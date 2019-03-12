@@ -1,0 +1,11 @@
+2007-09-29 - 1.03
+
+Added support for "body" and "subject" parameters.
+
+2007-01-07 - 1.02
+
+Ralph S. reported a problem that causes a conflict if an onload="" is called right from the <body> tag. This is fixed by using a different addEvent() function from http://www.quirksmode.org/blog/archives/2005/10/_and_the_winner_1.html
+
+2006-05-13 - 1.00
+
+Initial release.

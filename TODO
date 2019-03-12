@@ -1,0 +1,111 @@
+
+vts: db von dm zu vts verschieben
+
+description textarea "rows=10" geht nicht. erst nach einem f5 reload
+
+make forms and other stuff look nicer. at the moment, it was just developed for functionality
+
+when javascript fails, the form will be submitted to './' , that is not good! failed javascript must return false, so that the form does not get submitted
+
+automatisch umleiten nach https
+
+tiny mce : textcolor plugin nicht installiert?!
+
+icons
+
+html checkbox: "label for" verwenden
+
+admin: show privacy entries from RAs (but grey, so you know that it is private)
+
+aktuelle baustellen:
+- script to change email address
+- prüfe angaben in action.php (gültige ASN.1 id usw)
+- escape everything
+- anti xss
+- (oid+ genroot = mapping to OID tree)
+- settings database table
+
+admin soll contact data einer fremden RA ändern dürfen
+
+freeoid: asn.1 und iri spalten ausblenden, da dieser arc keine IDs vergibt?
+
+pro RA dinge loggen wie z.B. last login
+
+OID suchen
+
+Privacy: Mehr stufen, z.b. dass man den personal name evtl gar nicht zeigen möchte
+
+Man sollte "created" abändern dürfen! oder evtl ganz verstecken, wenn man es nicht weiß
+
+!!in der crud liste den titel des objekts zeigen
+
+que: nicht verwendete namespaces ausblenden für die öffentlichkeit?
+
+prüfen, ob java/asn1/iri arcs syntaktisch gültig
+
+
+natOrder() ist nur für OID gültig!!! andere sort-mechanismen für andere objekttypen erforderlich
+
+mce dirty flag:
+	- wenn man wechsel (js tree select), dann soll abgefragt werden, ob tinymce dirty ist, und eine warnung bringen, also so, wie wenn man die seite neu laden würde
+	- kritischer bug: seite öffnen, tiny mce editieren, speichern klicken. dann f5 neu laden (nicht strg+f5): dann ist der alte content wieder da. außer man drückt strg+f5
+
+jstree select: automatically scroll down
+
+!!document.title : es soll immer " - OID Database" dranhängen
+
+titel logo anklickbar -> naviere zu system
+
+innerhalb des content-panes
+	- navigation zu parent IDs
+
+foreign keys nutzen
+
+optisch aufhübschen. dinge wie RA: mehr dinge zeigen, adresse, email etc
+
+login
+
+change history of each oid + last modification time
+
+db
+	- weg von mysql_! (PDO?)
+	- zugangsdaten in config, auch admin password
+	- mandanten (db präfixe)
+
+auth und datenüberprüfungschecks in crud_action.php
+
+!! dsgvo datenschutzerklärung, agbs etc.
+
+markers draft, leaf, frozen etc
+
+multilang
+
+auslifern mit 2.999 und example DOIs etc
+
+wo in x.660 ist festgehalten, dass die erste RA festgehalten werden muss?
+que : historie einer oid
+
+"technical information" für ipv4, ipv6, guid
+
+http login nicht möglich. warum?
+
+objecttypes automatisch laden (php dateien suchen) und registrieren.
+
+kleinigkeiten:
+- <abbr> in <code> wird doppelt unterstrichen
+
+"Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollst&auml;ndig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), ...<br>
+
+wort "guid" oder "uuid" verwenden?
+
+zukunft
+- admin: soll wellknown oids ändern dürfen
+- move oid to different arc
+- bei sehr großen arcs (z.B. PEN) sollen nicht alle angezeigt werden
+- unterstützung für ORS?
+
+REJECTED IDEAS:
+- sollte es mehere admins geben?
+
+bei mehreren identifiern kann man nicht bestimmen, welcher identifier der bevorzugte sein soll!!
+

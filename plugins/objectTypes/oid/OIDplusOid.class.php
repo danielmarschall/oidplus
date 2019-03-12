@@ -1,0 +1,288 @@
+<?php
+
+/*
+ * OIDplus 2.0
+ * Copyright 2019 Daniel Marschall, ViaThinkSoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+class OIDplusOid extends OIDplusObject {
+	private $oid;
+
+	public function __construct($oid) {
+		// TODO: hier gültigkeitsprüfungen machen
+		$this->oid = $oid;
+	}
+
+	public static function parse($node_id) {
+		@list($namespace, $oid) = explode(':', $node_id, 2);
+		if ($namespace !== 'oid') return false;
+		return new self($oid);
+	}
+
+	public static function objectTypeTitle() {
+		return "Object Identifier (OID)";
+	}
+
+	public static function objectTypeTitleShort() {
+		return "OID";
+	}
+
+	public static function ns() {
+		return 'oid';
+	}
+
+	public static function root() {
+		return 'oid:';
+	}
+
+	public function isRoot() {
+		return $this->oid == '';
+	}
+
+	public function nodeId() {
+		return 'oid:'.$this->oid;
+	}
+
+	public function addString($str) {
+		if (!$this->isRoot()) {
+			if (strpos($str,'.') !== false) die("Please only submit one arc (not an absolute OID or multiple arcs).");
+		}
+		return $this->appendArcs($str)->nodeId();
+	}
+
+	public function crudShowId(OIDplusObject $parent) {
+		return $this->deltaDotNotation($parent);
+	}
+
+	public function crudInsertPrefix() {
+		return '';
+	}
+
+	public function jsTreeNodeName(OIDplusObject $parent = null) {
+		if ($parent == null) return $this->objectTypeTitle();
+		return $this->viewGetArcAsn1s($parent);
+	}
+
+	public function defaultTitle() {
+		return 'OID ' . $this->oid;
+	}
+
+	public function getContentPage(&$title, &$content) {
+		if ($this->isRoot()) {
+			$title = OIDplusOid::objectTypeTitle();
+
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = '".OIDplus::db()->real_escape_string(self::root())."'");
+			if (OIDplus::db()->num_rows($res) > 0) {
+				$content = 'Please select an OID in the tree view at the left to show its contents.';
+			} else {
+				$content = 'Currently, no OID is registered in the system.';
+			}
+
+			if (OIDplus::authUtils()::isAdminLoggedIn()) {
+				$content .= '<h2>Manage your root OIDs</h2>';
+			} else {
+				$content .= '<h2>Root OIDs</h2>';
+			}
+			$content .= '%%CRUD%%';
+		} else {
+			$content = "<h2>Technical information</h2>".$this->oidInformation().
+			               "<h2>Description</h2>%%DESC%%<br>".
+			               "<h2>Registration Authority</h2>%%RA_INFO%%";
+
+			if ($this->userHasWriteRights()) {
+				$content .= '<h2>Create or change subsequent objects</h2>';
+			} else {
+				$content .= '<h2>Subsequent objects</h2>';
+			}
+			$content .= '%%CRUD%%';
+		}
+	}
+
+	# ---
+
+	private function oidInformation() {
+		return "Dot Notation: <code>" . $this->getDotNotation() . "</code><br>" .
+		       "ASN.1 Notation: <code>{ " . $this->getAsn1Notation() . " }</code><br>" .
+		       "IRI Notation: <code>" . $this->getIriNotation() . "</code><br><br>";
+	}
+
+	public function __clone() {
+		return new self($this->oid);
+	}
+
+	public function appendArcs(String $arcs) {
+		$out = clone $this;
+		if ($out->isRoot()) {
+			$out->oid .= $arcs;
+		} else {
+			$out->oid .= '.' . $arcs;
+		}
+		return $out;
+	}
+
+	public function deltaDotNotation(OIDplusOid $parent) {
+		if (!$parent->isRoot()) {
+			if (substr($this->oid, 0, strlen($parent->oid)+1) == $parent->oid.'.') {
+				return substr($this->oid, strlen($parent->oid)+1);
+			} else {
+				return false;
+			}
+		} else {
+			return $this->oid;
+		}
+	}
+
+	public function viewGetArcAsn1s(OIDplusOid $parent=null, $separator = ' | ') {
+		$asn_ids = array();
+
+		if (is_null($parent)) $parent = OIDplusOid::parse('oid:');
+
+		$part = $this->deltaDotNotation($parent);
+
+		if (strpos($part, '.') === false) {
+			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = 'oid:".OIDplus::db()->real_escape_string($this->oid)."' order by lfd");
+			while ($row2 = OIDplus::db()->fetch_array($res2)) {
+				$asn_ids[] = $row2['name'].'('.$part.')';
+			}
+		}
+
+		if (count($asn_ids) == 0) $asn_ids = array($part);
+		return implode($asn_ids, $separator);
+	}
+
+	public function getAsn1Notation($withAbbr=true) {
+		$asn1_notation = '';
+		$arcs = explode('.', $this->oid);
+
+		foreach ($arcs as $arc) {
+			$res = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string('oid:'.implode('.',$arcs))."' order by lfd");
+
+			$names = array();
+			while ($row = OIDplus::db()->fetch_array($res)) {
+				$names[] = $row['name'];
+			}
+
+			if (count($names) > 1) {
+				$first_name = array_shift($names);
+				$abbr = 'Other identifiers: '.implode(', ',$names);
+				if ($withAbbr) {
+					$asn1_notation = '<abbr title="'.$abbr.'">'.$first_name.'</abbr>'.'('.array_pop($arcs).')'.' '.$asn1_notation;
+				} else {
+					$asn1_notation = $first_name.'('.array_pop($arcs).')'.' '.$asn1_notation;
+				}
+			} else if (count($names) == 1) {
+				$asn1_notation = array_shift($names).'('.array_pop($arcs).')'.' '.$asn1_notation;
+			} else {
+				$asn1_notation = array_pop($arcs).' '.$asn1_notation;
+			}
+		}
+
+		return $asn1_notation;
+	}
+
+	public function getIriNotation($withAbbr=true) {
+		$iri_notation = '';
+		$arcs = explode('.', $this->oid);
+
+		foreach ($arcs as $arc) {
+			$res = OIDplus::db()->query("select name, longarc from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = '".OIDplus::db()->real_escape_string('oid:'.implode('.',$arcs))."' order by lfd");
+
+			$is_longarc = false;
+			$names = array();
+			while ($row = OIDplus::db()->fetch_array($res)) {
+				$is_longarc = $row['longarc'];
+				$names[] = $row['name'];
+			}
+
+			$names[] = array_pop($arcs);
+			if (count($names) > 2) {
+				$first_name = array_shift($names);
+				$abbr = 'Other identifiers: '.implode(', ',$names);
+				$iri_notation = $withAbbr ? '<abbr title="'.$abbr.'">'.$first_name.'</abbr>/'.$iri_notation : $first_name.'/'.$iri_notation;
+			} else if (count($names) > 1) {
+				$first_name = array_shift($names);
+				$abbr = 'Numeric value: '.array_shift($names);
+				$iri_notation = $withAbbr ? '<abbr title="'.$abbr.'">'.$first_name.'</abbr>/'.$iri_notation : $first_name.'/'.$iri_notation;
+			} else if (count($names) == 1) {
+				$iri_notation = array_shift($names) . '/' . $iri_notation;
+			}
+
+			if ($is_longarc) break;
+		}
+		$iri_notation = '/' . substr($iri_notation, 0, strlen($iri_notation)-1);
+
+		return $iri_notation;
+	}
+
+	public function getDotNotation() {
+		return $this->oid;
+	}
+
+	public function replaceAsn1Ids($demandedASN1s=array()) {
+		// First do a few checks
+		foreach ($demandedASN1s as &$asn1) {
+			$asn1 = trim($asn1);
+			// TODO: check if $id is valid ASN.1
+
+			// Check if the (real) parent has any conflict
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where name = '".OIDplus::db()->real_escape_string($asn1)."'");
+			while ($row = OIDplus::db()->fetch_array($res)) {
+				$check_oid = OIDplusOid::parse($row['oid'])->oid;
+				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent
+				   ($check_oid !== $this->oid))                    // different OID
+				{
+					throw new Exception("ASN.1 identifier '$asn1' is already used by another OID ($check_oid)");
+				}
+			}
+		}
+
+		// Now do the real replacement
+		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = 'oid:".OIDplus::db()->real_escape_string($this->oid)."'");
+		foreach ($demandedASN1s as &$asn1) {
+			if (!OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."asn1id (oid, name) values ('oid:".OIDplus::db()->real_escape_string($this->oid)."', '".OIDplus::db()->real_escape_string($asn1)."')")) {
+				throw new Exception("Insertion of ASN.1 ID $asn1 to OID ".$this->oid." failed!");
+			}
+		}
+	}
+
+	public function replaceIris($demandedIris=array()) {
+		// First do a few checks
+		foreach ($demandedIris as &$iri) {
+			$iri = trim($iri);
+			// TODO: check if $id is valid IRI
+
+			// Check if the (real) parent has any conflict
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where name = '".OIDplus::db()->real_escape_string($iri)."'");
+			while ($row = OIDplus::db()->fetch_array($res)) {
+				$check_oid = OIDplusOid::parse($row['oid'])->oid;
+				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent
+				   ($check_oid !== $this->oid))                    // different OID
+				{
+					throw new Exception("IRI '$iri' is already used by another OID ($check_oid)");
+				}
+			}
+		}
+
+		// Now do the real replacement
+		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = 'oid:".OIDplus::db()->real_escape_string($this->oid)."'");
+		foreach ($demandedIris as &$iri) {
+			if (!OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."iri (oid, name) values ('oid:".OIDplus::db()->real_escape_string($this->oid)."', '".OIDplus::db()->real_escape_string($iri)."')")) {
+				throw new Exception("Insertion of IRI $iri to OID ".$this->oid." failed!");
+			}
+		}
+	}
+}
+
+OIDplusObject::$registeredObjectTypes[] = 'OIDplusOid';

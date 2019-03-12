@@ -1,0 +1,55 @@
+3P ("Third party") assets, code and frameworks
+==============================================
+
+jsTree:
+	License:  MIT
+	Version:  3.3.7
+	Download: https://www.jstree.com/ (only dist directory)
+
+TinyMCE:
+	License:  LGPL 2.1
+	Version:  4.8.1
+	Download: https://www.tiny.cloud/download/self-hosted/
+
+Bootstrap:
+	License   MIT
+	Version:  3.3.7
+	Download: http://blog.getbootstrap.com/2016/07/25/bootstrap-3-3-7-released/ (only dist directory)
+
+jQuery:
+	Liense:   MIT
+	Version:  2.2.1
+	Download: https://code.jquery.com/jquery-2.2.1.min.js
+
+0xbb SHA3 implementation in PHP (for PHP<7.1 compatibility):
+	License: MIT
+	Version: 591a636 on 21 May 2017
+	Download: https://github.com/0xbb/php-sha3
+
+emn178 SHA3 implementation in JavaScript:
+	License: MIT
+	Version: 0.8.0 on 5 Aug 2018
+	Download: https://github.com/emn178/js-sha3
+
+allpro layout:
+	License: MIT / GPLv3
+	Version: 1.4.3 on 7 Sep 2014
+	Download: https://github.com/allpro/layout/
+
+jQuery UI:
+	License: MIT
+	Version: 1.12.1
+	Download: http://jqueryui.com/
+
+SpamSpan:
+	License: GPLv2
+	Version: 1.03
+	Download: http://www.spamspan.de/
+
+Cookie consent:
+	Currently directly linked
+	Download: https://cookieconsent.insites.com/
+
+ReCaptcha:
+	Currently directly linked
+	Website: https://www.google.com/recaptcha/
