@@ -19,11 +19,7 @@
 
 include_once __DIR__ . '/functions.inc.php';
 
-if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'viathinksoft.de') ||
-                                       ($_SERVER['SERVER_NAME'] == 'www.viathinksoft.de') ||
-                                       ($_SERVER['SERVER_NAME'] == 'viathinksoft.com') ||
-                                       ($_SERVER['SERVER_NAME'] == 'www.viathinksoft.com')))
-{
+if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viathinksoft.com'))) {
 
 	if (explode('$',$id)[0] == 'oidplus:com.viathinksoft.freeoid') {
 		$handled = true;
