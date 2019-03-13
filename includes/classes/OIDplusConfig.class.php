@@ -24,7 +24,12 @@ class OIDplusConfig {
 	}
 
 	public function systemTitle() {
-		return 'OIDplus 2.0';
+		// TODO
+		if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viathinksoft.com'))) {
+			return 'ViaThinkSoft Registration Authority';
+		} else {
+			return 'OIDplus 2.0';
+		}
 	}
 
 	public function globalCC() {
@@ -33,6 +38,7 @@ class OIDplusConfig {
 	}
 
 	public function minRaPasswordLength() {
+		// TODO
 		return 6;
 	}
 
@@ -43,14 +49,17 @@ class OIDplusConfig {
 	*/
 
 	public function maxInviteTime() {
+		// TODO
 		return 0; // infinite
 	}
 
 	public function maxPasswordResetTime() {
+		// TODO
 		return 0; // infinite
 	}
 
 	public function oidinfoExportProtected() {
+		// TODO
 		// true = oidinfo_export.php requires admin login
 		// false = oidinfo_export.php can be accessed without restrictions
 		return false;

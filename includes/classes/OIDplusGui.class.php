@@ -184,7 +184,7 @@ class OIDplusGui {
 
 	protected static function showMCE($name, $content) {
 		$mce_plugins = array();
-		foreach (glob(__DIR__ . '/../3p/tinymce/plugins/*') as $m) { // */
+		foreach (glob(__DIR__ . '/../../3p/tinymce/plugins/*') as $m) { // */
 			$mce_plugins[] = basename($m);
 		}
 
@@ -193,15 +193,20 @@ class OIDplusGui {
 			if ($index !== false) unset($mce_plugins[$index]);
 		}
 
-		$out = "<script>
-				tinymce.remove('#".$name."');
+		$out = '<script>
+				tinymce.remove("#'.$name.'");
 				tinymce.init({
-					selector: '#".$name."',
-					plugins: '".implode(' ', $mce_plugins)."'
+					selector: "#'.$name.'",
+					height: 200,
+					statusbar: false,
+//					menubar:false,
+//					toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | fontsizeselect",
+					toolbar: "undo redo | styleselect | bold italic underline forecolor | bullist numlist | outdent indent | table | fontsizeselect",
+					plugins: "'.implode(' ', $mce_plugins).'"
 				});
-			</script>";
+			</script>';
 
-		$out .= '<textarea name="'.htmlentities($name).'" id="'.htmlentities($name).'" rows="10">'.trim($content).'</textarea><br>';
+		$out .= '<textarea name="'.htmlentities($name).'" id="'.htmlentities($name).'">'.trim($content).'</textarea><br>';
 
 		return $out;
 	}
@@ -276,7 +281,7 @@ class OIDplusGui {
 		if ($id === 'oidplus:system') {
 			$handled = true;
 
-			$out['title'] = 'Object Database of ' . $_SERVER['SERVER_NAME'];
+			$out['title'] = OIDplus::config()->systemTitle(); // 'Object Database of ' . $_SERVER['SERVER_NAME'];
 			$out['text'] = file_get_contents('welcome.html');
 			return $out;
 
@@ -427,6 +432,7 @@ class OIDplusGui {
 			                                  '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>' : '');
 
 			$out['text'] .= '<h2>Login as RA</h2>';
+			// TODO: show if the user is already logged in and tell the user that he can now login as someone else additionally
 			$out['text'] .= '<form action="action.php" method="POST" onsubmit="return raLoginOnSubmit(this);">';
 			$out['text'] .= '<input type="hidden" name="action" value="ra_login">';
 			$out['text'] .= 'E-Mail: <input type="text" name="email" value="" id="raLoginEMail"><br>';

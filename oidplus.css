@@ -1,125 +1,152 @@
-	.box {
-		width:auto !important;
-		padding:20px;
-		background-color:#fff;
-		border:1px solid #ccc;
-		border-radius:5px;
-		margin-top:10px;
-	}
+/*
+ * OIDplus 2.0
+ * Copyright 2019 Daniel Marschall, ViaThinkSoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-	#titleedit {
-		width:100%;
-	}
+.box {
+	width:auto !important;
+	padding:20px;
+	background-color:#fff;
+	border:1px solid #ccc;
+	border-radius:5px;
+	margin-top:10px;
+}
+#titleedit {
+	width:100%;
+}
+#system_title_1 {
+	color:#2b336f;
+}
+#system_title_2 {
+	color:#2b336f;
+	font-size:2em;
+}
+#system_title_bar {
+	line-height:1.75em;
 
-	#system_title_bar {
-		font-size:2em;
-		font-style:italic;
-		font-weight:bolder;
-		float:left;
-		border-bottom:1px;
+	height:55px !important;
 
-		width:100%; /* brauchen wir fuer NoScript */
-		padding-left:5px;/* brauchen wir fuer NoScript */
-		padding-right:5px;/* brauchen wir fuer NoScript */
+	font-style:italic;
+	font-weight:bolder;
+	float:left;
+	border-bottom:1px;
 
-		padding-left:0px;
-		margin:left:0px;
+	width:100%; /* brauchen wir fuer NoScript */
+	padding-left:5px;/* brauchen wir fuer NoScript */
+	padding-right:5px;/* brauchen wir fuer NoScript */
 
-		display:block; /* TODO: geht nicht */
+	padding-left:0px;
+	margin:left:0px;
 
-		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a0d8ef+0,ddf1f9+65,feffff+100 */
-		background: #a0d8ef; /* Old browsers */
-		background: -moz-linear-gradient(left, #a0d8ef 0%, #ddf1f9 65%, #feffff 100%); /* FF3.6-15 */
-		background: -webkit-linear-gradient(left, #a0d8ef 0%,#ddf1f9 65%,#feffff 100%); /* Chrome10-25,Safari5.1-6 */
-		background: linear-gradient(to right, #a0d8ef 0%,#ddf1f9 65%,#feffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a0d8ef', endColorstr='#feffff',GradientType=1 ); /* IE6-9 */
-	}
-	#system_title_bar a:hover, #title a:active, #title a:link {
-		text-decoration:none;
-	}
-	#oidtree {
-		position:absolute;
-		left:0px;
-		bottom:0px;
-		padding-left:5px;/* brauchen wir fuer NoScript */
-		padding-right:5px;/* brauchen wir fuer NoScript */
-		top:40px; /* brauchen wir fuer NoScript */
-		width:400px; /* brauchen wir fuer NoScript */
-	}
-	#content_window {
-		position:absolute;
-		left:400px;
-		right:0px;
-		bottom:0px;
-		top:40px; /* brauchen wir fuer NoScript */
-		padding-left:20px;
-		padding-right:20px;
-	}
-	html {
-		margin:0;
-		padding:0;
-		height:100%;
-		font-family:Helvetica;
-	}
-	body {
-		margin:0px;
-		padding:0px;
-		font-size:0.85em;
-		height:100%;
-		overflow: hidden;
-	}
-	h1 {
-		font-size:1.8em;
-	}
-	.borderbox {
-		overflow:auto;
-		border:1px solid silver;
-	}
+	display:block; /* TODO: geht nicht */
 
-	/**
-	 *	Splitter / uiLayout
-	 */
-	.ui-layout-pane { /* all 'panes' */
-		border: 1px solid #BBB;
-	}
-	.ui-layout-pane-center { /* content body */
-		padding: 0;
-		margin:  0;
-	}
-	.ui-layout-pane-west { /* west pane */
-		padding: 0 10px;
-		background-color: #f9f9f9 !important;
-		overflow: auto;
-	}
-	.ui-layout-resizer { /* all 'resizer-bars' */
-		background: #DDD;
-	}
-	.ui-layout-resizer-open:hover { /* mouse-over */
-		background: #9D9;
-	}
-	.ui-layout-resizer-north {
-		background:#2b336f !important;
-	}
-	.ui-layout-toggler { /* all 'toggler-buttons' */
-		background: #AAA;
-		}
-	.ui-layout-toggler-closed { /* closed toggler-button */
-		background: #CCC;
-		border-bottom: 1px solid #BBB;
-	}
-	.ui-layout-toggler .content { /* toggler-text */
-		font: 14px bold Verdana, Verdana, Arial, Helvetica, sans-serif;
-	}
-	.ui-layout-toggler:hover { /* mouse-over */
-		background: #DCA;
-	}
-	.ui-layout-toggler:hover .content { /* mouse-over */
-		color: #009;
-	}
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a0d8ef+0,ddf1f9+65,feffff+100 */
+	background: #a0d8ef; /* Old browsers */
+	background: -moz-linear-gradient(left, #a0d8ef 0%, #ddf1f9 65%, #feffff 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(left, #a0d8ef 0%,#ddf1f9 65%,#feffff 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to right, #a0d8ef 0%,#ddf1f9 65%,#feffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a0d8ef', endColorstr='#feffff',GradientType=1 ); /* IE6-9 */
+}
+#system_title_bar a:hover, #title a:active, #title a:link {
+	text-decoration:none;
+}
+#oidtree {
+	position:absolute;
+	left:0px;
+	bottom:0px;
+	padding-left:5px;/* brauchen wir fuer NoScript */
+	padding-right:5px;/* brauchen wir fuer NoScript */
+	top:55px; /* brauchen wir fuer NoScript */
+	width:400px; /* brauchen wir fuer NoScript */
+}
+#content_window {
+	position:absolute;
+	left:400px;
+	right:0px;
+	bottom:0px;
+	top:55px; /* brauchen wir fuer NoScript */
+	padding-left:20px;
+	padding-right:20px;
+}
+html {
+	margin:0;
+	padding:0;
+	height:100%;
+	font-family:Helvetica;
+}
+body {
+	margin:0px;
+	padding:0px;
+	font-size:0.85em;
+	height:100%;
+	overflow: hidden;
+}
+h1 {
+	font-size:1.8em;
+}
+.borderbox {
+	overflow:auto;
+	border:1px solid silver;
+}
 
-	/* masks are usually transparent - make them visible (must 'override' default) */
-	.ui-layout-mask {
-		background:	#C00 !important;
-		opacity:	.20 !important;
-		filter:		alpha(opacity=20) !important;
+/**
+ *	Splitter / uiLayout
+ */
+.ui-layout-pane { /* all 'panes' */
+	border: 1px solid #BBB;
+}
+.ui-layout-pane-center { /* content body */
+	padding: 0;
+	margin:  0;
+}
+.ui-layout-pane-west { /* west pane */
+	padding: 0 10px;
+	background-color: #f9f9f9 !important;
+	overflow: auto;
+}
+.ui-layout-resizer { /* all 'resizer-bars' */
+	background: #DDD;
+	top:55px !important; /* DM 13.03.2019 */
+}
+.ui-layout-resizer-open:hover { /* mouse-over */
+	background: #9D9;
+}
+.ui-layout-resizer-north {
+	background:#2b336f !important;
+	z-index:10 !important; /* DM 13.03.30291 */
+}
+.ui-layout-toggler { /* all 'toggler-buttons' */
+	background: #AAA;
 	}
+.ui-layout-toggler-closed { /* closed toggler-button */
+	background: #CCC;
+	border-bottom: 1px solid #BBB;
+}
+.ui-layout-toggler .content { /* toggler-text */
+	font: 14px bold Verdana, Verdana, Arial, Helvetica, sans-serif;
+}
+.ui-layout-toggler:hover { /* mouse-over */
+	background: #DCA;
+}
+.ui-layout-toggler:hover .content { /* mouse-over */
+	color: #009;
+}
+
+/* masks are usually transparent - make them visible (must 'override' default) */
+.ui-layout-mask {
+	background:	#C00 !important;
+	opacity:	.20 !important;
+	filter:		alpha(opacity=20) !important;
+}

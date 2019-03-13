@@ -118,7 +118,10 @@ window.cookieconsent.initialise({
 </head>
 <body>
 	<div id="system_title_bar" class="ui-layout-north">
-		<a href="?goto=oidplus:system"><font color="#2b336f">ViaThinkSoft OIDplus 2.0</font><!-- <sup><font color="red">ALPHA</font>--></sup></a>
+		<a href="?goto=oidplus:system">
+			<span id="system_title_1">ViaThinkSoft OIDplus 2.0</span><br>
+			<span id="system_title_2"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></span>
+		</a>
 	</div>
 
 	<div id="oidtree" class="borderbox ui-layout-west">

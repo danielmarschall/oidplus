@@ -1,7 +1,11 @@
 
-vts: db von dm zu vts verschieben
+WICHTIG:
+- prüfe angaben in action.php (gültige ASN.1 id usw)
+- Erweiterte Konfig (OIDplusConfig) in DB, durch Admin editierbar machen
 
-description textarea "rows=10" geht nicht. erst nach einem f5 reload
+systemTitle an mehr stellen im programm verwenden, und die SERVER_NAME nur im bedarfsfall verwenden
+
+vts: db von dm zu vts verschieben
 
 make forms and other stuff look nicer. at the moment, it was just developed for functionality
 
@@ -19,7 +23,6 @@ admin: show privacy entries from RAs (but grey, so you know that it is private)
 
 aktuelle baustellen:
 - script to change email address
-- prüfe angaben in action.php (gültige ASN.1 id usw)
 - escape everything
 - anti xss
 - (oid+ genroot = mapping to OID tree)
@@ -108,4 +111,12 @@ REJECTED IDEAS:
 - sollte es mehere admins geben?
 
 bei mehreren identifiern kann man nicht bestimmen, welcher identifier der bevorzugte sein soll!!
+
+IDEAS
+- there should be a form where an RA can request an invitation, even if the superior RA did not invite them.
+  the fact that a RA exists in the Object Table should permit the RA to invite theirself.
+- beim verlassen der seite, z.b. wenn man links auf einen neuen menüpunkt klickt, soll eine abfrage kommen, ob man speichern möchte
+
+QUESTIONS:
+- should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie
 

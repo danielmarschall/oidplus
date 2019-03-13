@@ -3,7 +3,7 @@
 /**
  * OID-Info.com API by Daniel Marschall, ViaThinkSoft
  * License terms: Apache 2.0
- * Revision: 2019-03-11
+ * Revision: 2019-03-12
  */
 
 error_reporting(E_ALL | E_NOTICE | E_STRICT | E_DEPRECATED);
