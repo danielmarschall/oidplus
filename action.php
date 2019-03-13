@@ -71,7 +71,7 @@ try {
 			$message = OIDplus::gui()::getInvitationText($_POST['email']);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 
-			my_mail($email, 'Invitation from OIDplus', $message, OIDplus::config()->globalCC());
+			my_mail($email, OIDplus::config()->systemTitle().' - Invitation', $message, OIDplus::config()->globalCC());
 
 			die("OK");
 		}
@@ -134,7 +134,7 @@ try {
 			$message = OIDplus::gui()::getForgotPasswordText($_POST['email']);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 
-			my_mail($email, 'OIDplus password reset', $message, OIDplus::config()->globalCC());
+			my_mail($email, OIDplus::config()->systemTitle().' - Password reset request', $message, OIDplus::config()->globalCC());
 
 			die("OK");
 		}
@@ -221,10 +221,16 @@ try {
 		if ($_POST["action"] == "Update") {
 			$handled = true;
 
-			// TODO: eingaben auf gültigkeit prüfen
+			// Es wird validiert: ra email, asn1 ids, iri ids
+
 			$id = $_POST['id'];
 			$obj = OIDplusObject::parse($_POST['id']);
+
+			// Validate RA email address
 			$new_ra = $_POST['ra_email'];
+			if (!empty($new_ra) && !oiddb_valid_email($new_ra)) {
+				die('Invalid RA email address');
+			}
 
 			// Prüfen ob zugelassen
 			if (!$obj->userHasParentalWriteRights()) die('Authentification error. Please log in as the superior RA to update this OID.');
@@ -244,6 +250,7 @@ try {
 				try {
 					$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
 					$ids = array_map('trim',$ids);
+					$ids = array_map('_iri_validate', $ids);
 					$oid->replaceIris($ids);
 				} catch (Exception $e) {
 					echo $e->getMessage()."\n";
@@ -253,6 +260,7 @@ try {
 				try {
 					$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
 					$ids = array_map('trim',$ids);
+					$ids = array_map('_asn1_validate', $ids);
 					$oid->replaceAsn1Ids($ids);
 				} catch (Exception $e) {
 					echo $e->getMessage()."\n";
@@ -292,14 +300,25 @@ try {
 		}
 		if ($_POST["action"] == "Insert") {
 			$handled = true;
-
-			// TODO: eingaben auf gültigkeit prüfen
-			$objParent = OIDplusObject::parse($_POST['parent']);
 			$error = false;
 
+			// Es wird validiert: ID, ra email, asn1 ids, iri ids
+
+			// Check if you have write rights on the parent (to create a new object)
+			$objParent = OIDplusObject::parse($_POST['parent']);
 			if (!$objParent->userHasWriteRights()) die('Authentification error. Please log in as the correct RA to insert an OID at this arc.');
 
-			if (is_null($_POST['id']) || ($_POST['id'] === '')) die('Invalid identifier. It may not be empty.');
+			// Check if the ID is valid
+			if ($_POST['id'] == '') die('ID may not be empty');
+			if ($objParent::ns() == 'oid') {
+				// TODO: Make a function in the object type class for the ID validation
+				//       Then, we can also validate non-OID types, too.
+				$numeric_arc = $_POST['id'];
+				if ($numeric_arc == '') die('ID may not be empty');
+				if (!is_numeric($numeric_arc)) die('ID must be a number');
+				if ($numeric_arc < 0) die('ID may not be negative!');
+				if ((substr($numeric_arc,0,1) == '0') && ($numeric_arc != '0')) die('ID may not have leading zeros');
+			}
 
 			// Absoluten OID namen bestimmen
 			if ($parent = OIDplusObject::parse($_POST['parent'])) $id = $parent->addString($_POST['id']);
@@ -309,18 +328,22 @@ try {
 			// Superior RA Änderung durchführen
 			$parent = $_POST['parent'];
 			$ra_email = $_POST['ra_email'];
+			if (!empty($ra_email) && !oiddb_valid_email($ra_email)) {
+				die('Invalid RA email address');
+			}
 			$confidential = $_POST['confidential'] == 'true' ? '1' : '0';
 			if (!OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, created) VALUES ('".OIDplus::db()->real_escape_string($id)."', '".OIDplus::db()->real_escape_string($parent)."', '".OIDplus::db()->real_escape_string($ra_email)."', ".OIDplus::db()->real_escape_string($confidential).", now())")) {
 				die(OIDplus::db()->error());
 			}
 
-			// nun ASN.1 und IRI IDs setzen
+			// Set ASN.1 und IRI IDs
 			if ($obj::ns() == 'oid') {
 				$oid = $obj;
 
 				try {
 					$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
 					$ids = array_map('trim',$ids);
+					$ids = array_map('_iri_validate', $ids);
 					$oid->replaceIris($ids);
 				} catch (Exception $e) {
 					echo $e->getMessage()."\n";
@@ -330,6 +353,7 @@ try {
 				try {
 					$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
 					$ids = array_map('trim',$ids);
+					$ids = array_map('_asn1_validate', $ids);
 					$oid->replaceAsn1Ids($ids);
 				} catch (Exception $e) {
 					echo $e->getMessage()."\n";
@@ -429,4 +453,14 @@ function _ra_change_rec($id, $old_ra, $new_ra) {
 	while ($row = OIDplus::db()->fetch_array($res)) {
 		_ra_change_rec($row['id'], $old_ra, $new_ra);
 	}
+}
+
+function _asn1_validate($id) {
+	if (!oid_id_is_valid($id)) throw new Exception("'$id' is not a valid ASN.1 arc!");
+	return $id;
+}
+
+function _iri_validate($id) {
+	if (!iri_arc_valid($id, false)) throw new Exception("'$id' is not a valid IRI arc!");
+	return $id;
 }

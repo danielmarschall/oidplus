@@ -39,6 +39,14 @@ String.prototype.html_entity_decode = function () {
 	return $('<textarea />').html(this).text();
 }
 
+function combine_systemtitle_and_pagetitle(systemtitle, pagetitle) {
+	if (systemtitle == pagetitle) {
+		return systemtitle;
+	} else {
+		return systemtitle + ' - ' + pagetitle;
+	}
+}
+
 function getTreeLoadURL() {
 	var url = new URL(window.location.href);
 	var goto = url.searchParams.get("goto");
@@ -73,7 +81,7 @@ function openOidInPanel(id, unselect=false) {
 		.then(function(data) {
 			data.id = id;
 
-			document.title = system_title + data.title;
+			document.title = combine_systemtitle_and_pagetitle(system_title, data.title);
 			var state = {
 				"node_id":id,
 				"titleHTML":data.title.htmlentities(),
@@ -88,7 +96,7 @@ function openOidInPanel(id, unselect=false) {
 
 			$('#real_title').html(data.title.htmlentities());
 			$('#real_content').html(data.text);
-			document.title = system_title + data.title;
+			document.title = combine_systemtitle_and_pagetitle(system_title, data.title);
 			current_node = id;
 		})
 		.catch(function(error) {
@@ -125,7 +133,7 @@ function updateDesc() {
 					var h1 = h1s[i];
 					h1.innerHTML = document.getElementById('titleedit').value.htmlentities();
 				}
-				document.title = system_title + document.getElementById('titleedit').value;
+				document.title = combine_systemtitle_and_pagetitle(system_title, document.getElementById('titleedit').value);
 
 				var mce = tinymce.get('description');
 				if (mce != null) mce.isNotDirty = 1;
@@ -359,7 +367,7 @@ $(window).on("popstate", function(e) {
 		$('#real_title').html(data.titleHTML);
 		$('#real_content').html(data.textHTML);
 		$('#static_link').attr("href", data.staticlinkHREF);
-		document.title = system_title + data.titleHTML.html_entity_decode();
+		document.title = combine_systemtitle_and_pagetitle(system_title, data.titleHTML.html_entity_decode());
 	} catch (err) {
 		popstate_running = false;
 	} finally {

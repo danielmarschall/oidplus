@@ -54,7 +54,7 @@ if (explode('$',$id)[0] == 'oidplus:edit_ra') {
 		    <input type="submit" value="Change data">
 		  </form><br><br>';
 
-		$out['text'] .= '<p><a href="javascript:deleteRa('.js_escape($ra_email).',\'oidplus:system\')">Delete your profile</a> (your objects stay active)</p>';
+		$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).',\'oidplus:system\')">Delete your profile</a> (your objects stay active)</p>';
 
 	}
 }

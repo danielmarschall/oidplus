@@ -33,12 +33,20 @@ $static = OIDplus::gui()::generateContentPage($static_node_id);
 $static_title = $static['title'];
 $static_content = $static['text'];
 
+function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
+	if ($systemtitle == $pagetitle) {
+		return $systemtitle;
+	} else {
+		return $systemtitle . ' - ' . $pagetitle;
+	}
+}
+
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title><?php echo htmlentities(OIDplus::config()->systemTitle().' - '.$static_title); ?></title>
+	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->systemTitle(), $static_title); ?></title>
 	<link rel="stylesheet" href="3p/jstree/themes/default/style.min.css">
 
 	<!-- We are using jQuery 2.2.1, because 3.3.1 seems to be incompatible with jsTree (HTML content will not be loaded into jsTree!) TODO: File bug report -->
@@ -93,7 +101,7 @@ $static_content = $static['text'];
 	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
 
 	<script>
-	system_title = <?php echo js_escape(OIDplus::config()->systemTitle().' - '); ?>; // TODO: Is that timing OK or is that a race condition?
+	system_title = <?php echo js_escape(OIDplus::config()->systemTitle()); ?>; // TODO: Is that timing OK or is that a race condition?
 	</script>
 
 <!-- https://cookieconsent.insites.com -->
@@ -119,8 +127,8 @@ window.cookieconsent.initialise({
 <body>
 	<div id="system_title_bar" class="ui-layout-north">
 		<a href="?goto=oidplus:system">
-			<span id="system_title_1">ViaThinkSoft OIDplus 2.0</span><br>
-			<span id="system_title_2"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></span>
+			<div id="system_title_1">ViaThinkSoft OIDplus 2.0</div>
+			<div id="system_title_2"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></div>
 		</a>
 	</div>
 

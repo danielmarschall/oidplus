@@ -1,9 +1,7 @@
 
 WICHTIG:
-- prüfe angaben in action.php (gültige ASN.1 id usw)
+- implement ID validation method in objectType API
 - Erweiterte Konfig (OIDplusConfig) in DB, durch Admin editierbar machen
-
-systemTitle an mehr stellen im programm verwenden, und die SERVER_NAME nur im bedarfsfall verwenden
 
 vts: db von dm zu vts verschieben
 
@@ -54,8 +52,6 @@ mce dirty flag:
 	- kritischer bug: seite öffnen, tiny mce editieren, speichern klicken. dann f5 neu laden (nicht strg+f5): dann ist der alte content wieder da. außer man drückt strg+f5
 
 jstree select: automatically scroll down
-
-!!document.title : es soll immer " - OID Database" dranhängen
 
 titel logo anklickbar -> naviere zu system
 

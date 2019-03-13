@@ -1,6 +1,6 @@
 Dear sir or madam,
 
-a person has requested a free Object Identifier (OID) assigned to this email address.
+a person has requested a free Object Identifier (OID) assigned to your email address.
 
 Please click this link to activate your new free OID:
 

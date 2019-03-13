@@ -176,10 +176,11 @@ class OIDplusTree {
 					'text' => 'Log out'
 				);
 				foreach (OIDplusObject::getRaRoots($ra_email) as $loc_root) {
+					$ico = $loc_root->getIcon();
 					$ra_roots[] = array(
 						'id' => 'oidplus:raroot$'.$loc_root->nodeId(),
 						'text' => 'Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())),
-						'icon' => file_exists('plugins/objectTypes/'.$loc_root::ns().'/img/treeicon_link.png') ? 'plugins/objectTypes/'.$loc_root::ns().'/img/treeicon_link.png' : 'img/link.png'
+						'icon' => !is_null($ico) ? $ico : 'img/link.png'
 					);
 				}
 				$ra_email_or_name = (new OIDplusRA($ra_email))->raName();

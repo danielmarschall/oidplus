@@ -55,7 +55,7 @@ if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viat
 
 		$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 
-                my_mail($email, 'Request for a free OID', $message, 'daniel-marschall@viathinksoft.de');
+                my_mail($email, OIDplus::config()->systemTitle().' - Free OID request', $message, 'daniel-marschall@viathinksoft.de');
 
 		die("OK");
 	}
@@ -131,7 +131,7 @@ if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viat
                 $message .= "\n";
                 $message .= "More details: ".OIDplus::system_url()."?goto=oid:$new_oid\n";
 
-                my_mail($email, 'OID '.$new_oid.' registered', $message, OIDplus::config()->globalCC(), 'admin@oid-info.com');
+                my_mail($email, OIDplus::config()->systemTitle()." - OID $new_oid registered", $message, OIDplus::config()->globalCC(), 'admin@oid-info.com');
 
 		die('OK');
 	}

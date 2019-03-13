@@ -107,21 +107,21 @@ class OIDplusGui {
 			while ($row2 = OIDplus::db()->fetch_array($res2)) {
 				$asn1ids[] = $row2['name'];
 			}
-			$asn1ids = implode(', ', $asn1ids);
 
 			$iris = array();
 			$res2 = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = '".OIDplus::db()->real_escape_string($row->id)."' order by lfd");
 			while ($row2 = OIDplus::db()->fetch_array($res2)) {
 				$iris[] = $row2['name'];
 			}
-			$iris = implode(', ', $iris);
 
 			$output .= '<tr>';
-// TODO: if no scripts are allowed, we cannot open this link using openAndSelectNode()
-			$output .= '     <td><a href="javascript:openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).')">'.htmlentities($show_id).'</a></td>';
+			// TODO: if no scripts are allowed, we cannot open this link using openAndSelectNode()
+			$output .= '     <td><a href="#" onclick="return openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).')">'.htmlentities($show_id).'</a></td>';
 			if ($objParent->userHasWriteRights()) {
-				if ($obj::ns() == 'oid') $output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.$asn1ids.'"></td>';
-				if ($obj::ns() == 'oid') $output .= '     <td><input type="text" id="iris_'.$row->id.'" value="'.$iris.'"></td>';
+				if ($obj::ns() == 'oid') {
+					$output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.implode(', ', $asn1ids).'"></td>';
+					$output .= '     <td><input type="text" id="iris_'.$row->id.'" value="'.implode(', ', $iris).'"></td>';
+				}
 				$output .= '     <td><input type="text" id="ra_email_'.$row->id.'" value="'.$row->ra_email.'"></td>';
 				$output .= '     <td><input type="checkbox" id="hide_'.$row->id.'" '.($row->confidential ? 'checked' : '').'></td>';
 				$output .= '     <td><button type="button" name="update_'.$row->id.'" id="update_'.$row->id.'" class="btn btn-success btn-xs update" onclick="javascript:crudActionUpdate('.js_escape($row->id).', '.js_escape($parent).')">Update</button></td>';
@@ -131,10 +131,17 @@ class OIDplusGui {
 			} else {
 				if ($asn1ids == '') $asn1ids = '<i>(none)</i>';
 				if ($iris == '') $iris = '<i>(none)</i>';
-				if ($obj::ns() == 'oid') $output .= '     <td><a href="javascript:openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).')">'.$asn1ids.'</a></td>';
-				if ($obj::ns() == 'oid') $output .= '     <td>'.$iris.'</td>';
-// TODO: if no scripts are allowed, we cannot open the rainfo: pages using openOidInPanel()
-				$output .= '     <td><a href="javascript:openOidInPanel('.js_escape('oidplus:rainfo$'.str_replace('@', "'+'@'+'", $row->ra_email)).', true)">'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
+				if ($obj::ns() == 'oid') {
+					$asn1ids_ext = array();
+					foreach ($asn1ids as $asn1id) {
+						// TODO: if no scripts are allowed, we cannot open the rainfo: pages using openOidInPanel()
+						$asn1ids_ext[] = '<a href="#" onclick="return openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).')">'.$asn1id.'</a>';
+					}
+					$output .= '     <td>'.implode(', ', $asn1ids_ext).'</td>';
+					$output .= '     <td>'.implode(', ', $iris).'</td>';
+				}
+				// TODO: if no scripts are allowed, we cannot open the rainfo: pages using openOidInPanel()
+				$output .= '     <td><a href="#" onclick="return openOidInPanel('.js_escape('oidplus:rainfo$'.str_replace('@', "'+'@'+'", $row->ra_email)).', true)">'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
 				$output .= '     <td>'.oiddb_formatdate($row->created).'</td>';
 				$output .= '     <td>'.oiddb_formatdate($row->updated).'</td>';
 			}
@@ -301,13 +308,14 @@ class OIDplusGui {
 			}
 
 			foreach (OIDplusObject::getRaRoots($ra_email) as $loc_root) {
-				$icon = file_exists('plugins/objectTypes/'.$loc_root::ns().'/img/treeicon_link.png') ? 'plugins/objectTypes/'.$loc_root::ns().'/img/treeicon_link.png' : 'img/link.png';
+				$ico = $loc_root->getIcon();
+				$icon = !is_null($ico) ? $ico : 'img/link.png';
 				$out['text'] .= '<p><a href="?goto='.$loc_root->nodeId().'"><img src="'.$icon.'"> Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())).'</a></p>';
 			}
 
 
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$out['text'] .= '<p><a href="javascript:deleteRa('.js_escape($ra_email).',null)">Delete this RA</a></p>';
+				$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).',null)">Delete this RA</a></p>';
 			}
 
 		// === Forgot password ===
@@ -432,7 +440,16 @@ class OIDplusGui {
 			                                  '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>' : '');
 
 			$out['text'] .= '<h2>Login as RA</h2>';
-			// TODO: show if the user is already logged in and tell the user that he can now login as someone else additionally
+
+			$login_list = OIDplus::authUtils()->loggedInRaList();
+			if (count($login_list) > 0) {
+				foreach (OIDplus::authUtils()->loggedInRaList() as $x) {
+					$out['text'] .= '<p>You are logged in as <b>'.$x.'</b> (<a href="#" onclick="return raLogout('.js_escape($x).');">Logout</a>)</p>';
+				}
+				$out['text'] .= '<p>If you have more accounts, you can log in with a new account:</p>';
+			} else {
+				$out['text'] .= '<p>Enter your email address and your password to log in as Registration Authority.</p>';
+			}
 			$out['text'] .= '<form action="action.php" method="POST" onsubmit="return raLoginOnSubmit(this);">';
 			$out['text'] .= '<input type="hidden" name="action" value="ra_login">';
 			$out['text'] .= 'E-Mail: <input type="text" name="email" value="" id="raLoginEMail"><br>';
@@ -450,7 +467,7 @@ class OIDplusGui {
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['text'] .= '<h2>Admin login</h2>';
 				$out['text'] .= '<p>You are logged in as administrator.</p>';
-				$out['text'] .= '<a href="javascript:adminLogout();">Logout</a>';
+				$out['text'] .= '<a href="#" onclick="return adminLogout();">Logout</a>';
 			} else {
 				$out['text'] .= '<h2>Login as admin</h2>';
 				$out['text'] .= '<form action="action.php" method="POST" onsubmit="return adminLoginOnSubmit(this);">';

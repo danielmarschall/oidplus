@@ -124,11 +124,16 @@ class OIDplusOid extends OIDplusObject {
 
 	public function appendArcs(String $arcs) {
 		$out = clone $this;
+
 		if ($out->isRoot()) {
 			$out->oid .= $arcs;
 		} else {
 			$out->oid .= '.' . $arcs;
 		}
+
+		$out->oid = sanitizeOID($out->oid);
+		if ($out->oid === false) throw new Exception("Cannot append OID arc(s) because they are not numeric");
+
 		return $out;
 	}
 
