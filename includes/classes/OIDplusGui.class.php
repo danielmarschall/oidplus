@@ -343,15 +343,15 @@ class OIDplusGui {
 		} else if (explode('$',$id)[0] == 'oidplus:reset_password') {
 			$handled = true;
 
-                        $email = explode('$',$id)[1];
-                        $timestamp = explode('$',$id)[2];
-                        $auth = explode('$',$id)[3];
+			$email = explode('$',$id)[1];
+			$timestamp = explode('$',$id)[2];
+			$auth = explode('$',$id)[3];
 
 			$out['title'] = 'Reset password';
 
-                        if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
-	                        $out['text'] = 'Invalid authorization. Is the URL OK?';
-                        } else {
+			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
+				$out['text'] = 'Invalid authorization. Is the URL OK?';
+			} else {
 				$out['text'] = '<p>E-Mail-Adress: <b>'.$email.'</b></p>
 
 				  <form id="resetPasswordForm" onsubmit="return resetPasswordFormOnSubmit();">
@@ -396,19 +396,19 @@ class OIDplusGui {
 		} else if (explode('$',$id)[0] == 'oidplus:activate_ra') {
 			$handled = true;
 
-                        $email = explode('$',$id)[1];
-                        $timestamp = explode('$',$id)[2];
-                        $auth = explode('$',$id)[3];
+			$email = explode('$',$id)[1];
+			$timestamp = explode('$',$id)[2];
+			$auth = explode('$',$id)[3];
 
 			$out['title'] = 'Register as Registration Authority';
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 			if (OIDplus::db()->num_rows($res) > 0) {
-                                $out['text'] = 'This RA is already registered and does not need to be invited.';
+				$out['text'] = 'This RA is already registered and does not need to be invited.';
 			} else {
-	                        if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
-		                        $out['text'] = 'Invalid authorization. Is the URL OK?';
-	                        } else {
+				if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
+					$out['text'] = 'Invalid authorization. Is the URL OK?';
+				} else {
 					// TODO: like in the FreeOID plugin, we could ask here at least for a name for the RA
 					$out['text'] = '<p>E-Mail-Adress: <b>'.$email.'</b></p>
 

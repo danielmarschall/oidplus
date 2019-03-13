@@ -146,7 +146,7 @@ h1 {
 
 /* masks are usually transparent - make them visible (must 'override' default) */
 .ui-layout-mask {
-	background:	#C00 !important;
-	opacity:	.20 !important;
-	filter:		alpha(opacity=20) !important;
+	background: #C00 !important;
+	opacity: .20 !important;
+	filter: alpha(opacity=20) !important;
 }

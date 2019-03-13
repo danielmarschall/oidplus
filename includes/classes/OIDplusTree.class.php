@@ -30,8 +30,8 @@ class OIDplusTree {
 			$parent = $row->parent;
 		}
 
-	        $objTypesChildren = array();
-	        foreach (OIDplusObject::$registeredObjectTypes as $ot) {
+		$objTypesChildren = array();
+		foreach (OIDplusObject::$registeredObjectTypes as $ot) {
 			$icon = 'plugins/objectTypes/'.$ot::ns().'/img/treeicon_root.png';
 			if (file_exists($icon)) {
 				$icon = '<img src="'.$icon.'"> ';
@@ -75,7 +75,7 @@ class OIDplusTree {
 				if ($z_used) foreach ($menu_entries as $i => &$menu_entry) if ($stufen[$i] >= 0) $menu_entry = str_repeat('&nbsp;', 5) . $menu_entry;
 				echo implode("<br>\n", $menu_entries)."<br>\n";
 			}
-	        }
+		}
 
 		// === Plugins ===
 
@@ -102,17 +102,17 @@ class OIDplusTree {
 			$json = array();
 
 			if (isset($req_goto)) {
-		                        $goto = $req_goto;
-				        $path = array();
-		                        while (true) {
-				                $path[] = $goto;
-		                                $res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($goto)."'");
-				                if (OIDplus::db()->num_rows($res) == 0) break;
-		                                $row = OIDplus::db()->fetch_array($res);
+					$goto = $req_goto;
+					$path = array();
+					while (true) {
+						$path[] = $goto;
+						$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($goto)."'");
+						if (OIDplus::db()->num_rows($res) == 0) break;
+						$row = OIDplus::db()->fetch_array($res);
 						$goto = $row['parent'];
-		                        }
+					}
 
-		                        $goto_path = array_reverse($path);
+					$goto_path = array_reverse($path);
 			} else {
 				$goto_path = null;
 			}

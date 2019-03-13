@@ -98,8 +98,8 @@ class OIDplusOid extends OIDplusObject {
 			$content .= '%%CRUD%%';
 		} else {
 			$content = "<h2>Technical information</h2>".$this->oidInformation().
-			               "<h2>Description</h2>%%DESC%%<br>".
-			               "<h2>Registration Authority</h2>%%RA_INFO%%";
+			           "<h2>Description</h2>%%DESC%%<br>".
+			           "<h2>Registration Authority</h2>%%RA_INFO%%";
 
 			if ($this->userHasWriteRights()) {
 				$content .= '<h2>Create or change subsequent objects</h2>';

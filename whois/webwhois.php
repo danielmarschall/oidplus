@@ -35,14 +35,14 @@ header('Content-Type:text/plain; charset=UTF-8');
 
 if (php_sapi_name() == 'cli') {
 	if ($argc != 2) {
-	        echo "Syntax: $argv[0] <query>\n";
-	        exit(2);
+		echo "Syntax: $argv[0] <query>\n";
+		exit(2);
 	}
 	$query = $argv[1];
 } else {
 	if (!isset($_REQUEST['query'])) {
 		http_response_code(400);
-	        echo "Argument 'query' is missing\n";
+		echo "Argument 'query' is missing\n";
 		die();
 	}
 	$query = $_REQUEST['query'];

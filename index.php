@@ -110,16 +110,16 @@ function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
 <script>
 window.addEventListener("load", function(){
 window.cookieconsent.initialise({
-  "palette": {
-    "popup": {
-      "background": "#edeff5",
-      "text": "#838391"
-    },
-    "button": {
-      "background": "#4b81e8"
-    }
-  },
-  "position": "bottom-right"
+	"palette": {
+		"popup": {
+			"background": "#edeff5",
+			"text": "#838391"
+		},
+		"button": {
+			"background": "#4b81e8"
+		}
+	},
+	"position": "bottom-right"
 })});
 </script>
 

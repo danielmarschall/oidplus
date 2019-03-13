@@ -143,20 +143,20 @@ function oiddb_formatdate($date) { // TODO: umbenennen in oidplus
 class MailException extends Exception {}
 
 function my_mail($to, $title, $msg, $cc='', $bcc='') {
-        $h = new SecureMailer();
+	$h = new SecureMailer();
 
-        $title = /*SERVICE_NAME.' - '.*/$title;
+	$title = $title;
 
-        $h->addHeader('From', OIDPLUS_ADMIN_EMAIL);
+	$h->addHeader('From', OIDPLUS_ADMIN_EMAIL);
 
 	if (!empty($cc)) $h->addHeader('Cc',  $cc);
 	if (!empty($bcc)) $h->addHeader('Bcc',  $bcc);
 
-        $h->addHeader('X-Mailer', 'PHP/'.phpversion());
+	$h->addHeader('X-Mailer', 'PHP/'.phpversion());
+	if (isset($_SERVER['REMOTE_ADDR'])) $h->addHeader('X-RemoteAddr', $_SERVER['REMOTE_ADDR']);
 
-        $sent = $h->sendMail($to, $title, $msg);
-        if (!$sent) {
-                throw new MailException('Sending mail failed');
-        }
+	$sent = $h->sendMail($to, $title, $msg);
+	if (!$sent) {
+		throw new MailException('Sending mail failed');
+	}
 }
-
