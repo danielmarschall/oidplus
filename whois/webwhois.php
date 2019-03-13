@@ -86,7 +86,7 @@ if ($row = OIDplus::db()->fetch_object($res)) {
 
 		$out[] = '';
 
-		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = '".OIDplus::db()->real_escape_string($row->id)."'");
+		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = '".OIDplus::db()->real_escape_string($row->id)."' order by ".OIDplus::db()->natOrder('id'));
 		if (OIDplus::db()->num_rows($res2) == 0) {
 			$out[] = 'subordinate: (none)';
 		}
