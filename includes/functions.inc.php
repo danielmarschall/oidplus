@@ -160,3 +160,9 @@ function my_mail($to, $title, $msg, $cc='', $bcc='') {
 		throw new MailException('Sending mail failed');
 	}
 }
+
+function trim_br($html) {
+	do { $html = preg_replace('@^\s*<\s*br\s*/{0,1}\s*>@isU', '', $html, -1, $count); } while ($count > 0); // left trim
+	do { $html = preg_replace('@<\s*br\s*/{0,1}\s*>\s*$@isU', '', $html, -1, $count); } while ($count > 0); // right trim
+	return $html;
+}

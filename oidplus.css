@@ -27,10 +27,10 @@
 	width:100%;
 }
 #system_title_1 {
-	color:#337AB7;
+	color:#2D6A9F;
 }
 #system_title_2 {
-	color:#2b336f;
+	color:#2B336F;
 	font-size:2em;
 }
 #system_title_bar {
@@ -95,6 +95,9 @@ body {
 }
 h1 {
 	font-size:1.8em;
+}
+h2 {
+	font-size:1.6em !important;
 }
 .borderbox {
 	overflow:auto;

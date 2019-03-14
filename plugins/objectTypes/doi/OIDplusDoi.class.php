@@ -112,7 +112,7 @@ class OIDplusDoi extends OIDplusObject {
 			$pure = explode(':',$this->nodeId())[1];
 			$content = '<h3><a target="_blank" href="https://dx.doi.org/'.htmlentities($pure).'">Resolve '.htmlentities($pure).'</a></h3>';
 
-			$content .= '<h2>Description</h2><br><br>%%DESC%%<br><br>'; // TODO: add more meta information about the object type
+			$content .= '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
 			if ($this->userHasWriteRights()) {
 				$content .= '<h2>Create or change subsequent objects</h2>';

@@ -98,7 +98,7 @@ class OIDplusOid extends OIDplusObject {
 			$content .= '%%CRUD%%';
 		} else {
 			$content = "<h2>Technical information</h2>".$this->oidInformation().
-			           "<h2>Description</h2>%%DESC%%<br>".
+			           "<h2>Description</h2>%%DESC%%".
 			           "<h2>Registration Authority</h2>%%RA_INFO%%";
 
 			if ($this->userHasWriteRights()) {
@@ -113,9 +113,9 @@ class OIDplusOid extends OIDplusObject {
 	# ---
 
 	private function oidInformation() {
-		return "Dot Notation: <code>" . $this->getDotNotation() . "</code><br>" .
+		return "<p>Dot Notation: <code>" . $this->getDotNotation() . "</code><br>" .
 		       "ASN.1 Notation: <code>{ " . $this->getAsn1Notation() . " }</code><br>" .
-		       "IRI Notation: <code>" . $this->getIriNotation() . "</code><br><br>";
+		       "IRI Notation: <code>" . $this->getIriNotation() . "</code></p>";
 	}
 
 	public function __clone() {

@@ -107,7 +107,7 @@ class OIDplusOther extends OIDplusObject {
 			}
 			$content .= '%%CRUD%%';
 		} else {
-			$content = '<h2>Description</h2><br><br>%%DESC%%<br><br>'; // TODO: add more meta information about the object type
+			$content = '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
 			if ($this->userHasWriteRights()) {
 				$content .= '<h2>Create or change subsequent objects</h2>';

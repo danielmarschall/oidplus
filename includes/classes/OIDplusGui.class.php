@@ -27,7 +27,8 @@ class OIDplusGui {
 		$forbidden_tags = array('script');
 		$html = str_ireplace('<script', '<xxx', $html);
 		$html = str_ireplace('</script>', '</xxx>', $html);
-		return $html;
+
+		return trim_br($html);
 	}
 
 	protected static function showRAInfo($email) {
@@ -60,7 +61,7 @@ class OIDplusGui {
 			}
 		}
 
-		return $out;
+		return trim_br($out);
 	}
 
 	protected static function showCrud($parent='oid:') {
@@ -496,12 +497,6 @@ class OIDplusGui {
 			$out['text'] .= '				</div>';
 			$out['text'] .= '			</div>';
 			$out['text'] .= '  </div>';
-
-
-
-
-
-
 		}
 
 		// === Plugins ===
