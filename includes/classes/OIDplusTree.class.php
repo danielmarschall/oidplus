@@ -21,7 +21,7 @@ class OIDplusTree {
 
 	public static function nonjs_menu($static_node_id) {
 		if ($static_node_id == 'oidplus:system') echo '<b>';
-		echo '<a href="?goto=oidplus:system"><img src="img/system.png"> System</a><br>';
+		echo '<a href="?goto=oidplus:system"><img src="img/system.png" alt="System icon"> System</a><br>';
 		if ($static_node_id == 'oidplus:system') echo '</b>';
 
 		$parent = '';
@@ -34,7 +34,7 @@ class OIDplusTree {
 		foreach (OIDplusObject::$registeredObjectTypes as $ot) {
 			$icon = 'plugins/objectTypes/'.$ot::ns().'/img/treeicon_root.png';
 			if (file_exists($icon)) {
-				$icon = '<img src="'.$icon.'"> ';
+				$icon = '<img src="'.$icon.'" alt="'.$ot::ns().' icon"> ';
 			}
 
 			if ($ot::ns().':' == $static_node_id) echo '<b>';
@@ -87,7 +87,7 @@ class OIDplusTree {
 
 		foreach ($json as $x) {
 			if ($static_node_id == $x['id']) echo '<b>';
-			echo '<a href="?goto='.urlencode($x['id']).'"><img src="'.$x['icon'].'"> '.htmlentities($x['text']).'</a><br>';
+			echo '<a href="?goto='.urlencode($x['id']).'"><img src="'.$x['icon'].'" alt="'.$x['id'].' icon"> '.htmlentities($x['text']).'</a><br>';
 			if ($static_node_id == $x['id']) echo '</b>';
 		}
 

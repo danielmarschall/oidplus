@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+/*jshint esversion: 6 */
+
 // $('#html').jstree();
 
 current_node = "";
@@ -33,11 +35,11 @@ String.prototype.explode = function (separator, limit) {
 
 String.prototype.htmlentities = function () {
 	return this.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
+};
 
 String.prototype.html_entity_decode = function () {
 	return $('<textarea />').html(this).text();
-}
+};
 
 function combine_systemtitle_and_pagetitle(systemtitle, pagetitle) {
 	if (systemtitle == pagetitle) {
@@ -427,7 +429,7 @@ $(document).ready(function () {
 		if (goto != null) data.instance.select_node([goto]);
 	})
 	.on('select_node.jstree', function (node, selected, event) {
-		var id = selected.node.id
+		var id = selected.node.id;
 		if (current_node != id) {
 			openOidInPanel(id);
 		}

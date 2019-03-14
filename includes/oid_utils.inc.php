@@ -1,9 +1,9 @@
 <?php
 
 // OID-Utilities for PHP
-// (C) 2011-2018 Daniel Marschall, ViaThinkSoft
-// Licensed under GNU LGPL 3.0
-// Last revision: 2018-01-05
+// (C) 2011-2019 Daniel Marschall, ViaThinkSoft
+// Licensed under the terms of the Apache 2.0 license
+// Last revision: 2019-03-13
 
 // All functions in this library are compatible with leading zeroes (not recommended) and leading dots
 
@@ -495,10 +495,10 @@ function iri_char_valid($c, $firstchar, $lastchar) {
 	return false;
 }
 
-function iri_arc_valid($arc, $allow_only_numeric=true) {
+function iri_arc_valid($arc, $allow_numeric=true) {
 	if ($arc == '') return false;
 
-	if ($allow_only_numeric && preg_match('@^(\\d+)$@', $arc, $m)) return true; # numeric arc
+	if ($allow_numeric && preg_match('@^(\\d+)$@', $arc, $m)) return true; # numeric arc
 
 	if (substr($arc, 2, 2) == '--') return false; // see Rec. ITU-T X.660, clause 7.5.4
 

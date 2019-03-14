@@ -44,7 +44,6 @@ function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->systemTitle(), $static_title); ?></title>
 	<link rel="stylesheet" href="3p/jstree/themes/default/style.min.css">

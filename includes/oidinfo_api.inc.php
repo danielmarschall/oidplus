@@ -542,7 +542,7 @@ class OIDInfoAPI {
 		}
 
 		// ATTENTION: the XML-generator will always add <dotted-oid> , but what will happen if additionally an
-	        // asn1-path (<value>) is given? (the resulting OIDs might be inconsistent/mismatch)
+		// asn1-path (<value>) is given? (the resulting OIDs might be inconsistent/mismatch)
 		if (isset($elements['value']) && (!asn1_path_valid($elements['value']))) {
 			unset($elements['value']);
 		}
