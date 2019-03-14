@@ -150,3 +150,22 @@ h1 {
 	opacity: .20 !important;
 	filter: alpha(opacity=20) !important;
 }
+
+/* Tabs */
+
+#loginTab .tab-content {
+	color: black;
+	background-color: #eeeeee;
+	padding : 5px 15px;
+}
+
+#loginTab .nav-pills > li > a {
+	border-radius: 0;
+}
+
+#loginTab .nav-pills > li.active > a {
+	color: black;
+	font-weight: bold;
+	background-color: #eeeeee;
+}
+

@@ -429,15 +429,28 @@ class OIDplusGui {
 			$handled = true;
 			$out['title'] = 'Login';
 
-			$out['text'] = 'Here you can login and register as RA.';
-
 			$out['text'] .= '<script>function raLoginOnSubmit() {';
 			$out['text'] .= '	raLogin(document.getElementById("raLoginEMail").value, document.getElementById("raLoginPassword").value);';
 			$out['text'] .= '	return false;';
 			$out['text'] .= '}</script>';
 
 			$out['text'] .= (RECAPTCHA_ENABLED ? '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.RECAPTCHA_PUBLIC.'" }); </script>'.
-			                                  '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>' : '');
+			                                  '<p>Before logging in, please solve the following CAPTCHA</p><div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>' : '');
+
+
+			$out['text'] .= '<br>';
+			$out['text'] .= '<br>';
+
+			$out['text'] .= '<div id="loginTab" class="container" style="width:100%">';
+			$out['text'] .= '<ul  class="nav nav-pills">';
+			$out['text'] .= '			<li class="active">';
+			$out['text'] .= '        <a  href="#1a" data-toggle="tab">Login as RA</a>';
+			$out['text'] .= '			</li>';
+			$out['text'] .= '			<li><a href="#2a" data-toggle="tab">Login as Administrator</a>';
+			$out['text'] .= '			</li>';
+			$out['text'] .= '		</ul>';
+			$out['text'] .= '			<div class="tab-content clearfix">';
+			$out['text'] .= '			  <div class="tab-pane active" id="1a">';
 
 			$out['text'] .= '<h2>Login as RA</h2>';
 
@@ -453,30 +466,42 @@ class OIDplusGui {
 			$out['text'] .= '<form action="action.php" method="POST" onsubmit="return raLoginOnSubmit(this);">';
 			$out['text'] .= '<input type="hidden" name="action" value="ra_login">';
 			$out['text'] .= 'E-Mail: <input type="text" name="email" value="" id="raLoginEMail"><br>';
-			$out['text'] .= 'Password: <input type="password" name="password" value="" id="raLoginPassword"><br>';
-			$out['text'] .= '<input type="submit" value="Login">';
+			$out['text'] .= 'Password: <input type="password" name="password" value="" id="raLoginPassword"><br><br>';
+			$out['text'] .= '<input type="submit" value="Login"><br><br>';
 			$out['text'] .= '</form>';
 			$out['text'] .= '<p><a href="?goto=oidplus:forgot_password">Forgot password?</a><br>';
 			$out['text'] .= '<abbr title="To receive login data, the superior RA needs to send you an invitation. After creating or updating your OID, the system will ask them if they want to send you an invitation. If they accept, you will receive an email with an activation link.">How to register?</abbr></p>';
-
 			$out['text'] .= '<script>function adminLoginOnSubmit() {';
 			$out['text'] .= '	adminLogin(document.getElementById("adminLoginPassword").value);';
 			$out['text'] .= '	return false;';
 			$out['text'] .= '}</script>';
+
+			$out['text'] .= '				</div>';
+			$out['text'] .= '				<div class="tab-pane" id="2a">';
 
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['text'] .= '<h2>Admin login</h2>';
 				$out['text'] .= '<p>You are logged in as administrator.</p>';
 				$out['text'] .= '<a href="#" onclick="return adminLogout();">Logout</a>';
 			} else {
-				$out['text'] .= '<h2>Login as admin</h2>';
+				$out['text'] .= '<h2>Login as Administrator</h2>';
 				$out['text'] .= '<form action="action.php" method="POST" onsubmit="return adminLoginOnSubmit(this);">';
 				$out['text'] .= '<input type="hidden" name="action" value="admin_login">';
-				$out['text'] .= 'Password: <input type="password" name="password" value="" id="adminLoginPassword"><br>';
-				$out['text'] .= '<input type="submit" value="Login">';
+				$out['text'] .= 'Password: <input type="password" name="password" value="" id="adminLoginPassword"><br><br>';
+				$out['text'] .= '<input type="submit" value="Login"><br><br>';
 				$out['text'] .= '</form>';
 				$out['text'] .= '<p><abbr title="Delete the file includes/config.inc.php and reload the page to start Setup again">Forgot password?</abbr></p>';
 			}
+
+			$out['text'] .= '				</div>';
+			$out['text'] .= '			</div>';
+			$out['text'] .= '  </div>';
+
+
+
+
+
+
 		}
 
 		// === Plugins ===

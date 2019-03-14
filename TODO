@@ -2,6 +2,7 @@
 WICHTIG:
 - implement ID validation method in objectType API
 - Erweiterte Konfig (OIDplusConfig) in DB, durch Admin editierbar machen
+- OID: Validate first arcs (i.e. so that you cannot create the OID 3.0 or 1.99)
 
 vts: db von dm zu vts verschieben
 
@@ -14,6 +15,8 @@ automatisch umleiten nach https
 tiny mce : textcolor plugin nicht installiert?!
 
 icons
+
+forms: align input edits, see https://stackoverflow.com/questions/30008948/how-to-align-two-labels-and-two-textboxes-without-a-gap-in-form-horizontal
 
 html checkbox: "label for" verwenden
 
