@@ -65,5 +65,9 @@ class OIDplusConfig {
 		return false;
 	}
 
+	public function authToken() {
+		return false;
+	}
+
 }
 

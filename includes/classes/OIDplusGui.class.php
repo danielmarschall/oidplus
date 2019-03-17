@@ -23,10 +23,7 @@ class OIDplusGui {
 
 	protected static function objDescription($html) {
 		// We allow HTML, but no hacking
-		// TODO: disallow more html tags https://www.experts-exchange.com/questions/22664900/Extensive-list-of-all-dangerous-HTML-tags-and-attributes-anti-XSS.html
-		$forbidden_tags = array('script');
-		$html = str_ireplace('<script', '<xxx', $html);
-		$html = str_ireplace('</script>', '</xxx>', $html);
+		$html = anti_xss($html);
 
 		return trim_br($html);
 	}

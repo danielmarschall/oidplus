@@ -48,25 +48,80 @@ if (php_sapi_name() == 'cli') {
 	$query = $_REQUEST['query'];
 }
 
+$authTokens = explode('$', $query);
+$query = array_shift($authTokens);
+$authToken = OIDplus::config()->authToken();
+$show_confidential = $authToken && in_array($authToken, $authTokens);
+
 $query = str_replace('oid:.', 'oid:', $query); // backwards compatibility: allow leading dot
 
 // Step 1: Collect data
 
 $out = array();
 
-$out[] = "object: $query";
+$out[] = "query: $query";
 
-$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($query)."'");
-if ($row = OIDplus::db()->fetch_object($res)) {
-	$obj = OIDplusObject::parse($row->id);
-	if ($obj->isConfidential()) {
-		$out[] = 'status: Found, confidential';
+$distance = null;
+$found = null;
+
+try {
+	$obj = OIDplusObject::parse($query);
+} catch (Exception $e) {
+	$obj = null;
+}
+
+if (!$obj) {
+	$found = false;
+} else {
+	$query = $obj->nodeId(); // this may sanitize/canonize identifiers
+	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($obj->nodeId())."'");
+	if (OIDplus::db()->num_rows($res) > 0) {
+		$found = true;
+		$distance = 0;
+	} else {
+		$found = false;
+		$objParent = OIDplusObject::parse($query)->getParent();
+		if ($objParent) {
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($objParent->nodeId())."'");
+			$distance = $objParent->distance($query);
+			assert(OIDplus::db()->num_rows($res) > 0);
+
+			$query = $objParent->nodeId();
+			$obj = $objParent;
+		}
+	}
+}
+
+$continue = null;
+if (!$found) {
+	if (!is_null($distance)) {
+		$out[] = "result: Not found; superior object found";
+		$out[] = "distance: $distance";
+		$continue = true;
+	} else {
+		$out[] = "result: Not found";
+		$continue = false;
+	}
+} else {
+	$out[] = "result: Found";
+	$continue = true;
+}
+
+if ($continue) {
+	$out[] = "";
+	$out[] = "object: $query";
+	if ($obj->isConfidential() && !$show_confidential) {
+		$out[] = "status: Confidential";
 	} else {
 		$out[] = "status: Found";
+
+		$row = OIDplus::db()->fetch_object($res);
+		$obj = OIDplusObject::parse($row->id);
+
 		if (!empty($row->parent) && (!is_root($row->parent))) {
 			$out[] = 'parent: ' . $row->parent . show_asn1_appendix($row->parent);
 		}
-		$out[] = 'title: ' . $row->title;
+		$out[] = 'name: ' . $row->title;
 		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($row->description)));
 
 		if (substr($query,0,4) === 'oid:') {
@@ -84,28 +139,28 @@ if ($row = OIDplus::db()->fetch_object($res)) {
 		$out[] = 'created: ' . $row->created;
 		$out[] = 'updated: ' . $row->updated;
 
-		$out[] = '';
-
 		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = '".OIDplus::db()->real_escape_string($row->id)."' order by ".OIDplus::db()->natOrder('id'));
 		if (OIDplus::db()->num_rows($res2) == 0) {
-			$out[] = 'subordinate: (none)';
+			// $out[] = 'subordinate: (none)';
 		}
 		while ($row2 = OIDplus::db()->fetch_object($res2)) {
 			$out[] = 'subordinate: ' . $row2->id . show_asn1_appendix($row2->id);
 		}
 
 		$out[] = '';
-		$out[] = 'ra-email: ' . $row->ra_email;
+
 		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($row->ra_email)."'");
 		if ($row2 = OIDplus::db()->fetch_object($res2)) {
-			$out[] = 'ra-status: Registered';
+			$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : $row2->email);
+			$out[] = 'ra-status: Found';
 			$out[] = 'ra-name: ' . $row2->ra_name;
-			$out[] = 'ra-personal_name: ' . $row2->personal_name;
+			$out[] = 'ra-email: ' . $row->ra_email;
+			$out[] = 'ra-personal-name: ' . $row2->personal_name;
 			$out[] = 'ra-organization: ' . $row2->organization;
 			$out[] = 'ra-office: ' . $row2->office;
-			if ($row2->privacy) {
+			if ($row2->privacy && !$show_confidential) {
 				$out[] = 'ra-street: ' . (!empty($row2->street) ? '(redacted)' : '');
-				$out[] = 'ra-zip_town: ' . (!empty($row2->zip_town) ? '(redacted)' : '');
+				$out[] = 'ra-town: ' . (!empty($row2->zip_town) ? '(redacted)' : '');
 				$out[] = 'ra-country: ' . (!empty($row2->country) ? '(redacted)' : '');
 				$out[] = 'ra-phone: ' . (!empty($row2->phone) ? '(redacted)' : '');
 				$out[] = 'ra-mobile: ' . (!empty($row2->mobile) ? '(redacted)' : '');
@@ -118,14 +173,13 @@ if ($row = OIDplus::db()->fetch_object($res)) {
 				$out[] = 'ra-mobile: ' . $row2->mobile;
 				$out[] = 'ra-fax: ' . $row2->fax;
 			}
-			$out[] = 'ra-registered: ' . $row2->registered;
+			$out[] = 'ra-created: ' . $row2->registered;
 			$out[] = 'ra-updated: ' . $row2->updated;
 		} else {
-			$out[] = "ra-status: Not registered";
+			$out[] = 'ra: '.$row->ra_email;
+			$out[] = "ra-status: Not found";
 		}
 	}
-} else {
-	$out[] = "status: Not found";
 }
 
 // Step 2: Format output
@@ -148,8 +202,8 @@ foreach ($out as $line) {
 	$key = trim($ary[0]);
 
 	$value = trim($ary[1]);
-	$value = wordwrap($value, OUTPUT_FORMAT_MAX_LINE_LENGTH - (OUTPUT_FORMAT_SPACER+1) - $longest_key);
-	$value = str_replace("\n", "\n".str_repeat(' ', $longest_key+OUTPUT_FORMAT_SPACER+1), $value);
+	$value = wordwrap($value, OUTPUT_FORMAT_MAX_LINE_LENGTH - $longest_key - strlen(':') - OUTPUT_FORMAT_SPACER);
+	$value = str_replace("\n", "\n$key:".str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OUTPUT_FORMAT_SPACER), $value);
 
 	echo $key.':' . str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OUTPUT_FORMAT_SPACER) . (!empty($value) ? $value : '.') . "\n";
 }

@@ -118,7 +118,7 @@ if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viat
 			die(OIDplus::db()->error());
 		}
 
-		// Send delegation report email
+		// Send delegation report email to admin
 
 		$message  = "OID delegation report\n";
 		$message .= "\n";
@@ -132,6 +132,14 @@ if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viat
 		$message .= "More details: ".OIDplus::system_url()."?goto=oid:$new_oid\n";
 
 		my_mail($email, OIDplus::config()->systemTitle()." - OID $new_oid registered", $message, OIDplus::config()->globalCC(), 'admin@oid-info.com');
+
+		// Send delegation information to user
+
+		$message = file_get_contents(__DIR__ . '/allocated_msg.tpl');
+		$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
+		$message = str_replace('{{ADMIN_EMAIL}}', OIDPLUS_ADMIN_EMAIL, $message);
+		$message = str_replace('{{NEW_OID}}', $new_oid, $message);
+		my_mail($email, OIDplus::config()->systemTitle().' - Free OID allocated', $message, 'daniel-marschall@viathinksoft.de');
 
 		die('OK');
 	}

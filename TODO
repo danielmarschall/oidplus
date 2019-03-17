@@ -1,8 +1,14 @@
 
+BUGS:
+- man kann im root "1.3.6" und gleichzeitig "1" einfügen. löscht man "1" dann löscht man auch "1.3.6"
+
 WICHTIG:
 - implement ID validation method in objectType API
 - Erweiterte Konfig (OIDplusConfig) in DB, durch Admin editierbar machen
-- OID: Validate first arcs (i.e. so that you cannot create the OID 3.0 or 1.99)
+
+Administrator-Interface:
+- config page (config database table), see OIDplusConfig.inc.php
+- enable and disable object types
 
 vts: db von dm zu vts verschieben
 
@@ -25,7 +31,7 @@ admin: show privacy entries from RAs (but grey, so you know that it is private)
 aktuelle baustellen:
 - script to change email address
 - escape everything
-- anti xss
+- anti xss weiter verfeinern
 - (oid+ genroot = mapping to OID tree)
 - settings database table
 

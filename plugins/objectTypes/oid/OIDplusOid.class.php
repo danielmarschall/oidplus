@@ -21,7 +21,18 @@ class OIDplusOid extends OIDplusObject {
 	private $oid;
 
 	public function __construct($oid) {
-		// TODO: hier gültigkeitsprüfungen machen
+		$bak_oid = $oid;
+
+		$oid = sanitizeOID($oid, 'auto');
+		if ($oid === false) {
+			throw new Exception("Invalid OID '$bak_oid'");
+		}
+
+		if (($oid != '') && (!oid_valid_dotnotation($oid, false, true, 0))) {
+			// avoid OIDs like 3.0
+			throw new Exception("Invalid OID '$bak_oid'");
+		}
+
 		$this->oid = $oid;
 	}
 
@@ -287,6 +298,27 @@ class OIDplusOid extends OIDplusObject {
 				throw new Exception("Insertion of IRI $iri to OID ".$this->oid." failed!");
 			}
 		}
+	}
+
+	public function getParent() {
+		$obj = parent::getParent();
+		if ($obj) return $obj;
+
+		// If this OID does not exist, the SQL query "select parent from ..." does not work. So we try to find the next possible parent using oid_up()
+		$cur = oid_up($this->oid);
+		do {
+			if (self::exists(self::ns().':'.$cur)) return self::parse(self::ns().':'.$cur);
+
+			$prev = $cur;
+			$cur = oid_up($cur);
+		} while ($prev != $cur);
+
+		return false;
+	}
+
+	public function distance($to) {
+		if (!is_object($to)) $to = OIDplusObject::parse($to);
+		return oid_distance($to->oid, $this->oid);
 	}
 }
 
