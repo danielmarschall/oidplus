@@ -19,10 +19,22 @@
 
 class OIDplusIpv4 extends OIDplusObject {
 	private $ipv4;
+	private $bare;
+	private $cidr;
 
 	public function __construct($ipv4) {
-		// TODO: syntax checks
 		$this->ipv4 = $ipv4;
+
+		if (!empty($ipv4)) {
+			if (strpos($ipv4, '/') === false) $ipv4 .= '/32';
+			list($bare, $cidr) = explode('/', $ipv4);
+			$this->bare = $bare;
+			$this->cidr = $cidr;
+			if (!ipv4_valid($bare)) throw new Exception("Invalid IPv4");
+			if (!is_numeric($cidr)) throw new Exception("Invalid IPv4");
+			if ($cidr < 0) throw new Exception("Invalid IPv4");
+			if ($cidr > 32) throw new Exception("Invalid IPv4");
+		}
 	}
 
 	public static function parse($node_id) {
@@ -78,7 +90,7 @@ class OIDplusIpv4 extends OIDplusObject {
 	}
 
 	public function isLeafNode() {
-		return false; // TODO: bei /32 ist es leaf
+		return $this->cidr >= 32;
 	}
 
 	public function getContentPage(&$title, &$content) {
@@ -101,7 +113,17 @@ class OIDplusIpv4 extends OIDplusObject {
 				$content .= '%%CRUD%%';
 			}
 		} else {
-			$content = '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
+			$content = '<h2>Technical information</h2>';
+
+			$content .= '<p>IPv4/CIDR: <code>' . ipv4_normalize($this->bare) . '/' . $this->cidr . '</code><br>';
+			if ($this->cidr < 32) {
+				$content .= 'First address: <code>' . ipv4_cidr_min_ip($this->bare . '/' . $this->cidr) . '</code><br>';
+				$content .= 'Last address: <code>' . ipv4_cidr_max_ip($this->bare . '/' . $this->cidr) . '</code></p>';
+			} else {
+				$content .= 'Single host address</p>';
+			}
+
+			$content .= '<h2>Description</h2>%%DESC%%';
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {

@@ -19,10 +19,22 @@
 
 class OIDplusIpv6 extends OIDplusObject {
 	private $ipv6;
+	private $bare;
+	private $cidr;
 
 	public function __construct($ipv6) {
-		// TODO: syntax checks
 		$this->ipv6 = $ipv6;
+
+		if (!empty($ipv6)) {
+			if (strpos($ipv6, '/') === false) $ipv6 .= '/128';
+			list($bare, $cidr) = explode('/', $ipv6);
+			$this->bare = $bare;
+			$this->cidr = $cidr;
+			if (!ipv6_valid($bare)) throw new Exception("Invalid IPv6");
+			if (!is_numeric($cidr)) throw new Exception("Invalid IPv6");
+			if ($cidr < 0) throw new Exception("Invalid IPv6");
+			if ($cidr > 128) throw new Exception("Invalid IPv6");
+		}
 	}
 
 	public static function parse($node_id) {
@@ -78,7 +90,7 @@ class OIDplusIpv6 extends OIDplusObject {
 	}
 
 	public function isLeafNode() {
-		return false; // TODO: bei /128 ist es leaf
+		return $this->cidr >= 128;
 	}
 
 	public function getContentPage(&$title, &$content) {
@@ -101,7 +113,17 @@ class OIDplusIpv6 extends OIDplusObject {
 				$content .= '%%CRUD%%';
 			}
 		} else {
-			$content = '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
+			$content = '<h2>Technical information</h2>';
+
+			$content .= '<p>IPv6/CIDR: <code>' . ipv6_normalize($this->bare) . '/' . $this->cidr . '</code><br>';
+			if ($this->cidr < 128) {
+				$content .= 'First address: <code>' . ipv6_cidr_min_ip($this->bare . '/' . $this->cidr) . '</code><br>';
+				$content .= 'Last address: <code>' . ipv6_cidr_max_ip($this->bare . '/' . $this->cidr) . '</code></p>';
+			} else {
+				$content .= 'Single host address</p>';
+			}
+
+			$content .= '<h2>Description</h2>%%DESC%%';
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
