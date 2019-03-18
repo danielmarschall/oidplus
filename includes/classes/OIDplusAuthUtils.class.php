@@ -19,7 +19,7 @@
 
 class OIDplusAuthUtils {
 
-	// RA authentification functions
+	// RA authentication functions
 
 	public static function raLogin($email) {
 		if (strpos($email, '|') !== false) return;
@@ -67,7 +67,7 @@ class OIDplusAuthUtils {
 		return in_array($email, self::loggedInRaList());
 	}
 
-	// Admin authentification functions
+	// Admin authentication functions
 
 	public static function adminLogin() {
 		$ses = new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);

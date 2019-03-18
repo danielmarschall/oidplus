@@ -98,7 +98,6 @@ kleinigkeiten:
 - <abbr> in <code> wird doppelt unterstrichen
 - wenn man eine well-known OID anlegen möchte, dann kommt fehler wegen replaceAsn1/replaceIri, aber die OID ist erstellt. Die API ist aber nicht reloaded. Man sieht also nicht, dass die OID erstellt wurde, und ein erneuter klick auf Insert führt zum Primary-Key fehler
 - problem: wenn eine RA eingeladen werden möchte, muss man "update" drücken und die OID wird als updated markiert
-- admin: konfig seite: werte sollten überprüft werden, sodass man nur gültige werte eintragen kann. hierfür bräuchten wir dann read/write attribute in OIDplusConfig
 
 "Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollst&auml;ndig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), ...<br>
 

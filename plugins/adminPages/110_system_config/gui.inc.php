@@ -34,6 +34,8 @@ if (explode('$',$id)[0] == 'oidplus:edit_config') {
 		$output .= '	     <th>Update</th>';
 		$output .= '	</tr>';
 
+		OIDplus::config(); // <-- make sure that the config table is loaded/filled correctly before we do a select
+
 		$result = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config order by name");
 		while ($row = OIDplus::db()->fetch_object($result)) {
 			$output .= '<tr>';

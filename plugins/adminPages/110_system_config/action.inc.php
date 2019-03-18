@@ -27,9 +27,7 @@ if ($_POST["action"] == "config_update") {
 	$name = $_POST['name'];
 	$value = $_POST['value'];
 
-	if (!OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."config set value = '".OIDplus::db()->real_escape_string($value)."' where name = '".OIDplus::db()->real_escape_string($name)."'")) {
-		die(OIDplus::db()->error());
-	}
+	OIDplus::config()->setValue($name, $value);
 
 	echo "OK";
 }
