@@ -1,14 +1,22 @@
+CREATE TABLE `config` (
+  `name` varchar(50) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `description` varchar(255)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `asn1id` (
   `lfd` int(11) NOT NULL,
   `oid` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL
+  `name` varchar(255) NOT NULL,
+  `well_known` bit default 0 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `iri` (
   `lfd` int(11) NOT NULL,
   `oid` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `longarc` bit default 0 NOT NULL
+  `longarc` bit default 0 NOT NULL,
+  `well_known` bit default 0 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `objects` (
@@ -42,6 +50,9 @@ CREATE TABLE `ra` (
   `updated` datetime,
   `last_login` datetime
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `config`
+  ADD PRIMARY KEY (`name`);
 
 ALTER TABLE `asn1id`
   ADD PRIMARY KEY (`lfd`),

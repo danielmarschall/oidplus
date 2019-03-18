@@ -27,7 +27,7 @@ if ($id === 'oidplus:baseasn1') {
 
 		$out['text'] = '<p><abbr title="These ID names can only be edited in the database directly (Table '.OIDPLUS_TABLENAME_PREFIX.'asn1id). Usually, there is no need to do this, though.">How to edit these IDs?</abbr></p>';
 
-		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects) order by ".OIDplus::db()->natOrder('oid').", lfd");
+		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known = 1 order by ".OIDplus::db()->natOrder('oid').", lfd");
 		while ($row = OIDplus::db()->fetch_array($res)) {
 			$out['text'] .= '<p>'.htmlentities(explode(':',$row['oid'])[1]).' = '.htmlentities($row['name']).'</p>';
 		}

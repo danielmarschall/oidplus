@@ -1,13 +1,8 @@
 
-BUGS:
-- man kann im root "1.3.6" und gleichzeitig "1" einfügen. löscht man "1" dann löscht man auch "1.3.6"
-
 WICHTIG:
 - implement ID validation method in objectType API
-- Erweiterte Konfig (OIDplusConfig) in DB, durch Admin editierbar machen
 
 Administrator-Interface:
-- config page (config database table), see OIDplusConfig.inc.php
 - enable and disable object types
 
 vts: db von dm zu vts verschieben
@@ -101,6 +96,9 @@ objecttypes automatisch laden (php dateien suchen) und registrieren.
 
 kleinigkeiten:
 - <abbr> in <code> wird doppelt unterstrichen
+- wenn man eine well-known OID anlegen möchte, dann kommt fehler wegen replaceAsn1/replaceIri, aber die OID ist erstellt. Die API ist aber nicht reloaded. Man sieht also nicht, dass die OID erstellt wurde, und ein erneuter klick auf Insert führt zum Primary-Key fehler
+- problem: wenn eine RA eingeladen werden möchte, muss man "update" drücken und die OID wird als updated markiert
+- admin: konfig seite: werte sollten überprüft werden, sodass man nur gültige werte eintragen kann. hierfür bräuchten wir dann read/write attribute in OIDplusConfig
 
 "Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollst&auml;ndig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), ...<br>
 
@@ -121,7 +119,10 @@ IDEAS
 - there should be a form where an RA can request an invitation, even if the superior RA did not invite them.
   the fact that a RA exists in the Object Table should permit the RA to invite theirself.
 - beim verlassen der seite, z.b. wenn man links auf einen neuen menüpunkt klickt, soll eine abfrage kommen, ob man speichern möchte
+- make a list of OIDs that do not assign ASN1/IRI identifiers (e.g. IANA PEN or ViaThinkSoft FreeOID), then reject any identifier the user provides
 
 QUESTIONS:
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie
+
+bit or tinyint(1) ?
 

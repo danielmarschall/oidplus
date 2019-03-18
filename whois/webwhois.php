@@ -53,7 +53,7 @@ $query = array_shift($authTokens);
 $authToken = OIDplus::config()->authToken();
 $show_confidential = $authToken && in_array($authToken, $authTokens);
 
-$query = str_replace('oid:.', 'oid:', $query); // backwards compatibility: allow leading dot
+$query = str_replace('oid:.', 'oid:', $query); // allow leading dot
 
 // Step 1: Collect data
 

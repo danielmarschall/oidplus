@@ -142,8 +142,9 @@ class OIDplusOid extends OIDplusObject {
 			$out->oid .= '.' . $arcs;
 		}
 
+		$bak_oid = $out->oid;
 		$out->oid = sanitizeOID($out->oid);
-		if ($out->oid === false) throw new Exception("Cannot append OID arc(s) because they are not numeric");
+		if ($out->oid === false) throw new Exception("$bak_oid is not a valid OID!");
 
 		return $out;
 	}
@@ -246,11 +247,27 @@ class OIDplusOid extends OIDplusObject {
 		return $this->oid;
 	}
 
+	public function isWellKnown() {
+		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = 'oid:".$this->oid."' and well_known = 1");
+		if (OIDplus::db()->num_rows($res) > 0) return true;
+
+		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = 'oid:".$this->oid."' and well_known = 1");
+		if (OIDplus::db()->num_rows($res) > 0) return true;
+
+		return false;
+	}
+
 	public function replaceAsn1Ids($demandedASN1s=array()) {
+		if ($this->isWellKnown()) {
+			throw new Exception("OID ".$this->oid." is a 'well-known' OID. Its identifiers cannot be changed.");
+		}
+
 		// First do a few checks
 		foreach ($demandedASN1s as &$asn1) {
 			$asn1 = trim($asn1);
-			// TODO: check if $id is valid ASN.1
+
+			// Validate identifier
+			if (!oid_id_is_valid($asn1)) throw new Exception("'$asn1' is not a valid ASN.1 identifier!");
 
 			// Check if the (real) parent has any conflict
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where name = '".OIDplus::db()->real_escape_string($asn1)."'");
@@ -274,10 +291,16 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	public function replaceIris($demandedIris=array()) {
+		if ($this->isWellKnown()) {
+			throw new Exception("OID ".$this->oid." is a 'well-known' OID. Its identifiers cannot be changed.");
+		}
+
 		// First do a few checks
 		foreach ($demandedIris as &$iri) {
 			$iri = trim($iri);
-			// TODO: check if $id is valid IRI
+
+			// Validate identifier
+			if (!iri_arc_valid($iri, false)) throw new Exception("'$iri' is not a valid IRI!");
 
 			// Check if the (real) parent has any conflict
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where name = '".OIDplus::db()->real_escape_string($iri)."'");

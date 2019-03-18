@@ -19,27 +19,39 @@
 
 class OIDplusConfig {
 
+	protected $values;
+
+	protected function loadConfig() {
+		$this->values = array();
+		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config");
+		while ($row = OIDplus::db()->fetch_object($res)) {
+			$this->values[$row->name] = $row->value;
+		}
+
+		// Add defaults
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('system_title', 'What is the name of your RA?', 'OIDplus 2.0')");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('global_cc', 'Global CC for all outgoing emails?', '')");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('ra_min_password_length', 'Minimum length for RA passwords', '6')");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0')");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('max_ra_pwd_reset_time', 'Max RA password reset time in seconds (0 = infinite)', '0')");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('oidinfo_export_protected', 'OID-info.com export interface protected (requires admin log in), values 0/1', '1')");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('whois_auth_token', 'OID-over-WHOIS authentification token to display confidential data', '')");
+	}
+
 	public function __construct() {
-		// TODO
+		$this->loadConfig();
 	}
 
 	public function systemTitle() {
-		// TODO
-		if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viathinksoft.com'))) {
-			return 'ViaThinkSoft Registration Authority';
-		} else {
-			return 'OIDplus 2.0';
-		}
+		return trim($this->values['system_title']);
 	}
 
 	public function globalCC() {
-		// TODO
-		return 'info@daniel-marschall.de';
+		return trim($this->values['global_cc']);
 	}
 
 	public function minRaPasswordLength() {
-		// TODO
-		return 6;
+		return $this->values['ra_min_password_length'];
 	}
 
 	/*   hardcoded in setup/ , because during installation, we dont have a settings database
@@ -49,25 +61,21 @@ class OIDplusConfig {
 	*/
 
 	public function maxInviteTime() {
-		// TODO
-		return 0; // infinite
+		return $this->values['max_ra_invite_time'];
 	}
 
 	public function maxPasswordResetTime() {
-		// TODO
-		return 0; // infinite
+		return $this->values['max_ra_pwd_reset_time'];
 	}
 
 	public function oidinfoExportProtected() {
-		// TODO
-		// true = oidinfo_export.php requires admin login
-		// false = oidinfo_export.php can be accessed without restrictions
+		$val = $this->values['oidinfo_export_protected'];
+		if (($val == 'true') || ($val == '1')) return true;
 		return false;
 	}
 
 	public function authToken() {
-		return false;
+		$val = trim($this->values['whois_auth_token']);
+		return empty($val) ? false : $val;
 	}
-
 }
-

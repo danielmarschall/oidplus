@@ -202,19 +202,16 @@ try {
 			// Prüfen ob zugelassen
 			if (!$obj->userHasParentalWriteRights()) die('Authentification error. Please log in as the superior RA to delete this OID.');
 
-			// Nun löschen
+			// Delete object
 			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
-			if ($obj::ns() == 'oid') {
-				OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id like '".OIDplus::db()->real_escape_string($id).".%'"); // Unter-OIDs löschen
 
-				OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string($id)."'");
-				OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid like '".OIDplus::db()->real_escape_string($id).".%'"); // Unter-OIDs löschen
-
-				OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = '".OIDplus::db()->real_escape_string($id)."'");
-				OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri where oid like '".OIDplus::db()->real_escape_string($id).".%'"); // Unter-OIDs löschen
-			} else {
-				// TODO: Wir sollten nun aber auch hier rekurisv löschen, (evtl per Foreign Key Constraint?)
+			// Delete orphan stuff
+			$test = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent <> 'oid:' and parent like 'oid:%' and parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
+			if (OIDplus::db()->num_rows($test) > 0) {
+				OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where parent <> 'oid:' and parent like 'oid:%' and parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
 			}
+			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known <> 1 and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
+			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri    where well_known <> 1 and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
 
 			echo "OK";
 		}
@@ -242,30 +239,16 @@ try {
 
 			if ($new_ra != $current_ra) _ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mitändern
 
-			$error = false;
-
 			if ($obj::ns() == 'oid') {
 				$oid = $obj;
 
-				try {
-					$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
-					$ids = array_map('trim',$ids);
-					$ids = array_map('_iri_validate', $ids);
-					$oid->replaceIris($ids);
-				} catch (Exception $e) {
-					echo $e->getMessage()."\n";
-					$error = true;
-				}
+				$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
+				$ids = array_map('trim',$ids);
+				$oid->replaceIris($ids);
 
-				try {
-					$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
-					$ids = array_map('trim',$ids);
-					$ids = array_map('_asn1_validate', $ids);
-					$oid->replaceAsn1Ids($ids);
-				} catch (Exception $e) {
-					echo $e->getMessage()."\n";
-					$error = true;
-				}
+				$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
+				$ids = array_map('trim',$ids);
+				$oid->replaceAsn1Ids($ids);
 			}
 
 			$confidential = $_POST['confidential'] == 'true' ? '1' : '0';
@@ -273,19 +256,16 @@ try {
 				die('Error at setting confidential flag:' . OIDplus::db()->error());
 			}
 
-			if (!$error) {
-				echo "OK";
+			echo "OK";
 
-				if (!empty($new_ra)) {
-					$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($new_ra)."'");
-					if (OIDplus::db()->num_rows($res) == 0) echo " (RaNotInDatabase)"; // do not change
-				}
+			if (!empty($new_ra)) {
+				$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($new_ra)."'");
+				if (OIDplus::db()->num_rows($res) == 0) echo " (RaNotInDatabase)"; // do not change
 			}
 		}
 		if ($_POST["action"] == "Update2") {
 			$handled = true;
 
-			$error = false;
 			$id = $_POST['id'];
 			$obj = OIDplusObject::parse($_POST['id']);
 
@@ -296,11 +276,10 @@ try {
 				die(OIDplus::db()->error());
 			}
 
-			if (!$error) echo "OK";
+			echo "OK";
 		}
 		if ($_POST["action"] == "Insert") {
 			$handled = true;
-			$error = false;
 
 			// Es wird validiert: ID, ra email, asn1 ids, iri ids
 
@@ -315,9 +294,9 @@ try {
 				//       Then, we can also validate non-OID types, too.
 				$numeric_arc = $_POST['id'];
 				if ($numeric_arc == '') die('ID may not be empty');
-				if (!is_numeric($numeric_arc)) die('ID must be a number');
-				if ($numeric_arc < 0) die('ID may not be negative!');
-				if ((substr($numeric_arc,0,1) == '0') && ($numeric_arc != '0')) die('ID may not have leading zeros');
+				if (!$objParent->isRoot() && !is_numeric($numeric_arc)) die('ID must be a number');
+				#if ($numeric_arc < 0) die('ID may not be negative!');
+				#if ((substr($numeric_arc,0,1) == '0') && ($numeric_arc != '0')) die('ID may not have leading zeros');
 			}
 
 			// Absoluten OID namen bestimmen
@@ -340,34 +319,20 @@ try {
 			if ($obj::ns() == 'oid') {
 				$oid = $obj;
 
-				try {
-					$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
-					$ids = array_map('trim',$ids);
-					$ids = array_map('_iri_validate', $ids);
-					$oid->replaceIris($ids);
-				} catch (Exception $e) {
-					echo $e->getMessage()."\n";
-					$error = true;
-				}
+				$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
+				$ids = array_map('trim',$ids);
+				$oid->replaceIris($ids);
 
-				try {
-					$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
-					$ids = array_map('trim',$ids);
-					$ids = array_map('_asn1_validate', $ids);
-					$oid->replaceAsn1Ids($ids);
-				} catch (Exception $e) {
-					echo $e->getMessage()."\n";
-					$error = true;
-				}
+				$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
+				$ids = array_map('trim',$ids);
+				$oid->replaceAsn1Ids($ids);
 			}
 
-			if (!$error) {
-				echo "OK";
+			echo "OK";
 
-				if (!empty($ra_email)) {
-					$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
-					if (OIDplus::db()->num_rows($res) == 0) echo " (RaNotInDatabase)"; // do not change
-				}
+			if (!empty($ra_email)) {
+				$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
+				if (OIDplus::db()->num_rows($res) == 0) echo " (RaNotInDatabase)"; // do not change
 			}
 		}
 
@@ -453,14 +418,4 @@ function _ra_change_rec($id, $old_ra, $new_ra) {
 	while ($row = OIDplus::db()->fetch_array($res)) {
 		_ra_change_rec($row['id'], $old_ra, $new_ra);
 	}
-}
-
-function _asn1_validate($id) {
-	if (!oid_id_is_valid($id)) throw new Exception("'$id' is not a valid ASN.1 arc!");
-	return $id;
-}
-
-function _iri_validate($id) {
-	if (!iri_arc_valid($id, false)) throw new Exception("'$id' is not a valid IRI arc!");
-	return $id;
 }
