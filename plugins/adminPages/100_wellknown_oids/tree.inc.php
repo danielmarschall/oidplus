@@ -24,7 +24,7 @@ if (file_exists(__DIR__.'/treeicon.png')) {
 }
 
 $ra_roots[] = array(
-	'id' => 'oidplus:baseiri',
+	'id' => 'oidplus:well_known_oids',
 	'icon' => $tree_icon,
-	'text' => 'Well known IRI'
+	'text' => 'Well known OIDs'
 );
