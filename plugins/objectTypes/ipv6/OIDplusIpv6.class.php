@@ -68,8 +68,14 @@ class OIDplusIpv6 extends OIDplusObject {
 	}
 
 	public function addString($str) {
-		// TODO!
-		return 'ipv6:'.$str;
+		if (!$this->isRoot()) {
+			$test = (strpos($str, '/') === false) ? "$str/128" : $str;
+			if (!ipv6_in_cidr($this->bare.'/'.$this->cidr, $test)) {
+				throw new Exception("Cannot add this address, because it must be inside the address range of the superior range.");
+			}
+		}
+
+		return 'ipv6:'.$str; // overwrite; no hierarchical tree
 	}
 
 	public function crudShowId(OIDplusObject $parent) {
