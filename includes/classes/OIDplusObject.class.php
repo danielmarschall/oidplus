@@ -50,6 +50,8 @@ abstract class OIDplusObject {
 
 	public abstract function defaultTitle();
 
+	public abstract function isLeafNode();
+
 	public abstract function getContentPage(&$title, &$content);
 
 	private static function getRaRoots_rec($parent=null, $ra_email=null, &$out, $prev_owns) {

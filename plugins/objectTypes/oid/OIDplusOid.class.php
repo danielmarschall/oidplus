@@ -90,6 +90,10 @@ class OIDplusOid extends OIDplusObject {
 		return 'OID ' . $this->oid;
 	}
 
+	public function isLeafNode() {
+		return false;
+	}
+
 	public function getContentPage(&$title, &$content) {
 		if ($this->isRoot()) {
 			$title = OIDplusOid::objectTypeTitle();
@@ -101,23 +105,27 @@ class OIDplusOid extends OIDplusObject {
 				$content = 'Currently, no OID is registered in the system.';
 			}
 
-			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$content .= '<h2>Manage your root OIDs</h2>';
-			} else {
-				$content .= '<h2>Root OIDs</h2>';
+			if (!$this->isLeafNode()) {
+				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+					$content .= '<h2>Manage your root OIDs</h2>';
+				} else {
+					$content .= '<h2>Root OIDs</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
 		} else {
 			$content = "<h2>Technical information</h2>".$this->oidInformation().
 			           "<h2>Description</h2>%%DESC%%".
 			           "<h2>Registration Authority</h2>%%RA_INFO%%";
 
-			if ($this->userHasWriteRights()) {
-				$content .= '<h2>Create or change subsequent objects</h2>';
-			} else {
-				$content .= '<h2>Subsequent objects</h2>';
+			if (!$this->isLeafNode()) {
+				if ($this->userHasWriteRights()) {
+					$content .= '<h2>Create or change subsequent objects</h2>';
+				} else {
+					$content .= '<h2>Subsequent objects</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
 		}
 	}
 

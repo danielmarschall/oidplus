@@ -21,6 +21,7 @@ class OIDplusOther extends OIDplusObject {
 	private $other;
 
 	public function __construct($other) {
+		// No syntax checks
 		$this->other = $other;
 	}
 
@@ -89,6 +90,10 @@ class OIDplusOther extends OIDplusObject {
 		return $ary[0];
 	}
 
+	public function isLeafNode() {
+		return false;
+	}
+
 	public function getContentPage(&$title, &$content) {
 		if ($this->isRoot()) {
 			$title = OIDplusOther::objectTypeTitle();
@@ -100,21 +105,25 @@ class OIDplusOther extends OIDplusObject {
 				$content  = 'Currently, no misc objects are registered in the system.';
 			}
 
-			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$content .= '<h2>Manage root objects</h2>';
-			} else {
-				$content .= '<h2>Available objects</h2>';
+			if (!$this->isLeafNode()) {
+				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+					$content .= '<h2>Manage root objects</h2>';
+				} else {
+					$content .= '<h2>Available objects</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
 		} else {
 			$content = '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
-			if ($this->userHasWriteRights()) {
-				$content .= '<h2>Create or change subsequent objects</h2>';
-			} else {
-				$content .= '<h2>Subsequent objects</h2>';
+			if (!$this->isLeafNode()) {
+				if ($this->userHasWriteRights()) {
+					$content .= '<h2>Create or change subsequent objects</h2>';
+				} else {
+					$content .= '<h2>Subsequent objects</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
 		}
 	}
 }

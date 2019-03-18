@@ -540,12 +540,12 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    unicode-label:  (Arabian characters omitted in this example)
    unicode-label:  (Japanese characters omitted in this example)
    unicode-label:  (Chinese characters omitted in this example)
+   unicode-label:  (Russian characters omitted in this example)
    created:        2011-06
    updated:        2011-09
 
    ra:             ITU-T SG 17 & ISO/IEC JTC 1/SC 6
    ra-status:      Not found
-
 
 
 

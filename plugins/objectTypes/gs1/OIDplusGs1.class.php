@@ -21,6 +21,7 @@ class OIDplusGs1 extends OIDplusObject {
 	private $number;
 
 	public function __construct($number) {
+		// TODO: syntax checks
 		$this->number = $number;
 	}
 
@@ -67,7 +68,7 @@ class OIDplusGs1 extends OIDplusObject {
 	}
 
 	public function crudInsertPrefix() {
-		return $this->isRoot() ? '' : substr($this->chunkedNotation(false), strlen(self::ns())+1);
+		return $this->isRoot() ? '' : $this->chunkedNotation(false);
 	}
 
 	public function jsTreeNodeName(OIDplusObject $parent = null) {
@@ -77,6 +78,10 @@ class OIDplusGs1 extends OIDplusObject {
 
 	public function defaultTitle() {
 		return $this->number;
+	}
+
+	public function isLeafNode() {
+		return !$this->isBaseOnly();
 	}
 
 	public function getContentPage(&$title, &$content) {
@@ -90,32 +95,33 @@ class OIDplusGs1 extends OIDplusObject {
 				$content  = 'Currently, no GS1 based numbers are registered in the system.';
 			}
 
-			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$content .= '<h2>Manage root objects</h2>';
-			} else {
-				$content .= '<h2>Available objects</h2>';
+			if (!$this->isLeafNode()) {
+				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+					$content .= '<h2>Manage root objects</h2>';
+				} else {
+					$content .= '<h2>Available objects</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
 		} else {
-			if ($this->isBaseOnly()) {
-				$chunked = $this->chunkedNotation(true);
-				$content = '<h2>'.$chunked.'</h2>';
-			} else {
+			if ($this->isLeafNode()) {
 				$chunked = $this->chunkedNotation(true);
 				$checkDigit = $this->checkDigit();
 				$content = '<h2>'.$chunked.' - <abbr title="check digit">'.$checkDigit.'</abbr></h2>';
 				$content .= '<p><a target="_blank" href="https://www.ean-search.org/?q='.htmlentities($this->fullNumber()).'">Lookup in ean-search.org</a></p>';
 				$content .= '<img src="plugins/objectTypes/'.basename(__DIR__).'/barcode.php?number='.urlencode($this->fullNumber()).'">';
-			}
-
-			$content .= '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
-
-			if ($this->userHasWriteRights()) {
-				$content .= '<h2>Create or change subsequent objects</h2>';
+				$content .= '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
 			} else {
-				$content .= '<h2>Subsequent objects</h2>';
+				$chunked = $this->chunkedNotation(true);
+				$content = '<h2>'.$chunked.'</h2>';
+				$content .= '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
+				if ($this->userHasWriteRights()) {
+					$content .= '<h2>Create or change subsequent objects</h2>';
+				} else {
+					$content .= '<h2>Subsequent objects</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
 		}
 	}
 

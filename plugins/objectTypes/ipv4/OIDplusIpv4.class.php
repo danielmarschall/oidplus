@@ -21,6 +21,7 @@ class OIDplusIpv4 extends OIDplusObject {
 	private $ipv4;
 
 	public function __construct($ipv4) {
+		// TODO: syntax checks
 		$this->ipv4 = $ipv4;
 	}
 
@@ -76,6 +77,10 @@ class OIDplusIpv4 extends OIDplusObject {
 		return $this->ipv4;
 	}
 
+	public function isLeafNode() {
+		return false; // TODO: bei /32 ist es leaf
+	}
+
 	public function getContentPage(&$title, &$content) {
 		if ($this->isRoot()) {
 			$title = OIDplusIpv4::objectTypeTitle();
@@ -87,21 +92,25 @@ class OIDplusIpv4 extends OIDplusObject {
 				$content  = 'Currently, no network blocks are registered in the system.';
 			}
 
-			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$content .= '<h2>Manage root objects</h2>';
-			} else {
-				$content .= '<h2>Available objects</h2>';
+			if (!$this->isLeafNode()) {
+				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+					$content .= '<h2>Manage root objects</h2>';
+				} else {
+					$content .= '<h2>Available objects</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
 		} else {
 			$content = '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
-			if ($this->userHasWriteRights()) {
-				$content .= '<h2>Create or change subsequent objects</h2>';
-			} else {
-				$content .= '<h2>Subsequent objects</h2>';
+			if (!$this->isLeafNode()) {
+				if ($this->userHasWriteRights()) {
+					$content .= '<h2>Create or change subsequent objects</h2>';
+				} else {
+					$content .= '<h2>Subsequent objects</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
 		}
 	}
 }

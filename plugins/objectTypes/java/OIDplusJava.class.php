@@ -21,6 +21,7 @@ class OIDplusJava extends OIDplusObject {
 	private $java;
 
 	public function __construct($java) {
+		// TODO: syntax checks
 		$this->java = $java;
 	}
 
@@ -80,6 +81,10 @@ class OIDplusJava extends OIDplusObject {
 		return $this->java;
 	}
 
+	public function isLeafNode() {
+		return false;
+	}
+
 	public function getContentPage(&$title, &$content) {
 		if ($this->isRoot()) {
 			$title = OIDplusJava::objectTypeTitle();
@@ -91,24 +96,27 @@ class OIDplusJava extends OIDplusObject {
 				$content  = 'Currently, no Java Package Name is registered in the system.';
 			}
 
-			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$content .= '<h2>Manage root objects</h2>';
-			} else {
-				$content .= '<h2>Available objects</h2>';
+			if (!$this->isLeafNode()) {
+				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+					$content .= '<h2>Manage root objects</h2>';
+				} else {
+					$content .= '<h2>Available objects</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
 		} else {
 			$content = '<h3>'.explode(':',$this->nodeId())[1].'</h3>';
 
 			$content .= '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
-			if ($this->userHasWriteRights()) {
-				$content .= '<h2>Create or change subsequent objects</h2>';
-			} else {
-				$content .= '<h2>Subsequent objects</h2>';
+			if (!$this->isLeafNode()) {
+				if ($this->userHasWriteRights()) {
+					$content .= '<h2>Create or change subsequent objects</h2>';
+				} else {
+					$content .= '<h2>Subsequent objects</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
-
 		}
 	}
 }

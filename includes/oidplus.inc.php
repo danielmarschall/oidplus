@@ -33,6 +33,7 @@ require_once __DIR__ . '/SecureMailer.class.php';
 
 require_once __DIR__ . '/functions.inc.php';
 require_once __DIR__ . '/oid_utils.inc.php';
+require_once __DIR__ . '/uuid_utils.inc.php';
 require_once __DIR__ . '/anti_xss.inc.php';
 
 // ---

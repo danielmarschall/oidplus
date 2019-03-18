@@ -1,19 +1,12 @@
 
-WICHTIG:
-- implement ID validation method in objectType API
-
 Administrator-Interface:
 - enable and disable object types
-
-vts: db von dm zu vts verschieben
 
 make forms and other stuff look nicer. at the moment, it was just developed for functionality
 
 when javascript fails, the form will be submitted to './' , that is not good! failed javascript must return false, so that the form does not get submitted
 
 automatisch umleiten nach https
-
-tiny mce : textcolor plugin nicht installiert?!
 
 icons
 
@@ -36,7 +29,7 @@ freeoid: asn.1 und iri spalten ausblenden, da dieser arc keine IDs vergibt?
 
 pro RA dinge loggen wie z.B. last login
 
-OID suchen
+add search functionality
 
 Privacy: Mehr stufen, z.b. dass man den personal name evtl gar nicht zeigen möchte
 
@@ -45,8 +38,6 @@ Man sollte "created" abändern dürfen! oder evtl ganz verstecken, wenn man es nic
 !!in der crud liste den titel des objekts zeigen
 
 que: nicht verwendete namespaces ausblenden für die öffentlichkeit?
-
-prüfen, ob java/asn1/iri arcs syntaktisch gültig
 
 
 natOrder() ist nur für OID gültig!!! andere sort-mechanismen für andere objekttypen erforderlich
@@ -72,7 +63,6 @@ change history of each oid + last modification time
 
 db
 	- weg von mysql_! (PDO?)
-	- zugangsdaten in config, auch admin password
 	- mandanten (db präfixe)
 
 auth und datenüberprüfungschecks in crud_action.php
@@ -88,7 +78,7 @@ auslifern mit 2.999 und example DOIs etc
 wo in x.660 ist festgehalten, dass die erste RA festgehalten werden muss?
 que : historie einer oid
 
-"technical information" für ipv4, ipv6, guid
+"technical information" für ipv4, ipv6
 
 http login nicht möglich. warum?
 
@@ -98,21 +88,17 @@ kleinigkeiten:
 - <abbr> in <code> wird doppelt unterstrichen
 - wenn man eine well-known OID anlegen möchte, dann kommt fehler wegen replaceAsn1/replaceIri, aber die OID ist erstellt. Die API ist aber nicht reloaded. Man sieht also nicht, dass die OID erstellt wurde, und ein erneuter klick auf Insert führt zum Primary-Key fehler
 - problem: wenn eine RA eingeladen werden möchte, muss man "update" drücken und die OID wird als updated markiert
-
-"Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollst&auml;ndig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), ...<br>
-
-wort "guid" oder "uuid" verwenden?
+bei mehreren identifiern kann man nicht bestimmen, welcher identifier der bevorzugte sein soll!!
 
 zukunft
 - admin: soll wellknown oids ändern dürfen
 - move oid to different arc
 - bei sehr großen arcs (z.B. PEN) sollen nicht alle angezeigt werden
 - unterstützung für ORS?
+- Mehr "Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollst&auml;ndig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), ...<br>
 
 REJECTED IDEAS:
 - sollte es mehere admins geben?
-
-bei mehreren identifiern kann man nicht bestimmen, welcher identifier der bevorzugte sein soll!!
 
 IDEAS
 - there should be a form where an RA can request an invitation, even if the superior RA did not invite them.
@@ -122,6 +108,10 @@ IDEAS
 
 QUESTIONS:
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie
+- wort "guid" oder "uuid" verwenden?
+- bit or tinyint(1) ?
 
-bit or tinyint(1) ?
-
+GUID Management
+- Leaf nodes (GUIDs) should show/edit the Title in the CRUD, so you dont have to click the GUID to see the title
+- Make it possible that two cateogires may have the same name (OIDplusGuid::addString)
+- seltsamer bug: wenn ich guid:oidplus editiere, dann öffnet sich links guid:activedirectory beim neuladen des baums nach dem update. irgendwie öffnet er den zuletzt geöffneten node beim reload nochmal

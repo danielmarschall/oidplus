@@ -21,6 +21,7 @@ class OIDplusGuid extends OIDplusObject {
 	private $guid;
 
 	public function __construct($guid) {
+		// No syntax checks, since we also allow categories.
 		$this->guid = $guid;
 	}
 
@@ -55,7 +56,7 @@ class OIDplusGuid extends OIDplusObject {
 	}
 
 	public function addString($str) {
-		// TODO!
+		// TODO! es soll möglich sein, zwei kategorien zu haben mit dem selben namen (filedialog/filedialog/guid)
 		return 'guid:'.$str;
 	}
 
@@ -76,6 +77,10 @@ class OIDplusGuid extends OIDplusObject {
 		return $this->guid;
 	}
 
+	public function isLeafNode() {
+		return uuid_valid($this->guid);
+	}
+
 	public function getContentPage(&$title, &$content) {
 		if ($this->isRoot()) {
 			$title = OIDplusGuid::objectTypeTitle();
@@ -87,21 +92,41 @@ class OIDplusGuid extends OIDplusObject {
 				$content  = 'Currently, no GUID is registered in the system.';
 			}
 
-			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$content .= '<h2>Manage root objects</h2>';
-			} else {
-				$content .= '<h2>Available objects</h2>';
+			if (!$this->isLeafNode()) {
+				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+					$content .= '<h2>Manage root objects / categories</h2>';
+				} else {
+					$content .= '<h2>Available objects / categories</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
 		} else {
-			$content = '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
+			if ($this->isLeafNode()) {
+				ob_start();
+				uuid_info($this->guid);
+				$info = ob_get_contents();
+				ob_end_clean();
+				$info = preg_replace('@:\s*(.+)\n@ismU', ": <code>\\1</code><br>", $info);
 
-			if ($this->userHasWriteRights()) {
-				$content .= '<h2>Create or change subsequent objects</h2>';
+				$content = "<h2>Technical information</h2><p>UUID: <code>" . uuid_canonize($this->guid) . "</code><br>" .
+				       "OID: <code>" . uuid_to_oid($this->guid) . "</code><br>" .
+				       "C++ notation: <code>" . uuid_c_syntax($this->guid) . "</code><br>" .
+				       "$info";
+				//      "<a href=\"https://misc.daniel-marschall.de/tools/uuid_mac_decoder/interprete_uuid.php?uuid=".urlencode($this->guid)."\">More technical information</a></p>";
 			} else {
-				$content .= '<h2>Subsequent objects</h2>';
+				$content = '';
 			}
-			$content .= '%%CRUD%%';
+
+			$content .= '<h2>Description</h2>%%DESC%%';
+
+			if (!$this->isLeafNode()) {
+				if ($this->userHasWriteRights()) {
+					$content .= '<h2>Create or change subsequent objects / categories</h2>';
+				} else {
+					$content .= '<h2>Subsequent objects / categories</h2>';
+				}
+				$content .= '%%CRUD%%';
+			}
 		}
 	}
 }

@@ -21,6 +21,7 @@ class OIDplusDoi extends OIDplusObject {
 	private $doi;
 
 	public function __construct($doi) {
+		// TODO: syntax checks
 		$this->doi = $doi;
 	}
 
@@ -91,6 +92,10 @@ class OIDplusDoi extends OIDplusObject {
 		return 'DOI ' . $this->doi;
 	}
 
+	public function isLeafNode() {
+		return false;
+	}
+
 	public function getContentPage(&$title, &$content) {
 		if ($this->isRoot()) {
 			$title = OIDplusDoi::objectTypeTitle();
@@ -102,24 +107,28 @@ class OIDplusDoi extends OIDplusObject {
 				$content = 'Currently, no DOIs are registered in the system.';
 			}
 
-			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$content .= '<h2>Manage your DOIs</h2>';
-			} else {
-				$content .= '<h2>Available DOIs</h2>';
+			if (!$this->isLeafNode()) {
+				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+					$content .= '<h2>Manage your DOIs</h2>';
+				} else {
+					$content .= '<h2>Available DOIs</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
 		} else {
 			$pure = explode(':',$this->nodeId())[1];
 			$content = '<h3><a target="_blank" href="https://dx.doi.org/'.htmlentities($pure).'">Resolve '.htmlentities($pure).'</a></h3>';
 
 			$content .= '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
-			if ($this->userHasWriteRights()) {
-				$content .= '<h2>Create or change subsequent objects</h2>';
-			} else {
-				$content .= '<h2>Subsequent objects</h2>';
+			if (!$this->isLeafNode()) {
+				if ($this->userHasWriteRights()) {
+					$content .= '<h2>Create or change subsequent objects</h2>';
+				} else {
+					$content .= '<h2>Subsequent objects</h2>';
+				}
+				$content .= '%%CRUD%%';
 			}
-			$content .= '%%CRUD%%';
 		}
 	}
 

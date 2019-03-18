@@ -444,7 +444,7 @@ class OIDplusGui {
 			$out['text'] .= '			<li class="active">';
 			$out['text'] .= '        <a  href="#1a" data-toggle="tab">Login as RA</a>';
 			$out['text'] .= '			</li>';
-			$out['text'] .= '			<li><a href="#2a" data-toggle="tab">Login as Administrator</a>';
+			$out['text'] .= '			<li><a href="#2a" data-toggle="tab">Login as administrator</a>';
 			$out['text'] .= '			</li>';
 			$out['text'] .= '		</ul>';
 			$out['text'] .= '			<div class="tab-content clearfix">';
@@ -482,7 +482,7 @@ class OIDplusGui {
 				$out['text'] .= '<p>You are logged in as administrator.</p>';
 				$out['text'] .= '<a href="#" onclick="return adminLogout();">Logout</a>';
 			} else {
-				$out['text'] .= '<h2>Login as Administrator</h2>';
+				$out['text'] .= '<h2>Login as administrator</h2>';
 				$out['text'] .= '<form action="action.php" method="POST" onsubmit="return adminLoginOnSubmit(this);">';
 				$out['text'] .= '<input type="hidden" name="action" value="admin_login">';
 				$out['text'] .= 'Password: <input type="password" name="password" value="" id="adminLoginPassword"><br><br>';
