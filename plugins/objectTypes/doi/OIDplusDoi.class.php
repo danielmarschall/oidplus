@@ -129,6 +129,8 @@ class OIDplusDoi extends OIDplusObject {
 				}
 				$content .= '%%CRUD%%';
 			}
+
+			$content .= '<br>%%WHOIS%%';
 		}
 	}
 

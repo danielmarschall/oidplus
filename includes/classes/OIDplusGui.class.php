@@ -567,6 +567,8 @@ class OIDplusGui {
 				return $out;
 			}
 
+			if (strpos($out['text'], '%%WHOIS%%') !== false)
+				$out['text'] = str_replace('%%WHOIS%%',   '<a href="whois/webwhois.php?query='.urlencode($id).'">Whois</a>', $out['text']);
 			if (strpos($out['text'], '%%DESC%%') !== false)
 				$out['text'] = str_replace('%%DESC%%',    $desc,                              $out['text']);
 			if (strpos($out['text'], '%%CRUD%%') !== false)

@@ -139,6 +139,8 @@ class OIDplusIpv4 extends OIDplusObject {
 				}
 				$content .= '%%CRUD%%';
 			}
+
+			$content .= '<br>%%WHOIS%%';
 		}
 	}
 
