@@ -331,20 +331,8 @@ class OIDplusOid extends OIDplusObject {
 		}
 	}
 
-	public function getParent() {
-		$obj = parent::getParent();
-		if ($obj) return $obj;
-
-		// If this OID does not exist, the SQL query "select parent from ..." does not work. So we try to find the next possible parent using oid_up()
-		$cur = oid_up($this->oid);
-		do {
-			if (self::exists(self::ns().':'.$cur)) return self::parse(self::ns().':'.$cur);
-
-			$prev = $cur;
-			$cur = oid_up($cur);
-		} while ($prev != $cur);
-
-		return false;
+	public function one_up() {
+		return self::parse(self::ns().':'.oid_up($this->oid));
 	}
 
 	public function distance($to) {

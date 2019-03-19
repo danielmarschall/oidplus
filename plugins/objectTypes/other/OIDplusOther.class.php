@@ -126,6 +126,16 @@ class OIDplusOther extends OIDplusObject {
 			}
 		}
 	}
+
+	public function one_up() {
+		// TODO
+		return false;
+	}
+
+	public function distance($to) {
+		// TODO
+		return null;
+	}
 }
 
 OIDplusObject::$registeredObjectTypes[] = 'OIDplusOther';

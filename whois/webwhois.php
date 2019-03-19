@@ -65,7 +65,8 @@ $distance = null;
 $found = null;
 
 try {
-	$obj = OIDplusObject::parse($query);
+	$obj = OIDplusObject::findFitting($query);
+	if (!$obj) $obj = OIDplusObject::parse($query); // in case we didn't find anything fitting, we take it as it is and later use getParent() to find something else
 } catch (Exception $e) {
 	$obj = null;
 }

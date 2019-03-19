@@ -144,6 +144,16 @@ class OIDplusGuid extends OIDplusObject {
 		return parent::getIcon($row);
 	}
 	*/
+
+	public function one_up() {
+		// A GUID is a GUID, there is no hierarchy
+		return false;
+	}
+
+	public function distance($to) {
+		// Distance between GUIDs is not possible
+		return null;
+	}
 }
 
 OIDplusObject::$registeredObjectTypes[] = 'OIDplusGuid';

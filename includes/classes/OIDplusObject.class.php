@@ -183,7 +183,7 @@ abstract class OIDplusObject {
 	}
 
 	public function getIcon($row=null) {
-		$namespace = self::parse($this->nodeId())::ns(); // TODO: warum muss ich das machen??? $this::ns() gibt abstrakten fehler
+		$namespace = $this->ns(); // must use $this, not self::, otherwise the virtual method will not be called
 
 		if (is_null($row)) {
 			$res = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($this->nodeId())."'");
@@ -208,7 +208,21 @@ abstract class OIDplusObject {
 		$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($this->nodeId())."'");
 		$row = OIDplus::db()->fetch_array($res);
 		$parent = $row['parent'];
-		return OIDplusObject::parse($parent);
+		$obj = OIDplusObject::parse($parent);
+		if ($obj) return $obj;
+
+		// If this OID does not exist, the SQL query "select parent from ..." does not work. So we try to find the next possible parent using oid_up()
+		$cur = $this->one_up();
+		if (!$cur) return false;
+		do {
+			if ($fitting = self::findFitting($cur->nodeId())) return $fitting;
+
+			$prev = $cur;
+			$cur = $cur->one_up();
+			if (!$cur) return false;
+		} while ($prev != $cur);
+
+		return false;
 	}
 
 	public function getRaMail() {
@@ -237,6 +251,30 @@ abstract class OIDplusObject {
 	}
 
 	public function distance($to) {
+		return null; // not implemented
+	}
+
+	public function equals($obj) {
+		if (!is_object($obj)) $obj = OIDplusObject::parse($obj);
+		$distance = $this->distance($obj);
+		if (is_numeric($distance)) return $distance === 0; // if the distance function is implemented, use it
+
+		return $this->nodeId() == $obj->nodeId(); // otherwise compare the node id case-sensitive
+	}
+
+	public static function findFitting($id) {
+		$obj = OIDplusObject::parse($id);
+		if (!$obj) throw new Exception("findFitting: Parse failed\n");
+
+		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id like '".OIDplus::db()->real_escape_string($obj->ns()).":%'");
+		while ($row = OIDplus::db()->fetch_object($res)) {
+			$test = OIDplusObject::parse($row->id);
+			if ($obj->equals($test)) return $test;
+		}
+		return false;
+	}
+
+	public function one_up() {
 		return null; // not implemented
 	}
 }

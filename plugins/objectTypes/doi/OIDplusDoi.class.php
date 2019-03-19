@@ -137,6 +137,16 @@ class OIDplusDoi extends OIDplusObject {
 	public static function validBaseDoi($doi) {
 		return preg_match('@^10\.\d{4}$@', $doi, $m);
 	}
+
+	public function one_up() {
+		// TODO
+		return false;
+	}
+
+	public function distance($to) {
+		// TODO
+		return null;
+	}
 }
 
 OIDplusObject::$registeredObjectTypes[] = 'OIDplusDoi';

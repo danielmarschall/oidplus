@@ -178,6 +178,16 @@ class OIDplusGs1 extends OIDplusObject {
 		}
 		return 10 - ($sum % 10);
 	}
+
+	public function one_up() {
+		// TODO
+		return false;
+	}
+
+	public function distance($to) {
+		// TODO
+		return null;
+	}
 }
 
 OIDplusObject::$registeredObjectTypes[] = 'OIDplusGs1';

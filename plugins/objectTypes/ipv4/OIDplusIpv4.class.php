@@ -141,6 +141,18 @@ class OIDplusIpv4 extends OIDplusObject {
 			}
 		}
 	}
+
+	public function one_up() {
+		$cidr = $this->cidr - 1;
+		if ($cidr < 0) return false; // cannot go further up
+
+		return self::parse(self::ns() . ':' . $this->bare . '/' . $cidr); // TODO: remove unnecessary bits, so we don't have stuff like ...::1337/112
+	}
+
+	public function distance($to) {
+		if (!is_object($to)) $to = OIDplusObject::parse($to);
+		return ipv4_distance($to->ipv4, $this->ipv4);
+	}
 }
 
 OIDplusObject::$registeredObjectTypes[] = 'OIDplusIpv4';
