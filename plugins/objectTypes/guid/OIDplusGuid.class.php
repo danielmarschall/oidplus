@@ -56,12 +56,18 @@ class OIDplusGuid extends OIDplusObject {
 	}
 
 	public function addString($str) {
-		// TODO! es soll möglich sein, zwei kategorien zu haben mit dem selben namen (filedialog/filedialog/guid)
-		return 'guid:'.$str;
+		if (uuid_valid($str)) {
+			// real GUID
+			return 'guid:'.$str;
+		} else {
+			// just a category
+			return 'guid:'.$this->guid.'/'.$str;
+		}
 	}
 
 	public function crudShowId(OIDplusObject $parent) {
-		return $this->guid;
+		$tmp = explode('/',$this->guid);
+		return end($tmp);
 	}
 
 	public function crudInsertPrefix() {
@@ -70,7 +76,7 @@ class OIDplusGuid extends OIDplusObject {
 
 	public function jsTreeNodeName(OIDplusObject $parent = null) {
 		if ($parent == null) return $this->objectTypeTitle();
-		return $this->guid;
+		return $this->crudShowId($parent);
 	}
 
 	public function defaultTitle() {
@@ -129,6 +135,15 @@ class OIDplusGuid extends OIDplusObject {
 			}
 		}
 	}
+
+	// TODO: It would be nice if category and leaf items could have different pictures.
+	//       But the problem is, that the RA link should have a orange "GUID" icon, not a folder icon
+	/*
+	public function getIcon($row) {
+		if (!$this->isLeafNode()) return null; // foldericon
+		return parent::getIcon($row);
+	}
+	*/
 }
 
 OIDplusObject::$registeredObjectTypes[] = 'OIDplusGuid';
