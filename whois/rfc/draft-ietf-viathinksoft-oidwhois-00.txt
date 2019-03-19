@@ -54,7 +54,7 @@ Copyright and License Notice
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 1]
-
+
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
@@ -81,18 +81,18 @@ Table of Contents
        2.3.3  "RESULT: Not found" . . . . . . . . . . . . . . . . . .  6
      3.4  Section that displays information about the OID . . . . . .  7
      3.6  Section that displays information about the RA  . . . . . .  8
-     3.7  Date/Time references  . . . . . . . . . . . . . . . . . . .  8
-     3.8  Referral  . . . . . . . . . . . . . . . . . . . . . . . . .  9
-       3.8.1  Example . . . . . . . . . . . . . . . . . . . . . . . .  9
+     3.7  Referral  . . . . . . . . . . . . . . . . . . . . . . . . .  8
+     3.8  Date/Time references  . . . . . . . . . . . . . . . . . . .  9
    4  Full example  . . . . . . . . . . . . . . . . . . . . . . . . . 10
      4.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 10
      4.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 10
-   5  Security Considerations . . . . . . . . . . . . . . . . . . . . 11
-   6  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 11
-   7  References  . . . . . . . . . . . . . . . . . . . . . . . . . . 12
-     7.1  Normative References  . . . . . . . . . . . . . . . . . . . 12
-     7.2  Informative References  . . . . . . . . . . . . . . . . . . 12
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 12
+   5. Alternative namespaces  . . . . . . . . . . . . . . . . . . . . 10
+   6  Security Considerations . . . . . . . . . . . . . . . . . . . . 12
+   7  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 12
+   8  References  . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+     8.1  Normative References  . . . . . . . . . . . . . . . . . . . 13
+     8.2  Informative References  . . . . . . . . . . . . . . . . . . 13
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 13
 
 
 
@@ -110,7 +110,7 @@ Table of Contents
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 2]
-
+
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
@@ -166,7 +166,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 3]
-
+
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
@@ -222,7 +222,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 4]
-
+
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
@@ -278,7 +278,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 5]
-
+
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
@@ -334,7 +334,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 6]
-
+
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
@@ -390,7 +390,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 7]
-
+
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
@@ -435,45 +435,27 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    with "ra-".
 
 
-3.7  Date/Time references
+3.7  Referral
 
-   Date/Time references should have the format "yyyy-mm-dd hh:nn:ss
-   +oooo", e.g. "2019-03-15 18:32:00 +0200".
-
-   If parts of the date/time reference are uncertain, they may be
-   removed until the date/time reference has the highest correctness.
+   By using the field "whois-service", the service can instruct the
+   client to query another service that might have more information
+   about the requested object. If Registration Authorities maintain up-
+   to-date references to WHOIS service references in the descriptions of
+   their delegated OIDs, it is possible to automatically retrieve
  
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 8]
-
+
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
-   Examples of valid date/time references:
-
-   2019-03-15 18:32:00 +0200
-   2019-03-15 18:32:00
-   2019-03-15 18:32 +0200
-   2019-03-15 18:32
-   2019-03-15
-   2019-03
-   2019
-
-
-3.8  Referral
-
-   If Registration Authorities operate WHOIS services and maintain up-
-   to-date references to WHOIS service references in the descriptions of
-   their delegated OIDs, it is possible to automatically retrieve
    information about any OID.
 
-
-3.8.1  Example
-
-   OID 2.999 is owned by Registration Authority "A" running a whois
-   server a.example.com. The OID 2.999.1000 will be allocated to
-   Registration Authority "B" running the whois service a.example.com.
+   Example: OID 2.999 is owned by Registration Authority "A", running a
+   whois server a.example.com. The OID 2.999.1000 will be allocated to
+   Registration Authority "B" who is operating the whois service
+   b.example.com.
 
    The client asks a.example.com for information about 2.999.1000.1 and
    should receive following reply:
@@ -484,7 +466,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
        object:         oid:2.999.1000
        status:         Found
        name:           Company "B"
-       whois-service   b.example.com
+       whois-service:  b.example.com
 
        ra:             "B"
        ra-status:      Not Found
@@ -498,18 +480,36 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
        object:         oid:2.999.1000.1
        status:         Found
- 
-
-
-Daniel Marschall         Expires <Expiry Date>                  [Page 9]
-
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
-
-
        name:           Example OID 1
 
        ra:             "B"
        ra-status:      Not Found
+
+3.8  Date/Time references
+
+   Date/Time references should have the format "yyyy-mm-dd hh:nn:ss
+   +oooo", e.g. "2019-03-15 18:32:00 +0200".
+
+   If parts of the date/time reference are uncertain, they may be
+   removed until the date/time reference has the highest correctness.
+
+   Examples of valid date/time references:
+
+   2019-03-15 18:32:00 +0200
+   2019-03-15 18:32:00
+   2019-03-15 18:32 +0200
+ 
+
+
+Daniel Marschall         Expires <Expiry Date>                  [Page 9]
+
+INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+
+
+   2019-03-15 18:32
+   2019-03-15
+   2019-03
+   2019
 
 
 4  Full example
@@ -549,6 +549,62 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
 
+5. Alternative namespaces
+
+   This document describes the usage of retrieving information about
+   OIDs using the whois protocol. In addition to the namespace "oid",
+   the methods described in this RFC can also be applied to other
+ 
+
+
+Daniel Marschall         Expires <Expiry Date>                 [Page 10]
+
+INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+
+
+   namespaces, like "ipv4", "ipv6", "uuid", "doi" etc.
+
+   In the following example, the client wants to retrieve information
+   about the IPv6 address "2001:1af8:4700:a07e:1::1336". The whois
+   service did not found this particular IPv6 address in its database,
+   however, it did find the address range "2001:1af8:4700:a07e:1::/112",
+   with the distance of 16 (bits):
+
+       query:        ipv6:2001:1af8:4700:a07e:1::1336
+       result:       Not found; superior object found
+       distance:     16
+
+       object:       ipv6:2001:1af8:4700:a07e:1::/112
+       status:       Found
+       name:         ...
+       description:  ...
+       created:      ...
+       updated:      ...
+
+       ra:           ...
+       ra-status:    Not found
+
+   Another usage example is the retrieval of information about UUIDs
+   (i.e. GUIDs used by Microsoft COM interfaces). This namespace has no
+   hierarchical structure, so the whois service can only reply "Found"
+   or "Not Found".
+
+       query:        uuid:2a00375e-224c-49de-b8d1-440df7ef3ddc
+       result:       Found
+
+       object:       uuid:2a00375e-224c-49de-b8d1-440df7ef3ddc
+       status:       Found
+       name:         LocalizedResourcesDir
+       description:  This GUID is used as "Custom Place" in file dialogs.
+       created:      ...
+       updated:      ...
+
+       ra:           Microsoft Corp.
+       ra-status:    Not found
+
+
+
+
 
 
 
@@ -557,12 +613,12 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 10]
-
+Daniel Marschall         Expires <Expiry Date>                 [Page 11]
+
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
-5  Security Considerations
+6  Security Considerations
 
    The knowledge of existence or information about some OIDs could be
    considered confidential. In this case, the service can either deny
@@ -587,7 +643,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    requests.
 
 
-6  IANA Considerations
+7  IANA Considerations
 
    IANA is running a whois service at whois.iana.org. The WHOIS service
    could be extended by allowing requests starting with "oid:" and could
@@ -613,14 +669,14 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 11]
-
+Daniel Marschall         Expires <Expiry Date>                 [Page 12]
+
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
-7  References
+8  References
 
-7.1  Normative References
+8.1  Normative References
 
    [RFC3912]  L. Daigle, "WHOIS Protocol Specification", RFC 3912,
               September 2004.
@@ -632,7 +688,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
               Messages", STD 11, RFC 822, August 1982.
 
 
-7.2  Informative References
+8.2  Informative References
 
    [X660]     Procedures for the operation of object identifier
               registration authorities: General procedures and top arcs
@@ -669,5 +725,4 @@ Authors' Addresses
 
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 12]
-
+Daniel Marschall         Expires <Expiry Date>                 [Page 13]
