@@ -103,6 +103,9 @@ IDEAS
   the fact that a RA exists in the Object Table should permit the RA to invite theirself.
 - beim verlassen der seite, z.b. wenn man links auf einen neuen menüpunkt klickt, soll eine abfrage kommen, ob man speichern möchte
 - make a list of OIDs that do not assign ASN1/IRI identifiers (e.g. IANA PEN or ViaThinkSoft FreeOID), then reject any identifier the user provides
+- sanitize IPv4, IPv6, GUID during creation
+	bei IPv4 und IPv6: - if it is a single host address, don't put /32 or /128 suffix
+	                   - strike unnecessary bits that are not defined in the netmask (also at the whois output)
 
 QUESTIONS:
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie

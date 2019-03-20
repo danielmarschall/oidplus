@@ -3,7 +3,7 @@
 // ---------------------------------------------------
 // UUID utils for PHP
 // By Daniel Marschall, ViaThinkSoft
-// Version 2019-03-18
+// Version 2019-03-19
 // Licensed under the terms of the Apache 2.0 license
 // ---------------------------------------------------
 
@@ -134,7 +134,7 @@ function uuid_info($uuid) {
 			} else if ($family_dec == 13) {
 				$family_ = 'DDS (Data Link)';
 			} else {
-				$family_ = 'Unknown'; # TODO: Find out all families [0..13]
+				$family_ = "Unknown ($family_dec)"; # TODO: Find out all families [0..13]
 			}
 			echo sprintf("%-24s %s\n", "Family:", "[0x$family_hex = $family_dec] $family_");
 
