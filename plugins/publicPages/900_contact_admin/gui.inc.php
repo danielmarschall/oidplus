@@ -20,6 +20,7 @@
 if ($id === 'oidplus:contact') {
 	$handled = true;
 	$out['title'] = 'Contact system admin';
+	$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/publicPages/'.basename(__DIR__).'/icon_big.png' : '';
 
 	if (empty(OIDPLUS_ADMIN_EMAIL)) {
 		$out['text'] = '<p>The administrator of this system has not entered a contact email address.';

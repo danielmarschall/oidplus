@@ -20,6 +20,7 @@
 if ($id === 'oidplus:list_ra') {
 	$handled = true;
 	$out['title'] = 'RA Listing';
+	$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/adminPages/'.basename(__DIR__).'/icon_big.png' : '';
 
 	if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 		$out['text'] .= '<p>You need to <a href="?goto=oidplus:login">log in</a> as administrator.</p>';

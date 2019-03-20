@@ -25,6 +25,7 @@ if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viat
 		$handled = true;
 
 		$out['title'] = 'Register a free OID';
+		$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/publicPages/'.basename(__DIR__).'/icon_big.png' : '';
 
 		$highest_id = freeoid_max_id();
 
@@ -86,6 +87,7 @@ if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viat
 		$auth = explode('$',$id)[3];
 
 		$out['title'] = 'Activate Free OID';
+		$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/publicPages/'.basename(__DIR__).'/icon_big.png' : '';
 
 		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 		if (OIDplus::db()->num_rows($res) > 0) {

@@ -31,6 +31,7 @@ OIDplus::db()->query("SET NAMES 'utf8'");
 $static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
 $static = OIDplus::gui()::generateContentPage($static_node_id);
 $static_title = $static['title'];
+$static_icon = $static['icon'];
 $static_content = $static['text'];
 
 function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
@@ -148,7 +149,7 @@ window.cookieconsent.initialise({
 				return secure_email($email, $text, 1); // AntiSpam
 			}, $static_content);
 
-		echo '<h1 id="real_title">'.htmlentities($static_title).'</h1>';
+		echo '<h1 id="real_title"><img src="'.htmlentities($static_icon).'" width="48" height="48" alt="'.htmlentities($static_title).'"> '.htmlentities($static_title).'</h1>';
 		echo '<div id="real_content">'.$static_content.'</div>';
 		echo '<br><p><a href="?goto='.htmlentities($static_node_id).'" id="static_link"><img src="img/share.png" width="15" height="15" alt="Share"> Static link to this page</a></p>';
 		echo '<br>';

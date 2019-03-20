@@ -20,6 +20,7 @@
 if (explode('$',$id)[0] == 'oidplus:edit_config') {
 	$handled = true;
 	$out['title'] = 'System configuration';
+	$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/adminPages/'.basename(__DIR__).'/icon_big.png' : '';
 
 	if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 		$out['text'] .= '<p>You need to <a href="?goto=oidplus:login">log in</a> as administrator.</p>';

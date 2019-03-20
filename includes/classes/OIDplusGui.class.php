@@ -279,6 +279,7 @@ class OIDplusGui {
 
 		$handled = false;
 		$out['title'] = '';
+		$out['icon'] = '';
 		$out['text'] = '';
 
 		// === System ===
@@ -287,6 +288,7 @@ class OIDplusGui {
 			$handled = true;
 
 			$out['title'] = OIDplus::config()->systemTitle(); // 'Object Database of ' . $_SERVER['SERVER_NAME'];
+			$out['icon'] = 'img/system_big.png';
 			$out['text'] = file_get_contents('welcome.html');
 			return $out;
 
@@ -298,6 +300,7 @@ class OIDplusGui {
 			$ra_email = explode('$',$id)[1];
 
 			$out['title'] = 'Registration Authority Information'; // TODO: email addresse reinschreiben? aber wie vor anti spam schützen?
+			$out['icon'] = ''; // TODO
 
 			if (empty($ra_email)) {
 				$out['text'] = '<p>Following object roots have an undefined Registration Authority:</p>';
@@ -322,6 +325,7 @@ class OIDplusGui {
 			$handled = true;
 
 			$out['title'] = 'Forgot password';
+			$out['icon'] = ''; // TODO
 
 			try {
 				$out['text'] .= '<p>Please enter the email address of your account, and information about the password reset will be sent to you.</p>
@@ -346,6 +350,7 @@ class OIDplusGui {
 			$auth = explode('$',$id)[3];
 
 			$out['title'] = 'Reset password';
+			$out['icon'] = ''; // TODO
 
 			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
 				$out['text'] = 'Invalid authorization. Is the URL OK?';
@@ -372,6 +377,7 @@ class OIDplusGui {
 			$origin = explode('$',$id)[2];
 
 			$out['title'] = 'Invite a Registration Authority';
+			$out['icon'] = ''; // TODO
 
 			try {
 				$cont = self::getInvitationText($email);
@@ -399,6 +405,7 @@ class OIDplusGui {
 			$auth = explode('$',$id)[3];
 
 			$out['title'] = 'Register as Registration Authority';
+			$out['icon'] = ''; // TODO
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 			if (OIDplus::db()->num_rows($res) > 0) {
@@ -426,6 +433,7 @@ class OIDplusGui {
 		} else if ($id === 'oidplus:login') {
 			$handled = true;
 			$out['title'] = 'Login';
+			$out['icon'] = 'img/login_big.png';
 
 			$out['text'] .= '<script>function raLoginOnSubmit() {';
 			$out['text'] .= '	raLogin(document.getElementById("raLoginEMail").value, document.getElementById("raLoginPassword").value);';
@@ -517,6 +525,7 @@ class OIDplusGui {
 
 			if ((!is_null($obj)) && (!$obj->userHasReadRights())) {
 				$out['title'] = 'Access denied';
+				$out['icon'] = ''; // TODO
 				$out['text'] = '<p>Please <a href="?goto=oidplus:login">log in</a> to receive information about this object.</p>';
 				return $out;
 			}
@@ -529,6 +538,7 @@ class OIDplusGui {
 			} else {
 				$out['title'] = $row['title'];
 			}
+			$out['icon'] = ''; // TODO
 
 			if (isset($row['description'])) {
 				$desc = empty($row['description']) ? '<p><i>No description for this object available</i></p>' : OIDplusGui::objDescription($row['description']);

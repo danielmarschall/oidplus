@@ -20,6 +20,7 @@
 if (explode('$',$id)[0] == 'oidplus:edit_ra') {
 	$handled = true;
 	$out['title'] = 'Edit RA contact data';
+	$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/raPages/'.basename(__DIR__).'/icon_big.png' : '';
 
 	$ra_email = explode('$',$id)[1];
 

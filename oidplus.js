@@ -96,7 +96,11 @@ function openOidInPanel(id, unselect=false) {
 				window.history.replaceState(state, data.title, "?goto="+encodeURI(id));
 			}
 
-			$('#real_title').html(data.title.htmlentities());
+			if (data.icon) {
+				$('#real_title').html('<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' + data.title.htmlentities());
+			} else {
+				$('#real_title').html(data.title.htmlentities());
+			}
 			$('#real_content').html(data.text);
 			document.title = combine_systemtitle_and_pagetitle(system_title, data.title);
 			current_node = id;
