@@ -206,9 +206,18 @@ try {
 			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
 
 			// Delete orphan stuff
-			$test = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent <> 'oid:' and parent like 'oid:%' and parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
-			if (OIDplus::db()->num_rows($test) > 0) {
-				OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where parent <> 'oid:' and parent like 'oid:%' and parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
+			foreach (OIDplusObject::$registeredObjectTypes as $ot) {
+				$where = "where parent <> '".OIDplus::db()->real_escape_string($ot::ns().':')."' and " .
+				         "      parent like '".OIDplus::db()->real_escape_string($ot::ns().':%')."' and " .
+				         "      parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like '".OIDplus::db()->real_escape_string($ot::ns().':%')."')";
+				do {
+					$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects $where");
+					while ($row = OIDplus::db()->fetch_array($res)) {
+						if (!OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($row['id'])."'")) {
+							die(OIDplus::db()->error());
+						}
+					}
+				} while (OIDplus::db()->num_rows($res) > 0);
 			}
 			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known <> 1 and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
 			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri    where well_known <> 1 and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
