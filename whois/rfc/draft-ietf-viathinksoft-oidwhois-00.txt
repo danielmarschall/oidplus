@@ -121,7 +121,9 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    of object with a globally unambiguous name. OIDs provide a persistent
    identification of objects based on a hierarchical structure of
    Registration Authorities (RA), where each parent has an Object
-   Identifier and allocates Object Identifiers to child nodes.
+   Identifier and allocates Object Identifiers to child nodes. More
+   information about OIDs can be found in Recommendation ITU-T X.660
+   (2011) | ISO/IEC 9834-1:2012 [X660].
 
    There are a few methods of retrieving information about an Object
    Identifier, like:
@@ -131,10 +133,10 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    information is usually not machine readable.
 
    (B) Retrieving information using the Object Identifier Resolution
-   System (ORS) defined in Rec. ITU-T X.672 | ISO/IEC 29168-1. This has
-   the disadvantage that the Registration Authority needs to include
-   specific DNS Resource Records to their domain, and additionally, all
-   superior OIDs must implement ORS.
+   System (ORS) defined in Recommendation ITU-T X.672 | ISO/IEC 29168-1
+   [X672]. This has the disadvantage that the Registration Authority
+   needs to include specific DNS Resource Records to their domain, and
+   additionally, all superior RAs must implement ORS.
 
    This document describes an additional method of retrieving
    information about OIDs, which is both human-readable and machine-
@@ -149,8 +151,6 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
    In this document, "RA" is an abbreviation for "Registration
    Authority" and "OID" is an abbreviation for "Object Identifier".
-
-
 
 
 
@@ -193,9 +193,9 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
        oid:2.999
        oid:.2.999
 
-   All OIDs are interpreted as absolute OIDs. Relative OIDs (e.g.
-   relative to the root of the Registration Authority running the whois
-   service) are not allowed.
+   All OIDs must be interpreted as absolute OIDs. Relative OIDs (e.g.
+   relative to the root of the Registration Authority operating the
+   whois service) are not allowed.
 
 2.1  Authentication tokens
 
@@ -208,7 +208,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    Examples of valid queries:
 
        oid:2.999$firstToken
-       oid:2.999$firstToken$secondToken1234
+       oid:2.999$firstToken$secondToken
 
    Please note that authentication tokens are only a weak protection.
    For more information, see "security considerations".
@@ -258,7 +258,8 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 3.1  Format and encoding
 
-   The response should be UTF-8 encoded, without Byte-Order-Mark (BOM).
+   The response should be UTF-8 encoded (as defined in RFC 3629
+   [RFC3629]), without Byte-Order-Mark (BOM).
 
    It is recommended that each line is limited to 80 characters.
 
@@ -273,7 +274,6 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    to be repeated at the beginning of the new line.
 
    If attributes have multiple values (e.g. multiple Unicode labels,
-   alternative email-addresses etc.), a new line with the same field
  
 
 
@@ -282,6 +282,7 @@ Daniel Marschall         Expires <Expiry Date>                  [Page 5]
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
+   alternative email-addresses etc.), a new line with the same field
    name may be added.
 
    Comment lines start with a percent sign ("%") at the beginning of a
@@ -328,7 +329,6 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    - "distance" is only present if the result is "Not found; superior
    object found". A distance of "1" means that the direct parent was
    found. A distance of "2" means that the grand-parent was found, etc.
-
 
  
 
@@ -394,12 +394,12 @@ Daniel Marschall         Expires <Expiry Date>                  [Page 7]
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
-   alphanumeric value as defined in Rec. ITU-T X.680 | ISO/IEC 8824-1,
-   clause 32 [X680].
+   alphanumeric value as defined in Recommendation ITU-T X.680 | ISO/IEC
+   8824-1, clause 32 [X680].
 
    - "unicode-label" (optional, multiple values allowed) contains an
-   Internationalized Resource Identifier (IRI) as defined in Rec. ITU-T
-   X.680 | ISO/IEC 8824-1, clause 34 [X680].
+   Internationalized Resource Identifier (IRI) as defined in
+   Recommendation ITU-T X.680 | ISO/IEC 8824-1, clause 34 [X680].
 
    - "name" contains the name of the OID.
 
@@ -691,7 +691,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    during the request.
 
    The usage of authentication tokens is not recommended if the traffic
-   between client and server and client goes through an untrusted
+   between client and server is transmitted through an untrusted
    network, because the WHOIS protocol is not encrypted.
 
    Furthermore, authentication tokens must have an sufficient length to
@@ -734,30 +734,37 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 8.1  Normative References
 
-   [RFC3912]  L. Daigle, "WHOIS Protocol Specification", RFC 3912,
+   [X672]     "Object identifier resolution system (ORS)",
+              Recommendation ITU-T X.672 | ISO/IEC 29168-1.
+
+   [RFC2119]  Bradner, "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119, March 1997.
+
+   [RFC3912]  Daigle, "WHOIS Protocol Specification", RFC 3912,
               September 2004.
 
    [RFC2252]  Wahl, et. al., Lightweight Directory Access Protocol (v3):
               Attribute Syntax Definitions, RFC RFC2252, December 1997.
 
-   [RFC822]   Crocker, D., "Standard of the Format of ARPA-Internet Text
+   [RFC822]   Crocker, "Standard of the Format of ARPA-Internet Text
               Messages", STD 11, RFC 822, August 1982.
 
-   [X680]     Information Technology - Abstract Syntax Notation One
-              (ASN.1) & ASN.1 encoding rules, Recommendation ITU-T X.680
-              | ISO/IEC 8824-1
+   [RFC3629]  Yergeau, "UTF-8, a transformation format of ISO 10646",
+              RFC 3629, November 2003.
+
+   [X680]     "Abstract Syntax Notation One (ASN.1) & ASN.1 encoding
+              rules", Recommendation ITU-T X.680 | ISO/IEC 8824-1.
 
 
 8.2  Informative References
 
-   [X660]     Procedures for the operation of object identifier
+   [X660]     "Procedures for the operation of object identifier
               registration authorities: General procedures and top arcs
-              of the international object identifier tree,
+              of the international object identifier tree",
               Recommendation ITU-T X.660 | ISO/IEC 9834-1
 
 
 Authors' Addresses
-
 
 
    Daniel Marschall
@@ -767,13 +774,6 @@ Authors' Addresses
    Germany
 
    EMail: daniel-marschall@viathinksoft.de
-
-
-
-
-
-
-
 
 
 
