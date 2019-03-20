@@ -42,7 +42,7 @@ draft-ietf-viathinksoft-oidwhois-00
 .ti 0
 Abstract
 
-This document defines a machine readable structure for retrieving information about Object Identifiers (OIDs) and their associated Registration Authorities (RAs) using the WHOIS protocol.
+This document defines a machine-readable structure for retrieving information about Object Identifiers (OIDs) and their associated Registration Authorities (RAs) using the WHOIS protocol.
 
 
 .ti 0
@@ -155,7 +155,7 @@ oid:.2.999
 .fi
 .in 3
 
-All OIDs must be interpreted as absolute OIDs. Relative OIDs (e.g. relative to the root of the Registration Authority operating the whois service) are not allowed.
+All OIDs must be interpreted as absolute OIDs. Relative OIDs (e.g. relative to the root of the Registration Authority operating the WHOIS service) are not allowed.
 
 .ti 0
 2.1  Authentication tokens
@@ -270,7 +270,7 @@ Possible fields:
 .ti 0
 3.3.1  "RESULT: Found"
 
-The system can verify that the requested OID exists. It has either full information about the OID, or knows another service (e.g. another whois service) where information can be retrieved from.
+The system can verify that the requested OID exists. It has either full information about the OID, or knows another service (e.g. another WHOIS service) where information can be retrieved from.
 
 .ti 0
 3.3.2  "RESULT: Not found; superior object found"
@@ -295,7 +295,7 @@ Possible fields:
 
 - "status" which usually has the value "Found", but it can also have different values like "Confidential" (in case the server doesn't deny the existence of the OID).
 
-- "whois-service" should be present if the service does not have full information about the OID (e.g. if the requested OID is inside a branch that was delegated to a different RA operating an own whois service). If the response was "Found" (i.e. the service has full information about the OID), the information "whois-service" is only informational; its existence is most likely a hint that subsequent OIDs will be found at this whois server. If the result is "Found; superior object found", the client must query the referred whois server in order to receive accurate information about the OID.
+- "whois-service" should be present if the service does not have full information about the OID (e.g. if the requested OID is inside a branch that was delegated to a different RA operating an own WHOIS service). If the response was "Found" (i.e. the service has full information about the OID), the information "whois-service" is only informational; its existence is most likely a hint that subsequent OIDs will be found at this WHOIS server. If the result is "Found; superior object found", the client must query the referred WHOIS server in order to receive accurate information about the OID.
 
 - "url" (optional, multiple values allowed) contains a website that contains more information about the OID.
 
@@ -363,9 +363,9 @@ If Registration Authorities maintain up-to-date references to WHOIS service refe
 
 Example:
 
-OID 2.999 is owned by Registration Authority "A", operating a whois service at "a.example.com".
+OID 2.999 is owned by Registration Authority "A", operating a WHOIS service at "a.example.com".
 
-The OID 2.999.1000 has been allocated to Registration Authority "B" who is operating a whois service at "b.example.com".
+The OID 2.999.1000 has been allocated to Registration Authority "B" who is operating a WHOIS service at "b.example.com".
 
 The client asks a.example.com for information about 2.999.1000.1 and should receive following reply:
 
@@ -384,7 +384,7 @@ ra-status:      Not Found
 .fi
 .in 3
 
-The client now knows that "a.example.com" only knows 2.999.1000, and that there is a reference to another whois service located at "b.example.com". So, the client could then accordingly query "b.example.com", asking for information about 2.999.1000.1.
+The client now knows that "a.example.com" only knows 2.999.1000, and that there is a reference to another WHOIS service located at "b.example.com". So, the client could then accordingly query "b.example.com", asking for information about 2.999.1000.1.
 
 .in 7
 .nf
@@ -467,9 +467,9 @@ ra-status:      Not found
 .ti 0
 5. Alternative namespaces
 
-This document describes the usage of retrieving information about OIDs using the whois protocol. In addition to the namespace "oid", the methods described in this RFC can also be applied to other namespaces like "ipv4", "ipv6", "uuid", "doi" etc.
+This document describes the usage of retrieving information about OIDs using the WHOIS protocol. In addition to the namespace "oid", the methods described in this RFC can also be applied to other namespaces like "ipv4", "ipv6", "uuid", "doi" etc.
 
-In the following example, the client wants to retrieve information about the IPv6 address "2001:1af8:4700:a07e:1::1336". The whois service didn't find this particular IPv6 address in its database, however, it did find the address range "2001:1af8:4700:a07e:1::/112", with the distance of 16 (bits):
+In the following example, the client wants to retrieve information about the IPv6 address "2001:1af8:4700:a07e:1::1336". The WHOIS service didn't find this particular IPv6 address in its database, however, it did find the address range "2001:1af8:4700:a07e:1::/112", with the distance of 16 (bits):
 
 .in 7
 .nf
@@ -489,7 +489,7 @@ ra-status:    Not found
 .fi
 
 .in 3
-Another usage example is the retrieval of information about UUIDs (i.e. GUIDs used by Microsoft COM interfaces). The UUID namespace has no hierarchical structure, so the whois service can only reply "Found" or "Not Found".
+Another usage example is the retrieval of information about UUIDs (i.e. GUIDs used by Microsoft COM interfaces). The UUID namespace has no hierarchical structure, so the WHOIS service can only reply "Found" or "Not Found".
 
 .in 7
 .nf
@@ -527,11 +527,11 @@ Furthermore, authentication tokens must have an sufficient length to avoid brute
 .ti 0
 7  IANA Considerations
 
-IANA is running a whois service at whois.iana.org. This WHOIS service could be extended by allowing requests starting with "oid:" and could serve following contents:
+IANA is running a WHOIS service at whois.iana.org. This WHOIS service could be extended by allowing requests starting with "oid:" and could serve following contents:
 
 (1) The service could output information about OIDs owned or delegated by IANA, for example it could output information about Private Enterprise Numbers (PEN) located at 1.3.6.1.4.1. Owners of Private Enterprise Numbers could store addresses of their own WHOIS servers in the IANA database, so that these addresses can be included in the WHOIS output of IANA.
 
-(2) The service can furthermore maintain records for the OID roots "oid:" (refers to IANA itself), "oid:0" (refers to ITU-T), "oid:1" (refers to ISO) and "oid:2" (refers to either an ISO or an ITU-T server). This could alternatively be accomplished by a whois service operated by ISO or ITU-T.
+(2) The service can furthermore maintain records for the OID roots "oid:" (refers to IANA itself), "oid:0" (refers to ITU-T), "oid:1" (refers to ISO) and "oid:2" (refers to either an ISO or an ITU-T server). This could alternatively be accomplished by a WHOIS service operated by ISO or ITU-T.
 
 
 .bp

@@ -14,7 +14,7 @@ Expires: <Expiry Date>                                      January 2019
 
 Abstract
 
-   This document defines a machine readable structure for retrieving
+   This document defines a machine-readable structure for retrieving
    information about Object Identifiers (OIDs) and their associated
    Registration Authorities (RAs) using the WHOIS protocol.
 
@@ -195,7 +195,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
    All OIDs must be interpreted as absolute OIDs. Relative OIDs (e.g.
    relative to the root of the Registration Authority operating the
-   whois service) are not allowed.
+   WHOIS service) are not allowed.
 
 2.1  Authentication tokens
 
@@ -342,7 +342,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
    The system can verify that the requested OID exists. It has either
    full information about the OID, or knows another service (e.g.
-   another whois service) where information can be retrieved from.
+   another WHOIS service) where information can be retrieved from.
 
 3.3.2  "RESULT: Not found; superior object found"
 
@@ -374,12 +374,12 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
    - "whois-service" should be present if the service does not have full
    information about the OID (e.g. if the requested OID is inside a
-   branch that was delegated to a different RA operating an own whois
+   branch that was delegated to a different RA operating an own WHOIS
    service). If the response was "Found" (i.e. the service has full
    information about the OID), the information "whois-service" is only
    informational; its existence is most likely a hint that subsequent
-   OIDs will be found at this whois server. If the result is "Found;
-   superior object found", the client must query the referred whois
+   OIDs will be found at this WHOIS server. If the result is "Found;
+   superior object found", the client must query the referred WHOIS
    server in order to receive accurate information about the OID.
 
    - "url" (optional, multiple values allowed) contains a website that
@@ -489,11 +489,11 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
    Example:
 
-   OID 2.999 is owned by Registration Authority "A", operating a whois
+   OID 2.999 is owned by Registration Authority "A", operating a WHOIS
    service at "a.example.com".
 
    The OID 2.999.1000 has been allocated to Registration Authority "B"
-   who is operating a whois service at "b.example.com".
+   who is operating a WHOIS service at "b.example.com".
 
    The client asks a.example.com for information about 2.999.1000.1 and
    should receive following reply:
@@ -518,7 +518,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
        ra-status:      Not Found
 
    The client now knows that "a.example.com" only knows 2.999.1000, and
-   that there is a reference to another whois service located at
+   that there is a reference to another WHOIS service located at
    "b.example.com". So, the client could then accordingly query
    "b.example.com", asking for information about 2.999.1000.1.
 
@@ -621,12 +621,12 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 5. Alternative namespaces
 
    This document describes the usage of retrieving information about
-   OIDs using the whois protocol. In addition to the namespace "oid",
+   OIDs using the WHOIS protocol. In addition to the namespace "oid",
    the methods described in this RFC can also be applied to other
    namespaces like "ipv4", "ipv6", "uuid", "doi" etc.
 
    In the following example, the client wants to retrieve information
-   about the IPv6 address "2001:1af8:4700:a07e:1::1336". The whois
+   about the IPv6 address "2001:1af8:4700:a07e:1::1336". The WHOIS
    service didn't find this particular IPv6 address in its database,
    however, it did find the address range "2001:1af8:4700:a07e:1::/112",
    with the distance of 16 (bits):
@@ -647,7 +647,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
    Another usage example is the retrieval of information about UUIDs
    (i.e. GUIDs used by Microsoft COM interfaces). The UUID namespace has
-   no hierarchical structure, so the whois service can only reply
+   no hierarchical structure, so the WHOIS service can only reply
    "Found" or "Not Found".
 
        query:        uuid:2a00375e-224c-49de-b8d1-440df7ef3ddc
@@ -701,7 +701,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 7  IANA Considerations
 
-   IANA is running a whois service at whois.iana.org. This WHOIS service
+   IANA is running a WHOIS service at whois.iana.org. This WHOIS service
    could be extended by allowing requests starting with "oid:" and could
    serve following contents:
 
@@ -715,7 +715,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    (2) The service can furthermore maintain records for the OID roots
    "oid:" (refers to IANA itself), "oid:0" (refers to ITU-T), "oid:1"
    (refers to ISO) and "oid:2" (refers to either an ISO or an ITU-T
-   server). This could alternatively be accomplished by a whois service
+   server). This could alternatively be accomplished by a WHOIS service
    operated by ISO or ITU-T.
 
 
