@@ -54,52 +54,26 @@ abstract class OIDplusObject {
 
 	public abstract function getContentPage(&$title, &$content);
 
-	private static function getRaRoots_rec($parent=null, $ra_email=null, &$out, $prev_owns) {
-		if (is_null($parent)) {
-			$roots = array();
-			foreach (self::$registeredObjectTypes as $ot) {
-				$roots[] = "parent = '" . OIDplus::db()->real_escape_string($ot::root()) . "'";
-			}
-			$roots = implode(' or ', $roots);
-		} else {
-			$roots = "parent = '" . OIDplus::db()->real_escape_string($parent) . "'";
-		}
-
-		$res = OIDplus::db()->query("select id, ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where $roots order by ".OIDplus::db()->natOrder('id'));
-
-		$this_owns = array();
-		$this_all = array();
-		while ($row = OIDplus::db()->fetch_array($res)) {
-			if (is_null($ra_email)) {
-				// if $ra_email is null, we want to query only the roots of the currently logged in user
-				$owns = OIDplus::authUtils()::isRaLoggedIn($row['ra_email']);
-			} else {
-				$owns = $row['ra_email'] == $ra_email;
-			}
-
-			if ($owns) $this_owns[] = $row['id'];
-			$this_all[] = $row['id'];
-		}
-
-		foreach ($this_owns as $this_ra) {
-			$nogap = true;
-			if (!is_null($prev_owns)) {
-				// Check if we have any gaps. If there is a "gap" in the hierarchy, then we need to count that as a second root of that RA ("reintroduce ownership")
-				foreach ($prev_owns as $prev) {
-					if (oid_up(explode(':',$this_ra)[1]) == explode(':',$prev)[1]) $nogap = false;
-				}
-			}
-			if ($nogap) $out[] = self::parse($this_ra);
-		}
-
-		foreach ($this_all as $this_ra) {
-			self::getRaRoots_rec($this_ra, $ra_email, $out, $this_owns);
-		}
-	}
-
 	public static function getRaRoots($ra_email=null) {
 		$out = array();
-		self::getRaRoots_rec(null, $ra_email, $out, null);
+		if (is_null($ra_email)) {
+			$res = OIDplus::db()->query("select oChild.id as id, oChild.ra_email as child_mail, oParent.ra_email as parent_mail from ".OIDPLUS_TABLENAME_PREFIX."objects as oChild ".
+			                            "left join ".OIDPLUS_TABLENAME_PREFIX."objects as oParent on oChild.parent = oParent.id ".
+			                            "order by ".OIDplus::db()->natOrder('oChild.id'));
+			while ($row = OIDplus::db()->fetch_array($res)) {
+				if (!OIDplus::authUtils()::isRaLoggedIn($row['parent_mail']) && OIDplus::authUtils()::isRaLoggedIn($row['child_mail'])) {
+					$out[] = self::parse($row['id']);
+				}
+			}
+		} else {
+			$res = OIDplus::db()->query("select oChild.id as id from ".OIDPLUS_TABLENAME_PREFIX."objects as oChild ".
+			                            "left join ".OIDPLUS_TABLENAME_PREFIX."objects as oParent on oChild.parent = oParent.id ".
+			                            "where ifnull(oParent.ra_email,'') <> '".OIDplus::db()->real_escape_string($ra_email)."' and oChild.ra_email = '".OIDplus::db()->real_escape_string($ra_email)."' ".
+			                            "order by ".OIDplus::db()->natOrder('oChild.id'));
+			while ($row = OIDplus::db()->fetch_array($res)) {
+				$out[] = self::parse($row['id']);
+			}
+		}
 		return $out;
 	}
 
@@ -211,7 +185,7 @@ abstract class OIDplusObject {
 		$obj = OIDplusObject::parse($parent);
 		if ($obj) return $obj;
 
-		// If this OID does not exist, the SQL query "select parent from ..." does not work. So we try to find the next possible parent using oid_up()
+		// If this OID does not exist, the SQL query "select parent from ..." does not work. So we try to find the next possible parent using one_up()
 		$cur = $this->one_up();
 		if (!$cur) return false;
 		do {
