@@ -153,6 +153,7 @@ class OIDplusIpv4 extends OIDplusObject {
 
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
+		if (!($to instanceof $this)) return false;
 		return ipv4_distance($to->ipv4, $this->ipv4);
 	}
 }

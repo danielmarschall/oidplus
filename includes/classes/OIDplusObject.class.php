@@ -230,6 +230,8 @@ abstract class OIDplusObject {
 
 	public function equals($obj) {
 		if (!is_object($obj)) $obj = OIDplusObject::parse($obj);
+		if (!($obj instanceof $this)) return false;
+
 		$distance = $this->distance($obj);
 		if (is_numeric($distance)) return $distance === 0; // if the distance function is implemented, use it
 

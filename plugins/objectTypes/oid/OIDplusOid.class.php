@@ -339,6 +339,7 @@ class OIDplusOid extends OIDplusObject {
 
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
+		if (!($to instanceof $this)) return false;
 		return oid_distance($to->oid, $this->oid);
 	}
 }
