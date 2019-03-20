@@ -239,6 +239,7 @@ try {
 
 			if ($new_ra != $current_ra) _ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mitändern
 
+			// Replace ASN.1 und IRI IDs
 			if ($obj::ns() == 'oid') {
 				$oid = $obj;
 
@@ -289,19 +290,10 @@ try {
 
 			// Check if the ID is valid
 			if ($_POST['id'] == '') die('ID may not be empty');
-			if ($objParent::ns() == 'oid') {
-				// TODO: Make a function in the object type class for the ID validation
-				//       Then, we can also validate non-OID types, too.
-				$numeric_arc = $_POST['id'];
-				if ($numeric_arc == '') die('ID may not be empty');
-				if (!$objParent->isRoot() && !is_numeric($numeric_arc)) die('ID must be a number');
-				#if ($numeric_arc < 0) die('ID may not be negative!');
-				#if ((substr($numeric_arc,0,1) == '0') && ($numeric_arc != '0')) die('ID may not have leading zeros');
-			}
 
 			// Absoluten OID namen bestimmen
-			if ($parent = OIDplusObject::parse($_POST['parent'])) $id = $parent->addString($_POST['id']);
-			if (is_null($parent)) throw new Exception("Type of ".$_POST['parent']." unknown");
+			// Note: At addString() and parse(), the syntax of the ID will be checked
+			$id = $objParent->addString($_POST['id']);
 			$obj = OIDplusObject::parse($id);
 
 			// Superior RA Änderung durchführen

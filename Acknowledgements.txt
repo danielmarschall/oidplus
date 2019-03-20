@@ -1,0 +1,7 @@
+
+Most of the icons are taken from the
+Nuvola icon pack by David Vignoni,
+licensed under the terms of GNU/LGPL.
+
+https://www.iconfinder.com/iconsets/nuvola2
+https://findicons.com/pack/2118/nuvola
