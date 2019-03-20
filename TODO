@@ -8,8 +8,6 @@ when javascript fails, the form will be submitted to './' , that is not good! fa
 
 automatisch umleiten nach https
 
-icons
-
 forms: align input edits, see https://stackoverflow.com/questions/30008948/how-to-align-two-labels-and-two-textboxes-without-a-gap-in-form-horizontal
 
 html checkbox: "label for" verwenden
@@ -82,13 +80,15 @@ http login nicht möglich. warum?
 
 objecttypes automatisch laden (php dateien suchen) und registrieren.
 
-kleinigkeiten:
+SMALL THINGS
 - <abbr> in <code> wird doppelt unterstrichen
 - wenn man eine well-known OID anlegen möchte, dann kommt fehler wegen replaceAsn1/replaceIri, aber die OID ist erstellt. Die API ist aber nicht reloaded. Man sieht also nicht, dass die OID erstellt wurde, und ein erneuter klick auf Insert führt zum Primary-Key fehler
 - problem: wenn eine RA eingeladen werden möchte, muss man "update" drücken und die OID wird als updated markiert
-bei mehreren identifiern kann man nicht bestimmen, welcher identifier der bevorzugte sein soll!!
+- bei mehreren identifiern kann man nicht bestimmen, welcher identifier der bevorzugte sein soll!!
+- show big icons in the content pane
+- show whois links only if folder "whois/" exists
 
-zukunft
+FUTURE
 - admin: soll wellknown oids ändern dürfen
 - move oid to different arc
 - bei sehr großen arcs (z.B. PEN) sollen nicht alle angezeigt werden
@@ -112,6 +112,7 @@ QUESTIONS:
 GUID Management
 - Leaf nodes (GUIDs) should show/edit the Title in the CRUD, so you dont have to click the GUID to see the title
 - seltsamer bug: wenn ich guid:oidplus editiere, dann öffnet sich links guid:activedirectory beim neuladen des baums nach dem update. irgendwie öffnet er den zuletzt geöffneten node beim reload nochmal
+- "root detection" does not work, i.e. at the RA-menu, all GUIDs are shown, even if the RA manages the whole category with the GUIDs inside.
 
 GS1 Management:
 - Whois muss einen Eintrag sowohl mit als auch ohne Prüfsumme finden können (findFitting anpassen?)

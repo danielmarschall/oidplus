@@ -153,8 +153,9 @@ class OIDplusTree {
 				foreach ($ary as $a) include $a;
 
 				$ra_roots[] = array(
-					'id' => 'oidplus:logout$admin',
-					'text' => 'Log out'
+					'id'       => 'oidplus:logout$admin',
+					'icon'     => 'img/logout.png',
+					'text'     => 'Log out'
 				);
 				$loginChildren[] = array(
 					'id'       => 'oidplus:dummy$admin',
@@ -172,8 +173,9 @@ class OIDplusTree {
 				foreach ($ary as $a) include $a;
 
 				$ra_roots[] = array(
-					'id' => 'oidplus:logout$'.$ra_email,
-					'text' => 'Log out'
+					'id'       => 'oidplus:logout$'.$ra_email,
+					'icon'     => 'img/logout.png',
+					'text'     => 'Log out'
 				);
 				foreach (OIDplusObject::getRaRoots($ra_email) as $loc_root) {
 					$ico = $loc_root->getIcon();
@@ -195,9 +197,9 @@ class OIDplusTree {
 			}
 
 			$json[] = array(
-				'id' => 'oidplus:login',
-				'icon' => 'img/login.png',
-				'text' => 'Login',
+				'id'       => 'oidplus:login',
+				'icon'     => 'img/login.png',
+				'text'     => 'Login',
 				'state'    => array("opened" => count($loginChildren)>0),
 				'children' => $loginChildren
 			);
