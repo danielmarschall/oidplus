@@ -31,8 +31,9 @@ t.pl 10.0i
 .\" Only the left and right components are used in Internet-draft headers
 .\" This and other comments in this template can safely be deleted.
 
-.ce 2
-Querying OID information over the WHOIS protocol
+.ce 3
+Retrieving information about Object Identifiers
+using the WHOIS protocol
 draft-ietf-viathinksoft-oidwhois-00
 .fi
 .in 3
@@ -41,7 +42,7 @@ draft-ietf-viathinksoft-oidwhois-00
 .ti 0
 Abstract
 
-OID-over-WHOIS defines a machine readable format/structure of retrieving information about Object Identifiers (OIDs) and their associated Registration Authorities (RAs) over the WHOIS protocol.
+This document defines a machine readable structure for retrieving information about Object Identifiers (OIDs) and their associated Registration Authorities (RAs) using the WHOIS protocol.
 
 
 .ti 0
@@ -76,30 +77,30 @@ Table of Contents
 .nf
    1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  3
      1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  3
-   2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  3
+   2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
      2.1  Authentication tokens . . . . . . . . . . . . . . . . . . .  4
-     2.2  BNF notation  . . . . . . . . . . . . . . . . . . . . . . .  4
+     2.2  BNF notation  . . . . . . . . . . . . . . . . . . . . . . .  5
    3.  Response . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
-     3.1  Format  . . . . . . . . . . . . . . . . . . . . . . . . . .  5
-     3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  5
+     3.1  Format and encoding . . . . . . . . . . . . . . . . . . . .  5
+     3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  6
      3.3  Section that displays the query and the result  . . . . . .  6
-       3.3.1  "RESULT: Found" . . . . . . . . . . . . . . . . . . . .  6
-       3.3.2  "RESULT: Not found; superior object found"  . . . . . .  6
-       2.3.3  "RESULT: Not found" . . . . . . . . . . . . . . . . . .  6
+       3.3.1  "RESULT: Found" . . . . . . . . . . . . . . . . . . . .  7
+       3.3.2  "RESULT: Not found; superior object found"  . . . . . .  7
+       2.3.3  "RESULT: Not found" . . . . . . . . . . . . . . . . . .  7
      3.4  Section that displays information about the OID . . . . . .  7
      3.6  Section that displays information about the RA  . . . . . .  8
-     3.7  Referral  . . . . . . . . . . . . . . . . . . . . . . . . .  8
-     3.8  Date/Time references  . . . . . . . . . . . . . . . . . . .  9
-   4  Full example  . . . . . . . . . . . . . . . . . . . . . . . . . 10
-     4.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 10
-     4.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 10
-   5. Alternative namespaces  . . . . . . . . . . . . . . . . . . . . 10
-   6  Security Considerations . . . . . . . . . . . . . . . . . . . . 12
-   7  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 12
-   8  References  . . . . . . . . . . . . . . . . . . . . . . . . . . 13
-     8.1  Normative References  . . . . . . . . . . . . . . . . . . . 13
-     8.2  Informative References  . . . . . . . . . . . . . . . . . . 13
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 13
+     3.7  Referral  . . . . . . . . . . . . . . . . . . . . . . . . .  9
+     3.8  Date/Time references  . . . . . . . . . . . . . . . . . . . 10
+   4  Full example  . . . . . . . . . . . . . . . . . . . . . . . . . 11
+     4.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+     4.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 11
+   5. Alternative namespaces  . . . . . . . . . . . . . . . . . . . . 12
+   6  Security Considerations . . . . . . . . . . . . . . . . . . . . 13
+   7  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 13
+   8  References  . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+     8.1  Normative References  . . . . . . . . . . . . . . . . . . . 14
+     8.2  Informative References  . . . . . . . . . . . . . . . . . . 14
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 14
 .fi
 .in 3
 
@@ -109,16 +110,16 @@ Table of Contents
 .ti 0
 1  Introduction
 
-An object identifier (OID) is an extensively used identification mechanism jointly developed by ITU-T and ISO/IEC for naming any type of object with a globally unambiguous name. OIDs provide a persistent identification of objects based on a hierarchical structure of Registration Authorities (RA), where each parent has an object identifier and allocates object identifiers to child nodes.
+An Object Identifier (OID) is an extensively used identification mechanism jointly developed by ITU-T and ISO/IEC for naming any type of object with a globally unambiguous name. OIDs provide a persistent identification of objects based on a hierarchical structure of Registration Authorities (RA), where each parent has an Object Identifier and allocates Object Identifiers to child nodes.
 
 There are a few methods of retrieving information about an Object Identifier, like:
 
-A) Searching through web repositories like www.oid-info.com or www.alvestrand.no/objectid/ . This has the disadvantage that the information is usually not machine readable.
+(A) Searching through web repositories like www.oid-info.com or www.alvestrand.no/objectid/ . This has the disadvantage that the information is usually not machine readable.
 
-B) Retrieving information using the Object Identifier Resolution System (ORS) defined in Rec. ITU-T X.672 | ISO/IEC 29168-1.
-This has the disadvantage that the Registration Authority needs to include specific DNS RRs to their domain, and additionally, all superior OIDs need to implement ORS in order to be able to use ORS.
+(B) Retrieving information using the Object Identifier Resolution System (ORS) defined in Rec. ITU-T X.672 | ISO/IEC 29168-1.
+This has the disadvantage that the Registration Authority needs to include specific DNS Resource Records to their domain, and additionally, all superior OIDs must implement ORS.
 
-OID-over-WHOIS creates an additional method of retrieving information about an OID which is both human-readable as well as machine-readable.
+This document describes an additional method of retrieving information about OIDs, which is both human-readable and machine-readable.
 
 
 .ti 0
@@ -129,18 +130,23 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 In this document, "RA" is an abbreviation for "Registration Authority" and "OID" is an abbreviation for "Object Identifier".
 
 
+.bp
 .ti 0
 2  Request
 
 OID-over-WHOIS uses the WHOIS protocol specified in RFC\03912 [RFC3912].
 
-During the request, the client shall send a query beginning with "oid:", following by an OID in dot notation as defined as "numericoid" in RFC\02252 [RFC2252]. However, numbers shall not have leading zeroes. A leading dot in front of the OID is permitted.
+During the request, the client sends a query beginning with "oid:", followed by an OID in dot notation, as defined in RFC\02252 [RFC2252], but with following differences:
 
-The OID may be empty or contain a single dot "." to query the root of the OID tree.
+(a) Numbers must not have leading zeroes.
+
+(b) A leading dot in front of the OID is permitted.
+
+(c) To query the root of the OID tree, the OID may be empty or only consist of a single dot.
 
 Examples of valid queries:
 
-.in 6
+.in 7
 .nf
 oid:
 oid:.
@@ -149,18 +155,18 @@ oid:.2.999
 .fi
 .in 3
 
-All OIDs are interpreted as absolute OIDs. Relative OIDs (i.e. relative to the root OID of the Registration Authority running the whois service) are not allowed.
+All OIDs are interpreted as absolute OIDs. Relative OIDs (e.g. relative to the root of the Registration Authority running the whois service) are not allowed.
 
 .ti 0
 2.1  Authentication tokens
 
-At the end of the query, the user may additionally append case sensitive, non-empty alphanumeric authentication tokens to control the display of confidential information.
+At the end of the query, the client may additionally append case sensitive, non-empty alphanumeric authentication tokens to control the display of confidential information.
 
 Each authentication token is prepended by a dollar sign ("$")
 
 Examples of valid queries:
 
-.in 6
+.in 7
 .nf
 oid:2.999$firstToken
 oid:2.999$firstToken$secondToken1234
@@ -170,6 +176,7 @@ oid:2.999$firstToken$secondToken1234
 Please note that authentication tokens are only a weak protection. For more information, see "security considerations".
 
 
+.bp
 .ti 0
 2.2  BNF notation
 
@@ -178,9 +185,9 @@ definitions will be used. They are based on the BNF styles of
 RFC\0822 [RFC822].
 
 .nf
-digit  = "0" / "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9"
+digit   = "0" / "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9"
 
-nonzerodigit = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9"
+nonzero-digit = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9"
 
 char  = "a" / "b" / "c" / "d" / "e" / "f" / "g" / "h" / "i" / "j" /
         "k" / "l" / "m" / "n" / "o" / "p" / "q" / "r" / "s" / "t" /
@@ -189,15 +196,15 @@ char  = "a" / "b" / "c" / "d" / "e" / "f" / "g" / "h" / "i" / "j" /
         "O" / "P" / "Q" / "R" / "S" / "T" / "U" / "V" / "W" / "X" /
         "Y" / "Z" / digit
 
-number          = "0" / nonzerodigit *( digit )
+positive-number = "0" / nonzero-digit *( digit )
 
-oid             = number *( "." number )
+oid             = positive-number *( "." positive-number )
 
-optionaloid     = 0*1( "." ) *( oid )
+optional-oid    = 0*1( "." ) 0*1( oid )
 
 authtoken       = char *( char )
 
-query           = "oid:" optionaloid *( "$" authtoken )
+query           = "oid:" optional-oid *( "$" authtoken )
 .fi
 
 
@@ -205,21 +212,28 @@ query           = "oid:" optionaloid *( "$" authtoken )
 3.  Response
 
 .ti 0
-3.1  Format
+3.1  Format and encoding
 
 The response should be UTF-8 encoded, without Byte-Order-Mark (BOM).
 
 It is recommended that each line is limited to 80 characters.
 
-The response contains multiple lines with fields and values, which are separated by a double colon (":"). Whitespace characters after the double colon are allowed.
+The response contains multiple lines with fields and values,
+which are separated by a double colon (":").
+Whitespace characters after the double colon are allowed.
 
 Field names are case insensitive.
 
-If a value needs to be splitted into multiple lines, e.g. if the values would exceed the line length limit, the key including double colon needs to be repeated at the beginning of the new line.
+If a value needs to be split into multiple lines, e.g.
+if the line would exceed the length limit, the key including double
+colon needs to be repeated at the beginning of the new line.
 
-If attributes have multiple values (e.g. multiple unicode-labels, alternative email-addresses etc.), a new line with the same field name may be added to the previous line containing the same field name.
+If attributes have multiple values (e.g. multiple Unicode labels,
+alternative email-addresses etc.),
+a new line with the same field name may be added.
 
-Comment lines start with a percent sign ("%"). They shall not be evaluated by machines.
+Comment lines start with a percent sign ("%") at the beginning of a line,
+without whitespaces in front of it. Comment lines shall not be evaluated by machines.
 
 
 .ti 0
@@ -230,13 +244,13 @@ It is recommended that sections are divided by at least one empty line and/or co
 
 This RFC defines following sections (which should stay in this order):
 
-(1) Section that displays the request and the result, starting with field "query".
+(1) Section that displays the request and the result, starting with the field "query".
 
-(2) Section that displays information about the OID information starting with field "object".
+(2) Section that displays information about the OID, starting with the field "object".
 
-(3) Section that displays information about the Registration Authority starting with field "ra".
+(3) Section that displays information about the Registration Authority, starting with the field "ra".
 
-The service may define additional sections between or after sections, but not at the beginning at the response.
+The service may define additional sections between or after these sections, but not at the beginning at the response.
 
 
 .ti 0
@@ -248,7 +262,7 @@ Possible fields:
 
 - "query" contains the request of the user (beginning with "oid:"). No canonization or sanitation should be applied at this step. Authentication tokens must be omitted.
 
-- "result" may only be "Found", "Not found; superior object found", or "Not found". These result types are defined below.
+- "result" may only be "Found", "Not found" or "Not found; superior object found". These result types are defined below.
 
 - "distance" is only present if the result is "Not found; superior object found". A distance of "1" means that the direct parent was found. A distance of "2" means that the grand-parent was found, etc.
 
@@ -256,21 +270,18 @@ Possible fields:
 .ti 0
 3.3.1  "RESULT: Found"
 
-The system can verify that the requested OID does exists.
-It has either full information about the OID, or knows another service (e.g. another whois service, or a website) where information can be retrieved from).
+The system can verify that the requested OID exists. It has either full information about the OID, or knows another service (e.g. another whois service) where information can be retrieved from.
 
 .ti 0
 3.3.2  "RESULT: Not found; superior object found"
 
 The system cannot verify that the requested OID exists, or it denies that the OID exists (because it is confidential).
-However, the system knows a superior OID which is existing.
-The following sections of the response will show information about this superior OID instead.
+However, the system knows a superior OID which is existing. The response will show information about this superior OID instead.
 
 .ti 0
 2.3.3  "RESULT: Not found"
 
 The system cannot verify that the requested OID exists, or it denies that the OID exists (because it is confidential). Additionally, the system does not have information about any superior OID.
-
 
 
 .ti 0
@@ -282,29 +293,31 @@ Possible fields:
 
 - "object" which shows the OID in dot-notation, beginning with "oid:".
 
-- "status" which has usually the value "Found", but it can also have different values like "Confidential" (in case the server does not deny the existence of the OID).
+- "status" which usually has the value "Found", but it can also have different values like "Confidential" (in case the server doesn't deny the existence of the OID).
 
-- Fields like "url" or "whois-service" should be present if the local service does not have full information about the OID, or if the subordinate objects are delegated to another Registration Authority which operates an individual database / whois service / website.
+- "whois-service" should be present if the service does not have full information about the OID (e.g. if the requested OID is inside a branch that was delegated to a different RA operating an own whois service). If the response was "Found" (i.e. the service has full information about the OID), the information "whois-service" is only informational; its existence is most likely a hint that subsequent OIDs will be found at this whois server. If the result is "Found; superior object found", the client must query the referred whois server in order to receive accurate information about the OID.
 
-- "identifier" (optional, multiple values allowed) contains the ASN.1 alphanumeric value as defined in Rec. ITU-T X.680 | ISO/IEC 8824-1, clause 32.
+- "url" (optional, multiple values allowed) contains a website that contains more information about the OID.
 
-- "unicode-label" (optional, multiple values allowed) contains an Internationalized Resource Identifier (IRI) as defined in Rec. ITU-T X.680.
+- "identifier" (optional, multiple values allowed) contains the ASN.1 alphanumeric value as defined in Rec. ITU-T X.680 | ISO/IEC 8824-1, clause 32 [X680].
+
+- "unicode-label" (optional, multiple values allowed) contains an Internationalized Resource Identifier (IRI) as defined in Rec. ITU-T X.680 | ISO/IEC 8824-1, clause 34 [X680].
 
 - "name" contains the name of the OID.
 
 - "description" (optional) contains a short description of the OID.
 
-- "information" (optional) contains additional information
+- "information" (optional) contains additional information.
 
 - "created" (optional) contains the date the OID was allocated by the superior RA.
 
-- "registered" (optional) contains the date when the OID was registered in the local database.
+- "registered" (optional) contains the date the OID was registered in the local database.
 
 - "updated" (optional) contains the date the OID was last updated.
 
 - "parent" (optional) contains the OID of the nearest known object, beginning with "oid:".
 
-- "subordinate" (optional, multiple values allowed) contains subordinate OIDs, beginning with "oid:"
+- "subordinate" (optional, multiple values allowed) contains a list of subordinate OIDs, beginning with "oid:".
 
 - Additional fields can be defined by the service.
 
@@ -312,7 +325,7 @@ Possible fields:
 .ti 0
 3.6  Section that displays information about the RA
 
-This section may not be present when result is "Not found", otherwise it is optional. If it is present, it must start with the field "ra".
+This section must not be present when result is "Not found", otherwise it is optional. If it is present, it must start with the field "ra".
 
 Fields:
 
@@ -320,15 +333,15 @@ Fields:
 
 - "ra-status" shows the status of the RA. It can be "Found", "Not found" (if the service does only know the name of the RA and nothing else) or "Confidential".
 
-- "ra-name" (optional) contains the name of a person or group.
+- "ra-name" (optional) contains the name of a person or group responsible for the allocation of OIDs.
 
 - "ra-organization" (optional) contains the name of the organization, in case "ra-name" is the name of a person or workgroup.
 
 - "ra-address" (optional) contains the postal address of the Registration Authority.
 
-- "ra-phone" (optional) contains the phone number of the Registration Authority; it should contain the international country code.
+- "ra-phone" (optional) contains the phone number of the Registration Authority, including the international country code.
 
-- "ra-fax" (optional) contains the phone number of the Registration Authority; it should contain the international country code.
+- "ra-fax" (optional) contains the phone number of the Registration Authority, including the international country code.
 
 - "ra-email" (optional) contains the email address of the Registration Authority.
 
@@ -339,12 +352,20 @@ Fields:
 - Additional fields can be defined by the service, but must begin with "ra-".
 
 
+
 .ti 0
 3.7  Referral
 
-By using the field "whois-service", the service can instruct the client to query another service that might have more information about the requested object. If Registration Authorities maintain up-to-date references to WHOIS service references in the descriptions of their delegated OIDs, it is possible to automatically retrieve information about any OID.
+By using the field "whois-service", the service can instruct the client to query another service that might have more information about the requested object.
 
-Example: OID 2.999 is owned by Registration Authority "A", running a whois server a.example.com. The OID 2.999.1000 will be allocated to Registration Authority "B" who is operating the whois service b.example.com.
+If Registration Authorities maintain up-to-date references to WHOIS service references of their OID delegations, it is possible to automatically retrieve information about any OID.
+
+
+Example:
+
+OID 2.999 is owned by Registration Authority "A", operating a whois service at "a.example.com".
+
+The OID 2.999.1000 has been allocated to Registration Authority "B" who is operating a whois service at "b.example.com".
 
 The client asks a.example.com for information about 2.999.1000.1 and should receive following reply:
 
@@ -363,7 +384,7 @@ ra-status:      Not Found
 .fi
 .in 3
 
-The client now knows that a.example.com only knows 2.999.1000, and that more information can be requested from b.example.com. So, the client could then accordingly query b.example.com for 2.999.1000.1.
+The client now knows that "a.example.com" only knows 2.999.1000, and that there is a reference to another whois service located at "b.example.com". So, the client could then accordingly query "b.example.com", asking for information about 2.999.1000.1.
 
 .in 7
 .nf
@@ -382,7 +403,7 @@ ra-status:      Not Found
 .ti 0
 3.8  Date/Time references
 
-Date/Time references should have the format "yyyy-mm-dd hh:nn:ss +oooo", e.g. "2019-03-15 18:32:00 +0200".
+Date/Time references should have the format "YYYY-MM-DD hh:mm:ss +/-zzzz", e.g. "2019-03-15 18:32:00 +0200".
 
 If parts of the date/time reference are uncertain, they may be removed until the date/time reference has the highest correctness.
 
@@ -399,6 +420,7 @@ Examples of valid date/time references:
 .fi
 
 
+.bp
 .ti 0
 4  Full example
 
@@ -441,14 +463,13 @@ ra:             ITU-T SG 17 & ISO/IEC JTC 1/SC 6
 ra-status:      Not found
 .fi
 
-
-
+.bp
 .ti 0
 5. Alternative namespaces
 
-This document describes the usage of retrieving information about OIDs using the whois protocol. In addition to the namespace "oid", the methods described in this RFC can also be applied to other namespaces, like "ipv4", "ipv6", "uuid", "doi" etc.
+This document describes the usage of retrieving information about OIDs using the whois protocol. In addition to the namespace "oid", the methods described in this RFC can also be applied to other namespaces like "ipv4", "ipv6", "uuid", "doi" etc.
 
-In the following example, the client wants to retrieve information about the IPv6 address "2001:1af8:4700:a07e:1::1336". The whois service did not found this particular IPv6 address in its database, however, it did find the address range "2001:1af8:4700:a07e:1::/112", with the distance of 16 (bits):
+In the following example, the client wants to retrieve information about the IPv6 address "2001:1af8:4700:a07e:1::1336". The whois service didn't find this particular IPv6 address in its database, however, it did find the address range "2001:1af8:4700:a07e:1::/112", with the distance of 16 (bits):
 
 .in 7
 .nf
@@ -468,7 +489,7 @@ ra-status:    Not found
 .fi
 
 .in 3
-Another usage example is the retrieval of information about UUIDs (i.e. GUIDs used by Microsoft COM interfaces). This namespace has no hierarchical structure, so the whois service can only reply "Found" or "Not Found".
+Another usage example is the retrieval of information about UUIDs (i.e. GUIDs used by Microsoft COM interfaces). The UUID namespace has no hierarchical structure, so the whois service can only reply "Found" or "Not Found".
 
 .in 7
 .nf
@@ -478,7 +499,7 @@ result:       Found
 object:       uuid:2a00375e-224c-49de-b8d1-440df7ef3ddc
 status:       Found
 name:         LocalizedResourcesDir
-description:  This GUID is used as "Custom Place" in file dialogs.
+description:  GUID used as "Custom Place" in file dialogs.
 created:      ...
 updated:      ...
 
@@ -506,15 +527,14 @@ Furthermore, authentication tokens must have an sufficient length to avoid brute
 .ti 0
 7  IANA Considerations
 
-IANA is running a whois service at whois.iana.org. The WHOIS service could be extended by allowing requests starting with "oid:" and could serve following contents:
+IANA is running a whois service at whois.iana.org. This WHOIS service could be extended by allowing requests starting with "oid:" and could serve following contents:
 
-(1) The service can output information about OIDs owned or delegated by IANA, for example it could output information about Private Enterprise Numbers (PEN) located at 1.3.6.1.4.1. Owners of Private Enterprise Numbers could store addresses of their own WHOIS servers in the IANA database, so that these addresses can be included in the WHOIS output of IANA.
+(1) The service could output information about OIDs owned or delegated by IANA, for example it could output information about Private Enterprise Numbers (PEN) located at 1.3.6.1.4.1. Owners of Private Enterprise Numbers could store addresses of their own WHOIS servers in the IANA database, so that these addresses can be included in the WHOIS output of IANA.
 
-(2) The service can furthermore maintain records for the OID roots "oid:" (refers to IANA itself), "oid:0" (refers to ITU-T), "oid:1" (refers to ISO) and "oid:2" (includes a reference to referring to either an ISO or an ITU-T server). This could alternatively be accomplished by a whois service by ISO or ITU-T.
-
-If IANA adopts the retrieval of OID information over their WHOIS server, a great portion of arbitrary OIDs could be automatically queried.
+(2) The service can furthermore maintain records for the OID roots "oid:" (refers to IANA itself), "oid:0" (refers to ITU-T), "oid:1" (refers to ISO) and "oid:2" (refers to either an ISO or an ITU-T server). This could alternatively be accomplished by a whois service operated by ISO or ITU-T.
 
 
+.bp
 .ti 0
 8  References
 
@@ -533,6 +553,10 @@ If IANA adopts the retrieval of OID information over their WHOIS server, a great
 .ti 3
 [RFC822]   Crocker, D., "Standard of the Format of ARPA-Internet Text Messages", STD 11, RFC 822, August 1982.
 
+.in 14
+.ti 3
+[X680]     Information Technology - Abstract Syntax Notation One (ASN.1) & ASN.1 encoding rules, Recommendation ITU-T\0X.680 | ISO/IEC\08824-1
+
 
 .ti 0
 8.2  Informative References
@@ -540,9 +564,6 @@ If IANA adopts the retrieval of OID information over their WHOIS server, a great
 .in 14
 .ti 3
 [X660]     Procedures for the operation of object identifier registration authorities: General procedures and top arcs of the international object identifier tree, Recommendation ITU-T\0X.660 | ISO/IEC\09834-1
-
-.ti 3
-[X680]     Information Technology - Abstract Syntax Notation One (ASN.1) & ASN.1 encoding rules, Recommendation ITU-T\0X.680 | ISO/IEC\08824-1
 
 
 .ti 0
@@ -553,6 +574,7 @@ Authors' Addresses
 .sp
 .nf
 Daniel Marschall
+ViaThinkSoft
 Postfach 11 53
 69243 Bammental
 Germany
