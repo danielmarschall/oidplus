@@ -34,7 +34,7 @@
 .ce 3
 Retrieving information about Object Identifiers
 using the WHOIS protocol
-draft-ietf-viathinksoft-oidwhois-00
+draft-viathinksoft-oidwhois-00
 .fi
 .in 3
 
@@ -111,7 +111,7 @@ Table of Contents
 1  Introduction
 
 An Object Identifier (OID) is an extensively used identification mechanism jointly developed by ITU-T and ISO/IEC for naming any type of object with a globally unambiguous name. OIDs provide a persistent identification of objects based on a hierarchical structure of Registration Authorities (RA), where each parent has an Object Identifier and allocates Object Identifiers to child nodes.
-More information about OIDs can be found in Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660].
+More information about OIDs can be found in Recommendation ITU-T X.660 | ISO/IEC 9834-1 [X660].
 
 There are a few methods of retrieving information about an Object Identifier, like:
 
