@@ -182,15 +182,45 @@ class OIDplusGs1 extends OIDplusObject {
 	}
 
 	public function one_up() {
-		// TODO
-		return false;
+		return  OIDplusObject::parse($this->ns().':'.substr($this->number,0,strlen($this->number)-1));
+	}
+
+	private static function distance_($a, $b) {
+		$min_len = min(strlen($a), strlen($b));
+
+		for ($i=0; $i<$min_len; $i++) {
+			if ($a[$i] != $b[$i]) return false;
+		}
+
+		return strlen($a) - strlen($b);
 	}
 
 	public function distance($to) {
-		// TODO
+		if (!is_object($to)) $to = OIDplusObject::parse($to);
+		if (!($to instanceof $this)) return false;
+
+		// This is pretty tricky, because the whois service should accept GS1 numbers with and without checksum
+		if ($this->number == $to->number) return 0;
+		if ($this->number.$this->checkDigit() == $to->number) return 0;
+		if ($this->number == $to->number.$to->checkDigit()) return 0;
+
+		$b = $this->number;
+		$a = $to->number;
+		$tmp = self::distance_($a, $b);
+		if ($tmp != false) return $tmp;
+
+		$b = $this->number.$this->checkDigit();
+		$a = $to->number;
+		$tmp = self::distance_($a, $b);
+		if ($tmp != false) return $tmp;
+
+		$b = $this->number;
+		$a = $to->number.$to->checkDigit();
+		$tmp = self::distance_($a, $b);
+		if ($tmp != false) return $tmp;
+
 		return null;
 	}
 }
 
 OIDplusObject::$registeredObjectTypes[] = 'OIDplusGs1';
-

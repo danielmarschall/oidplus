@@ -148,7 +148,8 @@ class OIDplusIpv4 extends OIDplusObject {
 		$cidr = $this->cidr - 1;
 		if ($cidr < 0) return false; // cannot go further up
 
-		return self::parse(self::ns() . ':' . $this->bare . '/' . $cidr); // TODO: remove unnecessary bits, so we don't have stuff like ...::1337/112
+		$tmp = ipv4_normalize_range($this->bare . '/' . $cidr);
+		return self::parse($this->ns() . ':' . $tmp);
 	}
 
 	public function distance($to) {

@@ -114,6 +114,3 @@ QUESTIONS:
 GUID Management
 - Leaf nodes (GUIDs) should show/edit the Title in the CRUD, so you dont have to click the GUID to see the title
 - seltsamer bug: wenn ich guid:oidplus editiere, dann öffnet sich links guid:activedirectory beim neuladen des baums nach dem update. irgendwie öffnet er den zuletzt geöffneten node beim reload nochmal
-
-GS1 Management:
-- Whois muss einen Eintrag sowohl mit als auch ohne Prüfsumme finden können (findFitting anpassen?)
