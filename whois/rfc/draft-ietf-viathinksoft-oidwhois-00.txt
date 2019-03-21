@@ -261,7 +261,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    The response should be UTF-8 encoded (as defined in RFC 3629
    [RFC3629]), without Byte-Order-Mark (BOM).
 
-   It is recommended that each line is limited to 80 characters.
+   It is recommended that each line be limited to 80 characters.
 
    The response contains multiple lines with fields and values, which
    are separated by a double colon (":"). Whitespace characters after
@@ -348,8 +348,8 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
    The system cannot verify that the requested OID exists, or it denies
    that the OID exists (because it is confidential). However, the system
-   knows a superior OID which is existing. The response will show
-   information about this superior OID instead.
+   knows a superior OID does exist. The response will show information
+   about this superior OID instead.
 
 2.3.3  "RESULT: Not found"
 
@@ -378,7 +378,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    service). If the response was "Found" (i.e. the service has full
    information about the OID), the information "whois-service" is only
    informational; its existence is most likely a hint that subsequent
-   OIDs will be found at this WHOIS server. If the result is "Found;
+   OIDs will be found at this WHOIS server. If the result is "Not found;
    superior object found", the client must query the referred WHOIS
    server in order to receive accurate information about the OID.
 
@@ -433,11 +433,11 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    Fields:
 
    - "ra" contains a general name of the RA like a person name, a group
-   name or a company name.
+   name, or a company name.
 
    - "ra-status" shows the status of the RA. It can be "Found", "Not
    found" (if the service does only know the name of the RA and nothing
-   else) or "Confidential".
+   else), or "Confidential".
 
    - "ra-name" (optional) contains the name of a person or group
    responsible for the allocation of OIDs.
@@ -459,7 +459,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    - "ra-phone" (optional) contains the phone number of the Registration
    Authority, including the international country code.
 
-   - "ra-fax" (optional) contains the phone number of the Registration
+   - "ra-fax" (optional) contains the fax number of the Registration
    Authority, including the international country code.
 
    - "ra-email" (optional) contains the email address of the
@@ -703,14 +703,14 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
    IANA is running a WHOIS service at whois.iana.org. This WHOIS service
    could be extended by allowing requests starting with "oid:" and could
-   serve following contents:
+   serve the following contents:
 
    (1) The service could output information about OIDs owned or
    delegated by IANA, for example it could output information about
    Private Enterprise Numbers (PEN) located at 1.3.6.1.4.1. Owners of
-   Private Enterprise Numbers could store addresses of their own WHOIS
-   servers in the IANA database, so that these addresses can be included
-   in the WHOIS output of IANA.
+   Private Enterprise Numbers could store the addresses of their own
+   WHOIS servers in the IANA database, so that these addresses can be
+   included in the WHOIS output of IANA.
 
    (2) The service can furthermore maintain records for the OID roots
    "oid:" (refers to IANA itself), "oid:0" (refers to ITU-T), "oid:1"
