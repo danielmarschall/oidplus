@@ -3,7 +3,7 @@
 
 
 INTERNET-DRAFT                                          Daniel Marschall
-Intended Status: Experimental                               ViaThinkSoft
+Intended Status: Informational                              ViaThinkSoft
 Expires: <Expiry Date>                                      January 2019
 
 

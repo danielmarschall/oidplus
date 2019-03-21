@@ -1,4 +1,4 @@
-t.pl 10.0i
+.pl 10.0i
 .po 0
 .ll 7.2i
 .lt 7.2i
@@ -17,7 +17,7 @@ t.pl 10.0i
 
 .nf
 .tl 'INTERNET-DRAFT''Daniel Marschall'
-.tl 'Intended Status: Experimental''ViaThinkSoft'
+.tl 'Intended Status: Informational''ViaThinkSoft'
 .tl 'Expires: <Expiry Date>''January 2019'
 .fi
 
