@@ -296,7 +296,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    following clauses. It is recommended that sections are divided by at
    least one empty line and/or comment line.
 
-   This RFC defines following sections (which should stay in this
+   This document defines following sections (which should stay in this
    order):
 
    (1) Section that displays the request and the result, starting with
@@ -622,7 +622,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
    This document describes the usage of retrieving information about
    OIDs using the WHOIS protocol. In addition to the namespace "oid",
-   the methods described in this RFC can also be applied to other
+   the methods described in this document can also be applied to other
    namespaces like "ipv4", "ipv6", "uuid", "doi" etc.
 
    In the following example, the client wants to retrieve information
@@ -643,7 +643,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
        updated:      ...
 
        ra:           ...
-       ra-status:    Not found
+       ra-status:    ...
 
    Another usage example is the retrieval of information about UUIDs
    (i.e. GUIDs used by Microsoft COM interfaces). The UUID namespace has
@@ -676,28 +676,32 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 6  Security Considerations
 
-   The knowledge of existence or information about some OIDs could be
-   considered confidential. In this case, the service can either deny
+   (1) The knowledge of existence or information about some OIDs could
+   be considered confidential. In this case, the service can either deny
    the existence of the requested OID (by setting the result to "Not
    found") or redact information in the object output section.
 
-   Registration Authorities might demand that their personal data is
+   (2) Registration Authorities might demand that their personal data is
    kept confidential, or at least be partially redacted to increase
    privacy or as a measurement against spam.
 
-   The service can decide if confidential material is omitted or shown,
-   based on authentication mechanisms like white-listing client IP
-   addresses or by using authentication tokens supplied by the client
+   (3) The service can decide if confidential material is omitted or
+   shown, based on authentication mechanisms like white-listing client
+   IP addresses or by using authentication tokens supplied by the client
    during the request.
 
-   The usage of authentication tokens is not recommended if the traffic
-   between client and server is transmitted through an untrusted
-   network, because the WHOIS protocol is not encrypted.
+   (4) The usage of authentication tokens is not recommended if the
+   traffic between client and server is transmitted through an untrusted
+   network, because the WHOIS protocol is not encrypted. Furthermore,
+   authentication tokens must have an sufficient length to avoid brute
+   force attacks, or the service must limit the number of requests.
 
-   Furthermore, authentication tokens must have an sufficient length to
-   avoid brute force attacks, or the service must limit the number of
-   requests.
-
+   (5) The WHOIS protocol itself has no mechanism for verifying the
+   integrity of data received. Due to this fact, information should not
+   be trusted if it is transmitted through an untrusted network. If
+   integrity/authenticity is required, the WHOIS output should be signed
+   using a public key (this mechanism is not described in this
+   document).
 
 7  IANA Considerations
 
@@ -717,10 +721,6 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    (refers to ISO) and "oid:2" (refers to either an ISO or an ITU-T
    server). This could alternatively be accomplished by a WHOIS service
    operated by ISO or ITU-T.
-
-
-
-
 
  
 
