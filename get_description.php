@@ -31,7 +31,7 @@ try {
 } catch(Exception $e) {
 	$out = array();
 	$out['title'] = 'Error';
-	$out['icon'] = ''; // TODO
+	$out['icon'] = 'img/error_big.png';
 	$out['text'] = $e->getMessage();
 }
 

@@ -85,7 +85,7 @@ class OIDplusJava extends OIDplusObject {
 		return false;
 	}
 
-	public function getContentPage(&$title, &$content) {
+	public function getContentPage(&$title, &$content, &$icon) {
 		if ($this->isRoot()) {
 			$title = OIDplusJava::objectTypeTitle();
 

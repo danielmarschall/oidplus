@@ -52,7 +52,7 @@ abstract class OIDplusObject {
 
 	public abstract function isLeafNode();
 
-	public abstract function getContentPage(&$title, &$content);
+	public abstract function getContentPage(&$title, &$content, &$icon);
 
 	public static function getRaRoots($ra_email=null) {
 		$out = array();

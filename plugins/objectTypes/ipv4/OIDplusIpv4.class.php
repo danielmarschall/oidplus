@@ -99,7 +99,7 @@ class OIDplusIpv4 extends OIDplusObject {
 		return $this->cidr >= 32;
 	}
 
-	public function getContentPage(&$title, &$content) {
+	public function getContentPage(&$title, &$content, &$icon) {
 		if ($this->isRoot()) {
 			$title = OIDplusIpv4::objectTypeTitle();
 

@@ -87,7 +87,7 @@ class OIDplusGuid extends OIDplusObject {
 		return uuid_valid($this->guid);
 	}
 
-	public function getContentPage(&$title, &$content) {
+	public function getContentPage(&$title, &$content, &$icon) {
 		if ($this->isRoot()) {
 			$title = OIDplusGuid::objectTypeTitle();
 

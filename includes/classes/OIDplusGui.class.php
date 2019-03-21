@@ -300,7 +300,7 @@ class OIDplusGui {
 			$ra_email = explode('$',$id)[1];
 
 			$out['title'] = 'Registration Authority Information'; // TODO: email addresse reinschreiben? aber wie vor anti spam schützen?
-			$out['icon'] = ''; // TODO
+			$out['icon'] = 'img/rainfo_big.png';
 
 			if (empty($ra_email)) {
 				$out['text'] = '<p>Following object roots have an undefined Registration Authority:</p>';
@@ -325,7 +325,7 @@ class OIDplusGui {
 			$handled = true;
 
 			$out['title'] = 'Forgot password';
-			$out['icon'] = ''; // TODO
+			$out['icon'] = 'img/forgot_password_big.png';
 
 			try {
 				$out['text'] .= '<p>Please enter the email address of your account, and information about the password reset will be sent to you.</p>
@@ -350,7 +350,7 @@ class OIDplusGui {
 			$auth = explode('$',$id)[3];
 
 			$out['title'] = 'Reset password';
-			$out['icon'] = ''; // TODO
+			$out['icon'] = 'img/reset_password_big.png';
 
 			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
 				$out['text'] = 'Invalid authorization. Is the URL OK?';
@@ -377,7 +377,7 @@ class OIDplusGui {
 			$origin = explode('$',$id)[2];
 
 			$out['title'] = 'Invite a Registration Authority';
-			$out['icon'] = ''; // TODO
+			$out['icon'] = 'img/invite_ra_big.png';
 
 			try {
 				$cont = self::getInvitationText($email);
@@ -405,7 +405,7 @@ class OIDplusGui {
 			$auth = explode('$',$id)[3];
 
 			$out['title'] = 'Register as Registration Authority';
-			$out['icon'] = ''; // TODO
+			$out['icon'] = 'img/activate_ra_big.png';
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 			if (OIDplus::db()->num_rows($res) > 0) {
@@ -525,7 +525,7 @@ class OIDplusGui {
 
 			if ((!is_null($obj)) && (!$obj->userHasReadRights())) {
 				$out['title'] = 'Access denied';
-				$out['icon'] = ''; // TODO
+				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>Please <a href="?goto=oidplus:login">log in</a> to receive information about this object.</p>';
 				return $out;
 			}
@@ -538,7 +538,7 @@ class OIDplusGui {
 			} else {
 				$out['title'] = $row['title'];
 			}
-			$out['icon'] = ''; // TODO
+			$out['icon'] = 'img/object_big.png';
 
 			if (isset($row['description'])) {
 				$desc = empty($row['description']) ? '<p><i>No description for this object available</i></p>' : OIDplusGui::objDescription($row['description']);
@@ -563,16 +563,18 @@ class OIDplusGui {
 					if ((OIDplus::db()->num_rows($res) == 0) && !$obj->isRoot()){
 						http_response_code(404);
 						$out['title'] = 'Object not found';
+						$out['icon'] = 'img/error_big.png';
 						$out['text'] = 'The object <code>'.htmlentities($id).'</code> was not found in this database.';
 						return $out;
 					} else {
-						$obj->getContentPage($out['title'], $out['text']);
+						$obj->getContentPage($out['title'], $out['text'], $out['icon']);
 					}
 				}
 			}
 			if (!$matches_any_registered_type) {
 				http_response_code(404);
 				$out['title'] = 'Object not found';
+				$out['icon'] = 'img/error_big.png';
 				$out['text'] = 'The object <code>'.htmlentities($id).'</code> was not found in this database.';
 				return $out;
 			}

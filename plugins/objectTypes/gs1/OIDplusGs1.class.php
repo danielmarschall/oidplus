@@ -84,7 +84,7 @@ class OIDplusGs1 extends OIDplusObject {
 		return !$this->isBaseOnly();
 	}
 
-	public function getContentPage(&$title, &$content) {
+	public function getContentPage(&$title, &$content, &$icon) {
 		if ($this->isRoot()) {
 			$title = OIDplusGs1::objectTypeTitle();
 

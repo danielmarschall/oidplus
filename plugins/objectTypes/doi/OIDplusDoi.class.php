@@ -96,7 +96,7 @@ class OIDplusDoi extends OIDplusObject {
 		return false;
 	}
 
-	public function getContentPage(&$title, &$content) {
+	public function getContentPage(&$title, &$content, &$icon) {
 		if ($this->isRoot()) {
 			$title = OIDplusDoi::objectTypeTitle();
 

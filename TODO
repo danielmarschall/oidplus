@@ -85,7 +85,6 @@ SMALL THINGS
 - wenn man eine well-known OID anlegen möchte, dann kommt fehler wegen replaceAsn1/replaceIri, aber die OID ist erstellt. Die API ist aber nicht reloaded. Man sieht also nicht, dass die OID erstellt wurde, und ein erneuter klick auf Insert führt zum Primary-Key fehler
 - problem: wenn eine RA eingeladen werden möchte, muss man "update" drücken und die OID wird als updated markiert
 - bei mehreren identifiern kann man nicht bestimmen, welcher identifier der bevorzugte sein soll!!
-- show big icons in the content pane
 - show whois links only if folder "whois/" exists
 
 FUTURE
