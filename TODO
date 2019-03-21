@@ -40,9 +40,13 @@ que: nicht verwendete namespaces ausblenden für die öffentlichkeit?
 
 natOrder() ist nur für OID gültig!!! andere sort-mechanismen für andere objekttypen erforderlich
 
-mce dirty flag:
-	- wenn man wechsel (js tree select), dann soll abgefragt werden, ob tinymce dirty ist, und eine warnung bringen, also so, wie wenn man die seite neu laden würde
-	- kritischer bug: seite öffnen, tiny mce editieren, speichern klicken. dann f5 neu laden (nicht strg+f5): dann ist der alte content wieder da. außer man drückt strg+f5
+tinymce
+	mce dirty flag:
+		- wenn man wechsel (js tree select), dann soll abgefragt werden, ob tinymce dirty ist, und eine warnung bringen, also so, wie wenn man die seite neu laden würde
+		- kritischer bug: seite öffnen, tiny mce editieren, speichern klicken. dann f5 neu laden (nicht strg+f5): dann ist der alte content wieder da. außer man drückt strg+f5
+	bug: overlay "bild" und "tabelle" bleibt auf dem bildschirm, selbst wenn man die seite wechselt über das menü
+
+prüfen, ob wirklich alles mit noscript möglich ist
 
 jstree select: automatically scroll down
 

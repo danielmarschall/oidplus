@@ -308,15 +308,20 @@ class OIDplusGui {
 				$out['text'] = self::showRAInfo($ra_email);
 			}
 
+			$out['text'] .= '<br><br>';
+
 			foreach (OIDplusObject::getRaRoots($ra_email) as $loc_root) {
 				$ico = $loc_root->getIcon();
 				$icon = !is_null($ico) ? $ico : 'img/link.png';
 				$out['text'] .= '<p><a href="?goto='.$loc_root->nodeId().'"><img src="'.$icon.'"> Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())).'</a></p>';
 			}
 
+			if (OIDplus::authUtils()::isRALoggedIn($ra_email)) {
+				$out['text'] .= '<br><p><a href="?goto=oidplus:edit_ra$'.urlencode($ra_email).'">Edit contact info</a></p>';
+			}
 
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).',null)">Delete this RA</a></p>';
+				$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).',null)">Delete this RA</a></p>';
 			}
 
 		// === Forgot password ===
