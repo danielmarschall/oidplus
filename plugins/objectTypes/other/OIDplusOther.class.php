@@ -130,13 +130,37 @@ class OIDplusOther extends OIDplusObject {
 	}
 
 	public function one_up() {
-		// TODO
-		return false;
+		$oid = $this->other;
+
+		$p = strrpos($oid, '\\');
+		if ($p === false) return $oid;
+		if ($p == 0) return '\\';
+
+		$oid_up = substr($oid, 0, $p);
+
+		return self::parse(self::ns().':'.$oid_up);
 	}
 
 	public function distance($to) {
-		// TODO
-		return null;
+		if (!is_object($to)) $to = OIDplusObject::parse($to);
+		if (!($to instanceof $this)) return false;
+
+		$a = $to->other;
+		$b = $this->other;
+
+		if (substr($a,0,1) == '\\') $a = substr($a,1);
+		if (substr($b,0,1) == '\\') $b = substr($b,1);
+
+		$ary = explode('\\', $a);
+		$bry = explode('\\', $b);
+
+		$min_len = min(count($ary), count($bry));
+
+		for ($i=0; $i<$min_len; $i++) {
+			if ($ary[$i] != $bry[$i]) return false;
+		}
+
+		return count($ary) - count($bry);
 	}
 }
 
