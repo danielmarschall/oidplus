@@ -15,6 +15,17 @@
  * limitations under the License.
  */
 
+label.padding_label {
+	font-weight: normal !important;
+	display: inline-block;
+	float: left;
+	clear: left;
+	width: 100px;
+	text-align: right;
+	padding-top: 3px;
+	margin-right: 8px;
+}
+
 .box {
 	width:auto !important;
 	padding:20px;

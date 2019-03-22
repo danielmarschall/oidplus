@@ -366,8 +366,8 @@ class OIDplusGui {
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 				    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
-				    New password: <input type="password" id="password1" value=""/><br><br>
-				    Again: <input type="password" id="password2" value=""/><br><br>
+				    <label class="padding_label">New password:</label><input type="password" id="password1" value=""/><br><br>
+				    <label class="padding_label">Again:</label><input type="password" id="password2" value=""/><br><br>
 				    <input type="submit" value="Change password">
 				  </form>';
 			}
@@ -426,8 +426,8 @@ class OIDplusGui {
 					    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 					    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 					    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
-					    New password: <input type="password" id="password1" value=""/><br><br>
-					    Again: <input type="password" id="password2" value=""/><br><br>
+					    <label class="padding_label">New password:</label><input type="password" id="password1" value=""/><br><br>
+					    <label class="padding_label">Again:</label><input type="password" id="password2" value=""/><br><br>
 					    <input type="submit" value="Register">
 					  </form>';
 				}
@@ -476,8 +476,8 @@ class OIDplusGui {
 			}
 			$out['text'] .= '<form action="action.php" method="POST" onsubmit="return raLoginOnSubmit(this);">';
 			$out['text'] .= '<input type="hidden" name="action" value="ra_login">';
-			$out['text'] .= 'E-Mail: <input type="text" name="email" value="" id="raLoginEMail"><br>';
-			$out['text'] .= 'Password: <input type="password" name="password" value="" id="raLoginPassword"><br><br>';
+			$out['text'] .= '<label class="padding_label">E-Mail:</label><input type="text" name="email" value="" id="raLoginEMail"><br>';
+			$out['text'] .= '<label class="padding_label">Password:</label><input type="password" name="password" value="" id="raLoginPassword"><br><br>';
 			$out['text'] .= '<input type="submit" value="Login"><br><br>';
 			$out['text'] .= '</form>';
 			$out['text'] .= '<p><a href="?goto=oidplus:forgot_password">Forgot password?</a><br>';
@@ -498,7 +498,7 @@ class OIDplusGui {
 				$out['text'] .= '<h2>Login as administrator</h2>';
 				$out['text'] .= '<form action="action.php" method="POST" onsubmit="return adminLoginOnSubmit(this);">';
 				$out['text'] .= '<input type="hidden" name="action" value="admin_login">';
-				$out['text'] .= 'Password: <input type="password" name="password" value="" id="adminLoginPassword"><br><br>';
+				$out['text'] .= '<label class="padding_label">Password:</label><input type="password" name="password" value="" id="adminLoginPassword"><br><br>';
 				$out['text'] .= '<input type="submit" value="Login"><br><br>';
 				$out['text'] .= '</form>';
 				$out['text'] .= '<p><abbr title="Delete the file includes/config.inc.php and reload the page to start Setup again">Forgot password?</abbr></p>';

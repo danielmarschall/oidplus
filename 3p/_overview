@@ -47,9 +47,11 @@ SpamSpan:
 	Download: http://www.spamspan.de/
 
 Cookie consent:
+	License: MIT
 	Currently directly linked
 	Download: https://cookieconsent.insites.com/
 
 ReCaptcha:
+	License: BSD 3-Clause "New" or "Revised" License
 	Currently directly linked
 	Website: https://www.google.com/recaptcha/

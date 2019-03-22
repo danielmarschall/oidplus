@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+// TODO: sign output using PKI
+
 define('OUTPUT_FORMAT_SPACER', 2);
 define('OUTPUT_FORMAT_MAX_LINE_LENGTH', 80);
 
@@ -123,7 +125,10 @@ if ($continue) {
 			$out[] = 'parent: ' . $row->parent . show_asn1_appendix($row->parent);
 		}
 		$out[] = 'name: ' . $row->title;
-		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($row->description)));
+
+		$cont = $row->description;
+		$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
+		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont)));
 
 		if (substr($query,0,4) === 'oid:') {
 			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string($row->id)."'");

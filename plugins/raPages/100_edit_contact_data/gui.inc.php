@@ -39,19 +39,19 @@ if (explode('$',$id)[0] == 'oidplus:edit_ra') {
 
 		$out['text'] .= '<p>Change basic information (public):</p>
 		  <form id="raChangeContactDataForm" onsubmit="return raChangeContactDataFormOnSubmit();">
-			<input type="hidden" id="email" value="'.htmlentities($ra_email).'"/>
-		    RA Name: <input type="text" id="ra_name" value="'.htmlentities($row['ra_name']).'"/><br>
-		    Organization: <input type="text" id="organization" value="'.htmlentities($row['organization']).'"/><br>
-		    Office: <input type="text" id="office" value="'.htmlentities($row['office']).'"/><br>
-		    Person name: <input type="text" id="personal_name" value="'.htmlentities($row['personal_name']).'"/><br>
-		<br>
-		    <input type="checkbox" id="privacy" value="" '.($row['privacy'] == 1 ? ' checked' : '').'/> Privacy: Hide postal address and Phone/Fax/Mobile Numbers<br>
-		    Street: <input type="text" id="street" value="'.htmlentities($row['street']).'"/><br>
-		    ZIP/Town: <input type="text" id="zip_town" value="'.htmlentities($row['zip_town']).'"/><br>
-		    Country: <input type="text" id="country" value="'.htmlentities($row['country']).'"/><br>
-		    Phone: <input type="text" id="phone" value="'.htmlentities($row['phone']).'"/><br>
-		    Mobile: <input type="text" id="mobile" value="'.htmlentities($row['mobile']).'"/><br>
-		    Fax: <input type="text" id="fax" value="'.htmlentities($row['fax']).'"/><br>
+		    <input type="hidden" id="email" value="'.htmlentities($ra_email).'"/>
+		    <label class="padding_label">RA Name:</label><input type="text" id="ra_name" value="'.htmlentities($row['ra_name']).'"/><br>
+		    <label class="padding_label">Organization:</label><input type="text" id="organization" value="'.htmlentities($row['organization']).'"/><br>
+		    <label class="padding_label">Office:</label><input type="text" id="office" value="'.htmlentities($row['office']).'"/><br>
+		    <label class="padding_label">Person name:</label><input type="text" id="personal_name" value="'.htmlentities($row['personal_name']).'"/><br>
+		    <br>
+		    <label class="padding_label">Privacy</label><input type="checkbox" id="privacy" value="" '.($row['privacy'] == 1 ? ' checked' : '').'/> <label for="privacy">Hide postal address and Phone/Fax/Mobile Numbers</label><br>
+		    <label class="padding_label">Street:</label><input type="text" id="street" value="'.htmlentities($row['street']).'"/><br>
+		    <label class="padding_label">ZIP/Town:</label><input type="text" id="zip_town" value="'.htmlentities($row['zip_town']).'"/><br>
+		    <label class="padding_label">Country:</label><input type="text" id="country" value="'.htmlentities($row['country']).'"/><br>
+		    <label class="padding_label">Phone:</label><input type="text" id="phone" value="'.htmlentities($row['phone']).'"/><br>
+		    <label class="padding_label">Mobile:</label><input type="text" id="mobile" value="'.htmlentities($row['mobile']).'"/><br>
+		    <label class="padding_label">Fax:</label><input type="text" id="fax" value="'.htmlentities($row['fax']).'"/><br>
 		    <input type="submit" value="Change data">
 		  </form><br><br>';
 

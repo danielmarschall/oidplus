@@ -1,9 +1,8 @@
 
+Download CookieConsent code into _3p folder
+
 Administrator-Interface:
 - enable and disable object types
-
-make forms and other stuff look nicer. at the moment, it was just developed for functionality
-	=> forms: align input edits, see https://stackoverflow.com/questions/30008948/how-to-align-two-labels-and-two-textboxes-without-a-gap-in-form-horizontal
 
 when javascript fails, the form will be submitted to './' , that is not good! failed javascript must return false, so that the form does not get submitted
 

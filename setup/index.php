@@ -25,7 +25,7 @@
 <p>MySQL database name:<br><input id="mysql_database" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
 <p>Tablename prefix (e.g. <b>oidplus_</b>):<br><input id="tablename_prefix" type="text" value="oidplus_" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
 <p>---</p>
-<p>RECAPTCHA Enabled <input id="recaptcha_enabled" type="checkbox" onclick="javascript:rebuild()"></p><!-- TODO Label for -->
+<p><input id="recaptcha_enabled" type="checkbox" onclick="javascript:rebuild()"> <label for="recaptcha_enabled">RECAPTCHA Enabled</label></p>
 <p>RECAPTCHA Public key<br><input id="recaptcha_public" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
 <p>RECAPTCHA Private key<br><input id="recaptcha_private" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
 </form>

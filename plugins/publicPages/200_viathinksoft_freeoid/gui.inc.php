@@ -107,8 +107,8 @@ if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viat
 				    Title of your OID (usually equal to your name, optional):<br><input type="text" id="title" value=""/><br><br>
 				    URL for more information about your project(s) (optional):<br><input type="text" id="url" value=""/><br><br>
 
-				    Password: <input type="password" id="password1" value=""/><br><br>
-				    Again: <input type="password" id="password2" value=""/><br><br>
+				    <label class="padding_label">Password:</label><input type="password" id="password1" value=""/><br><br>
+				    <label class="padding_label">Again:</label><input type="password" id="password2" value=""/><br><br>
 				    <input type="submit" value="Register">
 				  </form>';
 			}

@@ -29,9 +29,9 @@ if (explode('$',$id)[0] == 'oidplus:changepwd_ra') {
 	} else {
 		$out['text'] .= '<form id="raChangePasswordForm" onsubmit="return raChangePasswordFormOnSubmit();">';
 		$out['text'] .= '<input type="hidden" id="email" value="'.htmlentities($ra_email).'"/><br>';
-		$out['text'] .= 'Old password: <input type="password" id="old_password" value=""/><br>';
-		$out['text'] .= 'New password: <input type="password" id="new_password1" value=""/><br>';
-		$out['text'] .= 'Again: <input type="password" id="new_password2" value=""/><br>';
+		$out['text'] .= '<label class="padding_label">Old password:</label><input type="password" id="old_password" value=""/><br>';
+		$out['text'] .= '<label class="padding_label">New password:</label><input type="password" id="new_password1" value=""/><br>';
+		$out['text'] .= '<label class="padding_label">Again:</label><input type="password" id="new_password2" value=""/><br>';
 		$out['text'] .= '<input type="submit" value="Change password"></form>';
 	}
 }
