@@ -24,7 +24,7 @@ class OIDplusAuthUtils {
 	public static function raLogin($email) {
 		if (strpos($email, '|') !== false) return;
 
-		$ses = new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);
+		$ses = OIDplus::sesHandler();
 		$list = $ses->getValue('oidplus_logged_in');
 		if (is_null($list)) $list = '';
 
@@ -37,7 +37,7 @@ class OIDplusAuthUtils {
 	}
 
 	public static function raLogout($email) {
-		$ses = new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);
+		$ses = OIDplus::sesHandler();
 		$list = $ses->getValue('oidplus_logged_in');
 		if (is_null($list)) $list = '';
 
@@ -51,13 +51,13 @@ class OIDplusAuthUtils {
 	}
 
 	public static function raLogoutAll() {
-		$ses = new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);
+		$ses = OIDplus::sesHandler();
 		$ses->setValue('oidplus_logged_in', '');
 		unset($ses);
 	}
 
 	public static function loggedInRaList() {
-		$ses = new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);
+		$ses = OIDplus::sesHandler();
 		$list = $ses->getValue('oidplus_logged_in');
 		if (is_null($list)) $list = '';
 		return ($list == '') ? array() : explode('|', $list);
@@ -70,13 +70,13 @@ class OIDplusAuthUtils {
 	// Admin authentication functions
 
 	public static function adminLogin() {
-		$ses = new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);
+		$ses = OIDplus::sesHandler();
 		$ses->setValue('oidplus_admin_logged_in', '1');
 		unset($ses);
 	}
 
 	public static function adminLogout() {
-		$ses = new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);
+		$ses = OIDplus::sesHandler();
 		$ses->setValue('oidplus_admin_logged_in', '');
 		unset($ses);
 	}
@@ -87,7 +87,7 @@ class OIDplusAuthUtils {
 	}
 
 	public static function isAdminLoggedIn() {
-		$ses = new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);
+		$ses = OIDplus::sesHandler();
 		return $ses->getValue('oidplus_admin_logged_in') == '1';
 	}
 

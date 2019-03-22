@@ -31,7 +31,7 @@ class OIDplusSessionHandler {
 		ini_set('session.use_only_cookies', 1);
 
 		// Uses a secure connection (HTTPS) if possible
-		ini_set('session.cookie_secure', 1);
+		ini_set('session.cookie_secure', OIDPLUS_SSL_AVAILABLE);
 
 		if (isset($_SERVER['REQUEST_URI'])) {
 			$path = $_SERVER['REQUEST_URI'];

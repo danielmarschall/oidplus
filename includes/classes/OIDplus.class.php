@@ -50,7 +50,13 @@ class OIDplus {
 		return dirname($actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]").'/';
 	}
 
+	public static function sesHandler() {
+		return new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);
+	}
+
 	public static function init($html=true) {
+		define('OIDPLUS_HTML_OUTPUT', $html);
+
 		// Include config file
 		if (file_exists(__DIR__ . '/../config.inc.php')) {
 			include_once __DIR__ . '/../config.inc.php';
@@ -59,7 +65,7 @@ class OIDplus {
 				if (!is_dir(__DIR__.'/../setup')) {
 					echo 'Error: Setup directory missing.';
 				} else {
-					header('Location:setup');
+					header('Location:setup/');
 				}
 			} else {
 				echo 'Error: Setup directory missing!';
@@ -89,6 +95,40 @@ class OIDplus {
 				echo 'The information located in includes/config.inc.php is outdated. Please run setup again.';
 			}
 			die();
+		}
+
+		// Do redirect stuff etc.
+		define('OIDPLUS_SSL_AVAILABLE', self::isSslAvailable());
+	}
+
+	private static function isSslAvailable() {
+		$timeout = 1;
+
+		if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == "on")) {
+			// we are already on HTTPS
+			setcookie('SSL_CHECK', '1', 0, '', '', false, true);
+			return true;
+		} else {
+			if (isset($_COOKIE['SSL_CHECK']) && ($_COOKIE['SSL_CHECK'])) {
+				// Redirect now
+				$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+				header('Location:'.$location);
+				die('Redirect to HTTPS');
+				return true;
+			}
+
+			if (@fsockopen($_SERVER['HTTP_HOST'], 443, $errno, $errstr, $timeout)) {
+				// Redirect now
+				setcookie('SSL_CHECK', '1', 0, '', '', false, true);
+				$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+				header('Location:'.$location);
+				die('Redirect to HTTPS');
+				return true;
+			} else {
+				// Next time, don't try fsockopen
+				setcookie('SSL_CHECK', '0', 0, '', '', false, true);
+				return false;
+			}
 		}
 	}
 }

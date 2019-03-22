@@ -45,6 +45,8 @@ class OIDplusDataBaseMySQL implements OIDplusDataBase {
 		return mysql_error();
 	}
 	public function __construct() {
+		$html = OIDPLUS_HTML_OUTPUT;
+
 		// Try connecting to the database
 		if (!@mysql_connect(OIDPLUS_MYSQL_HOST, OIDPLUS_MYSQL_USERNAME, base64_decode(OIDPLUS_MYSQL_PASSWORD)) || !@mysql_select_db(OIDPLUS_MYSQL_DATABASE)) {
 			if ($html) {
