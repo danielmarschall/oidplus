@@ -3,7 +3,7 @@
 /**
  * OID-Info.com API by Daniel Marschall, ViaThinkSoft
  * License terms: Apache 2.0
- * Revision: 2019-03-12
+ * Revision: 2019-03-22
  */
 
 error_reporting(E_ALL | E_NOTICE | E_STRICT | E_DEPRECATED);
@@ -31,7 +31,6 @@ class OIDInfoAPI {
 	// "-" = error
 	// "0" = The OID may not be created
 	// "1" = OID is not an illegal OID, and none of its ascendant is a leaf and its parent OID is not frozen
-	// TODO: can grand-parents also be frozen?
 	/*private*/ const PING_IDX_MAY_CREATE = 1;
 
 	/*private*/ const SOFT_CORRECT_BEHAVIOR_NONE = 0;
@@ -42,7 +41,7 @@ class OIDInfoAPI {
 
 	# --- Part 1: "Ping API" for checking if OIDs are available or allowed to create
 
-	public $verbosePingProviders = array('https://www.viathinksoft.de/~daniel-marschall/oid-repository/ping_oid.php?oid={OID}');
+	public $verbosePingProviders = array('https://misc.daniel-marschall.de/oid-repository/ping_oid.php?oid={OID}');
 
 	private $pingCache = array();
 
@@ -115,7 +114,7 @@ class OIDInfoAPI {
 			}
 		}
 		if ($res === false) {
-			throw new OIDInfoException("Could not ping OID-Info.com for OID $oid !");
+			throw new OIDInfoException("Could not ping OID $oid status!");
 		}
 
 		// if ($this->pingCacheMaxAge >= 0) {
