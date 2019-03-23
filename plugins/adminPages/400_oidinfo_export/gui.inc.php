@@ -23,6 +23,7 @@ if ($id === 'oidplus:export') {
 	$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/adminPages/'.basename(__DIR__).'/icon_big.png' : '';
 
 	if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+		$out['icon'] = 'img/error_big.png';
 		$out['text'] .= '<p>You need to <a href="?goto=oidplus:login">log in</a> as administrator.</p>';
 	} else {
 		$out['text'] = '<p>Here you can prepare the data export to <b>oid-info.com</b>.</p>'.

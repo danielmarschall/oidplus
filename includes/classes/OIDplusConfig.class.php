@@ -37,6 +37,7 @@ class OIDplusConfig {
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('max_ra_email_change_time', 'Max RA email change time in seconds (0 = infinite)', '0')");
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('oidinfo_export_protected', 'OID-info.com export interface protected (requires admin log in), values 0/1', '1')");
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('whois_auth_token', 'OID-over-WHOIS authentication token to display confidential data', '')");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('allow_ra_email_change', 'Allow that RAs change their email address (0/1)', '1')");
 	}
 
 	public function __construct() {
@@ -82,6 +83,10 @@ class OIDplusConfig {
 		return empty($val) ? false : $val;
 	}
 
+	public function allowRaChangeEMailAddress() {
+		return $this->values['allow_ra_email_change'] == '1';
+	}
+
 	public function setValue($name, $value) {
 		// Check for valid values
 
@@ -106,7 +111,7 @@ class OIDplusConfig {
 				throw new Exception("Please enter a valid value.");
 			}
 		}
-		if ($name == 'oidinfo_export_protected') {
+		if (($name == 'oidinfo_export_protected') || ($name == 'allow_ra_email_change')) {
 			if (($value != '0') && ($value != '1')) {
 				throw new Exception("Please enter either 0 or 1.");
 			}

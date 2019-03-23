@@ -91,9 +91,11 @@ if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viat
 
 		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 		if (OIDplus::db()->num_rows($res) > 0) {
+			$out['icon'] = 'img/error_big.png';
 			$out['text'] = 'This RA is already registered.'; // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
 		} else {
 			if (!OIDplus::authUtils()::validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
+				$out['icon'] = 'img/error_big.png';
 				$out['text'] = 'Invalid authorization. Is the URL OK?';
 			} else {
 				$out['text'] = '<p>eMail-Address: <b>'.$email.'</b></p>

@@ -24,7 +24,11 @@ if (explode('$',$id)[0] == 'oidplus:change_ra_email') {
 
 	$ra_email = explode('$',$id)[1];
 
-	if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
+	if (!OIDplus::config()->allowRaChangeEMailAddress()) {
+		$out['icon'] = 'img/error_big.png';
+		$out['text'] .= '<p>This functionality has been disabled by the administrator.</p>';
+	} else if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
+		$out['icon'] = 'img/error_big.png';
 		$out['text'] .= '<p>You need to <a href="?goto=oidplus:login">log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
 	} else {
 		$out['text'] .= '<form id="changeRaEmailForm" onsubmit="return changeRaEmailFormOnSubmit();">';
@@ -41,24 +45,31 @@ if (explode('$',$id)[0] == 'oidplus:change_ra_email') {
 	$timestamp = explode('$',$id)[3];
 	$auth = explode('$',$id)[4];
 
-	$out['title'] = 'Perform email address change';
-	$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/raPages/'.basename(__DIR__).'/icon_big.png' : '';
-
-	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($old_email)."'");
-	if (OIDplus::db()->num_rows($res) == 0) {
-		$out['text'] = 'eMail address does not exist anymore. It was probably already changed.';
+	if (!OIDplus::config()->allowRaChangeEMailAddress()) {
+		$out['icon'] = 'img/error_big.png';
+		$out['text'] .= '<p>This functionality has been disabled by the administrator.</p>';
 	} else {
-		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($new_email)."'");
-		if (OIDplus::db()->num_rows($res) > 0) {
-			$out['text'] = 'eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.';
+		$out['title'] = 'Perform email address change';
+		$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/raPages/'.basename(__DIR__).'/icon_big.png' : '';
+
+		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($old_email)."'");
+		if (OIDplus::db()->num_rows($res) == 0) {
+			$out['icon'] = 'img/error_big.png';
+			$out['text'] = 'eMail address does not exist anymore. It was probably already changed.';
 		} else {
-			if (!OIDplus::authUtils()::validateAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp, $auth)) {
-				$out['text'] = 'Invalid authorization. Is the URL OK?';
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($new_email)."'");
+			if (OIDplus::db()->num_rows($res) > 0) {
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = 'eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.';
 			} else {
-				$out['text'] = '<p>Old eMail-Address: <b>'.$old_email.'</b></p>
+				if (!OIDplus::authUtils()::validateAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp, $auth)) {
+					$out['icon'] = 'img/error_big.png';
+					$out['text'] = 'Invalid authorization. Is the URL OK?';
+				} else {
+					$out['text'] = '<p>Old eMail-Address: <b>'.$old_email.'</b></p>
 			                <p>New eMail-Address: <b>'.$new_email.'</b></p>
 
-				  <form id="activateNewRaEmailForm" onsubmit="return activateNewRaEmailFormOnSubmit();">
+				         <form id="activateNewRaEmailForm" onsubmit="return activateNewRaEmailFormOnSubmit();">
 				    <input type="hidden" id="old_email" value="'.htmlentities($old_email).'"/>
 				    <input type="hidden" id="new_email" value="'.htmlentities($new_email).'"/>
 				    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
@@ -67,6 +78,7 @@ if (explode('$',$id)[0] == 'oidplus:change_ra_email') {
 				    <label class="padding_label">Please verify your password:</label><input type="password" id="password" value=""/><br><br>
 				    <input type="submit" value="Change email address">
 				  </form>';
+				}
 			}
 		}
 	}

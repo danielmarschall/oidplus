@@ -25,12 +25,19 @@ if (explode('$',$id)[0] == 'oidplus:edit_ra') {
 	$ra_email = explode('$',$id)[1];
 
 	if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
+		$out['icon'] = 'img/error_big.png';
 		$out['text'] .= '<p>You need to <a href="?goto=oidplus:login">log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
 	} else {
 		$out['text'] .= '<p>Your email address: <b>'.htmlentities($ra_email).'</b>';
 
 		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
 		$row = OIDplus::db()->fetch_array($res);
+
+		if (OIDplus::config()->allowRaChangeEMailAddress()) {
+			$out['text'] .= '<p><abbr title="To change the email address, you need to contact the superior RA. They will need to change the email address and invite you (with your new email address) again.">How to change the email address?</abbr></p>';
+		} else {
+			$out['text'] .= '<p><a href="?goto=oidplus:change_ra_email">Change email address</a></p>';
+		}
 
 		// ---
 

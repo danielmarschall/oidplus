@@ -25,6 +25,7 @@ if (explode('$',$id)[0] == 'oidplus:change_ra_password') {
 	$ra_email = explode('$',$id)[1];
 
 	if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
+		$out['icon'] = 'img/error_big.png';
 		$out['text'] .= '<p>You need to <a href="?goto=oidplus:login">log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
 	} else {
 		$out['text'] .= '<form id="raChangePasswordForm" onsubmit="return raChangePasswordFormOnSubmit();">';

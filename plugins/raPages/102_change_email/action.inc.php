@@ -20,6 +20,10 @@
 if ($_POST["action"] == "change_ra_email") {
 	$handled = true;
 
+	if (!OIDplus::config()->allowRaChangeEMailAddress()) {
+		die('This functionality has been disabled by the administrator.');
+	}
+
 	$old_email = $_POST['old_email'];
 	$new_email = $_POST['new_email'];
 
@@ -56,6 +60,10 @@ if ($_POST["action"] == "change_ra_email") {
 	die('OK');
 } else if ($_POST["action"] == "activate_new_ra_email") {
 	$handled = true;
+
+	if (!OIDplus::config()->allowRaChangeEMailAddress()) {
+		die('This functionality has been disabled by the administrator.');
+	}
 
 	$old_email = $_POST['old_email'];
 	$new_email = $_POST['new_email'];

@@ -78,6 +78,8 @@ SMALL THINGS
 - problem: wenn eine RA eingeladen werden möchte, muss man "update" drücken und die OID wird als updated markiert
 - bei mehreren identifiern kann man nicht bestimmen, welcher identifier der bevorzugte sein soll!!
 - show whois links only if folder "whois/" exists
+- disable autocomplete on some forms
+- graphical imporvements of forms (input edits aligned)
 
 FUTURE
 - admin: soll wellknown oids ändern dürfen

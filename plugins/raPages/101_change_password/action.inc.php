@@ -20,7 +20,6 @@
 if ($_POST["action"] == "change_ra_password") {
 	$handled = true;
 
-	$error = false;
 	$email = $_POST['email'];
 
 	if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
@@ -45,5 +44,5 @@ if ($_POST["action"] == "change_ra_password") {
 	}
 	$ra->change_password($password1);
 
-	if (!$error) echo "OK";
+	echo "OK";
 }

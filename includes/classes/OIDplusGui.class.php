@@ -344,6 +344,7 @@ class OIDplusGui {
 
 			} catch (Exception $e) {
 
+				$out['icon'] = 'img/error_big.png';
 				$out['text'] = "Error: ".$e->getMessage();
 
 			}
@@ -358,6 +359,7 @@ class OIDplusGui {
 			$out['icon'] = 'img/reset_password_big.png';
 
 			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
+				$out['icon'] = 'img/error_big.png';
 				$out['text'] = 'Invalid authorization. Is the URL OK?';
 			} else {
 				$out['text'] = '<p>E-Mail-Adress: <b>'.$email.'</b></p>
@@ -399,6 +401,7 @@ class OIDplusGui {
 
 			} catch (Exception $e) {
 
+				$out['icon'] = 'img/error_big.png';
 				$out['text'] = "Error: ".$e->getMessage();
 
 			}
@@ -417,6 +420,7 @@ class OIDplusGui {
 				$out['text'] = 'This RA is already registered and does not need to be invited.';
 			} else {
 				if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
+					$out['icon'] = 'img/error_big.png';
 					$out['text'] = 'Invalid authorization. Is the URL OK?';
 				} else {
 					// TODO: like in the FreeOID plugin, we could ask here at least for a name for the RA

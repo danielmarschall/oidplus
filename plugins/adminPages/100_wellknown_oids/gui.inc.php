@@ -23,6 +23,7 @@ if ($id === 'oidplus:well_known_oids') {
 	$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/adminPages/'.basename(__DIR__).'/icon_big.png' : '';
 
 	if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+		$out['icon'] = 'img/error_big.png';
 		$out['text'] .= '<p>You need to <a href="?goto=oidplus:login">log in</a> as administrator.</p>';
 	} else {
 

@@ -20,7 +20,6 @@
 if ($_POST["action"] == "change_ra_data") {
 	$handled = true;
 
-	$error = false;
 	$email = $_POST['email'];
 
 	if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
@@ -46,5 +45,5 @@ if ($_POST["action"] == "change_ra_data") {
 		die(OIDplus::db()->error());
 	}
 
-	if (!$error) echo "OK";
+	echo "OK";
 }
