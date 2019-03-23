@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (explode('$',$id)[0] == 'oidplus:changepwd_ra') {
+if (explode('$',$id)[0] == 'oidplus:change_ra_password') {
 	$handled = true;
 	$out['title'] = 'Change RA password';
 	$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/raPages/'.basename(__DIR__).'/icon_big.png' : '';
@@ -31,7 +31,7 @@ if (explode('$',$id)[0] == 'oidplus:changepwd_ra') {
 		$out['text'] .= '<input type="hidden" id="email" value="'.htmlentities($ra_email).'"/><br>';
 		$out['text'] .= '<label class="padding_label">Old password:</label><input type="password" id="old_password" value=""/><br>';
 		$out['text'] .= '<label class="padding_label">New password:</label><input type="password" id="new_password1" value=""/><br>';
-		$out['text'] .= '<label class="padding_label">Again:</label><input type="password" id="new_password2" value=""/><br>';
+		$out['text'] .= '<label class="padding_label">Again:</label><input type="password" id="new_password2" value=""/><br><br>';
 		$out['text'] .= '<input type="submit" value="Change password"></form>';
 	}
 }

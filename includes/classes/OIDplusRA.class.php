@@ -39,6 +39,12 @@ class OIDplusRA {
 		}
 	}
 
+	function change_email($new_email) {
+		if (!OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."ra set email = '".OIDplus::db()->real_escape_string($new_email)."' where email = '".OIDplus::db()->real_escape_string($this->email)."'")) {
+			throw new Exception(OIDplus::db()->error());
+		}
+	}
+
 	function register_ra($new_password) {
 		$s_salt = substr(md5(rand()), 0, 7);
 		$calc_authkey = 'A2#'.base64_encode(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $s_salt.$new_password, true) : bb\Sha3\Sha3::hash($s_salt.$new_password, 512, true));
@@ -77,5 +83,4 @@ class OIDplusRA {
 			throw new Exception(OIDplus::db()->error());
 		}
 	}
-
 }

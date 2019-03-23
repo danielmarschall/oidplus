@@ -24,7 +24,7 @@ if (file_exists(__DIR__.'/treeicon.png')) {
 }
 
 $ra_roots[] = array(
-	'id' => 'oidplus:change_ra_password$'.$ra_email,
+	'id' => 'oidplus:change_ra_email$'.$ra_email,
 	'icon' => $tree_icon,
-	'text' => 'Change password'
+	'text' => 'Change email address'
 );

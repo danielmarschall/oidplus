@@ -96,7 +96,7 @@ if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viat
 			if (!OIDplus::authUtils()::validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
 				$out['text'] = 'Invalid authorization. Is the URL OK?';
 			} else {
-				$out['text'] = '<p>E-Mail-Adress: <b>'.$email.'</b></p>
+				$out['text'] = '<p>eMail-Address: <b>'.$email.'</b></p>
 
 				  <form id="activateFreeOIDForm" onsubmit="return activateFreeOIDFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>

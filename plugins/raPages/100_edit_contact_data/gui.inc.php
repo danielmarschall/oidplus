@@ -32,9 +32,6 @@ if (explode('$',$id)[0] == 'oidplus:edit_ra') {
 		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
 		$row = OIDplus::db()->fetch_array($res);
 
-		// TODO: configurable: allow changing
-		$out['text'] .= '<p><abbr title="To change the email address, you need to contact the superior RA. They will need to change the email address and invite you (with your new email address) again.">How to change the email address?</abbr></p>';
-
 		// ---
 
 		$out['text'] .= '<p>Change basic information (public):</p>

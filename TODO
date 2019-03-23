@@ -11,7 +11,6 @@ html checkbox: "label for" verwenden
 admin: show privacy entries from RAs (but grey, so you know that it is private)
 
 aktuelle baustellen:
-- script to change email address
 - escape everything
 - anti xss weiter verfeinern
 - (oid+ genroot = mapping to OID tree)
@@ -99,6 +98,7 @@ IDEAS
 - sanitize IPv4, IPv6, GUID during creation
 	bei IPv4 und IPv6: - if it is a single host address, don't put /32 or /128 suffix
 	                   - strike unnecessary bits that are not defined in the netmask (also at the whois output)
+- we need some kind of plugin API to allow individual config values to be stored
 
 QUESTIONS:
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie

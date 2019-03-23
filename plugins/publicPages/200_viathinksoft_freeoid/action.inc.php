@@ -48,13 +48,10 @@ if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viat
 		$activate_url = OIDplus::system_url() . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp));
 
 		$message = file_get_contents(__DIR__ . '/request_msg.tpl');
-
-		// Resolve stuff
 		$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
+		$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
 		$message = str_replace('{{ADMIN_EMAIL}}', OIDPLUS_ADMIN_EMAIL, $message);
-
 		$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
-
 		my_mail($email, OIDplus::config()->systemTitle().' - Free OID request', $message, 'daniel-marschall@viathinksoft.de');
 
 		die("OK");
@@ -137,6 +134,7 @@ if (isset($_SERVER['SERVER_NAME']) && (($_SERVER['SERVER_NAME'] == 'oidplus.viat
 
 		$message = file_get_contents(__DIR__ . '/allocated_msg.tpl');
 		$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
+		$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
 		$message = str_replace('{{ADMIN_EMAIL}}', OIDPLUS_ADMIN_EMAIL, $message);
 		$message = str_replace('{{NEW_OID}}', $new_oid, $message);
 		my_mail($email, OIDplus::config()->systemTitle().' - Free OID allocated', $message, 'daniel-marschall@viathinksoft.de');

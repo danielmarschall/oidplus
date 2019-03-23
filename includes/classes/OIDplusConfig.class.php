@@ -34,6 +34,7 @@ class OIDplusConfig {
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('ra_min_password_length', 'Minimum length for RA passwords', '6')");
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0')");
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('max_ra_pwd_reset_time', 'Max RA password reset time in seconds (0 = infinite)', '0')");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('max_ra_email_change_time', 'Max RA email change time in seconds (0 = infinite)', '0')");
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('oidinfo_export_protected', 'OID-info.com export interface protected (requires admin log in), values 0/1', '1')");
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('whois_auth_token', 'OID-over-WHOIS authentication token to display confidential data', '')");
 	}
@@ -68,6 +69,10 @@ class OIDplusConfig {
 		return $this->values['max_ra_pwd_reset_time'];
 	}
 
+	public function maxEmailChangeTime() {
+		return $this->values['max_ra_email_change_time'];
+	}
+
 	public function oidinfoExportProtected() {
 		return $this->values['oidinfo_export_protected'] == '1';
 	}
@@ -96,7 +101,7 @@ class OIDplusConfig {
 				throw new Exception("Please enter a valid password length.");
 			}
 		}
-		if (($name == 'max_ra_invite_time') || ($name == 'max_ra_pwd_reset_time')) {
+		if (($name == 'max_ra_invite_time') || ($name == 'max_ra_pwd_reset_time') || ($name == 'max_ra_email_change_time')) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new Exception("Please enter a valid value.");
 			}
