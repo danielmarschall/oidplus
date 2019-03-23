@@ -102,32 +102,39 @@ class OIDplus {
 	}
 
 	private static function isSslAvailable() {
-		$timeout = 1;
+		$timeout = 2;
 
 		if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == "on")) {
 			// we are already on HTTPS
 			setcookie('SSL_CHECK', '1', 0, '', '', false, true);
 			return true;
 		} else {
-			if (isset($_COOKIE['SSL_CHECK']) && ($_COOKIE['SSL_CHECK'])) {
-				// Redirect now
-				$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-				header('Location:'.$location);
-				die('Redirect to HTTPS');
-				return true;
-			}
-
-			if (@fsockopen($_SERVER['HTTP_HOST'], 443, $errno, $errstr, $timeout)) {
-				// Redirect now
-				setcookie('SSL_CHECK', '1', 0, '', '', false, true);
-				$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-				header('Location:'.$location);
-				die('Redirect to HTTPS');
-				return true;
+			if (isset($_COOKIE['SSL_CHECK'])) {
+				// We already had the HTTPS detection done before.
+                if ($_COOKIE['SSL_CHECK']) {
+					// HTTPS was detected before, but we are HTTP. Redirect now
+					$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+					header('Location:'.$location);
+					die('Redirect to HTTPS');
+					return true;
+				} else {
+					// No HTTPS available. Do nothing.
+					return false;
+				}
 			} else {
-				// Next time, don't try fsockopen
-				setcookie('SSL_CHECK', '0', 0, '', '', false, true);
-				return false;
+				// This is our first check (or the browser didn't accept the SSL_CHECK cookie)
+				if (@fsockopen($_SERVER['HTTP_HOST'], 443, $errno, $errstr, $timeout)) {
+					// HTTPS detected. Redirect now, and remember that we had detected HTTPS
+					setcookie('SSL_CHECK', '1', 0, '', '', false, true);
+					$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+					header('Location:'.$location);
+					die('Redirect to HTTPS');
+					return true;
+				} else {
+					// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.
+					setcookie('SSL_CHECK', '0', 0, '', '', false, true);
+					return false;
+				}
 			}
 		}
 	}
