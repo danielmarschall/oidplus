@@ -194,23 +194,28 @@ class OIDplusOid extends OIDplusObject {
 		$arcs = explode('.', $this->oid);
 
 		foreach ($arcs as $arc) {
-			$res = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string('oid:'.implode('.',$arcs))."' order by lfd");
+			$res = OIDplus::db()->query("select name, standardized from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string('oid:'.implode('.',$arcs))."' order by lfd");
 
 			$names = array();
 			while ($row = OIDplus::db()->fetch_array($res)) {
-				$names[] = $row['name'];
+				$names[] = $row['name']."(".end($arcs).")";
+				if ($row['standardized']) {
+					$names[] = $row['name'];
+				}
 			}
 
 			if (count($names) > 1) {
 				$first_name = array_shift($names);
 				$abbr = 'Other identifiers: '.implode(', ',$names);
+				array_pop($arcs);
 				if ($withAbbr) {
-					$asn1_notation = '<abbr title="'.$abbr.'">'.$first_name.'</abbr>'.'('.array_pop($arcs).')'.' '.$asn1_notation;
+					$asn1_notation = '<abbr title="'.$abbr.'">'.$first_name.'</abbr> '.$asn1_notation;
 				} else {
-					$asn1_notation = $first_name.'('.array_pop($arcs).')'.' '.$asn1_notation;
+					$asn1_notation = $first_name.' '.$asn1_notation;
 				}
 			} else if (count($names) == 1) {
-				$asn1_notation = array_shift($names).'('.array_pop($arcs).')'.' '.$asn1_notation;
+				array_pop($arcs);
+				$asn1_notation = array_shift($names).' '.$asn1_notation;
 			} else {
 				$asn1_notation = array_pop($arcs).' '.$asn1_notation;
 			}
@@ -231,6 +236,10 @@ class OIDplusOid extends OIDplusObject {
 			while ($row = OIDplus::db()->fetch_array($res)) {
 				$is_longarc = $row['longarc'];
 				$names[] = $row['name'];
+
+				if ($is_longarc) {
+					$names[] = 'Joint-ISO-ITU-T/'.$row['name']; // Long arcs can only be inside root OID 2
+				}
 			}
 
 			$names[] = array_pop($arcs);
@@ -246,7 +255,7 @@ class OIDplusOid extends OIDplusObject {
 				$iri_notation = array_shift($names) . '/' . $iri_notation;
 			}
 
-			if ($is_longarc) break;
+			if ($is_longarc) break; // we don't write /ITU-T/ at the beginning, when /ITU-T/xxx is a long arc
 		}
 		$iri_notation = '/' . substr($iri_notation, 0, strlen($iri_notation)-1);
 
