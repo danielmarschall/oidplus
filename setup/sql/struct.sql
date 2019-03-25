@@ -8,15 +8,16 @@ CREATE TABLE `asn1id` (
   `lfd` int(11) NOT NULL,
   `oid` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `well_known` bit default 0 NOT NULL
+  `standardized` bit(1) NOT NULL DEFAULT b'0',
+  `well_known` bit default 0 NOT NULL DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `iri` (
   `lfd` int(11) NOT NULL,
   `oid` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `longarc` bit default 0 NOT NULL,
-  `well_known` bit default 0 NOT NULL
+  `longarc` bit default 0 NOT NULL DEFAULT b'0',
+  `well_known` bit default 0 NOT NULL DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `objects` (

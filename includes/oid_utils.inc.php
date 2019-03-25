@@ -3,7 +3,7 @@
 // OID-Utilities for PHP
 // (C) 2011-2019 Daniel Marschall, ViaThinkSoft
 // Licensed under the terms of the Apache 2.0 license
-// Last revision: 2019-03-17
+// Last revision: 2019-03-25
 
 // All functions in this library are compatible with leading zeroes (not recommended) and leading dots
 
@@ -666,11 +666,11 @@ function asn1_path_valid($asn1) {
 
 /**
  * Returns an array of standardized ASN.1 alphanumeric identifiers which do not require a numeric identifier, e.g. { 2 example }
- * The array has the form '0.0.a' -> '0.0.0'
+ * The array has the form '0.0.a' -> '0.0.1'
  * @author  Daniel Marschall, ViaThinkSoft
- * @version 2014-12-28
+ * @version 2019-03-25
  * @see http://www.oid-info.com/name-forms.htm
- * @return  (array) Assoziative array of standardized ASN.1 alphanumeric identifiers
+ * @return  (array) Associative array of standardized ASN.1 alphanumeric identifiers
  **/
 function asn1_get_standardized_array() {
 
@@ -683,32 +683,32 @@ function asn1_get_standardized_array() {
 	$standardized['joint-iso-itu-t'] = '2';
 	$standardized['joint-iso-ccitt'] = '2';
 	$standardized['0.recommendation'] = '0.0';
-	$standardized['0.0.a'] = '0.0.0';
-	$standardized['0.0.b'] = '0.0.1';
-	$standardized['0.0.c'] = '0.0.2';
-	$standardized['0.0.d'] = '0.0.3';
-	$standardized['0.0.e'] = '0.0.4';
-	$standardized['0.0.f'] = '0.0.5';
-	$standardized['0.0.g'] = '0.0.6';
-	$standardized['0.0.h'] = '0.0.7';
-	$standardized['0.0.i'] = '0.0.8';
-	$standardized['0.0.j'] = '0.0.9';
-	$standardized['0.0.k'] = '0.0.10';
-	$standardized['0.0.l'] = '0.0.11';
-	$standardized['0.0.m'] = '0.0.12';
-	$standardized['0.0.n'] = '0.0.13';
-	$standardized['0.0.o'] = '0.0.14';
-	$standardized['0.0.p'] = '0.0.15';
-	$standardized['0.0.q'] = '0.0.16';
-	$standardized['0.0.r'] = '0.0.17';
-	$standardized['0.0.s'] = '0.0.18';
-	$standardized['0.0.t'] = '0.0.19';
-	$standardized['0.0.u'] = '0.0.20';
-	$standardized['0.0.v'] = '0.0.21';
-	$standardized['0.0.w'] = '0.0.22';
-	$standardized['0.0.x'] = '0.0.23';
-	$standardized['0.0.y'] = '0.0.24';
-	$standardized['0.0.z'] = '0.0.25';
+	$standardized['0.0.a'] = '0.0.1';
+	$standardized['0.0.b'] = '0.0.2';
+	$standardized['0.0.c'] = '0.0.3';
+	$standardized['0.0.d'] = '0.0.4';
+	$standardized['0.0.e'] = '0.0.5';
+	$standardized['0.0.f'] = '0.0.6';
+	$standardized['0.0.g'] = '0.0.7';
+	$standardized['0.0.h'] = '0.0.8';
+	$standardized['0.0.i'] = '0.0.9';
+	$standardized['0.0.j'] = '0.0.10';
+	$standardized['0.0.k'] = '0.0.11';
+	$standardized['0.0.l'] = '0.0.12';
+	$standardized['0.0.m'] = '0.0.13';
+	$standardized['0.0.n'] = '0.0.14';
+	$standardized['0.0.o'] = '0.0.15';
+	$standardized['0.0.p'] = '0.0.16';
+	$standardized['0.0.q'] = '0.0.17';
+	$standardized['0.0.r'] = '0.0.18';
+	$standardized['0.0.s'] = '0.0.19';
+	$standardized['0.0.t'] = '0.0.20';
+	$standardized['0.0.u'] = '0.0.21';
+	$standardized['0.0.v'] = '0.0.22';
+	$standardized['0.0.w'] = '0.0.23'; // actually, this OID does not exist
+	$standardized['0.0.x'] = '0.0.24';
+	$standardized['0.0.y'] = '0.0.25';
+	$standardized['0.0.z'] = '0.0.26';
 	$standardized['0.question'] = '0.1';
 	$standardized['0.administration'] = '0.2';
 	$standardized['0.network-operator'] = '0.3';

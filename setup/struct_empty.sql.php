@@ -20,12 +20,15 @@
 $prefix = isset($_REQUEST['prefix']) ? $_REQUEST['prefix'] : '';
 
 $cont = trim(file_get_contents(__DIR__.'/sql/struct.sql'))."\n\n".
-        trim(file_get_contents(__DIR__.'/sql/wellknown_ids.sql'))."\n\n";
+        trim(file_get_contents(__DIR__.'/sql/wellknown_country.sql'))."\n\n".
+        trim(file_get_contents(__DIR__.'/sql/wellknown_other.sql'))."\n\n";
 
 $table_names = array('objects', 'asn1id', 'iri', 'ra');
 foreach ($table_names as $table) {
 	$cont = str_replace('`'.$table.'`', '`'.$prefix.$table.'`', $cont);
 }
 
-header('Content-Type:text/sql');
+if (php_sapi_name() != 'cli') {
+	header('Content-Type:text/sql');
+}
 echo $cont;

@@ -41,9 +41,9 @@ if ($id === 'oidplus:well_known_oids') {
 		while ($row = OIDplus::db()->fetch_array($res)) {
 
 			$asn1ids = array();
-			$res2 = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".$row['oid']."'");
+			$res2 = OIDplus::db()->query("select name, standardized from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".$row['oid']."'");
 			while ($row2 = OIDplus::db()->fetch_array($res2)) {
-				$asn1ids[] = $row2['name'];
+				$asn1ids[] = $row2['name'].($row2['standardized'] ? ' (standardized)' : '');
 			}
 
 			$iris = array();

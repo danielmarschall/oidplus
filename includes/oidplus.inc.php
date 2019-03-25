@@ -17,16 +17,18 @@
  * limitations under the License.
  */
 
-header('X-Content-Type-Options: nosniff');
-header('X-XSS-Protection: 1; mode=block');
-header("Content-Security-Policy: default-src 'self' https://fonts.gstatic.com https://www.google.com/ https://www.gstatic.com/; ".
-       "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com/; ".
-       "img-src http: https:; ".
-       "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.google.com/ https://www.gstatic.com/ https://cdnjs.cloudflare.com/; ".
-       "frame-ancestors 'none'; ".
-       "object-src 'none'");
-header('X-Frame-Options: SAMEORIGIN');
-header('Referrer-Policy: no-referrer-when-downgrade');
+if (php_sapi_name() != 'cli') {
+	header('X-Content-Type-Options: nosniff');
+	header('X-XSS-Protection: 1; mode=block');
+	header("Content-Security-Policy: default-src 'self' https://fonts.gstatic.com https://www.google.com/ https://www.gstatic.com/; ".
+	       "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com/; ".
+	       "img-src http: https:; ".
+	       "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.google.com/ https://www.gstatic.com/ https://cdnjs.cloudflare.com/; ".
+	       "frame-ancestors 'none'; ".
+	       "object-src 'none'");
+	header('X-Frame-Options: SAMEORIGIN');
+	header('Referrer-Policy: no-referrer-when-downgrade');
+}
 
 require_once __DIR__ . '/../3p/0xbb/Sha3.class.php';
 require_once __DIR__ . '/SecureMailer.class.php';
