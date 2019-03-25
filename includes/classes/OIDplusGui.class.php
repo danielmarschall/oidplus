@@ -31,6 +31,11 @@ class OIDplusGui {
 	protected static function showRAInfo($email) {
 		$out = '';
 
+		if (empty($email)) {
+			$out = '<p>The superior RA did not define a RA for this OID.</p>';
+			return $out;
+		}
+
 		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 		if (OIDplus::db()->num_rows($res) === 0) {
 			$out = '<p>The RA <a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a> is not registered in the database.</p>';

@@ -204,20 +204,19 @@ class OIDplusOid extends OIDplusObject {
 				}
 			}
 
+			$numeric = array_pop($arcs);
 			if (count($names) > 1) {
 				$first_name = array_shift($names);
-				$abbr = 'Other identifiers: '.implode(', ',$names);
-				array_pop($arcs);
+				$abbr = 'Other identifiers:&#10;      '.implode('&#10;      ',$names);
 				if ($withAbbr) {
 					$asn1_notation = '<abbr title="'.$abbr.'">'.$first_name.'</abbr> '.$asn1_notation;
 				} else {
 					$asn1_notation = $first_name.' '.$asn1_notation;
 				}
 			} else if (count($names) == 1) {
-				array_pop($arcs);
 				$asn1_notation = array_shift($names).' '.$asn1_notation;
 			} else {
-				$asn1_notation = array_pop($arcs).' '.$asn1_notation;
+				$asn1_notation = $numeric.' '.$asn1_notation;
 			}
 		}
 
@@ -245,7 +244,8 @@ class OIDplusOid extends OIDplusObject {
 			$names[] = array_pop($arcs);
 			if (count($names) > 2) {
 				$first_name = array_shift($names);
-				$abbr = 'Other identifiers: '.implode(', ',$names);
+				$numeric = array_pop($names);
+				$abbr = 'Other identifiers:&#10;      '.implode('&#10;      ',$names).'&#10;Numeric value: '.$numeric;
 				$iri_notation = $withAbbr ? '<abbr title="'.$abbr.'">'.$first_name.'</abbr>/'.$iri_notation : $first_name.'/'.$iri_notation;
 			} else if (count($names) > 1) {
 				$first_name = array_shift($names);

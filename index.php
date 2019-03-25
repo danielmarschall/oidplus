@@ -142,7 +142,7 @@ window.cookieconsent.initialise({
 	<div id="content_window" class="borderbox ui-layout-center">
 		<?php
 		$static_content = preg_replace_callback(
-			'|<a\s([^>]*)href="mailto:(.+)"([^>]*)>([^<]*)</a>|ismU',
+			'|<a\s([^>]*)href="mailto:([^"]+)"([^>]*)>([^<]*)</a>|ismU',
 			function ($treffer) {
 				$email = $treffer[2];
 				$text = $treffer[4];
