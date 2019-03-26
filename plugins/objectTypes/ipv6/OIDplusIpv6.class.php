@@ -100,6 +100,8 @@ class OIDplusIpv6 extends OIDplusObject {
 	}
 
 	public function getContentPage(&$title, &$content, &$icon) {
+		$icon = file_exists(__DIR__.'/icon_big.png') ? 'plugins/objectTypes/'.basename(__DIR__).'/icon_big.png' : '';
+
 		if ($this->isRoot()) {
 			$title = OIDplusIpv6::objectTypeTitle();
 
