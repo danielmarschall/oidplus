@@ -81,19 +81,19 @@ Table of Contents
        3.3.2  "RESULT: Not found; superior object found"  . . . . . .  7
        2.3.3  "RESULT: Not found" . . . . . . . . . . . . . . . . . .  7
      3.4  Section that displays information about the OID . . . . . .  7
-     3.6  Section that displays information about the RA  . . . . . .  8
+     3.6  Section that displays information about the RA  . . . . . .  9
      3.7  Referral  . . . . . . . . . . . . . . . . . . . . . . . . .  9
      3.8  Date/Time references  . . . . . . . . . . . . . . . . . . . 10
-   4  Full example  . . . . . . . . . . . . . . . . . . . . . . . . . 11
-     4.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 11
-     4.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 11
-   5. Alternative namespaces  . . . . . . . . . . . . . . . . . . . . 12
-   6  Security Considerations . . . . . . . . . . . . . . . . . . . . 13
-   7  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 13
-   8  References  . . . . . . . . . . . . . . . . . . . . . . . . . . 14
-     8.1  Normative References  . . . . . . . . . . . . . . . . . . . 14
-     8.2  Informative References  . . . . . . . . . . . . . . . . . . 14
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 14
+   4  Full example  . . . . . . . . . . . . . . . . . . . . . . . . . 12
+     4.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+     4.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 12
+   5. Alternative namespaces  . . . . . . . . . . . . . . . . . . . . 13
+   6  Security Considerations . . . . . . . . . . . . . . . . . . . . 14
+   7  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 14
+   8  References  . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+     8.1  Normative References  . . . . . . . . . . . . . . . . . . . 15
+     8.2  Informative References  . . . . . . . . . . . . . . . . . . 15
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 15
 
 
 
@@ -394,12 +394,30 @@ Daniel Marschall         Expires <Expiry Date>                  [Page 7]
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
-   alphanumeric value as defined in Recommendation ITU-T X.680 | ISO/IEC
-   8824-1, clause 32 [X680].
+   alphanumeric value ("NameForm") as defined in Recommendation ITU-T
+   X.680 | ISO/IEC 8824-1, clause 32 [X680].
+
+   - "standardized-identifier" (optional, multiple values allowed)
+   contains an identifier that has a standardized NameForm, i.e. in an
+   ASN.1 notation, it can be written without its associated number.
 
    - "unicode-label" (optional, multiple values allowed) contains an
-   Internationalized Resource Identifier (IRI) as defined in
-   Recommendation ITU-T X.680 | ISO/IEC 8824-1, clause 34 [X680].
+   Unicode label that can be used in an OID Internationalized Resource
+   Identifier (OID-IRI), as defined in Recommendation ITU-T X.680 |
+   ISO/IEC 8824-1, clause 34 [X680].
+
+   - "long-arc" (optional, multiple values allowed) contains an Unicode
+   label that can be used as first identifier in an ORI-IRI, shortening
+   it.
+
+   - "attribute" (optional, multiple values allowed) contains attributes
+   for that OID. Possible attributes: "leaf" (this means that no child
+   OIDs can be allocated under this OID), "frozen" (this means that no
+   more child OIDs can be created under this OID, e.g. because the RA
+   has stopped operating, but the existing child OIDs stay valid), "no-
+   identifiers" (this means that the RA is not allocating identifiers),
+   or "no-unicode-labels" (this means that the RA is not allocating
+   Unicode labels).
 
    - "name" contains the name of the OID.
 
@@ -424,6 +442,14 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    - Additional fields can be defined by the service.
 
 
+ 
+
+
+Daniel Marschall         Expires <Expiry Date>                  [Page 8]
+
+INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+
+
 3.6  Section that displays information about the RA
 
    This section must not be present when result is "Not found",
@@ -441,14 +467,6 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
    - "ra-name" (optional) contains the name of a person or group
    responsible for the allocation of OIDs.
-
- 
-
-
-Daniel Marschall         Expires <Expiry Date>                  [Page 8]
-
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
-
 
    - "ra-organization" (optional) contains the name of the organization,
    in case "ra-name" is the name of a person or workgroup.
@@ -474,29 +492,11 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    - Additional fields can be defined by the service, but must begin
    with "ra-".
 
-
-
 3.7  Referral
 
    By using the field "whois-service", the service can instruct the
    client to query another service that might have more information
    about the requested object.
-
-   If Registration Authorities maintain up-to-date references to WHOIS
-   service references of their OID delegations, it is possible to
-   automatically retrieve information about any OID.
-
-
-   Example:
-
-   OID 2.999 is owned by Registration Authority "A", operating a WHOIS
-   service at "a.example.com".
-
-   The OID 2.999.1000 has been allocated to Registration Authority "B"
-   who is operating a WHOIS service at "b.example.com".
-
-   The client asks a.example.com for information about 2.999.1000.1 and
-   should receive following reply:
 
  
 
@@ -505,6 +505,19 @@ Daniel Marschall         Expires <Expiry Date>                  [Page 9]
 
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
+
+   If Registration Authorities maintain up-to-date references to WHOIS
+   service references of their OID delegations, it is possible to
+   automatically retrieve information about any OID.
+
+   Example: OID 2.999 is owned by Registration Authority "A", operating
+   a WHOIS service at "a.example.com".
+
+   The OID 2.999.1000 has been allocated to Registration Authority "B"
+   who is operating a WHOIS service at "b.example.com".
+
+   The client asks a.example.com for information about 2.999.1000.1 and
+   should receive following reply:
 
        query:          oid:2.999.1000.1
        result:         Not found; superior object found
@@ -541,6 +554,13 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    removed until the date/time reference has the highest correctness.
 
    Examples of valid date/time references:
+ 
+
+
+Daniel Marschall         Expires <Expiry Date>                 [Page 10]
+
+INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+
 
    2019-03-15 18:32:00 +0200
    2019-03-15 18:32:00
@@ -554,10 +574,46 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 10]
+Daniel Marschall         Expires <Expiry Date>                 [Page 11]
 
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
@@ -591,6 +647,15 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    unicode-label:  (Japanese characters omitted in this example)
    unicode-label:  (Chinese characters omitted in this example)
    unicode-label:  (Russian characters omitted in this example)
+   long-arc:       Beispiel
+   long-arc:       Ejemplo
+   long-arc:       Example
+   long-arc:       Exemple
+   long-arc:       (Korean characters omitted in this example)
+   long-arc:       (Arabian characters omitted in this example)
+   long-arc:       (Japanese characters omitted in this example)
+   long-arc:       (Chinese characters omitted in this example)
+   long-arc:       (Russian characters omitted in this example)
    created:        2011-06
    updated:        2011-09
 
@@ -601,19 +666,10 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
 
-
-
-
-
-
-
-
-
-
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 11]
+Daniel Marschall         Expires <Expiry Date>                 [Page 12]
 
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
@@ -669,7 +725,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 12]
+Daniel Marschall         Expires <Expiry Date>                 [Page 13]
 
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
@@ -725,7 +781,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 13]
+Daniel Marschall         Expires <Expiry Date>                 [Page 14]
 
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
@@ -781,4 +837,4 @@ Authors' Addresses
 
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 14]
+Daniel Marschall         Expires <Expiry Date>                 [Page 15]
