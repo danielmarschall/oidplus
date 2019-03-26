@@ -136,9 +136,19 @@ if ($continue) {
 				$out[] = 'identifier: ' . $row2->name;
 			}
 
+			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where standardized = 1 and oid = '".OIDplus::db()->real_escape_string($row->id)."'");
+			while ($row2 = OIDplus::db()->fetch_object($res2)) {
+				$out[] = 'standardized-id: ' . $row2->name;
+			}
+
 			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = '".OIDplus::db()->real_escape_string($row->id)."'");
 			while ($row2 = OIDplus::db()->fetch_object($res2)) {
 				$out[] = 'unicode-label: ' . $row2->name;
+			}
+
+			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where longarc = 1 and oid = '".OIDplus::db()->real_escape_string($row->id)."'");
+			while ($row2 = OIDplus::db()->fetch_object($res2)) {
+				$out[] = 'long-arc: ' . $row2->name;
 			}
 		}
 

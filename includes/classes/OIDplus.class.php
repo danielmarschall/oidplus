@@ -104,6 +104,8 @@ class OIDplus {
 	private static function isSslAvailable() {
 		$timeout = 2;
 
+		if (php_sapi_name() == 'cli') return false;
+
 		if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == "on")) {
 			// we are already on HTTPS
 			setcookie('SSL_CHECK', '1', 0, '', '', false, true);

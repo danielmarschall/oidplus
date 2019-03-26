@@ -1,4 +1,4 @@
--- This file (wellknown_ids.sql) contains ASN.1 and IRI names of OIDs which are either
+-- This file (wellknown_other.sql) contains ASN.1 and IRI names of OIDs which are either
 -- a) Root OIDs
 -- b) Unicode labels which are long arcs
 -- c) Standardized ASN.1 identifiers
@@ -275,4 +275,6 @@ insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_bas
 insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_base64('7JiI7KCc'), 1, 1);
 insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_base64('5L6L'), 1, 1);
 insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', 'Beispiel', 1, 1);
+
+-- Generator checksum dc378dba
 

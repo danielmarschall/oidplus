@@ -1,0 +1,9 @@
+#!/bin/bash
+
+DIR=$( dirname "$0" )
+
+cd "$DIR/.."
+grep -ir todo | grep -v "3p/" | grep -v ".svn/"
+
+cat "TODO"
+

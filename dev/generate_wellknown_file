@@ -1,0 +1,143 @@
+#!/usr/bin/php
+-- This file (wellknown_other.sql) contains ASN.1 and IRI names of OIDs which are either
+-- a) Root OIDs
+-- b) Unicode labels which are long arcs
+-- c) Standardized ASN.1 identifiers
+-- d) OIDs where potential users of this software can register OIDs in these arcs (e.g. an "identified organization" arc)
+
+<?php
+
+require_once __DIR__ . '/../includes/oidplus.inc.php';
+
+OIDplus::init(false);
+if (!defined('OIDINFO_API_URL')) {
+	die("OIDINFO_API_URL not available (API is currently not public)\n");
+}
+
+$output = array();
+
+function _is_standardized($oid, $asn1id) {
+	$std = asn1_get_standardized_array();
+	$x = oid_up($oid) == $oid ? '' : oid_up($oid).".";
+	return isset( $std[$x.$asn1id]) && ($std[$x.$asn1id] == $oid);
+}
+
+function _is_long($oid) {
+	$oid = '/'.str_replace('.', '/', $oid);
+	return in_array($oid, iri_get_long_arcs());
+}
+
+function _process_oid($oid) {
+	global $output;
+
+	if (!isset($output[$oid])) {
+		if ($oid == '0.0.23') {
+			// Rec. ITU-T X.660 | ISO/IEC 9834-3, clause A.3.3.1 allows "0.0.w", although it is illegal, since no W-series exist
+			$data = array();
+			$data['oid'] = array();
+			$data['oid']['identifier'] = array('w');
+			$data['oid']['unicode-label'] = array('W');
+		} else {
+			$data = ft_get_oid_data($oid);
+		}
+
+                $output[$oid] = array();
+		$output[$oid]['asn1id'] = array();
+		$output[$oid]['iri'] = array();
+
+		if (isset($data['oid']['identifier'])) {
+			foreach ($data['oid']['identifier'] as $asn1id) {
+				$std = _is_standardized($oid, $asn1id) ? '1' : '0';
+				$output[$oid]['asn1id'][] = "insert into `asn1id` (oid, name, standardized, well_known) values ('oid:$oid', '$asn1id', $std, 1);";
+			}
+		} else {
+			echo "-- Warning: Has no ASN.1 identifier: $oid\n";
+		}
+		if (isset($data['oid']['unicode-label'])) {
+			foreach ($data['oid']['unicode-label'] as $iri) {
+				$std = _is_long($oid) ? '1' : '0';
+
+				if (strpos($iri, '&#') !== false) {
+					$iri = "from_base64('".base64_encode(html_entity_decode($iri, ENT_COMPAT | ENT_HTML401, "UTF-8"))."')";
+				} else {
+					$iri = "'$iri'";
+				}
+
+				$output[$oid]['iri'][] = "insert into `iri` (oid, name, longarc, well_known) values ('oid:$oid', $iri, $std, 1);";
+			}
+		}
+	}
+
+	return $output[$oid];
+}
+
+// ---
+
+$interesting_oids = array();
+
+foreach (asn1_get_standardized_array() as $tmp => $oid) {
+	$interesting_oids[] = $oid;
+}
+
+foreach (iri_get_long_arcs() as $tmp => $oid) {
+	$oid = substr(str_replace('/', '.', $oid),1);
+	$interesting_oids[] = $oid;
+}
+
+$interesting_oids[] = '0.4.0'; // etsi
+$interesting_oids[] = '0.4.0.127'; // reserved
+$interesting_oids[] = '0.4.0.127.0'; // etsi-identified-organization
+$interesting_oids[] = '1.2.826.0'; // national
+$interesting_oids[] = '1.2.826.0.1'; // eng-ltd
+$interesting_oids[] = '1.2.840.1'; // organization
+$interesting_oids[] = '1.2.840.113556'; // microsoft
+$interesting_oids[] = '1.3.6'; // dod
+$interesting_oids[] = '1.3.6.1'; // internet
+$interesting_oids[] = '1.3.6.1.2'; // mgmt
+$interesting_oids[] = '1.3.6.1.2.1'; // mib-2
+$interesting_oids[] = '1.3.6.1.4'; // private
+$interesting_oids[] = '1.3.6.1.4.1'; // enterprise
+$interesting_oids[] = '1.3.6.1.4.1.37476.9000'; // freeoid
+$interesting_oids[] = '2.16.840.1'; // country
+$interesting_oids[] = '2.16.840.1.113883'; // hl7
+$interesting_oids[] = '2.40'; // upu
+$interesting_oids[] = '2.40.2'; // member-body
+$interesting_oids[] = '2.40.3'; // identified-organization
+
+$interesting_oids = array_unique($interesting_oids);
+natsort($interesting_oids);
+
+$output = array();
+foreach ($interesting_oids as $oid) {
+	_process_oid($oid);
+}
+
+$check_sum = '';
+foreach ($output as $oid => $data) {
+	echo "-- $oid\n";
+	foreach ($data['asn1id'] as $line_asn1) {
+		$check_sum .= $oid.'='.$line_asn1.'/';
+		echo "$line_asn1\n";
+	}
+	foreach ($data['iri'] as $line_iri) {
+		$check_sum .= $oid.'='.$line_iri.'/';
+		echo "$line_iri\n";
+	}
+	echo "\n";
+}
+echo '-- Generator checksum '.dechex(crc32($check_sum))."\n";
+
+# ---
+
+function ft_get_oid_data($oid) {
+	$url = OIDINFO_API_URL . '&oid='.urlencode($oid);
+	$cont_json = @file_get_contents($url);
+	if (!$cont_json) {
+		sleep(5);
+                $cont_json = @file_get_contents($url);
+                if (!$cont_json) return false;
+	}
+	$data = json_decode($cont_json,true);
+
+	return $data;
+}

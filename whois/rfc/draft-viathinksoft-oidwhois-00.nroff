@@ -301,7 +301,7 @@ Possible fields:
 
 - "identifier" (optional, multiple values allowed) contains the ASN.1 alphanumeric value ("NameForm") as defined in Recommendation ITU-T X.680 | ISO/IEC 8824-1, clause 32 [X680].
 
-- "standardized-identifier" (optional, multiple values allowed) contains an identifier that has a standardized NameForm, i.e. in an ASN.1 notation, it can be written without its associated number.
+- "standardized-id" (optional, multiple values allowed) contains an identifier that has a standardized NameForm, i.e. in an ASN.1 notation, it can be written without its associated number.
 
 - "unicode-label" (optional, multiple values allowed) contains an Unicode label that can be used in an OID Internationalized Resource Identifier (OID-IRI), as defined in Recommendation ITU-T X.680 | ISO/IEC 8824-1, clause 34 [X680].
 
