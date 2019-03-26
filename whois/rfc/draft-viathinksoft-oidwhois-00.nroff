@@ -89,8 +89,8 @@ Table of Contents
        2.3.3  "RESULT: Not found" . . . . . . . . . . . . . . . . . .  7
      3.4  Section that displays information about the OID . . . . . .  7
      3.6  Section that displays information about the RA  . . . . . .  9
-     3.7  Referral  . . . . . . . . . . . . . . . . . . . . . . . . .  9
-     3.8  Date/Time references  . . . . . . . . . . . . . . . . . . . 10
+     3.7  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . 10
+     3.8  Date/Time references  . . . . . . . . . . . . . . . . . . . 11
    4  Full example  . . . . . . . . . . . . . . . . . . . . . . . . . 12
      4.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 12
      4.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 12
@@ -363,6 +363,7 @@ Fields:
 
 - Additional fields can be defined by the service, but must begin with "ra-".
 
+.bp
 .ti 0
 3.7  Referral
 
@@ -407,6 +408,7 @@ ra-status:      Not Found
 .fi
 .in 3
 
+.bp
 .ti 0
 3.8  Date/Time references
 

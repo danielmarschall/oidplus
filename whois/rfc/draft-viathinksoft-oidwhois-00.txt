@@ -82,8 +82,8 @@ Table of Contents
        2.3.3  "RESULT: Not found" . . . . . . . . . . . . . . . . . .  7
      3.4  Section that displays information about the OID . . . . . .  7
      3.6  Section that displays information about the RA  . . . . . .  9
-     3.7  Referral  . . . . . . . . . . . . . . . . . . . . . . . . .  9
-     3.8  Date/Time references  . . . . . . . . . . . . . . . . . . . 10
+     3.7  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . 10
+     3.8  Date/Time references  . . . . . . . . . . . . . . . . . . . 11
    4  Full example  . . . . . . . . . . . . . . . . . . . . . . . . . 12
      4.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 12
      4.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 12
@@ -397,9 +397,9 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    alphanumeric value ("NameForm") as defined in Recommendation ITU-T
    X.680 | ISO/IEC 8824-1, clause 32 [X680].
 
-   - "standardized-id" (optional, multiple values allowed)
-   contains an identifier that has a standardized NameForm, i.e. in an
-   ASN.1 notation, it can be written without its associated number.
+   - "standardized-id" (optional, multiple values allowed) contains an
+   identifier that has a standardized NameForm, i.e. in an ASN.1
+   notation, it can be written without its associated number.
 
    - "unicode-label" (optional, multiple values allowed) contains an
    Unicode label that can be used in an OID Internationalized Resource
@@ -492,11 +492,11 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    - Additional fields can be defined by the service, but must begin
    with "ra-".
 
-3.7  Referral
 
-   By using the field "whois-service", the service can instruct the
-   client to query another service that might have more information
-   about the requested object.
+
+
+
+
 
  
 
@@ -505,6 +505,12 @@ Daniel Marschall         Expires <Expiry Date>                  [Page 9]
 
 INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
+
+3.7  Referral
+
+   By using the field "whois-service", the service can instruct the
+   client to query another service that might have more information
+   about the requested object.
 
    If Registration Authorities maintain up-to-date references to WHOIS
    service references of their OID delegations, it is possible to
@@ -545,6 +551,17 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
        ra:             "B"
        ra-status:      Not Found
 
+
+
+
+ 
+
+
+Daniel Marschall         Expires <Expiry Date>                 [Page 10]
+
+INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+
+
 3.8  Date/Time references
 
    Date/Time references should have the format "YYYY-MM-DD hh:mm:ss +/-
@@ -554,13 +571,6 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    removed until the date/time reference has the highest correctness.
 
    Examples of valid date/time references:
- 
-
-
-Daniel Marschall         Expires <Expiry Date>                 [Page 10]
-
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
-
 
    2019-03-15 18:32:00 +0200
    2019-03-15 18:32:00
@@ -569,16 +579,6 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    2019-03-15
    2019-03
    2019
-
-
-
-
-
-
-
-
-
-
 
 
 
