@@ -80,7 +80,7 @@ if (explode('$',$id)[0] == 'oidplus:search') {
 			    <input type="submit" value="Search">
 			  </form>';
 
-		if (!empty($search_term)) {
+		if (isset($_POST['search'])) {
 			// Note: The SQL collation defines if search is case sensitive or case insensitive
 
 			$min_length = 3; // TODO: configurable

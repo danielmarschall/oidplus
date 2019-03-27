@@ -19,6 +19,3 @@
 
 include_once __DIR__ . '/functions.inc.php';
 
-if ($_POST["action"] == "search") {
-	die("OK");
-}
