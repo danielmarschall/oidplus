@@ -86,7 +86,7 @@ function openOidInPanel(id, unselect=false) {
 			document.title = combine_systemtitle_and_pagetitle(system_title, data.title);
 			var state = {
 				"node_id":id,
-				"titleHTML":data.title.htmlentities(),
+				"titleHTML":(data.icon ? '<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' : '') +data.title.htmlentities(),
 				"textHTML":data.text,
 				"staticlinkHREF":"?goto="+encodeURI(id)
 			};
