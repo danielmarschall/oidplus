@@ -24,7 +24,7 @@ if (explode('$',$id)[0] == 'oidplus:change_ra_email') {
 
 	$ra_email = explode('$',$id)[1];
 
-	if (!OIDplus::config()->allowRaChangeEMailAddress()) {
+	if (!OIDplus::config()->getValue('allow_ra_email_change')) {
 		$out['icon'] = 'img/error_big.png';
 		$out['text'] .= '<p>This functionality has been disabled by the administrator.</p>';
 	} else if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
@@ -45,7 +45,7 @@ if (explode('$',$id)[0] == 'oidplus:change_ra_email') {
 	$timestamp = explode('$',$id)[3];
 	$auth = explode('$',$id)[4];
 
-	if (!OIDplus::config()->allowRaChangeEMailAddress()) {
+	if (!OIDplus::config()->getValue('allow_ra_email_change')) {
 		$out['icon'] = 'img/error_big.png';
 		$out['text'] .= '<p>This functionality has been disabled by the administrator.</p>';
 	} else {

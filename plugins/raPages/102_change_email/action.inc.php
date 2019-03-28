@@ -20,7 +20,7 @@
 if ($_POST["action"] == "change_ra_email") {
 	$handled = true;
 
-	if (!OIDplus::config()->allowRaChangeEMailAddress()) {
+	if (!OIDplus::config()->getValue('allow_ra_email_change')) {
 		die('This functionality has been disabled by the administrator.');
 	}
 
@@ -61,7 +61,7 @@ if ($_POST["action"] == "change_ra_email") {
 } else if ($_POST["action"] == "activate_new_ra_email") {
 	$handled = true;
 
-	if (!OIDplus::config()->allowRaChangeEMailAddress()) {
+	if (!OIDplus::config()->getValue('allow_ra_email_change')) {
 		die('This functionality has been disabled by the administrator.');
 	}
 
@@ -76,7 +76,7 @@ if ($_POST["action"] == "change_ra_email") {
 		die('Invalid auth key');
 	}
 
-	if ((OIDplus::config()->maxEmailChangeTime() > 0) && (time()-$timestamp > OIDplus::config()->maxEmailChangeTime())) {
+	if ((OIDplus::config()->getValue('max_ra_email_change_time') > 0) && (time()-$timestamp > OIDplus::config()->maxEmailChangeTime())) {
 		die('Activation link expired!');
 	}
 

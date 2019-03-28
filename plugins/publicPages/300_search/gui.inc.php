@@ -83,7 +83,7 @@ if (explode('$',$id)[0] == 'oidplus:search') {
 		if (isset($_POST['search'])) {
 			// Note: The SQL collation defines if search is case sensitive or case insensitive
 
-			$min_length = 3; // TODO: configurable
+			$min_length = OIDplus::config()->getValue('search_min_term_length');
 
 			$search_term = trim($search_term);
 

@@ -22,22 +22,25 @@ class OIDplusConfig {
 	protected $values;
 
 	protected function loadConfig() {
-		$this->values = array();
-		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config");
-		while ($row = OIDplus::db()->fetch_object($res)) {
-			$this->values[$row->name] = $row->value;
-		}
-
 		// Add defaults
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('system_title', 'What is the name of your RA?', 'OIDplus 2.0')");
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('global_cc', 'Global CC for all outgoing emails?', '')");
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('ra_min_password_length', 'Minimum length for RA passwords', '6')");
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0')");
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('max_ra_pwd_reset_time', 'Max RA password reset time in seconds (0 = infinite)', '0')");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('max_ra_email_change_time', 'Max RA email change time in seconds (0 = infinite)', '0')");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('oidinfo_export_protected', 'OID-info.com export interface protected (requires admin log in), values 0/1', '1')");
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('whois_auth_token', 'OID-over-WHOIS authentication token to display confidential data', '')");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('allow_ra_email_change', 'Allow that RAs change their email address (0/1)', '1')");
+
+		// Also ask the plugins if they have defaults
+		$ary = glob(__DIR__ . '/../../plugins/'.'*'.'/'.'*'.'/cfg_loadconfig.inc.php');
+		sort($ary);
+		foreach ($ary as $a) include $a;
+
+		// Now load the values
+		$this->values = array();
+		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config");
+		while ($row = OIDplus::db()->fetch_object($res)) {
+			$this->values[$row->name] = $row->value;
+		}
 	}
 
 	public function __construct() {
@@ -70,21 +73,17 @@ class OIDplusConfig {
 		return $this->values['max_ra_pwd_reset_time'];
 	}
 
-	public function maxEmailChangeTime() {
-		return $this->values['max_ra_email_change_time'];
-	}
-
-	public function oidinfoExportProtected() {
-		return $this->values['oidinfo_export_protected'] == '1';
-	}
-
 	public function authToken() {
 		$val = trim($this->values['whois_auth_token']);
 		return empty($val) ? false : $val;
 	}
 
-	public function allowRaChangeEMailAddress() {
-		return $this->values['allow_ra_email_change'] == '1';
+	public function getValue($name) {
+		if (isset($this->values[$name])) {
+			return $this->values[$name];
+		} else {
+			return null;
+		}
 	}
 
 	public function setValue($name, $value) {
@@ -106,14 +105,9 @@ class OIDplusConfig {
 				throw new Exception("Please enter a valid password length.");
 			}
 		}
-		if (($name == 'max_ra_invite_time') || ($name == 'max_ra_pwd_reset_time') || ($name == 'max_ra_email_change_time')) {
+		if (($name == 'max_ra_invite_time') || ($name == 'max_ra_pwd_reset_time')) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new Exception("Please enter a valid value.");
-			}
-		}
-		if (($name == 'oidinfo_export_protected') || ($name == 'allow_ra_email_change')) {
-			if (($value != '0') && ($value != '1')) {
-				throw new Exception("Please enter either 0 or 1.");
 			}
 		}
 		if ($name == 'whois_auth_token') {
@@ -122,6 +116,11 @@ class OIDplusConfig {
 				throw new Exception("Only characters and numbers are allowed as authentication token.");
 			}
 		}
+
+
+		$ary = glob(__DIR__ . '/../../plugins/'.'*'.'/'.'*'.'/cfg_setvalue.inc.php');
+		sort($ary);
+		foreach ($ary as $a) include $a;
 
 		// Now change the value in the database
 

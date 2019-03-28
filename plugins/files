@@ -7,7 +7,8 @@ Types "raPages", "publicPages", and "adminPages"
 	tree.inc.php
 	action.inc.php
 	treeicon.png (optional)
-	
+	cfg_loadconfig.inc.php (optional)
+	cfg_setvalue.inc.php (optional)
 
 Type "objectTypes"
 ------------------

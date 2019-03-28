@@ -29,7 +29,7 @@ OIDplus::db()->query("SET NAMES 'utf8'");
 
 # ---
 
-if (OIDplus::config()->oidinfoExportProtected() && !OIDplus::authUtils()::isAdminLoggedIn()) {
+if (OIDplus::config()->getValue('oidinfo_export_protected') && !OIDplus::authUtils()::isAdminLoggedIn()) {
 	echo '<p>You need to <a href="./?goto=oidplus:login">log in</a> as administrator.</p>';
 	die();
 }
