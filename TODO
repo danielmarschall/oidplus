@@ -84,7 +84,7 @@ FUTURE
 - move oid to different arc
 - bei sehr großen arcs (z.B. PEN) sollen nicht alle angezeigt werden
 - unterstützung für ORS?
-- Mehr "Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollst&auml;ndig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), ...<br>
+- Mehr "Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollständig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), ...<br>
 
 REJECTED IDEAS:
 - sollte es mehere admins geben?
@@ -104,6 +104,8 @@ QUESTIONS:
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie
 - wort "guid" oder "uuid" verwenden?
 - bit or tinyint(1) ?
+- should "OID updated" be split into two categories "updated by superior" (e.g. identifiers) and "updated by owner" (description etc)?
+- "updated" nicht aktualisieren, wenn man nur auf "update" klickt aber nix geändert hat
 
 GUID Management
 - Leaf nodes (GUIDs) should show/edit the Title in the CRUD, so you dont have to click the GUID to see the title

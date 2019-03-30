@@ -177,4 +177,4 @@ class OIDplusDoi extends OIDplusObject {
 	}
 }
 
-OIDplusObject::$registeredObjectTypes[] = 'OIDplusDoi';
+OIDplus::registerObjectType('OIDplusDoi');

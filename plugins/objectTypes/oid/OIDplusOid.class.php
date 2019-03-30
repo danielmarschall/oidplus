@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+include_once __DIR__ . '/WeidOidConverter.class.php';
+
 class OIDplusOid extends OIDplusObject {
 	private $oid;
 
@@ -136,9 +138,11 @@ class OIDplusOid extends OIDplusObject {
 	# ---
 
 	private function oidInformation() {
-		return "<p>Dot Notation: <code>" . $this->getDotNotation() . "</code><br>" .
-		       "ASN.1 Notation: <code>{ " . $this->getAsn1Notation() . " }</code><br>" .
-		       "IRI Notation: <code>" . $this->getIriNotation() . "</code></p>";
+		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
+		$weid = ($weid === false) ? "" : "<br>WEID notation: <code>" . htmlentities($weid) . "</code>";
+		return "<p>Dot notation: <code>" . $this->getDotNotation() . "</code><br>" .
+		       "ASN.1 notation: <code>{ " . $this->getAsn1Notation() . " }</code><br>" .
+		       "OID-IRI notation: <code>" . $this->getIriNotation() . "</code>$weid</p>";
 	}
 
 	public function __clone() {
@@ -355,4 +359,4 @@ class OIDplusOid extends OIDplusObject {
 	}
 }
 
-OIDplusObject::$registeredObjectTypes[] = 'OIDplusOid';
+OIDplus::registerObjectType('OIDplusOid');

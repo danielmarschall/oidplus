@@ -520,17 +520,9 @@ class OIDplusGui {
 
 		// === Plugins ===
 
-		$ary = glob(__DIR__ . '/../../plugins/publicPages/'.'*'.'/gui.inc.php');
-		sort($ary);
-		foreach ($ary as $a) include $a;
-
-		$ary = glob(__DIR__ . '/../../plugins/adminPages/'.'*'.'/gui.inc.php');
-		sort($ary);
-		foreach ($ary as $a) include $a;
-
-		$ary = glob(__DIR__ . '/../../plugins/raPages/'.'*'.'/gui.inc.php');
-		sort($ary);
-		foreach ($ary as $a) include $a;
+		foreach (OIDplus::getPagePlugins('*') as $plugin) {
+			$plugin->gui($id, $out, $handled);
+		}
 
 		// === Everything else (objects) ===
 
@@ -571,7 +563,7 @@ class OIDplusGui {
 			}
 
 			$matches_any_registered_type = false;
-			foreach (OIDplusObject::$registeredObjectTypes as $ot) {
+			foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
 				if ($obj = $ot::parse($id)) {
 					$matches_any_registered_type = true;
 					if ((OIDplus::db()->num_rows($res) == 0) && !$obj->isRoot()){

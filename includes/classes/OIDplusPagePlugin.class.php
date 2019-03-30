@@ -17,14 +17,13 @@
  * limitations under the License.
  */
 
-if (file_exists(__DIR__.'/treeicon.png')) {
-	$tree_icon = 'plugins/publicPages/'.basename(__DIR__).'/treeicon.png';
-} else {
-	$tree_icon = null; // default icon (folder)
+class OIDplusPagePlugin {
+	public function type() {}
+        public function priority() {}
+        public function action(&$handled) {}
+        public function cfgLoadConfig() {}
+        public function cfgSetValue($name, $value) {}
+        public function gui($id, &$out, &$handled) {}
+        public function tree(&$json, $ra_email=null) {}
 }
 
-$json[] = array(
-	'id' => 'oidplus:contact',
-	'icon' => $tree_icon,
-	'text' => 'Contact sysadmin'
-);

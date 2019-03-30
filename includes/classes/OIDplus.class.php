@@ -20,6 +20,8 @@
 class OIDplus {
 	private static /*OIDplusDataBase*/ $database;
 	private static /*OIDplusConfig*/ $config;
+	private static /*OIDplusPagePlugin[][]*/ $pagePlugins = array();
+	private static /*OIDplusObject*/ $objectTypes = array();
 
 	private function __construct() {
 	}
@@ -52,6 +54,40 @@ class OIDplus {
 
 	public static function sesHandler() {
 		return new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);
+	}
+
+	public static function registerPagePlugin(OIDplusPagePlugin $plugin) {
+		$type = $plugin->type();
+		if ($type === false) return false;
+
+		$prio = $plugin->priority();
+		if ($prio === false) return false;
+
+		if (!isset(self::$pagePlugins[$type])) self::$pagePlugins[$type] = array();
+		self::$pagePlugins[$type][$prio] = $plugin;
+
+		return true;
+	}
+
+	public static function getPagePlugins($type) {
+		if ($type == '*') {
+			$res = array();
+			foreach (self::$pagePlugins as $data) {
+				$res = array_merge($res, $data);
+			}
+		} else {
+			$res = self::$pagePlugins[$type];
+		}
+		ksort($res);
+		return $res;
+	}
+
+	public static function registerObjectType($ot) {
+		self::$objectTypes[] = $ot;
+	}
+
+	public static function getRegisteredObjectTypes() {
+		return self::$objectTypes;
 	}
 
 	public static function init($html=true) {
@@ -99,6 +135,14 @@ class OIDplus {
 
 		// Do redirect stuff etc.
 		define('OIDPLUS_SSL_AVAILABLE', self::isSslAvailable());
+
+		// Register plugins
+		$ary = glob(__DIR__ . '/../../plugins/publicPages/'.'*'.'/plugin.inc.php');
+		foreach ($ary as $a) include $a;
+		$ary = glob(__DIR__ . '/../../plugins/raPages/'.'*'.'/plugin.inc.php');
+		foreach ($ary as $a) include $a;
+		$ary = glob(__DIR__ . '/../../plugins/adminPages/'.'*'.'/plugin.inc.php');
+		foreach ($ary as $a) include $a;
 	}
 
 	private static function isSslAvailable() {
@@ -113,7 +157,7 @@ class OIDplus {
 		} else {
 			if (isset($_COOKIE['SSL_CHECK'])) {
 				// We already had the HTTPS detection done before.
-                if ($_COOKIE['SSL_CHECK']) {
+				if ($_COOKIE['SSL_CHECK']) {
 					// HTTPS was detected before, but we are HTTP. Redirect now
 					$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 					header('Location:'.$location);

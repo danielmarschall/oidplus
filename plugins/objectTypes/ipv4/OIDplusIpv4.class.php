@@ -161,5 +161,4 @@ class OIDplusIpv4 extends OIDplusObject {
 	}
 }
 
-OIDplusObject::$registeredObjectTypes[] = 'OIDplusIpv4';
-
+OIDplus::registerObjectType('OIDplusIpv4');

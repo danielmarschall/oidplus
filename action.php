@@ -33,17 +33,9 @@ try {
 
 		// === Plugins ===
 
-		$ary = glob(__DIR__ . '/plugins/publicPages/'.'*'.'/action.inc.php');
-		sort($ary);
-		foreach ($ary as $a) include $a;
-
-		$ary = glob(__DIR__ . '/plugins/adminPages/'.'*'.'/action.inc.php');
-		sort($ary);
-		foreach ($ary as $a) include $a;
-
-		$ary = glob(__DIR__ . '/plugins/raPages/'.'*'.'/action.inc.php');
-		sort($ary);
-		foreach ($ary as $a) include $a;
+		foreach (OIDplus::getPagePlugins('*') as $plugin) {
+			$plugin->action($handled);
+		}
 
 		// === INVITATION ===
 
@@ -206,7 +198,7 @@ try {
 			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
 
 			// Delete orphan stuff
-			foreach (OIDplusObject::$registeredObjectTypes as $ot) {
+			foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
 				$where = "where parent <> '".OIDplus::db()->real_escape_string($ot::ns().':')."' and " .
 				         "      parent like '".OIDplus::db()->real_escape_string($ot::ns().':%')."' and " .
 				         "      parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like '".OIDplus::db()->real_escape_string($ot::ns().':%')."')";

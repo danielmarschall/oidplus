@@ -43,6 +43,7 @@ require_once __DIR__ . '/anti_xss.inc.php';
 // ---
 
 require_once __DIR__ . '/classes/OIDplus.class.php';
+require_once __DIR__ . '/classes/OIDplusPagePlugin.class.php';
 require_once __DIR__ . '/classes/OIDplusDataBase.class.php';
 require_once __DIR__ . '/classes/OIDplusDataBaseMySQL.class.php';
 require_once __DIR__ . '/classes/OIDplusConfig.class.php';

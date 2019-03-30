@@ -159,4 +159,4 @@ class OIDplusJava extends OIDplusObject {
 	}
 }
 
-OIDplusObject::$registeredObjectTypes[] = 'OIDplusJava';
+OIDplus::registerObjectType('OIDplusJava');

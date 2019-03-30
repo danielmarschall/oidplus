@@ -161,5 +161,4 @@ class OIDplusIpv6 extends OIDplusObject {
 	}
 }
 
-OIDplusObject::$registeredObjectTypes[] = 'OIDplusIpv6';
-
+OIDplus::registerObjectType('OIDplusIpv6');

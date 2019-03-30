@@ -18,11 +18,9 @@
  */
 
 abstract class OIDplusObject {
-	public static $registeredObjectTypes = array();
-
 	public static function parse($node_id) { // please overwrite this function!
 		// TODO: in case we are not calling this class directly, check if function is overwritten and throw exception otherwise
-		foreach (self::$registeredObjectTypes as $ot) {
+		foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
 			if ($obj = $ot::parse($node_id)) return $obj;
 		}
 		return null;
@@ -80,7 +78,7 @@ abstract class OIDplusObject {
 	private static function getAllNonConfidential_rec($parent=null, &$out) {
 		if (is_null($parent)) {
 			$roots = array();
-			foreach (self::$registeredObjectTypes as $ot) {
+			foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
 				$roots[] = "parent = '" . OIDplus::db()->real_escape_string($ot::root()) . "'";
 			}
 			$roots = implode(' or ', $roots);

@@ -160,5 +160,4 @@ class OIDplusGuid extends OIDplusObject {
 	}
 }
 
-OIDplusObject::$registeredObjectTypes[] = 'OIDplusGuid';
-
+OIDplus::registerObjectType('OIDplusGuid');

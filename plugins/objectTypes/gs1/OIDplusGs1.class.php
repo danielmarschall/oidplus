@@ -225,4 +225,4 @@ class OIDplusGs1 extends OIDplusObject {
 	}
 }
 
-OIDplusObject::$registeredObjectTypes[] = 'OIDplusGs1';
+OIDplus::registerObjectType('OIDplusGs1');

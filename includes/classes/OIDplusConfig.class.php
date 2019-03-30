@@ -31,9 +31,9 @@ class OIDplusConfig {
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('whois_auth_token', 'OID-over-WHOIS authentication token to display confidential data', '')");
 
 		// Also ask the plugins if they have defaults
-		$ary = glob(__DIR__ . '/../../plugins/'.'*'.'/'.'*'.'/cfg_loadconfig.inc.php');
-		sort($ary);
-		foreach ($ary as $a) include $a;
+		foreach (OIDplus::getPagePlugins('*') as $plugin) {
+			$plugin->cfgLoadConfig();
+		}
 
 		// Now load the values
 		$this->values = array();
@@ -117,10 +117,9 @@ class OIDplusConfig {
 			}
 		}
 
-
-		$ary = glob(__DIR__ . '/../../plugins/'.'*'.'/'.'*'.'/cfg_setvalue.inc.php');
-		sort($ary);
-		foreach ($ary as $a) include $a;
+		foreach (OIDplus::getPagePlugins('*') as $plugin) {
+			$plugin->cfgSetValue($name, $value);
+		}
 
 		// Now change the value in the database
 

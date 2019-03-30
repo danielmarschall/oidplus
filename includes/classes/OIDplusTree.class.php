@@ -31,7 +31,7 @@ class OIDplusTree {
 		}
 
 		$objTypesChildren = array();
-		foreach (OIDplusObject::$registeredObjectTypes as $ot) {
+		foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
 			$icon = 'plugins/objectTypes/'.$ot::ns().'/img/treeicon_root.png';
 			if (file_exists($icon)) {
 				$icon = '<img src="'.$icon.'" alt="'.$ot::ns().' icon"> ';
@@ -53,7 +53,7 @@ class OIDplusTree {
 				$y_used = 0;
 				$x_used = 0;
 				$stufe = 0;
-				$menu_entires = array();
+				$menu_entries = array();
 				$stufen = array();
 				while ($row = OIDplus::db()->fetch_object($res)) {
 					$obj = OIDplusObject::parse($row->id);
@@ -81,9 +81,9 @@ class OIDplusTree {
 
 		$json = array();
 
-		$ary = glob(__DIR__ . '/../../plugins/publicPages/'.'*'.'/tree.inc.php');
-		sort($ary);
-		foreach ($ary as $a) include $a;
+		foreach (OIDplus::getPagePlugins('public') as $plugin) {
+			$plugin->tree($json);
+		}
 
 		foreach ($json as $x) {
 			if ($static_node_id == $x['id']) echo '<b>';
@@ -118,7 +118,7 @@ class OIDplusTree {
 			}
 
 			$objTypesChildren = array();
-			foreach (OIDplusObject::$registeredObjectTypes as $ot) {
+			foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
 				$child = array(
 						'id' => $ot::root(),
 						'text' => $ot::objectTypeTitle(),
@@ -148,9 +148,9 @@ class OIDplusTree {
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
 				$ra_roots = array();
 
-				$ary = glob(__DIR__ . '/../../plugins/adminPages/'.'*'.'/tree.inc.php');
-				sort($ary);
-				foreach ($ary as $a) include $a;
+				foreach (OIDplus::getPagePlugins('admin') as $plugin) {
+					$plugin->tree($ra_roots);
+				}
 
 				$ra_roots[] = array(
 					'id'       => 'oidplus:logout$admin',
@@ -168,9 +168,9 @@ class OIDplusTree {
 			foreach ($ra_emails as $ra_email) {
 				$ra_roots = array();
 
-				$ary = glob(__DIR__ . '/../../plugins/raPages/'.'*'.'/tree.inc.php');
-				sort($ary);
-				foreach ($ary as $a) include $a;
+				foreach (OIDplus::getPagePlugins('ra') as $plugin) {
+					$plugin->tree($ra_roots, $ra_email);
+				}
 
 				$ra_roots[] = array(
 					'id'       => 'oidplus:logout$'.$ra_email,
@@ -204,9 +204,9 @@ class OIDplusTree {
 				'children' => $loginChildren
 			);
 
-			$ary = glob(__DIR__ . '/../../plugins/publicPages/'.'*'.'/tree.inc.php');
-			sort($ary);
-			foreach ($ary as $a) include $a;
+			foreach (OIDplus::getPagePlugins('public') as $plugin) {
+				$plugin->tree($json);
+			}
 		} else {
 			$json = self::tree_populate($req_id);
 		}
