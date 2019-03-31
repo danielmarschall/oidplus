@@ -84,25 +84,89 @@ foreach (iri_get_long_arcs() as $tmp => $oid) {
 	$interesting_oids[] = $oid;
 }
 
-$interesting_oids[] = '0.4.0'; // etsi
-$interesting_oids[] = '0.4.0.127'; // reserved
-$interesting_oids[] = '0.4.0.127.0'; // etsi-identified-organization
-$interesting_oids[] = '1.2.826.0'; // national
-$interesting_oids[] = '1.2.826.0.1'; // eng-ltd
-$interesting_oids[] = '1.2.840.1'; // organization
-$interesting_oids[] = '1.2.840.113556'; // microsoft
-$interesting_oids[] = '1.3.6'; // dod
-$interesting_oids[] = '1.3.6.1'; // internet
-$interesting_oids[] = '1.3.6.1.2'; // mgmt
-$interesting_oids[] = '1.3.6.1.2.1'; // mib-2
-$interesting_oids[] = '1.3.6.1.4'; // private
-$interesting_oids[] = '1.3.6.1.4.1'; // enterprise
-$interesting_oids[] = '1.3.6.1.4.1.37476.9000'; // freeoid
-$interesting_oids[] = '2.16.840.1'; // country
-$interesting_oids[] = '2.16.840.1.113883'; // hl7
-$interesting_oids[] = '2.40'; // upu
-$interesting_oids[] = '2.40.2'; // member-body
-$interesting_oids[] = '2.40.3'; // identified-organization
+// ----------------------------------------------------------------
+
+$interesting_oids[] = '0'; // itu-t
+	$interesting_oids[] = '0.2'; // telecom operators
+	$interesting_oids[] = '0.3'; // network-operator
+	$interesting_oids[] = '0.4'; // identified-organization
+		$interesting_oids[] = '0.4.0'; // etsi
+			$interesting_oids[] = '0.4.0.127'; // reserved
+				$interesting_oids[] = '0.4.0.127.0'; // etsi-identified-organization
+$interesting_oids[] = '1'; // iso
+	$interesting_oids[] = '1.1'; // registration-authority
+		$interesting_oids[] = '1.1.19785'; // cbeff
+			$interesting_oids[] = '1.1.19785.0'; // organization
+	$interesting_oids[] = '1.2'; // member-body
+		// country_getter defines the country OIDs
+		$interesting_oids[] = '1.2.158'; // tw
+			$interesting_oids[] = '1.2.158.1'; // organization
+		$interesting_oids[] = '1.2.276'; // de
+			$interesting_oids[] = '1.2.276.0'; // din-certco
+		$interesting_oids[] = '1.2.344'; // hk
+			$interesting_oids[] = '1.2.344.1'; // organization
+		$interesting_oids[] = '1.2.616'; // pl
+			$interesting_oids[] = '1.2.616.1'; // organization
+		$interesting_oids[] = '1.2.826'; // gb
+			$interesting_oids[] = '1.2.826.0'; // national
+				$interesting_oids[] = '1.2.826.0.1'; // eng-ltd
+					$interesting_oids[] = '1.2.826.0.1.3680043'; // Medical Connections ( https://www.medicalconnections.co.uk/FreeUID/ )
+		$interesting_oids[] = '1.2.840'; // us
+			$interesting_oids[] = '1.2.840.1'; // organization
+				$interesting_oids[] = '1.2.840.113556'; // microsoft
+					$interesting_oids[] = '1.2.840.113556.1'; // Microsoft Active Directory
+						$interesting_oids[] = '1.2.840.113556.1.8000'; // companies
+							$interesting_oids[] = '1.2.840.113556.1.8000.2554'; // customer usage
+					$interesting_oids[] = '1.2.840.113556.2'; // DICOM
+	$interesting_oids[] = '1.3'; // identified-organization
+		$interesting_oids[] = '1.3.6'; // dod
+			$interesting_oids[] = '1.3.6.1'; // internet
+				$interesting_oids[] = '1.3.6.1.2'; // mgmt
+					$interesting_oids[] = '1.3.6.1.2.1'; // mib-2
+						$interesting_oids[] = '1.3.6.1.4'; // private
+							$interesting_oids[] = '1.3.6.1.4.1'; // enterprise
+								$interesting_oids[] = '1.3.6.1.4.1.19376'; // Integrating the Healthcare Enterprise International
+									$interesting_oids[] = '1.3.6.1.4.1.19376.3'; // Organizations (not in Repo!)
+									$interesting_oids[] = '1.3.6.1.4.1.19376.3.276'; // IHE Deutschland
+										$interesting_oids[] = '1.3.6.1.4.1.19376.3.276.1'; // OID für das OID Konzept Version 1
+											$interesting_oids[] = '1.3.6.1.4.1.19376.3.276.1.4'; // Identifikation des ID-Pools für Institutionen (Organisationen, Einheiten, etc.)
+													$interesting_oids[] = '1.3.6.1.4.1.19376.3.276.1.4.1'; // Krankenhäuser
+													$interesting_oids[] = '1.3.6.1.4.1.19376.3.276.1.4.2'; // Praxen niedergelassener Ärzte
+													$interesting_oids[] = '1.3.6.1.4.1.19376.3.276.1.4.3'; // Systeme
+								$interesting_oids[] = '1.3.6.1.4.1.12798'; // Members of Internet-Käyttäjät Ikuisesti (IKI)
+									$interesting_oids[] = '1.3.6.1.4.1.12798.1'; // member
+								$interesting_oids[] = '1.3.6.1.4.1.37476'; // ViaThinkSoft
+									$interesting_oids[] = '1.3.6.1.4.1.37476.9000'; // freeoid
+$interesting_oids[] = '2'; // joint-iso-itu-t
+	$interesting_oids[] = '2.16'; // country
+		// country_getter defines the country OIDs
+		$interesting_oids[] = '2.16.158'; // tw
+			$interesting_oids[] = '2.16.158.1'; // organization
+		$interesting_oids[] = '2.16.344'; // hk
+			$interesting_oids[] = '2.16.344.1'; // organization
+		$interesting_oids[] = '2.16.616'; // pl
+			$interesting_oids[] = '2.16.616.1'; // organization
+		$interesting_oids[] = '2.16.840'; // us
+			$interesting_oids[] = '2.16.840.1'; // organization
+				$interesting_oids[] = '2.16.840.1.113883'; // hl7
+					$interesting_oids[] = '2.16.840.1.113883.3'; // externalUseRoots
+					$interesting_oids[] = '2.16.840.1.113883.6'; // externalCodeSystems
+					$interesting_oids[] = '2.16.840.1.113883.13'; // externalValueSets
+	$interesting_oids[] = '2.23'; // international-organizations
+	$interesting_oids[] = '2.25'; // uuid
+	$interesting_oids[] = '2.40'; // upu
+		$interesting_oids[] = '2.40.2'; // member-body
+		$interesting_oids[] = '2.40.3'; // identified-organization
+	$interesting_oids[] = '2.49'; // alerting
+		$interesting_oids[] = '2.49.0'; // wmo
+			$interesting_oids[] = '2.49.0.0'; // authority (Countries)
+				// country_getter defines the country OIDs
+			$interesting_oids[] = '2.49.0.1'; // country-msg
+				// country_getter defines the country OIDs
+			$interesting_oids[] = '2.49.0.2'; // org
+			$interesting_oids[] = '2.49.0.3'; // org-msg
+
+// ----------------------------------------------------------------
 
 $interesting_oids = array_unique($interesting_oids);
 natsort($interesting_oids);

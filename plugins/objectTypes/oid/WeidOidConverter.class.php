@@ -7,7 +7,7 @@
 
 class WeidOidConverter {
 
-	public static function weLuhnGetCheckDigit($str) {
+	protected static function weLuhnGetCheckDigit($str) {
 		$wrkstr = str_replace('-', '', $str); // remove separators
 		for ($i=0; $i<36; $i++) {
 			$wrkstr = str_ireplace(chr(ord('a')+$i), $i+10, $wrkstr);
@@ -60,7 +60,7 @@ class WeidOidConverter {
 		return $namespace . substr($weidstr.'-'.self::weLuhnGetCheckDigit($weidstr), strlen($base.'-'));
 	}
 
-	private static function base_convert_bigint($numstring, $frombase, $tobase) {
+	protected static function base_convert_bigint($numstring, $frombase, $tobase) {
 		$frombase_str = '';
 		for ($i=0; $i<$frombase; $i++) {
 			$frombase_str .= strtoupper(base_convert($i, 10, 36));
@@ -122,4 +122,3 @@ echo "Done, checked $cnt testcases!\n";
 $weid = 'weid:EXAMPLE-?';
 echo "Autocomplete test: '$weid' => '".WeidOidConverter::weid2oid($weid)."' (checksum corrected to: '$weid')\n";
 */
-
