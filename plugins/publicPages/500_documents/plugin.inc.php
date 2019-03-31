@@ -112,6 +112,8 @@ class OIDplusPagePublicDocuments extends OIDplusPagePlugin {
 				$dirs = glob($file.'*'.'/');
 				asort($dirs);
 				foreach ($dirs as $dir) {
+					if (!is_dir($dir)) continue; // for some reason, a symlink to a HTML is catched in the glob mask doc / * / ....
+
 					$icon_candidate = pathinfo($dir)['dirname'].'/'.pathinfo($dir)['filename'].'_tree.png';
 					if (file_exists($icon_candidate)) {
 						$tree_icon = $icon_candidate;
@@ -162,6 +164,8 @@ class OIDplusPagePublicDocuments extends OIDplusPagePlugin {
 		$dirs = glob($rootdir.'*'.'/');
 		asort($dirs);
 		foreach ($dirs as $dir) {
+			if (!is_dir($dir)) continue; // for some reason, a symlink to a HTML is catched in the glob mask doc / * / ....
+
 			$tmp = array();
 			$this->tree_rec($tmp, $dir, $depth+1);
 
@@ -177,30 +181,27 @@ class OIDplusPagePublicDocuments extends OIDplusPagePlugin {
 			$children[] = array(
 				'id' => 'oidplus:documents$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:documents;$dir"),
 				'icon' => $tree_icon,
-				'text' => $this->getDocumentTitle($dir),
+				'text' => basename($dir),
 				'children' => $tmp
 			);
 		}
 
 		$files = glob($rootdir.'*.htm*');
-		if (count($files) > 0) {
-			asort($files);
-			foreach ($files as $file) {
-				$icon_candidate = pathinfo($file)['dirname'].'/'.pathinfo($file)['filename'].'_tree.png';
-				if (file_exists($icon_candidate)) {
-					$tree_icon = $icon_candidate;
-				} else if (file_exists(__DIR__.'/treeicon_leaf.png')) {
-					$tree_icon = 'plugins/publicPages/'.basename(__DIR__).'/treeicon_leaf.png';
-				} else {
-					$tree_icon = null; // default icon (folder)
-				}
-
-				$children[] = array(
-					'id' => 'oidplus:documents$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:documents;$file"),
-					'icon' => $tree_icon,
-					'text' => $this->getDocumentTitle($file)
-				);
+		asort($files);
+		foreach ($files as $file) {
+			$icon_candidate = pathinfo($file)['dirname'].'/'.pathinfo($file)['filename'].'_tree.png';
+			if (file_exists($icon_candidate)) {
+				$tree_icon = $icon_candidate;
+			} else if (file_exists(__DIR__.'/treeicon_leaf.png')) {
+				$tree_icon = 'plugins/publicPages/'.basename(__DIR__).'/treeicon_leaf.png';
+			} else {
+				$tree_icon = null; // default icon (folder)
 			}
+			$children[] = array(
+				'id' => 'oidplus:documents$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:documents;$file"),
+				'icon' => $tree_icon,
+				'text' => $this->getDocumentTitle($file)
+			);
 		}
 	}
 
