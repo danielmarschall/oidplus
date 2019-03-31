@@ -86,6 +86,8 @@ FUTURE
 - bei sehr großen arcs (z.B. PEN) sollen nicht alle angezeigt werden
 - unterstützung für ORS?
 - Mehr "Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollständig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), ...<br>
+- "Search" plugin: Feature to search inside documentation (doc/ directory)
+- Make a "version" field in the database, so we know when we need to update the database structure
 
 REJECTED IDEAS:
 - sollte es mehere admins geben?

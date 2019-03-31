@@ -1,7 +1,9 @@
 CREATE TABLE `config` (
   `name` varchar(50) NOT NULL,
   `value` varchar(255) NOT NULL,
-  `description` varchar(255)
+  `description` varchar(255),
+  `protected` bit(1) NOT NULL DEFAULT b'0',
+  `visible` bit(1) NOT NULL DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `asn1id` (

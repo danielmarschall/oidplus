@@ -31,7 +31,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 	}
 
 	public function cfgLoadConfig() {
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('oidinfo_export_protected', 'OID-info.com export interface protected (requires admin log in), values 0/1', '1')");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('oidinfo_export_protected', 'OID-info.com export interface protected (requires admin log in), values 0/1', '1', 0, 1)");
 	}
 
 	public function cfgSetValue($name, $value) {

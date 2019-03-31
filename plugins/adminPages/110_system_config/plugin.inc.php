@@ -39,6 +39,12 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 
 			OIDplus::config()->setValue($name, $value);
 
+			$res = OIDplus::db()->query("select protected from ".OIDPLUS_TABLENAME_PREFIX."config where name = '".OIDplus::db()->real_escape_string($name)."';");
+			$row = OIDplus::db()->fetch_array($res);
+			if ($row['protected'] == 1) {
+				die('Setting is write protected');
+			}
+
 			echo "OK";
 		}
 	}
@@ -73,13 +79,18 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 
 				OIDplus::config(); // <-- make sure that the config table is loaded/filled correctly before we do a select
 
-				$result = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config order by name");
+				$result = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config where `visible` = 1 order by name");
 				while ($row = OIDplus::db()->fetch_object($result)) {
 					$output .= '<tr>';
 					$output .= '     <td>'.htmlentities($row->name).'</td>';
 					$output .= '     <td>'.htmlentities($row->description).'</td>';
-					$output .= '     <td><input type="text" id="config_'.$row->name.'" value="'.htmlentities($row->value).'"></td>';
-					$output .= '     <td><button type="button" name="config_update_'.$row->name.'" id="config_update_'.$row->name.'" class="btn btn-success btn-xs update" onclick="javascript:crudActionConfigUpdate('.js_escape($row->name).')">Update</button></td>';
+					if ($row->protected == 1) {
+						$output .= '     <td>'.htmlentities($row->value).'</td>';
+						$output .= '     <td>&nbsp;</td>';
+					} else {
+						$output .= '     <td><input type="text" id="config_'.$row->name.'" value="'.htmlentities($row->value).'"></td>';
+						$output .= '     <td><button type="button" name="config_update_'.$row->name.'" id="config_update_'.$row->name.'" class="btn btn-success btn-xs update" onclick="javascript:crudActionConfigUpdate('.js_escape($row->name).')">Update</button></td>';
+					}
 					$output .= '</tr>';
 				}
 

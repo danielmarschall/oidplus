@@ -31,7 +31,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 	}
 
 	public function cfgLoadConfig() {
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value) values ('search_min_term_length', 'Minimum length of a search term', '3')");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('search_min_term_length', 'Minimum length of a search term', '3', 0, 1)");
 	}
 
 	public function cfgSetValue($name, $value) {
