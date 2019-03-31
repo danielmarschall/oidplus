@@ -70,11 +70,6 @@ http login nicht möglich. warum?
 
 objecttypes automatisch laden (php dateien suchen) und registrieren.
 
-PLANNED FEATURES:
-- "Documents" section: Make documentation for usage of OIDplus (for members)
-- "Documents" section: Can base of URLs/images be changed automatically?
-- "Documents" section: Implement support for folders
-
 SMALL THINGS
 - <abbr> in <code> wird doppelt unterstrichen
 - wenn man eine well-known OID anlegen möchte, dann kommt fehler wegen replaceAsn1/replaceIri, aber die OID ist erstellt. Die API ist aber nicht reloaded. Man sieht also nicht, dass die OID erstellt wurde, und ein erneuter klick auf Insert führt zum Primary-Key fehler
@@ -83,6 +78,7 @@ SMALL THINGS
 - show whois links only if folder "whois/" exists
 - disable autocomplete on some forms
 - graphical imporvements of forms (input edits aligned)
+- "Documents" section: Make documentation for usage of OIDplus (for members)
 
 FUTURE
 - admin: soll wellknown oids ändern dürfen
@@ -111,6 +107,7 @@ QUESTIONS:
 - bit or tinyint(1) ?
 - should "OID updated" be split into two categories "updated by superior" (e.g. identifiers) and "updated by owner" (description etc)?
 - "updated" nicht aktualisieren, wenn man nur auf "update" klickt aber nix geändert hat
+- "Documents" section: Can base of URLs/images inside the HTML be changed automatically?
 
 GUID Management
 - Leaf nodes (GUIDs) should show/edit the Title in the CRUD, so you dont have to click the GUID to see the title
