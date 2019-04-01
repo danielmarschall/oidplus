@@ -53,7 +53,3 @@ require_once __DIR__ . '/classes/OIDplusAuthUtils.class.php';
 require_once __DIR__ . '/classes/OIDplusRA.class.php';
 require_once __DIR__ . '/classes/OIDplusSessionHandler.class.php';
 require_once __DIR__ . '/classes/OIDplusObject.class.php';
-
-// ---
-
-@include_once __DIR__ . '/../plugins/objectTypes/_EnabledObjectTypes.inc.php';

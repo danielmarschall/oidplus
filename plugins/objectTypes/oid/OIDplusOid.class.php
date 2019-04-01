@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-include_once __DIR__ . '/WeidOidConverter.class.php';
-
 class OIDplusOid extends OIDplusObject {
 	private $oid;
 

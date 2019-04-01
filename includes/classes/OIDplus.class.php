@@ -83,7 +83,52 @@ class OIDplus {
 	}
 
 	public static function registerObjectType($ot) {
-		self::$objectTypes[] = $ot;
+		$ns = $ot::ns();
+
+		if (empty($ns)) die("Attention: Empty NS at $ot\n");
+
+		$ns_found = false;
+		foreach (OIDplus::getRegisteredObjectTypes() as $test_ot) {
+			if ($test_ot::ns() == $ns) {
+				$ns_found = true;
+				break;
+			}
+		}
+		if ($ns_found) {
+			throw new Exception("Attention: Two objectType plugins use the same namespace \"$ns\"!");
+		}
+
+		$init = OIDplus::config()->getValue("objecttypes_initialized");
+		$init_ary = empty($init) ? array() : explode(';', $init);
+
+		$enabled = OIDplus::config()->getValue("objecttypes_enabled");
+		$enabled_ary = empty($enabled) ? array() : explode(';', $enabled);
+
+		if (in_array($ns, $enabled_ary) || !in_array($ns, $init_ary)) {
+			self::$objectTypes[] = $ot;
+			usort(self::$objectTypes, function($a, $b) {
+				$enabled = OIDplus::config()->getValue("objecttypes_enabled");
+				$enabled_ary = explode(';', $enabled);
+
+				$idx_a = array_search($a::ns(), $enabled_ary);
+				$idx_b = array_search($b::ns(), $enabled_ary);
+
+			        if ($idx_a == $idx_b) {
+			            return 0;
+			        }
+			        return ($idx_a > $idx_b) ? +1 : -1;
+			});
+		}
+
+		if (!in_array($ns, $init_ary)) {
+			// Was never initialized before, so we add it to the list of enabled object types once
+
+			$enabled_ary[] = $ns;
+			OIDplus::config()->setValue("objecttypes_enabled", implode(';', $enabled_ary));
+
+			$init_ary[] = $ns;
+			OIDplus::config()->setValue("objecttypes_initialized", implode(';', $init_ary));
+		}
 	}
 
 	public static function getRegisteredObjectTypes() {
@@ -136,12 +181,19 @@ class OIDplus {
 		// Do redirect stuff etc.
 		define('OIDPLUS_SSL_AVAILABLE', self::isSslAvailable());
 
+		// System config settings
+
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('objecttypes_initialized', 'List of object type plugins that were initialized once', '', 1, 1)");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('objecttypes_enabled', 'Enabled object types and their order, separated with a semicolon (please reload the page so that the change is applied)', '', 0, 1)");
+
 		// Register plugins
 		$ary = glob(__DIR__ . '/../../plugins/publicPages/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 		$ary = glob(__DIR__ . '/../../plugins/raPages/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 		$ary = glob(__DIR__ . '/../../plugins/adminPages/'.'*'.'/plugin.inc.php');
+		foreach ($ary as $a) include $a;
+		$ary = glob(__DIR__ . '/../../plugins/objectTypes/'.'*'.'/*.class.php');
 		foreach ($ary as $a) include $a;
 	}
 

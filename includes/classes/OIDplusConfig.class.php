@@ -117,6 +117,30 @@ class OIDplusConfig {
 			}
 		}
 
+		if ($name == 'objecttypes_enabled') {
+			# TODO: when objecttypes_enabled is changed at the admin control panel, we need to do a reload of the page, so that jsTree will be updated. Is there anything we can do?
+
+			$ary = explode(';',$value);
+			$uniq_ary = array_unique($ary);
+
+			if (count($ary) != count($uniq_ary)) {
+				throw new Exception("Please check your input. Some object types are double.");
+			}
+
+			foreach ($ary as $ot_check) {
+				$ns_found = false;
+				foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+					if ($ot::ns() == $ot_check) {
+						$ns_found = true;
+						break;
+					}
+				}
+				if (!$ns_found) {
+					throw new Exception("Please check your input. Namespace \"$ot_check\" is not found");
+				}
+			}
+		}
+
 		foreach (OIDplus::getPagePlugins('*') as $plugin) {
 			$plugin->cfgSetValue($name, $value);
 		}
@@ -126,6 +150,7 @@ class OIDplusConfig {
 		if (!OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."config set value = '".OIDplus::db()->real_escape_string($value)."' where name = '".OIDplus::db()->real_escape_string($name)."'")) {
 			throw new Exception(OIDplus::db()->error());
 		}
+		$this->values[$name] = $value;
 	}
 
 }

@@ -138,7 +138,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$message .= "\n";
 			$message .= "More details: ".OIDplus::system_url()."?goto=oid:$new_oid\n";
 
-			my_mail($email, OIDplus::config()->systemTitle()." - OID $new_oid registered", $message, OIDplus::config()->globalCC(), 'admin@oid-info.com');
+			my_mail($email, OIDplus::config()->systemTitle()." - OID $new_oid registered", $message, OIDplus::config()->globalCC());
 
 			// Send delegation information to user
 
