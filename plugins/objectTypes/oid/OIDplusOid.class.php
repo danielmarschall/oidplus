@@ -140,7 +140,9 @@ class OIDplusOid extends OIDplusObject {
 		$weid = ($weid === false) ? "" : "<br>WEID notation: <code>" . htmlentities($weid) . "</code>";
 		return "<p>Dot notation: <code>" . $this->getDotNotation() . "</code><br>" .
 		       "ASN.1 notation: <code>{ " . $this->getAsn1Notation() . " }</code><br>" .
-		       "OID-IRI notation: <code>" . $this->getIriNotation() . "</code>$weid</p>";
+		       "OID-IRI notation: <code>" . $this->getIriNotation() . "</code><br>" .
+		       "SHA1 namebased UUID: <code>".gen_uuid_sha1_namespace(UUID_NAMEBASED_NS_OID, $this->getDotNotation())."</code><br>" .
+		       "MD5 namebased UUID: <code>".gen_uuid_md5_namespace(UUID_NAMEBASED_NS_OID, $this->getDotNotation())."</code>$weid</p>";
 	}
 
 	public function __clone() {
