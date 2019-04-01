@@ -397,26 +397,10 @@ $(document).ready(function () {
 			"multiple": false
 		},
 		'conditionalselect' : function (node) {
-			var id = node.id;
-
-			if (id.explode('$', 2)[0] == 'oidplus:dummy') {
-				// Nothing to do here
-				// node can either bei "ra:<emailAddress" or "ra:admin"
-				// TODO: it would be much better if the mouse cursor would not show a hand
-			} else if (id.explode('$', 2)[0] == 'oidplus:logout') {
-				var email = id.explode('$', 2)[1];
-				if (email == 'admin') {
-					adminLogout();
-				} else {
-					raLogout(email);
-				}
-				return false;
-			} else if (id.explode('$', 2)[0] == 'oidplus:raroot') {
-				// Function "Jump to RA root"
-				$('#content_window').html('');
-				document.location = '?goto='+encodeURI(id.explode('$', 2)[1]);
+			if (node.original.conditionalselect !== undefined) {
+				return eval(node.original.conditionalselect);
 			} else {
-				return true;
+				return true; // allow select
 			}
 		},
 	})

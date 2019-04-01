@@ -44,6 +44,7 @@ class OIDplusTree {
 			$tmp = OIDplusObject::parse($static_node_id);
 			if (!is_null($tmp) && ($ot == get_class($tmp))) {
 				// TODO: Instead of just having 3 levels (parent, this and children), it would be better if we'd had a full tree of all parents
+				//       on the other hand, for giving search engines content, this is good enough
 				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where " .
 				                   "parent = '".OIDplus::db()->real_escape_string($static_node_id)."' or " .
 				                   "id = '".OIDplus::db()->real_escape_string($static_node_id)."' " .
@@ -155,12 +156,14 @@ class OIDplusTree {
 				$ra_roots[] = array(
 					'id'       => 'oidplus:logout$admin',
 					'icon'     => 'img/logout.png',
+					'conditionalselect' => 'adminLogout()', // defined in oidplus.js
 					'text'     => 'Log out'
 				);
 				$loginChildren[] = array(
-					'id'       => 'oidplus:dummy$admin',
+					'id'       => 'oidplus:dummy$'.md5(rand()),
 					'text'     => "Logged in as admin",
 					'icon'     => 'img/admin.png',
+					'conditionalselect' => 'false', // dummy node that can't be selected
 					'state'    => array("opened" => true),
 					'children' => $ra_roots
 				);
@@ -174,6 +177,7 @@ class OIDplusTree {
 
 				$ra_roots[] = array(
 					'id'       => 'oidplus:logout$'.$ra_email,
+					'conditionalselect' => 'raLogout("'.js_escape($ra_email).'")', // defined in oidplus.js
 					'icon'     => 'img/logout.png',
 					'text'     => 'Log out'
 				);
@@ -182,15 +186,17 @@ class OIDplusTree {
 					$ra_roots[] = array(
 						'id' => 'oidplus:raroot$'.$loc_root->nodeId(),
 						'text' => 'Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())),
+						'conditionalselect' => '$("#content_window").html(""); document.location = "?goto="+encodeURI('.js_escape($loc_root->nodeId()).');',
 						'icon' => !is_null($ico) ? $ico : 'img/link.png'
 					);
 				}
 				$ra_email_or_name = (new OIDplusRA($ra_email))->raName();
 				if ($ra_email_or_name == '') $ra_email_or_name = $ra_email;
 				$loginChildren[] = array(
-					'id'       => 'oidplus:dummy$'.$ra_email,
+					'id'       => 'oidplus:dummy$'.md5(rand()),
 					'text'     => "Logged in as ".htmlentities($ra_email_or_name),
 					'icon'     => 'img/ra.png',
+					'conditionalselect' => 'false', // dummy node that can't be selected
 					'state'    => array("opened" => true),
 					'children' => $ra_roots
 				);

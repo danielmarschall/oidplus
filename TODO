@@ -78,7 +78,7 @@ SMALL THINGS
 - show whois links only if folder "whois/" exists
 - disable autocomplete on some forms
 - graphical imporvements of forms (input edits aligned)
-- "Documents" section: Make documentation for usage of OIDplus (for members)
+- "Documents" section: Make documentation for usage of OIDplus (for members only)
 
 FUTURE
 - admin: soll wellknown oids ändern dürfen

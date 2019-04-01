@@ -60,7 +60,8 @@ abstract class OIDplusObject {
 			                            "order by ".OIDplus::db()->natOrder('oChild.id'));
 			while ($row = OIDplus::db()->fetch_array($res)) {
 				if (!OIDplus::authUtils()::isRaLoggedIn($row['parent_mail']) && OIDplus::authUtils()::isRaLoggedIn($row['child_mail'])) {
-					$out[] = self::parse($row['id']);
+					$x = self::parse($row['id']); // can be FALSE if namespace was disabled
+					if ($x) $out[] = $x;
 				}
 			}
 		} else {
@@ -69,7 +70,8 @@ abstract class OIDplusObject {
 			                            "where ifnull(oParent.ra_email,'') <> '".OIDplus::db()->real_escape_string($ra_email)."' and oChild.ra_email = '".OIDplus::db()->real_escape_string($ra_email)."' ".
 			                            "order by ".OIDplus::db()->natOrder('oChild.id'));
 			while ($row = OIDplus::db()->fetch_array($res)) {
-				$out[] = self::parse($row['id']);
+				$x = self::parse($row['id']); // can be FALSE if namespace was disabled
+				if ($x) $out[] = self::parse($row['id']);
 			}
 		}
 		return $out;
