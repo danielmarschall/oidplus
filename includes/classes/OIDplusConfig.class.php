@@ -127,6 +127,8 @@ class OIDplusConfig {
 				throw new Exception("Please check your input. Some object types are double.");
 			}
 
+			// TODO: Problem: If a plugin was disabled, it cannot be enabled again, due to this check!
+			/*
 			foreach ($ary as $ot_check) {
 				$ns_found = false;
 				foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
@@ -139,6 +141,7 @@ class OIDplusConfig {
 					throw new Exception("Please check your input. Namespace \"$ot_check\" is not found");
 				}
 			}
+			*/
 		}
 
 		foreach (OIDplus::getPagePlugins('*') as $plugin) {
