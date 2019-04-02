@@ -100,9 +100,11 @@ class OIDplus {
 
 		$init = OIDplus::config()->getValue("objecttypes_initialized");
 		$init_ary = empty($init) ? array() : explode(';', $init);
+		$init_ary = array_map('trim', $init_ary);
 
 		$enabled = OIDplus::config()->getValue("objecttypes_enabled");
 		$enabled_ary = empty($enabled) ? array() : explode(';', $enabled);
+		$enabled_ary = array_map('trim', $enabled_ary);
 
 		if (in_array($ns, $enabled_ary) || !in_array($ns, $init_ary)) {
 			self::$objectTypes[] = $ot;

@@ -446,7 +446,7 @@ function oid_remove_leading_dot($oid) {
 }
 
 
-# === IRI NOTATION FUNCTIONS ===
+# === OID-IRI NOTATION FUNCTIONS ===
 
 if (!function_exists('mb_ord')) {
 	# http://stackoverflow.com/a/24755772/3544341
@@ -523,7 +523,7 @@ function iri_arc_valid($arc, $allow_numeric=true) {
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-17
  * @param   $iri (string)<br />
- *              An OID in IRI notation, e.g. /Example/test
+ *              An OID in OID-IRI notation, e.g. /Example/test
  * @return  (bool) true if the IRI identifier is valid.
  **/
 function iri_valid($iri) {
@@ -594,7 +594,7 @@ function iri_get_long_arcs() {
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-28
  * @param   $iri (string)<br />
- *              An OID in IRI notation, e.g. /Example/test
+ *              An OID in OID-IRI notation, e.g. /Example/test
  * @return  (string) The modified IRI.
  **/
 function iri_add_longarcs($iri) {

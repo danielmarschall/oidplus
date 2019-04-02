@@ -3,7 +3,7 @@
 /**
  * OID-Info.com API by Daniel Marschall, ViaThinkSoft
  * License terms: Apache 2.0
- * Revision: 2019-03-22
+ * Revision: 2019-04-01
  */
 
 error_reporting(E_ALL | E_NOTICE | E_STRICT | E_DEPRECATED);
@@ -202,7 +202,10 @@ class OIDInfoAPI {
 		$str = str_ireplace('<b>', '<strong>', $str);
 		$str = str_ireplace('</b>', '</strong>', $str);
 
-		return preg_replace_callback(
+		$str = preg_replace('@<\s*script.+<\s*/script.*>@isU', '', $str);
+		$str = preg_replace('@<\s*style.+<\s*/style.*>@isU', '', $str);
+
+		$str = preg_replace_callback(
 			'@<(\s*/{0,1}\d*)([^\s/>]+)(\s*[^>]*)>@i',
 			function ($treffer) {
 				// see http://oid-info.com/xhtml-light.xsd
@@ -217,6 +220,8 @@ class OIDInfoAPI {
 					return '';
 				}
 			}, $str);
+
+		return $str;
 	}
 
 	const OIDINFO_CORRECT_DESC_OPTIONAL_ENDING_DOT = 0;
