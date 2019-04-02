@@ -326,7 +326,11 @@ class OIDplusGui {
 			}
 
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).',null)">Delete this RA</a></p>';
+				if (class_exists("OIDplusPageAdminListRAs")) {
+					$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">Delete this RA</a></p>';
+				} else {
+					$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">Delete this RA</a></p>';
+				}
 			}
 
 		// === Forgot password ===
