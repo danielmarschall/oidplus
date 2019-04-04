@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Export tables "demo_*" into file setup/sql/example.sql
+
+mysqldump --default-character-set=utf8 --no-create-info --extended-insert=FALSE oidplus demo_iri demo_asn1id demo_ra demo_objects -r ../setup/sql/example.sql
+
+sed -i 's/`demo_/`/g' ../setup/sql/example.sql
+
