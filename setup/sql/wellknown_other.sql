@@ -263,18 +263,3 @@ insert into `iri` (oid, name, longarc, well_known) values ('oid:2.50', 'ORS', 1,
 -- 2.51
 insert into `asn1id` (oid, name, standardized, well_known) values ('oid:2.51', 'gs1', 0, 1);
 insert into `iri` (oid, name, longarc, well_known) values ('oid:2.51', 'GS1', 1, 1);
-
--- 2.999
-insert into `asn1id` (oid, name, standardized, well_known) values ('oid:2.999', 'example', 0, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', 'Example', 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', 'Exemple', 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', 'Ejemplo', 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_base64('2KfZhNmF2KvYp9mE'), 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_base64('6IyD5L6L'), 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_base64('0J/RgNC40LzQtdGA'), 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_base64('7JiI7KCc'), 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_base64('5L6L'), 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', 'Beispiel', 1, 1);
-
--- Generator checksum dc378dba
-

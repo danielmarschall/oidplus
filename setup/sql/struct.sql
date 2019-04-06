@@ -27,7 +27,7 @@ CREATE TABLE `objects` (
   `parent` varchar(255) DEFAULT NULL,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `ra_email` varchar(100) NOT NULL,
+  `ra_email` varchar(100) NULL,
   `confidential` bit default 0 NOT NULL,
   `created` datetime,
   `updated` datetime

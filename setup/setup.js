@@ -115,11 +115,6 @@ function rebuild() {
 		document.getElementById('step4').style.visibility='visible';
 	}
 
-	if (document.getElementById('tablename_prefix').value == '') {
-		document.getElementById('struct_1').href = 'struct_empty.sql.php';
-		document.getElementById('struct_2').href = 'struct_with_examples.sql.php';
-	} else {
-		document.getElementById('struct_1').href = 'struct_empty.sql.php?prefix='+encodeURI(document.getElementById('tablename_prefix').value);
-		document.getElementById('struct_2').href = 'struct_with_examples.sql.php?prefix='+encodeURI(document.getElementById('tablename_prefix').value);
-	}
+	document.getElementById('struct_1').href = 'struct_empty.sql.php?prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
+	document.getElementById('struct_2').href = 'struct_with_examples.sql.php?prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
 }

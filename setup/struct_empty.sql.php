@@ -18,6 +18,7 @@
  */
 
 $prefix = isset($_REQUEST['prefix']) ? $_REQUEST['prefix'] : '';
+$database = isset($_REQUEST['database']) ? $_REQUEST['database'] : '';
 
 $cont = trim(file_get_contents(__DIR__.'/sql/struct.sql'))."\n\n".
         trim(file_get_contents(__DIR__.'/sql/wellknown_country.sql'))."\n\n".
@@ -31,4 +32,6 @@ foreach ($table_names as $table) {
 if (php_sapi_name() != 'cli') {
 	header('Content-Type:text/sql');
 }
+
+echo "USE `".$database."`;\n\n";
 echo $cont;

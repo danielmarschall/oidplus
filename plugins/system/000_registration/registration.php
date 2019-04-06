@@ -31,6 +31,8 @@ OIDplus::db()->query("SET NAMES 'utf8'");
 ob_start();
 
 $step = 1;
+$do_edits = false;
+$errors_happened = false;
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -58,12 +60,12 @@ After setup is complete, you can change all these settings if required.</p>
 
 <p><input type="password" name="admin_password" value=""> (<a href="<?php echo OIDplus::system_url(); ?>setup/">Forgot?</a>) <?php
 
-$do_edits = false;
 if (isset($_REQUEST['sent'])) {
 	if (OIDplusAuthUtils::adminCheckPassword($_REQUEST['admin_password'])) {
 		$do_edits = true;
 	} else {
 		$do_edits = false;
+		$errors_happened = true;
 		echo '<font color="red"><b>Wrong password</b></font>';
 	}
 } else {
@@ -84,6 +86,7 @@ if (isset($_REQUEST['sent'])) {
 			OIDplus::config()->setValue('admin_email', $_REQUEST['admin_email']);
 		} catch (Exception $e) {
 			$msg = $e->getMessage();
+			$errors_happened = true;
 		}
 	}
 } else {
@@ -104,6 +107,7 @@ if (isset($_REQUEST['sent'])) {
 			OIDplus::config()->setValue('system_title', $_REQUEST['system_title']);
 		} catch (Exception $e) {
 			$msg = $e->getMessage();
+			$errors_happened = true;
 		}
 	}
 } else {
@@ -152,6 +156,7 @@ if ($do_edits) {
 		OIDplus::config()->setValue('objecttypes_enabled', implode(';', $enabled_ary));
 	} catch (Exception $e) {
 		$msg = $e->getMessage();
+		$errors_happened = true;
 	}
 }
 
@@ -189,6 +194,7 @@ if ($do_edits) {
 		}
 	} catch (Exception $e) {
 		$msg = $e->getMessage();
+		$errors_happened = true;
 	}
 }
 ?>> <label for="register_oidinfo">Would you like to enable the automatic transfer of the Object Identifiers you create on this system to the
@@ -223,6 +229,7 @@ if ($do_edits) {
 		}
 	} catch (Exception $e) {
 		$msg = $e->getMessage();
+		$errors_happened = true;
 	}
 }
 ?>> <label for="register_viathinksoft">Would you like to register your system to the ViaThinkSoft directory?</label><?php echo ' <font color="red"><b>'.$msg.'</b></font>'; ?><br>
@@ -278,7 +285,7 @@ echo '<pre>'.htmlentities(OIDplus::config()->getValue('oidplus_public_key')).'</
 $cont = ob_get_contents();
 ob_end_clean();
 
-if ($do_edits) {
+if ($do_edits && !$errors_happened)  {
 	OIDplus::config()->setValue('registration_done', '1');
 	header('Location:../../../');
 } else {

@@ -28,7 +28,7 @@ class OIDplusDataBaseMySQL implements OIDplusDataBase {
 		return $res->num_rows;
 	}
 	public function fetch_array($res) {
-		return $res->fetch_array(MYSQL_BOTH);
+		return $res->fetch_array(MYSQLI_BOTH);
 	}
 	public function fetch_object($res) {
 		return $res->fetch_object("stdClass");
@@ -49,16 +49,16 @@ class OIDplusDataBaseMySQL implements OIDplusDataBase {
 		$html = OIDPLUS_HTML_OUTPUT;
 
 		// Try connecting to the database
-		$this->mysqli = new mysqli(OIDPLUS_MYSQL_HOST, OIDPLUS_MYSQL_USERNAME, base64_decode(OIDPLUS_MYSQL_PASSWORD), OIDPLUS_MYSQL_DATABASE, ini_get("mysqli.default_port"), ini_get("mysqli.default_socket"));
+		$this->mysqli = @new mysqli(OIDPLUS_MYSQL_HOST, OIDPLUS_MYSQL_USERNAME, base64_decode(OIDPLUS_MYSQL_PASSWORD), OIDPLUS_MYSQL_DATABASE, ini_get("mysqli.default_port"), ini_get("mysqli.default_socket"));
 		if (!empty($this->mysqli->connect_error) || ($this->mysqli->connect_errno != 0)) {
 			if ($html) {
 				echo "<h1>Error</h1><p>Database connection failed!</p>";
-				if (is_dir(__DIR__.'/setup')) {
+				if (is_dir(__DIR__.'/../../setup')) {
 					echo '<p>If you believe that the login credentials are wrong, please run <a href="setup/">setup</a> again.</p>';
 				}
 			} else {
 				echo "Error: Database connection failed!";
-				if (is_dir(__DIR__.'/setup')) {
+				if (is_dir(__DIR__.'/../../setup')) {
 					echo ' If you believe that the login credentials are wrong, please run setup again.';
 				}
 			}
