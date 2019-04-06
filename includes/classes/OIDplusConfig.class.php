@@ -86,6 +86,10 @@ class OIDplusConfig {
 		}
 	}
 
+	public function exists($name) {
+		return isset($this->values[$name]);
+	}
+
 	public function setValue($name, $value) {
 		// Check for valid values
 
@@ -127,11 +131,15 @@ class OIDplusConfig {
 				throw new Exception("Please check your input. Some object types are double.");
 			}
 
-			// TODO: Problem: If a plugin was disabled, it cannot be enabled again, due to this check!
-			/*
 			foreach ($ary as $ot_check) {
 				$ns_found = false;
 				foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+					if ($ot::ns() == $ot_check) {
+						$ns_found = true;
+						break;
+					}
+				}
+				foreach (OIDplus::getDisabledObjectTypes() as $ot) {
 					if ($ot::ns() == $ot_check) {
 						$ns_found = true;
 						break;
@@ -141,8 +149,9 @@ class OIDplusConfig {
 					throw new Exception("Please check your input. Namespace \"$ot_check\" is not found");
 				}
 			}
-			*/
 		}
+
+		// Give plugins the possibility to stop the process (e.g. if the value is invalid)
 
 		foreach (OIDplus::getPagePlugins('*') as $plugin) {
 			$plugin->cfgSetValue($name, $value);

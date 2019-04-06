@@ -64,7 +64,7 @@ class OIDplusDataBaseMySQL implements OIDplusDataBase {
 		}
 
 		// Check if database tables are existing
-		$table_names = array('objects', 'asn1id', 'iri', 'ra');
+		$table_names = array('objects', 'asn1id', 'iri', 'ra', 'config');
 		foreach ($table_names as $tablename) {
 			if (!mysql_query("DESCRIBE `".OIDPLUS_TABLENAME_PREFIX.$tablename."`")) {
 				if ($html) {
@@ -75,6 +75,25 @@ class OIDplusDataBaseMySQL implements OIDplusDataBase {
 				die();
 			}
 		}
+
+		// Do the database table tables need an update?
+		// Note: The config setting "database_version" is inserted in setup/sql/...sql, not in the OIDplus core init
+
+		/*
+		$res = mysql_query("SELECT value FROM `".OIDPLUS_TABLENAME_PREFIX."config` WHERE name = 'database_version'");
+		$row = mysql_fetch_array($res);
+		$version = $row['value'];
+		if ($version == 200) {
+			// Do stuff to update 200 -> 201
+			$version = 201;
+			mysql_query("UPDATE `".OIDPLUS_TABLENAME_PREFIX."config` SET value = '$version' WHERE name = 'database_version'");
+		}
+		if ($version == 201) {
+			// Do stuff to update 201 -> 202
+			$version = 202;
+			mysql_query("UPDATE `".OIDPLUS_TABLENAME_PREFIX."config` SET value = '$version' WHERE name = 'database_version'");
+		}
+		*/
 	}
 
 	// TODO: better create some kind of Object-Type-API that does the sorting. But this means, the sorting won't be done with SQL

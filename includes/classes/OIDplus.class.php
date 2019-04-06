@@ -22,6 +22,7 @@ class OIDplus {
 	private static /*OIDplusConfig*/ $config;
 	private static /*OIDplusPagePlugin[][]*/ $pagePlugins = array();
 	private static /*OIDplusObject*/ $objectTypes = array();
+	private static /*OIDplusObject*/ $disabledObjectTypes = array();
 
 	private function __construct() {
 	}
@@ -49,7 +50,23 @@ class OIDplus {
 	}
 
 	public static function system_url() {
-		return dirname($actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]").'/';
+		if (!isset($_SERVER["REQUEST_URI"])) return false;
+
+		$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
+		$c = 0;
+		while (!file_exists($test_dir.'/oidplus.js')) {
+			$test_dir = dirname($test_dir);
+			$c++;
+			if ($c == 1000) return false;
+		}
+
+		$res = dirname($actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]").'/';
+
+		for ($i=1; $i<=$c; $i++) {
+			$res = dirname($res).'/';
+		}
+
+		return $res;
 	}
 
 	public static function sesHandler() {
@@ -120,6 +137,8 @@ class OIDplus {
 			        }
 			        return ($idx_a > $idx_b) ? +1 : -1;
 			});
+		} else {
+			self::$disabledObjectTypes[] = $ot;
 		}
 
 		if (!in_array($ns, $init_ary)) {
@@ -137,15 +156,60 @@ class OIDplus {
 		return self::$objectTypes;
 	}
 
+	public static function getDisabledObjectTypes() {
+		return self::$disabledObjectTypes;
+	}
+
+	public static function system_id($oid=false) {
+		if (!self::pkiStatus(true)) return false;
+		$pubKey = OIDplus::config()->getValue('oidplus_public_key');
+		if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
+			return ($oid ? '1.3.6.1.4.1.37476.30.9.' : '').smallhash(base64_decode($m[1]));
+		}
+		return false;
+	}
+
+	public static function pkiStatus($try_generate=true) {
+		if (!function_exists('openssl_pkey_new')) return false;
+
+		$privKey = OIDplus::config()->getValue('oidplus_private_key');
+		$pubKey = OIDplus::config()->getValue('oidplus_public_key');
+
+		if ($try_generate && !verify_private_public_key($privKey, $pubKey)) {
+			$config = array(
+			    "digest_alg" => "sha512",
+			    "private_key_bits" => 2048,
+			    "private_key_type" => OPENSSL_KEYTYPE_RSA,
+			);
+
+			// Create the private and public key
+			$res = openssl_pkey_new($config);
+
+			// Extract the private key from $res to $privKey
+			openssl_pkey_export($res, $privKey);
+
+			OIDplus::config()->setValue('oidplus_private_key', $privKey);
+
+			// Extract the public key from $res to $pubKey
+			$pubKey = openssl_pkey_get_details($res);
+			$pubKey = $pubKey["key"];
+
+			OIDplus::config()->setValue('oidplus_public_key', $pubKey);
+		}
+
+		return verify_private_public_key($privKey, $pubKey);
+	}
+
 	public static function init($html=true) {
 		define('OIDPLUS_HTML_OUTPUT', $html);
 
 		// Include config file
+
 		if (file_exists(__DIR__ . '/../config.inc.php')) {
 			include_once __DIR__ . '/../config.inc.php';
 		} else {
 			if ($html) {
-				if (!is_dir(__DIR__.'/../setup')) {
+				if (!is_dir('setup')) {
 					echo 'Error: Setup directory missing.';
 				} else {
 					header('Location:setup/');
@@ -157,6 +221,7 @@ class OIDplus {
 		}
 
 		// Auto-fill non-existing config values
+
 		if (!defined('OIDPLUS_CONFIG_VERSION'))   define('OIDPLUS_CONFIG_VERSION',   0.0);
 		if (!defined('OIDPLUS_ADMIN_PASSWORD'))   define('OIDPLUS_ADMIN_PASSWORD',   '');
 		if (!defined('OIDPLUS_ADMIN_EMAIL'))      define('OIDPLUS_ADMIN_EMAIL',      '');
@@ -171,6 +236,7 @@ class OIDplus {
 		if (!defined('RECAPTCHA_PRIVATE'))        define('RECAPTCHA_PRIVATE',        '');
 
 		// Check version of the config file
+
 		if (OIDPLUS_CONFIG_VERSION != 0.1) {
 			if ($html) {
 				echo '<h1>Error</h1><p>The information located in <b>includes/config.inc.php</b> is outdated.</p><p>Please run <a href="setup/">setup</a> again.</p>';
@@ -181,6 +247,7 @@ class OIDplus {
 		}
 
 		// Do redirect stuff etc.
+
 		define('OIDPLUS_SSL_AVAILABLE', self::isSslAvailable());
 
 		// System config settings
@@ -188,7 +255,17 @@ class OIDplus {
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('objecttypes_initialized', 'List of object type plugins that were initialized once', '', 1, 1)");
 		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('objecttypes_enabled', 'Enabled object types and their order, separated with a semicolon (please reload the page so that the change is applied)', '', 0, 1)");
 
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('oidplus_private_key', 'Private key for this system', '', 1, 0)");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('oidplus_public_key', 'Public key for this system', '', 1, 1)");
+
+		// Initialize public / private keys
+
+		OIDplus::pkiStatus(true);
+
 		// Register plugins
+
+		$ary = glob(__DIR__ . '/../../plugins/system/'.'*'.'/plugin.inc.php');
+		foreach ($ary as $a) include $a;
 		$ary = glob(__DIR__ . '/../../plugins/publicPages/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 		$ary = glob(__DIR__ . '/../../plugins/raPages/'.'*'.'/plugin.inc.php');
@@ -197,6 +274,12 @@ class OIDplus {
 		foreach ($ary as $a) include $a;
 		$ary = glob(__DIR__ . '/../../plugins/objectTypes/'.'*'.'/*.class.php');
 		foreach ($ary as $a) include $a;
+
+		// Initialize plugins
+
+		foreach (OIDplus::getPagePlugins('*') as $plugin) {
+			$plugin->init($html);
+		}
 	}
 
 	private static function isSslAvailable() {

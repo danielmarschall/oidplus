@@ -77,7 +77,17 @@ foreach ($nonConfidential as $id) {
 		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($row->ra_email)."'");
 		$row2 = OIDplus::db()->fetch_object($res2);
 
-		$elements['description'] = $row->title;
+		if (!empty($row->title)) {
+			$elements['description'] = $row->title;
+		} else if (isset($elements['identifier'][0])) {
+			$elements['description'] = '"'.$elements['identifier'][0].'"';
+		} else if (isset($elements['unicode-label'][0])) {
+			$elements['description'] = '"'.$elements['unicode-label'][0].'"';
+		} else if (!empty($row->description)) {
+			$elements['description'] = $row->description;
+		} else {
+			$elements['description'] = '<i>No description available</i>';
+		}
 		$elements['information'] = $row->description;
 
 		$elements['first-registrant']['first-name'] = '';

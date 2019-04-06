@@ -42,10 +42,14 @@ function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
 	}
 }
 
+$sysid_oid = OIDplus::system_id(true);
+header('X-OIDplus-SystemID:'.$sysid_oid);
+
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="x-oidplus-systemid" content="<?php echo $sysid_oid; ?>">
 	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->systemTitle(), $static_title); ?></title>
 	<link rel="stylesheet" href="3p/jstree/themes/default/style.min.css">
 

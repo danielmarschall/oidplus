@@ -79,6 +79,8 @@ SMALL THINGS
 - disable autocomplete on some forms
 - graphical imporvements of forms (input edits aligned)
 - "Documents" section: Make documentation for usage of OIDplus (for members only)
+- admin config mehr user friendly, e.g. having the enable/disable object type stuff (like in registration wizard) also in the admin control panel
+- it would be cool if after the login, the opened nodes in the tree would stay open
 
 FUTURE
 - admin: soll wellknown oids ändern dürfen

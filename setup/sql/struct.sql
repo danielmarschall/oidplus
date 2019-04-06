@@ -1,6 +1,6 @@
 CREATE TABLE `config` (
   `name` varchar(50) NOT NULL,
-  `value` varchar(255) NOT NULL,
+  `value` text NOT NULL,
   `description` varchar(255),
   `protected` bit(1) NOT NULL DEFAULT b'0',
   `visible` bit(1) NOT NULL DEFAULT b'0'
@@ -81,4 +81,6 @@ ALTER TABLE `iri`
 ALTER TABLE `ra`
   MODIFY `ra_id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
+
+INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '200', 1, 0);
 

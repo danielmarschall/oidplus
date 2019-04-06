@@ -166,3 +166,21 @@ function trim_br($html) {
 	do { $html = preg_replace('@<\s*br\s*/{0,1}\s*>\s*$@isU', '', $html, -1, $count); } while ($count > 0); // right trim
 	return $html;
 }
+
+function verify_private_public_key($privKey, $pubKey) {
+	try {
+		if (empty($privKey)) return false;
+		if (empty($pubKey)) return false;
+		$data = 'TEST';
+		if (!@openssl_public_encrypt($data, $encrypted, $pubKey)) return false;
+		if (!@openssl_private_decrypt($encrypted, $decrypted, $privKey)) return false;
+		return $decrypted == $data;
+	} catch (Exception $e) {
+		return false;
+	}
+}
+
+function smallhash($data) { // get 31 bits from SHA1. Values 0..2147483647
+	return (hexdec(substr(sha1($data),-4*2)) & 2147483647);
+}
+

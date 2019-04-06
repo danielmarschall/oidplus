@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-// TODO: sign output using PKI
-
 define('OUTPUT_FORMAT_SPACER', 2);
 define('OUTPUT_FORMAT_MAX_LINE_LENGTH', 80);
 
@@ -200,6 +198,8 @@ if ($continue) {
 
 // Step 2: Format output
 
+ob_start();
+
 $longest_key = 0;
 foreach ($out as $line) {
 	$longest_key = max($longest_key, strlen(trim(explode(':',$line,2)[0])));
@@ -225,6 +225,26 @@ foreach ($out as $line) {
 }
 
 echo '% ' . str_repeat('*', OUTPUT_FORMAT_MAX_LINE_LENGTH-2)."\n";
+
+$cont = ob_get_contents();
+ob_end_clean();
+
+echo $cont;
+
+// Try to sign
+
+if (OIDplus::pkiStatus(true)) {
+	$signature = '';
+	if (openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+		$signature = base64_encode($signature);
+		$signature = wordwrap($signature, 80, "\n", true);
+
+		$signature = "-----BEGIN RSA SIGNATURE-----\n".
+	                     "$signature\n".
+		             "-----END RSA SIGNATURE-----\n";
+		echo $signature;
+	}
+}
 
 # ---
 

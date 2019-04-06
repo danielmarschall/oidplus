@@ -25,5 +25,6 @@ class OIDplusPagePlugin {
         public function cfgSetValue($name, $value) {}
         public function gui($id, &$out, &$handled) {}
         public function tree(&$json, $ra_email=null) {}
+	public function init($html=true) {}
 }
 
