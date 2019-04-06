@@ -19,66 +19,64 @@
 
 class OIDplusConfig {
 
-	protected $values;
+	protected $values = array();
+	protected $dirty = 1;
 
-	protected function loadConfig() {
-		// Add defaults
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('system_title', 'What is the name of your RA?', 'OIDplus 2.0', 0, 1)");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('global_cc', 'Global CC for all outgoing emails?', '', 0, 1)");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('ra_min_password_length', 'Minimum length for RA passwords', '6', 0, 1)");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0', 0, 1)");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('max_ra_pwd_reset_time', 'Max RA password reset time in seconds (0 = infinite)', '0', 0, 1)");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('whois_auth_token', 'OID-over-WHOIS authentication token to display confidential data', '', 0, 1)");
-
-		// Also ask the plugins if they have defaults
-		foreach (OIDplus::getPagePlugins('*') as $plugin) {
-			$plugin->cfgLoadConfig();
-		}
-
-		// Now load the values
-		$this->values = array();
-		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config");
-		while ($row = OIDplus::db()->fetch_object($res)) {
-			$this->values[$row->name] = $row->value;
-		}
+	public function prepareConfigKey($name, $description, $init_value, $protected, $visible) {
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('".OIDplus::db()->real_escape_string($name)."', '".OIDplus::db()->real_escape_string($description)."', '".OIDplus::db()->real_escape_string($init_value)."', '".OIDplus::db()->real_escape_string($protected)."', '".OIDplus::db()->real_escape_string($visible)."')");
+		$this->dirty = 1;
 	}
 
 	public function __construct() {
-		$this->loadConfig();
+		$this->prepareConfigKey('system_title', 'What is the name of your RA?', 'OIDplus 2.0', 0, 1);
+		$this->prepareConfigKey('global_cc', 'Global CC for all outgoing emails?', '', 0, 1);
+		$this->prepareConfigKey('ra_min_password_length', 'Minimum length for RA passwords', '6', 0, 1);
+		$this->prepareConfigKey('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0', 0, 1);
+		$this->prepareConfigKey('max_ra_pwd_reset_time', 'Max RA password reset time in seconds (0 = infinite)', '0', 0, 1);
+		$this->prepareConfigKey('whois_auth_token', 'OID-over-WHOIS authentication token to display confidential data', '', 0, 1);
 	}
 
 	public function systemTitle() {
-		return trim($this->values['system_title']);
+		return trim($this->getValue('system_title'));
 	}
 
 	public function globalCC() {
-		return trim($this->values['global_cc']);
+		return trim(getValue('global_cc'));
 	}
 
 	public function minRaPasswordLength() {
-		return $this->values['ra_min_password_length'];
+		return $this->getValue('ra_min_password_length');
 	}
 
-	/*   hardcoded in setup/ , because during installation, we dont have a settings database
+	/* hardcoded in setup/, because during installation, we don't have a settings database
 	public function minAdminPasswordLength() {
 		return 6;
 	}
 	*/
 
 	public function maxInviteTime() {
-		return $this->values['max_ra_invite_time'];
+		return getValue('max_ra_invite_time');
 	}
 
 	public function maxPasswordResetTime() {
-		return $this->values['max_ra_pwd_reset_time'];
+		return getValue('max_ra_pwd_reset_time');
 	}
 
 	public function authToken() {
-		$val = trim($this->values['whois_auth_token']);
+		$val = trim($this->getValue('whois_auth_token'));
 		return empty($val) ? false : $val;
 	}
 
 	public function getValue($name) {
+		if ($this->dirty) {
+			$this->values = array();
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config");
+			while ($row = OIDplus::db()->fetch_object($res)) {
+				$this->values[$row->name] = $row->value;
+			}
+			$this->dirty = 0;
+		}
+
 		if (isset($this->values[$name])) {
 			return $this->values[$name];
 		} else {
@@ -87,7 +85,7 @@ class OIDplusConfig {
 	}
 
 	public function exists($name) {
-		return isset($this->values[$name]);
+		return !is_null($this->getValue($name));
 	}
 
 	public function setValue($name, $value) {

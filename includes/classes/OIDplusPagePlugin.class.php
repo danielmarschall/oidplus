@@ -19,12 +19,11 @@
 
 class OIDplusPagePlugin {
 	public function type() {}
-        public function priority() {}
-        public function action(&$handled) {}
-        public function cfgLoadConfig() {}
-        public function cfgSetValue($name, $value) {}
-        public function gui($id, &$out, &$handled) {}
-        public function tree(&$json, $ra_email=null) {}
+	public function priority() {}
+	public function action(&$handled) {}
+	public function cfgSetValue($name, $value) {}
+	public function gui($id, &$out, &$handled) {}
+	public function tree(&$json, $ra_email=null) {}
 	public function init($html=true) {}
 }
 

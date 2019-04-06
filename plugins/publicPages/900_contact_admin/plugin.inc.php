@@ -30,7 +30,7 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePlugin {
 		// Nothing
 	}
 
-	public function cfgLoadConfig() {
+	public function init($html=true) {
 		// Nothing
 	}
 

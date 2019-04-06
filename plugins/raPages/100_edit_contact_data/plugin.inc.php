@@ -64,7 +64,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 		}
 	}
 
-	public function cfgLoadConfig() {
+	public function init($html=true) {
 		// Nothing
 	}
 

@@ -126,7 +126,7 @@ if (OIDplus::config()->exists('oidinfo_export_protected')) {
 if (isset($_REQUEST['sent'])) {
 	if (isset($_REQUEST['register_oidinfo'])) echo ' checked';
 } else {
-	if (!OIDplus::config()->getValue('oidinfo_export_protected')) {
+	if (!OIDplus::config()->getValue('oidinfo_export_protected') || !OIDplus::config()->getValue('registration_done')) {
 		echo ' checked';
 	} else {
 		echo '';
@@ -155,7 +155,7 @@ Please mention your system ID below.</p>
 if (isset($_REQUEST['sent'])) {
         if (isset($_REQUEST['register_viathinksoft'])) echo ' checked';
 } else {
-	if (OIDplus::config()->getValue('reg_enabled')) {
+	if (OIDplus::config()->getValue('reg_enabled') || !OIDplus::config()->getValue('registration_done')) {
 		echo ' checked';
 	} else {
 		echo '';

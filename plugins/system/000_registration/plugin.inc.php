@@ -30,13 +30,6 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 		// Nothing
 	}
 
-	public function cfgLoadConfig() {
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('registration_done', 'Registration wizard done once?', '0', 1, 0)");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('reg_enabled', 'Register your system to the ViaThinkSoft directory?', '0', 0, 1)");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('reg_ping_interval', 'Registration ping interval', '3600', 0, 0)");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('reg_last_ping', 'Last ping to ViaThinkSoft directory services', '0', 1, 0)");
-	}
-
 	public function cfgSetValue($name, $value) {
 		if ($name == 'reg_enabled') {
 			if (($value != '0') && ($value != '1')) {
@@ -54,6 +47,11 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 	}
 
 	public function init($html=true) {
+		OIDplus::config()->prepareConfigKey('registration_done', 'Registration wizard done once?', '0', 1, 0);
+		OIDplus::config()->prepareConfigKey('reg_enabled', 'Register your system to the ViaThinkSoft directory?', '0', 0, 1);
+		OIDplus::config()->prepareConfigKey('reg_ping_interval', 'Registration ping interval', '3600', 0, 0);
+		OIDplus::config()->prepareConfigKey('reg_last_ping', 'Last ping to ViaThinkSoft directory services', '0', 1, 0);
+
 		if (function_exists('openssl_sign')) {
 			// This is what we answer to the ViaThinkSoft server
 
@@ -89,8 +87,9 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 
 			// Is it time to register / renew directory entry?
 
-			if ((OIDplus::config()->getValue('reg_enabled')) &&
-			   (time()-OIDplus::config()->getValue('reg_last_ping') >= OIDplus::config()->getValue('reg_ping_interval'))) {
+#			if ((OIDplus::config()->getValue('reg_enabled')) &&
+#			   (time()-OIDplus::config()->getValue('reg_last_ping') >= OIDplus::config()->getValue('reg_ping_interval'))) {
+if (1) {
 				if ($system_url = OIDplus::system_url()) {
 					$payload = array(
 						"system_id" => OIDplus::system_id(false),

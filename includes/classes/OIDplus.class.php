@@ -252,11 +252,11 @@ class OIDplus {
 
 		// System config settings
 
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('objecttypes_initialized', 'List of object type plugins that were initialized once', '', 1, 1)");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('objecttypes_enabled', 'Enabled object types and their order, separated with a semicolon (please reload the page so that the change is applied)', '', 0, 1)");
+		OIDplus::config()->prepareConfigKey('objecttypes_initialized', 'List of object type plugins that were initialized once', '', 1, 1);
+		OIDplus::config()->prepareConfigKey('objecttypes_enabled', 'Enabled object types and their order, separated with a semicolon (please reload the page so that the change is applied)', '', 0, 1);
 
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('oidplus_private_key', 'Private key for this system', '', 1, 0)");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('oidplus_public_key', 'Public key for this system', '', 1, 1)");
+		OIDplus::config()->prepareConfigKey('oidplus_private_key', 'Private key for this system', '', 1, 0);
+		OIDplus::config()->prepareConfigKey('oidplus_public_key', 'Public key for this system', '', 1, 1);
 
 		// Initialize public / private keys
 

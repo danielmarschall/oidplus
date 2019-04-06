@@ -126,9 +126,9 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 		}
 	}
 
-	public function cfgLoadConfig() {
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('max_ra_email_change_time', 'Max RA email change time in seconds (0 = infinite)', '0', 0, 1)");
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('allow_ra_email_change', 'Allow that RAs change their email address (0/1)', '1', 0, 1)");
+	public function init($html=true) {
+		OIDplus::config()->prepareConfigKey('max_ra_email_change_time', 'Max RA email change time in seconds (0 = infinite)', '0', 0, 1);
+		OIDplus::config()->prepareConfigKey('allow_ra_email_change', 'Allow that RAs change their email address (0/1)', '1', 0, 1);
 	}
 
 	public function cfgSetValue($name, $value) {

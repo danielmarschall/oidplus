@@ -19,8 +19,6 @@ admin soll contact data einer fremden RA ändern dürfen
 
 freeoid: asn.1 und iri spalten ausblenden, da dieser arc keine IDs vergibt?
 
-pro RA dinge loggen wie z.B. last login
-
 Privacy: Mehr stufen, z.b. dass man den personal name evtl gar nicht zeigen möchte
 
 Man sollte "created" abändern dürfen! oder evtl ganz verstecken, wenn man es nicht weiß
@@ -81,6 +79,7 @@ SMALL THINGS
 - "Documents" section: Make documentation for usage of OIDplus (for members only)
 - admin config mehr user friendly, e.g. having the enable/disable object type stuff (like in registration wizard) also in the admin control panel
 - it would be cool if after the login, the opened nodes in the tree would stay open
+- should we log somewhere, when the admin account was logged in?
 
 FUTURE
 - admin: soll wellknown oids ändern dürfen
@@ -89,7 +88,6 @@ FUTURE
 - unterstützung für ORS?
 - Mehr "Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollständig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), ...<br>
 - "Search" plugin: Feature to search inside documentation (doc/ directory)
-- Make a "version" field in the database, so we know when we need to update the database structure
 
 REJECTED IDEAS:
 - sollte es mehere admins geben?

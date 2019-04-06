@@ -153,8 +153,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 		}
 	}
 
-	public function cfgLoadConfig() {
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('freeoid_root_oid', 'Root-OID of free OID service', '', 0, 1)");
+	public function init($html=true) {
+		OIDplus::config()->prepareConfigKey('freeoid_root_oid', 'Root-OID of free OID service', '', 0, 1);
 	}
 
 	public function cfgSetValue($name, $value) {
