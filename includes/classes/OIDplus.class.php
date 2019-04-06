@@ -125,7 +125,18 @@ class OIDplus {
 		$enabled_ary = empty($enabled) ? array() : explode(';', $enabled);
 		$enabled_ary = array_map('trim', $enabled_ary);
 
-		if (in_array($ns, $enabled_ary) || !in_array($ns, $init_ary)) {
+		$do_enable = false;
+		if (in_array($ns, $enabled_ary)) {
+			$do_enable = true;
+		} else {
+			if (!OIDplus::config()->getValue('registration_done')) {
+				$do_enable = $ns == 'oid';
+			} else {
+				$do_enable = !in_array($ns, $init_ary);
+			}
+		}
+
+		if ($do_enable) {
 			self::$objectTypes[] = $ot;
 			usort(self::$objectTypes, function($a, $b) {
 				$enabled = OIDplus::config()->getValue("objecttypes_enabled");
@@ -146,8 +157,10 @@ class OIDplus {
 		if (!in_array($ns, $init_ary)) {
 			// Was never initialized before, so we add it to the list of enabled object types once
 
-			$enabled_ary[] = $ns;
-			OIDplus::config()->setValue("objecttypes_enabled", implode(';', $enabled_ary));
+			if ($do_enable) {
+				$enabled_ary[] = $ns;
+				OIDplus::config()->setValue("objecttypes_enabled", implode(';', $enabled_ary));
+			}
 
 			$init_ary[] = $ns;
 			OIDplus::config()->setValue("objecttypes_initialized", implode(';', $init_ary));

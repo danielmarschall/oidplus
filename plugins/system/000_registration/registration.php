@@ -74,7 +74,7 @@ if (isset($_REQUEST['sent'])) {
 
 ?></p>
 
-<p><u>Step <?php echo $step++; ?>: Please enter the email address of the system administrator?</u></p>
+<p><u>Step <?php echo $step++; ?>: Please enter the email address of the system administrator</u></p>
 
 <input type="text" name="admin_email" value="<?php
 
