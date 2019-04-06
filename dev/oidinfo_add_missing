@@ -29,8 +29,8 @@ foreach ($out as $oid) {
 
 function check_oid($oid) {
 
-	$res = mysql_query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = 'oid:$oid'");
-	$ok = mysql_num_rows($res) > 0;
+	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = 'oid:$oid'");
+	$ok = OIDplus::db()->num_rows($res) > 0;
 
 	if (!$ok) {
 		echo "Not existing: $oid : Adding!\n";
@@ -55,7 +55,7 @@ function add_oid($oid, $root=DESIRED_ROOT) {
 		$ra_email = '';
 		if ((DEFAULT_EMAIL != '') && ($ra_email == '')) $ra_email = DEFAULT_EMAIL;
 
-		$sql = "insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, title, description, ra_email) values ('oid:".mysql_real_escape_string($oid)."', 'oid:".mysql_real_escape_string($parent)."', '".mysql_real_escape_string($title)."', '".mysql_real_escape_string($description)."', '".mysql_real_escape_string($ra_email)."');";
+		$sql = "insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, title, description, ra_email) values ('oid:".OIDplus::db()->real_escape_string($oid)."', 'oid:".OIDplus::db()->real_escape_string($parent)."', '".OIDplus::db()->real_escape_string($title)."', '".OIDplus::db()->real_escape_string($description)."', '".OIDplus::db()->real_escape_string($ra_email)."');";
 		sql_execute($sql);
 
 		return;
@@ -63,13 +63,13 @@ function add_oid($oid, $root=DESIRED_ROOT) {
 
 	if (!isset($data['oid']['identifier'])) $data['oid']['identifier'] = array();
 	foreach ($data['oid']['identifier'] as $identifier) {
-		$sql = "insert into ".OIDPLUS_TABLENAME_PREFIX."asn1id (oid, name) values ('oid:".mysql_real_escape_string($oid)."', '".mysql_real_escape_string($identifier)."');";
+		$sql = "insert into ".OIDPLUS_TABLENAME_PREFIX."asn1id (oid, name) values ('oid:".OIDplus::db()->real_escape_string($oid)."', '".OIDplus::db()->real_escape_string($identifier)."');";
 		sql_execute($sql);
 	}
 
 	if (!isset($data['oid']['unicode-label'])) $data['oid']['unicode-label'] = array();
 	foreach ($data['oid']['unicode-label'] as $identifier) {
-		$sql = "insert into ".OIDPLUS_TABLENAME_PREFIX."iri (oid, name) values ('oid:".mysql_real_escape_string($oid)."', '".mysql_real_escape_string($identifier)."');";
+		$sql = "insert into ".OIDPLUS_TABLENAME_PREFIX."iri (oid, name) values ('oid:".OIDplus::db()->real_escape_string($oid)."', '".OIDplus::db()->real_escape_string($identifier)."');";
 		sql_execute($sql);
 	}
 
@@ -87,13 +87,13 @@ function add_oid($oid, $root=DESIRED_ROOT) {
 	$ra_email = @$data['oid']['current_registrant']['email'];
 	if ($ra_email == '') $ra_email = @$data['oid']['first_registrant']['email'];
 
-	$resx = mysql_query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = 'oid:".mysql_real_escape_string($parent)."'");
-	if ($rowx = mysql_fetch_array($resx)) $ra_email = $rowx['ra_email'];
+	$resx = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = 'oid:".OIDplus::db()->real_escape_string($parent)."'");
+	if ($rowx = OIDplus::db()->fetch_array($resx)) $ra_email = $rowx['ra_email'];
 
 	$created = @$data['oid']['first_registrant']['creation-date'];
 	$updated = @$data['oid']['last-modification'];
 
-	$sql = "insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, title, description, ra_email, created, updated) values ('oid:".mysql_real_escape_string($oid)."', 'oid:".mysql_real_escape_string($parent)."', '".mysql_real_escape_string($title)."', '".mysql_real_escape_string($description)."', '".mysql_real_escape_string($ra_email)."', '".mysql_real_escape_string($created)."', '".mysql_real_escape_string($updated)."');";
+	$sql = "insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, title, description, ra_email, created, updated) values ('oid:".OIDplus::db()->real_escape_string($oid)."', 'oid:".OIDplus::db()->real_escape_string($parent)."', '".OIDplus::db()->real_escape_string($title)."', '".OIDplus::db()->real_escape_string($description)."', '".OIDplus::db()->real_escape_string($ra_email)."', '".OIDplus::db()->real_escape_string($created)."', '".OIDplus::db()->real_escape_string($updated)."');";
 	sql_execute($sql);
 }
 
@@ -112,7 +112,7 @@ function ft_get_oid_data($oid) {
 
 function sql_execute($sql) {
 #	echo "$sql\n";
-	mysql_query($sql);
-	$err = mysql_error();
+	OIDplus::db()->query($sql);
+	$err = OIDplus::db()->error();
 	if ($err) echo "Warning: $err at $sql\n";
 }

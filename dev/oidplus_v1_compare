@@ -20,8 +20,8 @@ foreach ($m[1] as $oid) {
 
 function check_oid($oid) {
 
-	$res = mysql_query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = 'oid:$oid'");
-	$ok = mysql_num_rows($res) > 0;
+	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = 'oid:$oid'");
+	$ok = OIDplus::db()->num_rows($res) > 0;
 
 	if (!$ok) {
 		echo "Not existing: $oid\n";

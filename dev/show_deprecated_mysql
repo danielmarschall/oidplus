@@ -1,0 +1,7 @@
+#!/bin/bash
+
+DIR=$( dirname "$0" )
+
+cd "$DIR/.."
+grep -r "mysql_" | grep -v ".svn" | grep -v "mysql_host" | grep -v "mysql_username" | grep -v "mysql_password" | grep -v "mysql_database"
+

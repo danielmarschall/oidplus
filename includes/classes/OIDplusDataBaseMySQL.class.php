@@ -18,37 +18,39 @@
  */
 
 class OIDplusDataBaseMySQL implements OIDplusDataBase {
-	// TODO: Change to mysqli
+	private $mysqli;
+
 	public function query($sql) {
 		// $sql = str_replace('???_', OIDPLUS_TABLENAME_PREFIX, $sql);
-		return mysql_query($sql);
+		return $this->mysqli->query($sql, MYSQLI_STORE_RESULT);
 	}
 	public function num_rows($res) {
-		return mysql_num_rows($res);
+		return $res->num_rows;
 	}
 	public function fetch_array($res) {
-		return mysql_fetch_array($res);
+		return $res->fetch_array(MYSQL_BOTH);
 	}
 	public function fetch_object($res) {
-		return mysql_fetch_object($res);
+		return $res->fetch_object("stdClass");
 	}
 	public function real_escape_string($str) {
-		return mysql_real_escape_string($str);
+		return $this->mysqli->real_escape_string($str);
 	}
 	public function escape_bool($str) {
 		return (($str == 'true') || ($str == '1') || ($str == 'On') || ($str == 'on')) ? '1' : '0';
 	}
 	public function set_charset($charset) {
-		return mysql_set_charset($charset);
+		return $this->mysqli->set_charset($charset);
 	}
 	public function error() {
-		return mysql_error();
+		return !empty($this->mysqli->connect_error) ? $this->mysqli->connect_error : $this->mysqli->error;
 	}
 	public function __construct() {
 		$html = OIDPLUS_HTML_OUTPUT;
 
 		// Try connecting to the database
-		if (!@mysql_connect(OIDPLUS_MYSQL_HOST, OIDPLUS_MYSQL_USERNAME, base64_decode(OIDPLUS_MYSQL_PASSWORD)) || !@mysql_select_db(OIDPLUS_MYSQL_DATABASE)) {
+		$this->mysqli = new mysqli(OIDPLUS_MYSQL_HOST, OIDPLUS_MYSQL_USERNAME, base64_decode(OIDPLUS_MYSQL_PASSWORD), OIDPLUS_MYSQL_DATABASE, ini_get("mysqli.default_port"), ini_get("mysqli.default_socket"));
+		if (!empty($this->mysqli->connect_error) || ($this->mysqli->connect_errno != 0)) {
 			if ($html) {
 				echo "<h1>Error</h1><p>Database connection failed!</p>";
 				if (is_dir(__DIR__.'/setup')) {
@@ -66,7 +68,7 @@ class OIDplusDataBaseMySQL implements OIDplusDataBase {
 		// Check if database tables are existing
 		$table_names = array('objects', 'asn1id', 'iri', 'ra', 'config');
 		foreach ($table_names as $tablename) {
-			if (!mysql_query("DESCRIBE `".OIDPLUS_TABLENAME_PREFIX.$tablename."`")) {
+			if (!$this->query("DESCRIBE `".OIDPLUS_TABLENAME_PREFIX.$tablename."`")) {
 				if ($html) {
 					echo '<h1>Error</h1><p>Table <b>'.OIDPLUS_TABLENAME_PREFIX.$tablename.'</b> does not exist.</p><p>Please run <a href="setup/">setup</a> again.</p>';
 				} else {
@@ -80,18 +82,18 @@ class OIDplusDataBaseMySQL implements OIDplusDataBase {
 		// Note: The config setting "database_version" is inserted in setup/sql/...sql, not in the OIDplus core init
 
 		/*
-		$res = mysql_query("SELECT value FROM `".OIDPLUS_TABLENAME_PREFIX."config` WHERE name = 'database_version'");
-		$row = mysql_fetch_array($res);
+		$res = $this->query("SELECT value FROM `".OIDPLUS_TABLENAME_PREFIX."config` WHERE name = 'database_version'");
+		$row = $this->fetch_array($res);
 		$version = $row['value'];
 		if ($version == 200) {
 			// Do stuff to update 200 -> 201
 			$version = 201;
-			mysql_query("UPDATE `".OIDPLUS_TABLENAME_PREFIX."config` SET value = '$version' WHERE name = 'database_version'");
+			$this->query("UPDATE `".OIDPLUS_TABLENAME_PREFIX."config` SET value = '$version' WHERE name = 'database_version'");
 		}
 		if ($version == 201) {
 			// Do stuff to update 201 -> 202
 			$version = 202;
-			mysql_query("UPDATE `".OIDPLUS_TABLENAME_PREFIX."config` SET value = '$version' WHERE name = 'database_version'");
+			$this->query("UPDATE `".OIDPLUS_TABLENAME_PREFIX."config` SET value = '$version' WHERE name = 'database_version'");
 		}
 		*/
 	}

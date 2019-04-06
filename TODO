@@ -47,10 +47,6 @@ foreign keys nutzen
 
 optisch aufhübschen. dinge wie RA: mehr dinge zeigen, adresse, email etc
 
-db
-	- weg von mysql_! (PDO?)
-	- mandanten (db präfixe)
-
 auth und datenüberprüfungschecks in crud_action.php
 
 !! dsgvo datenschutzerklärung, agbs etc.
