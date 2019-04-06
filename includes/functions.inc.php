@@ -147,7 +147,7 @@ function my_mail($to, $title, $msg, $cc='', $bcc='') {
 
 	$title = $title;
 
-	$h->addHeader('From', OIDPLUS_ADMIN_EMAIL);
+	$h->addHeader('From', OIDplus::config()->getValue('admin_email'));
 
 	if (!empty($cc)) $h->addHeader('Cc',  $cc);
 	if (!empty($bcc)) $h->addHeader('Bcc',  $bcc);

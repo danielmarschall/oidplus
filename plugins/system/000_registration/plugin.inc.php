@@ -87,16 +87,17 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 
 			// Is it time to register / renew directory entry?
 
-#			if ((OIDplus::config()->getValue('reg_enabled')) &&
-#			   (time()-OIDplus::config()->getValue('reg_last_ping') >= OIDplus::config()->getValue('reg_ping_interval'))) {
-if (1) {
+			if ((OIDplus::config()->getValue('reg_enabled')) &&
+			   (time()-OIDplus::config()->getValue('reg_last_ping') >= OIDplus::config()->getValue('reg_ping_interval'))) {
 				if ($system_url = OIDplus::system_url()) {
 					$payload = array(
 						"system_id" => OIDplus::system_id(false),
 						"public_key" => OIDplus::config()->getValue('oidplus_public_key'),
 						"system_url" => $system_url,
 						"hide_system_url" => 0,
-						"hide_public_key" => 0
+						"hide_public_key" => 0,
+						"admin_email" => OIDplus::config()->getValue('admin_email'),
+						"system_title" => OIDplus::config()->systemTitle()
 					);
 
 					$signature = '';

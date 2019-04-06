@@ -60,11 +60,13 @@ class OIDplus {
 			if ($c == 1000) return false;
 		}
 
-		$res = dirname($actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]").'/';
+		$res = dirname($_SERVER['SCRIPT_URI'].'xxx');
 
 		for ($i=1; $i<=$c; $i++) {
-			$res = dirname($res).'/';
+			$res = dirname($res);
 		}
+
+		$res .= '/';
 
 		return $res;
 	}
@@ -224,7 +226,6 @@ class OIDplus {
 
 		if (!defined('OIDPLUS_CONFIG_VERSION'))   define('OIDPLUS_CONFIG_VERSION',   0.0);
 		if (!defined('OIDPLUS_ADMIN_PASSWORD'))   define('OIDPLUS_ADMIN_PASSWORD',   '');
-		if (!defined('OIDPLUS_ADMIN_EMAIL'))      define('OIDPLUS_ADMIN_EMAIL',      '');
 		if (!defined('OIDPLUS_MYSQL_HOST'))       define('OIDPLUS_MYSQL_HOST',       'localhost');
 		if (!defined('OIDPLUS_MYSQL_USERNAME'))   define('OIDPLUS_MYSQL_USERNAME',   'root');
 		if (!defined('OIDPLUS_MYSQL_PASSWORD'))   define('OIDPLUS_MYSQL_PASSWORD',   '');
@@ -237,7 +238,7 @@ class OIDplus {
 
 		// Check version of the config file
 
-		if (OIDPLUS_CONFIG_VERSION != 0.1) {
+		if (OIDPLUS_CONFIG_VERSION != 2.0) {
 			if ($html) {
 				echo '<h1>Error</h1><p>The information located in <b>includes/config.inc.php</b> is outdated.</p><p>Please run <a href="setup/">setup</a> again.</p>';
 			} else {

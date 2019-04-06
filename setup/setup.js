@@ -84,10 +84,9 @@ function rebuild() {
 			'<i>// To renew this file, please run setup/ in your browser.</i><br>' +
 			'<i>// If you don\'t want to run setup again, you can also change most of the settings directly in this file.</i><br>' +
 			'<br>' +
-			'<b>define</b>(\'OIDPLUS_CONFIG_VERSION\',   0.1);<br>' +
+			'<b>define</b>(\'OIDPLUS_CONFIG_VERSION\',   2.0);<br>' +
 			'<br>' +
 			'<b>define</b>(\'OIDPLUS_ADMIN_PASSWORD\',   \'' + hexToBase64(sha3_512(document.getElementById('admin_password').value)) + '\'); // base64 encoded SHA3-512 hash<br>' +
-			'<b>define</b>(\'OIDPLUS_ADMIN_EMAIL\',      \'' + document.getElementById('admin_email').value + '\');<br>' +
 			'<br>' +
 			'<b>define</b>(\'OIDPLUS_MYSQL_HOST\',       \''+document.getElementById('mysql_host').value+'\');<br>' +
 			'<b>define</b>(\'OIDPLUS_MYSQL_USERNAME\',   \''+document.getElementById('mysql_username').value+'\');<br>' +

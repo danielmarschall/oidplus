@@ -254,7 +254,7 @@ class OIDplusGui {
 		// Resolve stuff
 		$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
 		$message = str_replace('{{OID_LIST}}', implode("\n", $list_of_oids), $message);
-		$message = str_replace('{{ADMIN_EMAIL}}', OIDPLUS_ADMIN_EMAIL, $message);
+		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 		$message = str_replace('{{PARTY}}', OIDplus::authUtils()::isAdminLoggedIn() ? 'the system administrator' : 'a superior Registration Authority', $message);
 
 		// {{ACTIVATE_URL}} will be resolved in action.php
@@ -272,7 +272,7 @@ class OIDplusGui {
 
 		// Resolve stuff
 		$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
-		$message = str_replace('{{ADMIN_EMAIL}}', OIDPLUS_ADMIN_EMAIL, $message);
+		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 
 		// {{ACTIVATE_URL}} will be resolved in action.php
 

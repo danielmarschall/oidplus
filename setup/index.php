@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>OIDplus Setup</title>
+	<title>OIDplus setup</title>
 	<link rel="stylesheet" href="setup.css">
 	<script src="../3p/sha3_js/sha3.js"></script><!-- https://github.com/emn178/js-sha3 -->
 	<script src="setup.js"></script>
@@ -10,14 +10,13 @@
 
 <body onLoad="javascript:rebuild()">
 
-<h1>OIDplus Setup</h1>
+<h1>OIDplus setup - Database connectivity</h1>
 
 <div id="step1">
 <h2>Step 1: Enter setup information</h2>
 <form id="step1_form">
 <p>Which admin password do you want?<br><input id="admin_password" type="password" autocomplete="new-password" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"> <span id="password_warn"></span></p>
 <p>Please repeat the password input:<br><input id="admin_password2" type="password" autocomplete="new-password" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"> <span id="password_warn2"></span></p>
-<p>Which email address?<br><input id="admin_email" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
 <p>---</p>
 <p>MySQL hostname (usually <b>localhost</b>):<br><input id="mysql_host" type="text" value="localhost" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
 <p>MySQL username:<br><input id="mysql_username" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>

@@ -60,7 +60,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$message = file_get_contents(__DIR__ . '/request_msg.tpl');
 			$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
-			$message = str_replace('{{ADMIN_EMAIL}}', OIDPLUS_ADMIN_EMAIL, $message);
+			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 			my_mail($email, OIDplus::config()->systemTitle().' - Free OID request', $message, 'daniel-marschall@viathinksoft.de');
 
@@ -145,7 +145,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$message = file_get_contents(__DIR__ . '/allocated_msg.tpl');
 			$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
-			$message = str_replace('{{ADMIN_EMAIL}}', OIDPLUS_ADMIN_EMAIL, $message);
+			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{NEW_OID}}', $new_oid, $message);
 			my_mail($email, OIDplus::config()->systemTitle().' - Free OID allocated', $message, 'daniel-marschall@viathinksoft.de');
 
@@ -187,7 +187,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 				  </form>';
 
 				$tos = file_get_contents(__DIR__ . '/tos.html');
-				$tos = str_replace('{{ADMIN_EMAIL}}', OIDPLUS_ADMIN_EMAIL, $tos);
+				$tos = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $tos);
 				$tos = str_replace('{{ROOT_OID}}', OIDplus::config()->getValue('freeoid_root_oid'), $tos);
 				$tos = str_replace('{{ROOT_OID_ASN1}}', self::getFreeRootOid()->getAsn1Notation(), $tos);
 				$tos = str_replace('{{ROOT_OID_IRI}}', self::getFreeRootOid()->getIriNotation(), $tos);

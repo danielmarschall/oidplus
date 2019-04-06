@@ -29,6 +29,7 @@ class OIDplusConfig {
 
 	public function __construct() {
 		$this->prepareConfigKey('system_title', 'What is the name of your RA?', 'OIDplus 2.0', 0, 1);
+		$this->prepareConfigKey('admin_email', 'E-Mail address of the system administrator', '', 0, 1);
 		$this->prepareConfigKey('global_cc', 'Global CC for all outgoing emails?', '', 0, 1);
 		$this->prepareConfigKey('ra_min_password_length', 'Minimum length for RA passwords', '6', 0, 1);
 		$this->prepareConfigKey('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0', 0, 1);
@@ -97,7 +98,7 @@ class OIDplusConfig {
 
 			}
 		}
-		if ($name == 'global_cc') {
+		if (($name == 'global_cc') || ($name == 'admin_email')) {
 			if (!empty($value) && !oiddb_valid_email($value)) {
 				throw new Exception("This is not a correct email address");
 			}

@@ -39,7 +39,7 @@ header('Content-Type:text/xml');
 $oa = new OIDInfoAPI();
 $oa->addSimplePingProvider('viathinksoft.de:49500');
 
-echo $oa->xmlAddHeader(OIDplus::config()->systemTitle(), isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Export interface', OIDPLUS_ADMIN_EMAIL);
+echo $oa->xmlAddHeader(OIDplus::config()->systemTitle(), isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Export interface', OIDplus::config()->getValue('admin_email'));
 
 $params['allow_html'] = true;
 $params['allow_illegal_email'] = true; // It should be enabled, because the creator could have used some kind of human-readable anti-spam technique

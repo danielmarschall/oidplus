@@ -44,14 +44,10 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePlugin {
 			$out['title'] = 'Contact system admin';
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/publicPages/'.basename(__DIR__).'/icon_big.png' : '';
 
-			if (empty(OIDPLUS_ADMIN_EMAIL)) {
+			if (empty(OIDplus::config()->getValue('admin_email'))) {
 				$out['text'] = '<p>The administrator of this system has not entered a contact email address.';
 			} else {
-				$out['text'] = '<p>You can contact the administrator of this OIDplus system at this email address:</p><p><a href="mailto:'.htmlentities(OIDPLUS_ADMIN_EMAIL).'">'.htmlentities(OIDPLUS_ADMIN_EMAIL).'</a></p>';
-			}
-
-			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$out['text'] .= '<p><abbr title="Edit the file includes/config.inc.php">How to change this address?</abbr></p>';
+				$out['text'] = '<p>You can contact the administrator of this OIDplus system at this email address:</p><p><a href="mailto:'.htmlentities(OIDplus::config()->getValue('admin_email')).'">'.htmlentities(OIDplus::config()->getValue('admin_email')).'</a></p>';
 			}
 		}
 	}

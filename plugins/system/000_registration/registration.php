@@ -30,17 +30,19 @@ OIDplus::db()->query("SET NAMES 'utf8'");
 
 ob_start();
 
+$step = 1;
+
 ?><!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<title>OIDplus Setup</title>
+	<title>OIDplus setup</title>
 	<link rel="stylesheet" href="../../../setup/setup.css">
 </head>
 
 <body>
 
-<h1>OIDplus Setup</h1>
+<h1>OIDplus setup - Initial settings</h1>
 
 <p>Your database settings are correct.</p>
 
@@ -50,7 +52,7 @@ After setup is complete, you can change all these settings if required.</p>
 <form method="POST" action="registration.php">
 <input type="hidden" name="sent" value="1">
 
-<p><u>Step 1: Authentificate</u></p>
+<p><u>Step <?php echo $step++; ?>: Authentificate</u></p>
 
 <p>Please enter the administrator password you have entered before.</p>
 
@@ -70,7 +72,47 @@ if (isset($_REQUEST['sent'])) {
 
 ?></p>
 
-<p><u>Step 2: Enable/Disable object type plugins</u></p>
+<p><u>Step <?php echo $step++; ?>: Please enter the email address of the system administrator?</u></p>
+
+<input type="text" name="admin_email" value="<?php
+
+$msg = '';
+if (isset($_REQUEST['sent'])) {
+	echo htmlentities($_REQUEST['admin_email']);
+	if ($do_edits) {
+		try {
+			OIDplus::config()->setValue('admin_email', $_REQUEST['admin_email']);
+		} catch (Exception $e) {
+			$msg = $e->getMessage();
+		}
+	}
+} else {
+	echo htmlentities(OIDplus::config()->getValue('admin_email'));
+}
+
+?>" size="25"><?php echo ' <font color="red"><b>'.$msg.'</b></font>'; ?>
+
+<p><u>Step <?php echo $step++; ?>: What title should your Registration Authority / OIDplus instance have?</u></p>
+
+<input type="text" name="system_title" value="<?php
+
+$msg = '';
+if (isset($_REQUEST['sent'])) {
+	echo htmlentities($_REQUEST['system_title']);
+	if ($do_edits) {
+		try {
+			OIDplus::config()->setValue('system_title', $_REQUEST['system_title']);
+		} catch (Exception $e) {
+			$msg = $e->getMessage();
+		}
+	}
+} else {
+	echo htmlentities(OIDplus::config()->getValue('system_title'));
+}
+
+?>" size="50"><?php echo ' <font color="red"><b>'.$msg.'</b></font>'; ?>
+
+<p><u>Step <?php echo $step++; ?>: Enable/Disable object type plugins</u></p>
 
 <p>Which object types do you want to manage using OIDplus?</p>
 
@@ -104,13 +146,18 @@ foreach (OIDplus::getDisabledObjectTypes() as $ot) {
 	echo '> <label for="enable_ot_'.$ot::ns().'">'.htmlentities($ot::objectTypeTitle()).'</label><br>';
 }
 
+$msg = '';
 if ($do_edits) {
-	OIDplus::config()->setValue('objecttypes_enabled', implode(';', $enabled_ary));
+	try {
+		OIDplus::config()->setValue('objecttypes_enabled', implode(';', $enabled_ary));
+	} catch (Exception $e) {
+		$msg = $e->getMessage();
+	}
 }
 
-?>
+?><?php echo ' <font color="red"><b>'.$msg.'</b></font>'; ?>
 
-<p><u>Step 3: Automatic Publishing</u></p>
+<p><u>Step <?php echo $step++; ?>: Automatic Publishing</u></p>
 
 <?php
 
@@ -132,15 +179,20 @@ if (isset($_REQUEST['sent'])) {
 		echo '';
 	}
 }
+$msg = '';
 if ($do_edits) {
-	if (isset($_REQUEST['register_oidinfo'])) {
-		OIDplus::config()->setValue('oidinfo_export_protected', '0');
-	} else {
-		OIDplus::config()->setValue('oidinfo_export_protected', '1');
+	try {
+		if (isset($_REQUEST['register_oidinfo'])) {
+			OIDplus::config()->setValue('oidinfo_export_protected', '0');
+		} else {
+			OIDplus::config()->setValue('oidinfo_export_protected', '1');
+		}
+	} catch (Exception $e) {
+		$msg = $e->getMessage();
 	}
 }
 ?>> <label for="register_oidinfo">Would you like to enable the automatic transfer of the Object Identifiers you create on this system to the
-OID Repository <a href="http://oid-info.com/" target="_blank">oid-info.com</a>?</label><br>
+OID Repository <a href="http://oid-info.com/" target="_blank">oid-info.com</a>?</label><?php echo ' <font color="red"><b>'.$msg.'</b></font>'; ?><br>
 <i>Privacy information:</i>
 You can always disable the automatic transmission in the admin control panel of OIDplus,<br>
 and you can demand the deletion of already published object identifiers by writing an email
@@ -161,14 +213,19 @@ if (isset($_REQUEST['sent'])) {
 		echo '';
 	}
 }
+$msg = '';
 if ($do_edits) {
-	if (isset($_REQUEST['register_viathinksoft'])) {
-		OIDplus::config()->setValue('reg_enabled', '1');
-	} else {
-		OIDplus::config()->setValue('reg_enabled', '0');
+	try {
+		if (isset($_REQUEST['register_viathinksoft'])) {
+			OIDplus::config()->setValue('reg_enabled', '1');
+		} else {
+			OIDplus::config()->setValue('reg_enabled', '0');
+		}
+	} catch (Exception $e) {
+		$msg = $e->getMessage();
 	}
 }
-?>> <label for="register_viathinksoft">Would you like to register your system to the ViaThinkSoft directory?</label><br>
+?>> <label for="register_viathinksoft">Would you like to register your system to the ViaThinkSoft directory?</label><?php echo ' <font color="red"><b>'.$msg.'</b></font>'; ?><br>
 This means that the URL of your OIDplus system together with its public key (see below) is published to the <a href="https://oidplus.viathinksoft.com/oidplus/?goto=oid:1.3.6.1.4.1.37476.30.9" target="_blank">OIDplus instance directory</a> and <a href="http://www.oid-info.com/get/1.3.6.1.4.1.37476.30.9">oid-info.com</a>.<br>
 The publication of your public key allows users to verify integrity of your data. The registration is also the requirement<br>
 for the automatic XML export of Object Identifiers to oid-info.com.<br>
