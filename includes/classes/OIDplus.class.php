@@ -68,6 +68,8 @@ class OIDplus {
 
 		$res .= '/';
 
+		$res = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . $res; // TODO: also add port?
+
 		return $res;
 	}
 

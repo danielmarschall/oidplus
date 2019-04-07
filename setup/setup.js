@@ -151,5 +151,7 @@ function rebuild() {
 	}
 
 	document.getElementById('struct_1').href = 'struct_empty.sql.php?prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
+	document.getElementById('sqlcli_1').innerHTML = 'struct_empty.sql.php?prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
 	document.getElementById('struct_2').href = 'struct_with_examples.sql.php?prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
+	document.getElementById('sqlcli_2').innerHTML = 'struct_with_examples.sql.php?prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
 }

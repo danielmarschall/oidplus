@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+<?php
+
+$own_dir = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'];
+
+?><!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -31,7 +35,7 @@
 <p>SSL enforcement<br><select name="enforce_ssl" id="enforce_ssl" onclick="javascript:rebuild()">
 <option value="0">No SSL available (don't redirect)</option>
 <option value="1">Enforce SSL (always redirect)</option>
-<option value="2" selected>Intelligenet SSL detection (redirect if port 443 is open)</option>
+<option value="2" selected>Intelligent SSL detection (redirect if port 443 is open)</option>
 </select></p>
 </form>
 </div>
@@ -41,16 +45,12 @@
 <p><b>If you already have an OIDplus database and just want to rebuild the config file, please ignore this step.</b></p>
 <p>Otherwise, import one of the following MySQL dumps in your database:</p>
 <p><ul>
-	<li><a href="struct_empty.sql.php" id="struct_1" target="_blank">Empty OIDplus database without example data</a><br><br></li>
-	<li><a href="struct_with_examples.sql.php" id="struct_2" target="_blank">OIDplus database with example data</a></li>
+	<li><a href="struct_empty.sql.php" id="struct_1" target="_blank">Empty OIDplus database without example data</a>,<br>
+	or via command line: <code>curl "<?php echo $own_dir; ?><span id="sqlcli_1"></span>" | mysql</code><br><br></li>
+	<li><a href="struct_with_examples.sql.php" id="struct_2" target="_blank">OIDplus database with example data</a>,<br>
+	or via command line: <code>curl "<?php echo $own_dir; ?><span id="sqlcli_2"></span>" | mysql</code></li>
 </ul></p>
-<p><font color="red">All data from the previous OIDplus instance will be deleted during the import</font></p>
-
-<!--
-TODO: At this step we could also show what we would need to do at command line:
-wget ...
-mysql < ...
--->
+<p><font color="red">All data from the previous OIDplus instance will be deleted during the import.</font></p>
 
 </div>
 
