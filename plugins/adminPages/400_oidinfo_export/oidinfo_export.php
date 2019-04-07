@@ -122,7 +122,9 @@ foreach ($nonConfidential as $id) {
 		$elements['current-registrant']['modification-date'] = _formatdate($row->updated);
 
 		$obj = OIDplusObject::parse($row->id);
-		echo $oa->createXMLEntry($obj->getOid(), $elements, $params, $comment=$obj->nodeId());
+		$oid = $obj->getOid();
+		if (empty($oid)) continue; // e.g. if no system ID is available, then we cannot submit non-OID objects
+		echo $oa->createXMLEntry($oid, $elements, $params, $comment=$obj->nodeId());
 	}
 
 	flush();

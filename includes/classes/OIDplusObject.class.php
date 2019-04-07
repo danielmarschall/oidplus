@@ -30,7 +30,9 @@ abstract class OIDplusObject {
 		if ($this->ns() == 'oid') {
 			return $this->getDotNotation();
 		} else {
-			return OIDplus::system_id(true) . '.' . smallhash($this->nodeId());
+			$sid = OIDplus::system_id(true);
+			if (empty($sid)) return false;
+			return $sid . '.' . smallhash($this->nodeId());
 		}
 	}
 
