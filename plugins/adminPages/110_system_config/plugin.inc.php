@@ -85,7 +85,9 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 					$output .= '     <td>'.htmlentities($row->name).'</td>';
 					$output .= '     <td>'.htmlentities($row->description).'</td>';
 					if ($row->protected == 1) {
-						$output .= '     <td>'.htmlentities($row->value).'</td>';
+						$desc = $row->value;
+						if (strlen($desc) > 100) $desc = substr($desc, 0, 100) . '...';
+						$output .= '     <td>'.htmlentities($desc).'</td>';
 						$output .= '     <td>&nbsp;</td>';
 					} else {
 						$output .= '     <td><input type="text" id="config_'.$row->name.'" value="'.htmlentities($row->value).'"></td>';
@@ -96,6 +98,10 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 
 				$output .= '</table>';
 				$output .= '</div></div>';
+
+				$output .= '<br><p>See also:</p>';
+				$output .= '<ul><li><a href="setup/">Setup part 1: Create config.php (contains database settings, ReCAPTCHA, admin password and SSL enforcement)</a></li>';
+				$output .= '<li><a href="plugins/system/000_registration/registration.php">Setup part 2: Basic settings (they are all available above, too)</a></li></ul>';
 
 				$out['text'] = $output;
 			}

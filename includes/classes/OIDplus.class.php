@@ -60,7 +60,7 @@ class OIDplus {
 			if ($c == 1000) return false;
 		}
 
-		$res = dirname($_SERVER['SCRIPT_URI'].'xxx');
+		$res = dirname($_SERVER['REQUEST_URI'].'xxx');
 
 		for ($i=1; $i<=$c; $i++) {
 			$res = dirname($res);
@@ -248,6 +248,7 @@ class OIDplus {
 		if (!defined('RECAPTCHA_ENABLED'))        define('RECAPTCHA_ENABLED',        false);
 		if (!defined('RECAPTCHA_PUBLIC'))         define('RECAPTCHA_PUBLIC',         '');
 		if (!defined('RECAPTCHA_PRIVATE'))        define('RECAPTCHA_PRIVATE',        '');
+		if (!defined('OIDPLUS_ENFORCE_SSL'))      define('OIDPLUS_ENFORCE_SSL',      2);		
 
 		// Check version of the config file
 
@@ -270,7 +271,7 @@ class OIDplus {
 		OIDplus::config()->prepareConfigKey('objecttypes_enabled', 'Enabled object types and their order, separated with a semicolon (please reload the page so that the change is applied)', '', 0, 1);
 
 		OIDplus::config()->prepareConfigKey('oidplus_private_key', 'Private key for this system', '', 1, 0);
-		OIDplus::config()->prepareConfigKey('oidplus_public_key', 'Public key for this system', '', 1, 1);
+		OIDplus::config()->prepareConfigKey('oidplus_public_key', 'Public key for this system. If you "clone" your system, you must delete this key (e.g. using phpMyAdmin), so that a new one is created.', '', 1, 1);
 
 		// Initialize public / private keys
 
@@ -298,39 +299,62 @@ class OIDplus {
 
 	private static function isSslAvailable() {
 		$timeout = 2;
+		$already_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == "on");
+		$ssl_port = 443;
 
 		if (php_sapi_name() == 'cli') return false;
 
-		if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == "on")) {
-			// we are already on HTTPS
-			setcookie('SSL_CHECK', '1', 0, '', '', false, true);
-			return true;
-		} else {
-			if (isset($_COOKIE['SSL_CHECK'])) {
-				// We already had the HTTPS detection done before.
-				if ($_COOKIE['SSL_CHECK']) {
-					// HTTPS was detected before, but we are HTTP. Redirect now
-					$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-					header('Location:'.$location);
-					die('Redirect to HTTPS');
-					return true;
-				} else {
-					// No HTTPS available. Do nothing.
-					return false;
-				}
+		if (OIDPLUS_ENFORCE_SSL == 0) {
+			// No SSL available
+			return $already_ssl;
+		}
+
+		if (OIDPLUS_ENFORCE_SSL == 1) {
+			// Force SSL
+			if ($already_ssl) {
+				return true;
 			} else {
-				// This is our first check (or the browser didn't accept the SSL_CHECK cookie)
-				if (@fsockopen($_SERVER['HTTP_HOST'], 443, $errno, $errstr, $timeout)) {
-					// HTTPS detected. Redirect now, and remember that we had detected HTTPS
-					setcookie('SSL_CHECK', '1', 0, '', '', false, true);
-					$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-					header('Location:'.$location);
-					die('Redirect to HTTPS');
-					return true;
+				$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+				header('Location:'.$location);
+				die('Redirect to HTTPS'); 
+				return true;
+			}
+		}
+
+		if (OIDPLUS_ENFORCE_SSL == 2) {
+			// Automatic SSL detection
+
+			if ($already_ssl) {
+				// we are already on HTTPS
+				setcookie('SSL_CHECK', '1', 0, '', '', false, true);
+				return true;
+			} else {
+				if (isset($_COOKIE['SSL_CHECK'])) {
+					// We already had the HTTPS detection done before.
+					if ($_COOKIE['SSL_CHECK']) {
+						// HTTPS was detected before, but we are HTTP. Redirect now
+						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+						header('Location:'.$location);
+						die('Redirect to HTTPS');
+						return true;
+					} else {
+						// No HTTPS available. Do nothing.
+						return false;
+					}
 				} else {
-					// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.
-					setcookie('SSL_CHECK', '0', 0, '', '', false, true);
-					return false;
+					// This is our first check (or the browser didn't accept the SSL_CHECK cookie)
+					if (@fsockopen($_SERVER['HTTP_HOST'], $ssl_port, $errno, $errstr, $timeout)) {
+						// HTTPS detected. Redirect now, and remember that we had detected HTTPS
+						setcookie('SSL_CHECK', '1', 0, '', '', false, true);
+						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+						header('Location:'.$location);
+						die('Redirect to HTTPS'); 
+						return true;
+					} else {
+						// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.
+						setcookie('SSL_CHECK', '0', 0, '', '', false, true);
+						return false;
+					}
 				}
 			}
 		}

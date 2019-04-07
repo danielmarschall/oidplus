@@ -33,5 +33,6 @@ if (php_sapi_name() != 'cli') {
 	header('Content-Type:text/sql');
 }
 
-echo "USE `".$database."`;\n\n";
+echo "CREATE DATABASE IF NOT EXISTS `$database`;\n\n";
+echo "USE `$database`;\n\n";
 echo $cont;

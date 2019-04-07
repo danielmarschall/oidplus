@@ -23,7 +23,7 @@ class OIDplusConfig {
 	protected $dirty = 1;
 
 	public function prepareConfigKey($name, $description, $init_value, $protected, $visible) {
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('".OIDplus::db()->real_escape_string($name)."', '".OIDplus::db()->real_escape_string($description)."', '".OIDplus::db()->real_escape_string($init_value)."', '".OIDplus::db()->real_escape_string($protected)."', '".OIDplus::db()->real_escape_string($visible)."')");
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('".OIDplus::db()->real_escape_string($name)."', '".OIDplus::db()->real_escape_string($description)."', '".OIDplus::db()->real_escape_string($init_value)."', ".OIDplus::db()->real_escape_string($protected).", ".OIDplus::db()->real_escape_string($visible).")");
 		$this->dirty = 1;
 	}
 
@@ -51,7 +51,7 @@ class OIDplusConfig {
 
 	/* hardcoded in setup/, because during installation, we don't have a settings database
 	public function minAdminPasswordLength() {
-		return 6;
+		return 10;
 	}
 	*/
 

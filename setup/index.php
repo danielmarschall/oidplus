@@ -27,6 +27,12 @@
 <p><input id="recaptcha_enabled" type="checkbox" onclick="javascript:rebuild()"> <label for="recaptcha_enabled">RECAPTCHA Enabled</label></p>
 <p>RECAPTCHA Public key<br><input id="recaptcha_public" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
 <p>RECAPTCHA Private key<br><input id="recaptcha_private" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
+<p>---</p>
+<p>SSL enforcement<br><select name="enforce_ssl" id="enforce_ssl" onclick="javascript:rebuild()">
+<option value="0">No SSL available (don't redirect)</option>
+<option value="1">Enforce SSL (always redirect)</option>
+<option value="2" selected>Intelligenet SSL detection (redirect if port 443 is open)</option>
+</select></p>
 </form>
 </div>
 
@@ -37,6 +43,13 @@
 	<li><a href="struct_empty.sql.php" id="struct_1" target="_blank">Empty OIDplus database without example data</a><br><br></li>
 	<li><a href="struct_with_examples.sql.php" id="struct_2" target="_blank">OIDplus database with example data</a></li>
 </ul></p>
+
+<!--
+TODO: At this step we could also show what we would need to do at command line:
+wget ...
+mysql < ...
+-->
+
 </div>
 
 <div id="step3">
@@ -46,10 +59,10 @@
 </div>
 
 <div id="step4">
-<h2>Step 4: Enter the page</h2>
-<p><a href="../">Run the OIDplus system</a></p>
+<h2>Step 4: Continue to next step</h2>
+<p><input type="button" onclick="document.location='../'" value="Continue"></p>
+<!-- <p><a href="../">Run the OIDplus system</a></p> -->
 </div>
 
 </body>
 </html>
-

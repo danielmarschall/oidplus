@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+min_password_length = 10;
+
 function btoa(bin) {
 	var tableStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 	var table = tableStr.split("");
@@ -57,8 +59,6 @@ String.prototype.replaceAll = function(search, replacement) {
 	return target.replace(new RegExp(search, 'g'), replacement);
 };
 
-min_password_length = 5;
-
 function rebuild() {
 	var error = false;
 
@@ -99,7 +99,9 @@ function rebuild() {
 			'<br>' +
 			'<b>define</b>(\'RECAPTCHA_ENABLED\',        '+(document.getElementById('recaptcha_enabled').checked ? 1 : 0)+');<br>' +
 			'<b>define</b>(\'RECAPTCHA_PUBLIC\',         \''+document.getElementById('recaptcha_public').value+'\');<br>' +
-			'<b>define</b>(\'RECAPTCHA_PRIVATE\',        \''+document.getElementById('recaptcha_private').value+'\');<br>';
+			'<b>define</b>(\'RECAPTCHA_PRIVATE\',        \''+document.getElementById('recaptcha_private').value+'\');<br>' +
+			'<br>' +
+			'<b>define</b>(\'OIDPLUS_ENFORCE_SSL\',      \''+document.getElementById('enforce_ssl').value+'\');<br>';
 
 		document.getElementById('config').innerHTML = document.getElementById('config').innerHTML.replaceAll(' ', '&nbsp;');
 	}
