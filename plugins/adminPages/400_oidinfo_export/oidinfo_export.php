@@ -30,7 +30,7 @@ OIDplus::db()->query("SET NAMES 'utf8'");
 # ---
 
 if (OIDplus::config()->getValue('oidinfo_export_protected') && !OIDplus::authUtils()::isAdminLoggedIn()) {
-	echo '<p>You need to <a href="./?goto=oidplus:login">log in</a> as administrator.</p>';
+	echo '<p>You need to <a href="'.OIDplus::system_url().'?goto=oidplus:login">log in</a> as administrator.</p>';
 	die();
 }
 
@@ -39,7 +39,10 @@ header('Content-Type:text/xml');
 $oa = new OIDInfoAPI();
 $oa->addSimplePingProvider('viathinksoft.de:49500');
 
-echo $oa->xmlAddHeader(OIDplus::config()->systemTitle(), isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Export interface', OIDplus::config()->getValue('admin_email'));
+$email = OIDplus::config()->getValue('admin_email');
+if (empty($email)) $email = 'unknown@example.com';
+
+echo $oa->xmlAddHeader(OIDplus::config()->systemTitle(), isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Export interface', $email);
 
 $params['allow_html'] = true;
 $params['allow_illegal_email'] = true; // It should be enabled, because the creator could have used some kind of human-readable anti-spam technique
@@ -57,9 +60,6 @@ $params['ignore_xhtml_light'] = false;
 $nonConfidential = OIDplusObject::getAllNonConfidential();
 
 foreach ($nonConfidential as $id) {
-
-	if (substr($id,0,4) != 'oid:') continue;
-
 	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
 	if ($row = OIDplus::db()->fetch_object($res)) {
 		$elements['identifier'] = array();
@@ -121,8 +121,8 @@ foreach ($nonConfidential as $id) {
 		}
 		$elements['current-registrant']['modification-date'] = _formatdate($row->updated);
 
-		$oid = OIDplusObject::parse($row->id)->getDotNotation();
-		echo $oa->createXMLEntry($oid, $elements, $params, $comment='');
+		$obj = OIDplusObject::parse($row->id);
+		echo $oa->createXMLEntry($obj->getOid(), $elements, $params, $comment=$obj->nodeId());
 	}
 
 	flush();

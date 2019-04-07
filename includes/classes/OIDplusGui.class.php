@@ -325,7 +325,7 @@ class OIDplusGui {
 				$out['text'] .= '<br><p><a href="?goto=oidplus:edit_ra$'.urlencode($ra_email).'">Edit contact info</a></p>';
 			}
 
-			if (OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!empty($ra_email) && OIDplus::authUtils()::isAdminLoggedIn()) {
 				if (class_exists("OIDplusPageAdminListRAs")) {
 					$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">Delete this RA</a></p>';
 				} else {

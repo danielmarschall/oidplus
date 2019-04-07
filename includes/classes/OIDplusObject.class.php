@@ -26,6 +26,14 @@ abstract class OIDplusObject {
 		return null;
 	}
 
+	public function getOid() {
+		if ($this->ns() == 'oid') {
+			return $this->getDotNotation();
+		} else {
+			return OIDplus::system_id(true) . '.' . smallhash($this->nodeId());
+		}
+	}
+
 	public abstract static function objectTypeTitle();
 
 	public abstract static function objectTypeTitleShort();
@@ -67,7 +75,8 @@ abstract class OIDplusObject {
 		} else {
 			$res = OIDplus::db()->query("select oChild.id as id from ".OIDPLUS_TABLENAME_PREFIX."objects as oChild ".
 			                            "left join ".OIDPLUS_TABLENAME_PREFIX."objects as oParent on oChild.parent = oParent.id ".
-			                            "where ifnull(oParent.ra_email,'') <> '".OIDplus::db()->real_escape_string($ra_email)."' and oChild.ra_email = '".OIDplus::db()->real_escape_string($ra_email)."' ".
+			                            "where (ifnull(oParent.ra_email,'') <> '".OIDplus::db()->real_escape_string($ra_email)."' and ifnull(oChild.ra_email,'') = '".OIDplus::db()->real_escape_string($ra_email)."') or ".
+			                            "      (oParent.ra_email is null and ifnull(oChild.ra_email,'') = '".OIDplus::db()->real_escape_string($ra_email)."') ".
 			                            "order by ".OIDplus::db()->natOrder('oChild.id'));
 			while ($row = OIDplus::db()->fetch_array($res)) {
 				$x = self::parse($row['id']); // can be FALSE if namespace was disabled

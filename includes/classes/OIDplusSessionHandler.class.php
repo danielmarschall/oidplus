@@ -33,9 +33,9 @@ class OIDplusSessionHandler {
 		// Uses a secure connection (HTTPS) if possible
 		ini_set('session.cookie_secure', OIDPLUS_SSL_AVAILABLE);
 
-		if (isset($_SERVER['REQUEST_URI'])) {
-			$path = $_SERVER['REQUEST_URI'];
-			ini_set('session.cookie_path', basename($path));
+		$path = OIDplus::system_url(true);
+		if (!empty($path)) {
+			ini_set('session.cookie_path', $path);
 		}
 
 		ini_set('session.cookie_samesite', 'Lax');
@@ -57,6 +57,10 @@ class OIDplusSessionHandler {
 	public function getValue($name) {
 		if (!isset($_SESSION[$name])) return null;
 		return self::decrypt($_SESSION[$name], $this->secret);
+	}
+
+	public function exists($name) {
+		return isset($_SESSION[$name]);
 	}
 
 	protected static function encrypt($data, $key) {

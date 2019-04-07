@@ -49,7 +49,7 @@ class OIDplus {
 		return new OIDplusAuthUtils();
 	}
 
-	public static function system_url() {
+	public static function system_url($relative=false) {
 		if (!isset($_SERVER["REQUEST_URI"])) return false;
 
 		$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
@@ -68,7 +68,9 @@ class OIDplus {
 
 		$res .= '/';
 
-		$res = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . $res; // TODO: also add port?
+		if (!$relative) {
+			$res = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . $res; // TODO: also add port?
+		}
 
 		return $res;
 	}
@@ -303,6 +305,8 @@ class OIDplus {
 		$timeout = 2;
 		$already_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == "on");
 		$ssl_port = 443;
+		$cookie_path = OIDplus::system_url(true);
+		if (empty($cookie_path)) $cookie_path = '/';
 
 		if (php_sapi_name() == 'cli') return false;
 
@@ -328,7 +332,7 @@ class OIDplus {
 
 			if ($already_ssl) {
 				// we are already on HTTPS
-				setcookie('SSL_CHECK', '1', 0, '', '', false, true);
+				setcookie('SSL_CHECK', '1', 0, $cookie_path, '', false, true);
 				return true;
 			} else {
 				if (isset($_COOKIE['SSL_CHECK'])) {
@@ -347,14 +351,14 @@ class OIDplus {
 					// This is our first check (or the browser didn't accept the SSL_CHECK cookie)
 					if (@fsockopen($_SERVER['HTTP_HOST'], $ssl_port, $errno, $errstr, $timeout)) {
 						// HTTPS detected. Redirect now, and remember that we had detected HTTPS
-						setcookie('SSL_CHECK', '1', 0, '', '', false, true);
+						setcookie('SSL_CHECK', '1', 0, $cookie_path, '', false, true);
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
 						die('Redirect to HTTPS'); 
 						return true;
 					} else {
 						// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.
-						setcookie('SSL_CHECK', '0', 0, '', '', false, true);
+						setcookie('SSL_CHECK', '0', 0, $cookie_path, '', false, true);
 						return false;
 					}
 				}
