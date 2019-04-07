@@ -62,7 +62,17 @@ String.prototype.replaceAll = function(search, replacement) {
 function rebuild() {
 	var error = false;
 
-	// Check 1: Do the passwords match?
+	// Check 1: Has the password the correct length?
+	if (document.getElementById('admin_password').value.length < min_password_length)
+	{
+		document.getElementById('password_warn').innerHTML = '<font color="red">Password must be at least '+min_password_length+' characters long</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Password must be at least '+min_password_length+' characters long</i>';
+		error = true;
+	} else {
+		document.getElementById('password_warn').innerHTML = '';
+	}
+
+	// Check 2: Do the passwords match?
 	if (document.getElementById('admin_password').value != document.getElementById('admin_password2').value) {
 		document.getElementById('password_warn2').innerHTML = '<font color="red">The passwords do not match!</font>';
 		error = true;
@@ -70,16 +80,39 @@ function rebuild() {
 		document.getElementById('password_warn2').innerHTML = '';
 	}
 
-	// Check 2: Has the password the correct length?
-	if (document.getElementById('admin_password').value.length < min_password_length)
+	// Check 3: host must not be empty
+	if (document.getElementById('mysql_host').value.length == 0)
 	{
-		document.getElementById('password_warn').innerHTML = '<font color="red">Password must be at least '+min_password_length+' characters long</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Password must be at least '+min_password_length+' characters long</i>';
+		document.getElementById('mysql_host_warn').innerHTML = '<font color="red">Please specify a host name!</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a host name!</i>';
 		error = true;
+	} else {
+		document.getElementById('mysql_host_warn').innerHTML = '';
 	}
-	else
+
+	// Check 4: Username must not be empty
+	if (document.getElementById('mysql_username').value.length == 0)
 	{
-		document.getElementById('password_warn').innerHTML = '';
+		document.getElementById('mysql_username_warn').innerHTML = '<font color="red">Please specify a username name!</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a username name!</i>';
+		error = true;
+	} else {
+		document.getElementById('mysql_username_warn').innerHTML = '';
+	}
+
+	// Check 5: Database name must not be empty
+	if (document.getElementById('mysql_database').value.length == 0)
+	{
+		document.getElementById('mysql_database_warn').innerHTML = '<font color="red">Please specify a database name!</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a database name!</i>';
+		error = true;
+	} else {
+		document.getElementById('mysql_database_warn').innerHTML = '';
+	}
+
+	// Continue	
+	if (!error)
+	{
 		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br>' +
 			'<i>// To renew this file, please run setup/ in your browser.</i><br>' +
 			'<i>// If you don\'t want to run setup again, you can also change most of the settings directly in this file.</i><br>' +

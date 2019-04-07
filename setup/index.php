@@ -18,10 +18,10 @@
 <p>Which admin password do you want?<br><input id="admin_password" type="password" autocomplete="new-password" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"> <span id="password_warn"></span></p>
 <p>Please repeat the password input:<br><input id="admin_password2" type="password" autocomplete="new-password" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"> <span id="password_warn2"></span></p>
 <p>---</p>
-<p>MySQL hostname (usually <b>localhost</b>):<br><input id="mysql_host" type="text" value="localhost" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
-<p>MySQL username:<br><input id="mysql_username" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
+<p>MySQL hostname (usually <b>localhost</b>):<br><input id="mysql_host" type="text" value="localhost" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()">  <span id="mysql_host_warn"></p>
+<p>MySQL username:<br><input id="mysql_username" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"> <span id="mysql_username_warn"></p>
 <p>MySQL password:<br><input id="mysql_password" type="password" autocomplete="new-password" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
-<p>MySQL database name:<br><input id="mysql_database" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
+<p>MySQL database name:<br><input id="mysql_database" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"> <span id="mysql_database_warn"></p>
 <p>Tablename prefix (e.g. <b>oidplus_</b>):<br><input id="tablename_prefix" type="text" value="oidplus_" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
 <p>---</p>
 <p><input id="recaptcha_enabled" type="checkbox" onclick="javascript:rebuild()"> <label for="recaptcha_enabled">RECAPTCHA Enabled</label></p>
@@ -38,11 +38,13 @@
 
 <div id="step2">
 <h2>Step 2: Import data</h2>
-<p>If you already have an OIDplus database and just want to rebuild the config file, please ignore this step. Otherwise, import one of the following MySQL dumps in your database:</p>
+<p><b>If you already have an OIDplus database and just want to rebuild the config file, please ignore this step.</b></p>
+<p>Otherwise, import one of the following MySQL dumps in your database:</p>
 <p><ul>
 	<li><a href="struct_empty.sql.php" id="struct_1" target="_blank">Empty OIDplus database without example data</a><br><br></li>
 	<li><a href="struct_with_examples.sql.php" id="struct_2" target="_blank">OIDplus database with example data</a></li>
 </ul></p>
+<p><font color="red">All data from the previous OIDplus instance will be deleted during the import</font></p>
 
 <!--
 TODO: At this step we could also show what we would need to do at command line:
