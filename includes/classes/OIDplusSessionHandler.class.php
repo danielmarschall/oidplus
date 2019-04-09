@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+define('SESSION_LIFETIME', 10*60); // TODO: Configure
+
 class OIDplusSessionHandler {
 
 	protected $secret = '';
@@ -30,6 +32,8 @@ class OIDplusSessionHandler {
 		// Session ID cannot be passed through URLs
 		ini_set('session.use_only_cookies', 1);
 
+		ini_set('session.use_trans_sid', 0);
+
 		// Uses a secure connection (HTTPS) if possible
 		ini_set('session.cookie_secure', OIDPLUS_SSL_AVAILABLE);
 
@@ -40,10 +44,13 @@ class OIDplusSessionHandler {
 
 		ini_set('session.cookie_samesite', 'Lax');
 
-		session_name('OIDPLUS_SESHDLR');
-		session_start();
+		ini_set('session.use_strict_mode', 1);
+
+		ini_set('session.gc_maxlifetime', SESSION_LIFETIME);
 
 		$this->secret = $secret;
+
+		session_name('OIDPLUS_SESHDLR');
 	}
 
 	function __destruct() {
@@ -51,12 +58,32 @@ class OIDplusSessionHandler {
 	}
 
 	public function setValue($name, $value) {
+		@session_start();
+		setcookie(session_name(),session_id(),time()+SESSION_LIFETIME, ini_get('session.cookie_path'));
+
 		$_SESSION[$name] = self::encrypt($value, $this->secret);
 	}
 
 	public function getValue($name) {
+		if (!isset($_COOKIE[session_name()])) return null; // GDPR: Only start a session when we really need one
+
+		@session_start();
+		setcookie(session_name(),session_id(),time()+SESSION_LIFETIME, ini_get('session.cookie_path'));
+
 		if (!isset($_SESSION[$name])) return null;
 		return self::decrypt($_SESSION[$name], $this->secret);
+	}
+
+	public function destroySession() {
+		if (!isset($_COOKIE[session_name()])) return;
+
+		@session_start();
+		setcookie(session_name(),session_id(),time()+SESSION_LIFETIME, ini_get('session.cookie_path'));
+
+		$_SESSION = array();
+		session_destroy();
+		session_write_close();
+		setcookie(session_name(), "", time()-3600, ini_get('session.cookie_path')); // remove cookie, so GDPR people are happy
 	}
 
 	public function exists($name) {

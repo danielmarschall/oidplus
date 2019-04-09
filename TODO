@@ -1,5 +1,9 @@
 
-Download CookieConsent code into _3p folder
+Cookie law:
+	Download CookieConsent code into _3p folder, do not hotlink it
+	we need to log all consents
+	do we need an explicit consent at the login form?
+	do we need a consent for the cookie SSL_CHECK?
 
 Administrator-Interface:
 - enable and disable object types

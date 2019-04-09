@@ -33,7 +33,6 @@ class OIDplusAuthUtils {
 		$list = implode('|', $ary);
 
 		$ses->setValue('oidplus_logged_in', $list);
-		unset($ses);
 	}
 
 	public static function raLogout($email) {
@@ -47,13 +46,23 @@ class OIDplusAuthUtils {
 		$list = implode('|', $ary);
 
 		$ses->setValue('oidplus_logged_in', $list);
-		unset($ses);
+
+		if ((count($list) == 0) && (!self::isAdminLoggedIn())) {
+			// Nobody logged in anymore. Destroy session cookie to make GDPR people happy
+			$ses->destroySession();
+		}
+	}
+
+	public static function raNumLoggedIn() {
+		$ses = OIDplus::sesHandler();
+		$list = $ses->getValue('oidplus_logged_in');
+		if (is_null($list)) return 0;
+		return count($list);
 	}
 
 	public static function raLogoutAll() {
 		$ses = OIDplus::sesHandler();
 		$ses->setValue('oidplus_logged_in', '');
-		unset($ses);
 	}
 
 	public static function loggedInRaList() {
@@ -72,13 +81,17 @@ class OIDplusAuthUtils {
 	public static function adminLogin() {
 		$ses = OIDplus::sesHandler();
 		$ses->setValue('oidplus_admin_logged_in', '1');
-		unset($ses);
 	}
 
 	public static function adminLogout() {
 		$ses = OIDplus::sesHandler();
-		$ses->setValue('oidplus_admin_logged_in', '');
-		unset($ses);
+
+		$ses->setValue('oidplus_admin_logged_in', '0');
+
+		if (self::raNumLoggedIn() == 0) {
+			// Nobody logged in anymore. Destroy session cookie to make GDPR people happy
+			$ses->destroySession();
+		}
 	}
 
 	public static function adminCheckPassword($password) {
