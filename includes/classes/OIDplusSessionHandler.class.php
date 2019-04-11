@@ -53,12 +53,24 @@ class OIDplusSessionHandler {
 		session_name('OIDPLUS_SESHDLR');
 	}
 
+	protected function sessionSafeStart() {
+		@session_start();
+
+		if (!isset($_SESSION['ip'])) return;
+		if (!isset($_SERVER['REMOTE_ADDR'])) return;
+
+		if ($_SERVER['REMOTE_ADDR'] != $_SESSION['ip']) {
+			// Was the session hijacked?! Get out of here!
+			$this->destroySession();
+		}
+	}
+
 	function __destruct() {
 		session_write_close();
 	}
 
 	public function setValue($name, $value) {
-		@session_start();
+		$this->sessionSafeStart();
 		setcookie(session_name(),session_id(),time()+SESSION_LIFETIME, ini_get('session.cookie_path'));
 
 		$_SESSION[$name] = self::encrypt($value, $this->secret);
@@ -67,7 +79,7 @@ class OIDplusSessionHandler {
 	public function getValue($name) {
 		if (!isset($_COOKIE[session_name()])) return null; // GDPR: Only start a session when we really need one
 
-		@session_start();
+		$this->sessionSafeStart();
 		setcookie(session_name(),session_id(),time()+SESSION_LIFETIME, ini_get('session.cookie_path'));
 
 		if (!isset($_SESSION[$name])) return null;
@@ -77,7 +89,7 @@ class OIDplusSessionHandler {
 	public function destroySession() {
 		if (!isset($_COOKIE[session_name()])) return;
 
-		@session_start();
+		$this->sessionSafeStart();
 		setcookie(session_name(),session_id(),time()+SESSION_LIFETIME, ini_get('session.cookie_path'));
 
 		$_SESSION = array();

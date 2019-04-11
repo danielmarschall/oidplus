@@ -18,8 +18,6 @@
  */
 
 class OIDplus {
-	private static /*OIDplusDataBase*/ $database;
-	private static /*OIDplusConfig*/ $config;
 	private static /*OIDplusPagePlugin[][]*/ $pagePlugins = array();
 	private static /*OIDplusObject*/ $objectTypes = array();
 	private static /*OIDplusObject*/ $disabledObjectTypes = array();
@@ -28,25 +26,43 @@ class OIDplus {
 	}
 
 	public static function db() {
-		if (is_null(self::$database)) {
-			self::$database = new OIDplusDataBaseMySQL();
+		static $database = null;
+		if (is_null($database)) {
+			$database = new OIDplusDataBaseMySQL();
 		}
-		return self::$database;
+		return $database;
 	}
 
 	public static function config() {
-		if (is_null(self::$config)) {
-			self::$config = new OIDplusConfig();
+		static $config = null;
+		if (is_null($config)) {
+			$config = new OIDplusConfig();
 		}
-		return self::$config;
+		return $config;
 	}
 
 	public static function gui() {
-		return new OIDplusGui();
+		static $gui = null;
+		if (is_null($gui)) {
+			$gui = new OIDplusGui();
+		}
+		return $gui;
 	}
 
 	public static function authUtils() {
-		return new OIDplusAuthUtils();
+		static $authUtils = null;
+		if (is_null($authUtils)) {
+			$authUtils = new OIDplusAuthUtils();
+		}
+		return $authUtils;
+	}
+
+	public static function sesHandler() {
+		static $sesHandler = null;
+		if (is_null($sesHandler)) {
+			$sesHandler = new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);
+		}
+		return $sesHandler;
 	}
 
 	public static function system_url($relative=false) {
@@ -73,10 +89,6 @@ class OIDplus {
 		}
 
 		return $res;
-	}
-
-	public static function sesHandler() {
-		return new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);
 	}
 
 	public static function registerPagePlugin(OIDplusPagePlugin $plugin) {
