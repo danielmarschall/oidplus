@@ -26,27 +26,27 @@ class OIDplusSessionHandler {
 	function __construct($secret) {
 		// **PREVENTING SESSION HIJACKING**
 		// Prevents javascript XSS attacks aimed to steal the session ID
-		ini_set('session.cookie_httponly', 1);
+		@ini_set('session.cookie_httponly', 1);
 
 		// **PREVENTING SESSION FIXATION**
 		// Session ID cannot be passed through URLs
-		ini_set('session.use_only_cookies', 1);
+		@ini_set('session.use_only_cookies', 1);
 
-		ini_set('session.use_trans_sid', 0);
+		@ini_set('session.use_trans_sid', 0);
 
 		// Uses a secure connection (HTTPS) if possible
-		ini_set('session.cookie_secure', OIDPLUS_SSL_AVAILABLE);
+		@ini_set('session.cookie_secure', OIDPLUS_SSL_AVAILABLE);
 
 		$path = OIDplus::system_url(true);
 		if (!empty($path)) {
-			ini_set('session.cookie_path', $path);
+			@ini_set('session.cookie_path', $path);
 		}
 
-		ini_set('session.cookie_samesite', 'Lax');
+		@ini_set('session.cookie_samesite', 'Lax');
 
-		ini_set('session.use_strict_mode', 1);
+		@ini_set('session.use_strict_mode', 1);
 
-		ini_set('session.gc_maxlifetime', SESSION_LIFETIME);
+		@ini_set('session.gc_maxlifetime', SESSION_LIFETIME);
 
 		$this->secret = $secret;
 
@@ -56,12 +56,16 @@ class OIDplusSessionHandler {
 	protected function sessionSafeStart() {
 		@session_start();
 
-		if (!isset($_SESSION['ip'])) return;
-		if (!isset($_SERVER['REMOTE_ADDR'])) return;
+		if (!isset($_SESSION['ip'])) {
+			if (!isset($_SERVER['REMOTE_ADDR'])) return;
 
-		if ($_SERVER['REMOTE_ADDR'] != $_SESSION['ip']) {
-			// Was the session hijacked?! Get out of here!
-			$this->destroySession();
+			// Remember the IP address of the user
+			$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
+		} else {
+			if ($_SERVER['REMOTE_ADDR'] != $_SESSION['ip']) {
+				// Was the session hijacked?! Get out of here!
+				$this->destroySession();
+			}
 		}
 	}
 
