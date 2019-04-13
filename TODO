@@ -1,74 +1,16 @@
 
-Cookie law:
+IMPORTANT
+- Verify: escape everything
+- Mobile design
+- Cookie law:
 	Download CookieConsent code into _3p folder, do not hotlink it
 	we need to log all consents
 	do we need an explicit consent at the login form?
 	do we need a consent for the cookie SSL_CHECK?
-
-Administrator-Interface:
-- enable and disable object types
-
-when javascript fails, the form will be submitted to './' , that is not good! failed javascript must return false, so that the form does not get submitted
-
-html checkbox: "label for" verwenden
-
-admin: show privacy entries from RAs (but grey, so you know that it is private)
-
-aktuelle baustellen:
-- escape everything
-- anti xss weiter verfeinern
-- (oid+ genroot = mapping to OID tree)
-
-admin soll contact data einer fremden RA ändern dürfen
-
-freeoid: asn.1 und iri spalten ausblenden, da dieser arc keine IDs vergibt?
-
-Privacy: Mehr stufen, z.b. dass man den personal name evtl gar nicht zeigen möchte
-
-Man sollte "created" abändern dürfen! oder evtl ganz verstecken, wenn man es nicht weiß
-
-!!in der crud liste den titel des objekts zeigen
-
-que: nicht verwendete namespaces ausblenden für die öffentlichkeit?
-
-
-natOrder() ist nur für OID gültig!!! andere sort-mechanismen für andere objekttypen erforderlich
-
-tinymce
-	mce dirty flag:
-		- wenn man wechsel (js tree select), dann soll abgefragt werden, ob tinymce dirty ist, und eine warnung bringen, also so, wie wenn man die seite neu laden würde
-		- kritischer bug: seite öffnen, tiny mce editieren, speichern klicken. dann f5 neu laden (nicht strg+f5): dann ist der alte content wieder da. außer man drückt strg+f5
-	bug: overlay "bild" und "tabelle" bleibt auf dem bildschirm, selbst wenn man die seite wechselt über das menü
-
-prüfen, ob wirklich alles mit noscript möglich ist
-
-jstree select: automatically scroll down
-
-innerhalb des content-panes
-	- navigation zu parent IDs
-
-foreign keys nutzen
-
-optisch aufhübschen. dinge wie RA: mehr dinge zeigen, adresse, email etc
-
-auth und datenüberprüfungschecks in crud_action.php
-
-!! dsgvo datenschutzerklärung, agbs etc.
-
-markers draft, leaf, frozen etc
-
-multilang
-
-auslifern mit 2.999 und example DOIs etc
-
-wo in x.660 ist festgehalten, dass die erste RA festgehalten werden muss?
-que : historie einer oid
-
-http login nicht möglich. warum?
-
-objecttypes automatisch laden (php dateien suchen) und registrieren.
+- dsgvo datenschutzerklärung, agbs etc.
 
 SMALL THINGS
+- make usage of Foreign Keys
 - <abbr> in <code> wird doppelt unterstrichen
 - wenn man eine well-known OID anlegen möchte, dann kommt fehler wegen replaceAsn1/replaceIri, aber die OID ist erstellt. Die API ist aber nicht reloaded. Man sieht also nicht, dass die OID erstellt wurde, und ein erneuter klick auf Insert führt zum Primary-Key fehler
 - problem: wenn eine RA eingeladen werden möchte, muss man "update" drücken und die OID wird als updated markiert
@@ -80,18 +22,42 @@ SMALL THINGS
 - admin config mehr user friendly, e.g. having the enable/disable object type stuff (like in registration wizard) also in the admin control panel
 - it would be cool if after the login, the opened nodes in the tree would stay open
 - should we log somewhere, when the admin account was logged in?
+- multilang
+- html checkbox: "label for" verwenden
+- when javascript fails, the form will be submitted to './' , that is not good! failed javascript must return false, so that the form does not get submitted
+- admin: show privacy entries from RAs (but grey, so you know that it is private)
+- admin soll contact data einer fremden RA ändern dürfen
+- freeoid: asn.1 und iri spalten ausblenden, da dieser arc keine IDs vergibt?
+- Privacy: Mehr stufen, z.b. dass man den personal name evtl gar nicht zeigen möchte
+- Man sollte "created" abändern dürfen! oder evtl ganz verstecken, wenn man es nicht weiß
+- in der crud liste den titel des objekts zeigen
+- natOrder() ist nur für OID gültig!!! andere sort-mechanismen für andere objekttypen erforderlich
+- tinymce
+	mce dirty flag:
+		- wenn man wechsel (js tree select), dann soll abgefragt werden, ob tinymce dirty ist, und eine warnung bringen, also so, wie wenn man die seite neu laden würde
+		- kritischer bug: seite öffnen, tiny mce editieren, speichern klicken. dann f5 neu laden (nicht strg+f5): dann ist der alte content wieder da. außer man drückt strg+f5
+	bug: overlay "bild" und "tabelle" bleibt auf dem bildschirm, selbst wenn man die seite wechselt über das menü
+- prüfen, ob wirklich alles mit noscript möglich ist
+- jstree select: automatically scroll down
+- innerhalb des content-panes: navigation zu parent IDs
+- optisch aufhübschen. dinge wie RA: mehr dinge zeigen, adresse, email etc
 
 FUTURE
-- admin: soll wellknown oids ändern dürfen
+- record history of an OID?
+- admin should be able to change wellknown oids?
 - move oid to different arc
 - bei sehr großen arcs (z.B. PEN) sollen nicht alle angezeigt werden
 - unterstützung für ORS?
 - Mehr "Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollständig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), ...<br>
 - "Search" plugin: Feature to search inside documentation (doc/ directory)
+- How can we make sure that example objects are not exported using oid-info.com export?
+- Administrator-Interface: enable and disable object types
 
 REJECTED IDEAS:
 - sollte es mehere admins geben?
 - change history of each oid
+- record first RA and current RA => X.660 does not have this requirement
+- markers DRAFT, LEAF and FROZEN etc. => use "Protected" if you want to make it invisible
 
 IDEAS
 - there should be a form where an RA can request an invitation, even if the superior RA did not invite them.

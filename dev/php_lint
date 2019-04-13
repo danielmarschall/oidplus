@@ -1,0 +1,71 @@
+#!/usr/bin/php
+<?php
+
+# Vorlage: /usr/share/gwhois/maintenance/global-syntax-check
+
+error_reporting(E_ALL | E_NOTICE | E_STRICT | E_DEPRECATED);
+
+$silent = ($argc >= 2) && ($argv[1] == '--silent');
+
+$files = array();
+
+$rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname(__DIR__)));
+foreach ($rii as $file) {
+        $filename = $file->getPathname();
+        if (strpos($filename, '/.') !== false) continue; # also hide ".dir" and ".file"
+        if (!file_exists($filename)) continue;
+        $files[] = $filename;
+}
+
+$baddest = 0;
+
+foreach ($files as $filename) {
+        $h = fopen($filename, 'r');
+        $headline = fgets($h);
+        fclose($h);
+
+        $scripttype = 'n/a';
+
+        if (preg_match('@#!(.+)\s@U', $headline, $m)) {
+                $interpreter = $m[1];
+
+                switch ($interpreter) {
+                        case '/usr/bin/php':
+                                $scripttype = 'PHP';
+                                break;
+                        case '/usr/bin/perl':
+                                $scripttype = 'Perl';
+                                break;
+                }
+        } else if (strpos($filename, '.php') !== false) {
+                $scripttype = 'PHP';
+        } else if ((strpos($filename, '.pl') !== false) || (strpos($filename, '.pm') !== false)) {
+                $scripttype = 'Perl';
+        }
+
+        $cmd = '';
+        switch ($scripttype) {
+                case 'PHP':
+                        $cmd = 'php -l '.escapeshellarg($filename);
+                        break;
+                case 'Perl':
+                        $cmd = 'perl -Mstrict -Mdiagnostics -cw '.escapeshellarg($filename);
+                        break;
+        }
+
+        if ($cmd) {
+                $out = array();
+                exec($cmd." 2>&1", $out, $code);
+
+                if ($code > $baddest) $baddest = $code;
+
+                if ($code != 0) {
+                        echo "($code) $filename: ".trim(implode("\n    ", $out))."\n";
+                } else {
+                        if (!$silent) echo "OK: $filename\n";
+                }
+        }
+}
+
+exit($baddest);
+
