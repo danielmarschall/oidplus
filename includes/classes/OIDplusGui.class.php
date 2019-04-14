@@ -216,6 +216,8 @@ class OIDplusGui {
 				});
 			</script>';
 
+		$content = htmlentities($content); // For some reason, if we want to display the text "<xyz>" in TinyMCE, we need to double-encode things! &lt; will not be accepted, we need &amp;lt; ... why?
+
 		$out .= '<textarea name="'.htmlentities($name).'" id="'.htmlentities($name).'">'.trim($content).'</textarea><br>';
 
 		return $out;
