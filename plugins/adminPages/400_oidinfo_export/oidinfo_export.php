@@ -90,6 +90,12 @@ foreach ($nonConfidential as $id) {
 		}
 		$elements['information'] = $row->description;
 
+		$elements['information'] .= '<br><br><a href="'.OIDplus::system_url(false).'?goto='.urlencode($id).'">More information</a>'; // TODO: system_url() geht nicht bei CLI
+
+		if (explode(':',$id,2)[0] != 'oid') {
+			$elements['information'] = "Object: $id\n\n" . $elements['information'];
+		}
+
 		$elements['first-registrant']['first-name'] = '';
 		$elements['first-registrant']['last-name'] = '';
 		$elements['first-registrant']['address'] = '';
