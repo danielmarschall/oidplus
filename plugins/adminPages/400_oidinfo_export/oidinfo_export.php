@@ -90,7 +90,7 @@ foreach ($nonConfidential as $id) {
 		}
 		$elements['information'] = $row->description;
 
-		$elements['information'] .= '<br><br><a href="'.OIDplus::system_url(false).'?goto='.urlencode($id).'">More information</a>'; // TODO: system_url() geht nicht bei CLI
+		$elements['information'] .= '<br/><br/>See <a href="'.OIDplus::system_url(false).'?goto='.urlencode($id).'">more information</a>.'; // TODO: system_url() geht nicht bei CLI
 
 		if (explode(':',$id,2)[0] != 'oid') {
 			$elements['information'] = "Object: $id\n\n" . $elements['information'];
@@ -123,7 +123,7 @@ foreach ($nonConfidential as $id) {
 				$elements['current-registrant']['phone'] = !empty($row2->phone) ? $row2->phone : $row2->mobile;
 				$elements['current-registrant']['fax'] = $row2->fax;
 			}
-			$elements['current-registrant']['address'] = implode("<br/>\n", $tmp);
+			$elements['current-registrant']['address'] = implode("<br/>", $tmp);
 		}
 		$elements['current-registrant']['modification-date'] = _formatdate($row->updated);
 
