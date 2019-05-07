@@ -556,7 +556,16 @@ class OIDplusGui {
 			$out['icon'] = 'img/object_big.png';
 
 			if (isset($row['description'])) {
-				$desc = empty($row['description']) ? '<p><i>No description for this object available</i></p>' : OIDplusGui::objDescription($row['description']);
+				if (empty($row['description'])) {
+					if (empty($row['title'])) {
+						$desc = '<p><i>No description for this object available</i></p>';
+					} else {
+						$desc = $row['title'];
+					}
+				} else {
+					$desc = OIDplusGui::objDescription($row['description']);
+				}
+
 				if ($obj->userHasWriteRights()) {
 					$rand = ++self::$crudCounter;
 					$desc = '<noscript><p><b>You need to enable JavaScript to edit title or description of this object.</b></p>'.$desc.'</noscript>';
