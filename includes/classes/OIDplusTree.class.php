@@ -41,7 +41,11 @@ class OIDplusTree {
 			echo '<a href="?goto='.urlencode($ot::root()).'">'.$icon.htmlentities($ot::objectTypeTitle()).'</a><br>';
 			if ($ot::ns().':' == $static_node_id) echo '</b>';
 
-			$tmp = OIDplusObject::parse($static_node_id);
+			try {
+				$tmp = OIDplusObject::parse($static_node_id);
+			} catch (Exception $e) {
+				$tmp = null;
+			}
 			if (!is_null($tmp) && ($ot == get_class($tmp))) {
 				// TODO: Instead of just having 3 levels (parent, this and children), it would be better if we'd had a full tree of all parents
 				//       on the other hand, for giving search engines content, this is good enough

@@ -536,7 +536,14 @@ class OIDplusGui {
 		// === Everything else (objects) ===
 
 		if (!$handled) {
-			$obj = OIDplusObject::parse($id);
+			try {
+				$obj = OIDplusObject::parse($id);
+			} catch (Exception $e) {
+				$out['title'] = 'Error';
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = htmlentities($e->getMessage());
+				return $out;
+			}
 
 			if ((!is_null($obj)) && (!$obj->userHasReadRights())) {
 				$out['title'] = 'Access denied';
