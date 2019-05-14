@@ -156,11 +156,15 @@ function mobileNavButtonClick() {
 </div>
 <br>
 
-<div id="oidtree" class="mobile"><!-- TODO: jstree should be inside a scrollable container. don't let the page be broader than the screen. -->
-	<noscript>
-		<p><b>Please enable JavaScript to use all features</b></p>
-	</noscript>
-	<?php OIDplusTree::nonjs_menu($static_node_id); ?>
+<div class="wrap">
+	<!-- TODO: add ellipses at the end? https://stackoverflow.com/questions/37158758/add-a-gap-between-jstree-nodes-text-and-scrollbars -->
+
+	<div id="oidtree" class="mobile"><!-- TODO: jstree should be inside a scrollable container. don't let the page be broader than the screen. -->
+		<noscript>
+			<p><b>Please enable JavaScript to use all features</b></p>
+		</noscript>
+		<?php OIDplusTree::nonjs_menu($static_node_id); ?>
+	</div>
 </div>
 
 <div id="content_window" class="mobile">
