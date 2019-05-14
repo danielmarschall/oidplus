@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-require_once __DIR__ . '/../oidplus/includes/oidplus.inc.php';
+require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 OIDplus::init(true);
 
@@ -28,7 +28,7 @@ function check_oid($oid) {
 	$ok = OIDplus::db()->num_rows($res) > 0;
 
 	if (!$ok) {
-		echo "Not existing: $oid\n";
+		echo "Missing at OIDplus: $oid\n";
 	}
 }
 
