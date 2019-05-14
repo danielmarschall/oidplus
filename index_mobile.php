@@ -183,7 +183,10 @@ function mobileNavButtonClick() {
 	if ($static_icon != '') echo '<img src="'.htmlentities($static_icon).'" width="48" height="48" alt="'.htmlentities($static_title).'"> ';
 	echo htmlentities($static_title).'</h1>';
 	echo '<div id="real_content">'.$static_content.'</div>';
-	echo '<br><p><a href="?goto='.htmlentities($static_node_id).'" id="static_link"><img src="img/share.png" width="15" height="15" alt="Share"> Static link to this page</a></p>';
+	echo '<br><p><a href="?goto='.htmlentities($static_node_id).'" id="static_link"><img src="img/share.png" width="15" height="15" alt="Share"> Static link to this page</a>';
+	echo ' | <a href="index_mobile.php?goto='.htmlentities($static_node_id).'" id="static_link_mobile">Mobile view</a>';
+	echo ' | <a href="index_desktop.php?goto='.htmlentities($static_node_id).'" id="static_link_desktop">Desktop view</a>';
+	echo '</p>';
 	echo '<br>';
 	?>
 </div>

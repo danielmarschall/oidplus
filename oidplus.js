@@ -74,6 +74,8 @@ function openOidInPanel(id, unselect=false) {
 	$('#real_title').html("&nbsp;");
 	$('#real_content').html("Loading...");
 	$('#static_link').attr("href", "?goto="+encodeURI(id));
+	$('#static_link_desktop').attr("href", "index_desktop.php?goto="+encodeURI(id));
+	$('#static_link_mobile').attr("href", "index_mobile.php?goto="+encodeURI(id));
 
 	if (popstate_running) return; // To avoid that the jstree selection during popstate() won't trigger another page load
 
@@ -89,7 +91,9 @@ function openOidInPanel(id, unselect=false) {
 				"node_id":id,
 				"titleHTML":(data.icon ? '<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' : '') +data.title.htmlentities(),
 				"textHTML":data.text,
-				"staticlinkHREF":"?goto="+encodeURI(id)
+				"staticlinkHREF":"?goto="+encodeURI(id),
+				"staticlinkHREF_Desktop":"index_desktop.php?goto="+encodeURI(id),
+				"staticlinkHREF_Mobile":"index_mobile.php?goto="+encodeURI(id)
 			};
 			if (current_node != id) {
 				window.history.pushState(state, data.title, "?goto="+encodeURI(id));
@@ -374,6 +378,8 @@ $(window).on("popstate", function(e) {
 		$('#real_title').html(data.titleHTML);
 		$('#real_content').html(data.textHTML);
 		$('#static_link').attr("href", data.staticlinkHREF);
+		$('#static_link_desktop').attr("href", data.staticlinkHREF_Desktop);
+		$('#static_link_mobile').attr("href", data.staticlinkHREF_Mobile);
 		document.title = combine_systemtitle_and_pagetitle(system_title, data.titleHTML.html_entity_decode());
 	} catch (err) {
 		popstate_running = false;
@@ -413,7 +419,14 @@ $(document).ready(function () {
 		// By setting current_node, select_node() will not cause get_description.php to load (since we already loaded the first static content via PHP, for search engines mainly)
 		// But then we need to set the history state manually
 		current_node = goto;
-		window.history.replaceState({"node_id":goto, "titleHTML":$('#real_title').html(), "textHTML":$('#real_content').html(), "staticlinkHREF":"?goto="+encodeURI(goto)}, $('#real_title').html(), '?goto='+encodeURI(goto));
+		window.history.replaceState({
+			"node_id":goto,
+			"titleHTML":$('#real_title').html(),
+			"textHTML":$('#real_content').html(),
+			"staticlinkHREF":"?goto="+encodeURI(goto),
+			"staticlinkHREF_Desktop":"index_desktop.php?goto="+encodeURI(goto),
+			"staticlinkHREF_Mobile":"index_mobile.php?goto="+encodeURI(goto)
+		}, $('#real_title').html(), '?goto='+encodeURI(goto));
 
 		if (goto != null) data.instance.select_node([goto]);
 	})

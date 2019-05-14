@@ -22,6 +22,11 @@
 	width:100%;
 }
 
+#static_link, #static_link_desktop, #static_link_mobile {
+	color:gray;
+	font-size:0.9em;
+}
+
 label.padding_label {
 	font-weight: normal !important;
 	display: inline-block;
@@ -132,7 +137,7 @@ a#system_title_menu.active:hover {
 }
 #content_window.mobile {
 	padding-left:16px;
-	padding-top:28px;
+	padding-top:0px;
 }
 #content_window.pc {
 	position:absolute;
