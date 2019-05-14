@@ -66,6 +66,7 @@ function openOidInPanel(id, unselect=false) {
 
 	if (unselect) {
 		$('#oidtree').jstree('deselect_all');
+		$('#oidtree').jstree('select_node', id);
 	}
 
 	// $('#content_window').hide();

@@ -1,7 +1,6 @@
 
 IMPORTANT
 - Verify: escape everything
-- Mobile design
 - Cookie law:
 	Download CookieConsent code into _3p folder, do not hotlink it
 	we need to log all consents
@@ -10,6 +9,9 @@ IMPORTANT
 - dsgvo datenschutzerklärung, agbs etc.
 
 SMALL THINGS
+- mobile design
+	if title is too long => make system title bar multi line?
+	there is a gap between content/menu and system title bar
 - make usage of Foreign Keys
 - <abbr> in <code> wird doppelt unterstrichen
 - wenn man eine well-known OID anlegen möchte, dann kommt fehler wegen replaceAsn1/replaceIri, aber die OID ist erstellt. Die API ist aber nicht reloaded. Man sieht also nicht, dass die OID erstellt wurde, und ein erneuter klick auf Insert führt zum Primary-Key fehler
@@ -39,7 +41,6 @@ SMALL THINGS
 	bug: overlay "bild" und "tabelle" bleibt auf dem bildschirm, selbst wenn man die seite wechselt über das menü
 - prüfen, ob wirklich alles mit noscript möglich ist
 - jstree select: automatically scroll down
-- innerhalb des content-panes: navigation zu parent IDs
 - optisch aufhübschen. dinge wie RA: mehr dinge zeigen, adresse, email etc
 
 FUTURE

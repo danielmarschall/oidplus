@@ -118,8 +118,8 @@ class OIDplusGui {
 			}
 
 			$output .= '<tr>';
-			// TODO: if no scripts are allowed, we cannot open this link using openAndSelectNode()
-			$output .= '     <td><a href="#" onclick="return openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).')">'.htmlentities($show_id).'</a></td>';
+			# TODO: make it compatible with NoScript
+			$output .= '     <td><a href="javascript:openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).')">'.htmlentities($show_id).'</a></td>';
 			if ($objParent->userHasWriteRights()) {
 				if ($obj::ns() == 'oid') {
 					$output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.implode(', ', $asn1ids).'"></td>';
@@ -137,14 +137,14 @@ class OIDplusGui {
 				if ($obj::ns() == 'oid') {
 					$asn1ids_ext = array();
 					foreach ($asn1ids as $asn1id) {
-						// TODO: if no scripts are allowed, we cannot open the rainfo: pages using openOidInPanel()
-						$asn1ids_ext[] = '<a href="#" onclick="return openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).')">'.$asn1id.'</a>';
+						# TODO: make it compatible with NoScript
+						$asn1ids_ext[] = '<a href="javascript:openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).')">'.$asn1id.'</a>';
 					}
 					$output .= '     <td>'.implode(', ', $asn1ids_ext).'</td>';
 					$output .= '     <td>'.implode(', ', $iris).'</td>';
 				}
-				// TODO: if no scripts are allowed, we cannot open the rainfo: pages using openOidInPanel()
-				$output .= '     <td><a href="#" onclick="return openOidInPanel('.js_escape('oidplus:rainfo$'.str_replace('@', "'+'@'+'", $row->ra_email)).', true)">'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
+				# TODO: make it compatible with NoScript
+				$output .= '     <td><a href="javascript:openOidInPanel('.js_escape('oidplus:rainfo$'.str_replace('@', "'+'@'+'", $row->ra_email)).', true)">'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
 				$output .= '     <td>'.oiddb_formatdate($row->created).'</td>';
 				$output .= '     <td>'.oiddb_formatdate($row->updated).'</td>';
 			}
@@ -587,6 +587,8 @@ class OIDplusGui {
 				$desc = '';
 			}
 
+			$parent = null;
+
 			$matches_any_registered_type = false;
 			foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
 				if ($obj = $ot::parse($id)) {
@@ -599,6 +601,8 @@ class OIDplusGui {
 						return $out;
 					} else {
 						$obj->getContentPage($out['title'], $out['text'], $out['icon']);
+						$parent = $obj->getParent();
+						break;
 					}
 				}
 			}
@@ -608,6 +612,33 @@ class OIDplusGui {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = 'The object <code>'.htmlentities($id).'</code> was not found in this database.';
 				return $out;
+			}
+
+			if (strpos($out['text'], '%%PARENT%%') !== false) {
+				if (!$parent) {
+					$out['text'] = str_replace('%%PARENT%%', '', $out['text']);
+				} else if ($parent->isRoot()) {
+
+					# TODO: make it compatible with NoScript
+					$parent_link_text = $parent->objectTypeTitle();
+					$out['text'] = str_replace('%%PARENT%%', '<p>Parent node: <a href="javascript:openOidInPanel('.js_escape($parent->ns().':').', true)">'.htmlentities($parent_link_text).'</a></p>', $out['text']);
+
+				} else {
+					$res_ = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($parent->nodeId())."'");
+					$row_ = OIDplus::db()->fetch_array($res_);
+
+					$parent_title = $row_['title'];
+					if (empty($parent_title) && ($parent->ns() == 'oid')) {
+						$res_ = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string($parent->nodeId())."'");
+						$row_ = OIDplus::db()->fetch_array($res_);
+						$parent_title = $row_['name']; // TODO: multiple ASN1 ids?
+					}
+
+					$parent_link_text = empty($parent_title) ? explode(':',$parent->nodeId())[1] : $parent_title.' ('.explode(':',$parent->nodeId())[1].')';
+
+					# TODO: make it compatible with NoScript
+					$out['text'] = str_replace('%%PARENT%%', '<p>Parent node: <a href="javascript:openOidInPanel('.js_escape($parent->nodeId()).', true)">'.htmlentities($parent_link_text).'</a></p>', $out['text']);
+				}
 			}
 
 			if (strpos($out['text'], '%%WHOIS%%') !== false)

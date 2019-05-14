@@ -116,7 +116,7 @@ class OIDplusOid extends OIDplusObject {
 				$content .= '%%CRUD%%';
 			}
 		} else {
-			$content = "<h2>Technical information</h2>".$this->oidInformation().
+			$content = "%%PARENT%%<h2>Technical information</h2>".$this->oidInformation().
 			           "<h2>Description</h2>%%DESC%%".
 			           "<h2>Registration Authority</h2>%%RA_INFO%%";
 
