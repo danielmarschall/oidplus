@@ -59,21 +59,31 @@ label.padding_label {
 	margin-left:50px;
 	padding-left:13px;
 }
-#system_title_bar a.icon {
-	color: white;
-	padding: 15px 17px;
+a#system_title_menu {
+	color: orange;
+	padding: 15.3px 17px;
 	text-decoration: none;
-	font-size: 17px;
+	font-size: 19px;
 	display: block;
-	background: black;
+	background-color: black;
 	position: absolute;
 	left: 0;
 	top: 0;
 }
 
-#system_title_bar a.icon:hover {
-	background-color: #ddd;
+a#system_title_menu:hover {
+	background-color: black;
+	color: white;
+}
+
+a#system_title_menu.active {
+	background-color: orange;
 	color: black;
+}
+
+a#system_title_menu.active:hover {
+	background-color: orange;
+	color: white;
 }
 
 #system_title_bar {

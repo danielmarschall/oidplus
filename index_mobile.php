@@ -137,8 +137,10 @@ function mobileNavButtonClick() {
 	var x = document.getElementById("oidtree");
 	if (x.style.display === "block") {
 		x.style.display = "none";
+		document.getElementById("system_title_menu").classList.remove("active");
 	} else {
 		x.style.display = "block";
+		document.getElementById("system_title_menu").classList.add("active");
 	}
 }
 </script>
@@ -152,7 +154,7 @@ function mobileNavButtonClick() {
 		<span id="system_title_1" class="mobile">ViaThinkSoft OIDplus 2.0</span><br>
 		<span id="system_title_2" class="mobile"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></span>
 	</a>
-	<a href="javascript:void(0);" class="icon" onclick="mobileNavButtonClick()"><i class="fa fa-bars"></i></a>
+	<a href="javascript:void(0);" id="system_title_menu" onclick="mobileNavButtonClick()"><i class="fa fa-bars"></i></a>
 </div>
 <br>
 
