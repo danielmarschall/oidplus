@@ -417,6 +417,10 @@ $(document).ready(function () {
 		if (goto != null) data.instance.select_node([goto]);
 	})
 	.on('select_node.jstree', function (node, selected, event) {
+		if (oidplusMobile()) {
+			document.getElementById("oidtree").style.display = "none";
+		}
+
 		var id = selected.node.id;
 		if (current_node != id) {
 			openOidInPanel(id);
@@ -425,22 +429,28 @@ $(document).ready(function () {
 
 	// --- Layout
 
-	$('body').layout({
-		north__size: 40,
-		north__slidable: false,
-		north__closable: false,
-		north__resizable: false,
-		west__size:			450,
-		west__spacing_closed:		20,
-		west__togglerLength_closed:	230,
-		west__togglerAlign_closed:	"top",
-		west__togglerContent_closed:"O<br>B<br>J<br>E<br>C<br>T<br><br>T<BR>R<BR>E<BR>E",
-		west__togglerTip_closed:	"Open & Pin Menu",
-		west__sliderTip:		"Slide Open Menu",
-		west__slideTrigger_open:	"mouseover",
-		center__maskContents:		true // IMPORTANT - enable iframe masking
-	});
+	if (!oidplusMobile()) {
+		$('body').layout({
+			north__size: 40,
+			north__slidable: false,
+			north__closable: false,
+			north__resizable: false,
+			west__size:			450,
+			west__spacing_closed:		20,
+			west__togglerLength_closed:	230,
+			west__togglerAlign_closed:	"top",
+			west__togglerContent_closed:"O<br>B<br>J<br>E<br>C<br>T<br><br>T<BR>R<BR>E<BR>E",
+			west__togglerTip_closed:	"Open & Pin Menu",
+			west__sliderTip:		"Slide Open Menu",
+			west__slideTrigger_open:	"mouseover",
+			center__maskContents:		true // IMPORTANT - enable iframe masking
+		});
+	}
 });
+
+function oidplusMobile() {
+	return document.getElementsByClassName("ui-layout-center").length == 0;
+}
 
 function inviteFormOnSubmit() {
 	$.ajax({

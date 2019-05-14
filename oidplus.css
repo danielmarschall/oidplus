@@ -40,10 +40,35 @@ label.padding_label {
 #system_title_1 {
 	color:#2D6A9F;
 }
+#system_title_1.mobile {
+	margin-left:50px;
+	padding-left:13px;
+}
 #system_title_2 {
 	color:#2B336F;
 	font-size:2em;
 }
+#system_title_2.mobile {
+	margin-left:50px;
+	padding-left:13px;
+}
+#system_title_bar a.icon {
+	color: white;
+	padding: 15px 17px;
+	text-decoration: none;
+	font-size: 17px;
+	display: block;
+	background: black;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+#system_title_bar a.icon:hover {
+	background-color: #ddd;
+	color: black;
+}
+
 #system_title_bar {
 	line-height:1.75em;
 
@@ -69,11 +94,13 @@ label.padding_label {
 	background: -webkit-linear-gradient(left, #a0d8ef 0%,#ddf1f9 65%,#feffff 100%); /* Chrome10-25,Safari5.1-6 */
 	background: linear-gradient(to right, #a0d8ef 0%,#ddf1f9 65%,#feffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a0d8ef', endColorstr='#feffff',GradientType=1 ); /* IE6-9 */
+
+	overflow:hidden;
 }
 #system_title_bar a:hover, #system_title_bar a:active, #system_title_bar a:focus, #system_title_bar a:visited, #system_title_bar a:link {
 	text-decoration:none;
 }
-#oidtree {
+#oidtree.pc {
 	position:absolute;
 	left:0px;
 	bottom:0px;
@@ -82,7 +109,15 @@ label.padding_label {
 	top:55px; /* brauchen wir fuer NoScript */
 	width:400px; /* brauchen wir fuer NoScript */
 }
-#content_window {
+#oidtree.mobile {
+	display: none;
+	margin-top:45px;
+}
+#content_window.mobile {
+	padding-left:16px;
+	padding-top:28px;
+}
+#content_window.pc {
 	position:absolute;
 	left:400px;
 	right:0px;
@@ -102,7 +137,9 @@ body {
 	padding:0px;
 	font-size:0.85em;
 	height:100%;
-	overflow: hidden;
+}
+body.pc {
+	overflow:hidden;
 }
 h1 {
 	font-size:1.8em;
