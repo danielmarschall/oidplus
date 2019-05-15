@@ -52,6 +52,7 @@ header('X-OIDplus-SystemID:'.$sysid_oid);
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="x-oidplus-system-id" content="<?php echo $sysid_oid; ?>">
 	<meta name="x-oidplus-system-url" content="<?php echo OIDplus::system_url(); ?>">
+	<meta name="theme-color" content="#A9DCF0">
 	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->systemTitle(), $static_title); ?></title>
 	<link rel="stylesheet" href="3p/jstree/themes/default/style.min.css">
 
