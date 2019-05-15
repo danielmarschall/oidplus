@@ -25,5 +25,6 @@ class OIDplusPagePlugin {
 	public function gui($id, &$out, &$handled) {}
 	public function tree(&$json, $ra_email=null) {}
 	public function init($html=true) {}
+	public function modifyContent($id, &$title, &$icon, &$text) {}
 }
 

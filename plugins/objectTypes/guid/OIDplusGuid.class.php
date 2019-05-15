@@ -135,8 +135,6 @@ class OIDplusGuid extends OIDplusObject {
 				}
 				$content .= '%%CRUD%%';
 			}
-
-			$content .= '<br>%%WHOIS%%';
 		}
 	}
 

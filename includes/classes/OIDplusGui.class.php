@@ -641,14 +641,16 @@ class OIDplusGui {
 				}
 			}
 
-			if (strpos($out['text'], '%%WHOIS%%') !== false)
-				$out['text'] = str_replace('%%WHOIS%%',   '<a href="whois/webwhois.php?query='.urlencode($id).'">Whois</a>', $out['text']);
 			if (strpos($out['text'], '%%DESC%%') !== false)
 				$out['text'] = str_replace('%%DESC%%',    $desc,                              $out['text']);
 			if (strpos($out['text'], '%%CRUD%%') !== false)
 				$out['text'] = str_replace('%%CRUD%%',    self::showCrud($id),                $out['text']);
 			if (strpos($out['text'], '%%RA_INFO%%') !== false)
 				$out['text'] = str_replace('%%RA_INFO%%', self::showRaInfo($row['ra_email']), $out['text']);
+
+			foreach (OIDplus::getPagePlugins('public') as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
+			foreach (OIDplus::getPagePlugins('ra')     as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
+			foreach (OIDplus::getPagePlugins('admin')  as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
 		}
 
 		return $out;

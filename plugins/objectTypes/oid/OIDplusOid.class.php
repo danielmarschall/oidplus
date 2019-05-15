@@ -128,8 +128,6 @@ class OIDplusOid extends OIDplusObject {
 				}
 				$content .= '%%CRUD%%';
 			}
-
-			$content .= '<br>%%WHOIS%%';
 		}
 	}
 

@@ -22,7 +22,7 @@ define('OUTPUT_FORMAT_MAX_LINE_LENGTH', 80);
 
 # ---
 
-require_once __DIR__ . '/../includes/oidplus.inc.php';
+require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 OIDplus::init(true);
 

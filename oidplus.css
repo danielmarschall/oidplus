@@ -22,7 +22,7 @@
 	width:100%;
 }
 
-#static_link, #static_link_desktop, #static_link_mobile {
+.gray_footer_font {
 	color:gray;
 	font-size:0.9em;
 }
@@ -133,7 +133,7 @@ a#system_title_menu.active:hover {
 }
 #oidtree.mobile {
 	display: none;
-	margin-top:45px;
+	margin-top:10px;
 }
 #content_window.mobile {
 	padding-left:16px;

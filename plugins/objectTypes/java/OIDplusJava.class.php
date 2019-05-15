@@ -119,8 +119,6 @@ class OIDplusJava extends OIDplusObject {
 				}
 				$content .= '%%CRUD%%';
 			}
-
-			$content .= '<br>%%WHOIS%%';
 		}
 	}
 

@@ -141,8 +141,6 @@ class OIDplusIpv6 extends OIDplusObject {
 				}
 				$content .= '%%CRUD%%';
 			}
-
-			$content .= '<br>%%WHOIS%%';
 		}
 	}
 

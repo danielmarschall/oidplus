@@ -7,12 +7,10 @@ IMPORTANT
 	do we need an explicit consent at the login form?
 	do we need a consent for the cookie SSL_CHECK?
 - dsgvo datenschutzerklärung, agbs etc.
-- Web whois as individual module! (page)
 
 SMALL THINGS
 - mobile design
 	if title is too long => make system title bar multi line?
-	there is a gap between menu and system title bar, because of "overflow-x" but why?!
 	!! at the home page (oidplus:system), link to all categories and object types, so you can navigate without menu button
 - make usage of Foreign Keys
 - <abbr> in <code> wird doppelt unterstrichen

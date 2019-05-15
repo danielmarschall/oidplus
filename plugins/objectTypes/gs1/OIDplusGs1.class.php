@@ -124,8 +124,6 @@ class OIDplusGs1 extends OIDplusObject {
 				}
 				$content .= '%%CRUD%%';
 			}
-
-			$content .= '<br>%%WHOIS%%';
 		}
 	}
 
