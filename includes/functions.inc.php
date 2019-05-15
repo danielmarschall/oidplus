@@ -184,3 +184,15 @@ function smallhash($data) { // get 31 bits from SHA1. Values 0..2147483647
 	return (hexdec(substr(sha1($data),-4*2)) & 2147483647);
 }
 
+function isMobile() {
+	if (basename($_SERVER['SCRIPT_NAME']) == 'index_mobile.php') return true;
+
+        if (!isset($_SERVER['HTTP_USER_AGENT'])) return false;
+
+        // https://deviceatlas.com/blog/list-of-user-agent-strings
+        return
+                (stripos($_SERVER['HTTP_USER_AGENT'], 'mobile') !== false) ||
+                (stripos($_SERVER['HTTP_USER_AGENT'], 'iphone') !== false) ||
+                (stripos($_SERVER['HTTP_USER_AGENT'], 'android') !== false) ||
+                (stripos($_SERVER['HTTP_USER_AGENT'], 'windows phone') !== false);
+}

@@ -297,6 +297,18 @@ class OIDplusGui {
 			$out['title'] = OIDplus::config()->systemTitle(); // 'Object Database of ' . $_SERVER['SERVER_NAME'];
 			$out['icon'] = 'img/system_big.png';
 			$out['text'] = file_get_contents('welcome.html');
+
+			if (strpos($out['text'], '%%OBJECT_TYPE_LIST%%') !== false) {
+				$tmp = '<ul>';
+				foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+					// TODO: make NoScript compatible
+					//$tmp .= '<li><a href="?goto='.urlencode($ot::ns()).':">'.htmlentities($ot::objectTypeTitle()).'</a></li>';
+					$tmp .= '<li><a href="javascript:openOidInPanel(\''.urlencode($ot::ns().':').'\', true)">'.htmlentities($ot::objectTypeTitle()).'</a></li>';
+				}
+				$tmp .= '</ul>';
+				$out['text'] = str_replace('%%OBJECT_TYPE_LIST%%', $tmp, $out['text']);
+			}
+
 			return $out;
 
 		// === Generic stuff ===
@@ -614,14 +626,12 @@ class OIDplusGui {
 				return $out;
 			}
 
-			if (strpos($out['text'], '%%PARENT%%') !== false) {
-				if (!$parent) {
-					$out['text'] = str_replace('%%PARENT%%', '', $out['text']);
-				} else if ($parent->isRoot()) {
+			if ($parent) {
+				if ($parent->isRoot()) {
 
 					# TODO: make it compatible with NoScript
 					$parent_link_text = $parent->objectTypeTitle();
-					$out['text'] = str_replace('%%PARENT%%', '<p>Parent node: <a href="javascript:openOidInPanel('.js_escape($parent->ns().':').', true)">'.htmlentities($parent_link_text).'</a></p>', $out['text']);
+					$out['text'] = '<p>Parent node: <a href="javascript:openOidInPanel('.js_escape($parent->ns().':').', true)">'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 
 				} else {
 					$res_ = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($parent->nodeId())."'");
@@ -637,8 +647,11 @@ class OIDplusGui {
 					$parent_link_text = empty($parent_title) ? explode(':',$parent->nodeId())[1] : $parent_title.' ('.explode(':',$parent->nodeId())[1].')';
 
 					# TODO: make it compatible with NoScript
-					$out['text'] = str_replace('%%PARENT%%', '<p>Parent node: <a href="javascript:openOidInPanel('.js_escape($parent->nodeId()).', true)">'.htmlentities($parent_link_text).'</a></p>', $out['text']);
+					$out['text'] = '<p>Parent node: <a href="javascript:openOidInPanel('.js_escape($parent->nodeId()).', true)">'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 				}
+			} else {
+				$parent_link_text = 'Go back to front page';
+				$out['text'] = '<p><a href="javascript:openOidInPanel('.js_escape('oidplus:system').', true)">'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 			}
 
 			if (strpos($out['text'], '%%DESC%%') !== false)
@@ -651,6 +664,12 @@ class OIDplusGui {
 			foreach (OIDplus::getPagePlugins('public') as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
 			foreach (OIDplus::getPagePlugins('ra')     as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
 			foreach (OIDplus::getPagePlugins('admin')  as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
+		} else {
+			// Other pages
+			if (isMobile()) {
+				$parent_link_text = 'Go back to front page';
+				$out['text'] = '<p><a href="javascript:openOidInPanel('.js_escape('oidplus:system').', true)">'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+			}
 		}
 
 		return $out;

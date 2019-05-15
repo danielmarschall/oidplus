@@ -133,19 +133,6 @@ window.cookieconsent.initialise({
 })});
 </script>
 
-<script>
-function mobileNavButtonClick() {
-	var x = document.getElementById("oidtree");
-	if (x.style.display === "block") {
-		x.style.display = "none";
-		document.getElementById("system_title_menu").classList.remove("active");
-	} else {
-		x.style.display = "block";
-		document.getElementById("system_title_menu").classList.add("active");
-	}
-}
-</script>
-
 </head>
 
 <body class="mobile">

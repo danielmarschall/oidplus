@@ -17,16 +17,7 @@
  * limitations under the License.
  */
 
-function isMobile() {
-        if (!isset($_SERVER['HTTP_USER_AGENT'])) return false;
-
-        // https://deviceatlas.com/blog/list-of-user-agent-strings
-        return
-                (stripos($_SERVER['HTTP_USER_AGENT'], 'mobile') !== false) ||
-                (stripos($_SERVER['HTTP_USER_AGENT'], 'iphone') !== false) ||
-                (stripos($_SERVER['HTTP_USER_AGENT'], 'android') !== false) ||
-                (stripos($_SERVER['HTTP_USER_AGENT'], 'windows phone') !== false);
-}
+require_once __DIR__ . '/includes/functions.inc.php';
 
 if (isMobile()) {
 	require_once 'index_mobile.php';
