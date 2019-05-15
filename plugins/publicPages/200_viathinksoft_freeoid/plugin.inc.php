@@ -40,7 +40,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 				die('This email address already exists.'); // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
 			}
 
-			if (!oiddb_valid_email($email)) {
+			if (!oidplus_valid_email($email)) {
 				die('Invalid email address');
 			}
 
@@ -85,7 +85,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 				die('Invalid auth key');
 			}
 
-			if ((OIDplus::config()->maxInviteTime() > 0) && (time()-$timestamp > OIDplus::config()->maxInviteTime())) {
+			if ((OIDplus::config()->getValue('max_ra_invite_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_invite_time'))) {
 				die('Invitation expired!');
 			}
 
@@ -234,7 +234,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null) {
+	public function tree(&$json, $ra_email=null, $nonjs=false) {
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = 'plugins/publicPages/'.basename(__DIR__).'/treeicon.png';
 		} else {
@@ -246,6 +246,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			'icon' => $tree_icon,
 			'text' => 'Register a free OID'
 		);
+
+		return true;
 	}
 
 	# ---

@@ -100,7 +100,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null) {
+	public function tree(&$json, $ra_email=null, $nonjs=false) {
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = 'plugins/raPages/'.basename(__DIR__).'/treeicon.png';
 		} else {
@@ -112,6 +112,8 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 			'icon' => $tree_icon,
 			'text' => 'Change password'
 		);
+
+		return true;
 	}
 }
 

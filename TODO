@@ -7,8 +7,10 @@ IMPORTANT
 	do we need an explicit consent at the login form?
 	do we need a consent for the cookie SSL_CHECK?
 - dsgvo datenschutzerklärung, agbs etc.
+- !!! nach der großen änderung (verschieben nach plugins) alles nochmal ganz genau testen: invite, forgot password, login
 
 SMALL THINGS
+- disable specific functions (e.g. invite, login, rainfo, forgot password) if the plugins are not installed (check if class type is registered)
 - mobile design: if title is too long => make system title bar multi line?
 - make usage of Foreign Keys
 - <abbr> in <code> wird doppelt unterstrichen
@@ -37,11 +39,11 @@ SMALL THINGS
 		- wenn man wechsel (js tree select), dann soll abgefragt werden, ob tinymce dirty ist, und eine warnung bringen, also so, wie wenn man die seite neu laden würde
 		- kritischer bug: seite öffnen, tiny mce editieren, speichern klicken. dann f5 neu laden (nicht strg+f5): dann ist der alte content wieder da. außer man drückt strg+f5
 	bug: overlay "bild" und "tabelle" bleibt auf dem bildschirm, selbst wenn man die seite wechselt über das menü
-- prüfen, ob wirklich alles mit noscript möglich ist
 - jstree select: automatically scroll down
 - optisch aufhübschen. dinge wie RA: mehr dinge zeigen, adresse, email etc
 
 FUTURE
+- implement sitemaps xml
 - record history of an OID?
 - admin should be able to change wellknown oids?
 - move oid to different arc
@@ -49,10 +51,11 @@ FUTURE
 - unterstützung für ORS?
 - Mehr "Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollständig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), ...<br>
 - "Search" plugin: Feature to search inside documentation (doc/ directory)
+- "Search" plugin: I want to search in all object types and RAs. Not first select the type.
 - How can we make sure that example objects are not exported using oid-info.com export?
 - Administrator-Interface: enable and disable object types
 
-REJECTED IDEAS:
+REJECTED IDEAS
 - sollte es mehere admins geben?
 - change history of each oid
 - record first RA and current RA => X.660 does not have this requirement
@@ -68,7 +71,7 @@ IDEAS
 	                   - strike unnecessary bits that are not defined in the netmask (also at the whois output)
 - we need some kind of plugin API to allow individual config values to be stored
 
-QUESTIONS:
+QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie
 - wort "guid" oder "uuid" verwenden?
 - bit or tinyint(1) ?

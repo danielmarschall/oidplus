@@ -91,7 +91,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 						$output .= '     <td>&nbsp;</td>';
 					} else {
 						$output .= '     <td><input type="text" id="config_'.$row->name.'" value="'.htmlentities($row->value).'"></td>';
-						$output .= '     <td><button type="button" name="config_update_'.$row->name.'" id="config_update_'.$row->name.'" class="btn btn-success btn-xs update" onclick="javascript:crudActionConfigUpdate('.js_escape($row->name).')">Update</button></td>';
+						$output .= '     <td><button type="button" name="config_update_'.$row->name.'" id="config_update_'.$row->name.'" class="btn btn-success btn-xs update" onclick="crudActionConfigUpdate('.js_escape($row->name).')">Update</button></td>';
 					}
 					$output .= '</tr>';
 				}
@@ -110,7 +110,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null) {
+	public function tree(&$json, $ra_email=null, $nonjs=false) {
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = 'plugins/adminPages/'.basename(__DIR__).'/treeicon.png';
 		} else {
@@ -122,6 +122,8 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 			'icon' => $tree_icon,
 			'text' => 'System config'
 		);
+
+		return true;
 	}
 }
 

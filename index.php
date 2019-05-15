@@ -24,4 +24,3 @@ if (isMobile()) {
 } else {
 	require_once 'index_desktop.php';
 }
-

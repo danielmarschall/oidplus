@@ -84,7 +84,7 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null) {
+	public function tree(&$json, $ra_email=null, $nonjs=false) {
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = 'plugins/adminPages/'.basename(__DIR__).'/treeicon.png';
 		} else {
@@ -96,6 +96,8 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 			'icon' => $tree_icon,
 			'text' => 'List RAs'
 		);
+
+		return true;
 	}
 }
 

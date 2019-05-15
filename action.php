@@ -37,131 +37,6 @@ try {
 			$plugin->action($handled);
 		}
 
-		// === INVITATION ===
-
-		if ($_POST["action"] == "invite_ra") {
-			$handled = true;
-			$email = $_POST['email'];
-
-			if (!oiddb_valid_email($email)) {
-				die('Invalid email address');
-			}
-
-			if (RECAPTCHA_ENABLED) {
-				$secret=RECAPTCHA_PRIVATE;
-				$response=$_POST["captcha"];
-				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-				$captcha_success=json_decode($verify);
-				if ($captcha_success->success==false) {
-					die('Captcha wrong');
-				}
-			}
-
-			$timestamp = time();
-			$activate_url = OIDplus::system_url() . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('activate_ra;'.$email.';'.$timestamp));
-
-			$message = OIDplus::gui()::getInvitationText($_POST['email']);
-			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
-
-			my_mail($email, OIDplus::config()->systemTitle().' - Invitation', $message, OIDplus::config()->globalCC());
-
-			die("OK");
-		}
-
-		if ($_POST["action"] == "activate_ra") {
-			$handled = true;
-
-			$password1 = $_POST['password1'];
-			$password2 = $_POST['password2'];
-			$email = $_POST['email'];
-			$auth = $_POST['auth'];
-			$timestamp = $_POST['timestamp'];
-
-			if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
-				die('Invalid auth key');
-			}
-
-			if ((OIDplus::config()->maxInviteTime() > 0) && (time()-$timestamp > OIDplus::config()->maxInviteTime())) {
-				die('Invitation expired!');
-			}
-
-			if ($password1 !== $password2) {
-				die('Passwords are not equal');
-			}
-
-			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				die('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
-			}
-
-			$ra = new OIDplusRA($email);
-			$ra->register_ra($password1);
-
-			die('OK');
-		}
-
-		// === FORGOT PASSWORD ===
-
-		if ($_POST["action"] == "forgot_password") {
-			$handled = true;
-
-			$email = $_POST['email'];
-
-			if (!oiddb_valid_email($email)) {
-				die('Invalid email address');
-			}
-
-			if (RECAPTCHA_ENABLED) {
-				$secret=RECAPTCHA_PRIVATE;
-				$response=$_POST["captcha"];
-				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-				$captcha_success=json_decode($verify);
-				if ($captcha_success->success==false) {
-					die('Captcha wrong');
-				}
-			}
-
-			$timestamp = time();
-			$activate_url = OIDplus::system_url() . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('reset_password;'.$email.';'.$timestamp));
-
-			$message = OIDplus::gui()::getForgotPasswordText($_POST['email']);
-			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
-
-			my_mail($email, OIDplus::config()->systemTitle().' - Password reset request', $message, OIDplus::config()->globalCC());
-
-			die("OK");
-		}
-
-		if ($_POST["action"] == "reset_password") {
-			$handled = true;
-
-			$password1 = $_POST['password1'];
-			$password2 = $_POST['password2'];
-			$email = $_POST['email'];
-			$auth = $_POST['auth'];
-			$timestamp = $_POST['timestamp'];
-
-			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
-				die('Invalid auth key');
-			}
-
-			if ((OIDplus::config()->maxPasswordResetTime() > 0) && (time()-$timestamp > OIDplus::config()->maxPasswordResetTime())) {
-				die('Invitation expired!');
-			}
-
-			if ($password1 !== $password2) {
-				die('Passwords are not equal');
-			}
-
-			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				die('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
-			}
-
-			$ra = new OIDplusRA($email);
-			$ra->change_password($password1);
-
-			die('OK');
-		}
-
 		// === Admin / RA actions ===
 
 		if ($_POST["action"] == "delete_ra") {
@@ -199,9 +74,9 @@ try {
 
 			// Delete orphan stuff
 			foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
-				$where = "where parent <> '".OIDplus::db()->real_escape_string($ot::ns().':')."' and " .
-				         "      parent like '".OIDplus::db()->real_escape_string($ot::ns().':%')."' and " .
-				         "      parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like '".OIDplus::db()->real_escape_string($ot::ns().':%')."')";
+				$where = "where parent <> '".OIDplus::db()->real_escape_string($ot::root())."' and " .
+				         "      parent like '".OIDplus::db()->real_escape_string($ot::root().'%')."' and " .
+				         "      parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like '".OIDplus::db()->real_escape_string($ot::root().'%')."')";
 				do {
 					$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects $where");
 					while ($row = OIDplus::db()->fetch_array($res)) {
@@ -226,7 +101,7 @@ try {
 
 			// Validate RA email address
 			$new_ra = $_POST['ra_email'];
-			if (!empty($new_ra) && !oiddb_valid_email($new_ra)) {
+			if (!empty($new_ra) && !oidplus_valid_email($new_ra)) {
 				die('Invalid RA email address');
 			}
 
@@ -300,7 +175,7 @@ try {
 			// Superior RA Änderung durchführen
 			$parent = $_POST['parent'];
 			$ra_email = $_POST['ra_email'];
-			if (!empty($ra_email) && !oiddb_valid_email($ra_email)) {
+			if (!empty($ra_email) && !oidplus_valid_email($ra_email)) {
 				die('Invalid RA email address');
 			}
 			$confidential = $_POST['confidential'] == 'true' ? '1' : '0';
@@ -327,69 +202,6 @@ try {
 				$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
 				if (OIDplus::db()->num_rows($res) == 0) echo " (RaNotInDatabase)"; // do not change
 			}
-		}
-
-		// === RA LOGIN/LOGOUT ===
-
-		if ($_POST["action"] == "ra_login") {
-			$handled = true;
-
-			$ra = new OIDplusRA($_POST['email']);
-
-			if (RECAPTCHA_ENABLED) {
-				$secret=RECAPTCHA_PRIVATE;
-				$response=$_POST["captcha"];
-				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-				$captcha_success=json_decode($verify);
-				if ($captcha_success->success==false) {
-					die('Captcha wrong');
-				}
-			}
-
-			if ($ra->checkPassword($_POST['password'])) {
-				OIDplus::authUtils()::raLogin($_POST['email']);
-
-				if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = now() where email = '".OIDplus::db()->real_escape_string($_POST['email'])."'")) {
-					die(OIDplus::db()->error());
-				}
-
-				echo "OK";
-			} else {
-				echo "Wrong password";
-			}
-		}
-		if ($_POST["action"] == "ra_logout") {
-			$handled = true;
-			OIDplus::authUtils()::raLogout($_POST['email']);
-			echo "OK";
-		}
-
-		// === ADMIN LOGIN/LOGOUT ===
-
-		if ($_POST["action"] == "admin_login") {
-			$handled = true;
-
-			if (RECAPTCHA_ENABLED) {
-				$secret=RECAPTCHA_PRIVATE;
-				$response=$_POST["captcha"];
-				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-				$captcha_success=json_decode($verify);
-				if ($captcha_success->success==false) {
-					die('Captcha wrong');
-				}
-			}
-
-			if (OIDplus::authUtils()::adminCheckPassword($_POST['password'])) {
-				OIDplus::authUtils()::adminLogin();
-				echo "OK";
-			} else {
-				echo "Wrong password";
-			}
-		}
-		if ($_POST["action"] == "admin_logout") {
-			$handled = true;
-			OIDplus::authUtils()::adminLogout();
-			echo "OK";
 		}
 
 		// === Not found ===

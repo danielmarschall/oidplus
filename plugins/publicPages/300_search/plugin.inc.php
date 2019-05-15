@@ -89,7 +89,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 				            <input type="checkbox" name="search_title" id="search_title" value="1"'.(isset($_POST["search_title"]) ? ' checked' : '').'> <label for="search_title">Search in field "Title"</label><br>
 				            <input type="checkbox" name="search_description" id="search_description" value="1"'.(isset($_POST["search_description"]) ? ' checked' : '').'> <label for="search_description">Search in field "Description"</label><br>
 				<div id="search_options_oid">
-			            <input type="checkbox" name="search_asn1id" id="search_asn1id" value="1"'.(isset($_POST["search_asn1id"]) ? ' checked' : '').'> <label for="search_asn1id">Search in field "ASN.1 identiier" (only OIDs)</label><br>
+			            <input type="checkbox" name="search_asn1id" id="search_asn1id" value="1"'.(isset($_POST["search_asn1id"]) ? ' checked' : '').'> <label for="search_asn1id">Search in field "ASN.1 identifier" (only OIDs)</label><br>
 			            <input type="checkbox" name="search_iri" id="search_iri" value="1"'.(isset($_POST["search_iri"]) ? ' checked' : '').'> <label for="search_iri">Search in field "Unicode label" (only OIDs)</label><br>
 				</div>
 				</div>
@@ -122,8 +122,8 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 
 							$count = 0;
 							while ($row = OIDplus::db()->fetch_object($res)) {
-								// TODO: anti spam!
-								$out['text'] .= '<p><a href="?goto=oidplus:rainfo$'.urlencode($row->email).'">'.htmlentities($row->email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
+								$email = str_replace('@', '&', $row->email);
+								$out['text'] .= '<p><a href="?goto=oidplus:rainfo$'.urlencode($email).'">'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
 								$count++;
 							}
 							if ($count == 0) {
@@ -171,7 +171,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null) {
+	public function tree(&$json, $ra_email=null, $nonjs=false) {
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = 'plugins/publicPages/'.basename(__DIR__).'/treeicon.png';
 		} else {
@@ -183,6 +183,8 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 			'icon' => $tree_icon,
 			'text' => 'Search'
 		);
+
+		return true;
 	}
 }
 

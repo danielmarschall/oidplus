@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-function oiddb_valid_email($email) {  // TODO: umbenennen in oidplus
+function oidplus_valid_email($email) {
 	return !empty(filter_var($email, FILTER_VALIDATE_EMAIL));
 }
 
@@ -36,7 +36,7 @@ function secure_email($email, $linktext, $level=1) {
 	*/
 
 	if ($level == 1) {
-		list($user, $domain) = explode('@', $email);
+		@list($user, $domain) = explode('@', $email);
 		if (($linktext == $email) || empty($linktext)) {
 			return '<span class="spamspan"><span class="u">'.htmlentities($user).'</span>&#64;<span class="d">'.htmlentities($domain).'</span></span>';
 		} else {
@@ -133,7 +133,7 @@ function js_escape($data) {
 	return "'" . str_replace('\\', '\\\\', $data) . "'";
 }
 
-function oiddb_formatdate($date) { // TODO: umbenennen in oidplus
+function oidplus_formatdate($date) {
 	$date = explode(' ', $date)[0];
 	if ($date == '0000-00-00') $date = '';
 	return $date;
@@ -185,14 +185,18 @@ function smallhash($data) { // get 31 bits from SHA1. Values 0..2147483647
 }
 
 function isMobile() {
+	// If the page "index_mobile.php" is called, the user is explicitly requesting a mobile page
 	if (basename($_SERVER['SCRIPT_NAME']) == 'index_mobile.php') return true;
 
-        if (!isset($_SERVER['HTTP_USER_AGENT'])) return false;
+	// If the page "index_desktop.php" is called, the user is explicitly requesting a desktop page
+	if (basename($_SERVER['SCRIPT_NAME']) == 'index_desktop.php') return true;
 
-        // https://deviceatlas.com/blog/list-of-user-agent-strings
-        return
-                (stripos($_SERVER['HTTP_USER_AGENT'], 'mobile') !== false) ||
-                (stripos($_SERVER['HTTP_USER_AGENT'], 'iphone') !== false) ||
-                (stripos($_SERVER['HTTP_USER_AGENT'], 'android') !== false) ||
-                (stripos($_SERVER['HTTP_USER_AGENT'], 'windows phone') !== false);
+	// Otherwise (for index.php), we check the user agent to see if the device is a mobile phone
+	// see https://deviceatlas.com/blog/list-of-user-agent-strings
+	if (!isset($_SERVER['HTTP_USER_AGENT'])) return false;
+	return
+	        (stripos($_SERVER['HTTP_USER_AGENT'], 'mobile') !== false) ||
+	        (stripos($_SERVER['HTTP_USER_AGENT'], 'iphone') !== false) ||
+	        (stripos($_SERVER['HTTP_USER_AGENT'], 'android') !== false) ||
+	        (stripos($_SERVER['HTTP_USER_AGENT'], 'windows phone') !== false);
 }

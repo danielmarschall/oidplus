@@ -201,7 +201,7 @@ class OIDplusPagePublicDocuments extends OIDplusPagePlugin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null) {
+	public function tree(&$json, $ra_email=null, $nonjs=false) {
 		$children = array();
 
 		$this->tree_rec($children, 'doc/');
@@ -221,6 +221,8 @@ class OIDplusPagePublicDocuments extends OIDplusPagePlugin {
 				'children' => $children
 			);
 		}
+
+		return true;
 	}
 }
 

@@ -41,7 +41,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 				die('Authentification error. Please log in as the RA to update its email address.');
 			}
 
-			if (!oiddb_valid_email($new_email)) {
+			if (!oidplus_valid_email($new_email)) {
 				die('eMail address is invalid.');
 			}
 
@@ -217,7 +217,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null) {
+	public function tree(&$json, $ra_email=null, $nonjs=false) {
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = 'plugins/raPages/'.basename(__DIR__).'/treeicon.png';
 		} else {
@@ -229,6 +229,8 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 			'icon' => $tree_icon,
 			'text' => 'Change email address'
 		);
+
+		return true;
 	}
 }
 

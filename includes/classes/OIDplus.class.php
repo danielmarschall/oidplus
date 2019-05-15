@@ -111,7 +111,7 @@ class OIDplus {
 				$res = array_merge($res, $data);
 			}
 		} else {
-			$res = self::$pagePlugins[$type];
+			$res = isset(self::$pagePlugins[$type]) ? self::$pagePlugins[$type] : array();
 		}
 		ksort($res);
 		return $res;

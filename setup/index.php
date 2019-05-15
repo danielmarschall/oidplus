@@ -7,32 +7,33 @@ $own_dir = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "
 
 <head>
 	<title>OIDplus setup</title>
+	<meta name="robots" content="noindex">
 	<link rel="stylesheet" href="setup.css">
 	<script src="../3p/sha3_js/sha3.js"></script><!-- https://github.com/emn178/js-sha3 -->
 	<script src="setup.js"></script>
 </head>
 
-<body onLoad="javascript:rebuild()">
+<body onload="rebuild()">
 
 <h1>OIDplus setup - Database connectivity</h1>
 
 <div id="step1">
 <h2>Step 1: Enter setup information</h2>
 <form id="step1_form">
-<p>Which admin password do you want?<br><input id="admin_password" type="password" autocomplete="new-password" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"> <span id="password_warn"></span></p>
-<p>Please repeat the password input:<br><input id="admin_password2" type="password" autocomplete="new-password" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"> <span id="password_warn2"></span></p>
+<p>Which admin password do you want?<br><input id="admin_password" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="password_warn"></span></p>
+<p>Please repeat the password input:<br><input id="admin_password2" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="password_warn2"></span></p>
 <p>---</p>
-<p>MySQL hostname (usually <b>localhost</b>):<br><input id="mysql_host" type="text" value="localhost" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()">  <span id="mysql_host_warn"></p>
-<p>MySQL username:<br><input id="mysql_username" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"> <span id="mysql_username_warn"></p>
-<p>MySQL password:<br><input id="mysql_password" type="password" autocomplete="new-password" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
-<p>MySQL database name:<br><input id="mysql_database" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"> <span id="mysql_database_warn"></p>
-<p>Tablename prefix (e.g. <b>oidplus_</b>):<br><input id="tablename_prefix" type="text" value="oidplus_" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
+<p>MySQL hostname (usually <b>localhost</b>):<br><input id="mysql_host" type="text" value="localhost" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="mysql_host_warn"></p>
+<p>MySQL username:<br><input id="mysql_username" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="mysql_username_warn"></p>
+<p>MySQL password:<br><input id="mysql_password" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"></p>
+<p>MySQL database name:<br><input id="mysql_database" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="mysql_database_warn"></p>
+<p>Tablename prefix (e.g. <b>oidplus_</b>):<br><input id="tablename_prefix" type="text" value="oidplus_" onkeypress="rebuild()" onkeyup="rebuild()"></p>
 <p>---</p>
-<p><input id="recaptcha_enabled" type="checkbox" onclick="javascript:rebuild()"> <label for="recaptcha_enabled">RECAPTCHA Enabled</label></p>
-<p>RECAPTCHA Public key<br><input id="recaptcha_public" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
-<p>RECAPTCHA Private key<br><input id="recaptcha_private" type="text" onKeyPress="javascript:rebuild()" onKeyUp="javascript:rebuild()"></p>
+<p><input id="recaptcha_enabled" type="checkbox" onclick="rebuild()"> <label for="recaptcha_enabled">RECAPTCHA Enabled</label></p>
+<p>RECAPTCHA Public key<br><input id="recaptcha_public" type="text" onkeypress="rebuild()" onkeyup="rebuild()"></p>
+<p>RECAPTCHA Private key<br><input id="recaptcha_private" type="text" onkeypress="rebuild()" onkeyup="rebuild()"></p>
 <p>---</p>
-<p>SSL enforcement<br><select name="enforce_ssl" id="enforce_ssl" onclick="javascript:rebuild()">
+<p>SSL enforcement<br><select name="enforce_ssl" id="enforce_ssl" onclick="rebuild()">
 <option value="0">No SSL available (don't redirect)</option>
 <option value="1">Enforce SSL (always redirect)</option>
 <option value="2" selected>Intelligent SSL detection (redirect if port 443 is open)</option>

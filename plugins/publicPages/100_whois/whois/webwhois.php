@@ -50,7 +50,10 @@ if (php_sapi_name() == 'cli') {
 
 $authTokens = explode('$', $query);
 $query = array_shift($authTokens);
-$authToken = OIDplus::config()->authToken();
+
+$authToken = trim(OIDplus::config()->getValue('whois_auth_token'));
+if (empty($authToken)) $authToken = false;
+
 $show_confidential = $authToken && in_array($authToken, $authTokens);
 
 $query = str_replace('oid:.', 'oid:', $query); // allow leading dot

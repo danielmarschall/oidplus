@@ -143,7 +143,7 @@ window.cookieconsent.initialise({
 		<noscript>
 			<p><b>Please enable JavaScript to use all features</b></p>
 		</noscript>
-		<?php OIDplusTree::nonjs_menu($static_node_id); ?> <!-- TODO: NonJS menu: Horizontal Scrol bar missing -->
+		<?php OIDplusTree::nonjs_menu(); ?> <!-- TODO: NonJS menu: Horizontal Scrol bar missing -->
 	</div>
 
 	<div id="content_window" class="pc borderbox ui-layout-center">
@@ -160,10 +160,12 @@ window.cookieconsent.initialise({
 		if ($static_icon != '') echo '<img src="'.htmlentities($static_icon).'" width="48" height="48" alt="'.htmlentities($static_title).'"> ';
 		echo htmlentities($static_title).'</h1>';
 		echo '<div id="real_content">'.$static_content.'</div>';
-		echo '<br><p><img src="img/share.png" width="15" height="15" alt="Share"> <a href="?goto='.htmlentities($static_node_id).'" id="static_link" class="gray_footer_font">Static link to this page</a>';
-		echo ' | <a href="index_mobile.php?goto='.htmlentities($static_node_id).'" id="static_link_mobile" class="gray_footer_font">Mobile view</a>';
-		echo ' | <a href="index_desktop.php?goto='.htmlentities($static_node_id).'" id="static_link_desktop" class="gray_footer_font">Desktop view</a>';
-		echo '</p>';
+		if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+			echo '<br><p><img src="img/share.png" width="15" height="15" alt="Share"> <a href="index.php?goto='.htmlentities($static_node_id).'" id="static_link" class="gray_footer_font">Static link to this page</a>';
+			echo ' | <a href="index_mobile.php?goto='.htmlentities($static_node_id).'" id="static_link_mobile" class="gray_footer_font">Mobile view</a>';
+			echo ' | <a href="index_desktop.php?goto='.htmlentities($static_node_id).'" id="static_link_desktop" class="gray_footer_font">Desktop view</a>';
+			echo '</p>';
+		}
 		echo '<br>';
 		?>
 	</div>

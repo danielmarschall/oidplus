@@ -52,11 +52,11 @@ function combine_systemtitle_and_pagetitle(systemtitle, pagetitle) {
 function getTreeLoadURL() {
 	var url = new URL(window.location.href);
 	var goto = url.searchParams.get("goto");
-	return (goto != null) ? "treeload.php?goto="+encodeURI(goto) : "treeload.php";
+	return (goto != null) ? "treeload.php?goto="+encodeURIComponent(goto) : "treeload.php";
 }
 
 function reloadContent() {
-	// document.location = '?goto='+encodeURI(current_node);
+	// document.location = '?goto='+encodeURIComponent(current_node);
 	openOidInPanel(current_node);
 	$('#oidtree').jstree("refresh");
 }
@@ -73,14 +73,14 @@ function openOidInPanel(id, unselect=false) {
 	document.title = "";
 	$('#real_title').html("&nbsp;");
 	$('#real_content').html("Loading...");
-	$('#static_link').attr("href", "?goto="+encodeURI(id));
-	$('#static_link_desktop').attr("href", "index_desktop.php?goto="+encodeURI(id));
-	$('#static_link_mobile').attr("href", "index_mobile.php?goto="+encodeURI(id));
+	$('#static_link').attr("href", "?goto="+encodeURIComponent(id));
+	$('#static_link_desktop').attr("href", "index_desktop.php?goto="+encodeURIComponent(id));
+	$('#static_link_mobile').attr("href", "index_mobile.php?goto="+encodeURIComponent(id));
 
 	if (popstate_running) return; // To avoid that the jstree selection during popstate() won't trigger another page load
 
 	// Normal opening of a description
-	fetch('get_description.php?id='+id)
+	fetch('get_description.php?id='+encodeURIComponent(id))
 	.then(function(response) {
 		response.json()
 		.then(function(data) {
@@ -88,17 +88,17 @@ function openOidInPanel(id, unselect=false) {
 
 			document.title = combine_systemtitle_and_pagetitle(system_title, data.title);
 			var state = {
-				"node_id":id,
+				"node_id":encodeURIComponent(id),
 				"titleHTML":(data.icon ? '<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' : '') +data.title.htmlentities(),
 				"textHTML":data.text,
-				"staticlinkHREF":"?goto="+encodeURI(id),
-				"staticlinkHREF_Desktop":"index_desktop.php?goto="+encodeURI(id),
-				"staticlinkHREF_Mobile":"index_mobile.php?goto="+encodeURI(id)
+				"staticlinkHREF":"?goto="+encodeURIComponent(id),
+				"staticlinkHREF_Desktop":"index_desktop.php?goto="+encodeURIComponent(id),
+				"staticlinkHREF_Mobile":"index_mobile.php?goto="+encodeURIComponent(id)
 			};
 			if (current_node != id) {
-				window.history.pushState(state, data.title, "?goto="+encodeURI(id));
+				window.history.pushState(state, data.title, "?goto="+encodeURIComponent(id));
 			} else {
-				window.history.replaceState(state, data.title, "?goto="+encodeURI(id));
+				window.history.replaceState(state, data.title, "?goto="+encodeURIComponent(id));
 			}
 
 			if (data.icon) {
@@ -198,7 +198,7 @@ function crudActionUpdate(id, parent) {
 		method:"POST",
 		data: {
 			action:"Update",
-			id:id,
+			id:encodeURIComponent(id),
 			ra_email:document.getElementById('ra_email_'+id).value,
 			asn1ids:(document.getElementById('asn1ids_'+id) ? document.getElementById('asn1ids_'+id).value : null),
 			iris:(document.getElementById('iris_'+id) ? document.getElementById('iris_'+id).value : null),
@@ -232,7 +232,7 @@ function crudActionDelete(id, parent) {
 		method:"POST",
 		data: {
 			action:"Delete",
-			id:id,
+			id:encodeURIComponent(id),
 			parent:parent
 		},
 		success:function(data) {
@@ -268,90 +268,6 @@ function deleteRa(email, goto) {
 	});
 }
 
-function raLogout(email) {
-	if(!window.confirm("Are you sure that you want to logout?")) return false;
-
-	$.ajax({
-		url:"action.php",
-		method:"POST",
-		data: {
-			action:"ra_logout",
-			email:email,
-		},
-		success:function(data) {
-			if (data != "OK") {
-				alert("Error: " + data);
-			} else {
-				document.location = '?goto=oidplus:system';
-				// reloadContent();
-			}
-		}
-	});
-}
-
-function raLogin(email, password) {
-	$.ajax({
-		url:"action.php",
-		method:"POST",
-		data: {
-			action:"ra_login",
-			email:email,
-			password:password,
-			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
-		},
-		success:function(data) {
-			if (data != "OK") {
-				alert("Error: " + data);
-				grecaptcha.reset();
-			} else {
-				document.location = '?goto=oidplus:system';
-				// reloadContent();
-			}
-		}
-	});
-}
-
-function adminLogin(password) {
-	$.ajax({
-		url:"action.php",
-		method:"POST",
-		data: {
-			action:"admin_login",
-			password:password,
-			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
-		},
-		success:function(data) {
-			if (data != "OK") {
-				alert("Error: " + data);
-				grecaptcha.reset();
-			} else {
-				document.location = '?goto=oidplus:system';
-				// reloadContent();
-			}
-		}
-	});
-}
-
-function adminLogout() {
-	if(!window.confirm("Are you sure that you want to logout?")) return false;
-
-	$.ajax({
-		url:"action.php",
-		method:"POST",
-		data: {
-			action:"admin_logout",
-		},
-		success:function(data) {
-			if (data != "OK") {
-				alert("Error: " + data);
-			} else {
-				document.location = '?goto=oidplus:system';
-				// reloadContent();
-			}
-		}
-	});
-}
-
 function openAndSelectNode(childID, parentID) {
 	if ($('#oidtree').jstree(true).get_node(parentID)) {
 		$('#oidtree').jstree('open_node', '#'+parentID, function(e, data) { // open parent node
@@ -359,12 +275,12 @@ function openAndSelectNode(childID, parentID) {
 				$('#oidtree').jstree('deselect_all').jstree('select_node', '#'+childID); // select it
 			} else {
 				// This can happen if the content page contains brand new items which are not in the treeview yet
-				document.location = "?goto="+encodeURI(childID);
+				document.location = "?goto="+encodeURIComponent(childID);
 			}
 		}, true);
 	} else {
 		// This should usually not happen
-		document.location = "?goto="+encodeURI(childID);
+		document.location = "?goto="+encodeURIComponent(childID);
 	}
 }
 
@@ -420,19 +336,20 @@ $(document).ready(function () {
 		// But then we need to set the history state manually
 		current_node = goto;
 		window.history.replaceState({
-			"node_id":goto,
+			"node_id":encodeURIComponent(goto),
 			"titleHTML":$('#real_title').html(),
 			"textHTML":$('#real_content').html(),
-			"staticlinkHREF":"?goto="+encodeURI(goto),
-			"staticlinkHREF_Desktop":"index_desktop.php?goto="+encodeURI(goto),
-			"staticlinkHREF_Mobile":"index_mobile.php?goto="+encodeURI(goto)
-		}, $('#real_title').html(), '?goto='+encodeURI(goto));
+			"staticlinkHREF":"?goto="+encodeURIComponent(goto),
+			"staticlinkHREF_Desktop":"index_desktop.php?goto="+encodeURIComponent(goto),
+			"staticlinkHREF_Mobile":"index_mobile.php?goto="+encodeURIComponent(goto)
+		}, $('#real_title').html(), '?goto='+encodeURIComponent(goto));
 
 		if (goto != null) data.instance.select_node([goto]);
 	})
 	.on('select_node.jstree', function (node, selected, event) {
 		if (oidplusMobile()) {
 			document.getElementById("oidtree").style.display = "none";
+			document.getElementById("system_title_menu").classList.remove("active");
 		}
 
 		var id = selected.node.id;
@@ -443,7 +360,10 @@ $(document).ready(function () {
 
 	// --- Layout
 
-	if (!oidplusMobile()) {
+	if (oidplusMobile()) {
+		document.getElementById('oidtree').style.display = "none";
+		document.getElementById('system_title_menu').style.visibility = "visible";
+	} else {
 		$('body').layout({
 			north__size: 40,
 			north__slidable: false,
@@ -464,102 +384,6 @@ $(document).ready(function () {
 
 function oidplusMobile() {
 	return document.getElementsByClassName("ui-layout-center").length == 0;
-}
-
-function inviteFormOnSubmit() {
-	$.ajax({
-		url: "action.php",
-		type: "POST",
-		data: {
-			action: "invite_ra",
-			email: $("#email").val(),
-			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
-		},
-		success: function(data) {
-			if (data != "OK") {
-				alert("Error: " + data);
-				grecaptcha.reset();
-			} else {
-				alert("The RA has been invited via email.");
-				document.location = '?goto='+$("#origin").val();
-				//reloadContent();
-			}
-		}
-	});
-	return false;
-}
-
-function activateRaFormOnSubmit() {
-	$.ajax({
-		url: "action.php",
-		type: "POST",
-		data: {
-			action: "activate_ra",
-			email: $("#email").val(),
-			auth: $("#auth").val(),
-			password1: $("#password1").val(),
-			password2: $("#password2").val(),
-			timestamp: $("#timestamp").val()
-		},
-		success: function(data) {
-			if (data != "OK") {
-				alert("Error: " + data);
-			} else {
-				alert("Registration successful! You can now log in.");
-				document.location = '?goto=oidplus:login';
-				//reloadContent();
-			}
-		}
-	});
-	return false;
-}
-
-function forgotPasswordFormOnSubmit() {
-	$.ajax({
-		url: "action.php",
-		type: "POST",
-		data: {
-			action: "forgot_password",
-			email: $("#email").val(),
-			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
-		},
-		success: function(data) {
-			if (data != "OK") {
-				alert("Error: " + data);
-				grecaptcha.reset();
-			} else {
-				alert("E-Mail sent.");
-				document.location = '?goto=oidplus:login';
-				//reloadContent();
-			}
-		}
-	});
-	return false;
-}
-
-function resetPasswordFormOnSubmit() {
-	$.ajax({
-		url: "action.php",
-		type: "POST",
-		data: {
-			action: "reset_password",
-			email: $("#email").val(),
-			auth: $("#auth").val(),
-			password1: $("#password1").val(),
-			password2: $("#password2").val(),
-			timestamp: $("#timestamp").val()
-		},
-		success: function(data) {
-			if (data != "OK") {
-				alert("Error: " + data);
-			} else {
-				alert("Password sucessfully changed. You can now log in.");
-				document.location = '?goto=oidplus:login';
-				//reloadContent();
-			}
-		}
-	});
-	return false;
 }
 
 function mobileNavButtonClick() {

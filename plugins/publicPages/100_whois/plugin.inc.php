@@ -31,9 +31,16 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 	}
 
 	public function init($html=true) {
+		OIDplus::config()->prepareConfigKey('whois_auth_token', 'OID-over-WHOIS authentication token to display confidential data', '', 0, 1);
 	}
 
 	public function cfgSetValue($name, $value) {
+		if ($name == 'whois_auth_token') {
+			$test_value = preg_replace('@[0-9a-zA-Z]*@', '', $value);
+			if ($test_value != '') {
+				throw new Exception("Only characters and numbers are allowed as authentication token.");
+			}
+		}
 	}
 
 	public function gui($id, &$out, &$handled) {
@@ -43,16 +50,17 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 			$out['title'] = 'Web WHOIS';
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/publicPages/'.basename(__DIR__).'/icon_big.png' : '';
 
-			$out['text'] = '';
+			$out['text']  = '';
 			$out['text'] .= '<p>With the web based whois service, you can query object information in a machine readable format.</p>';
+			$out['text'] .= '<p>RFC draft: <a href="plugins/publicPages/'.basename(__DIR__).'/whois/rfc/draft-viathinksoft-oidwhois-00.txt">TXT</a> | <a href="plugins/publicPages/'.basename(__DIR__).'/whois/rfc/draft-viathinksoft-oidwhois-00.nroff">NROFF</a></p>';
 			$out['text'] .= '<form action="plugins/publicPages/'.basename(__DIR__).'/whois/webwhois.php" method="GET">';
 			$out['text'] .= '	<input type="text" name="query" value="oid:2.999">';
-			$out['text'] .= '	<input type="submit">';
+			$out['text'] .= '	<input type="submit" value="Query">';
 			$out['text'] .= '</form>';
 		}
 	}
 
-	public function tree(&$json, $ra_email=null) {
+	public function tree(&$json, $ra_email=null, $nonjs=false) {
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = 'plugins/publicPages/'.basename(__DIR__).'/treeicon.png';
 		} else {
@@ -64,6 +72,8 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 			'icon' => $tree_icon,
 			'text' => 'Web WHOIS'
 		);
+
+		return true;
 	}
 
 	public function modifyContent($id, &$title, &$icon, &$text) {

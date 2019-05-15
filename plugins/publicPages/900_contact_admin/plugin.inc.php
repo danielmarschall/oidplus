@@ -52,7 +52,7 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePlugin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null) {
+	public function tree(&$json, $ra_email=null, $nonjs=false) {
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = 'plugins/publicPages/'.basename(__DIR__).'/treeicon.png';
 		} else {
@@ -64,6 +64,8 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePlugin {
 			'icon' => $tree_icon,
 			'text' => 'Contact sysadmin'
 		);
+
+		return true;
 	}
 }
 

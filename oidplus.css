@@ -130,9 +130,9 @@ a#system_title_menu.active:hover {
 	padding-right:5px;/* brauchen wir fuer NoScript */
 	top:55px; /* brauchen wir fuer NoScript */
 	width:400px; /* brauchen wir fuer NoScript */
+	padding-top:5px;
 }
 #oidtree.mobile {
-	display: none;
 	margin-top:10px;
 }
 #content_window.mobile {

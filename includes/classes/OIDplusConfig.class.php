@@ -32,9 +32,6 @@ class OIDplusConfig {
 		$this->prepareConfigKey('admin_email', 'E-Mail address of the system administrator', '', 0, 1);
 		$this->prepareConfigKey('global_cc', 'Global CC for all outgoing emails?', '', 0, 1);
 		$this->prepareConfigKey('ra_min_password_length', 'Minimum length for RA passwords', '6', 0, 1);
-		$this->prepareConfigKey('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0', 0, 1);
-		$this->prepareConfigKey('max_ra_pwd_reset_time', 'Max RA password reset time in seconds (0 = infinite)', '0', 0, 1);
-		$this->prepareConfigKey('whois_auth_token', 'OID-over-WHOIS authentication token to display confidential data', '', 0, 1);
 	}
 
 	public function systemTitle() {
@@ -54,19 +51,6 @@ class OIDplusConfig {
 		return 10;
 	}
 	*/
-
-	public function maxInviteTime() {
-		return getValue('max_ra_invite_time');
-	}
-
-	public function maxPasswordResetTime() {
-		return getValue('max_ra_pwd_reset_time');
-	}
-
-	public function authToken() {
-		$val = trim($this->getValue('whois_auth_token'));
-		return empty($val) ? false : $val;
-	}
 
 	public function getValue($name) {
 		if ($this->dirty) {
@@ -99,24 +83,13 @@ class OIDplusConfig {
 			}
 		}
 		if (($name == 'global_cc') || ($name == 'admin_email')) {
-			if (!empty($value) && !oiddb_valid_email($value)) {
+			if (!empty($value) && !oidplus_valid_email($value)) {
 				throw new Exception("This is not a correct email address");
 			}
 		}
 		if ($name == 'ra_min_password_length') {
 			if (!is_numeric($value) || ($value < 1)) {
 				throw new Exception("Please enter a valid password length.");
-			}
-		}
-		if (($name == 'max_ra_invite_time') || ($name == 'max_ra_pwd_reset_time')) {
-			if (!is_numeric($value) || ($value < 0)) {
-				throw new Exception("Please enter a valid value.");
-			}
-		}
-		if ($name == 'whois_auth_token') {
-			$test_value = preg_replace('@[0-9a-zA-Z]*@', '', $value);
-			if ($test_value != '') {
-				throw new Exception("Only characters and numbers are allowed as authentication token.");
 			}
 		}
 
