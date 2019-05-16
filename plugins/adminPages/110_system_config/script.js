@@ -17,15 +17,20 @@
 
 function crudActionConfigUpdate(name) {
 	$.ajax({
-		url:"action.php",
+		url:"ajax.php",
 		method:"POST",
 		data: {
 			action:"config_update",
 			name:name,
 			value:document.getElementById('config_'+name).value,
 		},
+		error:function(jqXHR, textStatus, errorThrown) {
+			alert("Error: " + errorThrown);
+		},
 		success:function(data) {
-			if (data == "OK") {
+			if ("error" in data) {
+				alert("Error: " + data.error);
+			} else if (data.status == 0) {
 				alert("Update OK");
 			} else {
 				alert("Error: " + data);

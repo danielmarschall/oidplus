@@ -69,42 +69,45 @@ header('X-OIDplus-SystemID:'.$sysid_oid);
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<script src="oidplus.js"></script>
+
 	<?php
 	$ary = glob(__DIR__ . '/plugins/publicPages/'.'*'.'/script.js');
 	sort($ary);
 	foreach ($ary as $a) {
-		echo '<script src="'.str_replace(__DIR__ . '/', '', $a).'"></script>';
+		echo '<script src="'.str_replace(__DIR__ . '/', '', $a).'"></script>'."\n\t";
 	}
 	$ary = glob(__DIR__ . '/plugins/adminPages/'.'*'.'/script.js');
 	sort($ary);
 	foreach ($ary as $a) {
-		echo '<script src="'.str_replace(__DIR__ . '/', '', $a).'"></script>';
+		echo '<script src="'.str_replace(__DIR__ . '/', '', $a).'"></script>'."\n\t";
 	}
 	$ary = glob(__DIR__ . '/plugins/raPages/'.'*'.'/script.js');
 	sort($ary);
 	foreach ($ary as $a) {
-		echo '<script src="'.str_replace(__DIR__ . '/', '', $a).'"></script>';
+		echo '<script src="'.str_replace(__DIR__ . '/', '', $a).'"></script>'."\n\t";
 	}
 	?>
 
 	<link rel="stylesheet" href="oidplus.css">
+
 	<?php
 	$ary = glob(__DIR__ . '/plugins/publicPages/'.'*'.'/style.css');
 	sort($ary);
 	foreach ($ary as $a) {
-		echo '<link rel="stylesheet" href="'.str_replace(__DIR__ . '/', '', $a).'">';
+		echo '<link rel="stylesheet" href="'.str_replace(__DIR__ . '/', '', $a).'">'."\n\t";
 	}
 	$ary = glob(__DIR__ . '/plugins/adminPages/'.'*'.'/style.css');
 	sort($ary);
 	foreach ($ary as $a) {
-		echo '<link rel="stylesheet" href="'.str_replace(__DIR__ . '/', '', $a).'">';
+		echo '<link rel="stylesheet" href="'.str_replace(__DIR__ . '/', '', $a).'">'."\n\t";
 	}
 	$ary = glob(__DIR__ . '/plugins/raPages/'.'*'.'/style.css');
 	sort($ary);
 	foreach ($ary as $a) {
-		echo '<link rel="stylesheet" href="'.str_replace(__DIR__ . '/', '', $a).'">';
+		echo '<link rel="stylesheet" href="'.str_replace(__DIR__ . '/', '', $a).'">'."\n\t";
 	}
 	?>
+
 	<link rel="stylesheet" href="3p/bootstrap/css/bootstrap.min.css">
 
 	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
@@ -113,24 +116,25 @@ header('X-OIDplus-SystemID:'.$sysid_oid);
 	system_title = <?php echo js_escape(OIDplus::config()->systemTitle()); ?>; // TODO: Is that timing OK or is that a race condition?
 	</script>
 
-<!-- https://cookieconsent.insites.com -->
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
-<script>
-window.addEventListener("load", function(){
-window.cookieconsent.initialise({
-	"palette": {
-		"popup": {
-			"background": "#edeff5",
-			"text": "#838391"
-		},
-		"button": {
-			"background": "#4b81e8"
-		}
-	},
-	"position": "bottom-right"
-})});
-</script>
+	<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" /> -->
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script> -->
+	<link rel="stylesheet" type="text/css" href="3p/cookieconsent/cookieconsent.min.css">
+	<script src="3p/cookieconsent/cookieconsent.min.js"></script>
+	<script>
+		window.addEventListener("load", function(){
+		window.cookieconsent.initialise({
+			"palette": {
+				"popup": {
+					"background": "#edeff5",
+					"text": "#838391"
+				},
+				"button": {
+					"background": "#4b81e8"
+				}
+			},
+			"position": "bottom-right"
+		})});
+	</script>
 
 </head>
 
@@ -144,7 +148,7 @@ window.cookieconsent.initialise({
 	</div>
 
 	<div>
-		<a href="?goto=oidplus:system">
+		<a <?php echo oidplus_link('oidplus:system'); ?>>
 			<span id="system_title_1" class="mobile">ViaThinkSoft OIDplus 2.0</span><br>
 			<span id="system_title_2" class="mobile"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></span>
 		</a>

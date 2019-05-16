@@ -27,18 +27,18 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 	}
 
 	public function action(&$handled) {
-		if ($_POST["action"] == "change_ra_data") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "change_ra_data")) {
 			$handled = true;
 
 			$email = $_POST['email'];
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				die('Authentification error. Please log in as the RA to update its data.');
+				die(json_encode(array("error" => 'Authentification error. Please log in as the RA to update its data.')));
 			}
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 			if (OIDplus::db()->num_rows($res) == 0) {
-				die('RA does not exist');
+				die(json_encode(array("error" => 'RA does not exist')));
 			}
 
 			if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra ".
@@ -57,10 +57,10 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 				"fax = '".OIDplus::db()->real_escape_string($_POST['fax'])."' ".
 				"WHERE email = '".OIDplus::db()->real_escape_string($email)."'"))
 			{
-				die(OIDplus::db()->error());
+				die(json_encode(array("error" => OIDplus::db()->error())));
 			}
 
-			echo "OK";
+			echo json_encode(array("status" => 0));
 		}
 	}
 
@@ -82,7 +82,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>You need to <a href="?goto=oidplus:login">log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
+				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
 			} else {
 				$out['text'] .= '<p>Your email address: <b>'.htmlentities($ra_email).'</b>';
 
@@ -95,7 +95,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 				$row = OIDplus::db()->fetch_array($res);
 
 				if (OIDplus::config()->getValue('allow_ra_email_change')) {
-					$out['text'] .= '<p><a href="?goto=oidplus:change_ra_email$'.urlencode($ra_email).'">Change email address</a></p>';
+					$out['text'] .= '<p><a '.oidplus_link('oidplus:change_ra_email$'.$ra_email).'>Change email address</a></p>';
 				} else {
 					$out['text'] .= '<p><abbr title="To change the email address, you need to contact the superior RA. They will need to change the email address and invite you (with your new email address) again.">How to change the email address?</abbr></p>';
 				}

@@ -123,7 +123,7 @@ class OIDplusPagePublicDocuments extends OIDplusPagePlugin {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a href="?goto=oidplus:documents$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:documents;$dir").'">'.$ic.' '.htmlentities(basename($dir)).'</a></p>';
+					$out['text'] .= '<p><a '.oidplus_link('oidplus:documents$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:documents;$dir")).'>'.$ic.' '.htmlentities(basename($dir)).'</a></p>';
 					$count++;
 				}
 
@@ -140,7 +140,7 @@ class OIDplusPagePublicDocuments extends OIDplusPagePlugin {
 					}
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a href="?goto=oidplus:documents$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:documents;$file").'">'.$ic.' '.htmlentities($this->getDocumentTitle($file)).'</a></p>';
+					$out['text'] .= '<p><a '.oidplus_link('oidplus:documents$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:documents;$file")).'>'.$ic.' '.htmlentities($this->getDocumentTitle($file)).'</a></p>';
 					$count++;
 				}
 

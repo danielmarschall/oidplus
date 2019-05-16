@@ -27,7 +27,32 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 	}
 
 	public function action(&$handled) {
-		// Nothing
+		if (isset($_REQUEST["action"]) && ($_REQUEST['action'] == "vts_regqry")) {
+			$handled = true;
+
+			// This is what we answer to the ViaThinkSoft server
+			if (function_exists('openssl_sign')) {
+				$payload = array(
+					"version" => 1,
+					"vts_directory_listing" => OIDplus::config()->getValue('reg_enabled') ? true : false,
+					"oidinfo_xml_unlocked" => OIDplus::config()->exists('oidinfo_export_protected') && !OIDplus::config()->getValue('oidinfo_export_protected') ? true : false,
+					"oidinfo_xml_location" => 'plugins/adminPages/400_oidinfo_export/oidinfo_export.php?online=1'
+				);
+
+				$signature = '';
+				openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'));
+
+				$data = array(
+					"payload" => $payload,
+					"signature" => base64_encode($signature)
+				);
+			} else {
+				$data = array(
+					"error" => "OpenSSL not available"
+				);
+			}
+			echo json_encode($data);
+		}
 	}
 
 	public function cfgSetValue($name, $value) {
@@ -53,29 +78,6 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 		OIDplus::config()->prepareConfigKey('reg_last_ping', 'Last ping to ViaThinkSoft directory services', '0', 1, 0);
 
 		if (function_exists('openssl_sign')) {
-			// This is what we answer to the ViaThinkSoft server
-
-			if (isset($_REQUEST['vts_regqry'])) {
-				$payload = array(
-					"version" => 1,
-					"vts_directory_listing" => OIDplus::config()->getValue('reg_enabled') ? true : false,
-					"oidinfo_xml_unlocked" => OIDplus::config()->exists('oidinfo_export_protected') && !OIDplus::config()->getValue('oidinfo_export_protected') ? true : false,
-					"oidinfo_xml_location" => 'plugins/adminPages/400_oidinfo_export/oidinfo_export.php?online=1'
-				);
-
-				$signature = '';
-				openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'));
-
-				$data = array(
-					"payload" => $payload,
-				"signature" => base64_encode($signature)
-				);
-
-				header_remove('Content-Type');
-				header('Content-Type: application/json');
-				die(json_encode($data));
-			}
-
 			// Show registration wizard once
 
 			if ($html && (OIDplus::config()->getValue('registration_done') != '1')) {

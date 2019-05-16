@@ -99,7 +99,7 @@ class OIDplusGui {
 					$output .= '     <td>'.implode(', ', $asn1ids_ext).'</td>';
 					$output .= '     <td>'.implode(', ', $iris).'</td>';
 				}
-				$output .= '     <td><a href="?goto='.urlencode('oidplus:rainfo$'.str_replace('@', '&', $row->ra_email)).'" onclick="openOidInPanel('.js_escape('oidplus:rainfo$'.str_replace('@', '&', $row->ra_email)).', true); return false;">'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
+				$output .= '     <td><a '.oidplus_link('oidplus:rainfo$'.str_replace('@', '&', $row->ra_email)).'>'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
 				$output .= '     <td>'.oidplus_formatdate($row->created).'</td>';
 				$output .= '     <td>'.oidplus_formatdate($row->updated).'</td>';
 			}
@@ -137,9 +137,9 @@ class OIDplusGui {
 		$output .= '</div></div>';
 
 		if ($items_hidden == 1) {
-			$output .= '<p>'.$items_hidden.' item is hidden. Please <a href="?goto=oidplus:login">log in</a> to see it.</p>';
+			$output .= '<p>'.$items_hidden.' item is hidden. Please <a '.oidplus_link('oidplus:login').'>log in</a> to see it.</p>';
 		} else if ($items_hidden > 1) {
-			$output .= '<p>'.$items_hidden.' items are hidden. Please <a href="?goto=oidplus:login">log in</a> to see them.</p>';
+			$output .= '<p>'.$items_hidden.' items are hidden. Please <a '.oidplus_link('oidplus:login').'>log in</a> to see them.</p>';
 		}
 
 		return $output;
@@ -207,7 +207,7 @@ class OIDplusGui {
 			if ((!is_null($obj)) && (!$obj->userHasReadRights())) {
 				$out['title'] = 'Access denied';
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>Please <a href="?goto=oidplus:login">log in</a> to receive information about this object.</p>';
+				$out['text'] = '<p>Please <a '.oidplus_link('oidplus:login').'>log in</a> to receive information about this object.</p>';
 				return $out;
 			}
 
@@ -277,7 +277,7 @@ class OIDplusGui {
 				if ($parent->isRoot()) {
 
 					$parent_link_text = $parent->objectTypeTitle();
-					$out['text'] = '<p>Parent node: <a href="?goto='.urlencode($parent->root()).'" onclick="openOidInPanel('.js_escape($parent->root()).', true); return false;">'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+					$out['text'] = '<p>Parent node: <a '.oidplus_link($parent->root()).'>'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 
 				} else {
 					$res_ = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($parent->nodeId())."'");
@@ -292,11 +292,11 @@ class OIDplusGui {
 
 					$parent_link_text = empty($parent_title) ? explode(':',$parent->nodeId())[1] : $parent_title.' ('.explode(':',$parent->nodeId())[1].')';
 
-					$out['text'] = '<p>Parent node: <a href="?goto='.urlencode($parent->nodeId()).'" onclick="openOidInPanel('.js_escape($parent->nodeId()).', true); return false;">'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+					$out['text'] = '<p>Parent node: <a '.oidplus_link($parent->nodeId()).'>'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 				}
 			} else {
 				$parent_link_text = 'Go back to front page';
-				$out['text'] = '<p><a href="?goto=oidplus:system" onclick="openOidInPanel('.js_escape('oidplus:system').', true); return false;">'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+				$out['text'] = '<p><a '.oidplus_link('oidplus:system').'>'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 			}
 
 			if (strpos($out['text'], '%%DESC%%') !== false)
@@ -313,7 +313,7 @@ class OIDplusGui {
 			// Other pages
 			if (isMobile() && ($id != 'oidplus:system')) {
 				$parent_link_text = 'Go back to front page';
-				$out['text'] = '<p><a href="?goto=oidplus:system" onclick="openOidInPanel('.js_escape('oidplus:system').', true); return false;">'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+				$out['text'] = '<p><a '.oidplus_link('oidplus:system').'>'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 			}
 		}
 

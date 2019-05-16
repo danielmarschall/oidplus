@@ -29,7 +29,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 	public function action(&$handled) {
 		// === RA LOGIN/LOGOUT ===
 
-		if ($_POST["action"] == "ra_login") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "ra_login")) {
 			$handled = true;
 
 			$ra = new OIDplusRA($_POST['email']);
@@ -40,7 +40,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					die('Captcha wrong');
+					die(json_encode(array("error" => 'Captcha wrong')));
 				}
 			}
 
@@ -48,23 +48,23 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				OIDplus::authUtils()::raLogin($_POST['email']);
 
 				if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = now() where email = '".OIDplus::db()->real_escape_string($_POST['email'])."'")) {
-					die(OIDplus::db()->error());
+					die(json_encode(array("error" => OIDplus::db()->error())));
 				}
 
-				echo "OK";
+				echo json_encode(array("status" => 0));
 			} else {
-				echo "Wrong password";
+				die(json_encode(array("error" => "Wrong password")));
 			}
 		}
-		if ($_POST["action"] == "ra_logout") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "ra_logout")) {
 			$handled = true;
 			OIDplus::authUtils()::raLogout($_POST['email']);
-			echo "OK";
+			echo json_encode(array("status" => 0));
 		}
 
 		// === ADMIN LOGIN/LOGOUT ===
 
-		if ($_POST["action"] == "admin_login") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "admin_login")) {
 			$handled = true;
 
 			if (RECAPTCHA_ENABLED) {
@@ -73,21 +73,21 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					die('Captcha wrong');
+					die(json_encode(array("error" => 'Captcha wrong')));
 				}
 			}
 
 			if (OIDplus::authUtils()::adminCheckPassword($_POST['password'])) {
 				OIDplus::authUtils()::adminLogin();
-				echo "OK";
+				echo json_encode(array("status" => 0));
 			} else {
-				echo "Wrong password";
+				die(json_encode(array("error" => "Wrong password")));
 			}
 		}
-		if ($_POST["action"] == "admin_logout") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "admin_logout")) {
 			$handled = true;
 			OIDplus::authUtils()::adminLogout();
-			echo "OK";
+			echo json_encode(array("status" => 0));
 		}
 	}
 
@@ -113,7 +113,6 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 
 			$out['text'] .= '<br>';
 
-			$out['text'] .= '<script>document.getElementById("loginArea").style.visibility = "visible";</script>';
 			$out['text'] .= '<div id="loginArea" style="visibility: hidden"><div id="loginTab" class="container" style="width:100%;">';
 			$out['text'] .= '<ul  class="nav nav-pills">';
 			$out['text'] .= '			<li class="active">';
@@ -136,13 +135,13 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			} else {
 				$out['text'] .= '<p>Enter your email address and your password to log in as Registration Authority.</p>';
 			}
-			$out['text'] .= '<form action="action.php" method="POST" onsubmit="return raLoginOnSubmit(this);">';
+			$out['text'] .= '<form onsubmit="return raLoginOnSubmit(this);">';
 			$out['text'] .= '<input type="hidden" name="action" value="ra_login">';
 			$out['text'] .= '<label class="padding_label">E-Mail:</label><input type="text" name="email" value="" id="raLoginEMail"><br>';
 			$out['text'] .= '<label class="padding_label">Password:</label><input type="password" name="password" value="" id="raLoginPassword"><br><br>';
 			$out['text'] .= '<input type="submit" value="Login"><br><br>';
 			$out['text'] .= '</form>';
-			$out['text'] .= '<p><a href="?goto=oidplus:forgot_password">Forgot password?</a><br>';
+			$out['text'] .= '<p><a '.oidplus_link('oidplus:forgot_password').'>Forgot password?</a><br>';
 			$out['text'] .= '<abbr title="To receive login data, the superior RA needs to send you an invitation. After creating or updating your OID, the system will ask them if they want to send you an invitation. If they accept, you will receive an email with an activation link.">How to register?</abbr></p>';
 
 			$out['text'] .= '				</div>';
@@ -154,7 +153,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				$out['text'] .= '<a href="#" onclick="return adminLogout();">Logout</a>';
 			} else {
 				$out['text'] .= '<h2>Login as administrator</h2>';
-				$out['text'] .= '<form action="action.php" method="POST" onsubmit="return adminLoginOnSubmit(this);">';
+				$out['text'] .= '<form onsubmit="return adminLoginOnSubmit(this);">';
 				$out['text'] .= '<input type="hidden" name="action" value="admin_login">';
 				$out['text'] .= '<label class="padding_label">Password:</label><input type="password" name="password" value="" id="adminLoginPassword"><br><br>';
 				$out['text'] .= '<input type="submit" value="Login"><br><br>';
@@ -168,6 +167,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			$out['text'] .= '<p><font size="-1"><i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. '.
 			                'The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. '.
 			                'It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of '.ceil(SESSION_LIFETIME/60).' minutes.</font></p></div>';
+
+			$out['text'] .= '<script>document.getElementById("loginArea").style.visibility = "visible";</script>';
 		}
 	}
 

@@ -16,55 +16,65 @@
  */
 
 function freeOIDFormOnSubmit() {
-    $.ajax({
-      url: "action.php",
-      type: "POST",
-      data: {
-        action: "com.viathinksoft.freeoid.request_freeoid",
-        email: $("#email").val(),
-        captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
-      },
-      success: function(data) {
-                        if (data != "OK") {
-                                alert("Error: " + data);
-				grecaptcha.reset();
-                        } else {
+	$.ajax({
+		url: "ajax.php",
+		type: "POST",
+		data: {
+			action: "com.viathinksoft.freeoid.request_freeoid",
+			email: $("#email").val(),
+			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
+		},
+		error:function(jqXHR, textStatus, errorThrown) {
+			alert("Error: " + errorThrown);
+			if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+		},
+		success: function(data) {
+			if ("error" in data) {
+				alert("Error: " + data.error);
+				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+			} else if (data.status == 0) {
 				alert("Instructions have been sent via email.");
-                                document.location = '?goto=oidplus:system';
-                                //reloadContent();
-                        }
-      }
-  });
-  return false;
+				document.location = '?goto=oidplus:system';
+				//reloadContent();
+			} else {
+				alert("Error: " + data);
+				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+			}
+		}
+	});
+	return false;
 }
 
 function activateFreeOIDFormOnSubmit() {
-    $.ajax({
-      url: "action.php",
-      type: "POST",
-      data: {
-        action: "com.viathinksoft.freeoid.activate_freeoid",
-        email: $("#email").val(),
-
-        ra_name: $("#ra_name").val(),
-        title: $("#title").val(),
-        url: $("#url").val(),
-
-        auth: $("#auth").val(),
-        password1: $("#password1").val(),
-        password2: $("#password2").val(),
-        timestamp: $("#timestamp").val()
-      },
-      success: function(data) {
-                        if (data != "OK") {
-                                alert("Error: " + data);
-                        } else {
+	$.ajax({
+		url: "ajax.php",
+		type: "POST",
+		data: {
+			action: "com.viathinksoft.freeoid.activate_freeoid",
+			email: $("#email").val(),
+			ra_name: $("#ra_name").val(),
+			title: $("#title").val(),
+			url: $("#url").val(),
+			auth: $("#auth").val(),
+			password1: $("#password1").val(),
+			password2: $("#password2").val(),
+			timestamp: $("#timestamp").val()
+		},
+		error:function(jqXHR, textStatus, errorThrown) {
+			alert("Error: " + errorThrown);
+		},
+		success: function(data) {
+			if ("error" in data) {
+				alert("Error: " + data.error);
+			} else if (data.status == 0) {
 				alert("Registration successful! You can now log in.");
-                                document.location = '?goto=oidplus:login';
-                                //reloadContent();
-                        }
-      }
-  });
-  return false;
+				document.location = '?goto=oidplus:login';
+				//reloadContent();
+			} else {
+				alert("Error: " + data);
+			}
+		}
+	});
+	return false;
 }
 

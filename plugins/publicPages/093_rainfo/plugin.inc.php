@@ -56,11 +56,11 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 			foreach (OIDplusObject::getRaRoots($ra_email) as $loc_root) {
 				$ico = $loc_root->getIcon();
 				$icon = !is_null($ico) ? $ico : 'plugins/publicPages/'.basename(__DIR__).'/treeicon_link.png';
-				$out['text'] .= '<p><a href="?goto='.$loc_root->nodeId().'"><img src="'.$icon.'"> Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())).'</a></p>';
+				$out['text'] .= '<p><a '.oidplus_link($loc_root->nodeId()).'><img src="'.$icon.'"> Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())).'</a></p>';
 			}
 
 			if (OIDplus::authUtils()::isRALoggedIn($ra_email)) {
-				$out['text'] .= '<br><p><a href="?goto=oidplus:edit_ra$'.urlencode($ra_email).'">Edit contact info</a></p>';
+				$out['text'] .= '<br><p><a '.oidplus_link('oidplus:edit_ra$'.$ra_email).'>Edit contact info</a></p>';
 			}
 
 			if (!empty($ra_email) && OIDplus::authUtils()::isAdminLoggedIn()) {

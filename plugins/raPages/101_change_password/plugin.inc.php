@@ -27,18 +27,18 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 	}
 
 	public function action(&$handled) {
-		if ($_POST["action"] == "change_ra_password") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "change_ra_password")) {
 			$handled = true;
 
 			$email = $_POST['email'];
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 			if (OIDplus::db()->num_rows($res) == 0) {
-				die('RA does not exist');
+				die(json_encode(array("error" => 'RA does not exist')));
 			}
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				die('Authentification error. Please log in as the RA to update its data.');
+				die(json_encode(array("error" => 'Authentification error. Please log in as the RA to update its data.')));
 			}
 
 			$old_password = $_POST['old_password'];
@@ -46,20 +46,20 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 			$password2 = $_POST['new_password2'];
 
 			if ($password1 !== $password2) {
-				die('Passwords are not equal');
+				die(json_encode(array("error" => 'Passwords are not equal')));
 			}
 
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				die('New password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
+				die(json_encode(array("error" => 'New password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength())));
 			}
 
 			$ra = new OIDplusRA($email);
 			if (!$ra->checkPassword($old_password)) {
-				die('Old password incorrect');
+				die(json_encode(array("error" => 'Old password incorrect')));
 			}
 			$ra->change_password($password1);
 
-			echo "OK";
+			echo json_encode(array("status" => 0));
 		}
 	}
 
@@ -88,7 +88,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>You need to <a href="?goto=oidplus:login">log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
+				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
 			} else {
 				$out['text'] .= '<form id="raChangePasswordForm" onsubmit="return raChangePasswordFormOnSubmit();">';
 				$out['text'] .= '<input type="hidden" id="email" value="'.htmlentities($ra_email).'"/><br>';

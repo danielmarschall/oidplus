@@ -27,13 +27,13 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 	}
 
 	public function action(&$handled) {
-		if ($_POST["action"] == "forgot_password") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "forgot_password")) {
 			$handled = true;
 
 			$email = $_POST['email'];
 
 			if (!oidplus_valid_email($email)) {
-				die('Invalid email address');
+				die(json_encode(array("error" => 'Invalid email address')));
 			}
 
 			if (RECAPTCHA_ENABLED) {
@@ -42,7 +42,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					die('Captcha wrong');
+					die(json_encode(array("error" => 'Captcha wrong')));
 				}
 			}
 
@@ -54,10 +54,10 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 
 			my_mail($email, OIDplus::config()->systemTitle().' - Password reset request', $message, OIDplus::config()->globalCC());
 
-			die("OK");
+			echo json_encode(array("status" => 0));
 		}
 
-		if ($_POST["action"] == "reset_password") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "reset_password")) {
 			$handled = true;
 
 			$password1 = $_POST['password1'];
@@ -67,25 +67,25 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 			$timestamp = $_POST['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
-				die('Invalid auth key');
+				die(json_encode(array("error" => 'Invalid auth key')));
 			}
 
 			if ((OIDplus::config()->getValue('max_ra_pwd_reset_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_pwd_reset_time'))) {
-				die('Invitation expired!');
+				die(json_encode(array("error" => 'Invitation expired!')));
 			}
 
 			if ($password1 !== $password2) {
-				die('Passwords are not equal');
+				die(json_encode(array("error" => 'Passwords are not equal')));
 			}
 
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				die('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
+				die(json_encode(array("error" => 'Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength())));
 			}
 
 			$ra = new OIDplusRA($email);
 			$ra->change_password($password1);
 
-			die('OK');
+			echo json_encode(array("status" => 0));
 		}
 	}
 
@@ -168,7 +168,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 		$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
 		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 
-		// {{ACTIVATE_URL}} will be resolved in action.php
+		// {{ACTIVATE_URL}} will be resolved in ajax.php
 
 		return $message;
 	}

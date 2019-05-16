@@ -16,48 +16,58 @@
  */
 
 function changeRaEmailFormOnSubmit() {
-    $.ajax({
-      url: "action.php",
-      type: "POST",
-      data: {
-        action: "change_ra_email",
-        old_email: $("#old_email").val(),
-        new_email: $("#new_email").val(),
-      },
-      success: function(data) {
-                        if (data != "OK") {
-                                alert("Error: " + data);
-                        } else {
+	$.ajax({
+		url: "ajax.php",
+		type: "POST",
+		data: {
+			action: "change_ra_email",
+			old_email: $("#old_email").val(),
+			new_email: $("#new_email").val(),
+		},
+		error:function(jqXHR, textStatus, errorThrown) {
+			alert("Error: " + errorThrown);
+		},
+		success: function(data) {
+			if ("error" in data) {
+				alert("Error: " + data.error);
+			} else if (data.status == 0) {
 				alert("eMail was sent");
-                                //document.location = '?goto=oidplus:system';
-                                //reloadContent();
-                        }
-      }
-  });
-  return false;
+				//document.location = '?goto=oidplus:system';
+				//reloadContent();
+			} else {
+				alert("Error: " + data);
+			}
+		}
+	});
+	return false;
 }
 
 function activateNewRaEmailFormOnSubmit() {
-    $.ajax({
-      url: "action.php",
-      type: "POST",
-      data: {
-        action: "activate_new_ra_email",
-        password: $("#password").val(),
-        old_email: $("#old_email").val(),
-        new_email: $("#new_email").val(),
-        auth: $("#auth").val(),
-        timestamp: $("#timestamp").val()
-      },
-      success: function(data) {
-                        if (data != "OK") {
-                                alert("Error: " + data);
-                        } else {
+	$.ajax({
+		url: "ajax.php",
+		type: "POST",
+		data: {
+			action: "activate_new_ra_email",
+			password: $("#password").val(),
+			old_email: $("#old_email").val(),
+			new_email: $("#new_email").val(),
+			auth: $("#auth").val(),
+			timestamp: $("#timestamp").val()
+		},
+		error:function(jqXHR, textStatus, errorThrown) {
+			alert("Error: " + errorThrown);
+		},
+		success: function(data) {
+			if ("error" in data) {
+				alert("Error: " + data.error);
+			} else if (data.status == 0) {
 				alert("Done");
-                                document.location = '?goto=oidplus:system';
-                                //reloadContent();
-                        }
-      }
-  });
-  return false;
+				document.location = '?goto=oidplus:system';
+				//reloadContent();
+			} else {
+				alert("Error: " + data);
+			}
+		}
+	});
+	return false;
 }

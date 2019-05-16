@@ -27,32 +27,32 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 	}
 
 	public function action(&$handled) {
-		if ($_POST["action"] == "change_ra_email") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "change_ra_email")) {
 			$handled = true;
 
 			if (!OIDplus::config()->getValue('allow_ra_email_change')) {
-				die('This functionality has been disabled by the administrator.');
+				die(json_encode(array("error" => 'This functionality has been disabled by the administrator.')));
 			}
 
 			$old_email = $_POST['old_email'];
 			$new_email = $_POST['new_email'];
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($old_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				die('Authentification error. Please log in as the RA to update its email address.');
+				die(json_encode(array("error" => 'Authentification error. Please log in as the RA to update its email address.')));
 			}
 
 			if (!oidplus_valid_email($new_email)) {
-				die('eMail address is invalid.');
+				die(json_encode(array("error" => 'eMail address is invalid.')));
 			}
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($old_email)."'");
 			if (OIDplus::db()->num_rows($res) == 0) {
-				die('eMail address does not exist anymore. It was probably already changed.');
+				die(json_encode(array("error" => 'eMail address does not exist anymore. It was probably already changed.')));
 			}
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($new_email)."'");
 			if (OIDplus::db()->num_rows($res) > 0) {
-				die('eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.');
+				die(json_encode(array("error" => 'eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.')));
 			}
 
 			$timestamp = time();
@@ -67,12 +67,14 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 			my_mail($new_email, OIDplus::config()->systemTitle().' - Change email request', $message);
 
-			die('OK');
-		} else if ($_POST["action"] == "activate_new_ra_email") {
+			echo json_encode(array("status" => 0));
+		}
+
+		if (isset($_POST["action"]) && ($_POST["action"] == "activate_new_ra_email")) {
 			$handled = true;
 
 			if (!OIDplus::config()->getValue('allow_ra_email_change')) {
-				die('This functionality has been disabled by the administrator.');
+				die(json_encode(array("error" => 'This functionality has been disabled by the administrator.')));
 			}
 
 			$old_email = $_POST['old_email'];
@@ -83,26 +85,26 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 			$timestamp = $_POST['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp, $auth)) {
-				die('Invalid auth key');
+				die(json_encode(array("error" => 'Invalid auth key')));
 			}
 
 			if ((OIDplus::config()->getValue('max_ra_email_change_time') > 0) && (time()-$timestamp > OIDplus::config()->maxEmailChangeTime())) {
-				die('Activation link expired!');
+				die(json_encode(array("error" => 'Activation link expired!')));
 			}
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($old_email)."'");
 			if (OIDplus::db()->num_rows($res) == 0) {
-				die('eMail address does not exist anymore. It was probably already changed.');
+				die(json_encode(array("error" => 'eMail address does not exist anymore. It was probably already changed.')));
 			}
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($new_email)."'");
 			if (OIDplus::db()->num_rows($res) > 0) {
-				die('eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.');
+				die(json_encode(array("error" => 'eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.')));
 			}
 
 			$ra = new OIDplusRA($old_email);
 			if (!$ra->checkPassword($password)) {
-				die('Wrong password');
+				die(json_encode(array("error" => 'Wrong password')));
 			}
 
 			$ra->change_email($new_email);
@@ -122,7 +124,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 			$message = str_replace('{{NEW_EMAIL}}', $new_email, $message);
 			my_mail($old_email, OIDplus::config()->systemTitle().' - eMail address changed', $message);
 
-			die('OK');
+			echo json_encode(array("status" => 0));
 		}
 	}
 
@@ -161,7 +163,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 				$out['text'] .= '<p>This functionality has been disabled by the administrator.</p>';
 			} else if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>You need to <a href="?goto=oidplus:login">log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
+				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
 			} else {
 				$out['text'] .= '<form id="changeRaEmailForm" onsubmit="return changeRaEmailFormOnSubmit();">';
 				$out['text'] .= '<input type="hidden" id="old_email" value="'.htmlentities($ra_email).'"/><br>';

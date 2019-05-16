@@ -27,12 +27,12 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 	}
 
 	public function action(&$handled) {
-		if ($_POST["action"] == "invite_ra") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "invite_ra")) {
 			$handled = true;
 			$email = $_POST['email'];
 
 			if (!oidplus_valid_email($email)) {
-				die('Invalid email address');
+				die(json_encode(array("error" => 'Invalid email address')));
 			}
 
 			if (RECAPTCHA_ENABLED) {
@@ -41,7 +41,7 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					die('Captcha wrong');
+					die(json_encode(array("error" => 'Captcha wrong')));
 				}
 			}
 
@@ -53,10 +53,10 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 
 			my_mail($email, OIDplus::config()->systemTitle().' - Invitation', $message, OIDplus::config()->globalCC());
 
-			die("OK");
+			echo json_encode(array("status" => 0));
 		}
 
-		if ($_POST["action"] == "activate_ra") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "activate_ra")) {
 			$handled = true;
 
 			$password1 = $_POST['password1'];
@@ -66,25 +66,25 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 			$timestamp = $_POST['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
-				die('Invalid auth key');
+				die(json_encode(array("error" => 'Invalid auth key')));
 			}
 
 			if ((OIDplus::config()->getValue('max_ra_invite_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_invite_time'))) {
-				die('Invitation expired!');
+				die(json_encode(array("error" => 'Invitation expired!')));
 			}
 
 			if ($password1 !== $password2) {
-				die('Passwords are not equal');
+				die(json_encode(array("error" => 'Passwords are not equal')));
 			}
 
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				die('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
+				die(json_encode(array("error" => 'Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength())));
 			}
 
 			$ra = new OIDplusRA($email);
 			$ra->register_ra($password1);
 
-			die('OK');
+			echo json_encode(array("status" => 0));
 		}
 	}
 
@@ -203,7 +203,7 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 		$message = str_replace('{{PARTY}}', OIDplus::authUtils()::isAdminLoggedIn() ? 'the system administrator' : 'a superior Registration Authority', $message);
 
-		// {{ACTIVATE_URL}} will be resolved in action.php
+		// {{ACTIVATE_URL}} will be resolved in ajax.php
 
 		return $message;
 	}

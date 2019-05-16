@@ -7,7 +7,10 @@ IMPORTANT
 	do we need an explicit consent at the login form?
 	do we need a consent for the cookie SSL_CHECK?
 - dsgvo datenschutzerkl‰rung, agbs etc.
-- !!! nach der groﬂen ‰nderung (verschieben nach plugins) alles nochmal ganz genau testen: invite, forgot password, login
+
+VTS INTERNAL
+- vts_regqry nun von ajax.php beziehen und nicht von index.php
+- whois server hat nun andere position
 
 SMALL THINGS
 - disable specific functions (e.g. invite, login, rainfo, forgot password) if the plugins are not installed (check if class type is registered)

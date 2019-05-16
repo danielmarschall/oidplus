@@ -21,6 +21,10 @@ function oidplus_valid_email($email) {
 	return !empty(filter_var($email, FILTER_VALIDATE_EMAIL));
 }
 
+function oidplus_link($goto) {
+	return 'href="?goto='.urlencode($goto).'" onclick="openOidInPanel('.js_escape($goto).', true); return false;"';
+}
+
 function secure_email($email, $linktext, $level=1) {
 
 	// see http://www.spamspan.de/

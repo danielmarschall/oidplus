@@ -31,17 +31,17 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 	}
 
 	public function action(&$handled) {
-		if ($_POST["action"] == "com.viathinksoft.freeoid.request_freeoid") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "com.viathinksoft.freeoid.request_freeoid")) {
 			$handled = true;
 			$email = $_POST['email'];
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 			if (OIDplus::db()->num_rows($res) > 0) {
-				die('This email address already exists.'); // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
+				die(json_encode(array("error" => 'This email address already exists.'))); // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
 			}
 
 			if (!oidplus_valid_email($email)) {
-				die('Invalid email address');
+				die(json_encode(array("error" => 'Invalid email address')));
 			}
 
 			if (RECAPTCHA_ENABLED) {
@@ -50,7 +50,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					die('Captcha wrong');
+					die(json_encode(array("error" => 'Captcha wrong')));
 				}
 			}
 
@@ -64,10 +64,10 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 			my_mail($email, OIDplus::config()->systemTitle().' - Free OID request', $message, 'daniel-marschall@viathinksoft.de');
 
-			die("OK");
+			echo json_encode(array("status" => 0));
 		}
 
-		if ($_POST["action"] == "com.viathinksoft.freeoid.activate_freeoid") {
+		if (isset($_POST["action"]) && ($_POST["action"] == "com.viathinksoft.freeoid.activate_freeoid")) {
 			$handled = true;
 
 			$password1 = $_POST['password1'];
@@ -82,23 +82,23 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$timestamp = $_POST['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
-				die('Invalid auth key');
+				die(json_encode(array("error" => 'Invalid auth key')));
 			}
 
 			if ((OIDplus::config()->getValue('max_ra_invite_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_invite_time'))) {
-				die('Invitation expired!');
+				die(json_encode(array("error" => 'Invitation expired!')));
 			}
 
 			if ($password1 !== $password2) {
-				die('Passwords are not equal');
+				die(json_encode(array("error" => 'Passwords are not equal')));
 			}
 
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				die('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
+				die(json_encode(array("error" => 'Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength())));
 			}
 
 			if (empty($ra_name)) {
-				die('Please enter your personal name or the name of your group.');
+				die(json_encode(array("error" => 'Please enter your personal name or the name of your group.')));
 			}
 
 			// 1. step: Add the RA to the database
@@ -122,7 +122,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 
 			if (!OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, ra_email, parent, title, description, confidential, created) values ('".OIDplus::db()->real_escape_string('oid:'.$new_oid)."', '".OIDplus::db()->real_escape_string($email)."', '".OIDplus::db()->real_escape_string('oid:'.OIDplus::config()->getValue('freeoid_root_oid'))."', '".OIDplus::db()->real_escape_string($title)."', '".OIDplus::db()->real_escape_string($description)."', 0, now())")) {
 				$ra->delete();
-				die(OIDplus::db()->error());
+				die(json_encode(array("error" => OIDplus::db()->error())));
 			}
 
 			// Send delegation report email to admin
@@ -149,7 +149,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$message = str_replace('{{NEW_OID}}', $new_oid, $message);
 			my_mail($email, OIDplus::config()->systemTitle().' - Free OID allocated', $message, 'daniel-marschall@viathinksoft.de');
 
-			die('OK');
+			echo json_encode(array("status" => 0));
 		}
 	}
 
@@ -174,7 +174,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 
 			$highest_id = $this->freeoid_max_id();
 
-			$out['text'] .= '<p>Currently <a href="?goto=oid:'.OIDplus::config()->getValue('freeoid_root_oid').'">'.$highest_id.' free OIDs have been</a> registered. Please enter your email below to receive a free OID.</p>';
+			$out['text'] .= '<p>Currently <a '.oidplus_link('oid:'.OIDplus::config()->getValue('freeoid_root_oid')).'>'.$highest_id.' free OIDs have been</a> registered. Please enter your email below to receive a free OID.</p>';
 
 			try {
 				$out['text'] .= '

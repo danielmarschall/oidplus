@@ -48,8 +48,8 @@ SpamSpan:
 
 Cookie consent:
 	License: MIT
-	Currently directly linked
-	Download: https://cookieconsent.insites.com/
+	Version: 2018-07-17
+	Download: https://github.com/insites/cookieconsent (only build directory)
 
 ReCaptcha:
 	License: BSD 3-Clause "New" or "Revised" License

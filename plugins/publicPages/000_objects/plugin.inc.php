@@ -46,7 +46,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 			if (strpos($out['text'], '%%OBJECT_TYPE_LIST%%') !== false) {
 				$tmp = '<ul>';
 				foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
-					$tmp .= '<li><a href="?goto='.urlencode($ot::root()).'" onclick="openOidInPanel('.js_escape($ot::root()).', true); return false;">'.htmlentities($ot::objectTypeTitle()).'</a></li>';
+					$tmp .= '<li><a '.oidplus_link($ot::root()).'>'.htmlentities($ot::objectTypeTitle()).'</a></li>';
 				}
 				$tmp .= '</ul>';
 				$out['text'] = str_replace('%%OBJECT_TYPE_LIST%%', $tmp, $out['text']);

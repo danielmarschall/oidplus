@@ -17,21 +17,28 @@
 
 function forgotPasswordFormOnSubmit() {
 	$.ajax({
-		url: "action.php",
+		url: "ajax.php",
 		type: "POST",
 		data: {
 			action: "forgot_password",
 			email: $("#email").val(),
 			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
 		},
+		error:function(jqXHR, textStatus, errorThrown) {
+			alert("Error: " + errorThrown);
+			if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+		},
 		success: function(data) {
-			if (data != "OK") {
-				alert("Error: " + data);
-				grecaptcha.reset();
-			} else {
+			if ("error" in data) {
+				alert("Error: " + data.error);
+				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+			} else if (data.status == 0) {
 				alert("E-Mail sent.");
 				document.location = '?goto=oidplus:login';
 				//reloadContent();
+			} else {
+				alert("Error: " + data);
+				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 			}
 		}
 	});
@@ -40,7 +47,7 @@ function forgotPasswordFormOnSubmit() {
 
 function resetPasswordFormOnSubmit() {
 	$.ajax({
-		url: "action.php",
+		url: "ajax.php",
 		type: "POST",
 		data: {
 			action: "reset_password",
@@ -50,13 +57,18 @@ function resetPasswordFormOnSubmit() {
 			password2: $("#password2").val(),
 			timestamp: $("#timestamp").val()
 		},
+		error:function(jqXHR, textStatus, errorThrown) {
+			alert("Error: " + errorThrown);
+		},
 		success: function(data) {
-			if (data != "OK") {
-				alert("Error: " + data);
-			} else {
+			if ("error" in data) {
+				alert("Error: " + data.error);
+			} else if (data.status == 0) {
 				alert("Password sucessfully changed. You can now log in.");
 				document.location = '?goto=oidplus:login';
 				//reloadContent();
+			} else {
+				alert("Error: " + data);
 			}
 		}
 	});

@@ -46,7 +46,7 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>You need to <a href="?goto=oidplus:login">log in</a> as administrator.</p>';
+				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
 				$out['text'] = '';
 
@@ -67,16 +67,16 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 
 				foreach ($tmp as $ra_email => $registered) {
 					if (empty($ra_email)) {
-						$out['text'] .= '<p><b><a href="?goto=oidplus:rainfo$">(Objects with undefined RA)</a></b></p>';
+						$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$').'>(Objects with undefined RA)</a></b></p>';
 					} else {
 						if ($registered == 0) {
-							$out['text'] .= '<p><b><a href="?goto=oidplus:rainfo$'.htmlentities($ra_email).'">'.htmlentities($ra_email).'</a></b> (has objects, is not registered)</p>';
+							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.htmlentities($ra_email)).'>'.htmlentities($ra_email).'</a></b> (has objects, is not registered)</p>';
 						}
 						if ($registered == 1) {
-							$out['text'] .= '<p><b><a href="?goto=oidplus:rainfo$'.htmlentities($ra_email).'">'.htmlentities($ra_email).'</a></b> (registered, <font color="red">has no objects</font>)</p>';
+							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.htmlentities($ra_email)).'>'.htmlentities($ra_email).'</a></b> (registered, <font color="red">has no objects</font>)</p>';
 						}
 						if ($registered == 2) {
-							$out['text'] .= '<p><b><a href="?goto=oidplus:rainfo$'.htmlentities($ra_email).'">'.htmlentities($ra_email).'</a></b></p>';
+							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.htmlentities($ra_email)).'>'.htmlentities($ra_email).'</a></b></p>';
 						}
 					}
 				}

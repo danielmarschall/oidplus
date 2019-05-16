@@ -123,7 +123,7 @@ class OIDplusPagePublicLinks extends OIDplusPagePlugin {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a href="?goto=oidplus:links$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:links;$dir").'">'.$ic.' '.htmlentities(basename($dir)).'</a></p>';
+					$out['text'] .= '<p><a '.oidplus_link('oidplus:links$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:links;$dir")).'>'.$ic.' '.htmlentities(basename($dir)).'</a></p>';
 					$count++;
 				}
 

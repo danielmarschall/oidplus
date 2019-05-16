@@ -62,6 +62,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 					$_POST['search_iri'] = '1';
 				}
 
+				// TODO: make it via AJAX? Reloading the whole page is not good. But attention: Also allow NoScript
 				$out['text'] .= '<form id="searchForm" action="?goto=oidplus:search" method="POST">
 				                 <input type="hidden" name="search" value="1">
 				                 Search for: <input type="text" id="term" name="term" value="'.htmlentities($search_term).'"><br><br>
@@ -123,7 +124,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 							$count = 0;
 							while ($row = OIDplus::db()->fetch_object($res)) {
 								$email = str_replace('@', '&', $row->email);
-								$out['text'] .= '<p><a href="?goto=oidplus:rainfo$'.urlencode($email).'">'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
+								$out['text'] .= '<p><a '.oidplus_link('oidplus:rainfo$'.$email).'>'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
 								$count++;
 							}
 							if ($count == 0) {
@@ -156,7 +157,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 
 							$count = 0;
 							while ($row = OIDplus::db()->fetch_object($res)) {
-								$out['text'] .= '<p><a href="?goto='.urlencode($row->id).'">'.htmlentities($row->id).'</a>: <b>'.htmlentities($row->title).'</b></p>'; // TODO: also show asn1id; highlight search match?
+								$out['text'] .= '<p><a '.oidplus_link($row->id).'>'.htmlentities($row->id).'</a>: <b>'.htmlentities($row->title).'</b></p>'; // TODO: also show asn1id; highlight search match?
 								$count++;
 							}
 							if ($count == 0) {
