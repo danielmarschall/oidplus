@@ -16,7 +16,6 @@
  */
 
 .wrap {
-	/* TODO: at the top, there is a weird padding, caused by overflow-x */
 	overflow-x: auto;
 	margin: 0 auto;
 	width:100%;
@@ -64,9 +63,47 @@ label.padding_label {
 	margin-left:50px;
 	padding-left:13px;
 }
-a#system_title_menu {
-	color: orange;
-	padding: 15.3px 17px;
+
+/* Mobile menu button */
+
+#bar1, #bar2, #bar3 {
+	width: 35px;
+	height: 5px;
+	background-color: orange;
+	margin: 6px 0;
+	transition: 0.4s;
+	margin-left:10px;
+}
+
+#system_title_menu.active {
+	background-color:orange;
+}
+
+.active #bar1 {
+	-webkit-transform: rotate(-45deg) translate(-9px, 6px);
+	transform: rotate(-45deg) translate(-9px, 6px);
+	background-color: black;
+}
+
+.active #bar2 {
+	opacity: 0;
+	background-color: black;
+}
+
+.active #bar3 {
+	-webkit-transform: rotate(45deg) translate(-8px, -8px);
+	transform: rotate(45deg) translate(-8px, -8px);
+	background-color: black;
+}
+
+.hover #bar1, .hover #bar2, .hover #bar3 {
+	background-color:white;
+}
+
+#system_title_menu {
+	width:55px;
+	height:55px;
+	padding-top:8px;
 	text-decoration: none;
 	font-size: 19px;
 	display: block;
@@ -74,22 +111,10 @@ a#system_title_menu {
 	position: absolute;
 	left: 0;
 	top: 0;
+	cursor: pointer;
 }
 
-a#system_title_menu:hover {
-	background-color: black;
-	color: white;
-}
-
-a#system_title_menu.active {
-	background-color: orange;
-	color: black;
-}
-
-a#system_title_menu.active:hover {
-	background-color: orange;
-	color: white;
-}
+/* Title bar */
 
 #system_title_bar {
 	line-height:1.75em;
@@ -122,6 +147,9 @@ a#system_title_menu.active:hover {
 #system_title_bar a:hover, #system_title_bar a:active, #system_title_bar a:focus, #system_title_bar a:visited, #system_title_bar a:link {
 	text-decoration:none;
 }
+
+/* OID-Tree */
+
 #oidtree.pc {
 	position:absolute;
 	left:0px;

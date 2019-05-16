@@ -67,7 +67,6 @@ header('X-OIDplus-SystemID:'.$sysid_oid);
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><!-- for menu button. TODO: download into 3p/ -->
 
 	<script src="oidplus.js"></script>
 	<?php
@@ -138,13 +137,19 @@ window.cookieconsent.initialise({
 <body class="mobile">
 
 <div id="system_title_bar">
-	<a href="?goto=oidplus:system">
-		<span id="system_title_1" class="mobile">ViaThinkSoft OIDplus 2.0</span><br>
-		<span id="system_title_2" class="mobile"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></span>
-	</a>
-	<a href="javascript:void(0);" id="system_title_menu" onclick="mobileNavButtonClick()" style="visibility:hidden"><i class="fa fa-bars"></i></a>
+	<div id="system_title_menu" onclick="mobileNavButtonClick(this)" onmouseenter="mobileNavButtonHover(this)" onmouseleave="mobileNavButtonHover(this)" style="visibility:hidden">
+		<div id="bar1"></div>
+		<div id="bar2"></div>
+		<div id="bar3"></div>
+	</div>
+
+	<div>
+		<a href="?goto=oidplus:system">
+			<span id="system_title_1" class="mobile">ViaThinkSoft OIDplus 2.0</span><br>
+			<span id="system_title_2" class="mobile"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></span>
+		</a>
+	</div>
 </div>
-<br>
 
 <div class="wrap">
 	<!-- TODO: add ellipses at the end? https://stackoverflow.com/questions/37158758/add-a-gap-between-jstree-nodes-text-and-scrollbars -->

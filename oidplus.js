@@ -348,8 +348,8 @@ $(document).ready(function () {
 	})
 	.on('select_node.jstree', function (node, selected, event) {
 		if (oidplusMobile()) {
-			document.getElementById("oidtree").style.display = "none";
-			document.getElementById("system_title_menu").classList.remove("active");
+			$("#oidtree").hide("slow");
+			$("#system_title_menu").removeClass("active");
 		}
 
 		var id = selected.node.id;
@@ -386,13 +386,16 @@ function oidplusMobile() {
 	return document.getElementsByClassName("ui-layout-center").length == 0;
 }
 
-function mobileNavButtonClick() {
-	var x = document.getElementById("oidtree");
-	if (x.style.display === "block") {
-		x.style.display = "none";
-		document.getElementById("system_title_menu").classList.remove("active");
+function mobileNavButtonClick(sender) {
+	if ($("#oidtree").is(":visible")) {
+		$("#oidtree").hide("slow");
+		$("#system_title_menu").removeClass("active");
 	} else {
-		x.style.display = "block";
-		document.getElementById("system_title_menu").classList.add("active");
+		$("#oidtree").show("slow");
+		$("#system_title_menu").addClass("active");
 	}
+}
+
+function mobileNavButtonHover(sender) {
+	sender.classList.toggle("hover");
 }
