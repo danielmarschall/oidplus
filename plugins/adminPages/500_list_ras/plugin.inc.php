@@ -76,13 +76,13 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 						$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$').'>(Objects with undefined RA)</a></b></p>';
 					} else {
 						if ($registered == 0) {
-							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.$ra_email).'>'.htmlentities($ra_email).'</a></b> (has objects, is not registered)</p>';
+							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.str_replace('@','&',$ra_email)).'>'.htmlentities($ra_email).'</a></b> (has objects, is not registered)</p>';
 						}
 						if ($registered == 1) {
-							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.$ra_email).'>'.htmlentities($ra_email).'</a></b> (registered, <font color="red">has no objects</font>)</p>';
+							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.str_replace('@','&',$ra_email)).'>'.htmlentities($ra_email).'</a></b> (registered, <font color="red">has no objects</font>)</p>';
 						}
 						if ($registered == 2) {
-							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.$ra_email).'>'.htmlentities($ra_email).'</a></b></p>';
+							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.str_replace('@','&',$ra_email)).'>'.htmlentities($ra_email).'</a></b></p>';
 						}
 					}
 				}
@@ -109,7 +109,7 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 			} else {
 				if ($registered == 0) {
 					$children[] = array(
-						'id' => 'oidplus:rainfo$'.$ra_email,
+						'id' => 'oidplus:rainfo$'.str_replace('@', '&', $ra_email),
 						'icon' => $tree_icon,
 						'text' => $ra_email.' <i>(has objects, is not registered)</i>'
 					);
@@ -142,11 +142,16 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 	}
 
 	public function tree_search($request) {
+		// We don't need this, because the list of RAs is loaded without lazy-loading,
+		// so the node does not need to be searched
+		/*
 		if (strpos($request, 'oidplus:rainfo$') === 0) {
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				return array('oidplus:list_ra', $request);
+				return array('oidplus:login', ...dummy..., 'oidplus:list_ra', $request);
 			}
 		}
+		*/
+		return false;
 	}
 }
 

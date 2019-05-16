@@ -13,6 +13,8 @@ VTS INTERNAL
 - whois server hat nun andere position
 
 SMALL THINGS
+- when login expired, remove entries in the treeview
+- can we put even more code (e.g. object CRUD) into the plugin directory?
 - disable specific functions (e.g. invite, login, rainfo, forgot password) if the plugins are not installed (check if class type is registered)
 - mobile design: if title is too long => make system title bar multi line?
 - make usage of Foreign Keys
@@ -72,7 +74,6 @@ IDEAS
 - sanitize IPv4, IPv6, GUID during creation
 	bei IPv4 und IPv6: - if it is a single host address, don't put /32 or /128 suffix
 	                   - strike unnecessary bits that are not defined in the netmask (also at the whois output)
-- we need some kind of plugin API to allow individual config values to be stored
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie

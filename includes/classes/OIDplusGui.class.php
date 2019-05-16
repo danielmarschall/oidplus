@@ -99,7 +99,7 @@ class OIDplusGui {
 					$output .= '     <td>'.implode(', ', $asn1ids_ext).'</td>';
 					$output .= '     <td>'.implode(', ', $iris).'</td>';
 				}
-				$output .= '     <td><a '.oidplus_link('oidplus:rainfo$'.str_replace('@', '&', $row->ra_email)).'>'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
+				$output .= '     <td><a '.oidplus_link('oidplus:rainfo$'.str_replace('@','&',$row->ra_email)).'>'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
 				$output .= '     <td>'.oidplus_formatdate($row->created).'</td>';
 				$output .= '     <td>'.oidplus_formatdate($row->updated).'</td>';
 			}

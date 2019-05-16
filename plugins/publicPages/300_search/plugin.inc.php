@@ -124,7 +124,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 							$count = 0;
 							while ($row = OIDplus::db()->fetch_object($res)) {
 								$email = str_replace('@', '&', $row->email);
-								$out['text'] .= '<p><a '.oidplus_link('oidplus:rainfo$'.$email).'>'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
+								$out['text'] .= '<p><a '.oidplus_link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
 								$count++;
 							}
 							if ($count == 0) {

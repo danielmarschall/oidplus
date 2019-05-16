@@ -64,10 +64,13 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 			}
 
 			if (!empty($ra_email) && OIDplus::authUtils()::isAdminLoggedIn()) {
-				if (class_exists("OIDplusPageAdminListRAs")) {
-					$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">Delete this RA</a></p>';
-				} else {
-					$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">Delete this RA</a></p>';
+				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
+				if (OIDplus::db()->num_rows($res) > 0) {
+					if (class_exists("OIDplusPageAdminListRAs")) {
+						$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">Delete this RA</a></p>';
+					} else {
+						$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">Delete this RA</a></p>';
+					}
 				}
 			}
 		}
