@@ -79,6 +79,10 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 	public function modifyContent($id, &$title, &$icon, &$text) {
 		$text .= '<br><img src="plugins/publicPages/'.basename(__DIR__).'/page_pictogram.png" height="15" alt=""> <a href="plugins/publicPages/'.basename(__DIR__).'/whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font">Whois</a>';
 	}
+
+	public function tree_search($request) {
+		return false;
+	}
 }
 
 OIDplus::registerPagePlugin(new OIDplusPagePublicWhois());

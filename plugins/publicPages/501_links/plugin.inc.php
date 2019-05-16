@@ -225,6 +225,10 @@ class OIDplusPagePublicLinks extends OIDplusPagePlugin {
 
 		return true;
 	}
+
+	public function tree_search($request) {
+		return false;
+	}
 }
 
 OIDplus::registerPagePlugin(new OIDplusPagePublicLinks());

@@ -39,7 +39,7 @@ class OIDplusConfig {
 	}
 
 	public function globalCC() {
-		return trim(getValue('global_cc'));
+		return trim($this->getValue('global_cc'));
 	}
 
 	public function minRaPasswordLength() {

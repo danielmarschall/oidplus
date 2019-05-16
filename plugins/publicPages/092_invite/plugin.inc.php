@@ -48,7 +48,7 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 			$timestamp = time();
 			$activate_url = OIDplus::system_url() . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('activate_ra;'.$email.';'.$timestamp));
 
-			$message = OIDplus::gui()::getInvitationText($_POST['email']);
+			$message = $this->getInvitationText($_POST['email']);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 
 			my_mail($email, OIDplus::config()->systemTitle().' - Invitation', $message, OIDplus::config()->globalCC());
@@ -111,7 +111,7 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 			$out['icon'] = 'plugins/publicPages/'.basename(__DIR__).'/invite_ra_big.png';
 
 			try {
-				$cont = self::getInvitationText($email);
+				$cont = $this->getInvitationText($email);
 
 				$out['text'] .= '<p>You have chosen to invite <b>'.$email.'</b> as an Registration Authority. If you click "Send", the following email will be sent to '.$email.':</p><p><i>'.nl2br(htmlentities($cont)).'</i></p>
 				  <form id="inviteForm" onsubmit="return inviteFormOnSubmit();">
@@ -195,7 +195,7 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 			$list_of_oids[] = $row['id'];
 		}
 
-		$message = file_get_contents(__DIR__ . '/../invite_msg.tpl');
+		$message = file_get_contents(__DIR__ . '/invite_msg.tpl');
 
 		// Resolve stuff
 		$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
@@ -206,6 +206,10 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 		// {{ACTIVATE_URL}} will be resolved in ajax.php
 
 		return $message;
+	}
+
+	public function tree_search($request) {
+		return false;
 	}
 }
 

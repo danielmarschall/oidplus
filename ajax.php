@@ -55,6 +55,8 @@ try {
 		echo json_encode($out);
 	}
 
+	// === jsTree ===
+
 	// Action:     tree_search
 	// Method:     GET / POST
 	// Parameters: search
@@ -62,14 +64,20 @@ try {
 	if (isset($_REQUEST["action"]) && ($_REQUEST['action'] == 'tree_search')) {
 		$handled = true;
 		if (!isset($_REQUEST['search'])) throw new Exception("Invalid args");
-		$ary = array();
-		if ($obj = OIDplusObject::parse($_REQUEST['search'])) {
-			do {
-				$ary[] = $obj->nodeId();
-			} while ($obj = $obj->getParent());
-			$ary = array_reverse($ary);
+
+		$found = false;
+		foreach (OIDplus::getPagePlugins('*') as $plugin) {
+			$res = $plugin->tree_search($_REQUEST['search']);
+			if ($res) {
+				echo json_encode($res);
+				$found = true;
+				break;
+			}
 		}
-		echo json_encode($ary);
+
+		if (!$found) {
+			echo json_encode(array());
+		}
 	}
 
 	// Action:     tree_load

@@ -67,12 +67,12 @@ label.padding_label {
 /* Mobile menu button */
 
 #bar1, #bar2, #bar3 {
-	width: 35px;
+	width: 27px;
 	height: 5px;
 	background-color: orange;
 	margin: 6px 0;
 	transition: 0.4s;
-	margin-left:10px;
+	margin-left:14px;
 }
 
 #system_title_menu.active {
@@ -80,8 +80,8 @@ label.padding_label {
 }
 
 .active #bar1 {
-	-webkit-transform: rotate(-45deg) translate(-9px, 6px);
-	transform: rotate(-45deg) translate(-9px, 6px);
+	-webkit-transform: rotate(-45deg) translate(-7.5px, 7.5px);
+	transform: rotate(-45deg) translate(-7.5px, 7.5px);
 	background-color: black;
 }
 

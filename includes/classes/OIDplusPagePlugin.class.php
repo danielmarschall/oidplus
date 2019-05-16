@@ -26,5 +26,6 @@ class OIDplusPagePlugin {
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {}
 	public function init($html=true) {}
 	public function modifyContent($id, &$title, &$icon, &$text) {}
+	public function tree_search($request) {}
 }
 

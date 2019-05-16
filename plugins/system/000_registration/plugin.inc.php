@@ -119,6 +119,10 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 			}
 		}
 	}
+
+	public function tree_search($request) {
+		return false;
+	}
 }
 
 OIDplus::registerPagePlugin(new OIDplusRegistrationWizard());

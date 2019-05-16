@@ -261,6 +261,10 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 		}
 		return $highest_id;
 	}
+
+	public function tree_search($request) {
+		return false;
+	}
 }
 
 if (OIDplus::config()->getValue('freeoid_root_oid') != '') {

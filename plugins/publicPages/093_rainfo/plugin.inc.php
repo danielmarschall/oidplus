@@ -114,6 +114,10 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 
 		return trim_br($out);
 	}
+
+	public function tree_search($request) {
+		return false;
+	}
 }
 
 OIDplus::registerPagePlugin(new OIDplusPagePublicRaInfo());

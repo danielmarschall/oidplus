@@ -156,6 +156,19 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 			return true;
 		}
 	}
+
+	public function tree_search($request) {
+		$ary = array();
+		if ($obj = OIDplusObject::parse($request)) {
+			if ($obj->userHasReadRights()) {
+				do {
+					$ary[] = $obj->nodeId();
+				} while ($obj = $obj->getParent());
+				$ary = array_reverse($ary);
+			}
+		}
+		return $ary;
+	}
 }
 
 OIDplus::registerPagePlugin(new OIDplusPagePublicObjects());

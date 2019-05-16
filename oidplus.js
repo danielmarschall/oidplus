@@ -63,6 +63,7 @@ function reloadContent() {
 }
 
 function x_rec(x_data, i) {
+console.log("rec: " + x_data);
 	$('#oidtree').jstree('open_node', x_data[i], function(e, data) {
 		if (i+1 < x_data.length) {
 			x_rec(x_data, i+1);
@@ -93,7 +94,10 @@ function openOidInPanel(id, reselect=false) {
 				openOidInPanel(id, false);
 			},
 			success:function(data) {
-				if ((data instanceof Array) && (data.length > 0) && ("error" in data)) {
+				if ("error" in data) {
+					console.error(data);
+					openOidInPanel(id, false); // silently ignore the problem
+				} else if ((data instanceof Array) && (data.length > 0)) {
 					x_rec(data, 0);
 				} else {
 					openOidInPanel(id, false);
@@ -110,7 +114,7 @@ function openOidInPanel(id, reselect=false) {
 	document.title = "";
 	$('#real_title').html("&nbsp;");
 	$('#real_content').html("Loading...");
-	$('#static_link').attr("href", "?goto="+encodeURIComponent(id));
+	$('#static_link').attr("href", "index.php?goto="+encodeURIComponent(id));
 	$('#static_link_desktop').attr("href", "index_desktop.php?goto="+encodeURIComponent(id));
 	$('#static_link_mobile').attr("href", "index_mobile.php?goto="+encodeURIComponent(id));
 
@@ -132,9 +136,9 @@ function openOidInPanel(id, reselect=false) {
 			document.title = combine_systemtitle_and_pagetitle(system_title, data.title);
 			var state = {
 				"node_id":id,
-				"titleHTML":(data.icon ? '<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' : '') +data.title.htmlentities(),
+				"titleHTML":(data.icon ? '<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' : '') + data.title.htmlentities(),
 				"textHTML":data.text,
-				"staticlinkHREF":"?goto="+encodeURIComponent(id),
+				"staticlinkHREF":"index.php?goto="+encodeURIComponent(id),
 				"staticlinkHREF_Desktop":"index_desktop.php?goto="+encodeURIComponent(id),
 				"staticlinkHREF_Mobile":"index_mobile.php?goto="+encodeURIComponent(id)
 			};
@@ -408,7 +412,7 @@ $(document).ready(function () {
 			"node_id":goto,
 			"titleHTML":$('#real_title').html(),
 			"textHTML":$('#real_content').html(),
-			"staticlinkHREF":"?goto="+encodeURIComponent(goto),
+			"staticlinkHREF":"index.php?goto="+encodeURIComponent(goto),
 			"staticlinkHREF_Desktop":"index_desktop.php?goto="+encodeURIComponent(goto),
 			"staticlinkHREF_Mobile":"index_mobile.php?goto="+encodeURIComponent(goto)
 		}, $('#real_title').html(), '?goto='+encodeURIComponent(goto));
@@ -434,19 +438,19 @@ $(document).ready(function () {
 		document.getElementById('system_title_menu').style.visibility = "visible";
 	} else {
 		$('body').layout({
-			north__size: 40,
-			north__slidable: false,
-			north__closable: false,
-			north__resizable: false,
-			west__size:			450,
-			west__spacing_closed:		20,
-			west__togglerLength_closed:	230,
-			west__togglerAlign_closed:	"top",
-			west__togglerContent_closed:"O<br>B<br>J<br>E<br>C<br>T<br><br>T<BR>R<BR>E<BR>E",
-			west__togglerTip_closed:	"Open & Pin Menu",
-			west__sliderTip:		"Slide Open Menu",
-			west__slideTrigger_open:	"mouseover",
-			center__maskContents:		true // IMPORTANT - enable iframe masking
+			north__size:                  40,
+			north__slidable:              false,
+			north__closable:              false,
+			north__resizable:             false,
+			west__size:                   450,
+			west__spacing_closed:         20,
+			west__togglerLength_closed:   230,
+			west__togglerAlign_closed:    "top",
+			west__togglerContent_closed:  "O<br>B<br>J<br>E<br>C<br>T<br><br>T<BR>R<BR>E<BR>E",
+			west__togglerTip_closed:      "Open & Pin Menu",
+			west__sliderTip:              "Slide Open Menu",
+			west__slideTrigger_open:      "mouseover",
+			center__maskContents:         true // IMPORTANT - enable iframe masking
 		});
 	}
 });

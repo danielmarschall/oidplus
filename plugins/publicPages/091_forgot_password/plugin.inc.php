@@ -162,7 +162,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 			throw new Exception("This RA does not exist.");
 		}
 
-		$message = file_get_contents(__DIR__ . '/../forgot_password.tpl');
+		$message = file_get_contents(__DIR__ . '/forgot_password.tpl');
 
 		// Resolve stuff
 		$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
@@ -171,6 +171,10 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 		// {{ACTIVATE_URL}} will be resolved in ajax.php
 
 		return $message;
+	}
+
+	public function tree_search($request) {
+		return false;
 	}
 }
 

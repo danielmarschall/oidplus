@@ -38,6 +38,25 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 		// Nothing
 	}
 
+	private function get_ralist() {
+		$tmp = array();
+		$res = OIDplus::db()->query("select distinct BINARY(email) as email from ".OIDPLUS_TABLENAME_PREFIX."ra"); // "binary" because we want to ensure that 'distinct' is case sensitive
+		while ($row = OIDplus::db()->fetch_array($res)) {
+			$tmp[$row['email']] = 1;
+		}
+		$res = OIDplus::db()->query("select distinct BINARY(ra_email) as ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects");
+		while ($row = OIDplus::db()->fetch_array($res)) {
+			if (!isset($tmp[$row['ra_email']])) {
+				$tmp[$row['ra_email']] = 0;
+			} else {
+				$tmp[$row['ra_email']] = 2;
+			}
+		}
+		ksort($tmp);
+
+		return $tmp;
+	}
+
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:list_ra') {
 			$handled = true;
@@ -50,33 +69,20 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 			} else {
 				$out['text'] = '';
 
-				$tmp = array();
-				$res = OIDplus::db()->query("select distinct BINARY(email) as email from ".OIDPLUS_TABLENAME_PREFIX."ra"); // "binary" because we want to ensure that 'distinct' is case sensitive
-				while ($row = OIDplus::db()->fetch_array($res)) {
-					$tmp[$row['email']] = 1;
-				}
-				$res = OIDplus::db()->query("select distinct BINARY(ra_email) as ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects");
-				while ($row = OIDplus::db()->fetch_array($res)) {
-					if (!isset($tmp[$row['ra_email']])) {
-						$tmp[$row['ra_email']] = 0;
-					} else {
-						$tmp[$row['ra_email']] = 2;
-					}
-				}
-				ksort($tmp);
+				$tmp = $this->get_ralist();
 
 				foreach ($tmp as $ra_email => $registered) {
 					if (empty($ra_email)) {
 						$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$').'>(Objects with undefined RA)</a></b></p>';
 					} else {
 						if ($registered == 0) {
-							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.htmlentities($ra_email)).'>'.htmlentities($ra_email).'</a></b> (has objects, is not registered)</p>';
+							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.$ra_email).'>'.htmlentities($ra_email).'</a></b> (has objects, is not registered)</p>';
 						}
 						if ($registered == 1) {
-							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.htmlentities($ra_email)).'>'.htmlentities($ra_email).'</a></b> (registered, <font color="red">has no objects</font>)</p>';
+							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.$ra_email).'>'.htmlentities($ra_email).'</a></b> (registered, <font color="red">has no objects</font>)</p>';
 						}
 						if ($registered == 2) {
-							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.htmlentities($ra_email)).'>'.htmlentities($ra_email).'</a></b></p>';
+							$out['text'] .= '<p><b><a '.oidplus_link('oidplus:rainfo$'.$ra_email).'>'.htmlentities($ra_email).'</a></b></p>';
 						}
 					}
 				}
@@ -91,13 +97,56 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 			$tree_icon = null; // default icon (folder)
 		}
 
+		$children = array();
+		$tmp = $this->get_ralist();
+		foreach ($tmp as $ra_email => $registered) {
+			if (empty($ra_email)) {
+				$children[] = array(
+					'id' => 'oidplus:rainfo$',
+					'icon' => $tree_icon,
+					'text' => '(Objects with undefined RA)'
+				);
+			} else {
+				if ($registered == 0) {
+					$children[] = array(
+						'id' => 'oidplus:rainfo$'.$ra_email,
+						'icon' => $tree_icon,
+						'text' => $ra_email.' <i>(has objects, is not registered)</i>'
+					);
+				}
+				if ($registered == 1) {
+					$children[] = array(
+						'id' => 'oidplus:rainfo$'.$ra_email,
+						'icon' => $tree_icon,
+						'text' => $ra_email.' <i><font color="red">(has no objects)</font></i>'
+					);
+				}
+				if ($registered == 2) {
+					$children[] = array(
+						'id' => 'oidplus:rainfo$'.$ra_email,
+						'icon' => $tree_icon,
+						'text' => $ra_email
+					);
+				}
+			}
+		}
+
 		$json[] = array(
 			'id' => 'oidplus:list_ra',
 			'icon' => $tree_icon,
-			'text' => 'List RAs'
+			'text' => 'List RAs',
+			'children' => $children
 		);
 
 		return true;
+	}
+
+	public function tree_search($request) {
+		if (strpos($request, 'oidplus:rainfo$') === 0) {
+			if (OIDplus::authUtils()::isAdminLoggedIn()) {
+				return array('oidplus:list_ra', $request);
+			}
+		}
 	}
 }
 
