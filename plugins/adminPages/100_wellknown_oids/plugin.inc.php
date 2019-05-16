@@ -85,7 +85,7 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePlugin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false) {
+	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = 'plugins/adminPages/'.basename(__DIR__).'/treeicon.png';
 		} else {

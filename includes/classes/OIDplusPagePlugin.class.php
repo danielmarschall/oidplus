@@ -23,7 +23,7 @@ class OIDplusPagePlugin {
 	public function action(&$handled) {}
 	public function cfgSetValue($name, $value) {}
 	public function gui($id, &$out, &$handled) {}
-	public function tree(&$json, $ra_email=null, $nonjs=false) {}
+	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {}
 	public function init($html=true) {}
 	public function modifyContent($id, &$title, &$icon, &$text) {}
 }

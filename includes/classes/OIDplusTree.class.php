@@ -22,11 +22,11 @@ class OIDplusTree {
 	public static function nonjs_menu() {
 		$json = array();
 
-		foreach (OIDplus::getPagePlugins('public') as $plugin) {
-			$plugin->tree($json, null, true);
-		}
-
 		$static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
+
+		foreach (OIDplus::getPagePlugins('public') as $plugin) {
+			$plugin->tree($json, null, true, $static_node_id);
+		}
 
 		foreach ($json as $x) {
 			if ($static_node_id == $x['id']) echo '<b>';
@@ -39,14 +39,18 @@ class OIDplusTree {
 
 	}
 
+	// req_id comes from jsTree via AJAX
+	// req_goto comes from the user (GET argument)
 	public static function json_tree($req_id, $req_goto) {
+		$json = array();
 
 		if (!isset($req_id) || ($req_id == '#')) {
+			// 'ra' and 'admin' pages will not be iterated, because they usually have no tree icon, or an icon underneath the login section
 			foreach (OIDplus::getPagePlugins('public') as $plugin) {
-				$plugin->tree($json);
+				$plugin->tree($json, null, false, $req_goto);
 			}
 		} else {
-			$json = self::tree_populate($req_id, null, false);
+			$json = self::tree_populate($req_id);
 		}
 
 		return json_encode($json);

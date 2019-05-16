@@ -40,7 +40,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 			$handled = true;
 
 			$out['title'] = OIDplus::config()->systemTitle(); // 'Object Database of ' . $_SERVER['SERVER_NAME'];
-			$out['icon'] = 'img/system_big.png';
+			$out['icon'] = 'plugins/publicPages/'.basename(__DIR__).'/system_big.png';
 			$out['text'] = file_get_contents('welcome.html');
 
 			if (strpos($out['text'], '%%OBJECT_TYPE_LIST%%') !== false) {
@@ -56,16 +56,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false) {
-		$json = array();
-
+	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if ($nonjs) {
-			$static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
-
-			$json[] = array('id' => 'oidplus:system', 'icon' => 'img/system.png', 'text' => 'System');
+			$json[] = array('id' => 'oidplus:system', 'icon' => 'plugins/publicPages/'.basename(__DIR__).'/system.png', 'text' => 'System');
 
 			$parent = '';
-			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($static_node_id)."'");
+			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($req_goto)."'");
 			while ($row = OIDplus::db()->fetch_object($res)) {
 				$parent = $row->parent;
 			}
@@ -76,7 +72,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 				$json[] = array('id' => $ot::root(), 'icon' => $icon, 'text' => $ot::objectTypeTitle());
 
 				try {
-					$tmp = OIDplusObject::parse($static_node_id);
+					$tmp = OIDplusObject::parse($req_goto);
 				} catch (Exception $e) {
 					$tmp = null;
 				}
@@ -84,8 +80,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 					// TODO: Instead of just having 3 levels (parent, this and children), it would be better if we'd had a full tree of all parents
 					//       on the other hand, for giving search engines content, this is good enough
 					$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where " .
-					                   "parent = '".OIDplus::db()->real_escape_string($static_node_id)."' or " .
-					                   "id = '".OIDplus::db()->real_escape_string($static_node_id)."' " .
+					                   "parent = '".OIDplus::db()->real_escape_string($req_goto)."' or " .
+					                   "id = '".OIDplus::db()->real_escape_string($req_goto)."' " .
 					                   ((!empty($parent)) ? " or id = '".OIDplus::db()->real_escape_string($parent)."' " : "") .
 					                   "order by ".OIDplus::db()->natOrder('id'));
 					$z_used = 0;
@@ -101,8 +97,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 						$txt = $row->title == '' ? '' : ' -- '.htmlentities($row->title);
 
 						if ($row->id == $parent) { $stufe=0; $z_used++; }
-						if ($row->id == $static_node_id) { $stufe=1; $y_used++; }
-						if ($row->parent == $static_node_id) { $stufe=2; $x_used++; }
+						if ($row->id == $req_goto) { $stufe=1; $y_used++; }
+						if ($row->parent == $req_goto) { $stufe=2; $x_used++; }
 
 						$menu_entry = array('id' => $row->id, 'icon' => '', 'text' => $txt, 'indent' => 0);
 						$menu_entries[] = $menu_entry;
@@ -153,7 +149,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 					"opened" => true,
 					// "selected" => true)  // "selected" ist buggy: 1) Das select-Event wird beim Laden nicht gefeuert 2) Die direkt untergeordneten Knoten lassen sich nicht öffnen (laden für ewig)
 				),
-				'icon' => 'img/system.png',
+				'icon' => 'plugins/publicPages/'.basename(__DIR__).'/system.png',
 				'children' => $objTypesChildren
 			);
 

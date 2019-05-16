@@ -42,7 +42,7 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 		// nothing
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false) {
+	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		return false;
 	}
 

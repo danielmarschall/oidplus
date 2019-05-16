@@ -202,7 +202,7 @@ class OIDplusPagePublicLinks extends OIDplusPagePlugin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false) {
+	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		$children = array();
 
 		$this->tree_rec($children, 'links/');
