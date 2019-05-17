@@ -53,76 +53,38 @@ $sys_ver = OIDplus::getVersion();
 if (!$sys_ver) $sys_ver = 'unknown';
 header('X-OIDplus-SystemVersion:'.$sys_ver);
 
+$sys_title = OIDplus::config()->systemTitle();
+header('X-OIDplus-SystemTitle:'.$sys_title);
+
 ?><!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="OIDplus-SystemID" content="<?php echo $sysid_oid; ?>">
-	<meta name="OIDplus-SystemURL" content="<?php echo $sys_url; ?>">
-	<meta name="OIDplus-SystemVersion" content="<?php echo $sys_ver; ?>">
+	<meta name="OIDplus-SystemID" content="<?php echo htmlentities($sysid_oid); ?>">
+	<meta name="OIDplus-SystemURL" content="<?php echo htmlentities($sys_url); ?>">
+	<meta name="OIDplus-SystemVersion" content="<?php echo htmlentities($sys_ver); ?>">
+	<meta name="OIDplus-SystemTitle" content="<?php echo htmlentities($sys_title); /* Do not remove. This meta tag is acessed via JS */ ?>">
 	<meta name="theme-color" content="#A9DCF0">
+
 	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->systemTitle(), $static_title); ?></title>
-	<link rel="stylesheet" href="3p/jstree/themes/default/style.min.css">
 
 	<!-- We are using jQuery 2.2.1, because 3.3.1 seems to be incompatible with jsTree (HTML content will not be loaded into jsTree!) TODO: File bug report -->
 	<script src="3p/jquery/jquery-2.2.1.min.js"></script>
 	<script src="3p/bootstrap/js/bootstrap.min.js"></script>
 	<script src="3p/jstree/jstree.min.js"></script>
 	<script src='3p/tinymce/tinymce.min.js'></script>
-	<script src="3p/jquery-ui/jquery-ui.js"></script>
+	<script src="3p/jquery-ui/jquery-ui.min.js"></script>
 	<script src="3p/layout/jquery.layout.min.js"></script>
 	<script src="3p/spamspan/spamspan.js"></script>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<script src="oidplus.min.js.php"></script>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<script src="oidplus.js"></script>
-
-	<?php
-	$ary = glob(__DIR__ . '/plugins/publicPages/'.'*'.'/script.js');
-	sort($ary);
-	foreach ($ary as $a) {
-		echo '<script src="'.str_replace(__DIR__ . '/', '', $a).'"></script>'."\n\t";
-	}
-	$ary = glob(__DIR__ . '/plugins/adminPages/'.'*'.'/script.js');
-	sort($ary);
-	foreach ($ary as $a) {
-		echo '<script src="'.str_replace(__DIR__ . '/', '', $a).'"></script>'."\n\t";
-	}
-	$ary = glob(__DIR__ . '/plugins/raPages/'.'*'.'/script.js');
-	sort($ary);
-	foreach ($ary as $a) {
-		echo '<script src="'.str_replace(__DIR__ . '/', '', $a).'"></script>'."\n\t";
-	}
-	?>
-
-	<link rel="stylesheet" href="oidplus.css">
-
-	<?php
-	$ary = glob(__DIR__ . '/plugins/publicPages/'.'*'.'/style.css');
-	sort($ary);
-	foreach ($ary as $a) {
-		echo '<link rel="stylesheet" href="'.str_replace(__DIR__ . '/', '', $a).'">'."\n\t";
-	}
-	$ary = glob(__DIR__ . '/plugins/adminPages/'.'*'.'/style.css');
-	sort($ary);
-	foreach ($ary as $a) {
-		echo '<link rel="stylesheet" href="'.str_replace(__DIR__ . '/', '', $a).'">'."\n\t";
-	}
-	$ary = glob(__DIR__ . '/plugins/raPages/'.'*'.'/style.css');
-	sort($ary);
-	foreach ($ary as $a) {
-		echo '<link rel="stylesheet" href="'.str_replace(__DIR__ . '/', '', $a).'">'."\n\t";
-	}
-	?>
-
+	<link rel="stylesheet" href="3p/jstree/themes/default/style.min.css">
+	<link rel="stylesheet" href="oidplus.min.css.php">
 	<link rel="stylesheet" href="3p/bootstrap/css/bootstrap.min.css">
 
 	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
-
-	<script>
-	system_title = <?php echo js_escape(OIDplus::config()->systemTitle()); ?>; // TODO: Is that timing OK or is that a race condition?
-	</script>
 
 	<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" /> -->
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script> -->
@@ -143,7 +105,6 @@ header('X-OIDplus-SystemVersion:'.$sys_ver);
 			"position": "bottom-right"
 		})});
 	</script>
-
 </head>
 
 <body class="mobile">

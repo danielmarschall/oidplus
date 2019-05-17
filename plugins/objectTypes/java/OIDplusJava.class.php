@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+if (!defined('IN_OIDPLUS')) die();
+
 class OIDplusJava extends OIDplusObject {
 	private $java;
 

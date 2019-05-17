@@ -22,8 +22,6 @@
 current_node = "";
 popstate_running = false;
 
-system_title = "";
-
 String.prototype.explode = function (separator, limit) {
 	// https://stackoverflow.com/questions/4514323/javascript-equivalent-to-php-explode
 	const array = this.split(separator);
@@ -40,6 +38,22 @@ String.prototype.htmlentities = function () {
 String.prototype.html_entity_decode = function () {
 	return $('<textarea />').html(this).text();
 };
+
+function getMeta(metaName) {
+	const metas = document.getElementsByTagName('meta');
+
+	for (let i = 0; i < metas.length; i++) {
+		if (metas[i].getAttribute('name') === metaName) {
+			return metas[i].getAttribute('content');
+		}
+	}
+
+	return '';
+}
+
+function getOidPlusSystemTitle() {
+	return getMeta('OIDplus-SystemTitle')
+}
 
 function combine_systemtitle_and_pagetitle(systemtitle, pagetitle) {
 	if (systemtitle == pagetitle) {
@@ -63,7 +77,6 @@ function reloadContent() {
 }
 
 function x_rec(x_data, i) {
-console.log("rec: " + x_data);
 	$('#oidtree').jstree('open_node', x_data[i], function(e, data) {
 		if (i+1 < x_data.length) {
 			x_rec(x_data, i+1);
@@ -133,7 +146,7 @@ function openOidInPanel(id, reselect=false) {
 
 			data.id = id;
 
-			document.title = combine_systemtitle_and_pagetitle(system_title, data.title);
+			document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
 			var state = {
 				"node_id":id,
 				"titleHTML":(data.icon ? '<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' : '') + data.title.htmlentities(),
@@ -154,7 +167,7 @@ function openOidInPanel(id, reselect=false) {
 				$('#real_title').html(data.title.htmlentities());
 			}
 			$('#real_content').html(data.text);
-			document.title = combine_systemtitle_and_pagetitle(system_title, data.title);
+			document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
 			current_node = id;
 		})
 		.catch(function(error) {
@@ -194,7 +207,7 @@ function updateDesc() {
 					var h1 = h1s[i];
 					h1.innerHTML = document.getElementById('titleedit').value.htmlentities();
 				}
-				document.title = combine_systemtitle_and_pagetitle(system_title, document.getElementById('titleedit').value);
+				document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), document.getElementById('titleedit').value);
 
 				var mce = tinymce.get('description');
 				if (mce != null) mce.isNotDirty = 1;
@@ -369,7 +382,7 @@ $(window).on("popstate", function(e) {
 		$('#static_link').attr("href", data.staticlinkHREF);
 		$('#static_link_desktop').attr("href", data.staticlinkHREF_Desktop);
 		$('#static_link_mobile').attr("href", data.staticlinkHREF_Mobile);
-		document.title = combine_systemtitle_and_pagetitle(system_title, data.titleHTML.html_entity_decode());
+		document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.titleHTML.html_entity_decode());
 	} catch (err) {
 		popstate_running = false;
 	} finally {

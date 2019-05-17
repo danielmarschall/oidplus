@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+if (!defined('IN_OIDPLUS')) die();
+
 class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 	public function type() {
 		return 'ra';

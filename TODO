@@ -44,6 +44,9 @@ SMALL THINGS
 - optisch aufhübschen. dinge wie RA: mehr dinge zeigen, adresse, email etc
 
 FUTURE
+- make use of Composer. Problems:
+  * What if composer installs a version of a component, which is incompatible?
+  * We need a new publishing script, because simply checking out SVN is not enough anymore. The user needs to execute composer. But what is if the user don't have composer (or dont have shell access at all?)
 - implement sitemaps xml
 - record history of an OID?
 - admin should be able to change wellknown oids?

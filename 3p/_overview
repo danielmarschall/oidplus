@@ -55,3 +55,9 @@ ReCaptcha:
 	License: BSD 3-Clause "New" or "Revised" License
 	Currently directly linked
 	Website: https://www.google.com/recaptcha/
+
+Minify:
+	License: MIT
+	https://github.com/matthiasmullie/minify (Version: 17 Dec 2018)
+	and its dependency:
+	https://github.com/matthiasmullie/path-converter (Version: 25 Oct 2018)

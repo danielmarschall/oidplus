@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+if (!defined('IN_OIDPLUS')) die();
+
 class OIDplus {
 	private static /*OIDplusPagePlugin[][]*/ $pagePlugins = array();
 	private static /*OIDplusObject*/ $objectTypes = array();

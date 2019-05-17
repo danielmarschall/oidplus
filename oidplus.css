@@ -133,7 +133,7 @@ label.padding_label {
 	padding-left:0px;
 	margin-left:0px;
 
-	display:block; /* TODO: geht nicht */
+	display:block;
 
 	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a0d8ef+0,ddf1f9+65,feffff+100 */
 	background: #a0d8ef; /* Old browsers */

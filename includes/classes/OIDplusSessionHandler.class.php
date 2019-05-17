@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+if (!defined('IN_OIDPLUS')) die();
+
 define('SESSION_LIFETIME', 10*60); // TODO: Configure
 
 class OIDplusSessionHandler {

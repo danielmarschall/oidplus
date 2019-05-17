@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+if (!defined('IN_OIDPLUS')) die();
+
 class OIDplusPagePlugin {
 	public function type() {}
 	public function priority() {}

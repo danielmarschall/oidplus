@@ -30,17 +30,15 @@ foreach ($m as $n) {
 	$check_sum .= $n[2].'='.$n[3].'/';
 
 	if (strpos($n[2], '2.49.0.0') === 0) {
-		// WMO Country OIDs (does not assign Unicode labels)
-
+		// WMO Country OIDs (does not assign Unicode labels), 2.49.0.0
 		echo "INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:$n[2]', '$n[3]', 1);\n";
 
-		$n[2] = str_replace('2.49.0.0', '2.49.0.1', $n[2]); // also country-msg
+		// Country-Msg, 2.49.0.1
+		$n[2] = str_replace('2.49.0.0', '2.49.0.1', $n[2]);
 		echo "INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:$n[2]', '$n[3]', 1);\n";
 	} else {
-		// ISO or JointISOItuT OID Countries
+		// ISO or Joint-ISO-ITU-T OID Countries (1.2 and 2.16)
 		echo "INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:$n[2]', '$n[3]', 1);\n";
-
-		// TODO: In 2.16, some have unicode labels, some don't! Is that an error at oid-info.com? => reported in job 0091
 		echo "INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:$n[2]', '".strtoupper($n[3])."', 0, 1);\n";
 	}
 }

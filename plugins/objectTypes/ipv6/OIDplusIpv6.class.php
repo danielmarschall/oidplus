@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+if (!defined('IN_OIDPLUS')) die();
+
 class OIDplusIpv6 extends OIDplusObject {
 	private $ipv6;
 	private $bare;

@@ -17,17 +17,24 @@
  * limitations under the License.
  */
 
-if (!isset($_GET['number'])) die();
-$number = $_GET['number'];
-$number = preg_replace("/[^0-9]/", "", $number);
-$number = substr($number, 0, 20);
-
-header('Content-Type:image/png');
-header('Content-Disposition:inline; filename="barcode_'.$number.'.png"');
-
 // Using this script (barcode.php) as proxy to the service at metafloor.com has the advantage
 // that we are flexible (e.g. if we want to change to another service or create the barcodes
 // ourselves) and also allows us to be conform with the GDPR, since the IP address / referrer is
 // not transferred to metafloor.com
-echo file_get_contents('http://bwipjs-api.metafloor.com/?bcid=code128&text='.urlencode($number).'&scale=1&includetext');
 
+if (!isset($_GET['number'])) die();
+
+$number = $_GET['number'];
+$number = preg_replace("/[^0-9]/", "", $number);
+$number = substr($number, 0, 20);
+$out = file_get_contents('http://bwipjs-api.metafloor.com/?bcid=code128&text='.urlencode($number).'&scale=1&includetext');
+
+$etag = md5($out);
+header("Etag: $etag");
+if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag)) {
+	header("HTTP/1.1 304 Not Modified");
+} else {
+	header('Content-Type:image/png');
+	header('Content-Disposition:inline; filename="barcode_'.$number.'.png"');
+	echo $out;
+}

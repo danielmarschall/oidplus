@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+if (!defined('IN_OIDPLUS')) die();
+
 interface OIDplusDataBase {
 	public function query($sql);
 	public function num_rows($res);

@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+define('IN_OIDPLUS', true);
+
 if (php_sapi_name() != 'cli') {
 	header('X-Content-Type-Options: nosniff');
 	header('X-XSS-Protection: 1; mode=block');

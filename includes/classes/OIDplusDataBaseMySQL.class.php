@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+if (!defined('IN_OIDPLUS')) die();
+
 class OIDplusDataBaseMySQL implements OIDplusDataBase {
 	private $mysqli;
 
