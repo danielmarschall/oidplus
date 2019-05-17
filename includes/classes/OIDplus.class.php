@@ -264,7 +264,7 @@ class OIDplus {
 		if (!defined('RECAPTCHA_ENABLED'))        define('RECAPTCHA_ENABLED',        false);
 		if (!defined('RECAPTCHA_PUBLIC'))         define('RECAPTCHA_PUBLIC',         '');
 		if (!defined('RECAPTCHA_PRIVATE'))        define('RECAPTCHA_PRIVATE',        '');
-		if (!defined('OIDPLUS_ENFORCE_SSL'))      define('OIDPLUS_ENFORCE_SSL',      2);		
+		if (!defined('OIDPLUS_ENFORCE_SSL'))      define('OIDPLUS_ENFORCE_SSL',      2 /* Auto */);
 
 		// Check version of the config file
 
@@ -313,6 +313,15 @@ class OIDplus {
 		}
 	}
 
+	public static function getVersion() {
+		$status = @shell_exec('svnversion '.realpath(__FILE__));
+		if (preg_match('/\d+/', $status, $match)) {
+			return 'svn-'.$match[0];
+		} else {
+			return false;
+		}
+	}
+
 	private static function isSslAvailable() {
 		$timeout = 2;
 		$already_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == "on");
@@ -334,7 +343,7 @@ class OIDplus {
 			} else {
 				$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 				header('Location:'.$location);
-				die('Redirect to HTTPS'); 
+				die('Redirect to HTTPS');
 				return true;
 			}
 		}
@@ -366,7 +375,7 @@ class OIDplus {
 						setcookie('SSL_CHECK', '1', 0, $cookie_path, '', false, true);
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
-						die('Redirect to HTTPS'); 
+						die('Redirect to HTTPS');
 						return true;
 					} else {
 						// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.

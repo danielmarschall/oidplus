@@ -1,4 +1,4 @@
-DROP TABLE `config`;
+DROP TABLE IF EXISTS `config`;
 CREATE TABLE `config` (
   `name` varchar(50) NOT NULL,
   `value` text NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE `config` (
   `visible` bit(1) NOT NULL DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE `asn1id`;
+DROP TABLE IF EXISTS `asn1id`;
 CREATE TABLE `asn1id` (
   `lfd` int(11) NOT NULL,
   `oid` varchar(255) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE `asn1id` (
   `well_known` bit default 0 NOT NULL DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE `iri`;
+DROP TABLE IF EXISTS `iri`;
 CREATE TABLE `iri` (
   `lfd` int(11) NOT NULL,
   `oid` varchar(255) NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE `iri` (
   `well_known` bit default 0 NOT NULL DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE `objects`;
+DROP TABLE IF EXISTS `objects`;
 CREATE TABLE `objects` (
   `id` varchar(255) NOT NULL,
   `parent` varchar(255) DEFAULT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE `objects` (
   `updated` datetime
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE `ra`;
+DROP TABLE IF EXISTS `ra`;
 CREATE TABLE `ra` (
   `ra_id` int(11) NOT NULL,
   `email` varchar(100) NOT NULL,

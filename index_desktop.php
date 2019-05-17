@@ -46,12 +46,20 @@ $sysid_oid = OIDplus::system_id(true);
 if (!$sysid_oid) $sysid_oid = 'unknown';
 header('X-OIDplus-SystemID:'.$sysid_oid);
 
+$sys_url = OIDplus::system_url();
+header('X-OIDplus-SystemURL:'.$sys_url);
+
+$sys_ver = OIDplus::getVersion();
+if (!$sys_ver) $sys_ver = 'unknown';
+header('X-OIDplus-SystemVersion:'.$sys_ver);
+
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="x-oidplus-system-id" content="<?php echo $sysid_oid; ?>">
-	<meta name="x-oidplus-system-url" content="<?php echo OIDplus::system_url(); ?>">
+	<meta name="OIDplus-SystemID" content="<?php echo $sysid_oid; ?>">
+	<meta name="OIDplus-SystemURL" content="<?php echo $sys_url; ?>">
+	<meta name="OIDplus-SystemVersion" content="<?php echo $sys_ver; ?>">
 	<meta name="theme-color" content="#A9DCF0">
 	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->systemTitle(), $static_title); ?></title>
 	<link rel="stylesheet" href="3p/jstree/themes/default/style.min.css">

@@ -1,18 +1,7 @@
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', 'Example', 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', 'Exemple', 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', 'Ejemplo', 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_base64('2KfZhNmF2KvYp9mE'), 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_base64('6IyD5L6L'), 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_base64('0J/RgNC40LzQtdGA'), 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_base64('7JiI7KCc'), 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', from_base64('5L6L'), 1, 1);
-insert into `iri` (oid, name, longarc, well_known) values ('oid:2.999', 'Beispiel', 1, 1);
-
-insert into `asn1id` (oid, name, standardized, well_known) values ('oid:2.999', 'example', 0, 1);
-INSERT INTO `asn1id` VALUES (2256,'oid:1.3.6.1.4.1.37553.8.32488192274','example',0,'\0');
-INSERT INTO `asn1id` VALUES (2257,'oid:2.999.1','example1',0,'\0');
-INSERT INTO `asn1id` VALUES (2258,'oid:2.999.2','example2',0,'\0');
-INSERT INTO `asn1id` VALUES (2259,'oid:2.999.1.123','delegated',0,'\0');
+INSERT IGNORE INTO `asn1id` VALUES (2256,'oid:1.3.6.1.4.1.37553.8.32488192274','example',0,'\0');
+INSERT IGNORE INTO `asn1id` VALUES (2257,'oid:2.999.1','example1',0,'\0');
+INSERT IGNORE INTO `asn1id` VALUES (2258,'oid:2.999.2','example2',0,'\0');
+INSERT IGNORE INTO `asn1id` VALUES (2259,'oid:2.999.1.123','delegated',0,'\0');
 
 INSERT INTO `objects` VALUES ('doi:10.1000','doi:','DOI Foundation (Example)','<p><strong>DOI Foundation</strong></p>\n<p>This DOI is only included as an example.<br />Please delete this object once your database goes online.</p>','','\0','2018-09-30 22:47:29','2019-03-10 22:42:31');
 INSERT INTO `objects` VALUES ('doi:10.1000/182','doi:10.1000','DOI Handbook','<p><b>DOI Handbook</b></p>\n<p>This DOI is only included as an example.<br />Please delete this object once your database goes online.</p>','','\0','2018-09-30 22:47:20',NULL);

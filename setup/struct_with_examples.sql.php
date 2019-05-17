@@ -32,8 +32,11 @@ foreach ($table_names as $table) {
 
 if (php_sapi_name() != 'cli') {
 	header('Content-Type:text/sql');
+	header('Content-Disposition: inline; filename="struct_with_examples.sql"');
 }
 
-echo "CREATE DATABASE IF NOT EXISTS `$database`;\n\n";
-echo "USE `$database`;\n\n";
+if (!empty($database)) {
+	echo "CREATE DATABASE IF NOT EXISTS `$database`;\n\n";
+	echo "USE `$database`;\n\n";
+}
 echo $cont;

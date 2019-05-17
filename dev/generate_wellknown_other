@@ -48,10 +48,10 @@ function _process_oid($oid) {
 		if (isset($data['oid']['identifier'])) {
 			foreach ($data['oid']['identifier'] as $asn1id) {
 				$std = _is_standardized($oid, $asn1id) ? '1' : '0';
-				$output[$oid]['asn1id'][] = "insert into `asn1id` (oid, name, standardized, well_known) values ('oid:$oid', '$asn1id', $std, 1);";
+				$output[$oid]['asn1id'][] = "INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:$oid', '$asn1id', $std, 1);";
 			}
 		} else {
-			echo "-- Warning: Has no ASN.1 identifier: $oid\n";
+			//echo "-- Warning: Has no ASN.1 identifier: $oid\n";
 		}
 		if (isset($data['oid']['unicode-label'])) {
 			foreach ($data['oid']['unicode-label'] as $iri) {
@@ -63,7 +63,7 @@ function _process_oid($oid) {
 					$iri = "'$iri'";
 				}
 
-				$output[$oid]['iri'][] = "insert into `iri` (oid, name, longarc, well_known) values ('oid:$oid', $iri, $std, 1);";
+				$output[$oid]['iri'][] = "INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:$oid', $iri, $std, 1);";
 			}
 		}
 	}
@@ -99,19 +99,19 @@ $interesting_oids[] = '1'; // iso
 			$interesting_oids[] = '1.1.19785.0'; // organization
 	$interesting_oids[] = '1.2'; // member-body
 		// country_getter defines the country OIDs
-		$interesting_oids[] = '1.2.158'; // tw
+		//$interesting_oids[] = '1.2.158'; // tw
 			$interesting_oids[] = '1.2.158.1'; // organization
-		$interesting_oids[] = '1.2.276'; // de
+		//$interesting_oids[] = '1.2.276'; // de
 			$interesting_oids[] = '1.2.276.0'; // din-certco
-		$interesting_oids[] = '1.2.344'; // hk
+		//$interesting_oids[] = '1.2.344'; // hk
 			$interesting_oids[] = '1.2.344.1'; // organization
-		$interesting_oids[] = '1.2.616'; // pl
+		//$interesting_oids[] = '1.2.616'; // pl
 			$interesting_oids[] = '1.2.616.1'; // organization
-		$interesting_oids[] = '1.2.826'; // gb
+		//$interesting_oids[] = '1.2.826'; // gb
 			$interesting_oids[] = '1.2.826.0'; // national
 				$interesting_oids[] = '1.2.826.0.1'; // eng-ltd
 					$interesting_oids[] = '1.2.826.0.1.3680043'; // Medical Connections ( https://www.medicalconnections.co.uk/FreeUID/ )
-		$interesting_oids[] = '1.2.840'; // us
+		//$interesting_oids[] = '1.2.840'; // us
 			$interesting_oids[] = '1.2.840.1'; // organization
 				$interesting_oids[] = '1.2.840.113556'; // microsoft
 					$interesting_oids[] = '1.2.840.113556.1'; // Microsoft Active Directory
@@ -140,13 +140,13 @@ $interesting_oids[] = '1'; // iso
 $interesting_oids[] = '2'; // joint-iso-itu-t
 	$interesting_oids[] = '2.16'; // country
 		// country_getter defines the country OIDs
-		$interesting_oids[] = '2.16.158'; // tw
+		//$interesting_oids[] = '2.16.158'; // tw
 			$interesting_oids[] = '2.16.158.1'; // organization
-		$interesting_oids[] = '2.16.344'; // hk
+		//$interesting_oids[] = '2.16.344'; // hk
 			$interesting_oids[] = '2.16.344.1'; // organization
-		$interesting_oids[] = '2.16.616'; // pl
+		//$interesting_oids[] = '2.16.616'; // pl
 			$interesting_oids[] = '2.16.616.1'; // organization
-		$interesting_oids[] = '2.16.840'; // us
+		//$interesting_oids[] = '2.16.840'; // us
 			$interesting_oids[] = '2.16.840.1'; // organization
 				$interesting_oids[] = '2.16.840.1.113883'; // hl7
 					$interesting_oids[] = '2.16.840.1.113883.3'; // externalUseRoots
@@ -160,9 +160,9 @@ $interesting_oids[] = '2'; // joint-iso-itu-t
 	$interesting_oids[] = '2.49'; // alerting
 		$interesting_oids[] = '2.49.0'; // wmo
 			$interesting_oids[] = '2.49.0.0'; // authority (Countries)
-				// country_getter defines the country OIDs
+				// country_getter defines the country OIDs beneath 2.49.0.0
 			$interesting_oids[] = '2.49.0.1'; // country-msg
-				// country_getter defines the country OIDs
+				// country_getter defines the country OIDs beneath 2.49.0.1
 			$interesting_oids[] = '2.49.0.2'; // org
 			$interesting_oids[] = '2.49.0.3'; // org-msg
 
@@ -178,6 +178,8 @@ foreach ($interesting_oids as $oid) {
 
 $check_sum = '';
 foreach ($output as $oid => $data) {
+	if (count($data['asn1id']) + count($data['iri']) == 0) continue;
+
 	echo "-- $oid\n";
 	foreach ($data['asn1id'] as $line_asn1) {
 		$check_sum .= $oid.'='.$line_asn1.'/';
@@ -189,7 +191,7 @@ foreach ($output as $oid => $data) {
 	}
 	echo "\n";
 }
-echo '-- Generator checksum '.dechex(crc32($check_sum))."\n";
+echo '-- Generator "generate_wellknown_other" checksum '.dechex(crc32($check_sum))."\n";
 
 # ---
 
