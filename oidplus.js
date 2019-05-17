@@ -81,7 +81,14 @@ function x_rec(x_data, i) {
 		if (i+1 < x_data.length) {
 			x_rec(x_data, i+1);
 		} else {
-			$('#oidtree').jstree('select_node', x_data[i]);
+			popstate_running = true; // don't call openOidInPanel again
+			try {
+				$('#oidtree').jstree('select_node', x_data[i]);
+			} catch (err) {
+				popstate_running = false;
+			} finally {
+				popstate_running = false;
+			}
 		}
 	});
 }
@@ -90,40 +97,41 @@ function openOidInPanel(id, reselect=false) {
 	if (reselect) {
 		$('#oidtree').jstree('deselect_all');
 
-		// If the node is already loaded in the tree, select it.
-		// The select-event will load the content page, so we can return from this function.
-		if ($('#oidtree').jstree('select_node', id)) return;
-
-		// If the node is not loaded, then we try to search it.
-		// If it can be found, then open all parent nodes and select the node
-		// TODO: maybe it would be good if content is loaded BEFORE the tree is expanded
-		$.ajax({
-			url:"ajax.php",
-			method:"POST",
-			data:{
-				action:"tree_search",
-				search:id
-			},
-			error:function(jqXHR, textStatus, errorThrown) {
-				openOidInPanel(id, false);
-			},
-			success:function(data) {
-				if ("error" in data) {
-					console.error(data);
-					openOidInPanel(id, false); // silently ignore the problem
-				} else if ((data instanceof Array) && (data.length > 0)) {
-					x_rec(data, 0);
-				} else {
-					openOidInPanel(id, false);
-				}
+		popstate_running = true; // don't call openOidInPanel during tree selection
+		try {
+			// If the node is already loaded in the tree, select it
+			if (!$('#oidtree').jstree('select_node', id)) {
+				// If the node is not loaded, then we try to search it.
+				// If it can be found, then open all parent nodes and select the node
+				$.ajax({
+					url:"ajax.php",
+					method:"POST",
+					data:{
+						action:"tree_search",
+						search:id
+					},
+					error:function(jqXHR, textStatus, errorThrown) {
+						console.error("Error: " + errorThrown);
+					},
+					success:function(data) {
+						if ("error" in data) {
+							console.error(data);
+						} else if ((data instanceof Array) && (data.length > 0)) {
+							x_rec(data, 0);
+						} else {
+							console.error(data);
+						}
+					}
+				});
 			}
-		});
-
-		// If something fails (e.g. if ajax.php=action=tree_search cannot find the node,
-		// then openOidInPanel will be called again, without the reselect argument.
-		// So we can now exit
-		return;
+		} catch (err) {
+			popstate_running = false;
+		} finally {
+			popstate_running = false;
+		}
 	}
+
+	// This loads the actual content
 
 	document.title = "";
 	$('#real_title').html("&nbsp;");
@@ -131,8 +139,6 @@ function openOidInPanel(id, reselect=false) {
 	$('#static_link').attr("href", "index.php?goto="+encodeURIComponent(id));
 	$('#static_link_desktop').attr("href", "index_desktop.php?goto="+encodeURIComponent(id));
 	$('#static_link_mobile').attr("href", "index_mobile.php?goto="+encodeURIComponent(id));
-
-	if (popstate_running) return; // To avoid that the jstree selection during popstate() won't trigger another page load
 
 	// Normal opening of a description
 	fetch('ajax.php?action=get_description&id='+encodeURIComponent(id))
@@ -438,7 +444,7 @@ $(document).ready(function () {
 		}
 
 		var id = selected.node.id;
-		if (current_node != id) {
+		if ((!popstate_running) && (current_node != id)) {
 			openOidInPanel(id, false);
 		}
 	});
