@@ -218,7 +218,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				$ra_roots[] = array(
 					'id' => 'oidplus:raroot$'.$loc_root->nodeId(),
 					'text' => 'Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())),
-					'conditionalselect' => '$("#content_window").html(""); document.location = "?goto="+encodeURI('.js_escape($loc_root->nodeId()).');',
+					'conditionalselect' => 'openOidInPanel('.js_escape($loc_root->nodeId()).', true);',
 					'icon' => !is_null($ico) ? $ico : 'plugins/publicPages/'.basename(__DIR__).'/treeicon_link.png'
 				);
 			}

@@ -8,10 +8,6 @@ IMPORTANT
 	do we need a consent for the cookie SSL_CHECK?
 - dsgvo datenschutzerklärung, agbs etc.
 
-VTS INTERNAL
-- vts_regqry nun von ajax.php beziehen und nicht von index.php
-- whois server hat nun andere position
-
 SMALL THINGS
 - when login expired, remove entries in the treeview
 - can we put even more code (e.g. object CRUD) into the plugin directory?
