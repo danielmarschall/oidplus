@@ -119,7 +119,7 @@ header('X-OIDplus-SystemTitle:'.$sys_title);
 		<noscript>
 			<p><b>Please enable JavaScript to use all features</b></p>
 		</noscript>
-		<?php OIDplusTree::nonjs_menu(); ?> <!-- TODO: NonJS menu: Horizontal Scrol bar missing -->
+		<?php OIDplusTree::nonjs_menu(); ?> <!-- TODO: NonJS menu: Horizontal scroll bar missing -->
 	</div>
 
 	<div id="content_window" class="pc borderbox ui-layout-center">

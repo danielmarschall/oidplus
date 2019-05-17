@@ -43,11 +43,11 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePlugin {
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:contact') {
 			$handled = true;
-			$out['title'] = 'Contact system admin';
+			$out['title'] = 'Contact administrator';
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/publicPages/'.basename(__DIR__).'/icon_big.png' : '';
 
 			if (empty(OIDplus::config()->getValue('admin_email'))) {
-				$out['text'] = '<p>The administrator of this system has not entered a contact email address.';
+				$out['text'] = '<p>The administrator of this OIDplus system has not entered a contact email address.';
 			} else {
 				$out['text'] = '<p>You can contact the administrator of this OIDplus system at this email address:</p><p><a href="mailto:'.htmlentities(OIDplus::config()->getValue('admin_email')).'">'.htmlentities(OIDplus::config()->getValue('admin_email')).'</a></p>';
 			}
@@ -64,7 +64,7 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePlugin {
 		$json[] = array(
 			'id' => 'oidplus:contact',
 			'icon' => $tree_icon,
-			'text' => 'Contact sysadmin'
+			'text' => 'Contact administrator'
 		);
 
 		return true;

@@ -71,7 +71,7 @@ function getTreeLoadURL() {
 }
 
 function reloadContent() {
-	// document.location = '?goto='+encodeURIComponent(current_node);
+	// document.location = "?goto="+encodeURIComponent(current_node);
 	openOidInPanel(current_node, false);
 	$('#oidtree').jstree("refresh");
 }
@@ -96,6 +96,7 @@ function openOidInPanel(id, reselect=false) {
 
 		// If the node is not loaded, then we try to search it.
 		// If it can be found, then open all parent nodes and select the node
+		// TODO: maybe it would be good if content is loaded BEFORE the tree is expanded
 		$.ajax({
 			url:"ajax.php",
 			method:"POST",
@@ -219,10 +220,8 @@ function updateDesc() {
 }
 
 function crudActionSendInvitation(origin, email) {
-	// document.location = '?goto=oidplus:invite_ra$'+email+'$'+origin;
-
+	// document.location = "?goto=oidplus:invite_ra$"+encodeURIComponent(email)+"$"+encodeURIComponent(origin);
 	openOidInPanel('oidplus:invite_ra$'+email+'$'+origin, false);
-
 }
 
 function crudActionInsert(parent) {
@@ -344,7 +343,7 @@ function deleteRa(email, goto) {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
 				alert("Done.");
-				if (goto != null) document.location = '?goto=' + goto;
+				if (goto != null) document.location = "?goto="+encodeURIComponent(goto);
 				// reloadContent();
 			} else {
 				alert("Error: " + data.error);
@@ -428,7 +427,7 @@ $(document).ready(function () {
 			"staticlinkHREF":"index.php?goto="+encodeURIComponent(goto),
 			"staticlinkHREF_Desktop":"index_desktop.php?goto="+encodeURIComponent(goto),
 			"staticlinkHREF_Mobile":"index_mobile.php?goto="+encodeURIComponent(goto)
-		}, $('#real_title').html(), '?goto='+encodeURIComponent(goto));
+		}, $('#real_title').html(), "?goto="+encodeURIComponent(goto));
 
 		if (goto != null) data.instance.select_node([goto]);
 	})
