@@ -38,6 +38,9 @@ class OIDplusDataBaseMySQL implements OIDplusDataBase {
 	public function real_escape_string($str) {
 		return $this->mysqli->real_escape_string($str);
 	}
+	public function insert_id() {
+		return $this->mysqli->insert_id;
+	}
 	public function escape_bool($str) {
 		return (($str == 'true') || ($str == '1') || ($str == 'On') || ($str == 'on')) ? '1' : '0';
 	}

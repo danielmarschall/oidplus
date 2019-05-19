@@ -61,17 +61,39 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 				$out['text'] .= '<p><a '.oidplus_link($loc_root->nodeId()).'><img src="'.$icon.'"> Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())).'</a></p>';
 			}
 
-			if (OIDplus::authUtils()::isRALoggedIn($ra_email)) {
-				$out['text'] .= '<br><p><a '.oidplus_link('oidplus:edit_ra$'.$ra_email).'>Edit contact info</a></p>';
-			}
+			if (!empty($ra_email)) {
+				if (OIDplus::authUtils()::isRALoggedIn($ra_email)) {
+					$out['text'] .= '<br><p><a '.oidplus_link('oidplus:edit_ra$'.$ra_email).'>Edit contact info</a></p>';
+				}
 
-			if (!empty($ra_email) && OIDplus::authUtils()::isAdminLoggedIn()) {
-				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
-				if (OIDplus::db()->num_rows($res) > 0) {
-					if (class_exists("OIDplusPageAdminListRAs")) {
-						$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">Delete this RA</a></p>';
-					} else {
-						$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">Delete this RA</a></p>';
+				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+					$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
+					if (OIDplus::db()->num_rows($res) > 0) {
+						if (class_exists("OIDplusPageAdminListRAs")) {
+							$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">Delete this RA</a></p>';
+						} else {
+							$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">Delete this RA</a></p>';
+						}
+					}
+				}
+
+				if (OIDplus::authUtils()::isRALoggedIn($ra_email) || OIDplus::authUtils()::isAdminLoggedIn()) {
+					$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event from ".OIDPLUS_TABLENAME_PREFIX."log lo ".
+					                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_user lu on lu.log_id = lo.id ".
+					                            "where lu.user = '".OIDplus::db()->real_escape_string($ra_email)."' " .
+												"order by lo.unix_ts desc");
+					if (OIDplus::db()->num_rows($res) > 0) {
+						$out['text'] .= '<h2>Log messages for RA '.htmlentities($ra_email).'</h2>';
+						$out['text'] .= '<pre>';
+						while ($row = OIDplus::db()->fetch_array($res)) {
+							$addr = empty($row['addr']) ? 'no address' : $row['addr'];
+
+							$out['text'] .= date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr) . ")\n";
+						}
+						$out['text'] .= '</pre>';
+
+						// TODO: List logs in a table instead of a <pre> text
+						// TODO: Load only X events and then re-load new events via AJAX when the user scrolls down
 					}
 				}
 			}

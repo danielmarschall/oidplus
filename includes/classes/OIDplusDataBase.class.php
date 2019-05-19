@@ -25,6 +25,7 @@ interface OIDplusDataBase {
 	public function fetch_array($res);
 	public function fetch_object($res);
 	public function real_escape_string($str);
+	public function insert_id();
 	public function escape_bool($str);
 	public function set_charset($charset);
 	public function error();

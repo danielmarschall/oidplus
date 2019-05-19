@@ -19,11 +19,9 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-// TODO: This should be an RA plugin, not a PUBLIC plugin!
-
-class OIDplusPagePublicInvite extends OIDplusPagePlugin {
+class OIDplusPageRaInvite extends OIDplusPagePlugin {
 	public function type() {
-		return 'public';
+		return 'ra';
 	}
 
 	public function priority() {
@@ -117,7 +115,7 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 			$origin = explode('$',$id)[2];
 
 			$out['title'] = 'Invite a Registration Authority';
-			$out['icon'] = 'plugins/publicPages/'.basename(__DIR__).'/invite_ra_big.png';
+			$out['icon'] = 'plugins/raPages/'.basename(__DIR__).'/invite_ra_big.png';
 
 			try {
 				$this->inviteSecurityCheck($email);
@@ -147,7 +145,7 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 			$auth = explode('$',$id)[3];
 
 			$out['title'] = 'Register as Registration Authority';
-			$out['icon'] = 'plugins/publicPages/'.basename(__DIR__).'/activate_ra_big.png';
+			$out['icon'] = 'plugins/raPages/'.basename(__DIR__).'/activate_ra_big.png';
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 			if (OIDplus::db()->num_rows($res) > 0) {
@@ -176,7 +174,7 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		return false;
 	}
-	
+
 	private function inviteSecurityCheck($email) {
 		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 		if (OIDplus::db()->num_rows($res) > 0) {
@@ -225,4 +223,4 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 	}
 }
 
-OIDplus::registerPagePlugin(new OIDplusPagePublicInvite());
+OIDplus::registerPagePlugin(new OIDplusPageRaInvite());

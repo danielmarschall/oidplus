@@ -136,11 +136,19 @@ class OIDplusLogger {
 			}
 		}
 
-		// TODO: Log to database
-		$users = implode(';', $users);
-		if ($users == '') $users = '-';
-		$objects = implode(';', $objects);
-		if ($objects == '') $objects = '-';
-		file_put_contents(__DIR__ . '/../../logtest.log', "$objects / $users / $event\n", FILE_APPEND);
+		// Now write the log message
+
+		$addr = isset($_SERVER['REMOTE_ADDR']) ? "'".OIDplus::db()->real_escape_string($_SERVER['REMOTE_ADDR'])."'" : "null";
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log (addr, unix_ts, event) values ($addr, UNIX_TIMESTAMP(), '".OIDplus::db()->real_escape_string($event)."')");
+		$log_id = OIDplus::db()->insert_id();
+
+		foreach ($objects as $object) {
+			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log_object (log_id, object) values ($log_id, '".OIDplus::db()->real_escape_string($object)."')");
+		}
+
+		foreach ($users as $user) {
+			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log_user (log_id, user) values ($log_id, '".OIDplus::db()->real_escape_string($user)."')");
+		}
+
 	}
 }

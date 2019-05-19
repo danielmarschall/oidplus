@@ -10,11 +10,7 @@ IMPORTANT
 - Problems with mobile view when logged in
 	* viewport not working? page is too tiny
 	* TinyMCE seems to be incompatible with Android?
-
-NEW FEATURES
-- Implement logger
-	* Log API should not just log RAs, but also OIDs. This way we can have a small history
-	* check all log functions if the correct RAs are logged
+- Verify that logger works correctly, check if all logmasks are correct
 
 ADMIN AREA
 - Allow that the admin can change user's passwort/contact data

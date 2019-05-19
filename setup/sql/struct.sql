@@ -59,16 +59,42 @@ CREATE TABLE `ra` (
   `last_login` datetime
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `log`;
+CREATE TABLE `log` (
+  `id` int(11) NOT NULL,
+  `unix_ts` bigint NOT NULL,
+  `addr` varchar(45) NOT NULL,
+  `event` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `log_user`;
+CREATE TABLE `log_user` (
+  `id` int(11) NOT NULL,
+  `log_id` int(11) NOT NULL,
+  `user` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `log_object`;
+CREATE TABLE `log_object` (
+  `id` int(11) NOT NULL,
+  `log_id` int(11) NOT NULL,
+  `object` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 ALTER TABLE `config`
   ADD PRIMARY KEY (`name`);
 
 ALTER TABLE `asn1id`
   ADD PRIMARY KEY (`lfd`),
   ADD UNIQUE KEY `oid` (`oid`,`name`);
+ALTER TABLE `asn1id`
+  MODIFY `lfd` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `iri`
   ADD PRIMARY KEY (`lfd`),
   ADD UNIQUE KEY `oid` (`oid`,`name`);
+ALTER TABLE `iri`
+  MODIFY `lfd` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `objects`
   ADD PRIMARY KEY (`id`) USING BTREE;
@@ -76,16 +102,22 @@ ALTER TABLE `objects`
 ALTER TABLE `ra`
   ADD PRIMARY KEY (`ra_id`),
   ADD UNIQUE KEY `email` (`email`);
-
-ALTER TABLE `asn1id`
-  MODIFY `lfd` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `iri`
-  MODIFY `lfd` int(11) NOT NULL AUTO_INCREMENT;
-
 ALTER TABLE `ra`
   MODIFY `ra_id` int(11) NOT NULL AUTO_INCREMENT;
-COMMIT;
+
+ALTER TABLE `log`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `log_user`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `log_user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `log_object`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `log_object`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '200', 1, 0);
-
