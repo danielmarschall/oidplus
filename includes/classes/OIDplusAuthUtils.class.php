@@ -71,11 +71,20 @@ class OIDplusAuthUtils {
 		$ses = OIDplus::sesHandler();
 		$list = $ses->getValue('oidplus_logged_in');
 		if (is_null($list)) $list = '';
-		return ($list == '') ? array() : explode('|', $list);
+
+		$res = array();
+		foreach (explode('|', $list) as $ra_email) {
+			if ($ra_email == '') continue;
+			$res[] = new OIDplusRA($ra_email);
+		}
+		return $res;
 	}
 
 	public static function isRaLoggedIn($email) {
-		return in_array($email, self::loggedInRaList());
+		foreach (self::loggedInRaList() as $ra) {
+			if ($email == $ra->raEmail()) return true;
+		}
+		return false;
 	}
 
 	// Admin authentication functions

@@ -56,6 +56,9 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 				}
 			}
 
+			$root_oid = OIDplus::config()->getValue('freeoid_root_oid');
+			OIDplus::logger()->log("OID($root_oid)+RA($email)!", "Requested a free OID for email '$email' to be placed into root '$root_oid'");
+
 			$timestamp = time();
 			$activate_url = OIDplus::system_url() . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp));
 
@@ -64,7 +67,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
-			my_mail($email, OIDplus::config()->systemTitle().' - Free OID request', $message, 'daniel-marschall@viathinksoft.de');
+			my_mail($email, OIDplus::config()->systemTitle().' - Free OID request', $message, OIDplus::config()->globalCC());
 
 			echo json_encode(array("status" => 0));
 		}
@@ -102,7 +105,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			if (empty($ra_name)) {
 				die(json_encode(array("error" => 'Please enter your personal name or the name of your group.')));
 			}
-
+			
 			// 1. step: Add the RA to the database
 
 			$ra = new OIDplusRA($email);
@@ -111,7 +114,11 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 
 			// 2. step: Add the new OID to the database
 
-			$new_oid = OIDplus::config()->getValue('freeoid_root_oid').'.'.($this->freeoid_max_id()+1);
+			$root_oid = OIDplus::config()->getValue('freeoid_root_oid');
+			$new_oid = $root_oid.'.'.($this->freeoid_max_id()+1);
+
+			OIDplus::logger()->log("OID($root_oid)+OIDRA($root_oid)!", "Child OID '$new_oid' added automatically by '$email' (RA Name: '$ra_name')");
+			OIDplus::logger()->log("OID($new_oid)+RA($email)!",        "Free OID '$new_oid' activated (RA Name: '$ra_name')");
 
 			if ((!empty($url)) && (substr($url, 0, 4) != 'http')) $url = 'http://'.$url;
 
@@ -149,7 +156,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{NEW_OID}}', $new_oid, $message);
-			my_mail($email, OIDplus::config()->systemTitle().' - Free OID allocated', $message, 'daniel-marschall@viathinksoft.de');
+			my_mail($email, OIDplus::config()->systemTitle().' - Free OID allocated', $message, OIDplus::config()->globalCC());
 
 			echo json_encode(array("status" => 0));
 		}

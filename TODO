@@ -7,8 +7,25 @@ IMPORTANT
 	do we need an explicit consent at the login form?
 	do we need a consent for the cookie SSL_CHECK?
 - dsgvo datenschutzerklärung, agbs etc.
+- Problems with mobile view when logged in
+	* viewport not working? page is too tiny
+	* TinyMCE seems to be incompatible with Android?
+
+NEW FEATURES
+- Implement logger
+	* Log API should not just log RAs, but also OIDs. This way we can have a small history
+	* check all log functions if the correct RAs are logged
+
+ADMIN AREA
+- Allow that the admin can change user's passwort/contact data
+- Admin should see log events for each RA and OID
+
+SETUP
+- Add warning that with the insertion of the database, all tables will be droppped
 
 SMALL THINGS
+- when a PHP error happens, the AJAX script outputs "Error: SyntaxError: Unexpected token < in JSON at position 0" ... better show the user the actual message
+- "plugin.inc.php" => rename to *.class.php ? Or vice versa for object types?
 - when login expired, remove entries in the treeview
 - can we put even more code (e.g. object CRUD) into the plugin directory?
 - disable specific functions (e.g. invite, login, rainfo, forgot password) if the plugins are not installed (check if class type is registered)
@@ -58,6 +75,12 @@ FUTURE
 - "Search" plugin: I want to search in all object types and RAs. Not first select the type.
 - How can we make sure that example objects are not exported using oid-info.com export?
 - Administrator-Interface: enable and disable object types
+
+BUGS?
+- AJAX requests won't contain BASIC AUTH, although the page itself is
+  loaded via BASIC AUTH. Happens only when the query comes from local,
+  acessed by domain name?
+  (Chromium 56.0.2924.84 Built on Ubuntu 14.04, running on Raspbian 9.9)
 
 REJECTED IDEAS
 - sollte es mehere admins geben?

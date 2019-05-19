@@ -19,6 +19,8 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
+// TODO: This should be an RA plugin, not a PUBLIC plugin!
+
 class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 	public function type() {
 		return 'public';
@@ -47,10 +49,13 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 				}
 			}
 
+			$this->inviteSecurityCheck($email);
+			OIDplus::logger()->log("RA($email)!", "RA '$email' has been invited");
+
 			$timestamp = time();
 			$activate_url = OIDplus::system_url() . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('activate_ra;'.$email.';'.$timestamp));
 
-			$message = $this->getInvitationText($_POST['email']);
+			$message = $this->getInvitationText($email);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 
 			my_mail($email, OIDplus::config()->systemTitle().' - Invitation', $message, OIDplus::config()->globalCC());
@@ -83,6 +88,8 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 				die(json_encode(array("error" => 'Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength())));
 			}
 
+			OIDplus::logger()->log("RA($email)!", "RA '$email' has been registered due to invitation");
+
 			$ra = new OIDplusRA($email);
 			$ra->register_ra($password1);
 
@@ -113,6 +120,7 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 			$out['icon'] = 'plugins/publicPages/'.basename(__DIR__).'/invite_ra_big.png';
 
 			try {
+				$this->inviteSecurityCheck($email);
 				$cont = $this->getInvitationText($email);
 
 				$out['text'] .= '<p>You have chosen to invite <b>'.$email.'</b> as an Registration Authority. If you click "Send", the following email will be sent to '.$email.':</p><p><i>'.nl2br(htmlentities($cont)).'</i></p>
@@ -168,8 +176,8 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		return false;
 	}
-
-	private function getInvitationText($email) {
+	
+	private function inviteSecurityCheck($email) {
 		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 		if (OIDplus::db()->num_rows($res) > 0) {
 			throw new Exception("This RA is already registered and does not need to be invited.");
@@ -190,7 +198,9 @@ class OIDplusPagePublicInvite extends OIDplusPagePlugin {
 				throw new Exception('You may not invite this RA. Maybe you need to log in again.');
 			}
 		}
+	}
 
+	private function getInvitationText($email) {
 		$list_of_oids = array();
 		$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where ra_email = '".OIDplus::db()->real_escape_string($email)."'");
 		while ($row = OIDplus::db()->fetch_array($res)) {

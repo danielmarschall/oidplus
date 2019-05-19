@@ -102,16 +102,18 @@ try {
 
 		$email = $_POST['email'];
 
-		$ra_logged_in = OIDplus::authUtils()::isRaLoggedIn($email);
+		$ra_logged_in = OIDplus::authUtils()->isRaLoggedIn($email);
 
-		if (!OIDplus::authUtils()::isAdminLoggedIn() && !$ra_logged_in) {
-			throw new Exception('You need to log in as administrator');
+		if (!OIDplus::authUtils()->isAdminLoggedIn() && !$ra_logged_in) {
+			throw new Exception('Authentification error. Please log in.');
 		}
 
-		if ($ra_logged_in) OIDplus::authUtils()::raLogout($email);
+		if ($ra_logged_in) OIDplus::authUtils()->raLogout($email);
 
 		$ra = new OIDplusRA($email);
 		$ra->delete();
+
+		OIDplus::logger()->log("RA($email)?/A?", "RA '$email' deleted");
 
 		echo json_encode(array("status" => 0));
 	}
@@ -130,6 +132,8 @@ try {
 
 		// Prüfen ob zugelassen
 		if (!$obj->userHasParentalWriteRights()) throw new Exception('Authentification error. Please log in as the superior RA to delete this OID.');
+		
+		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Object '$id' (recursively) deleted");
 
 		// Delete object
 		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
@@ -164,21 +168,28 @@ try {
 		$id = $_POST['id'];
 		$obj = OIDplusObject::parse($id);
 
+		// Prüfen ob zugelassen
+		if (!$obj->userHasParentalWriteRights()) throw new Exception('Authentification error. Please log in as the superior RA to update this OID.');
+
 		// Validate RA email address
 		$new_ra = $_POST['ra_email'];
 		if (!empty($new_ra) && !oidplus_valid_email($new_ra)) {
 			throw new Exception('Invalid RA email address');
 		}
-
-		// Prüfen ob zugelassen
-		if (!$obj->userHasParentalWriteRights()) throw new Exception('Authentification error. Please log in as the superior RA to update this OID.');
-
+		
 		// RA ändern (rekursiv)
 		$res = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
 		$row = OIDplus::db()->fetch_array($res);
 		$current_ra = $row['ra_email'];
 
-		if ($new_ra != $current_ra) _ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mitändern
+		if ($new_ra != $current_ra) {
+			OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
+			OIDplus::logger()->log("RA($current_ra)!", "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
+			OIDplus::logger()->log("RA($new_ra)!", "Gained ownership of object '$id' due to RA transfer of superior RA / admin.");
+			_ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mitändern
+		}
+
+		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Identifiers/Confidential flag of object '$id' updated"); // TODO: Check if they were ACTUALLY updated!
 
 		// Replace ASN.1 und IRI IDs
 		if ($obj::ns() == 'oid') {
@@ -220,6 +231,8 @@ try {
 
 		// Prüfen ob zugelassen
 		if (!$obj->userHasWriteRights()) throw new Exception('Authentification error. Please log in as the RA to update this OID.');
+		
+		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Title/Description of object '$id' updated");
 
 		if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET title = '".OIDplus::db()->real_escape_string($_POST['title'])."', description = '".OIDplus::db()->real_escape_string($_POST['description'])."', updated = now() WHERE id = '".OIDplus::db()->real_escape_string($id)."'")) {
 			throw new Exception(OIDplus::db()->error());
@@ -243,7 +256,7 @@ try {
 
 		// Check if the ID is valid
 		if ($_POST['id'] == '') throw new Exception('ID may not be empty');
-
+		
 		// Absoluten OID namen bestimmen
 		// Note: At addString() and parse(), the syntax of the ID will be checked
 		$id = $objParent->addString($_POST['id']);
@@ -256,6 +269,10 @@ try {
 			throw new Exception('Invalid RA email address');
 		}
 		$confidential = $_POST['confidential'] == 'true' ? '1' : '0';
+
+		OIDplus::logger()->log("OID($parent)+OIDRA($parent)?/A?", "Created child object '$id'");
+		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?",      "OIDP/A", "Object '$id' created, given to RA '".(empty($ra_email) ? '(undefined)' : $ra_email)."'");
+
 		if (!OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, created) VALUES ('".OIDplus::db()->real_escape_string($id)."', '".OIDplus::db()->real_escape_string($parent)."', '".OIDplus::db()->real_escape_string($ra_email)."', ".OIDplus::db()->real_escape_string($confidential).", now())")) {
 			throw new Exception(OIDplus::db()->error());
 		}
@@ -276,6 +293,7 @@ try {
 		$status = 0;
 
 		if (!empty($ra_email)) {
+			// Do we need to notify that the RA does not exist?
 			$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
 			if (OIDplus::db()->num_rows($res) == 0) $status = 1;
 		}

@@ -22,8 +22,12 @@ if (!defined('IN_OIDPLUS')) die();
 class OIDplusRA {
 	private $email = null;
 
-	function __construct($email) {
+	public function __construct($email) {
 		$this->email = $email;
+	}
+
+	public function raEmail() {
+		return $this->email;
 	}
 
 	public function raName() {
@@ -33,7 +37,16 @@ class OIDplusRA {
 		return $row['ra_name'];
 	}
 
-	function change_password($new_password) {
+	public static function getAllRAs() {
+		$out = array();
+		$res = OIDplus::db()->query("select email from ".OIDPLUS_TABLENAME_PREFIX."ra");
+		while ($row = OIDplus::db()->fetch_array($res)) {
+			$out[] = new OIDplusRA($row['email']);
+		}
+		return $out;
+	}
+
+	public function change_password($new_password) {
 		$s_salt = substr(md5(rand()), 0, 7);
 		$calc_authkey = 'A2#'.base64_encode(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $s_salt.$new_password, true) : bb\Sha3\Sha3::hash($s_salt.$new_password, 512, true));
 		if (!OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."ra set salt='".OIDplus::db()->real_escape_string($s_salt)."', authkey='".OIDplus::db()->real_escape_string($calc_authkey)."' where email = '".OIDplus::db()->real_escape_string($this->email)."'")) {
@@ -41,13 +54,13 @@ class OIDplusRA {
 		}
 	}
 
-	function change_email($new_email) {
+	public function change_email($new_email) {
 		if (!OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."ra set email = '".OIDplus::db()->real_escape_string($new_email)."' where email = '".OIDplus::db()->real_escape_string($this->email)."'")) {
 			throw new Exception(OIDplus::db()->error());
 		}
 	}
 
-	function register_ra($new_password) {
+	public function register_ra($new_password) {
 		$s_salt = substr(md5(rand()), 0, 7);
 		$calc_authkey = 'A2#'.base64_encode(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $s_salt.$new_password, true) : bb\Sha3\Sha3::hash($s_salt.$new_password, 512, true));
 		if (!OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."ra (salt, authkey, email, registered) values ('".OIDplus::db()->real_escape_string($s_salt)."', '".OIDplus::db()->real_escape_string($calc_authkey)."', '".OIDplus::db()->real_escape_string($this->email)."', now())")) {
@@ -55,7 +68,7 @@ class OIDplusRA {
 		}
 	}
 
-	function checkPassword($password) {
+	public function checkPassword($password) {
 		$ra_res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($this->email)."'");
 		$ra_row = OIDplus::db()->fetch_array($ra_res);
 		$s_salt = $ra_row['salt'];
@@ -74,13 +87,13 @@ class OIDplusRA {
 		return hash_equals($calc_authkey, $s_authkey);
 	}
 
-	function delete() {
+	public function delete() {
 		if (!OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($this->email)."'")) {
 			throw new Exception(OIDplus::db()->error());
 		}
 	}
 
-	function setRaName($ra_name) {
+	public function setRaName($ra_name) {
 		if (!OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."ra set ra_name = '".OIDplus::db()->real_escape_string($ra_name)."' where email = '".OIDplus::db()->real_escape_string($this->email)."'")) {
 			throw new Exception(OIDplus::db()->error());
 		}

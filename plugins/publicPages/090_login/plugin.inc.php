@@ -35,7 +35,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			$handled = true;
 
 			$ra = new OIDplusRA($_POST['email']);
-
+			
 			if (RECAPTCHA_ENABLED) {
 				$secret=RECAPTCHA_PRIVATE;
 				$response=$_POST["captcha"];
@@ -47,6 +47,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			}
 
 			if ($ra->checkPassword($_POST['password'])) {
+				OIDplus::logger()->log("RA(".$_POST['email'].")!", "RA '".$_POST['email']."' logged in");
 				OIDplus::authUtils()::raLogin($_POST['email']);
 
 				if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = now() where email = '".OIDplus::db()->real_escape_string($_POST['email'])."'")) {
@@ -60,6 +61,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 		}
 		if (isset($_POST["action"]) && ($_POST["action"] == "ra_logout")) {
 			$handled = true;
+
+			OIDplus::logger()->log("RA(".$_POST['email'].")!", "RA '".$_POST['email']."' logged out");
 			OIDplus::authUtils()::raLogout($_POST['email']);
 			echo json_encode(array("status" => 0));
 		}
@@ -80,6 +83,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			}
 
 			if (OIDplus::authUtils()::adminCheckPassword($_POST['password'])) {
+				OIDplus::logger()->log("A!", "Admin logged in");
 				OIDplus::authUtils()::adminLogin();
 				echo json_encode(array("status" => 0));
 			} else {
@@ -88,6 +92,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 		}
 		if (isset($_POST["action"]) && ($_POST["action"] == "admin_logout")) {
 			$handled = true;
+			OIDplus::logger()->log("A!", "Admin logged out");
 			OIDplus::authUtils()::adminLogout();
 			echo json_encode(array("status" => 0));
 		}
@@ -130,8 +135,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 
 			$login_list = OIDplus::authUtils()->loggedInRaList();
 			if (count($login_list) > 0) {
-				foreach (OIDplus::authUtils()->loggedInRaList() as $x) {
-					$out['text'] .= '<p>You are logged in as <b>'.$x.'</b> (<a href="#" onclick="return raLogout('.js_escape($x).');">Logout</a>)</p>';
+				foreach ($login_list as $x) {
+					$out['text'] .= '<p>You are logged in as <b>'.$x->raEmail().'</b> (<a href="#" onclick="return raLogout('.js_escape($x->raEmail()).');">Logout</a>)</p>';
 				}
 				$out['text'] .= '<p>If you have more accounts, you can log in with a new account:</p>';
 			} else {
@@ -200,9 +205,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			);
 		}
 
-		$ra_emails = OIDplus::authUtils()::loggedInRaList();
-
-		foreach ($ra_emails as $ra_email) {
+		foreach (OIDplus::authUtils()::loggedInRaList() as $ra) {
+			$ra_email = $ra->raEmail();
 			$ra_roots = array();
 
 			foreach (OIDplus::getPagePlugins('ra') as $plugin) {

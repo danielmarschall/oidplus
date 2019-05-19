@@ -59,6 +59,14 @@ class OIDplus {
 		return $authUtils;
 	}
 
+	public static function logger() {
+		static $logger = null;
+		if (is_null($logger)) {
+			$logger = new OIDplusLogger();
+		}
+		return $logger;
+	}
+
 	public static function sesHandler() {
 		static $sesHandler = null;
 		if (is_null($sesHandler)) {

@@ -59,6 +59,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 			if (!$ra->checkPassword($old_password)) {
 				die(json_encode(array("error" => 'Old password incorrect')));
 			}
+			OIDplus::logger()->log("RA($email)?/A?", "Password of RA '$email' changed");
 			$ra->change_password($password1);
 
 			echo json_encode(array("status" => 0));

@@ -42,6 +42,8 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 			if (OIDplus::db()->num_rows($res) == 0) {
 				die(json_encode(array("error" => 'RA does not exist')));
 			}
+			
+			OIDplus::logger()->log("RA($email)?/A?", "Changed RA '$email' contact data/details");
 
 			if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra ".
 				"SET ".

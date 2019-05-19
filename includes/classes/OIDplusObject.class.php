@@ -65,6 +65,8 @@ abstract class OIDplusObject {
 	public abstract function getContentPage(&$title, &$content, &$icon);
 
 	public static function getRaRoots($ra_email=null) {
+		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
+
 		$out = array();
 		if (is_null($ra_email)) {
 			$res = OIDplus::db()->query("select oChild.id as id, oChild.ra_email as child_mail, oParent.ra_email as parent_mail from ".OIDPLUS_TABLENAME_PREFIX."objects as oChild ".
@@ -142,7 +144,15 @@ abstract class OIDplusObject {
 		return false;
 	}
 
+	public function getRa() {
+		$res = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($this->nodeId())."'");
+		$row = OIDplus::db()->fetch_array($res);
+		return new OIDplusRA($row['ra_email']);
+	}
+
 	public function userHasReadRights($ra_email=null) {
+		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
+
 		// Admin may do everything
 		if (OIDplus::authUtils()::isAdminLoggedIn()) return true;
 
@@ -219,6 +229,8 @@ abstract class OIDplusObject {
 	}
 
 	public function userHasParentalWriteRights($ra_email=null) {
+		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
+
 		if (is_null($ra_email)) {
 			if (OIDplus::authUtils()::isAdminLoggedIn()) return true;
 		}
@@ -229,6 +241,8 @@ abstract class OIDplusObject {
 	}
 
 	public function userHasWriteRights($ra_email=null) {
+		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
+
 		if (is_null($ra_email)) {
 			if (OIDplus::authUtils()::isAdminLoggedIn()) return true;
 			return OIDplus::authUtils()::isRaLoggedIn($this->getRaMail());

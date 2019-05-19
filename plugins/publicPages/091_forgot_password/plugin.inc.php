@@ -48,6 +48,8 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 				}
 			}
 
+			OIDplus::logger()->log("RA($email)!", "A new password for '$email' was requested (forgot password)");
+
 			$timestamp = time();
 			$activate_url = OIDplus::system_url() . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('reset_password;'.$email.';'.$timestamp));
 
@@ -83,6 +85,8 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
 				die(json_encode(array("error" => 'Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength())));
 			}
+
+			OIDplus::logger()->log("RA($email)!", "RA '$email' has reset his password (forgot passwort)");
 
 			$ra = new OIDplusRA($email);
 			$ra->change_password($password1);

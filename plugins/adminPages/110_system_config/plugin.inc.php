@@ -38,14 +38,15 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 
 			$name = $_POST['name'];
 			$value = $_POST['value'];
-
-			OIDplus::config()->setValue($name, $value);
-
+			
 			$res = OIDplus::db()->query("select protected from ".OIDPLUS_TABLENAME_PREFIX."config where name = '".OIDplus::db()->real_escape_string($name)."';");
 			$row = OIDplus::db()->fetch_array($res);
 			if ($row['protected'] == 1) {
 				die(json_encode(array("error" => 'Setting is write protected')));
 			}
+
+			OIDplus::config()->setValue($name, $value);
+			OIDplus::logger()->log("A?", "Changed system config setting '$name' to '$value'");
 
 			echo json_encode(array("status" => 0));
 		}
