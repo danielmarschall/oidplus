@@ -35,7 +35,7 @@ class OIDplusLogger {
 		\\ras3\daten\htdocs\oidplus_dev\ajax.php(192): OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Identifiers/Confidential flag of object '$id' updated"); // TODO: Check if they were ACTUALLY updated!
 		\\ras3\daten\htdocs\oidplus_dev\ajax.php(235): OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Title/Description of object '$id' updated");
 		\\ras3\daten\htdocs\oidplus_dev\ajax.php(273): OIDplus::logger()->log("OID($parent)+OIDRA($parent)?/A?", "Created child object '$id'");
-		\\ras3\daten\htdocs\oidplus_dev\ajax.php(274): OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?",      "OIDP/A", "Object '$id' created, given to RA '".(empty($ra_email) ? '(undefined)' : $ra_email)."'");
+		\\ras3\daten\htdocs\oidplus_dev\ajax.php(274): OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Object '$id' created, given to RA '".(empty($ra_email) ? '(undefined)' : $ra_email)."'");
 		\\ras3\daten\htdocs\oidplus_dev\plugins\publicPages\200_viathinksoft_freeoid\plugin.inc.php(60): OIDplus::logger()->log("OID($root_oid)+RA($email)!", "Requested a free OID for email '$email' to be placed into root '$root_oid'");
 		\\ras3\daten\htdocs\oidplus_dev\plugins\publicPages\200_viathinksoft_freeoid\plugin.inc.php(120): OIDplus::logger()->log("OID($root_oid)+OIDRA($root_oid)!", "Child OID '$new_oid' added automatically by '$email' (RA Name: '$ra_name')");
 		\\ras3\daten\htdocs\oidplus_dev\plugins\publicPages\200_viathinksoft_freeoid\plugin.inc.php(121): OIDplus::logger()->log("OID($new_oid)+RA($email)!",        "Free OID '$new_oid' activated (RA Name: '$ra_name')");
@@ -62,22 +62,26 @@ class OIDplusLogger {
 			if (preg_match('@^OID\((.+)\)$@ismU', $maskcode, $m)) {
 				$object_id = $m[1];
 				$objects[] = $object_id;
+				if ($object_id == '') throw new Exception("OID logger mask requires OID");
 			}
 
 			// OIDRA(x)?	Save log entry into the logbook of: Logged in RA of object "x"
 			// Replace ? by ! if the entity does not need to be logged in
 			else if (preg_match('@^OIDRA\((.+)\)([\?\!])$@ismU', $maskcode, $m)) {
 				$object_id         = $m[1];
-				$ra_need_login     = $m[2];
+				$ra_need_login     = $m[2] == '?';
+				if ($object_id == '') throw new Exception("OIDRA logger mask requires OID");
 				$obj = OIDplusObject::parse($object_id);
-				if ($ra_need_login) {
-					foreach (OIDplus::authUtils()->loggedInRaList() as $ra) {
-						if ($obj->hasWriteRights($ra)) $users[] = $ra->raEmail();
-					}
-				} else {
-					// $users[] = $obj->getRa()->raEmail();
-					foreach (OIDplusRA::getAllRAs() as $ra) {
-						if ($obj->hasWriteRights($ra)) $users[] = $ra->raEmail();
+				if ($obj) {
+					if ($ra_need_login) {
+						foreach (OIDplus::authUtils()->loggedInRaList() as $ra) {
+							if ($obj->userHasWriteRights($ra)) $users[] = $ra->raEmail();
+						}
+					} else {
+						// $users[] = $obj->getRa()->raEmail();
+						foreach (OIDplusRA::getAllRAs() as $ra) {
+							if ($obj->userHasWriteRights($ra)) $users[] = $ra->raEmail();
+						}
 					}
 				}
 			}
@@ -86,16 +90,19 @@ class OIDplusLogger {
 			// Replace ? by ! if the entity does not need to be logged in
 			else if (preg_match('@^SUPOIDRA\((.+)\)([\?\!])$@ismU', $maskcode, $m)) {
 				$object_id         = $m[1];
-				$ra_need_login     = $m[2];
+				$ra_need_login     = $m[2] == '?';
+				if ($object_id == '') throw new Exception("SUPOIDRA logger mask requires OID");
 				$obj = OIDplusObject::parse($object_id);
-				if ($ra_need_login) {
-					foreach (OIDplus::authUtils()->loggedInRaList() as $ra) {
-						if ($obj->hasParentalWriteRights($ra)) $users[] = $ra->raEmail();
-					}
-				} else {
-					// $users[] = $obj->getParent()->getRa()->raEmail();
-					foreach (OIDplusRA::getAllRAs() as $ra) {
-						if ($obj->hasParentalWriteRights($ra)) $users[] = $ra->raEmail();
+				if ($obj) {
+					if ($ra_need_login) {
+						foreach (OIDplus::authUtils()->loggedInRaList() as $ra) {
+							if ($obj->userHasParentalWriteRights($ra)) $users[] = $ra->raEmail();
+						}
+					} else {
+						// $users[] = $obj->getParent()->getRa()->raEmail();
+						foreach (OIDplusRA::getAllRAs() as $ra) {
+							if ($obj->userHasParentalWriteRights($ra)) $users[] = $ra->raEmail();
+						}
 					}
 				}
 			}
@@ -104,7 +111,7 @@ class OIDplusLogger {
 			// Replace ? by ! if the entity does not need to be logged in
 			else if (preg_match('@^RA\((.+)\)([\?\!])$@ismU', $maskcode, $m)) {
 				$ra_email          = $m[1];
-				$ra_need_login     = $m[2];
+				$ra_need_login     = $m[2] == '?';
 				if ($ra_need_login && OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
 					$users[] = $ra_email;
 				} else if (!$ra_need_login) {
@@ -115,7 +122,7 @@ class OIDplusLogger {
 			// A?	Save log entry into the logbook of: A logged in admin
 			// Replace ? by ! if the entity does not need to be logged in
 			else if (preg_match('@^A([\?\!])$@ismU', $maskcode, $m)) {
-				$admin_need_login = $m[1];
+				$admin_need_login = $m[1] == '?';
 				if ($admin_need_login && OIDplus::authUtils()->isAdminLoggedIn()) {
 					$users[] = 'admin';
 				} else if (!$admin_need_login) {
@@ -127,13 +134,13 @@ class OIDplusLogger {
 			else {
 				throw new Exception("Unexpected logger mask code '$maskcode'");
 			}
-
-			// TODO: Log to database
-			$users = implode(';', $users);
-			if ($users == '') $users = '-';
-			$objects = implode(';', $objects);
-			if ($objects == '') $objects = '-';
-			file_put_contents(__DIR__ . '/../../logtest.log', "$objects / $users / $event\n", FILE_APPEND);
 		}
+
+		// TODO: Log to database
+		$users = implode(';', $users);
+		if ($users == '') $users = '-';
+		$objects = implode(';', $objects);
+		if ($objects == '') $objects = '-';
+		file_put_contents(__DIR__ . '/../../logtest.log', "$objects / $users / $event\n", FILE_APPEND);
 	}
 }

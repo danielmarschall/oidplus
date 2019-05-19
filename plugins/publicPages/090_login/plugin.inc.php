@@ -61,7 +61,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 		}
 		if (isset($_POST["action"]) && ($_POST["action"] == "ra_logout")) {
 			$handled = true;
-
+			
 			OIDplus::logger()->log("RA(".$_POST['email'].")!", "RA '".$_POST['email']."' logged out");
 			OIDplus::authUtils()::raLogout($_POST['email']);
 			echo json_encode(array("status" => 0));
@@ -215,7 +215,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 
 			$ra_roots[] = array(
 				'id'       => 'oidplus:logout$'.$ra_email,
-				'conditionalselect' => 'raLogout("'.js_escape($ra_email).'")', // defined in oidplus.js
+				'conditionalselect' => 'raLogout('.js_escape($ra_email).')', // defined in oidplus.js
 				'icon'     => 'plugins/publicPages/'.basename(__DIR__).'/treeicon_logout.png',
 				'text'     => 'Log out'
 			);

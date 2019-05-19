@@ -271,7 +271,7 @@ try {
 		$confidential = $_POST['confidential'] == 'true' ? '1' : '0';
 
 		OIDplus::logger()->log("OID($parent)+OIDRA($parent)?/A?", "Created child object '$id'");
-		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?",      "OIDP/A", "Object '$id' created, given to RA '".(empty($ra_email) ? '(undefined)' : $ra_email)."'");
+		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?",      "Object '$id' created, given to RA '".(empty($ra_email) ? '(undefined)' : $ra_email)."'");
 
 		if (!OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, created) VALUES ('".OIDplus::db()->real_escape_string($id)."', '".OIDplus::db()->real_escape_string($parent)."', '".OIDplus::db()->real_escape_string($ra_email)."', ".OIDplus::db()->real_escape_string($confidential).", now())")) {
 			throw new Exception(OIDplus::db()->error());
