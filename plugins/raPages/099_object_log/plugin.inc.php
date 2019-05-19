@@ -56,9 +56,8 @@ class OIDplusPageRaObjectLog extends OIDplusPagePlugin {
 		                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_object lu on lu.log_id = lo.id ".
 		                            "where lu.object = '".OIDplus::db()->real_escape_string($id)."' " .
 									"order by lo.unix_ts desc");
+		$text .= "<h2>Log messages for object ".htmlentities($id)."</h2>";
 		if (OIDplus::db()->num_rows($res) > 0) {
-			$text .= "<h2>Log messages for object ".htmlentities($id)."</h2>";
-
 			$text .= '<pre>';
 			while ($row = OIDplus::db()->fetch_array($res)) {
 				$users = array();
@@ -77,6 +76,8 @@ class OIDplusPageRaObjectLog extends OIDplusPagePlugin {
 
 			// TODO: List logs in a table instead of a <pre> text
 			// TODO: Load only X events and then re-load new events via AJAX when the user scrolls down
+		} else {
+			$text .= '<p>Currently there are no log entries</p>';
 		}
 
 	}

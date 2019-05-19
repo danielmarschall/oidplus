@@ -82,8 +82,8 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 					                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_user lu on lu.log_id = lo.id ".
 					                            "where lu.user = '".OIDplus::db()->real_escape_string($ra_email)."' " .
 												"order by lo.unix_ts desc");
+					$out['text'] .= '<h2>Log messages for RA '.htmlentities($ra_email).'</h2>';
 					if (OIDplus::db()->num_rows($res) > 0) {
-						$out['text'] .= '<h2>Log messages for RA '.htmlentities($ra_email).'</h2>';
 						$out['text'] .= '<pre>';
 						while ($row = OIDplus::db()->fetch_array($res)) {
 							$addr = empty($row['addr']) ? 'no address' : $row['addr'];
@@ -94,6 +94,8 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 
 						// TODO: List logs in a table instead of a <pre> text
 						// TODO: Load only X events and then re-load new events via AJAX when the user scrolls down
+					} else {
+						$out['text'] .= '<p>Currently there are no log entries</p>';
 					}
 				}
 			}
