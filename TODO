@@ -8,8 +8,7 @@ IMPORTANT
 	do we need a consent for the cookie SSL_CHECK?
 - dsgvo datenschutzerklärung, agbs etc.
 - Problems with mobile view when logged in
-	* viewport not working? page is too tiny
-	* TinyMCE seems to be incompatible with Android?
+	* TinyMCE seems to be incompatible with Android? Do we need a mobile version?
 - Verify that logger works correctly, check if all logmasks are correct
 
 ADMIN AREA
@@ -20,6 +19,8 @@ SETUP
 - Add warning that with the insertion of the database, all tables will be droppped
 
 SMALL THINGS
+- freeoid: gmail app does not hyperlink the activation URL. why?
+- how to avoid invite spamming?
 - when a PHP error happens, the AJAX script outputs "Error: SyntaxError: Unexpected token < in JSON at position 0" ... better show the user the actual message
 - "plugin.inc.php" => rename to *.class.php ? Or vice versa for object types?
 - when login expired, remove entries in the treeview

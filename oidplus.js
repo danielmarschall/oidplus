@@ -440,7 +440,7 @@ $(document).ready(function () {
 
 	// --- Layout
 
-	document.getElementById('system_title_menu').style.visibility = "visible";
+	document.getElementById('system_title_menu').style.display = "block";
 
 	$('#oidtree').addClass('ui-layout-west');
 	$('#content_window').addClass('ui-layout-center');

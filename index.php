@@ -112,13 +112,13 @@ header('X-OIDplus-SystemTitle:'.$sys_title);
 
 <div id="frames">
 	<div id="system_title_bar">
-		<div id="system_title_menu" onclick="mobileNavButtonClick(this)" onmouseenter="mobileNavButtonHover(this)" onmouseleave="mobileNavButtonHover(this)" style="visibility:hidden">
+		<div id="system_title_menu" onclick="mobileNavButtonClick(this)" onmouseenter="mobileNavButtonHover(this)" onmouseleave="mobileNavButtonHover(this)">
 			<div id="bar1"></div>
 			<div id="bar2"></div>
 			<div id="bar3"></div>
 		</div>
 
-		<div>
+		<div id="system_title_text">
 			<a <?php echo oidplus_link('oidplus:system'); ?>>
 				<span id="system_title_1">ViaThinkSoft OIDplus 2.0</span><br>
 				<span id="system_title_2"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></span>
@@ -127,9 +127,9 @@ header('X-OIDplus-SystemTitle:'.$sys_title);
 	</div>
 
 	<div id="oidtree" class="borderbox">
-		<noscript>
+		<!-- <noscript>
 			<p><b>Please enable JavaScript to use all features</b></p>
-		</noscript>
+		</noscript> -->
 		<?php OIDplusTree::nonjs_menu(); ?>
 	</div>
 
