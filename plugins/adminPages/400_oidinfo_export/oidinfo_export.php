@@ -96,6 +96,9 @@ foreach ($nonConfidential as $id) {
 			$elements['information'] = "Object: $id\n\n" . $elements['information'];
 		}
 
+		$elements['description'] = repair_relative_links($elements['description']);
+		$elements['information'] = repair_relative_links($elements['information']);
+
 		$elements['first-registrant']['first-name'] = '';
 		$elements['first-registrant']['last-name'] = '';
 		$elements['first-registrant']['address'] = '';
@@ -113,9 +116,9 @@ foreach ($nonConfidential as $id) {
 		$elements['current-registrant']['address'] = '';
 		if ($row2) {
 			$tmp = array();
-			if (!empty($row2->organization))  $tmp[] = $row2->organization;
-			if (!empty($row2->office))        $tmp[] = $row2->office;
-			if (!empty($row2->personal_name)) $tmp[] = $row2->personal_name;
+			if (!empty($row2->organization)  && ($row2->organization  != $row2->ra_name)) $tmp[] = $row2->organization;
+			if (!empty($row2->office)        && ($row2->office        != $row2->ra_name)) $tmp[] = $row2->office;
+			if (!empty($row2->personal_name) && ($row2->personal_name != $row2->ra_name)) $tmp[] = (!empty($row2->organization) ? 'c/o ' : '') . $row2->personal_name;
 			if (!$row2->privacy) {
 				if (!empty($row2->street))   $tmp[] = $row2->street;
 				if (!empty($row2->zip_town)) $tmp[] = $row2->zip_town;
@@ -126,6 +129,30 @@ foreach ($nonConfidential as $id) {
 			$elements['current-registrant']['address'] = implode("<br/>", $tmp);
 		}
 		$elements['current-registrant']['modification-date'] = _formatdate($row->updated);
+
+
+		// Request from O.D. 20 May 2019: First registrant should not be empty (especially for cases where Creation and Modify Dates are the same)
+		// Actually, this is a problem because we don't know the first registrant.
+		// However, since oidinfo gets their XML very fast (if using registration), it is likely that the reported RA is still the same...
+		// ... and changes at the RA are not reported to oid-info.com anyways - the XML is only for creation
+
+		$elements['first-registrant']['first-name'] = $elements['current-registrant']['first-name'];
+		$elements['first-registrant']['last-name']  = $elements['current-registrant']['last-name'];
+		$elements['first-registrant']['address']    = $elements['current-registrant']['address'];
+		$elements['first-registrant']['email']      = $elements['current-registrant']['email'];
+		$elements['first-registrant']['phone']      = $elements['current-registrant']['phone'];
+		$elements['first-registrant']['fax']        = $elements['current-registrant']['fax'];
+
+		$elements['current-registrant']['first-name'] = '';
+		$elements['current-registrant']['last-name'] = '';
+		$elements['current-registrant']['address'] = '';
+		$elements['current-registrant']['email'] = '';
+		$elements['current-registrant']['phone'] = '';
+		$elements['current-registrant']['fax'] = '';
+		$elements['current-registrant']['modification-date'] = '';
+
+		// End request O.D. 20 May 2019
+
 
 		$obj = OIDplusObject::parse($row->id);
 		$oid = $obj->getOid();
@@ -145,3 +172,19 @@ function _formatdate($str) {
 	if ($str == '0000-00-00') $str = '';
 	return $str;
 }
+
+function repair_relative_links($str) {
+	$str = preg_replace_callback('@(href\s*=\s*([\'"]))(.+)(\\2)@ismU', function($treffer) {
+		$url = $treffer[3];
+		if ((stripos($url,'http') === false) && (stripos($url,'ftp') === false)) {
+			if (stripos($url,'www') === 0) {
+				$url .= 'http://' . $url;
+			} else {
+				$url = OIDplus::system_url() . $url;
+			}
+		}
+		return $treffer[1].$url.$treffer[4];
+	}, $str);
+	return $str;
+}
+

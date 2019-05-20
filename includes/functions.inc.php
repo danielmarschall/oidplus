@@ -158,6 +158,8 @@ function my_mail($to, $title, $msg, $cc='', $bcc='') {
 
 	$h->addHeader('X-Mailer', 'PHP/'.phpversion());
 	if (isset($_SERVER['REMOTE_ADDR'])) $h->addHeader('X-RemoteAddr', $_SERVER['REMOTE_ADDR']);
+	$h->addHeader('MIME-Version', '1.0');
+	$h->addHeader('Content-Type', 'text/plain; charset=ISO-8859-1');
 
 	$sent = $h->sendMail($to, $title, $msg);
 	if (!$sent) {
