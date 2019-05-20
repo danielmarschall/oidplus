@@ -57,7 +57,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			}
 
 			$root_oid = OIDplus::config()->getValue('freeoid_root_oid');
-			OIDplus::logger()->log("OID($root_oid)+RA($email)!", "Requested a free OID for email '$email' to be placed into root '$root_oid'");
+			OIDplus::logger()->log("OID(oid:$root_oid)+RA($email)!", "Requested a free OID for email '$email' to be placed into root '$root_oid'");
 
 			$timestamp = time();
 			$activate_url = OIDplus::system_url() . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp));
@@ -117,8 +117,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$root_oid = OIDplus::config()->getValue('freeoid_root_oid');
 			$new_oid = $root_oid.'.'.($this->freeoid_max_id()+1);
 
-			OIDplus::logger()->log("OID($root_oid)+OIDRA($root_oid)!", "Child OID '$new_oid' added automatically by '$email' (RA Name: '$ra_name')");
-			OIDplus::logger()->log("OID($new_oid)+RA($email)!",        "Free OID '$new_oid' activated (RA Name: '$ra_name')");
+			OIDplus::logger()->log("OID(oid:$root_oid)+OIDRA(oid:$root_oid)!", "Child OID '$new_oid' added automatically by '$email' (RA Name: '$ra_name')");
+			OIDplus::logger()->log("OID(oid:$new_oid)+RA($email)!",            "Free OID '$new_oid' activated (RA Name: '$ra_name')");
 
 			if ((!empty($url)) && (substr($url, 0, 4) != 'http')) $url = 'http://'.$url;
 

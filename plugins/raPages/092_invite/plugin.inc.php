@@ -48,6 +48,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 			}
 
 			$this->inviteSecurityCheck($email);
+			// TODO: should we also log who has invited?
 			OIDplus::logger()->log("RA($email)!", "RA '$email' has been invited");
 
 			$timestamp = time();

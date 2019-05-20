@@ -33,8 +33,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 
 		if (isset($_POST["action"]) && ($_POST["action"] == "ra_login")) {
 			$handled = true;
-
-			$ra = new OIDplusRA($_POST['email']);
+			
+			$email = $_POST['email'];
+			$ra = new OIDplusRA($email);
 			
 			if (RECAPTCHA_ENABLED) {
 				$secret=RECAPTCHA_PRIVATE;
@@ -47,10 +48,10 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			}
 
 			if ($ra->checkPassword($_POST['password'])) {
-				OIDplus::logger()->log("RA(".$_POST['email'].")!", "RA '".$_POST['email']."' logged in");
-				OIDplus::authUtils()::raLogin($_POST['email']);
+				OIDplus::logger()->log("RA($email)!", "RA '$email' logged in");
+				OIDplus::authUtils()::raLogin($email);
 
-				if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = now() where email = '".OIDplus::db()->real_escape_string($_POST['email'])."'")) {
+				if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = now() where email = '".OIDplus::db()->real_escape_string($email)."'")) {
 					die(json_encode(array("error" => OIDplus::db()->error())));
 				}
 
@@ -62,8 +63,10 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 		if (isset($_POST["action"]) && ($_POST["action"] == "ra_logout")) {
 			$handled = true;
 			
-			OIDplus::logger()->log("RA(".$_POST['email'].")!", "RA '".$_POST['email']."' logged out");
-			OIDplus::authUtils()::raLogout($_POST['email']);
+			$email = $_POST['email'];
+
+			OIDplus::logger()->log("RA($email)!", "RA '$email' logged out");
+			OIDplus::authUtils()::raLogout($email);
 			echo json_encode(array("status" => 0));
 		}
 
@@ -115,7 +118,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			$out['text'] .= '</noscript>';
 
 			$out['text'] .= (RECAPTCHA_ENABLED ? '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.RECAPTCHA_PUBLIC.'" }); </script>'.
-			                                  '<p>Before logging in, please solve the following CAPTCHA</p><div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>' : '');
+			                                     '<p>Before logging in, please solve the following CAPTCHA</p><div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>' : '');
 
 
 			$out['text'] .= '<br>';
@@ -123,7 +126,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			$out['text'] .= '<div id="loginArea" style="visibility: hidden"><div id="loginTab" class="container" style="width:100%;">';
 			$out['text'] .= '<ul  class="nav nav-pills">';
 			$out['text'] .= '			<li class="active">';
-			$out['text'] .= '        <a  href="#1a" data-toggle="tab">Login as RA</a>';
+			$out['text'] .= '			<a href="#1a" data-toggle="tab">Login as RA</a>';
 			$out['text'] .= '			</li>';
 			$out['text'] .= '			<li><a href="#2a" data-toggle="tab">Login as administrator</a>';
 			$out['text'] .= '			</li>';

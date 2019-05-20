@@ -134,6 +134,7 @@ try {
 		if (!$obj->userHasParentalWriteRights()) throw new Exception('Authentification error. Please log in as the superior RA to delete this OID.');
 		
 		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Object '$id' (recursively) deleted");
+		OIDplus::logger()->log("OIDRA($id)!", "Lost ownership of object '$id' because it was deleted");
 
 		// Delete object
 		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
@@ -146,7 +147,9 @@ try {
 			do {
 				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects $where");
 				while ($row = OIDplus::db()->fetch_array($res)) {
-					if (!OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($row['id'])."'")) {
+					$id_to_delete = $row['id'];
+					OIDplus::logger()->log("OIDRA($id_to_delete)!", "Lost ownership of object '$id_to_delete' because one of the superior objects ('$id') was recursively deleted");
+					if (!OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id_to_delete)."'")) {
 						throw new Exception(OIDplus::db()->error());
 					}
 				}
@@ -184,8 +187,8 @@ try {
 
 		if ($new_ra != $current_ra) {
 			OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
-			OIDplus::logger()->log("RA($current_ra)!", "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
-			OIDplus::logger()->log("RA($new_ra)!", "Gained ownership of object '$id' due to RA transfer of superior RA / admin.");
+			OIDplus::logger()->log("RA($current_ra)!",           "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
+			OIDplus::logger()->log("RA($new_ra)!",               "Gained ownership of object '$id' due to RA transfer of superior RA / admin.");
 			_ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mitändern
 		}
 
@@ -232,7 +235,7 @@ try {
 		// Prüfen ob zugelassen
 		if (!$obj->userHasWriteRights()) throw new Exception('Authentification error. Please log in as the RA to update this OID.');
 		
-		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Title/Description of object '$id' updated");
+		OIDplus::logger()->log("OID($id)+OIDRA($id)?/A?", "Title/Description of object '$id' updated");
 
 		if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET title = '".OIDplus::db()->real_escape_string($_POST['title'])."', description = '".OIDplus::db()->real_escape_string($_POST['description'])."', updated = now() WHERE id = '".OIDplus::db()->real_escape_string($id)."'")) {
 			throw new Exception(OIDplus::db()->error());
@@ -270,8 +273,10 @@ try {
 		}
 		$confidential = $_POST['confidential'] == 'true' ? '1' : '0';
 
-		OIDplus::logger()->log("OID($parent)+OIDRA($parent)?/A?", "Created child object '$id'");
-		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?",      "Object '$id' created, given to RA '".(empty($ra_email) ? '(undefined)' : $ra_email)."'");
+		OIDplus::logger()->log("OID($parent)+OID($id)+OIDRA($parent)?/A?", "Object '$id' created, ".(empty($ra_email) ? "without defined RA" : "given to RA '$ra_email'")).", superior object is '$parent'";
+		if (!empty($ra_email)) {
+			OIDplus::logger()->log("RA($ra_email)!", "Gained ownership of newly created object '$id'");
+		}
 
 		if (!OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, created) VALUES ('".OIDplus::db()->real_escape_string($id)."', '".OIDplus::db()->real_escape_string($parent)."', '".OIDplus::db()->real_escape_string($ra_email)."', ".OIDplus::db()->real_escape_string($confidential).", now())")) {
 			throw new Exception(OIDplus::db()->error());
