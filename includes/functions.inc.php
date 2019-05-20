@@ -187,20 +187,3 @@ function verify_private_public_key($privKey, $pubKey) {
 function smallhash($data) { // get 31 bits from SHA1. Values 0..2147483647
 	return (hexdec(substr(sha1($data),-4*2)) & 2147483647);
 }
-
-function isMobile() {
-	// If the page "index_mobile.php" is called, the user is explicitly requesting a mobile page
-	if (basename($_SERVER['SCRIPT_NAME']) == 'index_mobile.php') return true;
-
-	// If the page "index_desktop.php" is called, the user is explicitly requesting a desktop page
-	if (basename($_SERVER['SCRIPT_NAME']) == 'index_desktop.php') return true;
-
-	// Otherwise (for index.php), we check the user agent to see if the device is a mobile phone
-	// see https://deviceatlas.com/blog/list-of-user-agent-strings
-	if (!isset($_SERVER['HTTP_USER_AGENT'])) return false;
-	return
-	        (stripos($_SERVER['HTTP_USER_AGENT'], 'mobile') !== false) ||
-	        (stripos($_SERVER['HTTP_USER_AGENT'], 'iphone') !== false) ||
-	        (stripos($_SERVER['HTTP_USER_AGENT'], 'android') !== false) ||
-	        (stripos($_SERVER['HTTP_USER_AGENT'], 'windows phone') !== false);
-}

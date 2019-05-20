@@ -312,11 +312,13 @@ class OIDplusGui {
 			foreach (OIDplus::getPagePlugins('ra')     as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
 			foreach (OIDplus::getPagePlugins('admin')  as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
 		} else {
-			// Other pages
-			if (isMobile() && ($id != 'oidplus:system')) {
+			// Other pages (search, whois, etc.)
+			/*
+			if ($id != 'oidplus:system') {
 				$parent_link_text = 'Go back to front page';
 				$out['text'] = '<p><a '.oidplus_link('oidplus:system').'>'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 			}
+			*/
 		}
 
 		return $out;
