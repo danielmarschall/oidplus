@@ -169,7 +169,13 @@ class OIDplusGui {
 //					menubar:false,
 //					toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | fontsizeselect",
 					toolbar: "undo redo | styleselect | bold italic underline forecolor | bullist numlist | outdent indent | table | fontsizeselect",
-					plugins: "'.implode(' ', $mce_plugins).'"
+					plugins: "'.implode(' ', $mce_plugins).'",
+					mobile: {
+						theme: "mobile",
+						toolbar: "undo redo | styleselect | bold italic underline forecolor | bullist numlist | outdent indent | table | fontsizeselect",
+						plugins: "'.implode(' ', $mce_plugins).'"
+					}
+
 				});
 			</script>';
 

@@ -7,8 +7,6 @@ IMPORTANT
 	do we need an explicit consent at the login form?
 	do we need a consent for the cookie SSL_CHECK?
 - dsgvo datenschutzerklärung, agbs etc.
-- Problems with mobile view when logged in
-	* TinyMCE seems to be incompatible with Android? Do we need a mobile version?
 - Verify that logger works correctly, check if all logmasks are correct
 
 ADMIN AREA
