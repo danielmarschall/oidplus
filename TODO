@@ -16,6 +16,12 @@ ADMIN AREA
 SETUP
 - Add warning that with the insertion of the database, all tables will be droppped
 
+RFC
+- proof read
+- should the whole WHOIS output be case insensitive?
+- should "distance" be mandatory?
+- try to use MUST, MUST NOT, SHALL etc. according to RFC 2119
+
 SMALL THINGS
 - freeoid: gmail app does not hyperlink the activation URL. why?
 - how to avoid invite spamming?

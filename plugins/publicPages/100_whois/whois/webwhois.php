@@ -117,7 +117,7 @@ if ($continue) {
 	if ($obj->isConfidential() && !$show_confidential) {
 		$out[] = "status: Confidential";
 	} else {
-		$out[] = "status: Found";
+		$out[] = "status: Information available";
 
 		$row = OIDplus::db()->fetch_object($res);
 		$obj = OIDplusObject::parse($row->id);
@@ -169,7 +169,7 @@ if ($continue) {
 		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($row->ra_email)."'");
 		if ($row2 = OIDplus::db()->fetch_object($res2)) {
 			$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : $row2->email);
-			$out[] = 'ra-status: Found';
+			$out[] = 'ra-status: Information available';
 			$out[] = 'ra-name: ' . $row2->ra_name;
 			$out[] = 'ra-email: ' . $row->ra_email;
 			$out[] = 'ra-personal-name: ' . $row2->personal_name;
@@ -194,7 +194,7 @@ if ($continue) {
 			$out[] = 'ra-updated: ' . $row2->updated;
 		} else {
 			$out[] = 'ra: '.$row->ra_email;
-			$out[] = "ra-status: Not found";
+			$out[] = "ra-status: Information unavailable";
 		}
 	}
 }

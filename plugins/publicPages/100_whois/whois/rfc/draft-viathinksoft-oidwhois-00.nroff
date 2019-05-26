@@ -18,7 +18,7 @@
 .nf
 .tl 'INTERNET-DRAFT''Daniel Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: <Expiry Date>''January 2019'
+.tl 'Expires: <Expiry Date>''May 2019'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -262,7 +262,7 @@ Possible fields:
 
 - "query" contains the request of the user (beginning with "oid:"). No canonization or sanitation should be applied at this step. Authentication tokens must be omitted.
 
-- "result" may only be "Found", "Not found" or "Not found; superior object found". These result types are defined below.
+- "result" must be "Found", "Not found" or "Not found; superior object found". These result types are defined below.
 
 - "distance" is only present if the result is "Not found; superior object found". A distance of "1" means that the direct parent was found. A distance of "2" means that the grand-parent was found, etc.
 
@@ -293,9 +293,9 @@ Possible fields:
 
 - "object" which shows the OID in dot-notation, beginning with "oid:".
 
-- "status" which usually has the value "Found", but it can also have different values like "Confidential" (in case the server doesn't deny the existence of the OID).
+- "status" which usually has the value "Information available", but it can also have different values like "Confidential" (in case the server doesn't deny the existence of the OID).
 
-- "whois-service" should be present if the service does not have full information about the OID (e.g. if the requested OID is inside a branch that was delegated to a different RA operating an own WHOIS service). If the response was "Found" (i.e. the service has full information about the OID), the information "whois-service" is only informational; its existence is most likely a hint that subsequent OIDs will be found at this WHOIS server. If the result is "Not found; superior object found", the client must query the referred WHOIS server in order to receive accurate information about the OID.
+- "whois-service" should be present if the service does not have full information about the OID (e.g. if the requested OID is inside a branch that was delegated to a different RA operating an own WHOIS service). If the result was "Found" (i.e. the service has full information about the OID), the information "whois-service" is only informational; its existence is most likely a hint that subsequent OIDs will be found at this WHOIS server. If the result is "Not found; superior object found", the client must query the referred WHOIS server in order to receive accurate information about the OID.
 
 - "url" (optional, multiple values allowed) contains a website that contains more information about the OID.
 
@@ -343,7 +343,7 @@ Fields:
 
 - "ra" contains a general name of the RA like a person name, a group name, or a company name.
 
-- "ra-status" shows the status of the RA. It can be "Found", "Not found" (if the service does only know the name of the RA and nothing else), or "Confidential".
+- "ra-status" shows the status of the RA. It is usually "Information available", "Information unavailable" (if the service does only know the name of the RA and nothing else), or "Confidential". Other values are permitted.
 
 - "ra-name" (optional) contains the name of a person or group responsible for the allocation of OIDs.
 
@@ -381,14 +381,15 @@ The client asks a.example.com for information about 2.999.1000.1 and should rece
 .nf
 query:          oid:2.999.1000.1
 result:         Not found; superior object found
+distance:       1
 
 object:         oid:2.999.1000
-status:         Found
+status:         Information available
 name:           Company "B"
 whois-service:  b.example.com
 
 ra:             "B"
-ra-status:      Not Found
+ra-status:      Information unavailable
 .fi
 .in 3
 
@@ -400,11 +401,11 @@ query:          oid:2.999.1000.1
 result:         Found
 
 object:         oid:2.999.1000.1
-status:         Found
+status:         Information available
 name:           Example OID 1
 
 ra:             "B"
-ra-status:      Not Found
+ra-status:      Information unavailable
 .fi
 .in 3
 
@@ -446,7 +447,7 @@ query:          oid:2.999
 result:         Found
 
 object:         oid:2.999
-status:         Found
+status:         Information available
 name:           Example
 information:    This OID can be used by anyone, without any
 information:    permission, for the purpose of documenting examples
@@ -476,7 +477,7 @@ created:        2011-06
 updated:        2011-09
 
 ra:             ITU-T SG 17 & ISO/IEC JTC 1/SC 6
-ra-status:      Not found
+ra-status:      Information unavailable
 .fi
 
 .bp
@@ -494,7 +495,7 @@ result:       Not found; superior object found
 distance:     16
 
 object:       ipv6:2001:1af8:4700:a07e:1::/112
-status:       Found
+status:       Information available
 name:         ...
 description:  ...
 created:      ...
@@ -505,7 +506,7 @@ ra-status:    ...
 .fi
 
 .in 3
-Another usage example is the retrieval of information about UUIDs (i.e. GUIDs used by Microsoft COM interfaces). The UUID namespace has no hierarchical structure, so the WHOIS service can only reply "Found" or "Not Found".
+Another usage example is the retrieval of information about UUIDs (i.e. GUIDs used by Microsoft COM interfaces). The UUID namespace has no hierarchical structure, so the WHOIS service can only reply with the result "Found" or "Not found".
 
 .in 7
 .nf
@@ -513,14 +514,14 @@ query:        uuid:2a00375e-224c-49de-b8d1-440df7ef3ddc
 result:       Found
 
 object:       uuid:2a00375e-224c-49de-b8d1-440df7ef3ddc
-status:       Found
+status:       Information available
 name:         LocalizedResourcesDir
 description:  GUID used as "Custom Place" in file dialogs.
 created:      ...
 updated:      ...
 
 ra:           Microsoft Corp.
-ra-status:    Not found
+ra-status:    Information unavailable
 .fi
 .in 3
 
