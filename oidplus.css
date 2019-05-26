@@ -60,6 +60,10 @@
 	}
 }
 
+#system_title_text {
+	overflow-x:scroll;
+}
+
 #system_title_bar {
 	width:100% !important;
 	position:relative !important;

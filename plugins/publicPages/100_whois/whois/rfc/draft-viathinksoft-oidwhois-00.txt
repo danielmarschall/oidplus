@@ -679,7 +679,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    This document describes the usage of retrieving information about
    OIDs using the WHOIS protocol. In addition to the namespace "oid",
    the methods described in this document can also be applied to other
-   namespaces like "ipv4", "ipv6", "uuid", "doi" etc.
+   namespaces like "ipv4", "ipv6", "uuid", "isbn", "gtin" etc.
 
    In the following example, the client wants to retrieve information
    about the IPv6 address "2001:1af8:4700:a07e:1::1336". The WHOIS
