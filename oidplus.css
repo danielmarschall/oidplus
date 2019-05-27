@@ -51,6 +51,26 @@
 	#content_window {
 		top: 0 !important;
 	}
+	#frames {
+		display:flex;
+		flex-direction:column;
+		align-items: flex-start;
+	}
+	#system_title_bar {
+		order:0;
+		flex:none;
+	}
+	#oidtree {
+		order:1;
+		flex:none;
+	}
+	#content_window {
+		order:2;
+		flex:none;
+	}
+	#system_title_text {
+		overflow-x:scroll; /* TODO: at computer browser, you see a scroll bar */
+	}
 }
 
 @media only screen and (min-width: 801px) {
@@ -58,10 +78,6 @@
 	#system_title_menu {
 		display:none !important;
 	}
-}
-
-#system_title_text {
-	overflow-x:scroll;
 }
 
 #system_title_bar {
@@ -227,7 +243,7 @@ label.padding_label {
 	
 	#content_window {
 		position:absolute;
-		left:400px;
+		left:401px; /* incompatibility/bug between Chrome and jQueryUI: This value must not be 400px, otherwise the layout breaks */
 		right:0px;
 		bottom:0px;
 		top:55px; /* required for NoScript */

@@ -87,9 +87,10 @@ header('X-OIDplus-SystemTitle:'.$sys_title);
 
 	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
 
-	<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" /> -->
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script> -->
-	<link rel="stylesheet" type="text/css" href="3p/cookieconsent/cookieconsent.min.css">
+	<!-- DM 28 May 2019: Removed CookieConsent temporarily, because it is placed at the beginning of the page and therefore ruins the Google index ... -->
+	<!-- We might not need it, because cookies are only set during login, and at the login page we already warn about cookies -->
+	<!-- TODO: Bring back? -->
+	<!-- <link rel="stylesheet" type="text/css" href="3p/cookieconsent/cookieconsent.min.css">
 	<script src="3p/cookieconsent/cookieconsent.min.js"></script>
 	<script>
 		window.addEventListener("load", function(){
@@ -105,34 +106,12 @@ header('X-OIDplus-SystemTitle:'.$sys_title);
 			},
 			"position": "bottom-right"
 		})});
-	</script>
+	</script> -->
 </head>
 
 <body>
 
 <div id="frames">
-	<div id="system_title_bar">
-		<div id="system_title_menu" onclick="mobileNavButtonClick(this)" onmouseenter="mobileNavButtonHover(this)" onmouseleave="mobileNavButtonHover(this)">
-			<div id="bar1"></div>
-			<div id="bar2"></div>
-			<div id="bar3"></div>
-		</div>
-
-		<div id="system_title_text">
-			<a <?php echo oidplus_link('oidplus:system'); ?>>
-				<span id="system_title_1">ViaThinkSoft OIDplus 2.0</span><br>
-				<span id="system_title_2"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></span>
-			</a>
-		</div>
-	</div>
-
-	<div id="oidtree" class="borderbox">
-		<!-- <noscript>
-			<p><b>Please enable JavaScript to use all features</b></p>
-		</noscript> -->
-		<?php OIDplusTree::nonjs_menu(); ?>
-	</div>
-
 	<div id="content_window" class="borderbox">
 		<?php
 		$static_content = preg_replace_callback(
@@ -153,6 +132,28 @@ header('X-OIDplus-SystemTitle:'.$sys_title);
 		}
 		echo '<br>';
 		?>
+	</div>
+
+	<div id="system_title_bar">
+		<div id="system_title_menu" onclick="mobileNavButtonClick(this)" onmouseenter="mobileNavButtonHover(this)" onmouseleave="mobileNavButtonHover(this)">
+			<div id="bar1"></div>
+			<div id="bar2"></div>
+			<div id="bar3"></div>
+		</div>
+
+		<div id="system_title_text">
+			<a <?php echo oidplus_link('oidplus:system'); ?>>
+				<span id="system_title_1">ViaThinkSoft OIDplus 2.0</span><br>
+				<span id="system_title_2"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></span>
+			</a>
+		</div>
+	</div>
+
+	<div id="oidtree" class="borderbox">
+		<!-- <noscript>
+			<p><b>Please enable JavaScript to use all features</b></p>
+		</noscript> -->
+		<?php OIDplusTree::nonjs_menu(); ?>
 	</div>
 </div>
 
