@@ -428,6 +428,8 @@ $(document).ready(function () {
 		}, $('#real_title').html(), "?goto="+encodeURIComponent(goto));
 
 		if (goto != null) data.instance.select_node([goto]);
+
+		glayout.resizeAll(); // Required, otherwise the design breaks sometimes... Bug in Chrome?
 	})
 	.on('select_node.jstree', function (node, selected, event) {
 		mobileNavClose();
@@ -436,6 +438,8 @@ $(document).ready(function () {
 		if ((!popstate_running) && (current_node != id)) {
 			openOidInPanel(id, false);
 		}
+
+		glayout.resizeAll(); // This probably not required, but just to make sure
 	});
 
 	// --- Layout
@@ -445,7 +449,7 @@ $(document).ready(function () {
 	$('#oidtree').addClass('ui-layout-west');
 	$('#content_window').addClass('ui-layout-center');
 	$('#system_title_bar').addClass('ui-layout-north');
-	var layout = $('#frames').layout({
+	glayout = $('#frames').layout({
 		north__size:                  40,
 		north__slidable:              false,
 		north__closable:              false,
@@ -460,7 +464,6 @@ $(document).ready(function () {
 		west__slideTrigger_open:      "mouseover",
 		center__maskContents:         true // IMPORTANT - enable iframe masking
 	});
-	layout.sizePane("west", 451); // We need this weird hack because of a Chrome bug that appears when you reload the page a few times
 });
 
 function mobileNavClose() {

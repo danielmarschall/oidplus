@@ -243,7 +243,7 @@ label.padding_label {
 	
 	#content_window {
 		position:absolute;
-		left:401px; /* incompatibility/bug between Chrome and jQueryUI: This value must not be 400px, otherwise the layout breaks */
+		left:400px;
 		right:0px;
 		bottom:0px;
 		top:55px; /* required for NoScript */
