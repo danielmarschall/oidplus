@@ -445,7 +445,7 @@ $(document).ready(function () {
 	$('#oidtree').addClass('ui-layout-west');
 	$('#content_window').addClass('ui-layout-center');
 	$('#system_title_bar').addClass('ui-layout-north');
-	$('#frames').layout({
+	var layout = $('#frames').layout({
 		north__size:                  40,
 		north__slidable:              false,
 		north__closable:              false,
@@ -460,6 +460,7 @@ $(document).ready(function () {
 		west__slideTrigger_open:      "mouseover",
 		center__maskContents:         true // IMPORTANT - enable iframe masking
 	});
+	layout.sizePane("west", 451); // We need this weird hack because of a Chrome bug that appears when you reload the page a few times
 });
 
 function mobileNavClose() {

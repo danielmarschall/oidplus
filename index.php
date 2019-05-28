@@ -123,7 +123,7 @@ header('X-OIDplus-SystemTitle:'.$sys_title);
 			}, $static_content);
 
 		echo '<h1 id="real_title">';
-		if ($static_icon != '') echo '<img src="'.htmlentities($static_icon).'" width="48" height="48" alt="'.htmlentities($static_title).'"> ';
+		if ($static_icon != '') echo '<img src="'.htmlentities($static_icon).'" width="48" height="48" alt=""> ';
 		echo htmlentities($static_title).'</h1>';
 		echo '<div id="real_content">'.$static_content.'</div>';
 		if ($_SERVER['REQUEST_METHOD'] == 'GET') {

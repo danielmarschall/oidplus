@@ -34,7 +34,7 @@ class OIDplusTree {
 			if ($static_node_id == $x['id']) echo '<b>';
 			if (isset($x['indent'])) echo str_repeat('&nbsp', $x['indent']*5);
 			echo '<a href="?goto='.urlencode($x['id']).'">';
-			if (!empty($x['icon'])) echo '<img src="'.$x['icon'].'" alt="'.$x['id'].' icon"> ';
+			if (!empty($x['icon'])) echo '<img src="'.$x['icon'].'" alt=""> ';
 			echo htmlentities($x['text']).'</a><br>';
 			if ($static_node_id == $x['id']) echo '</b>';
 		}
