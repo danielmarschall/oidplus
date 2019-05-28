@@ -285,7 +285,7 @@ class OIDplusGui {
 				if ($parent->isRoot()) {
 
 					$parent_link_text = $parent->objectTypeTitle();
-					$out['text'] = '<p><img src="img/arrow_back.png" width="16"> Parent node: <a '.oidplus_link($parent->root()).'>'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+					$out['text'] = '<p><a '.oidplus_link($parent->root()).'><img src="img/arrow_back.png" width="16"> Parent node: '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 
 				} else {
 					$res_ = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($parent->nodeId())."'");
@@ -300,7 +300,7 @@ class OIDplusGui {
 
 					$parent_link_text = empty($parent_title) ? explode(':',$parent->nodeId())[1] : $parent_title.' ('.explode(':',$parent->nodeId())[1].')';
 
-					$out['text'] = '<p><img src="img/arrow_back.png" width="16"> Parent node: <a '.oidplus_link($parent->nodeId()).'>'.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+					$out['text'] = '<p><a '.oidplus_link($parent->nodeId()).'><img src="img/arrow_back.png" width="16"> Parent node: '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 				}
 			} else {
 				$parent_link_text = 'Go back to front page';
