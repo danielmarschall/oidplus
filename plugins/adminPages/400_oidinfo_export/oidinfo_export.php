@@ -80,6 +80,9 @@ foreach ($nonConfidential as $id) {
 		if (!empty($row->title)) {
 			$elements['description'] = $row->title;
 			$elements['information'] = $row->description;
+			if (trim($row->title) == trim(strip_tags($row->description))) {
+				$elements['information'] = '';
+			}
 		} else if (isset($elements['identifier'][0])) {
 			$elements['description'] = '"'.$elements['identifier'][0].'"';
 			$elements['information'] = $row->description;
