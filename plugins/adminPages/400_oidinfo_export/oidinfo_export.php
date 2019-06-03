@@ -79,18 +79,26 @@ foreach ($nonConfidential as $id) {
 
 		if (!empty($row->title)) {
 			$elements['description'] = $row->title;
+			$elements['information'] = $row->description;
 		} else if (isset($elements['identifier'][0])) {
 			$elements['description'] = '"'.$elements['identifier'][0].'"';
+			$elements['information'] = $row->description;
 		} else if (isset($elements['unicode-label'][0])) {
 			$elements['description'] = '"'.$elements['unicode-label'][0].'"';
+			$elements['information'] = $row->description;
 		} else if (!empty($row->description)) {
 			$elements['description'] = $row->description;
+			$elements['information'] = '';
 		} else {
 			$elements['description'] = '<i>No description available</i>';
+			$elements['information'] = '';
 		}
-		$elements['information'] = $row->description;
 
-		$elements['information'] .= '<br/><br/>See <a href="'.OIDplus::system_url(false).'?goto='.urlencode($id).'">more information</a>.'; // TODO: system_url() geht nicht bei CLI
+		if ($elements['information'] != '') {
+			$elements['information'] .= '<br/><br/>';
+		}
+
+		$elements['information'] .= 'See <a href="'.OIDplus::system_url(false).'?goto='.urlencode($id).'">more information</a>.'; // TODO: system_url() geht nicht bei CLI
 
 		if (explode(':',$id,2)[0] != 'oid') {
 			$elements['information'] = "Object: $id\n\n" . $elements['information'];

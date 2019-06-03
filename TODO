@@ -21,6 +21,7 @@ RFC
 - should the whole WHOIS output be case insensitive?
 - should "distance" be mandatory?
 - try to use MUST, MUST NOT, SHALL etc. according to RFC 2119
+- felder die nicht optional sind => mandatory kennzeichnen
 
 SMALL THINGS
 - freeoid: gmail app does not hyperlink the activation URL. why?
