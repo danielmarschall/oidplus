@@ -105,7 +105,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			if (empty($ra_name)) {
 				die(json_encode(array("error" => 'Please enter your personal name or the name of your group.')));
 			}
-			
+
 			// 1. step: Add the RA to the database
 
 			$ra = new OIDplusRA($email);
@@ -122,7 +122,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 
 			if ((!empty($url)) && (substr($url, 0, 4) != 'http')) $url = 'http://'.$url;
 
-			$description = '<p>'.htmlentities($ra_name).'</p>';
+			$description = ''; // '<p>'.htmlentities($ra_name).'</p>';
 			if (!empty($url)) {
 				$description .= '<p>More information at <a href="'.htmlentities($url).'">'.htmlentities($url).'</a></p>';
 			}
