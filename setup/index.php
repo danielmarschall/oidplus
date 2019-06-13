@@ -47,9 +47,9 @@ $own_dir = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "
 <p>Otherwise, import one of the following MySQL dumps in your database:</p>
 <p><ul>
 	<li><a href="struct_empty.sql.php" id="struct_1" target="_blank">Empty OIDplus database without example data</a>,<br>
-	or via command line: <code>curl "<?php echo $own_dir; ?><span id="sqlcli_1"></span>" | mysql</code><br><br></li>
+	or via command line:<br><code>curl -s "<?php echo $own_dir; ?><span id="sqlcli_1"></span>" | mysql -u <span id="mysqluser_1"></span> -p</code><br><br></li>
 	<li><a href="struct_with_examples.sql.php" id="struct_2" target="_blank">OIDplus database with example data</a>,<br>
-	or via command line: <code>curl "<?php echo $own_dir; ?><span id="sqlcli_2"></span>" | mysql</code></li>
+	or via command line:<br><code>curl -s "<?php echo $own_dir; ?><span id="sqlcli_2"></span>" | mysql -u <span id="mysqluser_2"></span> -p</code></li>
 </ul></p>
 <p><font color="red">All data from the previous OIDplus instance will be deleted during the import.</font></p>
 

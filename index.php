@@ -23,6 +23,11 @@ ob_start(); // allow cookie headers to be sent
 
 header('Content-Type:text/html; charset=UTF-8');
 
+if (!function_exists('gmp_init')) {
+	// Required for uuid_functions.inc.php and ipv6_functions.inc.php
+	die('<h1>OIDplus Installation</h1><p>ERROR: The extension <b>gmp</b> is not installed.</p><p>Install it using <code>sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.</p>');
+}
+
 OIDplus::init(true);
 
 OIDplus::db()->set_charset("UTF8");
