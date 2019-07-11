@@ -58,7 +58,6 @@ SMALL THINGS
 	mce dirty flag:
 		- wenn man wechsel (js tree select), dann soll abgefragt werden, ob tinymce dirty ist, und eine warnung bringen, also so, wie wenn man die seite neu laden würde
 		- kritischer bug: seite öffnen, tiny mce editieren, speichern klicken. dann f5 neu laden (nicht strg+f5): dann ist der alte content wieder da. außer man drückt strg+f5
-	bug: overlay "bild" und "tabelle" bleibt auf dem bildschirm, selbst wenn man die seite wechselt über das menü
 - jstree select: automatically scroll down
 - optisch aufhübschen. dinge wie RA: mehr dinge zeigen, adresse, email etc
 

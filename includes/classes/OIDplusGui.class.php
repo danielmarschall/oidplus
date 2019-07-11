@@ -147,7 +147,10 @@ class OIDplusGui {
 		return $output;
 	}
 
-	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode');
+	// 'quickbars' added 11 July 2019: Disabled because of two problems:
+	//                                 1. When you load TinyMCE via AJAX using the left menu, the quickbar is immediately shown, even if TinyMCE does not have the focus
+	//                                 2. When you load a page without TinyMCE using the left menu, the quickbar is still visible, although there is no edit
+	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode', 'quickbars');
 
 	protected static function showMCE($name, $content) {
 		$mce_plugins = array();
