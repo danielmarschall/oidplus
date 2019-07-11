@@ -429,7 +429,8 @@ $(document).ready(function () {
 
 		if (goto != null) data.instance.select_node([goto]);
 
-		glayout.resizeAll(); // Required, otherwise the design breaks sometimes... Bug in Chrome?
+		setTimeout(glayoutWorkaroundA, 100);
+		setTimeout(glayoutWorkaroundB, 100);
 	})
 	.on('select_node.jstree', function (node, selected, event) {
 		mobileNavClose();
@@ -438,8 +439,6 @@ $(document).ready(function () {
 		if ((!popstate_running) && (current_node != id)) {
 			openOidInPanel(id, false);
 		}
-
-		glayout.resizeAll(); // This probably not required, but just to make sure
 	});
 
 	// --- Layout
@@ -465,6 +464,20 @@ $(document).ready(function () {
 		center__maskContents:         true // IMPORTANT - enable iframe masking
 	});
 });
+
+function glayoutWorkaroundA() {
+	// "Bug A": Sometimes, the design is completelydestroyed after reloading the page. It does not help when glayout.resizeAll()
+	//          is called at the beginning (e.g. during the ready function), and it does not help if we wait 500ms.
+	//          So we do it all the time. It has probably something to do with slow loading times, since the error
+	//          does only appear when the page is "blank" for a short while while it is loading.
+	glayout.resizeAll();
+	setTimeout(glayoutWorkaroundA, 100);
+}
+
+function glayoutWorkaroundB() {
+	// "Bug B": Sometimes, after reload, weird space between oidtree and content window, because oidtree has size of 438px
+	document.getElementById("oidtree").style.width = "450px";
+}
 
 function mobileNavClose() {
 	if ($("#system_title_menu").is(":hidden")) {
