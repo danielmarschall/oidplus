@@ -9,6 +9,10 @@ IMPORTANT
 - dsgvo datenschutzerklärung, agbs etc.
 - Verify that logger works correctly, check if all logmasks are correct
 
+ERRORS FOUND 14 JULY 2019
+- oid anlegen mit ungültigem asn1 : er bringt fehler, aber die OID ist angelegt!
+- wenn man "insert" nochmal klickt, obwohl objekt schon existiert, dann wird trotzdem log entry geschrieben: "object 'oid:2.999.1.123.123' created, given to RA"
+
 ADMIN AREA
 - Allow that the admin can change user's passwort/contact data
 - Admin should see log events for each RA and OID

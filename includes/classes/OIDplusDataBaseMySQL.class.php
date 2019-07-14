@@ -21,19 +21,33 @@ if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusDataBaseMySQL implements OIDplusDataBase {
 	private $mysqli;
+	private $last_query; // for debugging
 
 	public function query($sql) {
+		$this->last_query = $sql;
 		// $sql = str_replace('???_', OIDPLUS_TABLENAME_PREFIX, $sql);
 		return $this->mysqli->query($sql, MYSQLI_STORE_RESULT);
 	}
 	public function num_rows($res) {
-		return $res->num_rows;
+		if (!is_object($res)) {
+			throw new Exception("num_rows called on non object. Last query: ".$this->last_query);
+		} else {
+			return $res->num_rows;
+		}
 	}
 	public function fetch_array($res) {
-		return $res->fetch_array(MYSQLI_BOTH);
+		if (!is_object($res)) {
+			throw new Exception("fetch_array called on non object. Last query: ".$this->last_query);
+		} else {
+			return $res->fetch_array(MYSQLI_BOTH);
+		}
 	}
 	public function fetch_object($res) {
-		return $res->fetch_object("stdClass");
+		if (!is_object($res)) {
+			throw new Exception("fetch_object called on non object. Last query: ".$this->last_query);
+		} else {
+			return $res->fetch_object("stdClass");
+		}
 	}
 	public function real_escape_string($str) {
 		return $this->mysqli->real_escape_string($str);

@@ -25,7 +25,12 @@ header('Content-Type:text/html; charset=UTF-8');
 
 if (!function_exists('gmp_init')) {
 	// Required for uuid_functions.inc.php and ipv6_functions.inc.php
-	die('<h1>OIDplus Installation</h1><p>ERROR: The extension <b>gmp</b> is not installed.</p><p>Install it using <code>sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.</p>');
+	die('<h1>OIDplus Installation</h1><p>ERROR: The extension <b>gmp</b> is not installed.</p><p>Install it using <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.</p>');
+}
+
+if (!function_exists('mb_substr')) {
+	// Required for includes/classes/OIDplusSessionHandler.class.php, includes/oid_utils.inc.php, 3p/minify/path-converter/Converter.php, 3p/0xbb/Sha3.class.php
+	die('<h1>OIDplus Installation</h1><p>ERROR: The extension <b>php-mbstring</b> is not installed.</p><p>Install it using <code>sudo aptitude update && sudo aptitude install php-mbstring && sudo service apache2 restart</code> on Linux systems.</p>');
 }
 
 OIDplus::init(true);
