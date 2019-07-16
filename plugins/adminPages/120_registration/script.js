@@ -31,13 +31,6 @@ function crudActionRegPrivacyUpdate(name) {
 			if ("error" in data) {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
-
-				// Call another time, so that the ViaThinkSoft server will be contacted
-				$.ajax({
-					url:"ajax.php",
-					method:"GET"
-				});
-
 				alert("Update OK");
 			} else {
 				alert("Error: " + data);

@@ -41,7 +41,9 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 			if (($value != '0') && ($value != '1') && ($value != '2')) {
 				throw new Exception("Please enter either 0, 1 or 2.");
 			}
-			OIDplus::config()->setValue('reg_last_ping', 0); // force renewal of ping on the next page load
+			// Now do a recheck and notify the ViaThinkSoft server
+			OIDplus::config()->setValue('reg_last_ping', 0);
+			$this->sendRegistrationQuery($value);
 		}
 	}
 
@@ -105,8 +107,10 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 		}
 	}
 
-	public function sendRegistrationQuery() {
-		$privacy_level = OIDplus::config()->getValue('reg_privacy');
+	public function sendRegistrationQuery($privacy_level=null) {
+		if (is_null($privacy_level)) {
+			$privacy_level = OIDplus::config()->getValue('reg_privacy');
+		}
 
 		$system_url = OIDplus::system_url();
 
