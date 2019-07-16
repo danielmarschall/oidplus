@@ -201,13 +201,22 @@ class OIDplus {
 		return self::$disabledObjectTypes;
 	}
 
+	private static $system_id_cache = null;
 	public static function system_id($oid=false) {
-		if (!self::pkiStatus(true)) return false;
-		$pubKey = OIDplus::config()->getValue('oidplus_public_key');
-		if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
-			return ($oid ? '1.3.6.1.4.1.37476.30.9.' : '').smallhash(base64_decode($m[1]));
+		if (!is_null(self::$system_id_cache)) {
+			$out = self::$system_id_cache;
+		} else {
+			$out = false;
+
+			if (self::pkiStatus(true)) {
+				$pubKey = OIDplus::config()->getValue('oidplus_public_key');
+				if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
+					$out = smallhash(base64_decode($m[1]));
+				}
+			}
+			self::$system_id_cache = $out;
 		}
-		return false;
+		return ($oid ? '1.3.6.1.4.1.37476.30.9.' : '').$out;
 	}
 
 	public static function pkiStatus($try_generate=true) {

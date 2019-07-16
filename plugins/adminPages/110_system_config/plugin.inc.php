@@ -38,7 +38,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 
 			$name = $_POST['name'];
 			$value = $_POST['value'];
-			
+
 			$res = OIDplus::db()->query("select protected from ".OIDPLUS_TABLENAME_PREFIX."config where name = '".OIDplus::db()->real_escape_string($name)."';");
 			$row = OIDplus::db()->fetch_array($res);
 			if ($row['protected'] == 1) {
@@ -104,7 +104,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 
 				$output .= '<br><p>See also:</p>';
 				$output .= '<ul><li><a href="setup/">Setup part 1: Create config.php (contains database settings, ReCAPTCHA, admin password and SSL enforcement)</a></li>';
-				$output .= '<li><a href="plugins/system/000_registration/registration.php">Setup part 2: Basic settings (they are all available above, too)</a></li></ul>';
+				$output .= '<li><a href="plugins/adminPages/120_registration/registration.php">Setup part 2: Basic settings (they are all available above, too)</a></li></ul>';
 
 				$out['text'] = $output;
 			}

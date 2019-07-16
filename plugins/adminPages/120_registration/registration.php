@@ -162,88 +162,77 @@ if ($do_edits) {
 
 ?><?php echo ' <font color="red"><b>'.$msg.'</b></font>'; ?>
 
-<p><u>Step <?php echo $step++; ?>: Automatic Publishing</u></p>
+<p><u>Step <?php echo $step++; ?>: System registration and automatic Publishing</u></p>
+
+<p>The registration of your OIDplus installation has various advantages: The public key of your system is published, so that users can check the integrity of your data (e.g. signed OID-over-WHOIS requests). You can optionally also enable the automatic publishing of your public OID information to the repository oid-info.com.</p>
 
 <?php
 
 if (!function_exists('openssl_sign')) {
-	'<p>OpenSSL plugin is missing in PHP. You cannot register your OIDplus instance.</p>';
+	echo '<p>OpenSSL plugin is missing in PHP. You cannot register your OIDplus instance.</p>';
 } else {
 
-if (OIDplus::config()->exists('oidinfo_export_protected')) {
+	echo '<p>Privacy level:</p><select name="reg_privacy" id="reg_privacy">';
 
-?>
+	# ---
 
-<input type="checkbox" name="register_oidinfo" id="register_oidinfo" <?php
-if (isset($_REQUEST['sent'])) {
-	if (isset($_REQUEST['register_oidinfo'])) echo ' checked';
-} else {
-	if (!OIDplus::config()->getValue('oidinfo_export_protected') || !OIDplus::config()->getValue('registration_done')) {
-		echo ' checked';
+	echo '<option value="0"';
+	if (isset($_REQUEST['sent'])) {
+		if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 0)) echo ' selected';
 	} else {
-		echo '';
-	}
-}
-$msg = '';
-if ($do_edits) {
-	try {
-		if (isset($_REQUEST['register_oidinfo'])) {
-			OIDplus::config()->setValue('oidinfo_export_protected', '0');
+		if ((OIDplus::config()->getValue('reg_privacy') == 0) || !OIDplus::config()->getValue('reg_wizard_done')) {
+			echo ' selected';
 		} else {
-			OIDplus::config()->setValue('oidinfo_export_protected', '1');
+			echo '';
 		}
-	} catch (Exception $e) {
-		$msg = $e->getMessage();
-		$errors_happened = true;
 	}
-}
-?>> <label for="register_oidinfo">Would you like to enable the automatic transfer of the Object Identifiers you create on this system to the
-OID Repository <a href="http://oid-info.com/" target="_blank">oid-info.com</a>?</label><?php echo ' <font color="red"><b>'.$msg.'</b></font>'; ?><br>
-<i>Privacy information:</i>
-You can always disable the automatic transmission in the admin control panel of OIDplus,<br>
-and you can demand the deletion of already published object identifiers by writing an email
-to the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a>.<br>
-Please mention your system ID below.</p>
+	echo '>0 = Register to directory service and automatically publish RA/OID data at oid-info.com</option>';
 
-<?php
-}
-?>
+	# ---
 
-<input type="checkbox" name="register_viathinksoft" id="register_viathinksoft" <?php
-if (isset($_REQUEST['sent'])) {
-        if (isset($_REQUEST['register_viathinksoft'])) echo ' checked';
-} else {
-	if (OIDplus::config()->getValue('reg_enabled') || !OIDplus::config()->getValue('registration_done')) {
-		echo ' checked';
+	echo '<option value="1"';
+	if (isset($_REQUEST['sent'])) {
+		if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 1)) echo ' selected';
 	} else {
-		echo '';
-	}
-}
-$msg = '';
-if ($do_edits) {
-	try {
-		if (isset($_REQUEST['register_viathinksoft'])) {
-			OIDplus::config()->setValue('reg_enabled', '1');
+		if ((OIDplus::config()->getValue('reg_privacy') == 1)) {
+			echo ' selected';
 		} else {
-			OIDplus::config()->setValue('reg_enabled', '0');
+			echo '';
 		}
-	} catch (Exception $e) {
-		$msg = $e->getMessage();
-		$errors_happened = true;
 	}
-}
-?>> <label for="register_viathinksoft">Would you like to register your system to the ViaThinkSoft directory?</label><?php echo ' <font color="red"><b>'.$msg.'</b></font>'; ?><br>
-This means that the URL of your OIDplus system together with its public key (see below) is published to the <a href="https://oidplus.viathinksoft.com/oidplus/?goto=oid:1.3.6.1.4.1.37476.30.9" target="_blank">OIDplus instance directory</a> and <a href="http://www.oid-info.com/get/1.3.6.1.4.1.37476.30.9">oid-info.com</a>.<br>
-The publication of your public key allows users to verify integrity of your data. The registration is also the requirement<br>
-for the automatic XML export of Object Identifiers to oid-info.com.<br>
-<i>Privacy information:</i>
-You can always revoke this permission as well as demand the deletion of<br>
-the public directory entries by writing an email to <a href="mailto:info@daniel-marschall.de">ViaThinkSoft</a> (for the directory entry at ViaThinkSoft) and<br>
-the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a> (for the removal of the directory entry at oid-info.com).
-Please mention your system ID below.</p>
+	echo '>1 = Only register to directory service</option>';
 
-<?php
+	# ---
 
+	echo '<option value="2"';
+	if (isset($_REQUEST['sent'])) {
+		if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 2)) echo ' selected';
+	} else {
+		if ((OIDplus::config()->getValue('reg_privacy') == 2)) {
+			echo ' selected';
+		} else {
+			echo '';
+		}
+	}
+	echo '>2 = Hide system</option>';
+
+	# ---
+
+	echo '</select>';
+
+	$msg = '';
+	if ($do_edits) {
+		try {
+			OIDplus::config()->setValue('reg_privacy', $_REQUEST['reg_privacy']);
+		} catch (Exception $e) {
+			$msg = $e->getMessage();
+			$errors_happened = true;
+		}
+	}
+	echo ' <font color="red"><b>'.$msg.'</b></font>';
+
+	echo '<p><i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.</p>';
+	// TODO: describe what data is transmitted or link to a privacy statement
 }
 
 ?>
@@ -286,7 +275,7 @@ $cont = ob_get_contents();
 ob_end_clean();
 
 if ($do_edits && !$errors_happened)  {
-	OIDplus::config()->setValue('registration_done', '1');
+	OIDplus::config()->setValue('reg_wizard_done', '1');
 	header('Location:../../../');
 } else {
 	echo $cont;

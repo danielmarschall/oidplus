@@ -8,10 +8,15 @@
 
 error_reporting(E_ALL | E_NOTICE | E_STRICT | E_DEPRECATED);
 
+/*
 if (file_exists(__DIR__ . '/oid_utils.inc.phps')) require_once __DIR__ . '/oid_utils.inc.phps';
 if (file_exists(__DIR__ . '/oid_utils.inc.php'))  require_once __DIR__ . '/oid_utils.inc.php';
 if (file_exists(__DIR__ . '/xml_utils.inc.phps')) require_once __DIR__ . '/xml_utils.inc.phps';
 if (file_exists(__DIR__ . '/xml_utils.inc.php'))  require_once __DIR__ . '/xml_utils.inc.php';
+*/
+
+require_once __DIR__ . '/../../../includes/oid_utils.inc.php';
+require_once __DIR__ . '/../../../includes/xml_utils.inc.php';
 
 class OIDInfoException extends Exception {
 }
