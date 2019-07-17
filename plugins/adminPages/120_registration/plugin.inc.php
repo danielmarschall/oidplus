@@ -22,6 +22,7 @@ if (!defined('IN_OIDPLUS')) die();
 define('QUERY_REGISTER_V1',         '1.3.6.1.4.1.37476.2.5.2.1.1.1');
 define('QUERY_UNREGISTER_V1',       '1.3.6.1.4.1.37476.2.5.2.1.2.1');
 define('QUERY_LISTALLSYSTEMIDS_V1', '1.3.6.1.4.1.37476.2.5.2.1.3.1');
+define('QUERY_LIVESTATUS_V1',       '1.3.6.1.4.1.37476.2.5.2.1.4.1');
 
 class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 	public function type() {
@@ -48,9 +49,9 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 	}
 
 	public function gui($id, &$out, &$handled) {
-		if ($id === 'oidplus:reg_status') {
+		if ($id === 'oidplus:srv_registration') {
 			$handled = true;
-			$out['title'] = 'Registration status';
+			$out['title'] = 'System registration settings';
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/adminPages/'.basename(__DIR__).'/icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
@@ -58,7 +59,7 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
 				$out['text'] = '<p>The registration of your OIDplus installation has various advantages: The public key of your system is published, so that users can check the integrity of your data (e.g. signed OID-over-WHOIS requests). You can optionally also enable the automatic publishing of your public OID information to the repository oid-info.com.</p>'.
-				               '<p><input type="button" onclick="window.open(\'https://oidplus.viathinksoft.com/reg2/status.php?systemid='.OIDplus::system_id(false).'\',\'_blank\')" value="Check status of the registration and collected data"></p>';
+				               '<p><input type="button" onclick="document.location = \'?goto=oidplus:srvreg_status\'" value="Check status of the registration and collected data"></p>';
 
 				if (!function_exists('openssl_sign')) {
 					$out['text'] .= '<p><font color="red">Error: OpenSSL plugin is missing in PHP. You cannot (un)register your OIDplus instance.</font></p>';
@@ -104,6 +105,39 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 
 				$out['text'] .= '<p><i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete already submitted OIDs to oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID-Info Webmaster</a>.';
 			}
+		}
+		if ($id === 'oidplus:srvreg_status') {
+			$handled = true;
+
+			$query = QUERY_LIVESTATUS_V1;
+
+			$payload = array(
+				"query" => $query, // we must repeat the query because we want to sign it
+				"system_id" => OIDplus::system_id(false)
+			);
+
+			$signature = '';
+			openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'));
+
+			$data = array(
+				"payload" => $payload,
+				"signature" => base64_encode($signature)
+			);
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=$query&data=".base64_encode(json_encode($data)));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+			$res = curl_exec($ch);
+			curl_close($ch);
+			// die("RES: $res\n");
+			// if ($res == 'OK') ...
+
+			$out['title'] = 'Registration live status';
+			$out['text'] = '<p><a href="?goto=oidplus:srv_registration"><img src="img/arrow_back.png" width="16"> Go back to registration settings</a></p>'.$res;
 		}
 	}
 
@@ -250,7 +284,7 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 		}
 
 		$json[] = array(
-			'id' => 'oidplus:reg_status',
+			'id' => 'oidplus:srv_registration',
 			'icon' => $tree_icon,
 			'text' => 'Registration'
 		);
