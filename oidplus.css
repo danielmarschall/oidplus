@@ -292,6 +292,13 @@ h2 {
 	font-size:1.6em !important;
 }
 
+textarea,input[type="text"] {
+	/* for dark themes, this looks better */
+	/*background:transparent;*/
+	background:rgba(255,255,255,0.1);
+	border: #AAAAAA 1px solid;
+}
+
 /**
  *	Splitter / uiLayout
  */

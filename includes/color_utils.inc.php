@@ -102,6 +102,7 @@ function rgb2html($r, $g=-1, $b=-1) {
 }
 
 function changeHueOfCSS($css_content, $h_shift=0, $s_shift=0, $v_shift=0) {
+	// TODO: also support rgb() and rgba() color references (and maybe also hsl?)
 	$css_content = preg_replace_callback('@#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})@ismU',
 		function ($x) use ($h_shift, $s_shift, $v_shift) {
 			if (strlen($x[1]) == 3) {

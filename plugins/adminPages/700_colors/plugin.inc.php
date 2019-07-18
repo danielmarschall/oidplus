@@ -82,17 +82,17 @@ class OIDplusPageAdminColors extends OIDplusPagePlugin {
 			} else {
 				$out['text']  = '<p>';
 				$out['text'] .= '  <label for="amount">Hue shift:</label>';
-				$out['text'] .= '  <input type="text" id="hshift" readonly style="border:0; color:#f6931f; font-weight:bold;">';
+				$out['text'] .= '  <input type="text" id="hshift" readonly style="border:0; background:transparent; font-weight:bold;">';
 				$out['text'] .= '</p>';
 				$out['text'] .= '<div id="slider-hshift"></div>';
 				$out['text'] .= '<p>';
 				$out['text'] .= '  <label for="amount">Saturation shift:</label>';
-				$out['text'] .= '  <input type="text" id="sshift" readonly style="border:0; color:#f6931f; font-weight:bold;">';
+				$out['text'] .= '  <input type="text" id="sshift" readonly style="border:0; background:transparent; font-weight:bold;">';
 				$out['text'] .= '</p>';
 				$out['text'] .= '<div id="slider-sshift"></div>';
 				$out['text'] .= '<p>';
 				$out['text'] .= '  <label for="amount">Value shift:</label>';
-				$out['text'] .= '  <input type="text" id="vshift" readonly style="border:0; color:#f6931f; font-weight:bold;">';
+				$out['text'] .= '  <input type="text" id="vshift" readonly style="border:0; background:transparent; font-weight:bold;">';
 				$out['text'] .= '</p>';
 				$out['text'] .= '<div id="slider-vshift"></div>';
 				$out['text'] .= '<script>';
@@ -101,7 +101,8 @@ class OIDplusPageAdminColors extends OIDplusPagePlugin {
 				$out['text'] .= 'if (g_val_shift == null) g_val_shift = '.OIDplus::config()->getValue('color_val_shift').";\n";
 				$out['text'] .= 'setup_color_sliders();';
 				$out['text'] .= '</script>';
-				$out['text'] .= '<br><input type="button" onclick="test_color_theme()" value="Test">'.str_repeat('&nbsp;',5);
+				$out['text'] .= '<br><input type="button" onclick="color_reset_sliders()" value="Reset">'.str_repeat('&nbsp;',5);
+				$out['text'] .= '<input type="button" onclick="test_color_theme()" value="Test">'.str_repeat('&nbsp;',5);
 				$out['text'] .= '<input type="button" onclick="crudActionColorUpdate()" value="Set permanently">';
 			}
 		}

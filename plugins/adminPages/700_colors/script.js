@@ -2,9 +2,18 @@ g_hue_shift = null;
 g_sat_shift = null;
 g_val_shift = null;
 
+function color_reset_sliders() {
+	$("#hshift").val(g_hue_shift = 0);
+	$("#sshift").val(g_sat_shift = 0);
+	$("#vshift").val(g_val_shift = 0);
+	$("#slider-hshift").slider("option", "value", g_hue_shift);
+	$("#slider-sshift").slider("option", "value", g_sat_shift);
+	$("#slider-vshift").slider("option", "value", g_val_shift);
+	test_color_theme();
+}
+
 function setup_color_sliders() {
 	$("#slider-hshift").slider({
-		range: "min",
 		value: g_hue_shift,
 		min:   -360,
 		max:   360,
@@ -15,7 +24,6 @@ function setup_color_sliders() {
 	$("#hshift").val($("#slider-hshift").slider("value"));
 
 	$("#slider-sshift").slider({
-		range: "min",
 		value: g_sat_shift,
 		min:   -100,
 		max:   100,
@@ -26,7 +34,6 @@ function setup_color_sliders() {
 	$("#sshift").val($("#slider-sshift").slider("value"));
 
 	$("#slider-vshift").slider({
-		range: "min",
 		value: g_val_shift,
 		min:   -100,
 		max:   100,

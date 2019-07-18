@@ -63,6 +63,7 @@ foreach (array('publicPages','adminPages','raPages') as $pudir) {
 }
 
 $out .= process_file('3p/jstree/themes/default/style.css')."\n\n";
+$out .= process_file('3p/jquery-ui/jquery-ui.css')."\n\n";
 $out .= process_file('3p/bootstrap/css/bootstrap.css')."\n\n";
 
 # ---

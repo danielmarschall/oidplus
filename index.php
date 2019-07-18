@@ -99,12 +99,6 @@ if (class_exists('OIDplusPageAdminColors')) {
 
 	<link rel="stylesheet" href="<?php echo htmlentities($css); ?>">
 
-
-
-<!-- TODO: in 3p speichern -->
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
-
 	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
 
 	<!-- DM 28 May 2019: Removed CookieConsent temporarily, because it is placed at the beginning of the page and therefore ruins the Google index ... -->
