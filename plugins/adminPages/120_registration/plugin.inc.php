@@ -59,7 +59,7 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
 				$out['text'] = '<p>The registration of your OIDplus installation has various advantages: The public key of your system is published, so that users can check the integrity of your data (e.g. signed OID-over-WHOIS requests). You can optionally also enable the automatic publishing of your public OID information to the repository oid-info.com.</p>'.
-				               '<p><input type="button" onclick="document.location = \'?goto=oidplus:srvreg_status\'" value="Check status of the registration and collected data"></p>';
+				               '<p><input type="button" onclick="openOidInPanel(\'oidplus:srvreg_status\');" value="Check status of the registration and collected data"></p>';
 
 				if (!function_exists('openssl_sign')) {
 					$out['text'] .= '<p><font color="red">Error: OpenSSL plugin is missing in PHP. You cannot (un)register your OIDplus instance.</font></p>';
@@ -103,7 +103,7 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 					$out['text'] .= '<p>After clicking "change", your OIDplus installation will contact the ViaThinkSoft server to adjust (add or remove information) your privacy setting. This may take a few minutes.</p>';
 				}
 
-				$out['text'] .= '<p><i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete already submitted OIDs to oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID-Info Webmaster</a>.';
+				$out['text'] .= '<p><i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a>.';
 			}
 		}
 		if ($id === 'oidplus:srvreg_status') {
@@ -137,7 +137,8 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 			// if ($res == 'OK') ...
 
 			$out['title'] = 'Registration live status';
-			$out['text'] = '<p><a href="?goto=oidplus:srv_registration"><img src="img/arrow_back.png" width="16"> Go back to registration settings</a></p>'.$res;
+			$out['text']  = '<p><a '.oidplus_link('oidplus:srv_registration').'><img src="img/arrow_back.png" width="16"> Go back to registration settings</a></p>' .
+			                $res;
 		}
 	}
 

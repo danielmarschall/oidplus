@@ -19,29 +19,62 @@
 
 use MatthiasMullie\Minify;
 
+define('DO_MINIFY', true);
+
 require_once __DIR__ . '/3p/minify/path-converter/ConverterInterface.php';
 require_once __DIR__ . '/3p/minify/path-converter/Converter.php';
 require_once __DIR__ . '/3p/minify/src/Minify.php';
 require_once __DIR__ . '/3p/minify/src/CSS.php';
 require_once __DIR__ . '/3p/minify/src/Exception.php';
 
+require_once __DIR__ . '/includes/color_utils.inc.php';
+
 error_reporting(E_ALL);
 
-$minifier = new Minify\CSS(__DIR__ . '/oidplus.css');
+$out = '';
 
-$ary = glob(__DIR__ . '/plugins/publicPages/'.'*'.'/style.css');
-sort($ary);
-foreach ($ary as $a) $minifier->add($a);
+# ---
 
-$ary = glob(__DIR__ . '/plugins/adminPages/'.'*'.'/style.css');
-sort($ary);
-foreach ($ary as $a) $minifier->add($a);
+function process_file($filename) {
+	if (DO_MINIFY) {
+		$minifier = new Minify\CSS(__DIR__.'/'.$filename);
+		$cont = $minifier->minify();
+		$cont = str_ireplace("url(data:", "url###(data:", $cont);
+		$cont = str_ireplace("url(", "url(".dirname($filename).'/', $cont);
+	} else {
+		$cont = file_get_contents(__DIR__.'/'.$filename);
+		$cont = str_ireplace('url("data:', 'url###("data:', $cont);
+		$cont = str_ireplace('url("', 'url("'.dirname($filename).'/', $cont);
+		$cont = str_ireplace("url('data:", "url###('data:", $cont);
+		$cont = str_ireplace("url('", "url('".dirname($filename).'/', $cont);
+	}
+	$cont = str_ireplace("url###(", "url(", $cont);
+	return $cont;
+}
 
-$ary = glob(__DIR__ . '/plugins/raPages/'.'*'.'/style.css');
-sort($ary);
-foreach ($ary as $a) $minifier->add($a);
+# ---
 
-$out = $minifier->minify();
+$out .= process_file('oidplus.css')."\n\n";
+
+foreach (array('publicPages','adminPages','raPages') as $pudir) {
+	$ary = glob(__DIR__ . '/plugins/'.$pudir.'/'.'*'.'/style.css');
+	sort($ary);
+	foreach ($ary as $a) $out .= process_file($a);
+}
+
+$out .= process_file('3p/jstree/themes/default/style.css')."\n\n";
+$out .= process_file('3p/bootstrap/css/bootstrap.css')."\n\n";
+
+# ---
+
+$hs = isset($_REQUEST['h_shift']) ? $_REQUEST['h_shift'] : 0;
+$ss = isset($_REQUEST['s_shift']) ? $_REQUEST['s_shift'] : 0;
+$vs = isset($_REQUEST['v_shift']) ? $_REQUEST['v_shift'] : 0;
+if (($hs != 0) ||($ss != 0) || ($vs != 0))
+$out = changeHueOfCSS($out, $hs, $ss, $vs);
+
+# ---
+
 $etag = md5($out);
 header("Etag: $etag");
 if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag)) {

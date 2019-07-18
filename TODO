@@ -94,6 +94,7 @@ REJECTED IDEAS
 - markers DRAFT, LEAF and FROZEN etc. => use "Protected" if you want to make it invisible
 
 IDEAS
+- make color plugin available for everyone. Admin may permanently save the colors, but users should be able to set their own theme, saved via cookies
 - there should be a form where an RA can request an invitation, even if the superior RA did not invite them.
   the fact that a RA exists in the Object Table should permit the RA to invite theirself.
 - beim verlassen der seite, z.b. wenn man links auf einen neuen menüpunkt klickt, soll eine abfrage kommen, ob man speichern möchte

@@ -66,6 +66,12 @@ header('X-OIDplus-SystemVersion:'.$sys_ver);
 $sys_title = OIDplus::config()->systemTitle();
 header('X-OIDplus-SystemTitle:'.$sys_title);
 
+if (class_exists('OIDplusPageAdminColors')) {
+	$css = 'oidplus.min.css.php?h_shift='.(OIDplus::config()->getValue('color_hue_shift')/360).'&s_shift='.(OIDplus::config()->getValue('color_sat_shift')/100).'&v_shift='.(OIDplus::config()->getValue('color_val_shift')/100);
+} else {
+	$css = 'oidplus.min.css.php';
+}
+
 ?><!DOCTYPE html>
 <html lang="en">
 
@@ -91,9 +97,13 @@ header('X-OIDplus-SystemTitle:'.$sys_title);
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<script src="oidplus.min.js.php"></script>
 
-	<link rel="stylesheet" href="3p/jstree/themes/default/style.min.css">
-	<link rel="stylesheet" href="oidplus.min.css.php">
-	<link rel="stylesheet" href="3p/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="<?php echo htmlentities($css); ?>">
+
+
+
+<!-- TODO: in 3p speichern -->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 
 	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
 

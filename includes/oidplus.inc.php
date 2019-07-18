@@ -22,12 +22,14 @@ define('IN_OIDPLUS', true);
 if (php_sapi_name() != 'cli') {
 	header('X-Content-Type-Options: nosniff');
 	header('X-XSS-Protection: 1; mode=block');
+/*
 	header("Content-Security-Policy: default-src 'self' https://fonts.gstatic.com https://www.google.com/ https://www.gstatic.com/ https://cdnjs.cloudflare.com/; ".
 	       "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com/; ".
 	       "img-src http: https:; ".
 	       "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.google.com/ https://www.gstatic.com/ https://cdnjs.cloudflare.com/; ".
 	       "frame-ancestors 'none'; ".
 	       "object-src 'none'");
+*/
 	header('X-Frame-Options: SAMEORIGIN');
 	header('Referrer-Policy: no-referrer-when-downgrade');
 }
