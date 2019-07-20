@@ -96,12 +96,14 @@ class OIDplusPageAdminColors extends OIDplusPagePlugin {
 				$out['text'] .= '</p>';
 				$out['text'] .= '<div id="slider-vshift"></div>';
 				$out['text'] .= '<script>';
-				$out['text'] .= 'if (g_hue_shift == null) g_hue_shift = '.OIDplus::config()->getValue('color_hue_shift').";\n";
-				$out['text'] .= 'if (g_sat_shift == null) g_sat_shift = '.OIDplus::config()->getValue('color_sat_shift').";\n";
-				$out['text'] .= 'if (g_val_shift == null) g_val_shift = '.OIDplus::config()->getValue('color_val_shift').";\n";
+				$out['text'] .= 'if (g_hue_shift == null) g_hue_shift = g_hue_shift_saved = '.OIDplus::config()->getValue('color_hue_shift').";\n";
+				$out['text'] .= 'if (g_sat_shift == null) g_sat_shift = g_sat_shift_saved = '.OIDplus::config()->getValue('color_sat_shift').";\n";
+				$out['text'] .= 'if (g_val_shift == null) g_val_shift = g_val_shift_saved = '.OIDplus::config()->getValue('color_val_shift').";\n";
 				$out['text'] .= 'setup_color_sliders();';
 				$out['text'] .= '</script>';
-				$out['text'] .= '<br><input type="button" onclick="color_reset_sliders()" value="Reset">'.str_repeat('&nbsp;',5);
+				$out['text'] .= '<br>';
+				$out['text'] .= '<input type="button" onclick="color_reset_sliders_cfg()" value="Reset to last saved config">'.str_repeat('&nbsp;',5);
+				$out['text'] .= '<input type="button" onclick="color_reset_sliders_factory()" value="Reset default setting">'.str_repeat('&nbsp;',5);
 				$out['text'] .= '<input type="button" onclick="test_color_theme()" value="Test">'.str_repeat('&nbsp;',5);
 				$out['text'] .= '<input type="button" onclick="crudActionColorUpdate()" value="Set permanently">';
 			}

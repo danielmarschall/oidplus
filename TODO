@@ -35,7 +35,6 @@ SMALL THINGS
 - when login expired, remove entries in the treeview
 - can we put even more code (e.g. object CRUD) into the plugin directory?
 - disable specific functions (e.g. invite, login, rainfo, forgot password) if the plugins are not installed (check if class type is registered)
-- mobile design: if title is too long => make system title bar multi line?
 - make usage of Foreign Keys
 - <abbr> in <code> wird doppelt unterstrichen
 - wenn man eine well-known OID anlegen möchte, dann kommt fehler wegen replaceAsn1/replaceIri, aber die OID ist erstellt. Die API ist aber nicht reloaded. Man sieht also nicht, dass die OID erstellt wurde, und ein erneuter klick auf Insert führt zum Primary-Key fehler
@@ -70,7 +69,6 @@ FUTURE
   * What if composer installs a version of a component, which is incompatible?
   * We need a new publishing script, because simply checking out SVN is not enough anymore. The user needs to execute composer. But what is if the user don't have composer (or dont have shell access at all?)
 - implement sitemaps xml
-- record history of an OID?
 - admin should be able to change wellknown oids?
 - move oid to different arc
 - bei sehr großen arcs (z.B. PEN) sollen nicht alle angezeigt werden
@@ -86,6 +84,9 @@ BUGS?
   loaded via BASIC AUTH. Happens only when the query comes from local,
   acessed by domain name?
   (Chromium 56.0.2924.84 Built on Ubuntu 14.04, running on Raspbian 9.9)
+- OIDplus does not work in Safari Mobile!
+	1. You cannot scroll the OID grid, as the scrolling affects the whole page, not the grid.
+	2. JQueryUI sliders cannot be dragged
 
 REJECTED IDEAS
 - sollte es mehere admins geben?
@@ -102,6 +103,9 @@ IDEAS
 - sanitize IPv4, IPv6, GUID during creation
 	bei IPv4 und IPv6: - if it is a single host address, don't put /32 or /128 suffix
 	                   - strike unnecessary bits that are not defined in the netmask (also at the whois output)
+- let the sysadmin decide if they want the title be "systemtitle - object title" or "object title - systemtitle"
+- should a RA be able to mark their own oid as confidential, instead of asking the superior RA?
+- sollte es eine oidplus projektseite geben anstelle nur das nackte system?
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie

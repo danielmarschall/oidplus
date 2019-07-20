@@ -1,11 +1,24 @@
 g_hue_shift = null;
 g_sat_shift = null;
 g_val_shift = null;
+g_hue_shift_saved = null;
+g_sat_shift_saved = null;
+g_val_shift_saved = null;
 
-function color_reset_sliders() {
+function color_reset_sliders_factory() {
 	$("#hshift").val(g_hue_shift = 0);
 	$("#sshift").val(g_sat_shift = 0);
 	$("#vshift").val(g_val_shift = 0);
+	$("#slider-hshift").slider("option", "value", g_hue_shift);
+	$("#slider-sshift").slider("option", "value", g_sat_shift);
+	$("#slider-vshift").slider("option", "value", g_val_shift);
+	test_color_theme();
+}
+
+function color_reset_sliders_cfg() {
+	$("#hshift").val(g_hue_shift = g_hue_shift_saved);
+	$("#sshift").val(g_sat_shift = g_sat_shift_saved);
+	$("#vshift").val(g_val_shift = g_val_shift_saved);
 	$("#slider-hshift").slider("option", "value", g_hue_shift);
 	$("#slider-sshift").slider("option", "value", g_sat_shift);
 	$("#slider-vshift").slider("option", "value", g_val_shift);
@@ -79,6 +92,9 @@ function crudActionColorUpdate(name) {
 			if ("error" in data) {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
+				g_hue_shift_saved = g_hue_shift;
+				g_sat_shift_saved = g_sat_shift;
+				g_val_shift_saved = g_val_shift;
 				test_color_theme(); // apply visually
 				alert("Update OK");
 			} else {
