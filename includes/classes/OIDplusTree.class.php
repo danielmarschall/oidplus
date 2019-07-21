@@ -105,7 +105,20 @@ class OIDplusTree {
 				$child['state'] = array("opened" => true);
 			} else {
 				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = '".OIDplus::db()->real_escape_string($row['id'])."'");
-				$child['children'] = OIDplus::db()->num_rows($res2) > 0;
+
+				// Variant 1: Fast, but does not check for hidden OIDs
+				//$child_count = OIDplus::db()->num_rows($res2);
+
+				// variant 2
+				$child_count = 0;
+				while ($row2 = OIDplus::db()->fetch_object($res2)) {
+					$obj_test = OIDplusObject::parse($row2->id);
+					if (is_null($obj_test)) continue;
+					if (!$obj_test->userHasReadRights()) continue;
+					$child_count++;
+				}
+
+				$child['children'] = $child_count > 0;
 			}
 
 			$children[] = $child;

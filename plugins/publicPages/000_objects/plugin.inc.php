@@ -118,30 +118,29 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 			return true;
 		} else {
 			if (isset($req_goto)) {
-					$goto = $req_goto;
-					$path = array();
-					while (true) {
-						$path[] = $goto;
-						$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($goto)."'");
-						if (OIDplus::db()->num_rows($res) == 0) break;
-						$row = OIDplus::db()->fetch_array($res);
-						$goto = $row['parent'];
-					}
+				$goto = $req_goto;
+				$path = array();
+				while (true) {
+					$path[] = $goto;
+					$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($goto)."'");
+					if (OIDplus::db()->num_rows($res) == 0) break;
+					$row = OIDplus::db()->fetch_array($res);
+					$goto = $row['parent'];
+				}
 
-					$goto_path = array_reverse($path);
+				$goto_path = array_reverse($path);
 			} else {
 				$goto_path = null;
 			}
 
 			$objTypesChildren = array();
 			foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
-				$child = array(
-						'id' => $ot::root(),
-						'text' => $ot::objectTypeTitle(),
-						'state' => array("opened" => true),
-						'icon' => 'plugins/objectTypes/'.$ot::ns().'/img/treeicon_root.png',
-						'children' => OIDplusTree::tree_populate($ot::root(), $goto_path)
-					);
+				$child = array('id' => $ot::root(),
+				               'text' => $ot::objectTypeTitle(),
+				               'state' => array("opened" => true),
+				               'icon' => 'plugins/objectTypes/'.$ot::ns().'/img/treeicon_root.png',
+				               'children' => OIDplusTree::tree_populate($ot::root(), $goto_path)
+				               );
 				if (!file_exists($child['icon'])) $child['icon'] = null; // default icon (folder)
 				$objTypesChildren[] = $child;
 			}
