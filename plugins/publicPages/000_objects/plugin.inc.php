@@ -57,7 +57,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 			return $out;
 		}
 
-		// Objects will be loaded by includes/classes/OIDplusGui.class.php , if $hanlded=False all page plugins were probed
+		// Objects will be loaded by includes/classes/OIDplusGui.class.php , if $handled=False all page plugins were probed
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {

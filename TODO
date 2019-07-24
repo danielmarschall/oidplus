@@ -9,10 +9,6 @@ IMPORTANT
 - dsgvo datenschutzerklärung, agbs etc.
 - Verify that logger works correctly, check if all logmasks are correct
 
-ERRORS FOUND 14 JULY 2019
-- oid anlegen mit ungültigem asn1 : er bringt fehler, aber die OID ist angelegt!
-- wenn man "insert" nochmal klickt, obwohl objekt schon existiert, dann wird trotzdem log entry geschrieben: "object 'oid:2.999.1.123.123' created, given to RA"
-
 ADMIN AREA
 - Allow that the admin can change user's passwort/contact data
 - Admin should see log events for each RA and OID
@@ -80,10 +76,6 @@ FUTURE
 - Administrator-Interface: enable and disable object types
 
 BUGS?
-- AJAX requests won't contain BASIC AUTH, although the page itself is
-  loaded via BASIC AUTH. Happens only when the query comes from local,
-  acessed by domain name?
-  (Chromium 56.0.2924.84 Built on Ubuntu 14.04, running on Raspbian 9.9)
 - OIDplus does not work in Safari Mobile!
 	1. You cannot scroll the OID grid, as the scrolling affects the whole page, not the grid.
 	2. JQueryUI sliders cannot be dragged
@@ -95,6 +87,7 @@ REJECTED IDEAS
 - markers DRAFT, LEAF and FROZEN etc. => use "Protected" if you want to make it invisible
 
 IDEAS
+- admin area: make a plugin that shows all plugins (Also by type, e.g. page plugin and objecttype plugin)
 - make color plugin available for everyone. Admin may permanently save the colors, but users should be able to set their own theme, saved via cookies
 - there should be a form where an RA can request an invitation, even if the superior RA did not invite them.
   the fact that a RA exists in the Object Table should permit the RA to invite theirself.

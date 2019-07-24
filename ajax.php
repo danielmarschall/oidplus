@@ -179,12 +179,24 @@ try {
 		if (!empty($new_ra) && !oidplus_valid_email($new_ra)) {
 			throw new Exception('Invalid RA email address');
 		}
+
+		// First, do a simulation for ASN.1 IDs and IRIs to check if there are any problems (then an Exception will be thrown)
+		if ($obj::ns() == 'oid') {
+			$oid = $obj;
+
+			$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
+			$ids = array_map('trim',$ids);
+			$oid->replaceIris($ids, true);
+
+			$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
+			$ids = array_map('trim',$ids);
+			$oid->replaceAsn1Ids($ids, true);
+		}
 		
-		// RA ändern (rekursiv)
+		// Change RA recursively
 		$res = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
 		$row = OIDplus::db()->fetch_array($res);
 		$current_ra = $row['ra_email'];
-
 		if ($new_ra != $current_ra) {
 			OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
 			OIDplus::logger()->log("RA($current_ra)!",           "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
@@ -194,17 +206,17 @@ try {
 
 		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Identifiers/Confidential flag of object '$id' updated"); // TODO: Check if they were ACTUALLY updated!
 
-		// Replace ASN.1 und IRI IDs
+		// Replace ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {
 			$oid = $obj;
 
 			$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
 			$ids = array_map('trim',$ids);
-			$oid->replaceIris($ids);
+			$oid->replaceIris($ids, false);
 
 			$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
 			$ids = array_map('trim',$ids);
-			$oid->replaceAsn1Ids($ids);
+			$oid->replaceAsn1Ids($ids, false);
 		}
 
 		$confidential = $_POST['confidential'] == 'true' ? '1' : '0';
@@ -263,7 +275,27 @@ try {
 		// Absoluten OID namen bestimmen
 		// Note: At addString() and parse(), the syntax of the ID will be checked
 		$id = $objParent->addString($_POST['id']);
+
+		// Check, if the OID exists
+		$test = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
+		if (OIDplus::db()->num_rows($test) >= 1) {
+			throw new Exception("Object $id already exists!");
+		}
+
 		$obj = OIDplusObject::parse($id);
+
+		// First simulate if there are any problems of ASN.1 IDs und IRIs
+		if ($obj::ns() == 'oid') {
+			$oid = $obj;
+
+			$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
+			$ids = array_map('trim',$ids);
+			$oid->replaceIris($ids, true);
+
+			$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
+			$ids = array_map('trim',$ids);
+			$oid->replaceAsn1Ids($ids, true);
+		}
 
 		// Superior RA Änderung durchführen
 		$parent = $_POST['parent'];
@@ -282,17 +314,17 @@ try {
 			throw new Exception(OIDplus::db()->error());
 		}
 
-		// Set ASN.1 und IRI IDs
+		// Set ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {
 			$oid = $obj;
 
 			$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
 			$ids = array_map('trim',$ids);
-			$oid->replaceIris($ids);
+			$oid->replaceIris($ids, false);
 
 			$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
 			$ids = array_map('trim',$ids);
-			$oid->replaceAsn1Ids($ids);
+			$oid->replaceAsn1Ids($ids, false);
 		}
 
 		$status = 0;

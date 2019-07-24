@@ -282,7 +282,7 @@ class OIDplusOid extends OIDplusObject {
 		return false;
 	}
 
-	public function replaceAsn1Ids($demandedASN1s=array()) {
+	public function replaceAsn1Ids($demandedASN1s=array(), $simulate=false) {
 		if ($this->isWellKnown()) {
 			throw new Exception("OID ".$this->oid." is a 'well-known' OID. Its identifiers cannot be changed.");
 		}
@@ -307,15 +307,17 @@ class OIDplusOid extends OIDplusObject {
 		}
 
 		// Now do the real replacement
-		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string("oid:".$this->oid)."'");
-		foreach ($demandedASN1s as &$asn1) {
-			if (!OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."asn1id (oid, name) values ('".OIDplus::db()->real_escape_string("oid:".$this->oid)."', '".OIDplus::db()->real_escape_string($asn1)."')")) {
-				throw new Exception("Insertion of ASN.1 ID $asn1 to OID ".$this->oid." failed!");
+		if (!$simulate) {
+			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string("oid:".$this->oid)."'");
+			foreach ($demandedASN1s as &$asn1) {
+				if (!OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."asn1id (oid, name) values ('".OIDplus::db()->real_escape_string("oid:".$this->oid)."', '".OIDplus::db()->real_escape_string($asn1)."')")) {
+					throw new Exception("Insertion of ASN.1 ID $asn1 to OID ".$this->oid." failed!");
+				}
 			}
 		}
 	}
 
-	public function replaceIris($demandedIris=array()) {
+	public function replaceIris($demandedIris=array(), $simulate=false) {
 		if ($this->isWellKnown()) {
 			throw new Exception("OID ".$this->oid." is a 'well-known' OID. Its identifiers cannot be changed.");
 		}
@@ -340,10 +342,12 @@ class OIDplusOid extends OIDplusObject {
 		}
 
 		// Now do the real replacement
-		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = '".OIDplus::db()->real_escape_string("oid:".$this->oid)."'");
-		foreach ($demandedIris as &$iri) {
-			if (!OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."iri (oid, name) values ('".OIDplus::db()->real_escape_string("oid:".$this->oid)."', '".OIDplus::db()->real_escape_string($iri)."')")) {
-				throw new Exception("Insertion of IRI $iri to OID ".$this->oid." failed!");
+		if (!$simulate) {
+			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = '".OIDplus::db()->real_escape_string("oid:".$this->oid)."'");
+			foreach ($demandedIris as &$iri) {
+				if (!OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."iri (oid, name) values ('".OIDplus::db()->real_escape_string("oid:".$this->oid)."', '".OIDplus::db()->real_escape_string($iri)."')")) {
+					throw new Exception("Insertion of IRI $iri to OID ".$this->oid." failed!");
+				}
 			}
 		}
 	}
