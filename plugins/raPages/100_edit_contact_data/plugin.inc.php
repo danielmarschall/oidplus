@@ -42,7 +42,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 			if (OIDplus::db()->num_rows($res) == 0) {
 				die(json_encode(array("error" => 'RA does not exist')));
 			}
-			
+
 			OIDplus::logger()->log("RA($email)?/A?", "Changed RA '$email' contact data/details");
 
 			if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra ".
@@ -80,7 +80,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 		if (explode('$',$id)[0] == 'oidplus:edit_ra') {
 			$handled = true;
 			$out['title'] = 'Edit RA contact data';
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/raPages/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
 
 			$ra_email = explode('$',$id)[1];
 
@@ -131,7 +131,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/raPages/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

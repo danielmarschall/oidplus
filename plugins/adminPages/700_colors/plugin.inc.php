@@ -74,7 +74,7 @@ class OIDplusPageAdminColors extends OIDplusPagePlugin {
 		if ($id === 'oidplus:colors') {
 			$handled = true;
 			$out['title'] = 'Colors';
-			$out['icon']  = 'plugins/adminPages/'.basename(__DIR__).'/icon_big.png';
+			$out['icon']  = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
@@ -112,7 +112,7 @@ class OIDplusPageAdminColors extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
                 if (file_exists(__DIR__.'/treeicon.png')) {
-                        $tree_icon = 'plugins/adminPages/'.basename(__DIR__).'/treeicon.png';
+                        $tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
                 } else {
                         $tree_icon = null; // default icon (folder)
                 }

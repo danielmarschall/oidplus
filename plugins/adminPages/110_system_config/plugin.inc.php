@@ -64,7 +64,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 		if (explode('$',$id)[0] == 'oidplus:edit_config') {
 			$handled = true;
 			$out['title'] = 'System configuration';
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/adminPages/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
@@ -104,7 +104,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 
 				$output .= '<br><p>See also:</p>';
 				$output .= '<ul><li><a href="setup/">Setup part 1: Create config.php (contains database settings, ReCAPTCHA, admin password and SSL enforcement)</a></li>';
-				$output .= '<li><a href="plugins/adminPages/120_registration/registration.php">Setup part 2: Basic settings (they are all available above, too)</a></li></ul>';
+				$output .= '<li><a href="plugins/'.basename(dirname(__DIR__)).'/120_registration/registration.php">Setup part 2: Basic settings (they are all available above, too)</a></li></ul>';
 
 				$out['text'] = $output;
 			}
@@ -115,7 +115,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/adminPages/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

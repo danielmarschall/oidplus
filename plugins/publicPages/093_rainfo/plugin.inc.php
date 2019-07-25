@@ -45,7 +45,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 			$ra_email = str_replace('&', '@', $ra_email);
 
 			$out['title'] = 'Registration Authority Information'; // TODO: email addresse reinschreiben? aber wie vor anti spam schützen?
-			$out['icon'] = 'plugins/publicPages/'.basename(__DIR__).'/rainfo_big.png';
+			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/rainfo_big.png';
 
 			if (empty($ra_email)) {
 				$out['text'] = '<p>Following object roots have an undefined Registration Authority:</p>';
@@ -57,7 +57,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 
 			foreach (OIDplusObject::getRaRoots($ra_email) as $loc_root) {
 				$ico = $loc_root->getIcon();
-				$icon = !is_null($ico) ? $ico : 'plugins/publicPages/'.basename(__DIR__).'/treeicon_link.png';
+				$icon = !is_null($ico) ? $ico : 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon_link.png';
 				$out['text'] .= '<p><a '.oidplus_link($loc_root->nodeId()).'><img src="'.$icon.'"> Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())).'</a></p>';
 			}
 

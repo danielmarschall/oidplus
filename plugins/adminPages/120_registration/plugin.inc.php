@@ -24,7 +24,7 @@ define('QUERY_UNREGISTER_V1',       '1.3.6.1.4.1.37476.2.5.2.1.2.1');
 define('QUERY_LISTALLSYSTEMIDS_V1', '1.3.6.1.4.1.37476.2.5.2.1.3.1');
 define('QUERY_LIVESTATUS_V1',       '1.3.6.1.4.1.37476.2.5.2.1.4.1');
 
-class OIDplusRegistrationWizard extends OIDplusPagePlugin {
+class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 	public function type() {
 		return 'admin';
 	}
@@ -52,7 +52,7 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 		if ($id === 'oidplus:srv_registration') {
 			$handled = true;
 			$out['title'] = 'System registration settings';
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/adminPages/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
@@ -257,9 +257,9 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 			if ($html && (OIDplus::config()->getValue('reg_wizard_done') != '1')) {
 				if (basename($_SERVER['SCRIPT_NAME']) != 'registration.php') {
 					if ($system_url = OIDplus::system_url()) {
-						header('Location:'.$system_url.'plugins/adminPages/'.basename(__DIR__).'/registration.php');
+						header('Location:'.$system_url.'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/registration.php');
 					} else {
-						header('Location:plugins/adminPages/'.basename(__DIR__).'/registration.php');
+						header('Location:plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/registration.php');
 					}
 					die();
 				}
@@ -279,7 +279,7 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/adminPages/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}
@@ -298,4 +298,4 @@ class OIDplusRegistrationWizard extends OIDplusPagePlugin {
 	}
 }
 
-OIDplus::registerPagePlugin(new OIDplusRegistrationWizard());
+OIDplus::registerPagePlugin(new OIDplusPageAdminRegistration());

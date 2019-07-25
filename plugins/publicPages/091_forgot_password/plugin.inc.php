@@ -112,7 +112,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 			$handled = true;
 
 			$out['title'] = 'Forgot password';
-			$out['icon'] = 'plugins/publicPages/'.basename(__DIR__).'/forgot_password_big.png';
+			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/forgot_password_big.png';
 
 			try {
 				$out['text'] .= '<p>Please enter the email address of your account, and information about the password reset will be sent to you.</p>
@@ -138,7 +138,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 			$auth = explode('$',$id)[3];
 
 			$out['title'] = 'Reset password';
-			$out['icon'] = 'plugins/publicPages/'.basename(__DIR__).'/reset_password_big.png';
+			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/reset_password_big.png';
 
 			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
 				$out['icon'] = 'img/error_big.png';

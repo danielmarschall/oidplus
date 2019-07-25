@@ -50,12 +50,12 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 			$handled = true;
 
 			$out['title'] = 'Web WHOIS';
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/publicPages/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
 
 			$out['text']  = '';
 			$out['text'] .= '<p>With the web based whois service, you can query object information in a machine readable format.</p>';
-			$out['text'] .= '<p>RFC draft: <a href="plugins/publicPages/'.basename(__DIR__).'/whois/rfc/draft-viathinksoft-oidwhois-00.txt">TXT</a> | <a href="plugins/publicPages/'.basename(__DIR__).'/whois/rfc/draft-viathinksoft-oidwhois-00.nroff">NROFF</a></p>';
-			$out['text'] .= '<form action="plugins/publicPages/'.basename(__DIR__).'/whois/webwhois.php" method="GET">';
+			$out['text'] .= '<p>RFC draft: <a href="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/rfc/draft-viathinksoft-oidwhois-00.txt">TXT</a> | <a href="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/rfc/draft-viathinksoft-oidwhois-00.nroff">NROFF</a></p>';
+			$out['text'] .= '<form action="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/webwhois.php" method="GET">';
 			$out['text'] .= '	<input type="text" name="query" value="oid:2.999">';
 			$out['text'] .= '	<input type="submit" value="Query">';
 			$out['text'] .= '</form>';
@@ -64,7 +64,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/publicPages/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}
@@ -79,7 +79,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 	}
 
 	public function modifyContent($id, &$title, &$icon, &$text) {
-		$text .= '<br><img src="plugins/publicPages/'.basename(__DIR__).'/page_pictogram.png" height="15" alt=""> <a href="plugins/publicPages/'.basename(__DIR__).'/whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font">Whois</a>';
+		$text .= '<br><img src="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/page_pictogram.png" height="15" alt=""> <a href="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font">Whois</a>';
 	}
 
 	public function tree_search($request) {

@@ -157,7 +157,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 		if (explode('$',$id)[0] == 'oidplus:change_ra_email') {
 			$handled = true;
 			$out['title'] = 'Change RA email';
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/raPages/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
 
 			$ra_email = explode('$',$id)[1];
 
@@ -191,7 +191,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 				$out['text'] .= '<p>This functionality has been disabled by the administrator.</p>';
 			} else {
 				$out['title'] = 'Perform email address change';
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/raPages/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
 
 				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($old_email)."'");
 				if (OIDplus::db()->num_rows($res) == 0) {
@@ -228,7 +228,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/raPages/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

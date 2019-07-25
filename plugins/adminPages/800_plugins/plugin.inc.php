@@ -19,13 +19,13 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPageAdminLogEvents extends OIDplusPagePlugin {
+class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 	public function type() {
 		return 'admin';
 	}
 
 	public function priority() {
-		return 600;
+		return 800;
 	}
 
 	public function action(&$handled) {
@@ -38,7 +38,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePlugin {
 	}
 
 	public function gui($id, &$out, &$handled) {
-		if ($id == 'oidplus:system_log') {
+		if ($id == 'oidplus:system_plugins') {
 			$handled = true;
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
@@ -47,35 +47,48 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePlugin {
 				return $out;
 			}
 
-			$out['title'] = "All log messages";
+			$out['title'] = "Installed plugins";
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
 
-			$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event from ".OIDPLUS_TABLENAME_PREFIX."log lo ".
-			                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_user lu on lu.log_id = lo.id ".
-			                            //"where lu.user = 'admin' " .
-										"order by lo.unix_ts desc");
-			if (OIDplus::db()->num_rows($res) > 0) {
-				$out['text'] = '<pre>';
-				while ($row = OIDplus::db()->fetch_array($res)) {
-					$users = array();
-					$res2 = OIDplus::db()->query("select user from ".OIDPLUS_TABLENAME_PREFIX."log_user ".
-								     "where log_id = '".OIDplus::db()->real_escape_string($row['id'])."'");
-					while ($row2 = OIDplus::db()->fetch_array($res2)) {
-						$users[] = $row2['user'];
-					}
-					$users = count($users) > 0 ? ", ".implode('/',$users) : '';
-
-					$addr = empty($row['addr']) ? 'no address' : $row['addr'];
-
-					$out['text'] .= date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr.$users) . ")\n";
+			if (count($plugins = OIDplus::getPagePlugins('public')) > 0) {
+				$out['text'] .= '<p><u>Public page plugins:</u></p><ul>';
+				foreach ($plugins as $plugin) {
+					$out['text'] .= '<li>'.get_class($plugin).'</li>';
 				}
-				$out['text'] .= '</pre>';
-			} else {
-				$out['text'] .= '<p>Currently there are no log entries</p>';
+				$out['text'] .= '</ul>';
 			}
 
-			// TODO: List logs in a table instead of a <pre> text
-			// TODO: Load only X events and then re-load new events via AJAX when the user scrolls down
+			if (count($plugins = OIDplus::getPagePlugins('ra')) > 0) {
+				$out['text'] .= '<p><u>RA page plugins:</u></p><ul>';
+				foreach ($plugins as $plugin) {
+					$out['text'] .= '<li>'.get_class($plugin).'</li>';
+				}
+				$out['text'] .= '</ul>';
+			}
+
+			if (count($plugins = OIDplus::getPagePlugins('admin')) > 0) {
+				$out['text'] .= '<p><u>Admin page plugins:</u></p><ul>';
+				foreach ($plugins as $plugin) {
+					$out['text'] .= '<li>'.get_class($plugin).'</li>';
+				}
+				$out['text'] .= '</ul>';
+			}
+
+			if (count($plugins = OIDplus::getRegisteredObjectTypes()) > 0) {
+				$out['text'] .= '<p><u>Enabled object types:</u></p><ul>';
+				foreach ($plugins as $ot) {
+					$out['text'] .= '<li>'.$ot::objectTypeTitle().' ('.$ot::ns().')</li>';
+				}
+				$out['text'] .= '</ul>';
+			}
+
+			if (count($plugins = OIDplus::getDisabledObjectTypes()) > 0) {
+				$out['text'] .= '<ul><u>Disabled object types:</u></ul>';
+				foreach ($plugins as $ot) {
+					$out['text'] .= '<li>'.$ot::objectTypeTitle().' ('.$ot::ns().')</li>';
+				}
+				$out['text'] .= '</ul>';
+			}
 		}
 	}
 
@@ -87,9 +100,9 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePlugin {
 		}
 
 		$json[] = array(
-			'id' => 'oidplus:system_log',
+			'id' => 'oidplus:system_plugins',
 			'icon' => $tree_icon,
-			'text' => 'All log events'
+			'text' => 'Plugins'
 		);
 
 		return true;
@@ -100,4 +113,4 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePlugin {
 	}
 }
 
-OIDplus::registerPagePlugin(new OIDplusPageAdminLogEvents());
+OIDplus::registerPagePlugin(new OIDplusPageAdminPlugins());

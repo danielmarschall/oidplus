@@ -116,7 +116,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 			$origin = explode('$',$id)[2];
 
 			$out['title'] = 'Invite a Registration Authority';
-			$out['icon'] = 'plugins/raPages/'.basename(__DIR__).'/invite_ra_big.png';
+			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/invite_ra_big.png';
 
 			try {
 				$this->inviteSecurityCheck($email);
@@ -146,7 +146,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 			$auth = explode('$',$id)[3];
 
 			$out['title'] = 'Register as Registration Authority';
-			$out['icon'] = 'plugins/raPages/'.basename(__DIR__).'/activate_ra_big.png';
+			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/activate_ra_big.png';
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
 			if (OIDplus::db()->num_rows($res) > 0) {

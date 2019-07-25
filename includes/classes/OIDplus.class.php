@@ -314,8 +314,6 @@ class OIDplus {
 
 		// Register plugins
 
-		$ary = glob(__DIR__ . '/../../plugins/system/'.'*'.'/plugin.inc.php');
-		foreach ($ary as $a) include $a;
 		$ary = glob(__DIR__ . '/../../plugins/publicPages/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 		$ary = glob(__DIR__ . '/../../plugins/raPages/'.'*'.'/plugin.inc.php');
