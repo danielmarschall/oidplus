@@ -168,7 +168,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				$out['text'] .= '<label class="padding_label">Password:</label><input type="password" name="password" value="" id="adminLoginPassword"><br><br>';
 				$out['text'] .= '<input type="submit" value="Login"><br><br>';
 				$out['text'] .= '</form>';
-				$out['text'] .= '<p><abbr title="Delete the file includes/config.inc.php and reload the page to start Setup again">Forgot password?</abbr></p>';
+				$out['text'] .= '<p><a '.oidplus_link('oidplus:forgot_password_admin').'>Forgot password?</a><br>';
 			}
 
 			$out['text'] .= '				</div>';

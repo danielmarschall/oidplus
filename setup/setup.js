@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-min_password_length = 10;
+min_password_length = 10; // see also plugins/publicPages/092_forgot_password_admin/script.js
 
 function btoa(bin) {
 	var tableStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -110,7 +110,7 @@ function rebuild() {
 		document.getElementById('mysql_database_warn').innerHTML = '';
 	}
 
-	// Continue	
+	// Continue
 	if (!error)
 	{
 		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br>' +
