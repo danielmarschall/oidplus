@@ -75,7 +75,7 @@ class OIDplusTree {
 			$confidential_oids[] = $row['id'];
 		}
 
-		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = '".OIDplus::db()->real_escape_string($parent)."' order by ".OIDplus::db()->natOrder('id'));
+		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($parent));
 		while ($row = OIDplus::db()->fetch_array($res)) {
 			$obj = OIDplusObject::parse($row['id']);
 
@@ -104,16 +104,14 @@ class OIDplusTree {
 				$child['children'] = self::tree_populate($row['id'], $goto_path);
 				$child['state'] = array("opened" => true);
 			} else {
-				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = '".OIDplus::db()->real_escape_string($row['id'])."'");
+				$obj_children = $obj->getChildren();
 
 				// Variant 1: Fast, but does not check for hidden OIDs
-				//$child_count = OIDplus::db()->num_rows($res2);
+				//$child_count = count($obj_children);
 
 				// variant 2
 				$child_count = 0;
-				while ($row2 = OIDplus::db()->fetch_object($res2)) {
-					$obj_test = OIDplusObject::parse($row2->id);
-					if (is_null($obj_test)) continue;
+				foreach ($obj_children as $obj_test) {
 					if (!$obj_test->userHasReadRights()) continue;
 					$child_count++;
 				}

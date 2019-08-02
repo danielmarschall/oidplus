@@ -1,0 +1,70 @@
+<div id="DBPLUGIN_PARAMS_MySQL">
+	<p>MySQL hostname and port:<br><input id="mysql_host" type="text" value="localhost:3306" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="mysql_host_warn"></p>
+	<p>MySQL username:<br><input id="mysql_username" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="mysql_username_warn"></p>
+	<p>MySQL password:<br><input id="mysql_password" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"></p>
+	<p>MySQL database name:<br><input id="mysql_database" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="mysql_database_warn"></p>
+</div>
+<script>
+plugin_combobox_change_callbacks.push(function(strPlugin) {
+	document.getElementById('DBPLUGIN_PARAMS_MySQL').style.display = (strPlugin == 'MySQL') ? "Block" : "None";
+});
+rebuild_callbacks.push(function() {
+	var e = document.getElementById("db_plugin");
+	var strPlugin = e.options[e.selectedIndex].value;
+	if (strPlugin != 'MySQL') return true;
+
+	document.getElementById('struct_cli_1').innerHTML = '';
+	document.getElementById('struct_cli_2').innerHTML = '';
+	document.getElementById('struct_1').href = 'struct_empty.sql.php';
+	document.getElementById('struct_2').href = 'struct_with_examples.sql.php';
+
+	error = false;
+
+	// Check 1: host must not be empty
+	if (document.getElementById('mysql_host').value.length == 0)
+	{
+		document.getElementById('mysql_host_warn').innerHTML = '<font color="red">Please specify a host name!</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a host name!</i>';
+		error = true;
+	} else {
+		document.getElementById('mysql_host_warn').innerHTML = '';
+	}
+
+	// Check 2: Username must not be empty
+	if (document.getElementById('mysql_username').value.length == 0)
+	{
+		document.getElementById('mysql_username_warn').innerHTML = '<font color="red">Please specify a username!</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a username!</i>';
+		error = true;
+	} else {
+		document.getElementById('mysql_username_warn').innerHTML = '';
+	}
+
+	// Check 3: Database name must not be empty
+	if (document.getElementById('mysql_database').value.length == 0)
+	{
+		document.getElementById('mysql_database_warn').innerHTML = '<font color="red">Please specify a database name!</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a database name!</i>';
+		error = true;
+	} else {
+		document.getElementById('mysql_database_warn').innerHTML = '';
+	}
+
+	document.getElementById('struct_cli_1').innerHTML = '<br>or via command line:<br><code>curl -s "'+owndir+'struct_empty.sql.php?plugin=mysql&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value)+'" | mysql -u '+document.getElementById('mysql_username').value+' -p</code>';
+	document.getElementById('struct_cli_2').innerHTML = '<br>or via command line:<br><code>curl -s "'+owndir+'struct_with_examples.sql.php?plugin=mysql&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value)+' | mysql -u '+document.getElementById('mysql_username').value+' -p</code>';
+	document.getElementById('struct_1').href = owndir+'struct_empty.sql.php?plugin=mysql&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
+	document.getElementById('struct_2').href = owndir+'struct_with_examples.sql.php?plugin=mysql&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
+
+	return !error;
+});
+rebuild_config_callbacks.push(function() {
+	var e = document.getElementById("db_plugin");
+	var strPlugin = e.options[e.selectedIndex].value;
+	if (strPlugin != 'MySQL') return '';
+
+	return '<b>define</b>(\'OIDPLUS_MYSQL_HOST\',       \''+document.getElementById('mysql_host').value+'\');<br>' +
+	       '<b>define</b>(\'OIDPLUS_MYSQL_USERNAME\',   \''+document.getElementById('mysql_username').value+'\');<br>' +
+	       '<b>define</b>(\'OIDPLUS_MYSQL_PASSWORD\',   \''+b64EncodeUnicode(document.getElementById('mysql_password').value)+'\'); // base64 encoded<br>' +
+	       '<b>define</b>(\'OIDPLUS_MYSQL_DATABASE\',   \''+document.getElementById('mysql_database').value+'\');<br>';
+});
+</script>

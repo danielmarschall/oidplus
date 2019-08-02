@@ -59,7 +59,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePlugin {
 				while ($row = OIDplus::db()->fetch_array($res)) {
 					$users = array();
 					$res2 = OIDplus::db()->query("select user from ".OIDPLUS_TABLENAME_PREFIX."log_user ".
-								     "where log_id = '".OIDplus::db()->real_escape_string($row['id'])."'");
+					                             "where log_id = ?", array($row['id']));
 					while ($row2 = OIDplus::db()->fetch_array($res2)) {
 						$users[] = $row2['user'];
 					}

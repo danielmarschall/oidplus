@@ -21,12 +21,10 @@ require_once __DIR__ . '/includes/oidplus.inc.php';
 
 OIDplus::init(false);
 
-OIDplus::db()->set_charset("UTF8");
-OIDplus::db()->query("SET NAMES 'utf8'");
-
 header('Content-Type:application/json; charset=utf-8');
 
 try {
+	OIDplus::db()->transaction_begin();
 	$handled = false;
 
 	// Action:     (actions defined by plugins)
@@ -132,24 +130,22 @@ try {
 
 		// Prüfen ob zugelassen
 		if (!$obj->userHasParentalWriteRights()) throw new Exception('Authentification error. Please log in as the superior RA to delete this OID.');
-		
+
 		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Object '$id' (recursively) deleted");
 		OIDplus::logger()->log("OIDRA($id)!", "Lost ownership of object '$id' because it was deleted");
 
 		// Delete object
-		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
+		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
 
 		// Delete orphan stuff
 		foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
-			$where = "where parent <> '".OIDplus::db()->real_escape_string($ot::root())."' and " .
-			         "      parent like '".OIDplus::db()->real_escape_string($ot::root().'%')."' and " .
-			         "      parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like '".OIDplus::db()->real_escape_string($ot::root().'%')."')";
 			do {
-				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects $where");
+				$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent <> ? and parent like ? and parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?)", array($ot::root(), $ot::root().'%', $ot::root().'%'));
+
 				while ($row = OIDplus::db()->fetch_array($res)) {
 					$id_to_delete = $row['id'];
 					OIDplus::logger()->log("OIDRA($id_to_delete)!", "Lost ownership of object '$id_to_delete' because one of the superior objects ('$id') was recursively deleted");
-					if (!OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id_to_delete)."'")) {
+					if (!OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id_to_delete))) {
 						throw new Exception(OIDplus::db()->error());
 					}
 				}
@@ -192,9 +188,9 @@ try {
 			$ids = array_map('trim',$ids);
 			$oid->replaceAsn1Ids($ids, true);
 		}
-		
+
 		// Change RA recursively
-		$res = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
+		$res = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
 		$row = OIDplus::db()->fetch_array($res);
 		$current_ra = $row['ra_email'];
 		if ($new_ra != $current_ra) {
@@ -219,15 +215,15 @@ try {
 			$oid->replaceAsn1Ids($ids, false);
 		}
 
-		$confidential = $_POST['confidential'] == 'true' ? '1' : '0';
-		if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ".OIDplus::db()->real_escape_string($confidential).", updated = now() WHERE id = '".OIDplus::db()->real_escape_string($id)."'")) {
+		$confidential = $_POST['confidential'] == 'true';
+		if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ?, updated = now() WHERE id = ?", array($confidential, $id))) {
 			throw new Exception('Error at setting confidential flag:' . OIDplus::db()->error());
 		}
 
 		$status = 0;
 
 		if (!empty($new_ra)) {
-			$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($new_ra)."'");
+			$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($new_ra));
 			if (OIDplus::db()->num_rows($res) == 0) $status = 1;
 		}
 
@@ -244,12 +240,12 @@ try {
 		$id = $_POST['id'];
 		$obj = OIDplusObject::parse($id);
 
-		// Prüfen ob zugelassen
+		// Check if allowed
 		if (!$obj->userHasWriteRights()) throw new Exception('Authentification error. Please log in as the RA to update this OID.');
-		
+
 		OIDplus::logger()->log("OID($id)+OIDRA($id)?/A?", "Title/Description of object '$id' updated");
 
-		if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET title = '".OIDplus::db()->real_escape_string($_POST['title'])."', description = '".OIDplus::db()->real_escape_string($_POST['description'])."', updated = now() WHERE id = '".OIDplus::db()->real_escape_string($id)."'")) {
+		if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET title = ?, description = ?, updated = now() WHERE id = ?", array($_POST['title'], $_POST['description'], $id))) {
 			throw new Exception(OIDplus::db()->error());
 		}
 
@@ -263,7 +259,7 @@ try {
 	if (isset($_POST["action"]) && ($_POST["action"] == "Insert")) {
 		$handled = true;
 
-		// Es wird validiert: ID, ra email, asn1 ids, iri ids
+		// Validated are: ID, ra email, asn1 ids, iri ids
 
 		// Check if you have write rights on the parent (to create a new object)
 		$objParent = OIDplusObject::parse($_POST['parent']);
@@ -271,13 +267,13 @@ try {
 
 		// Check if the ID is valid
 		if ($_POST['id'] == '') throw new Exception('ID may not be empty');
-		
+
 		// Absoluten OID namen bestimmen
 		// Note: At addString() and parse(), the syntax of the ID will be checked
 		$id = $objParent->addString($_POST['id']);
 
 		// Check, if the OID exists
-		$test = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
+		$test = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
 		if (OIDplus::db()->num_rows($test) >= 1) {
 			throw new Exception("Object $id already exists!");
 		}
@@ -303,14 +299,14 @@ try {
 		if (!empty($ra_email) && !oidplus_valid_email($ra_email)) {
 			throw new Exception('Invalid RA email address');
 		}
-		$confidential = $_POST['confidential'] == 'true' ? '1' : '0';
+		$confidential = $_POST['confidential'] == 'true';
 
 		OIDplus::logger()->log("OID($parent)+OID($id)+OIDRA($parent)?/A?", "Object '$id' created, ".(empty($ra_email) ? "without defined RA" : "given to RA '$ra_email'")).", superior object is '$parent'";
 		if (!empty($ra_email)) {
 			OIDplus::logger()->log("RA($ra_email)!", "Gained ownership of newly created object '$id'");
 		}
 
-		if (!OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, created) VALUES ('".OIDplus::db()->real_escape_string($id)."', '".OIDplus::db()->real_escape_string($parent)."', '".OIDplus::db()->real_escape_string($ra_email)."', ".OIDplus::db()->real_escape_string($confidential).", now())")) {
+		if (!OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, created) VALUES (?, ?, ?, ?, now())", array($id, $parent, $ra_email, $confidential))) {
 			throw new Exception(OIDplus::db()->error());
 		}
 
@@ -331,7 +327,7 @@ try {
 
 		if (!empty($ra_email)) {
 			// Do we need to notify that the RA does not exist?
-			$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
+			$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
 			if (OIDplus::db()->num_rows($res) == 0) $status = 1;
 		}
 
@@ -341,7 +337,10 @@ try {
 	if (!$handled) {
 		throw new Exception('Invalid action ID');
 	}
+
+	OIDplus::db()->transaction_commit();
 } catch (Exception $e) {
+	OIDplus::db()->transaction_rollback();
 	$ary = array();
 	$ary['error'] = $e->getMessage();
 	echo json_encode($ary);
@@ -350,9 +349,9 @@ try {
 # ---
 
 function _ra_change_rec($id, $old_ra, $new_ra) {
-	OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set ra_email = '".OIDplus::db()->real_escape_string($new_ra)."', updated = now() where id = '".OIDplus::db()->real_escape_string($id)."' and ifnull(ra_email,'') = '".OIDplus::db()->real_escape_string($old_ra)."'");
+	OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set ra_email = ?, updated = now() where id = ? and ifnull(ra_email,'') = ?", array($new_ra, $id, $old_ra));
 
-	$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = '".OIDplus::db()->real_escape_string($id)."' and ifnull(ra_email,'') = '".OIDplus::db()->real_escape_string($old_ra)."'");
+	$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ? and ifnull(ra_email,'') = ?", array($id, $old_ra));
 	while ($row = OIDplus::db()->fetch_array($res)) {
 		_ra_change_rec($row['id'], $old_ra, $new_ra);
 	}

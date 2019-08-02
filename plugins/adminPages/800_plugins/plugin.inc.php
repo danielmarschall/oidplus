@@ -53,7 +53,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 			if (count($plugins = OIDplus::getPagePlugins('public')) > 0) {
 				$out['text'] .= '<p><u>Public page plugins:</u></p><ul>';
 				foreach ($plugins as $plugin) {
-					$out['text'] .= '<li>'.get_class($plugin).'</li>';
+					$out['text'] .= '<li>'.htmlentities(get_class($plugin)).'</li>'; // TODO: human friendly names
 				}
 				$out['text'] .= '</ul>';
 			}
@@ -61,7 +61,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 			if (count($plugins = OIDplus::getPagePlugins('ra')) > 0) {
 				$out['text'] .= '<p><u>RA page plugins:</u></p><ul>';
 				foreach ($plugins as $plugin) {
-					$out['text'] .= '<li>'.get_class($plugin).'</li>';
+					$out['text'] .= '<li>'.htmlentities(get_class($plugin)).'</li>'; // TODO: human friendly names
 				}
 				$out['text'] .= '</ul>';
 			}
@@ -69,23 +69,34 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 			if (count($plugins = OIDplus::getPagePlugins('admin')) > 0) {
 				$out['text'] .= '<p><u>Admin page plugins:</u></p><ul>';
 				foreach ($plugins as $plugin) {
-					$out['text'] .= '<li>'.get_class($plugin).'</li>';
+					$out['text'] .= '<li>'.htmlentities(get_class($plugin)).'</li>'; // TODO: human friendly names
 				}
 				$out['text'] .= '</ul>';
 			}
 
-			if (count($plugins = OIDplus::getRegisteredObjectTypes()) > 0) {
-				$out['text'] .= '<p><u>Enabled object types:</u></p><ul>';
+			$enabled = OIDplus::getRegisteredObjectTypes();
+			$disabled = OIDplus::getDisabledObjectTypes();
+			$plugins = array_merge($enabled, $disabled);
+			if (count($plugins) > 0) {
+				$out['text'] .= '<p><u>Object types:</u></p><ul>';
 				foreach ($plugins as $ot) {
-					$out['text'] .= '<li>'.$ot::objectTypeTitle().' ('.$ot::ns().')</li>';
+					if (in_array($ot, $enabled)) {
+						$out['text'] .= '<li>'.htmlentities($ot::objectTypeTitle()).' ('.htmlentities($ot::ns()).')</li>';
+					} else {
+						$out['text'] .= '<li><font color="gray">'.htmlentities($ot::objectTypeTitle()).' ('.htmlentities($ot::ns()).', disabled)</font></li>';
+					}
 				}
 				$out['text'] .= '</ul>';
 			}
 
-			if (count($plugins = OIDplus::getDisabledObjectTypes()) > 0) {
-				$out['text'] .= '<ul><u>Disabled object types:</u></ul>';
-				foreach ($plugins as $ot) {
-					$out['text'] .= '<li>'.$ot::objectTypeTitle().' ('.$ot::ns().')</li>';
+			if (count($plugins = OIDplus::getDatabasePlugins()) > 0) {
+				$out['text'] .= '<p><u>Database plugins:</u></p><ul>';
+				foreach ($plugins as $plugin) {
+					if ($plugin::name() == OIDPLUS_DATABASE_PLUGIN) {
+						$out['text'] .= '<li><b>'.htmlentities($plugin::name()).'</b></li>';
+					} else {
+						$out['text'] .= '<li>'.htmlentities($plugin::name()).'</li>';
+					}
 				}
 				$out['text'] .= '</ul>';
 			}

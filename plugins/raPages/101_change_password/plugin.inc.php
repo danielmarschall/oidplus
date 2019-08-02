@@ -34,7 +34,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 
 			$email = $_POST['email'];
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 			if (OIDplus::db()->num_rows($res) == 0) {
 				die(json_encode(array("error" => 'RA does not exist')));
 			}
@@ -82,7 +82,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 
 			$ra_email = explode('$',$id)[1];
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
 			if (OIDplus::db()->num_rows($res) == 0) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = 'RA <b>'.htmlentities($ra_email).'</b> does not exist';

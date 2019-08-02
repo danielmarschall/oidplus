@@ -63,13 +63,13 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePlugin {
 				$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known = 1 union select oid from ".OIDPLUS_TABLENAME_PREFIX."iri where well_known = 1 order by ".OIDplus::db()->natOrder('oid'));
 				while ($row = OIDplus::db()->fetch_array($res)) {
 					$asn1ids = array();
-					$res2 = OIDplus::db()->query("select name, standardized from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string($row['oid'])."'");
+					$res2 = OIDplus::db()->query("select name, standardized from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($row['oid']));
 					while ($row2 = OIDplus::db()->fetch_array($res2)) {
 						$asn1ids[] = $row2['name'].($row2['standardized'] ? ' (standardized)' : '');
 					}
 
 					$iris = array();
-					$res2 = OIDplus::db()->query("select name, longarc from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = '".OIDplus::db()->real_escape_string($row['oid'])."'");
+					$res2 = OIDplus::db()->query("select name, longarc from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ?", array($row['oid']));
 					while ($row2 = OIDplus::db()->fetch_array($res2)) {
 						$iris[] = $row2['name'].($row2['longarc'] ? ' (long arc)' : '');
 					}

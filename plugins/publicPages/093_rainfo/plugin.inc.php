@@ -67,7 +67,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 				}
 
 				if (OIDplus::authUtils()::isAdminLoggedIn()) {
-					$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
+					$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
 					if (OIDplus::db()->num_rows($res) > 0) {
 						if (class_exists("OIDplusPageAdminListRAs")) {
 							$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">Delete this RA</a></p>';
@@ -80,8 +80,8 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 				if (OIDplus::authUtils()::isRALoggedIn($ra_email) || OIDplus::authUtils()::isAdminLoggedIn()) {
 					$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event from ".OIDPLUS_TABLENAME_PREFIX."log lo ".
 					                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_user lu on lu.log_id = lo.id ".
-					                            "where lu.user = '".OIDplus::db()->real_escape_string($ra_email)."' " .
-												"order by lo.unix_ts desc");
+					                            "where lu.user = ? " .
+					                            "order by lo.unix_ts desc", array($ra_email));
 					$out['text'] .= '<h2>Log messages for RA '.htmlentities($ra_email).'</h2>';
 					if (OIDplus::db()->num_rows($res) > 0) {
 						$out['text'] .= '<pre>';
@@ -114,7 +114,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 			return $out;
 		}
 
-		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
+		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 		if (OIDplus::db()->num_rows($res) === 0) {
 			$out = '<p>The RA <a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a> is not registered in the database.</p>';
 

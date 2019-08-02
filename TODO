@@ -1,6 +1,6 @@
 
 IMPORTANT
-- Verify: escape everything
+- Test all new prepared statements
 - Cookie law:
 	Download CookieConsent code into _3p folder, do not hotlink it
 	we need to log all consents
@@ -9,12 +9,15 @@ IMPORTANT
 - dsgvo datenschutzerklärung, agbs etc.
 - Verify that logger works correctly, check if all logmasks are correct
 
+TODO
+- "Plugins" aufklappen
+- Instead of title "Registration Authority Information", the title should be the actual RA name
+- backtick operators entf
+- self host polyfill and add to acknowledgements page
+
 ADMIN AREA
 - Allow that the admin can change user's passwort/contact data
 - Admin should see log events for each RA and OID
-
-SETUP
-- Add warning that with the insertion of the database, all tables will be droppped
 
 RFC
 - proof read
@@ -24,6 +27,8 @@ RFC
 - felder die nicht optional sind => mandatory kennzeichnen
 
 SMALL THINGS
+- Object type plugins : name all files "plugin.inc.php"
+- when ajax.php generates a PHP error, the client gives a "syntax error" message... it would be better if the client shows the full php error? or something more user-friendly?
 - freeoid: gmail app does not hyperlink the activation URL. why?
 - how to avoid invite spamming?
 - when a PHP error happens, the AJAX script outputs "Error: SyntaxError: Unexpected token < in JSON at position 0" ... better show the user the actual message
@@ -61,6 +66,7 @@ SMALL THINGS
 - optisch aufhübschen. dinge wie RA: mehr dinge zeigen, adresse, email etc
 
 FUTURE
+- we need to make OIDplus more compatible with non-MySQL databases (different SQL dialects)
 - make use of Composer. Problems:
   * What if composer installs a version of a component, which is incompatible?
   * We need a new publishing script, because simply checking out SVN is not enough anymore. The user needs to execute composer. But what is if the user don't have composer (or dont have shell access at all?)

@@ -1,0 +1,18 @@
+
+Installing a MySQL ODBC driver on your Linux system
+(for testing the OIDplus ODBC plugin)
+
+Step 1:
+aptitude install odbcinst
+
+Step 2:
+Download and unextract the ODBC driver at
+https://dev.mysql.com/downloads/connector/odbc/
+
+Step 3:
+Create /etc/odbcinst.ini with following contents:
+	[MySQL]
+	Description = ODBC for MySQL (Unicode)
+	Driver = /home/oidplus/public_html/oidplus_dev/test/mysql-connector-odbc-8.0.17-linux-debian9-x86-64bit/lib/libmyodbc8w.so
+	Setup = /home/oidplus/public_html/oidplus_dev/test/mysql-connector-odbc-8.0.17-linux-debian9-x86-64bit/lib/libmyodbc8S.so
+	FileUsage = 1

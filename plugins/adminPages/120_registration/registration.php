@@ -25,9 +25,6 @@ header('Content-Type:text/html; charset=UTF-8');
 
 OIDplus::init(true);
 
-OIDplus::db()->set_charset("UTF8");
-OIDplus::db()->query("SET NAMES 'utf8'");
-
 ob_start();
 
 $step = 1;

@@ -45,28 +45,14 @@ class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePlugin {
 			$out['icon']  = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/forgot_password_big.png';
 
 			$out['text']  = '<p>To reset the password of the administrator, create a hash below and then replace the entry in the file <b>includes/config.inc.php</b>.</p>';
-            $out['text'] .= '<p>New password: <input type="password" id="admin_password" onkeypress="rehash_admin_pwd()" onkeyup="rehash_admin_pwd()"></p>';
-            $out['text'] .= '<p><pre id="config"></pre></p>';
+			$out['text'] .= '<p>New password: <input type="password" id="admin_password" onkeypress="rehash_admin_pwd()" onkeyup="rehash_admin_pwd()"></p>';
+			$out['text'] .= '<p>Repeat password: <input type="password" id="admin_password2" onkeypress="rehash_admin_pwd()" onkeyup="rehash_admin_pwd()"></p>';
+			$out['text'] .= '<p><pre id="config"></pre></p>';
 			$out['text'] .= '<script> rehash_admin_pwd(); </script>';
 		}
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
-		/*
-		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
-		} else {
-			$tree_icon = null; // default icon (folder)
-		}
-
-		$json[] = array(
-			'id' => 'oidplus:forgot_password_admin',
-			'icon' => $tree_icon,
-			'text' => 'Reset admin password'
-		);
-
-		return true;
-		*/
 		return false;
 	}
 

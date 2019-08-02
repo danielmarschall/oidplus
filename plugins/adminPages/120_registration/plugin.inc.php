@@ -251,7 +251,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 		OIDplus::config()->prepareConfigKey('reg_ping_interval', 'Registration ping interval (in seconds)', '3600', 0, 0);
 		OIDplus::config()->prepareConfigKey('reg_last_ping', 'Last ping to ViaThinkSoft directory services', '0', 1, 0);
 
-		if (function_exists('openssl_sign')) {
+		// REGISTRATION_HIDE_SYSTEM is an undocumented constant that can be put in the config.inc.php files of a test system accessing the same database as the productive system that is registered.
+		// This avoids that the URL of the productive system is overridden with the test system URL (since they use the same database, they also have the same system ID)
+		if (function_exists('openssl_sign') && !defined('REGISTRATION_HIDE_SYSTEM')) {
 			// Show registration wizard once
 
 			if ($html && (OIDplus::config()->getValue('reg_wizard_done') != '1')) {

@@ -5,9 +5,6 @@ require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 OIDplus::init(true);
 
-OIDplus::db()->set_charset("UTF8");
-OIDplus::db()->query("SET NAMES 'utf8'");
-
 define('ALL_OID_LIST', '/home/oidplus/all_oids.txt'); // contains all OIDs (non-public file)
 define('DESIRED_ROOT', '1.3.6.1.4.1.37476');
 
@@ -24,7 +21,7 @@ foreach ($out as $oid) {
 
 function check_oid($oid) {
 
-	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string("oid:$oid")."'");
+	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array("oid:$oid"));
 	$ok = OIDplus::db()->num_rows($res) > 0;
 
 	if (!$ok) {

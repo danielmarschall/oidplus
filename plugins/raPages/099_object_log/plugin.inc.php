@@ -54,15 +54,15 @@ class OIDplusPageRaObjectLog extends OIDplusPagePlugin {
 		//       The problem is that first all public and then all RA plugins get loaded, not mixed by their priority
 		$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event from ".OIDPLUS_TABLENAME_PREFIX."log lo ".
 		                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_object lu on lu.log_id = lo.id ".
-		                            "where lu.object = '".OIDplus::db()->real_escape_string($id)."' " .
-									"order by lo.unix_ts desc");
+		                            "where lu.object = ? " .
+		                            "order by lo.unix_ts desc", array($id));
 		$text .= "<h2>Log messages for object ".htmlentities($id)."</h2>";
 		if (OIDplus::db()->num_rows($res) > 0) {
 			$text .= '<pre>';
 			while ($row = OIDplus::db()->fetch_array($res)) {
 				$users = array();
 				$res2 = OIDplus::db()->query("select user from ".OIDPLUS_TABLENAME_PREFIX."log_user ".
-				                             "where log_id = '".OIDplus::db()->real_escape_string($row['id'])."'");
+				                             "where log_id = ?", array($row['id']));
 				while ($row2 = OIDplus::db()->fetch_array($res2)) {
 					$users[] = $row2['user'];
 				}

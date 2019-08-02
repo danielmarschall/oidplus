@@ -105,21 +105,21 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 		$nonConfidential = OIDplusObject::getAllNonConfidential();
 
 		foreach ($nonConfidential as $id) {
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
 			if ($row = OIDplus::db()->fetch_object($res)) {
 				$elements['identifier'] = array();
-				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string($row->id)."'");
+				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($row->id));
 				while ($row2 = OIDplus::db()->fetch_object($res2)) {
 					$elements['identifier'][] = $row2->name; // 'unicode-label' is currently not in the standard format (oid.xsd)
 				}
 
 				$elements['unicode-label'] = array();
-				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = '".OIDplus::db()->real_escape_string($row->id)."'");
+				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ?", array($row->id));
 				while ($row2 = OIDplus::db()->fetch_object($res2)) {
 					$elements['unicode-label'][] = $row2->name;
 				}
 
-				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($row->ra_email)."'");
+				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($row->ra_email));
 				$row2 = OIDplus::db()->fetch_object($res2);
 
 				if (!empty($row->title)) {

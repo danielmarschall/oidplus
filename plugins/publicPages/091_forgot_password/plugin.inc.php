@@ -163,7 +163,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 	}
 
 	private function getForgotPasswordText($email) {
-		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
+		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 		if (OIDplus::db()->num_rows($res) == 0) {
 			throw new Exception("This RA does not exist.");
 		}

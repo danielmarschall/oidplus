@@ -21,18 +21,20 @@ if (!defined('IN_OIDPLUS')) die();
 
 class OIDplus {
 	private static /*OIDplusPagePlugin[][]*/ $pagePlugins = array();
-	private static /*OIDplusObject*/ $objectTypes = array();
-	private static /*OIDplusObject*/ $disabledObjectTypes = array();
+	private static /*OIDplusObject[]*/ $objectTypes = array();
+	private static /*OIDplusObject[]*/ $disabledObjectTypes = array();
+	private static /*OIDplusDatabase[]*/ $dbPlugins = array();
 
 	private function __construct() {
 	}
 
 	public static function db() {
-		static $database = null;
-		if (is_null($database)) {
-			$database = new OIDplusDataBaseMySQL();
+		if (!isset(self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN])) {
+			throw new Exception("Database plugin '".htmlentities(OIDPLUS_DATABASE_PLUGIN)."' not found. Please check config.inc.php or run <a href=\"setup/\">setup</a> again.");
 		}
-		return $database;
+		$obj = self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN];
+		if (!$obj->isConnected()) $obj->connect();
+		return $obj;
 	}
 
 	public static function config() {
@@ -99,6 +101,19 @@ class OIDplus {
 		}
 
 		return $res;
+	}
+
+	public static function registerDatabasePlugin(OIDplusDatabase $plugin) {
+		$name = $plugin->name();
+		if ($name === false) return false;
+
+		self::$dbPlugins[$name] = $plugin;
+
+		return true;
+	}
+
+	public static function getDatabasePlugins() {
+		return self::$dbPlugins;
 	}
 
 	public static function registerPagePlugin(OIDplusPagePlugin $plugin) {
@@ -274,9 +289,10 @@ class OIDplus {
 
 		if (!defined('OIDPLUS_CONFIG_VERSION'))   define('OIDPLUS_CONFIG_VERSION',   0.0);
 		if (!defined('OIDPLUS_ADMIN_PASSWORD'))   define('OIDPLUS_ADMIN_PASSWORD',   '');
+		if (!defined('OIDPLUS_DATABASE_PLUGIN'))  define('OIDPLUS_DATABASE_PLUGIN',  'MySQL');
 		if (!defined('OIDPLUS_MYSQL_HOST'))       define('OIDPLUS_MYSQL_HOST',       'localhost');
 		if (!defined('OIDPLUS_MYSQL_USERNAME'))   define('OIDPLUS_MYSQL_USERNAME',   'root');
-		if (!defined('OIDPLUS_MYSQL_PASSWORD'))   define('OIDPLUS_MYSQL_PASSWORD',   '');
+		if (!defined('OIDPLUS_MYSQL_PASSWORD'))   define('OIDPLUS_MYSQL_PASSWORD',   ''); // base64 encoded
 		if (!defined('OIDPLUS_MYSQL_DATABASE'))   define('OIDPLUS_MYSQL_DATABASE',   'oidplus');
 		if (!defined('OIDPLUS_TABLENAME_PREFIX')) define('OIDPLUS_TABLENAME_PREFIX', '');
 		if (!defined('OIDPLUS_SESSION_SECRET'))   define('OIDPLUS_SESSION_SECRET',   '');
@@ -296,6 +312,11 @@ class OIDplus {
 			die();
 		}
 
+		// Register database types (highest priority)
+
+		$ary = glob(__DIR__ . '/../../plugins/database/'.'*'.'/plugin.inc.php');
+		foreach ($ary as $a) include $a;
+
 		// Do redirect stuff etc.
 
 		define('OIDPLUS_SSL_AVAILABLE', self::isSslAvailable());
@@ -314,13 +335,14 @@ class OIDplus {
 
 		// Register plugins
 
+		$ary = glob(__DIR__ . '/../../plugins/objectTypes/'.'*'.'/*.class.php');
+		foreach ($ary as $a) include $a;
+
 		$ary = glob(__DIR__ . '/../../plugins/publicPages/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 		$ary = glob(__DIR__ . '/../../plugins/raPages/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 		$ary = glob(__DIR__ . '/../../plugins/adminPages/'.'*'.'/plugin.inc.php');
-		foreach ($ary as $a) include $a;
-		$ary = glob(__DIR__ . '/../../plugins/objectTypes/'.'*'.'/*.class.php');
 		foreach ($ary as $a) include $a;
 
 		// Initialize plugins

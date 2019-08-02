@@ -53,7 +53,7 @@ class OIDplusGui {
 		$output .= '	     <th>Updated</th>';
 		$output .= '	</tr>';
 
-		$result = OIDplus::db()->query("select o.*, r.ra_name from ".OIDPLUS_TABLENAME_PREFIX."objects o left join ".OIDPLUS_TABLENAME_PREFIX."ra r on r.email = o.ra_email where parent = '".OIDplus::db()->real_escape_string($parent)."' order by ".OIDplus::db()->natOrder('id'));
+		$result = OIDplus::db()->query("select o.*, r.ra_name from ".OIDPLUS_TABLENAME_PREFIX."objects o left join ".OIDPLUS_TABLENAME_PREFIX."ra r on r.email = o.ra_email where parent = ? order by ".OIDplus::db()->natOrder('id'), array($parent));
 		while ($row = OIDplus::db()->fetch_object($result)) {
 			$obj = OIDplusObject::parse($row->id);
 
@@ -66,13 +66,13 @@ class OIDplusGui {
 			$show_id = $obj->crudShowId($objParent);
 
 			$asn1ids = array();
-			$res2 = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string($row->id)."' order by lfd");
+			$res2 = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ? order by lfd", array($row->id));
 			while ($row2 = OIDplus::db()->fetch_array($res2)) {
 				$asn1ids[] = $row2['name'];
 			}
 
 			$iris = array();
-			$res2 = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = '".OIDplus::db()->real_escape_string($row->id)."' order by lfd");
+			$res2 = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ? order by lfd", array($row->id));
 			while ($row2 = OIDplus::db()->fetch_array($res2)) {
 				$iris[] = $row2['name'];
 			}
@@ -108,7 +108,7 @@ class OIDplusGui {
 			$output .= '</tr>';
 		}
 
-		$result = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($parent)."'");
+		$result = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($parent));
 		$parent_ra_email = OIDplus::db()->num_rows($result) > 0 ? OIDplus::db()->fetch_object($result)->ra_email : '';
 
 		if ($objParent->userHasWriteRights()) {
@@ -222,7 +222,7 @@ class OIDplusGui {
 				return $out;
 			}
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($id)."'");
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
 			$row = OIDplus::db()->fetch_array($res);
 
 			if (empty($row['title'])) {
@@ -291,12 +291,12 @@ class OIDplusGui {
 					$out['text'] = '<p><a '.oidplus_link($parent->root()).'><img src="img/arrow_back.png" width="16"> Parent node: '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 
 				} else {
-					$res_ = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($parent->nodeId())."'");
+					$res_ = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($parent->nodeId()));
 					$row_ = OIDplus::db()->fetch_array($res_);
 
 					$parent_title = $row_['title'];
 					if (empty($parent_title) && ($parent->ns() == 'oid')) {
-						$res_ = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string($parent->nodeId())."'");
+						$res_ = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($parent->nodeId()));
 						$row_ = OIDplus::db()->fetch_array($res_);
 						$parent_title = $row_['name']; // TODO: multiple ASN1 ids?
 					}

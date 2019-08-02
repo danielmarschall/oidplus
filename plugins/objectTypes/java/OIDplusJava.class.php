@@ -93,7 +93,7 @@ class OIDplusJava extends OIDplusObject {
 		if ($this->isRoot()) {
 			$title = OIDplusJava::objectTypeTitle();
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = '".OIDplus::db()->real_escape_string(self::root())."'");
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array(self::root()));
 			if (OIDplus::db()->num_rows($res) > 0) {
 				$content  = 'Please select a Java Package Name in the tree view at the left to show its contents.';
 			} else {

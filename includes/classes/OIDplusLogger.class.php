@@ -109,16 +109,21 @@ class OIDplusLogger {
 
 		// Now write the log message
 
-		$addr = isset($_SERVER['REMOTE_ADDR']) ? "'".OIDplus::db()->real_escape_string($_SERVER['REMOTE_ADDR'])."'" : "null";
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log (addr, unix_ts, event) values ($addr, UNIX_TIMESTAMP(), '".OIDplus::db()->real_escape_string($event)."')");
+		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log (addr, unix_ts, event) values (?, UNIX_TIMESTAMP(), ?)", array($addr, $event));
 		$log_id = OIDplus::db()->insert_id();
+		if ($log_id === false) {
+			$res = OIDplus::db()->query("select max(id) as last_id from ".OIDPLUS_TABLENAME_PREFIX."log");
+			$row = OIDplus::db()->fetch_array($res);
+			$log_id = $row['last_id'];
+		}
 
 		foreach ($objects as $object) {
-			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log_object (log_id, object) values ($log_id, '".OIDplus::db()->real_escape_string($object)."')");
+			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log_object (log_id, object) values (?, ?)", array($log_id, $object));
 		}
 
 		foreach ($users as $user) {
-			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log_user (log_id, user) values ($log_id, '".OIDplus::db()->real_escape_string($user)."')");
+			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log_user (log_id, user) values (?, ?)", array($log_id, $user));
 		}
 
 	}

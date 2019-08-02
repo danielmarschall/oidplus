@@ -8,9 +8,6 @@ if (!defined('OIDINFO_API_URL')) {
 	die("OIDINFO_API_URL not available (API is currently not public)\n");
 }
 
-OIDplus::db()->set_charset("UTF8");
-OIDplus::db()->query("SET NAMES 'utf8'");
-
 define('VERBOSE', false);
 define('DEFAULT_EMAIL', 'oidra@viathinksoft.de');
 define('ALL_OID_LIST', '/home/oidplus/all_oids.txt'); // contains all OIDs (non-public file)
@@ -29,7 +26,7 @@ foreach ($out as $oid) {
 
 function check_oid($oid) {
 
-	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string("oid:$oid")."';");
+	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array("oid:$oid"));
 	$ok = OIDplus::db()->num_rows($res) > 0;
 
 	if (!$ok) {
@@ -55,19 +52,19 @@ function add_oid($oid, $root=DESIRED_ROOT) {
 		$ra_email = '';
 		if ((DEFAULT_EMAIL != '') && ($ra_email == '')) $ra_email = DEFAULT_EMAIL;
 
-		sql_execute("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, title, description, ra_email) values ('".OIDplus::db()->real_escape_string("oid:$oid")."', '".OIDplus::db()->real_escape_string("oid:$parent")."', '".OIDplus::db()->real_escape_string($title)."', '".OIDplus::db()->real_escape_string($description)."', '".OIDplus::db()->real_escape_string($ra_email)."');");
+		sql_execute("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, title, description, ra_email) values (?, ?, ?, ?, ?)", array("oid:$oid", "oid:$parent", $title, $description, $ra_email));
 
 		return;
 	}
 
 	if (!isset($data['oid']['identifier'])) $data['oid']['identifier'] = array();
 	foreach ($data['oid']['identifier'] as $identifier) {
-		sql_execute("insert into ".OIDPLUS_TABLENAME_PREFIX."asn1id (oid, name) values ('".OIDplus::db()->real_escape_string("oid:$oid")."', '".OIDplus::db()->real_escape_string($identifier)."');");
+		sql_execute("insert into ".OIDPLUS_TABLENAME_PREFIX."asn1id (oid, name) values (?, ?)", array("oid:$oid", $identifier));
 	}
 
 	if (!isset($data['oid']['unicode-label'])) $data['oid']['unicode-label'] = array();
 	foreach ($data['oid']['unicode-label'] as $identifier) {
-		sql_execute("insert into ".OIDPLUS_TABLENAME_PREFIX."iri (oid, name) values ('".OIDplus::db()->real_escape_string("oid:$oid")."', '".OIDplus::db()->real_escape_string($identifier)."');");
+		sql_execute("insert into ".OIDPLUS_TABLENAME_PREFIX."iri (oid, name) values (?, ?)", array("oid:$oid", $identifier));
 	}
 
 	$parent = ($oid == $root) ? '' : oid_up($oid);
@@ -84,14 +81,14 @@ function add_oid($oid, $root=DESIRED_ROOT) {
 	$ra_email = @$data['oid']['current_registrant']['email'];
 	if ($ra_email == '') $ra_email = @$data['oid']['first_registrant']['email'];
 
-	$resx = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string("oid:$parent")."'");
+	$resx = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array("oid:$parent"));
 	if ($rowx = OIDplus::db()->fetch_array($resx)) $ra_email = $rowx['ra_email'];
 
 	$created = @$data['oid']['first_registrant']['creation-date'];
 	$updated = @$data['oid']['last-modification'];
 
-	$sql = "insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, title, description, ra_email, created, updated) values ('".OIDplus::db()->real_escape_string("oid:$oid")."', '".OIDplus::db()->real_escape_string("oid:$parent")."', '".OIDplus::db()->real_escape_string($title)."', '".OIDplus::db()->real_escape_string($description)."', '".OIDplus::db()->real_escape_string($ra_email)."', '".OIDplus::db()->real_escape_string($created)."', '".OIDplus::db()->real_escape_string($updated)."');";
-	sql_execute($sql);
+	sql_execute("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, title, description, ra_email, created, updated) values (?, ?, ?, ?, ?, ?, ?)",
+		array("oid:$oid", "oid:$parent", $title, $description, $ra_email, $created, $updated));
 }
 
 function ft_get_oid_data($oid) {
@@ -107,9 +104,9 @@ function ft_get_oid_data($oid) {
 	return $data;
 }
 
-function sql_execute($sql) {
+function sql_execute($sql, $prep=null) {
 #	echo "$sql\n";
-	OIDplus::db()->query($sql);
+	OIDplus::db()->query($sql, $prep);
 	$err = OIDplus::db()->error();
 	if ($err) echo "Warning: $err at $sql\n";
 }

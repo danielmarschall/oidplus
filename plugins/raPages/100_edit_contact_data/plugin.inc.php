@@ -38,7 +38,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 				die(json_encode(array("error" => 'Authentification error. Please log in as the RA to update its data.')));
 			}
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($email)."'");
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 			if (OIDplus::db()->num_rows($res) == 0) {
 				die(json_encode(array("error" => 'RA does not exist')));
 			}
@@ -48,18 +48,33 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 			if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra ".
 				"SET ".
 				"updated = now(), ".
-				"ra_name = '".OIDplus::db()->real_escape_string($_POST['ra_name'])."', ".
-				"organization = '".OIDplus::db()->real_escape_string($_POST['organization'])."', ".
-				"office = '".OIDplus::db()->real_escape_string($_POST['office'])."', ".
-				"personal_name = '".OIDplus::db()->real_escape_string($_POST['personal_name'])."', ".
-				"privacy = ".OIDplus::db()->escape_bool($_POST['privacy']).", ".
-				"street = '".OIDplus::db()->real_escape_string($_POST['street'])."', ".
-				"zip_town = '".OIDplus::db()->real_escape_string($_POST['zip_town'])."', ".
-				"country = '".OIDplus::db()->real_escape_string($_POST['country'])."', ".
-				"phone = '".OIDplus::db()->real_escape_string($_POST['phone'])."', ".
-				"mobile = '".OIDplus::db()->real_escape_string($_POST['mobile'])."', ".
-				"fax = '".OIDplus::db()->real_escape_string($_POST['fax'])."' ".
-				"WHERE email = '".OIDplus::db()->real_escape_string($email)."'"))
+				"ra_name = ?, ".
+				"organization = ?, ".
+				"office = ?, ".
+				"personal_name = ?, ".
+				"privacy = ?, ".
+				"street = ?, ".
+				"zip_town = ?, ".
+				"country = ?, ".
+				"phone = ?, ".
+				"mobile = ?, ".
+				"fax = ? ".
+				"WHERE email = ?",
+				array(
+					$_POST['ra_name'],
+					$_POST['organization'],
+					$_POST['office'],
+					$_POST['personal_name'],
+					$_POST['privacy'],
+					$_POST['street'],
+					$_POST['zip_town'],
+					$_POST['country'],
+					$_POST['phone'],
+					$_POST['mobile'],
+					$_POST['fax'],
+					$email
+				)
+				))
 			{
 				die(json_encode(array("error" => OIDplus::db()->error())));
 			}
@@ -90,7 +105,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 			} else {
 				$out['text'] .= '<p>Your email address: <b>'.htmlentities($ra_email).'</b>';
 
-				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
+				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
 				if (OIDplus::db()->num_rows($res) == 0) {
 					$out['icon'] = 'img/error_big.png';
 					$out['text'] = 'RA <b>'.htmlentities($ra_email).'</b> does not exist';

@@ -23,9 +23,6 @@ header('Content-Type:text/html; charset=UTF-8');
 
 OIDplus::init(true);
 
-OIDplus::db()->set_charset("UTF8");
-OIDplus::db()->query("SET NAMES 'utf8'");
-
 # ---
 
 if (!OIDplus::authUtils()::isAdminLoggedIn()) {

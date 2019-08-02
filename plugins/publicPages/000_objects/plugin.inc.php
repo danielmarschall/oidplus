@@ -65,7 +65,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 			$json[] = array('id' => 'oidplus:system', 'icon' => 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/system.png', 'text' => 'System');
 
 			$parent = '';
-			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($req_goto)."'");
+			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($req_goto));
 			while ($row = OIDplus::db()->fetch_object($res)) {
 				$parent = $row->parent;
 			}
@@ -83,11 +83,19 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 				if (!is_null($tmp) && ($ot == get_class($tmp))) {
 					// TODO: Instead of just having 3 levels (parent, this and children), it would be better if we'd had a full tree of all parents
 					//       on the other hand, for giving search engines content, this is good enough
-					$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where " .
-					                   "parent = '".OIDplus::db()->real_escape_string($req_goto)."' or " .
-					                   "id = '".OIDplus::db()->real_escape_string($req_goto)."' " .
-					                   ((!empty($parent)) ? " or id = '".OIDplus::db()->real_escape_string($parent)."' " : "") .
-					                   "order by ".OIDplus::db()->natOrder('id'));
+					if (empty($parent)) {
+						$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where " .
+										   "parent = ? or " .
+										   "id = ? " .
+										   "order by ".OIDplus::db()->natOrder('id'), array($req_goto, $req_goto));
+					} else {
+						$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where " .
+										   "parent = ? or " .
+										   "id = ? or " .
+										   "id = ? ".
+										   "order by ".OIDplus::db()->natOrder('id'), array($req_goto, $req_goto, $parent));
+					}
+
 					$z_used = 0;
 					$y_used = 0;
 					$x_used = 0;
@@ -122,10 +130,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 				$path = array();
 				while (true) {
 					$path[] = $goto;
-					$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($goto)."'");
+					$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($goto));
 					if (OIDplus::db()->num_rows($res) == 0) break;
 					$row = OIDplus::db()->fetch_array($res);
 					$goto = $row['parent'];
+					if ($goto == '') continue;
 				}
 
 				$goto_path = array_reverse($path);

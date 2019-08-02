@@ -23,10 +23,55 @@ $own_dir = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "
 <p>Which admin password do you want?<br><input id="admin_password" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="password_warn"></span></p>
 <p>Please repeat the password input:<br><input id="admin_password2" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="password_warn2"></span></p>
 <p>---</p>
-<p>MySQL hostname (usually <b>localhost</b>):<br><input id="mysql_host" type="text" value="localhost" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="mysql_host_warn"></p>
-<p>MySQL username:<br><input id="mysql_username" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="mysql_username_warn"></p>
-<p>MySQL password:<br><input id="mysql_password" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"></p>
-<p>MySQL database name:<br><input id="mysql_database" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="mysql_database_warn"></p>
+
+
+Database plugin: <select name="db_plugin" onChange="dbplugin_changed()" id="db_plugin">
+<option value="MySQL" selected="true">MySQL</option>
+<option value="PDO">PDO</option>
+<option value="ODBC">ODBC</option>
+</select>
+
+<script>
+
+owndir = '<?php echo $own_dir; ?>';
+rebuild_callbacks = [];
+rebuild_config_callbacks = [];
+plugin_combobox_change_callbacks = [];
+
+function dbplugin_changed() {
+	var e = document.getElementById("db_plugin");
+	var strPlugin = e.options[e.selectedIndex].value;
+
+	for (var i = 0; i < plugin_combobox_change_callbacks.length; i++) {
+		var f = plugin_combobox_change_callbacks[i];
+		f(strPlugin);
+	}
+
+	rebuild();
+}
+
+</script>
+
+<div style="margin-left:50px">
+
+<?php
+
+$files = glob(__DIR__.'/../plugins/database/*/setup.part.html');
+foreach ($files as $file) {
+	echo file_get_contents($file);
+}
+if (count($files) == 0) {
+	echo '<p><font color="red">ATTENTION: No database plugins found!</font></p>';
+}
+
+?>
+
+</div>
+
+<script>
+dbplugin_changed();
+</script>
+
 <p>Tablename prefix (e.g. <b>oidplus_</b>):<br><input id="tablename_prefix" type="text" value="oidplus_" onkeypress="rebuild()" onkeyup="rebuild()"></p>
 <p>---</p>
 <p><input id="recaptcha_enabled" type="checkbox" onclick="rebuild()"> <label for="recaptcha_enabled">RECAPTCHA Enabled</label></p>
@@ -43,15 +88,14 @@ $own_dir = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "
 
 <div id="step2">
 <h2>Step 2: Import data</h2>
-<p><b>If you already have an OIDplus database and just want to rebuild the config file, please ignore this step.</b></p>
+<p><b>If you already have an OIDplus database and just want to rebuild the config file, please skip this step.</b></p>
 <p>Otherwise, import one of the following MySQL dumps in your database:</p>
 <p><ul>
-	<li><a href="struct_empty.sql.php" id="struct_1" target="_blank">Empty OIDplus database without example data</a>,<br>
-	or via command line:<br><code>curl -s "<?php echo $own_dir; ?><span id="sqlcli_1"></span>" | mysql -u <span id="mysqluser_1"></span> -p</code><br><br></li>
-	<li><a href="struct_with_examples.sql.php" id="struct_2" target="_blank">OIDplus database with example data</a>,<br>
-	or via command line:<br><code>curl -s "<?php echo $own_dir; ?><span id="sqlcli_2"></span>" | mysql -u <span id="mysqluser_2"></span> -p</code></li>
+	<li><a href="struct_empty.sql.php" id="struct_1" target="_blank">Empty OIDplus database without example data</a><span id="struct_cli_1"></span><br><br></li>
+	<li><a href="struct_with_examples.sql.php" id="struct_2" target="_blank">OIDplus database with example data</a><span id="struct_cli_2"></span><br><br></li>
+
 </ul></p>
-<p><font color="red">All data from the previous OIDplus instance will be deleted during the import.</font></p>
+<p><font color="red">Warning: All data from the previous OIDplus instance will be deleted during the import.<br>If you already have an OIDplus database, skip to Step 3.</font></p>
 
 </div>
 

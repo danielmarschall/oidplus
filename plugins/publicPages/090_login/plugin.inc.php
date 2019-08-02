@@ -51,7 +51,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				OIDplus::logger()->log("RA($email)!", "RA '$email' logged in");
 				OIDplus::authUtils()::raLogin($email);
 
-				if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = now() where email = '".OIDplus::db()->real_escape_string($email)."'")) {
+				if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = now() where email = ?", array($email))) {
 					die(json_encode(array("error" => OIDplus::db()->error())));
 				}
 
@@ -62,7 +62,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 		}
 		if (isset($_POST["action"]) && ($_POST["action"] == "ra_logout")) {
 			$handled = true;
-			
+
 			$email = $_POST['email'];
 
 			OIDplus::logger()->log("RA($email)!", "RA '$email' logged out");

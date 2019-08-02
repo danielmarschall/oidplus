@@ -8,9 +8,6 @@ require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 OIDplus::init(true);
 
-OIDplus::db()->set_charset("UTF8");
-OIDplus::db()->query("SET NAMES 'utf8'");
-
 // Generates countries for wellknown OIDs
 
 $options = array('http' => array('user_agent' => 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.84 Safari/537.36'));

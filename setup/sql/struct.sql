@@ -97,7 +97,8 @@ ALTER TABLE `iri`
   MODIFY `lfd` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `objects`
-  ADD PRIMARY KEY (`id`) USING BTREE;
+  ADD PRIMARY KEY (`id`) USING BTREE,
+  ADD INDEX `parent` (`parent`);
 
 ALTER TABLE `ra`
   ADD PRIMARY KEY (`ra_id`),

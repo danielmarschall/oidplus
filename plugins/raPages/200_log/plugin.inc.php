@@ -43,7 +43,7 @@ class OIDplusPageRaLogEvents extends OIDplusPagePlugin {
 
 			$ra_email = explode('$',$id)[1];
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($ra_email)."'");
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
 			if (OIDplus::db()->num_rows($res) == 0) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = 'RA <b>'.htmlentities($ra_email).'</b> does not exist';
@@ -61,8 +61,8 @@ class OIDplusPageRaLogEvents extends OIDplusPagePlugin {
 
 			$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event from ".OIDPLUS_TABLENAME_PREFIX."log lo ".
 			                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_user lu on lu.log_id = lo.id ".
-			                            "where lu.user = '".OIDplus::db()->real_escape_string($ra_email)."' " .
-										"order by lo.unix_ts desc");
+			                            "where lu.user = ? " .
+			                            "order by lo.unix_ts desc", array($ra_email));
 			if (OIDplus::db()->num_rows($res) > 0) {
 				$out['text'] = '<pre>';
 				while ($row = OIDplus::db()->fetch_array($res)) {

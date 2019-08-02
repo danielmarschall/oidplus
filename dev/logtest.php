@@ -4,9 +4,6 @@ require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 OIDplus::init(true);
 
-OIDplus::db()->set_charset("UTF8");
-OIDplus::db()->query("SET NAMES 'utf8'");
-
 // This file tests all log events (to verify that the logmasks are working)
 
 $id = 'oid:2.999';

@@ -47,7 +47,7 @@ function _process_oid($oid) {
 
 		if (isset($data['oid']['identifier'])) {
 			foreach ($data['oid']['identifier'] as $asn1id) {
-				$std = _is_standardized($oid, $asn1id) ? '1' : '0';
+				$std = _is_standardized($oid, $asn1id);
 				$output[$oid]['asn1id'][] = "INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:$oid', '$asn1id', $std, 1);";
 			}
 		} else {
@@ -55,7 +55,7 @@ function _process_oid($oid) {
 		}
 		if (isset($data['oid']['unicode-label'])) {
 			foreach ($data['oid']['unicode-label'] as $iri) {
-				$std = _is_long($oid) ? '1' : '0';
+				$std = _is_long($oid);
 
 				if (strpos($iri, '&#') !== false) {
 					$iri = "from_base64('".base64_encode(html_entity_decode($iri, ENT_COMPAT | ENT_HTML401, "UTF-8"))."')";

@@ -26,9 +26,6 @@ require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 OIDplus::init(true);
 
-OIDplus::db()->set_charset("UTF8");
-OIDplus::db()->query("SET NAMES 'utf8'");
-
 header('Content-Type:text/plain; charset=UTF-8');
 
 // Step 0: Get request parameter
@@ -78,7 +75,7 @@ if (!$obj) {
 	$found = false;
 } else {
 	$query = $obj->nodeId(); // this may sanitize/canonize identifiers
-	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($obj->nodeId())."'");
+	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($obj->nodeId()));
 	if (OIDplus::db()->num_rows($res) > 0) {
 		$found = true;
 		$distance = 0;
@@ -86,7 +83,7 @@ if (!$obj) {
 		$found = false;
 		$objParent = OIDplusObject::parse($query)->getParent();
 		if ($objParent) {
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($objParent->nodeId())."'");
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($objParent->nodeId()));
 			$distance = $objParent->distance($query);
 			assert(OIDplus::db()->num_rows($res) > 0);
 
@@ -132,22 +129,22 @@ if ($continue) {
 		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont)));
 
 		if (substr($query,0,4) === 'oid:') {
-			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string($row->id)."'");
+			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($row->id));
 			while ($row2 = OIDplus::db()->fetch_object($res2)) {
 				$out[] = 'identifier: ' . $row2->name;
 			}
 
-			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where standardized = 1 and oid = '".OIDplus::db()->real_escape_string($row->id)."'");
+			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where standardized = 1 and oid = ?", array($row->id));
 			while ($row2 = OIDplus::db()->fetch_object($res2)) {
 				$out[] = 'standardized-id: ' . $row2->name;
 			}
 
-			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = '".OIDplus::db()->real_escape_string($row->id)."'");
+			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ?", array($row->id));
 			while ($row2 = OIDplus::db()->fetch_object($res2)) {
 				$out[] = 'unicode-label: ' . $row2->name;
 			}
 
-			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where longarc = 1 and oid = '".OIDplus::db()->real_escape_string($row->id)."'");
+			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where longarc = 1 and oid = ?", array($row->id));
 			while ($row2 = OIDplus::db()->fetch_object($res2)) {
 				$out[] = 'long-arc: ' . $row2->name;
 			}
@@ -156,7 +153,7 @@ if ($continue) {
 		$out[] = 'created: ' . $row->created;
 		$out[] = 'updated: ' . $row->updated;
 
-		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = '".OIDplus::db()->real_escape_string($row->id)."' order by ".OIDplus::db()->natOrder('id'));
+		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($row->id));
 		if (OIDplus::db()->num_rows($res2) == 0) {
 			// $out[] = 'subordinate: (none)';
 		}
@@ -166,7 +163,7 @@ if ($continue) {
 
 		$out[] = '';
 
-		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = '".OIDplus::db()->real_escape_string($row->ra_email)."'");
+		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($row->ra_email));
 		if ($row2 = OIDplus::db()->fetch_object($res2)) {
 			$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : $row2->email);
 			$out[] = 'ra-status: Information available';
@@ -254,7 +251,7 @@ if (OIDplus::pkiStatus(true)) {
 function show_asn1_appendix($id) {
 	if (substr($id,0,4) === 'oid:') {
 		$appendix_asn1ids = array();
-		$res3 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = '".OIDplus::db()->real_escape_string($id)."'");
+		$res3 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($id));
 		while ($row3 = OIDplus::db()->fetch_object($res3)) {
 			$appendix_asn1ids[] = $row3->name;
 		}

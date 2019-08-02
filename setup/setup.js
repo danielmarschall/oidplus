@@ -62,6 +62,8 @@ String.prototype.replaceAll = function(search, replacement) {
 function rebuild() {
 	var error = false;
 
+	if (document.getElementById('config') == null) return;
+
 	// Check 1: Has the password the correct length?
 	if (document.getElementById('admin_password').value.length < min_password_length)
 	{
@@ -80,51 +82,39 @@ function rebuild() {
 		document.getElementById('password_warn2').innerHTML = '';
 	}
 
-	// Check 3: host must not be empty
-	if (document.getElementById('mysql_host').value.length == 0)
-	{
-		document.getElementById('mysql_host_warn').innerHTML = '<font color="red">Please specify a host name!</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a host name!</i>';
-		error = true;
-	} else {
-		document.getElementById('mysql_host_warn').innerHTML = '';
-	}
-
-	// Check 4: Username must not be empty
-	if (document.getElementById('mysql_username').value.length == 0)
-	{
-		document.getElementById('mysql_username_warn').innerHTML = '<font color="red">Please specify a username name!</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a username name!</i>';
-		error = true;
-	} else {
-		document.getElementById('mysql_username_warn').innerHTML = '';
-	}
-
-	// Check 5: Database name must not be empty
-	if (document.getElementById('mysql_database').value.length == 0)
-	{
-		document.getElementById('mysql_database_warn').innerHTML = '<font color="red">Please specify a database name!</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a database name!</i>';
-		error = true;
-	} else {
-		document.getElementById('mysql_database_warn').innerHTML = '';
+	// Check 3: Ask the database plugins for verification of their data
+	for (var i = 0; i < rebuild_callbacks.length; i++) {
+		var f = rebuild_callbacks[i];
+		if (!f()) {
+			error = true;
+		}
 	}
 
 	// Continue
 	if (!error)
 	{
+		var e = document.getElementById("db_plugin");
+		var strPlugin = e.options[e.selectedIndex].value;
+
 		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br>' +
 			'<i>// To renew this file, please run setup/ in your browser.</i><br>' +
 			'<i>// If you don\'t want to run setup again, you can also change most of the settings directly in this file.</i><br>' +
 			'<br>' +
 			'<b>define</b>(\'OIDPLUS_CONFIG_VERSION\',   2.0);<br>' +
 			'<br>' +
+			// Passwords are Base64 encoded to avoid that passwords can be read upon first sight,
+			// e.g. if collegues are looking over your shoulder while you accidently open (and quickly close) config.inc.php
 			'<b>define</b>(\'OIDPLUS_ADMIN_PASSWORD\',   \'' + hexToBase64(sha3_512(document.getElementById('admin_password').value)) + '\'); // base64 encoded SHA3-512 hash<br>' +
 			'<br>' +
-			'<b>define</b>(\'OIDPLUS_MYSQL_HOST\',       \''+document.getElementById('mysql_host').value+'\');<br>' +
-			'<b>define</b>(\'OIDPLUS_MYSQL_USERNAME\',   \''+document.getElementById('mysql_username').value+'\');<br>' +
-			'<b>define</b>(\'OIDPLUS_MYSQL_PASSWORD\',   \''+b64EncodeUnicode(document.getElementById('mysql_password').value)+'\'); // base64 encoded<br>' +
-			'<b>define</b>(\'OIDPLUS_MYSQL_DATABASE\',   \''+document.getElementById('mysql_database').value+'\');<br>' +
+			'<b>define</b>(\'OIDPLUS_DATABASE_PLUGIN\',  \''+strPlugin+'\');<br>';
+		for (var i = 0; i < rebuild_config_callbacks.length; i++) {
+			var f = rebuild_config_callbacks[i];
+			var cont = f();
+			if (cont) {
+				document.getElementById('config').innerHTML = document.getElementById('config').innerHTML + cont;
+			}
+		}
+		document.getElementById('config').innerHTML = document.getElementById('config').innerHTML + 
 			'<br>' +
 			'<b>define</b>(\'OIDPLUS_TABLENAME_PREFIX\', \''+document.getElementById('tablename_prefix').value+'\');<br>' +
 			'<br>' +
@@ -141,19 +131,12 @@ function rebuild() {
 
 	// In case something is not good, do not allow the user to continue with the other configuration steps:
 	if (error) {
-		document.getElementById('step2').style.visibility='hidden';
-		document.getElementById('step3').style.visibility='hidden';
-		document.getElementById('step4').style.visibility='hidden';
+		document.getElementById('step2').style.display = "None";
+		document.getElementById('step3').style.display = "None";
+		document.getElementById('step4').style.display = "None";
 	} else {
-		document.getElementById('step2').style.visibility='visible';
-		document.getElementById('step3').style.visibility='visible';
-		document.getElementById('step4').style.visibility='visible';
+		document.getElementById('step2').style.display = "Block";
+		document.getElementById('step3').style.display = "Block";
+		document.getElementById('step4').style.display = "Block";
 	}
-
-	document.getElementById('struct_1').href = 'struct_empty.sql.php?prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
-	document.getElementById('sqlcli_1').innerHTML = 'struct_empty.sql.php?prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
-	document.getElementById('struct_2').href = 'struct_with_examples.sql.php?prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
-	document.getElementById('sqlcli_2').innerHTML = 'struct_with_examples.sql.php?prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
-	document.getElementById('mysqluser_1').innerHTML = document.getElementById('mysql_username').value;
-	document.getElementById('mysqluser_2').innerHTML = document.getElementById('mysql_username').value;
 }

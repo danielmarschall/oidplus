@@ -22,14 +22,18 @@ if (!defined('IN_OIDPLUS')) die();
 class OIDplusConfig {
 
 	protected $values = array();
-	protected $dirty = 1;
+	protected $dirty = true;
 
 	public function prepareConfigKey($name, $description, $init_value, $protected, $visible) {
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values ('".OIDplus::db()->real_escape_string($name)."', '".OIDplus::db()->real_escape_string($description)."', '".OIDplus::db()->real_escape_string($init_value)."', ".OIDplus::db()->real_escape_string($protected).", ".OIDplus::db()->real_escape_string($visible).")");
-		$this->dirty = 1;
+		$this->buildConfigArray();
+		if (!isset($this->values[$name])) {
+			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values (?, ?, ?, ?, ?)", array($name, $description, $init_value, $protected, $visible));
+			$this->values[$name] = $value;
+		}
 	}
 
 	public function __construct() {
+		// TODO: Auslagern in ein Plugin
 		$this->prepareConfigKey('system_title', 'What is the name of your RA?', 'OIDplus 2.0', 0, 1);
 		$this->prepareConfigKey('admin_email', 'E-Mail address of the system administrator', '', 0, 1);
 		$this->prepareConfigKey('global_cc', 'Global CC for all outgoing emails?', '', 0, 1);
@@ -54,16 +58,19 @@ class OIDplusConfig {
 	}
 	*/
 
-	public function getValue($name) {
+	protected function buildConfigArray() {
 		if ($this->dirty) {
 			$this->values = array();
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config");
 			while ($row = OIDplus::db()->fetch_object($res)) {
 				$this->values[$row->name] = $row->value;
 			}
-			$this->dirty = 0;
+			$this->dirty = false;
 		}
+	}
 
+	public function getValue($name) {
+		$this->buildConfigArray();
 		if (isset($this->values[$name])) {
 			return $this->values[$name];
 		} else {
@@ -72,6 +79,7 @@ class OIDplusConfig {
 	}
 
 	public function exists($name) {
+		$this->buildConfigArray();
 		return !is_null($this->getValue($name));
 	}
 
@@ -133,7 +141,7 @@ class OIDplusConfig {
 
 		// Now change the value in the database
 
-		if (!OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."config set value = '".OIDplus::db()->real_escape_string($value)."' where name = '".OIDplus::db()->real_escape_string($name)."'")) {
+		if (!OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."config set value = ? where name = ?", array($value, $name))) {
 			throw new Exception(OIDplus::db()->error());
 		}
 		$this->values[$name] = $value;

@@ -93,7 +93,9 @@ function x_rec(x_data, i) {
 	});
 }
 
-function openOidInPanel(id, reselect=false) {
+function openOidInPanel(id, reselect/*=false*/) {
+	reselect = (typeof reselect === 'undefined') ? false : reselect;
+
 	if (reselect) {
 		$('#oidtree').jstree('deselect_all');
 

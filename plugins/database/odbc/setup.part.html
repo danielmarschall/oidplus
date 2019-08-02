@@ -1,0 +1,57 @@
+<div id="DBPLUGIN_PARAMS_ODBC">
+	<p>ODBC DSN (<a href="https://www.connectionstrings.com/" target="_blank">examples</a>):<br><input id="odbc_dsn" type="text" value="DRIVER={MySQL};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8" onkeypress="rebuild()" onkeyup="rebuild()" style="width:600px">  <span id="odbc_dsn_warn"></p><!-- Driver={SQL Server Native Client 10.0};Server=localhost;Database=oidplus -->
+	<p>ODBC Username:<br><input id="odbc_username" type="text" value="root" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="odbc_username_warn"></p>
+	<p>ODBC Password:<br><input id="odbc_password" type="password" value="" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="odbc_password_warn"></p>
+	<p><i>Attention: OIDplus currently only implements the SQL dialect of MySQL. Other DBMS might not work.</i></p>
+</div>
+<script>
+plugin_combobox_change_callbacks.push(function(strPlugin) {
+	document.getElementById('DBPLUGIN_PARAMS_ODBC').style.display = (strPlugin == 'ODBC') ? "Block" : "None";
+});
+rebuild_callbacks.push(function() {
+	var e = document.getElementById("db_plugin");
+	var strPlugin = e.options[e.selectedIndex].value;
+	if (strPlugin != 'ODBC') return true;
+
+	document.getElementById('struct_cli_1').innerHTML = '';
+	document.getElementById('struct_cli_2').innerHTML = '';
+	document.getElementById('struct_1').href = 'struct_empty.sql.php';
+	document.getElementById('struct_2').href = 'struct_with_examples.sql.php';
+
+	error = false;
+
+	// Check 1: dsn must not be empty
+	if (document.getElementById('odbc_dsn').value.length == 0)
+	{
+		document.getElementById('odbc_dsn_warn').innerHTML = '<font color="red">Please specify a DSN!</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a DSN!</i>';
+		error = true;
+	} else {
+		document.getElementById('odbc_dsn_warn').innerHTML = '';
+	}
+
+	// Check 2: Username must not be empty
+	if (document.getElementById('odbc_username').value.length == 0)
+	{
+		document.getElementById('odbc_username_warn').innerHTML = '<font color="red">Please specify a username!</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a username!</i>';
+		error = true;
+	} else {
+		document.getElementById('odbc_username_warn').innerHTML = '';
+	}
+
+	document.getElementById('struct_1').href = owndir+'struct_empty.sql.php?plugin=odbc&prefix='+encodeURI(document.getElementById('tablename_prefix').value);
+	document.getElementById('struct_2').href = owndir+'struct_with_examples.sql.php?plugin=odbc&prefix='+encodeURI(document.getElementById('tablename_prefix').value);
+
+	return !error;
+});
+rebuild_config_callbacks.push(function() {
+	var e = document.getElementById("db_plugin");
+	var strPlugin = e.options[e.selectedIndex].value;
+	if (strPlugin != 'ODBC') return '';
+
+	return '<b>define</b>(\'OIDPLUS_ODBC_DSN\',         \''+document.getElementById('odbc_dsn').value+'\');<br>' +
+	       '<b>define</b>(\'OIDPLUS_ODBC_USERNAME\',    \''+document.getElementById('odbc_username').value+'\');<br>' +
+	       '<b>define</b>(\'OIDPLUS_ODBC_PASSWORD\',    \''+b64EncodeUnicode(document.getElementById('odbc_password').value)+'\'); // base64 encoded<br>';
+});
+</script>

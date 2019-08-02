@@ -35,9 +35,6 @@ if (!function_exists('mb_substr')) {
 
 OIDplus::init(true);
 
-OIDplus::db()->set_charset("UTF8");
-OIDplus::db()->query("SET NAMES 'utf8'");
-
 $static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
 $static = OIDplus::gui()::generateContentPage($static_node_id);
 $static_title = $static['title'];
@@ -94,8 +91,9 @@ if (class_exists('OIDplusPageAdminColors')) {
 	<script src="3p/jquery-ui/jquery-ui.min.js"></script>
 	<script src="3p/layout/jquery.layout.min.js"></script>
 	<script src="3p/spamspan/spamspan.js"></script>
-    <script src="3p/sha3_js/sha3.js"></script><!-- https://github.com/emn178/js-sha3 -->
+	<script src="3p/sha3_js/sha3.js"></script><!-- https://github.com/emn178/js-sha3 -->
 	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=fetch%2CURL"></script><!-- For IE... -->
 	<script src="oidplus.min.js.php"></script>
 
 	<link rel="stylesheet" href="<?php echo htmlentities($css); ?>">

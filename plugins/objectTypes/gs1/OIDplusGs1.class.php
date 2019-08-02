@@ -92,7 +92,7 @@ class OIDplusGs1 extends OIDplusObject {
 		if ($this->isRoot()) {
 			$title = OIDplusGs1::objectTypeTitle();
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = '".OIDplus::db()->real_escape_string(self::root())."'");
+			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array(self::root()));
 			if (OIDplus::db()->num_rows($res) > 0) {
 				$content  = 'Please select an item in the tree view at the left to show its contents.';
 			} else {
@@ -138,12 +138,12 @@ class OIDplusGs1 extends OIDplusObject {
 	public function chunkedNotation($withAbbr=true) {
 		$curid = 'gs1:'.$this->number;
 
-		$res = OIDplus::db()->query("select id, title from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($curid)."'");
+		$res = OIDplus::db()->query("select id, title from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($curid));
 		if (OIDplus::db()->num_rows($res) == 0) return $this->number();
 
 		$hints = array();
 		$lengths = array(strlen($curid));
-		while (OIDplus::db()->num_rows($res = OIDplus::db()->query("select parent, title from ".OIDPLUS_TABLENAME_PREFIX."objects where id = '".OIDplus::db()->real_escape_string($curid)."'")) > 0) {
+		while (OIDplus::db()->num_rows($res = OIDplus::db()->query("select parent, title from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($curid))) > 0) {
 			$row = OIDplus::db()->fetch_array($res);
 			$curid = $row['parent'];
 			$hints[] = $row['title'];

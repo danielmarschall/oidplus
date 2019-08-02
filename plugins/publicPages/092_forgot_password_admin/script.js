@@ -23,8 +23,23 @@ function hexToBase64(str) {
 }
 
 function rehash_admin_pwd() {
+	var error = "";
+
+	if (document.getElementById('admin_password').value.length == 0) {
+		document.getElementById('config').innerHTML = "";
+		return;
+	}
+
 	if (document.getElementById('admin_password').value.length < min_password_length) {
-		document.getElementById('config').innerHTML = 'Password too short. Need at least '+min_password_length+' characters<br>';
+		error += 'Password too short. Need at least '+min_password_length+' characters<br>';
+	}
+
+	if (document.getElementById('admin_password').value != document.getElementById('admin_password2').value) {
+		error += 'Passwords do not match.<br>';
+	}
+
+	if (error != "") {
+		document.getElementById('config').innerHTML = error;
 	} else {
 		document.getElementById('config').innerHTML = '<b>define</b>(\'OIDPLUS_ADMIN_PASSWORD\',   \'' + hexToBase64(sha3_512(document.getElementById('admin_password').value)) + '\'); // base64 encoded SHA3-512 hash<br>';
 	}
