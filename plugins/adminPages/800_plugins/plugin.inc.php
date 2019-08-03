@@ -56,9 +56,10 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 
 			$reflector = new \ReflectionClass($classname);
 
-			$out['text'] .= "<p>Plugin class name $classname</p>".
-			"<p>Plugin installed in " . dirname($reflector->getFileName())."</p>".
-			"<p>Plugin type " . get_parent_class($classname)."</p>";
+			// TODO: output more verbose data like human friendly name etc.
+			$out['text'] .= '<div><label class="padding_label">Classname</label><b>'.htmlentities($classname).'</b></div>'.
+			                '<div><label class="padding_label">Location</label><b>'.htmlentities(dirname($reflector->getFileName())).'</b></div>'.
+			                '<div><label class="padding_label">Plugin type</label><b>'.htmlentities(get_parent_class($classname)).'</b></div>';
 		} else {
 			$show_pages_public = false;
 			$show_pages_ra = false;

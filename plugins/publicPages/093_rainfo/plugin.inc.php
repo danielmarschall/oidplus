@@ -70,17 +70,23 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 			}
 
 			if (!empty($ra_email)) {
-				if (OIDplus::authUtils()::isRALoggedIn($ra_email)) {
-					$out['text'] .= '<br><p><a '.oidplus_link('oidplus:edit_ra$'.$ra_email).'>Edit contact info</a></p>';
-				}
+				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
+				if (OIDplus::db()->num_rows($res) > 0) {
+					if (OIDplus::authUtils()::isRALoggedIn($ra_email) || OIDplus::authUtils()::isAdminLoggedIn()) {
+						if (class_exists('OIDplusPageRaEditContactData')) {
+							$out['text'] .= '<p><a '.oidplus_link('oidplus:edit_ra$'.$ra_email).'>Edit contact data</a></p>';
+						}
+					}
 
-				if (OIDplus::authUtils()::isAdminLoggedIn()) {
-					$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
-					if (OIDplus::db()->num_rows($res) > 0) {
+					if (OIDplus::authUtils()::isAdminLoggedIn()) {
 						if (class_exists("OIDplusPageAdminListRAs")) {
-							$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">Delete this RA</a></p>';
+							$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">Delete this RA</a></p>';
 						} else {
-							$out['text'] .= '<br><p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">Delete this RA</a></p>';
+							$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">Delete this RA</a></p>';
+						}
+						
+						if (class_exists('OIDplusPageRaChangePassword')) {
+							$out['text'] .= '<p><a '.oidplus_link('oidplus:change_ra_password$'.$ra_email).'>Change password of this RA</a>';
 						}
 					}
 				}

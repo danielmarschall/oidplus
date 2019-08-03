@@ -61,3 +61,9 @@ Minify:
 	https://github.com/matthiasmullie/minify (Version: 17 Dec 2018)
 	and its dependency:
 	https://github.com/matthiasmullie/path-converter (Version: 25 Oct 2018)
+
+Polyfill:
+	License: MIT
+	Currently directly linked
+	Website: https://polyfill.io/v3/
+

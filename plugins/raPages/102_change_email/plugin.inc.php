@@ -32,7 +32,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 		if (isset($_POST["action"]) && ($_POST["action"] == "change_ra_email")) {
 			$handled = true;
 
-			if (!OIDplus::config()->getValue('allow_ra_email_change')) {
+			if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				die(json_encode(array("error" => 'This functionality has been disabled by the administrator.')));
 			}
 
@@ -56,22 +56,42 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 			if (OIDplus::db()->num_rows($res) > 0) {
 				die(json_encode(array("error" => 'eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.')));
 			}
+			
+			if (OIDplus::authUtils()::isAdminLoggedIn()) {
+				OIDplus::logger()->log("RA($old_email)!+RA($new_email)!+A!", "Admin changed email address '$old_email' to '$new_email'");
+				
+				$ra_was_logged_in = OIDplus::authUtils()::isRaLoggedIn($old_email);
 
-			OIDplus::logger()->log("RA($old_email)!+RA($new_email)!", "Requested email change from '$old_email' to '$new_email'");
+				$ra = new OIDplusRA($old_email);
+				$ra->change_email($new_email);
 
-			$timestamp = time();
-			$activate_url = OIDplus::system_url() . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp));
+				if (!OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set ra_email = ? where ra_email = ?", array($new_email, $old_email))) {
+					throw new Exception(OIDplus::db()->error());
+				}
 
-			$message = file_get_contents(__DIR__ . '/change_request_email.tpl');
-			$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
-			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
-			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
-			$message = str_replace('{{OLD_EMAIL}}', $old_email, $message);
-			$message = str_replace('{{NEW_EMAIL}}', $new_email, $message);
-			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
-			my_mail($new_email, OIDplus::config()->systemTitle().' - Change email request', $message);
+				if ($ra_was_logged_in) {
+					OIDplus::authUtils()->raLogout($old_email);
+					OIDplus::authUtils()->raLogin($new_email);
+				}
 
-			echo json_encode(array("status" => 0));
+				echo json_encode(array("status" => 0));
+			} else {
+				OIDplus::logger()->log("RA($old_email)!+RA($new_email)!", "Requested email change from '$old_email' to '$new_email'");
+
+				$timestamp = time();
+				$activate_url = OIDplus::system_url() . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp));
+
+				$message = file_get_contents(__DIR__ . '/change_request_email.tpl');
+				$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
+				$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
+				$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
+				$message = str_replace('{{OLD_EMAIL}}', $old_email, $message);
+				$message = str_replace('{{NEW_EMAIL}}', $new_email, $message);
+				$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
+				my_mail($new_email, OIDplus::config()->systemTitle().' - Change email request', $message);
+
+				echo json_encode(array("status" => 0));
+			}
 		}
 
 		if (isset($_POST["action"]) && ($_POST["action"] == "activate_new_ra_email")) {
@@ -165,18 +185,26 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 			if (OIDplus::db()->num_rows($res) == 0) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = 'RA <b>'.htmlentities($ra_email).'</b> does not exist';
-			} else if (!OIDplus::config()->getValue('allow_ra_email_change')) {
+			} else if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] .= '<p>This functionality has been disabled by the administrator.</p>';
 			} else if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
+				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b> or as admin.</p>';
 			} else {
-				$out['text'] .= '<form id="changeRaEmailForm" onsubmit="return changeRaEmailFormOnSubmit();">';
-				$out['text'] .= '<input type="hidden" id="old_email" value="'.htmlentities($ra_email).'"/><br>';
-				$out['text'] .= '<label class="padding_label">Old address:</label><b>'.htmlentities($ra_email).'</b><br><br>';
-				$out['text'] .= '<label class="padding_label">New address:</label><input type="text" id="new_email" value=""/><br><br>';
-				$out['text'] .= '<input type="submit" value="Send new activation email"></form>';
+				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+					$out['text'] .= '<form id="changeRaEmailForm" onsubmit="return changeRaEmailFormOnSubmit(true);">';
+					$out['text'] .= '<input type="hidden" id="old_email" value="'.htmlentities($ra_email).'"/><br>';
+					$out['text'] .= '<div><label class="padding_label">Old address:</label><b>'.htmlentities($ra_email).'</b></div>';
+					$out['text'] .= '<div><label class="padding_label">New address:</label><input type="text" id="new_email" value=""/></div>';
+					$out['text'] .= '<br><input type="submit" value="Change password"> (admin does not require email verification)</form>';
+				} else {
+					$out['text'] .= '<form id="changeRaEmailForm" onsubmit="return changeRaEmailFormOnSubmit(false);">';
+					$out['text'] .= '<input type="hidden" id="old_email" value="'.htmlentities($ra_email).'"/><br>';
+					$out['text'] .= '<div><label class="padding_label">Old address:</label><b>'.htmlentities($ra_email).'</b></div>';
+					$out['text'] .= '<div><label class="padding_label">New address:</label><input type="text" id="new_email" value=""/></div>';
+					$out['text'] .= '<br><input type="submit" value="Send new activation email"></form>';
+				}
 			}
 		} else if (explode('$',$id)[0] == 'oidplus:activate_new_ra_email') {
 			$handled = true;
@@ -186,7 +214,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 			$timestamp = explode('$',$id)[3];
 			$auth = explode('$',$id)[4];
 
-			if (!OIDplus::config()->getValue('allow_ra_email_change')) {
+			if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] .= '<p>This functionality has been disabled by the administrator.</p>';
 			} else {
@@ -216,8 +244,8 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 						    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 						    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
 
-						    <label class="padding_label">Please verify your password:</label><input type="password" id="password" value=""/><br><br>
-						    <input type="submit" value="Change email address">
+						    <div><label class="padding_label">Please verify your password:</label><input type="password" id="password" value=""/></div>
+						    <br><input type="submit" value="Change email address">
 						  </form>';
 						}
 					}

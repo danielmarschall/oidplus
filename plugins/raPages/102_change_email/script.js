@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-function changeRaEmailFormOnSubmit() {
+function changeRaEmailFormOnSubmit(isadmin) {
 	$.ajax({
 		url: "ajax.php",
 		type: "POST",
@@ -31,9 +31,16 @@ function changeRaEmailFormOnSubmit() {
 			if ("error" in data) {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
-				alert("eMail was sent");
-				//document.location = '?goto=oidplus:system';
-				//reloadContent();
+				if (isadmin) {
+					alert("E-Mail was changed");
+					//openOidInPanel('oidplus:rainfo$'+$("#new_email").val(),true);
+					// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs
+					document.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#new_email").val());
+				} else {
+					alert("eMail was sent");
+					//document.location = '?goto=oidplus:system';
+					//reloadContent();
+				}
 			} else {
 				alert("Error: " + data);
 			}

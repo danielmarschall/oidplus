@@ -147,9 +147,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			}
 			$out['text'] .= '<form onsubmit="return raLoginOnSubmit(this);">';
 			$out['text'] .= '<input type="hidden" name="action" value="ra_login">';
-			$out['text'] .= '<label class="padding_label">E-Mail:</label><input type="text" name="email" value="" id="raLoginEMail"><br>';
-			$out['text'] .= '<label class="padding_label">Password:</label><input type="password" name="password" value="" id="raLoginPassword"><br><br>';
-			$out['text'] .= '<input type="submit" value="Login"><br><br>';
+			$out['text'] .= '<div><label class="padding_label">E-Mail:</label><input type="text" name="email" value="" id="raLoginEMail"></div>';
+			$out['text'] .= '<div><label class="padding_label">Password:</label><input type="password" name="password" value="" id="raLoginPassword"></div>';
+			$out['text'] .= '<br><input type="submit" value="Login"><br><br>';
 			$out['text'] .= '</form>';
 			$out['text'] .= '<p><a '.oidplus_link('oidplus:forgot_password').'>Forgot password?</a><br>';
 			$out['text'] .= '<abbr title="To receive login data, the superior RA needs to send you an invitation. After creating or updating your OID, the system will ask them if they want to send you an invitation. If they accept, you will receive an email with an activation link.">How to register?</abbr></p>';
@@ -165,8 +165,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				$out['text'] .= '<h2>Login as administrator</h2>';
 				$out['text'] .= '<form onsubmit="return adminLoginOnSubmit(this);">';
 				$out['text'] .= '<input type="hidden" name="action" value="admin_login">';
-				$out['text'] .= '<label class="padding_label">Password:</label><input type="password" name="password" value="" id="adminLoginPassword"><br><br>';
-				$out['text'] .= '<input type="submit" value="Login"><br><br>';
+				$out['text'] .= '<div><label class="padding_label">Password:</label><input type="password" name="password" value="" id="adminLoginPassword"></div>';
+				$out['text'] .= '<br><input type="submit" value="Login"><br><br>';
 				$out['text'] .= '</form>';
 				$out['text'] .= '<p><a '.oidplus_link('oidplus:forgot_password_admin').'>Forgot password?</a><br>';
 			}

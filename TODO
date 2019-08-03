@@ -8,18 +8,11 @@ IMPORTANT
 	do we need a consent for the cookie SSL_CHECK?
 - dsgvo datenschutzerklärung, agbs etc.
 - Verify that logger works correctly, check if all logmasks are correct
+- remove backtick operators due to sql compatibility
 
 NEW FEATURES
-- Make a admin plugin that allows to create users, e.g. if you don't have a MTA on your server (so you cannot use invitations)
-- Setting to turn off invitations
-
-TODO
-- backtick operators entf
-- self host polyfill and add to acknowledgements page
-
-ADMIN AREA
-- Allow that the admin can change user's passwort/contact data
-- Admin should see log events for each RA and OID
+- Make a admin plugin that allows an admin to create users, e.g. if you don't have a MTA on your server (so you cannot use invitations)
+- Introduce a setting to turn off invitations
 
 RFC
 - proof read
@@ -29,6 +22,7 @@ RFC
 - felder die nicht optional sind => mandatory kennzeichnen
 
 SMALL THINGS
+- Should we self-host polyfill due to GDPR stuff?
 - Object type plugins : name all files "plugin.inc.php" and also take care that "treeicon.png" and "icon_big.png" exist everywhere (become standard)
 - when ajax.php generates a PHP error, the client gives a "syntax error" message... it would be better if the client shows the full php error? or something more user-friendly?
 - freeoid: gmail app does not hyperlink the activation URL. why?

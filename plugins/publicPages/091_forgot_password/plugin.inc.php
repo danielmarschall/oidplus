@@ -150,9 +150,9 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 				    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
-				    <label class="padding_label">New password:</label><input type="password" id="password1" value=""/><br><br>
-				    <label class="padding_label">Again:</label><input type="password" id="password2" value=""/><br><br>
-				    <input type="submit" value="Change password">
+				    <div><label class="padding_label">New password:</label><input type="password" id="password1" value=""/></div>
+				    <div><label class="padding_label">Again:</label><input type="password" id="password2" value=""/></div>
+				    <br><input type="submit" value="Change password">
 				  </form>';
 			}
 		}

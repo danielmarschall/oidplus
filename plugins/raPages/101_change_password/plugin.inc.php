@@ -40,10 +40,12 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 			}
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				die(json_encode(array("error" => 'Authentification error. Please log in as the RA to update its data.')));
+				die(json_encode(array("error" => 'Authentification error. Please log in as the RA or admin to update its data.')));
 			}
 
-			$old_password = $_POST['old_password'];
+			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+				$old_password = $_POST['old_password'];
+			}
 			$password1 = $_POST['new_password1'];
 			$password2 = $_POST['new_password2'];
 
@@ -56,8 +58,10 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 			}
 
 			$ra = new OIDplusRA($email);
-			if (!$ra->checkPassword($old_password)) {
-				die(json_encode(array("error" => 'Old password incorrect')));
+			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+				if (!$ra->checkPassword($old_password)) {
+					die(json_encode(array("error" => 'Old password incorrect')));
+				}
 			}
 			OIDplus::logger()->log("RA($email)?/A?", "Password of RA '$email' changed");
 			$ra->change_password($password1);
@@ -95,10 +99,15 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 			} else {
 				$out['text'] .= '<form id="raChangePasswordForm" onsubmit="return raChangePasswordFormOnSubmit();">';
 				$out['text'] .= '<input type="hidden" id="email" value="'.htmlentities($ra_email).'"/><br>';
-				$out['text'] .= '<label class="padding_label">Old password:</label><input type="password" id="old_password" value=""/><br>';
-				$out['text'] .= '<label class="padding_label">New password:</label><input type="password" id="new_password1" value=""/><br>';
-				$out['text'] .= '<label class="padding_label">Again:</label><input type="password" id="new_password2" value=""/><br><br>';
-				$out['text'] .= '<input type="submit" value="Change password"></form>';
+				$out['text'] .= '<div><label class="padding_label">E-Mail:</label><b>'.htmlentities($ra_email).'</b></div>';
+				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+					$out['text'] .= '<div><label class="padding_label">Old password:</label><i>Admin can change the password without verification of the old password.</i></div>';
+				} else {
+					$out['text'] .= '<div><label class="padding_label">Old password:</label><input type="password" id="old_password" value=""/></div>';
+				}
+				$out['text'] .= '<div><label class="padding_label">New password:</label><input type="password" id="new_password1" value=""/></div>';
+				$out['text'] .= '<div><label class="padding_label">Again:</label><input type="password" id="new_password2" value=""/></div>';
+				$out['text'] .= '<br><input type="submit" value="Change password"></form>';
 			}
 		}
 	}

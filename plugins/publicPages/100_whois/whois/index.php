@@ -12,7 +12,7 @@
 
 <form action="webwhois.php" method="GET">
 <input type="text" name="query" value="oid:2.999">
-<input type="submit">
+<input type="submit" value="Lookup">
 </form>
 
 </body>
