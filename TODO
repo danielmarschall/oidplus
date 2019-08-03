@@ -9,9 +9,11 @@ IMPORTANT
 - dsgvo datenschutzerklärung, agbs etc.
 - Verify that logger works correctly, check if all logmasks are correct
 
+NEW FEATURES
+- Make a admin plugin that allows to create users, e.g. if you don't have a MTA on your server (so you cannot use invitations)
+- Setting to turn off invitations
+
 TODO
-- "Plugins" aufklappen
-- Instead of title "Registration Authority Information", the title should be the actual RA name
 - backtick operators entf
 - self host polyfill and add to acknowledgements page
 
@@ -27,7 +29,7 @@ RFC
 - felder die nicht optional sind => mandatory kennzeichnen
 
 SMALL THINGS
-- Object type plugins : name all files "plugin.inc.php"
+- Object type plugins : name all files "plugin.inc.php" and also take care that "treeicon.png" and "icon_big.png" exist everywhere (become standard)
 - when ajax.php generates a PHP error, the client gives a "syntax error" message... it would be better if the client shows the full php error? or something more user-friendly?
 - freeoid: gmail app does not hyperlink the activation URL. why?
 - how to avoid invite spamming?
@@ -105,6 +107,7 @@ IDEAS
 - let the sysadmin decide if they want the title be "systemtitle - object title" or "object title - systemtitle"
 - should a RA be able to mark their own oid as confidential, instead of asking the superior RA?
 - sollte es eine oidplus projektseite geben anstelle nur das nackte system?
+- vendor signature to plugins
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie

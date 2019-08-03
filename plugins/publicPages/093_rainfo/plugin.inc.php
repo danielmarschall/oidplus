@@ -41,15 +41,23 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 		if (explode('$',$id)[0] == 'oidplus:rainfo') {
 			$handled = true;
 
-			$ra_email = explode('$',$id)[1];
-			$ra_email = str_replace('&', '@', $ra_email);
+			$antispam_email = explode('$',$id.'$')[1];
+			$ra_email = str_replace('&', '@', $antispam_email);
 
-			$out['title'] = 'Registration Authority Information'; // TODO: email addresse reinschreiben? aber wie vor anti spam schützen?
 			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/rainfo_big.png';
 
 			if (empty($ra_email)) {
+				$out['title'] = 'Object roots without RA';
 				$out['text'] = '<p>Following object roots have an undefined Registration Authority:</p>';
 			} else {
+				$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
+				$out['title'] = '';
+				if ($row = OIDplus::db()->fetch_array($res)) {
+					$out['title'] = $row['ra_name'];
+				}
+				if (empty($out['title'])) {
+					$out['title'] = $antispam_email;
+				}
 				$out['text'] = $this->showRAInfo($ra_email);
 			}
 
@@ -117,10 +125,9 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 		if (OIDplus::db()->num_rows($res) === 0) {
 			$out = '<p>The RA <a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a> is not registered in the database.</p>';
-
 		} else {
 			$row = OIDplus::db()->fetch_array($res);
-			$out = '<b>'.htmlentities($row['ra_name']).'</b><br>';
+			$out = '<b>'.htmlentities($row['ra_name']).'</b><br>'; // TODO: if you are not already at the page "oidplus:rainfo", then link to it now
 			$out .= 'E-Mail: <a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a><br>';
 			if (trim($row['personal_name']) !== '') $out .= htmlentities($row['personal_name']).'<br>';
 			if (trim($row['organization']) !== '') $out .= htmlentities($row['organization']).'<br>';
