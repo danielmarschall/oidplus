@@ -68,7 +68,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
 				$output = '';
 				$output .= '<div class="container box"><div id="suboid_table" class="table-responsive">';

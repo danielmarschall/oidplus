@@ -127,7 +127,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 			} catch (Exception $e) {
 
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = "Error: ".$e->getMessage();
+				$out['text'] = '<p>Error: '.htmlentities($e->getMessage()).'</p>';
 
 			}
 		} else if (explode('$',$id)[0] == 'oidplus:reset_password') {
@@ -151,7 +151,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 				    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 				    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
 				    <div><label class="padding_label">New password:</label><input type="password" id="password1" value=""/></div>
-				    <div><label class="padding_label">Again:</label><input type="password" id="password2" value=""/></div>
+				    <div><label class="padding_label">Repeat:</label><input type="password" id="password2" value=""/></div>
 				    <br><input type="submit" value="Change password">
 				  </form>';
 			}

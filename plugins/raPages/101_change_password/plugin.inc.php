@@ -95,7 +95,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
+				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
 			} else {
 				$out['text'] .= '<form id="raChangePasswordForm" onsubmit="return raChangePasswordFormOnSubmit();">';
 				$out['text'] .= '<input type="hidden" id="email" value="'.htmlentities($ra_email).'"/><br>';
@@ -106,7 +106,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 					$out['text'] .= '<div><label class="padding_label">Old password:</label><input type="password" id="old_password" value=""/></div>';
 				}
 				$out['text'] .= '<div><label class="padding_label">New password:</label><input type="password" id="new_password1" value=""/></div>';
-				$out['text'] .= '<div><label class="padding_label">Again:</label><input type="password" id="new_password2" value=""/></div>';
+				$out['text'] .= '<div><label class="padding_label">Repeat:</label><input type="password" id="new_password2" value=""/></div>';
 				$out['text'] .= '<br><input type="submit" value="Change password"></form>';
 			}
 		}

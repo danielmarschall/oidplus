@@ -43,7 +43,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
 				return $out;
 			}
 
@@ -53,7 +53,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePlugin {
 			$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event from ".OIDPLUS_TABLENAME_PREFIX."log lo ".
 			                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_user lu on lu.log_id = lo.id ".
 			                            //"where lu.user = 'admin' " .
-										"order by lo.unix_ts desc");
+			                            "order by lo.unix_ts desc");
 			if (OIDplus::db()->num_rows($res) > 0) {
 				$out['text'] = '<pre>';
 				while ($row = OIDplus::db()->fetch_array($res)) {

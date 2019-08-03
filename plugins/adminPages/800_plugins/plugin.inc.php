@@ -45,7 +45,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 			$out['icon'] = 'img/error_big.png';
-			$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
+			$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
 			return $out;
 		}
 
@@ -125,7 +125,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 				$show_db_inactive = true;
 			} else {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>Invalid arguments.</p>';
+				$out['text'] = '<p>Invalid arguments.</p>';
 				return $out;
 			}
 

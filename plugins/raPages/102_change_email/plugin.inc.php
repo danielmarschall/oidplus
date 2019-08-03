@@ -187,10 +187,10 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 				$out['text'] = 'RA <b>'.htmlentities($ra_email).'</b> does not exist';
 			} else if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>This functionality has been disabled by the administrator.</p>';
+				$out['text'] = '<p>This functionality has been disabled by the administrator.</p>';
 			} else if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b> or as admin.</p>';
+				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b> or as admin.</p>';
 			} else {
 				if (OIDplus::authUtils()::isAdminLoggedIn()) {
 					$out['text'] .= '<form id="changeRaEmailForm" onsubmit="return changeRaEmailFormOnSubmit(true);">';
@@ -216,7 +216,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 
 			if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>This functionality has been disabled by the administrator.</p>';
+				$out['text'] = '<p>This functionality has been disabled by the administrator.</p>';
 			} else {
 				$out['title'] = 'Perform email address change';
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';

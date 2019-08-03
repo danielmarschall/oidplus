@@ -101,9 +101,9 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
+				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
 			} else {
-				$out['text'] .= '<p>Your email address: <b>'.htmlentities($ra_email).'</b>';
+				$out['text'] = '<p>Your email address: <b>'.htmlentities($ra_email).'</b>';
 
 				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
 				if (OIDplus::db()->num_rows($res) == 0) {

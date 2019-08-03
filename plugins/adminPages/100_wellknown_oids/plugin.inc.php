@@ -48,7 +48,7 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
 				$out['text'] = '<p><abbr title="These ID names can only be edited in the database directly (Tables '.OIDPLUS_TABLENAME_PREFIX.'asn1id and '.OIDPLUS_TABLENAME_PREFIX.'iri). Usually, there is no need to do this, though.">How to edit these IDs?</abbr></p>';
 

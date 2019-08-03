@@ -56,7 +56,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] .= '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
 				$out['text'] = '<p>The registration of your OIDplus installation has various advantages: The public key of your system is published, so that users can check the integrity of your data (e.g. signed OID-over-WHOIS requests). You can optionally also enable the automatic publishing of your public OID information to the repository oid-info.com.</p>'.
 				               '<p><input type="button" onclick="openOidInPanel(\'oidplus:srvreg_status\');" value="Check status of the registration and collected data"></p>';

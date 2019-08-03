@@ -235,7 +235,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 				    URL for more information about your project(s) (optional):<br><input type="text" id="url" value=""/><br><br>
 
 				    <div><label class="padding_label">Password:</label><input type="password" id="password1" value=""/></div>
-				    <div><label class="padding_label">Again:</label><input type="password" id="password2" value=""/></div>
+				    <div><label class="padding_label">Repeat:</label><input type="password" id="password2" value=""/></div>
 				    <br><input type="submit" value="Register">
 				  </form>';
 				}
