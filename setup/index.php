@@ -107,7 +107,7 @@ dbplugin_changed();
 
 <div id="step4">
 <h2>Step 4: Continue to next step</h2>
-<p><input type="button" onclick="document.location='../'" value="Continue"></p>
+<p><input type="button" onclick="window.location.href='../'" value="Continue"></p>
 <!-- <p><a href="../">Run the OIDplus system</a></p> -->
 </div>
 

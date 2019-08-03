@@ -34,7 +34,7 @@ function inviteFormOnSubmit() {
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 			} else if (data.status == 0) {
 				alert("The RA has been invited via email.");
-				document.location = '?goto='+$("#origin").val();
+				window.location.href = '?goto='+$("#origin").val();
 				//reloadContent();
 			} else {
 				alert("Error: " + data);
@@ -65,7 +65,7 @@ function activateRaFormOnSubmit() {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
 				alert("Registration successful! You can now log in.");
-				document.location = '?goto=oidplus:login';
+				window.location.href = '?goto=oidplus:login';
 				//reloadContent();
 			} else {
 				alert("Error: " + data);

@@ -34,7 +34,7 @@ function raLogout(email) {
 			if ("error" in data) {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
-				document.location = '?goto=oidplus:system';
+				window.location.href = '?goto=oidplus:system';
 				// reloadContent();
 			} else {
 				alert("Error: " + data);
@@ -62,7 +62,7 @@ function raLogin(email, password) {
 				alert("Error: " + data.error);
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 			} else if (data.status == 0) {
-				document.location = '?goto=oidplus:system';
+				window.location.href = '?goto=oidplus:system';
 				// reloadContent();
 			} else {
 				alert("Error: " + data);
@@ -97,7 +97,7 @@ function adminLogin(password) {
 				alert("Error: " + data.error);
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 			} else if (data.status == 0) {
-				document.location = '?goto=oidplus:system';
+				window.location.href = '?goto=oidplus:system';
 				// reloadContent();
 			} else {
 				alert("Error: " + data);
@@ -123,7 +123,7 @@ function adminLogout() {
 			if ("error" in data) {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
-				document.location = '?goto=oidplus:system';
+				window.location.href = '?goto=oidplus:system';
 				// reloadContent();
 			} else {
 				alert("Error: " + data);

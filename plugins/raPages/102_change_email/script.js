@@ -35,10 +35,10 @@ function changeRaEmailFormOnSubmit(isadmin) {
 					alert("eMail adress of RA changed");
 					//openOidInPanel('oidplus:rainfo$'+$("#new_email").val(),true);
 					// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs
-					document.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#new_email").val());
+					window.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#new_email").val());
 				} else {
 					alert("Verification eMail sent");
-					//document.location = '?goto=oidplus:system';
+					//window.location.href = '?goto=oidplus:system';
 					//reloadContent();
 				}
 			} else {
@@ -69,7 +69,7 @@ function activateNewRaEmailFormOnSubmit() {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
 				alert("Done");
-				document.location = '?goto=oidplus:system';
+				window.location.href = '?goto=oidplus:system';
 				//reloadContent();
 			} else {
 				alert("Error: " + data);

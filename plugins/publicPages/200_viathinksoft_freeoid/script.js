@@ -34,7 +34,7 @@ function freeOIDFormOnSubmit() {
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 			} else if (data.status == 0) {
 				alert("Instructions have been sent via email.");
-				document.location = '?goto=oidplus:system';
+				window.location.href = '?goto=oidplus:system';
 				//reloadContent();
 			} else {
 				alert("Error: " + data);
@@ -68,7 +68,7 @@ function activateFreeOIDFormOnSubmit() {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
 				alert("Registration successful! You can now log in.");
-				document.location = '?goto=oidplus:login';
+				window.location.href = '?goto=oidplus:login';
 				//reloadContent();
 			} else {
 				alert("Error: " + data);

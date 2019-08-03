@@ -34,7 +34,7 @@ function forgotPasswordFormOnSubmit() {
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 			} else if (data.status == 0) {
 				alert("E-Mail sent.");
-				document.location = '?goto=oidplus:login';
+				window.location.href = '?goto=oidplus:login';
 				//reloadContent();
 			} else {
 				alert("Error: " + data);
@@ -65,7 +65,7 @@ function resetPasswordFormOnSubmit() {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
 				alert("Password sucessfully changed. You can now log in.");
-				document.location = '?goto=oidplus:login';
+				window.location.href = '?goto=oidplus:login';
 				//reloadContent();
 			} else {
 				alert("Error: " + data);

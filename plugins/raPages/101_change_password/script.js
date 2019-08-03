@@ -34,7 +34,7 @@ function raChangePasswordFormOnSubmit() {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
 				alert("Done");
-				//document.location = '?goto=oidplus:system';
+				//window.location.href = '?goto=oidplus:system';
 				//reloadContent();
 			} else {
 				alert("Error: " + data);

@@ -35,7 +35,7 @@ function adminCreateRaFormOnSubmit() {
 				alert("Account created");
 				//openOidInPanel('oidplus:rainfo$'+$("#email").val(),true);
 				// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs
-				document.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#email").val());
+				window.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#email").val());
 			} else {
 				alert("Error: " + data);
 			}

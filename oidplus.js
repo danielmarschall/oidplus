@@ -71,7 +71,7 @@ function getTreeLoadURL() {
 }
 
 function reloadContent() {
-	// document.location = "?goto="+encodeURIComponent(current_node);
+	// window.location.href = "?goto="+encodeURIComponent(current_node);
 	openOidInPanel(current_node, false);
 	$('#oidtree').jstree("refresh");
 }
@@ -224,7 +224,7 @@ function updateDesc() {
 }
 
 function crudActionSendInvitation(origin, email) {
-	// document.location = "?goto=oidplus:invite_ra$"+encodeURIComponent(email)+"$"+encodeURIComponent(origin);
+	// window.location.href = "?goto=oidplus:invite_ra$"+encodeURIComponent(email)+"$"+encodeURIComponent(origin);
 	openOidInPanel('oidplus:invite_ra$'+email+'$'+origin, false);
 }
 
@@ -347,7 +347,7 @@ function deleteRa(email, goto) {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
 				alert("Done.");
-				if (goto != null) document.location = "?goto="+encodeURIComponent(goto);
+				if (goto != null) window.location.href = "?goto="+encodeURIComponent(goto);
 				// reloadContent();
 			} else {
 				alert("Error: " + data.error);
@@ -364,12 +364,12 @@ function openAndSelectNode(childID, parentID) {
 				$('#oidtree').jstree('deselect_all').jstree('select_node', childID); // select it
 			} else {
 				// This can happen if the content page contains brand new items which are not in the treeview yet
-				document.location = "?goto="+encodeURIComponent(childID);
+				window.location.href = "?goto="+encodeURIComponent(childID);
 			}
 		}, true);
 	} else {
 		// This should usually not happen
-		document.location = "?goto="+encodeURIComponent(childID);
+		window.location.href = "?goto="+encodeURIComponent(childID);
 	}
 }
 
