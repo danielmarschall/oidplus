@@ -28,7 +28,7 @@ class OIDplusConfig {
 		$this->buildConfigArray();
 		if (!isset($this->values[$name])) {
 			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values (?, ?, ?, ?, ?)", array($name, $description, $init_value, $protected, $visible));
-			$this->values[$name] = $value;
+			$this->values[$name] = $init_value;
 		}
 	}
 

@@ -224,7 +224,7 @@ try {
 
 		if (!empty($new_ra)) {
 			$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($new_ra));
-			if (OIDplus::db()->num_rows($res) == 0) $status = 1;
+			if (OIDplus::db()->num_rows($res) == 0) $status = OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 		}
 
 		echo json_encode(array("status" => $status));
@@ -324,11 +324,11 @@ try {
 		}
 
 		$status = 0;
-
+		
 		if (!empty($ra_email)) {
 			// Do we need to notify that the RA does not exist?
 			$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
-			if (OIDplus::db()->num_rows($res) == 0) $status = 1;
+			if (OIDplus::db()->num_rows($res) == 0) $status = OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 		}
 
 		echo json_encode(array("status" => $status));

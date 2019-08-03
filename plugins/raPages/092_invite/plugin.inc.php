@@ -98,12 +98,18 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 
 	public function init($html=true) {
 		OIDplus::config()->prepareConfigKey('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0', 0, 1);
+		OIDplus::config()->prepareConfigKey('ra_invitation_enabled', 'May RAs be invited?', '1', 0, 1);
 	}
 
 	public function cfgSetValue($name, $value) {
 		if ($name == 'max_ra_invite_time') {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new Exception("Please enter a valid value.");
+			}
+		}
+		else if ($name == 'ra_invitation_enabled') {
+			if (($value != 0) && ($value != 1)) {
+				throw new Exception("Please enter a valid value: 0 or 1.");
 			}
 		}
 	}
@@ -114,8 +120,15 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 
 			$email = explode('$',$id)[1];
 			$origin = explode('$',$id)[2];
-
+			
 			$out['title'] = 'Invite a Registration Authority';
+
+			if (!OIDplus::config()->getValue('ra_invitation_enabled')) {
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = '<p>Invitations are disabled by the administrator.</p>';
+				return $out;
+			}
+
 			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/invite_ra_big.png';
 
 			try {
@@ -141,11 +154,18 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 		} else if (explode('$',$id)[0] == 'oidplus:activate_ra') {
 			$handled = true;
 
+			$out['title'] = 'Register as Registration Authority';
+
+			if (!OIDplus::config()->getValue('ra_invitation_enabled')) {
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = '<p>Invitations are disabled by the administrator.</p>';
+				return $out;
+			}
+
 			$email = explode('$',$id)[1];
 			$timestamp = explode('$',$id)[2];
 			$auth = explode('$',$id)[3];
 
-			$out['title'] = 'Register as Registration Authority';
 			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/activate_ra_big.png';
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));

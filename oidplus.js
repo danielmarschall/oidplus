@@ -247,17 +247,21 @@ function crudActionInsert(parent) {
 		success:function(data) {
 			if ("error" in data) {
 				alert("Error: " + data.error);
-			} else if (data.status == 0) {
+			} else if (data.status == 0/*OK*/) {
 				//alert("Insert OK");
 				reloadContent();
 				// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
-			} else if (data.status == 1) {
+			} else if (data.status == 1/*RaNotExisting*/) {
 				if (confirm("Update OK. However, the email address you have entered ("+document.getElementById('ra_email').value+") is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?")) {
 					crudActionSendInvitation(parent, document.getElementById('ra_email').value);
 				} else {
 					reloadContent();
 					// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
 				}
+			} else if (data.status == 2/*RaNotExistingNoInvitation*/) {
+				//alert("Insert OK");
+				reloadContent();
+				// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
 			} else {
 				alert("Error: " + data);
 			}
@@ -284,17 +288,21 @@ function crudActionUpdate(id, parent) {
 		success:function(data) {
 			if ("error" in data) {
 				alert("Error: " + data.error);
-			} else if (data.status == 0) {
+			} else if (data.status == 0/*OK*/) {
 				alert("Update OK");
 				// reloadContent();
 				$('#oidtree').jstree("refresh");
-			} else if (data.status == 1) {
+			} else if (data.status == 1/*RaNotExisting*/) {
 				if (confirm("Update OK. However, the email address you have entered ("+document.getElementById('ra_email_'+id).value+") is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?")) {
 					crudActionSendInvitation(parent, document.getElementById('ra_email_'+id).value);
 				} else {
 					// reloadContent();
 					$('#oidtree').jstree("refresh");
 				}
+			} else if (data.status == 2/*RaNotExistingNoInvitation*/) {
+				alert("Update OK");
+				// reloadContent();
+				$('#oidtree').jstree("refresh");
 			} else {
 				alert("Error: " + data);
 			}
