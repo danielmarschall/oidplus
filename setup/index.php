@@ -6,8 +6,9 @@ $own_dir = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "
 <html lang="en">
 
 <head>
-	<title>OIDplus setup</title>
+	<title>OIDplus Setup</title>
 	<meta name="robots" content="noindex">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="setup.css">
 	<script src="../3p/sha3_js/sha3.js"></script><!-- https://github.com/emn178/js-sha3 -->
 	<script src="setup.js"></script>
@@ -15,15 +16,22 @@ $own_dir = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "
 
 <body onload="rebuild()">
 
-<h1>OIDplus setup - Database connectivity</h1>
+<h1>OIDplus Setup - Configuration File Generator</h1>
+
+<p>Thank you very much for choosing OIDplus! This setup assistant will help you creating or updating the file <b>includes/config.inc.php</b>.
+Setup does not automatically write to this file. Instead, you need to copy-paste the contents into the file.
+Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.</p>
 
 <div id="step1">
 <h2>Step 1: Enter setup information</h2>
+
+<h3>Administrator password</h3>
+
 <form id="step1_form">
 <p>Which admin password do you want?<br><input id="admin_password" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="password_warn"></span></p>
 <p>Please repeat the password input:<br><input id="admin_password2" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="password_warn2"></span></p>
-<p>---</p>
 
+<h3>Database connectivity</h3>
 
 Database plugin: <select name="db_plugin" onChange="dbplugin_changed()" id="db_plugin">
 <option value="MySQL" selected="true">MySQL</option>
@@ -73,11 +81,15 @@ dbplugin_changed();
 </script>
 
 <p>Tablename prefix (e.g. <b>oidplus_</b>):<br><input id="tablename_prefix" type="text" value="oidplus_" onkeypress="rebuild()" onkeyup="rebuild()"></p>
-<p>---</p>
-<p><input id="recaptcha_enabled" type="checkbox" onclick="rebuild()"> <label for="recaptcha_enabled">RECAPTCHA Enabled</label></p>
-<p>RECAPTCHA Public key<br><input id="recaptcha_public" type="text" onkeypress="rebuild()" onkeyup="rebuild()"></p>
-<p>RECAPTCHA Private key<br><input id="recaptcha_private" type="text" onkeypress="rebuild()" onkeyup="rebuild()"></p>
-<p>---</p>
+
+<h3>ReCAPTCHA</h3>
+
+<p><input id="recaptcha_enabled" type="checkbox" onclick="rebuild()"> <label for="recaptcha_enabled">reCAPTCHA enabled</label> (<a href="https://developers.google.com/recaptcha/intro" target="_blank">more information and obtain key</a>)</p>
+<p>reCAPTCHA Public key<br><input id="recaptcha_public" type="text" onkeypress="rebuild()" onkeyup="rebuild()"></p>
+<p>reCAPTCHA Private key<br><input id="recaptcha_private" type="text" onkeypress="rebuild()" onkeyup="rebuild()"></p>
+
+<h3>TLS</h3>
+
 <p>SSL enforcement<br><select name="enforce_ssl" id="enforce_ssl" onclick="rebuild()">
 <option value="0">No SSL available (don't redirect)</option>
 <option value="1">Enforce SSL (always redirect)</option>

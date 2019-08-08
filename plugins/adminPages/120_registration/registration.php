@@ -28,20 +28,23 @@ OIDplus::init(true);
 ob_start();
 
 $step = 1;
-$do_edits = false;
 $errors_happened = false;
+$edits_possible = true;
 
 ?><!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<title>OIDplus setup</title>
+	<title>OIDplus Setup</title>
+	<meta name="robots" content="noindex">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="../../../setup/setup.css">
+	<script src="https://www.google.com/recaptcha/api.js"></script>
 </head>
 
 <body>
 
-<h1>OIDplus setup - Initial settings</h1>
+<h1>OIDplus Setup - Initial Settings</h1>
 
 <p>Your database settings are correct.</p>
 
@@ -51,6 +54,31 @@ After setup is complete, you can change all these settings if required.</p>
 <form method="POST" action="registration.php">
 <input type="hidden" name="sent" value="1">
 
+<?php
+if (RECAPTCHA_ENABLED) {
+	echo '<p><u>Step '.($step++).': Solve CAPTCHA</u></p>';
+	echo '<noscript>';
+	echo '<p><font color="red">You need to enable JavaScript to solve the CAPTCHA.</font></p>';
+	echo '</noscript>';
+	echo '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.RECAPTCHA_PUBLIC.'" }); </script>';
+	echo '<p>Before logging in, please solve the following CAPTCHA</p>';
+	echo '<p>If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="<?php echo OIDplus::system_url(); ?>setup/">setup part 1</a> again or edit includes/config.inc.php).</p>';
+	echo '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>';
+
+	if (isset($_REQUEST['sent'])) {
+		$secret=RECAPTCHA_PRIVATE;
+		$response=$_POST["g-recaptcha-response"];
+		$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
+		$captcha_success=json_decode($verify);
+		if ($captcha_success->success==false) {
+			echo '<p><font color="red"><b>CAPTCHA not sucessfully verified</b></font></p>';
+			$errors_happened = true;
+			$edits_possible = false;
+		}
+	}
+}
+?>
+
 <p><u>Step <?php echo $step++; ?>: Authentificate</u></p>
 
 <p>Please enter the administrator password you have entered before.</p>
@@ -58,18 +86,20 @@ After setup is complete, you can change all these settings if required.</p>
 <p><input type="password" name="admin_password" value=""> (<a href="<?php echo OIDplus::system_url(); ?>setup/">Forgot?</a>) <?php
 
 if (isset($_REQUEST['sent'])) {
-	if (OIDplusAuthUtils::adminCheckPassword($_REQUEST['admin_password'])) {
-		$do_edits = true;
-	} else {
-		$do_edits = false;
+	if (!OIDplusAuthUtils::adminCheckPassword($_REQUEST['admin_password'])) {
 		$errors_happened = true;
+		$edits_possible = false;
 		echo '<font color="red"><b>Wrong password</b></font>';
 	}
-} else {
-	$do_edits = false;
 }
 
 ?></p>
+
+<?php
+#------------------------
+$do_edits = isset($_REQUEST['sent']) && $edits_possible;;
+#------------------------
+?>
 
 <p><u>Step <?php echo $step++; ?>: Please enter the email address of the system administrator</u></p>
 
