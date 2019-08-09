@@ -25,7 +25,7 @@ $cont = trim(file_get_contents(__DIR__.'/sql/struct.sql'))."\n\n".
         trim(file_get_contents(__DIR__.'/sql/wellknown_other.sql'))."\n\n".
         trim(file_get_contents(__DIR__.'/sql/example.sql'))."\n\n";
 
-$table_names = array('objects', 'asn1id', 'iri', 'ra', 'config');
+$table_names = array('objects', 'asn1id', 'iri', 'ra', 'config', 'log', 'log_user', 'log_object');
 foreach ($table_names as $table) {
 	$cont = str_replace('`'.$table.'`', '`'.$prefix.$table.'`', $cont);
 }
