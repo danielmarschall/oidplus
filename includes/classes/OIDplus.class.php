@@ -94,6 +94,7 @@ class OIDplus {
 			$res = dirname($res);
 		}
 
+		if ($res == '/') $res = '';
 		$res .= '/';
 
 		if (!$relative) {
