@@ -52,7 +52,7 @@ function getMeta(metaName) {
 }
 
 function getOidPlusSystemTitle() {
-	return getMeta('OIDplus-SystemTitle')
+	return getMeta('OIDplus-SystemTitle');
 }
 
 function combine_systemtitle_and_pagetitle(systemtitle, pagetitle) {

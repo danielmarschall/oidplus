@@ -80,6 +80,7 @@ FUTURE
 - "Search" plugin: I want to search in all object types and RAs. Not first select the type.
 - How can we make sure that example objects are not exported using oid-info.com export?
 - Administrator-Interface: enable and disable object types
+- detailled change-history of each oid
 
 BUGS?
 - OIDplus does not work in Safari Mobile!
@@ -88,12 +89,10 @@ BUGS?
 
 REJECTED IDEAS
 - sollte es mehere admins geben?
-- change history of each oid
 - record first RA and current RA => X.660 does not have this requirement
 - markers DRAFT, LEAF and FROZEN etc. => use "Protected" if you want to make it invisible
 
 IDEAS
-- admin area: make a plugin that shows all plugins (Also by type, e.g. page plugin and objecttype plugin)
 - make color plugin available for everyone. Admin may permanently save the colors, but users should be able to set their own theme, saved via cookies
 - there should be a form where an RA can request an invitation, even if the superior RA did not invite them.
   the fact that a RA exists in the Object Table should permit the RA to invite theirself.
