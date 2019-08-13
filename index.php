@@ -92,7 +92,13 @@ if (class_exists('OIDplusPageAdminColors')) {
 	<script src="3p/layout/jquery.layout.min.js"></script>
 	<script src="3p/spamspan/spamspan.js"></script>
 	<script src="3p/sha3_js/sha3.js"></script><!-- https://github.com/emn178/js-sha3 -->
+	<?php
+	if (RECAPTCHA_ENABLED) {
+	?>
 	<script src="https://www.google.com/recaptcha/api.js"></script>
+	<?php
+	}
+	?>
 	<script src="https://polyfill.io/v3/polyfill.min.js?features=fetch%2CURL"></script><!-- For IE... -->
 	<script src="oidplus.min.js.php"></script>
 

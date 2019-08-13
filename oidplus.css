@@ -300,6 +300,11 @@ textarea,input[type="text"],input[type="password"],select {
 	border: #AAAAAA 1px solid;
 }
 
+
+input[type=button], input[type=submit], input[type=reset] {
+	cursor:pointer;
+}
+
 /**
  *	Splitter / uiLayout
  */

@@ -21,3 +21,7 @@ body {
 	background-image: url("setup_bg.png");
 	background-repeat: repeat;
 }
+
+input[type=button], input[type=submit], input[type=reset] {
+	cursor:pointer;
+}

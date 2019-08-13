@@ -39,7 +39,13 @@ $edits_possible = true;
 	<meta name="robots" content="noindex">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="../../../setup/setup.css">
+	<?php
+	if (RECAPTCHA_ENABLED) {
+	?>
 	<script src="https://www.google.com/recaptcha/api.js"></script>
+	<?php
+	}
+	?>
 </head>
 
 <body>
