@@ -17,9 +17,12 @@
  * limitations under the License.
  */
 
+declare(ticks=1);
+
 include __DIR__ . '/../includes/oidplus.inc.php';
 include __DIR__ . '/../includes/config.inc.php';
 include __DIR__ . '/phpsvnclient.inc.php';
+require_once __DIR__ . '/vnag_framework.inc.php';
 
 define('OIDPLUS_REPO', 'https://svn.viathinksoft.com/svn/oidplus');
 
@@ -74,6 +77,22 @@ if (isset($_REQUEST['update_now'])) {
 
 } else {
 
+	class VNagMonitorDummy extends VNag {
+		private $status;
+		private $content;
+
+		public function __construct($status, $content) {
+			parent::__construct();
+			$this->status = $status;
+			$this->content = $content;
+		}
+
+		protected function cbRun($optional_args=array()) {
+			$this->setStatus($this->status);
+			$this->setHeadline($this->content);
+		}
+	}
+
 	?>
 
 	<p><u>There are two possibilities how to keep OIDplus up-to-date:</u></p>
@@ -96,8 +115,16 @@ if (isset($_REQUEST['update_now'])) {
 
 	if ($svn_wc_exists && $snapshot_exists) {
 		echo '<font color="red">ERROR: Both, oidplus_version.txt and .svn directory exist! Therefore, the version is ambigous!</font>';
+		$job = new VNagMonitorDummy(VNag::STATUS_CRITICAL, "ERROR: Both, oidplus_version.txt and .svn directory exist! Therefore, the version is ambigous!");
+		$job->http_visual_output = false;
+		$job->run();
+		unset($job);
 	} else if (!$svn_wc_exists && !$snapshot_exists) {
 		echo '<font color="red">ERROR: Neither oidplus_version.txt, nor .svn directory exist! Therefore, the version cannot be determined and the update needs to be applied manually!</font>';
+		$job = new VNagMonitorDummy(VNag::STATUS_CRITICAL, "Neither oidplus_version.txt, nor .svn directory exist! Therefore, the version cannot be determined and the update needs to be applied manually!");
+		$job->http_visual_output = false;
+		$job->run();
+		unset($job);
 	} else if ($svn_wc_exists) {
 		echo '<p>You are using <b>method A</b> (SVN working copy).</p>';
 
@@ -110,8 +137,16 @@ if (isset($_REQUEST['update_now'])) {
 
 		if ($local_installation == $newest_version) {
 			echo '<p><font color="green">You are already using the latest version of OIDplus.</font></p>';
+			$job = new VNagMonitorDummy(VNag::STATUS_OK, "You are using the latest version of OIDplus ($local_installation local / $newest_version remote)");
+			$job->http_visual_output = false;
+			$job->run();
+			unset($job);
 		} else {
 			echo '<p><font color="blue">Please enter <code>svn update</code> into the SSH shell to update OIDplus to the latest version.</font></p>';
+			$job = new VNagMonitorDummy(VNag::STATUS_WARNING, "OIDplus is outdated. ($local_installation local / $newest_version remote)");
+			$job->http_visual_output = false;
+			$job->run();
+			unset($job);
 		}
 
 	} else if ($snapshot_exists) {
@@ -126,6 +161,10 @@ if (isset($_REQUEST['update_now'])) {
 
 		if ($local_installation == $newest_version) {
 			echo '<p><font color="green">You are already using the latest version of OIDplus.</font></p>';
+			$job = new VNagMonitorDummy(VNag::STATUS_OK, "You are using the latest version of OIDplus ($local_installation local / $newest_version remote)");
+			$job->http_visual_output = false;
+			$job->run();
+			unset($job);
 		} else {
 			echo '<p><font color="blue">To update your OIDplus installation, please enter your password and click the button "Update NOW".</font></p>';
 			echo '<p><font color="red">WARNING: Please make a backup of your files before updating. In case of an error, the OIDplus installation (including this update-assistant) might become unavailable. Also, since the web-update does not contain collission-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost!</font></p>';
@@ -149,12 +188,18 @@ if (isset($_REQUEST['update_now'])) {
 			echo '<pre>';
 			$svn->updateWorkingCopy('/trunk', dirname(__DIR__), true);
 			echo '</pre>';
+			$job = new VNagMonitorDummy(VNag::STATUS_WARNING, "OIDplus is outdated. ($local_installation local / $newest_version remote)");
+			$job->http_visual_output = false;
+			$job->run();
+			unset($job);
 		}
 	}
 
 	echo '<hr>';
 
 	echo '<p><input type="button" onclick="document.location=\'../\'" value="Go back to OIDplus"></p>';
+
+	echo '<br><p>Did you know that this page contains an invisible VNag tag? You can watch this page using the "webreader" plugin of VNag, and then monitor it with any Nagios compatible software! <a href="https://www.viathinksoft.com/projects/vnag">More information</a>.</p>';
 }
 
 ?>

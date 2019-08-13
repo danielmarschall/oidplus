@@ -104,7 +104,7 @@ IDEAS
 - let the sysadmin decide if they want the title be "systemtitle - object title" or "object title - systemtitle"
 - should a RA be able to mark their own oid as confidential, instead of asking the superior RA?
 - sollte es eine oidplus projektseite geben anstelle nur das nackte system?
-- vendor signature to plugins
+- vendor signature to plugins + viathinksoft signatures + "check" program if all signatures match
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie
