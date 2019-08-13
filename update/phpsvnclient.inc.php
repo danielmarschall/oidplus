@@ -262,14 +262,14 @@ class phpsvnclient
 				// Add dirs
 				foreach ($objects_list['dirs'] as $file) {
 					if ($file != '') {
-						$file = str_replace($folder, "", $file);
-						$file = $outPath . '/' . $file;
-						$file = str_replace("///", "/", $file);
+						$localPath = str_replace($folder, "", $file);
+                                                $localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
+
 						echo "Added or modified directory: $file\n";
 						flush();
 						if (!$preview) {
-							$this->createDirs($file);
-							if (!is_dir($file)) {
+							$this->createDirs($localPath);
+							if (!is_dir($localPath)) {
 								$errors_happened = true;
 								echo "=> FAILED\n";
 								flush();
@@ -282,15 +282,14 @@ class phpsvnclient
 				// Add files
 				foreach ($objects_list['files'] as $file) {
 					if ($file != '') {
-						$createPath = str_replace($folder, "", $file);
-						$createPath = $outPath . '/' . $createPath;
-						$createPath = str_replace("///", "/", $createPath);
+						$localFile = str_replace($folder, "", $file);
+                                                $localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
 
 						echo "Added or modified file: $file\n";
 						flush();
 						if (!$preview) {
 							$contents = $this->getFile($file);
-							if (@file_put_contents($createPath, $contents) === false) {
+							if (@file_put_contents($localFile, $contents) === false) {
 								$errors_happened = true;
 								echo "=> FAILED\n";
 								flush();
@@ -301,15 +300,15 @@ class phpsvnclient
 				//Remove files
 				foreach ($objects_list['filesDelete'] as $file) {
 					if ($file != '') {
-						$file = str_replace($folder, "", $file);
-						$file = $outPath . '/' . $file;
-						$file = str_replace("///", "/", $file);
+						$localFile = str_replace($folder, "", $file);
+                                                $localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
+
 						echo "Removed file: $file\n";
 						flush();
 
 						if (!$preview) {
-							@unlink($file);
-							if (file_exists($file)) {
+							@unlink($localFile);
+							if (file_exists($localFile)) {
 								$errors_happened = true;
 								echo "=> FAILED\n";
 								flush();
@@ -322,15 +321,15 @@ class phpsvnclient
 				// Changed by Daniel Marschall: moved this to the end, because "add/update" requests for this directory might happen before the directory gets removed
 				foreach ($objects_list['dirsDelete'] as $file) {
 					if ($file != '') {
-						$file = str_replace($folder, "", $file);
-						$file = $outPath . '/' . $file;
-						$file = str_replace("///", "/", $file);
+						$localPath = str_replace($folder, "", $file);
+                                                $localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
+
 						echo "Removed directory: $file\n";
 						flush();
 
 						if (!$preview) {
-							$this->removeDirs($file);
-							if (is_dir($file)) {
+							$this->removeDirs($localPath);
+							if (is_dir($localPath)) {
 								$errors_happened = true;
 								echo "=> FAILED\n";
 								flush();

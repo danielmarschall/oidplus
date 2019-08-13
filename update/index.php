@@ -65,7 +65,7 @@ if (isset($_REQUEST['update_now'])) {
 			$svn->versionFile = 'oidplus_version.txt';
 			echo '<h2>Updating ...</h2>';
 			echo '<pre>';
-			$svn->updateWorkingCopy('/trunk', __DIR__.'/..', false);
+			$svn->updateWorkingCopy('/trunk', dirname(__DIR__), false);
 			echo '</pre>';
 			echo '<p><a href="index.php">Back to update page</a></p>';
 			echo '<hr>';
@@ -147,7 +147,7 @@ if (isset($_REQUEST['update_now'])) {
 			$svn = new phpsvnclient('https://svn.viathinksoft.com/svn/oidplus');
 			$svn->versionFile = 'oidplus_version.txt';
 			echo '<pre>';
-			$svn->updateWorkingCopy('/trunk', __DIR__.'/..', true);
+			$svn->updateWorkingCopy('/trunk', dirname(__DIR__), true);
 			echo '</pre>';
 		}
 	}
