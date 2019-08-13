@@ -354,12 +354,37 @@ class OIDplus {
 	}
 
 	public static function getVersion() {
-		$status = @shell_exec('svnversion '.realpath(__FILE__));
-		if (preg_match('/\d+/', $status, $match)) {
-			return 'svn-'.$match[0];
-		} else {
-			return false;
+		$svn_version = null;
+
+		if (file_exists(__DIR__ . '/../../oidplus_version.txt') && is_dir(__DIR__ . '/../../.svn')) {
+			return false; // ambigous
 		}
+
+		if (is_dir(__DIR__ . '/../../.svn')) {
+			// Try to find out the SVN version using the shell
+			$status = @shell_exec('svnversion '.realpath(__FILE__));
+			if (preg_match('/\d+/', $status, $match)) {
+				$svn_version = 'svn-'.$match[0];
+			}
+
+			// If that failed, try to get the version via SQLite3
+			if (is_null($svn_version)) {
+				$db = new SQLite3(__DIR__ . '/../../.svn/wc.db');
+				$results = $db->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
+				while ($row = $results->fetchArray()) {
+					$svn_version = 'svn-'.$row['rev'];
+				}
+			}
+		}
+
+		if (file_exists(__DIR__ . '/../../oidplus_version.txt')) {
+			$cont = file_get_contents(__DIR__ . '/../../oidplus_version.txt');
+			if (!preg_match('@Revision (\d+)@', $cont, $m))
+				return false; // File has unknown format
+			$svn_version = 'svn-'.$m[1];
+		}
+
+		return $svn_version;
 	}
 
 	private static function isSslAvailable() {
