@@ -142,11 +142,11 @@ abstract class OIDplusObject {
 		$out = array();
 
 		if (!OIDPLUS_OBJECT_CACHING) {
-			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where confidential = 0 order by ".OIDplus::db()->natOrder('id'), $roots);
+			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where confidential = 0 order by ".OIDplus::db()->natOrder('id'));
 
 			while ($row = OIDplus::db()->fetch_array($res)) {
 				$obj = self::parse($row['id']); // will be NULL if the object type is not registered
-				if ($obj) {
+				if ($obj && (!$obj->isConfidential())) {
 					$out[] = $row['id'];
 				}
 			}
@@ -156,7 +156,7 @@ abstract class OIDplusObject {
 			foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email)) {
 				if (!$confidential) {
 					$obj = self::parse($id); // will be NULL if the object type is not registered
-					if ($obj) {
+					if ($obj && (!$obj->isConfidential())) {
 						$out[] = $id;
 					}
 				}
@@ -195,7 +195,7 @@ abstract class OIDplusObject {
 
 			$curid = $this->nodeId();
 			// Recursively search for the confidential flag in the parents
-			if (isset(self::$object_info_cache[$curid])) {
+			while (isset(self::$object_info_cache[$curid])) {
 				if (self::$object_info_cache[$curid][self::CACHE_CONFIDENTIAL]) return true;
 				$curid = self::$object_info_cache[$curid][self::CACHE_PARENT];
 			}
@@ -216,7 +216,7 @@ abstract class OIDplusObject {
 			self::buildObjectInformationCache();
 
 			$curid = $this->nodeId();
-			if (isset(self::$object_info_cache[$curid])) {
+			while (isset(self::$object_info_cache[$curid])) {
 				if ($curid == $obj->nodeId()) return true;
 				$curid = self::$object_info_cache[$curid][self::CACHE_PARENT];
 			}
