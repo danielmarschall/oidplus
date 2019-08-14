@@ -33,6 +33,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 	}
 
 	public function action(&$handled) {
+		if (empty(OIDplus::config()->getValue('freeoid_root_oid'))) return;
+
 		if (isset($_POST["action"]) && ($_POST["action"] == "com.viathinksoft.freeoid.request_freeoid")) {
 			$handled = true;
 			$email = $_POST['email'];
@@ -163,7 +165,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('freeoid_root_oid', 'Root-OID of free OID service', '', 0, 1);
+		OIDplus::config()->prepareConfigKey('freeoid_root_oid', 'Root-OID of free OID service (a service where visitors can create their own OID using email verification)', '', 0, 1);
 	}
 
 	public function cfgSetValue($name, $value) {
@@ -175,6 +177,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 	}
 
 	public function gui($id, &$out, &$handled) {
+		if (empty(OIDplus::config()->getValue('freeoid_root_oid'))) return;
+
 		if (explode('$',$id)[0] == 'oidplus:com.viathinksoft.freeoid') {
 			$handled = true;
 
@@ -244,6 +248,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+		if (empty(OIDplus::config()->getValue('freeoid_root_oid'))) return false;
+
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
 		} else {
@@ -276,6 +282,4 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 	}
 }
 
-if (OIDplus::config()->getValue('freeoid_root_oid') != '') {
-	OIDplus::registerPagePlugin(new OIDplusPagePublicFreeOID());
-}
+OIDplus::registerPagePlugin(new OIDplusPagePublicFreeOID());

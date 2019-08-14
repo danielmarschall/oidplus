@@ -25,6 +25,12 @@ class OIDplusConfig {
 	protected $dirty = true;
 
 	public function prepareConfigKey($name, $description, $init_value, $protected, $visible) {
+		if (strlen($name) > 50) {
+			throw new Exception("Config key name '$name' is too long. (max 50).");
+		}
+		if (strlen($description) > 255) {
+			throw new Exception("Description for config key '$name' is too long (max 255).");
+		}
 		$this->buildConfigArray();
 		if (!isset($this->values[$name])) {
 			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values (?, ?, ?, ?, ?)", array($name, $description, $init_value, $protected, $visible));
