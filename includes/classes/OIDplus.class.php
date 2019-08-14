@@ -353,6 +353,21 @@ class OIDplus {
 		}
 	}
 
+	public static function getInstallType() {
+		if (!file_exists(__DIR__ . '/../../oidplus_version.txt') && !is_dir(__DIR__ . '/../../.svn')) {
+			return 'unknown';
+		}
+		if (file_exists(__DIR__ . '/../../oidplus_version.txt') && is_dir(__DIR__ . '/../../.svn')) {
+			return 'ambigous';
+		}
+		if (is_dir(__DIR__ . '/../../.svn')) {
+			return 'svn-wc';
+		}
+		if (file_exists(__DIR__ . '/../../oidplus_version.txt')) {
+			return 'svn-snapshot';
+		}
+	}
+
 	public static function getVersion() {
 		$svn_version = null;
 

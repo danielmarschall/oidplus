@@ -218,7 +218,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 				"admin_email" => OIDplus::config()->getValue('admin_email'),
 				"system_title" => OIDplus::config()->systemTitle(),
 				"oidinfo_xml" => @base64_encode($oidinfo_xml),
-				"root_oids" => $root_oids
+				"root_oids" => $root_oids,
+				"system_version" => OIDplus::getVersion(),
+				"system_install_type" => OIDplus::getInstallType()
 			);
 
 			$signature = '';

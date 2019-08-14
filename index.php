@@ -60,6 +60,9 @@ $sys_ver = OIDplus::getVersion();
 if (!$sys_ver) $sys_ver = 'unknown';
 header('X-OIDplus-SystemVersion:'.$sys_ver);
 
+$sys_install_type = OIDplus::getInstallType();
+header('X-OIDplus-SystemInstallType:'.$sys_install_type);
+
 $sys_title = OIDplus::config()->systemTitle();
 header('X-OIDplus-SystemTitle:'.$sys_title);
 
@@ -77,6 +80,7 @@ if (class_exists('OIDplusPageAdminColors')) {
 	<meta name="OIDplus-SystemID" content="<?php echo htmlentities($sysid_oid); ?>">
 	<meta name="OIDplus-SystemURL" content="<?php echo htmlentities($sys_url); ?>">
 	<meta name="OIDplus-SystemVersion" content="<?php echo htmlentities($sys_ver); ?>">
+	<meta name="OIDplus-SystemInstallType" content="<?php echo htmlentities($sys_install_type); ?>">
 	<meta name="OIDplus-SystemTitle" content="<?php echo htmlentities($sys_title); /* Do not remove. This meta tag is acessed via JS */ ?>">
 	<meta name="theme-color" content="#A9DCF0">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
