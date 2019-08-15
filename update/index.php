@@ -19,10 +19,11 @@
 
 declare(ticks=1);
 
-include __DIR__ . '/../includes/oidplus.inc.php';
-include __DIR__ . '/../includes/config.inc.php';
-include __DIR__ . '/phpsvnclient.inc.php';
-require_once __DIR__ . '/vnag_framework.inc.php';
+require_once __DIR__ . '/../includes/oidplus.inc.php';
+require_once __DIR__ . '/../includes/config.inc.php';
+require_once __DIR__ . '/includes/phpsvnclient.class.php';
+require_once __DIR__ . '/includes/http_class.class.php';
+require_once __DIR__ . '/includes/vnag_framework.inc.php';
 
 define('OIDPLUS_REPO', 'https://svn.viathinksoft.com/svn/oidplus');
 
@@ -97,14 +98,14 @@ if (isset($_REQUEST['update_now'])) {
 
 	<p><u>There are two possibilities how to keep OIDplus up-to-date:</u></p>
 
-	<p><b>Method A</b>: Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co <?php echo OIDPLUS_REPO; ?></code>
+	<p><b>Method A</b>: Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co <?php echo OIDPLUS_REPO; ?>/trunk</code>
 	and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and also check for
 	conflicts. Highly recommended if you have a Shell/SSH access to your webspace!</p>
 
 	<p><b>Method B:</b> Install OIDplus by downloading a ZIP file from www.viathinksoft.com, which contains a SVN snapshot, and extract it to your webspace.
 	The ZIP file contains a file named "oidplus_version.txt" which contains the SVN revision of the snapshot. This update-tool will then try to update your files
 	on-the-fly by downloading them from the ViaThinkSoft SVN repository directly in your webspace (using PHP). It is required that the files on your webspace have
-	create/write/delete permissions. Only recommended if you have no access to SSH/Linux shell.</p>
+	create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.</p>
 
 	<hr>
 
