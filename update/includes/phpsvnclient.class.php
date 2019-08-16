@@ -13,8 +13,10 @@ if (!defined('IN_OIDPLUS')) die();
  *    CHANGES by Daniel Marschall, ViaThinkSoft in 2019:
  *    - The class has been customized and contains specific changes for the software "OIDplus"
  *    - Functions which are not used in the "SVN checkout" were removed.
+ *      The only important functions are getVersion() and updateWorkingCopy()
  *    - The dependency class xml2array was converted from a class into a function and
  *      included into this class
+ *    - Added "revision log/comment" functionality
  *
  * 2. "xml2array" class
  *    Taken from http://www.php.net/manual/en/function.xml-parse.php#52567
@@ -79,8 +81,6 @@ class phpsvnclient
 	 *  @var integer
 	 */
 	public $errNro;
-
-	public $versionFile = 'version.txt'; // added by Daniel Marschall. File must have format "Revision ...\n"
 
 	/**
 	 * Number of actual revision local repository.
@@ -147,11 +147,16 @@ class phpsvnclient
 	 */
 
 	/**
-	 * Function to easily create and update a working copy of the repository.
-	 * @param type $folder Folder in remote repository
-	 * @param type $outPath Folder for storing files
-	 */
-	public function updateWorkingCopy($folder = '/trunk/', $outPath = '.', $preview = false)
+	* Updates a working copy
+	* @param $from_revision Either a revision number or a text file with the
+	*                       contents "Revision ..." (if it is a file,
+	*                       the file revision will be updated if everything
+	*                       was successful)
+	* @param $folder        SVN remote folder
+	* @param $outpath       Local path of the working copy
+	* @param $preview       Only simulate, do not write to files
+	**/
+	public function updateWorkingCopy($from_revision='version.txt', $folder = '/trunk/', $outPath = '.', $preview = false)
 	{
 		if (!is_dir($outPath)) {
 			echo "ERROR: Local path $outPath not existing\n";
@@ -159,141 +164,156 @@ class phpsvnclient
 			return false;
 		}
 
-		if (!file_exists($outPath . '/' . $this->versionFile)) { // Daniel Marschall: This is specific code for OIDplus ONLY
-			echo "ERROR: ".$this->versionFile." missing\n";
+		if (!is_numeric($from_revision)) {
+			$version_file = $from_revision;
+                        $from_revision = -1;
+
+			if (!file_exists($version_file)) {
+				echo "ERROR: $version_file missing\n";
+				flush();
+				return false;
+			} else {
+				//Obtain the number of current version number of the local copy.
+				$cont = file_get_contents($version_file);
+				if (!preg_match('@Revision (\d+)@', $cont, $m)) {
+					echo "ERROR: $version_file unknown format\n";
+					flush();
+					return false;
+				}
+				$from_revision = $m[1];
+
+				echo "Found $version_file with revision information $from_revision\n";
+				flush();
+			}
+		} else {
+			$version_file = '';
+		}
+
+		$errors_happened = false;
+
+		// First, do some read/write test (even if we are in preview mode, because we want to detect errors before it is too late)
+		$file = $outPath . '/dummy_'.uniqid().'.tmp';
+		$file = str_replace("///", "/", $file);
+		if (@file_put_contents($file, 'Write Test') === false) {
+			echo "Cannot write test file $file\n";
 			flush();
 			return false;
-		} else {
-			//Obtain the number of current version number of the local copy.
-			$cont = file_get_contents($outPath . '/' . $this->versionFile);
-			if (!preg_match('@Revision (\d+)@', $cont, $m)) {
-				echo "ERROR: ".$this->versionFile." unknown format\n";
-				flush();
-				return false;
-			}
-			$copy_version = $m[1];
-
-			echo "Found ".$this->versionFile." with revision information $copy_version\n";
+		}
+		@unlink($file);
+		if (file_exists($file)) {
+			echo "Cannot delete test file $file\n";
 			flush();
+			return false;
+		}
 
-			$errors_happened = false;
-
-			$file = $outPath . '/dummy_'.uniqid().'.tmp';
-			$file = str_replace("///", "/", $file);
-			if (@file_put_contents($file, 'Write Test') === false) {
-				echo "Cannot write test file $file\n";
-				flush();
-				return false;
-			}
-			@unlink($file);
-			if (file_exists($file)) {
-				echo "Cannot delete test file $file\n";
-				flush();
-				return false;
+		//Get a list of objects to be updated.
+		$objects_list = $this->getLogsForUpdate($folder, $from_revision + 1);
+		if (!is_null($objects_list)) {
+			// Output version information
+			foreach ($objects_list['revisions'] as $revision) {
+				echo trim("New revision ".$revision['versionName']." by ".$revision['creator']." (".$revision['date'].") ".$revision['comment'])."\n";
 			}
 
-			//Get a list of objects to be updated.
-			$objects_list = $this->getLogsForUpdate($folder, $copy_version + 1);
-			if (!is_null($objects_list)) {
-				////Lets update dirs
-				// Add dirs
-				foreach ($objects_list['dirs'] as $file) {
-					if ($file != '') {
-						$localPath = str_replace($folder, "", $file);
-                                                $localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
+			////Lets update dirs
+			// Add dirs
+			foreach ($objects_list['dirs'] as $file) {
+				if ($file != '') {
+					$localPath = str_replace($folder, "", $file);
+                                        $localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
 
-						echo "Added or modified directory: $file\n";
-						flush();
-						if (!$preview) {
-							$this->createDirs($localPath);
-							if (!is_dir($localPath)) {
-								$errors_happened = true;
-								echo "=> FAILED\n";
-								flush();
-							}
-						}
-					}
-				}
-
-				////Lets update files
-				// Add files
-				foreach ($objects_list['files'] as $file) {
-					if ($file != '') {
-						$localFile = str_replace($folder, "", $file);
-                                                $localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
-
-						echo "Added or modified file: $file\n";
-						flush();
-						if (!$preview) {
-							$contents = $this->getFile($file);
-							if (@file_put_contents($localFile, $contents) === false) {
-								$errors_happened = true;
-								echo "=> FAILED\n";
-								flush();
-							}
-						}
-					}
-				}
-				//Remove files
-				foreach ($objects_list['filesDelete'] as $file) {
-					if ($file != '') {
-						$localFile = str_replace($folder, "", $file);
-                                                $localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
-
-						echo "Removed file: $file\n";
-						flush();
-
-						if (!$preview) {
-							@unlink($localFile);
-							if (file_exists($localFile)) {
-								$errors_happened = true;
-								echo "=> FAILED\n";
-								flush();
-							}
-						}
-					}
-				}
-
-				// Remove dirs
-				// Changed by Daniel Marschall: moved this to the end, because "add/update" requests for this directory might happen before the directory gets removed
-				foreach ($objects_list['dirsDelete'] as $file) {
-					if ($file != '') {
-						$localPath = str_replace($folder, "", $file);
-                                                $localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
-
-						echo "Removed directory: $file\n";
-						flush();
-
-						if (!$preview) {
-							$this->removeDirs($localPath);
-							if (is_dir($localPath)) {
-								$errors_happened = true;
-								echo "=> FAILED\n";
-								flush();
-							}
-						}
-					}
-				}
-
-				//Update version file
-				// Changed by Daniel Marschall: Added $errors_happened
-				if (!$preview) {
-					if (!$errors_happened) {
-						if (@file_put_contents($outPath . '/' . $this->versionFile, "Revision " . $this->actVersion . "\n") === false) {
-							echo "ERROR: Could not set the revision\n";
+					echo "Added or modified directory: $file\n";
+					flush();
+					if (!$preview) {
+						$this->createDirs($localPath);
+						if (!is_dir($localPath)) {
+							$errors_happened = true;
+							echo "=> FAILED\n";
 							flush();
-							return false;
-						} else {
-							echo "Set revision to " . $this->actVersion . "\n";
-							flush();
-							return true;
 						}
-					} else {
-						echo "Revision NOT set to " . $this->actVersion . " because some files/dirs could not be updated. Please try again.\n";
+					}
+				}
+			}
+
+			////Lets update files
+			// Add files
+			foreach ($objects_list['files'] as $file) {
+				if ($file != '') {
+					$localFile = str_replace($folder, "", $file);
+                                        $localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
+
+					echo "Added or modified file: $file\n";
+					flush();
+					if (!$preview) {
+						$contents = $this->getFile($file);
+						if (@file_put_contents($localFile, $contents) === false) {
+							$errors_happened = true;
+							echo "=> FAILED\n";
+							flush();
+						}
+					}
+				}
+			}
+			//Remove files
+			foreach ($objects_list['filesDelete'] as $file) {
+				if ($file != '') {
+					$localFile = str_replace($folder, "", $file);
+                                        $localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
+
+					echo "Removed file: $file\n";
+					flush();
+
+					if (!$preview) {
+						@unlink($localFile);
+						if (file_exists($localFile)) {
+							$errors_happened = true;
+							echo "=> FAILED\n";
+							flush();
+						}
+					}
+				}
+			}
+
+			// Remove dirs
+			// Changed by Daniel Marschall: moved this to the end, because "add/update" requests for this directory might happen before the directory gets removed
+			foreach ($objects_list['dirsDelete'] as $file) {
+				if ($file != '') {
+					$localPath = str_replace($folder, "", $file);
+                                        $localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
+
+					echo "Removed directory: $file\n";
+					flush();
+
+					if (!$preview) {
+						$this->removeDirs($localPath);
+						if (is_dir($localPath)) {
+							$errors_happened = true;
+							echo "=> FAILED\n";
+							flush();
+						}
+					}
+				}
+			}
+
+			//Update version file
+			// Changed by Daniel Marschall: Added $errors_happened
+			if (!$preview && !empty($version_file)) {
+				if (!$errors_happened) {
+					if (@file_put_contents($version_file, "Revision " . $this->actVersion . "\n") === false) {
+						echo "ERROR: Could not set the revision\n";
 						flush();
 						return false;
+					} else {
+						echo "Set revision to " . $this->actVersion . "\n";
+						flush();
+						return true;
 					}
+				} else {
+					echo "Revision NOT set to " . $this->actVersion . " because some files/dirs could not be updated. Please try again.\n";
+					flush();
+					return false;
 				}
+			} else {
+				return true;
 			}
 		}
 	}
@@ -338,10 +358,55 @@ class phpsvnclient
 		if ($arrOutput = $this->rawDirectoryDump($folder, $version)) {
 			$files = array();
 			foreach ($arrOutput['children'] as $key => $value) {
-				array_walk_recursive($value, array(
-					$this,
-					'storeDirectoryFiles'
-				));
+				array_walk_recursive($value,
+					function ($item, $key) {
+						if ($key == 'name') {
+							if (($item == 'D:HREF') || ($item == 'LP1:GETLASTMODIFIED') || ($item == 'LP1:VERSION-NAME') || ($item == 'LP2:BASELINE-RELATIVE-PATH') || ($item == 'LP3:BASELINE-RELATIVE-PATH') || ($item == 'D:STATUS')) {
+								$this->lastDirectoryFiles = $item;
+							}
+						} elseif (($key == 'tagData') && ($this->lastDirectoryFiles != '')) {
+
+							// Unsure if the 1st of two D:HREF's always returns the result we want, but for now...
+							if (($this->lastDirectoryFiles == 'D:HREF') && (isset($this->storeDirectoryFiles['type'])))
+								return;
+
+							// Dump into the array
+							switch ($this->lastDirectoryFiles) {
+								case 'D:HREF':
+									$var = 'type';
+									break;
+								case 'LP1:VERSION-NAME':
+									$var = 'version';
+									break;
+								case 'LP1:GETLASTMODIFIED':
+									$var = 'last-mod';
+									break;
+								case 'LP2:BASELINE-RELATIVE-PATH':
+								case 'LP3:BASELINE-RELATIVE-PATH':
+									$var = 'path';
+									break;
+								case 'D:STATUS':
+									$var = 'status';
+									break;
+							}
+							$this->storeDirectoryFiles[$var] = $item;
+							$this->lastDirectoryFiles        = '';
+
+							// Detect 'type' as either a 'directory' or 'file'
+							if ((isset($this->storeDirectoryFiles['type'])) && (isset($this->storeDirectoryFiles['last-mod'])) && (isset($this->storeDirectoryFiles['path'])) && (isset($this->storeDirectoryFiles['status']))) {
+								$this->storeDirectoryFiles['path'] = str_replace(' ', '%20', $this->storeDirectoryFiles['path']); //Hack to make filenames with spaces work.
+								$len                               = strlen($this->storeDirectoryFiles['path']);
+								if (substr($this->storeDirectoryFiles['type'], strlen($this->storeDirectoryFiles['type']) - $len) == $this->storeDirectoryFiles['path']) {
+									$this->storeDirectoryFiles['type'] = 'file';
+								} else {
+									$this->storeDirectoryFiles['type'] = 'directory';
+								}
+							}
+						} else {
+							$this->lastDirectoryFiles = '';
+						}
+					}
+				);
 				array_push($files, $this->storeDirectoryFiles);
 				unset($this->storeDirectoryFiles);
 			}
@@ -424,11 +489,11 @@ class phpsvnclient
 		return $body;
 	}
 
-	private function getLogsForUpdate($file, $vini = 0, $vend = -1, $checkvend = true)
+	private function getLogsForUpdate($file, $vini = 0, $vend = -1)
 	{
 		$fileLogs = array();
 
-		if (($vend == -1 || $vend > $this->actVersion) && $checkvend) {
+		if ($vend == -1) {
 			$vend = $this->actVersion;
 		}
 
@@ -453,10 +518,25 @@ class phpsvnclient
 
 		$arrOutput = $this->xmlParse($body);
 
+		$revlogs = array();
+
 		$array = array();
 		foreach ($arrOutput['children'] as $value) {
-			foreach ($value['children'] as $entry) {
+			/*
+                        <S:log-item>
+			<D:version-name>164</D:version-name>
+			<S:date>2019-08-13T13:12:13.915920Z</S:date>
+			<D:comment>Update assistant bugfix</D:comment>
+			<D:creator-displayname>daniel-marschall</D:creator-displayname>
+			<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/trunk/update/index.php</S:modified-path>
+			<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/trunk/update/phpsvnclient.inc.php</S:modified-path>
+			</S:log-item>
+			*/
 
+			$versionName = '';
+			$date = '';
+			$comment = '';
+			foreach ($value['children'] as $entry) {
 				if (($entry['name'] == 'S:ADDED-PATH') || ($entry['name'] == 'S:MODIFIED-PATH') || ($entry['name'] == 'S:DELETED-PATH')) {
 					if ($entry['attrs']['NODE-KIND'] == "file") {
 						$array['objects'][] = array(
@@ -471,8 +551,20 @@ class phpsvnclient
 							'type' => 'dir'
 						);
 					}
+				} else if ($entry['name'] == 'D:VERSION-NAME') {
+					$versionName = isset($entry['tagData']) ? $entry['tagData'] : '';
+				} else if ($entry['name'] == 'S:DATE') {
+					$date = isset($entry['tagData']) ? $entry['tagData'] : '';
+				} else if ($entry['name'] == 'D:COMMENT') {
+					$comment = isset($entry['tagData']) ? $entry['tagData'] : '';
+				} else if ($entry['name'] == 'D:CREATOR-DISPLAYNAME') {
+					$creator = isset($entry['tagData']) ? $entry['tagData'] : '';
 				}
 			}
+                        $revlogs[] = array('versionName' => $versionName,
+			                   'date' => $date,
+					   'comment' => $comment,
+					   'creator' => $creator);
 		}
 		$files       = "";
 		$filesDelete = "";
@@ -534,6 +626,7 @@ class phpsvnclient
 		$out['filesDelete'] = $filesDelete;
 		$out['dirs']        = $dirs;
 		$out['dirsDelete']  = $dirsDelete;
+		$out['revisions']   = $revlogs;
 		return $out;
 	}
 
@@ -570,60 +663,6 @@ class phpsvnclient
 	/**
 	 *  Private Functions
 	 */
-
-	/**
-	 *  Callback for array_walk_recursive in public function getDirectoryFiles
-	 *
-	 *  @access private
-	 */
-	private function storeDirectoryFiles($item, $key)
-	{
-		if ($key == 'name') {
-			if (($item == 'D:HREF') || ($item == 'LP1:GETLASTMODIFIED') || ($item == 'LP1:VERSION-NAME') || ($item == 'LP2:BASELINE-RELATIVE-PATH') || ($item == 'LP3:BASELINE-RELATIVE-PATH') || ($item == 'D:STATUS')) {
-				$this->lastDirectoryFiles = $item;
-			}
-		} elseif (($key == 'tagData') && ($this->lastDirectoryFiles != '')) {
-
-			// Unsure if the 1st of two D:HREF's always returns the result we want, but for now...
-			if (($this->lastDirectoryFiles == 'D:HREF') && (isset($this->storeDirectoryFiles['type'])))
-				return;
-
-			// Dump into the array
-			switch ($this->lastDirectoryFiles) {
-				case 'D:HREF':
-					$var = 'type';
-					break;
-				case 'LP1:VERSION-NAME':
-					$var = 'version';
-					break;
-				case 'LP1:GETLASTMODIFIED':
-					$var = 'last-mod';
-					break;
-				case 'LP2:BASELINE-RELATIVE-PATH':
-				case 'LP3:BASELINE-RELATIVE-PATH':
-					$var = 'path';
-					break;
-				case 'D:STATUS':
-					$var = 'status';
-					break;
-			}
-			$this->storeDirectoryFiles[$var] = $item;
-			$this->lastDirectoryFiles        = '';
-
-			// Detect 'type' as either a 'directory' or 'file'
-			if ((isset($this->storeDirectoryFiles['type'])) && (isset($this->storeDirectoryFiles['last-mod'])) && (isset($this->storeDirectoryFiles['path'])) && (isset($this->storeDirectoryFiles['status']))) {
-				$this->storeDirectoryFiles['path'] = str_replace(' ', '%20', $this->storeDirectoryFiles['path']); //Hack to make filenames with spaces work.
-				$len                               = strlen($this->storeDirectoryFiles['path']);
-				if (substr($this->storeDirectoryFiles['type'], strlen($this->storeDirectoryFiles['type']) - $len) == $this->storeDirectoryFiles['path']) {
-					$this->storeDirectoryFiles['type'] = 'file';
-				} else {
-					$this->storeDirectoryFiles['type'] = 'directory';
-				}
-			}
-		} else {
-			$this->lastDirectoryFiles = '';
-		}
-	}
 
 	/**
 	 *  Prepare HTTP CLIENT object

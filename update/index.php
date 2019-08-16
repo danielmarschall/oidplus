@@ -19,6 +19,8 @@
 
 declare(ticks=1);
 
+set_time_limit(0);
+
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 require_once __DIR__ . '/../includes/config.inc.php';
 require_once __DIR__ . '/includes/phpsvnclient.class.php';
@@ -104,7 +106,7 @@ if (isset($_REQUEST['update_now'])) {
 
 	<p><b>Method B:</b> Install OIDplus by downloading a ZIP file from www.viathinksoft.com, which contains a SVN snapshot, and extract it to your webspace.
 	The ZIP file contains a file named "oidplus_version.txt" which contains the SVN revision of the snapshot. This update-tool will then try to update your files
-	on-the-fly by downloading them from the ViaThinkSoft SVN repository directly in your webspace (using PHP). It is required that the files on your webspace have
+	on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory using PHP. It is required that the files on your webspace have
 	create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.</p>
 
 	<hr>
@@ -131,37 +133,45 @@ if (isset($_REQUEST['update_now'])) {
 
 		$local_installation = OIDplus::getVersion();
 		$svn = new phpsvnclient(OIDPLUS_REPO);
-		$newest_version     = 'svn-'.$svn->getVersion();
+		$newest_version = 'svn-'.$svn->getVersion();
 
 		echo 'Local installation: ' . $local_installation.'<br>';
 		echo 'Latest published version: ' . $newest_version.'<br>';
 
 		if ($local_installation == $newest_version) {
 			echo '<p><font color="green">You are already using the latest version of OIDplus.</font></p>';
+
 			$job = new VNagMonitorDummy(VNag::STATUS_OK, "You are using the latest version of OIDplus ($local_installation local / $newest_version remote)");
 			$job->http_visual_output = false;
 			$job->run();
 			unset($job);
 		} else {
 			echo '<p><font color="blue">Please enter <code>svn update</code> into the SSH shell to update OIDplus to the latest version.</font></p>';
+
+			echo '<h2>Preview of update '.$local_installation.' => '.$newest_version.'</h2>';
+			$svn = new phpsvnclient(OIDPLUS_REPO);
+			echo '<pre>';
+			$svn->updateWorkingCopy(str_replace('svn-', '', $local_installation), '/trunk', dirname(__DIR__), true);
+			echo '</pre>';
+
 			$job = new VNagMonitorDummy(VNag::STATUS_WARNING, "OIDplus is outdated. ($local_installation local / $newest_version remote)");
 			$job->http_visual_output = false;
 			$job->run();
 			unset($job);
 		}
-
 	} else if ($snapshot_exists) {
 		echo '<p>You are using <b>method B</b> (Snapshot ZIP file with oidplus_version.txt file).</p>';
 
 		$local_installation = OIDplus::getVersion();
 		$svn = new phpsvnclient(OIDPLUS_REPO);
-		$newest_version     = 'svn-'.$svn->getVersion();
+		$newest_version = 'svn-'.$svn->getVersion();
 
 		echo 'Local installation: ' . $local_installation.'<br>';
 		echo 'Latest published version: ' . $newest_version.'<br>';
 
 		if ($local_installation == $newest_version) {
 			echo '<p><font color="green">You are already using the latest version of OIDplus.</font></p>';
+
 			$job = new VNagMonitorDummy(VNag::STATUS_OK, "You are using the latest version of OIDplus ($local_installation local / $newest_version remote)");
 			$job->http_visual_output = false;
 			$job->run();
@@ -183,12 +193,13 @@ if (isset($_REQUEST['update_now'])) {
 			echo '<input type="password" name="admin_password">';
 			echo '<input type="submit" value="Update NOW">';
 			echo '</form>';
-			echo '<h2>Preview</h2>';
-			$svn = new phpsvnclient('https://svn.viathinksoft.com/svn/oidplus');
-			$svn->versionFile = 'oidplus_version.txt';
+
+			echo '<h2>Preview of update '.$local_installation.' => '.$newest_version.'</h2>';
+			$svn = new phpsvnclient(OIDPLUS_REPO);
 			echo '<pre>';
-			$svn->updateWorkingCopy('/trunk', dirname(__DIR__), true);
+			$svn->updateWorkingCopy(dirname(__DIR__).'/oidplus_version.txt', '/trunk', dirname(__DIR__), true);
 			echo '</pre>';
+
 			$job = new VNagMonitorDummy(VNag::STATUS_WARNING, "OIDplus is outdated. ($local_installation local / $newest_version remote)");
 			$job->http_visual_output = false;
 			$job->run();
