@@ -21,6 +21,11 @@ declare(ticks=1);
 
 set_time_limit(0);
 
+if (!file_exists(__DIR__ . '/../includes/config.inc.php')) {
+	header('location:../setup/');
+	die();
+}
+
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 require_once __DIR__ . '/../includes/config.inc.php';
 require_once __DIR__ . '/includes/phpsvnclient.class.php';
