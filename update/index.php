@@ -76,7 +76,7 @@ if (isset($_REQUEST['update_now'])) {
 			$svn->versionFile = 'oidplus_version.txt';
 			echo '<h2>Updating ...</h2>';
 			echo '<pre>';
-			$svn->updateWorkingCopy('/trunk', dirname(__DIR__), false);
+			$svn->updateWorkingCopy(dirname(__DIR__).'/oidplus_version.txt', '/trunk', dirname(__DIR__), false);
 			echo '</pre>';
 			echo '<p><a href="index.php">Back to update page</a></p>';
 			echo '<hr>';
