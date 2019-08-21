@@ -216,7 +216,7 @@ try {
 		}
 
 		$confidential = $_POST['confidential'] == 'true';
-		if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ?, updated = now() WHERE id = ?", array($confidential, $id))) {
+		if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ?, updated = now() WHERE id = ?", array($confidential ? 1 : 0, $id))) {
 			throw new Exception('Error at setting confidential flag:' . OIDplus::db()->error());
 		}
 
@@ -306,7 +306,7 @@ try {
 			OIDplus::logger()->log("RA($ra_email)!", "Gained ownership of newly created object '$id'");
 		}
 
-		if (!OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, created) VALUES (?, ?, ?, ?, now())", array($id, $parent, $ra_email, $confidential))) {
+		if (!OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, created) VALUES (?, ?, ?, ?, now())", array($id, $parent, $ra_email, $confidential ? 1 : 0))) {
 			throw new Exception(OIDplus::db()->error());
 		}
 
@@ -324,7 +324,7 @@ try {
 		}
 
 		$status = 0;
-		
+
 		if (!empty($ra_email)) {
 			// Do we need to notify that the RA does not exist?
 			$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
