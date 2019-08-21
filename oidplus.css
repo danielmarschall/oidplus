@@ -211,7 +211,7 @@ label.padding_label {
 
 	overflow:hidden;
 }
-#system_title_bar a:hover, #system_title_bar a:active, #system_title_bar a:focus, #system_title_bar a:visited, #system_title_bar a:link {
+#system_title_bar a {
 	text-decoration:none;
 }
 
