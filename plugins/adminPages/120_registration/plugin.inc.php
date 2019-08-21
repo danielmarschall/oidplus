@@ -149,6 +149,10 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 
 		$system_url = OIDplus::system_url();
 
+		// It is very important that we set the ping time NOW, because ViaThinkSoft might contact us during the ping,
+		// and this would cause an endless loop!
+		OIDplus::config()->setValue('reg_last_ping', time());
+
 		if ($privacy_level == 2) {
 			// The user wants to unregister
 			// but we only unregister if we are registered. Check this "anonymously" (i.e. without revealing our system ID)
@@ -243,8 +247,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			// die("RES: $res\n");
 			// if ($res == 'OK') ...
 		}
-
-		OIDplus::config()->setValue('reg_last_ping', time());
 	}
 
 	public function init($html=true) {
