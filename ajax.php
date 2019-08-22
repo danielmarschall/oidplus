@@ -127,6 +127,7 @@ try {
 
 		$id = $_POST['id'];
 		$obj = OIDplusObject::parse($id);
+		if ($obj === null) throw new Exception("DELETE action failed because object '$id' cannot be parsed!");
 
 		// Prüfen ob zugelassen
 		if (!$obj->userHasParentalWriteRights()) throw new Exception('Authentification error. Please log in as the superior RA to delete this OID.');
@@ -166,6 +167,7 @@ try {
 
 		$id = $_POST['id'];
 		$obj = OIDplusObject::parse($id);
+		if ($obj === null) throw new Exception("UPDATE action failed because object '$id' cannot be parsed!");
 
 		// Prüfen ob zugelassen
 		if (!$obj->userHasParentalWriteRights()) throw new Exception('Authentification error. Please log in as the superior RA to update this OID.');
@@ -239,6 +241,7 @@ try {
 
 		$id = $_POST['id'];
 		$obj = OIDplusObject::parse($id);
+		if ($obj === null) throw new Exception("UPDATE2 action failed because object '$id' cannot be parsed!");
 
 		// Check if allowed
 		if (!$obj->userHasWriteRights()) throw new Exception('Authentification error. Please log in as the RA to update this OID.');
@@ -263,6 +266,7 @@ try {
 
 		// Check if you have write rights on the parent (to create a new object)
 		$objParent = OIDplusObject::parse($_POST['parent']);
+		if ($obj === null) throw new Exception("INSERT action failed because parent object '".$_POST['parent']."' cannot be parsed!");
 		if (!$objParent->userHasWriteRights()) throw new Exception('Authentification error. Please log in as the correct RA to insert an OID at this arc.');
 
 		// Check if the ID is valid
@@ -279,6 +283,7 @@ try {
 		}
 
 		$obj = OIDplusObject::parse($id);
+                if ($obj === null) throw new Exception("INSERT action failed because object '$id' cannot be parsed!");
 
 		// First simulate if there are any problems of ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {

@@ -19,7 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-define('SESSION_LIFETIME', 10*60); // TODO: Configure
+define('SESSION_LIFETIME', 30*60); // TODO: Configure. Current default: 30 minutes
 
 class OIDplusSessionHandler {
 
@@ -51,12 +51,16 @@ class OIDplusSessionHandler {
 		@ini_set('session.gc_maxlifetime', SESSION_LIFETIME);
 
 		$this->secret = $secret;
-
-		session_name('OIDPLUS_SESHDLR');
 	}
 
 	protected function sessionSafeStart() {
-		@session_start();
+		if (!isset($_SESSION)) {
+			// TODO: session_name() makes some problems. Leave it away for now.
+			//session_name('OIDPLUS_SESHDLR');
+			if (!session_start()) {
+				throw new Exception("Session could not be started");
+			}
+		}
 
 		if (!isset($_SESSION['ip'])) {
 			if (!isset($_SERVER['REMOTE_ADDR'])) return;

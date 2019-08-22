@@ -49,7 +49,7 @@ class OIDplusAuthUtils {
 
 		$ses->setValue('oidplus_logged_in', $list);
 
-		if ((count($list) == 0) && (!self::isAdminLoggedIn())) {
+		if (($list == '') && (!self::isAdminLoggedIn())) {
 			// Nobody logged in anymore. Destroy session cookie to make GDPR people happy
 			$ses->destroySession();
 		}
@@ -57,9 +57,12 @@ class OIDplusAuthUtils {
 
 	public static function raNumLoggedIn() {
 		$ses = OIDplus::sesHandler();
+
 		$list = $ses->getValue('oidplus_logged_in');
 		if (is_null($list)) return 0;
-		return count($list);
+
+		$ary = ($list == '') ? array() : explode('|', $list);
+		return count($ary);
 	}
 
 	public static function raLogoutAll() {
