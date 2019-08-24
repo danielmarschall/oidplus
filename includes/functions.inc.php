@@ -189,3 +189,28 @@ function verify_private_public_key($privKey, $pubKey) {
 function smallhash($data) { // get 31 bits from SHA1. Values 0..2147483647
 	return (hexdec(substr(sha1($data),-4*2)) & 2147483647);
 }
+
+function originHeaders() {
+	// CORS
+	// Author: Till Wehowski
+	
+	header("Access-Control-Allow-Credentials: true");
+	header("Access-Control-Allow-Origin: ".strip_tags(((isset($_SERVER['HTTP_ORIGIN'])) ? $_SERVER['HTTP_ORIGIN'] : "*")));
+
+	header("Access-Control-Allow-Headers: If-None-Match, X-Requested-With, Origin, X-Frdlweb-Bugs, Etag, X-Forgery-Protection-Token, X-CSRF-Token");
+
+	if (isset($_SERVER['HTTP_ORIGIN'])) {
+		header('X-Frame-Options: ALLOW-FROM '.$_SERVER['HTTP_ORIGIN']);
+	} else {
+		header_remove("X-Frame-Options");
+	}
+
+	$expose = array('Etag', 'X-CSRF-Token');
+	foreach (headers_list() as $num => $header) {
+		$h = explode(':', $header);
+		$expose[] = trim($h[0]);
+	}
+	header("Access-Control-Expose-Headers: ".implode(',',$expose));
+
+	header("Vary: Origin");
+}

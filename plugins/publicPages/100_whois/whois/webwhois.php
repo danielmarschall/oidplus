@@ -27,6 +27,7 @@ require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 OIDplus::init(true);
 
 header('Content-Type:text/plain; charset=UTF-8');
+originHeaders();
 
 // Step 0: Get request parameter
 

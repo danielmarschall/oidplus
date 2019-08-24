@@ -54,7 +54,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 		if (preg_match('@<h4>(.+)</h4>@ismU', $cont, $m)) return $m[1];
 		if (preg_match('@<h5>(.+)</h5>@ismU', $cont, $m)) return $m[1];
 		if (preg_match('@<h6>(.+)</h6>@ismU', $cont, $m)) return $m[1];
-		return basename($file);
+		return pathinfo($file, PATHINFO_FILENAME); // filename without extension
 	}
 
 	public function gui($id, &$out, &$handled) {
