@@ -12,6 +12,8 @@ IMPORTANT
 - the inactivity timer is much too fast!
 - Does the admin feature "600_log" also show all log events from all Objects and all RAs?
 - at a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
+- webwhois: different output modi:  WHOIS, CSV, JSON, S/MIME  (and add the S/MIME keypurpose to the X.509 certificates)
+- offer signature checker tool to verify WHOIS responses
 
 RFC
 - proof read
@@ -105,6 +107,7 @@ IDEAS
 - should a RA be able to mark their own oid as confidential, instead of asking the superior RA?
 - sollte es eine oidplus projektseite geben anstelle nur das nackte system?
 - vendor signature to plugins + viathinksoft signatures + "check" program if all signatures match
+- have a menu item (plugin) "latest updates" which lists OIDs that have been changed or added recently?
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie

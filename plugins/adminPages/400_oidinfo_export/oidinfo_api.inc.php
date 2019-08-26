@@ -3,7 +3,7 @@
 /**
  * OID-Info.com API by Daniel Marschall, ViaThinkSoft
  * License terms: Apache 2.0
- * Revision: 2019-07-16
+ * Revision: 2019-08-26
  */
 
 error_reporting(E_ALL | E_NOTICE | E_STRICT | E_DEPRECATED);
@@ -373,6 +373,14 @@ class OIDInfoAPI {
 			if (($desc != '') && (substr($desc, -1)) != '.') $desc .= '.';
 		} else if ($ending_dot_policy == self::OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT) {
 			$desc = preg_replace('@\\.$@', '', $desc);
+		}
+
+		// Request by O.D. 26 August 2019
+		$desc = trim($desc);
+		if (preg_match('@^[a-z]@', $desc, $m)) {
+			if (($ending_dot_policy != self::OIDINFO_CORRECT_DESC_ENFORCE_ENDING_DOT) && (strpos($desc, ' ') === false)) { // <-- added by DM
+				$desc = '"' . $desc . '"';
+			}
 		}
 
 		return $desc;

@@ -90,7 +90,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 					if ($row->protected == 1) {
 						$desc = $row->value;
 						if (strlen($desc) > 100) $desc = substr($desc, 0, 100) . '...';
-						$output .= '     <td>'.htmlentities($desc).'</td>';
+						$output .= '     <td style="word-break: break-all;">'.htmlentities($desc).'</td>';
 						$output .= '     <td>&nbsp;</td>';
 					} else {
 						$output .= '     <td><input type="text" id="config_'.$row->name.'" value="'.htmlentities($row->value).'"></td>';

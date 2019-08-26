@@ -103,6 +103,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 		$params['ignore_xhtml_light'] = false;
 
 		$nonConfidential = OIDplusObject::getAllNonConfidential();
+		natsort($nonConfidential);
 
 		foreach ($nonConfidential as $id) {
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
@@ -172,9 +173,16 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 				$elements['current-registrant']['address'] = '';
 				if ($row2) {
 					$tmp = array();
+					// Request from O.D. 26 August 2019
+					/*
 					if (!empty($row2->organization)  && ($row2->organization  != $row2->ra_name)) $tmp[] = $row2->organization;
 					if (!empty($row2->office)        && ($row2->office        != $row2->ra_name)) $tmp[] = $row2->office;
 					if (!empty($row2->personal_name) && ($row2->personal_name != $row2->ra_name)) $tmp[] = (!empty($row2->organization) ? 'c/o ' : '') . $row2->personal_name;
+					*/
+					if (!empty($row2->personal_name) && ($row2->personal_name != $row2->ra_name)) $tmp[] = $row2->personal_name;
+					if (!empty($row2->office)        && ($row2->office        != $row2->ra_name)) $tmp[] = $row2->office;
+					if (!empty($row2->organization)  && ($row2->organization  != $row2->ra_name)) $tmp[] = $row2->organization;
+					// End of request from O.D. 26 August 2019
 					if (!$row2->privacy) {
 						if (!empty($row2->street))   $tmp[] = $row2->street;
 						if (!empty($row2->zip_town)) $tmp[] = $row2->zip_town;
