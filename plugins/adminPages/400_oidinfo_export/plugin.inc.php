@@ -164,25 +164,32 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 				$elements['first-registrant']['fax'] = '';
 				$elements['first-registrant']['creation-date'] = self::_formatdate($row->created);
 
-				$elements['current-registrant']['first-name'] = $row2 ? $row2->ra_name : '';
+				$elements['current-registrant']['first-name'] = '';
 				$elements['current-registrant']['last-name'] = '';
 				$elements['current-registrant']['email'] = $row->ra_email;
-
 				$elements['current-registrant']['phone'] = '';
 				$elements['current-registrant']['fax'] = '';
 				$elements['current-registrant']['address'] = '';
 				if ($row2) {
 					$tmp = array();
-					// Request from O.D. 26 August 2019
-					/*
-					if (!empty($row2->organization)  && ($row2->organization  != $row2->ra_name)) $tmp[] = $row2->organization;
-					if (!empty($row2->office)        && ($row2->office        != $row2->ra_name)) $tmp[] = $row2->office;
-					if (!empty($row2->personal_name) && ($row2->personal_name != $row2->ra_name)) $tmp[] = (!empty($row2->organization) ? 'c/o ' : '') . $row2->personal_name;
-					*/
-					if (!empty($row2->personal_name) && ($row2->personal_name != $row2->ra_name)) $tmp[] = $row2->personal_name;
-					if (!empty($row2->office)        && ($row2->office        != $row2->ra_name)) $tmp[] = $row2->office;
-					if (!empty($row2->organization)  && ($row2->organization  != $row2->ra_name)) $tmp[] = $row2->organization;
-					// End of request from O.D. 26 August 2019
+					if (!empty($row2->personal_name)) {
+						$name_ary = split_firstname_lastname($row2->personal_name);
+						$elements['current-registrant']['first-name'] = $name_ary[0];
+						$elements['current-registrant']['last-name']  = $name_ary[1];
+						if (!empty($row2->ra_name)       ) $tmp[] = $row2->ra_name;
+						if (!empty($row2->office)        ) $tmp[] = $row2->office;
+						if (!empty($row2->organization)  ) $tmp[] = $row2->organization;
+					} else {
+						$elements['current-registrant']['first-name'] = $row2->ra_name;
+						$elements['current-registrant']['last-name']  = '';
+						if (!empty($row2->personal_name) ) $tmp[] = $row2->personal_name;
+						if (!empty($row2->office)        ) $tmp[] = $row2->office;
+						if (!empty($row2->organization)  ) $tmp[] = $row2->organization;
+					}
+
+					if ((count($tmp) > 0) && ($tmp[0] == $row2->ra_name)) array_shift($tmp);
+					array_unique($tmp);
+
 					if (!$row2->privacy) {
 						if (!empty($row2->street))   $tmp[] = $row2->street;
 						if (!empty($row2->zip_town)) $tmp[] = $row2->zip_town;
@@ -235,8 +242,8 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 	private static function repair_relative_links($str) {
 		$str = preg_replace_callback('@(href\s*=\s*([\'"]))(.+)(\\2)@ismU', function($treffer) {
 			$url = $treffer[3];
-			if ((stripos($url,'http') === false) && (stripos($url,'ftp') === false)) {
-				if (stripos($url,'www') === 0) {
+			if ((stripos($url,'http:') !== 0) && (stripos($url,'https:') !== 0) && (stripos($url,'ftp:') !== 0)) {
+				if (stripos($url,'www.') === 0) {
 					$url .= 'http://' . $url;
 				} else {
 					$url = OIDplus::system_url() . $url;

@@ -190,10 +190,17 @@ function smallhash($data) { // get 31 bits from SHA1. Values 0..2147483647
 	return (hexdec(substr(sha1($data),-4*2)) & 2147483647);
 }
 
+function split_firstname_lastname($name) {
+	$ary = explode(' ', $name);
+	$last_name = array_pop($ary);
+	$first_name = implode(' ', $ary);
+	return array($first_name, $last_name);
+}
+
 function originHeaders() {
 	// CORS
 	// Author: Till Wehowski
-	
+
 	header("Access-Control-Allow-Credentials: true");
 	header("Access-Control-Allow-Origin: ".strip_tags(((isset($_SERVER['HTTP_ORIGIN'])) ? $_SERVER['HTTP_ORIGIN'] : "*")));
 

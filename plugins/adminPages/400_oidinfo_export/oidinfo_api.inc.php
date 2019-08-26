@@ -375,14 +375,6 @@ class OIDInfoAPI {
 			$desc = preg_replace('@\\.$@', '', $desc);
 		}
 
-		// Request by O.D. 26 August 2019
-		$desc = trim($desc);
-		if (preg_match('@^[a-z]@', $desc, $m)) {
-			if (($ending_dot_policy != self::OIDINFO_CORRECT_DESC_ENFORCE_ENDING_DOT) && (strpos($desc, ' ') === false)) { // <-- added by DM
-				$desc = '"' . $desc . '"';
-			}
-		}
-
 		return $desc;
 	}
 
@@ -517,6 +509,15 @@ class OIDInfoAPI {
 
 		$elements['description'] = $this->correctDesc($elements['description'], $params, self::OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT, true);
 		$elements['information'] = $this->correctDesc($elements['information'], $params, self::OIDINFO_CORRECT_DESC_ENFORCE_ENDING_DOT, true);
+
+		// Request by O.D. 26 August 2019
+		$elements['description'] = trim($elements['description']);
+		if (preg_match('@^[a-z]@', $elements['description'], $m)) {
+			if (($ending_dot_policy != self::OIDINFO_CORRECT_DESC_ENFORCE_ENDING_DOT) && (strpos($elements['description'], ' ') === false)) { // <-- added by DM
+				$elements['description'] = '"' . $elements['description'] . '"';
+			}
+		}
+		// End request by O.D. 26. August 2019
 
 		if ($params['auto_extract_name'] || $params['auto_extract_url']) {
 			if (!empty($elements['information'])) $elements['information'] .= '<br /><br />';
