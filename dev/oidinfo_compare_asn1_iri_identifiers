@@ -1,0 +1,88 @@
+#!/usr/bin/php
+<?php
+
+require_once __DIR__ . '/../includes/oidplus.inc.php';
+
+OIDplus::init(false);
+if (!defined('OIDINFO_API_URL')) {
+	die("OIDINFO_API_URL not available (API is currently not public)\n");
+}
+
+define('VERBOSE', false);
+define('DEFAULT_EMAIL', 'oidra@viathinksoft.de');
+define('ALL_OID_LIST', '/home/oidplus/all_oids.txt'); // contains all OIDs (non-public file)
+define('DESIRED_ROOT', '1.3.6.1.4.1.37476');
+
+# ---
+
+exec("cat ".escapeshellarg(ALL_OID_LIST)." | sort | grep '^".DESIRED_ROOT."'", $out, $ec);
+
+foreach ($out as $oid) {
+	$oid = trim($oid);
+	if ($oid == '') continue;
+
+	check_oid($oid);
+}
+
+function check_oid($oid, $root=DESIRED_ROOT) {
+	$data = ft_get_oid_data($oid);
+
+	// ASN.1 IDs
+
+	if (!isset($data['oid']['identifier'])) $data['oid']['identifier'] = array();
+	if (is_array($data['oid']['identifier'])) {
+		asort($data['oid']['identifier']);
+		$oidinfo = implode('|',$data['oid']['identifier']);
+	} else {
+		$oidinfo = $data['oid']['identifier'];
+	}
+	$oidplus = array();
+	$resx = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array("oid:$oid"));
+	while ($rowx = OIDplus::db()->fetch_array($resx)) {
+		$oidplus[] = $rowx['name'];
+	}
+	asort($oidplus);
+	$oidplus = implode('|',$oidplus);
+
+	if ($oidinfo != $oidplus) {
+		echo "ASN.1 : $oid (oidinfo '$oidinfo' vs oidplus '$oidplus')\n";
+	}
+
+	// Unicode Labels
+
+	if (!isset($data['oid']['unicode-label'])) $data['oid']['unicode-label'] = array();
+	if (is_array($data['oid']['unicode-label'])) {
+		asort($data['oid']['unicode-label']);
+		$oidinfo = implode('|',$data['oid']['unicode-label']);
+	} else {
+		$oidinfo = $data['oid']['unicode-label'];
+	}
+	$oidplus = array();
+	$resx = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ?", array("oid:$oid"));
+	while ($rowx = OIDplus::db()->fetch_array($resx)) {
+		$oidplus[] = $rowx['name'];
+	}
+	asort($oidplus);
+	$oidplus = implode('|',$oidplus);
+
+	if ($oidinfo != $oidplus) {
+		echo "IRI : $oid (oidinfo '$oidinfo' vs oidplus '$oidplus')\n";
+	}
+}
+
+echo "OK\n";
+
+# ---
+
+function ft_get_oid_data($oid) {
+	$url = OIDINFO_API_URL . '&oid='.urlencode($oid);
+	$cont_json = @file_get_contents($url);
+	if (!$cont_json) {
+		sleep(5);
+                $cont_json = @file_get_contents($url);
+                if (!$cont_json) return false;
+	}
+	$data = json_decode($cont_json,true);
+
+	return $data;
+}

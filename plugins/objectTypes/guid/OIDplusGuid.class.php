@@ -24,6 +24,7 @@ class OIDplusGuid extends OIDplusObject {
 
 	public function __construct($guid) {
 		// No syntax checks, since we also allow categories.
+		$guid = preg_replace('@^\{(.+)\}$@', '\1', $guid); // remove curly braces
 		$this->guid = $guid;
 	}
 

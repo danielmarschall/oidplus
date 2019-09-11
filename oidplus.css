@@ -372,3 +372,37 @@ input[type=button], input[type=submit], input[type=reset] {
 	font-weight: bold;
 	background-color: #eeeeee;
 }
+
+/* Goto box */
+
+@media only screen and (max-width: 800px) {
+	/* Mobile */
+
+	#gotobox {
+		display: none !important; /* don't show at all. we have no space left... */
+	}
+
+}
+
+@media only screen and (min-width: 801px) {
+	/* Desktop */
+
+	#gotobox {
+		position:absolute;
+		right:10px;
+		top:10px;
+		display: none; /* will be set to 'block' by JavaScript */
+		width:30%;
+		max-width:350px;
+	}
+
+	#gotobox input[type="text"] {
+		width:calc(100% - 40px);
+	}
+
+	#gotobox input[type="button"] {
+		width:40px;
+	}
+
+}
+

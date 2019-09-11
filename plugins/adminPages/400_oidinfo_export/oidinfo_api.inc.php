@@ -3,7 +3,7 @@
 /**
  * OID-Info.com API by Daniel Marschall, ViaThinkSoft
  * License terms: Apache 2.0
- * Revision: 2019-08-26
+ * Revision: 2019-08-27
  */
 
 error_reporting(E_ALL | E_NOTICE | E_STRICT | E_DEPRECATED);
@@ -204,9 +204,16 @@ class OIDInfoAPI {
 		return $phone;
 	}
 
-	private static function strip_to_xhtml_light($str){
+	private static function strip_to_xhtml_light($str, $allow_strong_text=false) {
+		// <strong> is allowed in the XSD, but not <b>
 		$str = str_ireplace('<b>', '<strong>', $str);
 		$str = str_ireplace('</b>', '</strong>', $str);
+
+		if (!$allow_strong_text) {
+			// <strong> is only used for very important things like the word "deprecated". It should therefore not used for anything else
+			$str = str_ireplace('<strong>', '', $str);
+			$str = str_ireplace('</strong>', '', $str);
+		}
 
 		$str = preg_replace('@<\s*script.+<\s*/script.*>@isU', '', $str);
 		$str = preg_replace('@<\s*style.+<\s*/style.*>@isU', '', $str);

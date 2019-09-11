@@ -139,6 +139,7 @@ function openOidInPanel(id, reselect/*=false*/) {
 	$('#real_title').html("&nbsp;");
 	$('#real_content').html("Loading...");
 	$('#static_link').attr("href", "index.php?goto="+encodeURIComponent(id));
+	$("#gotoedit").val(id);
 
 	// Normal opening of a description
 	fetch('ajax.php?action=get_description&id='+encodeURIComponent(id))
@@ -355,7 +356,10 @@ function deleteRa(email, goto) {
 				alert("Error: " + data.error);
 			} else if (data.status == 0) {
 				alert("Done.");
-				if (goto != null) window.location.href = "?goto="+encodeURIComponent(goto);
+				if (goto != null) {
+					$("#gotoedit").val(goto);
+					window.location.href = "?goto="+encodeURIComponent(goto);
+				}
 				// reloadContent();
 			} else {
 				alert("Error: " + data.error);
@@ -372,11 +376,13 @@ function openAndSelectNode(childID, parentID) {
 				$('#oidtree').jstree('deselect_all').jstree('select_node', childID); // select it
 			} else {
 				// This can happen if the content page contains brand new items which are not in the treeview yet
+				$("#gotoedit").val(childID);
 				window.location.href = "?goto="+encodeURIComponent(childID);
 			}
 		}, true);
 	} else {
 		// This should usually not happen
+		$("#gotoedit").val(childID);
 		window.location.href = "?goto="+encodeURIComponent(childID);
 	}
 }
@@ -426,6 +432,7 @@ $(document).ready(function () {
 		var url = new URL(window.location.href);
 		var goto = url.searchParams.get("goto");
 		if (goto == null) goto = "oidplus:system"; // the page was not called with ?goto=...
+		$("#gotoedit").val(goto);
 
 		// By setting current_node, select_node() will not cause ajax.php?action=get_description to load (since we already loaded the first static content via PHP, for search engines mainly)
 		// But then we need to set the history state manually
@@ -473,6 +480,14 @@ $(document).ready(function () {
 		west__slideTrigger_open:      "mouseover",
 		center__maskContents:         true // IMPORTANT - enable iframe masking
 	});
+
+	document.getElementById('gotobox').style.display = "block";
+	$('#gotoedit').keypress(function(event) {
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if (keycode == '13') {
+			gotoButtonClicked();
+		}
+	});
 });
 
 function glayoutWorkaroundA() {
@@ -518,4 +533,8 @@ function mobileNavButtonClick(sender) {
 
 function mobileNavButtonHover(sender) {
 	sender.classList.toggle("hover");
+}
+
+function gotoButtonClicked() {
+	openOidInPanel($("#gotoedit").val(), 1);
 }

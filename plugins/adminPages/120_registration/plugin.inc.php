@@ -276,8 +276,10 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			if (OIDplus::config()->getValue('reg_wizard_done') == '1') {
 				$privacy_level = OIDplus::config()->getValue('reg_privacy');
 
-				if ((time()-OIDplus::config()->getValue('reg_last_ping') >= OIDplus::config()->getValue('reg_ping_interval'))) {
-					$this->sendRegistrationQuery();
+				if (php_sapi_name() !== 'cli') { // don't register when called from CLI, otherweise the oidinfo XML can't convert relative links into absolute links
+					if ((time()-OIDplus::config()->getValue('reg_last_ping') >= OIDplus::config()->getValue('reg_ping_interval'))) {
+						$this->sendRegistrationQuery();
+					}
 				}
 			}
 		}

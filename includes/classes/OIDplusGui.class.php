@@ -222,57 +222,33 @@ class OIDplusGui {
 				return $out;
 			}
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
-			$row = OIDplus::db()->fetch_array($res);
-
-			if (empty($row['title'])) {
-				$out['title'] = is_null($obj) ? $id : $obj->defaultTitle();
-			} else {
-				$out['title'] = $row['title'];
-			}
-			$out['icon'] = 'img/object_big.png';
-
-			if (isset($row['description'])) {
-				if (empty($row['description'])) {
-					if (empty($row['title'])) {
-						$desc = '<p><i>No description for this object available</i></p>';
-					} else {
-						$desc = $row['title'];
-					}
-				} else {
-					$desc = OIDplusGui::objDescription($row['description']);
-				}
-
-				if ($obj->userHasWriteRights()) {
-					$rand = ++self::$crudCounter;
-					$desc = '<noscript><p><b>You need to enable JavaScript to edit title or description of this object.</b></p>'.$desc.'</noscript>';
-					$desc .= '<div class="container box" style="display:none" id="descbox_'.$rand.'">';
-					$desc .= 'Title: <input type="text" name="title" id="titleedit" value="'.htmlentities($row['title']).'"><br><br>Description:<br>';
-					$desc .= self::showMCE('description', $row['description']);
-					$desc .= '<button type="button" name="update_desc" id="update_desc" class="btn btn-success btn-xs update" onclick="updateDesc()">Update description</button>';
-					$desc .= '</div>';
-					$desc .= '<script>document.getElementById("descbox_'.$rand.'").style.display = "block";</script>';
-				}
-			} else {
-				$desc = '';
-			}
+			// ---
 
 			$parent = null;
-
+			$res = null;
+			$row = null;
 			$matches_any_registered_type = false;
 			foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
 				if ($obj = $ot::parse($id)) {
 					$matches_any_registered_type = true;
-					if ((OIDplus::db()->num_rows($res) == 0) && !$obj->isRoot()){
-						http_response_code(404);
-						$out['title'] = 'Object not found';
-						$out['icon'] = 'img/error_big.png';
-						$out['text'] = 'The object <code>'.htmlentities($id).'</code> was not found in this database.';
-						return $out;
-					} else {
+					if ($obj->isRoot()) {
 						$obj->getContentPage($out['title'], $out['text'], $out['icon']);
-						$parent = $obj->getParent();
+						$parent = null; // $obj->getParent();
 						break;
+					} else {
+						$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($obj->nodeId()));
+						$row = OIDplus::db()->fetch_array($res);
+						if (OIDplus::db()->num_rows($res) == 0) {
+							http_response_code(404);
+							$out['title'] = 'Object not found';
+							$out['icon'] = 'img/error_big.png';
+							$out['text'] = 'The object <code>'.htmlentities($id).'</code> was not found in this database.';
+							return $out;
+						} else {
+							$obj->getContentPage($out['title'], $out['text'], $out['icon']);
+							$parent = $obj->getParent();
+							break;
+						}
 					}
 				}
 			}
@@ -283,6 +259,8 @@ class OIDplusGui {
 				$out['text'] = 'The object <code>'.htmlentities($id).'</code> was not found in this database.';
 				return $out;
 			}
+
+			// ---
 
 			if ($parent) {
 				if ($parent->isRoot()) {
@@ -309,6 +287,44 @@ class OIDplusGui {
 				$parent_link_text = 'Go back to front page';
 				$out['text'] = '<p><a '.oidplus_link('oidplus:system').'><img src="img/arrow_back.png" width="16"> '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 			}
+
+			// ---
+
+			if (is_null($row) || empty($row['title'])) {
+				$out['title'] = is_null($obj) ? $id : $obj->defaultTitle();
+			} else {
+				$out['title'] = $row['title'];
+			}
+			$out['icon'] = 'img/object_big.png';
+
+			// ---
+
+			if (!is_null($row) && isset($row['description'])) {
+				if (empty($row['description'])) {
+					if (empty($row['title'])) {
+						$desc = '<p><i>No description for this object available</i></p>';
+					} else {
+						$desc = $row['title'];
+					}
+				} else {
+					$desc = OIDplusGui::objDescription($row['description']);
+				}
+
+				if ($obj->userHasWriteRights()) {
+					$rand = ++self::$crudCounter;
+					$desc = '<noscript><p><b>You need to enable JavaScript to edit title or description of this object.</b></p>'.$desc.'</noscript>';
+					$desc .= '<div class="container box" style="display:none" id="descbox_'.$rand.'">';
+					$desc .= 'Title: <input type="text" name="title" id="titleedit" value="'.htmlentities($row['title']).'"><br><br>Description:<br>';
+					$desc .= self::showMCE('description', $row['description']);
+					$desc .= '<button type="button" name="update_desc" id="update_desc" class="btn btn-success btn-xs update" onclick="updateDesc()">Update description</button>';
+					$desc .= '</div>';
+					$desc .= '<script>document.getElementById("descbox_'.$rand.'").style.display = "block";</script>';
+				}
+			} else {
+				$desc = '';
+			}
+
+			// ---
 
 			if (strpos($out['text'], '%%DESC%%') !== false)
 				$out['text'] = str_replace('%%DESC%%',    $desc,                              $out['text']);

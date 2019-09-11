@@ -13,7 +13,6 @@ IMPORTANT
 - Does the admin feature "600_log" also show all log events from all Objects and all RAs?
 - at a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
 - webwhois: different output modi:  WHOIS, CSV, JSON, S/MIME  (and add the S/MIME keypurpose to the X.509 certificates)
-- offer signature checker tool to verify WHOIS responses
 
 RFC
 - proof read
@@ -26,6 +25,11 @@ OOBE/SETUP
 - There should be a "test database connection" button
 
 SMALL THINGS
+- offer signature checker tool to verify WHOIS responses
+- web svn updater: "black list" (do not overwrite specific files like favicon.ico)
+- minimum-aufklappstufen fuer alle objekte und plugins einstellbar machen, sodass z.b. alle OIDs immer bis zur stufe 2 aufgeklappt sind, wenn man OIDplus frisch öffnet
+- make use of autoloading of PHP classes
+- Revive the idea of "information objects" = OIDs that contain content
 - Things like "config()->minRaPasswordLength" should not be hardcoded functions, but rather queried with normal getValue() etc.
 - API : Make a function that checks if a RA exists, and use it everywhere where needed
 - Should we self-host polyfill due to GDPR stuff?
@@ -95,6 +99,8 @@ REJECTED IDEAS
 - markers DRAFT, LEAF and FROZEN etc. => use "Protected" if you want to make it invisible
 
 IDEAS
+- the "goto" quickbar (at the top right) could also be used to search something ...
+- ... alternatively, the "object not found" error page could link to the search plugin
 - make color plugin available for everyone. Admin may permanently save the colors, but users should be able to set their own theme, saved via cookies
 - there should be a form where an RA can request an invitation, even if the superior RA did not invite them.
   the fact that a RA exists in the Object Table should permit the RA to invite theirself.
