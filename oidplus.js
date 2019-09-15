@@ -481,6 +481,7 @@ $(document).ready(function () {
 		center__maskContents:         true // IMPORTANT - enable iframe masking
 	});
 
+	$("#gotobox").addClass("mobilehidden");
 	document.getElementById('gotobox').style.display = "block";
 	$('#gotoedit').keypress(function(event) {
 		var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -512,6 +513,8 @@ function mobileNavClose() {
 	$("#oidtree").slideUp("medium").promise().done(function() {
 		$("#oidtree").addClass("ui-layout-west");
 		$("#oidtree").show();
+//		$("#gotobox").hide();
+		$("#gotobox").addClass("mobilehidden");
 	});
 	$("#system_title_menu").removeClass("active");
 }
@@ -520,6 +523,8 @@ function mobileNavOpen() {
 	$("#oidtree").hide();
 	$("#oidtree").removeClass("ui-layout-west");
 	$("#oidtree").slideDown("medium");
+//	$("#gotobox").show();
+	$("#gotobox").removeClass("mobilehidden");
 	$("#system_title_menu").addClass("active");
 }
 

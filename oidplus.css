@@ -379,7 +379,12 @@ input[type=button], input[type=submit], input[type=reset] {
 	/* Mobile */
 
 	#gotobox {
-		display: none !important; /* don't show at all. we have no space left... */
+		/*max-width:350px;*/
+		width:75%;
+	}
+
+	.mobilehidden {
+		display:none !important;
 	}
 
 }
@@ -391,18 +396,37 @@ input[type=button], input[type=submit], input[type=reset] {
 		position:absolute;
 		right:10px;
 		top:10px;
-		display: none; /* will be set to 'block' by JavaScript */
 		width:30%;
-		max-width:350px;
+		max-width:400px;
 	}
 
-	#gotobox input[type="text"] {
-		width:calc(100% - 40px);
-	}
+}
 
-	#gotobox input[type="button"] {
-		width:40px;
-	}
+#gotobox {
+	display: none; /* will be set to 'block' by JavaScript */
 
+	line-height:1.75em;
+
+	height:55px !important;
+
+	font-style:italic;
+	font-weight:bolder;
+	float:left;
+	border-bottom:1px;
+
+	width:100%; /* required for NoScript */
+	padding-left:5px;/* required for NoScript */
+	padding-right:5px;/* required for NoScript */
+
+	padding-left:0px;
+	margin-left:0px;
+}
+
+#gotobox input[type="text"] {
+	width:calc(100% - 45px);
+}
+
+#gotobox input[type="button"] {
+	width:40px;
 }
 

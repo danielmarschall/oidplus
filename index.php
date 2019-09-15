@@ -170,13 +170,12 @@ if (class_exists('OIDplusPageAdminColors')) {
 				<span id="system_title_2"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></span>
 			</a>
 		</div>
+	</div>
 
 		<div id="gotobox">
 			<input type="text" name="goto" id="gotoedit" value="<?php echo htmlentities($static_node_id); ?>">
 			<input type="button" value="Go" onclick="gotoButtonClicked()" id="gotobutton">
 		</div>
-	</div>
-
 	<div id="oidtree" class="borderbox">
 		<!-- <noscript>
 			<p><b>Please enable JavaScript to use all features</b></p>
