@@ -211,7 +211,9 @@ class phpsvnclient
 		if (!is_null($objects_list)) {
 			// Output version information
 			foreach ($objects_list['revisions'] as $revision) {
-				echo trim("New revision ".$revision['versionName']." by ".$revision['creator']." (".$revision['date'].") ".$revision['comment'])."\n";
+				$tex = "New revision ".$revision['versionName']." by ".$revision['creator']." (".date('Y-m-d H:i:s', strtotime($revision['date'])).") ";
+				echo trim($tex . str_replace("\n", "\n".str_repeat(' ', strlen($tex)), $revision['comment']));
+				echo "\n";
 			}
 
 			////Lets update dirs

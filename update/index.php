@@ -111,7 +111,9 @@ if (isset($_REQUEST['update_now'])) {
 
 	<p><b>Method B:</b> Install OIDplus by downloading a ZIP file from www.viathinksoft.com, which contains a SVN snapshot, and extract it to your webspace.
 	The ZIP file contains a file named "oidplus_version.txt" which contains the SVN revision of the snapshot. This update-tool will then try to update your files
-	on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory using PHP. It is required that the files on your webspace have
+	on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory.
+	A change conflict detection is NOT implemented.
+	It is required that the files on your webspace have
 	create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.</p>
 
 	<hr>
@@ -153,7 +155,7 @@ if (isset($_REQUEST['update_now'])) {
 		} else {
 			echo '<p><font color="blue">Please enter <code>svn update</code> into the SSH shell to update OIDplus to the latest version.</font></p>';
 
-			echo '<h2>Preview of update '.$local_installation.' => '.$newest_version.'</h2>';
+			echo '<h2>Preview of update '.$local_installation.' &rarr; '.$newest_version.'</h2>';
 			$svn = new phpsvnclient(OIDPLUS_REPO);
 			echo '<pre>';
 			$svn->updateWorkingCopy(str_replace('svn-', '', $local_installation), '/trunk', dirname(__DIR__), true);
@@ -199,7 +201,7 @@ if (isset($_REQUEST['update_now'])) {
 			echo '<input type="submit" value="Update NOW">';
 			echo '</form>';
 
-			echo '<h2>Preview of update '.$local_installation.' => '.$newest_version.'</h2>';
+			echo '<h2>Preview of update '.$local_installation.' &rarr; '.$newest_version.'</h2>';
 			$svn = new phpsvnclient(OIDPLUS_REPO);
 			echo '<pre>';
 			$svn->updateWorkingCopy(dirname(__DIR__).'/oidplus_version.txt', '/trunk', dirname(__DIR__), true);
