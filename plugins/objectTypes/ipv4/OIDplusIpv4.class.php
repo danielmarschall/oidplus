@@ -36,6 +36,7 @@ class OIDplusIpv4 extends OIDplusObject {
 			if (!is_numeric($cidr)) throw new Exception("Invalid IPv4");
 			if ($cidr < 0) throw new Exception("Invalid IPv4");
 			if ($cidr > 32) throw new Exception("Invalid IPv4");
+			$this->bare = ipv4_normalize($this->bare);
 		}
 	}
 
@@ -77,6 +78,7 @@ class OIDplusIpv4 extends OIDplusObject {
 			}
 		}
 
+		$str = ipv4_normalize($str);
 		return 'ipv4:'.$str; // overwrite; no hierarchical tree
 	}
 

@@ -99,6 +99,7 @@ REJECTED IDEAS
 - markers DRAFT, LEAF and FROZEN etc. => use "Protected" if you want to make it invisible
 
 IDEAS
+- when an object was not found, the error message could show the next possible known object (like WebWHOIS does)
 - the "goto" quickbar (at the top right) could also be used to search something ...
 - ... alternatively, the "object not found" error page could link to the search plugin
 - make color plugin available for everyone. Admin may permanently save the colors, but users should be able to set their own theme, saved via cookies

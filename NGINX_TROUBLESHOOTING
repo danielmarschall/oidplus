@@ -1,0 +1,12 @@
+
+If you get HTTP error 502 with NGINX, or the error log message
+"upstream sent too big header while reading response header from upstream",
+following settings might solve the problem:
+
+proxy_intercept_errors on;
+fastcgi_buffers 16 16k;
+fastcgi_buffer_size 32k;
+proxy_buffer_size   128k;
+proxy_buffers   4 256k;
+proxy_busy_buffers_size   256k;
+

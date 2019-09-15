@@ -129,7 +129,7 @@ try {
 		$obj = OIDplusObject::parse($id);
 		if ($obj === null) throw new Exception("DELETE action failed because object '$id' cannot be parsed!");
 
-		// Prüfen ob zugelassen
+		// Check if permitted
 		if (!$obj->userHasParentalWriteRights()) throw new Exception('Authentification error. Please log in as the superior RA to delete this OID.');
 
 		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Object '$id' (recursively) deleted");
@@ -169,7 +169,7 @@ try {
 		$obj = OIDplusObject::parse($id);
 		if ($obj === null) throw new Exception("UPDATE action failed because object '$id' cannot be parsed!");
 
-		// Prüfen ob zugelassen
+		// Check if permitted
 		if (!$obj->userHasParentalWriteRights()) throw new Exception('Authentification error. Please log in as the superior RA to update this OID.');
 
 		// Validate RA email address

@@ -36,6 +36,7 @@ class OIDplusIpv6 extends OIDplusObject {
 			if (!is_numeric($cidr)) throw new Exception("Invalid IPv6");
 			if ($cidr < 0) throw new Exception("Invalid IPv6");
 			if ($cidr > 128) throw new Exception("Invalid IPv6");
+			$this->bare = ipv6_normalize($this->bare);
 		}
 	}
 
@@ -77,6 +78,7 @@ class OIDplusIpv6 extends OIDplusObject {
 			}
 		}
 
+		$str = ipv4_normalize($str);
 		return 'ipv6:'.$str; // overwrite; no hierarchical tree
 	}
 

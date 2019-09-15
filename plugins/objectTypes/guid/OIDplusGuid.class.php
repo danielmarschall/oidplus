@@ -23,9 +23,11 @@ class OIDplusGuid extends OIDplusObject {
 	private $guid;
 
 	public function __construct($guid) {
-		// No syntax checks, since we also allow categories.
-		$guid = preg_replace('@^\{(.+)\}$@', '\1', $guid); // remove curly braces
-		$this->guid = $guid;
+		if (uuid_valid($guid)) {
+			$this->guid = uuid_canonize($guid); // It is a real GUID (leaf node)
+		} else {
+			$this->guid = $guid; // It is a category name
+		}
 	}
 
 	public static function parse($node_id) {
@@ -61,7 +63,7 @@ class OIDplusGuid extends OIDplusObject {
 	public function addString($str) {
 		if (uuid_valid($str)) {
 			// real GUID
-			return 'guid:'.$str;
+			return 'guid:'.uuid_canonize($str);
 		} else {
 			// just a category
 			return 'guid:'.$this->guid.'/'.$str;
