@@ -266,7 +266,7 @@ try {
 
 		// Check if you have write rights on the parent (to create a new object)
 		$objParent = OIDplusObject::parse($_POST['parent']);
-		if ($obj === null) throw new Exception("INSERT action failed because parent object '".$_POST['parent']."' cannot be parsed!");
+		if ($objParent === null) throw new Exception("INSERT action failed because parent object '".$_POST['parent']."' cannot be parsed!");
 		if (!$objParent->userHasWriteRights()) throw new Exception('Authentification error. Please log in as the correct RA to insert an OID at this arc.');
 
 		// Check if the ID is valid
