@@ -21,14 +21,40 @@ if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusLogger {
 
+	private static function split_maskcodes($maskcodes) {
+		$out = array();
+
+		$code = '';
+		$bracket_level = 0;
+		for ($i=0; $i<strlen($maskcodes); $i++) {
+			$char = $maskcodes[$i];
+			if ($char == '(') $bracket_level++;
+			if ($char == ')') {
+				$bracket_level--;
+				if ($bracket_level < 0) return false;
+			}
+			if ((($char == '+') || ($char == '/')) && ($bracket_level == 0)) {
+				$out[] = $code;
+				$code = '';
+			} else {
+				$code .= $char;
+			}
+		}
+		if ($code != '') $out[] = $code;
+
+		return $out;
+	}
+
 	public function log($maskcodes, $event) {
 
 		$users = array();
 		$objects = array();
 
-		$maskcodes = str_replace('/', '+', $maskcodes);
-		$maskcodes = explode('+', $maskcodes);
-		foreach ($maskcodes as $maskcode) {
+		$maskcodes_ary = self::split_maskcodes($maskcodes);
+		if ($maskcodes_ary === false) {
+			throw new Exception("Invalid maskcode '$maskcodes'");
+		}
+		foreach ($maskcodes_ary as $maskcode) {
 			// OID(x)	Save log entry into the logbook of: Object "x"
 			if (preg_match('@^OID\((.+)\)$@ismU', $maskcode, $m)) {
 				$object_id = $m[1];

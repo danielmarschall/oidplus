@@ -71,15 +71,20 @@ class OIDplusIpv6 extends OIDplusObject {
 	}
 
 	public function addString($str) {
+		if (strpos($str, '/') === false) $str .= "/128";
+
 		if (!$this->isRoot()) {
-			$test = (strpos($str, '/') === false) ? "$str/128" : $str;
 			if (!ipv6_in_cidr($this->bare.'/'.$this->cidr, $test)) {
 				throw new Exception("Cannot add this address, because it must be inside the address range of the superior range.");
 			}
 		}
 
-		$str = ipv4_normalize($str);
-		return 'ipv6:'.$str; // overwrite; no hierarchical tree
+		list($ipv6, $cidr) = explode('/', $str);
+		if ($cidr < 0) throw new Exception("Invalid IPv6 address '$str'");
+		if ($cidr > 128) throw new Exception("Invalid IPv6 address '$str'");
+		$ipv6N = ipv6_normalize($ipv6);
+		if (!$ipv6N) throw new Exception("Invalid IPv6 address '$str'");
+		return 'ipv6:'.$ipv6N.'/'.$cidr; // overwrite; no hierarchical tree
 	}
 
 	public function crudShowId(OIDplusObject $parent) {

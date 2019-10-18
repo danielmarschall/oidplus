@@ -71,15 +71,20 @@ class OIDplusIpv4 extends OIDplusObject {
 	}
 
 	public function addString($str) {
+		if (strpos($str, '/') === false) $str .= "/32";
+
 		if (!$this->isRoot()) {
-			$test = (strpos($str, '/') === false) ? "$str/32" : $str;
 			if (!ipv4_in_cidr($this->bare.'/'.$this->cidr, $test)) {
 				throw new Exception("Cannot add this address, because it must be inside the address range of the superior range.");
 			}
 		}
 
-		$str = ipv4_normalize($str);
-		return 'ipv4:'.$str; // overwrite; no hierarchical tree
+		list($ipv4, $cidr) = explode('/', $str);
+		if ($cidr < 0) throw new Exception("Invalid IPv4 address '$str'");
+		if ($cidr > 32) throw new Exception("Invalid IPv4 address '$str'");
+		$ipv4N = ipv4_normalize($ipv4);
+		if (!$ipv4N) throw new Exception("Invalid IPv4 address '$str'");
+		return 'ipv4:'.$ipv4N.'/'.$cidr; // overwrite; no hierarchical tree
 	}
 
 	public function crudShowId(OIDplusObject $parent) {
