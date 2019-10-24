@@ -1,0 +1,73 @@
+#!/usr/bin/php
+<?php
+
+#
+# Since OIDplus svn-184, entries in the database need to have a canonical ID
+# If the ID is not canonical (e.g. GUIDs missing hyphens), the object cannot be opened in OIDplus
+# This script re-canonizes the object IDs if required.
+#
+
+require_once __DIR__ . '/../includes/oidplus.inc.php';
+
+OIDplus::init(true);
+
+# ---
+
+$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?", array("oid:%"));
+while ($row = OIDplus::db()->fetch_array($res)) {
+	list ($ns, $ida) = explode(':', $row['id']);
+	$idb = sanitizeOID($ida);
+	if (!$idb) continue;
+	if ($ida != $idb) {
+		echo "$ida -> $idb\n";
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."log_object set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+	}
+}
+
+# ---
+
+$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?", array("ipv4:%"));
+while ($row = OIDplus::db()->fetch_array($res)) {
+	list ($ns, $ida) = explode(':', $row['id']);
+	$idb = ipv4_normalize($ida);
+	if (!$idb) continue;
+	if ($ida != $idb) {
+		echo "$ida -> $idb\n";
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."log_object set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+	}
+}
+
+# ---
+
+$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?", array("ipv6:%"));
+while ($row = OIDplus::db()->fetch_array($res)) {
+	list ($ns, $ida) = explode(':', $row['id']);
+	$idb = ipv6_normalize($ida);
+	if (!$idb) continue;
+	if ($ida != $idb) {
+		echo "$ida -> $idb\n";
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."log_object set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+	}
+}
+
+# ---
+
+$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?", array("guid:%"));
+while ($row = OIDplus::db()->fetch_array($res)) {
+	list ($ns, $ida) = explode(':', $row['id']);
+	$idb = uuid_canonize($ida);
+	if (!$idb) continue;
+	if ($ida != $idb) {
+		echo "$ida -> $idb\n";
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."log_object set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."asn1id set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."iri set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+	}
+}
+
+echo "Done.\n";
+
