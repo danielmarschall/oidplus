@@ -506,12 +506,15 @@ class OIDInfoAPI {
 		$bak_oid = $oid;
 		$oid = self::trySanitizeOID($oid);
 		if ($oid === false) {
-			$out .= "\t\t<!-- Ignored '$bak_oid', because it is not a valid OID -->\n";
-			return false;
+			fwrite(STDERR,"Ignored '$bak_oid', because it is not a valid OID\n");
+			return $err;
 		}
 
 		if ($params['creation_allowed_check']) {
-			if (!$this->oidMayCreate($oid, $params['do_online_check'], $params['do_simpleping_check'], $params['do_illegality_check'])) return $err;
+			if (!$this->oidMayCreate($oid, $params['do_online_check'], $params['do_simpleping_check'], $params['do_illegality_check'])) {
+				fwrite(STDERR,"Creation of $oid disallowed\n");
+				return $err;
+			}
 		}
 
 		$elements['description'] = $this->correctDesc($elements['description'], $params, self::OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT, true);
@@ -520,6 +523,7 @@ class OIDInfoAPI {
 		// Request by O.D. 26 August 2019
 		$elements['description'] = trim($elements['description']);
 		if (preg_match('@^[a-z]@', $elements['description'], $m)) {
+			$ending_dot_policy = self::OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT; // for description
 			if (($ending_dot_policy != self::OIDINFO_CORRECT_DESC_ENFORCE_ENDING_DOT) && (strpos($elements['description'], ' ') === false)) { // <-- added by DM
 				$elements['description'] = '"' . $elements['description'] . '"';
 			}

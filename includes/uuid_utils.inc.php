@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011-2019 Daniel Marschall, ViaThinkSoft
- * Version 2019-03-19
+ * Version 2019-10-27
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ function gen_uuid_md5_namespace($namespace_uuid, $name) {
 
 	$hash = md5($namespace_uuid.$name);
 
-	$hash[12] = '3'; // MD5
-	$hash[16] = hexdec($hash[16]) & 0x3 | 0x8; // name based
+	$hash[12] = '3'; // Set version: 3 = MD5
+	$hash[16] = dechex(hexdec($hash[16]) & 0x3 | 0x8); // Set variant to "10xx" (RFC4122)
 
 	return substr($hash,  0, 8).'-'.
 	       substr($hash,  8, 4).'-'.
@@ -47,8 +47,8 @@ function gen_uuid_sha1_namespace($namespace_uuid, $name) {
 
 	$hash = sha1($namespace_uuid.$name);
 
-	$hash[12] = '5'; // SHA1
-	$hash[16] = hexdec($hash[16]) & 0x3 | 0x8; // name based
+	$hash[12] = '5'; // Set version: 5 = SHA1
+	$hash[16] = dechex(hexdec($hash[16]) & 0x3 | 0x8); // Set variant to "10xx" (RFC4122)
 
 	return substr($hash,  0, 8).'-'.
 	       substr($hash,  8, 4).'-'.
@@ -68,7 +68,7 @@ function uuid_valid($uuid) {
 	return ($uuid == '');
 }
 
-# TODO: nicht echo
+# TODO: Don't echo
 function uuid_info($uuid) {
 	if (!uuid_valid($uuid)) return false;
 
@@ -125,7 +125,7 @@ function uuid_info($uuid) {
 			$timestamp = substr($uuid, 0, 12);
 			$ts = gmp_init($timestamp, 16);
 			$ts = gmp_add($ts, gmp_init("78883200000000"));
-			$ms = gmp_mod($ts, gmp_init("250000")); # TODO: gibt es kein divmod?
+			$ms = gmp_mod($ts, gmp_init("250000")); # TODO: is there no divmod?
 			$ts = gmp_div($ts, gmp_init("250000"));
 			$ts = gmp_strval($ts);
 			$ms = gmp_strval($ms);
@@ -167,7 +167,7 @@ function uuid_info($uuid) {
 					$timestamp = substr($uuid, 13, 3).substr($uuid, 8, 4).substr($uuid, 0, 8);
 					$ts = gmp_init($timestamp, 16);
 					$ts = gmp_sub($ts, gmp_init("122192928000000000"));
-					$ms = gmp_mod($ts, gmp_init("10000000")); # TODO: gibt es kein divmod?
+					$ms = gmp_mod($ts, gmp_init("10000000")); # TODO: is there no divmod?
 					$ts = gmp_div($ts, gmp_init("10000000"));
 					$ts = gmp_strval($ts);
 					$ms = gmp_strval($ms);
@@ -210,17 +210,17 @@ function uuid_info($uuid) {
 
 					# Timestamp: Count of 100ns intervals since 15 Oct 1582 00:00:00
 					# 1/0,0000001 = 10000000
-					$timestamp = substr($uuid, 13, 3).substr($uuid, 8, 4).'00000000'; # TODO: ist das OK so????
+					$timestamp = substr($uuid, 13, 3).substr($uuid, 8, 4).'00000000'; # TODO: is that OK????
 					$ts = gmp_init($timestamp, 16);
 					$ts = gmp_sub($ts, gmp_init("122192928000000000"));
-					$ms = gmp_mod($ts, gmp_init("10000000")); # TODO: gibt es kein divmod?
+					$ms = gmp_mod($ts, gmp_init("10000000")); # TODO: is there no divmod?
 					$ts = gmp_div($ts, gmp_init("10000000"));
 					$ts = gmp_strval($ts);
 					$ms = gmp_strval($ms);
 					$ts = gmdate('Y-m-d H:i:s', $ts);
 					echo sprintf("%-24s %s\n", "Timestamp:", "[0x$timestamp] $ts'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT');
 
-					$x = hexdec(substr($uuid, 16, 2).'00'); # TODO: ist das OK so????
+					$x = hexdec(substr($uuid, 16, 2).'00'); # TODO: is that OK????
 					$x = $x ^ 0x8000;
 					$y = dechex($x);
 					echo sprintf("%-24s %s\n", "Clock ID:", "0x$y = $x");
@@ -342,7 +342,7 @@ function uuid_to_oid($uuid) {
 
 	$uuid = str_replace(array('-', '{', '}'), '', $uuid);
 	$x = gmp_init($uuid, 16);
-	return '2.25.'.gmp_strval($x, 10); # TODO: parameter mit oder ohne leading dot
+	return '2.25.'.gmp_strval($x, 10); # TODO: parameter with or without leading dot
 }
 
 function _gen_uuid_v4() {
