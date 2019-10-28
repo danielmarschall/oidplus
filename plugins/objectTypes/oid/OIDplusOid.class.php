@@ -118,6 +118,8 @@ class OIDplusOid extends OIDplusObject {
 				$content .= '%%CRUD%%';
 			}
 		} else {
+			$title = $this->getTitle();
+
 			$content = "<h2>Technical information</h2>".$this->oidInformation().
 			           "<h2>Description</h2>%%DESC%%".
 			           "<h2>Registration Authority</h2>%%RA_INFO%%";
@@ -360,6 +362,11 @@ class OIDplusOid extends OIDplusObject {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
 		if (!($to instanceof $this)) return false;
 		return oid_distance($to->oid, $this->oid);
+	}
+
+	public function getOid() {
+		// Override this function; we already ARE an OID, so we do not need an OIDplus-Hash-OID
+		return $this->getDotNotation();
 	}
 }
 

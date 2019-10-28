@@ -290,15 +290,6 @@ class OIDplusGui {
 
 			// ---
 
-			if (is_null($row) || empty($row['title'])) {
-				$out['title'] = is_null($obj) ? $id : $obj->defaultTitle();
-			} else {
-				$out['title'] = $row['title'];
-			}
-			$out['icon'] = 'img/object_big.png';
-
-			// ---
-
 			if (!is_null($row) && isset($row['description'])) {
 				if (empty($row['description'])) {
 					if (empty($row['title'])) {

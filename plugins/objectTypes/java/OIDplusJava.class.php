@@ -109,6 +109,8 @@ class OIDplusJava extends OIDplusObject {
 				$content .= '%%CRUD%%';
 			}
 		} else {
+			$title = $this->getTitle();
+
 			$content = '<h3>'.explode(':',$this->nodeId())[1].'</h3>';
 
 			$content .= '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type

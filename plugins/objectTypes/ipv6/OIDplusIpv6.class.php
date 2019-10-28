@@ -130,6 +130,8 @@ class OIDplusIpv6 extends OIDplusObject {
 				$content .= '%%CRUD%%';
 			}
 		} else {
+			$title = $this->getTitle();
+
 			$content = '<h2>Technical information</h2>';
 
 			$content .= '<p>IPv6/CIDR: <code>' . ipv6_normalize($this->bare) . '/' . $this->cidr . '</code><br>';

@@ -114,6 +114,8 @@ class OIDplusGuid extends OIDplusObject {
 				$content .= '%%CRUD%%';
 			}
 		} else {
+			$title = $this->getTitle();
+
 			if ($this->isLeafNode()) {
 				ob_start();
 				uuid_info($this->guid);
@@ -160,6 +162,11 @@ class OIDplusGuid extends OIDplusObject {
 	public function distance($to) {
 		// Distance between GUIDs is not possible
 		return null;
+	}
+
+	public function getOid() {
+		// Override this function; we have a better way to represent an OID, so we do not need an OIDplus-Hash-OID
+		return uuid_to_oid($this->guid);
 	}
 }
 

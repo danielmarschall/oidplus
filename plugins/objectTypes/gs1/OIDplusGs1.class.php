@@ -108,6 +108,8 @@ class OIDplusGs1 extends OIDplusObject {
 				$content .= '%%CRUD%%';
 			}
 		} else {
+			$title = $this->getTitle();
+
 			if ($this->isLeafNode()) {
 				$chunked = $this->chunkedNotation(true);
 				$checkDigit = $this->checkDigit();

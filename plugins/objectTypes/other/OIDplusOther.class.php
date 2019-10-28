@@ -118,6 +118,8 @@ class OIDplusOther extends OIDplusObject {
 				$content .= '%%CRUD%%';
 			}
 		} else {
+			$title = $this->getTitle();
+
 			$content = '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
 			if (!$this->isLeafNode()) {

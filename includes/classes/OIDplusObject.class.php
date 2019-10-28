@@ -31,13 +31,11 @@ abstract class OIDplusObject {
 	}
 
 	public function getOid() {
-		if ($this->ns() == 'oid') {
-			return $this->getDotNotation();
-		} else {
-			$sid = OIDplus::system_id(true);
-			if (empty($sid)) return false;
-			return $sid . '.' . smallhash($this->nodeId());
-		}
+		// Creates an OIDplus-Hash-OID
+		// If the object type has a better way of defining an OID, please override this method!
+		$sid = OIDplus::system_id(true);
+		if (empty($sid)) return false;
+		return $sid . '.' . smallhash($this->nodeId());
 	}
 
 	public abstract static function objectTypeTitle();
@@ -350,6 +348,20 @@ abstract class OIDplusObject {
 		}
 	}
 
+	public function getTitle() {
+		if (!OIDPLUS_OBJECT_CACHING) {
+			$res = OIDplus::db()->query("select title from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($this->nodeId()));
+			$row = OIDplus::db()->fetch_array($res);
+			return $row['title'];
+		} else {
+			self::buildObjectInformationCache();
+			if (isset(self::$object_info_cache[$this->nodeId()])) {
+				return self::$object_info_cache[$this->nodeId()][self::CACHE_TITLE];
+			}
+			return false;
+		}
+	}
+
 	public function userHasParentalWriteRights($ra_email=null) {
 		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
 
@@ -425,15 +437,16 @@ abstract class OIDplusObject {
 	const CACHE_CONFIDENTIAL = 0;
 	const CACHE_PARENT = 1;
 	const CACHE_RA_EMAIL = 2;
+	const CACHE_TITLE = 3;
 
 	private static function buildObjectInformationCache() {
 		if (is_null(self::$object_info_cache)) {
 			self::$object_info_cache = array();
-			$res = OIDplus::db()->query("select id, parent, confidential, ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects");
+			$res = OIDplus::db()->query("select id, parent, confidential, ra_email, title from ".OIDPLUS_TABLENAME_PREFIX."objects");
 			while ($row = OIDplus::db()->fetch_array($res)) {
 				if ($row['confidential'] == chr(0)) $row['confidential'] = false; // ODBC...
 				if ($row['confidential'] == chr(1)) $row['confidential'] = true; // ODBC...
-				self::$object_info_cache[$row['id']] = array($row['confidential'], $row['parent'], $row['ra_email']);
+				self::$object_info_cache[$row['id']] = array($row['confidential'], $row['parent'], $row['ra_email'], $row['title']);
 			}
 		}
 	}

@@ -120,6 +120,8 @@ class OIDplusDoi extends OIDplusObject {
 				$content .= '%%CRUD%%';
 			}
 		} else {
+			$title = $this->getTitle();
+
 			$pure = explode(':',$this->nodeId())[1];
 			$content = '<h3><a target="_blank" href="https://dx.doi.org/'.htmlentities($pure).'">Resolve '.htmlentities($pure).'</a></h3>';
 

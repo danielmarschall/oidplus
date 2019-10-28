@@ -130,6 +130,8 @@ class OIDplusIpv4 extends OIDplusObject {
 				$content .= '%%CRUD%%';
 			}
 		} else {
+			$title = $this->getTitle();
+
 			$content = '<h2>Technical information</h2>';
 
 			$content .= '<p>IPv4/CIDR: <code>' . ipv4_normalize($this->bare) . '/' . $this->cidr . '</code><br>';
