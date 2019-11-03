@@ -142,9 +142,7 @@ class OIDplusOid extends OIDplusObject {
 		$weid = ($weid === false) ? "" : "<br>WEID notation: <code>" . htmlentities($weid) . "</code>";
 		return "<p>Dot notation: <code>" . $this->getDotNotation() . "</code><br>" .
 		       "ASN.1 notation: <code>{ " . $this->getAsn1Notation() . " }</code><br>" .
-		       "OID-IRI notation: <code>" . $this->getIriNotation() . "</code><br>" .
-		       "SHA1 namebased UUID: <code>".gen_uuid_sha1_namespace(UUID_NAMEBASED_NS_OID, $this->getDotNotation())."</code><br>" .
-		       "MD5 namebased UUID: <code>".gen_uuid_md5_namespace(UUID_NAMEBASED_NS_OID, $this->getDotNotation())."</code>$weid</p>";
+		       "OID-IRI notation: <code>" . $this->getIriNotation() . "</code>$weid</p>";
 	}
 
 	public function __clone() {
@@ -364,9 +362,15 @@ class OIDplusOid extends OIDplusObject {
 		return oid_distance($to->oid, $this->oid);
 	}
 
-	public function getOid() {
-		// Override this function; we already ARE an OID, so we do not need an OIDplus-Hash-OID
-		return $this->getDotNotation();
+	public function getAltIds() {
+		if ($this->isRoot()) return array();
+		$ids = parent::getAltIds();
+		if ($uuid = oid_to_uuid($this->oid)) {
+			$ids[] = array('guid', $uuid, 'GUID representation of this OID');
+		}
+		$ids[] = array('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_OID, $this->oid), 'Namebased version 3 / MD5 UUID with namespace UUID_NAMEBASED_NS_OID');
+		$ids[] = array('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OID, $this->oid), 'Namebased version 5 / SHA1 UUID with namespace UUID_NAMEBASED_NS_OID');
+		return $ids;
 	}
 }
 

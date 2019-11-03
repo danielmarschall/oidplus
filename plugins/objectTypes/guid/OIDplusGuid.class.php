@@ -124,7 +124,6 @@ class OIDplusGuid extends OIDplusObject {
 				$info = preg_replace('@:\s*(.+)\n@ismU', ": <code>\\1</code><br>", $info);
 
 				$content = "<h2>Technical information</h2><p>UUID: <code>" . uuid_canonize($this->guid) . "</code><br>" .
-				       "OID: <code>" . uuid_to_oid($this->guid) . "</code><br>" .
 				       "C++ notation: <code>" . uuid_c_syntax($this->guid) . "</code><br>" .
 				       "$info";
 				//      "<a href=\"https://misc.daniel-marschall.de/tools/uuid_mac_decoder/interprete_uuid.php?uuid=".urlencode($this->guid)."\">More technical information</a></p>";
@@ -164,9 +163,12 @@ class OIDplusGuid extends OIDplusObject {
 		return null;
 	}
 
-	public function getOid() {
-		// Override this function; we have a better way to represent an OID, so we do not need an OIDplus-Hash-OID
-		return uuid_to_oid($this->guid);
+	public function getAltIds() {
+		if ($this->isRoot()) return array();
+		if (!$this->isLeafNode()) return array();
+		$ids = parent::getAltIds();
+		$ids[] = array('oid', uuid_to_oid($this->guid), 'OID representation of UUID');
+		return $ids;
 	}
 }
 

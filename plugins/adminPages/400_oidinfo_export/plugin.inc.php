@@ -224,9 +224,12 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 				// End request O.D. 20 May 2019
 
 				$obj = OIDplusObject::parse($row->id);
-				$oid = $obj->getOid(); // TODO: slow!
-				if (empty($oid)) continue; // e.g. if no system ID is available, then we cannot submit non-OID objects
-				echo $oa->createXMLEntry($oid, $elements, $params, $comment=$obj->nodeId());
+				$alt_ids = $obj->getAltIds(); // TODO: slow!
+				foreach ($alt_ids as list($ns, $id, $desc)) {
+					if ($ns == 'oid') {
+						echo $oa->createXMLEntry($oid, $elements, $params, $comment=$obj->nodeId());
+					}
+				}
 			}
 		}
 

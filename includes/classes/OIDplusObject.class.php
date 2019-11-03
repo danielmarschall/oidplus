@@ -21,6 +21,8 @@ if (!defined('IN_OIDPLUS')) die();
 
 define('OIDPLUS_OBJECT_CACHING', true);
 
+define('UUID_NAMEBASED_NS_OidPlusMisc', 'ad1654e6-7e15-11e4-9ef6-78e3b5fc7f22');
+
 abstract class OIDplusObject {
 	public static function parse($node_id) { // please overwrite this function!
 		// TODO: in case we are not calling this class directly, check if function is overwritten and throw exception otherwise
@@ -30,12 +32,25 @@ abstract class OIDplusObject {
 		return null;
 	}
 
-	public function getOid() {
-		// Creates an OIDplus-Hash-OID
-		// If the object type has a better way of defining an OID, please override this method!
-		$sid = OIDplus::system_id(true);
-		if (empty($sid)) return false;
-		return $sid . '.' . smallhash($this->nodeId());
+	public function getAltIds() {
+		if ($this->isRoot()) return array();
+
+		$ids = array();
+		if ($this->ns() != 'oid') {
+			// Creates an OIDplus-Hash-OID
+			// If the object type has a better way of defining an OID, please override this method!
+			$sid = OIDplus::system_id(true);
+			if (!empty($sid)) {
+				$oid = $sid . '.' . smallhash($this->nodeId());
+				$ids[] = array('oid', $oid, 'OIDplus Information Object ID');
+			}
+		}
+		if ($this->ns() != 'guid') {
+			// TODO: Instead of having the array($ns,$id,$desc) we should use an object oriented class
+			$ids[] = array('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), 'Namebased version 3 / MD5 UUID with namespace UUID_NAMEBASED_NS_OidPlusMisc');
+			$ids[] = array('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), 'Namebased version 5 / SHA1 UUID with namespace UUID_NAMEBASED_NS_OidPlusMisc');
+		}
+		return $ids;
 	}
 
 	public abstract static function objectTypeTitle();
@@ -102,25 +117,19 @@ abstract class OIDplusObject {
 			self::buildObjectInformationCache();
 
 			foreach ($ra_mails_to_check as $check_ra_mail) {
-				$tmp = self::$object_info_cache;
-
-				foreach ($tmp as $id => list($confidential, $parent, $ra_email)) {
-					$tmp[$id][] = $ra_email == $check_ra_mail; // add a temporary "choose flag"
-				}
-
-				foreach ($tmp as $id => list($confidential, $parent, $ra_email, $choose_flag)) {
-					if (isset($tmp[$parent])) {
-						if ($tmp[$parent][self::CACHE_RA_EMAIL] == $ra_email) {
-							$tmp[$id][3] = false; // if the parent has the same RA, then this OID cannot be a root => remove "choose flag"
-						}
-					}
-				}
-
 				$out_part = array();
 
-				foreach ($tmp as $id => list($confidential, $parent, $ra_email, $choose_flag)) {
-					if ($choose_flag) {
-						$out_part[] = $id;
+				foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email, $title)) {
+					// If the OID RA is the RA we are searching, then add the object to the choice list
+					if ($ra_email == $check_ra_mail) $out_part[] = $id;
+				}
+
+				foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email, $title)) {
+					if (isset(self::$object_info_cache[$parent])) {
+						if (self::$object_info_cache[$parent][self::CACHE_RA_EMAIL] == $ra_email) {
+							// if the parent has the same RA, then this OID cannot be a root => remove the element from the choice list
+							foreach (array_keys($out_part, $id) as $key) unset($out_part[$key]);
+						}
 					}
 				}
 
@@ -151,7 +160,7 @@ abstract class OIDplusObject {
 		} else {
 			self::buildObjectInformationCache();
 
-			foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email)) {
+			foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email, $title)) {
 				if (!$confidential) {
 					$obj = self::parse($id); // will be NULL if the object type is not registered
 					if ($obj && (!$obj->isConfidential())) {
@@ -234,7 +243,7 @@ abstract class OIDplusObject {
 		} else {
 			self::buildObjectInformationCache();
 
-			foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email)) {
+			foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email, $title)) {
 				if ($parent == $this->nodeId()) {
 					$obj = self::parse($id);
 					if (!$obj) continue;
@@ -412,7 +421,7 @@ abstract class OIDplusObject {
 			return false;
 		} else {
 			self::buildObjectInformationCache();
-			foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email)) {
+			foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email, $title)) {
 				if (strpos($id, $obj->ns().':') === 0) {
 					$test = OIDplusObject::parse($id);
 					if ($obj->equals($test)) return $test;
@@ -434,7 +443,7 @@ abstract class OIDplusObject {
 		self::$object_info_cache = null;
 	}
 
-	const CACHE_CONFIDENTIAL = 0;
+	const CACHE_CONFIDENTIAL = 0; // TODO: An object would be better so you can use $cacheitem->isConfidential() etc.
 	const CACHE_PARENT = 1;
 	const CACHE_RA_EMAIL = 2;
 	const CACHE_TITLE = 3;

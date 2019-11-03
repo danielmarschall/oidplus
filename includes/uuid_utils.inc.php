@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011-2019 Daniel Marschall, ViaThinkSoft
- * Version 2019-10-27
+ * Version 2019-11-01
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,38 +24,6 @@ define('UUID_NAMEBASED_NS_DNS',     '6ba7b810-9dad-11d1-80b4-00c04fd430c8');
 define('UUID_NAMEBASED_NS_URL',     '6ba7b811-9dad-11d1-80b4-00c04fd430c8');
 define('UUID_NAMEBASED_NS_OID',     '6ba7b812-9dad-11d1-80b4-00c04fd430c8');
 define('UUID_NAMEBASED_NS_X500_DN', '6ba7b814-9dad-11d1-80b4-00c04fd430c8');
-
-function gen_uuid_md5_namespace($namespace_uuid, $name) {
-	$namespace_uuid = str_replace('-', '', $namespace_uuid);
-	$namespace_uuid = hex2bin($namespace_uuid);
-
-	$hash = md5($namespace_uuid.$name);
-
-	$hash[12] = '3'; // Set version: 3 = MD5
-	$hash[16] = dechex(hexdec($hash[16]) & 0x3 | 0x8); // Set variant to "10xx" (RFC4122)
-
-	return substr($hash,  0, 8).'-'.
-	       substr($hash,  8, 4).'-'.
-	       substr($hash, 12, 4).'-'.
-	       substr($hash, 16, 4).'-'.
-	       substr($hash, 20, 12);
-}
-
-function gen_uuid_sha1_namespace($namespace_uuid, $name) {
-	$namespace_uuid = str_replace('-', '', $namespace_uuid);
-	$namespace_uuid = hex2bin($namespace_uuid);
-
-	$hash = sha1($namespace_uuid.$name);
-
-	$hash[12] = '5'; // Set version: 5 = SHA1
-	$hash[16] = dechex(hexdec($hash[16]) & 0x3 | 0x8); // Set variant to "10xx" (RFC4122)
-
-	return substr($hash,  0, 8).'-'.
-	       substr($hash,  8, 4).'-'.
-	       substr($hash, 12, 4).'-'.
-	       substr($hash, 16, 4).'-'.
-	       substr($hash, 20, 12);
-}
 
 function uuid_valid($uuid) {
 	$uuid = str_replace(array('-', '{', '}'), '', $uuid);
@@ -125,12 +93,12 @@ function uuid_info($uuid) {
 			$timestamp = substr($uuid, 0, 12);
 			$ts = gmp_init($timestamp, 16);
 			$ts = gmp_add($ts, gmp_init("78883200000000"));
-			$ms = gmp_mod($ts, gmp_init("250000")); # TODO: is there no divmod?
+			$ms = gmp_mod($ts, gmp_init("250000"));
 			$ts = gmp_div($ts, gmp_init("250000"));
 			$ts = gmp_strval($ts);
 			$ms = gmp_strval($ms);
-			$ts = gmdate('Y-m-d H:i:s', $ts);
-			echo sprintf("%-24s %s\n", "Timestamp:", "[0x$timestamp] $ts'".str_pad($ms, 6, '0', STR_PAD_LEFT).' GMT');
+			$ts = gmdate('Y-m-d H:i:s', $ts)."'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT';
+			echo sprintf("%-24s %s\n", "Timestamp:", "[0x$timestamp] $ts");
 
 			$reserved = substr($uuid, 12, 4);
 			echo sprintf("%-24s %s\n", "Reserved:", "0x$reserved");
@@ -145,7 +113,7 @@ function uuid_info($uuid) {
 			} else if ($family_dec == 13) {
 				$family_ = 'DDS (Data Link)';
 			} else {
-				$family_ = "Unknown ($family_dec)"; # TODO: Find out all families [0..13]
+				$family_ = "Unknown ($family_dec)"; # There are probably no more families
 			}
 			echo sprintf("%-24s %s\n", "Family:", "[0x$family_hex = $family_dec] $family_");
 
@@ -167,17 +135,17 @@ function uuid_info($uuid) {
 					$timestamp = substr($uuid, 13, 3).substr($uuid, 8, 4).substr($uuid, 0, 8);
 					$ts = gmp_init($timestamp, 16);
 					$ts = gmp_sub($ts, gmp_init("122192928000000000"));
-					$ms = gmp_mod($ts, gmp_init("10000000")); # TODO: is there no divmod?
+					$ms = gmp_mod($ts, gmp_init("10000000"));
 					$ts = gmp_div($ts, gmp_init("10000000"));
 					$ts = gmp_strval($ts);
 					$ms = gmp_strval($ms);
-					$ts = gmdate('Y-m-d H:i:s', $ts);
-					echo sprintf("%-24s %s\n", "Timestamp:", "[0x$timestamp] $ts'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT');
+					$ts = gmdate('Y-m-d H:i:s', $ts)."'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT';
+					echo sprintf("%-24s %s\n", "Timestamp:", "[0x$timestamp] $ts");
 
 					$x = hexdec(substr($uuid, 16, 4));
-					$x = $x ^ 0x8000;
-					$y = dechex($x);
-					echo sprintf("%-24s %s\n", "Clock ID:", '0x'.strtoupper($y)." = $x");
+					$dec = $x & 0x3FFF; // The highest 2 bits are used by "variant" (10x)
+					$hex = substr($uuid, 16, 4);
+					echo sprintf("%-24s %s\n", "Clock ID:", "[0x$hex] $dec");
 
 					$x = substr($uuid, 20, 12);
 					$nodeid = '';
@@ -194,36 +162,48 @@ function uuid_info($uuid) {
 
 					break;
 				case 2:
-					echo sprintf("%-24s %s\n", "Version:", "[2] DCE Security version (with POSIX UIDs)");
-
-					# TODO: is that correct???
+					echo sprintf("%-24s %s\n", "Version:", "[2] DCE Security version");
 
 					# The time_low field (which represents an integer in the range [0, 232-1]) is interpreted as a local-ID; that is, an identifier (within the domain specified by clock_seq_low) meaningful to the local host. In the particular case of a POSIX host, when combined with a POSIX UID or POSIX GID domain in the clock_seq_low field (above), the time_low field represents a POSIX UID or POSIX GID, respectively. 
 					$x = substr($uuid, 0, 8);
 					echo sprintf("%-24s %s\n", "Local ID:", "0x$x");
 
-
 					# The clock_seq_low field (which represents an integer in the range [0, 28-1]) is interpreted as a local domain (as represented by sec_rgy_domain_t; see sec_rgy_domain_t ); that is, an identifier domain meaningful to the local host. (Note that the data type sec_rgy_domain_t can potentially hold values outside the range [0, 28-1]; however, the only values currently registered are in the range [0, 2], so this type mismatch is not significant.) In the particular case of a POSIX host, the value sec_rgy_domain_person is to be interpreted as the "POSIX UID domain", and the value sec_rgy_domain_group is to be interpreted as the "POSIX GID domain".
-					$x = substr($uuid, 0, 18, 2);
-					echo sprintf("%-24s %s\n", "Local Domain:", "0x$x");
-
+					$x = substr($uuid, 18, 2);
+					if ($x == '00') $domain_info = 'POSIX: User-ID / Non-POSIX: site-defined';
+					else if ($x == '01') $domain_info = 'POSIX: Group-ID / Non-POSIX: site-defined';
+					else $domain_info = 'site-defined';
+					echo sprintf("%-24s %s\n", "Local Domain:", "0x$x ($domain_info)");
 
 					# Timestamp: Count of 100ns intervals since 15 Oct 1582 00:00:00
 					# 1/0,0000001 = 10000000
-					$timestamp = substr($uuid, 13, 3).substr($uuid, 8, 4).'00000000'; # TODO: is that OK????
+					$timestamp = substr($uuid, 13, 3).substr($uuid, 8, 4).'00000000';
 					$ts = gmp_init($timestamp, 16);
 					$ts = gmp_sub($ts, gmp_init("122192928000000000"));
-					$ms = gmp_mod($ts, gmp_init("10000000")); # TODO: is there no divmod?
+					$ms = gmp_mod($ts, gmp_init("10000000"));
 					$ts = gmp_div($ts, gmp_init("10000000"));
 					$ts = gmp_strval($ts);
 					$ms = gmp_strval($ms);
-					$ts = gmdate('Y-m-d H:i:s', $ts);
-					echo sprintf("%-24s %s\n", "Timestamp:", "[0x$timestamp] $ts'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT');
+					$ts_min = gmdate('Y-m-d H:i:s', $ts)."'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT';
 
-					$x = hexdec(substr($uuid, 16, 2).'00'); # TODO: is that OK????
-					$x = $x ^ 0x8000;
-					$y = dechex($x);
-					echo sprintf("%-24s %s\n", "Clock ID:", "0x$y = $x");
+					$timestamp = substr($uuid, 13, 3).substr($uuid, 8, 4).'FFFFFFFF';
+					$ts = gmp_init($timestamp, 16);
+					$ts = gmp_sub($ts, gmp_init("122192928000000000"));
+					$ms = gmp_mod($ts, gmp_init("10000000"));
+					$ts = gmp_div($ts, gmp_init("10000000"));
+					$ts = gmp_strval($ts);
+					$ms = gmp_strval($ms);
+					$ts_max = gmdate('Y-m-d H:i:s', $ts)."'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT';
+
+					$timestamp = substr($uuid, 13, 3).substr($uuid, 8, 4).'xxxxxxxx';
+					echo sprintf("%-24s %s\n", "Timestamp:", "[0x$timestamp] $ts_min - $ts_max");
+
+					$x = hexdec(substr($uuid, 16, 2).'00');
+					$dec_min = $x & 0x3FFF; // The highest 2 bits are used by "variant" (10x)
+					$x = hexdec(substr($uuid, 16, 2).'FF');
+					$dec_max = $x & 0x3FFF; // The highest 2 bits are used by "variant" (10x)
+					$hex = substr($uuid, 16, 2).'xx';
+					echo sprintf("%-24s %s\n", "Clock ID:", "[0x$hex] $dec_min - $dec_max");
 
 					$x = substr($uuid, 20, 12);
 					$nodeid = '';
@@ -242,7 +222,11 @@ function uuid_info($uuid) {
 				case 3:
 					echo sprintf("%-24s %s\n", "Version:", "[3] Name-based (MD5 hash)");
 
-					# TODO
+					$hash = str_replace('-', '', strtolower($uuid));
+					$hash[12] = '?'; // was overwritten by version
+					$hash[16] = '?'; // was partially overwritten by variant
+
+					echo sprintf("%-24s %s\n", "MD5(Namespace+Subject):", "$hash");
 
 					break;
 				case 4:
@@ -272,7 +256,13 @@ function uuid_info($uuid) {
 				case 5:
 					echo sprintf("%-24s %s\n", "Version:", "[5] Name-based (SHA-1 hash)");
 
-					# TODO
+					$hash = str_replace('-', '', strtolower($uuid));
+					$hash[12] = '?'; // was overwritten by version
+					$hash[16] = '?'; // was partially overwritten by variant
+					$hash .= '????????'; // was cut off
+
+					echo sprintf("%-24s %s\n", "SHA1(Namespace+Subject):", "$hash");
+
 
 					break;
 				default:
@@ -283,9 +273,6 @@ function uuid_info($uuid) {
 			break;
 		case 2:
 			echo sprintf("%-24s %s\n", "Variant:", "[110] Reserved for Microsoft Corporation");
-
-			# TODO
-
 			break;
 		case 3:
 			echo sprintf("%-24s %s\n", "Variant:", "[111] Reserved for future use");
@@ -345,8 +332,103 @@ function uuid_to_oid($uuid) {
 	return '2.25.'.gmp_strval($x, 10); # TODO: parameter with or without leading dot
 }
 
-function _gen_uuid_v4() {
-	// http://rogerstringer.com/2013/11/15/generate-uuids-php
+function gen_uuid($prefer_timebased = true) {
+	if ($prefer_timebased) $uuid = gen_uuid_timebased();
+	if ($uuid === false) $uuid = gen_uuid_random();
+	return $uuid;
+}
+
+// Version 1 (Time based) UUID
+function gen_uuid_timebased() {
+	# On Debian: aptitude install php-uuid
+	# extension_loaded('uuid')
+	if (function_exists('uuid_create')) {
+		# OSSP uuid extension like seen in php5-uuid at Debian 8
+		/*
+		$x = uuid_create($context);
+		uuid_make($context, UUID_MAKE_V1);
+		uuid_export($context, UUID_FMT_STR, $uuid);
+		return trim($uuid);
+		*/
+
+		# PECL uuid extension like seen in php-uuid at Debian 9
+		return trim(uuid_create(UUID_TYPE_TIME));
+	}
+
+	# On Debian: aptitude install uuid-runtime
+	$out = array();
+	exec('uuidgen -t', $out, $ec);
+	if ($ec == 0) return $out[0];
+
+	# TODO: Implement the time based generation routine ourselves!
+	# At the moment we cannot determine the time based UUID
+	return false;
+}
+
+// Version 2 (DCE Security) UUID
+function gen_uuid_dce($domain, $id) {
+	# Start with a version 1 UUID
+	$uuid = gen_uuid_timebased();
+
+	# Add ID
+	$uuid = str_pad(dechex($id), 8, '0', STR_PAD_LEFT) . substr($uuid, 8);
+
+	# Add domain
+	$uuid = substr($uuid,0,21) . str_pad(dechex($domain), 2, '0', STR_PAD_LEFT) . substr($uuid, 23);
+
+	# Change version to 2
+	$uuid[14] = '2';
+
+	return $uuid;
+}
+
+// Version 3 (MD5 name based) UUID
+function gen_uuid_md5_namebased($namespace_uuid, $name) {
+	if (!uuid_valid($namespace_uuid)) return false;
+	$namespace_uuid = uuid_canonize($namespace_uuid);
+	$namespace_uuid = str_replace('-', '', $namespace_uuid);
+	$namespace_uuid = hex2bin($namespace_uuid);
+
+	$hash = md5($namespace_uuid.$name);
+	$hash[12] = '3'; // Set version: 3 = MD5
+	$hash[16] = dechex(hexdec($hash[16]) & 0x3 | 0x8); // Set variant to "10xx" (RFC4122)
+
+	return substr($hash,  0, 8).'-'.
+	       substr($hash,  8, 4).'-'.
+	       substr($hash, 12, 4).'-'.
+	       substr($hash, 16, 4).'-'.
+	       substr($hash, 20, 12);
+}
+
+// Version 4 (Random) UUID
+function gen_uuid_random() {
+	# On Debian: aptitude install php-uuid
+	# extension_loaded('uuid')
+	if (function_exists('uuid_create')) {
+		# OSSP uuid extension like seen in php5-uuid at Debian 8
+		/*
+		$x = uuid_create($context);
+		uuid_make($context, UUID_MAKE_V4);
+		uuid_export($context, UUID_FMT_STR, $uuid);
+		return trim($uuid);
+		*/
+
+		# PECL uuid extension like seen in php-uuid at Debian 9
+		return trim(uuid_create(UUID_TYPE_RANDOM));
+	}
+
+	# On Debian: aptitude install uuid-runtime
+	$out = array();
+	exec('uuidgen -r', $out, $ec);
+	if ($ec == 0) return $out[0];
+
+	# On Debian Jessie: UUID V4 (Random)
+	if (file_exists('/proc/sys/kernel/random/uuid')) {
+		return file_get_contents('/proc/sys/kernel/random/uuid');
+	}
+
+	# Make the UUID by ourselves
+	# Source: http://rogerstringer.com/2013/11/15/generate-uuids-php
 	return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 		mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
 		mt_rand( 0, 0xffff ),
@@ -356,48 +438,20 @@ function _gen_uuid_v4() {
 	);
 }
 
-function gen_uuid($prefer_timebased = true) {
-	$out = array();
+// Version 5 (SHA1 name based) UUID
+function gen_uuid_sha1_namebased($namespace_uuid, $name) {
+	$namespace_uuid = str_replace('-', '', $namespace_uuid);
+	$namespace_uuid = hex2bin($namespace_uuid);
 
-	# On Debian: aptitude install php-uuid
-	# extension_loaded('uuid')
-	if (function_exists('uuid_create')) {
-		# OSSP uuid extension like seen in php5-uuid at Debian 8
-		/*
-		$x = uuid_create($context);
-		if ($prefer_timebased) {
-			uuid_make($context, UUID_MAKE_V1);
-		} else {
-			uuid_make($context, UUID_MAKE_V4);
-		}
-		uuid_export($context, UUID_FMT_STR, $uuid);
-		return trim($uuid);
-		*/
+	$hash = sha1($namespace_uuid.$name);
+	$hash[12] = '5'; // Set version: 5 = SHA1
+	$hash[16] = dechex(hexdec($hash[16]) & 0x3 | 0x8); // Set variant to "10xx" (RFC4122)
 
-		# PECL uuid extension like seen in php-uuid at Debian 9
-		return trim(uuid_create($prefer_timebased ? UUID_TYPE_TIME : UUID_TYPE_RANDOM));
-	}
-
-	# On Debian: aptitude install uuid-runtime
-	if ($prefer_timebased) {
-		exec('uuidgen -t', $out, $ec);
-	} else {
-		exec('uuidgen -r', $out, $ec);
-	}
-	if ($ec == 0) return $out[0];
-
-	if (!$prefer_timebased) {
-		return _gen_uuid_v4();
-	}
-
-	// At this point we cannot fulfil the caller's wish in regards to $prefer_timebased or not
-
-	if (file_exists('/proc/sys/kernel/random/uuid')) {
-		// On Debian Jessie: UUID V4 (Random)
-		return file_get_contents('/proc/sys/kernel/random/uuid');
-	}
-
-	return _gen_uuid_v4();
+	return substr($hash,  0, 8).'-'.
+	       substr($hash,  8, 4).'-'.
+	       substr($hash, 12, 4).'-'.
+	       substr($hash, 16, 4).'-'.
+	       substr($hash, 20, 12);
 }
 
 function uuid_numeric_value($uuid) {

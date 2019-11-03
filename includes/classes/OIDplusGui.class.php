@@ -324,6 +324,14 @@ class OIDplusGui {
 			if (strpos($out['text'], '%%RA_INFO%%') !== false)
 				$out['text'] = str_replace('%%RA_INFO%%', OIDplusPagePublicRaInfo::showRaInfo($row['ra_email']), $out['text']);
 
+			$alt_ids = $obj->getAltIds();
+			if (count($alt_ids) > 0) {
+				$out['text'] .= "<h2>Alternative Identifiers</h2>";
+				foreach ($alt_ids as list($ns, $aid, $aiddesc)) {
+					$out['text'] .= "$aiddesc <code>$ns:$aid</code><br>";
+				}
+			}
+
 			foreach (OIDplus::getPagePlugins('public') as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
 			foreach (OIDplus::getPagePlugins('ra')     as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
 			foreach (OIDplus::getPagePlugins('admin')  as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
