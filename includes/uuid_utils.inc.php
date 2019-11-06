@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011-2019 Daniel Marschall, ViaThinkSoft
- * Version 2019-11-01
+ * Version 2019-11-04
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -305,9 +305,7 @@ function oid_to_uuid($oid) {
 }
 
 function is_uuid_oid($oid, $only_allow_root=false) {
-	if ((substr($oid, 0, 5) != '2.25.') && (substr($oid, 0, 6) != '.2.25.')) return false;
-
-	if ($oid[0] == '.') $oid = substr($oid, 1);
+	if ($oid[0] == '.') $oid = substr($oid, 1); // remove leading dot
 
 	$ary = explode('.', $oid);
 
@@ -315,9 +313,16 @@ function is_uuid_oid($oid, $only_allow_root=false) {
 		if (count($ary) != 3) return false;
 	}
 
+	if ($ary[0] != '2') return false;
+	if ($ary[1] != '25') return false;
 	for ($i=2; $i<count($ary); $i++) {
 		$v = $ary[$i];
 		if (!is_numeric($v)) return false;
+		if ($i == 2) {
+			// Must be in the range of 128 bit UUID
+			$test = gmp_init($v, 10);
+			if (strlen(gmp_strval($test, 16)) > 32) return false;
+		}
 		if ($v < 0) return false;
 	}
 

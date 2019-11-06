@@ -227,7 +227,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 				$alt_ids = $obj->getAltIds(); // TODO: slow!
 				foreach ($alt_ids as list($ns, $id, $desc)) {
 					if ($ns == 'oid') {
-						echo $oa->createXMLEntry($oid, $elements, $params, $comment=$obj->nodeId());
+						echo $oa->createXMLEntry($id, $elements, $params, $comment=$obj->nodeId());
 					}
 				}
 			}
