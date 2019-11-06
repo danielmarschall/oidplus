@@ -3,7 +3,7 @@
 /*
  * OID-Info.com API for PHP
  * Copyright 2019 Daniel Marschall, ViaThinkSoft
- * Version 2019-11-01
+ * Version 2019-11-06
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,10 @@
  */
 
 error_reporting(E_ALL | E_NOTICE | E_STRICT | E_DEPRECATED);
+
+if(!defined('STDIN'))  define('STDIN',  fopen('php://stdin',  'rb'));
+if(!defined('STDOUT')) define('STDOUT', fopen('php://stdout', 'wb'));
+if(!defined('STDERR')) define('STDERR', fopen('php://stderr', 'wb'));
 
 if (file_exists(__DIR__ . '/oid_utils.inc.phps')) require_once __DIR__ . '/oid_utils.inc.phps';
 if (file_exists(__DIR__ . '/oid_utils.inc.php'))  require_once __DIR__ . '/oid_utils.inc.php';
@@ -518,18 +522,18 @@ class OIDInfoAPI {
 		$bak_oid = $oid;
 		$oid = self::trySanitizeOID($oid);
 		if ($oid === false) {
-			fwrite(STDERR,"<!-- ERROR: Ignored '$bak_oid', because it is not a valid OID -->\n");
+			fwrite(STDOUT/*STDERR*/,"<!-- ERROR: Ignored '$bak_oid', because it is not a valid OID -->\n");
 			return $err;
 		}
 
 		if ($params['creation_allowed_check']) {
 			if (!$this->oidMayCreate($oid, $params['do_online_check'], $params['do_simpleping_check'], $params['do_illegality_check'])) {
-				fwrite(STDERR,"<!-- ERROR: Creation of $oid disallowed -->\n");
+				fwrite(STDOUT/*STDERR*/,"<!-- ERROR: Creation of $oid disallowed -->\n");
 				return $err;
 			}
 		} else {
 			if ($params['do_illegality_check'] && ($this->illegalOid($oid))) {
-				fwrite(STDERR,"<!-- ERROR: Creation of $oid disallowed -->\n");
+				fwrite(STDOUT/*STDERR*/,"<!-- ERROR: Creation of $oid disallowed -->\n");
 				return $err;
 			}
 		}
