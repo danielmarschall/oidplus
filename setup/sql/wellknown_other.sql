@@ -220,6 +220,17 @@ INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.
 INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9000', 'FreeOID', 0, 1);
 INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9000', 'FreeSub', 0, 1);
 
+-- 1.3.6.1.4.1.37553.8
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8', 'weid', 0, 1);
+-- 1.3.6.1.4.1.37553.8.8
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8.8', 'private', 0, 1);
+-- 1.3.6.1.4.1.37553.8.9
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8.9', 'ns', 0, 1);
+-- 1.3.6.1.4.1.37553.8.9.17704
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8.9.17704', 'dns', 0, 1);
+-- 1.3.6.1.4.1.37553.8.9.1439221
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8.9.1439221', 'uuid', 0, 1);
+
 -- 2
 INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:2', 'joint-iso-itu-t', 1, 1);
 INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:2', 'joint-iso-ccitt', 1, 1);

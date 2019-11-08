@@ -61,7 +61,7 @@ class OIDplusJava extends OIDplusObject {
 		if ($this->isRoot()) {
 			return 'java:'.$str;
 		} else {
-			if (strpos($str,'.') !== false) die("Please only submit one arc.");
+			if (strpos($str,'.') !== false) throw new Exception("Please only submit one arc.");
 			return $this->nodeId() . '.' . $str;
 		}
 	}

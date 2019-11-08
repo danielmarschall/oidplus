@@ -84,7 +84,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 						} else {
 							$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">Delete this RA</a></p>';
 						}
-						
+
 						if (class_exists('OIDplusPageRaChangePassword')) {
 							$out['text'] .= '<p><a '.oidplus_link('oidplus:change_ra_password$'.$ra_email).'>Change password of this RA</a>';
 						}

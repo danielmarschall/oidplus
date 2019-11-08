@@ -41,8 +41,11 @@ class OIDplusGui {
 		$output .= '<table class="table table-bordered table-striped">';
 		$output .= '	<tr>';
 		$output .= '	     <th>ID'.(($objParent::ns() == 'gs1') ? ' (without check digit)' : '').'</th>';
-		if ($objParent::ns() == 'oid') $output .= '	     <th>ASN.1 IDs (comma sep.)</th>';
-		if ($objParent::ns() == 'oid') $output .= '	     <th>IRI IDs (comma sep.)</th>';
+		if ($objParent::ns() == 'oid') {
+			if ($objParent->isWeid()) $output .= '	     <th>WEID</th>';
+			$output .= '	     <th>ASN.1 IDs (comma sep.)</th>';
+			$output .= '	     <th>IRI IDs (comma sep.)</th>';
+		}
 		$output .= '	     <th>RA</th>';
 		if ($objParent->userHasWriteRights()) {
 			$output .= '	     <th>Hide</th>';
@@ -81,6 +84,9 @@ class OIDplusGui {
 			$output .= '     <td><a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.htmlentities($show_id).'</a></td>';
 			if ($objParent->userHasWriteRights()) {
 				if ($obj::ns() == 'oid') {
+					if ($obj->isWeid()) {
+						$output .= '	<td>'.$obj->weidArc().'</td>';
+					}
 					$output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.implode(', ', $asn1ids).'"></td>';
 					$output .= '     <td><input type="text" id="iris_'.$row->id.'" value="'.implode(', ', $iris).'"></td>';
 				}
@@ -94,6 +100,9 @@ class OIDplusGui {
 				if ($asn1ids == '') $asn1ids = '<i>(none)</i>';
 				if ($iris == '') $iris = '<i>(none)</i>';
 				if ($obj::ns() == 'oid') {
+					if ($obj->isWeid()) {
+						$output .= '	<td>'.$obj->weidArc().'</td>';
+					}
 					$asn1ids_ext = array();
 					foreach ($asn1ids as $asn1id) {
 						$asn1ids_ext[] = '<a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.$asn1id.'</a>';
@@ -118,6 +127,9 @@ class OIDplusGui {
 				$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:50px"></td>'; // TODO: idee classname vergeben, z.B. "OID" und dann mit einem oid-spezifischen css die breite einstellbar machen, somit hat das plugin mehr kontrolle über das aussehen und die mindestbreiten
 			} else {
 				$output .= '     <td>'.$prefix.' <input type="text" id="id" value=""></td>';
+			}
+			if (($objParent::ns() == 'oid') && ($objParent->isWeid())) {
+				$output .= '	<td><input type="checkbox" name="weid" id="weid" value="1" checked> <label for="weid">WEID</label></td>';
 			}
 			if ($objParent::ns() == 'oid') $output .= '     <td><input type="text" id="asn1ids" value=""></td>';
 			if ($objParent::ns() == 'oid') $output .= '     <td><input type="text" id="iris" value=""></td>';

@@ -240,6 +240,7 @@ function crudActionInsert(parent) {
 			asn1ids:(document.getElementById('asn1ids') ? document.getElementById('asn1ids').value : null),
 			iris:(document.getElementById('iris') ? document.getElementById('iris').value : null),
 			confidential:(document.getElementById('hide') ? document.getElementById('hide').checked : null),
+			weid:(document.getElementById('weid') ? document.getElementById('weid').checked : null),
 			parent:parent
 		},
 		error:function(jqXHR, textStatus, errorThrown) {

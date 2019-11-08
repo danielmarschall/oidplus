@@ -70,9 +70,21 @@ class OIDplusOid extends OIDplusObject {
 
 	public function addString($str) {
 		if (!$this->isRoot()) {
-			if (strpos($str,'.') !== false) die("Please only submit one arc (not an absolute OID or multiple arcs).");
+			if (strpos($str,'.') !== false) throw new Exception("Please only submit one arc (not an absolute OID or multiple arcs).");
 		}
-		return $this->appendArcs($str)->nodeId();
+
+		if (isset($_REQUEST['weid']) && ($_REQUEST['weid'] == "true")) { // <-- TODO: mixing GUI with backend code is not a good idea...!
+			if (preg_replace('@[A-Za-z0-9]@ismU', '', $str) !== "") throw new Exception("Invalid characters. Can only be A-Z and 0-9");
+			$old_oid = $this->oid;
+			$old_weid = WeidOidConverter::oid2weid($old_oid, '');
+			$old_weid = substr($old_weid, 0, strlen($old_weid)-2); // remove checksum
+			if ($old_weid != '') $old_weid .= '-';
+			$old_weid = 'weid:' . $old_weid . $str . '-?'; // add new WEID arc
+			$new_oid = WeidOidConverter::weid2oid($old_weid); // convert back to OID (since OIDplus can only handle those)
+			return "oid:$new_oid";
+		} else {
+			return $this->appendArcs($str)->nodeId();
+		}
 	}
 
 	public function crudShowId(OIDplusObject $parent) {
@@ -137,12 +149,48 @@ class OIDplusOid extends OIDplusObject {
 
 	# ---
 
-	private function oidInformation() {
+	public function isWeid() {
 		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
-		$weid = ($weid === false) ? "" : "<br>WEID notation: <code>" . htmlentities($weid) . "</code>";
-		return "<p>Dot notation: <code>" . $this->getDotNotation() . "</code><br>" .
-		       "ASN.1 notation: <code>{ " . $this->getAsn1Notation() . " }</code><br>" .
-		       "OID-IRI notation: <code>" . $this->getIriNotation() . "</code>$weid</p>";
+		return $weid !== false;
+	}
+
+	public function weidArc() {
+		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
+		if ($weid === false) return false;
+		$x = explode('-', $weid);
+		return $x[count($x)-2];
+	}
+
+	public function getWeidNotation($withAbbr=true) {
+		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
+		if ($withAbbr) {
+			list($ns,$weid) = explode(':', $weid);
+			$weid_arcs = explode('-', $weid);
+			foreach ($weid_arcs as $i => &$weid) {
+				if ($i == count($weid_arcs)-1) {
+					$weid = '<abbr title="weLuhn check digit">'.$weid.'</abbr>';
+				} else {
+					$oid_arcs = explode('.',$this->oid);
+					$weid_num = $oid_arcs[(count($oid_arcs)-1)-(count($weid_arcs)-1)+($i+1)];
+					if ($weid_num != $weid) {
+						$weid = '<abbr title="Numeric value: '.$weid_num.'">'.$weid.'</abbr>';
+					}
+				}
+			}
+			$weid = '<abbr title="Root arc: 1.3.6.1.4.1.37553.8">' . $ns . '</abbr>:' . implode('-',$weid_arcs);
+		}
+		return $weid;
+	}
+
+	private function oidInformation() {
+		$out = array();
+		$out[] = "Dot notation: <code>" . $this->getDotNotation() . "</code>";
+		$out[] = "ASN.1 notation: <code>{ " . $this->getAsn1Notation() . " }</code>";
+		$out[] = "OID-IRI notation: <code>" . $this->getIriNotation() . "</code>";
+		if ($this->isWeid()) {
+			$out[] = "WEID notation: <code>" . $this->getWeidNotation() . "</code>";
+		}
+		return '<p>'.implode('<br>',$out).'</p>';
 	}
 
 	public function __clone() {
