@@ -149,15 +149,18 @@ class OIDplusOid extends OIDplusObject {
 
 	# ---
 
-	public function isWeid() {
+	public function isWeid($allow_root) {
 		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
+		if (!$allow_root && ($weid === 'weid:4')) return false;
 		return $weid !== false;
 	}
 
 	public function weidArc() {
 		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
 		if ($weid === false) return false;
+		list($ns,$weid) = explode(':', $weid, 2);
 		$x = explode('-', $weid);
+		if (count($x) < 2) return ''; // WEID root arc. Has no name
 		return $x[count($x)-2];
 	}
 
@@ -187,7 +190,7 @@ class OIDplusOid extends OIDplusObject {
 		$out[] = "Dot notation: <code>" . $this->getDotNotation() . "</code>";
 		$out[] = "ASN.1 notation: <code>{ " . $this->getAsn1Notation() . " }</code>";
 		$out[] = "OID-IRI notation: <code>" . $this->getIriNotation() . "</code>";
-		if ($this->isWeid()) {
+		if ($this->isWeid(true)) {
 			$out[] = "WEID notation: <code>" . $this->getWeidNotation() . "</code>";
 		}
 		return '<p>'.implode('<br>',$out).'</p>';

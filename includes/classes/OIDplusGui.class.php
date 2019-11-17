@@ -42,7 +42,7 @@ class OIDplusGui {
 		$output .= '	<tr>';
 		$output .= '	     <th>ID'.(($objParent::ns() == 'gs1') ? ' (without check digit)' : '').'</th>';
 		if ($objParent::ns() == 'oid') {
-			if ($objParent->isWeid()) $output .= '	     <th>WEID</th>';
+			if ($objParent->isWeid(true)) $output .= '	     <th>WEID</th>';
 			$output .= '	     <th>ASN.1 IDs (comma sep.)</th>';
 			$output .= '	     <th>IRI IDs (comma sep.)</th>';
 		}
@@ -84,7 +84,7 @@ class OIDplusGui {
 			$output .= '     <td><a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.htmlentities($show_id).'</a></td>';
 			if ($objParent->userHasWriteRights()) {
 				if ($obj::ns() == 'oid') {
-					if ($obj->isWeid()) {
+					if ($obj->isWeid(false)) {
 						$output .= '	<td>'.$obj->weidArc().'</td>';
 					}
 					$output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.implode(', ', $asn1ids).'"></td>';
@@ -100,7 +100,7 @@ class OIDplusGui {
 				if ($asn1ids == '') $asn1ids = '<i>(none)</i>';
 				if ($iris == '') $iris = '<i>(none)</i>';
 				if ($obj::ns() == 'oid') {
-					if ($obj->isWeid()) {
+					if ($obj->isWeid(false)) {
 						$output .= '	<td>'.$obj->weidArc().'</td>';
 					}
 					$asn1ids_ext = array();
@@ -128,7 +128,7 @@ class OIDplusGui {
 			} else {
 				$output .= '     <td>'.$prefix.' <input type="text" id="id" value=""></td>';
 			}
-			if (($objParent::ns() == 'oid') && ($objParent->isWeid())) {
+			if (($objParent::ns() == 'oid') && ($objParent->isWeid(true))) {
 				$output .= '	<td><input type="checkbox" name="weid" id="weid" value="1" checked> <label for="weid">WEID</label></td>';
 			}
 			if ($objParent::ns() == 'oid') $output .= '     <td><input type="text" id="asn1ids" value=""></td>';
