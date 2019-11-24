@@ -73,18 +73,7 @@ class OIDplusOid extends OIDplusObject {
 			if (strpos($str,'.') !== false) throw new Exception("Please only submit one arc (not an absolute OID or multiple arcs).");
 		}
 
-		if (isset($_REQUEST['weid']) && ($_REQUEST['weid'] == "true")) { // <-- TODO: mixing GUI with backend code is not a good idea...!
-			if (preg_replace('@[A-Za-z0-9]@ismU', '', $str) !== "") throw new Exception("Invalid characters. Can only be A-Z and 0-9");
-			$old_oid = $this->oid;
-			$old_weid = WeidOidConverter::oid2weid($old_oid, '');
-			$old_weid = substr($old_weid, 0, strlen($old_weid)-2); // remove checksum
-			if ($old_weid != '') $old_weid .= '-';
-			$old_weid = 'weid:' . $old_weid . $str . '-?'; // add new WEID arc
-			$new_oid = WeidOidConverter::weid2oid($old_weid); // convert back to OID (since OIDplus can only handle those)
-			return "oid:$new_oid";
-		} else {
-			return $this->appendArcs($str)->nodeId();
-		}
+		return $this->appendArcs($str)->nodeId();
 	}
 
 	public function crudShowId(OIDplusObject $parent) {

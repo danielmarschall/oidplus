@@ -1,32 +1,32 @@
 <?php /* <ViaThinkSoftSignature>
-i1Ox4pM0A5UeIZrXsnfEQNOTzk0ajnmpk57FeGqfm6NfPzJn2WB6PgTV1mt61S0De
-Xbj4756UEGFYmRASqM9SC4r4GR4PLgZ7+gZ99D2kezXEqu1BpXozrw65BRRgls9u1
-8g4i1oU+V5+/zqCFlDRSXS3UCoeReHtYdZG6Ve9JhI0xB2eG4LL+n1mAsC810LhCn
-gHIqP6W5LDgufSiWT8cmJIATcVnVF8AgAVCe6qDrkzFL1/KlHUsjdWYdExkERM2mi
-Wt25wdDk5NGUvqs/L6PUVS/0AHZLoNnFmZtUpobIfMXboSF4GxSbC/j2UVrvTnS1g
-NLSPEe26U7gbCTXD+3ixpEWUiTVFsLN9KlS1KpvZO/FHafYqiV7WvdjD1wLeXvPQ7
-/mcZAzRW837FR6ouoZwJnOv5iFAIQFn9Ci0UGtvu6HJV1jnctkkkrfdaK+tf+w2Fe
-gLvisDHWMm2NFX5soFokVkPKPqu+b4HjJhsjv8FWo9a4INiQBSQ60IaU5mIeLC4Gl
-YSf6otP6r74O2TUUZzWEd/vhe0ZoQK/HuAnnibT7ftBHrTfSmdQ258/1mvMB7+sG1
-OT8YpCSM8RqdN3PtKt/qFK6DBXiCkrL45NuarVhu0v0gbN+Wsq4SHiEkK2iDsFZPb
-HLNGqh1qrV23AUKYdxNpsypVboe74DcV3Rg51maiYavMbs4Zk9sy+0b0VjHI3MorK
-K/FV3nr6HeCJEGyV2pWu45wGGfFQ9vZntZxeZ/V6LNd0Dcbp4HgLix4mTA3bz1YMD
-trCRKUt7oY7rKAdTCC+iJzGUUBTquf5HsCEbG+ztY1oHk4uN9IJ1r2eu/38XfUJm+
-4wUyX8mXNOzSPA2SqKrz3gvJRkDZ+E1ZN6KbaEIV17ae7exSWoYyZm3ML0fFrwQG+
-9GiWBmyEqQ8Ad5YxtWOnvCTHvFbEYl0TqpcnPDEhcEoU7Cv/78G+wezq3aUo4ij3n
-7yjyDOW6BphHpA6yMFyx2AAj4u8c/LNpssVBFUwAkh1SAochIN0hzo3Kfx/csJSze
-OSTVUbS1NdAR0Xb/POii7tM/Pka9yUZ6b0Y+5goKBKIpEPxJfb0rLelmLB2DtL0sK
-qHg9BDpGjyHeSffXLCHs9bDP93F/7SFONrDSXoAaVfJuh8duW31lfBoiIEN0X8X4a
-0ZqRPCbMcPgOq5VF3NoDe26SFhnR1VE78u1xdJorNc1yW16fcYDW1mDBLmsZRbTSh
-lACvUoW58SdHPFM5aoZFwhNtqmqzjqte5qdDvz2EWkS8KB+8Z+Ve2UvfQ5yVkyjLp
-3HLo1XJeDphQGdHooYyZBQUtvTDJ1F2ZwfC+a6iimM5SGB9eJfXEHH5uPtJW0Tsgs
-Q==
+Ry2GSL8Q16B8ytPv1LExFhPnZ/J0l8wraAlsDf+DyesnAobgPpfA5R7iP4r3Rigdu
+lFqTnRVRqQCWnqWd6pcRJSgvShSDw7sfIMWP8pg7KKcFlfdx0iZx0Tb7FmHPF4xg6
+OyVue0SgAtQ0qGNBAnE7QSrhScTeZs+bXHO33l+iaJuF1kjA5QELiMtNXjCBr9Sw3
+mcW4oPwc/H1yucGul+N0Wao0OpnZua9ai8afTD23K2ughXU+z/CmDNHcUWhthK7Xn
+T35siXU5uf3Bys2L3raQnaFIGtGTnenNdGKBh+SIHq6uch4YwPEow3waxV2P8HTTO
+lIaeqwQ4oSrCOGMGwuDYgOuX7OueBhvfng5TA7EZ3Q09PSx5t6rEl6Op1P6aXRv8d
+Q4ezHNwucHJPi/JaCzH0Qt4Sj5W4zUKAqdNBtSfRuyIpWi3fJx0bmWoqWy9ufyZ87
+4N0U5XbZOuz6AlCWfFkeOvFqEFT5l7JPUT4PJf1w2/+4uZvRR6JRtlgDy7Csh8LhC
+ARLKDQv4hrRD/p9bIUR3NmpA0EdKD9ybSm8IhkMXxrQkZLP2Ykoc636OQxy1L1qsx
+D49lwQ6MiIe0QKJwNIqrLQWZP+zIGakopg/2abs7S46nrJOOYc8X5kcaEk0GWO2yR
+Nuo0hWdLIaGwoLmfrLOnb1TQV5X/ivP+w/yEnFK08gZ5z2XKJ2Pp2FJfMdihfOWa+
+V7qjFtrrgnEXILsbKK9Vnh6fDq4vL/8EAdkYRfKU4Fu5Rdv1UdeSKGZIorW+IG8nO
+r3VVv6pwDA/heiudcAd5dBsALBQplqFh22RlwtyyHD6wgDhjEyGnMsIsG/V8GqS3d
+Q+H3RfCOdbIl6UzTS9RVgnwiWgpXX4Bvffzo2Re9GKRu+OqT9gXulkYD3tVvVqjt6
+FUFt6sO//PZT1SLfNDGwuxqx8+OMnKQ6PX6F+8tr6tmMwQIS1ZakHq0srVsfF1yUa
+ubX1tshGusLVtgL/y7ZPCXizuMSdN3SZ15YuBJivPCaUSY9R3XUV8QvqKUIRnfC6w
+g3ud8TExKfd+jL4ikOHcBBh7STq4c7AM3S3i6OqhW/B/mG9rZx8PR0JUlzc+HVD+i
+fCUTQKLsDFwUnPsw0vepmR03GRF0xsetGKmQE6eLCrcMUSl8HujehhAm2587JCFBl
+ZqfZPn98kCtxHwak0RORN69/0ciovEh8HaG79Na1m41M3XvH20eqKt2an+xK6HeeX
+h0P9KJyDV45vkgtETbl1EG92Otttdo2NXSsLovHhxbrJP1vQ3dhIoOw3zztmZdaTo
+U3HAJ0XCRwTj1H4KzsPVjvZ7628YX8d5eCcea0wNroa3pBWhEXgC6n7gUO9mXaiWm
+g==
 </ViaThinkSoftSignature> */ ?>
 <?php
 
 /*
 
-      VNag - Nagios Framework for PHP                  (C) 2014-2018
+      VNag - Nagios Framework for PHP                  (C) 2014-2019
       __     ___      _____ _     _       _     ____         __ _
       \ \   / (_) __ |_   _| |__ (_)_ __ | | __/ ___|  ___  / _| |_
        \ \ / /| |/ _` || | | '_ \| | '_ \| |/ /\___ \ / _ \| |_| __|
@@ -35,7 +35,7 @@ Q==
 
       Developed by Daniel Marschall             www.viathinksoft.com
       Licensed under the terms of the Apache 2.0 license
-      Revision 2018-11-04
+      Revision 2019-11-12
 
 */
 
@@ -328,7 +328,7 @@ declare(ticks=1);
 # PHP should set this time limit to infinite.
 set_time_limit(0);
 
-define('VNAG_JSONDATA_V1', 'oid:1.3.6.1.4.1.37476.2.3.1.1');
+define('VNAG_JSONDATA_V1', 'oid:1.3.6.1.4.1.37476.2.3.1.1'); // {iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) vnag(3) jsondata(1) v1(1)}
 
 // Set this to an array to overwrite getopt() and $_REQUEST[], respectively.
 // Useful for mock tests.
@@ -341,7 +341,7 @@ if (is_array($x)) debug_print_stacktrace();
 }
 
 abstract class VNag {
-	const VNAG_VERSION = '2018-10-02';
+	const VNAG_VERSION = '2019-11-12';
 
 	// Status 0..3 for STATUSMODEL_SERVICE (the default status model):
 	# The guideline states: "Higher-level errors (such as name resolution errors, socket timeouts, etc) are outside of the control of plugins and should generally NOT be reported as UNKNOWN states."
@@ -1792,8 +1792,8 @@ class VNagRange {
 		foreach ($values as $value) {
 			if (!($value instanceof VNagValueUomPair)) $value = new VNagValueUomPair($value);
 
-			assert($this->start instanceof VNagValueUomPair);
-			assert($this->end   instanceof VNagValueUomPair);
+			assert(($this->start === 'inf') || ($this->start instanceof VNagValueUomPair));
+			assert(($this->end   === 'inf') || ($this->end   instanceof VNagValueUomPair));
 
 			if (($this->start !== 'inf') && (!$this->start->compatibleWith($value))) continue;
 			if (($this->end   !== 'inf') && (!$this->end->compatibleWith($value)))   continue;

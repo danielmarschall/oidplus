@@ -124,12 +124,14 @@ class OIDplusGui {
 			$output .= '<tr>';
 			$prefix = is_null($objParent) ? '' : $objParent->crudInsertPrefix();
 			if ($objParent::ns() == 'oid') {
-				$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:50px"></td>'; // TODO: idee classname vergeben, z.B. "OID" und dann mit einem oid-spezifischen css die breite einstellbar machen, somit hat das plugin mehr kontrolle über das aussehen und die mindestbreiten
+				if ($objParent->isWeid(true)) {
+					$output .= '     <td>'.$prefix.' <input oninput="frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>'; // TODO: idee classname vergeben, z.B. "OID" und dann mit einem oid-spezifischen css die breite einstellbar machen, somit hat das plugin mehr kontrolle über das aussehen und die mindestbreiten
+					$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="frdl_weid_change()"></td>';
+				} else {
+					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:50px"></td>'; // TODO: idee classname vergeben, z.B. "OID" und dann mit einem oid-spezifischen css die breite einstellbar machen, somit hat das plugin mehr kontrolle über das aussehen und die mindestbreiten
+				}
 			} else {
 				$output .= '     <td>'.$prefix.' <input type="text" id="id" value=""></td>';
-			}
-			if (($objParent::ns() == 'oid') && ($objParent->isWeid(true))) {
-				$output .= '	<td><input type="checkbox" name="weid" id="weid" value="1" checked> <label for="weid">WEID</label></td>';
 			}
 			if ($objParent::ns() == 'oid') $output .= '     <td><input type="text" id="asn1ids" value=""></td>';
 			if ($objParent::ns() == 'oid') $output .= '     <td><input type="text" id="iris" value=""></td>';

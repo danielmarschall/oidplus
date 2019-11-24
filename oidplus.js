@@ -544,3 +544,41 @@ function mobileNavButtonHover(sender) {
 function gotoButtonClicked() {
 	openOidInPanel($("#gotoedit").val(), 1);
 }
+
+function frdl_weid_change() {
+	from_base = 36;
+	from_control = "#weid";
+	to_base = 10;
+	to_control = "#id";
+
+	inp = $(from_control).val().trim();
+	if (inp == "") {
+		$(to_control).val("");
+	} else {
+		x = BigNumber(inp, from_base);
+		if (isNaN(x)) {
+			$(to_control).val("");
+		} else {
+			$(to_control).val(x.toString(to_base));
+		}
+	}
+}
+
+function frdl_oidid_change() {
+	from_base = 10;
+	from_control = "#id";
+	to_base = 36;
+	to_control = "#weid";
+
+	inp = $(from_control).val().trim();
+	if (inp == "") {
+		$(to_control).val("");
+	} else {
+		x = BigNumber(inp, from_base);
+		if (isNaN(x)) {
+			$(to_control).val("");
+		} else {
+			$(to_control).val(x.toString(to_base));
+		}
+	}
+}

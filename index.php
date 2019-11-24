@@ -95,6 +95,7 @@ if (class_exists('OIDplusPageAdminColors')) {
 	<script src="3p/jquery-ui/jquery-ui.min.js"></script>
 	<script src="3p/layout/jquery.layout.min.js"></script>
 	<script src="3p/spamspan/spamspan.js"></script>
+	<script src="3p/bignumber.js/bignumber.min.js"></script>
 	<script src="3p/sha3_js/sha3.js"></script><!-- https://github.com/emn178/js-sha3 -->
 	<?php
 	if (RECAPTCHA_ENABLED) {

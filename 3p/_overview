@@ -1,6 +1,11 @@
 3P ("Third party") assets, code and frameworks
 ==============================================
 
+bignumber.js
+	License: MIT
+	Version: Nov 10, 2019
+	Download: https://github.com/MikeMcl/bignumber.js
+
 jsTree:
 	License:  MIT
 	Version:  3.3.7
