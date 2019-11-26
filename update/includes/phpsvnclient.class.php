@@ -218,6 +218,7 @@ class phpsvnclient
 
 			////Lets update dirs
 			// Add dirs
+			sort($objects_list['dirs']); // <-- added by Daniel Marschall: Sort folder list, so that directories will be created in the correct hierarchical order
 			foreach ($objects_list['dirs'] as $file) {
 				if ($file != '') {
 					$localPath = str_replace($folder, "", $file);
@@ -238,6 +239,7 @@ class phpsvnclient
 
 			////Lets update files
 			// Add files
+			sort($objects_list['files']); // <-- added by Daniel Marschall: Sort list, just for cosmetic improvement
 			foreach ($objects_list['files'] as $file) {
 				if ($file != '') {
 					$localFile = str_replace($folder, "", $file);
@@ -256,6 +258,7 @@ class phpsvnclient
 				}
 			}
 			//Remove files
+			sort($objects_list['filesDelete']); // <-- added by Daniel Marschall: Sort list, just for cosmetic improvement
 			foreach ($objects_list['filesDelete'] as $file) {
 				if ($file != '') {
 					$localFile = str_replace($folder, "", $file);
@@ -277,6 +280,7 @@ class phpsvnclient
 
 			// Remove dirs
 			// Changed by Daniel Marschall: moved this to the end, because "add/update" requests for this directory might happen before the directory gets removed
+			rsort($objects_list['dirsDelete']); // <-- added by Daniel Marschall: Sort list in reverse order, so that directories get deleted in the correct hierarchical order
 			foreach ($objects_list['dirsDelete'] as $file) {
 				if ($file != '') {
 					$localPath = str_replace($folder, "", $file);
