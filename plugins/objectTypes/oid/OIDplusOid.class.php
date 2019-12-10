@@ -335,13 +335,14 @@ class OIDplusOid extends OIDplusObject {
 			if (!oid_id_is_valid($asn1)) throw new Exception("'$asn1' is not a valid ASN.1 identifier!");
 
 			// Check if the (real) parent has any conflict
-			$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where name = ?", array($asn1));
+			// Unlike IRI identifiers, ASN.1 identifiers may be used multiple times (not recommended), except if one of them is standardized
+			$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where name = ? and standardized = 1", array($asn1));
 			while ($row = OIDplus::db()->fetch_array($res)) {
 				$check_oid = OIDplusOid::parse($row['oid'])->oid;
 				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent
 				   ($check_oid !== $this->oid))                    // different OID
 				{
-					throw new Exception("ASN.1 identifier '$asn1' is already used by another OID ($check_oid)");
+					throw new Exception("ASN.1 identifier '$asn1' is a standardized identifier belonging to OID ($check_oid)");
 				}
 			}
 		}

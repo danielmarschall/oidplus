@@ -26,7 +26,6 @@ require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 OIDplus::init(true);
 
-header('Content-Type:text/plain; charset=UTF-8');
 originHeaders();
 
 // Step 0: Get request parameter
@@ -201,50 +200,118 @@ if ($continue) {
 
 ob_start();
 
-$longest_key = 0;
-foreach ($out as $line) {
-	$longest_key = max($longest_key, strlen(trim(explode(':',$line,2)[0])));
-}
+$format = isset($_REQUEST['format']) ? $_REQUEST['format'] : 'txt';
 
-echo '% ' . str_repeat('*', OUTPUT_FORMAT_MAX_LINE_LENGTH-2)."\n";
+if ($format == 'txt') {
+	header('Content-Type:text/plain; charset=UTF-8');
 
-foreach ($out as $line) {
-	if (trim($line) == '') {
-		echo "\n";
-		continue;
+	$longest_key = 0;
+	foreach ($out as $line) {
+		$longest_key = max($longest_key, strlen(trim(explode(':',$line,2)[0])));
 	}
 
-	$ary = explode(':', $line, 2);
+	echo '% ' . str_repeat('*', OUTPUT_FORMAT_MAX_LINE_LENGTH-2)."\n";
 
-	$key = trim($ary[0]);
+	foreach ($out as $line) {
+		if (trim($line) == '') {
+			echo "\n";
+			continue;
+		}
 
-	$value = trim($ary[1]);
-	$value = wordwrap($value, OUTPUT_FORMAT_MAX_LINE_LENGTH - $longest_key - strlen(':') - OUTPUT_FORMAT_SPACER);
-	$value = str_replace("\n", "\n$key:".str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OUTPUT_FORMAT_SPACER), $value);
+		$ary = explode(':', $line, 2);
 
-	echo $key.':' . str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OUTPUT_FORMAT_SPACER) . (!empty($value) ? $value : '.') . "\n";
+		$key = trim($ary[0]);
+
+		$value = trim($ary[1]);
+		$value = wordwrap($value, OUTPUT_FORMAT_MAX_LINE_LENGTH - $longest_key - strlen(':') - OUTPUT_FORMAT_SPACER);
+		$value = str_replace("\n", "\n$key:".str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OUTPUT_FORMAT_SPACER), $value);
+
+		echo $key.':' . str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OUTPUT_FORMAT_SPACER) . (!empty($value) ? $value : '.') . "\n";
+	}
+
+	echo '% ' . str_repeat('*', OUTPUT_FORMAT_MAX_LINE_LENGTH-2)."\n";
+
+	$cont = ob_get_contents();
+	ob_end_clean();
+
+	echo $cont;
+
+	if (OIDplus::pkiStatus(true)) {
+		$signature = '';
+		if (openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+			$signature = base64_encode($signature);
+			$signature = wordwrap($signature, 80, "\n", true);
+
+			$signature = "-----BEGIN RSA SIGNATURE-----\n".
+		                     "$signature\n".
+			             "-----END RSA SIGNATURE-----\n";
+			echo $signature;
+		}
+	}
 }
 
-echo '% ' . str_repeat('*', OUTPUT_FORMAT_MAX_LINE_LENGTH-2)."\n";
+if ($format == 'json') {
+	$ary = array();
 
-$cont = ob_get_contents();
-ob_end_clean();
+	$current_section = array();
+	$ary[] = &$current_section;
 
-echo $cont;
-
-// Try to sign
-
-if (OIDplus::pkiStatus(true)) {
-	$signature = '';
-	if (openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
-		$signature = base64_encode($signature);
-		$signature = wordwrap($signature, 80, "\n", true);
-
-		$signature = "-----BEGIN RSA SIGNATURE-----\n".
-	                     "$signature\n".
-		             "-----END RSA SIGNATURE-----\n";
-		echo $signature;
+	foreach ($out as $line) {
+		if ($line == '') {
+			unset($current_section);
+			$current_section = array();
+			$ary[] = &$current_section;
+		} else {
+			list($key,$val) = explode(':', $line, 2);
+			$val = trim($val);
+			if (!isset($current_section[$key])) {
+				$current_section[$key] = $val;
+			} elseif (is_array($current_section[$key])) {
+				$current_section[$key][] = $val;
+			} else {
+				$current_section[$key] = array($current_section[$key], $val);
+			}
+		}
 	}
+	$ary = array('whois' => $ary); // we need this named root, otherwise PHP will name the sections "0", "1", "2" if the array is not sequencial (e.g. because "signature" is added)
+
+	if (OIDplus::pkiStatus(true)) {
+		$cont = json_encode($ary);
+		$signature = '';
+		if (openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+			$signature = base64_encode($signature);
+			$ary['signature'] = array('content' => $cont, 'signature' => $signature);
+		}
+	}
+	header('Content-Type:application/json; charset=UTF-8');
+	echo json_encode($ary);
+}
+
+if ($format == 'xml') {
+	$xml = '<whois><section>';
+	foreach ($out as $line) {
+		if ($line == '') {
+			$xml .= '</section><section>';
+		} else {
+			list($key,$val) = explode(':', $line, 2);
+			$val = trim($val);
+			$xml .= "<$key>".htmlspecialchars($val)."</$key>";
+		}
+	}
+	$xml .= '</section></whois>';
+
+	if (OIDplus::pkiStatus(true)) {
+		$cont = $xml;
+		$signature = '';
+		if (openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+			$signature = base64_encode($signature);
+			$xml .= "<signature><content>".htmlspecialchars($cont)."</content><signature>".htmlspecialchars($signature)."</signature></signature>";
+		}
+	}
+
+	header('Content-Type:application/xml; charset=UTF-8');
+	echo '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>';
+	echo '<root>'.$xml.'</root>';
 }
 
 # ---

@@ -54,9 +54,14 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 
 			$out['text']  = '';
 			$out['text'] .= '<p>With the web based whois service, you can query object information in a machine readable format.</p>';
-			$out['text'] .= '<p>RFC draft: <a href="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/rfc/draft-viathinksoft-oidwhois-00.txt">TXT</a> | <a href="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/rfc/draft-viathinksoft-oidwhois-00.nroff">NROFF</a></p>';
+			$out['text'] .= '<p>RFC draft (for Text format): <a href="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/rfc/draft-viathinksoft-oidwhois-00.txt">TXT</a> | <a href="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/rfc/draft-viathinksoft-oidwhois-00.nroff">NROFF</a></p>';
 			$out['text'] .= '<form action="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/webwhois.php" method="GET">';
-			$out['text'] .= '	<input type="text" name="query" value="oid:2.999">';
+			$out['text'] .= '	<label class="padding_label">Format:</label><select name="format">';
+			$out['text'] .= '		<option value="txt">Text (RFC pending)</option>';
+			$out['text'] .= '		<option value="json">JSON</option>';
+			$out['text'] .= '		<option value="xml">XML</option>';
+			$out['text'] .= '	</select><br>';
+			$out['text'] .= '	<label class="padding_label">Query:</label><input type="text" name="query" value="oid:2.999" style="width:250px">';
 			$out['text'] .= '	<input type="submit" value="Query">';
 			$out['text'] .= '</form>';
 		}
