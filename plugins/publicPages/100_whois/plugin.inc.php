@@ -45,9 +45,29 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 		}
 	}
 
+	private function getExampleId() {
+		$firsts = array();
+		$first_ns = null;
+		foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+			if (is_null($first_ns)) $first_ns = $ot::ns();
+			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array($ot::ns().':'));
+			if ($row = OIDplus::db()->fetch_array($res))
+				$firsts[$ot::ns()] = $row['id'];
+		}
+		if (count($firsts) == 0) {
+			return 'oid:2.999';
+		} elseif (isset($firsts['oid'])) {
+			return  $firsts['oid'];
+		} else {
+			return  $firsts[$first_ns];
+		}
+	}
+
 	public function gui($id, &$out, &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:whois') {
 			$handled = true;
+
+			$example = $this->getExampleId();
 
 			$out['title'] = 'Web WHOIS';
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
@@ -61,7 +81,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 			$out['text'] .= '		<option value="json">JSON</option>';
 			$out['text'] .= '		<option value="xml">XML</option>';
 			$out['text'] .= '	</select><br>';
-			$out['text'] .= '	<label class="padding_label">Query:</label><input type="text" name="query" value="oid:2.999" style="width:250px">';
+			$out['text'] .= '	<label class="padding_label">Query:</label><input type="text" name="query" value="'.htmlentities($example).'" style="width:250px">';
 			$out['text'] .= '	<input type="submit" value="Query">';
 			$out['text'] .= '</form>';
 		}
