@@ -34,7 +34,8 @@ CREATE TABLE `objects` (
   `ra_email` varchar(100) NULL,
   `confidential` bit default 0 NOT NULL,
   `created` datetime,
-  `updated` datetime
+  `updated` datetime,
+  `comment` varchar(255) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ra`;
@@ -121,4 +122,4 @@ ALTER TABLE `log_object`
 ALTER TABLE `log_object`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '200', 1, 0);
+INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '201', 1, 0);

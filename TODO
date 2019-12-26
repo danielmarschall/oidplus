@@ -115,6 +115,8 @@ IDEAS
 - sollte es eine oidplus projektseite geben anstelle nur das nackte system?
 - vendor signature to plugins + viathinksoft signatures + "check" program if all signatures match
 - have a menu item (plugin) "latest updates" which lists OIDs that have been changed or added recently?
+- (unsure:) would it be good if the superior RA comment is shown in the object page itself?
+- During an object insertion: If everything is empty (ASN1, IRI, comment), should then there be a warning?
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie

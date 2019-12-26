@@ -160,7 +160,7 @@ try {
 
 	// Action:     Update
 	// Method:     POST
-	// Parameters: id, ra_email, iris, asn1ids, confidential
+	// Parameters: id, ra_email, comment, iris, asn1ids, confidential
 	// Outputs:    Text
 	if (isset($_POST["action"]) && ($_POST["action"] == "Update")) {
 		$handled = true;
@@ -218,7 +218,8 @@ try {
 		}
 
 		$confidential = $_POST['confidential'] == 'true';
-		if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ?, updated = now() WHERE id = ?", array($confidential ? 1 : 0, $id))) {
+		$comment = $_POST['comment'];
+		if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ?, comment = ?, updated = now() WHERE id = ?", array($confidential ? 1 : 0, $comment, $id))) {
 			throw new Exception('Error at setting confidential flag:' . OIDplus::db()->error());
 		}
 
@@ -272,7 +273,7 @@ try {
 		// Check if the ID is valid
 		if ($_POST['id'] == '') throw new Exception('ID may not be empty');
 
-		// Absoluten OID namen bestimmen
+		// Determine absolute OID name
 		// Note: At addString() and parse(), the syntax of the ID will be checked
 		$id = $objParent->addString($_POST['id']);
 
@@ -298,7 +299,7 @@ try {
 			$oid->replaceAsn1Ids($ids, true);
 		}
 
-		// Superior RA Änderung durchführen
+		// Apply superior RA change
 		$parent = $_POST['parent'];
 		$ra_email = $_POST['ra_email'];
 		if (!empty($ra_email) && !oidplus_valid_email($ra_email)) {
@@ -311,7 +312,8 @@ try {
 			OIDplus::logger()->log("RA($ra_email)!", "Gained ownership of newly created object '$id'");
 		}
 
-		if (!OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, created) VALUES (?, ?, ?, ?, now())", array($id, $parent, $ra_email, $confidential ? 1 : 0))) {
+		$comment = $_POST['comment'];
+		if (!OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, comment, created) VALUES (?, ?, ?, ?, ?, now())", array($id, $parent, $ra_email, $confidential ? 1 : 0, $comment))) {
 			throw new Exception(OIDplus::db()->error());
 		}
 

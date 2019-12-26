@@ -47,6 +47,7 @@ class OIDplusGui {
 			$output .= '	     <th>IRI IDs (comma sep.)</th>';
 		}
 		$output .= '	     <th>RA</th>';
+		$output .= '	     <th>Comment</th>';
 		if ($objParent->userHasWriteRights()) {
 			$output .= '	     <th>Hide</th>';
 			$output .= '	     <th>Update</th>';
@@ -56,7 +57,11 @@ class OIDplusGui {
 		$output .= '	     <th>Updated</th>';
 		$output .= '	</tr>';
 
-		$result = OIDplus::db()->query("select o.*, r.ra_name from ".OIDPLUS_TABLENAME_PREFIX."objects o left join ".OIDPLUS_TABLENAME_PREFIX."ra r on r.email = o.ra_email where parent = ? order by ".OIDplus::db()->natOrder('id'), array($parent));
+		$result = OIDplus::db()->query("select o.*, r.ra_name " .
+		                               "from ".OIDPLUS_TABLENAME_PREFIX."objects o " .
+		                               "left join ".OIDPLUS_TABLENAME_PREFIX."ra r on r.email = o.ra_email " .
+		                               "where parent = ? " .
+		                               "order by ".OIDplus::db()->natOrder('id'), array($parent));
 		while ($row = OIDplus::db()->fetch_object($result)) {
 			$obj = OIDplusObject::parse($row->id);
 
@@ -90,7 +95,8 @@ class OIDplusGui {
 					$output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.implode(', ', $asn1ids).'"></td>';
 					$output .= '     <td><input type="text" id="iris_'.$row->id.'" value="'.implode(', ', $iris).'"></td>';
 				}
-				$output .= '     <td><input type="text" id="ra_email_'.$row->id.'" value="'.$row->ra_email.'"></td>';
+				$output .= '     <td><input type="text" id="ra_email_'.$row->id.'" value="'.htmlentities($row->ra_email).'"></td>';
+				$output .= '     <td><input type="text" id="comment_'.$row->id.'" value="'.htmlentities($row->comment).'"></td>';
 				$output .= '     <td><input type="checkbox" id="hide_'.$row->id.'" '.($row->confidential ? 'checked' : '').'></td>';
 				$output .= '     <td><button type="button" name="update_'.$row->id.'" id="update_'.$row->id.'" class="btn btn-success btn-xs update" onclick="crudActionUpdate('.js_escape($row->id).', '.js_escape($parent).')">Update</button></td>';
 				$output .= '     <td><button type="button" name="delete_'.$row->id.'" id="delete_'.$row->id.'" class="btn btn-danger btn-xs delete" onclick="crudActionDelete('.js_escape($row->id).', '.js_escape($parent).')">Delete</button></td>';
@@ -111,6 +117,7 @@ class OIDplusGui {
 					$output .= '     <td>'.implode(', ', $iris).'</td>';
 				}
 				$output .= '     <td><a '.oidplus_link('oidplus:rainfo$'.str_replace('@','&',$row->ra_email)).'>'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
+				$output .= '     <td>'.htmlentities($row->comment).'</td>';
 				$output .= '     <td>'.oidplus_formatdate($row->created).'</td>';
 				$output .= '     <td>'.oidplus_formatdate($row->updated).'</td>';
 			}
@@ -136,6 +143,7 @@ class OIDplusGui {
 			if ($objParent::ns() == 'oid') $output .= '     <td><input type="text" id="asn1ids" value=""></td>';
 			if ($objParent::ns() == 'oid') $output .= '     <td><input type="text" id="iris" value=""></td>';
 			$output .= '     <td><input type="text" id="ra_email" value="'.htmlentities($parent_ra_email).'"></td>';
+			$output .= '     <td><input type="text" id="comment" value=""></td>';
 			$output .= '     <td><input type="checkbox" id="hide"></td>';
 			$output .= '     <td><button type="button" name="insert" id="insert" class="btn btn-success btn-xs update" onclick="crudActionInsert('.js_escape($parent).')">Insert</button></td>';
 			$output .= '     <td></td>';
@@ -144,7 +152,7 @@ class OIDplusGui {
 			$output .= '</tr>';
 		} else {
 			if ($items_total-$items_hidden == 0) {
-				$cols = ($objParent::ns() == 'oid') ? 7 : 5;
+				$cols = ($objParent::ns() == 'oid') ? 8 : 6;
 				$output .= '<tr><td colspan="'.$cols.'">No items available</td></tr>';
 			}
 		}

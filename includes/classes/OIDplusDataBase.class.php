@@ -77,21 +77,16 @@ abstract class OIDplusDataBase {
 		// Do the database table tables need an update?
 		// Note: The config setting "database_version" is inserted in setup/sql/...sql, not in the OIDplus core init
 
-		/*
 		$res = $this->query("SELECT value FROM `".OIDPLUS_TABLENAME_PREFIX."config` WHERE name = 'database_version'");
 		$row = $this->fetch_array($res);
 		$version = $row['value'];
 		if ($version == 200) {
-			// Do stuff to update 200 -> 201
+			$this->transaction_begin();
+			$this->query("ALTER TABLE `".OIDPLUS_TABLENAME_PREFIX."objects` ADD comment varchar(255) NULL");
 			$version = 201;
 			$this->query("UPDATE `".OIDPLUS_TABLENAME_PREFIX."config` SET value = '$version' WHERE name = 'database_version'");
+			$this->transaction_commit();
 		}
-		if ($version == 201) {
-			// Do stuff to update 201 -> 202
-			$version = 202;
-			$this->query("UPDATE `".OIDPLUS_TABLENAME_PREFIX."config` SET value = '$version' WHERE name = 'database_version'");
-		}
-		*/
 	}
 
 	public function isConnected() {

@@ -138,6 +138,9 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 				} else if (!empty($row->description)) {
 					$elements['description'] = $row->description;
 					$elements['information'] = '';
+				} else if (!empty($row->comment)) {
+					$elements['description'] = $row->comment;
+					$elements['information'] = '';
 				} else {
 					$elements['description'] = '<i>No description available</i>';
 					$elements['information'] = '';
