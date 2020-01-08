@@ -222,12 +222,17 @@ INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.3747
 
 -- 1.3.6.1.4.1.37553.8
 INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8', 'weid', 0, 1);
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8', 'weid', 0, 1);
+
 -- 1.3.6.1.4.1.37553.8.8
-INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8.8', 'private', 0, 1);
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8.8', 'private-weid', 0, 1);
+
 -- 1.3.6.1.4.1.37553.8.9
 INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8.9', 'ns', 0, 1);
+
 -- 1.3.6.1.4.1.37553.8.9.17704
 INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8.9.17704', 'dns', 0, 1);
+
 -- 1.3.6.1.4.1.37553.8.9.1439221
 INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8.9.1439221', 'uuid', 0, 1);
 
@@ -338,4 +343,4 @@ INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:2.999', from_bas
 INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:2.999', from_base64('5L6L'), 1, 1);
 INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:2.999', 'Beispiel', 1, 1);
 
--- Generator "generate_wellknown_other" checksum 4e855304
+-- Generator "generate_wellknown_other" checksum 87dbc59d

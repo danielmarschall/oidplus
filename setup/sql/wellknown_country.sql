@@ -463,6 +463,8 @@ INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.0.8', 'al', 1);
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.1.8', 'al', 1);
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.0.12', 'dz', 1);
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.1.12', 'dz', 1);
+INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.0.20', 'ad', 1);
+INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.1.20', 'ad', 1);
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.0.24', 'ao', 1);
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.1.24', 'ao', 1);
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.0.28', 'ag', 1);
@@ -727,6 +729,8 @@ INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.0.578', 'no', 1
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.1.578', 'no', 1);
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.0.583', 'fm', 1);
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.1.583', 'fm', 1);
+INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.0.585', 'pw', 1);
+INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.1.585', 'pw', 1);
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.0.586', 'pk', 1);
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.1.586', 'pk', 1);
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.0.591', 'pa', 1);
@@ -856,4 +860,4 @@ INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.1.887', 'ye', 1
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.0.894', 'zm', 1);
 INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:2.49.0.1.894', 'zm', 1);
 
--- Generator generate_wellknown_country checksum fd5dda1b
+-- Generator generate_wellknown_country checksum 5b500f9d
