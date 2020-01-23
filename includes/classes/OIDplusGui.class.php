@@ -35,14 +35,38 @@ class OIDplusGui {
 		$items_hidden = 0;
 
 		$objParent = OIDplusObject::parse($parent);
+		$parentNS = $objParent::ns();
+
+		$result = OIDplus::db()->query("select o.*, r.ra_name " .
+		                               "from ".OIDPLUS_TABLENAME_PREFIX."objects o " .
+		                               "left join ".OIDPLUS_TABLENAME_PREFIX."ra r on r.email = o.ra_email " .
+		                               "where parent = ? " .
+		                               "order by ".OIDplus::db()->natOrder('id'), array($parent));
+		$rows = array();
+		if ($parentNS == 'oid') {
+			$one_weid_available = $objParent->isWeid(true);
+			while ($row = OIDplus::db()->fetch_object($result)) {
+				$obj = OIDplusObject::parse($row->id);
+				$rows[] = array($obj,$row);
+				if (!$one_weid_available) {
+					if ($obj->isWeid(true)) $one_weid_available = true;
+				}
+			}
+		} else {
+			$one_weid_available = false;
+			while ($row = OIDplus::db()->fetch_object($result)) {
+				$obj = OIDplusObject::parse($row->id);
+				$rows[] = array($obj,$row);
+			}
+		}
 
 		$output = '';
 		$output .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 		$output .= '<table class="table table-bordered table-striped">';
 		$output .= '	<tr>';
-		$output .= '	     <th>ID'.(($objParent::ns() == 'gs1') ? ' (without check digit)' : '').'</th>';
-		if ($objParent::ns() == 'oid') {
-			if ($objParent->isWeid(true)) $output .= '	     <th>WEID</th>';
+		$output .= '	     <th>ID'.(($parentNS == 'gs1') ? ' (without check digit)' : '').'</th>';
+		if ($parentNS == 'oid') {
+			if ($one_weid_available) $output .= '	     <th>WEID</th>';
 			$output .= '	     <th>ASN.1 IDs (comma sep.)</th>';
 			$output .= '	     <th>IRI IDs (comma sep.)</th>';
 		}
@@ -57,14 +81,7 @@ class OIDplusGui {
 		$output .= '	     <th>Updated</th>';
 		$output .= '	</tr>';
 
-		$result = OIDplus::db()->query("select o.*, r.ra_name " .
-		                               "from ".OIDPLUS_TABLENAME_PREFIX."objects o " .
-		                               "left join ".OIDPLUS_TABLENAME_PREFIX."ra r on r.email = o.ra_email " .
-		                               "where parent = ? " .
-		                               "order by ".OIDplus::db()->natOrder('id'), array($parent));
-		while ($row = OIDplus::db()->fetch_object($result)) {
-			$obj = OIDplusObject::parse($row->id);
-
+		foreach ($rows as list($obj,$row)) {
 			$items_total++;
 			if (!$obj->userHasReadRights()) {
 				$items_hidden++;
@@ -88,9 +105,13 @@ class OIDplusGui {
 			$output .= '<tr>';
 			$output .= '     <td><a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.htmlentities($show_id).'</a></td>';
 			if ($objParent->userHasWriteRights()) {
-				if ($obj::ns() == 'oid') {
-					if ($obj->isWeid(false)) {
-						$output .= '	<td>'.$obj->weidArc().'</td>';
+				if ($parentNS == 'oid') {
+					if ($one_weid_available) {
+						if ($obj->isWeid(false)) {
+							$output .= '	<td>'.$obj->weidArc().'</td>';
+						} else {
+							$output .= '	<td>n/a</td>';
+						}
 					}
 					$output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.implode(', ', $asn1ids).'"></td>';
 					$output .= '     <td><input type="text" id="iris_'.$row->id.'" value="'.implode(', ', $iris).'"></td>';
@@ -105,9 +126,13 @@ class OIDplusGui {
 			} else {
 				if ($asn1ids == '') $asn1ids = '<i>(none)</i>';
 				if ($iris == '') $iris = '<i>(none)</i>';
-				if ($obj::ns() == 'oid') {
-					if ($obj->isWeid(false)) {
-						$output .= '	<td>'.$obj->weidArc().'</td>';
+				if ($parentNS == 'oid') {
+					if ($one_weid_available) {
+						if ($obj->isWeid(false)) {
+							$output .= '	<td>'.$obj->weidArc().'</td>';
+						} else {
+							$output .= '	<td>n/a</td>';
+						}
 					}
 					$asn1ids_ext = array();
 					foreach ($asn1ids as $asn1id) {
@@ -130,18 +155,19 @@ class OIDplusGui {
 		if ($objParent->userHasWriteRights()) {
 			$output .= '<tr>';
 			$prefix = is_null($objParent) ? '' : $objParent->crudInsertPrefix();
-			if ($objParent::ns() == 'oid') {
+			if ($parentNS == 'oid') {
 				if ($objParent->isWeid(true)) {
 					$output .= '     <td>'.$prefix.' <input oninput="frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>'; // TODO: idee classname vergeben, z.B. "OID" und dann mit einem oid-spezifischen css die breite einstellbar machen, somit hat das plugin mehr kontrolle über das aussehen und die mindestbreiten
 					$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="frdl_weid_change()"></td>';
 				} else {
 					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:50px"></td>'; // TODO: idee classname vergeben, z.B. "OID" und dann mit einem oid-spezifischen css die breite einstellbar machen, somit hat das plugin mehr kontrolle über das aussehen und die mindestbreiten
+					if ($one_weid_available) $output .= '     <td></td>'; // WEID-editor not available for root nodes. Do it manually, please
 				}
 			} else {
 				$output .= '     <td>'.$prefix.' <input type="text" id="id" value=""></td>';
 			}
-			if ($objParent::ns() == 'oid') $output .= '     <td><input type="text" id="asn1ids" value=""></td>';
-			if ($objParent::ns() == 'oid') $output .= '     <td><input type="text" id="iris" value=""></td>';
+			if ($parentNS == 'oid') $output .= '     <td><input type="text" id="asn1ids" value=""></td>';
+			if ($parentNS == 'oid') $output .= '     <td><input type="text" id="iris" value=""></td>';
 			$output .= '     <td><input type="text" id="ra_email" value="'.htmlentities($parent_ra_email).'"></td>';
 			$output .= '     <td><input type="text" id="comment" value=""></td>';
 			$output .= '     <td><input type="checkbox" id="hide"></td>';
@@ -152,7 +178,8 @@ class OIDplusGui {
 			$output .= '</tr>';
 		} else {
 			if ($items_total-$items_hidden == 0) {
-				$cols = ($objParent::ns() == 'oid') ? 8 : 6;
+				$cols = ($parentNS == 'oid') ? 7 : 5;
+				if ($one_weid_available) $cols++;
 				$output .= '<tr><td colspan="'.$cols.'">No items available</td></tr>';
 			}
 		}

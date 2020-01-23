@@ -58,7 +58,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
-				$out['text'] = '<p>The registration of your OIDplus installation has various advantages: The public key of your system is published, so that users can check the integrity of your data (e.g. signed OID-over-WHOIS requests). You can optionally also enable the automatic publishing of your public OID information to the repository oid-info.com.</p>'.
+				$out['text'] = file_get_contents(__DIR__ . '/info.tpl').
 				               '<p><input type="button" onclick="openOidInPanel(\'oidplus:srvreg_status\');" value="Check status of the registration and collected data"></p>';
 
 				if (!function_exists('openssl_sign')) {
@@ -244,6 +244,22 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			$res = curl_exec($ch);
 			curl_close($ch);
+
+			if ($res === 'HASH_CONFLICT') {
+				OIDplus::logger()->log("A!", "Removing SystemID and key pair because there is a hash conflict with another OIDplus system!");
+
+				// Delete the system ID since we have a conflict with the 31-bit hash!
+				OIDplus::config()->setValue('oidplus_private_key', '');
+				OIDplus::config()->setValue('oidplus_public_key', '');
+
+				// Try to generate a new system ID
+				OIDplus::pkiStatus(true);
+
+				// Enforce a new registration attempt at the next run
+				// We will not try again here, because that might lead to an endless loop if the VTS server would always return 'HASH_CONFLCIT'
+				OIDplus::config()->setValue('reg_last_ping', 0);
+			}
+
 			// die("RES: $res\n");
 			// if ($res == 'OK') ...
 		}
@@ -295,7 +311,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 		$json[] = array(
 			'id' => 'oidplus:srv_registration',
 			'icon' => $tree_icon,
-			'text' => 'Registration'
+			'text' => 'System registration'
 		);
 
 		return true;

@@ -242,6 +242,8 @@ class OIDplus {
 		$pubKey = OIDplus::config()->getValue('oidplus_public_key');
 
 		if ($try_generate && !verify_private_public_key($privKey, $pubKey)) {
+			OIDplus::logger()->log("A!", "Generating new SystemID using a new key pair");
+
 			$config = array(
 			    "digest_alg" => "sha512",
 			    "private_key_bits" => 2048,
@@ -254,13 +256,18 @@ class OIDplus {
 			// Extract the private key from $res to $privKey
 			openssl_pkey_export($res, $privKey);
 
-			OIDplus::config()->setValue('oidplus_private_key', $privKey);
-
 			// Extract the public key from $res to $pubKey
-			$pubKey = openssl_pkey_get_details($res);
-			$pubKey = $pubKey["key"];
+			$pubKey = openssl_pkey_get_details($res)["key"];
 
+			// Save the key pair to database
+			OIDplus::config()->setValue('oidplus_private_key', $privKey);
 			OIDplus::config()->setValue('oidplus_public_key', $pubKey);
+
+			// Log the new system ID
+			if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
+				$system_id = smallhash(base64_decode($m[1]));
+				OIDplus::logger()->log("A!", "Your SystemID is now $system_id");
+			}
 		}
 
 		return verify_private_public_key($privKey, $pubKey);

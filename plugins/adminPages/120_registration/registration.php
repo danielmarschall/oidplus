@@ -193,13 +193,11 @@ if ($do_edits) {
 	}
 }
 
-?><?php echo ' <font color="red"><b>'.$msg.'</b></font>'; ?>
+echo ' <font color="red"><b>'.$msg.'</b></font>';
 
-<p><u>Step <?php echo $step++; ?>: System registration and automatic Publishing</u></p>
+echo '<p><u>Step '.($step++).': System registration and automatic Publishing</u></p>';
 
-<p>The registration of your OIDplus installation has various advantages: The public key of your system is published, so that users can check the integrity of your data (e.g. signed OID-over-WHOIS requests). You can optionally also enable the automatic publishing of your public OID information to the repository oid-info.com.</p>
-
-<?php
+echo file_get_contents(__DIR__ . '/info.tpl');
 
 if (!function_exists('openssl_sign')) {
 	echo '<p>OpenSSL plugin is missing in PHP. You cannot register your OIDplus instance.</p>';
