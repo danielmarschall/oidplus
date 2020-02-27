@@ -17,21 +17,43 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/includes/oidplus.inc.php';
-
-ob_start(); // allow cookie headers to be sent
-
 header('Content-Type:text/html; charset=UTF-8');
 
+// Before we do ANYTHING, check for dependencies! Do not include anything yet.
+
+$missing_dependencies = array();
+
 if (!function_exists('gmp_init')) {
-	// Required for uuid_functions.inc.php and ipv6_functions.inc.php
-	die('<h1>OIDplus Installation</h1><p>ERROR: The extension <b>gmp</b> is not installed.</p><p>Install it using <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.</p>');
+	// Required for includes/uuid_functions.inc.php
+	//              includes/ipv6_functions.inc.php
+	//              plugins/adminPages/400_oidinfo_export/oidinfo_api.inc.php (if GMP is not available, BC will be used)
+        $missing_dependencies[] = 'GMP (Install it using <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.)';
 }
 
 if (!function_exists('mb_substr')) {
-	// Required for includes/classes/OIDplusSessionHandler.class.php, includes/oid_utils.inc.php, 3p/minify/path-converter/Converter.php, 3p/0xbb/Sha3.class.php
-	die('<h1>OIDplus Installation</h1><p>ERROR: The extension <b>php-mbstring</b> is not installed.</p><p>Install it using <code>sudo aptitude update && sudo aptitude install php-mbstring && sudo service apache2 restart</code> on Linux systems.</p>');
+	// Required for includes/classes/OIDplusSessionHandler.class.php
+	//              includes/oid_utils.inc.php
+	//              3p/minify/path-converter/Converter.php
+	//              3p/0xbb/Sha3.class.php
+	$missing_dependencies[] = 'MB (Install it using <code>sudo aptitude update && sudo aptitude install php-mbstring && sudo service apache2 restart</code> on Linux systems.)';
 }
+
+if (count($missing_dependencies) >= 1) {
+	echo '<h1>OIDplus error</h1>';
+	echo '<p>The following PHP extensions need to be installed in order to run OIDplus.</p>';
+	echo '<ul>';
+	foreach ($missing_dependencies as $dependency) {
+		echo '<li>'.$dependency.'</li>';
+	}
+	echo '</ul>';
+	die();
+}
+
+// Now we can continue!
+
+require_once __DIR__ . '/includes/oidplus.inc.php';
+
+ob_start(); // allow cookie headers to be sent
 
 OIDplus::init(true);
 
