@@ -134,7 +134,11 @@ try {
 
 		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Object '$id' (recursively) deleted");
 		OIDplus::logger()->log("OIDRA($id)!", "Lost ownership of object '$id' because it was deleted");
-
+		
+		if ($parentObj = $obj->getParent()) {
+			OIDplus::logger()->log("OID(".$parentObj->nodeId().")", "Object '$id' (recursively) deleted");
+		}
+		
 		// Delete object
 		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
 
@@ -199,10 +203,17 @@ try {
 			OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
 			OIDplus::logger()->log("RA($current_ra)!",           "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
 			OIDplus::logger()->log("RA($new_ra)!",               "Gained ownership of object '$id' due to RA transfer of superior RA / admin.");
+			if ($parentObj = $obj->getParent()) {
+				OIDplus::logger()->log("OID(".$parentObj->nodeId().")", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
+			}
 			_ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mitändern
 		}
 
+		// Log if confidentially flag was changed
 		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Identifiers/Confidential flag of object '$id' updated"); // TODO: Check if they were ACTUALLY updated!
+		if ($parentObj = $obj->getParent()) {
+			OIDplus::logger()->log("OID(".$parentObj->nodeId().")", "Identifiers/Confidential flag of object '$id' updated"); // TODO: Check if they were ACTUALLY updated!
+		}
 
 		// Replace ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {
@@ -215,6 +226,9 @@ try {
 			$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
 			$ids = array_map('trim',$ids);
 			$oid->replaceAsn1Ids($ids, false);
+			
+			// TODO: Check if any identifiers have been actually changed,
+			// and log it to OID($id), OID($parent), ... (see above)
 		}
 
 		$confidential = $_POST['confidential'] == 'true';
