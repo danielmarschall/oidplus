@@ -20,6 +20,7 @@
 if (!defined('IN_OIDPLUS')) die();
 
 define('OIDPLUS_MYSQL_QUERYLOG', false);
+define('MYSQLND_AVAILABLE', function_exists('mysqli_fetch_all'));
 
 if (OIDPLUS_MYSQL_QUERYLOG) {
 	function CallingFunctionName() {
@@ -61,7 +62,10 @@ class OIDplusDataBaseMySQLi extends OIDplusDataBase {
 
 			bind_placeholder_vars($ps,$prepared_args);
 			if (!$ps->execute()) return false;
-			$res = $ps->get_result();
+
+//echo "Query: $sql\n".print_r($prepared_args,true);
+			$res = MYSQLND_AVAILABLE ? $ps->get_result() : iimysqli_stmt_get_result($ps);
+			
 			if ($res === false) return true; // A non-SELECT statement does not give a result-set, but it is still successful
 			return $res;
 		}
@@ -70,21 +74,21 @@ class OIDplusDataBaseMySQLi extends OIDplusDataBase {
 		if (!is_object($res)) {
 			throw new Exception("num_rows called on non object. Last query: ".$this->last_query);
 		} else {
-			return $res->num_rows;
+			return (get_class($res)=='mysqli_result') || MYSQLND_AVAILABLE ? $res->num_rows : $res->num_rows();
 		}
 	}
 	public function fetch_array($res) {
 		if (!is_object($res)) {
 			throw new Exception("fetch_array called on non object. Last query: ".$this->last_query);
 		} else {
-			return $res->fetch_array(MYSQLI_BOTH);
+			return (get_class($res)=='mysqli_result') || MYSQLND_AVAILABLE ? $res->fetch_array(MYSQLI_BOTH) : $res->fetch_array();
 		}
 	}
 	public function fetch_object($res) {
 		if (!is_object($res)) {
 			throw new Exception("fetch_object called on non object. Last query: ".$this->last_query);
 		} else {
-			return $res->fetch_object("stdClass");
+			return (get_class($res)=='mysqli_result') || MYSQLND_AVAILABLE ? $res->fetch_object("stdClass") : $res->fetch_object();
 		}
 	}
 	public function insert_id() {
@@ -145,57 +149,174 @@ class OIDplusDataBaseMySQLi extends OIDplusDataBase {
 }
 
 function bind_placeholder_vars(&$stmt,$params,$debug=0) {
-    // Credit to: Dave Morgan
-    // Code ripped from: http://www.devmorgan.com/blog/2009/03/27/dydl-part-3-dynamic-binding-with-mysqli-php/
-    if ($params != null) {
-        $types = '';                        //initial sting with types
-        foreach ($params as $param) {        //for each element, determine type and add
-            if (is_int($param)) {
-                $types .= 'i';              //integer
-            } elseif (is_float($param)) {
-                $types .= 'd';              //double
-            } elseif (is_string($param)) {
-                $types .= 's';              //string
-            } else {
-                $types .= 'b';              //blob and unknown
-            }
-        }
+	// Credit to: Dave Morgan
+	// Code ripped from: http://www.devmorgan.com/blog/2009/03/27/dydl-part-3-dynamic-binding-with-mysqli-php/
+	//                   https://stackoverflow.com/questions/17219214/how-to-bind-in-mysqli-dynamically
+	if ($params != null) {
+		$types = '';                        //initial sting with types
+		foreach ($params as $param) {        //for each element, determine type and add
+			if (is_int($param)) {
+				$types .= 'i';              //integer
+			} elseif (is_float($param)) {
+				$types .= 'd';              //double
+			} elseif (is_string($param)) {
+				$types .= 's';              //string
+			} else {
+				$types .= 'b';              //blob and unknown
+			}
+		}
 
-        $bind_names = array();
-        $bind_names[] = $types;             //first param needed is the type string
-                                // eg:  'issss'
+		$bind_names = array();
+		$bind_names[] = $types;             //first param needed is the type string
+								// eg:  'issss'
 
-        for ($i=0; $i<count($params);$i++) {    //go through incoming params and added em to array
-            $bind_name = 'bind' . $i;       //give them an arbitrary name
-            $$bind_name = $params[$i];      //add the parameter to the variable variable
-            $bind_names[] = &$$bind_name;   //now associate the variable as an element in an array
-        }
+		for ($i=0; $i<count($params);$i++) {    //go through incoming params and added em to array
+			$bind_name = 'bind' . $i;       //give them an arbitrary name
+			$$bind_name = $params[$i];      //add the parameter to the variable variable
+			$bind_names[] = &$$bind_name;   //now associate the variable as an element in an array
+		}
 
-        if ($debug) {
-            echo "\$bind_names:<br />\n";
-            var_dump($bind_names);
-            echo "<br />\n";
-        }
-        //error_log("better_mysqli has params ".print_r($bind_names, 1));
-        //call the function bind_param with dynamic params
-        call_user_func_array(array($stmt,'bind_param'),$bind_names);
-        return true;
-    }else{
-        return false;
-    }
+		if ($debug) {
+			echo "\$bind_names:<br />\n";
+			var_dump($bind_names);
+			echo "<br />\n";
+		}
+		//error_log("better_mysqli has params ".print_r($bind_names, 1));
+		//call the function bind_param with dynamic params
+		call_user_func_array(array($stmt,'bind_param'),$bind_names);
+		return true;
+	}else{
+		return false;
+	}
 }
 
 function bind_result_array($stmt, &$row) {
-    // Credit to: Dave Morgan
-    // Code ripped from: http://www.devmorgan.com/blog/2009/03/27/dydl-part-3-dynamic-binding-with-mysqli-php/
-    $meta = $stmt->result_metadata();
-    while ($field = $meta->fetch_field()) {
-        $params[] = &$row[$field->name];
-    }
-    call_user_func_array(array($stmt, 'bind_result'), $params);
-    return true;
+	// Credit to: Dave Morgan
+	// Code ripped from: http://www.devmorgan.com/blog/2009/03/27/dydl-part-3-dynamic-binding-with-mysqli-php/
+	$meta = $stmt->result_metadata();
+	while ($field = $meta->fetch_field()) {
+		$params[] = &$row[$field->name];
+	}
+	call_user_func_array(array($stmt, 'bind_result'), $params);
+	return true;
 }
 
-// https://stackoverflow.com/questions/17219214/how-to-bind-in-mysqli-dynamically
+if (!MYSQLND_AVAILABLE) {
+	class iimysqli_result {
+		// Source: https://www.php.net/manual/de/mysqli-stmt.get-result.php#113398
+		
+		public $stmt, $nCols;
+		/*
+		protected $curpos = 0;
+		*/
+
+		function fetch_array() {
+			// https://stackoverflow.com/questions/10752815/mysqli-get-result-alternative , modified
+			$stmt = $this->stmt;
+			$stmt->store_result();
+			$resultkeys = array();
+			$thisName = "";
+			
+			if ($stmt->num_rows==0) return false;
+			
+			for ( $i = 0; $i < $stmt->num_rows; $i++ ) {
+				$metadata = $stmt->result_metadata();
+				while ( $field = $metadata->fetch_field() ) {
+					$thisName = $field->name;
+					$resultkeys[] = $thisName;
+				}
+			}
+
+			$ret = array();
+			$code = "return mysqli_stmt_bind_result(\$this->stmt ";
+			for ($i=0; $i<$this->nCols; $i++) {
+				$ret[$i] = NULL;
+				$theValue = $resultkeys[$i];
+				$code .= ", \$ret['$theValue']";
+			}
+
+			$code .= ");";
+			if (!eval($code)) { 
+				return NULL; 
+			}
+
+			// This should advance the "$stmt" cursor.
+			if (!mysqli_stmt_fetch($this->stmt)) {
+				return NULL; 
+			}
+			/*
+			$this->curpos++;
+			*/
+
+			// Return the array we built.
+			return $ret;
+		}		
+		
+		public function num_rows() {
+			$this->stmt->store_result();
+			return $this->stmt->num_rows;
+			
+
+			/*			
+			$this->stmt->store_result();
+			$this->stmt->data_seek(0);
+			$count = 0;
+			while ($this->stmt->fetch()){
+				$count++;
+			}
+			$this->stmt->data_seek($this->curpos);
+			return $count;
+			*/
+		}
+		
+		public function fetch_object() {
+			$obj = new stdClass;
+			$ary = $this->fetch_array();
+			if (!$ary) return false;
+			foreach ($ary as $name => $val) {
+				$obj->$name = $val;
+			}
+			return $obj;
+		}
+	}   
+	
+	function iimysqli_stmt_get_result($stmt) {
+		// Source: https://www.php.net/manual/de/mysqli-stmt.get-result.php#113398
+		
+		/**    EXPLANATION:
+		 * We are creating a fake "result" structure to enable us to have
+		 * source-level equivalent syntax to a query executed via
+		 * mysqli_query().
+		 *
+		 *    $stmt = mysqli_prepare($conn, "");
+		 *    mysqli_bind_param($stmt, "types", ...);
+		 *
+		 *    $param1 = 0;
+		 *    $param2 = 'foo';
+		 *    $param3 = 'bar';
+		 *    mysqli_execute($stmt);
+		 *    $result _mysqli_stmt_get_result($stmt);
+		 *        [ $arr = _mysqli_result_fetch_array($result);
+		 *            || $assoc = _mysqli_result_fetch_assoc($result); ]
+		 *    mysqli_stmt_close($stmt);
+		 *    mysqli_close($conn);
+		 *
+		 * At the source level, there is no difference between this and mysqlnd.
+		 **/
+		$metadata = mysqli_stmt_result_metadata($stmt);
+		$ret = new iimysqli_result;
+		if (!$ret) return NULL;
+		
+		if (is_bool($metadata)) {
+			return $metadata;
+		}
+	
+		$ret->nCols = mysqli_num_fields($metadata);
+		$ret->stmt = $stmt;
+	
+		mysqli_free_result($metadata);
+		return $ret;
+	}
+}
 
 OIDplus::registerDatabasePlugin(new OIDplusDataBaseMySQLi());

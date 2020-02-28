@@ -19,15 +19,21 @@
 
 header('Content-Type:text/html; charset=UTF-8');
 
-// Before we do ANYTHING, check for dependencies! Do not include anything yet.
+// Before we do ANYTHING, check for dependencies! Do not include anything (except the GMP supplement) yet.
 
 $missing_dependencies = array();
 
+include_once __DIR__ . '/includes/gmp_supplement.inc.php';
+
 if (!function_exists('gmp_init')) {
-	// Required for includes/uuid_functions.inc.php
-	//              includes/ipv6_functions.inc.php
-	//              plugins/adminPages/400_oidinfo_export/oidinfo_api.inc.php (if GMP is not available, BC will be used)
-        $missing_dependencies[] = 'GMP (Install it using <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.)';
+	// GMP Required for includes/uuid_functions.inc.php
+	//                  includes/ipv6_functions.inc.php
+	//                  plugins/adminPages/400_oidinfo_export/oidinfo_api.inc.php (if GMP is not available, BC will be used)
+	// Note that gmp_supplement.inc.php will implement the GMP functions if BCMath is present.
+	// This is the reason why we use function_exists('gmp_init') instead of extension_loaded('gmp') 
+        $missing_dependencies[] = 'GMP (Install it using <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.)' .
+	                          '<br>or alternatively<br>' .
+	                          'BCMath (Install it using <code>sudo aptitude update && sudo aptitude install php-bcmath && sudo service apache2 restart</code> on Linux systems.)';
 }
 
 if (!function_exists('mb_substr')) {
@@ -35,7 +41,7 @@ if (!function_exists('mb_substr')) {
 	//              includes/oid_utils.inc.php
 	//              3p/minify/path-converter/Converter.php
 	//              3p/0xbb/Sha3.class.php
-	$missing_dependencies[] = 'MB (Install it using <code>sudo aptitude update && sudo aptitude install php-mbstring && sudo service apache2 restart</code> on Linux systems.)';
+	$missing_dependencies[] = 'MBString (Install it using <code>sudo aptitude update && sudo aptitude install php-mbstring && sudo service apache2 restart</code> on Linux systems.)';
 }
 
 if (count($missing_dependencies) >= 1) {

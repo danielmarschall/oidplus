@@ -26,6 +26,8 @@
 
 define('GMP_ONE', gmp_init('1'));
 
+if (file_exists(__DIR__ . '/gmp_supplement.inc.php')) include_once __DIR__ . '/gmp_supplement.inc.php';
+
 // Very small self-test:
 /*
 function ipv6_selftest() {
@@ -388,14 +390,18 @@ function ipv6_line2range($line) {
 
 # ---
 
-function gmp_shiftl($x, $n) { // shift left
-	// http://www.php.net/manual/en/ref.gmp.php#99788
-	return gmp_mul($x, gmp_pow('2', $n));
+if (!function_exists('gmp_shiftl')) {
+	function gmp_shiftl($x, $n) { // shift left
+		// http://www.php.net/manual/en/ref.gmp.php#99788
+		return gmp_mul($x, gmp_pow('2', $n));
+	}
 }
 
-function gmp_shiftr($x, $n) { // shift right
-	// http://www.php.net/manual/en/ref.gmp.php#99788
-	return gmp_div($x, gmp_pow('2', $n));
+if (!function_exists('gmp_shiftr')) {
+	function gmp_shiftr($x, $n) { // shift right
+		// http://www.php.net/manual/en/ref.gmp.php#99788
+		return gmp_div($x, gmp_pow('2', $n));
+	}
 }
 
 $cache_ip2long6 = array();
