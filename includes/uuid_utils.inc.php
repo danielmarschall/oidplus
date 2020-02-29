@@ -2,8 +2,8 @@
 
 /*
  * UUID utils for PHP
- * Copyright 2011-2019 Daniel Marschall, ViaThinkSoft
- * Version 2019-11-04
+ * Copyright 2011-2020 Daniel Marschall, ViaThinkSoft
+ * Version 2020-02-28
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+# This library requires either the GMP extension (or BCMath if gmp_supplement.inc.php is present)
 
 if (file_exists(__DIR__ . '/mac_utils.inc.phps')) include_once __DIR__ . '/mac_utils.inc.phps';
 if (file_exists(__DIR__ . '/gmp_supplement.inc.php')) include_once __DIR__ . '/gmp_supplement.inc.php';

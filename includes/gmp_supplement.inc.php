@@ -176,15 +176,43 @@ if (function_exists('bcadd')) {
 		// gmp_gcd ( GMP $a , GMP $b ) : GMP
 		// Calculate GCD
 		function gmp_gcd($a, $b) {
-			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			return gmp_gcdext($a, $b)['g'];
 		}
 	
 		// gmp_gcdext ( GMP $a , GMP $b ) : array
 		// Calculate GCD and multipliers
 		function gmp_gcdext($a, $b) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+
+			// Source: https://github.com/phpseclib/phpseclib/blob/master/phpseclib/Math/BigInteger/Engines/BCMath.php#L285
+			// modified to make it fit here and to be compatible with gmp_gcdext
+		
+			$s = '1';
+			$t = '0';
+			$s_ = '0';
+			$t_ = '1';
+		
+			while (bccomp($b, '0', 0) != 0) {
+				$q = bcdiv($a, $b, 0);
+		
+				$temp = $a;
+				$a = $b;
+				$b = bcsub($temp, bcmul($b, $q, 0), 0);
+		
+				$temp = $s;
+				$s = $s_;
+				$s_ = bcsub($temp, bcmul($s, $q, 0), 0);
+		
+				$temp = $t;
+				$t = $t_;
+				$t_ = bcsub($temp, bcmul($t, $q, 0), 0);
+			}
+		
+			return [
+				'g' => $this->normalize($a),
+				's' => $this->normalize($s),
+				't' => $this->normalize($t)
+			];
 		}
 	
 		// gmp_hamdist ( GMP $a , GMP $b ) : int
