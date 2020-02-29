@@ -495,7 +495,7 @@ $(document).ready(function () {
 });
 
 function glayoutWorkaroundA() {
-	// "Bug A": Sometimes, the design is completelydestroyed after reloading the page. It does not help when glayout.resizeAll()
+	// "Bug A": Sometimes, the design is completely destroyed after reloading the page. It does not help when glayout.resizeAll()
 	//          is called at the beginning (e.g. during the ready function), and it does not help if we wait 500ms.
 	//          So we do it all the time. It has probably something to do with slow loading times, since the error
 	//          does only appear when the page is "blank" for a short while while it is loading.

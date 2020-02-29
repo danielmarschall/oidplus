@@ -26,8 +26,13 @@ OIDplus::init(true);
 # ---
 
 if (!OIDplus::authUtils()::isAdminLoggedIn()) {
-	echo '<p>You need to <a href="'.OIDplus::system_url().'?goto=oidplus:login">log in</a> as administrator.</p>';
-	die();
+	if (php_sapi_name() == 'cli') {
+		#echo "You need to log in as administrator.\n";
+		#die();
+	} else {
+		echo '<p>You need to <a href="'.OIDplus::system_url().'?goto=oidplus:login">log in</a> as administrator.</p>';
+		die();
+	}
 }
 
 header('Content-Type:text/xml');

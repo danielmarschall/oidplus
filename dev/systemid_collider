@@ -1,0 +1,42 @@
+#!/usr/bin/php
+<?php
+
+define('TARGET_ID', '6175446'); // ViaThinkSoft RA
+
+$config = array("digest_alg" => "sha1", // sha512
+                "private_key_bits" => 384,
+                "private_key_type" => OPENSSL_KEYTYPE_RSA,
+               );
+
+# ---
+
+$cnt = 0;
+
+echo date('Y-m-d H:i:s')." START\n";
+
+while (true) {
+	$cnt++;
+
+	$res = openssl_pkey_new($config);
+
+	$details = openssl_pkey_get_details($res);
+	$pubKey = str_replace(array('BEGIN PUBLIC KEY','END PUBLIC KEY','-',"\n"), '', $details["key"]);
+	unset($details);
+
+	$system_id = smallhash(base64_decode($pubKey));
+
+	if ($system_id == TARGET_ID) {
+		openssl_pkey_export($res, $privKey);
+		echo date('Y-m-d H:i:s')." COLLISSION WITH $system_id AFTER $cnt TRIES: ".$pubKey." / ".$privKey."\n";
+		unset($privKey);
+	}
+
+	unset($res);
+
+	if ($cnt%25 == 0) echo "PROCESSING: $cnt       \r";
+}
+
+function smallhash($data) { // get 31 bits from SHA1. Values 0..2147483647
+	return (hexdec(substr(sha1($data),-4*2)) & 2147483647);
+}
+

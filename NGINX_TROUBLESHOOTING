@@ -1,5 +1,5 @@
 
-If you get HTTP error 502 with NGINX, or the error log message
+If you get HTTP error "502 Bad Gateway" with NGINX, or the error log message
 "upstream sent too big header while reading response header from upstream",
 following settings might solve the problem:
 
