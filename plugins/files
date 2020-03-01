@@ -3,15 +3,17 @@ Types "raPages", "publicPages" and "adminPages"
 
 	script.js (optional)
 	style.css (optional)
-	gui.inc.php
-	tree.inc.php
-	action.inc.php
+	plugin.inc.php
 	treeicon.png (optional)
-	cfg_loadconfig.inc.php (optional)
-	cfg_setvalue.inc.php (optional)
 
 Type "objectTypes"
 ------------------
 
-	Description will follow
+	icon_big.png
+	*.class.php
 
+Type "database"
+---------------
+
+	plugin.inc.php
+	setup.part.html

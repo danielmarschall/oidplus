@@ -3,7 +3,7 @@
 /*
  * PHP GMP-Supplement implemented using BCMath
  * Copyright 2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-02-27
+ * Version 2020-02-29
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ if (function_exists('bcadd')) {
 		// Calculates binomial coefficient
 		function gmp_binomial($n, $k) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			throw new Exception("gmp_binomial() NOT IMPLEMENTED");
 		}
 	
 		// gmp_clrbit ( GMP $a , int $index ) : void
@@ -114,7 +114,7 @@ if (function_exists('bcadd')) {
 	
 		// gmp_div_q ( GMP $a , GMP $b [, int $round = GMP_ROUND_ZERO ] ) : GMP
 		// Divide numbers
-		function gmp_div_q($a, $b, $round = GMP_ROUND_ZERO/*not implemented*/) {
+		function gmp_div_q($a, $b, $round = GMP_ROUND_ZERO/*$round not implemented*/) {
 			bcscale(0);
 			
 			// bcdiv ( string $dividend , string $divisor [, int $scale = 0 ] ) : string
@@ -123,7 +123,7 @@ if (function_exists('bcadd')) {
 	
 		// Divide numbers and get quotient and remainder
 		// gmp_div_qr ( GMP $n , GMP $d [, int $round = GMP_ROUND_ZERO ] ) : array
-		function gmp_div_qr($n, $d, $round = GMP_ROUND_ZERO/*not implemented*/) {
+		function gmp_div_qr($n, $d, $round = GMP_ROUND_ZERO/*$round not implemented*/) {
 			bcscale(0);
 			return array(
 				gmp_div_q($n, $d, $round),
@@ -133,7 +133,7 @@ if (function_exists('bcadd')) {
 	
 		// Remainder of the division of numbers
 		// gmp_div_r ( GMP $n , GMP $d [, int $round = GMP_ROUND_ZERO ] ) : GMP
-		function gmp_div_r($n, $d, $round = GMP_ROUND_ZERO/*not implemented*/) {
+		function gmp_div_r($n, $d, $round = GMP_ROUND_ZERO/*$round not implemented*/) {
 			bcscale(0);
 			// The remainder operator can be used with negative integers. The rule is:
 			// - Perform the operation as if both operands were positive.
@@ -147,7 +147,7 @@ if (function_exists('bcadd')) {
 	
 		// gmp_div ( GMP $a , GMP $b [, int $round = GMP_ROUND_ZERO ] ) : GMP
 		// Divide numbers
-		function gmp_div($a, $b, $round = GMP_ROUND_ZERO/*not implemented*/) {
+		function gmp_div($a, $b, $round = GMP_ROUND_ZERO/*$round not implemented*/) {
 			bcscale(0);
 			return gmp_div_q($a, $b, $round); // Alias von gmp_div_q
 		}
@@ -162,8 +162,12 @@ if (function_exists('bcadd')) {
 		// gmp_export ( GMP $gmpnumber [, int $word_size = 1 [, int $options = GMP_MSW_FIRST | GMP_NATIVE_ENDIAN ]] ) : string
 		// Export to a binary string
 		function gmp_export($gmpnumber, $word_size = 1, $options = GMP_MSW_FIRST | GMP_NATIVE_ENDIAN) {
+			if ($word_size != 1) die("Word size != 1 not implemented");
+			if ($options != GMP_MSW_FIRST | GMP_NATIVE_ENDIAN) die("Different options not implemented");
+
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			$gmpnumber = bcmul($gmpnumber,"1"); // normalize
+			return gmp_init(bin2hex($gmpnumber), 16);
 		}
 	
 		// gmp_fact ( mixed $a ) : GMP
@@ -176,6 +180,7 @@ if (function_exists('bcadd')) {
 		// gmp_gcd ( GMP $a , GMP $b ) : GMP
 		// Calculate GCD
 		function gmp_gcd($a, $b) {
+			bcscale(0);
 			return gmp_gcdext($a, $b)['g'];
 		}
 	
@@ -219,14 +224,18 @@ if (function_exists('bcadd')) {
 		// Hamming distance
 		function gmp_hamdist($a, $b) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			throw new Exception("gmp_hamdist() NOT IMPLEMENTED");
 		}
 	
 		// gmp_import ( string $data [, int $word_size = 1 [, int $options = GMP_MSW_FIRST | GMP_NATIVE_ENDIAN ]] ) : GMP
 		// Import from a binary string
 		function gmp_import($data, $word_size=1, $options=GMP_MSW_FIRST | GMP_NATIVE_ENDIAN) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+
+			if ($word_size != 1) die("Word size != 1 not implemented");
+			if ($options != GMP_MSW_FIRST | GMP_NATIVE_ENDIAN) die("Different options not implemented");
+
+			return gmp_init(hex2bin(gmp_strval(gmp_init($data), 16)));
 		}
 	
 		// gmp_init ( mixed $number [, int $base = 0 ] ) : GMP
@@ -265,35 +274,96 @@ if (function_exists('bcadd')) {
 		// Inverse by modulo
 		function gmp_invert($a, $b) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			
+			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L246
+
+			while (bccomp($a, 0)==-1) {
+				$a=bcadd($m, $a);
+			}
+			while (bccomp($m, $a)==-1) {
+				$a=bcmod($a, $m);
+			}
+			$c=$a;
+			$d=$m;
+			$uc=1;
+			$vc=0;
+			$ud=0;
+			$vd=1;
+			while (bccomp($c, 0)!=0) {
+				$temp1=$c;
+				$q=bcdiv($d, $c, 0);
+				$c=bcmod($d, $c);
+				$d=$temp1;
+				$temp2=$uc;
+				$temp3=$vc;
+				$uc=bcsub($ud, bcmul($q, $uc));
+				$vc=bcsub($vd, bcmul($q, $vc));
+				$ud=$temp2;
+				$vd=$temp3;
+			}
+			$result='';
+			if (bccomp($d, 1)==0) {
+				if (bccomp($ud, 0)==1) {
+					$result=$ud;
+				} else {
+					$result=bcadd($ud, $m);
+				}
+			} else {
+				throw new ErrorException("ERROR: $a and $m are NOT relatively prime.");
+			}
+			return $result;
 		}
 	
 		// gmp_jacobi ( GMP $a , GMP $p ) : int
 		// Jacobi symbol
 		function gmp_jacobi($a, $p) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			
+			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L136
+
+			if ($n>=3 && $n%2==1) {
+				$a = bcmod($a, $n);
+				if ($a == 0) return 0;
+				if ($a == 1) return 1;
+				$a1 = $a;
+				$e = 0;
+				while (bcmod($a1, 2) == 0) {
+					$a1 = bcdiv($a1, 2);
+					$e = bcadd($e, 1);
+				}
+				$s = (bcmod($e, 2)==0 || bcmod($n, 8)==1 || bcmod($n, 8)==7) ? 1 : -1;
+				if ($a1 == 1) return $s;
+				if (bcmod($n, 4)==3 && bcmod($a1, 4)==3) $s = -$s;
+				return bcmul($s, gmp_jacobi(bcmod($n, $a1), $a1));
+			} else {
+				return false;
+			}
 		}
 	
 		// gmp_kronecker ( mixed $a , mixed $b ) : int
 		// Kronecker symbol
 		function gmp_kronecker($a, $b) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			throw new Exception("gmp_kronecker() NOT IMPLEMENTED");
 		}
 	
 		// gmp_lcm ( mixed $a , mixed $b ) : GMP
 		// Calculate LCM
 		function gmp_lcm($a, $b) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			
+			if ((bccomp($a,'0')==0) && (bccomp($b,'0')==0)) {
+				return 0;
+			} else {
+				return gmp_div(gmp_abs(gmp_mul($a,$b)), gmp_gcd($a,$b));
+			}
 		}
 	
 		// gmp_legendre ( GMP $a , GMP $p ) : int
 		// Legendre symbol
 		function gmp_legendre($a, $p) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			throw new Exception("gmp_legendre() NOT IMPLEMENTED");
 		}
 	
 		// gmp_mod ( GMP $n , GMP $d ) : GMP
@@ -325,7 +395,17 @@ if (function_exists('bcadd')) {
 		// Find next prime number
 		function gmp_nextprime($a) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			
+			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L692
+			
+			if (bccomp($starting_value, 2) == -1) {
+				return 2;
+			}
+			$result = gmp_or(bcadd($starting_value, 1), 1);
+			while (!gmp_prob_prime($result)) {
+				$result = bcadd($result, 2);
+			}
+			return $result;			
 		}
 	
 		// gmp_or ( GMP $a , GMP $b ) : GMP
@@ -353,21 +433,22 @@ if (function_exists('bcadd')) {
 		// Perfect power check
 		function gmp_perfect_power($a) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			throw new Exception("gmp_perfect_power() NOT IMPLEMENTED");
 		}
 	
 		// gmp_perfect_square ( GMP $a ) : bool
 		// Perfect square check
 		function gmp_perfect_square($a) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			throw new Exception("gmp_perfect_square() NOT IMPLEMENTED");
 		}
 	
 		// gmp_popcount ( GMP $a ) : int
 		// Population count
 		function gmp_popcount($a) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			$ab = bc_dec2bin($a);
+			return substr_count($ab, '1');
 		}
 	
 		// gmp_pow ( GMP $base , int $exp ) : GMP
@@ -392,49 +473,82 @@ if (function_exists('bcadd')) {
 		// Check if number is "probably prime"
 		function gmp_prob_prime($a, $reps=10) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			
+			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L655
+
+			$t = 40;
+			$k = 0;
+			$m = bcsub($n, 1);
+			while (bcmod($m, 2) == 0) {
+				$k = bcadd($k, 1);
+				$m = bcdiv($m, 2);
+			}
+			for ($i=0; $i<$t; $i++) {
+				$a = bcrand(1, bcsub($n, 1));
+				if ($m < 0) {
+					return new ErrorException("Negative exponents ($m) not allowed");
+				} else {
+					$b0 = bcpowmod($a, $m, $n);
+				}				
+				if ($b0!=1 && $b0!=bcsub($n, 1)) {
+					$j = 1;
+					while ($j<=$k-1 && $b0!=bcsub($n, 1)) {
+						$b0 = bcpowmod($b0, 2, $n);
+						if ($b0 == 1) {
+							return false;
+						}
+						$j++;
+					}
+					if ($b0 != bcsub($n, 1)) {
+						return false;
+					}
+				}
+			}
+			return true;			
 		}
 	
 		// gmp_random_bits ( int $bits ) : GMP
 		// Random number
 		function gmp_random_bits($bits) {
-			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			bcscale(0);			
+			$min = 0;
+			$max = bcsub(bcpow('2', $bits), '1');
+			return bcrand($min, $max);
 		}
 	
 		// gmp_random_range ( GMP $min , GMP $max ) : GMP
 		// Random number
 		function gmp_random_range($min, $max) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			return bcrand($min, $max);
 		}
 	
 		// gmp_random_seed ( mixed $seed ) : void
 		// Sets the RNG seed
 		function gmp_random_seed($seed) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			bcrand_seed($seed);
 		}
 	
 		// gmp_random ([ int $limiter = 20 ] ) : GMP
 		// Random number (deprecated)
 		function gmp_random($limiter=20) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			throw new Exception("gmp_random() is deprecated! Please use gmp_random_bits() or gmp_random_range() instead.");
 		}
 	
 		// gmp_root ( GMP $a , int $nth ) : GMP
 		// Take the integer part of nth root
 		function gmp_root($a, $nth) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			throw new Exception("gmp_root() NOT IMPLEMENTED");
 		}
 	
 		// gmp_rootrem ( GMP $a , int $nth ) : array
 		// Take the integer part and remainder of nth root
 		function gmp_rootrem($a, $nth) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			throw new Exception("gmp_rootrem() NOT IMPLEMENTED");
 		}
 	
 		// gmp_scan0 ( GMP $a , int $start ) : int
@@ -511,7 +625,7 @@ if (function_exists('bcadd')) {
 		// Square root with remainder
 		function gmp_sqrtrem($a) {
 			bcscale(0);
-			throw new Exception("NOT IMPLEMENTED");
+			throw new Exception("gmp_sqrtrem() NOT IMPLEMENTED");
 		}
 	
 		// gmp_strval ( GMP $gmpnumber [, int $base = 10 ] ) : string
@@ -656,6 +770,7 @@ if (function_exists('bcadd')) {
 		return true;
 	}
 	function gmp_not($a) {
+		bcscale(0);
 		return bcnot($a);
 	}
 	
@@ -665,6 +780,7 @@ if (function_exists('bcadd')) {
 		return bcmul($num, bcpow('2', $bits));
 	}
 	function gmp_shiftl($num, $bits) {
+		bcscale(0);
 		return bcshiftl($num, $bits);
 	}
 	
@@ -674,6 +790,7 @@ if (function_exists('bcadd')) {
 		return bcdiv($num, bcpow('2', $bits));
 	}
 	function gmp_shiftr($num, $bits) {
+		bcscale(0);
 		return bcshiftr($num, $bits);
 	}
 	
@@ -692,5 +809,23 @@ if (function_exists('bcadd')) {
 		}
 	
 		return $result;
+	}
+
+	// Newly added (used by gmp_prob_prime, gmp_random_range and gmp_random_bits)
+	function bcrand($min, $max = false) {
+		bcscale(0);
+		// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/BCMathUtils.php#L7
+		// Fixed: https://github.com/CityOfZion/neo-php/issues/16
+		if (!$max) {
+			$max = $min;
+			$min = 0;
+		}
+		return bcadd(bcmul(bcdiv(mt_rand(), mt_getrandmax(), strlen($max)), bcsub(bcadd($max, 1), $min)), $min);
+	}
+	
+	// Newly added (used by gmp_random_seed)
+	function bcrand_seed($seed) {
+		bcscale(0);
+		mt_srand($seed);
 	}
 }

@@ -63,7 +63,6 @@ class OIDplusDataBaseMySQLi extends OIDplusDataBase {
 			bind_placeholder_vars($ps,$prepared_args);
 			if (!$ps->execute()) return false;
 
-//echo "Query: $sql\n".print_r($prepared_args,true);
 			$res = MYSQLND_AVAILABLE ? $ps->get_result() : iimysqli_stmt_get_result($ps);
 			
 			if ($res === false) return true; // A non-SELECT statement does not give a result-set, but it is still successful
@@ -206,9 +205,6 @@ if (!MYSQLND_AVAILABLE) {
 		// Source: https://www.php.net/manual/de/mysqli-stmt.get-result.php#113398
 		
 		public $stmt, $nCols;
-		/*
-		protected $curpos = 0;
-		*/
 
 		function fetch_array() {
 			// https://stackoverflow.com/questions/10752815/mysqli-get-result-alternative , modified
@@ -244,9 +240,6 @@ if (!MYSQLND_AVAILABLE) {
 			if (!mysqli_stmt_fetch($this->stmt)) {
 				return NULL; 
 			}
-			/*
-			$this->curpos++;
-			*/
 
 			// Return the array we built.
 			return $ret;
@@ -255,18 +248,6 @@ if (!MYSQLND_AVAILABLE) {
 		public function num_rows() {
 			$this->stmt->store_result();
 			return $this->stmt->num_rows;
-			
-
-			/*			
-			$this->stmt->store_result();
-			$this->stmt->data_seek(0);
-			$count = 0;
-			while ($this->stmt->fetch()){
-				$count++;
-			}
-			$this->stmt->data_seek($this->curpos);
-			return $count;
-			*/
 		}
 		
 		public function fetch_object() {
