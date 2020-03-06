@@ -120,7 +120,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 
 			$email = explode('$',$id)[1];
 			$origin = explode('$',$id)[2];
-			
+
 			$out['title'] = 'Invite a Registration Authority';
 
 			if (!OIDplus::config()->getValue('ra_invitation_enabled')) {

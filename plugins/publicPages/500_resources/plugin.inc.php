@@ -64,10 +64,10 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 			$file = @explode('$',$id)[1];
 			$auth = @explode('$',$id)[2];
 
-			if (!OIDplus::authUtils()::validateAuthKey("oidplus:resources;$file", $auth)) {
+			if (!OIDplus::authUtils()::validateAuthKey("resources;$file", $auth)) {
 				$out['title'] = 'Access denied';
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>Invalid authentification token</p>';
+				$out['text'] = '<p>Invalid authentication token</p>';
 				return $out;
 			}
 
@@ -85,7 +85,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a '.oidplus_link('oidplus:resources$'.CFG_RESOURCE_PLUGIN_PATH.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:resources;".CFG_RESOURCE_PLUGIN_PATH)).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(CFG_RESOURCE_PLUGIN_TITLE).'</a></p>';
+					$out['text'] .= '<p><a '.oidplus_link('oidplus:resources$'.CFG_RESOURCE_PLUGIN_PATH.'$'.OIDplus::authUtils()::makeAuthKey("resources;".CFG_RESOURCE_PLUGIN_PATH)).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(CFG_RESOURCE_PLUGIN_TITLE).'</a></p>';
 				} else {
 					$icon_candidate = pathinfo($dir)['dirname'].'/'.pathinfo($dir)['filename'].'_tree.png';
 					if (file_exists($icon_candidate)) {
@@ -98,7 +98,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a '.oidplus_link('oidplus:resources$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:resources;$dir")).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(basename($dir)).'</a></p><br>';
+					$out['text'] .= '<p><a '.oidplus_link('oidplus:resources$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("resources;$dir")).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(basename($dir)).'</a></p><br>';
 				}
 			}
 
@@ -117,7 +117,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 
 					// Should not happen though, due to conditionalselect
 					$out['text'] .= '<a href="'.htmlentities(self::getHyperlinkURL($file)).'" target="_blank">Open in new window</a>';
-				} else {
+				} else if ((substr($file,-4,4) == '.htm') || (substr($file,-5,5) == '.html')) {
 					$out['title'] = $this->getDocumentTitle($file);
 
 					$icon_candidate = pathinfo($file)['dirname'].'/'.pathinfo($file)['filename'].'_big.png';
@@ -136,6 +136,11 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 					$cont = preg_replace('@<h1>.+</h1>@isU', '', $cont, 1);
 
 					$out['text'] .= $cont;
+				} else {
+					$out['title'] = 'Unknown file type';
+					$out['icon'] = 'img/error_big.png';
+					$out['text'] = '<p>The system does not know how to handle this file type.</p>';
+					return $out;
 				}
 			} else if (is_dir($file)) {
 				$out['title'] = ($file == CFG_RESOURCE_PLUGIN_PATH) ? CFG_RESOURCE_PLUGIN_TITLE : basename($file);
@@ -175,7 +180,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a '.oidplus_link('oidplus:resources$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:resources;$dir")).'>'.$ic.' '.htmlentities(basename($dir)).'</a></p>';
+					$out['text'] .= '<p><a '.oidplus_link('oidplus:resources$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("resources;$dir")).'>'.$ic.' '.htmlentities(basename($dir)).'</a></p>';
 					$count++;
 				}
 
@@ -211,7 +216,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 						}
 						$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-						$out['text'] .= '<p><a '.oidplus_link('oidplus:resources$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:resources;$file")).'>'.$ic.' '.htmlentities($this->getDocumentTitle($file)).'</a></p>';
+						$out['text'] .= '<p><a '.oidplus_link('oidplus:resources$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("resources;$file")).'>'.$ic.' '.htmlentities($this->getDocumentTitle($file)).'</a></p>';
 						$count++;
 					}
 				}
@@ -247,7 +252,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 			}
 
 			$children[] = array(
-				'id' => 'oidplus:resources$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:resources;$dir"),
+				'id' => 'oidplus:resources$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("resources;$dir"),
 				'icon' => $tree_icon,
 				'text' => basename($dir),
 				'children' => $tmp,
@@ -275,7 +280,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 				$hyperlink_pic = ' <img src="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/hyperlink.png" widht="13" height="13" alt="Hyperlink" style="top:-3px;position:relative">';
 
 				$children[] = array(
-					'id' => 'oidplus:resources$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:resources;$file"),
+					'id' => 'oidplus:resources$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("resources;$file"),
 					'conditionalselect' => 'window.open('.js_escape(self::getHyperlinkURL($file)).'); false;',
 					'icon' => $tree_icon,
 					'text' => $this->getHyperlinkTitle($file).' '.$hyperlink_pic,
@@ -292,7 +297,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 					$tree_icon = null; // default icon (folder)
 				}
 				$children[] = array(
-					'id' => 'oidplus:resources$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:resources;$file"),
+					'id' => 'oidplus:resources$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("resources;$file"),
 					'icon' => $tree_icon,
 					'text' => $this->getDocumentTitle($file),
 					'state' => array("opened" => $depth <= CFG_RESOURCE_PLUGIN_AUTOOPEN_LEVEL-1)
@@ -314,7 +319,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 			}
 
 			$json[] = array(
-				'id' => 'oidplus:resources$'.CFG_RESOURCE_PLUGIN_PATH.'$'.OIDplus::authUtils()::makeAuthKey("oidplus:resources;".CFG_RESOURCE_PLUGIN_PATH),
+				'id' => 'oidplus:resources$'.CFG_RESOURCE_PLUGIN_PATH.'$'.OIDplus::authUtils()::makeAuthKey("resources;".CFG_RESOURCE_PLUGIN_PATH),
 				'icon' => $tree_icon,
 				'state' => array("opened" => true),
 				'text' => CFG_RESOURCE_PLUGIN_TITLE,
