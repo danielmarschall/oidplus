@@ -71,6 +71,20 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 				return $out;
 			}
 
+			if (strpos($file, CFG_RESOURCE_PLUGIN_PATH) !== 0) {
+				$out['title'] = 'Access denied';
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = '<p>Security breach A</p>';
+				return $out;
+			}
+
+			if (strpos($file, '..') !== false) {
+				$out['title'] = 'Access denied';
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = '<p>Security breach A</p>';
+				return $out;
+			}
+
 			$out['text'] = '';
 
 			if ($file != CFG_RESOURCE_PLUGIN_PATH) {

@@ -127,6 +127,9 @@ QUESTIONS
 - "updated" nicht aktualisieren, wenn man nur auf "update" klickt aber nix geändert hat
 - "Documents" section: Can base of URLs/images inside the HTML be changed automatically?
 
+PRIVACY:
+- make a config.inc.php setting to disable POLYFILL.IO feature
+
 GUID Management
 - Leaf nodes (GUIDs) should show/edit the Title in the CRUD, so you dont have to click the GUID to see the title
 - seltsamer bug: wenn ich guid:oidplus editiere, dann öffnet sich links guid:activedirectory beim neuladen des baums nach dem update. irgendwie öffnet er den zuletzt geöffneten node beim reload nochmal

@@ -17,6 +17,22 @@
 
 /*jshint esversion: 6 */
 
+function oidplus_loadScript(src) {
+	var js = document.createElement('script');
+	js.src = src;
+	js.onload = function() {
+	};
+	js.onerror = function() {
+	};
+	document.head.appendChild(js);
+}
+
+var ua = window.navigator.userAgent;
+if ((ua.indexOf("MSIE ") > 0) || (ua.indexOf("Trident/") > 0)) {
+	// Compatibility with Internet Explorer
+	oidplus_loadScript('https://polyfill.io/v3/polyfill.min.js?features=fetch%2CURL');
+}
+
 // $('#html').jstree();
 
 current_node = "";
@@ -409,6 +425,7 @@ $(window).on("popstate", function(e) {
 });
 
 $(document).ready(function () {
+
 	// --- JsTree
 
 	$('#oidtree')

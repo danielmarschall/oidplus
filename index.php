@@ -132,7 +132,6 @@ if (class_exists('OIDplusPageAdminColors')) {
 	<?php
 	}
 	?>
-	<script src="https://polyfill.io/v3/polyfill.min.js?features=fetch%2CURL"></script><!-- For IE... -->
 	<script src="oidplus.min.js.php"></script>
 
 	<link rel="stylesheet" href="<?php echo htmlentities($css); ?>">
