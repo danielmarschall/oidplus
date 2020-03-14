@@ -51,11 +51,6 @@ SpamSpan:
 	Version: 1.03
 	Download: http://www.spamspan.de/
 
-Cookie consent:
-	License: MIT
-	Version: 2018-07-17
-	Download: https://github.com/insites/cookieconsent (only build directory)
-
 ReCaptcha:
 	License: BSD 3-Clause "New" or "Revised" License
 	Currently directly linked

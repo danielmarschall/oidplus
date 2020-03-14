@@ -36,17 +36,18 @@ $out = '';
 # ---
 
 function process_file($filename) {
+	$dir = dirname((strpos($filename, __DIR__.'/') === 0) ? substr($filename, strlen(__DIR__.'/')) : $filename);
 	if (DO_MINIFY) {
-		$minifier = new Minify\CSS(__DIR__.'/'.$filename);
+		$minifier = new Minify\CSS($filename);
 		$cont = $minifier->minify();
 		$cont = str_ireplace("url(data:", "url###(data:", $cont);
-		$cont = str_ireplace("url(", "url(".dirname($filename).'/', $cont);
+		$cont = str_ireplace("url(", "url(".$dir.'/', $cont);
 	} else {
-		$cont = file_get_contents(__DIR__.'/'.$filename);
+		$cont = file_get_contents($filename);
 		$cont = str_ireplace('url("data:', 'url###("data:', $cont);
-		$cont = str_ireplace('url("', 'url("'.dirname($filename).'/', $cont);
+		$cont = str_ireplace('url("', 'url("'.$dir.'/', $cont);
 		$cont = str_ireplace("url('data:", "url###('data:", $cont);
-		$cont = str_ireplace("url('", "url('".dirname($filename).'/', $cont);
+		$cont = str_ireplace("url('", "url('".$dir.'/', $cont);
 	}
 	$cont = str_ireplace("url###(", "url(", $cont);
 	return $cont;
@@ -54,7 +55,7 @@ function process_file($filename) {
 
 # ---
 
-$out .= process_file('oidplus.css')."\n\n";
+$out .= process_file(__DIR__ . '/oidplus_base.css')."\n\n";
 
 foreach (array('publicPages','adminPages','raPages') as $pudir) {
 	$ary = glob(__DIR__ . '/plugins/'.$pudir.'/'.'*'.'/style.css');
@@ -62,9 +63,9 @@ foreach (array('publicPages','adminPages','raPages') as $pudir) {
 	foreach ($ary as $a) $out .= process_file($a);
 }
 
-$out .= process_file('3p/jstree/themes/default/style.css')."\n\n";
-$out .= process_file('3p/jquery-ui/jquery-ui.css')."\n\n";
-$out .= process_file('3p/bootstrap/css/bootstrap.css')."\n\n";
+$out .= process_file(__DIR__ . '/3p/jstree/themes/default/style.css')."\n\n";
+$out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui.css')."\n\n";
+$out .= process_file(__DIR__ . '/3p/bootstrap/css/bootstrap.css')."\n\n";
 
 # ---
 

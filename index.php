@@ -30,7 +30,7 @@ if (!function_exists('gmp_init')) {
 	//                  includes/ipv6_functions.inc.php
 	//                  plugins/adminPages/400_oidinfo_export/oidinfo_api.inc.php (if GMP is not available, BC will be used)
 	// Note that gmp_supplement.inc.php will implement the GMP functions if BCMath is present.
-	// This is the reason why we use function_exists('gmp_init') instead of extension_loaded('gmp') 
+	// This is the reason why we use function_exists('gmp_init') instead of extension_loaded('gmp')
         $missing_dependencies[] = 'GMP (Install it using <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.)' .
 	                          '<br>or alternatively<br>' .
 	                          'BCMath (Install it using <code>sudo aptitude update && sudo aptitude install php-bcmath && sudo service apache2 restart</code> on Linux systems.)';
@@ -109,55 +109,18 @@ if (class_exists('OIDplusPageAdminColors')) {
 	<meta name="OIDplus-SystemURL" content="<?php echo htmlentities($sys_url); ?>">
 	<meta name="OIDplus-SystemVersion" content="<?php echo htmlentities($sys_ver); ?>">
 	<meta name="OIDplus-SystemInstallType" content="<?php echo htmlentities($sys_install_type); ?>">
-	<meta name="OIDplus-SystemTitle" content="<?php echo htmlentities($sys_title); /* Do not remove. This meta tag is acessed via JS */ ?>">
+	<meta name="OIDplus-SystemTitle" content="<?php echo htmlentities($sys_title); /* Do not remove. This meta tag is acessed by oidplus_base.js */ ?>">
 	<meta name="theme-color" content="#A9DCF0">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->systemTitle(), $static_title); ?></title>
 
-	<!-- We are using jQuery 2.2.1, because 3.3.1 seems to be incompatible with jsTree (HTML content will not be loaded into jsTree!) TODO: File bug report -->
-	<script src="3p/jquery/jquery-2.2.1.min.js"></script>
-	<script src="3p/bootstrap/js/bootstrap.min.js"></script>
-	<script src="3p/jstree/jstree.min.js"></script>
-	<script src='3p/tinymce/tinymce.min.js'></script>
-	<script src="3p/jquery-ui/jquery-ui.min.js"></script>
-	<script src="3p/layout/jquery.layout.min.js"></script>
-	<script src="3p/spamspan/spamspan.js"></script>
-	<script src="3p/bignumber.js/bignumber.min.js"></script>
-	<script src="3p/sha3_js/sha3.js"></script><!-- https://github.com/emn178/js-sha3 -->
-	<?php
-	if (RECAPTCHA_ENABLED) {
-	?>
-	<script src="https://www.google.com/recaptcha/api.js"></script>
-	<?php
-	}
-	?>
+	<?php if (RECAPTCHA_ENABLED) { ?><script src="https://www.google.com/recaptcha/api.js"></script><?php } ?>
+
 	<script src="oidplus.min.js.php"></script>
 
 	<link rel="stylesheet" href="<?php echo htmlentities($css); ?>">
-
 	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
-
-	<!-- DM 28 May 2019: Removed CookieConsent temporarily, because it is placed at the beginning of the page and therefore ruins the Google index ... -->
-	<!-- We might not need it, because cookies are only set during login, and at the login page we already warn about cookies -->
-	<!-- TODO: Bring back? -->
-	<!-- <link rel="stylesheet" type="text/css" href="3p/cookieconsent/cookieconsent.min.css">
-	<script src="3p/cookieconsent/cookieconsent.min.js"></script>
-	<script>
-		window.addEventListener("load", function(){
-		window.cookieconsent.initialise({
-			"palette": {
-				"popup": {
-					"background": "#edeff5",
-					"text": "#838391"
-				},
-				"button": {
-					"background": "#4b81e8"
-				}
-			},
-			"position": "bottom-right"
-		})});
-	</script> -->
 </head>
 
 <body>

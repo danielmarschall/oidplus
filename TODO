@@ -129,6 +129,8 @@ QUESTIONS
 
 PRIVACY:
 - make a config.inc.php setting to disable POLYFILL.IO feature
+- bring back "3p/cookiecontent"? DM 28 May 2019: Removed CookieConsent temporarily, because it is placed at the beginning of the page and therefore ruins the Google index ...
+	=> We might not need it, because cookies are only set during login, and at the login page itself, we already warn about cookies, in addition to the Privacy documentation
 
 GUID Management
 - Leaf nodes (GUIDs) should show/edit the Title in the CRUD, so you dont have to click the GUID to see the title
