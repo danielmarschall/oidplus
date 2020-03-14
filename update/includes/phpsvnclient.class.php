@@ -211,12 +211,12 @@ class phpsvnclient
 		if (!is_null($objects_list)) {
 			// Output version information
 			foreach ($objects_list['revisions'] as $revision) {
+				$comment = empty($revision['comment']) ? 'No comment' : $revision['comment'];
 				$tex = "New revision ".$revision['versionName']." by ".$revision['creator']." (".date('Y-m-d H:i:s', strtotime($revision['date'])).") ";
-				echo trim($tex . str_replace("\n", "\n".str_repeat(' ', strlen($tex)), $revision['comment']));
+				echo trim($tex . str_replace("\n", "\n".str_repeat(' ', strlen($tex)), $comment));
 				echo "\n";
 			}
 
-			////Lets update dirs
 			// Add dirs
 			sort($objects_list['dirs']); // <-- added by Daniel Marschall: Sort folder list, so that directories will be created in the correct hierarchical order
 			foreach ($objects_list['dirs'] as $file) {
@@ -237,7 +237,6 @@ class phpsvnclient
 				}
 			}
 
-			////Lets update files
 			// Add files
 			sort($objects_list['files']); // <-- added by Daniel Marschall: Sort list, just for cosmetic improvement
 			foreach ($objects_list['files'] as $file) {
@@ -257,7 +256,8 @@ class phpsvnclient
 					}
 				}
 			}
-			//Remove files
+
+			// Remove files
 			sort($objects_list['filesDelete']); // <-- added by Daniel Marschall: Sort list, just for cosmetic improvement
 			foreach ($objects_list['filesDelete'] as $file) {
 				if ($file != '') {
@@ -300,7 +300,7 @@ class phpsvnclient
 				}
 			}
 
-			//Update version file
+			// Update version file
 			// Changed by Daniel Marschall: Added $errors_happened
 			if (!$preview && !empty($version_file)) {
 				if (!$errors_happened) {
@@ -346,7 +346,7 @@ class phpsvnclient
 		if (!$this->Request($args, $headers, $body))
 			throw new Exception("Cannot get rawDirectoryDump (Request failed)");
 
-		return $this->xmlParse($body);
+		return self::xmlParse($body);
 	}
 
 	/**
@@ -522,7 +522,7 @@ class phpsvnclient
 		if (!$this->Request($args, $headers, $body))
 			throw new Exception("Cannot call getLogsForUpdate (Request failed)");
 
-		$arrOutput = $this->xmlParse($body);
+		$arrOutput = self::xmlParse($body);
 
 		$revlogs = array();
 
@@ -572,61 +572,42 @@ class phpsvnclient
 					   'comment' => $comment,
 					   'creator' => $creator);
 		}
-		$files       = "";
-		$filesDelete = "";
-		$dirs        = "";
-		$dirsDelete  = "";
+		$files       = array();
+		$filesDelete = array();
+		$dirs        = array();
+		$dirsDelete  = array();
 
 		foreach ($array['objects'] as $objects) {
+			// This section was completely changed by Daniel Marschall
 			if ($objects['type'] == "file") {
 				if ($objects['action'] == "S:ADDED-PATH" || $objects['action'] == "S:MODIFIED-PATH") {
-					$file = $objects['object_name'] . "/*+++*/";
-					$files .= $file;
-					$filesDelete = str_replace($file, "", $filesDelete, $count);
+					self::xarray_add($objects['object_name'], $files);
+					self::xarray_remove($objects['object_name'], $filesDelete);
 				}
 				if ($objects['action'] == "S:DELETED-PATH") {
-					if (strpos($files, $objects['object_name']) !== false) {
-						$file  = $objects['object_name'] . "/*+++*/";
-						$count = 1;
-						$files = str_replace($file, "", $files, $count);
-					} else {
-						$filesDelete .= $objects['object_name'] . "/*+++*/";
-					}
+					self::xarray_add($objects['object_name'], $filesDelete);
+					self::xarray_remove($objects['object_name'], $files);
 				}
 			}
 			if ($objects['type'] == "dir") {
 				if ($objects['action'] == "S:ADDED-PATH" || $objects['action'] == "S:MODIFIED-PATH") {
-					$dir = $objects['object_name'] . "/*+++*/";
-					$dirs .= $dir;
-					$dirsDelete = str_replace($dir, "", $dirsDelete, $count);
+					self::xarray_add($objects['object_name'], $dirs);
+					self::xarray_remove($objects['object_name'], $dirsDelete);
 				}
 				if ($objects['action'] == "S:DELETED-PATH") {
 					// Delete files from filelist
-					$dir    = $objects['object_name'] . "/";
-					$files1 = explode("/*+++*/", $files);
-					for ($x = 0; $x < count($files1); $x++) {
-						if (strpos($files1[$x], $dir) !== false) {
-							unset($files1[$x]);
-						}
+					$files_copy = $files;
+					foreach ($files_copy as $file) {
+						if (strpos($file, $objects['object_name'].'/') === 0) self::xarray_remove($file, $files);
 					}
-					$files = implode("/*+++*/", $files1);
 					// END OF Delete files from filelist
 					// Delete dirs from dirslist
-					if (strpos($dirs, $objects['object_name']) !== false) {
-						$dir   = $objects['object_name'] . "/*+++*/";
-						$count = 1;
-						$dirs  = str_replace($dir, "", $dirs, $count);
-					} else {
-						$dirsDelete .= $objects['object_name'] . "/*+++*/";
-					}
+					self::xarray_add($objects['object_name'], $dirsDelete);
+					self::xarray_remove($objects['object_name'], $dirs);
 					// END OF Delete dirs from dirslist
 				}
 			}
 		}
-		$files              = explode("/*+++*/", $files);
-		$filesDelete        = explode("/*+++*/", $filesDelete);
-		$dirs               = explode("/*+++*/", $dirs);
-		$dirsDelete         = explode("/*+++*/", $dirsDelete);
 		$out                = array();
 		$out['files']       = $files;
 		$out['filesDelete'] = $filesDelete;
@@ -790,5 +771,24 @@ class phpsvnclient
 		xml_parser_free($resParser);
 
 		return $arrOutput[0];
+	}
+
+	/*
+	  Small helper functions
+	*/
+
+	private static function xarray_add($needle, &$array) {
+		$key = array_search($needle, $array);
+		if ($key === false) {
+			$array[] = $needle;
+		}
+	}
+
+	private static function xarray_remove($needle, &$array) {
+		while (true) {
+			$key = array_search($needle, $array);
+			if ($key === false) break;
+			unset($array[$key]);
+		}
 	}
 }
