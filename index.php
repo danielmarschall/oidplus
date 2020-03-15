@@ -100,6 +100,8 @@ if (class_exists('OIDplusPageAdminColors')) {
 	$css = 'oidplus.min.css.php';
 }
 
+$js = 'oidplus.min.js.php';
+
 ?><!DOCTYPE html>
 <html lang="en">
 
@@ -115,9 +117,7 @@ if (class_exists('OIDplusPageAdminColors')) {
 
 	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->systemTitle(), $static_title); ?></title>
 
-	<?php if (RECAPTCHA_ENABLED) { ?><script src="https://www.google.com/recaptcha/api.js"></script><?php } ?>
-
-	<script src="oidplus.min.js.php"></script>
+	<script src="<?php echo htmlentities($js); ?>"></script>
 
 	<link rel="stylesheet" href="<?php echo htmlentities($css); ?>">
 	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">

@@ -16,7 +16,7 @@
 	}
 	</style>
 	<h1>Procedural documentation related to privacy</h1>
-	<p><em>Revision: 14 March 2020</em></p>
+	<p><em>Revision: 15 March 2020</em></p>
 	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software &ldquo;OIDplus&rdquo;) and gives general information how OIDplus works regarding privacy related topics. Since OIDplus is a web-software that can be downloaded, installed and operated by anyone on their own server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
 	<h2><strong><u>Parties / Terminology</u></strong></h2>
 	<p><strong>ViaThinkSoft</strong> is the developer of the program &ldquo;OIDplus&rdquo;. OIDplus is a system that organizations (or workgroups, single developers etc.) can download and install on their own web servers. The code and the database is located on the server of that organization, hereinafter referred to as <strong>system owner</strong>. The system administrator (<strong>system admin</strong>) is a person in that organization who manages and maintains the OIDplus software. The system admin is usually also the same person who manages the web server&rsquo;s hardware/software.</p>
@@ -499,9 +499,9 @@
 	<p>To make OIDplus compatible the web browser &ldquo;Internet Explorer&rdquo;, OIDplus will include a JavaScript script from &ldquo;polyfill.io&rdquo; which is a service by Financial Times.</p>
 	<p>Please see their <a href="https://polyfill.io/v3/privacy-policy/">Privacy Policy</a> and <a href="https://polyfill.io/v3/terms/">terms of service</a> for more information.</p>
 	<p>The polyfill JavaScript is only included if OIDplus detects that the web browser is Internet Explorer.</p>
-	<p>To disable the Polyfill feature, the system administrator needs to delete the following line in the source code file &ldquo;oidplus.js&rdquo; in the folder of the OIDplus installation.</p>
-	<p><code>oidplus_loadScript('https://polyfill.io/v3/polyfill.min.js?features=fetch%2CURL');</code></p>
-	<p>The deletion of this line on server-side and/or the blocking of the JavaScript on client-side will result in the page not working on &ldquo;Internet Explorer&rdquo; web browser.</p>
+	<p>To disable the Polyfill feature, the system administrator needs to add the following line into the configuration file &ldquo;includes/config.inc.php&rdquo; in the folder of the OIDplus installation.</p>
+	<p><code>define('DISABLE_MSIE_COMPAT', true);</code></p>
+	<p>The adding of this line on server-side and/or the blocking of the JavaScript on client-side will result in the page not working on &ldquo;Internet Explorer&rdquo; web browser.</p>
 	<h3><em><u>ReCAPTCHA (only if &ldquo;ReCAPTCHA&rdquo; is enabled)</u></em></h3>
 	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable &ldquo;ReCAPTCHA&rdquo; which is a service of Google. Before enabling ReCAPTCHA in the OIDplus setup/settings, the system administrator has to request an API key from Google. The usage of ReCAPTCHA will probably introduce additional cookies which are out of the control of OIDplus.</p>
 	<p>Please see <a href="https://policies.google.com/privacy">Google&rsquo;s Privacy Policy</a> and <a href="https://policies.google.com/terms">terms of service</a> for more information.</p>

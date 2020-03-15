@@ -27,10 +27,20 @@ function oidplus_loadScript(src) {
 	document.head.appendChild(js);
 }
 
-var ua = window.navigator.userAgent;
-if ((ua.indexOf("MSIE ") > 0) || (ua.indexOf("Trident/") > 0)) {
-	// Compatibility with Internet Explorer
-	oidplus_loadScript('https://polyfill.io/v3/polyfill.min.js?features=fetch%2CURL');
+function oidplus_external_polyfill() {
+	// Disable this code by adding following line to includes/config.inc.php
+	// define('RECAPTCHA_ENABLED', false);
+	var ua = window.navigator.userAgent;
+	if ((ua.indexOf("MSIE ") > 0) || (ua.indexOf("Trident/") > 0)) {
+		// Compatibility with Internet Explorer
+		oidplus_loadScript('https://polyfill.io/v3/polyfill.min.js?features=fetch%2CURL');
+	}
+}
+
+function oidplus_external_recaptcha() {
+	// Disable this code by adding following lines to includes/config.inc.php
+	// define('DISABLE_MSIE_COMPAT', true);
+	oidplus_loadScript('https://www.google.com/recaptcha/api.js');
 }
 
 // $('#html').jstree();

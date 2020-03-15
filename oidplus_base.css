@@ -46,6 +46,7 @@
 	#oidtree, .ui-layout-center {
 		position:relative !important;
 		width:100% !important;
+		padding-right:10px !important;
 		top: 0 !important;
 	}
 	#content_window {
