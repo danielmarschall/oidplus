@@ -117,14 +117,11 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			$out['text'] .= '<p>You need to enable JavaScript to use the login area.</p>';
 			$out['text'] .= '</noscript>';
 
+			$out['text'] .= '<div id="loginArea" style="visibility: hidden"><div id="loginTab" class="container" style="width:100%;">';
 			$out['text'] .= (RECAPTCHA_ENABLED ? '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.RECAPTCHA_PUBLIC.'" }); </script>'.
 			                                     '<p>Before logging in, please solve the following CAPTCHA</p><div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>' : '');
-
-
 			$out['text'] .= '<br>';
-
-			$out['text'] .= '<div id="loginArea" style="visibility: hidden"><div id="loginTab" class="container" style="width:100%;">';
-			$out['text'] .= '<ul  class="nav nav-pills">';
+			$out['text'] .= '<ul class="nav nav-pills">';
 			$out['text'] .= '			<li class="active">';
 			$out['text'] .= '			<a href="#1a" data-toggle="tab">Login as RA</a>';
 			$out['text'] .= '			</li>';
@@ -182,7 +179,12 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			$out['text'] .= '  </div><br>';
 			$out['text'] .= '<p><font size="-1"><i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. '.
 			                'The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. '.
-			                'It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of '.ceil(SESSION_LIFETIME/60).' minutes.</font></p></div>';
+			                'It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of '.ceil(SESSION_LIFETIME/60).' minutes.';
+			$privacy_document_file = 'res/OIDplus/privacy_documentation.html';
+			if (class_exists('OIDplusPagePublicResources') && file_exists($privacy_document_file)) {
+				$out['text'] .= ' <a '.oidplus_link('oidplus:resources$'.$privacy_document_file.'$'.OIDplus::authUtils()::makeAuthKey("resources;".$privacy_document_file).'#cookies').'>More information about the cookies used</a>';
+			}
+			$out['text'] .= '</font></p></div>';
 
 			$out['text'] .= '<script>document.getElementById("loginArea").style.visibility = "visible";</script>';
 		}

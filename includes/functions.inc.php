@@ -22,7 +22,12 @@ function oidplus_valid_email($email) {
 }
 
 function oidplus_link($goto) {
-	return 'href="?goto='.urlencode($goto).'" onclick="openOidInPanel('.js_escape($goto).', true); return false;"';
+	if (strpos($goto, '#') !== false) {
+		list($goto, $anchor) = explode('#', $goto, 2);
+		return 'href="?goto='.urlencode($goto).'#'.htmlentities($anchor).'" onclick="openOidInPanel('.js_escape($goto).', true, '.js_escape($anchor).'); return false;"';
+	} else {
+		return 'href="?goto='.urlencode($goto).'" onclick="openOidInPanel('.js_escape($goto).', true); return false;"';
+	}
 }
 
 function secure_email($email, $linktext, $level=1) {

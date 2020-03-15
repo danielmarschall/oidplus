@@ -17,6 +17,11 @@
 
 /*jshint esversion: 6 */
 
+// $('#html').jstree();
+
+var current_node = "";
+var popstate_running = false;
+
 function oidplus_loadScript(src) {
 	var js = document.createElement('script');
 	js.src = src;
@@ -42,11 +47,6 @@ function oidplus_external_recaptcha() {
 	// define('DISABLE_MSIE_COMPAT', true);
 	oidplus_loadScript('https://www.google.com/recaptcha/api.js');
 }
-
-// $('#html').jstree();
-
-current_node = "";
-popstate_running = false;
 
 String.prototype.explode = function (separator, limit) {
 	// https://stackoverflow.com/questions/4514323/javascript-equivalent-to-php-explode
@@ -119,8 +119,9 @@ function x_rec(x_data, i) {
 	});
 }
 
-function openOidInPanel(id, reselect/*=false*/) {
+function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/) {
 	reselect = (typeof reselect === 'undefined') ? false : reselect;
+	anchor = (typeof anchor === 'undefined') ? '' : anchor;
 
 	if (reselect) {
 		$('#oidtree').jstree('deselect_all');
@@ -201,6 +202,10 @@ function openOidInPanel(id, reselect/*=false*/) {
 			$('#real_content').html(data.text);
 			document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
 			current_node = id;
+
+			if (anchor != '') {
+				jumpToAnchor(anchor);
+			}
 		})
 		.catch(function(error) {
 			alert("Failed to load content: " + error);
@@ -575,16 +580,16 @@ function gotoButtonClicked() {
 }
 
 function frdl_weid_change() {
-	from_base = 36;
-	from_control = "#weid";
-	to_base = 10;
-	to_control = "#id";
+	var from_base = 36;
+	var from_control = "#weid";
+	var to_base = 10;
+	var to_control = "#id";
 
-	inp = $(from_control).val().trim();
+	var inp = $(from_control).val().trim();
 	if (inp == "") {
 		$(to_control).val("");
 	} else {
-		x = BigNumber(inp, from_base);
+		var x = BigNumber(inp, from_base);
 		if (isNaN(x)) {
 			$(to_control).val("");
 		} else {
@@ -594,16 +599,16 @@ function frdl_weid_change() {
 }
 
 function frdl_oidid_change() {
-	from_base = 10;
-	from_control = "#id";
-	to_base = 36;
-	to_control = "#weid";
+	var from_base = 10;
+	var from_control = "#id";
+	var to_base = 36;
+	var to_control = "#weid";
 
-	inp = $(from_control).val().trim();
+	var inp = $(from_control).val().trim();
 	if (inp == "") {
 		$(to_control).val("");
 	} else {
-		x = BigNumber(inp, from_base);
+		var x = BigNumber(inp, from_base);
 		if (isNaN(x)) {
 			$(to_control).val("");
 		} else {
@@ -611,3 +616,8 @@ function frdl_oidid_change() {
 		}
 	}
 }
+
+function jumpToAnchor(anchor) {
+	window.location.href = "#" + anchor;
+}
+
