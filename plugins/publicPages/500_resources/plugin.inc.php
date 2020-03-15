@@ -144,7 +144,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 					}
 
 					$cont = file_get_contents($file);
-					$cont = preg_replace('@^(.+)<body@isU', '', $cont);
+					$cont = preg_replace('@^(.+)<body[^>]*>@isU', '', $cont);
 					$cont = preg_replace('@</body>.+$@isU', '', $cont);
 					$cont = preg_replace('@<title>.+</title>@isU', '', $cont);
 					$cont = preg_replace('@<h1>.+</h1>@isU', '', $cont, 1);
