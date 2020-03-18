@@ -70,6 +70,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 			$show_db_inactive = false;
 			$show_obj_active = false;
 			$show_obj_inactive = false;
+			$show_auth = false;
 
 			if ($parts[1] == '') {
 				$out['title'] = "Installed plugins";
@@ -81,6 +82,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 				$show_db_inactive = true;
 				$show_obj_active = true;
 				$show_obj_inactive = true;
+				$show_auth = true;
 			} else if ($parts[1] == 'pages') {
 				$out['title'] = "Page plugins";
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
@@ -125,6 +127,10 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 				$out['title'] = "Database provider plugins (inactive)";
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
 				$show_db_inactive = true;
+			} else if ($parts[1] == 'auth') {
+				$out['title'] = "RA authentication";
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$show_auth = true;
 			} else {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>Invalid arguments.</p>';
@@ -189,6 +195,16 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 					$out['text'] .= '</ul>';
 				}
 			}
+
+			if ($show_auth) {
+				if (count($plugins = OIDplus::getAuthPlugins()) > 0) {
+					$out['text'] .= '<p><u>RA authentication plugins:</u></p><ul>';
+					foreach ($plugins as $plugin) {
+						$out['text'] .= '<li><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></li>'; // TODO: human friendly names
+					}
+					$out['text'] .= '</ul>';
+				}
+			}
 		}
 	}
 
@@ -207,6 +223,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 		$tree_icon_db_inactive = $tree_icon; // TODO
 		$tree_icon_obj_active = $tree_icon; // TODO
 		$tree_icon_obj_inactive = $tree_icon; // TODO
+		$tree_icon_auth = $tree_icon; // TODO
 
 		$public_plugins = array();
 		foreach (OIDplus::getPagePlugins('public') as $plugin) {
@@ -268,6 +285,14 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 				 );
 			}
 		}
+		$auth_plugins = array();
+		foreach (OIDplus::getAuthPlugins() as $plugin) {
+			$auth_plugins[] = array(
+				'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+				'icon' => $tree_icon_auth,
+				'text' => get_class($plugin),
+			);
+		}
 		$json[] = array(
 			'id' => 'oidplus:system_plugins',
 			'icon' => $tree_icon,
@@ -309,6 +334,12 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 					'icon' => $tree_icon,
 					'text' => 'Database providers',
 					'children' => $db_plugins
+				),
+				array(
+					'id' => 'oidplus:system_plugins.auth',
+					'icon' => $tree_icon,
+					'text' => 'RA authentication',
+					'children' => $auth_plugins
 				)
 			)
 		);

@@ -71,34 +71,12 @@ class OIDplusRA {
 	public function checkPassword($password) {
 		$ra_res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($this->email));
 		$ra_row = OIDplus::db()->fetch_array($ra_res);
-		$s_salt = $ra_row['salt'];
-		@list($s_authmethod, $s_authkey) = explode('#', $ra_row['authkey'], 2);
 
-		if ($s_authmethod == 'A1a') {
-			// This auth method can be used by you if you migrate users from another software solution into OIDplus
-			// A1a#hashalgo:X with X being hashalgo{hex}(salt+password)
-			$hashalgo = explode(':', $s_authkey)[0];
-			$calc_authkey = $hashalgo.':'.hash($hashalgo, $s_salt.$password);
-		} else if ($s_authmethod == 'A1b') {
-			// This auth method can be used by you if you migrate users from another software solution into OIDplus
-			// A1b#hashalgo:X with X being hashalgo{hex}(password+salt)
-			$hashalgo = explode(':', $s_authkey)[0];
-			$calc_authkey = $hashalgo.':'.hash($hashalgo, $password.$s_salt);
-		} else if ($s_authmethod == 'A1c') {
-			// This auth method can be used by you if you migrate users from another software solution into OIDplus
-			// A1c#hashalgo:X with X being hashalgo{hex}(salt+password+salt)
-			$hashalgo = explode(':', $s_authkey)[0];
-			$calc_authkey = $hashalgo.':'.hash($hashalgo, $s_salt.$password.$s_salt);
-		} else if ($s_authmethod == 'A2') {
-			// Default OIDplus 2.0 behavior
-			// A2#X with X being sha3{base64}(salt+password)
-			$calc_authkey = base64_encode(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $s_salt.$password, true) : bb\Sha3\Sha3::hash($s_salt.$password, 512, true));
-		} else {
-			// Invalid auth code
-			return false;
+		foreach (OIDplus::getAuthPlugins('*') as $plugin) {
+			if ($plugin->verify($ra_row['authkey'], $ra_row['salt'], $password)) return true;
 		}
 
-		return hash_equals($calc_authkey, $s_authkey);
+		return false;
 	}
 
 	public function delete() {

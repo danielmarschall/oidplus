@@ -17,3 +17,8 @@ Type "database"
 
 	plugin.inc.php
 	setup.part.html
+
+Type "auth"
+---------------
+
+	plugin.inc.php

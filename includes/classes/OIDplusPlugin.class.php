@@ -19,15 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPagePlugin extends OIDplusPlugin {
-	public function type() {}
-	public function priority() {}
-	public function action(&$handled) {}
-	public function cfgSetValue($name, $value) {}
-	public function gui($id, &$out, &$handled) {}
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {}
-	public function init($html=true) {}
-	public function modifyContent($id, &$title, &$icon, &$text) {}
-	public function tree_search($request) {}
+class OIDplusPlugin {
+
 }
 

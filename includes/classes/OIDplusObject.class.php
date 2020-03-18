@@ -23,7 +23,7 @@ define('OIDPLUS_OBJECT_CACHING', true);
 
 define('UUID_NAMEBASED_NS_OidPlusMisc', 'ad1654e6-7e15-11e4-9ef6-78e3b5fc7f22');
 
-abstract class OIDplusObject {
+abstract class OIDplusObject extends OIDplusPlugin {
 	public static function parse($node_id) { // please overwrite this function!
 		// TODO: in case we are not calling this class directly, check if function is overwritten and throw exception otherwise
 		foreach (OIDplus::getRegisteredObjectTypes() as $ot) {

@@ -19,7 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-abstract class OIDplusDataBase {
+abstract class OIDplusDataBase extends OIDplusPlugin {
 	protected $connected = false;
 
 	public abstract static function name();

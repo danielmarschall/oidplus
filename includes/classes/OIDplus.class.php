@@ -21,6 +21,7 @@ if (!defined('IN_OIDPLUS')) die();
 
 class OIDplus {
 	private static /*OIDplusPagePlugin[][]*/ $pagePlugins = array();
+	private static /*OIDplusAuthPlugin[][]*/ $authPlugins = array();
 	private static /*OIDplusObject[]*/ $objectTypes = array();
 	private static /*OIDplusObject[]*/ $disabledObjectTypes = array();
 	private static /*OIDplusDatabase[]*/ $dbPlugins = array();
@@ -130,6 +131,11 @@ class OIDplus {
 		return true;
 	}
 
+	public static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
+		self::$authPlugins[] = $plugin;
+		return true;
+	}
+
 	public static function getPagePlugins($type) {
 		if ($type == '*') {
 			$res = array();
@@ -141,6 +147,10 @@ class OIDplus {
 		}
 		ksort($res);
 		return $res;
+	}
+
+	public static function getAuthPlugins() {
+		return self::$authPlugins;
 	}
 
 	public static function registerObjectType($ot) {
@@ -351,6 +361,9 @@ class OIDplus {
 		$ary = glob(__DIR__ . '/../../plugins/raPages/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 		$ary = glob(__DIR__ . '/../../plugins/adminPages/'.'*'.'/plugin.inc.php');
+		foreach ($ary as $a) include $a;
+
+		$ary = glob(__DIR__ . '/../../plugins/auth/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 
 		// Initialize plugins
