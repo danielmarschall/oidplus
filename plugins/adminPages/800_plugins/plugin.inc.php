@@ -42,6 +42,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 		if (!isset($parts[1])) $parts[1] = '';
 		if ($parts[0] != 'oidplus:system_plugins') return;
 		$handled = true;
+		$out['title'] = "Installed plugins";
+		$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
 
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 			$out['icon'] = 'img/error_big.png';

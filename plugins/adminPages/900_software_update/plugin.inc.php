@@ -42,6 +42,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePlugin {
 		if (!isset($parts[1])) $parts[1] = '';
 		if ($parts[0] != 'oidplus:software_update') return;
 		$handled = true;
+		$out['title'] = 'Software update';
+		$out['icon']  = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png';
 
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 			$out['icon'] = 'img/error_big.png';
@@ -49,8 +51,6 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePlugin {
 			return $out;
 		}
 
-		$out['title'] = 'Software update';
-		$out['icon']  = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png';
 		$out['text']  = '<p>You can perform a system update by clicking the bottom below.</p>';
 		$out['text'] .= '<p><input type="button" onclick="document.location=\'update/\'" value="Start update assistant"></p>';
 	}
