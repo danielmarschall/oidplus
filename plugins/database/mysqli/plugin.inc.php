@@ -73,7 +73,7 @@ class OIDplusDataBaseMySQLi extends OIDplusDataBase {
 			if (!$ps->execute()) return false;
 
 			$res = MYSQLND_AVAILABLE ? $ps->get_result() : iimysqli_stmt_get_result($ps);
-			
+
 			if ($res === false) return true; // A non-SELECT statement does not give a result-set, but it is still successful
 			return $res;
 		}
@@ -212,7 +212,7 @@ function bind_result_array($stmt, &$row) {
 if (!MYSQLND_AVAILABLE) {
 	class iimysqli_result {
 		// Source: https://www.php.net/manual/de/mysqli-stmt.get-result.php#113398
-		
+
 		public $stmt, $nCols;
 
 		function fetch_array() {
@@ -221,9 +221,9 @@ if (!MYSQLND_AVAILABLE) {
 			$stmt->store_result();
 			$resultkeys = array();
 			$thisName = "";
-			
+
 			if ($stmt->num_rows==0) return false;
-			
+
 			for ( $i = 0; $i < $stmt->num_rows; $i++ ) {
 				$metadata = $stmt->result_metadata();
 				while ( $field = $metadata->fetch_field() ) {
@@ -241,24 +241,24 @@ if (!MYSQLND_AVAILABLE) {
 			}
 
 			$code .= ");";
-			if (!eval($code)) { 
-				return NULL; 
+			if (!eval($code)) {
+				return NULL;
 			}
 
 			// This should advance the "$stmt" cursor.
 			if (!mysqli_stmt_fetch($this->stmt)) {
-				return NULL; 
+				return NULL;
 			}
 
 			// Return the array we built.
 			return $ret;
-		}		
-		
+		}
+
 		public function num_rows() {
 			$this->stmt->store_result();
 			return $this->stmt->num_rows;
 		}
-		
+
 		public function fetch_object() {
 			$obj = new stdClass;
 			$ary = $this->fetch_array();
@@ -268,11 +268,11 @@ if (!MYSQLND_AVAILABLE) {
 			}
 			return $obj;
 		}
-	}   
-	
+	}
+
 	function iimysqli_stmt_get_result($stmt) {
 		// Source: https://www.php.net/manual/de/mysqli-stmt.get-result.php#113398
-		
+
 		/**    EXPLANATION:
 		 * We are creating a fake "result" structure to enable us to have
 		 * source-level equivalent syntax to a query executed via
@@ -296,17 +296,15 @@ if (!MYSQLND_AVAILABLE) {
 		$metadata = mysqli_stmt_result_metadata($stmt);
 		$ret = new iimysqli_result;
 		if (!$ret) return NULL;
-		
+
 		if (is_bool($metadata)) {
 			return $metadata;
 		}
-	
+
 		$ret->nCols = mysqli_num_fields($metadata);
 		$ret->stmt = $stmt;
-	
+
 		mysqli_free_result($metadata);
 		return $ret;
 	}
 }
-
-OIDplus::registerDatabasePlugin(new OIDplusDataBaseMySQLi());

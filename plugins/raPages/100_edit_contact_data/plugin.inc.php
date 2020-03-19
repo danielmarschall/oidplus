@@ -173,5 +173,3 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPageRaEditContactData());

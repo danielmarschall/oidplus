@@ -290,5 +290,3 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPagePublicFreeOID());

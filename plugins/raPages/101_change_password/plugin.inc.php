@@ -141,5 +141,3 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPageRaChangePassword());

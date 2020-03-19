@@ -154,5 +154,3 @@ class OIDplusDataBasePDO extends OIDplusDataBase {
 		$this->intransaction = false;
 	}
 }
-
-OIDplus::registerDatabasePlugin(new OIDplusDataBasePDO());

@@ -65,10 +65,10 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 			if (OIDplus::db()->num_rows($res) > 0) {
 				die(json_encode(array("error" => 'eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.')));
 			}
-			
+
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
 				OIDplus::logger()->log("RA($old_email)!+RA($new_email)!+A!", "Admin changed email address '$old_email' to '$new_email'");
-				
+
 				$ra_was_logged_in = OIDplus::authUtils()::isRaLoggedIn($old_email);
 
 				$ra = new OIDplusRA($old_email);
@@ -283,5 +283,3 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPageRaChangeEMail());

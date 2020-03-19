@@ -95,5 +95,3 @@ class OIDplusPageRaObjectLog extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPageRaObjectLog());

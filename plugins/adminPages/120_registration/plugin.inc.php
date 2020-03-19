@@ -330,5 +330,3 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPageAdminRegistration());

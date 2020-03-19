@@ -276,5 +276,3 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 		return $str;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPageAdminOIDInfoExport());

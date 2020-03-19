@@ -46,5 +46,3 @@ class OIDplusAuthPluginSha3SaltedBase64 extends OIDplusAuthPlugin {
 		return hash_equals($calc_authkey, $s_authkey);
 	}
 }
-
-OIDplus::registerAuthPlugin(new OIDplusAuthPluginSha3SaltedBase64());

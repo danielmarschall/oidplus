@@ -156,5 +156,3 @@ class OIDplusDataBaseODBC extends OIDplusDataBase {
 		$this->intransaction = false;
 	}
 }
-
-OIDplus::registerDatabasePlugin(new OIDplusDataBaseODBC());

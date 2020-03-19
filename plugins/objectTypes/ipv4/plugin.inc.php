@@ -178,5 +178,3 @@ class OIDplusIpv4 extends OIDplusObject {
 		return ipv4_distance($to->ipv4, $this->ipv4);
 	}
 }
-
-OIDplus::registerObjectType('OIDplusIpv4');

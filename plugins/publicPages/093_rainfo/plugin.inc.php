@@ -170,5 +170,3 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPagePublicRaInfo());

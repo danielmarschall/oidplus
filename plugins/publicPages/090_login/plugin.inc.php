@@ -275,5 +275,3 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPagePublicLogin());

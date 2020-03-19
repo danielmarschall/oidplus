@@ -120,5 +120,3 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPagePublicWhois());

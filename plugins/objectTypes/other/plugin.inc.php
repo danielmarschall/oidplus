@@ -176,5 +176,3 @@ class OIDplusOther extends OIDplusObject {
 		return count($ary) - count($bry);
 	}
 }
-
-OIDplus::registerObjectType('OIDplusOther');

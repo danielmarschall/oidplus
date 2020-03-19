@@ -96,7 +96,7 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePlugin {
 				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
 				return $out;
 			}
-			
+
 			$out['text'] .= '<form id="adminCreateRaFrom" onsubmit="return adminCreateRaFormOnSubmit();">';
 			$out['text'] .= '<div><label class="padding_label">E-Mail:</label><input type="text" id="email" value=""></div>';
 			$out['text'] .= '<div><label class="padding_label">Password:</label><input type="password" id="password1" value=""/></div>';
@@ -125,5 +125,3 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPageAdminCreateRa());

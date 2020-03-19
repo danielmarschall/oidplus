@@ -60,5 +60,3 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 		return hash_equals($calc_authkey, $s_authkey);
 	}
 }
-
-OIDplus::registerAuthPlugin(new OIDplusAuthPluginPhpGenericSaltedHex());

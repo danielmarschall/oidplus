@@ -191,5 +191,3 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 		return $ary;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPagePublicObjects());

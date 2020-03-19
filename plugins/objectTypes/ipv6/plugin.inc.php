@@ -178,5 +178,3 @@ class OIDplusIpv6 extends OIDplusObject {
 		return ipv6_distance($to->ipv6, $this->ipv6);
 	}
 }
-
-OIDplus::registerObjectType('OIDplusIpv6');

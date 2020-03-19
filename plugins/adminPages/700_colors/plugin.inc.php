@@ -139,5 +139,3 @@ class OIDplusPageAdminColors extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPageAdminColors());

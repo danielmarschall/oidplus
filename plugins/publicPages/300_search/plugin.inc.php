@@ -165,7 +165,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 
 							if (count($sql_where) == 0) $sql_where[] = '1=0';
 							array_unshift($prep_where, $ns.':%');
-							
+
 							$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ? and (".implode(' or ', $sql_where).")", $prep_where);
 
 							$count = 0;
@@ -205,5 +205,3 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPagePublicSearch());

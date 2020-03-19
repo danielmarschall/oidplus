@@ -374,5 +374,3 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 		return trim($m[1]);
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPagePublicResources());

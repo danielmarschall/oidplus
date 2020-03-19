@@ -142,5 +142,3 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPageAdminSystemConfig());

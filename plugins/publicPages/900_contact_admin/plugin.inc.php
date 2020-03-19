@@ -83,5 +83,3 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPagePublicContactEMail());

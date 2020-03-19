@@ -425,5 +425,3 @@ class OIDplusOid extends OIDplusObject {
 		return $ids;
 	}
 }
-
-OIDplus::registerObjectType('OIDplusOid');

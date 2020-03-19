@@ -169,5 +169,3 @@ class OIDplusJava extends OIDplusObject {
 		return count($ary) - count($bry);
 	}
 }
-
-OIDplus::registerObjectType('OIDplusJava');

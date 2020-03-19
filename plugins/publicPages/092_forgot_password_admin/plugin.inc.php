@@ -73,5 +73,3 @@ class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPagePublicForgotPasswordAdmin());

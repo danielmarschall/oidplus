@@ -165,5 +165,3 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPageAdminListRAs());

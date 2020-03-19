@@ -105,7 +105,7 @@ class OIDplus {
 		return $res;
 	}
 
-	public static function registerDatabasePlugin(OIDplusDatabase $plugin) {
+	private static function registerDatabasePlugin(OIDplusDatabase $plugin) {
 		$name = $plugin->name();
 		if ($name === false) return false;
 
@@ -118,7 +118,7 @@ class OIDplus {
 		return self::$dbPlugins;
 	}
 
-	public static function registerPagePlugin(OIDplusPagePlugin $plugin) {
+	private static function registerPagePlugin(OIDplusPagePlugin $plugin) {
 		$type = $plugin->type();
 		if ($type === false) return false;
 
@@ -131,7 +131,7 @@ class OIDplus {
 		return true;
 	}
 
-	public static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
+	private static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
 		self::$authPlugins[] = $plugin;
 		return true;
 	}
@@ -153,7 +153,7 @@ class OIDplus {
 		return self::$authPlugins;
 	}
 
-	public static function registerObjectType($ot) {
+	private static function registerObjectType($ot) {
 		$ns = $ot::ns();
 
 		if (empty($ns)) die("Attention: Empty NS at $ot\n");
@@ -335,6 +335,12 @@ class OIDplus {
 		$ary = glob(__DIR__ . '/../../plugins/database/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 
+		foreach (get_declared_classes() as $c) {
+			if (is_subclass_of($c, 'OIDplusDataBase')) {
+				self::registerDatabasePlugin(new $c());
+			}
+		}
+
 		// Do redirect stuff etc.
 
 		define('OIDPLUS_SSL_AVAILABLE', self::isSslAvailable());
@@ -366,7 +372,19 @@ class OIDplus {
 		$ary = glob(__DIR__ . '/../../plugins/auth/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 
-		// Initialize plugins
+		foreach (get_declared_classes() as $c) {
+			if (is_subclass_of($c, 'OIDplusPagePlugin')) {
+				self::registerPagePlugin(new $c());
+			}
+			if (is_subclass_of($c, 'OIDplusAuthPlugin')) {
+				self::registerAuthPlugin(new $c());
+			}
+			if (is_subclass_of($c, 'OIDplusObject')) {
+				self::registerObjectType($c);
+			}
+		}
+
+		// Initialize page plugins
 
 		foreach (OIDplus::getPagePlugins('*') as $plugin) {
 			$plugin->init($html);

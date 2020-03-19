@@ -116,5 +116,3 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPageAdminWellKnownOIDs());

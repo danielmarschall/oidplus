@@ -252,5 +252,3 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 		return false;
 	}
 }
-
-OIDplus::registerPagePlugin(new OIDplusPageRaInvite());
