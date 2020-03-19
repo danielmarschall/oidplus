@@ -24,6 +24,15 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 		return 'ra';
 	}
 
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'Edit contact data';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function priority() {
 		return 100;
 	}

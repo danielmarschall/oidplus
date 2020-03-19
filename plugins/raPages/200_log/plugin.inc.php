@@ -24,6 +24,15 @@ class OIDplusPageRaLogEvents extends OIDplusPagePlugin {
 		return 'ra';
 	}
 
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'Log';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function priority() {
 		return 200;
 	}

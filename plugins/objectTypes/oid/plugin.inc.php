@@ -19,8 +19,19 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
+include __DIR__ . '/WeidOidConverter.class.php';
+
 class OIDplusOid extends OIDplusObject {
 	private $oid;
+
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'Object Identifier (OID)';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
 
 	public function __construct($oid) {
 		$bak_oid = $oid;

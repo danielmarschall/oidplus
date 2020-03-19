@@ -22,6 +22,15 @@ if (!defined('IN_OIDPLUS')) die();
 class OIDplusGuid extends OIDplusObject {
 	private $guid;
 
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'Globally Unique Identifier (GUID)';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function __construct($guid) {
 		if (uuid_valid($guid)) {
 			$this->guid = uuid_canonize($guid); // It is a real GUID (leaf node)

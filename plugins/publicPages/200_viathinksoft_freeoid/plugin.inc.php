@@ -24,6 +24,15 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 		return 'public';
 	}
 
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'ViaThinkSoft FreeOID';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function priority() {
 		return 200;
 	}

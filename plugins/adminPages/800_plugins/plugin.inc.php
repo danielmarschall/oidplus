@@ -20,6 +20,15 @@
 if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'Plugins';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function type() {
 		return 'admin';
 	}
@@ -58,10 +67,21 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 
 			$reflector = new \ReflectionClass($classname);
 
-			// TODO: output more verbose data like human friendly name etc.
+			$pluginInfo = $classname::getPluginInformation();
+
+			if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
+			if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
+			if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
+			if (!isset($pluginInfo['descriptionHTML']) || empty($pluginInfo['descriptionHTML'])) $pluginInfo['descriptionHTML'] = '';
+
 			$out['text'] .= '<div><label class="padding_label">Classname</label><b>'.htmlentities($classname).'</b></div>'.
 			                '<div><label class="padding_label">Location</label><b>'.htmlentities(dirname($reflector->getFileName())).'</b></div>'.
-			                '<div><label class="padding_label">Plugin type</label><b>'.htmlentities(get_parent_class($classname)).'</b></div>';
+			                '<div><label class="padding_label">Plugin type</label><b>'.htmlentities(get_parent_class($classname)).'</b></div>'.
+			                '<div><label class="padding_label">Plugin name</label><b>'.htmlentities($pluginInfo['name']).'</b></div>'.
+			                '<div><label class="padding_label">Plugin author</label><b>'.htmlentities($pluginInfo['author']).'</b></div>'.
+			                '<div><label class="padding_label">Plugin version</label><b>'.htmlentities($pluginInfo['version']).'</b></div>'.
+					(!empty($pluginInfo['descriptionHTML']) ? '<br><p><b>Additional information:</b></p>' : '').
+					$pluginInfo['descriptionHTML'];
 		} else {
 			$show_pages_public = false;
 			$show_pages_ra = false;
@@ -139,70 +159,183 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 
 			if ($show_pages_public) {
 				if (count($plugins = OIDplus::getPagePlugins('public')) > 0) {
-					$out['text'] .= '<p><u>Public page plugins:</u></p><ul>';
+					$out['text'] .= '<h2>Public page plugins</h2>';
+					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '	<tr>';
+					$out['text'] .= '		<th width="25%">Class name</th>';
+					$out['text'] .= '		<th width="25%">Plugin name</th>';
+					$out['text'] .= '		<th width="25%">Plugin version</th>';
+					$out['text'] .= '		<th width="25%">Plugin author</th>';
+					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
-						$out['text'] .= '<li><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></li>'; // TODO: human friendly names
+						$out['text'] .= '	<tr>';
+						$pluginInfo = $plugin::getPluginInformation();
+						$out['text'] .= '<td><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
+						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
+						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$out['text'] .= '	</tr>';
 					}
-					$out['text'] .= '</ul>';
+					$out['text'] .= '</table>';
+					$out['text'] .= '</div></div>';
 				}
 			}
 
 			if ($show_pages_ra) {
 				if (count($plugins = OIDplus::getPagePlugins('ra')) > 0) {
-					$out['text'] .= '<p><u>RA page plugins:</u></p><ul>';
+					$out['text'] .= '<h2>RA page plugins</h2>';
+					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '	<tr>';
+					$out['text'] .= '		<th width="25%">Class name</th>';
+					$out['text'] .= '		<th width="25%">Plugin name</th>';
+					$out['text'] .= '		<th width="25%">Plugin version</th>';
+					$out['text'] .= '		<th width="25%">Plugin author</th>';
+					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
-						$out['text'] .= '<li><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></li>'; // TODO: human friendly names
+						$out['text'] .= '	<tr>';
+						$pluginInfo = $plugin::getPluginInformation();
+						$out['text'] .= '<td><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
+						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
+						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$out['text'] .= '	</tr>';
 					}
-					$out['text'] .= '</ul>';
+					$out['text'] .= '</table>';
+					$out['text'] .= '</div></div>';
 				}
 			}
 
 			if ($show_pages_admin) {
 				if (count($plugins = OIDplus::getPagePlugins('admin')) > 0) {
-					$out['text'] .= '<p><u>Admin page plugins:</u></p><ul>';
+					$out['text'] .= '<h2>Admin page plugins</h2>';
+					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '	<tr>';
+					$out['text'] .= '		<th width="25%">Class name</th>';
+					$out['text'] .= '		<th width="25%">Plugin name</th>';
+					$out['text'] .= '		<th width="25%">Plugin version</th>';
+					$out['text'] .= '		<th width="25%">Plugin author</th>';
+					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
-						$out['text'] .= '<li><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></li>'; // TODO: human friendly names
+						$out['text'] .= '	<tr>';
+						$pluginInfo = $plugin::getPluginInformation();
+						$out['text'] .= '<td><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
+						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
+						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$out['text'] .= '	</tr>';
 					}
-					$out['text'] .= '</ul>';
+					$out['text'] .= '</table>';
+					$out['text'] .= '</div></div>';
 				}
 			}
 
-			$enabled = $show_obj_active ? OIDplus::getRegisteredObjectTypes() : array();
-			$disabled = $show_obj_inactive ? OIDplus::getDisabledObjectTypes() : array();
-			$plugins = array_merge($enabled, $disabled);
-			if (count($plugins) > 0) {
-				$out['text'] .= '<p><u>Object types:</u></p><ul>';
-				foreach ($plugins as $ot) {
-					if (in_array($ot, $enabled)) {
-						$out['text'] .= '<li><a '.oidplus_link('oidplus:system_plugins.$'.$ot).'>'.htmlentities($ot::objectTypeTitle()).' ('.htmlentities($ot::ns()).')</a></li>';
-					} else {
-						$out['text'] .= '<li><a '.oidplus_link('oidplus:system_plugins.$'.$ot).'><font color="gray">'.htmlentities($ot::objectTypeTitle()).' ('.htmlentities($ot::ns()).', disabled)</font></a></li>';
+			if ($show_obj_active || $show_obj_inactive) {
+				$enabled = $show_obj_active ? OIDplus::getRegisteredObjectTypes() : array();
+				$disabled = $show_obj_inactive ? OIDplus::getDisabledObjectTypes() : array();
+				if (count($plugins = array_merge($enabled, $disabled)) > 0) {
+					$out['text'] .= '<h2>Object types</h2>';
+					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '	<tr>';
+					$out['text'] .= '		<th width="25%">Class name</th>';
+					$out['text'] .= '		<th width="25%">Plugin name</th>';
+					$out['text'] .= '		<th width="25%">Plugin version</th>';
+					$out['text'] .= '		<th width="25%">Plugin author</th>';
+					$out['text'] .= '	</tr>';
+					foreach ($plugins as $pluginName) {
+						$out['text'] .= '	<tr>';
+						$pluginInfo = $pluginName::getPluginInformation();
+						if (in_array($pluginName, $enabled)) {
+							$out['text'] .= '<td><a '.oidplus_link('oidplus:system_plugins.$'.$pluginName).'>'.htmlentities($pluginName).'</a></td>';
+						} else {
+							$out['text'] .= '<td><a '.oidplus_link('oidplus:system_plugins.$'.$pluginName).'><font color="gray">'.htmlentities($pluginName).' (disabled)</font></a></td>';
+						}
+						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
+						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
+						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$out['text'] .= '	</tr>';
 					}
+					$out['text'] .= '</table>';
+					$out['text'] .= '</div></div>';
 				}
-				$out['text'] .= '</ul>';
 			}
 
 			if ($show_db_active || $show_db_inactive) {
 				if (count($plugins = OIDplus::getDatabasePlugins()) > 0) {
-					$out['text'] .= '<p><u>Database plugins:</u></p><ul>';
+					$out['text'] .= '<h2>Database providers</h2>';
+					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '	<tr>';
+					$out['text'] .= '		<th width="25%">Class name</th>';
+					$out['text'] .= '		<th width="25%">Plugin name</th>';
+					$out['text'] .= '		<th width="25%">Plugin version</th>';
+					$out['text'] .= '		<th width="25%">Plugin author</th>';
+					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
+						$active = $plugin::name() == OIDPLUS_DATABASE_PLUGIN;
+						if ($active && !$show_db_active) continue;
+						if (!$active && !$show_db_inactive) continue;
+
+						$out['text'] .= '	<tr>';
+						$pluginInfo = $plugin::getPluginInformation();
 						if ($plugin::name() == OIDPLUS_DATABASE_PLUGIN) {
-							$out['text'] .= $show_db_active ? '<li><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'><b>'.htmlentities($plugin::name()).'</b></a></li>' : '';
+							$out['text'] .= '<td><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b> (active)</a></td>';
 						} else {
-							$out['text'] .= $show_db_inactive ? '<li><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities($plugin::name()).'</a></li>' : '';
+							$out['text'] .= '<td><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
 						}
+						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
+						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
+						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$out['text'] .= '	</tr>';
 					}
-					$out['text'] .= '</ul>';
+					$out['text'] .= '</table>';
+					$out['text'] .= '</div></div>';
 				}
 			}
 
 			if ($show_auth) {
 				if (count($plugins = OIDplus::getAuthPlugins()) > 0) {
-					$out['text'] .= '<p><u>RA authentication plugins:</u></p><ul>';
+					$out['text'] .= '<h2>RA authentication providers</h2>';
+					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '	<tr>';
+					$out['text'] .= '		<th width="25%">Class name</th>';
+					$out['text'] .= '		<th width="25%">Plugin name</th>';
+					$out['text'] .= '		<th width="25%">Plugin version</th>';
+					$out['text'] .= '		<th width="25%">Plugin author</th>';
+					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
-						$out['text'] .= '<li><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></li>'; // TODO: human friendly names
+						$out['text'] .= '	<tr>';
+						$pluginInfo = $plugin::getPluginInformation();
+						$out['text'] .= '<td><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
+						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
+						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$out['text'] .= '	</tr>';
 					}
-					$out['text'] .= '</ul>';
+					$out['text'] .= '</table>';
+					$out['text'] .= '</div></div>';
 				}
 			}
 		}
@@ -227,31 +360,42 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 
 		$public_plugins = array();
 		foreach (OIDplus::getPagePlugins('public') as $plugin) {
+			$pluginInfo = $plugin::getPluginInformation();
+			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+
 			$public_plugins[] = array(
 				'id' => 'oidplus:system_plugins.$'.get_class($plugin),
 				'icon' => $tree_icon_pages_public,
-				'text' => get_class($plugin),
+				'text' => $txt,
 			);
 		}
 		$ra_plugins = array();
 		foreach (OIDplus::getPagePlugins('ra') as $plugin) {
+			$pluginInfo = $plugin::getPluginInformation();
+			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+
 			$ra_plugins[] = array(
 				'id' => 'oidplus:system_plugins.$'.get_class($plugin),
 				'icon' => $tree_icon_pages_ra,
-				'text' => get_class($plugin),
+				'text' => $txt,
 			);
 		}
 		$admin_plugins = array();
 		foreach (OIDplus::getPagePlugins('admin') as $plugin) {
+			$pluginInfo = $plugin::getPluginInformation();
+			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+
 			$admin_plugins[] = array(
 				'id' => 'oidplus:system_plugins.$'.get_class($plugin),
 				'icon' => $tree_icon_pages_admin,
-				'text' => get_class($plugin),
+				'text' => $txt,
 			);
 		}
 		$db_plugins = array();
 		foreach (OIDplus::getDatabasePlugins() as $plugin) {
-			$txt = get_class($plugin);
+			$pluginInfo = $plugin::getPluginInformation();
+			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+
 			if ($plugin::name() == OIDPLUS_DATABASE_PLUGIN) {
 				$db_plugins[] = array(
 					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
@@ -269,17 +413,21 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 		$obj_plugins = array();
 		$enabled = OIDplus::getRegisteredObjectTypes();
 		$disabled = OIDplus::getDisabledObjectTypes();
-		foreach (array_merge($enabled, $disabled) as $ot) {
-			$txt = htmlentities($ot::objectTypeTitle()).' ('.htmlentities($ot::ns()).')';
-			if (in_array($ot, $enabled)) {
+		foreach (array_merge($enabled, $disabled) as $plugin) {
+			$pluginInfo = $plugin::getPluginInformation();
+			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? $plugin : $pluginInfo['name'];
+
+			// $txt = htmlentities($plugin::objectTypeTitle()).' ('.htmlentities($plugin::ns()).')';
+
+			if (in_array($plugin, $enabled)) {
 				$obj_plugins[] = array(
-					'id' => 'oidplus:system_plugins.$'.get_class(new $ot('')),
+					'id' => 'oidplus:system_plugins.$'.$plugin,
 					'icon' => $tree_icon_obj_active,
 					'text' => $txt,
 				 );
 			} else {
 				$obj_plugins[] = array(
-					'id' => 'oidplus:system_plugins.$'.get_class(new $ot('')),
+					'id' => 'oidplus:system_plugins.$'.$plugin,
 					'icon' => $tree_icon_obj_inactive,
 					'text' => '<font color="gray">'.$txt.'</font>',
 				 );
@@ -287,10 +435,13 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 		}
 		$auth_plugins = array();
 		foreach (OIDplus::getAuthPlugins() as $plugin) {
+			$pluginInfo = $plugin::getPluginInformation();
+			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+
 			$auth_plugins[] = array(
 				'id' => 'oidplus:system_plugins.$'.get_class($plugin),
 				'icon' => $tree_icon_auth,
-				'text' => get_class($plugin),
+				'text' => $txt,
 			);
 		}
 		$json[] = array(

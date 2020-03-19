@@ -6,7 +6,6 @@ IMPORTANT
 	we need to log all consents
 	do we need an explicit consent at the login form?
 	do we need a consent for the cookie SSL_CHECK?
-- dsgvo datenschutzerklärung, agbs etc.
 - Verify that logger works correctly, check if all logmasks are correct
 - remove backtick operators due to sql compatibility
 - the inactivity timer is much too fast!
@@ -38,7 +37,6 @@ SMALL THINGS
 - freeoid: gmail app does not hyperlink the activation URL. why?
 - how to avoid invite spamming?
 - when a PHP error happens, the AJAX script outputs "Error: SyntaxError: Unexpected token < in JSON at position 0" ... better show the user the actual message
-- "plugin.inc.php" => rename to *.class.php ? Or vice versa for object types?
 - when login expired, remove entries in the treeview
 - can we put even more code (e.g. object CRUD) into the plugin directory?
 - disable specific functions (e.g. invite, login, rainfo, forgot password) if the plugins are not installed (check if class type is registered)
@@ -118,7 +116,6 @@ IDEAS
 - have a menu item (plugin) "latest updates" which lists OIDs that have been changed or added recently?
 - (unsure:) would it be good if the superior RA comment is shown in the object page itself?
 - During an object insertion: If everything is empty (ASN1, IRI, comment), should then there be a warning?
-- The class OIDplusPlugin could introduce an abstract function for showing additional HTML information in the admin page "800_plugins"
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie

@@ -353,7 +353,7 @@ class OIDplus {
 
 		// Register plugins
 
-		$ary = glob(__DIR__ . '/../../plugins/objectTypes/'.'*'.'/*.class.php');
+		$ary = glob(__DIR__ . '/../../plugins/objectTypes/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 
 		$ary = glob(__DIR__ . '/../../plugins/publicPages/'.'*'.'/plugin.inc.php');

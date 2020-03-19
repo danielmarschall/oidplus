@@ -24,6 +24,15 @@ class OIDplusDataBasePDO extends OIDplusDataBase {
 	private $last_query;
 	private $prepare_cache = array();
 
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'PDO';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public static function name() {
 		return "PDO";
 	}

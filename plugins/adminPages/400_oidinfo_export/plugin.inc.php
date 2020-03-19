@@ -22,6 +22,15 @@ if (!defined('IN_OIDPLUS')) die();
 require_once __DIR__ . '/oidinfo_api.inc.php';
 
 class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'OID-Info.com export';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function type() {
 		return 'admin';
 	}

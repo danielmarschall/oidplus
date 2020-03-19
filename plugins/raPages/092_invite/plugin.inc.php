@@ -24,6 +24,15 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 		return 'ra';
 	}
 
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'Invite RA';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function priority() {
 		return 92;
 	}

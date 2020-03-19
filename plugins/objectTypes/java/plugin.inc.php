@@ -19,77 +19,77 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusOther extends OIDplusObject {
-	private $other;
+class OIDplusJava extends OIDplusObject {
+	private $java;
 
-	public function __construct($other) {
-		// No syntax checks
-		$this->other = $other;
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'Java Package Names';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
+	public function __construct($java) {
+		// TODO: syntax checks
+		$this->java = $java;
 	}
 
 	public static function parse($node_id) {
-		@list($namespace, $other) = explode(':', $node_id, 2);
-		if ($namespace !== 'other') return false;
-		return new self($other);
+		@list($namespace, $java) = explode(':', $node_id, 2);
+		if ($namespace !== 'java') return false;
+		return new self($java);
 	}
 
 	public static function objectTypeTitle() {
-		return "Other objects";
+		return "Java Package Names";
 	}
 
 	public static function objectTypeTitleShort() {
-		return "Object";
+		return "Package";
 	}
 
 	public static function ns() {
-		return 'other';
+		return 'java';
 	}
 
 	public static function root() {
-		return 'other:';
+		return 'java:';
 	}
 
 	public function isRoot() {
-		return $this->other == '';
+		return $this->java == '';
 	}
 
 	public function nodeId() {
-		return 'other:'.$this->other;
+		return 'java:'.$this->java;
 	}
 
 	public function addString($str) {
 		if ($this->isRoot()) {
-			return 'other:'.$str;
+			return 'java:'.$str;
 		} else {
-			return $this->nodeId() . '\\' . $str;
+			if (strpos($str,'.') !== false) throw new Exception("Please only submit one arc.");
+			return $this->nodeId() . '.' . $str;
 		}
 	}
 
 	public function crudShowId(OIDplusObject $parent) {
-		if ($parent->isRoot()) {
-			return substr($this->nodeId(), strlen($parent->nodeId()));
-		} else {
-			return substr($this->nodeId(), strlen($parent->nodeId())+1);
-		}
+		return $this->java;
 	}
 
 	public function crudInsertPrefix() {
-		return '';
+		return $this->isRoot() ? '' : substr($this->addString(''), strlen(self::ns())+1);
 	}
 
 	public function jsTreeNodeName(OIDplusObject $parent = null) {
 		if ($parent == null) return $this->objectTypeTitle();
-		if ($parent->isRoot()) {
-			return substr($this->nodeId(), strlen($parent->nodeId()));
-		} else {
-			return substr($this->nodeId(), strlen($parent->nodeId())+1);
-		}
+		return $this->java;
 	}
 
 	public function defaultTitle() {
-		$ary = explode('\\', $this->other); // TODO: aber wenn ein arc ein "\" enthält, geht es nicht. besser von db ablesen?
-		$ary = array_reverse($ary);
-		return $ary[0];
+		return $this->java;
 	}
 
 	public function isLeafNode() {
@@ -100,13 +100,13 @@ class OIDplusOther extends OIDplusObject {
 		$icon = file_exists(__DIR__.'/icon_big.png') ? 'plugins/objectTypes/'.basename(__DIR__).'/icon_big.png' : '';
 
 		if ($this->isRoot()) {
-			$title = OIDplusOther::objectTypeTitle();
+			$title = OIDplusJava::objectTypeTitle();
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array(self::root()));
 			if (OIDplus::db()->num_rows($res) > 0) {
-				$content  = 'Please select an object in the tree view at the left to show its contents.';
+				$content  = 'Please select a Java Package Name in the tree view at the left to show its contents.';
 			} else {
-				$content  = 'Currently, no misc objects are registered in the system.';
+				$content  = 'Currently, no Java Package Name is registered in the system.';
 			}
 
 			if (!$this->isLeafNode()) {
@@ -120,7 +120,9 @@ class OIDplusOther extends OIDplusObject {
 		} else {
 			$title = $this->getTitle();
 
-			$content = '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
+			$content = '<h3>'.explode(':',$this->nodeId())[1].'</h3>';
+
+			$content .= '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
@@ -134,11 +136,11 @@ class OIDplusOther extends OIDplusObject {
 	}
 
 	public function one_up() {
-		$oid = $this->other;
+		$oid = $this->java;
 
-		$p = strrpos($oid, '\\');
+		$p = strrpos($oid, '.');
 		if ($p === false) return $oid;
-		if ($p == 0) return '\\';
+		if ($p == 0) return '.';
 
 		$oid_up = substr($oid, 0, $p);
 
@@ -149,14 +151,14 @@ class OIDplusOther extends OIDplusObject {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
 		if (!($to instanceof $this)) return false;
 
-		$a = $to->other;
-		$b = $this->other;
+		$a = $to->java;
+		$b = $this->java;
 
-		if (substr($a,0,1) == '\\') $a = substr($a,1);
-		if (substr($b,0,1) == '\\') $b = substr($b,1);
+		if (substr($a,0,1) == '.') $a = substr($a,1);
+		if (substr($b,0,1) == '.') $b = substr($b,1);
 
-		$ary = explode('\\', $a);
-		$bry = explode('\\', $b);
+		$ary = explode('.', $a);
+		$bry = explode('.', $b);
 
 		$min_len = min(count($ary), count($bry));
 
@@ -168,4 +170,4 @@ class OIDplusOther extends OIDplusObject {
 	}
 }
 
-OIDplus::registerObjectType('OIDplusOther');
+OIDplus::registerObjectType('OIDplusJava');

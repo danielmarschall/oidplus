@@ -24,6 +24,15 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 		return 'public';
 	}
 
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'RA-Info';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function priority() {
 		return 93;
 	}

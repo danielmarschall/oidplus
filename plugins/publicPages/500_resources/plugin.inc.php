@@ -29,6 +29,15 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 		return 'public';
 	}
 
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'Resources';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function priority() {
 		return 500;
 	}

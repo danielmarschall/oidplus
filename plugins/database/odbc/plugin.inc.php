@@ -24,6 +24,15 @@ class OIDplusDataBaseODBC extends OIDplusDataBase {
 	private $last_query;
 	private $prepare_cache = array();
 
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'ODBC';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public static function name() {
 		return "ODBC";
 	}

@@ -20,6 +20,15 @@
 if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusPageAdminLogEvents extends OIDplusPagePlugin {
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'Log messages';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function type() {
 		return 'admin';
 	}

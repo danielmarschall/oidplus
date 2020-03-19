@@ -22,6 +22,15 @@ if (!defined('IN_OIDPLUS')) die();
 class OIDplusGs1 extends OIDplusObject {
 	private $number;
 
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'GS1 Based IDs';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function __construct($number) {
 		// TODO: syntax checks
 		$this->number = $number;

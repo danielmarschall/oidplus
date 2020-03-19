@@ -10,7 +10,7 @@ Type "objectTypes"
 ------------------
 
 	icon_big.png
-	*.class.php
+	plugin.inc.php
 
 Type "database"
 ---------------

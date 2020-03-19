@@ -22,6 +22,15 @@ if (!defined('IN_OIDPLUS')) die();
 class OIDplusDoi extends OIDplusObject {
 	private $doi;
 
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'Digital Object Identifier (DOI)';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function __construct($doi) {
 		// TODO: syntax checks
 		$this->doi = $doi;

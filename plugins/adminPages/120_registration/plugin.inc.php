@@ -25,6 +25,15 @@ define('QUERY_LISTALLSYSTEMIDS_V1', '1.3.6.1.4.1.37476.2.5.2.1.3.1');
 define('QUERY_LIVESTATUS_V1',       '1.3.6.1.4.1.37476.2.5.2.1.4.1');
 
 class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'System registration';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function type() {
 		return 'admin';
 	}

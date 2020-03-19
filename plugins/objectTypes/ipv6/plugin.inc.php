@@ -19,76 +19,85 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusIpv4 extends OIDplusObject {
-	private $ipv4;
+class OIDplusIpv6 extends OIDplusObject {
+	private $ipv6;
 	private $bare;
 	private $cidr;
 
-	public function __construct($ipv4) {
-		$this->ipv4 = $ipv4;
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'IPv6';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
 
-		if (!empty($ipv4)) {
-			if (strpos($ipv4, '/') === false) $ipv4 .= '/32';
-			list($bare, $cidr) = explode('/', $ipv4);
+	public function __construct($ipv6) {
+		$this->ipv6 = $ipv6;
+
+		if (!empty($ipv6)) {
+			if (strpos($ipv6, '/') === false) $ipv6 .= '/128';
+			list($bare, $cidr) = explode('/', $ipv6);
 			$this->bare = $bare;
 			$this->cidr = $cidr;
-			if (!ipv4_valid($bare)) throw new Exception("Invalid IPv4");
-			if (!is_numeric($cidr)) throw new Exception("Invalid IPv4");
-			if ($cidr < 0) throw new Exception("Invalid IPv4");
-			if ($cidr > 32) throw new Exception("Invalid IPv4");
-			$this->bare = ipv4_normalize($this->bare);
+			if (!ipv6_valid($bare)) throw new Exception("Invalid IPv6");
+			if (!is_numeric($cidr)) throw new Exception("Invalid IPv6");
+			if ($cidr < 0) throw new Exception("Invalid IPv6");
+			if ($cidr > 128) throw new Exception("Invalid IPv6");
+			$this->bare = ipv6_normalize($this->bare);
 		}
 	}
 
 	public static function parse($node_id) {
-		@list($namespace, $ipv4) = explode(':', $node_id, 2);
-		if ($namespace !== 'ipv4') return false;
-		return new self($ipv4);
+		@list($namespace, $ipv6) = explode(':', $node_id, 2);
+		if ($namespace !== 'ipv6') return false;
+		return new self($ipv6);
 	}
 
 	public static function objectTypeTitle() {
-		return "IPv4 Network Blocks";
+		return "IPv6 Network Blocks";
 	}
 
 	public static function objectTypeTitleShort() {
-		return "IPv4";
+		return "IPv6";
 	}
 
 	public static function ns() {
-		return 'ipv4';
+		return 'ipv6';
 	}
 
 	public static function root() {
-		return 'ipv4:';
+		return 'ipv6:';
 	}
 
 	public function isRoot() {
-		return $this->ipv4 == '';
+		return $this->ipv6 == '';
 	}
 
 	public function nodeId() {
-		return 'ipv4:'.$this->ipv4;
+		return 'ipv6:'.$this->ipv6;
 	}
 
 	public function addString($str) {
-		if (strpos($str, '/') === false) $str .= "/32";
+		if (strpos($str, '/') === false) $str .= "/128";
 
 		if (!$this->isRoot()) {
-			if (!ipv4_in_cidr($this->bare.'/'.$this->cidr, $str)) {
+			if (!ipv6_in_cidr($this->bare.'/'.$this->cidr, $str)) {
 				throw new Exception("Cannot add this address, because it must be inside the address range of the superior range.");
 			}
 		}
 
-		list($ipv4, $cidr) = explode('/', $str);
-		if ($cidr < 0) throw new Exception("Invalid IPv4 address '$str'");
-		if ($cidr > 32) throw new Exception("Invalid IPv4 address '$str'");
-		$ipv4_normalized = ipv4_normalize($ipv4);
-		if (!$ipv4_normalized) throw new Exception("Invalid IPv4 address '$str'");
-		return 'ipv4:'.$ipv4_normalized.'/'.$cidr; // overwrite; no hierarchical tree
+		list($ipv6, $cidr) = explode('/', $str);
+		if ($cidr < 0) throw new Exception("Invalid IPv6 address '$str'");
+		if ($cidr > 128) throw new Exception("Invalid IPv6 address '$str'");
+		$ipv6_normalized = ipv6_normalize($ipv6);
+		if (!$ipv6_normalized) throw new Exception("Invalid IPv6 address '$str'");
+		return 'ipv6:'.$ipv6_normalized.'/'.$cidr; // overwrite; no hierarchical tree
 	}
 
 	public function crudShowId(OIDplusObject $parent) {
-		return $this->ipv4;
+		return $this->ipv6;
 	}
 
 	public function crudInsertPrefix() {
@@ -97,22 +106,22 @@ class OIDplusIpv4 extends OIDplusObject {
 
 	public function jsTreeNodeName(OIDplusObject $parent = null) {
 		if ($parent == null) return $this->objectTypeTitle();
-		return $this->ipv4;
+		return $this->ipv6;
 	}
 
 	public function defaultTitle() {
-		return $this->ipv4;
+		return $this->ipv6;
 	}
 
 	public function isLeafNode() {
-		return $this->cidr >= 32;
+		return $this->cidr >= 128;
 	}
 
 	public function getContentPage(&$title, &$content, &$icon) {
 		$icon = file_exists(__DIR__.'/icon_big.png') ? 'plugins/objectTypes/'.basename(__DIR__).'/icon_big.png' : '';
 
 		if ($this->isRoot()) {
-			$title = OIDplusIpv4::objectTypeTitle();
+			$title = OIDplusIpv6::objectTypeTitle();
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array(self::root()));
 			if (OIDplus::db()->num_rows($res) > 0) {
@@ -134,10 +143,10 @@ class OIDplusIpv4 extends OIDplusObject {
 
 			$content = '<h2>Technical information</h2>';
 
-			$content .= '<p>IPv4/CIDR: <code>' . ipv4_normalize($this->bare) . '/' . $this->cidr . '</code><br>';
-			if ($this->cidr < 32) {
-				$content .= 'First address: <code>' . ipv4_cidr_min_ip($this->bare . '/' . $this->cidr) . '</code><br>';
-				$content .= 'Last address: <code>' . ipv4_cidr_max_ip($this->bare . '/' . $this->cidr) . '</code></p>';
+			$content .= '<p>IPv6/CIDR: <code>' . ipv6_normalize($this->bare) . '/' . $this->cidr . '</code><br>';
+			if ($this->cidr < 128) {
+				$content .= 'First address: <code>' . ipv6_cidr_min_ip($this->bare . '/' . $this->cidr) . '</code><br>';
+				$content .= 'Last address: <code>' . ipv6_cidr_max_ip($this->bare . '/' . $this->cidr) . '</code></p>';
 			} else {
 				$content .= 'Single host address</p>';
 			}
@@ -159,15 +168,15 @@ class OIDplusIpv4 extends OIDplusObject {
 		$cidr = $this->cidr - 1;
 		if ($cidr < 0) return false; // cannot go further up
 
-		$tmp = ipv4_normalize_range($this->bare . '/' . $cidr);
+		$tmp = ipv6_normalize_range($this->bare . '/' . $cidr);
 		return self::parse($this->ns() . ':' . $tmp);
 	}
 
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
 		if (!($to instanceof $this)) return false;
-		return ipv4_distance($to->ipv4, $this->ipv4);
+		return ipv6_distance($to->ipv6, $this->ipv6);
 	}
 }
 
-OIDplus::registerObjectType('OIDplusIpv4');
+OIDplus::registerObjectType('OIDplusIpv6');

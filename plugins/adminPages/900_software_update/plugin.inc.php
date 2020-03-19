@@ -20,6 +20,15 @@
 if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePlugin {
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'Software update';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] = null;
+		return $out;
+	}
+
 	public function type() {
 		return 'admin';
 	}

@@ -72,7 +72,11 @@ class OIDplusRA {
 		$ra_res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($this->email));
 		$ra_row = OIDplus::db()->fetch_array($ra_res);
 
-		foreach (OIDplus::getAuthPlugins('*') as $plugin) {
+		$plugins = OIDplus::getAuthPlugins();
+		if (count($plugins) == 0) {
+			throw new Exception("No RA authentication plugins found");
+		}
+		foreach ($plugins as $plugin) {
 			if ($plugin->verify($ra_row['authkey'], $ra_row['salt'], $password)) return true;
 		}
 

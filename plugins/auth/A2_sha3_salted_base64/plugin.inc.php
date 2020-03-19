@@ -20,6 +20,17 @@
 if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusAuthPluginSha3SaltedBase64 extends OIDplusAuthPlugin {
+	public static function getPluginInformation() {
+		$out = array();
+		$out['name'] = 'SHA3 salted hash (base64 notation)';
+		$out['author'] = 'ViaThinkSoft';
+		$out['version'] = null;
+		$out['descriptionHTML'] =
+			'<p>This auth method is the default method OIDplus uses for new passwords</p>'.
+			'<p>The format is:</p>'.
+			'<p><code>A2#X</code> with X being <code>sha3{base64}(salt+password)</code></p>';
+		return $out;
+	}
 	public function verify($authKey, $salt, $check_password) {
 		@list($s_authmethod, $s_authkey) = explode('#', $authKey, 2);
 
