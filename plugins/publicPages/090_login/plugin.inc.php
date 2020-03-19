@@ -212,7 +212,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			$ra_roots[] = array(
 				'id'       => 'oidplus:logout$admin',
 				'icon'     => 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon_logout.png',
-				'conditionalselect' => 'adminLogout()', // defined in oidplus.js
+				'conditionalselect' => 'adminLogout()', // defined in oidplus_base.js
 				'text'     => 'Log out'
 			);
 			$loginChildren[] = array(
@@ -235,7 +235,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 
 			$ra_roots[] = array(
 				'id'       => 'oidplus:logout$'.$ra_email,
-				'conditionalselect' => 'raLogout('.js_escape($ra_email).')', // defined in oidplus.js
+				'conditionalselect' => 'raLogout('.js_escape($ra_email).')', // defined in oidplus_base.js
 				'icon'     => 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon_logout.png',
 				'text'     => 'Log out'
 			);

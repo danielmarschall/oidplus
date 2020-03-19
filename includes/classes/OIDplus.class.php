@@ -83,7 +83,7 @@ class OIDplus {
 
 		$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
 		$c = 0;
-		while (!file_exists($test_dir.'/oidplus.js')) {
+		while (!file_exists($test_dir.'/oidplus_base.js')) {
 			$test_dir = dirname($test_dir);
 			$c++;
 			if ($c == 1000) return false;
