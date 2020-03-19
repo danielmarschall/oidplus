@@ -91,7 +91,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 
 				OIDplus::config(); // <-- make sure that the config table is loaded/filled correctly before we do a select
 
-				$result = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config where `visible` = 1 order by name");
+				$result = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config where visible = 1 order by name");
 				while ($row = OIDplus::db()->fetch_object($result)) {
 					$output .= '<tr>';
 					$output .= '     <td>'.htmlentities($row->name).'</td>';

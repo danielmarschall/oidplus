@@ -20,6 +20,8 @@
 $prefix = isset($_REQUEST['prefix']) ? $_REQUEST['prefix'] : '';
 $database = isset($_REQUEST['database']) ? $_REQUEST['database'] : '';
 
+define('MYSQL_SYNTAX', false);
+
 $cont = trim(file_get_contents(__DIR__.'/sql/struct.sql'))."\n\n".
         trim(file_get_contents(__DIR__.'/sql/wellknown_country.sql'))."\n\n".
         trim(file_get_contents(__DIR__.'/sql/wellknown_other.sql'))."\n\n".
@@ -27,7 +29,7 @@ $cont = trim(file_get_contents(__DIR__.'/sql/struct.sql'))."\n\n".
 
 $table_names = array('objects', 'asn1id', 'iri', 'ra', 'config', 'log', 'log_user', 'log_object');
 foreach ($table_names as $table) {
-	$cont = str_replace('`'.$table.'`', '`'.$prefix.$table.'`', $cont);
+	$cont = str_replace('`'.$table.'`', MYSQL_SYNTAX ? '`'.$prefix.$table.'`' : $prefix.$table, $cont);
 }
 
 if (php_sapi_name() != 'cli') {
@@ -36,7 +38,12 @@ if (php_sapi_name() != 'cli') {
 }
 
 if (!empty($database)) {
-	echo "CREATE DATABASE IF NOT EXISTS `$database`;\n\n";
-	echo "USE `$database`;\n\n";
+	if (MYSQL_SYNTAX) {
+		echo "CREATE DATABASE IF NOT EXISTS `$database`;\n\n";
+		echo "USE `$database`;\n\n";
+	} else {
+		echo "CREATE DATABASE IF NOT EXISTS $database;\n\n";
+		echo "USE $database;\n\n";
+	}
 }
 echo $cont;

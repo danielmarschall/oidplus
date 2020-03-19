@@ -7,7 +7,6 @@ IMPORTANT
 	do we need an explicit consent at the login form?
 	do we need a consent for the cookie SSL_CHECK?
 - Verify that logger works correctly, check if all logmasks are correct
-- remove backtick operators due to sql compatibility
 - the inactivity timer is much too fast!
 - Does the admin feature "600_log" also show all log events from all Objects and all RAs?
 - at a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?

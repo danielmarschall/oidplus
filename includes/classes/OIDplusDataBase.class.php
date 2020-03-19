@@ -58,7 +58,7 @@ abstract class OIDplusDataBase extends OIDplusPlugin {
 		// Check if database tables are existing
 		$table_names = array('objects', 'asn1id', 'iri', 'ra', 'config');
 		foreach ($table_names as $tablename) {
-			if (!$this->query("DESCRIBE `".OIDPLUS_TABLENAME_PREFIX.$tablename."`")) {
+			if (!$this->query("DESCRIBE ".OIDPLUS_TABLENAME_PREFIX.$tablename)) {
 				if ($html) {
 					echo '<h1>Error</h1><p>Table <b>'.OIDPLUS_TABLENAME_PREFIX.$tablename.'</b> does not exist.</p>';
 					if (is_dir(__DIR__.'/../../../setup')) {
@@ -77,14 +77,14 @@ abstract class OIDplusDataBase extends OIDplusPlugin {
 		// Do the database table tables need an update?
 		// Note: The config setting "database_version" is inserted in setup/sql/...sql, not in the OIDplus core init
 
-		$res = $this->query("SELECT value FROM `".OIDPLUS_TABLENAME_PREFIX."config` WHERE name = 'database_version'");
+		$res = $this->query("SELECT value FROM ".OIDPLUS_TABLENAME_PREFIX."config WHERE name = 'database_version'");
 		$row = $this->fetch_array($res);
 		$version = $row['value'];
 		if ($version == 200) {
 			$this->transaction_begin();
-			$this->query("ALTER TABLE `".OIDPLUS_TABLENAME_PREFIX."objects` ADD comment varchar(255) NULL");
+			$this->query("ALTER TABLE ".OIDPLUS_TABLENAME_PREFIX."objects ADD comment varchar(255) NULL");
 			$version = 201;
-			$this->query("UPDATE `".OIDPLUS_TABLENAME_PREFIX."config` SET value = '$version' WHERE name = 'database_version'");
+			$this->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."config SET value = '$version' WHERE name = 'database_version'");
 			$this->transaction_commit();
 		}
 	}
