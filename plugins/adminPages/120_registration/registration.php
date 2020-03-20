@@ -68,7 +68,7 @@ if (RECAPTCHA_ENABLED) {
 	echo '</noscript>';
 	echo '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.RECAPTCHA_PUBLIC.'" }); </script>';
 	echo '<p>Before logging in, please solve the following CAPTCHA</p>';
-	echo '<p>If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="<?php echo OIDplus::system_url(); ?>setup/">setup part 1</a> again or edit includes/config.inc.php).</p>';
+	echo '<p>If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="<?php echo OIDplus::getSystemUrl(); ?>setup/">setup part 1</a> again or edit includes/config.inc.php).</p>';
 	echo '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>';
 
 	if (isset($_REQUEST['sent'])) {
@@ -89,7 +89,7 @@ if (RECAPTCHA_ENABLED) {
 
 <p>Please enter the administrator password you have entered before.</p>
 
-<p><input type="password" name="admin_password" value=""> (<a href="<?php echo OIDplus::system_url(); ?>setup/">Forgot?</a>) <?php
+<p><input type="password" name="admin_password" value=""> (<a href="<?php echo OIDplus::getSystemUrl(); ?>setup/">Forgot?</a>) <?php
 
 if (isset($_REQUEST['sent'])) {
 	if (!OIDplusAuthUtils::adminCheckPassword($_REQUEST['admin_password'])) {
@@ -157,7 +157,7 @@ if (isset($_REQUEST['sent'])) {
 
 $enabled_ary = array();
 
-foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 	echo '<input type="checkbox" name="enable_ot_'.$ot::ns().'" id="enable_ot_'.$ot::ns().'"';
 	if (isset($_REQUEST['sent'])) {
 	        if (isset($_REQUEST['enable_ot_'.$ot::ns()])) {
@@ -283,7 +283,7 @@ if (function_exists('openssl_sign')) {
 <p><u>Your OIDplus system ID (derived from the public key) is:</u></p>
 
 1.3.6.1.4.1.37476.30.9.<b><?php
-echo htmlentities(OIDplus::system_id());
+echo htmlentities(OIDplus::getSystemId());
 ?></b>
 
 <p><u>Your public key is</u></p>

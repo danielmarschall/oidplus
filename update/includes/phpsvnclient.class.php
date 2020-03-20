@@ -527,6 +527,7 @@ class phpsvnclient
 		$revlogs = array();
 
 		$array = array();
+		if (!isset($arrOutput['children'])) $arrOutput['children'] = array();
 		foreach ($arrOutput['children'] as $value) {
 			/*
                         <S:log-item>
@@ -577,6 +578,7 @@ class phpsvnclient
 		$dirs        = array();
 		$dirsDelete  = array();
 
+		if (!isset($array['objects'])) $array['objects'] = array();
 		foreach ($array['objects'] as $objects) {
 			// This section was completely changed by Daniel Marschall
 			if ($objects['type'] == "file") {

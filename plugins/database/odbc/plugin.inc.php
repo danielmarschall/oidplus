@@ -19,7 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusDataBaseODBC extends OIDplusDataBase {
+class OIDplusDataBasePluginODBC extends OIDplusDataBasePlugin {
 	private $odbc;
 	private $last_query;
 	private $prepare_cache = array();

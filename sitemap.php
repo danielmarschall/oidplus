@@ -33,7 +33,7 @@ $json = array();
 foreach (OIDplus::getPagePlugins('public') as $plugin) {
 	if (get_class($plugin) == 'OIDplusPagePublicObjects') {
 		foreach ($nonConfidential as $id) {
-			echo OIDplus::system_url().'?goto='.urlencode($id)."\n";
+			echo OIDplus::getSystemUrl().'?goto='.urlencode($id)."\n";
 		}
 	} else {
 		$plugin->tree($json, null, true, null);
@@ -46,7 +46,7 @@ _rec($json);
 function _rec($json) {
 	foreach ($json as $x) {
 		if (isset($x['id']) && $x['id']) {
-			echo OIDplus::system_url().'?goto='.urlencode($x['id'])."\n";
+			echo OIDplus::getSystemUrl().'?goto='.urlencode($x['id'])."\n";
 		}
 		if (isset($x['children'])) {
 			_rec($x['children']);

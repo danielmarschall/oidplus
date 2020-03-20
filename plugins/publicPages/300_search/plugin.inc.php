@@ -89,7 +89,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 				                 </script>
 				                 Search in: <select name="namespace" id="namespace" onchange="searchNsSelect(this.value);"><br><br>';
 
-				foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+				foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 					$out['text'] .= '<option value="'.htmlentities($ot::ns()).'"'.(($ns == $ot::ns()) ? ' selected' : '').'>'.htmlentities($ot::objectTypeTitle()).'</option>';
 				}
 				$out['text'] .= '<option value="oidplus:ra"'.(($ns == 'oidplus:ra') ? ' selected' : '').'>Registration Authority</option>

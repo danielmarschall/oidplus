@@ -22,21 +22,15 @@ if (!defined('IN_OIDPLUS')) die();
 class OIDplus {
 	private static /*OIDplusPagePlugin[][]*/ $pagePlugins = array();
 	private static /*OIDplusAuthPlugin[][]*/ $authPlugins = array();
-	private static /*OIDplusObject[]*/ $objectTypes = array();
-	private static /*OIDplusObject[]*/ $disabledObjectTypes = array();
-	private static /*OIDplusDatabase[]*/ $dbPlugins = array();
+	private static /*OIDplusObjectTypePlugin[]*/ $objectTypePlugins = array();
+	private static /*string[]*/ $enabledObjectTypes = array();
+	private static /*string[]*/ $disabledObjectTypes = array();
+	private static /*OIDplusDatabasePlugin[]*/ $dbPlugins = array();
 
 	private function __construct() {
 	}
 
-	public static function db() {
-		if (!isset(self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN])) {
-			throw new Exception("Database plugin '".htmlentities(OIDPLUS_DATABASE_PLUGIN)."' not found. Please check config.inc.php or run <a href=\"setup/\">setup</a> again.");
-		}
-		$obj = self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN];
-		if (!$obj->isConnected()) $obj->connect();
-		return $obj;
-	}
+	# --- Singleton classes
 
 	public static function config() {
 		static $config = null;
@@ -78,34 +72,9 @@ class OIDplus {
 		return $sesHandler;
 	}
 
-	public static function system_url($relative=false) {
-		if (!isset($_SERVER["REQUEST_URI"])) return false;
+	# --- Database Plugin
 
-		$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
-		$c = 0;
-		while (!file_exists($test_dir.'/oidplus_base.js')) {
-			$test_dir = dirname($test_dir);
-			$c++;
-			if ($c == 1000) return false;
-		}
-
-		$res = dirname($_SERVER['REQUEST_URI'].'xxx');
-
-		for ($i=1; $i<=$c; $i++) {
-			$res = dirname($res);
-		}
-
-		if ($res == '/') $res = '';
-		$res .= '/';
-
-		if (!$relative) {
-			$res = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . $res; // TODO: also add port?
-		}
-
-		return $res;
-	}
-
-	private static function registerDatabasePlugin(OIDplusDatabase $plugin) {
+	private static function registerDatabasePlugin(OIDplusDatabasePlugin $plugin) {
 		$name = $plugin->name();
 		if ($name === false) return false;
 
@@ -118,6 +87,17 @@ class OIDplus {
 		return self::$dbPlugins;
 	}
 
+	public static function db() {
+		if (!isset(self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN])) {
+			throw new Exception("Database plugin '".htmlentities(OIDPLUS_DATABASE_PLUGIN)."' not found. Please check config.inc.php or run <a href=\"setup/\">setup</a> again.");
+		}
+		$obj = self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN];
+		if (!$obj->isConnected()) $obj->connect();
+		return $obj;
+	}
+
+	# --- Page plugin
+
 	private static function registerPagePlugin(OIDplusPagePlugin $plugin) {
 		$type = $plugin->type();
 		if ($type === false) return false;
@@ -128,11 +108,6 @@ class OIDplus {
 		if (!isset(self::$pagePlugins[$type])) self::$pagePlugins[$type] = array();
 		self::$pagePlugins[$type][$prio] = $plugin;
 
-		return true;
-	}
-
-	private static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
-		self::$authPlugins[] = $plugin;
 		return true;
 	}
 
@@ -149,8 +124,26 @@ class OIDplus {
 		return $res;
 	}
 
+	# --- Auth plugin
+
+	private static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
+		self::$authPlugins[] = $plugin;
+		return true;
+	}
+
 	public static function getAuthPlugins() {
 		return self::$authPlugins;
+	}
+
+	# --- Object type plugin
+
+	private static function registerObjectTypePlugin(OIDplusObjectTypePlugin $plugin) {
+		self::$objectTypePlugins[] = $plugin;
+
+		$ot = $plugin::getObjectTypeClassName();
+		self::registerObjectType($ot);
+
+		return true;
 	}
 
 	private static function registerObjectType($ot) {
@@ -159,7 +152,7 @@ class OIDplus {
 		if (empty($ns)) die("Attention: Empty NS at $ot\n");
 
 		$ns_found = false;
-		foreach (OIDplus::getRegisteredObjectTypes() as $test_ot) {
+		foreach (array_merge(OIDplus::getEnabledObjectTypes(), OIDplus::getDisabledObjectTypes()) as $test_ot) {
 			if ($test_ot::ns() == $ns) {
 				$ns_found = true;
 				break;
@@ -189,8 +182,8 @@ class OIDplus {
 		}
 
 		if ($do_enable) {
-			self::$objectTypes[] = $ot;
-			usort(self::$objectTypes, function($a, $b) {
+			self::$enabledObjectTypes[] = $ot;
+			usort(self::$enabledObjectTypes, function($a, $b) {
 				$enabled = OIDplus::config()->getValue("objecttypes_enabled");
 				$enabled_ary = explode(';', $enabled);
 
@@ -219,69 +212,37 @@ class OIDplus {
 		}
 	}
 
-	public static function getRegisteredObjectTypes() {
-		return self::$objectTypes;
+	public static function getObjectTypePlugins() {
+		return self::$objectTypePlugins;
+	}
+
+	public static function getObjectTypePluginsEnabled() {
+		$res = array();
+		foreach (self::$objectTypePlugins as $plugin) {
+			$ot = $plugin::getObjectTypeClassName();
+			if (in_array($ot, self::$enabledObjectTypes)) $res[] = $plugin;
+		}
+		return $res;
+	}
+
+	public static function getObjectTypePluginsDisabled() {
+		$res = array();
+		foreach (self::$objectTypePlugins as $plugin) {
+			$ot = $plugin::getObjectTypeClassName();
+			if (in_array($ot, self::$disabledObjectTypes)) $res[] = $plugin;
+		}
+		return $res;
+	}
+
+	public static function getEnabledObjectTypes() {
+		return self::$enabledObjectTypes;
 	}
 
 	public static function getDisabledObjectTypes() {
 		return self::$disabledObjectTypes;
 	}
 
-	private static $system_id_cache = null;
-	public static function system_id($oid=false) {
-		if (!is_null(self::$system_id_cache)) {
-			$out = self::$system_id_cache;
-		} else {
-			$out = false;
-
-			if (self::pkiStatus(true)) {
-				$pubKey = OIDplus::config()->getValue('oidplus_public_key');
-				if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
-					$out = smallhash(base64_decode($m[1]));
-				}
-			}
-			self::$system_id_cache = $out;
-		}
-		return ($oid ? '1.3.6.1.4.1.37476.30.9.' : '').$out;
-	}
-
-	public static function pkiStatus($try_generate=true) {
-		if (!function_exists('openssl_pkey_new')) return false;
-
-		$privKey = OIDplus::config()->getValue('oidplus_private_key');
-		$pubKey = OIDplus::config()->getValue('oidplus_public_key');
-
-		if ($try_generate && !verify_private_public_key($privKey, $pubKey)) {
-			OIDplus::logger()->log("A!", "Generating new SystemID using a new key pair");
-
-			$config = array(
-			    "digest_alg" => "sha512",
-			    "private_key_bits" => 2048,
-			    "private_key_type" => OPENSSL_KEYTYPE_RSA,
-			);
-
-			// Create the private and public key
-			$res = openssl_pkey_new($config);
-
-			// Extract the private key from $res to $privKey
-			openssl_pkey_export($res, $privKey);
-
-			// Extract the public key from $res to $pubKey
-			$pubKey = openssl_pkey_get_details($res)["key"];
-
-			// Save the key pair to database
-			OIDplus::config()->setValue('oidplus_private_key', $privKey);
-			OIDplus::config()->setValue('oidplus_public_key', $pubKey);
-
-			// Log the new system ID
-			if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
-				$system_id = smallhash(base64_decode($m[1]));
-				OIDplus::logger()->log("A!", "Your SystemID is now $system_id");
-			}
-		}
-
-		return verify_private_public_key($privKey, $pubKey);
-	}
+	# --- Initialization of OIDplus
 
 	public static function init($html=true) {
 		define('OIDPLUS_HTML_OUTPUT', $html);
@@ -336,7 +297,7 @@ class OIDplus {
 		foreach ($ary as $a) include $a;
 
 		foreach (get_declared_classes() as $c) {
-			if (is_subclass_of($c, 'OIDplusDataBase')) {
+			if (is_subclass_of($c, 'OIDplusDataBasePlugin')) {
 				self::registerDatabasePlugin(new $c());
 			}
 		}
@@ -355,7 +316,7 @@ class OIDplus {
 
 		// Initialize public / private keys
 
-		OIDplus::pkiStatus(true);
+		OIDplus::getPkiStatus(true);
 
 		// Register plugins
 
@@ -379,8 +340,8 @@ class OIDplus {
 			if (is_subclass_of($c, 'OIDplusAuthPlugin')) {
 				self::registerAuthPlugin(new $c());
 			}
-			if (is_subclass_of($c, 'OIDplusObject')) {
-				self::registerObjectType($c);
+			if (is_subclass_of($c, 'OIDplusObjectTypePlugin')) {
+				self::registerObjectTypePlugin(new $c());
 			}
 		}
 
@@ -389,6 +350,91 @@ class OIDplus {
 		foreach (OIDplus::getPagePlugins('*') as $plugin) {
 			$plugin->init($html);
 		}
+	}
+
+	# --- System URL, System ID, PKI, and other functions
+
+	public static function getSystemUrl($relative=false) {
+		if (!isset($_SERVER["SCRIPT_NAME"])) return false;
+
+		$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
+		$c = 0;
+		while (!file_exists($test_dir.'/oidplus_base.js')) {
+			$test_dir = dirname($test_dir);
+			$c++;
+			if ($c == 1000) return false;
+		}
+
+		$res = dirname($_SERVER['SCRIPT_NAME'].'xxx');
+
+		for ($i=1; $i<=$c; $i++) {
+			$res = dirname($res);
+		}
+
+		if ($res == '/') $res = '';
+		$res .= '/';
+
+		if (!$relative) {
+			$res = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . $res; // TODO: also add port?
+		}
+
+		return $res;
+	}
+
+	private static $system_id_cache = null;
+	public static function getSystemId($oid=false) {
+		if (!is_null(self::$system_id_cache)) {
+			$out = self::$system_id_cache;
+		} else {
+			$out = false;
+
+			if (self::getPkiStatus(true)) {
+				$pubKey = OIDplus::config()->getValue('oidplus_public_key');
+				if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
+					$out = smallhash(base64_decode($m[1]));
+				}
+			}
+			self::$system_id_cache = $out;
+		}
+		return ($oid ? '1.3.6.1.4.1.37476.30.9.' : '').$out;
+	}
+
+	public static function getPkiStatus($try_generate=true) {
+		if (!function_exists('openssl_pkey_new')) return false;
+
+		$privKey = OIDplus::config()->getValue('oidplus_private_key');
+		$pubKey = OIDplus::config()->getValue('oidplus_public_key');
+
+		if ($try_generate && !verify_private_public_key($privKey, $pubKey)) {
+			OIDplus::logger()->log("A!", "Generating new SystemID using a new key pair");
+
+			$config = array(
+			    "digest_alg" => "sha512",
+			    "private_key_bits" => 2048,
+			    "private_key_type" => OPENSSL_KEYTYPE_RSA,
+			);
+
+			// Create the private and public key
+			$res = openssl_pkey_new($config);
+
+			// Extract the private key from $res to $privKey
+			openssl_pkey_export($res, $privKey);
+
+			// Extract the public key from $res to $pubKey
+			$pubKey = openssl_pkey_get_details($res)["key"];
+
+			// Save the key pair to database
+			OIDplus::config()->setValue('oidplus_private_key', $privKey);
+			OIDplus::config()->setValue('oidplus_public_key', $pubKey);
+
+			// Log the new system ID
+			if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
+				$system_id = smallhash(base64_decode($m[1]));
+				OIDplus::logger()->log("A!", "Your SystemID is now $system_id");
+			}
+		}
+
+		return verify_private_public_key($privKey, $pubKey);
 	}
 
 	public static function getInstallType() {
@@ -444,7 +490,7 @@ class OIDplus {
 		$timeout = 2;
 		$already_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == "on");
 		$ssl_port = 443;
-		$cookie_path = OIDplus::system_url(true);
+		$cookie_path = OIDplus::getSystemUrl(true);
 		if (empty($cookie_path)) $cookie_path = '/';
 
 		if (php_sapi_name() == 'cli') return false;

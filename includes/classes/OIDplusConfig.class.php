@@ -121,7 +121,7 @@ class OIDplusConfig {
 
 			foreach ($ary as $ot_check) {
 				$ns_found = false;
-				foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+				foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 					if ($ot::ns() == $ot_check) {
 						$ns_found = true;
 						break;

@@ -17,25 +17,11 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/../../../includes/oidplus.inc.php';
+if (!defined('IN_OIDPLUS')) die();
 
-header('Content-Type:text/html; charset=UTF-8');
+class OIDplusObjectTypePlugin extends OIDplusPlugin {
 
-OIDplus::init(true);
+	public static function getObjectTypeClassName() {}
 
-# ---
-
-if (!OIDplus::authUtils()::isAdminLoggedIn()) {
-	if (php_sapi_name() == 'cli') {
-		#echo "You need to log in as administrator.\n";
-		#die();
-	} else {
-		echo '<p>You need to <a href="'.OIDplus::getSystemUrl().'?goto=oidplus:login">log in</a> as administrator.</p>';
-		die();
-	}
 }
-
-header('Content-Type:text/xml');
-
-OIDplusPageAdminOIDInfoExport::outputXML(isset($_GET['online']) && $_GET['online']);
 

@@ -19,8 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusGs1 extends OIDplusObject {
-	private $number;
+class OIDplusObjectTypePluginGs1 extends OIDplusObjectTypePlugin {
 
 	public static function getPluginInformation() {
 		$out = array();
@@ -30,6 +29,15 @@ class OIDplusGs1 extends OIDplusObject {
 		$out['descriptionHTML'] = null;
 		return $out;
 	}
+
+	public static function getObjectTypeClassName() {
+		return 'OIDplusGs1';
+	}
+
+}
+
+class OIDplusGs1 extends OIDplusObject {
+	private $number;
 
 	public function __construct($number) {
 		// TODO: syntax checks

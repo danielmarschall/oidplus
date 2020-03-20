@@ -134,16 +134,16 @@ try {
 
 		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Object '$id' (recursively) deleted");
 		OIDplus::logger()->log("OIDRA($id)!", "Lost ownership of object '$id' because it was deleted");
-		
+
 		if ($parentObj = $obj->getParent()) {
 			OIDplus::logger()->log("OID(".$parentObj->nodeId().")", "Object '$id' (recursively) deleted");
 		}
-		
+
 		// Delete object
 		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
 
 		// Delete orphan stuff
-		foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 			do {
 				$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent <> ? and parent like ? and parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?)", array($ot::root(), $ot::root().'%', $ot::root().'%'));
 
@@ -226,7 +226,7 @@ try {
 			$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
 			$ids = array_map('trim',$ids);
 			$oid->replaceAsn1Ids($ids, false);
-			
+
 			// TODO: Check if any identifiers have been actually changed,
 			// and log it to OID($id), OID($parent), ... (see above)
 		}

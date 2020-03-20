@@ -77,11 +77,11 @@ function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
 	}
 }
 
-$sysid_oid = OIDplus::system_id(true);
+$sysid_oid = OIDplus::getSystemId(true);
 if (!$sysid_oid) $sysid_oid = 'unknown';
 header('X-OIDplus-SystemID:'.$sysid_oid);
 
-$sys_url = OIDplus::system_url();
+$sys_url = OIDplus::getSystemUrl();
 header('X-OIDplus-SystemURL:'.$sys_url);
 
 $sys_ver = OIDplus::getVersion();

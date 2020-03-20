@@ -19,10 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusIpv4 extends OIDplusObject {
-	private $ipv4;
-	private $bare;
-	private $cidr;
+class OIDplusObjectTypePluginIpv4 extends OIDplusObjectTypePlugin {
 
 	public static function getPluginInformation() {
 		$out = array();
@@ -32,6 +29,17 @@ class OIDplusIpv4 extends OIDplusObject {
 		$out['descriptionHTML'] = null;
 		return $out;
 	}
+
+	public static function getObjectTypeClassName() {
+		return 'OIDplusIpv4';
+	}
+
+}
+
+class OIDplusIpv4 extends OIDplusObject {
+	private $ipv4;
+	private $bare;
+	private $cidr;
 
 	public function __construct($ipv4) {
 		$this->ipv4 = $ipv4;

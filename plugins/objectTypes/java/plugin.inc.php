@@ -19,8 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusJava extends OIDplusObject {
-	private $java;
+class OIDplusObjectTypePluginJava extends OIDplusObjectTypePlugin {
 
 	public static function getPluginInformation() {
 		$out = array();
@@ -30,6 +29,15 @@ class OIDplusJava extends OIDplusObject {
 		$out['descriptionHTML'] = null;
 		return $out;
 	}
+
+	public static function getObjectTypeClassName() {
+		return 'OIDplusJava';
+	}
+
+}
+
+class OIDplusJava extends OIDplusObject {
+	private $java;
 
 	public function __construct($java) {
 		// TODO: syntax checks

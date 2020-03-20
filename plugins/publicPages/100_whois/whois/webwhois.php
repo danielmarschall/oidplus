@@ -236,7 +236,7 @@ if ($format == 'txt') {
 
 	echo $cont;
 
-	if (OIDplus::pkiStatus(true)) {
+	if (OIDplus::getPkiStatus(true)) {
 		$signature = '';
 		if (openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 			$signature = base64_encode($signature);
@@ -275,7 +275,7 @@ if ($format == 'json') {
 	}
 	$ary = array('whois' => $ary); // we need this named root, otherwise PHP will name the sections "0", "1", "2" if the array is not sequencial (e.g. because "signature" is added)
 
-	if (OIDplus::pkiStatus(true)) {
+	if (OIDplus::getPkiStatus(true)) {
 		$cont = json_encode($ary);
 		$signature = '';
 		if (openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
@@ -300,7 +300,7 @@ if ($format == 'xml') {
 	}
 	$xml .= '</section></whois>';
 
-	if (OIDplus::pkiStatus(true)) {
+	if (OIDplus::getPkiStatus(true)) {
 		$cont = $xml;
 		$signature = '';
 		if (openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {

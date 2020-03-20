@@ -242,8 +242,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 			}
 
 			if ($show_obj_active || $show_obj_inactive) {
-				$enabled = $show_obj_active ? OIDplus::getRegisteredObjectTypes() : array();
-				$disabled = $show_obj_inactive ? OIDplus::getDisabledObjectTypes() : array();
+				$enabled = $show_obj_active ? OIDplus::getObjectTypePluginsEnabled() : array();
+				$disabled = $show_obj_inactive ? OIDplus::getObjectTypePluginsDisabled() : array();
 				if (count($plugins = array_merge($enabled, $disabled)) > 0) {
 					$out['text'] .= '<h2>Object types</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
@@ -254,13 +254,13 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 					$out['text'] .= '		<th width="25%">Plugin version</th>';
 					$out['text'] .= '		<th width="25%">Plugin author</th>';
 					$out['text'] .= '	</tr>';
-					foreach ($plugins as $pluginName) {
+					foreach ($plugins as $plugin) {
 						$out['text'] .= '	<tr>';
-						$pluginInfo = $pluginName::getPluginInformation();
-						if (in_array($pluginName, $enabled)) {
-							$out['text'] .= '<td><a '.oidplus_link('oidplus:system_plugins.$'.$pluginName).'>'.htmlentities($pluginName).'</a></td>';
+						$pluginInfo = $plugin::getPluginInformation();
+						if (in_array($plugin, $enabled)) {
+							$out['text'] .= '<td><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
 						} else {
-							$out['text'] .= '<td><a '.oidplus_link('oidplus:system_plugins.$'.$pluginName).'><font color="gray">'.htmlentities($pluginName).' (disabled)</font></a></td>';
+							$out['text'] .= '<td><a '.oidplus_link('oidplus:system_plugins.$'.get_class($plugin)).'><font color="gray">'.htmlentities(get_class($plugin)).' (disabled)</font></a></td>';
 						}
 						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
 						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
@@ -411,23 +411,21 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 			}
 		}
 		$obj_plugins = array();
-		$enabled = OIDplus::getRegisteredObjectTypes();
-		$disabled = OIDplus::getDisabledObjectTypes();
+		$enabled = OIDplus::getObjectTypePluginsEnabled();
+		$disabled = OIDplus::getObjectTypePluginsDisabled();
 		foreach (array_merge($enabled, $disabled) as $plugin) {
 			$pluginInfo = $plugin::getPluginInformation();
 			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? $plugin : $pluginInfo['name'];
 
-			// $txt = htmlentities($plugin::objectTypeTitle()).' ('.htmlentities($plugin::ns()).')';
-
 			if (in_array($plugin, $enabled)) {
 				$obj_plugins[] = array(
-					'id' => 'oidplus:system_plugins.$'.$plugin,
+					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
 					'icon' => $tree_icon_obj_active,
 					'text' => $txt,
 				 );
 			} else {
 				$obj_plugins[] = array(
-					'id' => 'oidplus:system_plugins.$'.$plugin,
+					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
 					'icon' => $tree_icon_obj_inactive,
 					'text' => '<font color="gray">'.$txt.'</font>',
 				 );

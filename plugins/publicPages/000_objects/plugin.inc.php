@@ -56,7 +56,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 
 			if (strpos($out['text'], '%%OBJECT_TYPE_LIST%%') !== false) {
 				$tmp = '<ul>';
-				foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+				foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 					$tmp .= '<li><a '.oidplus_link($ot::root()).'>'.htmlentities($ot::objectTypeTitle()).'</a></li>';
 				}
 				$tmp .= '</ul>';
@@ -80,7 +80,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 			}
 
 			$objTypesChildren = array();
-			foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 				$icon = 'plugins/objectTypes/'.$ot::ns().'/img/treeicon_root.png';
 				$json[] = array('id' => $ot::root(), 'icon' => $icon, 'text' => $ot::objectTypeTitle());
 
@@ -152,7 +152,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 			}
 
 			$objTypesChildren = array();
-			foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 				$child = array('id' => $ot::root(),
 				               'text' => $ot::objectTypeTitle(),
 				               'state' => array("opened" => true),

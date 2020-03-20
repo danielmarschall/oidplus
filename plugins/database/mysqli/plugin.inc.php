@@ -32,7 +32,7 @@ if (OIDPLUS_MYSQL_QUERYLOG) {
 	}
 }
 
-class OIDplusDataBaseMySQLi extends OIDplusDataBase {
+class OIDplusDataBasePluginMySQLi extends OIDplusDataBasePlugin {
 	private $mysqli;
 	private $last_query;
 	private $prepare_cache = array();

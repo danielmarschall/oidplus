@@ -60,7 +60,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 			OIDplus::logger()->log("RA($email)!", "A new password for '$email' was requested (forgot password)");
 
 			$timestamp = time();
-			$activate_url = OIDplus::system_url() . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('reset_password;'.$email.';'.$timestamp));
+			$activate_url = OIDplus::getSystemUrl() . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('reset_password;'.$email.';'.$timestamp));
 
 			$message = $this->getForgotPasswordText($_POST['email']);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
@@ -180,7 +180,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 		$message = file_get_contents(__DIR__ . '/forgot_password.tpl');
 
 		// Resolve stuff
-		$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
+		$message = str_replace('{{SYSTEM_URL}}', OIDplus::getSystemUrl(), $message);
 		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 
 		// {{ACTIVATE_URL}} will be resolved in ajax.php

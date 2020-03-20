@@ -70,6 +70,10 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 				$out['text'] = file_get_contents(__DIR__ . '/info.tpl').
 				               '<p><input type="button" onclick="openOidInPanel(\'oidplus:srvreg_status\');" value="Check status of the registration and collected data"></p>';
 
+				if (defined('REGISTRATION_HIDE_SYSTEM') && REGISTRATION_HIDE_SYSTEM) {
+					$out['text'] .= '<p><font color="red"><b>Attention!</b> <code>REGISTRATION_HIDE_SYSTEM</code> is set in the local configuration file! Therefore, this system will not register itself, despire the settings below.</font></p>';
+				}
+
 				if (!function_exists('openssl_sign')) {
 					$out['text'] .= '<p><font color="red">Error: OpenSSL plugin is missing in PHP. You cannot (un)register your OIDplus instance.</font></p>';
 				} else {
@@ -122,7 +126,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 
 			$payload = array(
 				"query" => $query, // we must repeat the query because we want to sign it
-				"system_id" => OIDplus::system_id(false)
+				"system_id" => OIDplus::getSystemId(false)
 			);
 
 			$signature = '';
@@ -156,7 +160,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			$privacy_level = OIDplus::config()->getValue('reg_privacy');
 		}
 
-		$system_url = OIDplus::system_url();
+		$system_url = OIDplus::getSystemUrl();
 
 		// It is very important that we set the ping time NOW, because ViaThinkSoft might contact us during the ping,
 		// and this would cause an endless loop!
@@ -165,12 +169,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 		if ($privacy_level == 2) {
 			// The user wants to unregister
 			// but we only unregister if we are registered. Check this "anonymously" (i.e. without revealing our system ID)
-			if (in_array(OIDplus::system_id(false), explode(';',file_get_contents('https://oidplus.viathinksoft.com/reg2/query.php?query='.QUERY_LISTALLSYSTEMIDS_V1)))) {
+			if (in_array(OIDplus::getSystemId(false), explode(';',file_get_contents('https://oidplus.viathinksoft.com/reg2/query.php?query='.QUERY_LISTALLSYSTEMIDS_V1)))) {
 				$query = QUERY_UNREGISTER_V1;
 
 				$payload = array(
 					"query" => $query, // we must repeat the query because we want to sign it
-					"system_id" => OIDplus::system_id(false)
+					"system_id" => OIDplus::getSystemId(false)
 				);
 
 				$signature = '';
@@ -210,7 +214,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			$query = QUERY_REGISTER_V1;
 
 			$root_oids = array();
-			foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 				if ($ot::ns() == 'oid') {
 					$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where " .
 					                            "parent = 'oid:' " .
@@ -223,7 +227,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			$payload = array(
 				"query" => $query, // we must repeat the query because we want to sign it
 				"privacy_level" => $privacy_level,
-				"system_id" => OIDplus::system_id(false),
+				"system_id" => OIDplus::getSystemId(false),
 				"public_key" => OIDplus::config()->getValue('oidplus_public_key'),
 				"system_url" => $system_url,
 				"hide_system_url" => 0,
@@ -262,7 +266,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 				OIDplus::config()->setValue('oidplus_public_key', '');
 
 				// Try to generate a new system ID
-				OIDplus::pkiStatus(true);
+				OIDplus::getPkiStatus(true);
 
 				// Enforce a new registration attempt at the next run
 				// We will not try again here, because that might lead to an endless loop if the VTS server would always return 'HASH_CONFLCIT'
@@ -282,12 +286,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 
 		// REGISTRATION_HIDE_SYSTEM is an undocumented constant that can be put in the config.inc.php files of a test system accessing the same database as the productive system that is registered.
 		// This avoids that the URL of the productive system is overridden with the test system URL (since they use the same database, they also have the same system ID)
-		if (function_exists('openssl_sign') && !defined('REGISTRATION_HIDE_SYSTEM')) {
+		if (function_exists('openssl_sign') && (!defined('REGISTRATION_HIDE_SYSTEM') || !REGISTRATION_HIDE_SYSTEM)) {
 			// Show registration wizard once
 
 			if ($html && (OIDplus::config()->getValue('reg_wizard_done') != '1')) {
 				if (basename($_SERVER['SCRIPT_NAME']) != 'registration.php') {
-					if ($system_url = OIDplus::system_url()) {
+					if ($system_url = OIDplus::getSystemUrl()) {
 						header('Location:'.$system_url.'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/registration.php');
 					} else {
 						header('Location:plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/registration.php');

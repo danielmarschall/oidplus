@@ -19,8 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusGuid extends OIDplusObject {
-	private $guid;
+class OIDplusObjectTypePluginGuid extends OIDplusObjectTypePlugin {
 
 	public static function getPluginInformation() {
 		$out = array();
@@ -30,6 +29,15 @@ class OIDplusGuid extends OIDplusObject {
 		$out['descriptionHTML'] = null;
 		return $out;
 	}
+
+	public static function getObjectTypeClassName() {
+		return 'OIDplusGuid';
+	}
+
+}
+
+class OIDplusGuid extends OIDplusObject {
+	private $guid;
 
 	public function __construct($guid) {
 		if (uuid_valid($guid)) {

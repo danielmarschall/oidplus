@@ -57,7 +57,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 	private function getExampleId() {
 		$firsts = array();
 		$first_ns = null;
-		foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 			if (is_null($first_ns)) $first_ns = $ot::ns();
 			$res = OIDplus::db()->query("SELECT id FROM ".OIDPLUS_TABLENAME_PREFIX."objects WHERE parent = ? ORDER BY id", array($ot::ns().':'));
 			if ($row = OIDplus::db()->fetch_array($res))

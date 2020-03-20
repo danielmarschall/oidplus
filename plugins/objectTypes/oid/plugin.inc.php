@@ -19,10 +19,9 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-include __DIR__ . '/WeidOidConverter.class.php';
+require_once __DIR__ . '/WeidOidConverter.class.php';
 
-class OIDplusOid extends OIDplusObject {
-	private $oid;
+class OIDplusObjectTypePluginOid extends OIDplusObjectTypePlugin {
 
 	public static function getPluginInformation() {
 		$out = array();
@@ -32,6 +31,15 @@ class OIDplusOid extends OIDplusObject {
 		$out['descriptionHTML'] = null;
 		return $out;
 	}
+
+	public static function getObjectTypeClassName() {
+		return 'OIDplusOid';
+	}
+
+}
+
+class OIDplusOid extends OIDplusObject {
+	private $oid;
 
 	public function __construct($oid) {
 		$bak_oid = $oid;

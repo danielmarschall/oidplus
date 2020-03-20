@@ -88,10 +88,10 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 				OIDplus::logger()->log("RA($old_email)!+RA($new_email)!", "Requested email change from '$old_email' to '$new_email'");
 
 				$timestamp = time();
-				$activate_url = OIDplus::system_url() . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp));
+				$activate_url = OIDplus::getSystemUrl() . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp));
 
 				$message = file_get_contents(__DIR__ . '/change_request_email.tpl');
-				$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
+				$message = str_replace('{{SYSTEM_URL}}', OIDplus::getSystemUrl(), $message);
 				$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
 				$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 				$message = str_replace('{{OLD_EMAIL}}', $old_email, $message);
@@ -153,7 +153,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePlugin {
 			OIDplus::logger()->log("RA($new_email)!", "RA '$old_email' has changed its email address to '$new_email'");
 
 			$message = file_get_contents(__DIR__ . '/email_change_confirmation.tpl');
-			$message = str_replace('{{SYSTEM_URL}}', OIDplus::system_url(), $message);
+			$message = str_replace('{{SYSTEM_URL}}', OIDplus::getSystemUrl(), $message);
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{OLD_EMAIL}}', $old_email, $message);

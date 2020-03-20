@@ -277,7 +277,7 @@ class OIDplusGui {
 			$res = null;
 			$row = null;
 			$matches_any_registered_type = false;
-			foreach (OIDplus::getRegisteredObjectTypes() as $ot) {
+			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 				if ($obj = $ot::parse($id)) {
 					$matches_any_registered_type = true;
 					if ($obj->isRoot()) {
@@ -295,6 +295,7 @@ class OIDplusGui {
 							return $out;
 						} else {
 							$obj->getContentPage($out['title'], $out['text'], $out['icon']);
+							if (empty($out['title'])) $out['title'] = explode(':',$id,2)[1];
 							$parent = $obj->getParent();
 							break;
 						}

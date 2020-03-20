@@ -159,7 +159,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 					$elements['information'] .= '<br/><br/>';
 				}
 
-				$elements['information'] .= 'See <a href="'.OIDplus::system_url(false).'?goto='.urlencode($id).'">more information</a>.'; // TODO: system_url() geht nicht bei CLI
+				$elements['information'] .= 'See <a href="'.OIDplus::getSystemUrl(false).'?goto='.urlencode($id).'">more information</a>.'; // TODO: system_url() geht nicht bei CLI
 
 				if (explode(':',$id,2)[0] != 'oid') {
 					$elements['information'] = "Object: $id\n\n" . $elements['information'];
@@ -268,7 +268,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 				if (stripos($url,'www.') === 0) {
 					$url .= 'http://' . $url;
 				} else {
-					$url = OIDplus::system_url() . $url;
+					$url = OIDplus::getSystemUrl() . $url;
 				}
 			}
 			return $treffer[1].$url.$treffer[4];

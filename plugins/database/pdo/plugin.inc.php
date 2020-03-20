@@ -19,7 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusDataBasePDO extends OIDplusDataBase {
+class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 	private $pdo;
 	private $last_query;
 	private $prepare_cache = array();
