@@ -44,6 +44,7 @@ require_once __DIR__ . '/anti_xss.inc.php';
 
 // ---
 
-foreach (glob(__DIR__ . '/classes/*.class.php') as $file) {
-	require_once $file;
-}
+spl_autoload_register(function ($class_name) {
+	$candidate = __DIR__ . '/classes/' . $class_name . '.class.php';
+	if (file_exists($candidate)) require_once $candidate;
+});
