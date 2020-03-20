@@ -32,7 +32,7 @@ abstract class OIDplusObject {
 		return null;
 	}
 
-	public function getAltIds() {
+	public function /*OIDplusAltId[]*/ getAltIds() {
 		if ($this->isRoot()) return array();
 
 		$ids = array();
@@ -42,13 +42,12 @@ abstract class OIDplusObject {
 			$sid = OIDplus::getSystemId(true);
 			if (!empty($sid)) {
 				$oid = $sid . '.' . smallhash($this->nodeId());
-				$ids[] = array('oid', $oid, 'OIDplus Information Object ID');
+				$ids[] = new OIDplusAltId('oid', $oid, 'OIDplus Information Object ID');
 			}
 		}
 		if ($this->ns() != 'guid') {
-			// TODO: Instead of having the array($ns,$id,$desc) we should use an object oriented class
-			$ids[] = array('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), 'Namebased version 3 / MD5 UUID with namespace UUID_NAMEBASED_NS_OidPlusMisc');
-			$ids[] = array('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), 'Namebased version 5 / SHA1 UUID with namespace UUID_NAMEBASED_NS_OidPlusMisc');
+			$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), 'Namebased version 3 / MD5 UUID with namespace UUID_NAMEBASED_NS_OidPlusMisc');
+			$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), 'Namebased version 5 / SHA1 UUID with namespace UUID_NAMEBASED_NS_OidPlusMisc');
 		}
 		return $ids;
 	}

@@ -184,7 +184,7 @@ class OIDplusGuid extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		if (!$this->isLeafNode()) return array();
 		$ids = parent::getAltIds();
-		$ids[] = array('oid', uuid_to_oid($this->guid), 'OID representation of UUID');
+		$ids[] = new OIDplusAltId('oid', uuid_to_oid($this->guid), 'OID representation of UUID');
 		return $ids;
 	}
 }

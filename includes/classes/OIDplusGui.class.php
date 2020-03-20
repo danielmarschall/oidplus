@@ -377,7 +377,10 @@ class OIDplusGui {
 			$alt_ids = $obj->getAltIds();
 			if (count($alt_ids) > 0) {
 				$out['text'] .= "<h2>Alternative Identifiers</h2>";
-				foreach ($alt_ids as list($ns, $aid, $aiddesc)) {
+				foreach ($alt_ids as $alt_id) {
+					$ns = $alt_id->getNamespace();
+					$aid = $alt_id->getId();
+					$aiddesc = $alt_id->getDescription();
 					$out['text'] .= "$aiddesc <code>$ns:$aid</code><br>";
 				}
 			}

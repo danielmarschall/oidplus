@@ -243,7 +243,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 				}
 
 				$alt_ids = $obj->getAltIds(); // TODO: slow!
-				foreach ($alt_ids as list($ns, $id, $desc)) {
+				foreach ($alt_ids as $alt_id) {
+					$ns = $alt_id->getNamespace();
+					$id = $alt_id->getId();
+					$desc = $alt_id->getDescription();
 					if ($ns == 'oid') {
 						if (strpos($id, '2.25.') === 0) continue; // don't spam the uuid arc with GUID objects
 						echo $oa->createXMLEntry($id, $elements, $params, $comment=$obj->nodeId());

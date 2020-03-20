@@ -426,10 +426,10 @@ class OIDplusOid extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 		if ($uuid = oid_to_uuid($this->oid)) {
-			$ids[] = array('guid', $uuid, 'GUID representation of this OID');
+			$ids[] = new OIDplusAltId('guid', $uuid, 'GUID representation of this OID');
 		}
-		$ids[] = array('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_OID, $this->oid), 'Namebased version 3 / MD5 UUID with namespace UUID_NAMEBASED_NS_OID');
-		$ids[] = array('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OID, $this->oid), 'Namebased version 5 / SHA1 UUID with namespace UUID_NAMEBASED_NS_OID');
+		$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_OID, $this->oid), 'Namebased version 3 / MD5 UUID with namespace UUID_NAMEBASED_NS_OID');
+		$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OID, $this->oid), 'Namebased version 5 / SHA1 UUID with namespace UUID_NAMEBASED_NS_OID');
 		return $ids;
 	}
 }

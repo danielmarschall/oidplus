@@ -44,17 +44,6 @@ require_once __DIR__ . '/anti_xss.inc.php';
 
 // ---
 
-require_once __DIR__ . '/classes/OIDplus.class.php';
-require_once __DIR__ . '/classes/OIDplusLogger.class.php';
-require_once __DIR__ . '/classes/OIDplusPlugin.class.php';
-require_once __DIR__ . '/classes/OIDplusAuthPlugin.class.php';
-require_once __DIR__ . '/classes/OIDplusPagePlugin.class.php';
-require_once __DIR__ . '/classes/OIDplusDataBasePlugin.class.php';
-require_once __DIR__ . '/classes/OIDplusObjectTypePlugin.class.php';
-require_once __DIR__ . '/classes/OIDplusConfig.class.php';
-require_once __DIR__ . '/classes/OIDplusGui.class.php';
-require_once __DIR__ . '/classes/OIDplusTree.class.php';
-require_once __DIR__ . '/classes/OIDplusAuthUtils.class.php';
-require_once __DIR__ . '/classes/OIDplusRA.class.php';
-require_once __DIR__ . '/classes/OIDplusSessionHandler.class.php';
-require_once __DIR__ . '/classes/OIDplusObject.class.php';
+foreach (glob(__DIR__ . '/classes/*.class.php') as $file) {
+	require_once $file;
+}
