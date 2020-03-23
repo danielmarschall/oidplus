@@ -72,7 +72,7 @@ class OIDplus {
 		return $sesHandler;
 	}
 
-	# --- Database Plugin
+	# --- Database plugin
 
 	private static function registerDatabasePlugin(OIDplusDatabasePlugin $plugin) {
 		$name = $plugin->name();
@@ -111,14 +111,17 @@ class OIDplus {
 		return true;
 	}
 
-	public static function getPagePlugins($type) {
-		if ($type == '*') {
+	public static function getPagePlugins($type='*') {
+		if ($type === '*') {
 			$res = array();
 			foreach (self::$pagePlugins as $data) {
 				$res = array_merge($res, $data);
 			}
 		} else {
-			$res = isset(self::$pagePlugins[$type]) ? self::$pagePlugins[$type] : array();
+			$types = explode(',', $type);
+			foreach ($types as $type) {
+				$res = isset(self::$pagePlugins[$type]) ? self::$pagePlugins[$type] : array();
+			}
 		}
 		ksort($res);
 		return $res;
@@ -245,8 +248,6 @@ class OIDplus {
 	# --- Initialization of OIDplus
 
 	public static function init($html=true) {
-		define('OIDPLUS_HTML_OUTPUT', $html);
-
 		// Include config file
 
 		if (file_exists(__DIR__ . '/../config.inc.php')) {
@@ -264,7 +265,8 @@ class OIDplus {
 			die();
 		}
 
-		// Auto-fill non-existing config values
+		// Auto-fill non-existing config values, so that there won't be any PHP errors
+		// if something would be missing in config.inc.php (which should not happen!)
 
 		if (!defined('OIDPLUS_CONFIG_VERSION'))   define('OIDPLUS_CONFIG_VERSION',   0.0);
 		if (!defined('OIDPLUS_ADMIN_PASSWORD'))   define('OIDPLUS_ADMIN_PASSWORD',   '');
@@ -304,7 +306,7 @@ class OIDplus {
 
 		// Do redirect stuff etc.
 
-		define('OIDPLUS_SSL_AVAILABLE', self::isSslAvailable());
+		self::isSslAvailable(); // This function does automatic redirects
 
 		// System config settings
 
@@ -318,7 +320,7 @@ class OIDplus {
 
 		OIDplus::getPkiStatus(true);
 
-		// Register plugins
+		// Register other plugins
 
 		$ary = glob(__DIR__ . '/../../plugins/objectTypes/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
@@ -345,9 +347,18 @@ class OIDplus {
 			}
 		}
 
-		// Initialize page plugins
+		// Initialize plugins
 
+		foreach (OIDplus::getDatabasePlugins() as $plugin) {
+			$plugin->init($html);
+		}
 		foreach (OIDplus::getPagePlugins('*') as $plugin) {
+			$plugin->init($html);
+		}
+		foreach (OIDplus::getAuthPlugins() as $plugin) {
+			$plugin->init($html);
+		}
+		foreach (OIDplus::getObjectTypePlugins() as $plugin) {
 			$plugin->init($html);
 		}
 	}
@@ -497,28 +508,37 @@ class OIDplus {
 		return $svn_version;
 	}
 
-	private static function isSslAvailable() {
+	private static $sslAvailableCache = null;
+	public static function isSslAvailable() {
+		if (!is_null(self::$sslAvailableCache)) return self::$sslAvailableCache;
+	
+		if (php_sapi_name() == 'cli') {
+			self::$sslAvailableCache = false;
+			return false;
+		}
+
 		$timeout = 2;
 		$already_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == "on");
 		$ssl_port = 443;
 		$cookie_path = OIDplus::getSystemUrl(true);
 		if (empty($cookie_path)) $cookie_path = '/';
 
-		if (php_sapi_name() == 'cli') return false;
-
 		if (OIDPLUS_ENFORCE_SSL == 0) {
 			// No SSL available
+			self::$sslAvailableCache = $already_ssl;
 			return $already_ssl;
 		}
 
 		if (OIDPLUS_ENFORCE_SSL == 1) {
 			// Force SSL
 			if ($already_ssl) {
+				self::$sslAvailableCache = true;
 				return true;
 			} else {
 				$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 				header('Location:'.$location);
 				die('Redirect to HTTPS');
+				self::$sslAvailableCache = true;
 				return true;
 			}
 		}
@@ -529,6 +549,7 @@ class OIDplus {
 			if ($already_ssl) {
 				// we are already on HTTPS
 				setcookie('SSL_CHECK', '1', 0, $cookie_path, '', false, true);
+				self::$sslAvailableCache = true;
 				return true;
 			} else {
 				if (isset($_COOKIE['SSL_CHECK'])) {
@@ -538,9 +559,11 @@ class OIDplus {
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
 						die('Redirect to HTTPS');
+						self::$sslAvailableCache = true;
 						return true;
 					} else {
 						// No HTTPS available. Do nothing.
+						self::$sslAvailableCache = false;
 						return false;
 					}
 				} else {
@@ -551,10 +574,12 @@ class OIDplus {
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
 						die('Redirect to HTTPS');
+						self::$sslAvailableCache = true;
 						return true;
 					} else {
 						// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.
 						setcookie('SSL_CHECK', '0', 0, $cookie_path, '', false, true);
+						self::$sslAvailableCache = false;
 						return false;
 					}
 				}

@@ -110,14 +110,16 @@ class OIDplusDataBasePluginODBC extends OIDplusDataBasePlugin {
 	public function error() {
 		return odbc_errormsg($this->odbc);
 	}
+	private $html = null;
+	public function init($html) {
+		$this->html = $html;
+	}
 	public function connect() {
-		$html = OIDPLUS_HTML_OUTPUT;
-
 		// Try connecting to the database
 		$this->odbc = @odbc_connect(OIDPLUS_ODBC_DSN, OIDPLUS_ODBC_USERNAME, base64_decode(OIDPLUS_ODBC_PASSWORD));
 
 		if (!$this->odbc) {
-			if ($html) {
+			if ($this->html) {
 				echo "<h1>Error</h1><p>Database connection failed! (".odbc_errormsg().")</p>";
 				if (is_dir(__DIR__.'/../../../setup')) {
 					echo '<p>If you believe that the login credentials are wrong, please run <a href="setup/">setup</a> again.</p>';
@@ -132,7 +134,7 @@ class OIDplusDataBasePluginODBC extends OIDplusDataBasePlugin {
 		}
 
 		$this->query("SET NAMES 'utf8'"); // Does most likely NOT work with ODBC. Try adding ";CHARSET=UTF8" (or similar) to the DSN
-		$this->afterConnect($html);
+		$this->afterConnect($this->html);
 		$this->connected = true;
 	}
 

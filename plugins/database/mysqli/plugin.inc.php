@@ -105,17 +105,20 @@ class OIDplusDataBasePluginMySQLi extends OIDplusDataBasePlugin {
 	public function error() {
 		return !empty($this->mysqli->connect_error) ? $this->mysqli->connect_error : $this->mysqli->error;
 	}
+	
+	private $html = null;
+	public function init($html) {
+		$this->html = $html;
+	}
 
 	public function connect() {
 		if (OIDPLUS_MYSQL_QUERYLOG) file_put_contents("query.log", '');
-
-		$html = OIDPLUS_HTML_OUTPUT;
 
 		// Try connecting to the database
 		list($hostname,$port) = explode(':', OIDPLUS_MYSQL_HOST.':'.ini_get("mysqli.default_port"));
 		$this->mysqli = @new mysqli($hostname, OIDPLUS_MYSQL_USERNAME, base64_decode(OIDPLUS_MYSQL_PASSWORD), OIDPLUS_MYSQL_DATABASE, $port);
 		if (!empty($this->mysqli->connect_error) || ($this->mysqli->connect_errno != 0)) {
-			if ($html) {
+			if ($this->html) {
 				echo "<h1>Error</h1><p>Database connection failed! (".$this->error().")</p>";
 				if (is_dir(__DIR__.'/../../../setup')) {
 					echo '<p>If you believe that the login credentials are wrong, please run <a href="setup/">setup</a> again.</p>';
@@ -130,7 +133,7 @@ class OIDplusDataBasePluginMySQLi extends OIDplusDataBasePlugin {
 		}
 
 		$this->query("SET NAMES 'utf8'");
-		$this->afterConnect($html);
+		$this->afterConnect($this->html);
 		$this->connected = true;
 	}
 

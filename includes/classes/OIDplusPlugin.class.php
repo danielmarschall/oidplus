@@ -21,6 +21,8 @@ if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusPlugin {
 
+	public function init($html=true) {}
+
 	public static function getPluginInformation() {
 		$out = array();
 		$out['name'] = null;
