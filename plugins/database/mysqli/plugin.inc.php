@@ -105,9 +105,9 @@ class OIDplusDataBasePluginMySQLi extends OIDplusDataBasePlugin {
 	public function error() {
 		return !empty($this->mysqli->connect_error) ? $this->mysqli->connect_error : $this->mysqli->error;
 	}
-	
+
 	private $html = null;
-	public function init($html) {
+	public function init($html = true) {
 		$this->html = $html;
 	}
 

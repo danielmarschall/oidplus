@@ -105,7 +105,7 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 		return $this->pdo->errorInfo()[2];
 	}
 	private $html = null;
-	public function init($html) {
+	public function init($html = true) {
 		$this->html = $html;
 	}
 	public function connect() {

@@ -111,7 +111,7 @@ class OIDplusDataBasePluginODBC extends OIDplusDataBasePlugin {
 		return odbc_errormsg($this->odbc);
 	}
 	private $html = null;
-	public function init($html) {
+	public function init($html = true) {
 		$this->html = $html;
 	}
 	public function connect() {
