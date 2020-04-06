@@ -52,11 +52,11 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 	private function get_ralist() {
 		$tmp = array();
 		$res = OIDplus::db()->query("select distinct BINARY(email) as email from ".OIDPLUS_TABLENAME_PREFIX."ra"); // "binary" because we want to ensure that 'distinct' is case sensitive
-		while ($row = OIDplus::db()->fetch_array($res)) {
+		while ($row = $res->fetch_array()) {
 			$tmp[$row['email']] = 1;
 		}
 		$res = OIDplus::db()->query("select distinct BINARY(ra_email) as ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects");
-		while ($row = OIDplus::db()->fetch_array($res)) {
+		while ($row = $res->fetch_array()) {
 			if (!isset($tmp[$row['ra_email']])) {
 				$tmp[$row['ra_email']] = 0;
 			} else {

@@ -66,13 +66,13 @@ class OIDplusPageRaObjectLog extends OIDplusPagePlugin {
 		                            "where lu.object = ? " .
 		                            "order by lo.unix_ts desc", array($id));
 		$text .= "<h2>Log messages for object ".htmlentities($id)."</h2>";
-		if (OIDplus::db()->num_rows($res) > 0) {
+		if ($res->num_rows() > 0) {
 			$text .= '<pre>';
-			while ($row = OIDplus::db()->fetch_array($res)) {
+			while ($row = $res->fetch_array()) {
 				$users = array();
 				$res2 = OIDplus::db()->query("select user from ".OIDPLUS_TABLENAME_PREFIX."log_user ".
 				                             "where log_id = ?", array($row['id']));
-				while ($row2 = OIDplus::db()->fetch_array($res2)) {
+				while ($row2 = $res2->fetch_array()) {
 					$users[] = $row2['user'];
 				}
 				$users = count($users) > 0 ? ", ".implode('/',$users) : '';

@@ -49,7 +49,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 			$value = $_POST['value'];
 
 			$res = OIDplus::db()->query("select protected from ".OIDPLUS_TABLENAME_PREFIX."config where name = ?", array($name));
-			$row = OIDplus::db()->fetch_array($res);
+			$row = $res->fetch_array();
 			if ($row['protected'] == 1) {
 				die(json_encode(array("error" => 'Setting is write protected')));
 			}
@@ -92,7 +92,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 				OIDplus::config(); // <-- make sure that the config table is loaded/filled correctly before we do a select
 
 				$result = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config where visible = 1 order by name");
-				while ($row = OIDplus::db()->fetch_object($result)) {
+				while ($row = $result->fetch_object()) {
 					$output .= '<tr>';
 					$output .= '     <td>'.htmlentities($row->name).'</td>';
 					$output .= '     <td>'.htmlentities($row->description).'</td>';

@@ -27,7 +27,7 @@ foreach ($out as $oid) {
 function check_oid($oid) {
 
 	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array("oid:$oid"));
-	$ok = OIDplus::db()->num_rows($res) > 0;
+	$ok = $res->num_rows() > 0;
 
 	if (!$ok) {
 		echo "Not existing: $oid : Adding!\n";
@@ -82,7 +82,7 @@ function add_oid($oid, $root=DESIRED_ROOT) {
 	if ($ra_email == '') $ra_email = @$data['oid']['first_registrant']['email'];
 
 	$resx = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array("oid:$parent"));
-	if ($rowx = OIDplus::db()->fetch_array($resx)) $ra_email = $rowx['ra_email'];
+	if ($rowx = $resx->fetch_array()) $ra_email = $rowx['ra_email'];
 
 	$created = @$data['oid']['first_registrant']['creation-date'];
 	$updated = @$data['oid']['last-modification'];

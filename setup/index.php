@@ -1,6 +1,6 @@
 <?php
 
-$own_dir = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'];
+require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -34,14 +34,25 @@ Once OIDplus setup is finished, you can change the config file by hand, or run t
 <h3>Database connectivity</h3>
 
 Database plugin: <select name="db_plugin" onChange="dbplugin_changed()" id="db_plugin">
-<option value="MySQL" selected="true">MySQL</option>
-<option value="PDO">PDO</option>
-<option value="ODBC">ODBC</option>
+
+<?php
+
+$ary = glob(__DIR__ . '/../plugins/database/'.'*'.'/plugin.inc.php');
+foreach ($ary as $a) include $a;
+
+foreach (get_declared_classes() as $c) {
+	if (is_subclass_of($c, 'OIDplusDataBasePlugin')) {
+		$selected = $c::name() == 'MySQL' ? ' selected="true"' : '';
+		echo '<option value="'.htmlentities($c::name()).'"'.$selected.'>'.htmlentities($c::name()).'</option>';
+	}
+}
+
+?>
 </select>
 
 <script>
 
-owndir = '<?php echo $own_dir; ?>';
+setupdir = '<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI']; ?>';
 rebuild_callbacks = [];
 rebuild_config_callbacks = [];
 plugin_combobox_change_callbacks = [];
@@ -69,7 +80,7 @@ foreach ($files as $file) {
 	echo file_get_contents($file);
 }
 if (count($files) == 0) {
-	echo '<p><font color="red">ATTENTION: No database plugins found!</font></p>';
+	echo '<p><font color="red">ERROR: No database plugins were found! You CANNOT use OIDplus without database connection.</font></p>';
 }
 
 ?>

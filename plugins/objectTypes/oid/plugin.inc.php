@@ -123,7 +123,7 @@ class OIDplusOid extends OIDplusObject {
 			$title = OIDplusOid::objectTypeTitle();
 
 			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array(self::root()));
-			if (OIDplus::db()->num_rows($res) > 0) {
+			if ($res->num_rows() > 0) {
 				$content = 'Please select an OID in the tree view at the left to show its contents.';
 			} else {
 				$content = 'Currently, no OID is registered in the system.';
@@ -245,7 +245,7 @@ class OIDplusOid extends OIDplusObject {
 
 		if (strpos($part, '.') === false) {
 			$res2 = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ? order by lfd", array("oid:".$this->oid));
-			while ($row2 = OIDplus::db()->fetch_array($res2)) {
+			while ($row2 = $res2->fetch_array()) {
 				$asn_ids[] = $row2['name'].'('.$part.')';
 			}
 		}
@@ -262,7 +262,7 @@ class OIDplusOid extends OIDplusObject {
 			$res = OIDplus::db()->query("select name, standardized from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ? order by lfd", array('oid:'.implode('.',$arcs)));
 
 			$names = array();
-			while ($row = OIDplus::db()->fetch_array($res)) {
+			while ($row = $res->fetch_array()) {
 				$names[] = $row['name']."(".end($arcs).")";
 				if ($row['standardized']) {
 					$names[] = $row['name'];
@@ -297,7 +297,7 @@ class OIDplusOid extends OIDplusObject {
 
 			$is_longarc = false;
 			$names = array();
-			while ($row = OIDplus::db()->fetch_array($res)) {
+			while ($row = $res->fetch_array()) {
 				$is_longarc = $row['longarc'];
 				$names[] = $row['name'];
 
@@ -333,10 +333,10 @@ class OIDplusOid extends OIDplusObject {
 
 	public function isWellKnown() {
 		$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ? and well_known = 1", array("oid:".$this->oid));
-		if (OIDplus::db()->num_rows($res) > 0) return true;
+		if ($res->num_rows() > 0) return true;
 
 		$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ? and well_known = 1", array("oid:".$this->oid));
-		if (OIDplus::db()->num_rows($res) > 0) return true;
+		if ($res->num_rows() > 0) return true;
 
 		return false;
 	}
@@ -356,7 +356,7 @@ class OIDplusOid extends OIDplusObject {
 			// Check if the (real) parent has any conflict
 			// Unlike IRI identifiers, ASN.1 identifiers may be used multiple times (not recommended), except if one of them is standardized
 			$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where name = ? and standardized = 1", array($asn1));
-			while ($row = OIDplus::db()->fetch_array($res)) {
+			while ($row = $res->fetch_array()) {
 				$check_oid = OIDplusOid::parse($row['oid'])->oid;
 				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent
 				   ($check_oid !== $this->oid))                    // different OID
@@ -391,7 +391,7 @@ class OIDplusOid extends OIDplusObject {
 
 			// Check if the (real) parent has any conflict
 			$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."iri where name = ?", array($iri));
-			while ($row = OIDplus::db()->fetch_array($res)) {
+			while ($row = $res->fetch_array()) {
 				$check_oid = OIDplusOid::parse($row['oid'])->oid;
 				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent
 				   ($check_oid !== $this->oid))                    // different OID

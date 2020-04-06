@@ -147,14 +147,14 @@ try {
 			do {
 				$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent <> ? and parent like ? and parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?)", array($ot::root(), $ot::root().'%', $ot::root().'%'));
 
-				while ($row = OIDplus::db()->fetch_array($res)) {
+				while ($row = $res->fetch_array()) {
 					$id_to_delete = $row['id'];
 					OIDplus::logger()->log("OIDRA($id_to_delete)!", "Lost ownership of object '$id_to_delete' because one of the superior objects ('$id') was recursively deleted");
 					if (!OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id_to_delete))) {
 						throw new Exception(OIDplus::db()->error());
 					}
 				}
-			} while (OIDplus::db()->num_rows($res) > 0);
+			} while ($res->num_rows() > 0);
 		}
 		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known <> 1 and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
 		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri    where well_known <> 1 and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
@@ -197,7 +197,7 @@ try {
 
 		// Change RA recursively
 		$res = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
-		$row = OIDplus::db()->fetch_array($res);
+		$row = $res->fetch_array();
 		$current_ra = $row['ra_email'];
 		if ($new_ra != $current_ra) {
 			OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
@@ -241,7 +241,7 @@ try {
 
 		if (!empty($new_ra)) {
 			$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($new_ra));
-			if (OIDplus::db()->num_rows($res) == 0) $status = OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
+			if ($res->num_rows() == 0) $status = OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 		}
 
 		echo json_encode(array("status" => $status));
@@ -293,7 +293,7 @@ try {
 
 		// Check, if the OID exists
 		$test = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
-		if (OIDplus::db()->num_rows($test) >= 1) {
+		if ($test->num_rows() >= 1) {
 			throw new Exception("Object $id already exists!");
 		}
 
@@ -349,7 +349,7 @@ try {
 		if (!empty($ra_email)) {
 			// Do we need to notify that the RA does not exist?
 			$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
-			if (OIDplus::db()->num_rows($res) == 0) $status = OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
+			if ($res->num_rows() == 0) $status = OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 		}
 
 		echo json_encode(array("status" => $status));
@@ -373,7 +373,7 @@ function _ra_change_rec($id, $old_ra, $new_ra) {
 	OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set ra_email = ?, updated = now() where id = ? and ifnull(ra_email,'') = ?", array($new_ra, $id, $old_ra));
 
 	$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ? and ifnull(ra_email,'') = ?", array($id, $old_ra));
-	while ($row = OIDplus::db()->fetch_array($res)) {
+	while ($row = $res->fetch_array()) {
 		_ra_change_rec($row['id'], $old_ra, $new_ra);
 	}
 }

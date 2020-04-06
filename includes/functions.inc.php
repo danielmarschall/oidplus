@@ -226,3 +226,11 @@ function originHeaders() {
 
 	header("Vary: Origin");
 }
+
+function get_calling_function() {
+	$ex = new Exception();
+	$trace = $ex->getTrace();
+	if (!isset($trace[2])) return '(main)';
+	$final_call = $trace[2];
+	return $final_call['file'].':'.$final_call['line'].'/'.$final_call['function'].'()';
+}

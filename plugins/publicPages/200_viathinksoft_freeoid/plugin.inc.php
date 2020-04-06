@@ -49,7 +49,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$email = $_POST['email'];
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
-			if (OIDplus::db()->num_rows($res) > 0) {
+			if ($res->num_rows() > 0) {
 				die(json_encode(array("error" => 'This email address already exists.'))); // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
 			}
 
@@ -228,7 +228,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
-			if (OIDplus::db()->num_rows($res) > 0) {
+			if ($res->num_rows() > 0) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = 'This RA is already registered.'; // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
 			} else {
@@ -279,7 +279,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 	protected function freeoid_max_id() {
 		$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ? order by ".OIDplus::db()->natOrder('id'), array('oid:'.OIDplus::config()->getValue('freeoid_root_oid').'.%'));
 		$highest_id = 0;
-		while ($row = OIDplus::db()->fetch_array($res)) {
+		while ($row = $res->fetch_array()) {
 			$arc = substr_count(OIDplus::config()->getValue('freeoid_root_oid'), '.')+1;
 			$highest_id = explode('.',$row['id'])[$arc];
 		}

@@ -178,7 +178,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/activate_ra_big.png';
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
-			if (OIDplus::db()->num_rows($res) > 0) {
+			if ($res->num_rows() > 0) {
 				$out['text'] = 'This RA is already registered and does not need to be invited.';
 			} else {
 				if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
@@ -207,7 +207,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 
 	private function inviteSecurityCheck($email) {
 		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
-		if (OIDplus::db()->num_rows($res) > 0) {
+		if ($res->num_rows() > 0) {
 			throw new Exception("This RA is already registered and does not need to be invited.");
 		}
 
@@ -215,7 +215,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 			// Check if the RA may invite the user (i.e. the they are the parent of an OID of that person)
 			$ok = false;
 			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where ra_email = ?", array($email));
-			while ($row = OIDplus::db()->fetch_array($res)) {
+			while ($row = $res->fetch_array()) {
 				$objParent = OIDplusObject::parse($row['parent']);
 				if (is_null($objParent)) throw new Exception("Type of ".$row['parent']." unknown");
 				if ($objParent->userHasWriteRights()) {
@@ -231,7 +231,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 	private function getInvitationText($email) {
 		$list_of_oids = array();
 		$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where ra_email = ?", array($email));
-		while ($row = OIDplus::db()->fetch_array($res)) {
+		while ($row = $res->fetch_array()) {
 			$list_of_oids[] = $row['id'];
 		}
 

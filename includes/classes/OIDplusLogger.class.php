@@ -140,7 +140,7 @@ class OIDplusLogger {
 		$log_id = OIDplus::db()->insert_id();
 		if ($log_id === false) {
 			$res = OIDplus::db()->query("select max(id) as last_id from ".OIDPLUS_TABLENAME_PREFIX."log");
-			$row = OIDplus::db()->fetch_array($res);
+			$row = $res->fetch_array();
 			$log_id = $row['last_id'];
 		}
 

@@ -48,7 +48,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 			}
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
-			if (OIDplus::db()->num_rows($res) == 0) {
+			if ($res->num_rows() == 0) {
 				die(json_encode(array("error" => 'RA does not exist')));
 			}
 
@@ -115,12 +115,12 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 				$out['text'] = '<p>Your email address: <b>'.htmlentities($ra_email).'</b>';
 
 				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
-				if (OIDplus::db()->num_rows($res) == 0) {
+				if ($res->num_rows() == 0) {
 					$out['icon'] = 'img/error_big.png';
 					$out['text'] = 'RA <b>'.htmlentities($ra_email).'</b> does not exist';
 					return $out;
 				}
-				$row = OIDplus::db()->fetch_array($res);
+				$row = $res->fetch_array();
 
 				if (class_exists('OIDplusPageRaChangeEMail') && OIDplus::config()->getValue('allow_ra_email_change')) {
 					$out['text'] .= '<p><a '.oidplus_link('oidplus:change_ra_email$'.$ra_email).'>Change email address</a></p>';

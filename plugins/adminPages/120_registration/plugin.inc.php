@@ -219,7 +219,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 					$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where " .
 					                            "parent = 'oid:' " .
 					                            "order by ".OIDplus::db()->natOrder('id'));
-					while ($row = OIDplus::db()->fetch_array($res)) {
+					while ($row = $res->fetch_array()) {
 						$root_oids[] = substr($row['id'],strlen('oid:'));
 					}
 				}

@@ -9,7 +9,7 @@ $silent = ($argc >= 2) && ($argv[1] == '--silent');
 
 $files = array();
 
-$rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname(__DIR__)));
+$rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname(__DIR__))); // dirname() to check the parent directory
 foreach ($rii as $file) {
         $filename = $file->getPathname();
         if (strpos($filename, '/.') !== false) continue; # also hide ".dir" and ".file"

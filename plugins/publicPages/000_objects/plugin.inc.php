@@ -75,7 +75,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 
 			$parent = '';
 			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($req_goto));
-			while ($row = OIDplus::db()->fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$parent = $row->parent;
 			}
 
@@ -111,7 +111,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 					$stufe = 0;
 					$menu_entries = array();
 					$stufen = array();
-					while ($row = OIDplus::db()->fetch_object($res)) {
+					while ($row = $res->fetch_object()) {
 						$obj = OIDplusObject::parse($row->id);
 						if (is_null($obj)) continue; // might happen if the objectType is not available/loaded
 						if (!$obj->userHasReadRights()) continue;
@@ -140,8 +140,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 				while (true) {
 					$path[] = $goto;
 					$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($goto));
-					if (OIDplus::db()->num_rows($res) == 0) break;
-					$row = OIDplus::db()->fetch_array($res);
+					if ($res->num_rows() == 0) break;
+					$row = $res->fetch_array();
 					$goto = $row['parent'];
 					if ($goto == '') continue;
 				}

@@ -27,6 +27,8 @@ class OIDplus {
 	private static /*string[]*/ $disabledObjectTypes = array();
 	private static /*OIDplusDatabasePlugin[]*/ $dbPlugins = array();
 
+	protected static $html = null;
+
 	private function __construct() {
 	}
 
@@ -89,7 +91,11 @@ class OIDplus {
 
 	public static function db() {
 		if (!isset(self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN])) {
-			throw new Exception("Database plugin '".htmlentities(OIDPLUS_DATABASE_PLUGIN)."' not found. Please check config.inc.php or run <a href=\"setup/\">setup</a> again.");
+			if ($this::$html) {
+				/*throw new Exception*/die("Database plugin '".htmlentities(OIDPLUS_DATABASE_PLUGIN)."' not found. Please check config.inc.php or run <a href=\"setup/\">setup</a> again.");
+			} else {
+				/*throw new Exception*/die("Database plugin '".OIDPLUS_DATABASE_PLUGIN."' not found. Please check config.inc.php or run setup again.\n");
+			}
 		}
 		$obj = self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN];
 		if (!$obj->isConnected()) $obj->connect();
@@ -248,6 +254,8 @@ class OIDplus {
 	# --- Initialization of OIDplus
 
 	public static function init($html=true) {
+		self::$html = $html;
+
 		// Include config file
 
 		if (file_exists(__DIR__ . '/../config.inc.php')) {

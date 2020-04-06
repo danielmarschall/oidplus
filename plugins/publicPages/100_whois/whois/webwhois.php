@@ -76,7 +76,7 @@ if (!$obj) {
 } else {
 	$query = $obj->nodeId(); // this may sanitize/canonize identifiers
 	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($obj->nodeId()));
-	if (OIDplus::db()->num_rows($res) > 0) {
+	if ($res->num_rows() > 0) {
 		$found = true;
 		$distance = 0;
 	} else {
@@ -85,7 +85,7 @@ if (!$obj) {
 		if ($objParent) {
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($objParent->nodeId()));
 			$distance = $objParent->distance($query);
-			assert(OIDplus::db()->num_rows($res) > 0);
+			assert($res->num_rows() > 0);
 
 			$query = $objParent->nodeId();
 			$obj = $objParent;
@@ -116,7 +116,7 @@ if ($continue) {
 	} else {
 		$out[] = "status: Information available";
 
-		$row = OIDplus::db()->fetch_object($res);
+		$row = $res->fetch_object();
 		$obj = OIDplusObject::parse($row->id);
 
 		if (!empty($row->parent) && (!is_root($row->parent))) {
@@ -130,22 +130,22 @@ if ($continue) {
 
 		if (substr($query,0,4) === 'oid:') {
 			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($row->id));
-			while ($row2 = OIDplus::db()->fetch_object($res2)) {
+			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'identifier: ' . $row2->name;
 			}
 
 			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where standardized = 1 and oid = ?", array($row->id));
-			while ($row2 = OIDplus::db()->fetch_object($res2)) {
+			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'standardized-id: ' . $row2->name;
 			}
 
 			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ?", array($row->id));
-			while ($row2 = OIDplus::db()->fetch_object($res2)) {
+			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'unicode-label: ' . $row2->name;
 			}
 
 			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where longarc = 1 and oid = ?", array($row->id));
-			while ($row2 = OIDplus::db()->fetch_object($res2)) {
+			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'long-arc: ' . $row2->name;
 			}
 		}
@@ -154,17 +154,17 @@ if ($continue) {
 		$out[] = 'updated: ' . $row->updated;
 
 		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($row->id));
-		if (OIDplus::db()->num_rows($res2) == 0) {
+		if ($res2->num_rows() == 0) {
 			// $out[] = 'subordinate: (none)';
 		}
-		while ($row2 = OIDplus::db()->fetch_object($res2)) {
+		while ($row2 = $res2->fetch_object()) {
 			$out[] = 'subordinate: ' . $row2->id . show_asn1_appendix($row2->id);
 		}
 
 		$out[] = '';
 
 		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($row->ra_email));
-		if ($row2 = OIDplus::db()->fetch_object($res2)) {
+		if ($row2 = $res2->fetch_object()) {
 			$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : $row2->email);
 			$out[] = 'ra-status: Information available';
 			$out[] = 'ra-name: ' . $row2->ra_name;
@@ -320,7 +320,7 @@ function show_asn1_appendix($id) {
 	if (substr($id,0,4) === 'oid:') {
 		$appendix_asn1ids = array();
 		$res3 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($id));
-		while ($row3 = OIDplus::db()->fetch_object($res3)) {
+		while ($row3 = $res3->fetch_object()) {
 			$appendix_asn1ids[] = $row3->name;
 		}
 

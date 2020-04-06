@@ -88,7 +88,7 @@ abstract class OIDplusObject {
 				$res = OIDplus::db()->query("select oChild.id as id, oChild.ra_email as child_mail, oParent.ra_email as parent_mail from ".OIDPLUS_TABLENAME_PREFIX."objects as oChild ".
 				                            "left join ".OIDPLUS_TABLENAME_PREFIX."objects as oParent on oChild.parent = oParent.id ".
 				                            "order by ".OIDplus::db()->natOrder('oChild.id'));
-				while ($row = OIDplus::db()->fetch_array($res)) {
+				while ($row = $res->fetch_array()) {
 					if (!OIDplus::authUtils()::isRaLoggedIn($row['parent_mail']) && OIDplus::authUtils()::isRaLoggedIn($row['child_mail'])) {
 						$x = self::parse($row['id']); // can be FALSE if namespace was disabled
 						if ($x) $out[] = $x;
@@ -100,7 +100,7 @@ abstract class OIDplusObject {
 				                            "where (ifnull(oParent.ra_email,'') <> ? and ifnull(oChild.ra_email,'') = ?) or ".
 				                            "      (oParent.ra_email is null and ifnull(oChild.ra_email,'') = ?) ".
 				                            "order by ".OIDplus::db()->natOrder('oChild.id'), array($ra_email, $ra_email, $ra_email));
-				while ($row = OIDplus::db()->fetch_array($res)) {
+				while ($row = $res->fetch_array()) {
 					$x = self::parse($row['id']); // can be FALSE if namespace was disabled
 					if ($x) $out[] = self::parse($row['id']);
 				}
@@ -150,7 +150,7 @@ abstract class OIDplusObject {
 		if (!OIDPLUS_OBJECT_CACHING) {
 			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where confidential = 0 order by ".OIDplus::db()->natOrder('id'));
 
-			while ($row = OIDplus::db()->fetch_array($res)) {
+			while ($row = $res->fetch_array()) {
 				$obj = self::parse($row['id']); // will be NULL if the object type is not registered
 				if ($obj && (!$obj->isConfidential())) {
 					$out[] = $row['id'];
@@ -178,8 +178,8 @@ abstract class OIDplusObject {
 			$orig_curid = $curid;
 			if (isset(self::$object_info_cache[$curid])) return self::$object_info_cache[$curid];
 			// Recursively search for the confidential flag in the parents
-			while (OIDplus::db()->num_rows($res = OIDplus::db()->query("select parent, confidential from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($curid))) > 0) {
-				$row = OIDplus::db()->fetch_array($res);
+			while (($res = OIDplus::db()->query("select parent, confidential from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($curid)))->num_rows() > 0) {
+				$row = $res->fetch_array();
 				if ($row['confidential']) {
 					self::$object_info_cache[$curid] = true;
 					self::$object_info_cache[$orig_curid] = true;
@@ -212,8 +212,8 @@ abstract class OIDplusObject {
 	public function isChildOf(OIDplusObject $obj) {
 		if (!OIDPLUS_OBJECT_CACHING) {
 			$curid = $this->nodeId();
-			while (OIDplus::db()->num_rows($res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($curid))) > 0) {
-				$row = OIDplus::db()->fetch_array($res);
+			while (($res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($curid)))->num_rows() > 0) {
+				$row = $res->fetch_array();
 				if ($curid == $obj->nodeId()) return true;
 				$curid = $row['parent'];
 			}
@@ -234,7 +234,7 @@ abstract class OIDplusObject {
 		$out = array();
 		if (!OIDPLUS_OBJECT_CACHING) {
 			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array($this->nodeId()));
-			while ($row = OIDplus::db()->fetch_array($res)) {
+			while ($row = $res->fetch_array()) {
 				$obj = self::parse($row['id']);
 				if (!$obj) continue;
 				$out[] = $obj;
@@ -305,7 +305,7 @@ abstract class OIDplusObject {
 	public static function exists($id) {
 		if (!OIDPLUS_OBJECT_CACHING) {
 			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
-			return OIDplus::db()->num_rows($res) > 0;
+			return $res->num_rows() > 0;
 		} else {
 			self::buildObjectInformationCache();
 			return isset(self::$object_info_cache[$id]);
@@ -315,7 +315,7 @@ abstract class OIDplusObject {
 	public function getParent() {
 		if (!OIDPLUS_OBJECT_CACHING) {
 			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($this->nodeId()));
-			$row = OIDplus::db()->fetch_array($res);
+			$row = $res->fetch_array();
 			$parent = $row['parent'];
 			$obj = OIDplusObject::parse($parent);
 			if ($obj) return $obj;
@@ -345,7 +345,7 @@ abstract class OIDplusObject {
 	public function getRaMail() {
 		if (!OIDPLUS_OBJECT_CACHING) {
 			$res = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($this->nodeId()));
-			$row = OIDplus::db()->fetch_array($res);
+			$row = $res->fetch_array();
 			return $row['ra_email'];
 		} else {
 			self::buildObjectInformationCache();
@@ -359,7 +359,7 @@ abstract class OIDplusObject {
 	public function getTitle() {
 		if (!OIDPLUS_OBJECT_CACHING) {
 			$res = OIDplus::db()->query("select title from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($this->nodeId()));
-			$row = OIDplus::db()->fetch_array($res);
+			$row = $res->fetch_array();
 			return $row['title'];
 		} else {
 			self::buildObjectInformationCache();
@@ -413,7 +413,7 @@ abstract class OIDplusObject {
 
 		if (!OIDPLUS_OBJECT_CACHING) {
 			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?", array($obj->ns().':%'));
-			while ($row = OIDplus::db()->fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$test = OIDplusObject::parse($row->id);
 				if ($obj->equals($test)) return $test;
 			}
@@ -451,7 +451,7 @@ abstract class OIDplusObject {
 		if (is_null(self::$object_info_cache)) {
 			self::$object_info_cache = array();
 			$res = OIDplus::db()->query("select id, parent, confidential, ra_email, title from ".OIDPLUS_TABLENAME_PREFIX."objects");
-			while ($row = OIDplus::db()->fetch_array($res)) {
+			while ($row = $res->fetch_array()) {
 				if ($row['confidential'] == chr(0)) $row['confidential'] = false; // ODBC...
 				if ($row['confidential'] == chr(1)) $row['confidential'] = true; // ODBC...
 				self::$object_info_cache[$row['id']] = array($row['confidential'], $row['parent'], $row['ra_email'], $row['title']);

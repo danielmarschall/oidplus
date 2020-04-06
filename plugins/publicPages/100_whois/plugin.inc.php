@@ -60,7 +60,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 			if (is_null($first_ns)) $first_ns = $ot::ns();
 			$res = OIDplus::db()->query("SELECT id FROM ".OIDPLUS_TABLENAME_PREFIX."objects WHERE parent = ? ORDER BY id", array($ot::ns().':'));
-			if ($row = OIDplus::db()->fetch_array($res))
+			if ($row = $res->fetch_array())
 				$firsts[$ot::ns()] = $row['id'];
 		}
 		if (count($firsts) == 0) {

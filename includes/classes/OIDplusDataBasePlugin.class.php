@@ -22,16 +22,13 @@ if (!defined('IN_OIDPLUS')) die();
 abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 	protected $connected = false;
 
-	public abstract static function name();
-	public abstract function query($sql, $prepared_args=null);
-	public abstract function num_rows($res);
-	public abstract function fetch_array($res);
-	public abstract function fetch_object($res);
-	public abstract function insert_id();
-	public abstract function error();
-	public abstract function transaction_begin();
-	public abstract function transaction_commit();
-	public abstract function transaction_rollback();
+	public abstract static function name(): string; // this is the name that is set to the configuration value OIDPLUS_DATABASE_PLUGIN to identify the database plugin
+	public abstract function query($sql, $prepared_args=null): OIDplusQueryResult;
+	public abstract function insert_id(): int;
+	public abstract function error(): string;
+	public abstract function transaction_begin(): void;
+	public abstract function transaction_commit(): void;
+	public abstract function transaction_rollback(): void;
 
 	// TODO: better create some kind of Object-Type-API that does the sorting. But this means, the sorting won't be done with SQL
 	public function natOrder($fieldname, $maxdepth=100) { // TODO: also "desc" and "asc" support?
@@ -54,7 +51,7 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 		return implode(', ', $out);
 	}
 
-	protected function afterConnect($html) {
+	protected function afterConnect($html): void {
 		// Check if database tables are existing
 		$table_names = array('objects', 'asn1id', 'iri', 'ra', 'config');
 		foreach ($table_names as $tablename) {
@@ -78,7 +75,7 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 		// Note: The config setting "database_version" is inserted in setup/sql/...sql, not in the OIDplus core init
 
 		$res = $this->query("SELECT value FROM ".OIDPLUS_TABLENAME_PREFIX."config WHERE name = 'database_version'");
-		$row = $this->fetch_array($res);
+		$row = $res->fetch_array();
 		$version = $row['value'];
 		if ($version == 200) {
 			$this->transaction_begin();
@@ -89,7 +86,7 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 		}
 	}
 
-	public function isConnected() {
+	public function isConnected(): bool {
 		return $this->connected;
 	}
 }

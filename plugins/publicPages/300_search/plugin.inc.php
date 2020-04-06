@@ -133,7 +133,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 							$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where (".implode(' or ', $sql_where).")", $prep_where);
 
 							$count = 0;
-							while ($row = OIDplus::db()->fetch_object($res)) {
+							while ($row = $res->fetch_object()) {
 								$email = str_replace('@', '&', $row->email);
 								$out['text'] .= '<p><a '.oidplus_link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
 								$count++;
@@ -151,14 +151,14 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 
 							if (isset($_POST["search_asn1id"])) {
 								$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where name like ?", array('%'.$search_term.'%'));
-								while ($row = OIDplus::db()->fetch_object($res)) {
+								while ($row = $res->fetch_object()) {
 									$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
 								}
 							}
 
 							if (isset($_POST["search_iri"])) {
 								$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where name like ?", array('%'.$search_term.'%'));
-								while ($row = OIDplus::db()->fetch_object($res)) {
+								while ($row = $res->fetch_object()) {
 									$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
 								}
 							}
@@ -169,7 +169,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 							$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ? and (".implode(' or ', $sql_where).")", $prep_where);
 
 							$count = 0;
-							while ($row = OIDplus::db()->fetch_object($res)) {
+							while ($row = $res->fetch_object()) {
 								$out['text'] .= '<p><a '.oidplus_link($row->id).'>'.htmlentities($row->id).'</a>: <b>'.htmlentities($row->title).'</b></p>'; // TODO: also show asn1id; highlight search match?
 								$count++;
 							}

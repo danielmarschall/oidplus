@@ -111,7 +111,7 @@ class OIDplusJava extends OIDplusObject {
 			$title = OIDplusJava::objectTypeTitle();
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array(self::root()));
-			if (OIDplus::db()->num_rows($res) > 0) {
+			if ($res->num_rows() > 0) {
 				$content  = 'Please select a Java Package Name in the tree view at the left to show its contents.';
 			} else {
 				$content  = 'Currently, no Java Package Name is registered in the system.';

@@ -45,7 +45,7 @@ class OIDplusGui {
 		$rows = array();
 		if ($parentNS == 'oid') {
 			$one_weid_available = $objParent->isWeid(true);
-			while ($row = OIDplus::db()->fetch_object($result)) {
+			while ($row = $result->fetch_object()) {
 				$obj = OIDplusObject::parse($row->id);
 				$rows[] = array($obj,$row);
 				if (!$one_weid_available) {
@@ -54,7 +54,7 @@ class OIDplusGui {
 			}
 		} else {
 			$one_weid_available = false;
-			while ($row = OIDplus::db()->fetch_object($result)) {
+			while ($row = $result->fetch_object()) {
 				$obj = OIDplusObject::parse($row->id);
 				$rows[] = array($obj,$row);
 			}
@@ -92,13 +92,13 @@ class OIDplusGui {
 
 			$asn1ids = array();
 			$res2 = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ? order by lfd", array($row->id));
-			while ($row2 = OIDplus::db()->fetch_array($res2)) {
+			while ($row2 = $res2->fetch_array()) {
 				$asn1ids[] = $row2['name'];
 			}
 
 			$iris = array();
 			$res2 = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ? order by lfd", array($row->id));
-			while ($row2 = OIDplus::db()->fetch_array($res2)) {
+			while ($row2 = $res2->fetch_array()) {
 				$iris[] = $row2['name'];
 			}
 
@@ -150,7 +150,7 @@ class OIDplusGui {
 		}
 
 		$result = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($parent));
-		$parent_ra_email = OIDplus::db()->num_rows($result) > 0 ? OIDplus::db()->fetch_object($result)->ra_email : '';
+		$parent_ra_email = $result->num_rows() > 0 ? $result->fetch_object()->ra_email : '';
 
 		if ($objParent->userHasWriteRights()) {
 			$output .= '<tr>';
@@ -199,7 +199,8 @@ class OIDplusGui {
 	// 'quickbars' added 11 July 2019: Disabled because of two problems:
 	//                                 1. When you load TinyMCE via AJAX using the left menu, the quickbar is immediately shown, even if TinyMCE does not have the focus
 	//                                 2. When you load a page without TinyMCE using the left menu, the quickbar is still visible, although there is no edit
-	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode', 'quickbars');
+	// 'colorpicker', 'textcolor' and 'contextmenu' added in 07 April 2020, because it is built in in the core.
+	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode', 'quickbars', 'colorpicker', 'textcolor', 'contextmenu');
 
 	protected static function showMCE($name, $content) {
 		$mce_plugins = array();
@@ -229,6 +230,7 @@ class OIDplusGui {
 					}
 
 				});
+				tinymce.EditorManager.baseURL = "'.OIDplus::getSystemUrl().'/3p/tinymce";
 			</script>';
 
 		$content = htmlentities($content); // For some reason, if we want to display the text "<xyz>" in TinyMCE, we need to double-encode things! &lt; will not be accepted, we need &amp;lt; ... why?
@@ -286,8 +288,8 @@ class OIDplusGui {
 						break;
 					} else {
 						$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($obj->nodeId()));
-						$row = OIDplus::db()->fetch_array($res);
-						if (OIDplus::db()->num_rows($res) == 0) {
+						$row = $res->fetch_array();
+						if ($res->num_rows() == 0) {
 							http_response_code(404);
 							$out['title'] = 'Object not found';
 							$out['icon'] = 'img/error_big.png';
@@ -320,12 +322,12 @@ class OIDplusGui {
 
 				} else {
 					$res_ = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($parent->nodeId()));
-					$row_ = OIDplus::db()->fetch_array($res_);
+					$row_ = $res_->fetch_array();
 
 					$parent_title = $row_['title'];
 					if (empty($parent_title) && ($parent->ns() == 'oid')) {
 						$res_ = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($parent->nodeId()));
-						$row_ = OIDplus::db()->fetch_array($res_);
+						$row_ = $res_->fetch_array();
 						$parent_title = $row_['name']; // TODO: multiple ASN1 ids?
 					}
 

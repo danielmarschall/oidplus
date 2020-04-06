@@ -24,7 +24,7 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 	private $last_query;
 	private $prepare_cache = array();
 
-	public static function getPluginInformation() {
+	public static function getPluginInformation(): array {
 		$out = array();
 		$out['name'] = 'PDO';
 		$out['author'] = 'ViaThinkSoft';
@@ -33,19 +33,23 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 		return $out;
 	}
 
-	public static function name() {
+	public static function name(): string {
 		return "PDO";
 	}
 
-	public function query($sql, $prepared_args=null) {
+	public function query($sql, $prepared_args=null): OIDplusQueryResult {
 		$this->last_query = $sql;
 		if (is_null($prepared_args)) {
-			return $this->pdo->query($sql);
+			$res = $this->pdo->query($sql);
+
+			if ($res === false) {
+				throw new OIDplusSQLException($sql, $this->error());
+			} else {
+				return new OIDplusQueryResultPDO($res);
+			}
 		} else {
-
-
 			// TEST: Emulate the prepared statement
-/*
+			/*
 			foreach ($prepared_args as $arg) {
 				$needle = '?';
 				$replace = "'$arg'"; // TODO: types
@@ -54,9 +58,8 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 					$sql = substr_replace($sql, $replace, $pos, strlen($needle));
 				}
 			}
-			return $this->pdo->query($sql);
-*/
-
+			return OIDplusQueryResultPDO($this->pdo->query($sql));
+			*/
 
 			if (!is_array($prepared_args)) {
 				throw new Exception("'prepared_args' must be either NULL or an ARRAY.");
@@ -66,49 +69,31 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 			} else {
 				$ps = $this->pdo->prepare($sql);
 				if (!$ps) {
-					throw new Exception("Cannot prepare statement '$sql'");
+					throw new OIDplusSQLException($sql, 'Cannot prepare statement');
 				}
 				$this->prepare_cache[$sql] = $ps;
 			}
 			if (!$ps->execute($prepared_args)) {
-				// Note: Our plugins prepare the configs by trying to insert stuff, which raises a Primary Key exception. So we cannot throw an Exception.
-				return false;
+				throw new OIDplusSQLException($sql, $this->error());
 			}
-			return $ps;
+			return new OIDplusQueryResultPDO($ps);
 		}
 	}
-	public function num_rows($res) {
-		if (!is_object($res)) {
-			throw new Exception("num_rows called on non object. Last query: ".$this->last_query);
-		} else {
-			return $res->rowCount();
-		}
-	}
-	public function fetch_array($res) {
-		if (!is_object($res)) {
-			throw new Exception("fetch_array called on non object. Last query: ".$this->last_query);
-		} else {
-			return $res->fetch(PDO::FETCH_ASSOC);
-		}
-	}
-	public function fetch_object($res) {
-		if (!is_object($res)) {
-			throw new Exception("fetch_object called on non object. Last query: ".$this->last_query);
-		} else {
-			return $res->fetch(PDO::FETCH_OBJ);
-		}
-	}
-	public function insert_id() {
+
+	public function insert_id(): int {
 		return $this->pdo->lastInsertId();
 	}
-	public function error() {
+
+	public function error(): string {
 		return $this->pdo->errorInfo()[2];
 	}
+
 	private $html = null;
-	public function init($html = true) {
+	public function init($html = true): void {
 		$this->html = $html;
 	}
-	public function connect() {
+
+	public function connect(): void {
 		try {
 			$options = [
 			#    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -140,19 +125,52 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 
 	private $intransaction = false;
 
-	public function transaction_begin() {
+	public function transaction_begin(): void {
 		if ($this->intransaction) throw new Exception("Nested transactions are not supported by this database plugin.");
 		$this->pdo->beginTransaction();
 		$this->intransaction = true;
 	}
 
-	public function transaction_commit() {
+	public function transaction_commit(): void {
 		$this->pdo->commit();
 		$this->intransaction = false;
 	}
 
-	public function transaction_rollback() {
+	public function transaction_rollback(): void {
 		$this->pdo->rollBack();
 		$this->intransaction = false;
+	}
+}
+
+class OIDplusQueryResultPDO extends OIDplusQueryResult {
+	protected $no_resultset;
+	protected $res;
+
+	public function __construct($res) {
+		$this->no_resultset = $res === false;
+		$this->res = $res;
+	}
+
+	public function containsResultSet(): bool {
+		return !$this->no_resultset;
+	}
+
+	public function num_rows(): int {
+		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		return $this->res->rowCount();
+	}
+
+	public function fetch_array()/*: ?array*/ {
+		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		$ret = $this->res->fetch(PDO::FETCH_ASSOC);
+		if ($ret === false) $ret = null;
+		return $ret;
+	}
+
+	public function fetch_object()/*: ?object*/ {
+		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		$ret = $this->res->fetch(PDO::FETCH_OBJ);
+		if ($ret === false) $ret = null;
+		return $ret;
 	}
 }

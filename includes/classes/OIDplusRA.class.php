@@ -32,15 +32,15 @@ class OIDplusRA {
 
 	public function raName() {
 		$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($this->email));
-		if (OIDplus::db()->num_rows($res) == 0) return "(RA not in database)";
-		$row = OIDplus::db()->fetch_array($res);
+		if ($res->num_rows() == 0) return "(RA not in database)";
+		$row = $res->fetch_array();
 		return $row['ra_name'];
 	}
 
 	public static function getAllRAs() {
 		$out = array();
 		$res = OIDplus::db()->query("select email from ".OIDPLUS_TABLENAME_PREFIX."ra");
-		while ($row = OIDplus::db()->fetch_array($res)) {
+		while ($row = $res->fetch_array()) {
 			$out[] = new OIDplusRA($row['email']);
 		}
 		return $out;
@@ -70,7 +70,7 @@ class OIDplusRA {
 
 	public function checkPassword($password) {
 		$ra_res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($this->email));
-		$ra_row = OIDplus::db()->fetch_array($ra_res);
+		$ra_row = $ra_res->fetch_array();
 
 		$plugins = OIDplus::getAuthPlugins();
 		if (count($plugins) == 0) {

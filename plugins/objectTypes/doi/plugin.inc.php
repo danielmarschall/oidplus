@@ -122,7 +122,7 @@ class OIDplusDoi extends OIDplusObject {
 			$title = OIDplusDoi::objectTypeTitle();
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array(self::root()));
-			if (OIDplus::db()->num_rows($res) > 0) {
+			if ($res->num_rows() > 0) {
 				$content = 'Please select an DOI in the tree view at the left to show its contents.';
 			} else {
 				$content = 'Currently, no DOIs are registered in the system.';

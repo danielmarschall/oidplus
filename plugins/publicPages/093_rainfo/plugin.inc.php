@@ -61,7 +61,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 			} else {
 				$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
 				$out['title'] = '';
-				if ($row = OIDplus::db()->fetch_array($res)) {
+				if ($row = $res->fetch_array()) {
 					$out['title'] = $row['ra_name'];
 				}
 				if (empty($out['title'])) {
@@ -80,7 +80,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 
 			if (!empty($ra_email)) {
 				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
-				if (OIDplus::db()->num_rows($res) > 0) {
+				if ($res->num_rows() > 0) {
 					if (OIDplus::authUtils()::isRALoggedIn($ra_email) || OIDplus::authUtils()::isAdminLoggedIn()) {
 						if (class_exists('OIDplusPageRaEditContactData')) {
 							$out['text'] .= '<p><a '.oidplus_link('oidplus:edit_ra$'.$ra_email).'>Edit contact data</a></p>';
@@ -106,9 +106,9 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 					                            "where lu.user = ? " .
 					                            "order by lo.unix_ts desc", array($ra_email));
 					$out['text'] .= '<h2>Log messages for RA '.htmlentities($ra_email).'</h2>';
-					if (OIDplus::db()->num_rows($res) > 0) {
+					if ($res->num_rows() > 0) {
 						$out['text'] .= '<pre>';
-						while ($row = OIDplus::db()->fetch_array($res)) {
+						while ($row = $res->fetch_array()) {
 							$addr = empty($row['addr']) ? 'no address' : $row['addr'];
 
 							$out['text'] .= date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr) . ")\n";
@@ -138,10 +138,10 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 		}
 
 		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
-		if (OIDplus::db()->num_rows($res) === 0) {
+		if ($res->num_rows() === 0) {
 			$out = '<p>The RA <a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a> is not registered in the database.</p>';
 		} else {
-			$row = OIDplus::db()->fetch_array($res);
+			$row = $res->fetch_array();
 			$out = '<b>'.htmlentities($row['ra_name']).'</b><br>'; // TODO: if you are not already at the page "oidplus:rainfo", then link to it now
 			$out .= 'E-Mail: <a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a><br>';
 			if (trim($row['personal_name']) !== '') $out .= htmlentities($row['personal_name']).'<br>';

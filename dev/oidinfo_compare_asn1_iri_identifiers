@@ -38,7 +38,7 @@ function check_oid($oid, $root=DESIRED_ROOT) {
 	}
 	$oidplus = array();
 	$resx = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array("oid:$oid"));
-	while ($rowx = OIDplus::db()->fetch_array($resx)) {
+	while ($rowx = $resx->fetch_array()) {
 		$oidplus[] = $rowx['name'];
 	}
 	asort($oidplus);
@@ -59,7 +59,7 @@ function check_oid($oid, $root=DESIRED_ROOT) {
 	}
 	$oidplus = array();
 	$resx = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ?", array("oid:$oid"));
-	while ($rowx = OIDplus::db()->fetch_array($resx)) {
+	while ($rowx = $resx->fetch_array()) {
 		$oidplus[] = $rowx['name'];
 	}
 	asort($oidplus);
