@@ -42,6 +42,8 @@ rebuild_callbacks.push(function() {
 
 	document.getElementById('struct_1').href = setupdir+'struct_empty.sql.php?plugin=odbc&prefix='+encodeURI(document.getElementById('tablename_prefix').value);
 	document.getElementById('struct_2').href = setupdir+'struct_with_examples.sql.php?plugin=odbc&prefix='+encodeURI(document.getElementById('tablename_prefix').value);
+	document.getElementById('struct_cli_1').innerHTML = '<br>or via command line:<br><code>curl -s "'+document.getElementById('struct_1').href+'" | mysql -u '+document.getElementById('mysql_username').value+' -p</code>';
+	document.getElementById('struct_cli_2').innerHTML = '<br>or via command line:<br><code>curl -s "'+document.getElementById('struct_2').href+'" | mysql -u '+document.getElementById('mysql_username').value+' -p</code>';
 
 	return !error;
 });

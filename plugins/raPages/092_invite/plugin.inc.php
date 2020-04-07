@@ -43,7 +43,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 			$email = $_POST['email'];
 
 			if (!oidplus_valid_email($email)) {
-				die(json_encode(array("error" => 'Invalid email address')));
+				throw new Exception('Invalid email address');
 			}
 
 			if (RECAPTCHA_ENABLED) {
@@ -52,7 +52,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					die(json_encode(array("error" => 'Captcha wrong')));
+					throw new Exception('Captcha wrong');
 				}
 			}
 
@@ -81,19 +81,19 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 			$timestamp = $_POST['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
-				die(json_encode(array("error" => 'Invalid auth key')));
+				throw new Exception('Invalid auth key');
 			}
 
 			if ((OIDplus::config()->getValue('max_ra_invite_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_invite_time'))) {
-				die(json_encode(array("error" => 'Invitation expired!')));
+				throw new Exception('Invitation expired!');
 			}
 
 			if ($password1 !== $password2) {
-				die(json_encode(array("error" => 'Passwords are not equal')));
+				throw new Exception('Passwords are not equal');
 			}
 
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				die(json_encode(array("error" => 'Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength())));
+				throw new Exception('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
 			}
 
 			OIDplus::logger()->log("RA($email)!", "RA '$email' has been registered due to invitation");

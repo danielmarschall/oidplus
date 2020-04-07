@@ -150,9 +150,7 @@ try {
 				while ($row = $res->fetch_array()) {
 					$id_to_delete = $row['id'];
 					OIDplus::logger()->log("OIDRA($id_to_delete)!", "Lost ownership of object '$id_to_delete' because one of the superior objects ('$id') was recursively deleted");
-					if (!OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id_to_delete))) {
-						throw new Exception(OIDplus::db()->error());
-					}
+					OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id_to_delete));
 				}
 			} while ($res->num_rows() > 0);
 		}
@@ -233,9 +231,7 @@ try {
 
 		$confidential = $_POST['confidential'] == 'true';
 		$comment = $_POST['comment'];
-		if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ?, comment = ?, updated = now() WHERE id = ?", array($confidential ? 1 : 0, $comment, $id))) {
-			throw new Exception('Error at setting confidential flag:' . OIDplus::db()->error());
-		}
+		OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ?, comment = ?, updated = now() WHERE id = ?", array($confidential ? 1 : 0, $comment, $id));
 
 		$status = 0;
 
@@ -263,9 +259,7 @@ try {
 
 		OIDplus::logger()->log("OID($id)+OIDRA($id)?/A?", "Title/Description of object '$id' updated");
 
-		if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET title = ?, description = ?, updated = now() WHERE id = ?", array($_POST['title'], $_POST['description'], $id))) {
-			throw new Exception(OIDplus::db()->error());
-		}
+		OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET title = ?, description = ?, updated = now() WHERE id = ?", array($_POST['title'], $_POST['description'], $id));
 
 		echo json_encode(array("status" => 0));
 	}
@@ -327,9 +321,7 @@ try {
 		}
 
 		$comment = $_POST['comment'];
-		if (!OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, comment, created) VALUES (?, ?, ?, ?, ?, now())", array($id, $parent, $ra_email, $confidential ? 1 : 0, $comment))) {
-			throw new Exception(OIDplus::db()->error());
-		}
+		OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, comment, created) VALUES (?, ?, ?, ?, ?, now())", array($id, $parent, $ra_email, $confidential ? 1 : 0, $comment));
 
 		// Set ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {

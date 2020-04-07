@@ -45,11 +45,11 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 			if ($res->num_rows() == 0) {
-				die(json_encode(array("error" => 'RA does not exist')));
+				throw new Exception('RA does not exist');
 			}
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				die(json_encode(array("error" => 'Authentification error. Please log in as the RA or admin to update its data.')));
+				throw new Exception('Authentification error. Please log in as the RA or admin to update its data.');
 			}
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
@@ -59,17 +59,17 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 			$password2 = $_POST['new_password2'];
 
 			if ($password1 !== $password2) {
-				die(json_encode(array("error" => 'Passwords are not equal')));
+				throw new Exception('Passwords are not equal');
 			}
 
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				die(json_encode(array("error" => 'New password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength())));
+				throw new Exception('New password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
 			}
 
 			$ra = new OIDplusRA($email);
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				if (!$ra->checkPassword($old_password)) {
-					die(json_encode(array("error" => 'Old password incorrect')));
+					throw new Exception('Old password incorrect');
 				}
 			}
 			OIDplus::logger()->log("RA($email)?/A?", "Password of RA '$email' changed");

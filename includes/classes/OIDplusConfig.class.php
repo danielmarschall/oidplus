@@ -147,9 +147,7 @@ class OIDplusConfig {
 
 		// Now change the value in the database
 
-		if (!OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."config set value = ? where name = ?", array($value, $name))) {
-			throw new Exception(OIDplus::db()->error());
-		}
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."config set value = ? where name = ?", array($value, $name));
 		$this->values[$name] = $value;
 	}
 

@@ -3,7 +3,7 @@
 /*
  * PHP GMP-Supplement implemented using BCMath
  * Copyright 2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-02-29
+ * Version 2020-04-07
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  */
 
 if (function_exists('bcadd')) {
-	// ----------------- Implementation of GMP functions using BCMath ----------------- 
+	// ----------------- Implementation of GMP functions using BCMath -----------------
 
 	if (!function_exists('gmp_init') ) {
 		define('GMP_ROUND_ZERO',     0);
@@ -31,7 +31,7 @@ if (function_exists('bcadd')) {
 		define('GMP_BIG_ENDIAN',     8);
 		define('GMP_NATIVE_ENDIAN', 16);
 		define('GMP_VERSION',  '6.0.0');
-	
+
 		// gmp_abs ( GMP $a ) : GMP
 		// Absolute value
 		function gmp_abs($a) {
@@ -42,16 +42,16 @@ if (function_exists('bcadd')) {
 				return bcmul($a, "-1");
 			}
 		}
-	
+
 		// gmp_add ( GMP $a , GMP $b ) : GMP
 		// Add numbers
 		function gmp_add($a, $b) {
 			bcscale(0);
-			
+
 			// bcadd ( string $left_operand , string $right_operand [, int $scale = 0 ] ) : string
 			return bcadd($a, $b);
 		}
-	
+
 		// gmp_and ( GMP $a , GMP $b ) : GMP
 		// Bitwise AND
 		function gmp_and($a, $b) {
@@ -62,65 +62,65 @@ if (function_exists('bcadd')) {
 			$length = max(strlen($ab), strlen($bb));
 			$ab = str_pad($ab, $length, "0", STR_PAD_LEFT);
 			$bb = str_pad($bb, $length, "0", STR_PAD_LEFT);
-		
+
 			// Do the bitwise binary operation
 			$cb = '';
 			for ($i=0; $i<$length; $i++) {
 				$cb .= (($ab[$i] == 1) and ($bb[$i] == 1)) ? '1' : '0';
 			}
-		
+
 			// Convert back to a decimal number
 			return bc_bin2dec($cb);
 		}
-	
+
 		// gmp_binomial ( mixed $n , int $k ) : GMP
 		// Calculates binomial coefficient
 		function gmp_binomial($n, $k) {
 			bcscale(0);
 			throw new Exception("gmp_binomial() NOT IMPLEMENTED");
 		}
-	
+
 		// gmp_clrbit ( GMP $a , int $index ) : void
 		// Clear bit
 		function gmp_clrbit($a, $index) {
 			bcscale(0);
 			return gmp_setbit($a, $index, false);
 		}
-	
+
 		// gmp_cmp ( GMP $a , GMP $b ) : int
 		// Compare numbers
 		function gmp_cmp($a, $b) {
 			bcscale(0);
-			
+
 			// bccomp ( string $left_operand , string $right_operand [, int $scale = 0 ] ) : int
 			return bccomp($a, $b);
 		}
-	
+
 		// gmp_com ( GMP $a ) : GMP
 		// Calculates one's complement
 		function gmp_com($a) {
 			bcscale(0);
 			// Convert $a and $b to a binary string
 			$ab = bc_dec2bin($a);
-		
+
 			// Swap every bit
 			for ($i=0; $i<strlen($ab); $i++) {
 				$ab[$i] = ($ab[$i] == '1' ? '0' : '1');
 			}
-		
+
 			// Convert back to a decimal number
 			return bc_bin2dec($ab);
 		}
-	
+
 		// gmp_div_q ( GMP $a , GMP $b [, int $round = GMP_ROUND_ZERO ] ) : GMP
 		// Divide numbers
 		function gmp_div_q($a, $b, $round = GMP_ROUND_ZERO/*$round not implemented*/) {
 			bcscale(0);
-			
+
 			// bcdiv ( string $dividend , string $divisor [, int $scale = 0 ] ) : string
 			return bcdiv($a, $b);
 		}
-	
+
 		// Divide numbers and get quotient and remainder
 		// gmp_div_qr ( GMP $n , GMP $d [, int $round = GMP_ROUND_ZERO ] ) : array
 		function gmp_div_qr($n, $d, $round = GMP_ROUND_ZERO/*$round not implemented*/) {
@@ -130,7 +130,7 @@ if (function_exists('bcadd')) {
 				gmp_div_r($n, $d, $round)
 			);
 		}
-	
+
 		// Remainder of the division of numbers
 		// gmp_div_r ( GMP $n , GMP $d [, int $round = GMP_ROUND_ZERO ] ) : GMP
 		function gmp_div_r($n, $d, $round = GMP_ROUND_ZERO/*$round not implemented*/) {
@@ -144,46 +144,46 @@ if (function_exists('bcadd')) {
 			if (bccomp($n, "0") < 0) $r = bcmul($r, "-1");
 			return $r;
 		}
-	
+
 		// gmp_div ( GMP $a , GMP $b [, int $round = GMP_ROUND_ZERO ] ) : GMP
 		// Divide numbers
 		function gmp_div($a, $b, $round = GMP_ROUND_ZERO/*$round not implemented*/) {
 			bcscale(0);
 			return gmp_div_q($a, $b, $round); // Alias von gmp_div_q
 		}
-	
+
 		// gmp_divexact ( GMP $n , GMP $d ) : GMP
 		// Exact division of numbers
 		function gmp_divexact($n, $d) {
 			bcscale(0);
 			return bcdiv($a, $b);
 		}
-	
+
 		// gmp_export ( GMP $gmpnumber [, int $word_size = 1 [, int $options = GMP_MSW_FIRST | GMP_NATIVE_ENDIAN ]] ) : string
 		// Export to a binary string
 		function gmp_export($gmpnumber, $word_size = 1, $options = GMP_MSW_FIRST | GMP_NATIVE_ENDIAN) {
-			if ($word_size != 1) die("Word size != 1 not implemented");
-			if ($options != GMP_MSW_FIRST | GMP_NATIVE_ENDIAN) die("Different options not implemented");
+			if ($word_size != 1) throw new Exception("Word size != 1 not implemented");
+			if ($options != GMP_MSW_FIRST | GMP_NATIVE_ENDIAN) throw new Exception("Different options not implemented");
 
 			bcscale(0);
 			$gmpnumber = bcmul($gmpnumber,"1"); // normalize
 			return gmp_init(bin2hex($gmpnumber), 16);
 		}
-	
+
 		// gmp_fact ( mixed $a ) : GMP
 		// Factorial
 		function gmp_fact($a) {
 			bcscale(0);
 			return bcfact($a);
 		}
-	
+
 		// gmp_gcd ( GMP $a , GMP $b ) : GMP
 		// Calculate GCD
 		function gmp_gcd($a, $b) {
 			bcscale(0);
 			return gmp_gcdext($a, $b)['g'];
 		}
-	
+
 		// gmp_gcdext ( GMP $a , GMP $b ) : array
 		// Calculate GCD and multipliers
 		function gmp_gcdext($a, $b) {
@@ -191,53 +191,53 @@ if (function_exists('bcadd')) {
 
 			// Source: https://github.com/phpseclib/phpseclib/blob/master/phpseclib/Math/BigInteger/Engines/BCMath.php#L285
 			// modified to make it fit here and to be compatible with gmp_gcdext
-		
+
 			$s = '1';
 			$t = '0';
 			$s_ = '0';
 			$t_ = '1';
-		
+
 			while (bccomp($b, '0', 0) != 0) {
 				$q = bcdiv($a, $b, 0);
-		
+
 				$temp = $a;
 				$a = $b;
 				$b = bcsub($temp, bcmul($b, $q, 0), 0);
-		
+
 				$temp = $s;
 				$s = $s_;
 				$s_ = bcsub($temp, bcmul($s, $q, 0), 0);
-		
+
 				$temp = $t;
 				$t = $t_;
 				$t_ = bcsub($temp, bcmul($t, $q, 0), 0);
 			}
-		
+
 			return [
 				'g' => $this->normalize($a),
 				's' => $this->normalize($s),
 				't' => $this->normalize($t)
 			];
 		}
-	
+
 		// gmp_hamdist ( GMP $a , GMP $b ) : int
 		// Hamming distance
 		function gmp_hamdist($a, $b) {
 			bcscale(0);
 			throw new Exception("gmp_hamdist() NOT IMPLEMENTED");
 		}
-	
+
 		// gmp_import ( string $data [, int $word_size = 1 [, int $options = GMP_MSW_FIRST | GMP_NATIVE_ENDIAN ]] ) : GMP
 		// Import from a binary string
 		function gmp_import($data, $word_size=1, $options=GMP_MSW_FIRST | GMP_NATIVE_ENDIAN) {
 			bcscale(0);
 
-			if ($word_size != 1) die("Word size != 1 not implemented");
-			if ($options != GMP_MSW_FIRST | GMP_NATIVE_ENDIAN) die("Different options not implemented");
+			if ($word_size != 1) throw new Exception("Word size != 1 not implemented");
+			if ($options != GMP_MSW_FIRST | GMP_NATIVE_ENDIAN) throw new Exception("Different options not implemented");
 
 			return gmp_init(hex2bin(gmp_strval(gmp_init($data), 16)));
 		}
-	
+
 		// gmp_init ( mixed $number [, int $base = 0 ] ) : GMP
 		// Create GMP number
 		function gmp_init($number, $base=0) {
@@ -255,26 +255,26 @@ if (function_exists('bcadd')) {
 					$base = 10;
 				}
 			}
-			
+
 			if ($base == 10) {
 				return $number;
 			} else {
 				return base_convert_bigint($number, $base, 10);
 			}
 		}
-	
+
 		// gmp_intval ( GMP $gmpnumber ) : int
 		// Convert GMP number to integer
 		function gmp_intval($gmpnumber) {
 			bcscale(0);
 			return (int)$gmpnumber;
 		}
-	
+
 		// gmp_invert ( GMP $a , GMP $b ) : GMP
 		// Inverse by modulo
 		function gmp_invert($a, $b) {
 			bcscale(0);
-			
+
 			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L246
 
 			while (bccomp($a, 0)==-1) {
@@ -313,12 +313,12 @@ if (function_exists('bcadd')) {
 			}
 			return $result;
 		}
-	
+
 		// gmp_jacobi ( GMP $a , GMP $p ) : int
 		// Jacobi symbol
 		function gmp_jacobi($a, $p) {
 			bcscale(0);
-			
+
 			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L136
 
 			if ($n>=3 && $n%2==1) {
@@ -339,42 +339,42 @@ if (function_exists('bcadd')) {
 				return false;
 			}
 		}
-	
+
 		// gmp_kronecker ( mixed $a , mixed $b ) : int
 		// Kronecker symbol
 		function gmp_kronecker($a, $b) {
 			bcscale(0);
 			throw new Exception("gmp_kronecker() NOT IMPLEMENTED");
 		}
-	
+
 		// gmp_lcm ( mixed $a , mixed $b ) : GMP
 		// Calculate LCM
 		function gmp_lcm($a, $b) {
 			bcscale(0);
-			
+
 			if ((bccomp($a,'0')==0) && (bccomp($b,'0')==0)) {
 				return 0;
 			} else {
 				return gmp_div(gmp_abs(gmp_mul($a,$b)), gmp_gcd($a,$b));
 			}
 		}
-	
+
 		// gmp_legendre ( GMP $a , GMP $p ) : int
 		// Legendre symbol
 		function gmp_legendre($a, $p) {
 			bcscale(0);
 			throw new Exception("gmp_legendre() NOT IMPLEMENTED");
 		}
-	
+
 		// gmp_mod ( GMP $n , GMP $d ) : GMP
 		// Modulo operation
 		function gmp_mod($n, $d) {
 			bcscale(0);
-			
+
 			// bcmod ( string $dividend , string $divisor [, int $scale = 0 ] ) : string
 			return bcmod($n, $d);
 		}
-	
+
 		// gmp_mul ( GMP $a , GMP $b ) : GMP
 		// Multiply numbers
 		function gmp_mul($a, $b) {
@@ -383,21 +383,21 @@ if (function_exists('bcadd')) {
 			// bcmul ( string $left_operand , string $right_operand [, int $scale = 0 ] ) : string
 			return bcmul($a, $b);
 		}
-	
+
 		// gmp_neg ( GMP $a ) : GMP
 		// Negate number
 		function gmp_neg($a) {
 			bcscale(0);
 			return bcmul($a, "-1");
 		}
-	
+
 		// gmp_nextprime ( int $a ) : GMP
 		// Find next prime number
 		function gmp_nextprime($a) {
 			bcscale(0);
-			
+
 			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L692
-			
+
 			if (bccomp($starting_value, 2) == -1) {
 				return 2;
 			}
@@ -405,9 +405,9 @@ if (function_exists('bcadd')) {
 			while (!gmp_prob_prime($result)) {
 				$result = bcadd($result, 2);
 			}
-			return $result;			
+			return $result;
 		}
-	
+
 		// gmp_or ( GMP $a , GMP $b ) : GMP
 		// Bitwise OR
 		function gmp_or($a, $b) {
@@ -418,31 +418,31 @@ if (function_exists('bcadd')) {
 			$length = max(strlen($ab), strlen($bb));
 			$ab = str_pad($ab, $length, "0", STR_PAD_LEFT);
 			$bb = str_pad($bb, $length, "0", STR_PAD_LEFT);
-		
+
 			// Do the bitwise binary operation
 			$cb = '';
 			for ($i=0; $i<$length; $i++) {
 				$cb .= (($ab[$i] == 1) or ($bb[$i] == 1)) ? '1' : '0';
 			}
-		
+
 			// Convert back to a decimal number
 			return bc_bin2dec($cb);
 		}
-	
+
 		// gmp_perfect_power ( mixed $a ) : bool
 		// Perfect power check
 		function gmp_perfect_power($a) {
 			bcscale(0);
 			throw new Exception("gmp_perfect_power() NOT IMPLEMENTED");
 		}
-	
+
 		// gmp_perfect_square ( GMP $a ) : bool
 		// Perfect square check
 		function gmp_perfect_square($a) {
 			bcscale(0);
 			throw new Exception("gmp_perfect_square() NOT IMPLEMENTED");
 		}
-	
+
 		// gmp_popcount ( GMP $a ) : int
 		// Population count
 		function gmp_popcount($a) {
@@ -450,30 +450,30 @@ if (function_exists('bcadd')) {
 			$ab = bc_dec2bin($a);
 			return substr_count($ab, '1');
 		}
-	
+
 		// gmp_pow ( GMP $base , int $exp ) : GMP
 		// Raise number into power
 		function gmp_pow($base, $exp) {
 			bcscale(0);
-			
+
 			// bcpow ( string $base , string $exponent [, int $scale = 0 ] ) : string
 			return bcpow($base, $exp);
 		}
-	
+
 		// gmp_powm ( GMP $base , GMP $exp , GMP $mod ) : GMP
 		// Raise number into power with modulo
 		function gmp_powm($base, $exp, $mod) {
 			bcscale(0);
-			
+
 			// bcpowmod ( string $base , string $exponent , string $modulus [, int $scale = 0 ] ) : string
 			return bcpowmod($base, $exp, $mod);
 		}
-	
+
 		// gmp_prob_prime ( GMP $a [, int $reps = 10 ] ) : int
 		// Check if number is "probably prime"
 		function gmp_prob_prime($a, $reps=10) {
 			bcscale(0);
-			
+
 			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L655
 
 			$t = 40;
@@ -489,7 +489,7 @@ if (function_exists('bcadd')) {
 					return new ErrorException("Negative exponents ($m) not allowed");
 				} else {
 					$b0 = bcpowmod($a, $m, $n);
-				}				
+				}
 				if ($b0!=1 && $b0!=bcsub($n, 1)) {
 					$j = 1;
 					while ($j<=$k-1 && $b0!=bcsub($n, 1)) {
@@ -504,60 +504,60 @@ if (function_exists('bcadd')) {
 					}
 				}
 			}
-			return true;			
+			return true;
 		}
-	
+
 		// gmp_random_bits ( int $bits ) : GMP
 		// Random number
 		function gmp_random_bits($bits) {
-			bcscale(0);			
+			bcscale(0);
 			$min = 0;
 			$max = bcsub(bcpow('2', $bits), '1');
 			return bcrand($min, $max);
 		}
-	
+
 		// gmp_random_range ( GMP $min , GMP $max ) : GMP
 		// Random number
 		function gmp_random_range($min, $max) {
 			bcscale(0);
 			return bcrand($min, $max);
 		}
-	
+
 		// gmp_random_seed ( mixed $seed ) : void
 		// Sets the RNG seed
 		function gmp_random_seed($seed) {
 			bcscale(0);
 			bcrand_seed($seed);
 		}
-	
+
 		// gmp_random ([ int $limiter = 20 ] ) : GMP
 		// Random number (deprecated)
 		function gmp_random($limiter=20) {
 			bcscale(0);
 			throw new Exception("gmp_random() is deprecated! Please use gmp_random_bits() or gmp_random_range() instead.");
 		}
-	
+
 		// gmp_root ( GMP $a , int $nth ) : GMP
 		// Take the integer part of nth root
 		function gmp_root($a, $nth) {
 			bcscale(0);
 			throw new Exception("gmp_root() NOT IMPLEMENTED");
 		}
-	
+
 		// gmp_rootrem ( GMP $a , int $nth ) : array
 		// Take the integer part and remainder of nth root
 		function gmp_rootrem($a, $nth) {
 			bcscale(0);
 			throw new Exception("gmp_rootrem() NOT IMPLEMENTED");
 		}
-	
+
 		// gmp_scan0 ( GMP $a , int $start ) : int
 		// Scan for 0
 		function gmp_scan0($a, $start) {
 			bcscale(0);
 
 			$ab = bc_dec2bin($a);
-			
+
 			if ($start < 0) throw new Exception("Starting index must be greater than or equal to zero");
 			if ($start >= strlen($ab)) return $start;
 
@@ -566,17 +566,17 @@ if (function_exists('bcadd')) {
 					return $i;
 				}
 			}
-			
+
 			return false;
 		}
-	
+
 		// gmp_scan1 ( GMP $a , int $start ) : int
 		// Scan for 1
 		function gmp_scan1($a, $start) {
 			bcscale(0);
 
 			$ab = bc_dec2bin($a);
-			
+
 			if ($start < 0) throw new Exception("Starting index must be greater than or equal to zero");
 			if ($start >= strlen($ab)) return -1;
 
@@ -585,49 +585,49 @@ if (function_exists('bcadd')) {
 					return $i;
 				}
 			}
-			
+
 			return false;
 		}
-	
+
 		// gmp_setbit ( GMP $a , int $index [, bool $bit_on = TRUE ] ) : void
 		// Set bit
 		function gmp_setbit($a, $index, $bit_on=TRUE) {
 			bcscale(0);
 			$ab = bc_dec2bin($a);
-			
-			if ($index < 0) throw new Exception("Invalid index");		
+
+			if ($index < 0) throw new Exception("Invalid index");
 			if ($index >= strlen($ab)) {
 				$ab = str_pad($ab, $index+1, '0', STR_PAD_LEFT);
 			}
-			
-			$ab[strlen($ab)-1-$index] = $bit_on ? '1' : '0'; 
-			
+
+			$ab[strlen($ab)-1-$index] = $bit_on ? '1' : '0';
+
 			return bc_bin2dec($ab);
 		}
-	
+
 		// gmp_sign ( GMP $a ) : int
 		// Sign of number
 		function gmp_sign($a) {
 			bcscale(0);
 			return bccomp($a, "0");
 		}
-	
+
 		// gmp_sqrt ( GMP $a ) : GMP
 		// Calculate square root
 		function gmp_sqrt($a) {
 			bcscale(0);
-			
+
 			// bcsqrt ( string $operand [, int $scale = 0 ] ) : string
 			return bcsqrt($a);
 		}
-	
+
 		// gmp_sqrtrem ( GMP $a ) : array
 		// Square root with remainder
 		function gmp_sqrtrem($a) {
 			bcscale(0);
 			throw new Exception("gmp_sqrtrem() NOT IMPLEMENTED");
 		}
-	
+
 		// gmp_strval ( GMP $gmpnumber [, int $base = 10 ] ) : string
 		// Convert GMP number to string
 		function gmp_strval($gmpnumber, $base=10) {
@@ -638,28 +638,28 @@ if (function_exists('bcadd')) {
 				return base_convert_bigint($gmpnumber, 10, $base);
 			}
 		}
-	
+
 		// gmp_sub ( GMP $a , GMP $b ) : GMP
 		// Subtract numbers
 		function gmp_sub($a, $b) {
 			bcscale(0);
-			
+
 			// bcsub ( string $left_operand , string $right_operand [, int $scale = 0 ] ) : string
 			return bcsub($a, $b);
 		}
-	
+
 		// gmp_testbit ( GMP $a , int $index ) : bool
 		// Tests if a bit is set
 		function gmp_testbit($a, $index) {
 			bcscale(0);
 			$ab = bc_dec2bin($a);
-			
-			if ($index < 0) throw new Exception("Invalid index");		
-			if ($index >= strlen($ab)) return ('0' == '1'); 
-			
+
+			if ($index < 0) throw new Exception("Invalid index");
+			if ($index >= strlen($ab)) return ('0' == '1');
+
 			return $ab[strlen($ab)-1-$index] == '1';
 		}
-	
+
 		// gmp_xor ( GMP $a , GMP $b ) : GMP
 		// Bitwise XOR
 		function gmp_xor($a, $b) {
@@ -670,20 +670,20 @@ if (function_exists('bcadd')) {
 			$length = max(strlen($ab), strlen($bb));
 			$ab = str_pad($ab, $length, "0", STR_PAD_LEFT);
 			$bb = str_pad($bb, $length, "0", STR_PAD_LEFT);
-		
+
 			// Do the bitwise binary operation
 			$cb = '';
 			for ($i=0; $i<$length; $i++) {
 				$cb .= (($ab[$i] == 1) xor ($bb[$i] == 1)) ? '1' : '0';
 			}
-		
+
 			// Convert back to a decimal number
 			return bc_bin2dec($cb);
 		}
 	}
-	
+
 	// ----------------- Helper functions -----------------
-	
+
 	function base_convert_bigint($numstring, $frombase, $tobase) {
 		$frombase_str = '';
 		for ($i=0; $i<$frombase; $i++) {
@@ -720,37 +720,37 @@ if (function_exists('bcadd')) {
 
 		return $result;
 	}
-	
+
 	function bc_dec2bin($decimal_i) {
 		// https://www.exploringbinary.com/base-conversion-in-php-using-bcmath/
-	
+
 		bcscale(0);
-	
+
 		$binary_i = '';
 		do {
 			$binary_i = bcmod($decimal_i,'2') . $binary_i;
 			$decimal_i = bcdiv($decimal_i,'2');
 		} while (bccomp($decimal_i,'0'));
-	
+
 		return $binary_i;
 	}
-	
+
 	function bc_bin2dec($binary_i) {
 		// https://www.exploringbinary.com/base-conversion-in-php-using-bcmath/
-	
+
 		bcscale(0);
-	
+
 		$decimal_i = '0';
 		for ($i = 0; $i < strlen($binary_i); $i++) {
 			$decimal_i = bcmul($decimal_i,'2');
 			$decimal_i = bcadd($decimal_i,$binary_i[$i]);
 		}
-	
+
 		return $decimal_i;
 	}
-	
-	// ----------------- New functions ----------------- 
-	
+
+	// ----------------- New functions -----------------
+
 	// Newly added: gmp_not / bcnot
 	function bcnot($a) {
 		bcscale(0);
@@ -760,21 +760,20 @@ if (function_exists('bcadd')) {
 		$length = max(strlen($ab), strlen($bb));
 		$ab = str_pad($ab, $length, "0", STR_PAD_LEFT);
 		$bb = str_pad($bb, $length, "0", STR_PAD_LEFT);
-	
 		// Do the bitwise binary operation
 		$cb = '';
 		for ($i=0; $i<$length; $i++) {
 			if ($ab[$i] == 1) return false;
 		}
-		
+
 		return true;
 	}
 	function gmp_not($a) {
 		bcscale(0);
 		return bcnot($a);
 	}
-	
-	// Newly added: bcshiftl / gmp_shiftl   
+
+	// Newly added: bcshiftl / gmp_shiftl
 	function bcshiftl($num, $bits) {
 		bcscale(0);
 		return bcmul($num, bcpow('2', $bits));
@@ -783,8 +782,8 @@ if (function_exists('bcadd')) {
 		bcscale(0);
 		return bcshiftl($num, $bits);
 	}
-	
-	// Newly added: bcshiftr / gmp_shiftr   
+
+	// Newly added: bcshiftr / gmp_shiftr
 	function bcshiftr($num, $bits) {
 		bcscale(0);
 		return bcdiv($num, bcpow('2', $bits));
@@ -793,21 +792,21 @@ if (function_exists('bcadd')) {
 		bcscale(0);
 		return bcshiftr($num, $bits);
 	}
-	
+
 	// Newly added: bcfact (used by gmp_fact)
 	function bcfact($a) {
 		bcscale(0);
-		
+
 		// Source: https://www.php.net/manual/de/book.bc.php#116510
-	
+
 		if (!filter_var($a, FILTER_VALIDATE_INT) || $a <= 0) {
 			throw new InvalidArgumentException(sprintf('Argument must be natural number, "%s" given.', $a));
 		}
-	
+
 		for ($result = '1'; $a > 0; $a--) {
 			$result = bcmul($result, $a);
 		}
-	
+
 		return $result;
 	}
 
@@ -822,7 +821,7 @@ if (function_exists('bcadd')) {
 		}
 		return bcadd(bcmul(bcdiv(mt_rand(), mt_getrandmax(), strlen($max)), bcsub(bcadd($max, 1), $min)), $min);
 	}
-	
+
 	// Newly added (used by gmp_random_seed)
 	function bcrand_seed($seed) {
 		bcscale(0);

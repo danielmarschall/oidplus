@@ -42,7 +42,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 			$handled = true;
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
-				die(json_encode(array("error" => 'You need to log in as administrator.')));
+				throw new Exception('You need to log in as administrator.');
 			}
 
 			$name = $_POST['name'];
@@ -51,7 +51,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 			$res = OIDplus::db()->query("select protected from ".OIDPLUS_TABLENAME_PREFIX."config where name = ?", array($name));
 			$row = $res->fetch_array();
 			if ($row['protected'] == 1) {
-				die(json_encode(array("error" => 'Setting is write protected')));
+				throw new Exception('Setting is write protected');
 			}
 
 			OIDplus::config()->setValue($name, $value);
@@ -112,7 +112,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 				$output .= '</div></div>';
 
 				$output .= '<br><p>See also:</p>';
-				$output .= '<ul><li><a href="setup/">Setup part 1: Create config.php (contains database settings, ReCAPTCHA, admin password and SSL enforcement)</a></li>';
+				$output .= '<ul><li><a href="'.OIDplus::getSystemUrl().'setup/">Setup part 1: Create config.php (contains database settings, ReCAPTCHA, admin password and SSL enforcement)</a></li>';
 				$output .= '<li><a href="plugins/'.basename(dirname(__DIR__)).'/120_registration/registration.php">Setup part 2: Basic settings (they are all available above, too)</a></li></ul>';
 
 				$out['text'] = $output;

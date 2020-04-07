@@ -52,7 +52,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					die(json_encode(array("error" => 'Captcha wrong')));
+					throw new Exception('Captcha wrong');
 				}
 			}
 
@@ -60,13 +60,11 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				OIDplus::logger()->log("RA($email)!", "RA '$email' logged in");
 				OIDplus::authUtils()::raLogin($email);
 
-				if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = now() where email = ?", array($email))) {
-					die(json_encode(array("error" => OIDplus::db()->error())));
-				}
+				OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = now() where email = ?", array($email));
 
 				echo json_encode(array("status" => 0));
 			} else {
-				die(json_encode(array("error" => "Wrong password")));
+				throw new Exception('Wrong password');
 			}
 		}
 		if (isset($_POST["action"]) && ($_POST["action"] == "ra_logout")) {
@@ -90,7 +88,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					die(json_encode(array("error" => 'Captcha wrong')));
+					throw new Exception('Captcha wrong');
 				}
 			}
 
@@ -99,7 +97,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				OIDplus::authUtils()::adminLogin();
 				echo json_encode(array("status" => 0));
 			} else {
-				die(json_encode(array("error" => "Wrong password")));
+				throw new Exception('Wrong password');
 			}
 		}
 		if (isset($_POST["action"]) && ($_POST["action"] == "admin_logout")) {

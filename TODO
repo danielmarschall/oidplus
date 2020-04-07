@@ -67,6 +67,7 @@ SMALL THINGS
 		- kritischer bug: seite öffnen, tiny mce editieren, speichern klicken. dann f5 neu laden (nicht strg+f5): dann ist der alte content wieder da. außer man drückt strg+f5
 - jstree select: automatically scroll down
 - optisch aufhübschen. dinge wie RA: mehr dinge zeigen, adresse, email etc
+- test with different DBMS (currently, only MySQL was tested)
 
 FUTURE
 - we need to make OIDplus more compatible with non-MySQL databases (different SQL dialects)

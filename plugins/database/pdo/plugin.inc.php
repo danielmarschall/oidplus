@@ -88,11 +88,6 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 		return $this->pdo->errorInfo()[2];
 	}
 
-	private $html = null;
-	public function init($html = true): void {
-		$this->html = $html;
-	}
-
 	public function connect(): void {
 		try {
 			$options = [
@@ -104,22 +99,12 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 			// Try connecting to the database
 			$this->pdo = new PDO(OIDPLUS_PDO_DSN, OIDPLUS_PDO_USERNAME, base64_decode(OIDPLUS_PDO_PASSWORD), $options);
 		} catch (PDOException $e) {
-			if ($this->html) {
-				echo "<h1>Error</h1><p>Database connection failed! (".$e->getMessage().")</p>";
-				if (is_dir(__DIR__.'/../../../setup')) {
-					echo '<p>If you believe that the login credentials are wrong, please run <a href="setup/">setup</a> again.</p>';
-				}
-			} else {
-				echo "Error: Database connection failed! (".$e->getMessage().")";
-				if (is_dir(__DIR__.'/../../../setup')) {
-					echo ' If you believe that the login credentials are wrong, please run setup again.';
-				}
-			}
+			parent::showConnectError($e->getMessage());
 			die();
 		}
 
 		$this->query("SET NAMES 'utf8'");
-		$this->afterConnect($this->html);
+		$this->afterConnect();
 		$this->connected = true;
 	}
 

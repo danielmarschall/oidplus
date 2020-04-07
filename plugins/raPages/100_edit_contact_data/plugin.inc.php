@@ -44,17 +44,17 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 			$email = $_POST['email'];
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				die(json_encode(array("error" => 'Authentification error. Please log in as the RA to update its data.')));
+				throw new Exception('Authentification error. Please log in as the RA to update its data.');
 			}
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 			if ($res->num_rows() == 0) {
-				die(json_encode(array("error" => 'RA does not exist')));
+				throw new Exception('RA does not exist');
 			}
 
 			OIDplus::logger()->log("RA($email)?/A?", "Changed RA '$email' contact data/details");
 
-			if (!OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra ".
+			OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra ".
 				"SET ".
 				"updated = now(), ".
 				"ra_name = ?, ".
@@ -83,10 +83,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 					$_POST['fax'],
 					$email
 				)
-				))
-			{
-				die(json_encode(array("error" => OIDplus::db()->error())));
-			}
+			);
 
 			echo json_encode(array("status" => 0));
 		}

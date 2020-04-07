@@ -370,9 +370,7 @@ class OIDplusOid extends OIDplusObject {
 		if (!$simulate) {
 			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array("oid:".$this->oid));
 			foreach ($demandedASN1s as &$asn1) {
-				if (!OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."asn1id (oid, name) values (?, ?)", array("oid:".$this->oid, $asn1))) {
-					throw new Exception("Insertion of ASN.1 ID $asn1 to OID ".$this->oid." failed!");
-				}
+				OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."asn1id (oid, name) values (?, ?)", array("oid:".$this->oid, $asn1));
 			}
 		}
 	}
@@ -405,9 +403,7 @@ class OIDplusOid extends OIDplusObject {
 		if (!$simulate) {
 			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ?", array("oid:".$this->oid));
 			foreach ($demandedIris as &$iri) {
-				if (!OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."iri (oid, name) values (?, ?)", array("oid:".$this->oid, $iri))) {
-					throw new Exception("Insertion of IRI $iri to OID ".$this->oid." failed!");
-				}
+				OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."iri (oid, name) values (?, ?)", array("oid:".$this->oid, $iri));
 			}
 		}
 	}

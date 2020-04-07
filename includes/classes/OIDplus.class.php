@@ -91,11 +91,12 @@ class OIDplus {
 
 	public static function db() {
 		if (!isset(self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN])) {
-			if ($this::$html) {
-				/*throw new Exception*/die("Database plugin '".htmlentities(OIDPLUS_DATABASE_PLUGIN)."' not found. Please check config.inc.php or run <a href=\"setup/\">setup</a> again.");
+			if (self::$html) {
+				echo "<h1>Error</h1><p>Database plugin '".htmlentities(OIDPLUS_DATABASE_PLUGIN)."' not found.</p><p>Please check config.inc.php or run <a href=\"".OIDplus::getSystemUrl()."setup/\">setup</a> again.</p>";
 			} else {
-				/*throw new Exception*/die("Database plugin '".OIDPLUS_DATABASE_PLUGIN."' not found. Please check config.inc.php or run setup again.\n");
+				echo "ERROR: Database plugin '".OIDPLUS_DATABASE_PLUGIN."' not found. Please check config.inc.php or run setup again.\n";
 			}
+			die();
 		}
 		$obj = self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN];
 		if (!$obj->isConnected()) $obj->connect();
@@ -262,10 +263,10 @@ class OIDplus {
 			include_once __DIR__ . '/../config.inc.php';
 		} else {
 			if ($html) {
-				if (!is_dir('setup')) {
+				if (!is_dir(__DIR__.'/../../setup')) {
 					echo 'Error: Setup directory missing.';
 				} else {
-					header('Location:setup/');
+					header('Location:'.OIDplus::getSystemUrl().'setup/');
 				}
 			} else {
 				echo 'Error: Setup directory missing!';
@@ -294,7 +295,7 @@ class OIDplus {
 
 		if (OIDPLUS_CONFIG_VERSION != 2.0) {
 			if ($html) {
-				echo '<h1>Error</h1><p>The information located in <b>includes/config.inc.php</b> is outdated.</p><p>Please run <a href="setup/">setup</a> again.</p>';
+				echo '<h1>Error</h1><p>The information located in <b>includes/config.inc.php</b> is outdated.</p><p>Please run <a href="'.OIDplus::getSystemUrl().'setup/">setup</a> again.</p>';
 			} else {
 				echo 'The information located in includes/config.inc.php is outdated. Please run setup again.';
 			}
@@ -310,6 +311,10 @@ class OIDplus {
 			if (is_subclass_of($c, 'OIDplusDataBasePlugin')) {
 				self::registerDatabasePlugin(new $c());
 			}
+		}
+
+		foreach (OIDplus::getDatabasePlugins() as $plugin) {
+			$plugin->init($html);
 		}
 
 		// Do redirect stuff etc.
@@ -328,7 +333,7 @@ class OIDplus {
 
 		OIDplus::getPkiStatus(true);
 
-		// Register other plugins
+		// Register non-DB plugins
 
 		$ary = glob(__DIR__ . '/../../plugins/objectTypes/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
@@ -355,11 +360,8 @@ class OIDplus {
 			}
 		}
 
-		// Initialize plugins
+		// Initialize non-DB plugins
 
-		foreach (OIDplus::getDatabasePlugins() as $plugin) {
-			$plugin->init($html);
-		}
 		foreach (OIDplus::getPagePlugins('*') as $plugin) {
 			$plugin->init($html);
 		}

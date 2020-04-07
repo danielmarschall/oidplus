@@ -230,7 +230,7 @@ class OIDplusGui {
 					}
 
 				});
-				tinymce.EditorManager.baseURL = "'.OIDplus::getSystemUrl().'/3p/tinymce";
+				tinymce.EditorManager.baseURL = "'.OIDplus::getSystemUrl().'3p/tinymce";
 			</script>';
 
 		$content = htmlentities($content); // For some reason, if we want to display the text "<xyz>" in TinyMCE, we need to double-encode things! &lt; will not be accepted, we need &amp;lt; ... why?

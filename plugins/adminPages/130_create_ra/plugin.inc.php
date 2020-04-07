@@ -52,20 +52,20 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePlugin {
 			$password2 = $_POST['password2'];
 
 			if (!oidplus_valid_email($email)) {
-				die(json_encode(array("error" => 'eMail address is invalid.')));
+				throw new Exception('eMail address is invalid.');
 			}
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email)); // TODO: this should be a static function in the RA class
 			if ($res->num_rows() > 0) {
-				die(json_encode(array("error" => 'RA does already exist')));
+				throw new Exception('RA does already exist');
 			}
 
 			if ($password1 !== $password2) {
-				die(json_encode(array("error" => 'Passwords are not equal')));
+				throw new Exception('Passwords are not equal');
 			}
 
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				die(json_encode(array("error" => 'Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength())));
+				throw new Exception('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
 			}
 
 			OIDplus::logger()->log("RA($email)!/A?", "RA '$email' was created by the admin, without email address verification or invitation");

@@ -106,7 +106,9 @@ function ft_get_oid_data($oid) {
 
 function sql_execute($sql, $prep=null) {
 #	echo "$sql\n";
-	OIDplus::db()->query($sql, $prep);
-	$err = OIDplus::db()->error();
-	if ($err) echo "Warning: $err at $sql\n";
+	try {
+		OIDplus::db()->query($sql, $prep);
+	} catch (Exception $e) {
+		echo "Warning: " . $e->getMessage() . "\n";
+	}
 }

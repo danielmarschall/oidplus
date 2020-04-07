@@ -21,6 +21,7 @@ if (!defined('IN_OIDPLUS')) die();
 
 abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 	protected $connected = false;
+	protected $html = null;
 
 	public abstract static function name(): string; // this is the name that is set to the configuration value OIDPLUS_DATABASE_PLUGIN to identify the database plugin
 	public abstract function query($sql, $prepared_args=null): OIDplusQueryResult;
@@ -51,19 +52,21 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 		return implode(', ', $out);
 	}
 
-	protected function afterConnect($html): void {
+	protected function afterConnect(): void {
 		// Check if database tables are existing
 		$table_names = array('objects', 'asn1id', 'iri', 'ra', 'config');
 		foreach ($table_names as $tablename) {
-			if (!$this->query("DESCRIBE ".OIDPLUS_TABLENAME_PREFIX.$tablename)) {
-				if ($html) {
+			try {
+				$this->query("select 0 from ".OIDPLUS_TABLENAME_PREFIX.$tablename." where 1=0");
+			} catch (Exception $e) {
+				if ($this->html) {
 					echo '<h1>Error</h1><p>Table <b>'.OIDPLUS_TABLENAME_PREFIX.$tablename.'</b> does not exist.</p>';
-					if (is_dir(__DIR__.'/../../../setup')) {
-						echo '<p>Please run <a href="setup/">setup</a> again.</p>';
+					if (is_dir(__DIR__.'/../../setup')) {
+						echo '<p>Please run <a href="'.OIDplus::getSystemUrl().'setup/">setup</a> again.</p>';
 					}
 				} else {
 					echo 'Error: Table '.OIDPLUS_TABLENAME_PREFIX.$tablename.' does not exist.';
-					if (is_dir(__DIR__.'/../../../setup')) {
+					if (is_dir(__DIR__.'/../../setup')) {
 						echo ' Please run setup again.';
 					}
 				}
@@ -86,8 +89,26 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 		}
 	}
 
+	protected function showConnectError($message): void {
+		if ($this->html) {
+			echo "<h1>Error</h1><p>Database connection failed! (".$this->error().")</p>";
+			if (is_dir(__DIR__.'/../../setup')) {
+				echo '<p>If you believe that the login credentials are wrong, please run <a href="'.OIDplus::getSystemUrl().'setup/">setup</a> again.</p>';
+			}
+		} else {
+			echo "Error: Database connection failed! (".$this->error().")";
+			if (is_dir(__DIR__.'/../../setup')) {
+				echo ' If you believe that the login credentials are wrong, please run setup again.';
+			}
+		}
+	}
+
 	public function isConnected(): bool {
 		return $this->connected;
+	}
+
+	public function init($html = true): void {
+		$this->html = $html;
 	}
 }
 

@@ -42,7 +42,7 @@ class OIDplusPageAdminColors extends OIDplusPagePlugin {
 			$handled = true;
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
-				die(json_encode(array("error" => 'You need to log in as administrator.')));
+				throw new Exception('You need to log in as administrator.');
 			}
 
 			OIDplus::config()->setValue('color_hue_shift', $_POST['hue_shift']);

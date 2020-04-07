@@ -50,11 +50,11 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 			if ($res->num_rows() > 0) {
-				die(json_encode(array("error" => 'This email address already exists.'))); // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
+				throw new Exception('This email address already exists.'); // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
 			}
 
 			if (!oidplus_valid_email($email)) {
-				die(json_encode(array("error" => 'Invalid email address')));
+				throw new Exception('Invalid email address');
 			}
 
 			if (RECAPTCHA_ENABLED) {
@@ -63,7 +63,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					die(json_encode(array("error" => 'Captcha wrong')));
+					throw new Exception('Captcha wrong');
 				}
 			}
 
@@ -98,23 +98,23 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$timestamp = $_POST['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
-				die(json_encode(array("error" => 'Invalid auth key')));
+				throw new Exception('Invalid auth key');
 			}
 
 			if ((OIDplus::config()->getValue('max_ra_invite_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_invite_time'))) {
-				die(json_encode(array("error" => 'Invitation expired!')));
+				throw new Exception('Invitation expired!');
 			}
 
 			if ($password1 !== $password2) {
-				die(json_encode(array("error" => 'Passwords are not equal')));
+				throw new Exception('Passwords are not equal');
 			}
 
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				die(json_encode(array("error" => 'Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength())));
+				throw new Exception('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
 			}
 
 			if (empty($ra_name)) {
-				die(json_encode(array("error" => 'Please enter your personal name or the name of your group.')));
+				throw new Exception('Please enter your personal name or the name of your group.');
 			}
 
 			// 1. step: Add the RA to the database
@@ -140,9 +140,11 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 
 			if (empty($title)) $title = $ra_name;
 
-			if (!OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, 0, now())", array('oid:'.$new_oid, $email, 'oid:'.OIDplus::config()->getValue('freeoid_root_oid'), $title, $description))) {
+			try {
+				OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, 0, now())", array('oid:'.$new_oid, $email, 'oid:'.OIDplus::config()->getValue('freeoid_root_oid'), $title, $description));
+			} catch (Exception $e) {
 				$ra->delete();
-				die(json_encode(array("error" => OIDplus::db()->error())));
+				throw $e;
 			}
 
 			// Send delegation report email to admin

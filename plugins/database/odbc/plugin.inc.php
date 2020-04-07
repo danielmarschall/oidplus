@@ -82,18 +82,20 @@ class OIDplusDataBasePluginODBC extends OIDplusDataBasePlugin {
 
 	public function insert_id(): int {
 		try {
-			$res = $this->query("SELECT LAST_INSERT_ID AS ID"); // MySQL
+			$res = $this->query("SELECT LAST_INSERT_ID() AS ID"); // MySQL
 		} catch (Exception $e) {
-			$res = null;
+			try {
+				$res = $this->query("SELECT SCOPE_IDENTITY() AS ID"); // Microsoft SQL Server
+			} catch (Exception $e) {
+				try {
+					$res = $this->query("SELECT LASTVAL() AS ID"); // PostgreSQL
+				} catch (Exception $e) {
+					$res = null;
+					// return 0;
+					throw new Exception("Cannot determine the last inserted ID. The DBMS is probably not supported.");
+				}
+			}
 		}
-
-		try {
-			if (!$res) $res = $this->query("SELECT @@IDENTITY AS ID"); // MS SQL
-		} catch (Exception $e) {
-			$res = null;
-		}
-
-		if (!$res) return 0;
 
 		$row = $res->fetch_array();
 		return (int)$row['ID'];
@@ -103,27 +105,12 @@ class OIDplusDataBasePluginODBC extends OIDplusDataBasePlugin {
 		return odbc_errormsg($this->odbc);
 	}
 
-	private $html = null;
-	public function init($html = true): void {
-		$this->html = $html;
-	}
-
 	public function connect(): void {
 		// Try connecting to the database
 		$this->odbc = @odbc_connect(OIDPLUS_ODBC_DSN, OIDPLUS_ODBC_USERNAME, base64_decode(OIDPLUS_ODBC_PASSWORD));
 
 		if (!$this->odbc) {
-			if ($this->html) {
-				echo "<h1>Error</h1><p>Database connection failed! (".odbc_errormsg().")</p>";
-				if (is_dir(__DIR__.'/../../../setup')) {
-					echo '<p>If you believe that the login credentials are wrong, please run <a href="setup/">setup</a> again.</p>';
-				}
-			} else {
-				echo "Error: Database connection failed! (".odbc_errormsg().")";
-				if (is_dir(__DIR__.'/../../../setup')) {
-					echo ' If you believe that the login credentials are wrong, please run setup again.';
-				}
-			}
+			parent::showConnectError(odbc_errormsg());
 			die();
 		}
 
@@ -131,7 +118,7 @@ class OIDplusDataBasePluginODBC extends OIDplusDataBasePlugin {
 			$this->query("SET NAMES 'utf8'"); // Does most likely NOT work with ODBC. Try adding ";CHARSET=UTF8" (or similar) to the DSN
 		} catch (Exception $e) {
 		}
-		$this->afterConnect($this->html);
+		$this->afterConnect();
 		$this->connected = true;
 	}
 
