@@ -215,7 +215,9 @@ class OIDplusGui {
 
 		$out = '<script>
 				tinymce.remove("#'.$name.'");
+				tinymce.EditorManager.baseURL = "3p/tinymce";
 				tinymce.init({
+					document_base_url: "'.OIDplus::getSystemUrl().'",
 					selector: "#'.$name.'",
 					height: 200,
 					statusbar: false,
@@ -230,7 +232,6 @@ class OIDplusGui {
 					}
 
 				});
-				tinymce.EditorManager.baseURL = "'.OIDplus::getSystemUrl().'3p/tinymce";
 			</script>';
 
 		$content = htmlentities($content); // For some reason, if we want to display the text "<xyz>" in TinyMCE, we need to double-encode things! &lt; will not be accepted, we need &amp;lt; ... why?
