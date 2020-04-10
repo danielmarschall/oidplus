@@ -157,8 +157,8 @@ try {
 				}
 			} while (true);
 		}
-		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known = '0' and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
-		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri    where well_known = '0' and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
+		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known = '0' and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%')");
+		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri    where well_known = '0' and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%')");
 
 		echo json_encode(array("status" => 0));
 	}
