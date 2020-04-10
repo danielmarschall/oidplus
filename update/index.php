@@ -22,8 +22,9 @@ declare(ticks=1);
 set_time_limit(0);
 
 if (!file_exists(__DIR__ . '/../includes/config.inc.php')) {
+	// We need to do this, because we don't want to use OIDplus::init() in this updater (it should be independent as much as possible)
 	header('location:../setup/');
-	die();
+	die('Redirecting to setup...');
 }
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';

@@ -39,8 +39,7 @@ if (php_sapi_name() == 'cli') {
 } else {
 	if (!isset($_REQUEST['query'])) {
 		http_response_code(400);
-		echo "Argument 'query' is missing\n";
-		die();
+		die("<h1>Error</h1><p>Argument 'query' is missing<p>");
 	}
 	$query = $_REQUEST['query'];
 }

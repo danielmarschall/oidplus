@@ -22,7 +22,7 @@
 // ourselves) and also allows us to be conform with the GDPR, since the IP address / referrer is
 // not transferred to metafloor.com
 
-if (!isset($_GET['number'])) die();
+if (!isset($_GET['number'])) die("Argument 'number' is missing");
 
 $number = $_GET['number'];
 $number = preg_replace("/[^0-9]/", "", $number);

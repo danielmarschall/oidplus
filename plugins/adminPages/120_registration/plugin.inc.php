@@ -310,7 +310,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 					} else {
 						header('Location:plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/registration.php');
 					}
-					die();
+					die('Redirecting to registration wizard...');
 				}
 			}
 		} else {

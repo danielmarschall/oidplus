@@ -21,6 +21,29 @@ header('Content-Type:text/html; charset=UTF-8');
 
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
+set_exception_handler('html_exception_handler');
+function html_exception_handler($exception) {
+	if ($exception instanceof OIDplusConfigInitializationException) {
+		echo "<h1>OIDplus initialization error</h1>";
+		echo '<p>'.htmlentities($exception->getMessage()).'</p>';
+		echo '<p>Please check <b>includes/config.inc.php</b>';
+		if (is_dir(__DIR__ . '/setup')) {
+			echo ' or run <a href="'.OIDplus::getSystemUrl().'setup/">setup</a> again';
+		}
+		echo '</p>';
+	} else {
+		echo "<h1>OIDplus error</h1>";
+		echo '<p>'.htmlentities($exception->getMessage()).'</p>';
+		echo '<p><b>Technical information about the problem:</b></p>';
+		echo '<pre>';
+		echo get_class($exception)."\n";
+		echo 'at '.$exception->getFile().'('.$exception->getLine().")\n";
+		echo "Stacktrace:\n";
+		echo $exception->getTraceAsString();
+		echo '</pre>';
+	}
+}
+
 ob_start(); // allow cookie headers to be sent
 
 OIDplus::init(true);

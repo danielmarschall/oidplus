@@ -91,12 +91,7 @@ class OIDplus {
 
 	public static function db() {
 		if (!isset(self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN])) {
-			if (self::$html) {
-				echo "<h1>Error</h1><p>Database plugin '".htmlentities(OIDPLUS_DATABASE_PLUGIN)."' not found.</p><p>Please check config.inc.php or run <a href=\"".OIDplus::getSystemUrl()."setup/\">setup</a> again.</p>";
-			} else {
-				echo "ERROR: Database plugin '".OIDPLUS_DATABASE_PLUGIN."' not found. Please check config.inc.php or run setup again.\n";
-			}
-			die();
+			throw new OIDplusConfigInitializationException("Database plugin '".OIDPLUS_DATABASE_PLUGIN."' not found");
 		}
 		$obj = self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN];
 		if (!$obj->isConnected()) $obj->connect();
@@ -159,7 +154,7 @@ class OIDplus {
 	private static function registerObjectType($ot) {
 		$ns = $ot::ns();
 
-		if (empty($ns)) die("Attention: Empty NS at $ot\n");
+		if (empty($ns)) throw new Exception("Attention: Empty NS at $ot\n");
 
 		$ns_found = false;
 		foreach (array_merge(OIDplus::getEnabledObjectTypes(), OIDplus::getDisabledObjectTypes()) as $test_ot) {
@@ -262,16 +257,17 @@ class OIDplus {
 		if (file_exists(__DIR__ . '/../config.inc.php')) {
 			include_once __DIR__ . '/../config.inc.php';
 		} else {
-			if ($html) {
-				if (!is_dir(__DIR__.'/../../setup')) {
-					echo 'Error: Setup directory missing.';
-				} else {
-					header('Location:'.OIDplus::getSystemUrl().'setup/');
-				}
+			if (!is_dir(__DIR__.'/../../setup')) {
+				throw new OIDplusConfigInitializationException('File includes/config.inc.php is missing, but setup can\'t be started because its directory missing.');
 			} else {
-				echo 'Error: Setup directory missing!';
+				if ($html) {
+					header('Location:'.OIDplus::getSystemUrl().'setup/');
+					die('Redirecting to setup...');
+				} else {
+					// This can be displayed in e.g. ajax.php
+					throw new OIDplusConfigInitializationException('File includes/config.inc.php is missing. Please run setup again.');
+				}
 			}
-			die();
 		}
 
 		// Auto-fill non-existing config values, so that there won't be any PHP errors
@@ -294,12 +290,7 @@ class OIDplus {
 		// Check version of the config file
 
 		if (OIDPLUS_CONFIG_VERSION != 2.0) {
-			if ($html) {
-				echo '<h1>Error</h1><p>The information located in <b>includes/config.inc.php</b> is outdated.</p><p>Please run <a href="'.OIDplus::getSystemUrl().'setup/">setup</a> again.</p>';
-			} else {
-				echo 'The information located in includes/config.inc.php is outdated. Please run setup again.';
-			}
-			die();
+			throw new OIDplusConfigInitializationException("The information located in includes/config.inc.php is outdated.");
 		}
 
 		// Register database types (highest priority)
@@ -548,7 +539,7 @@ class OIDplus {
 			} else {
 				$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 				header('Location:'.$location);
-				die('Redirect to HTTPS');
+				die('Redirecting to HTTPS...');
 				self::$sslAvailableCache = true;
 				return true;
 			}
@@ -569,7 +560,7 @@ class OIDplus {
 						// HTTPS was detected before, but we are HTTP. Redirect now
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
-						die('Redirect to HTTPS');
+						die('Redirecting to HTTPS...');
 						self::$sslAvailableCache = true;
 						return true;
 					} else {
@@ -584,7 +575,7 @@ class OIDplus {
 						setcookie('SSL_CHECK', '1', 0, $cookie_path, '', false, true);
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
-						die('Redirect to HTTPS');
+						die('Redirecting to HTTPS...');
 						self::$sslAvailableCache = true;
 						return true;
 					} else {

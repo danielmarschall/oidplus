@@ -12,13 +12,6 @@ RECENT STUFF
 - In plugins, we even see things like this:
 	plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/page_pictogram.png
 	=> This is very ugly! We need a function like this:  OIDplus::getRelativeWebDir(__DIR__) which outputs: plugin/...../page_pictogram.png
-- When a DB connection fails or if setup must be run again, it is not so good that the "die()" command is executed.
-	If it happens in ajax.php, we have a problem because then the HTTP response is not valid JSON
-	=> We need a new exception type "SetupRequiredException"
-		index.php will catch this exception and show a nice HTML message with setup link etc.
-		webwhois will catch this exception and show a plaintext message
-		ajax.php don't need to catch it, since it already catches all Exception-objects
-	=> We should remove "die()" whenever possible, because it is very unflexible
 
 WHOIS
 - webwhois: beside TXT/XML/JSON more output modi?  CSV, S/MIME  (and add the S/MIME keypurpose to the X.509 certificates)
@@ -35,6 +28,7 @@ OOBE/SETUP
 - There should be a "test database connection" button
 
 SMALL THINGS
+- We should remove "die()" whenever possible, because it is very unflexible
 - offer signature checker tool to verify WHOIS responses
 - web svn updater: "black list" (do not overwrite specific files like favicon.ico)
 - minimum-aufklappstufen fuer alle objekte und plugins einstellbar machen, sodass z.b. alle OIDs immer bis zur stufe 2 aufgeklappt sind, wenn man OIDplus frisch öffnet

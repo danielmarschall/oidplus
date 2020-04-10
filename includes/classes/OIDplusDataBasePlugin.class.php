@@ -89,18 +89,7 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 			try {
 				$this->query("select 0 from ".OIDPLUS_TABLENAME_PREFIX.$tablename." where 1=0");
 			} catch (Exception $e) {
-				if ($this->html) {
-					echo '<h1>Error</h1><p>Table <b>'.OIDPLUS_TABLENAME_PREFIX.$tablename.'</b> does not exist.</p>';
-					if (is_dir(__DIR__.'/../../setup')) {
-						echo '<p>Please run <a href="'.OIDplus::getSystemUrl().'setup/">setup</a> again.</p>';
-					}
-				} else {
-					echo 'Error: Table '.OIDPLUS_TABLENAME_PREFIX.$tablename.' does not exist.';
-					if (is_dir(__DIR__.'/../../setup')) {
-						echo ' Please run setup again.';
-					}
-				}
-				die();
+				throw new OIDplusConfigInitializationException('Table '.OIDPLUS_TABLENAME_PREFIX.$tablename.' is missing!');
 			}
 		}
 
@@ -111,18 +100,7 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 		$row = $res->fetch_array();
 		
 		if ($row == null) {
-			if ($this->html) {
-				echo '<h1>Error</h1><p>Cannot determine database version (config table).</p>';
-				if (is_dir(__DIR__.'/../../setup')) {
-					echo '<p>Please run <a href="'.OIDplus::getSystemUrl().'setup/">setup</a> again.</p>';
-				}
-			} else {
-				echo 'Error: Cannot determine database version (config table).';
-				if (is_dir(__DIR__.'/../../setup')) {
-					echo ' Please run setup again.';
-				}
-			}
-			die();
+			throw new OIDplusConfigInitializationException('Cannot determine database version (the entry "database_version" inside the table "'.OIDPLUS_TABLENAME_PREFIX.'config" is probably missing)');
 		}
 		
 		$version = $row['value'];
@@ -191,17 +169,7 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 	}
 
 	protected function showConnectError($message): void {
-		if ($this->html) {
-			echo "<h1>Error</h1><p>Database connection failed! (".$message.")</p>";
-			if (is_dir(__DIR__.'/../../setup')) {
-				echo '<p>If you believe that the login credentials are wrong, please run <a href="'.OIDplus::getSystemUrl().'setup/">setup</a> again.</p>';
-			}
-		} else {
-			echo "Error: Database connection failed! (".$message.")";
-			if (is_dir(__DIR__.'/../../setup')) {
-				echo ' If you believe that the login credentials are wrong, please run setup again.';
-			}
-		}
+		throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
 	}
 
 	public function isConnected(): bool {
