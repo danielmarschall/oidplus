@@ -1,8 +1,8 @@
 #!/usr/bin/php
 <?php
 
-// This script generates a part of ../setup/sql/wellknown_country.sql , based on Country OIDs at oid-info.com
-// If new countries are added to the ISO / ITU arcs, please re-run this script and update ../setup/sql/wellknown_country.sql accordingly
+// This script generates a part of ../setup/sql/wellknown_country_mysql.sql , based on Country OIDs at oid-info.com
+// If new countries are added to the ISO / ITU arcs, please re-run this script and update ../setup/sql/wellknown_country_mysql.sql accordingly
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
@@ -19,7 +19,7 @@ $cont = file_get_contents('http://oid-info.com/get/1.2', false, $context).
 preg_match_all('@<option value="https{0,1}://(www.){0,1}oid-info.com/get/([^"]+)">(..)\(.+\)</option>@ismU', $cont, $m, PREG_SET_ORDER);
 
 echo "-- Country OIDs\n";
-echo "-- Use the tool dev/country_getter.phps to generate these lines\n";
+echo "-- Use the tool dev/generate_wellknown_country_mysql to generate this file\n";
 echo "\n";
 
 $check_sum = '';
@@ -28,17 +28,17 @@ foreach ($m as $n) {
 
 	if (strpos($n[2], '2.49.0.0') === 0) {
 		// WMO Country OIDs (does not assign Unicode labels), 2.49.0.0
-		echo "INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:$n[2]', '$n[3]', 1);\n";
+		echo "INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:$n[2]', '$n[3]', '0', '1');\n";
 
 		// Country-Msg, 2.49.0.1
 		$n[2] = str_replace('2.49.0.0', '2.49.0.1', $n[2]);
-		echo "INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:$n[2]', '$n[3]', 1);\n";
+		echo "INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:$n[2]', '$n[3]', '0', '1');\n";
 	} else {
 		// ISO or Joint-ISO-ITU-T OID Countries (1.2 and 2.16)
-		echo "INSERT INTO `asn1id` (oid, name, well_known) VALUES ('oid:$n[2]', '$n[3]', 1);\n";
-		echo "INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:$n[2]', '".strtoupper($n[3])."', 0, 1);\n";
+		echo "INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:$n[2]', '$n[3]', '0', '1');\n";
+		echo "INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:$n[2]', '".strtoupper($n[3])."', '0', '1');\n";
 	}
 }
 
 echo "\n";
-echo '-- Generator generate_wellknown_country checksum '.dechex(crc32($check_sum))."\n";
+echo '-- Generator "generate_wellknown_country_mysql" checksum '.dechex(crc32($check_sum))."\n";

@@ -19,6 +19,6 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusAuthPlugin extends OIDplusPlugin {
-	public function verify($authKey, $salt, $check_password) {}
+abstract class OIDplusAuthPlugin extends OIDplusPlugin {
+	public abstract function verify($authKey, $salt, $check_password);
 }

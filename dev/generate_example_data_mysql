@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Export tables "demo_*" into file setup/sql/example_mysql.sql
+# We don't print to console because of encoding issues
+mysqldump --default-character-set=utf8 --no-create-info --extended-insert=FALSE oidplus demo_iri demo_asn1id demo_ra demo_objects -r ../setup/sql/example_mysql.sql
+
+# Remove database prefix
+sed -i 's/`demo_/`/g' ../setup/sql/example_mysql.sql
+
+# Avoid that there is a conflict with well known IDs (e.g. 2.999)
+sed -i 's/INSERT INTO `iri`/INSERT IGNORE INTO `iri`/g' ../setup/sql/example_mysql.sql
+sed -i 's/INSERT INTO `asn1id`/INSERT IGNORE INTO `asn1id`/g' ../setup/sql/example_mysql.sql

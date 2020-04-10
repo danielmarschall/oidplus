@@ -134,7 +134,7 @@ if ($continue) {
 				$out[] = 'identifier: ' . $row2->name;
 			}
 
-			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where standardized = 1 and oid = ?", array($row->id));
+			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where standardized = ? and oid = ?", array(true, $row->id));
 			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'standardized-id: ' . $row2->name;
 			}
@@ -144,7 +144,7 @@ if ($continue) {
 				$out[] = 'unicode-label: ' . $row2->name;
 			}
 
-			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where longarc = 1 and oid = ?", array($row->id));
+			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where longarc = ? and oid = ?", array(true, $row->id));
 			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'long-arc: ' . $row2->name;
 			}
@@ -238,7 +238,7 @@ if ($format == 'txt') {
 
 	if (OIDplus::getPkiStatus(true)) {
 		$signature = '';
-		if (openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 			$signature = base64_encode($signature);
 			$signature = wordwrap($signature, 80, "\n", true);
 
@@ -278,7 +278,7 @@ if ($format == 'json') {
 	if (OIDplus::getPkiStatus(true)) {
 		$cont = json_encode($ary);
 		$signature = '';
-		if (openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 			$signature = base64_encode($signature);
 			$ary['signature'] = array('content' => $cont, 'signature' => $signature);
 		}
@@ -303,7 +303,7 @@ if ($format == 'xml') {
 	if (OIDplus::getPkiStatus(true)) {
 		$cont = $xml;
 		$signature = '';
-		if (openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 			$signature = base64_encode($signature);
 			$xml .= "<signature><content>".htmlspecialchars($cont)."</content><signature>".htmlspecialchars($signature)."</signature></signature>";
 		}

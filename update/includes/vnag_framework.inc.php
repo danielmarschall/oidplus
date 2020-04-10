@@ -1,32 +1,32 @@
 <?php /* <ViaThinkSoftSignature>
-Ry2GSL8Q16B8ytPv1LExFhPnZ/J0l8wraAlsDf+DyesnAobgPpfA5R7iP4r3Rigdu
-lFqTnRVRqQCWnqWd6pcRJSgvShSDw7sfIMWP8pg7KKcFlfdx0iZx0Tb7FmHPF4xg6
-OyVue0SgAtQ0qGNBAnE7QSrhScTeZs+bXHO33l+iaJuF1kjA5QELiMtNXjCBr9Sw3
-mcW4oPwc/H1yucGul+N0Wao0OpnZua9ai8afTD23K2ughXU+z/CmDNHcUWhthK7Xn
-T35siXU5uf3Bys2L3raQnaFIGtGTnenNdGKBh+SIHq6uch4YwPEow3waxV2P8HTTO
-lIaeqwQ4oSrCOGMGwuDYgOuX7OueBhvfng5TA7EZ3Q09PSx5t6rEl6Op1P6aXRv8d
-Q4ezHNwucHJPi/JaCzH0Qt4Sj5W4zUKAqdNBtSfRuyIpWi3fJx0bmWoqWy9ufyZ87
-4N0U5XbZOuz6AlCWfFkeOvFqEFT5l7JPUT4PJf1w2/+4uZvRR6JRtlgDy7Csh8LhC
-ARLKDQv4hrRD/p9bIUR3NmpA0EdKD9ybSm8IhkMXxrQkZLP2Ykoc636OQxy1L1qsx
-D49lwQ6MiIe0QKJwNIqrLQWZP+zIGakopg/2abs7S46nrJOOYc8X5kcaEk0GWO2yR
-Nuo0hWdLIaGwoLmfrLOnb1TQV5X/ivP+w/yEnFK08gZ5z2XKJ2Pp2FJfMdihfOWa+
-V7qjFtrrgnEXILsbKK9Vnh6fDq4vL/8EAdkYRfKU4Fu5Rdv1UdeSKGZIorW+IG8nO
-r3VVv6pwDA/heiudcAd5dBsALBQplqFh22RlwtyyHD6wgDhjEyGnMsIsG/V8GqS3d
-Q+H3RfCOdbIl6UzTS9RVgnwiWgpXX4Bvffzo2Re9GKRu+OqT9gXulkYD3tVvVqjt6
-FUFt6sO//PZT1SLfNDGwuxqx8+OMnKQ6PX6F+8tr6tmMwQIS1ZakHq0srVsfF1yUa
-ubX1tshGusLVtgL/y7ZPCXizuMSdN3SZ15YuBJivPCaUSY9R3XUV8QvqKUIRnfC6w
-g3ud8TExKfd+jL4ikOHcBBh7STq4c7AM3S3i6OqhW/B/mG9rZx8PR0JUlzc+HVD+i
-fCUTQKLsDFwUnPsw0vepmR03GRF0xsetGKmQE6eLCrcMUSl8HujehhAm2587JCFBl
-ZqfZPn98kCtxHwak0RORN69/0ciovEh8HaG79Na1m41M3XvH20eqKt2an+xK6HeeX
-h0P9KJyDV45vkgtETbl1EG92Otttdo2NXSsLovHhxbrJP1vQ3dhIoOw3zztmZdaTo
-U3HAJ0XCRwTj1H4KzsPVjvZ7628YX8d5eCcea0wNroa3pBWhEXgC6n7gUO9mXaiWm
-g==
+NaPwmsdxevoUCRUvsIGaPelbEBiAfbM7gA3D2K5jlIgbWKWA25LiHdgmsp3s6/b78
+Oo/te1cJG+X3aGZWNy+0X23FcwngkqrYfh/Vt+LcLN2+qVrUPqM9grCLqOXvbYzrN
+pl3Emp+LPT2FaaPu2HB3HGsszXWAh/yg5PoV1TuF7zZS5sEsZ6u2thSlY1SwMKu+R
+0fWGb9DFX/xJYmoM3Z5ZGMEjMQwjSr9+etCXO738A7SxqbptquziYryaXFmUdos4r
+xM5VXa/OvXqFvoQo1dHH6m+aq8hdN2ol230+neuWULEJsx37jH4FVLOgE5rmkK5BI
+8D+9fHCzqpAhlg7FN0S5dq+bMQ1Cl8egbSvOtM7l3qNKWY6sBjtKiJifmO8cKY6IA
+mrs0lOsr7rCMoyx9P0TEgwH4u4i/PLV5pNiKvup+LWvicqkmasNAWVdlHXO8iZ4RJ
+8oqk+XvXbLVzgd++7lfRjU9cSGIRCK+HrbTRKErGK4Jk4wN7vHw94q2l4EId4UFni
+n4yy6I1Ep6ibqDPHvTJ729n3HJtIhNSPffLaeJYE67Pptz3OHU3IlDzBs7Mn2cktZ
+zI4JZjXD3qRvP6QxPETzSn7w4hqIzJkJtbWBF7TdiYZIYoCUhO34OV80MeZUN5lfO
+mTB2fD0iTtP2lc2bQQtlYYya8oi5zmgE3mFSUkNZeBflAdRiUNfhfbfeawfBW6TBM
+Q33bJcKu4PSDnkgHfwHMzmeuvCI8XKzL6OhG2I8uvZhF2/7q6hfh8bQdKBMH7yOjv
+SO0g34dNwTGZVovtj5MrfbtlcVhoSaJq4S+NA9eAa4m5rBLa8MIgPIcGivBkNiBoD
+wxuiEmvfY+zyffr9OfuTQMwKxU1iGYCfZJh9W+XqRIFrCkfU0IWCZKdKsZ6f/Usck
+WqnVa+TMm6WNCpb6BxqWt4JJO6BZN2NIjhbvLOEPUN9D5niYu0R/w0hhVrKmTobHG
+xdhLrfkmJ88nNNRjoCsqIpByuClfsp5o4h66bkSyOQ8RDKfkOtx+bU1KWek2MAEFh
+873MNHFmtnadWgwe+GjXJb1jUS8w+eTq/X53b07uvShwri13HobMYeKmJEawHIRDE
+6Tf4z+M8dBiBGDAISG4cFlp3dBjVkLC1uxv39yJ4CfL0flMBOzEZ4dydBxs51uI9Z
+StB/4nKpVJ+KARV8ERdnOCnZINAD2YsfE3Kc4MLPT9WmSRxKgJQ2NmyjlD7/sMXBH
+0t/YW70Zy/A0WB74GAyhfMQgwMWIi4bfTsG+k7UUefWzt6fVtuLlY02GZ+brq45HX
+f5h551C4dKMSHSAmBEqRUr7JmOlJr9QU1Aim79Q6eBF6y3KJ2P0oU1Ym1Ev5EgOSE
+w==
 </ViaThinkSoftSignature> */ ?>
 <?php
 
 /*
 
-      VNag - Nagios Framework for PHP                  (C) 2014-2019
+      VNag - Nagios Framework for PHP                  (C) 2014-2020
       __     ___      _____ _     _       _     ____         __ _
       \ \   / (_) __ |_   _| |__ (_)_ __ | | __/ ___|  ___  / _| |_
        \ \ / /| |/ _` || | | '_ \| | '_ \| |/ /\___ \ / _ \| |_| __|
@@ -35,7 +35,7 @@ g==
 
       Developed by Daniel Marschall             www.viathinksoft.com
       Licensed under the terms of the Apache 2.0 license
-      Revision 2019-11-12
+      Revision 2020-04-10
 
 */
 
@@ -1121,10 +1121,11 @@ abstract class VNag {
 				throw new VNagPrivateKeyException(sprintf(VNagLang::$privkey_file_not_readable, $this->privkey));
 			}
 
-			openssl_sign($payload, $signature, $pkeyid, $this->sign_algo);
-			openssl_free_key($pkeyid);
+			if (@openssl_sign($payload, $signature, $pkeyid, $this->sign_algo)) {
+				openssl_free_key($pkeyid);
 
-			$dataset['signature'] = base64_encode($signature);
+				$dataset['signature'] = base64_encode($signature);
+			}
 		}
 
 		if (!is_null($this->password_out)) {

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Export tables "demo_*" into file setup/sql/example_mssql.sql
+# We don't print to console because of encoding issues
+mysqldump --default-character-set=utf8 --no-create-info --extended-insert=FALSE oidplus demo_iri demo_asn1id demo_ra demo_objects -r ../setup/sql/example_mssql.sql
+
+# Remove database prefix
+sed -i 's/`demo_/`/g' ../setup/sql/example_mssql.sql
+
+# Avoid that there is a conflict with well known IDs (e.g. 2.999)
+#sed -i 's/INSERT INTO `iri`/INSERT IGNORE INTO `iri`/g' ../setup/sql/example_mssql.sql
+#sed -i 's/INSERT INTO `asn1id`/INSERT IGNORE INTO `asn1id`/g' ../setup/sql/example_mssql.sql
+
+# Change `backticks` to [brackets]
+sed -iE 's/`\([^`]\+\)`/\[\1\]/g' ../setup/sql/example_mssql.sql
+
+# Change "\n" to "' + CHAR(13) + '"
+sed -i "s/\\\n/' \+ CHAR(13) \+ '/g" ../setup/sql/example_mssql.sql
+
+# Prepend "SET DATEFORMAT ymd;"
+echo "SET DATEFORMAT ymd;" > tmp
+echo "" >> tmp
+cat ../setup/sql/example_mssql.sql >> tmp
+cat tmp > ../setup/sql/example_mssql.sql
+rm tmp

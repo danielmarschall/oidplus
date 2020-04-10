@@ -1386,7 +1386,7 @@ class http_class
 			curl_setopt($this->connection,CURLOPT_CUSTOMREQUEST,$request);
 			if($this->debug)
 				$this->OutputDebug("C ".$request);
-			if(!($success=(strlen($this->response=curl_exec($this->connection))!=0)))
+			if(!($success=(strlen($this->response=@curl_exec($this->connection))!=0)))
 			{
 				$error=curl_error($this->connection);
 				$this->SetError("Could not execute the request".(strlen($error) ? ": ".$error : ""), HTTP_CLIENT_ERROR_PROTOCOL_FAILURE);

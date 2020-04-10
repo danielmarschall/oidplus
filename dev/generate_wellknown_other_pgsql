@@ -1,9 +1,10 @@
 #!/usr/bin/php
--- This file (wellknown_other.sql) contains ASN.1 and IRI names of OIDs which are either
+-- This file (wellknown_other_pgsql.sql) contains ASN.1 and IRI names of OIDs which are either
 -- a) Root OIDs
 -- b) Unicode labels which are long arcs
 -- c) Standardized ASN.1 identifiers
 -- d) OIDs where potential users of this software can register OIDs in these arcs (e.g. an "identified organization" arc)
+-- Use the tool dev/generate_wellknown_other_pgsql to generate this file
 
 <?php
 
@@ -44,26 +45,30 @@ function _process_oid($oid) {
                 $output[$oid] = array();
 		$output[$oid]['asn1id'] = array();
 		$output[$oid]['iri'] = array();
+		$output[$oid]['checksum'] = array();
 
 		if (isset($data['oid']['identifier'])) {
 			foreach ($data['oid']['identifier'] as $asn1id) {
-				$std = _is_standardized($oid, $asn1id) ? 1 : 0;
-				$output[$oid]['asn1id'][] = "INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:$oid', '$asn1id', $std, 1);";
+				$output[$oid]['checksum'][] = $oid.'|ASN1|'.$asn1id.'|'.(_is_standardized($oid, $asn1id) ? '1' : '0').'|1||';
+				$std = _is_standardized($oid, $asn1id) ? "true" : "false";
+				$output[$oid]['asn1id'][] = "INSERT INTO \"asn1id\" (oid, name, standardized, well_known) VALUES ('oid:$oid', '$asn1id', $std, true);";
 			}
 		} else {
 			//echo "-- Warning: Has no ASN.1 identifier: $oid\n";
 		}
 		if (isset($data['oid']['unicode-label'])) {
 			foreach ($data['oid']['unicode-label'] as $iri) {
-				$std = _is_long($oid) ? 1 : 0;
+				$output[$oid]['checksum'][] = $oid.'|IRI|'.$iri.'|'.(_is_long($oid) ? '1' : '0').'|1||';
+
+				$std = _is_long($oid) ? "true" : "false";
 
 				if (strpos($iri, '&#') !== false) {
-					$iri = "from_base64('".base64_encode(html_entity_decode($iri, ENT_COMPAT | ENT_HTML401, "UTF-8"))."')";
+					$iri = "convert_from(decode('".base64_encode(html_entity_decode($iri, ENT_COMPAT | ENT_HTML401, "UTF-8"))."', 'base64'), 'utf-8')";
 				} else {
 					$iri = "'$iri'";
 				}
 
-				$output[$oid]['iri'][] = "INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:$oid', $iri, $std, 1);";
+				$output[$oid]['iri'][] = "INSERT INTO \"iri\" (oid, name, longarc, well_known) VALUES ('oid:$oid', $iri, $std, true);";
 			}
 		}
 	}
@@ -188,16 +193,17 @@ foreach ($output as $oid => $data) {
 
 	echo "-- $oid\n";
 	foreach ($data['asn1id'] as $line_asn1) {
-		$check_sum .= $oid.'='.$line_asn1.'/';
 		echo "$line_asn1\n";
 	}
 	foreach ($data['iri'] as $line_iri) {
-		$check_sum .= $oid.'='.$line_iri.'/';
 		echo "$line_iri\n";
+	}
+	foreach ($data['checksum'] as $chunk) {
+		$check_sum .= $chunk;
 	}
 	echo "\n";
 }
-echo '-- Generator "generate_wellknown_other" checksum '.dechex(crc32($check_sum))."\n";
+echo '-- Generator "generate_wellknown_other_pgsql" checksum '.dechex(crc32($check_sum))."\n";
 
 # ---
 

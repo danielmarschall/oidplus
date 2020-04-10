@@ -145,17 +145,20 @@ try {
 		// Delete orphan stuff
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 			do {
-				$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent <> ? and parent like ? and parent not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?)", array($ot::root(), $ot::root().'%', $ot::root().'%'));
+				$res = OIDplus::db()->query("select tchild.id from ".OIDPLUS_TABLENAME_PREFIX."objects tchild " .
+				                            "left join ".OIDPLUS_TABLENAME_PREFIX."objects tparent on tparent.id = tchild.parent " .
+				                            "where tchild.parent <> ? and tchild.id like ? and tparent.id is null;", array($ot::root(), $ot::root().'%'));
+				if ($res->num_rows() == 0) break; // we need to call num_rows() before fetch_array()   [Problem with ODBC/MsSQL]
 
 				while ($row = $res->fetch_array()) {
 					$id_to_delete = $row['id'];
 					OIDplus::logger()->log("OIDRA($id_to_delete)!", "Lost ownership of object '$id_to_delete' because one of the superior objects ('$id') was recursively deleted");
 					OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id_to_delete));
 				}
-			} while ($res->num_rows() > 0);
+			} while (true);
 		}
-		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known <> 1 and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
-		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri    where well_known <> 1 and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
+		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known = '0' and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
+		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri    where well_known = '0' and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%');");
 
 		echo json_encode(array("status" => 0));
 	}
@@ -231,7 +234,12 @@ try {
 
 		$confidential = $_POST['confidential'] == 'true';
 		$comment = $_POST['comment'];
-		OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ?, comment = ?, updated = now() WHERE id = ?", array($confidential ? 1 : 0, $comment, $id));
+		if (OIDplus::db()->slang() == 'mssql') {
+			OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ?, comment = ?, updated = getdate() WHERE id = ?", array($confidential, $comment, $id));
+		} else {
+			// MySQL + PgSQL
+			OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ?, comment = ?, updated = now() WHERE id = ?", array($confidential, $comment, $id));
+		}
 
 		$status = 0;
 
@@ -259,7 +267,12 @@ try {
 
 		OIDplus::logger()->log("OID($id)+OIDRA($id)?/A?", "Title/Description of object '$id' updated");
 
-		OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET title = ?, description = ?, updated = now() WHERE id = ?", array($_POST['title'], $_POST['description'], $id));
+		if (OIDplus::db()->slang() == 'mssql') {
+			OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET title = ?, description = ?, updated = getdate() WHERE id = ?", array($_POST['title'], $_POST['description'], $id));
+		} else {
+			// MySQL + PgSQL
+			OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET title = ?, description = ?, updated = now() WHERE id = ?", array($_POST['title'], $_POST['description'], $id));
+		}
 
 		echo json_encode(array("status" => 0));
 	}
@@ -313,15 +326,23 @@ try {
 		if (!empty($ra_email) && !oidplus_valid_email($ra_email)) {
 			throw new Exception('Invalid RA email address');
 		}
-		$confidential = $_POST['confidential'] == 'true';
 
 		OIDplus::logger()->log("OID($parent)+OID($id)+OIDRA($parent)?/A?", "Object '$id' created, ".(empty($ra_email) ? "without defined RA" : "given to RA '$ra_email'")).", superior object is '$parent'";
 		if (!empty($ra_email)) {
 			OIDplus::logger()->log("RA($ra_email)!", "Gained ownership of newly created object '$id'");
 		}
 
+		$confidential = $_POST['confidential'] == 'true';
 		$comment = $_POST['comment'];
-		OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, comment, created) VALUES (?, ?, ?, ?, ?, now())", array($id, $parent, $ra_email, $confidential ? 1 : 0, $comment));
+		$title = '';
+		$description = '';
+	
+		if (OIDplus::db()->slang() == 'mssql') {
+			OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, getdate(), ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
+		} else {
+			// MySQL + PgSQL
+			OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, now(), ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
+		}
 
 		// Set ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {
@@ -353,16 +374,33 @@ try {
 
 	OIDplus::db()->transaction_commit();
 } catch (Exception $e) {
-	OIDplus::db()->transaction_rollback();
+	try {
+		OIDplus::db()->transaction_rollback();
+	} catch (Exception $e1) {
+	}
+	
 	$ary = array();
 	$ary['error'] = $e->getMessage();
-	echo json_encode($ary);
+	$out = json_encode($ary);
+
+	if ($out === false) {
+		// Some modules (like ODBC) might output non-UTF8 data
+		$ary['error'] = utf8_encode($e->getMessage());
+		$out = json_encode($ary);
+	}
+	
+	die($out);
 }
 
 # ---
 
 function _ra_change_rec($id, $old_ra, $new_ra) {
-	OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set ra_email = ?, updated = now() where id = ? and ifnull(ra_email,'') = ?", array($new_ra, $id, $old_ra));
+	if (OIDplus::db()->slang() == 'mssql') {
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set ra_email = ?, updated = getdate() where id = ? and ifnull(ra_email,'') = ?", array($new_ra, $id, $old_ra));
+	} else {
+		// MySQL + PgSQL
+		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set ra_email = ?, updated = now() where id = ? and ifnull(ra_email,'') = ?", array($new_ra, $id, $old_ra));
+	}
 
 	$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ? and ifnull(ra_email,'') = ?", array($id, $old_ra));
 	while ($row = $res->fetch_array()) {

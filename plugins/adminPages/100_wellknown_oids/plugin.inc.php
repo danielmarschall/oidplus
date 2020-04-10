@@ -69,7 +69,7 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePlugin {
 				$out['text'] .= '	     <th>IRI identifiers (comma sep.)</th>';
 				$out['text'] .= '	</tr>';
 
-				$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known = 1 union select oid from ".OIDPLUS_TABLENAME_PREFIX."iri where well_known = 1 order by ".OIDplus::db()->natOrder('oid'));
+				$res = OIDplus::db()->query("select a.oid from (select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known = '1' union select oid from ".OIDPLUS_TABLENAME_PREFIX."iri where well_known = '1') a order by ".OIDplus::db()->natOrder('oid'));
 				while ($row = $res->fetch_array()) {
 					$asn1ids = array();
 					$res2 = OIDplus::db()->query("select name, standardized from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($row['oid']));

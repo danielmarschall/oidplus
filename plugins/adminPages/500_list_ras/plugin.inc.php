@@ -51,11 +51,19 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 
 	private function get_ralist() {
 		$tmp = array();
-		$res = OIDplus::db()->query("select distinct BINARY(email) as email from ".OIDPLUS_TABLENAME_PREFIX."ra"); // "binary" because we want to ensure that 'distinct' is case sensitive
+		if (OIDplus::db()->slang() == 'mysql') {
+			$res = OIDplus::db()->query("select distinct BINARY(email) as email from ".OIDPLUS_TABLENAME_PREFIX."ra"); // "binary" because we want to ensure that 'distinct' is case sensitive
+		} else {
+			$res = OIDplus::db()->query("select distinct email as email from ".OIDPLUS_TABLENAME_PREFIX."ra"); // distinct in PGSQL is always case sensitive
+		}
 		while ($row = $res->fetch_array()) {
 			$tmp[$row['email']] = 1;
 		}
-		$res = OIDplus::db()->query("select distinct BINARY(ra_email) as ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects");
+		if (OIDplus::db()->slang() == 'mysql') {
+			$res = OIDplus::db()->query("select distinct BINARY(ra_email) as ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects");
+		} else {
+			$res = OIDplus::db()->query("select distinct ra_email as ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects");
+		}
 		while ($row = $res->fetch_array()) {
 			if (!isset($tmp[$row['ra_email']])) {
 				$tmp[$row['ra_email']] = 0;
@@ -81,6 +89,10 @@ class OIDplusPageAdminListRAs extends OIDplusPagePlugin {
 				$out['text'] = '';
 
 				$tmp = $this->get_ralist();
+				
+				if (count($tmp) == 0) {
+					$out['text'] .= '<p>Currently there are no Registration Authorities.</p>';
+				}
 
 				foreach ($tmp as $ra_email => $registered) {
 					if (empty($ra_email)) {

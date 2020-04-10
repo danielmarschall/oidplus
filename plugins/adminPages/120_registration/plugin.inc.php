@@ -67,16 +67,17 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
-				$out['text'] = file_get_contents(__DIR__ . '/info.tpl').
-				               '<p><input type="button" onclick="openOidInPanel(\'oidplus:srvreg_status\');" value="Check status of the registration and collected data"></p>';
-
-				if (defined('REGISTRATION_HIDE_SYSTEM') && REGISTRATION_HIDE_SYSTEM) {
-					$out['text'] .= '<p><font color="red"><b>Attention!</b> <code>REGISTRATION_HIDE_SYSTEM</code> is set in the local configuration file! Therefore, this system will not register itself, despire the settings below.</font></p>';
-				}
-
-				if (!function_exists('openssl_sign')) {
-					$out['text'] .= '<p><font color="red">Error: OpenSSL plugin is missing in PHP. You cannot (un)register your OIDplus instance.</font></p>';
+				$out['text'] = file_get_contents(__DIR__ . '/info.tpl');
+				
+				if (!OIDplus::getPkiStatus()) {
+					$out['text'] .= '<p><font color="red">Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.</font></p>';
 				} else {
+					$out['text'] .= '<p><input type="button" onclick="openOidInPanel(\'oidplus:srvreg_status\');" value="Check status of the registration and collected data"></p>';
+
+					if (defined('REGISTRATION_HIDE_SYSTEM') && REGISTRATION_HIDE_SYSTEM) {
+						$out['text'] .= '<p><font color="red"><b>Attention!</b> <code>REGISTRATION_HIDE_SYSTEM</code> is set in the local configuration file! Therefore, this system will not register itself, despire the settings below.</font></p>';
+					}
+
 					$out['text'] .= '<p>You can adjust your privacy level here:</p><p><select name="reg_privacy" id="reg_privacy">';
 
 					# ---
@@ -114,9 +115,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 					$out['text'] .= '</select> <input type="button" value="Change" onclick="crudActionRegPrivacyUpdate()"></p>';
 
 					$out['text'] .= '<p>After clicking "change", your OIDplus installation will contact the ViaThinkSoft server to adjust (add or remove information) your privacy setting. This may take a few minutes.</p>';
-				}
 
-				$out['text'] .= '<p><i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a>.';
+					$out['text'] .= '<p><i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a>.';
+				}
 			}
 		}
 		if ($id === 'oidplus:srvreg_status') {
@@ -130,7 +131,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			);
 
 			$signature = '';
-			openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'));
+			if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+				throw new Exception("Signature failed");
+			}
 
 			$data = array(
 				"payload" => $payload,
@@ -144,7 +147,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-			$res = curl_exec($ch);
+			if (!($res = @curl_exec($ch))) {
+				throw new Exception("Communication with ViaThinkSoft server failed");
+			}
 			curl_close($ch);
 			// die("RES: $res\n");
 			// if ($res == 'OK') ...
@@ -165,6 +170,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 		// It is very important that we set the ping time NOW, because ViaThinkSoft might contact us during the ping,
 		// and this would cause an endless loop!
 		OIDplus::config()->setValue('reg_last_ping', time());
+		
+		if (!OIDplus::getPkiStatus()) return false;
 
 		if ($privacy_level == 2) {
 			// The user wants to unregister
@@ -178,7 +185,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 				);
 
 				$signature = '';
-				openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'));
+				if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+					return false; // throw new Exception("Signature failed");
+				}
 
 				$data = array(
 					"payload" => $payload,
@@ -192,7 +201,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 				curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-				$res = curl_exec($ch);
+				if (!($res = @curl_exec($ch))) {
+					return false; // throw new Exception("Communication with ViaThinkSoft server failed");
+				}
 				curl_close($ch);
 				// die("RES: $res\n");
 				// if ($res == 'OK') ...
@@ -241,7 +252,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			);
 
 			$signature = '';
-			openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'));
+			if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+					return false; // throw new Exception("Signature failed");
+			}
 
 			$data = array(
 				"payload" => $payload,
@@ -255,7 +268,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-			$res = curl_exec($ch);
+			if (!($res = @curl_exec($ch))) {
+				return false; // throw new Exception("Communication with ViaThinkSoft server failed");
+			}
 			curl_close($ch);
 
 			if ($res === 'HASH_CONFLICT') {
@@ -283,13 +298,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 		OIDplus::config()->prepareConfigKey('reg_privacy', '2=Hide your system, 1=Register your system to the ViaThinkSoft directory and oid-info.com, 0=Publish your system to ViaThinkSoft directory and all public contents (RA/OID) to oid-info.com', '0', 0, 1);
 		OIDplus::config()->prepareConfigKey('reg_ping_interval', 'Registration ping interval (in seconds)', '3600', 0, 0);
 		OIDplus::config()->prepareConfigKey('reg_last_ping', 'Last ping to ViaThinkSoft directory services', '0', 1, 0);
-
-		// REGISTRATION_HIDE_SYSTEM is an undocumented constant that can be put in the config.inc.php files of a test system accessing the same database as the productive system that is registered.
-		// This avoids that the URL of the productive system is overridden with the test system URL (since they use the same database, they also have the same system ID)
-		if (function_exists('openssl_sign') && (!defined('REGISTRATION_HIDE_SYSTEM') || !REGISTRATION_HIDE_SYSTEM)) {
-			// Show registration wizard once
-
-			if ($html && (OIDplus::config()->getValue('reg_wizard_done') != '1')) {
+		
+		$oobe_done = OIDplus::config()->getValue('reg_wizard_done') == '1';
+		
+		if (!$oobe_done) {
+			// Show registration/configuration wizard once
+			if ($html) {
 				if (basename($_SERVER['SCRIPT_NAME']) != 'registration.php') {
 					if ($system_url = OIDplus::getSystemUrl()) {
 						header('Location:'.$system_url.'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/registration.php');
@@ -299,10 +313,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 					die();
 				}
 			}
+		} else {
+			// Is it time to register / renew the directory entry?
+			// Note: REGISTRATION_HIDE_SYSTEM is an undocumented constant that can be put in the config.inc.php files of a test system accessing the same database as the productive system that is registered.
+			// This avoids that the URL of a productive system is overridden with the URL of a cloned test system (since they use the same database, they also have the same system ID)
 
-			// Is it time to register / renew directory entry?
-
-			if (OIDplus::config()->getValue('reg_wizard_done') == '1') {
+			if (!defined('REGISTRATION_HIDE_SYSTEM') || !REGISTRATION_HIDE_SYSTEM) {
 				$privacy_level = OIDplus::config()->getValue('reg_privacy');
 
 				if (php_sapi_name() !== 'cli') { // don't register when called from CLI, otherweise the oidinfo XML can't convert relative links into absolute links

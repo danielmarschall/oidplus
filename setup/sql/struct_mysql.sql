@@ -3,27 +3,27 @@ CREATE TABLE `config` (
   `name` varchar(50) NOT NULL,
   `value` text NOT NULL,
   `description` varchar(255),
-  `protected` bit(1) NOT NULL DEFAULT b'0',
-  `visible` bit(1) NOT NULL DEFAULT b'0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `protected` boolean NOT NULL DEFAULT '0',
+  `visible` boolean NOT NULL DEFAULT '0'
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `asn1id`;
 CREATE TABLE `asn1id` (
   `lfd` int(11) NOT NULL,
   `oid` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `standardized` bit(1) NOT NULL DEFAULT b'0',
-  `well_known` bit default 0 NOT NULL DEFAULT b'0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `standardized` boolean NOT NULL DEFAULT '0',
+  `well_known` boolean NOT NULL DEFAULT '0'
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `iri`;
 CREATE TABLE `iri` (
   `lfd` int(11) NOT NULL,
   `oid` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `longarc` bit default 0 NOT NULL DEFAULT b'0',
-  `well_known` bit default 0 NOT NULL DEFAULT b'0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `longarc` boolean NOT NULL DEFAULT '0',
+  `well_known` boolean NOT NULL DEFAULT '0'
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `objects`;
 CREATE TABLE `objects` (
@@ -32,11 +32,11 @@ CREATE TABLE `objects` (
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `ra_email` varchar(100) NULL,
-  `confidential` bit default 0 NOT NULL,
+  `confidential` boolean NOT NULL,
   `created` datetime,
   `updated` datetime,
   `comment` varchar(255) NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ra`;
 CREATE TABLE `ra` (
@@ -52,13 +52,13 @@ CREATE TABLE `ra` (
   `phone` varchar(100) NOT NULL,
   `mobile` varchar(100) NOT NULL,
   `fax` varchar(100) NOT NULL,
-  `privacy` bit(1) NOT NULL DEFAULT b'0',
+  `privacy` boolean NOT NULL DEFAULT '0',
   `salt` varchar(100) NOT NULL,
   `authkey` varchar(100) NOT NULL,
   `registered` datetime,
   `updated` datetime,
   `last_login` datetime
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `log`;
 CREATE TABLE `log` (
@@ -66,21 +66,21 @@ CREATE TABLE `log` (
   `unix_ts` bigint NOT NULL,
   `addr` varchar(45) NOT NULL,
   `event` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `log_user`;
 CREATE TABLE `log_user` (
   `id` int(11) NOT NULL,
   `log_id` int(11) NOT NULL,
-  `user` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `username` varchar(255) NOT NULL
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `log_object`;
 CREATE TABLE `log_object` (
   `id` int(11) NOT NULL,
   `log_id` int(11) NOT NULL,
   `object` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
 
 ALTER TABLE `config`
   ADD PRIMARY KEY (`name`);
@@ -122,4 +122,4 @@ ALTER TABLE `log_object`
 ALTER TABLE `log_object`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '201', 1, 0);
+INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '202', '1', '0');

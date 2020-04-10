@@ -22,7 +22,6 @@ if (!defined('IN_OIDPLUS')) die();
 class OIDplusDataBasePluginODBC extends OIDplusDataBasePlugin {
 	private $odbc;
 	private $last_query;
-	private $prepare_cache = array();
 
 	public static function getPluginInformation(): array {
 		$out = array();
@@ -37,7 +36,7 @@ class OIDplusDataBasePluginODBC extends OIDplusDataBasePlugin {
 		return "ODBC";
 	}
 
-	public function query($sql, $prepared_args=null): OIDplusQueryResult {
+	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 		$this->last_query = $sql;
 		if (is_null($prepared_args)) {
 			$res = @odbc_exec($this->odbc, $sql);
@@ -60,19 +59,21 @@ class OIDplusDataBasePluginODBC extends OIDplusDataBasePlugin {
 			}
 			return OIDplusQueryResultODBC(@odbc_exec($this->odbc, $sql));
 			*/
-
 			if (!is_array($prepared_args)) {
 				throw new Exception("'prepared_args' must be either NULL or an ARRAY.");
 			}
-			if (isset($this->prepare_cache[$sql])) {
-				$ps = $this->prepare_cache[$sql];
-			} else {
-				$ps = odbc_prepare($this->odbc, $sql);
-				if (!$ps) {
-					throw new OIDplusSQLException($sql, 'Cannot prepare statement');
-				}
-				$this->prepare_cache[$sql] = $ps;
+			
+			foreach ($prepared_args as &$value) {
+				// ODBC/SQLServer has problems converting "true" to the data type "bit"
+				// Error "Invalid character value for cast specification"
+				if (is_bool($value)) $value = $value ? '1' : '0';
 			}
+			
+			$ps = @odbc_prepare($this->odbc, $sql);
+			if (!$ps) {
+				throw new OIDplusSQLException($sql, 'Cannot prepare statement');
+			}
+
 			if (!@odbc_execute($ps, $prepared_args)) {
 				throw new OIDplusSQLException($sql, $this->error());
 			}
@@ -81,24 +82,22 @@ class OIDplusDataBasePluginODBC extends OIDplusDataBasePlugin {
 	}
 
 	public function insert_id(): int {
-		try {
-			$res = $this->query("SELECT LAST_INSERT_ID() AS ID"); // MySQL
-		} catch (Exception $e) {
-			try {
-				$res = $this->query("SELECT SCOPE_IDENTITY() AS ID"); // Microsoft SQL Server
-			} catch (Exception $e) {
-				try {
-					$res = $this->query("SELECT LASTVAL() AS ID"); // PostgreSQL
-				} catch (Exception $e) {
-					$res = null;
-					// return 0;
-					throw new Exception("Cannot determine the last inserted ID. The DBMS is probably not supported.");
-				}
-			}
+		switch ($this->slang()) {
+			case 'mysql':
+				$res = $this->query("SELECT LAST_INSERT_ID() AS ID");
+				$row = $res->fetch_array();
+				return (int)$row['ID'];
+			case 'pgsql':
+				$res = $this->query("SELECT LASTVAL() AS ID");
+				$row = $res->fetch_array();
+				return (int)$row['ID'];
+			case 'mssql':
+				$res = $this->query("SELECT SCOPE_IDENTITY() AS ID");
+				$row = $res->fetch_array();
+				return (int)$row['ID'];
+			default:
+				throw new Exception("Cannot determine the last inserted ID for your DBMS. The DBMS is probably not supported.");
 		}
-
-		$row = $res->fetch_array();
-		return (int)$row['ID'];
 	}
 
 	public function error(): string {
@@ -148,8 +147,15 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 	protected $res;
 
 	public function __construct($res) {
-		$this->no_resultset = $res === false;
-		$this->res = $res;
+		$this->no_resultset = is_bool($res);
+		
+		if (!$this->no_resultset) {
+			$this->res = $res;
+		}
+	}
+	
+	public function __destruct() {
+		// odbc_close_cursor($this->res);
 	}
 
 	public function containsResultSet(): bool {
@@ -165,6 +171,14 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
 		$ret = odbc_fetch_array($this->res);
 		if ($ret === false) $ret = null;
+		if (!is_null($ret)) {
+			// ODBC gives bit(1) as binary, MySQL as integer and PDO as string.
+			// We'll do it like MySQL does, even if ODBC is actually more correct.
+			foreach ($ret as &$value) {
+				if ($value === chr(0)) $value = 0;
+				if ($value === chr(1)) $value = 1;
+			}
+		}
 		return $ret;
 	}
 
@@ -172,6 +186,14 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
 		$ret = odbc_fetch_object($this->res);
 		if ($ret === false) $ret = null;
+		if (!is_null($ret)) {
+			// ODBC gives bit(1) as binary, MySQL as integer and PDO as string.
+			// We'll do it like MySQL does, even if ODBC is actually more correct.
+			foreach ($ret as &$value) {
+				if ($value === chr(0)) $value = 0;
+				if ($value === chr(1)) $value = 1;
+			}
+		}
 		return $ret;
 	}
 }

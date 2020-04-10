@@ -1,6 +1,5 @@
 
-IMPORTANT
-- Test all new prepared statements
+RECENT STUFF
 - Cookie law:
 	Download CookieConsent code into _3p folder, do not hotlink it
 	we need to log all consents
@@ -10,7 +9,20 @@ IMPORTANT
 - the inactivity timer is much too fast!
 - Does the admin feature "600_log" also show all log events from all Objects and all RAs?
 - at a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
+- In plugins, we even see things like this:
+	plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/page_pictogram.png
+	=> This is very ugly! We need a function like this:  OIDplus::getRelativeWebDir(__DIR__) which outputs: plugin/...../page_pictogram.png
+- When a DB connection fails or if setup must be run again, it is not so good that the "die()" command is executed.
+	If it happens in ajax.php, we have a problem because then the HTTP response is not valid JSON
+	=> We need a new exception type "SetupRequiredException"
+		index.php will catch this exception and show a nice HTML message with setup link etc.
+		webwhois will catch this exception and show a plaintext message
+		ajax.php don't need to catch it, since it already catches all Exception-objects
+	=> We should remove "die()" whenever possible, because it is very unflexible
+
+WHOIS
 - webwhois: beside TXT/XML/JSON more output modi?  CSV, S/MIME  (and add the S/MIME keypurpose to the X.509 certificates)
+- whois query 'oid:' should show all root entries (subordinate entries), but there is only the message "not found"
 
 RFC
 - proof read
@@ -35,7 +47,7 @@ SMALL THINGS
 - when ajax.php generates a PHP error, the client gives a "syntax error" message... it would be better if the client shows the full php error? or something more user-friendly?
 - freeoid: gmail app does not hyperlink the activation URL. why?
 - how to avoid invite spamming?
-- when a PHP error happens, the AJAX script outputs "Error: SyntaxError: Unexpected token < in JSON at position 0" ... better show the user the actual message
+- when a PHP error happens (i.e. the AJAX script did not manage to output a JSON), the AJAX script outputs "Error: SyntaxError: Unexpected token < in JSON at position 0" ... better show the user the actual message
 - when login expired, remove entries in the treeview
 - can we put even more code (e.g. object CRUD) into the plugin directory?
 - disable specific functions (e.g. invite, login, rainfo, forgot password) if the plugins are not installed (check if class type is registered)
@@ -51,7 +63,6 @@ SMALL THINGS
 - admin config mehr user friendly, e.g. having the enable/disable object type stuff (like in registration wizard) also in the admin control panel
 - it would be cool if after the login, the opened nodes in the tree would stay open
 - should we log somewhere, when the admin account was logged in?
-- multilang
 - html checkbox: "label for" verwenden
 - when javascript fails, the form will be submitted to './' , that is not good! failed javascript must return false, so that the form does not get submitted
 - admin: show privacy entries from RAs (but grey, so you know that it is private)
@@ -67,10 +78,15 @@ SMALL THINGS
 		- kritischer bug: seite öffnen, tiny mce editieren, speichern klicken. dann f5 neu laden (nicht strg+f5): dann ist der alte content wieder da. außer man drückt strg+f5
 - jstree select: automatically scroll down
 - optisch aufhübschen. dinge wie RA: mehr dinge zeigen, adresse, email etc
-- test with different DBMS (currently, only MySQL was tested)
+
+DATABASE
+- check if the NULL and NOT NULL definitions are meaningful. It is not good at in *_ra everything is NOT NULL
+- we need to make OIDplus more compatible with non-MySQL databases (different SQL dialects)
+  (currently, only MySQL/MariaDB, PostgreSQL and MS SQL are supported)
+- Implement database plugin for PHP's MSSQL extension?
 
 FUTURE
-- we need to make OIDplus more compatible with non-MySQL databases (different SQL dialects)
+- multilang
 - make use of Composer. Problems:
   * What if composer installs a version of a component, which is incompatible?
   * We need a new publishing script, because simply checking out SVN is not enough anymore. The user needs to execute composer. But what is if the user don't have composer (or dont have shell access at all?)

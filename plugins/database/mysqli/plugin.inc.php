@@ -39,7 +39,7 @@ class OIDplusDataBasePluginMySQLi extends OIDplusDataBasePlugin {
 		return "MySQL";
 	}
 
-	public function query($sql, $prepared_args=null): OIDplusQueryResult {
+	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 		$this->last_query = $sql;
 		if (OIDPLUS_MYSQL_QUERYLOG) file_put_contents(__DIR__."/query.log", "$sql <== ".get_calling_function()."\n", FILE_APPEND);
 		if (is_null($prepared_args)) {
@@ -54,6 +54,13 @@ class OIDplusDataBasePluginMySQLi extends OIDplusDataBasePlugin {
 			if (!is_array($prepared_args)) {
 				throw new Exception("'prepared_args' must be either NULL or an ARRAY.");
 			}
+			
+			foreach ($prepared_args as &$value) {
+				// MySQLi has problems converting "true/false" to the data type "tinyint(1)"
+				// It seems to be the same issue like in PDO reported 14 years ago at https://bugs.php.net/bug.php?id=57157
+				if (is_bool($value)) $value = $value ? '1' : '0';
+			}
+			
 			if (isset($this->prepare_cache[$sql])) {
 				$ps = $this->prepare_cache[$sql];
 			} else {
@@ -61,7 +68,19 @@ class OIDplusDataBasePluginMySQLi extends OIDplusDataBasePlugin {
 				if (!$ps) {
 					throw new OIDplusSQLException($sql, 'Cannot prepare statement');
 				}
-				$this->prepare_cache[$sql] = $ps;
+				
+				// Caching the prepared is very risky
+				// In PDO and ODBC we may not do it, because execute() will
+				// destroy the existing cursors.
+				// (test this with ./?goto=oid%3A1.3.6.1.4.1.37553.8.32488192274
+				// you will see that 2.999 is missing in the tree)
+				// But $ps->get_result() seems to "clone" the cursor,
+				// so that $ps->execute may be called a second time?!
+				// However, it only works with mysqlnd's get_result,
+				// not with OIDplusQueryResultMySQLNoNativeDriver
+				if (self::nativeDriverAvailable()) {
+					$this->prepare_cache[$sql] = $ps;
+				}
 			}
 
 			self::bind_placeholder_vars($ps,$prepared_args);
@@ -167,8 +186,15 @@ class OIDplusQueryResultMySQL extends OIDplusQueryResult {
 	protected $res;
 
 	public function __construct($res) {
-		$this->no_resultset = $res === false;
-		$this->res = $res;
+		$this->no_resultset = is_bool($res);
+		
+		if (!$this->no_resultset) {
+			$this->res = $res;
+		}
+	}
+	
+	public function __destruct() {
+		if ($this->res) $this->res->close();
 	}
 
 	public function containsResultSet(): bool {
@@ -182,7 +208,7 @@ class OIDplusQueryResultMySQL extends OIDplusQueryResult {
 
 	public function fetch_array()/*: ?array*/ {
 		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
-		return $this->res->fetch_array(MYSQLI_BOTH);
+		return $this->res->fetch_array(MYSQLI_ASSOC);
 	}
 
 	public function fetch_object()/*: ?object*/ {
@@ -201,7 +227,7 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 	public function __construct($stmt) {
 		$metadata = mysqli_stmt_result_metadata($stmt);
 
-		$this->no_resultset = $metadata === false;
+		$this->no_resultset = is_bool($metadata);
 
 		if (!$this->no_resultset) {
 			$this->nCols = mysqli_num_fields($metadata);
@@ -222,7 +248,7 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 		return $this->stmt->num_rows;
 	}
 
-	function fetch_array()/*: ?array*/ {
+	public function fetch_array()/*: ?array*/ {
 		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
 
 		// https://stackoverflow.com/questions/10752815/mysqli-get-result-alternative , modified

@@ -141,7 +141,12 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			if (empty($title)) $title = $ra_name;
 
 			try {
-				OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, 0, now())", array('oid:'.$new_oid, $email, 'oid:'.OIDplus::config()->getValue('freeoid_root_oid'), $title, $description));
+				if (OIDplus::db()->slang() == 'mssql') {
+					OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, getdate())", array('oid:'.$new_oid, $email, 'oid:'.OIDplus::config()->getValue('freeoid_root_oid'), $title, $description, false));
+				} else {
+					// MySQL + PgSQL
+					OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, now())", array('oid:'.$new_oid, $email, 'oid:'.OIDplus::config()->getValue('freeoid_root_oid'), $title, $description, false));
+				}
 			} catch (Exception $e) {
 				$ra->delete();
 				throw $e;

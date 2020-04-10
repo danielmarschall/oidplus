@@ -428,7 +428,7 @@ class OIDplus {
 			}
 			self::$system_id_cache = $out;
 		}
-		return ($oid ? '1.3.6.1.4.1.37476.30.9.' : '').$out;
+		return ($out ? '1.3.6.1.4.1.37476.30.9.' : '').$out;
 	}
 
 	public static function getPkiStatus($try_generate=true) {
@@ -438,8 +438,6 @@ class OIDplus {
 		$pubKey = OIDplus::config()->getValue('oidplus_public_key');
 
 		if ($try_generate && !verify_private_public_key($privKey, $pubKey)) {
-			OIDplus::logger()->log("A!", "Generating new SystemID using a new key pair");
-
 			$config = array(
 			    "digest_alg" => "sha512",
 			    "private_key_bits" => 2048,
@@ -448,12 +446,17 @@ class OIDplus {
 
 			// Create the private and public key
 			$res = openssl_pkey_new($config);
+			
+			if (!$res) return false;
 
 			// Extract the private key from $res to $privKey
 			openssl_pkey_export($res, $privKey);
 
 			// Extract the public key from $res to $pubKey
 			$pubKey = openssl_pkey_get_details($res)["key"];
+
+			// Log
+			OIDplus::logger()->log("A!", "Generating new SystemID using a new key pair");
 
 			// Save the key pair to database
 			OIDplus::config()->setValue('oidplus_private_key', $privKey);
@@ -485,37 +488,35 @@ class OIDplus {
 	}
 
 	public static function getVersion() {
-		$svn_version = null;
-
 		if (file_exists(__DIR__ . '/../../oidplus_version.txt') && is_dir(__DIR__ . '/../../.svn')) {
-			return false; // ambigous
+			return false; // version is ambigous
 		}
 
 		if (is_dir(__DIR__ . '/../../.svn')) {
 			// Try to find out the SVN version using the shell
+			// TODO: das müllt die log files voll!
 			$status = @shell_exec('svnversion '.realpath(__FILE__));
 			if (preg_match('/\d+/', $status, $match)) {
-				$svn_version = 'svn-'.$match[0];
+				return 'svn-'.$match[0];
 			}
 
 			// If that failed, try to get the version via SQLite3
-			if (is_null($svn_version)) {
+			if (class_exists('SQLite3')) {
 				$db = new SQLite3(__DIR__ . '/../../.svn/wc.db');
 				$results = $db->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
 				while ($row = $results->fetchArray()) {
-					$svn_version = 'svn-'.$row['rev'];
+					return 'svn-'.$row['rev'];
 				}
 			}
 		}
 
 		if (file_exists(__DIR__ . '/../../oidplus_version.txt')) {
 			$cont = file_get_contents(__DIR__ . '/../../oidplus_version.txt');
-			if (!preg_match('@Revision (\d+)@', $cont, $m))
-				return false; // File has unknown format
-			$svn_version = 'svn-'.$m[1];
+			if (preg_match('@Revision (\d+)@', $cont, $m))
+				return 'svn-'.$m[1];
 		}
 
-		return $svn_version;
+		return false;
 	}
 
 	private static $sslAvailableCache = null;

@@ -60,7 +60,12 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				OIDplus::logger()->log("RA($email)!", "RA '$email' logged in");
 				OIDplus::authUtils()::raLogin($email);
 
-				OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = now() where email = ?", array($email));
+				if (OIDplus::db()->slang() == 'mssql') {
+					OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = getdate() where email = ?", array($email));
+				} else {
+					// MySQL + PgSQL
+					OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = now() where email = ?", array($email));
+				}
 
 				echo json_encode(array("status" => 0));
 			} else {

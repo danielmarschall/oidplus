@@ -67,7 +67,7 @@ class OIDplusConfig {
 	protected function buildConfigArray() {
 		if ($this->dirty) {
 			$this->values = array();
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config");
+			$res = OIDplus::db()->query("select name, value from ".OIDPLUS_TABLENAME_PREFIX."config");
 			while ($row = $res->fetch_object()) {
 				$this->values[$row->name] = $row->value;
 			}

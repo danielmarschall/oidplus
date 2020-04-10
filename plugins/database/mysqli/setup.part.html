@@ -1,8 +1,8 @@
 <div id="DBPLUGIN_PARAMS_MySQL">
-	<p>MySQL hostname and port:<br><input id="mysql_host" type="text" value="localhost:3306" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="mysql_host_warn"></p>
-	<p>MySQL username:<br><input id="mysql_username" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="mysql_username_warn"></p>
+	<p>MySQL hostname and port:<br><input id="mysql_host" type="text" value="localhost:3306" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="mysql_host_warn"></span></p>
+	<p>MySQL username:<br><input id="mysql_username" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="mysql_username_warn"></span></p>
 	<p>MySQL password:<br><input id="mysql_password" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"></p>
-	<p>MySQL database name:<br><input id="mysql_database" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="mysql_database_warn"></p>
+	<p>MySQL database name:<br><input id="mysql_database" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="mysql_database_warn"></span></p>
 </div>
 <script>
 plugin_combobox_change_callbacks.push(function(strPlugin) {
@@ -50,8 +50,8 @@ rebuild_callbacks.push(function() {
 		document.getElementById('mysql_database_warn').innerHTML = '';
 	}
 
-	document.getElementById('struct_1').href = setupdir+'struct_empty.sql.php?plugin=mysql&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
-	document.getElementById('struct_2').href = setupdir+'struct_with_examples.sql.php?plugin=mysql&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value);
+	document.getElementById('struct_1').href = setupdir+'struct_empty.sql.php?plugin=mysql&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value)+'&slang=mysql';
+	document.getElementById('struct_2').href = setupdir+'struct_with_examples.sql.php?plugin=mysql&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('mysql_database').value)+'&slang=mysql';
 	document.getElementById('struct_cli_1').innerHTML = '<br>or via command line:<br><code>curl -s "'+document.getElementById('struct_1').href+'" | mysql -u '+document.getElementById('mysql_username').value+' -p</code>';
 	document.getElementById('struct_cli_2').innerHTML = '<br>or via command line:<br><code>curl -s "'+document.getElementById('struct_2').href+'" | mysql -u '+document.getElementById('mysql_username').value+' -p</code>';
 

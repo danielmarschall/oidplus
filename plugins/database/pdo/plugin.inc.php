@@ -22,7 +22,6 @@ if (!defined('IN_OIDPLUS')) die();
 class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 	private $pdo;
 	private $last_query;
-	private $prepare_cache = array();
 
 	public static function getPluginInformation(): array {
 		$out = array();
@@ -36,13 +35,17 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 	public static function name(): string {
 		return "PDO";
 	}
+	
+	private $last_error = null;
 
-	public function query($sql, $prepared_args=null): OIDplusQueryResult {
+	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 		$this->last_query = $sql;
+		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			$res = $this->pdo->query($sql);
 
 			if ($res === false) {
+				$this->last_error = $this->pdo->errorInfo()[2];
 				throw new OIDplusSQLException($sql, $this->error());
 			} else {
 				return new OIDplusQueryResultPDO($res);
@@ -64,16 +67,23 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 			if (!is_array($prepared_args)) {
 				throw new Exception("'prepared_args' must be either NULL or an ARRAY.");
 			}
-			if (isset($this->prepare_cache[$sql])) {
-				$ps = $this->prepare_cache[$sql];
-			} else {
-				$ps = $this->pdo->prepare($sql);
-				if (!$ps) {
-					throw new OIDplusSQLException($sql, 'Cannot prepare statement');
-				}
-				$this->prepare_cache[$sql] = $ps;
+			
+			foreach ($prepared_args as &$value) {
+				// We need to manually convert booleans into strings, because there is a 
+				// 14 year old bug that hasn't been adressed by the PDO developers:
+				// https://bugs.php.net/bug.php?id=57157 
+				// Note: We are using '1' and '0' instead of 'true' and 'false' because MySQL converts boolean to tinyint(1)
+				if (is_bool($value)) $value = $value ? '1' : '0';
+			} 
+			
+			$ps = $this->pdo->prepare($sql);
+			if (!$ps) {
+				throw new OIDplusSQLException($sql, 'Cannot prepare statement');
 			}
+			$this->prepare_cache[$sql] = $ps;
+
 			if (!$ps->execute($prepared_args)) {
+				$this->last_error = $ps->errorInfo()[2];
 				throw new OIDplusSQLException($sql, $this->error());
 			}
 			return new OIDplusQueryResultPDO($ps);
@@ -85,7 +95,9 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 	}
 
 	public function error(): string {
-		return $this->pdo->errorInfo()[2];
+		$err = $this->last_error;
+		if ($err == null) $err = '';
+		return $err;
 	}
 
 	public function connect(): void {
@@ -132,10 +144,17 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	protected $res;
 
 	public function __construct($res) {
-		$this->no_resultset = $res === false;
-		$this->res = $res;
+		$this->no_resultset = is_bool($res);
+		
+		if (!$this->no_resultset) {
+			$this->res = $res;
+		}
 	}
-
+	
+	public function __destruct() {
+		if ($this->res) $this->res->closeCursor();
+	}
+	
 	public function containsResultSet(): bool {
 		return !$this->no_resultset;
 	}

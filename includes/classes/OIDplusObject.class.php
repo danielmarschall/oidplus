@@ -148,7 +148,7 @@ abstract class OIDplusObject {
 		$out = array();
 
 		if (!OIDPLUS_OBJECT_CACHING) {
-			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where confidential = 0 order by ".OIDplus::db()->natOrder('id'));
+			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where confidential = '0' order by ".OIDplus::db()->natOrder('id'));
 
 			while ($row = $res->fetch_array()) {
 				$obj = self::parse($row['id']); // will be NULL if the object type is not registered
@@ -452,8 +452,6 @@ abstract class OIDplusObject {
 			self::$object_info_cache = array();
 			$res = OIDplus::db()->query("select id, parent, confidential, ra_email, title from ".OIDPLUS_TABLENAME_PREFIX."objects");
 			while ($row = $res->fetch_array()) {
-				if ($row['confidential'] == chr(0)) $row['confidential'] = false; // ODBC...
-				if ($row['confidential'] == chr(1)) $row['confidential'] = true; // ODBC...
 				self::$object_info_cache[$row['id']] = array($row['confidential'], $row['parent'], $row['ra_email'], $row['title']);
 			}
 		}

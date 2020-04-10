@@ -136,7 +136,7 @@ class OIDplusLogger {
 		// Now write the log message
 
 		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
-		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log (addr, unix_ts, event) values (?, UNIX_TIMESTAMP(), ?)", array($addr, $event));
+		OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event));
 		$log_id = OIDplus::db()->insert_id();
 		if ($log_id === false) {
 			$res = OIDplus::db()->query("select max(id) as last_id from ".OIDPLUS_TABLENAME_PREFIX."log");
@@ -148,8 +148,8 @@ class OIDplusLogger {
 			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log_object (log_id, object) values (?, ?)", array($log_id, $object));
 		}
 
-		foreach ($users as $user) {
-			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log_user (log_id, user) values (?, ?)", array($log_id, $user));
+		foreach ($users as $username) {
+			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."log_user (log_id, username) values (?, ?)", array($log_id, $username));
 		}
 
 	}

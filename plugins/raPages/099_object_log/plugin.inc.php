@@ -70,10 +70,10 @@ class OIDplusPageRaObjectLog extends OIDplusPagePlugin {
 			$text .= '<pre>';
 			while ($row = $res->fetch_array()) {
 				$users = array();
-				$res2 = OIDplus::db()->query("select user from ".OIDPLUS_TABLENAME_PREFIX."log_user ".
+				$res2 = OIDplus::db()->query("select username from ".OIDPLUS_TABLENAME_PREFIX."log_user ".
 				                             "where log_id = ?", array($row['id']));
 				while ($row2 = $res2->fetch_array()) {
-					$users[] = $row2['user'];
+					$users[] = $row2['username'];
 				}
 				$users = count($users) > 0 ? ", ".implode('/',$users) : '';
 

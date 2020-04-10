@@ -111,7 +111,7 @@ dbplugin_changed();
 
 <div id="step2">
 <h2>Step 2: Initialize database</h2>
-<p><b>If you already have an OIDplus database and just want to rebuild the config file, please skip this step.</b></p>
+<p><font color="red"><b>If you already have an OIDplus database and just want to rebuild the config file, please skip this step.</b></font></p>
 <p>Otherwise, import one of the following MySQL dumps in your database:</p>
 <p><ul>
 	<li><a href="struct_empty.sql.php" id="struct_1" target="_blank">Empty OIDplus database without example data</a><span id="struct_cli_1"></span><br><br></li>

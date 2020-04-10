@@ -114,7 +114,7 @@ function rebuild() {
 				document.getElementById('config').innerHTML = document.getElementById('config').innerHTML + cont;
 			}
 		}
-		document.getElementById('config').innerHTML = document.getElementById('config').innerHTML + 
+		document.getElementById('config').innerHTML = document.getElementById('config').innerHTML +
 			'<br>' +
 			'<b>define</b>(\'OIDPLUS_TABLENAME_PREFIX\', \''+document.getElementById('tablename_prefix').value+'\');<br>' +
 			'<br>' +
@@ -124,7 +124,7 @@ function rebuild() {
 			'<b>define</b>(\'RECAPTCHA_PUBLIC\',         \''+document.getElementById('recaptcha_public').value+'\');<br>' +
 			'<b>define</b>(\'RECAPTCHA_PRIVATE\',        \''+document.getElementById('recaptcha_private').value+'\');<br>' +
 			'<br>' +
-			'<b>define</b>(\'OIDPLUS_ENFORCE_SSL\',      \''+document.getElementById('enforce_ssl').value+'\');<br>';
+			'<b>define</b>(\'OIDPLUS_ENFORCE_SSL\',      '+document.getElementById('enforce_ssl').value+');<br>';
 
 		document.getElementById('config').innerHTML = document.getElementById('config').innerHTML.replaceAll(' ', '&nbsp;');
 	}

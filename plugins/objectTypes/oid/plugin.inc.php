@@ -251,7 +251,7 @@ class OIDplusOid extends OIDplusObject {
 		}
 
 		if (count($asn_ids) == 0) $asn_ids = array($part);
-		return implode($asn_ids, $separator);
+		return implode($separator, $asn_ids);
 	}
 
 	public function getAsn1Notation($withAbbr=true) {
@@ -332,10 +332,10 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	public function isWellKnown() {
-		$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ? and well_known = 1", array("oid:".$this->oid));
+		$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ? and well_known = ?", array("oid:".$this->oid,true));
 		if ($res->num_rows() > 0) return true;
 
-		$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ? and well_known = 1", array("oid:".$this->oid));
+		$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ? and well_known = ?", array("oid:".$this->oid,true));
 		if ($res->num_rows() > 0) return true;
 
 		return false;
@@ -355,7 +355,7 @@ class OIDplusOid extends OIDplusObject {
 
 			// Check if the (real) parent has any conflict
 			// Unlike IRI identifiers, ASN.1 identifiers may be used multiple times (not recommended), except if one of them is standardized
-			$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where name = ? and standardized = 1", array($asn1));
+			$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where name = ? and standardized = ?", array($asn1,true));
 			while ($row = $res->fetch_array()) {
 				$check_oid = OIDplusOid::parse($row['oid'])->oid;
 				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent

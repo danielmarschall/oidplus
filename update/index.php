@@ -141,11 +141,13 @@ if (isset($_REQUEST['update_now'])) {
 		$local_installation = OIDplus::getVersion();
 		$svn = new phpsvnclient(OIDPLUS_REPO);
 		$newest_version = 'svn-'.$svn->getVersion();
+		
+		echo 'Local installation: ' . ($local_installation ? $local_installation : 'unknown') . '<br>';
+		echo 'Latest published version: ' . ($newest_version ? $newest_version : 'unknown') . '<br>';
 
-		echo 'Local installation: ' . $local_installation.'<br>';
-		echo 'Latest published version: ' . $newest_version.'<br>';
-
-		if ($local_installation == $newest_version) {
+		if (!$local_installation) {
+			echo '<p><font color="red">The system could not determine the version of your system. (Required: svnupdate shell access or SQLite3). Please update your system manually via the SVN "update" command regularly.</font></p>';
+		} else if ($local_installation == $newest_version) {
 			echo '<p><font color="green">You are already using the latest version of OIDplus.</font></p>';
 
 			$job = new VNagMonitorDummy(VNag::STATUS_OK, "You are using the latest version of OIDplus ($local_installation local / $newest_version remote)");

@@ -195,12 +195,14 @@ if ($do_edits) {
 
 echo ' <font color="red"><b>'.$msg.'</b></font>';
 
-echo '<p><u>Step '.($step++).': System registration and automatic Publishing</u></p>';
+echo '<p><u>Step '.($step++).': System registration and automatic publishing</u> (optional)</p>';
 
 echo file_get_contents(__DIR__ . '/info.tpl');
 
-if (!function_exists('openssl_sign')) {
-	echo '<p>OpenSSL plugin is missing in PHP. You cannot register your OIDplus instance.</p>';
+$pki_status = OIDplus::getPkiStatus(); 
+
+if (!$pki_status) {
+	echo '<p>Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you <b>cannot</b> register your OIDplus instance at the moment.</p>';
 } else {
 
 	echo '<p>Privacy level:</p><select name="reg_privacy" id="reg_privacy">';
@@ -276,21 +278,28 @@ if (!function_exists('openssl_sign')) {
 
 <?php
 
-if (function_exists('openssl_sign')) {
+if ($pki_status) {
 
 ?>
 
 <p><u>Your OIDplus system ID (derived from the public key) is:</u></p>
 
-1.3.6.1.4.1.37476.30.9.<b><?php
-echo htmlentities(OIDplus::getSystemId());
+<b><?php
+$sysid_oid = OIDplus::getSystemId(true);
+if (!$sysid_oid) $sysid_oid = 'unknown';
+echo htmlentities($sysid_oid);
 ?></b>
 
 <p><u>Your public key is</u></p>
 
 <?php
 
-echo '<pre>'.htmlentities(OIDplus::config()->getValue('oidplus_public_key')).'</pre>';
+$val = OIDplus::config()->getValue('oidplus_public_key');
+if ($val) {
+	echo '<pre>'.htmlentities($val).'</pre>';
+} else {
+	echo '<p>Private/Public key creation failed</p>';
+}
 
 }
 

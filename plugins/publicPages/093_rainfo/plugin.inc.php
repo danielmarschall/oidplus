@@ -103,7 +103,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 				if (OIDplus::authUtils()::isRALoggedIn($ra_email) || OIDplus::authUtils()::isAdminLoggedIn()) {
 					$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event from ".OIDPLUS_TABLENAME_PREFIX."log lo ".
 					                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_user lu on lu.log_id = lo.id ".
-					                            "where lu.user = ? " .
+					                            "where lu.username = ? " .
 					                            "order by lo.unix_ts desc", array($ra_email));
 					$out['text'] .= '<h2>Log messages for RA '.htmlentities($ra_email).'</h2>';
 					if ($res->num_rows() > 0) {
