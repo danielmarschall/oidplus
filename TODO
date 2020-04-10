@@ -9,9 +9,6 @@ RECENT STUFF
 - the inactivity timer is much too fast!
 - Does the admin feature "600_log" also show all log events from all Objects and all RAs?
 - at a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
-- In plugins, we even see things like this:
-	plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/page_pictogram.png
-	=> This is very ugly! We need a function like this:  OIDplus::getRelativeWebDir(__DIR__) which outputs: plugin/...../page_pictogram.png
 
 WHOIS
 - webwhois: beside TXT/XML/JSON more output modi?  CSV, S/MIME  (and add the S/MIME keypurpose to the X.509 certificates)

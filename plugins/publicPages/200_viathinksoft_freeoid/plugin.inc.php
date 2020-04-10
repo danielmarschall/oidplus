@@ -199,7 +199,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$handled = true;
 
 			$out['title'] = 'Register a free OID';
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$highest_id = $this->freeoid_max_id();
 
@@ -232,7 +232,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			$auth = explode('$',$id)[3];
 
 			$out['title'] = 'Activate Free OID';
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 			if ($res->num_rows() > 0) {
@@ -267,7 +267,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 		if (empty(OIDplus::config()->getValue('freeoid_root_oid'))) return false;
 
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

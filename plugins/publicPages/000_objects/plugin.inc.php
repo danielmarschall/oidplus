@@ -51,7 +51,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 			$handled = true;
 
 			$out['title'] = OIDplus::config()->systemTitle(); // 'Object Database of ' . $_SERVER['SERVER_NAME'];
-			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/system_big.png';
+			$out['icon'] = OIDplus::webpath(__DIR__).'system_big.png';
 			$out['text'] = file_get_contents('welcome.html');
 
 			if (strpos($out['text'], '%%OBJECT_TYPE_LIST%%') !== false) {
@@ -71,7 +71,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if ($nonjs) {
-			$json[] = array('id' => 'oidplus:system', 'icon' => 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/system.png', 'text' => 'System');
+			$json[] = array('id' => 'oidplus:system', 'icon' => OIDplus::webpath(__DIR__).'system.png', 'text' => 'System');
 
 			$parent = '';
 			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($req_goto));
@@ -170,7 +170,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 					"opened" => true,
 					// "selected" => true)  // "selected" ist buggy: 1) Das select-Event wird beim Laden nicht gefeuert 2) Die direkt untergeordneten Knoten lassen sich nicht öffnen (laden für ewig)
 				),
-				'icon' => 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/system.png',
+				'icon' => OIDplus::webpath(__DIR__).'system.png',
 				'children' => $objTypesChildren
 			);
 

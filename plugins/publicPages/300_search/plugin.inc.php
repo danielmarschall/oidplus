@@ -58,7 +58,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 			$handled = true;
 
 			$out['title'] = 'Search';
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$out['text'] = '';
 
@@ -187,7 +187,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

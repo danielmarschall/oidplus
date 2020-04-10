@@ -53,7 +53,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 			$antispam_email = explode('$',$id.'$')[1];
 			$ra_email = str_replace('&', '@', $antispam_email);
 
-			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/rainfo_big.png';
+			$out['icon'] = OIDplus::webpath(__DIR__).'rainfo_big.png';
 
 			if (empty($ra_email)) {
 				$out['title'] = 'Object roots without RA';
@@ -74,7 +74,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 
 			foreach (OIDplusObject::getRaRoots($ra_email) as $loc_root) {
 				$ico = $loc_root->getIcon();
-				$icon = !is_null($ico) ? $ico : 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon_link.png';
+				$icon = !is_null($ico) ? $ico : OIDplus::webpath(__DIR__).'treeicon_link.png';
 				$out['text'] .= '<p><a '.oidplus_link($loc_root->nodeId()).'><img src="'.$icon.'"> Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())).'</a></p>';
 			}
 

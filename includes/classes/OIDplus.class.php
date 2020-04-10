@@ -31,7 +31,7 @@ class OIDplus {
 
 	private function __construct() {
 	}
-
+	
 	# --- Singleton classes
 
 	public static function config() {
@@ -587,5 +587,16 @@ class OIDplus {
 				}
 			}
 		}
+	}
+
+	public static function webpath($target) {
+		$dir = __DIR__;
+		$dir = dirname($dir);
+		$dir = dirname($dir);
+		$target = substr($target, strlen($dir)+1, strlen($target)-strlen($dir)-1);
+		if ($target != '') {
+			$target = str_replace('\\','/',$target).'/';
+		}
+		return $target;
 	}
 }

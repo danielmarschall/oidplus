@@ -79,12 +79,12 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 			$example = $this->getExampleId();
 
 			$out['title'] = 'Web WHOIS';
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$out['text']  = '';
 			$out['text'] .= '<p>With the web based whois service, you can query object information in a machine readable format.</p>';
-			$out['text'] .= '<p>RFC draft (for Text format): <a href="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/rfc/draft-viathinksoft-oidwhois-00.txt">TXT</a> | <a href="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/rfc/draft-viathinksoft-oidwhois-00.nroff">NROFF</a></p>';
-			$out['text'] .= '<form action="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/webwhois.php" method="GET">';
+			$out['text'] .= '<p>RFC draft (for Text format): <a href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.txt">TXT</a> | <a href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.nroff">NROFF</a></p>';
+			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__).'whois/webwhois.php" method="GET">';
 			$out['text'] .= '	<label class="padding_label">Format:</label><select name="format">';
 			$out['text'] .= '		<option value="txt">Text (RFC pending)</option>';
 			$out['text'] .= '		<option value="json">JSON</option>';
@@ -98,7 +98,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}
@@ -113,7 +113,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 	}
 
 	public function modifyContent($id, &$title, &$icon, &$text) {
-		$text .= '<br><img src="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/page_pictogram.png" height="15" alt=""> <a href="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font">Whois</a>';
+		$text .= '<br><img src="'.OIDplus::webpath(__DIR__).'page_pictogram.png" height="15" alt=""> <a href="'.OIDplus::webpath(__DIR__).'whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font">Whois</a>';
 	}
 
 	public function tree_search($request) {

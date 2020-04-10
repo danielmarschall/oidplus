@@ -123,7 +123,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 		if ($id === 'oidplus:login') {
 			$handled = true;
 			$out['title'] = 'Login';
-			$out['icon']  = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/login_big.png';
+			$out['icon']  = OIDplus::webpath(__DIR__).'login_big.png';
 
 			$out['text'] .= '<noscript>';
 			$out['text'] .= '<p>You need to enable JavaScript to use the login area.</p>';
@@ -214,14 +214,14 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 
 			$ra_roots[] = array(
 				'id'       => 'oidplus:logout$admin',
-				'icon'     => 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon_logout.png',
+				'icon'     => OIDplus::webpath(__DIR__).'treeicon_logout.png',
 				'conditionalselect' => 'adminLogout()', // defined in oidplus_base.js
 				'text'     => 'Log out'
 			);
 			$loginChildren[] = array(
 				'id'       => 'oidplus:dummy$'.md5(rand()),
 				'text'     => "Logged in as admin",
-				'icon'     => 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon_admin.png',
+				'icon'     => OIDplus::webpath(__DIR__).'treeicon_admin.png',
 				'conditionalselect' => 'false', // dummy node that can't be selected
 				'state'    => array("opened" => true),
 				'children' => $ra_roots
@@ -239,7 +239,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			$ra_roots[] = array(
 				'id'       => 'oidplus:logout$'.$ra_email,
 				'conditionalselect' => 'raLogout('.js_escape($ra_email).')', // defined in oidplus_base.js
-				'icon'     => 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon_logout.png',
+				'icon'     => OIDplus::webpath(__DIR__).'treeicon_logout.png',
 				'text'     => 'Log out'
 			);
 			foreach (OIDplusObject::getRaRoots($ra_email) as $loc_root) {
@@ -248,7 +248,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 					'id' => 'oidplus:raroot$'.$loc_root->nodeId(),
 					'text' => 'Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())),
 					'conditionalselect' => 'openOidInPanel('.js_escape($loc_root->nodeId()).', true);',
-					'icon' => !is_null($ico) ? $ico : 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon_link.png'
+					'icon' => !is_null($ico) ? $ico : OIDplus::webpath(__DIR__).'treeicon_link.png'
 				);
 			}
 			$ra_email_or_name = (new OIDplusRA($ra_email))->raName();
@@ -256,7 +256,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			$loginChildren[] = array(
 				'id'       => 'oidplus:dummy$'.md5(rand()),
 				'text'     => "Logged in as ".htmlentities($ra_email_or_name),
-				'icon'     => 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon_ra.png',
+				'icon'     => OIDplus::webpath(__DIR__).'treeicon_ra.png',
 				'conditionalselect' => 'false', // dummy node that can't be selected
 				'state'    => array("opened" => true),
 				'children' => $ra_roots
@@ -265,7 +265,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 
 		$json[] = array(
 			'id'       => 'oidplus:login',
-			'icon'     => 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon_login.png',
+			'icon'     => OIDplus::webpath(__DIR__).'treeicon_login.png',
 			'text'     => 'Login',
 			'state'    => array("opened" => count($loginChildren)>0),
 			'children' => $loginChildren

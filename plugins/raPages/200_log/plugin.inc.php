@@ -66,7 +66,7 @@ class OIDplusPageRaLogEvents extends OIDplusPagePlugin {
 			}
 
 			$out['title'] = "Log entries for RA $ra_email";
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event from ".OIDPLUS_TABLENAME_PREFIX."log lo ".
 			                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_user lu on lu.log_id = lo.id ".
@@ -91,7 +91,7 @@ class OIDplusPageRaLogEvents extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

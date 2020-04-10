@@ -55,15 +55,15 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 		if ($id === 'oidplus:export') {
 			$handled = true;
 			$out['title'] = 'Data export';
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
 				$out['text'] = '<p>Here you can prepare the data export to <b>oid-info.com</b>.</p>'.
-				               '<p><a href="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/oidinfo_export.php">Generate XML (all)</a></p>'.
-				               '<p><a href="plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/oidinfo_export.php?online=1">Generate XML (only non-existing)</a></p>'.
+				               '<p><a href="'.OIDplus::webpath(__DIR__).'oidinfo_export.php">Generate XML (all)</a></p>'.
+				               '<p><a href="'.OIDplus::webpath(__DIR__).'oidinfo_export.php?online=1">Generate XML (only non-existing)</a></p>'.
 				               '<p><a href="http://www.oid-info.com/submit.htm">Upload to oid-info.com</a></p>';
 			}
 		}
@@ -71,7 +71,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

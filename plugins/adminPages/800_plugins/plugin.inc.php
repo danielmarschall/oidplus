@@ -52,7 +52,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 		if ($parts[0] != 'oidplus:system_plugins') return;
 		$handled = true;
 		$out['title'] = "Installed plugins";
-		$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+		$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 			$out['icon'] = 'img/error_big.png';
@@ -63,7 +63,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 		if (substr($parts[1],0,1) == '$') {
 			$classname = substr($parts[1],1);
 			$out['title'] = htmlentities($classname);
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$reflector = new \ReflectionClass($classname);
 
@@ -94,7 +94,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 
 			if ($parts[1] == '') {
 				$out['title'] = "Installed plugins";
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_pages_public = true;
 				$show_pages_ra = true;
 				$show_pages_admin = true;
@@ -105,51 +105,51 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 				$show_auth = true;
 			} else if ($parts[1] == 'pages') {
 				$out['title'] = "Page plugins";
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_pages_public = true;
 				$show_pages_ra = true;
 				$show_pages_admin = true;
 			} else if ($parts[1] == 'pages.public') {
 				$out['title'] = "Public page plugins";
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_pages_public = true;
 			} else if ($parts[1] == 'pages.ra') {
 				$out['title'] = "RA page plugins";
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_pages_ra = true;
 			} else if ($parts[1] == 'pages.admin') {
 				$out['title'] = "Admin page plugins";
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_pages_admin = true;
 			} else if ($parts[1] == 'objects') {
 				$out['title'] = "Object type plugins";
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_obj_active = true;
 				$show_obj_inactive = true;
 			} else if ($parts[1] == 'objects.enabled') {
 				$out['title'] = "Object type plugins (enabled)";
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_obj_active = true;
 			} else if ($parts[1] == 'objects.disabled') {
 				$out['title'] = "Object type plugins (disabled)";
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_obj_inactive = true;
 			} else if ($parts[1] == 'database') {
 				$out['title'] = "Database provider plugins";
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_db_active = true;
 				$show_db_inactive = true;
 			} else if ($parts[1] == 'database.enabled') {
 				$out['title'] = "Database provider plugins (active)";
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_db_active = true;
 			} else if ($parts[1] == 'database.disabled') {
 				$out['title'] = "Database provider plugins (inactive)";
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_db_inactive = true;
 			} else if ($parts[1] == 'auth') {
 				$out['title'] = "RA authentication";
-				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_auth = true;
 			} else {
 				$out['icon'] = 'img/error_big.png';
@@ -343,7 +343,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

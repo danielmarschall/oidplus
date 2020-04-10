@@ -55,7 +55,7 @@ class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePlugin {
 			} else {
 				$out['title'] = 'Reset admin password';
 			}
-			$out['icon']  = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/forgot_password_big.png';
+			$out['icon']  = OIDplus::webpath(__DIR__).'forgot_password_big.png';
 
 			$out['text']  = '<p>To reset the password of the administrator, create a hash below and then replace the entry in the file <b>includes/config.inc.php</b>.</p>';
 			$out['text'] .= '<div><label class="padding_label">New password:</label><input type="password" id="admin_password" onkeypress="rehash_admin_pwd()" onkeyup="rehash_admin_pwd()"></div>';

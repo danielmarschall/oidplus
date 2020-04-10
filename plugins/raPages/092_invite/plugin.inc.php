@@ -138,7 +138,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 				return $out;
 			}
 
-			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/invite_ra_big.png';
+			$out['icon'] = OIDplus::webpath(__DIR__).'invite_ra_big.png';
 
 			try {
 				$this->inviteSecurityCheck($email);
@@ -175,7 +175,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 			$timestamp = explode('$',$id)[2];
 			$auth = explode('$',$id)[3];
 
-			$out['icon'] = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/activate_ra_big.png';
+			$out['icon'] = OIDplus::webpath(__DIR__).'activate_ra_big.png';
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 			if ($res->num_rows() > 0) {

@@ -52,7 +52,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePlugin {
 		if ($parts[0] != 'oidplus:software_update') return;
 		$handled = true;
 		$out['title'] = 'Software update';
-		$out['icon']  = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png';
+		$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
 
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 			$out['icon'] = 'img/error_big.png';
@@ -66,7 +66,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

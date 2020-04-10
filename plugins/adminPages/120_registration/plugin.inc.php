@@ -61,7 +61,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 		if ($id === 'oidplus:srv_registration') {
 			$handled = true;
 			$out['title'] = 'System registration settings';
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
@@ -305,11 +305,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			// Show registration/configuration wizard once
 			if ($html) {
 				if (basename($_SERVER['SCRIPT_NAME']) != 'registration.php') {
-					if ($system_url = OIDplus::getSystemUrl()) {
-						header('Location:'.$system_url.'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/registration.php');
-					} else {
-						header('Location:plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/registration.php');
-					}
+					header('Location:'.OIDplus::webpath(__DIR__).'registration.php');
 					die('Redirecting to registration wizard...');
 				}
 			}
@@ -332,7 +328,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = 'plugins/'.basename(dirname(__DIR__)).'/'.basename(__DIR__).'/treeicon.png';
+			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}
