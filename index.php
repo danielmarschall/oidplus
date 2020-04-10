@@ -33,7 +33,8 @@ function html_exception_handler($exception) {
 		echo '</p>';
 	} else {
 		echo "<h1>OIDplus error</h1>";
-		echo '<p>'.htmlentities($exception->getMessage()).'</p>';
+		// ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
+		echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
 		echo '<p><b>Technical information about the problem:</b></p>';
 		echo '<pre>';
 		echo get_class($exception)."\n";

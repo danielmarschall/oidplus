@@ -70,10 +70,20 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 			// 4. as last resort, sort by the identifier itself, e.g. if the casts above did fail (happens if it is not an OID)			
 			$out[] = "$fieldname $order";
 			
+		} else if ($this->slang() == 'mssql') {
+		
+			// 1. sort by namespace (oid, guid, ...)
+			$out[] = "substring($fieldname,1,charindex(':',$fieldname)-1) $order";
+			
+			for ($i=1; $i<=$maxdepth; $i++) {
+				// 2. Sort by the rest arcs one by one, not that MySQL can only handle decimal(65), not decimal($max_arc_len)
+				$out[] = "dbo.getOidArc($fieldname, '.', $i) $order";
+			}
+
+			// 3. as last resort, sort by the identifier itself, e.g. if the function getOidArc always return 0 (happens if it is not an OID)			
+			$out[] = "$fieldname $order";
 		} else {
 		
-			// TODO: Implement natural order for Microsoft SQL Server
-
 			// For (yet) unsupported DBMS, we do not offer natural sort
 			$out[] = "$fieldname $order";
 
@@ -163,6 +173,52 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 			}
   
 			$version = 202;
+			$this->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."config SET value = ? WHERE name = 'database_version'", array($version));
+			$this->transaction_commit();
+		}
+		if ($version == 202) {
+			$this->transaction_begin();
+			if ($this->slang() == 'mssql') {
+				$sql = "CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @separator varchar(1), @occurence tinyint)
+				RETURNS bigint AS
+				BEGIN 
+					DECLARE @intPos tinyint
+				
+					DECLARE @cnt tinyint
+					SET @cnt = 0
+				
+					if substring(@strList, 1, 4) <> 'oid:'
+					begin
+						return 0
+					end
+				
+					SET @strList = RIGHT(@strList, LEN(@strList)-4);
+				
+					WHILE CHARINDEX(@separator,@strList) > 0
+					BEGIN
+						SET @intPos = CHARINDEX(@separator,@strList) 
+						SET @cnt = @cnt + 1
+						IF @cnt = @occurence
+						BEGIN
+							RETURN CONVERT(bigint, LEFT(@strList,@intPos-1));
+						END
+						SET @strList = RIGHT(@strList, LEN(@strList)-@intPos)
+					END
+					IF LEN(@strList) > 0
+					BEGIN
+						SET @cnt = @cnt + 1
+						IF @cnt = @occurence
+						BEGIN
+							RETURN CONVERT(bigint, @strList);
+						END
+					END
+				
+					RETURN -1
+				END";
+				$this->query($sql);
+			}
+				
+			$version = 203;
 			$this->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."config SET value = ? WHERE name = 'database_version'", array($version));
 			$this->transaction_commit();
 		}

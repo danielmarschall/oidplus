@@ -122,4 +122,4 @@ ALTER TABLE `log_object`
 ALTER TABLE `log_object`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '202', '1', '0');
+INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '203', '1', '0');

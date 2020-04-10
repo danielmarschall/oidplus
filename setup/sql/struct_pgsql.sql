@@ -92,4 +92,4 @@ CREATE UNIQUE INDEX "index_iri_uq_oid_name"    ON "iri"("oid","name");
 CREATE        INDEX "index_objects_fk_parent"  ON "objects"("parent");
 CREATE UNIQUE INDEX "index_ra_uq_email"        ON "ra"("email");
 
-INSERT INTO "config" ("name", "description", "value", "protected", "visible") VALUES ('database_version', 'Version of the database tables', '202', true, false);
+INSERT INTO "config" ("name", "description", "value", "protected", "visible") VALUES ('database_version', 'Version of the database tables', '203', true, false);
