@@ -1,3 +1,51 @@
+/****** Object:  UserDefinedFunction [dbo].[getOidArc]    Script Date: 11.04.2020 00:03:10 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @maxArcLen int, @occurence int)
+RETURNS varchar(512) AS
+BEGIN 
+	DECLARE @intPos int
+
+	DECLARE @cnt int
+	SET @cnt = 0
+
+	if SUBSTRING(@strList, 1, 4) <> 'oid:'
+	begin
+		RETURN ''
+	end
+
+	SET @strList = RIGHT(@strList, LEN(@strList)-4)
+
+	WHILE CHARINDEX('.',@strList) > 0
+	BEGIN
+		SET @intPos=CHARINDEX('.',@strList) 
+		SET @cnt = @cnt + 1
+		IF @cnt = @occurence
+		BEGIN
+			SET @strList = LEFT(@strList,@intPos-1)
+			RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
+		END
+		SET @strList = RIGHT(@strList, LEN(@strList)-@intPos)
+	END
+	IF LEN(@strList) > 0
+	BEGIN
+		SET @cnt = @cnt + 1
+		IF @cnt = @occurence
+		BEGIN
+			RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
+		END
+	END
+
+	RETURN REPLICATE('0', @maxArcLen)
+END
+
+
+/****** Delete existing tables ******/
+
 IF OBJECT_ID('dbo.asn1id', 'U') IS NOT NULL 
 	DROP TABLE [asn1id]
 IF OBJECT_ID('dbo.config', 'U') IS NOT NULL 
@@ -270,51 +318,6 @@ ALTER TABLE [dbo].[ra] ADD  CONSTRAINT [DF__ra__privacy__29572725]  DEFAULT ('0'
 GO
 
 
-/****** Object:  UserDefinedFunction [dbo].[getOidArc]    Script Date: 11.04.2020 00:03:10 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(8000), @separator varchar(1), @occurence tinyint)
-RETURNS bigint AS
-BEGIN 
-	DECLARE @intPos tinyint
-
-	DECLARE @cnt tinyint
-	SET @cnt = 0
-
-	if substring(@strList, 1, 4) <> 'oid:'
-	begin
-		return 0
-	end
-
-	SET @strList = RIGHT(@strList, LEN(@strList)-4);
-
-	WHILE CHARINDEX(@separator,@strList) > 0
-	BEGIN
-		SET @intPos = CHARINDEX(@separator,@strList) 
-		SET @cnt = @cnt + 1
-		IF @cnt = @occurence
-		BEGIN
-			RETURN CONVERT(bigint, LEFT(@strList,@intPos-1));
-		END
-		SET @strList = RIGHT(@strList, LEN(@strList)-@intPos)
-	END
-	IF LEN(@strList) > 0
-	BEGIN
-		SET @cnt = @cnt + 1
-		IF @cnt = @occurence
-		BEGIN
-			RETURN CONVERT(bigint, @strList);
-		END
-	END
-
-	RETURN -1
-END
-GO
-
-
+/****** Set database version ******/
 
 INSERT INTO [config] (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '203', '1', '0');

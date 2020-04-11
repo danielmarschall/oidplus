@@ -38,8 +38,8 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 			throw new Exception("Invalid order '$order' (needs to be 'asc' or 'desc')");
 		}
 
-		$maxdepth = 100; // adjust this if you have performance issues (only MySQL)
-		$max_arc_len = 1000;
+		$maxdepth = 100; // adjust this if you have performance issues
+		$max_arc_len = 50;
 		
 		$out = array();
 		
@@ -73,11 +73,11 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 		} else if ($this->slang() == 'mssql') {
 		
 			// 1. sort by namespace (oid, guid, ...)
-			$out[] = "substring($fieldname,1,charindex(':',$fieldname)-1) $order";
+			$out[] = "SUBSTRING($fieldname,1,CHARINDEX(':',$fieldname)-1) $order";
 			
 			for ($i=1; $i<=$maxdepth; $i++) {
 				// 2. Sort by the rest arcs one by one, not that MySQL can only handle decimal(65), not decimal($max_arc_len)
-				$out[] = "dbo.getOidArc($fieldname, '.', $i) $order";
+				$out[] = "dbo.getOidArc($fieldname, $max_arc_len, $i) $order";
 			}
 
 			// 3. as last resort, sort by the identifier itself, e.g. if the function getOidArc always return 0 (happens if it is not an OID)			
@@ -179,28 +179,29 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 		if ($version == 202) {
 			$this->transaction_begin();
 			if ($this->slang() == 'mssql') {
-				$sql = "CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @separator varchar(1), @occurence tinyint)
-				RETURNS bigint AS
+				$sql = "CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @maxArcLen int, @occurence int)
+				RETURNS varchar(512) AS
 				BEGIN 
-					DECLARE @intPos tinyint
+					DECLARE @intPos int
 				
-					DECLARE @cnt tinyint
+					DECLARE @cnt int
 					SET @cnt = 0
 				
-					if substring(@strList, 1, 4) <> 'oid:'
+					if SUBSTRING(@strList, 1, 4) <> 'oid:'
 					begin
-						return 0
+						RETURN ''
 					end
 				
-					SET @strList = RIGHT(@strList, LEN(@strList)-4);
+					SET @strList = RIGHT(@strList, LEN(@strList)-4)
 				
-					WHILE CHARINDEX(@separator,@strList) > 0
+					WHILE CHARINDEX('.',@strList) > 0
 					BEGIN
-						SET @intPos = CHARINDEX(@separator,@strList) 
+						SET @intPos=CHARINDEX('.',@strList) 
 						SET @cnt = @cnt + 1
 						IF @cnt = @occurence
 						BEGIN
-							RETURN CONVERT(bigint, LEFT(@strList,@intPos-1));
+							SET @strList = LEFT(@strList,@intPos-1)
+							RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
 						END
 						SET @strList = RIGHT(@strList, LEN(@strList)-@intPos)
 					END
@@ -209,11 +210,11 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 						SET @cnt = @cnt + 1
 						IF @cnt = @occurence
 						BEGIN
-							RETURN CONVERT(bigint, @strList);
+							RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
 						END
 					END
 				
-					RETURN -1
+					RETURN REPLICATE('0', @maxArcLen)
 				END";
 				$this->query($sql);
 			}
