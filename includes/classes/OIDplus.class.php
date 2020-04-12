@@ -286,6 +286,13 @@ class OIDplus {
 		if (!defined('RECAPTCHA_PUBLIC'))         define('RECAPTCHA_PUBLIC',         '');
 		if (!defined('RECAPTCHA_PRIVATE'))        define('RECAPTCHA_PRIVATE',        '');
 		if (!defined('OIDPLUS_ENFORCE_SSL'))      define('OIDPLUS_ENFORCE_SSL',      2 /* Auto */);
+		
+		// Now include a file containing various size/depth limitations of OIDs
+		// It is important to include it after config.inc.php was included,
+		// so we can give config.inc.php the chance to override the values
+		// by defining the constants first. 
+
+		include_once __DIR__ . '/../limits.inc.php'; 
 
 		// Check version of the config file
 

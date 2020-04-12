@@ -70,8 +70,8 @@ class OIDplusJava extends OIDplusObject {
 		return $this->java == '';
 	}
 
-	public function nodeId() {
-		return 'java:'.$this->java;
+	public function nodeId($with_ns=true) {
+		return $with_ns ? 'java:'.$this->java : $this->java;
 	}
 
 	public function addString($str) {

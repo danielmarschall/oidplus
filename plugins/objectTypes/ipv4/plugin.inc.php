@@ -83,8 +83,8 @@ class OIDplusIpv4 extends OIDplusObject {
 		return $this->ipv4 == '';
 	}
 
-	public function nodeId() {
-		return 'ipv4:'.$this->ipv4;
+	public function nodeId($with_ns=true) {
+		return $with_ns ? 'ipv4:'.$this->ipv4 : $this->ipv4;
 	}
 
 	public function addString($str) {

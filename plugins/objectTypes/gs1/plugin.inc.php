@@ -70,8 +70,8 @@ class OIDplusGs1 extends OIDplusObject {
 		return $this->number == '';
 	}
 
-	public function nodeId() {
-		return 'gs1:'.$this->number;
+	public function nodeId($with_ns=true) {
+		return $with_ns ? 'gs1:'.$this->number : $this->number;
 	}
 
 	public function addString($str) {

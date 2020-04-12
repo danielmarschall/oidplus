@@ -185,15 +185,13 @@ try {
 
 		// First, do a simulation for ASN.1 IDs and IRIs to check if there are any problems (then an Exception will be thrown)
 		if ($obj::ns() == 'oid') {
-			$oid = $obj;
-
 			$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
 			$ids = array_map('trim',$ids);
-			$oid->replaceIris($ids, true);
+			$obj->replaceIris($ids, true);
 
 			$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
 			$ids = array_map('trim',$ids);
-			$oid->replaceAsn1Ids($ids, true);
+			$obj->replaceAsn1Ids($ids, true);
 		}
 
 		// Change RA recursively
@@ -218,15 +216,13 @@ try {
 
 		// Replace ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {
-			$oid = $obj;
-
 			$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
 			$ids = array_map('trim',$ids);
-			$oid->replaceIris($ids, false);
+			$obj->replaceIris($ids, false);
 
 			$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
 			$ids = array_map('trim',$ids);
-			$oid->replaceAsn1Ids($ids, false);
+			$obj->replaceAsn1Ids($ids, false);
 
 			// TODO: Check if any identifiers have been actually changed,
 			// and log it to OID($id), OID($parent), ... (see above)
@@ -309,15 +305,13 @@ try {
 
 		// First simulate if there are any problems of ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {
-			$oid = $obj;
-
 			$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
 			$ids = array_map('trim',$ids);
-			$oid->replaceIris($ids, true);
+			$obj->replaceAsn1Ids($ids, true);
 
 			$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
 			$ids = array_map('trim',$ids);
-			$oid->replaceAsn1Ids($ids, true);
+			$obj->replaceIris($ids, true);
 		}
 
 		// Apply superior RA change
@@ -336,6 +330,10 @@ try {
 		$comment = $_POST['comment'];
 		$title = '';
 		$description = '';
+		
+		if (strlen($id) > OIDPLUS_MAX_ID_LENGTH) {
+			throw new Exception("The identifier '$id' is too long (max allowed length: ".OIDPLUS_MAX_ID_LENGTH.")");
+		}
 	
 		if (OIDplus::db()->slang() == 'mssql') {
 			OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, getdate(), ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
@@ -346,15 +344,13 @@ try {
 
 		// Set ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {
-			$oid = $obj;
-
 			$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
 			$ids = array_map('trim',$ids);
-			$oid->replaceIris($ids, false);
+			$obj->replaceIris($ids, false);
 
 			$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
 			$ids = array_map('trim',$ids);
-			$oid->replaceAsn1Ids($ids, false);
+			$obj->replaceAsn1Ids($ids, false);
 		}
 
 		$status = 0;

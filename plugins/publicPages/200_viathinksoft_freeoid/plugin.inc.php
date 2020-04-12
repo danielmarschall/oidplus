@@ -37,12 +37,12 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 		return 200;
 	}
 
-	private static function getFreeRootOid() {
-		return OIDplusOID::parse('oid:'.OIDplus::config()->getValue('freeoid_root_oid'));
+	private static function getFreeRootOid($with_ns) {
+		return OIDplusOID::parse(($with_ns ? 'oid:' : '').OIDplus::config()->getValue('freeoid_root_oid'));
 	}
 
 	public function action(&$handled) {
-		if (empty(OIDplus::config()->getValue('freeoid_root_oid'))) return;
+		if (empty(self::getFreeRootOid(false))) return;
 
 		if (isset($_POST["action"]) && ($_POST["action"] == "com.viathinksoft.freeoid.request_freeoid")) {
 			$handled = true;
@@ -67,7 +67,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 				}
 			}
 
-			$root_oid = OIDplus::config()->getValue('freeoid_root_oid');
+			$root_oid = self::getFreeRootOid(false);
 			OIDplus::logger()->log("OID(oid:$root_oid)+RA($email)!", "Requested a free OID for email '$email' to be placed into root '$root_oid'");
 
 			$timestamp = time();
@@ -125,8 +125,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 
 			// 2. step: Add the new OID to the database
 
-			$root_oid = OIDplus::config()->getValue('freeoid_root_oid');
-			$new_oid = $root_oid.'.'.($this->freeoid_max_id()+1);
+			$root_oid = self::getFreeRootOid(false);
+			$new_oid = OIDplusOID::parse('oid:'.$root_oid)->appendArcs($this->freeoid_max_id()+1)->nodeId(false);
 
 			OIDplus::logger()->log("OID(oid:$root_oid)+OIDRA(oid:$root_oid)!", "Child OID '$new_oid' added automatically by '$email' (RA Name: '$ra_name')");
 			OIDplus::logger()->log("OID(oid:$new_oid)+RA($email)!",            "Free OID '$new_oid' activated (RA Name: '$ra_name')");
@@ -141,11 +141,15 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 			if (empty($title)) $title = $ra_name;
 
 			try {
+				if ('oid:'.$new_oid > OIDPLUS_MAX_ID_LENGTH) {
+					throw new Exception("The resulting object identifier '$new_oid' is too long (max allowed length ".(OIDPLUS_MAX_ID_LENGTH-strlen('oid:')).")");
+				}
+				
 				if (OIDplus::db()->slang() == 'mssql') {
-					OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, getdate())", array('oid:'.$new_oid, $email, 'oid:'.OIDplus::config()->getValue('freeoid_root_oid'), $title, $description, false));
+					OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, getdate())", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
 				} else {
 					// MySQL + PgSQL
-					OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, now())", array('oid:'.$new_oid, $email, 'oid:'.OIDplus::config()->getValue('freeoid_root_oid'), $title, $description, false));
+					OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, now())", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
 				}
 			} catch (Exception $e) {
 				$ra->delete();
@@ -193,7 +197,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 	}
 
 	public function gui($id, &$out, &$handled) {
-		if (empty(OIDplus::config()->getValue('freeoid_root_oid'))) return;
+		if (empty(self::getFreeRootOid(false))) return;
 
 		if (explode('$',$id)[0] == 'oidplus:com.viathinksoft.freeoid') {
 			$handled = true;
@@ -203,7 +207,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 
 			$highest_id = $this->freeoid_max_id();
 
-			$out['text'] .= '<p>Currently <a '.oidplus_link('oid:'.OIDplus::config()->getValue('freeoid_root_oid')).'>'.$highest_id.' free OIDs have been</a> registered. Please enter your email below to receive a free OID.</p>';
+			$out['text'] .= '<p>Currently <a '.oidplus_link(self::getFreeRootOid(true)).'>'.$highest_id.' free OIDs have been</a> registered. Please enter your email below to receive a free OID.</p>';
 
 			try {
 				$out['text'] .= '
@@ -217,7 +221,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 
 				$tos = file_get_contents(__DIR__ . '/tos.html');
 				$tos = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $tos);
-				$tos = str_replace('{{ROOT_OID}}', OIDplus::config()->getValue('freeoid_root_oid'), $tos);
+				$tos = str_replace('{{ROOT_OID}}', self::getFreeRootOid(false), $tos);
 				$tos = str_replace('{{ROOT_OID_ASN1}}', self::getFreeRootOid()->getAsn1Notation(), $tos);
 				$tos = str_replace('{{ROOT_OID_IRI}}', self::getFreeRootOid()->getIriNotation(), $tos);
 				$out['text'] .= $tos;
@@ -264,7 +268,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
-		if (empty(OIDplus::config()->getValue('freeoid_root_oid'))) return false;
+		if (empty(self::getFreeRootOid(false))) return false;
 
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
@@ -283,11 +287,11 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePlugin {
 
 	# ---
 
-	protected function freeoid_max_id() {
-		$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ? order by ".OIDplus::db()->natOrder('id'), array('oid:'.OIDplus::config()->getValue('freeoid_root_oid').'.%'));
+	protected static function freeoid_max_id() {
+		$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ? order by ".OIDplus::db()->natOrder('id'), array(self::getFreeRootOid(true).'.%'));
 		$highest_id = 0;
 		while ($row = $res->fetch_array()) {
-			$arc = substr_count(OIDplus::config()->getValue('freeoid_root_oid'), '.')+1;
+			$arc = substr_count(self::getFreeRootOid(false), '.')+1;
 			$highest_id = explode('.',$row['id'])[$arc];
 		}
 		return $highest_id;

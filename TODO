@@ -123,6 +123,7 @@ IDEAS
 - have a menu item (plugin) "latest updates" which lists OIDs that have been changed or added recently?
 - (unsure:) would it be good if the superior RA comment is shown in the object page itself?
 - During an object insertion: If everything is empty (ASN1, IRI, comment), should then there be a warning?
+- The system should warn if there are two OIDs with the same ASN.1 identifier (it is allowed, but not recommended!)
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie

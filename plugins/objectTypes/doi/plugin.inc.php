@@ -70,8 +70,8 @@ class OIDplusDoi extends OIDplusObject {
 		return $this->doi == '';
 	}
 
-	public function nodeId() {
-		return 'doi:'.$this->doi;
+	public function nodeId($with_ns=true) {
+		return $with_ns ? 'doi:'.$this->doi : $this->doi;
 	}
 
 	public function addString($str) {

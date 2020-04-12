@@ -70,8 +70,8 @@ class OIDplusOther extends OIDplusObject {
 		return $this->other == '';
 	}
 
-	public function nodeId() {
-		return 'other:'.$this->other;
+	public function nodeId($with_ns=true) {
+		return $with_ns ? 'other:'.$this->other : $this->other;
 	}
 
 	public function addString($str) {

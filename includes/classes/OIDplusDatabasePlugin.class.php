@@ -57,13 +57,10 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 			throw new Exception("Invalid order '$order' (needs to be 'asc' or 'desc')");
 		}
 
-		$maxdepth = 100; // adjust this if you have performance issues
-		$max_arc_len = 50;
-		
 		$out = array();
 		
 		if ($this->slang() == 'pgsql') {
-			if ($max_arc_len > 131072) $max_arc_len = 131072; // Limit of the "numeric()" type
+			$max_arc_len = OIDPLUS_MAX_OID_ARC_SIZE > 131072 ? 131072 : OIDPLUS_MAX_OID_ARC_SIZE; // Limit of the "numeric()" type
 			
 			// 1. Sort by namespace (oid, guid, ...)
 			$out[] = "SPLIT_PART($fieldname, ':', 1) $order";
@@ -75,7 +72,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 			$out[] = "$fieldname $order";
 			
 		} else if ($this->slang() == 'mysql') {
-			if ($max_arc_len > 65) $max_arc_len = 65; // Limit of "decimal()" type
+			$max_arc_len = OIDPLUS_MAX_OID_ARC_SIZE > 65 ? 65 : OIDPLUS_MAX_OID_ARC_SIZE; // Limit of "decimal()" type
 			
 			// 1. sort by namespace (oid, guid, ...)
 			$out[] = "SUBSTRING_INDEX($fieldname,':',1) $order";
@@ -83,7 +80,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 			// 2. sort by first arc (0,1,2)
 			$out[] = "SUBSTRING(SUBSTRING_INDEX($fieldname,'.',1), LENGTH(SUBSTRING_INDEX($fieldname,':',1))+2, $max_arc_len) $order";
 			
-			for ($i=2; $i<=$maxdepth; $i++) {
+			for ($i=2; $i<=OIDPLUS_MAX_OID_DEPTH; $i++) {
 				// 3. Sort by the rest arcs one by one, not that MySQL can only handle decimal(65), not decimal($max_arc_len)
 				$out[] = "cast(SUBSTRING(SUBSTRING_INDEX($fieldname,'.',$i), LENGTH(SUBSTRING_INDEX($fieldname,'.',".($i-1)."))+2, $max_arc_len) as decimal($max_arc_len)) $order";
 			}
@@ -92,11 +89,12 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 			$out[] = "$fieldname $order";
 			
 		} else if ($this->slang() == 'mssql') {
+			$max_arc_len = OIDPLUS_MAX_OID_ARC_SIZE;
 		
 			// 1. sort by namespace (oid, guid, ...)
 			$out[] = "SUBSTRING($fieldname,1,CHARINDEX(':',$fieldname)-1) $order";
 			
-			for ($i=1; $i<=$maxdepth; $i++) {
+			for ($i=1; $i<=OIDPLUS_MAX_OID_DEPTH; $i++) {
 				// 2. Sort by the rest arcs one by one, not that MySQL can only handle decimal(65), not decimal($max_arc_len)
 				$out[] = "dbo.getOidArc($fieldname, $max_arc_len, $i) $order";
 			}

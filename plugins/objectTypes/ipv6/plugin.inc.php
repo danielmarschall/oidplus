@@ -83,8 +83,8 @@ class OIDplusIpv6 extends OIDplusObject {
 		return $this->ipv6 == '';
 	}
 
-	public function nodeId() {
-		return 'ipv6:'.$this->ipv6;
+	public function nodeId($with_ns=true) {
+		return $with_ns ? 'ipv6:'.$this->ipv6 : $this->ipv6;
 	}
 
 	public function addString($str) {

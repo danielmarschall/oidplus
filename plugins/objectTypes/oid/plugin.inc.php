@@ -83,8 +83,8 @@ class OIDplusOid extends OIDplusObject {
 		return $this->oid == '';
 	}
 
-	public function nodeId() {
-		return 'oid:'.$this->oid;
+	public function nodeId($with_ns=true) {
+		return $with_ns ? 'oid:'.$this->oid : $this->oid;
 	}
 
 	public function addString($str) {
@@ -220,6 +220,21 @@ class OIDplusOid extends OIDplusObject {
 		$bak_oid = $out->oid;
 		$out->oid = sanitizeOID($out->oid);
 		if ($out->oid === false) throw new Exception("$bak_oid is not a valid OID!");
+		
+		if (strlen($out->oid) > OIDPLUS_MAX_ID_LENGTH-strlen('oid:')) {
+			throw new Exception("The resulting OID '".$out->oid."' is too long (max allowed: ".(OIDPLUS_MAX_ID_LENGTH-strlen('oid:')).").");
+		}
+		
+		$depth = 0;
+		foreach (explode('.',$out->oid) as $arc) {
+			if (strlen($arc) > OIDPLUS_MAX_OID_ARC_SIZE) {
+				throw new Exception("Arc '$arc' is too long and therefore cannot be appended to the OID '".$this->oid."' (max allowed arc size is ".OIDPLUS_MAX_OID_ARC_SIZE.")");
+			}
+			$depth++;
+		}
+		if ($depth > OIDPLUS_MAX_OID_DEPTH) {
+			throw new Exception("OID '".$out->oid."' has too many arcs (current depth $depth, max depth ".OIDPLUS_MAX_OID_DEPTH.")");
+		}
 
 		return $out;
 	}
@@ -350,6 +365,10 @@ class OIDplusOid extends OIDplusObject {
 		foreach ($demandedASN1s as &$asn1) {
 			$asn1 = trim($asn1);
 
+			if (strlen($asn1) > OIDPLUS_MAX_OID_ASN1_ID_LEN) {
+				throw new Exception("ASN.1 alphanumeric identifier '$asn1' is too long (max allowed length ".OIDPLUS_MAX_OID_ASN1_ID_LEN.")");
+			}
+
 			// Validate identifier
 			if (!oid_id_is_valid($asn1)) throw new Exception("'$asn1' is not a valid ASN.1 identifier!");
 
@@ -383,6 +402,10 @@ class OIDplusOid extends OIDplusObject {
 		// First do a few checks
 		foreach ($demandedIris as &$iri) {
 			$iri = trim($iri);
+
+			if (strlen($iri) > OIDPLUS_MAX_OID_UNICODE_LABEL_LEN) {
+				throw new Exception("Unicode label '$iri' is too long (max allowed length ".OIDPLUS_MAX_OID_UNICODE_LABEL_LEN.")");
+			}
 
 			// Validate identifier
 			if (!iri_arc_valid($iri, false)) throw new Exception("'$iri' is not a valid IRI!");

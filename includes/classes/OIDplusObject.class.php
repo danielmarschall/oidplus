@@ -62,7 +62,7 @@ abstract class OIDplusObject {
 
 	public abstract function isRoot();
 
-	public abstract function nodeId();
+	public abstract function nodeId($with_ns=true);
 
 	public abstract function addString($str);
 
