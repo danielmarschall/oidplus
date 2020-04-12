@@ -41,7 +41,7 @@ $ary = glob(__DIR__ . '/../plugins/database/'.'*'.'/plugin.inc.php');
 foreach ($ary as $a) include $a;
 
 foreach (get_declared_classes() as $c) {
-	if (is_subclass_of($c, 'OIDplusDataBasePlugin')) {
+	if (is_subclass_of($c, 'OIDplusDatabasePlugin')) {
 		$selected = $c::name() == 'MySQL' ? ' selected="true"' : '';
 		echo '<option value="'.htmlentities($c::name()).'"'.$selected.'>'.htmlentities($c::name()).'</option>';
 	}

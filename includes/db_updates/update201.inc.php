@@ -18,8 +18,8 @@
  */
 
 // DATABASE UPDATE 201 -> 202
-// This script will be included by OIDplusDataBasePlugin.class.php inside function afterConnect().
-// Parameters: $this is the OIDplusDataBasePlugin class
+// This script will be included by OIDplusDatabasePlugin.class.php inside function afterConnect().
+// Parameters: $this is the OIDplusDatabasePlugin class
 //             $version is the current version (this script MUST increase the number by 1 when it is done)
 
 $this->transaction_begin();

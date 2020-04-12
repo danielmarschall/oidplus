@@ -19,7 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
+class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 	private $pdo;
 	private $last_query;
 

@@ -299,7 +299,7 @@ class OIDplus {
 		foreach ($ary as $a) include $a;
 
 		foreach (get_declared_classes() as $c) {
-			if (is_subclass_of($c, 'OIDplusDataBasePlugin')) {
+			if (is_subclass_of($c, 'OIDplusDatabasePlugin')) {
 				self::registerDatabasePlugin(new $c());
 			}
 		}

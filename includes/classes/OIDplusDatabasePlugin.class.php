@@ -19,7 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
+abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 	protected $connected = false;
 	protected $html = null;
 

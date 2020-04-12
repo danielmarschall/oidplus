@@ -21,7 +21,7 @@ if (!defined('IN_OIDPLUS')) die();
 
 define('OIDPLUS_MYSQL_QUERYLOG', false);
 
-class OIDplusDataBasePluginMySQLi extends OIDplusDataBasePlugin {
+class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	private $mysqli;
 	private $last_query;
 	private $prepare_cache = array();

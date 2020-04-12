@@ -18,8 +18,8 @@
  */
 
 // DATABASE UPDATE 202 -> 203
-// This script will be included by OIDplusDataBasePlugin.class.php inside function afterConnect().
-// Parameters: $this is the OIDplusDataBasePlugin class
+// This script will be included by OIDplusDatabasePlugin.class.php inside function afterConnect().
+// Parameters: $this is the OIDplusDatabasePlugin class
 //             $version is the current version (this script MUST increase the number by 1 when it is done)
 
 if (!isset($version)) throw new Exception("Argument 'version' is missing; was the file included in a wrong way?");
