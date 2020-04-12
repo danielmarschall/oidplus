@@ -58,12 +58,14 @@ ReCaptcha:
 
 Minify:
 	License: MIT
-	https://github.com/matthiasmullie/minify (Version: 17 Dec 2018)
-	and its dependency:
-	https://github.com/matthiasmullie/path-converter (Version: 25 Oct 2018)
+	Version: Commit 9ba1b45 on 24 Nov 2019
+	https://github.com/matthiasmullie/minify
+	and its dependency path-converter:
+		License: MIT
+		Version: Commit e7d13b2 on 6 Feb 2019
+		https://github.com/matthiasmullie/path-converter
 
 Polyfill:
 	License: MIT
 	Currently directly linked
 	Website: https://polyfill.io/v3/
-
