@@ -100,7 +100,7 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 		return $err;
 	}
 
-	public function connect(): void {
+	protected function doConnect(): void {
 		try {
 			$options = [
 			#    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -111,13 +111,15 @@ class OIDplusDataBasePluginPDO extends OIDplusDataBasePlugin {
 			// Try connecting to the database
 			$this->pdo = new PDO(OIDPLUS_PDO_DSN, OIDPLUS_PDO_USERNAME, base64_decode(OIDPLUS_PDO_PASSWORD), $options);
 		} catch (PDOException $e) {
-			parent::showConnectError($e->getMessage());
-			die();
+			$message = $e->getMessage();
+			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
 		}
 
 		$this->query("SET NAMES 'utf8'");
-		$this->afterConnect();
-		$this->connected = true;
+	}
+
+	protected function doDisconnect(): void {
+		$this->pdo = null; // the connection will be closed by removing the reference
 	}
 
 	private $intransaction = false;

@@ -30,6 +30,25 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 	public abstract function transaction_begin(): void;
 	public abstract function transaction_commit(): void;
 	public abstract function transaction_rollback(): void;
+	protected abstract function doConnect(): void;
+	protected abstract function doDisconnect(): void;
+	
+	public final function connect(): void {
+		if ($this->connected) return;
+		$this->beforeConnect();
+		$this->doConnect();
+		$this->connected = true;
+		register_shutdown_function(array($this, 'disconnect'));
+		$this->afterConnect();
+	}
+	
+	public final function disconnect(): void {
+		if (!$this->connected) return;
+		$this->beforeDisconnect();
+		$this->doDisconnect();
+		$this->connected = false;
+		$this->afterDisconnect();
+	}
 
 	public function natOrder($fieldname, $order='asc'): string {
 	
@@ -44,6 +63,7 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 		$out = array();
 		
 		if ($this->slang() == 'pgsql') {
+			if ($max_arc_len > 131072) $max_arc_len = 131072; // Limit of the "numeric()" type
 			
 			// 1. Sort by namespace (oid, guid, ...)
 			$out[] = "SPLIT_PART($fieldname, ':', 1) $order";
@@ -55,6 +75,7 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 			$out[] = "$fieldname $order";
 			
 		} else if ($this->slang() == 'mysql') {
+			if ($max_arc_len > 65) $max_arc_len = 65; // Limit of "decimal()" type
 			
 			// 1. sort by namespace (oid, guid, ...)
 			$out[] = "SUBSTRING_INDEX($fieldname,':',1) $order";
@@ -64,7 +85,7 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 			
 			for ($i=2; $i<=$maxdepth; $i++) {
 				// 3. Sort by the rest arcs one by one, not that MySQL can only handle decimal(65), not decimal($max_arc_len)
-				$out[] = "cast(SUBSTRING(SUBSTRING_INDEX($fieldname,'.',$i), LENGTH(SUBSTRING_INDEX($fieldname,'.',".($i-1)."))+2, $max_arc_len) as decimal(65)) $order";
+				$out[] = "cast(SUBSTRING(SUBSTRING_INDEX($fieldname,'.',$i), LENGTH(SUBSTRING_INDEX($fieldname,'.',".($i-1)."))+2, $max_arc_len) as decimal($max_arc_len)) $order";
 			}
 
 			// 4. as last resort, sort by the identifier itself, e.g. if the casts above did fail (happens if it is not an OID)			
@@ -92,141 +113,64 @@ abstract class OIDplusDataBasePlugin extends OIDplusPlugin {
 		return implode(', ', $out); 
 	}
 
-	protected function afterConnect(): void {
-		// Check if database tables are existing
-		$table_names = array('objects', 'asn1id', 'iri', 'ra', 'config');
-		foreach ($table_names as $tablename) {
-			try {
-				$this->query("select 0 from ".OIDPLUS_TABLENAME_PREFIX.$tablename." where 1=0");
-			} catch (Exception $e) {
-				throw new OIDplusConfigInitializationException('Table '.OIDPLUS_TABLENAME_PREFIX.$tablename.' is missing!');
-			}
-		}
+	protected function beforeDisconnect(): void {}
 
-		// Do the database table tables need an update?
+	protected function afterDisconnect(): void {}
+
+	protected function beforeConnect(): void {}
+
+	protected function afterConnect(): void {
+		// Check if the config table exists. This is important because the database version is stored in it
+		$this->initRequireTables(array('config'));
+
+		// Do the database tables need an update?
+		// It is important that we do it immediately after connecting,
+		// because the database structure might change and therefore various things might fail.
 		// Note: The config setting "database_version" is inserted in setup/sql/...sql, not in the OIDplus core init
 
 		$res = $this->query("SELECT value FROM ".OIDPLUS_TABLENAME_PREFIX."config WHERE name = 'database_version'");
-		$row = $res->fetch_array();
-		
+		$row = $res->fetch_array();		
 		if ($row == null) {
 			throw new OIDplusConfigInitializationException('Cannot determine database version (the entry "database_version" inside the table "'.OIDPLUS_TABLENAME_PREFIX.'config" is probably missing)');
-		}
-		
+		}		
 		$version = $row['value'];
-		if ($version == 200) {
-			$this->transaction_begin();
-			$this->query("ALTER TABLE ".OIDPLUS_TABLENAME_PREFIX."objects ADD comment varchar(255) NULL");
-			$version = 201;
-			$this->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."config SET value = ? WHERE name = 'database_version'", array($version));
-			$this->transaction_commit();
+		if (!is_numeric($version) || ($version < 200) || ($version > 999)) {
+			throw new OIDplusConfigInitializationException('Entry "database_version" inside the table "'.OIDPLUS_TABLENAME_PREFIX.'config" seems to be wrong (expect number between 200 and 999)');
+		}		
+		while (file_exists($file = __DIR__."/../db_updates/update$version.inc.php")) {
+			$prev_version = $version;
+			include $file; // run update-script
+			if ($version != $prev_version+1) {
+				// This should usually not happen, since the update-file should increase the version
+				// or throw an Exception by itself
+				throw new Exception("Database update $prev_version -> ".($prev_version+1)." failed (script reports new version to be $version)");
+			}
 		}
-		if ($version == 201) {
-			// Change bit(1) types to boolean/tinyint(1)
-			$this->transaction_begin();
-			if ($this->slang() == 'pgsql') {
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  alter protected    drop default");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  alter protected    type boolean using get_bit(protected   ,0)::boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  alter protected    set default false");
-				
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  alter visible      drop default");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  alter visible      type boolean using get_bit(visible     ,0)::boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  alter visible      set default false");
 
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  alter standardized drop default");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  alter standardized type boolean using get_bit(standardized,0)::boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  alter standardized set default false");
-
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  alter well_known   drop default");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  alter well_known   type boolean using get_bit(well_known  ,0)::boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  alter well_known   set default false");
-
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     alter longarc      drop default");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     alter longarc      type boolean using get_bit(longarc     ,0)::boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     alter longarc      set default false");
-
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     alter well_known   drop default");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     alter well_known   type boolean using get_bit(well_known  ,0)::boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     alter well_known   set default false");
-
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."objects alter confidential type boolean using get_bit(confidential,0)::boolean");
-
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."ra      alter privacy      drop default");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."ra      alter privacy      type boolean using get_bit(privacy     ,0)::boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."ra      alter privacy      set default false");
-			} else if ($this->slang() == 'mysql') {
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  modify protected    boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  modify visible      boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  modify standardized boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  modify well_known   boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     modify longarc      boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     modify well_known   boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."objects modify confidential boolean");
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."ra      modify privacy      boolean");
+		// Now that our database is up-to-date, we check if database tables are existing
+		// without config table, because it was checked above
+		$this->initRequireTables(array('objects', 'asn1id', 'iri', 'ra'/*, 'config'*/));
+	}
+	
+	private function initRequireTables($tableNames) {
+		$msgs = array();
+		foreach ($tableNames as $tableName) {
+			if (!$this->tableExists(OIDPLUS_TABLENAME_PREFIX.$tableName)) {
+				$msgs[] = 'Table '.OIDPLUS_TABLENAME_PREFIX.$tableName.' is missing!';
 			}
-			
-			// Rename log_user.user to log_user.username, since user is a keyword in PostgreSQL and MSSQL
-			if ($this->slang() == 'pgsql') {
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."log_user rename column \"user\" to \"username\"");
-			} else if ($this->slang() == 'mysql') {
-				$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."log_user change `user` `username` varchar(255) NOT NULL");
-			}
-  
-			$version = 202;
-			$this->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."config SET value = ? WHERE name = 'database_version'", array($version));
-			$this->transaction_commit();
 		}
-		if ($version == 202) {
-			$this->transaction_begin();
-			if ($this->slang() == 'mssql') {
-				$sql = "CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @maxArcLen int, @occurence int)
-				RETURNS varchar(512) AS
-				BEGIN 
-					DECLARE @intPos int
-				
-					DECLARE @cnt int
-					SET @cnt = 0
-				
-					if SUBSTRING(@strList, 1, 4) <> 'oid:'
-					begin
-						RETURN ''
-					end
-				
-					SET @strList = RIGHT(@strList, LEN(@strList)-4)
-				
-					WHILE CHARINDEX('.',@strList) > 0
-					BEGIN
-						SET @intPos=CHARINDEX('.',@strList) 
-						SET @cnt = @cnt + 1
-						IF @cnt = @occurence
-						BEGIN
-							SET @strList = LEFT(@strList,@intPos-1)
-							RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
-						END
-						SET @strList = RIGHT(@strList, LEN(@strList)-@intPos)
-					END
-					IF LEN(@strList) > 0
-					BEGIN
-						SET @cnt = @cnt + 1
-						IF @cnt = @occurence
-						BEGIN
-							RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
-						END
-					END
-				
-					RETURN REPLICATE('0', @maxArcLen)
-				END";
-				$this->query($sql);
-			}
-				
-			$version = 203;
-			$this->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."config SET value = ? WHERE name = 'database_version'", array($version));
-			$this->transaction_commit();
+		if (count($msgs) > 0) {
+			throw new OIDplusConfigInitializationException(implode("\n\n",$msgs));
 		}
 	}
-
-	protected function showConnectError($message): void {
-		throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
+	
+	public function tableExists($tableName) {
+		try {
+			$this->query("select 0 from ".$tableName." where 1=0");
+			return true;
+		} catch (Exception $e) {
+			return false;
+		}
 	}
 
 	public function isConnected(): bool {

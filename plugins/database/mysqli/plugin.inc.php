@@ -104,20 +104,23 @@ class OIDplusDataBasePluginMySQLi extends OIDplusDataBasePlugin {
 		return !empty($this->mysqli->connect_error) ? $this->mysqli->connect_error : $this->mysqli->error;
 	}
 
-	public function connect(): void {
+	protected function doConnect(): void {
 		if (OIDPLUS_MYSQL_QUERYLOG) file_put_contents("query.log", '');
 
 		// Try connecting to the database
 		list($hostname,$port) = explode(':', OIDPLUS_MYSQL_HOST.':'.ini_get("mysqli.default_port"));
 		$this->mysqli = @new mysqli($hostname, OIDPLUS_MYSQL_USERNAME, base64_decode(OIDPLUS_MYSQL_PASSWORD), OIDPLUS_MYSQL_DATABASE, $port);
 		if (!empty($this->mysqli->connect_error) || ($this->mysqli->connect_errno != 0)) {
-			parent::showConnectError($this->error());
-			die();
+			$message = $this->error();
+			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
 		}
 
 		$this->query("SET NAMES 'utf8'");
-		$this->afterConnect();
-		$this->connected = true;
+	}
+
+	protected function doDisconnect(): void {
+		$this->mysqli->close();
+		$this->mysqli = null;
 	}
 
 	private $intransaction = false;

@@ -104,21 +104,24 @@ class OIDplusDataBasePluginODBC extends OIDplusDataBasePlugin {
 		return odbc_errormsg($this->odbc);
 	}
 
-	public function connect(): void {
+	protected function doConnect(): void {
 		// Try connecting to the database
 		$this->odbc = @odbc_connect(OIDPLUS_ODBC_DSN, OIDPLUS_ODBC_USERNAME, base64_decode(OIDPLUS_ODBC_PASSWORD));
 
 		if (!$this->odbc) {
-			parent::showConnectError(odbc_errormsg());
-			die();
+			$message = odbc_errormsg();
+			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
 		}
 
 		try {
 			$this->query("SET NAMES 'utf8'"); // Does most likely NOT work with ODBC. Try adding ";CHARSET=UTF8" (or similar) to the DSN
 		} catch (Exception $e) {
 		}
-		$this->afterConnect();
-		$this->connected = true;
+	}
+	
+	protected function doDisconnect(): void {
+		@odbc_close($this->odbc);
+		$this->odbc = null;
 	}
 
 	private $intransaction = false;
