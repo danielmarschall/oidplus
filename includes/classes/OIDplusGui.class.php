@@ -384,8 +384,8 @@ class OIDplusGui {
 				$out['text'] = str_replace('%%DESC%%',    $desc,                              $out['text']);
 			if (strpos($out['text'], '%%CRUD%%') !== false)
 				$out['text'] = str_replace('%%CRUD%%',    self::showCrud($id),                $out['text']);
-			if ((strpos($out['text'], '%%RA_INFO%%') !== false) && isset($row['ra_email']) && !empty($row['ra_email']))
-				$out['text'] = str_replace('%%RA_INFO%%', OIDplusPagePublicRaInfo::showRaInfo($row['ra_email']), $out['text']);
+			if (strpos($out['text'], '%%RA_INFO%%') !== false)
+				$out['text'] = str_replace('%%RA_INFO%%', OIDplusPagePublicRaInfo::showRaInfo($row['ra_email']), $out['text']);				
 
 			$alt_ids = $obj->getAltIds();
 			if (count($alt_ids) > 0) {
