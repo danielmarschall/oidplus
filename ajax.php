@@ -109,7 +109,11 @@ try {
 		if ($ra_logged_in) OIDplus::authUtils()->raLogout($email);
 
 		$ra = new OIDplusRA($email);
+		if (!$ra->existing()) {
+			throw new OIDplusException("RA '$email' does not exist.");
+		}
 		$ra->delete();
+		$ra = null;
 
 		OIDplus::logger()->log("RA($email)?/A?", "RA '$email' deleted");
 

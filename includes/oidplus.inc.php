@@ -95,6 +95,7 @@ require_once __DIR__ . '/uuid_utils.inc.php';
 require_once __DIR__ . '/ipv4_functions.inc.php';
 require_once __DIR__ . '/ipv6_functions.inc.php';
 require_once __DIR__ . '/anti_xss.inc.php';
+require_once __DIR__ . '/vnag_framework.inc.php';
 
 // ---
 

@@ -29,6 +29,11 @@ class OIDplusRA {
 	public function raEmail() {
 		return $this->email;
 	}
+	
+	public function existing() {
+		$res = OIDplus::db()->query("select email from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($this->email));
+		return ($res->num_rows() > 0);
+	}
 
 	public function raName() {
 		$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($this->email));

@@ -18,5 +18,8 @@ sed -i 's/'0'/false/g' ../setup/sql/example_pgsql.sql
 # Change backticks to double quotes
 sed -i 's/`/"/g' ../setup/sql/example_pgsql.sql
 
+# Change \" to "
+sed -i 's/\\"/"/g' ../setup/sql/example_pgsql.sql
+
 # Change "\n" to "' || chr(10) || '"
 sed -i "s/\\\n/' \|\| chr\(10\) \|\| '/g" ../setup/sql/example_pgsql.sql

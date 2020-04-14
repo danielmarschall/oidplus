@@ -31,10 +31,6 @@ if (!file_exists(__DIR__ . '/../includes/config.inc.php')) {
 	require_once __DIR__ . '/../includes/config.inc.php';
 }
 
-require_once __DIR__ . '/includes/phpsvnclient.class.php';
-require_once __DIR__ . '/includes/http_class.class.php';
-require_once __DIR__ . '/includes/vnag_framework.inc.php';
-
 define('OIDPLUS_REPO', 'https://svn.viathinksoft.com/svn/oidplus');
 
 ?><!DOCTYPE html>
