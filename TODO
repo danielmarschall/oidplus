@@ -9,6 +9,8 @@ RECENT STUFF
 - the inactivity timer is much too fast!
 - Does the admin feature "600_log" also show all log events from all Objects and all RAs?
 - at a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
+- ajax.php : can the whole code be put into plugins?
+- Test every function of OIDplus to ensure everything works after the recent changes in OOP
 
 WHOIS
 - webwhois: beside TXT/XML/JSON more output modi?  CSV, S/MIME  (and add the S/MIME keypurpose to the X.509 certificates)

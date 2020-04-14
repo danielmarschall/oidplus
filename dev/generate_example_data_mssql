@@ -18,7 +18,7 @@ sed -iE 's/`\([^`]\+\)`/\[\1\]/g' ../setup/sql/example_mssql.sql
 sed -i "s/\\\n/' \+ CHAR(13) \+ '/g" ../setup/sql/example_mssql.sql
 
 # Change \" to "
-sed -i 's/\\"/"/g' ../setup/sql/example_pgsql.sql
+sed -i 's/\\"/"/g' ../setup/sql/example_mssql.sql
 
 # Prepend "SET DATEFORMAT ymd;"
 echo "SET DATEFORMAT ymd;" > tmp
