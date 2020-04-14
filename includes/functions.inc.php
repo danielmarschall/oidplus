@@ -17,122 +17,6 @@
  * limitations under the License.
  */
 
-function oidplus_valid_email($email) {
-	return !empty(filter_var($email, FILTER_VALIDATE_EMAIL));
-}
-
-function oidplus_link($goto) {
-	if (strpos($goto, '#') !== false) {
-		list($goto, $anchor) = explode('#', $goto, 2);
-		return 'href="?goto='.urlencode($goto).'#'.htmlentities($anchor).'" onclick="openOidInPanel('.js_escape($goto).', true, '.js_escape($anchor).'); return false;"';
-	} else {
-		return 'href="?goto='.urlencode($goto).'" onclick="openOidInPanel('.js_escape($goto).', true); return false;"';
-	}
-}
-
-function secure_email($email, $linktext, $level=1) {
-
-	// see http://www.spamspan.de/
-
-	/* Level 1 */
-	/*
-	<span class="spamspan">
-	<span class="u">user</span>
-	@
-	<span class="d">beispiel.de</span>
-	(<span class="t">Spam Hasser</span>)
-	</span>
-	*/
-
-	if ($level == 1) {
-		@list($user, $domain) = explode('@', $email);
-		if (($linktext == $email) || empty($linktext)) {
-			return '<span class="spamspan"><span class="u">'.htmlentities($user).'</span>&#64;<span class="d">'.htmlentities($domain).'</span></span>';
-		} else {
-			return '<span class="spamspan"><span class="u">'.htmlentities($user).'</span>&#64;<span class="d">'.htmlentities($domain).'</span>(<span class="t">'.htmlentities($linktext).'</span>)</span>';
-		}
-	}
-
-	/* Level 2 */
-	/*
-	<span class="spamspan">
-		<span class="u">user</span>
-		<img alt="at" width="10" src="@.png">
-		<span class="d">beispiel.de</span>
-	</span>
-	*/
-
-	if ($level == 2) {
-		list($user, $domain) = explode('@', $email);
-		return '<span class="spamspan"><span class="u">'.htmlentities($user).'</span><img alt="at" width="10" src="@.png"><span class="d">'.htmlentities($domain).'</span></span>';
-	}
-
-	/* Level 3 */
-	/*
-	<span class="spamspan">
-		<span class="u">user</span>
-		[at]
-		<span class="d">beispiel [dot] de</span>
-	</span>
-	*/
-
-	if ($level == 3) {
-		list($user, $domain) = explode('@', $email);
-		$domain = str_replace('.', ' [dot] ', $domain);
-		return '<span class="spamspan"><span class="u">'.htmlentities($user).'</span> [at] <span class="d">'.htmlentities($domain).'</span></span>';
-	}
-
-	return null;
-
-
-	// --- Old code ---
-
-	// Attention: document.write() JavaScript will damage the browser cache, which leads to bugs if you navigate back&forth with the browser navigation
-
-	// No new lines to avoid a JavaScript error!
-	$linktext = str_replace("\r", ' ', $linktext);
-	$linktext = str_replace("\n", ' ', $linktext);
-
-	if (!function_exists('alas_js_crypt'))
-	{
-		function alas_js_crypt($text)
-		{
-			$tmp = '';
-			for ($i=0; $i<strlen($text); $i++)
-			{
-				$tmp .= 'document.write("&#'.ord(substr($text, $i, 1)).';");';
-			}
-			return $tmp;
-		}
-	}
-
-	if (!function_exists('alas_js_write'))
-	{
-		function alas_js_write($text)
-		{
-			$text = str_replace('\\', '\\\\', $text);
-			$text = str_replace('"', '\"', $text);
-			$text = str_replace('/', '\/', $text); // W3C Validation </a> -> <\/a>
-			return 'document.write("'.$text.'");';
-		}
-	}
-
-	$aus = '';
-	if ($email != '')
-	{
-		$aus .= '<script><!--'."\n"; // type="text/javascript" is not necessary in HTML5
-		$aus .= alas_js_write('<a href="');
-		$aus .= alas_js_crypt('mailto:'.$email);
-		$aus .= alas_js_write('">');
-		$aus .= $crypt_linktext ? alas_js_crypt($linktext) : alas_js_write($linktext);
-		$aus .= alas_js_write('</a>').'// --></script>';
-	}
-
-	if ($crypt_linktext) $linktext = str_replace('@', '&', $linktext);
-	$email = str_replace('@', '&', $email);
-	return $aus.'<noscript>'.htmlentities($linktext).' ('.htmlentities($email).')</noscript>';
-}
-
 function insertWhitespace($str, $index) {
 	return substr($str, 0, $index) . ' ' . substr($str, $index);
 }
@@ -140,36 +24,6 @@ function insertWhitespace($str, $index) {
 function js_escape($data) {
 	// TODO.... json_encode??
 	return "'" . str_replace('\\', '\\\\', $data) . "'";
-}
-
-function oidplus_formatdate($date) {
-	$date = explode(' ', $date)[0];
-	if ($date == '0000-00-00') $date = '';
-	return $date;
-}
-
-
-class MailException extends Exception {}
-
-function my_mail($to, $title, $msg, $cc='', $bcc='') {
-	$h = new SecureMailer();
-
-	$title = $title;
-
-	$h->addHeader('From', OIDplus::config()->getValue('admin_email'));
-
-	if (!empty($cc)) $h->addHeader('Cc',  $cc);
-	if (!empty($bcc)) $h->addHeader('Bcc',  $bcc);
-
-	$h->addHeader('X-Mailer', 'PHP/'.phpversion());
-	if (isset($_SERVER['REMOTE_ADDR'])) $h->addHeader('X-RemoteAddr', $_SERVER['REMOTE_ADDR']);
-	$h->addHeader('MIME-Version', '1.0');
-	$h->addHeader('Content-Type', 'text/plain; charset=ISO-8859-1');
-
-	$sent = $h->sendMail($to, $title, $msg);
-	if (!$sent) {
-		throw new MailException('Sending mail failed');
-	}
 }
 
 function trim_br($html) {
@@ -192,7 +46,7 @@ function verify_private_public_key($privKey, $pubKey) {
 }
 
 function smallhash($data) { // get 31 bits from SHA1. Values 0..2147483647
-	return (hexdec(substr(sha1($data),-4*2)) & 2147483647);
+	return (hexdec(substr(sha1($data),-4*2)) & 0x7FFFFFFF);
 }
 
 function split_firstname_lastname($name) {

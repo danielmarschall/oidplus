@@ -58,6 +58,22 @@ class OIDplus {
 		return $authUtils;
 	}
 
+	public static function mailUtils() {
+		static $mailUtils = null;
+		if (is_null($mailUtils)) {
+			$mailUtils = new OIDplusMailUtils();
+		}
+		return $mailUtils;
+	}
+
+	public static function menuUtils() {
+		static $menuUtils = null;
+		if (is_null($menuUtils)) {
+			$menuUtils = new OIDplusMenuUtils();
+		}
+		return $menuUtils;
+	}
+
 	public static function logger() {
 		static $logger = null;
 		if (is_null($logger)) {
@@ -154,7 +170,7 @@ class OIDplus {
 	private static function registerObjectType($ot) {
 		$ns = $ot::ns();
 
-		if (empty($ns)) throw new Exception("Attention: Empty NS at $ot\n");
+		if (empty($ns)) throw new OIDplusException("Attention: Empty NS at $ot\n");
 
 		$ns_found = false;
 		foreach (array_merge(OIDplus::getEnabledObjectTypes(), OIDplus::getDisabledObjectTypes()) as $test_ot) {
@@ -164,7 +180,7 @@ class OIDplus {
 			}
 		}
 		if ($ns_found) {
-			throw new Exception("Attention: Two objectType plugins use the same namespace \"$ns\"!");
+			throw new OIDplusException("Attention: Two objectType plugins use the same namespace \"$ns\"!");
 		}
 
 		$init = OIDplus::config()->getValue("objecttypes_initialized");

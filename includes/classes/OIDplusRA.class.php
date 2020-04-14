@@ -73,7 +73,7 @@ class OIDplusRA {
 
 		$plugins = OIDplus::getAuthPlugins();
 		if (count($plugins) == 0) {
-			throw new Exception("No RA authentication plugins found");
+			throw new OIDplusException("No RA authentication plugins found");
 		}
 		foreach ($plugins as $plugin) {
 			if ($plugin->verify($ra_row['authkey'], $ra_row['salt'], $password)) return true;

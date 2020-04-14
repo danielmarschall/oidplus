@@ -52,7 +52,7 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 			}
 		} else {
 			if (!is_array($prepared_args)) {
-				throw new Exception("'prepared_args' must be either NULL or an ARRAY.");
+				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
 			}
 			
 			foreach ($prepared_args as &$value) {
@@ -126,7 +126,7 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	private $intransaction = false;
 
 	public function transaction_begin(): void {
-		if ($this->intransaction) throw new Exception("Nested transactions are not supported by this database plugin.");
+		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
 		$this->mysqli->autocommit(true);
 		$this->intransaction = true;
 	}
@@ -205,17 +205,17 @@ class OIDplusQueryResultMySQL extends OIDplusQueryResult {
 	}
 
 	public function num_rows(): int {
-		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
 		return $this->res->num_rows;
 	}
 
 	public function fetch_array()/*: ?array*/ {
-		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
 		return $this->res->fetch_array(MYSQLI_ASSOC);
 	}
 
 	public function fetch_object()/*: ?object*/ {
-		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
 		return $this->res->fetch_object("stdClass");
 	}
 }
@@ -245,14 +245,14 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 	}
 
 	public function num_rows(): int {
-		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
 
 		$this->stmt->store_result();
 		return $this->stmt->num_rows;
 	}
 
 	public function fetch_array()/*: ?array*/ {
-		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
 
 		// https://stackoverflow.com/questions/10752815/mysqli-get-result-alternative , modified
 		$stmt = $this->stmt;
@@ -292,7 +292,7 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 	}
 
 	public function fetch_object()/*: ?object*/ {
-		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
 
 		$ary = $this->fetch_array();
 		if (!$ary) return null;

@@ -75,7 +75,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 			foreach (OIDplusObject::getRaRoots($ra_email) as $loc_root) {
 				$ico = $loc_root->getIcon();
 				$icon = !is_null($ico) ? $ico : OIDplus::webpath(__DIR__).'treeicon_link.png';
-				$out['text'] .= '<p><a '.oidplus_link($loc_root->nodeId()).'><img src="'.$icon.'"> Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())).'</a></p>';
+				$out['text'] .= '<p><a '.OIDplus::gui()->link($loc_root->nodeId()).'><img src="'.$icon.'"> Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())).'</a></p>';
 			}
 
 			if (!empty($ra_email)) {
@@ -83,7 +83,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 				if ($res->num_rows() > 0) {
 					if (OIDplus::authUtils()::isRALoggedIn($ra_email) || OIDplus::authUtils()::isAdminLoggedIn()) {
 						if (class_exists('OIDplusPageRaEditContactData')) {
-							$out['text'] .= '<p><a '.oidplus_link('oidplus:edit_ra$'.$ra_email).'>Edit contact data</a></p>';
+							$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:edit_ra$'.$ra_email).'>Edit contact data</a></p>';
 						}
 					}
 
@@ -95,7 +95,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePlugin {
 						}
 
 						if (class_exists('OIDplusPageRaChangePassword')) {
-							$out['text'] .= '<p><a '.oidplus_link('oidplus:change_ra_password$'.$ra_email).'>Change password of this RA</a>';
+							$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:change_ra_password$'.$ra_email).'>Change password of this RA</a>';
 						}
 					}
 				}

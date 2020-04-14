@@ -3,7 +3,7 @@
 /*
  * XML Encoding Utilities
  * Copyright 2011-2019 Daniel Marschall, ViaThinkSoft
- * Version 1.7
+ * Version 1.7.1
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

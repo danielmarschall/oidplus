@@ -19,7 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusTree {
+class OIDplusMenuUtils {
 
 	public static function nonjs_menu() {
 		$json = array();

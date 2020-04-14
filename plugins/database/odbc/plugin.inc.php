@@ -60,7 +60,7 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 			return OIDplusQueryResultODBC(@odbc_exec($this->odbc, $sql));
 			*/
 			if (!is_array($prepared_args)) {
-				throw new Exception("'prepared_args' must be either NULL or an ARRAY.");
+				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
 			}
 			
 			foreach ($prepared_args as &$value) {
@@ -96,7 +96,7 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 				$row = $res->fetch_array();
 				return (int)$row['ID'];
 			default:
-				throw new Exception("Cannot determine the last inserted ID for your DBMS. The DBMS is probably not supported.");
+				throw new OIDplusException("Cannot determine the last inserted ID for your DBMS. The DBMS is probably not supported.");
 		}
 	}
 
@@ -127,7 +127,7 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 	private $intransaction = false;
 
 	public function transaction_begin(): void {
-		if ($this->intransaction) throw new Exception("Nested transactions are not supported by this database plugin.");
+		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
 		odbc_autocommit($this->odbc, true);
 		$this->intransaction = true;
 	}
@@ -166,12 +166,12 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 	}
 
 	public function num_rows(): int {
-		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
 		return odbc_num_rows($this->res);
 	}
 
 	public function fetch_array()/*: ?array*/ {
-		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
 		$ret = odbc_fetch_array($this->res);
 		if ($ret === false) $ret = null;
 		if (!is_null($ret)) {
@@ -186,7 +186,7 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 	}
 
 	public function fetch_object()/*: ?object*/ {
-		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
 		$ret = odbc_fetch_object($this->res);
 		if ($ret === false) $ret = null;
 		if (!is_null($ret)) {

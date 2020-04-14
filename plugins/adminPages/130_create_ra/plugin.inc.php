@@ -43,7 +43,7 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
 				return $out;
 			}
 
@@ -51,21 +51,21 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePlugin {
 			$password1 = $_POST['password1'];
 			$password2 = $_POST['password2'];
 
-			if (!oidplus_valid_email($email)) {
-				throw new Exception('eMail address is invalid.');
+			if (!OIDplus::mailUtils()->validMailAddress($email)) {
+				throw new OIDplusException('eMail address is invalid.');
 			}
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email)); // TODO: this should be a static function in the RA class
 			if ($res->num_rows() > 0) {
-				throw new Exception('RA does already exist');
+				throw new OIDplusException('RA does already exist');
 			}
 
 			if ($password1 !== $password2) {
-				throw new Exception('Passwords are not equal');
+				throw new OIDplusException('Passwords are not equal');
 			}
 
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				throw new Exception('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
+				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
 			}
 
 			OIDplus::logger()->log("RA($email)!/A?", "RA '$email' was created by the admin, without email address verification or invitation");
@@ -93,7 +93,7 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
 				return $out;
 			}
 

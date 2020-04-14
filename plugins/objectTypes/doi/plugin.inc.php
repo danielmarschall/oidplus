@@ -79,7 +79,7 @@ class OIDplusDoi extends OIDplusObject {
 			// Parent is root, so $str is the base DOI (10.xxxx)
 			$base = $str;
 			if (!self::validBaseDoi($base)) {
-				throw new Exception("Invalid DOI $base . It must have syntax 10.xxxx");
+				throw new OIDplusException("Invalid DOI $base . It must have syntax 10.xxxx");
 			}
 			return 'doi:' . $base;
 		} else if (self::validBaseDoi($this->doi)) {

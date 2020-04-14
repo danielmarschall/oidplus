@@ -52,14 +52,14 @@ class OIDplusLogger {
 
 		$maskcodes_ary = self::split_maskcodes($maskcodes);
 		if ($maskcodes_ary === false) {
-			throw new Exception("Invalid maskcode '$maskcodes'");
+			throw new OIDplusException("Invalid maskcode '$maskcodes'");
 		}
 		foreach ($maskcodes_ary as $maskcode) {
 			// OID(x)	Save log entry into the logbook of: Object "x"
 			if (preg_match('@^OID\((.+)\)$@ismU', $maskcode, $m)) {
 				$object_id = $m[1];
 				$objects[] = $object_id;
-				if ($object_id == '') throw new Exception("OID logger mask requires OID");
+				if ($object_id == '') throw new OIDplusException("OID logger mask requires OID");
 			}
 
 			// OIDRA(x)?	Save log entry into the logbook of: Logged in RA of object "x"
@@ -67,7 +67,7 @@ class OIDplusLogger {
 			else if (preg_match('@^OIDRA\((.+)\)([\?\!])$@ismU', $maskcode, $m)) {
 				$object_id         = $m[1];
 				$ra_need_login     = $m[2] == '?';
-				if ($object_id == '') throw new Exception("OIDRA logger mask requires OID");
+				if ($object_id == '') throw new OIDplusException("OIDRA logger mask requires OID");
 				$obj = OIDplusObject::parse($object_id);
 				if ($obj) {
 					if ($ra_need_login) {
@@ -88,7 +88,7 @@ class OIDplusLogger {
 			else if (preg_match('@^SUPOIDRA\((.+)\)([\?\!])$@ismU', $maskcode, $m)) {
 				$object_id         = $m[1];
 				$ra_need_login     = $m[2] == '?';
-				if ($object_id == '') throw new Exception("SUPOIDRA logger mask requires OID");
+				if ($object_id == '') throw new OIDplusException("SUPOIDRA logger mask requires OID");
 				$obj = OIDplusObject::parse($object_id);
 				if ($obj) {
 					if ($ra_need_login) {
@@ -129,7 +129,7 @@ class OIDplusLogger {
 
 			// Unexpected
 			else {
-				throw new Exception("Unexpected logger mask code '$maskcode'");
+				throw new OIDplusException("Unexpected logger mask code '$maskcode'");
 			}
 		}
 

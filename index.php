@@ -119,7 +119,7 @@ $js = 'oidplus.min.js.php';
 			function ($treffer) {
 				$email = $treffer[2];
 				$text = $treffer[4];
-				return secure_email($email, $text, 1); // AntiSpam
+				return OIDplus::mailUtils()->secureEmailAddress($email, $text, 1); // AntiSpam
 			}, $static_content);
 
 		echo '<h1 id="real_title">';
@@ -142,7 +142,7 @@ $js = 'oidplus.min.js.php';
 		</div>
 
 		<div id="system_title_text">
-			<a <?php echo oidplus_link('oidplus:system'); ?>>
+			<a <?php echo OIDplus::gui()->link('oidplus:system'); ?>>
 				<span id="system_title_1">ViaThinkSoft OIDplus 2.0</span><br>
 				<span id="system_title_2"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></span>
 			</a>
@@ -158,7 +158,7 @@ $js = 'oidplus.min.js.php';
 		<!-- <noscript>
 			<p><b>Please enable JavaScript to use all features</b></p>
 		</noscript> -->
-		<?php OIDplusTree::nonjs_menu(); ?>
+		<?php OIDplus::menuUtils()->nonjs_menu(); ?>
 	</div>
 </div>
 

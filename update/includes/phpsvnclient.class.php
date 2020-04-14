@@ -344,7 +344,7 @@ class phpsvnclient
 		$args['Headers']['Content-Length'] = strlen(PHPSVN_NORMAL_REQUEST);
 
 		if (!$this->Request($args, $headers, $body))
-			throw new Exception("Cannot get rawDirectoryDump (Request failed)");
+			throw new OIDplusException("Cannot get rawDirectoryDump (Request failed)");
 
 		return self::xmlParse($body);
 	}
@@ -490,7 +490,7 @@ class phpsvnclient
 		$url = $this->cleanURL($this->_url . "/!svn/bc/" . $version . "/" . $file . "/");
 		$this->initQuery($args, "GET", $url);
 		if (!$this->Request($args, $headers, $body))
-			throw new Exception("Cannot call getFile (Request failed)");
+			throw new OIDplusException("Cannot call getFile (Request failed)");
 
 		return $body;
 	}
@@ -520,7 +520,7 @@ class phpsvnclient
 		$args['Headers']['Depth']          = 1;
 
 		if (!$this->Request($args, $headers, $body))
-			throw new Exception("Cannot call getLogsForUpdate (Request failed)");
+			throw new OIDplusException("Cannot call getLogsForUpdate (Request failed)");
 
 		$arrOutput = self::xmlParse($body);
 
@@ -637,13 +637,13 @@ class phpsvnclient
 		$args['Headers']['Depth']          = 0;
 
 		if (!$this->Request($args, $tmp, $body))
-			throw new Exception("Cannot get repository revision (Request failed)");
+			throw new OIDplusException("Cannot get repository revision (Request failed)");
 
 		$this->_repVersion = null;
 		if (preg_match('@/(\d+)\s*</D:href>@ismU', $body, $m)) {
 			$this->_repVersion = $m[1];
 		} else {
-			throw new Exception("Cannot get repository revision (RegEx failed)");
+			throw new OIDplusException("Cannot get repository revision (RegEx failed)");
 		}
 
 		return $this->_repVersion;

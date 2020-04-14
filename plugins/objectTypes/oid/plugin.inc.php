@@ -46,12 +46,12 @@ class OIDplusOid extends OIDplusObject {
 
 		$oid = sanitizeOID($oid, 'auto');
 		if ($oid === false) {
-			throw new Exception("Invalid OID '$bak_oid'");
+			throw new OIDplusException("Invalid OID '$bak_oid'");
 		}
 
 		if (($oid != '') && (!oid_valid_dotnotation($oid, false, true, 0))) {
 			// avoid OIDs like 3.0
-			throw new Exception("Invalid OID '$bak_oid'");
+			throw new OIDplusException("Invalid OID '$bak_oid'");
 		}
 
 		$this->oid = $oid;
@@ -89,7 +89,7 @@ class OIDplusOid extends OIDplusObject {
 
 	public function addString($str) {
 		if (!$this->isRoot()) {
-			if (strpos($str,'.') !== false) throw new Exception("Please only submit one arc (not an absolute OID or multiple arcs).");
+			if (strpos($str,'.') !== false) throw new OIDplusException("Please only submit one arc (not an absolute OID or multiple arcs).");
 		}
 
 		return $this->appendArcs($str)->nodeId();
@@ -219,21 +219,21 @@ class OIDplusOid extends OIDplusObject {
 
 		$bak_oid = $out->oid;
 		$out->oid = sanitizeOID($out->oid);
-		if ($out->oid === false) throw new Exception("$bak_oid is not a valid OID!");
+		if ($out->oid === false) throw new OIDplusException("$bak_oid is not a valid OID!");
 		
 		if (strlen($out->oid) > OIDPLUS_MAX_ID_LENGTH-strlen('oid:')) {
-			throw new Exception("The resulting OID '".$out->oid."' is too long (max allowed: ".(OIDPLUS_MAX_ID_LENGTH-strlen('oid:')).").");
+			throw new OIDplusException("The resulting OID '".$out->oid."' is too long (max allowed: ".(OIDPLUS_MAX_ID_LENGTH-strlen('oid:')).").");
 		}
 		
 		$depth = 0;
 		foreach (explode('.',$out->oid) as $arc) {
 			if (strlen($arc) > OIDPLUS_MAX_OID_ARC_SIZE) {
-				throw new Exception("Arc '$arc' is too long and therefore cannot be appended to the OID '".$this->oid."' (max allowed arc size is ".OIDPLUS_MAX_OID_ARC_SIZE.")");
+				throw new OIDplusException("Arc '$arc' is too long and therefore cannot be appended to the OID '".$this->oid."' (max allowed arc size is ".OIDPLUS_MAX_OID_ARC_SIZE.")");
 			}
 			$depth++;
 		}
 		if ($depth > OIDPLUS_MAX_OID_DEPTH) {
-			throw new Exception("OID '".$out->oid."' has too many arcs (current depth $depth, max depth ".OIDPLUS_MAX_OID_DEPTH.")");
+			throw new OIDplusException("OID '".$out->oid."' has too many arcs (current depth $depth, max depth ".OIDPLUS_MAX_OID_DEPTH.")");
 		}
 
 		return $out;
@@ -358,7 +358,7 @@ class OIDplusOid extends OIDplusObject {
 
 	public function replaceAsn1Ids($demandedASN1s=array(), $simulate=false) {
 		if ($this->isWellKnown()) {
-			throw new Exception("OID ".$this->oid." is a 'well-known' OID. Its identifiers cannot be changed.");
+			throw new OIDplusException("OID ".$this->oid." is a 'well-known' OID. Its identifiers cannot be changed.");
 		}
 
 		// First do a few checks
@@ -366,11 +366,11 @@ class OIDplusOid extends OIDplusObject {
 			$asn1 = trim($asn1);
 
 			if (strlen($asn1) > OIDPLUS_MAX_OID_ASN1_ID_LEN) {
-				throw new Exception("ASN.1 alphanumeric identifier '$asn1' is too long (max allowed length ".OIDPLUS_MAX_OID_ASN1_ID_LEN.")");
+				throw new OIDplusException("ASN.1 alphanumeric identifier '$asn1' is too long (max allowed length ".OIDPLUS_MAX_OID_ASN1_ID_LEN.")");
 			}
 
 			// Validate identifier
-			if (!oid_id_is_valid($asn1)) throw new Exception("'$asn1' is not a valid ASN.1 identifier!");
+			if (!oid_id_is_valid($asn1)) throw new OIDplusException("'$asn1' is not a valid ASN.1 identifier!");
 
 			// Check if the (real) parent has any conflict
 			// Unlike IRI identifiers, ASN.1 identifiers may be used multiple times (not recommended), except if one of them is standardized
@@ -380,7 +380,7 @@ class OIDplusOid extends OIDplusObject {
 				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent
 				   ($check_oid !== $this->oid))                    // different OID
 				{
-					throw new Exception("ASN.1 identifier '$asn1' is a standardized identifier belonging to OID ($check_oid)");
+					throw new OIDplusException("ASN.1 identifier '$asn1' is a standardized identifier belonging to OID ($check_oid)");
 				}
 			}
 		}
@@ -396,7 +396,7 @@ class OIDplusOid extends OIDplusObject {
 
 	public function replaceIris($demandedIris=array(), $simulate=false) {
 		if ($this->isWellKnown()) {
-			throw new Exception("OID ".$this->oid." is a 'well-known' OID. Its identifiers cannot be changed.");
+			throw new OIDplusException("OID ".$this->oid." is a 'well-known' OID. Its identifiers cannot be changed.");
 		}
 
 		// First do a few checks
@@ -404,11 +404,11 @@ class OIDplusOid extends OIDplusObject {
 			$iri = trim($iri);
 
 			if (strlen($iri) > OIDPLUS_MAX_OID_UNICODE_LABEL_LEN) {
-				throw new Exception("Unicode label '$iri' is too long (max allowed length ".OIDPLUS_MAX_OID_UNICODE_LABEL_LEN.")");
+				throw new OIDplusException("Unicode label '$iri' is too long (max allowed length ".OIDPLUS_MAX_OID_UNICODE_LABEL_LEN.")");
 			}
 
 			// Validate identifier
-			if (!iri_arc_valid($iri, false)) throw new Exception("'$iri' is not a valid IRI!");
+			if (!iri_arc_valid($iri, false)) throw new OIDplusException("'$iri' is not a valid IRI!");
 
 			// Check if the (real) parent has any conflict
 			$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."iri where name = ?", array($iri));
@@ -417,7 +417,7 @@ class OIDplusOid extends OIDplusObject {
 				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent
 				   ($check_oid !== $this->oid))                    // different OID
 				{
-					throw new Exception("IRI '$iri' is already used by another OID ($check_oid)");
+					throw new OIDplusException("IRI '$iri' is already used by another OID ($check_oid)");
 				}
 			}
 		}

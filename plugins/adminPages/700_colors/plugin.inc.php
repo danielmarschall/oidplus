@@ -42,7 +42,7 @@ class OIDplusPageAdminColors extends OIDplusPagePlugin {
 			$handled = true;
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
-				throw new Exception('You need to log in as administrator.');
+				throw new OIDplusException('You need to log in as administrator.');
 			}
 
 			OIDplus::config()->setValue('color_hue_shift', $_POST['hue_shift']);
@@ -64,17 +64,17 @@ class OIDplusPageAdminColors extends OIDplusPagePlugin {
 	public function cfgSetValue($name, $value) {
 		if ($name == 'color_hue_shift') {
 			if (!is_numeric($value) || ($value < -360) || ($value > 360)) {
-				throw new Exception("Please enter a valid value.");
+				throw new OIDplusException("Please enter a valid value.");
 			}
 		}
 		if ($name == 'color_sat_shift') {
 			if (!is_numeric($value) || ($value < -100) || ($value > 100)) {
-				throw new Exception("Please enter a valid value.");
+				throw new OIDplusException("Please enter a valid value.");
 			}
 		}
 		if ($name == 'color_val_shift') {
 			if (!is_numeric($value) || ($value < -100) || ($value > 100)) {
-				throw new Exception("Please enter a valid value.");
+				throw new OIDplusException("Please enter a valid value.");
 			}
 		}
 	}
@@ -87,7 +87,7 @@ class OIDplusPageAdminColors extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
 				$out['text']  = '<p>';
 				$out['text'] .= '  <label for="amount">Hue shift:</label>';

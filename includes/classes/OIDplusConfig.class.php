@@ -26,10 +26,10 @@ class OIDplusConfig {
 
 	public function prepareConfigKey($name, $description, $init_value, $protected, $visible) {
 		if (strlen($name) > 50) {
-			throw new Exception("Config key name '$name' is too long. (max 50).");
+			throw new OIDplusException("Config key name '$name' is too long. (max 50).");
 		}
 		if (strlen($description) > 255) {
-			throw new Exception("Description for config key '$name' is too long (max 255).");
+			throw new OIDplusException("Description for config key '$name' is too long (max 255).");
 		}
 		$this->buildConfigArray();
 		if (!isset($this->values[$name])) {
@@ -94,18 +94,18 @@ class OIDplusConfig {
 
 		if ($name == 'system_title') {
 			if (empty($value)) {
-				throw new Exception("Please enter a value for the system title.");
+				throw new OIDplusException("Please enter a value for the system title.");
 
 			}
 		}
 		if (($name == 'global_cc') || ($name == 'admin_email')) {
-			if (!empty($value) && !oidplus_valid_email($value)) {
-				throw new Exception("This is not a correct email address");
+			if (!empty($value) && !OIDplus::mailUtils()->validMailAddress($value)) {
+				throw new OIDplusException("This is not a correct email address");
 			}
 		}
 		if ($name == 'ra_min_password_length') {
 			if (!is_numeric($value) || ($value < 1)) {
-				throw new Exception("Please enter a valid password length.");
+				throw new OIDplusException("Please enter a valid password length.");
 			}
 		}
 
@@ -116,7 +116,7 @@ class OIDplusConfig {
 			$uniq_ary = array_unique($ary);
 
 			if (count($ary) != count($uniq_ary)) {
-				throw new Exception("Please check your input. Some object types are double.");
+				throw new OIDplusException("Please check your input. Some object types are double.");
 			}
 
 			foreach ($ary as $ot_check) {
@@ -134,7 +134,7 @@ class OIDplusConfig {
 					}
 				}
 				if (!$ns_found) {
-					throw new Exception("Please check your input. Namespace \"$ot_check\" is not found");
+					throw new OIDplusException("Please check your input. Namespace \"$ot_check\" is not found");
 				}
 			}
 		}

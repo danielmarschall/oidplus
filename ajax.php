@@ -41,7 +41,7 @@ try {
 	// Outputs:    JSON
 	if (isset($_REQUEST["action"]) && ($_REQUEST['action'] == 'get_description')) {
 		$handled = true;
-		if (!isset($_REQUEST['id'])) throw new Exception("Invalid args");
+		if (!isset($_REQUEST['id'])) throw new OIDplusException("Invalid args");
 		try {
 			$out = OIDplus::gui()::generateContentPage($_REQUEST['id']);
 		} catch(Exception $e) {
@@ -61,7 +61,7 @@ try {
 	// Outputs:    JSON
 	if (isset($_REQUEST["action"]) && ($_REQUEST['action'] == 'tree_search')) {
 		$handled = true;
-		if (!isset($_REQUEST['search'])) throw new Exception("Invalid args");
+		if (!isset($_REQUEST['search'])) throw new OIDplusException("Invalid args");
 
 		$found = false;
 		foreach (OIDplus::getPagePlugins('*') as $plugin) {
@@ -84,8 +84,8 @@ try {
 	// Outputs:    JSON
 	if (isset($_REQUEST["action"]) && ($_REQUEST['action'] == 'tree_load')) {
 		$handled = true;
-		if (!isset($_REQUEST['id'])) throw new Exception("Invalid args");
-		$json = OIDplusTree::json_tree($_REQUEST['id'], isset($_REQUEST['goto']) ? $_REQUEST['goto'] : '');
+		if (!isset($_REQUEST['id'])) throw new OIDplusException("Invalid args");
+		$json = OIDplus::menuUtils()->json_tree($_REQUEST['id'], isset($_REQUEST['goto']) ? $_REQUEST['goto'] : '');
 		echo $json;
 	}
 
@@ -103,7 +103,7 @@ try {
 		$ra_logged_in = OIDplus::authUtils()->isRaLoggedIn($email);
 
 		if (!OIDplus::authUtils()->isAdminLoggedIn() && !$ra_logged_in) {
-			throw new Exception('Authentification error. Please log in.');
+			throw new OIDplusException('Authentification error. Please log in.');
 		}
 
 		if ($ra_logged_in) OIDplus::authUtils()->raLogout($email);
@@ -127,10 +127,10 @@ try {
 
 		$id = $_POST['id'];
 		$obj = OIDplusObject::parse($id);
-		if ($obj === null) throw new Exception("DELETE action failed because object '$id' cannot be parsed!");
+		if ($obj === null) throw new OIDplusException("DELETE action failed because object '$id' cannot be parsed!");
 
 		// Check if permitted
-		if (!$obj->userHasParentalWriteRights()) throw new Exception('Authentification error. Please log in as the superior RA to delete this OID.');
+		if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentification error. Please log in as the superior RA to delete this OID.');
 
 		OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "Object '$id' (recursively) deleted");
 		OIDplus::logger()->log("OIDRA($id)!", "Lost ownership of object '$id' because it was deleted");
@@ -172,15 +172,15 @@ try {
 
 		$id = $_POST['id'];
 		$obj = OIDplusObject::parse($id);
-		if ($obj === null) throw new Exception("UPDATE action failed because object '$id' cannot be parsed!");
+		if ($obj === null) throw new OIDplusException("UPDATE action failed because object '$id' cannot be parsed!");
 
 		// Check if permitted
-		if (!$obj->userHasParentalWriteRights()) throw new Exception('Authentification error. Please log in as the superior RA to update this OID.');
+		if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentification error. Please log in as the superior RA to update this OID.');
 
 		// Validate RA email address
 		$new_ra = $_POST['ra_email'];
-		if (!empty($new_ra) && !oidplus_valid_email($new_ra)) {
-			throw new Exception('Invalid RA email address');
+		if (!empty($new_ra) && !OIDplus::mailUtils()->validMailAddress($new_ra)) {
+			throw new OIDplusException('Invalid RA email address');
 		}
 
 		// First, do a simulation for ASN.1 IDs and IRIs to check if there are any problems (then an Exception will be thrown)
@@ -256,10 +256,10 @@ try {
 
 		$id = $_POST['id'];
 		$obj = OIDplusObject::parse($id);
-		if ($obj === null) throw new Exception("UPDATE2 action failed because object '$id' cannot be parsed!");
+		if ($obj === null) throw new OIDplusException("UPDATE2 action failed because object '$id' cannot be parsed!");
 
 		// Check if allowed
-		if (!$obj->userHasWriteRights()) throw new Exception('Authentification error. Please log in as the RA to update this OID.');
+		if (!$obj->userHasWriteRights()) throw new OIDplusException('Authentification error. Please log in as the RA to update this OID.');
 
 		OIDplus::logger()->log("OID($id)+OIDRA($id)?/A?", "Title/Description of object '$id' updated");
 
@@ -284,11 +284,11 @@ try {
 
 		// Check if you have write rights on the parent (to create a new object)
 		$objParent = OIDplusObject::parse($_POST['parent']);
-		if ($objParent === null) throw new Exception("INSERT action failed because parent object '".$_POST['parent']."' cannot be parsed!");
-		if (!$objParent->userHasWriteRights()) throw new Exception('Authentification error. Please log in as the correct RA to insert an OID at this arc.');
+		if ($objParent === null) throw new OIDplusException("INSERT action failed because parent object '".$_POST['parent']."' cannot be parsed!");
+		if (!$objParent->userHasWriteRights()) throw new OIDplusException('Authentification error. Please log in as the correct RA to insert an OID at this arc.');
 
 		// Check if the ID is valid
-		if ($_POST['id'] == '') throw new Exception('ID may not be empty');
+		if ($_POST['id'] == '') throw new OIDplusException('ID may not be empty');
 
 		// Determine absolute OID name
 		// Note: At addString() and parse(), the syntax of the ID will be checked
@@ -297,11 +297,11 @@ try {
 		// Check, if the OID exists
 		$test = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
 		if ($test->num_rows() >= 1) {
-			throw new Exception("Object $id already exists!");
+			throw new OIDplusException("Object $id already exists!");
 		}
 
 		$obj = OIDplusObject::parse($id);
-                if ($obj === null) throw new Exception("INSERT action failed because object '$id' cannot be parsed!");
+                if ($obj === null) throw new OIDplusException("INSERT action failed because object '$id' cannot be parsed!");
 
 		// First simulate if there are any problems of ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {
@@ -317,8 +317,8 @@ try {
 		// Apply superior RA change
 		$parent = $_POST['parent'];
 		$ra_email = $_POST['ra_email'];
-		if (!empty($ra_email) && !oidplus_valid_email($ra_email)) {
-			throw new Exception('Invalid RA email address');
+		if (!empty($ra_email) && !OIDplus::mailUtils()->validMailAddress($ra_email)) {
+			throw new OIDplusException('Invalid RA email address');
 		}
 
 		OIDplus::logger()->log("OID($parent)+OID($id)+OIDRA($parent)?/A?", "Object '$id' created, ".(empty($ra_email) ? "without defined RA" : "given to RA '$ra_email'")).", superior object is '$parent'";
@@ -332,7 +332,7 @@ try {
 		$description = '';
 		
 		if (strlen($id) > OIDPLUS_MAX_ID_LENGTH) {
-			throw new Exception("The identifier '$id' is too long (max allowed length: ".OIDPLUS_MAX_ID_LENGTH.")");
+			throw new OIDplusException("The identifier '$id' is too long (max allowed length: ".OIDPLUS_MAX_ID_LENGTH.")");
 		}
 	
 		if (OIDplus::db()->slang() == 'mssql') {
@@ -365,7 +365,7 @@ try {
 	}
 
 	if (!$handled) {
-		throw new Exception('Invalid action ID');
+		throw new OIDplusException('Invalid action ID');
 	}
 
 	OIDplus::db()->transaction_commit();

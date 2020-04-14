@@ -49,7 +49,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePlugin {
 		if ($name == 'whois_auth_token') {
 			$test_value = preg_replace('@[0-9a-zA-Z]*@', '', $value);
 			if ($test_value != '') {
-				throw new Exception("Only characters and numbers are allowed as authentication token.");
+				throw new OIDplusException("Only characters and numbers are allowed as authentication token.");
 			}
 		}
 	}

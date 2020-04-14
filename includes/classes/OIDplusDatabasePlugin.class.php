@@ -54,7 +54,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 	
 		$order = strtolower($order);
 		if (($order != 'asc') && ($order != 'desc')) {
-			throw new Exception("Invalid order '$order' (needs to be 'asc' or 'desc')");
+			throw new OIDplusException("Invalid order '$order' (needs to be 'asc' or 'desc')");
 		}
 
 		$out = array();
@@ -141,7 +141,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 			if ($version != $prev_version+1) {
 				// This should usually not happen, since the update-file should increase the version
 				// or throw an Exception by itself
-				throw new Exception("Database update $prev_version -> ".($prev_version+1)." failed (script reports new version to be $version)");
+				throw new OIDplusException("Database update $prev_version -> ".($prev_version+1)." failed (script reports new version to be $version)");
 			}
 		}
 
@@ -196,7 +196,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 					$vers = $this->query("select @@version as dbms_version")->fetch_object()->dbms_version;
 					$vers = strtolower($vers);
 				} catch (Exception $e) {
-					throw new Exception("Cannot determine the slang of your DBMS (function 'version()' could not be called). Your DBMS is probably not supported.");
+					throw new OIDplusException("Cannot determine the slang of your DBMS (function 'version()' could not be called). Your DBMS is probably not supported.");
 				}
 			}
 
@@ -209,7 +209,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 				define('OIDPLUS_DBMS_SLANG', $slang);
 				return $slang;
 			} else {
-				throw new Exception("Cannot determine the slang of your DBMS (we don't know what to do with the DBMS '$vers'). Your DBMS is probably not supported.");
+				throw new OIDplusException("Cannot determine the slang of your DBMS (we don't know what to do with the DBMS '$vers'). Your DBMS is probably not supported.");
 			}
 		}
 	}

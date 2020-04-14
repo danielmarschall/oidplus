@@ -52,7 +52,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					throw new Exception('Captcha wrong');
+					throw new OIDplusException('Captcha wrong');
 				}
 			}
 
@@ -69,7 +69,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 
 				echo json_encode(array("status" => 0));
 			} else {
-				throw new Exception('Wrong password');
+				throw new OIDplusException('Wrong password');
 			}
 		}
 		if (isset($_POST["action"]) && ($_POST["action"] == "ra_logout")) {
@@ -93,7 +93,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					throw new Exception('Captcha wrong');
+					throw new OIDplusException('Captcha wrong');
 				}
 			}
 
@@ -102,7 +102,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				OIDplus::authUtils()::adminLogin();
 				echo json_encode(array("status" => 0));
 			} else {
-				throw new Exception('Wrong password');
+				throw new OIDplusException('Wrong password');
 			}
 		}
 		if (isset($_POST["action"]) && ($_POST["action"] == "admin_logout")) {
@@ -160,7 +160,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			$out['text'] .= '<div><label class="padding_label">Password:</label><input type="password" name="password" value="" id="raLoginPassword"></div>';
 			$out['text'] .= '<br><input type="submit" value="Login"><br><br>';
 			$out['text'] .= '</form>';
-			$out['text'] .= '<p><a '.oidplus_link('oidplus:forgot_password').'>Forgot password?</a><br>';
+			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:forgot_password').'>Forgot password?</a><br>';
 
 
 			if (OIDplus::config()->getValue('ra_invitation_enabled')) {
@@ -183,7 +183,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 				$out['text'] .= '<div><label class="padding_label">Password:</label><input type="password" name="password" value="" id="adminLoginPassword"></div>';
 				$out['text'] .= '<br><input type="submit" value="Login"><br><br>';
 				$out['text'] .= '</form>';
-				$out['text'] .= '<p><a '.oidplus_link('oidplus:forgot_password_admin').'>Forgot password?</a><br>';
+				$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:forgot_password_admin').'>Forgot password?</a><br>';
 			}
 
 			$out['text'] .= '				</div>';
@@ -194,7 +194,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			                'It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of '.ceil(SESSION_LIFETIME/60).' minutes.';
 			$privacy_document_file = 'res/OIDplus/privacy_documentation.html';
 			if (class_exists('OIDplusPagePublicResources') && file_exists($privacy_document_file)) {
-				$out['text'] .= ' <a '.oidplus_link('oidplus:resources$'.$privacy_document_file.'$'.OIDplus::authUtils()::makeAuthKey("resources;".$privacy_document_file).'#cookies').'>More information about the cookies used</a>';
+				$out['text'] .= ' <a '.OIDplus::gui()->link('oidplus:resources$'.$privacy_document_file.'$'.OIDplus::authUtils()::makeAuthKey("resources;".$privacy_document_file).'#cookies').'>More information about the cookies used</a>';
 			}
 			$out['text'] .= '</font></p></div>';
 

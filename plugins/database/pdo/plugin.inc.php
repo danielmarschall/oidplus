@@ -65,7 +65,7 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 			*/
 
 			if (!is_array($prepared_args)) {
-				throw new Exception("'prepared_args' must be either NULL or an ARRAY.");
+				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
 			}
 			
 			foreach ($prepared_args as &$value) {
@@ -125,7 +125,7 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 	private $intransaction = false;
 
 	public function transaction_begin(): void {
-		if ($this->intransaction) throw new Exception("Nested transactions are not supported by this database plugin.");
+		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
 		$this->pdo->beginTransaction();
 		$this->intransaction = true;
 	}
@@ -162,19 +162,19 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	}
 
 	public function num_rows(): int {
-		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
 		return $this->res->rowCount();
 	}
 
 	public function fetch_array()/*: ?array*/ {
-		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
 		$ret = $this->res->fetch(PDO::FETCH_ASSOC);
 		if ($ret === false) $ret = null;
 		return $ret;
 	}
 
 	public function fetch_object()/*: ?object*/ {
-		if ($this->no_resultset) throw new Exception("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
 		$ret = $this->res->fetch(PDO::FETCH_OBJ);
 		if ($ret === false) $ret = null;
 		return $ret;

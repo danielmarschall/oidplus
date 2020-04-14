@@ -48,7 +48,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 	public function cfgSetValue($name, $value) {
 		if ($name == 'search_min_term_length') {
 			if (!is_numeric($value) || ($value < 0)) {
-				throw new Exception("Please enter a valid value.");
+				throw new OIDplusException("Please enter a valid value.");
 			}
 		}
 	}
@@ -135,7 +135,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 							$count = 0;
 							while ($row = $res->fetch_object()) {
 								$email = str_replace('@', '&', $row->email);
-								$out['text'] .= '<p><a '.oidplus_link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
+								$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
 								$count++;
 							}
 							if ($count == 0) {
@@ -170,7 +170,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePlugin {
 
 							$count = 0;
 							while ($row = $res->fetch_object()) {
-								$out['text'] .= '<p><a '.oidplus_link($row->id).'>'.htmlentities($row->id).'</a>: <b>'.htmlentities($row->title).'</b></p>'; // TODO: also show asn1id; highlight search match?
+								$out['text'] .= '<p><a '.OIDplus::gui()->link($row->id).'>'.htmlentities($row->id).'</a>: <b>'.htmlentities($row->title).'</b></p>'; // TODO: also show asn1id; highlight search match?
 								$count++;
 							}
 							if ($count == 0) {

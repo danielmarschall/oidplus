@@ -24,8 +24,8 @@
 
 $this->transaction_begin();
 
-if (!isset($version)) throw new Exception("Argument 'version' is missing; was the file included in a wrong way?");
-if (!isset($this))    throw new Exception("Argument 'this' is missing; was the file included in a wrong way?");
+if (!isset($version)) throw new OIDplusException("Argument 'version' is missing; was the file included in a wrong way?");
+if (!isset($this))    throw new OIDplusException("Argument 'this' is missing; was the file included in a wrong way?");
 
 // Change bit(1) types to boolean/tinyint(1)
 if ($this->slang() == 'pgsql') {

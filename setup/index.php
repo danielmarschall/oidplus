@@ -33,6 +33,8 @@ Once OIDplus setup is finished, you can change the config file by hand, or run t
 
 <h3>Database connectivity</h3>
 
+<p><a href="doc/database_connectivity_diagram.png" target="_blank"><img src="doc/database_connectivity_diagram.png" width="20%" alt="Database connectivity diagram" title="Database connectivity diagram"></a></p>
+
 Database plugin: <select name="db_plugin" onChange="dbplugin_changed()" id="db_plugin">
 
 <?php

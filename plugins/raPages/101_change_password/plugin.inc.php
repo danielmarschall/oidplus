@@ -45,11 +45,11 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 			if ($res->num_rows() == 0) {
-				throw new Exception('RA does not exist');
+				throw new OIDplusException('RA does not exist');
 			}
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				throw new Exception('Authentification error. Please log in as the RA or admin to update its data.');
+				throw new OIDplusException('Authentification error. Please log in as the RA or admin to update its data.');
 			}
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
@@ -59,17 +59,17 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 			$password2 = $_POST['new_password2'];
 
 			if ($password1 !== $password2) {
-				throw new Exception('Passwords are not equal');
+				throw new OIDplusException('Passwords are not equal');
 			}
 
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				throw new Exception('New password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
+				throw new OIDplusException('New password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
 			}
 
 			$ra = new OIDplusRA($email);
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				if (!$ra->checkPassword($old_password)) {
-					throw new Exception('Old password incorrect');
+					throw new OIDplusException('Old password incorrect');
 				}
 			}
 			OIDplus::logger()->log("RA($email)?/A?", "Password of RA '$email' changed");
@@ -104,7 +104,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
+				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
 			} else {
 				$out['text'] .= '<form id="raChangePasswordForm" onsubmit="return raChangePasswordFormOnSubmit();">';
 				$out['text'] .= '<input type="hidden" id="email" value="'.htmlentities($ra_email).'"/><br>';

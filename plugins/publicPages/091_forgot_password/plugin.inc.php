@@ -43,8 +43,8 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 
 			$email = $_POST['email'];
 
-			if (!oidplus_valid_email($email)) {
-				throw new Exception('Invalid email address');
+			if (!OIDplus::mailUtils()->validMailAddress($email)) {
+				throw new OIDplusException('Invalid email address');
 			}
 
 			if (RECAPTCHA_ENABLED) {
@@ -53,7 +53,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					throw new Exception('Captcha wrong');
+					throw new OIDplusException('Captcha wrong');
 				}
 			}
 
@@ -65,7 +65,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 			$message = $this->getForgotPasswordText($_POST['email']);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 
-			my_mail($email, OIDplus::config()->systemTitle().' - Password reset request', $message, OIDplus::config()->globalCC());
+			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->systemTitle().' - Password reset request', $message, OIDplus::config()->globalCC());
 
 			echo json_encode(array("status" => 0));
 		}
@@ -80,19 +80,19 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 			$timestamp = $_POST['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
-				throw new Exception('Invalid auth key');
+				throw new OIDplusException('Invalid auth key');
 			}
 
 			if ((OIDplus::config()->getValue('max_ra_pwd_reset_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_pwd_reset_time'))) {
-				throw new Exception('Invitation expired!');
+				throw new OIDplusException('Invitation expired!');
 			}
 
 			if ($password1 !== $password2) {
-				throw new Exception('Passwords are not equal');
+				throw new OIDplusException('Passwords are not equal');
 			}
 
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				throw new Exception('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
+				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
 			}
 
 			OIDplus::logger()->log("RA($email)!", "RA '$email' has reset his password (forgot passwort)");
@@ -111,7 +111,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 	public function cfgSetValue($name, $value) {
 		if ($name == 'max_ra_pwd_reset_time') {
 			if (!is_numeric($value) || ($value < 0)) {
-				throw new Exception("Please enter a valid value.");
+				throw new OIDplusException("Please enter a valid value.");
 			}
 		}
 	}
@@ -174,7 +174,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePlugin {
 	private function getForgotPasswordText($email) {
 		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 		if ($res->num_rows() == 0) {
-			throw new Exception("This RA does not exist.");
+			throw new OIDplusException("This RA does not exist.");
 		}
 
 		$message = file_get_contents(__DIR__ . '/forgot_password.tpl');

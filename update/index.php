@@ -21,14 +21,16 @@ declare(ticks=1);
 
 set_time_limit(0);
 
+require_once __DIR__ . '/../includes/oidplus.inc.php';
+
 if (!file_exists(__DIR__ . '/../includes/config.inc.php')) {
 	// We need to do this, because we don't want to use OIDplus::init() in this updater (it should be independent as much as possible)
 	header('location:../setup/');
 	die('Redirecting to setup...');
+} else {
+	require_once __DIR__ . '/../includes/config.inc.php';
 }
 
-require_once __DIR__ . '/../includes/oidplus.inc.php';
-require_once __DIR__ . '/../includes/config.inc.php';
 require_once __DIR__ . '/includes/phpsvnclient.class.php';
 require_once __DIR__ . '/includes/http_class.class.php';
 require_once __DIR__ . '/includes/vnag_framework.inc.php';

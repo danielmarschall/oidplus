@@ -44,12 +44,12 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 			$email = $_POST['email'];
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				throw new Exception('Authentification error. Please log in as the RA to update its data.');
+				throw new OIDplusException('Authentification error. Please log in as the RA to update its data.');
 			}
 
 			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 			if ($res->num_rows() == 0) {
-				throw new Exception('RA does not exist');
+				throw new OIDplusException('RA does not exist');
 			}
 
 			OIDplus::logger()->log("RA($email)?/A?", "Changed RA '$email' contact data/details");
@@ -107,7 +107,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
+				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
 			} else {
 				$out['text'] = '<p>Your email address: <b>'.htmlentities($ra_email).'</b>';
 
@@ -120,7 +120,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
 				$row = $res->fetch_array();
 
 				if (class_exists('OIDplusPageRaChangeEMail') && OIDplus::config()->getValue('allow_ra_email_change')) {
-					$out['text'] .= '<p><a '.oidplus_link('oidplus:change_ra_email$'.$ra_email).'>Change email address</a></p>';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:change_ra_email$'.$ra_email).'>Change email address</a></p>';
 				} else {
 					$out['text'] .= '<p><abbr title="To change the email address, you need to contact the admin or superior RA. They will need to change the email address and invite you (with your new email address) again.">How to change the email address?</abbr></p>';
 				}

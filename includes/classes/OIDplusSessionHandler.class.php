@@ -58,7 +58,7 @@ class OIDplusSessionHandler {
 			// TODO: session_name() makes some problems. Leave it away for now.
 			//session_name('OIDPLUS_SESHDLR');
 			if (!session_start()) {
-				throw new Exception("Session could not be started");
+				throw new OIDplusException("Session could not be started");
 			}
 		}
 
@@ -144,7 +144,7 @@ class OIDplusSessionHandler {
 			true
 		);
 		if (!hash_equals($hmac, $hmacNew)) {
-			throw new Exception('Authentication failed');
+			throw new OIDplusException('Authentication failed');
 		}
 		// Decryption
 		return openssl_decrypt(

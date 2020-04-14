@@ -19,7 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusSQLException extends Exception {
+class OIDplusSQLException extends OIDplusException {
 
 	public function __construct($sql, $message) {
 		return parent::__construct("$message at query \"$sql\"");

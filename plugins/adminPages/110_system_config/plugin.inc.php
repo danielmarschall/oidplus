@@ -42,7 +42,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 			$handled = true;
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
-				throw new Exception('You need to log in as administrator.');
+				throw new OIDplusException('You need to log in as administrator.');
 			}
 
 			$name = $_POST['name'];
@@ -51,7 +51,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 			$res = OIDplus::db()->query("select protected from ".OIDPLUS_TABLENAME_PREFIX."config where name = ?", array($name));
 			$row = $res->fetch_array();
 			if ($row['protected'] == 1) {
-				throw new Exception('Setting is write protected');
+				throw new OIDplusException('Setting is write protected');
 			}
 
 			OIDplus::config()->setValue($name, $value);
@@ -77,7 +77,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
 				$output = '';
 				$output .= '<div class="container box"><div id="suboid_table" class="table-responsive">';

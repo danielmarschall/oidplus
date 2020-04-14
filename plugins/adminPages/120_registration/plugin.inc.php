@@ -49,7 +49,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 	public function cfgSetValue($name, $value) {
 		if ($name == 'reg_privacy') {
 			if (($value != '0') && ($value != '1') && ($value != '2')) {
-				throw new Exception("Please enter either 0, 1 or 2.");
+				throw new OIDplusException("Please enter either 0, 1 or 2.");
 			}
 			// Now do a recheck and notify the ViaThinkSoft server
 			OIDplus::config()->setValue('reg_last_ping', 0);
@@ -65,7 +65,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.oidplus_link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
 				$out['text'] = file_get_contents(__DIR__ . '/info.tpl');
 				
@@ -132,7 +132,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 
 			$signature = '';
 			if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
-				throw new Exception("Signature failed");
+				throw new OIDplusException("Signature failed");
 			}
 
 			$data = array(
@@ -148,14 +148,14 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			if (!($res = @curl_exec($ch))) {
-				throw new Exception("Communication with ViaThinkSoft server failed");
+				throw new OIDplusException("Communication with ViaThinkSoft server failed");
 			}
 			curl_close($ch);
 			// die("RES: $res\n");
 			// if ($res == 'OK') ...
 
 			$out['title'] = 'Registration live status';
-			$out['text']  = '<p><a '.oidplus_link('oidplus:srv_registration').'><img src="img/arrow_back.png" width="16"> Go back to registration settings</a></p>' .
+			$out['text']  = '<p><a '.OIDplus::gui()->link('oidplus:srv_registration').'><img src="img/arrow_back.png" width="16"> Go back to registration settings</a></p>' .
 			                $res;
 		}
 	}
@@ -186,7 +186,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 
 				$signature = '';
 				if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
-					return false; // throw new Exception("Signature failed");
+					return false; // throw new OIDplusException("Signature failed");
 				}
 
 				$data = array(
@@ -202,7 +202,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 				curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 				if (!($res = @curl_exec($ch))) {
-					return false; // throw new Exception("Communication with ViaThinkSoft server failed");
+					return false; // throw new OIDplusException("Communication with ViaThinkSoft server failed");
 				}
 				curl_close($ch);
 				// die("RES: $res\n");
@@ -253,7 +253,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 
 			$signature = '';
 			if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
-					return false; // throw new Exception("Signature failed");
+					return false; // throw new OIDplusException("Signature failed");
 			}
 
 			$data = array(
@@ -269,7 +269,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			if (!($res = @curl_exec($ch))) {
-				return false; // throw new Exception("Communication with ViaThinkSoft server failed");
+				return false; // throw new OIDplusException("Communication with ViaThinkSoft server failed");
 			}
 			curl_close($ch);
 

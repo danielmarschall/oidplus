@@ -409,7 +409,7 @@ abstract class OIDplusObject {
 
 	public static function findFitting($id) {
 		$obj = OIDplusObject::parse($id);
-		if (!$obj) throw new Exception("findFitting: Parse failed\n");
+		if (!$obj) throw new OIDplusException("findFitting: Parse failed\n");
 
 		if (!OIDPLUS_OBJECT_CACHING) {
 			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?", array($obj->ns().':%'));

@@ -57,7 +57,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 			if (strpos($out['text'], '%%OBJECT_TYPE_LIST%%') !== false) {
 				$tmp = '<ul>';
 				foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-					$tmp .= '<li><a '.oidplus_link($ot::root()).'>'.htmlentities($ot::objectTypeTitle()).'</a></li>';
+					$tmp .= '<li><a '.OIDplus::gui()->link($ot::root()).'>'.htmlentities($ot::objectTypeTitle()).'</a></li>';
 				}
 				$tmp .= '</ul>';
 				$out['text'] = str_replace('%%OBJECT_TYPE_LIST%%', $tmp, $out['text']);
@@ -157,7 +157,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePlugin {
 				               'text' => $ot::objectTypeTitle(),
 				               'state' => array("opened" => true),
 				               'icon' => 'plugins/objectTypes/'.$ot::ns().'/img/treeicon_root.png',
-				               'children' => OIDplusTree::tree_populate($ot::root(), $goto_path)
+				               'children' => OIDplus::menuUtils()->tree_populate($ot::root(), $goto_path)
 				               );
 				if (!file_exists($child['icon'])) $child['icon'] = null; // default icon (folder)
 				$objTypesChildren[] = $child;

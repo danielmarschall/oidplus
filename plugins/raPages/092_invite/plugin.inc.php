@@ -42,8 +42,8 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 			$handled = true;
 			$email = $_POST['email'];
 
-			if (!oidplus_valid_email($email)) {
-				throw new Exception('Invalid email address');
+			if (!OIDplus::mailUtils()->validMailAddress($email)) {
+				throw new OIDplusException('Invalid email address');
 			}
 
 			if (RECAPTCHA_ENABLED) {
@@ -52,7 +52,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					throw new Exception('Captcha wrong');
+					throw new OIDplusException('Captcha wrong');
 				}
 			}
 
@@ -66,7 +66,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 			$message = $this->getInvitationText($email);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 
-			my_mail($email, OIDplus::config()->systemTitle().' - Invitation', $message, OIDplus::config()->globalCC());
+			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->systemTitle().' - Invitation', $message, OIDplus::config()->globalCC());
 
 			echo json_encode(array("status" => 0));
 		}
@@ -81,19 +81,19 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 			$timestamp = $_POST['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
-				throw new Exception('Invalid auth key');
+				throw new OIDplusException('Invalid auth key');
 			}
 
 			if ((OIDplus::config()->getValue('max_ra_invite_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_invite_time'))) {
-				throw new Exception('Invitation expired!');
+				throw new OIDplusException('Invitation expired!');
 			}
 
 			if ($password1 !== $password2) {
-				throw new Exception('Passwords are not equal');
+				throw new OIDplusException('Passwords are not equal');
 			}
 
 			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				throw new Exception('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
+				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
 			}
 
 			OIDplus::logger()->log("RA($email)!", "RA '$email' has been registered due to invitation");
@@ -113,12 +113,12 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 	public function cfgSetValue($name, $value) {
 		if ($name == 'max_ra_invite_time') {
 			if (!is_numeric($value) || ($value < 0)) {
-				throw new Exception("Please enter a valid value.");
+				throw new OIDplusException("Please enter a valid value.");
 			}
 		}
 		else if ($name == 'ra_invitation_enabled') {
 			if (($value != 0) && ($value != 1)) {
-				throw new Exception("Please enter a valid value: 0 or 1.");
+				throw new OIDplusException("Please enter a valid value: 0 or 1.");
 			}
 		}
 	}
@@ -208,7 +208,7 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 	private function inviteSecurityCheck($email) {
 		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
 		if ($res->num_rows() > 0) {
-			throw new Exception("This RA is already registered and does not need to be invited.");
+			throw new OIDplusException("This RA is already registered and does not need to be invited.");
 		}
 
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) {
@@ -217,13 +217,13 @@ class OIDplusPageRaInvite extends OIDplusPagePlugin {
 			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where ra_email = ?", array($email));
 			while ($row = $res->fetch_array()) {
 				$objParent = OIDplusObject::parse($row['parent']);
-				if (is_null($objParent)) throw new Exception("Type of ".$row['parent']." unknown");
+				if (is_null($objParent)) throw new OIDplusException("Type of ".$row['parent']." unknown");
 				if ($objParent->userHasWriteRights()) {
 					$ok = true;
 				}
 			}
 			if (!$ok) {
-				throw new Exception('You may not invite this RA. Maybe you need to log in again.');
+				throw new OIDplusException('You may not invite this RA. Maybe you need to log in again.');
 			}
 		}
 	}

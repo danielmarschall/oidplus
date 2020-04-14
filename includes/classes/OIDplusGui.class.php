@@ -101,6 +101,9 @@ class OIDplusGui {
 			while ($row2 = $res2->fetch_array()) {
 				$iris[] = $row2['name'];
 			}
+			
+			$date_created = explode(' ', $row->created)[0] == '0000-00-00' ? '' : explode(' ', $row->created)[0];
+			$date_updated = explode(' ', $row->updated)[0] == '0000-00-00' ? '' : explode(' ', $row->updated)[0];
 
 			$output .= '<tr>';
 			$output .= '     <td><a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.htmlentities($show_id).'</a></td>';
@@ -121,8 +124,8 @@ class OIDplusGui {
 				$output .= '     <td><input type="checkbox" id="hide_'.$row->id.'" '.($row->confidential ? 'checked' : '').'></td>';
 				$output .= '     <td><button type="button" name="update_'.$row->id.'" id="update_'.$row->id.'" class="btn btn-success btn-xs update" onclick="crudActionUpdate('.js_escape($row->id).', '.js_escape($parent).')">Update</button></td>';
 				$output .= '     <td><button type="button" name="delete_'.$row->id.'" id="delete_'.$row->id.'" class="btn btn-danger btn-xs delete" onclick="crudActionDelete('.js_escape($row->id).', '.js_escape($parent).')">Delete</button></td>';
-				$output .= '     <td>'.oidplus_formatdate($row->created).'</td>';
-				$output .= '     <td>'.oidplus_formatdate($row->updated).'</td>';
+				$output .= '     <td>'.$date_created.'</td>';
+				$output .= '     <td>'.$date_updated.'</td>';
 			} else {
 				if ($asn1ids == '') $asn1ids = '<i>(none)</i>';
 				if ($iris == '') $iris = '<i>(none)</i>';
@@ -141,10 +144,10 @@ class OIDplusGui {
 					$output .= '     <td>'.implode(', ', $asn1ids_ext).'</td>';
 					$output .= '     <td>'.implode(', ', $iris).'</td>';
 				}
-				$output .= '     <td><a '.oidplus_link('oidplus:rainfo$'.str_replace('@','&',$row->ra_email)).'>'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
+				$output .= '     <td><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$row->ra_email)).'>'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
 				$output .= '     <td>'.htmlentities($row->comment).'</td>';
-				$output .= '     <td>'.oidplus_formatdate($row->created).'</td>';
-				$output .= '     <td>'.oidplus_formatdate($row->updated).'</td>';
+				$output .= '     <td>'.$date_created.'</td>';
+				$output .= '     <td>'.$date_updated.'</td>';
 			}
 			$output .= '</tr>';
 		}
@@ -188,9 +191,9 @@ class OIDplusGui {
 		$output .= '</div></div>';
 
 		if ($items_hidden == 1) {
-			$output .= '<p>'.$items_hidden.' item is hidden. Please <a '.oidplus_link('oidplus:login').'>log in</a> to see it.</p>';
+			$output .= '<p>'.$items_hidden.' item is hidden. Please <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> to see it.</p>';
 		} else if ($items_hidden > 1) {
-			$output .= '<p>'.$items_hidden.' items are hidden. Please <a '.oidplus_link('oidplus:login').'>log in</a> to see them.</p>';
+			$output .= '<p>'.$items_hidden.' items are hidden. Please <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> to see them.</p>';
 		}
 
 		return $output;
@@ -270,7 +273,7 @@ class OIDplusGui {
 			if ((!is_null($obj)) && (!$obj->userHasReadRights())) {
 				$out['title'] = 'Access denied';
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>Please <a '.oidplus_link('oidplus:login').'>log in</a> to receive information about this object.</p>';
+				$out['text'] = '<p>Please <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> to receive information about this object.</p>';
 				return $out;
 			}
 
@@ -319,7 +322,7 @@ class OIDplusGui {
 				if ($parent->isRoot()) {
 
 					$parent_link_text = $parent->objectTypeTitle();
-					$out['text'] = '<p><a '.oidplus_link($parent->root()).'><img src="img/arrow_back.png" width="16"> Parent node: '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+					$out['text'] = '<p><a '.OIDplus::gui()->link($parent->root()).'><img src="img/arrow_back.png" width="16"> Parent node: '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 
 				} else {
 					$res_ = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($parent->nodeId()));
@@ -334,11 +337,11 @@ class OIDplusGui {
 
 					$parent_link_text = empty($parent_title) ? explode(':',$parent->nodeId())[1] : $parent_title.' ('.explode(':',$parent->nodeId())[1].')';
 
-					$out['text'] = '<p><a '.oidplus_link($parent->nodeId()).'><img src="img/arrow_back.png" width="16"> Parent node: '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+					$out['text'] = '<p><a '.OIDplus::gui()->link($parent->nodeId()).'><img src="img/arrow_back.png" width="16"> Parent node: '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 				}
 			} else {
 				$parent_link_text = 'Go back to front page';
-				$out['text'] = '<p><a '.oidplus_link('oidplus:system').'><img src="img/arrow_back.png" width="16"> '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system').'><img src="img/arrow_back.png" width="16"> '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 			}
 
 			// ---
@@ -396,11 +399,20 @@ class OIDplusGui {
 			/*
 			if ($id != 'oidplus:system') {
 				$parent_link_text = 'Go back to front page';
-				$out['text'] = '<p><a '.oidplus_link('oidplus:system').'><img src="img/arrow_back.png" width="16"> '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system').'><img src="img/arrow_back.png" width="16"> '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 			}
 			*/
 		}
 
 		return $out;
+	}
+
+	public static function link($goto) {
+		if (strpos($goto, '#') !== false) {
+			list($goto, $anchor) = explode('#', $goto, 2);
+			return 'href="?goto='.urlencode($goto).'#'.htmlentities($anchor).'" onclick="openOidInPanel('.js_escape($goto).', true, '.js_escape($anchor).'); return false;"';
+		} else {
+			return 'href="?goto='.urlencode($goto).'" onclick="openOidInPanel('.js_escape($goto).', true); return false;"';
+		}
 	}
 }

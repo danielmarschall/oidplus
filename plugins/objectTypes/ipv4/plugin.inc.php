@@ -49,10 +49,10 @@ class OIDplusIpv4 extends OIDplusObject {
 			list($bare, $cidr) = explode('/', $ipv4);
 			$this->bare = $bare;
 			$this->cidr = $cidr;
-			if (!ipv4_valid($bare)) throw new Exception("Invalid IPv4");
-			if (!is_numeric($cidr)) throw new Exception("Invalid IPv4");
-			if ($cidr < 0) throw new Exception("Invalid IPv4");
-			if ($cidr > 32) throw new Exception("Invalid IPv4");
+			if (!ipv4_valid($bare)) throw new OIDplusException("Invalid IPv4");
+			if (!is_numeric($cidr)) throw new OIDplusException("Invalid IPv4");
+			if ($cidr < 0) throw new OIDplusException("Invalid IPv4");
+			if ($cidr > 32) throw new OIDplusException("Invalid IPv4");
 			$this->bare = ipv4_normalize($this->bare);
 		}
 	}
@@ -92,15 +92,15 @@ class OIDplusIpv4 extends OIDplusObject {
 
 		if (!$this->isRoot()) {
 			if (!ipv4_in_cidr($this->bare.'/'.$this->cidr, $str)) {
-				throw new Exception("Cannot add this address, because it must be inside the address range of the superior range.");
+				throw new OIDplusException("Cannot add this address, because it must be inside the address range of the superior range.");
 			}
 		}
 
 		list($ipv4, $cidr) = explode('/', $str);
-		if ($cidr < 0) throw new Exception("Invalid IPv4 address '$str'");
-		if ($cidr > 32) throw new Exception("Invalid IPv4 address '$str'");
+		if ($cidr < 0) throw new OIDplusException("Invalid IPv4 address '$str'");
+		if ($cidr > 32) throw new OIDplusException("Invalid IPv4 address '$str'");
 		$ipv4_normalized = ipv4_normalize($ipv4);
-		if (!$ipv4_normalized) throw new Exception("Invalid IPv4 address '$str'");
+		if (!$ipv4_normalized) throw new OIDplusException("Invalid IPv4 address '$str'");
 		return 'ipv4:'.$ipv4_normalized.'/'.$cidr; // overwrite; no hierarchical tree
 	}
 

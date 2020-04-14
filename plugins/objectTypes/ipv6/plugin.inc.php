@@ -49,10 +49,10 @@ class OIDplusIpv6 extends OIDplusObject {
 			list($bare, $cidr) = explode('/', $ipv6);
 			$this->bare = $bare;
 			$this->cidr = $cidr;
-			if (!ipv6_valid($bare)) throw new Exception("Invalid IPv6");
-			if (!is_numeric($cidr)) throw new Exception("Invalid IPv6");
-			if ($cidr < 0) throw new Exception("Invalid IPv6");
-			if ($cidr > 128) throw new Exception("Invalid IPv6");
+			if (!ipv6_valid($bare)) throw new OIDplusException("Invalid IPv6");
+			if (!is_numeric($cidr)) throw new OIDplusException("Invalid IPv6");
+			if ($cidr < 0) throw new OIDplusException("Invalid IPv6");
+			if ($cidr > 128) throw new OIDplusException("Invalid IPv6");
 			$this->bare = ipv6_normalize($this->bare);
 		}
 	}
@@ -92,15 +92,15 @@ class OIDplusIpv6 extends OIDplusObject {
 
 		if (!$this->isRoot()) {
 			if (!ipv6_in_cidr($this->bare.'/'.$this->cidr, $str)) {
-				throw new Exception("Cannot add this address, because it must be inside the address range of the superior range.");
+				throw new OIDplusException("Cannot add this address, because it must be inside the address range of the superior range.");
 			}
 		}
 
 		list($ipv6, $cidr) = explode('/', $str);
-		if ($cidr < 0) throw new Exception("Invalid IPv6 address '$str'");
-		if ($cidr > 128) throw new Exception("Invalid IPv6 address '$str'");
+		if ($cidr < 0) throw new OIDplusException("Invalid IPv6 address '$str'");
+		if ($cidr > 128) throw new OIDplusException("Invalid IPv6 address '$str'");
 		$ipv6_normalized = ipv6_normalize($ipv6);
-		if (!$ipv6_normalized) throw new Exception("Invalid IPv6 address '$str'");
+		if (!$ipv6_normalized) throw new OIDplusException("Invalid IPv6 address '$str'");
 		return 'ipv6:'.$ipv6_normalized.'/'.$cidr; // overwrite; no hierarchical tree
 	}
 

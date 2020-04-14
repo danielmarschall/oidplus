@@ -108,7 +108,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a '.oidplus_link('oidplus:resources$'.CFG_RESOURCE_PLUGIN_PATH.'$'.OIDplus::authUtils()::makeAuthKey("resources;".CFG_RESOURCE_PLUGIN_PATH)).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(CFG_RESOURCE_PLUGIN_TITLE).'</a></p>';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.CFG_RESOURCE_PLUGIN_PATH.'$'.OIDplus::authUtils()::makeAuthKey("resources;".CFG_RESOURCE_PLUGIN_PATH)).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(CFG_RESOURCE_PLUGIN_TITLE).'</a></p>';
 				} else {
 					$icon_candidate = pathinfo($dir)['dirname'].'/'.pathinfo($dir)['filename'].'_tree.png';
 					if (file_exists($icon_candidate)) {
@@ -121,7 +121,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a '.oidplus_link('oidplus:resources$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("resources;$dir")).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(basename($dir)).'</a></p><br>';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("resources;$dir")).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(basename($dir)).'</a></p><br>';
 				}
 			}
 
@@ -203,7 +203,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a '.oidplus_link('oidplus:resources$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("resources;$dir")).'>'.$ic.' '.htmlentities(basename($dir)).'</a></p>';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("resources;$dir")).'>'.$ic.' '.htmlentities(basename($dir)).'</a></p>';
 					$count++;
 				}
 
@@ -239,7 +239,7 @@ class OIDplusPagePublicResources extends OIDplusPagePlugin {
 						}
 						$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-						$out['text'] .= '<p><a '.oidplus_link('oidplus:resources$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("resources;$file")).'>'.$ic.' '.htmlentities($this->getDocumentTitle($file)).'</a></p>';
+						$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("resources;$file")).'>'.$ic.' '.htmlentities($this->getDocumentTitle($file)).'</a></p>';
 						$count++;
 					}
 				}

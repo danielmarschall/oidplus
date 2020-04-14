@@ -19,7 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusConfigInitializationException extends OIDplusException {
+class OIDplusMailException extends OIDplusException {
 
 }
 
