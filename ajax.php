@@ -129,6 +129,10 @@ try {
 		$obj = OIDplusObject::parse($id);
 		if ($obj === null) throw new OIDplusException("DELETE action failed because object '$id' cannot be parsed!");
 
+		if (OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id))->num_rows() == 0) {
+			throw new OIDplusException("Object '$id' does not exist");
+		}
+
 		// Check if permitted
 		if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentification error. Please log in as the superior RA to delete this OID.');
 
@@ -174,6 +178,10 @@ try {
 		$obj = OIDplusObject::parse($id);
 		if ($obj === null) throw new OIDplusException("UPDATE action failed because object '$id' cannot be parsed!");
 
+		if (OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id))->num_rows() == 0) {
+			throw new OIDplusException("Object '$id' does not exist");
+		}
+
 		// Check if permitted
 		if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentification error. Please log in as the superior RA to update this OID.');
 
@@ -196,16 +204,17 @@ try {
 
 		// Change RA recursively
 		$res = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
-		$row = $res->fetch_array();
-		$current_ra = $row['ra_email'];
-		if ($new_ra != $current_ra) {
-			OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
-			OIDplus::logger()->log("RA($current_ra)!",           "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
-			OIDplus::logger()->log("RA($new_ra)!",               "Gained ownership of object '$id' due to RA transfer of superior RA / admin.");
-			if ($parentObj = $obj->getParent()) {
-				OIDplus::logger()->log("OID(".$parentObj->nodeId().")", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
+		if ($row = $res->fetch_array()) {
+			$current_ra = $row['ra_email'];
+			if ($new_ra != $current_ra) {
+				OIDplus::logger()->log("OID($id)+SUPOIDRA($id)?/A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
+				OIDplus::logger()->log("RA($current_ra)!",           "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
+				OIDplus::logger()->log("RA($new_ra)!",               "Gained ownership of object '$id' due to RA transfer of superior RA / admin.");
+				if ($parentObj = $obj->getParent()) {
+					OIDplus::logger()->log("OID(".$parentObj->nodeId().")", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
+				}
+				_ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mitändern
 			}
-			_ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mitändern
 		}
 
 		// Log if confidentially flag was changed
@@ -258,6 +267,10 @@ try {
 		$obj = OIDplusObject::parse($id);
 		if ($obj === null) throw new OIDplusException("UPDATE2 action failed because object '$id' cannot be parsed!");
 
+		if (OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id))->num_rows() == 0) {
+			throw new OIDplusException("Object '$id' does not exist");
+		}
+
 		// Check if allowed
 		if (!$obj->userHasWriteRights()) throw new OIDplusException('Authentification error. Please log in as the RA to update this OID.');
 
@@ -285,6 +298,11 @@ try {
 		// Check if you have write rights on the parent (to create a new object)
 		$objParent = OIDplusObject::parse($_POST['parent']);
 		if ($objParent === null) throw new OIDplusException("INSERT action failed because parent object '".$_POST['parent']."' cannot be parsed!");
+
+		if (OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($objParent->nodeId()))->num_rows() == 0) {
+			throw new OIDplusException("Parent object '".($objParent->nodeId())."' does not exist");
+		}
+
 		if (!$objParent->userHasWriteRights()) throw new OIDplusException('Authentification error. Please log in as the correct RA to insert an OID at this arc.');
 
 		// Check if the ID is valid
