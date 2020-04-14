@@ -129,13 +129,13 @@ if (isset($_REQUEST['update_now'])) {
 	if ($svn_wc_exists && $snapshot_exists) {
 		echo '<font color="red">ERROR: Both, oidplus_version.txt and .svn directory exist! Therefore, the version is ambigous!</font>';
 		$job = new VNagMonitorDummy(VNag::STATUS_CRITICAL, "ERROR: Both, oidplus_version.txt and .svn directory exist! Therefore, the version is ambigous!");
-		$job->http_visual_output = false;
+		$job->http_visual_output = VNag::OUTPUT_NEVER;
 		$job->run();
 		unset($job);
 	} else if (!$svn_wc_exists && !$snapshot_exists) {
 		echo '<font color="red">ERROR: Neither oidplus_version.txt, nor .svn directory exist! Therefore, the version cannot be determined and the update needs to be applied manually!</font>';
 		$job = new VNagMonitorDummy(VNag::STATUS_CRITICAL, "Neither oidplus_version.txt, nor .svn directory exist! Therefore, the version cannot be determined and the update needs to be applied manually!");
-		$job->http_visual_output = false;
+		$job->http_visual_output = VNag::OUTPUT_NEVER;
 		$job->run();
 		unset($job);
 	} else if ($svn_wc_exists) {
@@ -150,11 +150,16 @@ if (isset($_REQUEST['update_now'])) {
 
 		if (!$local_installation) {
 			echo '<p><font color="red">The system could not determine the version of your system. (Required: svnupdate shell access or SQLite3). Please update your system manually via the SVN "update" command regularly.</font></p>';
+
+			$job = new VNagMonitorDummy(VNag::STATUS_WARNING, 'The system could not determine the version of your system. (Required: svnupdate shell access or SQLite3). Please update your system manually via the SVN "update" command regularly.');
+			$job->http_visual_output = VNag::OUTPUT_NEVER;
+			$job->run();
+			unset($job);
 		} else if ($local_installation == $newest_version) {
 			echo '<p><font color="green">You are already using the latest version of OIDplus.</font></p>';
 
 			$job = new VNagMonitorDummy(VNag::STATUS_OK, "You are using the latest version of OIDplus ($local_installation local / $newest_version remote)");
-			$job->http_visual_output = false;
+			$job->http_visual_output = VNag::OUTPUT_NEVER;
 			$job->run();
 			unset($job);
 		} else {
@@ -167,7 +172,7 @@ if (isset($_REQUEST['update_now'])) {
 			echo '</pre>';
 
 			$job = new VNagMonitorDummy(VNag::STATUS_WARNING, "OIDplus is outdated. ($local_installation local / $newest_version remote)");
-			$job->http_visual_output = false;
+			$job->http_visual_output = VNag::OUTPUT_NEVER;
 			$job->run();
 			unset($job);
 		}
@@ -185,7 +190,7 @@ if (isset($_REQUEST['update_now'])) {
 			echo '<p><font color="green">You are already using the latest version of OIDplus.</font></p>';
 
 			$job = new VNagMonitorDummy(VNag::STATUS_OK, "You are using the latest version of OIDplus ($local_installation local / $newest_version remote)");
-			$job->http_visual_output = false;
+			$job->http_visual_output = VNag::OUTPUT_NEVER;
 			$job->run();
 			unset($job);
 		} else {
@@ -213,7 +218,7 @@ if (isset($_REQUEST['update_now'])) {
 			echo '</pre>';
 
 			$job = new VNagMonitorDummy(VNag::STATUS_WARNING, "OIDplus is outdated. ($local_installation local / $newest_version remote)");
-			$job->http_visual_output = false;
+			$job->http_visual_output = VNag::OUTPUT_NEVER;
 			$job->run();
 			unset($job);
 		}

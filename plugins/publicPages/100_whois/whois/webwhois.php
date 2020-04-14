@@ -115,7 +115,7 @@ if ($continue) {
 	} else {
 		$out[] = "status: Information available";
 
-		$row = $res->fetch_object();
+		assert($row = $res->fetch_object());
 		$obj = OIDplusObject::parse($row->id);
 
 		if (!empty($row->parent) && (!is_root($row->parent))) {

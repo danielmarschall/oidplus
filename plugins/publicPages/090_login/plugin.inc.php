@@ -69,7 +69,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 
 				echo json_encode(array("status" => 0));
 			} else {
-				throw new OIDplusException('Wrong password');
+				throw new OIDplusException('Wrong password or user not registered');
 			}
 		}
 		if (isset($_POST["action"]) && ($_POST["action"] == "ra_logout")) {

@@ -68,7 +68,8 @@ class OIDplusRA {
 	}
 
 	public function checkPassword($password) {
-		$ra_res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($this->email));
+		$ra_res = OIDplus::db()->query("select authkey, salt from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($this->email));
+		if ($ra_res->num_rows() == 0) return false; // User not found
 		$ra_row = $ra_res->fetch_array();
 
 		$plugins = OIDplus::getAuthPlugins();

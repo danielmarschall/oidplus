@@ -315,6 +315,7 @@ abstract class OIDplusObject {
 	public function getParent() {
 		if (!OIDPLUS_OBJECT_CACHING) {
 			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($this->nodeId()));
+			if ($res->num_rows() == 0) return null;
 			$row = $res->fetch_array();
 			$parent = $row['parent'];
 			$obj = OIDplusObject::parse($parent);
@@ -345,6 +346,7 @@ abstract class OIDplusObject {
 	public function getRaMail() {
 		if (!OIDPLUS_OBJECT_CACHING) {
 			$res = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($this->nodeId()));
+			if ($res->num_rows() == 0) return null;
 			$row = $res->fetch_array();
 			return $row['ra_email'];
 		} else {
@@ -359,6 +361,7 @@ abstract class OIDplusObject {
 	public function getTitle() {
 		if (!OIDPLUS_OBJECT_CACHING) {
 			$res = OIDplus::db()->query("select title from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($this->nodeId()));
+			if ($res->num_rows() == 0) return null;
 			$row = $res->fetch_array();
 			return $row['title'];
 		} else {

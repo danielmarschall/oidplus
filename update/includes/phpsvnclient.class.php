@@ -25,16 +25,6 @@ if (!defined('IN_OIDPLUS')) die();
  *    - Converted class into a single function and added that function into the phpsvnclient class
  */
 
-define("PHPSVN_NORMAL_REQUEST", '<?xml version="1.0" encoding="utf-8"?><propfind xmlns="DAV:"><prop>
-<getlastmodified xmlns="DAV:"/> <checked-in xmlns="DAV:"/><version-name xmlns="DAV:"/><version-controlled-configuration xmlns="DAV:"/><resourcetype xmlns="DAV:"/><baseline-relative-path xmlns="http://subversion.tigris.org/xmlns/dav/"/><repository-uuid xmlns="http://subversion.tigris.org/xmlns/dav/"/></prop></propfind>');
-define("PHPSVN_VERSION_REQUEST", '<?xml version="1.0" encoding="utf-8"?><propfind xmlns="DAV:"><prop><checked-in xmlns="DAV:"/></prop></propfind>');
-define("PHPSVN_LOGS_REQUEST", '<?xml version="1.0" encoding="utf-8"?> <S:log-report xmlns:S="svn:"> <S:start-revision>%d</S:start-revision><S:end-revision>%d</S:end-revision><S:path></S:path><S:discover-changed-paths/></S:log-report>');
-
-define("NOT_FOUND", 2);
-define("AUTH_REQUIRED", 3);
-define("UNKNOWN_ERROR", 4);
-define("NO_ERROR", 1);
-
 /**
  *  PHP SVN CLIENT
  *
@@ -46,8 +36,19 @@ define("NO_ERROR", 1);
  *  @author Cesar D. Rodas <cesar@sixdegrees.com.br>
  *  @license BSD License
  */
-class phpsvnclient
-{
+class phpsvnclient {
+
+	protected const PHPSVN_NORMAL_REQUEST = '<?xml version="1.0" encoding="utf-8"?><propfind xmlns="DAV:"><prop><getlastmodified xmlns="DAV:"/> <checked-in xmlns="DAV:"/><version-name xmlns="DAV:"/><version-controlled-configuration xmlns="DAV:"/><resourcetype xmlns="DAV:"/><baseline-relative-path xmlns="http://subversion.tigris.org/xmlns/dav/"/><repository-uuid xmlns="http://subversion.tigris.org/xmlns/dav/"/></prop></propfind>';
+	
+	protected const PHPSVN_VERSION_REQUEST = '<?xml version="1.0" encoding="utf-8"?><propfind xmlns="DAV:"><prop><checked-in xmlns="DAV:"/></prop></propfind>';
+	
+	protected const PHPSVN_LOGS_REQUEST = '<?xml version="1.0" encoding="utf-8"?> <S:log-report xmlns:S="svn:"> <S:start-revision>%d</S:start-revision><S:end-revision>%d</S:end-revision><S:path></S:path><S:discover-changed-paths/></S:log-report>';
+	
+	protected const NO_ERROR = 1;
+	protected const NOT_FOUND = 2;
+	protected const AUTH_REQUIRED = 3;
+	protected const UNKNOWN_ERROR = 4;
+
 	/**
 	 *  SVN Repository URL
 	 *
@@ -340,8 +341,8 @@ class phpsvnclient
 		}
 		$url = $this->cleanURL($this->_url . "/!svn/bc/" . $version . "/" . $folder . "/");
 		$this->initQuery($args, "PROPFIND", $url);
-		$args['Body']                      = PHPSVN_NORMAL_REQUEST;
-		$args['Headers']['Content-Length'] = strlen(PHPSVN_NORMAL_REQUEST);
+		$args['Body']                      = self::PHPSVN_NORMAL_REQUEST;
+		$args['Headers']['Content-Length'] = strlen(self::PHPSVN_NORMAL_REQUEST);
 
 		if (!$this->Request($args, $headers, $body))
 			throw new OIDplusException("Cannot get rawDirectoryDump (Request failed)");
@@ -515,7 +516,7 @@ class phpsvnclient
 
 		$url = $this->cleanURL($this->_url . "/!svn/bc/" . $this->actVersion . "/" . $file . "/");
 		$this->initQuery($args, "REPORT", $url);
-		$args['Body']                      = sprintf(PHPSVN_LOGS_REQUEST, $vini, $vend);
+		$args['Body']                      = sprintf(self::PHPSVN_LOGS_REQUEST, $vini, $vend);
 		$args['Headers']['Content-Length'] = strlen($args['Body']);
 		$args['Headers']['Depth']          = 1;
 
@@ -632,8 +633,8 @@ class phpsvnclient
 
 		$this->_repVersion = -1;
 		$this->initQuery($args, "PROPFIND", $this->cleanURL($this->_url . "/!svn/vcc/default"));
-		$args['Body']                      = PHPSVN_VERSION_REQUEST;
-		$args['Headers']['Content-Length'] = strlen(PHPSVN_NORMAL_REQUEST);
+		$args['Body']                      = self::PHPSVN_VERSION_REQUEST;
+		$args['Headers']['Content-Length'] = strlen(self::PHPSVN_NORMAL_REQUEST);
 		$args['Headers']['Depth']          = 0;
 
 		if (!$this->Request($args, $tmp, $body))
@@ -690,13 +691,13 @@ class phpsvnclient
 		if ($http->response_status[0] != 2) {
 			switch ($http->response_status) {
 				case 404:
-					$this->errNro = NOT_FOUND;
+					$this->errNro = self::NOT_FOUND;
 					break;
 				case 401:
-					$this->errNro = AUTH_REQUIRED;
+					$this->errNro = self::AUTH_REQUIRED;
 					break;
 				default:
-					$this->errNro = UNKNOWN_ERROR;
+					$this->errNro = self::UNKNOWN_ERROR;
 					break;
 			}
 			//            trigger_error("request to $args[RequestURI] failed: $http->response_status
@@ -704,7 +705,7 @@ class phpsvnclient
 			$http->close();
 			return false;
 		}
-		$this->errNro = NO_ERROR;
+		$this->errNro = self::NO_ERROR;
 		$body         = '';
 		$tbody        = '';
 		for (;;) {

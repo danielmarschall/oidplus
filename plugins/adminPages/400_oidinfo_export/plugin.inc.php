@@ -129,9 +129,6 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 					$elements['unicode-label'][] = $row2->name;
 				}
 
-				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($row->ra_email));
-				$row2 = $res2->fetch_object();
-
 				if (!empty($row->title)) {
 					$elements['description'] = $row->title;
 					$elements['information'] = $row->description;
@@ -182,7 +179,11 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 				$elements['current-registrant']['phone'] = '';
 				$elements['current-registrant']['fax'] = '';
 				$elements['current-registrant']['address'] = '';
-				if ($row2) {
+
+				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($row->ra_email));
+				if ($res2->num_rows() > 0) {
+					$row2 = $res2->fetch_object();
+					
 					$tmp = array();
 					if (!empty($row2->personal_name)) {
 						$name_ary = split_firstname_lastname($row2->personal_name);

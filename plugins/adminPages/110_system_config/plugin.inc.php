@@ -49,6 +49,9 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePlugin {
 			$value = $_POST['value'];
 
 			$res = OIDplus::db()->query("select protected from ".OIDPLUS_TABLENAME_PREFIX."config where name = ?", array($name));
+			if ($res->num_rows() == 0) {
+				throw new OIDplusException('Setting does not exist');
+			}
 			$row = $res->fetch_array();
 			if ($row['protected'] == 1) {
 				throw new OIDplusException('Setting is write protected');

@@ -292,7 +292,6 @@ class OIDplusGui {
 						break;
 					} else {
 						$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($obj->nodeId()));
-						$row = $res->fetch_array();
 						if ($res->num_rows() == 0) {
 							http_response_code(404);
 							$out['title'] = 'Object not found';
@@ -300,6 +299,7 @@ class OIDplusGui {
 							$out['text'] = 'The object <code>'.htmlentities($id).'</code> was not found in this database.';
 							return $out;
 						} else {
+							$row = $res->fetch_array(); // will be used further down the code
 							$obj->getContentPage($out['title'], $out['text'], $out['icon']);
 							if (empty($out['title'])) $out['title'] = explode(':',$id,2)[1];
 							$parent = $obj->getParent();
@@ -326,18 +326,25 @@ class OIDplusGui {
 
 				} else {
 					$res_ = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($parent->nodeId()));
-					$row_ = $res_->fetch_array();
-
-					$parent_title = $row_['title'];
-					if (empty($parent_title) && ($parent->ns() == 'oid')) {
-						$res_ = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($parent->nodeId()));
+					if ($res_->num_rows() > 0) {
 						$row_ = $res_->fetch_array();
-						$parent_title = $row_['name']; // TODO: multiple ASN1 ids?
+	
+						$parent_title = $row_['title'];
+						if (empty($parent_title) && ($parent->ns() == 'oid')) {
+							// If not title is available, then use an ASN.1 identifier
+							$res_ = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($parent->nodeId()));
+							if ($res_->num_rows() > 0) {
+								$row_ = $res_->fetch_array();
+								$parent_title = $row_['name']; // TODO: multiple ASN1 ids?
+							}
+						}
+	
+						$parent_link_text = empty($parent_title) ? explode(':',$parent->nodeId())[1] : $parent_title.' ('.explode(':',$parent->nodeId())[1].')';
+	
+						$out['text'] = '<p><a '.OIDplus::gui()->link($parent->nodeId()).'><img src="img/arrow_back.png" width="16"> Parent node: '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+					} else {
+						$out['text'] = '';
 					}
-
-					$parent_link_text = empty($parent_title) ? explode(':',$parent->nodeId())[1] : $parent_title.' ('.explode(':',$parent->nodeId())[1].')';
-
-					$out['text'] = '<p><a '.OIDplus::gui()->link($parent->nodeId()).'><img src="img/arrow_back.png" width="16"> Parent node: '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 				}
 			} else {
 				$parent_link_text = 'Go back to front page';
@@ -377,7 +384,7 @@ class OIDplusGui {
 				$out['text'] = str_replace('%%DESC%%',    $desc,                              $out['text']);
 			if (strpos($out['text'], '%%CRUD%%') !== false)
 				$out['text'] = str_replace('%%CRUD%%',    self::showCrud($id),                $out['text']);
-			if (strpos($out['text'], '%%RA_INFO%%') !== false)
+			if ((strpos($out['text'], '%%RA_INFO%%') !== false) && isset($row['ra_email']) && !empty($row['ra_email']))
 				$out['text'] = str_replace('%%RA_INFO%%', OIDplusPagePublicRaInfo::showRaInfo($row['ra_email']), $out['text']);
 
 			$alt_ids = $obj->getAltIds();

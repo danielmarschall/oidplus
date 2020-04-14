@@ -148,7 +148,7 @@ try {
 				$res = OIDplus::db()->query("select tchild.id from ".OIDPLUS_TABLENAME_PREFIX."objects tchild " .
 				                            "left join ".OIDPLUS_TABLENAME_PREFIX."objects tparent on tparent.id = tchild.parent " .
 				                            "where tchild.parent <> ? and tchild.id like ? and tparent.id is null;", array($ot::root(), $ot::root().'%'));
-				if ($res->num_rows() == 0) break; // we need to call num_rows() before fetch_array()   [Problem with ODBC/MsSQL]
+				if ($res->num_rows() == 0) break;
 
 				while ($row = $res->fetch_array()) {
 					$id_to_delete = $row['id'];
