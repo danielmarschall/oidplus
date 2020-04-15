@@ -19,10 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePlugin {
-	public function type() {
-		return 'public';
-	}
+class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePluginPublic {
 
 	public static function getPluginInformation() {
 		$out = array();

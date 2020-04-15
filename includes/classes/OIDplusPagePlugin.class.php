@@ -19,9 +19,9 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPagePlugin extends OIDplusPlugin {
-	public function type() {}
-	public function priority() {}
+abstract class OIDplusPagePlugin extends OIDplusPlugin {
+	public abstract function type();
+	public abstract function priority();
 	public function action(&$handled) {}
 	public function cfgSetValue($name, $value) {}
 	public function gui($id, &$out, &$handled) {}

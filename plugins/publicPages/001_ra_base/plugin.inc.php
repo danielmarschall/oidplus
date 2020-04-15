@@ -19,11 +19,11 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPagePublicForgotPasswordAdmin2 extends OIDplusPagePluginAdmin {
+class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 
 	public static function getPluginInformation() {
 		$out = array();
-		$out['name'] = 'Forgot admin password (admin area)';
+		$out['name'] = 'RA base functionality';
 		$out['author'] = 'ViaThinkSoft';
 		$out['version'] = null;
 		$out['descriptionHTML'] = null;
@@ -31,10 +31,40 @@ class OIDplusPagePublicForgotPasswordAdmin2 extends OIDplusPagePluginAdmin {
 	}
 
 	public function priority() {
-		return 125;
+		return 1;
 	}
 
 	public function action(&$handled) {
+
+		// Action:     delete_ra
+		// Method:     POST
+		// Parameters: email
+		// Outputs:    Text
+		if (isset($_POST["action"]) && ($_POST["action"] == "delete_ra")) {
+			$handled = true;
+
+			$email = $_POST['email'];
+
+			$ra_logged_in = OIDplus::authUtils()->isRaLoggedIn($email);
+
+			if (!OIDplus::authUtils()->isAdminLoggedIn() && !$ra_logged_in) {
+				throw new OIDplusException('Authentification error. Please log in.');
+			}
+
+			if ($ra_logged_in) OIDplus::authUtils()->raLogout($email);
+
+			$ra = new OIDplusRA($email);
+			if (!$ra->existing()) {
+				throw new OIDplusException("RA '$email' does not exist.");
+			}
+			$ra->delete();
+			$ra = null;
+
+			OIDplus::logger()->log("RA($email)?/A?", "RA '$email' deleted");
+
+			echo json_encode(array("status" => 0));
+		}
+
 	}
 
 	public function init($html=true) {
@@ -47,19 +77,6 @@ class OIDplusPagePublicForgotPasswordAdmin2 extends OIDplusPagePluginAdmin {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
-		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
-		} else {
-			$tree_icon = null; // default icon (folder)
-		}
-
-		$json[] = array(
-			'id' => 'oidplus:forgot_password_admin', // link to the public plugin!
-			'icon' => $tree_icon,
-			'text' => 'Change password'
-		);
-
-		return true;
 	}
 
 	public function tree_search($request) {

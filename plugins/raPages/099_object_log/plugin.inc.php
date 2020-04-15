@@ -19,10 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPageRaObjectLog extends OIDplusPagePlugin {
-	public function type() {
-		return 'ra';
-	}
+class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 
 	public static function getPluginInformation() {
 		$out = array();

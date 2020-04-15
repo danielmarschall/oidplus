@@ -19,10 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPageRaInvite extends OIDplusPagePlugin {
-	public function type() {
-		return 'ra';
-	}
+class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 	public static function getPluginInformation() {
 		$out = array();

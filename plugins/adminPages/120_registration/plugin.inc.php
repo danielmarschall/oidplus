@@ -19,12 +19,13 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-define('QUERY_REGISTER_V1',         '1.3.6.1.4.1.37476.2.5.2.1.1.1');
-define('QUERY_UNREGISTER_V1',       '1.3.6.1.4.1.37476.2.5.2.1.2.1');
-define('QUERY_LISTALLSYSTEMIDS_V1', '1.3.6.1.4.1.37476.2.5.2.1.3.1');
-define('QUERY_LIVESTATUS_V1',       '1.3.6.1.4.1.37476.2.5.2.1.4.1');
+class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
-class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
+	private const QUERY_REGISTER_V1 =         '1.3.6.1.4.1.37476.2.5.2.1.1.1';
+	private const QUERY_UNREGISTER_V1 =       '1.3.6.1.4.1.37476.2.5.2.1.2.1';
+	private const QUERY_LISTALLSYSTEMIDS_V1 = '1.3.6.1.4.1.37476.2.5.2.1.3.1';
+	private const QUERY_LIVESTATUS_V1 =       '1.3.6.1.4.1.37476.2.5.2.1.4.1';
+
 	public static function getPluginInformation() {
 		$out = array();
 		$out['name'] = 'System registration';
@@ -32,10 +33,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 		$out['version'] = null;
 		$out['descriptionHTML'] = null;
 		return $out;
-	}
-
-	public function type() {
-		return 'admin';
 	}
 
 	public function priority() {
@@ -123,7 +120,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 		if ($id === 'oidplus:srvreg_status') {
 			$handled = true;
 
-			$query = QUERY_LIVESTATUS_V1;
+			$query = self::QUERY_LIVESTATUS_V1;
 
 			$payload = array(
 				"query" => $query, // we must repeat the query because we want to sign it
@@ -176,8 +173,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 		if ($privacy_level == 2) {
 			// The user wants to unregister
 			// but we only unregister if we are registered. Check this "anonymously" (i.e. without revealing our system ID)
-			if (in_array(OIDplus::getSystemId(false), explode(';',file_get_contents('https://oidplus.viathinksoft.com/reg2/query.php?query='.QUERY_LISTALLSYSTEMIDS_V1)))) {
-				$query = QUERY_UNREGISTER_V1;
+			if (in_array(OIDplus::getSystemId(false), explode(';',file_get_contents('https://oidplus.viathinksoft.com/reg2/query.php?query='.self::QUERY_LISTALLSYSTEMIDS_V1)))) {
+				$query = self::QUERY_UNREGISTER_V1;
 
 				$payload = array(
 					"query" => $query, // we must repeat the query because we want to sign it
@@ -222,7 +219,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePlugin {
 				$oidinfo_xml = false;
 			}
 
-			$query = QUERY_REGISTER_V1;
+			$query = self::QUERY_REGISTER_V1;
 
 			$root_oids = array();
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {

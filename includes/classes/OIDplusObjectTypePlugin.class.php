@@ -19,9 +19,9 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusObjectTypePlugin extends OIDplusPlugin {
+abstract class OIDplusObjectTypePlugin extends OIDplusPlugin {
 
-	public static function getObjectTypeClassName() {}
+	public static abstract function getObjectTypeClassName();
 
 }
 

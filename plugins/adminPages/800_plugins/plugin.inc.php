@@ -19,7 +19,8 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
+class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
+
 	public static function getPluginInformation() {
 		$out = array();
 		$out['name'] = 'Plugins';
@@ -27,10 +28,6 @@ class OIDplusPageAdminPlugins extends OIDplusPagePlugin {
 		$out['version'] = null;
 		$out['descriptionHTML'] = null;
 		return $out;
-	}
-
-	public function type() {
-		return 'admin';
 	}
 
 	public function priority() {

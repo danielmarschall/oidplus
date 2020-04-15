@@ -21,7 +21,8 @@ if (!defined('IN_OIDPLUS')) die();
 
 require_once __DIR__ . '/oidinfo_api.inc.php';
 
-class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
+class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
+
 	public static function getPluginInformation() {
 		$out = array();
 		$out['name'] = 'OID-Info.com export';
@@ -29,10 +30,6 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePlugin {
 		$out['version'] = null;
 		$out['descriptionHTML'] = null;
 		return $out;
-	}
-
-	public function type() {
-		return 'admin';
 	}
 
 	public function priority() {

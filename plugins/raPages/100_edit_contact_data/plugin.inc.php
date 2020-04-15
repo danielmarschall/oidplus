@@ -19,10 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPageRaEditContactData extends OIDplusPagePlugin {
-	public function type() {
-		return 'ra';
-	}
+class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 
 	public static function getPluginInformation() {
 		$out = array();

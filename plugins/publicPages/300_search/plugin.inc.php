@@ -19,10 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPagePublicSearch extends OIDplusPagePlugin {
-	public function type() {
-		return 'public';
-	}
+class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 
 	public static function getPluginInformation() {
 		$out = array();

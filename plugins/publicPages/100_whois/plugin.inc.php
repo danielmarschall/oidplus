@@ -19,10 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPagePublicWhois extends OIDplusPagePlugin {
-	public function type() {
-		return 'public';
-	}
+class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
 	public static function getPluginInformation() {
 		$out = array();

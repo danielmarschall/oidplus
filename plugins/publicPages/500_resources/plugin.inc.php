@@ -24,10 +24,7 @@ define('CFG_RESOURCE_PLUGIN_TITLE', 'Documents and resources');
 define('CFG_RESOURCE_PLUGIN_PATH', 'res/');
 define('CFG_RESOURCE_PLUGIN_HIDE_EMPTY_PATH', true);
 
-class OIDplusPagePublicResources extends OIDplusPagePlugin {
-	public function type() {
-		return 'public';
-	}
+class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 	public static function getPluginInformation() {
 		$out = array();

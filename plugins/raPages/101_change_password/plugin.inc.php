@@ -19,10 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPageRaChangePassword extends OIDplusPagePlugin {
-	public function type() {
-		return 'ra';
-	}
+class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 
 	public static function getPluginInformation() {
 		$out = array();

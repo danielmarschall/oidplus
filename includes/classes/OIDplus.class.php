@@ -31,7 +31,7 @@ class OIDplus {
 
 	private function __construct() {
 	}
-	
+
 	# --- Singleton classes
 
 	public static function config() {
@@ -121,10 +121,12 @@ class OIDplus {
 		if ($type === false) return false;
 
 		$prio = $plugin->priority();
-		if ($prio === false) return false;
+		if (!is_numeric($prio)) throw new OIDplusException('Errornous plugin "'.get_class($plugin).'": Invalid priority');
+		if ($prio <   0) throw new OIDplusException('Errornous plugin "'.get_class($plugin).'": Invalid priority');
+		if ($prio > 999) throw new OIDplusException('Errornous plugin "'.get_class($plugin).'": Invalid priority');
 
 		if (!isset(self::$pagePlugins[$type])) self::$pagePlugins[$type] = array();
-		self::$pagePlugins[$type][$prio] = $plugin;
+		self::$pagePlugins[$type][str_pad($prio, 3, '0', STR_PAD_LEFT).get_class($plugin)] = $plugin;
 
 		return true;
 	}
@@ -302,13 +304,13 @@ class OIDplus {
 		if (!defined('RECAPTCHA_PUBLIC'))         define('RECAPTCHA_PUBLIC',         '');
 		if (!defined('RECAPTCHA_PRIVATE'))        define('RECAPTCHA_PRIVATE',        '');
 		if (!defined('OIDPLUS_ENFORCE_SSL'))      define('OIDPLUS_ENFORCE_SSL',      2 /* Auto */);
-		
+
 		// Now include a file containing various size/depth limitations of OIDs
 		// It is important to include it after config.inc.php was included,
 		// so we can give config.inc.php the chance to override the values
-		// by defining the constants first. 
+		// by defining the constants first.
 
-		include_once __DIR__ . '/../limits.inc.php'; 
+		include_once __DIR__ . '/../limits.inc.php';
 
 		// Check version of the config file
 
@@ -352,25 +354,23 @@ class OIDplus {
 		$ary = glob(__DIR__ . '/../../plugins/objectTypes/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 
-		$ary = glob(__DIR__ . '/../../plugins/publicPages/'.'*'.'/plugin.inc.php');
-		foreach ($ary as $a) include $a;
-		$ary = glob(__DIR__ . '/../../plugins/raPages/'.'*'.'/plugin.inc.php');
-		foreach ($ary as $a) include $a;
-		$ary = glob(__DIR__ . '/../../plugins/adminPages/'.'*'.'/plugin.inc.php');
+		$ary = glob(__DIR__ . '/../../plugins/*Pages/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 
 		$ary = glob(__DIR__ . '/../../plugins/auth/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
 
 		foreach (get_declared_classes() as $c) {
-			if (is_subclass_of($c, 'OIDplusPagePlugin')) {
-				self::registerPagePlugin(new $c());
-			}
-			if (is_subclass_of($c, 'OIDplusAuthPlugin')) {
-				self::registerAuthPlugin(new $c());
-			}
-			if (is_subclass_of($c, 'OIDplusObjectTypePlugin')) {
-				self::registerObjectTypePlugin(new $c());
+			if (!(new ReflectionClass($c))->isAbstract()) {
+				if (is_subclass_of($c, 'OIDplusPagePlugin')) {
+						self::registerPagePlugin(new $c());
+				}
+				if (is_subclass_of($c, 'OIDplusAuthPlugin')) {
+					self::registerAuthPlugin(new $c());
+				}
+				if (is_subclass_of($c, 'OIDplusObjectTypePlugin')) {
+					self::registerObjectTypePlugin(new $c());
+				}
 			}
 		}
 
@@ -460,7 +460,7 @@ class OIDplus {
 
 			// Create the private and public key
 			$res = openssl_pkey_new($config);
-			
+
 			if (!$res) return false;
 
 			// Extract the private key from $res to $privKey
@@ -536,7 +536,7 @@ class OIDplus {
 	private static $sslAvailableCache = null;
 	public static function isSslAvailable() {
 		if (!is_null(self::$sslAvailableCache)) return self::$sslAvailableCache;
-	
+
 		if (php_sapi_name() == 'cli') {
 			self::$sslAvailableCache = false;
 			return false;

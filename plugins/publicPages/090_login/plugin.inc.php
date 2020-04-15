@@ -19,10 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPagePublicLogin extends OIDplusPagePlugin {
-	public function type() {
-		return 'public';
-	}
+class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 	public static function getPluginInformation() {
 		$out = array();
@@ -162,8 +159,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePlugin {
 			$out['text'] .= '</form>';
 			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:forgot_password').'>Forgot password?</a><br>';
 
-
-			if (OIDplus::config()->getValue('ra_invitation_enabled')) {
+			if (class_exists('OIDplusPageRaInvite') && OIDplus::config()->getValue('ra_invitation_enabled')) {
 				$out['text'] .= '<abbr title="To receive login data, the superior RA needs to send you an invitation. After creating or updating your OID, the system will ask them if they want to send you an invitation. If they accept, you will receive an email with an activation link. Alternatively, the system admin can create your account manually in the administrator control panel.">How to register?</abbr></p>';
 			} else {
 				$out['text'] .= '<abbr title="Since invitations are disabled at this OIDplus installation, the system administrator needs to create your account manually in the administrator control panel.">How to register?</abbr></p>';

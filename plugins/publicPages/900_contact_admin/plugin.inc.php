@@ -19,10 +19,7 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusPagePublicContactEMail extends OIDplusPagePlugin {
-	public function type() {
-		return 'public';
-	}
+class OIDplusPagePublicContactEMail extends OIDplusPagePluginPublic {
 
 	public static function getPluginInformation() {
 		$out = array();
