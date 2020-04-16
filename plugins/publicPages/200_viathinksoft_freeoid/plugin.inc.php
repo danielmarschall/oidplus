@@ -72,10 +72,10 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 			$message = file_get_contents(__DIR__ . '/request_msg.tpl');
 			$message = str_replace('{{SYSTEM_URL}}', OIDplus::getSystemUrl(), $message);
-			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
+			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->systemTitle().' - Free OID request', $message, OIDplus::config()->globalCC());
+			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID request', $message, OIDplus::config()->getValue('global_cc'));
 
 			echo json_encode(array("status" => 0));
 		}
@@ -106,8 +106,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				throw new OIDplusException('Passwords are not equal');
 			}
 
-			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
+			if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
+				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->getValue('ra_min_password_length'));
 			}
 
 			if (empty($ra_name)) {
@@ -166,16 +166,16 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$message .= "\n";
 			$message .= "More details: ".OIDplus::getSystemUrl()."?goto=oid:$new_oid\n";
 
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->systemTitle()." - OID $new_oid registered", $message, OIDplus::config()->globalCC());
+			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title')." - OID $new_oid registered", $message, OIDplus::config()->getValue('global_cc'));
 
 			// Send delegation information to user
 
 			$message = file_get_contents(__DIR__ . '/allocated_msg.tpl');
 			$message = str_replace('{{SYSTEM_URL}}', OIDplus::getSystemUrl(), $message);
-			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
+			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{NEW_OID}}', $new_oid, $message);
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->systemTitle().' - Free OID allocated', $message, OIDplus::config()->globalCC());
+			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID allocated', $message, OIDplus::config()->getValue('global_cc'));
 
 			echo json_encode(array("status" => 0));
 		}

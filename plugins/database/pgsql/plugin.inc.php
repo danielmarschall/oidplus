@@ -19,12 +19,13 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
+class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 	private $conn;
+	private $already_prepared;
 
 	public static function getPluginInformation(): array {
 		$out = array();
-		$out['name'] = 'PDO';
+		$out['name'] = 'PostgreSQL';
 		$out['author'] = 'ViaThinkSoft';
 		$out['version'] = null;
 		$out['descriptionHTML'] = null;
@@ -32,149 +33,163 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 	}
 
 	public static function name(): string {
-		return "PDO";
+		return "PgSQL";
 	}
-	
-	private $last_error = null;
 
 	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
-		$this->last_error = null;
 		if (is_null($prepared_args)) {
-			$res = $this->conn->query($sql);
+			$res = pg_query($this->conn, $sql);
 
 			if ($res === false) {
-				$this->last_error = $this->conn->errorInfo()[2];
 				throw new OIDplusSQLException($sql, $this->error());
 			} else {
-				return new OIDplusQueryResultPDO($res);
+				return new OIDplusQueryResultPgSql($res);
 			}
 		} else {
-			// TEST: Emulate the prepared statement
-			/*
-			foreach ($prepared_args as $arg) {
-				$needle = '?';
-				$replace = "'$arg'"; // TODO: types
-				$pos = strpos($sql, $needle);
-				if ($pos !== false) {
-					$sql = substr_replace($sql, $replace, $pos, strlen($needle));
-				}
-			}
-			return OIDplusQueryResultPDO($this->conn->query($sql));
-			*/
-
 			if (!is_array($prepared_args)) {
 				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
 			}
-			
-			foreach ($prepared_args as &$value) {
-				// We need to manually convert booleans into strings, because there is a 
-				// 14 year old bug that hasn't been adressed by the PDO developers:
-				// https://bugs.php.net/bug.php?id=57157 
-				// Note: We are using '1' and '0' instead of 'true' and 'false' because MySQL converts boolean to tinyint(1)
-				if (is_bool($value)) $value = $value ? '1' : '0';
-			} 
-			
-			$ps = $this->conn->prepare($sql);
-			if (!$ps) {
-				throw new OIDplusSQLException($sql, 'Cannot prepare statement');
-			}
-			$this->prepare_cache[$sql] = $ps;
 
-			if (!$ps->execute($prepared_args)) {
-				$this->last_error = $ps->errorInfo()[2];
+			// convert ? ? ? to $1 $2 $3
+			$sql = preg_replace_callback('@\\?@', function($found) {
+				static $i = 0;
+				$i++;
+				return '$'.$i;
+			}, $sql);
+
+			$prepare_name = 'OIDPLUS_'.sha1($sql);
+			if (!in_array($prepare_name, $this->already_prepared)) {
+				$res = pg_prepare($this->conn, $prepare_name, $sql);
+				if ($res === false) {
+					throw new OIDplusSQLException($sql, 'Cannot prepare statement');
+				}
+				$this->already_prepared[] = $prepare_name;
+			}
+
+			foreach ($prepared_args as &$value) {
+				if (is_bool($value)) $value = $value ? '1' : '0';
+			}
+
+			$ps = pg_execute($this->conn, $prepare_name, $prepared_args);
+			if ($ps === false) {
 				throw new OIDplusSQLException($sql, $this->error());
 			}
-			return new OIDplusQueryResultPDO($ps);
+			return new OIDplusQueryResultPgSql($ps);
 		}
 	}
 
 	public function insert_id(): int {
-		return $this->conn->lastInsertId();
+		return (int)$this->query('select lastval() as id')->fetch_object()->id;
 	}
 
 	public function error(): string {
-		$err = $this->last_error;
-		if ($err == null) $err = '';
+		$err = pg_last_error($this->conn);
+		if (!$err) $err = '';
 		return $err;
 	}
 
 	protected function doConnect(): void {
+		// Try connecting to the database
+		ob_start();
 		try {
-			$options = [
-			#    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-			    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-			    PDO::ATTR_EMULATE_PREPARES   => true,
-			];
-
-			// Try connecting to the database
-			$this->conn = new PDO(OIDPLUS_PDO_DSN, OIDPLUS_PDO_USERNAME, base64_decode(OIDPLUS_PDO_PASSWORD), $options);
-		} catch (PDOException $e) {
-			$message = $e->getMessage();
-			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
+			$err = '';
+			list($hostname, $port) = explode(':', OIDPLUS_PGSQL_HOST.':5432');
+			$username = OIDPLUS_PGSQL_USERNAME;
+			$password = OIDPLUS_PGSQL_PASSWORD;
+			$dbname   = OIDPLUS_PGSQL_DATABASE;
+			$this->conn = pg_connect("host=$hostname user=$username password=$password port=$port dbname=$dbname");
+		} finally {
+			$err = ob_get_contents();
+			ob_end_clean();
 		}
 
-		$this->query("SET NAMES 'utf8'");
+		if (!$this->conn) {
+			throw new OIDplusConfigInitializationException('Connection to the database failed! ' . strip_tags($err));
+		}
+
+		$this->already_prepared = array();
+
+		try {
+			$this->query("SET NAMES 'utf8'");
+		} catch (Exception $e) {
+		}
 	}
 
 	protected function doDisconnect(): void {
-		$this->conn = null; // the connection will be closed by removing the reference
+		$this->already_prepared = array();
+		pg_close($this->conn);
 	}
 
 	private $intransaction = false;
 
 	public function transaction_begin(): void {
-		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
-		$this->conn->beginTransaction();
+		$this->query('begin transaction');
 		$this->intransaction = true;
 	}
 
 	public function transaction_commit(): void {
-		$this->conn->commit();
+		$this->query('commit');
 		$this->intransaction = false;
 	}
 
 	public function transaction_rollback(): void {
-		$this->conn->rollBack();
+		$this->query('rollback');
 		$this->intransaction = false;
 	}
 }
 
-class OIDplusQueryResultPDO extends OIDplusQueryResult {
+class OIDplusQueryResultPgSql extends OIDplusQueryResult {
 	protected $no_resultset;
 	protected $res;
 
 	public function __construct($res) {
 		$this->no_resultset = is_bool($res);
-		
+
 		if (!$this->no_resultset) {
 			$this->res = $res;
 		}
 	}
-	
+
 	public function __destruct() {
-		if ($this->res) $this->res->closeCursor();
+		pg_free_result($this->res);
 	}
-	
+
 	public function containsResultSet(): bool {
 		return !$this->no_resultset;
 	}
 
 	public function num_rows(): int {
 		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
-		return $this->res->rowCount();
+		return pg_num_rows($this->res);
 	}
 
 	public function fetch_array()/*: ?array*/ {
 		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
-		$ret = $this->res->fetch(PDO::FETCH_ASSOC);
+		$ret = pg_fetch_array($this->res, null, PGSQL_ASSOC);
 		if ($ret === false) $ret = null;
+		if (!is_null($ret)) {
+			foreach ($ret as $key => &$value){
+				$type = pg_field_type($this->res,pg_field_num($this->res, $key));
+				if ($type == 'bool'){
+					$value = ($value == 't');
+				}
+			}
+		}
 		return $ret;
 	}
 
 	public function fetch_object()/*: ?object*/ {
 		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
-		$ret = $this->res->fetch(PDO::FETCH_OBJ);
+		$ret = pg_fetch_object($this->res);
 		if ($ret === false) $ret = null;
+		if (!is_null($ret)) {
+			foreach ($ret as $key => &$value){
+				$type = pg_field_type($this->res,pg_field_num($this->res, $key));
+				if ($type == 'bool'){
+					$value = ($value == 't');
+				}
+			}
+		}
 		return $ret;
 	}
 }

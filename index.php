@@ -77,7 +77,7 @@ header('X-OIDplus-SystemVersion:'.$sys_ver);
 $sys_install_type = OIDplus::getInstallType();
 header('X-OIDplus-SystemInstallType:'.$sys_install_type);
 
-$sys_title = OIDplus::config()->systemTitle();
+$sys_title = OIDplus::config()->getValue('system_title');
 header('X-OIDplus-SystemTitle:'.$sys_title);
 
 if (class_exists('OIDplusPageAdminColors')) {
@@ -101,7 +101,7 @@ $js = 'oidplus.min.js.php';
 	<meta name="theme-color" content="#A9DCF0">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->systemTitle(), $static_title); ?></title>
+	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->getValue('system_title'), $static_title); ?></title>
 
 	<script src="<?php echo htmlentities($js); ?>"></script>
 
@@ -144,7 +144,7 @@ $js = 'oidplus.min.js.php';
 		<div id="system_title_text">
 			<a <?php echo OIDplus::gui()->link('oidplus:system'); ?>>
 				<span id="system_title_1">ViaThinkSoft OIDplus 2.0</span><br>
-				<span id="system_title_2"><?php echo htmlentities(OIDplus::config()->systemTitle()); ?></span>
+				<span id="system_title_2"><?php echo htmlentities(OIDplus::config()->getValue('system_title')); ?></span>
 			</a>
 		</div>
 	</div>

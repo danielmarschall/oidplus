@@ -87,12 +87,12 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
 				$message = file_get_contents(__DIR__ . '/change_request_email.tpl');
 				$message = str_replace('{{SYSTEM_URL}}', OIDplus::getSystemUrl(), $message);
-				$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
+				$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
 				$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 				$message = str_replace('{{OLD_EMAIL}}', $old_email, $message);
 				$message = str_replace('{{NEW_EMAIL}}', $new_email, $message);
 				$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
-				OIDplus::mailUtils()->sendMail($new_email, OIDplus::config()->systemTitle().' - Change email request', $message);
+				OIDplus::mailUtils()->sendMail($new_email, OIDplus::config()->getValue('system_title').' - Change email request', $message);
 
 				echo json_encode(array("status" => 0));
 			}
@@ -147,11 +147,11 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
 			$message = file_get_contents(__DIR__ . '/email_change_confirmation.tpl');
 			$message = str_replace('{{SYSTEM_URL}}', OIDplus::getSystemUrl(), $message);
-			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->systemTitle(), $message);
+			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{OLD_EMAIL}}', $old_email, $message);
 			$message = str_replace('{{NEW_EMAIL}}', $new_email, $message);
-			OIDplus::mailUtils()->sendMail($old_email, OIDplus::config()->systemTitle().' - eMail address changed', $message);
+			OIDplus::mailUtils()->sendMail($old_email, OIDplus::config()->getValue('system_title').' - eMail address changed', $message);
 
 			echo json_encode(array("status" => 0));
 		}

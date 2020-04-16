@@ -20,8 +20,7 @@
 if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
-	private $odbc;
-	private $last_query;
+	private $conn;
 
 	public static function getPluginInformation(): array {
 		$out = array();
@@ -37,9 +36,8 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 	}
 
 	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
-		$this->last_query = $sql;
 		if (is_null($prepared_args)) {
-			$res = @odbc_exec($this->odbc, $sql);
+			$res = @odbc_exec($this->conn, $sql);
 
 			if ($res === false) {
 				throw new OIDplusSQLException($sql, $this->error());
@@ -57,7 +55,7 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 					$sql = substr_replace($sql, $replace, $pos, strlen($needle));
 				}
 			}
-			return OIDplusQueryResultODBC(@odbc_exec($this->odbc, $sql));
+			return OIDplusQueryResultODBC(@odbc_exec($this->conn, $sql));
 			*/
 			if (!is_array($prepared_args)) {
 				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
@@ -69,7 +67,7 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 				if (is_bool($value)) $value = $value ? '1' : '0';
 			}
 			
-			$ps = @odbc_prepare($this->odbc, $sql);
+			$ps = @odbc_prepare($this->conn, $sql);
 			if (!$ps) {
 				throw new OIDplusSQLException($sql, 'Cannot prepare statement');
 			}
@@ -101,14 +99,14 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 	}
 
 	public function error(): string {
-		return odbc_errormsg($this->odbc);
+		return odbc_errormsg($this->conn);
 	}
 
 	protected function doConnect(): void {
 		// Try connecting to the database
-		$this->odbc = @odbc_connect(OIDPLUS_ODBC_DSN, OIDPLUS_ODBC_USERNAME, base64_decode(OIDPLUS_ODBC_PASSWORD));
+		$this->conn = @odbc_connect(OIDPLUS_ODBC_DSN, OIDPLUS_ODBC_USERNAME, base64_decode(OIDPLUS_ODBC_PASSWORD));
 
-		if (!$this->odbc) {
+		if (!$this->conn) {
 			$message = odbc_errormsg();
 			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
 		}
@@ -120,27 +118,27 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 	}
 	
 	protected function doDisconnect(): void {
-		@odbc_close($this->odbc);
-		$this->odbc = null;
+		@odbc_close($this->conn);
+		$this->conn = null;
 	}
 
 	private $intransaction = false;
 
 	public function transaction_begin(): void {
 		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
-		odbc_autocommit($this->odbc, true);
+		odbc_autocommit($this->conn, true);
 		$this->intransaction = true;
 	}
 
 	public function transaction_commit(): void {
-		odbc_commit($this->odbc);
-		odbc_autocommit($this->odbc, false);
+		odbc_commit($this->conn);
+		odbc_autocommit($this->conn, false);
 		$this->intransaction = false;
 	}
 
 	public function transaction_rollback(): void {
-		odbc_rollback($this->odbc);
-		odbc_autocommit($this->odbc, false);
+		odbc_rollback($this->conn);
+		odbc_autocommit($this->conn, false);
 		$this->intransaction = false;
 	}
 }

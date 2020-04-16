@@ -39,30 +39,17 @@ class OIDplusConfig {
 	}
 
 	public function __construct() {
-		// TODO: Auslagern in ein Plugin
+
+		// These are important settings for base functionalities and therefore are not inside plugins
 		$this->prepareConfigKey('system_title', 'What is the name of your RA?', 'OIDplus 2.0', 0, 1);
 		$this->prepareConfigKey('admin_email', 'E-Mail address of the system administrator', '', 0, 1);
 		$this->prepareConfigKey('global_cc', 'Global CC for all outgoing emails?', '', 0, 1);
-		$this->prepareConfigKey('ra_min_password_length', 'Minimum length for RA passwords', '6', 0, 1);
-	}
+		$this->prepareConfigKey('objecttypes_initialized', 'List of object type plugins that were initialized once', '', 1, 1);
+		$this->prepareConfigKey('objecttypes_enabled', 'Enabled object types and their order, separated with a semicolon (please reload the page so that the change is applied)', '', 0, 1);
+		$this->prepareConfigKey('oidplus_private_key', 'Private key for this system', '', 1, 0);
+		$this->prepareConfigKey('oidplus_public_key', 'Public key for this system. If you "clone" your system, you must delete this key (e.g. using phpMyAdmin), so that a new one is created.', '', 1, 1);
 
-	public function systemTitle() {
-		return trim($this->getValue('system_title'));
 	}
-
-	public function globalCC() {
-		return trim($this->getValue('global_cc'));
-	}
-
-	public function minRaPasswordLength() {
-		return $this->getValue('ra_min_password_length');
-	}
-
-	/* hardcoded in setup/, because during installation, we don't have a settings database
-	public function minAdminPasswordLength() {
-		return 10;
-	}
-	*/
 
 	protected function buildConfigArray() {
 		if ($this->dirty) {
@@ -98,15 +85,15 @@ class OIDplusConfig {
 
 			}
 		}
+
 		if (($name == 'global_cc') || ($name == 'admin_email')) {
 			if (!empty($value) && !OIDplus::mailUtils()->validMailAddress($value)) {
 				throw new OIDplusException("This is not a correct email address");
 			}
 		}
-		if ($name == 'ra_min_password_length') {
-			if (!is_numeric($value) || ($value < 1)) {
-				throw new OIDplusException("Please enter a valid password length.");
-			}
+
+		if ($name == 'objecttypes_enabled') {
+			// Nothing here yet
 		}
 
 		if ($name == 'objecttypes_enabled') {
@@ -137,6 +124,14 @@ class OIDplusConfig {
 					throw new OIDplusException("Please check your input. Namespace \"$ot_check\" is not found");
 				}
 			}
+		}
+
+		if ($name == 'oidplus_private_key') {
+			// Nothing here yet
+		}
+
+		if ($name == 'oidplus_public_key') {
+			// Nothing here yet
 		}
 
 		// Give plugins the possibility to stop the process (e.g. if the value is invalid)

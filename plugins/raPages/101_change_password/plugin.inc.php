@@ -59,8 +59,8 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 				throw new OIDplusException('Passwords are not equal');
 			}
 
-			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				throw new OIDplusException('New password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
+			if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
+				throw new OIDplusException('New password is too short. Minimum password length: '.OIDplus::config()->getValue('ra_min_password_length'));
 			}
 
 			$ra = new OIDplusRA($email);

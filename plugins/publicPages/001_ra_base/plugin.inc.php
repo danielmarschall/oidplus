@@ -68,9 +68,15 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 	}
 
 	public function init($html=true) {
+		OIDplus::config()->prepareConfigKey('ra_min_password_length', 'Minimum length for RA passwords', '6', 0, 1);
 	}
 
 	public function cfgSetValue($name, $value) {
+		if ($name == 'ra_min_password_length') {
+			if (!is_numeric($value) || ($value < 1)) {
+				throw new OIDplusException("Please enter a valid password length.");
+			}
+		}
 	}
 
 	public function gui($id, &$out, &$handled) {

@@ -62,7 +62,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$message = $this->getForgotPasswordText($_POST['email']);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->systemTitle().' - Password reset request', $message, OIDplus::config()->globalCC());
+			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Password reset request', $message, OIDplus::config()->getValue('global_cc'));
 
 			echo json_encode(array("status" => 0));
 		}
@@ -88,8 +88,8 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 				throw new OIDplusException('Passwords are not equal');
 			}
 
-			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
+			if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
+				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->getValue('ra_min_password_length'));
 			}
 
 			OIDplus::logger()->log("RA($email)!", "RA '$email' has reset his password (forgot passwort)");

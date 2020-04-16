@@ -93,7 +93,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		$email = OIDplus::config()->getValue('admin_email');
 		if (empty($email)) $email = 'unknown@example.com';
 
-		echo $oa->xmlAddHeader(OIDplus::config()->systemTitle(), isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Export interface', $email);
+		echo $oa->xmlAddHeader(OIDplus::config()->getValue('system_title'), isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Export interface', $email);
 
 		$params['allow_html'] = true;
 		$params['allow_illegal_email'] = true; // It should be enabled, because the creator could have used some kind of human-readable anti-spam technique

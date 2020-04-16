@@ -217,7 +217,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$objParent = OIDplusObject::parse($_POST['parent']);
 			if ($objParent === null) throw new OIDplusException("INSERT action failed because parent object '".$_POST['parent']."' cannot be parsed!");
 
-			if (OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($objParent->nodeId()))->num_rows() == 0) {
+			if (!$objParent::root() && (OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($objParent->nodeId()))->num_rows() == 0)) {
 				throw new OIDplusException("Parent object '".($objParent->nodeId())."' does not exist");
 			}
 
@@ -312,7 +312,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		if ($id === 'oidplus:system') {
 			$handled = true;
 
-			$out['title'] = OIDplus::config()->systemTitle(); // 'Object Database of ' . $_SERVER['SERVER_NAME'];
+			$out['title'] = OIDplus::config()->getValue('system_title'); // 'Object Database of ' . $_SERVER['SERVER_NAME'];
 			$out['icon'] = OIDplus::webpath(__DIR__).'system_big.png';
 
 			if (file_exists(__DIR__ . '/welcome.local.html')) {

@@ -61,8 +61,8 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 				throw new OIDplusException('Passwords are not equal');
 			}
 
-			if (strlen($password1) < OIDplus::config()->minRaPasswordLength()) {
-				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->minRaPasswordLength());
+			if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
+				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->getValue('ra_min_password_length'));
 			}
 
 			OIDplus::logger()->log("RA($email)!/A?", "RA '$email' was created by the admin, without email address verification or invitation");

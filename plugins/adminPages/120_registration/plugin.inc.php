@@ -241,7 +241,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				"hide_system_url" => 0,
 				"hide_public_key" => 0,
 				"admin_email" => OIDplus::config()->getValue('admin_email'),
-				"system_title" => OIDplus::config()->systemTitle(),
+				"system_title" => OIDplus::config()->getValue('system_title'),
 				"oidinfo_xml" => @base64_encode($oidinfo_xml),
 				"root_oids" => $root_oids,
 				"system_version" => OIDplus::getVersion(),

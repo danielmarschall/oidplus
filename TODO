@@ -128,13 +128,11 @@ IDEAS
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie
 - wort "guid" oder "uuid" verwenden?
-- bit or tinyint(1) ?
 - should "OID updated" be split into two categories "updated by superior" (e.g. identifiers) and "updated by owner" (description etc)?
 - "updated" nicht aktualisieren, wenn man nur auf "update" klickt aber nix geändert hat
 - "Documents" section: Can base of URLs/images inside the HTML be changed automatically?
 
 PRIVACY:
-- make a config.inc.php setting to disable POLYFILL.IO feature
 - bring back "3p/cookiecontent"? DM 28 May 2019: Removed CookieConsent temporarily, because it is placed at the beginning of the page and therefore ruins the Google index ...
 	=> We might not need it, because cookies are only set during login, and at the login page itself, we already warn about cookies, in addition to the Privacy documentation
 

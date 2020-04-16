@@ -337,13 +337,10 @@ class OIDplus {
 
 		self::isSslAvailable(); // This function does automatic redirects
 
-		// System config settings
+		// Construct the configuration manager once
+		// During the construction, various system settings are prepared if required
 
-		OIDplus::config()->prepareConfigKey('objecttypes_initialized', 'List of object type plugins that were initialized once', '', 1, 1);
-		OIDplus::config()->prepareConfigKey('objecttypes_enabled', 'Enabled object types and their order, separated with a semicolon (please reload the page so that the change is applied)', '', 0, 1);
-
-		OIDplus::config()->prepareConfigKey('oidplus_private_key', 'Private key for this system', '', 1, 0);
-		OIDplus::config()->prepareConfigKey('oidplus_public_key', 'Public key for this system. If you "clone" your system, you must delete this key (e.g. using phpMyAdmin), so that a new one is created.', '', 1, 1);
+		OIDplus::config();
 
 		// Initialize public / private keys
 

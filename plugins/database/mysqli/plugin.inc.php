@@ -22,8 +22,7 @@ if (!defined('IN_OIDPLUS')) die();
 define('OIDPLUS_MYSQL_QUERYLOG', false);
 
 class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
-	private $mysqli;
-	private $last_query;
+	private $conn;
 	private $prepare_cache = array();
 
 	public static function getPluginInformation(): array {
@@ -40,10 +39,9 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	}
 
 	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
-		$this->last_query = $sql;
 		if (OIDPLUS_MYSQL_QUERYLOG) file_put_contents(__DIR__."/query.log", "$sql <== ".get_calling_function()."\n", FILE_APPEND);
 		if (is_null($prepared_args)) {
-			$res = $this->mysqli->query($sql, MYSQLI_STORE_RESULT);
+			$res = $this->conn->query($sql, MYSQLI_STORE_RESULT);
 
 			if ($res === false) {
 				throw new OIDplusSQLException($sql, $this->error());
@@ -64,7 +62,7 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 			if (isset($this->prepare_cache[$sql])) {
 				$ps = $this->prepare_cache[$sql];
 			} else {
-				$ps = $this->mysqli->prepare($sql);
+				$ps = $this->conn->prepare($sql);
 				if (!$ps) {
 					throw new OIDplusSQLException($sql, 'Cannot prepare statement');
 				}
@@ -97,11 +95,11 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	}
 
 	public function insert_id(): int {
-		return $this->mysqli->insert_id;
+		return $this->conn->insert_id;
 	}
 
 	public function error(): string {
-		return !empty($this->mysqli->connect_error) ? $this->mysqli->connect_error : $this->mysqli->error;
+		return !empty($this->conn->connect_error) ? $this->conn->connect_error : $this->conn->error;
 	}
 
 	protected function doConnect(): void {
@@ -109,8 +107,8 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 
 		// Try connecting to the database
 		list($hostname,$port) = explode(':', OIDPLUS_MYSQL_HOST.':'.ini_get("mysqli.default_port"));
-		$this->mysqli = @new mysqli($hostname, OIDPLUS_MYSQL_USERNAME, base64_decode(OIDPLUS_MYSQL_PASSWORD), OIDPLUS_MYSQL_DATABASE, $port);
-		if (!empty($this->mysqli->connect_error) || ($this->mysqli->connect_errno != 0)) {
+		$this->conn = @new mysqli($hostname, OIDPLUS_MYSQL_USERNAME, base64_decode(OIDPLUS_MYSQL_PASSWORD), OIDPLUS_MYSQL_DATABASE, $port);
+		if (!empty($this->conn->connect_error) || ($this->conn->connect_errno != 0)) {
 			$message = $this->error();
 			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
 		}
@@ -119,27 +117,27 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	}
 
 	protected function doDisconnect(): void {
-		$this->mysqli->close();
-		$this->mysqli = null;
+		$this->conn->close();
+		$this->conn = null;
 	}
 
 	private $intransaction = false;
 
 	public function transaction_begin(): void {
 		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
-		$this->mysqli->autocommit(true);
+		$this->conn->autocommit(true);
 		$this->intransaction = true;
 	}
 
 	public function transaction_commit(): void {
-		$this->mysqli->commit();
-		$this->mysqli->autocommit(false);
+		$this->conn->commit();
+		$this->conn->autocommit(false);
 		$this->intransaction = false;
 	}
 
 	public function transaction_rollback(): void {
-		$this->mysqli->rollback();
-		$this->mysqli->autocommit(false);
+		$this->conn->rollback();
+		$this->conn->autocommit(false);
 		$this->intransaction = false;
 	}
 
