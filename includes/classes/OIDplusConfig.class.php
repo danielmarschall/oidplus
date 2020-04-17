@@ -92,7 +92,7 @@ class OIDplusConfig {
 			}
 		}
 
-		if ($name == 'objecttypes_enabled') {
+		if ($name == 'objecttypes_initialized') {
 			// Nothing here yet
 		}
 

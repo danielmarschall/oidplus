@@ -68,6 +68,7 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 	}
 
 	public function init($html=true) {
+		// Will be used by: plugins admin-130, public-091, public-200, ra-092, ra-101
 		OIDplus::config()->prepareConfigKey('ra_min_password_length', 'Minimum length for RA passwords', '6', 0, 1);
 	}
 
