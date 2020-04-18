@@ -25,6 +25,10 @@ RFC
 OOBE/SETUP
 - There should be a "test database connection" button
 
+OOP
+- Go away from Singleton class? How can things be tested?
+- Remove all constants!!! Otherwise we cannot test very well
+
 SMALL THINGS
 - We should remove "die()" whenever possible, because it is very unflexible
 - offer signature checker tool to verify WHOIS responses

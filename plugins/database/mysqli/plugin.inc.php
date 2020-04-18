@@ -19,8 +19,6 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-define('OIDPLUS_MYSQL_QUERYLOG', false);
-
 class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	private $conn;
 	private $prepare_cache = array();
@@ -38,8 +36,15 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 		return "MySQL";
 	}
 
+	public function __construct() {
+		if (!defined('OIDPLUS_MYSQL_HOST'))     define('OIDPLUS_MYSQL_HOST',     'localhost');
+		if (!defined('OIDPLUS_MYSQL_USERNAME')) define('OIDPLUS_MYSQL_USERNAME', 'root');
+		if (!defined('OIDPLUS_MYSQL_PASSWORD')) define('OIDPLUS_MYSQL_PASSWORD', ''); // base64 encoded
+		if (!defined('OIDPLUS_MYSQL_DATABASE')) define('OIDPLUS_MYSQL_DATABASE', 'oidplus');
+	}
+
 	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
-		if (OIDPLUS_MYSQL_QUERYLOG) file_put_contents(__DIR__."/query.log", "$sql <== ".get_calling_function()."\n", FILE_APPEND);
+		if (defined('OIDPLUS_MYSQL_QUERYLOG') && OIDPLUS_MYSQL_QUERYLOG) file_put_contents(__DIR__."/query.log", "$sql <== ".get_calling_function()."\n", FILE_APPEND);
 		if (is_null($prepared_args)) {
 			$res = $this->conn->query($sql, MYSQLI_STORE_RESULT);
 
@@ -52,13 +57,13 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 			if (!is_array($prepared_args)) {
 				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
 			}
-			
+
 			foreach ($prepared_args as &$value) {
 				// MySQLi has problems converting "true/false" to the data type "tinyint(1)"
 				// It seems to be the same issue like in PDO reported 14 years ago at https://bugs.php.net/bug.php?id=57157
 				if (is_bool($value)) $value = $value ? '1' : '0';
 			}
-			
+
 			if (isset($this->prepare_cache[$sql])) {
 				$ps = $this->prepare_cache[$sql];
 			} else {
@@ -66,7 +71,7 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 				if (!$ps) {
 					throw new OIDplusSQLException($sql, 'Cannot prepare statement');
 				}
-				
+
 				// Caching the prepared is very risky
 				// In PDO and ODBC we may not do it, because execute() will
 				// destroy the existing cursors.
@@ -103,7 +108,9 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	}
 
 	protected function doConnect(): void {
-		if (OIDPLUS_MYSQL_QUERYLOG) file_put_contents("query.log", '');
+		if (!function_exists('mysqli_connect')) throw new OIDplusException('PHP extension "MySQLi" not installed');
+
+		if (defined('OIDPLUS_MYSQL_QUERYLOG') && OIDPLUS_MYSQL_QUERYLOG) file_put_contents("query.log", '');
 
 		// Try connecting to the database
 		list($hostname,$port) = explode(':', OIDPLUS_MYSQL_HOST.':'.ini_get("mysqli.default_port"));
@@ -142,7 +149,7 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	}
 
 	public static function nativeDriverAvailable(): bool {
-		return function_exists('mysqli_fetch_all');
+		return function_exists('mysqli_fetch_all') && (!(defined('OIDPLUS_MYSQL_FORCE_MYSQLND_SUPPLEMENT') && (OIDPLUS_MYSQL_FORCE_MYSQLND_SUPPLEMENT)));
 	}
 
 	private static function bind_placeholder_vars(&$stmt,$params): bool {
@@ -188,12 +195,12 @@ class OIDplusQueryResultMySQL extends OIDplusQueryResult {
 
 	public function __construct($res) {
 		$this->no_resultset = is_bool($res);
-		
+
 		if (!$this->no_resultset) {
 			$this->res = $res;
 		}
 	}
-	
+
 	public function __destruct() {
 		if ($this->res) $this->res->close();
 	}
@@ -290,7 +297,7 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 	}
 
 	public function fetch_object()/*: ?object*/ {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusConfigInitializationException("The query has returned no result set (i.e. it was not a SELECT query)");
 
 		$ary = $this->fetch_array();
 		if (!$ary) return null;

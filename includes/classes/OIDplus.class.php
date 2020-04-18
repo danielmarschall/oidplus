@@ -106,6 +106,9 @@ class OIDplus {
 	}
 
 	public static function db() {
+		if (!defined('OIDPLUS_DATABASE_PLUGIN')) {
+			throw new OIDplusConfigInitializationException("No database plugin selected in config file");
+		}
 		if (!isset(self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN])) {
 			throw new OIDplusConfigInitializationException("Database plugin '".OIDPLUS_DATABASE_PLUGIN."' not found");
 		}
@@ -293,11 +296,6 @@ class OIDplus {
 
 		if (!defined('OIDPLUS_CONFIG_VERSION'))   define('OIDPLUS_CONFIG_VERSION',   0.0);
 		if (!defined('OIDPLUS_ADMIN_PASSWORD'))   define('OIDPLUS_ADMIN_PASSWORD',   '');
-		if (!defined('OIDPLUS_DATABASE_PLUGIN'))  define('OIDPLUS_DATABASE_PLUGIN',  'MySQL');
-		if (!defined('OIDPLUS_MYSQL_HOST'))       define('OIDPLUS_MYSQL_HOST',       'localhost');
-		if (!defined('OIDPLUS_MYSQL_USERNAME'))   define('OIDPLUS_MYSQL_USERNAME',   'root');
-		if (!defined('OIDPLUS_MYSQL_PASSWORD'))   define('OIDPLUS_MYSQL_PASSWORD',   ''); // base64 encoded
-		if (!defined('OIDPLUS_MYSQL_DATABASE'))   define('OIDPLUS_MYSQL_DATABASE',   'oidplus');
 		if (!defined('OIDPLUS_TABLENAME_PREFIX')) define('OIDPLUS_TABLENAME_PREFIX', '');
 		if (!defined('OIDPLUS_SESSION_SECRET'))   define('OIDPLUS_SESSION_SECRET',   '');
 		if (!defined('RECAPTCHA_ENABLED'))        define('RECAPTCHA_ENABLED',        false);

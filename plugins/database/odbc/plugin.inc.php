@@ -35,6 +35,12 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 		return "ODBC";
 	}
 
+	public function __construct() {
+		if (!defined('OIDPLUS_ODBC_DSN'))      define('OIDPLUS_ODBC_DSN',      'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
+		if (!defined('OIDPLUS_ODBC_USERNAME')) define('OIDPLUS_ODBC_USERNAME', '');
+		if (!defined('OIDPLUS_ODBC_PASSWORD')) define('OIDPLUS_ODBC_PASSWORD', ''); // base64 encoded
+	}
+
 	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 		if (is_null($prepared_args)) {
 			$res = @odbc_exec($this->conn, $sql);
@@ -60,13 +66,13 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 			if (!is_array($prepared_args)) {
 				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
 			}
-			
+
 			foreach ($prepared_args as &$value) {
 				// ODBC/SQLServer has problems converting "true" to the data type "bit"
 				// Error "Invalid character value for cast specification"
 				if (is_bool($value)) $value = $value ? '1' : '0';
 			}
-			
+
 			$ps = @odbc_prepare($this->conn, $sql);
 			if (!$ps) {
 				throw new OIDplusSQLException($sql, 'Cannot prepare statement');
@@ -103,6 +109,8 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 	}
 
 	protected function doConnect(): void {
+		if (!function_exists('odbc_connect')) throw new OIDplusConfigInitializationException('PHP extension "ODBC" not installed');
+
 		// Try connecting to the database
 		$this->conn = @odbc_connect(OIDPLUS_ODBC_DSN, OIDPLUS_ODBC_USERNAME, base64_decode(OIDPLUS_ODBC_PASSWORD));
 
@@ -116,7 +124,7 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 		} catch (Exception $e) {
 		}
 	}
-	
+
 	protected function doDisconnect(): void {
 		@odbc_close($this->conn);
 		$this->conn = null;
@@ -149,12 +157,12 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 
 	public function __construct($res) {
 		$this->no_resultset = is_bool($res);
-		
+
 		if (!$this->no_resultset) {
 			$this->res = $res;
 		}
 	}
-	
+
 	public function __destruct() {
 		// odbc_close_cursor($this->res);
 	}

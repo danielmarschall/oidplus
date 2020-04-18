@@ -21,6 +21,7 @@ if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 	private $conn;
+	private $last_error = null; // we need that because PDO divides prepared statement errors and normal query errors, but we have only one "error()" method
 
 	public static function getPluginInformation(): array {
 		$out = array();
@@ -34,8 +35,12 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 	public static function name(): string {
 		return "PDO";
 	}
-	
-	private $last_error = null;
+
+	public function __construct() {
+		if (!defined('OIDPLUS_PDO_DSN'))      define('OIDPLUS_PDO_DSN',      'mysql:host=localhost;dbname=oidplus;CHARSET=UTF8');
+		if (!defined('OIDPLUS_PDO_USERNAME')) define('OIDPLUS_PDO_USERNAME', 'root');
+		if (!defined('OIDPLUS_PDO_PASSWORD')) define('OIDPLUS_PDO_PASSWORD', ''); // base64 encoded
+	}
 
 	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
@@ -65,15 +70,15 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 			if (!is_array($prepared_args)) {
 				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
 			}
-			
+
 			foreach ($prepared_args as &$value) {
-				// We need to manually convert booleans into strings, because there is a 
+				// We need to manually convert booleans into strings, because there is a
 				// 14 year old bug that hasn't been adressed by the PDO developers:
-				// https://bugs.php.net/bug.php?id=57157 
+				// https://bugs.php.net/bug.php?id=57157
 				// Note: We are using '1' and '0' instead of 'true' and 'false' because MySQL converts boolean to tinyint(1)
 				if (is_bool($value)) $value = $value ? '1' : '0';
-			} 
-			
+			}
+
 			$ps = $this->conn->prepare($sql);
 			if (!$ps) {
 				throw new OIDplusSQLException($sql, 'Cannot prepare statement');
@@ -99,6 +104,8 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 	}
 
 	protected function doConnect(): void {
+		if (!class_exists('PDO')) throw new OIDplusConfigInitializationException('PHP extension "PDO" not installed');
+
 		try {
 			$options = [
 			#    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -145,16 +152,16 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 
 	public function __construct($res) {
 		$this->no_resultset = is_bool($res);
-		
+
 		if (!$this->no_resultset) {
 			$this->res = $res;
 		}
 	}
-	
+
 	public function __destruct() {
 		if ($this->res) $this->res->closeCursor();
 	}
-	
+
 	public function containsResultSet(): bool {
 		return !$this->no_resultset;
 	}

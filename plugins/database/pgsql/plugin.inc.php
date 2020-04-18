@@ -36,6 +36,13 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 		return "PgSQL";
 	}
 
+	public function __construct() {
+		if (!defined('OIDPLUS_PGSQL_HOST'))     define('OIDPLUS_PGSQL_HOST',     'localhost:5432');
+		if (!defined('OIDPLUS_PGSQL_USERNAME')) define('OIDPLUS_PGSQL_USERNAME', 'postgres');
+		if (!defined('OIDPLUS_PGSQL_PASSWORD')) define('OIDPLUS_PGSQL_PASSWORD', ''); // base64 encoded
+		if (!defined('OIDPLUS_PGSQL_DATABASE')) define('OIDPLUS_PGSQL_DATABASE', 'oidplus');
+	}
+
 	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 		if (is_null($prepared_args)) {
 			$res = pg_query($this->conn, $sql);
@@ -89,16 +96,19 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 	}
 
 	protected function doConnect(): void {
+		if (!function_exists('pg_connect')) throw new OIDplusConfigInitializationException('PHP extension "PostgreSQL" not installed');
+
 		// Try connecting to the database
 		ob_start();
 		try {
 			$err = '';
 			list($hostname, $port) = explode(':', OIDPLUS_PGSQL_HOST.':5432');
 			$username = OIDPLUS_PGSQL_USERNAME;
-			$password = OIDPLUS_PGSQL_PASSWORD;
+			$password = base64_decode(OIDPLUS_PGSQL_PASSWORD);
 			$dbname   = OIDPLUS_PGSQL_DATABASE;
 			$this->conn = pg_connect("host=$hostname user=$username password=$password port=$port dbname=$dbname");
 		} finally {
+			# TODO: this does not seem to work?! (at least not for CLI)
 			$err = ob_get_contents();
 			ob_end_clean();
 		}
