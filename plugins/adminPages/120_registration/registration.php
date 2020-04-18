@@ -40,7 +40,7 @@ $edits_possible = true;
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="../../../setup/setup.css">
 	<?php
-	if (RECAPTCHA_ENABLED) {
+	if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 	?>
 	<script src="https://www.google.com/recaptcha/api.js"></script>
 	<?php
@@ -61,18 +61,18 @@ After setup is complete, you can change all these settings if required.</p>
 <input type="hidden" name="sent" value="1">
 
 <?php
-if (RECAPTCHA_ENABLED) {
+if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 	echo '<p><u>Step '.($step++).': Solve CAPTCHA</u></p>';
 	echo '<noscript>';
 	echo '<p><font color="red">You need to enable JavaScript to solve the CAPTCHA.</font></p>';
 	echo '</noscript>';
-	echo '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.RECAPTCHA_PUBLIC.'" }); </script>';
+	echo '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>';
 	echo '<p>Before logging in, please solve the following CAPTCHA</p>';
 	echo '<p>If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="<?php echo OIDplus::getSystemUrl(); ?>setup/">setup part 1</a> again or edit includes/config.inc.php).</p>';
-	echo '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>';
+	echo '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>';
 
 	if (isset($_REQUEST['sent'])) {
-		$secret=RECAPTCHA_PRIVATE;
+		$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 		$response=$_POST["g-recaptcha-response"];
 		$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 		$captcha_success=json_decode($verify);

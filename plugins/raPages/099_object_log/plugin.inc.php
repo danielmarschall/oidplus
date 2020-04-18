@@ -58,8 +58,8 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 
 		// TODO: I want that this content comes before the WHOIS modifyContent.
 		//       The problem is that first all public and then all RA plugins get loaded, not mixed by their priority
-		$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event from ".OIDPLUS_TABLENAME_PREFIX."log lo ".
-		                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_object lu on lu.log_id = lo.id ".
+		$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event from ###log lo ".
+		                            "left join ###log_object lu on lu.log_id = lo.id ".
 		                            "where lu.object = ? " .
 		                            "order by lo.unix_ts desc", array($id));
 		$text .= "<h2>Log messages for object ".htmlentities($id)."</h2>";
@@ -67,7 +67,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 			$text .= '<pre>';
 			while ($row = $res->fetch_array()) {
 				$users = array();
-				$res2 = OIDplus::db()->query("select username from ".OIDPLUS_TABLENAME_PREFIX."log_user ".
+				$res2 = OIDplus::db()->query("select username from ###log_user ".
 				                             "where log_id = ?", array($row['id']));
 				while ($row2 = $res2->fetch_array()) {
 					$users[] = $row2['username'];

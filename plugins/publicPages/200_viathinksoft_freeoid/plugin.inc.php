@@ -45,7 +45,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$handled = true;
 			$email = $_POST['email'];
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
+			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 			if ($res->num_rows() > 0) {
 				throw new OIDplusException('This email address already exists.'); // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
 			}
@@ -54,8 +54,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				throw new OIDplusException('Invalid email address');
 			}
 
-			if (RECAPTCHA_ENABLED) {
-				$secret=RECAPTCHA_PRIVATE;
+			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
+				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 				$response=$_POST["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
@@ -138,15 +138,15 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			if (empty($title)) $title = $ra_name;
 
 			try {
-				if ('oid:'.$new_oid > OIDPLUS_MAX_ID_LENGTH) {
-					throw new OIDplusException("The resulting object identifier '$new_oid' is too long (max allowed length ".(OIDPLUS_MAX_ID_LENGTH-strlen('oid:')).")");
+				if ('oid:'.$new_oid > OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')) {
+					throw new OIDplusException("The resulting object identifier '$new_oid' is too long (max allowed length ".(OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:')).")");
 				}
 				
 				if (OIDplus::db()->slang() == 'mssql') {
-					OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, getdate())", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
+					OIDplus::db()->query("insert into ###objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, getdate())", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
 				} else {
 					// MySQL + PgSQL
-					OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, now())", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
+					OIDplus::db()->query("insert into ###objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, now())", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
 				}
 			} catch (Exception $e) {
 				$ra->delete();
@@ -210,8 +210,9 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				$out['text'] .= '
 				  <form id="freeOIDForm" onsubmit="return freeOIDFormOnSubmit();">
 				    E-Mail: <input type="text" id="email" value=""/><br><br>'.
-				 (RECAPTCHA_ENABLED ? '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.RECAPTCHA_PUBLIC.'" }); </script>'.
-				                   '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>' : '').
+				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
+				 '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
+				 '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '').
 				' <br>
 				    <input type="submit" value="Request free OID">
 				  </form>';
@@ -235,7 +236,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$out['title'] = 'Activate Free OID';
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
+			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 			if ($res->num_rows() > 0) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = 'This RA is already registered.'; // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
@@ -285,7 +286,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	# ---
 
 	protected static function freeoid_max_id() {
-		$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ? order by ".OIDplus::db()->natOrder('id'), array(self::getFreeRootOid(true).'.%'));
+		$res = OIDplus::db()->query("select id from ###objects where id like ? order by ".OIDplus::db()->natOrder('id'), array(self::getFreeRootOid(true).'.%'));
 		$highest_id = 0;
 		while ($row = $res->fetch_array()) {
 			$arc = substr_count(self::getFreeRootOid(false), '.')+1;

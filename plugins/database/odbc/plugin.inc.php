@@ -21,6 +21,7 @@ if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 	private $conn;
+	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
 
 	public static function getPluginInformation(): array {
 		$out = array();
@@ -35,17 +36,13 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 		return "ODBC";
 	}
 
-	public function __construct() {
-		if (!defined('OIDPLUS_ODBC_DSN'))      define('OIDPLUS_ODBC_DSN',      'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
-		if (!defined('OIDPLUS_ODBC_USERNAME')) define('OIDPLUS_ODBC_USERNAME', '');
-		if (!defined('OIDPLUS_ODBC_PASSWORD')) define('OIDPLUS_ODBC_PASSWORD', ''); // base64 encoded
-	}
-
-	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			$res = @odbc_exec($this->conn, $sql);
 
 			if ($res === false) {
+				$this->last_error = odbc_errormsg($this->conn);
 				throw new OIDplusSQLException($sql, $this->error());
 			} else {
 				return new OIDplusQueryResultODBC($res);
@@ -79,6 +76,7 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 			}
 
 			if (!@odbc_execute($ps, $prepared_args)) {
+				$this->last_error = odbc_errormsg($this->conn);
 				throw new OIDplusSQLException($sql, $this->error());
 			}
 			return new OIDplusQueryResultODBC($ps);
@@ -105,14 +103,19 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 	}
 
 	public function error(): string {
-		return odbc_errormsg($this->conn);
+		$err = $this->last_error;
+		if ($err == null) $err = '';
+		return $err;
 	}
 
 	protected function doConnect(): void {
 		if (!function_exists('odbc_connect')) throw new OIDplusConfigInitializationException('PHP extension "ODBC" not installed');
 
 		// Try connecting to the database
-		$this->conn = @odbc_connect(OIDPLUS_ODBC_DSN, OIDPLUS_ODBC_USERNAME, base64_decode(OIDPLUS_ODBC_PASSWORD));
+		$dsn      = OIDplus::baseConfig()->getValue('ODBC_DSN',      'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
+		$username = OIDplus::baseConfig()->getValue('ODBC_USERNAME', '');
+		$password = OIDplus::baseConfig()->getValue('ODBC_PASSWORD', '');
+		$this->conn = @odbc_connect($dsn, $username, $password);
 
 		if (!$this->conn) {
 			$message = odbc_errormsg();

@@ -39,7 +39,9 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('whois_auth_token', 'OID-over-WHOIS authentication token to display confidential data', '', 0, 1);
+		OIDplus::config()->prepareConfigKey('whois_auth_token',                       'OID-over-WHOIS authentication token to display confidential data', '', 0, 1);
+		OIDplus::config()->prepareConfigKey('webwhois_output_format_spacer',          'WebWHOIS: Spacer', 2, 0, 1);
+		OIDplus::config()->prepareConfigKey('webwhois_output_format_max_line_length', 'WebWHOIS: Max line length', 80, 0, 1);
 	}
 
 	public function cfgSetValue($name, $value) {
@@ -49,6 +51,18 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 				throw new OIDplusException("Only characters and numbers are allowed as authentication token.");
 			}
 		}
+
+		if ($name == 'webwhois_output_format_spacer') {
+			if (!is_numeric($value) || ($value < 0)) {
+				throw new OIDplusException("Please enter a valid value.");
+			}
+		}
+
+		if ($name == 'webwhois_output_format_max_line_length') {
+			if (!is_numeric($value) || ($value < 0)) {
+				throw new OIDplusException("Please enter a valid value.");
+			}
+		}
 	}
 
 	private function getExampleId() {
@@ -56,7 +70,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 		$first_ns = null;
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 			if (is_null($first_ns)) $first_ns = $ot::ns();
-			$res = OIDplus::db()->query("SELECT id FROM ".OIDPLUS_TABLENAME_PREFIX."objects WHERE parent = ? ORDER BY id", array($ot::ns().':'));
+			$res = OIDplus::db()->query("SELECT id FROM ###objects WHERE parent = ? ORDER BY id", array($ot::ns().':'));
 			if ($row = $res->fetch_array())
 				$firsts[$ot::ns()] = $row['id'];
 		}

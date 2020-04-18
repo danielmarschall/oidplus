@@ -45,7 +45,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 			$name = $_POST['name'];
 			$value = $_POST['value'];
 
-			$res = OIDplus::db()->query("select protected from ".OIDPLUS_TABLENAME_PREFIX."config where name = ?", array($name));
+			$res = OIDplus::db()->query("select protected from ###config where name = ?", array($name));
 			if ($res->num_rows() == 0) {
 				throw new OIDplusException('Setting does not exist');
 			}
@@ -91,7 +91,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
 				OIDplus::config(); // <-- make sure that the config table is loaded/filled correctly before we do a select
 
-				$result = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."config where visible = ? order by name", array(true));
+				$result = OIDplus::db()->query("select * from ###config where visible = ? order by name", array(true));
 				while ($row = $result->fetch_object()) {
 					$output .= '<tr>';
 					$output .= '     <td>'.htmlentities($row->name).'</td>';

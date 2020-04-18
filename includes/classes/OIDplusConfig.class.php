@@ -19,7 +19,10 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusConfig {
+// OIDplusConfig contains settings that are stored in the database.
+// Not to be confused with OIDplusBaseConfig which is the basic ("static") configuration stored in includes/config.inc.php,
+// e.g. database access credentials.
+class OIDplusConfig implements OIDplusConfigInterface {
 
 	protected $values = array();
 	protected $dirty = true;
@@ -33,7 +36,7 @@ class OIDplusConfig {
 		}
 		$this->buildConfigArray();
 		if (!isset($this->values[$name])) {
-			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."config (name, description, value, protected, visible) values (?, ?, ?, ?, ?)", array($name, $description, $init_value, $protected, $visible));
+			OIDplus::db()->query("insert into ###config (name, description, value, protected, visible) values (?, ?, ?, ?, ?)", array($name, $description, $init_value, $protected, $visible));
 			$this->values[$name] = $init_value;
 		}
 	}
@@ -54,7 +57,7 @@ class OIDplusConfig {
 	protected function buildConfigArray() {
 		if ($this->dirty) {
 			$this->values = array();
-			$res = OIDplus::db()->query("select name, value from ".OIDPLUS_TABLENAME_PREFIX."config");
+			$res = OIDplus::db()->query("select name, value from ###config");
 			while ($row = $res->fetch_object()) {
 				$this->values[$row->name] = $row->value;
 			}
@@ -62,12 +65,12 @@ class OIDplusConfig {
 		}
 	}
 
-	public function getValue($name) {
+	public function getValue($name, $default=null) {
 		$this->buildConfigArray();
 		if (isset($this->values[$name])) {
 			return $this->values[$name];
 		} else {
-			return null;
+			return $default;
 		}
 	}
 
@@ -142,7 +145,7 @@ class OIDplusConfig {
 
 		// Now change the value in the database
 
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."config set value = ? where name = ?", array($value, $name));
+		OIDplus::db()->query("update ###config set value = ? where name = ?", array($value, $name));
 		$this->values[$name] = $value;
 	}
 

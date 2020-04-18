@@ -70,12 +70,12 @@ class OIDplusMenuUtils {
 
 		$confidential_oids = array();
 
-		$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where confidential = '1'");
+		$res = OIDplus::db()->query("select id from ###objects where confidential = '1'");
 		while ($row = $res->fetch_array()) {
 			$confidential_oids[] = $row['id'];
 		}
 
-		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($parent));
+		$res = OIDplus::db()->query("select * from ###objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($parent));
 		while ($row = $res->fetch_array()) {
 			$obj = OIDplusObject::parse($row['id']);
 

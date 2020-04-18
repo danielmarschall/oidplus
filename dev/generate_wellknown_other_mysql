@@ -11,7 +11,7 @@
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 OIDplus::init(false);
-if (!defined('OIDINFO_API_URL')) {
+if (!OIDplus::baseConfig()->exists('OIDINFO_API_URL')) {
 	die("OIDINFO_API_URL not available (API is currently not public)\n");
 }
 

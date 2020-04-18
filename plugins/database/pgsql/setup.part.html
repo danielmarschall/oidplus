@@ -62,9 +62,9 @@ rebuild_config_callbacks.push(function() {
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'PgSQL') return '';
 
-	return '<b>define</b>(\'OIDPLUS_PGSQL_HOST\',       \''+document.getElementById('pgsql_host').value+'\');<br>' +
-	       '<b>define</b>(\'OIDPLUS_PGSQL_USERNAME\',   \''+document.getElementById('pgsql_username').value+'\');<br>' +
-	       '<b>define</b>(\'OIDPLUS_PGSQL_PASSWORD\',   \''+b64EncodeUnicode(document.getElementById('pgsql_password').value)+'\'); // base64 encoded<br>' +
-	       '<b>define</b>(\'OIDPLUS_PGSQL_DATABASE\',   \''+document.getElementById('pgsql_database').value+'\');<br>';
+	return 'OIDplus::baseConfig()->setValue(\'PGSQL_HOST\',        \''+document.getElementById('pgsql_host').value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'PGSQL_USERNAME\',    \''+document.getElementById('pgsql_username').value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'PGSQL_PASSWORD\',    base64_decode(\''+b64EncodeUnicode(document.getElementById('pgsql_password').value)+'\'));<br>' +
+	       'OIDplus::baseConfig()->setValue(\'PGSQL_DATABASE\',    \''+document.getElementById('pgsql_database').value+'\');<br>';
 });
 </script>

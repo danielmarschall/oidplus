@@ -4,7 +4,7 @@
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 OIDplus::init(false);
-if (!defined('OIDINFO_API_URL')) {
+if (!OIDplus::baseConfig()->exists('OIDINFO_API_URL')) {
 	die("OIDINFO_API_URL not available (API is currently not public)\n");
 }
 
@@ -37,7 +37,7 @@ function check_oid($oid, $root=DESIRED_ROOT) {
 		$oidinfo = $data['oid']['identifier'];
 	}
 	$oidplus = array();
-	$resx = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array("oid:$oid"));
+	$resx = OIDplus::db()->query("select name from ###asn1id where oid = ?", array("oid:$oid"));
 	while ($rowx = $resx->fetch_array()) {
 		$oidplus[] = $rowx['name'];
 	}
@@ -58,7 +58,7 @@ function check_oid($oid, $root=DESIRED_ROOT) {
 		$oidinfo = $data['oid']['unicode-label'];
 	}
 	$oidplus = array();
-	$resx = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ?", array("oid:$oid"));
+	$resx = OIDplus::db()->query("select name from ###iri where oid = ?", array("oid:$oid"));
 	while ($rowx = $resx->fetch_array()) {
 		$oidplus[] = $rowx['name'];
 	}
@@ -75,7 +75,7 @@ echo "OK\n";
 # ---
 
 function ft_get_oid_data($oid) {
-	$url = OIDINFO_API_URL . '&oid='.urlencode($oid);
+	$url = OIDplus::baseConfig()->getValue('OIDINFO_API_URL') . '&oid='.urlencode($oid);
 	$cont_json = @file_get_contents($url);
 	if (!$cont_json) {
 		sleep(5);

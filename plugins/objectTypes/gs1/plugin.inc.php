@@ -109,7 +109,7 @@ class OIDplusGs1 extends OIDplusObject {
 		if ($this->isRoot()) {
 			$title = OIDplusGs1::objectTypeTitle();
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array(self::root()));
+			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
 			if ($res->num_rows() > 0) {
 				$content  = 'Please select an item in the tree view at the left to show its contents.';
 			} else {
@@ -157,12 +157,12 @@ class OIDplusGs1 extends OIDplusObject {
 	public function chunkedNotation($withAbbr=true) {
 		$curid = 'gs1:'.$this->number;
 
-		$res = OIDplus::db()->query("select id, title from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($curid));
+		$res = OIDplus::db()->query("select id, title from ###objects where id = ?", array($curid));
 		if ($res->num_rows() == 0) return $this->number();
 
 		$hints = array();
 		$lengths = array(strlen($curid));
-		while (($res = OIDplus::db()->query("select parent, title from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($curid)))->num_rows() > 0) {
+		while (($res = OIDplus::db()->query("select parent, title from ###objects where id = ?", array($curid)))->num_rows() > 0) {
 			$row = $res->fetch_array();
 			$curid = $row['parent'];
 			$hints[] = $row['title'];

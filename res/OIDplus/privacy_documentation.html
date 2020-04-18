@@ -504,7 +504,7 @@
 	<p>Please see their <a href="https://polyfill.io/v3/privacy-policy/">Privacy Policy</a> and <a href="https://polyfill.io/v3/terms/">terms of service</a> for more information.</p>
 	<p>The Polyfill JavaScript is only included if OIDplus detects that the web browser is Internet Explorer.</p>
 	<p>To disable the Polyfill feature, the system administrator needs to add the following line into the configuration file &ldquo;includes/config.inc.php&rdquo; in the folder of the OIDplus installation.</p>
-	<p><code>define('DISABLE_MSIE_COMPAT', true);</code></p>
+	<p><code>OIDplus::baseConfig()-&gt;setValue('DISABLE_MSIE_COMPAT', true);</code></p>
 	<p>The adding of this line on server-side and/or the blocking of the JavaScript on client-side will result in the page not working on &ldquo;Internet Explorer&rdquo; web browser.</p>
 	<h3><em><u>ReCAPTCHA (only if &ldquo;ReCAPTCHA&rdquo; is enabled)</u></em></h3>
 	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable &ldquo;ReCAPTCHA&rdquo; which is a service of Google. Before enabling ReCAPTCHA in the OIDplus setup/settings, the system administrator has to request an API key from Google. The usage of ReCAPTCHA will probably introduce additional cookies which are out of the control of OIDplus.</p>

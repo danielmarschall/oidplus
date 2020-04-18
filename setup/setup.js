@@ -100,13 +100,13 @@ function rebuild() {
 			'<i>// To renew this file, please run setup/ in your browser.</i><br>' +
 			'<i>// If you don\'t want to run setup again, you can also change most of the settings directly in this file.</i><br>' +
 			'<br>' +
-			'<b>define</b>(\'OIDPLUS_CONFIG_VERSION\',   2.0);<br>' +
+			'OIDplus::baseConfig()->setValue(\'CONFIG_VERSION\',    2.1);<br>' +
 			'<br>' +
 			// Passwords are Base64 encoded to avoid that passwords can be read upon first sight,
 			// e.g. if collegues are looking over your shoulder while you accidently open (and quickly close) config.inc.php
-			'<b>define</b>(\'OIDPLUS_ADMIN_PASSWORD\',   \'' + hexToBase64(sha3_512(document.getElementById('admin_password').value)) + '\'); // base64 encoded SHA3-512 hash<br>' +
+			'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + hexToBase64(sha3_512(document.getElementById('admin_password').value)) + '\'); // base64 encoded SHA3-512 hash<br>' +
 			'<br>' +
-			'<b>define</b>(\'OIDPLUS_DATABASE_PLUGIN\',  \''+strPlugin+'\');<br>';
+			'OIDplus::baseConfig()->setValue(\'DATABASE_PLUGIN\',   \''+strPlugin+'\');<br>';
 		for (var i = 0; i < rebuild_config_callbacks.length; i++) {
 			var f = rebuild_config_callbacks[i];
 			var cont = f();
@@ -116,15 +116,15 @@ function rebuild() {
 		}
 		document.getElementById('config').innerHTML = document.getElementById('config').innerHTML +
 			'<br>' +
-			'<b>define</b>(\'OIDPLUS_TABLENAME_PREFIX\', \''+document.getElementById('tablename_prefix').value+'\');<br>' +
+			'OIDplus::baseConfig()->setValue(\'TABLENAME_PREFIX\',  \''+document.getElementById('tablename_prefix').value+'\');<br>' +
 			'<br>' +
-			'<b>define</b>(\'OIDPLUS_SESSION_SECRET\',   \''+generateRandomString(32)+'\');<br>' +
+			'OIDplus::baseConfig()->setValue(\'SERVER_SECRET\',     \''+generateRandomString(32)+'\');<br>' +
 			'<br>' +
-			'<b>define</b>(\'RECAPTCHA_ENABLED\',        '+(document.getElementById('recaptcha_enabled').checked ? 1 : 0)+');<br>' +
-			'<b>define</b>(\'RECAPTCHA_PUBLIC\',         \''+document.getElementById('recaptcha_public').value+'\');<br>' +
-			'<b>define</b>(\'RECAPTCHA_PRIVATE\',        \''+document.getElementById('recaptcha_private').value+'\');<br>' +
+			'OIDplus::baseConfig()->setValue(\'RECAPTCHA_ENABLED\', '+(document.getElementById('recaptcha_enabled').checked ? 'true' : 'false')+');<br>' +
+			'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PUBLIC\',  \''+document.getElementById('recaptcha_public').value+'\');<br>' +
+			'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PRIVATE\', \''+document.getElementById('recaptcha_private').value+'\');<br>' +
 			'<br>' +
-			'<b>define</b>(\'OIDPLUS_ENFORCE_SSL\',      '+document.getElementById('enforce_ssl').value+');<br>';
+			'OIDplus::baseConfig()->setValue(\'ENFORCE_SSL\',       '+document.getElementById('enforce_ssl').value+');<br>';
 
 		document.getElementById('config').innerHTML = document.getElementById('config').innerHTML.replaceAll(' ', '&nbsp;');
 	}

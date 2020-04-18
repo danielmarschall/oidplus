@@ -24,7 +24,7 @@
 // -----------------------------------------------------------------------------
 
 /**
-  * OIDPLUS_MAX_OID_DEPTH
+  * LIMITS_MAX_OID_DEPTH
   *
   * Example:
   *	OID 2.999.123.456 has a depth of 4.
@@ -42,13 +42,12 @@
   * Note: This setting affects the performance of OIDplus, since it is used
   *       for sorting in MySQL and MSSQL (not in PostgreSQL).
   **/
-if (!defined('OIDPLUS_MAX_OID_DEPTH'))
-	define('OIDPLUS_MAX_OID_DEPTH', 30);
+OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_DEPTH', 30);
 
 // -----------------------------------------------------------------------------
 
 /**
-  * OIDPLUS_MAX_ID_LENGTH
+  * LIMITS_MAX_ID_LENGTH
   * 
   * Example:
   * 	OID 2.999.123.456 has a length of 13 characters in dot notation.
@@ -67,13 +66,12 @@ if (!defined('OIDPLUS_MAX_OID_DEPTH'))
   * 	        and the OID will have the prefix 'oid:' (4 bytes).
   * 	You can increase the limit by changing the field definition in the database.
   **/
-if (!defined('OIDPLUS_MAX_ID_LENGTH'))
-	define('OIDPLUS_MAX_ID_LENGTH', 255);
+OIDplus::baseConfig()->setValue('LIMITS_MAX_ID_LENGTH', 255);
 
 // -----------------------------------------------------------------------------
 
 /**
-  * OIDPLUS_MAX_OID_ARC_SIZE
+  * LIMITS_MAX_OID_ARC_SIZE
   *
   * Example:
   *	OID 2.999.123.456 has a max arc size of 3 digits.
@@ -109,13 +107,12 @@ if (!defined('OIDPLUS_MAX_ID_LENGTH'))
   *			The sorting will not work, because SQL Server handles the cast like this:
   *			select cast('1234' as varchar(3)) = '123'
   **/
-if (!defined('OIDPLUS_MAX_OID_ARC_SIZE'))
-	define('OIDPLUS_MAX_OID_ARC_SIZE', 50);
+OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ARC_SIZE', 50);
 
 // -----------------------------------------------------------------------------
 
 /**
-  * OIDPLUS_MAX_OID_ASN1_ID_LEN
+  * LIMITS_MAX_OID_ASN1_ID_LEN
   *
   * Default value:
   *	255 characters
@@ -124,13 +121,12 @@ if (!defined('OIDPLUS_MAX_OID_ARC_SIZE'))
   *	255, as defined in the database fields *_asn1id.name
   *	You can change the database field definition if you really need more.
   **/
-if (!defined('OIDPLUS_MAX_OID_ASN1_ID_LEN'))
-	define('OIDPLUS_MAX_OID_ASN1_ID_LEN', 255);
+OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ASN1_ID_LEN', 255);
 
 // -----------------------------------------------------------------------------
 
 /**
-  * OIDPLUS_MAX_OID_UNICODE_LABEL_LEN
+  * LIMITS_MAX_OID_UNICODE_LABEL_LEN
   *
   * Default value:
   *	255 bytes (UTF-8 encoded!) 
@@ -139,7 +135,6 @@ if (!defined('OIDPLUS_MAX_OID_ASN1_ID_LEN'))
   *	255, as defined in the database fields *_iri.name
   *	You can change the database field definition if you really need more.
   **/
-if (!defined('OIDPLUS_MAX_OID_UNICODE_LABEL_LEN'))
-	define('OIDPLUS_MAX_OID_UNICODE_LABEL_LEN', 255);
+OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_UNICODE_LABEL_LEN', 255);
 
 // -----------------------------------------------------------------------------

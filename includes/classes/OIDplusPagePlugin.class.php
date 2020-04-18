@@ -29,4 +29,3 @@ abstract class OIDplusPagePlugin extends OIDplusPlugin {
 	public function modifyContent($id, &$title, &$icon, &$text) {}
 	public function tree_search($request) {}
 }
-

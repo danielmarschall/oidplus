@@ -109,8 +109,12 @@ class OIDplusAuthUtils {
 	}
 
 	public static function adminCheckPassword($password) {
+		$hashed = OIDplus::baseConfig()->getValue('ADMIN_PASSWORD', '');
+		if (empty($hashed)) {
+			throw new OIDplusException("No admin password set in config.inc.php");
+		}
 		$calc_authkey = bin2hex(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $password, true) : bb\Sha3\Sha3::hash($password, 512, true));
-		return $calc_authkey == bin2hex(base64_decode(OIDPLUS_ADMIN_PASSWORD));
+		return $calc_authkey == bin2hex(base64_decode($hashed));
 	}
 
 	public static function isAdminLoggedIn() {
@@ -121,7 +125,7 @@ class OIDplusAuthUtils {
 	// Action.php auth arguments
 
 	public static function makeAuthKey($data) {
-		$data = OIDPLUS_SESSION_SECRET . $data;
+		$data = OIDplus::baseConfig()->getValue('SERVER_SECRET') . $data;
 		$calc_authkey = bin2hex(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $data, true) : bb\Sha3\Sha3::hash($data, 512, true));
 		return $calc_authkey;
 	}

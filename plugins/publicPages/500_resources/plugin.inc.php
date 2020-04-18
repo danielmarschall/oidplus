@@ -19,11 +19,6 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-define('CFG_RESOURCE_PLUGIN_AUTOOPEN_LEVEL', 1);
-define('CFG_RESOURCE_PLUGIN_TITLE', 'Documents and resources');
-define('CFG_RESOURCE_PLUGIN_PATH', 'res/');
-define('CFG_RESOURCE_PLUGIN_HIDE_EMPTY_PATH', true);
-
 class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 	public static function getPluginInformation() {
@@ -44,11 +39,28 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	public function init($html=true) {
-		// Nothing
+		OIDplus::config()->prepareConfigKey('resource_plugin_autoopen_level', 'Resource plugin: How many levels should be open in the treeview when OIDplus is loaded?', 1, 0, 1);
+		OIDplus::config()->prepareConfigKey('resource_plugin_title',          'Resource plugin: Title of the resource section?', 'Documents and resources', 0, 1);
+		OIDplus::config()->prepareConfigKey('resource_plugin_path',           'Resource plugin: Path that contains the documents?', 'res/', 0, 1);
+		OIDplus::config()->prepareConfigKey('resource_plugin_hide_empty_path','Resource plugin: Hide empty paths? 1=on, 0=off', 1, 0, 1);
 	}
 
 	public function cfgSetValue($name, $value) {
-		// Nothing
+		if ($name == 'resource_plugin_autoopen_level') {
+			if (!is_numeric($value) || ($value < 0)) {
+				throw new OIDplusException("Please enter a valid value.");
+			}
+		}
+		
+		if ($name == 'resource_plugin_path') {
+			// TODO: check if path exists
+		}
+		
+		if ($name == 'resource_plugin_hide_empty_path') {
+			if (!is_numeric($value) || (($value != 0) && ($value != 1))) {
+				throw new OIDplusException("Please enter a valid value (0=off, 1=on).");
+			}
+		}
 	}
 
 	private static function getDocumentTitle($file) {
@@ -77,7 +89,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				return $out;
 			}
 
-			if (strpos($file, CFG_RESOURCE_PLUGIN_PATH) !== 0) {
+			if (strpos($file, OIDplus::config()->getValue('resource_plugin_path', 'res/')) !== 0) {
 				$out['title'] = 'Access denied';
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>Security breach A</p>';
@@ -87,16 +99,16 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			if (strpos($file, '..') !== false) {
 				$out['title'] = 'Access denied';
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>Security breach A</p>';
+				$out['text'] = '<p>Security breach B</p>';
 				return $out;
 			}
 
 			$out['text'] = '';
 
-			if ($file != CFG_RESOURCE_PLUGIN_PATH) {
+			if ($file != OIDplus::config()->getValue('resource_plugin_path', 'res/')) {
 				$dir = dirname($file).'/';
 
-				if ($dir == CFG_RESOURCE_PLUGIN_PATH) {
+				if ($dir == OIDplus::config()->getValue('resource_plugin_path', 'res/')) {
 					if (file_exists(__DIR__.'/treeicon.png')) {
 						$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 					} else {
@@ -105,7 +117,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.CFG_RESOURCE_PLUGIN_PATH.'$'.OIDplus::authUtils()::makeAuthKey("resources;".CFG_RESOURCE_PLUGIN_PATH)).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(CFG_RESOURCE_PLUGIN_TITLE).'</a></p>';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.OIDplus::config()->getValue('resource_plugin_path', 'res/').'$'.OIDplus::authUtils()::makeAuthKey("resources;".OIDplus::config()->getValue('resource_plugin_path', 'res/'))).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(OIDplus::config()->getValue('resource_plugin_title', 'Documents and resources')).'</a></p>';
 				} else {
 					$icon_candidate = pathinfo($dir)['dirname'].'/'.pathinfo($dir)['filename'].'_tree.png';
 					if (file_exists($icon_candidate)) {
@@ -163,9 +175,9 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					return $out;
 				}
 			} else if (is_dir($file)) {
-				$out['title'] = ($file == CFG_RESOURCE_PLUGIN_PATH) ? CFG_RESOURCE_PLUGIN_TITLE : basename($file);
+				$out['title'] = ($file == OIDplus::config()->getValue('resource_plugin_path', 'res/')) ? OIDplus::config()->getValue('resource_plugin_title', 'Documents and resources') : basename($file);
 
-				if ($file == CFG_RESOURCE_PLUGIN_PATH) {
+				if ($file == OIDplus::config()->getValue('resource_plugin_path', 'res/')) {
 					$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				} else {
 					$icon_candidate = pathinfo($file)['dirname'].'/'.pathinfo($file)['filename'].'_big.png';
@@ -253,7 +265,8 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		}
 	}
 
-	private function tree_rec(&$children, $rootdir=CFG_RESOURCE_PLUGIN_PATH, $depth=0) {
+	private function tree_rec(&$children, $rootdir=null, $depth=0) {
+		if (is_null($rootdir)) $rootdir = OIDplus::config()->getValue('resource_plugin_path', 'res/');
 		if ($depth > 100) return false; // something is wrong!
 
 		$dirs = glob($rootdir.'*'.'/', GLOB_ONLYDIR);
@@ -276,7 +289,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				'icon' => $tree_icon,
 				'text' => basename($dir),
 				'children' => $tmp,
-				'state' => array("opened" => $depth <= CFG_RESOURCE_PLUGIN_AUTOOPEN_LEVEL-1)
+				'state' => array("opened" => $depth <= OIDplus::config()->getValue('resource_plugin_autoopen_level', 1)-1)
 			);
 		}
 
@@ -304,7 +317,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					'conditionalselect' => 'window.open('.js_escape(self::getHyperlinkURL($file)).'); false;',
 					'icon' => $tree_icon,
 					'text' => $this->getHyperlinkTitle($file).' '.$hyperlink_pic,
-					'state' => array("opened" => $depth <= CFG_RESOURCE_PLUGIN_AUTOOPEN_LEVEL-1)
+					'state' => array("opened" => $depth <= OIDplus::config()->getValue('resource_plugin_autoopen_level', 1)-1)
 				);
 
 			} else {
@@ -320,7 +333,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					'id' => 'oidplus:resources$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("resources;$file"),
 					'icon' => $tree_icon,
 					'text' => $this->getDocumentTitle($file),
-					'state' => array("opened" => $depth <= CFG_RESOURCE_PLUGIN_AUTOOPEN_LEVEL-1)
+					'state' => array("opened" => $depth <= OIDplus::config()->getValue('resource_plugin_autoopen_level', 1)-1)
 				);
 			}
 		}
@@ -329,9 +342,9 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		$children = array();
 
-		$this->tree_rec($children, CFG_RESOURCE_PLUGIN_PATH);
+		$this->tree_rec($children, OIDplus::config()->getValue('resource_plugin_path', 'res/'));
 
-		if (!CFG_RESOURCE_PLUGIN_HIDE_EMPTY_PATH || (count($children) > 0)) {
+		if (!OIDplus::config()->getValue('resource_plugin_hide_empty_path', true) || (count($children) > 0)) {
 			if (file_exists(__DIR__.'/treeicon.png')) {
 				$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 			} else {
@@ -339,10 +352,10 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			}
 
 			$json[] = array(
-				'id' => 'oidplus:resources$'.CFG_RESOURCE_PLUGIN_PATH.'$'.OIDplus::authUtils()::makeAuthKey("resources;".CFG_RESOURCE_PLUGIN_PATH),
+				'id' => 'oidplus:resources$'.OIDplus::config()->getValue('resource_plugin_path', 'res/').'$'.OIDplus::authUtils()::makeAuthKey("resources;".OIDplus::config()->getValue('resource_plugin_path', 'res/')),
 				'icon' => $tree_icon,
 				'state' => array("opened" => true),
-				'text' => CFG_RESOURCE_PLUGIN_TITLE,
+				'text' => OIDplus::config()->getValue('resource_plugin_title', 'Documents and resources'),
 				'children' => $children
 			);
 		}

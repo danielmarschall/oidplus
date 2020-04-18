@@ -71,7 +71,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				} else {
 					$out['text'] .= '<p><input type="button" onclick="openOidInPanel(\'oidplus:srvreg_status\');" value="Check status of the registration and collected data"></p>';
 
-					if (defined('REGISTRATION_HIDE_SYSTEM') && REGISTRATION_HIDE_SYSTEM) {
+					if (OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
 						$out['text'] .= '<p><font color="red"><b>Attention!</b> <code>REGISTRATION_HIDE_SYSTEM</code> is set in the local configuration file! Therefore, this system will not register itself, despire the settings below.</font></p>';
 					}
 
@@ -224,7 +224,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			$root_oids = array();
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 				if ($ot::ns() == 'oid') {
-					$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where " .
+					$res = OIDplus::db()->query("select id from ###objects where " .
 					                            "parent = 'oid:' " .
 					                            "order by ".OIDplus::db()->natOrder('id'));
 					while ($row = $res->fetch_array()) {
@@ -311,7 +311,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			// Note: REGISTRATION_HIDE_SYSTEM is an undocumented constant that can be put in the config.inc.php files of a test system accessing the same database as the productive system that is registered.
 			// This avoids that the URL of a productive system is overridden with the URL of a cloned test system (since they use the same database, they also have the same system ID)
 
-			if (!defined('REGISTRATION_HIDE_SYSTEM') || !REGISTRATION_HIDE_SYSTEM) {
+			if (!OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
 				$privacy_level = OIDplus::config()->getValue('reg_privacy');
 
 				if (php_sapi_name() !== 'cli') { // don't register when called from CLI, otherweise the oidinfo XML can't convert relative links into absolute links

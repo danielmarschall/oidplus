@@ -22,9 +22,10 @@ if (!defined('IN_OIDPLUS')) die();
 abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 	protected $connected = false;
 	protected $html = null;
+	protected $last_query = null;
 
-	public abstract static function name(): string; // this is the name that is set to the configuration value OIDPLUS_DATABASE_PLUGIN to identify the database plugin
-	public abstract function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult;
+	public abstract static function name(): string; // this is the name that is set to the configuration value OIDplus::baseConfig()->getValue('DATABASE_PLUGIN') to identify the database plugin
+	protected abstract function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult;
 	public abstract function insert_id(): int;
 	public abstract function error(): string;
 	public abstract function transaction_begin(): void;
@@ -32,7 +33,27 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 	public abstract function transaction_rollback(): void;
 	protected abstract function doConnect(): void;
 	protected abstract function doDisconnect(): void;
-	
+
+	public final function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+
+		$query_logfile = OIDplus::baseConfig()->getValue('QUERY_LOGFILE', '');
+		if (!empty($query_logfile)) {
+			$ts = explode(" ",microtime());
+			$ts = date("Y-m-d H:i:s",$ts[1]).substr((string)$ts[0],1,4);
+			static $log_session_id = "";
+			if (empty($log_session_id)) {
+				$log_session_id = rand(10000,99999);
+			}
+			$file = isset($_SERVER['REQUEST_URI']) ? ' | '.$_SERVER['REQUEST_URI'] : '';
+			file_put_contents($query_logfile, "$ts <$log_session_id$file> $sql\n", FILE_APPEND);
+		}
+
+		// TODO: debugging option (configurable) "query log" (including timestamp and a "session identifier" to see which call the queries belong to)
+		$this->last_query = $sql;
+		$sql = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $sql);
+		return $this->doQuery($sql, $prepared_args);
+	}
+
 	public final function connect(): void {
 		if ($this->connected) return;
 		$this->beforeConnect();
@@ -41,7 +62,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 		register_shutdown_function(array($this, 'disconnect'));
 		$this->afterConnect();
 	}
-	
+
 	public final function disconnect(): void {
 		if (!$this->connected) return;
 		$this->beforeDisconnect();
@@ -51,64 +72,64 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 	}
 
 	public function natOrder($fieldname, $order='asc'): string {
-	
+
 		$order = strtolower($order);
 		if (($order != 'asc') && ($order != 'desc')) {
 			throw new OIDplusException("Invalid order '$order' (needs to be 'asc' or 'desc')");
 		}
 
 		$out = array();
-		
+
 		if ($this->slang() == 'pgsql') {
-			$max_arc_len = OIDPLUS_MAX_OID_ARC_SIZE > 131072 ? 131072 : OIDPLUS_MAX_OID_ARC_SIZE; // Limit of the "numeric()" type
-			
+			$max_arc_len = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE') > 131072 ? 131072 : OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE'); // Limit of the "numeric()" type
+
 			// 1. Sort by namespace (oid, guid, ...)
 			$out[] = "SPLIT_PART($fieldname, ':', 1) $order";
-			
+
 			// 2. Only if namespace is 'oid:': Sort OID as integer array
 			$out[] = "STRING_TO_ARRAY(SPLIT_PART($fieldname, 'oid:', 2), '.')::numeric($max_arc_len)[] $order";
-			
+
 			// 3. Otherwise order by ID
 			$out[] = "$fieldname $order";
-			
+
 		} else if ($this->slang() == 'mysql') {
-			$max_arc_len = OIDPLUS_MAX_OID_ARC_SIZE > 65 ? 65 : OIDPLUS_MAX_OID_ARC_SIZE; // Limit of "decimal()" type
-			
+			$max_arc_len = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE') > 65 ? 65 : OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE'); // Limit of "decimal()" type
+
 			// 1. sort by namespace (oid, guid, ...)
 			$out[] = "SUBSTRING_INDEX($fieldname,':',1) $order";
-			
+
 			// 2. sort by first arc (0,1,2)
 			$out[] = "SUBSTRING(SUBSTRING_INDEX($fieldname,'.',1), LENGTH(SUBSTRING_INDEX($fieldname,':',1))+2, $max_arc_len) $order";
-			
-			for ($i=2; $i<=OIDPLUS_MAX_OID_DEPTH; $i++) {
+
+			for ($i=2; $i<=OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH'); $i++) {
 				// 3. Sort by the rest arcs one by one, not that MySQL can only handle decimal(65), not decimal($max_arc_len)
 				$out[] = "cast(SUBSTRING(SUBSTRING_INDEX($fieldname,'.',$i), LENGTH(SUBSTRING_INDEX($fieldname,'.',".($i-1)."))+2, $max_arc_len) as decimal($max_arc_len)) $order";
 			}
 
-			// 4. as last resort, sort by the identifier itself, e.g. if the casts above did fail (happens if it is not an OID)			
+			// 4. as last resort, sort by the identifier itself, e.g. if the casts above did fail (happens if it is not an OID)
 			$out[] = "$fieldname $order";
-			
+
 		} else if ($this->slang() == 'mssql') {
-			$max_arc_len = OIDPLUS_MAX_OID_ARC_SIZE;
-		
+			$max_arc_len = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE');
+
 			// 1. sort by namespace (oid, guid, ...)
 			$out[] = "SUBSTRING($fieldname,1,CHARINDEX(':',$fieldname)-1) $order";
-			
-			for ($i=1; $i<=OIDPLUS_MAX_OID_DEPTH; $i++) {
+
+			for ($i=1; $i<=OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH'); $i++) {
 				// 2. Sort by the rest arcs one by one, not that MySQL can only handle decimal(65), not decimal($max_arc_len)
 				$out[] = "dbo.getOidArc($fieldname, $max_arc_len, $i) $order";
 			}
 
-			// 3. as last resort, sort by the identifier itself, e.g. if the function getOidArc always return 0 (happens if it is not an OID)			
+			// 3. as last resort, sort by the identifier itself, e.g. if the function getOidArc always return 0 (happens if it is not an OID)
 			$out[] = "$fieldname $order";
 		} else {
-		
+
 			// For (yet) unsupported DBMS, we do not offer natural sort
 			$out[] = "$fieldname $order";
 
 		}
 
-		return implode(', ', $out); 
+		return implode(', ', $out);
 	}
 
 	protected function beforeDisconnect(): void {}
@@ -126,15 +147,15 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 		// because the database structure might change and therefore various things might fail.
 		// Note: The config setting "database_version" is inserted in setup/sql/...sql, not in the OIDplus core init
 
-		$res = $this->query("SELECT value FROM ".OIDPLUS_TABLENAME_PREFIX."config WHERE name = 'database_version'");
-		$row = $res->fetch_array();		
+		$res = $this->query("SELECT value FROM ###config WHERE name = 'database_version'");
+		$row = $res->fetch_array();
 		if ($row == null) {
-			throw new OIDplusConfigInitializationException('Cannot determine database version (the entry "database_version" inside the table "'.OIDPLUS_TABLENAME_PREFIX.'config" is probably missing)');
-		}		
+			throw new OIDplusConfigInitializationException('Cannot determine database version (the entry "database_version" inside the table "###config" is probably missing)');
+		}
 		$version = $row['value'];
 		if (!is_numeric($version) || ($version < 200) || ($version > 999)) {
-			throw new OIDplusConfigInitializationException('Entry "database_version" inside the table "'.OIDPLUS_TABLENAME_PREFIX.'config" seems to be wrong (expect number between 200 and 999)');
-		}		
+			throw new OIDplusConfigInitializationException('Entry "database_version" inside the table "###config" seems to be wrong (expect number between 200 and 999)');
+		}
 		while (file_exists($file = __DIR__."/../db_updates/update$version.inc.php")) {
 			$prev_version = $version;
 			include $file; // run update-script
@@ -149,19 +170,20 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 		// without config table, because it was checked above
 		$this->initRequireTables(array('objects', 'asn1id', 'iri', 'ra'/*, 'config'*/));
 	}
-	
+
 	private function initRequireTables($tableNames) {
 		$msgs = array();
 		foreach ($tableNames as $tableName) {
-			if (!$this->tableExists(OIDPLUS_TABLENAME_PREFIX.$tableName)) {
-				$msgs[] = 'Table '.OIDPLUS_TABLENAME_PREFIX.$tableName.' is missing!';
+			$prefix = OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', '');
+			if (!$this->tableExists($prefix.$tableName)) {
+				$msgs[] = 'Table '.$prefix.$tableName.' is missing!';
 			}
 		}
 		if (count($msgs) > 0) {
 			throw new OIDplusConfigInitializationException(implode("\n\n",$msgs));
 		}
 	}
-	
+
 	public function tableExists($tableName) {
 		try {
 			$this->query("select 0 from ".$tableName." where 1=0");
@@ -180,11 +202,14 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 	}
 
 	public function slang(): string {
-		// The constant OIDPLUS_DBMS_SLANG is used as cache.
-		// You can also put it in your config.inc.php if you want to enforce a slang to be used
+		if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
+			return OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');
+		}
 
-		if (defined('OIDPLUS_DBMS_SLANG')) {
-			return OIDPLUS_DBMS_SLANG;
+		static $cache_slang = "";
+
+		if (!empty($cache_slang)) {
+			return $cache_slang;
 		} else {
 			try {
 				// MySQL, MariaDB and PostgreSQL
@@ -206,7 +231,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 			if (strpos($vers, 'mariadb')              !== false) $slang = 'mysql';
 			if (strpos($vers, 'microsoft sql server') !== false) $slang = 'mssql';
 			if (!is_null($slang)) {
-				define('OIDPLUS_DBMS_SLANG', $slang);
+				$cache_slang = $slang;
 				return $slang;
 			} else {
 				throw new OIDplusException("Cannot determine the slang of your DBMS (we don't know what to do with the DBMS '$vers'). Your DBMS is probably not supported.");

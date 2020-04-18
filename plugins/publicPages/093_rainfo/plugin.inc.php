@@ -56,7 +56,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 				$out['title'] = 'Object roots without RA';
 				$out['text'] = '<p>Following object roots have an undefined Registration Authority:</p>';
 			} else {
-				$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
+				$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($ra_email));
 				$out['title'] = '';
 				if ($row = $res->fetch_array()) {
 					$out['title'] = $row['ra_name'];
@@ -76,7 +76,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 			}
 
 			if (!empty($ra_email)) {
-				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
+				$res = OIDplus::db()->query("select * from ###ra where email = ?", array($ra_email));
 				if ($res->num_rows() > 0) {
 					if (OIDplus::authUtils()::isRALoggedIn($ra_email) || OIDplus::authUtils()::isAdminLoggedIn()) {
 						if (class_exists('OIDplusPageRaEditContactData')) {
@@ -98,8 +98,8 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 				}
 
 				if (OIDplus::authUtils()::isRALoggedIn($ra_email) || OIDplus::authUtils()::isAdminLoggedIn()) {
-					$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event from ".OIDPLUS_TABLENAME_PREFIX."log lo ".
-					                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_user lu on lu.log_id = lo.id ".
+					$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event from ###log lo ".
+					                            "left join ###log_user lu on lu.log_id = lo.id ".
 					                            "where lu.username = ? " .
 					                            "order by lo.unix_ts desc", array($ra_email));
 					$out['text'] .= '<h2>Log messages for RA '.htmlentities($ra_email).'</h2>';
@@ -134,7 +134,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 			return $out;
 		}
 
-		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
+		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 		if ($res->num_rows() === 0) {
 			$out = '<p>The RA <a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a> is not registered in the database.</p>';
 		} else {

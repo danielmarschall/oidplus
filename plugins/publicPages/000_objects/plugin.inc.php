@@ -47,7 +47,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException("DELETE action failed because object '$id' cannot be parsed!");
 
-			if (OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id))->num_rows() == 0) {
+			if (OIDplus::db()->query("select id from ###objects where id = ?", array($id))->num_rows() == 0) {
 				throw new OIDplusException("Object '$id' does not exist");
 			}
 
@@ -62,25 +62,25 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			// Delete object
-			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
+			OIDplus::db()->query("delete from ###objects where id = ?", array($id));
 
 			// Delete orphan stuff
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 				do {
-					$res = OIDplus::db()->query("select tchild.id from ".OIDPLUS_TABLENAME_PREFIX."objects tchild " .
-					                            "left join ".OIDPLUS_TABLENAME_PREFIX."objects tparent on tparent.id = tchild.parent " .
+					$res = OIDplus::db()->query("select tchild.id from ###objects tchild " .
+					                            "left join ###objects tparent on tparent.id = tchild.parent " .
 					                            "where tchild.parent <> ? and tchild.id like ? and tparent.id is null;", array($ot::root(), $ot::root().'%'));
 					if ($res->num_rows() == 0) break;
 
 					while ($row = $res->fetch_array()) {
 						$id_to_delete = $row['id'];
 						OIDplus::logger()->log("OIDRA($id_to_delete)!", "Lost ownership of object '$id_to_delete' because one of the superior objects ('$id') was recursively deleted");
-						OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id_to_delete));
+						OIDplus::db()->query("delete from ###objects where id = ?", array($id_to_delete));
 					}
 				} while (true);
 			}
-			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known = '0' and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%')");
-			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri    where well_known = '0' and oid not in (select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like 'oid:%')");
+			OIDplus::db()->query("delete from ###asn1id where well_known = '0' and oid not in (select id from ###objects where id like 'oid:%')");
+			OIDplus::db()->query("delete from ###iri    where well_known = '0' and oid not in (select id from ###objects where id like 'oid:%')");
 
 			echo json_encode(array("status" => 0));
 		}
@@ -96,7 +96,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException("UPDATE action failed because object '$id' cannot be parsed!");
 
-			if (OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id))->num_rows() == 0) {
+			if (OIDplus::db()->query("select id from ###objects where id = ?", array($id))->num_rows() == 0) {
 				throw new OIDplusException("Object '$id' does not exist");
 			}
 
@@ -121,7 +121,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			// Change RA recursively
-			$res = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
+			$res = OIDplus::db()->query("select ra_email from ###objects where id = ?", array($id));
 			if ($row = $res->fetch_array()) {
 				$current_ra = $row['ra_email'];
 				if ($new_ra != $current_ra) {
@@ -158,16 +158,16 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$confidential = $_POST['confidential'] == 'true';
 			$comment = $_POST['comment'];
 			if (OIDplus::db()->slang() == 'mssql') {
-				OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ?, comment = ?, updated = getdate() WHERE id = ?", array($confidential, $comment, $id));
+				OIDplus::db()->query("UPDATE ###objects SET confidential = ?, comment = ?, updated = getdate() WHERE id = ?", array($confidential, $comment, $id));
 			} else {
 				// MySQL + PgSQL
-				OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET confidential = ?, comment = ?, updated = now() WHERE id = ?", array($confidential, $comment, $id));
+				OIDplus::db()->query("UPDATE ###objects SET confidential = ?, comment = ?, updated = now() WHERE id = ?", array($confidential, $comment, $id));
 			}
 
 			$status = 0;
 
 			if (!empty($new_ra)) {
-				$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($new_ra));
+				$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($new_ra));
 				if ($res->num_rows() == 0) $status = class_exists('OIDplusPageRaInvite') && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 			}
 
@@ -185,7 +185,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException("UPDATE2 action failed because object '$id' cannot be parsed!");
 
-			if (OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id))->num_rows() == 0) {
+			if (OIDplus::db()->query("select id from ###objects where id = ?", array($id))->num_rows() == 0) {
 				throw new OIDplusException("Object '$id' does not exist");
 			}
 
@@ -195,10 +195,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			OIDplus::logger()->log("OID($id)+OIDRA($id)?/A?", "Title/Description of object '$id' updated");
 
 			if (OIDplus::db()->slang() == 'mssql') {
-				OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET title = ?, description = ?, updated = getdate() WHERE id = ?", array($_POST['title'], $_POST['description'], $id));
+				OIDplus::db()->query("UPDATE ###objects SET title = ?, description = ?, updated = getdate() WHERE id = ?", array($_POST['title'], $_POST['description'], $id));
 			} else {
 				// MySQL + PgSQL
-				OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."objects SET title = ?, description = ?, updated = now() WHERE id = ?", array($_POST['title'], $_POST['description'], $id));
+				OIDplus::db()->query("UPDATE ###objects SET title = ?, description = ?, updated = now() WHERE id = ?", array($_POST['title'], $_POST['description'], $id));
 			}
 
 			echo json_encode(array("status" => 0));
@@ -217,7 +217,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$objParent = OIDplusObject::parse($_POST['parent']);
 			if ($objParent === null) throw new OIDplusException("INSERT action failed because parent object '".$_POST['parent']."' cannot be parsed!");
 
-			if (!$objParent::root() && (OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($objParent->nodeId()))->num_rows() == 0)) {
+			if (!$objParent::root() && (OIDplus::db()->query("select id from ###objects where id = ?", array($objParent->nodeId()))->num_rows() == 0)) {
 				throw new OIDplusException("Parent object '".($objParent->nodeId())."' does not exist");
 			}
 
@@ -231,7 +231,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$id = $objParent->addString($_POST['id']);
 
 			// Check, if the OID exists
-			$test = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
+			$test = OIDplus::db()->query("select id from ###objects where id = ?", array($id));
 			if ($test->num_rows() >= 1) {
 				throw new OIDplusException("Object $id already exists!");
 			}
@@ -267,15 +267,15 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$title = '';
 			$description = '';
 
-			if (strlen($id) > OIDPLUS_MAX_ID_LENGTH) {
-				throw new OIDplusException("The identifier '$id' is too long (max allowed length: ".OIDPLUS_MAX_ID_LENGTH.")");
+			if (strlen($id) > OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')) {
+				throw new OIDplusException("The identifier '$id' is too long (max allowed length: ".OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH').")");
 			}
 
 			if (OIDplus::db()->slang() == 'mssql') {
-				OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, getdate(), ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
+				OIDplus::db()->query("INSERT INTO ###objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, getdate(), ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
 			} else {
 				// MySQL + PgSQL
-				OIDplus::db()->query("INSERT INTO ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, now(), ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
+				OIDplus::db()->query("INSERT INTO ###objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, now(), ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
 			}
 
 			// Set ASN.1 IDs und IRIs
@@ -293,7 +293,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			if (!empty($ra_email)) {
 				// Do we need to notify that the RA does not exist?
-				$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
+				$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($ra_email));
 				if ($res->num_rows() == 0) $status = class_exists('OIDplusPageRaInvite') && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 			}
 
@@ -363,7 +363,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						$parent = null; // $obj->getParent();
 						break;
 					} else {
-						$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($obj->nodeId()));
+						$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
 						if ($res->num_rows() == 0) {
 							http_response_code(404);
 							$out['title'] = 'Object not found';
@@ -397,14 +397,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					$out['text'] = '<p><a '.OIDplus::gui()->link($parent->root()).'><img src="img/arrow_back.png" width="16"> Parent node: '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 
 				} else {
-					$res_ = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($parent->nodeId()));
+					$res_ = OIDplus::db()->query("select * from ###objects where id = ?", array($parent->nodeId()));
 					if ($res_->num_rows() > 0) {
 						$row_ = $res_->fetch_array();
 
 						$parent_title = $row_['title'];
 						if (empty($parent_title) && ($parent->ns() == 'oid')) {
 							// If not title is available, then use an ASN.1 identifier
-							$res_ = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($parent->nodeId()));
+							$res_ = OIDplus::db()->query("select name from ###asn1id where oid = ?", array($parent->nodeId()));
 							if ($res_->num_rows() > 0) {
 								$row_ = $res_->fetch_array();
 								$parent_title = $row_['name']; // TODO: multiple ASN1 ids?
@@ -481,7 +481,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$json[] = array('id' => 'oidplus:system', 'icon' => OIDplus::webpath(__DIR__).'system.png', 'text' => 'System');
 
 			$parent = '';
-			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($req_goto));
+			$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($req_goto));
 			while ($row = $res->fetch_object()) {
 				$parent = $row->parent;
 			}
@@ -500,12 +500,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					// TODO: Instead of just having 3 levels (parent, this and children), it would be better if we'd had a full tree of all parents
 					//       on the other hand, for giving search engines content, this is good enough
 					if (empty($parent)) {
-						$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where " .
+						$res = OIDplus::db()->query("select * from ###objects where " .
 										   "parent = ? or " .
 										   "id = ? " .
 										   "order by ".OIDplus::db()->natOrder('id'), array($req_goto, $req_goto));
 					} else {
-						$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where " .
+						$res = OIDplus::db()->query("select * from ###objects where " .
 										   "parent = ? or " .
 										   "id = ? or " .
 										   "id = ? ".
@@ -546,7 +546,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$path = array();
 				while (true) {
 					$path[] = $goto;
-					$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($goto));
+					$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($goto));
 					if ($res->num_rows() == 0) break;
 					$row = $res->fetch_array();
 					$goto = $row['parent'];
@@ -608,8 +608,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$parentNS = $objParent::ns();
 
 		$result = OIDplus::db()->query("select o.*, r.ra_name " .
-		                               "from ".OIDPLUS_TABLENAME_PREFIX."objects o " .
-		                               "left join ".OIDPLUS_TABLENAME_PREFIX."ra r on r.email = o.ra_email " .
+		                               "from ###objects o " .
+		                               "left join ###ra r on r.email = o.ra_email " .
 		                               "where parent = ? " .
 		                               "order by ".OIDplus::db()->natOrder('id'), array($parent));
 		$rows = array();
@@ -661,13 +661,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$show_id = $obj->crudShowId($objParent);
 
 			$asn1ids = array();
-			$res2 = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ? order by lfd", array($row->id));
+			$res2 = OIDplus::db()->query("select name from ###asn1id where oid = ? order by lfd", array($row->id));
 			while ($row2 = $res2->fetch_array()) {
 				$asn1ids[] = $row2['name'];
 			}
 
 			$iris = array();
-			$res2 = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ? order by lfd", array($row->id));
+			$res2 = OIDplus::db()->query("select name from ###iri where oid = ? order by lfd", array($row->id));
 			while ($row2 = $res2->fetch_array()) {
 				$iris[] = $row2['name'];
 			}
@@ -722,7 +722,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$output .= '</tr>';
 		}
 
-		$result = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($parent));
+		$result = OIDplus::db()->query("select * from ###objects where id = ?", array($parent));
 		$parent_ra_email = $result->num_rows() > 0 ? $result->fetch_object()->ra_email : '';
 
 		if ($objParent->userHasWriteRights()) {

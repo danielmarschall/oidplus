@@ -44,14 +44,14 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 				throw new OIDplusException('Authentification error. Please log in as the RA to update its data.');
 			}
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
+			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 			if ($res->num_rows() == 0) {
 				throw new OIDplusException('RA does not exist');
 			}
 
 			OIDplus::logger()->log("RA($email)?/A?", "Changed RA '$email' contact data/details");
 
-			OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra ".
+			OIDplus::db()->query("UPDATE ###ra ".
 				"SET ".
 				"updated = ".(OIDplus::db()->slang() == 'mssql' ? "getdate()" : "now()").", ".
 				"ra_name = ?, ".
@@ -108,7 +108,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			} else {
 				$out['text'] = '<p>Your email address: <b>'.htmlentities($ra_email).'</b>';
 
-				$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($ra_email));
+				$res = OIDplus::db()->query("select * from ###ra where email = ?", array($ra_email));
 				if ($res->num_rows() == 0) {
 					$out['icon'] = 'img/error_big.png';
 					$out['text'] = 'RA <b>'.htmlentities($ra_email).'</b> does not exist';

@@ -34,6 +34,69 @@ class OIDplus {
 
 	# --- Singleton classes
 
+	private static $baseConfigLoaded = false;
+	public static function baseConfig() {
+		static $baseConfig = null;
+		if (is_null($baseConfig)) {
+			$baseConfig = new OIDplusBaseConfig();
+		}
+
+		if (!self::$baseConfigLoaded) {
+			self::$baseConfigLoaded = true;
+
+			// Include a file containing various size/depth limitations of OIDs
+			// It is important to include it before config.inc.php was included,
+			// so we can give config.inc.php the chance to override the values.
+
+			include_once __DIR__ . '/../limits.inc.php';
+
+			// Include config file
+
+			if (file_exists(__DIR__ . '/../config.inc.php')) {
+				include_once __DIR__ . '/../config.inc.php';
+
+				if (defined('OIDPLUS_CONFIG_VERSION') && (OIDPLUS_CONFIG_VERSION == 2.0)) {
+					// Backwards compatibility 2.0 => 2.1
+					foreach (get_defined_constants(true)['user'] as $name => $value) {
+						$name = str_replace('OIDPLUS_', '', $name);
+						if ($name == 'SESSION_SECRET') $name = 'SERVER_SECRET';
+						if ($name == 'MYSQL_QUERYLOG') $name = 'QUERY_LOGFILE';
+						if (($name == 'MYSQL_PASSWORD') || ($name == 'ODBC_PASSWORD') || ($name == 'PDO_PASSWORD') || ($name == 'PGSQL_PASSWORD')) {
+							$baseConfig->setValue($name, base64_decode($value));
+						} else {
+							if ($name == 'CONFIG_VERSION') $value = 2.1;
+							$baseConfig->setValue($name, $value);
+						}
+					}
+				}
+			} else {
+				if (!is_dir(__DIR__.'/../../setup')) {
+					throw new OIDplusConfigInitializationException('File includes/config.inc.php is missing, but setup can\'t be started because its directory missing.');
+				} else {
+					if ($html) {
+						header('Location:'.OIDplus::getSystemUrl().'setup/');
+						die('Redirecting to setup...');
+					} else {
+						// This can be displayed in e.g. ajax.php
+						throw new OIDplusConfigInitializationException('File includes/config.inc.php is missing. Please run setup again.');
+					}
+				}
+			}
+
+			// Check important config settings
+
+			if ($baseConfig->getValue('CONFIG_VERSION') != 2.1) {
+				throw new OIDplusConfigInitializationException("The information located in includes/config.inc.php is outdated.");
+			}
+
+			if ($baseConfig->getValue('SERVER_SECRET', '') === '') {
+				throw new OIDplusConfigInitializationException("You must set a value for SERVER_SECRET in includes/config.inc.php for the system to operate secure.");
+			}
+		}
+
+		return $baseConfig;
+	}
+
 	public static function config() {
 		static $config = null;
 		if (is_null($config)) {
@@ -85,7 +148,7 @@ class OIDplus {
 	public static function sesHandler() {
 		static $sesHandler = null;
 		if (is_null($sesHandler)) {
-			$sesHandler = new OIDplusSessionHandler(OIDPLUS_SESSION_SECRET);
+			$sesHandler = new OIDplusSessionHandler();
 		}
 		return $sesHandler;
 	}
@@ -106,13 +169,13 @@ class OIDplus {
 	}
 
 	public static function db() {
-		if (!defined('OIDPLUS_DATABASE_PLUGIN')) {
+		if (OIDplus::baseConfig()->getValue('DATABASE_PLUGIN', '') === '') {
 			throw new OIDplusConfigInitializationException("No database plugin selected in config file");
 		}
-		if (!isset(self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN])) {
-			throw new OIDplusConfigInitializationException("Database plugin '".OIDPLUS_DATABASE_PLUGIN."' not found");
+		if (!isset(self::$dbPlugins[OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')])) {
+			throw new OIDplusConfigInitializationException("Database plugin '".OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')."' not found");
 		}
-		$obj = self::$dbPlugins[OIDPLUS_DATABASE_PLUGIN];
+		$obj = self::$dbPlugins[OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')];
 		if (!$obj->isConnected()) $obj->connect();
 		return $obj;
 	}
@@ -273,48 +336,8 @@ class OIDplus {
 	public static function init($html=true) {
 		self::$html = $html;
 
-		// Include config file
-
-		if (file_exists(__DIR__ . '/../config.inc.php')) {
-			include_once __DIR__ . '/../config.inc.php';
-		} else {
-			if (!is_dir(__DIR__.'/../../setup')) {
-				throw new OIDplusConfigInitializationException('File includes/config.inc.php is missing, but setup can\'t be started because its directory missing.');
-			} else {
-				if ($html) {
-					header('Location:'.OIDplus::getSystemUrl().'setup/');
-					die('Redirecting to setup...');
-				} else {
-					// This can be displayed in e.g. ajax.php
-					throw new OIDplusConfigInitializationException('File includes/config.inc.php is missing. Please run setup again.');
-				}
-			}
-		}
-
-		// Auto-fill non-existing config values, so that there won't be any PHP errors
-		// if something would be missing in config.inc.php (which should not happen!)
-
-		if (!defined('OIDPLUS_CONFIG_VERSION'))   define('OIDPLUS_CONFIG_VERSION',   0.0);
-		if (!defined('OIDPLUS_ADMIN_PASSWORD'))   define('OIDPLUS_ADMIN_PASSWORD',   '');
-		if (!defined('OIDPLUS_TABLENAME_PREFIX')) define('OIDPLUS_TABLENAME_PREFIX', '');
-		if (!defined('OIDPLUS_SESSION_SECRET'))   define('OIDPLUS_SESSION_SECRET',   '');
-		if (!defined('RECAPTCHA_ENABLED'))        define('RECAPTCHA_ENABLED',        false);
-		if (!defined('RECAPTCHA_PUBLIC'))         define('RECAPTCHA_PUBLIC',         '');
-		if (!defined('RECAPTCHA_PRIVATE'))        define('RECAPTCHA_PRIVATE',        '');
-		if (!defined('OIDPLUS_ENFORCE_SSL'))      define('OIDPLUS_ENFORCE_SSL',      2 /* Auto */);
-
-		// Now include a file containing various size/depth limitations of OIDs
-		// It is important to include it after config.inc.php was included,
-		// so we can give config.inc.php the chance to override the values
-		// by defining the constants first.
-
-		include_once __DIR__ . '/../limits.inc.php';
-
-		// Check version of the config file
-
-		if (OIDPLUS_CONFIG_VERSION != 2.0) {
-			throw new OIDplusConfigInitializationException("The information located in includes/config.inc.php is outdated.");
-		}
+		self::$baseConfigLoaded = false; // invalidate previously loaded base configuration
+		self::baseConfig(); // this loads the base configuration located in config.inc.php
 
 		// Register database types (highest priority)
 
@@ -543,13 +566,15 @@ class OIDplus {
 		$cookie_path = OIDplus::getSystemUrl(true);
 		if (empty($cookie_path)) $cookie_path = '/';
 
-		if (OIDPLUS_ENFORCE_SSL == 0) {
+		$mode = OIDplus::baseConfig()->getValue('ENFORCE_SSL', 2/*auto*/);
+
+		if ($mode == 0) {
 			// No SSL available
 			self::$sslAvailableCache = $already_ssl;
 			return $already_ssl;
 		}
 
-		if (OIDPLUS_ENFORCE_SSL == 1) {
+		if ($mode == 1) {
 			// Force SSL
 			if ($already_ssl) {
 				self::$sslAvailableCache = true;
@@ -563,7 +588,7 @@ class OIDplus {
 			}
 		}
 
-		if (OIDPLUS_ENFORCE_SSL == 2) {
+		if ($mode == 2) {
 			// Automatic SSL detection
 
 			if ($already_ssl) {

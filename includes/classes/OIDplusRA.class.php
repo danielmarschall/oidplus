@@ -31,12 +31,12 @@ class OIDplusRA {
 	}
 	
 	public function existing() {
-		$res = OIDplus::db()->query("select email from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($this->email));
+		$res = OIDplus::db()->query("select email from ###ra where email = ?", array($this->email));
 		return ($res->num_rows() > 0);
 	}
 
 	public function raName() {
-		$res = OIDplus::db()->query("select ra_name from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($this->email));
+		$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($this->email));
 		if ($res->num_rows() == 0) return "(RA not in database)";
 		$row = $res->fetch_array();
 		return $row['ra_name'];
@@ -44,7 +44,7 @@ class OIDplusRA {
 
 	public static function getAllRAs() {
 		$out = array();
-		$res = OIDplus::db()->query("select email from ".OIDPLUS_TABLENAME_PREFIX."ra");
+		$res = OIDplus::db()->query("select email from ###ra");
 		while ($row = $res->fetch_array()) {
 			$out[] = new OIDplusRA($row['email']);
 		}
@@ -54,26 +54,26 @@ class OIDplusRA {
 	public function change_password($new_password) {
 		$s_salt = substr(md5(rand()), 0, 7);
 		$calc_authkey = 'A2#'.base64_encode(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $s_salt.$new_password, true) : bb\Sha3\Sha3::hash($s_salt.$new_password, 512, true));
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."ra set salt=?, authkey=? where email = ?", array($s_salt, $calc_authkey, $this->email));
+		OIDplus::db()->query("update ###ra set salt=?, authkey=? where email = ?", array($s_salt, $calc_authkey, $this->email));
 	}
 
 	public function change_email($new_email) {
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."ra set email = ? where email = ?", array($new_email, $this->email));
+		OIDplus::db()->query("update ###ra set email = ? where email = ?", array($new_email, $this->email));
 	}
 
 	public function register_ra($new_password) {
 		$s_salt = substr(md5(rand()), 0, 7);
 		$calc_authkey = 'A2#'.base64_encode(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $s_salt.$new_password, true) : bb\Sha3\Sha3::hash($s_salt.$new_password, 512, true));
 		if (OIDplus::db()->slang() == 'mssql') {
-			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."ra (salt, authkey, email, registered) values (?, ?, ?, getdate())", array($s_salt, $calc_authkey, $this->email));
+			OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered) values (?, ?, ?, getdate())", array($s_salt, $calc_authkey, $this->email));
 		} else {
 			// MySQL + PgSQL
-			OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."ra (salt, authkey, email, registered) values (?, ?, ?, now())", array($s_salt, $calc_authkey, $this->email));
+			OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered) values (?, ?, ?, now())", array($s_salt, $calc_authkey, $this->email));
 		}
 	}
 
 	public function checkPassword($password) {
-		$ra_res = OIDplus::db()->query("select authkey, salt from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($this->email));
+		$ra_res = OIDplus::db()->query("select authkey, salt from ###ra where email = ?", array($this->email));
 		if ($ra_res->num_rows() == 0) return false; // User not found
 		$ra_row = $ra_res->fetch_array();
 
@@ -89,10 +89,10 @@ class OIDplusRA {
 	}
 
 	public function delete() {
-		OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($this->email));
+		OIDplus::db()->query("delete from ###ra where email = ?", array($this->email));
 	}
 
 	public function setRaName($ra_name) {
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."ra set ra_name = ? where email = ?", array($ra_name, $this->email));
+		OIDplus::db()->query("update ###ra set ra_name = ? where email = ?", array($ra_name, $this->email));
 	}
 }

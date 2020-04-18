@@ -4,7 +4,7 @@
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 OIDplus::init(false);
-if (!defined('OIDINFO_API_URL')) {
+if (!OIDplus::baseConfig()->exists('OIDINFO_API_URL')) {
 	die("OIDINFO_API_URL not available (API is currently not public)\n");
 }
 
@@ -26,7 +26,7 @@ foreach ($out as $oid) {
 
 function check_oid($oid) {
 
-	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array("oid:$oid"));
+	$res = OIDplus::db()->query("select * from ###objects where id = ?", array("oid:$oid"));
 	$ok = $res->num_rows() > 0;
 
 	if (!$ok) {
@@ -52,19 +52,19 @@ function add_oid($oid, $root=DESIRED_ROOT) {
 		$ra_email = '';
 		if ((DEFAULT_EMAIL != '') && ($ra_email == '')) $ra_email = DEFAULT_EMAIL;
 
-		sql_execute("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, title, description, ra_email) values (?, ?, ?, ?, ?)", array("oid:$oid", "oid:$parent", $title, $description, $ra_email));
+		sql_execute("insert into ###objects (id, parent, title, description, ra_email) values (?, ?, ?, ?, ?)", array("oid:$oid", "oid:$parent", $title, $description, $ra_email));
 
 		return;
 	}
 
 	if (!isset($data['oid']['identifier'])) $data['oid']['identifier'] = array();
 	foreach ($data['oid']['identifier'] as $identifier) {
-		sql_execute("insert into ".OIDPLUS_TABLENAME_PREFIX."asn1id (oid, name) values (?, ?)", array("oid:$oid", $identifier));
+		sql_execute("insert into ###asn1id (oid, name) values (?, ?)", array("oid:$oid", $identifier));
 	}
 
 	if (!isset($data['oid']['unicode-label'])) $data['oid']['unicode-label'] = array();
 	foreach ($data['oid']['unicode-label'] as $identifier) {
-		sql_execute("insert into ".OIDPLUS_TABLENAME_PREFIX."iri (oid, name) values (?, ?)", array("oid:$oid", $identifier));
+		sql_execute("insert into ###iri (oid, name) values (?, ?)", array("oid:$oid", $identifier));
 	}
 
 	$parent = ($oid == $root) ? '' : oid_up($oid);
@@ -81,18 +81,18 @@ function add_oid($oid, $root=DESIRED_ROOT) {
 	$ra_email = @$data['oid']['current_registrant']['email'];
 	if ($ra_email == '') $ra_email = @$data['oid']['first_registrant']['email'];
 
-	$resx = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array("oid:$parent"));
+	$resx = OIDplus::db()->query("select ra_email from ###objects where id = ?", array("oid:$parent"));
 	if ($rowx = $resx->fetch_array()) $ra_email = $rowx['ra_email'];
 
 	$created = @$data['oid']['first_registrant']['creation-date'];
 	$updated = @$data['oid']['last-modification'];
 
-	sql_execute("insert into ".OIDPLUS_TABLENAME_PREFIX."objects (id, parent, title, description, ra_email, created, updated) values (?, ?, ?, ?, ?, ?, ?)",
+	sql_execute("insert into ###objects (id, parent, title, description, ra_email, created, updated) values (?, ?, ?, ?, ?, ?, ?)",
 		array("oid:$oid", "oid:$parent", $title, $description, $ra_email, $created, $updated));
 }
 
 function ft_get_oid_data($oid) {
-	$url = OIDINFO_API_URL . '&oid='.urlencode($oid);
+	$url = OIDplus::baseConfig()->getValue('OIDINFO_API_URL') . '&oid='.urlencode($oid);
 	$cont_json = @file_get_contents($url);
 	if (!$cont_json) {
 		sleep(5);

@@ -42,7 +42,7 @@ define('OIDPLUS_REPO', 'https://svn.viathinksoft.com/svn/oidplus');
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="../setup/setup.css">
 	<?php
-	if (RECAPTCHA_ENABLED) {
+	if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 	?>
 	<script src="https://www.google.com/recaptcha/api.js"></script>
 	<?php
@@ -57,13 +57,13 @@ define('OIDPLUS_REPO', 'https://svn.viathinksoft.com/svn/oidplus');
 <?php
 
 if (isset($_REQUEST['update_now'])) {
-	if (RECAPTCHA_ENABLED) {
-		$secret = RECAPTCHA_PRIVATE;
+	if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
+		$secret = OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 		$response = $_POST["g-recaptcha-response"];
 		$verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 		$captcha_success = json_decode($verify);
 	}
-	if (RECAPTCHA_ENABLED && ($captcha_success->success==false)) {
+	if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_success->success==false)) {
 		echo '<p><font color="red"><b>CAPTCHA not sucessfully verified</b></font></p>';
 		echo '<p><a href="index.php">Try again</a></p>';
 	} else {
@@ -104,7 +104,7 @@ if (isset($_REQUEST['update_now'])) {
 
 	<p><u>There are two possibilities how to keep OIDplus up-to-date:</u></p>
 
-	<p><b>Method A</b>: Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co <?php echo OIDPLUS_REPO; ?>/trunk</code>
+	<p><b>Method A</b>: Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co <?php echo htmlentities(OIDPLUS_REPO); ?>/trunk</code>
 	and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and also check for
 	conflicts. Highly recommended if you have a Shell/SSH access to your webspace!</p>
 
@@ -194,12 +194,12 @@ if (isset($_REQUEST['update_now'])) {
 			echo '<p><font color="red">WARNING: Please make a backup of your files before updating. In case of an error, the OIDplus installation (including this update-assistant) might become unavailable. Also, since the web-update does not contain collission-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost!</font></p>';
 			echo '<form method="POST" action="index.php">';
 
-			if (RECAPTCHA_ENABLED) {
+			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 				echo '<noscript>';
 				echo '<p><font color="red">You need to enable JavaScript to solve the CAPTCHA.</font></p>';
 				echo '</noscript>';
-				echo '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.RECAPTCHA_PUBLIC.'" }); </script>';
-				echo '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>';
+				echo '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>';
+				echo '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>';
 			}
 
 			echo '<input type="hidden" name="update_now" value="1">';

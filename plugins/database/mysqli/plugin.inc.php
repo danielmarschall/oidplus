@@ -20,8 +20,9 @@
 if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
-	private $conn;
+	private $conn = null; // only with MySQLnd
 	private $prepare_cache = array();
+	private $last_error = null; // we need that because MySQL divides prepared statement errors and normal query errors, but we have only one "error()" method
 
 	public static function getPluginInformation(): array {
 		$out = array();
@@ -36,19 +37,13 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 		return "MySQL";
 	}
 
-	public function __construct() {
-		if (!defined('OIDPLUS_MYSQL_HOST'))     define('OIDPLUS_MYSQL_HOST',     'localhost');
-		if (!defined('OIDPLUS_MYSQL_USERNAME')) define('OIDPLUS_MYSQL_USERNAME', 'root');
-		if (!defined('OIDPLUS_MYSQL_PASSWORD')) define('OIDPLUS_MYSQL_PASSWORD', ''); // base64 encoded
-		if (!defined('OIDPLUS_MYSQL_DATABASE')) define('OIDPLUS_MYSQL_DATABASE', 'oidplus');
-	}
-
-	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
-		if (defined('OIDPLUS_MYSQL_QUERYLOG') && OIDPLUS_MYSQL_QUERYLOG) file_put_contents(__DIR__."/query.log", "$sql <== ".get_calling_function()."\n", FILE_APPEND);
+	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			$res = $this->conn->query($sql, MYSQLI_STORE_RESULT);
 
 			if ($res === false) {
+				$this->last_error = $this->conn->error;
 				throw new OIDplusSQLException($sql, $this->error());
 			} else {
 				return new OIDplusQueryResultMySQL($res);
@@ -88,6 +83,7 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 
 			self::bind_placeholder_vars($ps,$prepared_args);
 			if (!$ps->execute()) {
+				$this->last_error = mysqli_stmt_error($ps);
 				throw new OIDplusSQLException($sql, $this->error());
 			}
 
@@ -104,19 +100,23 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	}
 
 	public function error(): string {
-		return !empty($this->conn->connect_error) ? $this->conn->connect_error : $this->conn->error;
+		$err = $this->last_error;
+		if ($err == null) $err = '';
+		return $err;
 	}
 
 	protected function doConnect(): void {
 		if (!function_exists('mysqli_connect')) throw new OIDplusException('PHP extension "MySQLi" not installed');
 
-		if (defined('OIDPLUS_MYSQL_QUERYLOG') && OIDPLUS_MYSQL_QUERYLOG) file_put_contents("query.log", '');
-
 		// Try connecting to the database
-		list($hostname,$port) = explode(':', OIDPLUS_MYSQL_HOST.':'.ini_get("mysqli.default_port"));
-		$this->conn = @new mysqli($hostname, OIDPLUS_MYSQL_USERNAME, base64_decode(OIDPLUS_MYSQL_PASSWORD), OIDPLUS_MYSQL_DATABASE, $port);
+		$host     = OIDplus::baseConfig()->getValue('MYSQL_HOST',     'localhost');
+		$username = OIDplus::baseConfig()->getValue('MYSQL_USERNAME', 'root');
+		$password = OIDplus::baseConfig()->getValue('MYSQL_PASSWORD', '');
+		$database = OIDplus::baseConfig()->getValue('MYSQL_DATABASE', 'oidplus');
+		list($hostname,$port) = explode(':', $host.':'.ini_get("mysqli.default_port"));
+		$this->conn = @new mysqli($hostname, $username, $password, $database, $port);
 		if (!empty($this->conn->connect_error) || ($this->conn->connect_errno != 0)) {
-			$message = $this->error();
+			$message = $this->conn->connect_error;
 			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
 		}
 
@@ -126,6 +126,7 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	protected function doDisconnect(): void {
 		$this->conn->close();
 		$this->conn = null;
+		$this->prepare_cache = array();
 	}
 
 	private $intransaction = false;
@@ -149,7 +150,7 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	}
 
 	public static function nativeDriverAvailable(): bool {
-		return function_exists('mysqli_fetch_all') && (!(defined('OIDPLUS_MYSQL_FORCE_MYSQLND_SUPPLEMENT') && (OIDPLUS_MYSQL_FORCE_MYSQLND_SUPPLEMENT)));
+		return function_exists('mysqli_fetch_all') && (OIDplus::baseConfig()->getValue('MYSQL_FORCE_MYSQLND_SUPPLEMENT', false) === false);
 	}
 
 	private static function bind_placeholder_vars(&$stmt,$params): bool {

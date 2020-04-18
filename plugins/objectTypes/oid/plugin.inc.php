@@ -122,7 +122,7 @@ class OIDplusOid extends OIDplusObject {
 		if ($this->isRoot()) {
 			$title = OIDplusOid::objectTypeTitle();
 
-			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array(self::root()));
+			$res = OIDplus::db()->query("select id from ###objects where parent = ?", array(self::root()));
 			if ($res->num_rows() > 0) {
 				$content = 'Please select an OID in the tree view at the left to show its contents.';
 			} else {
@@ -221,19 +221,19 @@ class OIDplusOid extends OIDplusObject {
 		$out->oid = sanitizeOID($out->oid);
 		if ($out->oid === false) throw new OIDplusException("$bak_oid is not a valid OID!");
 		
-		if (strlen($out->oid) > OIDPLUS_MAX_ID_LENGTH-strlen('oid:')) {
-			throw new OIDplusException("The resulting OID '".$out->oid."' is too long (max allowed: ".(OIDPLUS_MAX_ID_LENGTH-strlen('oid:')).").");
+		if (strlen($out->oid) > OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:')) {
+			throw new OIDplusException("The resulting OID '".$out->oid."' is too long (max allowed: ".(OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:')).").");
 		}
 		
 		$depth = 0;
 		foreach (explode('.',$out->oid) as $arc) {
-			if (strlen($arc) > OIDPLUS_MAX_OID_ARC_SIZE) {
-				throw new OIDplusException("Arc '$arc' is too long and therefore cannot be appended to the OID '".$this->oid."' (max allowed arc size is ".OIDPLUS_MAX_OID_ARC_SIZE.")");
+			if (strlen($arc) > OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE')) {
+				throw new OIDplusException("Arc '$arc' is too long and therefore cannot be appended to the OID '".$this->oid."' (max allowed arc size is ".OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE').")");
 			}
 			$depth++;
 		}
-		if ($depth > OIDPLUS_MAX_OID_DEPTH) {
-			throw new OIDplusException("OID '".$out->oid."' has too many arcs (current depth $depth, max depth ".OIDPLUS_MAX_OID_DEPTH.")");
+		if ($depth > OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH')) {
+			throw new OIDplusException("OID '".$out->oid."' has too many arcs (current depth $depth, max depth ".OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH').")");
 		}
 
 		return $out;
@@ -259,7 +259,7 @@ class OIDplusOid extends OIDplusObject {
 		$part = $this->deltaDotNotation($parent);
 
 		if (strpos($part, '.') === false) {
-			$res2 = OIDplus::db()->query("select name from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ? order by lfd", array("oid:".$this->oid));
+			$res2 = OIDplus::db()->query("select name from ###asn1id where oid = ? order by lfd", array("oid:".$this->oid));
 			while ($row2 = $res2->fetch_array()) {
 				$asn_ids[] = $row2['name'].'('.$part.')';
 			}
@@ -274,7 +274,7 @@ class OIDplusOid extends OIDplusObject {
 		$arcs = explode('.', $this->oid);
 
 		foreach ($arcs as $arc) {
-			$res = OIDplus::db()->query("select name, standardized from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ? order by lfd", array('oid:'.implode('.',$arcs)));
+			$res = OIDplus::db()->query("select name, standardized from ###asn1id where oid = ? order by lfd", array('oid:'.implode('.',$arcs)));
 
 			$names = array();
 			while ($row = $res->fetch_array()) {
@@ -308,7 +308,7 @@ class OIDplusOid extends OIDplusObject {
 		$arcs = explode('.', $this->oid);
 
 		foreach ($arcs as $arc) {
-			$res = OIDplus::db()->query("select name, longarc from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ? order by lfd", array('oid:'.implode('.',$arcs)));
+			$res = OIDplus::db()->query("select name, longarc from ###iri where oid = ? order by lfd", array('oid:'.implode('.',$arcs)));
 
 			$is_longarc = false;
 			$names = array();
@@ -347,10 +347,10 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	public function isWellKnown() {
-		$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ? and well_known = ?", array("oid:".$this->oid,true));
+		$res = OIDplus::db()->query("select oid from ###asn1id where oid = ? and well_known = ?", array("oid:".$this->oid,true));
 		if ($res->num_rows() > 0) return true;
 
-		$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ? and well_known = ?", array("oid:".$this->oid,true));
+		$res = OIDplus::db()->query("select oid from ###iri where oid = ? and well_known = ?", array("oid:".$this->oid,true));
 		if ($res->num_rows() > 0) return true;
 
 		return false;
@@ -365,8 +365,8 @@ class OIDplusOid extends OIDplusObject {
 		foreach ($demandedASN1s as &$asn1) {
 			$asn1 = trim($asn1);
 
-			if (strlen($asn1) > OIDPLUS_MAX_OID_ASN1_ID_LEN) {
-				throw new OIDplusException("ASN.1 alphanumeric identifier '$asn1' is too long (max allowed length ".OIDPLUS_MAX_OID_ASN1_ID_LEN.")");
+			if (strlen($asn1) > OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ASN1_ID_LEN')) {
+				throw new OIDplusException("ASN.1 alphanumeric identifier '$asn1' is too long (max allowed length ".OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ASN1_ID_LEN').")");
 			}
 
 			// Validate identifier
@@ -374,7 +374,7 @@ class OIDplusOid extends OIDplusObject {
 
 			// Check if the (real) parent has any conflict
 			// Unlike IRI identifiers, ASN.1 identifiers may be used multiple times (not recommended), except if one of them is standardized
-			$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where name = ? and standardized = ?", array($asn1,true));
+			$res = OIDplus::db()->query("select oid from ###asn1id where name = ? and standardized = ?", array($asn1,true));
 			while ($row = $res->fetch_array()) {
 				$check_oid = OIDplusOid::parse($row['oid'])->oid;
 				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent
@@ -387,9 +387,9 @@ class OIDplusOid extends OIDplusObject {
 
 		// Now do the real replacement
 		if (!$simulate) {
-			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array("oid:".$this->oid));
+			OIDplus::db()->query("delete from ###asn1id where oid = ?", array("oid:".$this->oid));
 			foreach ($demandedASN1s as &$asn1) {
-				OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."asn1id (oid, name) values (?, ?)", array("oid:".$this->oid, $asn1));
+				OIDplus::db()->query("insert into ###asn1id (oid, name) values (?, ?)", array("oid:".$this->oid, $asn1));
 			}
 		}
 	}
@@ -403,15 +403,15 @@ class OIDplusOid extends OIDplusObject {
 		foreach ($demandedIris as &$iri) {
 			$iri = trim($iri);
 
-			if (strlen($iri) > OIDPLUS_MAX_OID_UNICODE_LABEL_LEN) {
-				throw new OIDplusException("Unicode label '$iri' is too long (max allowed length ".OIDPLUS_MAX_OID_UNICODE_LABEL_LEN.")");
+			if (strlen($iri) > OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_UNICODE_LABEL_LEN')) {
+				throw new OIDplusException("Unicode label '$iri' is too long (max allowed length ".OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_UNICODE_LABEL_LEN').")");
 			}
 
 			// Validate identifier
 			if (!iri_arc_valid($iri, false)) throw new OIDplusException("'$iri' is not a valid IRI!");
 
 			// Check if the (real) parent has any conflict
-			$res = OIDplus::db()->query("select oid from ".OIDPLUS_TABLENAME_PREFIX."iri where name = ?", array($iri));
+			$res = OIDplus::db()->query("select oid from ###iri where name = ?", array($iri));
 			while ($row = $res->fetch_array()) {
 				$check_oid = OIDplusOid::parse($row['oid'])->oid;
 				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent
@@ -424,9 +424,9 @@ class OIDplusOid extends OIDplusObject {
 
 		// Now do the real replacement
 		if (!$simulate) {
-			OIDplus::db()->query("delete from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ?", array("oid:".$this->oid));
+			OIDplus::db()->query("delete from ###iri where oid = ?", array("oid:".$this->oid));
 			foreach ($demandedIris as &$iri) {
-				OIDplus::db()->query("insert into ".OIDPLUS_TABLENAME_PREFIX."iri (oid, name) values (?, ?)", array("oid:".$this->oid, $iri));
+				OIDplus::db()->query("insert into ###iri (oid, name) values (?, ?)", array("oid:".$this->oid, $iri));
 			}
 		}
 	}

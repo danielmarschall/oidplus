@@ -43,8 +43,8 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				throw new OIDplusException('Invalid email address');
 			}
 
-			if (RECAPTCHA_ENABLED) {
-				$secret=RECAPTCHA_PRIVATE;
+			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
+				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 				$response=$_POST["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
@@ -145,8 +145,9 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				  <form id="inviteForm" onsubmit="return inviteFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="origin" value="'.htmlentities($origin).'"/>'.
-				 (RECAPTCHA_ENABLED ? '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.RECAPTCHA_PUBLIC.'" }); </script>'.
-				                   '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>' : '').
+				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
+				 '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
+				 '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '').
 				' <br>
 				    <input type="submit" value="Send invitation">
 				  </form>';
@@ -174,7 +175,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 			$out['icon'] = OIDplus::webpath(__DIR__).'activate_ra_big.png';
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
+			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 			if ($res->num_rows() > 0) {
 				$out['text'] = 'This RA is already registered and does not need to be invited.';
 			} else {
@@ -203,7 +204,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 	}
 
 	private function inviteSecurityCheck($email) {
-		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
+		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 		if ($res->num_rows() > 0) {
 			throw new OIDplusException("This RA is already registered and does not need to be invited.");
 		}
@@ -211,7 +212,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 			// Check if the RA may invite the user (i.e. the they are the parent of an OID of that person)
 			$ok = false;
-			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where ra_email = ?", array($email));
+			$res = OIDplus::db()->query("select parent from ###objects where ra_email = ?", array($email));
 			while ($row = $res->fetch_array()) {
 				$objParent = OIDplusObject::parse($row['parent']);
 				if (is_null($objParent)) throw new OIDplusException("Type of ".$row['parent']." unknown");
@@ -227,7 +228,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 	private function getInvitationText($email) {
 		$list_of_oids = array();
-		$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where ra_email = ?", array($email));
+		$res = OIDplus::db()->query("select id from ###objects where ra_email = ?", array($email));
 		while ($row = $res->fetch_array()) {
 			$list_of_oids[] = $row['id'];
 		}

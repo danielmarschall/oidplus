@@ -20,8 +20,9 @@
 if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
-	private $conn;
-	private $already_prepared;
+	private $conn = null;
+	private $already_prepared = array();
+	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
 
 	public static function getPluginInformation(): array {
 		$out = array();
@@ -36,18 +37,13 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 		return "PgSQL";
 	}
 
-	public function __construct() {
-		if (!defined('OIDPLUS_PGSQL_HOST'))     define('OIDPLUS_PGSQL_HOST',     'localhost:5432');
-		if (!defined('OIDPLUS_PGSQL_USERNAME')) define('OIDPLUS_PGSQL_USERNAME', 'postgres');
-		if (!defined('OIDPLUS_PGSQL_PASSWORD')) define('OIDPLUS_PGSQL_PASSWORD', ''); // base64 encoded
-		if (!defined('OIDPLUS_PGSQL_DATABASE')) define('OIDPLUS_PGSQL_DATABASE', 'oidplus');
-	}
-
-	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+		$this->last_error = null;
 		if (is_null($prepared_args)) {
-			$res = pg_query($this->conn, $sql);
+			$res = @pg_query($this->conn, $sql);
 
 			if ($res === false) {
+				$this->last_error = pg_last_error($this->conn);
 				throw new OIDplusSQLException($sql, $this->error());
 			} else {
 				return new OIDplusQueryResultPgSql($res);
@@ -64,9 +60,9 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 				return '$'.$i;
 			}, $sql);
 
-			$prepare_name = 'OIDPLUS_'.sha1($sql);
+			$prepare_name = 'OIDplus_ps_'.sha1($sql);
 			if (!in_array($prepare_name, $this->already_prepared)) {
-				$res = pg_prepare($this->conn, $prepare_name, $sql);
+				$res = @pg_prepare($this->conn, $prepare_name, $sql);
 				if ($res === false) {
 					throw new OIDplusSQLException($sql, 'Cannot prepare statement');
 				}
@@ -79,6 +75,7 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 
 			$ps = pg_execute($this->conn, $prepare_name, $prepared_args);
 			if ($ps === false) {
+				$this->last_error = pg_last_error($this->conn);
 				throw new OIDplusSQLException($sql, $this->error());
 			}
 			return new OIDplusQueryResultPgSql($ps);
@@ -90,8 +87,8 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 	}
 
 	public function error(): string {
-		$err = pg_last_error($this->conn);
-		if (!$err) $err = '';
+		$err = $this->last_error;
+		if ($err == null) $err = '';
 		return $err;
 	}
 
@@ -100,13 +97,14 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 
 		// Try connecting to the database
 		ob_start();
+		$err = '';
 		try {
-			$err = '';
-			list($hostname, $port) = explode(':', OIDPLUS_PGSQL_HOST.':5432');
-			$username = OIDPLUS_PGSQL_USERNAME;
-			$password = base64_decode(OIDPLUS_PGSQL_PASSWORD);
-			$dbname   = OIDPLUS_PGSQL_DATABASE;
-			$this->conn = pg_connect("host=$hostname user=$username password=$password port=$port dbname=$dbname");
+			$host     = OIDplus::baseConfig()->getValue('PGSQL_HOST',     'localhost:5432');
+			$username = OIDplus::baseConfig()->getValue('PGSQL_USERNAME', 'postgres');
+			$password = OIDplus::baseConfig()->getValue('PGSQL_PASSWORD', '');
+			$database = OIDplus::baseConfig()->getValue('PGSQL_DATABASE', 'oidplus');
+			list($hostname, $port) = explode(':', "$host:5432");
+			$this->conn = pg_connect("host=$hostname user=$username password=$password port=$port dbname=$database");
 		} finally {
 			# TODO: this does not seem to work?! (at least not for CLI)
 			$err = ob_get_contents();

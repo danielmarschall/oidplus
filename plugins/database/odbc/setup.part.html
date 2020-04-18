@@ -68,8 +68,8 @@ rebuild_config_callbacks.push(function() {
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'ODBC') return '';
 
-	return '<b>define</b>(\'OIDPLUS_ODBC_DSN\',         \''+document.getElementById('odbc_dsn').value+'\');<br>' +
-	       '<b>define</b>(\'OIDPLUS_ODBC_USERNAME\',    \''+document.getElementById('odbc_username').value+'\');<br>' +
-	       '<b>define</b>(\'OIDPLUS_ODBC_PASSWORD\',    \''+b64EncodeUnicode(document.getElementById('odbc_password').value)+'\'); // base64 encoded<br>';
+	return 'OIDplus::baseConfig()->setValue(\'ODBC_DSN\',          \''+document.getElementById('odbc_dsn').value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'ODBC_USERNAME\',     \''+document.getElementById('odbc_username').value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'ODBC_PASSWORD\',     base64_decode(\''+b64EncodeUnicode(document.getElementById('odbc_password').value)+'\'));<br>';
 });
 </script>

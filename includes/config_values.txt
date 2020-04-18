@@ -1,0 +1,185 @@
+
+OVERVIEW OF ALL CONFIG.INC.PHP SETTINGS
+=======================================
+
+The file includes/config.inc.php contains various settings
+which are essential to connect to your database and other
+things that should be known before the database connection
+is opened.
+
+Note that other settings are stored in the database (table "config")
+and can be accessed using the admin login area.
+
+
+-------------------------------------
+(1) CONFIG SETTINGS PROVIDED BY SETUP
+-------------------------------------
+
+OIDplus::baseConfig()->setValue('CONFIG_VERSION',           2.1);
+Old 2.0 format:          define('OIDPLUS_CONFIG_VERSION',   2.0);
+
+OIDplus::baseConfig()->setValue('ADMIN_PASSWORD',           '<base64 encoded SHA3-512 hash>');
+Old 2.0 format:          define('OIDPLUS_ADMIN_PASSWORD',   '<base64 encoded SHA3-512 hash>');
+
+OIDplus::baseConfig()->setValue('DATABASE_PLUGIN',          '');
+Old 2.0 format:          define('OIDPLUS_DATABASE_PLUGIN',  '');
+
+OIDplus::baseConfig()->setValue('ODBC_DSN',                 'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
+Old 2.0 format:          define('OIDPLUS_ODBC_DSN',         'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
+
+OIDplus::baseConfig()->setValue('ODBC_USERNAME',            'sa');
+Old 2.0 format:          define('OIDPLUS_ODBC_USERNAME',    'sa');
+
+OIDplus::baseConfig()->setValue('ODBC_PASSWORD',            base64_decode('<base64_encoded_password>')); // alternatively as plaintext
+Old 2.0 format:          define('OIDPLUS_ODBC_PASSWORD',    '<base64_encoded_password>'); // must be base64 encoded
+Information:             The base64 encoding "protects" your password from being read if
+                         someone quickly looks at your display while you have the configuration file opened.
+
+OIDplus::baseConfig()->setValue('PDO_DSN',                  'pgsql:host=localhost;dbname=oidplus');
+Old 2.0 format:          define('OIDPLUS_PDO_DSN',          'pgsql:host=localhost;dbname=oidplus');
+
+OIDplus::baseConfig()->setValue('PDO_USERNAME',             'postgres');
+Old 2.0 format:          define('OIDPLUS_PDO_USERNAME',     'postgres');
+
+OIDplus::baseConfig()->setValue('PDO_PASSWORD',             base64_decode('<base64_encoded_password>')); // alternatively as plaintext
+Old 2.0 format:          define('OIDPLUS_PDO_PASSWORD',     '<base64_encoded_password>'); // must be base64 encoded
+Information:             The base64 encoding "protects" your password from being read if
+                         someone quickly looks at your display while you have the configuration file opened.
+
+OIDplus::baseConfig()->setValue('MYSQL_HOST',               'localhost:3306');
+Old 2.0 format:          define('OIDPLUS_MYSQL_HOST',       'localhost:3306');
+Information:             Port is optional
+
+OIDplus::baseConfig()->setValue('MYSQL_USERNAME',           'root');
+Old 2.0 format:          define('OIDPLUS_MYSQL_USERNAME',   'root');
+
+OIDplus::baseConfig()->setValue('MYSQL_PASSWORD',           base64_decode('<base64_encoded_password>')); // alternatively as plaintext
+Old 2.0 format:          define('OIDPLUS_MYSQL_PASSWORD',   '<base64_encoded_password>'); // must be base64 encoded
+Information:             The base64 encoding "protects" your password from being read if
+                         someone quickly looks at your display while you have the configuration file opened.
+
+OIDplus::baseConfig()->setValue('MYSQL_DATABASE',           'oidplus');
+Old 2.0 format:          define('OIDPLUS_MYSQL_DATABASE',   'oidplus');
+
+OIDplus::baseConfig()->setValue('PGSQL_HOST',               'localhost:5432');
+Old 2.0 format:          define('OIDPLUS_PGSQL_HOST',       'localhost:5432');
+Information:             Port is optional
+
+OIDplus::baseConfig()->setValue('PGSQL_USERNAME',           'postgres');
+Old 2.0 format:          define('OIDPLUS_PGSQL_USERNAME',   'postgres');
+
+OIDplus::baseConfig()->setValue('PGSQL_PASSWORD',           base64_decode('<base64_encoded_password>')); // alternatively as plaintext
+Old 2.0 format:          define('OIDPLUS_PGSQL_PASSWORD',   '<base64_encoded_password>'); // must be base64 encoded
+Information:             The base64 encoding "protects" your password from being read if
+                         someone quickly looks at your display while you have the configuration file opened.
+
+OIDplus::baseConfig()->setValue('PGSQL_DATABASE',           'oidplus');
+Old 2.0 format:          define('OIDPLUS_PGSQL_DATABASE',   'oidplus');
+
+OIDplus::baseConfig()->setValue('TABLENAME_PREFIX',         'oidplus_');
+Old 2.0 format:          define('OIDPLUS_TABLENAME_PREFIX', 'oidplus_');
+
+OIDplus::baseConfig()->setValue('SERVER_SECRET',            'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+Old 2.0 format:          define('OIDPLUS_SESSION_SECRET',   'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+Information:             It is very very important that you choose a long sequence of
+                         random characters. OIDplus uses this secret for various
+                         security related purposes. If someone accidently received this secret,
+                         please change the sequence.
+
+OIDplus::baseConfig()->setValue('RECAPTCHA_ENABLED',        true);
+Old 2.0 format:          define('RECAPTCHA_ENABLED',        0);
+
+OIDplus::baseConfig()->setValue('RECAPTCHA_PUBLIC',         '');
+Old 2.0 format:          define('RECAPTCHA_PUBLIC',         '');
+
+OIDplus::baseConfig()->setValue('RECAPTCHA_PRIVATE',        '');
+Old 2.0 format:          define('RECAPTCHA_PRIVATE',        '');
+
+OIDplus::baseConfig()->setValue('ENFORCE_SSL',              2);
+Old 2.0 format:          define('OIDPLUS_ENFORCE_SSL',      2);
+Information:             Values 0 (off), 1 (on), 2 (auto detect)
+
+
+----------------------
+(2) SYSTEM LIMITATIONS (defined and documented in includes/limits.inc.php , can be overwritten by config.inc.php)
+----------------------
+
+OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_DEPTH',  30);
+Old 2.0 format:          define('OIDPLUS_MAX_OID_DEPTH', 30);
+Information:             Please read the documentation in the file includes/limits.inc.php
+
+OIDplus::baseConfig()->setValue('LIMITS_MAX_ID_LENGTH',     255);
+Old 2.0 format:          define('OIDPLUS_MAX_OID_ARC_SIZE', 255);
+Information:             Please read the documentation in the file includes/limits.inc.php
+
+OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ARC_SIZE',  50);
+Old 2.0 format:          define('OIDPLUS_MAX_OID_ARC_SIZE', 50);
+Information:             Please read the documentation in the file includes/limits.inc.php
+
+OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ASN1_ID_LEN',  255);
+Old 2.0 format:          define('OIDPLUS_MAX_OID_ASN1_ID_LEN', 255);
+Information:             Please read the documentation in the file includes/limits.inc.php
+
+OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_UNICODE_LABEL_LEN',  255);
+Old 2.0 format:          define('OIDPLUS_MAX_OID_UNICODE_LABEL_LEN', 255);
+Information:             Please read the documentation in the file includes/limits.inc.php
+
+
+-----------------------------------------
+(3) "HIDDEN"/UNDOCUMENTED CONFIG SETTINGS
+-----------------------------------------
+
+OIDplus::baseConfig()->setValue('OIDINFO_SECRET_ADMIN_USERNAME', '<email address>');
+Old 2.0 format:          define('OIDINFO_SECRET_ADMIN_USERNAME', '<email address>');
+Information:             Currently only internal use for development utilities (dev/).
+
+OIDplus::baseConfig()->setValue('OIDINFO_SECRET_ADMIN_PASSWORD', '<plaintext password>');
+Old 2.0 format:          define('OIDINFO_SECRET_ADMIN_PASSWORD', '<plaintext password>');
+Information:             Currently only internal use for development utilities (dev/).
+
+OIDplus::baseConfig()->setValue('OIDINFO_API_URL', '<url>');
+Old 2.0 format:          define('OIDINFO_API_URL', '<url>');
+Information:             Currently only internal use for development utilities (dev/).
+
+OIDplus::baseConfig()->setValue('REGISTRATION_HIDE_SYSTEM', true);
+Old 2.0 format:          define('REGISTRATION_HIDE_SYSTEM', true);
+Information:             Set this if you have a clone of a productive system and you want
+                         to avoid that the clone registers at the ViaThinkSoft directory
+                         (which would overwrite the URL of the productive system and reveal
+                         the URL of your testing system)
+
+OIDplus::baseConfig()->setValue('MYSQL_FORCE_MYSQLND_SUPPLEMENT',         false);
+Old 2.0 format:          define('OIDPLUS_MYSQL_FORCE_MYSQLND_SUPPLEMENT', false);
+Information:             The MySQLi plugin contains a supplement code to handle
+                         prepared statements on servers which do not have the MySQLnd extension
+                         installed. Set this flag to force the supplement to be used,
+                         even if MySQLnd is available. (For testing purposes only)
+
+OIDplus::baseConfig()->setValue('QUERY_LOGFILE',          '');
+Old 2.0 format:          define('OIDPLUS_MYSQL_QUERYLOG', false);
+Information:             Set this setting to a filename where all queries including timestamps would be written.
+                         This is used for performance analysis.
+                         Please choose a directory that cannot be accessed by world-wide.
+
+OIDplus::baseConfig()->setValue('SESSION_LIFETIME', 30*60);
+Old 2.0 format:          define('SESSION_LIFETIME', 30*60);
+Information:             Session lifetime in seconds.
+
+OIDplus::baseConfig()->setValue('OBJECT_CACHING',         true);
+Old 2.0 format:          define('OIDPLUS_OBJECT_CACHING', true);
+
+OIDplus::baseConfig()->setValue('FORCE_DBMS_SLANG', '');
+Old 2.0 format:          define('DBMS_SLANG',       '');
+Information:             Currently valid values: mysql, mssql, pgsql
+
+OIDplus::baseConfig()->setValue('MINIFY_CSS', true);
+Old 2.0 format:          define('DO_MINIFY',  true);
+
+OIDplus::baseConfig()->setValue('MINIFY_JS',  true);
+Old 2.0 format:          (Not available)
+
+OIDplus::baseConfig()->setValue('DISABLE_MSIE_COMPAT', false);
+Old 2.0 format:          define('DISABLE_MSIE_COMPAT', false);
+Information:             Set to "true" if you want to avoid that the external polyfill
+                         JavaScript will be included if Internet Explorer is detected.
+                         Only recommended if you have concerns about privacy.

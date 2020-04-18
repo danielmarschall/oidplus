@@ -127,7 +127,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 							$sql_where[] = "ra_name like ?"; $prep_where[] = '%'.$search_term.'%';
 
 							if (count($sql_where) == 0) $sql_where[] = '1=0';
-							$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where (".implode(' or ', $sql_where).")", $prep_where);
+							$res = OIDplus::db()->query("select * from ###ra where (".implode(' or ', $sql_where).")", $prep_where);
 
 							$count = 0;
 							while ($row = $res->fetch_object()) {
@@ -147,14 +147,14 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 							if (isset($_POST["search_description"])) { $sql_where[] = "description like ?"; $prep_where[] = '%'.$search_term.'%'; }
 
 							if (isset($_POST["search_asn1id"])) {
-								$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where name like ?", array('%'.$search_term.'%'));
+								$res = OIDplus::db()->query("select * from ###asn1id where name like ?", array('%'.$search_term.'%'));
 								while ($row = $res->fetch_object()) {
 									$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
 								}
 							}
 
 							if (isset($_POST["search_iri"])) {
-								$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where name like ?", array('%'.$search_term.'%'));
+								$res = OIDplus::db()->query("select * from ###iri where name like ?", array('%'.$search_term.'%'));
 								while ($row = $res->fetch_object()) {
 									$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
 								}
@@ -163,7 +163,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 							if (count($sql_where) == 0) $sql_where[] = '1=0';
 							array_unshift($prep_where, $ns.':%');
 
-							$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ? and (".implode(' or ', $sql_where).")", $prep_where);
+							$res = OIDplus::db()->query("select * from ###objects where id like ? and (".implode(' or ', $sql_where).")", $prep_where);
 
 							$count = 0;
 							while ($row = $res->fetch_object()) {

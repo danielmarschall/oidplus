@@ -25,10 +25,6 @@ RFC
 OOBE/SETUP
 - There should be a "test database connection" button
 
-OOP
-- Go away from Singleton class? How can things be tested?
-- Remove all constants!!! Otherwise we cannot test very well
-
 SMALL THINGS
 - We should remove "die()" whenever possible, because it is very unflexible
 - offer signature checker tool to verify WHOIS responses
@@ -90,7 +86,7 @@ FUTURE
 - move oid to different arc
 - bei sehr großen arcs (z.B. PEN) sollen nicht alle angezeigt werden
 - unterstützung für ORS?
-- Mehr "Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollständig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), ...<br>
+- Mehr "Cutting Edge Technologie" soll in diesem Projekt zum Tragen kommen: AJAX, JSON, vollständig UTF8, CRUD frameworks, PDO, HTML5, Mobiles Design, Pure CSS, Autoloading, Objektorientierung (aber nicht unbedingt MVC), Testing, ...<br>
 - "Search" plugin: Feature to search inside documentation (doc/ directory)
 - "Search" plugin: I want to search in all object types and RAs. Not first select the type.
 - How can we make sure that example objects are not exported using oid-info.com export?

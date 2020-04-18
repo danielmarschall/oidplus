@@ -44,8 +44,8 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 				throw new OIDplusException('Invalid email address');
 			}
 
-			if (RECAPTCHA_ENABLED) {
-				$secret=RECAPTCHA_PRIVATE;
+			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
+				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 				$response=$_POST["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
@@ -124,8 +124,9 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 				$out['text'] .= '<p>Please enter the email address of your account, and information about the password reset will be sent to you.</p>
 				  <form id="forgotPasswordForm" onsubmit="return forgotPasswordFormOnSubmit();">
 				    E-Mail: <input type="text" id="email" value=""/><br><br>'.
-				 (RECAPTCHA_ENABLED ? '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.RECAPTCHA_PUBLIC.'" }); </script>'.
-				                   '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>' : '').
+				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
+				 '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
+				 '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '').
 				' <br>
 				    <input type="submit" value="Send recovery information">
 				  </form>';
@@ -169,7 +170,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 	}
 
 	private function getForgotPasswordText($email) {
-		$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email));
+		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 		if ($res->num_rows() == 0) {
 			throw new OIDplusException("This RA does not exist.");
 		}

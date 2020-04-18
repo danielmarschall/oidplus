@@ -56,7 +56,7 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
 			} else {
-				$out['text'] = '<p><abbr title="These ID names can only be edited in the database directly (Tables '.OIDPLUS_TABLENAME_PREFIX.'asn1id and '.OIDPLUS_TABLENAME_PREFIX.'iri). Usually, there is no need to do this, though.">How to edit these IDs?</abbr></p>';
+				$out['text'] = '<p><abbr title="These ID names can only be edited in the database directly (Tables ###asn1id and ###iri). Usually, there is no need to do this, though.">How to edit these IDs?</abbr></p>';
 
 				$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 				$out['text'] .= '<table class="table table-bordered table-striped">';
@@ -66,16 +66,16 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 				$out['text'] .= '	     <th>IRI identifiers (comma sep.)</th>';
 				$out['text'] .= '	</tr>';
 
-				$res = OIDplus::db()->query("select a.oid from (select oid from ".OIDPLUS_TABLENAME_PREFIX."asn1id where well_known = '1' union select oid from ".OIDPLUS_TABLENAME_PREFIX."iri where well_known = '1') a order by ".OIDplus::db()->natOrder('oid'));
+				$res = OIDplus::db()->query("select a.oid from (select oid from ###asn1id where well_known = '1' union select oid from ###iri where well_known = '1') a order by ".OIDplus::db()->natOrder('oid'));
 				while ($row = $res->fetch_array()) {
 					$asn1ids = array();
-					$res2 = OIDplus::db()->query("select name, standardized from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($row['oid']));
+					$res2 = OIDplus::db()->query("select name, standardized from ###asn1id where oid = ?", array($row['oid']));
 					while ($row2 = $res2->fetch_array()) {
 						$asn1ids[] = $row2['name'].($row2['standardized'] ? ' (standardized)' : '');
 					}
 
 					$iris = array();
-					$res2 = OIDplus::db()->query("select name, longarc from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ?", array($row['oid']));
+					$res2 = OIDplus::db()->query("select name, longarc from ###iri where oid = ?", array($row['oid']));
 					while ($row2 = $res2->fetch_array()) {
 						$iris[] = $row2['name'].($row2['longarc'] ? ' (long arc)' : '');
 					}

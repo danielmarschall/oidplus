@@ -70,8 +70,8 @@ rebuild_config_callbacks.push(function() {
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'PDO') return '';
 
-	return '<b>define</b>(\'OIDPLUS_PDO_DSN\',          \''+document.getElementById('pdo_dsn').value+'\');<br>' +
-	       '<b>define</b>(\'OIDPLUS_PDO_USERNAME\',     \''+document.getElementById('pdo_username').value+'\');<br>' +
-	       '<b>define</b>(\'OIDPLUS_PDO_PASSWORD\',     \''+b64EncodeUnicode(document.getElementById('pdo_password').value)+'\'); // base64 encoded<br>';
+	return 'OIDplus::baseConfig()->setValue(\'PDO_DSN\',           \''+document.getElementById('pdo_dsn').value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'PDO_USERNAME\',      \''+document.getElementById('pdo_username').value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'PDO_PASSWORD\',      base64_decode(\''+b64EncodeUnicode(document.getElementById('pdo_password').value)+'\'));<br>';
 });
 </script>

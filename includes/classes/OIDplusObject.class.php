@@ -19,11 +19,9 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-define('OIDPLUS_OBJECT_CACHING', true);
-
-define('UUID_NAMEBASED_NS_OidPlusMisc', 'ad1654e6-7e15-11e4-9ef6-78e3b5fc7f22');
-
 abstract class OIDplusObject {
+	const UUID_NAMEBASED_NS_OidPlusMisc = 'ad1654e6-7e15-11e4-9ef6-78e3b5fc7f22';
+
 	public static function parse($node_id) { // please overwrite this function!
 		// TODO: in case we are not calling this class directly, check if function is overwritten and throw exception otherwise
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
@@ -46,8 +44,8 @@ abstract class OIDplusObject {
 			}
 		}
 		if ($this->ns() != 'guid') {
-			$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), 'Namebased version 3 / MD5 UUID with namespace UUID_NAMEBASED_NS_OidPlusMisc');
-			$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), 'Namebased version 5 / SHA1 UUID with namespace UUID_NAMEBASED_NS_OidPlusMisc');
+			$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), 'Namebased version 3 / MD5 UUID with namespace UUID_NAMEBASED_NS_OidPlusMisc');
+			$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), 'Namebased version 5 / SHA1 UUID with namespace UUID_NAMEBASED_NS_OidPlusMisc');
 		}
 		return $ids;
 	}
@@ -83,10 +81,10 @@ abstract class OIDplusObject {
 
 		$out = array();
 
-		if (!OIDPLUS_OBJECT_CACHING) {
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			if (is_null($ra_email)) {
-				$res = OIDplus::db()->query("select oChild.id as id, oChild.ra_email as child_mail, oParent.ra_email as parent_mail from ".OIDPLUS_TABLENAME_PREFIX."objects as oChild ".
-				                            "left join ".OIDPLUS_TABLENAME_PREFIX."objects as oParent on oChild.parent = oParent.id ".
+				$res = OIDplus::db()->query("select oChild.id as id, oChild.ra_email as child_mail, oParent.ra_email as parent_mail from ###objects as oChild ".
+				                            "left join ###objects as oParent on oChild.parent = oParent.id ".
 				                            "order by ".OIDplus::db()->natOrder('oChild.id'));
 				while ($row = $res->fetch_array()) {
 					if (!OIDplus::authUtils()::isRaLoggedIn($row['parent_mail']) && OIDplus::authUtils()::isRaLoggedIn($row['child_mail'])) {
@@ -95,8 +93,8 @@ abstract class OIDplusObject {
 					}
 				}
 			} else {
-				$res = OIDplus::db()->query("select oChild.id as id from ".OIDPLUS_TABLENAME_PREFIX."objects as oChild ".
-				                            "left join ".OIDPLUS_TABLENAME_PREFIX."objects as oParent on oChild.parent = oParent.id ".
+				$res = OIDplus::db()->query("select oChild.id as id from ###objects as oChild ".
+				                            "left join ###objects as oParent on oChild.parent = oParent.id ".
 				                            "where (ifnull(oParent.ra_email,'') <> ? and ifnull(oChild.ra_email,'') = ?) or ".
 				                            "      (oParent.ra_email is null and ifnull(oChild.ra_email,'') = ?) ".
 				                            "order by ".OIDplus::db()->natOrder('oChild.id'), array($ra_email, $ra_email, $ra_email));
@@ -147,8 +145,8 @@ abstract class OIDplusObject {
 	public static function getAllNonConfidential() {
 		$out = array();
 
-		if (!OIDPLUS_OBJECT_CACHING) {
-			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where confidential = '0' order by ".OIDplus::db()->natOrder('id'));
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
+			$res = OIDplus::db()->query("select id from ###objects where confidential = '0' order by ".OIDplus::db()->natOrder('id'));
 
 			while ($row = $res->fetch_array()) {
 				$obj = self::parse($row['id']); // will be NULL if the object type is not registered
@@ -173,12 +171,12 @@ abstract class OIDplusObject {
 	}
 
 	public function isConfidential() {
-		if (!OIDPLUS_OBJECT_CACHING) {
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$curid = $this->nodeId();
 			$orig_curid = $curid;
 			if (isset(self::$object_info_cache[$curid])) return self::$object_info_cache[$curid];
 			// Recursively search for the confidential flag in the parents
-			while (($res = OIDplus::db()->query("select parent, confidential from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($curid)))->num_rows() > 0) {
+			while (($res = OIDplus::db()->query("select parent, confidential from ###objects where id = ?", array($curid)))->num_rows() > 0) {
 				$row = $res->fetch_array();
 				if ($row['confidential']) {
 					self::$object_info_cache[$curid] = true;
@@ -210,9 +208,9 @@ abstract class OIDplusObject {
 	}
 
 	public function isChildOf(OIDplusObject $obj) {
-		if (!OIDPLUS_OBJECT_CACHING) {
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$curid = $this->nodeId();
-			while (($res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($curid)))->num_rows() > 0) {
+			while (($res = OIDplus::db()->query("select parent from ###objects where id = ?", array($curid)))->num_rows() > 0) {
 				$row = $res->fetch_array();
 				if ($curid == $obj->nodeId()) return true;
 				$curid = $row['parent'];
@@ -232,8 +230,8 @@ abstract class OIDplusObject {
 
 	public function getChildren() {
 		$out = array();
-		if (!OIDPLUS_OBJECT_CACHING) {
-			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array($this->nodeId()));
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
+			$res = OIDplus::db()->query("select id from ###objects where parent = ?", array($this->nodeId()));
 			while ($row = $res->fetch_array()) {
 				$obj = self::parse($row['id']);
 				if (!$obj) continue;
@@ -303,8 +301,8 @@ abstract class OIDplusObject {
 	}
 
 	public static function exists($id) {
-		if (!OIDPLUS_OBJECT_CACHING) {
-			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
+			$res = OIDplus::db()->query("select id from ###objects where id = ?", array($id));
 			return $res->num_rows() > 0;
 		} else {
 			self::buildObjectInformationCache();
@@ -313,8 +311,8 @@ abstract class OIDplusObject {
 	}
 
 	public function getParent() {
-		if (!OIDPLUS_OBJECT_CACHING) {
-			$res = OIDplus::db()->query("select parent from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($this->nodeId()));
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
+			$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($this->nodeId()));
 			if ($res->num_rows() == 0) return null;
 			$row = $res->fetch_array();
 			$parent = $row['parent'];
@@ -344,8 +342,8 @@ abstract class OIDplusObject {
 	}
 
 	public function getRaMail() {
-		if (!OIDPLUS_OBJECT_CACHING) {
-			$res = OIDplus::db()->query("select ra_email from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($this->nodeId()));
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
+			$res = OIDplus::db()->query("select ra_email from ###objects where id = ?", array($this->nodeId()));
 			if ($res->num_rows() == 0) return null;
 			$row = $res->fetch_array();
 			return $row['ra_email'];
@@ -359,8 +357,8 @@ abstract class OIDplusObject {
 	}
 
 	public function getTitle() {
-		if (!OIDPLUS_OBJECT_CACHING) {
-			$res = OIDplus::db()->query("select title from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($this->nodeId()));
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
+			$res = OIDplus::db()->query("select title from ###objects where id = ?", array($this->nodeId()));
 			if ($res->num_rows() == 0) return null;
 			$row = $res->fetch_array();
 			return $row['title'];
@@ -414,8 +412,8 @@ abstract class OIDplusObject {
 		$obj = OIDplusObject::parse($id);
 		if (!$obj) throw new OIDplusException("findFitting: Parse failed\n");
 
-		if (!OIDPLUS_OBJECT_CACHING) {
-			$res = OIDplus::db()->query("select id from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?", array($obj->ns().':%'));
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
+			$res = OIDplus::db()->query("select id from ###objects where id like ?", array($obj->ns().':%'));
 			while ($row = $res->fetch_object()) {
 				$test = OIDplusObject::parse($row->id);
 				if ($obj->equals($test)) return $test;
@@ -453,7 +451,7 @@ abstract class OIDplusObject {
 	private static function buildObjectInformationCache() {
 		if (is_null(self::$object_info_cache)) {
 			self::$object_info_cache = array();
-			$res = OIDplus::db()->query("select id, parent, confidential, ra_email, title from ".OIDPLUS_TABLENAME_PREFIX."objects");
+			$res = OIDplus::db()->query("select id, parent, confidential, ra_email, title from ###objects");
 			while ($row = $res->fetch_array()) {
 				self::$object_info_cache[$row['id']] = array($row['confidential'], $row['parent'], $row['ra_email'], $row['title']);
 			}

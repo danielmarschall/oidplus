@@ -43,8 +43,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$email = $_POST['email'];
 			$ra = new OIDplusRA($email);
 
-			if (RECAPTCHA_ENABLED) {
-				$secret=RECAPTCHA_PRIVATE;
+			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
+				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 				$response=$_POST["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
@@ -58,10 +58,10 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				OIDplus::authUtils()::raLogin($email);
 
 				if (OIDplus::db()->slang() == 'mssql') {
-					OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = getdate() where email = ?", array($email));
+					OIDplus::db()->query("UPDATE ###ra set last_login = getdate() where email = ?", array($email));
 				} else {
 					// MySQL + PgSQL
-					OIDplus::db()->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."ra set last_login = now() where email = ?", array($email));
+					OIDplus::db()->query("UPDATE ###ra set last_login = now() where email = ?", array($email));
 				}
 
 				echo json_encode(array("status" => 0));
@@ -84,8 +84,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		if (isset($_POST["action"]) && ($_POST["action"] == "admin_login")) {
 			$handled = true;
 
-			if (RECAPTCHA_ENABLED) {
-				$secret=RECAPTCHA_PRIVATE;
+			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
+				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 				$response=$_POST["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
@@ -127,8 +127,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$out['text'] .= '</noscript>';
 
 			$out['text'] .= '<div id="loginArea" style="visibility: hidden"><div id="loginTab" class="container" style="width:100%;">';
-			$out['text'] .= (RECAPTCHA_ENABLED ? '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.RECAPTCHA_PUBLIC.'" }); </script>'.
-			                                     '<p>Before logging in, please solve the following CAPTCHA</p><div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_PUBLIC.'"></div>' : '');
+			$out['text'] .= (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
+			                '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
+			                '<p>Before logging in, please solve the following CAPTCHA</p><div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '');
 			$out['text'] .= '<br>';
 			$out['text'] .= '<ul class="nav nav-pills">';
 			$out['text'] .= '			<li class="active">';
@@ -187,7 +188,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$out['text'] .= '  </div><br>';
 			$out['text'] .= '<p><font size="-1"><i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. '.
 			                'The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. '.
-			                'It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of '.ceil(SESSION_LIFETIME/60).' minutes.';
+			                'It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of '.ceil(OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60)/60).' minutes.';
 			$privacy_document_file = 'res/OIDplus/privacy_documentation.html';
 			if (class_exists('OIDplusPagePublicResources') && file_exists($privacy_document_file)) {
 				$out['text'] .= ' <a '.OIDplus::gui()->link('oidplus:resources$'.$privacy_document_file.'$'.OIDplus::authUtils()::makeAuthKey("resources;".$privacy_document_file).'#cookies').'>More information about the cookies used</a>';

@@ -17,11 +17,6 @@
  * limitations under the License.
  */
 
-define('OUTPUT_FORMAT_SPACER', 2);
-define('OUTPUT_FORMAT_MAX_LINE_LENGTH', 80);
-
-# ---
-
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 OIDplus::init(true);
@@ -74,7 +69,7 @@ if (!$obj) {
 	$found = false;
 } else {
 	$query = $obj->nodeId(); // this may sanitize/canonize identifiers
-	$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($obj->nodeId()));
+	$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
 	if ($res->num_rows() > 0) {
 		$found = true;
 		$distance = 0;
@@ -82,7 +77,7 @@ if (!$obj) {
 		$found = false;
 		$objParent = OIDplusObject::parse($query)->getParent();
 		if ($objParent) {
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($objParent->nodeId()));
+			$res = OIDplus::db()->query("select * from ###objects where id = ?", array($objParent->nodeId()));
 			$distance = $objParent->distance($query);
 			assert($res->num_rows() > 0);
 
@@ -128,22 +123,22 @@ if ($continue) {
 		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont)));
 
 		if (substr($query,0,4) === 'oid:') {
-			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($row->id));
+			$res2 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($row->id));
 			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'identifier: ' . $row2->name;
 			}
 
-			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where standardized = ? and oid = ?", array(true, $row->id));
+			$res2 = OIDplus::db()->query("select * from ###asn1id where standardized = ? and oid = ?", array(true, $row->id));
 			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'standardized-id: ' . $row2->name;
 			}
 
-			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ?", array($row->id));
+			$res2 = OIDplus::db()->query("select * from ###iri where oid = ?", array($row->id));
 			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'unicode-label: ' . $row2->name;
 			}
 
-			$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where longarc = ? and oid = ?", array(true, $row->id));
+			$res2 = OIDplus::db()->query("select * from ###iri where longarc = ? and oid = ?", array(true, $row->id));
 			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'long-arc: ' . $row2->name;
 			}
@@ -152,7 +147,7 @@ if ($continue) {
 		$out[] = 'created: ' . $row->created;
 		$out[] = 'updated: ' . $row->updated;
 
-		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($row->id));
+		$res2 = OIDplus::db()->query("select * from ###objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($row->id));
 		if ($res2->num_rows() == 0) {
 			// $out[] = 'subordinate: (none)';
 		}
@@ -162,7 +157,7 @@ if ($continue) {
 
 		$out[] = '';
 
-		$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($row->ra_email));
+		$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array($row->ra_email));
 		if ($row2 = $res2->fetch_object()) {
 			$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : $row2->email);
 			$out[] = 'ra-status: Information available';
@@ -209,7 +204,7 @@ if ($format == 'txt') {
 		$longest_key = max($longest_key, strlen(trim(explode(':',$line,2)[0])));
 	}
 
-	echo '% ' . str_repeat('*', OUTPUT_FORMAT_MAX_LINE_LENGTH-2)."\n";
+	echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\n";
 
 	foreach ($out as $line) {
 		if (trim($line) == '') {
@@ -222,13 +217,13 @@ if ($format == 'txt') {
 		$key = trim($ary[0]);
 
 		$value = trim($ary[1]);
-		$value = wordwrap($value, OUTPUT_FORMAT_MAX_LINE_LENGTH - $longest_key - strlen(':') - OUTPUT_FORMAT_SPACER);
-		$value = str_replace("\n", "\n$key:".str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OUTPUT_FORMAT_SPACER), $value);
+		$value = wordwrap($value, OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80) - $longest_key - strlen(':') - OIDplus::config()->getValue('webwhois_output_format_spacer', 2));
+		$value = str_replace("\n", "\n$key:".str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)), $value);
 
-		echo $key.':' . str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OUTPUT_FORMAT_SPACER) . (!empty($value) ? $value : '.') . "\n";
+		echo $key.':' . str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)) . (!empty($value) ? $value : '.') . "\n";
 	}
 
-	echo '% ' . str_repeat('*', OUTPUT_FORMAT_MAX_LINE_LENGTH-2)."\n";
+	echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\n";
 
 	$cont = ob_get_contents();
 	ob_end_clean();
@@ -318,7 +313,7 @@ if ($format == 'xml') {
 function show_asn1_appendix($id) {
 	if (substr($id,0,4) === 'oid:') {
 		$appendix_asn1ids = array();
-		$res3 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($id));
+		$res3 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($id));
 		while ($row3 = $res3->fetch_object()) {
 			$appendix_asn1ids[] = $row3->name;
 		}

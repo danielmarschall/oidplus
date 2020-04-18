@@ -29,54 +29,54 @@ if (!isset($this))    throw new OIDplusException("Argument 'this' is missing; wa
 
 // Change bit(1) types to boolean/tinyint(1)
 if ($this->slang() == 'pgsql') {
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  alter protected    drop default");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  alter protected    type boolean using get_bit(protected   ,0)::boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  alter protected    set default false");
+	$this->query("alter table ###config  alter protected    drop default");
+	$this->query("alter table ###config  alter protected    type boolean using get_bit(protected   ,0)::boolean");
+	$this->query("alter table ###config  alter protected    set default false");
 
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  alter visible      drop default");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  alter visible      type boolean using get_bit(visible     ,0)::boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  alter visible      set default false");
+	$this->query("alter table ###config  alter visible      drop default");
+	$this->query("alter table ###config  alter visible      type boolean using get_bit(visible     ,0)::boolean");
+	$this->query("alter table ###config  alter visible      set default false");
 
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  alter standardized drop default");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  alter standardized type boolean using get_bit(standardized,0)::boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  alter standardized set default false");
+	$this->query("alter table ###asn1id  alter standardized drop default");
+	$this->query("alter table ###asn1id  alter standardized type boolean using get_bit(standardized,0)::boolean");
+	$this->query("alter table ###asn1id  alter standardized set default false");
 
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  alter well_known   drop default");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  alter well_known   type boolean using get_bit(well_known  ,0)::boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  alter well_known   set default false");
+	$this->query("alter table ###asn1id  alter well_known   drop default");
+	$this->query("alter table ###asn1id  alter well_known   type boolean using get_bit(well_known  ,0)::boolean");
+	$this->query("alter table ###asn1id  alter well_known   set default false");
 
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     alter longarc      drop default");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     alter longarc      type boolean using get_bit(longarc     ,0)::boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     alter longarc      set default false");
+	$this->query("alter table ###iri     alter longarc      drop default");
+	$this->query("alter table ###iri     alter longarc      type boolean using get_bit(longarc     ,0)::boolean");
+	$this->query("alter table ###iri     alter longarc      set default false");
 
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     alter well_known   drop default");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     alter well_known   type boolean using get_bit(well_known  ,0)::boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     alter well_known   set default false");
+	$this->query("alter table ###iri     alter well_known   drop default");
+	$this->query("alter table ###iri     alter well_known   type boolean using get_bit(well_known  ,0)::boolean");
+	$this->query("alter table ###iri     alter well_known   set default false");
 
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."objects alter confidential type boolean using get_bit(confidential,0)::boolean");
+	$this->query("alter table ###objects alter confidential type boolean using get_bit(confidential,0)::boolean");
 
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."ra      alter privacy      drop default");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."ra      alter privacy      type boolean using get_bit(privacy     ,0)::boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."ra      alter privacy      set default false");
+	$this->query("alter table ###ra      alter privacy      drop default");
+	$this->query("alter table ###ra      alter privacy      type boolean using get_bit(privacy     ,0)::boolean");
+	$this->query("alter table ###ra      alter privacy      set default false");
 } else if ($this->slang() == 'mysql') {
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  modify protected    boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."config  modify visible      boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  modify standardized boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."asn1id  modify well_known   boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     modify longarc      boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."iri     modify well_known   boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."objects modify confidential boolean");
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."ra      modify privacy      boolean");
+	$this->query("alter table ###config  modify protected    boolean");
+	$this->query("alter table ###config  modify visible      boolean");
+	$this->query("alter table ###asn1id  modify standardized boolean");
+	$this->query("alter table ###asn1id  modify well_known   boolean");
+	$this->query("alter table ###iri     modify longarc      boolean");
+	$this->query("alter table ###iri     modify well_known   boolean");
+	$this->query("alter table ###objects modify confidential boolean");
+	$this->query("alter table ###ra      modify privacy      boolean");
 }
 
 // Rename log_user.user to log_user.username, since user is a keyword in PostgreSQL and MSSQL
 if ($this->slang() == 'pgsql') {
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."log_user rename column \"user\" to \"username\"");
+	$this->query("alter table ###log_user rename column \"user\" to \"username\"");
 } else if ($this->slang() == 'mysql') {
-	$this->query("alter table ".OIDPLUS_TABLENAME_PREFIX."log_user change `user` `username` varchar(255) NOT NULL");
+	$this->query("alter table ###log_user change `user` `username` varchar(255) NOT NULL");
 }
 
 $version = 202;
-$this->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."config SET value = ? WHERE name = 'database_version'", array($version));
+$this->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
 
 $this->transaction_commit();

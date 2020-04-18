@@ -20,7 +20,7 @@
 if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
-	private $conn;
+	private $conn = null;
 	private $last_error = null; // we need that because PDO divides prepared statement errors and normal query errors, but we have only one "error()" method
 
 	public static function getPluginInformation(): array {
@@ -36,13 +36,7 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 		return "PDO";
 	}
 
-	public function __construct() {
-		if (!defined('OIDPLUS_PDO_DSN'))      define('OIDPLUS_PDO_DSN',      'mysql:host=localhost;dbname=oidplus;CHARSET=UTF8');
-		if (!defined('OIDPLUS_PDO_USERNAME')) define('OIDPLUS_PDO_USERNAME', 'root');
-		if (!defined('OIDPLUS_PDO_PASSWORD')) define('OIDPLUS_PDO_PASSWORD', ''); // base64 encoded
-	}
-
-	public function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			$res = $this->conn->query($sql);
@@ -114,7 +108,10 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 			];
 
 			// Try connecting to the database
-			$this->conn = new PDO(OIDPLUS_PDO_DSN, OIDPLUS_PDO_USERNAME, base64_decode(OIDPLUS_PDO_PASSWORD), $options);
+			$dsn      = OIDplus::baseConfig()->getValue('PDO_DSN',      'mysql:host=localhost;dbname=oidplus;CHARSET=UTF8');
+			$username = OIDplus::baseConfig()->getValue('PDO_USERNAME', 'root');
+			$password = OIDplus::baseConfig()->getValue('PDO_PASSWORD', '');
+			$this->conn = new PDO($dsn, $username, $password, $options);
 		} catch (PDOException $e) {
 			$message = $e->getMessage();
 			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);

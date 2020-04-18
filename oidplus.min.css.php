@@ -19,15 +19,12 @@
 
 use MatthiasMullie\Minify;
 
-define('DO_MINIFY', true);
-
+require_once __DIR__ . '/includes/oidplus.inc.php';
 require_once __DIR__ . '/3p/minify/path-converter/ConverterInterface.php';
 require_once __DIR__ . '/3p/minify/path-converter/Converter.php';
 require_once __DIR__ . '/3p/minify/src/Minify.php';
 require_once __DIR__ . '/3p/minify/src/CSS.php';
 require_once __DIR__ . '/3p/minify/src/Exception.php';
-
-require_once __DIR__ . '/includes/color_utils.inc.php';
 
 error_reporting(E_ALL);
 
@@ -37,7 +34,7 @@ $out = '';
 
 function process_file($filename) {
 	$dir = dirname((strpos($filename, __DIR__.'/') === 0) ? substr($filename, strlen(__DIR__.'/')) : $filename);
-	if (DO_MINIFY) {
+	if (OIDplus::baseConfig()->getValue('MINIFY_CSS', true)) {
 		$minifier = new Minify\CSS($filename);
 		$cont = $minifier->minify();
 		$cont = str_ireplace("url(data:", "url###(data:", $cont);
@@ -50,12 +47,12 @@ function process_file($filename) {
 		$cont = str_ireplace("url('", "url('".$dir.'/', $cont);
 	}
 	$cont = str_ireplace("url###(", "url(", $cont);
-	return $cont;
+	return $cont."\n\n";
 }
 
 # ---
 
-$out .= process_file(__DIR__ . '/oidplus_base.css')."\n\n";
+$out .= process_file(__DIR__ . '/oidplus_base.css');
 
 foreach (array('publicPages','adminPages','raPages') as $pudir) {
 	$ary = glob(__DIR__ . '/plugins/'.$pudir.'/'.'*'.'/style.css');
@@ -63,9 +60,9 @@ foreach (array('publicPages','adminPages','raPages') as $pudir) {
 	foreach ($ary as $a) $out .= process_file($a);
 }
 
-$out .= process_file(__DIR__ . '/3p/jstree/themes/default/style.css')."\n\n";
-$out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui.css')."\n\n";
-$out .= process_file(__DIR__ . '/3p/bootstrap/css/bootstrap.css')."\n\n";
+$out .= process_file(__DIR__ . '/3p/jstree/themes/default/style.css');
+$out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui.css');
+$out .= process_file(__DIR__ . '/3p/bootstrap/css/bootstrap.css');
 
 # ---
 

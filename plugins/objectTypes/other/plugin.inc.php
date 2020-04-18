@@ -119,7 +119,7 @@ class OIDplusOther extends OIDplusObject {
 		if ($this->isRoot()) {
 			$title = OIDplusOther::objectTypeTitle();
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where parent = ?", array(self::root()));
+			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
 			if ($res->num_rows() > 0) {
 				$content  = 'Please select an object in the tree view at the left to show its contents.';
 			} else {

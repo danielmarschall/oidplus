@@ -13,59 +13,59 @@ OIDplus::init(true);
 
 # ---
 
-$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?", array("oid:%"));
+$res = OIDplus::db()->query("select * from ###objects where id like ?", array("oid:%"));
 while ($row = $res->fetch_array()) {
 	list ($ns, $ida) = explode(':', $row['id']);
 	$idb = sanitizeOID($ida);
 	if (!$idb) continue;
 	if ($ida != $idb) {
 		echo "$ida -> $idb\n";
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."log_object set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ###objects set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ###log_object set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
 	}
 }
 
 # ---
 
-$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?", array("ipv4:%"));
+$res = OIDplus::db()->query("select * from ###objects where id like ?", array("ipv4:%"));
 while ($row = $res->fetch_array()) {
 	list ($ns, $ida) = explode(':', $row['id']);
 	$idb = ipv4_normalize($ida);
 	if (!$idb) continue;
 	if ($ida != $idb) {
 		echo "$ida -> $idb\n";
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."log_object set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ###objects set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ###log_object set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
 	}
 }
 
 # ---
 
-$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?", array("ipv6:%"));
+$res = OIDplus::db()->query("select * from ###objects where id like ?", array("ipv6:%"));
 while ($row = $res->fetch_array()) {
 	list ($ns, $ida) = explode(':', $row['id']);
 	$idb = ipv6_normalize($ida);
 	if (!$idb) continue;
 	if ($ida != $idb) {
 		echo "$ida -> $idb\n";
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."log_object set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ###objects set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ###log_object set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
 	}
 }
 
 # ---
 
-$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id like ?", array("guid:%"));
+$res = OIDplus::db()->query("select * from ###objects where id like ?", array("guid:%"));
 while ($row = $res->fetch_array()) {
 	list ($ns, $ida) = explode(':', $row['id']);
 	$idb = uuid_canonize($ida);
 	if (!$idb) continue;
 	if ($ida != $idb) {
 		echo "$ida -> $idb\n";
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."objects set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."log_object set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."asn1id set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
-		OIDplus::db()->query("update ".OIDPLUS_TABLENAME_PREFIX."iri set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ###objects set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ###log_object set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ###asn1id set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
+		OIDplus::db()->query("update ###iri set id = ? where id = ?", array($ns.':'.$idb, $ns.':'.$ida));
 	}
 }
 

@@ -52,7 +52,7 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 				throw new OIDplusException('eMail address is invalid.');
 			}
 
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($email)); // TODO: this should be a static function in the RA class
+			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email)); // TODO: this should be a static function in the RA class
 			if ($res->num_rows() > 0) {
 				throw new OIDplusException('RA does already exist');
 			}

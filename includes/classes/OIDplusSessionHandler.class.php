@@ -19,13 +19,14 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-define('SESSION_LIFETIME', 30*60); // TODO: Configure. Current default: 30 minutes
-
 class OIDplusSessionHandler {
 
 	protected $secret = '';
 
-	function __construct($secret) {
+	function __construct() {
+		$this->sessionLifetime = OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60);
+		$this->secret = OIDplus::baseConfig()->getValue('SERVER_SECRET');
+
 		// **PREVENTING SESSION HIJACKING**
 		// Prevents javascript XSS attacks aimed to steal the session ID
 		@ini_set('session.cookie_httponly', 1);
@@ -48,15 +49,13 @@ class OIDplusSessionHandler {
 
 		@ini_set('session.use_strict_mode', 1);
 
-		@ini_set('session.gc_maxlifetime', SESSION_LIFETIME);
-
-		$this->secret = $secret;
+		@ini_set('session.gc_maxlifetime', $this->sessionLifetime);
 	}
 
 	protected function sessionSafeStart() {
 		if (!isset($_SESSION)) {
 			// TODO: session_name() makes some problems. Leave it away for now.
-			//session_name('OIDPLUS_SESHDLR');
+			//session_name('OIDplus_SESHDLR');
 			if (!session_start()) {
 				throw new OIDplusException("Session could not be started");
 			}
@@ -81,7 +80,7 @@ class OIDplusSessionHandler {
 
 	public function setValue($name, $value) {
 		$this->sessionSafeStart();
-		setcookie(session_name(),session_id(),time()+SESSION_LIFETIME, ini_get('session.cookie_path'));
+		setcookie(session_name(),session_id(),time()+$this->sessionLifetime, ini_get('session.cookie_path'));
 
 		$_SESSION[$name] = self::encrypt($value, $this->secret);
 	}
@@ -90,7 +89,7 @@ class OIDplusSessionHandler {
 		if (!isset($_COOKIE[session_name()])) return null; // GDPR: Only start a session when we really need one
 
 		$this->sessionSafeStart();
-		setcookie(session_name(),session_id(),time()+SESSION_LIFETIME, ini_get('session.cookie_path'));
+		setcookie(session_name(),session_id(),time()+$this->sessionLifetime, ini_get('session.cookie_path'));
 
 		if (!isset($_SESSION[$name])) return null;
 		return self::decrypt($_SESSION[$name], $this->secret);
@@ -100,7 +99,7 @@ class OIDplusSessionHandler {
 		if (!isset($_COOKIE[session_name()])) return;
 
 		$this->sessionSafeStart();
-		setcookie(session_name(),session_id(),time()+SESSION_LIFETIME, ini_get('session.cookie_path'));
+		setcookie(session_name(),session_id(),time()+$this->sessionLifetime, ini_get('session.cookie_path'));
 
 		$_SESSION = array();
 		session_destroy();

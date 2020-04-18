@@ -62,9 +62,9 @@ rebuild_config_callbacks.push(function() {
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'MySQL') return '';
 
-	return '<b>define</b>(\'OIDPLUS_MYSQL_HOST\',       \''+document.getElementById('mysql_host').value+'\');<br>' +
-	       '<b>define</b>(\'OIDPLUS_MYSQL_USERNAME\',   \''+document.getElementById('mysql_username').value+'\');<br>' +
-	       '<b>define</b>(\'OIDPLUS_MYSQL_PASSWORD\',   \''+b64EncodeUnicode(document.getElementById('mysql_password').value)+'\'); // base64 encoded<br>' +
-	       '<b>define</b>(\'OIDPLUS_MYSQL_DATABASE\',   \''+document.getElementById('mysql_database').value+'\');<br>';
+	return 'OIDplus::baseConfig()->setValue(\'MYSQL_HOST\',        \''+document.getElementById('mysql_host').value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'MYSQL_USERNAME\',    \''+document.getElementById('mysql_username').value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'MYSQL_PASSWORD\',    base64_decode(\''+b64EncodeUnicode(document.getElementById('mysql_password').value)+'\'));<br>' +
+	       'OIDplus::baseConfig()->setValue(\'MYSQL_DATABASE\',    \''+document.getElementById('mysql_database').value+'\');<br>';
 });
 </script>

@@ -112,16 +112,16 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		natsort($nonConfidential);
 
 		foreach ($nonConfidential as $id) {
-			$res = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."objects where id = ?", array($id));
+			$res = OIDplus::db()->query("select * from ###objects where id = ?", array($id));
 			if ($row = $res->fetch_object()) {
 				$elements['identifier'] = array();
-				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."asn1id where oid = ?", array($row->id));
+				$res2 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($row->id));
 				while ($row2 = $res2->fetch_object()) {
 					$elements['identifier'][] = $row2->name; // 'unicode-label' is currently not in the standard format (oid.xsd)
 				}
 
 				$elements['unicode-label'] = array();
-				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."iri where oid = ?", array($row->id));
+				$res2 = OIDplus::db()->query("select * from ###iri where oid = ?", array($row->id));
 				while ($row2 = $res2->fetch_object()) {
 					$elements['unicode-label'][] = $row2->name;
 				}
@@ -177,7 +177,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				$elements['current-registrant']['fax'] = '';
 				$elements['current-registrant']['address'] = '';
 
-				$res2 = OIDplus::db()->query("select * from ".OIDPLUS_TABLENAME_PREFIX."ra where email = ?", array($row->ra_email));
+				$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array($row->ra_email));
 				if ($res2->num_rows() > 0) {
 					$row2 = $res2->fetch_object();
 					

@@ -69,6 +69,6 @@ if ($this->slang() == 'mssql') {
 }
 
 $version = 203;
-$this->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."config SET value = ? WHERE name = 'database_version'", array($version));
+$this->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
 
 $this->transaction_commit();

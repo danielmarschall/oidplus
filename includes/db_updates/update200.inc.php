@@ -29,9 +29,9 @@ if (!isset($this))    throw new OIDplusException("Argument 'this' is missing; wa
 
 $this->transaction_begin();
 
-$this->query("ALTER TABLE ".OIDPLUS_TABLENAME_PREFIX."objects ADD comment varchar(255) NULL");
+$this->query("ALTER TABLE ###objects ADD comment varchar(255) NULL");
 
 $version = 201;
-$this->query("UPDATE ".OIDPLUS_TABLENAME_PREFIX."config SET value = ? WHERE name = 'database_version'", array($version));
+$this->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
 
 $this->transaction_commit();

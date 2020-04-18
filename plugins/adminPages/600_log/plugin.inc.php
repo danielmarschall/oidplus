@@ -55,15 +55,15 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 				return $out;
 			}
 
-			$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event from ".OIDPLUS_TABLENAME_PREFIX."log lo ".
-			                            "left join ".OIDPLUS_TABLENAME_PREFIX."log_user lu on lu.log_id = lo.id ".
+			$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event from ###log lo ".
+			                            "left join ###log_user lu on lu.log_id = lo.id ".
 			                            //"where lu.username = 'admin' " .
 			                            "order by lo.unix_ts desc");
 			if ($res->num_rows() > 0) {
 				$out['text'] = '<pre>';
 				while ($row = $res->fetch_array()) {
 					$users = array();
-					$res2 = OIDplus::db()->query("select username from ".OIDPLUS_TABLENAME_PREFIX."log_user ".
+					$res2 = OIDplus::db()->query("select username from ###log_user ".
 					                             "where log_id = ?", array($row['id']));
 					while ($row2 = $res2->fetch_array()) {
 						$users[] = $row2['username'];
