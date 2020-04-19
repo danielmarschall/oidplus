@@ -32,40 +32,50 @@ class OIDplus {
 	private function __construct() {
 	}
 
-	# --- Singleton classes
-
-	private static $baseConfigLoaded = false;
+	# --- Static classes
+	
+	private static $baseConfig = null;
+	private static $old_config_format = false;
 	public static function baseConfig() {
-		static $baseConfig = null;
-		if (is_null($baseConfig)) {
-			$baseConfig = new OIDplusBaseConfig();
+		$first_init = false;
+		
+		if ($first_init = is_null(self::$baseConfig)) {
+			self::$baseConfig = new OIDplusBaseConfig();
 		}
 
-		if (!self::$baseConfigLoaded) {
-			self::$baseConfigLoaded = true;
-
+		if ($first_init) {
 			// Include a file containing various size/depth limitations of OIDs
 			// It is important to include it before config.inc.php was included,
 			// so we can give config.inc.php the chance to override the values.
 
-			include_once __DIR__ . '/../limits.inc.php';
+			include __DIR__ . '/../limits.inc.php';
 
 			// Include config file
 
 			if (file_exists(__DIR__ . '/../config.inc.php')) {
-				include_once __DIR__ . '/../config.inc.php';
+				if (self::$old_config_format) {
+					// Note: We may only include it once due to backwards compatibility,
+					//       since in version 2.0, the configuration was defined using define() statements
+					// Attention: This does mean that a full re-init (e.g. for test cases) is not possible
+					//            if a version 2.0 config is used!
+					include_once __DIR__ . '/../config.inc.php';
+				} else {
+					include __DIR__ . '/../config.inc.php';
+				}
 
 				if (defined('OIDPLUS_CONFIG_VERSION') && (OIDPLUS_CONFIG_VERSION == 2.0)) {
+					self::$old_config_format = true;
+					
 					// Backwards compatibility 2.0 => 2.1
 					foreach (get_defined_constants(true)['user'] as $name => $value) {
 						$name = str_replace('OIDPLUS_', '', $name);
 						if ($name == 'SESSION_SECRET') $name = 'SERVER_SECRET';
 						if ($name == 'MYSQL_QUERYLOG') $name = 'QUERY_LOGFILE';
 						if (($name == 'MYSQL_PASSWORD') || ($name == 'ODBC_PASSWORD') || ($name == 'PDO_PASSWORD') || ($name == 'PGSQL_PASSWORD')) {
-							$baseConfig->setValue($name, base64_decode($value));
+							self::$baseConfig->setValue($name, base64_decode($value));
 						} else {
 							if ($name == 'CONFIG_VERSION') $value = 2.1;
-							$baseConfig->setValue($name, $value);
+							self::$baseConfig->setValue($name, $value);
 						}
 					}
 				}
@@ -85,72 +95,131 @@ class OIDplus {
 
 			// Check important config settings
 
-			if ($baseConfig->getValue('CONFIG_VERSION') != 2.1) {
+			if (self::$baseConfig->getValue('CONFIG_VERSION') != 2.1) {
 				throw new OIDplusConfigInitializationException("The information located in includes/config.inc.php is outdated.");
 			}
 
-			if ($baseConfig->getValue('SERVER_SECRET', '') === '') {
+			if (self::$baseConfig->getValue('SERVER_SECRET', '') === '') {
 				throw new OIDplusConfigInitializationException("You must set a value for SERVER_SECRET in includes/config.inc.php for the system to operate secure.");
 			}
 		}
 
-		return $baseConfig;
+		return self::$baseConfig;
 	}
 
+	private static $config = null;
 	public static function config() {
-		static $config = null;
-		if (is_null($config)) {
-			$config = new OIDplusConfig();
+		if ($first_init = is_null(self::$config)) {
+			self::$config = new OIDplusConfig();
 		}
-		return $config;
+
+		if ($first_init) {
+			// These are important settings for base functionalities and therefore are not inside plugins
+			self::$config->prepareConfigKey('system_title', 'What is the name of your RA?', 'OIDplus 2.0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+				if (empty($value)) {
+					throw new OIDplusException("Please enter a value for the system title.");
+				}
+			});
+			self::$config->prepareConfigKey('admin_email', 'E-Mail address of the system administrator', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+				if (!empty($value) && !OIDplus::mailUtils()->validMailAddress($value)) {
+					throw new OIDplusException("This is not a correct email address");
+				}
+			});
+			self::$config->prepareConfigKey('global_cc', 'Global CC for all outgoing emails?', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+				if (!empty($value) && !OIDplus::mailUtils()->validMailAddress($value)) {
+					throw new OIDplusException("This is not a correct email address");
+				}
+			});
+			self::$config->prepareConfigKey('objecttypes_initialized', 'List of object type plugins that were initialized once', '', OIDplusConfig::PROTECTION_READONLY, function($value) {
+				// Nothing here yet
+			});
+			self::$config->prepareConfigKey('objecttypes_enabled', 'Enabled object types and their order, separated with a semicolon (please reload the page so that the change is applied)', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+				# TODO: when objecttypes_enabled is changed at the admin control panel, we need to do a reload of the page, so that jsTree will be updated. Is there anything we can do?
+
+				$ary = explode(';',$value);
+				$uniq_ary = array_unique($ary);
+
+				if (count($ary) != count($uniq_ary)) {
+					throw new OIDplusException("Please check your input. Some object types are double.");
+				}
+
+				foreach ($ary as $ot_check) {
+					$ns_found = false;
+					foreach (OIDplus::getEnabledObjectTypes() as $ot) {
+						if ($ot::ns() == $ot_check) {
+							$ns_found = true;
+							break;
+						}
+					}
+					foreach (OIDplus::getDisabledObjectTypes() as $ot) {
+						if ($ot::ns() == $ot_check) {
+							$ns_found = true;
+							break;
+						}
+					}
+					if (!$ns_found) {
+						throw new OIDplusException("Please check your input. Namespace \"$ot_check\" is not found");
+					}
+				}
+			});
+			self::$config->prepareConfigKey('oidplus_private_key', 'Private key for this system', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
+				// Nothing here yet
+			});
+			self::$config->prepareConfigKey('oidplus_public_key', 'Public key for this system. If you "clone" your system, you must delete this key (e.g. using phpMyAdmin), so that a new one is created.', '', OIDplusConfig::PROTECTION_READONLY, function($value) {
+				// Nothing here yet
+			});
+
+		}
+
+		return self::$config;
 	}
 
+	private static $gui = null;
 	public static function gui() {
-		static $gui = null;
-		if (is_null($gui)) {
-			$gui = new OIDplusGui();
+		if (is_null(self::$gui)) {
+			self::$gui = new OIDplusGui();
 		}
-		return $gui;
+		return self::$gui;
 	}
 
+	private static $authUtils = null;
 	public static function authUtils() {
-		static $authUtils = null;
-		if (is_null($authUtils)) {
-			$authUtils = new OIDplusAuthUtils();
+		if (is_null(self::$authUtils)) {
+			self::$authUtils = new OIDplusAuthUtils();
 		}
-		return $authUtils;
+		return self::$authUtils;
 	}
 
+	private static $mailUtils = null;
 	public static function mailUtils() {
-		static $mailUtils = null;
-		if (is_null($mailUtils)) {
-			$mailUtils = new OIDplusMailUtils();
+		if (is_null(self::$mailUtils)) {
+			self::$mailUtils = new OIDplusMailUtils();
 		}
-		return $mailUtils;
+		return self::$mailUtils;
 	}
 
+	private static $menuUtils = null;
 	public static function menuUtils() {
-		static $menuUtils = null;
-		if (is_null($menuUtils)) {
-			$menuUtils = new OIDplusMenuUtils();
+		if (is_null(self::$menuUtils)) {
+			self::$menuUtils = new OIDplusMenuUtils();
 		}
-		return $menuUtils;
+		return self::$menuUtils;
 	}
 
+	private static $logger = null;
 	public static function logger() {
-		static $logger = null;
-		if (is_null($logger)) {
-			$logger = new OIDplusLogger();
+		if (is_null(self::$logger)) {
+			self::$logger = new OIDplusLogger();
 		}
-		return $logger;
+		return self::$logger;
 	}
 
+	private static $sesHandler = null;
 	public static function sesHandler() {
-		static $sesHandler = null;
-		if (is_null($sesHandler)) {
-			$sesHandler = new OIDplusSessionHandler();
+		if (is_null(self::$sesHandler)) {
+			self::$sesHandler = new OIDplusSessionHandler();
 		}
-		return $sesHandler;
+		return self::$sesHandler;
 	}
 
 	# --- Database plugin
@@ -336,8 +405,34 @@ class OIDplus {
 	public static function init($html=true) {
 		self::$html = $html;
 
-		self::$baseConfigLoaded = false; // invalidate previously loaded base configuration
-		self::baseConfig(); // this loads the base configuration located in config.inc.php
+		// Reset internal state, so we can re-init verything if required
+		
+		if (self::$old_config_format) {
+			// Note: This can only happen in very special cases (e.g. test cases) where you call init() twice
+			throw new OIDplusConfigInitializationException('A full re-initialization is not possible if a version 2.0 config file (containing "defines") is used. Please update to a config 2.1 file by running setup again.');
+		}
+		
+		self::$config = null;
+		self::$baseConfig = null;
+		self::$gui = null;
+		self::$authUtils = null;
+		self::$mailUtils = null;
+		self::$menuUtils = null;
+		self::$logger = null;
+		self::$sesHandler = null;
+		self::$pagePlugins = array();
+		self::$authPlugins = array();
+		self::$objectTypePlugins = array();
+		self::$enabledObjectTypes = array();
+		self::$disabledObjectTypes = array();
+		self::$dbPlugins = array();
+		self::$system_id_cache = null;
+		self::$sslAvailableCache = null;
+
+		// Continue...
+
+		OIDplus::baseConfig(); // this loads the base configuration located in config.inc.php (once!)
+		                       // You can do changes to the configuration afterwards using OIDplus::baseConfig()->...
 
 		// Register database types (highest priority)
 
@@ -358,10 +453,9 @@ class OIDplus {
 
 		self::isSslAvailable(); // This function does automatic redirects
 
-		// Construct the configuration manager once
-		// During the construction, various system settings are prepared if required
+		// Construct the configuration manager
 
-		OIDplus::config();
+		OIDplus::config(); // During the construction, various system settings are prepared if required
 
 		// Initialize public / private keys
 
@@ -381,7 +475,7 @@ class OIDplus {
 		foreach (get_declared_classes() as $c) {
 			if (!(new ReflectionClass($c))->isAbstract()) {
 				if (is_subclass_of($c, 'OIDplusPagePlugin')) {
-						self::registerPagePlugin(new $c());
+					self::registerPagePlugin(new $c());
 				}
 				if (is_subclass_of($c, 'OIDplusAuthPlugin')) {
 					self::registerAuthPlugin(new $c());
@@ -470,14 +564,14 @@ class OIDplus {
 		$pubKey = OIDplus::config()->getValue('oidplus_public_key');
 
 		if ($try_generate && !verify_private_public_key($privKey, $pubKey)) {
-			$config = array(
+			$pkey_config = array(
 			    "digest_alg" => "sha512",
 			    "private_key_bits" => 2048,
 			    "private_key_type" => OPENSSL_KEYTYPE_RSA,
 			);
 
 			// Create the private and public key
-			$res = openssl_pkey_new($config);
+			$res = openssl_pkey_new($pkey_config);
 
 			if (!$res) return false;
 

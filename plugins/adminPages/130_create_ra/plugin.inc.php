@@ -78,10 +78,6 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 		// Nothing
 	}
 
-	public function cfgSetValue($name, $value) {
-		// Nothing
-	}
-
 	public function gui($id, &$out, &$handled) {
 		if ($id == 'oidplus:create_ra') {
 			$handled = true;

@@ -39,28 +39,24 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('resource_plugin_autoopen_level', 'Resource plugin: How many levels should be open in the treeview when OIDplus is loaded?', 1, 0, 1);
-		OIDplus::config()->prepareConfigKey('resource_plugin_title',          'Resource plugin: Title of the resource section?', 'Documents and resources', 0, 1);
-		OIDplus::config()->prepareConfigKey('resource_plugin_path',           'Resource plugin: Path that contains the documents?', 'res/', 0, 1);
-		OIDplus::config()->prepareConfigKey('resource_plugin_hide_empty_path','Resource plugin: Hide empty paths? 1=on, 0=off', 1, 0, 1);
-	}
-
-	public function cfgSetValue($name, $value) {
-		if ($name == 'resource_plugin_autoopen_level') {
+		OIDplus::config()->prepareConfigKey('resource_plugin_autoopen_level', 'Resource plugin: How many levels should be open in the treeview when OIDplus is loaded?', 1, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException("Please enter a valid value.");
 			}
-		}
-		
-		if ($name == 'resource_plugin_path') {
+		});
+		OIDplus::config()->prepareConfigKey('resource_plugin_title',          'Resource plugin: Title of the resource section?', 'Documents and resources', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (empty($value)) {
+				throw new OIDplusException("Please enter a title.");
+			}
+		});
+		OIDplus::config()->prepareConfigKey('resource_plugin_path',           'Resource plugin: Path that contains the documents?', 'res/', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			// TODO: check if path exists
-		}
-		
-		if ($name == 'resource_plugin_hide_empty_path') {
+		});
+		OIDplus::config()->prepareConfigKey('resource_plugin_hide_empty_path','Resource plugin: Hide empty paths? 1=on, 0=off', 1, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || (($value != 0) && ($value != 1))) {
 				throw new OIDplusException("Please enter a valid value (0=off, 1=on).");
 			}
-		}
+		});
 	}
 
 	private static function getDocumentTitle($file) {

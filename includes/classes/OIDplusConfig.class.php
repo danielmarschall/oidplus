@@ -24,10 +24,32 @@ if (!defined('IN_OIDPLUS')) die();
 // e.g. database access credentials.
 class OIDplusConfig implements OIDplusConfigInterface {
 
+	public const PROTECTION_EDITABLE = 0;
+	public const PROTECTION_READONLY = 1;
+	public const PROTECTION_HIDDEN   = 2;
+
 	protected $values = array();
 	protected $dirty = true;
+	protected $validateCallbacks = array();
 
-	public function prepareConfigKey($name, $description, $init_value, $protected, $visible) {
+	public function prepareConfigKey($name, $description, $init_value, $protection, $validateCallback) {
+		switch ($protection) {
+			case OIDplusConfig::PROTECTION_EDITABLE:
+				$protected = 0;
+				$visible   = 1;
+				break;
+			case OIDplusConfig::PROTECTION_READONLY:
+				$protected = 1;
+				$visible   = 1;
+				break;
+			case OIDplusConfig::PROTECTION_HIDDEN:
+				$protected = 1;
+				$visible   = 0;
+				break;
+			default:
+				throw new OIDplusException("Invalid protection flag, use OIDplusConfig::PROTECTION_* constants");
+		}
+	
 		if (strlen($name) > 50) {
 			throw new OIDplusException("Config key name '$name' is too long. (max 50).");
 		}
@@ -39,19 +61,9 @@ class OIDplusConfig implements OIDplusConfigInterface {
 			OIDplus::db()->query("insert into ###config (name, description, value, protected, visible) values (?, ?, ?, ?, ?)", array($name, $description, $init_value, $protected, $visible));
 			$this->values[$name] = $init_value;
 		}
-	}
-
-	public function __construct() {
-
-		// These are important settings for base functionalities and therefore are not inside plugins
-		$this->prepareConfigKey('system_title', 'What is the name of your RA?', 'OIDplus 2.0', 0, 1);
-		$this->prepareConfigKey('admin_email', 'E-Mail address of the system administrator', '', 0, 1);
-		$this->prepareConfigKey('global_cc', 'Global CC for all outgoing emails?', '', 0, 1);
-		$this->prepareConfigKey('objecttypes_initialized', 'List of object type plugins that were initialized once', '', 1, 1);
-		$this->prepareConfigKey('objecttypes_enabled', 'Enabled object types and their order, separated with a semicolon (please reload the page so that the change is applied)', '', 0, 1);
-		$this->prepareConfigKey('oidplus_private_key', 'Private key for this system', '', 1, 0);
-		$this->prepareConfigKey('oidplus_public_key', 'Public key for this system. If you "clone" your system, you must delete this key (e.g. using phpMyAdmin), so that a new one is created.', '', 1, 1);
-
+		if (!is_null($validateCallback)) {
+			$this->validateCallbacks[$name] = $validateCallback;
+		}
 	}
 
 	protected function buildConfigArray() {
@@ -80,67 +92,11 @@ class OIDplusConfig implements OIDplusConfigInterface {
 	}
 
 	public function setValue($name, $value) {
-		// Check for valid values
+		// Give plugins the possibility to stop the process by throwing an Exception (e.g. if the value is invalid)
+		// Required is that the plugin previously prepared the config setting
 
-		if ($name == 'system_title') {
-			if (empty($value)) {
-				throw new OIDplusException("Please enter a value for the system title.");
-
-			}
-		}
-
-		if (($name == 'global_cc') || ($name == 'admin_email')) {
-			if (!empty($value) && !OIDplus::mailUtils()->validMailAddress($value)) {
-				throw new OIDplusException("This is not a correct email address");
-			}
-		}
-
-		if ($name == 'objecttypes_initialized') {
-			// Nothing here yet
-		}
-
-		if ($name == 'objecttypes_enabled') {
-			# TODO: when objecttypes_enabled is changed at the admin control panel, we need to do a reload of the page, so that jsTree will be updated. Is there anything we can do?
-
-			$ary = explode(';',$value);
-			$uniq_ary = array_unique($ary);
-
-			if (count($ary) != count($uniq_ary)) {
-				throw new OIDplusException("Please check your input. Some object types are double.");
-			}
-
-			foreach ($ary as $ot_check) {
-				$ns_found = false;
-				foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-					if ($ot::ns() == $ot_check) {
-						$ns_found = true;
-						break;
-					}
-				}
-				foreach (OIDplus::getDisabledObjectTypes() as $ot) {
-					if ($ot::ns() == $ot_check) {
-						$ns_found = true;
-						break;
-					}
-				}
-				if (!$ns_found) {
-					throw new OIDplusException("Please check your input. Namespace \"$ot_check\" is not found");
-				}
-			}
-		}
-
-		if ($name == 'oidplus_private_key') {
-			// Nothing here yet
-		}
-
-		if ($name == 'oidplus_public_key') {
-			// Nothing here yet
-		}
-
-		// Give plugins the possibility to stop the process (e.g. if the value is invalid)
-
-		foreach (OIDplus::getPagePlugins('*') as $plugin) {
-			$plugin->cfgSetValue($name, $value);
+		if (isset($this->validateCallbacks[$name])) {
+			$this->validateCallbacks[$name]($value);
 		}
 
 		// Now change the value in the database

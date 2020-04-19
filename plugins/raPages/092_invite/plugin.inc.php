@@ -103,21 +103,16 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0', 0, 1);
-		OIDplus::config()->prepareConfigKey('ra_invitation_enabled', 'May RAs be invited?', '1', 0, 1);
-	}
-
-	public function cfgSetValue($name, $value) {
-		if ($name == 'max_ra_invite_time') {
+		OIDplus::config()->prepareConfigKey('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException("Please enter a valid value.");
 			}
-		}
-		else if ($name == 'ra_invitation_enabled') {
+		});
+		OIDplus::config()->prepareConfigKey('ra_invitation_enabled', 'May RAs be invited?', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != 0) && ($value != 1)) {
 				throw new OIDplusException("Please enter a valid value: 0 or 1.");
 			}
-		}
+		});
 	}
 
 	public function gui($id, &$out, &$handled) {

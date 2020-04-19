@@ -40,9 +40,6 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 	public function init($html=true) {
 	}
 
-	public function cfgSetValue($name, $value) {
-	}
-
 	public function gui($id, &$out, &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:rainfo') {
 			$handled = true;

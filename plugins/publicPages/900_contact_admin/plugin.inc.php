@@ -42,10 +42,6 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePluginPublic {
 		// Nothing
 	}
 
-	public function cfgSetValue($name, $value) {
-		// Nothing
-	}
-
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:contact') {
 			$handled = true;

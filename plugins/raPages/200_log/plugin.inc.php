@@ -40,9 +40,6 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 	public function init($html=true) {
 	}
 
-	public function cfgSetValue($name, $value) {
-	}
-
 	public function gui($id, &$out, &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:ra_log') {
 			$handled = true;

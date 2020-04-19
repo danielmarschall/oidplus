@@ -21,9 +21,10 @@ if (!defined('IN_OIDPLUS')) die();
 
 class OIDplusSessionHandler {
 
-	protected $secret = '';
+	private $secret = '';
+	protected $sessionLifetime = '';
 
-	function __construct() {
+	public function __construct() {
 		$this->sessionLifetime = OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60);
 		$this->secret = OIDplus::baseConfig()->getValue('SERVER_SECRET');
 

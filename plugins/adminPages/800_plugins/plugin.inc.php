@@ -40,9 +40,6 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 	public function init($html=true) {
 	}
 
-	public function cfgSetValue($name, $value) {
-	}
-
 	public function gui($id, &$out, &$handled) {
 		$parts = explode('.',$id,2);
 		if (!isset($parts[1])) $parts[1] = '';

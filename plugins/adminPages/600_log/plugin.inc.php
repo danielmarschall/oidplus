@@ -40,9 +40,6 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 	public function init($html=true) {
 	}
 
-	public function cfgSetValue($name, $value) {
-	}
-
 	public function gui($id, &$out, &$handled) {
 		if ($id == 'oidplus:system_log') {
 			$handled = true;

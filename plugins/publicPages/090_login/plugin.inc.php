@@ -113,9 +113,6 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 	public function init($html=true) {
 	}
 
-	public function cfgSetValue($name, $value) {
-	}
-
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:login') {
 			$handled = true;

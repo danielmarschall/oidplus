@@ -102,15 +102,11 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('max_ra_pwd_reset_time', 'Max RA password reset time in seconds (0 = infinite)', '0', 0, 1);
-	}
-
-	public function cfgSetValue($name, $value) {
-		if ($name == 'max_ra_pwd_reset_time') {
+		OIDplus::config()->prepareConfigKey('max_ra_pwd_reset_time', 'Max RA password reset time in seconds (0 = infinite)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException("Please enter a valid value.");
 			}
-		}
+		});
 	}
 
 	public function gui($id, &$out, &$handled) {

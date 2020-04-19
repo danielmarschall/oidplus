@@ -42,10 +42,6 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 		// Nothing
 	}
 
-	public function cfgSetValue($name, $value) {
-		// Nothing
-	}
-
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:well_known_oids') {
 			$handled = true;

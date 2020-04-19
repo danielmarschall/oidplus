@@ -158,21 +158,16 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('max_ra_email_change_time', 'Max RA email change time in seconds (0 = infinite)', '0', 0, 1);
-		OIDplus::config()->prepareConfigKey('allow_ra_email_change', 'Allow that RAs change their email address (0/1)', '1', 0, 1);
-	}
-
-	public function cfgSetValue($name, $value) {
-		if ($name == 'allow_ra_email_change') {
-		        if (($value != '0') && ($value != '1')) {
-		                throw new OIDplusException("Please enter either 0 or 1.");
-		        }
-		}
-		if (($name == 'max_ra_invite_time') || ($name == 'max_ra_pwd_reset_time') || ($name == 'max_ra_email_change_time')) {
+		OIDplus::config()->prepareConfigKey('max_ra_email_change_time', 'Max RA email change time in seconds (0 = infinite)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException("Please enter a valid value.");
 			}
-		}
+		});
+		OIDplus::config()->prepareConfigKey('allow_ra_email_change', 'Allow that RAs change their email address (0/1)', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		        if (($value != '0') && ($value != '1')) {
+		                throw new OIDplusException("Please enter either 0 or 1.");
+		        }
+		});
 	}
 
 	public function gui($id, &$out, &$handled) {

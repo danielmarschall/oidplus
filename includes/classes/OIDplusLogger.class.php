@@ -45,7 +45,7 @@ class OIDplusLogger {
 		return $out;
 	}
 
-	public function log($maskcodes, $event) {
+	public static function log($maskcodes, $event) {
 
 		$users = array();
 		$objects = array();

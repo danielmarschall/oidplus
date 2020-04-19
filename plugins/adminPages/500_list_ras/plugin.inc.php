@@ -42,10 +42,6 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 		// Nothing
 	}
 
-	public function cfgSetValue($name, $value) {
-		// Nothing
-	}
-
 	private function get_ralist() {
 		$tmp = array();
 		if (OIDplus::db()->slang() == 'mysql') {

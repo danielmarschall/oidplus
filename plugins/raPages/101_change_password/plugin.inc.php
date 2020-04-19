@@ -80,10 +80,6 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 		// Nothing
 	}
 
-	public function cfgSetValue($name, $value) {
-		// Nothing
-	}
-
 	public function gui($id, &$out, &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:change_ra_password') {
 			$handled = true;

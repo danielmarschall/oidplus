@@ -39,15 +39,11 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('search_min_term_length', 'Minimum length of a search term', '3', 0, 1);
-	}
-
-	public function cfgSetValue($name, $value) {
-		if ($name == 'search_min_term_length') {
+		OIDplus::config()->prepareConfigKey('search_min_term_length', 'Minimum length of a search term', '3', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException("Please enter a valid value.");
 			}
-		}
+		});
 	}
 
 	public function gui($id, &$out, &$handled) {

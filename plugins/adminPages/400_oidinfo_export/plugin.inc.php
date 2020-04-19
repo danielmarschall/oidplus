@@ -44,10 +44,6 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		// Nothing
 	}
 
-	public function cfgSetValue($name, $value) {
-		// Nothing
-	}
-
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:export') {
 			$handled = true;

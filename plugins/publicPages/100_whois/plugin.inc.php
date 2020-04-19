@@ -39,30 +39,22 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('whois_auth_token',                       'OID-over-WHOIS authentication token to display confidential data', '', 0, 1);
-		OIDplus::config()->prepareConfigKey('webwhois_output_format_spacer',          'WebWHOIS: Spacer', 2, 0, 1);
-		OIDplus::config()->prepareConfigKey('webwhois_output_format_max_line_length', 'WebWHOIS: Max line length', 80, 0, 1);
-	}
-
-	public function cfgSetValue($name, $value) {
-		if ($name == 'whois_auth_token') {
+		OIDplus::config()->prepareConfigKey('whois_auth_token',                       'OID-over-WHOIS authentication token to display confidential data', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			$test_value = preg_replace('@[0-9a-zA-Z]*@', '', $value);
 			if ($test_value != '') {
 				throw new OIDplusException("Only characters and numbers are allowed as authentication token.");
 			}
-		}
-
-		if ($name == 'webwhois_output_format_spacer') {
+		});
+		OIDplus::config()->prepareConfigKey('webwhois_output_format_spacer',          'WebWHOIS: Spacer', 2, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException("Please enter a valid value.");
 			}
-		}
-
-		if ($name == 'webwhois_output_format_max_line_length') {
+		});
+		OIDplus::config()->prepareConfigKey('webwhois_output_format_max_line_length', 'WebWHOIS: Max line length', 80, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException("Please enter a valid value.");
 			}
-		}
+		});
 	}
 
 	private function getExampleId() {

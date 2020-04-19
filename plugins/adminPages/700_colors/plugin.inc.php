@@ -53,27 +53,21 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('color_hue_shift', 'HSV Hue shift of CSS colors (-360..360)', '0', 0, 1);
-		OIDplus::config()->prepareConfigKey('color_sat_shift', 'HSV Saturation shift of CSS colors (-100..100)', '0', 0, 1);
-		OIDplus::config()->prepareConfigKey('color_val_shift', 'HSV Value shift of CSS colors (-100..100)', '0', 0, 1);
-	}
-
-	public function cfgSetValue($name, $value) {
-		if ($name == 'color_hue_shift') {
+		OIDplus::config()->prepareConfigKey('color_hue_shift', 'HSV Hue shift of CSS colors (-360..360)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < -360) || ($value > 360)) {
 				throw new OIDplusException("Please enter a valid value.");
 			}
-		}
-		if ($name == 'color_sat_shift') {
+		});
+		OIDplus::config()->prepareConfigKey('color_sat_shift', 'HSV Saturation shift of CSS colors (-100..100)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < -100) || ($value > 100)) {
 				throw new OIDplusException("Please enter a valid value.");
 			}
-		}
-		if ($name == 'color_val_shift') {
+		});
+		OIDplus::config()->prepareConfigKey('color_val_shift', 'HSV Value shift of CSS colors (-100..100)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < -100) || ($value > 100)) {
 				throw new OIDplusException("Please enter a valid value.");
 			}
-		}
+		});
 	}
 
 	public function gui($id, &$out, &$handled) {

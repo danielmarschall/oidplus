@@ -43,17 +43,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		// Nothing
 	}
 
-	public function cfgSetValue($name, $value) {
-		if ($name == 'reg_privacy') {
-			if (($value != '0') && ($value != '1') && ($value != '2')) {
-				throw new OIDplusException("Please enter either 0, 1 or 2.");
-			}
-			// Now do a recheck and notify the ViaThinkSoft server
-			OIDplus::config()->setValue('reg_last_ping', 0);
-			$this->sendRegistrationQuery($value);
-		}
-	}
-
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:srv_registration') {
 			$handled = true;
@@ -291,10 +280,23 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('reg_wizard_done', 'Registration wizard done once?', '0', 1, 0);
-		OIDplus::config()->prepareConfigKey('reg_privacy', '2=Hide your system, 1=Register your system to the ViaThinkSoft directory and oid-info.com, 0=Publish your system to ViaThinkSoft directory and all public contents (RA/OID) to oid-info.com', '0', 0, 1);
-		OIDplus::config()->prepareConfigKey('reg_ping_interval', 'Registration ping interval (in seconds)', '3600', 0, 0);
-		OIDplus::config()->prepareConfigKey('reg_last_ping', 'Last ping to ViaThinkSoft directory services', '0', 1, 0);
+		OIDplus::config()->prepareConfigKey('reg_wizard_done', 'Registration wizard done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
+		
+		});
+		OIDplus::config()->prepareConfigKey('reg_privacy', '2=Hide your system, 1=Register your system to the ViaThinkSoft directory and oid-info.com, 0=Publish your system to ViaThinkSoft directory and all public contents (RA/OID) to oid-info.com', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (($value != '0') && ($value != '1') && ($value != '2')) {
+				throw new OIDplusException("Please enter either 0, 1 or 2.");
+			}
+			// Now do a recheck and notify the ViaThinkSoft server
+			OIDplus::config()->setValue('reg_last_ping', 0);
+			$this->sendRegistrationQuery($value);
+		});
+		OIDplus::config()->prepareConfigKey('reg_ping_interval', 'Registration ping interval (in seconds)', '3600', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
+		
+		});
+		OIDplus::config()->prepareConfigKey('reg_last_ping', 'Last ping to ViaThinkSoft directory services', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
+		
+		});
 		
 		$oobe_done = OIDplus::config()->getValue('reg_wizard_done') == '1';
 		

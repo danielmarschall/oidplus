@@ -182,15 +182,11 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('freeoid_root_oid', 'Root-OID of free OID service (a service where visitors can create their own OID using email verification)', '', 0, 1);
-	}
-
-	public function cfgSetValue($name, $value) {
-		if ($name == 'freeoid_root_oid') {
+		OIDplus::config()->prepareConfigKey('freeoid_root_oid', 'Root-OID of free OID service (a service where visitors can create their own OID using email verification)', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != '') && !oid_valid_dotnotation($value,false,false,1)) {
 				throw new OIDplusException("Please enter a valid OID in dot notation or nothing");
 			}
-		}
+		});
 	}
 
 	public function gui($id, &$out, &$handled) {

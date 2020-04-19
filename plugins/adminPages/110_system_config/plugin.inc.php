@@ -45,13 +45,13 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 			$name = $_POST['name'];
 			$value = $_POST['value'];
 
-			$res = OIDplus::db()->query("select protected from ###config where name = ?", array($name));
+			$res = OIDplus::db()->query("select protected, visible from ###config where name = ?", array($name));
 			if ($res->num_rows() == 0) {
 				throw new OIDplusException('Setting does not exist');
 			}
 			$row = $res->fetch_array();
-			if ($row['protected'] == 1) {
-				throw new OIDplusException('Setting is write protected');
+			if (($row['protected'] == 1) || ($row['visible'] == 0)) {
+				throw new OIDplusException("Setting '$name' is read-only");
 			}
 
 			OIDplus::config()->setValue($name, $value);
@@ -62,10 +62,6 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 	}
 
 	public function init($html=true) {
-		// Nothing
-	}
-
-	public function cfgSetValue($name, $value) {
 		// Nothing
 	}
 
