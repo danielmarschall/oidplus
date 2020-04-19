@@ -116,8 +116,33 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 			$out[] = "SUBSTRING($fieldname,1,CHARINDEX(':',$fieldname)-1) $order";
 
 			for ($i=1; $i<=OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH'); $i++) {
-				// 2. Sort by the rest arcs one by one, not that MySQL can only handle decimal(65), not decimal($max_arc_len)
+				// 2. Sort by the rest arcs one by one; note that MySQL can only handle decimal(65), not decimal($max_arc_len)
 				$out[] = "dbo.getOidArc($fieldname, $max_arc_len, $i) $order";
+			}
+
+			// 3. as last resort, sort by the identifier itself, e.g. if the function getOidArc always return 0 (happens if it is not an OID)
+			$out[] = "$fieldname $order";
+
+		} else if ($this->slang() == 'sqlite') {
+			$max_depth = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH');
+			if ($max_depth > 11) $max_depth = 11; // SQLite3 will crash if max depth > 11 (parser stack overflow); (TODO: can we do something else?!?!)
+
+			// 1. sort by namespace (oid, guid, ...)
+			$out[] = "substr($fieldname,0,instr($fieldname,':')) $order";
+
+			// 2. Sort by the rest arcs one by one
+			for ($i=1; $i<=$max_depth; $i++) {
+				if ($i==1) {
+					$arc = "substr($fieldname,5)||'.'";
+					$fieldname = $arc;
+					$arc = "substr($arc,0,instr($arc,'.'))";
+					$out[] = "cast($arc as integer) $order";
+				} else {
+					$arc = "ltrim(ltrim($fieldname,'0123456789'),'.')";
+					$fieldname = $arc;
+					$arc = "substr($arc,0,instr($arc,'.'))";
+					$out[] = "cast($arc as integer)  $order";
+				}
 			}
 
 			// 3. as last resort, sort by the identifier itself, e.g. if the function getOidArc always return 0 (happens if it is not an OID)
@@ -125,7 +150,6 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 		} else {
 
 			// For (yet) unsupported DBMS, we do not offer natural sort
-			// TODO: Implement for SQLite3
 			$out[] = "$fieldname $order";
 
 		}

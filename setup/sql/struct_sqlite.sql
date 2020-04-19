@@ -11,7 +11,7 @@ CREATE TABLE `config` (
 DROP TABLE IF EXISTS `asn1id`;
 CREATE TABLE `asn1id` (
   `lfd` INTEGER PRIMARY KEY AUTOINCREMENT,
-  `oid` TEXT NOT NULL,
+  `oid` TEXT NOT NULL REFERENCES `objects`(`id`),
   `name` TEXT NOT NULL,
   `standardized` INTEGER NOT NULL DEFAULT 0,
   `well_known` INTEGER NOT NULL DEFAULT 0,
@@ -21,7 +21,7 @@ CREATE TABLE `asn1id` (
 DROP TABLE IF EXISTS `iri`;
 CREATE TABLE `iri` (
   `lfd` INTEGER PRIMARY KEY AUTOINCREMENT,
-  `oid` TEXT NOT NULL,
+  `oid` TEXT NOT NULL REFERENCES `objects`(`id`),
   `name` TEXT NOT NULL,
   `longarc` INTEGER NOT NULL DEFAULT 0,
   `well_known` INTEGER NOT NULL DEFAULT 0,
@@ -31,13 +31,13 @@ CREATE TABLE `iri` (
 DROP TABLE IF EXISTS `objects`;
 CREATE TABLE `objects` (
   `id` TEXT NOT NULL,
-  `parent` TEXT DEFAULT NULL,
+  `parent` TEXT DEFAULT NULL REFERENCES `objects`(`id`),
   `title` TEXT NOT NULL,
   `description` TEXT NOT NULL,
-  `ra_email` TEXT NULL,
+  `ra_email` TEXT NULL REFERENCES `ra`(`email`),
   `confidential` boolean NOT NULL,
-  `created` TEXT, -- TODO: Datetime
-  `updated` TEXT, -- TODO: Datetime
+  `created` TEXT, -- DateTime
+  `updated` TEXT, -- DateTime
   `comment` TEXT NULL,
   PRIMARY KEY (`id`)
 );
@@ -59,8 +59,8 @@ CREATE TABLE `ra` (
   `privacy` INTEGER NOT NULL DEFAULT 0,
   `salt` TEXT NOT NULL,
   `authkey` TEXT NOT NULL,
-  `registered` TEXT, -- TODO: Datetime
-  `updated` TEXT, -- TODO: Datetime
+  `registered` TEXT, -- DateTime
+  `updated` TEXT, -- DateTime
   `last_login` datetime
 );
 
@@ -75,14 +75,14 @@ CREATE TABLE `log` (
 DROP TABLE IF EXISTS `log_user`;
 CREATE TABLE `log_user` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-  `log_id` INTEGER NOT NULL,
+  `log_id` INTEGER NOT NULL REFERENCES `log`(`id`),
   `username` TEXT NOT NULL
 );
 
 DROP TABLE IF EXISTS `log_object`;
 CREATE TABLE `log_object` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-  `log_id` INTEGER NOT NULL,
+  `log_id` INTEGER NOT NULL REFERENCES `log`(`id`),
   `object` TEXT NOT NULL
 );
 
