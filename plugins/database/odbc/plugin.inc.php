@@ -89,6 +89,10 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 				$res = $this->query("SELECT LAST_INSERT_ID() AS ID");
 				$row = $res->fetch_array();
 				return (int)$row['ID'];
+			case 'sqlite':
+				$res = $this->query("SELECT last_insert_rowid() AS ID");
+				$row = $res->fetch_array();
+				return (int)$row['ID'];
 			case 'pgsql':
 				$res = $this->query("SELECT LASTVAL() AS ID");
 				$row = $res->fetch_array();
@@ -122,6 +126,8 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
 		}
 
+		$this->last_error = null;
+
 		try {
 			$this->query("SET NAMES 'utf8'"); // Does most likely NOT work with ODBC. Try adding ";CHARSET=UTF8" (or similar) to the DSN
 		} catch (Exception $e) {
@@ -129,27 +135,29 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 	}
 
 	protected function doDisconnect(): void {
-		@odbc_close($this->conn);
-		$this->conn = null;
+		if (!is_null($this->conn)) {
+			@odbc_close($this->conn);
+			$this->conn = null;
+		}
 	}
 
 	private $intransaction = false;
 
 	public function transaction_begin(): void {
 		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
-		odbc_autocommit($this->conn, true);
+		odbc_autocommit($this->conn, false); // begin transaction
 		$this->intransaction = true;
 	}
 
 	public function transaction_commit(): void {
 		odbc_commit($this->conn);
-		odbc_autocommit($this->conn, false);
+		odbc_autocommit($this->conn, true);
 		$this->intransaction = false;
 	}
 
 	public function transaction_rollback(): void {
 		odbc_rollback($this->conn);
-		odbc_autocommit($this->conn, false);
+		odbc_autocommit($this->conn, true);
 		$this->intransaction = false;
 	}
 }

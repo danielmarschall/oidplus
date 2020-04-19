@@ -53,7 +53,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 
 			OIDplus::db()->query("UPDATE ###ra ".
 				"SET ".
-				"updated = ".(OIDplus::db()->slang() == 'mssql' ? "getdate()" : "now()").", ".
+				"updated = ".OIDplus::db()->sqlDate().", ".
 				"ra_name = ?, ".
 				"organization = ?, ".
 				"office = ?, ".

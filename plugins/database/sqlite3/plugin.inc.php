@@ -19,14 +19,14 @@
 
 if (!defined('IN_OIDPLUS')) die();
 
-class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
+class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 	private $conn = null;
-	private $already_prepared = array();
+	private $prepare_cache = array();
 	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
 
 	public static function getPluginInformation(): array {
 		$out = array();
-		$out['name'] = 'PostgreSQL';
+		$out['name'] = 'SQLite3';
 		$out['author'] = 'ViaThinkSoft';
 		$out['version'] = null;
 		$out['descriptionHTML'] = null;
@@ -34,56 +34,62 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 	}
 
 	public static function name(): string {
-		return "PgSQL";
+		return "SQLite3";
 	}
 
 	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
-			$res = @pg_query($this->conn, $sql);
-
+			$res = @$this->conn->query($sql);
 			if ($res === false) {
-				$this->last_error = pg_last_error($this->conn);
+				$this->last_error = $this->conn->lastErrorMsg();
 				throw new OIDplusSQLException($sql, $this->error());
 			} else {
-				return new OIDplusQueryResultPgSql($res);
+				return new OIDplusQueryResultSQLite3($res);
 			}
 		} else {
 			if (!is_array($prepared_args)) {
 				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
 			}
 
-			// convert ? ? ? to $1 $2 $3
+			// convert ? ? ? to :param1 :param2 :param3 ...
 			$sql = preg_replace_callback('@\\?@', function($found) {
 				static $i = 0;
 				$i++;
-				return '$'.$i;
+				return ':param'.$i;
 			}, $sql);
 
-			$prepare_name = 'OIDplus_ps_'.sha1($sql);
-			if (!in_array($prepare_name, $this->already_prepared)) {
-				$res = @pg_prepare($this->conn, $prepare_name, $sql);
-				if ($res === false) {
+			if (isset($this->prepare_cache[$sql])) {
+				$stmt = $this->prepare_cache[$sql];
+			} else {
+				$stmt = @$this->conn->prepare($sql);
+				if ($stmt === false) {
 					throw new OIDplusSQLException($sql, 'Cannot prepare statement');
 				}
-				$this->already_prepared[] = $prepare_name;
+				$this->prepare_cache[$sql] = $stmt;
 			}
 
+			if ($stmt->paramCount() != count($prepared_args)) {
+				throw new OIDplusException('Prepared argument list size not matching number of prepared statement arguments');
+			}
+			$i = 1;
 			foreach ($prepared_args as &$value) {
 				if (is_bool($value)) $value = $value ? '1' : '0';
+				$stmt->bindValue(':param'.$i, $value, SQLITE3_TEXT);
+				$i++;
 			}
 
-			$ps = pg_execute($this->conn, $prepare_name, $prepared_args);
+			$ps = $stmt->execute();
 			if ($ps === false) {
-				$this->last_error = pg_last_error($this->conn);
+				$this->last_error = $this->conn->lastErrorMsg();
 				throw new OIDplusSQLException($sql, $this->error());
 			}
-			return new OIDplusQueryResultPgSql($ps);
+			return new OIDplusQueryResultSQLite3($ps);
 		}
 	}
 
 	public function insert_id(): int {
-		return (int)$this->query('select lastval() as id')->fetch_object()->id;
+		return (int)$this->query('select last_insert_rowid() as id')->fetch_object()->id;
 	}
 
 	public function error(): string {
@@ -93,43 +99,32 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 	}
 
 	protected function doConnect(): void {
-		if (!function_exists('pg_connect')) throw new OIDplusConfigInitializationException('PHP extension "PostgreSQL" not installed');
+		if (!class_exists('SQLite3')) throw new OIDplusConfigInitializationException('PHP extension "SQLite3" not installed');
 
 		// Try connecting to the database
-		ob_start();
-		$err = '';
 		try {
-			$host     = OIDplus::baseConfig()->getValue('PGSQL_HOST',     'localhost:5432');
-			$username = OIDplus::baseConfig()->getValue('PGSQL_USERNAME', 'postgres');
-			$password = OIDplus::baseConfig()->getValue('PGSQL_PASSWORD', '');
-			$database = OIDplus::baseConfig()->getValue('PGSQL_DATABASE', 'oidplus');
-			list($hostname, $port) = explode(':', "$host:5432");
-			$this->conn = pg_connect("host=$hostname user=$username password=$password port=$port dbname=$database");
-		} finally {
-			# TODO: this does not seem to work?! (at least not for CLI)
-			$err = ob_get_contents();
-			ob_end_clean();
-		}
+			$filename   = OIDplus::baseConfig()->getValue('SQLITE3_FILE', 'oidplus_sqlite3.db');
+			$flags      = SQLITE3_OPEN_READWRITE/* | SQLITE3_OPEN_CREATE*/;
+			$encryption = OIDplus::baseConfig()->getValue('SQLITE3_ENCRYPTION', '');
 
-		if (!$this->conn) {
-			throw new OIDplusConfigInitializationException('Connection to the database failed! ' . strip_tags($err));
-		}
+			$is_absolute_path = ((substr($filename,0,1) == '/') || (substr($filename,1,1) == ':'));
+			if (!$is_absolute_path) {
+				// Filename must be absolute path, since OIDplus can be called from several locations (e.g. registration wizard)
+				$filename = __DIR__ . '/../../../' . $filename;
+			}
 
-		$this->already_prepared = array();
-		$this->last_error = null;
-
-		try {
-			$this->query("SET NAMES 'utf8'");
+			$this->conn = new SQLite3($filename, $flags, $encryption);
 		} catch (Exception $e) {
+			throw new OIDplusConfigInitializationException('Connection to the database failed! ' . $e->getMessage());
 		}
+
+		$this->prepare_cache = array();
+		$this->last_error = null;
 	}
 
 	protected function doDisconnect(): void {
-		$this->already_prepared = array();
-		if (!is_null($this->conn)) {
-			pg_close($this->conn);
-			$this->conn = null;
-		}
+		$this->prepare_cache = array();
+		$this->conn = null;
 	}
 
 	private $intransaction = false;
@@ -151,29 +146,45 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 	}
 
 	public function sqlDate(): string {
-		return 'now()';
+		return 'datetime()';
 	}
 
 	public function slang(): string {
-		return 'pgsql';
+		return 'sqlite';
 	}
 }
 
-class OIDplusQueryResultPgSql extends OIDplusQueryResult {
+class OIDplusQueryResultSQLite3 extends OIDplusQueryResult {
 	protected $no_resultset;
 	protected $res;
+	protected $all_results = array();
+	protected $cursor = 0;
 
 	public function __construct($res) {
-		$this->no_resultset = is_bool($res);
+		if (is_bool($res) || ($res->numColumns() == 0)) {
+			// Why do qe need to check numColumns() ?
+			// We need to do this because SQLite3::query() will always
+			// return a result, even for Non-SELECT queries.
+			// If you call fetchArray(), the query (e.g. INSERT)
+			// will be executed again.
+			$this->no_resultset = true;
+			return;
+		}
 
 		if (!$this->no_resultset) {
 			$this->res = $res;
+			while ($row = $this->res->fetchArray(SQLITE3_ASSOC)) {
+				// we need that because there is no numRows() function!
+				$this->all_results[] = $row;
+			}
 		}
 	}
 
 	public function __destruct() {
-		if ($this->res) {
-			pg_free_result($this->res);
+		$this->all_results = array();
+		if (!is_null($this->res)) {
+			$this->res->finalize();
+			$this->res = null;
 		}
 	}
 
@@ -183,36 +194,33 @@ class OIDplusQueryResultPgSql extends OIDplusQueryResult {
 
 	public function num_rows(): int {
 		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
-		return pg_num_rows($this->res);
+		return count($this->all_results);
 	}
 
 	public function fetch_array()/*: ?array*/ {
 		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
-		$ret = pg_fetch_array($this->res, null, PGSQL_ASSOC);
+
+		//$ret = $this->res->fetchArray(SQLITE3_ASSOC);
+		$cursor = $this->cursor;
+		if (!isset($this->all_results[$cursor])) return null;
+		$ret = $this->all_results[$cursor];
+		$cursor++;
+		$this->cursor = $cursor;
+
 		if ($ret === false) $ret = null;
-		if (!is_null($ret)) {
-			foreach ($ret as $key => &$value){
-				$type = pg_field_type($this->res,pg_field_num($this->res, $key));
-				if ($type == 'bool'){
-					$value = ($value == 't');
-				}
-			}
-		}
 		return $ret;
 	}
 
 	public function fetch_object()/*: ?object*/ {
 		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
-		$ret = pg_fetch_object($this->res);
-		if ($ret === false) $ret = null;
-		if (!is_null($ret)) {
-			foreach ($ret as $key => &$value){
-				$type = pg_field_type($this->res,pg_field_num($this->res, $key));
-				if ($type == 'bool'){
-					$value = ($value == 't');
-				}
-			}
+
+		$ary = $this->fetch_array();
+		if (!$ary) return null;
+
+		$obj = new stdClass;
+		foreach ($ary as $name => $val) {
+			$obj->$name = $val;
 		}
-		return $ret;
+		return $obj;
 	}
 }

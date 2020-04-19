@@ -72,9 +72,7 @@ SMALL THINGS
 
 DATABASE
 - check if the NULL and NOT NULL definitions are meaningful. It is not good at in *_ra everything is NOT NULL
-- we need to make OIDplus more compatible with non-MySQL databases (different SQL dialects)
-  (currently, only MySQL/MariaDB, PostgreSQL and MS SQL are supported)
-- Implement database plugin for PHP's MSSQL and PostgreSQL extension (without PDO/ODBC)?
+- SQLite3: Implement Natural OID sorting (natSort)
 
 FUTURE
 - multilang
@@ -139,3 +137,6 @@ PRIVACY:
 GUID Management
 - Leaf nodes (GUIDs) should show/edit the Title in the CRUD, so you dont have to click the GUID to see the title
 - seltsamer bug: wenn ich guid:oidplus editiere, dann öffnet sich links guid:activedirectory beim neuladen des baums nach dem update. irgendwie öffnet er den zuletzt geöffneten node beim reload nochmal
+
+Repro:
+- Can a previously deleted 2.999 not be created anymore? (during INSERT: "identifiers cannot be changed")

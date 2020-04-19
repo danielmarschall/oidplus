@@ -125,6 +125,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 		} else {
 
 			// For (yet) unsupported DBMS, we do not offer natural sort
+			// TODO: Implement for SQLite3
 			$out[] = "$fieldname $order";
 
 		}
@@ -201,6 +202,21 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 		$this->html = $html;
 	}
 
+	public function sqlDate(): string {
+		switch ($this->slang()) {
+			case 'mysql':
+				return 'now()';
+			case 'mssql':
+				return 'getdate()';
+			case 'pgsql':
+				return 'now()';
+			case 'sqlite':
+				return 'datetime()';
+			default:
+				return "'" . datetime('Y-m-d H:i:s') . "'";
+		}
+	}
+
 	public function slang(): string {
 		if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
 			return OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');
@@ -221,7 +237,17 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 					$vers = $this->query("select @@version as dbms_version")->fetch_object()->dbms_version;
 					$vers = strtolower($vers);
 				} catch (Exception $e) {
-					throw new OIDplusException("Cannot determine the slang of your DBMS (function 'version()' could not be called). Your DBMS is probably not supported.");
+
+					try {
+						// SQLite
+						$this->query("select sqlite_version as dbms_version")->fetch_object()->dbms_version;
+						$vers = "sqlite $vers";
+
+					} catch (Exception $e) {
+
+						// Don't know...
+						throw new OIDplusException("Cannot determine the slang of your DBMS (function 'version()' could not be called). Your DBMS is probably not supported.");
+					}
 				}
 			}
 
@@ -230,6 +256,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 			if (strpos($vers, 'mysql')                !== false) $slang = 'mysql';
 			if (strpos($vers, 'mariadb')              !== false) $slang = 'mysql';
 			if (strpos($vers, 'microsoft sql server') !== false) $slang = 'mssql';
+			if (strpos($vers, 'sqlite')               !== false) $slang = 'sqlite';
 			if (!is_null($slang)) {
 				$cache_slang = $slang;
 				return $slang;

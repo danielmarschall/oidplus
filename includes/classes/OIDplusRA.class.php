@@ -64,12 +64,7 @@ class OIDplusRA {
 	public function register_ra($new_password) {
 		$s_salt = substr(md5(rand()), 0, 7);
 		$calc_authkey = 'A2#'.base64_encode(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $s_salt.$new_password, true) : bb\Sha3\Sha3::hash($s_salt.$new_password, 512, true));
-		if (OIDplus::db()->slang() == 'mssql') {
-			OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered) values (?, ?, ?, getdate())", array($s_salt, $calc_authkey, $this->email));
-		} else {
-			// MySQL + PgSQL
-			OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered) values (?, ?, ?, now())", array($s_salt, $calc_authkey, $this->email));
-		}
+		OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered) values (?, ?, ?, ".OIDplus::db()->sqlDate().")", array($s_salt, $calc_authkey, $this->email));
 	}
 
 	public function checkPassword($password) {

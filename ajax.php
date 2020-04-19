@@ -119,12 +119,7 @@ try {
 # ---
 
 function _ra_change_rec($id, $old_ra, $new_ra) {
-	if (OIDplus::db()->slang() == 'mssql') {
-		OIDplus::db()->query("update ###objects set ra_email = ?, updated = getdate() where id = ? and ifnull(ra_email,'') = ?", array($new_ra, $id, $old_ra));
-	} else {
-		// MySQL + PgSQL
-		OIDplus::db()->query("update ###objects set ra_email = ?, updated = now() where id = ? and ifnull(ra_email,'') = ?", array($new_ra, $id, $old_ra));
-	}
+	OIDplus::db()->query("update ###objects set ra_email = ?, updated = ".OIDplus::db()->sqlDate()." where id = ? and ifnull(ra_email,'') = ?", array($new_ra, $id, $old_ra));
 
 	$res = OIDplus::db()->query("select id from ###objects where parent = ? and ifnull(ra_email,'') = ?", array($id, $old_ra));
 	while ($row = $res->fetch_array()) {

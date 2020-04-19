@@ -120,33 +120,47 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
 		}
 
+		$this->prepare_cache = array();
+		$this->last_error = null;
+
 		$this->query("SET NAMES 'utf8'");
 	}
 
 	protected function doDisconnect(): void {
-		$this->conn->close();
-		$this->conn = null;
 		$this->prepare_cache = array();
+		if (!is_null($this->conn)) {
+			$this->conn->close();
+			$this->conn = null;
+		}
 	}
 
 	private $intransaction = false;
 
 	public function transaction_begin(): void {
 		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
-		$this->conn->autocommit(true);
+		$this->conn->autocommit(false);
+		$this->conn->begin_transaction();
 		$this->intransaction = true;
 	}
 
 	public function transaction_commit(): void {
 		$this->conn->commit();
-		$this->conn->autocommit(false);
+		$this->conn->autocommit(true);
 		$this->intransaction = false;
 	}
 
 	public function transaction_rollback(): void {
 		$this->conn->rollback();
-		$this->conn->autocommit(false);
+		$this->conn->autocommit(true);
 		$this->intransaction = false;
+	}
+
+	public function sqlDate(): string {
+		return 'now()';
+	}
+
+	public function slang(): string {
+		return 'mysql';
 	}
 
 	public static function nativeDriverAvailable(): bool {

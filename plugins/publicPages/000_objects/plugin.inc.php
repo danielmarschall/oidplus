@@ -157,12 +157,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			$confidential = $_POST['confidential'] == 'true';
 			$comment = $_POST['comment'];
-			if (OIDplus::db()->slang() == 'mssql') {
-				OIDplus::db()->query("UPDATE ###objects SET confidential = ?, comment = ?, updated = getdate() WHERE id = ?", array($confidential, $comment, $id));
-			} else {
-				// MySQL + PgSQL
-				OIDplus::db()->query("UPDATE ###objects SET confidential = ?, comment = ?, updated = now() WHERE id = ?", array($confidential, $comment, $id));
-			}
+			OIDplus::db()->query("UPDATE ###objects SET confidential = ?, comment = ?, updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($confidential, $comment, $id));
 
 			$status = 0;
 
@@ -194,12 +189,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			OIDplus::logger()->log("OID($id)+OIDRA($id)?/A?", "Title/Description of object '$id' updated");
 
-			if (OIDplus::db()->slang() == 'mssql') {
-				OIDplus::db()->query("UPDATE ###objects SET title = ?, description = ?, updated = getdate() WHERE id = ?", array($_POST['title'], $_POST['description'], $id));
-			} else {
-				// MySQL + PgSQL
-				OIDplus::db()->query("UPDATE ###objects SET title = ?, description = ?, updated = now() WHERE id = ?", array($_POST['title'], $_POST['description'], $id));
-			}
+			OIDplus::db()->query("UPDATE ###objects SET title = ?, description = ?, updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($_POST['title'], $_POST['description'], $id));
 
 			echo json_encode(array("status" => 0));
 		}
@@ -271,12 +261,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				throw new OIDplusException("The identifier '$id' is too long (max allowed length: ".OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH').")");
 			}
 
-			if (OIDplus::db()->slang() == 'mssql') {
-				OIDplus::db()->query("INSERT INTO ###objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, getdate(), ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
-			} else {
-				// MySQL + PgSQL
-				OIDplus::db()->query("INSERT INTO ###objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, now(), ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
-			}
+			OIDplus::db()->query("INSERT INTO ###objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, ".OIDplus::db()->sqlDate().", ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
 
 			// Set ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {

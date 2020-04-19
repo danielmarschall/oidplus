@@ -142,12 +142,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 					throw new OIDplusException("The resulting object identifier '$new_oid' is too long (max allowed length ".(OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:')).")");
 				}
 				
-				if (OIDplus::db()->slang() == 'mssql') {
-					OIDplus::db()->query("insert into ###objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, getdate())", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
-				} else {
-					// MySQL + PgSQL
-					OIDplus::db()->query("insert into ###objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, now())", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
-				}
+				OIDplus::db()->query("insert into ###objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, ".OIDplus::db()->sqlDate().")", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
 			} catch (Exception $e) {
 				$ra->delete();
 				throw $e;

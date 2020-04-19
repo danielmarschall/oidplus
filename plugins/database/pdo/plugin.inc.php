@@ -117,6 +117,8 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
 		}
 
+		$this->last_error = null;
+
 		$this->query("SET NAMES 'utf8'");
 	}
 

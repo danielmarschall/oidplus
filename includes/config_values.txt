@@ -76,6 +76,15 @@ Information:             The base64 encoding "protects" your password from being
 OIDplus::baseConfig()->setValue('PGSQL_DATABASE',           'oidplus');
 Old 2.0 format:          define('OIDPLUS_PGSQL_DATABASE',   'oidplus');
 
+
+OIDplus::baseConfig()->setValue('SQLITE3_FILE',           'oidplus.db');
+Old 2.0 format:          define('OIDPLUS_SQLITE3_FILE',   'oidplus.db');
+Attention:               This file must be located in a location that is not world-readable/downloadable!
+
+OIDplus::baseConfig()->setValue('SQLITE3_ENCRYPTION',           '');
+Old 2.0 format:          define('OIDPLUS_SQLITE3_ENCRYPTION',   '');
+Note:                    Options
+
 OIDplus::baseConfig()->setValue('TABLENAME_PREFIX',         'oidplus_');
 Old 2.0 format:          define('OIDPLUS_TABLENAME_PREFIX', 'oidplus_');
 
@@ -170,7 +179,7 @@ Old 2.0 format:          define('OIDPLUS_OBJECT_CACHING', true);
 
 OIDplus::baseConfig()->setValue('FORCE_DBMS_SLANG', '');
 Old 2.0 format:          define('DBMS_SLANG',       '');
-Information:             Currently valid values: mysql, mssql, pgsql
+Information:             Currently valid values: mysql, mssql, pgsql, sqlite
 
 OIDplus::baseConfig()->setValue('MINIFY_CSS', true);
 Old 2.0 format:          define('DO_MINIFY',  true);

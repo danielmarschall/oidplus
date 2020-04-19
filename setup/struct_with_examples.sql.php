@@ -21,7 +21,7 @@ $prefix = isset($_REQUEST['prefix']) ? $_REQUEST['prefix'] : '';
 $database = isset($_REQUEST['database']) ? $_REQUEST['database'] : '';
 $slang = isset($_REQUEST['slang']) ? $_REQUEST['slang'] : 'mysql';
 
-if (($slang != 'mysql') && ($slang != 'pgsql') && ($slang != 'mssql')) die('Unknown slang');
+if (($slang != 'mysql') && ($slang != 'pgsql') && ($slang != 'mssql') && ($slang != 'sqlite')) die('Unknown slang');
 
 $cont = trim(file_get_contents(__DIR__.'/sql/struct_'.$slang.'.sql'))."\n\n".
         trim(file_get_contents(__DIR__.'/sql/wellknown_country_'.$slang.'.sql'))."\n\n".
@@ -31,6 +31,9 @@ $cont = trim(file_get_contents(__DIR__.'/sql/struct_'.$slang.'.sql'))."\n\n".
 $table_names = array('objects', 'asn1id', 'iri', 'ra', 'config', 'log', 'log_user', 'log_object');
 foreach ($table_names as $table) {
 	if ($slang == 'mysql') {
+		$cont = str_replace('`'.$table.'`', '`'.$prefix.$table.'`', $cont);
+	}
+	if ($slang == 'sqlite') {
 		$cont = str_replace('`'.$table.'`', '`'.$prefix.$table.'`', $cont);
 	}
 	if ($slang == 'pgsql') {
