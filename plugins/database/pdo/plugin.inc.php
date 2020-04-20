@@ -75,7 +75,8 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 
 			$ps = $this->conn->prepare($sql);
 			if (!$ps) {
-				throw new OIDplusSQLException($sql, 'Cannot prepare statement');
+				$this->last_error = $ps->errorInfo()[2];
+				throw new OIDplusSQLException($sql, 'Cannot prepare statement: '.$this->error());
 			}
 			$this->prepare_cache[$sql] = $ps;
 

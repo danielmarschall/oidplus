@@ -124,6 +124,14 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 			$out[] = "$fieldname $order";
 
 		} else if ($this->slang() == 'sqlite') {
+
+			// If the SQLite database is accessed through the SQLite3 plugin,
+			// we use an individual collation, therefore OIDplusDatabasePluginSQLite3 overrides
+			// natOrder().
+			// If we connected to SQLite using ODBC or PDO, we need to do something else,
+			// but that solution is complex, slow and wrong (since it does not support
+			// UUIDs etc.)
+
 			$max_depth = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH');
 			if ($max_depth > 11) $max_depth = 11; // SQLite3 will crash if max depth > 11 (parser stack overflow); (TODO: can we do something else?!?!)
 
@@ -147,6 +155,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 
 			// 3. as last resort, sort by the identifier itself, e.g. if the function getOidArc always return 0 (happens if it is not an OID)
 			$out[] = "$fieldname $order";
+
 		} else {
 
 			// For (yet) unsupported DBMS, we do not offer natural sort

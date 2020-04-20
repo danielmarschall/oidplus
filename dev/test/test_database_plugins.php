@@ -124,6 +124,13 @@ function dotest($db) {
 			}
 		}
 
+		$msg = $db->error();
+		if (strpos($msg, 'ABCDEF') !== false) {
+			echo "Error-Function after failed direct query: PASSED<br>";
+		} else {
+			echo "Error-Function after failed direct query: <font color=\"red\">FAILED</font>, does probably not contain DBMS error string ($msg)<br>";
+		}
+
 		try {
 			$db->query("FEDCBA", array(''));
 			echo "Exception for PreparedQuery: <font color=\"red\">FAILED</font>, no Exception thrown<br>";
@@ -133,6 +140,21 @@ function dotest($db) {
 			} else {
 				echo "Exception for PreparedQuery: <font color=\"red\">FAILED</font>, does probably not contain DBMS error string<br>";
 			}
+		}
+
+		$msg = $db->error();
+		if (strpos($msg, 'FEDCBA') !== false) {
+			echo "Error-Function after failed prepared query: PASSED<br>";
+		} else {
+			echo "Error-Function after failed prepared query: <font color=\"red\">FAILED</font>, does probably not contain DBMS error string ($msg)<br>";
+		}
+
+		$db->query("select 1");
+		$msg = $db->error();
+		if (!$msg) {
+			echo "Error-Function gets cleared after non-failed query: PASSED<br>";
+		} else {
+			echo "Error-Function gets cleared after non-failed query: <font color=\"red\">FAILED</font>, does probably not contain DBMS error string<br>";
 		}
 
 		// --- Boolean handling
@@ -177,13 +199,42 @@ function dotest($db) {
 
 		// --- Check natOrder feature
 
-		$db->query("delete from ###objects where id like 'test:%'");
+		$db->query("delete from ###objects where parent = 'test:1'");
 		$db->query("insert into ###objects (id, parent, title, description, confidential) values ('oid:3.1.10', 'test:1', '', '', '0')");
 		$db->query("insert into ###objects (id, parent, title, description, confidential) values ('oid:3.1.2', 'test:1', '', '', '0')");
-
 		$res = $db->query("select id from ###objects where parent = ? order by ".$db->natOrder('id'), array('test:1'));
 		$val = $res->fetch_object()->id;
-		echo "Natural OID Sorting: " . ($val == 'oid:3.1.2' ? 'PASSED' : '<font color="red">FAILED</font>')."<br>";
+		echo "Natural OID Sorting (< 16 Bit): " . ($val == 'oid:3.1.2' ? 'PASSED' : '<font color="red">FAILED</font>')."<br>";
+
+		$db->query("delete from ###objects where parent = 'test:1'");
+		$db->query("insert into ###objects (id, parent, title, description, confidential) values ('oid:2.25.317919736312109525688528068157180855579', 'test:1', '', '', '0')");
+		$db->query("insert into ###objects (id, parent, title, description, confidential) values ('oid:2.25.67919736312109525688528068157180855579', 'test:1', '', '', '0')");
+		$res = $db->query("select id from ###objects where parent = ? order by ".$db->natOrder('id'), array('test:1'));
+		$val = $res->fetch_object()->id;
+		echo "Natural OID Sorting (128 Bit): " . ($val == 'oid:2.25.67919736312109525688528068157180855579' ? 'PASSED' : '<font color="red">FAILED</font>')."<br>";
+
+		$db->query("delete from ###objects where parent = 'test:1'");
+		$db->query("insert into ###objects (id, parent, title, description, confidential) values ('abc:3.1.10', 'test:1', '', '', '0')");
+		$db->query("insert into ###objects (id, parent, title, description, confidential) values ('abc:3.1.2', 'test:1', '', '', '0')");
+		$res = $db->query("select id from ###objects where parent = ? order by ".$db->natOrder('id'), array('test:1'));
+		$val = $res->fetch_object()->id;
+		echo "Non-Natural Sorting for Non-OIDs: " . ($val == 'abc:3.1.10' ? 'PASSED' : '<font color="red">FAILED</font>')."<br>";
+
+		// --- Test insert_id()
+
+		$db->query("delete from ###log_object where object = 'test:1'");
+		$cur = $db->insert_id();
+		echo "Insert ID on non-insert: " . ($cur == 0 ? 'PASSED' : '<font color="red">FAILED</font>')." ($cur)<br>";
+		$db->query("insert into ###log_object (log_id, object) values (1000, 'test:1')");
+		$prev = $db->insert_id();
+		$db->query("insert into ###log_object (log_id, object) values (2000, 'test:1')");
+		$cur = $db->insert_id();
+		echo "Insert ID on actual inserts: " . ($cur == $prev+1 ? 'PASSED' : '<font color="red">FAILED</font>')." ($prev => $cur)<br>";
+		if ($cur != $prev+1);
+		$db->query("delete from ###log_object where object = 'test:1'");
+		$cur = $db->insert_id();
+		echo "Non-Insert query will reset insert ID: " . ($cur == 0 ? 'PASSED' : '<font color="red">FAILED</font>')." ($cur)<br>";
+
 	} finally {
 		$db->query("delete from ###objects where parent = 'test:1'");
 	}

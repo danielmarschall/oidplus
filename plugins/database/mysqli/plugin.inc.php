@@ -64,7 +64,8 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 			} else {
 				$ps = $this->conn->prepare($sql);
 				if (!$ps) {
-					throw new OIDplusSQLException($sql, 'Cannot prepare statement');
+					$this->last_error = $this->conn->error;
+					throw new OIDplusSQLException($sql, 'Cannot prepare statement: '.$this->error());
 				}
 
 				// Caching the prepared is very risky

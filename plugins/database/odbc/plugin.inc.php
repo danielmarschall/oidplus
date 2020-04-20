@@ -72,7 +72,8 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 
 			$ps = @odbc_prepare($this->conn, $sql);
 			if (!$ps) {
-				throw new OIDplusSQLException($sql, 'Cannot prepare statement');
+				$this->last_error = odbc_errormsg($this->conn);
+				throw new OIDplusSQLException($sql, 'Cannot prepare statement: '.$this->error());
 			}
 
 			if (!@odbc_execute($ps, $prepared_args)) {
@@ -98,7 +99,9 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 				$row = $res->fetch_array();
 				return (int)$row['ID'];
 			case 'mssql':
-				$res = $this->query("SELECT SCOPE_IDENTITY() AS ID");
+				// Note: SCOPE_IDENTITY() does not work, does only give 0.
+				// $res = $this->query("SELECT SCOPE_IDENTITY() AS ID");
+				$res = $this->query("SELECT @@IDENTITY AS ID");
 				$row = $res->fetch_array();
 				return (int)$row['ID'];
 			default:

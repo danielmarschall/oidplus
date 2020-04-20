@@ -40,7 +40,11 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
-			$res = @$this->conn->query($sql);
+			try {
+				$res = $this->conn->query($sql);
+			} catch (Exception $e) {
+				$res = false;
+			}
 			if ($res === false) {
 				$this->last_error = $this->conn->lastErrorMsg();
 				throw new OIDplusSQLException($sql, $this->error());
@@ -62,9 +66,14 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 			if (isset($this->prepare_cache[$sql])) {
 				$stmt = $this->prepare_cache[$sql];
 			} else {
-				$stmt = @$this->conn->prepare($sql);
+				try {
+					$stmt = $this->conn->prepare($sql);
+				} catch (Exception $e) {
+					$stmt = false;
+				}
 				if ($stmt === false) {
-					throw new OIDplusSQLException($sql, 'Cannot prepare statement');
+					$this->last_error = $this->conn->lastErrorMsg();
+					throw new OIDplusSQLException($sql, 'Cannot prepare statement: '.$this->error());
 				}
 				$this->prepare_cache[$sql] = $stmt;
 			}
@@ -79,7 +88,11 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 				$i++;
 			}
 
-			$ps = $stmt->execute();
+			try {
+				$ps = $stmt->execute();
+			} catch (Exception $e) {
+				$ps = false;
+			}
 			if ($ps === false) {
 				$this->last_error = $this->conn->lastErrorMsg();
 				throw new OIDplusSQLException($sql, $this->error());
@@ -89,7 +102,15 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 	}
 
 	public function insert_id(): int {
-		return (int)$this->query('select last_insert_rowid() as id')->fetch_object()->id;
+		try {
+			// Note: This will always give results even for tables that do not
+			// have autoincrements, because SQLite3 assigns an "autoindex" for every table,
+			// e.g. the config table. Therefore, our testcase will fail.
+			return (int)$this->conn->lastInsertRowID();
+			//return (int)$this->query('select last_insert_rowid() as id')->fetch_object()->id;
+		} catch (Exception $e) {
+			return 0;
+		}
 	}
 
 	public function error(): string {
@@ -117,6 +138,9 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 		} catch (Exception $e) {
 			throw new OIDplusConfigInitializationException('Connection to the database failed! ' . $e->getMessage());
 		}
+
+		$this->conn->createCollation('NATURAL_CMP', 'strnatcmp'); // we need that for natSort()
+		$this->conn->enableExceptions(true); // Throw exceptions instead of PHP warnings
 
 		$this->prepare_cache = array();
 		$this->last_error = null;
@@ -151,6 +175,13 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 
 	public function slang(): string {
 		return 'sqlite';
+	}
+
+	public function natOrder($fieldname, $order='asc'): string {
+
+		// This collation is defined in the database plugin using SQLite3::createCollation()
+		return "$fieldname COLLATE NATURAL_CMP $order";
+
 	}
 }
 

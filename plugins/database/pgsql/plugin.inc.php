@@ -64,7 +64,8 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 			if (!in_array($prepare_name, $this->already_prepared)) {
 				$res = @pg_prepare($this->conn, $prepare_name, $sql);
 				if ($res === false) {
-					throw new OIDplusSQLException($sql, 'Cannot prepare statement');
+					$this->last_error = pg_last_error($this->conn);
+					throw new OIDplusSQLException($sql, 'Cannot prepare statement: '.$this->error());
 				}
 				$this->already_prepared[] = $prepare_name;
 			}
@@ -83,7 +84,11 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 	}
 
 	public function insert_id(): int {
-		return (int)$this->query('select lastval() as id')->fetch_object()->id;
+		try {
+			return (int)$this->query('select lastval() as id')->fetch_object()->id;
+		} catch (Exception $e) {
+			return 0;
+		}
 	}
 
 	public function error(): string {
