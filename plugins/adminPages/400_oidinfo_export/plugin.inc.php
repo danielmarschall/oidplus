@@ -176,7 +176,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array($row->ra_email));
 				if ($res2->num_rows() > 0) {
 					$row2 = $res2->fetch_object();
-					
+
 					$tmp = array();
 					if (!empty($row2->personal_name)) {
 						$name_ary = split_firstname_lastname($row2->personal_name);
@@ -203,7 +203,13 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 						$elements['current-registrant']['phone'] = !empty($row2->phone) ? $row2->phone : $row2->mobile;
 						$elements['current-registrant']['fax'] = $row2->fax;
 					}
-					$elements['current-registrant']['address'] = implode("<br/>", $tmp);
+					if (empty($row2->zip_town) && empty($row2->country)) {
+						// The address is useless if we do neither know city nor country
+						// Ignore it
+						$elements['current-registrant']['address'] = '';
+					} else {
+						$elements['current-registrant']['address'] = implode("<br/>", $tmp);
+					}
 				}
 				$elements['current-registrant']['modification-date'] = self::_formatdate($row->updated);
 
