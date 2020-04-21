@@ -113,7 +113,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 				if (class_exists('OIDplusPageAdminRegistration')) {
 					$reflector = new \ReflectionClass('OIDplusPageAdminRegistration');
 					$path = dirname($reflector->getFilename());
-					$output .= '<li><a href="'.OIDplus::webpath($path).'registration.php">Setup part 2: Basic settings (they are all available above, too)</a></li>';
+					$output .= '<li><a href="'.OIDplus::webpath($path).'oobe.php">Setup part 2: Basic settings (they are all available above, too)</a></li>';
 				} else {
 					$output .= '<li>Setup part 2 requires plugin OIDplusPageAdminRegistration (the basic settings are all available above, too)</a></li>';
 				}

@@ -303,8 +303,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		if (!$oobe_done) {
 			// Show registration/configuration wizard once
 			if ($html) {
-				if (basename($_SERVER['SCRIPT_NAME']) != 'registration.php') {
-					header('Location:'.OIDplus::webpath(__DIR__).'registration.php');
+				if (basename($_SERVER['SCRIPT_NAME']) != 'oobe.php') {
+					header('Location:'.OIDplus::webpath(__DIR__).'oobe.php');
 					die('Redirecting to registration wizard...');
 				}
 			}

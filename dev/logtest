@@ -1,8 +1,9 @@
+#!/usr/bin/php
 <?php
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
-OIDplus::init(true);
+OIDplus::init(false);
 
 // This file tests all log events (to verify that the logmasks are working)
 
@@ -46,3 +47,5 @@ OIDplus::logger()->log("RA($new_email)!", "RA '$old_email' has changed its email
 OIDplus::logger()->log("RA($email)?/A?", "Password of RA '$email' changed");
 OIDplus::logger()->log("RA($email)?/A?", "Changed RA '$email' contact data/details");
 OIDplus::logger()->log("A?", "Changed system config setting '$name' to '$value'");
+
+echo "Done";

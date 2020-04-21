@@ -52,12 +52,13 @@ $edits_possible = true;
 
 <h1>OIDplus Setup - Initial Settings</h1>
 
-<p>Your database settings are correct.</p>
+<p>If you can read this, then your database login credentials are correct.</p>
 
 <p>The following settings need to be configured once.<br>
-After setup is complete, you can change all these settings if required.</p>
+After setup is complete, you can change all these settings
+through the admin login area, if necessary.</p>
 
-<form method="POST" action="registration.php">
+<form method="POST" action="oobe.php">
 <input type="hidden" name="sent" value="1">
 
 <?php
@@ -199,7 +200,7 @@ echo '<p><u>Step '.($step++).': System registration and automatic publishing</u>
 
 echo file_get_contents(__DIR__ . '/info.tpl');
 
-$pki_status = OIDplus::getPkiStatus(); 
+$pki_status = OIDplus::getPkiStatus();
 
 if (!$pki_status) {
 	echo '<p>Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you <b>cannot</b> register your OIDplus instance at the moment.</p>';
@@ -264,8 +265,8 @@ if (!$pki_status) {
 	}
 	echo ' <font color="red"><b>'.$msg.'</b></font>';
 
-	echo '<p><i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.</p>';
-	// TODO: describe what data is transmitted or link to a privacy statement
+	echo '<p><i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.<br>
+	<a href="../../../res/OIDplus/privacy_documentation.html" target="_blank">Click here</a> for more information about privacy related topics.</p>';
 }
 
 ?>
