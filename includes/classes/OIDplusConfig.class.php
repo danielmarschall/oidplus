@@ -24,9 +24,9 @@ if (!defined('IN_OIDPLUS')) die();
 // e.g. database access credentials.
 class OIDplusConfig implements OIDplusConfigInterface {
 
-	public const PROTECTION_EDITABLE = 0;
-	public const PROTECTION_READONLY = 1;
-	public const PROTECTION_HIDDEN   = 2;
+	/*public*/ const PROTECTION_EDITABLE = 0;
+	/*public*/ const PROTECTION_READONLY = 1;
+	/*public*/ const PROTECTION_HIDDEN   = 2;
 
 	protected $values = array();
 	protected $dirty = true;

@@ -27,10 +27,12 @@ if (version_compare(PHP_VERSION, '7.0.0') < 0) {
 	//   Note: By removing these return values (e.g. removing ": array"), you *might* be
 	//   able to run OIDplus with PHP lower than version 7.0 (not tested)
 	//
-	// Reasons why we would require PHP 7.1 in the future (*):
+	// Currently we do NOT require 7.1, because some (old-)stable distros are still using PHP 7.0
+	// (e.g. Debian 9 which has LTS support till May 2022).
+	// Therefore we commented out following features which would require PHP 7.1:
 	// - Nullable return values (e.g. "function foo(): ?array")
-	//
-	// (*) Currently we do NOT require 7.1, because some distros are still using PHP 7.0 (e.g. Debian 9 which has LTS support till May 2022).
+	// - void return value (e.g. "function foo(): void") => currently commented out
+	// - private/protected/public consts => currently commented out
 	echo '<h1>OIDplus error</h1>';
 	echo "<p>OIDplus requires at least PHP version 7.0! You are currently using version " . PHP_VERSION . "</p>\n";
 	die();

@@ -505,6 +505,7 @@ class OIDplus {
 		if (!isset($_SERVER["SCRIPT_NAME"])) return false;
 
 		$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
+		$test_dir = str_replace('\\', '/', $test_dir);
 		$c = 0;
 		while (!file_exists($test_dir.'/oidplus_base.js')) {
 			$test_dir = dirname($test_dir);
@@ -518,6 +519,7 @@ class OIDplus {
 			$res = dirname($res);
 		}
 
+		$res = str_replace('\\', '/', $res);
 		if ($res == '/') $res = '';
 		$res .= '/';
 

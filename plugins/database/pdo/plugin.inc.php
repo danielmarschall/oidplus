@@ -98,7 +98,7 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 		return $err;
 	}
 
-	protected function doConnect(): void {
+	protected function doConnect()/*: void*/ {
 		if (!class_exists('PDO')) throw new OIDplusConfigInitializationException('PHP extension "PDO" not installed');
 
 		try {
@@ -123,24 +123,24 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 		$this->query("SET NAMES 'utf8'");
 	}
 
-	protected function doDisconnect(): void {
+	protected function doDisconnect()/*: void*/ {
 		$this->conn = null; // the connection will be closed by removing the reference
 	}
 
 	private $intransaction = false;
 
-	public function transaction_begin(): void {
+	public function transaction_begin()/*: void*/ {
 		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
 		$this->conn->beginTransaction();
 		$this->intransaction = true;
 	}
 
-	public function transaction_commit(): void {
+	public function transaction_commit()/*: void*/ {
 		$this->conn->commit();
 		$this->intransaction = false;
 	}
 
-	public function transaction_rollback(): void {
+	public function transaction_rollback()/*: void*/ {
 		$this->conn->rollBack();
 		$this->intransaction = false;
 	}

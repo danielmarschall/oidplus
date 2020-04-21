@@ -106,7 +106,7 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 		return $err;
 	}
 
-	protected function doConnect(): void {
+	protected function doConnect()/*: void*/ {
 		if (!function_exists('mysqli_connect')) throw new OIDplusException('PHP extension "MySQLi" not installed');
 
 		// Try connecting to the database
@@ -127,7 +127,7 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 		$this->query("SET NAMES 'utf8'");
 	}
 
-	protected function doDisconnect(): void {
+	protected function doDisconnect()/*: void*/ {
 		$this->prepare_cache = array();
 		if (!is_null($this->conn)) {
 			$this->conn->close();
@@ -137,20 +137,20 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 
 	private $intransaction = false;
 
-	public function transaction_begin(): void {
+	public function transaction_begin()/*: void*/ {
 		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
 		$this->conn->autocommit(false);
 		$this->conn->begin_transaction();
 		$this->intransaction = true;
 	}
 
-	public function transaction_commit(): void {
+	public function transaction_commit()/*: void*/ {
 		$this->conn->commit();
 		$this->conn->autocommit(true);
 		$this->intransaction = false;
 	}
 
-	public function transaction_rollback(): void {
+	public function transaction_rollback()/*: void*/ {
 		$this->conn->rollback();
 		$this->conn->autocommit(true);
 		$this->intransaction = false;

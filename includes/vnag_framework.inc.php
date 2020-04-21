@@ -1,26 +1,26 @@
 <?php /* <ViaThinkSoftSignature>
-TMKHe6m9e4EBz6rT5RAMpHJZXV6Oy0+hV2ySTE+s+2C1rOZM2OqsmkOHIJ/twUNTY
-vbVR55Y5YoXXcSVprQ757CJjRHCgVphAJ/H8ObIrfXGOguz5tpdXij29Y94tf6WBV
-NlKZsjIypi2Zo2jqpeCiReJb2qEGP64REC9OVFtQVfFp6LgN1kIjJRpPCFTRKOoVM
-Gyi41SyOPEw5MK512g33dB4yWUbVe3slLobJT4gBmKshvyuNm2P+eDf51hsEf9MeH
-ZrRqUaAbWtM/Nn0px1IPs5Ceudf6AhHIih6pPj4KINt/gYFgDTG0L2XU9myYXTlkM
-ruAssPVyqLY8IrT/B3i7fYYEsIE3N1NC7D3KW8tzaotaRu7IhOBUpd4e1qrmiPFpZ
-DxcR2KctLmZkIygOQZbwQIF7L3DZxzSjp6fUkv/SxlrYtKU+eV5/3HUBBgIZcW+0l
-T1b76Rx505ULlRzl37zGoXi5NFY+ntjGAEyWsxWZIscEdcs5W+hCzaLBcQXzYGkIp
-3a4cyNzMe/aDBAPPHOtefUudiC1PGTBF9FnSlmxWQVMEO1Yq5A0pAIoycENke3Zqr
-fE36xV4eq/kn7Z8pquDvsn9ip8q6mw41beGzZSWSuDAQnJSv+zxgpECZoHCo3ejd2
-v9iJ3wwuLcuY88R4ec58W/po4k6SwoZ1EobTqNS2trhcv7zd/N78NwFqHaYmSxMwh
-RPWLhOCIlPeCyTO2tGWVxCatC9mDY9yXaK2cpWBdJxawZFoEcVvJDkkRqjXbpjbk9
-dbGeI+RecwUqi9/F6dQlKyGdLuGjgLDQBGfeQbeAFFpnO7hMw8jlBS0/pP/PNZAyS
-4zW61qZY8mdSWK2UGh/S3mcfkizFTnHQzqzhNDnfiFkMfIJelPxl+XzCBzemQ1WGL
-n0ejvPQQomKTBN28ue4HflIEnqfhnHycUHv7mONgtbYSxGKolzyLWjzvmexfM4kSw
-SfGx42xckQkmnxAalQHgfb69/6PxQ1tsGY0sovuz10IXSMI9OZCTn0MsgVZ8tjy7Z
-TOTFOmhWHTWyhLpyJTIPNsEjXoXRKPozppUO7JTwXRo8gLPis/YoIZUMSQij12Cyi
-fsAl0m/3LTvQ/VG6ZYMFsnXjglA5DOQ8vkI/tiC75l3ht3v0oUx566uSE30xwkzPx
-OBNfsKJmqn0V4M8vl6tTA9RlzFKLYSEX2ypgFZzLGq0eH5OLKz9YeZ9+uyInLacxT
-RGhwTLWcOzkEizvQONq7Qq/G9JGQgjp6PSO/IbJYMfgPYmtJ727uKn241Z8PVOrTR
-XJeXJvR9MnHrixMbaO2YsImllvHO+wmJvU2JK2wibrWhxx3RW/f+7jch0qkXVVmUb
-Q==
+nsun5SsV9MHpK/dKZrXuYoigyMiEMaJUCD7V/A6dXc5OcyNd6sBTHivw8+xkJQuwV
+DjrCQu7U3dSDkUIYr1SNk2eCfm3x5U9EjwzPJQxJXRDbugz/T+uZ4lmBkuQiNXDlE
+5iG28HO/nrZ5l1Qm9gxzk2XusmlVEmONAiQfEb5KtqMW3YB1L6vACY0Lu4yO2KYXB
+TaSY5vxhbChZK+2WrnoFjYqdUq/IcsiA0+vrFKabWwsgQI9G+ccfwxKOyc+L6MqLF
+hkfGIgMQq8ETTlh87FSD9Q4nXuS/YjWvQ2vynbUWBdkNXB1YebQQ2M9CrOZLg5jXA
+MaLg8o4sD8JkMnEnUBa8cZuKx9rNa94vRn0wf0cKWZhRqtpmhJHHrornVQrj+DIMg
+eShEbru2cvudKmdRHPtA/7c5yNbS6yfxEbxi5EiODhrMrClvuRoXVFgBzpxkL5Kvd
+QJFhQOCTdKy2bKNGzSt/APtNFTHDsLel27RpMUnDEtHm886hr6nTEIxmejx/1cdyw
+Sf+kulW+xN4SErhNd239CI8pDECRk4y+mj+8/ebx+Q8nW6Z34BjDy2aDNA7zO3y9H
+MiDHwy3njK+ix55pdWY5U3faJ1FVQlG66IOqEoVl3w4e+FzHCearcrkSeeGhaT+F4
+29wucZWt+Xrz7LUCInCyYT9S0lRR95JfIl4UfuafUxXsC0jfSvd79Vrje4jVx/ksq
+Wv1IDYxkFElDiNg7CTylawidfhxrZK/6ZTxmOmO1aL+ntq6hjTnklusW5LI0+tdaU
+BxTQWt1it+PQSMckqXwhdGe3B4vCLmaG8+1OY9/T+xlI9F+IENn57Ru1JWLtLV5S1
+sNldwQTDHDsuP8qUgyBVt0Jl64Q9Cf0VsDmocop2+NVWNp4t2QUilP4PZuBE9n0DM
+ZWtxPauiFsgafAXOBKcdDPsRBxlG5LIgkTjazVmw/byCy8DI0Abxz5rustJ+rHDaj
+s49VyHd6a7NjTsJ5kHlqa3YtvHiryuisTeed0Y7wIAEx/ncfUAN+Cmkd2dEIgv1Gu
+HwgzCWwhoz6k8uoU/8o0h3cOBLtd+gAPIx3m28Tzs4ykuBSGRYGP4R21BMQ+RftCs
+YpvHqm0Vb7ZBN3hh6u6tbPPWdJIEh/I/ijBw8pta3YXLQPeZxj5ksBN+GxplnAZUD
+1DpzaW09tY/k5nfTBWVvdD1uVq7tsHJXQDeq0mkI5aeS2MF2KsVAbqoS6hWsJ2pna
+ajn7qyeJlMudjcfC7zPu1gwkXu/p6bQ/h1tNM9OShqLBBUnSJbG7hQuT4kqTaIivu
+Ajct3wf0fadryFMoqIcTLI4E4YcsDJHbR1z5xNxAA/Y+t3Y7EkQARO8Gri22S1mHY
+w==
 </ViaThinkSoftSignature> */ ?>
 <?php
 
@@ -340,33 +340,33 @@ function _empty($x) {
 }
 
 abstract class VNag {
-	public const VNAG_VERSION = '2020-04-14';
+	/*public*/ const VNAG_VERSION = '2020-04-14';
 
 	// Status 0..3 for STATUSMODEL_SERVICE (the default status model):
 	# The guideline states: "Higher-level errors (such as name resolution errors, socket timeouts, etc) are outside of the control of plugins and should generally NOT be reported as UNKNOWN states."
 	# We choose 4 as exitcode. The plugin developer is free to return any other status.
-	public const STATUS_OK       = 0;
-	public const STATUS_WARNING  = 1;
-	public const STATUS_CRITICAL = 2;
-	public const STATUS_UNKNOWN  = 3;
-	public const STATUS_ERROR    = 4; // and upwards
+	/*public*/ const STATUS_OK       = 0;
+	/*public*/ const STATUS_WARNING  = 1;
+	/*public*/ const STATUS_CRITICAL = 2;
+	/*public*/ const STATUS_UNKNOWN  = 3;
+	/*public*/ const STATUS_ERROR    = 4; // and upwards
 
 	// Status 0..1 for STATUSMODEL_HOST:
 	// The page https://blog.centreon.com/good-practices-how-to-develop-monitoring-plugin-nagios/
 	// states that host plugins may return following status codes:
 	// 0=UP, 1=DOWN, Other=Maintains last known state
-	public const STATUS_UP       = 0;
-	public const STATUS_DOWN     = 1;
-	public const STATUS_MAINTAIN = 2; // and upwards
+	/*public*/ const STATUS_UP       = 0;
+	/*public*/ const STATUS_DOWN     = 1;
+	/*public*/ const STATUS_MAINTAIN = 2; // and upwards
 
-	public const VERBOSITY_SUMMARY                = 0;
-	public const VERBOSITY_ADDITIONAL_INFORMATION = 1;
-	public const VERBOSITY_CONFIGURATION_DEBUG    = 2;
-	public const VERBOSITY_PLUGIN_DEBUG           = 3;
-	public const MAX_VERBOSITY = self::VERBOSITY_PLUGIN_DEBUG;
+	/*public*/ const VERBOSITY_SUMMARY                = 0;
+	/*public*/ const VERBOSITY_ADDITIONAL_INFORMATION = 1;
+	/*public*/ const VERBOSITY_CONFIGURATION_DEBUG    = 2;
+	/*public*/ const VERBOSITY_PLUGIN_DEBUG           = 3;
+	/*public*/ const MAX_VERBOSITY = self::VERBOSITY_PLUGIN_DEBUG;
 
-	public const STATUSMODEL_SERVICE = 0;
-	public const STATUSMODEL_HOST    = 1;
+	/*public*/ const STATUSMODEL_SERVICE = 0;
+	/*public*/ const STATUSMODEL_HOST    = 1;
 
 	private $initialized = false;
 
@@ -381,11 +381,11 @@ abstract class VNag {
 	private $helpObj = null;
 	private $argHandler = null;
 
-	public const OUTPUT_NEVER     = 0;
-	public const OUTPUT_SPECIAL   = 1; // illegal usage / help page, version page
-	public const OUTPUT_NORMAL    = 2;
-	public const OUTPUT_EXCEPTION = 4;
-	public const OUTPUT_ALWAYS    = 7; // = OUTPUT_SPECIAL+OUTPUT_NORMAL+OUTPUT_EXCEPTION
+	/*public*/ const OUTPUT_NEVER     = 0;
+	/*public*/ const OUTPUT_SPECIAL   = 1; // illegal usage / help page, version page
+	/*public*/ const OUTPUT_NORMAL    = 2;
+	/*public*/ const OUTPUT_EXCEPTION = 4;
+	/*public*/ const OUTPUT_ALWAYS    = 7; // = OUTPUT_SPECIAL+OUTPUT_NORMAL+OUTPUT_EXCEPTION
 
 	public $http_visual_output    = self::OUTPUT_ALWAYS; // show a human-readable panel? ...
 	public $http_invisible_output = self::OUTPUT_ALWAYS; // ... and/or show an invisible machine-readable tag?
@@ -742,7 +742,7 @@ abstract class VNag {
 	// $optional_args will be forwarded to the callback function cbRun()
 	public function run($optional_args=array()) {
 		global $inside_vnag_run;
-		
+
 		$inside_vnag_run = true;
 		try {
 			if (!$this->constructed) {
@@ -2458,16 +2458,16 @@ class VNagLang {
 }
 
 function vnagErrorHandler($errorkind, $errortext, $file, $line) {
-	// This function "converts" PHP runtime errors into Exceptions, which can then be handled by VNag::handleException() 
+	// This function "converts" PHP runtime errors into Exceptions, which can then be handled by VNag::handleException()
 	global $inside_vnag_run;
-	
+
 	if (!$inside_vnag_run && VNag::is_http_mode()) {
 		// We want to avoid that the VNag-Exception will show up in a website that contains
 		// an embedded VNag monitor, so if we are not inside a running VNag code,
 		// we will call the normal PHP error handler.
 		return false;
 	}
-	
+
 	if (!(error_reporting() & $errorkind)) {
 		// Code is not included in error_reporting. Don't do anything.
 		return true;

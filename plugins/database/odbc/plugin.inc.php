@@ -115,7 +115,7 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 		return $err;
 	}
 
-	protected function doConnect(): void {
+	protected function doConnect()/*: void*/ {
 		if (!function_exists('odbc_connect')) throw new OIDplusConfigInitializationException('PHP extension "ODBC" not installed');
 
 		// Try connecting to the database
@@ -137,7 +137,7 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 		}
 	}
 
-	protected function doDisconnect(): void {
+	protected function doDisconnect()/*: void*/ {
 		if (!is_null($this->conn)) {
 			@odbc_close($this->conn);
 			$this->conn = null;
@@ -146,19 +146,19 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 
 	private $intransaction = false;
 
-	public function transaction_begin(): void {
+	public function transaction_begin()/*: void*/ {
 		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
 		odbc_autocommit($this->conn, false); // begin transaction
 		$this->intransaction = true;
 	}
 
-	public function transaction_commit(): void {
+	public function transaction_commit()/*: void*/ {
 		odbc_commit($this->conn);
 		odbc_autocommit($this->conn, true);
 		$this->intransaction = false;
 	}
 
-	public function transaction_rollback(): void {
+	public function transaction_rollback()/*: void*/ {
 		odbc_rollback($this->conn);
 		odbc_autocommit($this->conn, true);
 		$this->intransaction = false;

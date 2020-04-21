@@ -28,11 +28,11 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 	protected abstract function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult;
 	public abstract function insert_id(): int;
 	public abstract function error(): string;
-	public abstract function transaction_begin(): void;
-	public abstract function transaction_commit(): void;
-	public abstract function transaction_rollback(): void;
-	protected abstract function doConnect(): void;
-	protected abstract function doDisconnect(): void;
+	public abstract function transaction_begin()/*: void*/;
+	public abstract function transaction_commit()/*: void*/;
+	public abstract function transaction_rollback()/*: void*/;
+	protected abstract function doConnect()/*: void*/;
+	protected abstract function doDisconnect()/*: void*/;
 
 	public final function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 
@@ -54,7 +54,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 		return $this->doQuery($sql, $prepared_args);
 	}
 
-	public final function connect(): void {
+	public final function connect()/*: void*/ {
 		if ($this->connected) return;
 		$this->beforeConnect();
 		$this->doConnect();
@@ -63,7 +63,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 		$this->afterConnect();
 	}
 
-	public final function disconnect(): void {
+	public final function disconnect()/*: void*/ {
 		if (!$this->connected) return;
 		$this->beforeDisconnect();
 		$this->doDisconnect();
@@ -166,13 +166,13 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 		return implode(', ', $out);
 	}
 
-	protected function beforeDisconnect(): void {}
+	protected function beforeDisconnect()/*: void*/ {}
 
-	protected function afterDisconnect(): void {}
+	protected function afterDisconnect()/*: void*/ {}
 
-	protected function beforeConnect(): void {}
+	protected function beforeConnect()/*: void*/ {}
 
-	protected function afterConnect(): void {
+	protected function afterConnect()/*: void*/ {
 		// Check if the config table exists. This is important because the database version is stored in it
 		$this->initRequireTables(array('config'));
 
@@ -231,7 +231,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 		return $this->connected;
 	}
 
-	public function init($html = true): void {
+	public function init($html = true)/*: void*/ {
 		$this->html = $html;
 	}
 

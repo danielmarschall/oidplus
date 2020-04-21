@@ -38,16 +38,16 @@ if (!defined('IN_OIDPLUS')) die();
  */
 class phpsvnclient {
 
-	protected const PHPSVN_NORMAL_REQUEST = '<?xml version="1.0" encoding="utf-8"?><propfind xmlns="DAV:"><prop><getlastmodified xmlns="DAV:"/> <checked-in xmlns="DAV:"/><version-name xmlns="DAV:"/><version-controlled-configuration xmlns="DAV:"/><resourcetype xmlns="DAV:"/><baseline-relative-path xmlns="http://subversion.tigris.org/xmlns/dav/"/><repository-uuid xmlns="http://subversion.tigris.org/xmlns/dav/"/></prop></propfind>';
+	/*protected*/ const PHPSVN_NORMAL_REQUEST = '<?xml version="1.0" encoding="utf-8"?><propfind xmlns="DAV:"><prop><getlastmodified xmlns="DAV:"/> <checked-in xmlns="DAV:"/><version-name xmlns="DAV:"/><version-controlled-configuration xmlns="DAV:"/><resourcetype xmlns="DAV:"/><baseline-relative-path xmlns="http://subversion.tigris.org/xmlns/dav/"/><repository-uuid xmlns="http://subversion.tigris.org/xmlns/dav/"/></prop></propfind>';
 	
-	protected const PHPSVN_VERSION_REQUEST = '<?xml version="1.0" encoding="utf-8"?><propfind xmlns="DAV:"><prop><checked-in xmlns="DAV:"/></prop></propfind>';
+	/*protected*/ const PHPSVN_VERSION_REQUEST = '<?xml version="1.0" encoding="utf-8"?><propfind xmlns="DAV:"><prop><checked-in xmlns="DAV:"/></prop></propfind>';
 	
-	protected const PHPSVN_LOGS_REQUEST = '<?xml version="1.0" encoding="utf-8"?> <S:log-report xmlns:S="svn:"> <S:start-revision>%d</S:start-revision><S:end-revision>%d</S:end-revision><S:path></S:path><S:discover-changed-paths/></S:log-report>';
+	/*protected*/ const PHPSVN_LOGS_REQUEST = '<?xml version="1.0" encoding="utf-8"?> <S:log-report xmlns:S="svn:"> <S:start-revision>%d</S:start-revision><S:end-revision>%d</S:end-revision><S:path></S:path><S:discover-changed-paths/></S:log-report>';
 	
-	protected const NO_ERROR = 1;
-	protected const NOT_FOUND = 2;
-	protected const AUTH_REQUIRED = 3;
-	protected const UNKNOWN_ERROR = 4;
+	/*protected*/ const NO_ERROR = 1;
+	/*protected*/ const NOT_FOUND = 2;
+	/*protected*/ const AUTH_REQUIRED = 3;
+	/*protected*/ const UNKNOWN_ERROR = 4;
 
 	/**
 	 *  SVN Repository URL

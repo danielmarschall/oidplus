@@ -119,7 +119,7 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 		return $err;
 	}
 
-	protected function doConnect(): void {
+	protected function doConnect()/*: void*/ {
 		if (!class_exists('SQLite3')) throw new OIDplusConfigInitializationException('PHP extension "SQLite3" not installed');
 
 		// Try connecting to the database
@@ -146,25 +146,25 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 		$this->last_error = null;
 	}
 
-	protected function doDisconnect(): void {
+	protected function doDisconnect()/*: void*/ {
 		$this->prepare_cache = array();
 		$this->conn = null;
 	}
 
 	private $intransaction = false;
 
-	public function transaction_begin(): void {
+	public function transaction_begin()/*: void*/ {
 		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
 		$this->query('begin transaction');
 		$this->intransaction = true;
 	}
 
-	public function transaction_commit(): void {
+	public function transaction_commit()/*: void*/ {
 		$this->query('commit');
 		$this->intransaction = false;
 	}
 
-	public function transaction_rollback(): void {
+	public function transaction_rollback()/*: void*/ {
 		$this->query('rollback');
 		$this->intransaction = false;
 	}

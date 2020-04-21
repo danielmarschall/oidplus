@@ -97,7 +97,7 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 		return $err;
 	}
 
-	protected function doConnect(): void {
+	protected function doConnect()/*: void*/ {
 		if (!function_exists('pg_connect')) throw new OIDplusConfigInitializationException('PHP extension "PostgreSQL" not installed');
 
 		// Try connecting to the database
@@ -129,7 +129,7 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 		}
 	}
 
-	protected function doDisconnect(): void {
+	protected function doDisconnect()/*: void*/ {
 		$this->already_prepared = array();
 		if (!is_null($this->conn)) {
 			pg_close($this->conn);
@@ -139,18 +139,18 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 
 	private $intransaction = false;
 
-	public function transaction_begin(): void {
+	public function transaction_begin()/*: void*/ {
 		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
 		$this->query('begin transaction');
 		$this->intransaction = true;
 	}
 
-	public function transaction_commit(): void {
+	public function transaction_commit()/*: void*/ {
 		$this->query('commit');
 		$this->intransaction = false;
 	}
 
-	public function transaction_rollback(): void {
+	public function transaction_rollback()/*: void*/ {
 		$this->query('rollback');
 		$this->intransaction = false;
 	}

@@ -14,14 +14,14 @@ if (!defined('IN_OIDPLUS')) die();
 
 class http_class {
 
-	public const HTTP_CLIENT_ERROR_UNSPECIFIED_ERROR =       -1;
-	public const HTTP_CLIENT_ERROR_NO_ERROR =                 0;
-	public const HTTP_CLIENT_ERROR_INVALID_SERVER_ADDRESS =   1;
-	public const HTTP_CLIENT_ERROR_CANNOT_CONNECT =           2;
-	public const HTTP_CLIENT_ERROR_COMMUNICATION_FAILURE =    3;
-	public const HTTP_CLIENT_ERROR_CANNOT_ACCESS_LOCAL_FILE = 4;
-	public const HTTP_CLIENT_ERROR_PROTOCOL_FAILURE =         5;
-	public const HTTP_CLIENT_ERROR_INVALID_PARAMETERS =       6;
+	/*public*/ const HTTP_CLIENT_ERROR_UNSPECIFIED_ERROR =       -1;
+	/*public*/ const HTTP_CLIENT_ERROR_NO_ERROR =                 0;
+	/*public*/ const HTTP_CLIENT_ERROR_INVALID_SERVER_ADDRESS =   1;
+	/*public*/ const HTTP_CLIENT_ERROR_CANNOT_CONNECT =           2;
+	/*public*/ const HTTP_CLIENT_ERROR_COMMUNICATION_FAILURE =    3;
+	/*public*/ const HTTP_CLIENT_ERROR_CANNOT_ACCESS_LOCAL_FILE = 4;
+	/*public*/ const HTTP_CLIENT_ERROR_PROTOCOL_FAILURE =         5;
+	/*public*/ const HTTP_CLIENT_ERROR_INVALID_PARAMETERS =       6;
 
 	public $host_name="";
 	public $host_port=0;
