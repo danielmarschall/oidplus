@@ -9,7 +9,8 @@ GO
 
 /**********************************************/
 
-DROP FUNCTION IF EXISTS [dbo].[getOidArc];
+IF OBJECT_ID('dbo.getOidArc', 'FN') IS NOT NULL /*Backwards compatibility*/
+	DROP FUNCTION /*IF EXISTS*/ [dbo].[getOidArc];
 GO
 CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @maxArcLen int, @occurence int)
 RETURNS varchar(512) AS
@@ -52,7 +53,8 @@ GO
 
 /**********************************************/
 
-DROP TABLE IF EXISTS [dbo].[config];
+IF OBJECT_ID('dbo.config', 'U') IS NOT NULL /*Backwards compatibility*/
+	DROP TABLE /*IF EXISTS*/ [dbo].[config];
 CREATE TABLE [dbo].[config](
 	[name] [varchar](50) NOT NULL,
 	[value] [text] NOT NULL,
@@ -68,7 +70,8 @@ GO
 
 /**********************************************/
 
-DROP TABLE IF EXISTS [dbo].[asn1id];
+IF OBJECT_ID('dbo.asn1id', 'U') IS NOT NULL /*Backwards compatibility*/
+	DROP TABLE /*IF EXISTS*/ [dbo].[asn1id];
 CREATE TABLE [dbo].[asn1id](
 	[lfd] [int] IDENTITY(1,1) NOT NULL,
 	[oid] [varchar](255) NOT NULL,
@@ -89,7 +92,8 @@ GO
 
 /**********************************************/
 
-DROP TABLE IF EXISTS [dbo].[iri];
+IF OBJECT_ID('dbo.iri', 'U') IS NOT NULL /*Backwards compatibility*/
+	DROP TABLE /*IF EXISTS*/ [dbo].[iri];
 CREATE TABLE [dbo].[iri](
 	[lfd] [int] IDENTITY(1,1) NOT NULL,
 	[oid] [varchar](255) NOT NULL,
@@ -110,7 +114,8 @@ GO
 
 /**********************************************/
 
-DROP TABLE IF EXISTS [dbo].[objects];
+IF OBJECT_ID('dbo.objects', 'U') IS NOT NULL /*Backwards compatibility*/
+	DROP TABLE /*IF EXISTS*/ [dbo].[objects];
 CREATE TABLE [dbo].[objects](
 	[id] [varchar](255) NOT NULL,
 	[parent] [varchar](255) NULL,
@@ -138,7 +143,8 @@ GO
 
 /**********************************************/
 
-DROP TABLE IF EXISTS [dbo].[ra];
+IF OBJECT_ID('dbo.ra', 'U') IS NOT NULL /*Backwards compatibility*/
+	DROP TABLE /*IF EXISTS*/ [dbo].[ra];
 CREATE TABLE [dbo].[ra](
 	[ra_id] [int] IDENTITY(1,1) NOT NULL,
 	[email] [varchar](100) NOT NULL,
@@ -170,7 +176,8 @@ GO
 
 /**********************************************/
 
-DROP TABLE IF EXISTS [dbo].[log];
+IF OBJECT_ID('dbo.log', 'U') IS NOT NULL /*Backwards compatibility*/
+	DROP TABLE /*IF EXISTS*/ [dbo].[log];
 CREATE TABLE [dbo].[log](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[unix_ts] [bigint] NOT NULL,
@@ -185,7 +192,8 @@ GO
 
 /**********************************************/
 
-DROP TABLE IF EXISTS [dbo].[log_user];
+IF OBJECT_ID('dbo.log_user', 'U') IS NOT NULL /*Backwards compatibility*/
+	DROP TABLE /*IF EXISTS*/ [dbo].[log_user];
 CREATE TABLE [dbo].[log_user](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[log_id] [int] NOT NULL,
@@ -212,7 +220,8 @@ GO
 
 /**********************************************/
 
-DROP TABLE IF EXISTS [dbo].[log_object];
+IF OBJECT_ID('dbo.log_object', 'U') IS NOT NULL /*Backwards compatibility*/
+	DROP TABLE /*IF EXISTS*/ [dbo].[log_object];
 CREATE TABLE [dbo].[log_object](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[log_id] [int] NOT NULL,

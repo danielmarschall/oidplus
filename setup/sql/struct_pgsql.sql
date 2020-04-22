@@ -122,9 +122,9 @@ CREATE TABLE "log_object" (
   "object" varchar(255) NOT NULL
 );
 
-DROP INDEX IF EXISTS "index_log_object_fk_log_id"
-DROP INDEX IF EXISTS "index_log_object_fk_object"
-DROP INDEX IF EXISTS "index_log_object_uq_log_id_object"
+DROP INDEX IF EXISTS "index_log_object_fk_log_id";
+DROP INDEX IF EXISTS "index_log_object_fk_object";
+DROP INDEX IF EXISTS "index_log_object_uq_log_id_object";
 
 CREATE         INDEX "index_log_object_fk_log_id"        ON "log_object"("log_id");
 CREATE         INDEX "index_log_object_fk_object"        ON "log_object"("object");

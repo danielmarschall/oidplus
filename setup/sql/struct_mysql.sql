@@ -10,7 +10,7 @@ CREATE TABLE `config` (
 ALTER TABLE `config`
   ADD PRIMARY KEY (`name`);
 
--------------------------------------------------------
+/* -------------------------------------------------- */
 
 DROP TABLE IF EXISTS `asn1id`;
 CREATE TABLE `asn1id` (
@@ -27,7 +27,7 @@ ALTER TABLE `asn1id`
 ALTER TABLE `asn1id`
   MODIFY `lfd` int(11) NOT NULL AUTO_INCREMENT;
 
--------------------------------------------------------
+/* -------------------------------------------------- */
 
 DROP TABLE IF EXISTS `iri`;
 CREATE TABLE `iri` (
@@ -44,7 +44,7 @@ ALTER TABLE `iri`
 ALTER TABLE `iri`
   MODIFY `lfd` int(11) NOT NULL AUTO_INCREMENT;
 
--------------------------------------------------------
+/* -------------------------------------------------- */
 
 DROP TABLE IF EXISTS `objects`;
 CREATE TABLE `objects` (
@@ -64,7 +64,7 @@ ALTER TABLE `objects`
   ADD INDEX `parent` (`parent`),
   ADD INDEX `ra_email` (`ra_email`);
 
--------------------------------------------------------
+/* -------------------------------------------------- */
 
 DROP TABLE IF EXISTS `ra`;
 CREATE TABLE `ra` (
@@ -94,7 +94,7 @@ ALTER TABLE `ra`
 ALTER TABLE `ra`
   MODIFY `ra_id` int(11) NOT NULL AUTO_INCREMENT;
 
--------------------------------------------------------
+/* -------------------------------------------------- */
 
 DROP TABLE IF EXISTS `log`;
 CREATE TABLE `log` (
@@ -109,7 +109,7 @@ ALTER TABLE `log`
 ALTER TABLE `log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
--------------------------------------------------------
+/* -------------------------------------------------- */
 
 DROP TABLE IF EXISTS `log_user`;
 CREATE TABLE `log_user` (
@@ -127,7 +127,7 @@ ALTER TABLE `log_user`
 ALTER TABLE `log_user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
--------------------------------------------------------
+/* -------------------------------------------------- */
 
 DROP TABLE IF EXISTS `log_object`;
 CREATE TABLE `log_object` (
@@ -144,6 +144,6 @@ ALTER TABLE `log_object`
 ALTER TABLE `log_object`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
--------------------------------------------------------
+/* -------------------------------------------------- */
 
 INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '203', '1', '0');

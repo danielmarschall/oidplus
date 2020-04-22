@@ -42,7 +42,7 @@ foreach ($table_names as $table) {
 	}
 	if ($slang == 'mssql') {
 		$cont = str_replace('['.$table.']', '['.$prefix.$table.']', $cont);
-		$cont = str_replace('dbo.'.$table, 'dbo.'.$prefix.$table, $cont);
+		$cont = str_replace("'dbo.$table'", "'dbo.$prefix$table'", $cont);
 		$cont = str_replace('PK_'.$table, 'PK_'.$prefix.$table, $cont);
 		$cont = str_replace('IX_'.$table, 'PK_'.$prefix.$table, $cont);
 		$cont = str_replace('DF__'.$table, 'DF__'.$prefix.$table, $cont);
