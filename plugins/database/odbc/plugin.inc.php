@@ -84,31 +84,6 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 		}
 	}
 
-	public function insert_id(): int {
-		switch ($this->slang()) {
-			case 'mysql':
-				$res = $this->query("SELECT LAST_INSERT_ID() AS ID");
-				$row = $res->fetch_array();
-				return (int)$row['ID'];
-			case 'sqlite':
-				$res = $this->query("SELECT last_insert_rowid() AS ID");
-				$row = $res->fetch_array();
-				return (int)$row['ID'];
-			case 'pgsql':
-				$res = $this->query("SELECT LASTVAL() AS ID");
-				$row = $res->fetch_array();
-				return (int)$row['ID'];
-			case 'mssql':
-				// Note: SCOPE_IDENTITY() does not work, does only give 0.
-				// $res = $this->query("SELECT SCOPE_IDENTITY() AS ID");
-				$res = $this->query("SELECT @@IDENTITY AS ID");
-				$row = $res->fetch_array();
-				return (int)$row['ID'];
-			default:
-				throw new OIDplusException("Cannot determine the last inserted ID for your DBMS. The DBMS is probably not supported.");
-		}
-	}
-
 	public function error(): string {
 		$err = $this->last_error;
 		if ($err == null) $err = '';

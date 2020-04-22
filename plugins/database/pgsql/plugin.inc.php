@@ -127,6 +127,11 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 			$this->query("SET NAMES 'utf8'");
 		} catch (Exception $e) {
 		}
+
+		$this->slang = self::getHardcodedSlangById('pgsql');
+		if (is_null($this->slang)) {
+			throw new OIDplusConfigInitializationException("Slang plugin 'pgsql' is missing");
+		}
 	}
 
 	protected function doDisconnect()/*: void*/ {
@@ -157,10 +162,6 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 
 	public function sqlDate(): string {
 		return 'now()';
-	}
-
-	public function slang(): string {
-		return 'pgsql';
 	}
 }
 

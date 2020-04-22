@@ -18,6 +18,11 @@ Type "database"
 	plugin.inc.php
 	setup.part.html
 
+Type "sql_slang"
+----------------
+
+	plugin.inc.php
+
 Type "auth"
 ---------------
 

@@ -28,7 +28,7 @@ if (!isset($version)) throw new OIDplusException("Argument 'version' is missing;
 if (!isset($this))    throw new OIDplusException("Argument 'this' is missing; was the file included in a wrong way?");
 
 // Change bit(1) types to boolean/tinyint(1)
-if ($this->slang() == 'pgsql') {
+if ($this->getSlang()::id() == 'pgsql') {
 	$this->query("alter table ###config  alter protected    drop default");
 	$this->query("alter table ###config  alter protected    type boolean using get_bit(protected   ,0)::boolean");
 	$this->query("alter table ###config  alter protected    set default false");
@@ -58,7 +58,7 @@ if ($this->slang() == 'pgsql') {
 	$this->query("alter table ###ra      alter privacy      drop default");
 	$this->query("alter table ###ra      alter privacy      type boolean using get_bit(privacy     ,0)::boolean");
 	$this->query("alter table ###ra      alter privacy      set default false");
-} else if ($this->slang() == 'mysql') {
+} else if ($this->getSlang()::id() == 'mysql') {
 	$this->query("alter table ###config  modify protected    boolean");
 	$this->query("alter table ###config  modify visible      boolean");
 	$this->query("alter table ###asn1id  modify standardized boolean");
@@ -70,9 +70,9 @@ if ($this->slang() == 'pgsql') {
 }
 
 // Rename log_user.user to log_user.username, since user is a keyword in PostgreSQL and MSSQL
-if ($this->slang() == 'pgsql') {
+if ($this->getSlang()::id() == 'pgsql') {
 	$this->query("alter table ###log_user rename column \"user\" to \"username\"");
-} else if ($this->slang() == 'mysql') {
+} else if ($this->getSlang()::id() == 'mysql') {
 	$this->query("alter table ###log_user change `user` `username` varchar(255) NOT NULL");
 }
 

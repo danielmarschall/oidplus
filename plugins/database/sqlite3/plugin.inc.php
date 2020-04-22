@@ -144,6 +144,11 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 
 		$this->prepare_cache = array();
 		$this->last_error = null;
+
+		$this->slang = self::getHardcodedSlangById('sqlite');
+		if (is_null($this->slang)) {
+			throw new OIDplusConfigInitializationException("Slang plugin 'sqlite' is missing");
+		}
 	}
 
 	protected function doDisconnect()/*: void*/ {
@@ -171,10 +176,6 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 
 	public function sqlDate(): string {
 		return 'datetime()';
-	}
-
-	public function slang(): string {
-		return 'sqlite';
 	}
 
 	public function natOrder($fieldname, $order='asc'): string {

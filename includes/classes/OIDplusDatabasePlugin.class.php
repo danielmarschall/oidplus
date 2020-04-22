@@ -20,19 +20,27 @@
 if (!defined('IN_OIDPLUS')) die();
 
 abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
-	protected $connected = false;
-	protected $html = null;
-	protected $last_query = null;
+	protected /*bool*/ $connected = false;
+	protected /*?bool*/ $html = null;
+	protected /*?string*/ $last_query = null;
+	protected /*?OIDplusSqlSlangPlugin*/ $slang = null;
 
 	public abstract static function name(): string; // this is the name that is set to the configuration value OIDplus::baseConfig()->getValue('DATABASE_PLUGIN') to identify the database plugin
 	protected abstract function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult;
-	public abstract function insert_id(): int;
 	public abstract function error(): string;
 	public abstract function transaction_begin()/*: void*/;
 	public abstract function transaction_commit()/*: void*/;
 	public abstract function transaction_rollback()/*: void*/;
 	protected abstract function doConnect()/*: void*/;
 	protected abstract function doDisconnect()/*: void*/;
+
+	public function insert_id(): int {
+		// This is the "fallback" variant. If your database provider (e.g. PDO) supports
+		// a function to detect the last inserted id, please override this
+		// function in order to use that specialized function (since it is usually
+		// more reliable).
+		return $this->getSlang()->insert_id();
+	}
 
 	public final function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 
@@ -48,7 +56,6 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 			file_put_contents($query_logfile, "$ts <$log_session_id$file> $sql\n", FILE_APPEND);
 		}
 
-		// TODO: debugging option (configurable) "query log" (including timestamp and a "session identifier" to see which call the queries belong to)
 		$this->last_query = $sql;
 		$sql = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $sql);
 		return $this->doQuery($sql, $prepared_args);
@@ -72,98 +79,17 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 	}
 
 	public function natOrder($fieldname, $order='asc'): string {
-
-		$order = strtolower($order);
-		if (($order != 'asc') && ($order != 'desc')) {
-			throw new OIDplusException("Invalid order '$order' (needs to be 'asc' or 'desc')");
-		}
-
-		$out = array();
-
-		if ($this->slang() == 'pgsql') {
-			$max_arc_len = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE') > 131072 ? 131072 : OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE'); // Limit of the "numeric()" type
-
-			// 1. Sort by namespace (oid, guid, ...)
-			$out[] = "SPLIT_PART($fieldname, ':', 1) $order";
-
-			// 2. Only if namespace is 'oid:': Sort OID as integer array
-			$out[] = "STRING_TO_ARRAY(SPLIT_PART($fieldname, 'oid:', 2), '.')::numeric($max_arc_len)[] $order";
-
-			// 3. Otherwise order by ID
-			$out[] = "$fieldname $order";
-
-		} else if ($this->slang() == 'mysql') {
-			$max_arc_len = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE') > 65 ? 65 : OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE'); // Limit of "decimal()" type
-
-			// 1. sort by namespace (oid, guid, ...)
-			$out[] = "SUBSTRING_INDEX($fieldname,':',1) $order";
-
-			// 2. sort by first arc (0,1,2)
-			$out[] = "SUBSTRING(SUBSTRING_INDEX($fieldname,'.',1), LENGTH(SUBSTRING_INDEX($fieldname,':',1))+2, $max_arc_len) $order";
-
-			for ($i=2; $i<=OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH'); $i++) {
-				// 3. Sort by the rest arcs one by one, not that MySQL can only handle decimal(65), not decimal($max_arc_len)
-				$out[] = "cast(SUBSTRING(SUBSTRING_INDEX($fieldname,'.',$i), LENGTH(SUBSTRING_INDEX($fieldname,'.',".($i-1)."))+2, $max_arc_len) as decimal($max_arc_len)) $order";
-			}
-
-			// 4. as last resort, sort by the identifier itself, e.g. if the casts above did fail (happens if it is not an OID)
-			$out[] = "$fieldname $order";
-
-		} else if ($this->slang() == 'mssql') {
-			$max_arc_len = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE');
-
-			// 1. sort by namespace (oid, guid, ...)
-			$out[] = "SUBSTRING($fieldname,1,CHARINDEX(':',$fieldname)-1) $order";
-
-			for ($i=1; $i<=OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH'); $i++) {
-				// 2. Sort by the rest arcs one by one; note that MySQL can only handle decimal(65), not decimal($max_arc_len)
-				$out[] = "dbo.getOidArc($fieldname, $max_arc_len, $i) $order";
-			}
-
-			// 3. as last resort, sort by the identifier itself, e.g. if the function getOidArc always return 0 (happens if it is not an OID)
-			$out[] = "$fieldname $order";
-
-		} else if ($this->slang() == 'sqlite') {
-
-			// If the SQLite database is accessed through the SQLite3 plugin,
-			// we use an individual collation, therefore OIDplusDatabasePluginSQLite3 overrides
-			// natOrder().
-			// If we connected to SQLite using ODBC or PDO, we need to do something else,
-			// but that solution is complex, slow and wrong (since it does not support
-			// UUIDs etc.)
-
-			$max_depth = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH');
-			if ($max_depth > 11) $max_depth = 11; // SQLite3 will crash if max depth > 11 (parser stack overflow); (TODO: can we do something else?!?!)
-
-			// 1. sort by namespace (oid, guid, ...)
-			$out[] = "substr($fieldname,0,instr($fieldname,':')) $order";
-
-			// 2. Sort by the rest arcs one by one
-			for ($i=1; $i<=$max_depth; $i++) {
-				if ($i==1) {
-					$arc = "substr($fieldname,5)||'.'";
-					$fieldname = $arc;
-					$arc = "substr($arc,0,instr($arc,'.'))";
-					$out[] = "cast($arc as integer) $order";
-				} else {
-					$arc = "ltrim(ltrim($fieldname,'0123456789'),'.')";
-					$fieldname = $arc;
-					$arc = "substr($arc,0,instr($arc,'.'))";
-					$out[] = "cast($arc as integer)  $order";
-				}
-			}
-
-			// 3. as last resort, sort by the identifier itself, e.g. if the function getOidArc always return 0 (happens if it is not an OID)
-			$out[] = "$fieldname $order";
-
+		if (!is_null($this->slang)) {
+			return $this->slang->natOrder($fieldname, $order);
 		} else {
+			$order = strtolower($order);
+			if (($order != 'asc') && ($order != 'desc')) {
+				throw new OIDplusException("Invalid order '$order' (needs to be 'asc' or 'desc')");
+			}
 
 			// For (yet) unsupported DBMS, we do not offer natural sort
-			$out[] = "$fieldname $order";
-
+			return "$fieldname $order";
 		}
-
-		return implode(', ', $out);
 	}
 
 	protected function beforeDisconnect()/*: void*/ {}
@@ -205,7 +131,16 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 		$this->initRequireTables(array('objects', 'asn1id', 'iri', 'ra'/*, 'config'*/));
 	}
 
-	private function initRequireTables($tableNames) {
+	protected static function getHardcodedSlangById($id): /*?*/OIDplusSqlSlangPlugin {
+		foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
+			if ($plugin::id() == $id) {
+				return $plugin;
+			}
+		}
+		return null;
+	}
+
+	private function initRequireTables($tableNames)/*: void*/ {
 		$msgs = array();
 		foreach ($tableNames as $tableName) {
 			$prefix = OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', '');
@@ -218,7 +153,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 		}
 	}
 
-	public function tableExists($tableName) {
+	public function tableExists($tableName): bool {
 		try {
 			$this->query("select 0 from ".$tableName." where 1=0");
 			return true;
@@ -236,67 +171,35 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 	}
 
 	public function sqlDate(): string {
-		switch ($this->slang()) {
-			case 'mysql':
-				return 'now()';
-			case 'mssql':
-				return 'getdate()';
-			case 'pgsql':
-				return 'now()';
-			case 'sqlite':
-				return 'datetime()';
-			default:
-				return "'" . datetime('Y-m-d H:i:s') . "'";
+		if (!is_null($this->slang)) {
+			return $this->slang->sqlDate();
+		} else {
+			return "'" . datetime('Y-m-d H:i:s') . "'";
 		}
 	}
 
-	public function slang(): string {
-		if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
-			return OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');
-		}
-
-		static $cache_slang = "";
-
-		if (!empty($cache_slang)) {
-			return $cache_slang;
-		} else {
-			try {
-				// MySQL, MariaDB and PostgreSQL
-				$vers = $this->query("select version() as dbms_version")->fetch_object()->dbms_version;
-				$vers = strtolower($vers);
-			} catch (Exception $e) {
-				try {
-					// Microsoft SQL Server
-					$vers = $this->query("select @@version as dbms_version")->fetch_object()->dbms_version;
-					$vers = strtolower($vers);
-				} catch (Exception $e) {
-
-					try {
-						// SQLite
-						$this->query("select sqlite_version as dbms_version")->fetch_object()->dbms_version;
-						$vers = "sqlite $vers";
-
-					} catch (Exception $e) {
-
-						// Don't know...
-						throw new OIDplusException("Cannot determine the slang of your DBMS (function 'version()' could not be called). Your DBMS is probably not supported.");
+	public final function getSlang(bool $mustExist=true): /*?*/OIDplusSqlSlangPlugin {
+		if (is_null($this->slang)) {
+			if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
+				$name = OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');
+				$this->slang = self::getHardcodedSlangById($name);
+				if ($mustExist && is_null($this->slang)) {
+					throw new OIDplusConfigInitializationException("Enforced SQL slang (via setting FORCE_DBMS_SLANG) '$name' does not exist.");
+				}
+			} else {
+				foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
+					if ($plugin->detect()) {
+						$this->slang = $plugin;
+						break;
 					}
 				}
-			}
-
-			$slang = null;
-			if (strpos($vers, 'postgresql')           !== false) $slang = 'pgsql';
-			if (strpos($vers, 'mysql')                !== false) $slang = 'mysql';
-			if (strpos($vers, 'mariadb')              !== false) $slang = 'mysql';
-			if (strpos($vers, 'microsoft sql server') !== false) $slang = 'mssql';
-			if (strpos($vers, 'sqlite')               !== false) $slang = 'sqlite';
-			if (!is_null($slang)) {
-				$cache_slang = $slang;
-				return $slang;
-			} else {
-				throw new OIDplusException("Cannot determine the slang of your DBMS (we don't know what to do with the DBMS '$vers'). Your DBMS is probably not supported.");
+				if ($mustExist && is_null($this->slang)) {
+					throw new OIDplusException("Cannot determine the SQL slang of your DBMS. Your DBMS is probably not supported.");
+				}
 			}
 		}
+
+		return $this->slang;
 	}
 }
 

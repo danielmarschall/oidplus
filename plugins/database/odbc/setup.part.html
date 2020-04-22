@@ -4,13 +4,10 @@
 	<!-- Note: You should use the driver "ODBC Driver XX for SQL Server" instead, since it is the latest generation -->
 	<p>ODBC Username:<br><input id="odbc_username" type="text" value="root" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="odbc_username_warn"></span></p>
 	<p>ODBC Password:<br><input id="odbc_password" type="password" value="" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="odbc_password_warn"></span></p>
-	<p>Which DBMS is used?<br>
-	<i>Attention: OIDplus currently only implements the SQL dialect of MySQL/MariaDB and PostgreSQL and Microsoft SQL Server. Other DBMS will most likely not work.</i><br>
+	<p>Which DBMS (SQL dialect) is used?<br>
+	<i>Attention: If your DBMS is not listed, OIDplus will most likely not work. If you know that your DBMS is compatible with one of these listed SQL dialect, you can chose that dialect.</i><br>
 	<select name="odbc_slang" id="odbc_slang" onChange="dbplugin_changed()">
-		<option value="mysql">MySQL / MariaDB</option>
-		<option value="pgsql">PostgreSQL</option>
-		<option value="mssql">Microsoft SQL Server</option>
-		<option value="sqlite">SQLite</option>
+	<!-- %SQL_SLANG_SELECTION% -->
 	</select></p>
 </div>
 <script>

@@ -12,7 +12,6 @@ RECENT STUFF
 - Test every function of OIDplus to ensure everything works after the recent changes in OOP
 - Does nginx require special directory protection (other than .htaccess?)
 	https://serverfault.com/questions/1013536/deny-access-to-directory-in-nginx
-- Add a new plugin type "db_slang"
 
 WHOIS
 - webwhois: beside TXT/XML/JSON more output modi?  CSV, S/MIME  (and add the S/MIME keypurpose to the X.509 certificates)

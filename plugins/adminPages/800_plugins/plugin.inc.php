@@ -82,6 +82,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			$show_pages_admin = false;
 			$show_db_active = false;
 			$show_db_inactive = false;
+			$show_sql_active = false;
+			$show_sql_inactive = false;
 			$show_obj_active = false;
 			$show_obj_inactive = false;
 			$show_auth = false;
@@ -94,6 +96,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				$show_pages_admin = true;
 				$show_db_active = true;
 				$show_db_inactive = true;
+				$show_sql_active = true;
+				$show_sql_inactive = true;
 				$show_obj_active = true;
 				$show_obj_inactive = true;
 				$show_auth = true;
@@ -141,6 +145,19 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				$out['title'] = "Database provider plugins (inactive)";
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_db_inactive = true;
+			} else if ($parts[1] == 'sql') {
+				$out['title'] = "SQL slang plugins";
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$show_sql_active = true;
+				$show_sql_inactive = true;
+			} else if ($parts[1] == 'sql.enabled') {
+				$out['title'] = "SQL slang plugins (active)";
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$show_sql_active = true;
+			} else if ($parts[1] == 'sql.disabled') {
+				$out['title'] = "SQL slang plugins (inactive)";
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$show_sql_inactive = true;
 			} else if ($parts[1] == 'auth') {
 				$out['title'] = "RA authentication";
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
@@ -287,7 +304,43 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 
 						$out['text'] .= '	<tr>';
 						$pluginInfo = $plugin::getPluginInformation();
-						if ($plugin::name() == OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')) {
+						if ($active) {
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b> (active)</a></td>';
+						} else {
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						}
+						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
+						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
+						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$out['text'] .= '	</tr>';
+					}
+					$out['text'] .= '</table>';
+					$out['text'] .= '</div></div>';
+				}
+			}
+
+			if ($show_sql_active || $show_sql_inactive) {
+				if (count($plugins = OIDplus::getSqlSlangPlugins()) > 0) {
+					$out['text'] .= '<h2>SQL slang plugins</h2>';
+					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '	<tr>';
+					$out['text'] .= '		<th width="25%">Class name</th>';
+					$out['text'] .= '		<th width="25%">Plugin name</th>';
+					$out['text'] .= '		<th width="25%">Plugin version</th>';
+					$out['text'] .= '		<th width="25%">Plugin author</th>';
+					$out['text'] .= '	</tr>';
+					foreach ($plugins as $plugin) {
+						$active = $plugin::id() == OIDplus::db()->getSlang()::id();
+						if ($active && !$show_sql_active) continue;
+						if (!$active && !$show_sql_inactive) continue;
+
+						$out['text'] .= '	<tr>';
+						$pluginInfo = $plugin::getPluginInformation();
+						if ($active) {
 							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b> (active)</a></td>';
 						} else {
 							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
@@ -348,6 +401,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		$tree_icon_pages_admin = $tree_icon; // TODO
 		$tree_icon_db_active = $tree_icon; // TODO
 		$tree_icon_db_inactive = $tree_icon; // TODO
+		$tree_icon_sql_active = $tree_icon; // TODO
+		$tree_icon_sql_inactive = $tree_icon; // TODO
 		$tree_icon_obj_active = $tree_icon; // TODO
 		$tree_icon_obj_inactive = $tree_icon; // TODO
 		$tree_icon_auth = $tree_icon; // TODO
@@ -398,6 +453,25 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				 );
 			} else {
 				$db_plugins[] = array(
+					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+					'icon' => $tree_icon_db_inactive,
+					'text' => '<font color="gray">'.$txt.'</font>',
+				 );
+			}
+		}
+		$sql_plugins = array();
+		foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
+			$pluginInfo = $plugin::getPluginInformation();
+			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+
+			if ($plugin::id() == OIDplus::db()->getSlang()::id()) {
+				$sql_plugins[] = array(
+					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+					'icon' => $tree_icon_db_active,
+					'text' => $txt,
+				 );
+			} else {
+				$sql_plugins[] = array(
 					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
 					'icon' => $tree_icon_db_inactive,
 					'text' => '<font color="gray">'.$txt.'</font>',
@@ -477,6 +551,12 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					'icon' => $tree_icon,
 					'text' => 'Database providers',
 					'children' => $db_plugins
+				),
+				array(
+					'id' => 'oidplus:system_plugins.sql',
+					'icon' => $tree_icon,
+					'text' => 'SQL slangs',
+					'children' => $sql_plugins
 				),
 				array(
 					'id' => 'oidplus:system_plugins.auth',

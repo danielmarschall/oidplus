@@ -77,9 +77,24 @@ function dbplugin_changed() {
 
 <?php
 
+$ary = glob(__DIR__ . '/../plugins/sql_slang/'.'*'.'/plugin.inc.php');
+foreach ($ary as $a) include $a;
+$sql_slang_selection = array();
+foreach (get_declared_classes() as $c) {
+	if (is_subclass_of($c, 'OIDplusSqlSlangPlugin')) {
+		$obj = new $c;
+		$slang_id = $obj::id();
+		$human_friendly_name = $obj::getPluginInformation()['name'];
+		$sql_slang_selection[] = '<option value="'.$slang_id.'">'.$human_friendly_name.'</option>';
+	}
+}
+$sql_slang_selection = implode("\n", $sql_slang_selection);
+
 $files = glob(__DIR__.'/../plugins/database/*/setup.part.html');
 foreach ($files as $file) {
-	echo file_get_contents($file);
+	$cont = file_get_contents($file);
+	$cont = str_replace('<!-- %SQL_SLANG_SELECTION% -->', $sql_slang_selection, $cont);
+	echo $cont;
 }
 if (count($files) == 0) {
 	echo '<p><font color="red">ERROR: No database plugins were found! You CANNOT use OIDplus without database connection.</font></p>';

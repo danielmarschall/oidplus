@@ -27,7 +27,7 @@ if (!isset($this))    throw new OIDplusException("Argument 'this' is missing; wa
 
 $this->transaction_begin();
 
-if ($this->slang() == 'mssql') {
+if ($this->getSlang()::id() == 'mssql') {
 	$sql = "CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @maxArcLen int, @occurence int)
 	RETURNS varchar(512) AS
 	BEGIN 

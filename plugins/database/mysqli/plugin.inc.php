@@ -125,6 +125,11 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 		$this->last_error = null;
 
 		$this->query("SET NAMES 'utf8'");
+
+		$this->slang = self::getHardcodedSlangById('mysql');
+		if (is_null($this->slang)) {
+			throw new OIDplusConfigInitializationException("Slang plugin 'mysql' is missing");
+		}
 	}
 
 	protected function doDisconnect()/*: void*/ {
@@ -158,10 +163,6 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 
 	public function sqlDate(): string {
 		return 'now()';
-	}
-
-	public function slang(): string {
-		return 'mysql';
 	}
 
 	public static function nativeDriverAvailable(): bool {

@@ -65,7 +65,7 @@ function dotest($db) {
 		echo "Connection <font color=\"red\">FAILED</font> (check config.inc.php): ".$e->getMessage()."<br><br>";
 		return;
 	}
-	echo "Detected slang: " . $db->slang()."<br>";
+	echo "Detected slang: " . $db->getSlang()::id()."<br>";
 	$db->query("delete from ###objects where parent = 'test:1'");
 	$db->query("insert into ###objects (id, parent, title, description, confidential) values ('test:1.1', 'test:1', '', '', '0')");
 	$db->query("insert into ###objects (id, parent, title, description, confidential) values ('test:1.2', 'test:1', '', '', '0')");

@@ -26,6 +26,7 @@ class OIDplus {
 	private static /*string[]*/ $enabledObjectTypes = array();
 	private static /*string[]*/ $disabledObjectTypes = array();
 	private static /*OIDplusDatabasePlugin[]*/ $dbPlugins = array();
+	private static /*OIDplusSqlSlangPlugin[]*/ $sqlSlangPlugins = array();
 
 	protected static $html = null;
 
@@ -33,12 +34,12 @@ class OIDplus {
 	}
 
 	# --- Static classes
-	
+
 	private static $baseConfig = null;
 	private static $old_config_format = false;
 	public static function baseConfig() {
 		$first_init = false;
-		
+
 		if ($first_init = is_null(self::$baseConfig)) {
 			self::$baseConfig = new OIDplusBaseConfig();
 		}
@@ -65,7 +66,7 @@ class OIDplus {
 
 				if (defined('OIDPLUS_CONFIG_VERSION') && (OIDPLUS_CONFIG_VERSION == 2.0)) {
 					self::$old_config_format = true;
-					
+
 					// Backwards compatibility 2.0 => 2.1
 					foreach (get_defined_constants(true)['user'] as $name => $value) {
 						$name = str_replace('OIDPLUS_', '', $name);
@@ -220,6 +221,21 @@ class OIDplus {
 			self::$sesHandler = new OIDplusSessionHandler();
 		}
 		return self::$sesHandler;
+	}
+
+	# --- SQL slang plugin
+
+	private static function registerSqlSlangPlugin(OIDplusSqlSlangPlugin $plugin) {
+		$name = $plugin::id();
+		if ($name === false) return false;
+
+		self::$sqlSlangPlugins[$name] = $plugin;
+
+		return true;
+	}
+
+	public static function getSqlSlangPlugins() {
+		return self::$sqlSlangPlugins;
 	}
 
 	# --- Database plugin
@@ -406,12 +422,12 @@ class OIDplus {
 		self::$html = $html;
 
 		// Reset internal state, so we can re-init verything if required
-		
+
 		if (self::$old_config_format) {
 			// Note: This can only happen in very special cases (e.g. test cases) where you call init() twice
 			throw new OIDplusConfigInitializationException('A full re-initialization is not possible if a version 2.0 config file (containing "defines") is used. Please update to a config 2.1 file by running setup again.');
 		}
-		
+
 		self::$config = null;
 		self::$baseConfig = null;
 		self::$gui = null;
@@ -426,6 +442,7 @@ class OIDplus {
 		self::$enabledObjectTypes = array();
 		self::$disabledObjectTypes = array();
 		self::$dbPlugins = array();
+		self::$sqlSlangPlugins = array();
 		self::$system_id_cache = null;
 		self::$sslAvailableCache = null;
 
@@ -435,6 +452,23 @@ class OIDplus {
 		                       // You can do changes to the configuration afterwards using OIDplus::baseConfig()->...
 
 		// Register database types (highest priority)
+
+		// SQL slangs
+
+		$ary = glob(__DIR__ . '/../../plugins/sql_slang/'.'*'.'/plugin.inc.php');
+		foreach ($ary as $a) include $a;
+
+		foreach (get_declared_classes() as $c) {
+			if (is_subclass_of($c, 'OIDplusSqlSlangPlugin')) {
+				self::registerSqlSlangPlugin(new $c());
+			}
+		}
+
+		foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
+			$plugin->init($html);
+		}
+
+		// Database providers
 
 		$ary = glob(__DIR__ . '/../../plugins/database/'.'*'.'/plugin.inc.php');
 		foreach ($ary as $a) include $a;
