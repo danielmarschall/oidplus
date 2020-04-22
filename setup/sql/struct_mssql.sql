@@ -1,10 +1,16 @@
-/****** Object:  UserDefinedFunction [dbo].[getOidArc]    Script Date: 11.04.2020 00:03:10 ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
+SET ANSI_PADDING ON
+GO
+
+/**********************************************/
+
+DROP FUNCTION IF EXISTS [dbo].[getOidArc];
+GO
 CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @maxArcLen int, @occurence int)
 RETURNS varchar(512) AS
 BEGIN 
@@ -42,213 +48,69 @@ BEGIN
 
 	RETURN REPLICATE('0', @maxArcLen)
 END
-
-
-/****** Delete existing tables ******/
-
-IF OBJECT_ID('dbo.asn1id', 'U') IS NOT NULL 
-	DROP TABLE [asn1id]
-IF OBJECT_ID('dbo.config', 'U') IS NOT NULL 
-	DROP TABLE [config]
-IF OBJECT_ID('dbo.iri', 'U') IS NOT NULL 
-	DROP TABLE [iri]
-IF OBJECT_ID('dbo.log', 'U') IS NOT NULL 
-	DROP TABLE [log]
-IF OBJECT_ID('dbo.log_object', 'U') IS NOT NULL 
-	DROP TABLE [log_object]
-IF OBJECT_ID('dbo.log_user', 'U') IS NOT NULL 
-	DROP TABLE [log_user]
-IF OBJECT_ID('dbo.objects', 'U') IS NOT NULL 
-	DROP TABLE [objects]
-IF OBJECT_ID('dbo.ra', 'U') IS NOT NULL 
-	DROP TABLE [ra]
-
-
-/****** Object:  Table [dbo].[asn1id]    Script Date: 08.04.2020 22:51:47 ******/
-SET ANSI_NULLS ON
 GO
 
-SET QUOTED_IDENTIFIER ON
-GO
+/**********************************************/
 
-SET ANSI_PADDING ON
-GO
-
-CREATE TABLE [dbo].[asn1id](
-	[lfd] [int] IDENTITY(1,1) NOT NULL,
-	[oid] [varchar](255) NOT NULL,
-	[name] [varchar](255) NOT NULL,
-	[standardized] [bit] NOT NULL,
-	[well_known] [bit] NOT NULL,
- CONSTRAINT [PK_asn1id] PRIMARY KEY CLUSTERED 
-(
-	[lfd] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-SET ANSI_PADDING OFF
-GO
-
-ALTER TABLE [dbo].[asn1id] ADD  CONSTRAINT [DF__asn1id__standard__21B6055D]  DEFAULT ('0') FOR [standardized]
-GO
-
-ALTER TABLE [dbo].[asn1id] ADD  CONSTRAINT [DF__asn1id__well_kno__22AA2996]  DEFAULT ('0') FOR [well_known]
-GO
-
-
-/****** Object:  Table [dbo].[config]    Script Date: 08.04.2020 22:52:22 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-SET ANSI_PADDING ON
-GO
-
+DROP TABLE IF EXISTS [dbo].[config];
 CREATE TABLE [dbo].[config](
 	[name] [varchar](50) NOT NULL,
 	[value] [text] NOT NULL,
 	[description] [varchar](255) NULL,
 	[protected] [bit] NOT NULL DEFAULT ('0'),
 	[visible] [bit] NOT NULL DEFAULT ('0'),
- CONSTRAINT [PK_config] PRIMARY KEY CLUSTERED 
-(
-	[name] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
+	CONSTRAINT [PK_config] PRIMARY KEY CLUSTERED 
+	(
+		[name] ASC
+	)
+)
 GO
 
-SET ANSI_PADDING OFF
+/**********************************************/
+
+DROP TABLE IF EXISTS [dbo].[asn1id];
+CREATE TABLE [dbo].[asn1id](
+	[lfd] [int] IDENTITY(1,1) NOT NULL,
+	[oid] [varchar](255) NOT NULL,
+	[name] [varchar](255) NOT NULL,
+	[standardized] [bit] NOT NULL CONSTRAINT [DF__asn1id__standard__21B6055D]  DEFAULT ('0'),
+	[well_known] [bit] NOT NULL CONSTRAINT [DF__asn1id__well_kno__22AA2996]  DEFAULT ('0'),
+ 	CONSTRAINT [PK_asn1id] PRIMARY KEY CLUSTERED 
+	(
+		[lfd] ASC
+	),
+	INDEX [IX_asn1id_oid_name] NONCLUSTERED
+	(
+		[oid] ASC,
+		[name] ASC
+	)
+)
 GO
 
+/**********************************************/
 
-/****** Object:  Table [dbo].[iri]    Script Date: 08.04.2020 22:52:32 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-SET ANSI_PADDING ON
-GO
-
+DROP TABLE IF EXISTS [dbo].[iri];
 CREATE TABLE [dbo].[iri](
 	[lfd] [int] IDENTITY(1,1) NOT NULL,
 	[oid] [varchar](255) NOT NULL,
 	[name] [varchar](255) NOT NULL,
-	[longarc] [bit] NOT NULL,
-	[well_known] [bit] NOT NULL,
- CONSTRAINT [PK_iri] PRIMARY KEY CLUSTERED 
-(
-	[lfd] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
+	[longarc] [bit] NOT NULL CONSTRAINT [DF__iri__longarc__24927208]  DEFAULT ('0'),
+	[well_known] [bit] NOT NULL CONSTRAINT [DF__iri__well_known__25869641]  DEFAULT ('0'),
+	CONSTRAINT [PK_iri] PRIMARY KEY CLUSTERED 
+	(
+		[lfd] ASC
+	),
+	INDEX [IX_iri_oid_name] NONCLUSTERED
+	(
+		[oid] ASC,
+		[name] ASC
+	)
+)
 GO
 
-SET ANSI_PADDING OFF
-GO
+/**********************************************/
 
-ALTER TABLE [dbo].[iri] ADD  CONSTRAINT [DF__iri__longarc__24927208]  DEFAULT ('0') FOR [longarc]
-GO
-
-ALTER TABLE [dbo].[iri] ADD  CONSTRAINT [DF__iri__well_known__25869641]  DEFAULT ('0') FOR [well_known]
-GO
-
-
-/****** Object:  Table [dbo].[log]    Script Date: 08.04.2020 22:52:41 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-SET ANSI_PADDING ON
-GO
-
-CREATE TABLE [dbo].[log](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[unix_ts] [bigint] NOT NULL,
-	[addr] [varchar](45) NOT NULL,
-	[event] [text] NOT NULL,
- CONSTRAINT [PK_log] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-
-SET ANSI_PADDING OFF
-GO
-
-
-/****** Object:  Table [dbo].[log_object]    Script Date: 08.04.2020 22:52:50 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-SET ANSI_PADDING ON
-GO
-
-CREATE TABLE [dbo].[log_object](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[log_id] [int] NOT NULL,
-	[object] [varchar](255) NOT NULL,
- CONSTRAINT [PK_log_object] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-SET ANSI_PADDING OFF
-GO
-
-
-/****** Object:  Table [dbo].[log_user]    Script Date: 08.04.2020 22:52:58 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-SET ANSI_PADDING ON
-GO
-
-CREATE TABLE [dbo].[log_user](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[log_id] [int] NOT NULL,
-	[username] [varchar](255) NOT NULL,
- CONSTRAINT [PK_log_user] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-SET ANSI_PADDING OFF
-GO
-
-
-/****** Object:  Table [dbo].[objects]    Script Date: 08.04.2020 22:53:07 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-SET ANSI_PADDING ON
-GO
-
+DROP TABLE IF EXISTS [dbo].[objects];
 CREATE TABLE [dbo].[objects](
 	[id] [varchar](255) NOT NULL,
 	[parent] [varchar](255) NULL,
@@ -259,31 +121,24 @@ CREATE TABLE [dbo].[objects](
 	[created] [datetime] NULL,
 	[updated] [datetime] NULL,
 	[comment] [varchar](255) NULL,
- CONSTRAINT [PK_objects] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
+	CONSTRAINT [PK_objects] PRIMARY KEY CLUSTERED 
+	(
+		[id] ASC
+	),
+	INDEX [IX_objects_parent] NONCLUSTERED 
+	(
+		[parent] ASC
+	),
+	INDEX [IX_objects_ra_email] NONCLUSTERED  /* TODO: add to other DBMS structs */
+	(
+		[ra_email] ASC
+	)
+)
 GO
 
-SET ANSI_PADDING OFF
-GO
+/**********************************************/
 
-ALTER TABLE [dbo].[objects] ADD  DEFAULT (NULL) FOR [parent]
-GO
-
-
-/****** Object:  Table [dbo].[ra]    Script Date: 08.04.2020 22:53:16 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-SET ANSI_PADDING ON
-GO
-
+DROP TABLE IF EXISTS [dbo].[ra];
 CREATE TABLE [dbo].[ra](
 	[ra_id] [int] IDENTITY(1,1) NOT NULL,
 	[email] [varchar](100) NOT NULL,
@@ -297,27 +152,95 @@ CREATE TABLE [dbo].[ra](
 	[phone] [varchar](100) NOT NULL,
 	[mobile] [varchar](100) NOT NULL,
 	[fax] [varchar](100) NOT NULL,
-	[privacy] [bit] NOT NULL,
+	[privacy] [bit] NOT NULL CONSTRAINT [DF__ra__privacy__29572725]  DEFAULT ('0'),
 	[salt] [varchar](100) NOT NULL,
 	[authkey] [varchar](100) NOT NULL,
 	[registered] [datetime] NULL,
 	[updated] [datetime] NULL,
 	[last_login] [datetime] NULL,
- CONSTRAINT [PK_ra] PRIMARY KEY CLUSTERED 
-(
-	[ra_id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
+	CONSTRAINT [PK_ra] PRIMARY KEY CLUSTERED 
+	(
+		[ra_id] ASC
+	),
+	CONSTRAINT [IX_ra_email] UNIQUE (
+		[email] ASC
+	)
+)
 GO
 
-SET ANSI_PADDING OFF
+/**********************************************/
+
+DROP TABLE IF EXISTS [dbo].[log];
+CREATE TABLE [dbo].[log](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[unix_ts] [bigint] NOT NULL,
+	[addr] [varchar](45) NOT NULL,
+	[event] [text] NOT NULL,
+	CONSTRAINT [PK_log] PRIMARY KEY CLUSTERED 
+	(
+		[id] ASC
+	)
+)
 GO
 
-ALTER TABLE [dbo].[ra] ADD  CONSTRAINT [DF__ra__privacy__29572725]  DEFAULT ('0') FOR [privacy]
+/**********************************************/
+
+DROP TABLE IF EXISTS [dbo].[log_user];
+CREATE TABLE [dbo].[log_user](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[log_id] [int] NOT NULL,
+	[username] [varchar](255) NOT NULL,
+	CONSTRAINT [PK_log_user] PRIMARY KEY CLUSTERED 
+	(
+		[id] ASC
+	),
+	INDEX [IX_log_user_log_id] NONCLUSTERED  /* TODO: add to other DBMS structs */
+	(
+		[log_id] ASC
+	),
+	INDEX [IX_log_user_username] NONCLUSTERED  /* TODO: add to other DBMS structs */
+	(
+		[username] ASC
+	),
+	CONSTRAINT [IX_log_object_log_id_username] UNIQUE  /* TODO: add to other DBMS structs */
+	(
+		[log_id],
+		[username]
+	)
+)
+GO
+
+/**********************************************/
+
+DROP TABLE IF EXISTS [dbo].[log_object];
+CREATE TABLE [dbo].[log_object](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[log_id] [int] NOT NULL,
+	[object] [varchar](255) NOT NULL,
+	CONSTRAINT [PK_log_object] PRIMARY KEY CLUSTERED 
+	(
+		[id] ASC
+	),
+	INDEX [IX_log_object_log_id] NONCLUSTERED  /* TODO: add to other DBMS structs */
+	(
+		[log_id] ASC
+	),
+	INDEX [IX_log_object_object] NONCLUSTERED  /* TODO: add to other DBMS structs */
+	(
+		[object] ASC
+	),
+	CONSTRAINT [IX_log_object_log_id_object] UNIQUE  /* TODO: add to other DBMS structs */
+	(
+		[log_id],
+		[object]
+	)
+)
 GO
 
 
 /****** Set database version ******/
 
 INSERT INTO [config] (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '203', '1', '0');
+
+SET ANSI_PADDING OFF
+GO
