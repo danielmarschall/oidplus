@@ -76,8 +76,8 @@ CREATE TABLE [dbo].[asn1id](
 	[lfd] [int] IDENTITY(1,1) NOT NULL,
 	[oid] [varchar](255) NOT NULL,
 	[name] [varchar](255) NOT NULL,
-	[standardized] [bit] NOT NULL CONSTRAINT [DF__asn1id__standard__21B6055D]  DEFAULT ('0'),
-	[well_known] [bit] NOT NULL CONSTRAINT [DF__asn1id__well_kno__22AA2996]  DEFAULT ('0'),
+	[standardized] [bit] NOT NULL CONSTRAINT [DF__asn1id__standardized]  DEFAULT ('0'),
+	[well_known] [bit] NOT NULL CONSTRAINT [DF__asn1id__well_known]  DEFAULT ('0'),
  	CONSTRAINT [PK_asn1id] PRIMARY KEY CLUSTERED 
 	(
 		[lfd] ASC
@@ -98,8 +98,8 @@ CREATE TABLE [dbo].[iri](
 	[lfd] [int] IDENTITY(1,1) NOT NULL,
 	[oid] [varchar](255) NOT NULL,
 	[name] [varchar](255) NOT NULL,
-	[longarc] [bit] NOT NULL CONSTRAINT [DF__iri__longarc__24927208]  DEFAULT ('0'),
-	[well_known] [bit] NOT NULL CONSTRAINT [DF__iri__well_known__25869641]  DEFAULT ('0'),
+	[longarc] [bit] NOT NULL CONSTRAINT [DF__iri__longarc]  DEFAULT ('0'),
+	[well_known] [bit] NOT NULL CONSTRAINT [DF__iri__well_known]  DEFAULT ('0'),
 	CONSTRAINT [PK_iri] PRIMARY KEY CLUSTERED 
 	(
 		[lfd] ASC
@@ -134,7 +134,7 @@ CREATE TABLE [dbo].[objects](
 	(
 		[parent] ASC
 	),
-	INDEX [IX_objects_ra_email] NONCLUSTERED  /* TODO: add to other DBMS structs */
+	INDEX [IX_objects_ra_email] NONCLUSTERED
 	(
 		[ra_email] ASC
 	)
@@ -158,7 +158,7 @@ CREATE TABLE [dbo].[ra](
 	[phone] [varchar](100) NOT NULL,
 	[mobile] [varchar](100) NOT NULL,
 	[fax] [varchar](100) NOT NULL,
-	[privacy] [bit] NOT NULL CONSTRAINT [DF__ra__privacy__29572725]  DEFAULT ('0'),
+	[privacy] [bit] NOT NULL CONSTRAINT [DF__ra__privacy]  DEFAULT ('0'),
 	[salt] [varchar](100) NOT NULL,
 	[authkey] [varchar](100) NOT NULL,
 	[registered] [datetime] NULL,
@@ -202,15 +202,15 @@ CREATE TABLE [dbo].[log_user](
 	(
 		[id] ASC
 	),
-	INDEX [IX_log_user_log_id] NONCLUSTERED  /* TODO: add to other DBMS structs */
+	INDEX [IX_log_user_log_id] NONCLUSTERED
 	(
 		[log_id] ASC
 	),
-	INDEX [IX_log_user_username] NONCLUSTERED  /* TODO: add to other DBMS structs */
+	INDEX [IX_log_user_username] NONCLUSTERED
 	(
 		[username] ASC
 	),
-	CONSTRAINT [IX_log_object_log_id_username] UNIQUE  /* TODO: add to other DBMS structs */
+	CONSTRAINT [IX_log_object_log_id_username] UNIQUE
 	(
 		[log_id],
 		[username]
@@ -230,15 +230,15 @@ CREATE TABLE [dbo].[log_object](
 	(
 		[id] ASC
 	),
-	INDEX [IX_log_object_log_id] NONCLUSTERED  /* TODO: add to other DBMS structs */
+	INDEX [IX_log_object_log_id] NONCLUSTERED
 	(
 		[log_id] ASC
 	),
-	INDEX [IX_log_object_object] NONCLUSTERED  /* TODO: add to other DBMS structs */
+	INDEX [IX_log_object_object] NONCLUSTERED
 	(
 		[object] ASC
 	),
-	CONSTRAINT [IX_log_object_log_id_object] UNIQUE  /* TODO: add to other DBMS structs */
+	CONSTRAINT [IX_log_object_log_id_object] UNIQUE
 	(
 		[log_id],
 		[object]
