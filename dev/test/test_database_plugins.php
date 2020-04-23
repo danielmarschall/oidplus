@@ -58,7 +58,7 @@ dotest($db);
 # ---
 
 function dotest($db) {
-	echo "Database: " . $db->name()."<br>";
+	echo "Database: " . $db::id()."<br>";
 	try {
 		$db->connect();
 	} catch (Exception $e) {

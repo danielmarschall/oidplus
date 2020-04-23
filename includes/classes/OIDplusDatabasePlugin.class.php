@@ -25,7 +25,7 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 	protected /*?string*/ $last_query = null;
 	protected /*?OIDplusSqlSlangPlugin*/ $slang = null;
 
-	public abstract static function name(): string; // this is the name that is set to the configuration value OIDplus::baseConfig()->getValue('DATABASE_PLUGIN') to identify the database plugin
+	public abstract static function id(): string; // this is the name that is set to the configuration value OIDplus::baseConfig()->getValue('DATABASE_PLUGIN') to identify the database plugin
 	protected abstract function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult;
 	public abstract function error(): string;
 	public abstract function transaction_begin()/*: void*/;

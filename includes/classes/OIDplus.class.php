@@ -241,7 +241,7 @@ class OIDplus {
 	# --- Database plugin
 
 	private static function registerDatabasePlugin(OIDplusDatabasePlugin $plugin) {
-		$name = $plugin->name();
+		$name = $plugin::id();
 		if ($name === false) return false;
 
 		self::$dbPlugins[$name] = $plugin;

@@ -32,7 +32,7 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 		return $out;
 	}
 
-	public static function name(): string {
+	public static function id(): string {
 		return "PDO";
 	}
 

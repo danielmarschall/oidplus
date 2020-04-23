@@ -44,8 +44,8 @@ foreach ($ary as $a) include $a;
 
 foreach (get_declared_classes() as $c) {
 	if (is_subclass_of($c, 'OIDplusDatabasePlugin')) {
-		$selected = $c::name() == 'MySQL' ? ' selected="true"' : '';
-		echo '<option value="'.htmlentities($c::name()).'"'.$selected.'>'.htmlentities($c::name()).'</option>';
+		$selected = $c::id() == 'MySQL' ? ' selected="true"' : '';
+		echo '<option value="'.htmlentities($c::id()).'"'.$selected.'>'.htmlentities($c::id()).'</option>';
 	}
 }
 

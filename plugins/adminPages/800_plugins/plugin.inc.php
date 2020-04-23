@@ -298,7 +298,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '		<th width="25%">Plugin author</th>';
 					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
-						$active = $plugin::name() == OIDplus::baseConfig()->getValue('DATABASE_PLUGIN');
+						$active = $plugin::id() == OIDplus::baseConfig()->getValue('DATABASE_PLUGIN');
 						if ($active && !$show_db_active) continue;
 						if (!$active && !$show_db_inactive) continue;
 
@@ -445,7 +445,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			$pluginInfo = $plugin::getPluginInformation();
 			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
 
-			if ($plugin::name() == OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')) {
+			if ($plugin::id() == OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')) {
 				$db_plugins[] = array(
 					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
 					'icon' => $tree_icon_db_active,
