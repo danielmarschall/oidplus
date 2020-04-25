@@ -54,6 +54,11 @@ class OIDplusAuthUtils {
 	}
 
 	public static function raNumLoggedIn() {
+		if (basename($_SERVER['SCRIPT_FILENAME']) == 'sitemap.php') {
+			// The sitemap may not contain any confidential information, even if the user is logged in,
+			// because they could accidentally copy-paste the sitemap to a search engine control panel
+			return 0;
+		}
 		$ses = OIDplus::sesHandler();
 
 		$list = $ses->getValue('oidplus_logged_in');
@@ -69,6 +74,11 @@ class OIDplusAuthUtils {
 	}
 
 	public static function loggedInRaList() {
+		if (basename($_SERVER['SCRIPT_FILENAME']) == 'sitemap.php') {
+			// The sitemap may not contain any confidential information, even if the user is logged in,
+			// because they could accidentally copy-paste the sitemap to a search engine control panel
+			return array();
+		}
 		$ses = OIDplus::sesHandler();
 		$list = $ses->getValue('oidplus_logged_in');
 		if (is_null($list)) $list = '';
@@ -116,11 +126,16 @@ class OIDplusAuthUtils {
 	}
 
 	public static function isAdminLoggedIn() {
+		if (basename($_SERVER['SCRIPT_FILENAME']) == 'sitemap.php') {
+			// The sitemap may not contain any confidential information, even if the user is logged in,
+			// because they could accidentally copy-paste the sitemap to a search engine control panel
+			return false;
+		}
 		$ses = OIDplus::sesHandler();
 		return $ses->getValue('oidplus_admin_logged_in') == '1';
 	}
 
-	// Action.php auth arguments
+	// Authentification keys for validating arguments (e.g. sent by mail)
 
 	public static function makeAuthKey($data) {
 		$data = OIDplus::baseConfig()->getValue('SERVER_SECRET') . $data;

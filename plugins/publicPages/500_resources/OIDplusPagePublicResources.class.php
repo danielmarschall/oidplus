@@ -319,6 +319,23 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		}
 	}
 
+	private function publicSitemap_rec($json, &$out) {
+		foreach ($json as $x) {
+			if (isset($x['id']) && $x['id']) {
+				$out[] = OIDplus::getSystemUrl().'?goto='.urlencode($x['id']);
+			}
+			if (isset($x['children'])) {
+				$this->publicSitemap_rec($x['children'], $out);
+			}
+		}
+	}
+
+	public function publicSitemap(&$out) {
+		$json = array();
+		$this->tree($json, null/*RA EMail*/, false/*HTML tree algorithm*/, true/*display all*/);
+		$this->publicSitemap_rec($json, $out);
+	}
+
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		$children = array();
 

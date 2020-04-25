@@ -163,6 +163,10 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		}
 	}
 
+	public function publicSitemap(&$out) {
+		$out[] = OIDplus::getSystemUrl().'?goto=oidplus:search';
+	}
+
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';

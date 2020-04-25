@@ -146,6 +146,10 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 		}
 	}
 
+	public function publicSitemap(&$out) {
+		$out[] = OIDplus::getSystemUrl().'?goto=oidplus:forgot_password';
+	}
+
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		return false;
 	}

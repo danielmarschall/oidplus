@@ -175,6 +175,10 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$out['text'] .= '<script>document.getElementById("loginArea").style.visibility = "visible";</script>';
 		}
 	}
+	
+	public function publicSitemap(&$out) {
+		$out[] = OIDplus::getSystemUrl().'?goto=oidplus:login';
+	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		$loginChildren = array();

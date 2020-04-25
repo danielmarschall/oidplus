@@ -241,6 +241,10 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 		}
 	}
 
+	public function publicSitemap(&$out) {
+		$out[] = OIDplus::getSystemUrl().'?goto=oidplus:com.viathinksoft.freeoid';
+	}
+
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (empty(self::getFreeRootOid(false))) return false;
 

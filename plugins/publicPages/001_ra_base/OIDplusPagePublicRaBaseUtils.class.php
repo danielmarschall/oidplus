@@ -64,6 +64,9 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 	public function gui($id, &$out, &$handled) {
 	}
 
+	public function publicSitemap(&$out) {
+	}
+
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 	}
 

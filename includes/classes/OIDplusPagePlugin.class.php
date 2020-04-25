@@ -23,4 +23,5 @@ abstract class OIDplusPagePlugin extends OIDplusPlugin {
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {}
 	public function modifyContent($id, &$title, &$icon, &$text) {}
 	public function tree_search($request) {}
+	public function publicSitemap(&$out) {}
 }
