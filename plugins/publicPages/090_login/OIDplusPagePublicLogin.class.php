@@ -177,7 +177,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 	}
 	
 	public function publicSitemap(&$out) {
-		$out[] = OIDplus::getSystemUrl().'?goto=oidplus:login';
+		$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('oidplus:login');
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {

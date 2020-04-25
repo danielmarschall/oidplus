@@ -42,7 +42,7 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePluginPublic {
 	}
 
 	public function publicSitemap(&$out) {
-		$out[] = OIDplus::getSystemUrl().'?goto=oidplus:contact';
+		$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('oidplus:contact');
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {

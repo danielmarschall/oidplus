@@ -164,7 +164,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 	}
 
 	public function publicSitemap(&$out) {
-		$out[] = OIDplus::getSystemUrl().'?goto=oidplus:search';
+		$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('oidplus:search');
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
