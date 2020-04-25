@@ -1,7 +1,5 @@
 <?php
 
-if (!defined('IN_OIDPLUS')) die();
-
 /*
  * http.php
  *    by Manuel Lemos

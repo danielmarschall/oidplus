@@ -54,10 +54,17 @@ function process_file($filename) {
 
 $out .= process_file(__DIR__ . '/oidplus_base.css');
 
-foreach (array('publicPages','adminPages','raPages') as $pudir) {
-	$ary = glob(__DIR__ . '/plugins/'.$pudir.'/'.'*'.'/style.css');
-	sort($ary);
-	foreach ($ary as $a) $out .= process_file($a);
+$ary = OIDplus::getAllPluginManifests('*Pages');
+foreach ($ary as $plugintype_folder => $bry) {
+	foreach ($bry as $pluginname_folder => $cry) {
+		if (!isset($cry['CSS'])) continue;
+		foreach ($cry['CSS'] as $dry_name => $dry) {
+			if ($dry_name != 'file') continue;
+			foreach ($dry as $css_file) {
+				$out .= process_file(__DIR__ . '/plugins/'.$plugintype_folder.'/'.$pluginname_folder.'/'.$css_file);
+			}
+		}
+	}
 }
 
 $out .= process_file(__DIR__ . '/3p/jstree/themes/default/style.css');

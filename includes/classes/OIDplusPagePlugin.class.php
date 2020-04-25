@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 abstract class OIDplusPagePlugin extends OIDplusPlugin {
 	public abstract function type();
 	public abstract function priority();

@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 abstract class OIDplusObject {
 	const UUID_NAMEBASED_NS_OidPlusMisc = 'ad1654e6-7e15-11e4-9ef6-78e3b5fc7f22';
 

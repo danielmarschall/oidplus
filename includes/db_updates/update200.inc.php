@@ -22,8 +22,6 @@
 // Parameters: $this is the OIDplusDatabasePlugin class
 //             $version is the current version (this script MUST increase the number by 1 when it is done)
 
-if (!defined('IN_OIDPLUS')) die();
-
 if (!isset($version)) throw new OIDplusException("Argument 'version' is missing; was the file included in a wrong way?");
 if (!isset($this))    throw new OIDplusException("Argument 'this' is missing; was the file included in a wrong way?");
 

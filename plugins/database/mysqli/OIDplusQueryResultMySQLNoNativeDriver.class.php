@@ -1,0 +1,103 @@
+<?php
+
+/*
+ * OIDplus 2.0
+ * Copyright 2019 Daniel Marschall, ViaThinkSoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
+	// Based on https://www.php.net/manual/de/mysqli-stmt.get-result.php#113398
+
+	protected $stmt;
+	protected $nCols;
+	protected $no_resultset;
+
+	public function __construct($stmt) {
+		$metadata = mysqli_stmt_result_metadata($stmt);
+
+		$this->no_resultset = is_bool($metadata);
+
+		if (!$this->no_resultset) {
+			$this->nCols = mysqli_num_fields($metadata);
+			$this->stmt = $stmt;
+
+			mysqli_free_result($metadata);
+		}
+	}
+
+	public function containsResultSet(): bool {
+		return !$this->no_resultset;
+	}
+
+	public function num_rows(): int {
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+
+		$this->stmt->store_result();
+		return $this->stmt->num_rows;
+	}
+
+	public function fetch_array()/*: ?array*/ {
+		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+
+		// https://stackoverflow.com/questions/10752815/mysqli-get-result-alternative , modified
+		$stmt = $this->stmt;
+		$stmt->store_result();
+		$resultkeys = array();
+		$thisName = "";
+
+		if ($stmt->num_rows==0) return null;
+
+		for ($i = 0; $i < $stmt->num_rows; $i++) {
+			$metadata = $stmt->result_metadata();
+			while ($field = $metadata->fetch_field()) {
+				$thisName = $field->name;
+				$resultkeys[] = $thisName;
+			}
+		}
+
+		$ret = array();
+		$args = array();
+		for ($i=0; $i<$this->nCols; $i++) {
+			$ret[$i] = NULL;
+			$theValue = $resultkeys[$i];
+			$ret[$theValue] = NULL; // will be overwritten by mysqli_stmt_bind_result
+			$args[] = &$ret[$theValue];
+		}
+		if (!mysqli_stmt_bind_result($this->stmt, ...$args)) {
+			return null;
+		}
+
+		// This should advance the "$stmt" cursor.
+		if (!mysqli_stmt_fetch($this->stmt)) {
+			return null;
+		}
+
+		// Return the array we built.
+		return $ret;
+	}
+
+	public function fetch_object()/*: ?object*/ {
+		if ($this->no_resultset) throw new OIDplusConfigInitializationException("The query has returned no result set (i.e. it was not a SELECT query)");
+
+		$ary = $this->fetch_array();
+		if (!$ary) return null;
+
+		$obj = new stdClass;
+		foreach ($ary as $name => $val) {
+			$obj->$name = $val;
+		}
+		return $obj;
+	}
+}

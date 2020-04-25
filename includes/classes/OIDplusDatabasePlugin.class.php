@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 	protected /*bool*/ $connected = false;
 	protected /*?bool*/ $html = null;

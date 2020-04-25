@@ -23,9 +23,7 @@ $prefix = isset($_REQUEST['prefix']) ? $_REQUEST['prefix'] : '';
 $database = isset($_REQUEST['database']) ? $_REQUEST['database'] : '';
 $slang = isset($_REQUEST['slang']) ? $_REQUEST['slang'] : 'mysql';
 
-$ary = glob(__DIR__ . '/../plugins/sql_slang/'.'*'.'/plugin.inc.php');
-foreach ($ary as $a) include $a;
-
+OIDplus::registerAllPlugins('sql_slang', 'OIDplusSqlSlangPlugin', null);
 $slang_plugin = null;
 foreach (get_declared_classes() as $c) {
 	if (is_subclass_of($c, 'OIDplusSqlSlangPlugin')) {

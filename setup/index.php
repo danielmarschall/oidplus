@@ -39,9 +39,7 @@ Database plugin: <select name="db_plugin" onChange="dbplugin_changed()" id="db_p
 
 <?php
 
-$ary = glob(__DIR__ . '/../plugins/database/'.'*'.'/plugin.inc.php');
-foreach ($ary as $a) include $a;
-
+OIDplus::registerAllPlugins('database', 'OIDplusDatabasePlugin', null);
 foreach (get_declared_classes() as $c) {
 	if (is_subclass_of($c, 'OIDplusDatabasePlugin')) {
 		$selected = $c::id() == 'MySQL' ? ' selected="true"' : '';
@@ -77,20 +75,34 @@ function dbplugin_changed() {
 
 <?php
 
-$ary = glob(__DIR__ . '/../plugins/sql_slang/'.'*'.'/plugin.inc.php');
-foreach ($ary as $a) include $a;
+OIDplus::registerAllPlugins('sql_slang', 'OIDplusSqlSlangPlugin', null);
 $sql_slang_selection = array();
 foreach (get_declared_classes() as $c) {
 	if (is_subclass_of($c, 'OIDplusSqlSlangPlugin')) {
 		$obj = new $c;
 		$slang_id = $obj::id();
-		$human_friendly_name = $obj::getPluginInformation()['name'];
+		$pluginInfo = OIDplus::getPluginInfo($obj);
+		$human_friendly_name = isset($pluginInfo['name']) ? $pluginInfo['name'] : get_class($obj);
 		$sql_slang_selection[] = '<option value="'.$slang_id.'">'.$human_friendly_name.'</option>';
 	}
 }
 $sql_slang_selection = implode("\n", $sql_slang_selection);
 
-$files = glob(__DIR__.'/../plugins/database/*/setup.part.html');
+$files = array();
+
+$ary = OIDplus::getAllPluginManifests('database');
+foreach ($ary as $plugintype_folder => $bry) {
+	foreach ($bry as $pluginname_folder => $cry) {
+		if (!isset($cry['Setup'])) continue;
+		foreach ($cry['Setup'] as $dry_name => $dry) {
+			if ($dry_name != 'htmlpart') continue;
+			foreach ($dry as $html_file) {
+				$files[] = __DIR__ . '/../plugins/'.$plugintype_folder.'/'.$pluginname_folder.'/'.$html_file;
+			}
+		}
+	}
+}
+
 foreach ($files as $file) {
 	$cont = file_get_contents($file);
 	$cont = str_replace('<!-- %SQL_SLANG_SELECTION% -->', $sql_slang_selection, $cont);

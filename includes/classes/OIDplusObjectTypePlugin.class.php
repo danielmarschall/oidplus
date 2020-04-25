@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 abstract class OIDplusObjectTypePlugin extends OIDplusPlugin {
 
 	public static abstract function getObjectTypeClassName();

@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 class OIDplusLogger {
 
 	private static function split_maskcodes($maskcodes) {

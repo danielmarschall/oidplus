@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 
 	public abstract static function id(): string;

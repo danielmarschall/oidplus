@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 class OIDplus {
 	private static /*OIDplusPagePlugin[][]*/ $pagePlugins = array();
 	private static /*OIDplusAuthPlugin[][]*/ $authPlugins = array();
@@ -416,6 +414,63 @@ class OIDplus {
 		return self::$disabledObjectTypes;
 	}
 
+	# --- Plugin handling functions
+
+	public static function getPluginInfo($class_name): array {
+		$reflector = new ReflectionClass($class_name);
+		$ini = dirname($reflector->getFileName()).'/manifest.ini';
+		if (!file_exists($ini)) return array();
+		$bry = parse_ini_file($ini, true, INI_SCANNER_TYPED);
+		if (!isset($bry['Plugin'])) return array();
+		return $bry['Plugin'];
+	}
+
+	public static function getAllPluginManifests($pluginFolderMask='*'): array {
+		static $cache = null;
+		if (!is_null($cache)) return $cache;
+
+		$out = array();
+		$ary = glob(__DIR__ . '/../../plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.ini');
+		foreach ($ary as $ini) {
+			if (!file_exists($ini)) continue;
+			$bry = parse_ini_file($ini, true, INI_SCANNER_TYPED);
+
+			$plugintype_folder = basename(dirname(dirname($ini)));
+			$pluginname_folder = basename(dirname($ini));
+
+			if (!isset($out[$plugintype_folder])) $out[$plugintype_folder] = array();
+			if (!isset($out[$plugintype_folder][$pluginname_folder])) $out[$plugintype_folder][$pluginname_folder] = array();
+			$out[$plugintype_folder][$pluginname_folder] = $bry;
+		}
+
+		$cache = $out;
+		return $out;
+	}
+
+	public static function registerAllPlugins($pluginDirName, $expectedPluginClass, $registerCallback): array {
+		$out = array();
+		$ary = self::getAllPluginManifests();
+		foreach ($ary as $plugintype_folder => $bry) {
+			foreach ($bry as $pluginname_folder => $cry) {
+				if (!isset($cry['PHP'])) continue;
+				if (!isset($cry['PHP']['class'])) continue;
+				foreach ($cry['PHP']['class'] as $class_name) {
+					class_exists($class_name); // force autoloader to load the class
+					if (!is_null($registerCallback) &&
+					    !(new ReflectionClass($class_name))->isAbstract() &&
+					     ($class_name != $expectedPluginClass) &&
+					     is_subclass_of($class_name, $expectedPluginClass))
+					{
+						$out[] = $class_name;
+						call_user_func($registerCallback, new $class_name());
+					}
+				}
+			}
+
+		}
+		return $out;
+	}
+
 	# --- Initialization of OIDplus
 
 	public static function init($html=true) {
@@ -455,30 +510,14 @@ class OIDplus {
 
 		// SQL slangs
 
-		$ary = glob(__DIR__ . '/../../plugins/sql_slang/'.'*'.'/plugin.inc.php');
-		foreach ($ary as $a) include $a;
-
-		foreach (get_declared_classes() as $c) {
-			if (is_subclass_of($c, 'OIDplusSqlSlangPlugin')) {
-				self::registerSqlSlangPlugin(new $c());
-			}
-		}
-
+		self::registerAllPlugins('sql_slang', 'OIDplusSqlSlangPlugin', array('OIDplus','registerSqlSlangPlugin'));
 		foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 			$plugin->init($html);
 		}
 
 		// Database providers
 
-		$ary = glob(__DIR__ . '/../../plugins/database/'.'*'.'/plugin.inc.php');
-		foreach ($ary as $a) include $a;
-
-		foreach (get_declared_classes() as $c) {
-			if (is_subclass_of($c, 'OIDplusDatabasePlugin')) {
-				self::registerDatabasePlugin(new $c());
-			}
-		}
-
+		self::registerAllPlugins('database', 'OIDplusDatabasePlugin', array('OIDplus','registerDatabasePlugin'));
 		foreach (OIDplus::getDatabasePlugins() as $plugin) {
 			$plugin->init($html);
 		}
@@ -497,28 +536,9 @@ class OIDplus {
 
 		// Register non-DB plugins
 
-		$ary = glob(__DIR__ . '/../../plugins/objectTypes/'.'*'.'/plugin.inc.php');
-		foreach ($ary as $a) include $a;
-
-		$ary = glob(__DIR__ . '/../../plugins/*Pages/'.'*'.'/plugin.inc.php');
-		foreach ($ary as $a) include $a;
-
-		$ary = glob(__DIR__ . '/../../plugins/auth/'.'*'.'/plugin.inc.php');
-		foreach ($ary as $a) include $a;
-
-		foreach (get_declared_classes() as $c) {
-			if (!(new ReflectionClass($c))->isAbstract()) {
-				if (is_subclass_of($c, 'OIDplusPagePlugin')) {
-					self::registerPagePlugin(new $c());
-				}
-				if (is_subclass_of($c, 'OIDplusAuthPlugin')) {
-					self::registerAuthPlugin(new $c());
-				}
-				if (is_subclass_of($c, 'OIDplusObjectTypePlugin')) {
-					self::registerObjectTypePlugin(new $c());
-				}
-			}
-		}
+		self::registerAllPlugins('*Pages', 'OIDplusPagePlugin', array('OIDplus','registerPagePlugin'));
+		self::registerAllPlugins('auth', 'OIDplusAuthPlugin', array('OIDplus','registerAuthPlugin'));
+		self::registerAllPlugins('objectTypes', 'OIDplusObjectTypePlugin', array('OIDplus','registerObjectTypePlugin'));
 
 		// Initialize non-DB plugins
 

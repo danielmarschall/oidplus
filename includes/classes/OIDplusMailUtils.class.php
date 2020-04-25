@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 class OIDplusMailUtils {
 
 	public static function validMailAddress($email) {

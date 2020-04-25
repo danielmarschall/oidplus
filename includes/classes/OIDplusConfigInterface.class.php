@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 interface OIDplusConfigInterface {
 
 	public function getValue($name, $default=null);

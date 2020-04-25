@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 abstract class OIDplusAuthPlugin extends OIDplusPlugin {
 	public abstract function verify($authKey, $salt, $check_password);
 }

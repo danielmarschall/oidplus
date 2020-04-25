@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 // OIDplusConfig contains settings that are stored in the database.
 // Not to be confused with OIDplusBaseConfig which is the basic ("static") configuration stored in includes/config.inc.php,
 // e.g. database access credentials.

@@ -24,7 +24,6 @@ require_once __DIR__ . '/../../includes/oidplus.inc.php';
 echo '<h1>OIDplus Database plugin testcases</h1>';
 
 # Test MySQL
-include __DIR__ . '/../../plugins/database/mysqli/plugin.inc.php';
 $db = new OIDplusDatabasePluginMySQLi();
 if (function_exists('mysqli_fetch_all')) {
 	OIDplus::baseConfig()->setValue('MYSQL_FORCE_MYSQLND_SUPPLEMENT', false);
@@ -36,22 +35,18 @@ echo "[Without MySQLnd support] ";
 dotest($db);
 
 # Test PDO
-include __DIR__ . '/../../plugins/database/pdo/plugin.inc.php';
 $db = new OIDplusDatabasePluginPDO();
 dotest($db);
 
 # Test ODBC
-include __DIR__ . '/../../plugins/database/odbc/plugin.inc.php';
 $db = new OIDplusDatabasePluginODBC();
 dotest($db);
 
 # Test PgSQL
-include __DIR__ . '/../../plugins/database/pgsql/plugin.inc.php';
 $db = new OIDplusDatabasePluginPgSQL();
 dotest($db);
 
 # Test SQLite3
-include __DIR__ . '/../../plugins/database/sqlite3/plugin.inc.php';
 $db = new OIDplusDatabasePluginSQLite3();
 dotest($db);
 

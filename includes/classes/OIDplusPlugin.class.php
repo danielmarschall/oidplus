@@ -17,20 +17,9 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 abstract class OIDplusPlugin {
 
 	public function init($html=true) {}
-
-	public static function getPluginInformation() {
-		$out = array();
-		$out['name'] = null;
-		$out['author'] = null;
-		$out['version'] = null;
-		$out['descriptionHTML'] = null;
-		return $out;
-	}
 
 }
 

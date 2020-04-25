@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-if (!defined('IN_OIDPLUS')) die();
-
 abstract class OIDplusQueryResult {
 	abstract public function containsResultSet(): bool;
 	abstract public function num_rows(): int;

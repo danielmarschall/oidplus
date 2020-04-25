@@ -1,29 +1,24 @@
-Types "raPages", "publicPages" and "adminPages"
------------------------------------------------
+Types "*Pages"
+--------------
 
-	script.js (optional)
-	style.css (optional)
-	plugin.inc.php
-	treeicon.png (optional)
+	manifest.ini (Sections Plugin, PHP:class[], JavaScript:file[], CSS:file[])
 
 Type "objectTypes"
 ------------------
 
-	icon_big.png
-	plugin.inc.php
+	manifest.ini (Sections Plugin, PHP:class[])
 
 Type "database"
 ---------------
 
-	plugin.inc.php
-	setup.part.html
+	manifest.ini (Sections Plugin, PHP:class[], Setup:htmlpart[])
 
 Type "sql_slang"
 ----------------
 
-	plugin.inc.php
+	manifest.ini (Sections Plugin, PHP:class[])
 
 Type "auth"
 ---------------
 
-	plugin.inc.php
+	manifest.ini (Sections Plugin, PHP:class[])
