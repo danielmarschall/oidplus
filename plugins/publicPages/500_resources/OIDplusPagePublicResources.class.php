@@ -67,21 +67,21 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				$out['title'] = 'Access denied';
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>Invalid authentication token</p>';
-				return $out;
+				return;
 			}
 
 			if (strpos($file, OIDplus::config()->getValue('resource_plugin_path', 'res/')) !== 0) {
 				$out['title'] = 'Access denied';
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>Security breach A</p>';
-				return $out;
+				return;
 			}
 
 			if (strpos($file, '..') !== false) {
 				$out['title'] = 'Access denied';
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>Security breach B</p>';
-				return $out;
+				return;
 			}
 
 			$out['text'] = '';
@@ -153,7 +153,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					$out['title'] = 'Unknown file type';
 					$out['icon'] = 'img/error_big.png';
 					$out['text'] = '<p>The system does not know how to handle this file type.</p>';
-					return $out;
+					return;
 				}
 			} else if (is_dir($file)) {
 				$out['title'] = ($file == OIDplus::config()->getValue('resource_plugin_path', 'res/')) ? OIDplus::config()->getValue('resource_plugin_title', 'Documents and resources') : basename($file);
@@ -241,7 +241,6 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				$out['title'] = 'Not found';
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>This resource doesn\'t exist anymore.</p>';
-				return $out;
 			}
 		}
 	}

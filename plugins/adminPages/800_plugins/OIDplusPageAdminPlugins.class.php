@@ -36,7 +36,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 			$out['icon'] = 'img/error_big.png';
 			$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
-			return $out;
+			return;
 		}
 
 		if (substr($parts[1],0,1) == '$') {
@@ -149,11 +149,27 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			} else {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>Invalid arguments.</p>';
-				return $out;
+				return;
+			}
+
+			$pp_public = array();
+			$pp_ra = array();
+			$pp_admin = array();
+			
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if (is_subclass_of($plugin, OIDplusPagePluginPublic::class)) {
+					$pp_public[] = $plugin;
+				}
+				if (is_subclass_of($plugin, OIDplusPagePluginRa::class)) {
+					$pp_ra[] = $plugin;
+				}
+				if (is_subclass_of($plugin, OIDplusPagePluginAdmin::class)) {
+					$pp_admin[] = $plugin;
+				}
 			}
 
 			if ($show_pages_public) {
-				if (count($plugins = OIDplus::getPagePlugins('public')) > 0) {
+				if (count($plugins = $pp_public) > 0) {
 					$out['text'] .= '<h2>Public page plugins</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
@@ -181,7 +197,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			}
 
 			if ($show_pages_ra) {
-				if (count($plugins = OIDplus::getPagePlugins('ra')) > 0) {
+				if (count($plugins = $pp_ra) > 0) {
 					$out['text'] .= '<h2>RA page plugins</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
@@ -209,7 +225,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			}
 
 			if ($show_pages_admin) {
-				if (count($plugins = OIDplus::getPagePlugins('admin')) > 0) {
+				if (count($plugins = $pp_admin) > 0) {
 					$out['text'] .= '<h2>Admin page plugins</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
@@ -373,6 +389,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
@@ -391,8 +409,25 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		$tree_icon_obj_inactive = $tree_icon; // TODO
 		$tree_icon_auth = $tree_icon; // TODO
 
+		$pp_public = array();
+		$pp_ra = array();
+		$pp_admin = array();
+
+		foreach (OIDplus::getPagePlugins() as $plugin) {
+			if (is_subclass_of($plugin, OIDplusPagePluginPublic::class)) {
+				$pp_public[] = $plugin;
+			}
+			if (is_subclass_of($plugin, OIDplusPagePluginRa::class)) {
+				$pp_ra[] = $plugin;
+			}
+			if (is_subclass_of($plugin, OIDplusPagePluginAdmin::class)) {
+				$pp_admin[] = $plugin;
+			}
+		}
+
+
 		$public_plugins = array();
-		foreach (OIDplus::getPagePlugins('public') as $plugin) {
+		foreach ($pp_public as $plugin) {
 			$pluginInfo = OIDplus::getPluginInfo($plugin);
 			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
 
@@ -403,7 +438,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			);
 		}
 		$ra_plugins = array();
-		foreach (OIDplus::getPagePlugins('ra') as $plugin) {
+		foreach ($pp_ra as $plugin) {
 			$pluginInfo = OIDplus::getPluginInfo($plugin);
 			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
 
@@ -414,7 +449,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			);
 		}
 		$admin_plugins = array();
-		foreach (OIDplus::getPagePlugins('admin') as $plugin) {
+		foreach ($pp_admin as $plugin) {
 			$pluginInfo = OIDplus::getPluginInfo($plugin);
 			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
 

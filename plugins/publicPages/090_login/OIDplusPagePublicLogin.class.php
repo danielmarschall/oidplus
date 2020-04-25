@@ -182,8 +182,10 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		if (OIDplus::authUtils()::isAdminLoggedIn()) {
 			$ra_roots = array();
 
-			foreach (OIDplus::getPagePlugins('admin') as $plugin) {
-				$plugin->tree($ra_roots);
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if (is_subclass_of($plugin, OIDplusPagePluginAdmin::class)) {
+					$plugin->tree($ra_roots);
+				}
 			}
 
 			$ra_roots[] = array(
@@ -206,8 +208,10 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$ra_email = $ra->raEmail();
 			$ra_roots = array();
 
-			foreach (OIDplus::getPagePlugins('ra') as $plugin) {
-				$plugin->tree($ra_roots, $ra_email);
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if (is_subclass_of($plugin, OIDplusPagePluginRa::class)) {
+					$plugin->tree($ra_roots, $ra_email);
+				}
 			}
 
 			$ra_roots[] = array(

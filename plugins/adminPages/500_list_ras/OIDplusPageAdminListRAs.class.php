@@ -63,28 +63,29 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
-			} else {
-				$out['text'] = '';
+				return;
+			}
 
-				$tmp = $this->get_ralist();
+			$out['text'] = '';
 
-				if (count($tmp) == 0) {
-					$out['text'] .= '<p>Currently there are no Registration Authorities.</p>';
-				}
+			$tmp = $this->get_ralist();
 
-				foreach ($tmp as $ra_email => $registered) {
-					if (empty($ra_email)) {
-						$out['text'] .= '<p><b><a '.OIDplus::gui()->link('oidplus:rainfo$').'>(Objects with undefined RA)</a></b></p>';
-					} else {
-						if ($registered == 0) {
-							$out['text'] .= '<p><b><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$ra_email)).'>'.htmlentities($ra_email).'</a></b> (has objects, is not registered)</p>';
-						}
-						if ($registered == 1) {
-							$out['text'] .= '<p><b><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$ra_email)).'>'.htmlentities($ra_email).'</a></b> (registered, <font color="red">has no objects</font>)</p>';
-						}
-						if ($registered == 2) {
-							$out['text'] .= '<p><b><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$ra_email)).'>'.htmlentities($ra_email).'</a></b></p>';
-						}
+			if (count($tmp) == 0) {
+				$out['text'] .= '<p>Currently there are no Registration Authorities.</p>';
+			}
+
+			foreach ($tmp as $ra_email => $registered) {
+				if (empty($ra_email)) {
+					$out['text'] .= '<p><b><a '.OIDplus::gui()->link('oidplus:rainfo$').'>(Objects with undefined RA)</a></b></p>';
+				} else {
+					if ($registered == 0) {
+						$out['text'] .= '<p><b><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$ra_email)).'>'.htmlentities($ra_email).'</a></b> (has objects, is not registered)</p>';
+					}
+					if ($registered == 1) {
+						$out['text'] .= '<p><b><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$ra_email)).'>'.htmlentities($ra_email).'</a></b> (registered, <font color="red">has no objects</font>)</p>';
+					}
+					if ($registered == 2) {
+						$out['text'] .= '<p><b><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$ra_email)).'>'.htmlentities($ra_email).'</a></b></p>';
 					}
 				}
 			}
@@ -92,6 +93,8 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {

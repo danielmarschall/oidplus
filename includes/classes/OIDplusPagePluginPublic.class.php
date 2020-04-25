@@ -19,9 +19,5 @@
 
 abstract class OIDplusPagePluginPublic extends OIDplusPagePlugin {
 
-	public final function type() {
-		return 'public';
-	}
-
 }
 

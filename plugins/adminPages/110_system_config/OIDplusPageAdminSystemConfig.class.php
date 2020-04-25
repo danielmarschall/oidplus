@@ -59,59 +59,60 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
-			} else {
-				$output = '';
-				$output .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
-				$output .= '<table class="table table-bordered table-striped">';
-				$output .= '	<tr>';
-				$output .= '	     <th>Setting</th>';
-				$output .= '	     <th>Description</th>';
-				$output .= '	     <th>Value</th>';
-				$output .= '	     <th>Update</th>';
-				$output .= '	</tr>';
+				return;
+			}
+			
+			$output = '';
+			$output .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+			$output .= '<table class="table table-bordered table-striped">';
+			$output .= '	<tr>';
+			$output .= '	     <th>Setting</th>';
+			$output .= '	     <th>Description</th>';
+			$output .= '	     <th>Value</th>';
+			$output .= '	     <th>Update</th>';
+			$output .= '	</tr>';
 
-				OIDplus::config(); // <-- make sure that the config table is loaded/filled correctly before we do a select
+			OIDplus::config(); // <-- make sure that the config table is loaded/filled correctly before we do a select
 
-				$result = OIDplus::db()->query("select * from ###config where visible = ? order by name", array(true));
-				while ($row = $result->fetch_object()) {
-					$output .= '<tr>';
-					$output .= '     <td>'.htmlentities($row->name).'</td>';
-					$output .= '     <td>'.htmlentities($row->description).'</td>';
-					if ($row->protected == 1) {
-						$desc = $row->value;
-						if (strlen($desc) > 100) $desc = substr($desc, 0, 100) . '...';
-						$output .= '     <td style="word-break: break-all;">'.htmlentities($desc).'</td>';
-						$output .= '     <td>&nbsp;</td>';
-					} else {
-						$output .= '     <td><input type="text" id="config_'.$row->name.'" value="'.htmlentities($row->value).'"></td>';
-						$output .= '     <td><button type="button" name="config_update_'.$row->name.'" id="config_update_'.$row->name.'" class="btn btn-success btn-xs update" onclick="crudActionConfigUpdate('.js_escape($row->name).')">Update</button></td>';
-					}
-					$output .= '</tr>';
-				}
-
-				$output .= '</table>';
-				$output .= '</div></div>';
-
-				$output .= '<br><p>See also:</p>';
-				$output .= '<ul>';
-				$output .= '<li><a href="'.OIDplus::getSystemUrl().'setup/">Setup part 1: Create config.php (contains database settings, ReCAPTCHA, admin password and SSL enforcement)</a></li>';
-				if (class_exists('OIDplusPageAdminRegistration')) {
-					$reflector = new \ReflectionClass('OIDplusPageAdminRegistration');
-					$path = dirname($reflector->getFilename());
-					$output .= '<li><a href="'.OIDplus::webpath($path).'oobe.php">Setup part 2: Basic settings (they are all available above, too)</a></li>';
+			$result = OIDplus::db()->query("select * from ###config where visible = ? order by name", array(true));
+			while ($row = $result->fetch_object()) {
+				$output .= '<tr>';
+				$output .= '     <td>'.htmlentities($row->name).'</td>';
+				$output .= '     <td>'.htmlentities($row->description).'</td>';
+				if ($row->protected == 1) {
+					$desc = $row->value;
+					if (strlen($desc) > 100) $desc = substr($desc, 0, 100) . '...';
+					$output .= '     <td style="word-break: break-all;">'.htmlentities($desc).'</td>';
+					$output .= '     <td>&nbsp;</td>';
 				} else {
-					$output .= '<li>Setup part 2 requires plugin OIDplusPageAdminRegistration (the basic settings are all available above, too)</a></li>';
+					$output .= '     <td><input type="text" id="config_'.$row->name.'" value="'.htmlentities($row->value).'"></td>';
+					$output .= '     <td><button type="button" name="config_update_'.$row->name.'" id="config_update_'.$row->name.'" class="btn btn-success btn-xs update" onclick="crudActionConfigUpdate('.js_escape($row->name).')">Update</button></td>';
 				}
-				$output .= '</ul>';
-
-				$out['text'] = $output;
+				$output .= '</tr>';
 			}
 
-			return $out;
+			$output .= '</table>';
+			$output .= '</div></div>';
+
+			$output .= '<br><p>See also:</p>';
+			$output .= '<ul>';
+			$output .= '<li><a href="'.OIDplus::getSystemUrl().'setup/">Setup part 1: Create config.php (contains database settings, ReCAPTCHA, admin password and SSL enforcement)</a></li>';
+			if (class_exists('OIDplusPageAdminRegistration')) {
+				$reflector = new \ReflectionClass('OIDplusPageAdminRegistration');
+				$path = dirname($reflector->getFilename());
+				$output .= '<li><a href="'.OIDplus::webpath($path).'oobe.php">Setup part 2: Basic settings (they are all available above, too)</a></li>';
+			} else {
+				$output .= '<li>Setup part 2 requires plugin OIDplusPageAdminRegistration (the basic settings are all available above, too)</a></li>';
+			}
+			$output .= '</ul>';
+
+			$out['text'] = $output;
 		}
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {

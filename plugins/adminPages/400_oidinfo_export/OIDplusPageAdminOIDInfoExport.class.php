@@ -36,16 +36,19 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
-			} else {
-				$out['text'] = '<p>Here you can prepare the data export to <b>oid-info.com</b>.</p>'.
-				               '<p><a href="'.OIDplus::webpath(__DIR__).'oidinfo_export.php">Generate XML (all)</a></p>'.
-				               '<p><a href="'.OIDplus::webpath(__DIR__).'oidinfo_export.php?online=1">Generate XML (only non-existing)</a></p>'.
-				               '<p><a href="http://www.oid-info.com/submit.htm">Upload to oid-info.com</a></p>';
+				return;
 			}
+
+			$out['text'] = '<p>Here you can prepare the data export to <b>oid-info.com</b>.</p>'.
+				       '<p><a href="'.OIDplus::webpath(__DIR__).'oidinfo_export.php">Generate XML (all)</a></p>'.
+				       '<p><a href="'.OIDplus::webpath(__DIR__).'oidinfo_export.php?online=1">Generate XML (only non-existing)</a></p>'.
+				       '<p><a href="http://www.oid-info.com/submit.htm">Upload to oid-info.com</a></p>';
 		}
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {

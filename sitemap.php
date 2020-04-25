@@ -30,13 +30,11 @@ header('Content-Type:text/plain');
 $nonConfidential = OIDplusObject::getAllNonConfidential();
 
 $json = array();
-foreach (OIDplus::getPagePlugins('public') as $plugin) {
-	if (get_class($plugin) == 'OIDplusPagePublicObjects') {
-		foreach ($nonConfidential as $id) {
-			echo OIDplus::getSystemUrl().'?goto='.urlencode($id)."\n";
-		}
-	} else {
-		$plugin->tree($json, null, true, null);
+foreach (OIDplus::getPagePlugins() as $plugin) {
+	if (is_subclass_of($plugin, OIDplusPagePluginPublic::class)) {
+		// TODO: The "login" area should not show RA+Admin entries (in case someone who is logged in copy+pastes the sitemap to a search engine)
+		// TODO: Should there be a plugin API for sitemap?
+		$plugin->tree($json, null/*RA EMail*/, false/*HTML tree algorithm*/, true/*display all*/);
 	}
 }
 _rec($json);

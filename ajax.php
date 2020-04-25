@@ -31,8 +31,9 @@ try {
 	// Method:     GET / POST
 	// Parameters: ...
 	// Outputs:    ...
-	foreach (OIDplus::getPagePlugins('*') as $plugin) {
+	foreach (OIDplus::getPagePlugins() as $plugin) {
 		$plugin->action($handled);
+		if ($handled) break;
 	}
 
 	// Action:     get_description
@@ -66,7 +67,7 @@ try {
 		if (!isset($_REQUEST['search'])) throw new OIDplusException("Invalid args");
 
 		$found = false;
-		foreach (OIDplus::getPagePlugins('*') as $plugin) {
+		foreach (OIDplus::getPagePlugins() as $plugin) {
 			$res = $plugin->tree_search($_REQUEST['search']);
 			if ($res) {
 				echo json_encode($res);

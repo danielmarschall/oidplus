@@ -68,38 +68,43 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 	public function gui($id, &$out, &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:change_ra_password') {
 			$handled = true;
+			
+			$ra_email = explode('$',$id)[1];
+
 			$out['title'] = 'Change RA password';
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			$ra_email = explode('$',$id)[1];
+			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
+				return;
+			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($ra_email));
 			if ($res->num_rows() == 0) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = 'RA <b>'.htmlentities($ra_email).'</b> does not exist';
-				return $out;
+				return;
 			}
 
-			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
+			$out['text'] .= '<form id="raChangePasswordForm" onsubmit="return raChangePasswordFormOnSubmit();">';
+			$out['text'] .= '<input type="hidden" id="email" value="'.htmlentities($ra_email).'"/><br>';
+			$out['text'] .= '<div><label class="padding_label">E-Mail:</label><b>'.htmlentities($ra_email).'</b></div>';
+			if (OIDplus::authUtils()::isAdminLoggedIn()) {
+				$out['text'] .= '<div><label class="padding_label">Old password:</label><i>Admin can change the password without verification of the old password.</i></div>';
 			} else {
-				$out['text'] .= '<form id="raChangePasswordForm" onsubmit="return raChangePasswordFormOnSubmit();">';
-				$out['text'] .= '<input type="hidden" id="email" value="'.htmlentities($ra_email).'"/><br>';
-				$out['text'] .= '<div><label class="padding_label">E-Mail:</label><b>'.htmlentities($ra_email).'</b></div>';
-				if (OIDplus::authUtils()::isAdminLoggedIn()) {
-					$out['text'] .= '<div><label class="padding_label">Old password:</label><i>Admin can change the password without verification of the old password.</i></div>';
-				} else {
-					$out['text'] .= '<div><label class="padding_label">Old password:</label><input type="password" id="old_password" value=""/></div>';
-				}
-				$out['text'] .= '<div><label class="padding_label">New password:</label><input type="password" id="new_password1" value=""/></div>';
-				$out['text'] .= '<div><label class="padding_label">Repeat:</label><input type="password" id="new_password2" value=""/></div>';
-				$out['text'] .= '<br><input type="submit" value="Change password"></form>';
+				$out['text'] .= '<div><label class="padding_label">Old password:</label><input type="password" id="old_password" value=""/></div>';
 			}
+			$out['text'] .= '<div><label class="padding_label">New password:</label><input type="password" id="new_password1" value=""/></div>';
+			$out['text'] .= '<div><label class="padding_label">Repeat:</label><input type="password" id="new_password2" value=""/></div>';
+			$out['text'] .= '<br><input type="submit" value="Change password"></form>';
 		}
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+		if (!$ra_email) return false;
+		if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {

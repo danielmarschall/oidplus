@@ -18,8 +18,8 @@
  */
 
 class OIDplus {
-	private static /*OIDplusPagePlugin[][]*/ $pagePlugins = array();
-	private static /*OIDplusAuthPlugin[][]*/ $authPlugins = array();
+	private static /*OIDplusPagePlugin[]*/ $pagePlugins = array();
+	private static /*OIDplusAuthPlugin[]*/ $authPlugins = array();
 	private static /*OIDplusObjectTypePlugin[]*/ $objectTypePlugins = array();
 	private static /*string[]*/ $enabledObjectTypes = array();
 	private static /*string[]*/ $disabledObjectTypes = array();
@@ -266,28 +266,13 @@ class OIDplus {
 	# --- Page plugin
 
 	private static function registerPagePlugin(OIDplusPagePlugin $plugin) {
-		$type = $plugin->type();
-		if ($type === false) return false;
-
-		if (!isset(self::$pagePlugins[$type])) self::$pagePlugins[$type] = array();
-		self::$pagePlugins[$type][] = $plugin;
+		self::$pagePlugins[] = $plugin;
 
 		return true;
 	}
 
-	public static function getPagePlugins($type='*') {
-		if ($type === '*') {
-			$res = array();
-			foreach (self::$pagePlugins as $data) {
-				$res = array_merge($res, $data);
-			}
-		} else {
-			$types = explode(',', $type);
-			foreach ($types as $type) {
-				$res = isset(self::$pagePlugins[$type]) ? self::$pagePlugins[$type] : array();
-			}
-		}
-		return $res;
+	public static function getPagePlugins() {
+		return self::$pagePlugins;
 	}
 
 	# --- Auth plugin
@@ -531,7 +516,7 @@ class OIDplus {
 
 		// Initialize non-DB plugins
 
-		foreach (OIDplus::getPagePlugins('*') as $plugin) {
+		foreach (OIDplus::getPagePlugins() as $plugin) {
 			$plugin->init($html);
 		}
 		foreach (OIDplus::getAuthPlugins() as $plugin) {

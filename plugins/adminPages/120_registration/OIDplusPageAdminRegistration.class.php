@@ -37,58 +37,59 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
+				return;
+			}
+
+			$out['text'] = file_get_contents(__DIR__ . '/info.tpl');
+
+			if (!OIDplus::getPkiStatus()) {
+				$out['text'] .= '<p><font color="red">Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.</font></p>';
 			} else {
-				$out['text'] = file_get_contents(__DIR__ . '/info.tpl');
+				$out['text'] .= '<p><input type="button" onclick="openOidInPanel(\'oidplus:srvreg_status\');" value="Check status of the registration and collected data"></p>';
 
-				if (!OIDplus::getPkiStatus()) {
-					$out['text'] .= '<p><font color="red">Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.</font></p>';
-				} else {
-					$out['text'] .= '<p><input type="button" onclick="openOidInPanel(\'oidplus:srvreg_status\');" value="Check status of the registration and collected data"></p>';
-
-					if (OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
-						$out['text'] .= '<p><font color="red"><b>Attention!</b> <code>REGISTRATION_HIDE_SYSTEM</code> is set in the local configuration file! Therefore, this system will not register itself, despire the settings below.</font></p>';
-					}
-
-					$out['text'] .= '<p>You can adjust your privacy level here:</p><p><select name="reg_privacy" id="reg_privacy">';
-
-					# ---
-
-					$out['text'] .= '<option value="0"';
-					if (OIDplus::config()->getValue('reg_privacy') == 0) {
-						$out['text'] .= ' selected';
-					} else {
-						$out['text'] .= '';
-					}
-					$out['text'] .= '>0 = Register to directory service and automatically publish RA/OID data at oid-info.com</option>';
-
-					# ---
-
-					$out['text'] .= '<option value="1"';
-					if (OIDplus::config()->getValue('reg_privacy') == 1) {
-						$out['text'] .= ' selected';
-					} else {
-						$out['text'] .= '';
-					}
-					$out['text'] .= '>1 = Only register to directory service</option>';
-
-					# ---
-
-					$out['text'] .= '<option value="2"';
-					if (OIDplus::config()->getValue('reg_privacy') == 2) {
-						$out['text'] .= ' selected';
-					} else {
-						$out['text'] .= '';
-					}
-					$out['text'] .= '>2 = Hide system</option>';
-
-					# ---
-
-					$out['text'] .= '</select> <input type="button" value="Change" onclick="crudActionRegPrivacyUpdate()"></p>';
-
-					$out['text'] .= '<p>After clicking "change", your OIDplus installation will contact the ViaThinkSoft server to adjust (add or remove information) your privacy setting. This may take a few minutes.</p>';
-
-					$out['text'] .= '<p><i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a>.';
+				if (OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
+					$out['text'] .= '<p><font color="red"><b>Attention!</b> <code>REGISTRATION_HIDE_SYSTEM</code> is set in the local configuration file! Therefore, this system will not register itself, despire the settings below.</font></p>';
 				}
+
+				$out['text'] .= '<p>You can adjust your privacy level here:</p><p><select name="reg_privacy" id="reg_privacy">';
+
+				# ---
+
+				$out['text'] .= '<option value="0"';
+				if (OIDplus::config()->getValue('reg_privacy') == 0) {
+					$out['text'] .= ' selected';
+				} else {
+					$out['text'] .= '';
+				}
+				$out['text'] .= '>0 = Register to directory service and automatically publish RA/OID data at oid-info.com</option>';
+
+				# ---
+
+				$out['text'] .= '<option value="1"';
+				if (OIDplus::config()->getValue('reg_privacy') == 1) {
+					$out['text'] .= ' selected';
+				} else {
+					$out['text'] .= '';
+				}
+				$out['text'] .= '>1 = Only register to directory service</option>';
+
+				# ---
+
+				$out['text'] .= '<option value="2"';
+				if (OIDplus::config()->getValue('reg_privacy') == 2) {
+					$out['text'] .= ' selected';
+				} else {
+					$out['text'] .= '';
+				}
+				$out['text'] .= '>2 = Hide system</option>';
+
+				# ---
+
+				$out['text'] .= '</select> <input type="button" value="Change" onclick="crudActionRegPrivacyUpdate()"></p>';
+
+				$out['text'] .= '<p>After clicking "change", your OIDplus installation will contact the ViaThinkSoft server to adjust (add or remove information) your privacy setting. This may take a few minutes.</p>';
+
+				$out['text'] .= '<p><i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a>.';
 			}
 		}
 		if ($id === 'oidplus:srvreg_status') {
@@ -311,6 +312,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {

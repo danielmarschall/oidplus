@@ -19,9 +19,5 @@
 
 abstract class OIDplusPagePluginAdmin extends OIDplusPagePlugin {
 
-	public final function type() {
-		return 'admin';
-	}
-
 }
 

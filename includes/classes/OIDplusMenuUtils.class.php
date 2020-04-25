@@ -24,8 +24,10 @@ class OIDplusMenuUtils {
 
 		$static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
 
-		foreach (OIDplus::getPagePlugins('public') as $plugin) {
-			$plugin->tree($json, null, true, $static_node_id);
+		foreach (OIDplus::getPagePlugins() as $plugin) {
+			if (is_subclass_of($plugin, OIDplusPagePluginPublic::class)) {
+				$plugin->tree($json, null, true, $static_node_id);
+			}
 		}
 
 		foreach ($json as $x) {
@@ -45,9 +47,10 @@ class OIDplusMenuUtils {
 		$json = array();
 
 		if (!isset($req_id) || ($req_id == '#')) {
-			// 'ra' and 'admin' pages will not be iterated, because they usually have no tree icon, or an icon underneath the login section
-			foreach (OIDplus::getPagePlugins('public') as $plugin) {
-				$plugin->tree($json, null, false, $req_goto);
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if (is_subclass_of($plugin, OIDplusPagePluginPublic::class)) {
+					$plugin->tree($json, null, false, $req_goto);
+				}
 			}
 		} else {
 			$json = self::tree_populate($req_id);
@@ -64,8 +67,8 @@ class OIDplusMenuUtils {
 		@list($namespace, $oid) = explode(':', $parent, 2);
 		if ($namespace == 'oid') $oid = substr($oid, 1); // führenden Punkt entfernen
 
-		if (!is_null($goto_path)) array_shift($goto_path);
-
+		if (is_array($goto_path)) array_shift($goto_path);
+		
 		$confidential_oids = array();
 
 		$res = OIDplus::db()->query("select id from ###objects where confidential = '1'");
@@ -98,7 +101,10 @@ class OIDplusMenuUtils {
 			$child['icon'] = $obj->getIcon($row);
 
 			// Feststellen, ob es weitere Unter-OIDs gibt
-			if (!is_null($goto_path) && (count($goto_path) > 0) && ($goto_path[0] === $row['id'])) {
+			if ($goto_path === true) {
+				$child['children'] = self::tree_populate($row['id'], $goto_path);
+				$child['state'] = array("opened" => true);
+			} else if (!is_null($goto_path) && (count($goto_path) > 0) && ($goto_path[0] === $row['id'])) {
 				$child['children'] = self::tree_populate($row['id'], $goto_path);
 				$child['state'] = array("opened" => true);
 			} else {

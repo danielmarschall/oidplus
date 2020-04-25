@@ -112,7 +112,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			if (!OIDplus::config()->getValue('ra_invitation_enabled')) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>Invitations are disabled by the administrator.</p>';
-				return $out;
+				return;
 			}
 
 			$out['icon'] = OIDplus::webpath(__DIR__).'invite_ra_big.png';
@@ -141,17 +141,17 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 		} else if (explode('$',$id)[0] == 'oidplus:activate_ra') {
 			$handled = true;
 
+			$email = explode('$',$id)[1];
+			$timestamp = explode('$',$id)[2];
+			$auth = explode('$',$id)[3];
+
 			$out['title'] = 'Register as Registration Authority';
 
 			if (!OIDplus::config()->getValue('ra_invitation_enabled')) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>Invitations are disabled by the administrator.</p>';
-				return $out;
+				return;
 			}
-
-			$email = explode('$',$id)[1];
-			$timestamp = explode('$',$id)[2];
-			$auth = explode('$',$id)[3];
 
 			$out['icon'] = OIDplus::webpath(__DIR__).'activate_ra_big.png';
 
@@ -180,6 +180,9 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+		//if (!$ra_email) return false;
+		//if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) return false;
+
 		return false;
 	}
 

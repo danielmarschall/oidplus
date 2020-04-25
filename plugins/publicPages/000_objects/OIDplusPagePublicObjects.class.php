@@ -299,7 +299,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$out['text'] = str_replace('%%OBJECT_TYPE_LIST%%', $tmp, $out['text']);
 			}
 
-			return $out;
+			return;
 		}
 
 		try {
@@ -315,7 +315,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$out['title'] = 'Access denied';
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>Please <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> to receive information about this object.</p>';
-				return $out;
+				return;
 			}
 
 			$parent = null;
@@ -336,7 +336,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 							$out['title'] = 'Object not found';
 							$out['icon'] = 'img/error_big.png';
 							$out['text'] = 'The object <code>'.htmlentities($id).'</code> was not found in this database.';
-							return $out;
+							return;
 						} else {
 							$row = $res->fetch_array(); // will be used further down the code
 							$obj->getContentPage($out['title'], $out['text'], $out['icon']);
@@ -352,7 +352,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$out['title'] = 'Object not found';
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = 'The object <code>'.htmlentities($id).'</code> was not found in this database.';
-				return $out;
+				return;
 			}
 
 			// ---
@@ -437,9 +437,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 
-			foreach (OIDplus::getPagePlugins('public') as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
-			foreach (OIDplus::getPagePlugins('ra')     as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
-			foreach (OIDplus::getPagePlugins('admin')  as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
+			foreach (OIDplus::getPagePlugins() as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
 		}
 	}
 
@@ -508,7 +506,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			return true;
 		} else {
-			if (isset($req_goto)) {
+		 	if ($req_goto === true) {
+		 		$goto_path = true; // display everything recursively
+		 	} else if (isset($req_goto)) {
 				$goto = $req_goto;
 				$path = array();
 				while (true) {

@@ -27,15 +27,15 @@ class OIDplusGui {
 		$out['icon'] = '';
 		$out['text'] = '';
 
-		foreach (OIDplus::getPagePlugins('*') as $plugin) {
+		foreach (OIDplus::getPagePlugins() as $plugin) {
 			$plugin->gui($id, $out, $handled);
+			if ($handled) break;
 		}
 
 		if (!$handled) {
 			$out['title'] = 'Error';
 			$out['icon'] = 'img/error_big.png';
 			$out['text'] = 'The resource cannot be found.';
-			return $out;
 		}
 
 		return $out;

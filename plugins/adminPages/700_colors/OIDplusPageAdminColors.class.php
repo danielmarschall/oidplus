@@ -64,38 +64,41 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
-			} else {
-				$out['text']  = '<p>';
-				$out['text'] .= '  <label for="amount">Hue shift:</label>';
-				$out['text'] .= '  <input type="text" id="hshift" readonly style="border:0; background:transparent; font-weight:bold;">';
-				$out['text'] .= '</p>';
-				$out['text'] .= '<div id="slider-hshift"></div>';
-				$out['text'] .= '<p>';
-				$out['text'] .= '  <label for="amount">Saturation shift:</label>';
-				$out['text'] .= '  <input type="text" id="sshift" readonly style="border:0; background:transparent; font-weight:bold;">';
-				$out['text'] .= '</p>';
-				$out['text'] .= '<div id="slider-sshift"></div>';
-				$out['text'] .= '<p>';
-				$out['text'] .= '  <label for="amount">Value shift:</label>';
-				$out['text'] .= '  <input type="text" id="vshift" readonly style="border:0; background:transparent; font-weight:bold;">';
-				$out['text'] .= '</p>';
-				$out['text'] .= '<div id="slider-vshift"></div>';
-				$out['text'] .= '<script>';
-				$out['text'] .= 'if (g_hue_shift == null) g_hue_shift = g_hue_shift_saved = '.OIDplus::config()->getValue('color_hue_shift').";\n";
-				$out['text'] .= 'if (g_sat_shift == null) g_sat_shift = g_sat_shift_saved = '.OIDplus::config()->getValue('color_sat_shift').";\n";
-				$out['text'] .= 'if (g_val_shift == null) g_val_shift = g_val_shift_saved = '.OIDplus::config()->getValue('color_val_shift').";\n";
-				$out['text'] .= 'setup_color_sliders();';
-				$out['text'] .= '</script>';
-				$out['text'] .= '<br>';
-				$out['text'] .= '<input type="button" onclick="color_reset_sliders_cfg()" value="Reset to last saved config">'.str_repeat('&nbsp;',5);
-				$out['text'] .= '<input type="button" onclick="color_reset_sliders_factory()" value="Reset default setting">'.str_repeat('&nbsp;',5);
-				$out['text'] .= '<input type="button" onclick="test_color_theme()" value="Test">'.str_repeat('&nbsp;',5);
-				$out['text'] .= '<input type="button" onclick="crudActionColorUpdate()" value="Set permanently">';
+				return;
 			}
+			
+			$out['text']  = '<p>';
+			$out['text'] .= '  <label for="amount">Hue shift:</label>';
+			$out['text'] .= '  <input type="text" id="hshift" readonly style="border:0; background:transparent; font-weight:bold;">';
+			$out['text'] .= '</p>';
+			$out['text'] .= '<div id="slider-hshift"></div>';
+			$out['text'] .= '<p>';
+			$out['text'] .= '  <label for="amount">Saturation shift:</label>';
+			$out['text'] .= '  <input type="text" id="sshift" readonly style="border:0; background:transparent; font-weight:bold;">';
+			$out['text'] .= '</p>';
+			$out['text'] .= '<div id="slider-sshift"></div>';
+			$out['text'] .= '<p>';
+			$out['text'] .= '  <label for="amount">Value shift:</label>';
+			$out['text'] .= '  <input type="text" id="vshift" readonly style="border:0; background:transparent; font-weight:bold;">';
+			$out['text'] .= '</p>';
+			$out['text'] .= '<div id="slider-vshift"></div>';
+			$out['text'] .= '<script>';
+			$out['text'] .= 'if (g_hue_shift == null) g_hue_shift = g_hue_shift_saved = '.OIDplus::config()->getValue('color_hue_shift').";\n";
+			$out['text'] .= 'if (g_sat_shift == null) g_sat_shift = g_sat_shift_saved = '.OIDplus::config()->getValue('color_sat_shift').";\n";
+			$out['text'] .= 'if (g_val_shift == null) g_val_shift = g_val_shift_saved = '.OIDplus::config()->getValue('color_val_shift').";\n";
+			$out['text'] .= 'setup_color_sliders();';
+			$out['text'] .= '</script>';
+			$out['text'] .= '<br>';
+			$out['text'] .= '<input type="button" onclick="color_reset_sliders_cfg()" value="Reset to last saved config">'.str_repeat('&nbsp;',5);
+			$out['text'] .= '<input type="button" onclick="color_reset_sliders_factory()" value="Reset default setting">'.str_repeat('&nbsp;',5);
+			$out['text'] .= '<input type="button" onclick="test_color_theme()" value="Test">'.str_repeat('&nbsp;',5);
+			$out['text'] .= '<input type="button" onclick="crudActionColorUpdate()" value="Set permanently">';
 		}
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		
                 if (file_exists(__DIR__.'/treeicon.png')) {
                         $tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
                 } else {
