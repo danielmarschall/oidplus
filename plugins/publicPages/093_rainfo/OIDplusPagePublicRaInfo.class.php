@@ -104,21 +104,15 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 		}
 	}
 
-	private function publicSitemap_rec($json, &$out) {
-		foreach ($json as $x) {
-			if (isset($x['id']) && $x['id']) {
-				$out[] = OIDplus::getSystemUrl().'?goto='.urlencode($x['id']);
-			}
-			if (isset($x['children'])) {
-				$this->publicSitemap_rec($x['children'], $out);
-			}
-		}
-	}
-
 	public function publicSitemap(&$out) {
-		$json = array();
-		$this->tree($json, null/*RA EMail*/, false/*HTML tree algorithm*/, true/*display all*/);
-		$this->publicSitemap_rec($json, $out);
+		if (OIDplus::db()->getSlang()::id() == 'mysql') {
+			$res = OIDplus::db()->query("select distinct BINARY(email) as email from ###ra"); // "binary" because we want to ensure that 'distinct' is case sensitive
+		} else {
+			$res = OIDplus::db()->query("select distinct email as email from ###ra"); // distinct in PGSQL is always case sensitive
+		}
+		while ($row = $res->fetch_array()) {
+			$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('oidplus:rainfo$'.$row['email']);
+		}
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
