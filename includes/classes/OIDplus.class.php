@@ -649,20 +649,40 @@ class OIDplus {
 		}
 
 		if (is_dir(__DIR__ . '/../../.svn')) {
+			// Try to get the version via SQLite3
+			if (class_exists('SQLite3')) {
+				try {
+					$db = new SQLite3(__DIR__ . '/../../.svn/wc.db');
+					$results = $db->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
+					while ($row = $results->fetchArray()) {
+						return 'svn-'.$row['rev'];
+					}
+					$db->close();
+					$db = null;
+				} catch (Exception $e) {
+				}
+			}
+			if (class_exists('PDO')) {
+				try {
+					$pdo = new PDO('sqlite:' . __DIR__ . '/../../.svn/wc.db');
+					$res = $pdo->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
+					$row = $res->fetch();
+					if ($row !== false) return 'svn-'.$row['rev'];
+					$pdo = null;
+				} catch (Exception $e) {
+				}
+			}
+
 			// Try to find out the SVN version using the shell
-			// TODO: das müllt die log files voll!
-			$status = @shell_exec('svnversion '.realpath(__FILE__));
-			if (preg_match('/\d+/', $status, $match)) {
+			// We don't prioritize this method, because a failed shell access will flood the apache error log with STDERR messages
+			$output = @shell_exec('svnversion '.escapeshellarg(realpath(__DIR__ . '/../../')));
+			if (preg_match('/\d+/', $output, $match)) {
 				return 'svn-'.$match[0];
 			}
 
-			// If that failed, try to get the version via SQLite3
-			if (class_exists('SQLite3')) {
-				$db = new SQLite3(__DIR__ . '/../../.svn/wc.db');
-				$results = $db->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
-				while ($row = $results->fetchArray()) {
-					return 'svn-'.$row['rev'];
-				}
+			$output = @shell_exec('svn info '.escapeshellarg(realpath(__DIR__ . '/../../')));
+			if (preg_match('/Revision:\s*(\d+)/m', $output, $match)) {
+				return 'svn-'.$match[1];
 			}
 		}
 

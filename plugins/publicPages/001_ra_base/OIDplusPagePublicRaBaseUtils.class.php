@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+// TODO: should this be a different plugin type? A page without gui is weird!
 class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 
 	public function action(&$handled) {
