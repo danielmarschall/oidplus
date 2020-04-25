@@ -23,13 +23,8 @@ set_time_limit(0);
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
-if (!file_exists(__DIR__ . '/../includes/config.inc.php')) {
-	// We need to do this, because we don't want to use OIDplus::init() in this updater (it should be independent as much as possible)
-	header('location:../setup/');
-	die('Redirecting to setup...');
-} else {
-	require_once __DIR__ . '/../includes/config.inc.php';
-}
+// Note: we don't want to use OIDplus::init() in this updater (it should be independent as much as possible)
+OIDplus::baseConfig(); // This call will redirect to setup if config.inc.php is missing
 
 define('OIDPLUS_REPO', 'https://svn.viathinksoft.com/svn/oidplus');
 

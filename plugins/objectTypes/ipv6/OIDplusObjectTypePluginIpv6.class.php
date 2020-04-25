@@ -21,7 +21,7 @@
 class OIDplusObjectTypePluginIpv6 extends OIDplusObjectTypePlugin {
 
 	public static function getObjectTypeClassName() {
-		return 'OIDplusIpv6';
+		return OIDplusIpv6::class;
 	}
 
 }

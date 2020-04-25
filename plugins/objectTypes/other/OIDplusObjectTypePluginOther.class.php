@@ -20,7 +20,7 @@
 class OIDplusObjectTypePluginOther extends OIDplusObjectTypePlugin {
 
 	public static function getObjectTypeClassName() {
-		return 'OIDplusOther';
+		return OIDplusOther::class;
 	}
 
 }

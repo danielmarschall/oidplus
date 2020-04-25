@@ -26,7 +26,7 @@ class OIDplus {
 	private static /*OIDplusDatabasePlugin[]*/ $dbPlugins = array();
 	private static /*OIDplusSqlSlangPlugin[]*/ $sqlSlangPlugins = array();
 
-	protected static $html = null;
+	protected static $html = true;
 
 	private function __construct() {
 	}
@@ -82,7 +82,7 @@ class OIDplus {
 				if (!is_dir(__DIR__.'/../../setup')) {
 					throw new OIDplusConfigInitializationException('File includes/config.inc.php is missing, but setup can\'t be started because its directory missing.');
 				} else {
-					if ($html) {
+					if (self::$html) {
 						header('Location:'.OIDplus::getSystemUrl().'setup/');
 						die('Redirecting to setup...');
 					} else {

@@ -20,7 +20,7 @@
 class OIDplusObjectTypePluginIpv4 extends OIDplusObjectTypePlugin {
 
 	public static function getObjectTypeClassName() {
-		return 'OIDplusIpv4';
+		return OIDplusIpv4::class;
 	}
 
 }

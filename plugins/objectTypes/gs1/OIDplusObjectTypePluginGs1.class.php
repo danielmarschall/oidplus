@@ -20,7 +20,7 @@
 class OIDplusObjectTypePluginGs1 extends OIDplusObjectTypePlugin {
 
 	public static function getObjectTypeClassName() {
-		return 'OIDplusGs1';
+		return OIDplusGs1::class;
 	}
 
 }
