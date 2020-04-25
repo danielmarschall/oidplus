@@ -426,9 +426,6 @@ class OIDplus {
 	}
 
 	public static function getAllPluginManifests($pluginFolderMask='*'): array {
-		static $cache = null;
-		if (!is_null($cache)) return $cache;
-
 		$out = array();
 		$ary = glob(__DIR__ . '/../../plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.ini');
 		foreach ($ary as $ini) {
@@ -442,8 +439,6 @@ class OIDplus {
 			if (!isset($out[$plugintype_folder][$pluginname_folder])) $out[$plugintype_folder][$pluginname_folder] = array();
 			$out[$plugintype_folder][$pluginname_folder] = $bry;
 		}
-
-		$cache = $out;
 		return $out;
 	}
 
