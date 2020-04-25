@@ -19,10 +19,6 @@
 
 class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
-	public function priority() {
-		return 92;
-	}
-
 	public function action(&$handled) {
 		if (isset($_POST["action"]) && ($_POST["action"] == "invite_ra")) {
 			$handled = true;

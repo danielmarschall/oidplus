@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 
-	public function priority() {
-		return 1;
-	}
-
 	public function action(&$handled) {
 
 		// Action:     delete_ra

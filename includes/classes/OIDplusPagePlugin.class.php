@@ -19,7 +19,6 @@
 
 abstract class OIDplusPagePlugin extends OIDplusPlugin {
 	public abstract function type();
-	public abstract function priority();
 	public function action(&$handled) {}
 	public function gui($id, &$out, &$handled) {}
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {}

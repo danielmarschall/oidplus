@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
-	public function priority() {
-		return 100;
-	}
-
 	public function action(&$handled) {
 		// Nothing
 	}

@@ -19,10 +19,6 @@
 
 class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
-	public function priority() {
-		return 110;
-	}
-
 	public function action(&$handled) {
 		if (isset($_POST["action"]) && ($_POST["action"] == "config_update")) {
 			$handled = true;

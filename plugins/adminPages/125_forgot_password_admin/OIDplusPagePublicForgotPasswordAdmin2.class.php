@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicForgotPasswordAdmin2 extends OIDplusPagePluginAdmin {
 
-	public function priority() {
-		return 125;
-	}
-
 	public function action(&$handled) {
 	}
 

@@ -19,10 +19,6 @@
 
 class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 
-	public function priority() {
-		return 600;
-	}
-
 	public function action(&$handled) {
 	}
 

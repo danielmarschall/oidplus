@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 
-	public function priority() {
-		return 300;
-	}
-
 	public function action(&$handled) {
 		// Nothing
 	}

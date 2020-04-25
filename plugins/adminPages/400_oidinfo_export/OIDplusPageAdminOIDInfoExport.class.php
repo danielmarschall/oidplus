@@ -19,10 +19,6 @@
 
 class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
-	public function priority() {
-		return 400;
-	}
-
 	public function action(&$handled) {
 		// Nothing
 	}

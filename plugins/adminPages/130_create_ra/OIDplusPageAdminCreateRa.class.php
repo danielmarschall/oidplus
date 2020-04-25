@@ -19,10 +19,6 @@
 
 class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 
-	public function priority() {
-		return 130;
-	}
-
 	public function action(&$handled) {
 		if (isset($_POST["action"]) && ($_POST["action"] == "create_ra")) {
 			$handled = true;

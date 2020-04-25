@@ -19,10 +19,6 @@
 
 class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 
-	public function priority() {
-		return 700;
-	}
-
 	public function action(&$handled) {
 		if (isset($_POST["action"]) && ($_POST["action"] == "color_update")) {
 			$handled = true;

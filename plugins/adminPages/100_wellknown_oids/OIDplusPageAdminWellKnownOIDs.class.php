@@ -19,10 +19,6 @@
 
 class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 
-	public function priority() {
-		return 100;
-	}
-
 	public function action(&$handled) {
 		// Nothing
 	}

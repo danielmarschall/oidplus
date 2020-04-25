@@ -19,10 +19,6 @@
 
 class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 
-	public function priority() {
-		return 99;
-	}
-
 	public function action(&$handled) {
 		// Nothing
 	}

@@ -19,10 +19,6 @@
 
 class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 
-	public function priority() {
-		return 101;
-	}
-
 	public function action(&$handled) {
 		if (isset($_POST["action"]) && ($_POST["action"] == "change_ra_password")) {
 			$handled = true;

@@ -19,10 +19,6 @@
 
 class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 
-	public function priority() {
-		return 100;
-	}
-
 	public function action(&$handled) {
 		if (isset($_POST["action"]) && ($_POST["action"] == "change_ra_data")) {
 			$handled = true;

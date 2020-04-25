@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
-	public function priority() {
-		return 91;
-	}
-
 	public function action(&$handled) {
 		if (isset($_POST["action"]) && ($_POST["action"] == "forgot_password")) {
 			$handled = true;

@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
-	public function priority() {
-		return 200;
-	}
-
 	private static function getFreeRootOid($with_ns) {
 		return OIDplusOID::parse(($with_ns ? 'oid:' : '').OIDplus::config()->getValue('freeoid_root_oid'));
 	}

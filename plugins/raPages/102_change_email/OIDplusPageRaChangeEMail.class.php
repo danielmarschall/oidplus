@@ -19,10 +19,6 @@
 
 class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
-	public function priority() {
-		return 102;
-	}
-
 	public function action(&$handled) {
 		if (isset($_POST["action"]) && ($_POST["action"] == "change_ra_email")) {
 			$handled = true;

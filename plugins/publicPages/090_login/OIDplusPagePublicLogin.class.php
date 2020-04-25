@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
-	public function priority() {
-		return 90;
-	}
-
 	public function action(&$handled) {
 		// === RA LOGIN/LOGOUT ===
 

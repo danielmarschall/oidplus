@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
-	public function priority() {
-		return 500;
-	}
-
 	public function action(&$handled) {
 		// Nothing
 	}

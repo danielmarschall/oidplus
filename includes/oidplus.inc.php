@@ -105,7 +105,7 @@ if (php_sapi_name() != 'cli') {
 spl_autoload_register(function ($class_name) {
 	$candidate = __DIR__ . '/classes/' . $class_name . '.class.php';
 	if (file_exists($candidate)) require_once $candidate;
-	$candidates = glob(__DIR__ . '/../plugins/*/*/' . $class_name . '.class.php');
+	$candidates = glob(__DIR__ . '/../plugins/'.'*'.'/'.'*'.'/' . $class_name . '.class.php');
 	foreach ($candidates as $candidate) {
 		if (file_exists($candidate)) require_once $candidate;
 	}

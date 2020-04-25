@@ -24,10 +24,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	/*private*/ const QUERY_LISTALLSYSTEMIDS_V1 = '1.3.6.1.4.1.37476.2.5.2.1.3.1';
 	/*private*/ const QUERY_LIVESTATUS_V1 =       '1.3.6.1.4.1.37476.2.5.2.1.4.1';
 
-	public function priority() {
-		return 120;
-	}
-
 	public function action(&$handled) {
 		// Nothing
 	}

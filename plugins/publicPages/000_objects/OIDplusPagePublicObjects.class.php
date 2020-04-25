@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
-	public function priority() {
-		return 0;
-	}
-
 	public function action(&$handled) {
 
 		// Action:     Delete

@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicContactEMail extends OIDplusPagePluginPublic {
 
-	public function priority() {
-		return 900;
-	}
-
 	public function action(&$handled) {
 		// Nothing
 	}

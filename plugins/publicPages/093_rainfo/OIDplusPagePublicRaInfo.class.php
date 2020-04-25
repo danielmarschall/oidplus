@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 
-	public function priority() {
-		return 93;
-	}
-
 	public function action(&$handled) {
 	}
 

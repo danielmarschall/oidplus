@@ -269,13 +269,8 @@ class OIDplus {
 		$type = $plugin->type();
 		if ($type === false) return false;
 
-		$prio = $plugin->priority();
-		if (!is_numeric($prio)) throw new OIDplusException('Errornous plugin "'.get_class($plugin).'": Invalid priority');
-		if ($prio <   0) throw new OIDplusException('Errornous plugin "'.get_class($plugin).'": Invalid priority');
-		if ($prio > 999) throw new OIDplusException('Errornous plugin "'.get_class($plugin).'": Invalid priority');
-
 		if (!isset(self::$pagePlugins[$type])) self::$pagePlugins[$type] = array();
-		self::$pagePlugins[$type][str_pad($prio, 3, '0', STR_PAD_LEFT).get_class($plugin)] = $plugin;
+		self::$pagePlugins[$type][] = $plugin;
 
 		return true;
 	}
@@ -292,7 +287,6 @@ class OIDplus {
 				$res = isset(self::$pagePlugins[$type]) ? self::$pagePlugins[$type] : array();
 			}
 		}
-		ksort($res);
 		return $res;
 	}
 
@@ -427,6 +421,8 @@ class OIDplus {
 
 	public static function getAllPluginManifests($pluginFolderMask='*'): array {
 		$out = array();
+		// Note: glob() will sort by default, so we do not need a page priority attribute.
+		//       So you just need to use a numeric plugin directory prefix (padded).
 		$ary = glob(__DIR__ . '/../../plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.ini');
 		foreach ($ary as $ini) {
 			if (!file_exists($ini)) continue;
@@ -444,21 +440,19 @@ class OIDplus {
 
 	public static function registerAllPlugins($pluginDirName, $expectedPluginClass, $registerCallback): array {
 		$out = array();
-		$ary = self::getAllPluginManifests();
+		$ary = self::getAllPluginManifests($pluginDirName);
 		foreach ($ary as $plugintype_folder => $bry) {
 			foreach ($bry as $pluginname_folder => $cry) {
-				if (!isset($cry['PHP'])) continue;
-				if (!isset($cry['PHP']['class'])) continue;
-				foreach ($cry['PHP']['class'] as $class_name) {
-					class_exists($class_name); // force autoloader to load the class
-					if (!is_null($registerCallback) &&
-					    !(new ReflectionClass($class_name))->isAbstract() &&
-					     ($class_name != $expectedPluginClass) &&
-					     is_subclass_of($class_name, $expectedPluginClass))
-					{
-						$out[] = $class_name;
-						call_user_func($registerCallback, new $class_name());
-					}
+				if (!isset($cry['PHP']) || !isset($cry['PHP']['pluginclass'])) {
+					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin class is not defined (manifest.ini section 'PHP', key 'pluginclass'");
+				}
+				$class_name = $cry['PHP']['pluginclass'];
+				if (!is_subclass_of($class_name, $expectedPluginClass)) {
+					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin class '$class_name' is expected to be a subclass of '$expectedPluginClass'");
+				}
+				$out[] = $class_name;
+				if (!is_null($registerCallback)) {
+					call_user_func($registerCallback, new $class_name());
 				}
 			}
 

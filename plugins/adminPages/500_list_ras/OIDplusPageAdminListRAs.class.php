@@ -19,10 +19,6 @@
 
 class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 
-	public function priority() {
-		return 500;
-	}
-
 	public function action(&$handled) {
 		// Nothing
 	}

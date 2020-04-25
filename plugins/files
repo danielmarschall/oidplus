@@ -1,24 +1,24 @@
 Types "*Pages"
 --------------
 
-	manifest.ini (Sections Plugin, PHP:class[], JavaScript:file[], CSS:file[])
+	manifest.ini (Sections Plugin, PHP:pluginclass, JavaScript:file[], CSS:file[])
 
 Type "objectTypes"
 ------------------
 
-	manifest.ini (Sections Plugin, PHP:class[])
+	manifest.ini (Sections Plugin, PHP:pluginclass)
 
 Type "database"
 ---------------
 
-	manifest.ini (Sections Plugin, PHP:class[], Setup:htmlpart[])
+	manifest.ini (Sections Plugin, PHP:pluginclass, Setup:htmlpart[])
 
 Type "sql_slang"
 ----------------
 
-	manifest.ini (Sections Plugin, PHP:class[])
+	manifest.ini (Sections Plugin, PHP:pluginclass)
 
 Type "auth"
 ---------------
 
-	manifest.ini (Sections Plugin, PHP:class[])
+	manifest.ini (Sections Plugin, PHP:pluginclass)
