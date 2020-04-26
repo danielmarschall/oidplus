@@ -26,7 +26,6 @@ OOBE/SETUP
 - There should be a "test database connection" button
 
 SMALL THINGS
-- Dark theme
 - RA address data: Country selection box like in OIDInfo
 - We should remove "die()" whenever possible, because it is very unflexible
 - offer signature checker tool to verify WHOIS responses

@@ -123,3 +123,23 @@ function changeHueOfCSS($css_content, $h_shift=0, $s_shift=0, $v_shift=0) {
 		}, $css_content);
         return $css_content;
 }
+
+function invertColorsOfCSS($css_content) {
+	$css_content = preg_replace_callback('@#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})@ismU',
+		function ($x) {
+			if (strlen($x[1]) == 3) {
+				$r = hexdec($x[1][0].$x[1][0]);
+				$g = hexdec($x[1][1].$x[1][1]);
+				$b = hexdec($x[1][2].$x[1][2]);
+			} else {
+				$r = hexdec($x[1][0].$x[1][1]);
+				$g = hexdec($x[1][2].$x[1][3]);
+				$b = hexdec($x[1][4].$x[1][5]);
+			}
+			$r = 255 - $r;
+			$g = 255 - $g;
+			$b = 255 - $b;
+			return rgb2html($r,$g,$b);
+		}, $css_content);
+        return $css_content;
+}

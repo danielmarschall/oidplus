@@ -30,6 +30,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			OIDplus::config()->setValue('color_hue_shift', $_POST['hue_shift']);
 			OIDplus::config()->setValue('color_sat_shift', $_POST['sat_shift']);
 			OIDplus::config()->setValue('color_val_shift', $_POST['val_shift']);
+			OIDplus::config()->setValue('color_invert',    $_POST['invcolors']);
 
 			OIDplus::logger()->log("A?", "Changed system color theme");
 
@@ -53,6 +54,11 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 				throw new OIDplusException("Please enter a valid value.");
 			}
 		});
+		OIDplus::config()->prepareConfigKey('color_invert', 'Invert colors? (0=no, 1=yes)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
+				throw new OIDplusException("Please enter a valid value (0 or 1).");
+			}
+		});
 	}
 
 	public function gui($id, &$out, &$handled) {
@@ -66,28 +72,39 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
 				return;
 			}
-			
-			$out['text']  = '<p>';
+
+			$out['text']  = '<br><p>';
 			$out['text'] .= '  <label for="amount">Hue shift:</label>';
 			$out['text'] .= '  <input type="text" id="hshift" readonly style="border:0; background:transparent; font-weight:bold;">';
 			$out['text'] .= '</p>';
 			$out['text'] .= '<div id="slider-hshift"></div>';
-			$out['text'] .= '<p>';
+
+			$out['text'] .= '<br><p>';
 			$out['text'] .= '  <label for="amount">Saturation shift:</label>';
 			$out['text'] .= '  <input type="text" id="sshift" readonly style="border:0; background:transparent; font-weight:bold;">';
 			$out['text'] .= '</p>';
 			$out['text'] .= '<div id="slider-sshift"></div>';
-			$out['text'] .= '<p>';
+
+			$out['text'] .= '<br><p>';
 			$out['text'] .= '  <label for="amount">Value shift:</label>';
 			$out['text'] .= '  <input type="text" id="vshift" readonly style="border:0; background:transparent; font-weight:bold;">';
 			$out['text'] .= '</p>';
 			$out['text'] .= '<div id="slider-vshift"></div>';
+
+			$out['text'] .= '<br><p>';
+			$out['text'] .= '  <label for="amount">Invert colors:</label>';
+			$out['text'] .= '  <input type="text" id="icolor" readonly style="border:0; background:transparent; font-weight:bold;">';
+			$out['text'] .= '</p>';
+			$out['text'] .= '<div id="slider-icolor"></div>';
+
 			$out['text'] .= '<script>';
 			$out['text'] .= 'if (g_hue_shift == null) g_hue_shift = g_hue_shift_saved = '.OIDplus::config()->getValue('color_hue_shift').";\n";
 			$out['text'] .= 'if (g_sat_shift == null) g_sat_shift = g_sat_shift_saved = '.OIDplus::config()->getValue('color_sat_shift').";\n";
 			$out['text'] .= 'if (g_val_shift == null) g_val_shift = g_val_shift_saved = '.OIDplus::config()->getValue('color_val_shift').";\n";
+			$out['text'] .= 'if (g_invcolors == null) g_invcolors = g_invcolors_saved = '.OIDplus::config()->getValue('color_invert').";\n";
 			$out['text'] .= 'setup_color_sliders();';
 			$out['text'] .= '</script>';
+
 			$out['text'] .= '<br>';
 			$out['text'] .= '<input type="button" onclick="color_reset_sliders_cfg()" value="Reset to last saved config">'.str_repeat('&nbsp;',5);
 			$out['text'] .= '<input type="button" onclick="color_reset_sliders_factory()" value="Reset default setting">'.str_repeat('&nbsp;',5);
@@ -98,7 +115,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
-		
+
                 if (file_exists(__DIR__.'/treeicon.png')) {
                         $tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
                 } else {

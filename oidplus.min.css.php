@@ -73,11 +73,17 @@ $out .= process_file(__DIR__ . '/3p/bootstrap/css/bootstrap.css');
 
 # ---
 
+$inv = isset($_REQUEST['invert']) ? $_REQUEST['invert'] : 0;
+if ($inv != 0) {
+	$out = invertColorsOfCSS($out);
+}
+
 $hs = isset($_REQUEST['h_shift']) ? $_REQUEST['h_shift'] : 0;
 $ss = isset($_REQUEST['s_shift']) ? $_REQUEST['s_shift'] : 0;
 $vs = isset($_REQUEST['v_shift']) ? $_REQUEST['v_shift'] : 0;
-if (($hs != 0) ||($ss != 0) || ($vs != 0))
-$out = changeHueOfCSS($out, $hs, $ss, $vs);
+if (($hs != 0) ||($ss != 0) || ($vs != 0)) {
+	$out = changeHueOfCSS($out, $hs, $ss, $vs);
+}
 
 # ---
 

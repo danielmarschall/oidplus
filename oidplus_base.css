@@ -301,9 +301,25 @@ textarea,input[type="text"],input[type="password"],select {
 	border: #AAAAAA 1px solid;
 }
 
-
-input[type=button], input[type=submit], input[type=reset] {
-	cursor:pointer;
+input[type=button], input[type=submit], input[type=reset],
+input[type=button]:link, input[type=submit]:link, input[type=reset]:link,
+input[type=button]:visited, input[type=submit]:visited, input[type=reset]:visited,
+input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
+        border: 1px solid #a2a2a2;
+        padding-top:2px;
+        padding-bottom:2px;
+        padding-left:7px;
+        padding-right:7px;
+        text-decoration:none;
+        background: #ffffff;
+        color: #0066CC;
+}
+input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
+        background: #f4f4ff;
+}
+.hand, input[type=button], input[type=submit], input[type=reset] {
+        /* www.drweb.de/magazin/browser-cursor-hand */
+        cursor: hand; cursor: pointer;
 }
 
 /**

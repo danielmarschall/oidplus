@@ -81,7 +81,7 @@ $sys_title = OIDplus::config()->getValue('system_title');
 header('X-OIDplus-SystemTitle:'.$sys_title);
 
 if (class_exists('OIDplusPageAdminColors')) {
-	$css = 'oidplus.min.css.php?h_shift='.(OIDplus::config()->getValue('color_hue_shift')/360).'&s_shift='.(OIDplus::config()->getValue('color_sat_shift')/100).'&v_shift='.(OIDplus::config()->getValue('color_val_shift')/100);
+	$css = 'oidplus.min.css.php?invert='.(OIDplus::config()->getValue('color_invert')).'&h_shift='.(OIDplus::config()->getValue('color_hue_shift')/360).'&s_shift='.(OIDplus::config()->getValue('color_sat_shift')/100).'&v_shift='.(OIDplus::config()->getValue('color_val_shift')/100);
 } else {
 	$css = 'oidplus.min.css.php';
 }
