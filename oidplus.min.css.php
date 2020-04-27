@@ -52,7 +52,11 @@ function process_file($filename) {
 
 # ---
 
-$out .= process_file(__DIR__ . '/oidplus_base.css');
+if (file_exists(__DIR__ . '/oidplus_base.local.css')) {
+	$out .= process_file(__DIR__ . '/oidplus_base.local.css');
+} else {
+	$out .= process_file(__DIR__ . '/oidplus_base.css');
+}
 
 $ary = OIDplus::getAllPluginManifests('*Pages');
 foreach ($ary as $plugintype_folder => $bry) {

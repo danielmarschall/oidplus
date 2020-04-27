@@ -349,6 +349,10 @@ function glayoutWorkaroundA() {
 	//          does only appear when the page is "blank" for a short while while it is loading.
 	glayout.resizeAll();
 	setTimeout(glayoutWorkaroundA, 100);
+
+	// "Bug C": With Firefox (And sometimes with Chrome), there is a gap between the content-window (including scroll bars)
+	//          and the right corner of the screen. Removing the explicit width solves this problem.
+	document.getElementById("content_window").style.removeProperty("width");
 }
 
 function glayoutWorkaroundB() {
