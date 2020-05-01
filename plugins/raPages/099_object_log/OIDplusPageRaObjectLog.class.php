@@ -43,7 +43,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 
 		// TODO: I want that this content comes before the WHOIS modifyContent.
 		//       The problem is that first all public and then all RA plugins get loaded, not mixed by their priority
-		$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event from ###log lo ".
+		$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event, lu.severity from ###log lo ".
 		                            "left join ###log_object lu on lu.log_id = lo.id ".
 		                            "where lu.object = ? " .
 		                            "order by lo.unix_ts desc", array($id));
@@ -52,7 +52,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 			$text .= '<pre>';
 			while ($row = $res->fetch_array()) {
 				$users = array();
-				$res2 = OIDplus::db()->query("select username from ###log_user ".
+				$res2 = OIDplus::db()->query("select username, severity from ###log_user ".
 				                             "where log_id = ?", array($row['id']));
 				while ($row2 = $res2->fetch_array()) {
 					$users[] = $row2['username'];
@@ -61,7 +61,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 
 				$addr = empty($row['addr']) ? 'no address' : $row['addr'];
 
-				$text .= date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr.$users) . ")\n";
+				$text .= '<span class="severity_'.$row['severity'].'">' . date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr.$users) . ")</span>\n";
 			}
 			$text .= '</pre>';
 

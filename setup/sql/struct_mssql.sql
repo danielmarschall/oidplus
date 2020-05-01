@@ -198,6 +198,7 @@ CREATE TABLE [dbo].[log_user](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[log_id] [int] NOT NULL,
 	[username] [varchar](255) NOT NULL,
+	[severity] [int] NOT NULL,
 	CONSTRAINT [PK_log_user] PRIMARY KEY CLUSTERED 
 	(
 		[id] ASC
@@ -226,6 +227,7 @@ CREATE TABLE [dbo].[log_object](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[log_id] [int] NOT NULL,
 	[object] [varchar](255) NOT NULL,
+	[severity] [int] NOT NULL,
 	CONSTRAINT [PK_log_object] PRIMARY KEY CLUSTERED 
 	(
 		[id] ASC
@@ -249,7 +251,7 @@ GO
 
 /****** Set database version ******/
 
-INSERT INTO [config] (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '203', '1', '0');
+INSERT INTO [config] (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '204', '1', '0');
 
 SET ANSI_PADDING OFF
 GO

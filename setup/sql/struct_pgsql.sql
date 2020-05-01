@@ -102,7 +102,8 @@ DROP TABLE IF EXISTS "log_user";
 CREATE TABLE "log_user" (
   "id" serial PRIMARY KEY,
   "log_id" integer NOT NULL,
-  "username" varchar(255) NOT NULL
+  "username" varchar(255) NOT NULL,
+  "severity" integer NOT NULL
 );
 
 DROP INDEX IF EXISTS "index_log_user_fk_log_id";
@@ -119,7 +120,8 @@ DROP TABLE IF EXISTS "log_object";
 CREATE TABLE "log_object" (
   "id" serial PRIMARY KEY,
   "log_id" integer NOT NULL,
-  "object" varchar(255) NOT NULL
+  "object" varchar(255) NOT NULL,
+  "severity" integer NOT NULL
 );
 
 DROP INDEX IF EXISTS "index_log_object_fk_log_id";
@@ -132,4 +134,4 @@ CREATE UNIQUE  INDEX "index_log_object_uq_log_id_object" ON "log_object"("log_id
 
 -------------------------------------------------------
 
-INSERT INTO "config" ("name", "description", "value", "protected", "visible") VALUES ('database_version', 'Version of the database tables', '203', true, false);
+INSERT INTO "config" ("name", "description", "value", "protected", "visible") VALUES ('database_version', 'Version of the database tables', '204', true, false);

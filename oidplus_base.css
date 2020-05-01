@@ -463,3 +463,33 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 	width:40px;
 }
 
+/* Logbook severities (shared between plugins ra099, ra200, admin600)
+
+.severity_0 {
+	/* Undefined */
+}
+
+.severity_1 {
+	/* Success */
+	color: DarkGreen;
+}
+
+.severity_2 {
+	/* Informational */
+	color: CornflowerBlue;
+}
+
+.severity_3 {
+	/* Warning */
+	color: DarkGoldenRod;
+}
+
+.severity_4 {
+	/* Error */
+	color: DarkRed;
+}
+
+.severity_5 {
+	/* Critical */
+	color: DarkMagenta;
+}

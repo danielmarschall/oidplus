@@ -246,7 +246,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			curl_close($ch);
 
 			if ($res === 'HASH_CONFLICT') {
-				OIDplus::logger()->log("A!", "Removing SystemID and key pair because there is a hash conflict with another OIDplus system!");
+				OIDplus::logger()->log("[WARN]A!", "Removing SystemID and key pair because there is a hash conflict with another OIDplus system!");
 
 				// Delete the system ID since we have a conflict with the 31-bit hash!
 				OIDplus::config()->setValue('oidplus_private_key', '');

@@ -40,7 +40,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 			}
 
 			OIDplus::config()->setValue($name, $value);
-			OIDplus::logger()->log("A?", "Changed system config setting '$name' to '$value'");
+			OIDplus::logger()->log("[OK]A?", "Changed system config setting '$name' to '$value'");
 
 			echo json_encode(array("status" => 0));
 		}

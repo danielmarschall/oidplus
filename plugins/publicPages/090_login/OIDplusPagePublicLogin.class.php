@@ -39,7 +39,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			}
 
 			if ($ra->checkPassword($_POST['password'])) {
-				OIDplus::logger()->log("RA($email)!", "RA '$email' logged in");
+				OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged in");
 				OIDplus::authUtils()::raLogin($email);
 
 				OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
@@ -54,7 +54,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 			$email = $_POST['email'];
 
-			OIDplus::logger()->log("RA($email)!", "RA '$email' logged out");
+			OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged out");
 			OIDplus::authUtils()::raLogout($email);
 			echo json_encode(array("status" => 0));
 		}
@@ -75,7 +75,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			}
 
 			if (OIDplus::authUtils()::adminCheckPassword($_POST['password'])) {
-				OIDplus::logger()->log("A!", "Admin logged in");
+				OIDplus::logger()->log("[OK]A!", "Admin logged in");
 				OIDplus::authUtils()::adminLogin();
 				echo json_encode(array("status" => 0));
 			} else {
@@ -84,7 +84,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		}
 		if (isset($_POST["action"]) && ($_POST["action"] == "admin_logout")) {
 			$handled = true;
-			OIDplus::logger()->log("A!", "Admin logged out");
+			OIDplus::logger()->log("[OK]A!", "Admin logged out");
 			OIDplus::authUtils()::adminLogout();
 			echo json_encode(array("status" => 0));
 		}

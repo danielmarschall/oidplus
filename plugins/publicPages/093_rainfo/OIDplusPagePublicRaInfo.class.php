@@ -51,10 +51,19 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 
 			$out['text'] .= '<br><br>';
 
-			foreach (OIDplusObject::getRaRoots($ra_email) as $loc_root) {
-				$ico = $loc_root->getIcon();
-				$icon = !is_null($ico) ? $ico : OIDplus::webpath(__DIR__).'treeicon_link.png';
-				$out['text'] .= '<p><a '.OIDplus::gui()->link($loc_root->nodeId()).'><img src="'.$icon.'"> Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())).'</a></p>';
+			$ra_roots = OIDplusObject::getRaRoots($ra_email);
+			if (count($ra_roots) == 0) {
+				if (empty($ra_email)) {
+					$out['text'] .= '<p><i>None</i></p>';
+				} else {
+					$out['text'] .= '<p><i>This RA has no objects</i></p>';
+				}
+			} else {
+				foreach ($ra_roots as $loc_root) {
+					$ico = $loc_root->getIcon();
+					$icon = !is_null($ico) ? $ico : OIDplus::webpath(__DIR__).'treeicon_link.png';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link($loc_root->nodeId()).'><img src="'.$icon.'"> Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())).'</a></p>';
+				}
 			}
 
 			if (!empty($ra_email)) {

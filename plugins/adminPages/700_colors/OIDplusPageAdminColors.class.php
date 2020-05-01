@@ -32,7 +32,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			OIDplus::config()->setValue('color_val_shift', $_POST['val_shift']);
 			OIDplus::config()->setValue('color_invert',    $_POST['invcolors']);
 
-			OIDplus::logger()->log("A?", "Changed system color theme");
+			OIDplus::logger()->log("[OK]A?", "Changed system color theme");
 
 			echo json_encode(array("status" => 0));
 		}

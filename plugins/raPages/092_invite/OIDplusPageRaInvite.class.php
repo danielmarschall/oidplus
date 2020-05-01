@@ -40,7 +40,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 			$this->inviteSecurityCheck($email);
 			// TODO: should we also log who has invited?
-			OIDplus::logger()->log("RA($email)!", "RA '$email' has been invited");
+			OIDplus::logger()->log("[INFO]RA($email)!", "RA '$email' has been invited");
 
 			$timestamp = time();
 			$activate_url = OIDplus::getSystemUrl() . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('activate_ra;'.$email.';'.$timestamp));
@@ -78,7 +78,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->getValue('ra_min_password_length'));
 			}
 
-			OIDplus::logger()->log("RA($email)!", "RA '$email' has been registered due to invitation");
+			OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' has been registered due to invitation");
 
 			$ra = new OIDplusRA($email);
 			$ra->register_ra($password1);

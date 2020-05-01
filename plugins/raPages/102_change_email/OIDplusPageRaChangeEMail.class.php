@@ -49,7 +49,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			}
 
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				OIDplus::logger()->log("RA($old_email)!+RA($new_email)!+A!", "Admin changed email address '$old_email' to '$new_email'");
+				OIDplus::logger()->log("[WARN]RA($old_email)!+[INFO]RA($new_email)!+[OK]A!", "Admin changed email address '$old_email' to '$new_email'");
 
 				$ra_was_logged_in = OIDplus::authUtils()::isRaLoggedIn($old_email);
 
@@ -65,7 +65,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
 				echo json_encode(array("status" => 0));
 			} else {
-				OIDplus::logger()->log("RA($old_email)!+RA($new_email)!", "Requested email change from '$old_email' to '$new_email'");
+				OIDplus::logger()->log("[INFO]RA($old_email)!+RA($new_email)!", "Requested email address change from '$old_email' to '$new_email'");
 
 				$timestamp = time();
 				$activate_url = OIDplus::getSystemUrl() . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp));
@@ -127,8 +127,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			OIDplus::authUtils()->raLogout($old_email);
 			OIDplus::authUtils()->raLogin($new_email);
 
-			OIDplus::logger()->log("RA($old_email)!", "Changed email address from '$old_email' to '$new_email'");
-			OIDplus::logger()->log("RA($new_email)!", "RA '$old_email' has changed its email address to '$new_email'");
+			OIDplus::logger()->log("[OK]RA($new_email)!+RA($old_email)!", "RA '$old_email' has changed their email address to '$new_email'");
 
 			$message = file_get_contents(__DIR__ . '/email_change_confirmation.tpl');
 			$message = str_replace('{{SYSTEM_URL}}', OIDplus::getSystemUrl(), $message);

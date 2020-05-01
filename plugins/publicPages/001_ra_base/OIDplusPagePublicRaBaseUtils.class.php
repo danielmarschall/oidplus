@@ -46,7 +46,7 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 			$ra->delete();
 			$ra = null;
 
-			OIDplus::logger()->log("RA($email)?/A?", "RA '$email' deleted");
+			OIDplus::logger()->log("[?WARN/!OK]RA($email)!/[?INFO/!OK]A?", "RA '$email' deleted");
 
 			echo json_encode(array("status" => 0));
 		}

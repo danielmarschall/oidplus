@@ -20,48 +20,264 @@
 class OIDplusLogger {
 
 	private static function split_maskcodes($maskcodes) {
+		// This function splits a mask code containing multiple components
+		// (delimited by '+' or '/') in single components
+		// It takes care that '+' and '/' inside brackets won't be used to split the codes
+		// Also, brackets can be escaped.
+		// The severity block (optional, must be standing in front of a component)
+		// is handled too. Inside the severity block, you may only use '/' to split components.
+		// The severity block will be implicitly repeated from the previous components if a component
+		// does not feature one.
+		//
+		// "[S]AAA(BBB)+CCC(DDD)"   ==> array(
+		//                                 array(array("S"),"AAA(BBB)"),
+		//                                 array(array("S"),"CCC(DDD)")
+		//                              )
+		// "[S]AAA(B+BB)+CCC(DDD)"  ==> array(
+		//                                 array(array("S"),"AAA(B+BB)"),
+		//                                 array(array("S"),"CCC(DDD)")
+		//                              )
+		// "[S]AAA(B\)BB)+CCC(DDD)" ==> array(
+		//                                 array(array("S"),"AAA(B\)BB)"),
+		//                                 array(array("S"),"CCC(DDD)")
+		//                              )
+	
 		$out = array();
-
+		$sevs = array(); // Note: The severity block will repeat for the next components if not changed explicitly
+		
 		$code = '';
+		$sev = '';
 		$bracket_level = 0;
+		$is_escaping = false;
+		$inside_severity_block = false;
 		for ($i=0; $i<strlen($maskcodes); $i++) {
 			$char = $maskcodes[$i];
-			if ($char == '(') $bracket_level++;
-			if ($char == ')') {
-				$bracket_level--;
-				if ($bracket_level < 0) return false;
-			}
-			if ((($char == '+') || ($char == '/')) && ($bracket_level == 0)) {
-				$out[] = $code;
-				$code = '';
+			
+			if ($inside_severity_block) {
+				// Severity block (optional)
+				// e.g.  [?WARN/!OK] ==> $sevs = array("?WARN", "!OK")
+				if ($char == '\\') {
+					if ($is_escaping) {
+						$is_escaping = false;
+						$sev .= $char;
+					} else {
+						$is_escaping = true;
+					}
+				}
+				else if ($char == '[') {
+					if ($is_escaping) {
+						$is_escaping = false;
+					} else {
+						$bracket_level++;
+					}
+					$sev .= $char;
+				}
+				else if ($char == ']') {
+					if ($is_escaping) {
+						$is_escaping = false;
+						$sev .= $char;
+					} else {
+						$bracket_level--;
+						if ($bracket_level < 0) return false;
+						if ($bracket_level == 0) {
+							$inside_severity_block = false;
+							if ($sev != '') $sevs[] = $sev;
+							$sev = '';
+						} else {
+							$sev .= $char;
+						}
+					}
+				}
+				else if ((($char == '/')) && ($bracket_level == 1)) {
+					if ($is_escaping) {
+						$is_escaping = false;
+						$sev .= $char;
+					} else {
+						if ($sev != '') $sevs[] = $sev;
+						$sev = '';
+					}
+				} else {
+					if ($is_escaping) {
+						// This would actually be an error, because we cannot escape this
+						$is_escaping = false;
+						$sev .= '\\' . $char;
+					} else {
+						$sev .= $char;
+					}
+				}
 			} else {
-				$code .= $char;
+				// Normal data (after the severity block)
+				if (($char == '[') && ($code == '')) {
+					$inside_severity_block = true;
+					$bracket_level++;
+					$sevs = array();
+				}
+				else if ($char == '\\') {
+					if ($is_escaping) {
+						$is_escaping = false;
+						$code .= $char;
+					} else {
+						$is_escaping = true;
+					}
+				}
+				else if ($char == '(') {
+					if ($is_escaping) {
+						$is_escaping = false;
+					} else {
+						$bracket_level++;
+					}
+					$code .= $char;
+				}
+				else if ($char == ')') {
+					if ($is_escaping) {
+						$is_escaping = false;
+					} else {
+						$bracket_level--;
+						if ($bracket_level < 0) return false;
+					}
+					$code .= $char;
+				}
+				else if ((($char == '+') || ($char == '/')) && ($bracket_level == 0)) {
+					if ($is_escaping) {
+						$is_escaping = false;
+						$code .= $char;
+					} else {
+						if ($code != '') $out[] = array($sevs,$code);
+						$code = '';
+					}
+				} else {
+					if ($is_escaping) {
+						// This would actually be an error, because we cannot escape this
+						$is_escaping = false;
+						$code .= '\\' . $char;
+					} else {
+						$code .= $char;
+					}
+				}
 			}
 		}
-		if ($code != '') $out[] = $code;
+		if ($code != '') $out[] = array($sevs,$code);
+		if ($inside_severity_block) return false;
 
 		return $out;
 	}
 
 	public static function log($maskcodes, $event) {
+		// What is a mask code?
+		// A mask code gives information about the log event:
+		// 1. The severity (info, warning, error)
+		// 2. In which logbook(s) the event shall be placed
+		// Example:
+		// The event would be:
+		// "Person 'X' moves from house 'A' to house 'B'"
+		// This event would affect the person X and the two houses,
+		// so, instead of logging into 3 logbooks separately,
+		// you would create a mask code that tells the system
+		// to put the message into the logbooks of person X,
+		// house A and house B.
 
 		$users = array();
 		$objects = array();
 
+		// A mask code with multiple components is split into single codes
+		// using '+' or '/', e.g. "OID(x)+RA(x)" would be split to "OID(x)" and "RA(x)"
+		// which would result in the message being placed in the logbook of OID x,
+		// and the logbook of the RA owning OID x.
 		$maskcodes_ary = self::split_maskcodes($maskcodes);
 		if ($maskcodes_ary === false) {
-			throw new OIDplusException("Invalid maskcode '$maskcodes'");
+			throw new OIDplusException("Invalid maskcode '$maskcodes' (failed to split)");
 		}
-		foreach ($maskcodes_ary as $maskcode) {
+		foreach ($maskcodes_ary as list($sevs,$maskcode)) {
+			// At the beginning of each mask code, you can define a severity.
+			// If you have a mask code with multiple components, you don't have to place the
+			// severity for each component. You can just leave it at the beginning.
+			// e.g. "[WARN]OID(x)+RA(x)" is equal to "[WARN]OID(x)+[WARN]RA(x)"
+			// You can also put different severities for the components:
+			// e.g. "[INFO]OID(x)+[WARN]RA(x)" would be a info for the OID, but a warning for the RA.
+			// If you want to make the severity dependent on wheather the user is logged in or not,
+			// prepend "?" or "!" and use '/' as delimiter
+			// Example: "[?WARN/!OK]RA(x)" means: If RA is not logged in, it is a warning; if it is logged in, it is an success
+			$severity = 0; // default severity = none
+			foreach ($sevs as $sev) {
+				switch (strtoupper($sev)) {
+					// [OK]   = Success
+					//          Numeric value: 1
+					//          Rule of thumb: YOU have done something and it was successful
+					case '?OK':
+						$severity_online = 1;
+						break;
+					case '!OK':
+					case  'OK':
+						$severity = 1;
+						break;
+					// [INFO] = Informational
+					//          Numeric value: 2
+					//          Rule of thumb: Someone else has done something (that affects you) and it was successful
+					case '?INFO':
+						$severity_online = 2;
+						break;
+					case '!INFO':
+					case  'INFO':
+						$severity = 2;
+						break;
+					// [WARN] = Warning
+					//          Numeric value: 3
+					//          Rule of thumb: Something happened (probably someone did something) and it affects you
+					case '?WARN':
+						$severity_online = 3;
+						break;
+					case '!WARN':
+					case  'WARN':
+						$severity = 3;
+						break;
+					// [ERR]  = Error
+					//          Numeric value: 4
+					//          Rule of thumb: Something failed (probably someone did something) and it affects you
+					case '?ERR':
+						$severity_online = 4;
+						break;
+					case '!ERR':
+					case  'ERR':
+						$severity = 4;
+						break;
+					// [CRIT] = Critical
+					//          Numeric value: 5
+					//          Rule of thumb: Something happened (probably someone did something) which is not an error,
+					//          but some critical situation (e.g. hardware failure), and it affects you
+					case '?CRIT':
+						$severity_online = 5;
+						break;
+					case '!CRIT':
+					case  'CRIT':
+						$severity = 5;
+						break;
+					default:
+						throw new OIDplusException("Invalid maskcode '$maskcodes' (Unknown severity '$sev')");
+				}
+			}
+			
 			// OID(x)	Save log entry into the logbook of: Object "x"
 			if (preg_match('@^OID\((.+)\)$@ismU', $maskcode, $m)) {
 				$object_id = $m[1];
-				$objects[] = $object_id;
+				$objects[] = array($severity, $object_id);
 				if ($object_id == '') throw new OIDplusException("OID logger mask requires OID");
 			}
 
+			// SUPOID(x)	Save log entry into the logbook of: Parent of object "x"
+			else if (preg_match('@^SUPOID\((.+)\)$@ismU', $maskcode, $m)) {
+				$object_id         = $m[1];
+				if ($object_id == '') throw new OIDplusException("SUPOID logger mask requires OID");
+				$obj = OIDplusObject::parse($object_id);
+				if ($obj) {
+					$parent = $obj->getParent()->nodeId();
+					$objects[] = array($severity, $parent);
+				} else {
+					throw new OIDplusException("SUPOID logger mask: Invalid object '$object_id'");
+				}
+			}
+
 			// OIDRA(x)?	Save log entry into the logbook of: Logged in RA of object "x"
-			// Replace ? by ! if the entity does not need to be logged in
+			// Remove or replace "?" by "!" if the entity does not need to be logged in
 			else if (preg_match('@^OIDRA\((.+)\)([\?\!])$@ismU', $maskcode, $m)) {
 				$object_id         = $m[1];
 				$ra_need_login     = $m[2] == '?';
@@ -70,19 +286,21 @@ class OIDplusLogger {
 				if ($obj) {
 					if ($ra_need_login) {
 						foreach (OIDplus::authUtils()->loggedInRaList() as $ra) {
-							if ($obj->userHasWriteRights($ra)) $users[] = $ra->raEmail();
+							if ($obj->userHasWriteRights($ra)) $users[] = array($severity_online, $ra->raEmail());
 						}
 					} else {
-						// $users[] = $obj->getRa()->raEmail();
+						// $users[] = array($severity, $obj->getRa()->raEmail());
 						foreach (OIDplusRA::getAllRAs() as $ra) {
-							if ($obj->userHasWriteRights($ra)) $users[] = $ra->raEmail();
+							if ($obj->userHasWriteRights($ra)) $users[] = array($severity, $ra->raEmail());
 						}
 					}
+				} else {
+					throw new OIDplusException("OIDRA logger mask: Invalid object '$object_id'");
 				}
 			}
 
 			// SUPOIDRA(x)?	Save log entry into the logbook of: Logged in RA that owns the superior object of "x"
-			// Replace ? by ! if the entity does not need to be logged in
+			// Remove or replace "?" by "!" if the entity does not need to be logged in
 			else if (preg_match('@^SUPOIDRA\((.+)\)([\?\!])$@ismU', $maskcode, $m)) {
 				$object_id         = $m[1];
 				$ra_need_login     = $m[2] == '?';
@@ -91,43 +309,47 @@ class OIDplusLogger {
 				if ($obj) {
 					if ($ra_need_login) {
 						foreach (OIDplus::authUtils()->loggedInRaList() as $ra) {
-							if ($obj->userHasParentalWriteRights($ra)) $users[] = $ra->raEmail();
+							if ($obj->userHasParentalWriteRights($ra)) $users[] = array($severity_online, $ra->raEmail());
 						}
 					} else {
-						// $users[] = $obj->getParent()->getRa()->raEmail();
+						// $users[] = array($severity, $obj->getParent()->getRa()->raEmail());
 						foreach (OIDplusRA::getAllRAs() as $ra) {
-							if ($obj->userHasParentalWriteRights($ra)) $users[] = $ra->raEmail();
+							if ($obj->userHasParentalWriteRights($ra)) $users[] = array($severity, $ra->raEmail());
 						}
 					}
+				} else {
+					throw new OIDplusException("SUPOIDRA logger mask: Invalid object '$object_id'");
 				}
 			}
 
 			// RA(x)?	Save log entry into the logbook of: Logged in RA "x"
-			// Replace ? by ! if the entity does not need to be logged in
-			else if (preg_match('@^RA\((.+)\)([\?\!])$@ismU', $maskcode, $m)) {
+			// Remove or replace "?" by "!" if the entity does not need to be logged in
+			else if (preg_match('@^RA\((.*)\)([\?\!])$@ismU', $maskcode, $m)) {
 				$ra_email          = $m[1];
 				$ra_need_login     = $m[2] == '?';
-				if ($ra_need_login && OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
-					$users[] = $ra_email;
-				} else if (!$ra_need_login) {
-					$users[] = $ra_email;
+				if (!empty($ra_email)) {
+					if ($ra_need_login && OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
+						$users[] = array($severity_online, $ra_email);
+					} else if (!$ra_need_login) {
+						$users[] = array($severity, $ra_email);
+					}
 				}
 			}
 
 			// A?	Save log entry into the logbook of: A logged in admin
-			// Replace ? by ! if the entity does not need to be logged in
+			// Remove or replace "?" by "!" if the entity does not need to be logged in
 			else if (preg_match('@^A([\?\!])$@ismU', $maskcode, $m)) {
 				$admin_need_login = $m[1] == '?';
 				if ($admin_need_login && OIDplus::authUtils()->isAdminLoggedIn()) {
-					$users[] = 'admin';
+					$users[] = array($severity_online, 'admin');
 				} else if (!$admin_need_login) {
-					$users[] = 'admin';
+					$users[] = array($severity, 'admin');
 				}
 			}
 
 			// Unexpected
 			else {
-				throw new OIDplusException("Unexpected logger mask code '$maskcode'");
+				throw new OIDplusException("Unexpected logger component '$maskcode' in mask code '$maskcodes'");
 			}
 		}
 
@@ -141,14 +363,21 @@ class OIDplusLogger {
 			if ($res->num_rows() == 0) throw new OIDplusException("Could not log event");
 			$row = $res->fetch_array();
 			$log_id = $row['last_id'];
+			if ($log_id == 0) throw new OIDplusException("Could not log event");
 		}
 
-		foreach ($objects as $object) {
-			OIDplus::db()->query("insert into ###log_object (log_id, object) values (?, ?)", array($log_id, $object));
+		$object_dupe_check = array();
+		foreach ($objects as list($severity, $object)) {
+			if (in_array($object, $object_dupe_check)) continue;
+			$object_dupe_check[] = $object;
+			OIDplus::db()->query("insert into ###log_object (log_id, severity, object) values (?, ?, ?)", array($log_id, $severity, $object));
 		}
 
-		foreach ($users as $username) {
-			OIDplus::db()->query("insert into ###log_user (log_id, username) values (?, ?)", array($log_id, $username));
+		$user_dupe_check = array();
+		foreach ($users as list($severity, $username)) {
+			if (in_array($username, $user_dupe_check)) continue;
+			$user_dupe_check[] = $username;
+			OIDplus::db()->query("insert into ###log_user (log_id, severity, username) values (?, ?, ?)", array($log_id, $severity, $username));
 		}
 
 	}

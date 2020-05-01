@@ -612,7 +612,7 @@ class OIDplus {
 			$pubKey = openssl_pkey_get_details($res)["key"];
 
 			// Log
-			OIDplus::logger()->log("A!", "Generating new SystemID using a new key pair");
+			OIDplus::logger()->log("[INFO]A!", "Generating new SystemID using a new key pair");
 
 			// Save the key pair to database
 			OIDplus::config()->setValue('oidplus_private_key', $privKey);
@@ -621,7 +621,7 @@ class OIDplus {
 			// Log the new system ID
 			if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
 				$system_id = smallhash(base64_decode($m[1]));
-				OIDplus::logger()->log("A!", "Your SystemID is now $system_id");
+				OIDplus::logger()->log("[INFO]A!", "Your SystemID is now $system_id");
 			}
 		}
 

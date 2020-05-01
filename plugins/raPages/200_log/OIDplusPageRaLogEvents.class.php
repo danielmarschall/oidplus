@@ -47,7 +47,7 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 			$out['title'] = "Log entries for RA $ra_email";
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event from ###log lo ".
+			$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event, lu.severity from ###log lo ".
 			                            "left join ###log_user lu on lu.log_id = lo.id ".
 			                            "where lu.username = ? " .
 			                            "order by lo.unix_ts desc", array($ra_email));
@@ -56,7 +56,7 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 				while ($row = $res->fetch_array()) {
 					$addr = empty($row['addr']) ? 'no address' : $row['addr'];
 
-					$out['text'] .= date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr) . ")\n";
+					$out['text'] .= '<span class="severity_'.$row['severity'].'">' . date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr) . ")</span>\n";
 				}
 				$out['text'] .= '</pre>';
 			} else {

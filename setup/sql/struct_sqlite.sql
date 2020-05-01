@@ -77,6 +77,7 @@ CREATE TABLE `log_user` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT,
   `log_id` INTEGER NOT NULL REFERENCES `log`(`id`),
   `username` TEXT NOT NULL,
+  `severity` INTEGER NOT NULL,
   UNIQUE (`log_id`,`username`)
 );
 
@@ -85,7 +86,8 @@ CREATE TABLE `log_object` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT,
   `log_id` INTEGER NOT NULL REFERENCES `log`(`id`),
   `object` TEXT NOT NULL,
+  `severity` INTEGER NOT NULL,
   UNIQUE (`log_id`,`object`)
 );
 
-INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '203', '1', '0');
+INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '204', '1', '0');

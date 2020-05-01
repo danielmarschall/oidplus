@@ -115,7 +115,8 @@ DROP TABLE IF EXISTS `log_user`;
 CREATE TABLE `log_user` (
   `id` int(11) NOT NULL,
   `log_id` int(11) NOT NULL,
-  `username` varchar(255) NOT NULL
+  `username` varchar(255) NOT NULL,
+  `severity` int(11) NOT NULL
 ) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
 
 ALTER TABLE `log_user`
@@ -133,7 +134,8 @@ DROP TABLE IF EXISTS `log_object`;
 CREATE TABLE `log_object` (
   `id` int(11) NOT NULL,
   `log_id` int(11) NOT NULL,
-  `object` varchar(255) NOT NULL
+  `object` varchar(255) NOT NULL,
+  `severity` int(11) NOT NULL
 ) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
 
 ALTER TABLE `log_object`
@@ -146,4 +148,4 @@ ALTER TABLE `log_object`
 
 /* -------------------------------------------------- */
 
-INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '203', '1', '0');
+INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '204', '1', '0');

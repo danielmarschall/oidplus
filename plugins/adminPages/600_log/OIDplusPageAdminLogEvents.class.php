@@ -38,23 +38,32 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 			}
 
 			$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event from ###log lo ".
-			                            "left join ###log_user lu on lu.log_id = lo.id ".
-			                            //"where lu.username = 'admin' " .
 			                            "order by lo.unix_ts desc");
 			if ($res->num_rows() > 0) {
 				$out['text'] = '<pre>';
 				while ($row = $res->fetch_array()) {
+					$severity = 0;
+					// ---
 					$users = array();
-					$res2 = OIDplus::db()->query("select username from ###log_user ".
+					$res2 = OIDplus::db()->query("select username, severity from ###log_user ".
 					                             "where log_id = ?", array($row['id']));
 					while ($row2 = $res2->fetch_array()) {
 						$users[] = $row2['username'];
+						if ($row2['username'] == 'admin') $severity = $row2['severity'];
 					}
 					$users = count($users) > 0 ? ", ".implode('/',$users) : '';
-
+					// ---
+					$objects = array();
+					$res2 = OIDplus::db()->query("select object, severity from ###log_object ".
+					                             "where log_id = ?", array($row['id']));
+					while ($row2 = $res2->fetch_array()) {
+						$objects[] = $row2['object'];
+					}
+					$objects = count($objects) > 0 ? ", ".implode('/',$objects) : '';
+					// ---
 					$addr = empty($row['addr']) ? 'no address' : $row['addr'];
-
-					$out['text'] .= date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr.$users) . ")\n";
+					// ---
+					$out['text'] .= '<span class="severity_'.$severity.'">' . date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr.$users.$objects) . ")</span>\n";
 				}
 				$out['text'] .= '</pre>';
 			} else {
@@ -68,7 +77,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
-		
+
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
