@@ -20,6 +20,7 @@
 class OIDplus {
 	private static /*OIDplusPagePlugin[]*/ $pagePlugins = array();
 	private static /*OIDplusAuthPlugin[]*/ $authPlugins = array();
+	private static /*OIDplusLoggerPlugin[]*/ $loggerPlugins = array();
 	private static /*OIDplusObjectTypePlugin[]*/ $objectTypePlugins = array();
 	private static /*string[]*/ $enabledObjectTypes = array();
 	private static /*string[]*/ $disabledObjectTypes = array();
@@ -286,6 +287,17 @@ class OIDplus {
 		return self::$authPlugins;
 	}
 
+	# --- Logger plugin
+
+	private static function registerLoggerPlugin(OIDplusLoggerPlugin $plugin) {
+		self::$loggerPlugins[] = $plugin;
+		return true;
+	}
+
+	public static function getLoggerPlugins() {
+		return self::$loggerPlugins;
+	}
+
 	# --- Object type plugin
 
 	private static function registerObjectTypePlugin(OIDplusObjectTypePlugin $plugin) {
@@ -467,6 +479,7 @@ class OIDplus {
 		self::$sesHandler = null;
 		self::$pagePlugins = array();
 		self::$authPlugins = array();
+		self::$loggerPlugins = array();
 		self::$objectTypePlugins = array();
 		self::$enabledObjectTypes = array();
 		self::$disabledObjectTypes = array();
@@ -512,6 +525,7 @@ class OIDplus {
 
 		self::registerAllPlugins('*Pages', 'OIDplusPagePlugin', array('OIDplus','registerPagePlugin'));
 		self::registerAllPlugins('auth', 'OIDplusAuthPlugin', array('OIDplus','registerAuthPlugin'));
+		self::registerAllPlugins('logger', 'OIDplusLoggerPlugin', array('OIDplus','registerLoggerPlugin'));
 		self::registerAllPlugins('objectTypes', 'OIDplusObjectTypePlugin', array('OIDplus','registerObjectTypePlugin'));
 
 		// Initialize non-DB plugins
@@ -520,6 +534,9 @@ class OIDplus {
 			$plugin->init($html);
 		}
 		foreach (OIDplus::getAuthPlugins() as $plugin) {
+			$plugin->init($html);
+		}
+		foreach (OIDplus::getLoggerPlugins() as $plugin) {
 			$plugin->init($html);
 		}
 		foreach (OIDplus::getObjectTypePlugins() as $plugin) {

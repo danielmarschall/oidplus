@@ -22,3 +22,8 @@ Type "auth"
 ---------------
 
 	manifest.ini (Sections Plugin, PHP:pluginclass)
+
+Type "logger"
+---------------
+
+	manifest.ini (Sections Plugin, PHP:pluginclass)

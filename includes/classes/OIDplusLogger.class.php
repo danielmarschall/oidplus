@@ -41,10 +41,10 @@ class OIDplusLogger {
 		//                                 array(array("S"),"AAA(B\)BB)"),
 		//                                 array(array("S"),"CCC(DDD)")
 		//                              )
-	
+
 		$out = array();
 		$sevs = array(); // Note: The severity block will repeat for the next components if not changed explicitly
-		
+
 		$code = '';
 		$sev = '';
 		$bracket_level = 0;
@@ -52,7 +52,7 @@ class OIDplusLogger {
 		$inside_severity_block = false;
 		for ($i=0; $i<strlen($maskcodes); $i++) {
 			$char = $maskcodes[$i];
-			
+
 			if ($inside_severity_block) {
 				// Severity block (optional)
 				// e.g.  [?WARN/!OK] ==> $sevs = array("?WARN", "!OK")
@@ -163,6 +163,9 @@ class OIDplusLogger {
 	}
 
 	public static function log($maskcodes, $event) {
+		$loggerPlugins = OIDplus::getLoggerPlugins();
+		if (count($loggerPlugins) == 0) return false;
+
 		// What is a mask code?
 		// A mask code gives information about the log event:
 		// 1. The severity (info, warning, error)
@@ -198,6 +201,7 @@ class OIDplusLogger {
 			// prepend "?" or "!" and use '/' as delimiter
 			// Example: "[?WARN/!OK]RA(x)" means: If RA is not logged in, it is a warning; if it is logged in, it is an success
 			$severity = 0; // default severity = none
+			$severity_online = 0;
 			foreach ($sevs as $sev) {
 				switch (strtoupper($sev)) {
 					// [OK]   = Success
@@ -255,7 +259,7 @@ class OIDplusLogger {
 						throw new OIDplusException("Invalid maskcode '$maskcodes' (Unknown severity '$sev')");
 				}
 			}
-			
+
 			// OID(x)	Save log entry into the logbook of: Object "x"
 			if (preg_match('@^OID\((.+)\)$@ismU', $maskcode, $m)) {
 				$object_id = $m[1];
@@ -355,30 +359,16 @@ class OIDplusLogger {
 
 		// Now write the log message
 
-		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
-		OIDplus::db()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event));
-		$log_id = OIDplus::db()->insert_id();
-		if ($log_id === false) {
-			$res = OIDplus::db()->query("select max(id) as last_id from ###log");
-			if ($res->num_rows() == 0) throw new OIDplusException("Could not log event");
-			$row = $res->fetch_array();
-			$log_id = $row['last_id'];
-			if ($log_id == 0) throw new OIDplusException("Could not log event");
+		$result = false;
+
+		foreach ($loggerPlugins as $plugin) {
+			$reason = '';
+			if ($plugin->available($reason)) {
+				$result |= $plugin->log($event, $users, $objects);
+			}
 		}
 
-		$object_dupe_check = array();
-		foreach ($objects as list($severity, $object)) {
-			if (in_array($object, $object_dupe_check)) continue;
-			$object_dupe_check[] = $object;
-			OIDplus::db()->query("insert into ###log_object (log_id, severity, object) values (?, ?, ?)", array($log_id, $severity, $object));
-		}
-
-		$user_dupe_check = array();
-		foreach ($users as list($severity, $username)) {
-			if (in_array($username, $user_dupe_check)) continue;
-			$user_dupe_check[] = $username;
-			OIDplus::db()->query("insert into ###log_user (log_id, severity, username) values (?, ?, ?)", array($log_id, $severity, $username));
-		}
+		return $result;
 
 	}
 }

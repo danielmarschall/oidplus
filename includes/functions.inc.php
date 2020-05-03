@@ -23,7 +23,9 @@ function insertWhitespace($str, $index) {
 
 function js_escape($data) {
 	// TODO.... json_encode??
-	return "'" . str_replace('\\', '\\\\', $data) . "'";
+	$data = str_replace('\\', '\\\\', $data);
+	$data = str_replace('\'', '\\\'', $data);
+	return "'" . $data . "'";
 }
 
 function trim_br($html) {

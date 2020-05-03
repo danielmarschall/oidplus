@@ -71,6 +71,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			$show_obj_active = false;
 			$show_obj_inactive = false;
 			$show_auth = false;
+			$show_logger = false;
 
 			if ($parts[1] == '') {
 				$out['title'] = "Installed plugins";
@@ -85,6 +86,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				$show_obj_active = true;
 				$show_obj_inactive = true;
 				$show_auth = true;
+				$show_logger = true;
 			} else if ($parts[1] == 'pages') {
 				$out['title'] = "Page plugins";
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
@@ -146,6 +148,10 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				$out['title'] = "RA authentication";
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_auth = true;
+			} else if ($parts[1] == 'logger') {
+				$out['title'] = "Logger";
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$show_logger = true;
 			} else {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>Invalid arguments.</p>';
@@ -155,7 +161,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			$pp_public = array();
 			$pp_ra = array();
 			$pp_admin = array();
-			
+
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if (is_subclass_of($plugin, OIDplusPagePluginPublic::class)) {
 					$pp_public[] = $plugin;
@@ -385,12 +391,47 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '</div></div>';
 				}
 			}
+
+			if ($show_logger) {
+				if (count($plugins = OIDplus::getLoggerPlugins()) > 0) {
+					$out['text'] .= '<h2>Logger plugins</h2>';
+					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '	<tr>';
+					$out['text'] .= '		<th width="25%">Class name</th>';
+					$out['text'] .= '		<th width="25%">Plugin name</th>';
+					$out['text'] .= '		<th width="25%">Plugin version</th>';
+					$out['text'] .= '		<th width="25%">Plugin author</th>';
+					$out['text'] .= '	</tr>';
+					foreach ($plugins as $plugin) {
+						$reason = '';
+						$active = $plugin->available($reason);
+
+						$out['text'] .= '	<tr>';
+						$pluginInfo = OIDplus::getPluginInfo($plugin);
+						if ($active) {
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						} else {
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'><font color="gray">'.htmlentities(get_class($plugin)).'</font></a> <font color="gray">(not available: '.htmlentities($reason).')</font></td>';
+						}
+						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
+						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
+						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$out['text'] .= '	</tr>';
+					}
+					$out['text'] .= '</table>';
+					$out['text'] .= '</div></div>';
+				}
+			}
 		}
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
-		
+
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
@@ -408,6 +449,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		$tree_icon_obj_active = $tree_icon; // TODO
 		$tree_icon_obj_inactive = $tree_icon; // TODO
 		$tree_icon_auth = $tree_icon; // TODO
+		$tree_icon_logger = $tree_icon; // TODO
 
 		$pp_public = array();
 		$pp_ra = array();
@@ -528,6 +570,20 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				'text' => $txt,
 			);
 		}
+		$logger_plugins = array();
+		foreach (OIDplus::getLoggerPlugins() as $plugin) {
+			$pluginInfo = OIDplus::getPluginInfo($plugin);
+			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+
+			$reason = '';
+			if (!$plugin->available($reason)) $txt = '<font color="gray">'.$txt.'</font>';
+
+			$logger_plugins[] = array(
+				'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+				'icon' => $tree_icon_logger,
+				'text' => $txt,
+			);
+		}
 		$json[] = array(
 			'id' => 'oidplus:system_plugins',
 			'icon' => $tree_icon,
@@ -581,6 +637,12 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					'icon' => $tree_icon,
 					'text' => 'RA authentication',
 					'children' => $auth_plugins
+				),
+				array(
+					'id' => 'oidplus:system_plugins.logger',
+					'icon' => $tree_icon,
+					'text' => 'Logger',
+					'children' => $logger_plugins
 				)
 			)
 		);
