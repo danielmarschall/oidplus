@@ -1,0 +1,6 @@
+
+In this folder, you can place confidential stuff like log files or a SQLite database.
+
+Please make sure that your webserver (e.g. Apache) does not allow access to this directory through the web browser.
+
+If there are problems, please check .htaccess (for Apache), nginx.conf (for Nginx) or web.config (for Microsoft IIS).

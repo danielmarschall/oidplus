@@ -113,7 +113,7 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 
 		// Try connecting to the database
 		try {
-			$filename   = OIDplus::baseConfig()->getValue('SQLITE3_FILE', 'oidplus_sqlite3.db');
+			$filename   = OIDplus::baseConfig()->getValue('SQLITE3_FILE', 'secure/oidplus.db');
 			$flags      = SQLITE3_OPEN_READWRITE/* | SQLITE3_OPEN_CREATE*/;
 			$encryption = OIDplus::baseConfig()->getValue('SQLITE3_ENCRYPTION', '');
 

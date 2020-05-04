@@ -77,8 +77,8 @@ OIDplus::baseConfig()->setValue('PGSQL_DATABASE',           'oidplus');
 Old 2.0 format:          define('OIDPLUS_PGSQL_DATABASE',   'oidplus');
 
 
-OIDplus::baseConfig()->setValue('SQLITE3_FILE',           'oidplus.db');
-Old 2.0 format:          define('OIDPLUS_SQLITE3_FILE',   'oidplus.db');
+OIDplus::baseConfig()->setValue('SQLITE3_FILE',           'secure/oidplus.db');
+Old 2.0 format:          define('OIDPLUS_SQLITE3_FILE',   'secure/oidplus.db');
 Attention:               This file must be located in a location that is not world-readable/downloadable!
 
 OIDplus::baseConfig()->setValue('SQLITE3_ENCRYPTION',           '');
