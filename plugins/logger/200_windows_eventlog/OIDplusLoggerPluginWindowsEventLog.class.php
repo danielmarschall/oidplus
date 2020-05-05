@@ -29,7 +29,7 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 	const LOGPROVIDER = 'OIDplus'; // "Source name" (should be registered in the registry = mapped to a message file DLL)
 
 	public static function available(&$reason)/*: bool*/ {
-		if (substr($_SERVER['OS'],0,7) !== 'Windows') {
+		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 			$reason = 'Functionality only available on Windows servers';
 			return false;
 		}
@@ -70,7 +70,7 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 	}
 
 	public static function log($event, $users, $objects)/*: bool*/ {
-		if (substr($_SERVER['OS'],0,7) !== 'Windows') {
+		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 			return false;
 		}
 

@@ -601,7 +601,7 @@ class OIDplus {
 			}
 			self::$system_id_cache = $out;
 		}
-		return ($out ? '1.3.6.1.4.1.37476.30.9.' : '').$out;
+		return ($oid ? '1.3.6.1.4.1.37476.30.9.' : '').$out;
 	}
 
 	public static function getPkiStatus($try_generate=true) {

@@ -80,7 +80,7 @@ if (function_exists('bcadd')) {
 			throw new Exception("gmp_binomial() NOT IMPLEMENTED");
 		}
 
-		// gmp_clrbit ( GMP $a , int $index ) /*: void*/
+		// gmp_clrbit ( GMP $a , int $index ) : void
 		// Clear bit
 		function gmp_clrbit($a, $index) {
 			bcscale(0);
@@ -523,7 +523,7 @@ if (function_exists('bcadd')) {
 			return bcrand($min, $max);
 		}
 
-		// gmp_random_seed ( mixed $seed ) /*: void*/
+		// gmp_random_seed ( mixed $seed ) : void
 		// Sets the RNG seed
 		function gmp_random_seed($seed) {
 			bcscale(0);
@@ -589,7 +589,7 @@ if (function_exists('bcadd')) {
 			return false;
 		}
 
-		// gmp_setbit ( GMP $a , int $index [, bool $bit_on = TRUE ] ) /*: void*/
+		// gmp_setbit ( GMP $a , int $index [, bool $bit_on = TRUE ] ) : void
 		// Set bit
 		function gmp_setbit($a, $index, $bit_on=TRUE) {
 			bcscale(0);

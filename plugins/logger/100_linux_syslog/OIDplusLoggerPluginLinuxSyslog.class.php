@@ -20,7 +20,7 @@
 class OIDplusLoggerPluginLinuxSyslog extends OIDplusLoggerPlugin {
 
 	public static function available(&$reason)/*: bool*/ {
-		if (substr($_SERVER['OS'],0,7) === 'Windows') {
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			$reason = 'Functionality not available on Windows';
 			return false;
 		}
@@ -40,7 +40,7 @@ class OIDplusLoggerPluginLinuxSyslog extends OIDplusLoggerPlugin {
 	}
 
 	public static function log($event, $users, $objects)/*: bool*/ {
-		if (substr($_SERVER['OS'],0,7) === 'Windows') return false;
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') return false;
 
 		if (!file_exists('/var/log/syslog')) return false;
 
