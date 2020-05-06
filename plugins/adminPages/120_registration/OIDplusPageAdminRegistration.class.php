@@ -266,9 +266,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('reg_wizard_done', 'Registration wizard done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
-
-		});
 		OIDplus::config()->prepareConfigKey('reg_privacy', '2=Hide your system, 1=Register your system to the ViaThinkSoft directory and oid-info.com, 0=Publish your system to ViaThinkSoft directory and all public contents (RA/OID) to oid-info.com', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != '0') && ($value != '1') && ($value != '2')) {
 				throw new OIDplusException("Please enter either 0, 1 or 2.");
@@ -284,28 +281,16 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 		});
 
-		$oobe_done = OIDplus::config()->getValue('reg_wizard_done') == '1';
+		// Is it time to register / renew the directory entry?
+		// Note: REGISTRATION_HIDE_SYSTEM is an undocumented constant that can be put in the config.inc.php files of a test system accessing the same database as the productive system that is registered.
+		// This avoids that the URL of a productive system is overridden with the URL of a cloned test system (since they use the same database, they also have the same system ID)
 
-		if (!$oobe_done) {
-			// Show registration/configuration wizard once
-			if ($html) {
-				if (basename($_SERVER['SCRIPT_NAME']) != 'oobe.php') {
-					header('Location:'.OIDplus::webpath(__DIR__).'oobe.php');
-					die('Redirecting to registration wizard...');
-				}
-			}
-		} else {
-			// Is it time to register / renew the directory entry?
-			// Note: REGISTRATION_HIDE_SYSTEM is an undocumented constant that can be put in the config.inc.php files of a test system accessing the same database as the productive system that is registered.
-			// This avoids that the URL of a productive system is overridden with the URL of a cloned test system (since they use the same database, they also have the same system ID)
+		if (!OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
+			$privacy_level = OIDplus::config()->getValue('reg_privacy');
 
-			if (!OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
-				$privacy_level = OIDplus::config()->getValue('reg_privacy');
-
-				if (php_sapi_name() !== 'cli') { // don't register when called from CLI, otherweise the oidinfo XML can't convert relative links into absolute links
-					if ((time()-OIDplus::config()->getValue('reg_last_ping') >= OIDplus::config()->getValue('reg_ping_interval'))) {
-						$this->sendRegistrationQuery();
-					}
+			if (php_sapi_name() !== 'cli') { // don't register when called from CLI, otherweise the oidinfo XML can't convert relative links into absolute links
+				if ((time()-OIDplus::config()->getValue('reg_last_ping') >= OIDplus::config()->getValue('reg_ping_interval'))) {
+					$this->sendRegistrationQuery();
 				}
 			}
 		}
@@ -313,7 +298,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
-		
+
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
@@ -332,4 +317,87 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	public function tree_search($request) {
 		return false;
 	}
+
+	public function implementsFeature($id) {
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry
+		return false;
+	}
+
+	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
+
+		echo "<p><u>Step $step: System registration and automatic publishing</u> (optional)</p>";
+
+		echo file_get_contents(__DIR__ . '/info.tpl');
+
+		$pki_status = OIDplus::getPkiStatus();
+
+		if (!$pki_status) {
+			echo '<p>Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you <b>cannot</b> register your OIDplus instance at the moment.</p>';
+		} else {
+
+			echo '<p>Privacy level:</p><select name="reg_privacy" id="reg_privacy">';
+
+			# ---
+
+			echo '<option value="0"';
+			if (isset($_REQUEST['sent'])) {
+				if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 0)) echo ' selected';
+			} else {
+				if ((OIDplus::config()->getValue('reg_privacy') == 0) || !OIDplus::config()->getValue('reg_wizard_done')) {
+					echo ' selected';
+				} else {
+					echo '';
+				}
+			}
+			echo '>0 = Register to directory service and automatically publish RA/OID data at oid-info.com</option>';
+
+			# ---
+
+			echo '<option value="1"';
+			if (isset($_REQUEST['sent'])) {
+				if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 1)) echo ' selected';
+			} else {
+				if ((OIDplus::config()->getValue('reg_privacy') == 1)) {
+					echo ' selected';
+				} else {
+					echo '';
+				}
+			}
+			echo '>1 = Only register to directory service</option>';
+
+			# ---
+
+			echo '<option value="2"';
+			if (isset($_REQUEST['sent'])) {
+				if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 2)) echo ' selected';
+			} else {
+				if ((OIDplus::config()->getValue('reg_privacy') == 2)) {
+					echo ' selected';
+				} else {
+					echo '';
+				}
+			}
+			echo '>2 = Hide system</option>';
+
+			# ---
+
+			echo '</select>';
+
+			$msg = '';
+			if ($do_edits) {
+				try {
+					OIDplus::config()->setValue('reg_privacy', $_REQUEST['reg_privacy']);
+				} catch (Exception $e) {
+					$msg = $e->getMessage();
+					$errors_happened = true;
+				}
+			}
+			echo ' <font color="red"><b>'.$msg.'</b></font>';
+
+			echo '<p><i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.<br>
+			<a href="../../../res/OIDplus/privacy_documentation.html" target="_blank">Click here</a> for more information about privacy related topics.</p>';
+		}
+	}
+
 }

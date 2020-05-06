@@ -134,4 +134,40 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 	public function tree_search($request) {
 		return false;
 	}
+
+	public function implementsFeature($id) {
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry
+		return false;
+	}
+
+	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
+
+		echo "<p><u>Step $step: Color Theme</u></p>";
+
+		echo '<input type="checkbox" name="color_invert" id="color_invert"';
+		if (isset($_REQUEST['sent'])) {
+		        if ($set_value = isset($_REQUEST['color_invert'])) {
+				echo ' checked';
+			}
+		} else {
+			if (OIDplus::config()->getValue('color_invert') == 1) {
+				echo ' checked';
+			}
+		}
+		echo '> <label for="color_invert">Dark Theme (inverted colors)</label><br>';
+
+		$msg = '';
+		if ($do_edits) {
+			try {
+				OIDplus::config()->setValue('color_invert', $set_value ? 1 : 0);
+			} catch (Exception $e) {
+				$msg = $e->getMessage();
+				$errors_happened = true;
+			}
+		}
+
+		echo ' <font color="red"><b>'.$msg.'</b></font>';
+	}
+
 }

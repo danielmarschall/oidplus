@@ -444,6 +444,9 @@ class OIDplus {
 					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin class is not defined (manifest.ini section 'PHP', key 'pluginclass'");
 				}
 				$class_name = $cry['PHP']['pluginclass'];
+				if (!class_exists($class_name)) {
+					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin class '$class_name' not found (manifest.ini section 'PHP', key 'pluginclass'");
+				}
 				if (!is_subclass_of($class_name, $expectedPluginClass)) {
 					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin class '$class_name' is expected to be a subclass of '$expectedPluginClass'");
 				}

@@ -23,7 +23,7 @@ RFC
 - try to use MUST, MUST NOT, SHALL etc. according to RFC 2119
 - felder die nicht optional sind => mandatory kennzeichnen
 
-OOBE/SETUP
+SETUP
 - There should be a "test database connection" button
 
 SMALL THINGS

@@ -808,4 +808,56 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		return $out;
 	}
 
+	public function implementsFeature($id) {
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry
+		return false;
+	}
+
+	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
+
+		echo "<p><u>Step $step: Enable/Disable object type plugins</u></p>";
+		echo '<p>Which object types do you want to manage using OIDplus?</p>';
+
+		$enabled_ary = array();
+
+		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
+			echo '<input type="checkbox" name="enable_ot_'.$ot::ns().'" id="enable_ot_'.$ot::ns().'"';
+			if (isset($_REQUEST['sent'])) {
+			        if (isset($_REQUEST['enable_ot_'.$ot::ns()])) {
+					echo ' checked';
+					$enabled_ary[] = $ot::ns();
+				}
+			} else {
+			        echo ' checked';
+			}
+			echo '> <label for="enable_ot_'.$ot::ns().'">'.htmlentities($ot::objectTypeTitle()).'</label><br>';
+		}
+
+		foreach (OIDplus::getDisabledObjectTypes() as $ot) {
+			echo '<input type="checkbox" name="enable_ot_'.$ot::ns().'" id="enable_ot_'.$ot::ns().'"';
+			if (isset($_REQUEST['sent'])) {
+			        if (isset($_REQUEST['enable_ot_'.$ot::ns()])) {
+					echo ' checked';
+					$enabled_ary[] = $ot::ns();
+				}
+			} else {
+			        echo ''; // <-- difference
+			}
+			echo '> <label for="enable_ot_'.$ot::ns().'">'.htmlentities($ot::objectTypeTitle()).'</label><br>';
+		}
+
+		$msg = '';
+		if ($do_edits) {
+			try {
+				OIDplus::config()->setValue('objecttypes_enabled', implode(';', $enabled_ary));
+			} catch (Exception $e) {
+				$msg = $e->getMessage();
+				$errors_happened = true;
+			}
+		}
+
+		echo ' <font color="red"><b>'.$msg.'</b></font>';
+	}
+
 }
