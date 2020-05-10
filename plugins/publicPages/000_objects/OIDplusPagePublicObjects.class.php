@@ -285,7 +285,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$out['title'] = OIDplus::config()->getValue('system_title'); // 'Object Database of ' . $_SERVER['SERVER_NAME'];
 			$out['icon'] = OIDplus::webpath(__DIR__).'system_big.png';
 
-			if (file_exists(__DIR__ . '/welcome.local.html')) {
+			if (file_exists(OIDplus::basePath() . '/userdata/welcome/welcome.html')) {
+				$out['text'] = file_get_contents(OIDplus::basePath() . '/userdata/welcome/welcome.html');
+			} else if (file_exists(__DIR__ . '/welcome.local.html')) {
 				$out['text'] = file_get_contents(__DIR__ . '/welcome.local.html');
 			} else if (file_exists(__DIR__ . '/welcome.html')) {
 				$out['text'] = file_get_contents(__DIR__ . '/welcome.html');
@@ -771,7 +773,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 	protected static function showMCE($name, $content) {
 		$mce_plugins = array();
-		foreach (glob(__DIR__ . '/../../3p/tinymce/plugins/*') as $m) { // */
+		foreach (glob(OIDplus::basePath().'/3p/tinymce/plugins/*') as $m) { // */
 			$mce_plugins[] = basename($m);
 		}
 

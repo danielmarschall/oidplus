@@ -113,14 +113,14 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 
 		// Try connecting to the database
 		try {
-			$filename   = OIDplus::baseConfig()->getValue('SQLITE3_FILE', 'secure/oidplus.db');
+			$filename   = OIDplus::baseConfig()->getValue('SQLITE3_FILE', 'userdata/database/oidplus.db');
 			$flags      = SQLITE3_OPEN_READWRITE/* | SQLITE3_OPEN_CREATE*/;
 			$encryption = OIDplus::baseConfig()->getValue('SQLITE3_ENCRYPTION', '');
 
 			$is_absolute_path = ((substr($filename,0,1) == '/') || (substr($filename,1,1) == ':'));
 			if (!$is_absolute_path) {
 				// Filename must be absolute path, since OIDplus can be called from several locations (e.g. registration wizard)
-				$filename = __DIR__ . '/../../../' . $filename;
+				$filename = OIDplus::basePath().'/'.$filename;
 			}
 
 			$this->conn = new SQLite3($filename, $flags, $encryption);

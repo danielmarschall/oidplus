@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-// OIDplusBaseConfig is the basic ("static") configuration stored in includes/config.inc.php,
+// OIDplusBaseConfig is the basic ("static") configuration stored in userdata/baseconfig/config.inc.php,
 // e.g. database access credentials.
 // Not to be confused with OIDplusConfig which are settings that are stored in the database.
 class OIDplusBaseConfig implements OIDplusConfigInterface {

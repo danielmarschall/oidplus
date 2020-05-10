@@ -18,7 +18,8 @@
  */
 
 // OIDplusConfig contains settings that are stored in the database.
-// Not to be confused with OIDplusBaseConfig which is the basic ("static") configuration stored in includes/config.inc.php,
+// Not to be confused with OIDplusBaseConfig which is the basic ("static")
+// configuration stored in userdata/baseconfig/config.inc.php,
 // e.g. database access credentials.
 class OIDplusConfig implements OIDplusConfigInterface {
 
@@ -101,6 +102,13 @@ class OIDplusConfig implements OIDplusConfigInterface {
 
 		OIDplus::db()->query("update ###config set value = ? where name = ?", array($value, $name));
 		$this->values[$name] = $value;
+	}
+
+	public function deleteConfigKey($name) {
+		$this->buildConfigArray();
+		if (isset($this->values[$name])) {
+			OIDplus::db()->query("delete from ###config where name = ?", array($name));
+		}
 	}
 
 }

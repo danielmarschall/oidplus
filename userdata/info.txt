@@ -1,0 +1,77 @@
+
+The folder "userdata" contains various files that are unique
+for your OIDplus installation. With a few exceptions (like this file),
+the folder contents are safe from being accidentally changed or
+deleted by SVN updates.
+
+Since this folder can also contain sensitive information
+like log files or a SQLite database, the access to this
+directory must be restricted. Therefore, please make sure
+that your webserver (e.g. Apache) does not allow access
+to this directory.
+If the access is not denied, please check .htaccess (for Apache),
+nginx.conf (for Nginx) or web.config (for Microsoft IIS).
+
+Various plugins can put their data in this directory.
+Here is a list of typical sub-folders:
+
+
+Folder "attachments"
+--------------------
+
+Currently not in use (TODO)
+
+
+Folder "baseconfig"
+-------------------
+
+The folder "baseconfig" contains the file "config.inc.php" which defines
+important static settings like the database connection credentials or
+security keys (ReCaptcha) etc.
+Setup (/setup/) will show assist you in creating this config.inc.php file.
+
+
+Folder "database"
+-----------------
+
+This folder can be used to store a SQLite database.
+The default database name is" oidplus.db"
+
+
+Folder "logs"
+-------------
+
+Currently not in use (TODO)
+
+
+Folder "resources"
+------------------
+
+This folder is used by the plugin "publicPages/500_resources"
+(Section "Documents and resources")
+
+Its contents will be merged with "res/" from the root directory.
+"res/" contains the default resources which are part of the OIDplus
+main installation (you shall not change or add anything to that folder),
+while "userdata/resources" contains resources that you add yourself
+(e.g. your impress, privacy statement, additional resources,
+hyperlinks to your websites and products, etc.)
+
+Valid contents:
+- Sub folders
+- *.url files (will be converted to a hyperlink in the menu on the left)
+- *.html files (the HTML headline will define the title of the menu entry)
+- You can define custom icons for any resource by placing the files ..._big.png and ..._tree.png
+
+
+Folder "welcome"
+----------------
+
+The folder "welcome" contains the file "welcome.html",
+which is the front page shown by the plugin "publicPages/000_objects".
+You may edit this file to overwrite the default welcome page.
+Please note:
+- Since userdata/ is a protected directory,
+  you cannot place resources (images, css etc.) there.
+- Although the file extension is ".html", it may only contain plain
+  HTML data (without head or body).

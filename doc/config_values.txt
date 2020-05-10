@@ -2,13 +2,19 @@
 OVERVIEW OF ALL CONFIG.INC.PHP SETTINGS
 =======================================
 
-The file includes/config.inc.php contains various settings
+The file userdata/baseconfig/config.inc.php contains various settings
 which are essential to connect to your database and other
 things that should be known before the database connection
 is opened.
-
-Note that other settings are stored in the database (table "config")
+Other settings are stored in the database (table "config")
 and can be accessed using the admin login area.
+
+The setup assistant (/setup/) will lead you through
+the creation of the most important settings of config.inc.php.
+
+Below you will find a list of all possible config settings
+of the default OIDplus installation/plugins.
+Please note that a plugin can define any key.
 
 
 -------------------------------------
@@ -77,8 +83,8 @@ OIDplus::baseConfig()->setValue('PGSQL_DATABASE',           'oidplus');
 Old 2.0 format:          define('OIDPLUS_PGSQL_DATABASE',   'oidplus');
 
 
-OIDplus::baseConfig()->setValue('SQLITE3_FILE',           'secure/oidplus.db');
-Old 2.0 format:          define('OIDPLUS_SQLITE3_FILE',   'secure/oidplus.db');
+OIDplus::baseConfig()->setValue('SQLITE3_FILE',           'userdata/database/oidplus.db');
+Old 2.0 format:          define('OIDPLUS_SQLITE3_FILE',   'userdata/database/oidplus.db');
 Attention:               This file must be located in a location that is not world-readable/downloadable!
 
 OIDplus::baseConfig()->setValue('SQLITE3_ENCRYPTION',           '');

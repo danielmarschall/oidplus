@@ -57,7 +57,7 @@ function dotest($db) {
 	try {
 		$db->connect();
 	} catch (Exception $e) {
-		echo "Connection <font color=\"red\">FAILED</font> (check config.inc.php): ".$e->getMessage()."<br><br>";
+		echo "Connection <font color=\"red\">FAILED</font> (check userdata/baseconfig/config.inc.php): ".$e->getMessage()."<br><br>";
 		return;
 	}
 	echo "Detected slang: " . $db->getSlang()::id()."<br>";

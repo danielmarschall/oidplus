@@ -24,6 +24,7 @@ RFC
 - felder die nicht optional sind => mandatory kennzeichnen
 
 SETUP
+- Do a AJAX check to see if "userdata/" or "dev/" is word-readable, and then show a warning
 - There should be a "test database connection" button
 
 SMALL THINGS

@@ -18,7 +18,7 @@ require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 <h1>OIDplus Setup - Configuration File Generator</h1>
 
-<p>Thank you very much for choosing OIDplus! This setup assistant will help you creating or updating the file <b>includes/config.inc.php</b>.
+<p>Thank you very much for choosing OIDplus! This setup assistant will help you creating or updating the file <b>userdata/baseconfig/config.inc.php</b>.
 Setup does not automatically write to this file. Instead, you need to copy-paste the contents into the file.
 Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.</p>
 
@@ -75,7 +75,7 @@ function dbplugin_changed() {
 
 <?php
 
-OIDplus::registerAllPlugins('sql_slang', 'OIDplusSqlSlangPlugin', null);
+OIDplus::registerAllPlugins('sqlSlang', 'OIDplusSqlSlangPlugin', null);
 $sql_slang_selection = array();
 foreach (get_declared_classes() as $c) {
 	if (is_subclass_of($c, 'OIDplusSqlSlangPlugin')) {
@@ -97,7 +97,7 @@ foreach ($ary as $plugintype_folder => $bry) {
 		foreach ($cry['Setup'] as $dry_name => $dry) {
 			if ($dry_name != 'htmlpart') continue;
 			foreach ($dry as $html_file) {
-				$files[] = __DIR__ . '/../plugins/'.$plugintype_folder.'/'.$pluginname_folder.'/'.$html_file;
+				$files[] = OIDplus::basePath().'/plugins/'.$plugintype_folder.'/'.$pluginname_folder.'/'.$html_file;
 			}
 		}
 	}
@@ -152,8 +152,8 @@ dbplugin_changed();
 </div>
 
 <div id="step3">
-<h2>Step 3: Save config.inc.php file</h2>
-<p>Save following contents into the file <b>includes/config.inc.php</b>:</p>
+<h2>Step 3: Save userdata/baseconfig/config.inc.php file</h2>
+<p>Save following contents into the file <b>userdata/baseconfig/config.inc.php</b>:</p>
 <code><font color="darkblue"><div id="config"></div></font></code>
 </div>
 

@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 Daniel Marschall, ViaThinkSoft
+ * Copyright 2020 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				throw new OIDplusException("Please enter a title.");
 			}
 		});
-		OIDplus::config()->prepareConfigKey('resource_plugin_path',           'Resource plugin: Path that contains the documents?', 'res/', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
-			// TODO: check if path exists
-		});
+		OIDplus::config()->deleteConfigKey('resource_plugin_path');
 		OIDplus::config()->prepareConfigKey('resource_plugin_hide_empty_path','Resource plugin: Hide empty paths? 1=on, 0=off', 1, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || (($value != 0) && ($value != 1))) {
 				throw new OIDplusException("Please enter a valid value (0=off, 1=on).");
@@ -45,6 +43,9 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	private static function getDocumentTitle($file) {
+
+		$file = OIDplus::basePath().'/'.self::realname($file);
+
 		$cont = file_get_contents($file);
 		if (preg_match('@<title>(.+)</title>@ismU', $cont, $m)) return $m[1];
 		if (preg_match('@<h1>(.+)</h1>@ismU', $cont, $m)) return $m[1];
@@ -54,6 +55,33 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		if (preg_match('@<h5>(.+)</h5>@ismU', $cont, $m)) return $m[1];
 		if (preg_match('@<h6>(.+)</h6>@ismU', $cont, $m)) return $m[1];
 		return pathinfo($file, PATHINFO_FILENAME); // filename without extension
+	}
+	
+	private static function myglob($reldir, $onlydir=false) {
+		$out = array();
+		
+		$root = OIDplus::basePath().'/userdata/resources/';
+		$res = $onlydir ? glob($root.$reldir, GLOB_ONLYDIR) : glob($root.$reldir);
+		foreach ($res as &$x) {
+			$x = substr($x, strlen($root));
+			$out[] = $x;
+		}
+
+		$root = OIDplus::basePath().'/res/';
+		$res = $onlydir ? glob($root.$reldir, GLOB_ONLYDIR) : glob($root.$reldir);
+		foreach ($res as $x) {
+			$x = substr($x, strlen($root));
+			$out[] = $x;
+		}
+
+		return array_unique($out);
+	}
+	
+	private static function realname($rel) {
+		$candidate1 = OIDplus::basePath().'/userdata/resources/'.$rel;
+		$candidate2 = OIDplus::basePath().'/res/'.$rel;
+		if (file_exists($candidate1) || is_dir($candidate1)) return "userdata/resources/$rel";
+		if (file_exists($candidate2) || is_dir($candidate2)) return "res/$rel";
 	}
 
 	public function gui($id, &$out, &$handled) {
@@ -70,26 +98,19 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				return;
 			}
 
-			if (strpos($file, OIDplus::config()->getValue('resource_plugin_path', 'res/')) !== 0) {
-				$out['title'] = 'Access denied';
-				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>Security breach A</p>';
-				return;
-			}
-
 			if (strpos($file, '..') !== false) {
 				$out['title'] = 'Access denied';
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>Security breach B</p>';
+				$out['text'] = '<p>Security breach</p>';
 				return;
 			}
 
 			$out['text'] = '';
 
-			if ($file != OIDplus::config()->getValue('resource_plugin_path', 'res/')) {
-				$dir = dirname($file).'/';
+			if ($file != '/') {
+				$dir = dirname($file);
 
-				if ($dir == OIDplus::config()->getValue('resource_plugin_path', 'res/')) {
+				if ($dir == '/') {
 					if (file_exists(__DIR__.'/treeicon.png')) {
 						$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 					} else {
@@ -98,9 +119,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.OIDplus::config()->getValue('resource_plugin_path', 'res/').'$'.OIDplus::authUtils()::makeAuthKey("resources;".OIDplus::config()->getValue('resource_plugin_path', 'res/'))).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(OIDplus::config()->getValue('resource_plugin_title', 'Documents and resources')).'</a></p>';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$/$'.OIDplus::authUtils()::makeAuthKey('resources;/')).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(OIDplus::config()->getValue('resource_plugin_title', 'Documents and resources')).'</a></p>';
 				} else {
-					$icon_candidate = pathinfo($dir)['dirname'].'/'.pathinfo($dir)['filename'].'_tree.png';
+					$realdir = self::realname($dir);
+					
+					$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_folder&file='.urlencode($dir);
+					/*
+					$icon_candidate = pathinfo($realdir)['dirname'].'/'.pathinfo($realdir)['filename'].'_tree.png';
 					if (file_exists($icon_candidate)) {
 						$tree_icon = $icon_candidate;
 					} else if (file_exists(__DIR__.'/treeicon_folder.png')) {
@@ -108,18 +133,23 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					} else {
 						$tree_icon = null; // no icon
 					}
+					*/
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
 					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("resources;$dir")).'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(basename($dir)).'</a></p><br>';
 				}
 			}
+			
+			$realfile = self::realname($file);
 
-			if (file_exists($file) && (!is_dir($file))) {
+			if (file_exists($realfile) && (!is_dir($realfile))) {
 				if (substr($file,-4,4) == '.url') {
-					$out['title'] = $this->getHyperlinkTitle($file);
+					$out['title'] = $this->getHyperlinkTitle($realfile);
 
-					$icon_candidate = pathinfo($file)['dirname'].'/'.pathinfo($file)['filename'].'_big.png';
+					$out['icon'] = OIDplus::webpath(__DIR__).'show_icon.php?mode=icon_leaf_url_big&file='.urlencode($file);
+					/*
+					$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_big.png';
 					if (file_exists($icon_candidate)) {
 						$out['icon'] = $icon_candidate;
 					} else if (file_exists(__DIR__.'/icon_leaf_url_big.png')) {
@@ -127,13 +157,16 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					} else {
 						$out['icon'] = '';
 					}
+					*/
 
 					// Should not happen though, due to conditionalselect
-					$out['text'] .= '<a href="'.htmlentities(self::getHyperlinkURL($file)).'" target="_blank">Open in new window</a>';
+					$out['text'] .= '<a href="'.htmlentities(self::getHyperlinkURL($realfile)).'" target="_blank">Open in new window</a>';
 				} else if ((substr($file,-4,4) == '.htm') || (substr($file,-5,5) == '.html')) {
 					$out['title'] = $this->getDocumentTitle($file);
 
-					$icon_candidate = pathinfo($file)['dirname'].'/'.pathinfo($file)['filename'].'_big.png';
+					$out['icon'] = OIDplus::webpath(__DIR__).'show_icon.php?mode=icon_leaf_doc_big&file='.urlencode($file);
+					/*
+					$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_big.png';
 					if (file_exists($icon_candidate)) {
 						$out['icon'] = $icon_candidate;
 					} else if (file_exists(__DIR__.'/icon_leaf_doc_big.png')) {
@@ -141,7 +174,10 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					} else {
 						$out['icon'] = '';
 					}
+					*/
 
+					$file = OIDplus::basePath().'/'.self::realname($file);
+					
 					$cont = file_get_contents($file);
 					$cont = preg_replace('@^(.+)<body[^>]*>@isU', '', $cont);
 					$cont = preg_replace('@</body>.+$@isU', '', $cont);
@@ -155,13 +191,15 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					$out['text'] = '<p>The system does not know how to handle this file type.</p>';
 					return;
 				}
-			} else if (is_dir($file)) {
-				$out['title'] = ($file == OIDplus::config()->getValue('resource_plugin_path', 'res/')) ? OIDplus::config()->getValue('resource_plugin_title', 'Documents and resources') : basename($file);
+			} else if (is_dir($realfile)) {
+				$out['title'] = ($file == '/') ? OIDplus::config()->getValue('resource_plugin_title', 'Documents and resources') : basename($file);
 
-				if ($file == OIDplus::config()->getValue('resource_plugin_path', 'res/')) {
+				if ($file == '/') {
 					$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				} else {
-					$icon_candidate = pathinfo($file)['dirname'].'/'.pathinfo($file)['filename'].'_big.png';
+					$out['icon'] = OIDplus::webpath(__DIR__).'show_icon.php?mode=icon_folder_big&file='.urlencode($file);
+					/*
+					$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_big.png';
 					if (file_exists($icon_candidate)) {
 						$out['icon'] = $icon_candidate;
 					} else if (file_exists(__DIR__.'/icon_folder_big.png')) {
@@ -169,6 +207,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					} else {
 						$out['icon'] = null; // no icon
 					}
+					*/
 				}
 
 				if (file_exists(__DIR__.'/treeicon.png')) {
@@ -179,10 +218,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 				$count = 0;
 
-				$dirs = glob($file.'*'.'/', GLOB_ONLYDIR);
+				$dirs = self::myglob($file.'*'.'/', true);
 				natcasesort($dirs);
 				foreach ($dirs as $dir) {
-					$icon_candidate = pathinfo($dir)['dirname'].'/'.pathinfo($dir)['filename'].'_tree.png';
+					$realdir = self::realname($dir);
+					$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_folder&file='.urlencode($dir);
+					/*
+					$icon_candidate = pathinfo($realdir)['dirname'].'/'.pathinfo($realdir)['filename'].'_tree.png';
 					if (file_exists($icon_candidate)) {
 						$tree_icon = $icon_candidate;
 					} else if (file_exists(__DIR__.'/treeicon_folder.png')) {
@@ -190,6 +232,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					} else {
 						$tree_icon = null; // no icon
 					}
+					*/
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
@@ -198,13 +241,16 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				}
 
 				$files = array_merge(
-					glob($file.'/'.'*.htm*'), // TODO: also PHP?
-					glob($file.'/'.'*.url')
+					self::myglob($file.'/'.'*.htm*'), // TODO: also PHP?
+					self::myglob($file.'/'.'*.url')
 				);
 				natcasesort($files);
 				foreach ($files as $file) {
+					$realfile = self::realname($file);
 					if (substr($file,-4,4) == '.url') {
-						$icon_candidate = pathinfo($file)['dirname'].'/'.pathinfo($file)['filename'].'_tree.png';
+						$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_url&file='.urlencode($file);
+						/*
+						$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_tree.png';
 						if (file_exists($icon_candidate)) {
 							$tree_icon = $icon_candidate;
 						} else if (file_exists(__DIR__.'/treeicon_leaf_url.png')) {
@@ -212,14 +258,18 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 						} else {
 							$tree_icon = null; // default icon (folder)
 						}
+						*/
+						
 						$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
 						$hyperlink_pic = ' <img src="'.OIDplus::webpath(__DIR__).'hyperlink.png" widht="13" height="13" alt="Hyperlink" style="top:-3px;position:relative">';
 
-						$out['text'] .= '<p><a href="'.htmlentities(self::getHyperlinkURL($file)).'" target="_blank">'.$ic.' '.htmlentities($this->getHyperlinkTitle($file)).' '.$hyperlink_pic.'</a></p>';
+						$out['text'] .= '<p><a href="'.htmlentities(self::getHyperlinkURL($realfile)).'" target="_blank">'.$ic.' '.htmlentities($this->getHyperlinkTitle($realfile)).' '.$hyperlink_pic.'</a></p>';
 						$count++;
 					} else {
-						$icon_candidate = pathinfo($file)['dirname'].'/'.pathinfo($file)['filename'].'_tree.png';
+						$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_doc&file='.urlencode($file);
+						/*
+						$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_tree.png';
 						if (file_exists($icon_candidate)) {
 							$tree_icon = $icon_candidate;
 						} else if (file_exists(__DIR__.'/treeicon_leaf_doc.png')) {
@@ -227,6 +277,8 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 						} else {
 							$tree_icon = null; // default icon (folder)
 						}
+						*/
+						
 						$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
 						$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("resources;$file")).'>'.$ic.' '.htmlentities($this->getDocumentTitle($file)).'</a></p>';
@@ -246,16 +298,21 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	private function tree_rec(&$children, $rootdir=null, $depth=0) {
-		if (is_null($rootdir)) $rootdir = OIDplus::config()->getValue('resource_plugin_path', 'res/');
+		if (is_null($rootdir)) $rootdir = '/';
 		if ($depth > 100) return false; // something is wrong!
 
-		$dirs = glob($rootdir.'*'.'/', GLOB_ONLYDIR);
+		$dirs = self::myglob($rootdir.'*'.'/', true);
 		natcasesort($dirs);
 		foreach ($dirs as $dir) {
 			$tmp = array();
+			
 			$this->tree_rec($tmp, $dir, $depth+1);
 
-			$icon_candidate = pathinfo($dir)['dirname'].'/'.pathinfo($dir)['filename'].'_tree.png';
+			$realdir = self::realname($dir);
+			
+			$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_folder&file='.urlencode($dir);
+			/*
+			$icon_candidate = pathinfo($realdir)['dirname'].'/'.pathinfo($realdir)['filename'].'_tree.png';
 			if (file_exists($icon_candidate)) {
 				$tree_icon = $icon_candidate;
 			} else if (file_exists(__DIR__.'/treeicon_folder.png')) {
@@ -263,6 +320,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			} else {
 				$tree_icon = null; // default icon (folder)
 			}
+			*/
 
 			$children[] = array(
 				'id' => 'oidplus:resources$'.$dir.'$'.OIDplus::authUtils()::makeAuthKey("resources;$dir"),
@@ -274,14 +332,16 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		}
 
 		$files = array_merge(
-			glob($rootdir.'*.htm*'), // TODO: Also PHP?
-			glob($rootdir.'*.url')
+			self::myglob($rootdir.'*.htm*'), // TODO: Also PHP?
+			self::myglob($rootdir.'*.url')
 		);
 		natcasesort($files);
 		foreach ($files as $file) {
+			$realfile = self::realname($file);
 			if (substr($file,-4,4) == '.url') {
-
-				$icon_candidate = pathinfo($file)['dirname'].'/'.pathinfo($file)['filename'].'_tree.png';
+				$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_url&file='.urlencode($file);
+				/*
+				$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_tree.png';
 				if (file_exists($icon_candidate)) {
 					$tree_icon = $icon_candidate;
 				} else if (file_exists(__DIR__.'/treeicon_leaf_url.png')) {
@@ -289,19 +349,21 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				} else {
 					$tree_icon = null; // default icon (folder)
 				}
+				*/
 
 				$hyperlink_pic = ' <img src="'.OIDplus::webpath(__DIR__).'hyperlink.png" widht="13" height="13" alt="Hyperlink" style="top:-3px;position:relative">';
 
 				$children[] = array(
 					'id' => 'oidplus:resources$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("resources;$file"),
-					'conditionalselect' => 'window.open('.js_escape(self::getHyperlinkURL($file)).'); false;',
+					'conditionalselect' => 'window.open('.js_escape(self::getHyperlinkURL($realfile)).'); false;',
 					'icon' => $tree_icon,
-					'text' => $this->getHyperlinkTitle($file).' '.$hyperlink_pic,
+					'text' => $this->getHyperlinkTitle($realfile).' '.$hyperlink_pic,
 					'state' => array("opened" => $depth <= OIDplus::config()->getValue('resource_plugin_autoopen_level', 1)-1)
 				);
-
 			} else {
-				$icon_candidate = pathinfo($file)['dirname'].'/'.pathinfo($file)['filename'].'_tree.png';
+				$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_doc&file='.urlencode($file);
+				/*
+				$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_tree.png';
 				if (file_exists($icon_candidate)) {
 					$tree_icon = $icon_candidate;
 				} else if (file_exists(__DIR__.'/treeicon_leaf_doc.png')) {
@@ -309,6 +371,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				} else {
 					$tree_icon = null; // default icon (folder)
 				}
+				*/
 				$children[] = array(
 					'id' => 'oidplus:resources$'.$file.'$'.OIDplus::authUtils()::makeAuthKey("resources;$file"),
 					'icon' => $tree_icon,
@@ -339,7 +402,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		$children = array();
 
-		$this->tree_rec($children, OIDplus::config()->getValue('resource_plugin_path', 'res/'));
+		$this->tree_rec($children, '/');
 
 		if (!OIDplus::config()->getValue('resource_plugin_hide_empty_path', true) || (count($children) > 0)) {
 			if (file_exists(__DIR__.'/treeicon.png')) {
@@ -349,7 +412,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			}
 
 			$json[] = array(
-				'id' => 'oidplus:resources$'.OIDplus::config()->getValue('resource_plugin_path', 'res/').'$'.OIDplus::authUtils()::makeAuthKey("resources;".OIDplus::config()->getValue('resource_plugin_path', 'res/')),
+				'id' => 'oidplus:resources$/$'.OIDplus::authUtils()::makeAuthKey('resources;/'),
 				'icon' => $tree_icon,
 				'state' => array("opened" => true),
 				'text' => OIDplus::config()->getValue('resource_plugin_title', 'Documents and resources'),

@@ -13,8 +13,8 @@ Type "database"
 
 	manifest.ini (Sections Plugin, PHP:pluginclass, Setup:htmlpart[])
 
-Type "sql_slang"
-----------------
+Type "sqlSlang"
+---------------
 
 	manifest.ini (Sections Plugin, PHP:pluginclass)
 

@@ -282,7 +282,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		});
 
 		// Is it time to register / renew the directory entry?
-		// Note: REGISTRATION_HIDE_SYSTEM is an undocumented constant that can be put in the config.inc.php files of a test system accessing the same database as the productive system that is registered.
+		// Note: REGISTRATION_HIDE_SYSTEM is an undocumented constant that can be put in the userdata/baseconfig/config.inc.php files of a test system accessing the same database as the productive system that is registered.
 		// This avoids that the URL of a productive system is overridden with the URL of a cloned test system (since they use the same database, they also have the same system ID)
 
 		if (!OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {

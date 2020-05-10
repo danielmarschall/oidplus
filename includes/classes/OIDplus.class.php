@@ -31,7 +31,7 @@ class OIDplus {
 
 	private function __construct() {
 	}
-
+	
 	# --- Static classes
 
 	private static $baseConfig = null;
@@ -45,22 +45,29 @@ class OIDplus {
 
 		if ($first_init) {
 			// Include a file containing various size/depth limitations of OIDs
-			// It is important to include it before config.inc.php was included,
-			// so we can give config.inc.php the chance to override the values.
+			// It is important to include it before userdata/baseconfig/config.inc.php was included,
+			// so we can give userdata/baseconfig/config.inc.php the chance to override the values.
 
-			include __DIR__ . '/../limits.inc.php';
+			include OIDplus::basePath().'/includes/limits.inc.php';
 
 			// Include config file
+			
+			$config_file = OIDplus::basePath() . '/userdata/baseconfig/config.inc.php';
+			$config_file_old = OIDplus::basePath() . '/includes/config.inc.php'; // backwards compatibility
+			
+			if (!file_exists($config_file) && file_exists($config_file_old)) {
+				$config_file = $config_file_old;
+			}
 
-			if (file_exists(__DIR__ . '/../config.inc.php')) {
+			if (file_exists($config_file)) {
 				if (self::$old_config_format) {
 					// Note: We may only include it once due to backwards compatibility,
 					//       since in version 2.0, the configuration was defined using define() statements
 					// Attention: This does mean that a full re-init (e.g. for test cases) is not possible
 					//            if a version 2.0 config is used!
-					include_once __DIR__ . '/../config.inc.php';
+					include_once $config_file;
 				} else {
-					include __DIR__ . '/../config.inc.php';
+					include $config_file;
 				}
 
 				if (defined('OIDPLUS_CONFIG_VERSION') && (OIDPLUS_CONFIG_VERSION == 2.0)) {
@@ -80,15 +87,15 @@ class OIDplus {
 					}
 				}
 			} else {
-				if (!is_dir(__DIR__.'/../../setup')) {
-					throw new OIDplusConfigInitializationException('File includes/config.inc.php is missing, but setup can\'t be started because its directory missing.');
+				if (!is_dir(OIDplus::basePath().'/setup')) {
+					throw new OIDplusConfigInitializationException('File userdata/baseconfig/config.inc.php is missing, but setup can\'t be started because its directory missing.');
 				} else {
 					if (self::$html) {
 						header('Location:'.OIDplus::getSystemUrl().'setup/');
 						die('Redirecting to setup...');
 					} else {
 						// This can be displayed in e.g. ajax.php
-						throw new OIDplusConfigInitializationException('File includes/config.inc.php is missing. Please run setup again.');
+						throw new OIDplusConfigInitializationException('File userdata/baseconfig/config.inc.php is missing. Please run setup again.');
 					}
 				}
 			}
@@ -96,11 +103,11 @@ class OIDplus {
 			// Check important config settings
 
 			if (self::$baseConfig->getValue('CONFIG_VERSION') != 2.1) {
-				throw new OIDplusConfigInitializationException("The information located in includes/config.inc.php is outdated.");
+				throw new OIDplusConfigInitializationException("The information located in $config_file is outdated.");
 			}
 
 			if (self::$baseConfig->getValue('SERVER_SECRET', '') === '') {
-				throw new OIDplusConfigInitializationException("You must set a value for SERVER_SECRET in includes/config.inc.php for the system to operate secure.");
+				throw new OIDplusConfigInitializationException("You must set a value for SERVER_SECRET in $config_file for the system to operate secure.");
 			}
 		}
 
@@ -420,7 +427,7 @@ class OIDplus {
 		$out = array();
 		// Note: glob() will sort by default, so we do not need a page priority attribute.
 		//       So you just need to use a numeric plugin directory prefix (padded).
-		$ary = glob(__DIR__ . '/../../plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.ini');
+		$ary = glob(OIDplus::basePath().'/plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.ini');
 		foreach ($ary as $ini) {
 			if (!file_exists($ini)) continue;
 			$bry = parse_ini_file($ini, true, INI_SCANNER_TYPED);
@@ -493,14 +500,14 @@ class OIDplus {
 
 		// Continue...
 
-		OIDplus::baseConfig(); // this loads the base configuration located in config.inc.php (once!)
+		OIDplus::baseConfig(); // this loads the base configuration located in userdata/baseconfig/config.inc.php (once!)
 		                       // You can do changes to the configuration afterwards using OIDplus::baseConfig()->...
 
 		// Register database types (highest priority)
 
 		// SQL slangs
 
-		self::registerAllPlugins('sql_slang', 'OIDplusSqlSlangPlugin', array('OIDplus','registerSqlSlangPlugin'));
+		self::registerAllPlugins('sqlSlang', 'OIDplusSqlSlangPlugin', array('OIDplus','registerSqlSlangPlugin'));
 		foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 			$plugin->init($html);
 		}
@@ -548,6 +555,10 @@ class OIDplus {
 	}
 
 	# --- System URL, System ID, PKI, and other functions
+
+	public static function basePath() {
+		return realpath(__DIR__ . '/../../');
+	}
 
 	public static function getSystemUrl($relative=false) {
 		if (!isset($_SERVER["SCRIPT_NAME"])) return false;
@@ -649,30 +660,30 @@ class OIDplus {
 	}
 
 	public static function getInstallType() {
-		if (!file_exists(__DIR__ . '/../../oidplus_version.txt') && !is_dir(__DIR__ . '/../../.svn')) {
+		if (!file_exists(OIDplus::basePath().'/oidplus_version.txt') && !is_dir(OIDplus::basePath().'/.svn')) {
 			return 'unknown';
 		}
-		if (file_exists(__DIR__ . '/../../oidplus_version.txt') && is_dir(__DIR__ . '/../../.svn')) {
+		if (file_exists(OIDplus::basePath().'/oidplus_version.txt') && is_dir(OIDplus::basePath().'/.svn')) {
 			return 'ambigous';
 		}
-		if (is_dir(__DIR__ . '/../../.svn')) {
+		if (is_dir(OIDplus::basePath().'/.svn')) {
 			return 'svn-wc';
 		}
-		if (file_exists(__DIR__ . '/../../oidplus_version.txt')) {
+		if (file_exists(OIDplus::basePath().'/oidplus_version.txt')) {
 			return 'svn-snapshot';
 		}
 	}
 
 	public static function getVersion() {
-		if (file_exists(__DIR__ . '/../../oidplus_version.txt') && is_dir(__DIR__ . '/../../.svn')) {
+		if (file_exists(OIDplus::basePath().'/oidplus_version.txt') && is_dir(OIDplus::basePath().'/.svn')) {
 			return false; // version is ambigous
 		}
 
-		if (is_dir(__DIR__ . '/../../.svn')) {
+		if (is_dir(OIDplus::basePath().'/.svn')) {
 			// Try to get the version via SQLite3
 			if (class_exists('SQLite3')) {
 				try {
-					$db = new SQLite3(__DIR__ . '/../../.svn/wc.db');
+					$db = new SQLite3(OIDplus::basePath().'/.svn/wc.db');
 					$results = $db->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
 					while ($row = $results->fetchArray()) {
 						return 'svn-'.$row['rev'];
@@ -684,7 +695,7 @@ class OIDplus {
 			}
 			if (class_exists('PDO')) {
 				try {
-					$pdo = new PDO('sqlite:' . __DIR__ . '/../../.svn/wc.db');
+					$pdo = new PDO('sqlite:' . OIDplus::basePath().'/.svn/wc.db');
 					$res = $pdo->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
 					$row = $res->fetch();
 					if ($row !== false) return 'svn-'.$row['rev'];
@@ -695,19 +706,19 @@ class OIDplus {
 
 			// Try to find out the SVN version using the shell
 			// We don't prioritize this method, because a failed shell access will flood the apache error log with STDERR messages
-			$output = @shell_exec('svnversion '.escapeshellarg(realpath(__DIR__ . '/../../')));
+			$output = @shell_exec('svnversion '.escapeshellarg(OIDplus::basePath()));
 			if (preg_match('/\d+/', $output, $match)) {
 				return 'svn-'.$match[0];
 			}
 
-			$output = @shell_exec('svn info '.escapeshellarg(realpath(__DIR__ . '/../../')));
+			$output = @shell_exec('svn info '.escapeshellarg(OIDplus::basePath()));
 			if (preg_match('/Revision:\s*(\d+)/m', $output, $match)) {
 				return 'svn-'.$match[1];
 			}
 		}
 
-		if (file_exists(__DIR__ . '/../../oidplus_version.txt')) {
-			$cont = file_get_contents(__DIR__ . '/../../oidplus_version.txt');
+		if (file_exists(OIDplus::basePath().'/oidplus_version.txt')) {
+			$cont = file_get_contents(OIDplus::basePath().'/oidplus_version.txt');
 			if (preg_match('@Revision (\d+)@', $cont, $m))
 				return 'svn-'.$m[1];
 		}

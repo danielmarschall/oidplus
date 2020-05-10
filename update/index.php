@@ -24,7 +24,7 @@ set_time_limit(0);
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 // Note: we don't want to use OIDplus::init() in this updater (it should be independent as much as possible)
-OIDplus::baseConfig(); // This call will redirect to setup if config.inc.php is missing
+OIDplus::baseConfig(); // This call will redirect to setup if userdata/baseconfig/config.inc.php is missing
 
 define('OIDPLUS_REPO', 'https://svn.viathinksoft.com/svn/oidplus');
 
@@ -114,8 +114,8 @@ if (isset($_REQUEST['update_now'])) {
 
 	<?php
 
-	$svn_wc_exists = is_dir(__DIR__ . '/../.svn');
-	$snapshot_exists = file_exists(__DIR__ . '/../oidplus_version.txt');
+	$svn_wc_exists = is_dir(OIDplus::basePath().'/.svn');
+	$snapshot_exists = file_exists(OIDplus::basePath().'/oidplus_version.txt');
 
 	if ($svn_wc_exists && $snapshot_exists) {
 		echo '<font color="red">ERROR: Both, oidplus_version.txt and .svn directory exist! Therefore, the version is ambigous!</font>';

@@ -103,7 +103,7 @@ function rebuild() {
 			'OIDplus::baseConfig()->setValue(\'CONFIG_VERSION\',    2.1);<br>' +
 			'<br>' +
 			// Passwords are Base64 encoded to avoid that passwords can be read upon first sight,
-			// e.g. if collegues are looking over your shoulder while you accidently open (and quickly close) config.inc.php
+			// e.g. if collegues are looking over your shoulder while you accidently open (and quickly close) userdata/baseconfig/config.inc.php
 			'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + hexToBase64(sha3_512(document.getElementById('admin_password').value)) + '\'); // base64 encoded SHA3-512 hash<br>' +
 			'<br>' +
 			'OIDplus::baseConfig()->setValue(\'DATABASE_PLUGIN\',   \''+strPlugin+'\');<br>';

@@ -33,7 +33,7 @@ function oidplus_loadScript(src) {
 }
 
 function oidplus_external_polyfill() {
-	// Disable this code by adding following line to includes/config.inc.php
+	// Disable this code by adding following line to userdata/baseconfig/config.inc.php
 	// define('RECAPTCHA_ENABLED', false);
 	var ua = window.navigator.userAgent;
 	if ((ua.indexOf("MSIE ") > 0) || (ua.indexOf("Trident/") > 0)) {
@@ -43,7 +43,7 @@ function oidplus_external_polyfill() {
 }
 
 function oidplus_external_recaptcha() {
-	// Disable this code by adding following lines to includes/config.inc.php
+	// Disable this code by adding following lines to userdata/baseconfig/config.inc.php
 	// define('DISABLE_MSIE_COMPAT', true);
 	oidplus_loadScript('https://www.google.com/recaptcha/api.js');
 }

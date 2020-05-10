@@ -69,7 +69,7 @@ if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 	echo '</noscript>';
 	echo '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>';
 	echo '<p>Before logging in, please solve the following CAPTCHA</p>';
-	echo '<p>If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="<?php echo OIDplus::getSystemUrl(); ?>setup/">setup part 1</a> again or edit includes/config.inc.php).</p>';
+	echo '<p>If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="<?php echo OIDplus::getSystemUrl(); ?>setup/">setup part 1</a> again or edit userdata/baseconfig/config.inc.php).</p>';
 	echo '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>';
 
 	if (isset($_REQUEST['sent'])) {

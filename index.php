@@ -26,7 +26,7 @@ function html_exception_handler($exception) {
 	if ($exception instanceof OIDplusConfigInitializationException) {
 		echo "<h1>OIDplus initialization error</h1>";
 		echo '<p>'.htmlentities($exception->getMessage()).'</p>';
-		echo '<p>Please check <b>includes/config.inc.php</b>';
+		echo '<p>Please check <b>userdata/baseconfig/config.inc.php</b>';
 		if (is_dir(__DIR__ . '/setup')) {
 			echo ' or run <a href="'.OIDplus::getSystemUrl().'setup/">setup</a> again';
 		}
