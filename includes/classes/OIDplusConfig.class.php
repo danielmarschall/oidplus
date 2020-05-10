@@ -28,6 +28,7 @@ class OIDplusConfig implements OIDplusConfigInterface {
 	/*public*/ const PROTECTION_HIDDEN   = 2;
 
 	protected $values = array();
+	protected $descriptions = array();
 	protected $dirty = true;
 	protected $validateCallbacks = array();
 
@@ -48,7 +49,7 @@ class OIDplusConfig implements OIDplusConfigInterface {
 			default:
 				throw new OIDplusException("Invalid protection flag, use OIDplusConfig::PROTECTION_* constants");
 		}
-	
+
 		if (strlen($name) > 50) {
 			throw new OIDplusException("Config key name '$name' is too long. (max 50).");
 		}
@@ -59,6 +60,11 @@ class OIDplusConfig implements OIDplusConfigInterface {
 		if (!isset($this->values[$name])) {
 			OIDplus::db()->query("insert into ###config (name, description, value, protected, visible) values (?, ?, ?, ?, ?)", array($name, $description, $init_value, $protected, $visible));
 			$this->values[$name] = $init_value;
+			$this->descriptions[$name] = $description;
+		} else if ($this->descriptions[$name] != $description) {
+			// We want to give the plugins the possibility to update the default values for their plugins
+			OIDplus::db()->query("update ###config set description = ? where name = ?", array($description, $name));
+			$this->descriptions[$name] = $description;
 		}
 		if (!is_null($validateCallback)) {
 			$this->validateCallbacks[$name] = $validateCallback;
@@ -68,9 +74,11 @@ class OIDplusConfig implements OIDplusConfigInterface {
 	protected function buildConfigArray() {
 		if ($this->dirty) {
 			$this->values = array();
-			$res = OIDplus::db()->query("select name, value from ###config");
+			$this->descriptions = array();
+			$res = OIDplus::db()->query("select name, description, value from ###config");
 			while ($row = $res->fetch_object()) {
 				$this->values[$row->name] = $row->value;
+				$this->descriptions[$row->name] = $row->description;
 			}
 			$this->dirty = false;
 		}

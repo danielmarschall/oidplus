@@ -26,10 +26,10 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 
 	public static function log($event, $users, $objects)/*: bool*/ {
 		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
-		OIDplus::db()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event));
-		$log_id = OIDplus::db()->insert_id();
+		OIDplus::dbIsolated()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event));
+		$log_id = OIDplus::dbIsolated()->insert_id();
 		if ($log_id === false) {
-			$res = OIDplus::db()->query("select max(id) as last_id from ###log");
+			$res = OIDplus::dbIsolated()->query("select max(id) as last_id from ###log");
 			if ($res->num_rows() == 0) throw new OIDplusException("Could not log event");
 			$row = $res->fetch_array();
 			$log_id = $row['last_id'];
@@ -40,14 +40,14 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 		foreach ($objects as list($severity, $object)) {
 			if (in_array($object, $object_dupe_check)) continue;
 			$object_dupe_check[] = $object;
-			OIDplus::db()->query("insert into ###log_object (log_id, severity, object) values (?, ?, ?)", array($log_id, $severity, $object));
+			OIDplus::dbIsolated()->query("insert into ###log_object (log_id, severity, object) values (?, ?, ?)", array($log_id, $severity, $object));
 		}
 
 		$user_dupe_check = array();
 		foreach ($users as list($severity, $username)) {
 			if (in_array($username, $user_dupe_check)) continue;
 			$user_dupe_check[] = $username;
-			OIDplus::db()->query("insert into ###log_user (log_id, severity, username) values (?, ?, ?)", array($log_id, $severity, $username));
+			OIDplus::dbIsolated()->query("insert into ###log_user (log_id, severity, username) values (?, ?, ?)", array($log_id, $severity, $username));
 		}
 
 		return true;

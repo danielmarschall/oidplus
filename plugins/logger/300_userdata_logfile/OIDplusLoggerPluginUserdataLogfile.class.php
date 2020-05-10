@@ -17,21 +17,16 @@
  * limitations under the License.
  */
 
-class OIDplusLoggerPluginLinuxSyslog extends OIDplusLoggerPlugin {
+class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 
 	public static function available(&$reason)/*: bool*/ {
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			$reason = 'Functionality not available on Windows';
+		if (!is_dir(OIDplus::basePath().'/userdata/logs/')) {
+			$reason = "Directory userdata/logs/ not existing";
 			return false;
 		}
 
-		if (!file_exists('/var/log/syslog')) {
-			$reason = "File /var/log/syslog not existing";
-			return false;
-		}
-
-		if (@file_put_contents('/var/log/syslog', '', FILE_APPEND) === false) {
-			$reason = "File /var/log/syslog not writeable";
+		if (@file_put_contents(OIDplus::basePath().'/userdata/logs/oidplus.log', '', FILE_APPEND) === false) {
+			$reason = "File userdata/logs/oidplus.log not writeable";
 			return false;
 		}
 
@@ -40,9 +35,7 @@ class OIDplusLoggerPluginLinuxSyslog extends OIDplusLoggerPlugin {
 	}
 
 	public static function log($event, $users, $objects)/*: bool*/ {
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') return false;
-
-		if (!file_exists('/var/log/syslog')) return false;
+		if (!is_dir(OIDplus::basePath().'/userdata/logs/')) return false;
 
 		$users_names = array();
 		foreach ($users as list($severity, $username)) $users_names[] = $username;
@@ -56,6 +49,6 @@ class OIDplusLoggerPluginLinuxSyslog extends OIDplusLoggerPlugin {
 		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
 		$line = "$ts [$addr] $event$users_info$objects_info";
 
-		return @file_put_contents('/var/log/syslog', "$line\n", FILE_APPEND) !== false;
+		return @file_put_contents(OIDplus::basePath().'/userdata/logs/oidplus.log', "$line\n", FILE_APPEND) !== false;
 	}
 }

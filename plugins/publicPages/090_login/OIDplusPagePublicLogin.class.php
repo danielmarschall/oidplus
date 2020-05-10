@@ -46,6 +46,11 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 				echo json_encode(array("status" => 0));
 			} else {
+				if ($ra->existing()) {
+					OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '$email' (wrong password)");
+				} else {
+					OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '$email' (RA not existing)");
+				}
 				throw new OIDplusException('Wrong password or user not registered');
 			}
 		}
@@ -79,6 +84,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				OIDplus::authUtils()::adminLogin();
 				echo json_encode(array("status" => 0));
 			} else {
+				OIDplus::logger()->log("[WARN]A!", "Failed admin login");
 				throw new OIDplusException('Wrong password');
 			}
 		}
@@ -91,6 +97,16 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 	}
 
 	public function init($html=true) {
+		OIDplus::config()->prepareConfigKey('log_failed_ra_logins', 'Log failed RA logins', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (!is_numeric($value) || (($value != 0) && (($value != 1)))) {
+				throw new OIDplusException("Valid values: 0 (off) or 1 (on).");
+			}
+		});
+		OIDplus::config()->prepareConfigKey('log_failed_admin_logins', 'Log failed Admin logins', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (!is_numeric($value) || (($value != 0) && (($value != 1)))) {
+				throw new OIDplusException("Valid values: 0 (off) or 1 (on).");
+			}
+		});
 	}
 
 	public function gui($id, &$out, &$handled) {
@@ -175,7 +191,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$out['text'] .= '<script>document.getElementById("loginArea").style.visibility = "visible";</script>';
 		}
 	}
-	
+
 	public function publicSitemap(&$out) {
 		$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('oidplus:login');
 	}

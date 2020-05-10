@@ -31,7 +31,7 @@ class OIDplus {
 
 	private function __construct() {
 	}
-	
+
 	# --- Static classes
 
 	private static $baseConfig = null;
@@ -51,10 +51,10 @@ class OIDplus {
 			include OIDplus::basePath().'/includes/limits.inc.php';
 
 			// Include config file
-			
+
 			$config_file = OIDplus::basePath() . '/userdata/baseconfig/config.inc.php';
 			$config_file_old = OIDplus::basePath() . '/includes/config.inc.php'; // backwards compatibility
-			
+
 			if (!file_exists($config_file) && file_exists($config_file_old)) {
 				$config_file = $config_file_old;
 			}
@@ -259,16 +259,32 @@ class OIDplus {
 		return self::$dbPlugins;
 	}
 
-	public static function db() {
+	public static function getActiveDatabasePlugin() {
 		if (OIDplus::baseConfig()->getValue('DATABASE_PLUGIN', '') === '') {
 			throw new OIDplusConfigInitializationException("No database plugin selected in config file");
 		}
 		if (!isset(self::$dbPlugins[OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')])) {
 			throw new OIDplusConfigInitializationException("Database plugin '".OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')."' not found");
 		}
-		$obj = self::$dbPlugins[OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')];
-		if (!$obj->isConnected()) $obj->connect();
-		return $obj;
+		return self::$dbPlugins[OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')];
+	}
+
+	private static $dbMainSession = null;
+	public static function db() {
+		if (is_null(self::$dbMainSession)) {
+			self::$dbMainSession = self::getActiveDatabasePlugin()->newConnection();
+		}
+		if (!self::$dbMainSession->isConnected()) self::$dbMainSession->connect();
+		return self::$dbMainSession;
+	}
+
+	private static $dbIsolatedSession = null;
+	public static function dbIsolated() {
+		if (is_null(self::$dbIsolatedSession)) {
+			self::$dbIsolatedSession = self::getActiveDatabasePlugin()->newConnection();
+		}
+		if (!self::$dbIsolatedSession->isConnected()) self::$dbIsolatedSession->connect();
+		return self::$dbIsolatedSession;
 	}
 
 	# --- Page plugin
@@ -487,6 +503,8 @@ class OIDplus {
 		self::$menuUtils = null;
 		self::$logger = null;
 		self::$sesHandler = null;
+		self::$dbMainSession = null;
+		self::$dbIsolatedSession = null;
 		self::$pagePlugins = array();
 		self::$authPlugins = array();
 		self::$loggerPlugins = array();
