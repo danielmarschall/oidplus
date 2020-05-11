@@ -198,3 +198,14 @@ Old 2.0 format:          define('DISABLE_MSIE_COMPAT', false);
 Information:             Set to "true" if you want to avoid that the external polyfill
                          JavaScript will be included if Internet Explorer is detected.
                          Only recommended if you have concerns about privacy.
+
+OIDplus::baseConfig()->setValue('DISABLE_PLUGIN_...', true);
+Old 2.0 format:          define('OIDPLUS_DISABLE_PLUGIN_...', true);
+Information:             This gives you the possibility to disable a plugin without
+                         requiring it to be removed from the file system.
+                         (Removing a plugin from the file system can result in various
+                         problems, e.g. they can be re-added during a SVN/software update.)
+                         Replace "..." with the main PHP class of the plugin you want to disable
+                         Example:
+                         "DISABLE_PLUGIN_OIDplusLoggerPluginUserdataLogfile"
+                         disables the plugin "logger/300_userdata_logfile".
