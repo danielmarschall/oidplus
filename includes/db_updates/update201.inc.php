@@ -18,11 +18,11 @@
  */
 
 // DATABASE UPDATE 201 -> 202
-// This script will be included by OIDplusDatabasePlugin.class.php inside function afterConnect().
-// Parameters: $this is the OIDplusDatabasePlugin class
+// This script will be included by OIDplusDatabaseConnection.class.php inside function afterConnect().
+// Parameters: $this is the OIDplusDatabaseConnection class
 //             $version is the current version (this script MUST increase the number by 1 when it is done)
 
-$this->transaction_begin();
+if ($this->transaction_supported()) $this->transaction_begin();
 
 if (!isset($version)) throw new OIDplusException("Argument 'version' is missing; was the file included in a wrong way?");
 if (!isset($this))    throw new OIDplusException("Argument 'this' is missing; was the file included in a wrong way?");
@@ -79,4 +79,4 @@ if ($this->getSlang()::id() == 'pgsql') {
 $version = 202;
 $this->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
 
-$this->transaction_commit();
+if ($this->transaction_supported()) $this->transaction_commit();

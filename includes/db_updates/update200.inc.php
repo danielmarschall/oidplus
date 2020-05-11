@@ -18,18 +18,18 @@
  */
 
 // DATABASE UPDATE 200 -> 201
-// This script will be included by OIDplusDatabasePlugin.class.php inside function afterConnect().
-// Parameters: $this is the OIDplusDatabasePlugin class
+// This script will be included by OIDplusDatabaseConnection.class.php inside function afterConnect().
+// Parameters: $this is the OIDplusDatabaseConnection class
 //             $version is the current version (this script MUST increase the number by 1 when it is done)
 
 if (!isset($version)) throw new OIDplusException("Argument 'version' is missing; was the file included in a wrong way?");
 if (!isset($this))    throw new OIDplusException("Argument 'this' is missing; was the file included in a wrong way?");
 
-$this->transaction_begin();
+if ($this->transaction_supported()) $this->transaction_begin();
 
 $this->query("ALTER TABLE ###objects ADD comment varchar(255) NULL");
 
 $version = 201;
 $this->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
 
-$this->transaction_commit();
+if ($this->transaction_supported()) $this->transaction_commit();

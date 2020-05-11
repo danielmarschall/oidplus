@@ -24,7 +24,9 @@ OIDplus::init(false);
 header('Content-Type:application/json; charset=utf-8');
 
 try {
-	OIDplus::db()->transaction_begin();
+	if (OIDplus::db()->transaction_supported()) {
+		OIDplus::db()->transaction_begin();
+	}
 	$handled = false;
 
 	// Action:     (actions defined by plugins)
@@ -97,10 +99,14 @@ try {
 		throw new OIDplusException('Invalid action ID');
 	}
 
-	OIDplus::db()->transaction_commit();
+	if (OIDplus::db()->transaction_supported()) {
+		OIDplus::db()->transaction_commit();
+	}
 } catch (Exception $e) {
 	try {
-		OIDplus::db()->transaction_rollback();
+		if (OIDplus::db()->transaction_supported()) {
+			OIDplus::db()->transaction_rollback();
+		}
 	} catch (Exception $e1) {
 	}
 

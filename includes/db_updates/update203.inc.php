@@ -18,14 +18,14 @@
  */
 
 // DATABASE UPDATE 203 -> 204
-// This script will be included by OIDplusDatabasePlugin.class.php inside function afterConnect().
-// Parameters: $this is the OIDplusDatabasePlugin class
+// This script will be included by OIDplusDatabaseConnection.class.php inside function afterConnect().
+// Parameters: $this is the OIDplusDatabaseConnection class
 //             $version is the current version (this script MUST increase the number by 1 when it is done)
 
 if (!isset($version)) throw new OIDplusException("Argument 'version' is missing; was the file included in a wrong way?");
 if (!isset($this))    throw new OIDplusException("Argument 'this' is missing; was the file included in a wrong way?");
 
-$this->transaction_begin();
+if ($this->transaction_supported()) $this->transaction_begin();
 
 if ($this->getSlang()::id() == 'mssql') {
 	$this->query("ALTER TABLE ###log_object ADD severity [int]");
@@ -47,4 +47,4 @@ else if ($this->getSlang()::id() == 'sqlite') {
 $version = 204;
 $this->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
 
-$this->transaction_commit();
+if ($this->transaction_supported()) $this->transaction_commit();
