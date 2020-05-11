@@ -7,6 +7,19 @@ block network addresses that try to break into
 your system using brute force.
 
 
+Configuration
+=============
+
+In the OIDplus admin control panel, you need to set the following settings to "1" (enabled)
+- log_failed_admin_logins
+- log_failed_ra_logins
+
+Also, please make sure that in the menu tree under "Plugins --> Logger" the plugin
+"Simple Log File" is working (not marked in gray color).
+If it is gray, please click "Logger" and look at the error message.
+You probably need to set rights to the file "userdata/logs/oidplus.log" using chmod.
+
+
 /etc/fail2ban/jail.d/vts-oidplus.conf (please adjust it to your needs!)
 =====================================
 
