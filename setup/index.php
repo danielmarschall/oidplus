@@ -22,6 +22,33 @@ require_once __DIR__ . '/../includes/oidplus.inc.php';
 Setup does not automatically write to this file. Instead, you need to copy-paste the contents into the file.
 Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.</p>
 
+<h2 id="systemCheckCaption" style="display:none">System check</h2>
+
+<div id="dirAccessWarning"></div>
+
+<script>
+function checkAccess(dir) {
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === 4) {
+			if (xhr.status === 200) {
+				document.getElementById('systemCheckCaption').style.display = 'block';
+				document.getElementById('dirAccessWarning').innerHTML = document.getElementById('dirAccessWarning').innerHTML + 'Attention: The following directory is world-readable: <a target="_blank" href="'+xhr.responseURL+'">'+xhr.responseURL+'</a> ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>)<br>';
+			}
+		}
+	};
+
+	xhr.open('GET', dir);
+	xhr.send();
+}
+
+document.getElementById('dirAccessWarning').innerHTML = "";
+checkAccess('../userdata/');
+checkAccess('../dev/');
+checkAccess('../includes/');
+//checkAccess('../plugins/publicPages/100_whois/whois/cli/');
+</script>
+
 <div id="step1">
 <h2>Step 1: Enter setup information</h2>
 

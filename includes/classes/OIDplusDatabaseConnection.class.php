@@ -130,7 +130,7 @@ abstract class OIDplusDatabaseConnection {
 		$this->initRequireTables(array('objects', 'asn1id', 'iri', 'ra'/*, 'config'*/));
 	}
 
-	protected static function getHardcodedSlangById($id): /*?*/OIDplusSqlSlangPlugin {
+	protected static function getHardcodedSlangById($id)/*: ?OIDplusSqlSlangPlugin*/ {
 		foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 			if ($plugin::id() == $id) {
 				return $plugin;
@@ -177,7 +177,7 @@ abstract class OIDplusDatabaseConnection {
 		}
 	}
 
-	public final function getSlang(bool $mustExist=true): /*?*/OIDplusSqlSlangPlugin {
+	public final function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
 		if (is_null($this->slang)) {
 			if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
 				$name = OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');

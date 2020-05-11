@@ -23,8 +23,13 @@ require_once __DIR__ . '/../../includes/oidplus.inc.php';
 
 echo '<h1>OIDplus Database plugin testcases</h1>';
 
+OIDplus::init();
+
 # Test MySQL
-$db = new OIDplusDatabasePluginMySQLi();
+OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'MySQL');
+OIDplus::init();
+$db = OIDplus::db();
+OIDplus::init();
 if (function_exists('mysqli_fetch_all')) {
 	OIDplus::baseConfig()->setValue('MYSQL_FORCE_MYSQLND_SUPPLEMENT', false);
 	echo "[With MySQLnd support] ";
@@ -35,25 +40,33 @@ echo "[Without MySQLnd support] ";
 dotest($db);
 
 # Test PDO
-$db = new OIDplusDatabasePluginPDO();
+OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'PDO');
+OIDplus::init();
+$db = OIDplus::db();
 dotest($db);
 
 # Test ODBC
-$db = new OIDplusDatabasePluginODBC();
+OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'ODBC');
+OIDplus::init();
+$db = OIDplus::db();
 dotest($db);
 
 # Test PgSQL
-$db = new OIDplusDatabasePluginPgSQL();
+OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'PgSQL');
+OIDplus::init();
+$db = OIDplus::db();
 dotest($db);
 
 # Test SQLite3
-$db = new OIDplusDatabasePluginSQLite3();
+OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'SQLite');
+OIDplus::init();
+$db = OIDplus::db();
 dotest($db);
 
 # ---
 
 function dotest($db) {
-	echo "Database: " . $db::id()."<br>";
+	echo "Database: " . get_class($db) . "<br>";
 	try {
 		$db->connect();
 	} catch (Exception $e) {
