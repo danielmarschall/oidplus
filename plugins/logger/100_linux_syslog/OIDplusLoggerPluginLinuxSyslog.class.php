@@ -54,7 +54,7 @@ class OIDplusLoggerPluginLinuxSyslog extends OIDplusLoggerPlugin {
 
 		$ts = date('Y-m-d H:i:s');
 		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
-		$line = "$ts [$addr] $event$users_info$objects_info";
+		$line = "[$ts] [$addr] $event$users_info$objects_info";
 
 		return @file_put_contents('/var/log/syslog', "$line\n", FILE_APPEND) !== false;
 	}

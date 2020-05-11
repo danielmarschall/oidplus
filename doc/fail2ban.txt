@@ -1,0 +1,52 @@
+
+OIDPLUS FAIL2BAN INTEGRATION
+============================
+
+fail2ban can be used to watch your log files and
+block network addresses that try to break into
+your system using brute force.
+
+
+/etc/fail2ban/jail.d/vts-oidplus.conf (please adjust it to your needs!)
+=====================================
+
+[vts-oidplus]
+enabled  = true
+port     = http,https
+filter   = vts-oidplus
+logpath  = /......../userdata/logs/oidplus.log
+# action   = iptables-allports[name=OIDPLUS, protocol=tcp]
+action   = iptables-multiport[name=OIDPLUS, port="80,443"]
+maxretry = 20
+
+
+/etc/fail2ban/filter.d/vts-oidplus.conf
+=======================================
+
+# Fail2Ban configuration file for OIDplus
+#
+# Author: Daniel Marschall
+#
+# $Revision: 1
+#
+
+[Definition]
+
+# Option:  failregex
+# Notes.:  regex to match the password failure messages in the logfile. The
+#          host must be matched by a group named "host". The tag "<HOST>" can
+#          be used for standard IP/hostname matching and is only an alias for
+#          (?:::f{4,6}:)?(?P<host>[\w\-.^_]+)
+# Values:  TEXT
+#
+failregex = [[]<HOST>[]] Failed login to (admin|RA) account
+
+# Option:  ignoreregex
+# Notes.:  regex to ignore. If this regex matches, the line is ignored.
+# Values:  TEXT
+#
+ignoreregex =
+
+[Init]
+
+datepattern = ^%%Y-%%m-%%d %%H:%%M:%%S
