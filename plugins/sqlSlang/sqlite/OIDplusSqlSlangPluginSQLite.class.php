@@ -99,5 +99,4 @@ class OIDplusSqlSlangPluginSQLite extends OIDplusSqlSlangPlugin {
 	public function setupUseDatabase($database): string {
 		return "";
 	}
-
 }

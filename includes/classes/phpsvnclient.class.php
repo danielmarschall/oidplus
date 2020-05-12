@@ -609,6 +609,20 @@ class phpsvnclient {
 				}
 			}
 		}
+		foreach ($dirs as $dir) {
+			$contents = $this->getDirectoryTree($dir, $vend, true);
+			foreach ($contents as $cont) {
+				if ($cont['type'] == 'directory') {
+					$dirname = '/'.$cont['path'];
+					self::xarray_add($dirname, $dirs);
+					self::xarray_remove($dirname, $dirsDelete);
+				} else if ($cont['type'] == 'file') {
+					$filename = '/'.$cont['path'];
+					self::xarray_add($filename, $files);
+					self::xarray_remove($filename, $filesDelete);
+				}
+			}
+		}
 		$out                = array();
 		$out['files']       = $files;
 		$out['filesDelete'] = $filesDelete;
