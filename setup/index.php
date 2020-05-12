@@ -27,26 +27,34 @@ Once OIDplus setup is finished, you can change the config file by hand, or run t
 <div id="dirAccessWarning"></div>
 
 <script>
+function RemoveLastDirectoryPartOf(the_url) {
+	var the_arr = the_url.split('/');
+	if (the_arr.pop() == '') the_arr.pop();
+	return( the_arr.join('/') );
+}
 function checkAccess(dir) {
+	url = '../' + dir;
+	visibleUrl = RemoveLastDirectoryPartOf(window.location.href) + '/' + dir; // xhr.responseURL not available in IE
+
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState === 4) {
 			if (xhr.status === 200) {
 				document.getElementById('systemCheckCaption').style.display = 'block';
-				document.getElementById('dirAccessWarning').innerHTML = document.getElementById('dirAccessWarning').innerHTML + 'Attention: The following directory is world-readable: <a target="_blank" href="'+xhr.responseURL+'">'+xhr.responseURL+'</a> ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>)<br>';
+				document.getElementById('dirAccessWarning').innerHTML = document.getElementById('dirAccessWarning').innerHTML + 'Attention: The following directory is world-readable: <a target="_blank" href="'+url+'">'+visibleUrl+'</a> ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>)<br>';
 			}
 		}
 	};
 
-	xhr.open('GET', dir);
+	xhr.open('GET', url);
 	xhr.send();
 }
 
 document.getElementById('dirAccessWarning').innerHTML = "";
-checkAccess('../userdata/');
-checkAccess('../dev/');
-checkAccess('../includes/');
-//checkAccess('../plugins/publicPages/100_whois/whois/cli/');
+checkAccess('userdata/');
+checkAccess('dev/');
+checkAccess('includes/');
+//checkAccess('plugins/publicPages/100_whois/whois/cli/');
 </script>
 
 <div id="step1">

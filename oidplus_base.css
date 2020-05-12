@@ -313,7 +313,7 @@ h2 {
 textarea,input[type="text"],input[type="password"],select {
 	/* for dark themes, this looks better */
 	/*background:transparent;*/
-	background:rgb(255,255,255,0.4);
+	background:rgba(255,255,255,0.4);
 	border: #AAAAAA 1px solid;
 }
 
