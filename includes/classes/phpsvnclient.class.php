@@ -163,6 +163,8 @@ class phpsvnclient {
 			return false;
 		}
 
+		$webbrowser_update = !is_numeric($from_revision);
+
 		if (!is_numeric($from_revision)) {
 			$version_file = $from_revision;
                         $from_revision = -1;
@@ -190,19 +192,21 @@ class phpsvnclient {
 
 		$errors_happened = false;
 
-		// First, do some read/write test (even if we are in preview mode, because we want to detect errors before it is too late)
-		$file = $outPath . '/dummy_'.uniqid().'.tmp';
-		$file = str_replace("///", "/", $file);
-		if (@file_put_contents($file, 'Write Test') === false) {
-			echo (!$preview ? "ERROR" : "WARNING").": Cannot write test file $file ! An update through the web browser will NOT be possible.\n";
-			flush();
-			if (!$preview) return false;
-		}
-		@unlink($file);
-		if (file_exists($file)) {
-			echo (!$preview ? "ERROR" : "WARNING").": Cannot delete test file $file ! An update through the web browser will NOT be possible.\n";
-			flush();
-			if (!$preview) return false;
+		if ($webbrowser_update) {
+			// First, do some read/write test (even if we are in preview mode, because we want to detect errors before it is too late)
+			$file = $outPath . '/dummy_'.uniqid().'.tmp';
+			$file = str_replace("///", "/", $file);
+			if (@file_put_contents($file, 'Write Test') === false) {
+				echo (!$preview ? "ERROR" : "WARNING").": Cannot write test file $file ! An update through the web browser will NOT be possible.\n";
+				flush();
+				if (!$preview) return false;
+			}
+			@unlink($file);
+			if (file_exists($file)) {
+				echo (!$preview ? "ERROR" : "WARNING").": Cannot delete test file $file ! An update through the web browser will NOT be possible.\n";
+				flush();
+				if (!$preview) return false;
+			}
 		}
 
 		//Get a list of objects to be updated.

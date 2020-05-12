@@ -69,9 +69,15 @@ if (isset($_REQUEST['update_now'])) {
 			$svn = new phpsvnclient('https://svn.viathinksoft.com/svn/oidplus');
 			$svn->versionFile = 'oidplus_version.txt';
 			echo '<h2>Updating ...</h2>';
-			echo '<pre>';
+
+			ob_start();
 			$svn->updateWorkingCopy(dirname(__DIR__).'/oidplus_version.txt', '/trunk', dirname(__DIR__), false);
-			echo '</pre>';
+			$cont = ob_get_contents();
+			$cont = str_replace(realpath(dirname(__DIR__)), '...', $cont);
+			ob_end_clean();
+
+			echo '<pre>'.$cont.'</pre>';
+
 			echo '<p><a href="index.php">Back to update page</a></p>';
 			echo '<hr>';
 		}
@@ -158,9 +164,14 @@ if (isset($_REQUEST['update_now'])) {
 
 			echo '<h2>Preview of update '.$local_installation.' &rarr; '.$newest_version.'</h2>';
 			$svn = new phpsvnclient(OIDPLUS_REPO);
-			echo '<pre>';
+
+			ob_start();
 			$svn->updateWorkingCopy(str_replace('svn-', '', $local_installation), '/trunk', dirname(__DIR__), true);
-			echo '</pre>';
+			$cont = ob_get_contents();
+			$cont = str_replace(realpath(dirname(__DIR__)), '...', $cont);
+			ob_end_clean();
+
+			echo '<pre>'.$cont.'</pre>';
 
 			$job = new VNagMonitorDummy(VNag::STATUS_WARNING, "OIDplus is outdated. ($local_installation local / $newest_version remote)");
 			$job->http_visual_output = VNag::OUTPUT_NEVER;
@@ -204,9 +215,14 @@ if (isset($_REQUEST['update_now'])) {
 
 			echo '<h2>Preview of update '.$local_installation.' &rarr; '.$newest_version.'</h2>';
 			$svn = new phpsvnclient(OIDPLUS_REPO);
-			echo '<pre>';
+
+			ob_start();
 			$svn->updateWorkingCopy(dirname(__DIR__).'/oidplus_version.txt', '/trunk', dirname(__DIR__), true);
-			echo '</pre>';
+			$cont = ob_get_contents();
+			$cont = str_replace(realpath(dirname(__DIR__)), '...', $cont);
+			ob_end_clean();
+
+			echo '<pre>'.$cont.'</pre>';
 
 			$job = new VNagMonitorDummy(VNag::STATUS_WARNING, "OIDplus is outdated. ($local_installation local / $newest_version remote)");
 			$job->http_visual_output = VNag::OUTPUT_NEVER;

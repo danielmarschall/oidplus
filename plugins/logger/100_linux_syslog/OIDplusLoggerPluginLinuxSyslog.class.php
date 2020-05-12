@@ -25,7 +25,7 @@ class OIDplusLoggerPluginLinuxSyslog extends OIDplusLoggerPlugin {
 			return false;
 		}
 
-		if (!file_exists('/var/log/syslog')) {
+		if (!@file_exists('/var/log/syslog')) {
 			$reason = "File /var/log/syslog not existing";
 			return false;
 		}
@@ -42,7 +42,7 @@ class OIDplusLoggerPluginLinuxSyslog extends OIDplusLoggerPlugin {
 	public static function log($event, $users, $objects)/*: bool*/ {
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') return false;
 
-		if (!file_exists('/var/log/syslog')) return false;
+		if (!@file_exists('/var/log/syslog')) return false;
 
 		$users_names = array();
 		foreach ($users as list($severity, $username)) $users_names[] = $username;

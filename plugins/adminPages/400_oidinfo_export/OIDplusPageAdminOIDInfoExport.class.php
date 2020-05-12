@@ -24,7 +24,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	}
 
 	public function init($html=true) {
-		require_once __DIR__ . '/oidinfo_api.inc.php';
+		// Nothing
 	}
 
 	public function gui($id, &$out, &$handled) {
@@ -69,6 +69,14 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	}
 
 	public static function outputXML($only_non_existing) {
+		// This file contains class OIDInfoAPI.
+		// We cannot include this in init(), because the init
+		// of the registration plugin (OIDplusPageAdminRegistration) uses
+		// OIDplusPageAdminOIDInfoExport::outputXML() before
+		// OIDplusPageAdminOIDInfoExport::init() ,
+		// because OIDplusPageAdminRegistration::init() comes first sometimes.
+		require_once __DIR__ . '/oidinfo_api.inc.php';
+		
 		$oa = new OIDInfoAPI();
 		$oa->addSimplePingProvider('viathinksoft.de:49500');
 
