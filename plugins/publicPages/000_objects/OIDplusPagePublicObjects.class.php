@@ -442,7 +442,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 
-			foreach (OIDplus::getPagePlugins() as $plugin) $plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.2')) {
+					$plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
+				}
+			}
 		}
 	}
 
