@@ -23,8 +23,11 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 		return "PgSQL";
 	}
 
-	public function newConnection(): OIDplusDatabaseConnection {
+	public static function newConnection(): OIDplusDatabaseConnection {
 		return new OIDplusDatabaseConnectionPgSql();
 	}
 
+	public static function setupHTML(): string {
+		return file_get_contents(__DIR__ . '/setup.part.html');
+	}
 }

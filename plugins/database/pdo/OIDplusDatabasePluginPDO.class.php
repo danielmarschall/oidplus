@@ -23,8 +23,11 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 		return "PDO";
 	}
 
-	public function newConnection(): OIDplusDatabaseConnection {
+	public static function newConnection(): OIDplusDatabaseConnection {
 		return new OIDplusDatabaseConnectionPDO();
 	}
 
+	public static function setupHTML(): string {
+		return file_get_contents(__DIR__ . '/setup.part.html');
+	}
 }

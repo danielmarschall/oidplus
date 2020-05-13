@@ -11,7 +11,7 @@ Type "objectTypes"
 Type "database"
 ---------------
 
-	manifest.ini (Sections Plugin, PHP:pluginclass, Setup:htmlpart[])
+	manifest.ini (Sections Plugin, PHP:pluginclass)
 
 Type "sqlSlang"
 ---------------

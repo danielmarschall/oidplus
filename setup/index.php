@@ -33,8 +33,8 @@ function RemoveLastDirectoryPartOf(the_url) {
 	return( the_arr.join('/') );
 }
 function checkAccess(dir) {
-	url = '../' + dir;
-	visibleUrl = RemoveLastDirectoryPartOf(window.location.href) + '/' + dir; // xhr.responseURL not available in IE
+	var url = '../' + dir;
+	var visibleUrl = RemoveLastDirectoryPartOf(window.location.href) + '/' + dir; // xhr.responseURL not available in IE
 
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
@@ -51,10 +51,10 @@ function checkAccess(dir) {
 }
 
 document.getElementById('dirAccessWarning').innerHTML = "";
-checkAccess('userdata/');
-checkAccess('dev/');
-checkAccess('includes/');
-//checkAccess('plugins/publicPages/100_whois/whois/cli/');
+checkAccess('userdata/index.html');
+checkAccess('dev/index.html');
+checkAccess('includes/index.html');
+//checkAccess('plugins/publicPages/100_whois/whois/cli/index.html');
 </script>
 
 <div id="step1">
@@ -123,27 +123,18 @@ foreach (get_declared_classes() as $c) {
 }
 $sql_slang_selection = implode("\n", $sql_slang_selection);
 
-$files = array();
-
-$ary = OIDplus::getAllPluginManifests('database');
-foreach ($ary as $plugintype_folder => $bry) {
-	foreach ($bry as $pluginname_folder => $cry) {
-		if (!isset($cry['Setup'])) continue;
-		foreach ($cry['Setup'] as $dry_name => $dry) {
-			if ($dry_name != 'htmlpart') continue;
-			foreach ($dry as $html_file) {
-				$files[] = OIDplus::basePath().'/plugins/'.$plugintype_folder.'/'.$pluginname_folder.'/'.$html_file;
-			}
-		}
+$found_db_plugins = 0;
+OIDplus::registerAllPlugins('database', 'OIDplusDatabasePlugin', null);
+foreach (get_declared_classes() as $c) {
+	if (is_subclass_of($c, 'OIDplusDatabasePlugin')) {
+		$found_db_plugins++;
+		$cont = $c::setupHTML();
+		$cont = str_replace('<!-- %SQL_SLANG_SELECTION% -->', $sql_slang_selection, $cont);
+		echo $cont;
 	}
 }
 
-foreach ($files as $file) {
-	$cont = file_get_contents($file);
-	$cont = str_replace('<!-- %SQL_SLANG_SELECTION% -->', $sql_slang_selection, $cont);
-	echo $cont;
-}
-if (count($files) == 0) {
+if ($found_db_plugins == 0) {
 	echo '<p><font color="red">ERROR: No database plugins were found! You CANNOT use OIDplus without database connection.</font></p>';
 }
 

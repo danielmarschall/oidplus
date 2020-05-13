@@ -23,8 +23,11 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 		return "ODBC";
 	}
 
-	public function newConnection(): OIDplusDatabaseConnection {
+	public static function newConnection(): OIDplusDatabaseConnection {
 		return new OIDplusDatabaseConnectionODBC();
 	}
 
+	public static function setupHTML(): string {
+		return file_get_contents(__DIR__ . '/setup.part.html');
+	}
 }

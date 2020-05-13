@@ -1,0 +1,36 @@
+
+FEATURE OIDS
+============
+
+PHP classes belonging to the OIDplus system (such as the class handling the tree menu structure,
+the sitemap, the AJAX handling, etc) are communicating to plugins the "normal way", i.e.
+the plugin class defines a function which is called by the OIDplus system.
+
+Plugins can offer interfaces/functionalities that can be used by other plugins.
+For Example: The OOBE plugin queries other plugins if they want to be included
+in the Out-Of-Box-Experience configuration. Therefore the plugins need to implement an
+"oobeEntry" function. However, if we would do it the normal way (the OOBE plugin defining
+a PHP interface and the other plugins implementing it), the plugins would not work
+anymore if the plugin offering the interface is missing, due to a PHP compilation error.
+Therefore, we use a functionality called "features".
+A plugin can ask another plugin if it supports a feature (defined as OID) using
+the function OIDplusPlugin::implementsFeature().
+If it supports the feature with a given OID, the plugin promises that it
+contains a set of functions defined by that OID.
+
+Currently, there are following features defined in the standard plugins of OIDplus:
+
+Interface <1.3.6.1.4.1.37476.2.5.2.3.1> {
+	// called by plugin adminPages/050_oobe
+	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/;
+}
+
+Interface <1.3.6.1.4.1.37476.2.5.2.3.2> {
+	// called by plugin publicPages/000_objects
+	public function modifyContent($id, &$title, &$icon, &$text) {
+}
+
+
+TL;DR:
+Plugins communicate with other plugins using the OIDplusPlugin::implementsFeature()
+function, which provide a way of "optional" interfaces.

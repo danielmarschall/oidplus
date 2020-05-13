@@ -23,8 +23,11 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 		return "MySQL";
 	}
 
-	public function newConnection(): OIDplusDatabaseConnection {
+	public static function newConnection(): OIDplusDatabaseConnection {
 		return new OIDplusDatabaseConnectionMySQLi();
 	}
 
+	public static function setupHTML(): string {
+		return file_get_contents(__DIR__ . '/setup.part.html');
+	}
 }

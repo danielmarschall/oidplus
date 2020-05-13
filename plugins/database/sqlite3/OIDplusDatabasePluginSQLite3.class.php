@@ -23,8 +23,11 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 		return "SQLite3";
 	}
 
-	public function newConnection(): OIDplusDatabaseConnection {
+	public static function newConnection(): OIDplusDatabaseConnection {
 		return new OIDplusDatabaseConnectionSQLite3();
 	}
 
+	public static function setupHTML(): string {
+		return file_get_contents(__DIR__ . '/setup.part.html');
+	}
 }
