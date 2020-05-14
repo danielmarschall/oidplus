@@ -116,8 +116,8 @@ foreach (get_declared_classes() as $c) {
 	if (is_subclass_of($c, 'OIDplusSqlSlangPlugin')) {
 		$obj = new $c;
 		$slang_id = $obj::id();
-		$pluginInfo = OIDplus::getPluginInfo($obj);
-		$human_friendly_name = isset($pluginInfo['name']) ? $pluginInfo['name'] : get_class($obj);
+		$pluginManifest = OIDplus::getpluginManifest($obj);
+		$human_friendly_name = empty($pluginManifest->getName()) ? $pluginManifest->getName() : get_class($obj);
 		$sql_slang_selection[] = '<option value="'.$slang_id.'">'.$human_friendly_name.'</option>';
 	}
 }

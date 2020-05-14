@@ -58,16 +58,10 @@ if (file_exists(__DIR__ . '/oidplus_base.local.css')) {
 	$out .= process_file(__DIR__ . '/oidplus_base.css');
 }
 
-$ary = OIDplus::getAllPluginManifests('*Pages');
-foreach ($ary as $plugintype_folder => $bry) {
-	foreach ($bry as $pluginname_folder => $cry) {
-		if (!isset($cry['CSS'])) continue;
-		foreach ($cry['CSS'] as $dry_name => $dry) {
-			if ($dry_name != 'file') continue;
-			foreach ($dry as $css_file) {
-				$out .= process_file(__DIR__ . '/plugins/'.$plugintype_folder.'/'.$pluginname_folder.'/'.$css_file);
-			}
-		}
+$manifests = OIDplus::getAllPluginManifests('*Pages', true);
+foreach ($manifests as $manifest) {
+	foreach ($manifest->getCSSFiles() as $css_file) {
+		$out .= process_file($css_file);
 	}
 }
 

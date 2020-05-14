@@ -430,51 +430,55 @@ class OIDplus {
 
 	# --- Plugin handling functions
 
-	public static function getPluginInfo($class_name): array {
+	public static function getPluginManifest($class_name)/*: ?OIDplusPluginManifest*/ {
 		$reflector = new ReflectionClass($class_name);
 		$ini = dirname($reflector->getFileName()).'/manifest.ini';
-		if (!file_exists($ini)) return array();
-		$bry = parse_ini_file($ini, true, INI_SCANNER_TYPED);
-		if (!isset($bry['Plugin'])) return array();
-		return $bry['Plugin'];
+		$manifest = new OIDplusPluginManifest();
+		return $manifest->loadManifest($ini) ? $manifest : null;
 	}
 
-	public static function getAllPluginManifests($pluginFolderMask='*'): array {
+	public static function getAllPluginManifests($pluginFolderMask='*', $flat=true): array {
 		$out = array();
 		// Note: glob() will sort by default, so we do not need a page priority attribute.
 		//       So you just need to use a numeric plugin directory prefix (padded).
 		$ary = glob(OIDplus::basePath().'/plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.ini');
 		foreach ($ary as $ini) {
 			if (!file_exists($ini)) continue;
-			$bry = parse_ini_file($ini, true, INI_SCANNER_TYPED);
 
-			$plugintype_folder = basename(dirname(dirname($ini)));
-			$pluginname_folder = basename(dirname($ini));
+			$manifest = new OIDplusPluginManifest();
+			$manifest->loadManifest($ini);
 
-			if (!isset($out[$plugintype_folder])) $out[$plugintype_folder] = array();
-			if (!isset($out[$plugintype_folder][$pluginname_folder])) $out[$plugintype_folder][$pluginname_folder] = array();
-			$out[$plugintype_folder][$pluginname_folder] = $bry;
+			if ($flat) {
+				$out[] = $manifest;
+			} else {
+				$plugintype_folder = basename(dirname(dirname($ini)));
+				$pluginname_folder = basename(dirname($ini));
+
+				if (!isset($out[$plugintype_folder])) $out[$plugintype_folder] = array();
+				if (!isset($out[$plugintype_folder][$pluginname_folder])) $out[$plugintype_folder][$pluginname_folder] = array();
+				$out[$plugintype_folder][$pluginname_folder] = $manifest;
+			}
 		}
 		return $out;
 	}
 
 	public static function registerAllPlugins($pluginDirName, $expectedPluginClass, $registerCallback): array {
 		$out = array();
-		$ary = self::getAllPluginManifests($pluginDirName);
+		$ary = self::getAllPluginManifests($pluginDirName, false);
 		foreach ($ary as $plugintype_folder => $bry) {
 			foreach ($bry as $pluginname_folder => $cry) {
-				if (!isset($cry['PHP']) || !isset($cry['PHP']['pluginclass'])) {
-					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin class is not defined (manifest.ini section 'PHP', key 'pluginclass'");
+				$class_name = $cry->getPhpMainClass();
+				if (!$class_name) {
+					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Manifest does not declare a PHP main class");
 				}
-				$class_name = $cry['PHP']['pluginclass'];
 				if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_'.$class_name, false)) {
 					continue;
 				}
 				if (!class_exists($class_name)) {
-					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin class '$class_name' not found (manifest.ini section 'PHP', key 'pluginclass'");
+					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Manifest declares PHP main class as '$class_name', but it could not be found");
 				}
 				if (!is_subclass_of($class_name, $expectedPluginClass)) {
-					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin class '$class_name' is expected to be a subclass of '$expectedPluginClass'");
+					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin main class '$class_name' is expected to be a subclass of '$expectedPluginClass'");
 				}
 				$out[] = $class_name;
 				if (!is_null($registerCallback)) {

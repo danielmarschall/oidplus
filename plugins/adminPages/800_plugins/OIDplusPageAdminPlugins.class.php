@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+// TODO: getPluginManifest can get NULL !!!
+
 class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 
 	public function action(&$handled) {
@@ -26,7 +28,10 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 	}
 
 	public function gui($id, &$out, &$handled) {
-		$parts = explode('.',$id,2);
+		$tmp = explode('$',$id);
+		$classname = isset($tmp[1]) ? $tmp[1] : null;
+
+		$parts = explode('.',$tmp[0],2);
 		if (!isset($parts[1])) $parts[1] = '';
 		if ($parts[0] != 'oidplus:system_plugins') return;
 		$handled = true;
@@ -39,27 +44,21 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			return;
 		}
 
-		if (substr($parts[1],0,1) == '$') {
-			$classname = substr($parts[1],1);
+		if (!is_null($classname)) {
 			$out['title'] = htmlentities($classname);
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$reflector = new \ReflectionClass($classname);
-			$pluginInfo = OIDplus::getPluginInfo($classname);
-
-			if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
-			if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
-			if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
-			if (!isset($pluginInfo['descriptionHTML']) || empty($pluginInfo['descriptionHTML'])) $pluginInfo['descriptionHTML'] = '';
+			$pluginManifest = OIDplus::getPluginManifest($classname);
 
 			$out['text'] .= '<div><label class="padding_label">Classname</label><b>'.htmlentities($classname).'</b></div>'.
-			                '<div><label class="padding_label">Location</label><b>'.htmlentities(dirname($reflector->getFileName())).'</b></div>'.
-			                '<div><label class="padding_label">Plugin type</label><b>'.htmlentities(get_parent_class($classname)).'</b></div>'.
-			                '<div><label class="padding_label">Plugin name</label><b>'.htmlentities($pluginInfo['name']).'</b></div>'.
-			                '<div><label class="padding_label">Plugin author</label><b>'.htmlentities($pluginInfo['author']).'</b></div>'.
-			                '<div><label class="padding_label">Plugin version</label><b>'.htmlentities($pluginInfo['version']).'</b></div>'.
-					(!empty($pluginInfo['descriptionHTML']) ? '<br><p><b>Additional information:</b></p>' : '').
-					$pluginInfo['descriptionHTML'];
+					'<div><label class="padding_label">Location</label><b>'.htmlentities(dirname($reflector->getFileName())).'</b></div>'.
+					'<div><label class="padding_label">Plugin type</label><b>'.htmlentities(get_parent_class($classname)).'</b></div>'.
+					'<div><label class="padding_label">Plugin name</label><b>'.htmlentities(empty($pluginManifest->getName()) ? 'n/a' : $pluginManifest->getName()).'</b></div>'.
+					'<div><label class="padding_label">Plugin author</label><b>'.htmlentities(empty($pluginManifest->getAuthor()) ? 'n/a' : $pluginManifest->getAuthor()).'</b></div>'.
+					'<div><label class="padding_label">Plugin version</label><b>'.htmlentities(empty($pluginManifest->getVersion()) ? 'n/a' : $pluginManifest->getVersion()).'</b></div>'.
+					(!empty($pluginManifest->getHtmlDescription()) ? '<br><p><b>Additional information:</b></p>' : '').
+					$pluginManifest->getHtmlDescription();
 		} else {
 			$show_pages_public = false;
 			$show_pages_ra = false;
@@ -187,14 +186,11 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
 						$out['text'] .= '	<tr>';
-						$pluginInfo = OIDplus::getPluginInfo($plugin);
-						$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
-						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
-						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
-						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$pluginManifest = OIDplus::getPluginManifest($plugin);
+						$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getName()) ? 'n/a' : $pluginManifest->getName()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getVersion()) ? 'n/a' : $pluginManifest->getVersion()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getAuthor()) ? 'n/a' : $pluginManifest->getAuthor()) . '</td>';
 						$out['text'] .= '	</tr>';
 					}
 					$out['text'] .= '</table>';
@@ -215,14 +211,11 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
 						$out['text'] .= '	<tr>';
-						$pluginInfo = OIDplus::getPluginInfo($plugin);
-						$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
-						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
-						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
-						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$pluginManifest = OIDplus::getPluginManifest($plugin);
+						$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getName()) ? 'n/a' : $pluginManifest->getName()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getVersion()) ? 'n/a' : $pluginManifest->getVersion()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getAuthor()) ? 'n/a' : $pluginManifest->getAuthor()) . '</td>';
 						$out['text'] .= '	</tr>';
 					}
 					$out['text'] .= '</table>';
@@ -243,14 +236,11 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
 						$out['text'] .= '	<tr>';
-						$pluginInfo = OIDplus::getPluginInfo($plugin);
-						$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
-						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
-						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
-						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$pluginManifest = OIDplus::getPluginManifest($plugin);
+						$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getName()) ? 'n/a' : $pluginManifest->getName()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getVersion()) ? 'n/a' : $pluginManifest->getVersion()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getAuthor()) ? 'n/a' : $pluginManifest->getAuthor()) . '</td>';
 						$out['text'] .= '	</tr>';
 					}
 					$out['text'] .= '</table>';
@@ -273,18 +263,15 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
 						$out['text'] .= '	<tr>';
-						$pluginInfo = OIDplus::getPluginInfo($plugin);
+						$pluginManifest = OIDplus::getPluginManifest($plugin);
 						if (in_array($plugin, $enabled)) {
-							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
 						} else {
-							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'><font color="gray">'.htmlentities(get_class($plugin)).' (disabled)</font></a></td>';
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><font color="gray">'.htmlentities(get_class($plugin)).' (disabled)</font></a></td>';
 						}
-						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
-						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
-						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getName()) ? 'n/a' : $pluginManifest->getName()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getVersion()) ? 'n/a' : $pluginManifest->getVersion()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getAuthor()) ? 'n/a' : $pluginManifest->getAuthor()) . '</td>';
 						$out['text'] .= '	</tr>';
 					}
 					$out['text'] .= '</table>';
@@ -309,18 +296,15 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						if (!$active && !$show_db_inactive) continue;
 
 						$out['text'] .= '	<tr>';
-						$pluginInfo = OIDplus::getPluginInfo($plugin);
+						$pluginManifest = OIDplus::getPluginManifest($plugin);
 						if ($active) {
-							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b> (active)</a></td>';
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b> (active)</a></td>';
 						} else {
-							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
 						}
-						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
-						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
-						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getName()) ? 'n/a' : $pluginManifest->getName()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getVersion()) ? 'n/a' : $pluginManifest->getVersion()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getAuthor()) ? 'n/a' : $pluginManifest->getAuthor()) . '</td>';
 						$out['text'] .= '	</tr>';
 					}
 					$out['text'] .= '</table>';
@@ -345,18 +329,15 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						if (!$active && !$show_sql_inactive) continue;
 
 						$out['text'] .= '	<tr>';
-						$pluginInfo = OIDplus::getPluginInfo($plugin);
+						$pluginManifest = OIDplus::getPluginManifest($plugin);
 						if ($active) {
-							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b> (active)</a></td>';
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b> (active)</a></td>';
 						} else {
-							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
 						}
-						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
-						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
-						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getName()) ? 'n/a' : $pluginManifest->getName()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getVersion()) ? 'n/a' : $pluginManifest->getVersion()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getAuthor()) ? 'n/a' : $pluginManifest->getAuthor()) . '</td>';
 						$out['text'] .= '	</tr>';
 					}
 					$out['text'] .= '</table>';
@@ -377,14 +358,11 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
 						$out['text'] .= '	<tr>';
-						$pluginInfo = OIDplus::getPluginInfo($plugin);
-						$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
-						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
-						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
-						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$pluginManifest = OIDplus::getPluginManifest($plugin);
+						$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getName()) ? 'n/a' : $pluginManifest->getName()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getVersion()) ? 'n/a' : $pluginManifest->getVersion()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getAuthor()) ? 'n/a' : $pluginManifest->getAuthor()) . '</td>';
 						$out['text'] .= '	</tr>';
 					}
 					$out['text'] .= '</table>';
@@ -408,18 +386,15 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						$active = $plugin->available($reason);
 
 						$out['text'] .= '	<tr>';
-						$pluginInfo = OIDplus::getPluginInfo($plugin);
+						$pluginManifest = OIDplus::getPluginManifest($plugin);
 						if ($active) {
-							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
 						} else {
-							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins.$'.get_class($plugin)).'><font color="gray">'.htmlentities(get_class($plugin)).'</font></a> <font color="gray">(not available: '.htmlentities($reason).')</font></td>';
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><font color="gray">'.htmlentities(get_class($plugin)).'</font></a> <font color="gray">(not available: '.htmlentities($reason).')</font></td>';
 						}
-						if (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) $pluginInfo['name'] = 'n/a';
-						if (!isset($pluginInfo['author']) || empty($pluginInfo['author'])) $pluginInfo['author'] = 'n/a';
-						if (!isset($pluginInfo['version']) || empty($pluginInfo['version'])) $pluginInfo['version'] = 'n/a';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['name']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['version']) . '</td>';
-						$out['text'] .= '<td>' . htmlentities($pluginInfo['author']) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getName()) ? 'n/a' : $pluginManifest->getName()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getVersion()) ? 'n/a' : $pluginManifest->getVersion()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getAuthor()) ? 'n/a' : $pluginManifest->getAuthor()) . '</td>';
 						$out['text'] .= '	</tr>';
 					}
 					$out['text'] .= '</table>';
@@ -470,51 +445,51 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 
 		$public_plugins = array();
 		foreach ($pp_public as $plugin) {
-			$pluginInfo = OIDplus::getPluginInfo($plugin);
-			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+			$pluginManifest = OIDplus::getPluginManifest($plugin);
+			$txt = (empty($pluginManifest->getName())) ? get_class($plugin) : $pluginManifest->getName();
 
 			$public_plugins[] = array(
-				'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+				'id' => 'oidplus:system_plugins$'.get_class($plugin),
 				'icon' => $tree_icon_pages_public,
 				'text' => $txt,
 			);
 		}
 		$ra_plugins = array();
 		foreach ($pp_ra as $plugin) {
-			$pluginInfo = OIDplus::getPluginInfo($plugin);
-			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+			$pluginManifest = OIDplus::getPluginManifest($plugin);
+			$txt = (empty($pluginManifest->getName())) ? get_class($plugin) : $pluginManifest->getName();
 
 			$ra_plugins[] = array(
-				'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+				'id' => 'oidplus:system_plugins$'.get_class($plugin),
 				'icon' => $tree_icon_pages_ra,
 				'text' => $txt,
 			);
 		}
 		$admin_plugins = array();
 		foreach ($pp_admin as $plugin) {
-			$pluginInfo = OIDplus::getPluginInfo($plugin);
-			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+			$pluginManifest = OIDplus::getPluginManifest($plugin);
+			$txt = (empty($pluginManifest->getName())) ? get_class($plugin) : $pluginManifest->getName();
 
 			$admin_plugins[] = array(
-				'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+				'id' => 'oidplus:system_plugins$'.get_class($plugin),
 				'icon' => $tree_icon_pages_admin,
 				'text' => $txt,
 			);
 		}
 		$db_plugins = array();
 		foreach (OIDplus::getDatabasePlugins() as $plugin) {
-			$pluginInfo = OIDplus::getPluginInfo($plugin);
-			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+			$pluginManifest = OIDplus::getPluginManifest($plugin);
+			$txt = (empty($pluginManifest->getName())) ? get_class($plugin) : $pluginManifest->getName();
 
 			if ($plugin::id() == OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')) {
 				$db_plugins[] = array(
-					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+					'id' => 'oidplus:system_plugins$'.get_class($plugin),
 					'icon' => $tree_icon_db_active,
 					'text' => $txt,
 				 );
 			} else {
 				$db_plugins[] = array(
-					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+					'id' => 'oidplus:system_plugins$'.get_class($plugin),
 					'icon' => $tree_icon_db_inactive,
 					'text' => '<font color="gray">'.$txt.'</font>',
 				 );
@@ -522,18 +497,18 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		}
 		$sql_plugins = array();
 		foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
-			$pluginInfo = OIDplus::getPluginInfo($plugin);
-			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+			$pluginManifest = OIDplus::getPluginManifest($plugin);
+			$txt = (empty($pluginManifest->getName())) ? get_class($plugin) : $pluginManifest->getName();
 
 			if ($plugin::id() == OIDplus::db()->getSlang()::id()) {
 				$sql_plugins[] = array(
-					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+					'id' => 'oidplus:system_plugins$'.get_class($plugin),
 					'icon' => $tree_icon_db_active,
 					'text' => $txt,
 				 );
 			} else {
 				$sql_plugins[] = array(
-					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+					'id' => 'oidplus:system_plugins$'.get_class($plugin),
 					'icon' => $tree_icon_db_inactive,
 					'text' => '<font color="gray">'.$txt.'</font>',
 				 );
@@ -543,17 +518,17 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		$enabled = OIDplus::getObjectTypePluginsEnabled();
 		$disabled = OIDplus::getObjectTypePluginsDisabled();
 		foreach (array_merge($enabled, $disabled) as $plugin) {
-			$pluginInfo = OIDplus::getPluginInfo($plugin);
-			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+			$pluginManifest = OIDplus::getPluginManifest($plugin);
+			$txt = (empty($pluginManifest->getName())) ? get_class($plugin) : $pluginManifest->getName();
 			if (in_array($plugin, $enabled)) {
 				$obj_plugins[] = array(
-					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+					'id' => 'oidplus:system_plugins$'.get_class($plugin),
 					'icon' => $tree_icon_obj_active,
 					'text' => $txt,
 				 );
 			} else {
 				$obj_plugins[] = array(
-					'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+					'id' => 'oidplus:system_plugins$'.get_class($plugin),
 					'icon' => $tree_icon_obj_inactive,
 					'text' => '<font color="gray">'.$txt.'</font>',
 				 );
@@ -561,25 +536,25 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		}
 		$auth_plugins = array();
 		foreach (OIDplus::getAuthPlugins() as $plugin) {
-			$pluginInfo = OIDplus::getPluginInfo($plugin);
-			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+			$pluginManifest = OIDplus::getPluginManifest($plugin);
+			$txt = (empty($pluginManifest->getName())) ? get_class($plugin) : $pluginManifest->getName();
 
 			$auth_plugins[] = array(
-				'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+				'id' => 'oidplus:system_plugins$'.get_class($plugin),
 				'icon' => $tree_icon_auth,
 				'text' => $txt,
 			);
 		}
 		$logger_plugins = array();
 		foreach (OIDplus::getLoggerPlugins() as $plugin) {
-			$pluginInfo = OIDplus::getPluginInfo($plugin);
-			$txt = (!isset($pluginInfo['name']) || empty($pluginInfo['name'])) ? get_class($plugin) : $pluginInfo['name'];
+			$pluginManifest = OIDplus::getPluginManifest($plugin);
+			$txt = (empty($pluginManifest->getName())) ? get_class($plugin) : $pluginManifest->getName();
 
 			$reason = '';
 			if (!$plugin->available($reason)) $txt = '<font color="gray">'.$txt.'</font>';
 
 			$logger_plugins[] = array(
-				'id' => 'oidplus:system_plugins.$'.get_class($plugin),
+				'id' => 'oidplus:system_plugins$'.get_class($plugin),
 				'icon' => $tree_icon_logger,
 				'text' => $txt,
 			);
