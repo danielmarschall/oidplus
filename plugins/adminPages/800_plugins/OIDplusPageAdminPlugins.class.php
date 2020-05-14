@@ -57,7 +57,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					'<div><label class="padding_label">Plugin name</label><b>'.htmlentities(empty($pluginManifest->getName()) ? 'n/a' : $pluginManifest->getName()).'</b></div>'.
 					'<div><label class="padding_label">Plugin author</label><b>'.htmlentities(empty($pluginManifest->getAuthor()) ? 'n/a' : $pluginManifest->getAuthor()).'</b></div>'.
 					'<div><label class="padding_label">Plugin version</label><b>'.htmlentities(empty($pluginManifest->getVersion()) ? 'n/a' : $pluginManifest->getVersion()).'</b></div>'.
-					(!empty($pluginManifest->getHtmlDescription()) ? '<br><p><b>Additional information:</b></p>' : '').
+					'<div><label class="padding_label">Plugin OID</label><b>'.htmlentities(empty($pluginManifest->getOid()) ? 'n/a' : $pluginManifest->getOid()).'</b></div>'.
+					(!empty(trim($pluginManifest->getHtmlDescription())) ? '<br><p><b>Additional information:</b></p>' : '').
 					$pluginManifest->getHtmlDescription();
 		} else {
 			$show_pages_public = false;

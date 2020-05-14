@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<manifest>
+
+	<type>OIDplusLoggerPlugin</type>
+
+	<info>
+		<name>OIDplus Database</name>
+		<author>ViaThinkSoft</author>
+		<version />
+		<descriptionHTML><![CDATA[
+			Log entries are written in the OIDplus database directly (default)
+		]]></descriptionHTML>
+		<oid>1.3.6.1.4.1.37476.2.5.2.4.7.0</oid>
+	</info>
+
+	<php>
+		<mainclass>OIDplusLoggerPluginDatabase</mainclass>
+	</php>
+	
+</manifest>

@@ -19,14 +19,20 @@
 
 class OIDplusPluginManifest {
 
-	private $name;
-	private $author;
-	private $version;
-	private $htmlDescription;
+	private $name = '';
+	private $author = '';
+	private $version = '';
+	private $htmlDescription = '';
+	private $oid = '';
 
-	private $phpMainClass;
+	private $type = '';
+	private $phpMainClass = '';
 	private $cssFiles = array();
 	private $jsFiles = array();
+
+	public function getTypeClass(): string {
+		return $this->type;
+	}
 
 	public function getName(): string {
 		return $this->name;
@@ -44,6 +50,10 @@ class OIDplusPluginManifest {
 		return $this->htmlDescription;
 	}
 
+	public function getOid(): string {
+		return $this->oid;
+	}
+
 	public function getPhpMainClass(): string {
 		return $this->phpMainClass;
 	}
@@ -57,38 +67,28 @@ class OIDplusPluginManifest {
 	}
 
 	public function loadManifest($filename) {
-		$ini = $filename;
-		if (!file_exists($ini)) return false;
-		$bry = parse_ini_file($ini, true, INI_SCANNER_TYPED); // TODO: in the future, make an XML manifest file
-		if (!isset($bry['Plugin'])) return false;
+		if (!file_exists($filename)) return false;
+		$xmldata = @simplexml_load_file($filename);
+		if ($xmldata === false) return false;
 
-		$this->name = $bry['Plugin']['name'];
-		$this->author = $bry['Plugin']['author'];
-		$this->version = $bry['Plugin']['version'];
-		$this->htmlDescription = $bry['Plugin']['descriptionHTML'];
+		$this->type = (string)$xmldata->type;
 
-		$this->phpMainClass = isset($bry['PHP']['pluginclass']) ? $bry['PHP']['pluginclass'] : '';
+		$this->name = (string)$xmldata->info->name;
+		$this->author = (string)$xmldata->info->author;
+		$this->version = (string)$xmldata->info->version;
+		$this->htmlDescription = (string)$xmldata->info->descriptionHTML;
+		$this->oid = (string)$xmldata->info->oid;
 
-		if (isset($bry['CSS'])) {
-			foreach ($bry['CSS'] as $dry_name => $dry) {
-				if ($dry_name != 'file') continue;
-				foreach ($dry as $css_file) {
-					$this->cssFiles[] = dirname($filename).'/'.$css_file;
-				}
-			}
+		$this->phpMainClass = (string)$xmldata->php->mainclass;
+
+		foreach ((array)$xmldata->css->file as $css_file) {
+			$this->cssFiles[] = dirname($filename).'/'.$css_file;
 		}
-
-		if (isset($bry['JavaScript'])) {
-			foreach ($bry['JavaScript'] as $dry_name => $dry) {
-				if ($dry_name != 'file') continue;
-				foreach ($dry as $js_file) {
-					$this->jsFiles[] = dirname($filename).'/'.$js_file;
-				}
-			}
+		foreach ((array)$xmldata->js->file as $js_file) {
+			$this->jsFiles[] = dirname($filename).'/'.$js_file;
 		}
 
 		return true;
 	}
 
 }
-

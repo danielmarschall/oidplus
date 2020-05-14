@@ -432,7 +432,7 @@ class OIDplus {
 
 	public static function getPluginManifest($class_name)/*: ?OIDplusPluginManifest*/ {
 		$reflector = new ReflectionClass($class_name);
-		$ini = dirname($reflector->getFileName()).'/manifest.ini';
+		$ini = dirname($reflector->getFileName()).'/manifest.xml';
 		$manifest = new OIDplusPluginManifest();
 		return $manifest->loadManifest($ini) ? $manifest : null;
 	}
@@ -441,7 +441,7 @@ class OIDplus {
 		$out = array();
 		// Note: glob() will sort by default, so we do not need a page priority attribute.
 		//       So you just need to use a numeric plugin directory prefix (padded).
-		$ary = glob(OIDplus::basePath().'/plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.ini');
+		$ary = glob(OIDplus::basePath().'/plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.xml');
 		foreach ($ary as $ini) {
 			if (!file_exists($ini)) continue;
 
@@ -480,6 +480,13 @@ class OIDplus {
 				if (!is_subclass_of($class_name, $expectedPluginClass)) {
 					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin main class '$class_name' is expected to be a subclass of '$expectedPluginClass'");
 				}
+				if (($class_name!=$cry->getTypeClass()) && (!is_subclass_of($class_name,$cry->getTypeClass()))) {
+					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin main class '$class_name' is expected to be a subclass of '".$cry->getTypeClass()."', according to type declared in manifest");
+				}
+				if (($cry->getTypeClass()!=$expectedPluginClass) && (!is_subclass_of($cry->getTypeClass(),$expectedPluginClass))) {
+					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Class declared in manifest is '".$cry->getTypeClasS()."' does not fit expected class for this plugin type '$expectedPluginClass'");
+				}
+
 				$out[] = $class_name;
 				if (!is_null($registerCallback)) {
 					call_user_func($registerCallback, new $class_name());

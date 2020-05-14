@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<manifest>
+
+	<type>OIDplusPagePluginPublic</type>
+
+	<info>
+		<name>Resources</name>
+		<author>ViaThinkSoft</author>
+		<version />
+		<descriptionHTML />
+		<oid>1.3.6.1.4.1.37476.2.5.2.4.1.500</oid>
+	</info>
+
+	<php>
+		<mainclass>OIDplusPagePublicResources</mainclass>
+	</php>
+
+	<css>
+	</css>
+
+	<js>
+	</js>
+	
+</manifest>

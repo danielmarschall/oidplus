@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<manifest>
+
+	<type>OIDplusLoggerPlugin</type>
+
+	<info>
+		<name>Windows Event Log</name>
+		<author>ViaThinkSoft</author>
+		<version />
+		<descriptionHTML><![CDATA[
+			In order for using the Windows Event Log, you need to download and install <a target=_blank href='https://www.viathinksoft.de/projects/simple_log_event'>ViaThinkSoft SimpleLogEvent</a> and register the source name 'OIDplus' in its setup.
+		]]></descriptionHTML>
+		<oid>1.3.6.1.4.1.37476.2.5.2.4.7.200</oid>
+	</info>
+
+	<php>
+		<mainclass>OIDplusLoggerPluginWindowsEventLog</mainclass>
+	</php>
+	
+</manifest>
