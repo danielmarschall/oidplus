@@ -424,6 +424,61 @@ class phpsvnclient {
 		return false;
 	}
 
+	private static function dirToArray($dir, &$result) {
+		$cdir = scandir($dir);
+		foreach ($cdir as $key => $value) {
+			if (!in_array($value,array('.','..'))) {
+				if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) {
+					$result[] = $dir.DIRECTORY_SEPARATOR.$value.DIRECTORY_SEPARATOR;
+					self::dirToArray($dir.DIRECTORY_SEPARATOR.$value, $result);
+				} else {
+					$result[] = $dir.DIRECTORY_SEPARATOR.$value;
+				}
+			}
+		}
+	}
+
+	public function compareToDirectory($local_folder, $svn_folder='/trunk/', $version=-1) {
+		$local_cont = array();
+		self::dirToArray($local_folder, $local_cont);
+		foreach ($local_cont as $key => &$c) {
+			$c = substr($c, strlen($local_folder));
+			if (substr($c,0,1) === '/') $c = substr($c, 1);
+			if ($c === '') unset($local_cont[$key]);
+			if (strpos($c,'.svn/') === 0) unset($local_cont[$key]);
+			if ((strpos($c,'userdata/') === 0) && ($c !== 'userdata/info.txt') && ($c !== 'userdata/.htaccess') && ($c !== 'userdata/index.html') && (substr($c,-1) !== '/')) unset($local_cont[$key]);
+		}
+		unset($key);
+		unset($c);
+		natsort($local_cont);
+
+		$svn_cont = array();
+		$contents = $this->getDirectoryTree($svn_folder, $version, true);
+		foreach ($contents as $cont) {
+			if ($cont['type'] == 'directory') {
+				$svn_cont[] = '/'.$cont['path'].'/';
+			} else if ($cont['type'] == 'file') {
+				$svn_cont[] = '/'.$cont['path'];
+			}
+		}
+		foreach ($svn_cont as $key => &$c) {
+			$c = urldecode($c);
+			$c = substr($c, strlen($svn_folder));
+			if (substr($c,0,1) === '/') $c = substr($c, 1);
+			if ($c === '') unset($svn_cont[$key]);
+			if ((strpos($c,'userdata/') === 0) && ($c !== 'userdata/info.txt') && ($c !== 'userdata/.htaccess') && ($c !== 'userdata/index.html') && (substr($c,-1) !== '/')) unset($svn_cont[$key]);
+		}
+		unset($key);
+		unset($c);
+		unset($contents);
+		unset($cont);
+		natsort($svn_cont);
+
+		$only_svn = array_diff($svn_cont, $local_cont);
+		$only_local = array_diff($local_cont, $svn_cont);
+		return array($svn_cont, $local_cont);
+	}
+
 	/**
 	 *  getDirectoryTree
 	 *

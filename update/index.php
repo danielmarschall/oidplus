@@ -235,7 +235,28 @@ if (isset($_REQUEST['update_now'])) {
 
 	echo '<p><input type="button" onclick="document.location=\'../\'" value="Go back to OIDplus"></p>';
 
-	echo '<br><p>Did you know that this page contains an invisible VNag tag? You can watch this page using the "webreader" plugin of VNag, and then monitor it with any Nagios compatible software! <a href="https://www.viathinksoft.com/projects/vnag">More information</a>.</p>';
+	echo '<br><h2>File Completeness Check</h2>';
+
+	echo '<p>With this optional tool, you can check if your OIDplus installation is complete and no files are missing.</p>';
+
+	echo '<form method="POST" action="check.php">';
+	if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
+		echo '<noscript>';
+		echo '<p><font color="red">You need to enable JavaScript to solve the CAPTCHA.</font></p>';
+		echo '</noscript>';
+		echo '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>';
+		echo '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>';
+	}
+	if (!isset($local_installation)) $local_installation = 'svn-';
+	echo '<input type="hidden" name="svn_version" value="'.(substr($local_installation,strlen('svn-'))).'">';
+	echo '<input type="password" name="admin_password">';
+	echo '<input type="submit" value="Check">';
+	echo '<p>Attention: This will take some time!</p>';
+	echo '</form>';
+
+	echo '<h2>VNag integration</h2>';
+
+	echo '<p>Did you know that this page contains an invisible VNag tag? You can watch this page using the "webreader" plugin of VNag, and then monitor it with any Nagios compatible software! <a href="https://www.viathinksoft.com/projects/vnag">More information</a>.</p>';
 }
 
 ?>
