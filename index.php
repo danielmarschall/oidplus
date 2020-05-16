@@ -56,10 +56,11 @@ $static_icon = $static['icon'];
 $static_content = $static['text'];
 
 function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
+	// Please also change the function in oidplus_base.js
 	if ($systemtitle == $pagetitle) {
 		return $systemtitle;
 	} else {
-		return $systemtitle . ' - ' . $pagetitle;
+		return $pagetitle . ' - ' . $systemtitle;
 	}
 }
 

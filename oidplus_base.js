@@ -82,10 +82,11 @@ function getOidPlusSystemTitle() {
 }
 
 function combine_systemtitle_and_pagetitle(systemtitle, pagetitle) {
+	// Please also change the function in index.php
 	if (systemtitle == pagetitle) {
 		return systemtitle;
 	} else {
-		return systemtitle + ' - ' + pagetitle;
+		return pagetitle + ' - ' + systemtitle;
 	}
 }
 
