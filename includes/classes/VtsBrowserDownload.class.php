@@ -81,9 +81,12 @@ class VtsBrowserDownload {
 		}
 		header('Content-Type: ' . $mime_type);
 
-		if (strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
+		$ua = isset($_SERVER['HTTP_USER_AGENT']) ? strtoupper($_SERVER['HTTP_USER_AGENT']) : '';
+		if (strstr($ua, 'MSIE')) {
 			$name_msie = preg_replace('/\./', '%2e', $name, substr_count($name, '.') - 1);
 			header('Content-Disposition: '.$disposition.';filename="'.$name_msie.'"');
+		} else if (strstr($ua, 'FIREFOX')) {
+			header('Content-Disposition: '.$disposition.';filename*="UTF-8\'\''.utf8_encode($name).'"');
 		} else {
 			// Note: There is possibly a bug in Google Chrome: https://stackoverflow.com/questions/61866508/chrome-ignores-content-disposition-filename
 			header('Content-Disposition: '.$disposition.';filename="'.$name.'"');

@@ -19,26 +19,37 @@
 
 require_once __DIR__ . '/../../../includes/oidplus.inc.php';
 
-OIDplus::init(true);
+try {
+	OIDplus::init(true);
 
-originHeaders();
+	originHeaders();
 
-if (!isset($_REQUEST['filename'])) {
-	http_response_code(400);
-	throw new Exception("<h1>Error</h1><p>Argument 'filename' is missing<p>");
+	if (!isset($_REQUEST['filename'])) {
+		http_response_code(400);
+		throw new Exception("Argument 'filename' is missing");
+	}
+	$filename = $_REQUEST['filename'];
+	if (strpos($filename, '/') !== false) throw new OIDplusException("Illegal file name");
+	if (strpos($filename, '\\') !== false) throw new OIDplusException("Illegal file name");
+	if (strpos($filename, '..') !== false) throw new OIDplusException("Illegal file name");
+	if (strpos($filename, chr(0)) !== false) throw new OIDplusException("Illegal file name");
+
+	if (!isset($_REQUEST['id'])) {
+		http_response_code(400);
+		throw new Exception("Argument 'id' is missing");
+	}
+	$id = $_REQUEST['id'];
+
+	$uploaddir = OIDplusPagePublicAttachments::getUploadDir($id);
+	$local_file = $uploaddir.'/'.$filename;
+
+	if (!file_exists($local_file)) {
+		http_response_code(404);
+		throw new Exception("The file does not exist");
+	}
+
+	VtsBrowserDownload::output_file($local_file);
+} catch (Exception $e) {
+	echo "<h1>Error</h1><p>".htmlentities($e->getMessage())."<p>";
 }
-$filename = $_REQUEST['filename'];
-if (strpos($filename, '/') !== false) throw new OIDplusException("Illegal file name");
-if (strpos($filename, '\\') !== false) throw new OIDplusException("Illegal file name");
-if (strpos($filename, '..') !== false) throw new OIDplusException("Illegal file name");
-if (strpos($filename, chr(0)) !== false) throw new OIDplusException("Illegal file name");
 
-if (!isset($_REQUEST['id'])) {
-	http_response_code(400);
-	throw new Exception("<h1>Error</h1><p>Argument 'id' is missing<p>");
-}
-$id = $_REQUEST['id'];
-
-$uploaddir = OIDplusPagePublicAttachments::getUploadDir($id);
-$local_file = $uploaddir.'/'.$filename;
-VtsBrowserDownload::output_file($local_file);
