@@ -20,7 +20,7 @@
 class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 	private static function getFreeRootOid($with_ns) {
-		return OIDplusOID::parse(($with_ns ? 'oid:' : '').OIDplus::config()->getValue('freeoid_root_oid'));
+		return ($with_ns ? 'oid:' : '').OIDplus::config()->getValue('freeoid_root_oid');
 	}
 
 	public function action(&$handled) {
@@ -193,11 +193,15 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				    <input type="submit" value="Request free OID">
 				  </form>';
 
+				$obj = OIDplusOID::parse(self::getFreeRootOid(true));
+
 				$tos = file_get_contents(__DIR__ . '/tos.html');
 				$tos = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $tos);
-				$tos = str_replace('{{ROOT_OID}}', self::getFreeRootOid(false), $tos);
-				$tos = str_replace('{{ROOT_OID_ASN1}}', self::getFreeRootOid()->getAsn1Notation(), $tos);
-				$tos = str_replace('{{ROOT_OID_IRI}}', self::getFreeRootOid()->getIriNotation(), $tos);
+				if ($obj) {
+					$tos = str_replace('{{ROOT_OID}}', $obj->getDotNotation(), $tos);
+					$tos = str_replace('{{ROOT_OID_ASN1}}', $obj->getAsn1Notation(), $tos);
+					$tos = str_replace('{{ROOT_OID_IRI}}', $obj->getIriNotation(), $tos);
+				}
 				$out['text'] .= $tos;
 			} catch (Exception $e) {
 				$out['text'] = "Error: ".$e->getMessage();
