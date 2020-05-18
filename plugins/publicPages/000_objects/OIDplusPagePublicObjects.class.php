@@ -37,7 +37,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			// Check if permitted
-			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentification error. Please log in as the superior RA to delete this OID.');
+			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentication error. Please log in as the superior RA to delete this OID.');
 
 			OIDplus::logger()->log("[WARN]OID($id)+[?WARN/!OK]SUPOIDRA($id)?/[?INFO/!OK]A?", "Object '$id' (recursively) deleted");
 			OIDplus::logger()->log("[CRIT]OIDRA($id)!", "Lost ownership of object '$id' because it was deleted");
@@ -87,7 +87,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			// Check if permitted
-			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentification error. Please log in as the superior RA to update this OID.');
+			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentication error. Please log in as the superior RA to update this OID.');
 
 			// Validate RA email address
 			$new_ra = $_POST['ra_email'];
@@ -173,7 +173,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			// Check if allowed
-			if (!$obj->userHasWriteRights()) throw new OIDplusException('Authentification error. Please log in as the RA to update this OID.');
+			if (!$obj->userHasWriteRights()) throw new OIDplusException('Authentication error. Please log in as the RA to update this OID.');
 
 			OIDplus::logger()->log("[INFO]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Title/Description of object '$id' updated");
 
@@ -199,7 +199,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				throw new OIDplusException("Parent object '".($objParent->nodeId())."' does not exist");
 			}
 
-			if (!$objParent->userHasWriteRights()) throw new OIDplusException('Authentification error. Please log in as the correct RA to insert an OID at this arc.');
+			if (!$objParent->userHasWriteRights()) throw new OIDplusException('Authentication error. Please log in as the correct RA to insert an OID at this arc.');
 
 			// Check if the ID is valid
 			if ($_POST['id'] == '') throw new OIDplusException('ID may not be empty');

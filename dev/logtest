@@ -68,4 +68,11 @@ OIDplus::logger()->log("[WARN]RA($old_email)!+[INFO]RA($new_email)!+[OK]A!", "Ad
 OIDplus::logger()->log("[INFO]RA($old_email)!+RA($new_email)!", "Requested email address change from '$old_email' to '$new_email'");
 OIDplus::logger()->log("[OK]RA($new_email)!+RA($old_email)!", "RA '$old_email' has changed their email address to '$new_email'");
 
+$msg = "test";
+$uploadfile = "test";
+OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", $msg);
+OIDplus::logger()->log("[OK]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Deleted attachment '".basename($uploadfile)."' from object '$id'");
+OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", $msg);
+OIDplus::logger()->log("[OK]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Uploaded attachment '".basename($uploadfile)."' to object '$id'");
+
 echo "Done";

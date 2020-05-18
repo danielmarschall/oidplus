@@ -19,7 +19,23 @@ Here is a list of typical sub-folders:
 Folder "attachments"
 --------------------
 
-Currently not in use (TODO)
+Used by the plugin "publicPages/095_attachments".
+
+Contents:
+- userdata/attachments/filetypes.conf (optional) to define/overwrite fileformat descriptions placed in 3p/vts_fileformats/filetypes.conf
+- Folders with attachments users have uploaded.
+
+	Example for folder names:
+		oid_2_999: for a normal OID
+		oid_1_3_6_1_4_1_37476_30_9_<sysid>_<smallhash>: for a non-OID object
+	If your system does not have a public key / system ID (e.g. because of missing OpenSSL, the names are
+		oid_2_999: for a normal OID
+		oid_2_25_<...>: for a GUID
+		<md5hash>: for other non-OID objects
+
+In order for the file attachment upload to work,
+you need to adjust the folder permissions.
+For example, on Linux "chown" to the user "www-data" or "chmod" to "0777".
 
 
 Folder "baseconfig"

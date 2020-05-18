@@ -98,8 +98,9 @@ require_once __DIR__ . '/ipv6_functions.inc.php';
 require_once __DIR__ . '/anti_xss.inc.php';
 
 if (php_sapi_name() != 'cli') {
-	require_once __DIR__ . '/vnag_framework.inc.php';
+	include_once __DIR__ . '/../3p/vts_vnag/vnag_framework.inc.php';
 }
+include_once __DIR__ . '/../3p/vts_fileformats/VtsFileTypeDetect.class.php';
 
 // ---
 

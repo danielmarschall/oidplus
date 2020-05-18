@@ -69,3 +69,11 @@ Polyfill:
 	License: MIT
 	Currently directly linked
 	Website: https://polyfill.io/v3/
+
+ViaThinkSoft FileFormats:
+	License: Apache 2.0
+	https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/fileformats/trunk/
+
+ViaThinkSoft VNag:
+	License: Apache 2.0
+	https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/vnag/trunk/

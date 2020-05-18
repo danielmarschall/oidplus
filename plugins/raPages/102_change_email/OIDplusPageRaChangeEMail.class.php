@@ -31,7 +31,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			$new_email = $_POST['new_email'];
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($old_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				throw new OIDplusException('Authentification error. Please log in as the RA to update its email address.');
+				throw new OIDplusException('Authentication error. Please log in as the RA to update its email address.');
 			}
 
 			if (!OIDplus::mailUtils()->validMailAddress($new_email)) {

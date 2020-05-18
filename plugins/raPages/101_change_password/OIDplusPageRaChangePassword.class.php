@@ -31,7 +31,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 			}
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				throw new OIDplusException('Authentification error. Please log in as the RA or admin to update its data.');
+				throw new OIDplusException('Authentication error. Please log in as the RA or admin to update its data.');
 			}
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {

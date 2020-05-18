@@ -26,7 +26,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			$email = $_POST['email'];
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				throw new OIDplusException('Authentification error. Please log in as the RA to update its data.');
+				throw new OIDplusException('Authentication error. Please log in as the RA to update its data.');
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));

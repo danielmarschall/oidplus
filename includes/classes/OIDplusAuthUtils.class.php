@@ -135,7 +135,7 @@ class OIDplusAuthUtils {
 		return $ses->getValue('oidplus_admin_logged_in') == '1';
 	}
 
-	// Authentification keys for validating arguments (e.g. sent by mail)
+	// Authentication keys for validating arguments (e.g. sent by mail)
 
 	public static function makeAuthKey($data) {
 		$data = OIDplus::baseConfig()->getValue('SERVER_SECRET') . $data;
