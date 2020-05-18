@@ -615,6 +615,11 @@ class OIDplus {
 		$res .= '/';
 
 		if (!$relative) {
+			if (php_sapi_name() == 'cli') {
+				// TODO: what should we do???
+				return false;
+			}
+
 			$is_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
 			$protocol = $is_ssl ? 'https' : 'http';
 			$host = $_SERVER['HTTP_HOST'];

@@ -634,6 +634,8 @@ class phpsvnclient {
 		$files       = array();
 		$filesDelete = array();
 		$dirs        = array();
+		$dirsNew     = array();
+		$dirsMod     = array();
 		$dirsDelete  = array();
 
 		if (!isset($array['objects'])) $array['objects'] = array();
@@ -650,8 +652,14 @@ class phpsvnclient {
 				}
 			}
 			if ($objects['type'] == "dir") {
-				if ($objects['action'] == "S:ADDED-PATH" || $objects['action'] == "S:MODIFIED-PATH") {
+				if ($objects['action'] == "S:ADDED-PATH") {
 					self::xarray_add($objects['object_name'], $dirs);
+					self::xarray_add($objects['object_name'], $dirsNew);
+					self::xarray_remove($objects['object_name'], $dirsDelete);
+				}
+				if ($objects['action'] == "S:MODIFIED-PATH") {
+					self::xarray_add($objects['object_name'], $dirs);
+					self::xarray_add($objects['object_name'], $dirsMod);
 					self::xarray_remove($objects['object_name'], $dirsDelete);
 				}
 				if ($objects['action'] == "S:DELETED-PATH") {
@@ -664,11 +672,14 @@ class phpsvnclient {
 					// Delete dirs from dirslist
 					self::xarray_add($objects['object_name'], $dirsDelete);
 					self::xarray_remove($objects['object_name'], $dirs);
+					self::xarray_remove($objects['object_name'], $dirsMod);
+					self::xarray_remove($objects['object_name'], $dirsNew);
 					// END OF Delete dirs from dirslist
 				}
 			}
 		}
-		foreach ($dirs as $dir) {
+		foreach ($dirsNew as $dir) {
+			// For new directories, also download all its contents
 			$contents = $this->getDirectoryTree($dir, $vend, true);
 			foreach ($contents as $cont) {
 				if ($cont['type'] == 'directory') {

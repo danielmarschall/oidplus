@@ -127,7 +127,7 @@ $js = 'oidplus.min.js.php';
 		if ($static_icon != '') echo '<img src="'.htmlentities($static_icon).'" width="48" height="48" alt=""> ';
 		echo htmlentities($static_title).'</h1>';
 		echo '<div id="real_content">'.$static_content.'</div>';
-		if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+		if ((!isset($_SERVER['REQUEST_METHOD'])) || ($_SERVER['REQUEST_METHOD'] == 'GET')) {
 			echo '<br><p><img src="img/share.png" width="15" height="15" alt="Share"> <a href="?goto='.htmlentities($static_node_id).'" id="static_link" class="gray_footer_font">Static link to this page</a>';
 			echo '</p>';
 		}

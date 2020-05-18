@@ -98,7 +98,22 @@ require_once __DIR__ . '/ipv6_functions.inc.php';
 require_once __DIR__ . '/anti_xss.inc.php';
 
 if (php_sapi_name() != 'cli') {
+	if (!file_exists(__DIR__ . '/../3p/vts_vnag/vnag_framework.inc.php')) {
+		// This can happen if WebSVN did not catch the external SVN repository right
+		// If WebSVN was the reason, then we are safe to assume that writing is possible
+		@mkdir(__DIR__ . '/../3p/vts_vnag');
+		@file_put_contents(__DIR__ . '/../3p/vts_vnag/vnag_framework.inc.php', file_get_contents('https://svn.viathinksoft.com/svn/vnag/trunk/framework/vnag_framework.inc.php'));
+	}
 	include_once __DIR__ . '/../3p/vts_vnag/vnag_framework.inc.php';
+}
+
+if (!file_exists(__DIR__ . '/../3p/vts_fileformats/VtsFileTypeDetect.class.php')) {
+	// This can happen if WebSVN did not catch the external SVN repository right
+	// If WebSVN was the reason, then we are safe to assume that writing is possible
+	@mkdir(__DIR__ . '/../3p/vts_fileformats');
+	foreach (array('VtsFileTypeDetect.class.php', 'filetypes.conf', 'mimetype_lookup.inc.php') as $file) {
+		@file_put_contents(__DIR__ . '/../3p/vts_fileformats/'.$file, file_get_contents('https://svn.viathinksoft.com/svn/fileformats/trunk/'.$file));
+	}
 }
 include_once __DIR__ . '/../3p/vts_fileformats/VtsFileTypeDetect.class.php';
 
