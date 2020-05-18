@@ -29,11 +29,13 @@ RFC
 SETUP
 - There should be a "test database connection" button
 
+WEBSVN UPDATER
+- implement support for external repos!!!
+
 SMALL THINGS
 - RA address data: Country selection box like in OIDInfo
 - We should remove "die()" whenever possible, because it is very unflexible
 - offer signature checker tool to verify WHOIS responses
-- web svn updater: "black list" (do not overwrite specific files like favicon.ico)
 - minimum-aufklappstufen fuer alle objekte und plugins einstellbar machen, sodass z.b. alle OIDs immer bis zur stufe 2 aufgeklappt sind, wenn man OIDplus frisch öffnet
 - make use of autoloading of PHP classes
 - Revive the idea of "information objects" = OIDs that contain content

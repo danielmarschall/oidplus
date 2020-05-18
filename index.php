@@ -107,7 +107,7 @@ $js = 'oidplus.min.js.php';
 	<script src="<?php echo htmlentities($js); ?>"></script>
 
 	<link rel="stylesheet" href="<?php echo htmlentities($css); ?>">
-	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico.php">
 </head>
 
 <body>

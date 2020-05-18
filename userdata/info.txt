@@ -54,6 +54,12 @@ This folder can be used to store a SQLite database.
 The default database name is" oidplus.db"
 
 
+Folder "favicon"
+----------------
+
+If the file favicon.ico is existing, it will be chosen instead of img/favicon.ico
+
+
 Folder "logs"
 -------------
 

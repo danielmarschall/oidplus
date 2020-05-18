@@ -4,4 +4,5 @@ DIR=$( dirname "$0" )
 
 cd "$DIR/.."
 
+find . -type f -name '.DS_Store' -delete
 find . -type f -name '._*' -delete

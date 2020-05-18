@@ -203,6 +203,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		$files = glob(self::getUploadDir($id).'/'.'*');
 		$doshow = false;
 		$output = '';
+		$found_files = false;
 
 		$obj = OIDplusObject::parse($id);
 		if ($obj === null) throw new OIDplusException("Invalid object '$id'");
@@ -227,6 +228,8 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		if ($can_delete) $output .= '<th>Delete</th>';
 		$output .= '</tr>';
 		foreach ($files as $file) {
+			if (is_dir($file)) continue;
+
 			$output .= '<tr>';
 			$output .= '<td>'.htmlentities(basename($file)).'</td>';
 			$output .= '<td>'.htmlentities(self::convert_filesize(filesize($file), 0)).'</td>';
@@ -240,9 +243,10 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 			$output .= '</tr>';
 			$doshow = true;
+			$found_files = true;
 		}
 
-		if (count($files) === 0) $output .= '<tr><td colspan="'.($can_delete ? 5 : 4).'"><i>No attachments</i></td></tr>';
+		if (!$found_files) $output .= '<tr><td colspan="'.($can_delete ? 5 : 4).'"><i>No attachments</i></td></tr>';
 
 		$output .= '</table></div>';
 
