@@ -29,6 +29,10 @@ try {
 	}
 	$handled = false;
 
+	foreach (OIDplus::getPagePlugins() as $plugin) {
+		$plugin->actionBefore();
+	}
+
 	// Action:     (actions defined by plugins)
 	// Method:     GET / POST
 	// Parameters: ...
@@ -97,6 +101,10 @@ try {
 
 	if (!$handled) {
 		throw new OIDplusException('Invalid action ID');
+	}
+
+	foreach (OIDplus::getPagePlugins() as $plugin) {
+		$plugin->actionAfter();
 	}
 
 	if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {

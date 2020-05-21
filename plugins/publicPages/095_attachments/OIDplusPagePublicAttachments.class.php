@@ -58,6 +58,28 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		return OIDplus::config()->getValue('attachments_allow_ra_upload', 0);
 	}
 
+	public function actionAfter() {
+		if (isset($_POST["action"]) && ($_POST["action"] == "Delete")) {
+			$id = $_POST['id'];
+
+			// Check if permitted
+			$obj = OIDplusObject::parse($id);
+			if ($obj === null) throw new OIDplusException("DELETE action failed because object '$id' cannot be parsed!");
+			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentication error. Please log in as the superior RA to delete this OID.');
+
+			// Delete the attachment folder including all files in it (note: Subfolders are not possible)
+			$uploaddir = self::getUploadDir($id);
+			if ($uploaddir != '') {
+				$ary = glob($uploaddir . '/' . '*');
+				foreach ($ary as $a) @unlink($a);
+				@rmdir($uploaddir);
+				if (is_dir($uploaddir)) {
+					OIDplus::logger()->log("[WARN]OID($id)+[WARN]A!", "Attachment directory '$uploaddir' could not be deleted during the deletion of the OID");
+				}
+			}
+		}
+	}
+
 	public function action(&$handled) {
 
 		if ($_REQUEST['action'] == 'deleteAttachment') {
@@ -91,6 +113,10 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				} else {
 					throw new OIDplusException("$msg. Please contact the system administrator.");
 				}
+			} else {
+				// If it was the last file, delete the empty directory
+				$ary = glob($uploaddir . '/' . '*');
+				if (count($ary) == 0) @rmdir($uploaddir);
 			}
 
 			OIDplus::logger()->log("[OK]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Deleted attachment '".basename($uploadfile)."' from object '$id'");
