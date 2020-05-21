@@ -244,6 +244,14 @@ class OIDplus {
 		return self::$sqlSlangPlugins;
 	}
 
+	public static function getSqlSlangPlugin($id)/*: ?OIDplusSqlSlangPlugin*/ {
+		if (isset(self::$sqlSlangPlugins[$id])) {
+			return self::$sqlSlangPlugins[$id];
+		} else {
+			return null;
+		}
+	}
+
 	# --- Database plugin
 
 	private static function registerDatabasePlugin(OIDplusDatabasePlugin $plugin) {

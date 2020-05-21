@@ -194,7 +194,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	}
 
 	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
-		$slang = self::getHardcodedSlangById('mysql');
+		$slang = OIDplus::getSqlSlangPlugin('mysql');
 		if (is_null($slang)) {
 			throw new OIDplusConfigInitializationException("SQL-Slang plugin 'mysql' is missing. Please check if it exists in the directory 'plugin/sqlSlang'. If it is not existing, please recover it from a SVN snapshot or OIDplus ZIP file.");
 		}

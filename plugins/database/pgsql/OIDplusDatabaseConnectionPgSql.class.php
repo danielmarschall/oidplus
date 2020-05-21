@@ -154,7 +154,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 	}
 
 	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
-		$slang = self::getHardcodedSlangById('pgsql');
+		$slang = OIDplus::getSqlSlangPlugin('pgsql');
 		if (is_null($slang)) {
 			throw new OIDplusConfigInitializationException("SQL-Slang plugin 'pgsql' is missing. Please check if it exists in the directory 'plugin/sqlSlang'. If it is not existing, please recover it from a SVN snapshot or OIDplus ZIP file.");
 		}

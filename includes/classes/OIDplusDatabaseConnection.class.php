@@ -66,6 +66,7 @@ abstract class OIDplusDatabaseConnection {
 		$this->doConnect();
 		$this->connected = true;
 		register_shutdown_function(array($this, 'disconnect'));
+		$this->afterConnectMandatory();
 		$this->afterConnect();
 	}
 
@@ -97,7 +98,9 @@ abstract class OIDplusDatabaseConnection {
 
 	protected function beforeConnect()/*: void*/ {}
 
-	protected function afterConnect()/*: void*/ {
+	protected function afterConnect()/*: void*/ {}
+
+	private function afterConnectMandatory()/*: void*/ {
 		// Check if the config table exists. This is important because the database version is stored in it
 		$this->initRequireTables(array('config'));
 
@@ -138,15 +141,6 @@ abstract class OIDplusDatabaseConnection {
 		$this->getSlang();
 	}
 
-	protected static function getHardcodedSlangById($id)/*: ?OIDplusSqlSlangPlugin*/ {
-		foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
-			if ($plugin::id() == $id) {
-				return $plugin;
-			}
-		}
-		return null;
-	}
-
 	private function initRequireTables($tableNames)/*: void*/ {
 		$msgs = array();
 		foreach ($tableNames as $tableName) {
@@ -162,6 +156,7 @@ abstract class OIDplusDatabaseConnection {
 
 	public function tableExists($tableName): bool {
 		try {
+			// Attention: This query could interrupt transactions if Rollback-On-Error is enabled
 			$this->query("select 0 from ".$tableName." where 1=0");
 			return true;
 		} catch (Exception $e) {
@@ -189,7 +184,7 @@ abstract class OIDplusDatabaseConnection {
 		if (is_null($this->slang)) {
 			if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
 				$name = OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');
-				$this->slang = self::getHardcodedSlangById($name);
+				$this->slang = OIDplus::getSqlSlangPlugin($name);
 				if ($mustExist && is_null($this->slang)) {
 					throw new OIDplusConfigInitializationException("Enforced SQL slang (via setting FORCE_DBMS_SLANG) '$name' does not exist.");
 				}

@@ -174,7 +174,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	}
 
 	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
-		$slang = self::getHardcodedSlangById('sqlite');
+		$slang = OIDplus::getSqlSlangPlugin('sqlite');
 		if (is_null($slang)) {
 			throw new OIDplusConfigInitializationException("SQL-Slang plugin 'sqlite' is missing. Please check if it exists in the directory 'plugin/sqlSlang'. If it is not existing, please recover it from a SVN snapshot or OIDplus ZIP file.");
 		}
