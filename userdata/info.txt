@@ -1,8 +1,11 @@
 
 The folder "userdata" contains various files that are unique
-for your OIDplus installation. With a few exceptions (like this file),
+to your OIDplus installation. With a few exceptions (like this file),
 the folder contents are safe from being accidentally changed or
 deleted by SVN updates.
+
+Generally speaking, everything inside "userdata" belongs to you,
+and everything else belongs to OIDplus (and should not be changed).
 
 Since this folder can also contain sensitive information
 like log files or a SQLite database, the access to this

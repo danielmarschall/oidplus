@@ -153,7 +153,7 @@ if (isset($_REQUEST['update_now'])) {
 		$local_installation = OIDplus::getVersion();
 		$svn = new phpsvnclient(OIDPLUS_REPO);
 		$newest_version = 'svn-'.$svn->getVersion();
-		
+
 		echo 'Local installation: ' . ($local_installation ? $local_installation : 'unknown') . '<br>';
 		echo 'Latest published version: ' . ($newest_version ? $newest_version : 'unknown') . '<br>';
 
@@ -209,7 +209,7 @@ if (isset($_REQUEST['update_now'])) {
 			unset($job);
 		} else {
 			echo '<p><font color="blue">To update your OIDplus installation, please enter your password and click the button "Update NOW".</font></p>';
-			echo '<p><font color="red">WARNING: Please make a backup of your files before updating. In case of an error, the OIDplus installation (including this update-assistant) might become unavailable. Also, since the web-update does not contain collission-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost!</font></p>';
+			echo '<p><font color="red">WARNING: Please make a backup of your files before updating. In case of an error, the OIDplus installation (including this update-assistant) might become unavailable. Also, since the web-update does not contain collission-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! In case the update fails, you can download and extract the complete <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot ZIP file</a> again. Since all your data should lay inside the folder "userdata", this should be safe.</font></p>';
 			echo '<form method="POST" action="index.php">';
 
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {

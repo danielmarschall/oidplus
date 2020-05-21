@@ -456,13 +456,12 @@ class phpsvnclient {
 		$contents = $this->getDirectoryTree($svn_folder, $version, true);
 		foreach ($contents as $cont) {
 			if ($cont['type'] == 'directory') {
-				$svn_cont[] = '/'.$cont['path'].'/';
+				$svn_cont[] = '/'.urldecode($cont['path']).'/';
 			} else if ($cont['type'] == 'file') {
-				$svn_cont[] = '/'.$cont['path'];
+				$svn_cont[] = '/'.urldecode($cont['path']);
 			}
 		}
 		foreach ($svn_cont as $key => &$c) {
-			$c = urldecode($c);
 			$c = substr($c, strlen($svn_folder));
 			if (substr($c,0,1) === '/') $c = substr($c, 1);
 			if ($c === '') unset($svn_cont[$key]);
@@ -680,14 +679,20 @@ class phpsvnclient {
 		}
 		foreach ($dirsNew as $dir) {
 			// For new directories, also download all its contents
-			$contents = $this->getDirectoryTree($dir, $vend, true);
+			try {
+				$contents = $this->getDirectoryTree($dir, $vend, true);
+			} catch (Exception $e) {
+				// This can happen when you update from a very old version and a directory was new which is not existing in the newest ($vend) version
+				// In this case, we don't need it and can ignore the error
+				$contents = array();
+			}
 			foreach ($contents as $cont) {
 				if ($cont['type'] == 'directory') {
-					$dirname = '/'.$cont['path'];
+					$dirname = '/'.urldecode($cont['path']);
 					self::xarray_add($dirname, $dirs);
 					self::xarray_remove($dirname, $dirsDelete);
 				} else if ($cont['type'] == 'file') {
-					$filename = '/'.$cont['path'];
+					$filename = '/'.urldecode($cont['path']);
 					self::xarray_add($filename, $files);
 					self::xarray_remove($filename, $filesDelete);
 				}

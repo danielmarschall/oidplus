@@ -25,7 +25,7 @@ abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 
 	public abstract function sqlDate(): string;
 
-	public abstract function detect(): bool;
+	public abstract function detect(OIDplusDatabaseConnection $db): bool;
 
 	// Please note: This insert_id() function should use SQL to receive
 	// the last inserted ID. If the database connection provider (e.g. PDO)
@@ -34,7 +34,7 @@ abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 	// but instead use        OIDplus::db()->insert_id()
 	// This way, the database connection provider can override that function
 	// with their own method of fetching the last inserted ID.
-	public abstract function insert_id(): int;
+	public abstract function insert_id(OIDplusDatabaseConnection $db): int;
 
 	public abstract function setupSetTablePrefix($cont, $table, $prefix): string;
 

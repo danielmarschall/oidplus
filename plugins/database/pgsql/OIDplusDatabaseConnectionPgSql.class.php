@@ -94,7 +94,8 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 			$password = OIDplus::baseConfig()->getValue('PGSQL_PASSWORD', '');
 			$database = OIDplus::baseConfig()->getValue('PGSQL_DATABASE', 'oidplus');
 			list($hostname, $port) = explode(':', "$host:5432");
-			$this->conn = pg_connect("host=$hostname user=$username password=$password port=$port dbname=$database");
+			// We need to use PGSQL_CONNECT_FORCE_NEW because we require two connectoins (for isolated log message queries)
+			$this->conn = pg_connect("host=$hostname user=$username password=$password port=$port dbname=$database", PGSQL_CONNECT_FORCE_NEW);
 		} finally {
 			# TODO: this does not seem to work?! (at least not for CLI)
 			$err = ob_get_contents();
@@ -111,11 +112,6 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 		try {
 			$this->query("SET NAMES 'utf8'");
 		} catch (Exception $e) {
-		}
-
-		$this->slang = self::getHardcodedSlangById('pgsql');
-		if (is_null($this->slang)) {
-			throw new OIDplusConfigInitializationException("SQL-Slang plugin 'pgsql' is missing. Please check if it exists in the directory 'plugin/sqlSlang'. If it is not existing, please recover it from a SVN snapshot or OIDplus ZIP file.");
 		}
 	}
 
@@ -155,5 +151,13 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 
 	public function sqlDate(): string {
 		return 'now()';
+	}
+
+	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
+		$slang = self::getHardcodedSlangById('pgsql');
+		if (is_null($slang)) {
+			throw new OIDplusConfigInitializationException("SQL-Slang plugin 'pgsql' is missing. Please check if it exists in the directory 'plugin/sqlSlang'. If it is not existing, please recover it from a SVN snapshot or OIDplus ZIP file.");
+		}
+		return $slang;
 	}
 }

@@ -209,3 +209,10 @@ Information:             This gives you the possibility to disable a plugin with
                          Example:
                          "DISABLE_PLUGIN_OIDplusLoggerPluginUserdataLogfile"
                          disables the plugin "logger/300_userdata_logfile".
+
+OIDplus::baseConfig()->setValue('DISABLE_AJAX_TRANSACTIONS', false);
+Old 2.0 format:          define('OIDPLUS_DISABLE_AJAX_TRANSACTIONS', false);
+                         This will disable the usage of database transactions in ajax.php
+                         Do only use this if you have severe problems with the system running.
+                         It might result in inconsistent data e.g. if you update an OID
+                         and an error occurs in the middle of that process.

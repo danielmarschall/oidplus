@@ -21,7 +21,7 @@ abstract class OIDplusDatabaseConnection {
 	protected /*bool*/ $connected = false;
 	protected /*?bool*/ $html = null;
 	protected /*?string*/ $last_query = null;
-	protected /*?OIDplusSqlSlangPlugin*/ $slang = null;
+	private /*?OIDplusSqlSlangPlugin*/ $slang = null;
 
 	protected abstract function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult;
 	public abstract function error(): string;
@@ -38,7 +38,7 @@ abstract class OIDplusDatabaseConnection {
 		// a function to detect the last inserted id, please override this
 		// function in order to use that specialized function (since it is usually
 		// more reliable).
-		return $this->getSlang()->insert_id();
+		return $this->getSlang()->insert_id($this);
 	}
 
 	public final function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
@@ -129,6 +129,13 @@ abstract class OIDplusDatabaseConnection {
 		// Now that our database is up-to-date, we check if database tables are existing
 		// without config table, because it was checked above
 		$this->initRequireTables(array('objects', 'asn1id', 'iri', 'ra'/*, 'config'*/));
+
+		// In case an auto-detection of the slang is required (for generic providers like PDO or ODBC),
+		// we must not be inside a transaction, because the detection requires intentionally submitting
+		// invalid queries to detect the correct DBMS. If we would be inside a transaction, providers like
+		// PDO would automatically roll-back. Therefore, we detect the slang right at the beginning,
+		// before any transaction is used.
+		$this->getSlang();
 	}
 
 	protected static function getHardcodedSlangById($id)/*: ?OIDplusSqlSlangPlugin*/ {
@@ -178,7 +185,7 @@ abstract class OIDplusDatabaseConnection {
 		}
 	}
 
-	public final function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
+	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
 		if (is_null($this->slang)) {
 			if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
 				$name = OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');
@@ -188,7 +195,7 @@ abstract class OIDplusDatabaseConnection {
 				}
 			} else {
 				foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
-					if ($plugin->detect()) {
+					if ($plugin->detect($this)) {
 						$this->slang = $plugin;
 						break;
 					}

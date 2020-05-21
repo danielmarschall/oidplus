@@ -271,8 +271,10 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				throw new OIDplusException("Please enter either 0, 1 or 2.");
 			}
 			// Now do a recheck and notify the ViaThinkSoft server
-			OIDplus::config()->setValue('reg_last_ping', 0);
-			$this->sendRegistrationQuery($value);
+			if (($value == 2) || !OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
+				OIDplus::config()->setValue('reg_last_ping', 0);
+				$this->sendRegistrationQuery($value);
+			}
 		});
 		OIDplus::config()->prepareConfigKey('reg_ping_interval', 'Registration ping interval (in seconds)', '3600', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
 
@@ -288,7 +290,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		if (!OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
 			$privacy_level = OIDplus::config()->getValue('reg_privacy');
 
-			if (php_sapi_name() !== 'cli') { // don't register when called from CLI, otherweise the oidinfo XML can't convert relative links into absolute links
+			if (php_sapi_name() !== 'cli') { // don't register when called from CLI, otherwise the oidinfo XML can't convert relative links into absolute links
 				if ((time()-OIDplus::config()->getValue('reg_last_ping') >= OIDplus::config()->getValue('reg_ping_interval'))) {
 					$this->sendRegistrationQuery();
 				}

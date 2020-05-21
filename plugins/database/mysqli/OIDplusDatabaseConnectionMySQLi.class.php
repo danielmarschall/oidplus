@@ -110,11 +110,6 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		$this->last_error = null;
 
 		$this->query("SET NAMES 'utf8'");
-
-		$this->slang = self::getHardcodedSlangById('mysql');
-		if (is_null($this->slang)) {
-			throw new OIDplusConfigInitializationException("SQL-Slang plugin 'mysql' is missing. Please check if it exists in the directory 'plugin/sqlSlang'. If it is not existing, please recover it from a SVN snapshot or OIDplus ZIP file.");
-		}
 	}
 
 	protected function doDisconnect()/*: void*/ {
@@ -196,5 +191,13 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		} else {
 			return false;
 		}
+	}
+
+	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
+		$slang = self::getHardcodedSlangById('mysql');
+		if (is_null($slang)) {
+			throw new OIDplusConfigInitializationException("SQL-Slang plugin 'mysql' is missing. Please check if it exists in the directory 'plugin/sqlSlang'. If it is not existing, please recover it from a SVN snapshot or OIDplus ZIP file.");
+		}
+		return $slang;
 	}
 }

@@ -53,9 +53,9 @@ class OIDplusSqlSlangPluginMsSQL extends OIDplusSqlSlangPlugin {
 		return 'getdate()';
 	}
 
-	public function detect(): bool {
+	public function detect(OIDplusDatabaseConnection $db): bool {
 		try {
-			$vers = $this->query("select @@version as dbms_version")->fetch_object()->dbms_version;
+			$vers = $db->query("select @@version as dbms_version")->fetch_object()->dbms_version;
 			$vers = strtolower($vers);
 			return strpos($vers, 'microsoft sql server') !== false;
 		} catch (Exception $e) {
@@ -63,10 +63,10 @@ class OIDplusSqlSlangPluginMsSQL extends OIDplusSqlSlangPlugin {
 		}
 	}
 
-	public function insert_id(): int {
+	public function insert_id(OIDplusDatabaseConnection $db): int {
 		// Note: SCOPE_IDENTITY() does not work, does only give 0.
-		// $res = $this->query("SELECT SCOPE_IDENTITY() AS ID");
-		$res = $this->query("SELECT @@IDENTITY AS ID");
+		// $res = $db->query("SELECT SCOPE_IDENTITY() AS ID");
+		$res = $db->query("SELECT @@IDENTITY AS ID");
 		$row = $res->fetch_array();
 		return (int)$row['ID'];
 	}

@@ -129,11 +129,6 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 
 		$this->prepare_cache = array();
 		$this->last_error = null;
-
-		$this->slang = self::getHardcodedSlangById('sqlite');
-		if (is_null($this->slang)) {
-			throw new OIDplusConfigInitializationException("SQL-Slang plugin 'sqlite' is missing. Please check if it exists in the directory 'plugin/sqlSlang'. If it is not existing, please recover it from a SVN snapshot or OIDplus ZIP file.");
-		}
 	}
 
 	protected function doDisconnect()/*: void*/ {
@@ -176,5 +171,13 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 		// This collation is defined in the database plugin using SQLite3::createCollation()
 		return "$fieldname COLLATE NATURAL_CMP $order";
 
+	}
+
+	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
+		$slang = self::getHardcodedSlangById('sqlite');
+		if (is_null($slang)) {
+			throw new OIDplusConfigInitializationException("SQL-Slang plugin 'sqlite' is missing. Please check if it exists in the directory 'plugin/sqlSlang'. If it is not existing, please recover it from a SVN snapshot or OIDplus ZIP file.");
+		}
+		return $slang;
 	}
 }

@@ -71,9 +71,9 @@ class OIDplusSqlSlangPluginSQLite extends OIDplusSqlSlangPlugin {
 		return 'datetime()';
 	}
 
-	public function detect(): bool {
+	public function detect(OIDplusDatabaseConnection $db): bool {
 		try {
-			$this->query("select sqlite_version as dbms_version")->fetch_object()->dbms_version;
+			$db->query("select sqlite_version as dbms_version")->fetch_object()->dbms_version;
 			$vers = "sqlite $vers";
 			return strpos($vers, 'sqlite') !== false;
 		} catch (Exception $e) {
@@ -81,8 +81,8 @@ class OIDplusSqlSlangPluginSQLite extends OIDplusSqlSlangPlugin {
 		}
 	}
 
-	public function insert_id(): int {
-		$res = $this->query("SELECT last_insert_rowid() AS ID");
+	public function insert_id(OIDplusDatabaseConnection $db): int {
+		$res = $db->query("SELECT last_insert_rowid() AS ID");
 		$row = $res->fetch_array();
 		return (int)$row['ID'];
 	}

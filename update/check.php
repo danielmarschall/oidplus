@@ -74,7 +74,9 @@ if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_suc
 
 		list($svn_cont, $local_cont) = $svn->compareToDirectory('../', '/trunk/', $svn_rev);
 		foreach ($local_cont as $key => &$c) {
-			if ((strpos($c,'userdata/') === 0) && ($c !== 'userdata/info.txt') && ($c !== 'userdata/.htaccess') && ($c !== 'userdata/index.html') && (substr($c,-1) !== '/')) unset($local_cont[$key]);
+			if ((strpos($c,'userdata/') === 0) && ($c !== 'userdata/info.txt') && ($c !== 'userdata/.htaccess') && ($c !== 'userdata/index.html') && (substr_count($c,'/') > 2)) unset($local_cont[$key]);
+			if (strstr($c,'3p/vts_vnag')) unset($local_cont[$key]); // This is an external library
+			if (strstr($c,'3p/vts_fileformats')) unset($local_cont[$key]); // This is an external library
 		}
 		foreach ($svn_cont as $key => &$c) {
 			if ((strpos($c,'userdata/') === 0) && ($c !== 'userdata/info.txt') && ($c !== 'userdata/.htaccess') && ($c !== 'userdata/index.html') && (substr($c,-1) !== '/')) unset($svn_cont[$key]);

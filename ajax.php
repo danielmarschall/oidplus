@@ -24,7 +24,7 @@ OIDplus::init(false);
 header('Content-Type:application/json; charset=utf-8');
 
 try {
-	if (OIDplus::db()->transaction_supported()) {
+	if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
 		OIDplus::db()->transaction_begin();
 	}
 	$handled = false;
@@ -99,12 +99,12 @@ try {
 		throw new OIDplusException('Invalid action ID');
 	}
 
-	if (OIDplus::db()->transaction_supported()) {
+	if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
 		OIDplus::db()->transaction_commit();
 	}
 } catch (Exception $e) {
 	try {
-		if (OIDplus::db()->transaction_supported()) {
+		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
 			OIDplus::db()->transaction_rollback();
 		}
 	} catch (Exception $e1) {
