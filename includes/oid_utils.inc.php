@@ -2,7 +2,7 @@
 
 /*
  * OID-Utilities for PHP
- * Copyright 2011-2019 Daniel Marschall, ViaThinkSoft
+ * Copyright 2011-2020 Daniel Marschall, ViaThinkSoft
  * Version 2020-05-22
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,8 @@
 
 // All functions in this library are compatible with leading zeroes (not recommended) and leading dots
 
-// TODO: change the function names, so that they have a uniform naming schema, and rename "oid identifier" into "asn.1 alphanumeric identifier"
-// TODO: Function for finding a shared ancestor, e.g. oid_shared_ancestor('2.999.1.2.3', '2.999.4.5') == '2.999'
+// TODO: change some function names, so that they have a uniform naming schema, and rename "oid identifier" into "asn.1 alphanumeric identifier"
+//       oid_id_is_valid() => asn1_alpha_id_valid()
 
 define('OID_DOT_FORBIDDEN', 0);
 define('OID_DOT_OPTIONAL',  1);
@@ -304,6 +304,16 @@ function oidSort(&$ary, $output_with_leading_dot=false) {
 	$ary = $out;
 }
 
+function oid_dotnotation_equal($oidA, $oidB) {
+	$oidA = sanitizeOID($oidA, false);
+	if ($oidA === false) return null;
+
+	$oidB = sanitizeOID($oidB, false);
+	if ($oidB === false) return null;
+
+	return $oidA === $oidB;
+}
+
 /**
  * Removes leading zeroes from an OID in dot notation.
  * @author  Daniel Marschall, ViaThinkSoft
@@ -519,8 +529,6 @@ function iri_arc_valid($arc, $allow_numeric=true) {
 
 	// Question: Should we strip RTL/LTR characters?
 
-	if (mb_substr($arc, 0, 1) == '-')  return false; // see Rec. ITU-T X.660, clause 7.5.4
-	if (mb_substr($arc,-1, 1) == '-')  return false; // see Rec. ITU-T X.660, clause 7.5.4
 	if (mb_substr($arc, 2, 2) == '--') return false; // see Rec. ITU-T X.660, clause 7.5.4
 
 	$array = array();
@@ -607,7 +615,7 @@ function iri_get_long_arcs() {
 /**
  * Tries to shorten/simplify an IRI by applying "long arcs", e.g. /2/999/123 -> /Example/123 .
  * @author  Daniel Marschall, ViaThinkSoft
- * @version 2014-12-28
+ * @version 2020-05-22
  * @param   $iri (string)<br />
  *              An OID in OID-IRI notation, e.g. /Example/test
  * @return  (string) The modified IRI.
@@ -615,25 +623,17 @@ function iri_get_long_arcs() {
 function iri_add_longarcs($iri) {
 	$iri_long_arcs = iri_get_long_arcs();
 
-	// TODO: $iri valid?
+	if (!iri_valid($iri)) return false;
 
 	$ary = explode('/', $iri);
 
 	$ary_number_iri = $ary;
 	if ($ary_number_iri[1] == 'Joint-ISO-ITU-T') $ary_number_iri[1] = '2';
-	/*
-	if ($ary_number_iri[1] == '2') {
-		// TODO: /2/Example -> /2/999 -> /Example
-	} else {
-		// Currently, only long arcs inside .2 are defined
-		// return $iri;
-	}
-	*/
+
 	$number_iri = implode('/', $ary_number_iri);
 
 	foreach ($iri_long_arcs as $cur_longarc => $cur_iri) {
-		// TODO: $cur_iri valid?
-
+		assert(iri_valid($cur_iri));
 		if (strpos($number_iri.'/', $cur_iri.'/') === 0) {
 			$cnt = substr_count($cur_iri, '/');
 			for ($i=1; $i<$cnt; $i++) {
@@ -648,19 +648,21 @@ function iri_add_longarcs($iri) {
 
 	return $iri;
 }
+/*
+assert(iri_add_longarcs('/2/999/123') === '/Example/123');
+*/
 
 # === FUNCTIONS FOR OIDS IN ASN.1 NOTATION ===
 
 /**
  * Checks if an ASN.1 identifier is valid.
  * @author  Daniel Marschall, ViaThinkSoft
- * @version 2014-12-09
+ * @version 2020-05-22
  * @param   $id (string)<br />
  *              An ASN.1 identifier, e.g. "example". Not "example(99)" or "99" and not a path like "{ 2 999 }"
  *              Note: Use asn1_path_valid() for validating a whole ASN.1 notation path.
  * @return  (bool) true, if the identifier is valid: It begins with an lowercase letter and contains only 0-9, a-z, A-Z and "-"
  **/
-# TODO: umbenennen in asn1_alpha_id_valid
 function oid_id_is_valid($id) {
 	// see Rec. ITU-T X.660 | ISO/IEC 9834-1, clause 7.7
 	// and Rec. ITU-T X.680 | ISO/IEC 8824-1, clause 12.3
@@ -802,7 +804,7 @@ assert(asn1_to_dot('{  iso 3 }') == '1.3');
  * "Soft corrects" an invalid ASN.1 identifier.<br />
  * Attention, by "soft correcting" the ID, it is not authoritative anymore, and might not be able to be resolved by ORS.
  * @author  Daniel Marschall, ViaThinkSoft
- * @version 2014-12-09
+ * @version 2020-05-22
  * @param   $id (string)<br />
  *              An ASN.1 identifier.
  * @param   $append_id_prefix (bool)<br />
@@ -816,6 +818,9 @@ assert(asn1_to_dot('{  iso 3 }') == '1.3');
 function oid_soft_correct_id($id, $append_id_prefix = true) {
 	// Convert "_" to "-"
 	$id = str_replace('_', '-', $id);
+
+	// Convert "--" to "-"
+	$id = str_replace('--', '-', $id);
 
 	// Remove invalid characters
 	$id = preg_replace('/[^a-zA-Z0-9-]+/', '', $id);
@@ -835,3 +840,37 @@ function oid_soft_correct_id($id, $append_id_prefix = true) {
 	return $id;
 }
 
+function oid_common_ancestor(array $oids) {
+	$shared = array();
+
+	if (!is_array($oids)) return false;
+	if (count($oids) === 0) return false;
+
+	foreach ($oids as &$oid) {
+		$oid = sanitizeOID($oid, false);
+		if ($oid === false) return false;
+		$oid = explode('.', $oid);
+	}
+
+	$max_ok = count($oids[0]);
+	for ($i=1; $i<count($oids); $i++) {
+		for ($j=0; $j<min(count($oids[$i]),count($oids[0])); $j++) {
+			if ($oids[$i][$j] != $oids[0][$j]) {
+				if ($j < $max_ok) $max_ok = $j;
+				break;
+			}
+		}
+		if ($j < $max_ok) $max_ok = $j;
+	}
+
+	$out = array();
+	for ($i=0; $i<$max_ok; $i++) {
+		$out[] = $oids[0][$i];
+	}
+	return implode('.', $out);
+}
+/*
+assert(oid_shared_ancestor(array('2.999.4.5.3', '2.999.4.5')) === "2.999.4.5");
+assert(oid_shared_ancestor(array('2.999.4.5', '2.999.4.5.3')) === "2.999.4.5");
+assert(oid_shared_ancestor(array('2.999.1.2.3', '2.999.4.5')) === "2.999");
+*/

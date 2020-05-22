@@ -23,6 +23,7 @@ function deleteRa(email, goto) {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.1",
 			action:"delete_ra",
 			email:email,
 		},

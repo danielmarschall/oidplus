@@ -41,6 +41,6 @@ function rehash_admin_pwd() {
 	if (error != "") {
 		document.getElementById('config').innerHTML = error;
 	} else {
-		document.getElementById('config').innerHTML = '<b>define</b>(\'OIDPLUS_ADMIN_PASSWORD\',   \'' + hexToBase64(sha3_512(document.getElementById('admin_password').value)) + '\'); // base64 encoded SHA3-512 hash<br>';
+		document.getElementById('config').innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + hexToBase64(sha3_512(document.getElementById('admin_password').value)) + '\'); // base64 encoded SHA3-512 hash<br>';
 	}
 }

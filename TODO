@@ -10,9 +10,9 @@ RECENT STUFF
 - Does the admin feature "600_log" also show all log events from all Objects and all RAs?
 - at a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
 - Test every function of OIDplus to ensure everything works after the recent changes in OOP
-- "goto" and "action" arguments should be OIDs!
-	For all plugins, these OIDs shall be children of their plugin-OID
-- action(), actionBefore(), actionAfter(): It would be better if they would get _REQUEST["action"] and all other stuff as function argument, so that they do not need to rely on Apache/HTTP
+- action(), actionBefore(), actionAfter(): It would be better if they would get _REQUEST["action"] and all other
+  stuff as function argument, so that they do not need to rely on Apache/HTTP.
+  Also, Instead of modifying $handled, we could simply throw an Exception if the action ID was not found by the plugin.
 
 NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:
@@ -123,6 +123,13 @@ REJECTED IDEAS
 - sollte es mehere admins geben?
 - record first RA and current RA => X.660 does not have this requirement
 - markers DRAFT, LEAF and FROZEN etc. => use "Protected" if you want to make it invisible
+- Giving the "goto" argument OIDs instead of names, so that there are no conflict
+  with plugin vendors (like it was done with the "plugin" argument at ajax.php)
+	Rejected due to following reasons:
+	a) The "goto" parameter should usually be human readable (especially since it is shown at the right top)...
+	   Having a ViaThinkSoft OID there might get the user confused because they could think that the
+	   page is a OID page request for that OID instead of a plugin page.
+	b) Vendors should use something like "?goto=oidplus:com.example...."
 
 IDEAS
 - when a new oid is created, should we redirect to the newly created OID, so that the user can begin entering the description etc?

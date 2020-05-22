@@ -19,6 +19,15 @@
 
 class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
+	private function ra_change_rec($id, $old_ra, $new_ra) {
+		OIDplus::db()->query("update ###objects set ra_email = ?, updated = ".OIDplus::db()->sqlDate()." where id = ? and ifnull(ra_email,'') = ?", array($new_ra, $id, $old_ra));
+
+		$res = OIDplus::db()->query("select id from ###objects where parent = ? and ifnull(ra_email,'') = ?", array($id, $old_ra));
+		while ($row = $res->fetch_array()) {
+			$this->ra_change_rec($row['id'], $old_ra, $new_ra);
+		}
+	}
+
 	public function action(&$handled) {
 
 		// Action:     Delete
@@ -118,7 +127,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						$parent_oid = $parentObj->nodeId();
 						OIDplus::logger()->log("[INFO]OID($parent_oid)", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
 					}
-					_ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mitändern
+					$this->ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mitändern
 				}
 			}
 

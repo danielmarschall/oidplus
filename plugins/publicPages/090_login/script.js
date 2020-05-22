@@ -24,6 +24,7 @@ function raLogout(email) {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.90",
 			action:"ra_logout",
 			email:email,
 		},
@@ -48,6 +49,7 @@ function raLogin(email, password) {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.90",
 			action:"ra_login",
 			email:email,
 			password:password,
@@ -84,6 +86,7 @@ function adminLogin(password) {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.90",
 			action:"admin_login",
 			password:password,
 			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
@@ -114,6 +117,7 @@ function adminLogout() {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.90",
 			action:"admin_logout",
 		},
 		error:function(jqXHR, textStatus, errorThrown) {

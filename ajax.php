@@ -24,95 +24,88 @@ OIDplus::init(false);
 header('Content-Type:application/json; charset=utf-8');
 
 try {
-	if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
-		OIDplus::db()->transaction_begin();
-	}
-	$handled = false;
+	if (!isset($_REQUEST['action'])) throw new OIDplusException("Action ID is missing");
 
-	foreach (OIDplus::getPagePlugins() as $plugin) {
+	if (isset($_REQUEST['plugin']) && ($_REQUEST['plugin'] != '')) {
+
+		// Actions handled by plugins
+
+		$plugin = OIDplus::getPluginByOid($_REQUEST['plugin']);
+		if (!$plugin) {
+			throw new OIDplusException("Plugin with OID '".$_REQUEST['plugin']."' not found");
+		}
+
+		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
+			OIDplus::db()->transaction_begin();
+		}
+
 		$plugin->actionBefore();
-	}
-
-	// Action:     (actions defined by plugins)
-	// Method:     GET / POST
-	// Parameters: ...
-	// Outputs:    ...
-	foreach (OIDplus::getPagePlugins() as $plugin) {
+		$handled = false;
 		$plugin->action($handled);
-		if ($handled) break;
-	}
-
-	// Action:     get_description
-	// Method:     GET / POST
-	// Parameters: id
-	// Outputs:    JSON
-	if (isset($_REQUEST["action"]) && ($_REQUEST['action'] == 'get_description')) {
-		// This code is the very base functionality (load content page) and therefore won't be in a plugin
-		$handled = true;
-		if (!isset($_REQUEST['id'])) throw new OIDplusException("Invalid args");
-		try {
-			$out = OIDplus::gui()::generateContentPage($_REQUEST['id']);
-		} catch(Exception $e) {
-			$out = array();
-			$out['title'] = 'Error';
-			$out['icon'] = 'img/error_big.png';
-			$out['text'] = $e->getMessage();
-		}
-		echo json_encode($out);
-	}
-
-	// === jsTree ===
-
-	// Action:     tree_search
-	// Method:     GET / POST
-	// Parameters: search
-	// Outputs:    JSON
-	if (isset($_REQUEST["action"]) && ($_REQUEST['action'] == 'tree_search')) {
-		// This code is the very base functionality (menu handling)
-		$handled = true;
-		if (!isset($_REQUEST['search'])) throw new OIDplusException("Invalid args");
-
-		$found = false;
-		foreach (OIDplus::getPagePlugins() as $plugin) {
-			$res = $plugin->tree_search($_REQUEST['search']);
-			if ($res) {
-				echo json_encode($res);
-				$found = true;
-				break;
-			}
-		}
-
-		if (!$found) {
-			echo json_encode(array());
-		}
-	}
-
-	// Action:     tree_load
-	// Method:     GET / POST
-	// Parameters: id; goto (optional)
-	// Outputs:    JSON
-	if (isset($_REQUEST["action"]) && ($_REQUEST['action'] == 'tree_load')) {
-		// This code is the very base functionality (menu handling)
-		$handled = true;
-		if (!isset($_REQUEST['id'])) throw new OIDplusException("Invalid args");
-		$json = OIDplus::menuUtils()->json_tree($_REQUEST['id'], isset($_REQUEST['goto']) ? $_REQUEST['goto'] : '');
-		echo $json;
-	}
-
-	if (!$handled) {
-		throw new OIDplusException('Invalid action ID');
-	}
-
-	foreach (OIDplus::getPagePlugins() as $plugin) {
+		if (!$handled) OIDplusException('Invalid action ID');
 		$plugin->actionAfter();
-	}
 
-	if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
-		OIDplus::db()->transaction_commit();
+		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
+			OIDplus::db()->transaction_commit();
+		}
+
+	} else {
+
+		// Actions handled by the system (base functionality like the JS tree)
+
+		if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'get_description')) {
+			// Action:     get_description
+			// Method:     GET / POST
+			// Parameters: id
+			// Outputs:    JSON
+			$handled = true;
+			if (!isset($_REQUEST['id'])) throw new OIDplusException("Invalid args");
+			try {
+				$out = OIDplus::gui()::generateContentPage($_REQUEST['id']);
+			} catch(Exception $e) {
+				$out = array();
+				$out['title'] = 'Error';
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = $e->getMessage();
+			}
+			echo json_encode($out);
+		} else if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'tree_search')) {
+			// Action:     tree_search
+			// Method:     GET / POST
+			// Parameters: search
+			// Outputs:    JSON
+			$handled = true;
+			if (!isset($_REQUEST['search'])) throw new OIDplusException("Invalid args");
+
+			$found = false;
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				$res = $plugin->tree_search($_REQUEST['search']);
+				if ($res) {
+					echo json_encode($res);
+					$found = true;
+					break;
+				}
+			}
+
+			if (!$found) {
+				echo json_encode(array());
+			}
+		} else if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'tree_load')) {
+			// Action:     tree_load
+			// Method:     GET / POST
+			// Parameters: id; goto (optional)
+			// Outputs:    JSON
+			$handled = true;
+			if (!isset($_REQUEST['id'])) throw new OIDplusException("Invalid args");
+			$json = OIDplus::menuUtils()->json_tree($_REQUEST['id'], isset($_REQUEST['goto']) ? $_REQUEST['goto'] : '');
+			echo $json;
+		} else {
+			throw new OIDplusException('Invalid action ID');
+		}
 	}
 } catch (Exception $e) {
 	try {
-		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
+		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported() && (OIDplus::db()->transaction_level() > 0)) {
 			OIDplus::db()->transaction_rollback();
 		}
 	} catch (Exception $e1) {
@@ -129,15 +122,4 @@ try {
 	}
 
 	die($out);
-}
-
-# ---
-
-function _ra_change_rec($id, $old_ra, $new_ra) {
-	OIDplus::db()->query("update ###objects set ra_email = ?, updated = ".OIDplus::db()->sqlDate()." where id = ? and ifnull(ra_email,'') = ?", array($new_ra, $id, $old_ra));
-
-	$res = OIDplus::db()->query("select id from ###objects where parent = ? and ifnull(ra_email,'') = ?", array($id, $old_ra));
-	while ($row = $res->fetch_array()) {
-		_ra_change_rec($row['id'], $old_ra, $new_ra);
-	}
 }

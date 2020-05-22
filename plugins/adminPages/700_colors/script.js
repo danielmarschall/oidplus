@@ -100,6 +100,7 @@ function crudActionColorUpdate(name) {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.700",
 			action:"color_update",
 			hue_shift:document.getElementById('hshift').value,
 			sat_shift:document.getElementById('sshift').value,

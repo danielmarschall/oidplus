@@ -20,7 +20,8 @@ function freeOIDFormOnSubmit() {
 		url: "ajax.php",
 		type: "POST",
 		data: {
-			action: "com.viathinksoft.freeoid.request_freeoid",
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.200",
+			action: "request_freeoid",
 			email: $("#email").val(),
 			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
 		},
@@ -50,7 +51,8 @@ function activateFreeOIDFormOnSubmit() {
 		url: "ajax.php",
 		type: "POST",
 		data: {
-			action: "com.viathinksoft.freeoid.activate_freeoid",
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.200",
+			action: "activate_freeoid",
 			email: $("#email").val(),
 			ra_name: $("#ra_name").val(),
 			title: $("#title").val(),

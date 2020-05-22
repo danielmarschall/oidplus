@@ -30,6 +30,7 @@ function deleteAttachment(id, file) {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.95",
 			action:"deleteAttachment",
 			id:id,
 			filename:file,
@@ -55,6 +56,7 @@ function uploadAttachment(id, file) {
 
 	var form_data = new FormData();
 	form_data.append('userfile', file_data);
+	form_data.append('plugin', "1.3.6.1.4.1.37476.2.5.2.4.1.95");
 	form_data.append('action', "uploadAttachment");
 	form_data.append('id', id);
 

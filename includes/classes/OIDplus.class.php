@@ -438,6 +438,30 @@ class OIDplus {
 
 	# --- Plugin handling functions
 
+	public static function getAllPlugins()/*: array*/ {
+		$res = array();
+		$res = array_merge($res, self::$pagePlugins);
+		$res = array_merge($res, self::$authPlugins);
+		$res = array_merge($res, self::$loggerPlugins);
+		$res = array_merge($res, self::$objectTypePlugins);
+		$res = array_merge($res, self::$dbPlugins);
+		$res = array_merge($res, self::$sqlSlangPlugins);
+		return $res;
+	}
+
+	public static function getPluginByOid($oid, $pluginFolderMask='*')/*: ?OIDplusPlugin*/ {
+		$manifests = self::getAllPluginManifests($pluginFolderMask, true);
+		$plugins = self::getAllPlugins();
+		foreach ($manifests as $manifest) {
+			if (oid_dotnotation_equal($manifest->getOid(), $oid)) {
+				foreach ($plugins as $plugin) {
+					if (get_class($plugin) == $manifest->getPhpMainClass()) return $plugin;
+				}
+			}
+		}
+		return null;
+	}
+
 	public static function getPluginManifest($class_name)/*: ?OIDplusPluginManifest*/ {
 		$reflector = new ReflectionClass($class_name);
 		$ini = dirname($reflector->getFileName()).'/manifest.xml';
@@ -473,6 +497,7 @@ class OIDplus {
 	public static function registerAllPlugins($pluginDirName, $expectedPluginClass, $registerCallback): array {
 		$out = array();
 		$ary = self::getAllPluginManifests($pluginDirName, false);
+		$known_plugin_oids = array();
 		foreach ($ary as $plugintype_folder => $bry) {
 			foreach ($bry as $pluginname_folder => $cry) {
 				$class_name = $cry->getPhpMainClass();
@@ -493,6 +518,19 @@ class OIDplus {
 				}
 				if (($cry->getTypeClass()!=$expectedPluginClass) && (!is_subclass_of($cry->getTypeClass(),$expectedPluginClass))) {
 					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Class declared in manifest is '".$cry->getTypeClasS()."' does not fit expected class for this plugin type '$expectedPluginClass'");
+				}
+
+				$plugin_oid = $cry->getOid();
+				if (!$plugin_oid) {
+					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Does not have an OID");
+				}
+				if (!oid_valid_dotnotation($plugin_oid, false, false, 2)) {
+					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin OID '$plugin_oid' is invalid (needs to be valid dot-notation)");
+				}
+				if (isset($known_plugin_oids[$plugin_oid])) {
+					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: The OID '$plugin_oid' is already used by the plugin '".$known_plugin_oids[$plugin_oid]."'");
+				} else {
+					$known_plugin_oids[$plugin_oid] = $plugintype_folder.'/'.$pluginname_folder;
 				}
 
 				$out[] = $class_name;

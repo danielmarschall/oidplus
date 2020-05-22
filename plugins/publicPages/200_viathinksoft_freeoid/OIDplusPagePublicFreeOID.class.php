@@ -26,7 +26,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	public function action(&$handled) {
 		if (empty(self::getFreeRootOid(false))) return;
 
-		if (isset($_POST["action"]) && ($_POST["action"] == "com.viathinksoft.freeoid.request_freeoid")) {
+		if (isset($_POST["action"]) && ($_POST["action"] == "request_freeoid")) {
 			$handled = true;
 			$email = $_POST['email'];
 
@@ -65,7 +65,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			echo json_encode(array("status" => 0));
 		}
 
-		if (isset($_POST["action"]) && ($_POST["action"] == "com.viathinksoft.freeoid.activate_freeoid")) {
+		if (isset($_POST["action"]) && ($_POST["action"] == "activate_freeoid")) {
 			$handled = true;
 
 			$password1 = $_POST['password1'];

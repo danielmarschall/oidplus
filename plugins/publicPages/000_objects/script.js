@@ -20,6 +20,7 @@ function crudActionInsert(parent) {
 		url:"ajax.php",
 		method:"POST",
 		data:{
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
 			action:"Insert",
 			id:document.getElementById('id').value,
 			ra_email:document.getElementById('ra_email').value,
@@ -63,6 +64,7 @@ function crudActionUpdate(id, parent) {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
 			action:"Update",
 			id:id,
 			ra_email:document.getElementById('ra_email_'+id).value,
@@ -107,6 +109,7 @@ function crudActionDelete(id, parent) {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
 			action:"Delete",
 			id:id,
 			parent:parent
@@ -132,6 +135,7 @@ function updateDesc() {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
 			action:"Update2",
 			id:current_node,
 			title:(document.getElementById('titleedit') ? document.getElementById('titleedit').value : null),
