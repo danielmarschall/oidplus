@@ -144,7 +144,11 @@ if ($continue) {
 				$out[] = 'long-arc: ' . $row2->name;
 			}
 		}
-
+		foreach (OIDplus::getPagePlugins() as $plugin) {
+			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
+				$plugin->whoisObjectAttributes($row->id, $out);
+			}
+		}
 		$out[] = 'created: ' . $row->created;
 		$out[] = 'updated: ' . $row->updated;
 
@@ -182,10 +186,20 @@ if ($continue) {
 				$out[] = 'ra-mobile: ' . $row2->mobile;
 				$out[] = 'ra-fax: ' . $row2->fax;
 			}
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
+					$plugin->whoisRaAttributes($row->ra_email, $out);
+				}
+			}
 			$out[] = 'ra-created: ' . $row2->registered;
 			$out[] = 'ra-updated: ' . $row2->updated;
 		} else {
 			$out[] = 'ra: '.$row->ra_email;
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
+					$plugin->whoisRaAttributes($row->ra_email, $out);
+				}
+			}
 			$out[] = "ra-status: Information unavailable";
 		}
 	}
@@ -217,7 +231,7 @@ if ($format == 'txt') {
 
 		$key = trim($ary[0]);
 
-		$value = trim($ary[1]);
+		$value = isset($ary[1]) ? trim($ary[1]) : '';
 		$value = wordwrap($value, OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80) - $longest_key - strlen(':') - OIDplus::config()->getValue('webwhois_output_format_spacer', 2));
 		$value = str_replace("\n", "\n$key:".str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)), $value);
 

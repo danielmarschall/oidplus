@@ -98,9 +98,9 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			OIDplus::logger()->log("[OK]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Deleted attachment '".basename($uploadfile)."' from object '$id'");
 
 			echo json_encode(array("status" => 0));
-			
+
 		} else if ($actionID == 'uploadAttachment') {
-		
+
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException("Invalid object '$id'");
@@ -197,6 +197,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function implementsFeature($id) {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.2') return true; // modifyContent
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.3') return true; // beforeObject*, afterObject*
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.4') return true; // whois*Attributes
 		return false;
 	}
 
@@ -292,4 +293,16 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function tree_search($request) {
 		return false;
 	}
+
+	public function whoisObjectAttributes($id, &$out) {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.4
+
+		$files = glob(self::getUploadDir($id).'/'.'*');
+		foreach ($files as $file) {
+			$out[] = 'attachment-name: '.basename($file);
+			$out[] = 'attachment-url: '.OIDplus::getSystemUrl().OIDplus::webpath(__DIR__).'download.php?id='.urlencode($id).'&filename='.urlencode(basename($file));
+		}
+
+	}
+	public function whoisRaAttributes($email, &$out) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.4
 }
