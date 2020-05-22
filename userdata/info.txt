@@ -31,7 +31,7 @@ Contents:
 	Example for folder names:
 		oid_2_999: for a normal OID
 		oid_1_3_6_1_4_1_37476_30_9_<sysid>_<smallhash>: for a non-OID object
-	If your system does not have a public key / system ID (e.g. because of missing OpenSSL, the names are
+	If your system does not have a public key / system ID (e.g. because of missing OpenSSL), the names are
 		oid_2_999: for a normal OID
 		oid_2_25_<...>: for a GUID
 		<md5hash>: for other non-OID objects

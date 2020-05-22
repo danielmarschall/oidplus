@@ -3,7 +3,7 @@
 /*
  * OID-Utilities for PHP
  * Copyright 2011-2019 Daniel Marschall, ViaThinkSoft
- * Version 2019-03-25
+ * Version 2020-05-22
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -519,6 +519,8 @@ function iri_arc_valid($arc, $allow_numeric=true) {
 
 	// Question: Should we strip RTL/LTR characters?
 
+	if (mb_substr($arc, 0, 1) == '-')  return false; // see Rec. ITU-T X.660, clause 7.5.4
+	if (mb_substr($arc,-1, 1) == '-')  return false; // see Rec. ITU-T X.660, clause 7.5.4
 	if (mb_substr($arc, 2, 2) == '--') return false; // see Rec. ITU-T X.660, clause 7.5.4
 
 	$array = array();
@@ -660,7 +662,11 @@ function iri_add_longarcs($iri) {
  **/
 # TODO: umbenennen in asn1_alpha_id_valid
 function oid_id_is_valid($id) {
-	return preg_match('/^([a-z][a-zA-Z0-9-]*)$/', $id);
+	// see Rec. ITU-T X.660 | ISO/IEC 9834-1, clause 7.7
+	// and Rec. ITU-T X.680 | ISO/IEC 8824-1, clause 12.3
+	if (substr($id,-1,1) == '-') return false;
+	if (strstr($id,'--')) return false;
+	return preg_match('/^([a-z][a-zA-Z0-9-]*)$/', $id) != 0;
 }
 
 /**
