@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
-	public function action(&$handled) {
-		// Nothing
-	}
-
 	public function init($html=true) {
 		OIDplus::config()->prepareConfigKey('whois_auth_token',                       'OID-over-WHOIS authentication token to display confidential data', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			$test_value = preg_replace('@[0-9a-zA-Z]*@', '', $value);

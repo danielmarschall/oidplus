@@ -29,6 +29,12 @@ abstract class OIDplusPlugin {
 		return false;
 	}
 
+	public function getManifest() {
+
+		return OIDplus::getPluginManifest(get_called_class());
+
+	}
+
 	public function init($html=true) {}
 
 }

@@ -19,9 +19,6 @@
 
 class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 
-	public function action(&$handled) {
-	}
-
 	public function init($html=true) {
 	}
 

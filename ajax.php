@@ -38,12 +38,10 @@ try {
 		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
 			OIDplus::db()->transaction_begin();
 		}
-
-		$plugin->actionBefore();
-		$handled = false;
-		$plugin->action($handled);
-		if (!$handled) OIDplusException('Invalid action ID');
-		$plugin->actionAfter();
+		
+		$params = $_REQUEST;
+		unset($params['action']);
+		$plugin->action($_REQUEST['action'], $params);
 
 		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
 			OIDplus::db()->transaction_commit();

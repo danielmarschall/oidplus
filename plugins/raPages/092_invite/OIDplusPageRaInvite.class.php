@@ -19,10 +19,9 @@
 
 class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
-	public function action(&$handled) {
-		if (isset($_POST["action"]) && ($_POST["action"] == "invite_ra")) {
-			$handled = true;
-			$email = $_POST['email'];
+	public function action($actionID, $params) {
+		if ($actionID == 'invite_ra') {
+			$email = $params['email'];
 
 			if (!OIDplus::mailUtils()->validMailAddress($email)) {
 				throw new OIDplusException('Invalid email address');
@@ -30,7 +29,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
-				$response=$_POST["captcha"];
+				$response=$params["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
@@ -51,16 +50,14 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Invitation', $message, OIDplus::config()->getValue('global_cc'));
 
 			echo json_encode(array("status" => 0));
-		}
 
-		if (isset($_POST["action"]) && ($_POST["action"] == "activate_ra")) {
-			$handled = true;
+		} else if ($actionID == 'activate_ra') {
 
-			$password1 = $_POST['password1'];
-			$password2 = $_POST['password2'];
-			$email = $_POST['email'];
-			$auth = $_POST['auth'];
-			$timestamp = $_POST['timestamp'];
+			$password1 = $params['password1'];
+			$password2 = $params['password2'];
+			$email = $params['email'];
+			$auth = $params['auth'];
+			$timestamp = $params['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
 				throw new OIDplusException('Invalid auth key');
@@ -84,6 +81,8 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$ra->register_ra($password1);
 
 			echo json_encode(array("status" => 0));
+		} else {
+			throw new OIDplusException("Unknown action ID");
 		}
 	}
 

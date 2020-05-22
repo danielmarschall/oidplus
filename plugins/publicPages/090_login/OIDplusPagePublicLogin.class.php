@@ -19,18 +19,16 @@
 
 class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
-	public function action(&$handled) {
+	public function action($actionID, $params) {
 		// === RA LOGIN/LOGOUT ===
 
-		if (isset($_POST["action"]) && ($_POST["action"] == "ra_login")) {
-			$handled = true;
-
-			$email = $_POST['email'];
+		if ($actionID == 'ra_login') {
+			$email = $params['email'];
 			$ra = new OIDplusRA($email);
 
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
-				$response=$_POST["captcha"];
+				$response=$params["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
@@ -38,7 +36,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				}
 			}
 
-			if ($ra->checkPassword($_POST['password'])) {
+			if ($ra->checkPassword($params['password'])) {
 				OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged in");
 				OIDplus::authUtils()::raLogin($email);
 
@@ -55,11 +53,10 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				}
 				throw new OIDplusException('Wrong password or user not registered');
 			}
-		}
-		if (isset($_POST["action"]) && ($_POST["action"] == "ra_logout")) {
-			$handled = true;
 
-			$email = $_POST['email'];
+		} else if ($actionID == 'ra_logout') {
+
+			$email = $params['email'];
 
 			OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged out");
 			OIDplus::authUtils()::raLogout($email);
@@ -68,12 +65,10 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 		// === ADMIN LOGIN/LOGOUT ===
 
-		if (isset($_POST["action"]) && ($_POST["action"] == "admin_login")) {
-			$handled = true;
-
+		else if ($actionID == 'admin_login') {
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
-				$response=$_POST["captcha"];
+				$response=$params["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
@@ -81,7 +76,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				}
 			}
 
-			if (OIDplus::authUtils()::adminCheckPassword($_POST['password'])) {
+			if (OIDplus::authUtils()::adminCheckPassword($params['password'])) {
 				OIDplus::logger()->log("[OK]A!", "Admin logged in");
 				OIDplus::authUtils()::adminLogin();
 				echo json_encode(array("status" => 0));
@@ -92,11 +87,13 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				throw new OIDplusException('Wrong password');
 			}
 		}
-		if (isset($_POST["action"]) && ($_POST["action"] == "admin_logout")) {
-			$handled = true;
+		else if ($actionID == 'admin_logout') {
 			OIDplus::logger()->log("[OK]A!", "Admin logged out");
 			OIDplus::authUtils()::adminLogout();
 			echo json_encode(array("status" => 0));
+		}
+		else {
+			throw new OIDplusException("Unknown action ID");
 		}
 	}
 

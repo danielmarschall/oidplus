@@ -19,10 +19,6 @@
 
 class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 
-	public function action(&$handled) {
-		// Nothing
-	}
-
 	public function init($html=true) {
 	}
 

@@ -19,16 +19,14 @@
 
 class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
-	public function action(&$handled) {
-		if (isset($_POST["action"]) && ($_POST["action"] == "config_update")) {
-			$handled = true;
-
+	public function action($actionID, $params) {
+		if ($actionID == 'config_update') {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				throw new OIDplusException('You need to log in as administrator.');
 			}
 
-			$name = $_POST['name'];
-			$value = $_POST['value'];
+			$name = $params['name'];
+			$value = $params['value'];
 
 			$res = OIDplus::db()->query("select protected, visible from ###config where name = ?", array($name));
 			if ($res->num_rows() == 0) {
@@ -43,6 +41,8 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 			OIDplus::logger()->log("[OK]A?", "Changed system config setting '$name' to '$value'");
 
 			echo json_encode(array("status" => 0));
+		} else {
+			throw new OIDplusException("Unknown action ID");
 		}
 	}
 

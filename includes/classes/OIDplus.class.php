@@ -449,14 +449,11 @@ class OIDplus {
 		return $res;
 	}
 
-	public static function getPluginByOid($oid, $pluginFolderMask='*')/*: ?OIDplusPlugin*/ {
-		$manifests = self::getAllPluginManifests($pluginFolderMask, true);
+	public static function getPluginByOid($oid)/*: ?OIDplusPlugin*/ {
 		$plugins = self::getAllPlugins();
-		foreach ($manifests as $manifest) {
-			if (oid_dotnotation_equal($manifest->getOid(), $oid)) {
-				foreach ($plugins as $plugin) {
-					if (get_class($plugin) == $manifest->getPhpMainClass()) return $plugin;
-				}
+		foreach ($plugins as $plugin) {
+			if (oid_dotnotation_equal($plugin->getManifest()->getOid(), $oid)) {
+				return $plugin;
 			}
 		}
 		return null;

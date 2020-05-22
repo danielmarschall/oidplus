@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
-	public function action(&$handled) {
-		// Nothing
-	}
-
 	public function init($html=true) {
 		OIDplus::config()->prepareConfigKey('resource_plugin_autoopen_level', 'Resource plugin: How many levels should be open in the treeview when OIDplus is loaded?', 1, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {

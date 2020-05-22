@@ -28,16 +28,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function action(&$handled) {
+	public function action($actionID, $params) {
 
 		// Action:     Delete
 		// Method:     POST
 		// Parameters: id
 		// Outputs:    Text
-		if (isset($_POST["action"]) && ($_POST["action"] == "Delete")) {
-			$handled = true;
-
-			$id = $_POST['id'];
+		if ($actionID == 'Delete') {
+			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException("DELETE action failed because object '$id' cannot be parsed!");
 
@@ -47,6 +45,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// Check if permitted
 			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentication error. Please log in as the superior RA to delete this OID.');
+
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
+					$plugin->beforeObjectDelete($id);
+				}
+			}
 
 			OIDplus::logger()->log("[WARN]OID($id)+[?WARN/!OK]SUPOIDRA($id)?/[?INFO/!OK]A?", "Object '$id' (recursively) deleted");
 			OIDplus::logger()->log("[CRIT]OIDRA($id)!", "Lost ownership of object '$id' because it was deleted");
@@ -77,6 +81,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			OIDplus::db()->query("delete from ###asn1id where well_known = '0' and oid not in (select id from ###objects where id like 'oid:%')");
 			OIDplus::db()->query("delete from ###iri    where well_known = '0' and oid not in (select id from ###objects where id like 'oid:%')");
 
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
+					$plugin->afterObjectDelete($id);
+				}
+			}
+
 			echo json_encode(array("status" => 0));
 		}
 
@@ -84,10 +94,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		// Method:     POST
 		// Parameters: id, ra_email, comment, iris, asn1ids, confidential
 		// Outputs:    Text
-		if (isset($_POST["action"]) && ($_POST["action"] == "Update")) {
-			$handled = true;
-
-			$id = $_POST['id'];
+		else if ($actionID == 'Update') {
+			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException("UPDATE action failed because object '$id' cannot be parsed!");
 
@@ -98,19 +106,25 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Check if permitted
 			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentication error. Please log in as the superior RA to update this OID.');
 
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
+					$plugin->beforeObjectUpdateSuperior($id, $params);
+				}
+			}
+
 			// Validate RA email address
-			$new_ra = $_POST['ra_email'];
+			$new_ra = $params['ra_email'];
 			if (!empty($new_ra) && !OIDplus::mailUtils()->validMailAddress($new_ra)) {
 				throw new OIDplusException('Invalid RA email address');
 			}
 
 			// First, do a simulation for ASN.1 IDs and IRIs to check if there are any problems (then an Exception will be thrown)
 			if ($obj::ns() == 'oid') {
-				$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
+				$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
 				$ids = array_map('trim',$ids);
 				$obj->replaceIris($ids, true);
 
-				$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
+				$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
 				$ids = array_map('trim',$ids);
 				$obj->replaceAsn1Ids($ids, true);
 			}
@@ -140,11 +154,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// Replace ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
-				$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
+				$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
 				$ids = array_map('trim',$ids);
 				$obj->replaceIris($ids, false);
 
-				$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
+				$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
 				$ids = array_map('trim',$ids);
 				$obj->replaceAsn1Ids($ids, false);
 
@@ -152,8 +166,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				// and log it to OID($id), OID($parent), ... (see above)
 			}
 
-			$confidential = $_POST['confidential'] == 'true';
-			$comment = $_POST['comment'];
+			$confidential = $params['confidential'] == 'true';
+			$comment = $params['comment'];
 			OIDplus::db()->query("UPDATE ###objects SET confidential = ?, comment = ?, updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($confidential, $comment, $id));
 
 			$status = 0;
@@ -163,6 +177,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				if ($res->num_rows() == 0) $status = class_exists('OIDplusPageRaInvite') && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 			}
 
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
+					$plugin->afterObjectUpdateSuperior($id, $params);
+				}
+			}
+
 			echo json_encode(array("status" => $status));
 		}
 
@@ -170,10 +190,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		// Method:     POST
 		// Parameters: id, title, description
 		// Outputs:    Text
-		if (isset($_POST["action"]) && ($_POST["action"] == "Update2")) {
-			$handled = true;
-
-			$id = $_POST['id'];
+		else if ($actionID == 'Update2') {
+			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException("UPDATE2 action failed because object '$id' cannot be parsed!");
 
@@ -184,9 +202,21 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Check if allowed
 			if (!$obj->userHasWriteRights()) throw new OIDplusException('Authentication error. Please log in as the RA to update this OID.');
 
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
+					$plugin->beforeObjectUpdateSelf($id, $params);
+				}
+			}
+
 			OIDplus::logger()->log("[INFO]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Title/Description of object '$id' updated");
 
-			OIDplus::db()->query("UPDATE ###objects SET title = ?, description = ?, updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($_POST['title'], $_POST['description'], $id));
+			OIDplus::db()->query("UPDATE ###objects SET title = ?, description = ?, updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($params['title'], $params['description'], $id));
+
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
+					$plugin->afterObjectUpdateSelf($id, $params);
+				}
+			}
 
 			echo json_encode(array("status" => 0));
 		}
@@ -195,14 +225,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		// Method:     POST
 		// Parameters: parent, id, ra_email, confidential, iris, asn1ids
 		// Outputs:    Text
-		if (isset($_POST["action"]) && ($_POST["action"] == "Insert")) {
-			$handled = true;
-
+		else if ($actionID == 'Insert') {
 			// Validated are: ID, ra email, asn1 ids, iri ids
 
 			// Check if you have write rights on the parent (to create a new object)
-			$objParent = OIDplusObject::parse($_POST['parent']);
-			if ($objParent === null) throw new OIDplusException("INSERT action failed because parent object '".$_POST['parent']."' cannot be parsed!");
+			$objParent = OIDplusObject::parse($params['parent']);
+			if ($objParent === null) throw new OIDplusException("INSERT action failed because parent object '".$params['parent']."' cannot be parsed!");
 
 			if (!$objParent::root() && (OIDplus::db()->query("select id from ###objects where id = ?", array($objParent->nodeId()))->num_rows() == 0)) {
 				throw new OIDplusException("Parent object '".($objParent->nodeId())."' does not exist");
@@ -211,11 +239,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (!$objParent->userHasWriteRights()) throw new OIDplusException('Authentication error. Please log in as the correct RA to insert an OID at this arc.');
 
 			// Check if the ID is valid
-			if ($_POST['id'] == '') throw new OIDplusException('ID may not be empty');
+			if ($params['id'] == '') throw new OIDplusException('ID may not be empty');
 
 			// Determine absolute OID name
 			// Note: At addString() and parse(), the syntax of the ID will be checked
-			$id = $objParent->addString($_POST['id']);
+			$id = $objParent->addString($params['id']);
 
 			// Check, if the OID exists
 			$test = OIDplus::db()->query("select id from ###objects where id = ?", array($id));
@@ -226,20 +254,26 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$obj = OIDplusObject::parse($id);
 	                if ($obj === null) throw new OIDplusException("INSERT action failed because object '$id' cannot be parsed!");
 
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
+					$plugin->beforeObjectInsert($id, $params);
+				}
+			}
+
 			// First simulate if there are any problems of ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
-				$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
+				$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
 				$ids = array_map('trim',$ids);
 				$obj->replaceAsn1Ids($ids, true);
 
-				$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
+				$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
 				$ids = array_map('trim',$ids);
 				$obj->replaceIris($ids, true);
 			}
 
 			// Apply superior RA change
-			$parent = $_POST['parent'];
-			$ra_email = $_POST['ra_email'];
+			$parent = $params['parent'];
+			$ra_email = $params['ra_email'];
 			if (!empty($ra_email) && !OIDplus::mailUtils()->validMailAddress($ra_email)) {
 				throw new OIDplusException('Invalid RA email address');
 			}
@@ -249,8 +283,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				OIDplus::logger()->log("[INFO]RA($ra_email)!", "Gained ownership of newly created object '$id'");
 			}
 
-			$confidential = $_POST['confidential'] == 'true';
-			$comment = $_POST['comment'];
+			$confidential = $params['confidential'] == 'true';
+			$comment = $params['comment'];
 			$title = '';
 			$description = '';
 
@@ -262,11 +296,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// Set ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
-				$ids = ($_POST['iris'] == '') ? array() : explode(',',$_POST['iris']);
+				$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
 				$ids = array_map('trim',$ids);
 				$obj->replaceIris($ids, false);
 
-				$ids = ($_POST['asn1ids'] == '') ? array() : explode(',',$_POST['asn1ids']);
+				$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
 				$ids = array_map('trim',$ids);
 				$obj->replaceAsn1Ids($ids, false);
 			}
@@ -279,9 +313,16 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				if ($res->num_rows() == 0) $status = class_exists('OIDplusPageRaInvite') && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 			}
 
-			echo json_encode(array("status" => $status));
-		}
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
+					$plugin->afterObjectInsert($id, $params);
+				}
+			}
 
+			echo json_encode(array("status" => $status));
+		} else {
+			throw new OIDplusException("Unknown action ID");
+		}
 	}
 
 	public function init($html=true) {
@@ -291,7 +332,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		if ($id === 'oidplus:system') {
 			$handled = true;
 
-			$out['title'] = OIDplus::config()->getValue('system_title'); // 'Object Database of ' . $_SERVER['SERVER_NAME'];
+			$out['title'] = OIDplus::config()->getValue('system_title');
 			$out['icon'] = OIDplus::webpath(__DIR__).'system_big.png';
 
 			if (file_exists(OIDplus::basePath() . '/userdata/welcome/welcome.html')) {

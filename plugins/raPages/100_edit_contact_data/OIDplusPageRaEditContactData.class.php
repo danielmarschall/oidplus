@@ -19,11 +19,9 @@
 
 class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 
-	public function action(&$handled) {
-		if (isset($_POST["action"]) && ($_POST["action"] == "change_ra_data")) {
-			$handled = true;
-
-			$email = $_POST['email'];
+	public function action($actionID, $params) {
+		if ($actionID == 'change_ra_data') {
+			$email = $params['email'];
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				throw new OIDplusException('Authentication error. Please log in as the RA to update its data.');
@@ -52,22 +50,24 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 				"fax = ? ".
 				"WHERE email = ?",
 				array(
-					$_POST['ra_name'],
-					$_POST['organization'],
-					$_POST['office'],
-					$_POST['personal_name'],
-					$_POST['privacy'],
-					$_POST['street'],
-					$_POST['zip_town'],
-					$_POST['country'],
-					$_POST['phone'],
-					$_POST['mobile'],
-					$_POST['fax'],
+					$params['ra_name'],
+					$params['organization'],
+					$params['office'],
+					$params['personal_name'],
+					$params['privacy'],
+					$params['street'],
+					$params['zip_town'],
+					$params['country'],
+					$params['phone'],
+					$params['mobile'],
+					$params['fax'],
 					$email
 				)
 			);
 
 			echo json_encode(array("status" => 0));
+		} else {
+			throw new OIDplusException("Unknown action ID");
 		}
 	}
 

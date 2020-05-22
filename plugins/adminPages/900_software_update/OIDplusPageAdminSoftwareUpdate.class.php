@@ -19,9 +19,6 @@
 
 class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
-	public function action(&$handled) {
-	}
-
 	public function init($html=true) {
 	}
 

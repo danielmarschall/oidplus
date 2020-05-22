@@ -19,11 +19,9 @@
 
 class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
-	public function action(&$handled) {
-		if (isset($_POST["action"]) && ($_POST["action"] == "forgot_password")) {
-			$handled = true;
-
-			$email = $_POST['email'];
+	public function action($actionID, $params) {
+		if ($actionID == 'forgot_password') {
+			$email = $params['email'];
 
 			if (!OIDplus::mailUtils()->validMailAddress($email)) {
 				throw new OIDplusException('Invalid email address');
@@ -31,7 +29,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
-				$response=$_POST["captcha"];
+				$response=$params["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
@@ -44,22 +42,20 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$timestamp = time();
 			$activate_url = OIDplus::getSystemUrl() . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('reset_password;'.$email.';'.$timestamp));
 
-			$message = $this->getForgotPasswordText($_POST['email']);
+			$message = $this->getForgotPasswordText($params['email']);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 
 			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Password reset request', $message, OIDplus::config()->getValue('global_cc'));
 
 			echo json_encode(array("status" => 0));
-		}
 
-		if (isset($_POST["action"]) && ($_POST["action"] == "reset_password")) {
-			$handled = true;
+		} else if ($actionID == 'reset_password') {
 
-			$password1 = $_POST['password1'];
-			$password2 = $_POST['password2'];
-			$email = $_POST['email'];
-			$auth = $_POST['auth'];
-			$timestamp = $_POST['timestamp'];
+			$password1 = $params['password1'];
+			$password2 = $params['password2'];
+			$email = $params['email'];
+			$auth = $params['auth'];
+			$timestamp = $params['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
 				throw new OIDplusException('Invalid auth key');
@@ -83,6 +79,8 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$ra->change_password($password1);
 
 			echo json_encode(array("status" => 0));
+		} else {
+			throw new OIDplusException("Unknown action ID");
 		}
 	}
 

@@ -18,9 +18,7 @@
  */
 
 abstract class OIDplusPagePlugin extends OIDplusPlugin {
-	public function actionBefore() {}
-	public function action(&$handled) {}
-	public function actionAfter() {}
+	public function action($actionID, $params) {}
 	public function gui($id, &$out, &$handled) {}
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {}
 	public function tree_search($request) {}

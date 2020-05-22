@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 
-	public function action(&$handled) {
-		// Nothing
-	}
-
 	public function init($html=true) {
 		OIDplus::config()->prepareConfigKey('search_min_term_length', 'Minimum length of a search term', '3', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {

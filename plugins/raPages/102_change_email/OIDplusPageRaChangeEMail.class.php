@@ -19,16 +19,14 @@
 
 class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
-	public function action(&$handled) {
-		if (isset($_POST["action"]) && ($_POST["action"] == "change_ra_email")) {
-			$handled = true;
-
+	public function action($actionID, $params) {
+		if ($actionID == 'change_ra_email') {
 			if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				throw new OIDplusException('This functionality has been disabled by the administrator.');
 			}
 
-			$old_email = $_POST['old_email'];
-			$new_email = $_POST['new_email'];
+			$old_email = $params['old_email'];
+			$new_email = $params['new_email'];
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($old_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				throw new OIDplusException('Authentication error. Please log in as the RA to update its email address.');
@@ -83,19 +81,17 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			}
 		}
 
-		if (isset($_POST["action"]) && ($_POST["action"] == "activate_new_ra_email")) {
-			$handled = true;
-
+		else if ($actionID == 'activate_new_ra_email') {
 			if (!OIDplus::config()->getValue('allow_ra_email_change')) {
 				throw new OIDplusException('This functionality has been disabled by the administrator.');
 			}
 
-			$old_email = $_POST['old_email'];
-			$new_email = $_POST['new_email'];
-			$password = $_POST['password'];
+			$old_email = $params['old_email'];
+			$new_email = $params['new_email'];
+			$password = $params['password'];
 
-			$auth = $_POST['auth'];
-			$timestamp = $_POST['timestamp'];
+			$auth = $params['auth'];
+			$timestamp = $params['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp, $auth)) {
 				throw new OIDplusException('Invalid auth key');
@@ -138,6 +134,8 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			OIDplus::mailUtils()->sendMail($old_email, OIDplus::config()->getValue('system_title').' - eMail address changed', $message);
 
 			echo json_encode(array("status" => 0));
+		} else {
+			throw new OIDplusException("Unknown action ID");
 		}
 	}
 

@@ -20,16 +20,14 @@
 // TODO: should this be a different plugin type? A page without gui is weird!
 class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 
-	public function action(&$handled) {
+	public function action($actionID, $params) {
 
 		// Action:     delete_ra
 		// Method:     POST
 		// Parameters: email
 		// Outputs:    Text
-		if (isset($_POST["action"]) && ($_POST["action"] == "delete_ra")) {
-			$handled = true;
-
-			$email = $_POST['email'];
+		if ($actionID == 'delete_ra') {
+			$email = $params['email'];
 
 			$ra_logged_in = OIDplus::authUtils()->isRaLoggedIn($email);
 
@@ -49,6 +47,8 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 			OIDplus::logger()->log("[?WARN/!OK]RA($email)!/[?INFO/!OK]A?", "RA '$email' deleted");
 
 			echo json_encode(array("status" => 0));
+		} else {
+			throw new OIDplusException("Unknown action ID");
 		}
 
 	}

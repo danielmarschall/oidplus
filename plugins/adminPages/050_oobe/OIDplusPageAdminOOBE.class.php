@@ -19,10 +19,6 @@
 
 class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 
-	public function action(&$handled) {
-		// Nothing
-	}
-
 	public function gui($id, &$out, &$handled) {
 		// Nothing
 	}

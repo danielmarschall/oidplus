@@ -58,34 +58,10 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		return OIDplus::config()->getValue('attachments_allow_ra_upload', 0);
 	}
 
-	public function actionAfter() {
-		if (isset($_POST["action"]) && ($_POST["action"] == "Delete")) {
-			$id = $_POST['id'];
+	public function action($actionID, $params) {
 
-			// Check if permitted
-			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException("DELETE action failed because object '$id' cannot be parsed!");
-			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentication error. Please log in as the superior RA to delete this OID.');
-
-			// Delete the attachment folder including all files in it (note: Subfolders are not possible)
-			$uploaddir = self::getUploadDir($id);
-			if ($uploaddir != '') {
-				$ary = glob($uploaddir . '/' . '*');
-				foreach ($ary as $a) @unlink($a);
-				@rmdir($uploaddir);
-				if (is_dir($uploaddir)) {
-					OIDplus::logger()->log("[WARN]OID($id)+[WARN]A!", "Attachment directory '$uploaddir' could not be deleted during the deletion of the OID");
-				}
-			}
-		}
-	}
-
-	public function action(&$handled) {
-
-		if ($_REQUEST['action'] == 'deleteAttachment') {
-			$handled = true;
-
-			$id = $_POST['id'];
+		if ($actionID == 'deleteAttachment') {
+			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException("Invalid object '$id'");
 			if (!$obj->userHasWriteRights()) throw new OIDplusException("Authentication error. Please log in as the RA of '$id' to upload an attachment.");
@@ -94,7 +70,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				throw new OIDplusException("The administrator has disabled deleting attachments by RAs.");
 			}
 
-			$req_filename = $_REQUEST['filename'];
+			$req_filename = $params['filename'];
 			if (strpos($req_filename, '/') !== false) throw new OIDplusException("Illegal file name");
 			if (strpos($req_filename, '\\') !== false) throw new OIDplusException("Illegal file name");
 			if (strpos($req_filename, '..') !== false) throw new OIDplusException("Illegal file name");
@@ -122,12 +98,10 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			OIDplus::logger()->log("[OK]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Deleted attachment '".basename($uploadfile)."' from object '$id'");
 
 			echo json_encode(array("status" => 0));
-		}
-
-		if ($_REQUEST['action'] == 'uploadAttachment') {
-			$handled = true;
-
-			$id = $_POST['id'];
+			
+		} else if ($actionID == 'uploadAttachment') {
+		
+			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException("Invalid object '$id'");
 			if (!$obj->userHasWriteRights()) throw new OIDplusException("Authentication error. Please log in as the RA of '$id' to upload an attachment.");
@@ -182,6 +156,8 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			OIDplus::logger()->log("[OK]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Uploaded attachment '".basename($uploadfile)."' to object '$id'");
 
 			echo json_encode(array("status" => 0));
+		} else {
+			throw new OIDplusException("Unknown action ID");
 		}
 	}
 
@@ -220,6 +196,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 	public function implementsFeature($id) {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.2') return true; // modifyContent
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.3') return true; // beforeObject*, afterObject*
 		return false;
 	}
 
@@ -290,6 +267,27 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 		if ($doshow) $text .= $output;
 	}
+
+	public function beforeObjectDelete($id) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	public function afterObjectDelete($id) {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.3
+		// Delete the attachment folder including all files in it (note: Subfolders are not possible)
+		$uploaddir = self::getUploadDir($id);
+		if ($uploaddir != '') {
+			$ary = glob($uploaddir . '/' . '*');
+			foreach ($ary as $a) @unlink($a);
+			@rmdir($uploaddir);
+			if (is_dir($uploaddir)) {
+				OIDplus::logger()->log("[WARN]OID($id)+[WARN]A!", "Attachment directory '$uploaddir' could not be deleted during the deletion of the OID");
+			}
+		}
+	}
+	public function beforeObjectUpdateSuperior($id, &$params) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	public function afterObjectUpdateSuperior($id, &$params) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	public function beforeObjectUpdateSelf($id, &$params) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	public function afterObjectUpdateSelf($id, &$params) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	public function beforeObjectInsert($id, &$params) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	public function afterObjectInsert($id, &$params) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
 
 	public function tree_search($request) {
 		return false;

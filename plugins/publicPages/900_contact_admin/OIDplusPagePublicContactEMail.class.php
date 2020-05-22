@@ -19,10 +19,6 @@
 
 class OIDplusPagePublicContactEMail extends OIDplusPagePluginPublic {
 
-	public function action(&$handled) {
-		// Nothing
-	}
-
 	public function init($html=true) {
 		// Nothing
 	}

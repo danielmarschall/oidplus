@@ -19,17 +19,15 @@
 
 class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 
-	public function action(&$handled) {
-		if (isset($_POST["action"]) && ($_POST["action"] == "create_ra")) {
-			$handled = true;
-
+	public function action($actionID, $params) {
+		if ($actionID == 'create_ra') {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				throw new OIDplusException("You need to log in as administrator");
 			}
 
-			$email = $_POST['email'];
-			$password1 = $_POST['password1'];
-			$password2 = $_POST['password2'];
+			$email = $params['email'];
+			$password1 = $params['password1'];
+			$password2 = $params['password2'];
 
 			if (!OIDplus::mailUtils()->validMailAddress($email)) {
 				throw new OIDplusException('eMail address is invalid.');
@@ -54,6 +52,8 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 			$ra->register_ra($password1);
 
 			echo json_encode(array("status" => 0));
+		} else {
+			throw new OIDplusException("Unknown action ID");
 		}
 	}
 

@@ -19,9 +19,6 @@
 
 class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 
-	public function action(&$handled) {
-	}
-
 	public function init($html=true) {
 	}
 

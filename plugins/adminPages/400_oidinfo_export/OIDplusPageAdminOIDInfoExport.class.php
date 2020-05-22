@@ -19,10 +19,6 @@
 
 class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
-	public function action(&$handled) {
-		// Nothing
-	}
-
 	public function init($html=true) {
 		// Nothing
 	}

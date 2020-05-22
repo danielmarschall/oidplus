@@ -19,11 +19,9 @@
 
 class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 
-	public function action(&$handled) {
-		if (isset($_POST["action"]) && ($_POST["action"] == "change_ra_password")) {
-			$handled = true;
-
-			$email = $_POST['email'];
+	public function action($actionID, $params) {
+		if ($actionID == 'change_ra_password') {
+			$email = $params['email'];
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 			if ($res->num_rows() == 0) {
@@ -35,10 +33,10 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 			}
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
-				$old_password = $_POST['old_password'];
+				$old_password = $params['old_password'];
 			}
-			$password1 = $_POST['new_password1'];
-			$password2 = $_POST['new_password2'];
+			$password1 = $params['new_password1'];
+			$password2 = $params['new_password2'];
 
 			if ($password1 !== $password2) {
 				throw new OIDplusException('Passwords are not equal');
@@ -58,6 +56,8 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 			$ra->change_password($password1);
 
 			echo json_encode(array("status" => 0));
+		} else {
+			throw new OIDplusException("Unknown action ID");
 		}
 	}
 

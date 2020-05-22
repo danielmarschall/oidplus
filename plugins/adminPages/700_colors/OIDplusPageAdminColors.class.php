@@ -19,22 +19,22 @@
 
 class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 
-	public function action(&$handled) {
-		if (isset($_POST["action"]) && ($_POST["action"] == "color_update")) {
-			$handled = true;
-
+	public function action($actionID, $params) {
+		if ($actionID == 'color_update') {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				throw new OIDplusException('You need to log in as administrator.');
 			}
 
-			OIDplus::config()->setValue('color_hue_shift', $_POST['hue_shift']);
-			OIDplus::config()->setValue('color_sat_shift', $_POST['sat_shift']);
-			OIDplus::config()->setValue('color_val_shift', $_POST['val_shift']);
-			OIDplus::config()->setValue('color_invert',    $_POST['invcolors']);
+			OIDplus::config()->setValue('color_hue_shift', $params['hue_shift']);
+			OIDplus::config()->setValue('color_sat_shift', $params['sat_shift']);
+			OIDplus::config()->setValue('color_val_shift', $params['val_shift']);
+			OIDplus::config()->setValue('color_invert',    $params['invcolors']);
 
 			OIDplus::logger()->log("[OK]A?", "Changed system color theme");
 
 			echo json_encode(array("status" => 0));
+		} else {
+			throw new OIDplusException("Unknown action ID");
 		}
 	}
 

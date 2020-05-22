@@ -19,9 +19,6 @@
 
 class OIDplusPagePublicForgotPasswordAdmin2 extends OIDplusPagePluginAdmin {
 
-	public function action(&$handled) {
-	}
-
 	public function init($html=true) {
 	}
 

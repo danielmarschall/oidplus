@@ -23,12 +23,11 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 		return ($with_ns ? 'oid:' : '').OIDplus::config()->getValue('freeoid_root_oid');
 	}
 
-	public function action(&$handled) {
-		if (empty(self::getFreeRootOid(false))) return;
+	public function action($actionID, $params) {
+		if (empty(self::getFreeRootOid(false))) throw new OIDplusException("FreeOID service not available. Please ask your administrator.");
 
-		if (isset($_POST["action"]) && ($_POST["action"] == "request_freeoid")) {
-			$handled = true;
-			$email = $_POST['email'];
+		if ($actionID == 'request_freeoid') {
+			$email = $params['email'];
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 			if ($res->num_rows() > 0) {
@@ -41,7 +40,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
-				$response=$_POST["captcha"];
+				$response=$params["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
@@ -63,21 +62,19 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID request', $message, OIDplus::config()->getValue('global_cc'));
 
 			echo json_encode(array("status" => 0));
-		}
 
-		if (isset($_POST["action"]) && ($_POST["action"] == "activate_freeoid")) {
-			$handled = true;
+		} else if ($actionID == 'activate_freeoid') {
 
-			$password1 = $_POST['password1'];
-			$password2 = $_POST['password2'];
-			$email = $_POST['email'];
+			$password1 = $params['password1'];
+			$password2 = $params['password2'];
+			$email = $params['email'];
 
-			$ra_name = $_POST['ra_name'];
-			$url = $_POST['url'];
-			$title = $_POST['title'];
+			$ra_name = $params['ra_name'];
+			$url = $params['url'];
+			$title = $params['title'];
 
-			$auth = $_POST['auth'];
-			$timestamp = $_POST['timestamp'];
+			$auth = $params['auth'];
+			$timestamp = $params['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
 				throw new OIDplusException('Invalid auth key');
@@ -158,6 +155,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID allocated', $message, OIDplus::config()->getValue('global_cc'));
 
 			echo json_encode(array("status" => 0));
+		} else {
+			throw new OIDplusException("Unknown action ID");
 		}
 	}
 
