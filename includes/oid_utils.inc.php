@@ -3,7 +3,7 @@
 /*
  * OID-Utilities for PHP
  * Copyright 2011-2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-05-22
+ * Version 2020-05-27
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -304,6 +304,16 @@ function oidSort(&$ary, $output_with_leading_dot=false) {
 	$ary = $out;
 }
 
+/**
+ * Checks if two OIDs in dot-notation are equal
+ * @author  Daniel Marschall, ViaThinkSoft
+ * @version 2020-05-27
+ * @param   $oidA (string)<br />
+ *              First OID
+ * @param   $oidB (string)<br />
+ *              Second OID
+ * @return  (bool) True if the OIDs are equal
+ **/
 function oid_dotnotation_equal($oidA, $oidB) {
 	$oidA = sanitizeOID($oidA, false);
 	if ($oidA === false) return null;
@@ -427,7 +437,6 @@ function oid_distance($a, $b) {
 
 	return count($ary) - count($bry);
 }
-
 /*
 assert(oid_distance('2.999.1.2.3', '2.999.4.5') === false);
 assert(oid_distance('2.999.1.2', '2.999') === 2);
@@ -467,6 +476,49 @@ function oid_remove_leading_dot($oid) {
 	if (substr($oid,0,1) == '.') $oid = substr($oid, 1);
 	return $oid;
 }
+
+/**
+ * Find the common ancestor of two or more OIDs
+ * @author  Daniel Marschall, ViaThinkSoft
+ * @version 2020-05-27
+ * @param   $oids (array)<br />
+ *              An array of multiple OIDs, e.g. 2.999.1 and 2.999.2.3.4
+ * @return  (mixed) The common ancestor, e.g. 2.999, or false if there is no common ancestor.
+ **/
+function oid_common_ancestor(array $oids) {
+	$shared = array();
+
+	if (!is_array($oids)) return false;
+	if (count($oids) === 0) return false;
+
+	foreach ($oids as &$oid) {
+		$oid = sanitizeOID($oid, false);
+		if ($oid === false) return false;
+		$oid = explode('.', $oid);
+	}
+
+	$max_ok = count($oids[0]);
+	for ($i=1; $i<count($oids); $i++) {
+		for ($j=0; $j<min(count($oids[$i]),count($oids[0])); $j++) {
+			if ($oids[$i][$j] != $oids[0][$j]) {
+				if ($j < $max_ok) $max_ok = $j;
+				break;
+			}
+		}
+		if ($j < $max_ok) $max_ok = $j;
+	}
+
+	$out = array();
+	for ($i=0; $i<$max_ok; $i++) {
+		$out[] = $oids[0][$i];
+	}
+	return implode('.', $out);
+}
+/*
+assert(oid_shared_ancestor(array('2.999.4.5.3', '2.999.4.5')) === "2.999.4.5");
+assert(oid_shared_ancestor(array('2.999.4.5', '2.999.4.5.3')) === "2.999.4.5");
+assert(oid_shared_ancestor(array('2.999.1.2.3', '2.999.4.5')) === "2.999");
+*/
 
 
 # === OID-IRI NOTATION FUNCTIONS ===
@@ -801,6 +853,22 @@ assert(asn1_to_dot('{  iso 3 }') == '1.3');
 */
 
 /**
+ * Gets the last numeric identifier of an ASN.1 notation OID.
+ * @author  Daniel Marschall, ViaThinkSoft
+ * @version 2020-05-27
+ * @param   $asn1id (string)<br />
+ *              An ASN.1 identifier string, e.g. { 2 example(999) test(1) }
+ * @return  (int) The last numeric identifier arc, e.g. "1"
+ **/
+function asn1_last_identifier($asn1id) {
+	$asn1id = preg_replace('@\(\s*\d+\s*\)@', '', $asn1id);
+	$asn1id = trim(str_replace(array('{', '}', "\t"), ' ', $asn1id));
+	$ary = explode(' ', $asn1id);
+	$asn1id = $ary[count($ary)-1];
+	return $asn1id;
+}
+
+/**
  * "Soft corrects" an invalid ASN.1 identifier.<br />
  * Attention, by "soft correcting" the ID, it is not authoritative anymore, and might not be able to be resolved by ORS.
  * @author  Daniel Marschall, ViaThinkSoft
@@ -839,38 +907,3 @@ function oid_soft_correct_id($id, $append_id_prefix = true) {
 
 	return $id;
 }
-
-function oid_common_ancestor(array $oids) {
-	$shared = array();
-
-	if (!is_array($oids)) return false;
-	if (count($oids) === 0) return false;
-
-	foreach ($oids as &$oid) {
-		$oid = sanitizeOID($oid, false);
-		if ($oid === false) return false;
-		$oid = explode('.', $oid);
-	}
-
-	$max_ok = count($oids[0]);
-	for ($i=1; $i<count($oids); $i++) {
-		for ($j=0; $j<min(count($oids[$i]),count($oids[0])); $j++) {
-			if ($oids[$i][$j] != $oids[0][$j]) {
-				if ($j < $max_ok) $max_ok = $j;
-				break;
-			}
-		}
-		if ($j < $max_ok) $max_ok = $j;
-	}
-
-	$out = array();
-	for ($i=0; $i<$max_ok; $i++) {
-		$out[] = $oids[0][$i];
-	}
-	return implode('.', $out);
-}
-/*
-assert(oid_shared_ancestor(array('2.999.4.5.3', '2.999.4.5')) === "2.999.4.5");
-assert(oid_shared_ancestor(array('2.999.4.5', '2.999.4.5.3')) === "2.999.4.5");
-assert(oid_shared_ancestor(array('2.999.1.2.3', '2.999.4.5')) === "2.999");
-*/

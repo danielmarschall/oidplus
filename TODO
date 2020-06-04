@@ -17,7 +17,7 @@ NEW FUNCTIONALITIES
 	  (Alternatively they can just look in the userdata directory using FTP)
 	* Give the ability to enable/disable RA uploading/deleting
 	  (Alternatively they need to do it in the configuration module and enter '0' and '1' by hand)
-- Excel/CSV import tool for bulb data import
+- Excel/CSV import tool for bulk data import
 - RPC call to create OIDs via simple HTTP request
 
 TINYMCE

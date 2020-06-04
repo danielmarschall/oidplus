@@ -175,7 +175,9 @@ class OIDplus {
 			self::$config->prepareConfigKey('oidplus_public_key', 'Public key for this system. If you "clone" your system, you must delete this key (e.g. using phpMyAdmin), so that a new one is created.', '', OIDplusConfig::PROTECTION_READONLY, function($value) {
 				// Nothing here yet
 			});
-
+			self::$config->prepareConfigKey('last_known_system_url', 'Last known System URL', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
+				// Nothing here yet
+			});
 		}
 
 		return self::$config;
@@ -659,8 +661,7 @@ class OIDplus {
 
 		if (!$relative) {
 			if (php_sapi_name() == 'cli') {
-				// TODO: what should we do???
-				return false;
+				return OIDplus::config()->getValue('last_known_system_url', false);
 			}
 
 			$is_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
@@ -675,6 +676,8 @@ class OIDplus {
 				$port_add = "";
 			}
 			$res = $protocol.'://'.$host.$port_add.$res;
+
+			OIDplus::config()->setValue('last_known_system_url', $res);
 		}
 
 		return $res;
