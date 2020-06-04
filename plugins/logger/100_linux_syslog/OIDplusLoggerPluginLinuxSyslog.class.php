@@ -49,7 +49,7 @@ class OIDplusLoggerPluginLinuxSyslog extends OIDplusLoggerPlugin {
 		$users_info = count($users_names) == 0 ? '' : " (affected users: ".implode(', ',$users_names).")";
 
 		$objects_names = array();
-		foreach ($objects as list($severity, $objects_names)) $objects_names[] = $objectname;
+		foreach ($objects as list($severity, $objectname)) $objects_names[] = $objectname;
 		$objects_info = count($objects_names) == 0 ? '' : " (affected objects: ".implode(', ',$objects_names).")";
 
 		$ts = date('Y-m-d H:i:s');

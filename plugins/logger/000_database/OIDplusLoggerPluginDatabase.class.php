@@ -25,7 +25,7 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 	}
 
 	public static function log($event, $users, $objects)/*: bool*/ {
-		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
 		OIDplus::dbIsolated()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event));
 		$log_id = OIDplus::dbIsolated()->insert_id();
 		if ($log_id === false) {

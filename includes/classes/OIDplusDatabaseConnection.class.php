@@ -21,7 +21,6 @@ abstract class OIDplusDatabaseConnection {
 	protected /*bool*/ $connected = false;
 	protected /*?bool*/ $html = null;
 	protected /*?string*/ $last_query = null;
-	private /*?OIDplusSqlSlangPlugin*/ $slang = null;
 
 	protected abstract function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult;
 	public abstract function error(): string;
@@ -79,8 +78,9 @@ abstract class OIDplusDatabaseConnection {
 	}
 
 	public function natOrder($fieldname, $order='asc'): string {
-		if (!is_null($this->slang)) {
-			return $this->slang->natOrder($fieldname, $order);
+		$slang = $this->getSlang();
+		if (!is_null($slang)) {
+			return $slang->natOrder($fieldname, $order);
 		} else {
 			$order = strtolower($order);
 			if (($order != 'asc') && ($order != 'desc')) {
@@ -173,35 +173,37 @@ abstract class OIDplusDatabaseConnection {
 	}
 
 	public function sqlDate(): string {
-		if (!is_null($this->slang)) {
-			return $this->slang->sqlDate();
+		$slang = $this->getSlang();
+		if (!is_null($slang)) {
+			return $slang->sqlDate();
 		} else {
 			return "'" . datetime('Y-m-d H:i:s') . "'";
 		}
 	}
 
+	private /*?OIDplusSqlSlangPlugin*/ $slangCache = null;
 	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
-		if (is_null($this->slang)) {
+		if (is_null($this->slangCache)) {
 			if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
 				$name = OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');
-				$this->slang = OIDplus::getSqlSlangPlugin($name);
-				if ($mustExist && is_null($this->slang)) {
+				$this->slangCache = OIDplus::getSqlSlangPlugin($name);
+				if ($mustExist && is_null($this->slangCache)) {
 					throw new OIDplusConfigInitializationException("Enforced SQL slang (via setting FORCE_DBMS_SLANG) '$name' does not exist.");
 				}
 			} else {
 				foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 					if ($plugin->detect($this)) {
-						$this->slang = $plugin;
+						$this->slangCache = $plugin;
 						break;
 					}
 				}
-				if ($mustExist && is_null($this->slang)) {
+				if ($mustExist && is_null($this->slangCache)) {
 					throw new OIDplusException("Cannot determine the SQL slang of your DBMS. Your DBMS is probably not supported.");
 				}
 			}
 		}
 
-		return $this->slang;
+		return $this->slangCache;
 	}
 }
 
