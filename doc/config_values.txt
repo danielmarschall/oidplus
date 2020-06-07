@@ -216,3 +216,10 @@ Old 2.0 format:          define('OIDPLUS_DISABLE_AJAX_TRANSACTIONS', false);
                          Do only use this if you have severe problems with the system running.
                          It might result in inconsistent data e.g. if you update an OID
                          and an error occurs in the middle of that process.
+
+OIDplus::baseConfig()->setValue('EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
+Old 2.0 format:          define('OIDPLUS_EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
+                         This setting can override the absolute system URL, which is used at CLI WHOIS
+                         and possibly other modules. It has no effect on relative URLs.
+                         If this setting is not set, the last known absolute URL
+                         will be remembered and used when a CLI call is made.

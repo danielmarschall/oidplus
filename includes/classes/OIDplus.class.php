@@ -638,6 +638,14 @@ class OIDplus {
 	}
 
 	public static function getSystemUrl($relative=false) {
+		if (!$relative) {
+			$res = OIDplus::baseConfig()->getValue('EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
+			if ($res !== '') {
+				OIDplus::config()->setValue('last_known_system_url', $res);
+				return $res;
+			}
+		}
+
 		if (!isset($_SERVER["SCRIPT_NAME"])) return false;
 
 		$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);

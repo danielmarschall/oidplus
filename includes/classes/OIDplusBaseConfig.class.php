@@ -29,6 +29,8 @@ class OIDplusBaseConfig implements OIDplusConfigInterface {
 	}
 
 	public function setValue($name, $value) {
+		// Note: The set value is only at run time level!
+		// This function will NOT change the userdata/baseconfig/config.inc.php file!
 		$this->data[$name] = $value;
 	}
 

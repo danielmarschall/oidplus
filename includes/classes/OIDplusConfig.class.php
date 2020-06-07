@@ -27,12 +27,14 @@ class OIDplusConfig implements OIDplusConfigInterface {
 	/*public*/ const PROTECTION_READONLY = 1;
 	/*public*/ const PROTECTION_HIDDEN   = 2;
 
+	protected $configTableReadOnce = false; // this ensures that all $values and $descriptions were read
+
 	protected $values = array();
 	protected $descriptions = array();
-	protected $dirty = true;
 	protected $validateCallbacks = array();
 
 	public function prepareConfigKey($name, $description, $init_value, $protection, $validateCallback) {
+		// Check if the protection flag is valid
 		switch ($protection) {
 			case OIDplusConfig::PROTECTION_EDITABLE:
 				$protected = 0;
@@ -50,42 +52,72 @@ class OIDplusConfig implements OIDplusConfigInterface {
 				throw new OIDplusException("Invalid protection flag, use OIDplusConfig::PROTECTION_* constants");
 		}
 
+		// Check length limitations given by the database tables
 		if (strlen($name) > 50) {
-			throw new OIDplusException("Config key name '$name' is too long. (max 50).");
+			throw new OIDplusException("Config key name '$name' is too long (max 50).");
 		}
 		if (strlen($description) > 255) {
 			throw new OIDplusException("Description for config key '$name' is too long (max 255).");
 		}
+
+		// Read all values and descriptions from the database once.
 		$this->buildConfigArray();
+
+		// Figure out if we need to create/update something at database level
 		if (!isset($this->values[$name])) {
+			// Case A: The config setting does not exist in the database. So we create it now.
 			OIDplus::db()->query("insert into ###config (name, description, value, protected, visible) values (?, ?, ?, ?, ?)", array($name, $description, $init_value, $protected, $visible));
 			$this->values[$name] = $init_value;
 			$this->descriptions[$name] = $description;
-		} else if ($this->descriptions[$name] != $description) {
-			// We want to give the plugins the possibility to update the default values for their plugins
-			OIDplus::db()->query("update ###config set description = ? where name = ?", array($description, $name));
-			$this->descriptions[$name] = $description;
+		} else {
+			// Case B: The config setting exists ...
+			if ($this->descriptions[$name] != $description) {
+				// ... but the human readable description is different.
+				// We want to give the plugin authors the possibility to automatically update the config descriptions for their plugins
+				// So we just edit the description
+				OIDplus::db()->query("update ###config set description = ? where name = ?", array($description, $name));
+				$this->descriptions[$name] = $description;
+			}
 		}
+
+		// Register the validation callback
 		if (!is_null($validateCallback)) {
 			$this->validateCallbacks[$name] = $validateCallback;
 		}
 	}
 
+	public function clearCache() {
+		$this->configTableReadOnce = false;
+		$this->buildConfigArray();
+	}
+
 	protected function buildConfigArray() {
-		if ($this->dirty) {
-			$this->values = array();
-			$this->descriptions = array();
-			$res = OIDplus::db()->query("select name, description, value from ###config");
-			while ($row = $res->fetch_object()) {
-				$this->values[$row->name] = $row->value;
-				$this->descriptions[$row->name] = $row->description;
-			}
-			$this->dirty = false;
+		if ($this->configTableReadOnce) return;
+
+		$this->values = array();
+		$this->descriptions = array();
+		$res = OIDplus::db()->query("select name, description, value from ###config");
+		while ($row = $res->fetch_object()) {
+			$this->values[$row->name] = $row->value;
+			$this->descriptions[$row->name] = $row->description;
 		}
+
+		$this->configTableReadOnce = true;
 	}
 
 	public function getValue($name, $default=null) {
+		if (isset($this->values[$name])) {
+			// There is a rare case where this might succeed even
+			// before buildConfigArray() was called once:
+			// If a setValue() was called, and then getValue() for
+			// that same name!
+			return $this->values[$name];
+		}
+
+		// Read all config settings once and write them in array $this->values
 		$this->buildConfigArray();
+
+		// Now we can see if our desired attribute is available
 		if (isset($this->values[$name])) {
 			return $this->values[$name];
 		} else {
@@ -94,29 +126,42 @@ class OIDplusConfig implements OIDplusConfigInterface {
 	}
 
 	public function exists($name) {
-		$this->buildConfigArray();
-		return !is_null($this->getValue($name));
+		return !is_null($this->getValue($name, null));
 	}
 
 	public function setValue($name, $value) {
-		// Give plugins the possibility to stop the process by throwing an Exception (e.g. if the value is invalid)
-		// Required is that the plugin previously prepared the config setting
+		// Avoid unnecessary database writes
+		// We do not call getValue() or buildConfigArray(), because they could cause an unnecessary database read
+		if (isset($this->values[$name])) {
+			if ($this->values[$name] == $value) return;
+		}
 
+		// Give plugins the possibility to stop the process by throwing an Exception (e.g. if the value is invalid)
+		// Required is that the plugin previously prepared the config setting using prepareConfigKey()
 		if (isset($this->validateCallbacks[$name])) {
 			$this->validateCallbacks[$name]($value);
 		}
 
 		// Now change the value in the database
-
 		OIDplus::db()->query("update ###config set value = ? where name = ?", array($value, $name));
 		$this->values[$name] = $value;
 	}
 
 	public function deleteConfigKey($name) {
-		$this->buildConfigArray();
-		if (isset($this->values[$name])) {
+		if ($this->configTableReadOnce) {
+			if (isset($this->values[$name])) {
+				OIDplus::db()->query("delete from ###config where name = ?", array($name));
+			}
+		} else {
+			// We do not know if the value exists.
+			// buildConfigArray() would do many reads which are unnecessary.
+			// So we just do a MySQL command to delete the stuff:
 			OIDplus::db()->query("delete from ###config where name = ?", array($name));
 		}
+
+		unset($this->values[$name]);
+		unset($this->descriptions[$name]);
+		unset($this->validateCallbacks[$name]);
 	}
 
 }

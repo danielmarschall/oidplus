@@ -181,29 +181,30 @@ abstract class OIDplusDatabaseConnection {
 		}
 	}
 
-	private /*?OIDplusSqlSlangPlugin*/ $slangCache = null;
 	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
-		if (is_null($this->slangCache)) {
+		static /*?OIDplusSqlSlangPlugin*/ $slangCache = null;
+
+		if (is_null($slangCache)) {
 			if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
 				$name = OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');
-				$this->slangCache = OIDplus::getSqlSlangPlugin($name);
-				if ($mustExist && is_null($this->slangCache)) {
+				$slangCache = OIDplus::getSqlSlangPlugin($name);
+				if ($mustExist && is_null($slangCache)) {
 					throw new OIDplusConfigInitializationException("Enforced SQL slang (via setting FORCE_DBMS_SLANG) '$name' does not exist.");
 				}
 			} else {
 				foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 					if ($plugin->detect($this)) {
-						$this->slangCache = $plugin;
+						$slangCache = $plugin;
 						break;
 					}
 				}
-				if ($mustExist && is_null($this->slangCache)) {
+				if ($mustExist && is_null($slangCache)) {
 					throw new OIDplusException("Cannot determine the SQL slang of your DBMS. Your DBMS is probably not supported.");
 				}
 			}
 		}
 
-		return $this->slangCache;
+		return $slangCache;
 	}
 }
 
