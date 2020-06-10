@@ -147,7 +147,6 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				$out['text'] .= '<p>Enter your email address and your password to log in as Registration Authority.</p>';
 			}
 			$out['text'] .= '<form onsubmit="return raLoginOnSubmit(this);">';
-			$out['text'] .= '<input type="hidden" name="action" value="ra_login">';
 			$out['text'] .= '<div><label class="padding_label">E-Mail:</label><input type="text" name="email" value="" id="raLoginEMail"></div>';
 			$out['text'] .= '<div><label class="padding_label">Password:</label><input type="password" name="password" value="" id="raLoginPassword"></div>';
 			$out['text'] .= '<br><input type="submit" value="Login"><br><br>';
@@ -170,7 +169,6 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			} else {
 				$out['text'] .= '<h2>Login as administrator</h2>';
 				$out['text'] .= '<form onsubmit="return adminLoginOnSubmit(this);">';
-				$out['text'] .= '<input type="hidden" name="action" value="admin_login">';
 				$out['text'] .= '<div><label class="padding_label">Password:</label><input type="password" name="password" value="" id="adminLoginPassword"></div>';
 				$out['text'] .= '<br><input type="submit" value="Login"><br><br>';
 				$out['text'] .= '</form>';

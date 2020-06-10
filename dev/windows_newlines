@@ -1,0 +1,21 @@
+#!/bin/bash
+
+DIR=$( dirname "$1" )
+
+# 1. Convert everything to DOS except ".svn" and "3p"
+cd "$DIR"/..
+mv ".svn" ../_svn
+mv "3p" ../_3p
+find . -type f -exec unix2dos {} \;
+mv ../_svn ".svn"
+mv ../_3p "3p"
+
+# 2. Convert Linux shell script back to Unix format
+dos2unix plugins/publicPages/100_whois/whois/cli/whois
+
+cd dev
+find . -type f -exec dos2unix {} \;
+
+# 3. But this single PHP file in "dev/test" can be DOS
+cd test
+unix2dos test_database_plugins.php

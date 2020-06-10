@@ -41,12 +41,16 @@ class OIDplusGui {
 		return $out;
 	}
 
-	public static function link($goto) {
-		if (strpos($goto, '#') !== false) {
-			list($goto, $anchor) = explode('#', $goto, 2);
-			return 'href="?goto='.urlencode($goto).'#'.htmlentities($anchor).'" onclick="openOidInPanel('.js_escape($goto).', true, '.js_escape($anchor).'); return false;"';
+	public static function link($goto, $new_window=false) {
+		if ($new_window) {
+			return 'href="?goto='.urlencode($goto).'" target="_blank"';
 		} else {
-			return 'href="?goto='.urlencode($goto).'" onclick="openOidInPanel('.js_escape($goto).', true); return false;"';
+			if (strpos($goto, '#') !== false) {
+				list($goto, $anchor) = explode('#', $goto, 2);
+				return 'href="?goto='.urlencode($goto).'#'.htmlentities($anchor).'" onclick="openOidInPanel('.js_escape($goto).', true, '.js_escape($anchor).'); return false;"';
+			} else {
+				return 'href="?goto='.urlencode($goto).'" onclick="openOidInPanel('.js_escape($goto).', true); return false;"';
+			}
 		}
 	}
 }

@@ -3,7 +3,7 @@
 /*
  * OID-Utilities for PHP
  * Copyright 2011-2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-05-27
+ * Version 2020-06-11
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -855,7 +855,7 @@ assert(asn1_to_dot('{  iso 3 }') == '1.3');
 /**
  * Gets the last numeric identifier of an ASN.1 notation OID.
  * @author  Daniel Marschall, ViaThinkSoft
- * @version 2020-05-27
+ * @version 2020-06-11
  * @param   $asn1id (string)<br />
  *              An ASN.1 identifier string, e.g. { 2 example(999) test(1) }
  * @return  (int) The last numeric identifier arc, e.g. "1"
@@ -865,7 +865,7 @@ function asn1_last_identifier($asn1id) {
 	$asn1id = trim(str_replace(array('{', '}', "\t"), ' ', $asn1id));
 	$ary = explode(' ', $asn1id);
 	$asn1id = $ary[count($ary)-1];
-	return $asn1id;
+	return preg_match('#[^0-9]#',$asn1id) ? $asn1id : false;
 }
 
 /**

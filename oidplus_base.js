@@ -244,6 +244,7 @@ $(window).on("popstate", function(e) {
 		var data = e.originalEvent.state;
 
 		current_node = data.node_id;
+		$("#gotoedit").val(current_node);
 		$('#oidtree').jstree('deselect_all').jstree('select_node', data.node_id);
 		$('#real_title').html(data.titleHTML);
 		$('#real_content').html(data.textHTML);

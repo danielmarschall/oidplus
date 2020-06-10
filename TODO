@@ -41,6 +41,13 @@ SETUP
 WEBSVN UPDATER
 - implement support for external repos!!!
 
+DATA TRANSFER PLUGIN
+- XML import: Let the user decide if existing OIDs shall be overwritten
+- XML import: Let the user decide if RAs should be created
+- XML import: Let the user decide if "created=now" should be set
+- XML import: Waiting animation
+- XML import: If output (errors) is too long, show them in a page rather than an alert() box
+
 SMALL THINGS
 - RA address data: Country selection box like in OIDInfo
 - We should remove "die()" whenever possible, because it is very unflexible

@@ -16,6 +16,7 @@
 	</php>
 
 	<css>
+		<file>style.css</file>
 	</css>
 
 	<js>

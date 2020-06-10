@@ -388,24 +388,6 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 	filter: alpha(opacity=20) !important;
 }
 
-/* Tabs */
-
-#loginTab .tab-content {
-	color: #000;
-	background-color: #eeeeee;
-	padding : 5px 15px;
-}
-
-#loginTab .nav-pills > li > a {
-	border-radius: 0;
-}
-
-#loginTab .nav-pills > li.active > a {
-	color: #000;
-	font-weight: bold;
-	background-color: #eeeeee;
-}
-
 /* Goto box */
 
 @media only screen and (max-width: 800px) {

@@ -110,6 +110,10 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				throw new OIDplusException("The administrator has disabled uploading attachments by RAs.");
 			}
 
+			if (!isset($_FILES['userfile'])) {
+				throw new OIDplusException("Please choose a file.");
+			}
+
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$banned = explode(',', OIDplus::config()->getValue('attachments_block_extensions', ''));
 				foreach ($banned as $ext) {
@@ -257,7 +261,6 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		if ($can_upload) {
 			$output .= '<form onsubmit="return uploadAttachmentOnSubmit(this);" enctype="multipart/form-data" id="uploadAttachmentForm">';
 			$output .= '<input type="hidden" name="id" value="'.htmlentities($id).'">';
-			$output .= '<input type="hidden" name="action" value="uploadAttachment">';
 			$output .= '<div>Add a file attachment:<input type="file" name="userfile" value="" id="fileAttachment">';
 			$output .= '<br><input type="submit" value="Upload"></div>';
 			$output .= '</form>';

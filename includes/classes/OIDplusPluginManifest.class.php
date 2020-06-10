@@ -82,10 +82,14 @@ class OIDplusPluginManifest {
 		$this->phpMainClass = (string)$xmldata->php->mainclass;
 
 		foreach ((array)$xmldata->css->file as $css_file) {
-			$this->cssFiles[] = dirname($filename).'/'.$css_file;
+			$file = dirname($filename).'/'.$css_file;
+			if (!file_exists($file)) continue;
+			$this->cssFiles[] = $file;
 		}
 		foreach ((array)$xmldata->js->file as $js_file) {
-			$this->jsFiles[] = dirname($filename).'/'.$js_file;
+			$file = dirname($filename).'/'.$js_file;
+			if (!file_exists($file)) continue;
+			$this->jsFiles[] = $file;
 		}
 
 		return true;

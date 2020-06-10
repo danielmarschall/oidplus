@@ -4,7 +4,7 @@
 	<type>OIDplusPagePluginAdmin</type>
 
 	<info>
-		<name>OID-Info.com export</name>
+		<name>OID-Info.com import/export</name>
 		<author>ViaThinkSoft</author>
 		<version />
 		<descriptionHTML />
@@ -16,9 +16,11 @@
 	</php>
 
 	<css>
+		<file>style.css</file>
 	</css>
 
 	<js>
+		<file>script.js</file>
 	</js>
 	
 </manifest>
