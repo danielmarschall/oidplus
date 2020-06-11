@@ -42,7 +42,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 				OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 
-				echo json_encode(array("status" => 0));
+				return array("status" => 0);
 			} else {
 				if (OIDplus::config()->getValue('log_failed_ra_logins', false)) {
 					if ($ra->existing()) {
@@ -60,7 +60,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 			OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged out");
 			OIDplus::authUtils()::raLogout($email);
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 		}
 
 		// === ADMIN LOGIN/LOGOUT ===
@@ -79,7 +79,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			if (OIDplus::authUtils()::adminCheckPassword($params['password'])) {
 				OIDplus::logger()->log("[OK]A!", "Admin logged in");
 				OIDplus::authUtils()::adminLogin();
-				echo json_encode(array("status" => 0));
+				return array("status" => 0);
 			} else {
 				if (OIDplus::config()->getValue('log_failed_admin_logins', false)) {
 					OIDplus::logger()->log("[WARN]A!", "Failed login to admin account");
@@ -90,7 +90,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		else if ($actionID == 'admin_logout') {
 			OIDplus::logger()->log("[OK]A!", "Admin logged out");
 			OIDplus::authUtils()::adminLogout();
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 		}
 		else {
 			throw new OIDplusException("Unknown action ID");

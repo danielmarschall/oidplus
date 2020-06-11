@@ -46,7 +46,7 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 
 			OIDplus::logger()->log("[?WARN/!OK]RA($email)!/[?INFO/!OK]A?", "RA '$email' deleted");
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 		} else {
 			throw new OIDplusException("Unknown action ID");
 		}

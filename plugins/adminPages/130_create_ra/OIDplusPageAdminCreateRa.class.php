@@ -51,7 +51,7 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 			$ra = new OIDplusRA($email);
 			$ra->register_ra($password1);
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 		} else {
 			throw new OIDplusException("Unknown action ID");
 		}

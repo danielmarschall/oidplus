@@ -49,7 +49,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Invitation', $message, OIDplus::config()->getValue('global_cc'));
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 
 		} else if ($actionID == 'activate_ra') {
 
@@ -80,7 +80,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$ra = new OIDplusRA($email);
 			$ra->register_ra($password1);
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 		} else {
 			throw new OIDplusException("Unknown action ID");
 		}

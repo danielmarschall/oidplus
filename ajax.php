@@ -19,12 +19,12 @@
 
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
-OIDplus::init(false);
-
-header('Content-Type:application/json; charset=utf-8');
-
 try {
+	OIDplus::init(false);
+
 	if (!isset($_REQUEST['action'])) throw new OIDplusException("Action ID is missing");
+
+	$json_out = null;
 
 	if (isset($_REQUEST['plugin']) && ($_REQUEST['plugin'] != '')) {
 
@@ -38,10 +38,19 @@ try {
 		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
 			OIDplus::db()->transaction_begin();
 		}
-		
-		$params = $_REQUEST;
-		unset($params['action']);
-		$plugin->action($_REQUEST['action'], $params);
+
+		$params = array();
+		foreach (array_merge($_POST,$_GET) as $name => $val) {
+			if (($name != 'action') && ($name != 'plugin')) {
+				$params[$name] = $val;
+			}
+		}
+
+		$json_out = $plugin->action($_REQUEST['action'], $params);
+		if (!is_array($json_out)) {
+			throw new OIDplusException("Plugin with OID '".$_REQUEST['plugin']."' did not output array of result data");
+		}
+		if (!isset($json_out['status'])) $json_out['status'] = -1;
 
 		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
 			OIDplus::db()->transaction_commit();
@@ -56,52 +65,51 @@ try {
 			// Method:     GET / POST
 			// Parameters: id
 			// Outputs:    JSON
-			$handled = true;
 			if (!isset($_REQUEST['id'])) throw new OIDplusException("Invalid args");
 			try {
-				$out = OIDplus::gui()::generateContentPage($_REQUEST['id']);
-			} catch(Exception $e) {
-				$out = array();
-				$out['title'] = 'Error';
-				$out['icon'] = 'img/error_big.png';
-				$out['text'] = $e->getMessage();
+				$json_out = OIDplus::gui()::generateContentPage($_REQUEST['id']);
+			} catch (Exception $e) {
+				$json_out = array();
+				$json_out['title'] = 'Error';
+				$json_out['icon'] = 'img/error_big.png';
+				$json_out['text'] = $e->getMessage();
 			}
-			echo json_encode($out);
 		} else if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'tree_search')) {
 			// Action:     tree_search
 			// Method:     GET / POST
 			// Parameters: search
 			// Outputs:    JSON
-			$handled = true;
 			if (!isset($_REQUEST['search'])) throw new OIDplusException("Invalid args");
 
 			$found = false;
 			foreach (OIDplus::getPagePlugins() as $plugin) {
-				$res = $plugin->tree_search($_REQUEST['search']);
-				if ($res) {
-					echo json_encode($res);
+				$json_out = $plugin->tree_search($_REQUEST['search']);
+				if ($json_out) {
 					$found = true;
 					break;
 				}
 			}
 
 			if (!$found) {
-				echo json_encode(array());
+				$json_out = array();
 			}
 		} else if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'tree_load')) {
 			// Action:     tree_load
 			// Method:     GET / POST
 			// Parameters: id; goto (optional)
 			// Outputs:    JSON
-			$handled = true;
 			if (!isset($_REQUEST['id'])) throw new OIDplusException("Invalid args");
-			$json = OIDplus::menuUtils()->json_tree($_REQUEST['id'], isset($_REQUEST['goto']) ? $_REQUEST['goto'] : '');
-			echo $json;
+			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], isset($_REQUEST['goto']) ? $_REQUEST['goto'] : '');
 		} else {
 			throw new OIDplusException('Invalid action ID');
 		}
 	}
+
+	@header('Content-Type:application/json; charset=utf-8');
+	echo json_encode($json_out);
+
 } catch (Exception $e) {
+
 	try {
 		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported() && (OIDplus::db()->transaction_level() > 0)) {
 			OIDplus::db()->transaction_rollback();
@@ -109,15 +117,17 @@ try {
 	} catch (Exception $e1) {
 	}
 
-	$ary = array();
-	$ary['error'] = $e->getMessage();
-	$out = json_encode($ary);
+	$json_out = array();
+	$json_out['status'] = -2;
+	$json_out['error'] = $e->getMessage();
+	$out = json_encode($json_out);
 
 	if ($out === false) {
 		// Some modules (like ODBC) might output non-UTF8 data
-		$ary['error'] = utf8_encode($e->getMessage());
-		$out = json_encode($ary);
+		$json_out['error'] = utf8_encode($e->getMessage());
+		$out = json_encode($json_out);
 	}
 
-	die($out);
+	@header('Content-Type:application/json; charset=utf-8');
+	echo $out;
 }

@@ -97,7 +97,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 			OIDplus::logger()->log("[OK]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Deleted attachment '".basename($uploadfile)."' from object '$id'");
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 
 		} else if ($actionID == 'uploadAttachment') {
 
@@ -159,7 +159,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 			OIDplus::logger()->log("[OK]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Uploaded attachment '".basename($uploadfile)."' to object '$id'");
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 		} else {
 			throw new OIDplusException("Unknown action ID");
 		}

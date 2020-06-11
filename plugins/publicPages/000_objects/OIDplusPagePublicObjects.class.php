@@ -87,7 +87,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 		}
 
 		// Action:     Update
@@ -183,7 +183,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 
-			echo json_encode(array("status" => $status));
+			return array("status" => $status);
 		}
 
 		// Action:     Update2
@@ -218,7 +218,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 		}
 
 		// Action:     Insert
@@ -319,7 +319,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 
-			echo json_encode(array("status" => $status));
+			return array("status" => $status);
 		} else {
 			throw new OIDplusException("Unknown action ID");
 		}

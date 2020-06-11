@@ -61,7 +61,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 					OIDplus::authUtils()->raLogin($new_email);
 				}
 
-				echo json_encode(array("status" => 0));
+				return array("status" => 0);
 			} else {
 				OIDplus::logger()->log("[INFO]RA($old_email)!+RA($new_email)!", "Requested email address change from '$old_email' to '$new_email'");
 
@@ -77,7 +77,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 				OIDplus::mailUtils()->sendMail($new_email, OIDplus::config()->getValue('system_title').' - Change email request', $message);
 
-				echo json_encode(array("status" => 0));
+				return array("status" => 0);
 			}
 		}
 
@@ -133,7 +133,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			$message = str_replace('{{NEW_EMAIL}}', $new_email, $message);
 			OIDplus::mailUtils()->sendMail($old_email, OIDplus::config()->getValue('system_title').' - eMail address changed', $message);
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 		} else {
 			throw new OIDplusException("Unknown action ID");
 		}

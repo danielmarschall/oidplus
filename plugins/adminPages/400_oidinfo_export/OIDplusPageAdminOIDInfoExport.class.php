@@ -40,24 +40,22 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			if (count($errors) > 0) {
 				// Note: These "errors" can also be warnings (partial success)
 				// TODO XXX: since the output can be very long, should we really show it in a JavaScript alert() ?!
-				echo json_encode(array(
+				return array(
 					"status" => 1,
 					"count_imported_oids" => $count_imported_oids,
 					"count_already_existing" => $count_already_existing,
 					"count_errors" => $count_errors,
 					"count_warnings" => $count_warnings,
 					"error" => implode("\n",$errors)
-				));
-				return;
+				);
 			} else {
-				echo json_encode(array(
+				return array(
 					"status" => 0,
 					"count_imported_oids" => $count_imported_oids,
 					"count_already_existing" => $count_already_existing,
 					"count_errors" => $count_errors,
 					"count_warnings" => $count_warnings
-				));
-				return;
+				);
 			}
 		} else if ($actionID == 'import_oidinfo_oid') {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
@@ -99,25 +97,20 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$json = json_decode($res, true);
 
 			if (!$json) {
-				echo json_encode(array("status" => 1, "error" => 'JSON reply from ViaThinkSoft decoding error: ' . $res));
-				return;
+				return array("status" => 1, "error" => 'JSON reply from ViaThinkSoft decoding error: ' . $res);
 			}
 
 			if (isset($json['error']) || ($json['status'] != 0)) {
-				echo json_encode(array("status" => 1, "error" => $json['error']));
-				return;
+				return array("status" => 1, "error" => $json['error']);
 			} else {
 				$errors = array();
 				list($count_imported_oids, $count_already_existing, $count_errors, $count_warnings) = $this->oidinfoImportXML('<oid-database>'.$json['xml'].'</oid-database>', $errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_DISALLOW_ORPHANS);
 				if (count($errors) > 0) {
-					echo json_encode(array("status" => 1, "error" => implode("\n",$errors)));
-					return;
+					return array("status" => 1, "error" => implode("\n",$errors));
 				} else if ($count_imported_oids <> 1) {
-					echo json_encode(array("status" => 1, "error" => "Imported $count_imported_oids, but expected to import 1"));
-					return;
+					return array("status" => 1, "error" => "Imported $count_imported_oids, but expected to import 1");
 				} else {
-					echo json_encode(array("status" => 0));
-					return;
+					return array("status" => 0);
 				}
 
 			}

@@ -56,7 +56,7 @@ class OIDplusMenuUtils {
 			$json = self::tree_populate($req_id);
 		}
 
-		return json_encode($json);
+		return $json;
 	}
 
 	public static function tree_populate($parent, $goto_path=null) {

@@ -61,7 +61,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID request', $message, OIDplus::config()->getValue('global_cc'));
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 
 		} else if ($actionID == 'activate_freeoid') {
 
@@ -154,7 +154,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$message = str_replace('{{NEW_OID}}', $new_oid, $message);
 			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID allocated', $message, OIDplus::config()->getValue('global_cc'));
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 		} else {
 			throw new OIDplusException("Unknown action ID");
 		}

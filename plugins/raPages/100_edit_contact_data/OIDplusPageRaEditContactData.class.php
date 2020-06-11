@@ -65,7 +65,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 				)
 			);
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 		} else {
 			throw new OIDplusException("Unknown action ID");
 		}

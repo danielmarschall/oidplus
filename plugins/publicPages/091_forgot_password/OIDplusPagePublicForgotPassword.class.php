@@ -47,7 +47,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Password reset request', $message, OIDplus::config()->getValue('global_cc'));
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 
 		} else if ($actionID == 'reset_password') {
 
@@ -78,7 +78,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$ra = new OIDplusRA($email);
 			$ra->change_password($password1);
 
-			echo json_encode(array("status" => 0));
+			return array("status" => 0);
 		} else {
 			throw new OIDplusException("Unknown action ID");
 		}
