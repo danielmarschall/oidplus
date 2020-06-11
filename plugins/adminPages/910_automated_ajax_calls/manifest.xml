@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<manifest>
+
+	<type>OIDplusPagePluginAdmin</type>
+
+	<info>
+		<name>Automated AJAX calls</name>
+		<author>ViaThinkSoft</author>
+		<version />
+		<descriptionHTML />
+		<oid>1.3.6.1.4.1.37476.2.5.2.4.3.910</oid>
+	</info>
+
+	<php>
+		<mainclass>OIDplusPageAdminAutomatedAJAXCalls</mainclass>
+	</php>
+
+	<css>
+	</css>
+
+	<js>
+	</js>
+	
+</manifest>

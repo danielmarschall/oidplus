@@ -27,7 +27,7 @@ class OIDplusRA {
 	public function raEmail() {
 		return $this->email;
 	}
-	
+
 	public function existing() {
 		$res = OIDplus::db()->query("select email from ###ra where email = ?", array($this->email));
 		return ($res->num_rows() > 0);
@@ -62,7 +62,7 @@ class OIDplusRA {
 	public function register_ra($new_password) {
 		$s_salt = substr(md5(rand()), 0, 7);
 		$calc_authkey = 'A2#'.base64_encode(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $s_salt.$new_password, true) : bb\Sha3\Sha3::hash($s_salt.$new_password, 512, true));
-		OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered) values (?, ?, ?, ".OIDplus::db()->sqlDate().")", array($s_salt, $calc_authkey, $this->email));
+		OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered, ra_name, personal_name, organization, office, street, zip_town, country, phone, mobile, fax) values (?, ?, ?, ".OIDplus::db()->sqlDate().", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($s_salt, $calc_authkey, $this->email, "", "", "", "", "", "", "", "", "", ""));
 	}
 
 	public function checkPassword($password) {

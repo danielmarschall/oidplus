@@ -53,19 +53,13 @@ class OIDplusAuthUtils {
 		}
 	}
 
+	public static function raCheckPassword($ra_email, $password) {
+		$ra = new OIDplusRA($ra_email);
+		return $ra->checkPassword($password);
+	}
+
 	public static function raNumLoggedIn() {
-		if (basename($_SERVER['SCRIPT_FILENAME']) == 'sitemap.php') {
-			// The sitemap may not contain any confidential information, even if the user is logged in,
-			// because they could accidentally copy-paste the sitemap to a search engine control panel
-			return 0;
-		}
-		$ses = OIDplus::sesHandler();
-
-		$list = $ses->getValue('oidplus_logged_in');
-		if (is_null($list)) return 0;
-
-		$ary = ($list == '') ? array() : explode('|', $list);
-		return count($ary);
+		return count(self::loggedInRaList());
 	}
 
 	public static function raLogoutAll() {
@@ -74,17 +68,16 @@ class OIDplusAuthUtils {
 	}
 
 	public static function loggedInRaList() {
-		if (basename($_SERVER['SCRIPT_FILENAME']) == 'sitemap.php') {
-			// The sitemap may not contain any confidential information, even if the user is logged in,
-			// because they could accidentally copy-paste the sitemap to a search engine control panel
+		if (self::forceAllLoggedOut()) {
 			return array();
 		}
+
 		$ses = OIDplus::sesHandler();
 		$list = $ses->getValue('oidplus_logged_in');
 		if (is_null($list)) $list = '';
 
 		$res = array();
-		foreach (explode('|', $list) as $ra_email) {
+		foreach (array_unique(explode('|',$list)) as $ra_email) {
 			if ($ra_email == '') continue;
 			$res[] = new OIDplusRA($ra_email);
 		}
@@ -107,7 +100,6 @@ class OIDplusAuthUtils {
 
 	public static function adminLogout() {
 		$ses = OIDplus::sesHandler();
-
 		$ses->setValue('oidplus_admin_logged_in', '0');
 
 		if (self::raNumLoggedIn() == 0) {
@@ -126,9 +118,7 @@ class OIDplusAuthUtils {
 	}
 
 	public static function isAdminLoggedIn() {
-		if (basename($_SERVER['SCRIPT_FILENAME']) == 'sitemap.php') {
-			// The sitemap may not contain any confidential information, even if the user is logged in,
-			// because they could accidentally copy-paste the sitemap to a search engine control panel
+		if (self::forceAllLoggedOut()) {
 			return false;
 		}
 		$ses = OIDplus::sesHandler();
@@ -145,6 +135,20 @@ class OIDplusAuthUtils {
 
 	public static function validateAuthKey($data, $auth_key) {
 		return self::makeAuthKey($data) == $auth_key;
+	}
+
+	// "Veto" functions to force logout state
+
+	public static function forceAllLoggedOut() {
+		if (isset($_SERVER['SCRIPT_FILENAME']) && (basename($_SERVER['SCRIPT_FILENAME']) == 'sitemap.php')) {
+			// The sitemap may not contain any confidential information,
+			// even if the user is logged in, because the admin could
+			// accidentally copy-paste the sitemap to a
+			// search engine control panel while they are logged in
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

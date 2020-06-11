@@ -90,7 +90,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			if (!($res = @curl_exec($ch))) {
-				throw new OIDplusException("Communication with ViaThinkSoft server failed");
+				throw new OIDplusException("Communication with ViaThinkSoft server failed: " . curl_error($ch));
 			}
 			curl_close($ch);
 
@@ -160,7 +160,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			if (!($res = @curl_exec($ch))) {
-				throw new OIDplusException("Communication with ViaThinkSoft server failed");
+				throw new OIDplusException("Communication with ViaThinkSoft server failed: " . curl_error($ch));
 			}
 			curl_close($ch);
 
@@ -399,7 +399,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			if (!($res = @curl_exec($ch))) {
-				throw new OIDplusException("Communication with ViaThinkSoft server failed");
+				throw new OIDplusException("Communication with ViaThinkSoft server failed: " . curl_error($ch));
 			}
 			curl_close($ch);
 
