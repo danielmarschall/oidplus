@@ -180,7 +180,7 @@ if ($continue) {
 				$out[] = 'ra-fax: ' . (!empty($row2->fax) ? '(redacted)' : '');
 			} else {
 				$out[] = 'ra-street: ' . $row2->street;
-				$out[] = 'ra-zip_town: ' . $row2->zip_town;
+				$out[] = 'ra-town: ' . $row2->zip_town;
 				$out[] = 'ra-country: ' . $row2->country;
 				$out[] = 'ra-phone: ' . $row2->phone;
 				$out[] = 'ra-mobile: ' . $row2->mobile;
@@ -320,7 +320,11 @@ if ($format == 'xml') {
 
 	header('Content-Type:application/xml; charset=UTF-8');
 	echo '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>';
-	echo '<root>'.$xml.'</root>';
+	echo '<root xmlns="https://oidplus.viathinksoft.com"';
+	echo '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
+	echo '      xsi:schemaLocation="https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/xml_schema.xsd">';
+	echo $xml;
+	echo '</root>';
 }
 
 # ---

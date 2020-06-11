@@ -1,0 +1,62 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="root">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="whois">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="section" minOccurs="1" maxOccurs="3">
+                <xs:complexType>
+                  <xs:sequence>
+                    <!-- This must be in the first section: -->
+                    <xs:element type="xs:string" name="query" minOccurs="1"/>
+                    <xs:element type="xs:string" name="result" minOccurs="1"/>
+                    <!-- This must be in the second section: -->
+                    <xs:element type="xs:string" name="object" minOccurs="1"/>
+                    <xs:element type="xs:string" name="status" minOccurs="1"/>
+                    <xs:element type="xs:string" name="parent" minOccurs="0"/>
+                    <xs:element type="xs:string" name="name" minOccurs="0"/>
+                    <xs:element type="xs:string" name="description" minOccurs="0"/>
+                    <xs:element type="xs:string" name="identifier" minOccurs="0"/>
+                    <xs:element type="xs:string" name="standardized-id" minOccurs="0"/>
+                    <xs:element type="xs:string" name="unicode-label" minOccurs="0"/>
+                    <xs:element type="xs:string" name="long-arc" minOccurs="0"/>
+                    <xs:element type="xs:string" name="attachment-name" minOccurs="0"/>
+                    <xs:element type="xs:string" name="attachment-url" minOccurs="0"/>
+                    <xs:element type="xs:string" name="created" minOccurs="0"/>
+                    <xs:element type="xs:string" name="updated" minOccurs="0"/>
+                    <xs:element type="xs:string" name="subordinate" maxOccurs="unbounded" minOccurs="0"/>
+                    <!-- This must be in the third section: -->
+                    <xs:element type="xs:string" name="ra" minOccurs="1"/>
+                    <xs:element type="xs:string" name="ra-status" minOccurs="1"/>
+                    <xs:element type="xs:string" name="ra-name" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-email" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-personal-name" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-organization" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-office" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-street" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-town" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-country" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-phone" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-mobile" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-fax" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-created" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-updated" minOccurs="0"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="signature">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="content"/>
+              <xs:element type="xs:string" name="signature"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

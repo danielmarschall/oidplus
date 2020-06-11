@@ -67,14 +67,22 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
 			$out['text']  = '';
 			$out['text'] .= '<p>With the web based whois service, you can query object information in a machine readable format.</p>';
-			$out['text'] .= '<p>RFC draft (for Text format): <a href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.txt">TXT</a> | <a href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.nroff">NROFF</a></p>';
+
+
+
+
+
+
 			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__).'whois/webwhois.php" method="GET">';
-			$out['text'] .= '	<label class="padding_label">Format:</label><select name="format">';
-			$out['text'] .= '		<option value="txt">Text (RFC pending)</option>';
-			$out['text'] .= '		<option value="json">JSON</option>';
-			$out['text'] .= '		<option value="xml">XML</option>';
-			$out['text'] .= '	</select><br>';
-			$out['text'] .= '	<label class="padding_label">Query:</label><input type="text" name="query" value="'.htmlentities($example).'" style="width:250px">';
+			$out['text'] .= '<br>Output format:<br><fieldset>';
+			$out['text'] .= '    <input type="radio" id="txt" name="format" value="txt" checked>';
+			$out['text'] .= '    <label for="txt"> Text format (RFC draft: <a href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.txt">TXT</a> | <a href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.nroff">NROFF</a>)</label><br>';
+			$out['text'] .= '    <input type="radio" id="json" name="format" value="json">';
+			$out['text'] .= '    <label for="json"> JSON (<a href="'.OIDplus::webpath(__DIR__).'whois/json_schema.json">Schema</a>)</label><br>';
+			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml">';
+			$out['text'] .= '    <label for="xml"> XML (<a href="'.OIDplus::webpath(__DIR__).'whois/xml_schema.xsd">Schema</a>)</label><br>';
+			$out['text'] .= '</fieldset><br>';
+			$out['text'] .= '	<!--<label class="padding_label">-->Query:<!--</label>--> <input type="text" name="query" value="'.htmlentities($example).'" style="width:250px">';
 			$out['text'] .= '	<input type="submit" value="Query">';
 			$out['text'] .= '</form>';
 		}
