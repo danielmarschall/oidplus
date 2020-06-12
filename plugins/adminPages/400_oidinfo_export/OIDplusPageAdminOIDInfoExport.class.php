@@ -500,7 +500,8 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<p>These XML files are following the <a href="http://www.oid-info.com/oid.xsd" target="_blank">XML schema</a> of <b>oid-info.com</b>. They can be used for various purposes though.</p>';
 			$out['text'] .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__).'oidinfo_export.php\',\'_blank\')" value="Generate XML (all)"></p>';
 			$out['text'] .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__).'oidinfo_export.php?online=1\',\'_blank\')" value="Generate XML (only OIDs which do not exist at oid-info.com)"></p>';
-			$out['text'] .= '<p><a href="http://www.oid-info.com/submit.htm" target="_blank">Upload XML files to oid-info.com</a></p>';
+			$out['text'] .= '<p><a href="http://www.oid-info.com/submit.htm" target="_blank">Upload XML files manually to oid-info.com</a></p>';
+			$out['text'] .= '<br><p>Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.</p>';
 			$out['text'] .= '<h2>Automatic export to oid-info.com</h2>';
 			$privacy_level = OIDplus::config()->getValue('reg_privacy');
 			if ($privacy_level == 0) {
@@ -521,7 +522,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<div>Choose XML file here:<input type="file" name="userfile" value="" id="userfile">';
 			$out['text'] .= '<br><input type="submit" value="Import XML"></div>';
 			$out['text'] .= '</form>';
-			$out['text'] .= '<br><p>Attention: Do not use XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. Non-OIDs (e.g. GUIDs) are converted in OIDs.</p>';
+			$out['text'] .= '<br><p>Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.</p>';
 			$out['text'] .= '<h2>Comparison with oid-info.com</h2>';
 			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_import').'>List OIDs at oid-info.com which are missing in your system</a></p>';
 			// ---------------- End "Import" tab

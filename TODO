@@ -17,8 +17,8 @@ NEW FUNCTIONALITIES
 	  (Alternatively they can just look in the userdata directory using FTP)
 	* Give the ability to enable/disable RA uploading/deleting
 	  (Alternatively they need to do it in the configuration module and enter '0' and '1' by hand)
-- Excel/CSV import tool for bulk data import
-- RPC call to create OIDs via simple HTTP request
+- Excel/CSV import tool for bulk data import (as alternative to XML import. Maybe previous Excel->XML import tool?)
+- Admin plugin "System info" which shows information like PHP version, Database connection data etc.
 
 TINYMCE
 - menu entry "formats" is empty. can it be removed?

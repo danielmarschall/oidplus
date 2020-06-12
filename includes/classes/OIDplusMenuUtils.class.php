@@ -25,6 +25,9 @@ class OIDplusMenuUtils {
 		$static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
 
 		foreach (OIDplus::getPagePlugins() as $plugin) {
+			// Note: The system (OIDplusMenuUtils) does only show the menu of
+			//       publicPage plugins. Menu entries for RAs and Admins are
+			//       handled by the tree() function of the plugin publicPages/090_login
 			if (is_subclass_of($plugin, OIDplusPagePluginPublic::class)) {
 				$plugin->tree($json, null, true, $static_node_id);
 			}
@@ -48,6 +51,9 @@ class OIDplusMenuUtils {
 
 		if (!isset($req_id) || ($req_id == '#')) {
 			foreach (OIDplus::getPagePlugins() as $plugin) {
+				// Note: The system (OIDplusMenuUtils) does only show the menu of
+				//       publicPage plugins. Menu entries for RAs and Admins are
+				//       handled by the tree() function of the plugin publicPages/090_login
 				if (is_subclass_of($plugin, OIDplusPagePluginPublic::class)) {
 					$plugin->tree($json, null, false, $req_goto);
 				}
@@ -68,7 +74,7 @@ class OIDplusMenuUtils {
 		if ($namespace == 'oid') $oid = substr($oid, 1); // führenden Punkt entfernen
 
 		if (is_array($goto_path)) array_shift($goto_path);
-		
+
 		$confidential_oids = array();
 
 		$res = OIDplus::db()->query("select id from ###objects where confidential = '1'");

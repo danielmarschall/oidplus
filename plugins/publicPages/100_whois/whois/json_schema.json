@@ -39,7 +39,7 @@
                      "type":"string"
                   },
                   "identifier":{
-                     "anyOf":[
+                     "oneOf":[
                         {
                            "type":"string"
                         },
@@ -52,7 +52,7 @@
                      ]
                   },
                   "standardized-id":{
-                     "anyOf":[
+                     "oneOf":[
                         {
                            "type":"string"
                         },
@@ -65,7 +65,7 @@
                      ]
                   },
                   "unicode-label":{
-                     "anyOf":[
+                     "oneOf":[
                         {
                            "type":"string"
                         },
@@ -78,7 +78,7 @@
                      ]
                   },
                   "long-arc":{
-                     "anyOf":[
+                     "oneOf":[
                         {
                            "type":"string"
                         },
@@ -91,7 +91,7 @@
                      ]
                   },
                   "attachment-name":{
-                     "anyOf":[
+                     "oneOf":[
                         {
                            "type":"string"
                         },
@@ -104,7 +104,7 @@
                      ]
                   },
                   "attachment-url":{
-                     "anyOf":[
+                     "oneOf":[
                         {
                            "type":"string"
                         },
@@ -123,7 +123,7 @@
                      "type":"string"
                   },
                   "subordinate":{
-                     "anyOf":[
+                     "oneOf":[
                         {
                            "type":"string"
                         },

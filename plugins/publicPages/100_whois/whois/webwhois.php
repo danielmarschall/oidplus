@@ -282,7 +282,15 @@ if ($format == 'json') {
 			}
 		}
 	}
-	$ary = array('whois' => $ary); // we need this named root, otherwise PHP will name the sections "0", "1", "2" if the array is not sequencial (e.g. because "signature" is added)
+	$ary = array(
+		// https://code.visualstudio.com/docs/languages/json#_mapping-in-the-json
+		// Note that this syntax is VS Code-specific and not part of the JSON Schema specification.
+		//'$schema' => 'https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/json_schema.json',
+		'$schema' => OIDplus::getSystemUrl().'plugins/publicPages/100_whois/whois/json_schema.json',
+
+		// we need this NAMED root, otherwise PHP will name the sections "0", "1", "2" if the array is not sequencial (e.g. because "signature" is added)
+		'whois' => $ary
+	);
 
 	if (OIDplus::getPkiStatus(true)) {
 		$cont = json_encode($ary);
@@ -322,7 +330,8 @@ if ($format == 'xml') {
 	echo '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>';
 	echo '<root xmlns="https://oidplus.viathinksoft.com"';
 	echo '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
-	echo '      xsi:schemaLocation="https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/xml_schema.xsd">';
+	//echo '      xsi:schemaLocation="https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/xml_schema.xsd">';
+	echo '      xsi:schemaLocation="'.OIDplus::getSystemUrl().'plugins/publicPages/100_whois/whois/xml_schema.xsd">';
 	echo $xml;
 	echo '</root>';
 }
