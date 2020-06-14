@@ -121,6 +121,8 @@ if ($continue) {
 
 		$cont = $row->description;
 		$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
+		$cont = preg_replace('@<br.*>@', "\n", $cont);
+		$cont = preg_replace('@\\n+@', "\n", $cont);
 		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont)));
 
 		if (substr($query,0,4) === 'oid:') {
@@ -168,10 +170,11 @@ if ($continue) {
 			$out[] = 'ra-status: Information available';
 			$out[] = 'ra-name: ' . $row2->ra_name;
 			$out[] = 'ra-email: ' . $row->ra_email;
-			$out[] = 'ra-personal-name: ' . $row2->personal_name;
+			$out[] = 'ra-personal-name: ' . $row2->personal_name; // Note: This is currently not in the RFC
 			$out[] = 'ra-organization: ' . $row2->organization;
-			$out[] = 'ra-office: ' . $row2->office;
+			$out[] = 'ra-office: ' . $row2->office; // Note: This is currently not in the RFC
 			if ($row2->privacy && !$show_confidential) {
+				// TODO: Follow new RFC draft and only return only "ra-address"
 				$out[] = 'ra-street: ' . (!empty($row2->street) ? '(redacted)' : '');
 				$out[] = 'ra-town: ' . (!empty($row2->zip_town) ? '(redacted)' : '');
 				$out[] = 'ra-country: ' . (!empty($row2->country) ? '(redacted)' : '');
@@ -179,6 +182,7 @@ if ($continue) {
 				$out[] = 'ra-mobile: ' . (!empty($row2->mobile) ? '(redacted)' : '');
 				$out[] = 'ra-fax: ' . (!empty($row2->fax) ? '(redacted)' : '');
 			} else {
+				// TODO: Follow new RFC draft and only return only "ra-address"
 				$out[] = 'ra-street: ' . $row2->street;
 				$out[] = 'ra-town: ' . $row2->zip_town;
 				$out[] = 'ra-country: ' . $row2->country;
@@ -219,7 +223,7 @@ if ($format == 'txt') {
 		$longest_key = max($longest_key, strlen(trim(explode(':',$line,2)[0])));
 	}
 
-	echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\n";
+	//echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\n";
 
 	foreach ($out as $line) {
 		if (trim($line) == '') {
@@ -238,7 +242,7 @@ if ($format == 'txt') {
 		echo $key.':' . str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)) . (!empty($value) ? $value : '.') . "\n";
 	}
 
-	echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\n";
+	//echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\n";
 
 	$cont = ob_get_contents();
 	ob_end_clean();
@@ -249,11 +253,10 @@ if ($format == 'txt') {
 		$signature = '';
 		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 			$signature = base64_encode($signature);
-			$signature = wordwrap($signature, 80, "\n", true);
-
-			$signature = "-----BEGIN RSA SIGNATURE-----\n".
-		                     "$signature\n".
-			             "-----END RSA SIGNATURE-----\n";
+			$signature = wordwrap($signature, 78, "\n", true);
+			$signature = "% -----BEGIN RSA SIGNATURE-----\n".
+			             preg_replace('/^/m', '% ', $signature)."\n".
+			             "% -----END RSA SIGNATURE-----\n";
 			echo $signature;
 		}
 	}

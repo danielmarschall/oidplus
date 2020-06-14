@@ -28,13 +28,6 @@ WHOIS
 - webwhois: beside TXT/XML/JSON more output modi?  CSV, S/MIME  (and add the S/MIME keypurpose to the X.509 certificates)
 - whois query 'oid:' should show all root entries (subordinate entries), but there is only the message "not found"
 
-RFC
-- proof read
-- should the whole WHOIS output be case insensitive?
-- should "distance" be mandatory?
-- try to use MUST, MUST NOT, SHALL etc. according to RFC 2119
-- felder die nicht optional sind => mandatory kennzeichnen
-
 SETUP
 - There should be a "test database connection" button
 
