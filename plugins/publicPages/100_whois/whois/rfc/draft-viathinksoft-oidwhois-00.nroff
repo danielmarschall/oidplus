@@ -86,7 +86,7 @@ Table of Contents
        3.2.1  Query-Section (information about query and result)  . .  8
        3.2.2  Object-Section (information about the OID)  . . . . . .  9
        3.2.3  RA-Section (information about the current RA) . . . . . 10
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 11
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 12
      3.4  Date/Time references  . . . . . . . . . . . . . . . . . . . 12
    4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
    5  Full example  . . . . . . . . . . . . . . . . . . . . . . . . . 14
@@ -374,7 +374,7 @@ Possible fields:
 
 - Additional fields can be defined by the WHOIS service, but the field names MUST begin with "ra-".
 The field names SHALL only consist of the lower-case letters "a..z", hyphens (-) and numbers, and SHOULD be written in English language.
-
+.bp
 .ti 0
 3.3  Digital Signature
 
@@ -385,8 +385,10 @@ regarding signature creation and validation is given at this time.
 
 Depending on the signature method being used, various things need to be appended and/or prepended to the response.
 These additions MUST be prepended by a percent sign ("%") to avoid that an application confuses these additions
-(e.g. a PGP header) with part of the actual WHOIS response.
-.bp
+(e.g. a PGP header) with part of the actual WHOIS response. The comment lines which belong to the signature
+SHALL be removed before the signature is validated, so that the leading percent sign ("%") in front of the signature block
+will not be evaluated as part of the message content.
+
 .ti 0
 3.4  Date/Time references
 
@@ -640,7 +642,7 @@ Recommendation ITU-T\0X.672 (2010) | ISO/IEC 29168-1:2011.
 .in 14
 [X660]     "Information technology - Procedures for the operation of object identifier registration authorities: General procedures and top arcs of the international object identifier tree",
 .in 14
-Recommendation ITU-T\0X.660 (2011) | ISO/IEC\09834-1:2012
+Recommendation ITU-T\0X.660 (2011) | ISO/IEC\09834-1:2012.
 
 
 .ti 0

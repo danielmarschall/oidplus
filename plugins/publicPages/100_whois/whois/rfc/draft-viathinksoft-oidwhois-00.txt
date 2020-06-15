@@ -79,7 +79,7 @@ Table of Contents
        3.2.1  Query-Section (information about query and result)  . .  8
        3.2.2  Object-Section (information about the OID)  . . . . . .  9
        3.2.3  RA-Section (information about the current RA) . . . . . 10
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 11
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 12
      3.4  Date/Time references  . . . . . . . . . . . . . . . . . . . 12
    4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
    5  Full example  . . . . . . . . . . . . . . . . . . . . . . . . . 14
@@ -594,6 +594,30 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    of the lower-case letters "a..z", hyphens (-) and numbers, and SHOULD
    be written in English language.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+Daniel Marschall         Expires <Expiry Date>                 [Page 11]
+
+INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+
+
 3.3  Digital Signature
 
    If integrity/authenticity is required, the whole response can be
@@ -607,16 +631,10 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    be appended and/or prepended to the response. These additions MUST be
    prepended by a percent sign ("%") to avoid that an application
    confuses these additions (e.g. a PGP header) with part of the actual
-   WHOIS response.
-
-
- 
-
-
-Daniel Marschall         Expires <Expiry Date>                 [Page 11]
-
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
-
+   WHOIS response. The comment lines which belong to the signature SHALL
+   be removed before the signature is validated, so that the leading
+   percent sign ("%") in front of the signature block will not be
+   evaluated as part of the message content.
 
 3.4  Date/Time references
 
@@ -635,24 +653,6 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    2019-03-15
    2019-03
    2019
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -964,7 +964,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
               object identifier registration authorities: General
               procedures and top arcs of the international object
               identifier tree",
-              Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012
+              Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012.
 
 
 Authors' Addresses
