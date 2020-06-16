@@ -55,7 +55,7 @@ Copyright and License Notice
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 1]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
    carefully, as they describe your rights and restrictions with respect
@@ -78,7 +78,7 @@ Table of Contents
      3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  7
        3.2.1  Query-Section (information about query and result)  . .  8
        3.2.2  Object-Section (information about the OID)  . . . . . .  9
-       3.2.3  RA-Section (information about the current RA) . . . . . 10
+       3.2.3  RA-Section (information about the current RA) . . . . . 11
      3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 12
      3.4  Date/Time references  . . . . . . . . . . . . . . . . . . . 12
    4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
@@ -86,14 +86,14 @@ Table of Contents
      5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 14
      5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 14
    6  Alternative namespaces  . . . . . . . . . . . . . . . . . . . . 15
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 15
    7  Security Considerations . . . . . . . . . . . . . . . . . . . . 16
    8  Internationalization Considerations . . . . . . . . . . . . . . 16
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 16
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 17
    10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 17
      10.1  Normative References . . . . . . . . . . . . . . . . . . . 17
      10.2  Informative References . . . . . . . . . . . . . . . . . . 18
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 18
-
 
 
 
@@ -111,7 +111,7 @@ Table of Contents
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 2]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 1  Introduction
@@ -149,25 +149,25 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    X.509 certificates and usually contain a viewer application that
    shows the contents of a certificate. Attributes which are unknown by
    the application are either only displayed by their OID, or hidden to
-   avoid confusion to the user. With OID-over-WHOIS, the application
-   could query the name of these unknown OIDs or even retrieve
-   instructions on how the data described by this OID can be parsed and
-   displayed.
+   avoid confusion to the user. With OID-WHOIS, the application could
+   query the name of these unknown OIDs or even retrieve instructions on
+   how the data described by this OID can be parsed and displayed.
 
    (2) Systems that handle SNMP (Simple Network Management Protocol)
    might need information about additional MIB files or their OIDs. OID-
-   over-WHOIS could aid the applications gathering the required
-   information.
+   WHOIS could aid the applications gathering the required information.
 
    (3) In directory services like LDAP (Lightweight Directory Access
    Protocol), applications could query the name of attributes which are
    described by an OID the application does not know.
+
+
  
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 3]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 1.1  Terminology
@@ -223,13 +223,12 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 4]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 2  Request
 
-   OID-over-WHOIS uses the WHOIS protocol specified in RFC 3912
-   [RFC3912].
+   OID-WHOIS uses the WHOIS protocol specified in RFC 3912 [RFC3912].
 
    During the request, the client sends a query beginning with "oid:",
    followed by an OID in dot-notation, as defined in RFC 2252 [RFC2252],
@@ -272,14 +271,15 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
        oid:2.999$firstToken$secondToken
 
    Please note that authentication tokens are only a weak protection.
-   For more information, see chapter 6 ("Security Considerations").
+   For more information, see section 7 ("Security Considerations").
+
 
  
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 5]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 2.2  BNF notation
@@ -335,7 +335,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 6]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 3  Response
@@ -365,7 +365,8 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
    Comment lines MUST start with a percent sign ("%") at the beginning
    of a line, without prepending whitespaces. Comment lines MUST NOT be
-   evaluated by machines.
+   evaluated by machines (except for signature validation, as mentioned
+   in section 3.3 "Digital Signature").
 
 3.2  Structure
 
@@ -385,15 +386,15 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    (3) RA-Section which contains information about the current
    Registration Authority. This section MUST start with the field "ra".
 
-   The WHOIS service MAY define additional sections after any of these
  
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 7]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
+   The WHOIS service MAY define additional sections after any of these
    sections, but the Query-Section MUST be the first section in the
    response.
 
@@ -441,13 +442,12 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 
 
-
  
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 8]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 3.2.2  Object-Section (information about the OID)
@@ -496,16 +496,18 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    label that can be used as first identifier in an ORI-IRI, shortening
    it.
 
-   - "attribute" (OPTIONAL, multiple values allowed) contains attributes
-   for that OID. Possible attributes: "leaf" (this means that no child
+
+
  
 
 
 Daniel Marschall         Expires <Expiry Date>                  [Page 9]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
+   - "attribute" (OPTIONAL, multiple values allowed) contains attributes
+   for that OID. Possible attributes: "leaf" (this means that no child
    OIDs can be allocated under this OID), "frozen" (this means that no
    more child OIDs can be created under this OID, e.g. because the RA
    has stopped operating, but the existing child OIDs stay valid), "no-
@@ -533,9 +535,32 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    - "subordinate" (OPTIONAL, multiple values allowed) contains a list
    of subordinate OIDs, beginning with "oid:".
 
-   - Additional fields can be defined by the WHOIS service. The field
+   Additional fields can be defined by the WHOIS service. The field
    names SHALL only consist of the lower-case letters "a..z", hyphens (-
    ) and numbers, and SHOULD be written in English language.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+Daniel Marschall         Expires <Expiry Date>                 [Page 10]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+
 
 3.2.3  RA-Section (information about the current RA)
 
@@ -554,13 +579,6 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    service does only know the name of the RA and nothing else), or
    "Confidential". Other values are permitted. This field MUST be
    present.
- 
-
-
-Daniel Marschall         Expires <Expiry Date>                 [Page 10]
-
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
-
 
    - "ra-name" (OPTIONAL) contains the name of a person or group
    responsible for the allocation of OIDs.
@@ -589,33 +607,15 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    - "ra-updated" (OPTIONAL) contains the date the RA information was
    last modified.
 
-   - Additional fields can be defined by the WHOIS service, but the
-   field names MUST begin with "ra-". The field names SHALL only consist
-   of the lower-case letters "a..z", hyphens (-) and numbers, and SHOULD
-   be written in English language.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   Additional field names can be defined by the WHOIS service, but they
+   MUST begin with "ra-", SHALL only consist of the lower-case letters
+   "a..z", hyphens (-) and numbers, and SHOULD be written in English.
  
 
 
 Daniel Marschall         Expires <Expiry Date>                 [Page 11]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 3.3  Digital Signature
@@ -671,7 +671,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 Daniel Marschall         Expires <Expiry Date>                 [Page 12]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 4  Referral
@@ -727,7 +727,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 Daniel Marschall         Expires <Expiry Date>                 [Page 13]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 5  Full example
@@ -783,7 +783,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 Daniel Marschall         Expires <Expiry Date>                 [Page 14]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 6  Alternative namespaces
@@ -791,12 +791,22 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    This document describes the usage of retrieving information about
    OIDs using the WHOIS protocol. In addition to the namespace "oid",
    the methods described in this document can also be applied to other
-   namespaces like "ipv4", "ipv6", "uuid", "isbn", "gtin" etc.
+   namespaces like "uuid", "isbn", "gtin" etc.
 
-   In all cases, the request MUST be UTF-8 encoded (as defined in
-   RFC 3629 [RFC3629]), without Byte-Order-Mark (BOM). The identifier
-   that is requested MUST NOT contain a dollar sign ($), because it is
-   defined as separator for authentication tokens.
+   Following things need to be considered if alternative namespaces are
+   applied:
+
+   (1) The request MUST be UTF-8 encoded (as defined in RFC 3629
+   [RFC3629]), without Byte-Order-Mark (BOM).
+
+   (2) The namespace SHALL only consist of the lower case letters 'a' -
+   'z'.
+
+   (3) The identifier that is requested MUST NOT contain a dollar sign
+   ($), because it is defined as separator for authentication tokens.
+
+
+6.1  Example: UUID Namespace
 
    In the following example, the client wants to retrieve information
    about the IPv6 address "2001:1af8:4700:a07e:1::1336". The WHOIS
@@ -804,24 +814,11 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    however, it did find the address range "2001:1af8:4700:a07e:1::/112",
    with the distance of 16 (bits):
 
-       query:        ipv6:2001:1af8:4700:a07e:1::1336
-       result:       Not found; superior object found
-       distance:     16
-
-       object:       ipv6:2001:1af8:4700:a07e:1::/112
-       status:       Information available
-       name:         ...
-       description:  ...
-       created:      ...
-       updated:      ...
-
-       ra:           ...
-       ra-status:    ...
-
-   Another usage example is the retrieval of information about UUIDs
+   The following example shows the retrieval of information about UUIDs
    (e.g. GUIDs used by Microsoft COM interfaces). The UUID namespace has
    no hierarchical structure, so the WHOIS service can only respond with
    the result "Found" or "Not found".
+
        query:        uuid:2a00375e-224c-49de-b8d1-440df7ef3ddc
        result:       Found
 
@@ -834,12 +831,15 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
        ra:           Microsoft Corp.
        ra-status:    Information unavailable
+
+
+
  
 
 
 Daniel Marschall         Expires <Expiry Date>                 [Page 15]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 7  Security Considerations
@@ -870,7 +870,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    be trusted if it is transmitted through an untrusted network.
 
    (6) If integrity/authenticity is required, the WHOIS output can be
-   signed, as described in chapter 3.2.1 "Digital Signature". However,
+   signed, as described in section 3.3 "Digital Signature". However,
    this document does not describe a mechanism for detecting which
    signature method was used. Therefore, no interoperability of
    signature creation/validation is given at this time.
@@ -885,31 +885,31 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    encoded (as defined in RFC 3629 [RFC3629]), without Byte-Order-Mark
    (BOM).
 
-9  IANA Considerations
+   The WHOIS service can define additional field names, but they SHOULD
+   be written in English language so that there is consistency with the
+   predefined field names in this specification.
 
-   IANA is running a WHOIS service at whois.iana.org. This WHOIS service
-   could be extended by allowing requests starting with "oid:" and could
-   serve the following contents:
+
  
 
 
 Daniel Marschall         Expires <Expiry Date>                 [Page 16]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
-   (1) The WHOIS service could output information about OIDs owned or
-   delegated by IANA, for example it could output information about
-   Private Enterprise Numbers (PEN) located at OID 1.3.6.1.4.1. Owners
-   of Private Enterprise Numbers could store the addresses of their own
-   WHOIS servers in the IANA database, so that these addresses can be
-   included in the WHOIS output of IANA.
+9  IANA Considerations
 
-   (2) The WHOIS service could furthermore maintain records for the OID
-   roots "oid:" (refers to IANA itself), "oid:0" (refers to ITU-T),
-   "oid:1" (refers to ISO) and "oid:2" (refers to either an ISO or an
-   ITU-T server). This could alternatively be accomplished by a WHOIS
-   service operated by ISO or ITU-T.
+   IANA is running a WHOIS service at whois.iana.org. This WHOIS service
+   could be extended by allowing requests starting with "oid:" to output
+   information about OIDs owned or delegated by IANA, for example it
+   could output information about Private Enterprise Numbers (PEN)
+   located at OID 1.3.6.1.4.1. Owners of Private Enterprise Numbers
+   could store the addresses of their own WHOIS servers in the IANA
+   database, so that these addresses can be included in the WHOIS output
+   of IANA. This would enable the referral functionality described in
+   section 4 ("Referral").
+
 
 10  References
 
@@ -935,14 +935,14 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
               <http://www.rfc-editor.org/info/rfc822>.
 
    [RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO
-              10646", RFC 3629, DOI 10.17487/RFC3629, November 2003.
+              10646", STD 63, RFC 3629, DOI 10.17487/RFC3629,
+              November 2003.
               <http://www.rfc-editor.org/info/rfc3629>.
 
    [X680]     "Information technology - Abstract Syntax Notation One
               (ASN.1): Specification of basic notation",
               Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015.
-
-
+              <http://handle.itu.int/11.1002/1000/12479>.
 
 
 
@@ -951,7 +951,7 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
 
 Daniel Marschall         Expires <Expiry Date>                 [Page 17]
 
-INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 10.2  Informative References
@@ -959,12 +959,14 @@ INTERNET DRAFT               OID-over-WHOIS                 <Issue Date>
    [X672]     "Information technology - Open systems interconnection -
               Object identifier resolution system",
               Recommendation ITU-T X.672 (2010) | ISO/IEC 29168-1:2011.
+              <http://handle.itu.int/11.1002/1000/10831>.
 
    [X660]     "Information technology - Procedures for the operation of
               object identifier registration authorities: General
               procedures and top arcs of the international object
               identifier tree",
               Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012.
+              <http://handle.itu.int/11.1002/1000/11336>.
 
 
 Authors' Addresses
@@ -976,8 +978,6 @@ Authors' Addresses
    Germany
 
    EMail: daniel-marschall@viathinksoft.de
-
-
 
 
 

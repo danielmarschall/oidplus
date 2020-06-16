@@ -8,7 +8,7 @@
 .ds RF FORMFEED[Page %]
 .ds LH INTERNET DRAFT
 .ds RH <Issue Date>
-.ds CH OID-over-WHOIS
+.ds CH OID-WHOIS
 .ds CF Expires <Expiry Date>
 .hy 0
 .nh
@@ -85,7 +85,7 @@ Table of Contents
      3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  7
        3.2.1  Query-Section (information about query and result)  . .  8
        3.2.2  Object-Section (information about the OID)  . . . . . .  9
-       3.2.3  RA-Section (information about the current RA) . . . . . 10
+       3.2.3  RA-Section (information about the current RA) . . . . . 11
      3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 12
      3.4  Date/Time references  . . . . . . . . . . . . . . . . . . . 12
    4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
@@ -93,9 +93,10 @@ Table of Contents
      5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 14
      5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 14
    6  Alternative namespaces  . . . . . . . . . . . . . . . . . . . . 15
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 15
    7  Security Considerations . . . . . . . . . . . . . . . . . . . . 16
    8  Internationalization Considerations . . . . . . . . . . . . . . 16
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 16
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 17
    10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 17
      10.1  Normative References . . . . . . . . . . . . . . . . . . . 17
      10.2  Informative References . . . . . . . . . . . . . . . . . . 18
@@ -122,9 +123,9 @@ This document describes an additional method of retrieving information about OID
 
 Three of many possible use-cases are:
 
-(1) Many web-browsers and Operating Systems are able to handle ITU-T X.509 certificates and usually contain a viewer application that shows the contents of a certificate. Attributes which are unknown by the application are either only displayed by their OID, or hidden to avoid confusion to the user. With OID-over-WHOIS, the application could query the name of these unknown OIDs or even retrieve instructions on how the data described by this OID can be parsed and displayed.
+(1) Many web-browsers and Operating Systems are able to handle ITU-T X.509 certificates and usually contain a viewer application that shows the contents of a certificate. Attributes which are unknown by the application are either only displayed by their OID, or hidden to avoid confusion to the user. With OID-WHOIS, the application could query the name of these unknown OIDs or even retrieve instructions on how the data described by this OID can be parsed and displayed.
 
-(2) Systems that handle SNMP (Simple Network Management Protocol) might need information about additional MIB files or their OIDs. OID-over-WHOIS could aid the applications gathering the required information.
+(2) Systems that handle SNMP (Simple Network Management Protocol) might need information about additional MIB files or their OIDs. OID-WHOIS could aid the applications gathering the required information.
 
 (3) In directory services like LDAP (Lightweight Directory Access Protocol), applications could query the name of attributes which are described by an OID the application does not know.
 
@@ -141,7 +142,7 @@ In this document, "RA" is an abbreviation for "Registration Authority" and "OID"
 .ti 0
 2  Request
 
-OID-over-WHOIS uses the WHOIS protocol specified in RFC\03912 [RFC3912].
+OID-WHOIS uses the WHOIS protocol specified in RFC\03912 [RFC3912].
 
 During the request, the client sends a query beginning with "oid:", followed by an OID in dot-notation, as defined in RFC\02252 [RFC2252], but with following differences:
 
@@ -183,7 +184,7 @@ oid:2.999$firstToken$secondToken
 .fi
 .in 3
 
-Please note that authentication tokens are only a weak protection. For more information, see chapter 6 ("Security Considerations").
+Please note that authentication tokens are only a weak protection. For more information, see section 7 ("Security Considerations").
 .bp
 .ti 0
 2.2  BNF notation
@@ -247,7 +248,7 @@ If attributes have multiple values (e.g. multiple Unicode labels,
 alternative email-addresses etc.), a new line with the same field name MUST be added.
 
 Comment lines MUST start with a percent sign ("%") at the beginning of a line,
-without prepending whitespaces. Comment lines MUST NOT be evaluated by machines.
+without prepending whitespaces. Comment lines MUST NOT be evaluated by machines (except for signature validation, as mentioned in section 3.3 "Digital Signature").
 
 .ti 0
 3.2  Structure
@@ -316,7 +317,7 @@ Possible fields:
 - "unicode-label" (OPTIONAL, multiple values allowed) contains a Unicode label that can be used in an OID Internationalized Resource Identifier (OID-IRI), as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 34 [X680].
 
 - "long-arc" (OPTIONAL, multiple values allowed) contains a Unicode label that can be used as first identifier in an ORI-IRI, shortening it.
-
+.bp
 - "attribute" (OPTIONAL, multiple values allowed) contains attributes for that OID.
 Possible attributes:
 "leaf" (this means that no child OIDs can be allocated under this OID),
@@ -341,8 +342,8 @@ e.g. because the RA has stopped operating, but the existing child OIDs stay vali
 
 - "subordinate" (OPTIONAL, multiple values allowed) contains a list of subordinate OIDs, beginning with "oid:".
 
-- Additional fields can be defined by the WHOIS service. The field names SHALL only consist of the lower-case letters "a..z", hyphens (-) and numbers, and SHOULD be written in English language.
-
+Additional fields can be defined by the WHOIS service. The field names SHALL only consist of the lower-case letters "a..z", hyphens (-) and numbers, and SHOULD be written in English language.
+.bp
 .ti 0
 3.2.3  RA-Section (information about the current RA)
 
@@ -372,8 +373,7 @@ Possible fields:
 
 - "ra-updated" (OPTIONAL) contains the date the RA information was last modified.
 
-- Additional fields can be defined by the WHOIS service, but the field names MUST begin with "ra-".
-The field names SHALL only consist of the lower-case letters "a..z", hyphens (-) and numbers, and SHOULD be written in English language.
+Additional field names can be defined by the WHOIS service, but they MUST begin with "ra-", SHALL only consist of the lower-case letters "a..z", hyphens (-) and numbers, and SHOULD be written in English.
 .bp
 .ti 0
 3.3  Digital Signature
@@ -513,31 +513,25 @@ ra-status:      Information unavailable
 .ti 0
 6  Alternative namespaces
 
-This document describes the usage of retrieving information about OIDs using the WHOIS protocol. In addition to the namespace "oid", the methods described in this document can also be applied to other namespaces like "ipv4", "ipv6", "uuid", "isbn", "gtin" etc.
+This document describes the usage of retrieving information about OIDs using the WHOIS protocol. In addition to the namespace "oid", the methods described in this document can also be applied to other namespaces like "uuid", "isbn", "gtin" etc.
 
-In all cases, the request MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM). The identifier that is requested MUST NOT contain a dollar sign ($), because it is defined as separator for authentication tokens.
+Following things need to be considered if alternative namespaces are applied:
+
+(1) The request MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+
+(2) The namespace SHALL only consist of the lower case letters 'a' - 'z'.
+
+(3) The identifier that is requested MUST NOT contain a dollar sign ($), because it is defined as separator for authentication tokens.
+
+
+.ti 0
+6.1  Example: UUID Namespace
 
 In the following example, the client wants to retrieve information about the IPv6 address "2001:1af8:4700:a07e:1::1336". The WHOIS service didn't find this particular IPv6 address in its database, however, it did find the address range "2001:1af8:4700:a07e:1::/112", with the distance of 16 (bits):
 
-.in 7
-.nf
-query:        ipv6:2001:1af8:4700:a07e:1::1336
-result:       Not found; superior object found
-distance:     16
-
-object:       ipv6:2001:1af8:4700:a07e:1::/112
-status:       Information available
-name:         ...
-description:  ...
-created:      ...
-updated:      ...
-
-ra:           ...
-ra-status:    ...
-.fi
-
 .in 3
-Another usage example is the retrieval of information about UUIDs (e.g. GUIDs used by Microsoft COM interfaces). The UUID namespace has no hierarchical structure, so the WHOIS service can only respond with the result "Found" or "Not found".
+The following example shows the retrieval of information about UUIDs (e.g. GUIDs used by Microsoft COM interfaces). The UUID namespace has no hierarchical structure, so the WHOIS service can only respond with the result "Found" or "Not found".
+
 .in 7
 .nf
 query:        uuid:2a00375e-224c-49de-b8d1-440df7ef3ddc
@@ -569,7 +563,7 @@ ra-status:    Information unavailable
 (5) The WHOIS protocol itself has no mechanism for verifying the integrity of data received.
 Due to this fact, information should not be trusted if it is transmitted through an untrusted network.
 
-(6) If integrity/authenticity is required, the WHOIS output can be signed, as described in chapter 3.2.1 "Digital Signature". However, this document does not describe a mechanism for detecting which signature method was used. Therefore, no interoperability of signature creation/validation is given at this time.
+(6) If integrity/authenticity is required, the WHOIS output can be signed, as described in section 3.3 "Digital Signature". However, this document does not describe a mechanism for detecting which signature method was used. Therefore, no interoperability of signature creation/validation is given at this time.
 
 .ti 0
 8  Internationalization Considerations
@@ -578,14 +572,13 @@ The original WHOIS protocol as defined in RFC\03912 [RFC3912] does not define an
 
 To enhance interoperability, the request and response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
 
+The WHOIS service can define additional field names, but they SHOULD be written in English language so that there is consistency with the predefined field names in this specification.
+.bp
 .ti 0
 9  IANA Considerations
 
-IANA is running a WHOIS service at whois.iana.org. This WHOIS service could be extended by allowing requests starting with "oid:" and could serve the following contents:
+IANA is running a WHOIS service at whois.iana.org. This WHOIS service could be extended by allowing requests starting with "oid:" to output information about OIDs owned or delegated by IANA, for example it could output information about Private Enterprise Numbers (PEN) located at OID 1.3.6.1.4.1. Owners of Private Enterprise Numbers could store the addresses of their own WHOIS servers in the IANA database, so that these addresses can be included in the WHOIS output of IANA. This would enable the referral functionality described in section 4 ("Referral").
 
-(1) The WHOIS service could output information about OIDs owned or delegated by IANA, for example it could output information about Private Enterprise Numbers (PEN) located at OID 1.3.6.1.4.1. Owners of Private Enterprise Numbers could store the addresses of their own WHOIS servers in the IANA database, so that these addresses can be included in the WHOIS output of IANA.
-
-(2) The WHOIS service could furthermore maintain records for the OID roots "oid:" (refers to IANA itself), "oid:0" (refers to ITU-T), "oid:1" (refers to ISO) and "oid:2" (refers to either an ISO or an ITU-T server). This could alternatively be accomplished by a WHOIS service operated by ISO or ITU-T.
 
 .ti 0
 10  References
@@ -619,7 +612,7 @@ IANA is running a WHOIS service at whois.iana.org. This WHOIS service could be e
 
 .in 14
 .ti 3
-[RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO 10646", RFC\03629, DOI\010.17487/RFC3629, November\02003.
+[RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO 10646", STD\063, RFC\03629, DOI\010.17487/RFC3629, November\02003.
 .in 14
 <http://www.rfc-editor.org/info/rfc3629>.
 
@@ -628,6 +621,8 @@ IANA is running a WHOIS service at whois.iana.org. This WHOIS service could be e
 [X680]     "Information technology - Abstract Syntax Notation One (ASN.1): Specification of basic notation",
 .in 14
 Recommendation ITU-T\0X.680 (2015) | ISO/IEC\08824-1:2015.
+.in 14
+<http://handle.itu.int/11.1002/1000/12479>.
 .bp
 .ti 0
 10.2  Informative References
@@ -637,12 +632,16 @@ Recommendation ITU-T\0X.680 (2015) | ISO/IEC\08824-1:2015.
 [X672]     "Information technology - Open systems interconnection - Object identifier resolution system",
 .in 14
 Recommendation ITU-T\0X.672 (2010) | ISO/IEC 29168-1:2011.
+.in 14
+<http://handle.itu.int/11.1002/1000/10831>.
 
 .ti 3
 .in 14
 [X660]     "Information technology - Procedures for the operation of object identifier registration authorities: General procedures and top arcs of the international object identifier tree",
 .in 14
 Recommendation ITU-T\0X.660 (2011) | ISO/IEC\09834-1:2012.
+.in 14
+<http://handle.itu.int/11.1002/1000/11336>.
 
 
 .ti 0
