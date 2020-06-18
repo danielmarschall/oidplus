@@ -2,7 +2,7 @@
 
 
 
-INTERNET-DRAFT                                          Daniel Marschall
+INTERNET-DRAFT                                              D. Marschall
 Intended Status: Informational                              ViaThinkSoft
 Expires: <Expiry Date>                                         June 2020
 
@@ -44,22 +44,22 @@ Status of this Memo
 Copyright and License Notice
 
    Copyright (c) 2020 IETF Trust and the persons identified as the
-   document authors. All rights reserved.
+   document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
    (http://trustee.ietf.org/license-info) in effect on the date of
-   publication of this document. Please review these documents
+   publication of this document.  Please review these documents
  
 
 
-Daniel Marschall         Expires <Expiry Date>                  [Page 1]
+Marschall                Expires <Expiry Date>                  [Page 1]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
    carefully, as they describe your rights and restrictions with respect
-   to this document. Code Components extracted from this document must
+   to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
@@ -71,30 +71,30 @@ Table of Contents
    1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  3
      1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  4
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
-     2.1  Authentication tokens . . . . . . . . . . . . . . . . . . .  5
-     2.2  BNF notation  . . . . . . . . . . . . . . . . . . . . . . .  6
-   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  7
-     3.1  Format and encoding . . . . . . . . . . . . . . . . . . . .  7
+     2.1  Authentication Tokens . . . . . . . . . . . . . . . . . . .  5
+     2.2  BNF Notation  . . . . . . . . . . . . . . . . . . . . . . .  6
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  6
      3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  7
-       3.2.1  Query-Section (information about query and result)  . .  8
-       3.2.2  Object-Section (information about the OID)  . . . . . .  9
-       3.2.3  RA-Section (information about the current RA) . . . . . 11
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 12
-     3.4  Date/Time references  . . . . . . . . . . . . . . . . . . . 12
-   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
-   5  Full example  . . . . . . . . . . . . . . . . . . . . . . . . . 14
-     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 14
-     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 14
-   6  Alternative namespaces  . . . . . . . . . . . . . . . . . . . . 15
-     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 15
-   7  Security Considerations . . . . . . . . . . . . . . . . . . . . 16
-   8  Internationalization Considerations . . . . . . . . . . . . . . 16
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 17
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 17
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 17
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 18
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 18
-
+       3.2.1  Query-Section (Information about Query and Result)  . .  8
+       3.2.2  Object-Section (Information about the OID)  . . . . . .  9
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 11
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 13
+     3.4  Date/Time References  . . . . . . . . . . . . . . . . . . . 13
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+   5  Full Example  . . . . . . . . . . . . . . . . . . . . . . . . . 15
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 15
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 16
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 17
+   7  Internationalization Considerations . . . . . . . . . . . . . . 17
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 18
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 18
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 19
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 20
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 20
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 20
 
 
 
@@ -109,7 +109,7 @@ Table of Contents
  
 
 
-Daniel Marschall         Expires <Expiry Date>                  [Page 2]
+Marschall                Expires <Expiry Date>                  [Page 2]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
@@ -118,54 +118,54 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
    An Object Identifier (OID) is an extensively used identification
    mechanism jointly developed by ITU-T and ISO/IEC for naming any type
-   of object with a globally unambiguous name. OIDs provide a persistent
-   identification of objects based on a hierarchical structure of
-   Registration Authorities (RA), where each parent has an Object
-   Identifier and allocates Object Identifiers to child nodes. More
-   information about OIDs can be found in Recommendation ITU-T X.660
-   (2011) | ISO/IEC 9834-1:2012 [X660].
+   of object with a globally unambiguous name.  OIDs provide a
+   persistent identification of objects based on a hierarchical
+   structure of Registration Authorities (RA), where each parent has an
+   Object Identifier and allocates Object Identifiers to child nodes. 
+   More information about OIDs can be found in Recommendation ITU-T
+   X.660 (2011) | ISO/IEC 9834-1:2012 [X660].
 
-   There are a few methods of retrieving information about an Object
-   Identifier, like:
+   There are a few methods of retrieving information about an OID, like:
 
-   (A) Searching through web repositories like www.oid-info.com or
-   www.alvestrand.no/objectid/ . This has the disadvantage that the
-   information is usually not machine-readable without functionalities
-   like an API.
+   (A) Searching through web repositories like <http://www.oid-info.com>
+   or <http://www.alvestrand.no/objectid/>.  This has the disadvantage
+   that the information is usually not machine-readable without
+   functionalities like an API.
 
    (B) Retrieving information using the Object Identifier Resolution
-   System (ORS) defined in Recommendation ITU-T X.672 (2010) | ISO/IEC
-   29168-1:2011 [X672]. This has the disadvantage that the Registration
-   Authorities needs to include specific DNS Resource Records to their
-   domain, and additionally, all superior RAs must implement the ORS.
+   System (ORS) as defined in Recommendation ITU-T X.672 (2010) |
+   ISO/IEC 29168-1:2011 [X672].  This has the disadvantage that
+   Registration Authorities need to include specific DNS Resource
+   Records to their domain, and additionally, all superior RAs must
+   implement the ORS.
 
    This document describes an additional method of retrieving
    information about OIDs, which is both human-readable and machine-
    readable.
 
-   Three of many possible use-cases are:
+   Three of many possible use-case scenarios are:
 
    (1) Many web-browsers and Operating Systems are able to handle ITU-T
-   X.509 certificates and usually contain a viewer application that
-   shows the contents of a certificate. Attributes which are unknown by
-   the application are either only displayed by their OID, or hidden to
-   avoid confusion to the user. With OID-WHOIS, the application could
-   query the name of these unknown OIDs or even retrieve instructions on
-   how the data described by this OID can be parsed and displayed.
+   X.509 certificates [X509] and usually contain a viewer application
+   that shows the contents of a certificate.  Attributes which are
+   unknown by the application are either only displayed by their OID, or
+   hidden to avoid confusion to the user.  With OID-WHOIS, the
+   application could query the name of these unknown OIDs or even
+   retrieve instructions on how the data described by this OID can be
+   parsed and displayed.
 
-   (2) Systems that handle SNMP (Simple Network Management Protocol)
-   might need information about additional MIB files or their OIDs. OID-
-   WHOIS could aid the applications gathering the required information.
+   (2) Applications that handle SNMP (Simple Network Management
+   Protocol) [RFC1157] might need information about additional MIB files
+   or their OIDs.  OID-WHOIS could aid these applications gathering the
+   required information.
 
    (3) In directory services like LDAP (Lightweight Directory Access
-   Protocol), applications could query the name of attributes which are
-   described by an OID the application does not know.
-
-
+   Protocol) [RFC4511], applications could query the name of attributes
+   which are described by an OID the application doesn't know.
  
 
 
-Daniel Marschall         Expires <Expiry Date>                  [Page 3]
+Marschall                Expires <Expiry Date>                  [Page 3]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
@@ -221,24 +221,23 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Daniel Marschall         Expires <Expiry Date>                  [Page 4]
+Marschall                Expires <Expiry Date>                  [Page 4]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 2  Request
 
-   OID-WHOIS uses the WHOIS protocol specified in RFC 3912 [RFC3912].
+   OID-WHOIS is based on the WHOIS protocol specified in RFC 3912
+   [RFC3912].
 
    During the request, the client sends a query beginning with "oid:",
-   followed by an OID in dot-notation, as defined in RFC 2252 [RFC2252],
-   but with following differences:
+   followed by an OID in dot-notation, as defined in RFC 3061, section 2
+   [RFC3061], but with following differences:
 
-   (a) Numbers MUST NOT have leading zeroes.
+   (1) The OID MAY contain a leading dot at the beginning.
 
-   (b) The OID MAY contain a leading dot at the beginning.
-
-   (c) To query the root of the OID tree, the OID MUST be either missing
+   (2) To query the root of the OID tree, the OID MUST be either missing
    or consisting only of a single dot.
 
    Examples of valid queries:
@@ -248,17 +247,17 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
        oid:2.999
        oid:.2.999
 
-   All OIDs MUST be interpreted as absolute OIDs. Relative OIDs (e.g.
+   All OIDs MUST be interpreted as absolute OIDs.  Relative OIDs (e.g.
    relative to the OID of the Registration Authority operating the WHOIS
    service) are not allowed.
 
    The request MUST be treated case-sensitive.
 
-2.1  Authentication tokens
+2.1  Authentication Tokens
 
    Some organizations might not want to present their OID information
    (or part of it) to the public, e.g. for reasons like privacy or
-   confidentiality. Therefore, at the end of the query, the client can
+   confidentiality.  Therefore, at the end of the query, the client can
    append case-sensitive, non-empty alphanumeric authentication tokens
    to control the display of confidential information returned by the
    WHOIS service.
@@ -270,23 +269,24 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
        oid:2.999$firstToken
        oid:2.999$firstToken$secondToken
 
-   Please note that authentication tokens are only a weak protection.
-   For more information, see section 7 ("Security Considerations").
+   Please note that authentication tokens are only a weak protection. 
+   For more information, see section 8 ("Security Considerations").
+
 
 
  
 
 
-Daniel Marschall         Expires <Expiry Date>                  [Page 5]
+Marschall                Expires <Expiry Date>                  [Page 5]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
-2.2  BNF notation
+2.2  BNF Notation
 
    For the purposes of defining the query string, the following BNF
-   definitions will be used. They are based on the BNF styles of RFC 822
-   [RFC822].
+   definitions will be used.  They are based on the BNF styles of
+   RFC 822 [RFC0822].
 
    digit   = "0" / "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9"
 
@@ -317,30 +317,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    query           = namespace ":" optional-oid *( "$" authtoken )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-Daniel Marschall         Expires <Expiry Date>                  [Page 6]
-
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
-
-
 3  Response
 
-3.1  Format and encoding
+3.1  Format and Encoding
 
    The response MUST be UTF-8 encoded (as defined in RFC 3629
    [RFC3629]), without Byte-Order-Mark (BOM).
@@ -349,11 +328,17 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    double colon, value and whitespaces.
 
    The response contains multiple lines with field names and values,
-   which MUST be separated by a double colon (":"). Whitespace
+   which MUST be separated by a double colon (":").  Whitespace
    characters after the double colon are allowed.
+ 
 
-   Field names MUST be treated case-insensitive, while values MUST be
-   treated case-sensitive.
+
+Marschall                Expires <Expiry Date>                  [Page 6]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+
+
+   Field names and values MUST be treated case-sensitive.
 
    If a value needs to be split into multiple lines, e.g. if the line
    would exceed the length limit, the field name including double colon
@@ -364,242 +349,287 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    name MUST be added.
 
    Comment lines MUST start with a percent sign ("%") at the beginning
-   of a line, without prepending whitespaces. Comment lines MUST NOT be
+   of a line, without prepending whitespaces.  They MUST NOT be
    evaluated by machines (except for signature validation, as mentioned
    in section 3.3 "Digital Signature").
 
 3.2  Structure
 
    A response consists of sections, which are defined in the following
-   clauses. Sections SHOULD be separated by at least one empty line
+   clauses.  Sections SHOULD be separated by at least one empty line
    and/or comment line.
 
    This document defines the following sections (which SHALL stay in
    this order):
 
-   (1) Query-Section which contains the request and the result. This
+   (1) Query-Section which contains the request and the result.  This
    section MUST start with the field "query".
 
-   (2) Object-Section which contains information about the OID. This
+   (2) Object-Section which contains information about the OID.  This
    section MUST start with the field "object".
 
    (3) RA-Section which contains information about the current
-   Registration Authority. This section MUST start with the field "ra".
-
- 
-
-
-Daniel Marschall         Expires <Expiry Date>                  [Page 7]
-
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
-
+   Registration Authority.  This section MUST start with the field "ra".
 
    The WHOIS service MAY define additional sections after any of these
    sections, but the Query-Section MUST be the first section in the
    response.
 
-3.2.1  Query-Section (information about query and result)
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+Marschall                Expires <Expiry Date>                  [Page 7]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+
+
+3.2.1  Query-Section (Information about Query and Result)
 
    This section MUST always be present and MUST start with the field
-   "query". It MUST be the first section in the response.
+   "query".  It MUST be the first section in the response.
 
    Possible fields:
 
    - "query" MUST be present and contain the request of the client
-   (beginning with the namespace, i.e. "oid:"). Canonization or
-   sanitation (like removing a leading dot) SHOULD NOT be applied at
-   this step. Authentication tokens SHOULD be omitted, though.
+   (beginning with the namespace and double colon, i.e. "oid:"). 
+   Canonization or sanitation (like removing a leading dot) SHOULD NOT
+   be applied at this step.  Authentication tokens SHOULD be omitted,
+   though.
 
    - "result" MUST be present and MUST be one of the following values:
 
-       "Found" means that the system can verify that the requested OID
-       exists. It has either full information about the OID, or knows
-       another WHOIS service where information can be retrieved from.
+       "Found" means that the WHOIS service can verify that the
+       requested OID exists.  It has either full information about the
+       OID, or knows another WHOIS service where more information can be
+       retrieved from.
 
-       "Not found; superior object found" means that the system cannot
-       verify that the requested OID exists, or it denies that the OID
-       exists (e.g. because it is confidential). However, the system
-       knows a superior OID does exist. The response will show
-       information about this superior OID instead.
+       "Not found; superior object found" means that the WHOIS service
+       cannot verify that the requested OID exists, or it denies that
+       the OID exists (e.g. because it is confidential).  However, the
+       WHOIS service knows a superior OID which does exist.  The
+       following sections will show information about that superior OID
+       instead.
 
-       "Not found" means that the system cannot verify that the
+       "Not found" means that the WHOIS service cannot verify that the
        requested OID exists, or it denies that the OID exists (e.g.
-       because it is confidential). Additionally, the system does not
-       have information about any superior OID, or its existence is also
-       denied.
+       because it is confidential).  Additionally, the WHOIS service
+       does not have information about any superior OID, or its
+       existence is also denied.
 
-   - "distance" SHOULD be present if it is applicable in the namespace
-   (it is always applicable for OIDs) and if the result is "Not found;
-   superior object found". A distance of 1 means that the direct parent
-   was found. A distance of 2 means that the grand-parent was found,
-   etc.
+       "Service error" means that an internal error occurred, or if the
+       system is in maintenance mode.  The client should try again
+       later.
 
+   - "distance" SHOULD be present if it is applicable in the requested
+   namespace (it is always applicable for OIDs) and if the result is
+   "Not found; superior object found".  A distance of 1 means that the
+   direct parent was found.  A distance of 2 means that the grand-parent
+   was found, etc.
 
-
-
-
-
-
-
+   - "message" SHOULD be present if the result is "Service error" and
+   contain a message explaining why the service is not available (e.g.
+   displaying an error message).  It MUST NOT be present if the result
+   is something else.
 
  
 
 
-Daniel Marschall         Expires <Expiry Date>                  [Page 8]
+Marschall                Expires <Expiry Date>                  [Page 8]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
-3.2.2  Object-Section (information about the OID)
+3.2.2  Object-Section (Information about the OID)
 
    This section MUST be present if the result is "Found" or "Not found;
-   superior object found". It MUST start with the field "object".
+   superior object found".  It MUST start with the field "object".  It
+   MUST NOT be present if the result is "Not found" or "Service error".
 
    Possible fields:
 
    - "object" contains the OID in dot-notation, prepended by the
-   namespace ("oid:"). This field MUST be present.
+   namespace and double colon ("oid:").  This field MUST be present.
 
-   - "status" SHOULD usually have the value "Information available", but
-   it can also have different values like "Confidential" (in case the
-   server doesn't deny the existence of the OID). This field MUST be
-   present.
+   - "status" MUST be present and MUST be one of the following values:
 
-   - "whois-service" SHOULD be present if the WHOIS service doesn't have
-   full information about the OID (e.g. if the requested OID is inside a
-   branch that was delegated to a different RA operating their own WHOIS
-   service) but knows a WHOIS server which can handle the request. If
-   the result was "Found" (i.e. the WHOIS service has full information
-   about the OID), the information "whois-service" is only
-   informational; its existence is most likely a hint that subsequent
-   OIDs will be found at that WHOIS server. If the result is "Not found;
-   superior object found", the client SHOULD query the referred WHOIS
-   server in order to receive more information about the OID.
+       "Information available" means that information about this object
+       is fully available.
 
-   - "url" (OPTIONAL, multiple values allowed) contains a URL to a
-   website that contains more information about the OID.
+       "Information partially available" means that part of the
+       information is not available.  Possible reasons could be that
+       part of the information was redacted due to confidentiality, or
+       the WHOIS service does only know basic information, while the
+       full information can be found somewhere else (e.g. at a referred
+       WHOIS service).
 
-   - "identifier" (OPTIONAL, multiple values allowed) contains the ASN.1
-   alphanumeric value ("NameForm") as defined in Recommendation ITU-T
-   X.680 (2015) | ISO/IEC 8824-1:2015, clause 32 [X680].
+       "Information unavailable" means that the data is missing,
+       redacted due to confidentiality or otherwise unavailable.
 
-   - "standardized-id" (OPTIONAL, multiple values allowed) contains an
-   identifier that has a standardized NameForm, i.e. in an ASN.1
-   notation, it can be written without its associated number.
+   - "whois-service" contains an IP-address or host name of a system
+   that offers a WHOIS service.  The field SHOULD be present if the
+   WHOIS service doesn't have full information about the OID (e.g. if
+   the requested OID is inside a branch that was delegated to a
+   different RA operating their own WHOIS service) but knows a WHOIS
+   server which can handle the request.  If the result was "Found" (i.e.
+   the OID is existing in the local database), the information "whois-
+   service" is only informational; its existence is most likely a hint
+   that subordinate OIDs will be found at that WHOIS server.  If the
+   result is "Not found; superior object found", the client SHOULD query
+   the referred WHOIS server in order to receive more information about
+   the OID.  See more information in section 4 ("Referral").
 
-   - "unicode-label" (OPTIONAL, multiple values allowed) contains a
-   Unicode label that can be used in an OID Internationalized Resource
-   Identifier (OID-IRI), as defined in Recommendation ITU-T X.680 (2015)
-   | ISO/IEC 8824-1:2015, clause 34 [X680].
+   - "url" (OPTIONAL, multiple values allowed) contains a URL (as
+   defined in RFC 3986 [RFC3986]) leading to more information about the
+   OID.
 
-   - "long-arc" (OPTIONAL, multiple values allowed) contains a Unicode
-   label that can be used as first identifier in an ORI-IRI, shortening
-   it.
-
+   - "identifier" (OPTIONAL, multiple values allowed) contains the
+   alphanumeric identifier ("NameForm") as defined in Recommendation
+   ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.3 [X680].
 
 
  
 
 
-Daniel Marschall         Expires <Expiry Date>                  [Page 9]
+Marschall                Expires <Expiry Date>                  [Page 9]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
+   - "standardized-id" (OPTIONAL, multiple values allowed) contains an
+   alphanumeric identifier that has a standardized "NameForm", i.e. in
+   an ASN.1 notation, it can be written without its associated number. 
+   See more information at Recommendation ITU-T X.680 (2015) | ISO/IEC
+   8824-1:2015, clause 32.7 [X680].
+
+   - "unicode-label" (OPTIONAL, multiple values allowed) contains a Non-
+   integer Unicode label, as defined in Recommendation ITU-T X.680
+   (2015) | ISO/IEC 8824-1:2015, clause 12.27 [X680].
+
+   - "long-arc" (OPTIONAL, multiple values allowed) contains a Non-
+   integer Unicode label that can be used as first identifier in an OID
+   Internationalized Resource Identifier (OID-IRI), shortening it.  See
+   more information at Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-
+   1:2012, clause 3.5.8 [X660].
+
    - "attribute" (OPTIONAL, multiple values allowed) contains attributes
-   for that OID. Possible attributes: "leaf" (this means that no child
-   OIDs can be allocated under this OID), "frozen" (this means that no
-   more child OIDs can be created under this OID, e.g. because the RA
-   has stopped operating, but the existing child OIDs stay valid), "no-
-   identifiers" (this means that the RA is not allocating identifiers),
-   or "no-unicode-labels" (this means that the RA is not allocating
-   Unicode labels).
+   for that OID.  Possible attributes are:
 
-   - "name" contains the name of the OID. This field SHOULD be present.
+       "leaf" means that no child OIDs can be allocated under this OID.
 
-   - "description" (OPTIONAL) contains a short description of the OID.
+       "frozen" means that no more child OIDs can be created under this
+       OID, e.g. because the RA has stopped operating, but the existing
+       child OIDs stay valid.
 
-   - "information" (OPTIONAL) contains additional information.
+       "no-identifiers" means that the RA is not allocating alphanumeric
+       identifiers.
+
+       "no-unicode-labels" means that the RA is not allocating Non-
+       integer Unicode labels.
+
+   - "name" (OPTIONAL) contains the name of the OID.
+
+   - "description" (OPTIONAL) contains a short description of the OID. 
+   The description should only be a single sentence.
+
+   - "information" (OPTIONAL) contains additional information, e.g. a
+   MIB syntax.
 
    - "created" (OPTIONAL) contains the date the OID was allocated by the
    superior RA.
 
-   - "registered" (OPTIONAL) contains the date the OID was registered in
-   the local database.
-
-   - "updated" (OPTIONAL) contains the date the OID was last updated.
+   - "updated" (OPTIONAL) contains the date the OID information was last
+   updated.
 
    - "parent" (OPTIONAL) contains the OID of the nearest known parent
-   OID, beginning with "oid:".
-
-   - "subordinate" (OPTIONAL, multiple values allowed) contains a list
-   of subordinate OIDs, beginning with "oid:".
-
-   Additional fields can be defined by the WHOIS service. The field
-   names SHALL only consist of the lower-case letters "a..z", hyphens (-
-   ) and numbers, and SHOULD be written in English language.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   OID, prepended by namespace and double colon, i.e. "oid:".
 
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 10]
+Marschall                Expires <Expiry Date>                 [Page 10]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
-3.2.3  RA-Section (information about the current RA)
+   - "subordinate" (OPTIONAL, multiple values allowed) contains a list
+   of subordinate OIDs, prepended by namespace and double colon, i.e.
+   "oid:".
 
-   This section MUST NOT be present if result is "Not found", otherwise
-   it MAY be present. If it is present, it MUST start with the field
-   "ra".
+   Additional fields can be defined by the WHOIS service.  The field
+   names SHALL only consist of the lower-case letters "a..z", hyphens
+   ("-") and numbers, and SHOULD be written in English language.  The
+   field MUST NOT begin or end with a hyphen and a hyphen MUST NOT be
+   followed by another hyphen.
+
+
+3.2.3  RA-Section (Information about the Current RA)
+
+   This section MUST NOT be present if result is "Not found" or "Service
+   error", otherwise it MAY be present.  If it is present, it MUST start
+   with the field "ra".
 
    Possible fields:
 
    - "ra" contains a general name of the RA, like the name of a person,
-   the name of a workgroup, or a company name. This field MUST be
-   present.
+   the name of a workgroup, or the name of an organization.  This field
+   MUST be present.
 
-   - "ra-status" shows the status of the RA. It SHOULD usually be
-   "Information available", "Information unavailable" (if the WHOIS
-   service does only know the name of the RA and nothing else), or
-   "Confidential". Other values are permitted. This field MUST be
-   present.
+   - "ra-status" MUST be present and MUST be one of the following
+   values:
 
-   - "ra-name" (OPTIONAL) contains the name of a person or group
-   responsible for the allocation of OIDs.
+       "Information available" means that information about this RA is
+       fully available.
 
-   - "ra-organization" (OPTIONAL) contains the name of the organization,
-   in case "ra-name" is the name of a person or workgroup.
+       "Information partially available" means that part of the
+       information is not available.  Possible reason could be that part
+       of the information was redacted due to confidentiality.
+
+       "Information unavailable" means that the data is missing (if the
+       WHOIS service does only know the name of the RA and nothing
+       else), redacted due to confidentiality or otherwise unavailable.
+
+   - "ra-contact-name" (OPTIONAL, multiple values allowed) contains the
+   name of a person responsible for the allocation of OIDs, in case "ra"
+   is a group or organization.
 
    - "ra-address" (OPTIONAL) contains the postal address of the
    Registration Authority, including the name of the country.
 
-   - "ra-phone" (OPTIONAL) contains the landline phone number of the
-   Registration Authority, including the international country code.
+   - "ra-phone" (OPTIONAL, multiple values allowed) contains a landline
+   phone number of the Registration Authority, in the format specified
+   in Recommendation ITU-T E.123 (2001) [E123] (i.e. including the
+   international country code).
+ 
 
-   - "ra-mobile" (OPTIONAL) contains the mobile phone number of the
-   Registration Authority, including the international country code.
 
-   - "ra-fax" (OPTIONAL) contains the fax number of the Registration
-   Authority, including the international country code.
+Marschall                Expires <Expiry Date>                 [Page 11]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
-   - "ra-email" (OPTIONAL) contains the email address of the
-   Registration Authority.
+
+   - "ra-mobile" (OPTIONAL, multiple values allowed) contains a mobile
+   phone number of the Registration Authority, in the format specified
+   in Recommendation ITU-T E.123 (2001) [E123] (i.e. including the
+   international country code).
+
+   - "ra-fax" (OPTIONAL, multiple values allowed) contains a fax number
+   of the Registration Authority, in the format specified in
+   Recommendation ITU-T E.123 (2001) [E123] (i.e. including the
+   international country code).
+
+   - "ra-email" (OPTIONAL, multiple values allowed) contains an email
+   address of the Registration Authority.
 
    - "ra-created" (OPTIONAL) contains the date the RA was
    created/registered in the database.
@@ -607,13 +637,39 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    - "ra-updated" (OPTIONAL) contains the date the RA information was
    last modified.
 
-   Additional field names can be defined by the WHOIS service, but they
-   MUST begin with "ra-", SHALL only consist of the lower-case letters
-   "a..z", hyphens (-) and numbers, and SHOULD be written in English.
+   Additional fields can be defined by the WHOIS service, but they MUST
+   begin with "ra-".  The field names SHALL only consist of the lower-
+   case letters "a..z", hyphens ("-") and numbers, and SHOULD be written
+   in English language.  The field MUST NOT begin or end with a hyphen
+   and a hyphen MUST NOT be followed by another hyphen.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 11]
+Marschall                Expires <Expiry Date>                 [Page 12]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
@@ -621,24 +677,26 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 3.3  Digital Signature
 
    If integrity/authenticity is required, the whole response can be
-   signed, e.g. by using S/MIME, RSA or PGP. This document does not
-   describe a mechanism for detecting which signature method was used.
+   signed, e.g. by using S/MIME, RSA or PGP.  This document does not
+   describe a mechanism for detecting which signature method was used. 
    The creation and verification of the signature is therefore
    implementation specific and no interoperability regarding signature
    creation and validation is given at this time.
 
    Depending on the signature method being used, various things need to
-   be appended and/or prepended to the response. These additions MUST be
-   prepended by a percent sign ("%") to avoid that an application
+   be appended and/or prepended to the response.  These additions MUST
+   be prepended by a percent sign ("%") to avoid that an application
    confuses these additions (e.g. a PGP header) with part of the actual
-   WHOIS response. The comment lines which belong to the signature SHALL
-   be removed before the signature is validated, so that the leading
-   percent sign ("%") in front of the signature block will not be
-   evaluated as part of the message content.
+   WHOIS response.
 
-3.4  Date/Time references
+   During the signature validation, these added percent signs should be
+   removed, to avoid that these comment symbols aren't accidentally
+   evaluated as part of the message to be validated.
 
-   Date/Time references should have the format "YYYY-MM-DD hh:mm:ss +/-
+
+3.4  Date/Time References
+
+   Date/Time references SHOULD have the format "YYYY-MM-DD hh:mm:ss +/-
    zzzz", e.g. "2019-03-15 18:32:00 +0200".
 
    If parts of the date/time reference are uncertain, they may be
@@ -664,12 +722,10 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 
-
-
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 12]
+Marschall                Expires <Expiry Date>                 [Page 13]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
@@ -707,8 +763,8 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
    The client is now aware that "a.example.com" only knows OID
    2.999.1000, and that there is a reference to another WHOIS service
-   located at "b.example.com". So, the client could then accordingly
-   query "b.example.com", asking for information about OID 2.999.1000.1.
+   located at "b.example.com".  So, the client should then accordingly
+   query "b.example.com", asking for information about OID 2.999.1000.1:
 
        query:          oid:2.999.1000.1
        result:         Found
@@ -725,12 +781,12 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 13]
+Marschall                Expires <Expiry Date>                 [Page 14]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
-5  Full example
+5  Full Example
 
 5.1  Request
 
@@ -744,11 +800,11 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    object:         oid:2.999
    status:         Information available
    name:           Example
-   information:    This OID can be used by anyone, without any
-   information:    permission, for the purpose of documenting examples
-   information:    of object identifiers (in the same way as
-   information:    "example.com" is defined in IETF RFC 2606 as an
-   information:    example for web sites).
+   description:    This OID can be used by anyone, without any
+   description:    permission, for the purpose of documenting examples
+   description:    of object identifiers (in the same way as
+   description:    "example.com" is defined in IETF RFC 2606 as an
+   description:    example for web sites).
    identifier:     example
    unicode-label:  Beispiel
    unicode-label:  Ejemplo
@@ -781,43 +837,79 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 14]
+Marschall                Expires <Expiry Date>                 [Page 15]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
-6  Alternative namespaces
+6  Alternative Namespaces
 
    This document describes the usage of retrieving information about
-   OIDs using the WHOIS protocol. In addition to the namespace "oid",
+   OIDs using the WHOIS protocol.  In addition to the namespace "oid",
    the methods described in this document can also be applied to other
    namespaces like "uuid", "isbn", "gtin" etc.
 
    Following things need to be considered if alternative namespaces are
-   applied:
+   used:
 
    (1) The request MUST be UTF-8 encoded (as defined in RFC 3629
    [RFC3629]), without Byte-Order-Mark (BOM).
 
-   (2) The namespace SHALL only consist of the lower case letters 'a' -
-   'z'.
+   (2) The namespace SHALL be a namespace identifier (NID) as defined in
+   RFC 8141 [RFC8141].
 
-   (3) The identifier that is requested MUST NOT contain a dollar sign
-   ($), because it is defined as separator for authentication tokens.
+   (3) The namespace identifier SHALL be written in lower case.
+
+   (4) If possible, a formal URN namespace identifier (as defined in
+   RFC 8141, section 5.1 [RFC8141]) SHOULD be used, e.g. "uuid" should
+   be used instead of "guid".
+
+   (5) Although the term "RA" might not be appropriate for every
+   namespace, the section SHOULD still be used.  The term "RA" should
+   then be treated in the same was as "Creator" or "Owner".
+
+   (6) The namespace specific identifier MUST NOT contain a dollar sign
+   ("$"), because it is defined as separator for authentication tokens.
+
+   (7) Fields which can only be used in the OID namespace (e.g.
+   "unicode-label") MUST NOT be used for other namespaces.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+Marschall                Expires <Expiry Date>                 [Page 16]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 6.1  Example: UUID Namespace
 
-   In the following example, the client wants to retrieve information
-   about the IPv6 address "2001:1af8:4700:a07e:1::1336". The WHOIS
-   service didn't find this particular IPv6 address in its database,
-   however, it did find the address range "2001:1af8:4700:a07e:1::/112",
-   with the distance of 16 (bits):
-
    The following example shows the retrieval of information about UUIDs
-   (e.g. GUIDs used by Microsoft COM interfaces). The UUID namespace has
-   no hierarchical structure, so the WHOIS service can only respond with
-   the result "Found" or "Not found".
+   (e.g. GUIDs used by the Microsoft Common Object Model).  The UUID
+   namespace has no hierarchical structure, so the WHOIS service can
+   only respond with the result "Found", "Not found" or "Service error".
+
+   Request:
+
+       uuid:2a00375e-224c-49de-b8d1-440df7ef3ddc
+
+   Response:
 
        query:        uuid:2a00375e-224c-49de-b8d1-440df7ef3ddc
        result:       Found
@@ -826,26 +918,46 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
        status:       Information available
        name:         LocalizedResourcesDir
        description:  GUID used as "Custom Place" in file dialogs.
-       created:      ...
-       updated:      ...
 
        ra:           Microsoft Corp.
        ra-status:    Information unavailable
+
+   More information about UUIDs can be found at Recommendation ITU-T
+   X.667 (2012) | ISO/IEC 9834-8:2014 [X667].
+
+
+7  Internationalization Considerations
+
+   The original WHOIS protocol as defined in RFC 3912 [RFC3912] does not
+   define any character set and there is no mechanism for indicating
+   which character set is in use.
+
+   To enhance interoperability, this document specifies that the request
+   and response MUST be UTF-8 encoded (as defined in RFC 3629
+   [RFC3629]), without Byte-Order-Mark (BOM).
+
+   The WHOIS service can define additional field names, but they SHOULD
+   be written in English language so that there is consistency with the
+   field names defined in this specification.
+
+
+
+
 
 
 
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 15]
+Marschall                Expires <Expiry Date>                 [Page 17]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
-7  Security Considerations
+8  Security Considerations
 
    (1) The knowledge of existence or information about some OIDs could
-   be considered confidential. In this case, the WHOIS service can
+   be considered confidential.  In this case, the WHOIS service can
    either deny the existence of the requested OID (by setting the result
    to "Not found") or redact information in the object output section.
 
@@ -856,110 +968,88 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    (3) The WHOIS service can decide if confidential material is omitted
    or shown, based on authentication mechanisms like white-listing
    client IP addresses or by using authentication tokens supplied by the
-   client during the request.
+   client during the request.  See section 2.1 "Authentication Tokens".
 
    (4) The usage of authentication tokens is not recommended if the
    traffic between client and server is transmitted through an untrusted
-   network, because the WHOIS protocol is not encrypted. Furthermore,
+   network, because the WHOIS protocol is not encrypted.  Furthermore,
    authentication tokens must have a sufficient length to avoid brute
    force attacks, or the WHOIS service must limit the number of
    requests.
 
    (5) The WHOIS protocol itself has no mechanism for verifying the
-   integrity of data received. Due to this fact, information should not
-   be trusted if it is transmitted through an untrusted network.
+   integrity of data received.  Due to this fact, information should not
+   be trusted if it is transmitted through an untrusted network.  If
+   integrity/authenticity is required, the WHOIS response can be signed,
+   as described in section 3.3 "Digital Signature".  However, this
+   document does not describe a mechanism for detecting which signature
+   method was used.  Therefore, no interoperability of signature
+   creation/validation is given at this time.
 
-   (6) If integrity/authenticity is required, the WHOIS output can be
-   signed, as described in section 3.3 "Digital Signature". However,
-   this document does not describe a mechanism for detecting which
-   signature method was used. Therefore, no interoperability of
-   signature creation/validation is given at this time.
 
-8  Internationalization Considerations
+9  IANA Considerations
 
-   The original WHOIS protocol as defined in RFC 3912 [RFC3912] does not
-   define any character set and there is no mechanism for indicating
-   which character set is in use.
+   (1) IANA is running a WHOIS service at whois.iana.org.  This WHOIS
+   service could be extended by allowing requests starting with "oid:"
+   to output information about OIDs owned or delegated by IANA, for
+   example it could output information about Private Enterprise Numbers
+   (PEN) located at OID 1.3.6.1.4.1.
 
-   To enhance interoperability, the request and response MUST be UTF-8
-   encoded (as defined in RFC 3629 [RFC3629]), without Byte-Order-Mark
-   (BOM).
+   (2) Owners of Private Enterprise Numbers could store the addresses of
+   their own WHOIS servers in the IANA database, so that these addresses
+   can be included in the WHOIS output of IANA.  This would enable the
+   referral functionality described in section 4 ("Referral").
 
-   The WHOIS service can define additional field names, but they SHOULD
-   be written in English language so that there is consistency with the
-   predefined field names in this specification.
 
 
  
 
 
-Daniel Marschall         Expires <Expiry Date>                 [Page 16]
+Marschall                Expires <Expiry Date>                 [Page 18]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
-
-
-9  IANA Considerations
-
-   IANA is running a WHOIS service at whois.iana.org. This WHOIS service
-   could be extended by allowing requests starting with "oid:" to output
-   information about OIDs owned or delegated by IANA, for example it
-   could output information about Private Enterprise Numbers (PEN)
-   located at OID 1.3.6.1.4.1. Owners of Private Enterprise Numbers
-   could store the addresses of their own WHOIS servers in the IANA
-   database, so that these addresses can be included in the WHOIS output
-   of IANA. This would enable the referral functionality described in
-   section 4 ("Referral").
 
 
 10  References
 
 10.1  Normative References
 
+   [E123]     "Notation for national and international telephone
+              numbers, e-mail addresses and web addresses",
+              Recommendation ITU-T E.123 (2001).
+              <http://handle.itu.int/11.1002/1000/5341>.
+
+   [RFC0822]  Crocker, D., "Standard of the Format of ARPA-Internet Text
+              Messages", STD 11, RFC 822, DOI 10.17487/RFC822,
+              August 1982.
+              <http://www.rfc-editor.org/info/rfc822>.
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997.
               <http://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC3912]  Daigle, L., "WHOIS Protocol Specification", RFC 3912,
-              DOI 10.17487/RFC3912, September 2004.
-              <http://www.rfc-editor.org/info/rfc3912>.
-
-   [RFC2252]  Wahl, M., et. al., Lightweight Directory Access Protocol
-              (v3): Attribute Syntax Definitions, RFC 2252,
-              DOI 10.17487/RFC2252, December 1997.
-              <http://www.rfc-editor.org/info/rfc2252>.
-
-   [RFC822]   Crocker, D., "Standard of the Format of ARPA-Internet Text
-              Messages", STD 11, RFC 822, DOI 10.17487/RFC822,
-              August 1982.
-              <http://www.rfc-editor.org/info/rfc822>.
+   [RFC3061]  Mealling, M., "A URN Namespace of Object Identifiers",
+              RFC 3061, DOI 10.17487/RFC3061, February 2001.
+              <http://www.rfc-editor.org/info/rfc3061>.
 
    [RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO
               10646", STD 63, RFC 3629, DOI 10.17487/RFC3629,
               November 2003.
               <http://www.rfc-editor.org/info/rfc3629>.
 
-   [X680]     "Information technology - Abstract Syntax Notation One
-              (ASN.1): Specification of basic notation",
-              Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015.
-              <http://handle.itu.int/11.1002/1000/12479>.
+   [RFC3912]  Daigle, L., "WHOIS Protocol Specification", RFC 3912,
+              DOI 10.17487/RFC3912, September 2004.
+              <http://www.rfc-editor.org/info/rfc3912>.
 
+   [RFC3986]  Berners-Lee, T., "Uniform Resource Identifier (URI):
+              Generic Syntax", STD 66, RFC 3986, DOI 10.17487/RFC3986,
+              January 2005.
+              <http://www.rfc-editor.org/info/rfc3986>.
 
-
- 
-
-
-Daniel Marschall         Expires <Expiry Date>                 [Page 17]
-
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
-
-
-10.2  Informative References
-
-   [X672]     "Information technology - Open systems interconnection -
-              Object identifier resolution system",
-              Recommendation ITU-T X.672 (2010) | ISO/IEC 29168-1:2011.
-              <http://handle.itu.int/11.1002/1000/10831>.
+   [RFC8141]  Saint-Andre, P., "Uniform Resource Names (URNs)",
+              RFC 8141, DOI 10.17487/RFC8141, April 2017.
+              <http://www.rfc-editor.org/info/rfc8141>.
 
    [X660]     "Information technology - Procedures for the operation of
               object identifier registration authorities: General
@@ -968,9 +1058,54 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
               Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012.
               <http://handle.itu.int/11.1002/1000/11336>.
 
+ 
+
+
+Marschall                Expires <Expiry Date>                 [Page 19]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+
+
+   [X680]     "Information technology - Abstract Syntax Notation One
+              (ASN.1): Specification of basic notation",
+              Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015.
+              <http://handle.itu.int/11.1002/1000/12479>.
+
+
+10.2  Informative References
+
+   [RFC1157]  Case, J., Et. Al, "A Simple Network Management Protocol
+              (SNMP)", RFC 1157, DOI 10.17487/RFC1157, May 1990.
+              <http://www.rfc-editor.org/info/rfc1157>.
+
+   [RFC4511]  Sermersheim, J., "Lightweight Directory Access Protocol
+              (LDAP): The Protocol", RFC 4511, DOI 10.17487/RFC4511,
+              June 2006.
+              <http://www.rfc-editor.org/info/rfc4511>.
+
+   [X509]     "Information technology - Open Systems Interconnection -
+              The Directory: Public-key and attribute certificate
+              frameworks",
+              Recommendation ITU-T X.509 (2019) | ISO/IEC 9594-8:2017.
+              <http://handle.itu.int/11.1002/1000/14033>.
+
+   [X667]     "Information technology - Procedures for the operation of
+              object identifier registration authorities: Generation of
+              universally unique identifiers and their use in object
+              identifiers",
+              Recommendation ITU-T X.667 (2012) | ISO/IEC 9834-8:2014.
+              <http://handle.itu.int/11.1002/1000/11746>.
+
+   [X672]     "Information technology - Open systems interconnection -
+              Object identifier resolution system",
+              Recommendation ITU-T X.672 (2010) | ISO/IEC 29168-1:2011.
+              <http://handle.itu.int/11.1002/1000/10831>.
+
+Acknowledgements
+
+   Olivier Dubuisson
 
 Authors' Addresses
-
 
    Daniel Marschall
    Postfach 11 53
@@ -982,27 +1117,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Daniel Marschall         Expires <Expiry Date>                 [Page 18]
+Marschall                Expires <Expiry Date>                 [Page 20]

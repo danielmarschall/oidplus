@@ -13,6 +13,12 @@
                   },
                   "result":{
                      "type":"string"
+                  },
+                  "distance":{
+                     "type":"string"
+                  },
+                  "message":{
+                     "type":"string"
                   }
                },
                "required":[
@@ -29,13 +35,10 @@
                   "status":{
                      "type":"string"
                   },
-                  "parent":{
+                  "whois-service":{
                      "type":"string"
                   },
-                  "name":{
-                     "type":"string"
-                  },
-                  "description":{
+                  "url":{
                      "type":"string"
                   },
                   "identifier":{
@@ -90,6 +93,34 @@
                         }
                      ]
                   },
+                  "attribute":{
+                     "type":"string"
+                  },
+                  "name":{
+                     "type":"string"
+                  },
+                  "description":{
+                     "type":"string"
+                  },
+                  "information":{
+                     "type":"string"
+                  },
+                  "parent":{
+                     "type":"string"
+                  },
+                  "subordinate":{
+                     "oneOf":[
+                        {
+                           "type":"string"
+                        },
+                        {
+                           "type":"array",
+                           "items":{
+                              "type":"string"
+                           }
+                        }
+                     ]
+                  },
                   "attachment-name":{
                      "oneOf":[
                         {
@@ -121,19 +152,6 @@
                   },
                   "updated":{
                      "type":"string"
-                  },
-                  "subordinate":{
-                     "oneOf":[
-                        {
-                           "type":"string"
-                        },
-                        {
-                           "type":"array",
-                           "items":{
-                              "type":"string"
-                           }
-                        }
-                     ]
                   }
                },
                "required":[
@@ -150,28 +168,10 @@
                   "ra-status":{
                      "type":"string"
                   },
-                  "ra-name":{
+                  "ra-contact-name":{
                      "type":"string"
                   },
-                  "ra-email":{
-                     "type":"string"
-                  },
-                  "ra-personal-name":{
-                     "type":"string"
-                  },
-                  "ra-organization":{
-                     "type":"string"
-                  },
-                  "ra-office":{
-                     "type":"string"
-                  },
-                  "ra-street":{
-                     "type":"string"
-                  },
-                  "ra-town":{
-                     "type":"string"
-                  },
-                  "ra-country":{
+                  "ra-address":{
                      "type":"string"
                   },
                   "ra-phone":{
@@ -181,6 +181,9 @@
                      "type":"string"
                   },
                   "ra-fax":{
+                     "type":"string"
+                  },
+                  "ra-email":{
                      "type":"string"
                   },
                   "ra-created":{

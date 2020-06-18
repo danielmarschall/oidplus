@@ -11,35 +11,36 @@
                     <!-- This must be in the first section: -->
                     <xs:element type="xs:string" name="query" minOccurs="1"/>
                     <xs:element type="xs:string" name="result" minOccurs="1"/>
+                    <xs:element type="xs:string" name="distance" minOccurs="0"/>
+                    <xs:element type="xs:string" name="message" minOccurs="0"/>
                     <!-- This must be in the second section: -->
                     <xs:element type="xs:string" name="object" minOccurs="1"/>
                     <xs:element type="xs:string" name="status" minOccurs="1"/>
-                    <xs:element type="xs:string" name="parent" minOccurs="0"/>
-                    <xs:element type="xs:string" name="name" minOccurs="0"/>
-                    <xs:element type="xs:string" name="description" minOccurs="0"/>
+                    <xs:element type="xs:string" name="whois-service" minOccurs="0"/>
+                    <xs:element type="xs:string" name="url" minOccurs="0"/>
                     <xs:element type="xs:string" name="identifier" minOccurs="0"/>
                     <xs:element type="xs:string" name="standardized-id" minOccurs="0"/>
                     <xs:element type="xs:string" name="unicode-label" minOccurs="0"/>
                     <xs:element type="xs:string" name="long-arc" minOccurs="0"/>
-                    <xs:element type="xs:string" name="attachment-name" minOccurs="0"/>
-                    <xs:element type="xs:string" name="attachment-url" minOccurs="0"/>
+                    <xs:element type="xs:string" name="attribute" minOccurs="0"/>
+                    <xs:element type="xs:string" name="name" minOccurs="0"/>
+                    <xs:element type="xs:string" name="description" minOccurs="0"/>
+                    <xs:element type="xs:string" name="information" minOccurs="0"/>
+                    <xs:element type="xs:string" name="parent" minOccurs="0"/>
+                    <xs:element type="xs:string" name="subordinate" maxOccurs="unbounded" minOccurs="0"/>
+                    <xs:element type="xs:string" name="attachment-name" minOccurs="0"/><!-- OIDplus specific, not part of the RFC -->
+                    <xs:element type="xs:string" name="attachment-url" minOccurs="0"/><!-- OIDplus specific, not part of the RFC -->
                     <xs:element type="xs:string" name="created" minOccurs="0"/>
                     <xs:element type="xs:string" name="updated" minOccurs="0"/>
-                    <xs:element type="xs:string" name="subordinate" maxOccurs="unbounded" minOccurs="0"/>
                     <!-- This must be in the third section: -->
                     <xs:element type="xs:string" name="ra" minOccurs="1"/>
                     <xs:element type="xs:string" name="ra-status" minOccurs="1"/>
-                    <xs:element type="xs:string" name="ra-name" minOccurs="0"/>
-                    <xs:element type="xs:string" name="ra-email" minOccurs="0"/>
-                    <xs:element type="xs:string" name="ra-personal-name" minOccurs="0"/>
-                    <xs:element type="xs:string" name="ra-organization" minOccurs="0"/>
-                    <xs:element type="xs:string" name="ra-office" minOccurs="0"/>
-                    <xs:element type="xs:string" name="ra-street" minOccurs="0"/>
-                    <xs:element type="xs:string" name="ra-town" minOccurs="0"/>
-                    <xs:element type="xs:string" name="ra-country" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-contact-name" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-address" minOccurs="0"/>
                     <xs:element type="xs:string" name="ra-phone" minOccurs="0"/>
                     <xs:element type="xs:string" name="ra-mobile" minOccurs="0"/>
                     <xs:element type="xs:string" name="ra-fax" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ra-email" minOccurs="0"/>
                     <xs:element type="xs:string" name="ra-created" minOccurs="0"/>
                     <xs:element type="xs:string" name="ra-updated" minOccurs="0"/>
                   </xs:sequence>

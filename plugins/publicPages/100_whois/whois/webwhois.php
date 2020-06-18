@@ -114,17 +114,6 @@ if ($continue) {
 		assert($row);
 		$obj = OIDplusObject::parse($row->id);
 
-		if (!empty($row->parent) && (!is_root($row->parent))) {
-			$out[] = 'parent: ' . $row->parent . show_asn1_appendix($row->parent);
-		}
-		$out[] = 'name: ' . $row->title;
-
-		$cont = $row->description;
-		$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
-		$cont = preg_replace('@<br.*>@', "\n", $cont);
-		$cont = preg_replace('@\\n+@', "\n", $cont);
-		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont)));
-
 		if (substr($query,0,4) === 'oid:') {
 			$res2 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($row->id));
 			while ($row2 = $res2->fetch_object()) {
@@ -146,13 +135,18 @@ if ($continue) {
 				$out[] = 'long-arc: ' . $row2->name;
 			}
 		}
-		foreach (OIDplus::getPagePlugins() as $plugin) {
-			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-				$plugin->whoisObjectAttributes($row->id, $out);
-			}
+
+		$out[] = 'name: ' . $row->title;
+
+		$cont = $row->description;
+		$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
+		$cont = preg_replace('@<br.*>@', "\n", $cont);
+		$cont = preg_replace('@\\n+@', "\n", $cont);
+		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont)));
+
+		if (!empty($row->parent) && (!is_root($row->parent))) {
+			$out[] = 'parent: ' . $row->parent . show_asn1_appendix($row->parent);
 		}
-		$out[] = 'created: ' . $row->created;
-		$out[] = 'updated: ' . $row->updated;
 
 		$res2 = OIDplus::db()->query("select * from ###objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($row->id));
 		if ($res2->num_rows() == 0) {
@@ -162,34 +156,44 @@ if ($continue) {
 			$out[] = 'subordinate: ' . $row2->id . show_asn1_appendix($row2->id);
 		}
 
+		foreach (OIDplus::getPagePlugins() as $plugin) {
+			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
+				$plugin->whoisObjectAttributes($row->id, $out);
+			}
+		}
+
+		$out[] = 'created: ' . $row->created;
+		$out[] = 'updated: ' . $row->updated;
+
 		$out[] = '';
 
 		$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array($row->ra_email));
 		if ($row2 = $res2->fetch_object()) {
 			$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : $row2->email);
 			$out[] = 'ra-status: Information available';
-			$out[] = 'ra-name: ' . $row2->ra_name;
-			$out[] = 'ra-email: ' . $row->ra_email;
-			$out[] = 'ra-personal-name: ' . $row2->personal_name; // Note: This is currently not in the RFC
-			$out[] = 'ra-organization: ' . $row2->organization;
-			$out[] = 'ra-office: ' . $row2->office; // Note: This is currently not in the RFC
+
+			$tmp = array();
+			if (!empty($row2->office)) $tmp[] = $row2->office;
+			if (!empty($row2->organization)) $tmp[] = $row2->organization;
+			$tmp = implode(', ', $tmp);
+
+			$out[] = 'ra-contact-name: ' . $row2->personal_name.(!empty($tmp) ? " ($tmp)" : '');
 			if ($row2->privacy && !$show_confidential) {
-				// TODO: Follow new RFC draft and only return only "ra-address"
-				$out[] = 'ra-street: ' . (!empty($row2->street) ? '(redacted)' : '');
-				$out[] = 'ra-town: ' . (!empty($row2->zip_town) ? '(redacted)' : '');
-				$out[] = 'ra-country: ' . (!empty($row2->country) ? '(redacted)' : '');
+				if (!empty($row2->street) || !empty($row2->zip_town) || !empty($row2->country)) {
+					$out[] = 'ra-address: (redacted)';
+				}
 				$out[] = 'ra-phone: ' . (!empty($row2->phone) ? '(redacted)' : '');
 				$out[] = 'ra-mobile: ' . (!empty($row2->mobile) ? '(redacted)' : '');
 				$out[] = 'ra-fax: ' . (!empty($row2->fax) ? '(redacted)' : '');
 			} else {
-				// TODO: Follow new RFC draft and only return only "ra-address"
-				$out[] = 'ra-street: ' . $row2->street;
-				$out[] = 'ra-town: ' . $row2->zip_town;
-				$out[] = 'ra-country: ' . $row2->country;
+				if (!empty($row2->street))   $out[] = 'ra-address: ' . $row2->street;
+				if (!empty($row2->zip_town)) $out[] = 'ra-address: ' . $row2->zip_town;
+				if (!empty($row2->country))  $out[] = 'ra-address: ' . $row2->country;
 				$out[] = 'ra-phone: ' . $row2->phone;
 				$out[] = 'ra-mobile: ' . $row2->mobile;
 				$out[] = 'ra-fax: ' . $row2->fax;
 			}
+			$out[] = 'ra-email: ' . $row->ra_email;
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
 					$plugin->whoisRaAttributes($row->ra_email, $out);
