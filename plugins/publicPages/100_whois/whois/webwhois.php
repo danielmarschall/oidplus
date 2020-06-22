@@ -106,7 +106,8 @@ if ($continue) {
 	$out[] = "";
 	$out[] = "object: $query";
 	if ($obj->isConfidential() && !$show_confidential) {
-		$out[] = "status: Confidential";
+		$out[] = "status: Information unavailable";
+		$out[] = "attribute: confidential";
 	} else {
 		$out[] = "status: Information available";
 
@@ -114,7 +115,18 @@ if ($continue) {
 		assert($row);
 		$obj = OIDplusObject::parse($row->id);
 
+		$out[] = 'name: ' . $row->title;
+
+		$cont = $row->description;
+		$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
+		$cont = preg_replace('@<br.*>@', "\n", $cont);
+		$cont = preg_replace('@\\n+@', "\n", $cont);
+		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont)));
+
 		if (substr($query,0,4) === 'oid:') {
+			// TODO: field "asn1-notation"
+			// TODO: field "oid-iri-notation"
+
 			$res2 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($row->id));
 			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'identifier: ' . $row2->name;
@@ -136,13 +148,13 @@ if ($continue) {
 			}
 		}
 
-		$out[] = 'name: ' . $row->title;
+		// TODO: Field "attribute: confidential" if OID is hidden
 
-		$cont = $row->description;
-		$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
-		$cont = preg_replace('@<br.*>@', "\n", $cont);
-		$cont = preg_replace('@\\n+@', "\n", $cont);
-		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont)));
+		foreach (OIDplus::getPagePlugins() as $plugin) {
+			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
+				$plugin->whoisObjectAttributes($row->id, $out);
+			}
+		}
 
 		if (!empty($row->parent) && (!is_root($row->parent))) {
 			$out[] = 'parent: ' . $row->parent . show_asn1_appendix($row->parent);
@@ -154,12 +166,6 @@ if ($continue) {
 		}
 		while ($row2 = $res2->fetch_object()) {
 			$out[] = 'subordinate: ' . $row2->id . show_asn1_appendix($row2->id);
-		}
-
-		foreach (OIDplus::getPagePlugins() as $plugin) {
-			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-				$plugin->whoisObjectAttributes($row->id, $out);
-			}
 		}
 
 		$out[] = 'created: ' . $row->created;

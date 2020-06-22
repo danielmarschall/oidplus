@@ -80,9 +80,9 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 			$out['text'] .= '<p>Please keep this information confidential!</p>';
 			$out['text'] .= '<p>The batch-fields will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.</p>';
 			$out['text'] .= '<p>Currently, there is no documentation for the AJAX calls. However, you can look at the <b>script.js</b> files of the plugins to see the field names being used. You can also enable network analysis in your web browser debugger (F12) to see the request headers sent to the server during the operation of OIDplus.</p>';
-			$out['text'] .= '<h2>Example to add OID 2.999.123 using JavaScript</h2>';
+			$out['text'] .= '<h2>Example for adding OID 2.999.123 using JavaScript</h2>';
 			$out['text'] .= '<pre>'.htmlentities(file_get_contents(__DIR__.'/examples/example_js.html')).'</pre>';
-			$out['text'] .= '<h2>Example to add OID 2.999.123 using PHP (located at a foreign server)</h2>';
+			$out['text'] .= '<h2>Example for adding OID 2.999.123 using PHP (located at a foreign server)</h2>';
 			$out['text'] .= '<pre>'.preg_replace("@<br.*>@ismU","",highlight_file(__DIR__.'/examples/example_php.phps',true)).'</pre>';
 		}
 	}
