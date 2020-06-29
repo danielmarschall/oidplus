@@ -21,7 +21,7 @@
                     <xs:element type="xs:string" name="information" minOccurs="0"/>
                     <xs:element type="xs:string" name="url" minOccurs="0"/>
                     <xs:element type="xs:string" name="asn1-notation" minOccurs="0"/>
-                    <xs:element type="xs:string" name="oid-iri-notation" minOccurs="0"/>
+                    <xs:element type="xs:string" name="iri-notation" minOccurs="0"/>
                     <xs:element type="xs:string" name="identifier" minOccurs="0"/>
                     <xs:element type="xs:string" name="standardized-id" minOccurs="0"/>
                     <xs:element type="xs:string" name="unicode-label" minOccurs="0"/>

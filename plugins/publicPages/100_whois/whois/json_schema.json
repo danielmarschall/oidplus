@@ -62,7 +62,7 @@
                         }
                      ]
                   },
-                  "oid-iri-notation":{
+                  "iri-notation":{
                      "oneOf":[
                         {
                            "type":"string"
