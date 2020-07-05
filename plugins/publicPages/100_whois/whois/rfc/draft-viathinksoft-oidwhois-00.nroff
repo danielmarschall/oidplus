@@ -87,8 +87,9 @@ Table of Contents
        3.2.3  RA-Section (Information about the Current RA) . . . . . 11
        3.2.4  Sections for Previous Registration Authorities  . . . . 13
      3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 13
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 14
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 13
        3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 14
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 14
    4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
    5  Full Example  . . . . . . . . . . . . . . . . . . . . . . . . . 16
      5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 16
@@ -164,7 +165,7 @@ All OIDs MUST be interpreted as absolute OIDs.  Relative OIDs (e.g. relative to 
 
 The namespace identifier (i.e. "oid") MUST be written in lower-case.
 
-Note: Existing WHOIS servers can add the functionalities described in this document in addition to their normal operation, i.e. they can accept queries beginning with "oid:" as well as other types of queries.
+Note: Existing WHOIS servers can add the functionalities described in this document in addition to their usual operation, i.e. they may accept queries beginning with "oid:" as well as other types of queries.
 
 .ti 0
 2.1  Authentication Tokens
@@ -319,7 +320,7 @@ Possible fields are:
 
 (12) "long-arc" (OPTIONAL, multiple values allowed) contains a Non-integer Unicode label that can be used as first identifier in an OID Internationalized Resource Identifier (OID-IRI), shortening it.  More information can be found in Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012, clause 3.5.8 [X660].
 
-(13) "whois-service" (OPTIONAL) contains an IP-address or host name of a system that offers a WHOIS service which can supply information about the OID and/or its subordinate OIDs.  If the result was "Found" (i.e. the OID is existing in the local database), then the information "whois-service" is only informational; its existence is most likely a hint that subordinate OIDs will be found at that WHOIS server.  If the result is "Not found; superior object found", then the client SHOULD query the referred WHOIS server in order to receive more information about the OID.  See more information in section 4 "Referral".
+(13) "whois-service" (OPTIONAL) contains an IP-address or host name of a system that offers a WHOIS service which can supply information about the OID and/or its subordinate OIDs.  If the result is "Found" (i.e. the OID is existing in the local database), then the information "whois-service" is only informational; its existence is most likely a hint that subordinate OIDs will be found at that WHOIS server.  If the result is "Not found; superior object found", then the client SHOULD query the referred WHOIS server in order to receive more information about the OID.  See more information in section 4 "Referral".
 
 (14) "attribute" (OPTIONAL, multiple values allowed) contains attributes of the OID.  An attribute MUST be one of the following values:
 
@@ -339,9 +340,9 @@ Possible fields are:
 "retired" means that the OID is invalidated, revoked, retired, expired, etc.  Please consult Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660] for more information about such cases.
 .in 3
 
-(15) "parent" (OPTIONAL) contains the OID of the nearest known parent OID, prepended by namespace identifier and double colon, i.e. "oid:".
+(15) "parent" (OPTIONAL) contains the OID of the nearest known parent OID, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALLL be at least 1 whitespace in between.
 
-(16) "subordinate" (OPTIONAL, multiple values allowed) contains a list of subordinate OIDs, prepended by namespace identifier and double colon, i.e. "oid:".
+(16) "subordinate" (OPTIONAL, multiple values allowed) contains a list of subordinate OIDs, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALLL be at least 1 whitespace in between.
 
 (17) "created" (OPTIONAL) contains the date and time (as specified in section 3.4 "Date/Time Format") when the OID was first allocated by the RA of the superior OID.
 
@@ -419,30 +420,20 @@ The history does not need to be complete, e.g. it is no problem to only serve in
 If integrity/authenticity is required, the whole response can be signed, e.g. by using S/MIME, RSA or PGP.  This document does not describe a mechanism for detecting which signature method was used.  The creation and verification of the signature is therefore implementation specific and no interoperability regarding signature creation and validation is given at this time.
 
 Depending on the signature method being used, various things need to be appended and/or prepended to the response.  These additional lines MUST be prepended by a percent sign ("%") to avoid that an application confuses these additional lines (e.g. lines belonging to a PGP header) with part of the actual WHOIS response.
-.bp
+
 .ti 0
 3.4  Date/Time Format
 
-Date/Time references SHALL have the format "YYYY-MM-DD hh:mm:ss +/-zzzz", e.g. "2019-03-15 18:32:00 +0200".
+Date/Time references SHALL be formatted as described in section 3.4.1.
 
-If parts of the date/time reference are uncertain, then they SHOULD be removed until the date/time reference has the highest correctness.
+If parts of the date/time reference are uncertain, then they SHOULD be omitted until the date/time reference has the highest correctness.
 
-Examples of valid date/time references are:
-
-.nf
-2020-06-29 18:32:00 +0200
-2020-06-29 18:32:00
-2020-06-29 18:32 +0200
-2020-06-29 18:32
-2020-06-29
-2020-06
-2020
-.fi
+Examples of valid date/time references can be found at section 3.4.2.
 
 .ti 0
 3.4.1  Date/Time Format ABNF Notation
 
-For the purposes of defining a Date/Time reference, the following Augmented BNF definitions will be used.  They are based on the ABNF styles of RFC 5234 [RFC5234].
+For the purposes of defining the format of a Date/Time reference, the following Augmented BNF definitions will be used.  They are based on the ABNF styles of RFC 5234 [RFC5234].
 
 .nf
 date-time = year [ "-" month [ "-" day [ " " time ] ] ]
@@ -463,13 +454,29 @@ hour      = ( "0" %x30-39 ) /
             ( "1" %x30-39 ) /
             ( "2" %x30-33 )      ; 00-23
 
-minute    = ( %x30-35 ) DIGIT    ; 00-59
+minute    = %x30-35 DIGIT        ; 00-59
 
-second    = ( %x30-35 ) DIGIT    ; 00-59
+second    = %x30-35 DIGIT        ; 00-59
 
 timezone  = ( "+" / "-" ) hour minute
 .fi
 
+.ti 0
+3.4.2  Date/Time Format Examples
+
+Examples of valid date/time references are:
+
+.in 7
+.nf
+2020-06-29 18:32:00 +0200
+2020-06-29 18:32:00
+2020-06-29 18:32 +0200
+2020-06-29 18:32
+2020-06-29
+2020-06
+2020
+.fi
+.in 3
 .bp
 .ti 0
 4  Referral
@@ -545,21 +552,21 @@ unicode-label:  Beispiel
 unicode-label:  Ejemplo
 unicode-label:  Example
 unicode-label:  Exemple
-unicode-label:  (Korean characters omitted in this example)
-unicode-label:  (Arabian characters omitted in this example)
-unicode-label:  (Japanese characters omitted in this example)
-unicode-label:  (Chinese characters omitted in this example)
-unicode-label:  (Russian characters omitted in this example)
+unicode-label:  (Korean characters are omitted in this example)
+unicode-label:  (Arabian characters are omitted in this example)
+unicode-label:  (Japanese characters are omitted in this example)
+unicode-label:  (Chinese characters are omitted in this example)
+unicode-label:  (Russian characters are omitted in this example)
 long-arc:       Beispiel
 long-arc:       Ejemplo
 long-arc:       Example
 long-arc:       Exemple
-long-arc:       (Korean characters omitted in this example)
-long-arc:       (Arabian characters omitted in this example)
-long-arc:       (Japanese characters omitted in this example)
-long-arc:       (Chinese characters omitted in this example)
-long-arc:       (Russian characters omitted in this example)
-parent:         oid:2
+long-arc:       (Korean characters are omitted in this example)
+long-arc:       (Arabian characters are omitted in this example)
+long-arc:       (Japanese characters are omitted in this example)
+long-arc:       (Chinese characters are omitted in this example)
+long-arc:       (Russian characters are omitted in this example)
+parent:         oid:2 (joint-iso-itu-t)
 created:        2011-06
 updated:        2011-09
 
@@ -587,9 +594,9 @@ Following things need to be considered if alternative namespaces are implemented
 
 (4) If available, a formal URN namespace identifier (as defined in RFC\08141, section 5.1 [RFC8141]) SHOULD be used, e.g. "uuid" should be used instead of "guid".
 
-(5) Although the term "Registration Authority" might not be appropriate for every namespace, the section SHOULD still be used.  The term "Registration Authority" should then be treated like "Owner", "Creator", "Manager", etc.
+(5) Although the term "Registration Authority" might not be appropriate for every namespace, the RA-section as described in section 3.2.3 SHOULD still be used.  The term "Registration Authority" should then be treated like "Owner", "Creator", "Manager", etc.
 
-(6) The namespace specific identifier MUST NOT contain a dollar sign ("$"), because section 2.1 "Authentication Tokens" defines it as separator for authentication tokens.
+(6) The namespace specific identifier MUST NOT contain dollar signs ("$"), because section 2.1 "Authentication Tokens" defines them as separator for authentication tokens.
 
 (7) The namespace specific identifier MUST be treated case-sensitive if the namespace distinguishes between lower-case and upper-case.
 
@@ -599,7 +606,7 @@ Following things need to be considered if alternative namespaces are implemented
 6.1  Example: UUID Namespace
 
 .in 3
-The following example shows the retrieval of information about UUIDs (e.g. GUIDs used by the Microsoft Common Object Model).  The UUID namespace has no hierarchical structure, which means that the WHOIS service can only respond with the result "Found", "Not found" or "Service error" and the fields "parent" and "subordinate" cannot be used.
+The following example shows the retrieval of information about Universally Unique Identifiers (e.g. UUIDs used by the Microsoft Common Object Model, also known as GUIDs).  The UUID namespace has no hierarchical structure, which means that the WHOIS service can only respond with the result "Found", "Not found" or "Service error" and the fields "parent" and "subordinate" cannot be used.
 
 Request:
 
@@ -642,11 +649,11 @@ The WHOIS service can define additional field names, but they SHOULD be written 
 .ti 0
 8  Security Considerations
 
-(1) The knowledge of existence or information about some OIDs could be considered confidential.  In this case, the WHOIS service can either deny the existence of the requested OID (by setting the result to "Not found") or redact information in the Object-Section (as defined in section 3.2.2 "Object-Section").
+(1) The knowledge of existence or information about some OIDs could be considered confidential.  In this case, the WHOIS service can either deny the existence of the requested OID (by setting the result to "Not found") or redact information in the Object-Section, as defined in section 3.2.2 "Object-Section".
 
-(2) Registration Authorities might demand that their personal data is kept confidential, or at least be partially redacted to increase privacy or as a measurement against spam.  In this case, the WHOIS service can redact information in the RA-Section (as defined in section 3.2.3 "RA-Section").
+(2) Registration Authorities might demand that their personal data is kept confidential, or at least be partially redacted to increase privacy or as a measurement against spam.  In this case, the WHOIS service can redact information in the RA-Section, as defined in section 3.2.3 "RA-Section".
 
-(3) The WHOIS service can decide if confidential material is omitted or shown, based on authentication mechanisms like white-listing client IP addresses or by using authentication tokens supplied by the client (as defined in section 2.1 "Authentication Tokens").
+(3) The WHOIS service can decide if confidential material is omitted or shown, based on authentication mechanisms like white-listing client IP addresses or by using authentication tokens supplied by the client, as defined in section 2.1 "Authentication Tokens".
 .\" REMOVED BECAUSE PAGE WOULD BE TOO LONG:  "during the request"
 
 (4) The usage of authentication tokens is not recommended if the traffic between client and server is transmitted through an untrusted network, because the WHOIS protocol is not encrypted.
