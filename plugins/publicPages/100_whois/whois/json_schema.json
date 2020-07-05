@@ -13,7 +13,7 @@
                   },
                   "result":{
                      "type":"string",
-                     enum:["Found", "Not found; superior object found", "Not found", "Service error"]
+                     "enum":["Found", "Not found; superior object found", "Not found", "Service error"]
                   },
                   "distance":{
                      "type":"string"
@@ -35,7 +35,7 @@
                   },
                   "status":{
                      "type":"string",
-                     enum:["Information available", "Information partially available", "Information unavailable"]
+                     "enum":["Information available", "Information partially available", "Information unavailable"]
                   },
                   "name":{
                      "type":"string"
@@ -134,13 +134,13 @@
                      "oneOf":[
                         {
                            "type":"string",
-                           enum:["confidential", "draft", "frozen", "leaf", "no-identifiers", "no-unicode-labels", "retired"]
+                           "enum":["confidential", "draft", "frozen", "leaf", "no-identifiers", "no-unicode-labels", "retired"]
                         },
                         {
                            "type":"array",
                            "items":{
                               "type":"string",
-                              enum:["confidential", "draft", "frozen", "leaf", "no-identifiers", "no-unicode-labels", "retired"]
+                              "enum":["confidential", "draft", "frozen", "leaf", "no-identifiers", "no-unicode-labels", "retired"]
                            }
                         }
                      ]
@@ -188,10 +188,12 @@
                      ]
                   },
                   "created":{
-                     "type":"string"
+                     "type":"string",
+                     "pattern":"/^\\d{4}(\\-(0[1-9]|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$/"
                   },
                   "updated":{
-                     "type":"string"
+                     "type":"string",
+                     "pattern":"/^\\d{4}(\\-(0[1-9]|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$/"
                   }
                },
                "required":[
@@ -207,7 +209,7 @@
                   },
                   "ra-status":{
                      "type":"string",
-                     enum:["Information available", "Information partially available", "Information unavailable"]
+                     "enum":["Information available", "Information partially available", "Information unavailable"]
                   },
                   "ra-contact-name":{
                      "type":"string"
@@ -234,22 +236,24 @@
                      "oneOf":[
                         {
                            "type":"string",
-                           enum:["confidential", "retired"]
+                           "enum":["confidential", "retired"]
                         },
                         {
                            "type":"array",
                            "items":{
                               "type":"string",
-                              enum:["confidential", "retired"]
+                              "enum":["confidential", "retired"]
                            }
                         }
                      ]
                   },
                   "ra-created":{
-                     "type":"string"
+                     "type":"string",
+                     "pattern":"/^\\d{4}(\\-(0[1-9]|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$/"
                   },
                   "ra-updated":{
-                     "type":"string"
+                     "type":"string",
+                     "pattern":"/^\\d{4}(\\-(0[1-9]|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$/"
                   }
                },
                "required":[

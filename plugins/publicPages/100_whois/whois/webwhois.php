@@ -124,8 +124,8 @@ if ($continue) {
 		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont)));
 
 		if (substr($query,0,4) === 'oid:') {
-			// TODO: field "asn1-notation"
-			// TODO: field "oid-iri-notation"
+			$out[] = 'asn1-notation: ' . $obj->getAsn1Notation(false);
+			$out[] = 'iri-notation: ' . $obj->getIriNotation(false);
 
 			$res2 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($row->id));
 			while ($row2 = $res2->fetch_object()) {
@@ -175,7 +175,7 @@ if ($continue) {
 
 		$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array($row->ra_email));
 		if ($row2 = $res2->fetch_object()) {
-			$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : $row2->email);
+			$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : (!empty($row2->email) ? $row2->email : 'Unknown'));
 			$out[] = 'ra-status: Information available';
 
 			$tmp = array();
@@ -208,7 +208,7 @@ if ($continue) {
 			$out[] = 'ra-created: ' . $row2->registered;
 			$out[] = 'ra-updated: ' . $row2->updated;
 		} else {
-			$out[] = 'ra: '.$row->ra_email;
+			$out[] = 'ra: '.(!empty($row->ra_email) ? $row->ra_email : 'Unknown');
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
 					$plugin->whoisRaAttributes($row->ra_email, $out);
@@ -249,7 +249,9 @@ if ($format == 'txt') {
 		$value = wordwrap($value, OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80) - $longest_key - strlen(':') - OIDplus::config()->getValue('webwhois_output_format_spacer', 2));
 		$value = str_replace("\n", "\n$key:".str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)), $value);
 
-		echo $key.':' . str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)) . (!empty($value) ? $value : '.') . "\n";
+		if (!empty($value)) {
+			echo $key.':' . str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)) . $value . "\n";
+		}
 	}
 
 	//echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\n";
@@ -286,12 +288,14 @@ if ($format == 'json') {
 		} else {
 			list($key,$val) = explode(':', $line, 2);
 			$val = trim($val);
-			if (!isset($current_section[$key])) {
-				$current_section[$key] = $val;
-			} elseif (is_array($current_section[$key])) {
-				$current_section[$key][] = $val;
-			} else {
-				$current_section[$key] = array($current_section[$key], $val);
+			if (!empty($val)) {
+				if (!isset($current_section[$key])) {
+					$current_section[$key] = $val;
+				} elseif (is_array($current_section[$key])) {
+					$current_section[$key][] = $val;
+				} else {
+					$current_section[$key] = array($current_section[$key], $val);
+				}
 			}
 		}
 	}
@@ -313,6 +317,8 @@ if ($format == 'json') {
 			$ary['signature'] = array('content' => $cont, 'signature' => $signature);
 		}
 	}
+
+	// Good JSON schema validator here: https://www.jsonschemavalidator.net
 	header('Content-Type:application/json; charset=UTF-8');
 	echo json_encode($ary);
 }
@@ -325,10 +331,14 @@ if ($format == 'xml') {
 		} else {
 			list($key,$val) = explode(':', $line, 2);
 			$val = trim($val);
-			$xml .= "<$key>".htmlspecialchars($val)."</$key>";
+			if (!empty($val)) {
+				$xml .= "<$key>".htmlspecialchars($val)."</$key>";
+			}
 		}
 	}
 	$xml .= '</section></whois>';
+
+	$xml = preg_replace('@<section><(.+)>(.+)</section>@ismU', '<\\1Section><\\1>\\2</\\1Section>', $xml);
 
 	if (OIDplus::getPkiStatus(true)) {
 		$cont = $xml;
@@ -339,9 +349,10 @@ if ($format == 'xml') {
 		}
 	}
 
+	// Good XSD validator here: https://www.liquid-technologies.com/online-xsd-validator
 	header('Content-Type:application/xml; charset=UTF-8');
 	echo '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>';
-	echo '<root xmlns="https://oidplus.viathinksoft.com"';
+	echo '<root xmlns="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.1.1"';
 	echo '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
 	//echo '      xsi:schemaLocation="https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/xml_schema.xsd">';
 	echo '      xsi:schemaLocation="'.OIDplus::getSystemUrl().'plugins/publicPages/100_whois/whois/xml_schema.xsd">';

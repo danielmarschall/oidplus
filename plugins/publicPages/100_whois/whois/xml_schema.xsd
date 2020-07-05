@@ -1,21 +1,43 @@
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<?xml version="1.0"?>
+<xs:schema targetNamespace="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.1.1" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="root">
     <xs:complexType>
       <xs:sequence>
         <xs:element name="whois">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="section" minOccurs="1" maxOccurs="3">
+              <xs:element name="querySection" minOccurs="1" maxOccurs="1">
                 <xs:complexType>
-                  <xs:sequence>
-                    <!-- This must be in the first section: -->
+                  <xs:choice maxOccurs="unbounded" minOccurs="1">
                     <xs:element type="xs:string" name="query" minOccurs="1"/>
-                    <xs:element type="xs:string" name="result" minOccurs="1"/>
+                    <xs:element name="result" minOccurs="1">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="Found"/>
+                          <xs:enumeration value="Not found; superior object found"/>
+                          <xs:enumeration value="Not found"/>
+                          <xs:enumeration value="Service error"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
                     <xs:element type="xs:string" name="distance" minOccurs="0"/>
                     <xs:element type="xs:string" name="message" minOccurs="0"/>
-                    <!-- This must be in the second section: -->
+                  </xs:choice>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="objectSection" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:choice maxOccurs="unbounded" minOccurs="1">
                     <xs:element type="xs:string" name="object" minOccurs="1"/>
-                    <xs:element type="xs:string" name="status" minOccurs="1"/>
+                    <xs:element name="status" minOccurs="1">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="Information available"/>
+                          <xs:enumeration value="Information partially available"/>
+                          <xs:enumeration value="Information unavailable"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
                     <xs:element type="xs:string" name="name" minOccurs="0"/>
                     <xs:element type="xs:string" name="description" minOccurs="0"/>
                     <xs:element type="xs:string" name="information" minOccurs="0"/>
@@ -27,16 +49,53 @@
                     <xs:element type="xs:string" name="unicode-label" minOccurs="0"/>
                     <xs:element type="xs:string" name="long-arc" minOccurs="0"/>
                     <xs:element type="xs:string" name="whois-service" minOccurs="0"/>
-                    <xs:element type="xs:string" name="attribute" minOccurs="0"/>
+                    <xs:element name="attribute" minOccurs="0">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="confidential"/>
+                          <xs:enumeration value="draft"/>
+                          <xs:enumeration value="frozen"/>
+                          <xs:enumeration value="leaf"/>
+                          <xs:enumeration value="no-identifiers"/>
+                          <xs:enumeration value="no-unicode-labels"/>
+                          <xs:enumeration value="retired"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
                     <xs:element type="xs:string" name="attachment-name" minOccurs="0"/><!-- OIDplus specific, not part of the RFC -->
                     <xs:element type="xs:string" name="attachment-url" minOccurs="0"/><!-- OIDplus specific, not part of the RFC -->
                     <xs:element type="xs:string" name="parent" minOccurs="0"/>
                     <xs:element type="xs:string" name="subordinate" maxOccurs="unbounded" minOccurs="0"/>
-                    <xs:element type="xs:string" name="created" minOccurs="0"/>
-                    <xs:element type="xs:string" name="updated" minOccurs="0"/>
-                    <!-- This must be in the third section: -->
+                    <xs:element name="created" minOccurs="0">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="updated" minOccurs="0">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                  </xs:choice>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="raSection" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:choice maxOccurs="unbounded" minOccurs="1">
                     <xs:element type="xs:string" name="ra" minOccurs="1"/>
-                    <xs:element type="xs:string" name="ra-status" minOccurs="1"/>
+                    <xs:element name="ra-status" minOccurs="1">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="Information available"/>
+                          <xs:enumeration value="Information partially available"/>
+                          <xs:enumeration value="Information unavailable"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
                     <xs:element type="xs:string" name="ra-contact-name" minOccurs="0"/>
                     <xs:element type="xs:string" name="ra-address" minOccurs="0"/>
                     <xs:element type="xs:string" name="ra-phone" minOccurs="0"/>
@@ -44,10 +103,29 @@
                     <xs:element type="xs:string" name="ra-fax" minOccurs="0"/>
                     <xs:element type="xs:string" name="ra-email" minOccurs="0"/>
                     <xs:element type="xs:string" name="ra-url" minOccurs="0"/>
-                    <xs:element type="xs:string" name="ra-attribute" minOccurs="0"/>
-                    <xs:element type="xs:string" name="ra-created" minOccurs="0"/>
-                    <xs:element type="xs:string" name="ra-updated" minOccurs="0"/>
-                  </xs:sequence>
+                    <xs:element name="ra-attribute" minOccurs="0">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="confidential"/>
+                          <xs:enumeration value="retired"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="ra-created" minOccurs="0">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="ra-updated" minOccurs="0">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                  </xs:choice>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>

@@ -175,8 +175,8 @@ class OIDplusOid extends OIDplusObject {
 	private function oidInformation() {
 		$out = array();
 		$out[] = "Dot notation: <code>" . $this->getDotNotation() . "</code>";
-		$out[] = "ASN.1 notation: <code>{ " . $this->getAsn1Notation() . " }</code>";
-		$out[] = "OID-IRI notation: <code>" . $this->getIriNotation() . "</code>";
+		$out[] = "ASN.1 notation: <code>" . $this->getAsn1Notation(true) . "</code>";
+		$out[] = "OID-IRI notation: <code>" . $this->getIriNotation(true) . "</code>";
 		if ($this->isWeid(true)) {
 			$out[] = "WEID notation: <code>" . $this->getWeidNotation() . "</code>";
 		}
@@ -279,7 +279,7 @@ class OIDplusOid extends OIDplusObject {
 			}
 		}
 
-		return $asn1_notation;
+		return "{ $asn1_notation }";
 	}
 
 	public function getIriNotation($withAbbr=true) {
@@ -314,7 +314,7 @@ class OIDplusOid extends OIDplusObject {
 				$iri_notation = array_shift($names) . '/' . $iri_notation;
 			}
 
-			if ($is_longarc) break; // we don't write /ITU-T/ at the beginning, when /ITU-T/xxx is a long arc
+			if ($is_longarc) break; // we don't write /ITU-T/ at the beginning, when /ITU-T/xyz is a long arc
 		}
 		$iri_notation = '/' . substr($iri_notation, 0, strlen($iri_notation)-1);
 
