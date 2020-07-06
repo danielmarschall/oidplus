@@ -145,9 +145,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
    Three of many possible use-case scenarios are:
 
-   (1) Many web-browsers and Operating Systems are able to handle ITU-T
-   X.509 certificates [X509] and usually contain a viewer application
-   that shows the contents of these certificates.  Attributes which are
+   (1) Many web-browsers and Operating Systems can handle ITU-T X.509
+   certificates [X509] and usually contain a viewer application that
+   shows the contents of these certificates.  Attributes which are
    unknown by the application are either only displayed by their OID, or
    hidden to avoid confusion to the user.  With OID-WHOIS, the
    application could query the name of these unknown OIDs or even
@@ -156,12 +156,12 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
    (2) Applications that handle SNMP (Simple Network Management
    Protocol) [RFC1157] might need information about additional MIB files
-   or their OIDs.  OID-WHOIS could aid these applications gathering the
-   required information.
+   or their OIDs.  OID-WHOIS could aid these applications in gathering
+   the required information.
 
    (3) In directory services like LDAP (Lightweight Directory Access
    Protocol) [RFC4511], applications could query the name of attributes
-   which are described by an OID the application doesn't know.
+   that are described by an OID the application doesn't know.
  
 
 
@@ -186,7 +186,7 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
    During the request, the client sends a query beginning with "oid:",
    followed by an OID in dot-notation, as defined in RFC 3061, section 2
-   [RFC3061], but with following differences:
+   [RFC3061], but with the following differences:
 
    (1) The OID MAY contain a leading dot at the beginning.
 
@@ -233,14 +233,14 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
        oid:2.999$firstToken
        oid:2.999$firstToken$secondToken
 
-   Please note that authentication tokens are only a weak protection. 
-   For more information, see section 8 "Security Considerations".
+   Please note that authentication tokens are only weak protection.  For
+   more information, see section 8 "Security Considerations".
 
 2.2  Request ABNF Notation
 
-   For the purposes of defining the query string, the following
-   Augmented BNF definitions will be used.  They are based on the ABNF
-   styles of RFC 5234 [RFC5234].
+   To define the query string, the following Augmented BNF definitions
+   will be used.  They are based on the ABNF styles of RFC 5234
+   [RFC5234].
 
    query           = namespace ":" optional-oid *( "$" authtoken )
 
@@ -282,8 +282,8 @@ Marschall                Expires <Expiry Date>                  [Page 5]
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
-   Each line SHOULD be limited to 80 characters, including field name,
-   double colon, value and whitespaces.
+   Each line SHOULD be limited to 80 characters, including the field
+   name, double colon, value, and whitespaces.
 
    Field names and values MUST be treated case-sensitive.
 
@@ -292,7 +292,7 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    colon MUST be repeated at the beginning of the next line.
 
    If an attribute has multiple values (e.g. multiple Unicode labels,
-   alternative email-addresses etc.), each value MUST be written in a
+   alternative email-addresses, etc.), each value MUST be written in a
    new line with the same field name.
 
    Lines with the same field name SHALL be kept together.
@@ -421,7 +421,7 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
        MAY be used with the value "confidential".
 
        "Information unavailable" means that the information about the
-       OID is missing, redacted due to confidentiality or otherwise
+       OID is missing, redacted due to confidentiality, or otherwise
        unavailable.  The field "attribute" MAY be used with the value
        "confidential".
 
@@ -461,29 +461,29 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
    (10) "standardized-id" (OPTIONAL, multiple values allowed) contains
    an alphanumeric identifier that has a standardized "NameForm", i.e.
-   in an ASN.1 notation, it can be written without its associated
-   number.  See more information in Recommendation ITU-T X.680 (2015) |
-   ISO/IEC 8824-1:2015, clause 32.7 [X680].
+   in ASN.1 notation, it can be written without its associated number. 
+   See more information in Recommendation ITU-T X.680 (2015) | ISO/IEC
+   8824-1:2015, clause 32.7 [X680].
 
    (11) "unicode-label" (OPTIONAL, multiple values allowed) contains a
    Non-integer Unicode label, as defined in Recommendation ITU-T X.680
    (2015) | ISO/IEC 8824-1:2015, clause 12.27 [X680].
 
    (12) "long-arc" (OPTIONAL, multiple values allowed) contains a Non-
-   integer Unicode label that can be used as first identifier in an OID
-   Internationalized Resource Identifier (OID-IRI), shortening it.  More
-   information can be found in Recommendation ITU-T X.660 (2011) |
+   integer Unicode label that can be used as the first identifier in an
+   OID Internationalized Resource Identifier (OID-IRI), shortening it. 
+   More information can be found in Recommendation ITU-T X.660 (2011) |
    ISO/IEC 9834-1:2012, clause 3.5.8 [X660].
 
-   (13) "whois-service" (OPTIONAL) contains an IP-address or host name
-   of a system that offers a WHOIS service which can supply information
+   (13) "whois-service" (OPTIONAL) contains an IP-address or hostname of
+   a system that offers a WHOIS service that can supply information
    about the OID and/or its subordinate OIDs.  If the result is "Found"
    (i.e. the OID is existing in the local database), then the
    information "whois-service" is only informational; its existence is
    most likely a hint that subordinate OIDs will be found at that WHOIS
    server.  If the result is "Not found; superior object found", then
-   the client SHOULD query the referred WHOIS server in order to receive
-   more information about the OID.  See more information in section 4
+   the client SHOULD query the referred WHOIS server to receive more
+   information about the OID.  See more information in section 4
    "Referral".
 
    (14) "attribute" (OPTIONAL, multiple values allowed) contains
@@ -526,14 +526,14 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    (15) "parent" (OPTIONAL) contains the OID of the nearest known parent
    OID, prepended by namespace identifier and double colon, i.e. "oid:".
     It MAY be followed by additional human-readable information, e.g. a
-   description or a list of ASN.1 identifiers.  There SHALLL be at least
+   description or a list of ASN.1 identifiers.  There SHALL be at least
    1 whitespace in between.
 
    (16) "subordinate" (OPTIONAL, multiple values allowed) contains a
    list of subordinate OIDs, prepended by namespace identifier and
    double colon, i.e. "oid:".  It MAY be followed by additional human-
    readable information, e.g. a description or a list of ASN.1
-   identifiers.  There SHALLL be at least 1 whitespace in between.
+   identifiers.  There SHALL be at least 1 whitespace in between.
 
    (17) "created" (OPTIONAL) contains the date and time (as specified in
    section 3.4 "Date/Time Format") when the OID was first allocated by
@@ -545,9 +545,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
    Additional fields can be defined by the WHOIS service.  The field
    names SHALL only consist of the lower-case letters "a..z", hyphens
-   ("-") and numbers, and SHOULD be written in English language.  The
-   field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT
-   be followed by another hyphen.
+   ("-") and numbers, and SHOULD be written in the English language. 
+   The field name MUST NOT begin or end with a hyphen and a hyphen MUST
+   NOT be followed by another hyphen.
 
 
 
@@ -564,9 +564,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 3.2.3  RA-Section (Information about the Current RA)
 
-   This section MUST NOT be present if result is "Not found" or "Service
-   error", otherwise it MAY be present.  If it is present, it MUST start
-   with the field "ra".
+   This section MUST NOT be present if the result is "Not found" or
+   "Service error", otherwise it MAY be present.  If it is present, it
+   MUST start with the field "ra".
 
    Possible fields are:
 
@@ -598,7 +598,7 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    (4) "ra-address" (OPTIONAL) contains the physical location of the RA.
     While a fully qualified postal address is recommended, the field can
    also just contain a rough location like city and country name, state
-   and country name or just the country name.  The name of the country
+   and country name, or just the country name.  The name of the country
    SHOULD always be present.
 
    (5) "ra-phone" (OPTIONAL, multiple values allowed) contains a
@@ -653,7 +653,7 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    Additional fields can be defined by the WHOIS service, but they MUST
    begin with "ra-".  The field names SHALL only consist of the lower-
    case letters "a..z", hyphens ("-") and numbers, and SHOULD be written
-   in English language.  The field name MUST NOT begin or end with a
+   in the English language.  The field name MUST NOT begin or end with a
    hyphen and a hyphen MUST NOT be followed by another hyphen.
 
 
@@ -701,10 +701,10 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 3.3  Digital Signature
 
    If integrity/authenticity is required, the whole response can be
-   signed, e.g. by using S/MIME, RSA or PGP.  This document does not
+   signed, e.g. by using S/MIME, RSA, or PGP.  This document does not
    describe a mechanism for detecting which signature method was used. 
-   The creation and verification of the signature is therefore
-   implementation specific and no interoperability regarding signature
+   The creation and verification of the signature are therefore
+   implementation-specific and no interoperability regarding signature
    creation and validation is given at this time.
 
    Depending on the signature method being used, various things need to
@@ -721,7 +721,7 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    If parts of the date/time reference are uncertain, then they SHOULD
    be omitted until the date/time reference has the highest correctness.
 
-   Examples of valid date/time references can be found at section 3.4.2.
+   Examples of valid date/time references can be found in section 3.4.2.
  
 
 
@@ -732,9 +732,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 3.4.1  Date/Time Format ABNF Notation
 
-   For the purposes of defining the format of a Date/Time reference, the
-   following Augmented BNF definitions will be used.  They are based on
-   the ABNF styles of RFC 5234 [RFC5234].
+   To define the format of a Date/Time reference, the following
+   Augmented BNF definitions will be used.  They are based on the ABNF
+   styles of RFC 5234 [RFC5234].
 
    date-time = year [ "-" month [ "-" day [ " " time ] ] ]
 
@@ -928,7 +928,7 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    etc.
 
    (6) The namespace specific identifier MUST NOT contain dollar signs
-   ("$"), because section 2.1 "Authentication Tokens" defines them as
+   ("$"), because section 2.1 "Authentication Tokens" defines them as a
    separator for authentication tokens.
 
    (7) The namespace specific identifier MUST be treated case-sensitive
@@ -998,8 +998,8 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    [RFC3629]), without Byte-Order-Mark (BOM).
 
    The WHOIS service can define additional field names, but they SHOULD
-   be written in English language so that there is consistency with the
-   other field names defined in this document.
+   be written in the English language so that there is consistency with
+   the other field names defined in this document.
 
 
  
@@ -1018,11 +1018,11 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    to "Not found") or redact information in the Object-Section, as
    defined in section 3.2.2 "Object-Section".
 
-   (2) Registration Authorities might demand that their personal data is
-   kept confidential, or at least be partially redacted to increase
-   privacy or as a measurement against spam.  In this case, the WHOIS
-   service can redact information in the RA-Section, as defined in
-   section 3.2.3 "RA-Section".
+   (2) Registration Authorities might demand that their data is kept
+   confidential, or at least be partially redacted to increase privacy
+   or as measurement against spam.  In this case, the WHOIS service can
+   redact information in the RA-Section, as defined in section 3.2.3
+   "RA-Section".
 
    (3) The WHOIS service can decide if confidential material is omitted
    or shown, based on authentication mechanisms like white-listing
@@ -1034,12 +1034,12 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    network, because the WHOIS protocol is not encrypted.
 
    (5) Authentication tokens must have a sufficient length and
-   complexity in order to avoid successful brute force attacks, or the
-   WHOIS service must limit the number of requests per time period.
+   complexity to avoid successful brute force attacks, or the WHOIS
+   service must limit the number of requests per time.
 
    (6) The WHOIS protocol itself has no mechanism for verifying the
-   integrity of data received.  Due to this fact, information should not
-   be trusted if it is transmitted through an untrusted network.  If
+   integrity of data received.  Due to this fact, the information should
+   not be trusted if it is transmitted through an untrusted network.  If
    integrity/authenticity is required, the WHOIS response can be signed,
    as described in section 3.3 "Digital Signature".  However, this
    document does not describe a mechanism for detecting which signature
@@ -1050,14 +1050,14 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
    (1) IANA is operating a WHOIS service at whois.iana.org.  This WHOIS
    service could be extended by allowing requests starting with "oid:",
-   in order to serve information about OIDs owned or delegated by IANA,
-   for example it could output information about Private Enterprise
-   Numbers (PEN) located at OID 1.3.6.1.4.1.
+   to serve information about OIDs owned or delegated by IANA, for
+   example, it could output information about Private Enterprise Numbers
+   (PEN) located at OID 1.3.6.1.4.1.
 
    (2) Owners of Private Enterprise Numbers could store the addresses of
-   their own WHOIS servers in the IANA PEN database, so that these
-   addresses can be included in the WHOIS output of IANA.  This would
-   enable the referral functionality described in section 4 "Referral".
+   their WHOIS servers in the IANA PEN database so that these addresses
+   can be included in the WHOIS output of IANA.  This would enable the
+   referral functionality described in section 4 "Referral".
  
 
 
