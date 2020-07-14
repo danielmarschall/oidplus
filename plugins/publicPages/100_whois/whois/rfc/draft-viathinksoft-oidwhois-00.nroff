@@ -18,7 +18,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: <Expiry Date>''June 2020'
+.tl 'Expires: <Expiry Date>''July 2020'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -171,7 +171,7 @@ Note: Existing WHOIS servers can add the functionalities described in this docum
 2.1  Authentication Tokens
 
 Some organizations might not want to present their OID information (or part of it) to the public, e.g. for reasons like privacy or confidentiality.  Therefore, at the end of the query, the client can append case-sensitive, non-empty alphanumeric authentication tokens to control the display of confidential information.
-.\" REMOVED BECAUSE PAGE WOULD BE TOO LONG:  "returned by the WHOIS service."
+.\" REMOVED BECAUSE PAGE WOULD BE TOO LONG:  "... to control the display of confidential information [returned by the WHOIS service]."
 
 Each authentication token MUST be prepended by a dollar sign ("$").
 
@@ -594,7 +594,7 @@ Following things need to be considered if alternative namespaces are implemented
 
 (4) If available, a formal URN namespace identifier (as defined in RFC\08141, section 5.1 [RFC8141]) SHOULD be used, e.g. "uuid" should be used instead of "guid".
 
-(5) Although the term "Registration Authority" might not be appropriate for every namespace, the RA-section as described in section 3.2.3 SHOULD still be used.  The term "Registration Authority" should then be treated like "Owner", "Creator", "Manager", etc.
+(5) If things like "Owner", "Creator", "Manager", "Administrator", etc., are relevant to the identifiers in the namespace, then the RA-section as described in section 3.2.3 SHALL be used, even though the word "Registration Authority" might not be appropriate in the terminology of the namespace.
 
 (6) The namespace specific identifier MUST NOT contain dollar signs ("$"), because section 2.1 "Authentication Tokens" defines them as a separator for authentication tokens.
 
@@ -654,7 +654,7 @@ The WHOIS service can define additional field names, but they SHOULD be written 
 (2) Registration Authorities might demand that their data is kept confidential, or at least be partially redacted to increase privacy or as measurement against spam.  In this case, the WHOIS service can redact information in the RA-Section, as defined in section 3.2.3 "RA-Section".
 
 (3) The WHOIS service can decide if confidential material is omitted or shown, based on authentication mechanisms like white-listing client IP addresses or by using authentication tokens supplied by the client, as defined in section 2.1 "Authentication Tokens".
-.\" REMOVED BECAUSE PAGE WOULD BE TOO LONG:  "during the request"
+.\" REMOVED BECAUSE PAGE WOULD BE TOO LONG:  "... supplied by the client [during the request], as defined in ..."
 
 (4) The usage of authentication tokens is not recommended if the traffic between client and server is transmitted through an untrusted network, because the WHOIS protocol is not encrypted.
 

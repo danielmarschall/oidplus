@@ -4,7 +4,7 @@
 
 INTERNET-DRAFT                                              D. Marschall
 Intended Status: Informational                              ViaThinkSoft
-Expires: <Expiry Date>                                         June 2020
+Expires: <Expiry Date>                                         July 2020
 
 
             Retrieving information about Object Identifiers
@@ -921,11 +921,11 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    RFC 8141, section 5.1 [RFC8141]) SHOULD be used, e.g. "uuid" should
    be used instead of "guid".
 
-   (5) Although the term "Registration Authority" might not be
-   appropriate for every namespace, the RA-section as described in
-   section 3.2.3 SHOULD still be used.  The term "Registration
-   Authority" should then be treated like "Owner", "Creator", "Manager",
-   etc.
+   (5) If things like "Owner", "Creator", "Manager", "Administrator",
+   etc., are relevant to the identifiers in the namespace, then the RA-
+   section as described in section 3.2.3 SHALL be used, even though the
+   word "Registration Authority" might not be appropriate in the
+   terminology of the namespace.
 
    (6) The namespace specific identifier MUST NOT contain dollar signs
    ("$"), because section 2.1 "Authentication Tokens" defines them as a
