@@ -221,21 +221,21 @@ unsigned-number = "0" / nonzero-digit *( digit )
 .ti 0
 3.1  Format and Encoding
 
-The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+(1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
 
-The response contains multiple lines with field names and values, which MUST be separated by a double colon (":").  Whitespace characters after the double colon are allowed.
+(2) The response contains multiple lines with field names and values, which MUST be separated by a double colon (":").  Whitespace characters after the double colon are allowed.
 
-Each line SHOULD be limited to 80 characters, including the field name, double colon, value, and whitespaces.
+(3) If possible, each line SHOULD be limited to 80 characters, including the field name, double colon, value, and whitespaces.
 
-Field names and values MUST be treated case-sensitive.
+(4) Field names and values MUST be treated case-sensitive.
 
-If a value needs to be split into multiple lines, e.g. if the line would exceed the length limit, the same field name including double colon MUST be repeated at the beginning of the next line.
+(5) If a value needs to be split into multiple lines, e.g. if the line would exceed the length limit, the same field name including double colon MUST be repeated at the beginning of the next line.
 
-If an attribute has multiple values (e.g. multiple Unicode labels, alternative email-addresses, etc.), each value MUST be written in a new line with the same field name.
+(6) If an attribute has multiple values (e.g. multiple Unicode labels, alternative email-addresses, etc.), each value MUST be written in a new line with the same field name.
 
-Lines with the same field name SHALL be kept together.
+(7) Lines with the same field name SHALL be kept together.
 
-Comment lines MUST start with a percent sign ("%") at the beginning of a line, without prepending whitespaces.  They MUST NOT be evaluated by machines (except for signature validation, as mentioned in section 3.3 "Digital Signature").
+(8) Comment lines MUST start with a percent sign ("%") at the beginning of a line, without prepending whitespaces.  They MUST NOT be evaluated by machines (except for signature validation, as mentioned in section 3.3 "Digital Signature").
 
 .ti 0
 3.2  Structure
@@ -312,6 +312,10 @@ Possible fields are:
 .bp
 (8) "iri-notation" (OPTIONAL, multiple values allowed) contains one or more possible notations in the OID-IRI syntax, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 34.3 [X680] (but without quotation marks), e.g. /Joint-ISO-ITU-T/Example.
 
+.in 7
+Note: A line-break as defined in section 3.1 ("Format and Encoding") SHALL NOT be applied to an OID-IRI notation, otherwise, it would be ambiguous if the line-break was placed merely to shorten the line, or if the line-break indicates a new value in case multiple OID-IRI notations are supplied.
+.in 3
+
 (9) "identifier" (OPTIONAL, multiple values allowed) contains the alphanumeric identifier ("NameForm") as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.3 [X680].
 
 (10) "standardized-id" (OPTIONAL, multiple values allowed) contains an alphanumeric identifier that has a standardized "NameForm", i.e. in ASN.1 notation, it can be written without its associated number.  See more information in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.7 [X680].
@@ -328,7 +332,7 @@ Possible fields are:
 "confidential" means that information about the OID or part of it is confidential.
 
 "draft" means that the allocation of the OID is not yet official and the information is subject to change without notice.  This includes deletion and relocation.
-.bp
+
 "frozen" means that no more child OIDs can be created under this OID, e.g. because the RA has stopped operating, but the existing child OIDs stay valid.
 
 "leaf" means that no child OIDs can be allocated under this OID.  The field "subordinate" SHALL therefore not be present.
