@@ -73,10 +73,10 @@ Table of Contents
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
      2.1  Authentication Tokens . . . . . . . . . . . . . . . . . . .  4
      2.2  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  5
-   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
-     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  5
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  6
      3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  6
-       3.2.1  Query-Section (Information about Query and Result)  . .  6
+       3.2.1  Query-Section (Information about Query and Result)  . .  7
        3.2.2  Object-Section (Information about the OID)  . . . . . .  8
        3.2.3  RA-Section (Information about the Current RA) . . . . . 11
        3.2.4  Sections for Previous Registration Authorities  . . . . 13
@@ -264,6 +264,24 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
    unsigned-number = "0" / nonzero-digit *( digit )
 
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+Marschall                Expires <Expiry Date>                  [Page 5]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+
+
 3  Response
 
 3.1  Format and Encoding
@@ -274,13 +292,6 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    (2) The response contains multiple lines with field names and values,
    which MUST be separated by a double colon (":").  Whitespace
    characters after the double colon are allowed.
- 
-
-
-Marschall                Expires <Expiry Date>                  [Page 5]
-
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
-
 
    (3) If possible, each line SHOULD be limited to 80 characters,
    including the field name, double colon, value, and whitespaces.
@@ -319,6 +330,14 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    (3) RA-Section which contains information about the current
    Registration Authority.  This section MUST start with the field "ra".
 
+ 
+
+
+Marschall                Expires <Expiry Date>                  [Page 6]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+
+
    (4) Optional RA-Sections containing information about RAs which were
    previously in charge of managing the OID.
 
@@ -330,13 +349,6 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
    This section MUST always be present and MUST start with the field
    "query".  It MUST be the first section in the response.
- 
-
-
-Marschall                Expires <Expiry Date>                  [Page 6]
-
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
-
 
    Possible fields are:
 
@@ -374,6 +386,14 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    namespace (it is always applicable for OIDs) and if the result is
    "Not found; superior object found".  A distance of 1 means that the
    direct parent was found.  A distance of 2 means that the grand-parent
+ 
+
+
+Marschall                Expires <Expiry Date>                  [Page 7]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+
+
    was found, etc.
 
    (4) "message" SHOULD be present if the result is "Service error".  It
@@ -382,17 +402,6 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    has a different value.
 
    The WHOIS service SHOULD NOT add additional fields to this section.
-
-
-
-
- 
-
-
-Marschall                Expires <Expiry Date>                  [Page 7]
-
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
-
 
 3.2.2  Object-Section (Information about the OID)
 
@@ -433,6 +442,13 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
    (5) "information" (OPTIONAL) contains additional information, e.g.
    Management Information Base (MIB) definitions.
+ 
+
+
+Marschall                Expires <Expiry Date>                  [Page 8]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+
 
    (6) "url" (OPTIONAL, multiple values allowed) contains a URL (as
    defined in RFC 3986 [RFC3986]) leading to more information about the
@@ -442,13 +458,11 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    or more possible notations in the ASN.1 syntax, as defined in
    Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.3
    [X680], e.g. {joint-iso-itu-t(2) example(999)}.
- 
 
-
-Marschall                Expires <Expiry Date>                  [Page 8]
-
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
-
+       Note: A line-break as defined in section 3.1 ("Format and
+       Encoding") is allowed to break up lines which are too long. 
+       Multiple ASN.1 notations can be distinguished by their opening
+       curly bracket and their closing curly bracket.
 
    (8) "iri-notation" (OPTIONAL, multiple values allowed) contains one
    or more possible notations in the OID-IRI syntax, as defined in
@@ -484,6 +498,14 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    (13) "whois-service" (OPTIONAL) contains an IP-address or hostname of
    a system that offers a WHOIS service that can supply information
    about the OID and/or its subordinate OIDs.  If the result is "Found"
+ 
+
+
+Marschall                Expires <Expiry Date>                  [Page 9]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+
+
    (i.e. the OID is existing in the local database), then the
    information "whois-service" is only informational; its existence is
    most likely a hint that subordinate OIDs will be found at that WHOIS
@@ -498,13 +520,6 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
        "confidential" means that information about the OID or part of it
        is confidential.
- 
-
-
-Marschall                Expires <Expiry Date>                  [Page 9]
-
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
-
 
        "draft" means that the allocation of the OID is not yet official
        and the information is subject to change without notice.  This
@@ -539,6 +554,14 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    readable information, e.g. a description or a list of ASN.1
    identifiers.  There SHALL be at least 1 whitespace in between.
 
+ 
+
+
+Marschall                Expires <Expiry Date>                 [Page 10]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+
+
    (17) "created" (OPTIONAL) contains the date and time (as specified in
    section 3.4 "Date/Time Format") when the OID was first allocated by
    the RA of the superior OID.
@@ -552,15 +575,6 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    ("-") and numbers, and SHOULD be written in the English language. 
    The field name MUST NOT begin or end with a hyphen and a hyphen MUST
    NOT be followed by another hyphen.
-
-
- 
-
-
-Marschall                Expires <Expiry Date>                 [Page 10]
-
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
-
 
 3.2.3  RA-Section (Information about the Current RA)
 
@@ -596,6 +610,14 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    organization.
 
    (4) "ra-address" (OPTIONAL) contains the physical location of the RA.
+ 
+
+
+Marschall                Expires <Expiry Date>                 [Page 11]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+
+
     While a fully qualified postal address is recommended, the field can
    also just contain a rough location like city and country name, state
    and country name, or just the country name.  The name of the country
@@ -610,13 +632,6 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    phone number of the Registration Authority.  It SHOULD be written in
    the international number format specified in Recommendation ITU-T
    E.164 (2010) [E164], e.g. +1 206 555 0100.
- 
-
-
-Marschall                Expires <Expiry Date>                 [Page 11]
-
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
-
 
    (7) "ra-fax" (OPTIONAL, multiple values allowed) contains a fax
    number of the Registration Authority.  It SHOULD be written in the
@@ -650,21 +665,6 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    in section 3.4 "Date/Time Format") when the RA information was last
    modified.
 
-   Additional fields can be defined by the WHOIS service, but they MUST
-   begin with "ra-".  The field names SHALL only consist of the lower-
-   case letters "a..z", hyphens ("-") and numbers, and SHOULD be written
-   in the English language.  The field name MUST NOT begin or end with a
-   hyphen and a hyphen MUST NOT be followed by another hyphen.
-
-
-
-
-
-
-
-
-
-
 
  
 
@@ -673,6 +673,12 @@ Marschall                Expires <Expiry Date>                 [Page 12]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
+
+   Additional fields can be defined by the WHOIS service, but they MUST
+   begin with "ra-".  The field names SHALL only consist of the lower-
+   case letters "a..z", hyphens ("-") and numbers, and SHOULD be written
+   in the English language.  The field name MUST NOT begin or end with a
+   hyphen and a hyphen MUST NOT be followed by another hyphen.
 
 3.2.4  Sections for Previous Registration Authorities
 
@@ -715,13 +721,7 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 3.4  Date/Time Format
 
-   Date/Time references SHALL be formatted as described in section
-   3.4.1.
-
-   If parts of the date/time reference are uncertain, then they SHOULD
-   be omitted until the date/time reference has the highest correctness.
-
-   Examples of valid date/time references can be found in section 3.4.2.
+   Date/Time references SHALL be formatted as described in
  
 
 
@@ -729,6 +729,13 @@ Marschall                Expires <Expiry Date>                 [Page 13]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
+
+   section 3.4.1.
+
+   If parts of the date/time reference are uncertain, then they SHOULD
+   be omitted until the date/time reference has the highest correctness.
+
+   Examples of valid date/time references can be found in section 3.4.2.
 
 3.4.1  Date/Time Format ABNF Notation
 
@@ -771,13 +778,6 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
        2020-06-29
        2020-06
        2020
-
-
-
-
-
-
-
  
 
 

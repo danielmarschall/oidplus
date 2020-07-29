@@ -79,10 +79,10 @@ Table of Contents
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
      2.1  Authentication Tokens . . . . . . . . . . . . . . . . . . .  4
      2.2  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  5
-   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
-     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  5
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  6
      3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  6
-       3.2.1  Query-Section (Information about Query and Result)  . .  6
+       3.2.1  Query-Section (Information about Query and Result)  . .  7
        3.2.2  Object-Section (Information about the OID)  . . . . . .  8
        3.2.3  RA-Section (Information about the Current RA) . . . . . 11
        3.2.4  Sections for Previous Registration Authorities  . . . . 13
@@ -214,7 +214,7 @@ char-or-digit   = uppercase-char / lowercase-char / digit
 
 unsigned-number = "0" / nonzero-digit *( digit )
 .fi
-
+.bp
 .ti 0
 3  Response
 
@@ -235,7 +235,7 @@ unsigned-number = "0" / nonzero-digit *( digit )
 
 (7) Lines with the same field name SHALL be kept together.
 
-(8) Comment lines MUST start with a percent sign ("%") at the beginning of a line, without prepending whitespaces.  They MUST NOT be evaluated by machines (except for signature validation, as mentioned in section 3.3 "Digital Signature").
+(8) Comment lines MUST start with a percent sign ("%") at the beginning of a line, without prepending whitespaces.  They MUST NOT be evaluated by machines (except for signature validation, as mentioned in section\03.3 "Digital Signature").
 
 .ti 0
 3.2  Structure
@@ -280,7 +280,7 @@ Possible fields are:
 (4) "message" SHOULD be present if the result is "Service error".  It contains a message explaining why the service is not available (e.g. displaying an error message).  It MUST NOT be present if the result has a different value.
 
 The WHOIS service SHOULD NOT add additional fields to this section.
-.bp
+
 .ti 0
 3.2.2  Object-Section (Information about the OID)
 
@@ -309,11 +309,15 @@ Possible fields are:
 (6) "url" (OPTIONAL, multiple values allowed) contains a URL (as defined in RFC\03986 [RFC3986]) leading to more information about the OID.
 
 (7) "asn1-notation" (OPTIONAL, multiple values allowed) contains one or more possible notations in the ASN.1 syntax, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.3 [X680], e.g. {joint-iso-itu-t(2) example(999)}.
-.bp
+
+.in 7
+Note: A line-break as defined in section\03.1 ("Format and Encoding") is allowed to break up lines which are too long.  Multiple ASN.1 notations can be distinguished by their opening curly bracket and their closing curly bracket.
+.in 3
+
 (8) "iri-notation" (OPTIONAL, multiple values allowed) contains one or more possible notations in the OID-IRI syntax, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 34.3 [X680] (but without quotation marks), e.g. /Joint-ISO-ITU-T/Example.
 
 .in 7
-Note: A line-break as defined in section 3.1 ("Format and Encoding") SHALL NOT be applied to an OID-IRI notation, otherwise, it would be ambiguous if the line-break was placed merely to shorten the line, or if the line-break indicates a new value in case multiple OID-IRI notations are supplied.
+Note: A line-break as defined in section\03.1 ("Format and Encoding") SHALL NOT be applied to an OID-IRI notation, otherwise, it would be ambiguous if the line-break was placed merely to shorten the line, or if the line-break indicates a new value in case multiple OID-IRI notations are supplied.
 .in 3
 
 (9) "identifier" (OPTIONAL, multiple values allowed) contains the alphanumeric identifier ("NameForm") as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.3 [X680].
@@ -324,7 +328,7 @@ Note: A line-break as defined in section 3.1 ("Format and Encoding") SHALL NOT b
 
 (12) "long-arc" (OPTIONAL, multiple values allowed) contains a Non-integer Unicode label that can be used as the first identifier in an OID Internationalized Resource Identifier (OID-IRI), shortening it.  More information can be found in Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012, clause 3.5.8 [X660].
 
-(13) "whois-service" (OPTIONAL) contains an IP-address or hostname of a system that offers a WHOIS service that can supply information about the OID and/or its subordinate OIDs.  If the result is "Found" (i.e. the OID is existing in the local database), then the information "whois-service" is only informational; its existence is most likely a hint that subordinate OIDs will be found at that WHOIS server.  If the result is "Not found; superior object found", then the client SHOULD query the referred WHOIS server to receive more information about the OID.  See more information in section 4 "Referral".
+(13) "whois-service" (OPTIONAL) contains an IP-address or hostname of a system that offers a WHOIS service that can supply information about the OID and/or its subordinate OIDs.  If the result is "Found" (i.e. the OID is existing in the local database), then the information "whois-service" is only informational; its existence is most likely a hint that subordinate OIDs will be found at that WHOIS server.  If the result is "Not found; superior object found", then the client SHOULD query the referred WHOIS server to receive more information about the OID.  See more information in section\04 "Referral".
 
 (14) "attribute" (OPTIONAL, multiple values allowed) contains attributes of the OID.  An attribute MUST be one of the following values:
 
@@ -348,12 +352,12 @@ Note: A line-break as defined in section 3.1 ("Format and Encoding") SHALL NOT b
 
 (16) "subordinate" (OPTIONAL, multiple values allowed) contains a list of subordinate OIDs, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALL be at least 1 whitespace in between.
 
-(17) "created" (OPTIONAL) contains the date and time (as specified in section 3.4 "Date/Time Format") when the OID was first allocated by the RA of the superior OID.
+(17) "created" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID was first allocated by the RA of the superior OID.
 
-(18) "updated" (OPTIONAL) contains the date and time (as specified in section 3.4 "Date/Time Format") when the OID information was last updated.
+(18) "updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID information was last updated.
 
 Additional fields can be defined by the WHOIS service.  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-") and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
-.bp
+
 .ti 0
 3.2.3  RA-Section (Information about the Current RA)
 
@@ -395,12 +399,12 @@ Possible fields are:
 "retired" means that the RA is defunct.  If this attribute is set to the current RA, then the OID MUST have the attribute "frozen" (until the responsibility is transferred to a non-defunct RA, or until the current RA becomes active again).
 .in 3
 
-(11) "ra-created" (OPTIONAL) contains the date and time (as specified in section 3.4 "Date/Time Format") when the RA was created/registered in the database.
+(11) "ra-created" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the RA was created/registered in the database.
 
-(12) "ra-updated" (OPTIONAL) contains the date and time (as specified in section 3.4 "Date/Time Format") when the RA information was last modified.
-
-Additional fields can be defined by the WHOIS service, but they MUST begin with "ra-".  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-") and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
+(12) "ra-updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the RA information was last modified.
 .bp
+Additional fields can be defined by the WHOIS service, but they MUST begin with "ra-".  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-") and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
+
 .ti 0
 3.2.4  Sections for Previous Registration Authorities
 
@@ -414,7 +418,7 @@ etc.
 
 "ra-" is the prefix of the current Registration Authority.
 
-The definition of these sections is identical to the definition of the RA-Section (described in section 3.2.3 "RA-Section"), just with a different prefix.
+The definition of these sections is identical to the definition of the RA-Section (described in section\03.2.3 "RA-Section"), just with a different prefix.
 
 The history does not need to be complete, e.g. it is no problem to only serve information about the first and the current RA, or only serve information about the current RA.
 
@@ -428,11 +432,11 @@ Depending on the signature method being used, various things need to be appended
 .ti 0
 3.4  Date/Time Format
 
-Date/Time references SHALL be formatted as described in section 3.4.1.
+Date/Time references SHALL be formatted as described in section\03.4.1.
 
 If parts of the date/time reference are uncertain, then they SHOULD be omitted until the date/time reference has the highest correctness.
 
-Examples of valid date/time references can be found in section 3.4.2.
+Examples of valid date/time references can be found in section\03.4.2.
 
 .ti 0
 3.4.1  Date/Time Format ABNF Notation
@@ -594,11 +598,11 @@ Following things need to be considered if alternative namespaces are implemented
 
 (2) The namespace SHALL be a namespace identifier (NID) as defined in RFC\08141 [RFC8141].
 
-(3) The namespace identifier SHALL be written in lower-case (this is already defined in section 2 "Request").
+(3) The namespace identifier SHALL be written in lower-case (this is already defined in section\02 "Request").
 
 (4) If available, a formal URN namespace identifier (as defined in RFC\08141, section 5.1 [RFC8141]) SHOULD be used, e.g. "uuid" should be used instead of "guid".
 
-(5) If things like "Owner", "Creator", "Manager", "Administrator", etc., are relevant to the identifiers in the namespace, then the RA-section as described in section 3.2.3 SHALL be used, even though the word "Registration Authority" might not be appropriate in the terminology of the namespace.
+(5) If things like "Owner", "Creator", "Manager", "Administrator", etc., are relevant to the identifiers in the namespace, then the RA-section as described in section\03.2.3 SHALL be used, even though the word "Registration Authority" might not be appropriate in the terminology of the namespace.
 
 (6) The namespace specific identifier MUST NOT contain dollar signs ("$"), because section 2.1 "Authentication Tokens" defines them as a separator for authentication tokens.
 
@@ -653,25 +657,25 @@ The WHOIS service can define additional field names, but they SHOULD be written 
 .ti 0
 8  Security Considerations
 
-(1) The knowledge of existence or information about some OIDs could be considered confidential.  In this case, the WHOIS service can either deny the existence of the requested OID (by setting the result to "Not found") or redact information in the Object-Section, as defined in section 3.2.2 "Object-Section".
+(1) The knowledge of existence or information about some OIDs could be considered confidential.  In this case, the WHOIS service can either deny the existence of the requested OID (by setting the result to "Not found") or redact information in the Object-Section, as defined in section\03.2.2 "Object-Section".
 
-(2) Registration Authorities might demand that their data is kept confidential, or at least be partially redacted to increase privacy or as measurement against spam.  In this case, the WHOIS service can redact information in the RA-Section, as defined in section 3.2.3 "RA-Section".
+(2) Registration Authorities might demand that their data is kept confidential, or at least be partially redacted to increase privacy or as measurement against spam.  In this case, the WHOIS service can redact information in the RA-Section, as defined in section\03.2.3 "RA-Section".
 
-(3) The WHOIS service can decide if confidential material is omitted or shown, based on authentication mechanisms like white-listing client IP addresses or by using authentication tokens supplied by the client, as defined in section 2.1 "Authentication Tokens".
+(3) The WHOIS service can decide if confidential material is omitted or shown, based on authentication mechanisms like white-listing client IP addresses or by using authentication tokens supplied by the client, as defined in section\02.1 "Authentication Tokens".
 .\" REMOVED BECAUSE PAGE WOULD BE TOO LONG:  "... supplied by the client [during the request], as defined in ..."
 
 (4) The usage of authentication tokens is not recommended if the traffic between client and server is transmitted through an untrusted network, because the WHOIS protocol is not encrypted.
 
 (5) Authentication tokens must have a sufficient length and complexity to avoid successful brute force attacks, or the WHOIS service must limit the number of requests per time.
 
-(6) The WHOIS protocol itself has no mechanism for verifying the integrity of data received.  Due to this fact, the information should not be trusted if it is transmitted through an untrusted network.  If integrity/authenticity is required, the WHOIS response can be signed, as described in section 3.3 "Digital Signature".  However, this document does not describe a mechanism for detecting which signature method was used.  Therefore, no interoperability of signature creation/validation is given at this time.
+(6) The WHOIS protocol itself has no mechanism for verifying the integrity of data received.  Due to this fact, the information should not be trusted if it is transmitted through an untrusted network.  If integrity/authenticity is required, the WHOIS response can be signed, as described in section\03.3 "Digital Signature".  However, this document does not describe a mechanism for detecting which signature method was used.  Therefore, no interoperability of signature creation/validation is given at this time.
 
 .ti 0
 9  IANA Considerations
 
 (1) IANA is operating a WHOIS service at whois.iana.org.  This WHOIS service could be extended by allowing requests starting with "oid:", to serve information about OIDs owned or delegated by IANA, for example, it could output information about Private Enterprise Numbers (PEN) located at OID 1.3.6.1.4.1.
 
-(2) Owners of Private Enterprise Numbers could store the addresses of their WHOIS servers in the IANA PEN database so that these addresses can be included in the WHOIS output of IANA.  This would enable the referral functionality described in section 4 "Referral".
+(2) Owners of Private Enterprise Numbers could store the addresses of their WHOIS servers in the IANA PEN database so that these addresses can be included in the WHOIS output of IANA.  This would enable the referral functionality described in section\04 "Referral".
 .bp
 .ti 0
 10  References
