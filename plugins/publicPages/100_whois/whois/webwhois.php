@@ -246,7 +246,7 @@ if ($format == 'txt') {
 		$key = trim($ary[0]);
 
 		$value = isset($ary[1]) ? trim($ary[1]) : '';
-		$value = wordwrap($value, OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80) - $longest_key - strlen(':') - OIDplus::config()->getValue('webwhois_output_format_spacer', 2));
+		$value = mb_wordwrap($value, OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80) - $longest_key - strlen(':') - OIDplus::config()->getValue('webwhois_output_format_spacer', 2));
 		$value = str_replace("\n", "\n$key:".str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)), $value);
 
 		if (!empty($value)) {
@@ -265,7 +265,7 @@ if ($format == 'txt') {
 		$signature = '';
 		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 			$signature = base64_encode($signature);
-			$signature = wordwrap($signature, 78, "\n", true);
+			$signature = mb_wordwrap($signature, OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80) - strlen('% '), "\n", true);
 			$signature = "% -----BEGIN RSA SIGNATURE-----\n".
 			             preg_replace('/^/m', '% ', $signature)."\n".
 			             "% -----END RSA SIGNATURE-----\n";

@@ -311,13 +311,13 @@ Possible fields are:
 (7) "asn1-notation" (OPTIONAL, multiple values allowed) contains one or more possible notations in the ASN.1 syntax, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.3 [X680], e.g. {joint-iso-itu-t(2) example(999)}.
 
 .in 7
-Note: A line-break as defined in section\03.1 ("Format and Encoding") is allowed to break up lines which are too long.  Multiple ASN.1 notations can be distinguished by their opening curly bracket and their closing curly bracket.
+Note: A line-break, to break up lines which are too long, as defined in section\03.1 ("Format and Encoding") SHOULD be used.  This is no problem because multiple ASN.1 notations can be distinguished by their opening curly bracket and their closing curly bracket.
 .in 3
 
 (8) "iri-notation" (OPTIONAL, multiple values allowed) contains one or more possible notations in the OID-IRI syntax, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 34.3 [X680] (but without quotation marks), e.g. /Joint-ISO-ITU-T/Example.
 
 .in 7
-Note: A line-break as defined in section\03.1 ("Format and Encoding") SHALL NOT be applied to an OID-IRI notation, otherwise, it would be ambiguous if the line-break was placed merely to shorten the line, or if the line-break indicates a new value in case multiple OID-IRI notations are supplied.
+Note: A line-break, to break up lines which are too long, as defined in section\03.1 ("Format and Encoding") SHALL NOT be used, otherwise, it would be ambiguous if the line-break was used to shorten the line, or if the line-break indicates a new value in case multiple OID-IRI notations are supplied.
 .in 3
 
 (9) "identifier" (OPTIONAL, multiple values allowed) contains the alphanumeric identifier ("NameForm") as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.3 [X680].

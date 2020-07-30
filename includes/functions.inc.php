@@ -90,3 +90,38 @@ function get_calling_function() {
 	$final_call = $trace[2];
 	return $final_call['file'].':'.$final_call['line'].'/'.$final_call['function'].'()';
 }
+
+if (!function_exists('mb_wordwrap')) {
+	function mb_wordwrap($str, $width = 75, $break = "\n", $cut = false) {
+		// https://stackoverflow.com/a/4988494/488539
+		$lines = explode($break, $str);
+		foreach ($lines as &$line) {
+			$line = rtrim($line);
+			if (mb_strlen($line) <= $width) {
+				continue;
+			}
+			$words = explode(' ', $line);
+			$line = '';
+			$actual = '';
+			foreach ($words as $word) {
+				if (mb_strlen($actual.$word) <= $width) {
+					$actual .= $word.' ';
+				} else {
+					if ($actual != '') {
+						$line .= rtrim($actual).$break;
+					}
+					$actual = $word;
+					if ($cut) {
+						while (mb_strlen($actual) > $width) {
+							$line .= mb_substr($actual, 0, $width).$break;
+							$actual = mb_substr($actual, $width);
+						}
+					}
+					$actual .= ' ';
+				}
+			}
+			$line .= trim($actual);
+		}
+		return implode($break, $lines);
+	}
+}

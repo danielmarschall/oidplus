@@ -459,21 +459,22 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.3
    [X680], e.g. {joint-iso-itu-t(2) example(999)}.
 
-       Note: A line-break as defined in section 3.1 ("Format and
-       Encoding") is allowed to break up lines which are too long. 
-       Multiple ASN.1 notations can be distinguished by their opening
-       curly bracket and their closing curly bracket.
+       Note: A line-break, to break up lines which are too long, as
+       defined in section 3.1 ("Format and Encoding") SHOULD be used. 
+       This is no problem because multiple ASN.1 notations can be
+       distinguished by their opening curly bracket and their closing
+       curly bracket.
 
    (8) "iri-notation" (OPTIONAL, multiple values allowed) contains one
    or more possible notations in the OID-IRI syntax, as defined in
    Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 34.3
    [X680] (but without quotation marks), e.g. /Joint-ISO-ITU-T/Example.
 
-       Note: A line-break as defined in section 3.1 ("Format and
-       Encoding") SHALL NOT be applied to an OID-IRI notation,
-       otherwise, it would be ambiguous if the line-break was placed
-       merely to shorten the line, or if the line-break indicates a new
-       value in case multiple OID-IRI notations are supplied.
+       Note: A line-break, to break up lines which are too long, as
+       defined in section 3.1 ("Format and Encoding") SHALL NOT be used,
+       otherwise, it would be ambiguous if the line-break was used to
+       shorten the line, or if the line-break indicates a new value in
+       case multiple OID-IRI notations are supplied.
 
    (9) "identifier" (OPTIONAL, multiple values allowed) contains the
    alphanumeric identifier ("NameForm") as defined in Recommendation
@@ -497,7 +498,6 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
    (13) "whois-service" (OPTIONAL) contains an IP-address or hostname of
    a system that offers a WHOIS service that can supply information
-   about the OID and/or its subordinate OIDs.  If the result is "Found"
  
 
 
@@ -506,6 +506,7 @@ Marschall                Expires <Expiry Date>                  [Page 9]
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
+   about the OID and/or its subordinate OIDs.  If the result is "Found"
    (i.e. the OID is existing in the local database), then the
    information "whois-service" is only informational; its existence is
    most likely a hint that subordinate OIDs will be found at that WHOIS
@@ -553,7 +554,6 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    double colon, i.e. "oid:".  It MAY be followed by additional human-
    readable information, e.g. a description or a list of ASN.1
    identifiers.  There SHALL be at least 1 whitespace in between.
-
  
 
 
