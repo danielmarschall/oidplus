@@ -219,6 +219,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 							}
 						}
 
+						natsort($all_local_oids_of_root);
 						foreach ($all_local_oids_of_root as $local_oid) {
 							if (!in_array($local_oid, $root['children'])) {
 								$count++;
@@ -381,7 +382,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$payload = array(
 				"query" => $query, // we must repeat the query because we want to sign it
 				"system_id" => OIDplus::getSystemId(false),
-"show_all" => 0
+				"show_all" => 0
 			);
 
 			$signature = '';
@@ -447,6 +448,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 						$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 						$out['text'] .= '<table class="table table-bordered table-striped">';
 						$out['text'] .= '<tr><th colspan="4">Actions</th><th>OID</th></tr>';
+						natsort($root['children']);
 						foreach ($root['children'] as $child_oid) {
 							if (!in_array($child_oid, $all_local_oids)) {
 								$count++;

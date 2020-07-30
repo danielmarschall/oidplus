@@ -28,7 +28,13 @@ class OIDplusGui {
 		$out['text'] = '';
 
 		foreach (OIDplus::getPagePlugins() as $plugin) {
-			$plugin->gui($id, $out, $handled);
+			try {
+				$plugin->gui($id, $out, $handled);
+			} catch (Exception $e) {
+				$out['title'] = 'Error';
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = $e->getMessage();
+			}
 			if ($handled) break;
 		}
 

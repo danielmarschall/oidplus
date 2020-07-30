@@ -21,6 +21,10 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	private $conn;
 	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
 
+	public static function getPlugin(): OIDplusDatabasePlugin {
+		return new OIDplusDatabasePluginODBC();
+	}
+
 	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {

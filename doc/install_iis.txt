@@ -1,0 +1,34 @@
+
+Install OIDplus to Microsoft IIS
+================================
+
+(1) Install IIS using "Programs and Features" in the control panel
+
+	see tutorial here https://www.howtogeek.com/112455/how-to-install-iis-8-on-windows-8/
+
+(2) Install PHP using the Web Platform Installer
+
+	see more here: https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php
+	
+	Note: The Web Platform Installer sometimes exits with an error (signature verification failed etc),
+	but you can ignore it, as PHP is actually successfully installed!
+
+(3) Place OIDplus here:
+
+	C:\inetpub\wwwroot\oidplus\
+
+(4) Run following command to unlock various things in the web.config file:
+
+	%windir%\system32\inetsrv\appcmd.exe unlock config -section:system.webServer/security/authentication/anonymousAuthentication
+
+(5) Solving problem "SSL Certificate Problem: Unable to get local issuer certificate"
+
+	Download https://curl.haxx.se/ca/cacert.pem and place it in "C:\Program Files (x86)\PHP\v7.0\extras\ssl"
+
+	Edit "C:\Program Files (x86)\PHP\v7.0\php.ini" (you need to run Notepad as administrator)
+	Search for "curl.cainfo" and change the line into:
+	curl.cainfo=C:\Program Files\PHP\extras\ssl\cacert.pem
+	Attention: Do not write "Program Files (x86)", even though it might be the right directory.
+	           Otherwise, PHP will not work anymore "MBstring not found" ... a bug in PHP?!
+	           
+	Open cmd as administrator and run "iisreset"

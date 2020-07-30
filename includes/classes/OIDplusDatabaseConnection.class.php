@@ -22,6 +22,7 @@ abstract class OIDplusDatabaseConnection {
 	protected /*?bool*/ $html = null;
 	protected /*?string*/ $last_query = null;
 
+	public abstract static function getPlugin(): OIDplusDatabasePlugin;
 	protected abstract function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult;
 	public abstract function error(): string;
 	public abstract function transaction_begin()/*: void*/;

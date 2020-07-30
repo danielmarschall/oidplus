@@ -42,38 +42,93 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			# ---
 
 			$out['text'] .= '<h2>OIDplus</h2>';
+			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<th width="50%">Attribute</th>';
+			$out['text'] .= '		<th width="50%">Value</th>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '	<tr>';
 			$sysid_oid = OIDplus::getSystemId(true);
 			if (!$sysid_oid) $sysid_oid = 'unknown';
-			$out['text'] .= '<p>System OID: '.$sysid_oid.'</p>';
-
+			$out['text'] .= '		<td>System OID</td>';
+			$out['text'] .= '		<td>'.$sysid_oid.'</td>';
+			$out['text'] .= '	</tr>';
 			$sys_url = OIDplus::getSystemUrl();
-			$out['text'] .= '<p>System URL: '.$sys_url.'</p>';
-
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>System URL</td>';
+			$out['text'] .= '		<td>'.$sys_url.'</td>';
+			$out['text'] .= '	</tr>';
 			$sys_ver = OIDplus::getVersion();
 			if (!$sys_ver) $sys_ver = 'unknown';
-			$out['text'] .= '<p>System version: '.$sys_ver.'</p>';
-
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>System version</td>';
+			$out['text'] .= '		<td>'.$sys_ver.'</td>';
+			$out['text'] .= '	</tr>';
 			$sys_install_type = OIDplus::getInstallType();
-			$out['text'] .= '<p>Installation type: '.$sys_install_type.'</p>';
-
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>Installation type</td>';
+			$out['text'] .= '		<td>'.$sys_install_type.'</td>';
+			$out['text'] .= '	</tr>';
 			$sys_title = OIDplus::config()->getValue('system_title');
-			$out['text'] .= '<p>System title: '.$sys_title.'</p>';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>System title</td>';
+			$out['text'] .= '		<td>'.$sys_title.'</td>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '</table>';
+			$out['text'] .= '</div></div>';
 
 			# ---
 
 			$out['text'] .= '<h2>PHP</h2>';
-			$out['text'] .= '<p>PHP version: '.phpversion().'</p>';
+			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<th width="50%">Attribute</th>';
+			$out['text'] .= '		<th width="50%">Value</th>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>PHP version</td>';
+			$out['text'] .= '		<td>'.phpversion().'</td>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '</table>';
+			$out['text'] .= '</div></div>';
 
 			# ---
 
 			$out['text'] .= '<h2>Webserver</h2>';
-			$out['text'] .= '<p>Server software: '.(isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : 'unknown').'</p>';
+			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<th width="50%">Attribute</th>';
+			$out['text'] .= '		<th width="50%">Value</th>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>Server software</td>';
+			$out['text'] .= '		<td>'.(isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : 'unknown').'</td>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '</table>';
+			$out['text'] .= '</div></div>';
 
 			# ---
 
 			$out['text'] .= '<h2>Database</h2>';
-			$out['text'] .= '<p>Database provider: '.get_class(OIDplus::db()).'</p>';
-			$out['text'] .= '<p>SQL slang: '.get_class(OIDplus::db()->getSlang()).'</p>';
+			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<th width="50%">Attribute</th>';
+			$out['text'] .= '		<th width="50%">Value</th>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>Database provider</td>';
+			$out['text'] .= '		<td>'.OIDplus::db()->getPlugin()->getManifest()->getName().'</td>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>SQL slang</td>';
+			$out['text'] .= '		<td>'.OIDplus::db()->getSlang()->getManifest()->getName().'</td>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '</table>';
+			$out['text'] .= '</div></div>';
 
 			// TODO: can we somehow get the DBMS version, connection string etc?
 
