@@ -91,8 +91,12 @@ class OIDplus {
 					throw new OIDplusConfigInitializationException('File userdata/baseconfig/config.inc.php is missing, but setup can\'t be started because its directory missing.');
 				} else {
 					if (self::$html) {
-						header('Location:'.OIDplus::getSystemUrl().'setup/');
-						die('Redirecting to setup...');
+						if (strpos($_SERVER['REQUEST_URI'], OIDplus::getSystemUrl(true).'setup/') !== 0) {
+							header('Location:'.OIDplus::getSystemUrl().'setup/');
+							die('Redirecting to setup...');
+						} else {
+							return self::$baseConfig;
+						}
 					} else {
 						// This can be displayed in e.g. ajax.php
 						throw new OIDplusConfigInitializationException('File userdata/baseconfig/config.inc.php is missing. Please run setup again.');
@@ -641,8 +645,11 @@ class OIDplus {
 		if (!$relative) {
 			$res = OIDplus::baseConfig()->getValue('EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
 			if ($res !== '') {
-				OIDplus::config()->setValue('last_known_system_url', $res);
-				return $res;
+				try {
+					OIDplus::config()->setValue('last_known_system_url', $res);
+					return $res;
+				} catch (Exception $e) {
+				}
 			}
 		}
 
@@ -669,7 +676,10 @@ class OIDplus {
 
 		if (!$relative) {
 			if (php_sapi_name() == 'cli') {
-				return OIDplus::config()->getValue('last_known_system_url', false);
+				try {
+					return OIDplus::config()->getValue('last_known_system_url', false);
+				} catch (Exception $e) {
+				}
 			}
 
 			$is_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
@@ -685,7 +695,10 @@ class OIDplus {
 			}
 			$res = $protocol.'://'.$host.$port_add.$res;
 
-			OIDplus::config()->setValue('last_known_system_url', $res);
+			try {
+				OIDplus::config()->setValue('last_known_system_url', $res);
+			} catch (Exception $e) {
+			}
 		}
 
 		return $res;

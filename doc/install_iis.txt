@@ -3,12 +3,40 @@ Install OIDplus to Microsoft IIS
 ================================
 
 (1) Install IIS using "Programs and Features" in the control panel
-
-	see tutorial here https://www.howtogeek.com/112455/how-to-install-iis-8-on-windows-8/
+	( Source: https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php )
+	
+	Install on a Windows Client (Windows 7/8/10 etc.):
+		At the command promt, run appwiz.cpl
+		Click Turn Windows features on or off.
+		In the Windows Features dialog box, click Internet Information Services, note the preselected features that are installed by default, and then select CGI. This selection also installs FastCGI, which is recommended for PHP applications.
+		Click OK.
+		To verify that IIS installed successfully, type the following into a web browser: http://localhost
+		You see the default IIS Welcome page.
+		
+	Install on a Windows Server:
+		Open the Window Server Manager
+		In Server Manager, select Dashboard, and click Add roles and features.
+		In the Add Roles and Features Wizard, on the Before You Begin page, click Next.
+		On the Select Installation Type page, select Role-based or Feature-based Installation and click Next
+		On the Select Destination Server page, select Select a server from the server pool, select your server, and click Next.
+		On the Select Server Roles page, select Web Server (IIS), and then click Next.
+		On the Select Features page, note the preselected features that are installed by default, and then select CGI. This selection also installs FastCGI, which is recommended for PHP applications.
+		Click Next.
+		On the Web Server Role (IIS) page, click Next.
+		On the Select Role Services page, note the preselected role services that are installed by default, and then click Next.
+		Note: You only have to install the IIS 8 default role services for a static-content web server.
+		On the Confirm Installation Selections page, confirm your selections, and then click Install.
+		On the Installation Progress page, confirm that your installation of the Web Server (IIS) role and required role services completed successfully, and then click Close.
+		To verify that IIS installed successfully, type the following into a web browser: http://localhost
+		You should see the default IIS Welcome page.
 
 (2) Install PHP using the Web Platform Installer
-
-	see more here: https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php
+	Go to https://www.microsoft.com/web/downloads/platform.aspx
+	Click "Install this extension" to download the setup
+	Run WebPlatformInstaller_x64_en-US.msi
+	Accept the license aggreement
+	In the searchbox at the top right, enter "PHP" and press return
+	Select PHP 7.4 or similar
 	
 	Note: The Web Platform Installer sometimes exits with an error (signature verification failed etc),
 	but you can ignore it, as PHP is actually successfully installed!
@@ -29,6 +57,8 @@ Install OIDplus to Microsoft IIS
 	Search for "curl.cainfo" and change the line into:
 	curl.cainfo=C:\Program Files\PHP\extras\ssl\cacert.pem
 	Attention: Do not write "Program Files (x86)", even though it might be the right directory.
-	           Otherwise, PHP will not work anymore "MBstring not found" ... a bug in PHP?!
-	           
+	   Otherwise, PHP will not work anymore "MBstring not found" ... a bug in PHP?!
+	   
 	Open cmd as administrator and run "iisreset"
+
+(6) Open http://localhost/oidplus and follow the setup instructions
