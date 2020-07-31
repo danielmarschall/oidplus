@@ -719,6 +719,7 @@ class OIDplus {
 			}
 			self::$system_id_cache = $out;
 		}
+		if (!$out) return false;
 		return ($oid ? '1.3.6.1.4.1.37476.30.9.' : '').$out;
 	}
 

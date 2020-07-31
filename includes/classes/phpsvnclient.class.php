@@ -442,6 +442,7 @@ class phpsvnclient {
 		$local_cont = array();
 		self::dirToArray($local_folder, $local_cont);
 		foreach ($local_cont as $key => &$c) {
+			$c = str_replace('\\', '/', $c);
 			$c = substr($c, strlen($local_folder));
 			if (substr($c,0,1) === '/') $c = substr($c, 1);
 			if ($c === '') unset($local_cont[$key]);
@@ -462,6 +463,7 @@ class phpsvnclient {
 			}
 		}
 		foreach ($svn_cont as $key => &$c) {
+			$c = str_replace('\\', '/', $c);
 			$c = substr($c, strlen($svn_folder));
 			if (substr($c,0,1) === '/') $c = substr($c, 1);
 			if ($c === '') unset($svn_cont[$key]);

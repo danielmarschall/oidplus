@@ -82,7 +82,7 @@ if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_suc
 			if ((strpos($c,'userdata/') === 0) && ($c !== 'userdata/info.txt') && ($c !== 'userdata/.htaccess') && ($c !== 'userdata/index.html') && (substr($c,-1) !== '/')) unset($svn_cont[$key]);
 		}
 		echo '<pre>';
-		echo "Compare local <--> svn-$svn_rev\n\n";
+		echo $svn_rev == -1 ? "Compare local <--> svn-head\n\n" : "Compare local <--> svn-$svn_rev\n\n";
 		echo "=== FILES MISSING ===\n";
 		$diff = array_diff($svn_cont, $local_cont);
 		if (count($diff) === 0) echo "Everything OK\n";

@@ -251,6 +251,8 @@ if (isset($_REQUEST['update_now'])) {
 
 	echo '<p>With this optional tool, you can check if your OIDplus installation is complete and no files are missing.</p>';
 
+	echo '<p>Please enter your administrator password to run the tool.</p>';
+
 	echo '<form method="POST" action="check.php">';
 	if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 		echo '<noscript>';
