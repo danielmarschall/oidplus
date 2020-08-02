@@ -18,7 +18,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: <Expiry Date>''July 2020'
+.tl 'Expires: <Expiry Date>''August 2020'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -146,7 +146,7 @@ OID-WHOIS is based on the WHOIS protocol specified in RFC\03912 [RFC3912].
 
 During the request, the client sends a query beginning with "oid:", followed by an OID in dot-notation, as defined in RFC\03061, section 2 [RFC3061], but with the following differences:
 
-(1) The OID MAY contain a leading dot at the beginning.
+(1) The OID MAY contain a leading dot.
 
 (2) To query the root of the OID tree, the OID MUST be either missing or consisting only of a single dot.
 
@@ -295,7 +295,7 @@ Possible fields are:
 .in 7
 "Information available" means that information about the OID is fully available.
 
-"Information partially available" means that part of the information about the OID is not available.  Possible reasons could be that part of the information was redacted due to confidentiality, or the WHOIS service does only know basic information, while the full information can be found somewhere else (e.g. at a referred WHOIS service).  The field "attribute" MAY be used with the value "confidential".
+"Information partially available" means that part of the information about the OID is not available.  Possible reasons could be that part of the information is redacted due to confidentiality, or the WHOIS service does only know basic information, while the full information can be found somewhere else (e.g. at a referred WHOIS service).  The field "attribute" MAY be used with the value "confidential".
 
 "Information unavailable" means that the information about the OID is missing, redacted due to confidentiality, or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
 .in 3
@@ -320,7 +320,7 @@ Note: A line-break, to break up lines which are too long, as defined in section\
 Note: A line-break, to break up lines which are too long, as defined in section\03.1 ("Format and Encoding") SHALL NOT be used, otherwise, it would be ambiguous if the line-break was used to shorten the line, or if the line-break indicates a new value in case multiple OID-IRI notations are supplied.
 .in 3
 
-(9) "identifier" (OPTIONAL, multiple values allowed) contains the alphanumeric identifier ("NameForm") as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.3 [X680].
+(9) "identifier" (OPTIONAL, multiple values allowed) contains an alphanumeric identifier ("NameForm") as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.3 [X680].
 
 (10) "standardized-id" (OPTIONAL, multiple values allowed) contains an alphanumeric identifier that has a standardized "NameForm", i.e. in ASN.1 notation, it can be written without its associated number.  See more information in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.7 [X680].
 
@@ -345,7 +345,7 @@ Note: A line-break, to break up lines which are too long, as defined in section\
 
 "no-unicode-labels" means that the RA is not allocating Non-integer Unicode labels.
 
-"retired" means that the OID is invalidated, revoked, retired, expired, etc.  Please consult Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660] for more information about such cases.
+"retired" means that the OID is withdrawn, revoked, retired, expired, etc.  Please consult Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660] for more information about such cases.
 .in 3
 
 (15) "parent" (OPTIONAL) contains the OID of the nearest known parent OID, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALL be at least 1 whitespace in between.
@@ -372,14 +372,14 @@ Possible fields are:
 .in 7
 "Information available" means that information about this RA is fully available.
 
-"Information partially available" means that part of the information is not available.  A possible reason could be that part of the information was redacted due to confidentiality.  The field "attribute" MAY be used with the value "confidential".
+"Information partially available" means that part of the information is not available.  A possible reason could be that part of the information is redacted due to confidentiality.  The field "attribute" MAY be used with the value "confidential".
 
 "Information unavailable" means that the data is missing (if the WHOIS service does only know the name of the RA and nothing else), redacted due to confidentiality or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
 .in 3
 
-(3) "ra-contact-name" (OPTIONAL, multiple values allowed) contains the name of a person responsible for the allocation and administration of subordinate OIDs, in case "ra" is a group or organization.
+(3) "ra-contact-name" (OPTIONAL, multiple values allowed) contains the name of a person responsible for the allocation of subordinate OIDs, in case "ra" is a group or organization.
 
-(4) "ra-address" (OPTIONAL) contains the physical location of the RA.  While a fully qualified postal address is recommended, the field can also just contain a rough location like city and country name, state and country name, or just the country name.  The name of the country SHOULD always be present.
+(4) "ra-address" (OPTIONAL) contains the physical location of the RA.  While a fully qualified postal address is recommended, the field can also just contain a rough location like city and country name, state and country name, or just the country name, etc.  The name of the country SHOULD always be present.
 
 (5) "ra-phone" (OPTIONAL, multiple values allowed) contains a landline phone number of the Registration Authority.  It SHOULD be written in the international number format specified in Recommendation ITU-T E.164 (2010) [E164], e.g. +1 206 555 0100.
 
@@ -427,7 +427,7 @@ The history does not need to be complete, e.g. it is no problem to only serve in
 
 If integrity/authenticity is required, the whole response can be signed, e.g. by using S/MIME, RSA, or PGP.  This document does not describe a mechanism for detecting which signature method was used.  The creation and verification of the signature are therefore implementation-specific and no interoperability regarding signature creation and validation is given at this time.
 
-Depending on the signature method being used, various things need to be appended and/or prepended to the response.  These additional lines MUST be prepended by a percent sign ("%") to avoid that an application confuses these additional lines (e.g. lines belonging to a PGP header) with part of the actual WHOIS response.
+Depending on the signature method being used, various things need to be appended and/or prepended to the response.  These additional lines MUST be prepended by a percent sign ("%") to avoid that an application confuses these additional lines (e.g. lines belonging to a PGP header) with parts of the actual WHOIS response.
 
 .ti 0
 3.4  Date/Time Format
@@ -652,7 +652,7 @@ The original WHOIS protocol as defined in RFC\03912 [RFC3912] does not define an
 
 To enhance interoperability, this document specifies that the request and response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
 
-The WHOIS service can define additional field names, but they SHOULD be written in the English language so that there is consistency with the other field names defined in this document.
+The WHOIS service can define additional field names, but they SHOULD be written in the English language so that there is consistency with the field names defined in this document.
 .bp
 .ti 0
 8  Security Considerations
