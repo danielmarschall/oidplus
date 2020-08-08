@@ -38,27 +38,54 @@ Install OIDplus to Microsoft IIS
 	In the searchbox at the top right, enter "PHP" and press return
 	Select PHP 7.4 or similar
 	
-	Note: The Web Platform Installer sometimes exits with an error (signature verification failed etc),
+	Note: The Web Platform Installer sometimes exits with errors (signature verification failed etc),
 	but you can ignore it, as PHP is actually successfully installed!
 
 (3) Place OIDplus here:
 
 	C:\inetpub\wwwroot\oidplus\
 
-(4) Run following command to unlock various things in the web.config file:
+(4) Open CMD as administrator and run following command to unlock various things in the web.config file:
 
 	%windir%\system32\inetsrv\appcmd.exe unlock config -section:system.webServer/security/authentication/anonymousAuthentication
 
 (5) Solving problem "SSL Certificate Problem: Unable to get local issuer certificate"
+    (e.g. prevents you from registering your system in the admin control panel):
 
-	Download https://curl.haxx.se/ca/cacert.pem and place it in "C:\Program Files (x86)\PHP\v7.0\extras\ssl"
+	Download https://curl.haxx.se/ca/cacert.pem and place it in "C:\inetpub\"
 
-	Edit "C:\Program Files (x86)\PHP\v7.0\php.ini" (you need to run Notepad as administrator)
+	Edit "C:\Program Files (x86)\PHP\v7.4\php.ini" (you need to run Notepad as administrator)
 	Search for "curl.cainfo" and change the line into:
-	curl.cainfo=C:\Program Files\PHP\extras\ssl\cacert.pem
-	Attention: Do not write "Program Files (x86)", even though it might be the right directory.
-	   Otherwise, PHP will not work anymore "MBstring not found" ... a bug in PHP?!
-	   
-	Open cmd as administrator and run "iisreset"
+	curl.cainfo=C:\inetpub\\cacert.pem
 
-(6) Open http://localhost/oidplus and follow the setup instructions
+	Attention: Placing the file in "C:\Program Files (x86)\PHP\v7.4\extras\ssl\"
+	           sometimes causes a lot of problems because PHP has problems with the SysWOW64 replacement.
+	           On some systems it works if "(x86)" is simply removed, but on other systems it
+	           does not work at all. Instead, weird things happen like "MBstring not found" if
+	           you set "curl.cainfo" to a wrong value (a bug in PHP?!)
+	           So to be sure, use a different path, e.g. "C:\inetpub\"
+
+	If you want to double-check that everything works, try running
+	http://localhost/oidplus/dev/curl_https_check.php
+	(You need to move the file out of the "dev" directory, because it is secured from being accessed)
+	
+(6) Configure OpenSSL
+
+	Create the directory
+	C:\Program Files (x86)\Common Files\SSL
+	
+	Copy the file
+	C:\Program Files (x86)\PHP\v7.4\extras\ssl\openssl.cnf
+	into the directory
+	C:\Program Files (x86)\Common Files\SSL
+	
+	To see in which path PHP searches the openssl.cnf file, open
+	http://localhost/oidplus/dev/info.php
+	and look for the string "Openssl default config".
+	(You need to move the file out of the "dev" directory, because it is secured from being accessed)
+	
+	If you want to double-check that everything works, try running
+	http://localhost/oidplus/dev/check_openssl_keygen.php
+	(You need to move the file out of the "dev" directory, because it is secured from being accessed)
+
+(7) Open http://localhost/oidplus and follow the setup instructions

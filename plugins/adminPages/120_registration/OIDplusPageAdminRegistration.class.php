@@ -328,74 +328,96 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 		echo file_get_contents(__DIR__ . '/info.tpl');
 
+		if (!function_exists('curl_exec')) {
+			echo '<p><font color="red">Note: The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.';
+			echo 'Therefore, you <b>cannot</b> register your OIDplus instance at the moment.</font></p>';
+			return;
+		}
+
+		$testurl = 'https://www.google.com/';
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $testurl);
+		curl_setopt($ch, CURLOPT_HEADER, TRUE);
+		curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_exec($ch);
+		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+		if (!$httpCode) {
+			echo '<p><font color="red">Note: The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.';
+			echo 'Therefore, you <b>cannot</b> register your OIDplus instance at the moment.</font></p>';
+			return;
+		}
+
 		$pki_status = OIDplus::getPkiStatus();
 
 		if (!$pki_status) {
-			echo '<p>Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you <b>cannot</b> register your OIDplus instance at the moment.</p>';
-		} else {
-
-			echo '<p>Privacy level:</p><select name="reg_privacy" id="reg_privacy">';
-
-			# ---
-
-			echo '<option value="0"';
-			if (isset($_REQUEST['sent'])) {
-				if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 0)) echo ' selected';
-			} else {
-				if ((OIDplus::config()->getValue('reg_privacy') == 0) || !OIDplus::config()->getValue('reg_wizard_done')) {
-					echo ' selected';
-				} else {
-					echo '';
-				}
-			}
-			echo '>0 = Register to directory service and automatically publish RA/OID data at oid-info.com</option>';
-
-			# ---
-
-			echo '<option value="1"';
-			if (isset($_REQUEST['sent'])) {
-				if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 1)) echo ' selected';
-			} else {
-				if ((OIDplus::config()->getValue('reg_privacy') == 1)) {
-					echo ' selected';
-				} else {
-					echo '';
-				}
-			}
-			echo '>1 = Only register to directory service</option>';
-
-			# ---
-
-			echo '<option value="2"';
-			if (isset($_REQUEST['sent'])) {
-				if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 2)) echo ' selected';
-			} else {
-				if ((OIDplus::config()->getValue('reg_privacy') == 2)) {
-					echo ' selected';
-				} else {
-					echo '';
-				}
-			}
-			echo '>2 = Hide system</option>';
-
-			# ---
-
-			echo '</select>';
-
-			$msg = '';
-			if ($do_edits) {
-				try {
-					OIDplus::config()->setValue('reg_privacy', $_REQUEST['reg_privacy']);
-				} catch (Exception $e) {
-					$msg = $e->getMessage();
-					$errors_happened = true;
-				}
-			}
-			echo ' <font color="red"><b>'.$msg.'</b></font>';
-
-			echo '<p><i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.<br>
-			<a href="../../../res/OIDplus/privacy_documentation.html" target="_blank">Click here</a> for more information about privacy related topics.</p>';
+			echo '<p><font color="red">Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system).';
+			echo 'Therefore, you <b>cannot</b> register your OIDplus instance at the moment.</font></p>';
+			return;
 		}
+
+		echo '<p>Privacy level:</p><select name="reg_privacy" id="reg_privacy">';
+
+		# ---
+
+		echo '<option value="0"';
+		if (isset($_REQUEST['sent'])) {
+			if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 0)) echo ' selected';
+		} else {
+			if ((OIDplus::config()->getValue('reg_privacy') == 0) || !OIDplus::config()->getValue('reg_wizard_done')) {
+				echo ' selected';
+			} else {
+				echo '';
+			}
+		}
+		echo '>0 = Register to directory service and automatically publish RA/OID data at oid-info.com</option>';
+
+		# ---
+
+		echo '<option value="1"';
+		if (isset($_REQUEST['sent'])) {
+			if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 1)) echo ' selected';
+		} else {
+			if ((OIDplus::config()->getValue('reg_privacy') == 1)) {
+				echo ' selected';
+			} else {
+				echo '';
+			}
+		}
+		echo '>1 = Only register to directory service</option>';
+
+		# ---
+
+		echo '<option value="2"';
+		if (isset($_REQUEST['sent'])) {
+			if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 2)) echo ' selected';
+		} else {
+			if ((OIDplus::config()->getValue('reg_privacy') == 2)) {
+				echo ' selected';
+			} else {
+				echo '';
+			}
+		}
+		echo '>2 = Hide system</option>';
+
+		# ---
+
+		echo '</select>';
+
+		$msg = '';
+		if ($do_edits) {
+			try {
+				OIDplus::config()->setValue('reg_privacy', $_REQUEST['reg_privacy']);
+			} catch (Exception $e) {
+				$msg = $e->getMessage();
+				$errors_happened = true;
+			}
+		}
+		echo ' <font color="red"><b>'.$msg.'</b></font>';
+
+		echo '<p><i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.<br>
+		<a href="../../../res/OIDplus/privacy_documentation.html" target="_blank">Click here</a> for more information about privacy related topics.</p>';
 	}
 
 }
