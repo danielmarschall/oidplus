@@ -1,6 +1,6 @@
 <div id="DBPLUGIN_PARAMS_ODBC">
-	<p>ODBC DSN (<a href="https://www.connectionstrings.com/" target="_blank">examples</a>):<br><input id="odbc_dsn" type="text" value="DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8" onkeypress="rebuild()" onkeyup="rebuild()" style="width:600px">  <span id="odbc_dsn_warn"></span>
-	<br><font size="-1">Example for SQL Server: <i>DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8</i></font></p>
+	<p>ODBC DSN (<a href="https://www.connectionstrings.com/" target="_blank">examples</a>):<br><input id="odbc_dsn" type="text" value="DRIVER={SQL Server};SERVER=localhost\instancename;DATABASE=oidplus;CHARSET=UTF8" onkeypress="rebuild()" onkeyup="rebuild()" style="width:600px">  <span id="odbc_dsn_warn"></span>
+	<br><font size="-1">Example for SQL Server: <i>DRIVER={SQL Server};SERVER=localhost\instancename;DATABASE=oidplus;CHARSET=UTF8</i></font></p>
 	<!-- Note: You should use the driver "ODBC Driver XX for SQL Server" instead, since it is the latest generation -->
 	<p>ODBC Username:<br><input id="odbc_username" type="text" value="root" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="odbc_username_warn"></span></p>
 	<p>ODBC Password:<br><input id="odbc_password" type="password" value="" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="odbc_password_warn"></span></p>
