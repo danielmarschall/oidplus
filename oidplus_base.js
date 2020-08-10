@@ -21,6 +21,7 @@
 
 var current_node = "";
 var popstate_running = false;
+var DEFAULT_LANGUAGE = "enus";
 
 function oidplus_loadScript(src) {
 	var js = document.createElement('script');
@@ -165,7 +166,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/) {
 
 	document.title = "";
 	$('#real_title').html("&nbsp;");
-	$('#real_content').html("Loading...");
+	$('#real_content').html(_L("Loading..."));
 	$('#static_link').attr("href", "index.php?goto="+encodeURIComponent(id));
 	$("#gotoedit").val(id);
 
@@ -175,7 +176,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/) {
 		response.json()
 		.then(function(data) {
 			if ("error" in data) {
-				alert("Failed to load content: " + data.error);
+				alert(_L("Failed to load content") + ": " + data.error);
 				console.error(data.error);
 				return;
 			}
@@ -209,12 +210,12 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/) {
 			}
 		})
 		.catch(function(error) {
-			alert("Failed to load content: " + error);
+			alert(_L("Failed to load content") + ": " + error);
 			console.error(error);
 		});
 	})
 	.catch(function(error) {
-		alert("Failed to load content: " + error);
+		alert(_L("Failed to load content") + ": " + error);
 		console.error(error);
 	});
 }
@@ -315,6 +316,9 @@ $(document).ready(function () {
 
 	document.getElementById('system_title_menu').style.display = "block";
 
+	var tmpObjectTree = _L("OBJECT TREE").replace(/(.{1})/g,"$1<br>");
+	tmpObjectTree = tmpObjectTree.substring(0, tmpObjectTree.length-"<br>".length);
+
 	$('#oidtree').addClass('ui-layout-west');
 	$('#content_window').addClass('ui-layout-center');
 	$('#system_title_bar').addClass('ui-layout-north');
@@ -327,15 +331,17 @@ $(document).ready(function () {
 		west__spacing_closed:         20,
 		west__togglerLength_closed:   230,
 		west__togglerAlign_closed:    "top",
-		west__togglerContent_closed:  "O<br>B<br>J<br>E<br>C<br>T<br><br>T<BR>R<BR>E<BR>E",
-		west__togglerTip_closed:      "Open & Pin Menu",
-		west__sliderTip:              "Slide Open Menu",
+		west__togglerContent_closed:  tmpObjectTree,
+		west__togglerTip_closed:      _L("Open & Pin Menu"),
+		west__sliderTip:              _L("Slide Open Menu"),
 		west__slideTrigger_open:      "mouseover",
 		center__maskContents:         true // IMPORTANT - enable iframe masking
 	});
 
 	$("#gotobox").addClass("mobilehidden");
+	$("#languageBox").addClass("mobilehidden");
 	document.getElementById('gotobox').style.display = "block";
+	document.getElementById('languageBox').style.display = "block";
 	$('#gotoedit').keypress(function(event) {
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if (keycode == '13') {
@@ -371,7 +377,9 @@ function mobileNavClose() {
 		$("#oidtree").addClass("ui-layout-west");
 		$("#oidtree").show();
 //		$("#gotobox").hide();
+//		$("#languageBox").hide();
 		$("#gotobox").addClass("mobilehidden");
+		$("#languageBox").addClass("mobilehidden");
 	});
 	$("#system_title_menu").removeClass("active");
 }
@@ -381,7 +389,9 @@ function mobileNavOpen() {
 	$("#oidtree").removeClass("ui-layout-west");
 	$("#oidtree").slideDown("medium");
 //	$("#gotobox").show();
+//	$("#languageBox").show();
 	$("#gotobox").removeClass("mobilehidden");
+	$("#languageBox").removeClass("mobilehidden");
 	$("#system_title_menu").addClass("active");
 }
 
@@ -405,3 +415,57 @@ function jumpToAnchor(anchor) {
 	window.location.href = "#" + anchor;
 }
 
+function getCookie(cname) {
+	// Source: https://www.w3schools.com/js/js_cookies.asp
+	var name = cname + "=";
+	var decodedCookie = decodeURIComponent(document.cookie);
+	var ca = decodedCookie.split(';');
+	for(var i = 0; i <ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return undefined;
+}
+
+function setLanguage(lngid) {
+	$.ajax({
+		url:"ajax.php",
+		method:"POST",
+		data:{
+			action:"set_language",
+			language:lngid
+		},
+		error:function(jqXHR, textStatus, errorThrown) {
+			console.error("Error: " + errorThrown);
+		},
+		success:function(data) {
+			if ("error" in data) {
+				console.error(data);
+			} else if (data.status == 0) {
+				$(".lng_flag").each(function(){
+					$(this).addClass("picture_grayout");
+				});
+				$("#lng_flag_"+lngid).removeClass("picture_grayout");
+				openOidInPanel(current_node, false);
+			} else {
+				console.error(data);
+			}
+		}
+	});
+}
+
+function getCurrentLang() {
+	var lang = getCookie('LANGUAGE');
+	return (typeof lang != "undefined") ? lang : DEFAULT_LANGUAGE;
+}
+
+function _L(str) {
+	if (typeof language_messages[getCurrentLang()] == "undefined") return str;
+	var msg = language_messages[getCurrentLang()][str];
+	return (typeof msg != "undefined") ? msg : str;
+}

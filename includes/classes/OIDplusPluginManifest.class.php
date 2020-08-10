@@ -29,6 +29,7 @@ class OIDplusPluginManifest {
 	private $phpMainClass = '';
 	private $cssFiles = array();
 	private $jsFiles = array();
+	private $rawXML = null;
 
 	public function getTypeClass(): string {
 		return $this->type;
@@ -66,6 +67,10 @@ class OIDplusPluginManifest {
 		return $this->jsFiles;
 	}
 
+	public function getRawXml(): object {
+		return $this->rawXML;
+	}
+
 	public function loadManifest($filename) {
 		if (!file_exists($filename)) return false;
 		$xmldata = @simplexml_load_file($filename);
@@ -91,6 +96,8 @@ class OIDplusPluginManifest {
 			if (!file_exists($file)) continue;
 			$this->jsFiles[] = $file;
 		}
+
+		$this->rawXML = $xmldata;
 
 		return true;
 	}

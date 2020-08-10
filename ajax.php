@@ -100,6 +100,16 @@ try {
 			// Outputs:    JSON
 			if (!isset($_REQUEST['id'])) throw new OIDplusException("Invalid args");
 			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], isset($_REQUEST['goto']) ? $_REQUEST['goto'] : '');
+		} else if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'set_language')) {
+			// Action:     set_language
+			// Method:     GET / POST
+			// Parameters: language
+			// Outputs:    JSON
+			if (!isset($_REQUEST['language'])) throw new OIDplusException("Invalid args");
+			$cookie_path = OIDplus::getSystemUrl(true);
+			if (empty($cookie_path)) $cookie_path = '/';
+			setcookie('LANGUAGE', $_POST['language'], 0, $cookie_path, '', false, false/*HttpOnly off, because JavaScript also needs translation*/);
+			$json_out['status'] = 0;
 		} else {
 			throw new OIDplusException('Invalid action ID');
 		}

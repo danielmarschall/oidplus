@@ -125,3 +125,7 @@ if (!function_exists('mb_wordwrap')) {
 		return implode($break, $lines);
 	}
 }
+
+function _L($str, ...$sprintfArgs) {
+	return sprintf(OIDplus::getText($str), $sprintfArgs);
+}

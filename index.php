@@ -150,6 +150,24 @@ $js = 'oidplus.min.js.php';
 		</div>
 	</div>
 
+	<div id="languageBox">
+		<?php
+
+		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
+			$xmldata = $pluginManifest->getRawXml();
+			$flag = $xmldata->language->flag->__toString();
+			$code = $xmldata->language->code->__toString();
+			if ($code == OIDplus::getCurrentLang()) {
+				$class = 'lng_flag';
+			} else {
+				$class = 'lng_flag picture_grayout';
+			}
+			echo '<img src="plugins/language/'.$code.'/'.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20" onclick="setLanguage(\''.$code.'\')"> ';
+		}
+
+		?>
+	</div>
+
 	<div id="gotobox">
 		<input type="text" name="goto" id="gotoedit" value="<?php echo htmlentities($static_node_id); ?>">
 		<input type="button" value="Go" onclick="gotoButtonClicked()" id="gotobutton">

@@ -69,6 +69,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			$show_obj_inactive = false;
 			$show_auth = false;
 			$show_logger = false;
+			$show_language = false;
 
 			if ($parts[1] == '') {
 				$out['title'] = "Installed plugins";
@@ -84,6 +85,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				$show_obj_inactive = true;
 				$show_auth = true;
 				$show_logger = true;
+				$show_language = true;
 			} else if ($parts[1] == 'pages') {
 				$out['title'] = "Page plugins";
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
@@ -149,6 +151,10 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				$out['title'] = "Logger";
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$show_logger = true;
+			} else if ($parts[1] == 'language') {
+				$out['title'] = "Languages";
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$show_language = true;
 			} else {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>Invalid arguments.</p>';
@@ -399,6 +405,31 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '</div></div>';
 				}
 			}
+
+			if ($show_language) {
+				if (count($plugins = OIDplus::getLanguagePlugins()) > 0) {
+					$out['text'] .= '<h2>Languages</h2>';
+					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '	<tr>';
+					$out['text'] .= '		<th width="25%">Class name</th>';
+					$out['text'] .= '		<th width="25%">Plugin name</th>';
+					$out['text'] .= '		<th width="25%">Plugin version</th>';
+					$out['text'] .= '		<th width="25%">Plugin author</th>';
+					$out['text'] .= '	</tr>';
+					foreach ($plugins as $plugin) {
+						$out['text'] .= '	<tr>';
+						$pluginManifest = OIDplus::getPluginManifest($plugin);
+						$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getName()) ? 'n/a' : $pluginManifest->getName()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getVersion()) ? 'n/a' : $pluginManifest->getVersion()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($pluginManifest->getAuthor()) ? 'n/a' : $pluginManifest->getAuthor()) . '</td>';
+						$out['text'] .= '	</tr>';
+					}
+					$out['text'] .= '</table>';
+					$out['text'] .= '</div></div>';
+				}
+			}
 		}
 	}
 
@@ -423,6 +454,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		$tree_icon_obj_inactive = $tree_icon; // TODO
 		$tree_icon_auth = $tree_icon; // TODO
 		$tree_icon_logger = $tree_icon; // TODO
+		$tree_icon_language = $tree_icon; // TODO
 
 		$pp_public = array();
 		$pp_ra = array();
@@ -557,6 +589,17 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				'text' => $txt,
 			);
 		}
+		$language_plugins = array();
+		foreach (OIDplus::getLanguagePlugins() as $plugin) {
+			$pluginManifest = OIDplus::getPluginManifest($plugin);
+			$txt = (empty($pluginManifest->getName())) ? get_class($plugin) : $pluginManifest->getName();
+
+			$language_plugins[] = array(
+				'id' => 'oidplus:system_plugins$'.get_class($plugin),
+				'icon' => $tree_icon_language,
+				'text' => $txt,
+			);
+		}
 		$json[] = array(
 			'id' => 'oidplus:system_plugins',
 			'icon' => $tree_icon,
@@ -616,6 +659,12 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					'icon' => $tree_icon,
 					'text' => 'Logger',
 					'children' => $logger_plugins
+				),
+				array(
+					'id' => 'oidplus:system_plugins.language',
+					'icon' => $tree_icon,
+					'text' => 'Languages',
+					'children' => $language_plugins
 				)
 			)
 		);

@@ -32,7 +32,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					throw new OIDplusException('Captcha wrong');
+					throw new OIDplusException(_L('Captcha wrong'));
 				}
 			}
 
@@ -51,7 +51,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 						OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '$email' (RA not existing)");
 					}
 				}
-				throw new OIDplusException('Wrong password or user not registered');
+				throw new OIDplusException(_L('Wrong password or user not registered'));
 			}
 
 		} else if ($actionID == 'ra_logout') {
@@ -93,7 +93,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			return array("status" => 0);
 		}
 		else {
-			throw new OIDplusException("Unknown action ID");
+			throw new OIDplusException(_L("Unknown action ID"));
 		}
 	}
 
@@ -117,7 +117,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$out['icon']  = OIDplus::webpath(__DIR__).'login_big.png';
 
 			$out['text'] .= '<noscript>';
-			$out['text'] .= '<p>You need to enable JavaScript to use the login area.</p>';
+			$out['text'] .= '<p>'._L('You need to enable JavaScript to use the login area.').'</p>';
 			$out['text'] .= '</noscript>';
 
 			$out['text'] .= '<div id="loginArea" style="visibility: hidden"><div id="loginTab" class="container" style="width:100%;">';
@@ -142,9 +142,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				foreach ($login_list as $x) {
 					$out['text'] .= '<p>You are logged in as <b>'.$x->raEmail().'</b> (<a href="#" onclick="return raLogout('.js_escape($x->raEmail()).');">Logout</a>)</p>';
 				}
-				$out['text'] .= '<p>If you have more accounts, you can log in with a new account:</p>';
+				$out['text'] .= '<p>'._L('If you have more accounts, you can log in with a new account:').'</p>';
 			} else {
-				$out['text'] .= '<p>Enter your email address and your password to log in as Registration Authority.</p>';
+				$out['text'] .= '<p>'._L('Enter your email address and your password to log in as Registration Authority.').'</p>';
 			}
 			$out['text'] .= '<form onsubmit="return raLoginOnSubmit(this);">';
 			$out['text'] .= '<div><label class="padding_label">E-Mail:</label><input type="text" name="email" value="" id="raLoginEMail"></div>';
@@ -154,9 +154,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:forgot_password').'>Forgot password?</a><br>';
 
 			if (class_exists('OIDplusPageRaInvite') && OIDplus::config()->getValue('ra_invitation_enabled')) {
-				$out['text'] .= '<abbr title="To receive login data, the superior RA needs to send you an invitation. After creating or updating your OID, the system will ask them if they want to send you an invitation. If they accept, you will receive an email with an activation link. Alternatively, the system admin can create your account manually in the administrator control panel.">How to register?</abbr></p>';
+				$out['text'] .= '<abbr title="'._L('To receive login data, the superior RA needs to send you an invitation. After creating or updating your OID, the system will ask them if they want to send you an invitation. If they accept, you will receive an email with an activation link. Alternatively, the system admin can create your account manually in the administrator control panel.').'">'._L('How to register?').'</abbr></p>';
 			} else {
-				$out['text'] .= '<abbr title="Since invitations are disabled at this OIDplus installation, the system administrator needs to create your account manually in the administrator control panel.">How to register?</abbr></p>';
+				$out['text'] .= '<abbr title="'._L('Since invitations are disabled at this OIDplus installation, the system administrator needs to create your account manually in the administrator control panel.').'">'._L('How to register?').'</abbr></p>';
 			}
 
 			$out['text'] .= '				</div>';
@@ -178,9 +178,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$out['text'] .= '				</div>';
 			$out['text'] .= '			</div>';
 			$out['text'] .= '  </div><br>';
-			$out['text'] .= '<p><font size="-1"><i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. '.
+			$out['text'] .= '<p><font size="-1">'._L('<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. '.
 			                'The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. '.
-			                'It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of '.ceil(OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60)/60).' minutes.';
+			                'It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of %d minutes.', ceil(OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60)/60));
 			$privacy_document_file = 'OIDplus/privacy_documentation.html';
 			if (class_exists('OIDplusPagePublicResources') && file_exists(OIDplus::basePath().'/res/'.$privacy_document_file)) {
 				$out['text'] .= ' <a '.OIDplus::gui()->link('oidplus:resources$'.$privacy_document_file.'$'.OIDplus::authUtils()::makeAuthKey("resources;".$privacy_document_file).'#cookies').'>More information about the cookies used</a>';
@@ -211,11 +211,11 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				'id'       => 'oidplus:logout$admin',
 				'icon'     => OIDplus::webpath(__DIR__).'treeicon_logout.png',
 				'conditionalselect' => 'adminLogout()', // defined in oidplus_base.js
-				'text'     => 'Log out'
+				'text'     => _L('Log out')
 			);
 			$loginChildren[] = array(
 				'id'       => 'oidplus:dummy$'.md5(rand()),
-				'text'     => "Logged in as admin",
+				'text'     => _L("Logged in as admin"),
 				'icon'     => OIDplus::webpath(__DIR__).'treeicon_admin.png',
 				'conditionalselect' => 'false', // dummy node that can't be selected
 				'state'    => array("opened" => true),
@@ -237,7 +237,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				'id'       => 'oidplus:logout$'.$ra_email,
 				'conditionalselect' => 'raLogout('.js_escape($ra_email).')', // defined in oidplus_base.js
 				'icon'     => OIDplus::webpath(__DIR__).'treeicon_logout.png',
-				'text'     => 'Log out'
+				'text'     => _L('Log out')
 			);
 			foreach (OIDplusObject::getRaRoots($ra_email) as $loc_root) {
 				$ico = $loc_root->getIcon();
@@ -263,7 +263,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		$json[] = array(
 			'id'       => 'oidplus:login',
 			'icon'     => OIDplus::webpath(__DIR__).'treeicon_login.png',
-			'text'     => 'Login',
+			'text'     => _L('Login'),
 			'state'    => array("opened" => count($loginChildren)>0),
 			'children' => $loginChildren
 		);

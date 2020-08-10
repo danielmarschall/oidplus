@@ -388,6 +388,35 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 	filter: alpha(opacity=20) !important;
 }
 
+/* Language box */
+
+@media only screen and (min-width: 801px) {
+	/* Desktop */
+
+	#languageBox {
+		position:absolute;
+		right:420px;
+		top:15px;
+	}
+
+}
+
+#languageBox {
+	display: none; /* will be set to 'block' by JavaScript */
+}
+
+.lng_flag {
+	cursor: pointer;
+}
+
+.picture_grayout {
+	webkit-filter: grayscale(100%);
+	  -moz-filter: grayscale(100%);
+	    -o-filter: grayscale(100%);
+	   -ms-filter: grayscale(100%);
+	       filter: grayscale(100%);
+}
+
 /* Goto box */
 
 @media only screen and (max-width: 800px) {

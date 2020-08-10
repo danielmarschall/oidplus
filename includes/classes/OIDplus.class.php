@@ -26,8 +26,11 @@ class OIDplus {
 	private static /*string[]*/ $disabledObjectTypes = array();
 	private static /*OIDplusDatabasePlugin[]*/ $dbPlugins = array();
 	private static /*OIDplusSqlSlangPlugin[]*/ $sqlSlangPlugins = array();
+	private static /*OIDplusLanguagePlugin[]*/ $languagePlugins = array();
 
 	protected static $html = true;
+
+	/*public*/ const DEFAULT_LANGUAGE = 'enus';
 
 	private function __construct() {
 	}
@@ -324,6 +327,17 @@ class OIDplus {
 		return self::$authPlugins;
 	}
 
+	# --- Language plugin
+
+	private static function registerLanguagePlugin(OIDplusLanguagePlugin $plugin) {
+		self::$languagePlugins[] = $plugin;
+		return true;
+	}
+
+	public static function getLanguagePlugins() {
+		return self::$languagePlugins;
+	}
+
 	# --- Logger plugin
 
 	private static function registerLoggerPlugin(OIDplusLoggerPlugin $plugin) {
@@ -452,6 +466,7 @@ class OIDplus {
 		$res = array_merge($res, self::$objectTypePlugins);
 		$res = array_merge($res, self::$dbPlugins);
 		$res = array_merge($res, self::$sqlSlangPlugins);
+		$res = array_merge($res, self::$languagePlugins);
 		return $res;
 	}
 
@@ -576,6 +591,7 @@ class OIDplus {
 		self::$disabledObjectTypes = array();
 		self::$dbPlugins = array();
 		self::$sqlSlangPlugins = array();
+		self::$languagePlugins = array();
 		self::$system_id_cache = null;
 		self::$sslAvailableCache = null;
 
@@ -618,6 +634,7 @@ class OIDplus {
 		self::registerAllPlugins('auth', 'OIDplusAuthPlugin', array('OIDplus','registerAuthPlugin'));
 		self::registerAllPlugins('logger', 'OIDplusLoggerPlugin', array('OIDplus','registerLoggerPlugin'));
 		self::registerAllPlugins('objectTypes', 'OIDplusObjectTypePlugin', array('OIDplus','registerObjectTypePlugin'));
+		self::registerAllPlugins('language', 'OIDplusLanguagePlugin', array('OIDplus','registerLanguagePlugin'));
 
 		// Initialize non-DB plugins
 
@@ -631,6 +648,9 @@ class OIDplus {
 			$plugin->init($html);
 		}
 		foreach (OIDplus::getObjectTypePlugins() as $plugin) {
+			$plugin->init($html);
+		}
+		foreach (OIDplus::getLanguagePlugins() as $plugin) {
 			$plugin->init($html);
 		}
 	}
@@ -913,5 +933,35 @@ class OIDplus {
 			$target = str_replace('\\','/',$target).'/';
 		}
 		return $target;
+	}
+
+	public static function getCurrentLang() {
+		$lang = isset($_COOKIE['LANGUAGE']) ? $_COOKIE['LANGUAGE'] : self::DEFAULT_LANGUAGE;
+		$lang = preg_replace('@[^a-z]@ismU', '', $lang); // sanitize
+		return $lang;
+	}
+
+	// Note: Please use the alias _L() instead. It has also an builtin sprintf() to make code easier.
+	public static function getText($str) {
+		$lang = self::getCurrentLang();
+
+		static $translation_array = array();
+		static $translation_loaded = null;
+		if ($lang != $translation_loaded) {
+			if (strpos($lang,'/') !== false) return $str; // prevent attack (but actually, the sanitization above should work)
+			if (strpos($lang,'\\') !== false) return $str; // prevent attack (but actually, the sanitization above should work)
+			if (strpos($lang,'..') !== false) return $str; // prevent attack (but actually, the sanitization above should work)
+			$translation_file = __DIR__.'/../../plugins/language/'.$lang.'/messages.xml';
+			if (!file_exists($translation_file)) return $str;
+			$xml = simplexml_load_string(file_get_contents($translation_file));
+			foreach ($xml->message as $msg) {
+				$src = $msg->source->__toString();
+				$dst = $msg->target->__toString();
+				$translation_array[$src] = $dst;
+			}
+			$translation_loaded = $lang;
+		}
+
+		return isset($translation_array[$str]) ? $translation_array[$str] : $str;
 	}
 }
