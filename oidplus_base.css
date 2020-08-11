@@ -407,14 +407,11 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 
 .lng_flag {
 	cursor: pointer;
+	border: 1px solid #000 !important;
 }
 
-.picture_grayout {
-	webkit-filter: grayscale(100%);
-	  -moz-filter: grayscale(100%);
-	    -o-filter: grayscale(100%);
-	   -ms-filter: grayscale(100%);
-	       filter: grayscale(100%);
+.picture_ghost {
+	opacity: 0.5;
 }
 
 /* Goto box */

@@ -21,23 +21,29 @@
 
 var current_node = "";
 var popstate_running = false;
+var externalWaiting = 0;
 var DEFAULT_LANGUAGE = "enus";
 
 function oidplus_loadScript(src) {
-	var js = document.createElement('script');
-	js.src = src;
-	js.onload = function() {
+	externalWaiting++;
+	var script = document.createElement('script');
+	script.onload = function () {
+		externalWaiting--;
 	};
-	js.onerror = function() {
-	};
-	document.head.appendChild(js);
+	script.src = src;
+	script.rel = "preload"
+	document.head.appendChild(script);
+}
+
+function isInternetExplorer() {
+	var ua = window.navigator.userAgent;
+	return ((ua.indexOf("MSIE ") > 0) || (ua.indexOf("Trident/") > 0));
 }
 
 function oidplus_external_polyfill() {
 	// Disable this code by adding following line to userdata/baseconfig/config.inc.php
 	// define('RECAPTCHA_ENABLED', false);
-	var ua = window.navigator.userAgent;
-	if ((ua.indexOf("MSIE ") > 0) || (ua.indexOf("Trident/") > 0)) {
+	if (isInternetExplorer()) {
 		// Compatibility with Internet Explorer
 		oidplus_loadScript('https://polyfill.io/v3/polyfill.min.js?features=fetch%2CURL');
 	}
@@ -259,6 +265,18 @@ $(window).on("popstate", function(e) {
 });
 
 $(document).ready(function () {
+	initBeforeExternals();
+});
+
+function initBeforeExternals() {
+	if (externalWaiting > 0) {
+		setTimeout(initBeforeExternals, 100);
+	} else {
+		initAfterExternals();
+	}
+}
+
+function initAfterExternals() {
 
 	// --- JsTree
 
@@ -348,7 +366,7 @@ $(document).ready(function () {
 			gotoButtonClicked();
 		}
 	});
-});
+}
 
 function glayoutWorkaroundA() {
 	// "Bug A": Sometimes, the design is completely destroyed after reloading the page. It does not help when glayout.resizeAll()
@@ -432,31 +450,28 @@ function getCookie(cname) {
 	return undefined;
 }
 
+function setCookie(cname, cvalue, exdays, path) {
+	var d = new Date();
+	d.setTime(d.getTime() + (exdays*24*60*60*1000));
+	var expires = exdays == 0 ? "" : "; expires="+d.toUTCString();
+	document.cookie = cname + "=" + cvalue + expires + ";path=" + path;
+}
+
 function setLanguage(lngid) {
-	$.ajax({
-		url:"ajax.php",
-		method:"POST",
-		data:{
-			action:"set_language",
-			language:lngid
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			console.error("Error: " + errorThrown);
-		},
-		success:function(data) {
-			if ("error" in data) {
-				console.error(data);
-			} else if (data.status == 0) {
-				$(".lng_flag").each(function(){
-					$(this).addClass("picture_grayout");
-				});
-				$("#lng_flag_"+lngid).removeClass("picture_grayout");
-				openOidInPanel(current_node, false);
-			} else {
-				console.error(data);
-			}
-		}
+	setCookie('LANGUAGE', lngid, 0/*Until browser closes*/, location.pathname);
+
+	$(".lng_flag").each(function(){
+		$(this).addClass("picture_ghost");
 	});
+	$("#lng_flag_"+lngid).removeClass("picture_ghost");
+
+	if (isInternetExplorer()) {
+		// Internet Explorer has problems with sending new cookies to new AJAX requests, so we reload the page completely
+		window.location.reload();
+	} else {
+		openOidInPanel(current_node, false);
+		mobileNavClose();
+	}
 }
 
 function getCurrentLang() {

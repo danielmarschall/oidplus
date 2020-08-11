@@ -160,7 +160,7 @@ $js = 'oidplus.min.js.php';
 			if ($code == OIDplus::getCurrentLang()) {
 				$class = 'lng_flag';
 			} else {
-				$class = 'lng_flag picture_grayout';
+				$class = 'lng_flag picture_ghost';
 			}
 			echo '<img src="plugins/language/'.$code.'/'.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20" onclick="setLanguage(\''.$code.'\')"> ';
 		}
