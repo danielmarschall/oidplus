@@ -127,5 +127,5 @@ if (!function_exists('mb_wordwrap')) {
 }
 
 function _L($str, ...$sprintfArgs) {
-	return sprintf(OIDplus::getText($str), $sprintfArgs);
+	return vsprintf(OIDplus::getText($str), $sprintfArgs);
 }

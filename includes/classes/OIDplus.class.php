@@ -941,7 +941,7 @@ class OIDplus {
 		return $lang;
 	}
 
-	// Note: Please use the alias _L() instead. It has also an builtin sprintf() to make code easier.
+	// Note: Please use the alias _L() instead. It has also a builtin sprintf() to make code easier.
 	public static function getText($str) {
 		$lang = self::getCurrentLang();
 
@@ -955,13 +955,13 @@ class OIDplus {
 			if (!file_exists($translation_file)) return $str;
 			$xml = simplexml_load_string(file_get_contents($translation_file));
 			foreach ($xml->message as $msg) {
-				$src = $msg->source->__toString();
-				$dst = $msg->target->__toString();
+				$src = trim($msg->source->__toString());
+				$dst = trim($msg->target->__toString());
 				$translation_array[$src] = $dst;
 			}
 			$translation_loaded = $lang;
 		}
 
-		return isset($translation_array[$str]) ? $translation_array[$str] : $str;
+		return isset($translation_array[$str]) && !empty($translation_array[$str]) ? $translation_array[$str] : $str;
 	}
 }
