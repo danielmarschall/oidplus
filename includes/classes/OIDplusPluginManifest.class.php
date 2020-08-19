@@ -67,7 +67,7 @@ class OIDplusPluginManifest {
 		return $this->jsFiles;
 	}
 
-	public function getRawXml(): object {
+	public function getRawXml(): SimpleXMLElement {
 		return $this->rawXML;
 	}
 
