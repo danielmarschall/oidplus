@@ -351,7 +351,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			// make sure the program works even if the user provided HTML is not UTF-8
-			$out['text'] = iconv(mb_detect_encoding($out['text'], mb_detect_order(), true), 'UTF-8', $out['text']);
+			$out['text'] = iconv(mb_detect_encoding($out['text'], mb_detect_order(), true), 'UTF-8//IGNORE', $out['text']);
+
+			$bom = pack('H*','EFBBBF');
+			$out['text'] = preg_replace("/^$bom/", '', $out['text']);
 
 			if (strpos($out['text'], '%%OBJECT_TYPE_LIST%%') !== false) {
 				$tmp = '<ul>';

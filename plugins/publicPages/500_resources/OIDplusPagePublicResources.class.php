@@ -50,7 +50,10 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		$cont = file_get_contents($file);
 
 		// make sure the program works even if the user provided HTML is not UTF-8
-		$cont = iconv(mb_detect_encoding($cont, mb_detect_order(), true), 'UTF-8', $cont);
+		$cont = iconv(mb_detect_encoding($cont, mb_detect_order(), true), 'UTF-8//IGNORE', $cont);
+
+		$bom = pack('H*','EFBBBF');
+		$cont = preg_replace("/^$bom/", '', $cont);
 
 		$cont = preg_replace('@^(.+)<body[^>]*>@isU', '', $cont);
 		$cont = preg_replace('@</body>.+$@isU', '', $cont);
@@ -68,7 +71,10 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		$cont = file_get_contents($file);
 
 		// make sure the program works even if the user provided HTML is not UTF-8
-		$cont = iconv(mb_detect_encoding($cont, mb_detect_order(), true), 'UTF-8', $cont);
+		$cont = iconv(mb_detect_encoding($cont, mb_detect_order(), true), 'UTF-8//IGNORE', $cont);
+
+		$bom = pack('H*','EFBBBF');
+		$cont = preg_replace("/^$bom/", '', $cont);
 
 		if (preg_match('@<title>(.+)</title>@ismU', $cont, $m)) return $m[1];
 		if (preg_match('@<h1>(.+)</h1>@ismU', $cont, $m)) return $m[1];

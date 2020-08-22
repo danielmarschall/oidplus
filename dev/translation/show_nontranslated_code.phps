@@ -218,22 +218,17 @@ function phpRemoveComments($fileStr) {
 
 	$commentTokens = array(T_COMMENT);
 
-	if (defined('T_DOC_COMMENT'))
-	    $commentTokens[] = T_DOC_COMMENT; // PHP 5
-	if (defined('T_ML_COMMENT'))
-	    $commentTokens[] = T_ML_COMMENT;  // PHP 4
+	if (defined('T_DOC_COMMENT')) $commentTokens[] = T_DOC_COMMENT; // PHP 5
+	if (defined('T_ML_COMMENT'))  $commentTokens[] = T_ML_COMMENT;  // PHP 4
 
 	$tokens = token_get_all($fileStr);
 
 	foreach ($tokens as $token) {
-	    if (is_array($token)) {
-	        if (in_array($token[0], $commentTokens))
-	            continue;
-
-	        $token = $token[1];
-	    }
-
-	    $newStr .= $token;
+		if (is_array($token)) {
+			if (in_array($token[0], $commentTokens)) continue;
+			$token = $token[1];
+		}
+		$newStr .= $token;
 	}
 
 	return $newStr;

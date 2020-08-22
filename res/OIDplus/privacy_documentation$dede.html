@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 
 <html lang="en">
 
@@ -17,29 +17,29 @@
 	</style>
 	<h1>Datenschutz Verfahrensbeschreibung</h1>
 	<p><em>Revision: 20. August 2020</em></p>
-	<p><font color="red">ACHTUNG!!! Dieses Dokument wurde maschinell übersetzt und kann daher Fehler enthalten. Bitte konsultieren Sie die englischsprachige Version dieses Dokuments und nutzen Sie diese deutschsprachige Fassung nur als grobe Informationsquelle!</font></p>
-	<p><strong><em>Wichtig</em></strong><em> : Dieses Dokument wurde von ViaThinkSoft (dem Entwickler der Software „OIDplus“) verfasst und enthält allgemeine Informationen zur Funktionsweise von OIDplus in Bezug auf datenschutzbezogene Themen. Da OIDplus eine Web-Software ist, die von jedem auf seinen Serversystemen heruntergeladen, installiert und betrieben werden kann, beschreibt dieses Dokument NICHT, wie die Eigentümer / Administratoren dieser speziellen Installation von OIDplus mit Ihren Daten umgehen. Daher sollte der Eigentümer dieses Systems eine zusätzliche / individuelle Datenschutzerklärung vorlegen.</em></p>
+	<p><font color="red">ACHTUNG!!! Dieses Dokument wurde maschinell Ã¼bersetzt und kann daher Fehler enthalten. Bitte konsultieren Sie die englischsprachige Version dieses Dokuments und nutzen Sie diese deutschsprachige Fassung nur als grobe Informationsquelle!</font></p>
+	<p><strong><em>Wichtig</em></strong><em> : Dieses Dokument wurde von ViaThinkSoft (dem Entwickler der Software Â„OIDplusÂ“) verfasst und enthÃ¤lt allgemeine Informationen zur Funktionsweise von OIDplus in Bezug auf datenschutzbezogene Themen. Da OIDplus eine Web-Software ist, die von jedem auf seinen Serversystemen heruntergeladen, installiert und betrieben werden kann, beschreibt dieses Dokument NICHT, wie die EigentÃ¼mer / Administratoren dieser speziellen Installation von OIDplus mit Ihren Daten umgehen. Daher sollte der EigentÃ¼mer dieses Systems eine zusÃ¤tzliche / individuelle DatenschutzerklÃ¤rung vorlegen.</em></p>
 	<a name="terminology"></a><h2><strong><u>Parteien / Terminologie</u></strong></h2>
-	<p><strong>ViaThinkSoft</strong> ist der Entwickler der Softwarelösung „OIDplus“.</p>
-	<p><strong>OIDplus</strong> ist eine Softwarelösung zu organisieren, zu verwalten und Informationen zu veröffentlichen <strong>Object Identifiers</strong> ( im Folgenden als OID bezeichnet) und ihre Besitzer (nachfolgend als <strong>Registrierungsstelle</strong> oder <strong>RA</strong> ). Es kann auf jedem Server heruntergeladen und installiert werden. Eine bestimmte Installation von OIDplus wird als <strong>OIDplus-Instanz</strong> oder <strong>OIDplus-System bezeichnet</strong> . Betreiber von OIDplus-Instanzen sind normalerweise Softwareentwickler, Arbeitsgruppen, Unternehmen oder andere Organisationen, im Folgenden als <strong>Systembesitzer bezeichnet</strong> . Ein <strong>Systemadministrator</strong> ist eine Person, die die OIDplus-Software verwaltet und wartet, und normalerweise auch dieselbe Person, die die Hardware und Software des Servers verwaltet.</p>
-	<p><strong>Objektkennungen</strong> sind in einer hierarchischen Struktur organisiert, in der RAs OIDs unter den von ihnen verwalteten OIDs an andere RAs delegieren. Im Kontext einer bestimmten RA und OID ist die „ <strong>Superior RA</strong> “ die RA, die die Root-OID einer bestimmten RA delegiert hat. Die Aussagen zu „Superior RAs“ in diesem Dokument gelten jedoch nur, wenn die Superior RA OIDplus zum Delegieren der OID verwendet.</p>
+	<p><strong>ViaThinkSoft</strong> ist der Entwickler der SoftwarelÃ¶sung Â„OIDplusÂ“.</p>
+	<p><strong>OIDplus</strong> ist eine SoftwarelÃ¶sung zu organisieren, zu verwalten und Informationen zu verÃ¶ffentlichen <strong>Object Identifiers</strong> ( im Folgenden als OID bezeichnet) und ihre Besitzer (nachfolgend als <strong>Registrierungsstelle</strong> oder <strong>RA</strong> ). Es kann auf jedem Server heruntergeladen und installiert werden. Eine bestimmte Installation von OIDplus wird als <strong>OIDplus-Instanz</strong> oder <strong>OIDplus-System bezeichnet</strong> . Betreiber von OIDplus-Instanzen sind normalerweise Softwareentwickler, Arbeitsgruppen, Unternehmen oder andere Organisationen, im Folgenden als <strong>Systembesitzer bezeichnet</strong> . Ein <strong>Systemadministrator</strong> ist eine Person, die die OIDplus-Software verwaltet und wartet, und normalerweise auch dieselbe Person, die die Hardware und Software des Servers verwaltet.</p>
+	<p><strong>Objektkennungen</strong> sind in einer hierarchischen Struktur organisiert, in der RAs OIDs unter den von ihnen verwalteten OIDs an andere RAs delegieren. Im Kontext einer bestimmten RA und OID ist die Â„ <strong>Superior RA</strong> Â“ die RA, die die Root-OID einer bestimmten RA delegiert hat. Die Aussagen zu Â„Superior RAsÂ“ in diesem Dokument gelten jedoch nur, wenn die Superior RA OIDplus zum Delegieren der OID verwendet.</p>
 	<a name="server_client_side"></a><h2><strong><u>Definition von serverseitig und clientseitig</u></strong></h2>
 	<p>OIDplus ist eine Webanwendung, die in den Programmiersprachen PHP (serverseitig) und HTML / JavaScript (clientseitig) geschrieben ist.</p>
 	<h3><u>Serverseitig</u></h3>
-	<p>Die PHP-Skripte von OIDplus werden über einen PHP-Skriptinterpreter verarbeitet, der auf einer Webserversoftware („HTTP-Webserver“) ausgeführt wird, z. B. „Apache“ oder „Nginx“. Die tatsächlichen Daten von OIDplus (OIDs, RAs,…) werden in einem DBMS (Database Management Software) gespeichert, z. B. „MySQL“, „MariaDB“ oder „PostgreSQL“. Das DBMS wird normalerweise auf demselben Server installiert, auf dem PHP / Apache installiert ist. Der Serveradministrator kann es jedoch auf jedem Computer installieren.</p>
+	<p>Die PHP-Skripte von OIDplus werden Ã¼ber einen PHP-Skriptinterpreter verarbeitet, der auf einer Webserversoftware (Â„HTTP-WebserverÂ“) ausgefÃ¼hrt wird, z. B. Â„ApacheÂ“ oder Â„NginxÂ“. Die tatsÃ¤chlichen Daten von OIDplus (OIDs, RAs,Â…) werden in einem DBMS (Database Management Software) gespeichert, z. B. Â„MySQLÂ“, Â„MariaDBÂ“ oder Â„PostgreSQLÂ“. Das DBMS wird normalerweise auf demselben Server installiert, auf dem PHP / Apache installiert ist. Der Serveradministrator kann es jedoch auf jedem Computer installieren.</p>
 	<h3><u>Client-Seite</u></h3>
-	<p>Während der Benutzer OIDplus durchsucht, stellt die Serverseite dem Client-Computer HTML- und JavaScript-Inhalte bereit. Mit einer Webbrowsersoftware (wie „Chrome“ oder „Firefox“) werden diese Inhalte verarbeitet und auf dem Bildschirm angezeigt. Verschiedene JavaScript-Skripte sind entweder erforderlich, um OIDplus auszuführen, oder sie verbessern die Benutzererfahrung, z. B. indem OID-Beschreibungen neu geladen werden, ohne die gesamte Seite neu zu laden, während der Benutzer OIDplus durchsucht. Möglicherweise sind einige externe JavaScripts enthalten (Polyfill und ReCaptcha), die am Ende des Dokuments beschrieben werden.</p>
+	<p>WÃ¤hrend der Benutzer OIDplus durchsucht, stellt die Serverseite dem Client-Computer HTML- und JavaScript-Inhalte bereit. Mit einer Webbrowsersoftware (wie Â„ChromeÂ“ oder Â„FirefoxÂ“) werden diese Inhalte verarbeitet und auf dem Bildschirm angezeigt. Verschiedene JavaScript-Skripte sind entweder erforderlich, um OIDplus auszufÃ¼hren, oder sie verbessern die Benutzererfahrung, z. B. indem OID-Beschreibungen neu geladen werden, ohne die gesamte Seite neu zu laden, wÃ¤hrend der Benutzer OIDplus durchsucht. MÃ¶glicherweise sind einige externe JavaScripts enthalten (Polyfill und ReCaptcha), die am Ende des Dokuments beschrieben werden.</p>
 	<a name="scope"></a><h2><strong><u>Umfang dieses Dokuments</u></strong></h2>
-	<p>Dieses Dokument enthält nur Informationen zur OIDplus-Software. Es ist unabhängig vom Verhalten der clientseitigen Software (Webbrowser, Betriebssystem, Firewalls,…), unabhängig vom Verhalten der Hardware (Netzwerkrouter oder Firewalls,…), unabhängig vom Verhalten der serverseitigen Software ( Apache, PHP, MySQL / MariaDB / PostgreSQL / ..., Betriebssystem usw.) und die Vorgehensweise, wie der Systemadministrator die Serversoftware betreibt, Protokolldateien speichert, Firewalls verwaltet usw.</p>
+	<p>Dieses Dokument enthÃ¤lt nur Informationen zur OIDplus-Software. Es ist unabhÃ¤ngig vom Verhalten der clientseitigen Software (Webbrowser, Betriebssystem, Firewalls,Â…), unabhÃ¤ngig vom Verhalten der Hardware (Netzwerkrouter oder Firewalls,Â…), unabhÃ¤ngig vom Verhalten der serverseitigen Software ( Apache, PHP, MySQL / MariaDB / PostgreSQL / ..., Betriebssystem usw.) und die Vorgehensweise, wie der Systemadministrator die Serversoftware betreibt, Protokolldateien speichert, Firewalls verwaltet usw.</p>
 	<a name="oid_information"></a><h2><strong><u>OID-Informationen</u></strong></h2>
 	<p>Der Hauptzweck von OIDplus besteht darin, Informationen zu OID-Informationen anzuzeigen und zu verwalten.</p>
-	<p>Einige Attribute von Objektkennungen (wie z. B. ASN.1-Kennungen) können nur von der übergeordneten RA und nicht von der RA dieser OID geändert werden. Andererseits können einige andere Informationen (wie Titel und Beschreibung) nur von der RA geändert werden, die die OID besitzt, und nicht von der Superior RA. Der Systemadministrator kann alle Informationen bearbeiten.</p>
+	<p>Einige Attribute von Objektkennungen (wie z. B. ASN.1-Kennungen) kÃ¶nnen nur von der Ã¼bergeordneten RA und nicht von der RA dieser OID geÃ¤ndert werden. Andererseits kÃ¶nnen einige andere Informationen (wie Titel und Beschreibung) nur von der RA geÃ¤ndert werden, die die OID besitzt, und nicht von der Superior RA. Der Systemadministrator kann alle Informationen bearbeiten.</p>
 	<h3><em>Versteckte OID-Informationen</em></h3>
-	<p>Eine übergeordnete RA kann das "versteckte" Flag auf eine von ihnen delegierte OID setzen. Dies bedeutet, dass die OID und alle nachfolgenden OIDs für die Öffentlichkeit unsichtbar sind. Die Öffentlichkeit kann jedoch die Existenz versteckter OIDs durch einen Hinweis „ <em>XX OIDs sind versteckt. Loggen Sie sich ein, um sie zu sehen</em> “.</p>
+	<p>Eine Ã¼bergeordnete RA kann das "versteckte" Flag auf eine von ihnen delegierte OID setzen. Dies bedeutet, dass die OID und alle nachfolgenden OIDs fÃ¼r die Ã–ffentlichkeit unsichtbar sind. Die Ã–ffentlichkeit kann jedoch die Existenz versteckter OIDs durch einen Hinweis Â„ <em>XX OIDs sind versteckt. Loggen Sie sich ein, um sie zu sehen</em> Â“.</p>
 	<p>Der Systemadministrator kann alle OIDs anzeigen, auch wenn sie ausgeblendet sind.</p>
 	<p>Ein Besitzer einer OID kann alle OIDs sehen, die auf seine Root-OID verweisen, auch wenn einige davon ausgeblendet sind.</p>
-	<p>Wenn Sie <strong>Eigentümer einer OID sind</strong> und Ihre OID vor der Öffentlichkeit verbergen möchten, wenden Sie sich an Ihre <strong>übergeordnete RA</strong> (bevorzugt) oder an den <strong>Systemadministrator</strong> und bitten Sie diese, Ihre OID als versteckt zu markieren. Bitte beachten Sie, dass dadurch auch alle OIDs ausgeblendet werden, die Sie an sich selbst oder andere RAs delegieren.</p>
-	<h3><em>Übersicht: Verwaltete Informationen zu OIDs:</em></h3>
+	<p>Wenn Sie <strong>EigentÃ¼mer einer OID sind</strong> und Ihre OID vor der Ã–ffentlichkeit verbergen mÃ¶chten, wenden Sie sich an Ihre <strong>Ã¼bergeordnete RA</strong> (bevorzugt) oder an den <strong>Systemadministrator</strong> und bitten Sie diese, Ihre OID als versteckt zu markieren. Bitte beachten Sie, dass dadurch auch alle OIDs ausgeblendet werden, die Sie an sich selbst oder andere RAs delegieren.</p>
+	<h3><em>Ãœbersicht: Verwaltete Informationen zu OIDs:</em></h3>
 	<table border="1">
 	<tbody>
 	<tr>
@@ -47,13 +47,13 @@
 	<p><strong>Attribut:</strong></p>
 	</td>
 	<td width="196">
-	<p><strong>Kann nur geändert werden durch:</strong></p>
+	<p><strong>Kann nur geÃ¤ndert werden durch:</strong></p>
 	</td>
 	<td width="154">
-	<p><strong>Wenn nicht als „versteckt“ markiert, sichtbar für:</strong></p>
+	<p><strong>Wenn nicht als Â„verstecktÂ“ markiert, sichtbar fÃ¼r:</strong></p>
 	</td>
 	<td width="154">
-	<p><strong>Wenn markiert "versteckt", sichtbar für:</strong></p>
+	<p><strong>Wenn markiert "versteckt", sichtbar fÃ¼r:</strong></p>
 	</td>
 	</tr>
 	<tr>
@@ -61,42 +61,42 @@
 	<p>Numerische Kennung</p>
 	</td>
 	<td width="196">
-	<p>Überlegener RA- <br>Systemadministrator <br>(kann nur während der Erstellung definiert und niemals aktualisiert werden!)</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator <br>(kann nur wÃ¤hrend der Erstellung definiert und niemals aktualisiert werden!)</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	<tr>
 	<td width="111">
-	<p>Alphanumerische Kennung (für ASN.1-Notation)</p>
+	<p>Alphanumerische Kennung (fÃ¼r ASN.1-Notation)</p>
 	</td>
 	<td width="196">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	<tr>
 	<td width="111">
 	<p>Unicode-Label</p>
-	<p>(für IRI-Notation)</p>
+	<p>(fÃ¼r IRI-Notation)</p>
 	</td>
 	<td width="196">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	<tr>
@@ -104,13 +104,13 @@
 	<p>RA</p>
 	</td>
 	<td width="196">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	<tr>
@@ -118,13 +118,13 @@
 	<p>Kommentar</p>
 	</td>
 	<td width="196">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	<tr>
@@ -132,13 +132,13 @@
 	<p>"Versteckte" Flagge</p>
 	</td>
 	<td width="196">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	<tr>
@@ -149,10 +149,10 @@
 	<p>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	<tr>
@@ -163,18 +163,18 @@
 	<p>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>RA <br>Superior RA <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Überlegener RA- <br>Systemadministrator</p>
+	<p>Ãœberlegener RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	</tbody>
 	</table>
 	<a name="ra_information"></a><h2><strong><u>RA-Informationen</u></strong></h2>
-	<p>Die Informationen zu RAs, die OIDs besitzen, können öffentlich eingesehen werden. Eine RA kann ihre Kontaktdaten im OIDplus-System (Anmeldebereich) verwalten und ihre Informationen als "privat" markieren, um die für die Öffentlichkeit sichtbaren Informationen einzuschränken.</p>
+	<p>Die Informationen zu RAs, die OIDs besitzen, kÃ¶nnen Ã¶ffentlich eingesehen werden. Eine RA kann ihre Kontaktdaten im OIDplus-System (Anmeldebereich) verwalten und ihre Informationen als "privat" markieren, um die fÃ¼r die Ã–ffentlichkeit sichtbaren Informationen einzuschrÃ¤nken.</p>
 	<p>Folgende RA-Informationen werden immer angezeigt (auch wenn sie als "privat" markiert sind):</p>
-	<h3><em>Übersicht: Verwaltete Informationen zu RAs:</em></h3>
+	<h3><em>Ãœbersicht: Verwaltete Informationen zu RAs:</em></h3>
 	<table border="1">
 	<tbody>
 	<tr>
@@ -182,13 +182,13 @@
 	<p><strong>Attribut:</strong></p>
 	</td>
 	<td width="196">
-	<p><strong>Kann nur geändert werden durch:</strong></p>
+	<p><strong>Kann nur geÃ¤ndert werden durch:</strong></p>
 	</td>
 	<td width="154">
-	<p><strong>Wenn nicht als "privat" markiert, sichtbar für:</strong></p>
+	<p><strong>Wenn nicht als "privat" markiert, sichtbar fÃ¼r:</strong></p>
 	</td>
 	<td width="154">
-	<p><strong>Wenn als "privat" markiert, sichtbar für:</strong></p>
+	<p><strong>Wenn als "privat" markiert, sichtbar fÃ¼r:</strong></p>
 	</td>
 	</tr>
 	<tr>
@@ -199,10 +199,10 @@
 	<p>RA</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	<tr>
@@ -213,10 +213,10 @@
 	<p>RA</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	<tr>
@@ -227,38 +227,38 @@
 	<p>RA</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	<tr>
 	<td width="111">
-	<p>Büro</p>
+	<p>BÃ¼ro</p>
 	</td>
 	<td width="196">
 	<p>RA</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	<tr>
 	<td width="111">
-	<p>Persönlichen Namen</p>
+	<p>PersÃ¶nlichen Namen</p>
 	</td>
 	<td width="196">
 	<p>RA</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	</tr>
 	<tr>
@@ -279,13 +279,13 @@
 	</tr>
 	<tr>
 	<td width="111">
-	<p>Straße</p>
+	<p>StraÃŸe</p>
 	</td>
 	<td width="196">
 	<p>RA</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
 	<p>RA</p>
@@ -300,7 +300,7 @@
 	<p>RA</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
 	<p>RA</p>
@@ -315,7 +315,7 @@
 	<p>RA</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
 	<p>RA</p>
@@ -330,7 +330,7 @@
 	<p>RA</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
 	<p>RA</p>
@@ -345,7 +345,7 @@
 	<p>RA</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
 	<p>RA</p>
@@ -360,7 +360,7 @@
 	<p>RA</p>
 	</td>
 	<td width="154">
-	<p>Öffentlicher <br>übergeordneter RA <br>RA- <br>Systemadministrator</p>
+	<p>Ã–ffentlicher <br>Ã¼bergeordneter RA <br>RA- <br>Systemadministrator</p>
 	</td>
 	<td width="154">
 	<p>RA</p>
@@ -370,39 +370,39 @@
 	</tbody>
 	</table>
 	<a name="ra_invitation"></a><h2><strong><u>Einladung von RAs</u></strong></h2>
-	<p>Wenn eine OID von einer RA oder vom Systemadministrator erstellt wird, wird der Eigentümer der OID durch eine E-Mail-Adresse definiert (die öffentlich angezeigt wird). Daher ist es möglich, eine OID zu besitzen, auch wenn Sie nicht im OIDplus-System registriert sind.</p>
-	<p>Wenn die OID erstellt wird und die RA mit einer solchen E-Mail-Adresse nicht vorhanden ist, wird der Ersteller gefragt, ob er eine Einladung senden möchte. Wenn sie zustimmen, wird eine E-Mail an diese E-Mail-Adresse gesendet, sodass sie auf einen Link klicken können, um sich beim OIDplus-System zu registrieren, damit sie weitere Kontaktdaten hinzufügen sowie OID-Informationen delegieren und bearbeiten können.</p>
-	<p>Derzeit kann sich eine RA nicht registrieren. Sie benötigen eine Einladung des Systemadministrators oder ihrer übergeordneten RA, um sich beim OIDplus-System registrieren zu können. (Hinweis: Um eine Einladung erneut zu senden, muss der Systemadministrator oder die übergeordnete RA in der OID-Delegierungstabelle auf "Aktualisieren" klicken, damit sie erneut aufgefordert werden, die Einladung zu senden.)</p>
-	<p>Zusätzlich zum Einladungssystem kann der Systemadministrator RA-Konten ohne Überprüfung der E-Mail-Adresse erstellen.</p>
-	<a name="oidinfo_publishing"></a><h2><strong><u>Veröffentlichen von RAs / OIDs auf oid-info.com</u></strong></h2>
-	<p>oid-info.com ist eine Webseite, auf der Informationen zu OIDs wie in einem Wiki gesammelt und angezeigt werden. OIDplus enthält Funktionen zum Übermitteln von Daten seiner Datenbank an oid-info.com</p>
-	<p>Es gibt zwei Möglichkeiten:</p>
+	<p>Wenn eine OID von einer RA oder vom Systemadministrator erstellt wird, wird der EigentÃ¼mer der OID durch eine E-Mail-Adresse definiert (die Ã¶ffentlich angezeigt wird). Daher ist es mÃ¶glich, eine OID zu besitzen, auch wenn Sie nicht im OIDplus-System registriert sind.</p>
+	<p>Wenn die OID erstellt wird und die RA mit einer solchen E-Mail-Adresse nicht vorhanden ist, wird der Ersteller gefragt, ob er eine Einladung senden mÃ¶chte. Wenn sie zustimmen, wird eine E-Mail an diese E-Mail-Adresse gesendet, sodass sie auf einen Link klicken kÃ¶nnen, um sich beim OIDplus-System zu registrieren, damit sie weitere Kontaktdaten hinzufÃ¼gen sowie OID-Informationen delegieren und bearbeiten kÃ¶nnen.</p>
+	<p>Derzeit kann sich eine RA nicht registrieren. Sie benÃ¶tigen eine Einladung des Systemadministrators oder ihrer Ã¼bergeordneten RA, um sich beim OIDplus-System registrieren zu kÃ¶nnen. (Hinweis: Um eine Einladung erneut zu senden, muss der Systemadministrator oder die Ã¼bergeordnete RA in der OID-Delegierungstabelle auf "Aktualisieren" klicken, damit sie erneut aufgefordert werden, die Einladung zu senden.)</p>
+	<p>ZusÃ¤tzlich zum Einladungssystem kann der Systemadministrator RA-Konten ohne ÃœberprÃ¼fung der E-Mail-Adresse erstellen.</p>
+	<a name="oidinfo_publishing"></a><h2><strong><u>VerÃ¶ffentlichen von RAs / OIDs auf oid-info.com</u></strong></h2>
+	<p>oid-info.com ist eine Webseite, auf der Informationen zu OIDs wie in einem Wiki gesammelt und angezeigt werden. OIDplus enthÃ¤lt Funktionen zum Ãœbermitteln von Daten seiner Datenbank an oid-info.com</p>
+	<p>Es gibt zwei MÃ¶glichkeiten:</p>
 	<ol>
-		<li>Manuelle Übertragung: Der Systemadministrator kann eine XML-Datei erstellen, die OID- und RA-Informationen enthält (nur die Teile, die ohnehin für die Öffentlichkeit sichtbar sind) und diese XML-Datei auf oid-info.com hochladen</li>
-		<li>Wenn das OIDplus-System bei ViaThinkSoft registriert ist und die Übertragung von OID-info.com aktiviert ist (siehe unten), ruft ViaThinkSoft die XML-Daten automatisch über eine verschlüsselte Schnittstelle vom OIDplus-System ab und sendet die Daten an den Administrator von oid-info.com .</li>
+		<li>Manuelle Ãœbertragung: Der Systemadministrator kann eine XML-Datei erstellen, die OID- und RA-Informationen enthÃ¤lt (nur die Teile, die ohnehin fÃ¼r die Ã–ffentlichkeit sichtbar sind) und diese XML-Datei auf oid-info.com hochladen</li>
+		<li>Wenn das OIDplus-System bei ViaThinkSoft registriert ist und die Ãœbertragung von OID-info.com aktiviert ist (siehe unten), ruft ViaThinkSoft die XML-Daten automatisch Ã¼ber eine verschlÃ¼sselte Schnittstelle vom OIDplus-System ab und sendet die Daten an den Administrator von oid-info.com .</li>
 	</ol>
 	<a name="systemid"></a><h2><strong><u>Eindeutige System-ID</u></strong></h2>
-	<p>Während der Ersteinrichtung wird ein öffentliches / privates Schlüsselpaar erstellt, das für verschiedene Zwecke verwendet werden kann, z. B. um Daten zwischen OIDplus und ViaThinkSoft zu verschlüsseln, wenn der Dienst "Systemregistrierung" verwendet wird (siehe unten) oder um OID- zu signieren. Over-WHOIS-Antworten.</p>
-	<p>Aus diesem öffentlichen Schlüssel wird eine eindeutige System-ID abgeleitet. Die eindeutige System-ID und der öffentliche Schlüssel werden im Setup-Bildschirm angezeigt.</p>
-	<a name="system_registration"></a><h2><strong><u>Systemregistrierung und automatische Veröffentlichung auf oid-info.com</u></strong></h2>
-	<p>Während der Ersteinrichtung kann der Systemadministrator zwischen folgenden Optionen wählen:</p>
-	<p>0 Registrieren Sie sich beim Verzeichnisdienst und veröffentlichen Sie automatisch RA / OID-Daten unter oid-info.com. <br>1 Registrieren Sie sich nur beim Verzeichnisdienst. <br>2 System ausblenden</p>
-	<p>Diese Einstellung kann jederzeit im Administrator-Login / Control Panel geändert werden.</p>
+	<p>WÃ¤hrend der Ersteinrichtung wird ein Ã¶ffentliches / privates SchlÃ¼sselpaar erstellt, das fÃ¼r verschiedene Zwecke verwendet werden kann, z. B. um Daten zwischen OIDplus und ViaThinkSoft zu verschlÃ¼sseln, wenn der Dienst "Systemregistrierung" verwendet wird (siehe unten) oder um OID- zu signieren. Over-WHOIS-Antworten.</p>
+	<p>Aus diesem Ã¶ffentlichen SchlÃ¼ssel wird eine eindeutige System-ID abgeleitet. Die eindeutige System-ID und der Ã¶ffentliche SchlÃ¼ssel werden im Setup-Bildschirm angezeigt.</p>
+	<a name="system_registration"></a><h2><strong><u>Systemregistrierung und automatische VerÃ¶ffentlichung auf oid-info.com</u></strong></h2>
+	<p>WÃ¤hrend der Ersteinrichtung kann der Systemadministrator zwischen folgenden Optionen wÃ¤hlen:</p>
+	<p>0 Registrieren Sie sich beim Verzeichnisdienst und verÃ¶ffentlichen Sie automatisch RA / OID-Daten unter oid-info.com. <br>1 Registrieren Sie sich nur beim Verzeichnisdienst. <br>2 System ausblenden</p>
+	<p>Diese Einstellung kann jederzeit im Administrator-Login / Control Panel geÃ¤ndert werden.</p>
 	<h3><em><u>Registrieren des Systems beim Verzeichnisdienst (Option 0 und 1)</u></em></h3>
 	<p>Die Registrierung Ihres OIDplus-Systems hat verschiedene Vorteile:</p>
 	<ul>
-		<li>Der öffentliche Schlüssel Ihres Systems wird veröffentlicht, damit Benutzer die Integrität Ihrer Daten überprüfen können (z. B. signierte OID-over-WHOIS-Anforderungen).</li>
-		<li>Da die 31-Bit-System-ID Hash-Konflikte aufweisen kann, stellt ViaThinkSoft sicher, dass die System-ID nur von Ihrem System verwendet wird (andere OIDplus-Systeme mit derselben System-ID werden gezwungen, ihre IDs zu ändern).</li>
-		<li>ViaThinkSoft kann den Systemnamen, die Administrator-E-Mail und die OID-Stammbögen bestätigen. Daher kann Ihr System mithilfe der Überweisung WHOIS gefunden werden.</li>
-		<li>Optional können Sie die automatische Veröffentlichung Ihrer öffentlichen OID-Informationen im Repository oid-info.com aktivieren.</li>
-		<li>Ihre OIDplus-Version wird an ViaThinkSoft gemeldet. Wenn ein schwerwiegender Fehler oder eine Sicherheitslücke Ihr System betrifft, kann ViaThinkSoft Sie per E-Mail warnen.</li>
-		<li>Der Verzeichnisdienst erstellt automatisch ein X.509-Sicherheitszertifikat für Sie (KEIN SSL-Zertifikat!), Das für verschiedene Überprüfungen verwendet werden kann.</li>
+		<li>Der Ã¶ffentliche SchlÃ¼ssel Ihres Systems wird verÃ¶ffentlicht, damit Benutzer die IntegritÃ¤t Ihrer Daten Ã¼berprÃ¼fen kÃ¶nnen (z. B. signierte OID-over-WHOIS-Anforderungen).</li>
+		<li>Da die 31-Bit-System-ID Hash-Konflikte aufweisen kann, stellt ViaThinkSoft sicher, dass die System-ID nur von Ihrem System verwendet wird (andere OIDplus-Systeme mit derselben System-ID werden gezwungen, ihre IDs zu Ã¤ndern).</li>
+		<li>ViaThinkSoft kann den Systemnamen, die Administrator-E-Mail und die OID-StammbÃ¶gen bestÃ¤tigen. Daher kann Ihr System mithilfe der Ãœberweisung WHOIS gefunden werden.</li>
+		<li>Optional kÃ¶nnen Sie die automatische VerÃ¶ffentlichung Ihrer Ã¶ffentlichen OID-Informationen im Repository oid-info.com aktivieren.</li>
+		<li>Ihre OIDplus-Version wird an ViaThinkSoft gemeldet. Wenn ein schwerwiegender Fehler oder eine SicherheitslÃ¼cke Ihr System betrifft, kann ViaThinkSoft Sie per E-Mail warnen.</li>
+		<li>Der Verzeichnisdienst erstellt automatisch ein X.509-Sicherheitszertifikat fÃ¼r Sie (KEIN SSL-Zertifikat!), Das fÃ¼r verschiedene ÃœberprÃ¼fungen verwendet werden kann.</li>
 	</ul>
-	<p>Wenn die Option 0 oder 1 für die Datenschutzstufe ausgewählt wurde, kontaktiert das OIDplus-System regelmäßig den ViaThinkSoft-Server über eine sichere Verbindung und sendet die folgenden Informationen:</p>
+	<p>Wenn die Option 0 oder 1 fÃ¼r die Datenschutzstufe ausgewÃ¤hlt wurde, kontaktiert das OIDplus-System regelmÃ¤ÃŸig den ViaThinkSoft-Server Ã¼ber eine sichere Verbindung und sendet die folgenden Informationen:</p>
 	<ul>
 		<li>Datenschutzstufe (0, 1 oder 2)</li>
 		<li>System ID</li>
-		<li>Öffentlicher Schlüssel</li>
+		<li>Ã–ffentlicher SchlÃ¼ssel</li>
 		<li>Aktuelle URL</li>
 		<li>Administrator-E-Mail-Adresse</li>
 		<li>Systemtitel</li>
@@ -410,39 +410,39 @@
 		<li>Die Version Ihres Systems (SVN-Revision)</li>
 		<li>Installationstyp (ZIPed SVN-Snapshot oder SVN-Arbeitskopie)</li>
 	</ul>
-	<p>ViaThinkSoft speichert diese Daten intern und veröffentlicht Teile im öffentlichen Verzeichnisdienst unter <a href="https://oidplus.viathinksoft.com/oidplus/?goto=oid%3A1.3.6.1.4.1.37476.30.9">https://oidplus.viathinksoft.com/oidplus/?goto=oid%3A1.3.6.1.4.1.37476.30.9</a> :</p>
-	<p>Die öffentliche Aufzeichnung enthält:</p>
+	<p>ViaThinkSoft speichert diese Daten intern und verÃ¶ffentlicht Teile im Ã¶ffentlichen Verzeichnisdienst unter <a href="https://oidplus.viathinksoft.com/oidplus/?goto=oid%3A1.3.6.1.4.1.37476.30.9">https://oidplus.viathinksoft.com/oidplus/?goto=oid%3A1.3.6.1.4.1.37476.30.9</a> :</p>
+	<p>Die Ã¶ffentliche Aufzeichnung enthÃ¤lt:</p>
 	<ul>
 		<li>System ID</li>
-		<li>Öffentlicher Schlüssel</li>
+		<li>Ã–ffentlicher SchlÃ¼ssel</li>
 		<li>Aktuelle URL</li>
 	</ul>
 	<p>Die anderen Informationen verbleiben in der internen Datenbank von ViaThinkSoft und werden nicht an andere Parteien weitergegeben.</p>
-	<p>Wenn der Systemadministrator diese Option aktiviert hat und die Berechtigung widerrufen möchte, muss der Systemadministrator die Datenschutzstufe in der Administrator-Anmelde- / Systemsteuerung ändern. Das System setzt sich automatisch erneut mit dem ViaThinkSoft-Server in Verbindung und löscht alle Daten.</p>
-	<p>Bitte beachten Sie, dass durch das Löschen des Datensatzes im Verzeichnisdienst keine OID / RA-Informationen gelöscht werden, die bereits bei oid-info.com übermittelt wurden (wenn Option 0 ausgewählt wurde). Um diese Daten zu löschen, muss sich der Systemadministrator unter <a class="spamspan" href="mailto:admin@oid-info.com">admin@oid-info.com</a> an den OID Repository-Webmaster <a class="spamspan" href="mailto:admin@oid-info.com">wenden</a></p>
-	<h3><em><u>Veröffentlichen Sie RA / OID-Daten unter oid-info.com (Option 0)</u></em></h3>
-	<p>Wenn die Datenschutzstufe Option 0 ausgewählt ist, kontaktiert das System den ViaThinkSoft-Server regelmäßig über eine sichere Verbindung und sendet die öffentlichen RA / OID-Daten. ViaThinkSoft speichert diese Daten und leitet sie an den OID-Repository-Webmaster weiter, der die Daten überprüft und schließlich an das öffentliche Repository www.oid-info.com übermittelt</p>
-	<p>Wenn der Systemadministrator diese Option aktiviert hat und die Berechtigung widerrufen möchte, muss der Systemadministrator die Datenschutzstufe im Administrator-Anmelde- / Kontrollfeld auf Option 1 oder 2 ändern (um zu vermeiden, dass Daten erneut gesendet werden). Um bereits übermittelte OIDs zu entfernen, muss sich der Systemadministrator unter <a class="spamspan" href="mailto:admin@oid-info.com">admin@oid-info.com</a> an den OID-Repository-Webmaster <a class="spamspan" href="mailto:admin@oid-info.com">wenden</a></p>
+	<p>Wenn der Systemadministrator diese Option aktiviert hat und die Berechtigung widerrufen mÃ¶chte, muss der Systemadministrator die Datenschutzstufe in der Administrator-Anmelde- / Systemsteuerung Ã¤ndern. Das System setzt sich automatisch erneut mit dem ViaThinkSoft-Server in Verbindung und lÃ¶scht alle Daten.</p>
+	<p>Bitte beachten Sie, dass durch das LÃ¶schen des Datensatzes im Verzeichnisdienst keine OID / RA-Informationen gelÃ¶scht werden, die bereits bei oid-info.com Ã¼bermittelt wurden (wenn Option 0 ausgewÃ¤hlt wurde). Um diese Daten zu lÃ¶schen, muss sich der Systemadministrator unter <a class="spamspan" href="mailto:admin@oid-info.com">admin@oid-info.com</a> an den OID Repository-Webmaster <a class="spamspan" href="mailto:admin@oid-info.com">wenden</a></p>
+	<h3><em><u>VerÃ¶ffentlichen Sie RA / OID-Daten unter oid-info.com (Option 0)</u></em></h3>
+	<p>Wenn die Datenschutzstufe Option 0 ausgewÃ¤hlt ist, kontaktiert das System den ViaThinkSoft-Server regelmÃ¤ÃŸig Ã¼ber eine sichere Verbindung und sendet die Ã¶ffentlichen RA / OID-Daten. ViaThinkSoft speichert diese Daten und leitet sie an den OID-Repository-Webmaster weiter, der die Daten Ã¼berprÃ¼ft und schlieÃŸlich an das Ã¶ffentliche Repository www.oid-info.com Ã¼bermittelt</p>
+	<p>Wenn der Systemadministrator diese Option aktiviert hat und die Berechtigung widerrufen mÃ¶chte, muss der Systemadministrator die Datenschutzstufe im Administrator-Anmelde- / Kontrollfeld auf Option 1 oder 2 Ã¤ndern (um zu vermeiden, dass Daten erneut gesendet werden). Um bereits Ã¼bermittelte OIDs zu entfernen, muss sich der Systemadministrator unter <a class="spamspan" href="mailto:admin@oid-info.com">admin@oid-info.com</a> an den OID-Repository-Webmaster <a class="spamspan" href="mailto:admin@oid-info.com">wenden</a></p>
 	<h3><em><u>System ausblenden (Option 2)</u></em></h3>
-	<p>Wenn Option 2 für die Datenschutzstufe ausgewählt wurde, kontaktiert das System weder ViaThinkSoft noch oid-info.com.</p>
+	<p>Wenn Option 2 fÃ¼r die Datenschutzstufe ausgewÃ¤hlt wurde, kontaktiert das System weder ViaThinkSoft noch oid-info.com.</p>
 	<a name="logfiles"></a><h2><strong><u>Protokolldateien</u></strong></h2>
 	<h3><em><u>Protokolle von OIDplus</u></em></h3>
-	<p>OIDplus verwaltet Protokolleinträge für bestimmte Ereignisse wie Anmeldungen, OID / RA-Änderungen, Erstellen und Löschen von OIDs usw.</p>
+	<p>OIDplus verwaltet ProtokolleintrÃ¤ge fÃ¼r bestimmte Ereignisse wie Anmeldungen, OID / RA-Ã„nderungen, Erstellen und LÃ¶schen von OIDs usw.</p>
 	<p>Diese Protokollnachrichten werden nur im DBMS gespeichert.</p>
-	<p>Alle Protokollereignisse sind für den Systemadministrator sichtbar.</p>
-	<p>Einige Ereignisse sind für die RA und / oder die Superior RA sichtbar.</p>
-	<p>Protokollereignisse zeigen möglicherweise die IP-Adressen des Computers an, der mit dem OIDplus-System verbunden war, und die E-Mail-Adresse, wenn die RA mit ihren Anmeldeinformationen angemeldet war.</p>
-	<p>OIDplus bietet keine Funktion zum Löschen von Protokollereignissen. Ein Löschvorgang muss direkt in der Datenbank erfolgen, z. B. mit einem Datenbankclient wie phpMyAdmin.</p>
+	<p>Alle Protokollereignisse sind fÃ¼r den Systemadministrator sichtbar.</p>
+	<p>Einige Ereignisse sind fÃ¼r die RA und / oder die Superior RA sichtbar.</p>
+	<p>Protokollereignisse zeigen mÃ¶glicherweise die IP-Adressen des Computers an, der mit dem OIDplus-System verbunden war, und die E-Mail-Adresse, wenn die RA mit ihren Anmeldeinformationen angemeldet war.</p>
+	<p>OIDplus bietet keine Funktion zum LÃ¶schen von Protokollereignissen. Ein LÃ¶schvorgang muss direkt in der Datenbank erfolgen, z. B. mit einem Datenbankclient wie phpMyAdmin.</p>
 	<h3><em><u>Protokolle von Host-Software, Firewalls usw.</u></em></h3>
-	<p>Neben von OIDplus erstellten Protokollen kann auch andere clientseitige oder serverseitige Software, die an der Verarbeitung der Webanforderungen beteiligt ist (z. B. der HTTP-Webserver, der PHP-Skriptinterpreter, der Datenbankserver, das Betriebssystem, der Webbrowser oder verschiedene Firewalls) Protokollieren Sie Datenverkehr und Abfragen auf verschiedene Arten. Diese Protokolle sind unabhängig von OIDplus und müssen vom Systemadministrator und / oder den Netzwerkadministratoren verwaltet werden.</p>
-	<p>Wenn Sie über den Inhalt der Protokolldateien besorgt sind, wenden Sie sich an den Systemadministrator.</p>
+	<p>Neben von OIDplus erstellten Protokollen kann auch andere clientseitige oder serverseitige Software, die an der Verarbeitung der Webanforderungen beteiligt ist (z. B. der HTTP-Webserver, der PHP-Skriptinterpreter, der Datenbankserver, das Betriebssystem, der Webbrowser oder verschiedene Firewalls) Protokollieren Sie Datenverkehr und Abfragen auf verschiedene Arten. Diese Protokolle sind unabhÃ¤ngig von OIDplus und mÃ¼ssen vom Systemadministrator und / oder den Netzwerkadministratoren verwaltet werden.</p>
+	<p>Wenn Sie Ã¼ber den Inhalt der Protokolldateien besorgt sind, wenden Sie sich an den Systemadministrator.</p>
 	<a name="cookies"></a><h2><strong><u>Kekse</u></strong></h2>
-	<p>OIDplus verwendet Cookies nur für folgende Zwecke:</p>
+	<p>OIDplus verwendet Cookies nur fÃ¼r folgende Zwecke:</p>
 	<table border="1">
 	<tbody>
 	<tr>
 	<td width="122">
-	<p><strong>Plätzchen</strong></p>
+	<p><strong>PlÃ¤tzchen</strong></p>
 	</td>
 	<td width="114">
 	<p><strong>Kategorie</strong></p>
@@ -454,7 +454,7 @@
 	<p><strong>Wird erstellt:</strong></p>
 	</td>
 	<td width="126">
-	<p><strong>Wird gelöscht:</strong></p>
+	<p><strong>Wird gelÃ¶scht:</strong></p>
 	</td>
 	</tr>
 	<tr>
@@ -465,10 +465,10 @@
 	<p>Wesentlich</p>
 	</td>
 	<td width="139">
-	<p>Enthält einen Sitzungsschlüssel, mit dem der Anmeldestatus des Benutzers und die Berechtigungen ermittelt werden.</p>
+	<p>EnthÃ¤lt einen SitzungsschlÃ¼ssel, mit dem der Anmeldestatus des Benutzers und die Berechtigungen ermittelt werden.</p>
 	</td>
 	<td width="118">
-	<p>Während der Anmeldung eines Benutzers oder Administrators mit seinem Passwort.</p>
+	<p>WÃ¤hrend der Anmeldung eines Benutzers oder Administrators mit seinem Passwort.</p>
 	</td>
 	<td width="126">
 	<p>Wenn der Benutzer abgemeldet und / oder die Browsersitzung geschlossen ist.</p>
@@ -482,10 +482,10 @@
 	<p>Wesentlich</p>
 	</td>
 	<td width="139">
-	<p>Wenn der Systemadministrator die Option „Automatische SSL-Erkennung“ aktiviert, überprüft dieses Cookie, ob der SSL-Port geöffnet ist, um die automatische Umleitung von HTTP zu HTTPS zu ermöglichen.</p>
+	<p>Wenn der Systemadministrator die Option Â„Automatische SSL-ErkennungÂ“ aktiviert, Ã¼berprÃ¼ft dieses Cookie, ob der SSL-Port geÃ¶ffnet ist, um die automatische Umleitung von HTTP zu HTTPS zu ermÃ¶glichen.</p>
 	</td>
 	<td width="118">
-	<p>Während der ersten Seite besuchen</p>
+	<p>WÃ¤hrend der ersten Seite besuchen</p>
 	</td>
 	<td width="126">
 	<p>Wenn die Browsersitzung geschlossen ist.</p>
@@ -499,10 +499,10 @@
 	<p>Wesentlich</p>
 	</td>
 	<td width="139">
-	<p>Das Sprachcookie enthält die gewünschte Sprache.</p>
+	<p>Das Sprachcookie enthÃ¤lt die gewÃ¼nschte Sprache.</p>
 	</td>
 	<td width="118">
-	<p>Sobald auf ein Flag geklickt wird oder wenn eine URL mit einem <code>lang=...</code>Argument geöffnet wurde</p>
+	<p>Sobald auf ein Flag geklickt wird oder wenn eine URL mit einem <code>lang=...</code>Argument geÃ¶ffnet wurde</p>
 	</td>
 	<td width="126">
 	<p>Wenn die Browsersitzung geschlossen ist.</p>
@@ -511,24 +511,24 @@
 	</tbody>
 	</table>
 	<a name="external_javascripts"></a><h2><strong><u>Externe JavaScripts</u></strong></h2>
-	<p>Während des Ladens der Webseite werden verschiedene JavaScripts hinzugefügt, um die Benutzererfahrung zu verbessern und wichtige Funktionen hinzuzufügen. Die grundlegenden Skripte sind die JavaScript-Dateien von OIDplus selbst, die auf dem Server der jeweiligen OIDplus-Installation gespeichert sind.</p>
+	<p>WÃ¤hrend des Ladens der Webseite werden verschiedene JavaScripts hinzugefÃ¼gt, um die Benutzererfahrung zu verbessern und wichtige Funktionen hinzuzufÃ¼gen. Die grundlegenden Skripte sind die JavaScript-Dateien von OIDplus selbst, die auf dem Server der jeweiligen OIDplus-Installation gespeichert sind.</p>
 	<p>Es gibt zwei JavaScripts, die von einer externen Quelle / einem externen Server geladen werden:</p>
 	<h3><em><u>Polyfill (nur wenn Internet Explorer verwendet wird)</u></em></h3>
-	<p>Um OIDplus mit dem Webbrowser „Internet Explorer“ kompatibel zu machen, enthält OIDplus ein JavaScript-Skript von „polyfill.io“, einem Dienst der Financial Times.</p>
+	<p>Um OIDplus mit dem Webbrowser Â„Internet ExplorerÂ“ kompatibel zu machen, enthÃ¤lt OIDplus ein JavaScript-Skript von Â„polyfill.ioÂ“, einem Dienst der Financial Times.</p>
 	<p>Weitere Informationen finden Sie in den <a href="https://polyfill.io/v3/privacy-policy/">Datenschutzbestimmungen</a> und <a href="https://polyfill.io/v3/terms/">Nutzungsbedingungen</a> .</p>
 	<p>Das Polyfill-JavaScript ist nur enthalten, wenn OIDplus erkennt, dass der Webbrowser Internet Explorer ist.</p>
-	<p>Um die Polyfill-Funktion zu deaktivieren, muss der Systemadministrator die folgende Zeile in die Konfigurationsdatei "userdata / baseconfig / config.inc.php" im Ordner der OIDplus-Installation einfügen.</p>
+	<p>Um die Polyfill-Funktion zu deaktivieren, muss der Systemadministrator die folgende Zeile in die Konfigurationsdatei "userdata / baseconfig / config.inc.php" im Ordner der OIDplus-Installation einfÃ¼gen.</p>
 	<p><code>OIDplus::baseConfig()-&gt;setValue('DISABLE_MSIE_COMPAT', true);</code></p>
-	<p>Das Hinzufügen dieser Zeile auf der Serverseite und / oder das Blockieren des JavaScript auf der Clientseite führt dazu, dass die Seite im Webbrowser „Internet Explorer“ nicht funktioniert.</p>
+	<p>Das HinzufÃ¼gen dieser Zeile auf der Serverseite und / oder das Blockieren des JavaScript auf der Clientseite fÃ¼hrt dazu, dass die Seite im Webbrowser Â„Internet ExplorerÂ“ nicht funktioniert.</p>
 	<h3><em><u>ReCAPTCHA (nur wenn "ReCAPTCHA" aktiviert ist)</u></em></h3>
-	<p>Um vertrauliche Funktionen von OIDplus (z. B. das Anmeldeformular) vor Hackern zu schützen, kann der Systemadministrator "ReCAPTCHA" aktivieren, einen Dienst von Google. Vor dem Aktivieren von ReCAPTCHA in den OIDplus-Einstellungen muss der Systemadministrator einen API-Schlüssel von Google anfordern. Die Verwendung von ReCAPTCHA wird wahrscheinlich zusätzliche Cookies einführen, die außerhalb der Kontrolle von OIDplus liegen.</p>
+	<p>Um vertrauliche Funktionen von OIDplus (z. B. das Anmeldeformular) vor Hackern zu schÃ¼tzen, kann der Systemadministrator "ReCAPTCHA" aktivieren, einen Dienst von Google. Vor dem Aktivieren von ReCAPTCHA in den OIDplus-Einstellungen muss der Systemadministrator einen API-SchlÃ¼ssel von Google anfordern. Die Verwendung von ReCAPTCHA wird wahrscheinlich zusÃ¤tzliche Cookies einfÃ¼hren, die auÃŸerhalb der Kontrolle von OIDplus liegen.</p>
 	<p>Weitere Informationen finden Sie in <a href="https://policies.google.com/privacy">den Datenschutzbestimmungen</a> und <a href="https://policies.google.com/terms">Nutzungsbedingungen von </a><a href="https://policies.google.com/privacy">Google</a> .</p>
-	<p>Wenn der Systemadministrator die ReCAPTCHA-Funktion nicht aktiviert hat, wird überhaupt kein externes Skript eingefügt.</p>
-	<p>Wenn die Funktion aktiviert ist, führt das Blockieren des ReCAPTCHA-JavaScript auf der Clientseite dazu, dass verschiedene Funktionen (wie das Anmeldeformular) nicht funktionieren.</p>
-	<a name="additional_security"></a><h2><strong><u>Zusätzliche Sicherheits- / Zugriffskontrollen</u></strong></h2>
-	<p>Systemadministratoren können andere Methoden auswählen, um den öffentlichen Zugriff zu deaktivieren, z. B. mithilfe von Firewalls (sodass Clients überhaupt nicht auf den Server zugreifen können) oder indem Sie einen Kennwortschutz auf der Ebene der HTTP-Webserversoftware einrichten (z. B. "Basic Auth") Apache, damit die Clients nicht auf das Verzeichnis zugreifen können, in dem OIDplus installiert ist).</p>
-	<a name="encrypted_connections"></a><h2><strong><u>Verschlüsselte Netzwerkverbindungen</u></strong></h2>
-	<p>Der Serveradministrator ist für die Sicherung der Netzwerkverbindungen mit „HTTPS“ verantwortlich. Dies erfolgt auf HTTP-Webserverebene (dh einem Apache-Modul / einer Apache-Einstellung) und unabhängig von OIDplus.</p>
+	<p>Wenn der Systemadministrator die ReCAPTCHA-Funktion nicht aktiviert hat, wird Ã¼berhaupt kein externes Skript eingefÃ¼gt.</p>
+	<p>Wenn die Funktion aktiviert ist, fÃ¼hrt das Blockieren des ReCAPTCHA-JavaScript auf der Clientseite dazu, dass verschiedene Funktionen (wie das Anmeldeformular) nicht funktionieren.</p>
+	<a name="additional_security"></a><h2><strong><u>ZusÃ¤tzliche Sicherheits- / Zugriffskontrollen</u></strong></h2>
+	<p>Systemadministratoren kÃ¶nnen andere Methoden auswÃ¤hlen, um den Ã¶ffentlichen Zugriff zu deaktivieren, z. B. mithilfe von Firewalls (sodass Clients Ã¼berhaupt nicht auf den Server zugreifen kÃ¶nnen) oder indem Sie einen Kennwortschutz auf der Ebene der HTTP-Webserversoftware einrichten (z. B. "Basic Auth") Apache, damit die Clients nicht auf das Verzeichnis zugreifen kÃ¶nnen, in dem OIDplus installiert ist).</p>
+	<a name="encrypted_connections"></a><h2><strong><u>VerschlÃ¼sselte Netzwerkverbindungen</u></strong></h2>
+	<p>Der Serveradministrator ist fÃ¼r die Sicherung der Netzwerkverbindungen mit Â„HTTPSÂ“ verantwortlich. Dies erfolgt auf HTTP-Webserverebene (dh einem Apache-Modul / einer Apache-Einstellung) und unabhÃ¤ngig von OIDplus.</p>
 </body>
 
 </html>

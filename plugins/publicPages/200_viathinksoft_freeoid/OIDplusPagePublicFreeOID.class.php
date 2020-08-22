@@ -201,6 +201,13 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				} else {
 					$tos = file_get_contents(__DIR__ . '/tos.html');
 				}
+
+				// make sure the program works even if the user provided HTML is not UTF-8
+				$tos = iconv(mb_detect_encoding($out['text'], mb_detect_order(), true), 'UTF-8//IGNORE', $tos);
+
+				$bom = pack('H*','EFBBBF');
+				$tos = preg_replace("/^$bom/", '', $tos);
+
 				$tos = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $tos);
 				if ($obj) {
 					$tos = str_replace('{{ROOT_OID}}', $obj->getDotNotation(), $tos);

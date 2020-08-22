@@ -114,15 +114,15 @@ function get_php_L_strings($cont) {
 	$tokens = token_get_all($cont);
 	$activated = 0;
 	foreach ($tokens as $token) {
-	    if (is_array($token)) {
-	    	if (($token[0] == T_STRING) && ($token[1] == '_L')) {
-	    		$activated = 1;
-		} else if (($activated == 1) && ($token[0] == T_CONSTANT_ENCAPSED_STRING)) {
-			$tmp = stripcslashes($token[1]);
-			$out[] = substr($tmp,1,strlen($tmp)-2);
-	    		$activated = 0;
+		if (is_array($token)) {
+			if (($token[0] == T_STRING) && ($token[1] == '_L')) {
+				$activated = 1;
+			} else if (($activated == 1) && ($token[0] == T_CONSTANT_ENCAPSED_STRING)) {
+				$tmp = stripcslashes($token[1]);
+				$out[] = substr($tmp,1,strlen($tmp)-2);
+				$activated = 0;
+			}
 		}
-	    }
 	}
 	return $out;
 }
