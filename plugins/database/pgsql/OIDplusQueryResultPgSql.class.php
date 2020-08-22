@@ -40,12 +40,12 @@ class OIDplusQueryResultPgSql extends OIDplusQueryResult {
 	}
 
 	public function num_rows(): int {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		return pg_num_rows($this->res);
 	}
 
 	public function fetch_array()/*: ?array*/ {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		$ret = pg_fetch_array($this->res, null, PGSQL_ASSOC);
 		if ($ret === false) $ret = null;
 		if (!is_null($ret)) {
@@ -60,7 +60,7 @@ class OIDplusQueryResultPgSql extends OIDplusQueryResult {
 	}
 
 	public function fetch_object()/*: ?object*/ {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		$ret = pg_fetch_object($this->res);
 		if ($ret === false) $ret = null;
 		if (!is_null($ret)) {

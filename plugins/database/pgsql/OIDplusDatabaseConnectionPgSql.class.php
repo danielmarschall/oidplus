@@ -39,7 +39,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 			}
 		} else {
 			if (!is_array($prepared_args)) {
-				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
+				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
 			}
 
 			// convert ? ? ? to $1 $2 $3
@@ -54,7 +54,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 				$res = @pg_prepare($this->conn, $prepare_name, $sql);
 				if ($res === false) {
 					$this->last_error = pg_last_error($this->conn);
-					throw new OIDplusSQLException($sql, 'Cannot prepare statement: '.$this->error());
+					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
 				}
 				$this->already_prepared[] = $prepare_name;
 			}
@@ -87,7 +87,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 	}
 
 	protected function doConnect()/*: void*/ {
-		if (!function_exists('pg_connect')) throw new OIDplusConfigInitializationException('PHP extension "PostgreSQL" not installed');
+		if (!function_exists('pg_connect')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','PostgreSQL'));
 
 		// Try connecting to the database
 		ob_start();
@@ -107,7 +107,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 		}
 
 		if (!$this->conn) {
-			throw new OIDplusConfigInitializationException('Connection to the database failed! ' . strip_tags($err));
+			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' ' . strip_tags($err));
 		}
 
 		$this->already_prepared = array();
@@ -138,7 +138,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 	}
 
 	public function transaction_begin()/*: void*/ {
-		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
+		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		$this->query('begin transaction');
 		$this->intransaction = true;
 	}
@@ -160,7 +160,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
 		$slang = OIDplus::getSqlSlangPlugin('pgsql');
 		if (is_null($slang)) {
-			throw new OIDplusConfigInitializationException("SQL-Slang plugin 'pgsql' is missing. Please check if it exists in the directory 'plugin/sqlSlang'. If it is not existing, please recover it from a SVN snapshot or OIDplus ZIP file.");
+			throw new OIDplusConfigInitializationException(_L('SQL-Slang plugin "%1" is missing. Please check if it exists in the directory "plugin/sqlSlang". If it is not existing, please recover it from an SVN snapshot or OIDplus ZIP file.','pgsql'));
 		}
 		return $slang;
 	}

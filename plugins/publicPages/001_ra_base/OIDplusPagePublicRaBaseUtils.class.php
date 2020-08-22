@@ -32,14 +32,14 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 			$ra_logged_in = OIDplus::authUtils()->isRaLoggedIn($email);
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn() && !$ra_logged_in) {
-				throw new OIDplusException('Authentication error. Please log in.');
+				throw new OIDplusException(_L('Authentication error. Please log in.'));
 			}
 
 			if ($ra_logged_in) OIDplus::authUtils()->raLogout($email);
 
 			$ra = new OIDplusRA($email);
 			if (!$ra->existing()) {
-				throw new OIDplusException("RA '$email' does not exist.");
+				throw new OIDplusException(_L('RA "%1" does not exist.',$email));
 			}
 			$ra->delete();
 			$ra = null;
@@ -48,7 +48,7 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException("Unknown action ID");
+			throw new OIDplusException(_L('Unknown action ID'));
 		}
 
 	}
@@ -57,7 +57,7 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 		// Will be used by: plugins admin-130, public-091, public-200, ra-092, ra-101
 		OIDplus::config()->prepareConfigKey('ra_min_password_length', 'Minimum length for RA passwords', '6', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 1)) {
-				throw new OIDplusException("Please enter a valid password length.");
+				throw new OIDplusException(_L('Please enter a valid password length.'));
 			}
 		});
 	}

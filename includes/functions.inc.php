@@ -86,7 +86,7 @@ function originHeaders() {
 function get_calling_function() {
 	$ex = new Exception();
 	$trace = $ex->getTrace();
-	if (!isset($trace[2])) return '(main)';
+	if (!isset($trace[2])) return _L('(main)');
 	$final_call = $trace[2];
 	return $final_call['file'].':'.$final_call['line'].'/'.$final_call['function'].'()';
 }
@@ -126,6 +126,48 @@ if (!function_exists('mb_wordwrap')) {
 	}
 }
 
+function my_vsprintf($str, $args) {
+        $n = 1;
+        foreach ($args as $val) {
+                $str = str_replace("%$n", $val, $str);
+                $n++;
+        }
+        return $str;
+}
+
 function _L($str, ...$sprintfArgs) {
-	return vsprintf(OIDplus::getText($str), $sprintfArgs);
+	$lang = OIDplus::getCurrentLang();
+
+	static $translation_array = array();
+	static $translation_loaded = null;
+	if ($lang != $translation_loaded) {
+		$good = true;
+		if (strpos($lang,'/') !== false) $good = false; // prevent attack (but actually, the sanitization in getCurrentLang should work)
+		if (strpos($lang,'\\') !== false) $good = false; // prevent attack (but actually, the sanitization in getCurrentLang should work)
+		if (strpos($lang,'..') !== false) $good = false; // prevent attack (but actually, the sanitization in getCurrentLang should work)
+		$translation_file = __DIR__.'/../plugins/language/'.$lang.'/messages.xml';
+		if ($good && !file_exists($translation_file)) $good = false;
+		if ($good) {
+			$xml = simplexml_load_string(file_get_contents($translation_file));
+			foreach ($xml->message as $msg) {
+				$src = trim($msg->source->__toString());
+				$dst = trim($msg->target->__toString());
+				$translation_array[$src] = $dst;
+			}
+			$translation_loaded = $lang;
+		}
+	}
+
+	if ($lang != $translation_loaded) {
+		// Something bad happened (e.g. attack or message file not found)
+		$res = $str;
+	} else {
+		$res = isset($translation_array[$str]) && !empty($translation_array[$str]) ? $translation_array[$str] : $str;
+	}
+
+	$res = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $res);
+
+	$res = my_vsprintf($res, $sprintfArgs);
+
+	return $res;
 }

@@ -188,7 +188,7 @@ class OIDplusLogger {
 		// and the logbook of the RA owning OID x.
 		$maskcodes_ary = self::split_maskcodes($maskcodes);
 		if ($maskcodes_ary === false) {
-			throw new OIDplusException("Invalid maskcode '$maskcodes' (failed to split)");
+			throw new OIDplusException(_L('Invalid maskcode "%1" (failed to split)',$maskcodes));
 		}
 		foreach ($maskcodes_ary as list($sevs,$maskcode)) {
 			// At the beginning of each mask code, you can define a severity.
@@ -256,7 +256,7 @@ class OIDplusLogger {
 						$severity = 5;
 						break;
 					default:
-						throw new OIDplusException("Invalid maskcode '$maskcodes' (Unknown severity '$sev')");
+						throw new OIDplusException(_L('Invalid maskcode "%1" (Unknown severity "%2")',$maskcodes,$sev));
 				}
 			}
 
@@ -264,19 +264,19 @@ class OIDplusLogger {
 			if (preg_match('@^OID\((.+)\)$@ismU', $maskcode, $m)) {
 				$object_id = $m[1];
 				$objects[] = array($severity, $object_id);
-				if ($object_id == '') throw new OIDplusException("OID logger mask requires OID");
+				if ($object_id == '') throw new OIDplusException(_L('OID logger mask requires OID'));
 			}
 
 			// SUPOID(x)	Save log entry into the logbook of: Parent of object "x"
 			else if (preg_match('@^SUPOID\((.+)\)$@ismU', $maskcode, $m)) {
 				$object_id         = $m[1];
-				if ($object_id == '') throw new OIDplusException("SUPOID logger mask requires OID");
+				if ($object_id == '') throw new OIDplusException(_L('SUPOID logger mask requires OID'));
 				$obj = OIDplusObject::parse($object_id);
 				if ($obj) {
 					$parent = $obj->getParent()->nodeId();
 					$objects[] = array($severity, $parent);
 				} else {
-					throw new OIDplusException("SUPOID logger mask: Invalid object '$object_id'");
+					throw new OIDplusException(_L('SUPOID logger mask: Invalid object %1',$object_id));
 				}
 			}
 
@@ -285,7 +285,7 @@ class OIDplusLogger {
 			else if (preg_match('@^OIDRA\((.+)\)([\?\!])$@ismU', $maskcode, $m)) {
 				$object_id         = $m[1];
 				$ra_need_login     = $m[2] == '?';
-				if ($object_id == '') throw new OIDplusException("OIDRA logger mask requires OID");
+				if ($object_id == '') throw new OIDplusException(_L('OIDRA logger mask requires OID'));
 				$obj = OIDplusObject::parse($object_id);
 				if ($obj) {
 					if ($ra_need_login) {
@@ -299,7 +299,7 @@ class OIDplusLogger {
 						}
 					}
 				} else {
-					throw new OIDplusException("OIDRA logger mask: Invalid object '$object_id'");
+					throw new OIDplusException(_L('OIDRA logger mask: Invalid object "%1"',$object_id));
 				}
 			}
 
@@ -308,7 +308,7 @@ class OIDplusLogger {
 			else if (preg_match('@^SUPOIDRA\((.+)\)([\?\!])$@ismU', $maskcode, $m)) {
 				$object_id         = $m[1];
 				$ra_need_login     = $m[2] == '?';
-				if ($object_id == '') throw new OIDplusException("SUPOIDRA logger mask requires OID");
+				if ($object_id == '') throw new OIDplusException(_L('SUPOIDRA logger mask requires OID'));
 				$obj = OIDplusObject::parse($object_id);
 				if ($obj) {
 					if ($ra_need_login) {
@@ -322,7 +322,7 @@ class OIDplusLogger {
 						}
 					}
 				} else {
-					throw new OIDplusException("SUPOIDRA logger mask: Invalid object '$object_id'");
+					throw new OIDplusException(_L('SUPOIDRA logger mask: Invalid object "%1"',$object_id));
 				}
 			}
 
@@ -353,7 +353,7 @@ class OIDplusLogger {
 
 			// Unexpected
 			else {
-				throw new OIDplusException("Unexpected logger component '$maskcode' in mask code '$maskcodes'");
+				throw new OIDplusException(_L('Unexpected logger component "%1" in mask code "%2"',$maskcode,$maskcodes));
 			}
 		}
 

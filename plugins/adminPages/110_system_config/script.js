@@ -26,17 +26,16 @@ function crudActionConfigUpdate(name) {
 			value:document.getElementById('config_'+name).value,
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
-				alert("Update OK");
+				alert(_L("Update OK"));
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});
 }
-

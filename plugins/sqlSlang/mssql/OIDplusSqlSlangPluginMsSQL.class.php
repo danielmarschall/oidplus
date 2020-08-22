@@ -27,7 +27,7 @@ class OIDplusSqlSlangPluginMsSQL extends OIDplusSqlSlangPlugin {
 
 		$order = strtolower($order);
 		if (($order != 'asc') && ($order != 'desc')) {
-			throw new OIDplusException("Invalid order '$order' (needs to be 'asc' or 'desc')");
+			throw new OIDplusException(_L('Invalid order "%1" (needs to be "asc" or "desc")',$order));
 		}
 
 		$out = array();

@@ -44,7 +44,7 @@ class VtsBrowserDownload {
 
 		$file_extension = pathinfo($file, PATHINFO_EXTENSION);
 
-		if(!is_readable($file)) throw new Exception('File not found or inaccessible!');
+		if(!is_readable($file)) throw new Exception(_L('File not found or inaccessible!'));
 		$size = filesize($file);
 		$name = rawurldecode(basename($file));
 
@@ -72,7 +72,7 @@ class VtsBrowserDownload {
 				break;
 
 			default:
-				throw new Exception('Invalid value for inline_mode');
+				throw new Exception(_L('Invalid value for inline_mode'));
 				break;
 		}
 
@@ -144,7 +144,7 @@ class VtsBrowserDownload {
 			}
 			fclose($file);
 		} else {
-			throw new Exception("Cannot open file $file");
+			throw new Exception(_L('Cannot open file %1',$file));
 		}
 		return((connection_status() == 0) and !connection_aborted());
 	}

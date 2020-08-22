@@ -28,12 +28,12 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:systeminfo') {
 			$handled = true;
-			$out['title'] = 'System information';
+			$out['title'] = _L('System information');
 			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
 			}
 
@@ -41,54 +41,63 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 
 			# ---
 
-			$out['text'] .= '<h2>OIDplus</h2>';
+			$out['text'] .= '<h2>'._L('OIDplus').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<th width="50%">Attribute</th>';
-			$out['text'] .= '		<th width="50%">Value</th>';
+			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
+			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
+
 			$sysid_oid = OIDplus::getSystemId(true);
-			if (!$sysid_oid) $sysid_oid = 'unknown';
-			$out['text'] .= '		<td>System OID</td>';
-			$out['text'] .= '		<td>'.$sysid_oid.'</td>';
+			$out['text'] .= '		<td>'._L('System OID').'</td>';
+			$out['text'] .= '		<td>'.(!$sysid_oid ? '<i>'._L('unknown').'</i>' : htmlentities($sysid_oid)).'</td>';
 			$out['text'] .= '	</tr>';
+
 			$sys_url = OIDplus::getSystemUrl();
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>System URL</td>';
-			$out['text'] .= '		<td>'.$sys_url.'</td>';
+			$out['text'] .= '		<td>'._L('System URL').'</td>';
+			$out['text'] .= '		<td>'.htmlentities($sys_url).'</td>';
 			$out['text'] .= '	</tr>';
+
 			$sys_ver = OIDplus::getVersion();
-			if (!$sys_ver) $sys_ver = 'unknown';
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>System version</td>';
-			$out['text'] .= '		<td>'.$sys_ver.'</td>';
+			$out['text'] .= '		<td>'._L('System version').'</td>';
+			$out['text'] .= '		<td>'.(!$sys_ver ? '<i>'._L('unknown').'</i>' : htmlentities($sys_ver)).'</td>';
 			$out['text'] .= '	</tr>';
+
 			$sys_install_type = OIDplus::getInstallType();
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>Installation type</td>';
-			$out['text'] .= '		<td>'.$sys_install_type.'</td>';
+			$out['text'] .= '		<td>'._L('Installation type').'</td>';
+			$out['text'] .= '		<td>'.htmlentities($sys_install_type).'</td>';
 			$out['text'] .= '	</tr>';
+
 			$sys_title = OIDplus::config()->getValue('system_title');
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>System title</td>';
-			$out['text'] .= '		<td>'.$sys_title.'</td>';
+			$out['text'] .= '		<td>'._L('System title').'</td>';
+			$out['text'] .= '		<td>'.htmlentities($sys_title).'</td>';
 			$out['text'] .= '	</tr>';
+
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('System directory').'</td>';
+			$out['text'] .= '		<td>'.(isset($_SERVER['SCRIPT_FILENAME']) ? htmlentities(dirname($_SERVER['SCRIPT_FILENAME'])) : '<i>'._L('unknown').'</i>').'</td>';
+			$out['text'] .= '	</tr>';
+
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
 
 			# ---
 
-			$out['text'] .= '<h2>PHP</h2>';
+			$out['text'] .= '<h2>'._L('PHP').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<th width="50%">Attribute</th>';
-			$out['text'] .= '		<th width="50%">Value</th>';
+			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
+			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>PHP version</td>';
+			$out['text'] .= '		<td>'._L('PHP version').'</td>';
 			$out['text'] .= '		<td>'.phpversion().'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</table>';
@@ -96,36 +105,68 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 
 			# ---
 
-			$out['text'] .= '<h2>Webserver</h2>';
+			$out['text'] .= '<h2>'._L('Webserver').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<th width="50%">Attribute</th>';
-			$out['text'] .= '		<th width="50%">Value</th>';
+			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
+			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>Server software</td>';
-			$out['text'] .= '		<td>'.(isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : 'unknown').'</td>';
+			$out['text'] .= '		<td>'._L('Server software').'</td>';
+			$out['text'] .= '		<td>'.(isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '<i>'._L('unknown').'</i>').'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
 
 			# ---
 
-			$out['text'] .= '<h2>Database</h2>';
+			$out['text'] .= '<h2>'._L('Operating System').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<th width="50%">Attribute</th>';
-			$out['text'] .= '		<th width="50%">Value</th>';
+			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
+			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>Database provider</td>';
+			$out['text'] .= '		<td>'._L('Operating System').'</td>';
+			$out['text'] .= '		<td>'.htmlentities(php_uname("s").' '.php_uname("r").' '.php_uname("v")).'</td>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Machine type').'</td>';
+			$out['text'] .= '		<td>'.htmlentities(php_uname("m")).'</td>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Hostname').'</td>';
+			$out['text'] .= '		<td>'.htmlentities(php_uname("n")).'</td>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '</table>';
+			$out['text'] .= '</div></div>';
+
+			# ---
+
+			$out['text'] .= '<h2>'._L('Database').'</h2>';
+			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
+			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
+			$out['text'] .= '	</tr>';
+
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Database provider').'</td>';
 			$out['text'] .= '		<td>'.OIDplus::db()->getPlugin()->getManifest()->getName().'</td>';
 			$out['text'] .= '	</tr>';
+
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>SQL slang</td>';
+			$out['text'] .= '		<td>'._L('SQL slang').'</td>';
 			$out['text'] .= '		<td>'.OIDplus::db()->getSlang()->getManifest()->getName().'</td>';
+			$out['text'] .= '	</tr>';
+
+			$table_prefix = OIDplus::baseConfig()->getValue('TABLENAME_PREFIX');
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Table name prefix').'</td>';
+			$out['text'] .= '		<td>'.(!empty($table_prefix) ? htmlentities($table_prefix) : '<i>'._L('none').'</i>').'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
@@ -149,7 +190,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 		$json[] = array(
 			'id' => 'oidplus:systeminfo',
 			'icon' => $tree_icon,
-			'text' => 'System information'
+			'text' => _L('System information')
 		);
 
 		return true;

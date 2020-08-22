@@ -26,19 +26,20 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePluginPublic {
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:contact') {
 			$handled = true;
-			$out['title'] = 'Contact administrator';
+			$out['title'] = _L('Contact administrator');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			if (empty(OIDplus::config()->getValue('admin_email'))) {
-				$out['text'] = '<p>The administrator of this OIDplus system has not entered a contact email address.';
+				$out['text'] = '<p>'._L('The administrator of this OIDplus system has not entered a contact email address.').'</p>';
 			} else {
-				$out['text'] = '<p>You can contact the administrator of this OIDplus system at this email address:</p><p><a href="mailto:'.htmlentities(OIDplus::config()->getValue('admin_email')).'">'.htmlentities(OIDplus::config()->getValue('admin_email')).'</a></p>';
+				$admin_email = OIDplus::config()->getValue('admin_email');
+				$out['text'] = '<p>'._L('You can contact the administrator of this OIDplus system at this email address').':</p><p><a href="mailto:'.htmlentities($admin_email).'">'.htmlentities($admin_email).'</a></p>';
 			}
 		}
 	}
 
 	public function publicSitemap(&$out) {
-		$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('oidplus:contact');
+		$out[] = 'oidplus:contact';
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
@@ -51,7 +52,7 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePluginPublic {
 		$json[] = array(
 			'id' => 'oidplus:contact',
 			'icon' => $tree_icon,
-			'text' => 'Contact administrator'
+			'text' => _L('Contact administrator')
 		);
 
 		return true;

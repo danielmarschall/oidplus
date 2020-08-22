@@ -38,19 +38,19 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	}
 
 	public function num_rows(): int {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		return $this->res->rowCount();
 	}
 
 	public function fetch_array()/*: ?array*/ {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		$ret = $this->res->fetch(PDO::FETCH_ASSOC);
 		if ($ret === false) $ret = null;
 		return $ret;
 	}
 
 	public function fetch_object()/*: ?object*/ {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		$ret = $this->res->fetch(PDO::FETCH_OBJ);
 		if ($ret === false) $ret = null;
 		return $ret;

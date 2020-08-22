@@ -23,11 +23,13 @@
  *    - Converted class into a single function and added that function into the phpsvnclient class
  */
 
+// TODO: Translate (OIDplus _L function)
+
 /**
  *  PHP SVN CLIENT
  *
- *  This class is a SVN client. It can perform read operations
- *  to a SVN server (over Web-DAV).
+ *  This class is an SVN client. It can perform read operations
+ *  to an SVN server (over Web-DAV).
  *  It can get directory files, file contents, logs. All the operaration
  *  could be done for a specific version or for the last version.
  *

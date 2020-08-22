@@ -32,11 +32,11 @@ class OIDplusDoi extends OIDplusObject {
 	}
 
 	public static function objectTypeTitle() {
-		return "Digital Object Identifier (DOI)";
+		return _L('Digital Object Identifier (DOI)');
 	}
 
 	public static function objectTypeTitleShort() {
-		return "DOI";
+		return _L('DOI');
 	}
 
 	public static function ns() {
@@ -60,7 +60,7 @@ class OIDplusDoi extends OIDplusObject {
 			// Parent is root, so $str is the base DOI (10.xxxx)
 			$base = $str;
 			if (!self::validBaseDoi($base)) {
-				throw new OIDplusException("Invalid DOI $base . It must have syntax 10.xxxx");
+				throw new OIDplusException(_L('Invalid DOI %1 . It must have syntax 10.xxxx',$base));
 			}
 			return 'doi:' . $base;
 		} else if (self::validBaseDoi($this->doi)) {
@@ -89,7 +89,7 @@ class OIDplusDoi extends OIDplusObject {
 	}
 
 	public function defaultTitle() {
-		return 'DOI ' . $this->doi;
+		return _L('DOI %1',$this->doi);
 	}
 
 	public function isLeafNode() {
@@ -104,16 +104,16 @@ class OIDplusDoi extends OIDplusObject {
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
 			if ($res->num_rows() > 0) {
-				$content = 'Please select an DOI in the tree view at the left to show its contents.';
+				$content = _L('Please select an DOI in the tree view at the left to show its contents.');
 			} else {
-				$content = 'Currently, no DOIs are registered in the system.';
+				$content = _L('Currently, no DOIs are registered in the system.');
 			}
 
 			if (!$this->isLeafNode()) {
 				if (OIDplus::authUtils()::isAdminLoggedIn()) {
-					$content .= '<h2>Manage your DOIs</h2>';
+					$content .= '<h2>'._L('Manage your DOIs').'</h2>';
 				} else {
-					$content .= '<h2>Available DOIs</h2>';
+					$content .= '<h2>'._L('Available DOIs').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}
@@ -121,15 +121,15 @@ class OIDplusDoi extends OIDplusObject {
 			$title = $this->getTitle();
 
 			$pure = explode(':',$this->nodeId())[1];
-			$content = '<h3><a target="_blank" href="https://dx.doi.org/'.htmlentities($pure).'">Resolve '.htmlentities($pure).'</a></h3>';
+			$content = '<h3><a target="_blank" href="https://dx.doi.org/'.htmlentities($pure).'">'._L('Resolve %1',htmlentities($pure)).' </a></h3>';
 
-			$content .= '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
+			$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
-					$content .= '<h2>Create or change subsequent objects</h2>';
+					$content .= '<h2>'._L('Create or change subsequent objects').'</h2>';
 				} else {
-					$content .= '<h2>Subsequent objects</h2>';
+					$content .= '<h2>'._L('Subsequent objects').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}

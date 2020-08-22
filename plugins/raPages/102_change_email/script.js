@@ -26,24 +26,24 @@ function changeRaEmailFormOnSubmit(isadmin) {
 			new_email: $("#new_email").val(),
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success: function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
 				if (isadmin) {
-					alert("eMail adress of RA changed");
+					alert(_L("eMail address of RA changed"));
 					//openOidInPanel('oidplus:rainfo$'+$("#new_email").val(),true);
 					// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs
 					window.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#new_email").val());
 				} else {
-					alert("Verification eMail sent");
+					alert(_L("Verification eMail sent"));
 					//window.location.href = '?goto=oidplus:system';
 					//reloadContent();
 				}
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});
@@ -64,17 +64,17 @@ function activateNewRaEmailFormOnSubmit() {
 			timestamp: $("#timestamp").val()
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success: function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
-				alert("Done");
+				alert(_L("Done"));
 				window.location.href = '?goto=oidplus:system';
 				//reloadContent();
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});

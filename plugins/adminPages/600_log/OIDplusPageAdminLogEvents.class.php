@@ -25,12 +25,12 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 	public function gui($id, &$out, &$handled) {
 		if ($id == 'oidplus:system_log') {
 			$handled = true;
-			$out['title'] = "All log messages";
+			$out['title'] = _L('All log messages');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
 			}
 
@@ -48,7 +48,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 						$users[] = $row2['username'];
 						if ($row2['username'] == 'admin') $severity = $row2['severity'];
 					}
-					$users = count($users) > 0 ? "; affected users: ".implode(', ',$users) : '';
+					$users = count($users) > 0 ? '; '._L('affected users: %1',implode(', ',$users)) : '';
 					// ---
 					$objects = array();
 					$res2 = OIDplus::db()->query("select object, severity from ###log_object ".
@@ -56,15 +56,15 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 					while ($row2 = $res2->fetch_array()) {
 						$objects[] = $row2['object'];
 					}
-					$objects = count($objects) > 0 ? "; affected objects: ".implode(', ',$objects) : '';
+					$objects = count($objects) > 0 ? '; '._L('affected objects: %1',implode(', ',$objects)) : '';
 					// ---
-					$addr = empty($row['addr']) ? 'no address' : $row['addr'];
+					$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
 					// ---
 					$out['text'] .= '<span class="severity_'.$severity.'">' . date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr.$users.$objects) . ")</span>\n";
 				}
 				$out['text'] .= '</pre>';
 			} else {
-				$out['text'] .= '<p>Currently there are no log entries</p>';
+				$out['text'] .= '<p>'._L('Currently there are no log entries').'</p>';
 			}
 
 			// TODO: List logs in a table instead of a <pre> text
@@ -84,7 +84,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 		$json[] = array(
 			'id' => 'oidplus:system_log',
 			'icon' => $tree_icon,
-			'text' => 'All log events'
+			'text' => _L('All log messages')
 		);
 
 		return true;

@@ -26,11 +26,11 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 		if ($actionID == 'import_xml_file') {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
-				throw new OIDplusException('You need to log in as administrator.');
+				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
 
 			if (!isset($_FILES['userfile'])) {
-				throw new OIDplusException('Please choose a file');
+				throw new OIDplusException(_L('Please choose a file.'));
 			}
 
 			$xml_contents = file_get_contents($_FILES['userfile']['tmp_name']);
@@ -59,7 +59,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 		} else if ($actionID == 'import_oidinfo_oid') {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
-				throw new OIDplusException('You need to log in as administrator.');
+				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
 
 			$oid = $params['oid'];
@@ -75,9 +75,9 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$signature = '';
 			if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 				if (!OIDplus::getPkiStatus()) {
-					throw new OIDplusException('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.');
+					throw new OIDplusException(_L('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.'));
 				} else {
-					throw new OIDplusException("Signature failed");
+					throw new OIDplusException(_L('Signature failed'));
 				}
 			}
 
@@ -94,14 +94,14 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			if (!($res = @curl_exec($ch))) {
-				throw new OIDplusException("Communication with ViaThinkSoft server failed: " . curl_error($ch));
+				throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
 			}
 			curl_close($ch);
 
 			$json = json_decode($res, true);
 
 			if (!$json) {
-				return array("status" => 1, "error" => 'JSON reply from ViaThinkSoft decoding error: ' . $res);
+				return array("status" => 1, "error" => _L('JSON reply from ViaThinkSoft decoding error: %1',$res));
 			}
 
 			if (isset($json['error']) || ($json['status'] != 0)) {
@@ -112,14 +112,14 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				if (count($errors) > 0) {
 					return array("status" => 1, "error" => implode("\n",$errors));
 				} else if ($count_imported_oids <> 1) {
-					return array("status" => 1, "error" => "Imported $count_imported_oids, but expected to import 1");
+					return array("status" => 1, "error" => _L('Imported %1, but expected to import 1',$count_imported_oids));
 				} else {
 					return array("status" => 0);
 				}
 
 			}
 		} else {
-			throw new OIDplusException("Unknown action ID");
+			throw new OIDplusException(_L('Unknown action ID'));
 		}
 	}
 
@@ -130,12 +130,12 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:oidinfo_compare_export') {
 			$handled = true;
-			$out['title'] = 'List OIDs in your system which are missing at oid-info.com';
+			$out['title'] = _L('List OIDs in your system which are missing at oid-info.com');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
 			}
 
@@ -150,9 +150,9 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$signature = '';
 			if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 				if (!OIDplus::getPkiStatus()) {
-					throw new OIDplusException('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.');
+					throw new OIDplusException(_L('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.'));
 				} else {
-					throw new OIDplusException("Signature failed");
+					throw new OIDplusException(_L('Signature failed'));
 				}
 			}
 
@@ -169,7 +169,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			if (!($res = @curl_exec($ch))) {
-				throw new OIDplusException("Communication with ViaThinkSoft server failed: " . curl_error($ch));
+				throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
 			}
 			curl_close($ch);
 
@@ -177,25 +177,25 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 			if (!$json) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = 'JSON reply from ViaThinkSoft decoding error: ' . $res;
+				$out['text'] = _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
 				return;
 			}
 
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:datatransfer').'><img src="img/arrow_back.png" width="16"> Go back to data transfer main page</a>'; // TODO: How to automatically jump to the "Export" tab?
+			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:datatransfer').'><img src="img/arrow_back.png" width="16"> '._L('Go back to data transfer main page').'</a>'; // TODO: How to automatically jump to the "Export" tab?
 
 			if (isset($json['error']) || ($json['status'] != 0)) {
-				$out['text'] .= '<p>Error: ' . htmlentities($json['error']) . '</p>';
+				$out['text'] .= '<p>'._L('Error: %1',htmlentities($json['error'])).'</p>';
 			} else {
 				// TODO: If roots were created or deleted recently, we must do a re-query of the registration, so that the "roots" information at the directory service gets refreshed
-				if (count($json['roots']) == 0) $out['text'] .= '<p>In order to use this feature, you need to have at least one (root) OID added in your system, and the system needs to report the newly added root to the directory service (the reporting interval is 1 hour).</p>';
+				if (count($json['roots']) == 0) $out['text'] .= '<p>'._L('In order to use this feature, you need to have at least one (root) OID added in your system, and the system needs to report the newly added root to the directory service (the reporting interval is 1 hour).').'</p>';
 				foreach ($json['roots'] as $root) {
 					$oid = $root['oid'];
-					$out['text'] .= '<h2>Root OID '.$oid.'</h2>';
+					$out['text'] .= '<h2>'._L('Root OID %1',$oid).'</h2>';
 					if ($root['verified']) {
 						$count = 0;
 						$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 						$out['text'] .= '<table class="table table-bordered table-striped">';
-						$out['text'] .= '<tr><th colspan="3">Actions</th><th>OID</th></tr>';
+						$out['text'] .= '<tr><th colspan="3">'._L('Actions').'</th><th>'._L('OID').'</th></tr>';
 
 						$lookup_nonoid = array();
 						$row_lookup = array();
@@ -275,7 +275,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 									$tmp_description = $row->comment;
 									$tmp_information = '';
 								} else {
-									$tmp_description = '<i>No description available</i>';
+									$tmp_description = '<i>No description available</i>'; // do not translate
 									$tmp_information = '';
 								}
 
@@ -283,10 +283,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 									$tmp_information .= '<br/><br/>';
 								}
 
-								$tmp_information .= 'See <a href="'.OIDplus::getSystemUrl(false).'?goto='.urlencode($id).'">more information</a>.';
+								$tmp_information .= 'See <a href="'.OIDplus::getSystemUrl(false).'?goto='.urlencode($id).'">more information</a>.'; // do not translate
 
 								if (explode(':',$id,2)[0] != 'oid') {
-									$tmp_information = "Object: $id\n\n" . $tmp_information;
+									$tmp_information = "Object: $id\n\n" . $tmp_information; // do not translate
 								}
 
 								$url .= "&description=".urlencode(self::repair_relative_links($tmp_description));
@@ -356,19 +356,19 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 								// Note: "Actions" is at the left, because it has a fixed width, so the user can continue clicking without the links moving if the OID length changes between lines
 								$out['text'] .= '<tr id="missing_oid_'.str_replace('.','_',$local_oid).'">'.
-								'<td><a '.OIDplus::gui()->link(isset($lookup_nonoid[$local_oid]) ? $lookup_nonoid[$local_oid] : 'oid:'.$local_oid, true).'>View local OID</a></td>'.
-								'<td><a href="javascript:removeMissingOid(\''.$local_oid.'\');">Ignore for now</a></td>'.
-								'<td><a target="_blank" href="'.$url.'">Add to oid-info.com manually</a></td>'.
+								'<td><a '.OIDplus::gui()->link(isset($lookup_nonoid[$local_oid]) ? $lookup_nonoid[$local_oid] : 'oid:'.$local_oid, true).'>'._L('View local OID').'</a></td>'.
+								'<td><a href="javascript:removeMissingOid(\''.$local_oid.'\');">'._L('Ignore for now').'</a></td>'.
+								'<td><a target="_blank" href="'.$url.'">'._L('Add to oid-info.com manually').'</a></td>'.
 								'<td>'.$local_oid.'</td>'.
 								'</tr>';
 							}
 						}
 						if ($count == 0) {
-							$out['text'] .= '<tr><td colspan="4">No missing OIDs found</td></tr>';
+							$out['text'] .= '<tr><td colspan="4">'._L('No missing OIDs found').'</td></tr>';
 						}
 						$out['text'] .= '</table></div></div>';
 					} else {
-						$out['text'] .= '<p>This root is not validated. Please send an email to '.$json['vts_verification_email'].' in order to request ownership verification of this root OID.</p>';
+						$out['text'] .= '<p>'._L('This root is not validated. Please send an email to %1 in order to request ownership verification of this root OID.',$json['vts_verification_email']).'</p>';
 					}
 				}
 			}
@@ -376,12 +376,12 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 		if ($id === 'oidplus:oidinfo_compare_import') {
 			$handled = true;
-			$out['title'] = 'List OIDs at oid-info.com which are missing in your system';
+			$out['title'] = _L('List OIDs at oid-info.com which are missing in your system');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
 			}
 
@@ -396,9 +396,9 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$signature = '';
 			if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 				if (!OIDplus::getPkiStatus()) {
-					throw new OIDplusException('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.');
+					throw new OIDplusException(_L('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.'));
 				} else {
-					throw new OIDplusException("Signature failed");
+					throw new OIDplusException(_L('Signature failed'));
 				}
 			}
 
@@ -415,7 +415,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			if (!($res = @curl_exec($ch))) {
-				throw new OIDplusException("Communication with ViaThinkSoft server failed: " . curl_error($ch));
+				throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
 			}
 			curl_close($ch);
 
@@ -423,11 +423,11 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 			if (!$json) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = 'JSON reply from ViaThinkSoft decoding error: ' . $res;
+				$out['text'] = _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
 				return;
 			}
 
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:datatransfer').'><img src="img/arrow_back.png" width="16"> Go back to data transfer main page</a>'; // TODO: How to automatically jump to the "Import" tab?
+			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:datatransfer').'><img src="img/arrow_back.png" width="16"> '._L('Go back to data transfer main page').'</a>'; // TODO: How to automatically jump to the "Import" tab?
 
 			$all_local_oids = array();
 			$res = OIDplus::db()->query("select id from ###objects");
@@ -447,39 +447,39 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 
 			if (isset($json['error']) || ($json['status'] != 0)) {
-				$out['text'] .= '<p>Error: ' . htmlentities($json['error']) . '</p>';
+				$out['text'] .= '<p>'._L('Error: %1',htmlentities($json['error'])).'</p>';
 			} else {
 				// TODO: If roots were created or deleted recently, we must do a re-query of the registration, so that the "roots" information at the directory service gets refreshed
-				if (count($json['roots']) == 0) $out['text'] .= '<p>In order to use this feature, you need to have at least one (root) OID added in your system, and the system needs to report the newly added root to the directory service (the reporting interval is 1 hour).</p>';
+				if (count($json['roots']) == 0) $out['text'] .= '<p>'._L('In order to use this feature, you need to have at least one (root) OID added in your system, and the system needs to report the newly added root to the directory service (the reporting interval is 1 hour).').'</p>';
 				foreach ($json['roots'] as $root) {
 					$oid = $root['oid'];
-					$out['text'] .= '<h2>Root OID '.$oid.'</h2>';
+					$out['text'] .= '<h2>'._L('Root OID %1',$oid).'</h2>';
 					// TODO: "Import all" button
 					if ($root['verified']) {
 						$count = 0;
 						$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 						$out['text'] .= '<table class="table table-bordered table-striped">';
-						$out['text'] .= '<tr><th colspan="4">Actions</th><th>OID</th></tr>';
+						$out['text'] .= '<tr><th colspan="4">'._L('Actions').'</th><th>'._L('OID').'</th></tr>';
 						natsort($root['children']);
 						foreach ($root['children'] as $child_oid) {
 							if (!in_array($child_oid, $all_local_oids)) {
 								$count++;
 								// Note: "Actions" is at the left, because it has a fixed width, so the user can continue clicking without the links moving if the OID length changes between lines
 								$out['text'] .= '<tr id="missing_oid_'.str_replace('.','_',$child_oid).'">'.
-								'<td><a target="_blank" href="http://www.oid-info.com/get/'.$child_oid.'">View OID at oid-info.com</a></td>'.
-								'<td><a href="javascript:removeMissingOid(\''.$child_oid.'\');">Ignore for now</a></td>'.
-								'<td><a href="mailto:admin@oid-info.com">Report illegal OID</a></td>'.
-								(strpos($child_oid,'1.3.6.1.4.1.37476.30.9.') === 0 ? '<td>&nbsp;</td>' : '<td><a href="javascript:importMissingOid(\''.$child_oid.'\');">Import OID</a></td>').
+								'<td><a target="_blank" href="http://www.oid-info.com/get/'.$child_oid.'">'._L('View OID at oid-info.com').'</a></td>'.
+								'<td><a href="javascript:removeMissingOid(\''.$child_oid.'\');">'._L('Ignore for now').'</a></td>'.
+								'<td><a href="mailto:admin@oid-info.com">'._L('Report illegal OID').'</a></td>'.
+								(strpos($child_oid,'1.3.6.1.4.1.37476.30.9.') === 0 ? '<td>&nbsp;</td>' : '<td><a href="javascript:importMissingOid(\''.$child_oid.'\');">'._L('Import OID').'</a></td>').
 								'<td>'.$child_oid.'</td>'.
 								'</tr>';
 							}
 						}
 						if ($count == 0) {
-							$out['text'] .= '<tr><td colspan="5">No extra OIDs found</td></tr>';
+							$out['text'] .= '<tr><td colspan="5">'._L('No extra OIDs found').'</td></tr>';
 						}
 						$out['text'] .= '</table></div></div>';
 					} else {
-						$out['text'] .= '<p>This root is not validated. Please send an email to '.$json['vts_verification_email'].' in order to request ownership verification of this root OID.</p>';
+						$out['text'] .= '<p>'._L('This root is not validated. Please send an email to %1 in order to request ownership verification of this root OID.',$json['vts_verification_email']).'</p>';
 					}
 				}
 			}
@@ -487,12 +487,12 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 		if ($id === 'oidplus:datatransfer') {
 			$handled = true;
-			$out['title'] = 'Data Transfer';
+			$out['title'] = _L('Data Transfer');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
 			}
 
@@ -502,43 +502,43 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<br>';
 			$out['text'] .= '<ul class="nav nav-pills">';
 			$out['text'] .= '			<li class="active">';
-			$out['text'] .= '			<a href="#1a" data-toggle="tab">Export</a>';
+			$out['text'] .= '			<a href="#1a" data-toggle="tab">'._L('Export').'</a>';
 			$out['text'] .= '			</li>';
-			$out['text'] .= '			<li><a href="#2a" data-toggle="tab">Import</a>';
+			$out['text'] .= '			<li><a href="#2a" data-toggle="tab">'._L('Import').'</a>';
 			$out['text'] .= '			</li>';
 			$out['text'] .= '		</ul>';
 			$out['text'] .= '			<div class="tab-content clearfix">';
 			$out['text'] .= '			  <div class="tab-pane active" id="1a">';
 			// ---------------- Start "Export" tab
-			$out['text'] .= '<h2>Generate XML file containing all OIDs</h2>';
-			$out['text'] .= '<p>These XML files are following the <a href="http://www.oid-info.com/oid.xsd" target="_blank">XML schema</a> of <b>oid-info.com</b>. They can be used for various purposes though.</p>';
-			$out['text'] .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__).'oidinfo_export.php\',\'_blank\')" value="Generate XML (all)"></p>';
-			$out['text'] .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__).'oidinfo_export.php?online=1\',\'_blank\')" value="Generate XML (only OIDs which do not exist at oid-info.com)"></p>';
-			$out['text'] .= '<p><a href="http://www.oid-info.com/submit.htm" target="_blank">Upload XML files manually to oid-info.com</a></p>';
-			$out['text'] .= '<br><p>Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.</p>';
-			$out['text'] .= '<h2>Automatic export to oid-info.com</h2>';
+			$out['text'] .= '<h2>'._L('Generate XML file containing all OIDs').'</h2>';
+			$out['text'] .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>. They can be used for various purposes though.','href="http://www.oid-info.com/oid.xsd" target="_blank"').'</p>';
+			$out['text'] .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__).'oidinfo_export.php\',\'_blank\')" value="'._L('Generate XML (all OIDs)').'"></p>';
+			$out['text'] .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__).'oidinfo_export.php?online=1\',\'_blank\')" value="'._L('Generate XML (only OIDs which do not exist at oid-info.com)').'"></p>';
+			$out['text'] .= '<p><a href="http://www.oid-info.com/submit.htm" target="_blank">'._L('Upload XML files manually to oid-info.com').'</a></p>';
+			$out['text'] .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
+			$out['text'] .= '<h2>'._L('Automatic export to oid-info.com').'</h2>';
 			$privacy_level = OIDplus::config()->getValue('reg_privacy');
 			if ($privacy_level == 0) {
-				$out['text'] .= '<p>All your OIDs will automatically submitted to oid-info.com through the remote directory service in regular intervals. (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>Change preference</a>)</p>';
+				$out['text'] .= '<p>'._L('All your OIDs will automatically submitted to oid-info.com through the remote directory service in regular intervals.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
 			} else {
-				$out['text'] .= '<p>If you set the privacy option to "0" (your system is registered), then all your OIDs will be automatically exported to oid-info.com. (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>Change preference</a>)</p>';
+				$out['text'] .= '<p>'._L('If you set the privacy option to "0" (your system is registered), then all your OIDs will be automatically exported to oid-info.com.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
 			}
-			$out['text'] .= '<h2>Comparison with oid-info.com</h2>';
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_export').'>List OIDs in your system which are missing at oid-info.com</a></p>';
+			$out['text'] .= '<h2>'._L('Comparison with oid-info.com').'</h2>';
+			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_export').'>'._L('List OIDs in your system which are missing at oid-info.com').'</a></p>';
 			// ---------------- End "Export" tab
 			$out['text'] .= '				</div>';
 			$out['text'] .= '				<div class="tab-pane" id="2a">';
 			// ---------------- Start "Import" tab
-			$out['text'] .= '<h2>Import XML file</h2>';
-			$out['text'] .= '<p>These XML files are following the <a href="http://www.oid-info.com/oid.xsd" target="_blank">XML schema</a> of <b>oid-info.com</b>.</p>';
+			$out['text'] .= '<h2>'._L('Import XML file').'</h2>';
+			$out['text'] .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>.','href="http://www.oid-info.com/oid.xsd" target="_blank"').'</p>';
 			// TODO XXX: we need a waiting animation!
 			$out['text'] .= '<form onsubmit="return uploadXmlFileOnSubmit(this);" enctype="multipart/form-data" id="uploadXmlFileForm">';
-			$out['text'] .= '<div>Choose XML file here:<input type="file" name="userfile" value="" id="userfile">';
-			$out['text'] .= '<br><input type="submit" value="Import XML"></div>';
+			$out['text'] .= '<div>'._L('Choose XML file here').':<input type="file" name="userfile" value="" id="userfile">';
+			$out['text'] .= '<br><input type="submit" value="'._L('Import XML').'"></div>';
 			$out['text'] .= '</form>';
-			$out['text'] .= '<br><p>Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.</p>';
-			$out['text'] .= '<h2>Comparison with oid-info.com</h2>';
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_import').'>List OIDs at oid-info.com which are missing in your system</a></p>';
+			$out['text'] .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
+			$out['text'] .= '<h2>'._L('Comparison with oid-info.com').'</h2>';
+			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_import').'>'._L('List OIDs at oid-info.com which are missing in your system').'</a></p>';
 			// ---------------- End "Import" tab
 			$out['text'] .= '				</div>';
 			$out['text'] .= '			</div>';
@@ -560,7 +560,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		$json[] = array(
 			'id' => 'oidplus:datatransfer',
 			'icon' => $tree_icon,
-			'text' => 'Data Transfer'
+			'text' => _L('Data Transfer')
 		);
 
 		return true;
@@ -585,7 +585,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		$email = OIDplus::config()->getValue('admin_email');
 		if (empty($email)) $email = 'unknown@example.com';
 
-		echo $oa->xmlAddHeader(OIDplus::config()->getValue('system_title'), isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Export interface', $email);
+		echo $oa->xmlAddHeader(OIDplus::config()->getValue('system_title'), isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Export interface', $email); // do not translate
 
 		$params['allow_html'] = true;
 		$params['allow_illegal_email'] = true; // It should be enabled, because the creator could have used some kind of human-readable anti-spam technique
@@ -637,7 +637,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 					$elements['description'] = $row->comment;
 					$elements['information'] = '';
 				} else {
-					$elements['description'] = '<i>No description available</i>';
+					$elements['description'] = '<i>No description available</i>'; // do not translate
 					$elements['information'] = '';
 				}
 
@@ -645,10 +645,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 					$elements['information'] .= '<br/><br/>';
 				}
 
-				$elements['information'] .= 'See <a href="'.OIDplus::getSystemUrl(false).'?goto='.urlencode($id).'">more information</a>.';
+				$elements['information'] .= 'See <a href="'.OIDplus::getSystemUrl(false).'?goto='.urlencode($id).'">more information</a>.'; // do not translate
 
 				if (explode(':',$id,2)[0] != 'oid') {
-					$elements['information'] = "Object: $id\n\n" . $elements['information'];
+					$elements['information'] = "Object: $id\n\n" . $elements['information']; // do not translate
 				}
 
 				$elements['description'] = self::repair_relative_links($elements['description']);
@@ -818,7 +818,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		$count_warnings = 0;
 
 		if (!$xml) {
-			$errors[] = "Cannot read XML data. The XML file is probably invalid.";
+			$errors[] = _L('Cannot read XML data. The XML file is probably invalid.');
 			$count_errors++;
 			return array(0, 0, 1, 0);
 		}
@@ -832,7 +832,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			} else if (isset($xoid->{'asn1-notation'})) {
 				$dot_notation = asn1_to_dot($xoid->{'asn1-notation'}->__toString());
 			} else {
-				$errors[] = "Cannot find dot notation because fields asn1-notation and dot-notation are both not existing";
+				$errors[] = _L('Cannot find dot notation because fields asn1-notation and dot-notation are both not existing');
 				$count_errors++;
 				continue;
 			}
@@ -850,7 +850,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 
 			if (!oid_valid_dotnotation($dot_notation, false, false)) {
-				$errors[] = "Ignored OID '$dot_notation' because its dot notation is illegal or was not found";
+				$errors[] = _L('Ignored OID %1 because its dot notation is illegal or was not found',$dot_notation);
 				$count_errors++;
 				continue;
 			}
@@ -860,7 +860,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			if ($orphan_mode === self::ORPHAN_DISALLOW_ORPHANS) {
 				$res = OIDplus::db()->query("select * from ###objects where id = ?", array($parent));
 				if ($res->num_rows() === 0) {
-					$errors[] = "Cannot import $dot_notation, because its parent is not in the database.";
+					$errors[] = _L('Cannot import %1, because its parent is not in the database.',$dot_notation);
 					$count_errors++;
 					continue;
 				}
@@ -905,7 +905,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$asn1ids = array_unique($asn1ids);
 			foreach ($asn1ids as $asn1id) {
 				if (!oid_id_is_valid($asn1id)) {
-					$errors[] = "Warning: OID '$dot_notation': Ignored alphanumeric identifier '$asn1id' because it is invalid";
+					$errors[] = _L('Warning').' ['._L('OID %1',$dot_notation).']: '._L('Ignored alphanumeric identifier %1, because it is invalid',$asn1id);
 					$this_oid_has_warnings = true;
 				} else {
 					OIDplus::db()->query("delete from ###asn1id where oid = ? and name = ?", array($id, $asn1id));
@@ -923,7 +923,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				$iris = array_unique($iris);
 				foreach ($iris as $iri) {
 					if (!iri_arc_valid($iri, false)) {
-						$errors[] = "Warning: OID '$dot_notation': Ignored Unicode label '$iri' because it is invalid";
+						$errors[] = _L('Warning').' ['._L('OID %1',$dot_notation).']: '._L('Ignored Unicode label %1, because it is invalid',$iri);
 						$this_oid_has_warnings = true;
 					} else {
 						OIDplus::db()->query("delete from ###iri where oid = ? and name = ?", array($id, $iri));
@@ -943,7 +943,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			if ($orphan_mode === self::ORPHAN_AUTO_DEORPHAN) {
 				$res = OIDplus::db()->query("select * from ###objects where id = ? and parent not in (select id from ###objects)", array($id));
 				if ($res->num_rows() > 0) {
-					$errors[] = "'$id' was de-orphanized (placed as root OID) because its parent is not existing.";
+					$errors[] = _L("%1 was de-orphaned (placed as root OID) because its parent is not existing.",$id);
 					$count_warnings++;
 					OIDplus::db()->query("update ###objects set parent = 'oid:' where id = ? and parent not in (select id from ###objects)", array($id));
 				}

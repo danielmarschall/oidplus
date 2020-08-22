@@ -27,14 +27,14 @@ originHeaders();
 
 if (php_sapi_name() == 'cli') {
 	if ($argc != 2) {
-		echo "Syntax: $argv[0] <query>\n";
+		echo _L('Syntax').': '.$argv[0].' <query>'."\n";
 		exit(2);
 	}
 	$query = $argv[1];
 } else {
 	if (!isset($_REQUEST['query'])) {
 		http_response_code(400);
-		die("<h1>Error</h1><p>Argument 'query' is missing<p>");
+		die('<h1>'._L('Error').'</h1><p>'._L('Argument "%1" is missing','query').'<p>');
 	}
 	$query = $_REQUEST['query'];
 }
@@ -90,61 +90,61 @@ if (!$obj) {
 $continue = null;
 if (!$found) {
 	if (!is_null($distance)) {
-		$out[] = "result: Not found; superior object found";
-		$out[] = "distance: $distance";
+		$out[] = "result: Not found; superior object found"; // DO NOT TRANSLATE!
+		$out[] = "distance: $distance"; // DO NOT TRANSLATE
 		$continue = true;
 	} else {
-		$out[] = "result: Not found";
+		$out[] = "result: Not found"; // DO NOT TRANSLATE!
 		$continue = false;
 	}
 } else {
-	$out[] = "result: Found";
+	$out[] = "result: Found"; // DO NOT TRANSLATE!
 	$continue = true;
 }
 
 if ($continue) {
 	$out[] = "";
-	$out[] = "object: $query";
+	$out[] = "object: $query"; // DO NOT TRANSLATE!
 	if ($obj->isConfidential() && !$show_confidential) {
-		$out[] = "status: Information unavailable";
-		$out[] = "attribute: confidential";
+		$out[] = "status: Information unavailable"; // DO NOT TRANSLATE!
+		$out[] = "attribute: confidential"; // DO NOT TRANSLATE!
 	} else {
-		$out[] = "status: Information available";
+		$out[] = "status: Information available"; // DO NOT TRANSLATE!
 
 		$row = $res->fetch_object();
 		assert($row);
 		$obj = OIDplusObject::parse($row->id);
 
-		$out[] = 'name: ' . $row->title;
+		$out[] = 'name: ' . $row->title; // DO NOT TRANSLATE!
 
 		$cont = $row->description;
 		$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
 		$cont = preg_replace('@<br.*>@', "\n", $cont);
 		$cont = preg_replace('@\\n+@', "\n", $cont);
-		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont)));
+		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont))); // DO NOT TRANSLATE!
 
 		if (substr($query,0,4) === 'oid:') {
-			$out[] = 'asn1-notation: ' . $obj->getAsn1Notation(false);
-			$out[] = 'iri-notation: ' . $obj->getIriNotation(false);
+			$out[] = 'asn1-notation: ' . $obj->getAsn1Notation(false); // DO NOT TRANSLATE!
+			$out[] = 'iri-notation: ' . $obj->getIriNotation(false); // DO NOT TRANSLATE!
 
 			$res2 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($row->id));
 			while ($row2 = $res2->fetch_object()) {
-				$out[] = 'identifier: ' . $row2->name;
+				$out[] = 'identifier: ' . $row2->name; // DO NOT TRANSLATE!
 			}
 
 			$res2 = OIDplus::db()->query("select * from ###asn1id where standardized = ? and oid = ?", array(true, $row->id));
 			while ($row2 = $res2->fetch_object()) {
-				$out[] = 'standardized-id: ' . $row2->name;
+				$out[] = 'standardized-id: ' . $row2->name; // DO NOT TRANSLATE!
 			}
 
 			$res2 = OIDplus::db()->query("select * from ###iri where oid = ?", array($row->id));
 			while ($row2 = $res2->fetch_object()) {
-				$out[] = 'unicode-label: ' . $row2->name;
+				$out[] = 'unicode-label: ' . $row2->name; // DO NOT TRANSLATE!
 			}
 
 			$res2 = OIDplus::db()->query("select * from ###iri where longarc = ? and oid = ?", array(true, $row->id));
 			while ($row2 = $res2->fetch_object()) {
-				$out[] = 'long-arc: ' . $row2->name;
+				$out[] = 'long-arc: ' . $row2->name; // DO NOT TRANSLATE!
 			}
 		}
 
@@ -157,7 +157,7 @@ if ($continue) {
 		}
 
 		if (!empty($row->parent) && (!is_root($row->parent))) {
-			$out[] = 'parent: ' . $row->parent . show_asn1_appendix($row->parent);
+			$out[] = 'parent: ' . $row->parent . show_asn1_appendix($row->parent); // DO NOT TRANSLATE!
 		}
 
 		$res2 = OIDplus::db()->query("select * from ###objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($row->id));
@@ -165,56 +165,56 @@ if ($continue) {
 			// $out[] = 'subordinate: (none)';
 		}
 		while ($row2 = $res2->fetch_object()) {
-			$out[] = 'subordinate: ' . $row2->id . show_asn1_appendix($row2->id);
+			$out[] = 'subordinate: ' . $row2->id . show_asn1_appendix($row2->id); // DO NOT TRANSLATE!
 		}
 
-		$out[] = 'created: ' . $row->created;
-		$out[] = 'updated: ' . $row->updated;
+		$out[] = 'created: ' . $row->created; // DO NOT TRANSLATE!
+		$out[] = 'updated: ' . $row->updated; // DO NOT TRANSLATE!
 
 		$out[] = '';
 
 		$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array($row->ra_email));
 		if ($row2 = $res2->fetch_object()) {
-			$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : (!empty($row2->email) ? $row2->email : 'Unknown'));
-			$out[] = 'ra-status: Information available';
+			$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : (!empty($row2->email) ? $row2->email : _L('Unknown'))); // DO NOT TRANSLATE!
+			$out[] = 'ra-status: Information available'; // DO NOT TRANSLATE!
 
 			$tmp = array();
 			if (!empty($row2->office)) $tmp[] = $row2->office;
 			if (!empty($row2->organization)) $tmp[] = $row2->organization;
 			$tmp = implode(', ', $tmp);
 
-			$out[] = 'ra-contact-name: ' . $row2->personal_name.(!empty($tmp) ? " ($tmp)" : '');
+			$out[] = 'ra-contact-name: ' . $row2->personal_name.(!empty($tmp) ? " ($tmp)" : ''); // DO NOT TRANSLATE!
 			if ($row2->privacy && !$show_confidential) {
 				if (!empty($row2->street) || !empty($row2->zip_town) || !empty($row2->country)) {
-					$out[] = 'ra-address: (redacted)';
+					$out[] = 'ra-address: '._L('(redacted)'); // DO NOT TRANSLATE!
 				}
-				$out[] = 'ra-phone: ' . (!empty($row2->phone) ? '(redacted)' : '');
-				$out[] = 'ra-mobile: ' . (!empty($row2->mobile) ? '(redacted)' : '');
-				$out[] = 'ra-fax: ' . (!empty($row2->fax) ? '(redacted)' : '');
+				$out[] = 'ra-phone: ' . (!empty($row2->phone) ? _L('(redacted)') : ''); // DO NOT TRANSLATE!
+				$out[] = 'ra-mobile: ' . (!empty($row2->mobile) ? _L('(redacted)') : ''); // DO NOT TRANSLATE!
+				$out[] = 'ra-fax: ' . (!empty($row2->fax) ? _L('(redacted)') : ''); // DO NOT TRANSLATE!
 			} else {
-				if (!empty($row2->street))   $out[] = 'ra-address: ' . $row2->street;
-				if (!empty($row2->zip_town)) $out[] = 'ra-address: ' . $row2->zip_town;
-				if (!empty($row2->country))  $out[] = 'ra-address: ' . $row2->country;
-				$out[] = 'ra-phone: ' . $row2->phone;
-				$out[] = 'ra-mobile: ' . $row2->mobile;
-				$out[] = 'ra-fax: ' . $row2->fax;
+				if (!empty($row2->street))   $out[] = 'ra-address: ' . $row2->street; // DO NOT TRANSLATE!
+				if (!empty($row2->zip_town)) $out[] = 'ra-address: ' . $row2->zip_town; // DO NOT TRANSLATE!
+				if (!empty($row2->country))  $out[] = 'ra-address: ' . $row2->country; // DO NOT TRANSLATE!
+				$out[] = 'ra-phone: ' . $row2->phone; // DO NOT TRANSLATE!
+				$out[] = 'ra-mobile: ' . $row2->mobile; // DO NOT TRANSLATE!
+				$out[] = 'ra-fax: ' . $row2->fax; // DO NOT TRANSLATE!
 			}
-			$out[] = 'ra-email: ' . $row->ra_email;
+			$out[] = 'ra-email: ' . $row->ra_email; // DO NOT TRANSLATE!
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
 					$plugin->whoisRaAttributes($row->ra_email, $out);
 				}
 			}
-			$out[] = 'ra-created: ' . $row2->registered;
-			$out[] = 'ra-updated: ' . $row2->updated;
+			$out[] = 'ra-created: ' . $row2->registered; // DO NOT TRANSLATE!
+			$out[] = 'ra-updated: ' . $row2->updated; // DO NOT TRANSLATE!
 		} else {
-			$out[] = 'ra: '.(!empty($row->ra_email) ? $row->ra_email : 'Unknown');
+			$out[] = 'ra: '.(!empty($row->ra_email) ? $row->ra_email : _L('Unknown')); // DO NOT TRANSLATE!
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
 					$plugin->whoisRaAttributes($row->ra_email, $out);
 				}
 			}
-			$out[] = "ra-status: Information unavailable";
+			$out[] = "ra-status: Information unavailable"; // DO NOT TRANSLATE!
 		}
 	}
 }

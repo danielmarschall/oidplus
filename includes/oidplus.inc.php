@@ -31,8 +31,8 @@ if (version_compare(PHP_VERSION, '7.0.0') < 0) {
 	// - Nullable return values (e.g. "function foo(): ?array")
 	// - void return value (e.g. "function foo(): void") => currently commented out
 	// - private/protected/public consts => currently commented out
-	echo '<h1>OIDplus error</h1>';
-	echo "<p>OIDplus requires at least PHP version 7.0! You are currently using version " . PHP_VERSION . "</p>\n";
+	echo '<h1>'._L('OIDplus error').'</h1>';
+	echo '<p>'._L('OIDplus requires at least PHP version %1! You are currently using version %2','7.0',PHP_VERSION).'</p>'."\n";
 	die();
 }
 
@@ -46,9 +46,9 @@ if (!function_exists('gmp_init')) {
 	//                  plugins/adminPages/400_oidinfo_export/oidinfo_api.inc.php (if GMP is not available, BC will be used)
 	// Note that gmp_supplement.inc.php will implement the GMP functions if BCMath is present.
 	// This is the reason why we use function_exists('gmp_init') instead of extension_loaded('gmp')
-        $missing_dependencies[] = 'GMP (Install it using <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.)' .
-	                          '<br>or alternatively<br>' .
-	                          'BCMath (Install it using <code>sudo aptitude update && sudo aptitude install php-bcmath && sudo service apache2 restart</code> on Linux systems.)';
+        $missing_dependencies[] = _L('GMP (Install it using <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.)') .
+	                          '<br>'._L('or alternatively').'<br>' .
+	                          _L('BCMath (Install it using <code>sudo aptitude update && sudo aptitude install php-bcmath && sudo service apache2 restart</code> on Linux systems.)');
 }
 
 if (!function_exists('mb_substr')) {
@@ -56,12 +56,12 @@ if (!function_exists('mb_substr')) {
 	//              includes/oid_utils.inc.php
 	//              3p/minify/path-converter/Converter.php
 	//              3p/0xbb/Sha3.class.php
-	$missing_dependencies[] = 'MBString (Install it using <code>sudo aptitude update && sudo aptitude install php-mbstring && sudo service apache2 restart</code> on Linux systems.)';
+	$missing_dependencies[] = _L('MBString (Install it using <code>sudo aptitude update && sudo aptitude install php-mbstring && sudo service apache2 restart</code> on Linux systems.)');
 }
 
 if (count($missing_dependencies) >= 1) {
-	echo '<h1>OIDplus error</h1>';
-	echo '<p>The following PHP extensions need to be installed in order to run OIDplus.</p>';
+	echo '<h1>'._L('OIDplus error').'</h1>';
+	echo '<p>'._L('The following PHP extensions need to be installed in order to run OIDplus:').'</p>';
 	echo '<ul>';
 	foreach ($missing_dependencies as $dependency) {
 		echo '<li>'.$dependency.'</li>';

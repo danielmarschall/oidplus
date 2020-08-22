@@ -30,7 +30,7 @@ if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 		#echo "You need to log in as administrator.\n";
 		#die();
 	} else {
-		echo '<p>You need to <a href="'.OIDplus::getSystemUrl().'?goto=oidplus:login">log in</a> as administrator.</p>';
+		echo '<p>'._L('You need to <a %1>log in</a> as administrator.','href="'.OIDplus::getSystemUrl().'?goto=oidplus:login"').'</p>';
 		die();
 	}
 }
@@ -38,4 +38,3 @@ if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 header('Content-Type:text/xml');
 
 OIDplusPageAdminOIDInfoExport::outputXML(isset($_GET['online']) && $_GET['online']);
-

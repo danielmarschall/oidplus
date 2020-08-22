@@ -12,9 +12,17 @@ RECENT STUFF
 - Test every function of OIDplus to ensure everything works after the recent changes in OOP
 - When you try to create an OID and have not entered an asn1 id, there should be a warning
 - Multilang
-	* !! Translate all PHP and JS files (make a tool that searches all "_L" functions and updates the message.xml files)
-	* !! Find a solution how to translate resources, HTML templates, etc.
-	* Make it compatible with search engines: Instead of JavaScript/Cookie language selection, make an argument "?lang=" ???
+	* Not yet translated:
+		- includes\classes\http_class.class.php
+		- includes\classes\phpsvnclient.class.php
+		- plugins\adminPages\050_oobe\oobe.php (and various OOBE plugins)
+		- plugins\publicPages\100_whois\whois\index.php
+		- setup\index.php (and various setup.part.html)
+		- 3p\vts_fileformats\fileformats.conf
+	* Check/Correct German Machine-Translations:
+		- res/OIDplus/privacy_documentation$dede.html
+		- res/OIDplus/acknowledgements$dede.html
+		- plugins\publicPages\200_viathinksoft_freeoid\tos$dede.html
 - WebWHOIS: Open in new Window? Show URL without opening the page?
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Make a plugin that shows warning from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
@@ -97,6 +105,7 @@ SMALL THINGS
 - jstree select: automatically scroll down
 - upgrade the design; make things more pretty
 - things like RA: show more things, address, email etc.
+- note that we (and the RFC) talk about Objects, but actually OIDs only reference objects, but they are not the objects
 
 DATABASE
 - check if the NULL and NOT NULL definitions are meaningful. It is not good at in *_ra everything is NOT NULL

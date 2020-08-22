@@ -21,12 +21,12 @@ class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 
 	public static function available(&$reason)/*: bool*/ {
 		if (!is_dir(OIDplus::basePath().'/userdata/logs/')) {
-			$reason = "Directory userdata/logs/ not existing";
+			$reason = _L('Directory userdata/logs/ not existing');
 			return false;
 		}
 
 		if (@file_put_contents(OIDplus::basePath().'/userdata/logs/oidplus.log', '', FILE_APPEND) === false) {
-			$reason = "File userdata/logs/oidplus.log not writeable";
+			$reason = _L('File userdata/logs/oidplus.log not writeable');
 			return false;
 		}
 
@@ -39,14 +39,14 @@ class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 
 		$users_names = array();
 		foreach ($users as list($severity, $username)) $users_names[] = $username;
-		$users_info = count($users_names) == 0 ? '' : " (affected users: ".implode(', ',$users_names).")";
+		$users_info = count($users_names) == 0 ? '' : ' ('._L('affected users: %1',implode(', ',$users_names)).')';
 
 		$objects_names = array();
 		foreach ($objects as list($severity, $objectname)) $objects_names[] = $objectname;
-		$objects_info = count($objects_names) == 0 ? '' : " (affected objects: ".implode(', ',$objects_names).")";
+		$objects_info = count($objects_names) == 0 ? '' : ' ('._L('affected objects: %1',implode(', ',$objects_names)).')';
 
 		$ts = date('Y-m-d H:i:s');
-		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
+		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : _L('unknown');
 
 		// Note: $ts was put into brackets, because there is probably a bug in fail2ban that does not allow the date/time being at offset 0
 		// "WARNING Found a match for '020-05-11 22:50:58 [192.168.69.89] Failed login ..."

@@ -35,11 +35,11 @@ class OIDplusGuid extends OIDplusObject {
 	}
 
 	public static function objectTypeTitle() {
-		return "Globally Unique Identifier (GUID)";
+		return _L('Globally Unique Identifier (GUID)');
 	}
 
 	public static function objectTypeTitleShort() {
-		return "GUID";
+		return _L('GUID');
 	}
 
 	public static function ns() {
@@ -98,16 +98,16 @@ class OIDplusGuid extends OIDplusObject {
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
 			if ($res->num_rows() > 0) {
-				$content  = 'Please select a GUID in the tree view at the left to show its contents.';
+				$content  = _L('Please select a GUID in the tree view at the left to show its contents.');
 			} else {
-				$content  = 'Currently, no GUID is registered in the system.';
+				$content  = _L('Currently, no GUID is registered in the system.');
 			}
 
 			if (!$this->isLeafNode()) {
 				if (OIDplus::authUtils()::isAdminLoggedIn()) {
-					$content .= '<h2>Manage root objects / categories</h2>';
+					$content .= '<h2>'._L('Manage root objects / categories').'</h2>';
 				} else {
-					$content .= '<h2>Available objects / categories</h2>';
+					$content .= '<h2>'._L('Available objects / categories').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}
@@ -121,21 +121,22 @@ class OIDplusGuid extends OIDplusObject {
 				ob_end_clean();
 				$info = preg_replace('@:\s*(.+)\n@ismU', ": <code>\\1</code><br>", $info);
 
-				$content = "<h2>Technical information</h2><p>UUID: <code>" . uuid_canonize($this->guid) . "</code><br>" .
-				       "C++ notation: <code>" . uuid_c_syntax($this->guid) . "</code><br>" .
+				$content = '<h2>'._L('Technical information').'</h2>' .
+				       '<p>'._L('UUID').': <code>' . uuid_canonize($this->guid) . '</code><br>' .
+				       ''._L('C++ notation').': <code>' . uuid_c_syntax($this->guid) . '</code><br>' .
 				       "$info";
 				//      "<a href=\"https://misc.daniel-marschall.de/tools/uuid_mac_decoder/interprete_uuid.php?uuid=".urlencode($this->guid)."\">More technical information</a></p>";
 			} else {
 				$content = '';
 			}
 
-			$content .= '<h2>Description</h2>%%DESC%%';
+			$content .= '<h2>'._L('Description').'</h2>%%DESC%%';
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
-					$content .= '<h2>Create or change subsequent objects / categories</h2>';
+					$content .= '<h2>'._L('Create or change subsequent objects / categories').'</h2>';
 				} else {
-					$content .= '<h2>Subsequent objects / categories</h2>';
+					$content .= '<h2>'._L('Subsequent objects / categories').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}
@@ -165,7 +166,7 @@ class OIDplusGuid extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		if (!$this->isLeafNode()) return array();
 		$ids = parent::getAltIds();
-		$ids[] = new OIDplusAltId('oid', uuid_to_oid($this->guid), 'OID representation of UUID');
+		$ids[] = new OIDplusAltId('oid', uuid_to_oid($this->guid), _L('OID representation of UUID'));
 		return $ids;
 	}
 }

@@ -32,11 +32,11 @@ class OIDplusJava extends OIDplusObject {
 	}
 
 	public static function objectTypeTitle() {
-		return "Java Package Names";
+		return _L('Java Package Names');
 	}
 
 	public static function objectTypeTitleShort() {
-		return "Package";
+		return _L('Package');
 	}
 
 	public static function ns() {
@@ -59,7 +59,7 @@ class OIDplusJava extends OIDplusObject {
 		if ($this->isRoot()) {
 			return 'java:'.$str;
 		} else {
-			if (strpos($str,'.') !== false) throw new OIDplusException("Please only submit one arc.");
+			if (strpos($str,'.') !== false) throw new OIDplusException(_L('Please only submit one arc.'));
 			return $this->nodeId() . '.' . $str;
 		}
 	}
@@ -93,16 +93,16 @@ class OIDplusJava extends OIDplusObject {
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
 			if ($res->num_rows() > 0) {
-				$content  = 'Please select a Java Package Name in the tree view at the left to show its contents.';
+				$content  = _L('Please select a Java Package Name in the tree view at the left to show its contents.');
 			} else {
-				$content  = 'Currently, no Java Package Name is registered in the system.';
+				$content  = _L('Currently, no Java Package Name is registered in the system.');
 			}
 
 			if (!$this->isLeafNode()) {
 				if (OIDplus::authUtils()::isAdminLoggedIn()) {
-					$content .= '<h2>Manage root objects</h2>';
+					$content .= '<h2>'._L('Manage root objects').'</h2>';
 				} else {
-					$content .= '<h2>Available objects</h2>';
+					$content .= '<h2>'._L('Available objects').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}
@@ -111,13 +111,13 @@ class OIDplusJava extends OIDplusObject {
 
 			$content = '<h3>'.explode(':',$this->nodeId())[1].'</h3>';
 
-			$content .= '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
+			$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
-					$content .= '<h2>Create or change subsequent objects</h2>';
+					$content .= '<h2>'._L('Create or change subsequent objects').'</h2>';
 				} else {
-					$content .= '<h2>Subsequent objects</h2>';
+					$content .= '<h2>'._L('Subsequent objects').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}

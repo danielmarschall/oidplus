@@ -27,18 +27,18 @@ function adminCreateRaFormOnSubmit() {
 			password2: $("#password2").val()
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success: function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
-				alert("Account created");
+				alert(_L("Account created"));
 				//openOidInPanel('oidplus:rainfo$'+$("#email").val(),true);
 				// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs
 				window.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#email").val());
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});

@@ -26,19 +26,19 @@ function freeOIDFormOnSubmit() {
 			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 			if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 		},
 		success: function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 			} else if (data.status == 0) {
-				alert("Instructions have been sent via email.");
+				alert(_L("Instructions have been sent via email."));
 				window.location.href = '?goto=oidplus:system';
 				//reloadContent();
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 			}
 		}
@@ -63,20 +63,19 @@ function activateFreeOIDFormOnSubmit() {
 			timestamp: $("#timestamp").val()
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success: function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
-				alert("Registration successful! You can now log in.");
+				alert(_L("Registration successful! You can now log in."));
 				window.location.href = '?goto=oidplus:login';
 				//reloadContent();
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});
 	return false;
 }
-

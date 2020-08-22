@@ -24,7 +24,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$email = $params['email'];
 
 			if (!OIDplus::mailUtils()->validMailAddress($email)) {
-				throw new OIDplusException('Invalid email address');
+				throw new OIDplusException(_L('Invalid email address'));
 			}
 
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
@@ -33,7 +33,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					throw new OIDplusException('Captcha wrong');
+					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
 				}
 			}
 
@@ -60,19 +60,20 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$timestamp = $params['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
-				throw new OIDplusException('Invalid auth key');
+				throw new OIDplusException(_L('Invalid auth key'));
 			}
 
 			if ((OIDplus::config()->getValue('max_ra_invite_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_invite_time'))) {
-				throw new OIDplusException('Invitation expired!');
+				throw new OIDplusException(_L('Invitation expired!'));
 			}
 
 			if ($password1 !== $password2) {
-				throw new OIDplusException('Passwords are not equal');
+				throw new OIDplusException(_L('Passwords do not match'));
 			}
 
 			if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
-				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->getValue('ra_min_password_length'));
+				$minlen = OIDplus::config()->getValue('ra_min_password_length');
+				throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
 			}
 
 			OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' has been registered due to invitation");
@@ -82,19 +83,19 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException("Unknown action ID");
+			throw new OIDplusException(_L('Unknown action ID'));
 		}
 	}
 
 	public function init($html=true) {
 		OIDplus::config()->prepareConfigKey('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
-				throw new OIDplusException("Please enter a valid value.");
+				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
-		OIDplus::config()->prepareConfigKey('ra_invitation_enabled', 'May RAs be invited?', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		OIDplus::config()->prepareConfigKey('ra_invitation_enabled', 'May RAs be invited? (0=no, 1=yes)', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != 0) && ($value != 1)) {
-				throw new OIDplusException("Please enter a valid value: 0 or 1.");
+				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
 			}
 		});
 	}
@@ -106,11 +107,11 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$email = explode('$',$id)[1];
 			$origin = explode('$',$id)[2];
 
-			$out['title'] = 'Invite a Registration Authority';
+			$out['title'] = _L('Invite a Registration Authority');
 
 			if (!OIDplus::config()->getValue('ra_invitation_enabled')) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>Invitations are disabled by the administrator.</p>';
+				$out['text'] = '<p>'._L('Invitations are disabled by the administrator.').'</p>';
 				return;
 			}
 
@@ -120,7 +121,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				$this->inviteSecurityCheck($email);
 				$cont = $this->getInvitationText($email);
 
-				$out['text'] .= '<p>You have chosen to invite <b>'.$email.'</b> as an Registration Authority. If you click "Send", the following email will be sent to '.$email.':</p><p><i>'.nl2br(htmlentities($cont)).'</i></p>
+				$out['text'] .= '<p>'._L('You have chosen to invite %1 as a Registration Authority. If you click "Send", the following email will be sent to %2:','<b>'.$email.'</b>',$email).'</p><p><i>'.nl2br(htmlentities($cont)).'</i></p>
 				  <form id="inviteForm" onsubmit="return inviteFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="origin" value="'.htmlentities($origin).'"/>'.
@@ -128,13 +129,13 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				 '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
 				 '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '').
 				' <br>
-				    <input type="submit" value="Send invitation">
+				    <input type="submit" value="'._L('Send invitation').'">
 				  </form>';
 
 			} catch (Exception $e) {
 
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = "Error: ".$e->getMessage();
+				$out['text'] = _L('Error: %1',$e->getMessage());
 
 			}
 		} else if (explode('$',$id)[0] == 'oidplus:activate_ra') {
@@ -144,11 +145,11 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$timestamp = explode('$',$id)[2];
 			$auth = explode('$',$id)[3];
 
-			$out['title'] = 'Register as Registration Authority';
+			$out['title'] = _L('Register as Registration Authority');
 
 			if (!OIDplus::config()->getValue('ra_invitation_enabled')) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>Invitations are disabled by the administrator.</p>';
+				$out['text'] = '<p>'._L('Invitations are disabled by the administrator.').'</p>';
 				return;
 			}
 
@@ -156,22 +157,22 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 			if ($res->num_rows() > 0) {
-				$out['text'] = 'This RA is already registered and does not need to be invited.';
+				$out['text'] = _L('This RA is already registered and does not need to be invited.');
 			} else {
 				if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
 					$out['icon'] = 'img/error_big.png';
-					$out['text'] = 'Invalid authorization. Is the URL OK?';
+					$out['text'] = _L('Invalid authorization. Is the URL OK?');
 				} else {
 					// TODO: like in the FreeOID plugin, we could ask here at least for a name for the RA
-					$out['text'] = '<p>E-Mail-Adress: <b>'.$email.'</b></p>
+					$out['text'] = '<p>'._L('E-Mail-Address').': <b>'.$email.'</b></p>
 
 					  <form id="activateRaForm" onsubmit="return activateRaFormOnSubmit();">
 					    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 					    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 					    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
-					    <div><label class="padding_label">New password:</label><input type="password" id="password1" value=""/></div>
-					    <div><label class="padding_label">Repeat:</label><input type="password" id="password2" value=""/></div>
-					    <br><input type="submit" value="Register">
+					    <div><label class="padding_label">'._L('New password').':</label><input type="password" id="password1" value=""/></div>
+					    <div><label class="padding_label">'._L('Repeat').':</label><input type="password" id="password2" value=""/></div>
+					    <br><input type="submit" value="'._L('Register').'">
 					  </form>';
 				}
 			}
@@ -188,7 +189,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 	private function inviteSecurityCheck($email) {
 		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 		if ($res->num_rows() > 0) {
-			throw new OIDplusException("This RA is already registered and does not need to be invited.");
+			throw new OIDplusException(_L('This RA is already registered and does not need to be invited.'));
 		}
 
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) {
@@ -197,13 +198,13 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$res = OIDplus::db()->query("select parent from ###objects where ra_email = ?", array($email));
 			while ($row = $res->fetch_array()) {
 				$objParent = OIDplusObject::parse($row['parent']);
-				if (is_null($objParent)) throw new OIDplusException("Type of ".$row['parent']." unknown");
+				if (is_null($objParent)) throw new OIDplusException(_L('Type of %1 unknown',$row['parent']));
 				if ($objParent->userHasWriteRights()) {
 					$ok = true;
 				}
 			}
 			if (!$ok) {
-				throw new OIDplusException('You may not invite this RA. Maybe you need to log in again.');
+				throw new OIDplusException(_L('You may not invite this RA. Maybe you need to <a %1>log in</a> again.',OIDplus::gui()->link('oidplus:login')));
 			}
 		}
 	}

@@ -22,7 +22,7 @@ require_once __DIR__ . '/includes/oidplus.inc.php';
 try {
 	OIDplus::init(false);
 
-	if (!isset($_REQUEST['action'])) throw new OIDplusException("Action ID is missing");
+	if (!isset($_REQUEST['action'])) throw new OIDplusException(_L('Action ID is missing'));
 
 	$json_out = null;
 
@@ -32,7 +32,7 @@ try {
 
 		$plugin = OIDplus::getPluginByOid($_REQUEST['plugin']);
 		if (!$plugin) {
-			throw new OIDplusException("Plugin with OID '".$_REQUEST['plugin']."' not found");
+			throw new OIDplusException(_L('Plugin with OID "%1" not found',$_REQUEST['plugin']));
 		}
 
 		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
@@ -48,7 +48,7 @@ try {
 
 		$json_out = $plugin->action($_REQUEST['action'], $params);
 		if (!is_array($json_out)) {
-			throw new OIDplusException("Plugin with OID '".$_REQUEST['plugin']."' did not output array of result data");
+			throw new OIDplusException(_L('Plugin with OID %1 did not output array of result data',$_REQUEST['plugin']));
 		}
 		if (!isset($json_out['status'])) $json_out['status'] = -1;
 
@@ -65,12 +65,12 @@ try {
 			// Method:     GET / POST
 			// Parameters: id
 			// Outputs:    JSON
-			if (!isset($_REQUEST['id'])) throw new OIDplusException("Invalid args");
+			if (!isset($_REQUEST['id'])) throw new OIDplusException(_L('Invalid arguments'));
 			try {
 				$json_out = OIDplus::gui()::generateContentPage($_REQUEST['id']);
 			} catch (Exception $e) {
 				$json_out = array();
-				$json_out['title'] = 'Error';
+				$json_out['title'] = _L('Error');
 				$json_out['icon'] = 'img/error_big.png';
 				$json_out['text'] = $e->getMessage();
 			}
@@ -79,7 +79,7 @@ try {
 			// Method:     GET / POST
 			// Parameters: search
 			// Outputs:    JSON
-			if (!isset($_REQUEST['search'])) throw new OIDplusException("Invalid args");
+			if (!isset($_REQUEST['search'])) throw new OIDplusException(_L('Invalid arguments'));
 
 			$found = false;
 			foreach (OIDplus::getPagePlugins() as $plugin) {
@@ -98,10 +98,10 @@ try {
 			// Method:     GET / POST
 			// Parameters: id; goto (optional)
 			// Outputs:    JSON
-			if (!isset($_REQUEST['id'])) throw new OIDplusException("Invalid args");
+			if (!isset($_REQUEST['id'])) throw new OIDplusException(_L('Invalid arguments'));
 			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], isset($_REQUEST['goto']) ? $_REQUEST['goto'] : '');
 		} else {
-			throw new OIDplusException('Invalid action ID');
+			throw new OIDplusException(_L('Invalid action ID'));
 		}
 	}
 

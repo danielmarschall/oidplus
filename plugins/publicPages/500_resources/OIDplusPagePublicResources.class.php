@@ -19,30 +19,57 @@
 
 class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
+	private function getDefaultTitle() {
+		return _L('Documents and resources');
+	}
+
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('resource_plugin_autoopen_level', 'Resource plugin: How many levels should be open in the treeview when OIDplus is loaded?', 1, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		OIDplus::config()->prepareConfigKey('resource_plugin_autoopen_level', 'Resource plugin: How many levels should be open in the treeview when OIDplus is loaded?', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
-				throw new OIDplusException("Please enter a valid value.");
+				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
 		OIDplus::config()->prepareConfigKey('resource_plugin_title',          'Resource plugin: Title of the resource section?', 'Documents and resources', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (empty($value)) {
-				throw new OIDplusException("Please enter a title.");
+				throw new OIDplusException(_L('Please enter a title.'));
 			}
 		});
 		OIDplus::config()->deleteConfigKey('resource_plugin_path');
-		OIDplus::config()->prepareConfigKey('resource_plugin_hide_empty_path','Resource plugin: Hide empty paths? 1=on, 0=off', 1, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		OIDplus::config()->prepareConfigKey('resource_plugin_hide_empty_path','Resource plugin: Hide empty paths? (0=no, 1=yes)', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || (($value != 0) && ($value != 1))) {
-				throw new OIDplusException("Please enter a valid value (0=off, 1=on).");
+				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
 			}
 		});
 	}
 
-	private static function getDocumentTitle($file) {
-
+	private static function getDocumentContent($file) {
 		$file = rtrim(OIDplus::basePath(),'/').'/'.self::realname($file);
+		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
+		if (file_exists($file2)) $file = $file2;
 
 		$cont = file_get_contents($file);
+
+		// make sure the program works even if the user provided HTML is not UTF-8
+		$cont = iconv(mb_detect_encoding($cont, mb_detect_order(), true), 'UTF-8', $cont);
+
+		$cont = preg_replace('@^(.+)<body[^>]*>@isU', '', $cont);
+		$cont = preg_replace('@</body>.+$@isU', '', $cont);
+		$cont = preg_replace('@<title>.+</title>@isU', '', $cont);
+		$cont = preg_replace('@<h1>.+</h1>@isU', '', $cont, 1);
+
+		return $cont;
+	}
+
+	private static function getDocumentTitle($file) {
+		$file = rtrim(OIDplus::basePath(),'/').'/'.self::realname($file);
+		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
+		if (file_exists($file2)) $file = $file2;
+
+		$cont = file_get_contents($file);
+
+		// make sure the program works even if the user provided HTML is not UTF-8
+		$cont = iconv(mb_detect_encoding($cont, mb_detect_order(), true), 'UTF-8', $cont);
+
 		if (preg_match('@<title>(.+)</title>@ismU', $cont, $m)) return $m[1];
 		if (preg_match('@<h1>(.+)</h1>@ismU', $cont, $m)) return $m[1];
 		if (preg_match('@<h2>(.+)</h2>@ismU', $cont, $m)) return $m[1];
@@ -60,6 +87,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		$res = $onlydir ? glob($root.ltrim($reldir,'/'), GLOB_ONLYDIR) : glob($root.ltrim($reldir,'/'));
 		foreach ($res as &$x) {
 			$x = substr($x, strlen($root));
+			if (strpos($x,'$') !== false) continue;
 			$out[] = $x;
 		}
 
@@ -67,6 +95,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		$res = $onlydir ? glob($root.ltrim($reldir,'/'), GLOB_ONLYDIR) : glob($root.ltrim($reldir,'/'));
 		foreach ($res as $x) {
 			$x = substr($x, strlen($root));
+			if (strpos($x,'$') !== false) continue;
 			$out[] = $x;
 		}
 
@@ -99,9 +128,9 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					$file = str_replace(chr(0), '[NUL]', $file);
 				}
 				OIDplus::logger()->log("[WARN]A!", "LFI/RFI attack blocked (requested file '$file')");
-				$out['title'] = 'Access denied';
+				$out['title'] = _L('Access denied');
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>This request is invalid</p>';
+				$out['text'] = '<p>'._L('This request is invalid').'</p>';
 				return;
 			}
 
@@ -121,11 +150,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources').'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(OIDplus::config()->getValue('resource_plugin_title', 'Documents and resources')).'</a></p>';
+					$lng_gobackto = _L('Go back to').':';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources').'><img src="img/arrow_back.png" width="16"> '.$lng_gobackto.' '.$ic.' '.htmlentities(OIDplus::config()->getValue('resource_plugin_title', $this->getDefaultTitle())).'</a></p>';
 				} else {
 					$realdir = self::realname($dir);
 
-					$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_folder&file='.urlencode($dir);
+					$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_folder&lang='.OIDplus::getCurrentLang().'&file='.urlencode($dir);
 					/*
 					$icon_candidate = pathinfo($realdir)['dirname'].'/'.pathinfo($realdir)['filename'].'_tree.png';
 					if (file_exists($icon_candidate)) {
@@ -139,19 +169,21 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.rtrim($dir,'/').'/').'><img src="img/arrow_back.png" width="16"> Go back to: '.$ic.' '.htmlentities(basename($dir)).'</a></p><br>';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.rtrim($dir,'/').'/').'><img src="img/arrow_back.png" width="16"> '._L('Go back to').': '.$ic.' '.htmlentities(self::getFolderTitle($realdir)).'</a></p><br>';
 				}
 			}
 
 			// Then the content
 
 			$realfile = self::realname($file);
+			// $realfile2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $realfile);
+			// if (file_exists($realfile2)) $realfile = $realfile2;
 
 			if (file_exists($realfile) && (!is_dir($realfile))) {
-				if (substr($file,-4,4) == '.url') {
+				if ((substr($file,-4,4) == '.url') || (substr($file,-5,5) == '.link')) {
 					$out['title'] = $this->getHyperlinkTitle($realfile);
 
-					$out['icon'] = OIDplus::webpath(__DIR__).'show_icon.php?mode=icon_leaf_url_big&file='.urlencode($file);
+					$out['icon'] = OIDplus::webpath(__DIR__).'show_icon.php?mode=icon_leaf_url_big&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 					/*
 					$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_big.png';
 					if (file_exists($icon_candidate)) {
@@ -164,11 +196,11 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					*/
 
 					// Should not happen though, due to conditionalselect
-					$out['text'] .= '<a href="'.htmlentities(self::getHyperlinkURL($realfile)).'" target="_blank">Open in new window</a>';
+					$out['text'] .= '<a href="'.htmlentities(self::getHyperlinkURL($realfile)).'" target="_blank">'._L('Open in new window').'</a>';
 				} else if ((substr($file,-4,4) == '.htm') || (substr($file,-5,5) == '.html')) {
 					$out['title'] = $this->getDocumentTitle($file);
 
-					$out['icon'] = OIDplus::webpath(__DIR__).'show_icon.php?mode=icon_leaf_doc_big&file='.urlencode($file);
+					$out['icon'] = OIDplus::webpath(__DIR__).'show_icon.php?mode=icon_leaf_doc_big&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 					/*
 					$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_big.png';
 					if (file_exists($icon_candidate)) {
@@ -180,26 +212,20 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					}
 					*/
 
-					$cont = file_get_contents($realfile);
-					$cont = preg_replace('@^(.+)<body[^>]*>@isU', '', $cont);
-					$cont = preg_replace('@</body>.+$@isU', '', $cont);
-					$cont = preg_replace('@<title>.+</title>@isU', '', $cont);
-					$cont = preg_replace('@<h1>.+</h1>@isU', '', $cont, 1);
-
-					$out['text'] .= $cont;
+					$out['text'] .= self::getDocumentContent($file);
 				} else {
-					$out['title'] = 'Unknown file type';
+					$out['title'] = _L('Unknown file type');
 					$out['icon'] = 'img/error_big.png';
-					$out['text'] = '<p>The system does not know how to handle this file type.</p>';
+					$out['text'] = '<p>'._L('The system does not know how to handle this file type.').'</p>';
 					return;
 				}
 			} else if (is_dir($realfile)) {
-				$out['title'] = ($file == '') ? OIDplus::config()->getValue('resource_plugin_title', 'Documents and resources') : basename($file);
+				$out['title'] = ($file == '') ? OIDplus::config()->getValue('resource_plugin_title', $this->getDefaultTitle()) : self::getFolderTitle($realfile);
 
 				if ($file == '') {
 					$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				} else {
-					$out['icon'] = OIDplus::webpath(__DIR__).'show_icon.php?mode=icon_folder_big&file='.urlencode($file);
+					$out['icon'] = OIDplus::webpath(__DIR__).'show_icon.php?mode=icon_folder_big&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 					/*
 					$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_big.png';
 					if (file_exists($icon_candidate)) {
@@ -224,7 +250,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				natcasesort($dirs);
 				foreach ($dirs as $dir) {
 					$realdir = self::realname($dir);
-					$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_folder&file='.urlencode($dir);
+					$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_folder&lang='.OIDplus::getCurrentLang().'&file='.urlencode($dir);
 					/*
 					$icon_candidate = pathinfo($realdir)['dirname'].'/'.pathinfo($realdir)['filename'].'_tree.png';
 					if (file_exists($icon_candidate)) {
@@ -238,19 +264,21 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.rtrim($dir,'/').'/').'>'.$ic.' '.htmlentities(basename($dir)).'</a></p>';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.rtrim($dir,'/').'/').'>'.$ic.' '.htmlentities(self::getFolderTitle($realdir)).'</a></p>';
 					$count++;
 				}
 
 				$files = array_merge(
-					self::myglob(rtrim($file,'/').'/'.'*.htm*'), // TODO: also PHP?
-					self::myglob(rtrim($file,'/').'/'.'*.url')
+					self::myglob(rtrim($file,'/').'/'.'*.htm'), // TODO: also PHP?
+					self::myglob(rtrim($file,'/').'/'.'*.html'),
+					self::myglob(rtrim($file,'/').'/'.'*.url'),
+					self::myglob(rtrim($file,'/').'/'.'*.link')
 				);
 				natcasesort($files);
 				foreach ($files as $file) {
 					$realfile = self::realname($file);
-					if (substr($file,-4,4) == '.url') {
-						$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_url&file='.urlencode($file);
+					if ((substr($file,-4,4) == '.url') || (substr($file,-5,5) == '.link')) {
+						$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_url&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 						/*
 						$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_tree.png';
 						if (file_exists($icon_candidate)) {
@@ -269,7 +297,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 						$out['text'] .= '<p><a href="'.htmlentities(self::getHyperlinkURL($realfile)).'" target="_blank">'.$ic.' '.htmlentities($this->getHyperlinkTitle($realfile)).' '.$hyperlink_pic.'</a></p>';
 						$count++;
 					} else {
-						$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_doc&file='.urlencode($file);
+						$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_doc&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 						/*
 						$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_tree.png';
 						if (file_exists($icon_candidate)) {
@@ -289,12 +317,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				}
 
 				if ($count == 0) {
-					$out['text'] .= '<p>This folder does not contain any elements</p>';
+					$out['text'] .= '<p>'._L('This folder does not contain any elements').'</p>';
 				}
 			} else {
-				$out['title'] = 'Not found';
+				$out['title'] = _L('Not found');
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>This resource doesn\'t exist anymore.</p>';
+				$out['text'] = '<p>'._L('This resource doesn\'t exist anymore.').'</p>';
 			}
 		}
 	}
@@ -312,7 +340,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 			$realdir = self::realname($dir);
 
-			$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_folder&file='.urlencode($dir);
+			$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_folder&lang='.OIDplus::getCurrentLang().'&file='.urlencode($dir);
 			/*
 			$icon_candidate = pathinfo($realdir)['dirname'].'/'.pathinfo($realdir)['filename'].'_tree.png';
 			if (file_exists($icon_candidate)) {
@@ -327,21 +355,23 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			$children[] = array(
 				'id' => 'oidplus:resources$'.$dir,
 				'icon' => $tree_icon,
-				'text' => basename($dir),
+				'text' => self::getFolderTitle($realdir),
 				'children' => $tmp,
 				'state' => array("opened" => $depth <= OIDplus::config()->getValue('resource_plugin_autoopen_level', 1)-1)
 			);
 		}
 
 		$files = array_merge(
-			self::myglob($rootdir.'*.htm*'), // TODO: Also PHP?
-			self::myglob($rootdir.'*.url')
+			self::myglob($rootdir.'*.htm'), // TODO: Also PHP?
+			self::myglob($rootdir.'*.html'),
+			self::myglob($rootdir.'*.url'),
+			self::myglob($rootdir.'*.link')
 		);
 		natcasesort($files);
 		foreach ($files as $file) {
 			$realfile = self::realname($file);
-			if (substr($file,-4,4) == '.url') {
-				$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_url&file='.urlencode($file);
+			if ((substr($file,-4,4) == '.url') || (substr($file,-5,5) == '.link')) {
+				$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_url&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 				/*
 				$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_tree.png';
 				if (file_exists($icon_candidate)) {
@@ -363,7 +393,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					'state' => array("opened" => $depth <= OIDplus::config()->getValue('resource_plugin_autoopen_level', 1)-1)
 				);
 			} else {
-				$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_doc&file='.urlencode($file);
+				$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_doc&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 				/*
 				$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_tree.png';
 				if (file_exists($icon_candidate)) {
@@ -387,7 +417,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	private function publicSitemap_rec($json, &$out) {
 		foreach ($json as $x) {
 			if (isset($x['id']) && $x['id']) {
-				$out[] = OIDplus::getSystemUrl().'?goto='.urlencode($x['id']);
+				$out[] = $x['id'];
 			}
 			if (isset($x['children'])) {
 				$this->publicSitemap_rec($x['children'], $out);
@@ -417,7 +447,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				'id' => 'oidplus:resources',
 				'icon' => $tree_icon,
 				'state' => array("opened" => true),
-				'text' => OIDplus::config()->getValue('resource_plugin_title', 'Documents and resources'),
+				'text' => OIDplus::config()->getValue('resource_plugin_title', $this->getDefaultTitle()),
 				'children' => $children
 			);
 		}
@@ -430,19 +460,93 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	private static function getHyperlinkTitle($file) {
-		return preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($file));
+		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
+		if (file_exists($file2)) $file = $file2;
+
+		if (substr($file,-4,4) == '.url') {
+			return preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($file));
+		} else if (substr($file,-5,5) == '.link') {
+			/*
+			[Link]
+			Title=Report a bug
+			URL=https://www.viathinksoft.com/thinkbug/thinkbug.php?id=97
+			*/
+
+			$data = @parse_ini_file($file, true);
+			if (!$data) {
+				throw new OIDplusException(_L('File %1 has an invalid INI format!',$file));
+			}
+			if (!isset($data['Link'])) {
+				throw new OIDplusException(_L('Could not find "%1" section at %2','Link',$file));
+			}
+			if (!isset($data['Link']['Title'])) {
+				throw new OIDplusException(_L('"%1" is missing in %2','Title',$file));
+			}
+			return $data['Link']['Title'];
+		} else {
+			throw new OIDplusException(_L('Unexpected file extension for file %1',$file));
+		}
 	}
 
 	private static function getHyperlinkURL($file) {
-		/*
-		[{000214A0-0000-0000-C000-000000000046}]
-		Prop3=19,2
-		[InternetShortcut]
-		URL=http://www.example.com/
-		IDList=
-		*/
-		$cont = file_get_contents($file);
-		if (!preg_match('@URL=(.+)\n@ismU', $cont, $m)) return null;
-		return trim($m[1]);
+		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
+		if (file_exists($file2)) $file = $file2;
+
+		if (substr($file,-4,4) == '.url') {
+			/*
+			[{000214A0-0000-0000-C000-000000000046}]
+			Prop3=19,2
+			[InternetShortcut]
+			URL=http://www.example.com/
+			IDList=
+			*/
+
+			$data = @parse_ini_file($file, true);
+			if (!$data) {
+				throw new OIDplusException(_L('File %1 has an invalid INI format!',$file));
+			}
+			if (!isset($data['InternetShortcut'])) {
+				throw new OIDplusException(_L('Could not find "%1" section at %2','InternetShortcut',$file));
+			}
+			if (!isset($data['InternetShortcut']['URL'])) {
+				throw new OIDplusException(_L('"%1" is missing in %2','URL',$file));
+			}
+			return $data['InternetShortcut']['URL'];
+		} else if (substr($file,-5,5) == '.link') {
+			/*
+			[Link]
+			Title=Report a bug
+			URL=https://www.viathinksoft.com/thinkbug/thinkbug.php?id=97
+			*/
+
+			$data = @parse_ini_file($file, true);
+			if (!$data) {
+				throw new OIDplusException(_L('File %1 has an invalid INI format!',$file));
+			}
+			if (!isset($data['Link'])) {
+				throw new OIDplusException(_L('Could not find "%1" section at %2','Link',$file));
+			}
+			if (!isset($data['Link']['URL'])) {
+				throw new OIDplusException(_L('"%1" is missing in %2','URL',$file));
+			}
+			return $data['Link']['URL'];
+		} else {
+			throw new OIDplusException(_L('Unexpected file extension for file %1',$file));
+		}
+
+	}
+
+	private static function getFolderTitle($dir) {
+		$data = @parse_ini_file("$dir/folder\$".OIDplus::getCurrentLang().".ini", true);
+		if ($data && isset($data['Folder']) && isset($data['Folder']['Title'])) {
+			return $data['Folder']['Title'];
+		}
+
+		$data = @parse_ini_file("$dir/folder.ini", true);
+		if ($data && isset($data['Folder']) && isset($data['Folder']['Title'])) {
+			return $data['Folder']['Title'];
+		}
+
+		return basename($dir);
 	}
 }

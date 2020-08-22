@@ -38,17 +38,17 @@ class OIDplusQueryResultMySQL extends OIDplusQueryResult {
 	}
 
 	public function num_rows(): int {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		return $this->res->num_rows;
 	}
 
 	public function fetch_array()/*: ?array*/ {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		return $this->res->fetch_array(MYSQLI_ASSOC);
 	}
 
 	public function fetch_object()/*: ?object*/ {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		return $this->res->fetch_object("stdClass");
 	}
 }

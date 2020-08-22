@@ -18,7 +18,7 @@
 /* RA */
 
 function raLogout(email) {
-	if(!window.confirm("Are you sure that you want to logout?")) return false;
+	if(!window.confirm(_L("Are you sure that you want to logout?"))) return false;
 
 	$.ajax({
 		url:"ajax.php",
@@ -29,16 +29,16 @@ function raLogout(email) {
 			email:email,
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
 				window.location.href = '?goto=oidplus:system';
 				// reloadContent();
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});
@@ -56,18 +56,18 @@ function raLogin(email, password) {
 			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 			if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 			} else if (data.status == 0) {
 				window.location.href = '?goto=oidplus:system';
 				// reloadContent();
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 			}
 		}
@@ -92,18 +92,18 @@ function adminLogin(password) {
 			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 			if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 			} else if (data.status == 0) {
 				window.location.href = '?goto=oidplus:system';
 				// reloadContent();
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 			}
 		}
@@ -111,7 +111,7 @@ function adminLogin(password) {
 }
 
 function adminLogout() {
-	if(!window.confirm("Are you sure that you want to logout?")) return false;
+	if(!window.confirm(_L("Are you sure that you want to logout?"))) return false;
 
 	$.ajax({
 		url:"ajax.php",
@@ -121,16 +121,16 @@ function adminLogout() {
 			action:"admin_logout",
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
 				window.location.href = '?goto=oidplus:system';
 				// reloadContent();
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});

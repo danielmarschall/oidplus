@@ -50,7 +50,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 			return OIDplusQueryResultODBC(@odbc_exec($this->conn, $sql));
 			*/
 			if (!is_array($prepared_args)) {
-				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
+				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
 			}
 
 			foreach ($prepared_args as &$value) {
@@ -62,7 +62,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 			$ps = @odbc_prepare($this->conn, $sql);
 			if (!$ps) {
 				$this->last_error = odbc_errormsg($this->conn);
-				throw new OIDplusSQLException($sql, 'Cannot prepare statement: '.$this->error());
+				throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
 			}
 
 			if (!@odbc_execute($ps, $prepared_args)) {
@@ -80,7 +80,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	}
 
 	protected function doConnect()/*: void*/ {
-		if (!function_exists('odbc_connect')) throw new OIDplusConfigInitializationException('PHP extension "ODBC" not installed');
+		if (!function_exists('odbc_connect')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','ODBC'));
 
 		// Try connecting to the database
 		$dsn      = OIDplus::baseConfig()->getValue('ODBC_DSN',      'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
@@ -90,7 +90,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 
 		if (!$this->conn) {
 			$message = odbc_errormsg();
-			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
+			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' '.$message);
 		}
 
 		$this->last_error = null;
@@ -119,7 +119,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	}
 
 	public function transaction_begin()/*: void*/ {
-		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
+		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		odbc_autocommit($this->conn, false); // begin transaction
 		$this->intransaction = true;
 	}

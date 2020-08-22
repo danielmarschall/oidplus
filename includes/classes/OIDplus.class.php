@@ -91,18 +91,18 @@ class OIDplus {
 				}
 			} else {
 				if (!is_dir(OIDplus::basePath().'/setup')) {
-					throw new OIDplusConfigInitializationException('File userdata/baseconfig/config.inc.php is missing, but setup can\'t be started because its directory missing.');
+					throw new OIDplusConfigInitializationException(_L('File %1 is missing, but setup can\'t be started because its directory missing.','userdata/baseconfig/config.inc.php'));
 				} else {
 					if (self::$html) {
 						if (strpos($_SERVER['REQUEST_URI'], OIDplus::getSystemUrl(true).'setup/') !== 0) {
 							header('Location:'.OIDplus::getSystemUrl().'setup/');
-							die('Redirecting to setup...');
+							die(_L('Redirecting to setup...'));
 						} else {
 							return self::$baseConfig;
 						}
 					} else {
 						// This can be displayed in e.g. ajax.php
-						throw new OIDplusConfigInitializationException('File userdata/baseconfig/config.inc.php is missing. Please run setup again.');
+						throw new OIDplusConfigInitializationException(_L('File %1 is missing. Please run setup again.','userdata/baseconfig/config.inc.php'));
 					}
 				}
 			}
@@ -110,11 +110,11 @@ class OIDplus {
 			// Check important config settings
 
 			if (self::$baseConfig->getValue('CONFIG_VERSION') != 2.1) {
-				throw new OIDplusConfigInitializationException("The information located in $config_file is outdated.");
+				throw new OIDplusConfigInitializationException(_L("The information located in %1 is outdated.",$config_file));
 			}
 
 			if (self::$baseConfig->getValue('SERVER_SECRET', '') === '') {
-				throw new OIDplusConfigInitializationException("You must set a value for SERVER_SECRET in $config_file for the system to operate secure.");
+				throw new OIDplusConfigInitializationException(_L("You must set a value for SERVER_SECRET in %1 for the system to operate secure.",$config_file));
 			}
 		}
 
@@ -131,17 +131,17 @@ class OIDplus {
 			// These are important settings for base functionalities and therefore are not inside plugins
 			self::$config->prepareConfigKey('system_title', 'What is the name of your RA?', 'OIDplus 2.0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 				if (empty($value)) {
-					throw new OIDplusException("Please enter a value for the system title.");
+					throw new OIDplusException(_L('Please enter a value for the system title.'));
 				}
 			});
 			self::$config->prepareConfigKey('admin_email', 'E-Mail address of the system administrator', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 				if (!empty($value) && !OIDplus::mailUtils()->validMailAddress($value)) {
-					throw new OIDplusException("This is not a correct email address");
+					throw new OIDplusException(_L('This is not a correct email address'));
 				}
 			});
 			self::$config->prepareConfigKey('global_cc', 'Global CC for all outgoing emails?', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 				if (!empty($value) && !OIDplus::mailUtils()->validMailAddress($value)) {
-					throw new OIDplusException("This is not a correct email address");
+					throw new OIDplusException(_L('This is not a correct email address'));
 				}
 			});
 			self::$config->prepareConfigKey('objecttypes_initialized', 'List of object type plugins that were initialized once', '', OIDplusConfig::PROTECTION_READONLY, function($value) {
@@ -154,7 +154,7 @@ class OIDplus {
 				$uniq_ary = array_unique($ary);
 
 				if (count($ary) != count($uniq_ary)) {
-					throw new OIDplusException("Please check your input. Some object types are double.");
+					throw new OIDplusException(_L('Please check your input. Some object types are double.'));
 				}
 
 				foreach ($ary as $ot_check) {
@@ -172,7 +172,7 @@ class OIDplus {
 						}
 					}
 					if (!$ns_found) {
-						throw new OIDplusException("Please check your input. Namespace \"$ot_check\" is not found");
+						throw new OIDplusException(_L('Please check your input. Namespace "%1" is not found',$ot_check));
 					}
 				}
 			});
@@ -278,10 +278,11 @@ class OIDplus {
 
 	public static function getActiveDatabasePlugin() {
 		if (OIDplus::baseConfig()->getValue('DATABASE_PLUGIN', '') === '') {
-			throw new OIDplusConfigInitializationException("No database plugin selected in config file");
+			throw new OIDplusConfigInitializationException(_L('No database plugin selected in config file'));
 		}
 		if (!isset(self::$dbPlugins[OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')])) {
-			throw new OIDplusConfigInitializationException("Database plugin '".OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')."' not found");
+			$db_plugin_name = OIDplus::baseConfig()->getValue('DATABASE_PLUGIN');
+			throw new OIDplusConfigInitializationException(_L('Database plugin "%1" not found',$db_plugin_name));
 		}
 		return self::$dbPlugins[OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')];
 	}
@@ -363,7 +364,7 @@ class OIDplus {
 	private static function registerObjectType($ot) {
 		$ns = $ot::ns();
 
-		if (empty($ns)) throw new OIDplusException("Attention: Empty NS at $ot\n");
+		if (empty($ns)) throw new OIDplusException(_L('Attention: Empty NS at %1',$ot));
 
 		$ns_found = false;
 		foreach (array_merge(OIDplus::getEnabledObjectTypes(), OIDplus::getDisabledObjectTypes()) as $test_ot) {
@@ -373,7 +374,7 @@ class OIDplus {
 			}
 		}
 		if ($ns_found) {
-			throw new OIDplusException("Attention: Two objectType plugins use the same namespace \"$ns\"!");
+			throw new OIDplusException(_L('Attention: Two objectType plugins use the same namespace "%1"!',$ns));
 		}
 
 		$init = OIDplus::config()->getValue("objecttypes_initialized");
@@ -520,33 +521,33 @@ class OIDplus {
 			foreach ($bry as $pluginname_folder => $cry) {
 				$class_name = $cry->getPhpMainClass();
 				if (!$class_name) {
-					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Manifest does not declare a PHP main class");
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Manifest does not declare a PHP main class',$plugintype_folder,$pluginname_folder));
 				}
 				if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_'.$class_name, false)) {
 					continue;
 				}
 				if (!class_exists($class_name)) {
-					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Manifest declares PHP main class as '$class_name', but it could not be found");
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Manifest declares PHP main class as "%1", but it could not be found',$plugintype_folder,$pluginname_folder,$class_name));
 				}
 				if (!is_subclass_of($class_name, $expectedPluginClass)) {
-					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin main class '$class_name' is expected to be a subclass of '$expectedPluginClass'");
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Plugin main class "%1" is expected to be a subclass of "%2"',$plugintype_folder,$pluginname_folder,$class_name,$expectedPluginClass));
 				}
 				if (($class_name!=$cry->getTypeClass()) && (!is_subclass_of($class_name,$cry->getTypeClass()))) {
-					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin main class '$class_name' is expected to be a subclass of '".$cry->getTypeClass()."', according to type declared in manifest");
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Plugin main class "%1" is expected to be a subclass of "%2", according to type declared in manifest',$plugintype_folder,$pluginname_folder,$class_name,$cry->getTypeClass()));
 				}
 				if (($cry->getTypeClass()!=$expectedPluginClass) && (!is_subclass_of($cry->getTypeClass(),$expectedPluginClass))) {
-					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Class declared in manifest is '".$cry->getTypeClasS()."' does not fit expected class for this plugin type '$expectedPluginClass'");
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Class declared in manifest is "%1" does not fit expected class for this plugin type "%2"',$plugintype_folder,$pluginname_folder,$cry->getTypeClass(),$expectedPluginClass));
 				}
 
 				$plugin_oid = $cry->getOid();
 				if (!$plugin_oid) {
-					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Does not have an OID");
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Does not have an OID',$plugintype_folder,$pluginname_folder));
 				}
 				if (!oid_valid_dotnotation($plugin_oid, false, false, 2)) {
-					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: Plugin OID '$plugin_oid' is invalid (needs to be valid dot-notation)");
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Plugin OID "%1" is invalid (needs to be valid dot-notation)',$plugintype_folder,$pluginname_folder,$plugin_oid));
 				}
 				if (isset($known_plugin_oids[$plugin_oid])) {
-					throw new OIDplusException("Plugin '$plugintype_folder/$pluginname_folder' is errornous: The OID '$plugin_oid' is already used by the plugin '".$known_plugin_oids[$plugin_oid]."'");
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('The OID "%1" is already used by the plugin "%2"',$plugintype_folder,$pluginname_folder,$plugin_oid,$known_plugin_oids[$plugin_oid]));
 				} else {
 					$known_plugin_oids[$plugin_oid] = $plugintype_folder.'/'.$pluginname_folder;
 				}
@@ -570,7 +571,7 @@ class OIDplus {
 
 		if (self::$old_config_format) {
 			// Note: This can only happen in very special cases (e.g. test cases) where you call init() twice
-			throw new OIDplusConfigInitializationException('A full re-initialization is not possible if a version 2.0 config file (containing "defines") is used. Please update to a config 2.1 file by running setup again.');
+			throw new OIDplusConfigInitializationException(_L('A full re-initialization is not possible if a version 2.0 config file (containing "defines") is used. Please update to a config 2.1 file by running setup again.'));
 		}
 
 		self::$config = null;
@@ -703,7 +704,7 @@ class OIDplus {
 			}
 
 			$is_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
-			$protocol = $is_ssl ? 'https' : 'http';
+			$protocol = $is_ssl ? 'https' : 'http'; // do not translate
 			$host = $_SERVER['HTTP_HOST']; // includes port if it is not 80/443
 			$res = $protocol.'://'.$host.$res;
 
@@ -778,22 +779,22 @@ class OIDplus {
 
 	public static function getInstallType() {
 		if (!file_exists(OIDplus::basePath().'/oidplus_version.txt') && !is_dir(OIDplus::basePath().'/.svn')) {
-			return 'unknown';
+			return 'unknown'; // do not translate
 		}
 		if (file_exists(OIDplus::basePath().'/oidplus_version.txt') && is_dir(OIDplus::basePath().'/.svn')) {
-			return 'ambigous';
+			return 'ambigous'; // do not translate
 		}
 		if (is_dir(OIDplus::basePath().'/.svn')) {
-			return 'svn-wc';
+			return 'svn-wc'; // do not translate
 		}
 		if (file_exists(OIDplus::basePath().'/oidplus_version.txt')) {
-			return 'svn-snapshot';
+			return 'svn-snapshot'; // do not translate
 		}
 	}
 
 	public static function getVersion() {
 		if (file_exists(OIDplus::basePath().'/oidplus_version.txt') && is_dir(OIDplus::basePath().'/.svn')) {
-			return false; // version is ambigous
+			return false; // version is ambiguous
 		}
 
 		if (is_dir(OIDplus::basePath().'/.svn')) {
@@ -803,7 +804,7 @@ class OIDplus {
 					$db = new SQLite3(OIDplus::basePath().'/.svn/wc.db');
 					$results = $db->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
 					while ($row = $results->fetchArray()) {
-						return 'svn-'.$row['rev'];
+						return 'svn-'.$row['rev']; // do not translate
 					}
 					$db->close();
 					$db = null;
@@ -815,7 +816,7 @@ class OIDplus {
 					$pdo = new PDO('sqlite:' . OIDplus::basePath().'/.svn/wc.db');
 					$res = $pdo->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
 					$row = $res->fetch();
-					if ($row !== false) return 'svn-'.$row['rev'];
+					if ($row !== false) return 'svn-'.$row['rev']; // do not translate
 					$pdo = null;
 				} catch (Exception $e) {
 				}
@@ -825,19 +826,19 @@ class OIDplus {
 			// We don't prioritize this method, because a failed shell access will flood the apache error log with STDERR messages
 			$output = @shell_exec('svnversion '.escapeshellarg(OIDplus::basePath()));
 			if (preg_match('/\d+/', $output, $match)) {
-				return 'svn-'.$match[0];
+				return 'svn-'.$match[0]; // do not translate
 			}
 
 			$output = @shell_exec('svn info '.escapeshellarg(OIDplus::basePath()));
-			if (preg_match('/Revision:\s*(\d+)/m', $output, $match)) {
-				return 'svn-'.$match[1];
+			if (preg_match('/Revision:\s*(\d+)/m', $output, $match)) { // do not translate
+				return 'svn-'.$match[1]; // do not translate
 			}
 		}
 
 		if (file_exists(OIDplus::basePath().'/oidplus_version.txt')) {
 			$cont = file_get_contents(OIDplus::basePath().'/oidplus_version.txt');
-			if (preg_match('@Revision (\d+)@', $cont, $m))
-				return 'svn-'.$m[1];
+			if (preg_match('@Revision (\d+)@', $cont, $m)) // do not translate
+				return 'svn-'.$m[1]; // do not translate
 		}
 
 		return false;
@@ -874,7 +875,7 @@ class OIDplus {
 			} else {
 				$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 				header('Location:'.$location);
-				die('Redirecting to HTTPS...');
+				die(_L('Redirecting to HTTPS...'));
 				self::$sslAvailableCache = true;
 				return true;
 			}
@@ -895,7 +896,7 @@ class OIDplus {
 						// HTTPS was detected before, but we are HTTP. Redirect now
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
-						die('Redirecting to HTTPS...');
+						die(_L('Redirecting to HTTPS...'));
 						self::$sslAvailableCache = true;
 						return true;
 					} else {
@@ -910,7 +911,7 @@ class OIDplus {
 						setcookie('SSL_CHECK', '1', 0, $cookie_path, '', false, true);
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
-						die('Redirecting to HTTPS...');
+						die(_L('Redirecting to HTTPS...'));
 						self::$sslAvailableCache = true;
 						return true;
 					} else {
@@ -935,33 +936,28 @@ class OIDplus {
 		return $target;
 	}
 
+	public static function getAvailableLangs() {
+		$langs = array();
+		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
+			$xmldata = $pluginManifest->getRawXml();
+			$code = $xmldata->language->code->__toString();
+			$langs[] = $code;
+		}
+		return $langs;
+	}
+
 	public static function getCurrentLang() {
-		$lang = isset($_COOKIE['LANGUAGE']) ? $_COOKIE['LANGUAGE'] : self::DEFAULT_LANGUAGE;
-		$lang = preg_replace('@[^a-z]@ismU', '', $lang); // sanitize
+		if (isset($_GET['lang'])) {
+			$lang = $_GET['lang'];
+		} else if (isset($_POST['lang'])) {
+			$lang = $_POST['lang'];
+		} else if (isset($_COOKIE['LANGUAGE'])) {
+			$lang = $_COOKIE['LANGUAGE'];
+		} else {
+			$lang = self::DEFAULT_LANGUAGE;
+		}
+		$lang = substr(preg_replace('@[^a-z]@ismU', '', $lang),0,4); // sanitize
 		return $lang;
 	}
 
-	// Note: Please use the alias _L() instead. It has also a builtin sprintf() to make code easier.
-	public static function getText($str) {
-		$lang = self::getCurrentLang();
-
-		static $translation_array = array();
-		static $translation_loaded = null;
-		if ($lang != $translation_loaded) {
-			if (strpos($lang,'/') !== false) return $str; // prevent attack (but actually, the sanitization above should work)
-			if (strpos($lang,'\\') !== false) return $str; // prevent attack (but actually, the sanitization above should work)
-			if (strpos($lang,'..') !== false) return $str; // prevent attack (but actually, the sanitization above should work)
-			$translation_file = __DIR__.'/../../plugins/language/'.$lang.'/messages.xml';
-			if (!file_exists($translation_file)) return $str;
-			$xml = simplexml_load_string(file_get_contents($translation_file));
-			foreach ($xml->message as $msg) {
-				$src = trim($msg->source->__toString());
-				$dst = trim($msg->target->__toString());
-				$translation_array[$src] = $dst;
-			}
-			$translation_loaded = $lang;
-		}
-
-		return isset($translation_array[$str]) && !empty($translation_array[$str]) ? $translation_array[$str] : $str;
-	}
 }

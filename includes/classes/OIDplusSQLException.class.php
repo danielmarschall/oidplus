@@ -20,8 +20,7 @@
 class OIDplusSQLException extends OIDplusException {
 
 	public function __construct($sql, $message) {
-		return parent::__construct("$message at query \"$sql\"");
+		return parent::__construct(_L('%1 at query "%2"',$message,$sql));
 	}
 
 }
-

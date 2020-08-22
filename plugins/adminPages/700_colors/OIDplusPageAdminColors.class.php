@@ -22,7 +22,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 	public function action($actionID, $params) {
 		if ($actionID == 'color_update') {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
-				throw new OIDplusException('You need to log in as administrator.');
+				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
 
 			OIDplus::config()->setValue('color_hue_shift', $params['hue_shift']);
@@ -34,29 +34,29 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException("Unknown action ID");
+			throw new OIDplusException(_L('Unknown action ID'));
 		}
 	}
 
 	public function init($html=true) {
 		OIDplus::config()->prepareConfigKey('color_hue_shift', 'HSV Hue shift of CSS colors (-360..360)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < -360) || ($value > 360)) {
-				throw new OIDplusException("Please enter a valid value.");
+				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
 		OIDplus::config()->prepareConfigKey('color_sat_shift', 'HSV Saturation shift of CSS colors (-100..100)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < -100) || ($value > 100)) {
-				throw new OIDplusException("Please enter a valid value.");
+				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
 		OIDplus::config()->prepareConfigKey('color_val_shift', 'HSV Value shift of CSS colors (-100..100)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < -100) || ($value > 100)) {
-				throw new OIDplusException("Please enter a valid value.");
+				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
 		OIDplus::config()->prepareConfigKey('color_invert', 'Invert colors? (0=no, 1=yes)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
-				throw new OIDplusException("Please enter a valid value (0 or 1).");
+				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
 			}
 		});
 	}
@@ -64,35 +64,35 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:colors') {
 			$handled = true;
-			$out['title'] = 'Colors';
+			$out['title'] = _L('Colors');
 			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
 			}
 
 			$out['text']  = '<br><p>';
-			$out['text'] .= '  <label for="amount">Hue shift:</label>';
+			$out['text'] .= '  <label for="amount">'._L('Hue shift').':</label>';
 			$out['text'] .= '  <input type="text" id="hshift" readonly style="border:0; background:transparent; font-weight:bold;">';
 			$out['text'] .= '</p>';
 			$out['text'] .= '<div id="slider-hshift"></div>';
 
 			$out['text'] .= '<br><p>';
-			$out['text'] .= '  <label for="amount">Saturation shift:</label>';
+			$out['text'] .= '  <label for="amount">'._L('Saturation shift').':</label>';
 			$out['text'] .= '  <input type="text" id="sshift" readonly style="border:0; background:transparent; font-weight:bold;">';
 			$out['text'] .= '</p>';
 			$out['text'] .= '<div id="slider-sshift"></div>';
 
 			$out['text'] .= '<br><p>';
-			$out['text'] .= '  <label for="amount">Value shift:</label>';
+			$out['text'] .= '  <label for="amount">'._L('Value shift').':</label>';
 			$out['text'] .= '  <input type="text" id="vshift" readonly style="border:0; background:transparent; font-weight:bold;">';
 			$out['text'] .= '</p>';
 			$out['text'] .= '<div id="slider-vshift"></div>';
 
 			$out['text'] .= '<br><p>';
-			$out['text'] .= '  <label for="amount">Invert colors:</label>';
+			$out['text'] .= '  <label for="amount">'._L('Invert colors').':</label>';
 			$out['text'] .= '  <input type="text" id="icolor" readonly style="border:0; background:transparent; font-weight:bold;">';
 			$out['text'] .= '</p>';
 			$out['text'] .= '<div id="slider-icolor"></div>';
@@ -106,10 +106,10 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			$out['text'] .= '</script>';
 
 			$out['text'] .= '<br>';
-			$out['text'] .= '<input type="button" onclick="color_reset_sliders_cfg()" value="Reset to last saved config">'.str_repeat('&nbsp;',5);
-			$out['text'] .= '<input type="button" onclick="color_reset_sliders_factory()" value="Reset default setting">'.str_repeat('&nbsp;',5);
-			$out['text'] .= '<input type="button" onclick="test_color_theme()" value="Test">'.str_repeat('&nbsp;',5);
-			$out['text'] .= '<input type="button" onclick="crudActionColorUpdate()" value="Set permanently">';
+			$out['text'] .= '<input type="button" onclick="color_reset_sliders_cfg()" value="'._L('Reset to last saved config').'">'.str_repeat('&nbsp;',5);
+			$out['text'] .= '<input type="button" onclick="color_reset_sliders_factory()" value="'._L('Reset default setting').'">'.str_repeat('&nbsp;',5);
+			$out['text'] .= '<input type="button" onclick="test_color_theme()" value="'._L('Test').'">'.str_repeat('&nbsp;',5);
+			$out['text'] .= '<input type="button" onclick="crudActionColorUpdate()" value="'._L('Set permanently').'">';
 		}
 	}
 
@@ -125,7 +125,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
                 $json[] = array(
                         'id' => 'oidplus:colors',
                         'icon' => $tree_icon,
-                        'text' => 'Colors'
+                        'text' => _L('Colors')
                 );
 
                 return true;
@@ -143,7 +143,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
 
-		echo "<p><u>Step $step: Color Theme</u></p>";
+		echo '<p><u>'._L('Step %1: Color Theme',$step).'</u></p>';
 
 		echo '<input type="checkbox" name="color_invert" id="color_invert"';
 		if (isset($_REQUEST['sent'])) {
@@ -155,7 +155,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 				echo ' checked';
 			}
 		}
-		echo '> <label for="color_invert">Dark Theme (inverted colors)</label><br>';
+		echo '> <label for="color_invert">'._L('Dark Theme (inverted colors)').'</label><br>';
 
 		$msg = '';
 		if ($do_edits) {

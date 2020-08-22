@@ -30,10 +30,10 @@ class OIDplusIpv4 extends OIDplusObject {
 			list($bare, $cidr) = explode('/', $ipv4);
 			$this->bare = $bare;
 			$this->cidr = $cidr;
-			if (!ipv4_valid($bare)) throw new OIDplusException("Invalid IPv4");
-			if (!is_numeric($cidr)) throw new OIDplusException("Invalid IPv4");
-			if ($cidr < 0) throw new OIDplusException("Invalid IPv4");
-			if ($cidr > 32) throw new OIDplusException("Invalid IPv4");
+			if (!ipv4_valid($bare)) throw new OIDplusException(_L('Invalid IPv4'));
+			if (!is_numeric($cidr)) throw new OIDplusException(_L('Invalid IPv4'));
+			if ($cidr < 0) throw new OIDplusException(_L('Invalid IPv4'));
+			if ($cidr > 32) throw new OIDplusException(_L('Invalid IPv4'));
 			$this->bare = ipv4_normalize($this->bare);
 		}
 	}
@@ -45,11 +45,11 @@ class OIDplusIpv4 extends OIDplusObject {
 	}
 
 	public static function objectTypeTitle() {
-		return "IPv4 Network Blocks";
+		return _L('IPv4 Network Blocks');
 	}
 
 	public static function objectTypeTitleShort() {
-		return "IPv4";
+		return _L('IPv4');
 	}
 
 	public static function ns() {
@@ -73,15 +73,15 @@ class OIDplusIpv4 extends OIDplusObject {
 
 		if (!$this->isRoot()) {
 			if (!ipv4_in_cidr($this->bare.'/'.$this->cidr, $str)) {
-				throw new OIDplusException("Cannot add this address, because it must be inside the address range of the superior range.");
+				throw new OIDplusException(_L('Cannot add this address, because it must be inside the address range of the superior range.'));
 			}
 		}
 
 		list($ipv4, $cidr) = explode('/', $str);
-		if ($cidr < 0) throw new OIDplusException("Invalid IPv4 address '$str'");
-		if ($cidr > 32) throw new OIDplusException("Invalid IPv4 address '$str'");
+		if ($cidr < 0) throw new OIDplusException(_L('Invalid IPv4 address %1',$str));
+		if ($cidr > 32) throw new OIDplusException(_L('Invalid IPv4 address %1',$str));
 		$ipv4_normalized = ipv4_normalize($ipv4);
-		if (!$ipv4_normalized) throw new OIDplusException("Invalid IPv4 address '$str'");
+		if (!$ipv4_normalized) throw new OIDplusException(_L('Invalid IPv4 address %1',$str));
 		return 'ipv4:'.$ipv4_normalized.'/'.$cidr; // overwrite; no hierarchical tree
 	}
 
@@ -114,39 +114,39 @@ class OIDplusIpv4 extends OIDplusObject {
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
 			if ($res->num_rows() > 0) {
-				$content  = 'Please select a network block in the tree view at the left to show its contents.';
+				$content  = _L('Please select a network block in the tree view at the left to show its contents.');
 			} else {
-				$content  = 'Currently, no network blocks are registered in the system.';
+				$content  = _L('Currently, no network blocks are registered in the system.');
 			}
 
 			if (!$this->isLeafNode()) {
 				if (OIDplus::authUtils()::isAdminLoggedIn()) {
-					$content .= '<h2>Manage root objects</h2>';
+					$content .= '<h2>'._L('Manage root objects').'</h2>';
 				} else {
-					$content .= '<h2>Available objects</h2>';
+					$content .= '<h2>'._L('Available objects').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}
 		} else {
 			$title = $this->getTitle();
 
-			$content = '<h2>Technical information</h2>';
+			$content = '<h2>'._L('Technical information').'</h2>';
 
-			$content .= '<p>IPv4/CIDR: <code>' . ipv4_normalize($this->bare) . '/' . $this->cidr . '</code><br>';
+			$content .= '<p>'._L('IPv4/CIDR').': <code>' . ipv4_normalize($this->bare) . '/' . $this->cidr . '</code><br>';
 			if ($this->cidr < 32) {
-				$content .= 'First address: <code>' . ipv4_cidr_min_ip($this->bare . '/' . $this->cidr) . '</code><br>';
-				$content .= 'Last address: <code>' . ipv4_cidr_max_ip($this->bare . '/' . $this->cidr) . '</code></p>';
+				$content .= _L('First address').': <code>' . ipv4_cidr_min_ip($this->bare . '/' . $this->cidr) . '</code><br>';
+				$content .= _L('Last address').': <code>' . ipv4_cidr_max_ip($this->bare . '/' . $this->cidr) . '</code></p>';
 			} else {
-				$content .= 'Single host address</p>';
+				$content .= _L('Single host address').'</p>';
 			}
 
-			$content .= '<h2>Description</h2>%%DESC%%';
+			$content .= '<h2>'._L('Description').'</h2>%%DESC%%';
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
-					$content .= '<h2>Create or change subsequent objects</h2>';
+					$content .= '<h2>'._L('Create or change subsequent objects').'</h2>';
 				} else {
-					$content .= '<h2>Subsequent objects</h2>';
+					$content .= '<h2>'._L('Subsequent objects').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}

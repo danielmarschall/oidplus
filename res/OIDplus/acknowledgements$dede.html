@@ -1,0 +1,127 @@
+<h1>Informationen über OIDplus</h1>
+
+<p><font color="red">ACHTUNG!!! Dieses Dokument wurde maschinell übersetzt und kann daher Fehler enthalten. Bitte konsultieren Sie die englischsprachige Version dieses Dokuments und nutzen Sie diese deutschsprachige Fassung nur als grobe Informationsquelle!</font></p>
+
+<p>OIDplus ist eine OpenSource-Datenbank von <a href="https://www.viathinksoft.com/">ViaThinkSoft</a> , mit der Registrierungsstellen ihre Objekte wie Objektkennungen (OIDs) oder GUIDs (Global Unique Identifiers) und vieles mehr verwalten können.</p>
+
+<h2>Betreiben Sie Ihre eigene Kopie von OIDplus</h2>
+
+<p>Wir sind dankbar für jede Person, die OIDplus auf ihren Systemen installieren möchte, da wir es lieben, wenn sich unser Produkt verbreitet und Feedback zur Benutzererfahrung erhält. Wenn wir Ihnen bei der Installation von OIDplus und der Migration Ihrer Daten nach OIDplus helfen können, teilen
+ <a href="https://www.viathinksoft.de/contact/daniel-marschall" target="_blank">Sie uns dies bitte mit</a> . Wir unterstützen Sie dabei kostenlos!</p>
+
+<p><b>Download mit SVN (empfohlen):</b><br>
+<code>svn co https://svn.viathinksoft.com/svn/oidplus/trunk/</code></p>
+
+<p>Alternativ: <a href="https://www.viathinksoft.com/projects/oidplus">Laden Sie TAR.GZ herunter</a></p>
+
+<p><b>System Anforderungen:</b></p>
+
+<ul>
+	<li>PHP-kompatibler Webserver (getestet mit Apache 2, Nginx und Microsoft IIS)</li>
+	<li>PHP 7.0 oder höher<ul>
+		<li>mit Erweiterung GMP oder BCMath</li>
+		<li>mit Erweiterung MBString</li>
+		<li>mit der Erweiterung MySQLi, PostgreSQL, SQLite3, PDO oder ODBC</li>
+	</ul></li>
+	<li>Datenbank: MySQL / MariaDB (empfohlen), PostgreSQL, SQLite3 oder Microsoft SQL Server</li>
+	<li>Unabhängig vom Betriebssystem (getestet mit Windows und Linux)</li>
+</ul>
+
+<h2>Danksagung</h2>
+
+<p>ViaThinkSoft OIDplus verwendet die folgenden Produkte von Drittanbietern:</p>
+
+<ul>
+<li><a href="https://github.com/MikeMcl/bignumber.js">bignumber.js</a> (MIT)</li>
+<li><a href="https://www.jstree.com/">jsTree</a> (MIT)</li>
+<li><a href="https://www.tiny.cloud/">TinyMCE</a> (LGPL 2.1)</li>
+<li><a href="http://blog.getbootstrap.com/">Bootstrap</a> (MIT)</li>
+<li><a href="https://code.jquery.com/">jQuery</a> (MIT)</li>
+<li><a href="http://jqueryui.com/">jQuery UI</a> (MIT)</li>
+<li><a href="https://github.com/allpro/layout/">allpro Layout</a> (MIT / GPLv3)</li>
+<li><a href="https://github.com/0xbb/php-sha3">0xbb SHA3-Implementierung in PHP</a> (MIT)</li>
+<li><a href="https://github.com/emn178/js-sha3">emn178 SHA3-Implementierung in JavaScript</a> (MIT)</li>
+<li><a href="http://www.spamspan.de/">SpamSpan</a> (GPLv2)</li>
+<!-- <li><a href="https://cookieconsent.insites.com/">Insites cookie consent</a> (MIT)</li> -->
+<li><a href="https://www.google.com/recaptcha/">ReCaptcha</a> (BSD 3-Klausel "Neue" oder "Überarbeitete" Lizenz)</li>
+<li><a href="https://www.iconfinder.com/iconsets/nuvola2">Nuvola Icon Pack von David Vignoni</a> (LGPL)</li>
+<li><a href="https://github.com/matthiasmullie/minify">CSS / JS Minify von Matthias Mullie</a> (MIT)</li>
+<li><a href="https://github.com/matthiasmullie/path-converter">Pfadkonverter von Matthias Mullie</a> (MIT)</li>
+<li><a href="https://polyfill.io/v3/">Polyfill v3</a> (MIT)</li>
+<li><a href="https://code.google.com/archive/p/phpsvnclient/">PHP SVN Client von Sixdegrees / Cesar D. Rodas</a> (Neue BSD-Lizenz)</li>
+<li><a href="https://www.phpclasses.org/httpclient">PHP HTTP Client von Manuel Lemos</a> (BSD Lizenz)</li>
+<li><a href="https://www.viathinksoft.com/projects/vnag">VNag von ViaThinkSoft</a> (Apache 2.0 Lizenz)</li>
+<li><a href="https://www.viathinksoft.com/projects/fileformats">Dateiformate von ViaThinkSoft</a> (Apache 2.0-Lizenz)</li>
+</ul>
+
+<h2>Lizenz</h2>
+
+<div style="margin: 3em 10%; font-family:serif;text-align:justify; border: 1px solid black; padding: 2em;   box-shadow: 4px 8px #888888;">
+
+<p style="text-align:center">
+<strong>Apache License <br><br>Version 2.0, Januar 2004 <br><br></strong>
+<strong><a href="http://www.apache.org/licenses/">http://www.apache.org/licenses/</a></strong>
+</p>
+
+<p>ALLGEMEINE GESCHÄFTSBEDINGUNGEN FÜR NUTZUNG, REPRODUKTION UND VERTRIEB</p>
+
+<p><strong><a name="definitions">1. Definitionen</a></strong> .</p>
+
+<div style="margin-left: 1em;">
+
+  <p>" <strong>Lizenz</strong> " bezeichnet die Bedingungen für die Verwendung, Vervielfältigung und Verbreitung gemäß den Abschnitten 1 bis 9 dieses Dokuments.</p>
+
+  <p>" <strong>Lizenzgeber</strong> " bezeichnet den Urheberrechtsinhaber oder die vom Urheberrechtsinhaber autorisierte Stelle, die die Lizenz erteilt.</p>
+
+  <p>" <strong>Rechtliche</strong> Einheit" bezeichnet die Vereinigung der handelnden Einheit und aller anderen Einheiten, die diese Einheit kontrollieren, von dieser kontrolliert werden oder unter gemeinsamer Kontrolle mit dieser Einheit stehen. Für die Zwecke dieser Definition bedeutet " <strong>Kontrolle</strong> " (i) die direkte oder indirekte Befugnis, die Leitung oder das Management eines solchen Unternehmens vertraglich oder anderweitig zu veranlassen, oder (ii) das Eigentum von fünfzig Prozent (50%) oder mehr der ausstehenden Aktien oder (iii) wirtschaftliches Eigentum an einem solchen Unternehmen.</p>
+
+  <p>" <strong>Sie</strong> " (oder " <strong>Ihr</strong> ") ist eine natürliche oder juristische Person, die die durch diese Lizenz erteilten Berechtigungen ausübt.</p>
+
+  <p>" <strong>Quell</strong> " -Formular ist das bevorzugte Formular für Änderungen, einschließlich, aber nicht beschränkt auf Software-Quellcode, Dokumentationsquelle und Konfigurationsdateien.</p>
+
+  <p>" <strong>Objekt</strong> " -Formular ist jedes Formular, das sich aus der mechanischen Umwandlung oder Übersetzung eines Quellformulars ergibt, einschließlich, aber nicht beschränkt auf kompilierten Objektcode, generierte Dokumentation und Konvertierungen in andere Medientypen.</p>
+
+  <p>" <strong>Arbeit</strong> " bezeichnet die Arbeit der Urheberschaft, ob in Quell- oder Objektform, die unter der Lizenz zur Verfügung gestellt wird, wie durch einen Copyright-Hinweis angegeben, der in der Arbeit enthalten oder beigefügt ist (ein Beispiel finden Sie im Anhang unten).</p>
+
+  <p>" <strong>Abgeleitete Werke</strong> " sind alle Werke, ob in Quell- oder Objektform, die auf dem Werk basieren (oder von diesem abgeleitet sind) und für die die redaktionellen Überarbeitungen, Anmerkungen, Ausarbeitungen oder sonstigen Änderungen insgesamt ein Originalwerk darstellen der Urheberschaft. Für die Zwecke dieser Lizenz umfassen abgeleitete Werke keine Werke, die von den Schnittstellen und deren abgeleiteten Werken trennbar bleiben oder lediglich mit deren Schnittstellen verknüpft (oder namentlich gebunden) sind.</p>
+
+  <p>" <strong>Beitrag</strong> " bezeichnet jedes Werk der Urheberschaft, einschließlich der Originalversion des Werks und aller Änderungen oder Ergänzungen dieses Werks oder abgeleiteter Werke davon, die dem Lizenzgeber absichtlich zur Aufnahme in das Werk durch den Inhaber des Urheberrechts oder durch eine Einzelperson oder Juristische Person, die befugt ist, im Namen des Copyright-Inhabers einzureichen. Für die Zwecke dieser Definition " <strong>eingereicht</strong>"bezeichnet jede Form elektronischer, mündlicher oder schriftlicher Kommunikation, die an den Lizenzgeber oder seine Vertreter gesendet wird, einschließlich, aber nicht beschränkt auf die Kommunikation auf elektronischen Mailinglisten, Quellcode-Kontrollsystemen und Issue-Tracking-Systemen, die von oder im Auftrag von verwaltet werden. der Lizenzgeber zum Zwecke der Erörterung und Verbesserung des Werks, jedoch ohne Kommunikation, die vom Inhaber des Urheberrechts auffällig gekennzeichnet oder anderweitig schriftlich als " <strong>kein Beitrag" gekennzeichnet ist. </strong>""</p>
+
+  <p>" <strong>Mitwirkender</strong> " bezeichnet den Lizenzgeber und jede natürliche oder juristische Person, für die ein Beitrag beim Lizenzgeber eingegangen und anschließend in das Werk aufgenommen wurde.</p>
+
+</div>
+
+<p><strong><a name="copyright">2. Erteilung der Urheberrechtslizenz</a></strong> . Vorbehaltlich der Bedingungen dieser Lizenz gewährt Ihnen jeder Mitwirkende hiermit eine unbefristete, weltweite, nicht exklusive, kostenlose, lizenzgebührenfreie, unwiderrufliche Urheberrechtslizenz zur Reproduktion, Vorbereitung von Derivaten von, zur öffentlichen Anzeige, zur öffentlichen Aufführung, Unterlizenzierung und Verbreitung des Werks und solcher abgeleiteten Werke in Quell- oder Objektform.</p>
+
+<p><strong><a name="patent">3. Erteilung der Patentlizenz</a></strong>. Vorbehaltlich der Bestimmungen und Bedingungen dieser Lizenz gewährt Ihnen jeder Mitwirkende hiermit eine unbefristete, weltweite, nicht exklusive, kostenlose, lizenzgebührenfreie, unwiderrufliche (außer in diesem Abschnitt angegebene) Patentlizenz, die er erteilt, erteilt hat. Nutzung, Angebot zum Verkauf, Verkauf, Import und anderweitige Übertragung des Werks, sofern diese Lizenz nur für diejenigen Patentansprüche gilt, die von diesem Mitwirkenden lizenziert werden können und die notwendigerweise allein durch ihre Beiträge oder durch die Kombination ihrer Beiträge mit verletzt werden die Arbeit, zu der solche Beiträge eingereicht wurden. Wenn Sie Patentstreitigkeiten gegen ein Unternehmen einleiten (einschließlich einer Gegenklage oder Gegenklage in einer Klage), in der behauptet wird, dass das Werk oder ein Beitrag, der in das Werk aufgenommen wurde, eine direkte oder mitwirkende Patentverletzung darstellt,</p>
+
+<p><strong><a name="redistribution">4. Umverteilung</a></strong> . Sie dürfen Kopien der Werke oder abgeleiteten Werke davon in jedem Medium mit oder ohne Änderungen und in Quell- oder Objektform reproduzieren und verteilen, sofern Sie die folgenden Bedingungen erfüllen:</p>
+
+<ol style="list-style: lower-latin;">
+<li>Sie müssen allen anderen Empfängern des Werks oder der abgeleiteten Werke eine Kopie dieser Lizenz geben. und</li>
+
+<li>Sie müssen dafür sorgen, dass geänderte Dateien auffällige Hinweise enthalten, dass Sie die Dateien geändert haben. und</li>
+
+<li>Sie müssen in der Quellform aller von Ihnen vertriebenen abgeleiteten Werke alle Urheberrechts-, Patent-, Marken- und Namensnennungshinweise aus der Quellform des Werks aufbewahren, mit Ausnahme der Hinweise, die keinen Teil der abgeleiteten Werke betreffen. und</li>
+
+<li>Wenn die Arbeit einen " <strong>HINWEIS</strong> " enthält<strong></strong>"Textdatei als Teil ihrer Verteilung, dann müssen alle von Ihnen verteilten Derivative Works eine lesbare Kopie der in dieser NOTICE-Datei enthaltenen Zuordnungshinweise enthalten, mit Ausnahme derjenigen Hinweise, die keinen Teil der Derivative Works betreffen, in mindestens einem der folgenden Stellen: innerhalb einer NOTICE-Textdatei, die als Teil der Derivative Works verteilt wird, innerhalb des Quellformulars oder der Dokumentation, sofern diese zusammen mit den Derivative Works bereitgestellt wird, oder innerhalb einer von den Derivative Works generierten Anzeige, falls und wo immer diese dritte- In der Regel werden Partyhinweise angezeigt. Der Inhalt der NOTICE-Datei dient nur zu Informationszwecken und ändert die Lizenz nicht. Sie können Ihre eigenen Zuordnungshinweise zu Derivative Works hinzufügen, die Sie neben oder als Ergänzung zum NOTICE-Text aus dem Werk verteilen.vorausgesetzt, dass solche zusätzlichen Zuordnungshinweise nicht als Änderung der Lizenz ausgelegt werden können.
+<br>
+<br>
+Sie können Ihren Änderungen Ihre eigene Urheberrechtserklärung hinzufügen und zusätzliche oder abweichende Lizenzbedingungen für die Verwendung, Reproduktion oder Verbreitung Ihrer Änderungen oder für solche abgeleiteten Werke als Ganzes bereitstellen, sofern Sie diese verwenden, reproduzieren und verteilen Das Werk entspricht ansonsten den in dieser Lizenz angegebenen Bedingungen.
+</li>
+
+</ol>
+
+<p><strong><a name="contributions">5. Einreichung von Beiträgen</a></strong> . Sofern Sie nicht ausdrücklich etwas anderes angeben, unterliegt jeder Beitrag, der absichtlich zur Aufnahme in das Werk von Ihnen an den Lizenzgeber eingereicht wurde, den Bedingungen dieser Lizenz ohne zusätzliche Bedingungen. Ungeachtet des Vorstehenden ersetzt oder ändert nichts in diesem Dokument die Bedingungen einer separaten Lizenzvereinbarung, die Sie möglicherweise mit dem Lizenzgeber in Bezug auf solche Beiträge abgeschlossen haben.</p>
+
+<p><strong><a name="trademarks">6. Marken</a></strong> . Diese Lizenz gewährt keine Erlaubnis zur Verwendung der Handelsnamen, Marken, Dienstleistungsmarken oder Produktnamen des Lizenzgebers, es sei denn, dies ist für eine angemessene und übliche Verwendung zur Beschreibung der Herkunft des Werks und zur Reproduktion des Inhalts der NOTICE-Datei erforderlich.</p>
+
+<p><strong><a name="no-warranty">7. Gewährleistungsausschluss</a></strong> . Sofern dies nicht gesetzlich vorgeschrieben oder schriftlich vereinbart ist, stellt der Lizenzgeber das Werk (und jeder Mitwirkende stellt seine Beiträge zur Verfügung) auf "WIE BESEHEN" -BASIS, OHNE GEWÄHRLEISTUNGEN ODER BEDINGUNGEN JEGLICHER ART, entweder ausdrücklich oder stillschweigend, einschließlich, jedoch nicht beschränkt auf Garantien oder Bedingungen für TITEL, NICHTVERLETZUNG, MARKTGÄNGIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Sie sind allein dafür verantwortlich, die Angemessenheit der Nutzung oder Weitergabe des Werks zu bestimmen und alle Risiken zu übernehmen, die mit Ihrer Ausübung von Berechtigungen unter dieser Lizenz verbunden sind.</p>
+
+<p><strong><a name="no-liability">8. Haftungsbeschränkung</a></strong> . In keinem Fall und nach keiner Rechtstheorie haftet ein Mitwirkender Ihnen gegenüber, sei es aus unerlaubter Handlung (einschließlich Fahrlässigkeit), vertraglich oder anderweitig, es sei denn, dies ist gesetzlich vorgeschrieben (wie vorsätzliche und grob fahrlässige Handlungen) oder schriftlich vereinbart Schäden, einschließlich direkter, indirekter, besonderer, zufälliger oder Folgeschäden jeglicher Art, die sich aus dieser Lizenz oder aus der Nutzung oder Unfähigkeit zur Nutzung des Werks ergeben (einschließlich, aber nicht beschränkt auf Schäden wegen Verlust des guten Willens, Arbeitsunterbrechung , Computerausfall oder Fehlfunktion oder alle anderen kommerziellen Schäden oder Verluste), selbst wenn dieser Mitwirkende auf die Möglichkeit solcher Schäden hingewiesen wurde.</p>
+
+<p><strong><a name="additional">9. Gewährleistung oder zusätzliche Haftung übernehmen</a></strong> . Während Sie das Werk oder abgeleitete Werke davon weitergeben, können Sie sich dafür entscheiden, die Annahme von Support-, Garantie-, Entschädigungs- oder anderen Haftungsverpflichtungen und / oder Rechten im Zusammenhang mit dieser Lizenz anzubieten und eine Gebühr dafür zu erheben. Wenn Sie solche Verpflichtungen akzeptieren, dürfen Sie jedoch nur in Ihrem eigenen Namen und in Ihrer alleinigen Verantwortung handeln, nicht im Namen eines anderen Mitwirkenden, und nur, wenn Sie sich damit einverstanden erklären, jeden Mitwirkenden von jeglicher Haftung freizustellen, zu verteidigen und schadlos zu halten, die durch Folgendes entsteht: oder Ansprüche, die gegen diesen Mitwirkenden geltend gemacht werden, weil Sie eine solche Garantie oder zusätzliche Haftung akzeptieren.</p>
+
+<p>ENDE DER GESCHÄFTSBEDINGUNGEN</p>
+
+</div>

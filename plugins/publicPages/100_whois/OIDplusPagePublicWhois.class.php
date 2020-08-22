@@ -23,17 +23,17 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 		OIDplus::config()->prepareConfigKey('whois_auth_token',                       'OID-over-WHOIS authentication token to display confidential data', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			$test_value = preg_replace('@[0-9a-zA-Z]*@', '', $value);
 			if ($test_value != '') {
-				throw new OIDplusException("Only characters and numbers are allowed as authentication token.");
+				throw new OIDplusException(_L('Only characters and numbers are allowed as authentication token.'));
 			}
 		});
-		OIDplus::config()->prepareConfigKey('webwhois_output_format_spacer',          'WebWHOIS: Spacer', 2, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		OIDplus::config()->prepareConfigKey('webwhois_output_format_spacer',          'WebWHOIS: Spacer', '2', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
-				throw new OIDplusException("Please enter a valid value.");
+				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
-		OIDplus::config()->prepareConfigKey('webwhois_output_format_max_line_length', 'WebWHOIS: Max line length', 80, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		OIDplus::config()->prepareConfigKey('webwhois_output_format_max_line_length', 'WebWHOIS: Max line length', '80', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
-				throw new OIDplusException("Please enter a valid value.");
+				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
 	}
@@ -62,34 +62,29 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
 			$example = $this->getExampleId();
 
-			$out['title'] = 'Web WHOIS';
+			$out['title'] = _L('Web WHOIS');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$out['text']  = '';
-			$out['text'] .= '<p>With the web based whois service, you can query object information in a machine readable format.</p>';
-
-
-
-
-
+			$out['text'] .= '<p>'._L('With the web based whois service, you can query object information in a machine-readable format.').'</p>';
 
 			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__).'whois/webwhois.php" method="GET">';
-			$out['text'] .= '<br>Output format:<br><fieldset>';
+			$out['text'] .= '<br>'._L('Output format').':<br><fieldset>';
 			$out['text'] .= '    <input type="radio" id="txt" name="format" value="txt" checked>';
-			$out['text'] .= '    <label for="txt"> Text format (RFC draft: <a href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.txt">TXT</a> | <a href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.nroff">NROFF</a>)</label><br>';
+			$out['text'] .= '    <label for="txt"> '._L('Text format (RFC draft: %1)','<a href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.txt">'._L('TXT').'</a> | <a href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.nroff">'._L('NROFF').'</a>').'</label><br>';
 			$out['text'] .= '    <input type="radio" id="json" name="format" value="json">';
-			$out['text'] .= '    <label for="json"> JSON (<a href="'.OIDplus::webpath(__DIR__).'whois/json_schema.json">Schema</a>)</label><br>';
+			$out['text'] .= '    <label for="json"> '._L('JSON').' (<a href="'.OIDplus::webpath(__DIR__).'whois/json_schema.json">'._L('Schema').'</a>)</label><br>';
 			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml">';
-			$out['text'] .= '    <label for="xml"> XML (<a href="'.OIDplus::webpath(__DIR__).'whois/xml_schema.xsd">Schema</a>)</label><br>';
+			$out['text'] .= '    <label for="xml"> '._L('XML').' (<a href="'.OIDplus::webpath(__DIR__).'whois/xml_schema.xsd">'._L('Schema').'</a>)</label><br>';
 			$out['text'] .= '</fieldset><br>';
-			$out['text'] .= '	<!--<label class="padding_label">-->Query:<!--</label>--> <input type="text" name="query" value="'.htmlentities($example).'" style="width:250px">';
-			$out['text'] .= '	<input type="submit" value="Query">';
+			$out['text'] .= '	<!--<label class="padding_label">-->'._L('Query').':<!--</label>--> <input type="text" name="query" value="'.htmlentities($example).'" style="width:250px">';
+			$out['text'] .= '	<input type="submit" value="'._L('Query').'">';
 			$out['text'] .= '</form>';
 		}
 	}
 
 	public function publicSitemap(&$out) {
-		$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('oidplus:whois');
+		$out[] = 'oidplus:whois';
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
@@ -102,7 +97,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 		$json[] = array(
 			'id' => 'oidplus:whois',
 			'icon' => $tree_icon,
-			'text' => 'Web WHOIS'
+			'text' => _L('Web WHOIS')
 		);
 
 		return true;
@@ -116,7 +111,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 	public function modifyContent($id, &$title, &$icon, &$text) {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.2
 
-		$text .= '<br><img src="'.OIDplus::webpath(__DIR__).'page_pictogram.png" height="15" alt=""> <a href="'.OIDplus::webpath(__DIR__).'whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font">Whois</a>';
+		$text .= '<br><img src="'.OIDplus::webpath(__DIR__).'page_pictogram.png" height="15" alt=""> <a href="'.OIDplus::webpath(__DIR__).'whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font">'._L('Whois').'</a>';
 	}
 
 	public function tree_search($request) {

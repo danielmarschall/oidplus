@@ -25,12 +25,12 @@ class OIDplusOid extends OIDplusObject {
 
 		$oid = sanitizeOID($oid, 'auto');
 		if ($oid === false) {
-			throw new OIDplusException("Invalid OID '$bak_oid'");
+			throw new OIDplusException(_L('Invalid OID %1',$bak_oid));
 		}
 
 		if (($oid != '') && (!oid_valid_dotnotation($oid, false, true, 0))) {
 			// avoid OIDs like 3.0
-			throw new OIDplusException("Invalid OID '$bak_oid'");
+			throw new OIDplusException(_L('Invalid OID %1',$bak_oid));
 		}
 
 		$this->oid = $oid;
@@ -43,11 +43,11 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	public static function objectTypeTitle() {
-		return "Object Identifier (OID)";
+		return _L('Object Identifier (OID)');
 	}
 
 	public static function objectTypeTitleShort() {
-		return "OID";
+		return _L('OID');
 	}
 
 	public static function ns() {
@@ -68,7 +68,7 @@ class OIDplusOid extends OIDplusObject {
 
 	public function addString($str) {
 		if (!$this->isRoot()) {
-			if (strpos($str,'.') !== false) throw new OIDplusException("Please only submit one arc (not an absolute OID or multiple arcs).");
+			if (strpos($str,'.') !== false) throw new OIDplusException(_L('Please only submit one arc (not an absolute OID or multiple arcs).'));
 		}
 
 		return $this->appendArcs($str)->nodeId();
@@ -88,7 +88,7 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	public function defaultTitle() {
-		return 'OID ' . $this->oid;
+		return _L('OID %1',$this->oid);
 	}
 
 	public function isLeafNode() {
@@ -103,31 +103,31 @@ class OIDplusOid extends OIDplusObject {
 
 			$res = OIDplus::db()->query("select id from ###objects where parent = ?", array(self::root()));
 			if ($res->num_rows() > 0) {
-				$content = 'Please select an OID in the tree view at the left to show its contents.';
+				$content = _L('Please select an OID in the tree view at the left to show its contents.');
 			} else {
-				$content = 'Currently, no OID is registered in the system.';
+				$content = _L('Currently, no OID is registered in the system.');
 			}
 
 			if (!$this->isLeafNode()) {
 				if (OIDplus::authUtils()::isAdminLoggedIn()) {
-					$content .= '<h2>Manage your root OIDs</h2>';
+					$content .= '<h2>'._L('Manage your root OIDs').'</h2>';
 				} else {
-					$content .= '<h2>Root OIDs</h2>';
+					$content .= '<h2>'._L('Root OIDs').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}
 		} else {
 			$title = $this->getTitle();
 
-			$content = "<h2>Technical information</h2>".$this->oidInformation().
-			           "<h2>Description</h2>%%DESC%%".
-			           "<h2>Registration Authority</h2>%%RA_INFO%%";
+			$content = '<h2>'._L('Technical information').'</h2>'.$this->oidInformation().
+			           '<h2>'._L('Description').'</h2>%%DESC%%'.
+			           '<h2>'._L('Registration Authority').'</h2>%%RA_INFO%%';
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
-					$content .= '<h2>Create or change subsequent objects</h2>';
+					$content .= '<h2>'._L('Create or change subsequent objects').'</h2>';
 				} else {
-					$content .= '<h2>Subsequent objects</h2>';
+					$content .= '<h2>'._L('Subsequent objects').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}
@@ -158,27 +158,27 @@ class OIDplusOid extends OIDplusObject {
 			$weid_arcs = explode('-', $weid);
 			foreach ($weid_arcs as $i => &$weid) {
 				if ($i == count($weid_arcs)-1) {
-					$weid = '<abbr title="weLuhn check digit">'.$weid.'</abbr>';
+					$weid = '<abbr title="'._L('weLuhn check digit').'">'.$weid.'</abbr>';
 				} else {
 					$oid_arcs = explode('.',$this->oid);
 					$weid_num = $oid_arcs[(count($oid_arcs)-1)-(count($weid_arcs)-1)+($i+1)];
 					if ($weid_num != $weid) {
-						$weid = '<abbr title="Numeric value: '.$weid_num.'">'.$weid.'</abbr>';
+						$weid = '<abbr title="'._L('Numeric value').': '.$weid_num.'">'.$weid.'</abbr>';
 					}
 				}
 			}
-			$weid = '<abbr title="Root arc: 1.3.6.1.4.1.37553.8">' . $ns . '</abbr>:' . implode('-',$weid_arcs);
+			$weid = '<abbr title="'._L('Root arc').': 1.3.6.1.4.1.37553.8">' . $ns . '</abbr>:' . implode('-',$weid_arcs);
 		}
 		return $weid;
 	}
 
 	private function oidInformation() {
 		$out = array();
-		$out[] = "Dot notation: <code>" . $this->getDotNotation() . "</code>";
-		$out[] = "ASN.1 notation: <code>" . $this->getAsn1Notation(true) . "</code>";
-		$out[] = "OID-IRI notation: <code>" . $this->getIriNotation(true) . "</code>";
+		$out[] = _L('Dot notation').': <code>' . $this->getDotNotation() . '</code>';
+		$out[] = _L('ASN.1 notation').': <code>' . $this->getAsn1Notation(true) . '</code>';
+		$out[] = _L('OID-IRI notation').': <code>' . $this->getIriNotation(true) . '</code>';
 		if ($this->isWeid(true)) {
-			$out[] = "WEID notation: <code>" . $this->getWeidNotation() . "</code>";
+			$out[] = _L('WEID notation').': <code>' . $this->getWeidNotation() . '</code>';
 		}
 		return '<p>'.implode('<br>',$out).'</p>';
 	}
@@ -198,21 +198,24 @@ class OIDplusOid extends OIDplusObject {
 
 		$bak_oid = $out->oid;
 		$out->oid = sanitizeOID($out->oid);
-		if ($out->oid === false) throw new OIDplusException("$bak_oid is not a valid OID!");
+		if ($out->oid === false) throw new OIDplusException(_L('%1 is not a valid OID!',$bak_oid));
 
 		if (strlen($out->oid) > OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:')) {
-			throw new OIDplusException("The resulting OID '".$out->oid."' is too long (max allowed: ".(OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:')).").");
+			$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:');
+			throw new OIDplusException(_L('The resulting OID "%1" is too long (max allowed length: %2).',$out->oid,$maxlen));
 		}
 
 		$depth = 0;
 		foreach (explode('.',$out->oid) as $arc) {
 			if (strlen($arc) > OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE')) {
-				throw new OIDplusException("Arc '$arc' is too long and therefore cannot be appended to the OID '".$this->oid."' (max allowed arc size is ".OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE').")");
+				$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE');
+				throw new OIDplusException(_L('Arc "%1" is too long and therefore cannot be appended to the OID "%2" (max allowed arc size is "%3")',$arc,$this->oid,$maxlen));
 			}
 			$depth++;
 		}
 		if ($depth > OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH')) {
-			throw new OIDplusException("OID '".$out->oid."' has too many arcs (current depth $depth, max depth ".OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH').")");
+			$maxdepth = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH');
+			throw new OIDplusException(_L('OID %1 has too many arcs (current depth %2, max depth %3)',$out->oid,$depth,$maxdepth));
 		}
 
 		return $out;
@@ -266,7 +269,7 @@ class OIDplusOid extends OIDplusObject {
 			$numeric = array_pop($arcs);
 			if (count($names) > 1) {
 				$first_name = array_shift($names);
-				$abbr = 'Other identifiers:&#10;      '.implode('&#10;      ',$names);
+				$abbr = _L('Other identifiers').':&#10;      '.implode('&#10;      ',$names);
 				if ($withAbbr) {
 					$asn1_notation = '<abbr title="'.$abbr.'">'.$first_name.'</abbr> '.$asn1_notation;
 				} else {
@@ -304,11 +307,11 @@ class OIDplusOid extends OIDplusObject {
 			if (count($names) > 2) {
 				$first_name = array_shift($names);
 				$numeric = array_pop($names);
-				$abbr = 'Other identifiers:&#10;      '.implode('&#10;      ',$names).'&#10;Numeric value: '.$numeric;
+				$abbr = _L('Other identifiers').':&#10;      '.implode('&#10;      ',$names).'&#10;'._L('Numeric value').': '.$numeric;
 				$iri_notation = $withAbbr ? '<abbr title="'.$abbr.'">'.$first_name.'</abbr>/'.$iri_notation : $first_name.'/'.$iri_notation;
 			} else if (count($names) > 1) {
 				$first_name = array_shift($names);
-				$abbr = 'Numeric value: '.array_shift($names);
+				$abbr = _L('Numeric value').': '.array_shift($names);
 				$iri_notation = $withAbbr ? '<abbr title="'.$abbr.'">'.$first_name.'</abbr>/'.$iri_notation : $first_name.'/'.$iri_notation;
 			} else if (count($names) == 1) {
 				$iri_notation = array_shift($names) . '/' . $iri_notation;
@@ -337,7 +340,7 @@ class OIDplusOid extends OIDplusObject {
 
 	public function replaceAsn1Ids($demandedASN1s=array(), $simulate=false) {
 		if ($this->isWellKnown()) {
-			throw new OIDplusException("OID ".$this->oid." is a 'well-known' OID. Its identifiers cannot be changed.");
+			throw new OIDplusException(_L('OID "%1" is a "well-known" OID. Its identifiers cannot be changed.',$this->oid));
 		}
 
 		// First do a few checks
@@ -345,11 +348,12 @@ class OIDplusOid extends OIDplusObject {
 			$asn1 = trim($asn1);
 
 			if (strlen($asn1) > OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ASN1_ID_LEN')) {
-				throw new OIDplusException("ASN.1 alphanumeric identifier '$asn1' is too long (max allowed length ".OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ASN1_ID_LEN').")");
+				$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ASN1_ID_LEN');
+				throw new OIDplusException(_L('ASN.1 alphanumeric identifier "%1" is too long (max allowed length %2)',$asn1,$maxlen));
 			}
 
 			// Validate identifier
-			if (!oid_id_is_valid($asn1)) throw new OIDplusException("'$asn1' is not a valid ASN.1 identifier!");
+			if (!oid_id_is_valid($asn1)) throw new OIDplusException(_L('"%1" is not a valid ASN.1 identifier!',$asn1));
 
 			// Check if the (real) parent has any conflict
 			// Unlike IRI identifiers, ASN.1 identifiers may be used multiple times (not recommended), except if one of them is standardized
@@ -359,7 +363,7 @@ class OIDplusOid extends OIDplusObject {
 				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent
 				   ($check_oid !== $this->oid))                    // different OID
 				{
-					throw new OIDplusException("ASN.1 identifier '$asn1' is a standardized identifier belonging to OID ($check_oid)");
+					throw new OIDplusException(_L('ASN.1 identifier "%1" is a standardized identifier belonging to OID %2',$asn1,$check_oid));
 				}
 			}
 		}
@@ -375,7 +379,7 @@ class OIDplusOid extends OIDplusObject {
 
 	public function replaceIris($demandedIris=array(), $simulate=false) {
 		if ($this->isWellKnown()) {
-			throw new OIDplusException("OID ".$this->oid." is a 'well-known' OID. Its identifiers cannot be changed.");
+			throw new OIDplusException(_L('OID "%1" is a "well-known" OID. Its identifiers cannot be changed.',$this->oid));
 		}
 
 		// First do a few checks
@@ -383,11 +387,12 @@ class OIDplusOid extends OIDplusObject {
 			$iri = trim($iri);
 
 			if (strlen($iri) > OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_UNICODE_LABEL_LEN')) {
-				throw new OIDplusException("Unicode label '$iri' is too long (max allowed length ".OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_UNICODE_LABEL_LEN').")");
+				$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_UNICODE_LABEL_LEN');
+				throw new OIDplusException(_L('Unicode label "%1" is too long (max allowed length %2)',$iri,$maxlen));
 			}
 
 			// Validate identifier
-			if (!iri_arc_valid($iri, false)) throw new OIDplusException("'$iri' is not a valid IRI!");
+			if (!iri_arc_valid($iri, false)) throw new OIDplusException(_L('"%1" is not a valid IRI!',$iri));
 
 			// Check if the (real) parent has any conflict
 			$res = OIDplus::db()->query("select oid from ###iri where name = ?", array($iri));
@@ -396,7 +401,7 @@ class OIDplusOid extends OIDplusObject {
 				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent
 				   ($check_oid !== $this->oid))                    // different OID
 				{
-					throw new OIDplusException("IRI '$iri' is already used by another OID ($check_oid)");
+					throw new OIDplusException(_L('IRI "%1" is already used by another OID (%2)',$iri,$check_oid));
 				}
 			}
 		}
@@ -424,10 +429,10 @@ class OIDplusOid extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 		if ($uuid = oid_to_uuid($this->oid)) {
-			$ids[] = new OIDplusAltId('guid', $uuid, 'GUID representation of this OID');
+			$ids[] = new OIDplusAltId('guid', $uuid, _L('GUID representation of this OID'));
 		}
-		$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_OID, $this->oid), 'Namebased version 3 / MD5 UUID with namespace UUID_NAMEBASED_NS_OID');
-		$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OID, $this->oid), 'Namebased version 5 / SHA1 UUID with namespace UUID_NAMEBASED_NS_OID');
+		$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_OID, $this->oid), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OID'));
+		$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OID, $this->oid), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OID'));
 		return $ids;
 	}
 }

@@ -59,30 +59,30 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 
 			$ra_email = explode('$',$id)[1];
 
-			$out['title'] = 'Automated AJAX calls';
+			$out['title'] = _L('Automated AJAX calls');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b> or as admin.</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as the requested RA %2 or as admin.',OIDplus::gui()->link('oidplus:login'),'<b>'.htmlentities($ra_email).'</b>').'</p>';
 				return;
 			}
 
-			$out['text'] .= '<p>You can make automated calls to your OIDplus account by calling the AJAX API.</p>';
-			$out['text'] .= '<p>The URL for the AJAX script is:</p>';
+			$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling the AJAX API.').'</p>';
+			$out['text'] .= '<p>'._L('The URL for the AJAX script is:').':</p>';
 			$out['text'] .= '<p><b>'.OIDplus::getSystemUrl().'ajax.php</b></p>';
-			$out['text'] .= '<p>You must at least provide following fields:</p>';
+			$out['text'] .= '<p>'._L('You must at least provide following fields').':</p>';
 			$out['text'] .= '<p><pre>';
 			$out['text'] .= 'batch_login_username  = "'.htmlentities($ra_email).'"'."\n";
 			$out['text'] .= 'batch_login_password  = "........."'."\n";
 			$out['text'] .= 'batch_ajax_unlock_key = "'.$this->getUnlockKey($ra_email).'"'."\n";
 			$out['text'] .= '</pre></p>';
-			$out['text'] .= '<p>Please keep this information confidential!</p>';
-			$out['text'] .= '<p>The batch-fields will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.</p>';
-			$out['text'] .= '<p>Currently, there is no documentation for the AJAX calls. However, you can look at the <b>script.js</b> files of the plugins to see the field names being used. You can also enable network analysis in your web browser debugger (F12) to see the request headers sent to the server during the operation of OIDplus.</p>';
-			$out['text'] .= '<h2>Example for adding OID 2.999.123 using JavaScript</h2>';
+			$out['text'] .= '<p>'._L('Please keep this information confidential!').'</p>';
+			$out['text'] .= '<p>'._L('The batch-fields will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.').'</p>';
+			$out['text'] .= '<p>'._L('Currently, there is no documentation for the AJAX calls. However, you can look at the <b>script.js</b> files of the plugins to see the field names being used. You can also enable network analysis in your web browser debugger (F12) to see the request headers sent to the server during the operation of OIDplus.').'</p>';
+			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using JavaScript').'</h2>';
 			$out['text'] .= '<pre>'.htmlentities(file_get_contents(__DIR__.'/examples/example_js.html')).'</pre>';
-			$out['text'] .= '<h2>Example for adding OID 2.999.123 using PHP (located at a foreign server)</h2>';
+			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using PHP (located at a foreign server)').'</h2>';
 			$out['text'] .= '<pre>'.preg_replace("@<br.*>@ismU","",highlight_file(__DIR__.'/examples/example_php.phps',true)).'</pre>';
 		}
 	}
@@ -100,7 +100,7 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 		$json[] = array(
 			'id' => 'oidplus:automated_ajax_information_ra$'.$ra_email,
 			'icon' => $tree_icon,
-			'text' => 'Automated AJAX calls'
+			'text' => _L('Automated AJAX calls')
 		);
 
 		return true;

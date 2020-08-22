@@ -38,12 +38,12 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 	}
 
 	public function num_rows(): int {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		return odbc_num_rows($this->res);
 	}
 
 	public function fetch_array()/*: ?array*/ {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		$ret = odbc_fetch_array($this->res);
 		if ($ret === false) $ret = null;
 		if (!is_null($ret)) {
@@ -58,7 +58,7 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 	}
 
 	public function fetch_object()/*: ?object*/ {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		$ret = odbc_fetch_object($this->res);
 		if ($ret === false) $ret = null;
 		if (!is_null($ret)) {

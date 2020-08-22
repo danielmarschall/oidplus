@@ -50,7 +50,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 		                            "left join ###log_object lu on lu.log_id = lo.id ".
 		                            "where lu.object = ? " .
 		                            "order by lo.unix_ts desc", array($id));
-		$text .= "<h2>Log messages for object ".htmlentities($id)."</h2>";
+		$text .= '<h2>'._L('Log messages for object %1',htmlentities($id)).'</h2>';
 		if ($res->num_rows() > 0) {
 			$text .= '<pre>';
 			while ($row = $res->fetch_array()) {
@@ -62,7 +62,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 				}
 				$users = count($users) > 0 ? ", ".implode('/',$users) : '';
 
-				$addr = empty($row['addr']) ? 'no address' : $row['addr'];
+				$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
 
 				$text .= '<span class="severity_'.$row['severity'].'">' . date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr.$users) . ")</span>\n";
 			}
@@ -71,7 +71,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 			// TODO: List logs in a table instead of a <pre> text
 			// TODO: Load only X events and then re-load new events via AJAX when the user scrolls down
 		} else {
-			$text .= '<p>Currently there are no log entries</p>';
+			$text .= '<p>'._L('Currently there are no log entries').'</p>';
 		}
 
 	}

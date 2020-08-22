@@ -29,16 +29,16 @@ function importMissingOid(oid) {
 			oid:oid
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
-				console.log("Imported OID " + oid);
+				console.log(_L("Imported OID %1",oid));
 				removeMissingOid(oid);
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});
@@ -59,24 +59,41 @@ function uploadXmlFile(file) {
 		contentType:false,
 		data: form_data,
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			// TODO XXX: (Future feature) If the user decides that existing OIDs shall be overwritten, then we may not print "Ignored OIDs because they are already existing"
 			if ("error" in data) {
 				if ("count_imported_oids" in data) {
-					alert("Successfully imported OIDs: " + data.count_imported_oids + "\nIgnored OIDs because they are already existing: "+data.count_already_existing+"\nNot imported because of errors: "+data.count_errors+"\nWarnings: "+data.count_warnings+"\n\nWarnings / Errors:\n\n" + data.error);
+					alert(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
+					      _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
+					      _L("Not imported because of errors: %1",data.count_errors)+"\n"+
+					      _L("Warnings: %1",data.count_warnings)+"\n"+
+					      "\n"+
+					      _L("Warnings / Error messages:")+"\n"+
+					      "\n"+
+					      data.error);
 				} else {
-					alert("Error: " + data.error);
+					alert(_L("Error: %1",data.error));
 				}
 			} else if (data.status == 0) {
-				alert("Successfully imported OIDs: " + data.count_imported_oids + "\nIgnored OIDs because they are already existing: "+data.count_already_existing+"\nNot imported because of errors: "+data.count_errors+"\nWarnings: "+data.count_warnings);
+				alert(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
+					  _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
+					  _L("Not imported because of errors: %1",data.count_errors)+"\n"+
+					  _L("Warnings: %1",data.count_warnings));
 				$('#userfile').val('');
 			} else {
 				if ("count_imported_oids" in data) {
-					alert("Successfully imported OIDs: " + data.count_imported_oids + "\nIgnored OIDs because they are already existing: "+data.count_already_existing+"\nNot imported because of errors: "+data.count_errors+"\nWarnings: "+data.count_warnings+"\n\nWarnings / Errors:\n\n" + data);
+					alert(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
+					      _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
+					      _L("Not imported because of errors: %1",data.count_errors)+"\n"+
+					      _L("Warnings: %1",data.count_warnings)+"\n"+
+					      "\n"+
+					      _L("Warnings / Error messages:")+"\n"+
+					      "\n"+
+					      data/*sic*/);
 				} else {
-					alert("Error: " + data);
+					alert(_L("Error: %1",data));
 				}
 			}
 		}

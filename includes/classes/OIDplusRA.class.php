@@ -35,7 +35,7 @@ class OIDplusRA {
 
 	public function raName() {
 		$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($this->email));
-		if ($res->num_rows() == 0) return "(RA not in database)";
+		if ($res->num_rows() == 0) return _L('(RA not in database)');
 		$row = $res->fetch_array();
 		return $row['ra_name'];
 	}
@@ -72,7 +72,7 @@ class OIDplusRA {
 
 		$plugins = OIDplus::getAuthPlugins();
 		if (count($plugins) == 0) {
-			throw new OIDplusException("No RA authentication plugins found");
+			throw new OIDplusException(_L('No RA authentication plugins found'));
 		}
 		foreach ($plugins as $plugin) {
 			if ($plugin->verify($ra_row['authkey'], $ra_row['salt'], $password)) return true;

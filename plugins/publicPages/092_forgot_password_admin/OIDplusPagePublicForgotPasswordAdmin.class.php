@@ -27,22 +27,22 @@ class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePluginPublic {
 			$handled = true;
 
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$out['title'] = 'Change admin password';
+				$out['title'] = _L('Change admin password');
 			} else {
-				$out['title'] = 'Reset admin password';
+				$out['title'] = _L('Reset admin password');
 			}
 			$out['icon']  = OIDplus::webpath(__DIR__).'forgot_password_big.png';
-			
-			$out['text']  = '<p>To reset the password of the administrator, create a hash below and then replace the entry in the file <b>userdata/baseconfig/config.inc.php</b>.</p>';
-			$out['text'] .= '<div><label class="padding_label">New password:</label><input type="password" id="admin_password" onkeypress="rehash_admin_pwd()" onkeyup="rehash_admin_pwd()"></div>';
-			$out['text'] .= '<div><label class="padding_label">Repeat:</label><input type="password" id="admin_password2" onkeypress="rehash_admin_pwd()" onkeyup="rehash_admin_pwd()"></div>';
+
+			$out['text']  = '<p>'._L('To reset the password of the administrator, create a hash below and then replace the entry in the file %1.','<b>userdata/baseconfig/config.inc.php</b>').'</p>';
+			$out['text'] .= '<div><label class="padding_label">'._L('New password').':</label><input type="password" id="admin_password" onkeypress="rehash_admin_pwd()" onkeyup="rehash_admin_pwd()"></div>';
+			$out['text'] .= '<div><label class="padding_label">'._L('Repeat').':</label><input type="password" id="admin_password2" onkeypress="rehash_admin_pwd()" onkeyup="rehash_admin_pwd()"></div>';
 			$out['text'] .= '<p><pre id="config"></pre></p>';
 			$out['text'] .= '<script> rehash_admin_pwd(); </script>';
 		}
 	}
 
 	public function publicSitemap(&$out) {
-		$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('oidplus:forgot_password_admin');
+		$out[] = 'oidplus:forgot_password_admin';
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {

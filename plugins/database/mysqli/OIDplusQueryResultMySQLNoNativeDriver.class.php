@@ -42,14 +42,14 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 	}
 
 	public function num_rows(): int {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 
 		$this->stmt->store_result();
 		return $this->stmt->num_rows;
 	}
 
 	public function fetch_array()/*: ?array*/ {
-		if ($this->no_resultset) throw new OIDplusException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 
 		// https://stackoverflow.com/questions/10752815/mysqli-get-result-alternative , modified
 		$stmt = $this->stmt;
@@ -89,7 +89,7 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 	}
 
 	public function fetch_object()/*: ?object*/ {
-		if ($this->no_resultset) throw new OIDplusConfigInitializationException("The query has returned no result set (i.e. it was not a SELECT query)");
+		if ($this->no_resultset) throw new OIDplusConfigInitializationException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 
 		$ary = $this->fetch_array();
 		if (!$ary) return null;

@@ -35,7 +35,7 @@ foreach (get_declared_classes() as $c) {
 	}
 }
 if (is_null($slang_plugin)) {
-	die('Unknown slang');
+	die(_L('Unknown slang'));
 }
 
 $cont = trim(file_get_contents(__DIR__.'/sql/struct_'.$slang.'.sql'))."\n\n".

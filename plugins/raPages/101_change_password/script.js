@@ -28,17 +28,17 @@ function raChangePasswordFormOnSubmit() {
 			new_password2: $("#new_password2").val()
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success: function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
-				alert("Done");
+				alert(_L("Done"));
 				//window.location.href = '?goto=oidplus:system';
 				//reloadContent();
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});

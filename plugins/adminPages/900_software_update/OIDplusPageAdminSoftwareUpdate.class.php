@@ -27,22 +27,22 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 		if (!isset($parts[1])) $parts[1] = '';
 		if ($parts[0] != 'oidplus:software_update') return;
 		$handled = true;
-		$out['title'] = 'Software update';
+		$out['title'] = _L('Software update');
 		$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
 
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 			$out['icon'] = 'img/error_big.png';
-			$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
+			$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 			return;
 		}
 
-		$out['text']  = '<p>You can perform a system update by clicking the bottom below.</p>';
-		$out['text'] .= '<p><input type="button" onclick="document.location=\'update/\'" value="Start update assistant"></p>';
+		$out['text']  = '<p>'._L('You can perform a system update by clicking the button below.').'</p>';
+		$out['text'] .= '<p><input type="button" onclick="document.location=\'update/\'" value="'._L('Start update assistant').'"></p>';
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
-		
+
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
@@ -52,7 +52,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 		$json[] = array(
 			'id' => 'oidplus:software_update',
 			'icon' => $tree_icon,
-			'text' => 'Software update'
+			'text' => _L('Software update')
 		);
 
 		return true;

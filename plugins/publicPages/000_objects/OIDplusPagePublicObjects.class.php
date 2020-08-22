@@ -37,14 +37,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		if ($actionID == 'Delete') {
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException("DELETE action failed because object '$id' cannot be parsed!");
+			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','DELETE',$id));
 
 			if (OIDplus::db()->query("select id from ###objects where id = ?", array($id))->num_rows() == 0) {
-				throw new OIDplusException("Object '$id' does not exist");
+				throw new OIDplusException(_L('Object %1 does not exist',$id));
 			}
 
 			// Check if permitted
-			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentication error. Please log in as the superior RA to delete this OID.');
+			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to delete this OID.'));
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
@@ -97,14 +97,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		else if ($actionID == 'Update') {
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException("UPDATE action failed because object '$id' cannot be parsed!");
+			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE',$id));
 
 			if (OIDplus::db()->query("select id from ###objects where id = ?", array($id))->num_rows() == 0) {
-				throw new OIDplusException("Object '$id' does not exist");
+				throw new OIDplusException(_L('Object %1 does not exist',$id));
 			}
 
 			// Check if permitted
-			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException('Authentication error. Please log in as the superior RA to update this OID.');
+			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to update this OID.'));
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
@@ -115,7 +115,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Validate RA email address
 			$new_ra = $params['ra_email'];
 			if (!empty($new_ra) && !OIDplus::mailUtils()->validMailAddress($new_ra)) {
-				throw new OIDplusException('Invalid RA email address');
+				throw new OIDplusException(_L('Invalid RA email address'));
 			}
 
 			// First, do a simulation for ASN.1 IDs and IRIs to check if there are any problems (then an Exception will be thrown)
@@ -193,14 +193,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		else if ($actionID == 'Update2') {
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException("UPDATE2 action failed because object '$id' cannot be parsed!");
+			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE2',$id));
 
 			if (OIDplus::db()->query("select id from ###objects where id = ?", array($id))->num_rows() == 0) {
-				throw new OIDplusException("Object '$id' does not exist");
+				throw new OIDplusException(_L('Object %1 does not exist',$id));
 			}
 
 			// Check if allowed
-			if (!$obj->userHasWriteRights()) throw new OIDplusException('Authentication error. Please log in as the RA to update this OID.');
+			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the RA to update this OID.'));
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
@@ -230,16 +230,16 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// Check if you have write rights on the parent (to create a new object)
 			$objParent = OIDplusObject::parse($params['parent']);
-			if ($objParent === null) throw new OIDplusException("INSERT action failed because parent object '".$params['parent']."' cannot be parsed!");
+			if ($objParent === null) throw new OIDplusException(_L('%1 action failed because parent object "%2" cannot be parsed!','INSERT',$params['parent']));
 
 			if (!$objParent::root() && (OIDplus::db()->query("select id from ###objects where id = ?", array($objParent->nodeId()))->num_rows() == 0)) {
-				throw new OIDplusException("Parent object '".($objParent->nodeId())."' does not exist");
+				throw new OIDplusException(_L('Parent object %1 does not exist','".($objParent->nodeId())."'));
 			}
 
-			if (!$objParent->userHasWriteRights()) throw new OIDplusException('Authentication error. Please log in as the correct RA to insert an OID at this arc.');
+			if (!$objParent->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the correct RA to insert an OID at this arc.'));
 
 			// Check if the ID is valid
-			if ($params['id'] == '') throw new OIDplusException('ID may not be empty');
+			if ($params['id'] == '') throw new OIDplusException(_L('ID may not be empty'));
 
 			// Determine absolute OID name
 			// Note: At addString() and parse(), the syntax of the ID will be checked
@@ -248,11 +248,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Check, if the OID exists
 			$test = OIDplus::db()->query("select id from ###objects where id = ?", array($id));
 			if ($test->num_rows() >= 1) {
-				throw new OIDplusException("Object $id already exists!");
+				throw new OIDplusException(_L('Object %1 already exists!',$id));
 			}
 
 			$obj = OIDplusObject::parse($id);
-	                if ($obj === null) throw new OIDplusException("INSERT action failed because object '$id' cannot be parsed!");
+	                if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','INSERT',$id));
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
@@ -275,7 +275,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$parent = $params['parent'];
 			$ra_email = $params['ra_email'];
 			if (!empty($ra_email) && !OIDplus::mailUtils()->validMailAddress($ra_email)) {
-				throw new OIDplusException('Invalid RA email address');
+				throw new OIDplusException(_L('Invalid RA email address'));
 			}
 
 			OIDplus::logger()->log("[INFO]OID($parent)+[INFO]OID($id)+[?INFO/!OK]OIDRA($parent)?/[?INFO/!OK]A?", "Object '$id' created, ".(empty($ra_email) ? "without defined RA" : "given to RA '$ra_email'")).", superior object is '$parent'";
@@ -289,7 +289,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$description = '';
 
 			if (strlen($id) > OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')) {
-				throw new OIDplusException("The identifier '$id' is too long (max allowed length: ".OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH').")");
+				$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH');
+				throw new OIDplusException(_L('The identifier %1 is too long (max allowed length: %2)',$id,$maxlen));
 			}
 
 			OIDplus::db()->query("INSERT INTO ###objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, ".OIDplus::db()->sqlDate().", ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
@@ -321,7 +322,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			return array("status" => $status);
 		} else {
-			throw new OIDplusException("Unknown action ID");
+			throw new OIDplusException(_L('Unknown action ID'));
 		}
 	}
 
@@ -335,15 +336,22 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$out['title'] = OIDplus::config()->getValue('system_title');
 			$out['icon'] = OIDplus::webpath(__DIR__).'system_big.png';
 
-			if (file_exists(OIDplus::basePath() . '/userdata/welcome/welcome.html')) {
+			if (file_exists(OIDplus::basePath() . '/userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html')) {
+				$out['text'] = file_get_contents(OIDplus::basePath() . '/userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html');
+			} else if (file_exists(OIDplus::basePath() . '/userdata/welcome/welcome.html')) {
 				$out['text'] = file_get_contents(OIDplus::basePath() . '/userdata/welcome/welcome.html');
 			} else if (file_exists(__DIR__ . '/welcome.local.html')) {
-				$out['text'] = file_get_contents(__DIR__ . '/welcome.local.html');
+				$out['text'] = file_get_contents(__DIR__ . '/welcome.local.html'); // Backwards compatibility. Do not use!
+			} else if (file_exists(__DIR__ . '/welcome$'.OIDplus::getCurrentLang().'.html')) {
+				$out['text'] = file_get_contents(__DIR__ . '/welcome$'.OIDplus::getCurrentLang().'.html');
 			} else if (file_exists(__DIR__ . '/welcome.html')) {
 				$out['text'] = file_get_contents(__DIR__ . '/welcome.html');
 			} else {
 				$out['text'] = '';
 			}
+
+			// make sure the program works even if the user provided HTML is not UTF-8
+			$out['text'] = iconv(mb_detect_encoding($out['text'], mb_detect_order(), true), 'UTF-8', $out['text']);
 
 			if (strpos($out['text'], '%%OBJECT_TYPE_LIST%%') !== false) {
 				$tmp = '<ul>';
@@ -367,9 +375,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$handled = true;
 
 			if (!$obj->userHasReadRights()) {
-				$out['title'] = 'Access denied';
+				$out['title'] = _L('Access denied');
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>Please <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> to receive information about this object.</p>';
+				$out['text'] = '<p>'._L('Please <a %1>log in</a> to receive information about this object.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
 			}
 
@@ -388,9 +396,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
 						if ($res->num_rows() == 0) {
 							http_response_code(404);
-							$out['title'] = 'Object not found';
+							$out['title'] = _L('Object not found');
 							$out['icon'] = 'img/error_big.png';
-							$out['text'] = 'The object <code>'.htmlentities($id).'</code> was not found in this database.';
+							$out['text'] = _L('The object %1 was not found in this database.','<code>'.htmlentities($id).'</code>');
 							return;
 						} else {
 							$row = $res->fetch_array(); // will be used further down the code
@@ -404,9 +412,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 			if (!$matches_any_registered_type) {
 				http_response_code(404);
-				$out['title'] = 'Object not found';
+				$out['title'] = _L('Object not found');
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = 'The object <code>'.htmlentities($id).'</code> was not found in this database.';
+				$out['text'] = _L('The object %1 was not found in this database.','<code>'.htmlentities($id).'</code>');
 				return;
 			}
 
@@ -416,7 +424,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				if ($parent->isRoot()) {
 
 					$parent_link_text = $parent->objectTypeTitle();
-					$out['text'] = '<p><a '.OIDplus::gui()->link($parent->root()).'><img src="img/arrow_back.png" width="16"> Parent node: '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+					$out['text'] = '<p><a '.OIDplus::gui()->link($parent->root()).'><img src="img/arrow_back.png" width="16"> '._L('Parent node: %1',htmlentities($parent_link_text)).'</a></p>' . $out['text'];
 
 				} else {
 					$res_ = OIDplus::db()->query("select * from ###objects where id = ?", array($parent->nodeId()));
@@ -435,13 +443,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 						$parent_link_text = empty($parent_title) ? explode(':',$parent->nodeId())[1] : $parent_title.' ('.explode(':',$parent->nodeId())[1].')';
 
-						$out['text'] = '<p><a '.OIDplus::gui()->link($parent->nodeId()).'><img src="img/arrow_back.png" width="16"> Parent node: '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+						$out['text'] = '<p><a '.OIDplus::gui()->link($parent->nodeId()).'><img src="img/arrow_back.png" width="16"> '._L('Parent node: %1',htmlentities($parent_link_text)).'</a></p>' . $out['text'];
 					} else {
 						$out['text'] = '';
 					}
 				}
 			} else {
-				$parent_link_text = 'Go back to front page';
+				$parent_link_text = _L('Go back to front page');
 				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system').'><img src="img/arrow_back.png" width="16"> '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 			}
 
@@ -450,7 +458,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (!is_null($row) && isset($row['description'])) {
 				if (empty($row['description'])) {
 					if (empty($row['title'])) {
-						$desc = '<p><i>No description for this object available</i></p>';
+						$desc = '<p><i>'._L('No description for this object available').'</i></p>';
 					} else {
 						$desc = $row['title'];
 					}
@@ -460,11 +468,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 				if ($obj->userHasWriteRights()) {
 					$rand = ++self::$crudCounter;
-					$desc = '<noscript><p><b>You need to enable JavaScript to edit title or description of this object.</b></p>'.$desc.'</noscript>';
+					$desc = '<noscript><p><b>'._L('You need to enable JavaScript to edit title or description of this object.').'</b></p>'.$desc.'</noscript>';
 					$desc .= '<div class="container box" style="display:none" id="descbox_'.$rand.'">';
-					$desc .= 'Title: <input type="text" name="title" id="titleedit" value="'.htmlentities($row['title']).'"><br><br>Description:<br>';
+					$desc .= _L('Title').': <input type="text" name="title" id="titleedit" value="'.htmlentities($row['title']).'"><br><br>'._L('Description').':<br>';
 					$desc .= self::showMCE('description', $row['description']);
-					$desc .= '<button type="button" name="update_desc" id="update_desc" class="btn btn-success btn-xs update" onclick="updateDesc()">Update description</button>';
+					$desc .= '<button type="button" name="update_desc" id="update_desc" class="btn btn-success btn-xs update" onclick="updateDesc()">'._L('Update description').'</button>';
 					$desc .= '</div>';
 					$desc .= '<script>document.getElementById("descbox_'.$rand.'").style.display = "block";</script>';
 				}
@@ -483,7 +491,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			$alt_ids = $obj->getAltIds();
 			if (count($alt_ids) > 0) {
-				$out['text'] .= "<h2>Alternative Identifiers</h2>";
+				$out['text'] .= '<h2>'._L('Alternative Identifiers').'</h2>';
 				foreach ($alt_ids as $alt_id) {
 					$ns = $alt_id->getNamespace();
 					$aid = $alt_id->getId();
@@ -503,7 +511,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	private function publicSitemap_rec($json, &$out) {
 		foreach ($json as $x) {
 			if (isset($x['id']) && $x['id']) {
-				$out[] = OIDplus::getSystemUrl().'?goto='.urlencode($x['id']);
+				$out[] = $x['id'];
 			}
 			if (isset($x['children'])) {
 				$this->publicSitemap_rec($x['children'], $out);
@@ -519,7 +527,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if ($nonjs) {
-			$json[] = array('id' => 'oidplus:system', 'icon' => OIDplus::webpath(__DIR__).'system.png', 'text' => 'System');
+			$json[] = array('id' => 'oidplus:system', 'icon' => OIDplus::webpath(__DIR__).'system.png', 'text' => _L('System'));
 
 			$parent = '';
 			$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($req_goto));
@@ -615,7 +623,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			$json[] = array(
 				'id' => "oidplus:system",
-				'text' => "Objects",
+				'text' => _L('Objects'),
 				'state' => array(
 					"opened" => true,
 					// "selected" => true)  // "selected" ist buggy: 1) Das select-Event wird beim Laden nicht gefeuert 2) Die direkt untergeordneten Knoten lassen sich nicht öffnen (laden für ewig)
@@ -677,21 +685,21 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$output .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 		$output .= '<table class="table table-bordered table-striped">';
 		$output .= '	<tr>';
-		$output .= '	     <th>ID'.(($parentNS == 'gs1') ? ' (without check digit)' : '').'</th>';
+		$output .= '	     <th>'._L('ID').(($parentNS == 'gs1') ? ' '._L('(without check digit)') : '').'</th>';
 		if ($parentNS == 'oid') {
-			if ($one_weid_available) $output .= '	     <th>WEID</th>';
-			$output .= '	     <th>ASN.1 IDs (comma sep.)</th>';
-			$output .= '	     <th>IRI IDs (comma sep.)</th>';
+			if ($one_weid_available) $output .= '	     <th>'._L('WEID').'</th>';
+			$output .= '	     <th>'._L('ASN.1 IDs (comma sep.)').'</th>';
+			$output .= '	     <th>'._L('IRI IDs (comma sep.)').'</th>';
 		}
-		$output .= '	     <th>RA</th>';
-		$output .= '	     <th>Comment</th>';
+		$output .= '	     <th>'._L('RA').'</th>';
+		$output .= '	     <th>'._L('Comment').'</th>';
 		if ($objParent->userHasWriteRights()) {
-			$output .= '	     <th>Hide</th>';
-			$output .= '	     <th>Update</th>';
-			$output .= '	     <th>Delete</th>';
+			$output .= '	     <th>'._L('Hide').'</th>';
+			$output .= '	     <th>'._L('Update').'</th>';
+			$output .= '	     <th>'._L('Delete').'</th>';
 		}
-		$output .= '	     <th>Created</th>';
-		$output .= '	     <th>Updated</th>';
+		$output .= '	     <th>'._L('Created').'</th>';
+		$output .= '	     <th>'._L('Updated').'</th>';
 		$output .= '	</tr>';
 
 		foreach ($rows as list($obj,$row)) {
@@ -726,7 +734,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						if ($obj->isWeid(false)) {
 							$output .= '	<td>'.$obj->weidArc().'</td>';
 						} else {
-							$output .= '	<td>n/a</td>';
+							$output .= '	<td>'._L('n/a').'</td>';
 						}
 					}
 					$output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.implode(', ', $asn1ids).'"></td>';
@@ -735,19 +743,19 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$output .= '     <td><input type="text" id="ra_email_'.$row->id.'" value="'.htmlentities($row->ra_email).'"></td>';
 				$output .= '     <td><input type="text" id="comment_'.$row->id.'" value="'.htmlentities($row->comment).'"></td>';
 				$output .= '     <td><input type="checkbox" id="hide_'.$row->id.'" '.($row->confidential ? 'checked' : '').'></td>';
-				$output .= '     <td><button type="button" name="update_'.$row->id.'" id="update_'.$row->id.'" class="btn btn-success btn-xs update" onclick="crudActionUpdate('.js_escape($row->id).', '.js_escape($parent).')">Update</button></td>';
-				$output .= '     <td><button type="button" name="delete_'.$row->id.'" id="delete_'.$row->id.'" class="btn btn-danger btn-xs delete" onclick="crudActionDelete('.js_escape($row->id).', '.js_escape($parent).')">Delete</button></td>';
+				$output .= '     <td><button type="button" name="update_'.$row->id.'" id="update_'.$row->id.'" class="btn btn-success btn-xs update" onclick="crudActionUpdate('.js_escape($row->id).', '.js_escape($parent).')">'._L('Update').'</button></td>';
+				$output .= '     <td><button type="button" name="delete_'.$row->id.'" id="delete_'.$row->id.'" class="btn btn-danger btn-xs delete" onclick="crudActionDelete('.js_escape($row->id).', '.js_escape($parent).')">'._L('Delete').'</button></td>';
 				$output .= '     <td>'.$date_created.'</td>';
 				$output .= '     <td>'.$date_updated.'</td>';
 			} else {
-				if ($asn1ids == '') $asn1ids = '<i>(none)</i>';
-				if ($iris == '') $iris = '<i>(none)</i>';
+				if ($asn1ids == '') $asn1ids = '<i>'._L('(none)').'</i>';
+				if ($iris == '') $iris = '<i>'._L('(none)').'</i>';
 				if ($parentNS == 'oid') {
 					if ($one_weid_available) {
 						if ($obj->isWeid(false)) {
 							$output .= '	<td>'.$obj->weidArc().'</td>';
 						} else {
-							$output .= '	<td>n/a</td>';
+							$output .= '	<td>'._L('n/a').'</td>';
 						}
 					}
 					$asn1ids_ext = array();
@@ -787,7 +795,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$output .= '     <td><input type="text" id="ra_email" value="'.htmlentities($parent_ra_email).'"></td>';
 			$output .= '     <td><input type="text" id="comment" value=""></td>';
 			$output .= '     <td><input type="checkbox" id="hide"></td>';
-			$output .= '     <td><button type="button" name="insert" id="insert" class="btn btn-success btn-xs update" onclick="crudActionInsert('.js_escape($parent).')">Insert</button></td>';
+			$output .= '     <td><button type="button" name="insert" id="insert" class="btn btn-success btn-xs update" onclick="crudActionInsert('.js_escape($parent).')">'._L('Insert').'</button></td>';
 			$output .= '     <td></td>';
 			$output .= '     <td></td>';
 			$output .= '     <td></td>';
@@ -796,7 +804,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if ($items_total-$items_hidden == 0) {
 				$cols = ($parentNS == 'oid') ? 7 : 5;
 				if ($one_weid_available) $cols++;
-				$output .= '<tr><td colspan="'.$cols.'">No items available</td></tr>';
+				$output .= '<tr><td colspan="'.$cols.'">'._L('No items available').'</td></tr>';
 			}
 		}
 
@@ -804,9 +812,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$output .= '</div></div>';
 
 		if ($items_hidden == 1) {
-			$output .= '<p>'.$items_hidden.' item is hidden. Please <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> to see it.</p>';
+			$output .= '<p>'._L('One item is hidden. Please <a %1>log in</a> to see it.',$items_hidden,OIDplus::gui()->link('oidplus:login')).'</p>';
 		} else if ($items_hidden > 1) {
-			$output .= '<p>'.$items_hidden.' items are hidden. Please <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> to see them.</p>';
+			$output .= '<p>'._L('%1 items are hidden. Please <a %2>log in</a> to see them.',$items_hidden,OIDplus::gui()->link('oidplus:login')).'</p>';
 		}
 
 		return $output;
@@ -872,8 +880,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
 
-		echo "<p><u>Step $step: Enable/Disable object type plugins</u></p>";
-		echo '<p>Which object types do you want to manage using OIDplus?</p>';
+		echo '<p><u>'._L('Step %1: Enable/Disable object type plugins',$step).'</u></p>';
+		echo '<p>'._L('Which object types do you want to manage using OIDplus?').'</p>';
 
 		$enabled_ary = array();
 

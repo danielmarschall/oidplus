@@ -24,12 +24,12 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			$email = $params['email'];
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
-				throw new OIDplusException('Authentication error. Please log in as the RA to update its data.');
+				throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA to update its data.'));
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 			if ($res->num_rows() == 0) {
-				throw new OIDplusException('RA does not exist');
+				throw new OIDplusException(_L('RA does not exist'));
 			}
 
 			OIDplus::logger()->log("[?WARN/!OK]RA($email)?/[?INFO/!OK]A?", "Changed RA '$email' contact data/details");
@@ -67,7 +67,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException("Unknown action ID");
+			throw new OIDplusException(_L('Unknown action ID'));
 		}
 	}
 
@@ -81,52 +81,52 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 
 			$ra_email = explode('$',$id)[1];
 
-			$out['title'] = 'Edit RA contact data';
+			$out['title'] = _L('Edit RA contact data');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as the requested RA %2.',OIDplus::gui()->link('oidplus:login'),'<b>'.htmlentities($ra_email).'</b>').'</p>';
 				return;
 			}
 
-			$out['text'] = '<p>Your email address: <b>'.htmlentities($ra_email).'</b>';
+			$out['text'] = '<p>'._L('Your email address: %1','<b>'.htmlentities($ra_email).'</b>').'</p>';
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($ra_email));
 			if ($res->num_rows() == 0) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = 'RA <b>'.htmlentities($ra_email).'</b> does not exist';
+				$out['text'] = _L('RA "%1" does not exist','<b>'.htmlentities($ra_email).'</b>');
 				return;
 			}
 			$row = $res->fetch_array();
 
 			if (class_exists('OIDplusPageRaChangeEMail') && OIDplus::config()->getValue('allow_ra_email_change')) {
-				$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:change_ra_email$'.$ra_email).'>Change email address</a></p>';
+				$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:change_ra_email$'.$ra_email).'>'._L('Change email address').'</a></p>';
 			} else {
-				$out['text'] .= '<p><abbr title="To change the email address, you need to contact the admin or superior RA. They will need to change the email address and invite you (with your new email address) again.">How to change the email address?</abbr></p>';
+				$out['text'] .= '<p><abbr title="'._L('To change the email address, you need to contact the admin or superior RA. They will need to change the email address and invite you (with your new email address) again.').'">'._L('How to change the email address?').'</abbr></p>';
 			}
 
 			// ---
 
-			$out['text'] .= '<p>Change basic information (public):</p>
+			$out['text'] .= '<p>'._L('Change basic information (public)').':</p>
 			  <form id="raChangeContactDataForm" onsubmit="return raChangeContactDataFormOnSubmit();">
 			    <input type="hidden" id="email" value="'.htmlentities($ra_email).'"/>
-			    <div><label class="padding_label">RA Name:</label><input type="text" id="ra_name" value="'.htmlentities($row['ra_name']).'"/></div>
-			    <div><label class="padding_label">Organization:</label><input type="text" id="organization" value="'.htmlentities($row['organization']).'"/></div>
-			    <div><label class="padding_label">Office:</label><input type="text" id="office" value="'.htmlentities($row['office']).'"/></div>
-			    <div><label class="padding_label">Person name:</label><input type="text" id="personal_name" value="'.htmlentities($row['personal_name']).'"/></div>
+			    <div><label class="padding_label">'._L('RA Name').':</label><input type="text" id="ra_name" value="'.htmlentities($row['ra_name']).'"/></div>
+			    <div><label class="padding_label">'._L('Organization').':</label><input type="text" id="organization" value="'.htmlentities($row['organization']).'"/></div>
+			    <div><label class="padding_label">'._L('Office').':</label><input type="text" id="office" value="'.htmlentities($row['office']).'"/></div>
+			    <div><label class="padding_label">'._L('Person name').':</label><input type="text" id="personal_name" value="'.htmlentities($row['personal_name']).'"/></div>
 			    <br>
-			    <div><label class="padding_label">Privacy</label><input type="checkbox" id="privacy" value="" '.($row['privacy'] == 1 ? ' checked' : '').'/> <label for="privacy">Hide postal address and Phone/Fax/Mobile Numbers</label></div>
-			    <div><label class="padding_label">Street:</label><input type="text" id="street" value="'.htmlentities($row['street']).'"/></div>
-			    <div><label class="padding_label">ZIP/Town:</label><input type="text" id="zip_town" value="'.htmlentities($row['zip_town']).'"/></div>
-			    <div><label class="padding_label">Country:</label><input type="text" id="country" value="'.htmlentities($row['country']).'"/></div>
-			    <div><label class="padding_label">Phone:</label><input type="text" id="phone" value="'.htmlentities($row['phone']).'"/></div>
-			    <div><label class="padding_label">Mobile:</label><input type="text" id="mobile" value="'.htmlentities($row['mobile']).'"/></div>
-			    <div><label class="padding_label">Fax:</label><input type="text" id="fax" value="'.htmlentities($row['fax']).'"/></div>
-			    <br><input type="submit" value="Change data">
+			    <div><label class="padding_label">'._L('Privacy').'</label><input type="checkbox" id="privacy" value="" '.($row['privacy'] == 1 ? ' checked' : '').'/> <label for="privacy">'._L('Hide postal address and Phone/Fax/Mobile Numbers').'</label></div>
+			    <div><label class="padding_label">'._L('Street').':</label><input type="text" id="street" value="'.htmlentities($row['street']).'"/></div>
+			    <div><label class="padding_label">'._L('ZIP/Town').':</label><input type="text" id="zip_town" value="'.htmlentities($row['zip_town']).'"/></div>
+			    <div><label class="padding_label">'._L('Country').':</label><input type="text" id="country" value="'.htmlentities($row['country']).'"/></div>
+			    <div><label class="padding_label">'._L('Phone').':</label><input type="text" id="phone" value="'.htmlentities($row['phone']).'"/></div>
+			    <div><label class="padding_label">'._L('Mobile').':</label><input type="text" id="mobile" value="'.htmlentities($row['mobile']).'"/></div>
+			    <div><label class="padding_label">'._L('Fax').':</label><input type="text" id="fax" value="'.htmlentities($row['fax']).'"/></div>
+			    <br><input type="submit" value="'._L('Change data').'">
 			  </form><br><br>';
 
-			$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).',\'oidplus:system\')">Delete profile</a> (objects stay active)</p>';
+			$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).',\'oidplus:system\')">'._L('Delete profile').'</a> '._L('(objects stay active)').'</p>';
 		}
 	}
 
@@ -143,7 +143,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 		$json[] = array(
 			'id' => 'oidplus:edit_ra$'.$ra_email,
 			'icon' => $tree_icon,
-			'text' => 'Edit RA contact data'
+			'text' => _L('Edit RA contact data')
 		);
 
 		return true;

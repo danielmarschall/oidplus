@@ -23,7 +23,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		$path = realpath(__DIR__.'/../../../').'/userdata/attachments/';
 
 		$obj = OIDplusObject::parse($id);
-		if ($obj === null) throw new OIDplusException("Invalid object '$id'");
+		if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
 		if ($obj::ns() == 'oid') {
 			$oid = $obj->nodeId(false);
 		} else {
@@ -63,31 +63,31 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		if ($actionID == 'deleteAttachment') {
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException("Invalid object '$id'");
-			if (!$obj->userHasWriteRights()) throw new OIDplusException("Authentication error. Please log in as the RA of '$id' to upload an attachment.");
+			if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
+			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.',$id));
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn() && !$this->raMayDelete()) {
-				throw new OIDplusException("The administrator has disabled deleting attachments by RAs.");
+				throw new OIDplusException(_L('The administrator has disabled deleting attachments by RAs.'));
 			}
 
 			$req_filename = $params['filename'];
-			if (strpos($req_filename, '/') !== false) throw new OIDplusException("Illegal file name");
-			if (strpos($req_filename, '\\') !== false) throw new OIDplusException("Illegal file name");
-			if (strpos($req_filename, '..') !== false) throw new OIDplusException("Illegal file name");
-			if (strpos($req_filename, chr(0)) !== false) throw new OIDplusException("Illegal file name");
+			if (strpos($req_filename, '/') !== false) throw new OIDplusException(_L('Illegal file name'));
+			if (strpos($req_filename, '\\') !== false) throw new OIDplusException(_L('Illegal file name'));
+			if (strpos($req_filename, '..') !== false) throw new OIDplusException(_L('Illegal file name'));
+			if (strpos($req_filename, chr(0)) !== false) throw new OIDplusException(_L('Illegal file name'));
 
 			$uploaddir = self::getUploadDir($id);
 			$uploadfile = $uploaddir . '/' . basename($req_filename);
 
-			if (!file_exists($uploadfile)) throw new OIDplusException("File does not exist");
+			if (!file_exists($uploadfile)) throw new OIDplusException(_L('File does not exist'));
 			@unlink($uploadfile);
 			if (file_exists($uploadfile)) {
-				$msg = "Attachment file '".basename($uploadfile)."' could not be deleted from object '$oid' (problem with permissions?)";
-				OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", $msg);
+				OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", "Attachment file '".basename($uploadfile)."' could not be deleted from object '$oid' (problem with permissions?)");
+				$msg = _L('Attachment file "%1" could not be deleted from object "%2" (problem with permissions?)',basename($uploadfile),$oid);
 				if (OIDplus::authUtils()::isAdminLoggedIn()) {
 					throw new OIDplusException($msg);
 				} else {
-					throw new OIDplusException("$msg. Please contact the system administrator.");
+					throw new OIDplusException($msg.'. '._L('Please contact the system administrator.'));
 				}
 			} else {
 				// If it was the last file, delete the empty directory
@@ -103,15 +103,15 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException("Invalid object '$id'");
-			if (!$obj->userHasWriteRights()) throw new OIDplusException("Authentication error. Please log in as the RA of '$id' to upload an attachment.");
+			if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
+			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.',$id));
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn() && !$this->raMayUpload()) {
-				throw new OIDplusException("The administrator has disabled uploading attachments by RAs.");
+				throw new OIDplusException(_L('The administrator has disabled uploading attachments by RAs.'));
 			}
 
 			if (!isset($_FILES['userfile'])) {
-				throw new OIDplusException("Please choose a file.");
+				throw new OIDplusException(_L('Please choose a file.'));
 			}
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
@@ -120,16 +120,16 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 					$ext = trim($ext);
 					if ($ext == '') continue;
 					if (strtolower(substr(basename($_FILES['userfile']['name']), -strlen($ext)-1)) == strtolower('.'.$ext)) {
-						throw new OIDplusException("The file extension '.$ext' is banned by the administrator (it can be uploaded by the administrator though)");
+						throw new OIDplusException(_L('The file extension "%1" is banned by the administrator (it can be uploaded by the administrator though)',$ext));
 					}
 				}
 			}
 
 			$req_filename = $_FILES['userfile']['name'];
-			if (strpos($req_filename, '/') !== false) throw new OIDplusException("Illegal file name");
-			if (strpos($req_filename, '\\') !== false) throw new OIDplusException("Illegal file name");
-			if (strpos($req_filename, '..') !== false) throw new OIDplusException("Illegal file name");
-			if (strpos($req_filename, chr(0)) !== false) throw new OIDplusException("Illegal file name");
+			if (strpos($req_filename, '/') !== false) throw new OIDplusException(_L('Illegal file name'));
+			if (strpos($req_filename, '\\') !== false) throw new OIDplusException(_L('Illegal file name'));
+			if (strpos($req_filename, '..') !== false) throw new OIDplusException(_L('Illegal file name'));
+			if (strpos($req_filename, chr(0)) !== false) throw new OIDplusException(_L('Illegal file name'));
 
 			$uploaddir = self::getUploadDir($id);
 			$uploadfile = $uploaddir . '/' . basename($req_filename);
@@ -137,23 +137,23 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			if (!is_dir($uploaddir)) {
 				@mkdir($uploaddir, 0777, true);
 				if (!is_dir($uploaddir)) {
-					$msg = "Upload attachment '".basename($uploadfile)."' to object '$id' failed: Cannot create directory '".basename($uploaddir)."' (problem with permissions?)";
-					OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", $msg);
+					OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", "Upload attachment '".basename($uploadfile)."' to object '$id' failed: Cannot create directory '".basename($uploaddir)."' (problem with permissions?)");
+					$msg = _L('Upload attachment "%1" to object "%2" failed',basename($uploadfile),$id).': '._L('Cannot create directory "%1" (problem with permissions?)',basename($uploaddir));
 					if (OIDplus::authUtils()::isAdminLoggedIn()) {
 						throw new OIDplusException($msg);
 					} else {
-						throw new OIDplusException("$msg. Please contact the system administrator.");
+						throw new OIDplusException($msg.'. '._L('Please contact the system administrator.'));
 					}
 				}
 			}
 
 			if (!@move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-				$msg = "Upload attachment '".basename($uploadfile)."' to object '$id' failed: Cannot move uploaded file into directory (problem with permissions?)";
-				OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", $msg);
+				OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", "Upload attachment '".basename($uploadfile)."' to object '$id' failed: Cannot move uploaded file into directory (problem with permissions?)");
+				$msg = _L('Upload attachment "%1" to object "%2" failed',basename($uploadfile),$id).': '._L('Cannot move uploaded file into directory (problem with permissions?)');
 				if (OIDplus::authUtils()::isAdminLoggedIn()) {
 					throw new OIDplusException($msg);
 				} else {
-					throw new OIDplusException("$msg. Please contact the system administrator.");
+					throw new OIDplusException($msg.'. '._L('Please contact the system administrator.'));
 				}
 			}
 
@@ -161,7 +161,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException("Unknown action ID");
+			throw new OIDplusException(_L('Unknown action ID'));
 		}
 	}
 
@@ -170,12 +170,12 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		});
 		OIDplus::config()->prepareConfigKey('attachments_allow_ra_delete', 'Allow that RAs delete file attachments? (0=no, 1=yes)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
-				throw new OIDplusException("Please enter a valid value (0 or 1).");
+				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
 			}
 		});
 		OIDplus::config()->prepareConfigKey('attachments_allow_ra_upload', 'Allow that RAs upload file attachments? (0=no, 1=yes)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
-				throw new OIDplusException("Please enter a valid value (0 or 1).");
+				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
 			}
 		});
 	}
@@ -193,7 +193,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	}
 
 	private static function convert_filesize($bytes, $decimals = 2){
-		$size = array('Bytes','KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB');
+		$size = array(_L('Bytes'),_L('KiB'),_L('MiB'),_L('GiB'),_L('TiB'),_L('PiB'),_L('EiB'),_L('ZiB'),_L('YiB'));
 		$factor = floor((strlen($bytes) - 1) / 3);
 		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . ' ' . @$size[$factor];
 	}
@@ -214,26 +214,26 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		$found_files = false;
 
 		$obj = OIDplusObject::parse($id);
-		if ($obj === null) throw new OIDplusException("Invalid object '$id'");
+		if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
 		$can_upload = OIDplus::authUtils()::isAdminLoggedIn() || ($this->raMayUpload() && $obj->userHasWriteRights());
 		$can_delete = OIDplus::authUtils()::isAdminLoggedIn() || ($this->raMayDelete() && $obj->userHasWriteRights());
 
-		$output .= '<h2>File attachments</h2>';
+		$output .= '<h2>'._L('File attachments').'</h2>';
 		$output .= '<div class="container box">';
 
 		if (OIDplus::authUtils()::isAdminLoggedIn()) {
-			$output .= '<p>Admin info: The directory is <b>'.htmlentities(self::getUploadDir($id)).'</b></p>';
+			$output .= '<p>'._L('Admin info: The directory is %1','<b>'.htmlentities(self::getUploadDir($id)).'</b>').'</p>';
 			$doshow = true;
 		}
 
 		$output .= '<div id="fileattachments_table" class="table-responsive">';
 		$output .= '<table class="table table-bordered table-striped">';
 		$output .= '<tr>';
-		$output .= '<th>Filename</th>';
-		$output .= '<th>Size</th>';
-		$output .= '<th>File type</th>';
-		$output .= '<th>Download</th>';
-		if ($can_delete) $output .= '<th>Delete</th>';
+		$output .= '<th>'._L('Filename').'</th>';
+		$output .= '<th>'._L('Size').'</th>';
+		$output .= '<th>'._L('File type').'</th>';
+		$output .= '<th>'._L('Download').'</th>';
+		if ($can_delete) $output .= '<th>'._L('Delete').'</th>';
 		$output .= '</tr>';
 		foreach ($files as $file) {
 			if (is_dir($file)) continue;
@@ -244,9 +244,9 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			$lookup_files = array(__DIR__.'/../../../userdata/attachments/filetypes.conf', __DIR__.'/../../../3p/vts_fileformats/filetypes.local', __DIR__.'/../../../3p/vts_fileformats/filetypes.conf');
 			$output .= '<td>'.htmlentities(VtsFileTypeDetect::getDescription($file, $lookup_files)).'</td>';
 
-			$output .= '     <td><button type="button" name="download_'.md5($file).'" id="download_'.md5($file).'" class="btn btn-success btn-xs download" onclick="downloadAttachment('.js_escape(OIDplus::webpath(__DIR__)).', current_node,'.js_escape(basename($file)).')">Download</button></td>';
+			$output .= '     <td><button type="button" name="download_'.md5($file).'" id="download_'.md5($file).'" class="btn btn-success btn-xs download" onclick="downloadAttachment('.js_escape(OIDplus::webpath(__DIR__)).', current_node,'.js_escape(basename($file)).')">'._L('Download').'</button></td>';
 			if ($can_delete) {
-				$output .= '     <td><button type="button" name="delete_'.md5($file).'" id="delete_'.md5($file).'" class="btn btn-danger btn-xs delete" onclick="deleteAttachment(current_node,'.js_escape(basename($file)).')">Delete</button></td>';
+				$output .= '     <td><button type="button" name="delete_'.md5($file).'" id="delete_'.md5($file).'" class="btn btn-danger btn-xs delete" onclick="deleteAttachment(current_node,'.js_escape(basename($file)).')">'._L('Delete').'</button></td>';
 			}
 
 			$output .= '</tr>';
@@ -254,15 +254,15 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			$found_files = true;
 		}
 
-		if (!$found_files) $output .= '<tr><td colspan="'.($can_delete ? 5 : 4).'"><i>No attachments</i></td></tr>';
+		if (!$found_files) $output .= '<tr><td colspan="'.($can_delete ? 5 : 4).'"><i>'._L('No attachments').'</i></td></tr>';
 
 		$output .= '</table></div>';
 
 		if ($can_upload) {
 			$output .= '<form onsubmit="return uploadAttachmentOnSubmit(this);" enctype="multipart/form-data" id="uploadAttachmentForm">';
 			$output .= '<input type="hidden" name="id" value="'.htmlentities($id).'">';
-			$output .= '<div>Add a file attachment:<input type="file" name="userfile" value="" id="fileAttachment">';
-			$output .= '<br><input type="submit" value="Upload"></div>';
+			$output .= '<div>'._L('Add a file attachment').':<input type="file" name="userfile" value="" id="fileAttachment">';
+			$output .= '<br><input type="submit" value="'._L('Upload').'"></div>';
 			$output .= '</form>';
 			$doshow = true;
 		}

@@ -26,17 +26,17 @@ try {
 
 	if (!isset($_REQUEST['filename'])) {
 		http_response_code(400);
-		throw new Exception("Argument 'filename' is missing");
+		throw new Exception(_L('Argument "%1" is missing','filename'));
 	}
 	$filename = $_REQUEST['filename'];
-	if (strpos($filename, '/') !== false) throw new OIDplusException("Illegal file name");
-	if (strpos($filename, '\\') !== false) throw new OIDplusException("Illegal file name");
-	if (strpos($filename, '..') !== false) throw new OIDplusException("Illegal file name");
-	if (strpos($filename, chr(0)) !== false) throw new OIDplusException("Illegal file name");
+	if (strpos($filename, '/') !== false) throw new OIDplusException(_L('Illegal file name'));
+	if (strpos($filename, '\\') !== false) throw new OIDplusException(_L('Illegal file name'));
+	if (strpos($filename, '..') !== false) throw new OIDplusException(_L('Illegal file name'));
+	if (strpos($filename, chr(0)) !== false) throw new OIDplusException(_L('Illegal file name'));
 
 	if (!isset($_REQUEST['id'])) {
 		http_response_code(400);
-		throw new Exception("Argument 'id' is missing");
+		throw new Exception(_L('Argument "%1" is missing','id'));
 	}
 	$id = $_REQUEST['id'];
 
@@ -45,11 +45,10 @@ try {
 
 	if (!file_exists($local_file)) {
 		http_response_code(404);
-		throw new Exception("The file does not exist");
+		throw new Exception(_L('The file does not exist'));
 	}
 
 	VtsBrowserDownload::output_file($local_file);
 } catch (Exception $e) {
-	echo "<h1>Error</h1><p>".htmlentities($e->getMessage())."<p>";
+	echo '<h1>'._L('Error').'</h1><p>'.htmlentities($e->getMessage()).'<p>';
 }
-

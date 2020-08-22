@@ -24,7 +24,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$email = $params['email'];
 
 			if (!OIDplus::mailUtils()->validMailAddress($email)) {
-				throw new OIDplusException('Invalid email address');
+				throw new OIDplusException(_L('Invalid email address'));
 			}
 
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
@@ -33,7 +33,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					throw new OIDplusException('Captcha wrong');
+					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
 				}
 			}
 
@@ -58,19 +58,20 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$timestamp = $params['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
-				throw new OIDplusException('Invalid auth key');
+				throw new OIDplusException(_L('Invalid auth key'));
 			}
 
 			if ((OIDplus::config()->getValue('max_ra_pwd_reset_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_pwd_reset_time'))) {
-				throw new OIDplusException('Invitation expired!');
+				throw new OIDplusException(_L('Invitation expired!'));
 			}
 
 			if ($password1 !== $password2) {
-				throw new OIDplusException('Passwords are not equal');
+				throw new OIDplusException(_L('Passwords do not match'));
 			}
 
 			if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
-				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->getValue('ra_min_password_length'));
+				$minlen = OIDplus::config()->getValue('ra_min_password_length');
+				throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
 			}
 
 			OIDplus::logger()->log("[INFO]RA($email)!", "RA '$email' has reset his password (forgot passwort)");
@@ -80,14 +81,14 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException("Unknown action ID");
+			throw new OIDplusException(_L('Unknown action ID'));
 		}
 	}
 
 	public function init($html=true) {
 		OIDplus::config()->prepareConfigKey('max_ra_pwd_reset_time', 'Max RA password reset time in seconds (0 = infinite)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
-				throw new OIDplusException("Please enter a valid value.");
+				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
 	}
@@ -96,24 +97,24 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 		if (explode('$',$id)[0] == 'oidplus:forgot_password') {
 			$handled = true;
 
-			$out['title'] = 'Forgot password';
+			$out['title'] = _L('Forgot password');
 			$out['icon'] = OIDplus::webpath(__DIR__).'forgot_password_big.png';
 
 			try {
-				$out['text'] .= '<p>Please enter the email address of your account, and information about the password reset will be sent to you.</p>
+				$out['text'] .= '<p>'._L('Please enter the email address of your account, and information about the password reset will be sent to you.').'</p>
 				  <form id="forgotPasswordForm" onsubmit="return forgotPasswordFormOnSubmit();">
-				    E-Mail: <input type="text" id="email" value=""/><br><br>'.
+				    '._L('E-Mail').': <input type="text" id="email" value=""/><br><br>'.
 				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
 				 '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
 				 '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '').
 				' <br>
-				    <input type="submit" value="Send recovery information">
+				    <input type="submit" value="'._L('Send recovery information').'">
 				  </form>';
 
 			} catch (Exception $e) {
 
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>Error: '.htmlentities($e->getMessage()).'</p>';
+				$out['text'] = '<p>'._L('Error: %1',htmlentities($e->getMessage())).'</p>';
 
 			}
 		} else if (explode('$',$id)[0] == 'oidplus:reset_password') {
@@ -123,29 +124,29 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$timestamp = explode('$',$id)[2];
 			$auth = explode('$',$id)[3];
 
-			$out['title'] = 'Reset password';
+			$out['title'] = _L('Reset password');
 			$out['icon'] = OIDplus::webpath(__DIR__).'reset_password_big.png';
 
 			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = 'Invalid authorization. Is the URL OK?';
+				$out['text'] = _L('Invalid authorization. Is the URL OK?');
 			} else {
-				$out['text'] = '<p>E-Mail-Adress: <b>'.$email.'</b></p>
+				$out['text'] = '<p>'._L('E-Mail-Address: %1','<b>'.$email.'</b>').'</p>
 
 				  <form id="resetPasswordForm" onsubmit="return resetPasswordFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 				    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
-				    <div><label class="padding_label">New password:</label><input type="password" id="password1" value=""/></div>
-				    <div><label class="padding_label">Repeat:</label><input type="password" id="password2" value=""/></div>
-				    <br><input type="submit" value="Change password">
+				    <div><label class="padding_label">'._L('New password').':</label><input type="password" id="password1" value=""/></div>
+				    <div><label class="padding_label">'._L('Repeat').':</label><input type="password" id="password2" value=""/></div>
+				    <br><input type="submit" value="'._L('Change password').'">
 				  </form>';
 			}
 		}
 	}
 
 	public function publicSitemap(&$out) {
-		$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('oidplus:forgot_password');
+		$out[] = 'oidplus:forgot_password';
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
@@ -155,7 +156,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 	private function getForgotPasswordText($email) {
 		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 		if ($res->num_rows() == 0) {
-			throw new OIDplusException("This RA does not exist.");
+			throw new OIDplusException(_L('This RA does not exist.'));
 		}
 
 		$message = file_get_contents(__DIR__ . '/forgot_password.tpl');

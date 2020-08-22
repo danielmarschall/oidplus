@@ -23,6 +23,8 @@ var current_node = "";
 var popstate_running = false;
 var externalWaiting = 0;
 var DEFAULT_LANGUAGE = "enus";
+// language_messages will be set by oidplus.min.js.php
+// language_tblprefix will be set by oidplus.min.js.php
 
 function oidplus_loadScript(src) {
 	externalWaiting++;
@@ -31,7 +33,7 @@ function oidplus_loadScript(src) {
 		externalWaiting--;
 	};
 	script.src = src;
-	script.rel = "preload"
+	script.rel = "preload";
 	document.head.appendChild(script);
 }
 
@@ -85,7 +87,7 @@ function getMeta(metaName) {
 }
 
 function getOidPlusSystemTitle() {
-	return getMeta('OIDplus-SystemTitle');
+	return getMeta('OIDplus-SystemTitle'); // do not translate
 }
 
 function combine_systemtitle_and_pagetitle(systemtitle, pagetitle) {
@@ -148,7 +150,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/) {
 						search:id
 					},
 					error:function(jqXHR, textStatus, errorThrown) {
-						console.error("Error: " + errorThrown);
+						console.error(_L("Error: %1",errorThrown));
 					},
 					success:function(data) {
 						if ("error" in data) {
@@ -182,7 +184,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/) {
 		response.json()
 		.then(function(data) {
 			if ("error" in data) {
-				alert(_L("Failed to load content") + ": " + data.error);
+				alert(_L("Failed to load content: %1",data.error));
 				console.error(data.error);
 				return;
 			}
@@ -216,12 +218,12 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/) {
 			}
 		})
 		.catch(function(error) {
-			alert(_L("Failed to load content") + ": " + error);
+			alert(_L("Failed to load content: %1",error));
 			console.error(error);
 		});
 	})
 	.catch(function(error) {
-		alert(_L("Failed to load content") + ": " + error);
+		alert(_L("Failed to load content: %1",error));
 		console.error(error);
 	});
 }
@@ -359,7 +361,6 @@ function initAfterExternals() {
 	$("#gotobox").addClass("mobilehidden");
 	$("#languageBox").addClass("mobilehidden");
 	document.getElementById('gotobox').style.display = "block";
-	document.getElementById('languageBox').style.display = "block";
 	$('#gotoedit').keypress(function(event) {
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if (keycode == '13') {
@@ -469,18 +470,41 @@ function setLanguage(lngid) {
 		// Internet Explorer has problems with sending new cookies to new AJAX requests, so we reload the page completely
 		window.location.reload();
 	} else {
-		openOidInPanel(current_node, false);
+		reloadContent();
 		mobileNavClose();
 	}
 }
 
 function getCurrentLang() {
+	// Note: If the argument "?lang=" is used, PHP will automatically set a Cookie, so it is OK when we only check for the cookie
 	var lang = getCookie('LANGUAGE');
 	return (typeof lang != "undefined") ? lang : DEFAULT_LANGUAGE;
 }
 
-function _L(str) {
-	if (typeof language_messages[getCurrentLang()] == "undefined") return str;
-	var msg = language_messages[getCurrentLang()][str];
-	return (typeof msg != "undefined") ? msg : str;
+function _L() {
+	var args = Array.prototype.slice.call(arguments);
+	var str = args.shift();
+
+	var tmp = "";
+	if (typeof language_messages[getCurrentLang()] == "undefined") {
+		tmp = str;
+	} else {
+		var msg = language_messages[getCurrentLang()][str];
+		if (typeof msg != "undefined") {
+			tmp = msg;
+		} else {
+			tmp = str;
+		}
+	}
+
+	tmp = tmp.replace('###', language_tblprefix);
+
+	var n = 1;
+	while (args.length > 0) {
+		var val = args.shift();
+		tmp = tmp.replace("%"+n, val);
+		n++;
+	}
+
+	return tmp;
 }

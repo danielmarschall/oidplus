@@ -33,7 +33,7 @@ class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 			if ($html) {
 				if (basename($_SERVER['SCRIPT_NAME']) != 'oobe.php') {
 					header('Location:'.OIDplus::webpath(__DIR__).'oobe.php');
-					die('Redirecting to registration wizard...');
+					die(_L('Redirecting to registration wizard...'));
 				}
 			} else {
 				// We cannot guarantee that everything works correctly if OOBE never ran once. So abort AJAX and co.

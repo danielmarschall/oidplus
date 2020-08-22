@@ -91,10 +91,67 @@ while "userdata/resources" contains resources that you add yourself
 hyperlinks to your websites and products, etc.)
 
 Valid contents:
-- Sub folders
-- *.url files (will be converted to a hyperlink in the menu on the left)
-- *.html files (the HTML headline will define the title of the menu entry)
-- You can define custom icons for any resource by placing the files ..._big.png and ..._tree.png
+- Subfolders
+- *.html files
+- *.link files (will be converted to a hyperlink in the menu on the left)
+- *.url files (will be converted to a hyperlink in the menu on the left.
+               No internationalization possible, therefore deprecated!)
+
+Icons:
+	You can define custom icons for any any file or folder by placing PNG files
+	with the following file names:
+	
+	Assume the ressource file <filename>.html , then the icon files are:
+	<filename>_big.png        (Big icon in the content-pane)
+	<filename>_big$dede.png   (German-specific icon)
+	<filename>_tree.png       (Icon in the tree view, 16x16)
+	<filename>_tree$dede.png  (German-specific tree icon)
+	
+	The same applies for folders.
+
+Internationalization of *.html files:
+	Title: The title is taken from the HTML headline.
+	To create a file with multiple languages, create them like this:
+		example.html      <-- this is the file in the default language ("enus" = English USA)
+		example$dede.html <-- this is the file for German ("dede")
+	Attention: The main file (without language code) needs to exist, so this is NOT possible:
+		example$enus.html <-- DO NOT USE
+		example$dede.html
+
+Internationalization of *.link files:
+	Title:
+		.link files are like .url files, but they have an attribute for defining a title.
+	The file format is like this:
+		[Link]
+		Title="Report a bug"
+		URL="https://www.viathinksoft.com/thinkbug/thinkbug.php?id=97"
+	To create an URL with multiple languages, create them like this:
+		example.link      <-- this is the file in the default language ("enus" = English USA)
+		example$dede.link <-- this is the file for German ("dede")
+	Attention: The main file (without language code) needs to exist, so this is NOT possible:
+		example$enus.link <-- DO NOT USE
+		example$dede.link
+
+Internationalization of *.url files:
+	.url files are the normal files that can be created using Microsoft Windows.
+	Internationalization of *.url files is not possible.
+	Title:
+		The title is taken from the file name.
+	You need to create two entries which are always both visible in the menu,
+	independent from the chosen language:
+	- "Report a bug.url"
+	- "Einen Fehler melden.url"
+
+Internationalization of Folder names:
+	By default, the folder title is the name of the directory.
+	To change it, you can place a folder.ini with the following contents:
+		[Folder]
+		Title="Object Identifiers"
+	For multilinguality, e.g. create folder$dede.ini for a German name
+		[Folder]
+		Title="Objekt-Bezeichner (OID)"
+	Please note that the URL is always the same and exposes the real directory name:
+		...?goto=oidplus:resources$Object Identifiers/
 
 
 Folder "welcome"
@@ -108,3 +165,8 @@ Please note:
   you cannot place resources (images, css etc.) there.
 - Although the file extension is ".html", it may only contain plain
   HTML data (without head or body).
+
+Internationalization:
+To create a file with multiple languages, create them like this:
+	welcome.html      <-- this is the file in the default language ("enus" = English USA)
+	welcome$dede.html <-- this is the file for German ("dede")

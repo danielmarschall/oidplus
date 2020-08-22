@@ -22,15 +22,15 @@
 // Parameters: $this is the OIDplusDatabaseConnection class
 //             $version is the current version (this script MUST increase the number by 1 when it is done)
 
-if (!isset($version)) throw new OIDplusException("Argument 'version' is missing; was the file included in a wrong way?");
-if (!isset($this))    throw new OIDplusException("Argument 'this' is missing; was the file included in a wrong way?");
+if (!isset($version)) throw new OIDplusException(_L('Argument "%1" is missing; was the file included in a wrong way?','version'));
+if (!isset($this))    throw new OIDplusException(_L('Argument "%1" is missing; was the file included in a wrong way?','this'));
 
 if ($this->transaction_supported()) $this->transaction_begin();
 
 if ($this->getSlang()::id() == 'mssql') {
-	$sql = "CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @maxArcLen int, @occurence int)
+	$this->query("CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @maxArcLen int, @occurence int)
 	RETURNS varchar(512) AS
-	BEGIN 
+	BEGIN
 		DECLARE @intPos int
 
 		DECLARE @cnt int
@@ -45,7 +45,7 @@ if ($this->getSlang()::id() == 'mssql') {
 
 		WHILE CHARINDEX('.',@strList) > 0
 		BEGIN
-			SET @intPos=CHARINDEX('.',@strList) 
+			SET @intPos=CHARINDEX('.',@strList)
 			SET @cnt = @cnt + 1
 			IF @cnt = @occurence
 			BEGIN
@@ -64,8 +64,7 @@ if ($this->getSlang()::id() == 'mssql') {
 		END
 
 		RETURN REPLICATE('0', @maxArcLen)
-	END";
-	$this->query($sql);
+	END");
 }
 
 $version = 203;

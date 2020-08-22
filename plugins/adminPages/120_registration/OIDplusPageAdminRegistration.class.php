@@ -27,27 +27,27 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:srv_registration') {
 			$handled = true;
-			$out['title'] = 'System registration settings';
+			$out['title'] = _L('System registration settings');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
 			}
 
 			$out['text'] = file_get_contents(__DIR__ . '/info.tpl');
 
 			if (!OIDplus::getPkiStatus()) {
-				$out['text'] .= '<p><font color="red">Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.</font></p>';
+				$out['text'] .= '<p><font color="red">'._L('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.').'</font></p>';
 			} else {
-				$out['text'] .= '<p><input type="button" onclick="openOidInPanel(\'oidplus:srvreg_status\');" value="Check status of the registration and collected data"></p>';
+				$out['text'] .= '<p><input type="button" onclick="openOidInPanel(\'oidplus:srvreg_status\');" value="'._L('Check status of the registration and collected data').'"></p>';
 
 				if (OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
-					$out['text'] .= '<p><font color="red"><b>Attention!</b> <code>REGISTRATION_HIDE_SYSTEM</code> is set in the local configuration file! Therefore, this system will not register itself, despire the settings below.</font></p>';
+					$out['text'] .= '<p><font color="red"><b>'._L('Attention!').'</b> '._L('<code>REGISTRATION_HIDE_SYSTEM</code> is set in the local configuration file! Therefore, this system will not register itself, despite of the settings below.').'</font></p>';
 				}
 
-				$out['text'] .= '<p>You can adjust your privacy level here:</p><p><select name="reg_privacy" id="reg_privacy">';
+				$out['text'] .= '<p>'._L('You can adjust your privacy level here').':</p><p><select name="reg_privacy" id="reg_privacy">';
 
 				# ---
 
@@ -57,7 +57,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				} else {
 					$out['text'] .= '';
 				}
-				$out['text'] .= '>0 = Register to directory service and automatically publish RA/OID data at oid-info.com</option>';
+				$out['text'] .= '>'._L('0 = Register to directory service and automatically publish RA/OID data at oid-info.com').'</option>';
 
 				# ---
 
@@ -67,7 +67,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				} else {
 					$out['text'] .= '';
 				}
-				$out['text'] .= '>1 = Only register to directory service</option>';
+				$out['text'] .= '>'._L('1 = Only register to directory service').'</option>';
 
 				# ---
 
@@ -77,15 +77,15 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				} else {
 					$out['text'] .= '';
 				}
-				$out['text'] .= '>2 = Hide system</option>';
+				$out['text'] .= '>'._L('2 = Hide system').'</option>';
 
 				# ---
 
-				$out['text'] .= '</select> <input type="button" value="Change" onclick="crudActionRegPrivacyUpdate()"></p>';
+				$out['text'] .= '</select> <input type="button" value="'._L('Change').'" onclick="crudActionRegPrivacyUpdate()"></p>';
 
-				$out['text'] .= '<p>After clicking "change", your OIDplus installation will contact the ViaThinkSoft server to adjust (add or remove information) your privacy setting. This may take a few minutes.</p>';
+				$out['text'] .= '<p>'._L('After clicking "change", your OIDplus system will contact the ViaThinkSoft server to adjust (add or remove information) your privacy setting. This may take a few minutes.').'</p>';
 
-				$out['text'] .= '<p><i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a>.';
+				$out['text'] .= '<p>'._L('<i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a>.').'</p>';
 			}
 		}
 		if ($id === 'oidplus:srvreg_status') {
@@ -100,7 +100,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 			$signature = '';
 			if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
-				throw new OIDplusException("Signature failed");
+				throw new OIDplusException(_L('Signature failed'));
 			}
 
 			$data = array(
@@ -116,14 +116,14 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			if (!($res = @curl_exec($ch))) {
-				throw new OIDplusException("Communication with ViaThinkSoft server failed: " . curl_error($ch));
+				throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
 			}
 			curl_close($ch);
 			// die("RES: $res\n");
 			// if ($res == 'OK') ...
 
-			$out['title'] = 'Registration live status';
-			$out['text']  = '<p><a '.OIDplus::gui()->link('oidplus:srv_registration').'><img src="img/arrow_back.png" width="16"> Go back to registration settings</a></p>' .
+			$out['title'] = _L('Registration live status');
+			$out['text']  = '<p><a '.OIDplus::gui()->link('oidplus:srv_registration').'><img src="img/arrow_back.png" width="16"> '._L('Go back to registration settings').'</a></p>' .
 			                $res;
 		}
 	}
@@ -154,7 +154,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 				$signature = '';
 				if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
-					return false; // throw new OIDplusException("Signature failed");
+					return false; // throw new OIDplusException(_L('Signature failed'));
 				}
 
 				$data = array(
@@ -170,7 +170,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 				curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 				if (!($res = @curl_exec($ch))) {
-					return false; // throw new OIDplusException("Communication with ViaThinkSoft server failed: " . curl_error($ch));
+					return false; // throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
 				}
 				curl_close($ch);
 				// die("RES: $res\n");
@@ -221,7 +221,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 			$signature = '';
 			if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
-					return false; // throw new OIDplusException("Signature failed");
+					return false; // throw new OIDplusException(_L('Signature failed'));
 			}
 
 			$data = array(
@@ -237,7 +237,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			if (!($res = @curl_exec($ch))) {
-				return false; // throw new OIDplusException("Communication with ViaThinkSoft server failed: " . curl_error($ch));
+				return false; // throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
 			}
 			curl_close($ch);
 
@@ -264,7 +264,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	public function init($html=true) {
 		OIDplus::config()->prepareConfigKey('reg_privacy', '2=Hide your system, 1=Register your system to the ViaThinkSoft directory and oid-info.com, 0=Publish your system to ViaThinkSoft directory and all public contents (RA/OID) to oid-info.com', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != '0') && ($value != '1') && ($value != '2')) {
-				throw new OIDplusException("Please enter either 0, 1 or 2.");
+				throw new OIDplusException(_L('Please enter either 0, 1 or 2.'));
 			}
 			// Now do a recheck and notify the ViaThinkSoft server
 			if (($value == 2) || !OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
@@ -306,7 +306,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		$json[] = array(
 			'id' => 'oidplus:srv_registration',
 			'icon' => $tree_icon,
-			'text' => 'System registration'
+			'text' => _L('System registration')
 		);
 
 		return true;
@@ -324,13 +324,15 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
 
-		echo "<p><u>Step $step: System registration and automatic publishing</u> (optional)</p>";
+		echo '<p><u>'._L('Step %1: System registration and automatic publishing (optional)',$step).'</u></p>';
 
 		echo file_get_contents(__DIR__ . '/info.tpl');
 
 		if (!function_exists('curl_exec')) {
-			echo '<p><font color="red">Note: The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.';
-			echo 'Therefore, you <b>cannot</b> register your OIDplus instance at the moment.</font></p>';
+			echo '<p><font color="red">';
+			echo _L('Note: The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.');
+			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
+			echo '</font></p>';
 			return;
 		}
 
@@ -344,20 +346,24 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
 		if (!$httpCode) {
-			echo '<p><font color="red">Note: The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.';
-			echo 'Therefore, you <b>cannot</b> register your OIDplus instance at the moment.</font></p>';
+			echo '<p><font color="red">';
+			echo _L('Note: The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.');
+			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
+			echo '</font></p>';
 			return;
 		}
 
 		$pki_status = OIDplus::getPkiStatus();
 
 		if (!$pki_status) {
-			echo '<p><font color="red">Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system).';
-			echo 'Therefore, you <b>cannot</b> register your OIDplus instance at the moment.</font></p>';
+			echo '<p><font color="red">';
+			echo _L('Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system).');
+			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
+			echo '</font></p>';
 			return;
 		}
 
-		echo '<p>Privacy level:</p><select name="reg_privacy" id="reg_privacy">';
+		echo '<p>'._L('Privacy level').':</p><select name="reg_privacy" id="reg_privacy">';
 
 		# ---
 
@@ -371,7 +377,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				echo '';
 			}
 		}
-		echo '>0 = Register to directory service and automatically publish RA/OID data at oid-info.com</option>';
+		echo '>'._L('0 = Register to directory service and automatically publish RA/OID data at oid-info.com').'</option>';
 
 		# ---
 
@@ -385,7 +391,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				echo '';
 			}
 		}
-		echo '>1 = Only register to directory service</option>';
+		echo '>'._L('1 = Only register to directory service').'</option>';
 
 		# ---
 
@@ -399,7 +405,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				echo '';
 			}
 		}
-		echo '>2 = Hide system</option>';
+		echo '>'._L('2 = Hide system').'</option>';
 
 		# ---
 
@@ -416,8 +422,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		}
 		echo ' <font color="red"><b>'.$msg.'</b></font>';
 
-		echo '<p><i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.<br>
-		<a href="../../../res/OIDplus/privacy_documentation.html" target="_blank">Click here</a> for more information about privacy related topics.</p>';
+		echo '<p>'._L('<i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.').'<br>';
+		echo _L('<a %1>Click here</a> for more information about privacy related topics.','href="../../../res/OIDplus/privacy_documentation.html" target="_blank"');
+		echo '</p>';
 	}
 
 }

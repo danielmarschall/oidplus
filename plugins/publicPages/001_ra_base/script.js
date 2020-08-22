@@ -17,7 +17,7 @@
 
 // Is currently used by plugin public-093 (rainfo) and ra-100 (edit-contact-data)!
 function deleteRa(email, goto) {
-	if(!window.confirm("Are you really sure that you want to delete "+email+"? (The OIDs stay active)")) return false;
+	if(!window.confirm(_L("Are you sure that you want to delete %1? (The OIDs stay active)",email))) return false;
 
 	$.ajax({
 		url:"ajax.php",
@@ -28,20 +28,20 @@ function deleteRa(email, goto) {
 			email:email,
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
-				alert("Done.");
+				alert(_L("Done"));
 				if (goto != null) {
 					$("#gotoedit").val(goto);
 					window.location.href = "?goto="+encodeURIComponent(goto);
 				}
 				// reloadContent();
 			} else {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			}
 		}
 	});

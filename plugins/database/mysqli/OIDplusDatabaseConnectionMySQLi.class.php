@@ -39,7 +39,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 			}
 		} else {
 			if (!is_array($prepared_args)) {
-				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
+				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
 			}
 
 			foreach ($prepared_args as &$value) {
@@ -54,7 +54,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 				$ps = $this->conn->prepare($sql);
 				if (!$ps) {
 					$this->last_error = $this->conn->error;
-					throw new OIDplusSQLException($sql, 'Cannot prepare statement: '.$this->error());
+					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
 				}
 
 				// Caching the prepared is very risky
@@ -96,7 +96,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	}
 
 	protected function doConnect()/*: void*/ {
-		if (!function_exists('mysqli_connect')) throw new OIDplusException('PHP extension "MySQLi" not installed');
+		if (!function_exists('mysqli_connect')) throw new OIDplusException(_L('PHP extension "%1" not installed','MySQLi'));
 
 		// Try connecting to the database
 		$host     = OIDplus::baseConfig()->getValue('MYSQL_HOST',     'localhost');
@@ -107,7 +107,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		$this->conn = @new mysqli($hostname, $username, $password, $database, $port);
 		if (!empty($this->conn->connect_error) || ($this->conn->connect_errno != 0)) {
 			$message = $this->conn->connect_error;
-			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
+			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' '.$message);
 		}
 
 		$this->prepare_cache = array();
@@ -135,7 +135,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	}
 
 	public function transaction_begin()/*: void*/ {
-		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
+		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		$this->conn->autocommit(false);
 		$this->conn->begin_transaction();
 		$this->intransaction = true;
@@ -200,7 +200,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
 		$slang = OIDplus::getSqlSlangPlugin('mysql');
 		if (is_null($slang)) {
-			throw new OIDplusConfigInitializationException("SQL-Slang plugin 'mysql' is missing. Please check if it exists in the directory 'plugin/sqlSlang'. If it is not existing, please recover it from a SVN snapshot or OIDplus ZIP file.");
+			throw new OIDplusConfigInitializationException(_L('SQL-Slang plugin "%1" is missing. Please check if it exists in the directory "plugin/sqlSlang". If it is not existing, please recover it from an SVN snapshot or OIDplus ZIP file.','mysql'));
 		}
 		return $slang;
 	}

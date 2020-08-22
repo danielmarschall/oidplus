@@ -49,15 +49,15 @@ class OIDplusConfig implements OIDplusConfigInterface {
 				$visible   = 0;
 				break;
 			default:
-				throw new OIDplusException("Invalid protection flag, use OIDplusConfig::PROTECTION_* constants");
+				throw new OIDplusException(_L('Invalid protection flag, use OIDplusConfig::PROTECTION_* constants'));
 		}
 
 		// Check length limitations given by the database tables
 		if (strlen($name) > 50) {
-			throw new OIDplusException("Config key name '$name' is too long (max 50).");
+			throw new OIDplusException(_L('Config key name "%1" is too long (max %2).',$name,50));
 		}
 		if (strlen($description) > 255) {
-			throw new OIDplusException("Description for config key '$name' is too long (max 255).");
+			throw new OIDplusException(_L('Description for config key "%1" is too long (max %2).',$name,255));
 		}
 
 		// Read all values and descriptions from the database once.

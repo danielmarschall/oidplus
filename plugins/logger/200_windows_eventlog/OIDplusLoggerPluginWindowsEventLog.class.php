@@ -30,12 +30,12 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 
 	public static function available(&$reason)/*: bool*/ {
 		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-			$reason = 'Functionality only available on Windows servers';
+			$reason = _L('Functionality only available on Windows servers');
 			return false;
 		}
 
 		if (!class_exists('COM')) {
-			$reason = 'To use ViaThinkSoftSimpleEventLog, please enable the lines "extension=com_dotnet" and "extension_dir=ext" in your PHP.ini file';
+			$reason = _L('To use %1, please enable the lines "extension=com_dotnet" and "extension_dir=ext" in your PHP.ini file.','ViaThinkSoftSimpleEventLog');
 			return false;
 		}
 

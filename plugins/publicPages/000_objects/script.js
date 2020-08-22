@@ -32,28 +32,28 @@ function crudActionInsert(parent) {
 			parent:parent
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0/*OK*/) {
-				//alert("Insert OK");
+				//alert(_L("Insert OK"));
 				reloadContent();
 				// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
 			} else if (data.status == 1/*RaNotExisting*/) {
-				if (confirm("Update OK. However, the email address you have entered ("+document.getElementById('ra_email').value+") is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?")) {
+				if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",document.getElementById('ra_email').value))) {
 					crudActionSendInvitation(parent, document.getElementById('ra_email').value);
 				} else {
 					reloadContent();
 					// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
 				}
 			} else if (data.status == 2/*RaNotExistingNoInvitation*/) {
-				//alert("Insert OK");
+				//alert(_L("Insert OK"));
 				reloadContent();
 				// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});
@@ -75,35 +75,35 @@ function crudActionUpdate(id, parent) {
 			parent:parent
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0/*OK*/) {
-				alert("Update OK");
+				alert(_L("Update OK"));
 				// reloadContent();
 				$('#oidtree').jstree("refresh");
 			} else if (data.status == 1/*RaNotExisting*/) {
-				if (confirm("Update OK. However, the email address you have entered ("+document.getElementById('ra_email_'+id).value+") is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?")) {
+				if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",document.getElementById('ra_email_'+id).value))) {
 					crudActionSendInvitation(parent, document.getElementById('ra_email_'+id).value);
 				} else {
 					// reloadContent();
 					$('#oidtree').jstree("refresh");
 				}
 			} else if (data.status == 2/*RaNotExistingNoInvitation*/) {
-				alert("Update OK");
+				alert(_L("Update OK"));
 				// reloadContent();
 				$('#oidtree').jstree("refresh");
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});
 }
 
 function crudActionDelete(id, parent) {
-	if(!window.confirm("Are you sure that you want to delete "+id+"?")) return false;
+	if(!window.confirm(_L("Are you sure that you want to delete %1?",id))) return false;
 
 	$.ajax({
 		url:"ajax.php",
@@ -115,16 +115,16 @@ function crudActionDelete(id, parent) {
 			parent:parent
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
 				reloadContent();
 				// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts die zeile aus der tabelle löschen
 			} else {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			}
 		}
 	});
@@ -143,13 +143,13 @@ function updateDesc() {
 			description:tinyMCE.get('description').getContent()
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
-				alert("Update OK");
+				alert(_L("Update OK"));
 				//reloadContent();
 				$('#oidtree').jstree("refresh");
 				var h1s = document.getElementsByTagName("h1");
@@ -162,7 +162,7 @@ function updateDesc() {
 				var mce = tinymce.get('description');
 				if (mce != null) mce.isNotDirty = 1;
 			} else {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			}
 		}
 	});

@@ -85,7 +85,7 @@ abstract class OIDplusDatabaseConnection {
 		} else {
 			$order = strtolower($order);
 			if (($order != 'asc') && ($order != 'desc')) {
-				throw new OIDplusException("Invalid order '$order' (needs to be 'asc' or 'desc')");
+				throw new OIDplusException(_L('Invalid order "%1" (needs to be "asc" or "desc")',$order));
 			}
 
 			// For (yet) unsupported DBMS, we do not offer natural sort
@@ -113,11 +113,11 @@ abstract class OIDplusDatabaseConnection {
 		$res = $this->query("SELECT value FROM ###config WHERE name = 'database_version'");
 		$row = $res->fetch_array();
 		if ($row == null) {
-			throw new OIDplusConfigInitializationException('Cannot determine database version (the entry "database_version" inside the table "###config" is probably missing)');
+			throw new OIDplusConfigInitializationException(_L('Cannot determine database version (the entry "database_version" inside the table "###config" is probably missing)'));
 		}
 		$version = $row['value'];
 		if (!is_numeric($version) || ($version < 200) || ($version > 999)) {
-			throw new OIDplusConfigInitializationException('Entry "database_version" inside the table "###config" seems to be wrong (expect number between 200 and 999)');
+			throw new OIDplusConfigInitializationException(_L('Entry "database_version" inside the table "###config" seems to be wrong (expect number between 200 and 999)'));
 		}
 
 		while (file_exists($file = OIDplus::basePath().'/includes/db_updates/update'.$version.'.inc.php')) {
@@ -126,7 +126,7 @@ abstract class OIDplusDatabaseConnection {
 			if ($version != $prev_version+1) {
 				// This should usually not happen, since the update-file should increase the version
 				// or throw an Exception by itself
-				throw new OIDplusException("Database update $prev_version -> ".($prev_version+1)." failed (script reports new version to be $version)");
+				throw new OIDplusException(_L('Database update %1 -> %2 failed (script reports new version to be %3)',$prev_version,$prev_version+1,$version));
 			}
 		}
 
@@ -147,7 +147,7 @@ abstract class OIDplusDatabaseConnection {
 		foreach ($tableNames as $tableName) {
 			$prefix = OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', '');
 			if (!$this->tableExists($prefix.$tableName)) {
-				$msgs[] = 'Table '.$prefix.$tableName.' is missing!';
+				$msgs[] = _L('Table %1 is missing!',$prefix.$tableName);
 			}
 		}
 		if (count($msgs) > 0) {
@@ -190,7 +190,7 @@ abstract class OIDplusDatabaseConnection {
 				$name = OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');
 				$slangCache = OIDplus::getSqlSlangPlugin($name);
 				if ($mustExist && is_null($slangCache)) {
-					throw new OIDplusConfigInitializationException("Enforced SQL slang (via setting FORCE_DBMS_SLANG) '$name' does not exist.");
+					throw new OIDplusConfigInitializationException(_L('Enforced SQL slang (via setting FORCE_DBMS_SLANG) "%1" does not exist.',$name));
 				}
 			} else {
 				foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
@@ -200,7 +200,7 @@ abstract class OIDplusDatabaseConnection {
 					}
 				}
 				if ($mustExist && is_null($slangCache)) {
-					throw new OIDplusException("Cannot determine the SQL slang of your DBMS. Your DBMS is probably not supported.");
+					throw new OIDplusException(_L('Cannot determine the SQL slang of your DBMS. Your DBMS is probably not supported.'));
 				}
 			}
 		}
@@ -208,4 +208,3 @@ abstract class OIDplusDatabaseConnection {
 		return $slangCache;
 	}
 }
-

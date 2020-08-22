@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+// TODO: Translate
+
 require_once __DIR__ . '/../../../includes/oidplus.inc.php';
 
 ob_start(); // allow cookie headers to be sent
@@ -78,7 +80,7 @@ if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 		$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 		$captcha_success=json_decode($verify);
 		if ($captcha_success->success==false) {
-			echo '<p><font color="red"><b>CAPTCHA not sucessfully verified</b></font></p>';
+			echo '<p><font color="red"><b>CAPTCHA not successfully verified</b></font></p>';
 			$errors_happened = true;
 			$edits_possible = false;
 		}
@@ -179,7 +181,7 @@ echo '<p><u>Your OIDplus system ID (derived from the public key) is:</u></p>';
 
 echo '<b>';
 $sysid_oid = OIDplus::getSystemId(true);
-if (!$sysid_oid) $sysid_oid = 'unknown';
+if (!$sysid_oid) $sysid_oid = _L('Unknown!');
 echo htmlentities($sysid_oid);
 echo '</b>';
 

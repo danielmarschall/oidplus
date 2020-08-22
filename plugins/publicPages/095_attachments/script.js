@@ -24,7 +24,7 @@ function downloadAttachment(webpath, id, file) {
 }
 
 function deleteAttachment(id, file) {
-	if(!window.confirm("Are you sure that you want to delete "+file+"?")) return false;
+	if(!window.confirm(_L("Are you sure that you want to delete %1?",file))) return false;
 
 	$.ajax({
 		url:"ajax.php",
@@ -36,16 +36,16 @@ function deleteAttachment(id, file) {
 			filename:file,
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
-				alert("OK");
+				alert(_L("OK"));
 				reloadContent();
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});
@@ -67,17 +67,17 @@ function uploadAttachment(id, file) {
 		contentType:false,
 		data: form_data,
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
-				alert("OK");
+				alert(_L("OK"));
 				$('#fileAttachment').val('');
 				reloadContent();
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});

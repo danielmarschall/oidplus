@@ -38,12 +38,12 @@ abstract class OIDplusObject {
 			$sid = OIDplus::getSystemId(true);
 			if (!empty($sid)) {
 				$oid = $sid . '.' . smallhash($this->nodeId());
-				$ids[] = new OIDplusAltId('oid', $oid, 'OIDplus Information Object ID');
+				$ids[] = new OIDplusAltId('oid', $oid, _L('OIDplus Information Object ID'));
 			}
 		}
 		if ($this->ns() != 'guid') {
-			$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), 'Namebased version 3 / MD5 UUID with namespace UUID_NAMEBASED_NS_OidPlusMisc');
-			$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), 'Namebased version 5 / SHA1 UUID with namespace UUID_NAMEBASED_NS_OidPlusMisc');
+			$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
+			$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
 		}
 		return $ids;
 	}
@@ -408,7 +408,7 @@ abstract class OIDplusObject {
 
 	public static function findFitting($id) {
 		$obj = OIDplusObject::parse($id);
-		if (!$obj) throw new OIDplusException("findFitting: Parse failed\n");
+		if (!$obj) throw new OIDplusException(_L('findFitting: Parse failed'));
 
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select id from ###objects where id like ?", array($obj->ns().':%'));

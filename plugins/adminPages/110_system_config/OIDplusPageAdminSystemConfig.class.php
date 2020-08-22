@@ -22,7 +22,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 	public function action($actionID, $params) {
 		if ($actionID == 'config_update') {
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
-				throw new OIDplusException('You need to log in as administrator.');
+				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
 
 			$name = $params['name'];
@@ -30,11 +30,11 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
 			$res = OIDplus::db()->query("select protected, visible from ###config where name = ?", array($name));
 			if ($res->num_rows() == 0) {
-				throw new OIDplusException('Setting does not exist');
+				throw new OIDplusException(_L('Setting does not exist'));
 			}
 			$row = $res->fetch_array();
 			if (($row['protected'] == 1) || ($row['visible'] == 0)) {
-				throw new OIDplusException("Setting '$name' is read-only");
+				throw new OIDplusException(_L("Setting %1 is read-only",$name));
 			}
 
 			OIDplus::config()->setValue($name, $value);
@@ -42,7 +42,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException("Unknown action ID");
+			throw new OIDplusException(_L('Unknown action ID'));
 		}
 	}
 
@@ -53,23 +53,23 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 	public function gui($id, &$out, &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:edit_config') {
 			$handled = true;
-			$out['title'] = 'System configuration';
+			$out['title'] = _L('System configuration');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
 			}
-			
+
 			$output = '';
 			$output .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$output .= '<table class="table table-bordered table-striped">';
 			$output .= '	<tr>';
-			$output .= '	     <th>Setting</th>';
-			$output .= '	     <th>Description</th>';
-			$output .= '	     <th>Value</th>';
-			$output .= '	     <th>Update</th>';
+			$output .= '	     <th>'._L('Setting').'</th>';
+			$output .= '	     <th>'._L('Description').'</th>';
+			$output .= '	     <th>'._L('Value').'</th>';
+			$output .= '	     <th>'._L('Update').'</th>';
 			$output .= '	</tr>';
 
 			OIDplus::config(); // <-- make sure that the config table is loaded/filled correctly before we do a select
@@ -86,7 +86,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 					$output .= '     <td>&nbsp;</td>';
 				} else {
 					$output .= '     <td><input type="text" id="config_'.$row->name.'" value="'.htmlentities($row->value).'"></td>';
-					$output .= '     <td><button type="button" name="config_update_'.$row->name.'" id="config_update_'.$row->name.'" class="btn btn-success btn-xs update" onclick="crudActionConfigUpdate('.js_escape($row->name).')">Update</button></td>';
+					$output .= '     <td><button type="button" name="config_update_'.$row->name.'" id="config_update_'.$row->name.'" class="btn btn-success btn-xs update" onclick="crudActionConfigUpdate('.js_escape($row->name).')">'._L('Update').'</button></td>';
 				}
 				$output .= '</tr>';
 			}
@@ -94,15 +94,15 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 			$output .= '</table>';
 			$output .= '</div></div>';
 
-			$output .= '<br><p>See also:</p>';
+			$output .= '<br><p>'._L('See also').':</p>';
 			$output .= '<ul>';
-			$output .= '<li><a href="'.OIDplus::getSystemUrl().'setup/">Setup part 1: Create config.php (contains database settings, ReCAPTCHA, admin password and SSL enforcement)</a></li>';
+			$output .= '<li><a href="'.OIDplus::getSystemUrl().'setup/">'._L('Setup part 1: Create %1 (contains database settings, ReCAPTCHA, admin password and SSL enforcement)','userdata/baseconfig/config.inc.php').'</a></li>';
 			if (class_exists('OIDplusPageAdminOOBE')) {
 				$reflector = new \ReflectionClass('OIDplusPageAdminOOBE');
 				$path = dirname($reflector->getFilename());
-				$output .= '<li><a href="'.OIDplus::webpath($path).'oobe.php">Setup part 2: Basic settings (they are all available above, too)</a></li>';
+				$output .= '<li><a href="'.OIDplus::webpath($path).'oobe.php">'._L('Setup part 2: Basic settings (they are all available above, too)').'</a></li>';
 			} else {
-				$output .= '<li>Setup part 2 requires plugin OIDplusPageAdminOOBE (the basic settings are all available above, too)</a></li>';
+				$output .= '<li>'._L('Setup part 2 requires plugin %1 (the basic settings are all available above, too)','OIDplusPageAdminOOBE').'</a></li>';
 			}
 			$output .= '</ul>';
 
@@ -112,7 +112,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
-		
+
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
@@ -122,7 +122,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 		$json[] = array(
 			'id' => 'oidplus:edit_config',
 			'icon' => $tree_icon,
-			'text' => 'System config'
+			'text' => _L('System configuration')
 		);
 
 		return true;

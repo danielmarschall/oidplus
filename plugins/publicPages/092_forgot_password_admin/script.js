@@ -31,11 +31,11 @@ function rehash_admin_pwd() {
 	}
 
 	if (document.getElementById('admin_password').value.length < min_password_length) {
-		error += 'Password too short. Need at least '+min_password_length+' characters<br>';
+		error += _L("Password is too short. Need at least %1 characters",min_password_length)+"<br>";
 	}
 
 	if (document.getElementById('admin_password').value != document.getElementById('admin_password2').value) {
-		error += 'Passwords do not match.<br>';
+		error += _L("Passwords do not match")+"<br>";
 	}
 
 	if (error != "") {

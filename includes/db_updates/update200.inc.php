@@ -22,8 +22,8 @@
 // Parameters: $this is the OIDplusDatabaseConnection class
 //             $version is the current version (this script MUST increase the number by 1 when it is done)
 
-if (!isset($version)) throw new OIDplusException("Argument 'version' is missing; was the file included in a wrong way?");
-if (!isset($this))    throw new OIDplusException("Argument 'this' is missing; was the file included in a wrong way?");
+if (!isset($version)) throw new OIDplusException(_L('Argument "%1" is missing; was the file included in a wrong way?','version'));
+if (!isset($this))    throw new OIDplusException(_L('Argument "%1" is missing; was the file included in a wrong way?','this'));
 
 if ($this->transaction_supported()) $this->transaction_begin();
 

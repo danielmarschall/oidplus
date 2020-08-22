@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019-2020 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,22 +24,24 @@ require_once __DIR__ . '/includes/oidplus.inc.php';
 set_exception_handler('html_exception_handler');
 function html_exception_handler($exception) {
 	if ($exception instanceof OIDplusConfigInitializationException) {
-		echo "<h1>OIDplus initialization error</h1>";
+		echo '<h1>'._L('OIDplus initialization error').'</h1>';
 		echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
-		echo '<p>Please check <b>userdata/baseconfig/config.inc.php</b>';
+		echo '<p>'._L('Please check file %1','<b>userdata/baseconfig/config.inc.php</b>');
 		if (is_dir(__DIR__ . '/setup')) {
-			echo ' or run <a href="'.OIDplus::getSystemUrl().'setup/">setup</a> again';
+			echo ' '._L('or run <a href="%1">setup</a> again',OIDplus::getSystemUrl().'setup/');
 		}
 		echo '</p>';
 	} else {
-		echo "<h1>OIDplus error</h1>";
+		echo '<h1>'._L('OIDplus error').'</h1>';
 		// ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
 		echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
-		echo '<p><b>Technical information about the problem:</b></p>';
+		echo '<p><b>'._L('Technical information about the problem').':</b></p>';
 		echo '<pre>';
 		echo get_class($exception)."\n";
-		echo 'at '.$exception->getFile().'('.$exception->getLine().")\n";
-		echo "Stacktrace:\n";
+		var_dump($exception->getFile());
+		var_dump($exception->getLine());
+		echo _L('at file %1 (line %2)',$exception->getFile(),"".$exception->getLine())."\n";
+		echo _L('Stacktrace').":\n";
 		echo $exception->getTraceAsString();
 		echo '</pre>';
 	}
@@ -65,14 +67,14 @@ function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
 }
 
 $sysid_oid = OIDplus::getSystemId(true);
-if (!$sysid_oid) $sysid_oid = 'unknown';
+if (!$sysid_oid) $sysid_oid = 'unknown'; // do not translate
 header('X-OIDplus-SystemID:'.$sysid_oid);
 
 $sys_url = OIDplus::getSystemUrl();
 header('X-OIDplus-SystemURL:'.$sys_url);
 
 $sys_ver = OIDplus::getVersion();
-if (!$sys_ver) $sys_ver = 'unknown';
+if (!$sys_ver) $sys_ver = 'unknown'; // do not translate
 header('X-OIDplus-SystemVersion:'.$sys_ver);
 
 $sys_install_type = OIDplus::getInstallType();
@@ -128,7 +130,7 @@ $js = 'oidplus.min.js.php';
 		echo htmlentities($static_title).'</h1>';
 		echo '<div id="real_content">'.$static_content.'</div>';
 		if ((!isset($_SERVER['REQUEST_METHOD'])) || ($_SERVER['REQUEST_METHOD'] == 'GET')) {
-			echo '<br><p><img src="img/share.png" width="15" height="15" alt="Share"> <a href="?goto='.htmlentities($static_node_id).'" id="static_link" class="gray_footer_font">Static link to this page</a>';
+			echo '<br><p><img src="img/share.png" width="15" height="15" alt="'._L('Share').'"> <a href="?goto='.htmlentities($static_node_id).'" id="static_link" class="gray_footer_font">'._L('Static link to this page').'</a>';
 			echo '</p>';
 		}
 		echo '<br>';
@@ -136,46 +138,71 @@ $js = 'oidplus.min.js.php';
 	</div>
 
 	<div id="system_title_bar">
-		<div id="system_title_menu" onclick="mobileNavButtonClick(this)" onmouseenter="mobileNavButtonHover(this)" onmouseleave="mobileNavButtonHover(this)">
-			<div id="bar1"></div>
-			<div id="bar2"></div>
-			<div id="bar3"></div>
-		</div>
-
-		<div id="system_title_text">
-			<a <?php echo OIDplus::gui()->link('oidplus:system'); ?>>
-				<span id="system_title_1">ViaThinkSoft OIDplus 2.0</span><br>
-				<span id="system_title_2"><?php echo htmlentities(OIDplus::config()->getValue('system_title')); ?></span>
-			</a>
-		</div>
+		<?php
+		echo '<div id="system_title_menu" onclick="mobileNavButtonClick(this)" onmouseenter="mobileNavButtonHover(this)" onmouseleave="mobileNavButtonHover(this)">';
+		echo '	<div id="bar1"></div>';
+		echo '	<div id="bar2"></div>';
+		echo '	<div id="bar3"></div>';
+		echo '</div>';
+		echo '';
+		echo '<div id="system_title_text">';
+		echo '	<a '.OIDplus::gui()->link('oidplus:system').'>';
+		echo '		<span id="system_title_1">'._L('ViaThinkSoft OIDplus 2.0').'</span><br>';
+		echo '		<span id="system_title_2">'.htmlentities(OIDplus::config()->getValue('system_title')).'</span>';
+		echo '	</a>';
+		echo '</div>';
+		?>
 	</div>
 
 	<div id="languageBox">
 		<?php
 
+		if (isset($_GET['lang'])) {
+			// The "?lang=" argument is only for NoScript-Browsers/SearchEngines
+			// In case someone who has JavaScript clicks a ?lang= link, they should get
+			// the page in that language, but the cookie must be set, otherwise
+			// the menu and other stuff would be in their cookie-based-language and not the
+			// argument-based-language.
+			$cookie_path = OIDplus::getSystemUrl(true);
+			if (empty($cookie_path)) $cookie_path = '/';
+			setcookie('LANGUAGE', $_GET['lang'], 0, $cookie_path, '', false, false/*HttpOnly off, because JavaScript also needs translation*/);
+		} else if (isset($_POST['lang'])) {
+			$cookie_path = OIDplus::getSystemUrl(true);
+			if (empty($cookie_path)) $cookie_path = '/';
+			setcookie('LANGUAGE', $_POST['lang'], 0, $cookie_path, '', false, false/*HttpOnly off, because JavaScript also needs translation*/);
+		}
+
+		$langbox_entries = array();
+		$non_default_languages = 0;
 		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
 			$xmldata = $pluginManifest->getRawXml();
 			$flag = $xmldata->language->flag->__toString();
 			$code = $xmldata->language->code->__toString();
+			if ($code != OIDplus::DEFAULT_LANGUAGE) $non_default_languages++;
 			if ($code == OIDplus::getCurrentLang()) {
 				$class = 'lng_flag';
 			} else {
 				$class = 'lng_flag picture_ghost';
 			}
-			echo '<img src="plugins/language/'.$code.'/'.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20" onclick="setLanguage(\''.$code.'\')"> ';
+			$langbox_entries[] = '<a onclick="setLanguage(\''.$code.'\'); return false" href="?lang='.$code.'&amp;goto='.$static_node_id.'"><img src="plugins/language/'.$code.'/'.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20"></a> ';
+		}
+		if ($non_default_languages > 0) {
+			echo implode("\n\t\t",$langbox_entries);
 		}
 
 		?>
 	</div>
 
 	<div id="gotobox">
-		<input type="text" name="goto" id="gotoedit" value="<?php echo htmlentities($static_node_id); ?>">
-		<input type="button" value="Go" onclick="gotoButtonClicked()" id="gotobutton">
+		<?php
+		echo '<input type="text" name="goto" id="gotoedit" value="'.htmlentities($static_node_id).'">';
+		echo '<input type="button" value="'._L('Go').'" onclick="gotoButtonClicked()" id="gotobutton">';
+		?>
 	</div>
 
 	<div id="oidtree" class="borderbox">
 		<!-- <noscript>
-			<p><b>Please enable JavaScript to use all features</b></p>
+			<p><b><?php echo _L('Please enable JavaScript to use all features'); ?></b></p>
 		</noscript> -->
 		<?php OIDplus::menuUtils()->nonjs_menu(); ?>
 	</div>

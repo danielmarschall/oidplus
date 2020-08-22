@@ -51,7 +51,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			*/
 
 			if (!is_array($prepared_args)) {
-				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
+				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
 			}
 
 			foreach ($prepared_args as &$value) {
@@ -65,7 +65,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			$ps = $this->conn->prepare($sql);
 			if (!$ps) {
 				$this->last_error = $ps->errorInfo()[2];
-				throw new OIDplusSQLException($sql, 'Cannot prepare statement: '.$this->error());
+				throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
 			}
 			$this->prepare_cache[$sql] = $ps;
 
@@ -88,7 +88,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	}
 
 	protected function doConnect()/*: void*/ {
-		if (!class_exists('PDO')) throw new OIDplusConfigInitializationException('PHP extension "PDO" not installed');
+		if (!class_exists('PDO')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','PDO'));
 
 		try {
 			$options = [
@@ -104,7 +104,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			$this->conn = new PDO($dsn, $username, $password, $options);
 		} catch (PDOException $e) {
 			$message = $e->getMessage();
-			throw new OIDplusConfigInitializationException('Connection to the database failed! '.$message);
+			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' '.$message);
 		}
 
 		$this->last_error = null;
@@ -127,7 +127,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	}
 
 	public function transaction_begin()/*: void*/ {
-		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
+		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		$this->conn->beginTransaction();
 		$this->intransaction = true;
 	}

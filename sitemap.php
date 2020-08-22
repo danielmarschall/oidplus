@@ -27,7 +27,11 @@ OIDplus::init(true);
 
 header('Content-Type:text/plain');
 
-$nonConfidential = OIDplusObject::getAllNonConfidential();
+$non_default_languages = array();
+foreach (OIDplus::getAvailableLangs() as $code) {
+	if ($code == OIDplus::DEFAULT_LANGUAGE) continue;
+	$non_default_languages[] = $code;
+}
 
 $out = array();
 foreach (OIDplus::getPagePlugins() as $plugin) {
@@ -36,4 +40,13 @@ foreach (OIDplus::getPagePlugins() as $plugin) {
 
 	}
 }
-echo implode("\r\n", $out);
+
+$out2 = array();
+foreach ($out as $o) {
+	$out2[] = OIDplus::getSystemUrl().'?goto='.urlencode($o);
+	foreach ($non_default_languages as $lang) {
+		$out2[] = OIDplus::getSystemUrl().'?lang='.urlencode($lang).'&goto='.urlencode($o);
+	}
+}
+
+echo implode("\r\n", $out2);

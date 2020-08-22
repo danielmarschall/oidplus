@@ -32,11 +32,11 @@ class OIDplusOther extends OIDplusObject {
 	}
 
 	public static function objectTypeTitle() {
-		return "Other objects";
+		return _L('Other objects');
 	}
 
 	public static function objectTypeTitleShort() {
-		return "Object";
+		return _L('Object');
 	}
 
 	public static function ns() {
@@ -102,29 +102,29 @@ class OIDplusOther extends OIDplusObject {
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
 			if ($res->num_rows() > 0) {
-				$content  = 'Please select an object in the tree view at the left to show its contents.';
+				$content  = _L('Please select an object in the tree view at the left to show its contents.');
 			} else {
-				$content  = 'Currently, no misc objects are registered in the system.';
+				$content  = _L('Currently, no misc. objects are registered in the system.');
 			}
 
 			if (!$this->isLeafNode()) {
 				if (OIDplus::authUtils()::isAdminLoggedIn()) {
-					$content .= '<h2>Manage root objects</h2>';
+					$content .= '<h2>'._L('Manage root objects').'</h2>';
 				} else {
-					$content .= '<h2>Available objects</h2>';
+					$content .= '<h2>'._L('Available objects').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}
 		} else {
 			$title = $this->getTitle();
 
-			$content = '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
+			$content = '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
-					$content .= '<h2>Create or change subsequent objects</h2>';
+					$content .= '<h2>'._L('Create or change subsequent objects').'</h2>';
 				} else {
-					$content .= '<h2>Subsequent objects</h2>';
+					$content .= '<h2>'._L('Subsequent objects').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}

@@ -32,11 +32,11 @@ class OIDplusGs1 extends OIDplusObject {
 	}
 
 	public static function objectTypeTitle() {
-		return "GS1 Based IDs (GLN/GTIN/SSCC/...)";
+		return _L('GS1 Based IDs (GLN/GTIN/SSCC/...)');
 	}
 
 	public static function objectTypeTitleShort() {
-		return "GS1";
+		return _L('GS1');
 	}
 
 	public static function ns() {
@@ -57,7 +57,7 @@ class OIDplusGs1 extends OIDplusObject {
 
 	public function addString($str) {
 		if (!preg_match('@^\\d+$@', $str, $m)) {
-			throw new OIDplusException('GS1 value needs to be numeric');
+			throw new OIDplusException(_L('GS1 value needs to be numeric'));
 		}
 
 		return $this->nodeId() . $str;
@@ -92,16 +92,16 @@ class OIDplusGs1 extends OIDplusObject {
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
 			if ($res->num_rows() > 0) {
-				$content  = 'Please select an item in the tree view at the left to show its contents.';
+				$content  = _L('Please select an item in the tree view at the left to show its contents.');
 			} else {
-				$content  = 'Currently, no GS1 based numbers are registered in the system.';
+				$content  = _L('Currently, no GS1 based numbers are registered in the system.');
 			}
 
 			if (!$this->isLeafNode()) {
 				if (OIDplus::authUtils()::isAdminLoggedIn()) {
-					$content .= '<h2>Manage root objects</h2>';
+					$content .= '<h2>'._L('Manage root objects').'</h2>';
 				} else {
-					$content .= '<h2>Available objects</h2>';
+					$content .= '<h2>'._L('Available objects').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}
@@ -111,18 +111,18 @@ class OIDplusGs1 extends OIDplusObject {
 			if ($this->isLeafNode()) {
 				$chunked = $this->chunkedNotation(true);
 				$checkDigit = $this->checkDigit();
-				$content = '<h2>'.$chunked.' - <abbr title="check digit">'.$checkDigit.'</abbr></h2>';
-				$content .= '<p><a target="_blank" href="https://www.ean-search.org/?q='.htmlentities($this->fullNumber()).'">Lookup in ean-search.org</a></p>';
+				$content = '<h2>'.$chunked.' - <abbr title="'._L('check digit').'">'.$checkDigit.'</abbr></h2>';
+				$content .= '<p><a target="_blank" href="https://www.ean-search.org/?q='.htmlentities($this->fullNumber()).'">'._L('Lookup at ean-search.org').'</a></p>';
 				$content .= '<img src="plugins/objectTypes/'.basename(__DIR__).'/barcode.php?number='.urlencode($this->fullNumber()).'">';
-				$content .= '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
+				$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 			} else {
 				$chunked = $this->chunkedNotation(true);
 				$content = '<h2>'.$chunked.'</h2>';
-				$content .= '<h2>Description</h2>%%DESC%%'; // TODO: add more meta information about the object type
+				$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 				if ($this->userHasWriteRights()) {
-					$content .= '<h2>Create or change subsequent objects</h2>';
+					$content .= '<h2>'._L('Create or change subsequent objects').'</h2>';
 				} else {
-					$content .= '<h2>Subsequent objects</h2>';
+					$content .= '<h2>'._L('Subsequent objects').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}

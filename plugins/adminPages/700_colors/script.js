@@ -1,3 +1,20 @@
+/*
+ * OIDplus 2.0
+ * Copyright 2019 Daniel Marschall, ViaThinkSoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 g_hue_shift = null;
 g_sat_shift = null;
 g_val_shift = null;
@@ -94,7 +111,7 @@ function changeCSS(cssFile, cssLinkIndex) {
 }
 
 function crudActionColorUpdate(name) {
-	if(!window.confirm("Are you sure that you want to permanently change the color? Please make sure you have tested the colors first, because if the contrast is too extreme, you might not be able to see the controls anymore, in order to correct the colors.")) return false;
+	if(!window.confirm(_L("Are you sure that you want to permanently change the color (for all users)? Please make sure you have tested the colors first, because if the contrast is too extreme, you might not be able to see the controls anymore, in order to correct the colors."))) return false;
 
 	$.ajax({
 		url:"ajax.php",
@@ -108,22 +125,21 @@ function crudActionColorUpdate(name) {
 			invcolors:document.getElementById('icolor').value,
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
-			alert("Error: " + errorThrown);
+			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert("Error: " + data.error);
+				alert(_L("Error: %1",data.error));
 			} else if (data.status == 0) {
 				g_hue_shift_saved = g_hue_shift;
 				g_sat_shift_saved = g_sat_shift;
 				g_val_shift_saved = g_val_shift;
 				g_invcolors_saved = g_invcolors;
 				test_color_theme(); // apply visually
-				alert("Update OK");
+				alert(_L("Update OK"));
 			} else {
-				alert("Error: " + data);
+				alert(_L("Error: %1",data));
 			}
 		}
 	});
 }
-

@@ -42,7 +42,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 			}
 		} else {
 			if (!is_array($prepared_args)) {
-				throw new OIDplusException("'prepared_args' must be either NULL or an ARRAY.");
+				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
 			}
 
 			// convert ? ? ? to :param1 :param2 :param3 ...
@@ -62,13 +62,13 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 				}
 				if ($stmt === false) {
 					$this->last_error = $this->conn->lastErrorMsg();
-					throw new OIDplusSQLException($sql, 'Cannot prepare statement: '.$this->error());
+					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
 				}
 				$this->prepare_cache[$sql] = $stmt;
 			}
 
 			if ($stmt->paramCount() != count($prepared_args)) {
-				throw new OIDplusException('Prepared argument list size not matching number of prepared statement arguments');
+				throw new OIDplusException(_L('Prepared argument list size not matching number of prepared statement arguments'));
 			}
 			$i = 1;
 			foreach ($prepared_args as &$value) {
@@ -109,7 +109,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	}
 
 	protected function doConnect()/*: void*/ {
-		if (!class_exists('SQLite3')) throw new OIDplusConfigInitializationException('PHP extension "SQLite3" not installed');
+		if (!class_exists('SQLite3')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','SQLite3'));
 
 		// Try connecting to the database
 		try {
@@ -125,7 +125,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 
 			$this->conn = new SQLite3($filename, $flags, $encryption);
 		} catch (Exception $e) {
-			throw new OIDplusConfigInitializationException('Connection to the database failed! ' . $e->getMessage());
+			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' ' . $e->getMessage());
 		}
 
 		$this->conn->createCollation('NATURAL_CMP', 'strnatcmp'); // we need that for natSort()
@@ -151,7 +151,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	}
 
 	public function transaction_begin()/*: void*/ {
-		if ($this->intransaction) throw new OIDplusException("Nested transactions are not supported by this database plugin.");
+		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		$this->query('begin transaction');
 		$this->intransaction = true;
 	}
@@ -180,7 +180,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
 		$slang = OIDplus::getSqlSlangPlugin('sqlite');
 		if (is_null($slang)) {
-			throw new OIDplusConfigInitializationException("SQL-Slang plugin 'sqlite' is missing. Please check if it exists in the directory 'plugin/sqlSlang'. If it is not existing, please recover it from a SVN snapshot or OIDplus ZIP file.");
+			throw new OIDplusConfigInitializationException(_L('SQL-Slang plugin "%1" is missing. Please check if it exists in the directory "plugin/sqlSlang". If it is not existing, please recover it from an SVN snapshot or OIDplus ZIP file.','sqlite'));
 		}
 		return $slang;
 	}

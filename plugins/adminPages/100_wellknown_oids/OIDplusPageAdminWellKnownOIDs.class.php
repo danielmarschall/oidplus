@@ -26,23 +26,23 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:well_known_oids') {
 			$handled = true;
-			$out['title'] = 'Well known OIDs';
+			$out['title'] = _L('Well known OIDs');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as administrator.</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
 			}
 
-			$out['text'] = '<p><abbr title="These ID names can only be edited in the database directly (Tables ###asn1id and ###iri). Usually, there is no need to do this, though.">How to edit these IDs?</abbr></p>';
+			$out['text'] = '<p><abbr title="'._L('These ID names can only be edited in the database directly (Tables ###asn1id and ###iri). Usually, there is no need to do this, though.').'">'._L('How to edit these IDs?').'</abbr></p>';
 
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '	     <th>OID</th>';
-			$out['text'] .= '	     <th>ASN.1 identifiers (comma sep.)</th>';
-			$out['text'] .= '	     <th>IRI identifiers (comma sep.)</th>';
+			$out['text'] .= '	     <th>'._L('OID').'</th>';
+			$out['text'] .= '	     <th>'._L('ASN.1 identifiers (comma sep.)').'</th>';
+			$out['text'] .= '	     <th>'._L('IRI identifiers (comma sep.)').'</th>';
 			$out['text'] .= '	</tr>';
 
 			$res = OIDplus::db()->query("select a.oid from (select oid from ###asn1id where well_known = '1' union select oid from ###iri where well_known = '1') a order by ".OIDplus::db()->natOrder('oid'));
@@ -50,13 +50,13 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 				$asn1ids = array();
 				$res2 = OIDplus::db()->query("select name, standardized from ###asn1id where oid = ?", array($row['oid']));
 				while ($row2 = $res2->fetch_array()) {
-					$asn1ids[] = $row2['name'].($row2['standardized'] ? ' (standardized)' : '');
+					$asn1ids[] = $row2['name'].($row2['standardized'] ? ' ('._L('standardized').')' : '');
 				}
 
 				$iris = array();
 				$res2 = OIDplus::db()->query("select name, longarc from ###iri where oid = ?", array($row['oid']));
 				while ($row2 = $res2->fetch_array()) {
-					$iris[] = $row2['name'].($row2['longarc'] ? ' (long arc)' : '');
+					$iris[] = $row2['name'].($row2['longarc'] ? ' ('._L('long arc').')' : '');
 				}
 
 				$out['text'] .= '<tr>';
@@ -73,7 +73,7 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
-		
+
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
 		} else {
@@ -83,7 +83,7 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 		$json[] = array(
 			'id' => 'oidplus:well_known_oids',
 			'icon' => $tree_icon,
-			'text' => 'Well known OIDs'
+			'text' => _L('Well known OIDs')
 		);
 
 		return true;

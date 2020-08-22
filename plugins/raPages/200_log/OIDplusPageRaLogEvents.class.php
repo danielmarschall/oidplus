@@ -30,18 +30,18 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 
 			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>You need to <a '.OIDplus::gui()->link('oidplus:login').'>log in</a> as the requested RA <b>'.htmlentities($ra_email).'</b>.</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as the requested RA %2.',OIDplus::gui()->link('oidplus:login'),'<b>'.htmlentities($ra_email).'</b>').'</p>';
 				return;
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($ra_email));
 			if ($res->num_rows() == 0) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = 'RA <b>'.htmlentities($ra_email).'</b> does not exist';
+				$out['text'] = _L('RA "%1" does not exist','<b>'.htmlentities($ra_email).'</b>');
 				return;
 			}
 
-			$out['title'] = "Log entries for RA $ra_email";
+			$out['title'] = _L('Log messages for RA %1',$ra_email);
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event, lu.severity from ###log lo ".
@@ -51,13 +51,13 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 			if ($res->num_rows() > 0) {
 				$out['text'] = '<pre>';
 				while ($row = $res->fetch_array()) {
-					$addr = empty($row['addr']) ? 'no address' : $row['addr'];
+					$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
 
 					$out['text'] .= '<span class="severity_'.$row['severity'].'">' . date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr) . ")</span>\n";
 				}
 				$out['text'] .= '</pre>';
 			} else {
-				$out['text'] .= '<p>Currently there are no log entries</p>';
+				$out['text'] .= '<p>'._L('Currently there are no log entries').'</p>';
 			}
 
 			// TODO: List logs in a table instead of a <pre> text
@@ -78,7 +78,7 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 		$json[] = array(
 			'id' => 'oidplus:ra_log$'.$ra_email,
 			'icon' => $tree_icon,
-			'text' => 'RA log events'
+			'text' => _L('RA log events')
 		);
 
 		return true;

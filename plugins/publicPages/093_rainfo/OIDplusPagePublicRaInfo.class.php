@@ -32,8 +32,8 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 			$out['icon'] = OIDplus::webpath(__DIR__).'rainfo_big.png';
 
 			if (empty($ra_email)) {
-				$out['title'] = 'Object roots without RA';
-				$out['text'] = '<p>Following object roots have an undefined Registration Authority:</p>';
+				$out['title'] = _L('Object roots without RA');
+				$out['text'] = '<p>'._L('Following object roots have an undefined Registration Authority').':</p>';
 			} else {
 				$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($ra_email));
 				$out['title'] = '';
@@ -51,15 +51,15 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 			$ra_roots = OIDplusObject::getRaRoots($ra_email);
 			if (count($ra_roots) == 0) {
 				if (empty($ra_email)) {
-					$out['text'] .= '<p><i>None</i></p>';
+					$out['text'] .= '<p><i>'._L('None').'</i></p>';
 				} else {
-					$out['text'] .= '<p><i>This RA has no objects</i></p>';
+					$out['text'] .= '<p><i>'._L('This RA has no objects.').'</i></p>';
 				}
 			} else {
 				foreach ($ra_roots as $loc_root) {
 					$ico = $loc_root->getIcon();
 					$icon = !is_null($ico) ? $ico : OIDplus::webpath(__DIR__).'treeicon_link.png';
-					$out['text'] .= '<p><a '.OIDplus::gui()->link($loc_root->nodeId()).'><img src="'.$icon.'"> Jump to RA root '.$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root())).'</a></p>';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link($loc_root->nodeId()).'><img src="'.$icon.'"> '._L('Jump to RA root %1',$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root()))).'</a></p>';
 				}
 			}
 
@@ -68,19 +68,19 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 				if ($res->num_rows() > 0) {
 					if (OIDplus::authUtils()::isRALoggedIn($ra_email) || OIDplus::authUtils()::isAdminLoggedIn()) {
 						if (class_exists('OIDplusPageRaEditContactData')) {
-							$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:edit_ra$'.$ra_email).'>Edit contact data</a></p>';
+							$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:edit_ra$'.$ra_email).'>'._L('Edit contact data').'</a></p>';
 						}
 					}
 
 					if (OIDplus::authUtils()::isAdminLoggedIn()) {
 						if (class_exists("OIDplusPageAdminListRAs")) {
-							$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">Delete this RA</a></p>';
+							$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">'._L('Delete this RA').'</a></p>';
 						} else {
-							$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">Delete this RA</a></p>';
+							$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">'._L('Delete this RA').'</a></p>';
 						}
 
 						if (class_exists('OIDplusPageRaChangePassword')) {
-							$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:change_ra_password$'.$ra_email).'>Change password of this RA</a>';
+							$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:change_ra_password$'.$ra_email).'>'._L('Change password of this RA').'</a>';
 						}
 					}
 				}
@@ -90,11 +90,11 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 					                            "left join ###log_user lu on lu.log_id = lo.id ".
 					                            "where lu.username = ? " .
 					                            "order by lo.unix_ts desc", array($ra_email));
-					$out['text'] .= '<h2>Log messages for RA '.htmlentities($ra_email).'</h2>';
+					$out['text'] .= '<h2>'._L('Log messages for RA %1',htmlentities($ra_email)).'</h2>';
 					if ($res->num_rows() > 0) {
 						$out['text'] .= '<pre>';
 						while ($row = $res->fetch_array()) {
-							$addr = empty($row['addr']) ? 'no address' : $row['addr'];
+							$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
 
 							$out['text'] .= date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr) . ")\n";
 						}
@@ -103,7 +103,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 						// TODO: List logs in a table instead of a <pre> text
 						// TODO: Load only X events and then re-load new events via AJAX when the user scrolls down
 					} else {
-						$out['text'] .= '<p>Currently there are no log entries</p>';
+						$out['text'] .= '<p>'._L('Currently there are no log entries').'</p>';
 					}
 				}
 			}
@@ -117,7 +117,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 			$res = OIDplus::db()->query("select distinct email as email from ###ra"); // distinct in PGSQL is always case sensitive
 		}
 		while ($row = $res->fetch_array()) {
-			$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('oidplus:rainfo$'.$row['email']);
+			$out[] = 'oidplus:rainfo$'.$row['email'];
 		}
 	}
 
@@ -129,23 +129,23 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 		$out = '';
 
 		if (empty($email)) {
-			return '<p>The superior RA did not define a RA for this OID.</p>';
+			return '<p>'._L('The superior RA did not define a RA for this OID.').'</p>';
 		}
 
 		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 		if ($res->num_rows() === 0) {
-			$out = '<p>The RA <a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a> is not registered in the database.</p>';
+			$out = '<p>'._L('The RA %1 is not registered in the database.','<a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a>').'</p>';
 		} else {
 			$row = $res->fetch_array();
 			$out = '<b>'.htmlentities($row['ra_name']).'</b><br>'; // TODO: if you are not already at the page "oidplus:rainfo", then link to it now
-			$out .= 'E-Mail: <a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a><br>';
+			$out .= _L('E-Mail').': <a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a><br>';
 			if (trim($row['personal_name']) !== '') $out .= htmlentities($row['personal_name']).'<br>';
 			if (trim($row['organization']) !== '') $out .= htmlentities($row['organization']).'<br>';
 			if (trim($row['office']) !== '') $out .= htmlentities($row['office']).'<br>';
 			if ($row['privacy']) {
 				// TODO: meldung nur anzeigen, wenn benutzer überhaupt straße, adresse etc hat
 				// TODO: aber der admin soll es sehen, und der user selbst (mit anmerkung, dass es privat ist)
-				$out .= '<p>The RA does not want to publish their personal information.</p>';
+				$out .= '<p>'._L('The RA does not want to publish their personal information.').'</p>';
 			} else {
 				if (trim($row['street']) !== '') $out .= htmlentities($row['street']).'<br>';
 				if (trim($row['zip_town']) !== '') $out .= htmlentities($row['zip_town']).'<br>';

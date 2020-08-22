@@ -32,7 +32,7 @@ define('OIDPLUS_REPO', 'https://svn.viathinksoft.com/svn/oidplus');
 <html lang="en">
 
 <head>
-	<title>OIDplus File Completeness Check</title>
+	<title><?php echo _L('OIDplus File Completeness Check'); ?></title>
 	<meta name="robots" content="noindex">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="../setup/setup.css">
@@ -47,11 +47,11 @@ define('OIDPLUS_REPO', 'https://svn.viathinksoft.com/svn/oidplus');
 
 <body>
 
-<h1>OIDplus File Completeness Check</h1>
-
 <?php
 
-echo '<p><input type="button" onclick="document.location=\'index.php\'" value="Go back to updater"></p>';
+echo '<h1>'._L('OIDplus File Completeness Check').'</h1>';
+
+echo '<p><input type="button" onclick="document.location=\'index.php\'" value="'._L('Go back to updater').'"></p>';
 
 if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 	$secret = OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
@@ -61,11 +61,11 @@ if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 }
 
 if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_success->success==false)) {
-	echo '<p><font color="red"><b>CAPTCHA not sucessfully verified</b></font></p>';
+	echo '<p><font color="red"><b>'._L('CAPTCHA not successfully verified').'</b></font></p>';
 	//echo '<p><a href="index.php">Try again</a></p>';
 } else {
 	if (!OIDplusAuthUtils::adminCheckPassword($_REQUEST['admin_password'])) {
-		echo '<p><font color="red"><b>Wrong password</b></font></p>';
+		echo '<p><font color="red"><b>'._L('Wrong password').'</b></font></p>';
 		//echo '<p><a href="index.php">Try again</a></p>';
 	} else {
 		$svn = new phpsvnclient(OIDPLUS_REPO);
@@ -82,16 +82,16 @@ if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_suc
 			if ((strpos($c,'userdata/') === 0) && ($c !== 'userdata/info.txt') && ($c !== 'userdata/.htaccess') && ($c !== 'userdata/index.html') && (substr($c,-1) !== '/')) unset($svn_cont[$key]);
 		}
 		echo '<pre>';
-		echo $svn_rev == -1 ? "Compare local <--> svn-head\n\n" : "Compare local <--> svn-$svn_rev\n\n";
-		echo "=== FILES MISSING ===\n";
+		echo $svn_rev == -1 ? _L('Compare local <--> svn-head')."\n\n" : _L('Compare local <--> svn-%1',$svn_rev)."\n\n";
+		echo '=== '._L('FILES MISSING').' ==='."\n";
 		$diff = array_diff($svn_cont, $local_cont);
-		if (count($diff) === 0) echo "Everything OK\n";
+		if (count($diff) === 0) echo _L('Everything OK')."\n";
 		foreach ($diff as $c) echo "$c\n";
 		echo "\n";
 
-		echo "=== ADDITIONAL FILES ===\n";
+		echo '=== '._L('ADDITIONAL FILES').' ==='."\n";
 		$diff = array_diff($local_cont, $svn_cont);
-		if (count($diff) === 0) echo "Everything OK\n";
+		if (count($diff) === 0) echo _L('Everything OK')."\n";
 		foreach ($diff as $c) echo "$c\n";
 		echo "\n";
 		echo '</pre>';

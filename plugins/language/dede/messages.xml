@@ -1,6 +1,5627 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <translation>
 	<message>
-		<source>How to register?</source>
-		<target>Wie Sie sich registrieren</target>
+		<source><![CDATA[
+		"%1" is missing in %2
+		]]></source>
+		<target><![CDATA[
+		"%1" fehlt in %2
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		"%1" is not a valid ASN.1 identifier!
+		]]></source>
+		<target><![CDATA[
+		"%1" ist kein gültiger ASN.1 Identifier!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		"%1" is not a valid IRI!
+		]]></source>
+		<target><![CDATA[
+		"%1" ist keine gültige IRI!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		"prepared_args" must be either NULL or an ARRAY.
+		]]></source>
+		<target><![CDATA[
+		"prepared_args" muss entweder NULL oder ein ARRAY sein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		%1 action failed because object "%2" cannot be parsed!
+		]]></source>
+		<target><![CDATA[
+		%1-Aktion fehlgeschlagen, da Objekt "%2" nicht analysiert werden kann!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		%1 action failed because parent object "%2" cannot be parsed!
+		]]></source>
+		<target><![CDATA[
+		%1-Aktion fehlgeschlagen, da übergeordnetes Objekt "%2" nicht analysiert werden kann!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		%1 at query "%2"
+		]]></source>
+		<target><![CDATA[
+		%1 bei Query "%2"
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		%1 is not a valid OID!
+		]]></source>
+		<target><![CDATA[
+		%1 ist keine gültige OID!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		%1 items are hidden. Please <a %2>log in</a> to see them.
+		]]></source>
+		<target><![CDATA[
+		%1 Einträge sind versteckt. Bitte <a %1>melden Sie sich an</a> um sie einzusehen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		%1 was de-orphaned (placed as root OID) because its parent is not existing.
+		]]></source>
+		<target><![CDATA[
+		%1 wurde entwaist (als Wurzel-OID gesetzt), da der Elternknoten nicht existiert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(Objects with undefined RA)
+		]]></source>
+		<target><![CDATA[
+		(Objekte mit undefinierter RA)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(RA not in database)
+		]]></source>
+		<target><![CDATA[
+		(RA nicht in Datenbank)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(active)
+		]]></source>
+		<target><![CDATA[
+		(aktiv)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(admin does not require email verification)
+		]]></source>
+		<target><![CDATA[
+		(Admin braucht keine Bestätigung der E-Mail-Adresse)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(disabled)
+		]]></source>
+		<target><![CDATA[
+		(deaktiviert)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(has no objects)
+		]]></source>
+		<target><![CDATA[
+		(hat keine Objekte)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(has objects, is not registered)
+		]]></source>
+		<target><![CDATA[
+		(hat Objekte, ist nicht registriert)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(main)
+		]]></source>
+		<target><![CDATA[
+		(start)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(none)
+		]]></source>
+		<target><![CDATA[
+		(keine)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(objects stay active)
+		]]></source>
+		<target><![CDATA[
+		(Objekte bleiben erhalten)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(redacted)
+		]]></source>
+		<target><![CDATA[
+		(zensiert)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(registered, <font color="red">has no objects</font>)
+		]]></source>
+		<target><![CDATA[
+		(registriert, <font color="red">hat keine Objekte</font>)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(without check digit)
+		]]></source>
+		<target><![CDATA[
+		(ohne Prüfsumme)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		0 = Register to directory service and automatically publish RA/OID data at oid-info.com
+		]]></source>
+		<target><![CDATA[
+		0 = Beim OIDplus-Webverzeichnis registrieren und RA/OID-Daten automatisch auf oid-info.com veröffentlichen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		1 = Only register to directory service
+		]]></source>
+		<target><![CDATA[
+		1 = Nur im OIDplus-Webverzeichnis registrieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		2 = Hide system
+		]]></source>
+		<target><![CDATA[
+		2 = System verbergen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		<a %1>Click here</a> for more information about privacy related topics.
+		]]></source>
+		<target><![CDATA[
+		<a %1>Klicken Sie hier</a> für mehr Informationen bzgl. Datenschutz-Relevanten Themen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		<code>REGISTRATION_HIDE_SYSTEM</code> is set in the local configuration file! Therefore, this system will not register itself, despite of the settings below.
+		]]></source>
+		<target><![CDATA[
+		<code>REGISTRATION_HIDE_SYSTEM</code> befindet sich in der Basiskonfigurations-Datei! Daher wird das System sich nicht selbst registrieren, unabhängig von diesen Einstellungen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		<i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a>.
+		]]></source>
+		<target><![CDATA[
+		<i>Datenschutz-Hinweis:</i> Bitte beachten Sie, dass das Entfernen des Systems aus dem OIDplus-Webverzeichnis nicht automatisch OID/RA-Informationen löscht, die bereits bei oid-info.com veröffentlicht wurden. Um diese zu entfernen, kontaktieren Sie bitte den <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a> (in Englisch oder auf Französisch).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		<i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.
+		]]></source>
+		<target><![CDATA[
+		<i>Datenschutz-Hinweis:</i> Diese Einstellung kann jederzeit im Administrator-Login geändert werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of %1 minutes.
+		]]></source>
+		<target><![CDATA[
+		<i>Datenschutz-Hinweis</i>: Durch das Benutzen der Login-Funktion erklären Sie sich einverstanden, dass ein Sitzungs-Cookie temporär in Ihrem Browser abgespeichert wird. Ein Sitzungs-Cookie ist eine kleine Textdatei, die bei jedem Aufruf dieser Seite an den Webserver gesendet wird, um Sie als eingeloggten Benutzer zu identifizieren. Das Sitzungs-Cookie wird nicht Ihre Surfverhalten außerhalb OIDplus verfolgen. Das Cookie wird zerstört, wenn Sie sich ausloggen oder nach einer Inaktivität von %1 Minuten.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		A full re-initialization is not possible if a version 2.0 config file (containing "defines") is used. Please update to a config 2.1 file by running setup again.
+		]]></source>
+		<target><![CDATA[
+		Eine Neu-Initialisierung ist nicht möglich, da eine Basiskonfigurations-Datei der Version 2.0 vorliegt (diese verwendet "define"-Anweisungen). Bitte durchlaufen Sie Setup erneut, um eine Datei mit Version 2.1 zu erzeugen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ADDITIONAL FILES
+		]]></source>
+		<target><![CDATA[
+		ZUSÄTZLICHE DATEIEN
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ASN.1 IDs (comma sep.)
+		]]></source>
+		<target><![CDATA[
+		ASN.1 IDs (kommagetrennt)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ASN.1 alphanumeric identifier "%1" is too long (max allowed length %2)
+		]]></source>
+		<target><![CDATA[
+		ASN.1 Alphanumerischer Identifier "%1" ist zu lang (max. Länge %2)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ASN.1 identifier "%1" is a standardized identifier belonging to OID %2
+		]]></source>
+		<target><![CDATA[
+		ASN.1 identifier "%1" ist ein standardisierter Identifier, der der OID %2 gehört
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ASN.1 identifiers (comma sep.)
+		]]></source>
+		<target><![CDATA[
+		ASN.1 identifiers (kommagetrennt)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ASN.1 notation
+		]]></source>
+		<target><![CDATA[
+		ASN.1-Notation
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Access denied
+		]]></source>
+		<target><![CDATA[
+		Zugriff verweigert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Account created
+		]]></source>
+		<target><![CDATA[
+		Konto eröffnet
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Action ID is missing
+		]]></source>
+		<target><![CDATA[
+		Action-ID fehlt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Actions
+		]]></source>
+		<target><![CDATA[
+		Aktionen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Activate Free OID
+		]]></source>
+		<target><![CDATA[
+		Kostenlose OID aktivieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Activation link expired!
+		]]></source>
+		<target><![CDATA[
+		Aktivierungs-Link ist abgelaufen!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Add a file attachment
+		]]></source>
+		<target><![CDATA[
+		Datei-Anhang hinzufügen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Add to oid-info.com manually
+		]]></source>
+		<target><![CDATA[
+		Zu oid-info.com manuell hinzufügen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Additional information
+		]]></source>
+		<target><![CDATA[
+		Zusätzliche Informationen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Admin
+		]]></source>
+		<target><![CDATA[
+		Administrator
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Admin can change the password without verification of the old password.
+		]]></source>
+		<target><![CDATA[
+		Der Administrator kann das Passwort ohne Verifizierung des alten Passworts ändern.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Admin info: The directory is %1
+		]]></source>
+		<target><![CDATA[
+		Interner Hinweis: Das Verzeichnis ist %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Admin login
+		]]></source>
+		<target><![CDATA[
+		Administrator-Login
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Admin page plugins
+		]]></source>
+		<target><![CDATA[
+		Administrator-Seiten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		After clicking "change", your OIDplus system will contact the ViaThinkSoft server to adjust (add or remove information) your privacy setting. This may take a few minutes.
+		]]></source>
+		<target><![CDATA[
+		Nachdem Sie die Änderung bestätigt haben, wird Ihr OIDplus System eine Verbindung mit dem ViaThinkSoft-Server aufnehmen und das OIDplus-Webverzeichnis aktualisieren (d.h. Informationen hinzufügen oder löschen) gemäß Ihrer Datenschutz-Stufe. Dies könnte ein paar Minuten dauern.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		All log messages
+		]]></source>
+		<target><![CDATA[
+		Alle Logbuch-Einträge
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		All your OIDs will automatically submitted to oid-info.com through the remote directory service in regular intervals.
+		]]></source>
+		<target><![CDATA[
+		Alle Ihre OIDs werden durch das OIDplus-Webverzeichnis in regelmäßigen Abständen zu oid-info.com übertragen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Alternative Identifiers
+		]]></source>
+		<target><![CDATA[
+		Alternative Bezeichner
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Arc "%1" is too long and therefore cannot be appended to the OID "%2" (max allowed arc size is "%3")
+		]]></source>
+		<target><![CDATA[
+		Die Nummer "%1" ist zu lang und kann deshalb an die OID "%2" nicht angefügt werden (Maximale Länge: %3 Ziffern)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Are you sure that you want to delete %1?
+		]]></source>
+		<target><![CDATA[
+		Sind Sie sicher, dass Sie %1 löschen möchten?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Are you sure that you want to delete %1? (The OIDs stay active)
+		]]></source>
+		<target><![CDATA[
+		Sind Sie sicher, dass Sie %1 löschen möchten? (Die verbleibenden OIDs verbleiben aktiv)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Are you sure that you want to logout?
+		]]></source>
+		<target><![CDATA[
+		Sind Sie sicher, dass Sie sich abmelden möchten?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Are you sure that you want to permanently change the color (for all users)? Please make sure you have tested the colors first, because if the contrast is too extreme, you might not be able to see the controls anymore, in order to correct the colors.
+		]]></source>
+		<target><![CDATA[
+		Sind Sie sicher, dass Sie die Farbeinstellungen permanent ändern möchten (für alle Anwender)? Bitte achten Sie darauf, die Farben zuerst zu testen, da bei falschen Einstellungen (z.B., wenn der Kontrast zu extrem ist), Sie nicht in der Lage sein könnten, die Schaltflächen zu erkennen, um die Farben zu korrigieren.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Argument "%1" is missing
+		]]></source>
+		<target><![CDATA[
+		Argument "%1" fehlt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Argument "%1" is missing; was the file included in a wrong way?
+		]]></source>
+		<target><![CDATA[
+		Argument "%1" fehlt; wurde die Datei korrekt eingebunden?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Attachment file "%1" could not be deleted from object "%2" (problem with permissions?)
+		]]></source>
+		<target><![CDATA[
+		Datei-Anhang "%1" kann nicht vom Objekt "%2" gelöscht werden (Problem mit Berechtigungen?)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Attention!
+		]]></source>
+		<target><![CDATA[
+		Achtung!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can't be converted back.
+		]]></source>
+		<target><![CDATA[
+		Achtung: Verwenden Sie das XML-Export/Import-Tool NICHT für ein Backup bzw. Wiederherstellungsprozess einer OIDplus-Installation!<br>Das Exportieren und Importieren aus einer XML wird viele Datenverluste zur Folge haben, da z.B. Nicht-OIDs wie GUIDs in eine OID konvertiert werden, und diese Konvertierung nicht rückgängig gemacht werden kann.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Attention: Empty NS at %1
+		]]></source>
+		<target><![CDATA[
+		Achtung: Leerer Namensraum bei %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Attention: This will take some time!
+		]]></source>
+		<target><![CDATA[
+		Achtung: Dies wird einige Zeit dauern!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Attention: Two objectType plugins use the same namespace "%1"!
+		]]></source>
+		<target><![CDATA[
+		Achtung: Zwei Objekt-Typ-Plugins nutzen denselben Namensraum "%1"!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Attribute
+		]]></source>
+		<target><![CDATA[
+		Attribut
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.
+		]]></source>
+		<target><![CDATA[
+		Zugriff verweigert! Bitte melden Sie sich als Administrator oder RA von "%1" an, um einen Dateianhang hochzuladen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Authentication error. Please log in as admin, or as the RA to update its data.
+		]]></source>
+		<target><![CDATA[
+		Zugriff verweigert! Bitte melden Sie sich als Administrator oder RA an, um diese Daten zu ändern.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Authentication error. Please log in as admin, or as the RA to update its email address.
+		]]></source>
+		<target><![CDATA[
+		Zugriff verweigert! Bitte melden Sie sich als Administrator oder als der RA an, um deren E-Mail-Adresse zu ändern.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Authentication error. Please log in as the RA to update this OID.
+		]]></source>
+		<target><![CDATA[
+		Zugriff verweigert! Bitte melden Sie sich als die RA an, um diese OID zu bearbeiten.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Authentication error. Please log in as the correct RA to insert an OID at this arc.
+		]]></source>
+		<target><![CDATA[
+		Zugriff verweigert! Bitte melden Sie sich als die korrekte RA an, um eine OID an diese Stelle einzufügen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Authentication error. Please log in as the superior RA to delete this OID.
+		]]></source>
+		<target><![CDATA[
+		Zugriff verweigert! Bitte melden Sie sich als die übergeordnete RA an, um diese OID zu löschen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Authentication error. Please log in as the superior RA to update this OID.
+		]]></source>
+		<target><![CDATA[
+		Zugriff verweigert! Bitte melden Sie sich als die übergeordnete RA an, um diese OID zu bearbeiten.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Authentication error. Please log in.
+		]]></source>
+		<target><![CDATA[
+		Zugriff verweigert! Bitte melden Sie sich an.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Authentication failed
+		]]></source>
+		<target><![CDATA[
+		Zugriffsfehler
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Automated AJAX calls
+		]]></source>
+		<target><![CDATA[
+		Automatische AJAX-Zugriffe
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Automatic export to oid-info.com
+		]]></source>
+		<target><![CDATA[
+		Automatischer Export nach oid-info.com
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Available DOIs
+		]]></source>
+		<target><![CDATA[
+		Verfügbare DOIs
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Available objects
+		]]></source>
+		<target><![CDATA[
+		Verfügbare Objekte
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Available objects / categories
+		]]></source>
+		<target><![CDATA[
+		Verfügbare Objekte / Kategorien
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		BCMath (Install it using <code>sudo aptitude update && sudo aptitude install php-bcmath && sudo service apache2 restart</code> on Linux systems.)
+		]]></source>
+		<target><![CDATA[
+		BCMath (Bei einem Linux-System können Sie das Paket wie folgt installieren: <code>sudo aptitude update && sudo aptitude install php-bcmath && sudo service apache2 restart</code>)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Back to update page
+		]]></source>
+		<target><![CDATA[
+		Zugriff zur Update-Seite
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Before logging in, please solve the following CAPTCHA
+		]]></source>
+		<target><![CDATA[
+		Bitte lösen Sie das folgende CAPTCHA, bevor Sie sich anmelden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Both, oidplus_version.txt and .svn directory exist! Therefore, the version is ambiguous!
+		]]></source>
+		<target><![CDATA[
+		Es existieren sowohl die Datei oidplus_version.txt als auch das Verzeichnis ".svn". Die Version von OIDplus kann daher nicht eindeutig bestimmt werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Bytes
+		]]></source>
+		<target><![CDATA[
+		Bytes
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		C++ notation
+		]]></source>
+		<target><![CDATA[
+		C++ Notation
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		CAPTCHA not successfully verified
+		]]></source>
+		<target><![CDATA[
+		CAPTCHA wurde nicht richtig gelöst
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Cannot add this address, because it must be inside the address range of the superior range.
+		]]></source>
+		<target><![CDATA[
+		Diese Adresse kann nicht hinzugefügt werden, da sie nicht im übergeordneten Adressbereich liegt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Cannot create directory "%1" (problem with permissions?)
+		]]></source>
+		<target><![CDATA[
+		Verzeichnis "%1" kann nicht erstellt werden (Problem mit Berechtigungen?)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Cannot determine database version (the entry "database_version" inside the table "###config" is probably missing)
+		]]></source>
+		<target><![CDATA[
+		Die Datenbankversion kann nicht ermittelt werden (Der Wert "database_version" in der "###config" Tabelle fehlt möglicherweise)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Cannot determine the SQL slang of your DBMS. Your DBMS is probably not supported.
+		]]></source>
+		<target><![CDATA[
+		Der SQL-Dialekt Ihres Datenbanksystems konnte nicht ermittelt werden. Möglicherweise wird Ihre Datenbank-Software nicht unterstützt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Cannot find dot notation because fields asn1-notation and dot-notation are both not existing
+		]]></source>
+		<target><![CDATA[
+		Die Punkt-Notation der OID kann nicht ermittelt werden, da sowohl das Feld "asn1-notation" als auch das Feld "dot-notation" fehlt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Cannot import %1, because its parent is not in the database.
+		]]></source>
+		<target><![CDATA[
+		Kann %1 nicht importieren, da das Elternobjekt in der Datenbank nicht verfügbar ist.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Cannot move uploaded file into directory (problem with permissions?)
+		]]></source>
+		<target><![CDATA[
+		Hochgeladene Datei konnte nicht an ihren Zielort verschoben werden (Problem mit Berechtigungen?)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Cannot open file %1
+		]]></source>
+		<target><![CDATA[
+		Datei %1 kann nicht geöffnet werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Cannot prepare statement
+		]]></source>
+		<target><![CDATA[
+		SQL-Statement konnte nicht vorbereitet werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Cannot read XML data. The XML file is probably invalid.
+		]]></source>
+		<target><![CDATA[
+		XML-Daten konnten nicht gelesen werden. Die XML-Datei ist möglicherweise ungültig.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Change
+		]]></source>
+		<target><![CDATA[
+		Ändern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Change RA email
+		]]></source>
+		<target><![CDATA[
+		E-Mail-Adresse der RA ändern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Change RA password
+		]]></source>
+		<target><![CDATA[
+		RA-Passwort ändern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Change admin password
+		]]></source>
+		<target><![CDATA[
+		Administrator-Passwort ändern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Change basic information (public)
+		]]></source>
+		<target><![CDATA[
+		Basisdaten ändern (öffentlich)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Change data
+		]]></source>
+		<target><![CDATA[
+		Daten ändern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Change email address
+		]]></source>
+		<target><![CDATA[
+		E-Mail-Adresse ändern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Change password
+		]]></source>
+		<target><![CDATA[
+		Passwort ändern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Change password of this RA
+		]]></source>
+		<target><![CDATA[
+		Passwort dieser RA ändern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Change preference
+		]]></source>
+		<target><![CDATA[
+		Präferenz ändern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Check
+		]]></source>
+		<target><![CDATA[
+		Prüfen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Check status of the registration and collected data
+		]]></source>
+		<target><![CDATA[
+		Status der Registration und gesammelten Daten überprüfen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Choose XML file here
+		]]></source>
+		<target><![CDATA[
+		XML-Datei wählen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Class declared in manifest is "%1" does not fit expected class for this plugin type "%2"
+		]]></source>
+		<target><![CDATA[
+		Die Klassen-Deklaration im Manifest ("%1") passt nicht zur erwarteten Klasse für diesen Plugin-Typ "%2"
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Class name
+		]]></source>
+		<target><![CDATA[
+		Klassenname
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Colors
+		]]></source>
+		<target><![CDATA[
+		Farben
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Comment
+		]]></source>
+		<target><![CDATA[
+		Kommentar
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Communication with ViaThinkSoft server failed: %1
+		]]></source>
+		<target><![CDATA[
+		Kommunikation mit dem ViaThinkSoft-Server fehlgeschlagen: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Compare local <--> svn-%1
+		]]></source>
+		<target><![CDATA[
+		Vergleiche Lokal <--> SVN-%1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Compare local <--> svn-head
+		]]></source>
+		<target><![CDATA[
+		Vergleiche Lokale <--> SVN-Head
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Comparison with oid-info.com
+		]]></source>
+		<target><![CDATA[
+		Vergleich mit oid-info.com
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Config key name "%1" is too long (max %2).
+		]]></source>
+		<target><![CDATA[
+		Konfigurations-Schlüsselname "%1" ist zu lang (max. Länge: %2)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Connection to the database failed!
+		]]></source>
+		<target><![CDATA[
+		Verbindung zur Datenbank ist fehlgeschlagen!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Contact administrator
+		]]></source>
+		<target><![CDATA[
+		Administrator kontaktieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Could not find "%1" section at %2
+		]]></source>
+		<target><![CDATA[
+		Die "%1"-Sektion kann in %2 nicht gefunden werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Could not log event
+		]]></source>
+		<target><![CDATA[
+		Ereignis konnte nicht geloggt werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Country
+		]]></source>
+		<target><![CDATA[
+		Land
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Create
+		]]></source>
+		<target><![CDATA[
+		Erstellen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Create RA manually
+		]]></source>
+		<target><![CDATA[
+		RA manuell erstellen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Create or change subsequent objects
+		]]></source>
+		<target><![CDATA[
+		Untergeordnete Objekte hinzufügen oder ändern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Create or change subsequent objects / categories
+		]]></source>
+		<target><![CDATA[
+		Untergeordnete Objekte/Kategorien hinzufügen oder ändern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Created
+		]]></source>
+		<target><![CDATA[
+		Erstellt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently <a %1>%2 free OIDs have been</a> registered. Please enter your email below to receive a free OID.
+		]]></source>
+		<target><![CDATA[
+		Es sind bereits <a %1>%2 kostenlose OIDs</a> registriert. Bitte geben Sie Ihre E-Mail-Adresse ein, um eine kostenlose OID zu erhalten.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently there are no Registration Authorities.
+		]]></source>
+		<target><![CDATA[
+		Derzeit gibt es keine Registrierungsstellen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently there are no log entries
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine Logbucheinträge vorhanden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently, no DOIs are registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine DOIs in diesem System registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently, no GS1 based numbers are registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine GS1-basierenden Nummern im System registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently, no GUID is registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine GUIDs in diesem System registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently, no Java Package Name is registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine Java-Package-Namen in diesem System registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently, no OID is registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine OIDs in diesem System registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently, no misc. objects are registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine sonstigen Objekte in diesem System registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently, no network blocks are registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine Netzwerkblöcke in diesem System registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently, there is no documentation for the AJAX calls. However, you can look at the <b>script.js</b> files of the plugins to see the field names being used. You can also enable network analysis in your web browser debugger (F12) to see the request headers sent to the server during the operation of OIDplus.
+		]]></source>
+		<target><![CDATA[
+		Derzeit gibt es keine Dokumentation über die AJAX-Schnittstelle. Sie können jedoch die <b>script.js</b> Dateien in den Plugins anschauen, um dort die Feld-Namen abzulesen. Sie können auch mittels Netzwerk-Analyse im Browser-Entwicklungsmodus (F12) sehen, welche Daten an <b>ajax.php</b> gesendet werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		DOI
+		]]></source>
+		<target><![CDATA[
+		DOI
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		DOI %1
+		]]></source>
+		<target><![CDATA[
+		DOI %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Dark Theme (inverted colors)
+		]]></source>
+		<target><![CDATA[
+		Dunkles Design (invertierte Farben)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Data Transfer
+		]]></source>
+		<target><![CDATA[
+		Daten-Transfer
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Database
+		]]></source>
+		<target><![CDATA[
+		Datenbank
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Database plugin "%1" not found
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Plugin "%1" nicht gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Database provider
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Provider
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Database provider plugins
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Provider-Plugins
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Database provider plugins (active)
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Provider-Plugins (aktiv)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Database provider plugins (inactive)
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Provider-Plugins (inaktiv)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Database providers
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Provider
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Database update %1 -> %2 failed (script reports new version to be %3)
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Update %1 -> %2 fehlgeschlagen (Skript meldet neue Version %3)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Delete
+		]]></source>
+		<target><![CDATA[
+		Löschen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Delete profile
+		]]></source>
+		<target><![CDATA[
+		Profil löschen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Delete this RA
+		]]></source>
+		<target><![CDATA[
+		Diese RA löschen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Description
+		]]></source>
+		<target><![CDATA[
+		Beschreibung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Description for config key "%1" is too long (max %2).
+		]]></source>
+		<target><![CDATA[
+		Beschreibung des Konfigurations-Schlüssels "%1" ist zu lang (Maximale Länge: %2).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Did you know that this page contains an invisible VNag tag? You can watch this page using the "webreader" plugin of VNag, and then monitor it with any Nagios compatible software! <a href="https://www.viathinksoft.com/projects/vnag">More information</a>.
+		]]></source>
+		<target><![CDATA[
+		Wussten Sie, dass diese Seite einen unsichtbaren VNag-Code beinhaltet? Sie können diese Seite mit dem "webreader"-Plugin von VNag überachten, und mit einer Nagios-Kompatiblen Software informiert werden, wenn sich der Status dieser Seite ändert (d.h. wenn es ein neues Update gibt). <a href="https://www.viathinksoft.de/projects/vnag">Mehr Informationen hier</a>.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Digital Object Identifier (DOI)
+		]]></source>
+		<target><![CDATA[
+		Digital Object Identifier (DOI)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Directory userdata/logs/ not existing
+		]]></source>
+		<target><![CDATA[
+		Verzeichnis userdata/logs/ existiert nicht
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Documents and resources
+		]]></source>
+		<target><![CDATA[
+		Dokumente und Ressourcen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Does not have an OID
+		]]></source>
+		<target><![CDATA[
+		Hat keine OID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Done
+		]]></source>
+		<target><![CDATA[
+		Fertig
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Dot notation
+		]]></source>
+		<target><![CDATA[
+		Punkt-Notation
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Download
+		]]></source>
+		<target><![CDATA[
+		Herunterladen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		E-Mail
+		]]></source>
+		<target><![CDATA[
+		E-Mail
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		E-Mail sent.
+		]]></source>
+		<target><![CDATA[
+		E-Mail gesendet.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		E-Mail-Address
+		]]></source>
+		<target><![CDATA[
+		E-Mail-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		E-Mail-Address: %1
+		]]></source>
+		<target><![CDATA[
+		E-Mail-Adresse: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Edit RA contact data
+		]]></source>
+		<target><![CDATA[
+		RA-Kontaktdaten bearbeiten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Edit contact data
+		]]></source>
+		<target><![CDATA[
+		Kontaktdaten bearbeiten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		EiB
+		]]></source>
+		<target><![CDATA[
+		EiB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Enforced SQL slang (via setting FORCE_DBMS_SLANG) "%1" does not exist.
+		]]></source>
+		<target><![CDATA[
+		Der erzwungene SQL-Dialekt (Einstellung "FORCE_DBMS_SLANG") "%1" existiert nicht.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Enter your email address and your password to log in as Registration Authority.
+		]]></source>
+		<target><![CDATA[
+		Geben Sie Ihre E-Mail-Adresse und das Passwort ein, um sich als Registrierungsstelle anzumelden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Entry "database_version" inside the table "###config" seems to be wrong (expect number between 200 and 999)
+		]]></source>
+		<target><![CDATA[
+		Eintrag "database_version" in der Tabelle "###config" scheint falsch zu sein (Es wird eine Nummer zwischen 200 und 999 erwartet)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Error
+		]]></source>
+		<target><![CDATA[
+		Fehler
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Error: %1
+		]]></source>
+		<target><![CDATA[
+		Fehler: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Error: Search term minimum length is %1 characters.
+		]]></source>
+		<target><![CDATA[
+		Fehler: Suchwort muss mindestens %1 Zeichen lang sein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Error: You must enter a search term.
+		]]></source>
+		<target><![CDATA[
+		Fehler: Sie müssen ein Suchwort eingeben.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.
+		]]></source>
+		<target><![CDATA[
+		Achtung: Ihr System konnte kein Schlüsselpaar erzeugen. (OpenSSL fehlt möglicherweise auf Ihrem System). Aus diesem Grund können Sie Ihre OIDplus-Installation nicht registrieren.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Everything OK
+		]]></source>
+		<target><![CDATA[
+		Alles OK
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Example for adding OID 2.999.123 using JavaScript
+		]]></source>
+		<target><![CDATA[
+		Beispiel: OID 2.999.123 mittels JavaScript hinzufügen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Example for adding OID 2.999.123 using PHP (located at a foreign server)
+		]]></source>
+		<target><![CDATA[
+		Beispiel: OID 2.999.123 mittels PHP hinzufügen (von einem fremden Server ausgehend)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Export
+		]]></source>
+		<target><![CDATA[
+		Export
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		FILES MISSING
+		]]></source>
+		<target><![CDATA[
+		FEHLENDE DATEIEN
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Failed to load content: %1
+		]]></source>
+		<target><![CDATA[
+		Inhalt konnte nicht geladen werden: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Fax
+		]]></source>
+		<target><![CDATA[
+		Fax
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		File %1 does not exist
+		]]></source>
+		<target><![CDATA[
+		Datei %1 existiert nicht
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		File %1 has an invalid INI format!
+		]]></source>
+		<target><![CDATA[
+		Datei %1 hat ein ungültiges INI-Format!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		File %1 is missing, but setup can't be started because its directory missing.
+		]]></source>
+		<target><![CDATA[
+		Datei %1 fehlt, aber Setup kann diese Datei nicht erstellen, da das Setup-Verzeichnis ebenfalls fehlt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		File %1 is missing. Please run setup again.
+		]]></source>
+		<target><![CDATA[
+		Datei %1 fehlt. Bitte starten Sie Setup erneut, um die Datei zu erzeugen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		File %1 is not writeable
+		]]></source>
+		<target><![CDATA[
+		Datei %1 ist nicht schreibbar
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		File Completeness Check
+		]]></source>
+		<target><![CDATA[
+		Installationsdatei-Prüfung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		File attachments
+		]]></source>
+		<target><![CDATA[
+		Datei-Anhänge
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		File does not exist
+		]]></source>
+		<target><![CDATA[
+		Datei existiert nicht
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		File not found or inaccessible!
+		]]></source>
+		<target><![CDATA[
+		Datei nicht gefunden oder Zugriff verweigert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		File type
+		]]></source>
+		<target><![CDATA[
+		Dateityp
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		File userdata/logs/oidplus.log not writeable
+		]]></source>
+		<target><![CDATA[
+		Datei userdata/logs/oidplus.log ist nicht beschreibbar
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Filename
+		]]></source>
+		<target><![CDATA[
+		Dateiname
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		First address
+		]]></source>
+		<target><![CDATA[
+		Erste Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Following object roots have an undefined Registration Authority
+		]]></source>
+		<target><![CDATA[
+		Die folgenden Wurzel-Objekte sind keiner Registrierungsstelle zugeordnet
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Forgot password
+		]]></source>
+		<target><![CDATA[
+		Passwort vergessen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Forgot password?
+		]]></source>
+		<target><![CDATA[
+		Passwort vergessen?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		FreeOID service not available. Please ask your administrator.
+		]]></source>
+		<target><![CDATA[
+		Der FreeOID-Dienst ist nicht verfügbar. Bitte fragen Sie den Systembetreuer.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Functionality not available on Windows
+		]]></source>
+		<target><![CDATA[
+		Diese Funktion ist in Windows nicht verfügbar
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Functionality only available on Windows servers
+		]]></source>
+		<target><![CDATA[
+		Funktion ist nun auf Windows-Servern verfügbar
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		GMP (Install it using <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.)
+		]]></source>
+		<target><![CDATA[
+		GMP (Bei einem Linux-System können Sie das Paket wie folgt installieren: <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code>)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		GS1
+		]]></source>
+		<target><![CDATA[
+		GS1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		GS1 Based IDs (GLN/GTIN/SSCC/...)
+		]]></source>
+		<target><![CDATA[
+		GS1-basierende Bezeichner (GLN/GTIN/SSCC/...)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		GS1 value needs to be numeric
+		]]></source>
+		<target><![CDATA[
+		GS1-Bezeichner muss eine Zahl sein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		GUID
+		]]></source>
+		<target><![CDATA[
+		GUID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		GUID representation of this OID
+		]]></source>
+		<target><![CDATA[
+		GUID-Darstellung dieser OID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Generate XML (all OIDs)
+		]]></source>
+		<target><![CDATA[
+		XML generieren (Alle OIDs)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Generate XML (only OIDs which do not exist at oid-info.com)
+		]]></source>
+		<target><![CDATA[
+		XML generieren (Nur OIDs, die nicht auf oid-info.com existieren)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Generate XML file containing all OIDs
+		]]></source>
+		<target><![CDATA[
+		XML-Datei mit allen OIDs generieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		GiB
+		]]></source>
+		<target><![CDATA[
+		GiB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Globally Unique Identifier (GUID)
+		]]></source>
+		<target><![CDATA[
+		Globally Unique Identifier (GUID)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Go
+		]]></source>
+		<target><![CDATA[
+		&gt;&gt;
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Go back to
+		]]></source>
+		<target><![CDATA[
+		Zurückkehren zu
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Go back to OIDplus
+		]]></source>
+		<target><![CDATA[
+		Zu OIDplus zurückkehren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Go back to data transfer main page
+		]]></source>
+		<target><![CDATA[
+		Zu Transfer-Hauptseite zurückkehren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Go back to front page
+		]]></source>
+		<target><![CDATA[
+		Zur Hauptseite zurückkehren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Go back to registration settings
+		]]></source>
+		<target><![CDATA[
+		Zu den Registrierungs-Einstellungen zurückkehren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Go back to updater
+		]]></source>
+		<target><![CDATA[
+		Zum Updater zurückkehren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Hide
+		]]></source>
+		<target><![CDATA[
+		Verstecken
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Hide postal address and Phone/Fax/Mobile Numbers
+		]]></source>
+		<target><![CDATA[
+		Verstecke Postadresse und Telefon/Fax/Handy-Nummern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Hostname
+		]]></source>
+		<target><![CDATA[
+		Hostname
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		How to change the email address?
+		]]></source>
+		<target><![CDATA[
+		Sie können Sie die E-Mail-Adresse ändern?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		How to edit these IDs?
+		]]></source>
+		<target><![CDATA[
+		Wie können Sie diese Tabelle bearbeiten?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		How to register?
+		]]></source>
+		<target><![CDATA[
+		Wie können Sie sich registrieren?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Hue shift
+		]]></source>
+		<target><![CDATA[
+		Farbton-Verschiebung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ID
+		]]></source>
+		<target><![CDATA[
+		ID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ID may not be empty
+		]]></source>
+		<target><![CDATA[
+		ID darf nicht leer sein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		IPv4
+		]]></source>
+		<target><![CDATA[
+		IPv4
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		IPv4 Network Blocks
+		]]></source>
+		<target><![CDATA[
+		IPv4-Netzwerk-Blöcke
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		IPv4/CIDR
+		]]></source>
+		<target><![CDATA[
+		IPv4/CIDR
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		IPv6
+		]]></source>
+		<target><![CDATA[
+		IPv6
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		IPv6 Network Blocks
+		]]></source>
+		<target><![CDATA[
+		IPv6-Netzwerk-Blöcke
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		IPv6/CIDR
+		]]></source>
+		<target><![CDATA[
+		IPv6/CIDR
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		IRI "%1" is already used by another OID (%2)
+		]]></source>
+		<target><![CDATA[
+		IRI "%1" wird bereits von einer anderen OID (%2) verwendet
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		IRI IDs (comma sep.)
+		]]></source>
+		<target><![CDATA[
+		IRI IDs (Kommagetrennt)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		IRI identifiers (comma sep.)
+		]]></source>
+		<target><![CDATA[
+		IRI Bezeichner (Kommagetrennt)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		If you have more accounts, you can log in with another account here.
+		]]></source>
+		<target><![CDATA[
+		Wenn Sie mehrere Konten haben, können Sie sich mit einem anderen Konto hier anmelden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		If you set the privacy option to "0" (your system is registered), then all your OIDs will be automatically exported to oid-info.com.
+		]]></source>
+		<target><![CDATA[
+		Wenn Sie die Datenschutz-Stufe auf "0" (System registriert) setzen, dann werden alle Ihre OIDs automatisch nach oid-info.com exportiert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Ignore for now
+		]]></source>
+		<target><![CDATA[
+		Für den Moment ignorieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Ignored OID %1 because its dot notation is illegal or was not found
+		]]></source>
+		<target><![CDATA[
+		OID %1 ignoriert, da die Punkt-Notation ungültig ist oder nicht gefunden wurde
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Ignored OIDs because they are already existing: %1
+		]]></source>
+		<target><![CDATA[
+		Ignorierte OIDs, da sie bereits existieren: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Ignored Unicode label %1, because it is invalid
+		]]></source>
+		<target><![CDATA[
+		Ignoriere Unicode-Label %1, da es ungültig ist
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Ignored alphanumeric identifier %1, because it is invalid
+		]]></source>
+		<target><![CDATA[
+		Ignoriere ASN.1-Bezeichner %1, da er ungültig ist
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Illegal file name
+		]]></source>
+		<target><![CDATA[
+		Ungültiger Dateiname
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Import
+		]]></source>
+		<target><![CDATA[
+		Import
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Import OID
+		]]></source>
+		<target><![CDATA[
+		OID importieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Import XML
+		]]></source>
+		<target><![CDATA[
+		XML importieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Import XML file
+		]]></source>
+		<target><![CDATA[
+		XML-Datei importieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Imported %1, but expected to import 1
+		]]></source>
+		<target><![CDATA[
+		%1 importiert, aber es sollte nur 1 importiert werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Imported OID %1
+		]]></source>
+		<target><![CDATA[
+		OID %1 importiert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		In order to use this feature, you need to have at least one (root) OID added in your system, and the system needs to report the newly added root to the directory service (the reporting interval is 1 hour).
+		]]></source>
+		<target><![CDATA[
+		Um diese Funktion zu nutzen, müssen Sie zumindest eine Wurzel-OID in Ihrem System hinzugefügt haben, und das System muss die neu hinzugefügte Wurzel-OID an das OIDplus-Webverzeichnis melden (Der Melde-Intervall ist 1 Stunde).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Insert
+		]]></source>
+		<target><![CDATA[
+		Einfügen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Insert OK
+		]]></source>
+		<target><![CDATA[
+		Einfügen erfolgreich
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Install OIDplus by downloading a ZIP file from www.viathinksoft.com, which contains an SVN snapshot, and extract it to your webspace. The ZIP file contains a file named "oidplus_version.txt" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.
+		]]></source>
+		<target><![CDATA[
+		OIDplus durch das Downloaden und Entpacken eines ZIP-Archivs von www.viathinksoft.de installieren. Dieses ZIP-Archiv enthält einen Snapshot der aktuellen SVN-Revision, sowie eine Datei "oidplus_version.txt", die die SVN-Revisionsnummer enthält. Dieses Update-Tool wird versuchen, die geänderten Dateien "on-the-fly" aus dem ViaThinkSoft SVN-Repository herunterzuladen und im Serververzeichnis zu entpacken (Schreibrechte erforderlich). Achtung: Ein Änderungskonflikt wird nicht erkannt und führt zum Überschreiben der Datei! Die ZIP-Archiv-Methode ist nur empfohlen, wenn die andere Methode (Verwenden eines Subversion-Clients) nicht möglich ist.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co %1</code> and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!
+		]]></source>
+		<target><![CDATA[
+		OIDplus durch einen Subversion-Client aus dem ViaThinkSoft SVN-Repository herunterladen und aktualisieren. Bei Linux ist eine SSH/Linux-Shell erforderlich. Der Befehl zum erstmaligen Herunterladen ist <code>svn co %1</code>. Im Anschluss wird bei jedem Update <code>svn update</code> ausgeführt . Dies wird automatisch die neuste Version herunterladen, und im Falle eines Änderungskonflikts wird der Anwender gefragt, was getan werden soll. Diese Methode wird empfohlen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Installation type
+		]]></source>
+		<target><![CDATA[
+		Installations-Typ
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Installed plugins
+		]]></source>
+		<target><![CDATA[
+		Installierte Plugins
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Instructions have been sent via email.
+		]]></source>
+		<target><![CDATA[
+		Anweisungen wurden per E-Mail gesendet.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid DOI %1 . It must have syntax 10.xxxx
+		]]></source>
+		<target><![CDATA[
+		Ungültige DOI %1 . Sie muss die Syntax 10.xxxx haben
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid IPv4
+		]]></source>
+		<target><![CDATA[
+		Ungültige IPv4-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid IPv4 address %1
+		]]></source>
+		<target><![CDATA[
+		Ungültige IPv4-Adresse %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid IPv6
+		]]></source>
+		<target><![CDATA[
+		Ungültige IPv6-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid IPv6 address %1
+		]]></source>
+		<target><![CDATA[
+		Ungültige IPv6-Adresse %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid OID %1
+		]]></source>
+		<target><![CDATA[
+		Ungültige OID %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid RA email address
+		]]></source>
+		<target><![CDATA[
+		Ungültige RA E-Mail-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid action ID
+		]]></source>
+		<target><![CDATA[
+		Ungültige Action-ID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid arguments
+		]]></source>
+		<target><![CDATA[
+		Ungültige Argumente
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid auth key
+		]]></source>
+		<target><![CDATA[
+		Ungültiger Authentifizierungs-Schlüssel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid authorization. Is the URL OK?
+		]]></source>
+		<target><![CDATA[
+		Ungültige Authentifizierung. Ist die Link-Adresse OK?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid email address
+		]]></source>
+		<target><![CDATA[
+		Ungültige E-Mail-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid maskcode "%1" (Unknown severity "%2")
+		]]></source>
+		<target><![CDATA[
+		Ungültiger Mask-Code "%1" (Unbekannter Schweregrad "%2")
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid maskcode "%1" (failed to split)
+		]]></source>
+		<target><![CDATA[
+		Ungültiger Mask-Code "%1" (Splitten fehlgeschlagen)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid object "%1"
+		]]></source>
+		<target><![CDATA[
+		Ungültiges Objekt "%1"
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid order "%1" (needs to be "asc" or "desc")
+		]]></source>
+		<target><![CDATA[
+		Ungültige Reihenfolge "%1" (muss "asc" oder "desc" sein)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid protection flag, use OIDplusConfig::PROTECTION_* constants
+		]]></source>
+		<target><![CDATA[
+		Ungültiger Protection-Flag. Bitte nutzen Sie die OIDplusConfig::PROTECTION_* Kontanten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid value for inline_mode
+		]]></source>
+		<target><![CDATA[
+		Ungültiger Wert für inline_mode
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invert colors
+		]]></source>
+		<target><![CDATA[
+		Farben umkehren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invitation expired!
+		]]></source>
+		<target><![CDATA[
+		Einladung abgelaufen!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invitations are disabled by the administrator.
+		]]></source>
+		<target><![CDATA[
+		Einladungen sind durch den Administrator deaktiviert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invite a Registration Authority
+		]]></source>
+		<target><![CDATA[
+		Eine Registrierungsstelle einladen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		JSON
+		]]></source>
+		<target><![CDATA[
+		JSON
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		JSON reply from ViaThinkSoft decoding error: %1
+		]]></source>
+		<target><![CDATA[
+		JSON-Antwort von ViaThinkSoft konnte nicht dekodiert werden: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Java Package Names
+		]]></source>
+		<target><![CDATA[
+		Java Paket-Namen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Jump to RA root %1
+		]]></source>
+		<target><![CDATA[
+		Zu RA-Wurzel %1 springen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		KiB
+		]]></source>
+		<target><![CDATA[
+		KiB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Languages
+		]]></source>
+		<target><![CDATA[
+		Sprachen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Last address
+		]]></source>
+		<target><![CDATA[
+		Letzte Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Latest published version: %1
+		]]></source>
+		<target><![CDATA[
+		Letzte veröffentlichte Version: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		List OIDs at oid-info.com which are missing in your system
+		]]></source>
+		<target><![CDATA[
+		OIDs von oid-info.com auflisten, die in diesem System fehlen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		List OIDs in your system which are missing at oid-info.com
+		]]></source>
+		<target><![CDATA[
+		OIDs aus Ihrem System auflisten, die auf oid-info.com fehlen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		List RAs
+		]]></source>
+		<target><![CDATA[
+		RAs auflisten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Loading...
+		]]></source>
+		<target><![CDATA[
+		Lade...
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Local installation: %1
+		]]></source>
+		<target><![CDATA[
+		Lokale Installation: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Location
+		]]></source>
+		<target><![CDATA[
+		Ort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Log messages for RA %1
+		]]></source>
+		<target><![CDATA[
+		Logbuch-Einträge für RA %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Log messages for object %1
+		]]></source>
+		<target><![CDATA[
+		Logbuch-Einträge für Objekt %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Log out
+		]]></source>
+		<target><![CDATA[
+		Abmelden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Logged in as %1
+		]]></source>
+		<target><![CDATA[
+		Angemeldet als %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Logged in as admin
+		]]></source>
+		<target><![CDATA[
+		Angemeldet als Administrator
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Logger
+		]]></source>
+		<target><![CDATA[
+		Logger
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Logger plugins
+		]]></source>
+		<target><![CDATA[
+		Logger-Plugins
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Login
+		]]></source>
+		<target><![CDATA[
+		Anmelden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Login as RA
+		]]></source>
+		<target><![CDATA[
+		Als RA anmelden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Login as administrator
+		]]></source>
+		<target><![CDATA[
+		Als Administrator anmelden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Logout
+		]]></source>
+		<target><![CDATA[
+		Abmelden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Lookup at ean-search.org
+		]]></source>
+		<target><![CDATA[
+		Auf ean-search.org nachschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		MBString (Install it using <code>sudo aptitude update && sudo aptitude install php-mbstring && sudo service apache2 restart</code> on Linux systems.)
+		]]></source>
+		<target><![CDATA[
+		MBString (Bei einem Linux-System können Sie das Paket wie folgt installieren: <code>sudo aptitude update && sudo aptitude install php-mbstring && sudo service apache2 restart</code>)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Machine type
+		]]></source>
+		<target><![CDATA[
+		Maschinen-Typ
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Manage root objects
+		]]></source>
+		<target><![CDATA[
+		Wurzel-Objekte verwalten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Manage root objects / categories
+		]]></source>
+		<target><![CDATA[
+		Wurzel-Objekte / Kategorien verwalten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Manage your DOIs
+		]]></source>
+		<target><![CDATA[
+		Ihre DOIs verwalten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Manage your root OIDs
+		]]></source>
+		<target><![CDATA[
+		Ihre OIDs verwalten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Manifest declares PHP main class as "%1", but it could not be found
+		]]></source>
+		<target><![CDATA[
+		Manifest deklariert PHP-Hauptklasse als "%1", aber diese wurde nicht gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Manifest does not declare a PHP main class
+		]]></source>
+		<target><![CDATA[
+		Manifest deklariert keine PHP-Hauptklasse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Manual creation of a RA
+		]]></source>
+		<target><![CDATA[
+		Manuelle Erstellung einer RA
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Method A
+		]]></source>
+		<target><![CDATA[
+		Methode A
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Method B
+		]]></source>
+		<target><![CDATA[
+		Methode B
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		MiB
+		]]></source>
+		<target><![CDATA[
+		MiB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Mobile
+		]]></source>
+		<target><![CDATA[
+		Handy
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		More information about the cookies used
+		]]></source>
+		<target><![CDATA[
+		Weitere Informationen über die verwendeten Cookies
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		More information at %1
+		]]></source>
+		<target><![CDATA[
+		Mehr Informationen auf %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		NROFF
+		]]></source>
+		<target><![CDATA[
+		NROFF
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Name based version 3 / MD5 UUID with namespace %1
+		]]></source>
+		<target><![CDATA[
+		Namensbasierte Version 3 / MD5 UUID mit Namensraum %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Name based version 5 / SHA1 UUID with namespace %1
+		]]></source>
+		<target><![CDATA[
+		Namensbasierte Version 5 / SHA1 UUID mit Namensraum %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Neither oidplus_version.txt, nor .svn directory exist! Therefore, the version cannot be determined, and the update needs to be applied manually!
+		]]></source>
+		<target><![CDATA[
+		Weder oidplus_version.txt, noch das .svn-Verzeichnis existieren! Aus diesem Grund kann die OIDplus-Version nicht eindeutig bestimmt werden, und das Update muss manuell installiert werden!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Nested transactions are not supported by this database plugin.
+		]]></source>
+		<target><![CDATA[
+		Verschachtelte Transaktionen werden durch das Datenbank-Plugin nicht unterstützt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		New address
+		]]></source>
+		<target><![CDATA[
+		Neue Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		New eMail-Address
+		]]></source>
+		<target><![CDATA[
+		Neue E-Mail-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		New password
+		]]></source>
+		<target><![CDATA[
+		Neues Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		New password is too short. Minimum password length: %1
+		]]></source>
+		<target><![CDATA[
+		Das neue Passwort ist zu kurz. Minimale Länge: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No RA authentication plugins found
+		]]></source>
+		<target><![CDATA[
+		Keine RA-Authentifizierungs-Plugins gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No admin password set in %1
+		]]></source>
+		<target><![CDATA[
+		Kein Administrator-Passwort in %1 gesetzt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No attachments
+		]]></source>
+		<target><![CDATA[
+		Keine Dateianhänge
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No database plugin selected in config file
+		]]></source>
+		<target><![CDATA[
+		Kein Datenbankplugin in der Konfigurations-Datei angewählt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No description for this object available
+		]]></source>
+		<target><![CDATA[
+		Keine Beschreibung verfügbar
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No extra OIDs found
+		]]></source>
+		<target><![CDATA[
+		Keine zusätzlichen OIDs gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No items available
+		]]></source>
+		<target><![CDATA[
+		Keine Einträge vorhanden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No missing OIDs found
+		]]></source>
+		<target><![CDATA[
+		Keine fehlenden OIDs gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		None
+		]]></source>
+		<target><![CDATA[
+		Keine
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Not found
+		]]></source>
+		<target><![CDATA[
+		Nicht gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Not imported because of errors: %1
+		]]></source>
+		<target><![CDATA[
+		Nicht importiert aufgrund von Fehlern: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Note: The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.
+		]]></source>
+		<target><![CDATA[
+		Hinweis: Die "CURL" PHP-Erweiterung kann nicht auf HTTPS-Webseiten zugreifen. Aus diesem Grund können Sie diese Funktion nicht benutzen. Bitte downloaden Sie <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, und speichern Sie es irgendwo ab; danach ändern Sie die Einstellung <code>curl.cainfo</code> in PHP.ini.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Note: The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.
+		]]></source>
+		<target><![CDATA[
+		Hinweis: Die "CURL" PHP-Erweiterung ist nicht auf Ihrem System installiert. Bitte aktivieren Sie die PHP-Erweiterung <code>php_curl</code>.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system).
+		]]></source>
+		<target><![CDATA[
+		Hinweis: Ihr System konnte kein PKI-Schlüsselpaar erzeugen. Möglicherweise fehlt OpenSSL auf Ihrem System.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Nothing found
+		]]></source>
+		<target><![CDATA[
+		Nichts gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Numeric value
+		]]></source>
+		<target><![CDATA[
+		Numerischer Wert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OBJECT TREE
+		]]></source>
+		<target><![CDATA[
+		OBJEKT-BAUM
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OID
+		]]></source>
+		<target><![CDATA[
+		OID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OID "%1" is a "well-known" OID. Its identifiers cannot be changed.
+		]]></source>
+		<target><![CDATA[
+		OID "%1" ist eine wohlbekannte OID, deren Kennungen nicht geändert werden können.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OID %1
+		]]></source>
+		<target><![CDATA[
+		OID %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OID %1 has too many arcs (current depth %2, max depth %3)
+		]]></source>
+		<target><![CDATA[
+		OID %1 ist zu tief verzweigt (aktuelle Tiefe %2, maximale Tiefe %3)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OID logger mask requires OID
+		]]></source>
+		<target><![CDATA[
+		OID-Log-Maske benötigt OID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OID representation of UUID
+		]]></source>
+		<target><![CDATA[
+		OID-Darstellung der UUID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OID-IRI notation
+		]]></source>
+		<target><![CDATA[
+		OID-IRI-Notation
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDRA logger mask requires OID
+		]]></source>
+		<target><![CDATA[
+		OIDRA-Log-Maske benötigt OID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDRA logger mask: Invalid object "%1"
+		]]></source>
+		<target><![CDATA[
+		OIDRA-Log-Maske: Ungültiges Objekt "%1"
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus
+		]]></source>
+		<target><![CDATA[
+		OIDplus
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus File Completeness Check
+		]]></source>
+		<target><![CDATA[
+		OIDplus Installationsdatei-Prüfung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus Information Object ID
+		]]></source>
+		<target><![CDATA[
+		OIDplus Informations-Objekt Kennung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus Update
+		]]></source>
+		<target><![CDATA[
+		OIDplus Aktualisierung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus could not determine its version. (Required: svnupdate shell access or SQLite3). Please update your system manually via the SVN "update" command regularly.
+		]]></source>
+		<target><![CDATA[
+		OIDplus konnte seine Version nicht bestimmen. (Erforderlich: svnupdate Shell-Zugriff oder SQLite3). Bitte aktualisieren Sie Ihre OIDplus-Installation mit dem "SVN Update" Programm regelmäßig.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus error
+		]]></source>
+		<target><![CDATA[
+		OIDplus Fehler
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus initialization error
+		]]></source>
+		<target><![CDATA[
+		OIDplus Initialisierungs-Fehler
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus requires at least PHP version %1! You are currently using version %2
+		]]></source>
+		<target><![CDATA[
+		OIDplus benötigt mindestens PHP-Version %1! Sie besitzen derzeit Version %2
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OK
+		]]></source>
+		<target><![CDATA[
+		OK
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Object
+		]]></source>
+		<target><![CDATA[
+		Objekt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Object %1 already exists!
+		]]></source>
+		<target><![CDATA[
+		Objekt %1 existiert bereits!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Object %1 does not exist
+		]]></source>
+		<target><![CDATA[
+		Objekt %1 existiert nicht
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Object Identifier (OID)
+		]]></source>
+		<target><![CDATA[
+		Objekt-Bezeichner (OID)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Object not found
+		]]></source>
+		<target><![CDATA[
+		Objekt nicht gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Object roots without RA
+		]]></source>
+		<target><![CDATA[
+		Wurzel-Objekte ohne RA
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Object type plugins
+		]]></source>
+		<target><![CDATA[
+		Objekt-Typ-Plugins
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Object type plugins (disabled)
+		]]></source>
+		<target><![CDATA[
+		Objekt-Typ-Plugins (deaktiviert)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Object type plugins (enabled)
+		]]></source>
+		<target><![CDATA[
+		Objekt-Typ-Plugins (aktiviert)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Object types
+		]]></source>
+		<target><![CDATA[
+		Objekt-Typen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Objects
+		]]></source>
+		<target><![CDATA[
+		Objekte
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Office
+		]]></source>
+		<target><![CDATA[
+		Büro
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Old address
+		]]></source>
+		<target><![CDATA[
+		Alte Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Old eMail-Address
+		]]></source>
+		<target><![CDATA[
+		Alte E-Mail-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Old password
+		]]></source>
+		<target><![CDATA[
+		Altes Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Old password incorrect
+		]]></source>
+		<target><![CDATA[
+		Altes Passwort falsch
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		One item is hidden. Please <a %1>log in</a> to see it.
+		]]></source>
+		<target><![CDATA[
+		Ein Eintrag ist versteckt. Bitte <a %1>melden Sie sich an</a> um ihn einzusehen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Only characters and numbers are allowed as authentication token.
+		]]></source>
+		<target><![CDATA[
+		Nur Buchstaben und Nummern sind als Authentification-Token zugelassen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Open & Pin Menu
+		]]></source>
+		<target><![CDATA[
+		Menü öffnen und anpinnen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Open in new window
+		]]></source>
+		<target><![CDATA[
+		In neuem Fenster öffnen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Operating System
+		]]></source>
+		<target><![CDATA[
+		Betriebssystem
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Organization
+		]]></source>
+		<target><![CDATA[
+		Organisation
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Other identifiers
+		]]></source>
+		<target><![CDATA[
+		Andere Kennzeichen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Other objects
+		]]></source>
+		<target><![CDATA[
+		Andere Objekte
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Output format
+		]]></source>
+		<target><![CDATA[
+		Ausgabeformat
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PHP
+		]]></source>
+		<target><![CDATA[
+		PHP
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PHP extension "%1" not installed
+		]]></source>
+		<target><![CDATA[
+		PHP-Erweiterung "%1" nicht installiert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PHP version
+		]]></source>
+		<target><![CDATA[
+		PHP-Version
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Package
+		]]></source>
+		<target><![CDATA[
+		Paket
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Page plugins
+		]]></source>
+		<target><![CDATA[
+		Seiten-Plugins
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Parent node: %1
+		]]></source>
+		<target><![CDATA[
+		Eltern-Knoten: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Parent object %1 does not exist
+		]]></source>
+		<target><![CDATA[
+		Übergeordnetes Objekt %1 existiert nicht
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Password
+		]]></source>
+		<target><![CDATA[
+		Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Password is too short. Need at least %1 characters
+		]]></source>
+		<target><![CDATA[
+		Passwort ist zu kurz. Minimale Länge: %1 Zeichen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Password successfully changed. You can now log in.
+		]]></source>
+		<target><![CDATA[
+		Passwort erfolgreich geändert. Sie können sich nun anmelden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Passwords do not match
+		]]></source>
+		<target><![CDATA[
+		Passwörter stimmen nicht überein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Perform email address change
+		]]></source>
+		<target><![CDATA[
+		E-Mail-Adressänderung durchführen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Person name
+		]]></source>
+		<target><![CDATA[
+		Personen-Name
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Phone
+		]]></source>
+		<target><![CDATA[
+		Telefon
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PiB
+		]]></source>
+		<target><![CDATA[
+		PiB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please <a %1>log in</a> to receive information about this object.
+		]]></source>
+		<target><![CDATA[
+		Bitte <a %1>anmelden</a>, um weitere Informationen über dieses Objekt zu erhalten.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please check file %1
+		]]></source>
+		<target><![CDATA[
+		Bitte prüfen Sie Datei %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please check your input. Namespace "%1" is not found
+		]]></source>
+		<target><![CDATA[
+		Bitte überprüfen Sie Ihre Eingabe. Der Namensraum "%1" wurde nicht gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please check your input. Some object types are double.
+		]]></source>
+		<target><![CDATA[
+		Bitte prüfen Sie Ihre Eingabe. Einige Objekt-Typen sind doppelt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please choose a file.
+		]]></source>
+		<target><![CDATA[
+		Bitte wählen Sie eine Datei.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please contact the system administrator.
+		]]></source>
+		<target><![CDATA[
+		Bitte kontaktieren Sie den System-Administrator.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enable JavaScript to use all features
+		]]></source>
+		<target><![CDATA[
+		Bitte aktivieren Sie JavaScript, um alle Funktionen nutzen zu können
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter <code>svn update</code> into the SSH shell to update OIDplus to the latest version.
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie <code>svn update</code> in der Shell/Eingabe-Aufforderung ein, um OIDplus auf die neuste Version zu aktualisieren.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter a title.
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie einen Titel ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter a valid OID in dot notation or nothing
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie entweder nichts, oder eine gültige OID in Punkt-Notation ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter a valid password length.
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie eine gültige Passwort-Länge ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter a valid value (0=no, 1=yes).
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie einen gültigen Wert ein (0=nein, 1=ja).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter a valid value.
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie einen gültigen Wert ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter a value for the system title.
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie einen gültigen System-Titel ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter either 0, 1 or 2.
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie entweder 0, 1 oder 2 ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter the email address of your account, and information about the password reset will be sent to you.
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie die E-Mail-Adresse Ihres Kontos ein, sodass Ihnen Anweisungen zur Passwort-Rücksetzung zugesendet werden können.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter your administrator password to run the tool.
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie Ihr Administrator-Passwort ein, um dieses Programm zu starten.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter your personal name or the name of your group.
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie Ihren Personen-Namen oder Namen einer Gruppierung ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please keep this information confidential!
+		]]></source>
+		<target><![CDATA[
+		Bitte behandeln Sie diese Informationen vertraulich!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! In case the update fails, you can download and extract the complete <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot ZIP file</a> again. Since all your data should lay inside the folder "userdata", this should be safe.
+		]]></source>
+		<target><![CDATA[
+		Bitte fertigen Sie eine Datensicherung Ihrer Dateien vor der Aktualisierung an. Im Falle eines Fehlers könnte das OIDplus-System (inklusive diesem Update-Assistenten) ausfallen. Außerdem besitzt dieses WebSVN-Update keine Kollissions-Kontrolle, d.h. Datei-Änderungen, die Sie durchgeführt haben, können zurückgesetzt/verloren gehen. Im Falle eines Fehlschlags können Sie einen kompletten <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot als ZIP-Archiv</a> herunterladen und hier entpacken. Da alle Ihre Daten innerhalb des Ordners "userdata" liegen sollten, sollte dies sicher sein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please only submit one arc (not an absolute OID or multiple arcs).
+		]]></source>
+		<target><![CDATA[
+		Bitte fügen Sie nur einen Knoten auf einmal hinzu. (Keine vollständige OID oder mehrere Knoten)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please only submit one arc.
+		]]></source>
+		<target><![CDATA[
+		Bitte fügen Sie nur einen Knoten auf einmal hinzu.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please select a GUID in the tree view at the left to show its contents.
+		]]></source>
+		<target><![CDATA[
+		Bitte selektieren Sie eine GUID in der Baumansicht, um dessen Inhalt anzuzeigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please select a Java Package Name in the tree view at the left to show its contents.
+		]]></source>
+		<target><![CDATA[
+		Bitte selektieren Sie einen Java-Paketnamen in der Baumansicht, um dessen Inhalt anzuzeigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please select a network block in the tree view at the left to show its contents.
+		]]></source>
+		<target><![CDATA[
+		Bitte selektieren Sie einen Netzwerk-Block in der Baumansicht, um dessen Inhalt anzuzeigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please select an DOI in the tree view at the left to show its contents.
+		]]></source>
+		<target><![CDATA[
+		Bitte selektieren Sie eine DOI in der Baumansicht, um deren Inhalt anzuzeigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please select an OID in the tree view at the left to show its contents.
+		]]></source>
+		<target><![CDATA[
+		Bitte selektieren Sie eine OID in der Baumansicht, um deren Inhalt anzuzeigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please select an item in the tree view at the left to show its contents.
+		]]></source>
+		<target><![CDATA[
+		Bitte selektieren Sie einen Eintrag in der Baumansicht, um dessen Inhalt anzuzeigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please select an object in the tree view at the left to show its contents.
+		]]></source>
+		<target><![CDATA[
+		Bitte selektieren Sie ein Objekt in der Baumansicht, um dessen Inhalt anzuzeigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please verify your password
+		]]></source>
+		<target><![CDATA[
+		Bitte bestätigen Sie Ihr Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin "%1/%2" is erroneous
+		]]></source>
+		<target><![CDATA[
+		Plugin "%1/%2" ist fehlerhaft
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin OID
+		]]></source>
+		<target><![CDATA[
+		Plugin-OID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin OID "%1" is invalid (needs to be valid dot-notation)
+		]]></source>
+		<target><![CDATA[
+		Plugin OID "%1" ist ungültig (muss eine gültige Punkt-Notation sein)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin author
+		]]></source>
+		<target><![CDATA[
+		Plugin-Hersteller
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin main class "%1" is expected to be a subclass of "%2"
+		]]></source>
+		<target><![CDATA[
+		Plugin Hauptklasse "%1" soll eine Unterklasse von "%2" sein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin main class "%1" is expected to be a subclass of "%2", according to type declared in manifest
+		]]></source>
+		<target><![CDATA[
+		Plugin Hauptklasse "%1" soll eine Unterklasse von "%2" sein, gemäß dem Typ, der im Manifest deklariert ist
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin name
+		]]></source>
+		<target><![CDATA[
+		Plugin-Name
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin type
+		]]></source>
+		<target><![CDATA[
+		Plugin-Typ
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin version
+		]]></source>
+		<target><![CDATA[
+		Plugin-Version
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin with OID "%1" not found
+		]]></source>
+		<target><![CDATA[
+		Plugin mit OID "%1" nicht gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin with OID %1 did not output array of result data
+		]]></source>
+		<target><![CDATA[
+		Plugin mit OID %1 hat kein Array bestehend aus Ergebnis-Daten geliefert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugins
+		]]></source>
+		<target><![CDATA[
+		Plugins
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Prepared argument list size not matching number of prepared statement arguments
+		]]></source>
+		<target><![CDATA[
+		Die Größe der vorbereiteten Argumente stimmt nicht überein mit den "Prepared Statement" Argumenten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Preview of update %1 &rarr; %2
+		]]></source>
+		<target><![CDATA[
+		Vorschau von Update %1 &rarr; %2
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Privacy
+		]]></source>
+		<target><![CDATA[
+		Datenschutz
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Privacy level
+		]]></source>
+		<target><![CDATA[
+		Datenschutz-Stufe
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Public
+		]]></source>
+		<target><![CDATA[
+		Öffentlich
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Public page plugins
+		]]></source>
+		<target><![CDATA[
+		Öffentliche Seiten-Plugins
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Query
+		]]></source>
+		<target><![CDATA[
+		Abfrage
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		RA
+		]]></source>
+		<target><![CDATA[
+		RA
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		RA "%1" does not exist
+		]]></source>
+		<target><![CDATA[
+		RA "%1" existiert nicht
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		RA "%1" does not exist.
+		]]></source>
+		<target><![CDATA[
+		RA "%1" existiert nicht.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		RA Listing
+		]]></source>
+		<target><![CDATA[
+		RA-Auflistung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		RA Name
+		]]></source>
+		<target><![CDATA[
+		RA-Name
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		RA authentication
+		]]></source>
+		<target><![CDATA[
+		RA-Authentifizierung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		RA authentication providers
+		]]></source>
+		<target><![CDATA[
+		RA-Authentifizierungs-Anbieter
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		RA does already exist
+		]]></source>
+		<target><![CDATA[
+		RA existiert bereits
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		RA does not exist
+		]]></source>
+		<target><![CDATA[
+		RA existiert nicht
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		RA log events
+		]]></source>
+		<target><![CDATA[
+		RA-Logbuch-Einträge
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		RA page plugins
+		]]></source>
+		<target><![CDATA[
+		RA Seiten-Plugins
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Redirecting to HTTPS...
+		]]></source>
+		<target><![CDATA[
+		Nach HTTPS umleiten...
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Redirecting to registration wizard...
+		]]></source>
+		<target><![CDATA[
+		Umleiten zum Registrierungs-Assistenten...
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Redirecting to setup...
+		]]></source>
+		<target><![CDATA[
+		Umleiten zu Setup...
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Register
+		]]></source>
+		<target><![CDATA[
+		Registrieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Register a free OID
+		]]></source>
+		<target><![CDATA[
+		Kostenlose OID registrieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Register as Registration Authority
+		]]></source>
+		<target><![CDATA[
+		Als Registrierungsstelle registrieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Registration Authority
+		]]></source>
+		<target><![CDATA[
+		Registrierungsstelle
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Registration live status
+		]]></source>
+		<target><![CDATA[
+		Live Registrierungs-Status
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Registration successful! You can now log in.
+		]]></source>
+		<target><![CDATA[
+		Registrierung erfolgreich! Sie können sich nun anmelden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Repeat
+		]]></source>
+		<target><![CDATA[
+		Wiederholen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Report illegal OID
+		]]></source>
+		<target><![CDATA[
+		Ungültige OID melden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Request free OID
+		]]></source>
+		<target><![CDATA[
+		Eine kostenlose OID registrieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Reset admin password
+		]]></source>
+		<target><![CDATA[
+		Administrator-Passwort zurücksetzen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Reset default setting
+		]]></source>
+		<target><![CDATA[
+		Zu Werkseinstellung zurückkehren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Reset password
+		]]></source>
+		<target><![CDATA[
+		Passwort zurücksetzen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Reset to last saved config
+		]]></source>
+		<target><![CDATA[
+		Zuletzt gespeicherte Einstellung wiederherstellen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Resolve %1
+		]]></source>
+		<target><![CDATA[
+		%1 auflösen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Root OID %1
+		]]></source>
+		<target><![CDATA[
+		Wurzel-OID %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Root OIDs
+		]]></source>
+		<target><![CDATA[
+		Wurzel-OIDs
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Root arc
+		]]></source>
+		<target><![CDATA[
+		Wurzel-Knoten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SQL slang
+		]]></source>
+		<target><![CDATA[
+		SQL-Dialekt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SQL slang plugins
+		]]></source>
+		<target><![CDATA[
+		SQL-Dialekt-Plugins
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SQL slang plugins (active)
+		]]></source>
+		<target><![CDATA[
+		SQL-Dialekt-Plugins (aktiv)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SQL slang plugins (inactive)
+		]]></source>
+		<target><![CDATA[
+		SQL-Dialekt-Plugins (inaktiv)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SQL slangs
+		]]></source>
+		<target><![CDATA[
+		SQL-Dialekte
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SQL-Slang plugin "%1" is missing. Please check if it exists in the directory "plugin/sqlSlang". If it is not existing, please recover it from an SVN snapshot or OIDplus ZIP file.
+		]]></source>
+		<target><![CDATA[
+		SQL-Dialekt-Plugin "%1" fehlt. Bitte prüfen Sie, ob es im Verzeichnis "plugin/sqlSlang" existiert. Wenn nicht, dann stellen Sie es bitte aus einem SVN-Snapshot oder OIDplus-ZIP-Archiv wieder her.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SUPOID logger mask requires OID
+		]]></source>
+		<target><![CDATA[
+		SUPOID-Log-Maske benötigt OID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SUPOID logger mask: Invalid object %1
+		]]></source>
+		<target><![CDATA[
+		SUPOID-Log-Maske: Ungültiges Objekt %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SUPOIDRA logger mask requires OID
+		]]></source>
+		<target><![CDATA[
+		SUPOIDRA-Log-Maske benötigt OID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SUPOIDRA logger mask: Invalid object "%1"
+		]]></source>
+		<target><![CDATA[
+		SUPOIDRA-Log-Maske: Ungültiges Objekt "%1"
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Saturation shift
+		]]></source>
+		<target><![CDATA[
+		Farbsättigungs-Verschiebung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Schema
+		]]></source>
+		<target><![CDATA[
+		Schema
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Search
+		]]></source>
+		<target><![CDATA[
+		Suche
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Search for
+		]]></source>
+		<target><![CDATA[
+		Suchen nach
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Search in
+		]]></source>
+		<target><![CDATA[
+		Suche in
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Search in field "ASN.1 identifier" (only OIDs)
+		]]></source>
+		<target><![CDATA[
+		Suche im Feld "ASN.1 Identifier" (nur OIDs)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Search in field "Description"
+		]]></source>
+		<target><![CDATA[
+		Suche im Feld "Beschreibung"
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Search in field "Title"
+		]]></source>
+		<target><![CDATA[
+		Suche im Feld "Titel"
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Search in field "Unicode label" (only OIDs)
+		]]></source>
+		<target><![CDATA[
+		Suche im Feld "Unicode Label" (nur OIDs)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Search results for %1 (%2)
+		]]></source>
+		<target><![CDATA[
+		Suchergebnisse für %1 (%2)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Search results for RA %1
+		]]></source>
+		<target><![CDATA[
+		Suchergebnisse für RA %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		See also
+		]]></source>
+		<target><![CDATA[
+		Siehe auch
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Send invitation
+		]]></source>
+		<target><![CDATA[
+		Sende Einladung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Send new activation email
+		]]></source>
+		<target><![CDATA[
+		Sende neue Aktivierungs-E-Mail
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Send recovery information
+		]]></source>
+		<target><![CDATA[
+		Sende Wiederherstellungs-Informationen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Sending mail failed
+		]]></source>
+		<target><![CDATA[
+		Senden der E-Mail fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Server software
+		]]></source>
+		<target><![CDATA[
+		Server-Software
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Session could not be started
+		]]></source>
+		<target><![CDATA[
+		Sitzung konnte nicht gestartet werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Set permanently
+		]]></source>
+		<target><![CDATA[
+		Permanent setzen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Setting
+		]]></source>
+		<target><![CDATA[
+		Einstellung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Setting %1 is read-only
+		]]></source>
+		<target><![CDATA[
+		Einstellung %1 ist nur lesbar
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Setting does not exist
+		]]></source>
+		<target><![CDATA[
+		Einstellung existiert nicht
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Setup part 1: Create %1 (contains database settings, ReCAPTCHA, admin password and SSL enforcement)
+		]]></source>
+		<target><![CDATA[
+		Setup Teil 1: Erstelle %1 (beinhaltet Datenbank-Einstellungen, ReCAPTCHA, Administrator-Passwort und SSL-Einstellungen)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Setup part 2 requires plugin %1 (the basic settings are all available above, too)
+		]]></source>
+		<target><![CDATA[
+		Setup Teil 2 benötigt das Plugin %1 (die Basiseinstellungen sind oben ebenfalls vorhanden)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Setup part 2: Basic settings (they are all available above, too)
+		]]></source>
+		<target><![CDATA[
+		Setup Teil 2: Basiseinstellungen (diese sind oben auch vorhanden)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Share
+		]]></source>
+		<target><![CDATA[
+		Teilen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Signature failed
+		]]></source>
+		<target><![CDATA[
+		Signieren fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Since invitations are disabled at this OIDplus system, the system administrator needs to create your account manually in the administrator control panel.
+		]]></source>
+		<target><![CDATA[
+		Da Einladungen in diesem OIDplus-System deaktiviert sind, muss der System-Administrator Ihr Konto manuell erstellen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Single host address
+		]]></source>
+		<target><![CDATA[
+		Einzelne Host-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Size
+		]]></source>
+		<target><![CDATA[
+		Größe
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Slide Open Menu
+		]]></source>
+		<target><![CDATA[
+		Menü aufschieben
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Software update
+		]]></source>
+		<target><![CDATA[
+		Software-Update
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Stacktrace
+		]]></source>
+		<target><![CDATA[
+		Aufrufstapel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Start update assistant
+		]]></source>
+		<target><![CDATA[
+		Starte Update-Assistent
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Static link to this page
+		]]></source>
+		<target><![CDATA[
+		Statischer Link zu dieser Seite
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Step %1: Color Theme
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: Farbschema
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Step %1: Enable/Disable object type plugins
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: Zu verwaltende Objekt-Typen auswählen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Step %1: System registration and automatic publishing (optional)
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: System-Registrierung und automatische Veröffentlichung (optional)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Street
+		]]></source>
+		<target><![CDATA[
+		Straße
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Subsequent objects
+		]]></source>
+		<target><![CDATA[
+		Untergeordnete Objekte
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Subsequent objects / categories
+		]]></source>
+		<target><![CDATA[
+		Untergeordnete Objekte / Kategorien
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Successfully imported OIDs: %1
+		]]></source>
+		<target><![CDATA[
+		Erfolgreich importierte OIDs: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Syntax
+		]]></source>
+		<target><![CDATA[
+		Syntax
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		System
+		]]></source>
+		<target><![CDATA[
+		System
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		System OID
+		]]></source>
+		<target><![CDATA[
+		System-OID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		System URL
+		]]></source>
+		<target><![CDATA[
+		System-URL
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		System configuration
+		]]></source>
+		<target><![CDATA[
+		System-Konfiguration
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		System directory
+		]]></source>
+		<target><![CDATA[
+		System-Verzeichnis
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		System information
+		]]></source>
+		<target><![CDATA[
+		System-Informationen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		System registration
+		]]></source>
+		<target><![CDATA[
+		System-Registrierung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		System registration settings
+		]]></source>
+		<target><![CDATA[
+		System-Registrierungs-Einstellungen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		System title
+		]]></source>
+		<target><![CDATA[
+		System-Titel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		System version
+		]]></source>
+		<target><![CDATA[
+		System-Version
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		TXT
+		]]></source>
+		<target><![CDATA[
+		TXT
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Table %1 is missing!
+		]]></source>
+		<target><![CDATA[
+		Tabelle %1 fehlt!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Table name prefix
+		]]></source>
+		<target><![CDATA[
+		Tabellen-Namen-Präfix
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Technical information
+		]]></source>
+		<target><![CDATA[
+		Technische Informationen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Technical information about the problem
+		]]></source>
+		<target><![CDATA[
+		Technische Informationen des Problems
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Test
+		]]></source>
+		<target><![CDATA[
+		Testen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Text format (RFC draft: %1)
+		]]></source>
+		<target><![CDATA[
+		Text-Format (RFC Entwurf: %1)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The OID "%1" is already used by the plugin "%2"
+		]]></source>
+		<target><![CDATA[
+		Die OID "%1" wird bereits im Plugin %2 verwendet
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The RA %1 is not registered in the database.
+		]]></source>
+		<target><![CDATA[
+		Die Registrierungsstelle %1 ist nicht in der Datenbank registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The RA does not want to publish their personal information.
+		]]></source>
+		<target><![CDATA[
+		Die Registrierungsstelle möchte ihre persönlichen Informationen nicht veröffentlichen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The RA has been invited via email.
+		]]></source>
+		<target><![CDATA[
+		Die Registrierungsstelle wurde per E-Mail eingeladen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The URL for the AJAX script is:
+		]]></source>
+		<target><![CDATA[
+		Die URL für das AJAX-Skript ist:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The administrator has disabled deleting attachments by RAs.
+		]]></source>
+		<target><![CDATA[
+		Der Administrator hat das Löschen von Dateianhängen durch Registrierungsstellen deaktiviert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The administrator has disabled uploading attachments by RAs.
+		]]></source>
+		<target><![CDATA[
+		Der Administrator hat das Hochladen von Dateianhängen durch Registrierungsstellen deaktiviert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The administrator of this OIDplus system has not entered a contact email address.
+		]]></source>
+		<target><![CDATA[
+		Der Administrator dieses OIDplus-Systems hat keine Kontaktadresse hinterlegt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The batch-fields will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.
+		]]></source>
+		<target><![CDATA[
+		Die "batch"-Felder werden eine automatische Kurzzeit-Anmeldung veranlassen. Die anderen Felder sind die Felder, die im normalen Betrieb von OIDplus gesendet werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The file does not exist
+		]]></source>
+		<target><![CDATA[
+		Diese Datei existiert nicht
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The file extension "%1" is banned by the administrator (it can be uploaded by the administrator though)
+		]]></source>
+		<target><![CDATA[
+		Die Dateinamens-Erweiterung "%1" ist durch den Administrator verboten worden (Diese Datei kann jedoch durch den Administrator selbst hochgeladen werden)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The following PHP extensions need to be installed in order to run OIDplus:
+		]]></source>
+		<target><![CDATA[
+		Die folgenden PHP-Erweiterungen müssen installiert werden, um OIDplus zu betreiben:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The identifier %1 is too long (max allowed length: %2)
+		]]></source>
+		<target><![CDATA[
+		Das Kennzeichen %1 ist zu lang (Maximale Länge: %2)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The information located in %1 is outdated.
+		]]></source>
+		<target><![CDATA[
+		Die Informationen in %1 sind veraltet.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The object %1 was not found in this database.
+		]]></source>
+		<target><![CDATA[
+		Das Objekt %1 wurde nicht in dieser Datenbank gefunden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The query has returned no result set (i.e. it was not a SELECT query)
+		]]></source>
+		<target><![CDATA[
+		Die Abfrage hat keine Ergebnis-Menge geliefert (d.h. es handelte sich nicht um eine SELECT-Abfrage)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The resource cannot be found.
+		]]></source>
+		<target><![CDATA[
+		Die Ressource kann nicht gefunden werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The resulting OID "%1" is too long (max allowed length: %2).
+		]]></source>
+		<target><![CDATA[
+		Die resultierende OID "%1" ist zu lang (Maximale Länge: %2).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The resulting OID %1 is too long (max allowed length: %2)
+		]]></source>
+		<target><![CDATA[
+		Die resultierende OID %1 ist zu lang (Maximale Länge: %2)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The superior RA did not define a RA for this OID.
+		]]></source>
+		<target><![CDATA[
+		Die übergeordnete Registrierungsstelle hat keine Registrierungsstelle für diese OID ernannt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The system does not know how to handle this file type.
+		]]></source>
+		<target><![CDATA[
+		Das System weiß nicht, wie dieser Dateityp zu behandeln ist.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		There are two possibilities how to keep OIDplus up-to-date
+		]]></source>
+		<target><![CDATA[
+		Es gibt zwei Möglichkeiten, wie Sie OIDplus auf den aktuellsten Stand halten können
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Therefore, you <b>cannot</b> register your OIDplus instance now.
+		]]></source>
+		<target><![CDATA[
+		Aus diesem Grund können Sie Ihr OIDplus-System derzeit <b>nicht</b> registrieren.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		These ID names can only be edited in the database directly (Tables ###asn1id and ###iri). Usually, there is no need to do this, though.
+		]]></source>
+		<target><![CDATA[
+		Die Kennzeichen können nur in der Datenbank direkt bearbeitet werden (Tabellen ###asn1id und ###iri). Jedoch ist dies in der Regel nicht erforderlich.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>.
+		]]></source>
+		<target><![CDATA[
+		Diese XML-Dateien folgende dem <a %1>XML-Schema</a> von <b>oid-info.com</b>.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>. They can be used for various purposes though.
+		]]></source>
+		<target><![CDATA[
+		Diese XML-Dateien folgende dem <a %1>XML-Schema</a> von <b>oid-info.com</b>. Sie können jedoch auch für andere Zwecke verwendet werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This RA does not exist.
+		]]></source>
+		<target><![CDATA[
+		Diese Registrierungsstelle existiert nicht.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This RA has no objects.
+		]]></source>
+		<target><![CDATA[
+		Diese Registrierungsstelle hat keine zugeordneten Objekte.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This RA is already registered and does not need to be invited.
+		]]></source>
+		<target><![CDATA[
+		Diese Registrierungsstelle ist bereits registriert und muss daher nicht eingeladen werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This RA is already registered.
+		]]></source>
+		<target><![CDATA[
+		Diese Registrierungsstelle ist bereits registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This email address already exists.
+		]]></source>
+		<target><![CDATA[
+		Diese E-Mail-Adresse existiert bereits.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This folder does not contain any elements
+		]]></source>
+		<target><![CDATA[
+		Dieser Ordner beinhaltete keine Elemente
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This functionality has been disabled by the administrator.
+		]]></source>
+		<target><![CDATA[
+		Diese Funktion wurde durch den Administrator deaktiviert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This is not a correct email address
+		]]></source>
+		<target><![CDATA[
+		Dies ist keine gültige E-Mail-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This request is invalid
+		]]></source>
+		<target><![CDATA[
+		Die Anfrage ist ungültig
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This resource doesn't exist anymore.
+		]]></source>
+		<target><![CDATA[
+		Diese Ressource existiert nicht mehr.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This root is not validated. Please send an email to %1 in order to request ownership verification of this root OID.
+		]]></source>
+		<target><![CDATA[
+		Der Besitz der Wurzel-OID wurde noch nicht durch ViaThinkSoft verifiziert. Bitte senden Sie eine E-Mail an %1, um den Besitz dieser OID zu bestätigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		TiB
+		]]></source>
+		<target><![CDATA[
+		TiB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Title
+		]]></source>
+		<target><![CDATA[
+		Titel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Title of your OID (usually equal to your name, optional)
+		]]></source>
+		<target><![CDATA[
+		Titel Ihrer OID (üblicherweise identisch mit Ihrem Namen, optional)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		To change the email address, you need to contact the admin or superior RA. They will need to change the email address and invite you (with your new email address) again.
+		]]></source>
+		<target><![CDATA[
+		Nehmen Sie Kontakt mit der übergeordneten Registrierungsstelle oder dem Administrator auf, um die E-Mail-Adresse zu ändern. Diese müssen die E-Mail-Adresse dieser OID ändern, und Sie dadurch mittels einer Einladung (auf die neue Adresse) erneut zu OIDplus hinzufügen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		To receive login data, the superior RA needs to send you an invitation. After creating or updating your OID, the system will ask them if they want to send you an invitation. If they accept, you will receive an email with an activation link. Alternatively, the system admin can create your account manually in the administrator control panel.
+		]]></source>
+		<target><![CDATA[
+		Um Anmeldedaten zu erhalten, müssen Sie die übergeordnete Registrierungsstelle bitten, Ihnen eine Einladung zu senden. Wenn die übergeordnete Registrierungsstelle Ihre OID erstellt oder den Eintrag aktualisiert, wird OIDplus die Registrierungsstelle fragen, ob eine Einladung per E-Mail gesendet werden soll oder nicht. Wenn dies akzeptiert wird, erhalten Sie eine E-Mail mit einem Aktivierungs-Link. Alternativ kann der Systemadministrator ein Konto manuell erstellen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		To reset the password of the administrator, create a hash below and then replace the entry in the file %1.
+		]]></source>
+		<target><![CDATA[
+		Um das Administrator-Passwort zurückzusetzen, müssen Sie einen neuen Hash-Wert erzeugen und ihn in der Datei %1 ersetzen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		To update your OIDplus system, please enter the administrator password and click the button "Update NOW".
+		]]></source>
+		<target><![CDATA[
+		Um Ihr OIDplus-System zu aktualisieren, geben Sie das Administrator-Passwort ein und klicken Sie anschließend auf "Jetzt aktualisieren".
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		To use %1, please enable the lines "extension=com_dotnet" and "extension_dir=ext" in your PHP.ini file.
+		]]></source>
+		<target><![CDATA[
+		Um %1 nutzen zu können, müssen Sie die Zeilen "extension=com_dotnet" und "extension_dir=ext" in der PHP.ini Datei aktivieren.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Try again
+		]]></source>
+		<target><![CDATA[
+		Erneut versuchen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Type of %1 unknown
+		]]></source>
+		<target><![CDATA[
+		Typ von %1 ist unbekannt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		URL for more information about your project(s) (optional)
+		]]></source>
+		<target><![CDATA[
+		URL für mehr Informationen über Ihr(e) Projekt(e) (optional)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		UUID
+		]]></source>
+		<target><![CDATA[
+		UUID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unexpected file extension for file %1
+		]]></source>
+		<target><![CDATA[
+		Unerwartete Dateinamens-Erweiterung der Datei %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unexpected logger component "%1" in mask code "%2"
+		]]></source>
+		<target><![CDATA[
+		Unerwartete Logbuch-Komponente "%1" in Mask-Code "%2"
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unicode label "%1" is too long (max allowed length %2)
+		]]></source>
+		<target><![CDATA[
+		Unicode-Label "%1" ist zu lang (Maximale Länge: %2)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unknown
+		]]></source>
+		<target><![CDATA[
+		Unbekannt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unknown action ID
+		]]></source>
+		<target><![CDATA[
+		Unbekannte Action-ID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unknown file type
+		]]></source>
+		<target><![CDATA[
+		Unbekannter Dateityp
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unknown slang
+		]]></source>
+		<target><![CDATA[
+		Unbekannter Dialekt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unknown!
+		]]></source>
+		<target><![CDATA[
+		Unbekannt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update
+		]]></source>
+		<target><![CDATA[
+		Aktualisieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update NOW
+		]]></source>
+		<target><![CDATA[
+		Jetzt aktualisieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update OIDplus
+		]]></source>
+		<target><![CDATA[
+		OIDplus aktualisieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update OK
+		]]></source>
+		<target><![CDATA[
+		Aktualisierung OK
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?
+		]]></source>
+		<target><![CDATA[
+		Aktualisierung erfolgreich. Die eingegebene E-Mail-Adresse %1 existiert jedoch nicht im System. Möchten Sie eine Einladung verwenden, sodass der Eigentümer dieser E-Mail-Adresse seine OIDs in diesem System verwalten kann?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update description
+		]]></source>
+		<target><![CDATA[
+		Beschreibung ändern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Updated
+		]]></source>
+		<target><![CDATA[
+		Geändert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Updating ...
+		]]></source>
+		<target><![CDATA[
+		Aktualisieren ...
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Upload
+		]]></source>
+		<target><![CDATA[
+		Hochladen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Upload XML files manually to oid-info.com
+		]]></source>
+		<target><![CDATA[
+		XML-Dateien manuell auf oid-info.com hochladen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Upload attachment "%1" to object "%2" failed
+		]]></source>
+		<target><![CDATA[
+		Hochladen von Dateianhang "%1" zu Objekt "%2" fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		VNag integration
+		]]></source>
+		<target><![CDATA[
+		VNag-Integration
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Valid values: 0 (off) or 1 (on).
+		]]></source>
+		<target><![CDATA[
+		Gültige Werte: 0 (aus) oder 1 (ein).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Value
+		]]></source>
+		<target><![CDATA[
+		Wert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Value shift
+		]]></source>
+		<target><![CDATA[
+		Hellwert-Verschiebung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Verification eMail sent
+		]]></source>
+		<target><![CDATA[
+		Bestätigungs-Mail wurde gesendet
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ViaThinkSoft OIDplus 2.0
+		]]></source>
+		<target><![CDATA[
+		ViaThinkSoft OIDplus 2.0
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		View OID at oid-info.com
+		]]></source>
+		<target><![CDATA[
+		OID auf oid-info.com anzeigen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		View local OID
+		]]></source>
+		<target><![CDATA[
+		Lokale OID anzeigen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		WEID
+		]]></source>
+		<target><![CDATA[
+		WEID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		WEID notation
+		]]></source>
+		<target><![CDATA[
+		WEID-Notation
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Warning
+		]]></source>
+		<target><![CDATA[
+		Warnung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Warnings / Error messages:
+		]]></source>
+		<target><![CDATA[
+		Warnungen / Fehlermeldungen:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Warnings: %1
+		]]></source>
+		<target><![CDATA[
+		Warnungen: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Web WHOIS
+		]]></source>
+		<target><![CDATA[
+		Web-WHOIS
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Webserver
+		]]></source>
+		<target><![CDATA[
+		Webserver
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Well known OIDs
+		]]></source>
+		<target><![CDATA[
+		Wohlbekannte OIDs
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Which object types do you want to manage using OIDplus?
+		]]></source>
+		<target><![CDATA[
+		Welche Objekt-Typen möchten Sie mit OIDplus verwalten?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Whois
+		]]></source>
+		<target><![CDATA[
+		WhoIs
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		With the web based whois service, you can query object information in a machine-readable format.
+		]]></source>
+		<target><![CDATA[
+		Mit dem Web-Basierten WHOIS-Dienst können Sie Objekt-Informationen in einem maschinenlesbaren Format abfragen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		With this optional tool, you can check if your OIDplus installation is complete and no files are missing.
+		]]></source>
+		<target><![CDATA[
+		Mit diesem optionalen Werkzeug können Sie testen, ob Ihre OIDplus-Installation vollständig ist und keine Dateien fehlen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Wrong password
+		]]></source>
+		<target><![CDATA[
+		Falsches Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Wrong password or user not registered
+		]]></source>
+		<target><![CDATA[
+		Falsches Passwort oder Benutzer nicht registriert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		XML
+		]]></source>
+		<target><![CDATA[
+		XML
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		YiB
+		]]></source>
+		<target><![CDATA[
+		YiB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You are already using the latest version of OIDplus.
+		]]></source>
+		<target><![CDATA[
+		Sie verwenden bereits die neuste Version von OIDplus.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You are logged in as %1
+		]]></source>
+		<target><![CDATA[
+		Sie sind eingeloggt als %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You are logged in as administrator.
+		]]></source>
+		<target><![CDATA[
+		Sie sind als Administrator angemeldet.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You are using <b>method A</b> (SVN working copy).
+		]]></source>
+		<target><![CDATA[
+		Sie verwenden <b>Methode A</b> (SVN Arbeitskopie).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You are using <b>method B</b> (Snapshot ZIP file with oidplus_version.txt file).
+		]]></source>
+		<target><![CDATA[
+		Sie verwenden <b>Methode B</b> (ZIP-Archiv mit SVN-Snapshot und oidplus_version.txt-Datei).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You can adjust your privacy level here
+		]]></source>
+		<target><![CDATA[
+		Sie können Ihre Datenschutz-Stufe hier einstellen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You can contact the administrator of this OIDplus system at this email address
+		]]></source>
+		<target><![CDATA[
+		Sie können den Administrator dieses OIDplus-Systems unter dieser E-Mail-Adresse erreichen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You can make automated calls to your OIDplus account by calling the AJAX API.
+		]]></source>
+		<target><![CDATA[
+		Die AJAX API bietet die Möglichkeit, Aufgaben automatisiert über Ihr OIDplus-Konto durchzuführen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You can perform a system update by clicking the button below.
+		]]></source>
+		<target><![CDATA[
+		Sie können ein System-Update mit der untenstehenden Schaltfläche ausführen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You have chosen to invite %1 as a Registration Authority. If you click "Send", the following email will be sent to %2:
+		]]></source>
+		<target><![CDATA[
+		Sie haben sich entschieden, %1 als Registrierungsstelle einzuladen. Klicken Sie "Senden", um die folgende E-Mail an %2 zu versenden:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You may not invite this RA. Maybe you need to <a %1>log in</a> again.
+		]]></source>
+		<target><![CDATA[
+		Sie dürfen diese RA nicht einladen. Möglicherweise müssen Sie sich neu <a %1>anmelden</a>.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You must at least provide following fields
+		]]></source>
+		<target><![CDATA[
+		Sie müssen die folgenden Felder ausfüllen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You must set a value for SERVER_SECRET in %1 for the system to operate secure.
+		]]></source>
+		<target><![CDATA[
+		Sie müssen einen Wert für SERVER_SECRET in %1 setzen, da ansonsten das System nicht sicher ist.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You need to <a %1>log in</a> as administrator.
+		]]></source>
+		<target><![CDATA[
+		Sie müssen sich als Administrator <a %1>anmelden</a>.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You need to <a %1>log in</a> as the requested RA %2 or as admin.
+		]]></source>
+		<target><![CDATA[
+		Sie müssen sich als Administrator oder RA %2 <a %1>anmelden</a>.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You need to <a %1>log in</a> as the requested RA %2.
+		]]></source>
+		<target><![CDATA[
+		Sie müssen sich als RA %2 <a %1>anmelden</a>.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You need to enable JavaScript to edit title or description of this object.
+		]]></source>
+		<target><![CDATA[
+		Sie müssen JavaScript aktivieren, um den Titel oder die Beschreibung dieses Objekts zu ändern.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You need to enable JavaScript to solve the CAPTCHA.
+		]]></source>
+		<target><![CDATA[
+		Sie müssen JavaScript aktivieren, um das CAPTCHA zu lösen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You need to enable JavaScript to use the login area.
+		]]></source>
+		<target><![CDATA[
+		Sie müssen JavaScript aktivieren, um den Anmeldebereich zu verwenden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You need to log in as administrator.
+		]]></source>
+		<target><![CDATA[
+		Sie müssen sich als Administrator anmelden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Your email address: %1
+		]]></source>
+		<target><![CDATA[
+		Ihre E-Mail-Adresse: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Your personal name or the name of your group
+		]]></source>
+		<target><![CDATA[
+		Ihr persönlicher Name oder der Name einer Gruppierung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ZIP/Town
+		]]></source>
+		<target><![CDATA[
+		PLZ/Ort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ZiB
+		]]></source>
+		<target><![CDATA[
+		ZiB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		[at]
+		]]></source>
+		<target><![CDATA[
+		[at]
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		[dot]
+		]]></source>
+		<target><![CDATA[
+		[punkt]
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		affected objects: %1
+		]]></source>
+		<target><![CDATA[
+		Betroffene Objekte: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		affected users: %1
+		]]></source>
+		<target><![CDATA[
+		Betroffene Benutzer: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		at file %1 (line %2)
+		]]></source>
+		<target><![CDATA[
+		in Datei %1 (Zeile %2)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		check digit
+		]]></source>
+		<target><![CDATA[
+		Prüfsumme
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		eMail address does not exist anymore. It was probably already changed.
+		]]></source>
+		<target><![CDATA[
+		Die E-Mail-Adresse existiert nicht mehr. Sie wurde möglicherweise geändert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.
+		]]></source>
+		<target><![CDATA[
+		Die E-Mail-Adresse wird bereits von einer anderen Registrierungsstelle verwendet. Um die beiden Konten zu vereinen, kontaktieren Sie bitte die übergeordnete Registrierungsstelle und beantragen Sie einen Eigentümer-Wechsel Ihrer Objekte.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		eMail address is invalid.
+		]]></source>
+		<target><![CDATA[
+		E-Mail-Adresse ist ungültig.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		eMail address of RA changed
+		]]></source>
+		<target><![CDATA[
+		E-Mail-Adresse der Registrierungsstelle wurde geändert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		eMail-Address
+		]]></source>
+		<target><![CDATA[
+		E-Mail-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		findFitting: Parse failed
+		]]></source>
+		<target><![CDATA[
+		findFitting: Parsing fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		long arc
+		]]></source>
+		<target><![CDATA[
+		Long-Arc
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		n/a
+		]]></source>
+		<target><![CDATA[
+		n. a.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		no address
+		]]></source>
+		<target><![CDATA[
+		keine Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		none
+		]]></source>
+		<target><![CDATA[
+		keine
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		not available: %1
+		]]></source>
+		<target><![CDATA[
+		nicht verfügbar: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		or alternatively
+		]]></source>
+		<target><![CDATA[
+		oder alternativ
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		or run <a href="%1">setup</a> again
+		]]></source>
+		<target><![CDATA[
+		oder starten Sie <a href="%1">Setup</a> erneut
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		standardized
+		]]></source>
+		<target><![CDATA[
+		standardisiert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		unknown
+		]]></source>
+		<target><![CDATA[
+		unbekannt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		weLuhn check digit
+		]]></source>
+		<target><![CDATA[
+		weLuhn-Prüfsumme
+		]]></target>
 	</message>
 </translation>

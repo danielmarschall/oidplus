@@ -24,18 +24,18 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	}
 
 	public function action($actionID, $params) {
-		if (empty(self::getFreeRootOid(false))) throw new OIDplusException("FreeOID service not available. Please ask your administrator.");
+		if (empty(self::getFreeRootOid(false))) throw new OIDplusException(_L('FreeOID service not available. Please ask your administrator.'));
 
 		if ($actionID == 'request_freeoid') {
 			$email = $params['email'];
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 			if ($res->num_rows() > 0) {
-				throw new OIDplusException('This email address already exists.'); // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
+				throw new OIDplusException(_L('This email address already exists.')); // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
 			}
 
 			if (!OIDplus::mailUtils()->validMailAddress($email)) {
-				throw new OIDplusException('Invalid email address');
+				throw new OIDplusException(_L('Invalid email address'));
 			}
 
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
@@ -44,7 +44,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
 				if ($captcha_success->success==false) {
-					throw new OIDplusException('Captcha wrong');
+					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
 				}
 			}
 
@@ -77,23 +77,24 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$timestamp = $params['timestamp'];
 
 			if (!OIDplus::authUtils()::validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
-				throw new OIDplusException('Invalid auth key');
+				throw new OIDplusException(_L('Invalid auth key'));
 			}
 
 			if ((OIDplus::config()->getValue('max_ra_invite_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_invite_time'))) {
-				throw new OIDplusException('Invitation expired!');
+				throw new OIDplusException(_L('Invitation expired!'));
 			}
 
 			if ($password1 !== $password2) {
-				throw new OIDplusException('Passwords are not equal');
+				throw new OIDplusException(_L('Passwords do not match'));
 			}
 
 			if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
-				throw new OIDplusException('Password is too short. Minimum password length: '.OIDplus::config()->getValue('ra_min_password_length'));
+				$minlen = OIDplus::config()->getValue('ra_min_password_length');
+				throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
 			}
 
 			if (empty($ra_name)) {
-				throw new OIDplusException('Please enter your personal name or the name of your group.');
+				throw new OIDplusException(_L('Please enter your personal name or the name of your group.'));
 			}
 
 			// 1. step: Add the RA to the database
@@ -114,14 +115,15 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 			$description = ''; // '<p>'.htmlentities($ra_name).'</p>';
 			if (!empty($url)) {
-				$description .= '<p>More information at <a href="'.htmlentities($url).'">'.htmlentities($url).'</a></p>';
+				$description .= '<p>'._L('More information at %1','<a href="'.htmlentities($url).'">'.htmlentities($url).'</a>').'</p>';
 			}
 
 			if (empty($title)) $title = $ra_name;
 
 			try {
 				if ('oid:'.$new_oid > OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')) {
-					throw new OIDplusException("The resulting object identifier '$new_oid' is too long (max allowed length ".(OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:')).")");
+					$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:');
+					throw new OIDplusException(_L('The resulting OID %1 is too long (max allowed length: %2)',$new_oid,$maxlen));
 				}
 
 				OIDplus::db()->query("insert into ###objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, ".OIDplus::db()->sqlDate().")", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
@@ -156,14 +158,14 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException("Unknown action ID");
+			throw new OIDplusException(_L('Unknown action ID'));
 		}
 	}
 
 	public function init($html=true) {
 		OIDplus::config()->prepareConfigKey('freeoid_root_oid', 'Root-OID of free OID service (a service where visitors can create their own OID using email verification)', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != '') && !oid_valid_dotnotation($value,false,false,1)) {
-				throw new OIDplusException("Please enter a valid OID in dot notation or nothing");
+				throw new OIDplusException(_L('Please enter a valid OID in dot notation or nothing'));
 			}
 		});
 	}
@@ -174,27 +176,31 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 		if (explode('$',$id)[0] == 'oidplus:com.viathinksoft.freeoid') {
 			$handled = true;
 
-			$out['title'] = 'Register a free OID';
+			$out['title'] = _L('Register a free OID');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$highest_id = $this->freeoid_max_id();
 
-			$out['text'] .= '<p>Currently <a '.OIDplus::gui()->link(self::getFreeRootOid(true)).'>'.$highest_id.' free OIDs have been</a> registered. Please enter your email below to receive a free OID.</p>';
+			$out['text'] .= '<p>'._L('Currently <a %1>%2 free OIDs have been</a> registered. Please enter your email below to receive a free OID.',OIDplus::gui()->link(self::getFreeRootOid(true)),$highest_id).'</p>';
 
 			try {
 				$out['text'] .= '
 				  <form id="freeOIDForm" onsubmit="return freeOIDFormOnSubmit();">
-				    E-Mail: <input type="text" id="email" value=""/><br><br>'.
+				    '._L('E-Mail').': <input type="text" id="email" value=""/><br><br>'.
 				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
 				 '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
 				 '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '').
 				' <br>
-				    <input type="submit" value="Request free OID">
+				    <input type="submit" value="'._L('Request free OID').'">
 				  </form>';
 
 				$obj = OIDplusOID::parse(self::getFreeRootOid(true));
 
-				$tos = file_get_contents(__DIR__ . '/tos.html');
+				if (file_exists(__DIR__ . '/tos$'.OIDplus::getCurrentLang().'.html')) {
+					$tos = file_get_contents(__DIR__ . '/tos$'.OIDplus::getCurrentLang().'.html');
+				} else {
+					$tos = file_get_contents(__DIR__ . '/tos.html');
+				}
 				$tos = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $tos);
 				if ($obj) {
 					$tos = str_replace('{{ROOT_OID}}', $obj->getDotNotation(), $tos);
@@ -203,7 +209,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				}
 				$out['text'] .= $tos;
 			} catch (Exception $e) {
-				$out['text'] = "Error: ".$e->getMessage();
+				$out['text'] = _L('Error: %1',$e->getMessage());
 			}
 		} else if (explode('$',$id)[0] == 'oidplus:com.viathinksoft.freeoid.activate_freeoid') {
 			$handled = true;
@@ -212,32 +218,32 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$timestamp = explode('$',$id)[2];
 			$auth = explode('$',$id)[3];
 
-			$out['title'] = 'Activate Free OID';
+			$out['title'] = _L('Activate Free OID');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 			if ($res->num_rows() > 0) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = 'This RA is already registered.'; // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
+				$out['text'] = _L('This RA is already registered.'); // TODO: actually, the person might have something else (like a DOI) and want to have a FreeOID
 			} else {
 				if (!OIDplus::authUtils()::validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
 					$out['icon'] = 'img/error_big.png';
-					$out['text'] = 'Invalid authorization. Is the URL OK?';
+					$out['text'] = _L('Invalid authorization. Is the URL OK?');
 				} else {
-					$out['text'] = '<p>eMail-Address: <b>'.$email.'</b></p>
+					$out['text'] = '<p>'._L('eMail-Address').': <b>'.$email.'</b></p>
 
 				  <form id="activateFreeOIDForm" onsubmit="return activateFreeOIDFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 				    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
 
-				    Your personal name or the name of your group:<br><input type="text" id="ra_name" value=""/><br><br><!-- TODO: disable autocomplete -->
-				    Title of your OID (usually equal to your name, optional):<br><input type="text" id="title" value=""/><br><br>
-				    URL for more information about your project(s) (optional):<br><input type="text" id="url" value=""/><br><br>
+				    '._L('Your personal name or the name of your group').':<br><input type="text" id="ra_name" value=""/><br><br><!-- TODO: disable autocomplete -->
+				    '._L('Title of your OID (usually equal to your name, optional)').':<br><input type="text" id="title" value=""/><br><br>
+				    '._L('URL for more information about your project(s) (optional)').':<br><input type="text" id="url" value=""/><br><br>
 
-				    <div><label class="padding_label">Password:</label><input type="password" id="password1" value=""/></div>
-				    <div><label class="padding_label">Repeat:</label><input type="password" id="password2" value=""/></div>
-				    <br><input type="submit" value="Register">
+				    <div><label class="padding_label">'._L('Password').':</label><input type="password" id="password1" value=""/></div>
+				    <div><label class="padding_label">'._L('Repeat').':</label><input type="password" id="password2" value=""/></div>
+				    <br><input type="submit" value="'._L('Register').'">
 				  </form>';
 				}
 			}
@@ -246,7 +252,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 	public function publicSitemap(&$out) {
 		if (empty(self::getFreeRootOid(false))) return;
-		$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('oidplus:com.viathinksoft.freeoid');
+		$out[] = 'oidplus:com.viathinksoft.freeoid';
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
@@ -261,7 +267,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 		$json[] = array(
 			'id' => 'oidplus:com.viathinksoft.freeoid',
 			'icon' => $tree_icon,
-			'text' => 'Register a free OID'
+			'text' => _L('Register a free OID')
 		);
 
 		return true;

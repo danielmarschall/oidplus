@@ -22,7 +22,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 	public function init($html=true) {
 		OIDplus::config()->prepareConfigKey('search_min_term_length', 'Minimum length of a search term', '3', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
-				throw new OIDplusException("Please enter a valid value.");
+				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
 	}
@@ -31,7 +31,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		if (explode('$',$id)[0] == 'oidplus:search') {
 			$handled = true;
 
-			$out['title'] = 'Search';
+			$out['title'] = _L('Search');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$out['text'] = '';
@@ -50,7 +50,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				// TODO: make it via AJAX? Reloading the whole page is not good. But attention: Also allow NoScript
 				$out['text'] .= '<form id="searchForm" action="?goto=oidplus:search" method="POST">
 				                 <input type="hidden" name="search" value="1">
-				                 Search for: <input type="text" id="term" name="term" value="'.htmlentities($search_term).'"><br><br>
+				                 '._L('Search for').': <input type="text" id="term" name="term" value="'.htmlentities($search_term).'"><br><br>
 				                 <script>
 				                 function searchNsSelect(ns) {
 				                     document.getElementById("search_options_oid").style.display = (ns == "oid") ? "block" : "none";
@@ -61,27 +61,27 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				                     searchNsSelect(document.getElementById("namespace").value);
 				                 });
 				                 </script>
-				                 Search in: <select name="namespace" id="namespace" onchange="searchNsSelect(this.value);"><br><br>';
+				                 '._L('Search in').': <select name="namespace" id="namespace" onchange="searchNsSelect(this.value);"><br><br>';
 
 				foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 					$out['text'] .= '<option value="'.htmlentities($ot::ns()).'"'.(($ns == $ot::ns()) ? ' selected' : '').'>'.htmlentities($ot::objectTypeTitle()).'</option>';
 				}
-				$out['text'] .= '<option value="oidplus:ra"'.(($ns == 'oidplus:ra') ? ' selected' : '').'>Registration Authority</option>
+				$out['text'] .= '<option value="oidplus:ra"'.(($ns == 'oidplus:ra') ? ' selected' : '').'>'._L('Registration Authority').'</option>
 				                 </select><br><br>
 				<div id="search_options_ra">
 				<!-- TODO: RA specific selection criterias -->
 				</div>
 				<div id="search_options_object">
-				            <input type="checkbox" name="search_title" id="search_title" value="1"'.(isset($_POST["search_title"]) ? ' checked' : '').'> <label for="search_title">Search in field "Title"</label><br>
-				            <input type="checkbox" name="search_description" id="search_description" value="1"'.(isset($_POST["search_description"]) ? ' checked' : '').'> <label for="search_description">Search in field "Description"</label><br>
+				            <input type="checkbox" name="search_title" id="search_title" value="1"'.(isset($_POST["search_title"]) ? ' checked' : '').'> <label for="search_title">'._L('Search in field "Title"').'</label><br>
+				            <input type="checkbox" name="search_description" id="search_description" value="1"'.(isset($_POST["search_description"]) ? ' checked' : '').'> <label for="search_description">'._L('Search in field "Description"').'</label><br>
 				<div id="search_options_oid">
-			            <input type="checkbox" name="search_asn1id" id="search_asn1id" value="1"'.(isset($_POST["search_asn1id"]) ? ' checked' : '').'> <label for="search_asn1id">Search in field "ASN.1 identifier" (only OIDs)</label><br>
-			            <input type="checkbox" name="search_iri" id="search_iri" value="1"'.(isset($_POST["search_iri"]) ? ' checked' : '').'> <label for="search_iri">Search in field "Unicode label" (only OIDs)</label><br>
+			            <input type="checkbox" name="search_asn1id" id="search_asn1id" value="1"'.(isset($_POST["search_asn1id"]) ? ' checked' : '').'> <label for="search_asn1id">'._L('Search in field "ASN.1 identifier" (only OIDs)').'</label><br>
+			            <input type="checkbox" name="search_iri" id="search_iri" value="1"'.(isset($_POST["search_iri"]) ? ' checked' : '').'> <label for="search_iri">'._L('Search in field "Unicode label" (only OIDs)').'</label><br>
 				</div>
 				</div>
 				 <br>
 
-				<input type="submit" value="Search">
+				<input type="submit" value="'._L('Search').'">
 				</form>';
 
 				if (isset($_POST['search'])) {
@@ -92,12 +92,12 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 					$search_term = trim($search_term);
 
 					if (strlen($search_term) == 0) {
-						$out['text'] .= '<p><font color="red">Error: You must enter a search term.</font></p>';
+						$out['text'] .= '<p><font color="red">'._L('Error: You must enter a search term.').'</font></p>';
 					} else if (strlen($search_term) < $min_length) {
-						$out['text'] .= '<p><font color="red">Error: Search term minimum length is '.$min_length.' characters.</font></p>';
+						$out['text'] .= '<p><font color="red">'._L('Error: Search term minimum length is %1 characters.',$min_length).'</font></p>';
 					} else {
 						if ($ns == 'oidplus:ra') {
-							$out['text'] .= '<h2>Search results for RA "'.htmlentities($search_term).'"</h2>';
+							$out['text'] .= '<h2>'._L('Search results for RA %1',htmlentities($search_term)).'</h2>';
 
 							$sql_where = array(); $prep_where = array();
 							$sql_where[] = "email like ?";   $prep_where[] = '%'.$search_term.'%';
@@ -113,10 +113,10 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 								$count++;
 							}
 							if ($count == 0) {
-								$out['text'] .= '<p>Nothing found</p>';
+								$out['text'] .= '<p>'._L('Nothing found').'</p>';
 							}
 						} else {
-							$out['text'] .= '<h2>Search results for "'.htmlentities($search_term).'" ('.htmlentities($ns).')</h2>';
+							$out['text'] .= '<h2>'._L('Search results for %1 (%2)',htmlentities($search_term),htmlentities($ns)).'</h2>';
 
 							$sql_where = array(); $prep_where = array();
 							$sql_where[] = "id like ?"; $prep_where[] = '%'.$search_term.'%'; // TODO: should we rather do findFitting(), so we can e.g. find GUIDs with different notation?
@@ -148,19 +148,19 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 								$count++;
 							}
 							if ($count == 0) {
-								$out['text'] .= '<p>Nothing found</p>';
+								$out['text'] .= '<p>'._L('Nothing found').'</p>';
 							}
 						}
 					}
 				}
 			} catch (Exception $e) {
-				$out['text'] = "Error: ".$e->getMessage();
+				$out['text'] = _L('Error: %1',$e->getMessage());
 			}
 		}
 	}
 
 	public function publicSitemap(&$out) {
-		$out[] = OIDplus::getSystemUrl().'?goto='.urlencode('oidplus:search');
+		$out[] = 'oidplus:search';
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
@@ -173,7 +173,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		$json[] = array(
 			'id' => 'oidplus:search',
 			'icon' => $tree_icon,
-			'text' => 'Search'
+			'text' => _L('Search')
 		);
 
 		return true;
