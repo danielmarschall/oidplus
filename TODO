@@ -61,7 +61,6 @@ DATA TRANSFER PLUGIN
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
 
 SMALL THINGS
-- Adding things like CONTRIBUTING and README file (for GitHub)
 - Copyright notice:
 	* Currently, we have "2019", "2020" and "2019-2020". Change them all to "2019 - 2020"
 	* Copyright <BY> Daniel Marschall ("by" is missing)
