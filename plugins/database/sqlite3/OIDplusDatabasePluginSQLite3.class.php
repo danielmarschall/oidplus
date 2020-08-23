@@ -28,6 +28,13 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 	}
 
 	public static function setupHTML(): string {
-		return file_get_contents(__DIR__ . '/setup.part.html');
+		return '<div id="DBPLUGIN_PARAMS_SQLite3">'.
+		       '	<p>'._L('SQLite3 database file').':<br><input id="sqlite3_file" type="text" value="includes/oidplus.db" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="sqlite3_file_warn"></span></p>'.
+		       '	<p>'._L('SQLite3 encryption passphrase (optional)').':<br><input id="sqlite3_encryption" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"></p>'.
+		       '</div>';
+	}
+
+	public static function setupJS(): string {
+		return file_get_contents(__DIR__ . '/setup.js');
 	}
 }

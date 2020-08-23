@@ -30,7 +30,7 @@ class OIDplus {
 
 	protected static $html = true;
 
-	/*public*/ const DEFAULT_LANGUAGE = 'enus';
+	/*public*/ const DEFAULT_LANGUAGE = 'enus'; // the language of the source code
 
 	private function __construct() {
 	}
@@ -958,6 +958,45 @@ class OIDplus {
 		}
 		$lang = substr(preg_replace('@[^a-z]@ismU', '', $lang),0,4); // sanitize
 		return $lang;
+	}
+
+	public static function handleLangArgument() {
+		if (isset($_GET['lang'])) {
+			// The "?lang=" argument is only for NoScript-Browsers/SearchEngines
+			// In case someone who has JavaScript clicks a ?lang= link, they should get
+			// the page in that language, but the cookie must be set, otherwise
+			// the menu and other stuff would be in their cookie-based-language and not the
+			// argument-based-language.
+			$cookie_path = OIDplus::getSystemUrl(true);
+			if (empty($cookie_path)) $cookie_path = '/';
+			setcookie('LANGUAGE', $_GET['lang'], 0, $cookie_path, '', false, false/*HttpOnly off, because JavaScript also needs translation*/);
+		} else if (isset($_POST['lang'])) {
+			$cookie_path = OIDplus::getSystemUrl(true);
+			if (empty($cookie_path)) $cookie_path = '/';
+			setcookie('LANGUAGE', $_POST['lang'], 0, $cookie_path, '', false, false/*HttpOnly off, because JavaScript also needs translation*/);
+		}
+	}
+
+	public static function getTranslationArray() {
+		$translation_array = array();
+		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
+			$xmldata = $pluginManifest->getRawXml();
+			$lang = $xmldata->language->code->__toString();
+			$translation_array[$lang] = array();
+			if (strpos($lang,'/') !== false) continue; // just to be sure
+			if (strpos($lang,'\\') !== false) continue; // just to be sure
+			if (strpos($lang,'..') !== false) continue; // just to be sure
+			$translation_file = __DIR__.'/../../plugins/language/'.$lang.'/messages.xml';
+			if (!file_exists($translation_file)) continue;
+			$xml = @simplexml_load_string(file_get_contents($translation_file));
+			if (!$xml) continue; // if there is an UTF-8 or parsing error, don't output any errors, otherwise the JavaScript is corrupt and the page won't render correctly
+			foreach ($xml->message as $msg) {
+				$src = trim($msg->source->__toString());
+				$dst = trim($msg->target->__toString());
+				$translation_array[$lang][$src] = $dst;
+			}
+		}
+		return $translation_array;
 	}
 
 }

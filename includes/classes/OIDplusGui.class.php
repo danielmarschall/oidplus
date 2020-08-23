@@ -59,4 +59,27 @@ class OIDplusGui {
 			}
 		}
 	}
+
+	public static function getLanguageBox($goto, $useJs) {
+		echo '<div id="languageBox">';
+		$langbox_entries = array();
+		$non_default_languages = 0;
+		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
+			$xmldata = $pluginManifest->getRawXml();
+			$flag = $xmldata->language->flag->__toString();
+			$code = $xmldata->language->code->__toString();
+			if ($code != OIDplus::DEFAULT_LANGUAGE) $non_default_languages++;
+			if ($code == OIDplus::getCurrentLang()) {
+				$class = 'lng_flag';
+			} else {
+				$class = 'lng_flag picture_ghost';
+			}
+			$add = (!is_null($goto)) ? '&amp;goto='.urlencode($goto) : '';
+			$langbox_entries[] = '<a '.($useJs ? 'onclick="setLanguage(\''.$code.'\'); return false" )' : '').'href="?lang='.$code.$add.'"><img src="'.OIDplus::getSystemUrl(true).'/plugins/language/'.$code.'/'.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20"></a> ';
+		}
+		if ($non_default_languages > 0) {
+			echo implode("\n\t\t",$langbox_entries);
+		}
+		echo '</div>';
+	}
 }

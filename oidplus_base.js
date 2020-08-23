@@ -22,7 +22,7 @@
 var current_node = "";
 var popstate_running = false;
 var externalWaiting = 0;
-var DEFAULT_LANGUAGE = "enus";
+// DEFAULT_LANGUAGE will be set by oidplus.min.js.php
 // language_messages will be set by oidplus.min.js.php
 // language_tblprefix will be set by oidplus.min.js.php
 

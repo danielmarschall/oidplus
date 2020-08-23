@@ -15,6 +15,10 @@
  * limitations under the License.
  */
 
+// DEFAULT_LANGUAGE will be set by setup.js.php
+// language_messages will be set by setup.js.php
+// language_tblprefix will be set by setup.js.php
+
 min_password_length = 10; // see also plugins/publicPages/092_forgot_password_admin/script.js
 
 function btoa(bin) {
@@ -22,7 +26,7 @@ function btoa(bin) {
 	var table = tableStr.split("");
 	for (var i = 0, j = 0, len = bin.length / 3, base64 = []; i < len; ++i) {
 		var a = bin.charCodeAt(j++), b = bin.charCodeAt(j++), c = bin.charCodeAt(j++);
-		if ((a | b | c) > 255) throw new Error("String contains an invalid character");
+		if ((a | b | c) > 255) throw new Error(_L('String contains an invalid character'));
 		base64[base64.length] = table[a >> 2] + table[((a << 4) & 63) | (b >> 4)] +
 		                       (isNaN(b) ? "=" : table[((b << 2) & 63) | (c >> 6)]) +
 		                       (isNaN(b + c) ? "=" : table[c & 63]);
@@ -67,8 +71,8 @@ function rebuild() {
 	// Check 1: Has the password the correct length?
 	if (document.getElementById('admin_password').value.length < min_password_length)
 	{
-		document.getElementById('password_warn').innerHTML = '<font color="red">Password must be at least '+min_password_length+' characters long</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Password must be at least '+min_password_length+' characters long</i>';
+		document.getElementById('password_warn').innerHTML = '<font color="red">'+_L('Password must be at least %1 characters long',min_password_length)+'</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Password must be at least '+min_password_length+' characters long</i>'; // do not translate
 		error = true;
 	} else {
 		document.getElementById('password_warn').innerHTML = '';
@@ -76,7 +80,7 @@ function rebuild() {
 
 	// Check 2: Do the passwords match?
 	if (document.getElementById('admin_password').value != document.getElementById('admin_password2').value) {
-		document.getElementById('password_warn2').innerHTML = '<font color="red">The passwords do not match!</font>';
+		document.getElementById('password_warn2').innerHTML = '<font color="red">'+_L('The passwords do not match!')+'</font>';
 		error = true;
 	} else {
 		document.getElementById('password_warn2').innerHTML = '';
@@ -97,8 +101,8 @@ function rebuild() {
 		var strPlugin = e.options[e.selectedIndex].value;
 
 		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br>' +
-			'<i>// To renew this file, please run setup/ in your browser.</i><br>' +
-			'<i>// If you don\'t want to run setup again, you can also change most of the settings directly in this file.</i><br>' +
+			'<i>// To renew this file, please run setup/ in your browser.</i><br>' + // do not translate
+			'<i>// If you don\'t want to run setup again, you can also change most of the settings directly in this file.</i><br>' + // do not translate
 			'<br>' +
 			'OIDplus::baseConfig()->setValue(\'CONFIG_VERSION\',    2.1);<br>' +
 			'<br>' +
@@ -140,3 +144,106 @@ function rebuild() {
 		document.getElementById('step4').style.display = "Block";
 	}
 }
+
+function RemoveLastDirectoryPartOf(the_url) {
+	var the_arr = the_url.split('/');
+	if (the_arr.pop() == '') the_arr.pop();
+	return( the_arr.join('/') );
+}
+
+function checkAccess(dir) {
+	var url = '../' + dir;
+	var visibleUrl = RemoveLastDirectoryPartOf(window.location.href) + '/' + dir; // xhr.responseURL not available in IE
+
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === 4) {
+			if (xhr.status === 200) {
+				document.getElementById('systemCheckCaption').style.display = 'block';
+				document.getElementById('dirAccessWarning').innerHTML = document.getElementById('dirAccessWarning').innerHTML + 'Attention: The following directory is world-readable: <a target="_blank" href="'+url+'">'+visibleUrl+'</a> ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>)<br>';
+			}
+		}
+	};
+
+	xhr.open('GET', url);
+	xhr.send();
+}
+
+function dbplugin_changed() {
+	var e = document.getElementById("db_plugin");
+	var strPlugin = e.options[e.selectedIndex].value;
+
+	for (var i = 0; i < plugin_combobox_change_callbacks.length; i++) {
+		var f = plugin_combobox_change_callbacks[i];
+		f(strPlugin);
+	}
+
+	rebuild();
+}
+
+function performAccessCheck() {
+	document.getElementById("dirAccessWarning").innerHTML = "";
+	checkAccess("userdata/index.html");
+	checkAccess("dev/index.html");
+	checkAccess("includes/index.html");
+	//checkAccess("plugins/publicPages/100_whois/whois/cli/index.html");
+}
+
+function setupOnLoad() {
+	rebuild();
+	dbplugin_changed();
+	performAccessCheck();
+}
+
+function getCookie(cname) {
+	// Source: https://www.w3schools.com/js/js_cookies.asp
+	var name = cname + "=";
+	var decodedCookie = decodeURIComponent(document.cookie);
+	var ca = decodedCookie.split(';');
+	for(var i = 0; i <ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return undefined;
+}
+
+function getCurrentLang() {
+	// Note: If the argument "?lang=" is used, PHP will automatically set a Cookie, so it is OK when we only check for the cookie
+	var lang = getCookie('LANGUAGE');
+	return (typeof lang != "undefined") ? lang : DEFAULT_LANGUAGE;
+}
+
+function _L() {
+	var args = Array.prototype.slice.call(arguments);
+	var str = args.shift();
+
+	var tmp = "";
+	if (typeof language_messages[getCurrentLang()] == "undefined") {
+		tmp = str;
+	} else {
+		var msg = language_messages[getCurrentLang()][str];
+		if (typeof msg != "undefined") {
+			tmp = msg;
+		} else {
+			tmp = str;
+		}
+	}
+
+	tmp = tmp.replace('###', language_tblprefix);
+
+	var n = 1;
+	while (args.length > 0) {
+		var val = args.shift();
+		tmp = tmp.replace("%"+n, val);
+		n++;
+	}
+
+	return tmp;
+}
+
+window.onload = setupOnLoad;

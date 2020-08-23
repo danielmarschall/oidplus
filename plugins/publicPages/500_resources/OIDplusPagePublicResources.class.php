@@ -51,7 +51,6 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 		// make sure the program works even if the user provided HTML is not UTF-8
 		$cont = iconv(mb_detect_encoding($cont, mb_detect_order(), true), 'UTF-8//IGNORE', $cont);
-
 		$bom = pack('H*','EFBBBF');
 		$cont = preg_replace("/^$bom/", '', $cont);
 
@@ -72,7 +71,6 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 		// make sure the program works even if the user provided HTML is not UTF-8
 		$cont = iconv(mb_detect_encoding($cont, mb_detect_order(), true), 'UTF-8//IGNORE', $cont);
-
 		$bom = pack('H*','EFBBBF');
 		$cont = preg_replace("/^$bom/", '', $cont);
 

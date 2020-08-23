@@ -28,6 +28,15 @@ class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 	}
 
 	public static function setupHTML(): string {
-		return file_get_contents(__DIR__ . '/setup.part.html');
+		return '<div id="DBPLUGIN_PARAMS_PgSQL">'.
+		       '	<p>'._L('PgSQL hostname and port').':<br><input id="pgsql_host" type="text" value="localhost:5432" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="pgsql_host_warn"></span></p>'.
+		       '	<p>'._L('PgSQL username').':<br><input id="pgsql_username" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="pgsql_username_warn"></span></p>'.
+		       '	<p>'._L('PgSQL password').':<br><input id="pgsql_password" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"></p>'.
+		       '	<p>'._L('PgSQL database name').':<br><input id="pgsql_database" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="pgsql_database_warn"></span></p>'.
+		       '</div>';
+	}
+
+	public static function setupJS(): string {
+		return file_get_contents(__DIR__ . '/setup.js');
 	}
 }

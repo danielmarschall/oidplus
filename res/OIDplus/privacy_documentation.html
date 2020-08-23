@@ -385,21 +385,22 @@
 		<li>If the OIDplus system is registered to ViaThinkSoft and the OID-info.com transfer is enabled (see below), ViaThinkSoft will automatically fetch the XML data from the OIDplus system using an encrypted interface and submits the data to the oid-info.com administrator.</li>
 	</ol>
 	<a name="systemid"></a><h2><strong><u>Unique system ID</u></strong></h2>
-	<p>During the initial setup, a public/private-key-pair will be created which can be used for various purposes, e.g. to encrypt data between OIDplus and ViaThinkSoft if the &ldquo;system registration&rdquo; service is used (see below) or to sign OID-over-WHOIS responses.</p>
+	<p>During the initial setup, a public/private-key-pair will be created which can be used for various purposes, e.g. to encrypt data between OIDplus and ViaThinkSoft if the &ldquo;system registration&rdquo; service is used (see below) or to sign OID-WHOIS responses.</p>
 	<p>From this public key, a unique system ID will be derivated. The unique system ID and the public key can be seen in the setup screen.</p>
 	<a name="system_registration"></a><h2><strong><u>System registration and automatic publishing to oid-info.com</u></strong></h2>
 	<p>During initial setup, the system administrator can choose between the following options:</p>
 	<p>0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Register to directory service and automatically publish RA/OID data at oid-info.com<br /> 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Only register to directory service<br /> 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hide system</p>
 	<p>This setting can always be changed in the administrator login/control panel.</p>
 	<h3><em><u>Registering the system to the directory service (option 0 and 1)</u></em></h3>
-	<p>The registration of your OIDplus system has various advantages:</p>
+	<p>The registration of the OIDplus system has various advantages:</p><!-- please keep in sync with plugins/adminPages/120_registration/info.html document -->
 	<ul>
-		<li>The public key of your system will be published so that users can check the integrity of your data (e.g. signed OID-over-WHOIS requests).</li>
-		<li>Since the 31-bit System ID can have hash conflicts, ViaThinkSoft will make sure that the System ID is only used by your system (it will force other OIDplus systems with the same system ID to change their IDs).</li>
-		<li>ViaThinkSoft can acknowledge the system name, administrator email, and OID root arcs. Therefore, your system can be found using referral WHOIS.</li>
-		<li>You can optionally enable the automatic publishing of your public OID information to the repository oid-info.com.</li>
-		<li>Your OIDplus version will be reported to ViaThinkSoft. If a severe bug or security vulnerability is affecting your system, ViaThinkSoft can warn you via email.</li>
-		<li>The directory service will automatically create an X.509 security certificate for you (NOT an SSL certificate!) which can be used for various verifications.</li>
+		<li>The public key of the OIDplus instance will be published to the ViaThinkSoft web directory, so that users can check the integrity of the data (e.g. signed OID-WHOIS requests).</li>
+		<li>Since the 31-bit System ID can have hash conflicts, ViaThinkSoft will make sure that the System ID is only used by this OIDplus instance (it will force other OIDplus systems with the same system ID to change their IDs).</li>
+		<li>ViaThinkSoft can acknowledge the system name, administrator email address, and OID root arcs. Therefore, the OIDplus instance can be found using referral WHOIS.</li>
+		<li>The administrator can optionally enable the automatic publishing of the public OID information to the repository oid-info.com.</li>
+		<li>If the root OID(s) are approved by ViaThinkSoft (it will be manually verified that the root OIDs belong to the system owner), a feature will be unlocked which can be used to compare and import OIDs from oid-info.com into this OIDplus instance.</li>
+		<li>The OIDplus version will be reported to ViaThinkSoft. If a severe bug or security vulnerability is affecting this OIDplus instance, ViaThinkSoft can warn the administrator via email.</li>
+		<li>The directory service will automatically create an X.509 security certificate for this OIDplus instance (NOT an SSL certificate!) which can be used for various verifications.</li>
 	</ul>
 	<p>If privacy level option 0 or 1 was chosen, the OIDplus system will regularly contact the ViaThinkSoft server through a secure connection and send the following information:</p>
 	<ul>
@@ -410,7 +411,7 @@
 		<li>Administrator email address</li>
 		<li>System title</li>
 		<li>List of OID roots that this system is sending</li>
-		<li>The version of your system (SVN revision)</li>
+		<li>The version of the system (SVN revision)</li>
 		<li>Installation type (ZIPed SVN snapshot or SVN working copy)</li>
 	</ul>
 	<p>ViaThinkSoft will store this data internally and publish parts into the public directory service located at <a href="https://oidplus.viathinksoft.com/oidplus/?goto=oid%3A1.3.6.1.4.1.37476.30.9">https://oidplus.viathinksoft.com/oidplus/?goto=oid%3A1.3.6.1.4.1.37476.30.9</a> :</p>

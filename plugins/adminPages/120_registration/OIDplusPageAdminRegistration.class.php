@@ -36,7 +36,18 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$out['text'] = file_get_contents(__DIR__ . '/info.tpl');
+			if (file_exists(__DIR__ . '/info$'.OIDplus::getCurrentLang().'.html')) {
+				$info = file_get_contents(__DIR__ . '/info$'.OIDplus::getCurrentLang().'.html');
+			} else {
+				$info = file_get_contents(__DIR__ . '/info.html');
+			}
+
+			// make sure the program works even if the user provided HTML is not UTF-8
+			$info = iconv(mb_detect_encoding($info, mb_detect_order(), true), 'UTF-8//IGNORE', $info);
+			$bom = pack('H*','EFBBBF');
+			$info = preg_replace("/^$bom/", '', $info);
+
+			$out['text'] = $info;
 
 			if (!OIDplus::getPkiStatus()) {
 				$out['text'] .= '<p><font color="red">'._L('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.').'</font></p>';
@@ -278,6 +289,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		OIDplus::config()->prepareConfigKey('reg_last_ping', 'Last ping to ViaThinkSoft directory services', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
 
 		});
+		OIDplus::config()->prepareConfigKey('oobe_registration_done', '"Out Of Box Experience" wizard for OIDplusPageAdminRegistration done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 
 		// Is it time to register / renew the directory entry?
 		// Note: REGISTRATION_HIDE_SYSTEM is an undocumented constant that can be put in the userdata/baseconfig/config.inc.php files of a test system accessing the same database as the productive system that is registered.
@@ -317,22 +329,42 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	public function implementsFeature($id) {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested 
 		return false;
+	}
+
+	public function oobeRequested(): bool {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
+		
+		return OIDplus::config()->getValue('oobe_registration_done') == '0';
 	}
 
 	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
 
 		echo '<p><u>'._L('Step %1: System registration and automatic publishing (optional)',$step).'</u></p>';
+		
+		if (file_exists(__DIR__ . '/info$'.OIDplus::getCurrentLang().'.html')) {
+			$info = file_get_contents(__DIR__ . '/info$'.OIDplus::getCurrentLang().'.html');
+		} else {
+			$info = file_get_contents(__DIR__ . '/info.html');
+		}
 
-		echo file_get_contents(__DIR__ . '/info.tpl');
+		// make sure the program works even if the user provided HTML is not UTF-8
+		$info = iconv(mb_detect_encoding($info, mb_detect_order(), true), 'UTF-8//IGNORE', $info);
+		$bom = pack('H*','EFBBBF');
+		$info = preg_replace("/^$bom/", '', $info);
+
+		echo $info;
 
 		if (!function_exists('curl_exec')) {
 			echo '<p><font color="red">';
-			echo _L('Note: The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.');
+			echo _L('Note: The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.').' ';
 			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
 			echo '</font></p>';
+			if ($do_edits) {
+				OIDplus::config()->setValue('oobe_registration_done', '1');
+			}
 			return;
 		}
 
@@ -347,9 +379,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		curl_close($ch);
 		if (!$httpCode) {
 			echo '<p><font color="red">';
-			echo _L('Note: The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.');
+			echo _L('Note: The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.').' ';
 			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
 			echo '</font></p>';
+			if ($do_edits) {
+				OIDplus::config()->setValue('oobe_registration_done', '1');
+			}
 			return;
 		}
 
@@ -357,9 +392,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 		if (!$pki_status) {
 			echo '<p><font color="red">';
-			echo _L('Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system).');
+			echo _L('Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system).').' ';
 			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
 			echo '</font></p>';
+			if ($do_edits) {
+				OIDplus::config()->setValue('oobe_registration_done', '1');
+			}
 			return;
 		}
 
@@ -371,7 +409,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		if (isset($_REQUEST['sent'])) {
 			if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 0)) echo ' selected';
 		} else {
-			if ((OIDplus::config()->getValue('reg_privacy') == 0) || !OIDplus::config()->getValue('reg_wizard_done')) {
+			if ((OIDplus::config()->getValue('reg_privacy') == 0) || !OIDplus::config()->getValue('oobe_registration_done')) {
 				echo ' selected';
 			} else {
 				echo '';
@@ -415,6 +453,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		if ($do_edits) {
 			try {
 				OIDplus::config()->setValue('reg_privacy', $_REQUEST['reg_privacy']);
+				OIDplus::config()->setValue('oobe_registration_done', '1');
 			} catch (Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;

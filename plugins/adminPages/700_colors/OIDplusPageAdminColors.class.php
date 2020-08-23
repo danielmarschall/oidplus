@@ -59,6 +59,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
 			}
 		});
+		OIDplus::config()->prepareConfigKey('oobe_colors_done', '"Out Of Box Experience" wizard for OIDplusPageAdminColors done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 	}
 
 	public function gui($id, &$out, &$handled) {
@@ -136,8 +137,14 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 	}
 
 	public function implementsFeature($id) {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested
 		return false;
+	}
+
+	public function oobeRequested(): bool {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
+
+		return OIDplus::config()->getValue('oobe_colors_done') == '0';
 	}
 
 	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
@@ -161,6 +168,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 		if ($do_edits) {
 			try {
 				OIDplus::config()->setValue('color_invert', $set_value ? 1 : 0);
+				OIDplus::config()->setValue('oobe_colors_done', '1');
 			} catch (Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;

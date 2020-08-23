@@ -28,6 +28,15 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	}
 
 	public static function setupHTML(): string {
-		return file_get_contents(__DIR__ . '/setup.part.html');
+		return '<div id="DBPLUGIN_PARAMS_MySQL">'.
+		       '	<p>'._L('MySQL hostname and port').':<br><input id="mysql_host" type="text" value="localhost:3306" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="mysql_host_warn"></span></p>'.
+		       '	<p>'._L('MySQL username').':<br><input id="mysql_username" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="mysql_username_warn"></span></p>'.
+		       '	<p>'._L('MySQL password').':<br><input id="mysql_password" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"></p>'.
+		       '	<p>'._L('MySQL database name').':<br><input id="mysql_database" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="mysql_database_warn"></span></p>'.
+		       '</div>';
+	}
+
+	public static function setupJS(): string {
+		return file_get_contents(__DIR__ . '/setup.js');
 	}
 }

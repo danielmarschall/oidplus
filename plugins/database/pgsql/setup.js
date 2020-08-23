@@ -1,13 +1,24 @@
-<div id="DBPLUGIN_PARAMS_PgSQL">
-	<p>PgSQL hostname and port:<br><input id="pgsql_host" type="text" value="localhost:5432" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="pgsql_host_warn"></span></p>
-	<p>PgSQL username:<br><input id="pgsql_username" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="pgsql_username_warn"></span></p>
-	<p>PgSQL password:<br><input id="pgsql_password" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"></p>
-	<p>PgSQL database name:<br><input id="pgsql_database" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="pgsql_database_warn"></span></p>
-</div>
-<script>
+/*
+ * OIDplus 2.0
+ * Copyright 2019 Daniel Marschall, ViaThinkSoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 plugin_combobox_change_callbacks.push(function(strPlugin) {
 	document.getElementById('DBPLUGIN_PARAMS_PgSQL').style.display = (strPlugin == 'PgSQL') ? "Block" : "None";
 });
+
 rebuild_callbacks.push(function() {
 	var e = document.getElementById("db_plugin");
 	var strPlugin = e.options[e.selectedIndex].value;
@@ -23,8 +34,8 @@ rebuild_callbacks.push(function() {
 	// Check 1: host must not be empty
 	if (document.getElementById('pgsql_host').value.length == 0)
 	{
-		document.getElementById('pgsql_host_warn').innerHTML = '<font color="red">Please specify a host name!</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a host name!</i>';
+		document.getElementById('pgsql_host_warn').innerHTML = '<font color="red">'+_L('Please specify a host name!')+'</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a host name!</i>'; // do not translate
 		error = true;
 	} else {
 		document.getElementById('pgsql_host_warn').innerHTML = '';
@@ -33,8 +44,8 @@ rebuild_callbacks.push(function() {
 	// Check 2: Username must not be empty
 	if (document.getElementById('pgsql_username').value.length == 0)
 	{
-		document.getElementById('pgsql_username_warn').innerHTML = '<font color="red">Please specify a username!</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a username!</i>';
+		document.getElementById('pgsql_username_warn').innerHTML = '<font color="red">'+_L('Please specify a username!')+'</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a username!</i>'; // do not translate
 		error = true;
 	} else {
 		document.getElementById('pgsql_username_warn').innerHTML = '';
@@ -43,8 +54,8 @@ rebuild_callbacks.push(function() {
 	// Check 3: Database name must not be empty
 	if (document.getElementById('pgsql_database').value.length == 0)
 	{
-		document.getElementById('pgsql_database_warn').innerHTML = '<font color="red">Please specify a database name!</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a database name!</i>';
+		document.getElementById('pgsql_database_warn').innerHTML = '<font color="red">'+_L('Please specify a database name!')+'</font>';
+		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a database name!</i>'; // do not translate
 		error = true;
 	} else {
 		document.getElementById('pgsql_database_warn').innerHTML = '';
@@ -52,11 +63,12 @@ rebuild_callbacks.push(function() {
 
 	document.getElementById('struct_1').href = setupdir+'struct_empty.sql.php?plugin=pgsql&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('pgsql_database').value)+'&slang=pgsql';
 	document.getElementById('struct_2').href = setupdir+'struct_with_examples.sql.php?plugin=pgsql&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&database='+encodeURI(document.getElementById('pgsql_database').value)+'&slang=pgsql';
-	document.getElementById('struct_cli_1').innerHTML = '<br>or via command line:<br><code>curl -s "'+document.getElementById('struct_1').href+'" | psql <!-- TODO: split host/port  -h '+document.getElementById('pgsql_host').value+' --> -U '+document.getElementById('pgsql_username').value+' -d '+document.getElementById('pgsql_database').value+' -a</code>';
-	document.getElementById('struct_cli_2').innerHTML = '<br>or via command line:<br><code>curl -s "'+document.getElementById('struct_2').href+'" | psql <!-- TODO: split host/port  -h '+document.getElementById('pgsql_host').value+' --> -U '+document.getElementById('pgsql_username').value+' -d '+document.getElementById('pgsql_database').value+' -a</code>';
+	document.getElementById('struct_cli_1').innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+document.getElementById('struct_1').href+'" | psql <!-- TODO: split host/port  -h '+document.getElementById('pgsql_host').value+' --> -U '+document.getElementById('pgsql_username').value+' -d '+document.getElementById('pgsql_database').value+' -a</code>';
+	document.getElementById('struct_cli_2').innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+document.getElementById('struct_2').href+'" | psql <!-- TODO: split host/port  -h '+document.getElementById('pgsql_host').value+' --> -U '+document.getElementById('pgsql_username').value+' -d '+document.getElementById('pgsql_database').value+' -a</code>';
 
 	return !error;
 });
+
 rebuild_config_callbacks.push(function() {
 	var e = document.getElementById("db_plugin");
 	var strPlugin = e.options[e.selectedIndex].value;
@@ -67,4 +79,3 @@ rebuild_config_callbacks.push(function() {
 	       'OIDplus::baseConfig()->setValue(\'PGSQL_PASSWORD\',    base64_decode(\''+b64EncodeUnicode(document.getElementById('pgsql_password').value)+'\'));<br>' +
 	       'OIDplus::baseConfig()->setValue(\'PGSQL_DATABASE\',    \''+document.getElementById('pgsql_database').value+'\');<br>';
 });
-</script>

@@ -29,3 +29,12 @@ input[type=button], input[type=submit], input[type=reset] {
 #dirAccessWarning {
 	color:red;
 }
+
+.lng_flag {
+	cursor: pointer;
+	border: 1px solid #000 !important;
+}
+
+.picture_ghost {
+	opacity: 0.4;
+}

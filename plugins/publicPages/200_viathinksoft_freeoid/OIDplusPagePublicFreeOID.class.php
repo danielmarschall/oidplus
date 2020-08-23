@@ -203,8 +203,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				}
 
 				// make sure the program works even if the user provided HTML is not UTF-8
-				$tos = iconv(mb_detect_encoding($out['text'], mb_detect_order(), true), 'UTF-8//IGNORE', $tos);
-
+				$tos = iconv(mb_detect_encoding($tos, mb_detect_order(), true), 'UTF-8//IGNORE', $tos);
 				$bom = pack('H*','EFBBBF');
 				$tos = preg_replace("/^$bom/", '', $tos);
 

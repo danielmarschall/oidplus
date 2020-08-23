@@ -15,9 +15,7 @@ RECENT STUFF
 	* Not yet translated:
 		- includes\classes\http_class.class.php
 		- includes\classes\phpsvnclient.class.php
-		- plugins\adminPages\050_oobe\oobe.php (and various OOBE plugins)
 		- plugins\publicPages\100_whois\whois\index.php
-		- setup\index.php (and various setup.part.html)
 		- 3p\vts_fileformats\fileformats.conf
 	* Check/Correct German Machine-Translations:
 		- res/OIDplus/privacy_documentation$dede.html
@@ -26,6 +24,7 @@ RECENT STUFF
 - WebWHOIS: Open in new Window? Show URL without opening the page?
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Make a plugin that shows warning from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
+	But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
 
 NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:

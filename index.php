@@ -57,6 +57,8 @@ $static_title = $static['title'];
 $static_icon = $static['icon'];
 $static_content = $static['text'];
 
+OIDplus::handleLangArgument();
+
 function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
 	// Please also change the function in oidplus_base.js
 	if ($systemtitle == $pagetitle) {
@@ -154,44 +156,9 @@ $js = 'oidplus.min.js.php';
 		?>
 	</div>
 
-	<div id="languageBox">
-		<?php
-
-		if (isset($_GET['lang'])) {
-			// The "?lang=" argument is only for NoScript-Browsers/SearchEngines
-			// In case someone who has JavaScript clicks a ?lang= link, they should get
-			// the page in that language, but the cookie must be set, otherwise
-			// the menu and other stuff would be in their cookie-based-language and not the
-			// argument-based-language.
-			$cookie_path = OIDplus::getSystemUrl(true);
-			if (empty($cookie_path)) $cookie_path = '/';
-			setcookie('LANGUAGE', $_GET['lang'], 0, $cookie_path, '', false, false/*HttpOnly off, because JavaScript also needs translation*/);
-		} else if (isset($_POST['lang'])) {
-			$cookie_path = OIDplus::getSystemUrl(true);
-			if (empty($cookie_path)) $cookie_path = '/';
-			setcookie('LANGUAGE', $_POST['lang'], 0, $cookie_path, '', false, false/*HttpOnly off, because JavaScript also needs translation*/);
-		}
-
-		$langbox_entries = array();
-		$non_default_languages = 0;
-		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
-			$xmldata = $pluginManifest->getRawXml();
-			$flag = $xmldata->language->flag->__toString();
-			$code = $xmldata->language->code->__toString();
-			if ($code != OIDplus::DEFAULT_LANGUAGE) $non_default_languages++;
-			if ($code == OIDplus::getCurrentLang()) {
-				$class = 'lng_flag';
-			} else {
-				$class = 'lng_flag picture_ghost';
-			}
-			$langbox_entries[] = '<a onclick="setLanguage(\''.$code.'\'); return false" href="?lang='.$code.'&amp;goto='.$static_node_id.'"><img src="plugins/language/'.$code.'/'.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20"></a> ';
-		}
-		if ($non_default_languages > 0) {
-			echo implode("\n\t\t",$langbox_entries);
-		}
-
-		?>
-	</div>
+	<?php
+	echo OIDplusGui::getLanguageBox($static_node_id, true);
+	?>
 
 	<div id="gotobox">
 		<?php

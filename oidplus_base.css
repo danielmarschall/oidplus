@@ -407,7 +407,7 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 }
 
 .picture_ghost {
-	opacity: 0.5;
+	opacity: 0.4;
 }
 
 /* Goto box */

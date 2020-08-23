@@ -418,6 +418,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Administrator password
+		]]></source>
+		<target><![CDATA[
+		Administrator-Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		After clicking "change", your OIDplus system will contact the ViaThinkSoft server to adjust (add or remove information) your privacy setting. This may take a few minutes.
 		]]></source>
 		<target><![CDATA[
@@ -534,6 +542,14 @@
 		]]></source>
 		<target><![CDATA[
 		Achtung: Leerer Namensraum bei %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Attention: If your DBMS is not listed, OIDplus will most likely not work. If you know that your DBMS is compatible with one of these listed SQL dialects, you can choose that dialect.
+		]]></source>
+		<target><![CDATA[
+		Achtung: Wenn Ihr DBMS nicht gelistet ist, dann wird OIDplus möglicherweise nicht funktionieren. Wenn Sie wissen, dass Ihr DBMS mit einem dieser SQL-Dialekte kompatibel ist, dann wählen Sie diesen Dialekt.
 		]]></target>
 	</message>
 	<message>
@@ -1002,6 +1018,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Continue
+		]]></source>
+		<target><![CDATA[
+		Fortfahren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Could not find "%1" section at %2
 		]]></source>
 		<target><![CDATA[
@@ -1190,6 +1214,30 @@
 		]]></source>
 		<target><![CDATA[
 		Datenbank
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Database connectivity
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Anbindung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Database connectivity diagram
+		]]></source>
+		<target><![CDATA[
+		Diagramm zur Datenbank-Anbindung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Database plugin
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Plugin
 		]]></target>
 	</message>
 	<message>
@@ -1386,6 +1434,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		ERROR: No database plugins were found! You CANNOT use OIDplus without database connection.
+		]]></source>
+		<target><![CDATA[
+		FEHLER: Keine Datenbank-Plugins wurden gefunden! Sie könne OIDplus nicht ohne Datenbank-Verbindung verwenden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Edit RA contact data
 		]]></source>
 		<target><![CDATA[
@@ -1406,6 +1462,22 @@
 		]]></source>
 		<target><![CDATA[
 		EiB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Empty OIDplus database without example data
+		]]></source>
+		<target><![CDATA[
+		Leere OIDplus Datenbank ohne Beispiel-Daten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Enforce SSL (always redirect)
+		]]></source>
+		<target><![CDATA[
+		SSL erzwingen (immer Umleiten)
 		]]></target>
 	</message>
 	<message>
@@ -1478,6 +1550,30 @@
 		]]></source>
 		<target><![CDATA[
 		Alles OK
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Example for MySQL/MariaDB
+		]]></source>
+		<target><![CDATA[
+		Beispiel für MySQL/MariaDB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Example for PostgreSQL
+		]]></source>
+		<target><![CDATA[
+		Beispiel für PostgreSQL
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Example for SQL Server
+		]]></source>
+		<target><![CDATA[
+		Beispiel für SQL Server
 		]]></target>
 	</message>
 	<message>
@@ -1970,6 +2066,30 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="%1">setup part 1</a> again or edit %2 manually).
+		]]></source>
+		<target><![CDATA[
+		Wenn das CAPTCHA nicht funktioniert (z.B. aufgrund von falschen API-Schlüsseln, dann führen Sie bitte <a href="%1">Setup Schritt 1</a> erneut aus, oder editieren Sie %2 manuell).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		If you already have an OIDplus database and just want to rebuild the config file, please skip this step.
+		]]></source>
+		<target><![CDATA[
+		Wenn Sie bereits eine OIDplus-Datenbank installiert haben und nur diese Konfigurations-Datei editieren möchten, überspringen Sie bitte diesen Schritt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		If you can read this, then your database login credentials are correct.
+		]]></source>
+		<target><![CDATA[
+		Wenn Sie dies lesen können, dann funktioniert die Datenbank-Anbindung.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		If you have more accounts, you can log in with another account here.
 		]]></source>
 		<target><![CDATA[
@@ -2142,6 +2262,14 @@
 		]]></source>
 		<target><![CDATA[
 		Anweisungen wurden per E-Mail gesendet.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Intelligent SSL detection (redirect if port 443 is open)
+		]]></source>
+		<target><![CDATA[
+		Intelligente SSL-Erkennung (nur umleiten, wenn Port 443 offen ist)
 		]]></target>
 	</message>
 	<message>
@@ -2650,6 +2778,38 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		MySQL database name
+		]]></source>
+		<target><![CDATA[
+		MySQL Datenbank-Name
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		MySQL hostname and port
+		]]></source>
+		<target><![CDATA[
+		MySQL Hostname und Port
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		MySQL password
+		]]></source>
+		<target><![CDATA[
+		MySQL Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		MySQL username
+		]]></source>
+		<target><![CDATA[
+		MySQL Benutzername
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		NROFF
 		]]></source>
 		<target><![CDATA[
@@ -2726,6 +2886,14 @@
 		]]></source>
 		<target><![CDATA[
 		Keine RA-Authentifizierungs-Plugins gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No SSL available (don't redirect)
+		]]></source>
+		<target><![CDATA[
+		Kein SSL verfügbar (nicht umleiten)
 		]]></target>
 	</message>
 	<message>
@@ -2826,6 +2994,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Note: You should use the driver "ODBC Driver XX for SQL Server" instead, since it is the latest generation
+		]]></source>
+		<target><![CDATA[
+		Hinweis: Sie sollten den Treiber "ODBC Driver XX for SQL Server" anstelle nehmen, da dieser der neusten Generation angehört
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system).
 		]]></source>
 		<target><![CDATA[
@@ -2854,6 +3030,30 @@
 		]]></source>
 		<target><![CDATA[
 		OBJEKT-BAUM
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ODBC DSN
+		]]></source>
+		<target><![CDATA[
+		ODBC DSN
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ODBC Password
+		]]></source>
+		<target><![CDATA[
+		ODBC Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ODBC Username
+		]]></source>
+		<target><![CDATA[
+		ODBC Benutzername
 		]]></target>
 	</message>
 	<message>
@@ -2954,6 +3154,30 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OIDplus Setup
+		]]></source>
+		<target><![CDATA[
+		OIDplus Setup
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus Setup - Configuration File Generator
+		]]></source>
+		<target><![CDATA[
+		OIDplus Setup - Konfigurationsdatei generieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus Setup - Initial Settings
+		]]></source>
+		<target><![CDATA[
+		OIDplus Setup - Grundlegende Einstellungen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OIDplus Update
 		]]></source>
 		<target><![CDATA[
@@ -2966,6 +3190,14 @@
 		]]></source>
 		<target><![CDATA[
 		OIDplus konnte seine Version nicht bestimmen. (Erforderlich: svnupdate Shell-Zugriff oder SQLite3). Bitte aktualisieren Sie Ihre OIDplus-Installation mit dem "SVN Update" Programm regelmäßig.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus database with example data
+		]]></source>
+		<target><![CDATA[
+		OIDplus Datenbank mit Beispieldateien
 		]]></target>
 	</message>
 	<message>
@@ -3194,10 +3426,34 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Otherwise, import one of the following SQL dumps in your database:
+		]]></source>
+		<target><![CDATA[
+		Andernfalls importieren Sie eine der folgenden SQL-Dumps in Ihre Datenbank:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Output format
 		]]></source>
 		<target><![CDATA[
 		Ausgabeformat
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PDO Password
+		]]></source>
+		<target><![CDATA[
+		PDO Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PDO Username
+		]]></source>
+		<target><![CDATA[
+		PDO Benutzername
 		]]></target>
 	</message>
 	<message>
@@ -3274,6 +3530,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Password must be at least %1 characters long
+		]]></source>
+		<target><![CDATA[
+		Passwort muss mindestens %1 Zeichen lang sein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Password successfully changed. You can now log in.
 		]]></source>
 		<target><![CDATA[
@@ -3302,6 +3566,38 @@
 		]]></source>
 		<target><![CDATA[
 		Personen-Name
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PgSQL database name
+		]]></source>
+		<target><![CDATA[
+		PgSQL Datenbank-Name
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PgSQL hostname and port
+		]]></source>
+		<target><![CDATA[
+		PgSQL Hostname und Port
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PgSQL password
+		]]></source>
+		<target><![CDATA[
+		PgSQL Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PgSQL username
+		]]></source>
+		<target><![CDATA[
+		PgSQL Benutzername
 		]]></target>
 	</message>
 	<message>
@@ -3442,6 +3738,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Please enter the administrator password you have entered before.
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie das Administrator-Passwort ein, das Sie zuvor festgelegt haben.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Please enter the email address of your account, and information about the password reset will be sent to you.
 		]]></source>
 		<target><![CDATA[
@@ -3498,6 +3802,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Please repeat the password input:
+		]]></source>
+		<target><![CDATA[
+		Bitte wiederholen Sie die Passworteingabe:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Please select a GUID in the tree view at the left to show its contents.
 		]]></source>
 		<target><![CDATA[
@@ -3550,6 +3862,46 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte selektieren Sie ein Objekt in der Baumansicht, um dessen Inhalt anzuzeigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please specify a DSN!
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie eine DSN ein!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please specify a database name!
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie einen Datenbank-Namen ein!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please specify a filename!
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie einen Dateinamen ein!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please specify a host name!
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie einen Hostnamen ein!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please specify a username!
+		]]></source>
+		<target><![CDATA[
+		Bitte einen Benutzernamen eingeben!
 		]]></target>
 	</message>
 	<message>
@@ -3690,6 +4042,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Private/Public key creation failed
+		]]></source>
+		<target><![CDATA[
+		Schlüsselpaar-Generierung fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Public
 		]]></source>
 		<target><![CDATA[
@@ -3802,6 +4162,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		ReCAPTCHA
+		]]></source>
+		<target><![CDATA[
+		ReCAPTCHA
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Redirecting to HTTPS...
 		]]></source>
 		<target><![CDATA[
@@ -3810,10 +4178,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Redirecting to registration wizard...
+		Redirecting to Out-Of-Box-Experience wizard...
 		]]></source>
 		<target><![CDATA[
-		Umleiten zum Registrierungs-Assistenten...
+		Umleiten zum Out-Of-Box-Experience ...
 		]]></target>
 	</message>
 	<message>
@@ -4010,6 +4378,30 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		SQLite3 database file
+		]]></source>
+		<target><![CDATA[
+		SQLite3 Datenbank-Datei
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SQLite3 encryption passphrase (optional)
+		]]></source>
+		<target><![CDATA[
+		SQLite3 Verschlüsselungs-Passwort (optional)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SSL enforcement
+		]]></source>
+		<target><![CDATA[
+		SSL-Erzwingung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		SUPOID logger mask requires OID
 		]]></source>
 		<target><![CDATA[
@@ -4046,6 +4438,22 @@
 		]]></source>
 		<target><![CDATA[
 		Farbsättigungs-Verschiebung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Save and start OIDplus!
+		]]></source>
+		<target><![CDATA[
+		Speichern und OIDplus starten!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Save following contents into the file <b>%1</b>:
+		]]></source>
+		<target><![CDATA[
+		Speichern Sie die folgenden Inhalte in eine Datei mit dem Namen <b>%1</b>:
 		]]></target>
 	</message>
 	<message>
@@ -4322,10 +4730,26 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Step %1: Authenticate
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: Authentifizierung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Step %1: Color Theme
 		]]></source>
 		<target><![CDATA[
 		Schritt %1: Farbschema
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Step %1: Continue to next step
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: Datenbankverbindung testen und fortfahren
 		]]></target>
 	</message>
 	<message>
@@ -4338,6 +4762,54 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Step %1: Enter setup information
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: Setup-Informationen eingeben
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Step %1: Initialize database
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: Datenbank initialisieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Step %1: Please enter the email address of the system administrator
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: E-Mail-Adresse des Administrators
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Step %1: Save %2 file
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: Datei %2 abspeichern
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Step %1: Save settings and start OIDplus
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: Einstellungen speichern und OIDplus starten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Step %1: Solve CAPTCHA
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: CAPTCHA beantworten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Step %1: System registration and automatic publishing (optional)
 		]]></source>
 		<target><![CDATA[
@@ -4346,10 +4818,26 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Step %1: What title should your Registration Authority / OIDplus instance have?
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: Welchen Titel soll Ihre Registrierungsstelle / OIDplus-Installation haben?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Street
 		]]></source>
 		<target><![CDATA[
 		Straße
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		String contains an invalid character
+		]]></source>
+		<target><![CDATA[
+		Zeichenkette enthält ein ungültiges Zeichen
 		]]></target>
 	</message>
 	<message>
@@ -4410,6 +4898,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		System check
+		]]></source>
+		<target><![CDATA[
+		System-Prüfung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		System configuration
 		]]></source>
 		<target><![CDATA[
@@ -4466,6 +4962,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		TLS
+		]]></source>
+		<target><![CDATA[
+		TLS
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		TXT
 		]]></source>
 		<target><![CDATA[
@@ -4486,6 +4990,14 @@
 		]]></source>
 		<target><![CDATA[
 		Tabellen-Namen-Präfix
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Table name prefix (e.g. <b>oidplus_</b>)
+		]]></source>
+		<target><![CDATA[
+		Tabellen-Namen-Präfix (z.B. <b>oidplus_</b>)
 		]]></target>
 	</message>
 	<message>
@@ -4518,6 +5030,14 @@
 		]]></source>
 		<target><![CDATA[
 		Text-Format (RFC Entwurf: %1)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Thank you very much for choosing OIDplus! This setup assistant will help you creating or updating the file <b>%1</b>. Setup does not automatically write to this file. Instead, you need to copy-paste the contents into the file. Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.
+		]]></source>
+		<target><![CDATA[
+		Vielen Dank, dass Sie sich für OIDplus entschieden haben! Dieser Installations-Assistent wird Ihnen helfen, die Konfigurationsdatei <b>%1</b> zu erstellen. Der Assistent erstellt diese Datei nicht automatisch. Sie müssen diese Datei später in die Zwischenablage kopieren und die Inhalte in die Datei einfügen. Nachdem Die dies getan haben, können Sie die Datei zu einem späteren Zeitpunkt per Hand bearbeiten, oder diesen Assistenten erneut durchlaufen, in dem Sie <b>setup/</b> aufrufen.
 		]]></target>
 	</message>
 	<message>
@@ -4618,6 +5138,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The following settings need to be configured once.<br>After setup is complete, you can change all these settings through the admin login area, if necessary.
+		]]></source>
+		<target><![CDATA[
+		Die folgenden Einstellungen müssen einmalig gesetzt werden.<br>Sie können alle diese Einstellungen im Administrator-Login-Bereich zu einem späteren Zeitpunkt abändern.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The identifier %1 is too long (max allowed length: %2)
 		]]></source>
 		<target><![CDATA[
@@ -4638,6 +5166,14 @@
 		]]></source>
 		<target><![CDATA[
 		Das Objekt %1 wurde nicht in dieser Datenbank gefunden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The passwords do not match!
+		]]></source>
+		<target><![CDATA[
+		Die Passwörter stimmen nicht überein!
 		]]></target>
 	</message>
 	<message>
@@ -5154,6 +5690,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Warning: All data from the previous OIDplus instance will be deleted during the import.<br>If you already have an OIDplus database, skip to Step 3.
+		]]></source>
+		<target><![CDATA[
+		Warnung: Alle Daten von Ihrer vorherigen OIDplus-Installation werden durch den Import gelöscht!<br>Wenn Sie bereits eine OIDplus-Datenbank haben, fahren Sie bitte mit Schritt 3 fort.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Warnings / Error messages:
 		]]></source>
 		<target><![CDATA[
@@ -5190,6 +5734,22 @@
 		]]></source>
 		<target><![CDATA[
 		Wohlbekannte OIDs
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Which DBMS (SQL dialect) is used?
+		]]></source>
+		<target><![CDATA[
+		Welche Datenbanksoftware (SQL-Dialekt) wird verwendet?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Which admin password do you want?
+		]]></source>
+		<target><![CDATA[
+		Wie soll das Administrator-Passwort lauten?
 		]]></target>
 	</message>
 	<message>
@@ -5418,6 +5978,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Your OIDplus system ID (derived from the public key) is:
+		]]></source>
+		<target><![CDATA[
+		Ihre OIDplus-System-ID (abgeleitet vom öffentlichen Schlüssel) ist:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Your email address: %1
 		]]></source>
 		<target><![CDATA[
@@ -5430,6 +5998,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ihr persönlicher Name oder der Name einer Gruppierung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Your public key is:
+		]]></source>
+		<target><![CDATA[
+		Ihr öffentlicher Schlüssel lautet:
 		]]></target>
 	</message>
 	<message>
@@ -5538,6 +6114,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		examples
+		]]></source>
+		<target><![CDATA[
+		Beispiele
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		findFitting: Parse failed
 		]]></source>
 		<target><![CDATA[
@@ -5550,6 +6134,14 @@
 		]]></source>
 		<target><![CDATA[
 		Long-Arc
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		more information and obtain key
+		]]></source>
+		<target><![CDATA[
+		Mehr Informationen und Erhalten eines Schlüssels
 		]]></target>
 	</message>
 	<message>
@@ -5598,6 +6190,38 @@
 		]]></source>
 		<target><![CDATA[
 		oder starten Sie <a href="%1">Setup</a> erneut
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		or via command line:
+		]]></source>
+		<target><![CDATA[
+		oder per Kommando-Zeile:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		reCAPTCHA Private key
+		]]></source>
+		<target><![CDATA[
+		reCAPTCHA privater Schlüssel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		reCAPTCHA Public key
+		]]></source>
+		<target><![CDATA[
+		reCAPTCHA öffentlicher Schlüssel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		reCAPTCHA enabled
+		]]></source>
+		<target><![CDATA[
+		reCAPTCHA aktiviert
 		]]></target>
 	</message>
 	<message>

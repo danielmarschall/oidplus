@@ -22,7 +22,8 @@ Currently, there are following features defined in the standard plugins of OIDpl
 
 Interface <1.3.6.1.4.1.37476.2.5.2.3.1> {
 	// called by plugin adminPages/050_oobe
-	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/;
+	public function oobeEntry($step, $do_edits, &$errors_happened): void;
+	public function oobeRequested(): bool;
 }
 
 Interface <1.3.6.1.4.1.37476.2.5.2.3.2> {

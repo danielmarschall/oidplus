@@ -327,6 +327,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	}
 
 	public function init($html=true) {
+		OIDplus::config()->prepareConfigKey('oobe_objects_done', '"Out Of Box Experience" wizard for OIDplusPagePublicObjects done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 	}
 
 	public function gui($id, &$out, &$handled) {
@@ -352,7 +353,6 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// make sure the program works even if the user provided HTML is not UTF-8
 			$out['text'] = iconv(mb_detect_encoding($out['text'], mb_detect_order(), true), 'UTF-8//IGNORE', $out['text']);
-
 			$bom = pack('H*','EFBBBF');
 			$out['text'] = preg_replace("/^$bom/", '', $out['text']);
 
@@ -876,8 +876,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	}
 
 	public function implementsFeature($id) {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested()
 		return false;
+	}
+	
+	public function oobeRequested(): bool {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
+
+		return OIDplus::config()->getValue('oobe_objects_done') == '0';
 	}
 
 	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
@@ -918,6 +924,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		if ($do_edits) {
 			try {
 				OIDplus::config()->setValue('objecttypes_enabled', implode(';', $enabled_ary));
+				OIDplus::config()->setValue('oobe_objects_done', '1');
 			} catch (Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;
