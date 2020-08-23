@@ -160,7 +160,7 @@ function checkAccess(dir) {
 		if (xhr.readyState === 4) {
 			if (xhr.status === 200) {
 				document.getElementById('systemCheckCaption').style.display = 'block';
-				document.getElementById('dirAccessWarning').innerHTML = document.getElementById('dirAccessWarning').innerHTML + 'Attention: The following directory is world-readable: <a target="_blank" href="'+url+'">'+visibleUrl+'</a> ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>)<br>';
+				document.getElementById('dirAccessWarning').innerHTML = document.getElementById('dirAccessWarning').innerHTML + _L('Attention: The following directory is world-readable: %1 ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>).','<a target="_blank" href="'+url+'">'+visibleUrl+'</a>') + '<br>';
 			}
 		}
 	};

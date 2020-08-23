@@ -554,6 +554,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Attention: The following directory is world-readable: %1 ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>).
+		]]></source>
+		<target><![CDATA[
+		Achtung: Das folgende Verzeichnis ist nicht geschützt: %1 ! Sie müssen Ihren Webserver so konfigurieren, dass dieses Verzeichnis nicht mit dem Web-Browser geöffnet werden kann! (Für Apache, schauen Sie in <i>.htaccess</i>, für Microsoft IIS schauen Sie in <i>web.config</i>, für Nginx schauen Sie in <i>nginx.conf</i>).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Attention: This will take some time!
 		]]></source>
 		<target><![CDATA[
