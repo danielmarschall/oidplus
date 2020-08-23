@@ -341,8 +341,6 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$out['text'] = file_get_contents(OIDplus::basePath() . '/userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html');
 			} else if (file_exists(OIDplus::basePath() . '/userdata/welcome/welcome.html')) {
 				$out['text'] = file_get_contents(OIDplus::basePath() . '/userdata/welcome/welcome.html');
-			} else if (file_exists(__DIR__ . '/welcome.local.html')) {
-				$out['text'] = file_get_contents(__DIR__ . '/welcome.local.html'); // Backwards compatibility. Do not use!
 			} else if (file_exists(__DIR__ . '/welcome$'.OIDplus::getCurrentLang().'.html')) {
 				$out['text'] = file_get_contents(__DIR__ . '/welcome$'.OIDplus::getCurrentLang().'.html');
 			} else if (file_exists(__DIR__ . '/welcome.html')) {

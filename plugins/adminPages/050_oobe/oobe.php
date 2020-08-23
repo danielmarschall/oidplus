@@ -38,7 +38,7 @@ echo '<head>';
 echo '	<title>'._L('OIDplus Setup').'</title>';
 echo '	<meta name="robots" content="noindex">';
 echo '	<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-echo '	<link rel="stylesheet" href="../../../setup/setup.css">';
+echo '	<link rel="stylesheet" href="../../../setup/setup.min.css.php">';
 if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 	echo '	<script src="https://www.google.com/recaptcha/api.js"></script>';
 }

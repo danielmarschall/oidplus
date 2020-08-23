@@ -28,9 +28,8 @@ echo '<head>';
 echo '	<title>'._L('OIDplus Setup').'</title>';
 echo '	<meta name="robots" content="noindex">';
 echo '	<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-echo '	<link rel="stylesheet" href="setup.css">';
-echo '	<script src="../3p/sha3_js/sha3.js"></script>'; // https://github.com/emn178/js-sha3
-echo '	<script src="setup.js.php" type="text/javascript"></script>';
+echo '	<link rel="stylesheet" href="setup.min.css.php">';
+echo '	<script src="setup.min.js.php" type="text/javascript"></script>';
 echo '</head>';
 
 echo '<body>';

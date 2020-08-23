@@ -154,6 +154,18 @@ Internationalization of Folder names:
 		...?goto=oidplus:resources$Object Identifiers/
 
 
+Folder "styles"
+---------------
+
+In this folder, you can place an alternative version of oidplus_base.css and setup_base.css.
+
+ATTENTION:
+- You need to make sure that your changes are in-sync with the current versions
+  of oidplus_base.css and setup_base.css!
+- Note that the userdata/ directory cannot be accessed using the browser,
+  so if you need to use graphics, please specify a different path.
+
+
 Folder "welcome"
 ----------------
 

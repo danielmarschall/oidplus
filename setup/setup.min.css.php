@@ -19,12 +19,12 @@
 
 use MatthiasMullie\Minify;
 
-require_once __DIR__ . '/includes/oidplus.inc.php';
-require_once __DIR__ . '/3p/minify/path-converter/ConverterInterface.php';
-require_once __DIR__ . '/3p/minify/path-converter/Converter.php';
-require_once __DIR__ . '/3p/minify/src/Minify.php';
-require_once __DIR__ . '/3p/minify/src/CSS.php';
-require_once __DIR__ . '/3p/minify/src/Exception.php';
+require_once __DIR__ . '/../includes/oidplus.inc.php';
+require_once __DIR__ . '/../3p/minify/path-converter/ConverterInterface.php';
+require_once __DIR__ . '/../3p/minify/path-converter/Converter.php';
+require_once __DIR__ . '/../3p/minify/src/Minify.php';
+require_once __DIR__ . '/../3p/minify/src/CSS.php';
+require_once __DIR__ . '/../3p/minify/src/Exception.php';
 
 error_reporting(E_ALL);
 
@@ -52,35 +52,10 @@ function process_file($filename) {
 
 # ---
 
-if (file_exists(__DIR__ . '/userdata/styles/oidplus_base.css')) {
-	$out .= process_file(__DIR__ . '/userdata/styles/oidplus_base.css');
+if (file_exists(__DIR__ . '/../userdata/styles/setup_base.css')) {
+	$out .= process_file(__DIR__ . '/../userdata/styles/setup_base.css');
 } else {
-	$out .= process_file(__DIR__ . '/oidplus_base.css');
-}
-
-$manifests = OIDplus::getAllPluginManifests('*Pages', true);
-foreach ($manifests as $manifest) {
-	foreach ($manifest->getCSSFiles() as $css_file) {
-		$out .= process_file($css_file);
-	}
-}
-
-$out .= process_file(__DIR__ . '/3p/jstree/themes/default/style.css');
-$out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui.css');
-$out .= process_file(__DIR__ . '/3p/bootstrap/css/bootstrap.css');
-
-# ---
-
-$inv = isset($_REQUEST['invert']) ? $_REQUEST['invert'] : 0;
-if ($inv != 0) {
-	$out = invertColorsOfCSS($out);
-}
-
-$hs = isset($_REQUEST['h_shift']) ? $_REQUEST['h_shift'] : 0;
-$ss = isset($_REQUEST['s_shift']) ? $_REQUEST['s_shift'] : 0;
-$vs = isset($_REQUEST['v_shift']) ? $_REQUEST['v_shift'] : 0;
-if (($hs != 0) ||($ss != 0) || ($vs != 0)) {
-	$out = changeHueOfCSS($out, $hs, $ss, $vs);
+	$out .= process_file(__DIR__ . '/setup_base.css');
 }
 
 # ---

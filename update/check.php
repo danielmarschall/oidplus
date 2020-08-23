@@ -35,7 +35,7 @@ define('OIDPLUS_REPO', 'https://svn.viathinksoft.com/svn/oidplus');
 	<title><?php echo _L('OIDplus File Completeness Check'); ?></title>
 	<meta name="robots" content="noindex">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="../setup/setup.css">
+	<link rel="stylesheet" href="../setup/setup.min.css.php">
 	<?php
 	if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 	?>

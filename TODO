@@ -21,6 +21,8 @@ RECENT STUFF
 		- res/OIDplus/privacy_documentation$dede.html
 		- res/OIDplus/acknowledgements$dede.html
 		- plugins\publicPages\200_viathinksoft_freeoid\tos$dede.html
+	* Idea: Allow "oidplus_base$dede.css", so that languages can have their own CSS (e.g. wider "Go" button)
+		But this means that a language change also need to reload the style sheet (like the color-plugin does when you click "Test")
 - WebWHOIS: Open in new Window? Show URL without opening the page?
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Make a plugin that shows warning from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
