@@ -181,7 +181,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:datatransfer').'><img src="img/arrow_back.png" width="16"> '._L('Go back to data transfer main page').'</a>'; // TODO: How to automatically jump to the "Export" tab?
+			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:datatransfer').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to data transfer main page').'</a>'; // TODO: How to automatically jump to the "Export" tab?
 
 			if (isset($json['error']) || ($json['status'] != 0)) {
 				$out['text'] .= '<p>'._L('Error: %1',htmlentities($json['error'])).'</p>';
@@ -427,7 +427,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:datatransfer').'><img src="img/arrow_back.png" width="16"> '._L('Go back to data transfer main page').'</a>'; // TODO: How to automatically jump to the "Import" tab?
+			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:datatransfer').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to data transfer main page').'</a>'; // TODO: How to automatically jump to the "Import" tab?
 
 			$all_local_oids = array();
 			$res = OIDplus::db()->query("select id from ###objects");

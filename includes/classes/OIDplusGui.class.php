@@ -75,11 +75,36 @@ class OIDplusGui {
 				$class = 'lng_flag picture_ghost';
 			}
 			$add = (!is_null($goto)) ? '&amp;goto='.urlencode($goto) : '';
-			$langbox_entries[] = '<a '.($useJs ? 'onclick="setLanguage(\''.$code.'\'); return false" )' : '').'href="?lang='.$code.$add.'"><img src="'.OIDplus::getSystemUrl(true).'/plugins/language/'.$code.'/'.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20"></a> ';
+			$langbox_entries[] = '<a '.($useJs ? 'onclick="setLanguage(\''.$code.'\'); return false" ' : '').'href="?lang='.$code.$add.'"><img src="'.OIDplus::getSystemUrl(true).'/plugins/language/'.$code.'/'.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20"></a> ';
 		}
 		if ($non_default_languages > 0) {
 			echo implode("\n\t\t",$langbox_entries);
 		}
 		echo '</div>';
+	}
+
+	public static function html_exception_handler($exception) {
+		if ($exception instanceof OIDplusConfigInitializationException) {
+			echo '<h1>'._L('OIDplus initialization error').'</h1>';
+			echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
+			echo '<p>'._L('Please check the file %1','<b>userdata/baseconfig/config.inc.php</b>');
+			if (is_dir(__DIR__ . '/../../setup')) {
+				echo ' '._L('or run <a href="%1">setup</a> again',OIDplus::getSystemUrl().'setup/');
+			}
+			echo '</p>';
+		} else {
+			echo '<h1>'._L('OIDplus error').'</h1>';
+			// ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
+			echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
+			echo '<p><b>'._L('Technical information about the problem').':</b></p>';
+			echo '<pre>';
+			echo get_class($exception)."\n";
+			var_dump($exception->getFile());
+			var_dump($exception->getLine());
+			echo _L('at file %1 (line %2)',$exception->getFile(),"".$exception->getLine())."\n";
+			echo _L('Stacktrace').":\n";
+			echo $exception->getTraceAsString();
+			echo '</pre>';
+		}
 	}
 }

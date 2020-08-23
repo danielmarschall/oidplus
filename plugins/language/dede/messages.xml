@@ -1882,6 +1882,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Go back
+		]]></source>
+		<target><![CDATA[
+		Zurückkehren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Go back to
 		]]></source>
 		<target><![CDATA[
@@ -3509,7 +3517,7 @@
 		Parent node: %1
 		]]></source>
 		<target><![CDATA[
-		Eltern-Knoten: %1
+		Übergeordnet: %1
 		]]></target>
 	</message>
 	<message>
@@ -3634,10 +3642,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Please check file %1
+		Please check the file %1
 		]]></source>
 		<target><![CDATA[
-		Bitte prüfen Sie Datei %1
+		Bitte prüfen Sie die Datei %1
 		]]></target>
 	</message>
 	<message>

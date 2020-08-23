@@ -1,0 +1,50 @@
+About OIDplus 2.0
+=================
+
+What is OIDplus?
+----------------
+
+OIDplus is an OpenSource software solution by ViaThinkSoft that can be used by
+Registration Authorities to manage and publish information about
+Object Identifiers (OIDs), Globally Unique Identifiers (GUIDs), and much more.
+
+A demo version of OIDplus can be found here:
+https://oidplus.viathinksoft.com/oidplus_demo/
+
+
+Operate your own copy of OIDplus
+--------------------------------
+
+We are grateful for every person that wants to install OIDplus on their systems,
+as we love to see our product spreading and receive feedback about the user-experience.
+Therefore, if we can help you with installing OIDplus and migrating your data into OIDplus,
+please let us know ( https://www.viathinksoft.de/contact/daniel-marschall ).
+We will support you with this, free of charge!
+
+Download using SVN (recommended):
+$ svn co https://svn.viathinksoft.com/svn/oidplus/trunk/
+
+Alternatively: Download a TAR.GZ file here:
+https://www.viathinksoft.com/projects/oidplus
+
+System requirements:
+- PHP compatible web server (tested with Apache 2, nginx and Microsoft IIS)
+- PHP 7.0 or higher
+	with extension GMP or BCMath
+	with extension MBString
+	with extension MySQLi, PostgreSQL, SQLite3, PDO or ODBC
+- Database: MySQL/MariaDB (recommended), PostgreSQL, SQLite3 or Microsoft SQL Server
+- Independent of operating system (tested with Windows and Linux)
+
+
+Reporting a bug
+---------------
+
+You can file a bug report here:
+- https://www.viathinksoft.com/thinkbug/thinkbug.php?id=97
+- https://www.viathinksoft.com/contact/daniel-marschall
+- https://github.com/danielmarschall/oidplus/issues
+
+
+If you have any questions or need help, please contact us:
+https://www.viathinksoft.com/contact/daniel-marschall

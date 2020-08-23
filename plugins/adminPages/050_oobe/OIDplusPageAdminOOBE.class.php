@@ -31,7 +31,6 @@ class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 		foreach (OIDplus::getPagePlugins() as $plugin) {
 			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.1')) {
 				if ($plugin->oobeRequested()) {
-					echo "Plugin ".get_class($plugin)." requested OOBE\n";
 					$oobe_done = false;
 				}
 			}

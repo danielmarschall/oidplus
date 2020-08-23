@@ -58,6 +58,10 @@ if (file_exists(__DIR__ . '/../userdata/styles/setup_base.css')) {
 	$out .= process_file(__DIR__ . '/setup_base.css');
 }
 
+if (file_exists(__DIR__ . '/userdata/styles/setup_add.css')) {
+	$out .= process_file(__DIR__ . '/userdata/styles/setup_add.css');
+}
+
 # ---
 
 $etag = md5($out);

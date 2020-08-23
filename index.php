@@ -21,31 +21,7 @@ header('Content-Type:text/html; charset=UTF-8');
 
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
-set_exception_handler('html_exception_handler');
-function html_exception_handler($exception) {
-	if ($exception instanceof OIDplusConfigInitializationException) {
-		echo '<h1>'._L('OIDplus initialization error').'</h1>';
-		echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
-		echo '<p>'._L('Please check file %1','<b>userdata/baseconfig/config.inc.php</b>');
-		if (is_dir(__DIR__ . '/setup')) {
-			echo ' '._L('or run <a href="%1">setup</a> again',OIDplus::getSystemUrl().'setup/');
-		}
-		echo '</p>';
-	} else {
-		echo '<h1>'._L('OIDplus error').'</h1>';
-		// ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
-		echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
-		echo '<p><b>'._L('Technical information about the problem').':</b></p>';
-		echo '<pre>';
-		echo get_class($exception)."\n";
-		var_dump($exception->getFile());
-		var_dump($exception->getLine());
-		echo _L('at file %1 (line %2)',$exception->getFile(),"".$exception->getLine())."\n";
-		echo _L('Stacktrace').":\n";
-		echo $exception->getTraceAsString();
-		echo '</pre>';
-	}
-}
+set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
 
 ob_start(); // allow cookie headers to be sent
 
@@ -86,12 +62,10 @@ $sys_title = OIDplus::config()->getValue('system_title');
 header('X-OIDplus-SystemTitle:'.$sys_title);
 
 if (class_exists('OIDplusPageAdminColors')) {
-	$css = 'oidplus.min.css.php?invert='.(OIDplus::config()->getValue('color_invert')).'&h_shift='.(OIDplus::config()->getValue('color_hue_shift')/360).'&s_shift='.(OIDplus::config()->getValue('color_sat_shift')/100).'&v_shift='.(OIDplus::config()->getValue('color_val_shift')/100);
+	$add_css_args = '?invert='.(OIDplus::config()->getValue('color_invert')).'&h_shift='.(OIDplus::config()->getValue('color_hue_shift')/360).'&s_shift='.(OIDplus::config()->getValue('color_sat_shift')/100).'&v_shift='.(OIDplus::config()->getValue('color_val_shift')/100);
 } else {
-	$css = 'oidplus.min.css.php';
+	$add_css_args = '';
 }
-
-$js = 'oidplus.min.js.php';
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -108,9 +82,9 @@ $js = 'oidplus.min.js.php';
 
 	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->getValue('system_title'), $static_title); ?></title>
 
-	<script src="<?php echo htmlentities($js); ?>"></script>
+	<script src="oidplus.min.js.php"></script>
 
-	<link rel="stylesheet" href="<?php echo htmlentities($css); ?>">
+	<link rel="stylesheet" href="oidplus.min.css.php<?php echo htmlentities($add_css_args); ?>">
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico.php">
 </head>
 

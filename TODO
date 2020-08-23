@@ -40,8 +40,8 @@ NEW FUNCTIONALITIES
 - Excel/CSV import tool for bulk data import (as alternative to XML import. Maybe previous Excel->XML import tool?)
 
 TINYMCE
-- menu entry "formats" is empty. can it be removed?
-- clicking "Paragraph" dropdown box does not work (Safari problem?)
+- Menu entry "formats" is empty. can it be removed?
+- Clicking "Paragraph" dropdown box does not work (Safari problem?)
 
 WHOIS
 - webwhois: beside TXT/XML/JSON more output modi?  CSV, S/MIME  (and add the S/MIME keypurpose to the X.509 certificates)
@@ -61,6 +61,10 @@ DATA TRANSFER PLUGIN
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
 
 SMALL THINGS
+- Adding things like CONTRIBUTING and README file (for GitHub)
+- Copyright notice:
+	* Currently, we have "2019", "2020" and "2019-2020". Change them all to "2019 - 2020"
+	* Copyright <BY> Daniel Marschall ("by" is missing)
 - RA address data: Country selection box like in OIDInfo
 - We should remove "die()" whenever possible, because it is very unflexible
 - offer signature checker tool to verify WHOIS responses

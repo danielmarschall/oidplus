@@ -139,5 +139,7 @@ echo '<p><input type="button" onclick="window.location.href=\'../\'" value="'._L
 // echo '<p><a href="../">Run the OIDplus system</a></p>';
 echo '</div>';
 
+echo '<br><br><br>';
+
 echo '</body>';
 echo '</html>';

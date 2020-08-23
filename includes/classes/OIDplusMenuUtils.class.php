@@ -35,7 +35,7 @@ class OIDplusMenuUtils {
 
 		foreach ($json as $x) {
 			if ($static_node_id == $x['id']) echo '<b>';
-			if (isset($x['indent'])) echo str_repeat('&nbsp', $x['indent']*5);
+			if (isset($x['indent'])) echo str_repeat('&nbsp;', $x['indent']*5);
 			$cur_lang = OIDplus::getCurrentLang();
 			if ($cur_lang != OIDplus::DEFAULT_LANGUAGE) {
 				echo '<a href="?lang='.$cur_lang.'&amp;goto='.urlencode($x['id']).'">';

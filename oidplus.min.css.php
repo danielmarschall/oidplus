@@ -58,6 +58,10 @@ if (file_exists(__DIR__ . '/userdata/styles/oidplus_base.css')) {
 	$out .= process_file(__DIR__ . '/oidplus_base.css');
 }
 
+if (file_exists(__DIR__ . '/userdata/styles/oidplus_add.css')) {
+	$out .= process_file(__DIR__ . '/userdata/styles/oidplus_add.css');
+}
+
 $manifests = OIDplus::getAllPluginManifests('*Pages', true);
 foreach ($manifests as $manifest) {
 	foreach ($manifest->getCSSFiles() as $css_file) {

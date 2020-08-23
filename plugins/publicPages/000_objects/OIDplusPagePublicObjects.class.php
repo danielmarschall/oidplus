@@ -425,7 +425,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				if ($parent->isRoot()) {
 
 					$parent_link_text = $parent->objectTypeTitle();
-					$out['text'] = '<p><a '.OIDplus::gui()->link($parent->root()).'><img src="img/arrow_back.png" width="16"> '._L('Parent node: %1',htmlentities($parent_link_text)).'</a></p>' . $out['text'];
+					$out['text'] = '<p><a '.OIDplus::gui()->link($parent->root()).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Parent node: %1',htmlentities($parent_link_text)).'</a></p>' . $out['text'];
 
 				} else {
 					$res_ = OIDplus::db()->query("select * from ###objects where id = ?", array($parent->nodeId()));
@@ -444,14 +444,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 						$parent_link_text = empty($parent_title) ? explode(':',$parent->nodeId())[1] : $parent_title.' ('.explode(':',$parent->nodeId())[1].')';
 
-						$out['text'] = '<p><a '.OIDplus::gui()->link($parent->nodeId()).'><img src="img/arrow_back.png" width="16"> '._L('Parent node: %1',htmlentities($parent_link_text)).'</a></p>' . $out['text'];
+						$out['text'] = '<p><a '.OIDplus::gui()->link($parent->nodeId()).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Parent node: %1',htmlentities($parent_link_text)).'</a></p>' . $out['text'];
 					} else {
 						$out['text'] = '';
 					}
 				}
 			} else {
 				$parent_link_text = _L('Go back to front page');
-				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system').'><img src="img/arrow_back.png" width="16"> '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 			}
 
 			// ---

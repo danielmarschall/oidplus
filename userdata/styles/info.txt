@@ -4,8 +4,22 @@ About the folder "userdata/styles"
 
 In this folder, you can place an alternative version of oidplus_base.css and setup_base.css.
 
-Please note that the web browser will not access these CSS files.
-The CSS data is processed in oidplus.min.css.php and setup/setup.min.css.php instead.
+This folder can contain following files:
+
+- oidplus_base.css : This file REPLACES the oidplus_base.css file in the root directory.
+                     Please see a WARNING below.
+
+- oidplus_add.css  : This file is added after oidplus_base.css
+                     If you just want to override some styles, then you could write your
+                     changes in oidplus_add.css and give them priority using the
+                     "!important" statement.
+
+- setup_base.css   : This file REPLACES the setup/setup_base.css file.
+                     Please see a WARNING below.
+
+- setup_add.css    : Like oidplus_add.css , this file is placed after setup_base.css
+                     and allows you to do minor tweaks to the design.
+
 
 !! ATTENTION !!
 
@@ -13,4 +27,5 @@ The CSS data is processed in oidplus.min.css.php and setup/setup.min.css.php ins
     of oidplus_base.css and setup_base.css!
 
 (2) Note that the userdata/ directory cannot be accessed using the browser,
-    so if you need to use graphics, please put them in the folder "userdata_pub".
+    so if you need to reference graphics, please put them in the folder "userdata_pub".
+    (The CSS data is processed in oidplus.min.css.php and setup/setup.min.css.php instead.)

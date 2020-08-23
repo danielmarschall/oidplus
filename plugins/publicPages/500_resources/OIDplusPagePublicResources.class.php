@@ -155,7 +155,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
 					$lng_gobackto = _L('Go back to').':';
-					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources').'><img src="img/arrow_back.png" width="16"> '.$lng_gobackto.' '.$ic.' '.htmlentities(OIDplus::config()->getValue('resource_plugin_title', $this->getDefaultTitle())).'</a></p>';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '.$lng_gobackto.' '.$ic.' '.htmlentities(OIDplus::config()->getValue('resource_plugin_title', $this->getDefaultTitle())).'</a></p>';
 				} else {
 					$realdir = self::realname($dir);
 
@@ -173,7 +173,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.rtrim($dir,'/').'/').'><img src="img/arrow_back.png" width="16"> '._L('Go back to').': '.$ic.' '.htmlentities(self::getFolderTitle($realdir)).'</a></p><br>';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.rtrim($dir,'/').'/').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to').': '.$ic.' '.htmlentities(self::getFolderTitle($realdir)).'</a></p><br>';
 				}
 			}
 
