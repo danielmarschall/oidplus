@@ -1,0 +1,17 @@
+
+About the folder "userdata/welcome"
+-----------------------------------
+
+The folder "welcome" contains the file "welcome.html",
+which is the front page shown by the plugin "publicPages/000_objects".
+You may edit this file to overwrite the default welcome page.
+Please note:
+- Since userdata/ is a protected directory,
+  you cannot place resources (images, css etc.) there.
+- Although the file extension is ".html", it may only contain plain
+  HTML data (without head or body).
+
+Internationalization:
+To create a file with multiple languages, create them like this:
+	welcome.html      <-- this is the file in the default language ("enus" = English USA)
+	welcome$dede.html <-- this is the file for German ("dede")

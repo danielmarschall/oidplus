@@ -1,0 +1,13 @@
+
+About the folder "userdata/logs"
+--------------------------------
+
+This folder ontains the file oidplus.log created by plugin "logger/300_userdata_logfile".
+Having log messages stored in the log files makes
+processing of data easier. For example you can use "fail2ban" to
+analyze the log file and automatically ban IP addresses of networks
+that try to brute force an user account password.
+
+Note:
+- Make sure that oidplus.log can be written by your webserver (e.g. Apache).
+- You can shrink the size of oidplus.log by using logrotate (only Linux)

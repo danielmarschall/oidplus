@@ -1,0 +1,8 @@
+
+About the folder "userdata/private"
+-----------------------------------
+
+This folder is not used by any plugin.
+It can be used for the administrator to store any
+kind of files for their internal use.
+

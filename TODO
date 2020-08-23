@@ -27,6 +27,9 @@ RECENT STUFF
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Make a plugin that shows warning from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
 	But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
+- Should oid_utils.inc.php, xml_utils.inc.php, oidinfo_api, etc. all be put into 3p/ (especially if they have an own ViaThinkSoft repository)?
+	Note that external SVN repos need to be "hard coded" into includes/oidplus.inc.php and update/index.php
+- ViaThinkSoft reg2/query.php : Every reponse shall be JSON
 
 NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:

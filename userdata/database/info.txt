@@ -1,0 +1,6 @@
+
+About the folder "userdata/database"
+------------------------------------
+
+This folder can be used to store a SQLite database.
+The default database name is" oidplus.db"
