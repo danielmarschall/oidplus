@@ -19,8 +19,8 @@
 
 class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
-	private function getDefaultTitle() {
-		return _L('Documents and resources');
+	private function getMainTitle() {
+		return _L('Documents and Resources');
 	}
 
 	public function init($html=true) {
@@ -29,11 +29,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
-		OIDplus::config()->prepareConfigKey('resource_plugin_title',          'Resource plugin: Title of the resource section?', 'Documents and resources', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
-			if (empty($value)) {
-				throw new OIDplusException(_L('Please enter a title.'));
-			}
-		});
+		OIDplus::config()->deleteConfigKey('resource_plugin_title');
 		OIDplus::config()->deleteConfigKey('resource_plugin_path');
 		OIDplus::config()->prepareConfigKey('resource_plugin_hide_empty_path','Resource plugin: Hide empty paths? (0=no, 1=yes)', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || (($value != 0) && ($value != 1))) {
@@ -155,7 +151,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
 					$lng_gobackto = _L('Go back to').':';
-					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '.$lng_gobackto.' '.$ic.' '.htmlentities(OIDplus::config()->getValue('resource_plugin_title', $this->getDefaultTitle())).'</a></p>';
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '.$lng_gobackto.' '.$ic.' '.htmlentities($this->getMainTitle()).'</a></p>';
 				} else {
 					$realdir = self::realname($dir);
 
@@ -224,7 +220,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					return;
 				}
 			} else if (is_dir($realfile)) {
-				$out['title'] = ($file == '') ? OIDplus::config()->getValue('resource_plugin_title', $this->getDefaultTitle()) : self::getFolderTitle($realfile);
+				$out['title'] = ($file == '') ? $this->getMainTitle() : self::getFolderTitle($realfile);
 
 				if ($file == '') {
 					$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
@@ -451,7 +447,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				'id' => 'oidplus:resources',
 				'icon' => $tree_icon,
 				'state' => array("opened" => true),
-				'text' => OIDplus::config()->getValue('resource_plugin_title', $this->getDefaultTitle()),
+				'text' => $this->getMainTitle(),
 				'children' => $children
 			);
 		}

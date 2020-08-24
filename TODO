@@ -13,16 +13,15 @@ RECENT STUFF
 - When you try to create an OID and have not entered an asn1 id, there should be a warning
 - Multilang
 	* Not yet translated:
-		- includes\classes\http_class.class.php
-		- includes\classes\phpsvnclient.class.php
-		- plugins\publicPages\100_whois\whois\index.php
-		- 3p\vts_fileformats\fileformats.conf
+		- includes\classes\http_class.class.php [Problem: This is a third-party code!]
+		- includes\classes\phpsvnclient.class.php [Problem: This is a third-party code!]
+		- plugins\publicPages\100_whois\whois\index.php [Problem: This page is kinda standalone and does not include the OIDplus code]
+		- 3p\vts_fileformats\fileformats.conf [Problem: This is a third-party code!]
+		- includes\classes\VtsBrowserDownload.class.php [Problem: This is a third-party code!]
 	* Check/Correct German Machine-Translations:
 		- res/OIDplus/privacy_documentation$dede.html
 		- res/OIDplus/acknowledgements$dede.html
 		- plugins\publicPages\200_viathinksoft_freeoid\tos$dede.html
-	* Idea: Allow "oidplus_base$dede.css", so that languages can have their own CSS (e.g. wider "Go" button)
-		But this means that a language change also need to reload the style sheet (like the color-plugin does when you click "Test")
 - WebWHOIS: Open in new Window? Show URL without opening the page?
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Make a plugin that shows warning from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
@@ -152,6 +151,8 @@ REJECTED IDEAS
 	b) Vendors should use something like "?goto=oidplus:com.example...."
 
 IDEAS
+- In regards multilinguality: Allow "oidplus_base$dede.css", so that languages can have their own CSS (e.g. wider "Go" button)
+	But this means that a language change also need to reload the style sheet (like the color-plugin does when you click "Test")
 - when a new oid is created, should we redirect to the newly created OID, so that the user can begin entering the description etc?
 - when an object was not found, the error message could show the next possible known object (like WebWHOIS does)
 - the "goto" quickbar (at the top right) could also be used to search something ...

@@ -37,15 +37,16 @@ function process_file($filename) {
 	if (OIDplus::baseConfig()->getValue('MINIFY_CSS', true)) {
 		$minifier = new Minify\CSS($filename);
 		$cont = $minifier->minify();
-		$cont = str_ireplace("url(data:", "url###(data:", $cont);
-		$cont = str_ireplace("url(", "url(".$dir.'/', $cont);
 	} else {
 		$cont = file_get_contents($filename);
-		$cont = str_ireplace('url("data:', 'url###("data:', $cont);
-		$cont = str_ireplace('url("', 'url("'.$dir.'/', $cont);
-		$cont = str_ireplace("url('data:", "url###('data:", $cont);
-		$cont = str_ireplace("url('", "url('".$dir.'/', $cont);
 	}
+	$cont = preg_replace('@url\\(\s+@ism', 'url(', $cont);
+	$cont = str_ireplace('url("data:', 'url###("data:', $cont);
+	$cont = str_ireplace('url("', 'url###("'.$dir.'/', $cont);
+	$cont = str_ireplace("url('data:", "url###('data:", $cont);
+	$cont = str_ireplace("url('", "url###('".$dir.'/', $cont);
+	$cont = str_ireplace("url(data:", "url###(data:", $cont);
+	$cont = str_ireplace("url(", "url###(".$dir.'/', $cont);
 	$cont = str_ireplace("url###(", "url(", $cont);
 	return $cont."\n\n";
 }

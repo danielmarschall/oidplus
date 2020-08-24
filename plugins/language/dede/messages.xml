@@ -810,14 +810,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Cannot open file %1
-		]]></source>
-		<target><![CDATA[
-		Datei %1 kann nicht geöffnet werden
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Cannot prepare statement
 		]]></source>
 		<target><![CDATA[
@@ -1370,7 +1362,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Documents and resources
+		Documents and Resources
 		]]></source>
 		<target><![CDATA[
 		Dokumente und Ressourcen
@@ -1694,14 +1686,6 @@
 		]]></source>
 		<target><![CDATA[
 		Datei existiert nicht
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		File not found or inaccessible!
-		]]></source>
-		<target><![CDATA[
-		Datei nicht gefunden oder Zugriff verweigert
 		]]></target>
 	</message>
 	<message>
@@ -2422,14 +2406,6 @@
 		]]></source>
 		<target><![CDATA[
 		Ungültiger Protection-Flag. Bitte nutzen Sie die OIDplusConfig::PROTECTION_* Kontanten
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Invalid value for inline_mode
-		]]></source>
-		<target><![CDATA[
-		Ungültiger Wert für inline_mode
 		]]></target>
 	</message>
 	<message>
@@ -3694,14 +3670,6 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte geben Sie <code>svn update</code> in der Shell/Eingabe-Aufforderung ein, um OIDplus auf die neuste Version zu aktualisieren.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Please enter a title.
-		]]></source>
-		<target><![CDATA[
-		Bitte geben Sie einen Titel ein.
 		]]></target>
 	</message>
 	<message>
