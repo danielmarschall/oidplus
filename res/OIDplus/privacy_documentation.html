@@ -16,7 +16,7 @@
 	}
 	</style>
 	<h1>Procedural documentation related to privacy</h1>
-	<p><em>Revision: 20 August 2020</em></p>
+	<p><em>Revision: 24 August 2020</em></p>
 	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software &ldquo;OIDplus&rdquo;) and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web-software that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
 	<a name="terminology"></a><h2><strong><u>Parties / Terminology</u></strong></h2>
 	<p><strong>ViaThinkSoft</strong> is the developer of the software solution &ldquo;OIDplus&rdquo;.</p>
@@ -29,7 +29,8 @@
 	<a name="server_client_side"></a><h2><strong><u>Definition of server-side and client-side</u></strong></h2>
 	<p>OIDplus is a web application written in the programming languages PHP (running on server-side) and HTML/JavaScript (running on the client-side).</p>
 	<h3><u>Server-side</u></h3>
-	<p>The PHP scripts of OIDplus are processed through a PHP script interpreter running on top of a web server software (&ldquo;HTTP web server&rdquo;), for example, &ldquo;Apache&rdquo; or &ldquo;Nginx&rdquo;. The actual data of OIDplus (OIDs, RAs, &hellip;) is stored in a DBMS (Database Management Software) e.g. &ldquo;MySQL&rdquo;, &ldquo;MariaDB&rdquo; or &ldquo;PostgreSQL&rdquo;. The DBMS is usually installed on the same server machine where PHP/Apache is installed, but it can be installed on any machine by the server administrator.</p>
+	<p>The PHP scripts of OIDplus are processed through a PHP script interpreter running on top of a web server software (&ldquo;HTTP web server&rdquo;), for example, &ldquo;Apache&rdquo; or &ldquo;Nginx&rdquo;. The actual data of OIDplus (OIDs, RAs, &hellip;) is stored in a DBMS (Database Management
+	System) e.g. &ldquo;MySQL&rdquo;, &ldquo;MariaDB&rdquo; or &ldquo;PostgreSQL&rdquo;. The DBMS is usually installed on the same server machine where PHP/Apache is installed, but it can be installed on any machine by the server administrator.</p>
 	<h3><u>Client-side</u></h3>
 	<p>While the user browses OIDplus, the server-side serves HTML and JavaScript contents to the client computer. Using a web browser software (like &ldquo;Chrome&rdquo; or &ldquo;Firefox&rdquo;), these contents are processed and displayed on the screen. Various JavaScript scripts are either required to run OIDplus or are improving the user experience, e.g. by reloading OID descriptions without reloading the whole page while the user browses OIDplus. There might be a few external JavaScripts included (Polyfill and ReCaptcha), which are described at the end of the document.</p>
 	<a name="scope"></a><h2><strong><u>Scope of this document</u></strong></h2>
@@ -374,7 +375,7 @@
 	</table>
 	<a name="ra_invitation"></a><h2><strong><u>Invitation of RAs</u></strong></h2>
 	<p>When an OID is created by a RA or by the system administrator, the owner of the OID will be defined by an email address (which will be shown publicly). Therefore, it is possible to own an OID, even if you are not registered in the OIDplus system.</p>
-	<p>When the OID is created and the RA with such an email address does not exist, the creator will be asked if they want to send an invitation. If they agree, an email will be sent to this email address, allowing them to click a link to register to the OIDplus system, so that they can add more contact data as well as be able to delegate and edit OID information.</p>
+	<p>When the OID is created and the RA with such an email address does not exist	in the OIDplus system, the creator will be asked if they want to send an invitation. If they agree, an email will be sent to this email address, allowing them to click a link to register to the OIDplus system, so that they can add more contact data as well as be able to delegate and edit OID information.</p>
 	<p>Currently, a RA cannot register themselves. They need an invitation by the system administrator or their superior RA to be able to register to the OIDplus system. (Note: To resend an invitation, the system administrator or superior RA needs to click &ldquo;Update&rdquo; at the OID delegation table, so that they are asked again to send the invitation).</p>
 	<p>In addition to the invitation system, the system administrator can create RA accounts without email address verification.</p>
 	<a name="oidinfo_publishing"></a><h2><strong><u>Publishing RAs/OIDs to oid-info.com</u></strong></h2>
@@ -382,7 +383,9 @@
 	<p>There are two possibilities:</p>
 	<ol>
 		<li>Manual transfer: The system administrator can create an XML file that contains OID and RA information (only the parts which can be seen by the public anyway) and can upload this XML file to oid-info.com</li>
-		<li>If the OIDplus system is registered to ViaThinkSoft and the OID-info.com transfer is enabled (see below), ViaThinkSoft will automatically fetch the XML data from the OIDplus system using an encrypted interface and submits the data to the oid-info.com administrator.</li>
+		<li>If the OIDplus system is registered to ViaThinkSoft and the OID-info.com transfer is enabled (see below),
+		the OIDplus system will transmit XML data containing RA/OID information through an encrypted interface to ViaThinkSoft,
+		and ViaThinkSoft after regular manual check submits the data to the oid-info.com administrator.</li>
 	</ol>
 	<a name="systemid"></a><h2><strong><u>Unique system ID</u></strong></h2>
 	<p>During the initial setup, a public/private-key-pair will be created which can be used for various purposes, e.g. to encrypt data between OIDplus and ViaThinkSoft if the &ldquo;system registration&rdquo; service is used (see below) or to sign OID-WHOIS responses.</p>
@@ -441,6 +444,9 @@
 	<p>Besides logs created by OIDplus, other client-side or server-side software involved in processing the web requests (like the HTTP web server, the PHP script interpreter, the database server, the Operating System, the web browser, or various firewalls) might log traffic and queries in various ways. These logs are independent of OIDplus and need to be managed by the system administrator and/or network administrators.</p>
 	<p>If you are concerned about the contents of the log files, please contact the system administrator.</p>
 	<a name="cookies"></a><h2><strong><u>Cookies</u></strong></h2>
+	<p>A cookie is a small text file that is sent to this
+	website every time you visit it, e.g. to identify you
+	as a logged in user.</p>
 	<p>OIDplus does only use cookies for the following purposes:</p>
 	<table border="1">
 	<tbody>

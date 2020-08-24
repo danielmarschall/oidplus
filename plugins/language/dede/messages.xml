@@ -189,7 +189,7 @@
 		0 = Register to directory service and automatically publish RA/OID data at oid-info.com
 		]]></source>
 		<target><![CDATA[
-		0 = Beim OIDplus-Webverzeichnis registrieren und RA/OID-Daten automatisch auf oid-info.com veröffentlichen
+		0 = Beim OIDplus-Verzeichnisdienst registrieren und RA/OID-Daten automatisch auf oid-info.com veröffentlichen
 		]]></target>
 	</message>
 	<message>
@@ -197,7 +197,7 @@
 		1 = Only register to directory service
 		]]></source>
 		<target><![CDATA[
-		1 = Nur im OIDplus-Webverzeichnis registrieren
+		1 = Nur im OIDplus-Verzeichnisdienst registrieren
 		]]></target>
 	</message>
 	<message>
@@ -229,7 +229,7 @@
 		<i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a>.
 		]]></source>
 		<target><![CDATA[
-		<i>Datenschutz-Hinweis:</i> Bitte beachten Sie, dass das Entfernen des Systems aus dem OIDplus-Webverzeichnis nicht automatisch OID/RA-Informationen löscht, die bereits bei oid-info.com veröffentlicht wurden. Um diese zu entfernen, kontaktieren Sie bitte den <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a> (in Englisch oder auf Französisch).
+		<i>Datenschutz-Hinweis:</i> Bitte beachten Sie, dass das Entfernen des Systems aus dem OIDplus-Verzeichnisdienst nicht automatisch OID/RA-Informationen löscht, die bereits bei oid-info.com veröffentlicht wurden. Um diese zu entfernen, kontaktieren Sie bitte den <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a> (in Englisch oder auf Französisch).
 		]]></target>
 	</message>
 	<message>
@@ -429,7 +429,7 @@
 		After clicking "change", your OIDplus system will contact the ViaThinkSoft server to adjust (add or remove information) your privacy setting. This may take a few minutes.
 		]]></source>
 		<target><![CDATA[
-		Nachdem Sie die Änderung bestätigt haben, wird Ihr OIDplus System eine Verbindung mit dem ViaThinkSoft-Server aufnehmen und das OIDplus-Webverzeichnis aktualisieren (d.h. Informationen hinzufügen oder löschen) gemäß Ihrer Datenschutz-Stufe. Dies könnte ein paar Minuten dauern.
+		Nachdem Sie die Änderung bestätigt haben, wird Ihr OIDplus System eine Verbindung mit dem ViaThinkSoft-Server aufnehmen und den OIDplus-Verzeichnisdienst aktualisieren (d.h. Informationen hinzufügen oder löschen) gemäß Ihrer Datenschutz-Stufe. Dies könnte ein paar Minuten dauern.
 		]]></target>
 	</message>
 	<message>
@@ -445,7 +445,7 @@
 		All your OIDs will automatically submitted to oid-info.com through the remote directory service in regular intervals.
 		]]></source>
 		<target><![CDATA[
-		Alle Ihre OIDs werden durch das OIDplus-Webverzeichnis in regelmäßigen Abständen zu oid-info.com übertragen.
+		Alle Ihre OIDs werden durch den OIDplus-Verzeichnisdienst in regelmäßigen Abständen an oid-info.com übertragen.
 		]]></target>
 	</message>
 	<message>
@@ -2205,7 +2205,7 @@
 		In order to use this feature, you need to have at least one (root) OID added in your system, and the system needs to report the newly added root to the directory service (the reporting interval is 1 hour).
 		]]></source>
 		<target><![CDATA[
-		Um diese Funktion zu nutzen, müssen Sie zumindest eine Wurzel-OID in Ihrem System hinzugefügt haben, und das System muss die neu hinzugefügte Wurzel-OID an das OIDplus-Webverzeichnis melden (Der Melde-Intervall ist 1 Stunde).
+		Um diese Funktion zu nutzen, müssen Sie zumindest eine Wurzel-OID in Ihrem System hinzugefügt haben, und das System muss die neu hinzugefügte Wurzel-OID an den OIDplus-Verzeichnisdienst melden (Der Melde-Intervall ist 1 Stunde).
 		]]></target>
 	</message>
 	<message>
