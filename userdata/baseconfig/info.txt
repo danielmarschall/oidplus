@@ -6,3 +6,6 @@ The folder "baseconfig" contains the file "config.inc.php" which defines
 important static settings like the database connection credentials or
 security keys (ReCaptcha) etc.
 Setup (/setup/) will show assist you in creating this config.inc.php file.
+
+In the document doc/config_values.txt, you can see a list of advanced
+settings that can be manually added into the config.inc.php file.
