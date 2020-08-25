@@ -4154,6 +4154,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Received error status code: %1
+		]]></source>
+		<target><![CDATA[
+		Fehler-Code erhalten: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Redirecting to HTTPS...
 		]]></source>
 		<target><![CDATA[

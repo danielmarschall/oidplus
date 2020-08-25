@@ -506,5 +506,7 @@ function _L() {
 		n++;
 	}
 
+	tmp = tmp.replace("%%", "%");
+
 	return tmp;
 }

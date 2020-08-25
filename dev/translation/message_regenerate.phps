@@ -192,6 +192,11 @@ function test_missing_placeholder($test) {
 			break;
 		}
 	}
+
+	$test = preg_replace('@%([1-9][0-9]|%)*@ism', '', $test);
+	if (strpos($test,'%') !== false) {
+		echo "Attention: Wrong percentage sign in '$test'!\n";
+	}
 }
 
 # ---

@@ -98,25 +98,30 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 			curl_close($ch);
 
-			$json = json_decode($res, true);
+			$json = @json_decode($res, true);
 
 			if (!$json) {
-				return array("status" => 1, "error" => _L('JSON reply from ViaThinkSoft decoding error: %1',$res));
+				return array(
+					"status" => 1,
+					"error" => _L('JSON reply from ViaThinkSoft decoding error: %1',$res)
+				);
 			}
 
 			if (isset($json['error']) || ($json['status'] != 0)) {
-				return array("status" => 1, "error" => $json['error']);
-			} else {
-				$errors = array();
-				list($count_imported_oids, $count_already_existing, $count_errors, $count_warnings) = $this->oidinfoImportXML('<oid-database>'.$json['xml'].'</oid-database>', $errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_DISALLOW_ORPHANS);
-				if (count($errors) > 0) {
-					return array("status" => 1, "error" => implode("\n",$errors));
-				} else if ($count_imported_oids <> 1) {
-					return array("status" => 1, "error" => _L('Imported %1, but expected to import 1',$count_imported_oids));
-				} else {
-					return array("status" => 0);
-				}
+				return array(
+					"status" => 1,
+					"error" => isset($json['error']) ? $json['error'] : _L('Received error status code: %1',$json['status'])
+				);
+			}
 
+			$errors = array();
+			list($count_imported_oids, $count_already_existing, $count_errors, $count_warnings) = $this->oidinfoImportXML('<oid-database>'.$json['xml'].'</oid-database>', $errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_DISALLOW_ORPHANS);
+			if (count($errors) > 0) {
+				return array("status" => 1, "error" => implode("\n",$errors));
+			} else if ($count_imported_oids <> 1) {
+				return array("status" => 1, "error" => _L('Imported %1, but expected to import 1',$count_imported_oids));
+			} else {
+				return array("status" => 0);
 			}
 		} else {
 			throw new OIDplusException(_L('Unknown action ID'));
@@ -173,11 +178,21 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 			curl_close($ch);
 
-			$json = json_decode($res, true);
+			$json = @json_decode($res, true);
 
 			if (!$json) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
+				return;
+			}
+
+			if (isset($json['error']) || ($json['status'] != 0)) {
+				$out['icon'] = 'img/error_big.png';
+				if (isset($json['error'])) {
+					$out['text'] = _L('Received error status code: %1',$json['error']);
+				} else {
+					$out['text'] = _L('Received error status code: %1',$json['status']);
+				}
 				return;
 			}
 
@@ -419,11 +434,21 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 			curl_close($ch);
 
-			$json = json_decode($res, true);
+			$json = @json_decode($res, true);
 
 			if (!$json) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
+				return;
+			}
+
+			if (isset($json['error']) || ($json['status'] != 0)) {
+				$out['icon'] = 'img/error_big.png';
+				if (isset($json['error'])) {
+					$out['text'] = _L('Received error status code: %1',$json['error']);
+				} else {
+					$out['text'] = _L('Received error status code: %1',$json['status']);
+				}
 				return;
 			}
 

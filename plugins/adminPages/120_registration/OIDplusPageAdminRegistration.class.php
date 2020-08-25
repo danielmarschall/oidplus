@@ -130,13 +130,52 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
 			}
 			curl_close($ch);
-			// die("RES: $res\n");
-			// if ($res == 'OK') ...
+
+			$json = @json_decode($res, true);
+
+			if (!$json) {
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
+				return;
+			}
+
+			if (isset($json['error']) || ($json['status'] != 0)) {
+				$out['icon'] = 'img/error_big.png';
+				if (isset($json['error'])) {
+					$out['text'] = _L('Received error status code: %1',$json['error']);
+				} else {
+					$out['text'] = _L('Received error status code: %1',$json['status']);
+				}
+				return;
+			}
 
 			$out['title'] = _L('Registration live status');
 			$out['text']  = '<p><a '.OIDplus::gui()->link('oidplus:srv_registration').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to registration settings').'</a></p>' .
-			                $res;
+			                $res['content'];
 		}
+	}
+
+	protected function areWeRegistered() {
+		// To check if we are registered. Check it "anonymously" (i.e. without revealing our system ID)
+		$res = file_get_contents('https://oidplus.viathinksoft.com/reg2/query.php?query='.self::QUERY_LISTALLSYSTEMIDS_V1);
+
+		$json = @json_decode($res, true);
+
+		if (!$json) {
+			return false; // throw new OIDplusException(_L('JSON reply from ViaThinkSoft decoding error: %1',$res));
+		}
+
+		if (isset($json['error']) || ($json['status'] != 0)) {
+			if (isset($json['error'])) {
+				return false; // throw new OIDplusException(_L('Received error status code: %1',$json['error']));
+			} else {
+				return false; // throw new OIDplusException(_L('Received error status code: %1',$json['status']));
+			}
+		}
+
+		$list = $json['list'];
+
+		return in_array(OIDplus::getSystemId(false), $list);
 	}
 
 	public function sendRegistrationQuery($privacy_level=null) {
@@ -153,9 +192,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		if (!OIDplus::getPkiStatus()) return false;
 
 		if ($privacy_level == 2) {
-			// The user wants to unregister
-			// but we only unregister if we are registered. Check this "anonymously" (i.e. without revealing our system ID)
-			if (in_array(OIDplus::getSystemId(false), explode(';',file_get_contents('https://oidplus.viathinksoft.com/reg2/query.php?query='.self::QUERY_LISTALLSYSTEMIDS_V1)))) {
+			// The user wants to unregister,  but we only unregister if we are registered
+			if ($this->areWeRegistered()) {
 				$query = self::QUERY_UNREGISTER_V1;
 
 				$payload = array(
@@ -184,8 +222,20 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 					return false; // throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
 				}
 				curl_close($ch);
-				// die("RES: $res\n");
-				// if ($res == 'OK') ...
+
+				$json = @json_decode($res, true);
+
+				if (!$json) {
+					return false; // throw new OIDplusException(_L('JSON reply from ViaThinkSoft decoding error: %1',$res));
+				}
+
+				if (isset($json['error']) || ($json['status'] != 0)) {
+					if (isset($json['error'])) {
+						return false; // throw new OIDplusException(_L('Received error status code: %1',$json['error']));
+					} else {
+						return false; // throw new OIDplusException(_L('Received error status code: %1',$json['status']));
+					}
+				}
 			}
 		} else {
 			if ($privacy_level == 0) {
@@ -252,7 +302,13 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			}
 			curl_close($ch);
 
-			if ($res === 'HASH_CONFLICT') {
+			$json = @json_decode($res, true);
+
+			if (!$json) {
+				return false; // throw new OIDplusException(_L('JSON reply from ViaThinkSoft decoding error: %1',$res));
+			}
+
+			if ($json['status'] == 99/*Hash conflict*/) {
 				OIDplus::logger()->log("[WARN]A!", "Removing SystemID and key pair because there is a hash conflict with another OIDplus system!");
 
 				// Delete the system ID since we have a conflict with the 31-bit hash!
@@ -262,13 +318,16 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				// Try to generate a new system ID
 				OIDplus::getPkiStatus(true);
 
-				// Enforce a new registration attempt at the next run
+				// Enforce a new registration attempt at the next page visit
 				// We will not try again here, because that might lead to an endless loop if the VTS server would always return 'HASH_CONFLCIT'
 				OIDplus::config()->setValue('reg_last_ping', 0);
+			} elseif (isset($json['error']) || ($json['status'] != 0)) {
+				if (isset($json['error'])) {
+					return false; // throw new OIDplusException(_L('Received error status code: %1',$json['error']));
+				} else {
+					return false; // throw new OIDplusException(_L('Received error status code: %1',$json['status']));
+				}
 			}
-
-			// die("RES: $res\n");
-			// if ($res == 'OK') ...
 		}
 	}
 
@@ -329,13 +388,13 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	public function implementsFeature($id) {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested 
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested
 		return false;
 	}
 
 	public function oobeRequested(): bool {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
-		
+
 		return OIDplus::config()->getValue('oobe_registration_done') == '0';
 	}
 
@@ -343,7 +402,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
 
 		echo '<p><u>'._L('Step %1: System registration and automatic publishing (optional)',$step).'</u></p>';
-		
+
 		if (file_exists(__DIR__ . '/info$'.OIDplus::getCurrentLang().'.html')) {
 			$info = file_get_contents(__DIR__ . '/info$'.OIDplus::getCurrentLang().'.html');
 		} else {

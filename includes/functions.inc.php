@@ -132,6 +132,7 @@ function my_vsprintf($str, $args) {
                 $str = str_replace("%$n", $val, $str);
                 $n++;
         }
+        $str = str_replace("%%", "%", $str);
         return $str;
 }
 
