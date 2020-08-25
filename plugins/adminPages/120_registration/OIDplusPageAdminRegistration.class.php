@@ -151,7 +151,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 			$out['title'] = _L('Registration live status');
 			$out['text']  = '<p><a '.OIDplus::gui()->link('oidplus:srv_registration').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to registration settings').'</a></p>' .
-			                $res['content'];
+			                $json['content'];
 		}
 	}
 
