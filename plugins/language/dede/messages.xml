@@ -258,6 +258,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		A plugin has requested that the initialization wizard (OOBE) is shown. Please reload the page.
+		]]></source>
+		<target><![CDATA[
+		Ein Plugin hat die Anzeige des Einrichtungs-Assistenten angefordert. Bitte laden Sie die Seite erneut.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		ADDITIONAL FILES
 		]]></source>
 		<target><![CDATA[

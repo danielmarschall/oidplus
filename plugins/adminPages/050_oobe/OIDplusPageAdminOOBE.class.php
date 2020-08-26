@@ -23,21 +23,26 @@ class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 		// Nothing
 	}
 
-	public function init($html=true) {
-		OIDplus::config()->deleteConfigKey('reg_wizard_done');
-		OIDplus::config()->prepareConfigKey('oobe_main_done', '"Out Of Box Experience" wizard for the system settings done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
-
+	public function oobeRequired() {
 		$oobe_done = OIDplus::config()->getValue('oobe_main_done') == '1';
 
 		foreach (OIDplus::getPagePlugins() as $plugin) {
 			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.1')) {
 				if ($plugin->oobeRequested()) {
 					$oobe_done = false;
+					break;
 				}
 			}
 		}
 
-		if (!$oobe_done) {
+		return !$oobe_done;
+	}
+
+	public function init($html=true) {
+		OIDplus::config()->deleteConfigKey('reg_wizard_done');
+		OIDplus::config()->prepareConfigKey('oobe_main_done', '"Out Of Box Experience" wizard for the system settings done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
+
+		if ($this->oobeRequired()) {
 			// Show registration/configuration wizard once
 			if ($html) {
 				if (basename($_SERVER['SCRIPT_NAME']) != 'oobe.php') {
@@ -46,7 +51,7 @@ class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 				}
 			} else {
 				// We cannot guarantee that everything works correctly if OOBE never ran once. So abort AJAX and co.
-				die();
+				throw new OIDplusException(_L('A plugin has requested that the initialization wizard (OOBE) is shown. Please reload the page.'));
 			}
 		}
 	}

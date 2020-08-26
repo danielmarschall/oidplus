@@ -241,7 +241,14 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			$output .= '<tr>';
 			$output .= '<td>'.htmlentities(basename($file)).'</td>';
 			$output .= '<td>'.htmlentities(self::convert_filesize(filesize($file), 0)).'</td>';
-			$lookup_files = array(__DIR__.'/../../../userdata/attachments/filetypes.conf', __DIR__.'/../../../3p/vts_fileformats/filetypes.local', __DIR__.'/../../../3p/vts_fileformats/filetypes.conf');
+			$lookup_files = array(
+				__DIR__.'/../../../userdata/attachments/filetypes$'.OIDplus::getCurrentLang().'.conf',
+				__DIR__.'/../../../userdata/attachments/filetypes.conf',
+				__DIR__.'/../../../3p/vts_fileformats/filetypes$'.OIDplus::getCurrentLang().'.local', // not recommended
+				__DIR__.'/../../../3p/vts_fileformats/filetypes.local', // not recommended
+				__DIR__.'/../../../3p/vts_fileformats/filetypes$'.OIDplus::getCurrentLang().'.conf',
+				__DIR__.'/../../../3p/vts_fileformats/filetypes.conf'
+			);
 			$output .= '<td>'.htmlentities(VtsFileTypeDetect::getDescription($file, $lookup_files)).'</td>';
 
 			$output .= '     <td><button type="button" name="download_'.md5($file).'" id="download_'.md5($file).'" class="btn btn-success btn-xs download" onclick="downloadAttachment('.js_escape(OIDplus::webpath(__DIR__)).', current_node,'.js_escape(basename($file)).')">'._L('Download').'</button></td>';
