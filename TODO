@@ -18,17 +18,17 @@ RECENT STUFF
 	* Is there some useful German translation of the Apache 2.0 license?
 - WebWHOIS: Open in new Window? Show URL without opening the page?
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
-- Make a plugin that shows warning from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
-	But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
 - Should oid_utils.inc.php, xml_utils.inc.php, oidinfo_api, etc. all be put into 3p/ (especially if they have an own ViaThinkSoft repository)?
 	Note that external SVN repos need to be "hard coded" into includes/oidplus.inc.php and update/index.php
 
-NEW FUNCTIONALITIES
+IDEAS FOR NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:
 	* Show every object and its attachments, so that the admin knows what's going on
 	  (Alternatively they can just look in the userdata directory using FTP)
 	* Give the ability to enable/disable RA uploading/deleting
 	  (Alternatively they need to do it in the configuration module and enter '0' and '1' by hand)
+- Make a plugin that shows warning from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
+	But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
 - Excel/CSV import tool for bulk data import (as alternative to XML import. Maybe previous Excel->XML import tool?)
 
 TINYMCE

@@ -116,28 +116,28 @@ Information:             Values 0 (off), 1 (on), 2 (auto detect)
 
 
 ----------------------
-(2) SYSTEM LIMITATIONS (defined and documented in includes/limits.inc.php , can be overwritten by config.inc.php)
+(2) SYSTEM LIMITATIONS (defined and documented in includes/oidplus_limits.inc.php , can be overwritten by config.inc.php)
 ----------------------
 
 OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_DEPTH',  30);
 Old 2.0 format:          define('OIDPLUS_MAX_OID_DEPTH', 30);
-Information:             Please read the documentation in the file includes/limits.inc.php
+Information:             Please read the documentation in the file includes/oidplus_limits.inc.php
 
 OIDplus::baseConfig()->setValue('LIMITS_MAX_ID_LENGTH',     255);
 Old 2.0 format:          define('OIDPLUS_MAX_OID_ARC_SIZE', 255);
-Information:             Please read the documentation in the file includes/limits.inc.php
+Information:             Please read the documentation in the file includes/oidplus_limits.inc.php
 
 OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ARC_SIZE',  50);
 Old 2.0 format:          define('OIDPLUS_MAX_OID_ARC_SIZE', 50);
-Information:             Please read the documentation in the file includes/limits.inc.php
+Information:             Please read the documentation in the file includes/oidplus_limits.inc.php
 
 OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ASN1_ID_LEN',  255);
 Old 2.0 format:          define('OIDPLUS_MAX_OID_ASN1_ID_LEN', 255);
-Information:             Please read the documentation in the file includes/limits.inc.php
+Information:             Please read the documentation in the file includes/oidplus_limits.inc.php
 
 OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_UNICODE_LABEL_LEN',  255);
 Old 2.0 format:          define('OIDPLUS_MAX_OID_UNICODE_LABEL_LEN', 255);
-Information:             Please read the documentation in the file includes/limits.inc.php
+Information:             Please read the documentation in the file includes/oidplus_limits.inc.php
 
 
 -----------------------------------------

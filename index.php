@@ -142,10 +142,12 @@ if (class_exists('OIDplusPageAdminColors')) {
 	</div>
 
 	<div id="oidtree" class="borderbox">
-		<!-- <noscript>
-			<p><b><?php echo _L('Please enable JavaScript to use all features'); ?></b></p>
-		</noscript> -->
-		<?php OIDplus::menuUtils()->nonjs_menu(); ?>
+		<?php
+		//echo '<noscript>';
+		//echo '<p><b>'._L('Please enable JavaScript to use all features').'</b></p>';
+		//echo '</noscript>';
+		OIDplus::menuUtils()->nonjs_menu();
+		?>
 	</div>
 </div>
 

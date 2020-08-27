@@ -51,7 +51,7 @@ class OIDplus {
 			// It is important to include it before userdata/baseconfig/config.inc.php was included,
 			// so we can give userdata/baseconfig/config.inc.php the chance to override the values.
 
-			include OIDplus::basePath().'/includes/limits.inc.php';
+			include OIDplus::basePath().'/includes/oidplus_limits.inc.php';
 
 			// Include config file
 
@@ -564,7 +564,7 @@ class OIDplus {
 
 	# --- Initialization of OIDplus
 
-	public static function init($html=true) {
+	public static function init($html=true, $keepBaseConfig=true) {
 		self::$html = $html;
 
 		// Reset internal state, so we can re-init verything if required
@@ -575,7 +575,7 @@ class OIDplus {
 		}
 
 		self::$config = null;
-		self::$baseConfig = null;
+		if (!$keepBaseConfig) self::$baseConfig = null;  // for test cases we need to be able to control base config and setting values manually, so $keepBaseConfig needs to be true
 		self::$gui = null;
 		self::$authUtils = null;
 		self::$mailUtils = null;
