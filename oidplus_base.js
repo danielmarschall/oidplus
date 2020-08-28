@@ -42,18 +42,9 @@ function isInternetExplorer() {
 	return ((ua.indexOf("MSIE ") > 0) || (ua.indexOf("Trident/") > 0));
 }
 
-function oidplus_external_polyfill() {
-	// Disable this code by adding following line to userdata/baseconfig/config.inc.php
-	// define('RECAPTCHA_ENABLED', false);
-	if (isInternetExplorer()) {
-		// Compatibility with Internet Explorer
-		oidplus_loadScript('https://polyfill.io/v3/polyfill.min.js?features=fetch%2CURL');
-	}
-}
-
 function oidplus_external_recaptcha() {
-	// Disable this code by adding following lines to userdata/baseconfig/config.inc.php
-	// define('DISABLE_MSIE_COMPAT', true);
+	// Disable this code by changing/adding following line to userdata/baseconfig/config.inc.php
+	// define('RECAPTCHA_ENABLED', false);
 	oidplus_loadScript('https://www.google.com/recaptcha/api.js');
 }
 

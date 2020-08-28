@@ -63,7 +63,6 @@ SMALL THINGS
 - Revive the idea of "information objects" = OIDs that contain content
 - Things like "config()->minRaPasswordLength" should not be hardcoded functions, but rather queried with normal getValue() etc.
 - API : Make a function that checks if a RA exists, and use it everywhere where needed
-- Should we self-host polyfill due to GDPR stuff?
 - Object type plugins : take care that "treeicon.png" and "icon_big.png" exist everywhere (become standard)
 - when ajax.php generates a PHP error, the client gives a "syntax error" message... it would be better if the client shows the full php error? or something more user-friendly?
 - freeoid: gmail app does not hyperlink the activation URL. why?
@@ -101,7 +100,6 @@ SMALL THINGS
 		- if you select something in the jstree, then you should be asked if you want to save your work (if tinymce is dirty); the same thing as if you would want to reload/close the page
 		- critical bug: open page, edit tiny mce, click save. Then F5 reload (not Ctrl+F5): then the old content is there again. Except if you press Ctrl+F5
 - jstree select: automatically scroll down
-- upgrade the design; make things more pretty
 - things like RA: show more things, address, email etc.
 - note that we (and the RFC) talk about Objects, but actually OIDs only reference objects, but they are not the objects
 

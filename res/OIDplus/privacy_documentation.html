@@ -16,7 +16,7 @@
 	}
 	</style>
 	<h1>Procedural documentation related to privacy</h1>
-	<p><em>Revision: 24 August 2020</em></p>
+	<p><em>Revision: 29 August 2020</em></p>
 	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software &ldquo;OIDplus&rdquo;) and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web-software that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
 	<a name="terminology"></a><h2><strong><u>Parties / Terminology</u></strong></h2>
 	<p><strong>ViaThinkSoft</strong> is the developer of the software solution &ldquo;OIDplus&rdquo;.</p>
@@ -32,7 +32,7 @@
 	<p>The PHP scripts of OIDplus are processed through a PHP script interpreter running on top of a web server software (&ldquo;HTTP web server&rdquo;), for example, &ldquo;Apache&rdquo; or &ldquo;Nginx&rdquo;. The actual data of OIDplus (OIDs, RAs, &hellip;) is stored in a DBMS (Database Management
 	System) e.g. &ldquo;MySQL&rdquo;, &ldquo;MariaDB&rdquo; or &ldquo;PostgreSQL&rdquo;. The DBMS is usually installed on the same server machine where PHP/Apache is installed, but it can be installed on any machine by the server administrator.</p>
 	<h3><u>Client-side</u></h3>
-	<p>While the user browses OIDplus, the server-side serves HTML and JavaScript contents to the client computer. Using a web browser software (like &ldquo;Chrome&rdquo; or &ldquo;Firefox&rdquo;), these contents are processed and displayed on the screen. Various JavaScript scripts are either required to run OIDplus or are improving the user experience, e.g. by reloading OID descriptions without reloading the whole page while the user browses OIDplus. There might be a few external JavaScripts included (Polyfill and ReCaptcha), which are described at the end of the document.</p>
+	<p>While the user browses OIDplus, the server-side serves HTML and JavaScript contents to the client computer. Using a web browser software (like &ldquo;Chrome&rdquo; or &ldquo;Firefox&rdquo;), these contents are processed and displayed on the screen. Various JavaScript scripts are either required to run OIDplus or are improving the user experience, e.g. by reloading OID descriptions without reloading the whole page while the user browses OIDplus. There might be a few external JavaScripts included (currently only ReCaptcha), which are described at the end of the document.</p>
 	<a name="scope"></a><h2><strong><u>Scope of this document</u></strong></h2>
 	<p>This document contains information about the OIDplus software only. It is independent of the behavior of the client-side software (web browser, Operating system, firewalls, &hellip;), independent from the behavior of hardware (network routers or firewalls, &hellip;), independent from the behavior of the server-side software (Apache, PHP, MySQL/MariaDB/PostgreSQL/..., Operating system, etc.) and the practices how the system administrator is operating the server software, stores log files, manages firewalls, etc.</p>
 	<a name="oid_information"></a><h2><strong><u>OID information</u></strong></h2>
@@ -523,13 +523,6 @@
 	<a name="external_javascripts"></a><h2><strong><u>External JavaScripts</u></strong></h2>
 	<p>During the loading of the web page, various JavaScripts are included to improve the user experience and add essential functionalities. The basic scripts are the JavaScript files of OIDplus itself, which are stored on the server of the particular OIDplus installation.</p>
 	<p>There are two JavaScripts which are loaded from an external source/server:</p>
-	<h3><em><u>Polyfill (only if Internet Explorer is used)</u></em></h3>
-	<p>To make OIDplus compatible with the web browser &ldquo;Internet Explorer&rdquo;, OIDplus will include a JavaScript script from &ldquo;polyfill.io&rdquo; which is a service by Financial Times.</p>
-	<p>Please see their <a href="https://polyfill.io/v3/privacy-policy/">Privacy Policy</a> and <a href="https://polyfill.io/v3/terms/">Terms of service</a> for more information.</p>
-	<p>The Polyfill JavaScript is only included if OIDplus detects that the web browser is Internet Explorer.</p>
-	<p>To disable the Polyfill feature, the system administrator needs to add the following line into the configuration file &ldquo;userdata/baseconfig/config.inc.php&rdquo; in the folder of the OIDplus installation.</p>
-	<p><code>OIDplus::baseConfig()-&gt;setValue('DISABLE_MSIE_COMPAT', true);</code></p>
-	<p>The adding of this line on server-side and/or the blocking of the JavaScript on the client-side will result in the page not working on &ldquo;Internet Explorer&rdquo; web browser.</p>
 	<h3><em><u>ReCAPTCHA (only if &ldquo;ReCAPTCHA&rdquo; is enabled)</u></em></h3>
 	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable &ldquo;ReCAPTCHA&rdquo; which is a service of Google. Before enabling ReCAPTCHA in the OIDplus setup/settings, the system administrator has to request an API key from Google. The usage of ReCAPTCHA will probably introduce additional cookies that are out of the control of OIDplus.</p>
 	<p>Please see <a href="https://policies.google.com/privacy">Google&rsquo;s Privacy Policy</a> and <a href="https://policies.google.com/terms">Terms of service</a> for more information.</p>

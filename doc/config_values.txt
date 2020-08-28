@@ -193,12 +193,6 @@ Old 2.0 format:          define('DO_MINIFY',  true);
 OIDplus::baseConfig()->setValue('MINIFY_JS',  true);
 Old 2.0 format:          (Not available)
 
-OIDplus::baseConfig()->setValue('DISABLE_MSIE_COMPAT', false);
-Old 2.0 format:          define('DISABLE_MSIE_COMPAT', false);
-Information:             Set to "true" if you want to avoid that the external polyfill
-                         JavaScript will be included if Internet Explorer is detected.
-                         Only recommended if you have concerns about privacy.
-
 OIDplus::baseConfig()->setValue('DISABLE_PLUGIN_...', true);
 Old 2.0 format:          define('OIDPLUS_DISABLE_PLUGIN_...', true);
 Information:             This gives you the possibility to disable a plugin without
