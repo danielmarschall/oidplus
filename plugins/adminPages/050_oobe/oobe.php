@@ -188,7 +188,7 @@ if ($pki_status) {
 
 }
 
-echo '<br><br><br>';
+echo '<br><br><br>'; // because of iPhone Safari
 
 echo '</body>';
 

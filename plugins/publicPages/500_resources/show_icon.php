@@ -19,16 +19,16 @@
 
 define('SPACER_PNG', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII='));
 
+require_once __DIR__ . '/../../../includes/functions.inc.php';
+
 if (!isset($_REQUEST['file'])) {
-	header('Content-Type:image/png');
-	die(SPACER_PNG);
+	httpOutWithETag(SPACER_PNG, 'image/png', 'spacer.png');
 } else {
 	$file = $_REQUEST['file'];
 }
 
 if (!isset($_REQUEST['mode'])) {
-	header('Content-Type:image/png');
-	die(SPACER_PNG);
+	httpOutWithETag(SPACER_PNG, 'image/png', 'spacer.png');
 } else {
 	$mode = $_REQUEST['mode'];
 }
@@ -53,40 +53,31 @@ if (file_exists($candidate1) || is_dir($candidate1)) {
 if (($mode == 'treeicon_folder') || ($mode == 'treeicon_leaf_url') || ($mode == 'treeicon_leaf_doc')) {
 
 	if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'tree', $lang))) {
-		header('Content-Type:image/png');
-		die(file_get_contents($icon_candidate));
+		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
 	} else if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'tree', ''))) {
-		header('Content-Type:image/png');
-		die(file_get_contents($icon_candidate));
+		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
 	} else if (file_exists($icon_candidate = __DIR__.'/'.$mode.'.png')) { // default icon for mode
-		header('Content-Type:image/png');
-		die(file_get_contents($icon_candidate));
+		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
 	} else {
-		header('Content-Type:image/png');
-		die(SPACER_PNG); // should not happen
+		httpOutWithETag(SPACER_PNG, 'image/png'); // should not happen
 	}
 
 } else if (($mode == 'icon_leaf_url_big') || ($mode == 'icon_leaf_doc_big') || ($mode == 'icon_folder_big')) {
 
 	if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'big', $lang))) {
-		header('Content-Type:image/png');
-		die(file_get_contents($icon_candidate));
+		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
 	} else if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'big', ''))) {
-		header('Content-Type:image/png');
-		die(file_get_contents($icon_candidate));
+		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
 	} else if (file_exists($icon_candidate = __DIR__.'/'.$mode.'.png')) { // default icon for mode
-		header('Content-Type:image/png');
-		die(file_get_contents($icon_candidate));
+		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
 	} else {
-		header('Content-Type:image/png');
-		die(SPACER_PNG); // should not happen
+		httpOutWithETag(SPACER_PNG, 'image/png', 'spacer.png'); // should not happen
 	}
 
 } else {
 
 	// Invalid $mode value
-	header('Content-Type:image/png');
-	die(SPACER_PNG); // should not happen
+	httpOutWithETag(SPACER_PNG, 'image/png', 'spacer.png'); // should not happen
 
 }
 

@@ -20,8 +20,9 @@
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
 if (file_exists(__DIR__.'/userdata/favicon.ico')) {
-	VtsBrowserDownload::output_file(__DIR__.'/userdata/favicon.ico');
+	$out = file_get_contents(__DIR__.'/userdata/favicon.ico');
 } else {
-	VtsBrowserDownload::output_file(__DIR__.'/img/favicon.ico');
+	$out = file_get_contents(__DIR__.'/img/favicon.ico');
 }
 
+httpOutWithETag($out, 'image/x-icon', 'favicon.ico');

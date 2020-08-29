@@ -126,6 +126,22 @@ if (!function_exists('mb_wordwrap')) {
 	}
 }
 
+function httpOutWithETag($out, $contentType, $filename='') {
+	$etag = md5($out);
+	header("Etag: $etag");
+	header("Content-MD5: $etag"); // RFC 2616 clause 14.15
+	if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag)) {
+		header("HTTP/1.1 304 Not Modified");
+	} else {
+		header("Content-Type: $contentType");
+		if (!empty($filename)) {
+			header('Content-Disposition:inline; filename="'.$filename.'"');
+		}
+		echo $out;
+	}
+	die();
+}
+
 function my_vsprintf($str, $args) {
         $n = 1;
         foreach ($args as $val) {

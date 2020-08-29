@@ -64,12 +64,5 @@ if (file_exists(__DIR__ . '/userdata/styles/setup_add.css')) {
 
 # ---
 
-$etag = md5($out);
-header("Etag: $etag");
-header('Content-MD5: '.$etag); // RFC 2616 clause 14.15
-if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag)) {
-	header("HTTP/1.1 304 Not Modified");
-} else {
-	header('Content-Type:text/css');
-	echo $out;
-}
+httpOutWithETag($out, 'text/css', 'oidplus_setup.css');
+

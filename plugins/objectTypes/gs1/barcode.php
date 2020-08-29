@@ -24,17 +24,11 @@
 
 if (!isset($_GET['number'])) die("Argument 'number' is missing");
 
+require_once __DIR__ . '/../../../includes/functions.inc.php';
+
 $number = $_GET['number'];
 $number = preg_replace("/[^0-9]/", "", $number);
 $number = substr($number, 0, 20);
 $out = file_get_contents('http://bwipjs-api.metafloor.com/?bcid=code128&text='.urlencode($number).'&scale=1&includetext');
 
-$etag = md5($out);
-header("Etag: $etag");
-if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag)) {
-	header("HTTP/1.1 304 Not Modified");
-} else {
-	header('Content-Type:image/png');
-	header('Content-Disposition:inline; filename="barcode_'.$number.'.png"');
-	echo $out;
-}
+httpOutWithETag($out, 'image/png', "barcode_$number.png");
