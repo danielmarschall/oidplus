@@ -21,31 +21,13 @@
 
 var current_node = "";
 var popstate_running = false;
-var externalWaiting = 0;
 // DEFAULT_LANGUAGE will be set by oidplus.min.js.php
 // language_messages will be set by oidplus.min.js.php
 // language_tblprefix will be set by oidplus.min.js.php
 
-function oidplus_loadScript(src) {
-	externalWaiting++;
-	var script = document.createElement('script');
-	script.onload = function () {
-		externalWaiting--;
-	};
-	script.src = src;
-	script.rel = "preload";
-	document.head.appendChild(script);
-}
-
 function isInternetExplorer() {
 	var ua = window.navigator.userAgent;
 	return ((ua.indexOf("MSIE ") > 0) || (ua.indexOf("Trident/") > 0));
-}
-
-function oidplus_external_recaptcha() {
-	// Disable this code by changing/adding following line to userdata/baseconfig/config.inc.php
-	// define('RECAPTCHA_ENABLED', false);
-	oidplus_loadScript('https://www.google.com/recaptcha/api.js');
 }
 
 String.prototype.explode = function (separator, limit) {
@@ -258,18 +240,6 @@ $(window).on("popstate", function(e) {
 });
 
 $(document).ready(function () {
-	initBeforeExternals();
-});
-
-function initBeforeExternals() {
-	if (externalWaiting > 0) {
-		setTimeout(initBeforeExternals, 100);
-	} else {
-		initAfterExternals();
-	}
-}
-
-function initAfterExternals() {
 
 	// --- JsTree
 
@@ -358,7 +328,7 @@ function initAfterExternals() {
 			gotoButtonClicked();
 		}
 	});
-}
+});
 
 function glayoutWorkaroundA() {
 	// "Bug A": Sometimes, the design is completely destroyed after reloading the page. It does not help when glayout.resizeAll()

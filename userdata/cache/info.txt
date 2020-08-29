@@ -1,0 +1,6 @@
+
+About the folder "userdata/cache"
+---------------------------------
+
+Plugins can store data in this folder to improve performance
+of various things. You can delete the files in this folder regularly.

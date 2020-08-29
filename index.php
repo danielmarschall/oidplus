@@ -83,6 +83,11 @@ if (class_exists('OIDplusPageAdminColors')) {
 	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->getValue('system_title'), $static_title); ?></title>
 
 	<script src="polyfill.min.js.php"></script>
+	<?php
+	if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) == true) {
+		echo '<script src="https://www.google.com/recaptcha/api.js"></script>';
+	}
+	?>
 	<script src="oidplus.min.js.php"></script>
 
 	<link rel="stylesheet" href="oidplus.min.css.php<?php echo htmlentities($add_css_args); ?>">
