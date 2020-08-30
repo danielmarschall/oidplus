@@ -239,7 +239,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			}
 		} else {
 			if ($privacy_level == 0) {
-				if (class_exists('OIDplusPageAdminOIDInfoExport')) {
+				$adminExportPlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.3.400'); // OIDplusPageAdminOIDInfoExport
+				if (!is_null($adminExportPlugin)) {
 					ob_start();
 					OIDplusPageAdminOIDInfoExport::outputXML(false); // no online check, because the query should be short (since the query is done while a visitor waits for the response)
 					$oidinfo_xml = ob_get_contents();

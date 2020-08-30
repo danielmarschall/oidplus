@@ -37,6 +37,18 @@ class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 	}
 
 	public static function setupJS(): string {
-		return file_get_contents(__DIR__ . '/setup.js');
+		if (file_exists(__DIR__ . '/setup.js')) {
+			return file_get_contents(__DIR__ . '/setup.js');
+		} else {
+			return '';
+		}
+	}
+
+	public static function setupCSS(): string {
+		if (file_exists(__DIR__ . '/setup.css')) {
+			return file_get_contents(__DIR__ . '/setup.css');
+		} else {
+			return '';
+		}
 	}
 }

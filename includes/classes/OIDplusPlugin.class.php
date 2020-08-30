@@ -28,11 +28,18 @@ abstract class OIDplusPlugin {
 
 		return false;
 	}
+	
+	public final function getPluginDirectory() {
+		$reflector = new \ReflectionClass(get_called_class());
+		$path = dirname($reflector->getFilename());
+		return $path;
+	}
 
 	public function getManifest() {
-
-		return OIDplus::getPluginManifest(get_called_class());
-
+		$dir = $this->getPluginDirectory();
+		$ini = $dir.'/manifest.xml';
+		$manifest = new OIDplusPluginManifest();
+		return $manifest->loadManifest($ini) ? $manifest : null;
 	}
 
 	public function init($html=true) {}

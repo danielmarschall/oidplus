@@ -58,40 +58,33 @@ echo '<p><a href="../doc/database_connectivity_diagram.png" target="_blank"><img
 
 echo _L('Database plugin').': <select name="db_plugin" onChange="dbplugin_changed()" id="db_plugin">';
 
-OIDplus::registerAllPlugins('database', 'OIDplusDatabasePlugin', null);
-foreach (get_declared_classes() as $c) {
-	if (is_subclass_of($c, 'OIDplusDatabasePlugin')) {
-		$selected = $c::id() == 'MySQL' ? ' selected="true"' : '';
-		echo '<option value="'.htmlentities($c::id()).'"'.$selected.'>'.htmlentities($c::id()).'</option>';
-	}
+OIDplus::registerAllPlugins('database', 'OIDplusDatabasePlugin', array('OIDplus','registerDatabasePlugin'));
+foreach (OIDplus::getDatabasePlugins() as $plugin) {
+	$selected = $plugin::id() == 'MySQL' ? ' selected="true"' : '';
+	echo '<option value="'.htmlentities($plugin::id()).'"'.$selected.'>'.htmlentities($plugin::id()).'</option>';
 }
 
 echo '</select>';
 
 echo '<div style="margin-left:50px">';
 
-OIDplus::registerAllPlugins('sqlSlang', 'OIDplusSqlSlangPlugin', null);
+OIDplus::registerAllPlugins('sqlSlang', 'OIDplusSqlSlangPlugin', array('OIDplus','registerSqlSlangPlugin'));
 $sql_slang_selection = array();
-foreach (get_declared_classes() as $c) {
-	if (is_subclass_of($c, 'OIDplusSqlSlangPlugin')) {
-		$obj = new $c;
-		$slang_id = $obj::id();
-		$pluginManifest = OIDplus::getpluginManifest($obj);
-		$human_friendly_name = empty($pluginManifest->getName()) ? $pluginManifest->getName() : get_class($obj);
-		$sql_slang_selection[] = '<option value="'.$slang_id.'">'.$human_friendly_name.'</option>';
-	}
+foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
+	$slang_id = $plugin::id();
+	$pluginManifest = $plugin->getManifest();
+	$human_friendly_name = empty($pluginManifest->getName()) ? $pluginManifest->getName() : get_class($plugin);
+	$sql_slang_selection[] = '<option value="'.$slang_id.'">'.$human_friendly_name.'</option>';
 }
 $sql_slang_selection = implode("\n", $sql_slang_selection);
 
 $found_db_plugins = 0;
-OIDplus::registerAllPlugins('database', 'OIDplusDatabasePlugin', null);
-foreach (get_declared_classes() as $c) {
-	if (is_subclass_of($c, 'OIDplusDatabasePlugin')) {
-		$found_db_plugins++;
-		$cont = $c::setupHTML();
-		$cont = str_replace('<!-- %SQL_SLANG_SELECTION% -->', $sql_slang_selection, $cont);
-		echo $cont;
-	}
+//OIDplus::registerAllPlugins('database', 'OIDplusDatabasePlugin', array('OIDplus','registerDatabasePlugin'));
+foreach (OIDplus::getDatabasePlugins() as $plugin) {
+	$found_db_plugins++;
+	$cont = $plugin->setupHTML();
+	$cont = str_replace('<!-- %SQL_SLANG_SELECTION% -->', $sql_slang_selection, $cont);
+	echo $cont;
 }
 
 if ($found_db_plugins == 0) {

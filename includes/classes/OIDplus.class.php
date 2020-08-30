@@ -481,11 +481,14 @@ class OIDplus {
 		return null;
 	}
 
-	public static function getPluginManifest($class_name)/*: ?OIDplusPluginManifest*/ {
-		$reflector = new ReflectionClass($class_name);
-		$ini = dirname($reflector->getFileName()).'/manifest.xml';
-		$manifest = new OIDplusPluginManifest();
-		return $manifest->loadManifest($ini) ? $manifest : null;
+	public static function getPluginByClassName($classname)/*: ?OIDplusPlugin*/ {
+		$plugins = self::getAllPlugins();
+		foreach ($plugins as $plugin) {
+			if (get_class($plugin) === $classname) {
+				return $plugin;
+			}
+		}
+		return null;
 	}
 
 	public static function getAllPluginManifests($pluginFolderMask='*', $flat=true): array {

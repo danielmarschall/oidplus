@@ -23,15 +23,12 @@ $prefix = isset($_REQUEST['prefix']) ? $_REQUEST['prefix'] : '';
 $database = isset($_REQUEST['database']) ? $_REQUEST['database'] : '';
 $slang = isset($_REQUEST['slang']) ? $_REQUEST['slang'] : 'mysql';
 
-OIDplus::registerAllPlugins('sqlSlang', 'OIDplusSqlSlangPlugin', null);
+OIDplus::registerAllPlugins('sqlSlang', 'OIDplusSqlSlangPlugin', array('OIDplus','registerSqlSlangPlugin'));
 $slang_plugin = null;
-foreach (get_declared_classes() as $c) {
-	if (is_subclass_of($c, 'OIDplusSqlSlangPlugin')) {
-		$obj = new $c();
-		if ($obj::id() === $slang) {
-			$slang_plugin = $obj;
-			break;
-		}
+foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
+	if ($plugin::id() === $slang) {
+		$slang_plugin = $plugin;
+		break;
 	}
 }
 if (is_null($slang_plugin)) {

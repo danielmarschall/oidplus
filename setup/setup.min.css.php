@@ -52,6 +52,11 @@ function process_file($filename) {
 
 # ---
 
+OIDplus::registerAllPlugins('database', 'OIDplusDatabasePlugin', array('OIDplus','registerDatabasePlugin'));
+foreach (OIDplus::getDatabasePlugins() as $plugin) {
+	$out .= $plugin::setupCSS();
+}
+
 if (file_exists(__DIR__ . '/../userdata/styles/setup_base.css')) {
 	$out .= process_file(__DIR__ . '/../userdata/styles/setup_base.css');
 } else {

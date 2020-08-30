@@ -174,7 +174,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			if (!empty($new_ra)) {
 				$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($new_ra));
-				if ($res->num_rows() == 0) $status = class_exists('OIDplusPageRaInvite') && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
+				$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
+				if ($res->num_rows() == 0) $status = !is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 			}
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
@@ -311,7 +312,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (!empty($ra_email)) {
 				// Do we need to notify that the RA does not exist?
 				$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($ra_email));
-				if ($res->num_rows() == 0) $status = class_exists('OIDplusPageRaInvite') && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
+				$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
+				if ($res->num_rows() == 0) $status = !is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 			}
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
