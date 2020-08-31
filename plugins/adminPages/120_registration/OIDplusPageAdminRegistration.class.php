@@ -139,7 +139,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			if (isset($json['error']) || ($json['status'] != 0)) {
+			if (isset($json['error']) || ($json['status'] < 0)) {
 				$out['icon'] = 'img/error_big.png';
 				if (isset($json['error'])) {
 					$out['text'] = _L('Received error status code: %1',$json['error']);
@@ -165,7 +165,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			return false; // throw new OIDplusException(_L('JSON reply from ViaThinkSoft decoding error: %1',$res));
 		}
 
-		if (isset($json['error']) || ($json['status'] != 0)) {
+		if (isset($json['error']) || ($json['status'] < 0)) {
 			if (isset($json['error'])) {
 				return false; // throw new OIDplusException(_L('Received error status code: %1',$json['error']));
 			} else {
@@ -229,7 +229,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 					return false; // throw new OIDplusException(_L('JSON reply from ViaThinkSoft decoding error: %1',$res));
 				}
 
-				if (isset($json['error']) || ($json['status'] != 0)) {
+				if (isset($json['error']) || ($json['status'] < 0)) {
 					if (isset($json['error'])) {
 						return false; // throw new OIDplusException(_L('Received error status code: %1',$json['error']));
 					} else {
@@ -309,7 +309,13 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				return false; // throw new OIDplusException(_L('JSON reply from ViaThinkSoft decoding error: %1',$res));
 			}
 
-			if ($json['status'] == 99/*Hash conflict*/) {
+			if (isset($json['error']) || ($json['status'] < 0)) {
+				if (isset($json['error'])) {
+					return false; // throw new OIDplusException(_L('Received error status code: %1',$json['error']));
+				} else {
+					return false; // throw new OIDplusException(_L('Received error status code: %1',$json['status']));
+				}
+			} else if ($json['status'] == 99/*Hash conflict*/) {
 				OIDplus::logger()->log("[WARN]A!", "Removing SystemID and key pair because there is a hash conflict with another OIDplus system!");
 
 				// Delete the system ID since we have a conflict with the 31-bit hash!
@@ -322,12 +328,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				// Enforce a new registration attempt at the next page visit
 				// We will not try again here, because that might lead to an endless loop if the VTS server would always return 'HASH_CONFLCIT'
 				OIDplus::config()->setValue('reg_last_ping', 0);
-			} elseif (isset($json['error']) || ($json['status'] != 0)) {
-				if (isset($json['error'])) {
-					return false; // throw new OIDplusException(_L('Received error status code: %1',$json['error']));
-				} else {
-					return false; // throw new OIDplusException(_L('Received error status code: %1',$json['status']));
-				}
 			}
 		}
 	}

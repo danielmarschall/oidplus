@@ -31,7 +31,7 @@ function crudActionConfigUpdate(name) {
 		success:function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				alert(_L("Update OK"));
 			} else {
 				alert(_L("Error: %1",data));

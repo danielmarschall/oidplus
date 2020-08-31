@@ -130,7 +130,7 @@ function crudActionColorUpdate(name) {
 		success:function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				g_hue_shift_saved = g_hue_shift;
 				g_sat_shift_saved = g_sat_shift;
 				g_val_shift_saved = g_val_shift;

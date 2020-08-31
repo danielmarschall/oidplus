@@ -32,7 +32,7 @@ function adminCreateRaFormOnSubmit() {
 		success: function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				alert(_L("Account created"));
 				//openOidInPanel('oidplus:rainfo$'+$("#email").val(),true);
 				// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs

@@ -34,7 +34,7 @@ function raLogout(email) {
 		success:function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				window.location.href = '?goto=oidplus:system';
 				// reloadContent();
 			} else {
@@ -63,7 +63,7 @@ function raLogin(email, password) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				window.location.href = '?goto=oidplus:system';
 				// reloadContent();
 			} else {
@@ -99,7 +99,7 @@ function adminLogin(password) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				window.location.href = '?goto=oidplus:system';
 				// reloadContent();
 			} else {
@@ -126,7 +126,7 @@ function adminLogout() {
 		success:function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				window.location.href = '?goto=oidplus:system';
 				// reloadContent();
 			} else {

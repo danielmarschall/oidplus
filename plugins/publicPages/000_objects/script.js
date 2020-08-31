@@ -37,21 +37,23 @@ function crudActionInsert(parent) {
 		success:function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0/*OK*/) {
-				//alert(_L("Insert OK"));
-				reloadContent();
-				// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
-			} else if (data.status == 1/*RaNotExisting*/) {
-				if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",document.getElementById('ra_email').value))) {
-					crudActionSendInvitation(parent, document.getElementById('ra_email').value);
-				} else {
+			} else if (data.status >= 0) {
+				if (data.status == 0/*OK*/) {
+					//alert(_L("Insert OK"));
+					reloadContent();
+					// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
+				} else if (data.status == 1/*RaNotExisting*/) {
+					if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",document.getElementById('ra_email').value))) {
+						crudActionSendInvitation(parent, document.getElementById('ra_email').value);
+					} else {
+						reloadContent();
+						// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
+					}
+				} else if (data.status == 2/*RaNotExistingNoInvitation*/) {
+					//alert(_L("Insert OK"));
 					reloadContent();
 					// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
 				}
-			} else if (data.status == 2/*RaNotExistingNoInvitation*/) {
-				//alert(_L("Insert OK"));
-				reloadContent();
-				// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
 			} else {
 				alert(_L("Error: %1",data));
 			}
@@ -80,21 +82,23 @@ function crudActionUpdate(id, parent) {
 		success:function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0/*OK*/) {
-				alert(_L("Update OK"));
-				// reloadContent();
-				$('#oidtree').jstree("refresh");
-			} else if (data.status == 1/*RaNotExisting*/) {
-				if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",document.getElementById('ra_email_'+id).value))) {
-					crudActionSendInvitation(parent, document.getElementById('ra_email_'+id).value);
-				} else {
+			} else if (data.status >= 0) {
+				if (data.status == 0/*OK*/) {
+					alert(_L("Update OK"));
+					// reloadContent();
+					$('#oidtree').jstree("refresh");
+				} else if (data.status == 1/*RaNotExisting*/) {
+					if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",document.getElementById('ra_email_'+id).value))) {
+						crudActionSendInvitation(parent, document.getElementById('ra_email_'+id).value);
+					} else {
+						// reloadContent();
+						$('#oidtree').jstree("refresh");
+					}
+				} else if (data.status == 2/*RaNotExistingNoInvitation*/) {
+					alert(_L("Update OK"));
 					// reloadContent();
 					$('#oidtree').jstree("refresh");
 				}
-			} else if (data.status == 2/*RaNotExistingNoInvitation*/) {
-				alert(_L("Update OK"));
-				// reloadContent();
-				$('#oidtree').jstree("refresh");
 			} else {
 				alert(_L("Error: %1",data));
 			}
@@ -120,7 +124,7 @@ function crudActionDelete(id, parent) {
 		success:function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				reloadContent();
 				// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts die zeile aus der tabelle löschen
 			} else {
@@ -148,7 +152,7 @@ function updateDesc() {
 		success:function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				alert(_L("Update OK"));
 				//reloadContent();
 				$('#oidtree').jstree("refresh");

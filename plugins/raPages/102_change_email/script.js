@@ -31,7 +31,7 @@ function changeRaEmailFormOnSubmit(isadmin) {
 		success: function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				if (isadmin) {
 					alert(_L("eMail address of RA changed"));
 					//openOidInPanel('oidplus:rainfo$'+$("#new_email").val(),true);
@@ -69,7 +69,7 @@ function activateNewRaEmailFormOnSubmit() {
 		success: function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				alert(_L("Done"));
 				window.location.href = '?goto=oidplus:system';
 				//reloadContent();

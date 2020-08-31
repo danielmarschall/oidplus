@@ -33,7 +33,7 @@ function inviteFormOnSubmit() {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				alert(_L("The RA has been invited via email."));
 				window.location.href = '?goto='+$("#origin").val();
 				//reloadContent();
@@ -65,7 +65,7 @@ function activateRaFormOnSubmit() {
 		success: function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				alert(_L("Registration successful! You can now log in."));
 				window.location.href = '?goto=oidplus:login';
 				//reloadContent();

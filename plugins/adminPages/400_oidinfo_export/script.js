@@ -34,7 +34,7 @@ function importMissingOid(oid) {
 		success:function(data) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				console.log(_L("Imported OID %1",oid));
 				removeMissingOid(oid);
 			} else {
@@ -76,7 +76,7 @@ function uploadXmlFile(file) {
 				} else {
 					alert(_L("Error: %1",data.error));
 				}
-			} else if (data.status == 0) {
+			} else if (data.status >= 0) {
 				alert(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
 					  _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
 					  _L("Not imported because of errors: %1",data.count_errors)+"\n"+

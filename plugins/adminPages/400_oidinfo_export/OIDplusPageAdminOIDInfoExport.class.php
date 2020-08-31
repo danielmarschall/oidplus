@@ -41,7 +41,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				// Note: These "errors" can also be warnings (partial success)
 				// TODO XXX: since the output can be very long, should we really show it in a JavaScript alert() ?!
 				return array(
-					"status" => 1,
+					"status" => -1,
 					"count_imported_oids" => $count_imported_oids,
 					"count_already_existing" => $count_already_existing,
 					"count_errors" => $count_errors,
@@ -102,14 +102,14 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 			if (!$json) {
 				return array(
-					"status" => 1,
+					"status" => -1,
 					"error" => _L('JSON reply from ViaThinkSoft decoding error: %1',$res)
 				);
 			}
 
-			if (isset($json['error']) || ($json['status'] != 0)) {
+			if (isset($json['error']) || ($json['status'] < 0)) {
 				return array(
-					"status" => 1,
+					"status" => -1,
 					"error" => isset($json['error']) ? $json['error'] : _L('Received error status code: %1',$json['status'])
 				);
 			}
@@ -117,9 +117,9 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$errors = array();
 			list($count_imported_oids, $count_already_existing, $count_errors, $count_warnings) = $this->oidinfoImportXML('<oid-database>'.$json['xml'].'</oid-database>', $errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_DISALLOW_ORPHANS);
 			if (count($errors) > 0) {
-				return array("status" => 1, "error" => implode("\n",$errors));
+				return array("status" => -1, "error" => implode("\n",$errors));
 			} else if ($count_imported_oids <> 1) {
-				return array("status" => 1, "error" => _L('Imported %1, but expected to import 1',$count_imported_oids));
+				return array("status" => -1, "error" => _L('Imported %1, but expected to import 1',$count_imported_oids));
 			} else {
 				return array("status" => 0);
 			}
@@ -186,7 +186,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			if (isset($json['error']) || ($json['status'] != 0)) {
+			if (isset($json['error']) || ($json['status'] < 0)) {
 				$out['icon'] = 'img/error_big.png';
 				if (isset($json['error'])) {
 					$out['text'] = _L('Received error status code: %1',$json['error']);
@@ -198,7 +198,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:datatransfer').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to data transfer main page').'</a>'; // TODO: How to automatically jump to the "Export" tab?
 
-			if (isset($json['error']) || ($json['status'] != 0)) {
+			if (isset($json['error']) || ($json['status'] < 0)) {
 				$out['text'] .= '<p>'._L('Error: %1',htmlentities($json['error'])).'</p>';
 			} else {
 				// TODO: If roots were created or deleted recently, we must do a re-query of the registration, so that the "roots" information at the directory service gets refreshed
@@ -442,7 +442,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			if (isset($json['error']) || ($json['status'] != 0)) {
+			if (isset($json['error']) || ($json['status'] < 0)) {
 				$out['icon'] = 'img/error_big.png';
 				if (isset($json['error'])) {
 					$out['text'] = _L('Received error status code: %1',$json['error']);
@@ -471,7 +471,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				}
 			}
 
-			if (isset($json['error']) || ($json['status'] != 0)) {
+			if (isset($json['error']) || ($json['status'] < 0)) {
 				$out['text'] .= '<p>'._L('Error: %1',htmlentities($json['error'])).'</p>';
 			} else {
 				// TODO: If roots were created or deleted recently, we must do a re-query of the registration, so that the "roots" information at the directory service gets refreshed
