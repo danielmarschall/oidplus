@@ -18,6 +18,9 @@ IDEAS FOR NEW FUNCTIONALITIES
 TINYMCE
 - Menu entry "formats" is empty. can it be removed?
 - Clicking "Paragraph" dropdown box does not work (Safari problem?)
+- mce dirty flag:
+	* if you select something in the jstree, then you should be asked if you want to save your work (if tinymce is dirty); the same thing as if you would want to reload/close the page
+	* critical bug: open page, edit tiny mce, click save. Then F5 reload (not Ctrl+F5): then the old content is there again. Except if you press Ctrl+F5
 
 WHOIS
 - webwhois: beside TXT/XML/JSON more output modi?  CSV, S/MIME  (and add the S/MIME keypurpose to the X.509 certificates)
@@ -46,17 +49,11 @@ SMALL THINGS
 - Revive the idea of "information objects" = OIDs that contain content
 - API : Make a function that checks if a RA exists, and use it everywhere where needed
 - Object type plugins : take care that "treeicon.png" and "icon_big.png" exist everywhere (become standard)
-- when ajax.php generates a PHP error, the client gives a "syntax error" message... it would be better if the client shows the full php error? or something more user-friendly?
 - freeoid: gmail app does not hyperlink the activation URL. why?
 - how to avoid invite spamming?
-- when a PHP error happens (i.e. the AJAX script did not manage to output a JSON), the AJAX script outputs "Error: SyntaxError: Unexpected token < in JSON at position 0" ... better show the user the actual message
+- when a PHP error happens (i.e. the AJAX script did not manage to output a JSON), the AJAX script outputs "Error: SyntaxError: Unexpected token < in JSON at position 0" ... better show the user the actual message, or something more user-friendly at least
 - when login expired, remove entries in the treeview
 - disable specific functions (e.g. invite, login, rainfo, forgot password) if the plugins are not installed (check if class type is registered using class_exists())
-- make usage of Foreign Keys
-	PROBLEM: we need foreign keys with no check, because
-	a) we want to keep log entries even if an object/user is deleted
-	b) log_user.username can also be 'admin' (and therefore not be a foreign key to table 'ra')
-	c) not every object should have a registered RA. There should be "unknown" RAs where only the email address is known
 - <abbr> in <code> is double underlined; that's not good
 - if you want to create a OID which is defined as well-known OID, then you get an error because of replaceAsn1/replaceIri, but the OID is still created. But the GUI will not be realoded. So, you cannot see that the OID was created, and another click at the "Insert" button will give a Primary Key Error therefore
 - if you have multiple identifiers, how do you tell the system which identifier should be the preferred one?
@@ -76,10 +73,6 @@ SMALL THINGS
 - You should be able to change the "created" date for an object! Or maybe hide it completely if you don't know the original creation date?
 - In the CRUD table, you should be able to see the name of the OID? But on the other hand, the title is not in the control of the Superior RA, and the CRUD table is actually the allocation table of the Superior RA.
 - natOrder() does only work for OID namespace!!! other sort mechanisms are necessary for other object types
-- tinymce
-	mce dirty flag:
-		- if you select something in the jstree, then you should be asked if you want to save your work (if tinymce is dirty); the same thing as if you would want to reload/close the page
-		- critical bug: open page, edit tiny mce, click save. Then F5 reload (not Ctrl+F5): then the old content is there again. Except if you press Ctrl+F5
 - jstree select: automatically scroll down
 - things like RA: show more things, address, email etc.
 - note that we (and the RFC) talk about Objects, but actually OIDs only reference objects, but they are not the objects
@@ -93,10 +86,17 @@ SMALL THINGS
 		- 3p\vts_fileformats\fileformats.conf [Problem: This is a third-party code!]
 		- includes\classes\VtsBrowserDownload.class.php [Problem: This is a third-party code!]
 	* Is there some useful German translation of the Apache 2.0 license?
+- WEID UUID: das UUID 2.25/GUID pendant zeigen als alternative id
+- admin logs: don't show all logs. load more log entries as soon as the page is scrolled down
 
 DATABASE
 - check if the NULL and NOT NULL definitions are meaningful. It is not good at in *_ra everything is NOT NULL
 - SQLite3: Implement Natural OID sorting (natSort)
+- make usage of Foreign Keys
+	PROBLEM: we need foreign keys with no check, because
+	a) we want to keep log entries even if an object/user is deleted
+	b) log_user.username can also be 'admin' (and therefore not be a foreign key to table 'ra')
+	c) not every object should have a registered RA. There should be "unknown" RAs where only the email address is known
 
 FUTURE
 - make use of Composer. Problems:
@@ -115,6 +115,7 @@ FUTURE
 - detailled change-history of each oid
 
 BUGS?
+- BUG! Ra ist logged in, dann wird sie gelöscht => die RA kann trotzdem die OIDs bearbeiten!
 - OIDplus does not work in Safari Mobile!
 	1. You cannot scroll the OID grid, as the scrolling affects the whole page, not the grid.
 	2. JQueryUI sliders cannot be dragged
@@ -132,6 +133,9 @@ REJECTED IDEAS
 	b) Vendors should use something like "?goto=oidplus:com.example...."
 
 IDEAS
+- prune logs entries? automatically prune things like "logged in" but not prune OID changes, etc?
+- let users choose their own creation arc
+- system guid (name based pubkey)?
 - In regards multilinguality: Allow "oidplus_base$dede.css", so that languages can have their own CSS (e.g. wider "Go" button)
 	But this means that a language change also need to reload the style sheet (like the color-plugin does when you click "Test")
 - when a new oid is created, should we redirect to the newly created OID, so that the user can begin entering the description etc?

@@ -3666,14 +3666,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Please enable JavaScript to use all features
-		]]></source>
-		<target><![CDATA[
-		Bitte aktivieren Sie JavaScript, um alle Funktionen nutzen zu können
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Please enter <code>svn update</code> into the SSH shell to update OIDplus to the latest version.
 		]]></source>
 		<target><![CDATA[
@@ -3910,6 +3902,14 @@
 		]]></source>
 		<target><![CDATA[
 		Plugin "%1/%2" ist fehlerhaft
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin %1 not found.
+		]]></source>
+		<target><![CDATA[
+		Plugin %1 wurde nicht gefunden.
 		]]></target>
 	</message>
 	<message>
@@ -4166,6 +4166,14 @@
 		]]></source>
 		<target><![CDATA[
 		Fehler-Code erhalten: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Received error: %1
+		]]></source>
+		<target><![CDATA[
+		Fehlermeldung erhalten: %1
 		]]></target>
 	</message>
 	<message>

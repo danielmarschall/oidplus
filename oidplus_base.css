@@ -258,6 +258,7 @@ label.padding_label {
 		padding-top:5px;
 		white-space:nowrap; /* required for NoScript */
 		overflow:scroll; /* required for NoScript */
+		padding-bottom:10px !important;
 	}
 	
 	#content_window {

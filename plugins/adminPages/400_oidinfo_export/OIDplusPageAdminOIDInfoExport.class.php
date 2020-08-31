@@ -133,6 +133,13 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	}
 
 	public function gui($id, &$out, &$handled) {
+		$ary = explode('$', $id);
+		if (isset($ary[1])) {
+			$id = $ary[0];
+			$tab = $ary[1];
+		} else {
+			$tab = 'export';
+		}
 		if ($id === 'oidplus:oidinfo_compare_export') {
 			$handled = true;
 			$out['title'] = _L('List OIDs in your system which are missing at oid-info.com');
@@ -178,25 +185,25 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 			curl_close($ch);
 
+			$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:datatransfer$export').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to data transfer main page').'</a></p>';
+
 			$json = @json_decode($res, true);
 
 			if (!$json) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
+				$out['text'] .= _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
 				return;
 			}
 
 			if (isset($json['error']) || ($json['status'] < 0)) {
 				$out['icon'] = 'img/error_big.png';
 				if (isset($json['error'])) {
-					$out['text'] = _L('Received error status code: %1',$json['error']);
+					$out['text'] .= _L('Received error: %1',$json['error']);
 				} else {
-					$out['text'] = _L('Received error status code: %1',$json['status']);
+					$out['text'] .= _L('Received error status code: %1',$json['status']);
 				}
 				return;
 			}
-
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:datatransfer').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to data transfer main page').'</a>'; // TODO: How to automatically jump to the "Export" tab?
 
 			if (isset($json['error']) || ($json['status'] < 0)) {
 				$out['text'] .= '<p>'._L('Error: %1',htmlentities($json['error'])).'</p>';
@@ -434,25 +441,25 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 			curl_close($ch);
 
+			$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:datatransfer$import').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to data transfer main page').'</a></p>';
+
 			$json = @json_decode($res, true);
 
 			if (!$json) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
+				$out['text'] .= _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
 				return;
 			}
 
 			if (isset($json['error']) || ($json['status'] < 0)) {
 				$out['icon'] = 'img/error_big.png';
 				if (isset($json['error'])) {
-					$out['text'] = _L('Received error status code: %1',$json['error']);
+					$out['text'] .= _L('Received error: %1',$json['error']);
 				} else {
-					$out['text'] = _L('Received error status code: %1',$json['status']);
+					$out['text'] .= _L('Received error status code: %1',$json['status']);
 				}
 				return;
 			}
-
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:datatransfer').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to data transfer main page').'</a>'; // TODO: How to automatically jump to the "Import" tab?
 
 			$all_local_oids = array();
 			$res = OIDplus::db()->query("select id from ###objects");
@@ -526,10 +533,11 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<div id="oidinfoMainArea" style="visibility: hidden"><div id="oidinfoMainTab" class="container" style="width:100%;">';
 			$out['text'] .= '<br>';
 			$out['text'] .= '<ul class="nav nav-pills">';
-			$out['text'] .= '			<li class="active">';
+			$out['text'] .= '			<li'.($tab === 'export' ? ' class="active"' : '').'>';
 			$out['text'] .= '			<a href="#1a" data-toggle="tab">'._L('Export').'</a>';
 			$out['text'] .= '			</li>';
-			$out['text'] .= '			<li><a href="#2a" data-toggle="tab">'._L('Import').'</a>';
+			$out['text'] .= '			<li'.($tab === 'import' ? ' class="active"' : '').'>';
+			$out['text'] .= '			<a href="#2a" data-toggle="tab">'._L('Import').'</a>';
 			$out['text'] .= '			</li>';
 			$out['text'] .= '		</ul>';
 			$out['text'] .= '			<div class="tab-content clearfix">';

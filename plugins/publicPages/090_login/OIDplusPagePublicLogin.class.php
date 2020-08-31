@@ -111,6 +111,13 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 	}
 
 	public function gui($id, &$out, &$handled) {
+		$ary = explode('$', $id);
+		if (isset($ary[1])) {
+			$id = $ary[0];
+			$tab = $ary[1];
+		} else {
+			$tab = 'ra';
+		}
 		if ($id === 'oidplus:login') {
 			$handled = true;
 			$out['title'] = _L('Login');
@@ -127,10 +134,11 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 					'<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '');
 			$out['text'] .= '<br>';
 			$out['text'] .= '<ul class="nav nav-pills">';
-			$out['text'] .= '			<li class="active">';
+			$out['text'] .= '			<li'.($tab === 'ra' ? ' class="active"' : '').'>';
 			$out['text'] .= '			<a href="#1a" data-toggle="tab">'._L('Login as RA').'</a>';
 			$out['text'] .= '			</li>';
-			$out['text'] .= '			<li><a href="#2a" data-toggle="tab">'._L('Login as administrator').'</a>';
+			$out['text'] .= '			<li'.($tab === 'admin' ? ' class="active"' : '').'>';
+			$out['text'] .= '			<a href="#2a" data-toggle="tab">'._L('Login as administrator').'</a>';
 			$out['text'] .= '			</li>';
 			$out['text'] .= '		</ul>';
 			$out['text'] .= '			<div class="tab-content clearfix">';
