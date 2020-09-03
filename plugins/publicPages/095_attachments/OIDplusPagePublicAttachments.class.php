@@ -37,7 +37,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			}
 		}
 
-		if (!is_null($oid)) {
+		if (!is_null($oid) && ($oid != '')) {
 			// For OIDs, it is the OID, for other identifiers
 			// it it the OID alt ID (generated using the SystemID)
 			$path .= str_replace('.', '_', $oid);
