@@ -19,6 +19,7 @@
 	</css>
 
 	<js>
+		<file>script.js</file>
 	</js>
 	
 </manifest>

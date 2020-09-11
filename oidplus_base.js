@@ -72,6 +72,15 @@ function combine_systemtitle_and_pagetitle(systemtitle, pagetitle) {
 	}
 }
 
+function getSystemUrl(relative) {
+	var url = new URL(window.location.href);
+	if (relative) {
+		return url.pathname;
+	} else {
+		return url.href.substr(0, url.href.length-url.search.length);
+	}
+}
+
 function getTreeLoadURL() {
 	var url = new URL(window.location.href);
 	var goto = url.searchParams.get("goto");

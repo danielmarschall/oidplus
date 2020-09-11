@@ -1034,6 +1034,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Copy to clipboard
+		]]></source>
+		<target><![CDATA[
+		In Zwischenablage kopieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Could not find "%1" section at %2
 		]]></source>
 		<target><![CDATA[
@@ -4154,6 +4162,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		RFC draft
+		]]></source>
+		<target><![CDATA[
+		RFC-Entwurf
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		ReCAPTCHA
 		]]></source>
 		<target><![CDATA[
@@ -5034,10 +5050,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Text format (RFC draft: %1)
+		Text format
 		]]></source>
 		<target><![CDATA[
-		Text-Format (RFC Entwurf: %1)
+		Text-Format
 		]]></target>
 	</message>
 	<message>

@@ -68,18 +68,23 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$out['text']  = '';
 			$out['text'] .= '<p>'._L('With the web based whois service, you can query object information in a machine-readable format.').'</p>';
 
-			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__).'whois/webwhois.php" method="GET">';
-			$out['text'] .= '<br>'._L('Output format').':<br><fieldset>';
-			$out['text'] .= '    <input type="radio" id="txt" name="format" value="txt" checked>';
-			$out['text'] .= '    <label for="txt"> '._L('Text format (RFC draft: %1)','<a href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.txt">'._L('TXT').'</a> | <a href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.nroff">'._L('NROFF').'</a>').'</label><br>';
-			$out['text'] .= '    <input type="radio" id="json" name="format" value="json">';
-			$out['text'] .= '    <label for="json"> '._L('JSON').' (<a href="'.OIDplus::webpath(__DIR__).'whois/json_schema.json">'._L('Schema').'</a>)</label><br>';
-			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml">';
-			$out['text'] .= '    <label for="xml"> '._L('XML').' (<a href="'.OIDplus::webpath(__DIR__).'whois/xml_schema.xsd">'._L('Schema').'</a>)</label><br>';
+			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__).'whois/webwhois.php" method="GET" target="_blank">';
+			$out['text'] .= '<br>'._L('Output format').':<br><fieldset id="whois_format">';
+			$out['text'] .= '    <input type="radio" id="txt" name="format" value="txt" checked onclick="refresh_whois_url_bar()">';
+			$out['text'] .= '    <label for="txt"> '._L('Text format').'</label> ('._L('RFC draft').': <a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.txt">'._L('TXT').'</a> | <a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.nroff">'._L('NROFF').'</a>)<br>';
+			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="refresh_whois_url_bar()">';
+			$out['text'] .= '    <label for="json"> '._L('JSON').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/json_schema.json">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml" onclick="refresh_whois_url_bar()">';
+			$out['text'] .= '    <label for="xml"> '._L('XML').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/xml_schema.xsd">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '</fieldset><br>';
-			$out['text'] .= '	<!--<label class="padding_label">-->'._L('Query').':<!--</label>--> <input type="text" name="query" value="'.htmlentities($example).'" style="width:250px">';
+			$out['text'] .= '	<!--<label class="padding_label">-->'._L('Query').':<!--</label>--> <input type="text" id="whois_query" name="query" value="'.htmlentities($example).'" style="width:250px" onkeyup="refresh_whois_url_bar()">';
 			$out['text'] .= '	<input type="submit" value="'._L('Query').'">';
 			$out['text'] .= '</form>';
+			$out['text'] .= '<div id="whois_url_bar_section" style="display:none">';
+			$out['text'] .= '	<p><pre id="whois_url_bar"></pre></p>';
+			$out['text'] .= '	<input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(whois_url_bar)">';
+			$out['text'] .= '</div>';
+			$out['text'] .= '<script> refresh_whois_url_bar(); </script>'; // TODO: Copy to clipboard
 		}
 	}
 
