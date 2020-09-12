@@ -4,9 +4,6 @@
 
 <head>
 	<title>Procedural documentation related to privacy</title>
-</head>
-
-<body>
 	<style>
 	h2 {
 		font-size:large !important;
@@ -14,11 +11,17 @@
 	h3 {
 		font-size:medium !important;
 	}
+	.underline {
+		text-decoration: underline;
+	}
 	</style>
+</head>
+
+<body>
 	<h1>Procedural documentation related to privacy</h1>
 	<p><em>Revision: 29 August 2020</em></p>
 	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software &ldquo;OIDplus&rdquo;) and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web-software that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
-	<a name="terminology"></a><h2><strong><u>Parties / Terminology</u></strong></h2>
+	<a id="terminology"></a><h2><strong><span class="underline">Parties / Terminology</span></strong></h2>
 	<p><strong>ViaThinkSoft</strong> is the developer of the software solution &ldquo;OIDplus&rdquo;.</p>
 	<p><strong>OIDplus</strong> is a software solution to organize, manage and publish information about <strong>Object Identifiers</strong> (hereinafter referred to as OIDs) and their owners
 	(hereinafter referred to as <strong>Registration Authority</strong> or <strong>RA</strong>).
@@ -26,16 +29,16 @@
 	Operators of OIDplus instances are usually software developers, workgroups, companies, or other organizations, hereinafter referred to as <strong>system owner</strong>.
 	A <strong>system administrator</strong> is a person who manages and maintains the OIDplus software and is usually also the same person who manages the server&rsquo;s hardware and software.</p>
 	<p><strong>Object Identifiers</strong> are organized in a hierarchical structure where RAs are delegating OIDs underneath the OIDs they are managing, to other RAs. In the context of a specific RA and OID, the &ldquo;<strong>Superior RA</strong>&rdquo; is the RA that has delegated the root OID of a specific RA. However, the statements about &ldquo;Superior RAs&rdquo; in this document do only apply if the Superior RA is using OIDplus to delegate the OID.</p>
-	<a name="server_client_side"></a><h2><strong><u>Definition of server-side and client-side</u></strong></h2>
+	<a id="server_client_side"></a><h2><strong><span class="underline">Definition of server-side and client-side</span></strong></h2>
 	<p>OIDplus is a web application written in the programming languages PHP (running on server-side) and HTML/JavaScript (running on the client-side).</p>
-	<h3><u>Server-side</u></h3>
+	<h3><span class="underline">Server-side</span></h3>
 	<p>The PHP scripts of OIDplus are processed through a PHP script interpreter running on top of a web server software (&ldquo;HTTP web server&rdquo;), for example, &ldquo;Apache&rdquo; or &ldquo;Nginx&rdquo;. The actual data of OIDplus (OIDs, RAs, &hellip;) is stored in a DBMS (Database Management
 	System) e.g. &ldquo;MySQL&rdquo;, &ldquo;MariaDB&rdquo; or &ldquo;PostgreSQL&rdquo;. The DBMS is usually installed on the same server machine where PHP/Apache is installed, but it can be installed on any machine by the server administrator.</p>
-	<h3><u>Client-side</u></h3>
+	<h3><span class="underline">Client-side</span></h3>
 	<p>While the user browses OIDplus, the server-side serves HTML and JavaScript contents to the client computer. Using a web browser software (like &ldquo;Chrome&rdquo; or &ldquo;Firefox&rdquo;), these contents are processed and displayed on the screen. Various JavaScript scripts are either required to run OIDplus or are improving the user experience, e.g. by reloading OID descriptions without reloading the whole page while the user browses OIDplus. There might be a few external JavaScripts included (currently only ReCaptcha), which are described at the end of the document.</p>
-	<a name="scope"></a><h2><strong><u>Scope of this document</u></strong></h2>
+	<a id="scope"></a><h2><strong><span class="underline">Scope of this document</span></strong></h2>
 	<p>This document contains information about the OIDplus software only. It is independent of the behavior of the client-side software (web browser, Operating system, firewalls, &hellip;), independent from the behavior of hardware (network routers or firewalls, &hellip;), independent from the behavior of the server-side software (Apache, PHP, MySQL/MariaDB/PostgreSQL/..., Operating system, etc.) and the practices how the system administrator is operating the server software, stores log files, manages firewalls, etc.</p>
-	<a name="oid_information"></a><h2><strong><u>OID information</u></strong></h2>
+	<a id="oid_information"></a><h2><strong><span class="underline">OID information</span></strong></h2>
 	<p>The main purpose of OIDplus is to show and manage information on OID information.</p>
 	<p>Some attributes of Object Identifiers (like ASN.1 identifiers) can only be changed by the Superior RA and not by the RA of that OID. On the other hand, some other information (like the title and description) can only be changed by the RA owning the OID and not by the Superior RA. The system administrator can edit all information.</p>
 	<h3><em>Hidden OID information</em></h3>
@@ -175,7 +178,7 @@
 	</tr>
 	</tbody>
 	</table>
-	<a name="ra_information"></a><h2><strong><u>RA information</u></strong></h2>
+	<a id="ra_information"></a><h2><strong><span class="underline">RA information</span></strong></h2>
 	<p>The information about RAs owning OIDs can be seen publicly. A RA can manage their contact data in the OIDplus system (login-area) and mark their information as &ldquo;private&rdquo; to limit the information visible to the public.</p>
 	<p>Following RA information is always displayed (even if marked &ldquo;private&rdquo;):</p>
 	<h3><em>Overview: Managed information about RAs:</em></h3>
@@ -373,12 +376,12 @@
 	</tr>
 	</tbody>
 	</table>
-	<a name="ra_invitation"></a><h2><strong><u>Invitation of RAs</u></strong></h2>
+	<a id="ra_invitation"></a><h2><strong><span class="underline">Invitation of RAs</span></strong></h2>
 	<p>When an OID is created by a RA or by the system administrator, the owner of the OID will be defined by an email address (which will be shown publicly). Therefore, it is possible to own an OID, even if you are not registered in the OIDplus system.</p>
 	<p>When the OID is created and the RA with such an email address does not exist	in the OIDplus system, the creator will be asked if they want to send an invitation. If they agree, an email will be sent to this email address, allowing them to click a link to register to the OIDplus system, so that they can add more contact data as well as be able to delegate and edit OID information.</p>
 	<p>Currently, a RA cannot register themselves. They need an invitation by the system administrator or their superior RA to be able to register to the OIDplus system. (Note: To resend an invitation, the system administrator or superior RA needs to click &ldquo;Update&rdquo; at the OID delegation table, so that they are asked again to send the invitation).</p>
 	<p>In addition to the invitation system, the system administrator can create RA accounts without email address verification.</p>
-	<a name="oidinfo_publishing"></a><h2><strong><u>Publishing RAs/OIDs to oid-info.com</u></strong></h2>
+	<a id="oidinfo_publishing"></a><h2><strong><span class="underline">Publishing RAs/OIDs to oid-info.com</span></strong></h2>
 	<p>oid-info.com is a web page that collects and displays information about OIDs, like a Wiki. OIDplus contains features to submit data of its database to oid-info.com</p>
 	<p>There are two possibilities:</p>
 	<ol>
@@ -387,14 +390,14 @@
 		the OIDplus system will transmit XML data containing RA/OID information through an encrypted interface to ViaThinkSoft,
 		and ViaThinkSoft after regular manual check submits the data to the oid-info.com administrator.</li>
 	</ol>
-	<a name="systemid"></a><h2><strong><u>Unique system ID</u></strong></h2>
+	<a id="systemid"></a><h2><strong><span class="underline">Unique system ID</span></strong></h2>
 	<p>During the initial setup, a public/private-key-pair will be created which can be used for various purposes, e.g. to encrypt data between OIDplus and ViaThinkSoft if the &ldquo;system registration&rdquo; service is used (see below) or to sign OID-WHOIS responses.</p>
 	<p>From this public key, a unique system ID will be derivated. The unique system ID and the public key can be seen in the setup screen.</p>
-	<a name="system_registration"></a><h2><strong><u>System registration and automatic publishing to oid-info.com</u></strong></h2>
+	<a id="system_registration"></a><h2><strong><span class="underline">System registration and automatic publishing to oid-info.com</span></strong></h2>
 	<p>During initial setup, the system administrator can choose between the following options:</p>
 	<p>0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Register to directory service and automatically publish RA/OID data at oid-info.com<br /> 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Only register to directory service<br /> 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hide system</p>
 	<p>This setting can always be changed in the administrator login/control panel.</p>
-	<h3><em><u>Registering the system to the directory service (option 0 and 1)</u></em></h3>
+	<h3><em><span class="underline">Registering the system to the directory service (option 0 and 1)</span></em></h3>
 	<p>The registration of the OIDplus system has various advantages:</p><!-- please keep in sync with plugins/adminPages/120_registration/info.html document -->
 	<ul>
 		<li>The public key of the OIDplus instance will be published to the ViaThinkSoft web directory, so that users can check the integrity of the data (e.g. signed OID-WHOIS requests).</li>
@@ -427,23 +430,23 @@
 	<p>The other information will stay on the ViaThinkSoft internal database and will not be shared with other parties.</p>
 	<p>If the system administrator enabled this option and want to revoke the permission, the system administrator has to change the privacy level in the administrator login/control panel. The system will automatically contact the ViaThinkSoft server again and performs the deletion of all data.</p>
 	<p>Please note that the deletion of the record in the directory service does not delete OID/RA information which is already submitted at oid-info.com (if option 0 was chosen). To delete this data, the system administrator needs to contact the OID Repository Webmaster at <a href="mailto:admin@oid-info.com">admin@oid-info.com</a></p>
-	<h3><em><u>Publish RA/OID data at oid-info.com (option 0)</u></em></h3>
+	<h3><em><span class="underline">Publish RA/OID data at oid-info.com (option 0)</span></em></h3>
 	<p>If privacy level option 0 is chosen, the system regularly contacts the ViaThinkSoft server through a secure connection and sends the public RA/OID data. ViaThinkSoft will store this data and redirect it to the OID Repository Webmaster who will review the data and eventually submit it to the public repository www.oid-info.com</p>
 	<p>If the system administrator enabled this option and want to revoke the permission, the system administrator has to change the privacy level in the administrator login/control panel to option 1 or 2 (to avoid that data is sent again). To remove already submitted OIDs, the system administrator needs to contact the OID Repository Webmaster at <a href="mailto:admin@oid-info.com">admin@oid-info.com</a></p>
-	<h3><em><u>Hide system (option 2)</u></em></h3>
+	<h3><em><span class="underline">Hide system (option 2)</span></em></h3>
 	<p>If privacy level option 2 was chosen, the system will neither contact ViaThinkSoft, nor oid-info.com.</p>
-	<a name="logfiles"></a><h2><strong><u>Log files</u></strong></h2>
-	<h3><em><u>Logs by OIDplus</u></em></h3>
+	<a id="logfiles"></a><h2><strong><span class="underline">Log files</span></strong></h2>
+	<h3><em><span class="underline">Logs by OIDplus</span></em></h3>
 	<p>OIDplus manages log entries for specific events like logins, OID/RA modifications, creating and deletion of OIDs, etc.</p>
 	<p>These log messages are stored in the DBMS only.</p>
 	<p>All log events are visible to the system administrator.</p>
 	<p>Some events are visible to the RA and/or the Superior RA.</p>
 	<p>Log events may show the IP addresses of the computer that was connected to the OIDplus system and the email address if the RA was logged in using their credentials.</p>
 	<p>OIDplus does not provide a function to delete log events. A deletion must be done in the database directly, e.g. using a database client like phpMyAdmin.</p>
-	<h3><em><u>Logs by host software, firewalls, etc.</u></em></h3>
+	<h3><em><span class="underline">Logs by host software, firewalls, etc.</span></em></h3>
 	<p>Besides logs created by OIDplus, other client-side or server-side software involved in processing the web requests (like the HTTP web server, the PHP script interpreter, the database server, the Operating System, the web browser, or various firewalls) might log traffic and queries in various ways. These logs are independent of OIDplus and need to be managed by the system administrator and/or network administrators.</p>
 	<p>If you are concerned about the contents of the log files, please contact the system administrator.</p>
-	<a name="cookies"></a><h2><strong><u>Cookies</u></strong></h2>
+	<a id="cookies"></a><h2><strong><span class="underline">Cookies</span></strong></h2>
 	<p>A cookie is a small text file that is sent to this
 	website every time you visit it, e.g. to identify you
 	as a logged in user.</p>
@@ -520,17 +523,17 @@
 	</tr>
 	</tbody>
 	</table>
-	<a name="external_javascripts"></a><h2><strong><u>External JavaScripts</u></strong></h2>
+	<a id="external_javascripts"></a><h2><strong><span class="underline">External JavaScripts</span></strong></h2>
 	<p>During the loading of the web page, various JavaScripts are included to improve the user experience and add essential functionalities. The basic scripts are the JavaScript files of OIDplus itself, which are stored on the server of the particular OIDplus installation.</p>
 	<p>Following JavaScripts are loaded from an external source/server:</p>
-	<h3><em><u>ReCAPTCHA (only if &ldquo;ReCAPTCHA&rdquo; is enabled)</u></em></h3>
+	<h3><em><span class="underline">ReCAPTCHA (only if &ldquo;ReCAPTCHA&rdquo; is enabled)</span></em></h3>
 	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable &ldquo;ReCAPTCHA&rdquo; which is a service of Google. Before enabling ReCAPTCHA in the OIDplus setup/settings, the system administrator has to request an API key from Google. The usage of ReCAPTCHA will probably introduce additional cookies that are out of the control of OIDplus.</p>
 	<p>Please see <a href="https://policies.google.com/privacy">Google&rsquo;s Privacy Policy</a> and <a href="https://policies.google.com/terms">Terms of service</a> for more information.</p>
 	<p>If the system administrator has not enabled the ReCAPTCHA feature, no external script will be included at all.</p>
 	<p>If the feature is enabled, blocking the ReCAPTCHA JavaScript on the client-side will result in various functionalities (like the login form) not working.</p>
-	<a name="additional_security"></a><h2><strong><u>Additional security / access controls</u></strong></h2>
+	<a id="additional_security"></a><h2><strong><span class="underline">Additional security / access controls</span></strong></h2>
 	<p>System administrators can choose other methods to disable access from the public, e.g. by using firewalls (so that clients cannot access the server at all) or by setting up password protection at the level of the HTTP web server software (e.g. &ldquo;Basic Auth&rdquo; on Apache, so that the clients cannot access the directory where OIDplus is installed in).</p>
-	<a name="encrypted_connections"></a><h2><strong><u>Encrypted network connections</u></strong></h2>
+	<a id="encrypted_connections"></a><h2><strong><span class="underline">Encrypted network connections</span></strong></h2>
 	<p>The server administrator is responsible for securing the network connections using &ldquo;HTTPS&rdquo;. This is done at the HTTP web server level (i.e. an Apache module/setting) and independent from OIDplus.</p>
 </body>
 

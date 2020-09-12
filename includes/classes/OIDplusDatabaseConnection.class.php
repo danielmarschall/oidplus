@@ -119,10 +119,14 @@ abstract class OIDplusDatabaseConnection {
 		if (!is_numeric($version) || ($version < 200) || ($version > 999)) {
 			throw new OIDplusConfigInitializationException(_L('Entry "database_version" inside the table "###config" seems to be wrong (expect number between 200 and 999)'));
 		}
-
-		while (file_exists($file = OIDplus::basePath().'/includes/db_updates/update'.$version.'.inc.php')) {
+		
+		$update_files = glob(OIDplus::basePath().'/includes/db_updates/update*.inc.php');
+		foreach ($update_files as $update_file) {
+			include_once $update_file;
+		}
+		while (function_exists($function_name = "oidplus_dbupdate_".$version."_".($version+1))) {
 			$prev_version = $version;
-			include $file; // run update-script
+			$function_name($this, $version);
 			if ($version != $prev_version+1) {
 				// This should usually not happen, since the update-file should increase the version
 				// or throw an Exception by itself

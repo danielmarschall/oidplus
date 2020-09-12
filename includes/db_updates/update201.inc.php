@@ -17,66 +17,66 @@
  * limitations under the License.
  */
 
-// DATABASE UPDATE 201 -> 202
-// This script will be included by OIDplusDatabaseConnection.class.php inside function afterConnect().
-// Parameters: $this is the OIDplusDatabaseConnection class
-//             $version is the current version (this script MUST increase the number by 1 when it is done)
-
-if (!isset($version)) throw new OIDplusException(_L('Argument "%1" is missing; was the file included in a wrong way?','version'));
-if (!isset($this))    throw new OIDplusException(_L('Argument "%1" is missing; was the file included in a wrong way?','this'));
-
-if ($this->transaction_supported()) $this->transaction_begin();
-
-// Change bit(1) types to boolean/tinyint(1)
-if ($this->getSlang()::id() == 'pgsql') {
-	$this->query("alter table ###config  alter protected    drop default");
-	$this->query("alter table ###config  alter protected    type boolean using get_bit(protected   ,0)::boolean");
-	$this->query("alter table ###config  alter protected    set default false");
-
-	$this->query("alter table ###config  alter visible      drop default");
-	$this->query("alter table ###config  alter visible      type boolean using get_bit(visible     ,0)::boolean");
-	$this->query("alter table ###config  alter visible      set default false");
-
-	$this->query("alter table ###asn1id  alter standardized drop default");
-	$this->query("alter table ###asn1id  alter standardized type boolean using get_bit(standardized,0)::boolean");
-	$this->query("alter table ###asn1id  alter standardized set default false");
-
-	$this->query("alter table ###asn1id  alter well_known   drop default");
-	$this->query("alter table ###asn1id  alter well_known   type boolean using get_bit(well_known  ,0)::boolean");
-	$this->query("alter table ###asn1id  alter well_known   set default false");
-
-	$this->query("alter table ###iri     alter longarc      drop default");
-	$this->query("alter table ###iri     alter longarc      type boolean using get_bit(longarc     ,0)::boolean");
-	$this->query("alter table ###iri     alter longarc      set default false");
-
-	$this->query("alter table ###iri     alter well_known   drop default");
-	$this->query("alter table ###iri     alter well_known   type boolean using get_bit(well_known  ,0)::boolean");
-	$this->query("alter table ###iri     alter well_known   set default false");
-
-	$this->query("alter table ###objects alter confidential type boolean using get_bit(confidential,0)::boolean");
-
-	$this->query("alter table ###ra      alter privacy      drop default");
-	$this->query("alter table ###ra      alter privacy      type boolean using get_bit(privacy     ,0)::boolean");
-	$this->query("alter table ###ra      alter privacy      set default false");
-} else if ($this->getSlang()::id() == 'mysql') {
-	$this->query("alter table ###config  modify protected    boolean");
-	$this->query("alter table ###config  modify visible      boolean");
-	$this->query("alter table ###asn1id  modify standardized boolean");
-	$this->query("alter table ###asn1id  modify well_known   boolean");
-	$this->query("alter table ###iri     modify longarc      boolean");
-	$this->query("alter table ###iri     modify well_known   boolean");
-	$this->query("alter table ###objects modify confidential boolean");
-	$this->query("alter table ###ra      modify privacy      boolean");
+/**
+ * This function will be called by OIDplusDatabaseConnection.class.php at method afterConnect().
+ * @param OIDplusDatabaseConnection $db is the OIDplusDatabaseConnection class
+ * @param string $version is the current version (this script MUST increase the number by 1 when it is done)
+ * @throws OIDplusException
+ */
+function oidplus_dbupdate_201_202(OIDplusDatabaseConnection $db, string &$version) {
+    if ($db->transaction_supported()) $db->transaction_begin();
+    
+    // Change bit(1) types to boolean/tinyint(1)
+    if ($db->getSlang()::id() == 'pgsql') {
+    	$db->query("alter table ###config  alter protected    drop default");
+    	$db->query("alter table ###config  alter protected    type boolean using get_bit(protected   ,0)::boolean");
+    	$db->query("alter table ###config  alter protected    set default false");
+    
+    	$db->query("alter table ###config  alter visible      drop default");
+    	$db->query("alter table ###config  alter visible      type boolean using get_bit(visible     ,0)::boolean");
+    	$db->query("alter table ###config  alter visible      set default false");
+    
+    	$db->query("alter table ###asn1id  alter standardized drop default");
+    	$db->query("alter table ###asn1id  alter standardized type boolean using get_bit(standardized,0)::boolean");
+    	$db->query("alter table ###asn1id  alter standardized set default false");
+    
+    	$db->query("alter table ###asn1id  alter well_known   drop default");
+    	$db->query("alter table ###asn1id  alter well_known   type boolean using get_bit(well_known  ,0)::boolean");
+    	$db->query("alter table ###asn1id  alter well_known   set default false");
+    
+    	$db->query("alter table ###iri     alter longarc      drop default");
+    	$db->query("alter table ###iri     alter longarc      type boolean using get_bit(longarc     ,0)::boolean");
+    	$db->query("alter table ###iri     alter longarc      set default false");
+    
+    	$db->query("alter table ###iri     alter well_known   drop default");
+    	$db->query("alter table ###iri     alter well_known   type boolean using get_bit(well_known  ,0)::boolean");
+    	$db->query("alter table ###iri     alter well_known   set default false");
+    
+    	$db->query("alter table ###objects alter confidential type boolean using get_bit(confidential,0)::boolean");
+    
+    	$db->query("alter table ###ra      alter privacy      drop default");
+    	$db->query("alter table ###ra      alter privacy      type boolean using get_bit(privacy     ,0)::boolean");
+    	$db->query("alter table ###ra      alter privacy      set default false");
+    } else if ($db->getSlang()::id() == 'mysql') {
+    	$db->query("alter table ###config  modify protected    boolean");
+    	$db->query("alter table ###config  modify visible      boolean");
+    	$db->query("alter table ###asn1id  modify standardized boolean");
+    	$db->query("alter table ###asn1id  modify well_known   boolean");
+    	$db->query("alter table ###iri     modify longarc      boolean");
+    	$db->query("alter table ###iri     modify well_known   boolean");
+    	$db->query("alter table ###objects modify confidential boolean");
+    	$db->query("alter table ###ra      modify privacy      boolean");
+    }
+    
+    // Rename log_user.user to log_user.username, since user is a keyword in PostgreSQL and MSSQL
+    if ($db->getSlang()::id() == 'pgsql') {
+    	$db->query("alter table ###log_user rename column \"user\" to \"username\"");
+    } else if ($db->getSlang()::id() == 'mysql') {
+    	$db->query("alter table ###log_user change `user` `username` varchar(255) NOT NULL");
+    }
+    
+    $version = 202;
+    $db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
+    
+    if ($db->transaction_supported()) $db->transaction_commit();
 }
-
-// Rename log_user.user to log_user.username, since user is a keyword in PostgreSQL and MSSQL
-if ($this->getSlang()::id() == 'pgsql') {
-	$this->query("alter table ###log_user rename column \"user\" to \"username\"");
-} else if ($this->getSlang()::id() == 'mysql') {
-	$this->query("alter table ###log_user change `user` `username` varchar(255) NOT NULL");
-}
-
-$version = 202;
-$this->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
-
-if ($this->transaction_supported()) $this->transaction_commit();

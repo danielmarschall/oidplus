@@ -261,6 +261,7 @@ class OIDplusLogger {
 			}
 
 			// OID(x)	Save log entry into the logbook of: Object "x"
+			$m = array();			
 			if (preg_match('@^OID\((.+)\)$@ismU', $maskcode, $m)) {
 				$object_id = $m[1];
 				$objects[] = array($severity, $object_id);

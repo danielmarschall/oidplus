@@ -44,17 +44,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		if (file_exists($file2)) $file = $file2;
 
 		$cont = file_get_contents($file);
-
-		// make sure the program works even if the user provided HTML is not UTF-8
-		$cont = iconv(mb_detect_encoding($cont, mb_detect_order(), true), 'UTF-8//IGNORE', $cont);
-		$bom = pack('H*','EFBBBF');
-		$cont = preg_replace("/^$bom/", '', $cont);
-
-		$cont = preg_replace('@^(.+)<body[^>]*>@isU', '', $cont);
-		$cont = preg_replace('@</body>.+$@isU', '', $cont);
-		$cont = preg_replace('@<title>.+</title>@isU', '', $cont);
-		$cont = preg_replace('@<h1>.+</h1>@isU', '', $cont, 1);
-
+		
+		list($html, $js, $css) = extractHtmlContents($cont);
+		$cont = '';
+		if (!empty($js))  $cont .= "<script>\n$js\n</script>";
+		if (!empty($css)) $cont .= "<style>\n$css\n</style>";
+		$cont .= $html;
+		
 		return $cont;
 	}
 
@@ -70,6 +66,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		$bom = pack('H*','EFBBBF');
 		$cont = preg_replace("/^$bom/", '', $cont);
 
+		$m = array();
 		if (preg_match('@<title>(.+)</title>@ismU', $cont, $m)) return $m[1];
 		if (preg_match('@<h1>(.+)</h1>@ismU', $cont, $m)) return $m[1];
 		if (preg_match('@<h2>(.+)</h2>@ismU', $cont, $m)) return $m[1];

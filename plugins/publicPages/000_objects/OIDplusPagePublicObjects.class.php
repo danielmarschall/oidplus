@@ -340,21 +340,24 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$out['icon'] = OIDplus::webpath(__DIR__).'system_big.png';
 
 			if (file_exists(OIDplus::basePath() . '/userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html')) {
-				$out['text'] = file_get_contents(OIDplus::basePath() . '/userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html');
+				$cont = file_get_contents(OIDplus::basePath() . '/userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html');
 			} else if (file_exists(OIDplus::basePath() . '/userdata/welcome/welcome.html')) {
-				$out['text'] = file_get_contents(OIDplus::basePath() . '/userdata/welcome/welcome.html');
+				$cont = file_get_contents(OIDplus::basePath() . '/userdata/welcome/welcome.html');
 			} else if (file_exists(__DIR__ . '/welcome$'.OIDplus::getCurrentLang().'.html')) {
-				$out['text'] = file_get_contents(__DIR__ . '/welcome$'.OIDplus::getCurrentLang().'.html');
+				$cont = file_get_contents(__DIR__ . '/welcome$'.OIDplus::getCurrentLang().'.html');
 			} else if (file_exists(__DIR__ . '/welcome.html')) {
-				$out['text'] = file_get_contents(__DIR__ . '/welcome.html');
+				$cont = file_get_contents(__DIR__ . '/welcome.html');
 			} else {
-				$out['text'] = '';
+				$cont = '';
 			}
-
-			// make sure the program works even if the user provided HTML is not UTF-8
-			$out['text'] = iconv(mb_detect_encoding($out['text'], mb_detect_order(), true), 'UTF-8//IGNORE', $out['text']);
-			$bom = pack('H*','EFBBBF');
-			$out['text'] = preg_replace("/^$bom/", '', $out['text']);
+			
+			list($html, $js, $css) = extractHtmlContents($cont);
+			$cont = '';
+			if (!empty($js))  $cont .= "<script>\n$js\n</script>";
+			if (!empty($css)) $cont .= "<style>\n$css\n</style>";
+			$cont .= $html;
+			
+			$out['text'] = $cont;
 
 			if (strpos($out['text'], '%%OBJECT_TYPE_LIST%%') !== false) {
 				$tmp = '<ul>';

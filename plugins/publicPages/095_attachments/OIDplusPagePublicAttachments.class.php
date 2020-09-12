@@ -82,8 +82,8 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			if (!file_exists($uploadfile)) throw new OIDplusException(_L('File does not exist'));
 			@unlink($uploadfile);
 			if (file_exists($uploadfile)) {
-				OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", "Attachment file '".basename($uploadfile)."' could not be deleted from object '$oid' (problem with permissions?)");
-				$msg = _L('Attachment file "%1" could not be deleted from object "%2" (problem with permissions?)',basename($uploadfile),$oid);
+				OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", "Attachment file '".basename($uploadfile)."' could not be deleted from object '$id' (problem with permissions?)");
+				$msg = _L('Attachment file "%1" could not be deleted from object "%2" (problem with permissions?)',basename($uploadfile),$id);
 				if (OIDplus::authUtils()::isAdminLoggedIn()) {
 					throw new OIDplusException($msg);
 				} else {

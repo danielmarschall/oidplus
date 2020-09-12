@@ -41,11 +41,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			} else {
 				$info = file_get_contents(__DIR__ . '/info.html');
 			}
-
-			// make sure the program works even if the user provided HTML is not UTF-8
-			$info = iconv(mb_detect_encoding($info, mb_detect_order(), true), 'UTF-8//IGNORE', $info);
-			$bom = pack('H*','EFBBBF');
-			$info = preg_replace("/^$bom/", '', $info);
+			
+			list($html, $js, $css) = extractHtmlContents($info);
+			$info = '';
+			if (!empty($js))  $info .= "<script>\n$js\n</script>";
+			if (!empty($css)) $info .= "<style>\n$css\n</style>";
+			$info .= $html;
 
 			$out['text'] = $info;
 

@@ -69,7 +69,7 @@ class phpsvnclient {
 	 *  Respository Version.
 	 *
 	 *  @access private
-	 *  @var interger
+	 *  @var int
 	 */
 	private $_repVersion;
 
@@ -106,7 +106,7 @@ class phpsvnclient {
 
 	/**
 	 * Function for creating directories.
-	 * @param type $path The path to the directory that will be created.
+	 * @param $path (string) The path to the directory that will be created.
 	 */
 	private function createDirs($path)
 	{
@@ -122,8 +122,8 @@ class phpsvnclient {
 
 	/**
 	 * Function for the recursive removal of directories.
-	 * @param type $path The path to the directory to be deleted.
-	 * @return type Returns the status of a function or function rmdir unlink.
+	 * @param $path (string) The path to the directory to be deleted.
+	 * @return (string) Returns the status of a function or function rmdir unlink.
 	 */
 	private function removeDirs($path)
 	{
@@ -149,13 +149,13 @@ class phpsvnclient {
 
 	/**
 	* Updates a working copy
-	* @param $from_revision Either a revision number or a text file with the
+	* @param $from_revision (string) Either a revision number or a text file with the
 	*                       contents "Revision ..." (if it is a file,
 	*                       the file revision will be updated if everything
 	*                       was successful)
-	* @param $folder        SVN remote folder
-	* @param $outpath       Local path of the working copy
-	* @param $preview       Only simulate, do not write to files
+	* @param $folder        (string) SVN remote folder
+	* @param $outpath       (string) Local path of the working copy
+	* @param $preview       (bool) Only simulate, do not write to files
 	**/
 	public function updateWorkingCopy($from_revision='version.txt', $folder = '/trunk/', $outPath = '.', $preview = false)
 	{
@@ -178,6 +178,7 @@ class phpsvnclient {
 			} else {
 				//Obtain the number of current version number of the local copy.
 				$cont = file_get_contents($version_file);
+				$m = array();
 				if (!preg_match('@Revision (\d+)@', $cont, $m)) {
 					echo "ERROR: $version_file unknown format\n";
 					flush();
@@ -344,10 +345,13 @@ class phpsvnclient {
 			$version = $this->actVersion;
 		}
 		$url = $this->cleanURL($this->_url . "/!svn/bc/" . $version . "/" . $folder . "/");
+		$args = array();
 		$this->initQuery($args, "PROPFIND", $url);
 		$args['Body']                      = self::PHPSVN_NORMAL_REQUEST;
 		$args['Headers']['Content-Length'] = strlen(self::PHPSVN_NORMAL_REQUEST);
 
+		$headers = array();
+		$body = '';
 		if (!$this->Request($args, $headers, $body))
 			throw new OIDplusException("Cannot get rawDirectoryDump (Request failed)");
 
@@ -548,8 +552,11 @@ class phpsvnclient {
 		if ($fileInfo["type"] == "directory")
 			return false;
 
+		$args = array();
 		$url = $this->cleanURL($this->_url . "/!svn/bc/" . $version . "/" . $file . "/");
 		$this->initQuery($args, "GET", $url);
+		$headers = array();
+		$body = '';
 		if (!$this->Request($args, $headers, $body))
 			throw new OIDplusException("Cannot call getFile (Request failed)");
 
@@ -575,11 +582,14 @@ class phpsvnclient {
 		}
 
 		$url = $this->cleanURL($this->_url . "/!svn/bc/" . $this->actVersion . "/" . $file . "/");
+		$args = array();
 		$this->initQuery($args, "REPORT", $url);
 		$args['Body']                      = sprintf(self::PHPSVN_LOGS_REQUEST, $vini, $vend);
 		$args['Headers']['Content-Length'] = strlen($args['Body']);
 		$args['Headers']['Depth']          = 1;
 
+		$headers = array();
+		$body = '';
 		if (!$this->Request($args, $headers, $body))
 			throw new OIDplusException("Cannot call getLogsForUpdate (Request failed)");
 
@@ -723,15 +733,19 @@ class phpsvnclient {
 			return $this->_repVersion;
 
 		$this->_repVersion = -1;
+		$args = array();
 		$this->initQuery($args, "PROPFIND", $this->cleanURL($this->_url . "/!svn/vcc/default"));
 		$args['Body']                      = self::PHPSVN_VERSION_REQUEST;
 		$args['Headers']['Content-Length'] = strlen(self::PHPSVN_NORMAL_REQUEST);
 		$args['Headers']['Depth']          = 0;
 
+		$tmp = array();
+		$body = '';
 		if (!$this->Request($args, $tmp, $body))
 			throw new OIDplusException("Cannot get repository revision (Request failed)");
 
 		$this->_repVersion = null;
+		$m = array();
 		if (preg_match('@/(\d+)\s*</D:href>@ismU', $body, $m)) {
 			$this->_repVersion = $m[1];
 		} else {

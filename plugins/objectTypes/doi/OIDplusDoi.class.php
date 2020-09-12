@@ -139,6 +139,7 @@ class OIDplusDoi extends OIDplusObject {
 	# ---
 
 	public static function validBaseDoi($doi) {
+		$m = array();
 		return preg_match('@^10\.\d{4}$@', $doi, $m);
 	}
 

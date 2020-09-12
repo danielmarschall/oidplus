@@ -3,7 +3,7 @@
 /*
  * PHP GMP-Supplement implemented using BCMath
  * Copyright 2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-04-07
+ * Version 2020-09-12
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -156,7 +156,7 @@ if (function_exists('bcadd')) {
 		// Exact division of numbers
 		function gmp_divexact($n, $d) {
 			bcscale(0);
-			return bcdiv($a, $b);
+			return bcdiv($n, $d);
 		}
 
 		// gmp_export ( GMP $gmpnumber [, int $word_size = 1 [, int $options = GMP_MSW_FIRST | GMP_NATIVE_ENDIAN ]] ) : string
@@ -214,9 +214,9 @@ if (function_exists('bcadd')) {
 			}
 
 			return [
-				'g' => $this->normalize($a),
-				's' => $this->normalize($s),
-				't' => $this->normalize($t)
+				'g' => /*$this->normalize*/($a),
+				's' => /*$this->normalize*/($s),
+				't' => /*$this->normalize*/($t)
 			];
 		}
 
@@ -278,13 +278,13 @@ if (function_exists('bcadd')) {
 			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L246
 
 			while (bccomp($a, 0)==-1) {
-				$a=bcadd($m, $a);
+				$a=bcadd($b, $a);
 			}
-			while (bccomp($m, $a)==-1) {
-				$a=bcmod($a, $m);
+			while (bccomp($b, $a)==-1) {
+				$a=bcmod($a, $b);
 			}
 			$c=$a;
-			$d=$m;
+			$d=$b;
 			$uc=1;
 			$vc=0;
 			$ud=0;
@@ -306,10 +306,10 @@ if (function_exists('bcadd')) {
 				if (bccomp($ud, 0)==1) {
 					$result=$ud;
 				} else {
-					$result=bcadd($ud, $m);
+					$result=bcadd($ud, $b);
 				}
 			} else {
-				throw new ErrorException("ERROR: $a and $m are NOT relatively prime.");
+				throw new ErrorException("ERROR: $a and $b are NOT relatively prime.");
 			}
 			return $result;
 		}
@@ -321,8 +321,8 @@ if (function_exists('bcadd')) {
 
 			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L136
 
-			if ($n>=3 && $n%2==1) {
-				$a = bcmod($a, $n);
+			if ($p>=3 && $p%2==1) {
+				$a = bcmod($a, $p);
 				if ($a == 0) return 0;
 				if ($a == 1) return 1;
 				$a1 = $a;
@@ -331,10 +331,10 @@ if (function_exists('bcadd')) {
 					$a1 = bcdiv($a1, 2);
 					$e = bcadd($e, 1);
 				}
-				$s = (bcmod($e, 2)==0 || bcmod($n, 8)==1 || bcmod($n, 8)==7) ? 1 : -1;
+				$s = (bcmod($e, 2)==0 || bcmod($p, 8)==1 || bcmod($p, 8)==7) ? 1 : -1;
 				if ($a1 == 1) return $s;
-				if (bcmod($n, 4)==3 && bcmod($a1, 4)==3) $s = -$s;
-				return bcmul($s, gmp_jacobi(bcmod($n, $a1), $a1));
+				if (bcmod($p, 4)==3 && bcmod($a1, 4)==3) $s = -$s;
+				return bcmul($s, gmp_jacobi(bcmod($p, $a1), $a1));
 			} else {
 				return false;
 			}
@@ -398,10 +398,10 @@ if (function_exists('bcadd')) {
 
 			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L692
 
-			if (bccomp($starting_value, 2) == -1) {
+			if (bccomp($a, 2) == -1) {
 				return 2;
 			}
-			$result = gmp_or(bcadd($starting_value, 1), 1);
+			$result = gmp_or(bcadd($a, 1), 1);
 			while (!gmp_prob_prime($result)) {
 				$result = bcadd($result, 2);
 			}
@@ -478,28 +478,28 @@ if (function_exists('bcadd')) {
 
 			$t = 40;
 			$k = 0;
-			$m = bcsub($n, 1);
+			$m = bcsub($reps, 1);
 			while (bcmod($m, 2) == 0) {
 				$k = bcadd($k, 1);
 				$m = bcdiv($m, 2);
 			}
 			for ($i=0; $i<$t; $i++) {
-				$a = bcrand(1, bcsub($n, 1));
+				$a = bcrand(1, bcsub($reps, 1));
 				if ($m < 0) {
 					return new ErrorException("Negative exponents ($m) not allowed");
 				} else {
-					$b0 = bcpowmod($a, $m, $n);
+					$b0 = bcpowmod($a, $m, $reps);
 				}
-				if ($b0!=1 && $b0!=bcsub($n, 1)) {
+				if ($b0!=1 && $b0!=bcsub($reps, 1)) {
 					$j = 1;
-					while ($j<=$k-1 && $b0!=bcsub($n, 1)) {
-						$b0 = bcpowmod($b0, 2, $n);
+					while ($j<=$k-1 && $b0!=bcsub($reps, 1)) {
+						$b0 = bcpowmod($b0, 2, $reps);
 						if ($b0 == 1) {
 							return false;
 						}
 						$j++;
 					}
-					if ($b0 != bcsub($n, 1)) {
+					if ($b0 != bcsub($reps, 1)) {
 						return false;
 					}
 				}
@@ -754,19 +754,18 @@ if (function_exists('bcadd')) {
 	// Newly added: gmp_not / bcnot
 	function bcnot($a) {
 		bcscale(0);
-		// Convert $a and $b to a binary string
+		// Convert $a to a binary string
 		$ab = bc_dec2bin($a);
-		$bb = bc_dec2bin($b);
-		$length = max(strlen($ab), strlen($bb));
-		$ab = str_pad($ab, $length, "0", STR_PAD_LEFT);
-		$bb = str_pad($bb, $length, "0", STR_PAD_LEFT);
+		$length = strlen($ab);
+
 		// Do the bitwise binary operation
 		$cb = '';
 		for ($i=0; $i<$length; $i++) {
-			if ($ab[$i] == 1) return false;
+			$cb .= ($ab[$i] == 1) ? '0' : '1';
 		}
 
-		return true;
+		// Convert back to a decimal number
+		return bc_bin2dec($cb);
 	}
 	function gmp_not($a) {
 		bcscale(0);

@@ -73,9 +73,8 @@ class OIDplusSqlSlangPluginSQLite extends OIDplusSqlSlangPlugin {
 
 	public function detect(OIDplusDatabaseConnection $db): bool {
 		try {
-			$db->query("select sqlite_version as dbms_version")->fetch_object()->dbms_version;
-			$vers = "sqlite $vers";
-			return strpos($vers, 'sqlite') !== false;
+			$db->query("select sqlite_version as dbms_version");
+			return true;
 		} catch (Exception $e) {
 			return false;
 		}

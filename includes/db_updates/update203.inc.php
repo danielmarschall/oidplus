@@ -17,34 +17,34 @@
  * limitations under the License.
  */
 
-// DATABASE UPDATE 203 -> 204
-// This script will be included by OIDplusDatabaseConnection.class.php inside function afterConnect().
-// Parameters: $this is the OIDplusDatabaseConnection class
-//             $version is the current version (this script MUST increase the number by 1 when it is done)
-
-if (!isset($version)) throw new OIDplusException(_L('Argument "%1" is missing; was the file included in a wrong way?','version'));
-if (!isset($this))    throw new OIDplusException(_L('Argument "%1" is missing; was the file included in a wrong way?','this'));
-
-if ($this->transaction_supported()) $this->transaction_begin();
-
-if ($this->getSlang()::id() == 'mssql') {
-	$this->query("ALTER TABLE ###log_object ADD severity [int]");
-	$this->query("ALTER TABLE ###log_user ADD severity [int]");
+/**
+ * This function will be called by OIDplusDatabaseConnection.class.php at method afterConnect().
+ * @param OIDplusDatabaseConnection $db is the OIDplusDatabaseConnection class
+ * @param string $version is the current version (this script MUST increase the number by 1 when it is done)
+ * @throws OIDplusException
+ */
+function oidplus_dbupdate_203_204(OIDplusDatabaseConnection $db, string &$version) {
+    if ($db->transaction_supported()) $db->transaction_begin();
+    
+    if ($db->getSlang()::id() == 'mssql') {
+    	$db->query("ALTER TABLE ###log_object ADD severity [int]");
+    	$db->query("ALTER TABLE ###log_user ADD severity [int]");
+    }
+    else if ($db->getSlang()::id() == 'mysql') {
+    	$db->query("ALTER TABLE ###log_object ADD severity int(11)");
+    	$db->query("ALTER TABLE ###log_user ADD severity int(11)");
+    }
+    else if ($db->getSlang()::id() == 'pgsql') {
+    	$db->query("ALTER TABLE ###log_object ADD severity integer");
+    	$db->query("ALTER TABLE ###log_user ADD severity integer");
+    }
+    else if ($db->getSlang()::id() == 'sqlite') {
+    	$db->query("ALTER TABLE ###log_object ADD severity integer");
+    	$db->query("ALTER TABLE ###log_user ADD severity integer");
+    }
+    
+    $version = 204;
+    $db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
+    
+    if ($db->transaction_supported()) $db->transaction_commit();
 }
-else if ($this->getSlang()::id() == 'mysql') {
-	$this->query("ALTER TABLE ###log_object ADD severity int(11)");
-	$this->query("ALTER TABLE ###log_user ADD severity int(11)");
-}
-else if ($this->getSlang()::id() == 'pgsql') {
-	$this->query("ALTER TABLE ###log_object ADD severity integer");
-	$this->query("ALTER TABLE ###log_user ADD severity integer");
-}
-else if ($this->getSlang()::id() == 'sqlite') {
-	$this->query("ALTER TABLE ###log_object ADD severity integer");
-	$this->query("ALTER TABLE ###log_user ADD severity integer");
-}
-
-$version = 204;
-$this->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
-
-if ($this->transaction_supported()) $this->transaction_commit();

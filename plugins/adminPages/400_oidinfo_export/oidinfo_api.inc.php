@@ -2,8 +2,8 @@
 
 /*
  * OID-Info.com API for PHP
- * Copyright 2019 Daniel Marschall, ViaThinkSoft
- * Version 2019-11-06
+ * Copyright 2019-2020 Daniel Marschall, ViaThinkSoft
+ * Version 2020-09-12
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -313,6 +313,7 @@ class OIDInfoAPI {
 		// TODO: what do we do if there are more XHTML errors (e.g. additional open tags) which would make the XML invalid?
 
 		// "Trim" <br/>
+		$count = 0;
 		do { $desc = preg_replace('@^\s*<\s*br\s*/{0,1}\s*>@isU', '', $desc, -1, $count); } while ($count > 0); // left trim
 		do { $desc = preg_replace('@<\s*br\s*/{0,1}\s*>\s*$@isU', '', $desc, -1, $count); } while ($count > 0); // right trim
 
@@ -543,6 +544,7 @@ class OIDInfoAPI {
 
 		// Request by O.D. 26 August 2019
 		$elements['description'] = trim($elements['description']);
+		$m = array();
 		if (preg_match('@^[a-z]@', $elements['description'], $m)) {
 			$ending_dot_policy = self::OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT; // for description
 			if (($ending_dot_policy != self::OIDINFO_CORRECT_DESC_ENFORCE_ENDING_DOT) && (strpos($elements['description'], ' ') === false)) { // <-- added by DM
@@ -923,7 +925,7 @@ class OIDInfoAPI {
 		}
 
 		$one_null = false;
-		foreach ($this->simplePingProviders as $addr => $obj) {
+		foreach ($this->simplePingProviders as /*$addr =>*/ $obj) {
 			$res = $obj->queryOID($oid);
 			if ($res) return true;
 			if ($res !== false) $one_null = true;
@@ -969,7 +971,7 @@ class CSVSimplePingProvider implements IOIDSimplePingProvider {
 		}
 		$filemtime = filemtime($this->csvfile);
 		if ($filemtime != $this->filemtime) {
-			$this->lines = file($csvfile);
+			$this->lines = file($this->csvfile);
 			$this->filemtime = $filemtime;
 		}
 	}

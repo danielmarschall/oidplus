@@ -17,57 +17,57 @@
  * limitations under the License.
  */
 
-// DATABASE UPDATE 202 -> 203
-// This script will be included by OIDplusDatabaseConnection.class.php inside function afterConnect().
-// Parameters: $this is the OIDplusDatabaseConnection class
-//             $version is the current version (this script MUST increase the number by 1 when it is done)
-
-if (!isset($version)) throw new OIDplusException(_L('Argument "%1" is missing; was the file included in a wrong way?','version'));
-if (!isset($this))    throw new OIDplusException(_L('Argument "%1" is missing; was the file included in a wrong way?','this'));
-
-if ($this->transaction_supported()) $this->transaction_begin();
-
-if ($this->getSlang()::id() == 'mssql') {
-	$this->query("CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @maxArcLen int, @occurence int)
-	RETURNS varchar(512) AS
-	BEGIN
-		DECLARE @intPos int
-
-		DECLARE @cnt int
-		SET @cnt = 0
-
-		if SUBSTRING(@strList, 1, 4) <> 'oid:'
-		begin
-			RETURN ''
-		end
-
-		SET @strList = RIGHT(@strList, LEN(@strList)-4)
-
-		WHILE CHARINDEX('.',@strList) > 0
-		BEGIN
-			SET @intPos=CHARINDEX('.',@strList)
-			SET @cnt = @cnt + 1
-			IF @cnt = @occurence
-			BEGIN
-				SET @strList = LEFT(@strList,@intPos-1)
-				RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
-			END
-			SET @strList = RIGHT(@strList, LEN(@strList)-@intPos)
-		END
-		IF LEN(@strList) > 0
-		BEGIN
-			SET @cnt = @cnt + 1
-			IF @cnt = @occurence
-			BEGIN
-				RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
-			END
-		END
-
-		RETURN REPLICATE('0', @maxArcLen)
-	END");
+/**
+ * This function will be called by OIDplusDatabaseConnection.class.php at method afterConnect().
+ * @param OIDplusDatabaseConnection $db is the OIDplusDatabaseConnection class
+ * @param string $version is the current version (this script MUST increase the number by 1 when it is done)
+ * @throws OIDplusException
+ */
+function oidplus_dbupdate_202_203(OIDplusDatabaseConnection $db, string &$version) {
+    if ($db->transaction_supported()) $db->transaction_begin();
+    
+    if ($db->getSlang()::id() == 'mssql') {
+    	$db->query("CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @maxArcLen int, @occurence int)
+    	RETURNS varchar(512) AS
+    	BEGIN
+    		DECLARE @intPos int
+    
+    		DECLARE @cnt int
+    		SET @cnt = 0
+    
+    		if SUBSTRING(@strList, 1, 4) <> 'oid:'
+    		begin
+    			RETURN ''
+    		end
+    
+    		SET @strList = RIGHT(@strList, LEN(@strList)-4)
+    
+    		WHILE CHARINDEX('.',@strList) > 0
+    		BEGIN
+    			SET @intPos=CHARINDEX('.',@strList)
+    			SET @cnt = @cnt + 1
+    			IF @cnt = @occurence
+    			BEGIN
+    				SET @strList = LEFT(@strList,@intPos-1)
+    				RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
+    			END
+    			SET @strList = RIGHT(@strList, LEN(@strList)-@intPos)
+    		END
+    		IF LEN(@strList) > 0
+    		BEGIN
+    			SET @cnt = @cnt + 1
+    			IF @cnt = @occurence
+    			BEGIN
+    				RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
+    			END
+    		END
+    
+    		RETURN REPLICATE('0', @maxArcLen)
+    	END");
+    }
+    
+    $version = 203;
+    $db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
+    
+    if ($db->transaction_supported()) $db->transaction_commit();
 }
-
-$version = 203;
-$this->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
-
-if ($this->transaction_supported()) $this->transaction_commit();

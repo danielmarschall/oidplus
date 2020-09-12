@@ -100,6 +100,7 @@ function get_js_L_strings($cont) {
 	$cont = str_replace('\\"', chr(1), $cont);
 	$cont = str_replace("\\'", chr(2), $cont);
 	$cont = str_replace("\\\\", "\\", $cont);
+	$m = array();
 	preg_match_all('@[^_A-Za-z0-9]_L\\(.*(["\'])(.+)\\1@ismU', $cont, $m);
 	foreach ($m[2] as &$x) {
 		$x = str_replace(chr(1), '"', $x);

@@ -29,6 +29,7 @@ function js_escape($data) {
 }
 
 function trim_br($html) {
+	$count = 0;
 	do { $html = preg_replace('@^\s*<\s*br\s*/{0,1}\s*>@isU', '', $html, -1, $count); } while ($count > 0); // left trim
 	do { $html = preg_replace('@<\s*br\s*/{0,1}\s*>\s*$@isU', '', $html, -1, $count); } while ($count > 0); // right trim
 	return $html;
@@ -39,6 +40,8 @@ function verify_private_public_key($privKey, $pubKey) {
 		if (empty($privKey)) return false;
 		if (empty($pubKey)) return false;
 		$data = 'TEST';
+		$encrypted = '';
+		$decrypted = '';
 		if (!@openssl_public_encrypt($data, $encrypted, $pubKey)) return false;
 		if (!@openssl_private_decrypt($encrypted, $decrypted, $privKey)) return false;
 		return $decrypted == $data;
@@ -187,4 +190,35 @@ function _L($str, ...$sprintfArgs) {
 	$res = my_vsprintf($res, $sprintfArgs);
 
 	return $res;
+}
+
+function extractHtmlContents($cont) {
+	// make sure the program works even if the user provided HTML is not UTF-8
+	$cont = iconv(mb_detect_encoding($cont, mb_detect_order(), true), 'UTF-8//IGNORE', $cont);
+	$bom = pack('H*','EFBBBF');
+	$cont = preg_replace("/^$bom/", '', $cont);
+
+	$out_js = '';
+	$m = array();
+	preg_match_all('@<script[^>]*>(.+)</script>@ismU', $cont, $m);
+	foreach ($m[1] as $x) {
+		$out_js = $x . "\n\n";
+	}
+
+	$out_css = '';
+	$m = array();
+	preg_match_all('@<style[^>]*>(.+)</style>@ismU', $cont, $m);
+	foreach ($m[1] as $x) {
+		$out_css = $x . "\n\n";
+	}
+
+	$out_html = $cont;
+	$out_html = preg_replace('@^(.+)<body[^>]*>@isU', '', $out_html);
+	$out_html = preg_replace('@</body>.+$@isU', '', $out_html);
+	$out_html = preg_replace('@<title>.+</title>@isU', '', $out_html);
+	$out_html = preg_replace('@<h1>.+</h1>@isU', '', $out_html, 1);
+	$out_html = preg_replace('@<script[^>]*>(.+)</script>@ismU', '', $out_html);
+	$out_html = preg_replace('@<style[^>]*>(.+)</style>@ismU', '', $out_html);
+
+	return array($out_html, $out_js, $out_css);
 }

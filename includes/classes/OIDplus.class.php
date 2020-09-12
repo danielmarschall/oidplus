@@ -729,6 +729,7 @@ class OIDplus {
 
 			if (self::getPkiStatus(true)) {
 				$pubKey = OIDplus::config()->getValue('oidplus_public_key');
+				$m = array();
 				if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
 					$out = smallhash(base64_decode($m[1]));
 				}
@@ -771,6 +772,7 @@ class OIDplus {
 			OIDplus::config()->setValue('oidplus_public_key', $pubKey);
 
 			// Log the new system ID
+			$m = array();
 			if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
 				$system_id = smallhash(base64_decode($m[1]));
 				OIDplus::logger()->log("[INFO]A!", "Your SystemID is now $system_id");
@@ -828,6 +830,7 @@ class OIDplus {
 			// Try to find out the SVN version using the shell
 			// We don't prioritize this method, because a failed shell access will flood the apache error log with STDERR messages
 			$output = @shell_exec('svnversion '.escapeshellarg(OIDplus::basePath()));
+			$match = array();
 			if (preg_match('/\d+/', $output, $match)) {
 				return 'svn-'.$match[0]; // do not translate
 			}
@@ -840,6 +843,7 @@ class OIDplus {
 
 		if (file_exists(OIDplus::basePath().'/oidplus_version.txt')) {
 			$cont = file_get_contents(OIDplus::basePath().'/oidplus_version.txt');
+			$m = array();
 			if (preg_match('@Revision (\d+)@', $cont, $m)) // do not translate
 				return 'svn-'.$m[1]; // do not translate
 		}
@@ -909,6 +913,8 @@ class OIDplus {
 					}
 				} else {
 					// This is our first check (or the browser didn't accept the SSL_CHECK cookie)
+					$errno = -1;
+					$errstr = '';
 					if (@fsockopen($_SERVER['HTTP_HOST'], $ssl_port, $errno, $errstr, $timeout)) {
 						// HTTPS detected. Redirect now, and remember that we had detected HTTPS
 						setcookie('SSL_CHECK', '1', 0, $cookie_path, '', false, true);

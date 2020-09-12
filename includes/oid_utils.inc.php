@@ -3,7 +3,7 @@
 /*
  * OID-Utilities for PHP
  * Copyright 2011-2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-06-11
+ * Version 2020-09-12
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ define('OID_DOT_REQUIRED',  2);
 function oid_valid_dotnotation($oid, $allow_leading_zeroes=true, $allow_leading_dot=false, $min_len=0) {
 	$regex = oid_validation_regex($allow_leading_zeroes, $allow_leading_dot, $min_len);
 
+	$m = array();
 	return preg_match($regex, $oid, $m) ? true : false;
 }
 
@@ -154,6 +155,7 @@ function oid_part_regex($min_len=2, $allow_leading_zeroes=false, $leading_dot_po
 function parse_oids($text, $min_len=2, $allow_leading_zeroes=false, $leading_dot_policy=OID_DOT_OPTIONAL, $requires_whitespace_delimiters=true) {
 	$regex = oid_detection_regex($min_len, $allow_leading_zeroes, $leading_dot_policy, $requires_whitespace_delimiters);
 
+	$matches = array();
 	preg_match_all($regex, $text, $matches);
 	return $matches[1];
 }
@@ -271,7 +273,6 @@ assert(oid_parents('') == array());
  * @param   $output_with_leading_dot (bool)<br />
  *              true: The array will be normalized to OIDs with a leading dot.
  *              false: The array will be normalized to OIDs without a leading dot. (default)
- * @return  Nothing
  **/
 function oidSort(&$ary, $output_with_leading_dot=false) {
 	$out = array();
@@ -577,6 +578,7 @@ function iri_char_valid($c, $firstchar, $lastchar) {
 function iri_arc_valid($arc, $allow_numeric=true) {
 	if ($arc == '') return false;
 
+	$m = array();
 	if ($allow_numeric && preg_match('@^(\\d+)$@', $arc, $m)) return true; # numeric arc
 
 	// Question: Should we strip RTL/LTR characters?
@@ -809,6 +811,7 @@ function asn1_to_dot($asn) {
 	$standardized = asn1_get_standardized_array();
 
 	// Clean up
+	$count = -1;
 	$asn = preg_replace('@^\\{(.+)\\}$@', '\\1', $asn, -1, $count);
 	if ($count == 0) return false; // { and } are required. The asn.1 path will NOT be trimmed by this function
 
@@ -832,6 +835,7 @@ function asn1_to_dot($asn) {
 	// -> invalid stuff will be recognized, e.g. a "(1)" without an identifier in front of it
 	$ary = explode('.', $asn);
 	foreach ($ary as $a) {
+		$m = array();
 		if (!preg_match('@^(0|([1-9]\\d*))$@', $a, $m)) return false;
 	}
 

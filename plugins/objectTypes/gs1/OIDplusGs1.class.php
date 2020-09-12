@@ -56,6 +56,7 @@ class OIDplusGs1 extends OIDplusObject {
 	}
 
 	public function addString($str) {
+		$m = array();
 		if (!preg_match('@^\\d+$@', $str, $m)) {
 			throw new OIDplusException(_L('GS1 value needs to be numeric'));
 		}

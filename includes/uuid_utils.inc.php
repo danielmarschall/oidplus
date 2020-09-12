@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011-2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-02-28
+ * Version 2020-09-12
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -365,6 +365,7 @@ function gen_uuid_timebased() {
 
 	# On Debian: aptitude install uuid-runtime
 	$out = array();
+	$ec = -1;
 	exec('uuidgen -t', $out, $ec);
 	if ($ec == 0) return $out[0];
 
@@ -427,6 +428,7 @@ function gen_uuid_random() {
 
 	# On Debian: aptitude install uuid-runtime
 	$out = array();
+	$ec = -1;
 	exec('uuidgen -r', $out, $ec);
 	if ($ec == 0) return $out[0];
 

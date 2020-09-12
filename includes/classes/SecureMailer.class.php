@@ -28,14 +28,15 @@ class SecureMailer {
 	const endl = "\n"; // GMX will kein CRLF! wtf?! (Unter Postfix in Linux)
 
 	private function QB_SECURE_MAIL_PARAM($param_ = '', $level_ = 2) {
-		// Verhindert Mail-Header-Injections
-		// Quelle: http://www.erich-kachel.de/?p=26
+		// Prevents eMail header injections
+		// Source: http://www.erich-kachel.de/?p=26 (modified)
 
 		/* replace until done */
-		while (!isset($filtered) || ($param_ != $filtered)) {
-			if (isset($filtered)) {
-			$param_ = $filtered;
-		}
+		$filtered = null;
+		while (!is_null($filtered) || ($param_ != $filtered)) {
+			if (is_null($filtered)) {
+				$param_ = $filtered;
+			}
 
 			$filtered = preg_replace("/(Content-Transfer-Encoding:|MIME-Version:|content-type:|Subject:|to:|cc:|bcc:|from:|reply-to:)/ims", '', $param_);
 		}

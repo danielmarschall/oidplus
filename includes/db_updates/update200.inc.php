@@ -17,19 +17,19 @@
  * limitations under the License.
  */
 
-// DATABASE UPDATE 200 -> 201
-// This script will be included by OIDplusDatabaseConnection.class.php inside function afterConnect().
-// Parameters: $this is the OIDplusDatabaseConnection class
-//             $version is the current version (this script MUST increase the number by 1 when it is done)
-
-if (!isset($version)) throw new OIDplusException(_L('Argument "%1" is missing; was the file included in a wrong way?','version'));
-if (!isset($this))    throw new OIDplusException(_L('Argument "%1" is missing; was the file included in a wrong way?','this'));
-
-if ($this->transaction_supported()) $this->transaction_begin();
-
-$this->query("ALTER TABLE ###objects ADD comment varchar(255) NULL");
-
-$version = 201;
-$this->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
-
-if ($this->transaction_supported()) $this->transaction_commit();
+/**
+ * This function will be called by OIDplusDatabaseConnection.class.php at method afterConnect().
+ * @param OIDplusDatabaseConnection $db is the OIDplusDatabaseConnection class
+ * @param string $version is the current version (this script MUST increase the number by 1 when it is done)
+ * @throws OIDplusException
+ */
+function oidplus_dbupdate_200_201(OIDplusDatabaseConnection $db, string &$version) {
+    if ($db->transaction_supported()) $db->transaction_begin();
+    
+    $db->query("ALTER TABLE ###objects ADD comment varchar(255) NULL");
+    
+    $version = 201;
+    $db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
+    
+    if ($db->transaction_supported()) $db->transaction_commit();
+}

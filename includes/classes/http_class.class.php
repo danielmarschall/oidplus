@@ -1,10 +1,794 @@
 <?php
 
 /*
- * http.php
+ * This file includes:
+ *
+ * 1. PHP HTTP protocol client: HTTP client to access Web site pages
  *    by Manuel Lemos
  *    http://www.phpclasses.org/httpclient
  *    License: BSD License
+ *
+ *    http.php
+ *        @(#) $Header: /opt2/ena/metal/http/http.php,v 1.94 2016/05/03 02:07:04 mlemos Exp $
+ *        Modified by Daniel Marschall, ViaThinkSoft, Revision 2020-09-12
+ *
+ *
+ * 2. Simple Authentication and Security Layer client
+ *    (Included because of dependency)
+ *    by Manuel Lemos
+ *    http://www.phpclasses.org/sasl
+ *    License: BSD License
+ *
+ *    sasl.php
+ *        @(#) $Id: sasl.php,v 1.11 2005/10/31 18:43:27 mlemos Exp $
+ *    basic_sasl_client.php
+ *        @(#) $Id: basic_sasl_client.php,v 1.1 2004/11/17 08:01:23 mlemos Exp $
+ *    cram_md5_sasl_client.php
+ *        @(#) $Id: cram_md5_sasl_client.php,v 1.3 2004/11/17 08:00:37 mlemos Exp $
+ *    digest_sasl_client.php
+ *        @(#) $Id: digest_sasl_client.php,v 1.1 2005/10/27 05:24:15 mlemos Exp $
+ *    login_sasl_client.php
+ *        @(#) $Id: login_sasl_client.php,v 1.2 2004/11/17 08:00:37 mlemos Exp $
+ *    ntlm_sasl_client.php
+ *        @(#) $Id: ntlm_sasl_client.php,v 1.3 2004/11/17 08:00:37 mlemos Exp $
+ *    plain_sasl_client.php
+ *        @(#) $Id: plain_sasl_client.php,v 1.2 2004/11/17 08:00:37 mlemos Exp $
+ */
+
+// =============================================================================
+
+/*
+ * basic_sasl_client.php
+ *
+ * @(#) $Id: basic_sasl_client.php,v 1.1 2004/11/17 08:01:23 mlemos Exp $
+ *
+ */
+
+define("SASL_BASIC_STATE_START",    0);
+define("SASL_BASIC_STATE_DONE",     1);
+
+class basic_sasl_client_class
+{
+	var $credentials=array();
+	var $state=SASL_BASIC_STATE_START;
+
+	Function Initialize(&$client)
+	{
+		return(1);
+	}
+
+	Function Start(&$client, &$message, &$interactions)
+	{
+		if($this->state!=SASL_BASIC_STATE_START)
+		{
+			$client->error="Basic authentication state is not at the start";
+			return(SASL_FAIL);
+		}
+		$this->credentials=array(
+			"user"=>"",
+			"password"=>""
+		);
+		$defaults=array(
+		);
+		$status=$client->GetCredentials($this->credentials,$defaults,$interactions);
+		if($status==SASL_CONTINUE)
+		{
+			$message=$this->credentials["user"].":".$this->credentials["password"];
+			$this->state=SASL_BASIC_STATE_DONE;
+		}
+		else
+			Unset($message);
+		return($status);
+	}
+
+	Function Step(&$client, $response, &$message, &$interactions)
+	{
+		switch($this->state)
+		{
+			case SASL_BASIC_STATE_DONE:
+				$client->error="Basic authentication was finished without success";
+				return(SASL_FAIL);
+			default:
+				$client->error="invalid Basic authentication step state";
+				return(SASL_FAIL);
+		}
+		return(SASL_CONTINUE);
+	}
+};
+
+// =============================================================================
+
+/*
+ * cram_md5_sasl_client.php
+ *
+ * @(#) $Id: cram_md5_sasl_client.php,v 1.3 2004/11/17 08:00:37 mlemos Exp $
+ *
+ */
+
+define("SASL_CRAM_MD5_STATE_START",             0);
+define("SASL_CRAM_MD5_STATE_RESPOND_CHALLENGE", 1);
+define("SASL_CRAM_MD5_STATE_DONE",              2);
+
+class cram_md5_sasl_client_class
+{
+	var $credentials=array();
+	var $state=SASL_CRAM_MD5_STATE_START;
+
+	Function Initialize(&$client)
+	{
+		return(1);
+	}
+
+	Function HMACMD5($key,$text)
+	{
+		$key=(strlen($key)<64 ? str_pad($key,64,"\0") : substr($key,0,64));
+		return(md5((str_repeat("\x5c", 64)^$key).pack("H32", md5((str_repeat("\x36", 64)^$key).$text))));
+	}
+
+	Function Start(&$client, &$message, &$interactions)
+	{
+		if($this->state!=SASL_CRAM_MD5_STATE_START)
+		{
+			$client->error="CRAM-MD5 authentication state is not at the start";
+			return(SASL_FAIL);
+		}
+		$this->credentials=array(
+			"user"=>"",
+			"password"=>""
+		);
+		$defaults=array();
+		$status=$client->GetCredentials($this->credentials,$defaults,$interactions);
+		if($status==SASL_CONTINUE)
+			$this->state=SASL_CRAM_MD5_STATE_RESPOND_CHALLENGE;
+		Unset($message);
+		return($status);
+	}
+
+	Function Step(&$client, $response, &$message, &$interactions)
+	{
+		switch($this->state)
+		{
+			case SASL_CRAM_MD5_STATE_RESPOND_CHALLENGE:
+				$message=$this->credentials["user"]." ".$this->HMACMD5($this->credentials["password"], $response);
+				$this->state=SASL_CRAM_MD5_STATE_DONE;
+				break;
+			case SASL_CRAM_MD5_STATE_DONE:
+				$client->error="CRAM-MD5 authentication was finished without success";
+				return(SASL_FAIL);
+			default:
+				$client->error="invalid CRAM-MD5 authentication step state";
+				return(SASL_FAIL);
+		}
+		return(SASL_CONTINUE);
+	}
+};
+
+// =============================================================================
+
+/*
+ * digest_sasl_client.php
+ *
+ * @(#) $Id: digest_sasl_client.php,v 1.1 2005/10/27 05:24:15 mlemos Exp $
+ *
+ */
+
+define('SASL_DIGEST_STATE_START',             0);
+define('SASL_DIGEST_STATE_RESPOND_CHALLENGE', 1);
+define('SASL_DIGEST_STATE_DONE',              2);
+
+class digest_sasl_client_class
+{
+	var $credentials=array();
+	var $state=SASL_DIGEST_STATE_START;
+
+	Function unq($string)
+	{
+		return(($string[0]=='"' && $string[strlen($string)-1]=='"') ? substr($string, 1, strlen($string)-2) : $string);
+	}
+
+	Function H($data)
+	{
+		return md5($data);
+	}
+
+	Function KD($secret, $data)
+	{
+		return $this->H($secret.':'.$data);
+	}
+
+	Function Initialize(&$client)
+	{
+		return(1);
+	}
+
+	Function Start(&$client, &$message, &$interactions)
+	{
+		if($this->state!=SASL_DIGEST_STATE_START)
+		{
+			$client->error='Digest authentication state is not at the start';
+			return(SASL_FAIL);
+		}
+		$this->credentials=array(
+			'user'=>'',
+			'password'=>'',
+			'uri'=>'',
+			'method'=>'',
+			'session'=>''
+		);
+		$defaults=array();
+		$status=$client->GetCredentials($this->credentials,$defaults,$interactions);
+		if($status==SASL_CONTINUE)
+			$this->state=SASL_DIGEST_STATE_RESPOND_CHALLENGE;
+		Unset($message);
+		return($status);
+	}
+
+	Function Step(&$client, $response, &$message, &$interactions)
+	{
+		switch($this->state)
+		{
+			case SASL_DIGEST_STATE_RESPOND_CHALLENGE:
+				$values=explode(',',$response);
+				$parameters=array();
+				for($v=0; $v<count($values); $v++)
+					$parameters[strtok(trim($values[$v]), '=')]=strtok('');
+
+				$message='username="'.$this->credentials['user'].'"';
+				if(!IsSet($parameters[$p='realm'])
+				&& !IsSet($parameters[$p='nonce']))
+				{
+					$client->error='Digest authentication parameter '.$p.' is missing from the server response';
+					return(SASL_FAIL);
+				}
+				$message.=', realm='.$parameters['realm'];
+				$message.=', nonce='.$parameters['nonce'];
+				$message.=', uri="'.$this->credentials['uri'].'"';
+				if(IsSet($parameters['algorithm']))
+				{
+					$algorithm=$this->unq($parameters['algorithm']);
+					$message.=', algorithm='.$parameters['algorithm'];
+				}
+				else
+					$algorithm='';
+
+				$realm=$this->unq($parameters['realm']);
+				$nonce=$this->unq($parameters['nonce']);
+				if(IsSet($parameters['qop']))
+				{
+					switch($qop=$this->unq($parameters['qop']))
+					{
+						case "auth":
+							$cnonce=$this->credentials['session'];
+							break;
+						default:
+							$client->error='Digest authentication quality of protection '.$qop.' is not yet supported';
+							return(SASL_FAIL);
+					}
+				}
+				$nc_value='00000001';
+				if(IsSet($parameters['qop'])
+				&& !strcmp($algorithm, 'MD5-sess'))
+					$A1=$this->H($this->credentials['user'].':'. $realm.':'. $this->credentials['password']).':'.$nonce.':'.$cnonce;
+				else
+					$A1=$this->credentials['user'].':'. $realm.':'. $this->credentials['password'];
+				$A2=$this->credentials['method'].':'.$this->credentials['uri'];
+				if(IsSet($parameters['qop']))
+					$response=$this->KD($this->H($A1), $nonce.':'. $nc_value.':'. $cnonce.':'. $qop.':'. $this->H($A2));
+				else
+					$response=$this->KD($this->H($A1), $nonce.':'. $this->H($A2));
+				$message.=', response="'.$response.'"';
+				if(IsSet($parameters['opaque']))
+					$message.=', opaque='.$parameters['opaque'];
+				if(IsSet($parameters['qop']))
+					$message.=', qop="'.$qop.'"';
+				$message.=', nc='.$nc_value;
+				if(IsSet($parameters['qop']))
+					$message.=', cnonce="'.$cnonce.'"';
+				$client->encode_response=0;
+				$this->state=SASL_DIGEST_STATE_DONE;
+				break;
+			case SASL_DIGEST_STATE_DONE:
+				$client->error='Digest authentication was finished without success';
+				return(SASL_FAIL);
+			default:
+				$client->error='invalid Digest authentication step state';
+				return(SASL_FAIL);
+		}
+		return(SASL_CONTINUE);
+	}
+};
+
+// =============================================================================
+
+/*
+ * login_sasl_client.php
+ *
+ * @(#) $Id: login_sasl_client.php,v 1.2 2004/11/17 08:00:37 mlemos Exp $
+ *
+ */
+
+define("SASL_LOGIN_STATE_START",             0);
+define("SASL_LOGIN_STATE_IDENTIFY_USER",     1);
+define("SASL_LOGIN_STATE_IDENTIFY_PASSWORD", 2);
+define("SASL_LOGIN_STATE_DONE",              3);
+
+class login_sasl_client_class
+{
+	var $credentials=array();
+	var $state=SASL_LOGIN_STATE_START;
+
+	Function Initialize(&$client)
+	{
+		return(1);
+	}
+
+	Function Start(&$client, &$message, &$interactions)
+	{
+		if($this->state!=SASL_LOGIN_STATE_START)
+		{
+			$client->error="LOGIN authentication state is not at the start";
+			return(SASL_FAIL);
+		}
+		$this->credentials=array(
+			"user"=>"",
+			"password"=>"",
+			"realm"=>""
+		);
+		$defaults=array(
+			"realm"=>""
+		);
+		$status=$client->GetCredentials($this->credentials,$defaults,$interactions);
+		if($status==SASL_CONTINUE)
+			$this->state=SASL_LOGIN_STATE_IDENTIFY_USER;
+		Unset($message);
+		return($status);
+	}
+
+	Function Step(&$client, $response, &$message, &$interactions)
+	{
+		switch($this->state)
+		{
+			case SASL_LOGIN_STATE_IDENTIFY_USER:
+				$message=$this->credentials["user"].(strlen($this->credentials["realm"]) ? "@".$this->credentials["realm"] : "");
+				$this->state=SASL_LOGIN_STATE_IDENTIFY_PASSWORD;
+				break;
+			case SASL_LOGIN_STATE_IDENTIFY_PASSWORD:
+				$message=$this->credentials["password"];
+				$this->state=SASL_LOGIN_STATE_DONE;
+				break;
+			case SASL_LOGIN_STATE_DONE:
+				$client->error="LOGIN authentication was finished without success";
+				break;
+			default:
+				$client->error="invalid LOGIN authentication step state";
+				return(SASL_FAIL);
+		}
+		return(SASL_CONTINUE);
+	}
+};
+
+// =============================================================================
+
+/*
+ * ntlm_sasl_client.php
+ *
+ * @(#) $Id: ntlm_sasl_client.php,v 1.3 2004/11/17 08:00:37 mlemos Exp $
+ *
+ */
+
+define("SASL_NTLM_STATE_START",             0);
+define("SASL_NTLM_STATE_IDENTIFY_DOMAIN",   1);
+define("SASL_NTLM_STATE_RESPOND_CHALLENGE", 2);
+define("SASL_NTLM_STATE_DONE",              3);
+
+class ntlm_sasl_client_class
+{
+	var $credentials=array();
+	var $state=SASL_NTLM_STATE_START;
+
+	Function Initialize(&$client)
+	{
+		if(!function_exists($function="mcrypt_encrypt")
+		|| !function_exists($function="mhash"))
+		{
+			$extensions=array(
+				"mcrypt_encrypt"=>"mcrypt",
+				"mhash"=>"mhash"
+			);
+			$client->error="the extension ".$extensions[$function]." required by the NTLM SASL client class is not available in this PHP configuration";
+			return(0);
+		}
+		return(1);
+	}
+
+	Function ASCIIToUnicode($ascii)
+	{
+		for($unicode="",$a=0;$a<strlen($ascii);$a++)
+			$unicode.=substr($ascii,$a,1).chr(0);
+		return($unicode);
+	}
+
+	Function TypeMsg1($domain,$workstation)
+	{
+		$domain_length=strlen($domain);
+		$workstation_length=strlen($workstation);
+		$workstation_offset=32;
+		$domain_offset=$workstation_offset+$workstation_length;
+		return(
+			"NTLMSSP\0".
+			"\x01\x00\x00\x00".
+			"\x07\x32\x00\x00".
+			pack("v",$domain_length).
+			pack("v",$domain_length).
+			pack("V",$domain_offset).
+			pack("v",$workstation_length).
+			pack("v",$workstation_length).
+			pack("V",$workstation_offset).
+			$workstation.
+			$domain
+		);
+	}
+
+	Function NTLMResponse($challenge,$password)
+	{
+		$unicode=$this->ASCIIToUnicode($password);
+		$md4=mhash(MHASH_MD4,$unicode);
+		$padded=$md4.str_repeat(chr(0),21-strlen($md4));
+		$iv_size=mcrypt_get_iv_size(MCRYPT_DES,MCRYPT_MODE_ECB);
+		$iv=mcrypt_create_iv($iv_size,MCRYPT_RAND);
+		for($response="",$third=0;$third<21;$third+=7)
+		{
+			for($packed="",$p=$third;$p<$third+7;$p++)
+				$packed.=str_pad(decbin(ord(substr($padded,$p,1))),8,"0",STR_PAD_LEFT);
+			for($key="",$p=0;$p<strlen($packed);$p+=7)
+			{
+				$s=substr($packed,$p,7);
+				$b=$s.((substr_count($s,"1") % 2) ? "0" : "1");
+				$key.=chr(bindec($b));
+			}
+			$ciphertext=mcrypt_encrypt(MCRYPT_DES,$key,$challenge,MCRYPT_MODE_ECB,$iv);
+			$response.=$ciphertext;
+		}
+		return $response;
+	}
+
+	Function TypeMsg3($ntlm_response,$user,$domain,$workstation)
+	{
+		$domain_unicode=$this->ASCIIToUnicode($domain);
+		$domain_length=strlen($domain_unicode);
+		$domain_offset=64;
+		$user_unicode=$this->ASCIIToUnicode($user);
+		$user_length=strlen($user_unicode);
+		$user_offset=$domain_offset+$domain_length;
+		$workstation_unicode=$this->ASCIIToUnicode($workstation);
+		$workstation_length=strlen($workstation_unicode);
+		$workstation_offset=$user_offset+$user_length;
+		$lm="";
+		$lm_length=strlen($lm);
+		$lm_offset=$workstation_offset+$workstation_length;
+		$ntlm=$ntlm_response;
+		$ntlm_length=strlen($ntlm);
+		$ntlm_offset=$lm_offset+$lm_length;
+		$session="";
+		$session_length=strlen($session);
+		$session_offset=$ntlm_offset+$ntlm_length;
+		return(
+			"NTLMSSP\0".
+			"\x03\x00\x00\x00".
+			pack("v",$lm_length).
+			pack("v",$lm_length).
+			pack("V",$lm_offset).
+			pack("v",$ntlm_length).
+			pack("v",$ntlm_length).
+			pack("V",$ntlm_offset).
+			pack("v",$domain_length).
+			pack("v",$domain_length).
+			pack("V",$domain_offset).
+			pack("v",$user_length).
+			pack("v",$user_length).
+			pack("V",$user_offset).
+			pack("v",$workstation_length).
+			pack("v",$workstation_length).
+			pack("V",$workstation_offset).
+			pack("v",$session_length).
+			pack("v",$session_length).
+			pack("V",$session_offset).
+			"\x01\x02\x00\x00".
+			$domain_unicode.
+			$user_unicode.
+			$workstation_unicode.
+			$lm.
+			$ntlm
+		);
+	}
+
+	Function Start(&$client, &$message, &$interactions)
+	{
+		if($this->state!=SASL_NTLM_STATE_START)
+		{
+			$client->error="NTLM authentication state is not at the start";
+			return(SASL_FAIL);
+		}
+		$this->credentials=array(
+			"user"=>"",
+			"password"=>"",
+			"realm"=>"",
+			"workstation"=>""
+		);
+		$defaults=array();
+		$status=$client->GetCredentials($this->credentials,$defaults,$interactions);
+		if($status==SASL_CONTINUE)
+			$this->state=SASL_NTLM_STATE_IDENTIFY_DOMAIN;
+		Unset($message);
+		return($status);
+	}
+
+	Function Step(&$client, $response, &$message, &$interactions)
+	{
+		switch($this->state)
+		{
+			case SASL_NTLM_STATE_IDENTIFY_DOMAIN:
+				$message=$this->TypeMsg1($this->credentials["realm"],$this->credentials["workstation"]);
+				$this->state=SASL_NTLM_STATE_RESPOND_CHALLENGE;
+				break;
+			case SASL_NTLM_STATE_RESPOND_CHALLENGE:
+				$ntlm_response=$this->NTLMResponse(substr($response,24,8),$this->credentials["password"]);
+				$message=$this->TypeMsg3($ntlm_response,$this->credentials["user"],$this->credentials["realm"],$this->credentials["workstation"]);
+				$this->state=SASL_NTLM_STATE_DONE;
+				break;
+			case SASL_NTLM_STATE_DONE:
+				$client->error="NTLM authentication was finished without success";
+				return(SASL_FAIL);
+			default:
+				$client->error="invalid NTLM authentication step state";
+				return(SASL_FAIL);
+		}
+		return(SASL_CONTINUE);
+	}
+};
+
+// =============================================================================
+
+/*
+ * plain_sasl_client.php
+ *
+ * @(#) $Id: plain_sasl_client.php,v 1.2 2004/11/17 08:00:37 mlemos Exp $
+ *
+ */
+
+define("SASL_PLAIN_STATE_START",    0);
+define("SASL_PLAIN_STATE_IDENTIFY", 1);
+define("SASL_PLAIN_STATE_DONE",     2);
+
+define("SASL_PLAIN_DEFAULT_MODE",            0);
+define("SASL_PLAIN_EXIM_MODE",               1);
+define("SASL_PLAIN_EXIM_DOCUMENTATION_MODE", 2);
+
+class plain_sasl_client_class
+{
+	var $credentials=array();
+	var $state=SASL_PLAIN_STATE_START;
+
+	Function Initialize(&$client)
+	{
+		return(1);
+	}
+
+	Function Start(&$client, &$message, &$interactions)
+	{
+		if($this->state!=SASL_PLAIN_STATE_START)
+		{
+			$client->error="PLAIN authentication state is not at the start";
+			return(SASL_FAIL);
+		}
+		$this->credentials=array(
+			"user"=>"",
+			"password"=>"",
+			"realm"=>"",
+			"mode"=>""
+		);
+		$defaults=array(
+			"realm"=>"",
+			"mode"=>""
+		);
+		$status=$client->GetCredentials($this->credentials,$defaults,$interactions);
+		if($status==SASL_CONTINUE)
+		{
+			switch($this->credentials["mode"])
+			{
+				case SASL_PLAIN_EXIM_MODE:
+					$message=$this->credentials["user"]."\0".$this->credentials["password"]."\0";
+					break;
+				case SASL_PLAIN_EXIM_DOCUMENTATION_MODE:
+					$message="\0".$this->credentials["user"]."\0".$this->credentials["password"];
+					break;
+				default:
+					$message=$this->credentials["user"]."\0".$this->credentials["user"].(strlen($this->credentials["realm"]) ? "@".$this->credentials["realm"] : "")."\0".$this->credentials["password"];
+					break;
+			}
+			$this->state=SASL_PLAIN_STATE_DONE;
+		}
+		else
+			Unset($message);
+		return($status);
+	}
+
+	Function Step(&$client, $response, &$message, &$interactions)
+	{
+		switch($this->state)
+		{
+/*
+			case SASL_PLAIN_STATE_IDENTIFY:
+				switch($this->credentials["mode"])
+				{
+					case SASL_PLAIN_EXIM_MODE:
+						$message=$this->credentials["user"]."\0".$this->credentials["password"]."\0";
+						break;
+					case SASL_PLAIN_EXIM_DOCUMENTATION_MODE:
+						$message="\0".$this->credentials["user"]."\0".$this->credentials["password"];
+						break;
+					default:
+						$message=$this->credentials["user"]."\0".$this->credentials["user"].(strlen($this->credentials["realm"]) ? "@".$this->credentials["realm"] : "")."\0".$this->credentials["password"];
+						break;
+				}
+				var_dump($message);
+				$this->state=SASL_PLAIN_STATE_DONE;
+				break;
+*/
+			case SASL_PLAIN_STATE_DONE:
+				$client->error="PLAIN authentication was finished without success";
+				return(SASL_FAIL);
+			default:
+				$client->error="invalid PLAIN authentication step state";
+				return(SASL_FAIL);
+		}
+		return(SASL_CONTINUE);
+	}
+};
+
+// =============================================================================
+
+/*
+ * sasl.php
+ *
+ * @(#) $Id: sasl.php,v 1.11 2005/10/31 18:43:27 mlemos Exp $
+ *
+ */
+
+define("SASL_INTERACT", 2);
+define("SASL_CONTINUE", 1);
+define("SASL_OK",       0);
+define("SASL_FAIL",    -1);
+define("SASL_NOMECH",  -4);
+
+class sasl_interact_class
+{
+    var $id;
+    var $challenge;
+    var $prompt;
+    var $default_result;
+    var $result;
+};
+
+class sasl_client_class
+{
+    /* Public variables */
+
+    var $error='';
+
+    var $mechanism='';
+
+    var $encode_response=1;
+
+    /* Private variables */
+
+    var $driver;
+    var $drivers=array(
+        "Digest"   => array("digest_sasl_client_class"/*,   "digest_sasl_client.php"   */),
+        "CRAM-MD5" => array("cram_md5_sasl_client_class"/*, "cram_md5_sasl_client.php" */),
+        "LOGIN"    => array("login_sasl_client_class"/*,    "login_sasl_client.php"    */),
+        "NTLM"     => array("ntlm_sasl_client_class"/*,     "ntlm_sasl_client.php"     */),
+        "PLAIN"    => array("plain_sasl_client_class"/*,    "plain_sasl_client.php"    */),
+        "Basic"    => array("basic_sasl_client_class"/*,    "basic_sasl_client.php"    */)
+    );
+    var $credentials=array();
+
+    /* Public functions */
+
+    Function SetCredential($key,$value)
+    {
+        $this->credentials[$key]=$value;
+    }
+
+    Function GetCredentials(&$credentials,$defaults,&$interactions)
+    {
+        Reset($credentials);
+        $end=(GetType($key=Key($credentials))!="string");
+        for(;!$end;)
+        {
+            if(!IsSet($this->credentials[$key]))
+            {
+                if(IsSet($defaults[$key]))
+                    $credentials[$key]=$defaults[$key];
+                    else
+                    {
+                        $this->error="the requested credential ".$key." is not defined";
+                        return(SASL_NOMECH);
+                    }
+            }
+            else
+                $credentials[$key]=$this->credentials[$key];
+                Next($credentials);
+                $end=(GetType($key=Key($credentials))!="string");
+        }
+        return(SASL_CONTINUE);
+    }
+
+    Function Start($mechanisms, &$message, &$interactions)
+    {
+        if(strlen($this->error))
+            return(SASL_FAIL);
+        if(IsSet($this->driver))
+            return($this->driver->Start($this,$message,$interactions));
+        $no_mechanism_error="";
+        for($m=0;$m<count($mechanisms);$m++)
+        {
+            $mechanism=$mechanisms[$m];
+            if(IsSet($this->drivers[$mechanism]))
+            {
+                /*
+                 * if(!class_exists($this->drivers[$mechanism][0]))
+		 * 	require(dirname(__FILE__)."/".$this->drivers[$mechanism][1]);
+                 */
+                $this->driver=new $this->drivers[$mechanism][0];
+                if($this->driver->Initialize($this))
+                {
+                    $this->encode_response=1;
+                    $status=$this->driver->Start($this,$message,$interactions);
+                    switch($status)
+                    {
+                        case SASL_NOMECH:
+                            Unset($this->driver);
+                            if(strlen($no_mechanism_error)==0)
+                                $no_mechanism_error=$this->error;
+                                $this->error="";
+                                break;
+                        case SASL_CONTINUE:
+                            $this->mechanism=$mechanism;
+                            return($status);
+                        default:
+                            Unset($this->driver);
+                            $this->error="";
+                            return($status);
+                    }
+                }
+                else
+                {
+                    Unset($this->driver);
+                    if(strlen($no_mechanism_error)==0)
+                        $no_mechanism_error=$this->error;
+                        $this->error="";
+                }
+            }
+        }
+        $this->error=(strlen($no_mechanism_error) ? $no_mechanism_error : "it was not requested any of the authentication mechanisms that are supported");
+        return(SASL_NOMECH);
+    }
+
+    Function Step($response, &$message, &$interactions)
+    {
+        if(strlen($this->error))
+            return(SASL_FAIL);
+            return($this->driver->Step($this,$response,$message,$interactions));
+    }
+
+};
+
+// =============================================================================
+
+
+/*
+ * http.php
  *
  * @(#) $Header: /opt2/ena/metal/http/http.php,v 1.94 2016/05/03 02:07:04 mlemos Exp $
  *
@@ -124,8 +908,9 @@ class http_class {
 		}
 		for($character=0;$character<strlen($separator);$character++)
 		{
+			$found = null;
 			if(GetType($position=strpos($string,$separator[$character]))=="integer")
-				$found=(IsSet($found) ? min($found,$position) : $position);
+				$found=(!is_null($found) ? min($found,$position) : $position);
 		}
 		if(IsSet($found))
 		{
@@ -398,6 +1183,7 @@ class http_class {
 	{
 		$domain=$host_name;
 		$port = $host_port;
+		$ip = '';
 		if(strlen($error = $this->Resolve($domain, $ip, $server_type)))
 			return($error);
 		if(strlen($this->socks_host_name))
@@ -425,6 +1211,7 @@ class http_class {
 			$this->OutputDebug('Connecting to '.$server_type.' server IP '.$ip.' port '.$port.'...');
 		if($ssl)
 			$ip="ssl://".$host_name;
+		$errno = -1;
 		if(($this->connection=($this->timeout ? @fsockopen($ip, $port, $errno, $error, $this->timeout) : @fsockopen($ip, $port, $errno)))==0)
 		{
 			$error_code = self::HTTP_CLIENT_ERROR_CANNOT_CONNECT;
@@ -441,6 +1228,7 @@ class http_class {
 				case -7:
 					return($this->SetError("setvbuf() call failed", $error_code));
 				default:
+					$php_errormsg = '';
 					return($this->SetPHPError($errno." could not connect to the host \"".$host_name."\"",$php_errormsg, $error_code));
 			}
 		}
@@ -1001,9 +1789,11 @@ class http_class {
 			if(GetType($length=@filesize($file["FileName"]))!="integer")
 			{
 				$error="it was not possible to determine the length of the file ".$file["FileName"];
+				/*
 				if(IsSet($php_errormsg)
 				&& strlen($php_errormsg))
 					$error.=": ".$php_errormsg;
+				*/
 				if(!file_exists($file["FileName"]))
 					$error="it was not possible to access the file ".$file["FileName"];
 				return($error);
@@ -1051,6 +1841,7 @@ class http_class {
 				if(!stream_socket_enable_crypto($this->connection, 1, STREAM_CRYPTO_METHOD_SSLv23_CLIENT))
 				{
 					$this->OutputDebug('Failed establishing the cryptography layer with host '.$host);
+					$php_errormsg = '';
 					$this->SetPHPError('it was not possible to start a SSL encrypted connection via this proxy', $php_errormsg, self::HTTP_CLIENT_ERROR_COMMUNICATION_FAILURE);
 					$this->Disconnect();
 					return($this->error);
@@ -1096,6 +1887,7 @@ class http_class {
 				$connect = 0;
 				break;
 			case "ConnectedToProxy":
+				$headers = array();
 				if(strlen($error = $this->ConnectFromProxy($arguments, $headers)))
 					return($error);
 				$connect = 1;
@@ -1167,6 +1959,7 @@ class http_class {
 				$end=(GetType($input=Key($files))!="string");
 				for(;!$end;)
 				{
+					$definition = array();
 					if(strlen($error=$this->GetFileDefinition($files[$input],$definition)))
 						return("3 ".$error);
 					$headers="--".$boundary."\r\nContent-Disposition: form-data; name=\"".$input."\"; filename=\"".$definition["NAME"]."\"\r\nContent-Type: ".$definition["Content-Type"]."\r\n\r\n";
@@ -1230,8 +2023,10 @@ class http_class {
 						$this->request_body.=$stream[$part]["Data"];
 					elseif(IsSet($stream[$part]["File"]))
 					{
-						if(!($file=@fopen($stream[$part]["File"],"rb")))
+						if(!($file=@fopen($stream[$part]["File"],"rb"))) {
+							$php_errormsg = '';
 							return($this->SetPHPError("could not open upload file ".$stream[$part]["File"], $php_errormsg, self::HTTP_CLIENT_ERROR_CANNOT_ACCESS_LOCAL_FILE));
+						}
 						while(!feof($file))
 						{
 							if(GetType($block=@fread($file,$this->file_buffer_length))!="string")
@@ -1285,6 +2080,7 @@ class http_class {
 		}
 		if($this->use_curl)
 		{
+			$m = array();
 			$version=(GetType($v=curl_version())=="array" ? (IsSet($v["version"]) ? $v["version"] : "0.0.0") : (preg_match("/^libcurl\\/([0-9]+\\.[0-9]+\\.[0-9]+)/",$v,$m) ? $m[1] : "0.0.0"));
 			$curl_version=100000*intval($this->Tokenize($version,"."))+1000*intval($this->Tokenize("."))+intval($this->Tokenize(""));
 			$protocol_version=($curl_version<713002 ? "1.0" : $this->protocol_version);
@@ -1350,6 +2146,7 @@ class http_class {
 					{
 						if(!($file=@fopen($post_parts[$part]["FILENAME"],"rb")))
 						{
+							$php_errormsg = '';
 							$this->SetPHPError("could not open upload file ".$post_parts[$part]["FILENAME"], $php_errormsg, self::HTTP_CLIENT_ERROR_CANNOT_ACCESS_LOCAL_FILE);
 							$success=0;
 							break;
@@ -1558,6 +2355,7 @@ class http_class {
 				return($this->SetError("could not read request reply: ".$this->error, $this->error_code));
 			if(strlen($this->response_status)==0)
 			{
+				$matches = array();
 				if(!preg_match($match="/^http\\/[0-9]+\\.[0-9]+[ \t]+([0-9]+)[ \t]*(.*)\$/i",$line,$matches))
 					return($this->SetError("it was received an unexpected HTTP response status", self::HTTP_CLIENT_ERROR_PROTOCOL_FAILURE));
 				$this->response_status=$matches[1];
@@ -1675,6 +2473,7 @@ class http_class {
 			}
 			if(!strcmp($location[0],"/"))
 				$location=$this->protocol."://".$this->host_name.($this->host_port ? ":".$this->host_port : "").$location;
+			$arguments = array();
 			$error=$this->GetRequestArguments($location,$arguments);
 			if(strlen($error))
 				return($this->SetError("could not process redirect url: ".$error, self::HTTP_CLIENT_ERROR_PROTOCOL_FAILURE));
@@ -1754,6 +2553,8 @@ class http_class {
 			$sasl->SetCredential("session",$this->session);
 			do
 			{
+				$message = null;
+				$interactions = null;
 				$status=$sasl->Start($mechanisms,$message,$interactions);
 			}
 			while($status==SASL_INTERACT);
@@ -1770,6 +2571,7 @@ class http_class {
 			{
 				for(;;)
 				{
+					$body = '';
 					if(strlen($error=$this->ReadReplyBody($body,$this->file_buffer_length)))
 						return($error);
 					if(strlen($body)==0)
@@ -1927,7 +2729,7 @@ class http_class {
 		}
 		return("");
 	}
-	
+
 	Function ReadReplyHeaders(&$headers)
 	{
 		if(strlen($error=$this->ReadReplyHeadersResponse($headers)))
@@ -1972,6 +2774,7 @@ class http_class {
 			case "ConnectedToProxy":
 				return($this->SetError("request was not sent", self::HTTP_CLIENT_ERROR_INVALID_PARAMETERS));
 			case "RequestSent":
+				$headers = array();
 				if(($error=$this->ReadReplyHeaders($headers))!="")
 					return($error);
 				break;
@@ -2006,6 +2809,8 @@ class http_class {
 		$body = '';
 		for(;;)
 		{
+			$body = '';
+			$block = '';
 			if(strlen($error = $this->ReadReplyBody($block, $this->file_buffer_length)))
 				return($error);
 			if(strlen($block) == 0)
@@ -2016,10 +2821,13 @@ class http_class {
 
 	Function ReadWholeReplyIntoTemporaryFile(&$file)
 	{
-		if(!($file = tmpfile()))
+		if(!($file = tmpfile())) {
+			$php_errormsg = '';
 			return $this->SetPHPError('could not create the temporary file to save the response', $php_errormsg, self::HTTP_CLIENT_ERROR_CANNOT_ACCESS_LOCAL_FILE);
+		}
 		for(;;)
 		{
+			$block = '';
 			if(strlen($error = $this->ReadReplyBody($block, $this->file_buffer_length)))
 			{
 				fclose($file);
@@ -2037,6 +2845,7 @@ class http_class {
 			}
 			if(!@fwrite($file, $block))
 			{
+				$php_errormsg = '';
 				$error = $this->SetPHPError('could not write to the temporary file to save the response', $php_errormsg, self::HTTP_CLIENT_ERROR_CANNOT_ACCESS_LOCAL_FILE);
 				fclose($file);
 				return $error;

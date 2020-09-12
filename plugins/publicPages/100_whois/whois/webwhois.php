@@ -26,11 +26,11 @@ originHeaders();
 // Step 0: Get request parameter
 
 if (php_sapi_name() == 'cli') {
-	if ($argc != 2) {
-		echo _L('Syntax').': '.$argv[0].' <query>'."\n";
+	if ($_SERVER['argc'] != 2) {
+		echo _L('Syntax').': '.$_SERVER['argv'][0].' <query>'."\n";
 		exit(2);
 	}
-	$query = $argv[1];
+	$query = $_SERVER['argv'][1];
 } else {
 	if (!isset($_REQUEST['query'])) {
 		http_response_code(400);
@@ -354,8 +354,8 @@ if ($format == 'xml') {
 	echo '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>';
 	echo '<root xmlns="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.1.1"';
 	echo '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
-	//echo '      xsi:schemaLocation="https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/xml_schema.xsd">';
-	echo '      xsi:schemaLocation="'.OIDplus::getSystemUrl().'plugins/publicPages/100_whois/whois/xml_schema.xsd">';
+	//echo '      xsi:schemaLocation="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.1.1 https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/xml_schema.xsd">';
+	echo '      xsi:schemaLocation="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.1.1 '.OIDplus::getSystemUrl().'plugins/publicPages/100_whois/whois/xml_schema.xsd">';
 	echo $xml;
 	echo '</root>';
 }
