@@ -100,9 +100,9 @@ class OIDplusPluginManifest {
 		$this->rawXML = $xmldata;
 
 		// The following attributes are available for every plugin
-		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2 (page)
-		//            urn:oid:1.3.6.1.4.1.37476.2.5.2.5.3 (language)
-		//            urn:oid:1.3.6.1.4.1.37476.2.5.2.5.5 (other)
+		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1 (page)
+		//            urn:oid:1.3.6.1.4.1.37476.2.5.2.5.3.1 (language)
+		//            urn:oid:1.3.6.1.4.1.37476.2.5.2.5.5.1 (general)
 		$this->type = (string)$xmldata->type;
 
 		$this->name = (string)$xmldata->info->name;
@@ -114,7 +114,7 @@ class OIDplusPluginManifest {
 		$this->phpMainClass = (string)$xmldata->php->mainclass;
 
 		// The following functionalities are only available for page plugins
-		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2
+		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1
 		foreach ((array)$xmldata->css->file as $css_file) {
 			$file = dirname($filename).'/'.$css_file;
 			if (!file_exists($file)) continue;
@@ -127,7 +127,7 @@ class OIDplusPluginManifest {
 		}
 
 		// The following functionalities are only available for language plugins
-		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.3
+		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.3.1
 		$this->languageCode = (string)$xmldata->language->code;
 		$this->languageFlag = (string)$xmldata->language->flag;
 		$this->languageMessages = (string)$xmldata->language->messages;
