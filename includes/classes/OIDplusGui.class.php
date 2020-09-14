@@ -65,9 +65,8 @@ class OIDplusGui {
 		$langbox_entries = array();
 		$non_default_languages = 0;
 		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
-			$xmldata = $pluginManifest->getRawXml();
-			$flag = $xmldata->language->flag->__toString();
-			$code = $xmldata->language->code->__toString();
+			$flag = $pluginManifest->getLanguageFlag();
+			$code = $pluginManifest->getLanguageCode();
 			if ($code != OIDplus::DEFAULT_LANGUAGE) $non_default_languages++;
 			if ($code == OIDplus::getCurrentLang()) {
 				$class = 'lng_flag';

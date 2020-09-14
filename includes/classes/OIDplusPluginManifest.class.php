@@ -19,6 +19,9 @@
 
 class OIDplusPluginManifest {
 
+	private $rawXML = null;
+
+	// All plugins
 	private $name = '';
 	private $author = '';
 	private $version = '';
@@ -27,9 +30,15 @@ class OIDplusPluginManifest {
 
 	private $type = '';
 	private $phpMainClass = '';
+
+	// Only page plugins
 	private $cssFiles = array();
 	private $jsFiles = array();
-	private $rawXML = null;
+
+	// Only language plugins
+	private $languageCode = '';
+	private $languageFlag = '';
+	private $languageMessages = '';
 
 	public function getTypeClass(): string {
 		return $this->type;
@@ -71,11 +80,29 @@ class OIDplusPluginManifest {
 		return $this->rawXML;
 	}
 
+	public function getLanguageCode(): string {
+		return $this->languageCode;
+	}
+
+	public function getLanguageFlag(): string {
+		return $this->languageFlag;
+	}
+
+	public function getLanguageMessages(): string {
+		return $this->languageMessages;
+	}
+
 	public function loadManifest($filename) {
 		if (!file_exists($filename)) return false;
 		$xmldata = @simplexml_load_file($filename);
 		if ($xmldata === false) return false;
 
+		$this->rawXML = $xmldata;
+
+		// The following attributes are available for every plugin
+		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2 (page)
+		//            urn:oid:1.3.6.1.4.1.37476.2.5.2.5.3 (language)
+		//            urn:oid:1.3.6.1.4.1.37476.2.5.2.5.5 (other)
 		$this->type = (string)$xmldata->type;
 
 		$this->name = (string)$xmldata->info->name;
@@ -86,6 +113,8 @@ class OIDplusPluginManifest {
 
 		$this->phpMainClass = (string)$xmldata->php->mainclass;
 
+		// The following functionalities are only available for page plugins
+		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2
 		foreach ((array)$xmldata->css->file as $css_file) {
 			$file = dirname($filename).'/'.$css_file;
 			if (!file_exists($file)) continue;
@@ -97,7 +126,11 @@ class OIDplusPluginManifest {
 			$this->jsFiles[] = $file;
 		}
 
-		$this->rawXML = $xmldata;
+		// The following functionalities are only available for language plugins
+		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.3
+		$this->languageCode = (string)$xmldata->language->code;
+		$this->languageFlag = (string)$xmldata->language->flag;
+		$this->languageMessages = (string)$xmldata->language->messages;
 
 		return true;
 	}

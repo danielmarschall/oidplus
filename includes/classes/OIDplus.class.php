@@ -948,8 +948,7 @@ class OIDplus {
 	public static function getAvailableLangs() {
 		$langs = array();
 		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
-			$xmldata = $pluginManifest->getRawXml();
-			$code = $xmldata->language->code->__toString();
+			$code = $pluginManifest->getLanguageCode();
 			$langs[] = $code;
 		}
 		return $langs;
@@ -989,8 +988,7 @@ class OIDplus {
 	public static function getTranslationArray() {
 		$translation_array = array();
 		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
-			$xmldata = $pluginManifest->getRawXml();
-			$lang = $xmldata->language->code->__toString();
+			$lang = $pluginManifest->getLanguageCode();
 			$translation_array[$lang] = array();
 			if (strpos($lang,'/') !== false) continue; // just to be sure
 			if (strpos($lang,'\\') !== false) continue; // just to be sure
