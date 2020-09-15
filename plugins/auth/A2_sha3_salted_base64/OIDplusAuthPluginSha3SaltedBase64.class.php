@@ -25,7 +25,7 @@ class OIDplusAuthPluginSha3SaltedBase64 extends OIDplusAuthPlugin {
 		if ($s_authmethod == 'A2') {
 			// Default OIDplus 2.0 behavior
 			// A2#X with X being sha3{base64}(salt+password)
-			$calc_authkey = base64_encode(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $salt.$check_password, true) : bb\Sha3\Sha3::hash($salt.$check_password, 512, true));
+			$calc_authkey = base64_encode(sha3_512($salt.$check_password));
 		} else {
 			// Invalid auth code
 			return false;

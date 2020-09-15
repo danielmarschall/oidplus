@@ -25,7 +25,7 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 	private static function getUnlockKey($user) {
 		// This key prevents that the system gets hacked with brute
 		// force of the user passwords.
-		return sha1('ANTI-BRUTEFORCE-AJAX/'.$user.'/'.OIDplus::baseConfig()->getValue('SERVER_SECRET',''));
+		return sha3_512('ANTI-BRUTEFORCE-AJAX/'.$user.'/'.OIDplus::baseConfig()->getValue('SERVER_SECRET',''));
 	}
 
 	private $autoLoginList = array();

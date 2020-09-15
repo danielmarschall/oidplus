@@ -113,7 +113,7 @@ class OIDplusAuthUtils {
 		if (empty($hashed)) {
 			throw new OIDplusException(_L('No admin password set in %1','userdata/baseconfig/config.inc.php'));
 		}
-		$calc_authkey = bin2hex(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $password, true) : bb\Sha3\Sha3::hash($password, 512, true));
+		$calc_authkey = sha3_512($password);
 		return $calc_authkey == bin2hex(base64_decode($hashed));
 	}
 
@@ -129,7 +129,7 @@ class OIDplusAuthUtils {
 
 	public static function makeAuthKey($data) {
 		$data = OIDplus::baseConfig()->getValue('SERVER_SECRET') . $data;
-		$calc_authkey = bin2hex(version_compare(PHP_VERSION, '7.1.0') >= 0 ? hash('sha3-512', $data, true) : bb\Sha3\Sha3::hash($data, 512, true));
+		$calc_authkey = sha3_512($data);
 		return $calc_authkey;
 	}
 
