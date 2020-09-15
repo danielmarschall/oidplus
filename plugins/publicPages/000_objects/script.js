@@ -15,7 +15,41 @@
  * limitations under the License.
  */
 
+function checkMissingOrDoubleASN1(oid) {
+	var suffix = (oid == '') ? '' : '_'+oid;
+
+	//var curinput = $('#asn1ids'+suffix').value;
+	var curinput = $('input[id="asn1ids'+suffix+'"]')[0];
+
+	if (curinput.value == '') {
+		// TODO: maybe we should only warn if ASN.1, IRI and Comment are all null, not just ASN.1?
+		if (!confirm(_L("Attention: You did not enter an ASN.1 identifier. Are you sure that you want to continue?"))) return false;
+	}
+
+	var ary = curinput.value.split(',');
+
+	for (var i=0; i<ary.length; i++) {
+		var toCheck = ary[i];
+		var bry = $('input[id^="asn1ids_"]');
+		for (var j=0; j<bry.length; j++) {
+			if (bry[j].id != 'asn1ids'+suffix) {
+				var cry = bry[j].value.split(',');
+				for (var k=0; k<cry.length; k++) {
+					var candidate = cry[k];
+					if (toCheck == candidate) {
+						if (!confirm(_L("Warning! ASN.1 ID %1 is already used in another OID. Continue?", candidate))) return false;
+					}
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
 function crudActionInsert(parent) {
+	if (parent.startsWith('oid:') && !checkMissingOrDoubleASN1('')) return;
+
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
@@ -41,18 +75,18 @@ function crudActionInsert(parent) {
 				if (data.status == 0/*OK*/) {
 					//alert(_L("Insert OK"));
 					reloadContent();
-					// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
+					// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufÃ¼gen
 				} else if (data.status == 1/*RaNotExisting*/) {
 					if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",document.getElementById('ra_email').value))) {
 						crudActionSendInvitation(parent, document.getElementById('ra_email').value);
 					} else {
 						reloadContent();
-						// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
+						// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufÃ¼gen
 					}
 				} else if (data.status == 2/*RaNotExistingNoInvitation*/) {
 					//alert(_L("Insert OK"));
 					reloadContent();
-					// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
+					// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufÃ¼gen
 				}
 			} else {
 				alert(_L("Error: %1",data));
@@ -62,6 +96,8 @@ function crudActionInsert(parent) {
 }
 
 function crudActionUpdate(id, parent) {
+	if (id.startsWith('oid:') && !checkMissingOrDoubleASN1(id)) return;
+
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
@@ -126,7 +162,7 @@ function crudActionDelete(id, parent) {
 				alert(_L("Error: %1",data.error));
 			} else if (data.status >= 0) {
 				reloadContent();
-				// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts die zeile aus der tabelle löschen
+				// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts die zeile aus der tabelle lÃ¶schen
 			} else {
 				alert(_L("Error: %1",data.error));
 			}

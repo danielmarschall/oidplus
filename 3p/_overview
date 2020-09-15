@@ -15,6 +15,7 @@ TinyMCE:
 	License:  LGPL 2.1
 	Version:  5.0.2
 	Download: https://www.tiny.cloud/download/self-hosted/
+	          https://www.tiny.cloud/get-tiny/language-packages/ (German language)
 
 Bootstrap:
 	License   MIT

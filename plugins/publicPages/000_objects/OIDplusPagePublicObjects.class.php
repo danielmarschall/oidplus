@@ -350,13 +350,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			} else {
 				$cont = '';
 			}
-			
+
 			list($html, $js, $css) = extractHtmlContents($cont);
 			$cont = '';
 			if (!empty($js))  $cont .= "<script>\n$js\n</script>";
 			if (!empty($css)) $cont .= "<style>\n$css\n</style>";
 			$cont .= $html;
-			
+
 			$out['text'] = $cont;
 
 			if (strpos($out['text'], '%%OBJECT_TYPE_LIST%%') !== false) {
@@ -850,6 +850,20 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if ($index !== false) unset($mce_plugins[$index]);
 		}
 
+		$oidplusLang = OIDplus::getCurrentLang();
+
+		$langCandidates = array(
+			strtolower(substr($oidplusLang,0,2)).'_'.strtoupper(substr($oidplusLang,2,2)), // de_DE
+			strtolower(substr($oidplusLang,0,2)) // de
+		);
+		$tinyMCELang = '';
+		foreach ($langCandidates as $candidate) {
+			if (file_exists(OIDplus::basePath().'/3p/tinymce/langs/'.$candidate.'.js')) {
+				$tinyMCELang = $candidate;
+				break;
+			}
+		}
+
 		$out = '<script>
 				tinymce.remove("#'.$name.'");
 				tinymce.EditorManager.baseURL = "3p/tinymce";
@@ -867,7 +881,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						toolbar: "undo redo | styleselect | bold italic underline forecolor | bullist numlist | outdent indent | table | fontsizeselect",
 						plugins: "'.implode(' ', $mce_plugins).'"
 					}
-
+					'.($tinyMCELang == '' ? '' : ', language : "'.$tinyMCELang.'"').'
 				});
 			</script>';
 
@@ -882,7 +896,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested()
 		return false;
 	}
-	
+
 	public function oobeRequested(): bool {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
 
