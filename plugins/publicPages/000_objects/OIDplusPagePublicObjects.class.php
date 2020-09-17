@@ -871,7 +871,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	//                                 1. When you load TinyMCE via AJAX using the left menu, the quickbar is immediately shown, even if TinyMCE does not have the focus
 	//                                 2. When you load a page without TinyMCE using the left menu, the quickbar is still visible, although there is no edit
 	// 'colorpicker', 'textcolor' and 'contextmenu' added in 07 April 2020, because it is built in in the core.
-	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode', 'quickbars', 'colorpicker', 'textcolor', 'contextmenu');
+	// 'importcss' added 17 September 2020, because it breaks the "Format/Style" dropdown box ("styleselect" toolbar)
+	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode', 'quickbars', 'colorpicker', 'textcolor', 'contextmenu', 'importcss');
 
 	protected static function showMCE($name, $content) {
 		$mce_plugins = array();

@@ -15,8 +15,6 @@ IDEAS FOR NEW FUNCTIONALITIES
 - Excel/CSV import tool for bulk data import (as alternative to XML import. Maybe previous Excel->XML import tool?)
 
 TINYMCE
-- Menu entry "formats" is empty. can it be removed?
-- Clicking "Paragraph" dropdown box does not work (Safari problem?)
 - mce dirty flag:
 	* if you select something in the jstree, then you should be asked if you want to save your work (if tinymce is dirty); the same thing as if you would want to reload/close the page
 	* critical bug: open page, edit tiny mce, click save. Then F5 reload (not Ctrl+F5): then the old content is there again. Except if you press Ctrl+F5
@@ -154,6 +152,7 @@ IDEAS
 - have a menu item (plugin) "latest updates" which lists OIDs that have been changed or added recently?
 - (unsure:) would it be good if the superior RA comment is shown in the object page itself?
 - Protect attachments with a password? (Information objects?)
+- IPv4/IPv6 plugin: Should we allow that private IPs are put into categories (e.g. phyical locations?)
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie
@@ -174,6 +173,3 @@ PRIVACY:
 GUID Management
 - Leaf nodes (GUIDs) should show/edit the Title in the CRUD, so you dont have to click the GUID to see the title
 - weird bug: when i edit "guid:oidplus", then, after reload the treeview after the update, "guid:activedirectory" will be opened. somehow, the last opened node will be opened during the reload?!
-
-Repro:
-- Can a previously deleted 2.999 not be created anymore? (during INSERT: "identifiers cannot be changed")
