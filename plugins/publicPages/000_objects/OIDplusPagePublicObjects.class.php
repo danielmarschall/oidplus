@@ -33,7 +33,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		// Action:     Delete
 		// Method:     POST
 		// Parameters: id
-		// Outputs:    Text
+		// Outputs:    <0 Error, =0 Success
 		if ($actionID == 'Delete') {
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
@@ -93,7 +93,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		// Action:     Update
 		// Method:     POST
 		// Parameters: id, ra_email, comment, iris, asn1ids, confidential
-		// Outputs:    Text
+		// Outputs:    <0 Error, =0 Success, with following bitfields for further information:
+		//             1 = RA is not registered
+		//             2 = RA is not registered, but it cannot be invited
+		//             4 = OID is a well-known OID, so RA, ASN.1 and IRI identifiers were reset
 		else if ($actionID == 'Update') {
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
@@ -114,19 +117,26 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// Validate RA email address
 			$new_ra = $params['ra_email'];
+			if ($obj::ns() == 'oid') {
+				if ($obj->isWellKnown()) {
+					$new_ra = '';
+				}
+			}
 			if (!empty($new_ra) && !OIDplus::mailUtils()->validMailAddress($new_ra)) {
 				throw new OIDplusException(_L('Invalid RA email address'));
 			}
 
 			// First, do a simulation for ASN.1 IDs and IRIs to check if there are any problems (then an Exception will be thrown)
 			if ($obj::ns() == 'oid') {
-				$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
-				$ids = array_map('trim',$ids);
-				$obj->replaceIris($ids, true);
+				if (!$obj->isWellKnown()) {
+					$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
+					$ids = array_map('trim',$ids);
+					$obj->replaceIris($ids, true);
 
-				$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
-				$ids = array_map('trim',$ids);
-				$obj->replaceAsn1Ids($ids, true);
+					$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
+					$ids = array_map('trim',$ids);
+					$obj->replaceAsn1Ids($ids, true);
+				}
 			}
 
 			// Change RA recursively
@@ -154,13 +164,15 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// Replace ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
-				$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
-				$ids = array_map('trim',$ids);
-				$obj->replaceIris($ids, false);
+				if (!$obj->isWellKnown()) {
+					$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
+					$ids = array_map('trim',$ids);
+					$obj->replaceIris($ids, false);
 
-				$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
-				$ids = array_map('trim',$ids);
-				$obj->replaceAsn1Ids($ids, false);
+					$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
+					$ids = array_map('trim',$ids);
+					$obj->replaceAsn1Ids($ids, false);
+				}
 
 				// TODO: Check if any identifiers have been actually changed,
 				// and log it to OID($id), OID($parent), ... (see above)
@@ -178,6 +190,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				if ($res->num_rows() == 0) $status = !is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 			}
 
+			if ($obj::ns() == 'oid') {
+				if ($obj->isWellKnown()) {
+					$status += 4;
+				}
+			}
+
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
 					$plugin->afterObjectUpdateSuperior($id, $params);
@@ -190,7 +208,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		// Action:     Update2
 		// Method:     POST
 		// Parameters: id, title, description
-		// Outputs:    Text
+		// Outputs:    <0 Error, =0 Success
 		else if ($actionID == 'Update2') {
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
@@ -225,10 +243,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		// Action:     Insert
 		// Method:     POST
 		// Parameters: parent, id, ra_email, confidential, iris, asn1ids
-		// Outputs:    Text
+		// Outputs:    <0 Error, =0 Success, with following bitfields for further information:
+		//             1 = RA is not registered
+		//             2 = RA is not registered, but it cannot be invited
+		//             4 = OID is a well-known OID, so RA, ASN.1 and IRI identifiers were reset
 		else if ($actionID == 'Insert') {
-			// Validated are: ID, ra email, asn1 ids, iri ids
-
 			// Check if you have write rights on the parent (to create a new object)
 			$objParent = OIDplusObject::parse($params['parent']);
 			if ($objParent === null) throw new OIDplusException(_L('%1 action failed because parent object "%2" cannot be parsed!','INSERT',$params['parent']));
@@ -263,18 +282,25 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// First simulate if there are any problems of ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
-				$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
-				$ids = array_map('trim',$ids);
-				$obj->replaceAsn1Ids($ids, true);
+				if (!$obj->isWellKnown()) {
+					$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
+					$ids = array_map('trim',$ids);
+					$obj->replaceAsn1Ids($ids, true);
 
-				$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
-				$ids = array_map('trim',$ids);
-				$obj->replaceIris($ids, true);
+					$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
+					$ids = array_map('trim',$ids);
+					$obj->replaceIris($ids, true);
+				}
 			}
 
 			// Apply superior RA change
 			$parent = $params['parent'];
 			$ra_email = $params['ra_email'];
+			if ($obj::ns() == 'oid') {
+				if ($obj->isWellKnown()) {
+					$ra_email = '';
+				}
+			}
 			if (!empty($ra_email) && !OIDplus::mailUtils()->validMailAddress($ra_email)) {
 				throw new OIDplusException(_L('Invalid RA email address'));
 			}
@@ -298,13 +324,15 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// Set ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
-				$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
-				$ids = array_map('trim',$ids);
-				$obj->replaceIris($ids, false);
+				if (!$obj->isWellKnown()) {
+					$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
+					$ids = array_map('trim',$ids);
+					$obj->replaceIris($ids, false);
 
-				$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
-				$ids = array_map('trim',$ids);
-				$obj->replaceAsn1Ids($ids, false);
+					$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
+					$ids = array_map('trim',$ids);
+					$obj->replaceAsn1Ids($ids, false);
+				}
 			}
 
 			$status = 0;
@@ -314,6 +342,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($ra_email));
 				$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
 				if ($res->num_rows() == 0) $status = !is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
+			}
+
+			if ($obj::ns() == 'oid') {
+				if ($obj->isWellKnown()) {
+					$status += 4;
+				}
 			}
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {

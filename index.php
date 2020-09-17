@@ -80,7 +80,7 @@ if (class_exists('OIDplusPageAdminColors')) {
 	<meta name="theme-color" content="#A9DCF0">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title><?php echo combine_systemtitle_and_pagetitle(OIDplus::config()->getValue('system_title'), $static_title); ?></title>
+	<title><?php echo htmlentities(combine_systemtitle_and_pagetitle(OIDplus::config()->getValue('system_title'), $static_title)); ?></title>
 
 	<script src="polyfill.min.js.php"></script>
 	<?php

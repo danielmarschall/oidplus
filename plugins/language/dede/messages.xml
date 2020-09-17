@@ -2246,6 +2246,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Insert OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.
+		]]></source>
+		<target><![CDATA[
+		Das Hinzufügen war erfolgreich. Jeder wurde die Registrierungsstelle sowie die ASN.1- und IRI-Bezeichner zurückgesetzt, da diese OID eine wohlbekannte OID ist.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Insert OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?
+		]]></source>
+		<target><![CDATA[
+		Hinzufügen erfolgreich. Die eingegebene E-Mail-Adresse %1 existiert jedoch nicht im System. Möchten Sie eine Einladung verwenden, sodass der Eigentümer dieser E-Mail-Adresse seine OIDs in diesem System verwalten kann?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Install OIDplus by downloading a ZIP file from www.viathinksoft.com, which contains an SVN snapshot, and extract it to your webspace. The ZIP file contains a file named "oidplus_version.txt" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.
 		]]></source>
 		<target><![CDATA[
@@ -5570,6 +5586,14 @@
 		]]></source>
 		<target><![CDATA[
 		Aktualisierung OK
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.
+		]]></source>
+		<target><![CDATA[
+		Aktualisierung erfolgreich. Jeder wurde die Registrierungsstelle sowie die ASN.1- und IRI-Bezeichner zurückgesetzt, da diese OID eine wohlbekannte OID ist.
 		]]></target>
 	</message>
 	<message>
