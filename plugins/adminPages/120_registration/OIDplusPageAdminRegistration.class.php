@@ -259,14 +259,13 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 				if ($ot::ns() == 'oid') {
 					$res = OIDplus::db()->query("select id from ###objects where " .
-					                            "parent = 'oid:' or " .
+					                            "(parent = 'oid:' or " .
 					                            // The following two cases are special cases e.g. if there are multiple PEN or UUID-OIDs, and the system owner decides to use the IANA PEN as root OID, but actually, it is not "his" root then! The OIDs inside the IANA PEN root are his root then!
-					                            // (we assume hereby that RAs of well-known OIDs (e.g. IANA) will not use OIDplus for allocating OIDs)
 					                            "parent in (select oid from ###asn1id where well_known = 1) or " .
-					                            "parent in (select oid from ###iri where well_known = 1) or " .
-					                            "id not in (select oid from ###asn1id where well_known = 1) or " .
+					                            "parent in (select oid from ###iri where well_known = 1)) and " .
+					                            // We assume hereby that RAs of well-known OIDs (e.g. IANA) will not use OIDplus for allocating OIDs:
+					                            "id not in (select oid from ###asn1id where well_known = 1) and " .
 					                            "id not in (select oid from ###iri where well_known = 1) " .
-					                            // End of the special case handling
 					                            "order by ".OIDplus::db()->natOrder('id'));
 					while ($row = $res->fetch_array()) {
 						$root_oids[] = substr($row['id'],strlen('oid:'));
@@ -291,7 +290,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 			$signature = '';
 			if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
-					return false; // throw new OIDplusException(_L('Signature failed'));
+				return false; // throw new OIDplusException(_L('Signature failed'));
 			}
 
 			$data = array(
