@@ -72,8 +72,6 @@ function crudActionInsert(parent) {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
 			} else if (data.status >= 0) {
-				alert(data.status);
-
 				if (data.status == 0/*OK*/) {
 					alert(_L("Insert OK"));
 				}
