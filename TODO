@@ -14,10 +14,27 @@ IDEAS FOR NEW FUNCTIONALITIES
 	But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
 - Excel/CSV import tool for bulk data import (as alternative to XML import. Maybe previous Excel->XML import tool?)
 
+TRANSLATION
+- Multiple message XML files (wildcard), so that plugins can insert their own messages into the language plugin folder! (e.g. plugins/language/dede/messagesHelloWorldPlugin.xml)
+
+BASE JAVASCRIPT
+- browser history: the title of the page is not displayed correctly when you right-click on the navigation-buttons
+	Problem with FIREFOX
+	Works on CHROME and IE
+
 TINYMCE
-- mce dirty flag:
-	* if you select something in the jstree, then you should be asked if you want to save your work (if tinymce is dirty); the same thing as if you would want to reload/close the page
-	* critical bug: open page, edit tiny mce, click save. Then F5 reload (not Ctrl+F5): then the old content is there again. Except if you press Ctrl+F5
+- mce dirty flag: call performCloseQueryCB()/performCloseCB(), if ...
+	OK:   The page (browser tab) is about to be closed or the page is reloaded
+	      => TinyMCE uses the window.onbeforeunload event
+	TODO: The browser navigation buttons are clicked
+	      => This only works PARTIALLY. Preventing popstate() works and no data is lost,
+	         but the browser will think that it was successful!!
+	OK:   When a node at the jsTree is clicked (conditional select)
+	OK:   In the openOidInPanel() function, i.e. when you enter something into the goto-bar.
+- critical bug: open page, edit tiny mce, click save. Then F5 reload (not Ctrl+F5): then the old content is there again. Except if you press Ctrl+F5
+	(cannot be reproduced anymore? tested with firefox and chrome)
+- TinyMCE does not work on Internet Explorer, but on tiny.cloud, it works
+- The "is dirty" check should also include the "Title" input box
 
 WHOIS
 - webwhois: beside TXT/XML/JSON more output modi?  CSV, S/MIME  (and add the S/MIME keypurpose to the X.509 certificates)
@@ -129,6 +146,7 @@ REJECTED IDEAS
 	b) Vendors should use something like "?goto=oidplus:com.example...."
 
 IDEAS
+- Rename all script.js and style.css to their plugin names, so that it is easier if you have multiple JS files open in Eclipse IDE Tabs.
 - prune logs entries? automatically prune things like "logged in" but not prune OID changes, etc?
 - let users choose their own creation arc
 - system guid (name based pubkey)?

@@ -25,6 +25,9 @@ var popstate_running = false;
 // language_messages will be set by oidplus.min.js.php
 // language_tblprefix will be set by oidplus.min.js.php
 
+var pageChangeCallbacks = [];
+var pageChangeRequestCallbacks = [];
+
 function isInternetExplorer() {
 	var ua = window.navigator.userAgent;
 	return ((ua.indexOf("MSIE ") > 0) || (ua.indexOf("Trident/") > 0));
@@ -40,7 +43,7 @@ String.prototype.explode = function (separator, limit) {
 };
 
 String.prototype.htmlentities = function () {
-	return this.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+	return this.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');//"
 };
 
 String.prototype.html_entity_decode = function () {
@@ -90,8 +93,9 @@ function getTreeLoadURL() {
 
 function reloadContent() {
 	// window.location.href = "?goto="+encodeURIComponent(current_node);
-	openOidInPanel(current_node, false);
-	$('#oidtree').jstree("refresh");
+	if (openOidInPanel(current_node, false)) {
+		$('#oidtree').jstree("refresh");
+	}
 }
 
 function x_rec(x_data, i) {
@@ -111,10 +115,31 @@ function x_rec(x_data, i) {
 	});
 }
 
-function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/) {
+function performCloseQueryCB() {
+	for (var i=0; i<pageChangeRequestCallbacks.length; i++) {
+		if (!pageChangeRequestCallbacks[i][0](pageChangeRequestCallbacks[i][1])) return false;
+	}
+	pageChangeRequestCallbacks = [];
+	return true; // may close
+}
+
+function performCloseCB() {
+	for (var i=0; i<pageChangeCallbacks.length; i++) {
+		pageChangeCallbacks[i][0](pageChangeCallbacks[i][1]);
+	}
+	pageChangeCallbacks = [];
+}
+
+function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) {
 	reselect = (typeof reselect === 'undefined') ? false : reselect;
 	anchor = (typeof anchor === 'undefined') ? '' : anchor;
+	force = (typeof force === 'undefined') ? false : force;
 
+	var mayClose = performCloseQueryCB();
+	if (!force && !mayClose) return false;
+
+	performCloseCB();
+	
 	if (reselect) {
 		$('#oidtree').jstree('deselect_all');
 
@@ -208,6 +233,8 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/) {
 		alert(_L("Failed to load content: %1",error));
 		console.error(error);
 	});
+
+	return true;
 }
 
 // This function opens the "parentID" node, and then selects the "childID" node (which should be beneath the parent node)
@@ -230,6 +257,15 @@ function openAndSelectNode(childID, parentID) {
 }
 
 $(window).on("popstate", function(e) {
+	if (!performCloseQueryCB()) {
+		// TODO: does not work!!! The "back/forward" action will be cancelled, but the browser still thinks it was successful,
+		// so if you do it again, you will then jump 2 pages back, etc!
+		// This does also not help:
+		//window.history.pushState(e.originalEvent.state, e.originalEvent.title, e.originalEvent.url);
+		//window.history.forward();
+		return;
+	}
+
 	popstate_running = true;
 	try {
 		var data = e.originalEvent.state;
@@ -249,6 +285,21 @@ $(window).on("popstate", function(e) {
 });
 
 $(document).ready(function () {
+	/*
+	window.onbeforeunload = function(e) {
+		// TODO: This won't be called because TinyMCE overrides it??
+		// TODO: when the user accepted the query in performCloseQueryCB(), then the message will be shown again by the browser!
+		if (!performCloseQueryCB()) {
+			// Cancel the event
+			e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+			// Chrome requires returnValue to be set
+			e.returnValue = '';
+		} else {
+			// the absence of a returnValue property on the event will guarantee the browser unload happens
+			delete e['returnValue'];
+		}
+	};
+	*/
 
 	// --- JsTree
 
@@ -268,7 +319,7 @@ $(document).ready(function () {
 			if (node.original.conditionalselect !== undefined) {
 				return eval(node.original.conditionalselect);
 			} else {
-				return true; // allow select
+				return performCloseQueryCB();
 			}
 		},
 	})
@@ -298,7 +349,10 @@ $(document).ready(function () {
 
 		var id = selected.node.id;
 		if ((!popstate_running) && (current_node != id)) {
-			openOidInPanel(id, false);
+			// 4th argument: we force the reload (because in the
+			// conditional select above, we already asked if
+			// tinyMCE needs to be saved)
+			openOidInPanel(id, false, '', true);
 		}
 	});
 

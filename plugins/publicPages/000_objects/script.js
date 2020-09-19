@@ -15,6 +15,28 @@
  * limitations under the License.
  */
 
+function cbRemoveTinyMCE(selector) {
+	if ((typeof tinymce == "undefined") || (tinymce == null)) {
+		// This should not happen
+		console.error("cbRemoveTinyMCE(): TinyMCE is missing?!");
+		return;
+	}
+	tinymce.remove(selector);
+}
+
+function cbQueryTinyMCE(selector) {
+	if ((typeof tinymce == "undefined") || (tinymce == null) || (tinymce.activeEditor == null)) {
+		// This should not happen
+		console.error("cbQueryTinyMCE(): TinyMCE is missing?!");
+		return true;
+	}
+	if (tinymce.activeEditor.isDirty()) {
+		return confirm(_L("Attention: Do you want to continue without saving?"));
+	} else {
+		return true;
+	}
+}
+
 function checkMissingOrDoubleASN1(oid) {
 	var suffix = (oid == '') ? '' : '_'+oid;
 
