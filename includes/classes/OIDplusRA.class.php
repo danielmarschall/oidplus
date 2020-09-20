@@ -51,7 +51,7 @@ class OIDplusRA {
 
 	public function change_password($new_password) {
 		$s_salt = uniqid(mt_rand(), true);
-		$calc_authkey = 'A2#'.base64_encode(sha3_512($s_salt.$new_password));
+		$calc_authkey = 'A2#'.base64_encode(sha3_512($s_salt.$new_password, true));
 		OIDplus::db()->query("update ###ra set salt=?, authkey=? where email = ?", array($s_salt, $calc_authkey, $this->email));
 	}
 
@@ -61,7 +61,7 @@ class OIDplusRA {
 
 	public function register_ra($new_password) {
 		$s_salt = uniqid(mt_rand(), true);
-		$calc_authkey = 'A2#'.base64_encode(sha3_512($s_salt.$new_password));
+		$calc_authkey = 'A2#'.base64_encode(sha3_512($s_salt.$new_password, true));
 		OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered, ra_name, personal_name, organization, office, street, zip_town, country, phone, mobile, fax) values (?, ?, ?, ".OIDplus::db()->sqlDate().", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($s_salt, $calc_authkey, $this->email, "", "", "", "", "", "", "", "", "", ""));
 	}
 

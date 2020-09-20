@@ -33,8 +33,8 @@ class SecureMailer {
 
 		/* replace until done */
 		$filtered = null;
-		while (!is_null($filtered) || ($param_ != $filtered)) {
-			if (is_null($filtered)) {
+		while (is_null($filtered) || ($param_ != $filtered)) {
+			if (!is_null($filtered)) {
 				$param_ = $filtered;
 			}
 

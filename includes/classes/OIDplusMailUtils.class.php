@@ -82,7 +82,7 @@ class OIDplusMailUtils {
 
 		/*
 		// Attention: document.write() JavaScript will damage the browser cache, which leads to bugs if you navigate back&forth with the browser navigation
-		
+
 		$crypt_linktext = true;
 
 		// No new lines to avoid a JavaScript error!
@@ -127,14 +127,12 @@ class OIDplusMailUtils {
 		if ($crypt_linktext) $linktext = str_replace('@', '&', $linktext);
 		$email = str_replace('@', '&', $email);
 		return $aus.'<noscript>'.htmlentities($linktext).' ('.htmlentities($email).')</noscript>';
-		
+
 		*/
 	}
 
 	public static function sendMail($to, $title, $msg, $cc='', $bcc='') {
 		$h = new SecureMailer();
-
-		$title = $title;
 
 		$h->addHeader('From', OIDplus::config()->getValue('admin_email'));
 

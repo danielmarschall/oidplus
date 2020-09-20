@@ -223,10 +223,10 @@ function extractHtmlContents($cont) {
 	return array($out_html, $out_js, $out_css);
 }
 
-function sha3_512($password) {
+function sha3_512($password, $raw_output=false) {
 	if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
-		return bin2hex(hash('sha3-512', $password, true));
+		return hash('sha3-512', $password, $raw_output);
 	} else {
-		return bin2hex(bb\Sha3\Sha3::hash($password, 512, true));
+		return bb\Sha3\Sha3::hash($password, 512, $raw_output);
 	}
 }
