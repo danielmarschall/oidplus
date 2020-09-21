@@ -21,7 +21,7 @@
 	<language>
 		<code>enus</code>
 		<flag>flag.png</flag>
-		<messages>messages.xml</messages>
+		<messages>messages*.xml</messages>
 	</language>
 	
 </manifest>

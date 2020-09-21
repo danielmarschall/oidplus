@@ -156,25 +156,43 @@ function my_vsprintf($str, $args) {
 }
 
 function _L($str, ...$sprintfArgs) {
-	$lang = OIDplus::getCurrentLang();
-
 	static $translation_array = array();
 	static $translation_loaded = null;
-	if ($lang != $translation_loaded) {
-		$good = true;
-		if (strpos($lang,'/') !== false) $good = false; // prevent attack (but actually, the sanitization in getCurrentLang should work)
-		if (strpos($lang,'\\') !== false) $good = false; // prevent attack (but actually, the sanitization in getCurrentLang should work)
-		if (strpos($lang,'..') !== false) $good = false; // prevent attack (but actually, the sanitization in getCurrentLang should work)
-		$translation_file = __DIR__.'/../plugins/language/'.$lang.'/messages.xml';
-		if ($good && !file_exists($translation_file)) $good = false;
-		if ($good) {
-			$xml = simplexml_load_string(file_get_contents($translation_file));
-			foreach ($xml->message as $msg) {
-				$src = trim($msg->source->__toString());
-				$dst = trim($msg->target->__toString());
-				$translation_array[$src] = $dst;
+
+	$lang = OIDplus::getCurrentLang();
+
+	foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
+		$test_lang = $pluginManifest->getLanguageCode();
+
+		if ($test_lang == $lang) {
+			if ($lang != $translation_loaded) {
+				$good = true;
+				if (strpos($lang,'/') !== false) $good = false; // prevent attack (but actually, the sanitization in getCurrentLang should work)
+				if (strpos($lang,'\\') !== false) $good = false; // prevent attack (but actually, the sanitization in getCurrentLang should work)
+				if (strpos($lang,'..') !== false) $good = false; // prevent attack (but actually, the sanitization in getCurrentLang should work)
+
+				if ($good) {
+					$wildcard = $pluginManifest->getLanguageMessages();
+					if (strpos($wildcard,'/') !== false) $good = false; // just to be sure
+					if (strpos($wildcard,'\\') !== false) $good = false; // just to be sure
+					if (strpos($wildcard,'..') !== false) $good = false; // just to be sure
+
+					if ($good) {
+						$translation_files = glob(__DIR__.'/../plugins/language/'.$lang.'/'.$wildcard);
+						sort($translation_files);
+						foreach ($translation_files as $translation_file) {
+							$xml = simplexml_load_string(file_get_contents($translation_file));
+							foreach ($xml->message as $msg) {
+								$src = trim($msg->source->__toString());
+								$dst = trim($msg->target->__toString());
+								$translation_array[$src] = $dst;
+							}
+						}
+
+						$translation_loaded = $lang;
+					}
+				}
 			}
-			$translation_loaded = $lang;
 		}
 	}
 

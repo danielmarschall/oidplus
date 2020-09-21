@@ -993,14 +993,23 @@ class OIDplus {
 			if (strpos($lang,'/') !== false) continue; // just to be sure
 			if (strpos($lang,'\\') !== false) continue; // just to be sure
 			if (strpos($lang,'..') !== false) continue; // just to be sure
-			$translation_file = __DIR__.'/../../plugins/language/'.$lang.'/messages.xml';
-			if (!file_exists($translation_file)) continue;
-			$xml = @simplexml_load_string(file_get_contents($translation_file));
-			if (!$xml) continue; // if there is an UTF-8 or parsing error, don't output any errors, otherwise the JavaScript is corrupt and the page won't render correctly
-			foreach ($xml->message as $msg) {
-				$src = trim($msg->source->__toString());
-				$dst = trim($msg->target->__toString());
-				$translation_array[$lang][$src] = $dst;
+
+			$wildcard = $pluginManifest->getLanguageMessages();
+			if (strpos($wildcard,'/') !== false) continue; // just to be sure
+			if (strpos($wildcard,'\\') !== false) continue; // just to be sure
+			if (strpos($wildcard,'..') !== false) continue; // just to be sure
+
+			$translation_files = glob(__DIR__.'/../../plugins/language/'.$lang.'/'.$wildcard);
+			sort($translation_files);
+			foreach ($translation_files as $translation_file) {
+				if (!file_exists($translation_file)) continue;
+				$xml = @simplexml_load_string(file_get_contents($translation_file));
+				if (!$xml) continue; // if there is an UTF-8 or parsing error, don't output any errors, otherwise the JavaScript is corrupt and the page won't render correctly
+				foreach ($xml->message as $msg) {
+					$src = trim($msg->source->__toString());
+					$dst = trim($msg->target->__toString());
+					$translation_array[$lang][$src] = $dst;
+				}
 			}
 		}
 		return $translation_array;

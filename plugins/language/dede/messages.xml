@@ -542,6 +542,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Attention: Do you want to continue without saving?
+		]]></source>
+		<target><![CDATA[
+		Achtung: Wirklich fortfahren, ohne zu speichern?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Attention: Empty NS at %1
 		]]></source>
 		<target><![CDATA[
