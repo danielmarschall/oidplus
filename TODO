@@ -31,6 +31,7 @@ TINYMCE
 - critical bug: open page, edit tiny mce, click save. Then F5 reload (not Ctrl+F5): then the old content is there again. Except if you press Ctrl+F5
 	(cannot be reproduced anymore? tested with firefox and chrome)
 - TinyMCE "isDirty" does not correctly work on Internet Explorer: It always reports "dirty"
+- The "transparent TinyMCE" code does not work on the first opening (Ctrl+F5), because TinyMCE probably needs to load too long
 - The "is dirty" check should also include the "Title" input box
 
 WHOIS

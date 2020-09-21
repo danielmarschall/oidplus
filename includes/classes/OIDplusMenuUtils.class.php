@@ -43,7 +43,7 @@ class OIDplusMenuUtils {
 				echo '<a href="?goto='.urlencode($x['id']).'">';
 			}
 			if (!empty($x['icon'])) echo '<img src="'.$x['icon'].'" alt=""> ';
-			echo htmlentities($x['text']).'</a><br>';
+			echo htmlentities($x['id']).htmlentities($x['text']).'</a><br>';
 			if ($static_node_id == $x['id']) echo '</b>';
 		}
 
