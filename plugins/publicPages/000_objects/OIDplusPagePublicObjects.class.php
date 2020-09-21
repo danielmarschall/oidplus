@@ -917,6 +917,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					}
 					'.($tinyMCELang == '' ? '' : ', language : "'.$tinyMCELang.'"').'
 				});
+
+				// Make background transparent, see https://stackoverflow.com/questions/60135463/transparent-editor-background-in-tinymce-5
+				$(".tox-edit-area__iframe").css({"background-color":"rgba(0,0,0,0)"});
+
 				pageChangeRequestCallbacks.push([cbQueryTinyMCE, "#'.$name.'"]);
 				pageChangeCallbacks.push([cbRemoveTinyMCE, "#'.$name.'"]);
 			</script>';
