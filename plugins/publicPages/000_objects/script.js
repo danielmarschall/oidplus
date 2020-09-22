@@ -21,16 +21,19 @@ function cbRemoveTinyMCE(selector) {
 		console.error("cbRemoveTinyMCE(): TinyMCE is missing?!");
 		return;
 	}
-	tinymce.remove(selector);
+	tinymce.remove(selector); // here, we need a "#" (selector contains "#")
 }
 
 function cbQueryTinyMCE(selector) {
-	if ((typeof tinymce == "undefined") || (tinymce == null) || (tinymce.activeEditor == null)) {
+	// tinymce.get() does NOT allow a "#" prefix (but selector contains "#"). So we remove it
+	selector = selector.replace('#', '');
+
+	if ((typeof tinymce == "undefined") || (tinymce == null) || (tinymce.get(selector) == null)) {
 		// This should not happen
 		console.error("cbQueryTinyMCE(): TinyMCE is missing?!");
 		return true;
 	}
-	if (tinymce.activeEditor.isDirty()) {
+	if (tinymce.get(selector).isDirty()) {
 		return confirm(_L("Attention: Do you want to continue without saving?"));
 	} else {
 		return true;

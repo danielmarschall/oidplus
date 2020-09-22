@@ -914,12 +914,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						theme: "mobile",
 						toolbar: "undo redo | styleselect | bold italic underline forecolor | bullist numlist | outdent indent | table | fontsizeselect",
 						plugins: "'.implode(' ', $mce_plugins).'"
-					}
+    }
 					'.($tinyMCELang == '' ? '' : ', language : "'.$tinyMCELang.'"').'
 				});
-
-				// Make background transparent, see https://stackoverflow.com/questions/60135463/transparent-editor-background-in-tinymce-5
-				$(".tox-edit-area__iframe").css({"background-color":"rgba(0,0,0,0)"});
 
 				pageChangeRequestCallbacks.push([cbQueryTinyMCE, "#'.$name.'"]);
 				pageChangeCallbacks.push([cbRemoveTinyMCE, "#'.$name.'"]);
