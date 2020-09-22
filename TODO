@@ -14,11 +14,6 @@ IDEAS FOR NEW FUNCTIONALITIES
 	But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
 - Excel/CSV import tool for bulk data import (as alternative to XML import. Maybe previous Excel->XML import tool?)
 
-BASE JAVASCRIPT
-- browser history: the title of the page is not displayed correctly when you right-click on the navigation-buttons
-	Problem with FIREFOX
-	Works on CHROME and IE
-
 TINYMCE
 - mce dirty flag: call performCloseQueryCB()/performCloseCB(), if ...
 	OK:   The page (browser tab) is about to be closed or the page is reloaded

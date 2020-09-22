@@ -139,7 +139,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 	if (!force && !mayClose) return false;
 
 	performCloseCB();
-	
+
 	if (reselect) {
 		$('#oidtree').jstree('deselect_all');
 
@@ -179,7 +179,11 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 
 	// This loads the actual content
 
-	document.title = "";
+	// document.title = ""; // <-- we may not do this, otherwise Firefox won't
+	//                            show titles in the browser history (right-click
+	//                            on back-button), although document.title() is
+	//                            set inside the AJAX-callback [FirefoxBug?!]
+
 	$('#real_title').html("&nbsp;");
 	$('#real_content').html(_L("Loading..."));
 	$('#static_link').attr("href", "index.php?goto="+encodeURIComponent(id));
@@ -198,7 +202,6 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 
 			data.id = id;
 
-			document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
 			var state = {
 				"node_id":id,
 				"titleHTML":(data.icon ? '<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' : '') + data.title.htmlentities(),
@@ -210,6 +213,8 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 			} else {
 				window.history.replaceState(state, data.title, "?goto="+encodeURIComponent(id));
 			}
+
+			document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
 
 			if (data.icon) {
 				$('#real_title').html('<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' + data.title.htmlentities());
