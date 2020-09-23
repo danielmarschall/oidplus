@@ -65,6 +65,11 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 			$out['text'] = '';
 
 			$tmp = $this->get_ralist();
+			
+			$raCreatePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.3.130'); // OIDplusPageAdminCreateRa
+			if (!is_null($raCreatePlugin)) {
+				$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:create_ra').'>Create a new RA manually</a></p>';
+			}
 
 			if (count($tmp) == 0) {
 				$out['text'] .= '<p>'._L('Currently there are no Registration Authorities.').'</p>';

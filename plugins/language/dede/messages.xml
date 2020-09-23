@@ -1926,6 +1926,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Go back to RA listing
+		]]></source>
+		<target><![CDATA[
+		Zur RA-Auflistung zurückkehren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Go back to data transfer main page
 		]]></source>
 		<target><![CDATA[

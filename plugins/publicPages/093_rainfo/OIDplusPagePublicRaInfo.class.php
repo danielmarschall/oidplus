@@ -30,10 +30,12 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 			$ra_email = str_replace('&', '@', $antispam_email);
 
 			$out['icon'] = OIDplus::webpath(__DIR__).'rainfo_big.png';
+			
+			$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:list_ra').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to RA listing').'</a></p>';
 
 			if (empty($ra_email)) {
 				$out['title'] = _L('Object roots without RA');
-				$out['text'] = '<p>'._L('Following object roots have an undefined Registration Authority').':</p>';
+				$out['text'] .= '<p>'._L('Following object roots have an undefined Registration Authority').':</p>';
 			} else {
 				$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($ra_email));
 				$out['title'] = '';
@@ -43,10 +45,9 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 				if (empty($out['title'])) {
 					$out['title'] = $antispam_email;
 				}
-				$out['text'] = $this->showRAInfo($ra_email);
+				$out['text'] .= $this->showRAInfo($ra_email);
+				$out['text'] .= '<br><br>';
 			}
-
-			$out['text'] .= '<br><br>';
 
 			$ra_roots = OIDplusObject::getRaRoots($ra_email);
 			if (count($ra_roots) == 0) {

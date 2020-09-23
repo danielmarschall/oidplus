@@ -47,9 +47,21 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$out['title'] = htmlentities($classname);
+			$out['title'] = empty($plugin->getManifest()->getName()) ? htmlentities($classname) : htmlentities($plugin->getManifest()->getName());
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
+			$back_link = 'oidplus:system_plugins';
+			if (get_parent_class($classname) == 'OIDplusPagePluginPublic') $back_link = 'oidplus:system_plugins.pages.public';
+			if (get_parent_class($classname) == 'OIDplusPagePluginRa') $back_link = 'oidplus:system_plugins.pages.ra';
+			if (get_parent_class($classname) == 'OIDplusPagePluginAdmin') $back_link = 'oidplus:system_plugins.pages.admin';
+			if (get_parent_class($classname) == 'OIDplusObjectTypePlugin') $back_link = 'oidplus:system_plugins.objects';
+			if (get_parent_class($classname) == 'OIDplusDatabasePlugin') $back_link = 'oidplus:system_plugins.database';
+			if (get_parent_class($classname) == 'OIDplusSqlSlangPlugin') $back_link = 'oidplus:system_plugins.sql';
+			if (get_parent_class($classname) == 'OIDplusAuthPlugin') $back_link = 'oidplus:system_plugins.auth';
+			if (get_parent_class($classname) == 'OIDplusLoggerPlugin') $back_link = 'oidplus:system_plugins.logger';
+			if (get_parent_class($classname) == 'OIDplusLanguagePlugin') $back_link = 'oidplus:system_plugins.language';
+			$out['text'] = '<p><a '.OIDplus::gui()->link($back_link).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
+			
 			$out['text'] .= '<div><label class="padding_label">'._L('Class name').'</label><b>'.htmlentities($classname).'</b></div>'.
 					'<div><label class="padding_label">'._L('Location').'</label><b>'.htmlentities(dirname($plugin->getPluginDirectory())).'</b></div>'.
 					'<div><label class="padding_label">'._L('Plugin type').'</label><b>'.htmlentities(get_parent_class($classname)).'</b></div>'.
@@ -91,75 +103,92 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			} else if ($parts[1] == 'pages') {
 				$out['title'] = _L('Page plugins');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_pages_public = true;
 				$show_pages_ra = true;
 				$show_pages_admin = true;
 			} else if ($parts[1] == 'pages.public') {
 				$out['title'] = _L('Public page plugins');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins.pages').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_pages_public = true;
 			} else if ($parts[1] == 'pages.ra') {
 				$out['title'] = _L('RA page plugins');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins.pages').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_pages_ra = true;
 			} else if ($parts[1] == 'pages.admin') {
 				$out['title'] = _L('Admin page plugins');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins.pages').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_pages_admin = true;
 			} else if ($parts[1] == 'objects') {
 				$out['title'] = _L('Object type plugins');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_obj_active = true;
 				$show_obj_inactive = true;
 			} else if ($parts[1] == 'objects.enabled') {
 				$out['title'] = _L('Object type plugins (enabled)');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_obj_active = true;
 			} else if ($parts[1] == 'objects.disabled') {
 				$out['title'] = _L('Object type plugins (disabled)');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_obj_inactive = true;
 			} else if ($parts[1] == 'database') {
 				$out['title'] = _L('Database provider plugins');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_db_active = true;
 				$show_db_inactive = true;
 			} else if ($parts[1] == 'database.enabled') {
 				$out['title'] = _L('Database provider plugins (active)');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_db_active = true;
 			} else if ($parts[1] == 'database.disabled') {
 				$out['title'] = _L('Database provider plugins (inactive)');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_db_inactive = true;
 			} else if ($parts[1] == 'sql') {
 				$out['title'] = _L('SQL slang plugins');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_sql_active = true;
 				$show_sql_inactive = true;
 			} else if ($parts[1] == 'sql.enabled') {
 				$out['title'] = _L('SQL slang plugins (active)');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_sql_active = true;
 			} else if ($parts[1] == 'sql.disabled') {
 				$out['title'] = _L('SQL slang plugins (inactive)');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_sql_inactive = true;
 			} else if ($parts[1] == 'auth') {
 				$out['title'] = _L('RA authentication');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_auth = true;
 			} else if ($parts[1] == 'logger') {
 				$out['title'] = _L('Logger');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_logger = true;
 			} else if ($parts[1] == 'language') {
 				$out['title'] = _L('Languages');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_language = true;
 			} else {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('Invalid arguments').'</p>';
+				$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				return;
 			}
 
@@ -657,6 +686,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 	}
 
 	public function tree_search($request) {
+		// Not required, because all sub-nodes are loaded at the same time; no lazy-loading
 		return false;
 	}
 }
