@@ -153,9 +153,9 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 				if (trim($row['zip_town']) !== '') $out .= htmlentities($row['zip_town']).'<br>';
 				if (trim($row['country']) !== '') $out .= htmlentities($row['country']).'<br>';
 				$out .= '<br>';
-				if (trim($row['phone']) !== '') $out .= htmlentities($row['phone']).'<br>';
-				if (trim($row['fax']) !== '') $out .= htmlentities($row['fax']).'<br>';
-				if (trim($row['mobile']) !== '') $out .= htmlentities($row['mobile']).'<br>';
+				if (trim($row['phone']) !== '') $out .= _L('Phone: %1',htmlentities($row['phone'])).'<br>';
+				if (trim($row['fax']) !== '') $out .= _L('Fax: %1',htmlentities($row['fax'])).'<br>';
+				if (trim($row['mobile']) !== '') $out .= _L('Mobile: %1',htmlentities($row['mobile'])).'<br>';
 				$out .= '<br>';
 			}
 		}
