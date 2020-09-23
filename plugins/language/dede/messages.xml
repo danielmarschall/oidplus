@@ -1654,6 +1654,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Fax: %1
+		]]></source>
+		<target><![CDATA[
+		Fax: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		File %1 does not exist
 		]]></source>
 		<target><![CDATA[
@@ -2798,6 +2806,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Mobile: %1
+		]]></source>
+		<target><![CDATA[
+		Mobil: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		More information about the cookies used
 		]]></source>
 		<target><![CDATA[
@@ -3642,6 +3658,14 @@
 		]]></source>
 		<target><![CDATA[
 		Telefon
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Phone: %1
+		]]></source>
+		<target><![CDATA[
+		Telefon: %1
 		]]></target>
 	</message>
 	<message>
