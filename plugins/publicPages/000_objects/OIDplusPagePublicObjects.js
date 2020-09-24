@@ -235,7 +235,7 @@ function updateDesc() {
 				document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), document.getElementById('titleedit').value);
 
 				var mce = tinymce.get('description');
-				if (mce != null) mce.isNotDirty = 1;
+				if (mce != null) mce.setDirty(false);
 			} else {
 				alert(_L("Error: %1",data.error));
 			}
