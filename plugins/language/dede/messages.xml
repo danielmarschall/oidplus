@@ -4534,10 +4534,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Save following contents into the file <b>%1</b>:
+		Save following contents into the file <b>%1</b>
 		]]></source>
 		<target><![CDATA[
-		Speichern Sie die folgenden Inhalte in eine Datei mit dem Namen <b>%1</b>:
+		Speichern Sie die folgenden Inhalte in eine Datei mit dem Namen <b>%1</b>
 		]]></target>
 	</message>
 	<message>

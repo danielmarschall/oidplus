@@ -122,7 +122,7 @@ echo '</div>';
 
 echo '<div id="step3">';
 echo '<h2>'._L('Step %1: Save %2 file',3,'userdata/baseconfig/config.inc.php').'</h2>';
-echo '<p>'._L('Save following contents into the file <b>%1</b>:','userdata/baseconfig/config.inc.php').'</p>';
+echo '<p>'._L('Save following contents into the file <b>%1</b>','userdata/baseconfig/config.inc.php').'</p>';
 echo '<code><font color="darkblue"><div id="config"></div></font></code>';
 echo '</div>';
 

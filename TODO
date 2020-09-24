@@ -129,6 +129,7 @@ BUGS?
 
 REJECTED IDEAS
 - should there be more than one admin?
+- should there more than one person be able to manage an OID? (multiple emails per "RA" ?)
 - record first RA and current RA => X.660 does not have this requirement
 - markers DRAFT, LEAF and FROZEN etc. => use "Protected" if you want to make it invisible
 - Giving the "goto" argument OIDs instead of names, so that there are no conflict
@@ -142,7 +143,6 @@ REJECTED IDEAS
 IDEAS
 - Host/Domain ObjectType?
 - Hide/Proxy RA E-Mails from public requests
-- Rename all script.js and style.css to their plugin names, so that it is easier if you have multiple JS files open in Eclipse IDE Tabs.
 - prune logs entries? automatically prune things like "logged in" but not prune OID changes, etc?
 - let users choose their own creation arc
 - system guid (name based pubkey)?

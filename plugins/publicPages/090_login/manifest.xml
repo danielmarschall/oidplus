@@ -19,11 +19,11 @@
 	</php>
 
 	<css>
-		<file>style.css</file>
+		<file>OIDplusPagePublicLogin.css</file>
 	</css>
 
 	<js>
-		<file>script.js</file>
+		<file>OIDplusPagePublicLogin.js</file>
 	</js>
 	
 </manifest>
