@@ -89,7 +89,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=$query&compressed=1&data=".base64_encode(gzdeflate(json_encode($data))));
+			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=".urlencode($query)."&compressed=1&data=".urlencode(base64_encode(gzdeflate(json_encode($data)))));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
@@ -176,7 +176,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=$query&compressed=1&data=".base64_encode(gzdeflate(json_encode($data))));
+			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=".urlencode($query)."&compressed=1&data=".urlencode(base64_encode(gzdeflate(json_encode($data)))));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
@@ -432,7 +432,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=$query&compressed=1&data=".base64_encode(gzdeflate(json_encode($data))));
+			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=".urlencode($query)."&compressed=1&data=".urlencode(base64_encode(gzdeflate(json_encode($data)))));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
