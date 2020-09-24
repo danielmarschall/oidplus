@@ -94,7 +94,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 
 			$out['text'] .= '<br><p>';
 			$out['text'] .= '  <label for="amount">'._L('Invert colors').':</label>';
-			$out['text'] .= '  <input type="text" id="icolor" readonly style="border:0; background:transparent; font-weight:bold;">';
+			$out['text'] .= '  <input type="text" id="icolor" readonly style="border:0; background:transparent; font-weight:bold;">'; // TODO: It would be good if that was a checkbox
 			$out['text'] .= '</p>';
 			$out['text'] .= '<div id="slider-icolor"></div>';
 
