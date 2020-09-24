@@ -52,17 +52,26 @@ function process_file($filename) {
 
 # ---
 
-OIDplus::registerAllPlugins('database', 'OIDplusDatabasePlugin', array('OIDplus','registerDatabasePlugin'));
-foreach (OIDplus::getDatabasePlugins() as $plugin) {
-	$out .= $plugin::setupCSS();
-}
+// Third-party products
+// (None)
 
+// OIDplus basic definitions
 if (file_exists(__DIR__ . '/../userdata/styles/setup_base.css')) {
 	$out .= process_file(__DIR__ . '/../userdata/styles/setup_base.css');
 } else {
 	$out .= process_file(__DIR__ . '/setup_base.css');
 }
 
+// Then plugins
+OIDplus::registerAllPlugins('database', 'OIDplusDatabasePlugin', array('OIDplus','registerDatabasePlugin'));
+$manifests = OIDplus::getAllPluginManifests('database', true);
+foreach ($manifests as $manifest) {
+	foreach ($manifest->getCSSFilesSetup() as $css_file) {
+		$out .= process_file($css_file);
+	}
+}
+
+// Now user-defined definitions
 if (file_exists(__DIR__ . '/userdata/styles/setup_add.css')) {
 	$out .= process_file(__DIR__ . '/userdata/styles/setup_add.css');
 }
@@ -70,4 +79,3 @@ if (file_exists(__DIR__ . '/userdata/styles/setup_add.css')) {
 # ---
 
 httpOutWithETag($out, 'text/css', 'oidplus_setup.css');
-

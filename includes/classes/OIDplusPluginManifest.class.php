@@ -35,6 +35,10 @@ class OIDplusPluginManifest {
 	private $cssFiles = array();
 	private $jsFiles = array();
 
+	// Only database plugins
+	private $cssFilesSetup = array();
+	private $jsFilesSetup = array();
+
 	// Only language plugins
 	private $languageCode = '';
 	private $languageFlag = '';
@@ -74,6 +78,14 @@ class OIDplusPluginManifest {
 
 	public function getJSFiles(): array {
 		return $this->jsFiles;
+	}
+
+	public function getCSSFilesSetup(): array {
+		return $this->cssFilesSetup;
+	}
+
+	public function getJSFilesSetup(): array {
+		return $this->jsFilesSetup;
 	}
 
 	public function getRawXml(): SimpleXMLElement {
@@ -124,6 +136,19 @@ class OIDplusPluginManifest {
 			$file = dirname($filename).'/'.$js_file;
 			if (!file_exists($file)) continue;
 			$this->jsFiles[] = $file;
+		}
+
+		// The following functionalities are only available for database plugins
+		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.6
+		foreach ((array)$xmldata->cssSetup->file as $css_file) {
+			$file = dirname($filename).'/'.$css_file;
+			if (!file_exists($file)) continue;
+			$this->cssFilesSetup[] = $file;
+		}
+		foreach ((array)$xmldata->jsSetup->file as $js_file) {
+			$file = dirname($filename).'/'.$js_file;
+			if (!file_exists($file)) continue;
+			$this->jsFilesSetup[] = $file;
 		}
 
 		// The following functionalities are only available for language plugins

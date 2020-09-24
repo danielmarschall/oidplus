@@ -25,8 +25,4 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 
 	public abstract static function setupHTML(): string;
 
-	public abstract static function setupJS(): string;
-
-	public abstract static function setupCSS(): string;
-
 }

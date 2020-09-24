@@ -42,19 +42,4 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 		       '</div>';
 	}
 
-	public static function setupJS(): string {
-		if (file_exists(__DIR__ . '/'.get_called_class().'Setup.js')) {
-			return file_get_contents(__DIR__ . '/'.get_called_class().'Setup.js');
-		} else {
-			return '';
-		}
-	}
-
-	public static function setupCSS(): string {
-		if (file_exists(__DIR__ . '/'.get_called_class().'Setup.css')) {
-			return file_get_contents(__DIR__ . '/'.get_called_class().'Setup.css');
-		} else {
-			return '';
-		}
-	}
 }

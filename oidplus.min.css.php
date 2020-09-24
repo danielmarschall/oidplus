@@ -53,16 +53,19 @@ function process_file($filename) {
 
 # ---
 
+// Third-party products
+$out .= process_file(__DIR__ . '/3p/jstree/themes/default/style.css');
+$out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui.css');
+$out .= process_file(__DIR__ . '/3p/bootstrap/css/bootstrap.css');
+
+// OIDplus basic definitions
 if (file_exists(__DIR__ . '/userdata/styles/oidplus_base.css')) {
 	$out .= process_file(__DIR__ . '/userdata/styles/oidplus_base.css');
 } else {
 	$out .= process_file(__DIR__ . '/oidplus_base.css');
 }
 
-if (file_exists(__DIR__ . '/userdata/styles/oidplus_add.css')) {
-	$out .= process_file(__DIR__ . '/userdata/styles/oidplus_add.css');
-}
-
+// Then plugins
 $manifests = OIDplus::getAllPluginManifests('*Pages', true);
 foreach ($manifests as $manifest) {
 	foreach ($manifest->getCSSFiles() as $css_file) {
@@ -70,9 +73,10 @@ foreach ($manifests as $manifest) {
 	}
 }
 
-$out .= process_file(__DIR__ . '/3p/jstree/themes/default/style.css');
-$out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui.css');
-$out .= process_file(__DIR__ . '/3p/bootstrap/css/bootstrap.css');
+// Now user-defined definitions
+if (file_exists(__DIR__ . '/userdata/styles/oidplus_add.css')) {
+	$out .= process_file(__DIR__ . '/userdata/styles/oidplus_add.css');
+}
 
 # ---
 
