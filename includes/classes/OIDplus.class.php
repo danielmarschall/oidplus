@@ -185,6 +185,9 @@ class OIDplus {
 			self::$config->prepareConfigKey('last_known_system_url', 'Last known System URL', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
 				// Nothing here yet
 			});
+			self::$config->prepareConfigKey('last_known_version', 'Last known OIDplus Version', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
+				// Nothing here yet
+			});
 		}
 
 		return self::$config;
@@ -657,6 +660,11 @@ class OIDplus {
 		foreach (OIDplus::getLanguagePlugins() as $plugin) {
 			$plugin->init($html);
 		}
+
+		// Initialize other stuff (i.e. things which require the logger!)
+
+		OIDplus::recognizeSystemUrl(); // Make sure "last_known_system_url" is set
+		OIDplus::recognizeVersion(); // Make sure "last_known_version" is set and a log entry is created
 	}
 
 	# --- System URL, System ID, PKI, and other functions
@@ -665,15 +673,19 @@ class OIDplus {
 		return realpath(__DIR__ . '/../../');
 	}
 
+	private static function recognizeSystemUrl() {
+		try {
+			$url = OIDplus::getSystemUrl();
+			OIDplus::config()->setValue('last_known_system_url', $url);
+		} catch (Exception $e) {
+		}
+	}
+
 	public static function getSystemUrl($relative=false) {
 		if (!$relative) {
 			$res = OIDplus::baseConfig()->getValue('EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
 			if ($res !== '') {
-				try {
-					OIDplus::config()->setValue('last_known_system_url', $res);
-					return $res;
-				} catch (Exception $e) {
-				}
+				return $res;
 			}
 		}
 
@@ -703,6 +715,7 @@ class OIDplus {
 				try {
 					return OIDplus::config()->getValue('last_known_system_url', false);
 				} catch (Exception $e) {
+					return false;
 				}
 			}
 
@@ -710,11 +723,6 @@ class OIDplus {
 			$protocol = $is_ssl ? 'https' : 'http'; // do not translate
 			$host = $_SERVER['HTTP_HOST']; // includes port if it is not 80/443
 			$res = $protocol.'://'.$host.$res;
-
-			try {
-				OIDplus::config()->setValue('last_known_system_url', $res);
-			} catch (Exception $e) {
-			}
 		}
 
 		return $res;
@@ -797,9 +805,26 @@ class OIDplus {
 		}
 	}
 
+	private static function recognizeVersion() {
+		try {
+			$ver_prev = OIDplus::config()->getValue("last_known_version");
+			$ver_now = OIDplus::getVersion();
+			if (($ver_now != '') && ($ver_prev != '') && ($ver_now != $ver_prev)) {
+				OIDplus::logger()->log("[INFO]A!", "System version changed from '$ver_prev' to '$ver_now'");
+			}
+			OIDplus::config()->setValue("last_known_version", $ver_now);
+		} catch (Exception $e) {
+		}
+	}
+
 	public static function getVersion() {
+		static $cachedVersion = null;
+		if (!is_null($cachedVersion)) {
+			return $cachedVersion;
+		}
+
 		if (file_exists(OIDplus::basePath().'/oidplus_version.txt') && is_dir(OIDplus::basePath().'/.svn')) {
-			return false; // version is ambiguous
+			return ($cachedVersion = false); // version is ambiguous
 		}
 
 		if (is_dir(OIDplus::basePath().'/.svn')) {
@@ -809,7 +834,7 @@ class OIDplus {
 					$db = new SQLite3(OIDplus::basePath().'/.svn/wc.db');
 					$results = $db->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
 					while ($row = $results->fetchArray()) {
-						return 'svn-'.$row['rev']; // do not translate
+						return ($cachedVersion = 'svn-'.$row['rev']); // do not translate
 					}
 					$db->close();
 					$db = null;
@@ -821,7 +846,9 @@ class OIDplus {
 					$pdo = new PDO('sqlite:' . OIDplus::basePath().'/.svn/wc.db');
 					$res = $pdo->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
 					$row = $res->fetch();
-					if ($row !== false) return 'svn-'.$row['rev']; // do not translate
+					if ($row !== false) {
+						return ($cachedVersion = 'svn-'.$row['rev']); // do not translate
+					}
 					$pdo = null;
 				} catch (Exception $e) {
 				}
@@ -832,12 +859,12 @@ class OIDplus {
 			$output = @shell_exec('svnversion '.escapeshellarg(OIDplus::basePath()));
 			$match = array();
 			if (preg_match('/\d+/', $output, $match)) {
-				return 'svn-'.$match[0]; // do not translate
+				return ($cachedVersion = 'svn-'.$match[0]); // do not translate
 			}
 
 			$output = @shell_exec('svn info '.escapeshellarg(OIDplus::basePath()));
 			if (preg_match('/Revision:\s*(\d+)/m', $output, $match)) { // do not translate
-				return 'svn-'.$match[1]; // do not translate
+				return ($cachedVersion = 'svn-'.$match[1]); // do not translate
 			}
 		}
 
@@ -845,10 +872,10 @@ class OIDplus {
 			$cont = file_get_contents(OIDplus::basePath().'/oidplus_version.txt');
 			$m = array();
 			if (preg_match('@Revision (\d+)@', $cont, $m)) // do not translate
-				return 'svn-'.$m[1]; // do not translate
+				return ($cachedVersion = 'svn-'.$m[1]); // do not translate
 		}
 
-		return false;
+		return ($cachedVersion = false);
 	}
 
 	private static $sslAvailableCache = null;
