@@ -793,7 +793,7 @@ class phpsvnclient {
 		$http->Open($args);
 		$http->SendRequest($args);
 		$http->ReadReplyHeaders($headers);
-		if ($http->response_status[0] != 2) {
+		if (substr($http->response_status,0,1) != 2) {
 			switch ($http->response_status) {
 				case 404:
 					$this->errNro = self::NOT_FOUND;

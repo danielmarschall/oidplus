@@ -103,7 +103,7 @@ abstract class OIDplusObject {
 			}
 		} else {
 			if (is_null($ra_email)) {
-				$ra_mails_to_check = OIDplusAuthUtils::loggedInRaList();
+				$ra_mails_to_check = OIDplus::authUtils()->loggedInRaList();
 				if (count($ra_mails_to_check) == 0) return $out;
 			} else {
 				$ra_mails_to_check = array($ra_email);
@@ -308,6 +308,8 @@ abstract class OIDplusObject {
 		}
 	}
 
+	// Get parent gives the next possible parent which is EXISTING in OIDplus
+	// It does not give the immediate parent
 	public function getParent() {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($this->nodeId()));
@@ -316,6 +318,7 @@ abstract class OIDplusObject {
 			$parent = $row['parent'];
 			$obj = OIDplusObject::parse($parent);
 			if ($obj) return $obj;
+			// TODO: Also implement one_up() like below
 		} else {
 			self::buildObjectInformationCache();
 			if (isset(self::$object_info_cache[$this->nodeId()])) {
@@ -328,6 +331,7 @@ abstract class OIDplusObject {
 			$cur = $this->one_up();
 			if (!$cur) return false;
 			do {
+				// findFitting() checks if that OID exists
 				if ($fitting = self::findFitting($cur->nodeId())) return $fitting;
 
 				$prev = $cur;

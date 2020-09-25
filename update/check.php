@@ -64,7 +64,7 @@ if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_suc
 	echo '<p><font color="red"><b>'._L('CAPTCHA not successfully verified').'</b></font></p>';
 	//echo '<p><a href="index.php">Try again</a></p>';
 } else {
-	if (!OIDplusAuthUtils::adminCheckPassword($_REQUEST['admin_password'])) {
+	if (!OIDplus::authUtils()->adminCheckPassword($_REQUEST['admin_password'])) {
 		echo '<p><font color="red"><b>'._L('Wrong password').'</b></font></p>';
 		//echo '<p><a href="index.php">Try again</a></p>';
 	} else {

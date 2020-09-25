@@ -83,19 +83,26 @@ if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 
 echo '<p><u>'._L('Step %1: Authenticate',$step++).'</u></p>';
 
-echo '<p>'._L('Please enter the administrator password you have entered before.').'</p>';
+if (OIDplus::authUtils()->isAdminLoggedIn()) {
 
-echo '<p><input type="password" name="admin_password" value=""> (<a href="'.OIDplus::getSystemUrl().'setup/">'._L('Forgot password?').'</a>) ';
+	echo '<p><font color="green">You are already logged in as administrator.</font></p>';
 
-if (isset($_REQUEST['sent'])) {
-	if (!OIDplusAuthUtils::adminCheckPassword($_REQUEST['admin_password'])) {
-		$errors_happened = true;
-		$edits_possible = false;
-		echo '<font color="red"><b>'._L('Wrong password').'</b></font>';
+} else {
+
+	echo '<p>'._L('Please enter the administrator password you have entered before.').'</p>';
+
+	echo '<p><input type="password" name="admin_password" value=""> (<a href="'.OIDplus::getSystemUrl().'setup/">'._L('Forgot password?').'</a>) ';
+
+	if (isset($_REQUEST['sent'])) {
+		if (!OIDplus::authUtils()->adminCheckPassword($_REQUEST['admin_password'])) {
+			$errors_happened = true;
+			$edits_possible = false;
+			echo '<font color="red"><b>'._L('Wrong password').'</b></font>';
+		}
 	}
-}
 
-echo '</p>';
+	echo '</p>';
+}
 
 #------------------------
 $do_edits = isset($_REQUEST['sent']) && $edits_possible;;
