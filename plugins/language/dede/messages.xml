@@ -2254,6 +2254,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		In the automatic oid-info.com publishing, well-known OIDs will not be transmitted (because it is unlikely that RAs of well-known OIDs will be using OIDplus in combination with automatic publishing to oid-info.com). Instead, all children inside these well-known OIDs are most likely to be yours, so these will be reported to oid-info.com instead.
+		]]></source>
+		<target><![CDATA[
+		Wenn OIDs automatisch nach oid-info.com veröffentlicht werden, werden wohlbekannte OIDs nicht zu Ihren Wurzel-OIDs mitgezählt (da es sehr unwahrscheinlich ist, dass Sie eine wohlbekannte OID besitzen), sodass stattdessen die darunterliegenden OIDs als Ihre eigenen Wurzel-OIDs anerkannt werden. Beispiel: Sie haben einen "2.25" UUID Wurzelknoten in OIDplus, und darunter liegen Ihre UUID OIDs. In diesem Fall sind Sie Besitzer der UUID OIDs, aber nicht Besitzer von "2.25".
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Insert
 		]]></source>
 		<target><![CDATA[
@@ -3170,6 +3178,22 @@
 		]]></source>
 		<target><![CDATA[
 		OID-IRI-Notation
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OID-WHOIS Auth Token for displaying full RA information: %1 (only applies if the RA has set the privacy-flag)
+		]]></source>
+		<target><![CDATA[
+		OID-WHOIS Auth Token zum Anzeigen von vollen Informationen zur Registrierungsstelle (nur erforderlich, wenn diese ihre Kontaktdaten geschützt hat): %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OID-WHOIS Auth Token for displaying full object information: %1 (only applies if the this or superior objects are marked confidential)
+		]]></source>
+		<target><![CDATA[
+		OID-WHOIS Auth Token zum Anzeigen von vollen Informationen zum Objekt (nur erforderlich, wenn das Objekt oder darüberliegende Objekte versteckt sind): %1
 		]]></target>
 	</message>
 	<message>
@@ -5834,6 +5858,22 @@
 		]]></source>
 		<target><![CDATA[
 		Wohlbekannte OIDs
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Well-known OIDs are OIDs of Registration Authorities which are assigning OIDs to customers, i.e. they are most likely to be used by OIDplus users as their root OID. Well-known OIDs have the following purposes:
+		]]></source>
+		<target><![CDATA[
+		Wohlbekannte OIDs sind OIDs von Registrierungsstellen, die Objekt-Bezeichner an Kunden vergeben, d.h. es ist wahrscheinlich, dass OIDplus-Anwender diese OIDs als Wurzel-OIDs der OIDplus-Systeme verwenden werden. Wohlbekannte OIDs haben folgende Funktionen:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		When a new OIDplus user creates his root OID into OIDplus, then the ASN.1 identifiers and Unicode labels of the superior OIDs are automatically added.
+		]]></source>
+		<target><![CDATA[
+		Wenn Sie eine neue Wurzel-OID zu Ihrem OIDplus-System hinzufügen (z.B. eine IANA PEN OID), dann kann OIDplus mit Hilfe dieser Daten die ASN.1 Bezeichner und Unicode Labels automatisch zu den übergeordneten OIDs hinzufügen.
 		]]></target>
 	</message>
 	<message>

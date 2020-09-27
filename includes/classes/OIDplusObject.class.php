@@ -256,16 +256,18 @@ abstract class OIDplusObject {
 	public function userHasReadRights($ra_email=null) {
 		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
 
-		// Admin may do everything
-		if (OIDplus::authUtils()::isAdminLoggedIn()) return true;
-
 		// If it is not confidential, everybody can read/see it.
+		// Note: This also checks if superior OIDs are confidential.
 		if (!$this->isConfidential()) return true;
 
-		// If we own the object, we may see it
 		if (is_null($ra_email)) {
-			if ($this->userHasWriteRights()) return true;
+			// Admin may do everything
+			if (OIDplus::authUtils()::isAdminLoggedIn()) return true;
+
+			// If the RA is logged in, then they can see the OID.
+			if (OIDplus::authUtils()::isRaLoggedIn($this->getRaMail())) return true;
 		} else {
+			// If this OID belongs to the requested RA, then they may see it.
 			if ($this->getRaMail() == $ra_email) return true;
 		}
 

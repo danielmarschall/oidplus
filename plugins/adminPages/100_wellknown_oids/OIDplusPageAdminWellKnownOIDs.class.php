@@ -35,7 +35,15 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$out['text'] = '<p><abbr title="'._L('These ID names can only be edited in the database directly (Tables ###asn1id and ###iri). Usually, there is no need to do this, though.').'">'._L('How to edit these IDs?').'</abbr></p>';
+			$out['text'] = '';
+
+			$out['text'] .= '<p>'._L('Well-known OIDs are OIDs of Registration Authorities which are assigning OIDs to customers, i.e. they are most likely to be used by OIDplus users as their root OID. Well-known OIDs have the following purposes:').'<ol>';
+			$out['text'] .= '<li>'._L('When a new OIDplus user creates his root OID into OIDplus, then the ASN.1 identifiers and Unicode labels of the superior OIDs are automatically added.').'</li>';
+			$out['text'] .= '<li>'._L('In the automatic oid-info.com publishing, well-known OIDs will not be transmitted (because it is unlikely that RAs of well-known OIDs will be using OIDplus in combination with automatic publishing to oid-info.com). Instead, all children inside these well-known OIDs are most likely to be yours, so these will be reported to oid-info.com instead.').'</li>';
+			// $out['text'] .= '<li>'._L('In OID-WHOIS, if a user requests information about an unknown OID which is inside a well-known OID, then OID-WHOIS will output information at which place more information can be retrieved from.').'</li>';
+			$out['text'] .= '</ol></p>';
+
+			$out['text'] .= '<p><abbr title="'._L('These ID names can only be edited in the database directly (Tables ###asn1id and ###iri). Usually, there is no need to do this, though.').'">'._L('How to edit these IDs?').'</abbr></p>';
 
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';

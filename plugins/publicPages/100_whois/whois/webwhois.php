@@ -42,11 +42,6 @@ if (php_sapi_name() == 'cli') {
 $authTokens = explode('$', $query);
 $query = array_shift($authTokens);
 
-$authToken = trim(OIDplus::config()->getValue('whois_auth_token'));
-if (empty($authToken)) $authToken = false;
-
-$show_confidential = $authToken && in_array($authToken, $authTokens);
-
 $query = str_replace('oid:.', 'oid:', $query); // allow leading dot
 
 // Step 1: Collect data
@@ -61,119 +56,179 @@ $found = null;
 try {
 	$obj = OIDplusObject::findFitting($query);
 	if (!$obj) $obj = OIDplusObject::parse($query); // in case we didn't find anything fitting, we take it as it is and later use getParent() to find something else
+	$query = $obj->nodeId();
 } catch (Exception $e) {
 	$obj = null;
 }
 
-if (!$obj) {
-	$found = false;
-} else {
-	$query = $obj->nodeId(); // this may sanitize/canonize identifiers
-	$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
-	if ($res->num_rows() > 0) {
-		$found = true;
-		$distance = 0;
-	} else {
-		$found = false;
-		$objParent = OIDplusObject::parse($query)->getParent();
-		if ($objParent) {
-			$res = OIDplus::db()->query("select * from ###objects where id = ?", array($objParent->nodeId()));
-			$distance = $objParent->distance($query);
-			assert($res->num_rows() > 0);
+$only_wellknown_ids_found = false;
+$continue = false;
 
-			$query = $objParent->nodeId();
-			$obj = $objParent;
+if (!$obj) {
+	$out[] = "result: Not found"; // DO NOT TRANSLATE!
+	$continue = false;
+} else {
+	$obj = null;
+	$distance = 0;
+
+	$init_query = $query;
+	while (true) {
+		$res = OIDplus::db()->query("select * from ###objects where id = ?", array($query));
+		if ($res->num_rows() > 0) {
+			$obj = OIDplusObject::parse($query);
+			if ($distance > 0) {
+				$out[] = "result: Not found; superior object found"; // DO NOT TRANSLATE!
+				$out[] = "distance: $distance"; // DO NOT TRANSLATE
+			} else {
+				$out[] = "result: Found"; // DO NOT TRANSLATE!
+			}
+			$continue = true;
+			break;
+		}
+
+		if (substr($query,0,4) === 'oid:') {
+			$query_prev = $query;
+			$query = 'oid:'.oid_up(explode(':',$query,2)[1]);
+			if ($query == $query_prev) break;
+			$distance++;
+		} else {
+			$obj = OIDplusObject::parse($query)->getParent(); // For objects, we assume that they are parents of each other
+			if ($obj) {
+				$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
+				$distance = $obj->distance($query);
+				assert($res->num_rows() > 0);
+
+				$query = $obj->nodeId();
+			}
+			break;
 		}
 	}
-}
 
-$continue = null;
-if (!$found) {
-	if (!is_null($distance)) {
-		$out[] = "result: Not found; superior object found"; // DO NOT TRANSLATE!
-		$out[] = "distance: $distance"; // DO NOT TRANSLATE
-		$continue = true;
-	} else {
+	if ((substr($query,0,4) === 'oid:') && (!$obj)) {
+		$query = $init_query;
+		$distance = 0;
+		while (true) {
+			$res = OIDplus::db()->query("select * from ###asn1id where oid = ? union select * from ###iri where oid = ?", array($query, $query));
+			if ($res->num_rows() > 0) {
+				$obj = OIDplusObject::parse($query);
+				$res = null;
+				if ($distance > 0) {
+					$out[] = "result: Not found; superior object found"; // DO NOT TRANSLATE!
+					$out[] = "distance: $distance"; // DO NOT TRANSLATE
+				} else {
+					$out[] = "result: Found"; // DO NOT TRANSLATE!
+				}
+				$only_wellknown_ids_found = true; // Information partially available
+				$continue = true;
+				break;
+			}
+			$query_prev = $query;
+			$query = 'oid:'.oid_up(explode(':',$query,2)[1]);
+			if ($query == $query_prev) break;
+			$distance++;
+		}
+	}
+
+	if (!$obj) {
 		$out[] = "result: Not found"; // DO NOT TRANSLATE!
 		$continue = false;
 	}
-} else {
-	$out[] = "result: Found"; // DO NOT TRANSLATE!
-	$continue = true;
+
+	$found = $distance == 0;
 }
 
 if ($continue) {
 	$out[] = "";
 	$out[] = "object: $query"; // DO NOT TRANSLATE!
-	if ($obj->isConfidential() && !$show_confidential) {
+	if (!allowObjectView($obj, $authTokens)) {
 		$out[] = "status: Information unavailable"; // DO NOT TRANSLATE!
 		$out[] = "attribute: confidential"; // DO NOT TRANSLATE!
 	} else {
-		$out[] = "status: Information available"; // DO NOT TRANSLATE!
+		if ($only_wellknown_ids_found) {
+			$out[] = "status: Information partially available"; // DO NOT TRANSLATE!
+		} else {
+			$out[] = "status: Information available"; // DO NOT TRANSLATE!
+		}
 
-		$row = $res->fetch_object();
-		assert($row);
-		$obj = OIDplusObject::parse($row->id);
+		$row = $res ? $res->fetch_object() : null;
 
-		$out[] = 'name: ' . $row->title; // DO NOT TRANSLATE!
+		if (!is_null($row)) $out[] = 'name: ' . $row->title; // DO NOT TRANSLATE!
 
-		$cont = $row->description;
-		$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
-		$cont = preg_replace('@<br.*>@', "\n", $cont);
-		$cont = preg_replace('@\\n+@', "\n", $cont);
-		$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont))); // DO NOT TRANSLATE!
+		if (!is_null($row)) {
+			$cont = $row->description;
+			$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
+			$cont = preg_replace('@<br.*>@', "\n", $cont);
+			$cont = preg_replace('@\\n+@', "\n", $cont);
+			$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont))); // DO NOT TRANSLATE!
+		}
 
 		if (substr($query,0,4) === 'oid:') {
 			$out[] = 'asn1-notation: ' . $obj->getAsn1Notation(false); // DO NOT TRANSLATE!
 			$out[] = 'iri-notation: ' . $obj->getIriNotation(false); // DO NOT TRANSLATE!
 
-			$res2 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($row->id));
+			$res2 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($obj->nodeId()));
 			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'identifier: ' . $row2->name; // DO NOT TRANSLATE!
 			}
 
-			$res2 = OIDplus::db()->query("select * from ###asn1id where standardized = ? and oid = ?", array(true, $row->id));
+			$res2 = OIDplus::db()->query("select * from ###asn1id where standardized = ? and oid = ?", array(true, $obj->nodeId()));
 			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'standardized-id: ' . $row2->name; // DO NOT TRANSLATE!
 			}
 
-			$res2 = OIDplus::db()->query("select * from ###iri where oid = ?", array($row->id));
+			$res2 = OIDplus::db()->query("select * from ###iri where oid = ?", array($obj->nodeId()));
 			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'unicode-label: ' . $row2->name; // DO NOT TRANSLATE!
 			}
 
-			$res2 = OIDplus::db()->query("select * from ###iri where longarc = ? and oid = ?", array(true, $row->id));
+			$res2 = OIDplus::db()->query("select * from ###iri where longarc = ? and oid = ?", array(true, $obj->nodeId()));
 			while ($row2 = $res2->fetch_object()) {
 				$out[] = 'long-arc: ' . $row2->name; // DO NOT TRANSLATE!
 			}
 		}
 
-		// TODO: Field "attribute: confidential" if OID is hidden
+		if ($obj->isConfidential()) { // yes, we use isConfidential() instead of allowObjectView()!
+			$out[] = 'attribute: confidential';
+		}
 
 		foreach (OIDplus::getPagePlugins() as $plugin) {
 			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-				$plugin->whoisObjectAttributes($row->id, $out);
+				$plugin->whoisObjectAttributes($obj->nodeId(), $out);
 			}
 		}
 
-		if (!empty($row->parent) && (!is_root($row->parent))) {
-			$out[] = 'parent: ' . $row->parent . show_asn1_appendix($row->parent); // DO NOT TRANSLATE!
+		if (substr($query,0,4) === 'oid:') {
+			$sParent = 'oid:'.oid_up(explode(':',$query,2)[1]);
+
+			$objTest = OIDplusObject::parse($sParent);
+			if (allowObjectView($objTest, $authTokens)) {
+				$out[] = 'parent: ' . $sParent . show_asn1_appendix($sParent); // DO NOT TRANSLATE!
+			} else {
+				$out[] = 'parent: ' . $sParent; // DO NOT TRANSLATE!
+			}
+		} else if (!is_null($row) && !empty($row->parent) && (!is_root($row->parent))) {
+			$sParent = $row->parent;
+			$out[] = 'parent: ' . $row->parent; // DO NOT TRANSLATE!
 		}
 
-		$res2 = OIDplus::db()->query("select * from ###objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($row->id));
-		if ($res2->num_rows() == 0) {
-			// $out[] = 'subordinate: (none)';
-		}
+		$res2 = OIDplus::db()->query("select * from ###objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($obj->nodeId()));
 		while ($row2 = $res2->fetch_object()) {
-			$out[] = 'subordinate: ' . $row2->id . show_asn1_appendix($row2->id); // DO NOT TRANSLATE!
+			$objTest = OIDplusObject::parse($row2->id);
+			if (allowObjectView($objTest, $authTokens)) {
+				$out[] = 'subordinate: ' . $row2->id . show_asn1_appendix($row2->id); // DO NOT TRANSLATE!
+			} else {
+				$out[] = 'subordinate: ' . $row2->id; // DO NOT TRANSLATE!
+			}
 		}
 
-		$out[] = 'created: ' . $row->created; // DO NOT TRANSLATE!
-		$out[] = 'updated: ' . $row->updated; // DO NOT TRANSLATE!
+		if (!is_null($row)) {
+			if ($row->created) $out[] = 'created: ' . date('Y-m-d H:i:s', strtotime($row->created)); // DO NOT TRANSLATE!
+			if ($row->updated) $out[] = 'updated: ' . date('Y-m-d H:i:s', strtotime($row->updated)); // DO NOT TRANSLATE!
+		}
 
 		$out[] = '';
 
-		$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array($row->ra_email));
+		$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array(is_null($row) ? '' : $row->ra_email));
 		if ($row2 = $res2->fetch_object()) {
 			$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : (!empty($row2->email) ? $row2->email : _L('Unknown'))); // DO NOT TRANSLATE!
 			$out[] = 'ra-status: Information available'; // DO NOT TRANSLATE!
@@ -184,7 +239,7 @@ if ($continue) {
 			$tmp = implode(', ', $tmp);
 
 			$out[] = 'ra-contact-name: ' . $row2->personal_name.(!empty($tmp) ? " ($tmp)" : ''); // DO NOT TRANSLATE!
-			if ($row2->privacy && !$show_confidential) {
+			if (!allowRAView($row2, $authTokens)) {
 				if (!empty($row2->street) || !empty($row2->zip_town) || !empty($row2->country)) {
 					$out[] = 'ra-address: '._L('(redacted)'); // DO NOT TRANSLATE!
 				}
@@ -205,13 +260,20 @@ if ($continue) {
 					$plugin->whoisRaAttributes($row->ra_email, $out);
 				}
 			}
-			$out[] = 'ra-created: ' . $row2->registered; // DO NOT TRANSLATE!
-			$out[] = 'ra-updated: ' . $row2->updated; // DO NOT TRANSLATE!
+
+			if ($row2->privacy) { // yes, we use row2->privacy() instead of allowRAView()!
+				$out[] = 'ra-attribute: confidential';
+			}
+
+			if ($row2->registered) $out[] = 'ra-created: ' . date('Y-m-d H:i:s', strtotime($row2->registered)); // DO NOT TRANSLATE!
+			if ($row2->updated)    $out[] = 'ra-updated: ' . date('Y-m-d H:i:s', strtotime($row2->updated)); // DO NOT TRANSLATE!
 		} else {
-			$out[] = 'ra: '.(!empty($row->ra_email) ? $row->ra_email : _L('Unknown')); // DO NOT TRANSLATE!
-			foreach (OIDplus::getPagePlugins() as $plugin) {
-				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-					$plugin->whoisRaAttributes($row->ra_email, $out);
+			$out[] = 'ra: '.(!is_null($row) && !empty($row->ra_email) ? $row->ra_email : _L('Unknown')); // DO NOT TRANSLATE!
+			if (!is_null($row)) {
+				foreach (OIDplus::getPagePlugins() as $plugin) {
+					if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
+						$plugin->whoisRaAttributes($row->ra_email, $out);
+					}
 				}
 			}
 			$out[] = "ra-status: Information unavailable"; // DO NOT TRANSLATE!
@@ -380,4 +442,47 @@ function show_asn1_appendix($id) {
 
 function is_root($id) {
 	return empty(explode(':',$id,2)[1]);
+}
+
+function authTokenAccepted($content, $authTokens) {
+	foreach ($authTokens as $token) {
+		if (OIDplusPagePublicWhois::genWhoisAuthToken($content) == $token) return true;
+	}
+	return false;
+}
+
+function allowObjectView($obj, $authTokens) {
+	// Master auth token
+	$authToken = trim(OIDplus::config()->getValue('whois_auth_token'));
+	if (empty($authToken)) $authToken = false;
+	if ($authToken && in_array($authToken, $authTokens)) return true;
+
+	// Per-OID auth tokens
+	$curid = $obj->nodeId();
+	while (($res = OIDplus::db()->query("select parent, confidential from ###objects where id = ?", array($curid)))->num_rows() > 0) {
+		$row = $res->fetch_array();
+		// Example: You have an auth Token for 2.999.1.2.3
+		// This allows you to view 2.999.1.2.3 and all of its children,
+		// as long as they are not confidential (then you need their auth token).
+		// 2, 2.999, 2.999.1 and 2.999.1.2 are visible,
+		// (because their existence is now obvious).
+		if ($row['confidential'] && !authTokenAccepted($curid, $authTokens)) return false;
+		$curid = $row['parent'];
+	}
+
+	// Allow
+	return true;
+}
+
+function allowRAView($row, $authTokens) {
+	// Master auth token
+	$authToken = trim(OIDplus::config()->getValue('whois_auth_token'));
+	if (empty($authToken)) $authToken = false;
+	if ($authToken && in_array($authToken, $authTokens)) return true;
+
+	// Per-RA auth tokens
+	if ($row->privacy && !authTokenAccepted('ra:'.$row->ra_name, $authTokens)) return false;
+
+	// Allow
+	return true;
 }

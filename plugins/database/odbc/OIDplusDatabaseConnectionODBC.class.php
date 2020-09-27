@@ -76,6 +76,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	public function error(): string {
 		$err = $this->last_error;
 		if ($err == null) $err = '';
+		$err = utf8_encode($err); // because ODBC might output weird stuff ...
 		return $err;
 	}
 
