@@ -189,9 +189,19 @@ Information:             Currently valid values: mysql, mssql, pgsql, sqlite
 
 OIDplus::baseConfig()->setValue('MINIFY_CSS', true);
 Old 2.0 format:          define('DO_MINIFY',  true);
+                         This enables the compression of CSS definitions.
+                         Compressed approx:   220 KB
+                         Uncompressed approx: 224 KB
 
 OIDplus::baseConfig()->setValue('MINIFY_JS',  true);
 Old 2.0 format:          (Not available)
+                         This enables the compression of JavaScript code.
+                         Please only disable this, if you want to debug
+                         the code! You should not disable it on a productive
+                         system, because otherwise the JavaScript code
+                         would be several Megabytes large.
+                         Compressed approx:  1133 KB
+                         Unompressed approx: 2761 KB
 
 OIDplus::baseConfig()->setValue('DISABLE_PLUGIN_...', true);
 Old 2.0 format:          define('OIDPLUS_DISABLE_PLUGIN_...', true);

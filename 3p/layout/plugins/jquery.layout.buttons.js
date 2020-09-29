@@ -2,7 +2,7 @@
  * @preserve jquery.layout.buttons 1.0
  * $Date: 2011-07-16 08:00:00 (Sat, 16 July 2011) $
  *
- * Copyright (c) 2011 
+ * Copyright (c) 2011
  *   Kevin Dalman (http://allpro.net)
  *
  * Dual licensed under the GPL (http://www.gnu.org/licenses/gpl.html)
@@ -108,11 +108,11 @@ $.layout.buttons = {
 ,	bind: function (inst, sel, action, pane) {
 		var _ = $.layout.buttons;
 		switch (action.toLowerCase()) {
-			case "toggle":			_.addToggle	(inst, sel, pane); break;	
+			case "toggle":			_.addToggle	(inst, sel, pane); break;
 			case "open":			_.addOpen	(inst, sel, pane); break;
 			case "close":			_.addClose	(inst, sel, pane); break;
 			case "pin":				_.addPin	(inst, sel, pane); break;
-			case "toggle-slide":	_.addToggle	(inst, sel, pane, true); break;	
+			case "toggle-slide":	_.addToggle	(inst, sel, pane, true); break;
 			case "open-slide":		_.addOpen	(inst, sel, pane, true); break;
 		}
 		return inst;
@@ -127,7 +127,7 @@ $.layout.buttons = {
 	*/
 ,	addToggle: function (inst, selector, pane, slide) {
 		$.layout.buttons.get(inst, selector, pane, "toggle")
-			.click(function(evt){
+			.on('click',function(evt){
 				inst.toggle(pane, !!slide);
 				evt.stopPropagation();
 			});
@@ -144,7 +144,7 @@ $.layout.buttons = {
 ,	addOpen: function (inst, selector, pane, slide) {
 		$.layout.buttons.get(inst, selector, pane, "open")
 			.attr("title", lang.Open)
-			.click(function (evt) {
+			.on('click',function (evt) {
 				inst.open(pane, !!slide);
 				evt.stopPropagation();
 			});
@@ -160,7 +160,7 @@ $.layout.buttons = {
 ,	addClose: function (inst, selector, pane) {
 		$.layout.buttons.get(inst, selector, pane, "close")
 			.attr("title", lang.Close)
-			.click(function (evt) {
+			.on('click',function (evt) {
 				inst.close(pane);
 				evt.stopPropagation();
 			});
@@ -184,7 +184,7 @@ $.layout.buttons = {
 		var $E = $.layout.buttons.get(inst, selector, pane, "pin");
 		if ($E.length) {
 			var s = inst.state[pane];
-			$E.click(function (evt) {
+			$E.on('click',function (evt) {
 				$.layout.buttons.setPinState(inst, $(this), pane, (s.isSliding || s.isClosed));
 				if (s.isSliding || s.isClosed) inst.open( pane ); // change from sliding to open
 				else inst.close( pane ); // slide-closed
@@ -219,8 +219,8 @@ $.layout.buttons = {
 		$Pin
 			.attr("pin", doPin ? "down" : "up") // logic
 			.attr("title", doPin ? lang.Unpin : lang.Pin)
-			.removeClass( doPin ? UP : DN ) 
-			.addClass( doPin ? DN : UP ) 
+			.removeClass( doPin ? UP : DN )
+			.addClass( doPin ? DN : UP )
 		;
 	}
 

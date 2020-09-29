@@ -2,13 +2,13 @@
 ==============================================
 
 bignumber.js
-	License: MIT
-	Version: Nov 10, 2019
+	License:  MIT
+	Version:  Nov 10, 2019
 	Download: https://github.com/MikeMcl/bignumber.js
 
 jsTree:
 	License:  MIT
-	Version:  3.3.7
+	Version:  3.3.10
 	Download: https://www.jstree.com/ (only dist directory)
 
 TinyMCE:
@@ -16,65 +16,66 @@ TinyMCE:
 	Version:  5.4.2
 	Download: https://www.tiny.cloud/get-tiny/self-hosted/
 	          https://www.tiny.cloud/get-tiny/language-packages/ (German language)
+	Took the productive package, but added tinymce.js from the dev-package, too.
 
 Bootstrap:
 	License   MIT
 	Version:  3.3.7
 	Download: http://blog.getbootstrap.com/2016/07/25/bootstrap-3-3-7-released/ (only dist directory)
 
-jQuery:
+jQuery (Core):
 	Liense:   MIT
-	Version:  2.2.1
-	Download: https://code.jquery.com/jquery-2.2.1.min.js
+	Version:  3.5.1
+	Download: https://code.jquery.com/jquery/
 
 0xbb SHA3 implementation in PHP (for PHP<7.1 compatibility):
-	License: MIT
-	Version: 591a636 on 21 May 2017
+	License:  MIT
+	Version:  591a636 on 21 May 2017
 	Download: https://github.com/0xbb/php-sha3
 
 emn178 SHA3 implementation in JavaScript:
-	License: MIT
-	Version: 0.8.0 on 5 Aug 2018
+	License:  MIT
+	Version:  0.8.0 on 5 Aug 2018
 	Download: https://github.com/emn178/js-sha3
 
-allpro layout:
-	License: MIT / GPLv3
-	Version: 1.4.3 on 7 Sep 2014
-	Download: https://github.com/allpro/layout/
+GedMarc layout (forked from allpro layout):
+	License:  MIT / GPLv3
+	Version:  4b60746 on 22 Augugst 2020
+	Download: https://github.com/GedMarc/layout
 
 jQuery UI:
-	License: MIT
-	Version: 1.12.1
+	License:  MIT
+	Version:  1.12.1
 	Download: http://jqueryui.com/
 
 SpamSpan:
-	License: GPLv2
-	Version: 1.03
+	License:  GPLv2
+	Version:  1.03
 	Download: http://www.spamspan.de/
 
 ReCaptcha:
-	License: BSD 3-Clause "New" or "Revised" License
+	License:  BSD 3-Clause "New" or "Revised" License
 	Currently directly linked
-	Website: https://www.google.com/recaptcha/
+	Website:  https://www.google.com/recaptcha/
 
 Minify:
-	License: MIT
-	Version: Commit 9ba1b45 on 24 Nov 2019
-	https://github.com/matthiasmullie/minify
+	License:  MIT
+	Version:  Commit 9ba1b45 on 24 Nov 2019
+	Website:  https://github.com/matthiasmullie/minify
 	and its dependency path-converter:
-		License: MIT
-		Version: Commit e7d13b2 on 6 Feb 2019
-		https://github.com/matthiasmullie/path-converter
+		License:  MIT
+		Version:  Commit e7d13b2 on 6 Feb 2019
+		Website:  https://github.com/matthiasmullie/path-converter
 
 Polyfill:
-	License: MIT
+	License:  MIT
+	Website:  https://polyfill.io/v3/
 	Currently directly linked
-	Website: https://polyfill.io/v3/
 
 ViaThinkSoft FileFormats:
-	License: Apache 2.0
-	https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/fileformats/trunk/
+	License:  Apache 2.0
+	Download: https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/fileformats/trunk/
 
 ViaThinkSoft VNag:
-	License: Apache 2.0
-	https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/vnag/trunk/
+	License:  Apache 2.0
+	Download: https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/vnag/trunk/
