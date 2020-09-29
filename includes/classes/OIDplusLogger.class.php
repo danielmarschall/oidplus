@@ -261,7 +261,7 @@ class OIDplusLogger {
 			}
 
 			// OID(x)	Save log entry into the logbook of: Object "x"
-			$m = array();			
+			$m = array();
 			if (preg_match('@^OID\((.+)\)$@ismU', $maskcode, $m)) {
 				$object_id = $m[1];
 				$objects[] = array($severity, $object_id);
@@ -274,8 +274,12 @@ class OIDplusLogger {
 				if ($object_id == '') throw new OIDplusException(_L('SUPOID logger mask requires OID'));
 				$obj = OIDplusObject::parse($object_id);
 				if ($obj) {
-					$parent = $obj->getParent()->nodeId();
-					$objects[] = array($severity, $parent);
+					if ($objParent = $obj->getParent()) {
+						$parent = $objParent->nodeId();
+						$objects[] = array($severity, $parent);
+					} else {
+						//throw new OIDplusException(_L('%1 has no parent',$object_id));
+					}
 				} else {
 					throw new OIDplusException(_L('SUPOID logger mask: Invalid object %1',$object_id));
 				}
@@ -317,9 +321,13 @@ class OIDplusLogger {
 							if ($obj->userHasParentalWriteRights($ra)) $users[] = array($severity_online, $ra->raEmail());
 						}
 					} else {
-						// $users[] = array($severity, $obj->getParent()->getRa()->raEmail());
-						foreach (OIDplusRA::getAllRAs() as $ra) {
-							if ($obj->userHasParentalWriteRights($ra)) $users[] = array($severity, $ra->raEmail());
+						if ($objParent = $obj->getParent()) {
+							// $users[] = array($severity, $objParent->getRa()->raEmail());
+							foreach (OIDplusRA::getAllRAs() as $ra) {
+								if ($obj->userHasParentalWriteRights($ra)) $users[] = array($severity, $ra->raEmail());
+							}
+						} else {
+							//throw new OIDplusException(_L('%1 has no parent, therefore also no parent RA',$object_id));
 						}
 					}
 				} else {

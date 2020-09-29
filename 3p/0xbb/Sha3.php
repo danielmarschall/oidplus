@@ -1,7 +1,5 @@
 <?php
 
-# https://github.com/0xbb/php-sha3/blob/master/src/Sha3.php
-
 namespace bb\Sha3;
 
 final class Sha3

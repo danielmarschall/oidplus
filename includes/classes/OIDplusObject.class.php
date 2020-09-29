@@ -383,7 +383,7 @@ abstract class OIDplusObject {
 		}
 
 		$objParent = $this->getParent();
-		if (is_null($objParent)) return false;
+		if (!$objParent) return false;
 		return $objParent->userHasWriteRights($ra_email);
 	}
 

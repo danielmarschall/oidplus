@@ -87,7 +87,7 @@ if (php_sapi_name() != 'cli') {
 	header('Referrer-Policy: no-referrer-when-downgrade');
 }
 
-require_once __DIR__ . '/../3p/0xbb/Sha3.class.php';
+require_once __DIR__ . '/../3p/0xbb/Sha3.php';
 
 require_once __DIR__ . '/functions.inc.php';
 require_once __DIR__ . '/oid_utils.inc.php';
