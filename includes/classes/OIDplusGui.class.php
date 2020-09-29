@@ -106,4 +106,29 @@ class OIDplusGui {
 			echo '</pre>';
 		}
 	}
+
+	public function tabBarStart() {
+		return '<ul class="nav nav-tabs" id="myTab" role="tablist">';
+	}
+
+	public function tabBarEnd() {
+		return '</ul>';
+	}
+
+	public function tabBarElement($id, $title, $active) {
+		return '<li class="nav-item"><a class="nav-link'.($active ? ' active' : '').'" id="'.$id.'-tab" data-toggle="tab" href="#'.$id.'" role="tab" aria-controls="'.$id.'" aria-selected="'.($active ? 'true' : 'false').'">'.$title.'</a></li>';
+	}
+
+	public function tabContentStart() {
+		return '<div class="tab-content" id="myTabContent">';
+	}
+
+	public function tabContentEnd() {
+		return '</div>';
+	}
+
+	public function tabContentPage($id, $content, $active) {
+		return '<div class="tab-pane fade'.($active ? ' show active' : '').'" id="'.$id.'" role="tabpanel" aria-labelledby="'.$id.'-tab">'.$content.'</div>';
+	}
+
 }

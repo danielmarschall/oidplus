@@ -32,9 +32,13 @@ $out = '';
 
 # ---
 
+$do_minify = OIDplus::baseConfig()->getValue('MINIFY_CSS', true);
+
 function process_file($filename) {
+	global $do_minify;
+
 	$dir = dirname((strpos($filename, __DIR__.'/') === 0) ? substr($filename, strlen(__DIR__.'/')) : $filename);
-	if (OIDplus::baseConfig()->getValue('MINIFY_CSS', true)) {
+	if ($do_minify) {
 		$minifier = new Minify\CSS($filename);
 		$cont = $minifier->minify();
 	} else {
@@ -54,10 +58,9 @@ function process_file($filename) {
 # ---
 
 // Third-party products
-$out .= process_file(__DIR__ . '/3p/jstree/themes/default/style.css');
-$out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui.css');
-//$out .= process_file(__DIR__ . '/3p/bootstrap4/css/bootstrap.css');
-$out .= process_file(__DIR__ . '/3p/bootstrap/css/bootstrap.css');
+$out .= process_file(__DIR__ . '/3p/jstree/themes/default/style'.($do_minify ? '.min' : '').'.css');
+$out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui'.($do_minify ? '.min' : '').'.css');
+$out .= process_file(__DIR__ . '/3p/bootstrap4/css/bootstrap'.($do_minify ? '.min' : '').'.css');
 
 // OIDplus basic definitions
 if (file_exists(__DIR__ . '/userdata/styles/oidplus_base.css')) {

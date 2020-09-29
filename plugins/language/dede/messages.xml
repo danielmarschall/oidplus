@@ -414,14 +414,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Admin login
-		]]></source>
-		<target><![CDATA[
-		Administrator-Login
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Admin page plugins
 		]]></source>
 		<target><![CDATA[

@@ -20,9 +20,8 @@ TinyMCE:
 
 Bootstrap:
 	License   MIT
-	Version:  3.4.1
-	Download: https://getbootstrap.com/docs/3.4/getting-started/#download
-	TODO: Try to update to 4.5.2
+	Version:  4.5.2
+	Download: https://getbootstrap.com/docs/4.5/getting-started/download/
 
 jQuery (Core):
 	Liense:   MIT

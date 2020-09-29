@@ -133,61 +133,56 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			                '<p>'._L('Before logging in, please solve the following CAPTCHA').'</p>'.
 					'<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '');
 			$out['text'] .= '<br>';
-			$out['text'] .= '<ul class="nav nav-pills">';
-			$out['text'] .= '			<li'.($tab === 'ra' ? ' class="active"' : '').'>';
-			$out['text'] .= '			<a href="#1a" data-toggle="tab">'._L('Login as RA').'</a>';
-			$out['text'] .= '			</li>';
-			$out['text'] .= '			<li'.($tab === 'admin' ? ' class="active"' : '').'>';
-			$out['text'] .= '			<a href="#2a" data-toggle="tab">'._L('Login as administrator').'</a>';
-			$out['text'] .= '			</li>';
-			$out['text'] .= '		</ul>';
-			$out['text'] .= '			<div class="tab-content clearfix">';
-			$out['text'] .= '			  <div class="tab-pane active" id="1a">';
 
-			$out['text'] .= '<h2>'._L('Login as RA').'</h2>';
-
+			// ---------------- Tab control
+			$out['text'] .= OIDplus::gui()->tabBarStart();
+			$out['text'] .= OIDplus::gui()->tabBarElement('ra',    _L('Login as RA'),            $tab === 'ra');
+			$out['text'] .= OIDplus::gui()->tabBarElement('admin', _L('Login as administrator'), $tab === 'admin');
+			$out['text'] .= OIDplus::gui()->tabBarEnd();
+			$out['text'] .= OIDplus::gui()->tabContentStart();
+			// ---------------- "RA" tab
+			$tabcont = '<h2>'._L('Login as RA').'</h2>';
 			$login_list = OIDplus::authUtils()->loggedInRaList();
 			if (count($login_list) > 0) {
 				foreach ($login_list as $x) {
-					$out['text'] .= '<p>'._L('You are logged in as %1','<b>'.$x->raEmail().'</b>').' (<a href="#" onclick="return raLogout('.js_escape($x->raEmail()).');">'._L('Logout').'</a>)</p>';
+					$tabcont .= '<p>'._L('You are logged in as %1','<b>'.$x->raEmail().'</b>').' (<a href="#" onclick="return raLogout('.js_escape($x->raEmail()).');">'._L('Logout').'</a>)</p>';
 				}
-				$out['text'] .= '<p>'._L('If you have more accounts, you can log in with another account here.').'</p>';
+				$tabcont .= '<p>'._L('If you have more accounts, you can log in with another account here.').'</p>';
 			} else {
-				$out['text'] .= '<p>'._L('Enter your email address and your password to log in as Registration Authority.').'</p>';
+				$tabcont .= '<p>'._L('Enter your email address and your password to log in as Registration Authority.').'</p>';
 			}
-			$out['text'] .= '<form onsubmit="return raLoginOnSubmit(this);">';
-			$out['text'] .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" name="email" value="" id="raLoginEMail"></div>';
-			$out['text'] .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginPassword"></div>';
-			$out['text'] .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
-			$out['text'] .= '</form>';
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:forgot_password').'>'._L('Forgot password?').'</a><br>';
+			$tabcont .= '<form onsubmit="return raLoginOnSubmit(this);">';
+			$tabcont .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" name="email" value="" id="raLoginEMail"></div>';
+			$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginPassword"></div>';
+			$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
+			$tabcont .= '</form>';
+			$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:forgot_password').'>'._L('Forgot password?').'</a><br>';
 
 			$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
 			if (!is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled')) {
-				$out['text'] .= '<abbr title="'._L('To receive login data, the superior RA needs to send you an invitation. After creating or updating your OID, the system will ask them if they want to send you an invitation. If they accept, you will receive an email with an activation link. Alternatively, the system admin can create your account manually in the administrator control panel.').'">'._L('How to register?').'</abbr></p>';
+				$tabcont .= '<abbr title="'._L('To receive login data, the superior RA needs to send you an invitation. After creating or updating your OID, the system will ask them if they want to send you an invitation. If they accept, you will receive an email with an activation link. Alternatively, the system admin can create your account manually in the administrator control panel.').'">'._L('How to register?').'</abbr></p>';
 			} else {
-				$out['text'] .= '<abbr title="'._L('Since invitations are disabled at this OIDplus system, the system administrator needs to create your account manually in the administrator control panel.').'">'._L('How to register?').'</abbr></p>';
+				$tabcont .= '<abbr title="'._L('Since invitations are disabled at this OIDplus system, the system administrator needs to create your account manually in the administrator control panel.').'">'._L('How to register?').'</abbr></p>';
 			}
-
-			$out['text'] .= '				</div>';
-			$out['text'] .= '				<div class="tab-pane" id="2a">';
-
+			$out['text'] .= OIDplus::gui()->tabContentPage('ra', $tabcont, $tab === 'ra');
+			// ---------------- "Administrator" tab
+			$tabcont = '<h2>'._L('Login as administrator').'</h2>';
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$out['text'] .= '<h2>'._L('Admin login').'</h2>';
-				$out['text'] .= '<p>'._L('You are logged in as administrator.').'</p>';
-				$out['text'] .= '<a href="#" onclick="return adminLogout();">'._L('Logout').'</a>';
+				$tabcont .= '<p>'._L('You are logged in as administrator.').'</p>';
+				$tabcont .= '<a href="#" onclick="return adminLogout();">'._L('Logout').'</a>';
 			} else {
-				$out['text'] .= '<h2>'._L('Login as administrator').'</h2>';
-				$out['text'] .= '<form onsubmit="return adminLoginOnSubmit(this);">';
-				$out['text'] .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="adminLoginPassword"></div>';
-				$out['text'] .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
-				$out['text'] .= '</form>';
-				$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:forgot_password_admin').'>'._L('Forgot password?').'</a><br>';
+				$tabcont .= '<form onsubmit="return adminLoginOnSubmit(this);">';
+				$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="adminLoginPassword"></div>';
+				$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
+				$tabcont .= '</form>';
+				$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:forgot_password_admin').'>'._L('Forgot password?').'</a><br>';
 			}
+			$out['text'] .= OIDplus::gui()->tabContentPage('admin', $tabcont, $tab === 'admin');
+			$out['text'] .= OIDplus::gui()->tabContentEnd();
+			// ---------------- Tab control END
 
-			$out['text'] .= '				</div>';
-			$out['text'] .= '			</div>';
-			$out['text'] .= '  </div><br>';
+			$out['text'] .= '</div><br>';
+
 			$mins = ceil(OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60)/60);
 			$out['text'] .= '<p><font size="-1">'._L('<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of %1 minutes.', $mins);
 			$privacy_document_file = 'OIDplus/privacy_documentation.html';

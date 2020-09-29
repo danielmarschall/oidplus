@@ -312,6 +312,9 @@ h1 {
 h2 {
 	font-size:1.6em !important;
 }
+h3 {
+	font-size:1.5em !important;
+}
 
 textarea,input[type="text"],input[type="password"],select {
 	/* for dark themes, this looks better */
@@ -453,6 +456,11 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 
 }
 
+#gotoedit {
+	font-style:italic;
+	font-weight:bolder;
+}
+
 #gotobox {
 	display: none; /* will be set to 'block' by JavaScript */
 
@@ -460,8 +468,6 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 
 	height:55px !important;
 
-	font-style:italic;
-	font-weight:bolder;
 	float:left;
 	border-bottom:1px;
 
@@ -510,4 +516,35 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 .severity_5 {
 	/* Critical */
 	color: DarkMagenta;
+}
+
+/* Tabs */
+
+.tab-content {
+	color: #000;
+	background-color: #eeeeee;
+	padding : 15px;
+}
+
+.nav-link.active {
+	color: #000;
+	font-weight: bold;
+	background-color: #eeeeee !important;
+	border-radius: 0;
+}
+
+/* Let Bootstrap 4 look like Bootstrap 3 (more or less) */
+/* see https://www.geeksforgeeks.org/difference-between-bootstrap-3-and-bootstrap-4/ */
+
+.container {
+	max-width: unset !important;
+}
+
+body {
+	font-size:14px;
+}
+
+h1, h2, h3 {
+	margin-top: 20px;
+	margin-bottom: 10px;
 }

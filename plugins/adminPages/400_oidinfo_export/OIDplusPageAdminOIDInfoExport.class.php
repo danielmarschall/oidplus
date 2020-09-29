@@ -39,7 +39,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			list($count_imported_oids, $count_already_existing, $count_errors, $count_warnings) = $this->oidinfoImportXML($xml_contents, $errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_AUTO_DEORPHAN);
 			if (count($errors) > 0) {
 				// Note: These "errors" can also be warnings (partial success)
-				// TODO XXX: since the output can be very long, should we really show it in a JavaScript alert() ?!
+				// TODO: since the output can be very long, should we really show it in a JavaScript alert() ?!
 				return array(
 					"status" => -1,
 					"count_imported_oids" => $count_imported_oids,
@@ -528,56 +528,47 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$out['text'] = '';
+			$out['text'] = '<br><div id="dataTransferArea" style="visibility: hidden"><div id="dataTransferTab" class="container" style="width:100%;">';
 
-			$out['text'] .= '<div id="oidinfoMainArea" style="visibility: hidden"><div id="oidinfoMainTab" class="container" style="width:100%;">';
-			$out['text'] .= '<br>';
-			$out['text'] .= '<ul class="nav nav-pills">';
-			$out['text'] .= '			<li'.($tab === 'export' ? ' class="active"' : '').'>';
-			$out['text'] .= '			<a href="#1a" data-toggle="tab">'._L('Export').'</a>';
-			$out['text'] .= '			</li>';
-			$out['text'] .= '			<li'.($tab === 'import' ? ' class="active"' : '').'>';
-			$out['text'] .= '			<a href="#2a" data-toggle="tab">'._L('Import').'</a>';
-			$out['text'] .= '			</li>';
-			$out['text'] .= '		</ul>';
-			$out['text'] .= '			<div class="tab-content clearfix">';
-			$out['text'] .= '			  <div class="tab-pane active" id="1a">';
-			// ---------------- Start "Export" tab
-			$out['text'] .= '<h2>'._L('Generate XML file containing all OIDs').'</h2>';
-			$out['text'] .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>. They can be used for various purposes though.','href="http://www.oid-info.com/oid.xsd" target="_blank"').'</p>';
-			$out['text'] .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__).'oidinfo_export.php\',\'_blank\')" value="'._L('Generate XML (all OIDs)').'"></p>';
-			$out['text'] .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__).'oidinfo_export.php?online=1\',\'_blank\')" value="'._L('Generate XML (only OIDs which do not exist at oid-info.com)').'"></p>';
-			$out['text'] .= '<p><a href="http://www.oid-info.com/submit.htm" target="_blank">'._L('Upload XML files manually to oid-info.com').'</a></p>';
-			$out['text'] .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
-			$out['text'] .= '<h2>'._L('Automatic export to oid-info.com').'</h2>';
+			// ---------------- Tab control
+			$out['text'] .= OIDplus::gui()->tabBarStart();
+			$out['text'] .= OIDplus::gui()->tabBarElement('export', _L('Export'), $tab === 'export');
+			$out['text'] .= OIDplus::gui()->tabBarElement('import', _L('Import'), $tab === 'import');
+			$out['text'] .= OIDplus::gui()->tabBarEnd();
+			$out['text'] .= OIDplus::gui()->tabContentStart();
+			// ---------------- "Export" tab
+			$tabcont  = '<h2>'._L('Generate XML file containing all OIDs').'</h2>';
+			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>. They can be used for various purposes though.','href="http://www.oid-info.com/oid.xsd" target="_blank"').'</p>';
+			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__).'oidinfo_export.php\',\'_blank\')" value="'._L('Generate XML (all OIDs)').'"></p>';
+			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__).'oidinfo_export.php?online=1\',\'_blank\')" value="'._L('Generate XML (only OIDs which do not exist at oid-info.com)').'"></p>';
+			$tabcont .= '<p><a href="http://www.oid-info.com/submit.htm" target="_blank">'._L('Upload XML files manually to oid-info.com').'</a></p>';
+			$tabcont .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
+			$tabcont .= '<h2>'._L('Automatic export to oid-info.com').'</h2>';
 			$privacy_level = OIDplus::config()->getValue('reg_privacy');
 			if ($privacy_level == 0) {
-				$out['text'] .= '<p>'._L('All your OIDs will automatically submitted to oid-info.com through the remote directory service in regular intervals.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
+				$tabcont .= '<p>'._L('All your OIDs will automatically submitted to oid-info.com through the remote directory service in regular intervals.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
 			} else {
-				$out['text'] .= '<p>'._L('If you set the privacy option to "0" (your system is registered), then all your OIDs will be automatically exported to oid-info.com.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
+				$tabcont .= '<p>'._L('If you set the privacy option to "0" (your system is registered), then all your OIDs will be automatically exported to oid-info.com.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
 			}
-			$out['text'] .= '<h2>'._L('Comparison with oid-info.com').'</h2>';
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_export').'>'._L('List OIDs in your system which are missing at oid-info.com').'</a></p>';
-			// ---------------- End "Export" tab
-			$out['text'] .= '				</div>';
-			$out['text'] .= '				<div class="tab-pane" id="2a">';
-			// ---------------- Start "Import" tab
-			$out['text'] .= '<h2>'._L('Import XML file').'</h2>';
-			$out['text'] .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>.','href="http://www.oid-info.com/oid.xsd" target="_blank"').'</p>';
-			// TODO XXX: we need a waiting animation!
-			$out['text'] .= '<form onsubmit="return uploadXmlFileOnSubmit(this);" enctype="multipart/form-data" id="uploadXmlFileForm">';
-			$out['text'] .= '<div>'._L('Choose XML file here').':<input type="file" name="userfile" value="" id="userfile">';
-			$out['text'] .= '<br><input type="submit" value="'._L('Import XML').'"></div>';
-			$out['text'] .= '</form>';
-			$out['text'] .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
-			$out['text'] .= '<h2>'._L('Comparison with oid-info.com').'</h2>';
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_import').'>'._L('List OIDs at oid-info.com which are missing in your system').'</a></p>';
-			// ---------------- End "Import" tab
-			$out['text'] .= '				</div>';
-			$out['text'] .= '			</div>';
-			$out['text'] .= '  </div></div>';
+			$tabcont .= '<h2>'._L('Comparison with oid-info.com').'</h2>';
+			$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_export').'>'._L('List OIDs in your system which are missing at oid-info.com').'</a></p>';
+			$out['text'] .= OIDplus::gui()->tabContentPage('export', $tabcont, $tab === 'export');
+			// ---------------- "Import" tab
+			$tabcont  = '<h2>'._L('Import XML file').'</h2>';
+			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>.','href="http://www.oid-info.com/oid.xsd" target="_blank"').'</p>';
+			// TODO: we need a waiting animation!
+			$tabcont .= '<form onsubmit="return uploadXmlFileOnSubmit(this);" enctype="multipart/form-data" id="uploadXmlFileForm">';
+			$tabcont .= '<div>'._L('Choose XML file here').':<input type="file" name="userfile" value="" id="userfile">';
+			$tabcont .= '<br><input type="submit" value="'._L('Import XML').'"></div>';
+			$tabcont .= '</form>';
+			$tabcont .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
+			$tabcont .= '<h2>'._L('Comparison with oid-info.com').'</h2>';
+			$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_import').'>'._L('List OIDs at oid-info.com which are missing in your system').'</a></p>';
+			$out['text'] .= OIDplus::gui()->tabContentPage('import', $tabcont, $tab === 'import');
+			$out['text'] .= OIDplus::gui()->tabContentEnd();
+			// ---------------- Tab control END
 
-			$out['text'] .= '<script>document.getElementById("oidinfoMainArea").style.visibility = "visible";</script>';
+			$out['text'] .= '</div></div><script>document.getElementById("dataTransferArea").style.visibility = "visible";</script>';
 		}
 	}
 
@@ -834,9 +825,9 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	/*protected*/ const ORPHAN_DISALLOW_ORPHANS = 2;
 
 	protected function oidinfoImportXML($xml_contents, &$errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_AUTO_DEORPHAN) {
-		// TODO XXX: Implement RA import (let the user decide)
-		// TODO XXX: Let the user decide about $replaceExistingOIDs
-		// TODO XXX: Let the user decide if "created=now" should be set (this is good when the XML files is created by the user itself to do bulk-inserts)
+		// TODO: Implement RA import (let the user decide)
+		// TODO: Let the user decide about $replaceExistingOIDs
+		// TODO: Let the user decide if "created=now" should be set (this is good when the XML files is created by the user itself to do bulk-inserts)
 
 		$xml_contents = str_replace('<description>', '<description><![CDATA[', $xml_contents);
 		$xml_contents = str_replace('</description>', ']]></description>', $xml_contents);
