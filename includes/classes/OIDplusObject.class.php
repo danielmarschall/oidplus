@@ -331,17 +331,17 @@ abstract class OIDplusObject {
 
 			// If this OID does not exist, the SQL query "select parent from ..." does not work. So we try to find the next possible parent using one_up()
 			$cur = $this->one_up();
-			if (!$cur) return false;
+			if (!$cur) return null;
 			do {
 				// findFitting() checks if that OID exists
 				if ($fitting = self::findFitting($cur->nodeId())) return $fitting;
 
 				$prev = $cur;
 				$cur = $cur->one_up();
-				if (!$cur) return false;
+				if (!$cur) return null;
 			} while ($prev != $cur);
 
-			return false;
+			return null;
 		}
 	}
 
