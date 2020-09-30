@@ -20,6 +20,7 @@
 // language_tblprefix will be set by setup.js.php
 
 min_password_length = 10; // see also plugins/publicPages/092_forgot_password_admin/script.js
+password_salt_length = 10;
 
 function btoa(bin) {
 	var tableStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -62,6 +63,11 @@ String.prototype.replaceAll = function(search, replacement) {
 	var target = this;
 	return target.replace(new RegExp(search, 'g'), replacement);
 };
+
+function adminGeneratePassword(password) {
+	var salt = generateRandomString(password_salt_length);
+	return salt+'$'+hexToBase64(sha3_512(salt+password));
+}
 
 function rebuild() {
 	var error = false;
@@ -108,7 +114,7 @@ function rebuild() {
 			'<br>' +
 			// Passwords are Base64 encoded to avoid that passwords can be read upon first sight,
 			// e.g. if collegues are looking over your shoulder while you accidently open (and quickly close) userdata/baseconfig/config.inc.php
-			'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + hexToBase64(sha3_512(document.getElementById('admin_password').value)) + '\'); // base64 encoded SHA3-512 hash<br>' +
+			'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + adminGeneratePassword(document.getElementById('admin_password').value) + '\'); // salted, base64 encoded SHA3-512 hash<br>' +
 			'<br>' +
 			'OIDplus::baseConfig()->setValue(\'DATABASE_PLUGIN\',   \''+strPlugin+'\');<br>';
 		for (var i = 0; i < rebuild_config_callbacks.length; i++) {

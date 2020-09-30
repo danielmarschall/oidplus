@@ -109,12 +109,17 @@ class OIDplusAuthUtils {
 	}
 
 	public static function adminCheckPassword($password) {
-		$hashed = OIDplus::baseConfig()->getValue('ADMIN_PASSWORD', '');
-		if (empty($hashed)) {
+		$passwordData = OIDplus::baseConfig()->getValue('ADMIN_PASSWORD', '');
+		if (empty($passwordData)) {
 			throw new OIDplusException(_L('No admin password set in %1','userdata/baseconfig/config.inc.php'));
 		}
-		$calc_authkey = sha3_512($password);
-		return $calc_authkey == bin2hex(base64_decode($hashed));
+		if (strpos($passwordData, '$') !== false) {
+			list($s_salt, $hash) = explode('$', $passwordData, 2);
+		} else {
+			$s_salt = '';
+			$hash = $passwordData;
+		}
+		return strcmp(sha3_512($s_salt.$password, true), base64_decode($hash)) === 0;
 	}
 
 	public static function isAdminLoggedIn() {
@@ -129,12 +134,12 @@ class OIDplusAuthUtils {
 
 	public static function makeAuthKey($data) {
 		$data = OIDplus::baseConfig()->getValue('SERVER_SECRET') . $data;
-		$calc_authkey = sha3_512($data);
+		$calc_authkey = sha3_512($data, false);
 		return $calc_authkey;
 	}
 
 	public static function validateAuthKey($data, $auth_key) {
-		return self::makeAuthKey($data) == $auth_key;
+		return strcmp(self::makeAuthKey($data), $auth_key) === 0;
 	}
 
 	// "Veto" functions to force logout state
@@ -150,5 +155,17 @@ class OIDplusAuthUtils {
 			return false;
 		}
 	}
+
+	// Generate RA passwords
+
+	public static function raGeneratePassword($password) {
+		$s_salt = uniqid(mt_rand(), true);
+		$calc_authkey = 'A2#'.base64_encode(sha3_512($s_salt.$password, true));
+		return array($s_salt, $calc_authkey);
+	}
+
+	// Generate admin password
+
+	/* Nothing here; the admin password will be generated in setup_base.js */
 
 }
