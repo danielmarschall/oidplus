@@ -24,6 +24,7 @@ function importMissingOid(oid) {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.400",
 			action:"import_oidinfo_oid",
 			oid:oid
@@ -51,6 +52,7 @@ function uploadXmlFile(file) {
 	form_data.append('userfile', file_data);
 	form_data.append('plugin', "1.3.6.1.4.1.37476.2.5.2.4.3.400");
 	form_data.append('action', "import_xml_file");
+	form_data.append('csrf_token', csrf_token);
 
 	$.ajax({
 		url:"ajax.php",

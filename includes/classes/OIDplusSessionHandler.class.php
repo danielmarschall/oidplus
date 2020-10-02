@@ -77,14 +77,19 @@ class OIDplusSessionHandler {
 		session_write_close();
 	}
 
+	private $cacheSetValues = array(); // Important if you do a setValue() followed by an getValue()
+
 	public function setValue($name, $value) {
 		$this->sessionSafeStart();
 		setcookie(session_name(),session_id(),time()+$this->sessionLifetime, ini_get('session.cookie_path'));
 
 		$_SESSION[$name] = self::encrypt($value, $this->secret);
+		$this->cacheSetValues[$name] = self::encrypt($value, $this->secret);
 	}
 
 	public function getValue($name) {
+		if (isset($this->cacheSetValues[$name])) return self::decrypt($this->cacheSetValues[$name], $this->secret);
+
 		if (!isset($_COOKIE[session_name()])) return null; // GDPR: Only start a session when we really need one
 
 		$this->sessionSafeStart();

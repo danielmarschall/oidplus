@@ -20,6 +20,7 @@ function raChangePasswordFormOnSubmit() {
 		url: "ajax.php",
 		type: "POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.101",
 			action: "change_ra_password",
 			email: $("#email").val(),

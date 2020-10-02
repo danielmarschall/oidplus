@@ -2334,6 +2334,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Invalid AJAX unlock key
+		]]></source>
+		<target><![CDATA[
+		Ungültiger AJAX-Entsperr-Schlüssel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Invalid DOI %1 . It must have syntax 10.xxxx
 		]]></source>
 		<target><![CDATA[
@@ -5914,6 +5922,14 @@
 		]]></source>
 		<target><![CDATA[
 		Mit diesem optionalen Werkzeug können Sie testen, ob Ihre OIDplus-Installation vollständig ist und keine Dateien fehlen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Wrong CSRF Token
+		]]></source>
+		<target><![CDATA[
+		Falscher CSRF Token
 		]]></target>
 	</message>
 	<message>

@@ -20,6 +20,7 @@ function freeOIDFormOnSubmit() {
 		url: "ajax.php",
 		type: "POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.200",
 			action: "request_freeoid",
 			email: $("#email").val(),
@@ -51,6 +52,7 @@ function activateFreeOIDFormOnSubmit() {
 		url: "ajax.php",
 		type: "POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.200",
 			action: "activate_freeoid",
 			email: $("#email").val(),

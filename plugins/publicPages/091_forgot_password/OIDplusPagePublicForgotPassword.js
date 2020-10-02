@@ -20,6 +20,7 @@ function forgotPasswordFormOnSubmit() {
 		url: "ajax.php",
 		type: "POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.91",
 			action: "forgot_password",
 			email: $("#email").val(),
@@ -51,6 +52,7 @@ function resetPasswordFormOnSubmit() {
 		url: "ajax.php",
 		type: "POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.91",
 			action: "reset_password",
 			email: $("#email").val(),

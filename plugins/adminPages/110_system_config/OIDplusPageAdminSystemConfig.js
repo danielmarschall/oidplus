@@ -20,6 +20,7 @@ function crudActionConfigUpdate(name) {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.110",
 			action:"config_update",
 			name:name,

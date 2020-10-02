@@ -24,6 +24,7 @@ var popstate_running = false;
 // DEFAULT_LANGUAGE will be set by oidplus.min.js.php
 // language_messages will be set by oidplus.min.js.php
 // language_tblprefix will be set by oidplus.min.js.php
+// csrf_token will be set by oidplus.min.js.php
 
 var pageChangeCallbacks = [];
 var pageChangeRequestCallbacks = [];
@@ -87,8 +88,8 @@ function getSystemUrl(relative) {
 function getTreeLoadURL() {
 	var url = new URL(window.location.href);
 	var goto = url.searchParams.get("goto");
-	return (goto != null) ? "ajax.php?action=tree_load&goto="+encodeURIComponent(goto)
-	                      : "ajax.php?action=tree_load";
+	return (goto != null) ? "ajax.php?csrf_token="+csrf_token+"&action=tree_load&goto="+encodeURIComponent(goto)
+	                      : "ajax.php?csrf_token="+csrf_token+"&action=tree_load";
 }
 
 function reloadContent() {
@@ -153,6 +154,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 					url:"ajax.php",
 					method:"POST",
 					data:{
+						csrf_token:csrf_token,
 						action:"tree_search",
 						search:id
 					},
@@ -190,7 +192,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 	$("#gotoedit").val(id);
 
 	// Normal opening of a description
-	fetch('ajax.php?action=get_description&id='+encodeURIComponent(id))
+	fetch("ajax.php?csrf_token="+csrf_token+"&action=get_description&id="+encodeURIComponent(id))
 	.then(function(response) {
 		response.json()
 		.then(function(data) {

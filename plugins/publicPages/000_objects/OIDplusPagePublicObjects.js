@@ -61,7 +61,7 @@ function checkMissingOrDoubleASN1(oid) {
 				var cry = bry[j].value.split(',');
 				for (var k=0; k<cry.length; k++) {
 					var candidate = cry[k];
-					if (toCheck == candidate) {
+					if ((toCheck != "") && (candidate != "") && (toCheck == candidate)) {
 						if (!confirm(_L("Warning! ASN.1 ID %1 is already used in another OID. Continue?", candidate))) return false;
 					}
 				}
@@ -79,6 +79,7 @@ function crudActionInsert(parent) {
 		url:"ajax.php",
 		method:"POST",
 		data:{
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
 			action:"Insert",
 			id:document.getElementById('id').value,
@@ -132,6 +133,7 @@ function crudActionUpdate(id, parent) {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
 			action:"Update",
 			id:id,
@@ -184,6 +186,7 @@ function crudActionDelete(id, parent) {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
 			action:"Delete",
 			id:id,
@@ -210,6 +213,7 @@ function updateDesc() {
 		url:"ajax.php",
 		method:"POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
 			action:"Update2",
 			id:current_node,

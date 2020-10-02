@@ -20,6 +20,7 @@ function inviteFormOnSubmit() {
 		url: "ajax.php",
 		type: "POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.92",
 			action: "invite_ra",
 			email: $("#email").val(),
@@ -51,6 +52,7 @@ function activateRaFormOnSubmit() {
 		url: "ajax.php",
 		type: "POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.92",
 			action: "activate_ra",
 			email: $("#email").val(),

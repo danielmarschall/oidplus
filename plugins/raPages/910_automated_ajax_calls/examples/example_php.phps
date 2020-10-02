@@ -14,13 +14,13 @@ $request = array(
 	"iris" => "",
 	"confidential" => 0,
 	"weid" => "",
-	"batch_login_username" => "test@example.com",
-	"batch_login_password" => ".......",
-	"batch_ajax_unlock_key" => "ee33790b233737da02e0253df666dd8284701f7a"
+	"batch_login_username" => "<username>",
+	"batch_login_password" => "<password>",
+	"batch_ajax_unlock_key" => "<unlock key>"
 );
 
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://www.example.com/oidplus/ajax.php');
+curl_setopt($ch, CURLOPT_URL, '<url>');
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($request));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

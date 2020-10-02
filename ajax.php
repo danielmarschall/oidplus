@@ -25,6 +25,8 @@ try {
 	if (!isset($_REQUEST['action'])) throw new OIDplusException(_L('Action ID is missing'));
 
 	$json_out = null;
+	
+	OIDplus::authUtils()->checkCSRF();
 
 	if (isset($_REQUEST['plugin']) && ($_REQUEST['plugin'] != '')) {
 

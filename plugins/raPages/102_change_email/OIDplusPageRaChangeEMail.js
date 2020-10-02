@@ -20,6 +20,7 @@ function changeRaEmailFormOnSubmit(isadmin) {
 		url: "ajax.php",
 		type: "POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.102",
 			action: "change_ra_email",
 			old_email: $("#old_email").val(),
@@ -55,6 +56,7 @@ function activateNewRaEmailFormOnSubmit() {
 		url: "ajax.php",
 		type: "POST",
 		data: {
+			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.102",
 			action: "activate_new_ra_email",
 			password: $("#password").val(),

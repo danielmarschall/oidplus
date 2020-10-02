@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <html>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -9,7 +10,7 @@
 
 function testInsertOID() {
 	$.ajax({
-		url:"https://www.example.com/oidplus/ajax.php",
+		url:"<url>",
 		method:"POST",
 		data:{
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0", // OID of plugin "publicPages/000_objects"
@@ -22,9 +23,9 @@ function testInsertOID() {
 			iris:null,
 			confidential:false,
 			weid:null,
-			batch_login_username:"test@example.com",
-			batch_login_password:".......",
-			batch_ajax_unlock_key:"ee33790b233737da02e0253df666dd8284701f7a"
+			batch_login_username:"<username>",
+			batch_login_password:"<password>",
+			batch_ajax_unlock_key:"<unlock key>"
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
 			alert("Error: " + errorThrown);
