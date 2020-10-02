@@ -102,7 +102,7 @@ function crudActionInsert(parent) {
 				}
 
 				if ((data.status & 1) == 1/*RaNotExisting*/) {
-					if (confirm(_L("Insert OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",document.getElementById('ra_email_'+id).value))) {
+					if (confirm(_L("Insert OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",document.getElementById('ra_email').value))) {
 						crudActionSendInvitation(parent, document.getElementById('ra_email_'+id).value);
 						return;
 					}
