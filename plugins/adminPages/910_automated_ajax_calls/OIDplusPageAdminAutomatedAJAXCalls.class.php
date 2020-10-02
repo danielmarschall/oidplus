@@ -91,7 +91,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 			$cont = str_replace('<password>', '.........', $cont);
 			$cont = str_replace('<unlock key>', $this->getUnlockKey('admin'), $cont);
 			$out['text'] .= '<pre>'.htmlentities($cont).'</pre>';
-			
+
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using PHP (located at a foreign server)').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_php.phps');
 			$cont = str_replace('<url>', OIDplus::getSystemUrl(false).'ajax.php', $cont);
@@ -99,8 +99,14 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 			$cont = str_replace('<password>', '.........', $cont);
 			$cont = str_replace('<unlock key>', $this->getUnlockKey('admin'), $cont);
 			$out['text'] .= '<pre>'.preg_replace("@<br.*>@ismU","",highlight_string($cont,true)).'</pre>';
-			
-			// TODO: *.vbs Example?
+
+			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using VBScript').'</h2>';
+			$cont = file_get_contents(__DIR__.'/examples/example_vbs.vbs');
+			$cont = str_replace('<url>', OIDplus::getSystemUrl(false).'ajax.php', $cont);
+			$cont = str_replace('<username>', 'admin', $cont);
+			$cont = str_replace('<password>', '.........', $cont);
+			$cont = str_replace('<unlock key>', $this->getUnlockKey('admin'), $cont);
+			$out['text'] .= '<pre>'.htmlentities($cont).'</pre>';
 		}
 	}
 
