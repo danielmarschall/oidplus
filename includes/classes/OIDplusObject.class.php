@@ -170,27 +170,28 @@ abstract class OIDplusObject {
 
 	public function isConfidential() {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
+			//static $confidential_cache = array();
 			$curid = $this->nodeId();
-			$orig_curid = $curid;
-			if (isset(self::$object_info_cache[$curid])) return self::$object_info_cache[$curid];
+			//$orig_curid = $curid;
+			//if (isset($confidential_cache[$curid])) return $confidential_cache[$curid];
 			// Recursively search for the confidential flag in the parents
 			while (($res = OIDplus::db()->query("select parent, confidential from ###objects where id = ?", array($curid)))->num_rows() > 0) {
 				$row = $res->fetch_array();
 				if ($row['confidential']) {
-					self::$object_info_cache[$curid] = true;
-					self::$object_info_cache[$orig_curid] = true;
+					//$confidential_cache[$curid] = true;
+					//$confidential_cache[$orig_curid] = true;
 					return true;
 				} else {
-					self::$object_info_cache[$curid] = false;
+					//$confidential_cache[$curid] = false;
 				}
 				$curid = $row['parent'];
-				if (isset(self::$object_info_cache[$curid])) {
-					self::$object_info_cache[$orig_curid] = self::$object_info_cache[$curid];
-					return self::$object_info_cache[$curid];
-				}
+				//if (isset($confidential_cache[$curid])) {
+					//$confidential_cache[$orig_curid] = $confidential_cache[$curid];
+					//return $confidential_cache[$curid];
+				//}
 			}
 
-			self::$object_info_cache[$orig_curid] = false;
+			//$confidential_cache[$orig_curid] = false;
 			return false;
 		} else {
 			self::buildObjectInformationCache();

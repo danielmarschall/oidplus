@@ -499,6 +499,7 @@ class OIDplus {
 		// Note: glob() will sort by default, so we do not need a page priority attribute.
 		//       So you just need to use a numeric plugin directory prefix (padded).
 		$ary = glob(OIDplus::basePath().'/plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.xml');
+		sort($ary);
 		foreach ($ary as $ini) {
 			if (!file_exists($ini)) continue;
 

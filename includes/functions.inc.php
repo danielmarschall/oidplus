@@ -64,6 +64,7 @@ function split_firstname_lastname($name) {
 function originHeaders() {
 	// CORS
 	// Author: Till Wehowski
+	// TODO: add to class OIDplus
 
 	header("Access-Control-Allow-Credentials: true");
 	header("Access-Control-Allow-Origin: ".strip_tags(((isset($_SERVER['HTTP_ORIGIN'])) ? $_SERVER['HTTP_ORIGIN'] : "*")));

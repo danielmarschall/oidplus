@@ -19,7 +19,7 @@
 
 <body>
 	<h1>Datenschutz Verfahrensbeschreibung</h1>
-	<p><em>Revision: 29. August 2020</em></p>
+	<p><em>Revision: 03. Oktober 2020</em></p>
 	<p><strong><em>Wichtig</em></strong><em> : Dieses Dokument wurde von ViaThinkSoft (dem Entwickler der Software OIDplus) verfasst und enthält allgemeine Informationen zur Funktionsweise von OIDplus in Bezug auf datenschutzbezogene Themen. Da OIDplus eine Web-Software ist, die
 	heruntergeladen und auf einem eigenen Server betrieben werden kann, beschreibt dieses Dokument NICHT, wie die Eigentümer / Administratoren dieser Installation von OIDplus mit Ihren Daten umgehen. Daher sollte der Eigentümer dieses Systems eine zusätzliche / individuelle Datenschutzerklärung vorlegen.</em></p>
 	<a id="terminology"></a><h2><strong><span class="underline">Parteien / Terminologie</span></strong></h2>
@@ -523,7 +523,7 @@
 	<tbody>
 	<tr>
 	<td width="122">
-	<p><strong>Plätzchen</strong></p>
+	<p><strong>Cookie-Name</strong></p>
 	</td>
 	<td width="114">
 	<p><strong>Kategorie</strong></p>
@@ -586,6 +586,23 @@
 	<td width="118">
 	<p>Sobald auf eine Länderflagge geklickt wird oder wenn eine URL mit einem <code>lang=...</code>Argument
 	geöffnet wird</p>
+	</td>
+	<td width="126">
+	<p>Wenn die Browsersitzung geschlossen wird.</p>
+	</td>
+	</tr>
+	<tr>
+	<td width="122">
+	<p>CSRF-Token</p>
+	</td>
+	<td width="114">
+	<p>Essentiell</p>
+	</td>
+	<td width="139">
+	<p>Enthält eine zufällig generierte Zeichenfolge, die in die Seite eingebettet wird, um "Cross-site request forgery"-Angriffen entgegenzuwirken.</p>
+	</td>
+	<td width="118">
+	<p>Sobald die Seite besucht wird.</p>
 	</td>
 	<td width="126">
 	<p>Wenn die Browsersitzung geschlossen wird.</p>

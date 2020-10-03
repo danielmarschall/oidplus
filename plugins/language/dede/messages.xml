@@ -1614,6 +1614,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Example for adding OID 2.999.123 using VBScript
+		]]></source>
+		<target><![CDATA[
+		Beispiel: OID 2.999.123 mittels VBScript hinzufügen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Export
 		]]></source>
 		<target><![CDATA[
@@ -5930,6 +5938,22 @@
 		]]></source>
 		<target><![CDATA[
 		Falscher CSRF Token
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Wrong RA username or password
+		]]></source>
+		<target><![CDATA[
+		Falscher RA Benutzername oder Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Wrong admin password
+		]]></source>
+		<target><![CDATA[
+		Falsches Administrator-Passwort
 		]]></target>
 	</message>
 	<message>

@@ -41,20 +41,24 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 		if (isset($_SERVER['SCRIPT_FILENAME']) && (basename($_SERVER['SCRIPT_FILENAME']) == 'ajax.php')) {
 			$input = array_merge($_POST,$_GET);
 
-			if (!isset($input['batch_login_username'])) return;
-			if (!isset($input['batch_login_password'])) return;
-			if (!isset($input['batch_ajax_unlock_key'])) return;
-			originHeaders(); // Allows queries from other domains
-			if ($input['batch_ajax_unlock_key'] != self::getUnlockKey($input['batch_login_username'])) {
-				throw new OIDplusException(_L('Invalid AJAX unlock key'));
-			}
+			if (isset($input['batch_ajax_unlock_key']) && isset($input['batch_login_username']) && isset($input['batch_login_password'])) {
+				originHeaders(); // Allows queries from other domains
+				OIDplus::authUtils()->disableCSRF(); // allow access to ajax.php without valid CSRF token
 
-			OIDplus::authUtils()->disableCSRF();
+				if ($input['batch_login_username'] == 'admin') {
+					if ($input['batch_ajax_unlock_key'] != self::getUnlockKey($input['batch_login_username'])) {
+						throw new OIDplusException(_L('Invalid AJAX unlock key'));
+					}
 
-			if (($input['batch_login_username'] == 'admin') && !OIDplus::authUtils()::isAdminLoggedIn() && OIDplus::authUtils()::adminCheckPassword($input['batch_login_password'])) {
-				OIDplus::authUtils()::adminLogin();
-				$this->autoLoggedIn = true;
-				register_shutdown_function(array($this,'shutdownLogout'));
+					if (OIDplus::authUtils()::adminCheckPassword($input['batch_login_password'])) {
+						OIDplus::sesHandler()->simulate = true; // do not change the user session
+						OIDplus::authUtils()::adminLogin();
+						$this->autoLoggedIn = true;
+						register_shutdown_function(array($this,'shutdownLogout'));
+					} else {
+						throw new OIDplusException(_L('Wrong admin password'));
+					}
+				}
 			}
 		}
 	}

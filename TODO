@@ -142,6 +142,11 @@ REJECTED IDEAS
 	b) Vendors should use something like "?goto=oidplus:com.example...."
 
 IDEAS
+- Should object types be able to add additional sub-nodes/pages into the tree,
+  which are not "real" objects?
+  => currently OIDplusMenuUtils::tree_populate() handles the object tree loading
+     ... but shouldn't this task do the plugin publicPages/000_objects ?
+     ... then we could establish an API which can give object type plugins the possibility to add additional children
 - Host/Domain ObjectType?
 - Hide/Proxy RA E-Mails from public requests
 - prune logs entries? automatically prune things like "logged in" but not prune OID changes, etc?

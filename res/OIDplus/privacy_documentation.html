@@ -19,7 +19,7 @@
 
 <body>
 	<h1>Procedural documentation related to privacy</h1>
-	<p><em>Revision: 29 August 2020</em></p>
+	<p><em>Revision: 3 October 2020</em></p>
 	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software &ldquo;OIDplus&rdquo;) and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web-software that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
 	<a id="terminology"></a><h2><strong><span class="underline">Parties / Terminology</span></strong></h2>
 	<p><strong>ViaThinkSoft</strong> is the developer of the software solution &ldquo;OIDplus&rdquo;.</p>
@@ -516,6 +516,23 @@
 	</td>
 	<td width="118">
 	<p>As soon as a flag is clicked, or if an URL was opened that has a <code>lang=...</code> argument</p>
+	</td>
+	<td width="126">
+	<p>When the browser session is closed.</p>
+	</td>
+	</tr>
+	<tr>
+	<td width="122">
+	<p>CSRF-Token</p>
+	</td>
+	<td width="114">
+	<p>Essential</p>
+	</td>
+	<td width="139">
+	<p>Contains a random string that will be embedded into the page, as counter-measure against "Cross-site request forgery" attacks.</p>
+	</td>
+	<td width="118">
+	<p>As soon as the page is opened.</p>
 	</td>
 	<td width="126">
 	<p>When the browser session is closed.</p>
