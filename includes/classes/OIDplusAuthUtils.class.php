@@ -155,25 +155,25 @@ class OIDplusAuthUtils {
 			return false;
 		}
 	}
-	
+
 	// CSRF functions
-	
+
 	private $enable_csrf = true;
-	
+
 	public function enableCSRF() {
 		$this->enable_csrf = true;
 	}
-	
+
 	public function disableCSRF() {
 		$this->enable_csrf = false;
 	}
-	
+
 	public function genCSRFToken() {
 		return uniqid(mt_rand(), true);
 	}
-	
+
 	public function checkCSRF() {
-		if (!$this->enable_csrf) return; 
+		if (!$this->enable_csrf) return;
 		if (!isset($_REQUEST['csrf_token']) || !isset($_COOKIE['csrf_token']) || ($_REQUEST['csrf_token'] != $_COOKIE['csrf_token'])) {
 			throw new Exception(_L('Wrong CSRF Token'));
 		}
