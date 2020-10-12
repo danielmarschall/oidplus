@@ -74,7 +74,7 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$out['text'] .= '<form id="adminCreateRaFrom" onsubmit="return adminCreateRaFormOnSubmit();">';
+			$out['text'] .= '<form id="adminCreateRaFrom" action="javascript:void(0);" onsubmit="return adminCreateRaFormOnSubmit();">';
 			$out['text'] .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" id="email" value=""></div>';
 			$out['text'] .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" id="password1" value=""/></div>';
 			$out['text'] .= '<div><label class="padding_label">'._L('Repeat').':</label><input type="password" id="password2" value=""/></div>';

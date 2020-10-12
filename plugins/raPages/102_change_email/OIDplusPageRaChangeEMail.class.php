@@ -181,13 +181,13 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			}
 
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				$out['text'] .= '<form id="changeRaEmailForm" onsubmit="return changeRaEmailFormOnSubmit(true);">';
+				$out['text'] .= '<form id="changeRaEmailForm" action="javascript:void(0);" action="javascript:void(0);" onsubmit="return changeRaEmailFormOnSubmit(true);">';
 				$out['text'] .= '<input type="hidden" id="old_email" value="'.htmlentities($ra_email).'"/><br>';
 				$out['text'] .= '<div><label class="padding_label">'._L('Old address').':</label><b>'.htmlentities($ra_email).'</b></div>';
 				$out['text'] .= '<div><label class="padding_label">'._L('New address').':</label><input type="text" id="new_email" value=""/></div>';
 				$out['text'] .= '<br><input type="submit" value="'._L('Change password').'"> '._L('(admin does not require email verification)').'</form>';
 			} else {
-				$out['text'] .= '<form id="changeRaEmailForm" onsubmit="return changeRaEmailFormOnSubmit(false);">';
+				$out['text'] .= '<form id="changeRaEmailForm" action="javascript:void(0);" action="javascript:void(0);" onsubmit="return changeRaEmailFormOnSubmit(false);">';
 				$out['text'] .= '<input type="hidden" id="old_email" value="'.htmlentities($ra_email).'"/><br>';
 				$out['text'] .= '<div><label class="padding_label">'._L('Old address').':</label><b>'.htmlentities($ra_email).'</b></div>';
 				$out['text'] .= '<div><label class="padding_label">'._L('New address').':</label><input type="text" id="new_email" value=""/></div>';
@@ -227,7 +227,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 						$out['text'] = '<p>'._L('Old eMail-Address').': <b>'.$old_email.'</b></p>
 						<p>'._L('New eMail-Address').': <b>'.$new_email.'</b></p>
 
-						 <form id="activateNewRaEmailForm" onsubmit="return activateNewRaEmailFormOnSubmit();">
+						 <form id="activateNewRaEmailForm" action="javascript:void(0);" onsubmit="return activateNewRaEmailFormOnSubmit();">
 					    <input type="hidden" id="old_email" value="'.htmlentities($old_email).'"/>
 					    <input type="hidden" id="new_email" value="'.htmlentities($new_email).'"/>
 					    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>

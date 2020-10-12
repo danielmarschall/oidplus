@@ -110,7 +110,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			// ---
 
 			$out['text'] .= '<p>'._L('Change basic information (public)').':</p>
-			  <form id="raChangeContactDataForm" onsubmit="return raChangeContactDataFormOnSubmit();">
+			  <form id="raChangeContactDataForm" action="javascript:void(0);" onsubmit="return raChangeContactDataFormOnSubmit();">
 			    <input type="hidden" id="email" value="'.htmlentities($ra_email).'"/>
 			    <div><label class="padding_label">'._L('RA Name').':</label><input type="text" id="ra_name" value="'.htmlentities($row['ra_name']).'"/></div>
 			    <div><label class="padding_label">'._L('Organization').':</label><input type="text" id="organization" value="'.htmlentities($row['organization']).'"/></div>

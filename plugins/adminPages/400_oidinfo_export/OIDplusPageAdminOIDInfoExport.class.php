@@ -557,7 +557,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$tabcont  = '<h2>'._L('Import XML file').'</h2>';
 			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>.','href="http://www.oid-info.com/oid.xsd" target="_blank"').'</p>';
 			// TODO: we need a waiting animation!
-			$tabcont .= '<form onsubmit="return uploadXmlFileOnSubmit(this);" enctype="multipart/form-data" id="uploadXmlFileForm">';
+			$tabcont .= '<form action="javascript:void(0);" onsubmit="return uploadXmlFileOnSubmit(this);" enctype="multipart/form-data" id="uploadXmlFileForm">';
 			$tabcont .= '<div>'._L('Choose XML file here').':<input type="file" name="userfile" value="" id="userfile">';
 			$tabcont .= '<br><input type="submit" value="'._L('Import XML').'"></div>';
 			$tabcont .= '</form>';

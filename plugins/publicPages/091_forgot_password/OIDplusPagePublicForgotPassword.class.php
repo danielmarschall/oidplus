@@ -102,7 +102,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 			try {
 				$out['text'] .= '<p>'._L('Please enter the email address of your account, and information about the password reset will be sent to you.').'</p>
-				  <form id="forgotPasswordForm" onsubmit="return forgotPasswordFormOnSubmit();">
+				  <form id="forgotPasswordForm" action="javascript:void(0);" onsubmit="return forgotPasswordFormOnSubmit();">
 				    '._L('E-Mail').': <input type="text" id="email" value=""/><br><br>'.
 				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
 				 '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
@@ -133,7 +133,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			} else {
 				$out['text'] = '<p>'._L('E-Mail-Address: %1','<b>'.$email.'</b>').'</p>
 
-				  <form id="resetPasswordForm" onsubmit="return resetPasswordFormOnSubmit();">
+				  <form id="resetPasswordForm" action="javascript:void(0);" onsubmit="return resetPasswordFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 				    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>

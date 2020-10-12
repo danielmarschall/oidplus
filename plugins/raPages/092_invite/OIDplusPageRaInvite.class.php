@@ -122,7 +122,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				$cont = $this->getInvitationText($email);
 
 				$out['text'] .= '<p>'._L('You have chosen to invite %1 as a Registration Authority. If you click "Send", the following email will be sent to %2:','<b>'.$email.'</b>',$email).'</p><p><i>'.nl2br(htmlentities($cont)).'</i></p>
-				  <form id="inviteForm" onsubmit="return inviteFormOnSubmit();">
+				  <form id="inviteForm" action="javascript:void(0);" onsubmit="return inviteFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="origin" value="'.htmlentities($origin).'"/>'.
 				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
@@ -166,7 +166,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 					// TODO: like in the FreeOID plugin, we could ask here at least for a name for the RA
 					$out['text'] = '<p>'._L('E-Mail-Address').': <b>'.$email.'</b></p>
 
-					  <form id="activateRaForm" onsubmit="return activateRaFormOnSubmit();">
+					  <form id="activateRaForm" action="javascript:void(0);" onsubmit="return activateRaFormOnSubmit();">
 					    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 					    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 					    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>

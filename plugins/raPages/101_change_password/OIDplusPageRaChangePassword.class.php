@@ -88,7 +88,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 				return;
 			}
 
-			$out['text'] .= '<form id="raChangePasswordForm" onsubmit="return raChangePasswordFormOnSubmit();">';
+			$out['text'] .= '<form id="raChangePasswordForm" action="javascript:void(0);" onsubmit="return raChangePasswordFormOnSubmit();">';
 			$out['text'] .= '<input type="hidden" id="email" value="'.htmlentities($ra_email).'"/><br>';
 			$out['text'] .= '<div><label class="padding_label">'._L('E-Mail').':</label><b>'.htmlentities($ra_email).'</b></div>';
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {

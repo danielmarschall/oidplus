@@ -266,7 +266,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		$output .= '</table></div>';
 
 		if ($can_upload) {
-			$output .= '<form onsubmit="return uploadAttachmentOnSubmit(this);" enctype="multipart/form-data" id="uploadAttachmentForm">';
+			$output .= '<form action="javascript:void(0);" onsubmit="return uploadAttachmentOnSubmit(this);" enctype="multipart/form-data" id="uploadAttachmentForm">';
 			$output .= '<input type="hidden" name="id" value="'.htmlentities($id).'">';
 			$output .= '<div>'._L('Add a file attachment').':<input type="file" name="userfile" value="" id="fileAttachment">';
 			$output .= '<br><input type="submit" value="'._L('Upload').'"></div>';

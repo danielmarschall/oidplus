@@ -151,7 +151,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			} else {
 				$tabcont .= '<p>'._L('Enter your email address and your password to log in as Registration Authority.').'</p>';
 			}
-			$tabcont .= '<form onsubmit="return raLoginOnSubmit(this);">';
+			$tabcont .= '<form action="javascript:void(0);" onsubmit="return raLoginOnSubmit(this);">';
 			$tabcont .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" name="email" value="" id="raLoginEMail"></div>';
 			$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginPassword"></div>';
 			$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
@@ -171,7 +171,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				$tabcont .= '<p>'._L('You are logged in as administrator.').'</p>';
 				$tabcont .= '<a href="#" onclick="return adminLogout();">'._L('Logout').'</a>';
 			} else {
-				$tabcont .= '<form onsubmit="return adminLoginOnSubmit(this);">';
+				$tabcont .= '<form action="javascript:void(0);" onsubmit="return adminLoginOnSubmit(this);">';
 				$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="adminLoginPassword"></div>';
 				$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
 				$tabcont .= '</form>';

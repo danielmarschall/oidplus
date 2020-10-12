@@ -185,7 +185,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 			try {
 				$out['text'] .= '
-				  <form id="freeOIDForm" onsubmit="return freeOIDFormOnSubmit();">
+				  <form id="freeOIDForm" action="javascript:void(0);" onsubmit="return freeOIDFormOnSubmit();">
 				    '._L('E-Mail').': <input type="text" id="email" value=""/><br><br>'.
 				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
 				 '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
@@ -201,13 +201,13 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				} else {
 					$tos = file_get_contents(__DIR__ . '/tos.html');
 				}
-				
+
 				list($html, $js, $css) = extractHtmlContents($tos);
 				$tos = '';
 				if (!empty($js))  $tos .= "<script>\n$js\n</script>";
 				if (!empty($css)) $tos .= "<style>\n$css\n</style>";
 				$tos .= $html;
-				
+
 				$tos = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $tos);
 				if ($obj) {
 					$tos = str_replace('{{ROOT_OID}}', $obj->getDotNotation(), $tos);
@@ -239,7 +239,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				} else {
 					$out['text'] = '<p>'._L('eMail-Address').': <b>'.$email.'</b></p>
 
-				  <form id="activateFreeOIDForm" onsubmit="return activateFreeOIDFormOnSubmit();">
+				  <form id="activateFreeOIDForm" action="javascript:void(0);" onsubmit="return activateFreeOIDFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 				    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
