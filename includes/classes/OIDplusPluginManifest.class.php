@@ -129,12 +129,12 @@ class OIDplusPluginManifest {
 		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1
 		foreach ((array)$xmldata->css->file as $css_file) {
 			$file = dirname($filename).'/'.$css_file;
-			if (!file_exists($file)) continue;
+			//if (!file_exists($file)) continue;
 			$this->cssFiles[] = $file;
 		}
 		foreach ((array)$xmldata->js->file as $js_file) {
 			$file = dirname($filename).'/'.$js_file;
-			if (!file_exists($file)) continue;
+			//if (!file_exists($file)) continue;
 			$this->jsFiles[] = $file;
 		}
 
@@ -142,12 +142,12 @@ class OIDplusPluginManifest {
 		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.6
 		foreach ((array)$xmldata->cssSetup->file as $css_file) {
 			$file = dirname($filename).'/'.$css_file;
-			if (!file_exists($file)) continue;
+			//if (!file_exists($file)) continue;
 			$this->cssFilesSetup[] = $file;
 		}
 		foreach ((array)$xmldata->jsSetup->file as $js_file) {
 			$file = dirname($filename).'/'.$js_file;
-			if (!file_exists($file)) continue;
+			//if (!file_exists($file)) continue;
 			$this->jsFilesSetup[] = $file;
 		}
 

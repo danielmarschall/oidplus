@@ -32,9 +32,15 @@ $out = '';
 
 # ---
 
+$do_minify = OIDplus::baseConfig()->getValue('MINIFY_CSS', true);
+
 function process_file($filename) {
+	global $do_minify;
+
+	if (!file_exists($filename)) return;
+
 	$dir = dirname((strpos($filename, __DIR__.'/') === 0) ? substr($filename, strlen(__DIR__.'/')) : $filename);
-	if (OIDplus::baseConfig()->getValue('MINIFY_CSS', true)) {
+	if ($do_minify) {
 		$minifier = new Minify\CSS($filename);
 		$cont = $minifier->minify();
 		$cont = str_ireplace("url(data:", "url###(data:", $cont);
