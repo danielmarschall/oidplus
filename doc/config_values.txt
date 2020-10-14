@@ -227,3 +227,15 @@ Old 2.0 format:          define('OIDPLUS_EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
                          and possibly other modules. It has no effect on relative URLs.
                          If this setting is not set, the last known absolute URL
                          will be remembered and used when a CLI call is made.
+
+
+----------------------------------------------------
+(4) LDAP FIELDS (see document ldap_installation.txt)
+----------------------------------------------------
+
+OIDplus::baseConfig()->setValue('LDAP_ENABLED',              true);
+OIDplus::baseConfig()->setValue('LDAP_SERVER',               'ldap://shs.company.local');
+OIDplus::baseConfig()->setValue('LDAP_PORT',                 389);
+OIDplus::baseConfig()->setValue('LDAP_BASE_DN',              'DC=COMPANY,DC=local');
+OIDplus::baseConfig()->setValue('LDAP_CONTROLUSER_RDN',      'test@company.local'); // Can be any user that is able to search for users (in order to find who is owning an email address)
+OIDplus::baseConfig()->setValue('LDAP_CONTROLUSER_PASSWORD', 'foobar');

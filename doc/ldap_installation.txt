@@ -1,0 +1,20 @@
+
+How to use LDAP / ActiveDirectory login
+=======================================
+
+(1) In your PHP.ini, make sure that the "LDAP" extension is activated, e.g.:
+
+	extension=php_ldap.dll
+
+(2) On your ActiveDirectory server, please make sure that the "mail" attribute
+    is set for all users that should be able to log into OIDplus.
+
+(3) In userdata/baseconfig/config.inc.php, please add following lines,
+    and adjust them to your configuration:
+
+	OIDplus::baseConfig()->setValue('LDAP_ENABLED',              true);
+	OIDplus::baseConfig()->setValue('LDAP_SERVER',               'ldap://shs.company.local');
+	OIDplus::baseConfig()->setValue('LDAP_PORT',                 389);
+	OIDplus::baseConfig()->setValue('LDAP_BASE_DN',              'DC=COMPANY,DC=local');
+	OIDplus::baseConfig()->setValue('LDAP_CONTROLUSER_RDN',      'test@company.local'); // Can be any user that is able to search for users (in order to find who is owning an email address)
+	OIDplus::baseConfig()->setValue('LDAP_CONTROLUSER_PASSWORD', 'foobar');

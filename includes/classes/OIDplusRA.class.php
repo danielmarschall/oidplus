@@ -59,7 +59,14 @@ class OIDplusRA {
 	}
 
 	public function register_ra($new_password) {
-		list($s_salt, $calc_authkey) = OIDplus::authUtils()->raGeneratePassword($new_password);
+		if (is_null($new_password)) {
+			// Invalid password (used for LDAP/OAuth)
+			$s_salt = '';
+			$calc_authkey = '';
+		} else {
+			list($s_salt, $calc_authkey) = OIDplus::authUtils()->raGeneratePassword($new_password);
+		}
+
 		OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered, ra_name, personal_name, organization, office, street, zip_town, country, phone, mobile, fax) values (?, ?, ?, ".OIDplus::db()->sqlDate().", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($s_salt, $calc_authkey, $this->email, "", "", "", "", "", "", "", "", "", ""));
 	}
 

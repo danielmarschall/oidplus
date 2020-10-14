@@ -23,9 +23,6 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		// === RA LOGIN/LOGOUT ===
 
 		if ($actionID == 'ra_login') {
-			$email = $params['email'];
-			$ra = new OIDplusRA($email);
-
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 				$response=$params["captcha"];
@@ -34,6 +31,13 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				if ($captcha_success->success==false) {
 					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
 				}
+			}
+
+			$email = $params['email'];
+			$ra = new OIDplusRA($email);
+
+			if (empty($email)) {
+				throw new OIDplusException(_L('Please enter a valid email address'));
 			}
 
 			if ($ra->checkPassword($params['password'])) {
@@ -165,6 +169,29 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				$tabcont .= '<abbr title="'._L('Since invitations are disabled at this OIDplus system, the system administrator needs to create your account manually in the administrator control panel.').'">'._L('How to register?').'</abbr></p>';
 			}
 			$out['text'] .= OIDplus::gui()->tabContentPage('ra', $tabcont, $tab === 'ra');
+
+			$alt_logins_html = array();
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.5')) {
+					$logins = $plugin->alternativeLoginMethods();
+					foreach ($logins as $data) {
+						if (isset($data[2]) && !empty($data[2])) {
+							$img = '<img src="'.$data[2].'" alt="'.htmlentities($data[1]).'"> ';
+						} else {
+							$img = '';
+						}
+						$alt_logins_html[] = $img.'<a '.OIDplus::gui()->link($data[0]).'>'.htmlentities($data[1]).'</a>';
+					}
+				}
+			}
+			if (count($alt_logins_html) > 0) {
+				$out['text'] .= '<p>'._L('Alternative login methods').':<br>';
+				foreach ($alt_logins_html as $alt_login) {
+					$out['text'] .= $alt_login.'</br>';
+				}
+				$out['text'] .= '</p>';
+			}
+
 			// ---------------- "Administrator" tab
 			$tabcont = '<h2>'._L('Login as administrator').'</h2>';
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {

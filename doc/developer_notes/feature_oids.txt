@@ -49,6 +49,11 @@ Interface <1.3.6.1.4.1.37476.2.5.2.3.4> {
 	public function whoisRaAttributes($email, &$out);
 }
 
+Interface <1.3.6.1.4.1.37476.2.5.2.3.5> {
+	// called by plugin publicPages/090_login
+	public function alternativeLoginMethods();
+}
+
 
 TL;DR:
 Plugins communicate with other plugins using the OIDplusPlugin::implementsFeature()
