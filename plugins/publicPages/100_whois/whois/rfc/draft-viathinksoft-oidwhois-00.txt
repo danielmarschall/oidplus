@@ -4,7 +4,7 @@
 
 INTERNET-DRAFT                                              D. Marschall
 Intended Status: Informational                              ViaThinkSoft
-Expires: <Expiry Date>                                       August 2020
+Expires: <Expiry Date>                                      October 2020
 
 
             Retrieving information about Object Identifiers
@@ -96,8 +96,8 @@ Table of Contents
    10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 20
      10.1  Normative References . . . . . . . . . . . . . . . . . . . 20
      10.2  Informative References . . . . . . . . . . . . . . . . . . 21
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 21
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 21
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 22
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 22
 
 
 
@@ -609,7 +609,7 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    OIDs, in case "ra" is a group or organization.
 
    (4) "ra-address" (OPTIONAL) contains the physical location of the RA.
-
+    While a fully qualified postal address is recommended, the field can
  
 
 
@@ -618,7 +618,6 @@ Marschall                Expires <Expiry Date>                 [Page 11]
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
-    While a fully qualified postal address is recommended, the field can
    also just contain a rough location like city and country name, state
    and country name, or just the country name, etc.  The name of the
    country SHOULD always be present.
@@ -666,6 +665,7 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    modified.
 
 
+
  
 
 
@@ -686,15 +686,12 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    charge of managing the OID, a new section per RA can be added with
    the following field name prefixes:
 
+   "ra-" is the prefix of the current Registration Authority.
+
    "ra1-" is the prefix of the first RA.  It is the very first person or
    company to whom the OID was allocated by the RA of the superior OID.
-
    "ra2-" is the prefix of the second RA, after the responsibility has
-   been transferred.
-
-   etc.
-
-   "ra-" is the prefix of the current Registration Authority.
+   been transferred. etc.
 
    The definition of these sections is identical to the definition of
    the RA-Section (described in section 3.2.3 "RA-Section"), just with a
@@ -717,11 +714,14 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    be appended and/or prepended to the response.  These additional lines
    MUST be prepended by a percent sign ("%") to avoid that an
    application confuses these additional lines (e.g. lines belonging to
-   a PGP header) with parts of the actual WHOIS response.
+   a PGP header, as defined in RFC 4880 [RFC4880]) with parts of the
+   actual WHOIS response.
 
 3.4  Date/Time Format
 
    Date/Time references SHALL be formatted as described in
+   section 3.4.1.
+
  
 
 
@@ -729,8 +729,6 @@ Marschall                Expires <Expiry Date>                 [Page 13]
 
 INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
-
-   section 3.4.1.
 
    If parts of the date/time reference are uncertain, then they SHOULD
    be omitted until the date/time reference has the highest correctness.
@@ -778,6 +776,8 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
        2020-06-29
        2020-06
        2020
+
+
  
 
 
@@ -1138,6 +1138,10 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
               June 2006.
               <http://www.rfc-editor.org/info/rfc4511>.
 
+   [RFC4880]  Callas, J., Et. Al, "OpenPGP Message Format", RFC 4880,
+              DOI 10.17487/RFC4880, November 2007.
+              <http://www.rfc-editor.org/info/rfc4880>.
+
    [X509]     "Information technology - Open Systems Interconnection -
               The Directory: Public-key and attribute certificate
               frameworks", Recommendation ITU-T X.509 (2016) |
@@ -1157,6 +1161,23 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
               August 2010.
               <http://handle.itu.int/11.1002/1000/10831>.
 
+
+
+
+
+
+
+
+
+
+ 
+
+
+Marschall                Expires <Expiry Date>                 [Page 21]
+
+INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+
+
 Acknowledgements
 
    Olivier Dubuisson
@@ -1173,4 +1194,39 @@ Authors' Addresses
 
 
 
-Marschall                Expires <Expiry Date>                 [Page 21]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Marschall                Expires <Expiry Date>                 [Page 22]

@@ -203,6 +203,8 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 				return;
 			}
 
+			$out['text'] = '';
+
 			$out['text'] .= '<noscript>';
 			$out['text'] .= '<p>'._L('You need to enable JavaScript to use the login area.').'</p>';
 			$out['text'] .= '</noscript>';
@@ -211,10 +213,13 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			$out['text'] .= (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
 			                '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
 			                '<p>'._L('Before logging in, please solve the following CAPTCHA').'</p>'.
-					'<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '');
+			                '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '');
 			$out['text'] .= '<br>';
 
-			$out['text'] = '<h2>'._L('Login as RA').'</h2>';
+			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:login').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Regular login method').'</a></p>';
+
+			$out['text'] .= '<h2>'._L('Login as RA').'</h2>';
+
 			$login_list = OIDplus::authUtils()->loggedInRaList();
 			if (count($login_list) > 0) {
 				foreach ($login_list as $x) {
@@ -231,7 +236,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			$out['text'] .= '</form>';
 
 			$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
-			$out['text'] .= '<abbr title="'._L('You don\'t need to register. Just enter your Windows/Company credentials.').'">'._L('How to register?').'</abbr></p>';
+			$out['text'] .= '<p><abbr title="'._L('You don\'t need to register. Just enter your Windows/Company credentials.').'">'._L('How to register?').'</abbr></p>';
 
 			$mins = ceil(OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60)/60);
 			$out['text'] .= '<p><font size="-1">'._L('<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of %1 minutes.', $mins);
@@ -268,7 +273,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		if (OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {
 			$logins[] = array(
 				'oidplus:login_ldap',
-				'Login using LDAP / ActiveDirectory',
+				_L('Login using LDAP / ActiveDirectory'),
 				OIDplus::webpath(__DIR__).'treeicon.png'
 			);
 		}

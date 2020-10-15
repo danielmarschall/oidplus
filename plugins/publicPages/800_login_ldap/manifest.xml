@@ -19,6 +19,7 @@
 	</php>
 
 	<css>
+		<file>OIDplusPagePublicLoginLDAP.css</file>
 	</css>
 
 	<js>
