@@ -534,6 +534,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Attention! Do NOT change your email address if you have logged in using Google/LDAP and not yet created an individual password (for regular login), otherwise you will lose access to your account!
+		]]></source>
+		<target><![CDATA[
+		Achtung! Ändern Sie Ihre E-Mail-Adresse NICHT, wenn Sie sich mittels Google/LDAP angemeldet haben und noch kein individuelles Passwort (für die reguläre Anmeldung) haben, da Sie ansonsten den Zugriff auf Ihr Konto verlieren werden!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can't be converted back.
 		]]></source>
 		<target><![CDATA[
@@ -1990,6 +1998,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Google OAuth authentication is disabled on this system.
+		]]></source>
+		<target><![CDATA[
+		Google OAuth-Authentifizierung ist auf diesem System deaktiviert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Hide
 		]]></source>
 		<target><![CDATA[
@@ -2738,6 +2754,14 @@
 		]]></source>
 		<target><![CDATA[
 		Als Administrator anmelden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Login using Google
+		]]></source>
+		<target><![CDATA[
+		Mittels Google anmelden
 		]]></target>
 	</message>
 	<message>
@@ -4046,6 +4070,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Please wait...
+		]]></source>
+		<target><![CDATA[
+		Bitte warten...
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Plugin "%1/%2" is erroneous
 		]]></source>
 		<target><![CDATA[
@@ -4402,6 +4434,14 @@
 		]]></source>
 		<target><![CDATA[
 		Registrierung erfolgreich! Sie können sich nun anmelden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Regular login method
+		]]></source>
+		<target><![CDATA[
+		Reguläre Anmelde-Methode
 		]]></target>
 	</message>
 	<message>

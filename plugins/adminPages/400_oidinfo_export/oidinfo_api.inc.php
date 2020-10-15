@@ -1021,7 +1021,7 @@ class OIDSimplePingProvider implements IOIDSimplePingProvider {
 		$in = "${oid}\n\0"; // PHP's socket_send() does not send a trailing \n . There needs to be something after the \n ... :(
 
 		if ($failcount >= self::SPP_MAX_CONNECTION_ATTEMPTS) {
-			echo "Query $oid: CONNECTION FAILED!\n";
+			echo "Query $oid: CONNECTION TO SIMPLE PING PROVIDER FAILED!\n";
 			return null;
 		}
 

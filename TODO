@@ -14,6 +14,11 @@ IDEAS FOR NEW FUNCTIONALITIES
 	But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
 - Excel/CSV import tool for bulk data import (as alternative to XML import. Maybe previous Excel->XML import tool?)
 
+LDAP / OAUTH:
+- Implement other OAuth providers?
+- When someone is logged in using OAuth or LDAP, we must prohibit that the user changes their email address,
+  because this would make him lose his account and OIDs, since the account is *NOT* linked to the OAuth/LDAP uid, but to the email address!!!
+
 TINYMCE
 - mce dirty flag: call performCloseQueryCB()/performCloseCB(), if ...
 	OK:   The page (browser tab) is about to be closed or the page is reloaded

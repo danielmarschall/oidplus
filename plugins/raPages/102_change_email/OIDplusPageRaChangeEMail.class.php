@@ -180,6 +180,8 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				return;
 			}
 
+			$out['text'] .= '<p>'._L('Attention! Do NOT change your email address if you have logged in using Google/LDAP and not yet created an individual password (for regular login), otherwise you will lose access to your account!').'</p>';
+
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['text'] .= '<form id="changeRaEmailForm" action="javascript:void(0);" action="javascript:void(0);" onsubmit="return changeRaEmailFormOnSubmit(true);">';
 				$out['text'] .= '<input type="hidden" id="old_email" value="'.htmlentities($ra_email).'"/><br>';

@@ -239,3 +239,12 @@ OIDplus::baseConfig()->setValue('LDAP_PORT',                 389);
 OIDplus::baseConfig()->setValue('LDAP_BASE_DN',              'DC=COMPANY,DC=local');
 OIDplus::baseConfig()->setValue('LDAP_CONTROLUSER_RDN',      'test@company.local'); // Can be any user that is able to search for users (in order to find who is owning an email address)
 OIDplus::baseConfig()->setValue('LDAP_CONTROLUSER_PASSWORD', 'foobar');
+
+
+----------------------------------------------------------------------
+(5) GOOGLE OAUTH2 FIELDS (see document google_oauth2_installation.txt)
+----------------------------------------------------------------------
+
+OIDplus::baseConfig()->setValue('GOOGLE_OAUTH2_ENABLED',       true);
+OIDplus::baseConfig()->setValue('GOOGLE_OAUTH2_CLIENT_ID',     '..............apps.googleusercontent.com');
+OIDplus::baseConfig()->setValue('GOOGLE_OAUTH2_CLIENT_SECRET', '.............');
