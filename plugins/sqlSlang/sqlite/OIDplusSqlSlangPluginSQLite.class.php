@@ -98,4 +98,8 @@ class OIDplusSqlSlangPluginSQLite extends OIDplusSqlSlangPlugin {
 	public function setupUseDatabase($database): string {
 		return "";
 	}
+
+	public function isNullFunction($expr1, $expr2): string {
+		return "ifnull($expr1, $expr2)";
+	}
 }

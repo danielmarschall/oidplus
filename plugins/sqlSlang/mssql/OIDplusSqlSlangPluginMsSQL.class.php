@@ -87,4 +87,8 @@ class OIDplusSqlSlangPluginMsSQL extends OIDplusSqlSlangPlugin {
 	public function setupUseDatabase($database): string {
 		return "USE [$database]\n\nGO\n\n";
 	}
+
+	public function isNullFunction($expr1, $expr2): string {
+		return "isnull($expr1, $expr2)";
+	}
 }

@@ -93,8 +93,9 @@ abstract class OIDplusObject {
 			} else {
 				$res = OIDplus::db()->query("select oChild.id as id from ###objects as oChild ".
 				                            "left join ###objects as oParent on oChild.parent = oParent.id ".
-				                            "where (ifnull(oParent.ra_email,'') <> ? and ifnull(oChild.ra_email,'') = ?) or ".
-				                            "      (oParent.ra_email is null and ifnull(oChild.ra_email,'') = ?) ".
+				                            "where (".OIDplus::db()->getSlang()->isNullFunction('oParent.ra_email',"''")." <> ? and ".
+				                            OIDplus::db()->getSlang()->isNullFunction('oChild.ra_email',"''")." = ?) or ".
+				                            "      (oParent.ra_email is null and ".OIDplus::db()->getSlang()->isNullFunction('oChild.ra_email',"''")." = ?) ".
 				                            "order by ".OIDplus::db()->natOrder('oChild.id'), array($ra_email, $ra_email, $ra_email));
 				while ($row = $res->fetch_array()) {
 					$x = self::parse($row['id']); // can be FALSE if namespace was disabled

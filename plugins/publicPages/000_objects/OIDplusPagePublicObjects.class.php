@@ -20,9 +20,9 @@
 class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 	private function ra_change_rec($id, $old_ra, $new_ra) {
-		OIDplus::db()->query("update ###objects set ra_email = ?, updated = ".OIDplus::db()->sqlDate()." where id = ? and ifnull(ra_email,'') = ?", array($new_ra, $id, $old_ra));
+		OIDplus::db()->query("update ###objects set ra_email = ?, updated = ".OIDplus::db()->sqlDate()." where id = ? and ".OIDplus::db()->getSlang()->isNullFunction('ra_email',"''")." = ?", array($new_ra, $id, $old_ra));
 
-		$res = OIDplus::db()->query("select id from ###objects where parent = ? and ifnull(ra_email,'') = ?", array($id, $old_ra));
+		$res = OIDplus::db()->query("select id from ###objects where parent = ? and ".OIDplus::db()->getSlang()->isNullFunction('ra_email',"''")." = ?", array($id, $old_ra));
 		while ($row = $res->fetch_array()) {
 			$this->ra_change_rec($row['id'], $old_ra, $new_ra);
 		}

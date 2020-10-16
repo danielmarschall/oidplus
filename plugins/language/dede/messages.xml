@@ -534,14 +534,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Attention! Do NOT change your email address if you have logged in using Google/LDAP and not yet created an individual password (for regular login), otherwise you will lose access to your account!
-		]]></source>
-		<target><![CDATA[
-		Achtung! Ändern Sie Ihre E-Mail-Adresse NICHT, wenn Sie sich mittels Google/LDAP angemeldet haben und noch kein individuelles Passwort (für die reguläre Anmeldung) haben, da Sie ansonsten den Zugriff auf Ihr Konto verlieren werden!
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can't be converted back.
 		]]></source>
 		<target><![CDATA[
@@ -582,6 +574,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Attention: This user does not have a password because they log in using LDAP or Google OAuth etc.
+		]]></source>
+		<target><![CDATA[
+		Achtung: Dieser Benutzer hat kein Passwort, da er sich mittels einer alternativen Login-Methode wie z.B. LDAP oder Google OAuth anmeldet.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Attention: This will take some time!
 		]]></source>
 		<target><![CDATA[
@@ -594,6 +594,14 @@
 		]]></source>
 		<target><![CDATA[
 		Achtung: Zwei Objekt-Typ-Plugins nutzen denselben Namensraum "%1"!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Attention: You are logged in without password (via LDAP or Google OAuth etc.).
+		]]></source>
+		<target><![CDATA[
+		Achtung: Sie sind mit einer alternativen Anmelde-Methode angemeldet, z.B. mittels LDAP oder Google OAuth.
 		]]></target>
 	</message>
 	<message>
@@ -1126,6 +1134,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Create password
+		]]></source>
+		<target><![CDATA[
+		Passwort festlegen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Created
 		]]></source>
 		<target><![CDATA[
@@ -1466,6 +1482,14 @@
 		]]></source>
 		<target><![CDATA[
 		E-Mail-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		E-Mail-Address cannot be changed because this user does not have a password
+		]]></source>
+		<target><![CDATA[
+		Die E-Mail-Adresse kann nicht geändert werden, da der Benutzer eine alternative Anmelde-Methode verwendet
 		]]></target>
 	</message>
 	<message>
@@ -2174,6 +2198,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		If you change the email address, the user cannot log in anymore, because the LDAP/OAuth plugin identifies the user via email address, not OpenID.
+		]]></source>
+		<target><![CDATA[
+		Wenn Sie die E-Mail-Adresse ändern, dann wird der Benutzer sich mittels LDAP/OAuth nicht mehr anmelden können, da die Identifikation mittels E-Mail-Adresse und nicht per OpenID stattfindet.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		If you have more accounts, you can log in with another account here.
 		]]></source>
 		<target><![CDATA[
@@ -2186,6 +2218,22 @@
 		]]></source>
 		<target><![CDATA[
 		Wenn Sie die Datenschutz-Stufe auf "0" (System registriert) setzen, dann werden alle Ihre OIDs automatisch nach oid-info.com exportiert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		If you want to change the email address of the user, please <a %1>define a password</a> for them, so that they can use the regular login method using their new email address.
+		]]></source>
+		<target><![CDATA[
+		Wenn Sie die E-Mail-Adresse des Benutzers ändern möchten, dann <a %1>erstellen Sie zuerst ein Passwort</a> für ihn, sodass er sich dann mit der regulären Anmelde-Methode mit der neuen E-Mail-Adresse anmelden kann.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		If you want to change your email address, then please <a %1>setup a password</a> first, and then use the regular login method to log in using your new email address.
+		]]></source>
+		<target><![CDATA[
+		Wenn Sie Ihre E-Mail-Adresse ändern möchten, dann <a %1>erstellen Sie zunächst ein Passwort</a>, sodass Sie sich dann mit der regulären Anmelde-Methode mit der neuen E-Mail-Adresse anmelden können.
 		]]></target>
 	</message>
 	<message>
@@ -5450,6 +5498,14 @@
 		]]></source>
 		<target><![CDATA[
 		Aus diesem Grund können Sie Ihr OIDplus-System derzeit <b>nicht</b> registrieren.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Therefore, you cannot change your email address; otherwise you would love access to your account!
+		]]></source>
+		<target><![CDATA[
+		Deswegen können Sie Ihre E-Mail-Adresse nicht ändern; ansonsten würden Sie den Zugriff zu Ihrem Konto verlieren würden!
 		]]></target>
 	</message>
 	<message>

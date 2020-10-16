@@ -28,6 +28,9 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 
 			$ra_email = explode('$',$id)[1];
 
+			$out['title'] = _L('Log messages for RA %1',$ra_email);
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+
 			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as the requested RA %2.',OIDplus::gui()->link('oidplus:login'),'<b>'.htmlentities($ra_email).'</b>').'</p>';
@@ -40,9 +43,6 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 				$out['text'] = _L('RA "%1" does not exist','<b>'.htmlentities($ra_email).'</b>');
 				return;
 			}
-
-			$out['title'] = _L('Log messages for RA %1',$ra_email);
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event, lu.severity from ###log lo ".
 			                            "left join ###log_user lu on lu.log_id = lo.id ".

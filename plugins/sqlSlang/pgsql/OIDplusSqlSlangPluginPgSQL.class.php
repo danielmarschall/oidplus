@@ -80,4 +80,8 @@ class OIDplusSqlSlangPluginPgSQL extends OIDplusSqlSlangPlugin {
 	public function setupUseDatabase($database): string {
 		return "-- \connect $database;\n\n";
 	}
+
+	public function isNullFunction($expr1, $expr2): string {
+		return "coalesce($expr1, $expr2)";
+	}
 }

@@ -28,6 +28,11 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			$old_email = $params['old_email'];
 			$new_email = $params['new_email'];
 
+			$ra = new OIDplusRA($old_email);
+			if ($ra->isPasswordLess() && !OIDplus::authUtils()::isAdminLoggedIn()) {
+				throw new OIDplusException(_L('E-Mail-Address cannot be changed because this user does not have a password'));
+			}
+
 			if (!OIDplus::authUtils()::isRaLoggedIn($old_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA to update its email address.'));
 			}
@@ -47,15 +52,22 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			}
 
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
-				OIDplus::logger()->log("[WARN]RA($old_email)!+[INFO]RA($new_email)!+[OK]A!", "Admin changed email address '$old_email' to '$new_email'");
-
 				$ra_was_logged_in = OIDplus::authUtils()::isRaLoggedIn($old_email);
 
 				$ra = new OIDplusRA($old_email);
-				$ra->change_email($new_email);
 
+				// Change RA email
+				$ra->change_email($new_email);
+				OIDplus::logger()->log("[WARN]RA($old_email)!+[INFO]RA($new_email)!+[OK]A!", "Admin changed email address '$old_email' to '$new_email'");
+
+				// Change objects
+				$res = OIDplus::db()->query("select id from ###objects where ra_email = ?", array($old_email));
+				while ($row = $res->fetch_array()) {
+					OIDplus::logger()->log("[INFO]OID(".$row['id'].")+SUPOID(".$row['id'].")", "Admin changed email address of RA '$old_email' (owner of ".$row['id'].") to '$new_email'");
+				}
 				OIDplus::db()->query("update ###objects set ra_email = ? where ra_email = ?", array($new_email, $old_email));
 
+				// Re-login
 				if ($ra_was_logged_in) {
 					OIDplus::authUtils()->raLogout($old_email);
 					OIDplus::authUtils()->raLogin($new_email);
@@ -93,6 +105,11 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			$auth = $params['auth'];
 			$timestamp = $params['timestamp'];
 
+			$ra = new OIDplusRA($old_email);
+			if ($ra->isPasswordLess() && !OIDplus::authUtils()::isAdminLoggedIn()) {
+				throw new OIDplusException(_L('E-Mail-Address cannot be changed because this user does not have a password'));
+			}
+
 			if (!OIDplus::authUtils()::validateAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp, $auth)) {
 				throw new OIDplusException(_L('Invalid auth key'));
 			}
@@ -112,19 +129,28 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			}
 
 			$ra = new OIDplusRA($old_email);
-			if (!$ra->checkPassword($password)) {
-				throw new OIDplusException(_L('Wrong password'));
+			if (!$ra->isPasswordLess()) {
+				if (!$ra->checkPassword($password)) {
+					throw new OIDplusException(_L('Wrong password'));
+				}
 			}
 
+			// Change address of RA
 			$ra->change_email($new_email);
+			OIDplus::logger()->log("[OK]RA($new_email)!+RA($old_email)!", "RA '$old_email' has changed their email address to '$new_email'");
 
+			// Change objects
+			$res = OIDplus::db()->query("select id from ###objects where ra_email = ?", array($old_email));
+			while ($row = $res->fetch_array()) {
+				OIDplus::logger()->log("[INFO]OID(".$row['id'].")+SUPOID(".$row['id'].")", "RA '$old_email' (owner of ".$row['id'].") has changed their email address to '$new_email'");
+			}
 			OIDplus::db()->query("update ###objects set ra_email = ? where ra_email = ?", array($new_email, $old_email));
 
+			// Re-login
 			OIDplus::authUtils()->raLogout($old_email);
 			OIDplus::authUtils()->raLogin($new_email);
 
-			OIDplus::logger()->log("[OK]RA($new_email)!+RA($old_email)!", "RA '$old_email' has changed their email address to '$new_email'");
-
+			// Send email
 			$message = file_get_contents(__DIR__ . '/email_change_confirmation.tpl');
 			$message = str_replace('{{SYSTEM_URL}}', OIDplus::getSystemUrl(), $message);
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
@@ -180,15 +206,29 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				return;
 			}
 
-			$out['text'] .= '<p>'._L('Attention! Do NOT change your email address if you have logged in using Google/LDAP and not yet created an individual password (for regular login), otherwise you will lose access to your account!').'</p>';
-
 			if (OIDplus::authUtils()::isAdminLoggedIn()) {
+				$ra = new OIDplusRA($ra_email);
+				if ($ra->isPasswordLess()) {
+					$out['text'] .= '<p>'._L('Attention: This user does not have a password because they log in using LDAP or Google OAuth etc.').'</p>';
+					$out['text'] .= '<p>'._L('If you change the email address, the user cannot log in anymore, because the LDAP/OAuth plugin identifies the user via email address, not OpenID.').'</p>';
+					$out['text'] .= '<p>'._L('If you want to change the email address of the user, please <a %1>define a password</a> for them, so that they can use the regular login method using their new email address.', OIDplus::gui()->link('oidplus:change_ra_password$'.$ra_email)).'</p>';
+				}
+
 				$out['text'] .= '<form id="changeRaEmailForm" action="javascript:void(0);" action="javascript:void(0);" onsubmit="return changeRaEmailFormOnSubmit(true);">';
 				$out['text'] .= '<input type="hidden" id="old_email" value="'.htmlentities($ra_email).'"/><br>';
 				$out['text'] .= '<div><label class="padding_label">'._L('Old address').':</label><b>'.htmlentities($ra_email).'</b></div>';
 				$out['text'] .= '<div><label class="padding_label">'._L('New address').':</label><input type="text" id="new_email" value=""/></div>';
 				$out['text'] .= '<br><input type="submit" value="'._L('Change password').'"> '._L('(admin does not require email verification)').'</form>';
 			} else {
+				$ra = new OIDplusRA($ra_email);
+				if ($ra->isPasswordLess()) {
+					$out['icon'] = 'img/error_big.png';
+					$out['text'] .= '<p>'._L('Attention: You are logged in without password (via LDAP or Google OAuth etc.).').'</p>';
+					$out['text'] .= '<p>'._L('Therefore, you cannot change your email address, otherwise you would love access to your account!').'</p>';
+					$out['text'] .= '<p>'._L('If you want to change your email address, then please <a %1>setup a password</a> first, and then use the regular login method to log in using your new email address.', OIDplus::gui()->link('oidplus:change_ra_password$'.$ra_email)).'</p>';
+					return;
+				}
+
 				$out['text'] .= '<form id="changeRaEmailForm" action="javascript:void(0);" action="javascript:void(0);" onsubmit="return changeRaEmailFormOnSubmit(false);">';
 				$out['text'] .= '<input type="hidden" id="old_email" value="'.htmlentities($ra_email).'"/><br>';
 				$out['text'] .= '<div><label class="padding_label">'._L('Old address').':</label><b>'.htmlentities($ra_email).'</b></div>';
@@ -203,14 +243,21 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			$timestamp = explode('$',$id)[3];
 			$auth = explode('$',$id)[4];
 
+			$out['title'] = _L('Perform email address change');
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+
 			if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()::isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('This functionality has been disabled by the administrator.').'</p>';
 				return;
 			}
 
-			$out['title'] = _L('Perform email address change');
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+			$ra = new OIDplusRA($old_email);
+			if ($ra->isPasswordLess() && !OIDplus::authUtils()::isAdminLoggedIn()) {
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = '<p>'._L('E-Mail-Address cannot be changed because this user does not have a password').'</p>';
+				return;
+			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($old_email));
 			if ($res->num_rows() == 0) {

@@ -99,7 +99,6 @@ SMALL THINGS
 		- includes\classes\VtsBrowserDownload.class.php [Problem: This is a third-party code!]
 	* Is there some useful German translation of the Apache 2.0 license?
 - WEID UUID: das UUID 2.25/GUID pendant zeigen als alternative id
-- admin logs: don't show all logs. load more log entries as soon as the page is scrolled down
 - When an OID is edited/added/deleted, don't reload the whole tree. Instead, just change the tree! This looks much more fluid.
 
 DATABASE
@@ -146,6 +145,13 @@ REJECTED IDEAS
 	   page is a OID page request for that OID instead of a plugin page.
 	b) Vendors should use something like "?goto=oidplus:com.example...."
 
+LOGS
+- prune logs entries? automatically prune things like "logged in" but not prune OID changes, etc?
+- admin logs: don't show all logs. load more log entries as soon as the page is scrolled down
+- is it possible that LFI/RFI attacks fill the log files? This is not good!
+- when user changed email from "A" => "B", then all previous log events for "A" are not visible for "B" anymore!
+	=> should we also change the log entry email address references when the user changes their email address?
+
 IDEAS
 - Should object types be able to add additional sub-nodes/pages into the tree,
   which are not "real" objects?
@@ -154,7 +160,6 @@ IDEAS
      ... then we could establish an API which can give object type plugins the possibility to add additional children
 - Host/Domain ObjectType?
 - Hide/Proxy RA E-Mails from public requests
-- prune logs entries? automatically prune things like "logged in" but not prune OID changes, etc?
 - let users choose their own creation arc
 - system guid (name based pubkey)?
 - In regards multilinguality: Allow "oidplus_base$dede.css", so that languages can have their own CSS (e.g. wider "Go" button)

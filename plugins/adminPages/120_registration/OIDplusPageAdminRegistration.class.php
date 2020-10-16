@@ -134,6 +134,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 			$json = @json_decode($res, true);
 
+			$out['title'] = _L('Registration live status');
+
 			if (!$json) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
@@ -150,7 +152,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$out['title'] = _L('Registration live status');
 			$out['text']  = '<p><a '.OIDplus::gui()->link('oidplus:srv_registration').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to registration settings').'</a></p>' .
 			                $json['content'];
 		}

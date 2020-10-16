@@ -61,7 +61,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			if (get_parent_class($classname) == 'OIDplusLoggerPlugin') $back_link = 'oidplus:system_plugins.logger';
 			if (get_parent_class($classname) == 'OIDplusLanguagePlugin') $back_link = 'oidplus:system_plugins.language';
 			$out['text'] = '<p><a '.OIDplus::gui()->link($back_link).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
-			
+
 			$out['text'] .= '<div><label class="padding_label">'._L('Class name').'</label><b>'.htmlentities($classname).'</b></div>'.
 					'<div><label class="padding_label">'._L('Location').'</label><b>'.htmlentities(dirname($plugin->getPluginDirectory())).'</b></div>'.
 					'<div><label class="padding_label">'._L('Plugin type').'</label><b>'.htmlentities(get_parent_class($classname)).'</b></div>'.
@@ -186,6 +186,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_language = true;
 			} else {
+				$out['title'] = _L('Error');
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('Invalid arguments').'</p>';
 				$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';

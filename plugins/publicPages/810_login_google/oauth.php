@@ -64,43 +64,28 @@ $access_token = $data['access_token'];
 list($header,$payload,$signature) = explode('.', $id_token);
 $email = json_decode(base64_decode($payload),true)['email'];
 
-// Query user infos
-$ch = curl_init('https://www.googleapis.com/oauth2/v3/userinfo'); // Initialise cURL
-$data_string = '';
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-	'Content-Length: ' . strlen($data_string),
-	"Authorization: Bearer ".$access_token
-));
-curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-$result = curl_exec($ch);
-curl_close($ch);
-$data = json_decode($result,true);
-$personal_name = $data['name']; // = given_name + " " + family_name
-
-// We now have the data of the person that wanted to log in
-// So we can log off again
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/revoke");
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS,
-	"client_id=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'))."&".
-	"client_secret=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_SECRET'))."&".
-	"token_type_hint=access_token&".
-	"token=".$access_token
-);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_exec($ch);
-curl_close($ch);
-
 // Everything's done! Now login and/or create account
 
 if (!empty($email)) {
 	$ra = new OIDplusRA($email);
 	if (!$ra->existing()) {
 		$ra->register_ra(null); // create a user account without password
+
+		// Query user infos
+		$ch = curl_init('https://www.googleapis.com/oauth2/v3/userinfo'); // Initialise cURL
+		$data_string = '';
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'Content-Length: ' . strlen($data_string),
+			"Authorization: Bearer ".$access_token
+		));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		$result = curl_exec($ch);
+		curl_close($ch);
+		$data = json_decode($result,true);
+		$personal_name = $data['name']; // = given_name + " " + family_name
 
 		OIDplus::db()->query("update ###ra set ra_name = ?, personal_name = ? where email = ?", array($personal_name, $personal_name, $email));
 
@@ -116,3 +101,18 @@ if (!empty($email)) {
 
 	header('Location:'.OIDplus::getSystemUrl(false));
 }
+
+// We now have the data of the person that wanted to log in
+// So we can log off again
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/revoke");
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS,
+	"client_id=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'))."&".
+	"client_secret=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_SECRET'))."&".
+	"token_type_hint=access_token&".
+	"token=".$access_token
+);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_exec($ch);
+curl_close($ch);
