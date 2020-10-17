@@ -248,3 +248,12 @@ OIDplus::baseConfig()->setValue('LDAP_CONTROLUSER_PASSWORD', 'foobar');
 OIDplus::baseConfig()->setValue('GOOGLE_OAUTH2_ENABLED',       true);
 OIDplus::baseConfig()->setValue('GOOGLE_OAUTH2_CLIENT_ID',     '..............apps.googleusercontent.com');
 OIDplus::baseConfig()->setValue('GOOGLE_OAUTH2_CLIENT_SECRET', '.............');
+
+
+-------------------------------------------------------------------------
+(6) FACEBOOK OAUTH2 FIELDS (see document facebook_oauth2_installation.txt)
+-------------------------------------------------------------------------
+
+OIDplus::baseConfig()->setValue('FACEBOOK_OAUTH2_ENABLED',       true);
+OIDplus::baseConfig()->setValue('FACEBOOK_OAUTH2_CLIENT_ID',     '.............'); // Your App ID
+OIDplus::baseConfig()->setValue('FACEBOOK_OAUTH2_CLIENT_SECRET', '.............'); // Your App Secret

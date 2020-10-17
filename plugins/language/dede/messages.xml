@@ -1694,6 +1694,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Facebook OAuth authentication is disabled on this system.
+		]]></source>
+		<target><![CDATA[
+		Facebook OAuth-Authentifizierung ist in diesem System deaktiviert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Failed to load content: %1
 		]]></source>
 		<target><![CDATA[
@@ -2025,7 +2033,7 @@
 		Google OAuth authentication is disabled on this system.
 		]]></source>
 		<target><![CDATA[
-		Google OAuth-Authentifizierung ist auf diesem System deaktiviert.
+		Google OAuth-Authentifizierung ist in diesem System deaktiviert.
 		]]></target>
 	</message>
 	<message>
@@ -2802,6 +2810,14 @@
 		]]></source>
 		<target><![CDATA[
 		Als Administrator anmelden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Login using Facebook
+		]]></source>
+		<target><![CDATA[
+		Mittels Facebook anmelden
 		]]></target>
 	</message>
 	<message>
@@ -5502,10 +5518,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Therefore, you cannot change your email address; otherwise you would love access to your account!
+		Therefore, you cannot change your email address, otherwise you would love access to your account!
 		]]></source>
 		<target><![CDATA[
-		Deswegen können Sie Ihre E-Mail-Adresse nicht ändern; ansonsten würden Sie den Zugriff zu Ihrem Konto verlieren würden!
+		Deswegen können Sie nicht Ihre E-Mail-Adresse ändern, da Sie ansonsten den Zugang zu Ihrem Konto verlieren würden!
 		]]></target>
 	</message>
 	<message>
