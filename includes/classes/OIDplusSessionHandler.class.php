@@ -69,7 +69,12 @@ class OIDplusSessionHandler {
 		} else {
 			if ($_SERVER['REMOTE_ADDR'] != $_SESSION['ip']) {
 				// Was the session hijacked?! Get out of here!
-				$this->destroySession();
+
+				// We don't use $this->destroySession(), because this calls sessionSafeStart() again
+				$_SESSION = array();
+				session_destroy();
+				session_write_close();
+				setcookie(session_name(), "", time()-3600, ini_get('session.cookie_path')); // remove cookie, so GDPR people are happy
 			}
 		}
 	}
