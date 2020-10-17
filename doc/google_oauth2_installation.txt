@@ -31,9 +31,3 @@ How to setup Google Authentication
 	OIDplus::baseConfig()->setValue('GOOGLE_OAUTH2_ENABLED',       true);
 	OIDplus::baseConfig()->setValue('GOOGLE_OAUTH2_CLIENT_ID',     '..............apps.googleusercontent.com');
 	OIDplus::baseConfig()->setValue('GOOGLE_OAUTH2_CLIENT_SECRET', '.............');
-
-(6) You might want to include a document in userdata/resources/ where you explain to your
-    users that clicking the "Login using Google" link will redirect the user to
-    Google in order to perform a login. During this login, Google will send the email address and
-    the personal name of the user to OIDplus - nothing else.
-    Note that the Google consent-screen will also have a privacy statement by Google.

@@ -111,7 +111,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		if (!isset($ldap_userinfo['homephone']))                  $ldap_userinfo['homephone'] = '';
 		if (!isset($ldap_userinfo['mobile']))                     $ldap_userinfo['mobile'] = '';
 		if (!isset($ldap_userinfo['facsimiletelephonenumber']))   $ldap_userinfo['facsimiletelephonenumber'] = '';
-		if (!isset($ldap_userinfo['wwwhomepage']))                $ldap_userinfo['wwwhomepage'] = '';
+		//if (!isset($ldap_userinfo['wwwhomepage']))                $ldap_userinfo['wwwhomepage'] = '';
 
 		$opuserdata = array();
 		$opuserdata['ra_name'] = $ldap_userinfo['cn'];

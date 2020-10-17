@@ -7,9 +7,13 @@
 	<style>
 	h2 {
 		font-size:large !important;
+		text-decoration: underline !important;
+		font-weight: bold !important;
 	}
 	h3 {
 		font-size:medium !important;
+		text-decoration: underline !important;
+		font-style: italic !important;
 	}
 	.underline {
 		text-decoration: underline;
@@ -19,10 +23,10 @@
 
 <body>
 	<h1>Datenschutz Verfahrensbeschreibung</h1>
-	<p><em>Revision: 03. Oktober 2020</em></p>
+	<p><em>Revision: 17. Oktober 2020</em></p>
 	<p><strong><em>Wichtig</em></strong><em> : Dieses Dokument wurde von ViaThinkSoft (dem Entwickler der Software OIDplus) verfasst und enthält allgemeine Informationen zur Funktionsweise von OIDplus in Bezug auf datenschutzbezogene Themen. Da OIDplus eine Web-Software ist, die
 	heruntergeladen und auf einem eigenen Server betrieben werden kann, beschreibt dieses Dokument NICHT, wie die Eigentümer / Administratoren dieser Installation von OIDplus mit Ihren Daten umgehen. Daher sollte der Eigentümer dieses Systems eine zusätzliche / individuelle Datenschutzerklärung vorlegen.</em></p>
-	<a id="terminology"></a><h2><strong><span class="underline">Parteien / Terminologie</span></strong></h2>
+	<a id="terminology"></a><h2>Parteien / Terminologie</h2>
 	<p><strong>ViaThinkSoft</strong> ist der Entwickler der Softwarelösung OIDplus.</p>
 	<p><strong>OIDplus</strong> ist eine Softwarelösung, mit der
 	<strong>Objekt-Bezeichner</strong> (im Folgenden als
@@ -36,23 +40,23 @@
 	sind in einer hierarchischen Struktur organisiert, in der RAs OIDs unter den
 	von ihnen verwalteten OIDs an andere RAs delegieren. Im Kontext einer
 	bestimmten RA und OID ist die <strong>Übergeordnete RA</strong> die RA, die die Root-OID einer bestimmten RA delegiert hat. Die Aussagen zu Superior RAs in diesem Dokument gelten jedoch nur, wenn die Superior RA OIDplus zum Delegieren der OID verwendet.</p>
-	<a id="server_client_side"></a><h2><strong><span class="underline">Definition von serverseitig und clientseitig</span></strong></h2>
+	<a id="server_client_side"></a><h2>Definition von serverseitig und clientseitig</h2>
 	<p>OIDplus ist eine Webanwendung, die mit den Programmiersprachen PHP (serverseitig) und HTML / JavaScript (clientseitig)
 	programmiert wurde.</p>
-	<h3><span class="underline">Serverseitig</span></h3>
+	<h3>Serverseitig</h3>
 	<p>Die PHP-Skripte von OIDplus werden über einen PHP-Skriptinterpreter verarbeitet, der auf einer Webserversoftware (HTTP-Webserver) ausgeführt wird, z. B. Apache oder Nginx. Die tatsächlichen Daten von OIDplus (OIDs, RAs) werden in einem DBMS (Database Management
 	System) gespeichert, z.B. MySQL, MariaDB oder PostgreSQL. Das DBMS wird normalerweise auf demselben Server installiert, auf dem
 	auch PHP / Apache installiert ist. Der Serveradministrator kann es jedoch auf jedem Computer installieren.</p>
-	<h3><span class="underline">Client-Seite</span></h3>
+	<h3>Client-Seite</h3>
 	<p>Während der Benutzer OIDplus durchsucht, stellt die Serverseite dem Client-Computer HTML- und JavaScript-Inhalte bereit. Mit einer Webbrowsersoftware (wie Chrome oder Firefox) werden diese Inhalte verarbeitet und auf dem Bildschirm angezeigt. Verschiedene JavaScript-Skripte sind entweder erforderlich, um OIDplus auszuführen, oder sie verbessern die Benutzererfahrung, z. B. indem OID-Beschreibungen neu geladen werden, ohne die gesamte Seite neu zu laden, während der Benutzer OIDplus durchsucht. Möglicherweise sind einige externe JavaScripts enthalten (derzeit nur ReCaptcha), die am Ende
 	dieses Dokuments beschrieben werden.</p>
-	<a id="scope"></a><h2><strong><span class="underline">Umfang dieses Dokuments</span></strong></h2>
+	<a id="scope"></a><h2>Umfang dieses Dokuments</h2>
 	<p>Dieses Dokument enthält nur Informationen zur OIDplus-Software. Es ist unabhängig vom Verhalten der clientseitigen Software (Webbrowser, Betriebssystem, Firewalls), unabhängig vom Verhalten der Hardware (Netzwerkrouter oder Firewalls,), unabhängig vom Verhalten der serverseitigen Software (Apache, PHP, MySQL / MariaDB / PostgreSQL / ..., Betriebssystem usw.) und die Vorgehensweise, wie der Systemadministrator die Serversoftware betreibt, Protokolldateien speichert, Firewalls verwaltet usw.</p>
-	<a id="oid_information"></a><h2><strong><span class="underline">OID-Informationen</span></strong></h2>
+	<a id="oid_information"></a><h2>OID-Informationen</h2>
 	<p>Der Hauptzweck von OIDplus besteht darin, Informationen zu
 	Objekt-Bezeichnern anzuzeigen und zu verwalten.</p>
 	<p>Einige Attribute von Objekt-Bezeichnern (wie z. B. ASN.1-Kennungen) können nur von der übergeordneten RA und nicht von der RA dieser OID geändert werden. Andererseits können einige andere Informationen (wie Titel und Beschreibung) nur von der RA geändert werden, die die OID besitzt, und nicht von der Superior RA. Der Systemadministrator kann alle Informationen bearbeiten.</p>
-	<h3><em>Versteckte OID-Informationen</em></h3>
+	<h3>Versteckte OID-Informationen</h3>
 	<p>Eine übergeordnete RA kann das "Versteckt"
 	Kennzeichen auf eine von ihnen delegierte OID setzen.
 	Dies bedeutet, dass die OID und alle nachfolgenden OIDs für die
@@ -64,7 +68,7 @@
 	<p>Ein Besitzer einer OID kann alle OIDs sehen, die auf seine Root-OID verweisen, auch wenn einige davon ausgeblendet sind.</p>
 	<p>Wenn Sie <strong>Eigentümer einer OID </strong> sind und Ihre OID vor der Öffentlichkeit verbergen möchten, wenden Sie sich an Ihre <strong>übergeordnete RA</strong> (bevorzugt) oder an den <strong>Systemadministrator</strong> und bitten Sie diese, Ihre OID als versteckt zu markieren. Bitte beachten Sie, dass dadurch auch alle
 	Unter-OIDs ausgeblendet werden, die Sie an sich selbst oder andere RAs delegieren.</p>
-	<h3><em>Übersicht: Verwaltete Informationen zu OIDs:</em></h3>
+	<h3>Übersicht: Verwaltete Informationen zu OIDs:</h3>
 	<table border="1">
 	<tbody>
 	<tr>
@@ -205,10 +209,10 @@
 	</tr>
 	</tbody>
 	</table>
-	<a id="ra_information"></a><h2><strong><span class="underline">RA-Informationen</span></strong></h2>
+	<a id="ra_information"></a><h2>RA-Informationen</h2>
 	<p>Die Informationen zu RAs, die OIDs besitzen, können öffentlich eingesehen werden. Eine RA kann ihre Kontaktdaten im OIDplus-System (Anmeldebereich) verwalten und ihre Informationen als "privat" markieren, um die für die Öffentlichkeit sichtbaren Informationen einzuschränken.</p>
 	<p>Folgende RA-Informationen werden immer angezeigt (auch wenn sie als "privat" markiert sind):</p>
-	<h3><em>Übersicht: Verwaltete Informationen zu RAs:</em></h3>
+	<h3>Übersicht: Verwaltete Informationen zu RAs:</h3>
 	<table border="1">
 	<tbody>
 	<tr>
@@ -403,7 +407,7 @@
 	</tr>
 	</tbody>
 	</table>
-	<a id="ra_invitation"></a><h2><strong><span class="underline">Einladung von RAs</span></strong></h2>
+	<a id="ra_invitation"></a><h2>Einladung von RAs</h2>
 	<p>Wenn eine OID von einer RA oder vom Systemadministrator erstellt wird, wird der Eigentümer der OID durch eine E-Mail-Adresse definiert (die öffentlich angezeigt wird). Daher ist es möglich, eine OID zu besitzen, auch wenn Sie nicht im OIDplus-System registriert sind.</p>
 	<p>Wenn die OID erstellt wird und die RA mit einer solchen E-Mail-Adresse nicht
 	in OIDplus vorhanden ist, wird der Ersteller gefragt, ob er eine Einladung senden möchte. Wenn
@@ -413,11 +417,11 @@
 	Dort wird dann ein Passwort eingerichtet und es können weitere Kontaktdaten
 	hinzugefügt sowie OIDs
 	delegiert und bearbeiten werden.</p>
-	<p>Derzeit kann sich eine RA nicht selbstständig registrieren. Sie benötigen eine Einladung des Systemadministrators oder ihrer übergeordneten RA, um sich beim OIDplus-System registrieren zu können. (Hinweis: Um eine Einladung erneut zu senden, muss der Systemadministrator oder die übergeordnete RA in der OID-Delegierungstabelle auf "Aktualisieren" klicken, damit
+	<p>Derzeit kann sich eine RA mittels der regulären Anmeldemethode nicht selbstständig registrieren. (Mit einigen alternativen Anmeldemethoden kann ein Benutzer sich selbstständig registrieren. Mehr Infos zu den alternativen Anmeldemethoden finden Sie weiter unten.) Mit der regulären Anmeldemethode benötigen Sie eine Einladung des Systemadministrators oder ihrer übergeordneten RA, um sich beim OIDplus-System registrieren zu können. (Hinweis: Um eine Einladung erneut zu senden, muss der Systemadministrator oder die übergeordnete RA in der OID-Delegierungstabelle auf "Aktualisieren" klicken, damit
 	er erneut aufgefordert wird, die Einladung zu senden.)</p>
 	<p>Zusätzlich zum Einladungssystem kann der Systemadministrator RA-Konten
 	ohne Überprüfung der E-Mail-Adresse erstellen.</p>
-	<a id="oidinfo_publishing"></a><h2><strong><span class="underline">Veröffentlichen von RAs / OIDs auf oid-info.com</span></strong></h2>
+	<a id="oidinfo_publishing"></a><h2>Veröffentlichen von RAs / OIDs auf oid-info.com</h2>
 	<p>oid-info.com ist eine Webseite, auf der Informationen zu OIDs wie in einem Wiki gesammelt und angezeigt werden. OIDplus enthält Funktionen zum Übermitteln von Daten seiner Datenbank an oid-info.com</p>
 	<p>Es gibt zwei Möglichkeiten:</p>
 	<ol>
@@ -428,12 +432,12 @@
 		in regelmäßigen Abständen automatisch über eine sichere Verbindung und sendet die öffentlichen RA / OID-Daten
 		als XML-Datei. ViaThinkSoft speichert diese Daten und leitet sie an den OID-Repository-Webmaster weiter, der die Daten überprüft und schließlich an das öffentliche Repository www.oid-info.com übermittelt.</li>
 	</ol>
-	<a id="systemid"></a><h2><strong><span class="underline">Eindeutige System-ID</span></strong></h2>
+	<a id="systemid"></a><h2>Eindeutige System-ID</h2>
 	<p>Während der Ersteinrichtung wird ein "Schlüsselpaar",
 	bestehend aus einem öffentlichen und einem privaten Schlüssel erstellt.
 	Dieses Schlüsselpaar kann für verschiedene Zwecke verwendet werden, z. B. um Daten zwischen OIDplus und ViaThinkSoft zu verschlüsseln, wenn der Dienst "Systemregistrierung" verwendet wird (siehe unten) oder um OID-WHOIS-Abfrage-Eregebnisse zu signieren.</p>
 	<p>Aus diesem öffentlichen Schlüssel wird eine eindeutige System-ID abgeleitet. Die eindeutige System-ID und der öffentliche Schlüssel werden im Setup-Bildschirm angezeigt.</p>
-	<a id="system_registration"></a><h2><strong><span class="underline">Systemregistrierung und automatische Veröffentlichung auf oid-info.com</span></strong></h2>
+	<a id="system_registration"></a><h2>Systemregistrierung und automatische Veröffentlichung auf oid-info.com</h2>
 	<p>Während der Ersteinrichtung kann der Systemadministrator zwischen folgenden Optionen wählen:</p>
 	<p>0 = Beim OIDplus-Verzeichnisdienst registrieren und RA/OID-Daten
 	automatisch auf oid-info.com veröffentlichen<br>1 = Nur im
@@ -441,7 +445,7 @@
 	verbergen</p>
 	<p>Diese Einstellung kann jederzeit im Administrator-Anmeldebereich
 	geändert werden.</p>
-	<h3><em><span class="underline">Registrieren des Systems beim Verzeichnisdienst (Option 0 und 1)</span></em></h3>
+	<h3>Registrieren des Systems beim Verzeichnisdienst (Option 0 und 1)</h3>
 	<p>Die Registrierung des OIDplus-Systems hat viele Vorteile:</p><!-- please keep in sync with plugins/adminPages/120_registration/info$dede.html document -->
 	<ul>
 		<li>Der öffentliche Schlüssel der OIDplus-Installation wird im ViaThinkSoft OIDplus-Verzeichnis veröffentlicht, sodass Benutzer die Integrität der Daten (z.B. Daten aus einer OID-WHOIS-Abfrage) bestätigen können.</li>
@@ -496,10 +500,10 @@
 	Um bereits übermittelte OIDs zu entfernen, muss sich der Systemadministrator
 	an den OID-Repository-Webmaster wenden ( <a class="spamspan" href="mailto:admin@oid-info.com">admin@oid-info.com</a>
 	), in Englisch oder Französischer Sprache.</p>
-	<h3><em><span class="underline">System ausblenden (Option 2)</span></em></h3>
+	<h3>System ausblenden (Option 2)</h3>
 	<p>Wenn Option 2 für die Datenschutzstufe ausgewählt wurde, kontaktiert das System weder ViaThinkSoft, noch oid-info.com.</p>
-	<a id="logfiles"></a><h2><strong><span class="underline">Protokolldateien</span></strong></h2>
-	<h3><em><span class="underline">Protokolle von OIDplus</span></em></h3>
+	<a id="logfiles"></a><h2>Protokolldateien</h2>
+	<h3>Protokolle von OIDplus</h3>
 	<p>OIDplus verwaltet Protokolleinträge für bestimmte Ereignisse wie
 	z.B. Anmeldungen, OID / RA-Änderungen, Erstellen und Löschen von OIDs usw.</p>
 	<p>Diese Protokollnachrichten werden nur im DBMS gespeichert.</p>
@@ -509,12 +513,12 @@
 	<p>Protokollereignisse zeigen möglicherweise die IP-Adressen des Computers an, der mit dem OIDplus-System verbunden war, und die E-Mail-Adresse, wenn die RA mit ihren Anmeldeinformationen angemeldet war.</p>
 	<p>OIDplus bietet keine Funktion zum Löschen von Protokollereignissen. Ein Löschvorgang muss direkt in der Datenbank erfolgen, z. B. mit
 	einer Datenbanksoftware wie phpMyAdmin.</p>
-	<h3><em><span class="underline">Protokolle von Host-Software, Firewalls usw.</span></em></h3>
+	<h3>Protokolle von Host-Software, Firewalls usw.</h3>
 	<p>Neben von OIDplus erstellten Protokollen können auch andere clientseitige oder serverseitige Software, die an der Verarbeitung der Webanforderungen beteiligt
 	sind (z. B. der HTTP-Webserver, der PHP-Skriptinterpreter, der Datenbankserver, das Betriebssystem, der Webbrowser oder verschiedene Firewalls)
 	Datenverkehr und Abfrage auf verschiedene Art protokollieren. Diese Protokolle sind unabhängig von OIDplus und müssen vom Systemadministrator und / oder den Netzwerkadministratoren verwaltet werden.</p>
 	<p>Wenn Sie über den Inhalt von Protokolldateien besorgt sind, wenden Sie sich an den Systemadministrator.</p>
-	<a id="cookies"></a><h2><strong><span class="underline">Cookies</span></strong></h2>
+	<a id="cookies"></a><h2>Cookies</h2>
 	<p>Ein Cookie ist eine kleine Textdatei, die bei
 	jedem Aufruf dieser Seite an den Webserver gesendet wird,
 	z.B. um Sie als eingeloggten Benutzer zu identifizieren.</p>
@@ -610,22 +614,78 @@
 	</tr>
 	</tbody>
 	</table>
-	<a id="external_javascripts"></a><h2><strong><span class="underline">Externe JavaScripts</span></strong></h2>
+	<a id="external_javascripts"></a><h2>Externe JavaScripts</h2>
 	<p>Während des Ladens der Webseite werden verschiedene JavaScripts hinzugefügt, um die Benutzererfahrung zu verbessern und wichtige Funktionen
 	zu ermöglichen. Die grundlegenden Skripte sind die JavaScript-Dateien von OIDplus selbst, die auf dem Server der jeweiligen OIDplus-Installation gespeichert sind.</p>
 	<p>Es gibt folgende JavaScripts, die von einer externen Quelle / einem externen Server geladen werden:</p>
-	<h3><em><span class="underline">ReCAPTCHA (nur wenn "ReCAPTCHA" aktiviert ist)</span></em></h3>
+	<h3>ReCAPTCHA (nur wenn "ReCAPTCHA" aktiviert ist)</h3>
 	<p>Um vertrauliche Funktionen von OIDplus (z. B. das Anmeldeformular) vor Hackern zu schützen, kann der Systemadministrator "ReCAPTCHA" aktivieren, einen Dienst von Google. Vor dem Aktivieren von ReCAPTCHA in den OIDplus-Einstellungen muss der Systemadministrator einen API-Schlüssel von Google anfordern. Die Verwendung von ReCAPTCHA wird wahrscheinlich zusätzliche Cookies einführen, die außerhalb der Kontrolle von OIDplus liegen.</p>
 	<p>Weitere Informationen finden Sie in den <a href="https://policies.google.com/privacy">Datenschutzbestimmungen</a> und <a href="https://policies.google.com/terms">Nutzungsbedingungen</a> von Google.</p>
 	<p>Wenn der Systemadministrator die ReCAPTCHA-Funktion nicht aktiviert hat, wird überhaupt kein externes Skript eingefügt.</p>
 	<p>Wenn die Funktion aktiviert ist, führt das Blockieren des ReCAPTCHA-JavaScript auf der Clientseite dazu, dass verschiedene Funktionen (wie
 	z.B. der Anmeldebereich) nicht funktionieren.</p>
-	<a id="additional_security"></a><h2><strong><span class="underline">Zusätzliche Sicherheits- / Zugriffskontrollen</span></strong></h2>
-	<p>Systemadministratoren können andere Methoden auswählen, um den öffentlichen Zugriff zu deaktivieren, z. B. mithilfe von Firewalls (sodass Clients überhaupt nicht auf den Server zugreifen können) oder indem Sie einen Kennwortschutz auf der Ebene der HTTP-Webserversoftware einrichten,
+	<a id="additional_security"></a><h2>Zusätzliche Sicherheits- / Zugriffskontrollen</h2>
+	<p>Systemadministratoren können andere Methoden auswählen, um den öffentlichen Zugriff zu deaktivieren, z. B. mithilfe von Firewalls (sodass Clients überhaupt nicht auf den Server zugreifen können) oder indem Sie einen Passwortschutz auf der Ebene der HTTP-Webserversoftware einrichten,
 	z. B. "Basic Auth" bei Apache
 	(damit die Clients nicht auf das Verzeichnis zugreifen können, in dem OIDplus installiert ist).</p>
-	<a id="encrypted_connections"></a><h2><strong><span class="underline">Verschlüsselte Netzwerkverbindungen</span></strong></h2>
+	<a id="encrypted_connections"></a><h2>Verschlüsselte Netzwerkverbindungen</h2>
 	<p>Der Serveradministrator ist für die Sicherung der Netzwerkverbindungen mit HTTPS verantwortlich. Dies erfolgt auf HTTP-Webserverebene (d.h. einem Apache-Modul / einer Apache-Einstellung) und unabhängig von OIDplus.</p>
+
+	<a id="login_admin"></a><h2>Anmeldeverfahren für Administratoren</h2>
+	<p>Für die Administratoranmeldung ist ein Passwort erforderlich, das in einer lokalen Konfigurationsdatei gespeichert ist. Es wird mit einem "gesalzenen Hash" gespeichert, der einer "Einwegverschlüsselung" ähnelt, und daher kann das Passwort von niemandem gesehen werden, der die Konfigurationsdatei liest.</p>
+	<p>Die Konfigurationsdatei wird von einem "Setup"-Dienstprogramm generiert und kann vom Systemadministrator manuell bearbeitet werden.</p>
+
+	<a id="login_ra"></a><h2>RA-Anmeldeverfahren</h2>
+	<p>Es gibt verschiedene Möglichkeiten, sich als Registrierungsstelle anzumelden:</p>
+	<ul>
+		<li>Reguläre Anmeldemethode</li>
+		<li>Mittels Google anmelden (optionales Plugin für OIDplus)</li>
+		<li>Mittels LDAP / ActiveDirectory anmelden (optionales Plugin für OIDplus).</li>
+	</ul>
+
+	<a id="login_ra_regular"></a><h3>Reguläre Anmeldemethode</h3>
+	<p>Bei der regulären Anmeldemethode meldet sich die RA mit einem von ihnen definierten Passwort an. Das Passwort wird in der Datenbank mit einem "gesalzenen Hash" gespeichert, der einer "Einwegverschlüsselung" ähnelt. Daher kann der Systemadministrator das Passwort nicht in der Datenbanktabelle sehen.</p>
+
+	<a id="login_ra_google"></a><h3>Mittels Google anmelden</h3>
+	<p>Diese alternative Anmeldemethode ist ein optionales Plugin, das vom Administrator aktiviert werden kann.</p>
+	<p>Wenn der Nutzer auf den Link "Mittels Google anmelden" klickt, wird er zu einem Google-Zustimmungsbildschirm weitergeleitet, auf dem er sich mit seinen Anmeldeinformationen für das Google-Konto anmelden kann. (Dieses Verfahren wird als OAuth2 bezeichnet.) Beachten Sie, dass dieser Zustimmungsbildschirm eine Google-spezifische Datenschutzrichtlinie und Nutzungsbedingungen enthält. Sobald Sie sich angemeldet haben, leitet Google den Nutzer zurück zu OIDplus und übermittelt dabei eine signierte Nachricht mit den folgenden Inhalten:</p>
+	<ul>
+		<li>Die E-Mail-Adresse der Person, die sich angemeldet hat</li>
+		<li>Der persönliche Name der Person, die sich angemeldet hat</li>
+	</ul>
+	<p>Zusätzliche Informationen wie OpenID oder Profilbild werden verworfen und von OIDplus nicht ausgewertet.</p>
+	<p>Das Google-Passwort wird nicht an OIDplus übertragen.</p>
+	<p>Wenn sich der Benutzer zum ersten Mal angemeldet hat, erstellt OIDplus ein neues RA-Konto in der lokalen Datenbank, das diese Informationen enthält. Das Konto ist noch ohne Passwort, daher kann es nur für die OAuth-Authentifizierung verwendet werden.</p>
+	<p>Der Benutzer kann optional ein Passwort definieren, falls er zusätzlich die reguläre Anmeldemethode verwenden möchte.</p>
+	<p>Wenn die RA über ein Konto ohne Passwort verfügt, kann sie ihre E-Mail-Adresse nicht ändern, da die OIDplus-Implementierung von OAuth2 die E-Mail-Adresse anstelle der üblichen "OpenID" als Identifikation verwendet. Wenn sie ihre E-Mail-Adresse ändern möchten, müssen sie zuerst ein Passwort erstellen und dann die reguläre Anmeldemethode unter Verwendung der neuen E-Mail-Adresse verwenden.</p>
+
+	<a id="login_ra_ldap"></a><h3>Mittels LDAP / ActiveDirectory anmelden</h3>
+	<p>Diese alternative Anmeldemethode ist ein optionales Plugin, das vom Administrator aktiviert werden kann.</p>
+	<p>LDAP / ActiveDirectory ist eine Technologie, bei der ein Server die Authentifizierung für mehrere Dienste (wie etwa Windows-Computer, Intranet, Netzwerkfreigaben, E-Mail-Konten, etc.) verwaltet und normalerweise in großen Unternehmensnetzwerken zum Einsatz kommt.</p>
+	<p>Im Vergleich zu der üblichen Anmeldung im Firmennetzwerk, bei dem der Benutzer den Benutzernamen und das Passwort eingibt, fragt OIDplus nach einer E-Mail-Adresse und einem Passwort.</p>
+	<p>Die E-Mail-Adresse ist ein optionales Feld in der LDAP / ActiveDirectory-Datenbank. Daher muss der Netzwerkadministrator die E-Mail-Adressen aller Benutzer im Netzwerk festlegen, damit sie sich bei OIDplus anmelden können.</p>
+	<p>Sobald der Benutzer den Benutzernamen und das Passwort eingegeben hat, stellt OIDplus eine Verbindung zum LDAP-Server her und sucht nach einem Benutzer, der der eingegebenen E-Mail-Adresse entspricht. Wenn ein Benutzer gefunden wird, prüft OIDplus, ob das Passwort zum LDAP-Benutzer passt.</p>
+	<p>Sobald dieser Vorgang erfolgreich war, ruft OIDplus die folgenden Informationen vom LDAP-Server ab (falls im LDAP-Verzeichnis verfügbar):</p>
+	<ul>
+		<li>"Common name" (CN)</li>
+		<li>"Anzeigename"</li>
+		<li>Vorname</li>
+		<li>Nachname (SN)</li>
+		<li>Unternehmen</li>
+		<li>Name des Büros</li>
+		<li>Abteilung</li>
+		<li>Adresse</li>
+		<li>Postleitzahl</li>
+		<li>Ort (L)</li>
+		<li>Land (CO)</li>
+		<li>Telefonnummer(n)</li>
+		<li>Handynummer</li>
+		<li>Faxnummer</li>
+	</ul>
+	<p>Wenn sich der Benutzer zum ersten Mal angemeldet hat, erstellt OIDplus ein neues RA-Konto in der lokalen Datenbank, das diese Informationen enthält. Das Konto ist noch ohne Passwort und kann daher nur für die LDAP-Authentifizierung verwendet werden.</p>
+	<p>Der Benutzer kann optional ein Passwort definieren, falls er zusätzlich die reguläre Anmeldemethode verwenden möchte.</p>
+	<p>Wenn die RA über ein Konto ohne Passwort verfügt, kann sie ihre E-Mail-Adresse nicht ändern, da bei der OIDplus-Implementierung von LDAP / ActiveDirectory die E-Mail-Adresse anstelle des üblichen Benutzernamens als Identifikation verwendet wird. Wenn sie Ihre E-Mail-Adresse ändern möchten, müssen Sie zuerst ein Passwort erstellen und dann die reguläre Anmeldemethode unter Verwendung der neuen E-Mail-Adresse verwenden.</p>
+
 </body>
 
 </html>
