@@ -640,6 +640,7 @@
 	<ul>
 		<li>Reguläre Anmeldemethode</li>
 		<li>Mittels Google anmelden (optionales Plugin für OIDplus)</li>
+		<li>Mittels Facebook anmelden (optionales Plugin für OIDplus)</li>
 		<li>Mittels LDAP / ActiveDirectory anmelden (optionales Plugin für OIDplus).</li>
 	</ul>
 
@@ -666,11 +667,12 @@
 		<li>Die E-Mail-Adresse der Person, die sich angemeldet hat</li>
 		<li>Der persönliche Name der Person, die sich angemeldet hat</li>
 	</ul>
-	<p>Zusätzliche Informationen wie OpenID oder Profilbild werden verworfen und von OIDplus nicht ausgewertet.</p>
+	<p>Zusätzliche Informationen wie die User-ID werden verworfen und von OIDplus nicht ausgewertet.</p>
 	<p>Das Facebook-Passwort wird nicht an OIDplus übertragen.</p>
+	<p>Facebook speichert die Erlaubnis, die E-Mail-Adresse auszuhändigen, damit bei späteren Anmeldungen der Zustimmungsbildschirm nicht mehr angezeigt wird. Diese Zustimmungen werden in den "App"-Berechtigungen im Facebook-Konto verwaltet und können dort auch widerrufen werden.</p>
 	<p>Wenn sich der Benutzer zum ersten Mal angemeldet hat, erstellt OIDplus ein neues RA-Konto in der lokalen Datenbank, das diese Informationen enthält. Das Konto ist noch ohne Passwort, daher kann es nur für die OAuth-Authentifizierung verwendet werden.</p>
 	<p>Der Benutzer kann optional ein Passwort definieren, falls er zusätzlich die reguläre Anmeldemethode verwenden möchte.</p>
-	<p>Wenn die RA über ein Konto ohne Passwort verfügt, kann sie ihre E-Mail-Adresse nicht ändern, da die OIDplus-Implementierung von OAuth2 die E-Mail-Adresse anstelle der üblichen "OpenID" als Identifikation verwendet. Wenn sie ihre E-Mail-Adresse ändern möchten, müssen sie zuerst ein Passwort erstellen und dann die reguläre Anmeldemethode unter Verwendung der neuen E-Mail-Adresse verwenden.</p>
+	<p>Wenn die RA über ein Konto ohne Passwort verfügt, kann sie ihre E-Mail-Adresse nicht ändern, da die OIDplus-Implementierung von OAuth2 die E-Mail-Adresse anstelle der üblichen "User ID" als Identifikation verwendet. Wenn sie ihre E-Mail-Adresse ändern möchten, müssen sie zuerst ein Passwort erstellen und dann die reguläre Anmeldemethode unter Verwendung der neuen E-Mail-Adresse verwenden.</p>
 	<p><b>Vorsicht:</b> Das Löschen der "App" in den Facebook Einstellungen führt nicht dazu, dass die Daten aus OIDplus gelöscht werden. Löschen Sie daher zuerst Ihr OIDplus Profil, und entfernen Sie anschließend die "App"-Berechtigung in Ihrem Facebook-Konto.</p>
 
 	<a id="login_ra_ldap"></a><h3>Mittels LDAP / ActiveDirectory anmelden</h3>
