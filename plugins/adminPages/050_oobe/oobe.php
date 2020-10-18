@@ -24,6 +24,7 @@ ob_start(); // allow cookie headers to be sent
 header('Content-Type:text/html; charset=UTF-8');
 
 OIDplus::init(true);
+set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
 
 ob_start();
 

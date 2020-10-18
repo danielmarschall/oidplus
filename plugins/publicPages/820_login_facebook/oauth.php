@@ -24,6 +24,7 @@
 require_once __DIR__ . '/../../../includes/oidplus.inc.php';
 
 OIDplus::init(true);
+set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
 
 if (!OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {
 	throw new OIDplusException(_L('Facebook OAuth authentication is disabled on this system.'));
@@ -68,17 +69,12 @@ $cont = curl_exec($ch);
 curl_close($ch);
 $data = json_decode($cont,true);
 if (isset($data['error'])) {
-	// TODO: OIDplus design, multilang
-	echo '<h2>Error at step 2</h2>';
-	echo '<p>'.$data['error']['message'].'</p>';
-	die();
+	throw new OIDplusException(_L('Error receiving the authentication token from %1: %2','Facebook',$data['error']['message']));
 }
 $personal_name = $data['name'];
 $email = !isset($data['email']) ? '' : $data['email'];
 if (empty($email)) {
-	echo '<h2>Facebook Login</h2>';
-	echo '<p>Your Facebook account does not have an email address.</p>';
-	die();
+	throw new OIDplusException(_L('Your Facebook account does not have an email address.'));
 }
 
 // Everything's done! Now login and/or create account

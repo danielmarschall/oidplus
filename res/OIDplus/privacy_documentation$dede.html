@@ -23,7 +23,7 @@
 
 <body>
 	<h1>Datenschutz Verfahrensbeschreibung</h1>
-	<p><em>Revision: 17. Oktober 2020</em></p>
+	<p><em>Revision: 18. Oktober 2020</em></p>
 	<p><strong><em>Wichtig</em></strong><em> : Dieses Dokument wurde von ViaThinkSoft (dem Entwickler der Software OIDplus) verfasst und enthält allgemeine Informationen zur Funktionsweise von OIDplus in Bezug auf datenschutzbezogene Themen. Da OIDplus eine Web-Software ist, die
 	heruntergeladen und auf einem eigenen Server betrieben werden kann, beschreibt dieses Dokument NICHT, wie die Eigentümer / Administratoren dieser Installation von OIDplus mit Ihren Daten umgehen. Daher sollte der Eigentümer dieses Systems eine zusätzliche / individuelle Datenschutzerklärung vorlegen.</em></p>
 	<a id="terminology"></a><h2>Parteien / Terminologie</h2>
@@ -649,12 +649,15 @@
 
 	<a id="login_ra_google"></a><h3>Mittels Google anmelden</h3>
 	<p>Diese alternative Anmeldemethode ist ein optionales Plugin, das vom Administrator aktiviert werden kann.</p>
-	<p>Wenn der Nutzer auf den Link "Mittels Google anmelden" klickt, wird er zu einem Google-Zustimmungsbildschirm weitergeleitet, auf dem er sich mit seinen Anmeldeinformationen für das Google-Konto anmelden kann. (Dieses Verfahren wird als OAuth2 bezeichnet.) Beachten Sie, dass dieser Zustimmungsbildschirm eine Google-spezifische Datenschutzrichtlinie und Nutzungsbedingungen enthält. Sobald Sie sich angemeldet haben, leitet Google den Nutzer zurück zu OIDplus und übermittelt dabei eine signierte Nachricht mit den folgenden Inhalten:</p>
+	<p>Wenn der Nutzer auf den Link "Mittels Google anmelden" klickt, wird er zu einem Google-Zustimmungsbildschirm weitergeleitet, auf dem er sich mit seinen Anmeldeinformationen für das Google-Konto anmelden kann. (Dieses Verfahren wird als OAuth2 bezeichnet.) Beachten Sie, dass dieser Zustimmungsbildschirm eine Google-spezifische Datenschutzrichtlinie und Nutzungsbedingungen enthält. Sobald Sie sich angemeldet haben, leitet Google den Nutzer zurück zu OIDplus und übermittelt dabei eine signierte Nachricht mit den folgenden Informationen zur Person, die sich angemeldet hat:</p>
 	<ul>
-		<li>Die E-Mail-Adresse der Person, die sich angemeldet hat</li>
-		<li>Der persönliche Name der Person, die sich angemeldet hat</li>
+		<li>E-Mail-Adresse</li>
+		<li>Verifizierungs-Status der E-Mail-Adresse (muss verifiziert sein)</li>
+		<li>Persönlicher Name</li>
+		<li>Spracheinstellung (diese Information wird von OIDplus nicht ausgewertet und verworfen)</li>
+		<li>Link zum Profilbild (diese Information wird von OIDplus nicht ausgewertet und verworfen)</li>
+		<li>OpenID (diese Information wird von OIDplus nicht ausgewertet und verworfen)</li>
 	</ul>
-	<p>Zusätzliche Informationen wie OpenID oder Profilbild werden verworfen und von OIDplus nicht ausgewertet.</p>
 	<p>Das Google-Passwort wird nicht an OIDplus übertragen.</p>
 	<p>Wenn sich der Benutzer zum ersten Mal angemeldet hat, erstellt OIDplus ein neues RA-Konto in der lokalen Datenbank, das diese Informationen enthält. Das Konto ist noch ohne Passwort, daher kann es nur für die OAuth-Authentifizierung verwendet werden.</p>
 	<p>Der Benutzer kann optional ein Passwort definieren, falls er zusätzlich die reguläre Anmeldemethode verwenden möchte.</p>
@@ -662,12 +665,12 @@
 
 	<a id="login_ra_facebook"></a><h3>Mittels Facebook anmelden</h3>
 	<p>Diese alternative Anmeldemethode ist ein optionales Plugin, das vom Administrator aktiviert werden kann.</p>
-	<p>Wenn der Nutzer auf den Link "Mittels Facebook anmelden" klickt, wird er zu einem Facebook-Zustimmungsbildschirm weitergeleitet, auf dem er sich mit seinen Anmeldeinformationen für das Facebook-Konto anmelden kann. (Dieses Verfahren wird als OAuth2 bezeichnet.) Beachten Sie, dass dieser Zustimmungsbildschirm eine Facebook-spezifische Datenschutzrichtlinie und Nutzungsbedingungen enthält. Sobald Sie sich angemeldet haben, leitet Facebook den Nutzer zurück zu OIDplus und übermittelt dabei eine signierte Nachricht mit den folgenden Inhalten:</p>
+	<p>Wenn der Nutzer auf den Link "Mittels Facebook anmelden" klickt, wird er zu einem Facebook-Zustimmungsbildschirm weitergeleitet, auf dem er sich mit seinen Anmeldeinformationen für das Facebook-Konto anmelden kann. (Dieses Verfahren wird als OAuth2 bezeichnet.) Beachten Sie, dass dieser Zustimmungsbildschirm eine Facebook-spezifische Datenschutzrichtlinie und Nutzungsbedingungen enthält. Sobald Sie sich angemeldet haben, leitet Facebook den Nutzer zurück zu OIDplus und übermittelt dabei eine signierte Nachricht mit den folgenden Informationen zur Person, die sich angemeldet hat:</p>
 	<ul>
-		<li>Die E-Mail-Adresse der Person, die sich angemeldet hat</li>
-		<li>Der persönliche Name der Person, die sich angemeldet hat</li>
+		<li>E-Mail-Adresse</li>
+		<li>Persönlicher Name</li>
+		<li>User-ID (diese Information wird von OIDplus nicht ausgewertet und verworfen)</li>
 	</ul>
-	<p>Zusätzliche Informationen wie die User-ID werden verworfen und von OIDplus nicht ausgewertet.</p>
 	<p>Das Facebook-Passwort wird nicht an OIDplus übertragen.</p>
 	<p>Facebook speichert die Erlaubnis, die E-Mail-Adresse auszuhändigen, damit bei späteren Anmeldungen der Zustimmungsbildschirm nicht mehr angezeigt wird. Diese Zustimmungen werden in den "App"-Berechtigungen im Facebook-Konto verwaltet und können dort auch widerrufen werden.</p>
 	<p>Wenn sich der Benutzer zum ersten Mal angemeldet hat, erstellt OIDplus ein neues RA-Konto in der lokalen Datenbank, das diese Informationen enthält. Das Konto ist noch ohne Passwort, daher kann es nur für die OAuth-Authentifizierung verwendet werden.</p>

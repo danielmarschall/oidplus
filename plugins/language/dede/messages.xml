@@ -1590,6 +1590,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Error receiving the authentication token from %1: %2
+		]]></source>
+		<target><![CDATA[
+		Konnte Authentifizierungs-Token von %1 nicht erhalten: %2
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Error: %1
 		]]></source>
 		<target><![CDATA[
@@ -5398,6 +5406,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The email address %1 was not verified. Please verify it first!
+		]]></source>
+		<target><![CDATA[
+		Die E-Mail-Adresse %1 wurde nicht bestätigt. Bitte bestätigen Sie sie zuerst!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The file does not exist
 		]]></source>
 		<target><![CDATA[
@@ -6330,6 +6346,14 @@
 		]]></source>
 		<target><![CDATA[
 		Sie müssen sich als Administrator anmelden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Your Facebook account does not have an email address.
+		]]></source>
+		<target><![CDATA[
+		Ihr Facebook-Konto hat keine E-Mail-Adresse.
 		]]></target>
 	</message>
 	<message>

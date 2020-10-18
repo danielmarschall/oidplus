@@ -23,6 +23,7 @@
 require_once __DIR__ . '/../../../includes/oidplus.inc.php';
 
 OIDplus::init(true);
+set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
 
 if (!OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_ENABLED', false)) {
 	throw new OIDplusException(_L('Google OAuth authentication is disabled on this system.'));
@@ -54,11 +55,7 @@ curl_close($ch);
 // Note: We do not need to verify the signature because the token comes directly from Google
 $data = json_decode($cont,true);
 if (isset($data['error'])) {
-	// TODO: OIDplus design, multilang
-	echo '<h2>Error at step 2</h2>';
-	echo '<p>'.$data['error'].'</p>';
-	echo '<p>'.$data['error_description'].'</p>';
-	die();
+	throw new OIDplusException(_L('Error receiving the authentication token from %1: %2','Google',$data['error'].' '.$data['error_description']));
 }
 $id_token = $data['id_token'];
 $access_token = $data['access_token'];
@@ -69,10 +66,7 @@ $email = $data['email'];
 // Check if the email was verified
 
 if ($data['email_verified'] != 'true') {
-	// TODO: OIDplus design, multilang
-	echo '<h2>Google OAuth</h2>';
-	echo '<p>The email address '.$email.' was not verified. Please verify it first!</p>';
-	die();
+	throw new OIDplusException(_L('The email address %1 was not verified. Please verify it first!',$email));
 }
 
 // Everything's done! Now login and/or create account

@@ -23,7 +23,7 @@
 
 <body>
 	<h1>Procedural documentation related to privacy</h1>
-	<p><em>Revision: 17 October 2020</em></p>
+	<p><em>Revision: 18 October 2020</em></p>
 	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software &ldquo;OIDplus&rdquo;) and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web-software that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
 	<a id="terminology"></a><h2>Parties / Terminology</h2>
 	<p><strong>ViaThinkSoft</strong> is the developer of the software solution &ldquo;OIDplus&rdquo;.</p>
@@ -575,12 +575,15 @@
 
 	<a id="login_ra_google"></a><h3>Login using Google</h3>
 	<p>This alternative login method is an optional plugin that can be enabled by the administrator.</p>
-	<p>When the user clicks the "login using Google" link, they will be redirected to a Google "consent" screen where they can log in using their Google account credentials. (This procedure is called OAuth2) Note that this consent screen contains a Google-specific privacy policy and terms of service. Once you have logged in, Google will redirect the user back to OIDplus and sends a signed message with the following contents:</p>
+	<p>When the user clicks the "login using Google" link, they will be redirected to a Google "consent" screen where they can log in using their Google account credentials. (This procedure is called OAuth2) Note that this consent screen contains a Google-specific privacy policy and terms of service. Once you have logged in, Google will redirect the user back to OIDplus and sends a signed message which contains following information about the person who has logged in:</p>
 	<ul>
-		<li>The email address of the person who logged in</li>
-		<li>The personal name of the person who logged in</li>
+		<li>Email address</li>
+		<li>Verification status of the E-Mail address (must be verified)</li>
+		<li>Personal name</li>
+		<li>Language/Region setting (this information will not be evaluated by OIDplus and will be discarded)</li>
+		<li>Link to profile picture (this information will not be evaluated by OIDplus and will be discarded)</li>
+		<li>OpenID (this information will not be evaluated by OIDplus and will be discarded)</li>
 	</ul>
-	<p>Additional information like OpenID or profile picture is discarded and won't be evaluated by OIDplus.</p>
 	<p>The Google password is not transmitted to OIDplus.</p>
 	<p>If it is the first time the user has logged in, then OIDplus will then create a new RA account in the local database that contains this information. The account is yet password-less, therefore it can only be used for the OAuth authentication.</p>
 	<p>The user can optionally define a password in case they want to additionally use the regular login method.</p>
@@ -588,12 +591,12 @@
 
 	<a id="login_ra_facebook"></a><h3>Login using Facebook</h3>
 	<p>This alternative login method is an optional plugin that can be enabled by the administrator.</p>
-	<p>When the user clicks the "login using Facebook" link, they will be redirected to a Facebook "consent" screen where they can log in using their Facebook account credentials. (This procedure is called OAuth2) Note that this consent screen contains a Facebook-specific privacy policy and terms of service. Once you have logged in, Facebook will redirect the user back to OIDplus and sends a signed message with the following contents:</p>
+	<p>When the user clicks the "login using Facebook" link, they will be redirected to a Facebook "consent" screen where they can log in using their Facebook account credentials. (This procedure is called OAuth2) Note that this consent screen contains a Facebook-specific privacy policy and terms of service. Once you have logged in, Facebook will redirect the user back to OIDplus and sends a signed message which contains following information about the person who has logged in:</p>
 	<ul>
-		<li>The email address of the person who logged in</li>
-		<li>The personal name of the person who logged in</li>
+		<li>Email address</li>
+		<li>Personal name</li>
+		<li>User ID (this information will not be evaluated by OIDplus and will be discarded)</li>
 	</ul>
-	<p>Additional information like the user id is discarded and won't be evaluated by OIDplus.</p>
 	<p>The Facebook password is not transmitted to OIDplus.</p>
 	<p>Facebook preserves permission to hand over the e-mail address so that the consent screen is not displayed in later login attempts. These consents are managed in the "App" permissions in the Facebook account and can also be revoked there.</p>
 	<p>If it is the first time the user has logged in, then OIDplus will then create a new RA account in the local database that contains this information. The account is yet password-less, therefore it can only be used for the OAuth authentication.</p>

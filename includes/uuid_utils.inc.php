@@ -167,7 +167,7 @@ function uuid_info($uuid) {
 				case 2:
 					echo sprintf("%-24s %s\n", "Version:", "[2] DCE Security version");
 
-					# The time_low field (which represents an integer in the range [0, 232-1]) is interpreted as a local-ID; that is, an identifier (within the domain specified by clock_seq_low) meaningful to the local host. In the particular case of a POSIX host, when combined with a POSIX UID or POSIX GID domain in the clock_seq_low field (above), the time_low field represents a POSIX UID or POSIX GID, respectively. 
+					# The time_low field (which represents an integer in the range [0, 232-1]) is interpreted as a local-ID; that is, an identifier (within the domain specified by clock_seq_low) meaningful to the local host. In the particular case of a POSIX host, when combined with a POSIX UID or POSIX GID domain in the clock_seq_low field (above), the time_low field represents a POSIX UID or POSIX GID, respectively.
 					$x = substr($uuid, 0, 8);
 					echo sprintf("%-24s %s\n", "Local ID:", "0x$x");
 
@@ -364,7 +364,7 @@ function gen_uuid_timebased() {
 	}
 
 	# On Debian: aptitude install uuid-runtime
-	if (!stristr(PHP_OS, 'WINDOWS')) {
+	if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 		$out = array();
 		$ec = -1;
 		exec('uuidgen -t', $out, $ec);
@@ -434,18 +434,20 @@ function get_mac_address() {
 	//       here, and mac_utils.inc.php shall only be optional. What to do?
 	$out = array();
 	$ec = -1;
-	if (stristr(PHP_OS, 'WINDOWS')) {
+	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 		exec("ipconfig /all", $out, $ec);
 		if ($ec == 0) {
 			$out = implode("\n",$out);
+			$m = array();
 			if (preg_match("/([0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2})/ismU", $out, $m)) {
-				return $m[1];
+				return str_replace('-', ':', strtolower($m[1]));
 			}
 		}
 	} else {
 		exec("netstat -ie", $out, $ec);
 		if ($ec == 0) {
 			$out = implode("\n",$out);
+			$m = array();
 			if (preg_match("/([0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2})/ismU", $out, $m)) {
 				return $m[1];
 			}
@@ -506,7 +508,7 @@ function gen_uuid_random() {
 		return trim(uuid_create(UUID_TYPE_RANDOM));
 	}
 
-	if (!stristr(PHP_OS, 'WINDOWS')) {
+	if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 		# On Debian: aptitude install uuid-runtime
 		$out = array();
 		$ec = -1;
