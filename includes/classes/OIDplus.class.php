@@ -524,6 +524,7 @@ class OIDplus {
 		$out = array();
 		$ary = self::getAllPluginManifests($pluginDirName, false);
 		$known_plugin_oids = array();
+		$fake_feature = uuid_to_oid(gen_uuid());
 		foreach ($ary as $plugintype_folder => $bry) {
 			foreach ($bry as $pluginname_folder => $manifest) {
 				$class_name = $manifest->getPhpMainClass();
@@ -564,7 +565,6 @@ class OIDplus {
 				}
 
 				$obj = new $class_name();
-				$fake_feature = uuid_to_oid(gen_uuid());
 				if ($obj->implementsFeature($fake_feature)) {
 					// see https://devblogs.microsoft.com/oldnewthing/20040211-00/?p=40663
 					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('implementsFeature() always returns true'));
