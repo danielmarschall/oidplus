@@ -28,7 +28,7 @@ abstract class OIDplusPlugin {
 
 		return false;
 	}
-	
+
 	public final function getPluginDirectory() {
 		$reflector = new \ReflectionClass(get_called_class());
 		$path = dirname($reflector->getFilename());

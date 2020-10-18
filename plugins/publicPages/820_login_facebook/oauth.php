@@ -68,6 +68,7 @@ $cont = curl_exec($ch);
 curl_close($ch);
 $data = json_decode($cont,true);
 if (isset($data['error'])) {
+	// TODO: OIDplus design, multilang
 	echo '<h2>Error at step 2</h2>';
 	echo '<p>'.$data['error']['message'].'</p>';
 	die();

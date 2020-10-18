@@ -54,6 +54,7 @@ curl_close($ch);
 // Note: We do not need to verify the signature because the token comes directly from Google
 $data = json_decode($cont,true);
 if (isset($data['error'])) {
+	// TODO: OIDplus design, multilang
 	echo '<h2>Error at step 2</h2>';
 	echo '<p>'.$data['error'].'</p>';
 	echo '<p>'.$data['error_description'].'</p>';
@@ -62,7 +63,17 @@ if (isset($data['error'])) {
 $id_token = $data['id_token'];
 $access_token = $data['access_token'];
 list($header,$payload,$signature) = explode('.', $id_token);
-$email = json_decode(base64_decode($payload),true)['email'];
+$data = json_decode(base64_decode($payload),true);
+$email = $data['email'];
+
+// Check if the email was verified
+
+if ($data['email_verified'] != 'true') {
+	// TODO: OIDplus design, multilang
+	echo '<h2>Google OAuth</h2>';
+	echo '<p>The email address '.$email.' was not verified. Please verify it first!</p>';
+	die();
+}
 
 // Everything's done! Now login and/or create account
 

@@ -1766,6 +1766,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		File %1 was defined in manifest, but it is not existing
+		]]></source>
+		<target><![CDATA[
+		Datei %1 wurde in Manifest deklariert, existiert aber nicht
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		File Completeness Check
 		]]></source>
 		<target><![CDATA[
@@ -6474,6 +6482,14 @@
 		]]></source>
 		<target><![CDATA[
 		findFitting: Parsing fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		implementsFeature() always returns true
+		]]></source>
+		<target><![CDATA[
+		implementsFeature() gibt immer TRUE zurück
 		]]></target>
 	</message>
 	<message>

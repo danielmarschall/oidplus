@@ -525,43 +525,69 @@ class OIDplus {
 		$ary = self::getAllPluginManifests($pluginDirName, false);
 		$known_plugin_oids = array();
 		foreach ($ary as $plugintype_folder => $bry) {
-			foreach ($bry as $pluginname_folder => $cry) {
-				$class_name = $cry->getPhpMainClass();
+			foreach ($bry as $pluginname_folder => $manifest) {
+				$class_name = $manifest->getPhpMainClass();
+
+				// Before we load the plugin, we want to make some checks to confirm
+				// that the plugin is working correctly.
+
 				if (!$class_name) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Manifest does not declare a PHP main class',$plugintype_folder,$pluginname_folder));
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Manifest does not declare a PHP main class'));
 				}
 				if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_'.$class_name, false)) {
 					continue;
 				}
 				if (!class_exists($class_name)) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Manifest declares PHP main class as "%1", but it could not be found',$plugintype_folder,$pluginname_folder,$class_name));
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Manifest declares PHP main class as "%1", but it could not be found',$class_name));
 				}
 				if (!is_subclass_of($class_name, $expectedPluginClass)) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Plugin main class "%1" is expected to be a subclass of "%2"',$plugintype_folder,$pluginname_folder,$class_name,$expectedPluginClass));
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Plugin main class "%1" is expected to be a subclass of "%2"',$class_name,$expectedPluginClass));
 				}
-				if (($class_name!=$cry->getTypeClass()) && (!is_subclass_of($class_name,$cry->getTypeClass()))) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Plugin main class "%1" is expected to be a subclass of "%2", according to type declared in manifest',$plugintype_folder,$pluginname_folder,$class_name,$cry->getTypeClass()));
+				if (($class_name!=$manifest->getTypeClass()) && (!is_subclass_of($class_name,$manifest->getTypeClass()))) {
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Plugin main class "%1" is expected to be a subclass of "%2", according to type declared in manifest',$class_name,$manifest->getTypeClass()));
 				}
-				if (($cry->getTypeClass()!=$expectedPluginClass) && (!is_subclass_of($cry->getTypeClass(),$expectedPluginClass))) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Class declared in manifest is "%1" does not fit expected class for this plugin type "%2"',$plugintype_folder,$pluginname_folder,$cry->getTypeClass(),$expectedPluginClass));
+				if (($manifest->getTypeClass()!=$expectedPluginClass) && (!is_subclass_of($manifest->getTypeClass(),$expectedPluginClass))) {
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Class declared in manifest is "%1" does not fit expected class for this plugin type "%2"',$manifest->getTypeClass(),$expectedPluginClass));
 				}
 
-				$plugin_oid = $cry->getOid();
+				$plugin_oid = $manifest->getOid();
 				if (!$plugin_oid) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Does not have an OID',$plugintype_folder,$pluginname_folder));
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Does not have an OID'));
 				}
 				if (!oid_valid_dotnotation($plugin_oid, false, false, 2)) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('Plugin OID "%1" is invalid (needs to be valid dot-notation)',$plugintype_folder,$pluginname_folder,$plugin_oid));
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Plugin OID "%1" is invalid (needs to be valid dot-notation)',$plugin_oid));
 				}
 				if (isset($known_plugin_oids[$plugin_oid])) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous').': '._L('The OID "%1" is already used by the plugin "%2"',$plugintype_folder,$pluginname_folder,$plugin_oid,$known_plugin_oids[$plugin_oid]));
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('The OID "%1" is already used by the plugin "%2"',$plugin_oid,$known_plugin_oids[$plugin_oid]));
 				} else {
 					$known_plugin_oids[$plugin_oid] = $plugintype_folder.'/'.$pluginname_folder;
 				}
 
+				$obj = new $class_name();
+				$fake_feature = uuid_to_oid(gen_uuid());
+				if ($obj->implementsFeature($fake_feature)) {
+					// see https://devblogs.microsoft.com/oldnewthing/20040211-00/?p=40663
+					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('implementsFeature() always returns true'));
+				}
+
+				// TODO: Maybe as additional plugin-test, we should also check if plugins are allowed to define CSS/JS (since only page plugins may have them!)
+				$tmp = array_merge(
+					$manifest->getJSFiles(),
+					$manifest->getCSSFiles(),
+					$manifest->getJSFilesSetup(),
+					$manifest->getCSSFilesSetup()
+				);
+				foreach ($tmp as $file) {
+					if (!file_exists($file)) {
+						throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('File %1 was defined in manifest, but it is not existing',$file));
+					}
+				}
+
+				// Now we can continue
+
 				$out[] = $class_name;
 				if (!is_null($registerCallback)) {
-					call_user_func($registerCallback, new $class_name());
+					call_user_func($registerCallback, $obj);
 				}
 			}
 
