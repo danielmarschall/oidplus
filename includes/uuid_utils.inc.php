@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011-2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-10-18
+ * Version 2020-10-19
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -432,24 +432,63 @@ function gen_uuid_timebased() {
 function get_mac_address() {
 	// TODO: This should actually be part of mac_utils.inc.php, but we need it
 	//       here, and mac_utils.inc.php shall only be optional. What to do?
-	$out = array();
-	$ec = -1;
 	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-		exec("ipconfig /all", $out, $ec);
-		if ($ec == 0) {
-			$out = implode("\n",$out);
-			$m = array();
-			if (preg_match("/([0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2})/ismU", $out, $m)) {
-				return str_replace('-', ':', strtolower($m[1]));
+		// Windows
+		$cmds = array(
+			"getmac",
+			"ipconfig /all"
+		);
+		foreach ($cmds as $cmd) {
+			$out = array();
+			$ec = -1;
+			exec($cmd, $out, $ec);
+			if ($ec == 0) {
+				$out = implode("\n",$out);
+				$m = array();
+				if (preg_match("/([0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2})/ismU", $out, $m)) {
+					return str_replace('-', ':', strtolower($m[1]));
+				}
+			}
+		}
+	} else if (strtoupper(PHP_OS) == 'DARWIN') {
+		// Mac OS X
+		$cmds = array(
+			"networksetup -listallhardwareports",
+			"netstat -i"
+		);
+		foreach ($cmds as $cmd) {
+			$out = array();
+			$ec = -1;
+			exec($cmd, $out, $ec);
+			if ($ec == 0) {
+				$out = implode("\n",$out);
+				$m = array();
+				if (preg_match("/([0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2})/ismU", $out, $m)) {
+					return $m[1];
+				}
 			}
 		}
 	} else {
-		exec("netstat -ie", $out, $ec);
-		if ($ec == 0) {
-			$out = implode("\n",$out);
-			$m = array();
-			if (preg_match("/([0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2})/ismU", $out, $m)) {
-				return $m[1];
+		// Linux
+		foreach (glob('/sys/class/net/'.'*'.'/address') as $x) {
+			if (!strstr($x,'/lo/')) {
+				return trim(file_get_contents($x));
+			}
+		}
+		$cmds = array(
+			"netstat -ie",
+			"ifconfig" // only available for root (because it is in sbin)
+		);
+		foreach ($cmds as $cmd) {
+			$out = array();
+			$ec = -1;
+			exec($cmd, $out, $ec);
+			if ($ec == 0) {
+				$out = implode("\n",$out);
+				$m = array();
+				if (preg_match("/([0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2})/ismU", $out, $m)) {
+					return $m[1];
+				}
 			}
 		}
 	}

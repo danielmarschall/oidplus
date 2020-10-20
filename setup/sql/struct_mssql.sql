@@ -251,7 +251,7 @@ GO
 
 /****** Set database version ******/
 
-INSERT INTO [config] (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '204', '1', '0');
+INSERT INTO [config] (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '205', '1', '0');
 
 SET ANSI_PADDING OFF
 GO

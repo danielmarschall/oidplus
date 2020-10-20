@@ -36,4 +36,4 @@ foreach(new RecursiveIteratorIterator($it) as $file) {
 	}
 }
 
-echo "Done.";
+echo "Done.\n";
