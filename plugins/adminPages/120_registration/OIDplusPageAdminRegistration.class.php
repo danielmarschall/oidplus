@@ -262,12 +262,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 					$res = OIDplus::db()->query("select id from ###objects where " .
 					                            "(parent = 'oid:' or " .
 					                            // The following two cases are special cases e.g. if there are multiple PEN or UUID-OIDs, and the system owner decides to use the IANA PEN as root OID, but actually, it is not "his" root then! The OIDs inside the IANA PEN root are his root then!
-					                            "parent in (select oid from ###asn1id where well_known = 1) or " .
-					                            "parent in (select oid from ###iri where well_known = 1)) and " .
+					                            "parent in (select oid from ###asn1id where well_known = ?) or " .
+					                            "parent in (select oid from ###iri where well_known = ?)) and " .
 					                            // We assume hereby that RAs of well-known OIDs (e.g. IANA) will not use OIDplus for allocating OIDs:
-					                            "id not in (select oid from ###asn1id where well_known = 1) and " .
-					                            "id not in (select oid from ###iri where well_known = 1) " .
-					                            "order by ".OIDplus::db()->natOrder('id'));
+					                            "id not in (select oid from ###asn1id where well_known = ?) and " .
+					                            "id not in (select oid from ###iri where well_known = ?) " .
+					                            "order by ".OIDplus::db()->natOrder('id'), array(true, true, true, true));
 					while ($row = $res->fetch_array()) {
 						$root_oids[] = substr($row['id'],strlen('oid:'));
 					}

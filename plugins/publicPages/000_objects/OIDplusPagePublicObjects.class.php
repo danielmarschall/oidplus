@@ -78,8 +78,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					}
 				} while (true);
 			}
-			OIDplus::db()->query("delete from ###asn1id where well_known = '0' and oid not in (select id from ###objects where id like 'oid:%')");
-			OIDplus::db()->query("delete from ###iri    where well_known = '0' and oid not in (select id from ###objects where id like 'oid:%')");
+			OIDplus::db()->query("delete from ###asn1id where well_known = ? and oid not in (select id from ###objects where id like 'oid:%')", array(false));
+			OIDplus::db()->query("delete from ###iri    where well_known = ? and oid not in (select id from ###objects where id like 'oid:%')", array(false));
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {

@@ -82,7 +82,7 @@ class OIDplusMenuUtils {
 
 		$confidential_oids = array();
 
-		$res = OIDplus::db()->query("select id from ###objects where confidential = '1'");
+		$res = OIDplus::db()->query("select id from ###objects where confidential = ?", array(true));
 		while ($row = $res->fetch_array()) {
 			$confidential_oids[] = $row['id'];
 		}

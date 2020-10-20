@@ -145,7 +145,7 @@ abstract class OIDplusObject {
 		$out = array();
 
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
-			$res = OIDplus::db()->query("select id from ###objects where confidential = '0' order by ".OIDplus::db()->natOrder('id'));
+			$res = OIDplus::db()->query("select id from ###objects where confidential = ? order by ".OIDplus::db()->natOrder('id'), array(false));
 
 			while ($row = $res->fetch_array()) {
 				$obj = self::parse($row['id']); // will be NULL if the object type is not registered

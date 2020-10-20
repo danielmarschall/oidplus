@@ -94,8 +94,8 @@ function oidplus_dbupdate_204_205(OIDplusDatabaseConnection $db, string &$versio
 	           "  `privacy` INTEGER NOT NULL DEFAULT 0,".
 	           "  `salt` TEXT NULL,".
 	           "  `authkey` TEXT NULL,".
-	           "  `registered` TEXT, -- DateTime".
-	           "  `updated` TEXT, -- DateTime".
+	           "  `registered` TEXT,".
+	           "  `updated` TEXT,".
 	           "  `last_login` datetime".
 	           ");");
 	$db->query("INSERT INTO ###ra2 SELECT * FROM ###ra;");
@@ -109,8 +109,8 @@ function oidplus_dbupdate_204_205(OIDplusDatabaseConnection $db, string &$versio
 	           "  `description` TEXT NULL,".
 	           "  `ra_email` TEXT NULL REFERENCES `###ra`(`email`),".
 	           "  `confidential` boolean NOT NULL,".
-	           "  `created` TEXT, -- DateTime".
-	           "  `updated` TEXT, -- DateTime".
+	           "  `created` TEXT,".
+	           "  `updated` TEXT,".
 	           "  `comment` TEXT NULL,".
 	           "  PRIMARY KEY (`id`)".
 	           ");");
