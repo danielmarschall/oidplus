@@ -102,7 +102,6 @@ SMALL THINGS
 - When an OID is edited/added/deleted, don't reload the whole tree. Instead, just change the tree! This looks much more fluid.
 
 DATABASE
-- check if the NULL and NOT NULL definitions are meaningful. It is not good at in *_ra everything is NOT NULL
 - SQLite3: Implement Natural OID sorting (natSort)
 - make usage of Foreign Keys
 	PROBLEM: we need foreign keys with no check, because

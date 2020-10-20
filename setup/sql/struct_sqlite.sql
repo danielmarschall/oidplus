@@ -32,8 +32,8 @@ DROP TABLE IF EXISTS `objects`;
 CREATE TABLE `objects` (
   `id` TEXT NOT NULL,
   `parent` TEXT DEFAULT NULL REFERENCES `objects`(`id`),
-  `title` TEXT NOT NULL,
-  `description` TEXT NOT NULL,
+  `title` TEXT NULL,
+  `description` TEXT NULL,
   `ra_email` TEXT NULL REFERENCES `ra`(`email`),
   `confidential` boolean NOT NULL,
   `created` TEXT, -- DateTime
@@ -46,19 +46,19 @@ DROP TABLE IF EXISTS `ra`;
 CREATE TABLE `ra` (
   `ra_id` INTEGER PRIMARY KEY AUTOINCREMENT,
   `email` TEXT NOT NULL UNIQUE,
-  `ra_name` TEXT NOT NULL,
-  `personal_name` TEXT NOT NULL,
-  `organization` TEXT NOT NULL,
-  `office` TEXT NOT NULL,
-  `street` TEXT NOT NULL,
-  `zip_town` TEXT NOT NULL,
-  `country` TEXT NOT NULL,
-  `phone` TEXT NOT NULL,
-  `mobile` TEXT NOT NULL,
-  `fax` TEXT NOT NULL,
+  `ra_name` TEXT NULL,
+  `personal_name` TEXT NULL,
+  `organization` TEXT NULL,
+  `office` TEXT NULL,
+  `street` TEXT NULL,
+  `zip_town` TEXT NULL,
+  `country` TEXT NULL,
+  `phone` TEXT NULL,
+  `mobile` TEXT NULL,
+  `fax` TEXT NULL,
   `privacy` INTEGER NOT NULL DEFAULT 0,
-  `salt` TEXT NOT NULL,
-  `authkey` TEXT NOT NULL,
+  `salt` TEXT NULL,
+  `authkey` TEXT NULL,
   `registered` TEXT, -- DateTime
   `updated` TEXT, -- DateTime
   `last_login` datetime
