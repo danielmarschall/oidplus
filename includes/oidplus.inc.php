@@ -125,12 +125,15 @@ spl_autoload_register(function ($class_name) {
 	if (is_null($class_refs)) {
 		$class_refs = array();
 
-		$candidates = array_merge(
+		$class_files = array_merge(
 			glob(__DIR__ . '/classes/'.'*'.'.class.php'),
 			glob(__DIR__ . '/../plugins/'.'*'.'/'.'*'.'/'.'*'.'.class.php')
 		);
-		foreach ($candidates as $filename) {
-			$class_refs[basename($filename, '.class.php')] = $filename;
+		foreach ($class_files as $filename) {
+			$cn = basename($filename, '.class.php');
+			if (!isset($class_refs[$cn])) {
+				$class_refs[$cn] = $filename;
+			}
 		}
 	}
 
