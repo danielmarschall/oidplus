@@ -390,11 +390,16 @@ class OIDplus {
 
 		$do_enable = false;
 		if (in_array($ns, $enabled_ary)) {
+			// If it is in the list of enabled object types, it is enabled (obviously)
 			$do_enable = true;
 		} else {
-			if (!OIDplus::config()->getValue('registration_done')) {
+			if (!OIDplus::config()->getValue('oobe_objects_done')) {
+				// If the OOBE wizard is NOT done, then just enable the "oid" object type by default
 				$do_enable = $ns == 'oid';
 			} else {
+				// If the OOBE wizard was done (once), then
+				// we will enable all object types which were never initialized
+				// (i.e. a plugin folder was freshly added)
 				$do_enable = !in_array($ns, $init_ary);
 			}
 		}
