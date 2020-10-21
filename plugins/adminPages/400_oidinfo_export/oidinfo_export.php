@@ -26,7 +26,7 @@ OIDplus::init(true);
 # ---
 
 if (!OIDplus::authUtils()::isAdminLoggedIn()) {
-	if (php_sapi_name() == 'cli') {
+	if (PHP_SAPI == 'cli') {
 		#echo "You need to log in as administrator.\n";
 		#die();
 	} else {

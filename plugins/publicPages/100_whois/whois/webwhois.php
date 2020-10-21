@@ -26,7 +26,7 @@ originHeaders();
 
 // Step 0: Get request parameter
 
-if (php_sapi_name() == 'cli') {
+if (PHP_SAPI == 'cli') {
 	if ($_SERVER['argc'] != 2) {
 		echo _L('Syntax').': '.$_SERVER['argv'][0].' <query>'."\n";
 		exit(2);

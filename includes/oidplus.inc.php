@@ -74,7 +74,7 @@ unset($missing_dependencies);
 
 // Now we can continue!
 
-if (php_sapi_name() != 'cli') {
+if (PHP_SAPI != 'cli') {
 	header('X-Content-Type-Options: nosniff');
 	header('X-XSS-Protection: 1; mode=block');
 	header("Content-Security-Policy: default-src 'self' blob: https://fonts.gstatic.com https://www.google.com/ https://www.gstatic.com/ https://cdnjs.cloudflare.com/; ".
@@ -97,7 +97,7 @@ require_once __DIR__ . '/ipv4_functions.inc.php';
 require_once __DIR__ . '/ipv6_functions.inc.php';
 require_once __DIR__ . '/anti_xss.inc.php';
 
-if (php_sapi_name() != 'cli') {
+if (PHP_SAPI != 'cli') {
 	if (!file_exists(__DIR__ . '/../3p/vts_vnag/vnag_framework.inc.php')) {
 		// This can happen if WebSVN did not catch the external SVN repository right
 		// If WebSVN was the reason, then we are safe to assume that writing is possible
@@ -120,10 +120,21 @@ include_once __DIR__ . '/../3p/vts_fileformats/VtsFileTypeDetect.class.php';
 // ---
 
 spl_autoload_register(function ($class_name) {
-	$candidate = __DIR__ . '/classes/' . $class_name . '.class.php';
-	if (file_exists($candidate)) require_once $candidate;
-	$candidates = glob(__DIR__ . '/../plugins/'.'*'.'/'.'*'.'/' . $class_name . '.class.php');
-	foreach ($candidates as $candidate) {
-		if (file_exists($candidate)) require_once $candidate;
+	static $class_refs = null;
+
+	if (is_null($class_refs)) {
+		$class_refs = array();
+
+		$candidates = array_merge(
+			glob(__DIR__ . '/classes/'.'*'.'.class.php'),
+			glob(__DIR__ . '/../plugins/'.'*'.'/'.'*'.'/'.'*'.'.class.php')
+		);
+		foreach ($candidates as $filename) {
+			$class_refs[basename($filename, '.class.php')] = $filename;
+		}
+	}
+
+	if (isset($class_refs[$class_name])) {
+		require_once $class_refs[$class_name];
 	}
 });

@@ -45,7 +45,7 @@ foreach ($table_names as $table) {
 	$cont = $slang_plugin->setupSetTablePrefix($cont, $table, $prefix);
 }
 
-if (php_sapi_name() != 'cli') {
+if (PHP_SAPI != 'cli') {
 	header('Content-Type:text/sql');
 	header('Content-Disposition: inline; filename="struct_with_examples.sql"');
 }

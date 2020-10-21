@@ -139,7 +139,7 @@ class OIDplusMailUtils {
 		if (!empty($cc)) $h->addHeader('Cc',  $cc);
 		if (!empty($bcc)) $h->addHeader('Bcc',  $bcc);
 
-		$h->addHeader('X-Mailer', 'PHP/'.phpversion());
+		$h->addHeader('X-Mailer', 'PHP/'.PHP_VERSION);
 		if (isset($_SERVER['REMOTE_ADDR'])) $h->addHeader('X-RemoteAddr', $_SERVER['REMOTE_ADDR']);
 		$h->addHeader('MIME-Version', '1.0');
 		$h->addHeader('Content-Type', 'text/plain; charset=ISO-8859-1');

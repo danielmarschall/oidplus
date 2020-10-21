@@ -588,6 +588,11 @@ class OIDplus {
 				$out[] = $class_name;
 				if (!is_null($registerCallback)) {
 					call_user_func($registerCallback, $obj);
+
+					// Alternative approaches:
+					//$registerCallback[0]::{$registerCallback[1]}($obj);
+					// or:
+					//forward_static_call($registerCallback, $obj);
 				}
 			}
 

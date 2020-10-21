@@ -98,7 +98,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('PHP version').'</td>';
-			$out['text'] .= '		<td>'.phpversion().'</td>';
+			$out['text'] .= '		<td>'.PHP_VERSION.'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';

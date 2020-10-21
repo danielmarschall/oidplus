@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011-2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-10-19
+ * Version 2020-10-21
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -430,13 +430,19 @@ function gen_uuid_timebased() {
 }
 
 function get_mac_address() {
+	static $detected_mac = false;
+
+	if ($detected_mac !== false) { // false NOT null!
+		return $detected_mac;
+	}
+
 	// TODO: This should actually be part of mac_utils.inc.php, but we need it
 	//       here, and mac_utils.inc.php shall only be optional. What to do?
 	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 		// Windows
 		$cmds = array(
-			"getmac",
-			"ipconfig /all"
+			"ipconfig /all", // faster
+			"getmac"
 		);
 		foreach ($cmds as $cmd) {
 			$out = array();
@@ -446,7 +452,8 @@ function get_mac_address() {
 				$out = implode("\n",$out);
 				$m = array();
 				if (preg_match("/([0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2}\\-[0-9a-f]{2})/ismU", $out, $m)) {
-					return str_replace('-', ':', strtolower($m[1]));
+					$detected_mac = str_replace('-', ':', strtolower($m[1]));
+					return $detected_mac;
 				}
 			}
 		}
@@ -464,7 +471,8 @@ function get_mac_address() {
 				$out = implode("\n",$out);
 				$m = array();
 				if (preg_match("/([0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2})/ismU", $out, $m)) {
-					return $m[1];
+					$detected_mac = $m[1];
+					return $detected_mac;
 				}
 			}
 		}
@@ -472,7 +480,8 @@ function get_mac_address() {
 		// Linux
 		foreach (glob('/sys/class/net/'.'*'.'/address') as $x) {
 			if (!strstr($x,'/lo/')) {
-				return trim(file_get_contents($x));
+				$detected_mac = trim(file_get_contents($x));
+				return $detected_mac;
 			}
 		}
 		$cmds = array(
@@ -487,12 +496,15 @@ function get_mac_address() {
 				$out = implode("\n",$out);
 				$m = array();
 				if (preg_match("/([0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2})/ismU", $out, $m)) {
-					return $m[1];
+					$detected_mac = $m[1];
+					return $detected_mac;
 				}
 			}
 		}
 	}
-	return null;
+
+	$detected_mac = null;
+	return $detected_mac;
 }
 
 // Version 2 (DCE Security) UUID
