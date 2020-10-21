@@ -102,11 +102,20 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		}
 		if ($id === 'oidplus:srvreg_status') {
 			$handled = true;
+			$out['title'] = _L('Registration live status');
+			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+
+			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
+				return;
+			}
 
 			$query = self::QUERY_LIVESTATUS_V1;
 
 			$payload = array(
 				"query" => $query, // we must repeat the query because we want to sign it
+				"lang" => OIDplus::getCurrentLang(),
 				"system_id" => OIDplus::getSystemId(false)
 			);
 
@@ -133,8 +142,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			curl_close($ch);
 
 			$json = @json_decode($res, true);
-
-			$out['title'] = _L('Registration live status');
 
 			if (!$json) {
 				$out['icon'] = 'img/error_big.png';
