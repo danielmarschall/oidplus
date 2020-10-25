@@ -4,11 +4,6 @@ RECENT STUFF
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Publish RFC!
 
-DESIGN / THEME PLUGINS:
-- Create a "Theme" plugin that combines "Colors" and "Design".
-- Make a feature-interface to manipulate the CSS URL?
-	Attention: JS function test_color_theme() has an hardcoded set of parameters and does not follow the arguments set in index.php!
-
 IDEAS FOR NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:
 	* Show every object and its attachments, so that the admin knows what's going on
@@ -57,6 +52,7 @@ DATA TRANSFER PLUGIN
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
 
 SMALL THINGS
+- #gotobutton should have the same top and height as #gotoedit
 - Should plugins be able to change the "Content-Security-Policy" header (i.e. to include external JavaScripts frameworks)
 - Copyright notice:
 	* Currently, we have "2019", "2020" and "2019-2020". Change them all to "2019 - 2020"
@@ -184,6 +180,26 @@ IDEAS
 - should a RA be able to mark their own oid as confidential, instead of asking the superior RA?
 - should there be an OIDplus project page at oidplus.viathinksoft.com instead of a "naked" system?
 - vendor signature to plugins + viathinksoft signatures + "check" program if all signatures match
+	Why do we need it?
+		We want to make sure that the OIDplus files aren't modified by hackers (e.g. replaced by a webshell)
+		Unfortunately, we can only verify our own files. Plugins by vendors cannot be checked.
+	Problem:
+		We cannot store the ViaThinkSoft public key or the checking-tool in the OIDplus directory,
+		because then they could be altered by the hacker.
+		We also cannot add a "verified" icon in the "Plugins" admin section,
+		because this could also be fake.
+		The only solution to verify the OIDplus installation is to run a tool that
+		is downloaded on-demand over a secure connection.
+	Solution:
+		1. The OIDplus installation contains a file "signature.md5" that contains the MD5 sums of all files.
+		   The whole file is RSA signed with a ViaThinkSoft key.
+		2. We should offer a tool which can be started on-demand by running something like:
+		   curl -sSL https://oidplus.viathinksoft.com/signature_check/ | bash
+		   This tool contains a check procedure and the ViaThinkSoft public key,
+		   and verifies the OIDplus installation.
+		3. The tool should also warn if there are missing or additional files,
+		   because some additional files may be executed (e.g. if they are located in includes/db_updates/)
+		4. With every new release of OIDplus, this file must be re-generated!
 - have a menu item (plugin) "latest updates" which lists OIDs that have been changed or added recently?
 - (unsure:) would it be good if the superior RA comment is shown in the object page itself?
 - Protect attachments with a password? (Information objects?)

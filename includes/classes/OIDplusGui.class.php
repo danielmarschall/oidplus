@@ -74,7 +74,7 @@ class OIDplusGui {
 				$class = 'lng_flag picture_ghost';
 			}
 			$add = (!is_null($goto)) ? '&amp;goto='.urlencode($goto) : '';
-			$langbox_entries[$code] = '<span class="lang_flag_bg"><a '.($useJs ? 'onclick="setLanguage(\''.$code.'\'); return false" ' : '').'href="?lang='.$code.$add.'"><img src="'.OIDplus::getSystemUrl(true).'plugins/language/'.$code.'/'.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'"></a></span> ';
+			$langbox_entries[$code] = '<span class="lang_flag_bg"><a '.($useJs ? 'onclick="setLanguage(\''.$code.'\'); return false" ' : '').'href="?lang='.$code.$add.'"><img src="'.OIDplus::getSystemUrl(true).'plugins/language/'.$code.'/'.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20"></a></span> ';
 		}
 		if ($non_default_languages > 0) {
 			foreach ($langbox_entries as $ent) {

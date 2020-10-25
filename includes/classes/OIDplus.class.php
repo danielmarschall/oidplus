@@ -145,19 +145,6 @@ class OIDplus {
 					throw new OIDplusException(_L('This is not a correct email address'));
 				}
 			});
-			self::$config->prepareConfigKey('design', 'Which design to use (must exist in plugins/design/)?', 'default', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
-				$good = true;
-				if (strpos($value,'/') !== false) $good = false;
-				if (strpos($value,'\\') !== false) $good = false;
-				if (strpos($value,'..') !== false) $good = false;
-				if (!$good) {
-					throw new OIDplusException(_L('Invalid design folder name. Do only enter a folder name, not an absolute or relative path'));
-				}
-
-				if (!is_dir(__DIR__.'/../../plugins/design/'.$value)) {
-					throw new OIDplusException(_L('The design "%1" does not exist in plugin directory %2',$value,'plugins/design/'));
-				}
-			});
 			self::$config->prepareConfigKey('objecttypes_initialized', 'List of object type plugins that were initialized once', '', OIDplusConfig::PROTECTION_READONLY, function($value) {
 				// Nothing here yet
 			});
@@ -262,7 +249,7 @@ class OIDplus {
 		if ($name === false) return false;
 
 		if (isset(self::$sqlSlangPlugins[$name])) {
-			$plugintype_hf = _L('SQL-Slang');
+			$plugintype_hf = _L('SQL slang');
 			throw new OIDplusException('Multiple %1 plugins use the ID %2', $plugintype_hf, $name);
 		}
 

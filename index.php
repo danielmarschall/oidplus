@@ -64,6 +64,10 @@ header('X-OIDplus-SystemTitle:'.$sys_title);
 $add_css_args = array();
 $add_css_args[] = 'theme='.urlencode(OIDplus::config()->getValue('design'));
 if (class_exists('OIDplusPageAdminColors')) {
+	// QUESTION: Should the additional parameters of the CSS script
+	//           be moved into the OIDplusPageAdminColors plugins using "implementsFeature"?
+	//           Problem: The JS function test_color_theme() has an hardcoded set of parameters
+	//           and does not follow the arguments that might be set by other plugins.
 	$add_css_args[] = 'invert='.(OIDplus::config()->getValue('color_invert'));
 	$add_css_args[] = 'h_shift='.(OIDplus::config()->getValue('color_hue_shift')/360);
 	$add_css_args[] = 's_shift='.(OIDplus::config()->getValue('color_sat_shift')/100);
@@ -132,7 +136,8 @@ $add_css_args = count($add_css_args) > 0 ? '?'.implode('&',$add_css_args) : '';
 		echo '</div>';
 		echo '';
 		echo '<div id="system_title_text">';
-		echo '	<a '.OIDplus::gui()->link('oidplus:system').'>';
+		echo '	<a '.OIDplus::gui()->link('oidplus:system').' id="system_title_a">';
+		echo '		<span id="system_title_logo"></span>';
 		echo '		<span id="system_title_1">'._L('ViaThinkSoft OIDplus 2.0').'</span><br>';
 		echo '		<span id="system_title_2">'.htmlentities(OIDplus::config()->getValue('system_title')).'</span>';
 		echo '	</a>';

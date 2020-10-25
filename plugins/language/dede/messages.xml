@@ -990,14 +990,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Colors
-		]]></source>
-		<target><![CDATA[
-		Farben
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Comment
 		]]></source>
 		<target><![CDATA[
@@ -1394,6 +1386,22 @@
 		]]></source>
 		<target><![CDATA[
 		Beschreibung des Konfigurations-Schlüssels "%1" ist zu lang (Maximale Länge: %2).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Design
+		]]></source>
+		<target><![CDATA[
+		Design
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Designs
+		]]></source>
+		<target><![CDATA[
+		Designs
 		]]></target>
 	</message>
 	<message>

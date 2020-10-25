@@ -19,19 +19,25 @@ g_hue_shift = null;
 g_sat_shift = null;
 g_val_shift = null;
 g_invcolors = null;
+g_activetheme = null;
+
 g_hue_shift_saved = null;
 g_sat_shift_saved = null;
 g_val_shift_saved = null;
 g_invcolors_saved = null;
+g_activetheme_saved = null;
 
 function color_reset_sliders_factory() {
 	$("#hshift").val(g_hue_shift = 0);
 	$("#sshift").val(g_sat_shift = 0);
 	$("#vshift").val(g_val_shift = 0);
 	$("#icolor").val(g_invcolors = 0);
+	$("#theme").val(g_activetheme = "default");
 	$("#slider-hshift").slider("option", "value", g_hue_shift);
 	$("#slider-sshift").slider("option", "value", g_sat_shift);
 	$("#slider-vshift").slider("option", "value", g_val_shift);
+	$("#slider-icolor").slider("option", "value", g_invcolors);
+	$("#slider-icolor").slider("option", "value", g_invcolors);
 	$("#slider-icolor").slider("option", "value", g_invcolors);
 	test_color_theme();
 }
@@ -41,6 +47,7 @@ function color_reset_sliders_cfg() {
 	$("#sshift").val(g_sat_shift = g_sat_shift_saved);
 	$("#vshift").val(g_val_shift = g_val_shift_saved);
 	$("#icolor").val(g_invcolors = g_invcolors_saved);
+	$("#theme").val(g_activetheme = g_activetheme_saved);
 	$("#slider-hshift").slider("option", "value", g_hue_shift);
 	$("#slider-sshift").slider("option", "value", g_sat_shift);
 	$("#slider-vshift").slider("option", "value", g_val_shift);
@@ -96,7 +103,8 @@ function test_color_theme() {
 	g_sat_shift = $("#sshift").val();
 	g_val_shift = $("#vshift").val();
 	g_invcolors = $("#icolor").val();
-	changeCSS('oidplus.min.css.php?theme='+g_activetheme+'&invert='+$("#icolor").val()+'&h_shift='+$("#hshift").val()/360+'&s_shift='+$("#sshift" ).val()/100+'&v_shift='+$("#vshift" ).val()/100, 0);
+	g_activetheme = $("#theme").val();
+	changeCSS('oidplus.min.css.php?theme='+$("#theme").val()+'&invert='+$("#icolor").val()+'&h_shift='+$("#hshift").val()/360+'&s_shift='+$("#sshift" ).val()/100+'&v_shift='+$("#vshift" ).val()/100, 0);
 }
 
 function changeCSS(cssFile, cssLinkIndex) {
@@ -124,6 +132,7 @@ function crudActionColorUpdate(name) {
 			sat_shift:document.getElementById('sshift').value,
 			val_shift:document.getElementById('vshift').value,
 			invcolors:document.getElementById('icolor').value,
+			theme:document.getElementById('theme').value,
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
 			alert(_L("Error: %1",errorThrown));

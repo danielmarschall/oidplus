@@ -17,6 +17,12 @@ This folder can contain following files:
                      If you just want to override some styles, then you could write your
                      changes in oidplus_add.css and give them priority using the
                      "!important" statement.
+                     Example: If you want to have your own logo, then you might want to
+                     create an oidplus_add.css file which overrides "#system_title_logo"
+                     using the "!important" statement. The logo is put into
+                     userdata_pub.
+                     You shall not edit plugins/design/*/logo.png, because things might
+                     change during software updates.
 
 - setup_base.css   : This file REPLACES the setup/setup_base.css file.
                      Please see a WARNING below.

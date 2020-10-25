@@ -29,6 +29,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			OIDplus::config()->setValue('color_sat_shift', $params['sat_shift']);
 			OIDplus::config()->setValue('color_val_shift', $params['val_shift']);
 			OIDplus::config()->setValue('color_invert',    $params['invcolors']);
+			OIDplus::config()->setValue('design',          $params['theme']);
 
 			OIDplus::logger()->log("[OK]A?", "Changed system color theme");
 
@@ -59,13 +60,26 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
 			}
 		});
+		OIDplus::config()->prepareConfigKey('design', 'Which design to use (must exist in plugins/design/)?', 'default', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			$good = true;
+			if (strpos($value,'/') !== false) $good = false;
+			if (strpos($value,'\\') !== false) $good = false;
+			if (strpos($value,'..') !== false) $good = false;
+			if (!$good) {
+				throw new OIDplusException(_L('Invalid design folder name. Do only enter a folder name, not an absolute or relative path'));
+			}
+
+			if (!is_dir(OIDplus::basePath().'/plugins/design/'.$value)) {
+				throw new OIDplusException(_L('The design "%1" does not exist in plugin directory %2',$value,'plugins/design/'));
+			}
+		});
 		OIDplus::config()->prepareConfigKey('oobe_colors_done', '"Out Of Box Experience" wizard for OIDplusPageAdminColors done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 	}
 
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:colors') {
 			$handled = true;
-			$out['title'] = _L('Colors');
+			$out['title'] = _L('Design');
 			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
 
 			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
@@ -75,6 +89,17 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			}
 
 			$out['text']  = '<br><p>';
+			$out['text'] .= '  <label for="theme">'._L('Design').':</label>';
+			$out['text'] .= '  <select name="theme" id="theme">';
+			foreach (OIDplus::getDesignPlugins() as $plugin) {
+				$folder = basename($plugin->getPluginDirectory());
+				$selected = $folder == OIDplus::config()->getValue('design') ? ' selected="true"' : '';
+				$out['text'] .= '<option value="'.htmlentities($folder).'"'.$selected.'>'.htmlentities($plugin->getManifest()->getName()).'</option>';
+			}
+			$out['text'] .= '  </select>';
+			$out['text'] .= '</p>';
+
+			$out['text'] .= '<br><p>';
 			$out['text'] .= '  <label for="amount">'._L('Hue shift').':</label>';
 			$out['text'] .= '  <input type="text" id="hshift" readonly style="border:0; background:transparent; font-weight:bold;">';
 			$out['text'] .= '</p>';
@@ -103,7 +128,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			$out['text'] .= 'if (g_sat_shift == null) g_sat_shift = g_sat_shift_saved = '.OIDplus::config()->getValue('color_sat_shift').";\n";
 			$out['text'] .= 'if (g_val_shift == null) g_val_shift = g_val_shift_saved = '.OIDplus::config()->getValue('color_val_shift').";\n";
 			$out['text'] .= 'if (g_invcolors == null) g_invcolors = g_invcolors_saved = '.OIDplus::config()->getValue('color_invert').";\n";
-			$out['text'] .= 'g_activetheme = '.js_escape(OIDplus::config()->getValue('design')).";\n";
+			$out['text'] .= 'if (g_activetheme == null) g_activetheme_saved = '.js_escape(OIDplus::config()->getValue('design')).";\n";
 			$out['text'] .= 'setup_color_sliders();';
 			$out['text'] .= '</script>';
 
@@ -127,7 +152,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
                 $json[] = array(
                         'id' => 'oidplus:colors',
                         'icon' => $tree_icon,
-                        'text' => _L('Colors')
+                        'text' => _L('Design')
                 );
 
                 return true;
