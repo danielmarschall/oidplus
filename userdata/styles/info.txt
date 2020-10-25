@@ -6,8 +6,12 @@ In this folder, you can place an alternative version of oidplus_base.css and set
 
 This folder can contain following files:
 
-- oidplus_base.css : This file REPLACES the oidplus_base.css file in the root directory.
+- oidplus_base.css : This file REPLACES the oidplus_base.css file of the currently active design.
                      Please see a WARNING below.
+                     *DEPRECATED*: Please use a design plugin (located in plugins/design/)
+                     in order to define individual designs for your system.
+                     Design plugins also allow you to include graphics in the plugin
+                     directory itself (so you don't need "userdata_pub").
 
 - oidplus_add.css  : This file is added after oidplus_base.css
                      If you just want to override some styles, then you could write your

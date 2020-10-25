@@ -2550,6 +2550,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Invalid design folder name. Do only enter a folder name, not an absolute or relative path
+		]]></source>
+		<target><![CDATA[
+		Ungültiger Design-Ordnername. Bitte nur einen Ordnernamen (keinen Pfad) eingeben
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Invalid email address
 		]]></source>
 		<target><![CDATA[
@@ -5402,6 +5410,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die "batch"-Felder werden eine automatische Kurzzeit-Anmeldung veranlassen. Die anderen Felder sind die Felder, die im normalen Betrieb von OIDplus gesendet werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The design "%1" does not exist in plugin directory %2
+		]]></source>
+		<target><![CDATA[
+		Das Design "%1" existiert nicht im Plugin-Verzeichnis %2
 		]]></target>
 	</message>
 	<message>

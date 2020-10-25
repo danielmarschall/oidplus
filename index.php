@@ -61,11 +61,15 @@ header('X-OIDplus-SystemInstallType:'.$sys_install_type);
 $sys_title = OIDplus::config()->getValue('system_title');
 header('X-OIDplus-SystemTitle:'.$sys_title);
 
+$add_css_args = array();
+$add_css_args[] = 'theme='.urlencode(OIDplus::config()->getValue('design'));
 if (class_exists('OIDplusPageAdminColors')) {
-	$add_css_args = '?invert='.(OIDplus::config()->getValue('color_invert')).'&h_shift='.(OIDplus::config()->getValue('color_hue_shift')/360).'&s_shift='.(OIDplus::config()->getValue('color_sat_shift')/100).'&v_shift='.(OIDplus::config()->getValue('color_val_shift')/100);
-} else {
-	$add_css_args = '';
+	$add_css_args[] = 'invert='.(OIDplus::config()->getValue('color_invert'));
+	$add_css_args[] = 'h_shift='.(OIDplus::config()->getValue('color_hue_shift')/360);
+	$add_css_args[] = 's_shift='.(OIDplus::config()->getValue('color_sat_shift')/100);
+	$add_css_args[] = 'v_shift='.(OIDplus::config()->getValue('color_val_shift')/100);
 }
+$add_css_args = count($add_css_args) > 0 ? '?'.implode('&',$add_css_args) : '';
 
 ?><!DOCTYPE html>
 <html lang="<?php echo substr(OIDplus::getCurrentLang(),0,2); ?>">

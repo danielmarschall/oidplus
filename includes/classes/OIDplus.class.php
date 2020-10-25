@@ -144,6 +144,19 @@ class OIDplus {
 					throw new OIDplusException(_L('This is not a correct email address'));
 				}
 			});
+			self::$config->prepareConfigKey('design', 'Which design to use (must exist in plugins/design/)?', 'default', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+				$good = true;
+				if (strpos($value,'/') !== false) $good = false;
+				if (strpos($value,'\\') !== false) $good = false;
+				if (strpos($value,'..') !== false) $good = false;
+				if (!$good) {
+					throw new OIDplusException(_L('Invalid design folder name. Do only enter a folder name, not an absolute or relative path'));
+				}
+
+				if (!is_dir(__DIR__.'/../../plugins/design/'.$value)) {
+					throw new OIDplusException(_L('The design "%1" does not exist in plugin directory %2',$value,'plugins/design/'));
+				}
+			});
 			self::$config->prepareConfigKey('objecttypes_initialized', 'List of object type plugins that were initialized once', '', OIDplusConfig::PROTECTION_READONLY, function($value) {
 				// Nothing here yet
 			});
@@ -731,7 +744,8 @@ class OIDplus {
 		$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
 		$test_dir = str_replace('\\', '/', $test_dir);
 		$c = 0;
-		while (!file_exists($test_dir.'/oidplus_base.js')) {
+		// We just assume that only the OIDplus base directory contains "oidplus.min.css.php" and not any subsequent directory!
+		while (!file_exists($test_dir.'/oidplus.min.css.php')) {
 			$test_dir = dirname($test_dir);
 			$c++;
 			if ($c == 1000) return false;

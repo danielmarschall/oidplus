@@ -192,6 +192,7 @@ function performAccessCheck() {
 	checkAccess("userdata/index.html");
 	checkAccess("dev/index.html");
 	checkAccess("includes/index.html");
+	checkAccess("setup/includes/index.html");
 	//checkAccess("plugins/publicPages/100_whois/whois/cli/index.html");
 }
 

@@ -103,6 +103,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			$out['text'] .= 'if (g_sat_shift == null) g_sat_shift = g_sat_shift_saved = '.OIDplus::config()->getValue('color_sat_shift').";\n";
 			$out['text'] .= 'if (g_val_shift == null) g_val_shift = g_val_shift_saved = '.OIDplus::config()->getValue('color_val_shift').";\n";
 			$out['text'] .= 'if (g_invcolors == null) g_invcolors = g_invcolors_saved = '.OIDplus::config()->getValue('color_invert').";\n";
+			$out['text'] .= 'g_activetheme = '.js_escape(OIDplus::config()->getValue('design')).";\n";
 			$out['text'] .= 'setup_color_sliders();';
 			$out['text'] .= '</script>';
 

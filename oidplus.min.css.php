@@ -64,11 +64,23 @@ $out .= process_file(__DIR__ . '/3p/jstree/themes/default/style'.($do_minify ? '
 $out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui'.($do_minify ? '.min' : '').'.css');
 $out .= process_file(__DIR__ . '/3p/bootstrap4/css/bootstrap'.($do_minify ? '.min' : '').'.css');
 
+// Find out base CSS
+if (isset($_REQUEST['theme'])) {
+	$theme = $_REQUEST['theme'];
+	if (strpos($theme,'/') !== false) $theme = 'default';
+	if (strpos($theme,'\\') !== false) $theme = 'default';
+	if (strpos($theme,'..') !== false) $theme = 'default';
+	if (!is_dir(__DIR__.'/plugins/design/'.$theme)) $theme = 'default';
+} else {
+	$theme = 'default';
+}
+$base_css = __DIR__ . '/plugins/design/'.$theme.'/oidplus_base.css';
+
 // OIDplus basic definitions
 if (file_exists(__DIR__ . '/userdata/styles/oidplus_base.css')) {
 	$out .= process_file(__DIR__ . '/userdata/styles/oidplus_base.css');
 } else {
-	$out .= process_file(__DIR__ . '/oidplus_base.css');
+	$out .= process_file($base_css);
 }
 
 // Then plugins

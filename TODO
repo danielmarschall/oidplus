@@ -4,6 +4,13 @@ RECENT STUFF
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Publish RFC!
 
+DESIGN / THEME PLUGINS:
+- Add manifests and PHP main classes for the design plugin type
+- Create a "Theme" plugin that combines "Colors" and "Design".
+- Make a feature-interface to manipulate the CSS URL?
+	Attention: JS function test_color_theme() has an hardcoded set of parameters and does not follow the arguments set in index.php!
+- Add design plugins to the "Plugins" admin section
+
 IDEAS FOR NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:
 	* Show every object and its attachments, so that the admin knows what's going on

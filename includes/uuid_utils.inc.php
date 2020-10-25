@@ -2,8 +2,8 @@
 
 /*
  * UUID utils for PHP
- * Copyright 2011-2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-10-21
+ * Copyright 2011 - 2020 Daniel Marschall, ViaThinkSoft
+ * Version 2020-10-25
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -341,7 +341,7 @@ function uuid_to_oid($uuid) {
 }
 
 function gen_uuid($prefer_timebased = true) {
-	if ($prefer_timebased) $uuid = gen_uuid_timebased();
+	$uuid = $prefer_timebased ? gen_uuid_timebased() : false;
 	if ($uuid === false) $uuid = gen_uuid_random();
 	return $uuid;
 }
