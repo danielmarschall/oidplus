@@ -27,6 +27,7 @@ class OIDplus {
 	private static /*OIDplusDatabasePlugin[]*/ $dbPlugins = array();
 	private static /*OIDplusSqlSlangPlugin[]*/ $sqlSlangPlugins = array();
 	private static /*OIDplusLanguagePlugin[]*/ $languagePlugins = array();
+	private static /*OIDplusDesignPlugin[]*/ $designPlugins = array();
 
 	protected static $html = true;
 
@@ -260,6 +261,11 @@ class OIDplus {
 		$name = $plugin::id();
 		if ($name === false) return false;
 
+		if (isset(self::$sqlSlangPlugins[$name])) {
+			$plugintype_hf = _L('SQL-Slang');
+			throw new OIDplusException('Multiple %1 plugins use the ID %2', $plugintype_hf, $name);
+		}
+
 		self::$sqlSlangPlugins[$name] = $plugin;
 
 		return true;
@@ -282,6 +288,11 @@ class OIDplus {
 	private static function registerDatabasePlugin(OIDplusDatabasePlugin $plugin) {
 		$name = $plugin::id();
 		if ($name === false) return false;
+
+		if (isset(self::$dbPlugins[$name])) {
+			$plugintype_hf = _L('Database');
+			throw new OIDplusException('Multiple %1 plugins use the ID %2', $plugintype_hf, $name);
+		}
 
 		self::$dbPlugins[$name] = $plugin;
 
@@ -353,6 +364,17 @@ class OIDplus {
 
 	public static function getLanguagePlugins() {
 		return self::$languagePlugins;
+	}
+
+	# --- Design plugin
+
+	private static function registerDesignPlugin(OIDplusDesignPlugin $plugin) {
+		self::$designPlugins[] = $plugin;
+		return true;
+	}
+
+	public static function getDesignPlugins() {
+		return self::$designPlugins;
 	}
 
 	# --- Logger plugin
@@ -489,6 +511,7 @@ class OIDplus {
 		$res = array_merge($res, self::$dbPlugins);
 		$res = array_merge($res, self::$sqlSlangPlugins);
 		$res = array_merge($res, self::$languagePlugins);
+		$res = array_merge($res, self::$designPlugins);
 		return $res;
 	}
 
@@ -649,6 +672,7 @@ class OIDplus {
 		self::$dbPlugins = array();
 		self::$sqlSlangPlugins = array();
 		self::$languagePlugins = array();
+		self::$designPlugins = array();
 		self::$system_id_cache = null;
 		self::$sslAvailableCache = null;
 
@@ -692,6 +716,7 @@ class OIDplus {
 		self::registerAllPlugins('logger', 'OIDplusLoggerPlugin', array('OIDplus','registerLoggerPlugin'));
 		self::registerAllPlugins('objectTypes', 'OIDplusObjectTypePlugin', array('OIDplus','registerObjectTypePlugin'));
 		self::registerAllPlugins('language', 'OIDplusLanguagePlugin', array('OIDplus','registerLanguagePlugin'));
+		self::registerAllPlugins('design', 'OIDplusDesignPlugin', array('OIDplus','registerDesignPlugin'));
 
 		// Initialize non-DB plugins
 
@@ -708,6 +733,9 @@ class OIDplus {
 			$plugin->init($html);
 		}
 		foreach (OIDplus::getLanguagePlugins() as $plugin) {
+			$plugin->init($html);
+		}
+		foreach (OIDplus::getDesignPlugins() as $plugin) {
 			$plugin->init($html);
 		}
 

@@ -60,10 +60,11 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			if (get_parent_class($classname) == 'OIDplusAuthPlugin') $back_link = 'oidplus:system_plugins.auth';
 			if (get_parent_class($classname) == 'OIDplusLoggerPlugin') $back_link = 'oidplus:system_plugins.logger';
 			if (get_parent_class($classname) == 'OIDplusLanguagePlugin') $back_link = 'oidplus:system_plugins.language';
+			if (get_parent_class($classname) == 'OIDplusDesignPlugin') $back_link = 'oidplus:system_plugins.design';
 			$out['text'] = '<p><a '.OIDplus::gui()->link($back_link).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 
 			$out['text'] .= '<div><label class="padding_label">'._L('Class name').'</label><b>'.htmlentities($classname).'</b></div>'.
-					'<div><label class="padding_label">'._L('Location').'</label><b>'.htmlentities(dirname($plugin->getPluginDirectory())).'</b></div>'.
+					'<div><label class="padding_label">'._L('Location').'</label><b>'.htmlentities($plugin->getPluginDirectory()).'</b></div>'.
 					'<div><label class="padding_label">'._L('Plugin type').'</label><b>'.htmlentities(get_parent_class($classname)).'</b></div>'.
 					'<div><label class="padding_label">'._L('Plugin name').'</label><b>'.htmlentities(empty($plugin->getManifest()->getName()) ? _L('n/a') : $plugin->getManifest()->getName()).'</b></div>'.
 					'<div><label class="padding_label">'._L('Plugin author').'</label><b>'.htmlentities(empty($plugin->getManifest()->getAuthor()) ? _L('n/a') : $plugin->getManifest()->getAuthor()).'</b></div>'.
@@ -84,6 +85,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			$show_auth = false;
 			$show_logger = false;
 			$show_language = false;
+			$show_design_active = false;
+			$show_design_inactive = false;
 
 			if ($parts[1] == '') {
 				$out['title'] = _L('Installed plugins');
@@ -100,6 +103,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				$show_auth = true;
 				$show_logger = true;
 				$show_language = true;
+				$show_design_active = true;
+				$show_design_inactive = true;
 			} else if ($parts[1] == 'pages') {
 				$out['title'] = _L('Page plugins');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
@@ -185,6 +190,12 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_language = true;
+			} else if ($parts[1] == 'design') {
+				$out['title'] = _L('Designs');
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
+				$show_design_active = true;
+				$show_design_inactive = true;
 			} else {
 				$out['title'] = _L('Error');
 				$out['icon'] = 'img/error_big.png';
@@ -453,6 +464,38 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '</div></div>';
 				}
 			}
+
+			if ($show_design_active || $show_design_inactive) {
+				if (count($plugins = OIDplus::getDesignPlugins()) > 0) {
+					$out['text'] .= '<h2>'._L('Designs').'</h2>';
+					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '	<tr>';
+					$out['text'] .= '		<th width="25%">'._L('Class name').'</th>';
+					$out['text'] .= '		<th width="25%">'._L('Plugin name').'</th>';
+					$out['text'] .= '		<th width="25%">'._L('Plugin version').'</th>';
+					$out['text'] .= '		<th width="25%">'._L('Plugin author').'</th>';
+					$out['text'] .= '	</tr>';
+					foreach ($plugins as $plugin) {
+						$active = OIDplus::config()->getValue('design') === basename($plugin->getPluginDirectory());
+						if ($active && !$show_design_active) continue;
+						if (!$active && !$show_design_inactive) continue;
+
+						$out['text'] .= '	<tr>';
+						if ($active) {
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b> '._L('(active)').'</a></td>';
+						} else {
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						}
+						$out['text'] .= '<td>' . htmlentities(empty($plugin->getManifest()->getName()) ? _L('n/a') : $plugin->getManifest()->getName()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($plugin->getManifest()->getVersion()) ? _L('n/a') : $plugin->getManifest()->getVersion()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($plugin->getManifest()->getAuthor()) ? _L('n/a') : $plugin->getManifest()->getAuthor()) . '</td>';
+						$out['text'] .= '	</tr>';
+					}
+					$out['text'] .= '</table>';
+					$out['text'] .= '</div></div>';
+				}
+			}
 		}
 	}
 
@@ -478,6 +521,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		$tree_icon_auth = $tree_icon; // TODO
 		$tree_icon_logger = $tree_icon; // TODO
 		$tree_icon_language = $tree_icon; // TODO
+		$tree_icon_design_active = $tree_icon; // TODO
+		$tree_icon_design_inactive = $tree_icon; // TODO
 
 		$pp_public = array();
 		$pp_ra = array();
@@ -614,6 +659,25 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				'text' => $txt,
 			);
 		}
+		$design_plugins = array();
+		foreach (OIDplus::getDesignPlugins() as $plugin) {
+			$txt = (empty($plugin->getManifest()->getName())) ? get_class($plugin) : $plugin->getManifest()->getName();
+
+			$active = OIDplus::config()->getValue('design') === basename($plugin->getPluginDirectory());
+			if ($active) {
+				$design_plugins[] = array(
+					'id' => 'oidplus:system_plugins$'.get_class($plugin),
+					'icon' => $tree_icon_design_active,
+					'text' => $txt,
+				);
+			} else {
+				$design_plugins[] = array(
+					'id' => 'oidplus:system_plugins$'.get_class($plugin),
+					'icon' => $tree_icon_design_inactive,
+					'text' => '<font color="gray">'.$txt.'</font>',
+				);
+			}
+		}
 		$json[] = array(
 			'id' => 'oidplus:system_plugins',
 			'icon' => $tree_icon,
@@ -679,6 +743,12 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					'icon' => $tree_icon,
 					'text' => _L('Languages'),
 					'children' => $language_plugins
+				),
+				array(
+					'id' => 'oidplus:system_plugins.design',
+					'icon' => $tree_icon,
+					'text' => _L('Designs'),
+					'children' => $design_plugins
 				)
 			)
 		);
