@@ -53,10 +53,17 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	     <th>'._L('IRI identifiers (comma sep.)').'</th>';
 			$out['text'] .= '	</tr>';
 
+			/*
 			$res = OIDplus::db()->query("select a.oid from (".
 			                            "select oid from ###asn1id where well_known = ? union ".
 			                            "select oid from ###iri where well_known = ?) a ".
-			                            "order by ".OIDplus::db()->natOrder('oid'), array(true, true));
+			                            "order by ".OIDplus::db()->natOrder('oid'), array(true, true)); // <-- This prepared statement does not work in SQL-Server!
+			*/
+			$res = OIDplus::db()->query("select a.oid from (".
+			                            "select oid, well_known from ###asn1id union ".
+			                            "select oid, well_known from ###iri) a ".
+			                            "where a.well_known = ? ".
+			                            "order by ".OIDplus::db()->natOrder('oid'), array(true)); // <-- This works
 			while ($row = $res->fetch_array()) {
 				$asn1ids = array();
 				$res2 = OIDplus::db()->query("select name, standardized from ###asn1id where oid = ?", array($row['oid']));
