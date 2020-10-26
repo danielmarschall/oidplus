@@ -897,6 +897,7 @@ class OIDplus {
 			$ver_prev = OIDplus::config()->getValue("last_known_version");
 			$ver_now = OIDplus::getVersion();
 			if (($ver_now != '') && ($ver_prev != '') && ($ver_now != $ver_prev)) {
+				// TODO: Problem: When the system was updated using SVN, then the IP address of the next random visitor of the website is logged!
 				OIDplus::logger()->log("[INFO]A!", "System version changed from '$ver_prev' to '$ver_now'");
 			}
 			OIDplus::config()->setValue("last_known_version", $ver_now);

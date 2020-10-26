@@ -4,9 +4,6 @@ RECENT STUFF
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Publish RFC!
 
-SECURITY:
-- implement bcrypt for Admin (we need to find a good pureJS implementation)
-
 IDEAS FOR NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:
 	* Show every object and its attachments, so that the admin knows what's going on
@@ -148,13 +145,18 @@ REJECTED IDEAS
 	   Having a ViaThinkSoft OID there might get the user confused because they could think that the
 	   page is a OID page request for that OID instead of a plugin page.
 	b) Vendors should use something like "?goto=oidplus:com.example...."
+- Implement bcrypt for the admin account
+	=> Rejected because we need a JavaScript bcrypt algorithm, but it is very slow on some browsers,
+	   and therefore we cannot use the "generate hash while you type" thing we do in setup!
+	=> Example JavaScript algorithm:
+		https://misc.daniel-marschall.de/code/javascript/bcrypt.js
 
 LOGS
 - prune logs entries? automatically prune things like "logged in" but not prune OID changes, etc?
 - admin logs: don't show all logs. load more log entries as soon as the page is scrolled down
-- is it possible that LFI/RFI attacks fill the log files? This is not good!
 - when user changed email from "A" => "B", then all previous log events for "A" are not visible for "B" anymore!
 	=> should we also change the log entry email address references when the user changes their email address?
+- At "oidplus:system_log", user log section and object log section, the users and/or objects should be clickable
 
 IDEAS
 - Should object types be able to add additional sub-nodes/pages into the tree,

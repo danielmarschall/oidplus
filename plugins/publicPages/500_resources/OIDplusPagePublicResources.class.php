@@ -44,13 +44,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		if (file_exists($file2)) $file = $file2;
 
 		$cont = file_get_contents($file);
-		
+
 		list($html, $js, $css) = extractHtmlContents($cont);
 		$cont = '';
 		if (!empty($js))  $cont .= "<script>\n$js\n</script>";
 		if (!empty($css)) $cont .= "<style>\n$css\n</style>";
 		$cont .= $html;
-		
+
 		return $cont;
 	}
 
@@ -124,7 +124,8 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				if (strpos($file, chr(0)) !== false) {
 					$file = str_replace(chr(0), '[NUL]', $file);
 				}
-				OIDplus::logger()->log("[WARN]A!", "LFI/RFI attack blocked (requested file '$file')");
+				// This will not be logged anymore, because people could spam the log files otherwise
+				//OIDplus::logger()->log("[WARN]A!", "LFI/RFI attack blocked (requested file '$file')");
 				$out['title'] = _L('Access denied');
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('This request is invalid').'</p>';
