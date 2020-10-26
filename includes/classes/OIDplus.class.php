@@ -189,6 +189,19 @@ class OIDplus {
 			self::$config->prepareConfigKey('last_known_version', 'Last known OIDplus Version', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
 				// Nothing here yet
 			});
+			self::$config->prepareConfigKey('default_ra_auth_method', 'Default auth method used for generating password of RAs (must exist in plugins/auth/)?', 'A2_sha3_salted_base64', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+				$good = true;
+				if (strpos($value,'/') !== false) $good = false;
+				if (strpos($value,'\\') !== false) $good = false;
+				if (strpos($value,'..') !== false) $good = false;
+				if (!$good) {
+					throw new OIDplusException(_L('Invalid auth plugin folder name. Do only enter a folder name, not an absolute or relative path'));
+				}
+
+				if (!is_dir(OIDplus::basePath().'/plugins/auth/'.$value)) {
+					throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$value,'plugins/auth/'));
+				}
+			});
 		}
 
 		return self::$config;
@@ -334,6 +347,14 @@ class OIDplus {
 	# --- Auth plugin
 
 	private static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
+		$password = generateRandomString(25);
+		list($salt,$authkey) = $plugin->generate($password);
+		if ((!$plugin->verify($authkey,$salt,$password)) ||
+		   (!empty($salt) && $plugin->verify($authkey,$salt.'x',$password)) ||
+		   ($plugin->verify($authkey,$salt,$password.'x'))) {
+			throw new OIDplusException(_L('Auth plugin "%1" is erroneous: Generate/Verify self test failed',basename($plugin->getPluginDirectory())));
+		}
+
 		self::$authPlugins[] = $plugin;
 		return true;
 	}

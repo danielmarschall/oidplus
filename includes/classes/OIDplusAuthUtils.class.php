@@ -55,7 +55,20 @@ class OIDplusAuthUtils {
 
 	public static function raCheckPassword($ra_email, $password) {
 		$ra = new OIDplusRA($ra_email);
-		return $ra->checkPassword($password);
+
+		$salt = null;
+		$authkey = null;
+		list($salt, $authkey) = $ra->getAuthInfo();
+
+		$plugins = OIDplus::getAuthPlugins();
+		if (count($plugins) == 0) {
+			throw new OIDplusException(_L('No RA authentication plugins found'));
+		}
+		foreach ($plugins as $plugin) {
+			if ($plugin->verify($authkey, $salt, $password)) return true;
+		}
+
+		return false;
 	}
 
 	public static function raNumLoggedIn() {
@@ -182,9 +195,15 @@ class OIDplusAuthUtils {
 	// Generate RA passwords
 
 	public static function raGeneratePassword($password) {
-		$s_salt = uniqid(mt_rand(), true);
-		$calc_authkey = 'A2#'.base64_encode(sha3_512($s_salt.$password, true));
-		return array($s_salt, $calc_authkey);
+		$def_method = OIDplus::config()->getValue('default_ra_auth_method');
+
+		$plugins = OIDplus::getAuthPlugins();
+		foreach ($plugins as $plugin) {
+			if (basename($plugin->getPluginDirectory()) === $def_method) {
+				return $plugin->generate($password);
+			}
+		}
+		throw new OIDplusException(_L('Default RA auth method/plugin "%1" not found',$def_method));
 	}
 
 	// Generate admin password

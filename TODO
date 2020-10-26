@@ -4,6 +4,9 @@ RECENT STUFF
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Publish RFC!
 
+SECURITY:
+- implement bcrypt for Admin (we need to find a good pureJS implementation)
+
 IDEAS FOR NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:
 	* Show every object and its attachments, so that the admin knows what's going on

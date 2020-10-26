@@ -45,4 +45,11 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 		return hash_equals($calc_authkey, $s_authkey);
 	}
 
+	public function generate($password) {
+		$hashalgo = 'sha1';
+		$s_salt = uniqid(mt_rand(), true);
+		$calc_authkey = 'A1a#'.$hashalgo.':'.hash($hashalgo, $s_salt.$password);
+		return array($s_salt, $calc_authkey);
+	}
+
 }

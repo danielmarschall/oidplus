@@ -17,26 +17,28 @@
  * limitations under the License.
  */
 
-class OIDplusAuthPluginSha3SaltedBase64 extends OIDplusAuthPlugin {
+class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 
 	public function verify($authKey, $salt, $check_password) {
 		@list($s_authmethod, $s_authkey) = explode('#', $authKey, 2);
 
-		if ($s_authmethod == 'A2') {
-			// Default OIDplus 2.0 behavior
-			// A2#X with X being sha3{base64}(salt+password)
-			$calc_authkey = base64_encode(sha3_512($salt.$check_password, true));
+		if ($s_authmethod == 'A3') {
+			// A3#$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
+			//    \__/\/ \____________________/\_____________________________/
+			//     Alg Cost      Salt                        Hash
+			if ($salt != '') {
+				throw new OIDplusException(_L('This function does not accept a salt'));
+			}
+			return password_verify($check_password, $s_authkey);
 		} else {
 			// Invalid auth code
 			return false;
 		}
-
-		return hash_equals($calc_authkey, $s_authkey);
 	}
 
 	public function generate($password) {
-		$s_salt = uniqid(mt_rand(), true);
-		$calc_authkey = 'A2#'.base64_encode(sha3_512($s_salt.$password, true));
+		$s_salt = ''; // BCrypt automatically generates a salt
+		$calc_authkey = 'A3#'.password_hash($password, PASSWORD_BCRYPT);
 		return array($s_salt, $calc_authkey);
 	}
 

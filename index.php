@@ -62,16 +62,18 @@ $sys_title = OIDplus::config()->getValue('system_title');
 header('X-OIDplus-SystemTitle:'.$sys_title);
 
 $add_css_args = array();
-$add_css_args[] = 'theme='.urlencode(OIDplus::config()->getValue('design'));
 if (class_exists('OIDplusPageAdminColors')) {
-	// QUESTION: Should the additional parameters of the CSS script
-	//           be moved into the OIDplusPageAdminColors plugins using "implementsFeature"?
-	//           Problem: The JS function test_color_theme() has an hardcoded set of parameters
-	//           and does not follow the arguments that might be set by other plugins.
-	$add_css_args[] = 'invert='.(OIDplus::config()->getValue('color_invert'));
-	$add_css_args[] = 'h_shift='.(OIDplus::config()->getValue('color_hue_shift')/360);
-	$add_css_args[] = 's_shift='.(OIDplus::config()->getValue('color_sat_shift')/100);
-	$add_css_args[] = 'v_shift='.(OIDplus::config()->getValue('color_val_shift')/100);
+	// Usually, such things would be done using "features" (implementsFeature),
+	// but there are following reasons why we DON'T do it:
+	// 1. Just having a "CSS URL parameter feature" would change the URL parameter,
+	//    but it would not affect the custom code in oidplus.min.css.php
+	// 2. The JS function test_color_theme() has an hardcoded set of parameters
+	//    and does not follow the arguments that might be set by other plugins.
+	$add_css_args[] = 'theme='.urlencode(OIDplus::config()->getValue('design'));
+	$add_css_args[] = 'invert='.urlencode(OIDplus::config()->getValue('color_invert'));
+	$add_css_args[] = 'h_shift='.urlencode(OIDplus::config()->getValue('color_hue_shift')/360);
+	$add_css_args[] = 's_shift='.urlencode(OIDplus::config()->getValue('color_sat_shift')/100);
+	$add_css_args[] = 'v_shift='.urlencode(OIDplus::config()->getValue('color_val_shift')/100);
 }
 $add_css_args = count($add_css_args) > 0 ? '?'.implode('&',$add_css_args) : '';
 

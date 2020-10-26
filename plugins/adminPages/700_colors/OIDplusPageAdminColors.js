@@ -104,7 +104,12 @@ function test_color_theme() {
 	g_val_shift = $("#vshift").val();
 	g_invcolors = $("#icolor").val();
 	g_activetheme = $("#theme").val();
-	changeCSS('oidplus.min.css.php?theme='+$("#theme").val()+'&invert='+$("#icolor").val()+'&h_shift='+$("#hshift").val()/360+'&s_shift='+$("#sshift" ).val()/100+'&v_shift='+$("#vshift" ).val()/100, 0);
+	changeCSS('oidplus.min.css.php'+
+		'?theme='+encodeURIComponent($("#theme").val())+
+		'&invert='+encodeURIComponent($("#icolor").val())+
+		'&h_shift='+encodeURIComponent($("#hshift").val()/360)+
+		'&s_shift='+encodeURIComponent($("#sshift" ).val()/100)+
+		'&v_shift='+encodeURIComponent($("#vshift" ).val()/100), 0);
 }
 
 function changeCSS(cssFile, cssLinkIndex) {

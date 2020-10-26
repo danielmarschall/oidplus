@@ -35,11 +35,21 @@ function trim_br($html) {
 	return $html;
 }
 
+function generateRandomString($length) {
+	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$charactersLength = strlen($characters);
+	$randomString = '';
+	for ($i = 0; $i < $length; $i++) {
+		$randomString .= $characters[rand(0, $charactersLength - 1)];
+	}
+	return $randomString;
+}
+
 function verify_private_public_key($privKey, $pubKey) {
 	try {
 		if (empty($privKey)) return false;
 		if (empty($pubKey)) return false;
-		$data = 'TEST';
+		$data = generateRandomString(25);
 		$encrypted = '';
 		$decrypted = '';
 		if (!@openssl_public_encrypt($data, $encrypted, $pubKey)) return false;

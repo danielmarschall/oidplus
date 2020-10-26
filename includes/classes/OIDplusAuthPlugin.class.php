@@ -19,4 +19,5 @@
 
 abstract class OIDplusAuthPlugin extends OIDplusPlugin {
 	public abstract function verify($authKey, $salt, $check_password);
+	public abstract function generate($password); // outputs array($salt,$authkey)
 }

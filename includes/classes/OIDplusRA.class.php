@@ -70,20 +70,16 @@ class OIDplusRA {
 		OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered, ra_name, personal_name, organization, office, street, zip_town, country, phone, mobile, fax) values (?, ?, ?, ".OIDplus::db()->sqlDate().", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($s_salt, $calc_authkey, $this->email, "", "", "", "", "", "", "", "", "", ""));
 	}
 
-	public function checkPassword($password) {
+	public function getAuthInfo() {
 		$ra_res = OIDplus::db()->query("select authkey, salt from ###ra where email = ?", array($this->email));
 		if ($ra_res->num_rows() == 0) return false; // User not found
 		$ra_row = $ra_res->fetch_array();
 
-		$plugins = OIDplus::getAuthPlugins();
-		if (count($plugins) == 0) {
-			throw new OIDplusException(_L('No RA authentication plugins found'));
-		}
-		foreach ($plugins as $plugin) {
-			if ($plugin->verify($ra_row['authkey'], $ra_row['salt'], $password)) return true;
-		}
+		return array($ra_row['salt'], $ra_row['authkey']);
+	}
 
-		return false;
+	public function checkPassword($password) {
+		return OIDplus::authUtils()->raCheckPassword($this->email, $password);
 	}
 
 	public function delete() {
@@ -95,9 +91,9 @@ class OIDplusRA {
 	}
 
 	public function isPasswordLess() {
-		$ra_res = OIDplus::db()->query("select authkey, salt from ###ra where email = ?", array($this->email));
-		if ($ra_res->num_rows() == 0) return null; // User not found
-		$ra_row = $ra_res->fetch_array();
-		return $ra_row['authkey'] === '';
+		$salt = null;
+		$authkey = null;
+		list($salt, $authkey) = $this->getAuthInfo();
+		return $authkey === '';
 	}
 }

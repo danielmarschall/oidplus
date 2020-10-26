@@ -622,6 +622,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Auth plugin "%1" is erroneous: Generate/Verify self test failed
+		]]></source>
+		<target><![CDATA[
+		Authentifizierungs-Plugin "%1" ist fehlerhaft: Selbst-Test fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.
 		]]></source>
 		<target><![CDATA[
@@ -1346,6 +1354,14 @@
 		]]></source>
 		<target><![CDATA[
 		Datenbank-Update %1 -> %2 fehlgeschlagen (Skript meldet neue Version %3)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Default RA auth method/plugin "%1" not found
+		]]></source>
+		<target><![CDATA[
+		Standard RA-Authentifizierungsmethoden-Plugin "%1" nicht gefunden
 		]]></target>
 	</message>
 	<message>
@@ -2546,6 +2562,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ungültiger Authentifizierungs-Schlüssel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid auth plugin folder name. Do only enter a folder name, not an absolute or relative path
+		]]></source>
+		<target><![CDATA[
+		Ungültiger Authentifizierungs-Plugin Ordnername. Bitte nur einen Ordnernamen (keinen Pfad) eingeben
 		]]></target>
 	</message>
 	<message>
@@ -5414,6 +5438,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The auth plugin "%1" does not exist in plugin directory %2
+		]]></source>
+		<target><![CDATA[
+		Authentifizierungs-Plugin "%1" wurde im Ordner %2 nicht gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The batch-fields will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.
 		]]></source>
 		<target><![CDATA[
@@ -5642,6 +5674,14 @@
 		]]></source>
 		<target><![CDATA[
 		Dieser Ordner beinhaltete keine Elemente
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This function does not accept a salt
+		]]></source>
+		<target><![CDATA[
+		Diese Funktion akzeptiert kein Salt
 		]]></target>
 	</message>
 	<message>
