@@ -56,8 +56,6 @@ class OIDplusAuthUtils {
 	public static function raCheckPassword($ra_email, $password) {
 		$ra = new OIDplusRA($ra_email);
 
-		$salt = null;
-		$authkey = null;
 		list($salt, $authkey) = $ra->getAuthInfo();
 
 		$plugins = OIDplus::getAuthPlugins();

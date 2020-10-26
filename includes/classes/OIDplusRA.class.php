@@ -91,8 +91,6 @@ class OIDplusRA {
 	}
 
 	public function isPasswordLess() {
-		$salt = null;
-		$authkey = null;
 		list($salt, $authkey) = $this->getAuthInfo();
 		return $authkey === '';
 	}
