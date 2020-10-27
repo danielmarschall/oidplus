@@ -34,7 +34,7 @@ class OIDplusAuthPluginSha3SaltedBase64 extends OIDplusAuthPlugin {
 	}
 
 	public function generate($password) {
-		$s_salt = bin2hex(OIDplusAuthUtils::getRandomBytes(64));
+		$s_salt = bin2hex(OIDplusAuthUtils::getRandomBytes(50)); // DB field ra.salt is limited to 100 chars (= 50 bytes)
 		$calc_authkey = 'A2#'.base64_encode(sha3_512($s_salt.$password, true));
 		return array($s_salt, $calc_authkey);
 	}

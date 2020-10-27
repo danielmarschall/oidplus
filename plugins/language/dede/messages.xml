@@ -630,6 +630,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Auth plugin "%1" is erroneous: Salt is too long to fit into database field
+		]]></source>
+		<target><![CDATA[
+		Authentifizierungs-Plugin "%1" ist fehlerhaft: Salt ist zu groß für das Datenbankfeld
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.
 		]]></source>
 		<target><![CDATA[
@@ -3194,6 +3202,14 @@
 		]]></source>
 		<target><![CDATA[
 		Keine zusätzlichen OIDs gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No fitting hash algorithm found
+		]]></source>
+		<target><![CDATA[
+		Kein passender Hash-Algorithmus gefunden
 		]]></target>
 	</message>
 	<message>

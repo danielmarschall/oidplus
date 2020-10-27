@@ -78,7 +78,7 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 		if (is_null($hashalgo)) {
 			throw new OIDplusException(_L('No fitting hash algorithm found'));
 		}
-		$s_salt = bin2hex(OIDplusAuthUtils::getRandomBytes(64));
+		$s_salt = bin2hex(OIDplusAuthUtils::getRandomBytes(50)); // DB field ra.salt is limited to 100 chars (= 50 bytes)
 		$calc_authkey = 'A1c#'.$hashalgo.':'.hash($hashalgo, $s_salt.$password.$s_salt);
 		return array($s_salt, $calc_authkey);
 	}
