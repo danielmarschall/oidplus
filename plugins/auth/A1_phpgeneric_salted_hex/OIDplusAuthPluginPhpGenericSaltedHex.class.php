@@ -24,19 +24,25 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 
 		if ($s_authmethod == 'A1a') {
 			// This auth method can be used by you if you migrate users from another software solution into OIDplus
-			// A1a#hashalgo:X with X being hashalgo{hex}(salt+password)
+			// A1a#hashalgo:X with X being H(salt+password) in hex-notation
+			// Attention: With some hash algorithms, prepending the salt makes it vulnerable against length-extension-attacks
 			$hashalgo = explode(':', $s_authkey, 2)[0];
 			$calc_authkey = $hashalgo.':'.hash($hashalgo, $salt.$check_password);
 		} else if ($s_authmethod == 'A1b') {
 			// This auth method can be used by you if you migrate users from another software solution into OIDplus
-			// A1b#hashalgo:X with X being hashalgo{hex}(password+salt)
+			// A1b#hashalgo:X with X being H(password+salt) in hex-notation
 			$hashalgo = explode(':', $s_authkey, 2)[0];
 			$calc_authkey = $hashalgo.':'.hash($hashalgo, $check_password.$salt);
 		} else if ($s_authmethod == 'A1c') {
 			// This auth method can be used by you if you migrate users from another software solution into OIDplus
-			// A1c#hashalgo:X with X being hashalgo{hex}(salt+password+salt)
+			// A1c#hashalgo:X with X being H(salt+password+salt) in hex-notation
 			$hashalgo = explode(':', $s_authkey, 2)[0];
 			$calc_authkey = $hashalgo.':'.hash($hashalgo, $salt.$check_password.$salt);
+		} else if ($s_authmethod == 'A1d') {
+			// This auth method can be used by you if you migrate users from another software solution into OIDplus
+			// A1d#hashalgo:X with X being H_HMAC(password,salt) in hex-notation
+			$hashalgo = explode(':', $s_authkey, 2)[0];
+			$calc_authkey = $hashalgo.':'.hash_hmac($hashalgo, $check_password, $salt);
 		} else {
 			// Invalid auth code
 			return false;
@@ -46,9 +52,34 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 	}
 
 	public function generate($password) {
-		$hashalgo = 'sha1';
-		$s_salt = uniqid(mt_rand(), true);
-		$calc_authkey = 'A1a#'.$hashalgo.':'.hash($hashalgo, $s_salt.$password);
+		$preferred_hash_algos = array(
+		    // sorted by priority
+		    'sha3-512',
+		    'sha3-384',
+		    'sha3-256',
+		    'sha3-224',
+		    'sha512',
+		    'sha512/256',
+		    'sha512/224',
+		    'sha384',
+		    'sha256',
+		    'sha224',
+		    'sha1',
+		    'md5'
+		);
+		$algos = hash_algos();
+		$hashalgo = null;
+		foreach ($preferred_hash_algos as $a) {
+			if (in_array($a, $algos)) {
+				$hashalgo = $a;
+				break;
+			}
+		}
+		if (is_null($hashalgo)) {
+			throw new OIDplusException(_L('No fitting hash algorithm found'));
+		}
+		$s_salt = bin2hex(OIDplusAuthUtils::getRandomBytes(64));
+		$calc_authkey = 'A1c#'.$hashalgo.':'.hash($hashalgo, $s_salt.$password.$s_salt);
 		return array($s_salt, $calc_authkey);
 	}
 

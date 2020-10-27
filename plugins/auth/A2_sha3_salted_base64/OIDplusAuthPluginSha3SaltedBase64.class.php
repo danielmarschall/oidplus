@@ -23,8 +23,7 @@ class OIDplusAuthPluginSha3SaltedBase64 extends OIDplusAuthPlugin {
 		@list($s_authmethod, $s_authkey) = explode('#', $authKey, 2);
 
 		if ($s_authmethod == 'A2') {
-			// Default OIDplus 2.0 behavior
-			// A2#X with X being sha3{base64}(salt+password)
+			// A2#X with X being sha3(salt+password) in base64-notation
 			$calc_authkey = base64_encode(sha3_512($salt.$check_password, true));
 		} else {
 			// Invalid auth code
@@ -35,7 +34,7 @@ class OIDplusAuthPluginSha3SaltedBase64 extends OIDplusAuthPlugin {
 	}
 
 	public function generate($password) {
-		$s_salt = uniqid(mt_rand(), true);
+		$s_salt = bin2hex(OIDplusAuthUtils::getRandomBytes(64));
 		$calc_authkey = 'A2#'.base64_encode(sha3_512($s_salt.$password, true));
 		return array($s_salt, $calc_authkey);
 	}

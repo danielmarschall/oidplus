@@ -19,6 +19,26 @@
 
 class OIDplusAuthUtils {
 
+	public static function getRandomBytes($len) {
+		if (function_exists('openssl_random_pseudo_bytes')) {
+			$a = openssl_random_pseudo_bytes($len);
+			if ($a) return $a;
+		}
+
+		if (function_exists('random_bytes')) {
+			$a = random_bytes($len);
+			if ($a) return $a;
+		}
+
+		// Fallback to non-secure RNG
+		$a = '';
+		while (strlen($a) < $len*2) {
+			$a .= sha1(uniqid(mt_rand(), true));
+		}
+		$a = substr($a, 0, $len*2);
+		return hex2bin($a);
+	}
+
 	// RA authentication functions
 
 	public static function raLogin($email) {
@@ -130,7 +150,7 @@ class OIDplusAuthUtils {
 				// Version 3: BCrypt
 				return password_verify($password, $passwordData);
 			} else {
-				// Version 2: SHA3-512 without salt
+				// Version 2: SHA3-512 with salt
 				list($s_salt, $hash) = explode('$', $passwordData, 2);
 			}
 		} else {
@@ -188,7 +208,7 @@ class OIDplusAuthUtils {
 	}
 
 	public function genCSRFToken() {
-		return uniqid(mt_rand(), true);
+		return bin2hex(OIDplusAuthUtils::getRandomBytes(64));
 	}
 
 	public function checkCSRF() {
