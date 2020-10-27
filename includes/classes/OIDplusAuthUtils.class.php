@@ -124,9 +124,17 @@ class OIDplusAuthUtils {
 		if (empty($passwordData)) {
 			throw new OIDplusException(_L('No admin password set in %1','userdata/baseconfig/config.inc.php'));
 		}
+
 		if (strpos($passwordData, '$') !== false) {
-			list($s_salt, $hash) = explode('$', $passwordData, 2);
+			if ($passwordData[0] == '$') {
+				// Version 3: BCrypt
+				return password_verify($password, $passwordData);
+			} else {
+				// Version 2: SHA3-512 without salt
+				list($s_salt, $hash) = explode('$', $passwordData, 2);
+			}
 		} else {
+			// Version 1: SHA3-512 without salt
 			$s_salt = '';
 			$hash = $passwordData;
 		}

@@ -65,7 +65,7 @@ function process_file($filename) {
 if (file_exists(__DIR__ . '/../userdata/styles/setup_base.css')) {
 	$out .= process_file(__DIR__ . '/../userdata/styles/setup_base.css');
 } else {
-	$out .= process_file(__DIR__ . '/setup_base.css');
+	$out .= process_file(__DIR__ . '/includes/setup_base.css');
 }
 
 // Then plugins

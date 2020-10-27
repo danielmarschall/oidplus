@@ -189,7 +189,7 @@ class OIDplus {
 			self::$config->prepareConfigKey('last_known_version', 'Last known OIDplus Version', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
 				// Nothing here yet
 			});
-			self::$config->prepareConfigKey('default_ra_auth_method', 'Default auth method used for generating password of RAs (must exist in plugins/auth/)?', 'A2_sha3_salted_base64', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			self::$config->prepareConfigKey('default_ra_auth_method', 'Default auth method used for generating password of RAs (must exist in plugins/auth/)?', 'A3_bcrypt', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 				$good = true;
 				if (strpos($value,'/') !== false) $good = false;
 				if (strpos($value,'\\') !== false) $good = false;
@@ -347,12 +347,14 @@ class OIDplus {
 	# --- Auth plugin
 
 	private static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
-		$password = generateRandomString(25);
-		list($salt,$authkey) = $plugin->generate($password);
-		if ((!$plugin->verify($authkey,$salt,$password)) ||
-		   (!empty($salt) && $plugin->verify($authkey,$salt.'x',$password)) ||
-		   ($plugin->verify($authkey,$salt,$password.'x'))) {
-			throw new OIDplusException(_L('Auth plugin "%1" is erroneous: Generate/Verify self test failed',basename($plugin->getPluginDirectory())));
+		if (OIDplus::baseConfig()->getValue('DEBUG')) {
+			$password = generateRandomString(25);
+			list($salt,$authkey) = $plugin->generate($password);
+			if ((!$plugin->verify($authkey,$salt,$password)) ||
+			   (!empty($salt) && $plugin->verify($authkey,$salt.'x',$password)) ||
+			   ($plugin->verify($authkey,$salt,$password.'x'))) {
+				throw new OIDplusException(_L('Auth plugin "%1" is erroneous: Generate/Verify self test failed',basename($plugin->getPluginDirectory())));
+			}
 		}
 
 		self::$authPlugins[] = $plugin;
@@ -573,7 +575,9 @@ class OIDplus {
 		$out = array();
 		$ary = self::getAllPluginManifests($pluginDirName, false);
 		$known_plugin_oids = array();
-		$fake_feature = uuid_to_oid(gen_uuid());
+		if (OIDplus::baseConfig()->getValue('DEBUG')) {
+			$fake_feature = uuid_to_oid(gen_uuid());
+		}
 		foreach ($ary as $plugintype_folder => $bry) {
 			foreach ($bry as $pluginname_folder => $manifest) {
 				$class_name = $manifest->getPhpMainClass();
@@ -614,9 +618,12 @@ class OIDplus {
 				}
 
 				$obj = new $class_name();
-				if ($obj->implementsFeature($fake_feature)) {
-					// see https://devblogs.microsoft.com/oldnewthing/20040211-00/?p=40663
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('implementsFeature() always returns true'));
+
+				if (OIDplus::baseConfig()->getValue('DEBUG')) {
+					if ($obj->implementsFeature($fake_feature)) {
+						// see https://devblogs.microsoft.com/oldnewthing/20040211-00/?p=40663
+						throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('implementsFeature() always returns true'));
+					}
 				}
 
 				// TODO: Maybe as additional plugin-test, we should also check if plugins are allowed to define CSS/JS (since only page plugins may have them!)

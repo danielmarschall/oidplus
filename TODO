@@ -145,11 +145,6 @@ REJECTED IDEAS
 	   Having a ViaThinkSoft OID there might get the user confused because they could think that the
 	   page is a OID page request for that OID instead of a plugin page.
 	b) Vendors should use something like "?goto=oidplus:com.example...."
-- Implement bcrypt for the admin account
-	=> Rejected because we need a JavaScript bcrypt algorithm, but it is very slow on some browsers,
-	   and therefore we cannot use the "generate hash while you type" thing we do in setup!
-	=> Example JavaScript algorithm:
-		https://misc.daniel-marschall.de/code/javascript/bcrypt.js
 
 LOGS
 - prune logs entries? automatically prune things like "logged in" but not prune OID changes, etc?

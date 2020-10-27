@@ -15,12 +15,17 @@
  * limitations under the License.
  */
 
-min_password_length = 10; // see also setup/setup.js
+min_password_length = 10; // see also setup/includes/setup_base.js
 
 function hexToBase64(str) {
 	return btoa(String.fromCharCode.apply(null,
 	            str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ")));
 }
+
+var bCryptWorker = null;
+var g_prevBcryptPw = null;
+var g_last_admPwdHash = null;
+var g_last_pwComment = null;
 
 function rehash_admin_pwd() {
 	var error = "";
@@ -41,6 +46,33 @@ function rehash_admin_pwd() {
 	if (error != "") {
 		document.getElementById('config').innerHTML = error;
 	} else {
-		document.getElementById('config').innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + hexToBase64(sha3_512(document.getElementById('admin_password').value)) + '\'); // base64 encoded SHA3-512 hash<br>';
+		var pw = document.getElementById('admin_password').value;
+
+		if (pw != g_prevBcryptPw) {
+			// sync call to calculate SHA3
+			var admPwdHash = hexToBase64(sha3_512(pw))
+			var pwComment = 'salted, base64 encoded SHA3-512 hash';
+			document.getElementById('config').innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + admPwdHash + '\'); // '+pwComment+'<br>';
+			g_last_admPwdHash = admPwdHash;
+			g_last_pwComment = pwComment;
+
+			// "async" call to calculate bcrypt (via web-worker)
+			if (bCryptWorker != null) {
+				g_prevBcryptPw = null;
+				bCryptWorker.terminate();
+			}
+			bCryptWorker = new Worker('setup/bcrypt_worker.js');
+			bCryptWorker.postMessage(pw);
+			bCryptWorker.onmessage = function (event) {
+				var admPwdHash = event.data;
+				var pwComment = 'bcrypt encoded hash';
+				document.getElementById('config').innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + admPwdHash + '\'); // '+pwComment+'<br>';
+				g_last_admPwdHash = admPwdHash;
+				g_last_pwComment = pwComment;
+				g_prevBcryptPw = pw;
+			};
+		} else {
+			document.getElementById('config').innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + g_last_admPwdHash + '\'); // '+g_last_pwComment+'<br>';
+		}
 	}
 }

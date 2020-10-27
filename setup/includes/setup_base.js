@@ -69,7 +69,42 @@ function adminGeneratePassword(password) {
 	return salt+'$'+hexToBase64(sha3_512(salt+password));
 }
 
+var bCryptWorker = null;
+var g_prevBcryptPw = null;
+var g_last_admPwdHash = null;
+var g_last_pwComment = null;
+
 function rebuild() {
+	var pw = document.getElementById('admin_password').value;
+
+	if (pw != g_prevBcryptPw) {
+		// sync call to calculate SHA3
+		var admPwdHash = adminGeneratePassword(pw);
+		var pwComment = 'salted, base64 encoded SHA3-512 hash';
+		doRebuild(admPwdHash, pwComment);
+
+		// "async" call to calculate bcrypt (via web-worker)
+		if (bCryptWorker != null) {
+			g_prevBcryptPw = null;
+			bCryptWorker.terminate();
+		}
+		bCryptWorker = new Worker('bcrypt_worker.js');
+		bCryptWorker.postMessage(pw);
+		bCryptWorker.onmessage = function (event) {
+			var admPwdHash = event.data;
+			var pwComment = 'bcrypt encoded hash';
+			doRebuild(admPwdHash, pwComment);
+			g_prevBcryptPw = pw;
+		};
+	} else {
+		doRebuild(g_last_admPwdHash, g_last_pwComment);
+	}
+}
+
+function doRebuild(admPwdHash, pwComment) {
+	g_last_admPwdHash = admPwdHash;
+	g_last_pwComment = pwComment;
+
 	var error = false;
 
 	if (document.getElementById('config') == null) return;
@@ -114,7 +149,7 @@ function rebuild() {
 			'<br>' +
 			// Passwords are Base64 encoded to avoid that passwords can be read upon first sight,
 			// e.g. if collegues are looking over your shoulder while you accidently open (and quickly close) userdata/baseconfig/config.inc.php
-			'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + adminGeneratePassword(document.getElementById('admin_password').value) + '\'); // salted, base64 encoded SHA3-512 hash<br>' +
+			'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + admPwdHash + '\'); // '+pwComment+'<br>' +
 			'<br>' +
 			'OIDplus::baseConfig()->setValue(\'DATABASE_PLUGIN\',   \''+strPlugin+'\');<br>';
 		for (var i = 0; i < rebuild_config_callbacks.length; i++) {

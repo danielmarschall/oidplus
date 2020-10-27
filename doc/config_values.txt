@@ -228,6 +228,12 @@ Old 2.0 format:          define('OIDPLUS_EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
                          If this setting is not set, the last known absolute URL
                          will be remembered and used when a CLI call is made.
 
+OIDplus::baseConfig()->setValue('DEBUG', false);
+Old 2.0 format:          (Not available)
+                         Enables some special checks for plugins (e.g. a self-test for auth plugins).
+                         It is highly recommended that you enable DEBUG if you are developing
+                         plugins!
+
 
 ----------------------------------------------------
 (4) LDAP FIELDS (see document ldap_installation.txt)
