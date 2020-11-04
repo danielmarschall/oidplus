@@ -19,8 +19,11 @@
 
 class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 
-	public function verify($authKey, $salt, $check_password) {
+	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
 		@list($s_authmethod, $s_authkey) = explode('#', $authKey, 2);
+
+		$authKey = $authInfo->getAuthKey();
+		$salt = $authInfo->getSalt();
 
 		if ($s_authmethod == 'A1a') {
 			// This auth method can be used by you if you migrate users from another software solution into OIDplus
@@ -51,7 +54,7 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 		return hash_equals($calc_authkey, $s_authkey);
 	}
 
-	public function generate($password) {
+	public function generate($password): OIDplusRAAuthInfo {
 		$preferred_hash_algos = array(
 		    // sorted by priority
 		    'sha3-512',

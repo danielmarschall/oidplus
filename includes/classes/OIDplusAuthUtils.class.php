@@ -76,14 +76,14 @@ class OIDplusAuthUtils {
 	public static function raCheckPassword($ra_email, $password) {
 		$ra = new OIDplusRA($ra_email);
 
-		list($salt, $authkey) = $ra->getAuthInfo();
+		$authInfo = $ra->getAuthInfo();
 
 		$plugins = OIDplus::getAuthPlugins();
 		if (count($plugins) == 0) {
 			throw new OIDplusException(_L('No RA authentication plugins found'));
 		}
 		foreach ($plugins as $plugin) {
-			if ($plugin->verify($authkey, $salt, $password)) return true;
+			if ($plugin->verify($authInfo, $password)) return true;
 		}
 
 		return false;
@@ -220,7 +220,7 @@ class OIDplusAuthUtils {
 
 	// Generate RA passwords
 
-	public static function raGeneratePassword($password) {
+	public static function raGeneratePassword($password): OIDInfoRAAuthInfo {
 		$def_method = OIDplus::config()->getValue('default_ra_auth_method');
 
 		$plugins = OIDplus::getAuthPlugins();

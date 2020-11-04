@@ -50,7 +50,9 @@ class OIDplusRA {
 	}
 
 	public function change_password($new_password) {
-		list($s_salt, $calc_authkey) = OIDplus::authUtils()->raGeneratePassword($new_password);
+		$authInfo = OIDplus::authUtils()->raGeneratePassword($new_password);
+		$s_salt = $authInfo->getSalt();
+		$calc_authkey = $authInfo->getAuthKey();
 		OIDplus::db()->query("update ###ra set salt=?, authkey=? where email = ?", array($s_salt, $calc_authkey, $this->email));
 	}
 
@@ -64,18 +66,20 @@ class OIDplusRA {
 			$s_salt = '';
 			$calc_authkey = '';
 		} else {
-			list($s_salt, $calc_authkey) = OIDplus::authUtils()->raGeneratePassword($new_password);
+			$authInfo = OIDplus::authUtils()->raGeneratePassword($new_password);
+			$s_salt = $authInfo->getSalt();
+			$calc_authkey = $authInfo->getAuthKey();
 		}
 
 		OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered, ra_name, personal_name, organization, office, street, zip_town, country, phone, mobile, fax) values (?, ?, ?, ".OIDplus::db()->sqlDate().", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($s_salt, $calc_authkey, $this->email, "", "", "", "", "", "", "", "", "", ""));
 	}
 
-	public function getAuthInfo() {
+	public function getAuthInfo(): OIDplusRAAuthInfo {
 		$ra_res = OIDplus::db()->query("select authkey, salt from ###ra where email = ?", array($this->email));
 		if ($ra_res->num_rows() == 0) return false; // User not found
 		$ra_row = $ra_res->fetch_array();
 
-		return array($ra_row['salt'], $ra_row['authkey']);
+		return new OIDplusRAAuthInfo($this->email, $ra_row['salt'], $ra_row['authkey']);
 	}
 
 	public function checkPassword($password) {
@@ -91,7 +95,6 @@ class OIDplusRA {
 	}
 
 	public function isPasswordLess() {
-		list($salt, $authkey) = $this->getAuthInfo();
-		return $authkey === '';
+		return $this->getAuthInfo()->isPasswordLess();
 	}
 }

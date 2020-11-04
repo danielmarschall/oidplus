@@ -349,7 +349,11 @@ class OIDplus {
 	private static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
 		if (OIDplus::baseConfig()->getValue('DEBUG')) {
 			$password = generateRandomString(25);
-			list($salt,$authkey) = $plugin->generate($password);
+
+			$authInfo = $plugin->generate($password);
+			$salt = $authInfo->getSalt();
+			$authKey = $authInfo->getAuthInfo();
+
 			if (strlen($salt) > 100) {
 				throw new OIDplusException(_L('Auth plugin "%1" is erroneous: Salt is too long to fit into database field',basename($plugin->getPluginDirectory())));
 			}

@@ -1766,6 +1766,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Field %1 is too long. Max allowed %2
+		]]></source>
+		<target><![CDATA[
+		Feld %1 ist zu lang. Maximale Länge %2
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		File %1 does not exist
 		]]></source>
 		<target><![CDATA[

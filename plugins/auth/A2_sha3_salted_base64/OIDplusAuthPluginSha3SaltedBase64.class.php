@@ -19,8 +19,11 @@
 
 class OIDplusAuthPluginSha3SaltedBase64 extends OIDplusAuthPlugin {
 
-	public function verify($authKey, $salt, $check_password) {
+	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
 		@list($s_authmethod, $s_authkey) = explode('#', $authKey, 2);
+
+		$authKey = $authInfo->getAuthKey();
+		$salt = $authInfo->getSalt();
 
 		if ($s_authmethod == 'A2') {
 			// A2#X with X being sha3(salt+password) in base64-notation
@@ -33,7 +36,7 @@ class OIDplusAuthPluginSha3SaltedBase64 extends OIDplusAuthPlugin {
 		return hash_equals($calc_authkey, $s_authkey);
 	}
 
-	public function generate($password) {
+	public function generate($password): OIDplusRAAuthInfo {
 		$s_salt = bin2hex(OIDplusAuthUtils::getRandomBytes(50)); // DB field ra.salt is limited to 100 chars (= 50 bytes)
 		$calc_authkey = 'A2#'.base64_encode(sha3_512($s_salt.$password, true));
 		return array($s_salt, $calc_authkey);
