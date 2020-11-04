@@ -79,7 +79,7 @@ class OIDplusRA {
 		if ($ra_res->num_rows() == 0) return false; // User not found
 		$ra_row = $ra_res->fetch_array();
 
-		return new OIDplusRAAuthInfo($this->email, $ra_row['salt'], $ra_row['authkey']);
+		return new OIDplusRAAuthInfo($ra_row['salt'], $ra_row['authkey']);
 	}
 
 	public function checkPassword($password) {
