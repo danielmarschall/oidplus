@@ -220,7 +220,7 @@ class OIDplusAuthUtils {
 
 	// Generate RA passwords
 
-	public static function raGeneratePassword($password): OIDInfoRAAuthInfo {
+	public static function raGeneratePassword($password): OIDplusRAAuthInfo {
 		$def_method = OIDplus::config()->getValue('default_ra_auth_method');
 
 		$plugins = OIDplus::getAuthPlugins();

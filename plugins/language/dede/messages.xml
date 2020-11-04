@@ -622,18 +622,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Auth plugin "%1" is erroneous: Generate/Verify self test failed
+		Auth plugin "%1" is erroneous: %2
 		]]></source>
 		<target><![CDATA[
-		Authentifizierungs-Plugin "%1" ist fehlerhaft: Selbst-Test fehlgeschlagen
+		Authentifizierungs-Plugin "%1" ist fehlerhaft: %2
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		Auth plugin "%1" is erroneous: Salt is too long to fit into database field
+		Auth plugin "%1" is erroneous: Generate/Verify self test failed
 		]]></source>
 		<target><![CDATA[
-		Authentifizierungs-Plugin "%1" ist fehlerhaft: Salt ist zu groß für das Datenbankfeld
+		Authentifizierungs-Plugin "%1" ist fehlerhaft: Selbst-Test fehlgeschlagen
 		]]></target>
 	</message>
 	<message>

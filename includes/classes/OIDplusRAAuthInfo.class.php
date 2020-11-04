@@ -40,12 +40,12 @@ class OIDplusRAAuthInfo {
 		return $this->authKey;
 	}
 
-	public __construct($salt, $authKey) {
+	public function __construct($salt, $authKey) {
 		$this->setSalt($salt);
 		$this->setAuthKey($authKey);
 	}
 
-	public isPasswordLess() {
+	public function isPasswordLess() {
 		return empty($this->authKey);
 	}
 

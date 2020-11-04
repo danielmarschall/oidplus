@@ -20,10 +20,9 @@
 class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 
 	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
-		@list($s_authmethod, $s_authkey) = explode('#', $authKey, 2);
-
 		$authKey = $authInfo->getAuthKey();
 		$salt = $authInfo->getSalt();
+		@list($s_authmethod, $s_authkey) = explode('#', $authKey, 2);
 
 		if ($s_authmethod == 'A1a') {
 			// This auth method can be used by you if you migrate users from another software solution into OIDplus
@@ -57,14 +56,14 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 	public function generate($password): OIDplusRAAuthInfo {
 		$preferred_hash_algos = array(
 		    // sorted by priority
-		    'sha3-512',
-		    'sha3-384',
+		    //'sha3-512', // this would exceed the 100 byte auth key length
+		    //'sha3-384', // this would exceed the 100 byte auth key length
 		    'sha3-256',
 		    'sha3-224',
-		    'sha512',
+		    //'sha512', // this would exceed the 100 byte auth key length
 		    'sha512/256',
 		    'sha512/224',
-		    'sha384',
+		    //'sha384', // this would exceed the 100 byte auth key length
 		    'sha256',
 		    'sha224',
 		    'sha1',
@@ -83,7 +82,8 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 		}
 		$s_salt = bin2hex(OIDplusAuthUtils::getRandomBytes(50)); // DB field ra.salt is limited to 100 chars (= 50 bytes)
 		$calc_authkey = 'A1c#'.$hashalgo.':'.hash($hashalgo, $s_salt.$password.$s_salt);
-		return array($s_salt, $calc_authkey);
+
+		return new OIDplusRAAuthInfo($s_salt, $calc_authkey);
 	}
 
 }

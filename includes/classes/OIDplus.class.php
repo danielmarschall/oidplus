@@ -350,16 +350,25 @@ class OIDplus {
 		if (OIDplus::baseConfig()->getValue('DEBUG')) {
 			$password = generateRandomString(25);
 
-			$authInfo = $plugin->generate($password);
-			$salt = $authInfo->getSalt();
-			$authKey = $authInfo->getAuthInfo();
-
-			if (strlen($salt) > 100) {
-				throw new OIDplusException(_L('Auth plugin "%1" is erroneous: Salt is too long to fit into database field',basename($plugin->getPluginDirectory())));
+			try {
+				$authInfo = $plugin->generate($password);
+			} catch (OIDplusException $e) {
+				// This can happen when the AuthKey or Salt is too long
+				throw new OIDplusException(_L('Auth plugin "%1" is erroneous: %2',basename($plugin->getPluginDirectory()),$e->getMessage()));
 			}
-			if ((!$plugin->verify($authkey,$salt,$password)) ||
-			   (!empty($salt) && $plugin->verify($authkey,$salt.'x',$password)) ||
-			   ($plugin->verify($authkey,$salt,$password.'x'))) {
+			$salt = $authInfo->getSalt();
+			$authKey = $authInfo->getAuthKey();
+
+			$authInfo_SaltDiff = clone $authInfo;
+			$authInfo_SaltDiff->setSalt(strrev($authInfo_SaltDiff->getSalt()));
+
+			$authInfo_AuthKeyDiff = clone $authInfo;
+			$authInfo_AuthKeyDiff->setAuthKey(strrev($authInfo_AuthKeyDiff->getAuthKey()));
+
+			if ((!$plugin->verify($authInfo,$password)) ||
+			   (!empty($salt) && $plugin->verify($authInfo_SaltDiff,$password)) ||
+			   ($plugin->verify($authInfo_AuthKeyDiff,$password)) ||
+			   ($plugin->verify($authInfo,$password.'x'))) {
 				throw new OIDplusException(_L('Auth plugin "%1" is erroneous: Generate/Verify self test failed',basename($plugin->getPluginDirectory())));
 			}
 		}

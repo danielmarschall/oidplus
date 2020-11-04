@@ -20,10 +20,9 @@
 class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 
 	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
-		@list($s_authmethod, $s_authkey) = explode('#', $authKey, 2);
-
 		$authKey = $authInfo->getAuthKey();
 		$salt = $authInfo->getSalt();
+		@list($s_authmethod, $s_authkey) = explode('#', $authKey, 2);
 
 		if ($s_authmethod == 'A3') {
 			// A3#$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
@@ -42,7 +41,7 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 	public function generate($password): OIDplusRAAuthInfo {
 		$s_salt = ''; // BCrypt automatically generates a salt
 		$calc_authkey = 'A3#'.password_hash($password, PASSWORD_BCRYPT);
-		return array($s_salt, $calc_authkey);
+		return new OIDplusRAAuthInfo($s_salt, $calc_authkey);
 	}
 
 }
