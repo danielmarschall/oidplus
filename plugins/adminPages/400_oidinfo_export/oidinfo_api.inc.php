@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-error_reporting(E_ALL | E_NOTICE | E_STRICT | E_DEPRECATED);
+// error_reporting(E_ALL | E_NOTICE | E_STRICT | E_DEPRECATED);
 
 if(!defined('STDIN'))  define('STDIN',  fopen('php://stdin',  'rb'));
 if(!defined('STDOUT')) define('STDOUT', fopen('php://stdout', 'wb'));

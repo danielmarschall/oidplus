@@ -20,13 +20,14 @@
 use MatthiasMullie\Minify;
 
 require_once __DIR__ . '/includes/oidplus.inc.php';
+
 require_once __DIR__ . '/3p/minify/path-converter/ConverterInterface.php';
 require_once __DIR__ . '/3p/minify/path-converter/Converter.php';
 require_once __DIR__ . '/3p/minify/src/Minify.php';
 require_once __DIR__ . '/3p/minify/src/CSS.php';
 require_once __DIR__ . '/3p/minify/src/Exception.php';
 
-error_reporting(E_ALL);
+error_reporting(OIDplus::baseConfig()->getValue('DEBUG') ? E_ALL : 0);
 
 $out = '';
 
@@ -37,15 +38,35 @@ $do_minify = OIDplus::baseConfig()->getValue('MINIFY_CSS', true);
 function process_file($filename) {
 	global $do_minify;
 
-	if (!file_exists($filename)) return;
+	$filename_min = preg_replace('/\.[^.]+$/', '.min.css', $filename);
+	$filename_full = $filename;
+
+	if ($do_minify) {
+		if (file_exists($filename_min)) {
+			// There is a file which is already minified
+			$filename = $filename_min;
+			$cont = file_get_contents($filename);
+		} else if (file_exists($filename_full)) {
+			// Otherwise, we minify it ourself
+			$filename = $filename_full;
+			$minifier = new Minify\CSS($filename);
+			$cont = $minifier->minify();
+		} else {
+			return;
+		}
+	} else {
+		if (file_exists($filename_full)) {
+			$filename = $filename_full;
+			$cont = file_get_contents($filename);
+		} else if (file_exists($filename_min)) {
+			$filename = $filename_min;
+			$cont = file_get_contents($filename);
+		} else {
+			return;
+		}
+	}
 
 	$dir = dirname((strpos($filename, __DIR__.'/') === 0) ? substr($filename, strlen(__DIR__.'/')) : $filename);
-	if ($do_minify) {
-		$minifier = new Minify\CSS($filename);
-		$cont = $minifier->minify();
-	} else {
-		$cont = file_get_contents($filename);
-	}
 	$cont = preg_replace('@url\\(\s+@ism', 'url(', $cont);
 	$cont = str_ireplace('url("data:', 'url###("data:', $cont);
 	$cont = str_ireplace('url("', 'url###("'.$dir.'/', $cont);
@@ -60,9 +81,9 @@ function process_file($filename) {
 # ---
 
 // Third-party products
-$out .= process_file(__DIR__ . '/3p/jstree/themes/default/style'.($do_minify ? '.min' : '').'.css');
-$out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui'.($do_minify ? '.min' : '').'.css');
-$out .= process_file(__DIR__ . '/3p/bootstrap4/css/bootstrap'.($do_minify ? '.min' : '').'.css');
+$out .= process_file(__DIR__ . '/3p/jstree/themes/default/style.css');
+$out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui.css');
+$out .= process_file(__DIR__ . '/3p/bootstrap4/css/bootstrap.css');
 
 // Find out base CSS
 if (isset($_REQUEST['theme'])) {

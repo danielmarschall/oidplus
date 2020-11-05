@@ -3,7 +3,7 @@
 
 bignumber.js:
 	License:  MIT
-	Version:  02a0604 on 29 September 2020 (Version 9.0.1)
+	Version:  4d5ba0f on 29 September 2020 (Version 9.0.1)
 	Download: https://github.com/MikeMcl/bignumber.js
 
 jsTree:
@@ -13,14 +13,13 @@ jsTree:
 
 TinyMCE:
 	License:  LGPL 2.1
-	Version:  5.4.2
+	Version:  5.5.1
 	Download: https://www.tiny.cloud/get-tiny/self-hosted/
 	          https://www.tiny.cloud/get-tiny/language-packages/ (German language)
-	Took the productive package, but added tinymce.js from the dev-package, too.
 
 Bootstrap:
 	License   MIT
-	Version:  4.5.2
+	Version:  4.5.3
 	Download: https://getbootstrap.com/docs/4.5/getting-started/download/
 
 jQuery (Core):
@@ -45,7 +44,7 @@ GedMarc layout (forked from allpro layout):
 
 jQuery UI:
 	License:  MIT
-	Version:  1.12.1
+	Version:  1.12.1 (Stable)
 	Download: http://jqueryui.com/
 
 SpamSpan:

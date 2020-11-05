@@ -825,7 +825,7 @@ function asn1_to_dot($asn) {
 	// Apply standardized identifiers (case sensitive)
 	$asn .= '.';
 	foreach ($standardized as $s => $r) {
-		$asn = preg_replace("|^$s|", $r, $asn);
+		$asn = preg_replace("@^".preg_quote($s,"@")."@", $r, $asn);
 	}
 	$asn = substr($asn, 0, strlen($asn)-1);
 

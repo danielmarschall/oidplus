@@ -19,8 +19,8 @@
 
 class OIDplusRAAuthInfo {
 
-	public $salt;
-	public $authKey;
+	private $salt;
+	private $authKey;
 
 	public function setSalt($salt) {
 		if (strlen($salt) > 100) throw new OIDplusException(_L('Field %1 is too long. Max allowed %2','Salt',100));

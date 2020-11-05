@@ -816,7 +816,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		// https://stackoverflow.com/questions/13637145/split-text-string-into-first-and-last-name-in-php
 		$name = trim($name);
 		$last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
-		$first_name = trim( preg_replace('#'.$last_name.'#', '', $name ) );
+		$first_name = trim( preg_replace('#'.preg_quote($last_name,'#').'#', '', $name ) );
 		return array($first_name, $last_name);
 	}
 
