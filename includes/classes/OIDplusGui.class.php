@@ -86,6 +86,8 @@ class OIDplusGui {
 
 	public static function html_exception_handler($exception) {
 		if ($exception instanceof OIDplusConfigInitializationException) {
+			echo '<!DOCTYPE HTML>';
+			echo '<html><head><title>'._L('OIDplus initialization error').'</title></head><body>';
 			echo '<h1>'._L('OIDplus initialization error').'</h1>';
 			echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
 			echo '<p>'._L('Please check the file %1','<b>userdata/baseconfig/config.inc.php</b>');
@@ -93,7 +95,10 @@ class OIDplusGui {
 				echo ' '._L('or run <a href="%1">setup</a> again',OIDplus::getSystemUrl().'setup/');
 			}
 			echo '</p>';
+			echo '</body></html>';
 		} else {
+			echo '<!DOCTYPE HTML>';
+			echo '<html><head><title>'._L('OIDplus error').'</title></head><body>';
 			echo '<h1>'._L('OIDplus error').'</h1>';
 			// ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
 			echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
@@ -106,6 +111,7 @@ class OIDplusGui {
 			echo _L('Stacktrace').":\n";
 			echo $exception->getTraceAsString();
 			echo '</pre>';
+			echo '</body></html>';
 		}
 	}
 

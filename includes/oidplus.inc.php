@@ -19,6 +19,8 @@
 
 // Before we do ANYTHING, check for dependencies! Do not include anything (except the GMP supplement) yet.
 
+require_once __DIR__ . '/functions.inc.php'; // Required for _L()
+
 if (version_compare(PHP_VERSION, '7.0.0') < 0) {
 	// Reasons why we currently require PHP 7.0:
 	// - Return values (e.g. "function foo(): array") (added 2020-04-06 at the database classes)
@@ -31,42 +33,31 @@ if (version_compare(PHP_VERSION, '7.0.0') < 0) {
 	// - Nullable return values (e.g. "function foo(): ?array")
 	// - void return value (e.g. "function foo(): void") => currently commented out
 	// - private/protected/public consts => currently commented out
+	echo '<!DOCTYPE HTML>';
+	echo '<html><head><title>'._L('OIDplus error').'</title></head><body>';
 	echo '<h1>'._L('OIDplus error').'</h1>';
 	echo '<p>'._L('OIDplus requires at least PHP version %1! You are currently using version %2','7.0',PHP_VERSION).'</p>'."\n";
+	echo '</body></html>';
 	die();
 }
 
 include_once __DIR__ . '/gmp_supplement.inc.php';
 
-$missing_dependencies = array();
+require_once __DIR__ . '/oidplus_dependency.inc.php';
 
-if (!function_exists('gmp_init')) {
-	// GMP Required for includes/uuid_functions.inc.php
-	//                  includes/ipv6_functions.inc.php
-	//                  plugins/adminPages/400_oidinfo_export/oidinfo_api.inc.php (if GMP is not available, BC will be used)
-	// Note that gmp_supplement.inc.php will implement the GMP functions if BCMath is present.
-	// This is the reason why we use function_exists('gmp_init') instead of extension_loaded('gmp')
-        $missing_dependencies[] = _L('GMP (Install it using <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.)') .
-	                          '<br>'._L('or alternatively').'<br>' .
-	                          _L('BCMath (Install it using <code>sudo aptitude update && sudo aptitude install php-bcmath && sudo service apache2 restart</code> on Linux systems.)');
-}
-
-if (!function_exists('mb_substr')) {
-	// Required for includes/classes/OIDplusSessionHandler.class.php
-	//              includes/oid_utils.inc.php
-	//              3p/minify/path-converter/Converter.php
-	//              3p/0xbb/Sha3.class.php
-	$missing_dependencies[] = _L('MBString (Install it using <code>sudo aptitude update && sudo aptitude install php-mbstring && sudo service apache2 restart</code> on Linux systems.)');
-}
+$missing_dependencies = oidplus_get_missing_dependencies();
 
 if (count($missing_dependencies) >= 1) {
+	echo '<!DOCTYPE HTML>';
+	echo '<html><head><title>'._L('OIDplus error').'</title></head><body>';
 	echo '<h1>'._L('OIDplus error').'</h1>';
 	echo '<p>'._L('The following PHP extensions need to be installed in order to run OIDplus:').'</p>';
 	echo '<ul>';
 	foreach ($missing_dependencies as $dependency) {
-		echo '<li>'.$dependency.'</li>';
+		echo '<li>'.$dependency.'<br><br></li>';
 	}
 	echo '</ul>';
+	echo '</body></html>';
 	die();
 }
 
@@ -89,7 +80,6 @@ if (PHP_SAPI != 'cli') {
 
 require_once __DIR__ . '/../3p/0xbb/Sha3.php';
 
-require_once __DIR__ . '/functions.inc.php';
 require_once __DIR__ . '/oid_utils.inc.php';
 require_once __DIR__ . '/uuid_utils.inc.php';
 require_once __DIR__ . '/color_utils.inc.php';

@@ -36,6 +36,10 @@ if ($_GET['state'] != $_COOKIE['csrf_token']) {
 	die('Invalid CSRF token');
 }
 
+if (!function_exists('curl_exec')) {
+	die(_L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.'));
+}
+
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/token");
 curl_setopt($ch, CURLOPT_POST, 1);

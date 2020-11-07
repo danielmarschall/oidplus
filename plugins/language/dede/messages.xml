@@ -750,14 +750,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		BCMath (Install it using <code>sudo aptitude update && sudo aptitude install php-bcmath && sudo service apache2 restart</code> on Linux systems.)
-		]]></source>
-		<target><![CDATA[
-		BCMath (Bei einem Linux-System können Sie das Paket wie folgt installieren: <code>sudo aptitude update && sudo aptitude install php-bcmath && sudo service apache2 restart</code>)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Back to update page
 		]]></source>
 		<target><![CDATA[
@@ -1926,14 +1918,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		GMP (Install it using <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code> on Linux systems.)
-		]]></source>
-		<target><![CDATA[
-		GMP (Bei einem Linux-System können Sie das Paket wie folgt installieren: <code>sudo aptitude update && sudo aptitude install php-gmp && sudo service apache2 restart</code>)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		GS1
 		]]></source>
 		<target><![CDATA[
@@ -2926,14 +2910,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		MBString (Install it using <code>sudo aptitude update && sudo aptitude install php-mbstring && sudo service apache2 restart</code> on Linux systems.)
-		]]></source>
-		<target><![CDATA[
-		MBString (Bei einem Linux-System können Sie das Paket wie folgt installieren: <code>sudo aptitude update && sudo aptitude install php-mbstring && sudo service apache2 restart</code>)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Machine type
 		]]></source>
 		<target><![CDATA[
@@ -3262,34 +3238,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Note: The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.
-		]]></source>
-		<target><![CDATA[
-		Hinweis: Die "CURL" PHP-Erweiterung kann nicht auf HTTPS-Webseiten zugreifen. Aus diesem Grund können Sie diese Funktion nicht benutzen. Bitte downloaden Sie <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, und speichern Sie es irgendwo ab; danach ändern Sie die Einstellung <code>curl.cainfo</code> in PHP.ini.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Note: The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.
-		]]></source>
-		<target><![CDATA[
-		Hinweis: Die "CURL" PHP-Erweiterung ist nicht auf Ihrem System installiert. Bitte aktivieren Sie die PHP-Erweiterung <code>php_curl</code>.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Note: You should use the driver "ODBC Driver XX for SQL Server" instead, since it is the latest generation
 		]]></source>
 		<target><![CDATA[
 		Hinweis: Sie sollten den Treiber "ODBC Driver XX for SQL Server" anstelle nehmen, da dieser der neusten Generation angehört
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system).
-		]]></source>
-		<target><![CDATA[
-		Hinweis: Ihr System konnte kein PKI-Schlüsselpaar erzeugen. Möglicherweise fehlt OpenSSL auf Ihrem System.
 		]]></target>
 	</message>
 	<message>
@@ -3658,6 +3610,30 @@
 		]]></source>
 		<target><![CDATA[
 		Altes Passwort falsch
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		On Linux, install it by running e.g. %1, and then restart your webserver service, e.g. by running %2
+		]]></source>
+		<target><![CDATA[
+		Unter Linux, die Installation kann beispielsweise mit %1 durchgeführt werden. Anschließend muss der Webserver-Dienst neu gestartet werden, z.B. mit %1.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		On Windows, install it by enabling the line %1 in your PHP.ini
+		]]></source>
+		<target><![CDATA[
+		Auf einem Windows-Server müssen Sie in der PHP.ini die Zeile %1 aktivieren.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		On Windows, it should be installed by default
+		]]></source>
+		<target><![CDATA[
+		Auf Windows-Systemen sollte diese Erweiterung eigentlich standardmäßig aktiviert sein
 		]]></target>
 	</message>
 	<message>
@@ -5398,6 +5374,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.
+		]]></source>
+		<target><![CDATA[
+		Die "CURL" PHP-Erweiterung kann nicht auf HTTPS-Webseiten zugreifen. Aus diesem Grund können Sie diese Funktion nicht benutzen. Bitte downloaden Sie <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, und speichern Sie es irgendwo ab; danach ändern Sie die Einstellung <code>curl.cainfo</code> in PHP.ini.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.
+		]]></source>
+		<target><![CDATA[
+		Die "CURL" PHP-Erweiterung ist nicht auf Ihrem System installiert. Bitte aktivieren Sie die PHP-Erweiterung <code>php_curl</code>.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The OID "%1" is already used by the plugin "%2"
 		]]></source>
 		<target><![CDATA[
@@ -6474,6 +6466,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ihr öffentlicher Schlüssel lautet:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system).
+		]]></source>
+		<target><![CDATA[
+		Ihr System konnte kein PKI-Schlüsselpaar erzeugen. Möglicherweise fehlt OpenSSL auf Ihrem System.
 		]]></target>
 	</message>
 	<message>

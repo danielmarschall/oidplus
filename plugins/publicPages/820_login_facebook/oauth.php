@@ -37,6 +37,10 @@ if ($_GET['state'] != $_COOKIE['csrf_token']) {
 	die('Invalid CSRF token');
 }
 
+if (!function_exists('curl_exec')) {
+	die(_L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.'));
+}
+
 // Get access token
 
 $ch = curl_init();

@@ -129,6 +129,10 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				"signature" => base64_encode($signature)
 			);
 
+			if (!function_exists('curl_exec')) {
+				throw new Exception(_L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.'));
+			}
+
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
@@ -220,6 +224,10 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 					"signature" => base64_encode($signature)
 				);
 
+				if (!function_exists('curl_exec')) {
+					return false; // throw new Exception(_L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.'));
+				}
+
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 				curl_setopt($ch, CURLOPT_POST, 1);
@@ -306,6 +314,11 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				"signature" => base64_encode($signature)
 			);
 
+
+			if (!function_exists('curl_exec')) {
+				return false; // throw new Exception(_L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.'));
+			}
+
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
@@ -348,7 +361,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('reg_privacy', '2=Hide your system, 1=Register your system to the ViaThinkSoft directory and oid-info.com, 0=Publish your system to ViaThinkSoft directory and all public contents (RA/OID) to oid-info.com', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		// Note: It is important that the default value is '2', otherwise, systems which don't have CURL will fail
+		OIDplus::config()->prepareConfigKey('reg_privacy', '2=Hide your system, 1=Register your system to the ViaThinkSoft directory and oid-info.com, 0=Publish your system to ViaThinkSoft directory and all public contents (RA/OID) to oid-info.com', '2', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != '0') && ($value != '1') && ($value != '2')) {
 				throw new OIDplusException(_L('Please enter either 0, 1 or 2.'));
 			}
@@ -370,12 +384,14 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		// Note: REGISTRATION_HIDE_SYSTEM is an undocumented constant that can be put in the userdata/baseconfig/config.inc.php files of a test system accessing the same database as the productive system that is registered.
 		// This avoids that the URL of a productive system is overridden with the URL of a cloned test system (since they use the same database, they also have the same system ID)
 
-		if (!OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
-			$privacy_level = OIDplus::config()->getValue('reg_privacy');
+		if (OIDplus::config()->getValue('oobe_registration_done') == '1') {
+			if (!OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
+				$privacy_level = OIDplus::config()->getValue('reg_privacy');
 
-			if (PHP_SAPI !== 'cli') { // don't register when called from CLI, otherwise the oidinfo XML can't convert relative links into absolute links
-				if ((time()-OIDplus::config()->getValue('reg_last_ping') >= OIDplus::config()->getValue('reg_ping_interval'))) {
-					$this->sendRegistrationQuery();
+				if (PHP_SAPI !== 'cli') { // don't register when called from CLI, otherwise the oidinfo XML can't convert relative links into absolute links
+					if ((time()-OIDplus::config()->getValue('reg_last_ping') >= OIDplus::config()->getValue('reg_ping_interval'))) {
+						$this->sendRegistrationQuery();
+					}
 				}
 			}
 		}
@@ -434,7 +450,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 		if (!function_exists('curl_exec')) {
 			echo '<p><font color="red">';
-			echo _L('Note: The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.').' ';
+			echo _L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.').' ';
 			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
 			echo '</font></p>';
 			if ($do_edits) {
@@ -454,7 +470,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		curl_close($ch);
 		if (!$httpCode) {
 			echo '<p><font color="red">';
-			echo _L('Note: The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.').' ';
+			echo _L('The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.').' ';
 			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
 			echo '</font></p>';
 			if ($do_edits) {
@@ -467,7 +483,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 		if (!$pki_status) {
 			echo '<p><font color="red">';
-			echo _L('Note: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system).').' ';
+			echo _L('Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system).').' ';
 			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
 			echo '</font></p>';
 			if ($do_edits) {

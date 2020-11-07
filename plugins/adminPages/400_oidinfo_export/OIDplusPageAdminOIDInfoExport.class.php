@@ -86,6 +86,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				"signature" => base64_encode($signature)
 			);
 
+			if (!function_exists('curl_exec')) {
+				throw new Exception(_L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.'));
+			}
+
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
@@ -172,6 +176,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				"payload" => $payload,
 				"signature" => base64_encode($signature)
 			);
+
+			if (!function_exists('curl_exec')) {
+				throw new Exception(_L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.'));
+			}
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
@@ -428,6 +436,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				"payload" => $payload,
 				"signature" => base64_encode($signature)
 			);
+
+			if (!function_exists('curl_exec')) {
+				throw new Exception(_L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.'));
+			}
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
