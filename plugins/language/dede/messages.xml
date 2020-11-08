@@ -5374,18 +5374,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.
+		The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.
 		]]></source>
 		<target><![CDATA[
-		Die "CURL" PHP-Erweiterung kann nicht auf HTTPS-Webseiten zugreifen. Aus diesem Grund können Sie diese Funktion nicht benutzen. Bitte downloaden Sie <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, und speichern Sie es irgendwo ab; danach ändern Sie die Einstellung <code>curl.cainfo</code> in PHP.ini.
+		Die "%1" PHP-Erweiterung ist nicht auf Ihrem System installiert. Bitte aktivieren Sie die PHP-Erweiterung <code>%2</code>.
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.
+		The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.
 		]]></source>
 		<target><![CDATA[
-		Die "CURL" PHP-Erweiterung ist nicht auf Ihrem System installiert. Bitte aktivieren Sie die PHP-Erweiterung <code>php_curl</code>.
+		Die "CURL" PHP-Erweiterung kann nicht auf HTTPS-Webseiten zugreifen. Aus diesem Grund können Sie diese Funktion nicht benutzen. Bitte downloaden Sie <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, und speichern Sie es irgendwo ab; danach ändern Sie die Einstellung <code>curl.cainfo</code> in PHP.ini.
 		]]></target>
 	</message>
 	<message>
@@ -5798,10 +5798,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		To use %1, please enable the lines "extension=com_dotnet" and "extension_dir=ext" in your PHP.ini file.
+		To use %1, please enable the lines "extension=%2" and "extension_dir=ext" in your PHP.ini file.
 		]]></source>
 		<target><![CDATA[
-		Um %1 nutzen zu können, müssen Sie die Zeilen "extension=com_dotnet" und "extension_dir=ext" in der PHP.ini Datei aktivieren.
+		Um %1 nutzen zu können, müssen Sie die Zeilen "extension=%2" und "extension_dir=ext" in der PHP.ini Datei aktivieren.
 		]]></target>
 	</message>
 	<message>

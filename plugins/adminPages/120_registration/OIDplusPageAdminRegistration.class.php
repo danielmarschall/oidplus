@@ -130,13 +130,20 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			);
 
 			if (!function_exists('curl_exec')) {
-				throw new Exception(_L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.'));
+				throw new Exception(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 			}
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=".urlencode($query)."&compressed=1&data=".urlencode(base64_encode(gzdeflate(json_encode($data)))));
+			if (function_exists('gzdeflate')) {
+				$compressed = "1";
+				$data2 = gzdeflate(json_encode($data));
+			} else {
+				$compressed = "0";
+				$data2 = json_encode($data);
+			}
+			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=".urlencode($query)."&compressed=$compressed&data=".urlencode(base64_encode($data2)));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
@@ -225,13 +232,20 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				);
 
 				if (!function_exists('curl_exec')) {
-					return false; // throw new Exception(_L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.'));
+					return false; // throw new Exception(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 				}
 
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 				curl_setopt($ch, CURLOPT_POST, 1);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, "query=".urlencode($query)."&compressed=1&data=".urlencode(base64_encode(gzdeflate(json_encode($data)))));
+				if (function_exists('gzdeflate')) {
+					$compressed = "1";
+					$data2 = gzdeflate(json_encode($data));
+				} else {
+					$compressed = "0";
+					$data2 = json_encode($data);
+				}
+				curl_setopt($ch, CURLOPT_POSTFIELDS, "query=".urlencode($query)."&compressed=$compressed&data=".urlencode(base64_encode($data2)));
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 				curl_setopt($ch, CURLOPT_AUTOREFERER, true);
@@ -316,13 +330,20 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 
 			if (!function_exists('curl_exec')) {
-				return false; // throw new Exception(_L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.'));
+				return false; // throw new Exception(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 			}
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=".urlencode($query)."&compressed=1&data=".urlencode(base64_encode(gzdeflate(json_encode($data)))));
+			if (function_exists('gzdeflate')) {
+				$compressed = "1";
+				$data2 = gzdeflate(json_encode($data));
+			} else {
+				$compressed = "0";
+				$data2 = json_encode($data);
+			}
+			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=".urlencode($query)."&compressed=$compressed&data=".urlencode(base64_encode($data2)));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
@@ -450,7 +471,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 		if (!function_exists('curl_exec')) {
 			echo '<p><font color="red">';
-			echo _L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.').' ';
+			echo _L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl').' ';
 			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
 			echo '</font></p>';
 			if ($do_edits) {

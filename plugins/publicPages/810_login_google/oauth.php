@@ -37,7 +37,7 @@ if ($_GET['state'] != $_COOKIE['csrf_token']) {
 }
 
 if (!function_exists('curl_exec')) {
-	die(_L('The "CURL" PHP extension is not installed at your system. Please enable the PHP extension <code>php_curl</code>.'));
+	die(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 }
 
 $ch = curl_init();

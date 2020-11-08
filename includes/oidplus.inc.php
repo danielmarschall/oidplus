@@ -31,8 +31,8 @@ if (version_compare(PHP_VERSION, '7.0.0') < 0) {
 	// (e.g. Debian 9 which has LTS support till May 2022).
 	// Therefore we commented out following features which would require PHP 7.1:
 	// - Nullable return values (e.g. "function foo(): ?array")
-	// - void return value (e.g. "function foo(): void") => currently commented out
-	// - private/protected/public consts => currently commented out
+	// - void return value (e.g. "function foo(): void")
+	// - private/protected/public consts
 	echo '<!DOCTYPE HTML>';
 	echo '<html><head><title>'._L('OIDplus error').'</title></head><body>';
 	echo '<h1>'._L('OIDplus error').'</h1>';

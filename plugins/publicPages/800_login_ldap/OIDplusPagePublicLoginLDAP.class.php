@@ -80,7 +80,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		$ra->register_ra(null); // create a user account without password
 
 		/*
-		OID+ DB Field             ActiveDirectory field
+		OIDplus DB Field          ActiveDirectory field
 		------------------------------------------------
 		ra_name                   cn
 		personal_name             displayname (or: givenname + " " + sn)
@@ -146,6 +146,8 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 				throw new OIDplusException(_L('LDAP authentication is disabled on this system.'));
 			}
 
+			if (!function_exists('ldap_connect')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','LDAP'));
+
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 				$response=$params["captcha"];
@@ -200,6 +202,12 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			if (!OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = _L('LDAP authentication is disabled on this system.');
+				return;
+			}
+
+			if (!function_exists('ldap_connect')) {
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = _L('PHP extension "%1" not installed','LDAP');
 				return;
 			}
 
