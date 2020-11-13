@@ -124,46 +124,73 @@ class OIDplusSessionHandler {
 	}
 
 	protected static function encrypt($data, $key) {
-		$iv = random_bytes(16); // AES block size in CBC mode
-		// Encryption
-		$ciphertext = openssl_encrypt(
-			$data,
-			'AES-256-CBC',
-			mb_substr($key, 0, 32, '8bit'),
-			OPENSSL_RAW_DATA,
-			$iv
-		);
-		// Authentication
-		$hmac = hash_hmac(
-			'SHA256',
-			$iv . $ciphertext,
-			mb_substr($key, 32, null, '8bit'),
-			true
-		);
-		return $hmac . $iv . $ciphertext;
+		if (function_exists('openssl_encrypt')) {
+			$iv = random_bytes(16); // AES block size in CBC mode
+			// Encryption
+			$ciphertext = openssl_encrypt(
+				$data,
+				'AES-256-CBC',
+				mb_substr($key, 0, 32, '8bit'),
+				OPENSSL_RAW_DATA,
+				$iv
+			);
+			// Authentication
+			$hmac = hash_hmac(
+				'SHA256',
+				$iv . $ciphertext,
+				mb_substr($key, 32, null, '8bit'),
+				true
+			);
+			return $hmac . $iv . $ciphertext;
+		} else {
+			// When OpenSSL is not available, then we just do a HMAC
+			$hmac = hash_hmac(
+				'SHA256',
+				$data,
+				mb_substr($key, 32, null, '8bit'),
+				true
+			);
+			return $hmac . $data;
+		}
 	}
 
 	protected static function decrypt($data, $key) {
-		$hmac       = mb_substr($data, 0, 32, '8bit');
-		$iv         = mb_substr($data, 32, 16, '8bit');
-		$ciphertext = mb_substr($data, 48, null, '8bit');
-		// Authentication
-		$hmacNew = hash_hmac(
-			'SHA256',
-			$iv . $ciphertext,
-			mb_substr($key, 32, null, '8bit'),
-			true
-		);
-		if (!hash_equals($hmac, $hmacNew)) {
-			throw new OIDplusException(_L('Authentication failed'));
+		if (function_exists('openssl_decrypt')) {
+			$hmac       = mb_substr($data, 0, 32, '8bit');
+			$iv         = mb_substr($data, 32, 16, '8bit');
+			$ciphertext = mb_substr($data, 48, null, '8bit');
+			// Authentication
+			$hmacNew = hash_hmac(
+				'SHA256',
+				$iv . $ciphertext,
+				mb_substr($key, 32, null, '8bit'),
+				true
+			);
+			if (!hash_equals($hmac, $hmacNew)) {
+				throw new OIDplusException(_L('Authentication failed'));
+			}
+			// Decryption
+			return openssl_decrypt(
+				$ciphertext,
+				'AES-256-CBC',
+				mb_substr($key, 0, 32, '8bit'),
+				OPENSSL_RAW_DATA,
+				$iv
+			);
+		} else {
+			// When OpenSSL is not available, then we just do a HMAC
+			$hmac       = mb_substr($data, 0, 32, '8bit');
+			$cleartext  = mb_substr($data, 32, null, '8bit');
+			$hmacNew = hash_hmac(
+				'SHA256',
+				$cleartext,
+				mb_substr($key, 32, null, '8bit'),
+				true
+			);
+			if (!hash_equals($hmac, $hmacNew)) {
+				throw new OIDplusException(_L('Authentication failed'));
+			}
+			return $cleartext;
 		}
-		// Decryption
-		return openssl_decrypt(
-			$ciphertext,
-			'AES-256-CBC',
-			mb_substr($key, 0, 32, '8bit'),
-			OPENSSL_RAW_DATA,
-			$iv
-		);
 	}
 }

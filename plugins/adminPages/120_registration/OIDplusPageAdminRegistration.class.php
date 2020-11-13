@@ -120,7 +120,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			);
 
 			$signature = '';
-			if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 				throw new OIDplusException(_L('Signature failed'));
 			}
 
@@ -222,7 +222,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				);
 
 				$signature = '';
-				if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+				if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 					return false; // throw new OIDplusException(_L('Signature failed'));
 				}
 
@@ -319,7 +319,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			);
 
 			$signature = '';
-			if (!@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 				return false; // throw new OIDplusException(_L('Signature failed'));
 			}
 

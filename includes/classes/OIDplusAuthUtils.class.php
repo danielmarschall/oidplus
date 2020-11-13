@@ -25,6 +25,11 @@ class OIDplusAuthUtils {
 			if ($a) return $a;
 		}
 
+		if (function_exists('mcrypt_create_iv')) {
+			$a = bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
+			if ($a) return $a;
+		}
+
 		if (function_exists('random_bytes')) {
 			$a = random_bytes($len);
 			if ($a) return $a;
