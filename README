@@ -32,6 +32,7 @@ System requirements:
 - PHP 7.0 or higher
 	with extension GMP or BCMath
 	with extension MBString
+	with extension SimpleXML
 	with extension MySQLi, PostgreSQL, SQLite3, PDO or ODBC
 - Database: MySQL/MariaDB (recommended), PostgreSQL, SQLite3 or Microsoft SQL Server
 - Independent of operating system (tested with Windows and Linux)

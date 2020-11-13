@@ -26,7 +26,7 @@ class OIDplusAuthUtils {
 		}
 
 		if (function_exists('mcrypt_create_iv')) {
-			$a = bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
+			$a = bin2hex(mcrypt_create_iv($len, MCRYPT_DEV_URANDOM));
 			if ($a) return $a;
 		}
 

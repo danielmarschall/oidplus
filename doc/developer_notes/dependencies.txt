@@ -1,0 +1,9 @@
+
+When a new PHP extension is required, then please change following
+
+1. README file
+2. res/ acknowledgements
+3. OIDplus product website
+4. OIDplus ViaThinkSoft project description
+
+and add checks in includes/oidplus_dependency.inc.php
