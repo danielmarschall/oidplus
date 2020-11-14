@@ -706,6 +706,7 @@ class OIDplus {
 		self::$designPlugins = array();
 		self::$system_id_cache = null;
 		self::$sslAvailableCache = null;
+		self::$translationArray = array();
 
 		// Continue...
 
@@ -1123,34 +1124,53 @@ class OIDplus {
 		}
 	}
 
-	public static function getTranslationArray() {
-		$translation_array = array();
+	private static $translationArray = array();
+	public static function getTranslationArray($requested_lang='*') {
 		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
 			$lang = $pluginManifest->getLanguageCode();
-			$translation_array[$lang] = array();
 			if (strpos($lang,'/') !== false) continue; // just to be sure
 			if (strpos($lang,'\\') !== false) continue; // just to be sure
 			if (strpos($lang,'..') !== false) continue; // just to be sure
 
-			$wildcard = $pluginManifest->getLanguageMessages();
-			if (strpos($wildcard,'/') !== false) continue; // just to be sure
-			if (strpos($wildcard,'\\') !== false) continue; // just to be sure
-			if (strpos($wildcard,'..') !== false) continue; // just to be sure
+			if (($requested_lang != '*') && ($lang != $requested_lang)) continue;
 
-			$translation_files = glob(__DIR__.'/../../plugins/language/'.$lang.'/'.$wildcard);
-			sort($translation_files);
-			foreach ($translation_files as $translation_file) {
-				if (!file_exists($translation_file)) continue;
-				$xml = @simplexml_load_string(file_get_contents($translation_file));
-				if (!$xml) continue; // if there is an UTF-8 or parsing error, don't output any errors, otherwise the JavaScript is corrupt and the page won't render correctly
-				foreach ($xml->message as $msg) {
-					$src = trim($msg->source->__toString());
-					$dst = trim($msg->target->__toString());
-					$translation_array[$lang][$src] = $dst;
+			if (!isset(self::$translationArray[$lang])) {
+				self::$translationArray[$lang] = array();
+
+				$wildcard = $pluginManifest->getLanguageMessages();
+				if (strpos($wildcard,'/') !== false) continue; // just to be sure
+				if (strpos($wildcard,'\\') !== false) continue; // just to be sure
+				if (strpos($wildcard,'..') !== false) continue; // just to be sure
+
+				$translation_files = glob(__DIR__.'/../../plugins/language/'.$lang.'/'.$wildcard);
+				sort($translation_files);
+				foreach ($translation_files as $translation_file) {
+					if (!file_exists($translation_file)) continue;
+
+					$cache_file = __DIR__ . '/../../userdata/cache/.translation_'.md5($translation_file).'.ser';
+					if (file_exists($cache_file) && (filemtime($cache_file) == filemtime($translation_file))) {
+						$cac = @unserialize(file_get_contents($cache_file));
+						if (!$cac) continue;
+						foreach ($cac as $src => $dst) {
+							self::$translationArray[$lang][$src] = $dst;
+						}
+					} else {
+						$xml = @simplexml_load_string(file_get_contents($translation_file));
+						if (!$xml) continue; // if there is an UTF-8 or parsing error, don't output any errors, otherwise the JavaScript is corrupt and the page won't render correctly
+						$cac = array();
+						foreach ($xml->message as $msg) {
+							$src = trim($msg->source->__toString());
+							$dst = trim($msg->target->__toString());
+							self::$translationArray[$lang][$src] = $dst;
+							$cac[$src] = $dst;
+						}
+						@file_put_contents($cache_file,serialize($cac));
+						@touch($cache_file,filemtime($translation_file));
+					}
 				}
 			}
 		}
-		return $translation_array;
+		return self::$translationArray;
 	}
 
 }

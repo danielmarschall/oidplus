@@ -175,48 +175,8 @@ function _L($str, ...$sprintfArgs) {
 	}
 
 	$lang = OIDplus::getCurrentLang();
-
-	foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
-		$test_lang = $pluginManifest->getLanguageCode();
-
-		if ($test_lang == $lang) {
-			if ($lang != $translation_loaded) {
-				$good = true;
-				if (strpos($lang,'/') !== false) $good = false; // prevent attack (but actually, the sanitization in getCurrentLang should work)
-				if (strpos($lang,'\\') !== false) $good = false; // prevent attack (but actually, the sanitization in getCurrentLang should work)
-				if (strpos($lang,'..') !== false) $good = false; // prevent attack (but actually, the sanitization in getCurrentLang should work)
-
-				if ($good) {
-					$wildcard = $pluginManifest->getLanguageMessages();
-					if (strpos($wildcard,'/') !== false) $good = false; // just to be sure
-					if (strpos($wildcard,'\\') !== false) $good = false; // just to be sure
-					if (strpos($wildcard,'..') !== false) $good = false; // just to be sure
-
-					if ($good) {
-						$translation_files = glob(__DIR__.'/../plugins/language/'.$lang.'/'.$wildcard);
-						sort($translation_files);
-						foreach ($translation_files as $translation_file) {
-							$xml = simplexml_load_string(file_get_contents($translation_file));
-							foreach ($xml->message as $msg) {
-								$src = trim($msg->source->__toString());
-								$dst = trim($msg->target->__toString());
-								$translation_array[$src] = $dst;
-							}
-						}
-
-						$translation_loaded = $lang;
-					}
-				}
-			}
-		}
-	}
-
-	if ($lang != $translation_loaded) {
-		// Something bad happened (e.g. attack or message file not found)
-		$res = $str;
-	} else {
-		$res = isset($translation_array[$str]) && !empty($translation_array[$str]) ? $translation_array[$str] : $str;
-	}
+	$ta = OIDplus::getTranslationArray($lang);
+	$res = (isset($ta[$lang]) && isset($ta[$lang][$str])) ? $ta[$lang][$str] : $str;
 
 	$res = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $res);
 

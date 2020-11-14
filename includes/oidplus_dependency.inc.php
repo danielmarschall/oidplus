@@ -66,9 +66,10 @@ function oidplus_get_missing_dependencies() {
 	}
 
 	if (!function_exists('simplexml_load_file')) {
-		// Required for includes/functions.inc.php (Translation)
-		//              includes/classes/OIDplusPluginManifest.class.php (Plugins)
+		// Required for includes/classes/OIDplusPluginManifest.class.php (Plugins)
 		//              includes/classes/OIDplus.class.php (Translation)
+		//              plugins/adminPages/400_oidinfo_export/OIDplusPageAdminOIDInfoExport.class.php (Import OID from oid-info.com)
+		//              dev/translation/*.phps (only for developers)
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			$install_hint = _L('On Windows, it should be installed by default');
 		} else {

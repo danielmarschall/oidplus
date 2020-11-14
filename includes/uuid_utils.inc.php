@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-10-25
+ * Version 2020-11-14
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -348,7 +348,7 @@ function gen_uuid($prefer_timebased = true) {
 
 // Version 1 (Time based) UUID
 function gen_uuid_timebased() {
-	# On Debian: aptitude install php-uuid
+	# On Debian: apt-get install php-uuid
 	# extension_loaded('uuid')
 	if (function_exists('uuid_create')) {
 		# OSSP uuid extension like seen in php5-uuid at Debian 8
@@ -363,11 +363,11 @@ function gen_uuid_timebased() {
 		return trim(uuid_create(UUID_TYPE_TIME));
 	}
 
-	# On Debian: aptitude install uuid-runtime
+	# On Debian: apt-get install uuid-runtime
 	if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 		$out = array();
 		$ec = -1;
-		exec('uuidgen -t', $out, $ec);
+		exec('uuidgen -t 2>/dev/null', $out, $ec);
 		if ($ec == 0) return $out[0];
 	}
 
@@ -460,8 +460,8 @@ function get_mac_address() {
 	} else if (strtoupper(PHP_OS) == 'DARWIN') {
 		// Mac OS X
 		$cmds = array(
-			"networksetup -listallhardwareports",
-			"netstat -i"
+			"networksetup -listallhardwareports 2>/dev/null",
+			"netstat -i 2>/dev/null"
 		);
 		foreach ($cmds as $cmd) {
 			$out = array();
@@ -485,8 +485,8 @@ function get_mac_address() {
 			}
 		}
 		$cmds = array(
-			"netstat -ie",
-			"ifconfig" // only available for root (because it is in sbin)
+			"netstat -ie 2>/dev/null",
+			"ifconfig 2>/dev/null" // only available for root (because it is in sbin)
 		);
 		foreach ($cmds as $cmd) {
 			$out = array();
@@ -544,7 +544,7 @@ function gen_uuid_md5_namebased($namespace_uuid, $name) {
 
 // Version 4 (Random) UUID
 function gen_uuid_random() {
-	# On Debian: aptitude install php-uuid
+	# On Debian: apt-get install php-uuid
 	# extension_loaded('uuid')
 	if (function_exists('uuid_create')) {
 		# OSSP uuid extension like seen in php5-uuid at Debian 8
@@ -560,10 +560,10 @@ function gen_uuid_random() {
 	}
 
 	if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-		# On Debian: aptitude install uuid-runtime
+		# On Debian: apt-get install uuid-runtime
 		$out = array();
 		$ec = -1;
-		exec('uuidgen -r', $out, $ec);
+		exec('uuidgen -r 2>/dev/null', $out, $ec);
 		if ($ec == 0) return $out[0];
 
 		# On Debian Jessie: UUID V4 (Random)

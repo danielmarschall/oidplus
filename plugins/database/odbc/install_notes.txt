@@ -3,7 +3,7 @@ Installing a MySQL ODBC driver on your Linux system
 (for testing the OIDplus ODBC plugin)
 
 Step 1:
-aptitude install odbcinst
+apt-get install odbcinst
 
 Step 2:
 Download and unextract the ODBC driver at
