@@ -71,6 +71,11 @@ Polyfill:
 	Website:  https://polyfill.io/v3/
 	Currently directly linked via CDN
 
+Symfony MBString Polyfill:
+	License:  MIT
+	Version:  Commit 401c9d9 on 26 Oct 2020 (Version 1.20)
+	Website:  https://github.com/symfony/polyfill-mbstring
+
 ViaThinkSoft FileFormats:
 	License:  Apache 2.0
 	Download: https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/fileformats/trunk/

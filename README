@@ -30,8 +30,8 @@ https://www.viathinksoft.com/projects/oidplus
 System requirements:
 - PHP compatible web server (tested with Apache 2, nginx and Microsoft IIS)
 - PHP 7.0 or higher
-	with extension GMP or BCMath
-	with extension MBString
+	with extension GMP or BCMath (usually part of every PHP installation)
+	with extension MBString or iconv (usually part of every PHP installation)
 	with extension SimpleXML
 	with extension MySQLi, PostgreSQL, SQLite3, PDO or ODBC
 - Database: MySQL/MariaDB (recommended), PostgreSQL, SQLite3 or Microsoft SQL Server
