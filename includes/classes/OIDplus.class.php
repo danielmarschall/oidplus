@@ -1125,6 +1125,27 @@ class OIDplus {
 	}
 
 	private static $translationArray = array();
+	protected static function getTranslationFileContents($translation_file) {
+		// First, try the cache
+		$cache_file = __DIR__ . '/../../userdata/cache/.translation_'.md5($translation_file).'.ser';
+		if (file_exists($cache_file) && (filemtime($cache_file) == filemtime($translation_file))) {
+			$cac = @unserialize(file_get_contents($cache_file));
+			if ($cac) return $cac;
+		}
+	
+		// If not successful, then load the XML file
+		$xml = @simplexml_load_string(file_get_contents($translation_file));
+		if (!$xml) return array(); // if there is an UTF-8 or parsing error, don't output any errors, otherwise the JavaScript is corrupt and the page won't render correctly
+		$cac = array();
+		foreach ($xml->message as $msg) {
+			$src = trim($msg->source->__toString());
+			$dst = trim($msg->target->__toString());
+			$cac[$src] = $dst;
+		}
+		@file_put_contents($cache_file,serialize($cac));
+		@touch($cache_file,filemtime($translation_file));
+		return $cac;
+	}
 	public static function getTranslationArray($requested_lang='*') {
 		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
 			$lang = $pluginManifest->getLanguageCode();
@@ -1146,26 +1167,9 @@ class OIDplus {
 				sort($translation_files);
 				foreach ($translation_files as $translation_file) {
 					if (!file_exists($translation_file)) continue;
-
-					$cache_file = __DIR__ . '/../../userdata/cache/.translation_'.md5($translation_file).'.ser';
-					if (file_exists($cache_file) && (filemtime($cache_file) == filemtime($translation_file))) {
-						$cac = @unserialize(file_get_contents($cache_file));
-						if (!$cac) continue;
-						foreach ($cac as $src => $dst) {
-							self::$translationArray[$lang][$src] = $dst;
-						}
-					} else {
-						$xml = @simplexml_load_string(file_get_contents($translation_file));
-						if (!$xml) continue; // if there is an UTF-8 or parsing error, don't output any errors, otherwise the JavaScript is corrupt and the page won't render correctly
-						$cac = array();
-						foreach ($xml->message as $msg) {
-							$src = trim($msg->source->__toString());
-							$dst = trim($msg->target->__toString());
-							self::$translationArray[$lang][$src] = $dst;
-							$cac[$src] = $dst;
-						}
-						@file_put_contents($cache_file,serialize($cac));
-						@touch($cache_file,filemtime($translation_file));
+					$cac = self::getTranslationFileContents($translation_file);
+					foreach ($cac as $src => $dst) {
+						self::$translationArray[$lang][$src] = $dst;
 					}
 				}
 			}
