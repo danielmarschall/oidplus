@@ -233,6 +233,10 @@ Old 2.0 format:          (Not available)
                          Enables some special checks for plugins (e.g. a self-test for auth plugins).
                          It is highly recommended that you enable DEBUG if you are developing
                          plugins!
+                         It is recommended to disable this switch in productive systems,
+                         because the self-tests decrease the performance.
+                         However, after installing a new plugin, you might want to enable
+                         it for a few minutes, to make sure the plugin is working correctly.
 
 
 ----------------------------------------------------

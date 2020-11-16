@@ -219,7 +219,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$privacy_document_file = 'OIDplus/privacy_documentation.html';
 			$resourcePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.1.500'); // OIDplusPagePublicResources
 			if (!is_null($resourcePlugin) && file_exists(OIDplus::basePath().'/res/'.$privacy_document_file)) {
-				$out['text'] .= ' <a '.OIDplus::gui()->link('oidplus:resources$'.$privacy_document_file.'$'.OIDplus::authUtils()::makeAuthKey("resources;".$privacy_document_file).'#cookies').'>'._L('More information about the cookies used').'</a>';
+				$out['text'] .= ' <a '.OIDplus::gui()->link('oidplus:resources$'.$privacy_document_file.'#cookies').'>'._L('More information about the cookies used').'</a>';
 			}
 			$out['text'] .= '</font></p></div>';
 
