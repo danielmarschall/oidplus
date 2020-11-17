@@ -24,8 +24,8 @@ Please note that a plugin can define any key.
 OIDplus::baseConfig()->setValue('CONFIG_VERSION',           2.1);
 Old 2.0 format:          define('OIDPLUS_CONFIG_VERSION',   2.0);
 
-OIDplus::baseConfig()->setValue('ADMIN_PASSWORD',           '<base64 encoded SHA3-512 hash>');
-Old 2.0 format:          define('OIDPLUS_ADMIN_PASSWORD',   '<base64 encoded SHA3-512 hash>');
+OIDplus::baseConfig()->setValue('ADMIN_PASSWORD',           '<BCrypt hash, or base64 encoded SHA3-512 hash>');
+Old 2.0 format:          define('OIDPLUS_ADMIN_PASSWORD',   '<BCrypt hash, or base64 encoded SHA3-512 hash>');
 
 OIDplus::baseConfig()->setValue('DATABASE_PLUGIN',          '');
 Old 2.0 format:          define('OIDPLUS_DATABASE_PLUGIN',  '');

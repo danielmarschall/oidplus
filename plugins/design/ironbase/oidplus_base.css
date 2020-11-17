@@ -113,6 +113,7 @@ a:hover {
 	#content_window {
 		top: 0 !important;
 		background:#fbfbfb;
+		color:#000;
 	}
 	#frames {
 		display:flex;
@@ -126,7 +127,11 @@ a:hover {
 	#oidtree {
 		order:1;
 		flex:none;
-		background:url(stripes2.gif);
+		
+		/* https://stripesgenerator.com/ */
+		background-image: linear-gradient(0deg, #ffffff 25%, #f4f4f4 25%, #f4f4f4 50%, #ffffff 50%, #ffffff 75%, #f4f4f4 75%, #f4f4f4 100%);
+		background-size: 4.00px 4.00px;
+		
 	}
 	#content_window {
 		order:2;
@@ -180,6 +185,7 @@ label.padding_label {
 	width:auto !important;
 	padding:20px;
 	background-color:#fff;
+	color:#000;
 	border:1px solid #ccc;
 	border-radius:5px;
 	margin-top:10px;
@@ -265,7 +271,11 @@ label.padding_label {
 
 	display:block;
 
-	background:url(stripes.gif);
+	/* https://stripesgenerator.com/ */
+	background-image: linear-gradient(0deg, #ffffff 25%, #d4d4d4 25%, #d4d4d4 50%, #ffffff 50%, #ffffff 75%, #d4d4d4 75%, #d4d4d4 100%);
+	background-size: 4.00px 4.00px;
+	
+	color:#000;
 
 	overflow:hidden;
 }
@@ -277,10 +287,12 @@ label.padding_label {
 
 .jstree-clicked {
 	background:#FFD5AA !important;
+	color:#000;
 }
 
 .jstree-anchor:hover {
 	background:#FFE4CA;
+	color:#000;
 }
 
 @media only screen and (max-width: 800px) {
@@ -305,7 +317,10 @@ label.padding_label {
 		white-space:nowrap; /* required for NoScript */
 		overflow:scroll; /* required for NoScript */
 		padding-bottom:10px !important;
-		background:url(stripes2.gif);
+
+		/* https://stripesgenerator.com/ */
+		background-image: linear-gradient(0deg, #ffffff 25%, #f4f4f4 25%, #f4f4f4 50%, #ffffff 50%, #ffffff 75%, #f4f4f4 75%, #f4f4f4 100%);
+		background-size: 4.00px 4.00px;
 	}
 	
 	#content_window {
@@ -317,6 +332,7 @@ label.padding_label {
 		padding-left:20px;
 		padding-right:20px;
 		background:#fbfbfb;
+		color:#000;
 	}
 }
 
@@ -369,6 +385,7 @@ textarea,input[type="text"],input[type="password"],select {
 	/*background:transparent;*/
 	background: #F0F0F0;
 	border: #AAAAAA 1px solid;
+	color:#000;
 }
 
 input[type=button], input[type=submit], input[type=reset],
@@ -383,12 +400,15 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 	text-decoration:none;
 	background: #ffffff;
 	/*color: #0066CC;*/
+	color:#000;
 }
 input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 	background: #FFE4CA;
+	color:#000;
 }
 .hand, input[type=button], input[type=submit], input[type=reset] {
 	cursor: pointer;
+	color:#000;
 }
 
 /**
@@ -408,22 +428,27 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 }
 .ui-layout-resizer { /* all 'resizer-bars' */
 	background: #DDD;
+	color:#000;
 	top:55px !important; /* DM 13.03.2019 */
 }
 .ui-layout-resizer-open:hover { /* mouse-over */
 	background: #9D9;
+	color:#000;
 }
 .ui-layout-resizer-north:hover {
 	background: #DDD;
+	color:#000;
 }
 .ui-layout-resizer-north {
 	z-index:10 !important; /* DM 13.03.2019 */
 }
 .ui-layout-toggler { /* all 'toggler-buttons' */
 	background: #AAA;
-	}
+	color:#000;
+}
 .ui-layout-toggler-closed { /* closed toggler-button */
 	background: #CCC;
+	color:#000;
 	border-bottom: 1px solid #BBB;
 }
 .ui-layout-toggler .content { /* toggler-text */
@@ -433,6 +458,7 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 }
 .ui-layout-toggler:hover { /* mouse-over */
 	background: #DCA;
+	color:#000;
 }
 .ui-layout-toggler:hover .content { /* mouse-over */
 	color: #009;
@@ -441,6 +467,7 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 /* masks are usually transparent - make them visible (must 'override' default) */
 .ui-layout-mask {
 	background: #C00 !important;
+	color:#000;
 	opacity: .20 !important;
 	filter: alpha(opacity=20) !important;
 }
@@ -461,8 +488,12 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 @media only screen and (max-width: 800px) {
 	/* Mobile */
 
-	.lng_flag {
+	#languageBox {
 		margin: 10px;
+	}
+	
+	.lang_flag_bg {
+		margin-right: 10px;
 	}
 
 }
@@ -471,11 +502,14 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 	cursor: pointer;
 	border: 1px solid #000 !important;
 	height: 20px;
+	margin: 0px;
 }
 
 .lang_flag_bg {
 	/* to avoid that the stripes shine through a ghost image */
-	background:#f0f0f0;
+	background:#fff;
+	color:#000;
+	display: inline-block;
 }
 
 .picture_ghost {

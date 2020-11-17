@@ -164,6 +164,7 @@ label.padding_label {
 	width:auto !important;
 	padding:20px;
 	background-color:#fff;
+	color:#000;
 	border:1px solid #ccc;
 	border-radius:5px;
 	margin-top:10px;
@@ -256,6 +257,8 @@ label.padding_label {
 	background: -webkit-linear-gradient(left, #a0d8ef 0%,#ddf1f9 65%,#feffff 100%); /* Chrome10-25,Safari5.1-6 */
 	background: linear-gradient(to right, #a0d8ef 0%,#ddf1f9 65%,#feffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a0d8ef', endColorstr='#feffff',GradientType=1 ); /* IE6-9 */
+	
+	color:#000;
 
 	overflow:hidden;
 }
@@ -347,8 +350,10 @@ h3 {
 textarea,input[type="text"],input[type="password"],select {
 	/* for dark themes, this looks better */
 	/*background:transparent;*/
-	background:rgba(255,255,255,0.4);
+	background:#fff;
+	background-opacity: 0.4;
 	border: #AAAAAA 1px solid;
+	color:#000;
 }
 
 input[type=button], input[type=submit], input[type=reset],
@@ -366,6 +371,7 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 }
 input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 	background: #f4f4ff;
+	color:#000;
 }
 .hand, input[type=button], input[type=submit], input[type=reset] {
 	cursor: pointer;
@@ -389,19 +395,24 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 .ui-layout-resizer { /* all 'resizer-bars' */
 	background: #DDD;
 	top:55px !important; /* DM 13.03.2019 */
+	color:#000;
 }
 .ui-layout-resizer-open:hover { /* mouse-over */
 	background: #9D9;
+	color:#000;
 }
 .ui-layout-resizer-north {
 	background:#2b336f !important;
+	color:#000;
 	z-index:10 !important; /* DM 13.03.2019 */
 }
 .ui-layout-toggler { /* all 'toggler-buttons' */
 	background: #AAA;
+	color:#000;
 	}
 .ui-layout-toggler-closed { /* closed toggler-button */
 	background: #CCC;
+	color:#000;
 	border-bottom: 1px solid #BBB;
 }
 .ui-layout-toggler .content { /* toggler-text */
@@ -411,6 +422,7 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 }
 .ui-layout-toggler:hover { /* mouse-over */
 	background: #DCA;
+	color:#000;
 }
 .ui-layout-toggler:hover .content { /* mouse-over */
 	color: #009;
@@ -419,6 +431,7 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 /* masks are usually transparent - make them visible (must 'override' default) */
 .ui-layout-mask {
 	background: #C00 !important;
+	color:#000;
 	opacity: .20 !important;
 	filter: alpha(opacity=20) !important;
 }
@@ -439,8 +452,12 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 @media only screen and (max-width: 800px) {
 	/* Mobile */
 
-	.lng_flag {
+	#languageBox {
 		margin: 10px;
+	}
+	
+	.lang_flag_bg {
+		margin-right: 10px;
 	}
 
 }
@@ -449,6 +466,14 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 	cursor: pointer;
 	border: 1px solid #000 !important;
 	height: 20px;
+	margin: 0px;
+}
+
+.lang_flag_bg {
+	/* to avoid that the stripes shine through a ghost image */
+	background:#fff;
+	color:#000;
+	display: inline-block;
 }
 
 .picture_ghost {
