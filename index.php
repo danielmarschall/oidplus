@@ -44,23 +44,6 @@ function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
 	}
 }
 
-$sysid_oid = OIDplus::getSystemId(true);
-if (!$sysid_oid) $sysid_oid = 'unknown'; // do not translate
-header('X-OIDplus-SystemID:'.$sysid_oid);
-
-$sys_url = OIDplus::getSystemUrl();
-header('X-OIDplus-SystemURL:'.$sys_url);
-
-$sys_ver = OIDplus::getVersion();
-if (!$sys_ver) $sys_ver = 'unknown'; // do not translate
-header('X-OIDplus-SystemVersion:'.$sys_ver);
-
-$sys_install_type = OIDplus::getInstallType();
-header('X-OIDplus-SystemInstallType:'.$sys_install_type);
-
-$sys_title = OIDplus::config()->getValue('system_title');
-header('X-OIDplus-SystemTitle:'.$sys_title);
-
 $add_css_args = array();
 if (class_exists('OIDplusPageAdminColors')) {
 	// Usually, such things would be done using "features" (implementsFeature),
@@ -82,11 +65,7 @@ $add_css_args = count($add_css_args) > 0 ? '?'.implode('&',$add_css_args) : '';
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="OIDplus-SystemID" content="<?php echo htmlentities($sysid_oid); ?>">
-	<meta name="OIDplus-SystemURL" content="<?php echo htmlentities($sys_url); ?>">
-	<meta name="OIDplus-SystemVersion" content="<?php echo htmlentities($sys_ver); ?>">
-	<meta name="OIDplus-SystemInstallType" content="<?php echo htmlentities($sys_install_type); ?>">
-	<meta name="OIDplus-SystemTitle" content="<?php echo htmlentities($sys_title); /* Do not remove. This meta tag is acessed by oidplus_base.js */ ?>">
+	<meta name="OIDplus-SystemTitle" content="<?php echo htmlentities(OIDplus::config()->getValue('system_title')); /* Do not remove. This meta tag is acessed by oidplus_base.js */ ?>">
 	<meta name="theme-color" content="#A9DCF0">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 

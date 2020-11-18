@@ -19,13 +19,11 @@
 
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
-header('Content-Type:text/html; charset=UTF-8');
+header('Content-Type:text/text; charset=UTF-8');
 
-OIDplus::init(true);
+OIDplus::init(false);
 
 # ---
-
-header('Content-Type:text/plain');
 
 $non_default_languages = array();
 foreach (OIDplus::getAvailableLangs() as $code) {
