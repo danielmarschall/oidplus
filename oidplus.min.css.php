@@ -23,6 +23,7 @@ require_once __DIR__ . '/includes/oidplus.inc.php';
 
 require_once __DIR__ . '/3p/minify/path-converter/ConverterInterface.php';
 require_once __DIR__ . '/3p/minify/path-converter/Converter.php';
+require_once __DIR__ . '/3p/minify/php-fig-cache/CacheItemInterface.php';
 require_once __DIR__ . '/3p/minify/src/Minify.php';
 require_once __DIR__ . '/3p/minify/src/CSS.php';
 require_once __DIR__ . '/3p/minify/src/Exception.php';
@@ -120,7 +121,7 @@ foreach ($manifests as $manifest) {
 	}
 }
 
-// Now user-defined definitions
+// Now user-defined (additional) definitions
 if (file_exists(__DIR__ . '/userdata/styles/oidplus_add.css')) {
 	$out .= process_file(__DIR__ . '/userdata/styles/oidplus_add.css');
 }

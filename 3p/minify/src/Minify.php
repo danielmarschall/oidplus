@@ -10,6 +10,8 @@
  */
 namespace MatthiasMullie\Minify;
 
+include_once __DIR__ . '/../php-fig-cache/CacheItemInterface.php'; // ViaThinkSoft: Added to make Eclipse for PHP happy
+
 use MatthiasMullie\Minify\Exceptions\IOException;
 use Psr\Cache\CacheItemInterface;
 
