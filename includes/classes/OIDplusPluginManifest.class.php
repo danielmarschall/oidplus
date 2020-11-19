@@ -31,8 +31,10 @@ class OIDplusPluginManifest {
 	private $type = '';
 	private $phpMainClass = '';
 
-	// Only page plugins
+	// Only page or design plugins
 	private $cssFiles = array();
+
+	// only page plugins
 	private $jsFiles = array();
 
 	// Only database plugins
@@ -125,13 +127,17 @@ class OIDplusPluginManifest {
 
 		$this->phpMainClass = (string)$xmldata->php->mainclass;
 
-		// The following functionalities are only available for page plugins
+		// The following functionalities are only available for page or design plugins
 		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1
+		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.7.1
 		foreach ((array)$xmldata->css->file as $css_file) {
 			$file = dirname($filename).'/'.$css_file;
 			//if (!file_exists($file)) continue;
 			$this->cssFiles[] = $file;
 		}
+
+		// The following functionalities are only available for page plugins
+		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1
 		foreach ((array)$xmldata->js->file as $js_file) {
 			$file = dirname($filename).'/'.$js_file;
 			//if (!file_exists($file)) continue;

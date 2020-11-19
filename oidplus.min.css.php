@@ -91,17 +91,25 @@ if (isset($_REQUEST['theme'])) {
 	if (strpos($theme,'/') !== false) $theme = 'default';
 	if (strpos($theme,'\\') !== false) $theme = 'default';
 	if (strpos($theme,'..') !== false) $theme = 'default';
-	if (!is_dir(__DIR__.'/plugins/design/'.$theme)) $theme = 'default';
 } else {
 	$theme = 'default';
 }
-$base_css = __DIR__ . '/plugins/design/'.$theme.'/oidplus_base.css';
 
-// OIDplus basic definitions
 if (file_exists(__DIR__ . '/userdata/styles/oidplus_base.css')) {
+	// There is a user defined CSS (not recommended, use design plugins instead!)
 	$out .= process_file(__DIR__ . '/userdata/styles/oidplus_base.css');
 } else {
-	$out .= process_file($base_css);
+	// Use CSS of the design plugin
+	OIDplus::registerAllPlugins('design', 'OIDplusDesignPlugin', array('OIDplus','registerDesignPlugin'));
+	$plugins = OIDplus::getDesignPlugins();
+	foreach ($plugins as $plugin) {
+		if ((basename($plugin->getPluginDirectory())) == $theme) {
+			$manifest = $plugin->getManifest();
+			foreach ($manifest->getCSSFiles() as $css_file) {
+				$out .= process_file($css_file);
+			}
+		}
+	}
 }
 
 // Then plugins

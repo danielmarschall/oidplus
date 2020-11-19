@@ -573,6 +573,11 @@ class OIDplus {
 			$manifest = new OIDplusPluginManifest();
 			$manifest->loadManifest($ini);
 
+			$class_name = $manifest->getPhpMainClass();
+			if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_'.$class_name, false)) {
+				continue;
+			}
+
 			if ($flat) {
 				$out[] = $manifest;
 			} else {
