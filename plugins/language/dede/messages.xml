@@ -5846,6 +5846,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Unexpected security level in %1 (expect PUBLIC, RA or ADMIN)
+		]]></source>
+		<target><![CDATA[
+		Unerwartete Sicherheitsstufe in %1 (Erwartet: PUBLIC, RA oder ADMIN)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Unexpected logger component "%1" in mask code "%2"
 		]]></source>
 		<target><![CDATA[

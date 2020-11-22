@@ -19,6 +19,8 @@
 
 define('SPACER_PNG', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII='));
 
+// TODO: should we also check security.ini ?
+
 require_once __DIR__ . '/../../../includes/functions.inc.php';
 
 if (!isset($_REQUEST['file'])) {

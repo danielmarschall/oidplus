@@ -56,7 +56,7 @@ Install OIDplus to Microsoft IIS
 
 	Edit "C:\Program Files (x86)\PHP\v7.4\php.ini" (you need to run Notepad as administrator)
 	Search for "curl.cainfo" and change the line into:
-	curl.cainfo=C:\inetpub\\cacert.pem
+	curl.cainfo=C:\inetpub\cacert.pem
 
 	Attention: Placing the file in "C:\Program Files (x86)\PHP\v7.4\extras\ssl\"
 	           sometimes causes a lot of problems because PHP has problems with the SysWOW64 replacement.

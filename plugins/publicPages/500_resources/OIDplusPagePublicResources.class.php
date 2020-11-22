@@ -76,6 +76,35 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		if (preg_match('@<h6>(.+)</h6>@ismU', $cont, $m)) return $m[1];
 		return pathinfo($file, PATHINFO_FILENAME); // filename without extension
 	}
+	
+	protected static function mayAccessResource($source) {
+		if (OIDplus::authUtils()::isAdminLoggedIn()) return true;
+		
+		$candidates = array(
+			OIDplus::basePath().'/userdata/resources/security.ini',
+			OIDplus::basePath().'/res/security.ini'
+		);
+		foreach ($candidates as $ini_file) {
+			if (file_exists($ini_file)) {
+				$data = @parse_ini_file($ini_file, true);
+				if (isset($data['Security']) && isset($data['Security'][$source])) {
+					$level = $data['Security'][$source];
+					if ($level == 'PUBLIC') {
+						return true;
+					} else if ($level == 'RA') {
+						return
+							((OIDplus::authUtils()::raNumLoggedIn() > 0) ||
+							(OIDplus::authUtils()::isAdminLoggedIn()));
+					} else if ($level == 'ADMIN') {
+						return OIDplus::authUtils()::isAdminLoggedIn();
+					} else {
+						throw new OIDplusException('Unexpected security level in %1 (expect PUBLIC, RA or ADMIN)', $ini_file);
+					}
+				}
+			}
+		}
+		return true;
+	}
 
 	private static function myglob($reldir, $onlydir=false) {
 		$out = array();
@@ -95,8 +124,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			if (strpos($x,'$') !== false) continue;
 			$out[] = $x;
 		}
-
-		return array_unique($out);
+		
+		$out = array_unique($out);
+		
+		return array_filter($out, function($v, $k) {
+			return self::mayAccessResource($v);
+		}, ARRAY_FILTER_USE_BOTH);
 	}
 
 	private static function realname($rel) {
@@ -162,6 +195,17 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				}
 			}
 
+			// Check for permission
+
+			if ($file != '') {
+				if (!self::mayAccessResource($file)) {
+					$out['title'] = _L('Access denied');
+					$out['icon'] = 'img/error_big.png';
+					$out['text'] = '<p>'._L('Authentication error. Please log in.').'</p>';
+					return;
+				}
+			}
+			
 			// First, "Go back to" line
 
 			if ($file != '') {
@@ -204,7 +248,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			$realfile = self::realname($file);
 			// $realfile2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $realfile);
 			// if (file_exists($realfile2)) $realfile = $realfile2;
-
+			
 			if (file_exists($realfile) && (!is_dir($realfile))) {
 				if ((substr($file,-4,4) == '.url') || (substr($file,-5,5) == '.link')) {
 					$out['title'] = $this->getHyperlinkTitle($realfile);

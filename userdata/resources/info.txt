@@ -45,7 +45,21 @@ Redirections:
 		Foobar/Devices.html="/test123.html"	
 		; Redirect a resource to a local "goto" file
 		Foobar/Devices.html="?goto=oidplus:resources$Foobar/Manuals/Devices.html"	
+
+Securing resources:
+	If you want that a resource is only visible to RAs or Admins,
+	create a file res/security.ini (not recommended)
+	or userdata/resources/security.ini (recommended) with a
+	content like this:
 	
+		[Security]
+		; Document is visible for all (default)
+		rules.html=PUBLIC
+		; Document is only visible to RAs and admins
+		rules.html=RA
+		; Document is only visible to admins
+		rules.html=ADMIN
+
 Internationalization of *.html files:
 	Title: The title is taken from the HTML headline.
 	To create a file with multiple languages, create them like this:

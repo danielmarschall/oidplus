@@ -67,11 +67,12 @@ unset($missing_dependencies);
 // Now we can continue!
 
 if (PHP_SAPI != 'cli') {
+	// TODO: Plugins should be able to extend CSP
 	header('X-Content-Type-Options: nosniff');
 	header('X-XSS-Protection: 1; mode=block');
 	header("Content-Security-Policy: default-src 'self' blob: https://fonts.gstatic.com https://www.google.com/ https://www.gstatic.com/ https://cdnjs.cloudflare.com/; ".
 	       "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com/; ".
-	       "img-src data: http: https:; ".
+	       "img-src blob: data: http: https:; ".
 	       "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.google.com/ https://www.gstatic.com/ https://cdnjs.cloudflare.com/ https://polyfill.io/; ".
 	       "frame-ancestors 'none'; ".
 	       "object-src 'none'");

@@ -225,6 +225,7 @@ function dbplugin_changed() {
 function performAccessCheck() {
 	document.getElementById("dirAccessWarning").innerHTML = "";
 	checkAccess("userdata/index.html");
+	checkAccess("res/ATTENTION.TXT");
 	checkAccess("dev/index.html");
 	checkAccess("includes/index.html");
 	checkAccess("setup/includes/index.html");
