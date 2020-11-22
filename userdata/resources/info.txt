@@ -31,6 +31,21 @@ Icons:
 	
 	The same applies for folders.
 
+Redirections:
+	In case a resource have been moved to another location,
+	you can setup a redirection.
+	Therefore, create a file res/redirect.ini (not recommended)
+	or userdata/resources/redirect.ini (recommended) with a
+	content like this:
+			
+		[Redirects]
+		; Redirect a resource to an absolute URL
+		Foobar/Test.html="http://example.com/test123.html"
+		; Redirect a resource to a relative URL
+		Foobar/Devices.html="/test123.html"	
+		; Redirect a resource to a local "goto" file
+		Foobar/Devices.html="?goto=oidplus:resources$Foobar/Manuals/Devices.html"	
+	
 Internationalization of *.html files:
 	Title: The title is taken from the HTML headline.
 	To create a file with multiple languages, create them like this:

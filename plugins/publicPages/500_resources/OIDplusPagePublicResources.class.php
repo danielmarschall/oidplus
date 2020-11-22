@@ -105,6 +105,23 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		if (file_exists($candidate1) || is_dir($candidate1)) return "userdata/resources/$rel";
 		if (file_exists($candidate2) || is_dir($candidate2)) return "res/$rel";
 	}
+	
+	protected static function checkRedirect($source, &$target): bool {
+		$candidates = array(
+			OIDplus::basePath().'/userdata/resources/redirect.ini',
+			OIDplus::basePath().'/res/redirect.ini'
+		);
+		foreach ($candidates as $ini_file) {
+			if (file_exists($ini_file)) {
+				$data = @parse_ini_file($ini_file, true);
+				if (isset($data['Redirects']) && isset($data['Redirects'][$source])) {
+					$target = $data['Redirects'][$source];
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	public function gui($id, &$out, &$handled) {
 		if (explode('$',$id,2)[0] === 'oidplus:resources') {
@@ -131,8 +148,19 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				$out['text'] = '<p>'._L('This request is invalid').'</p>';
 				return;
 			}
-
+			
 			$out['text'] = '';
+			
+			// Redirections
+			
+			if ($file != '') {
+				$target = null;
+				if (self::checkRedirect($file, $target)) {
+					$out['title'] = _L('Please wait...');
+					$out['text'] = '<p>'._L('You are being redirected...').'</p><script>window.location.href = '.js_escape($target).';</script>';
+					return;
+				}
+			}
 
 			// First, "Go back to" line
 

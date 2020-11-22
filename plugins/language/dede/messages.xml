@@ -6270,6 +6270,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		You are being redirected...
+		]]></source>
+		<target><![CDATA[
+		Sie werden weitergeleitet...
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		You are logged in as %1
 		]]></source>
 		<target><![CDATA[
