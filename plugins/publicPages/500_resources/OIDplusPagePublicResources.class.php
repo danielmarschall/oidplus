@@ -184,6 +184,17 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			
 			$out['text'] = '';
 			
+			// Check for permission
+			
+			if ($file != '') {
+				if (!self::mayAccessResource($file)) {
+					$out['title'] = _L('Access denied');
+					$out['icon'] = 'img/error_big.png';
+					$out['text'] = '<p>'._L('Authentication error. Please log in.').'</p>';
+					return;
+				}
+			}
+			
 			// Redirections
 			
 			if ($file != '') {
@@ -195,17 +206,6 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				}
 			}
 
-			// Check for permission
-
-			if ($file != '') {
-				if (!self::mayAccessResource($file)) {
-					$out['title'] = _L('Access denied');
-					$out['icon'] = 'img/error_big.png';
-					$out['text'] = '<p>'._L('Authentication error. Please log in.').'</p>';
-					return;
-				}
-			}
-			
 			// First, "Go back to" line
 
 			if ($file != '') {
