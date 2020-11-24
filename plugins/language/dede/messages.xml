@@ -3622,6 +3622,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		On Linux, it should be installed by default
+		]]></source>
+		<target><![CDATA[
+		Unter Linux ist diese Erweiterung im Normalfall aktiviert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		On Windows, install it by enabling the line %1 in your PHP.ini
 		]]></source>
 		<target><![CDATA[
@@ -5846,18 +5854,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Unexpected security level in %1 (expect PUBLIC, RA or ADMIN)
-		]]></source>
-		<target><![CDATA[
-		Unerwartete Sicherheitsstufe in %1 (Erwartet: PUBLIC, RA oder ADMIN)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Unexpected logger component "%1" in mask code "%2"
 		]]></source>
 		<target><![CDATA[
 		Unerwartete Logbuch-Komponente "%1" in Mask-Code "%2"
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unexpected security level in %1 (expect PUBLIC, RA or ADMIN)
+		]]></source>
+		<target><![CDATA[
+		Unerwartete Sicherheits-Stufe in %1 (Erwartet: PUBLIC, RA oder ADMIN)
 		]]></target>
 	</message>
 	<message>

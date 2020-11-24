@@ -76,10 +76,10 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		if (preg_match('@<h6>(.+)</h6>@ismU', $cont, $m)) return $m[1];
 		return pathinfo($file, PATHINFO_FILENAME); // filename without extension
 	}
-	
+
 	protected static function mayAccessResource($source) {
 		if (OIDplus::authUtils()::isAdminLoggedIn()) return true;
-		
+
 		$candidates = array(
 			OIDplus::basePath().'/userdata/resources/security.ini',
 			OIDplus::basePath().'/res/security.ini'
@@ -98,7 +98,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					} else if ($level == 'ADMIN') {
 						return OIDplus::authUtils()::isAdminLoggedIn();
 					} else {
-						throw new OIDplusException('Unexpected security level in %1 (expect PUBLIC, RA or ADMIN)', $ini_file);
+						throw new OIDplusException(_L('Unexpected security level in %1 (expect PUBLIC, RA or ADMIN)', $ini_file));
 					}
 				}
 			}
@@ -124,9 +124,9 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			if (strpos($x,'$') !== false) continue;
 			$out[] = $x;
 		}
-		
+
 		$out = array_unique($out);
-		
+
 		return array_filter($out, function($v, $k) {
 			return self::mayAccessResource($v);
 		}, ARRAY_FILTER_USE_BOTH);
@@ -138,7 +138,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		if (file_exists($candidate1) || is_dir($candidate1)) return "userdata/resources/$rel";
 		if (file_exists($candidate2) || is_dir($candidate2)) return "res/$rel";
 	}
-	
+
 	protected static function checkRedirect($source, &$target): bool {
 		$candidates = array(
 			OIDplus::basePath().'/userdata/resources/redirect.ini',
@@ -181,11 +181,11 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				$out['text'] = '<p>'._L('This request is invalid').'</p>';
 				return;
 			}
-			
+
 			$out['text'] = '';
-			
+
 			// Check for permission
-			
+
 			if ($file != '') {
 				if (!self::mayAccessResource($file)) {
 					$out['title'] = _L('Access denied');
@@ -194,9 +194,9 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					return;
 				}
 			}
-			
+
 			// Redirections
-			
+
 			if ($file != '') {
 				$target = null;
 				if (self::checkRedirect($file, $target)) {
@@ -248,7 +248,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			$realfile = self::realname($file);
 			// $realfile2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $realfile);
 			// if (file_exists($realfile2)) $realfile = $realfile2;
-			
+
 			if (file_exists($realfile) && (!is_dir($realfile))) {
 				if ((substr($file,-4,4) == '.url') || (substr($file,-5,5) == '.link')) {
 					$out['title'] = $this->getHyperlinkTitle($realfile);
