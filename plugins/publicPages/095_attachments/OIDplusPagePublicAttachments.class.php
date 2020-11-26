@@ -20,7 +20,7 @@
 class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 	public static function getUploadDir($id) {
-		$path = realpath(__DIR__.'/../../../').'/userdata/attachments/';
+		$path = realpath(__DIR__.'/../../../userdata/attachments/');
 
 		$obj = OIDplusObject::parse($id);
 		if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));

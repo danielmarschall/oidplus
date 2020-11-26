@@ -54,7 +54,9 @@ echo '<p>'._L('Please repeat the password input:').'<br><input id="admin_passwor
 
 echo '<h3>'._L('Database connectivity').'</h3>';
 
-echo '<p><a href="../doc/database_connectivity_diagram.png" target="_blank"><img src="../doc/database_connectivity_diagram.png" width="20%" alt="'._L('Database connectivity diagram').'" title="'._L('Database connectivity diagram').'"></a></p>';
+if (file_exists(__DIR__ . '/../doc/database_connectivity_diagram.png')) {
+	echo '<p><a href="../doc/database_connectivity_diagram.png" target="_blank"><img src="../doc/database_connectivity_diagram.png" width="20%" alt="'._L('Database connectivity diagram').'" title="'._L('Database connectivity diagram').'"></a></p>';
+}
 
 echo _L('Database plugin').': <select name="db_plugin" onChange="dbplugin_changed()" id="db_plugin">';
 
