@@ -70,6 +70,7 @@ function oidplus_get_missing_dependencies() {
 		//              includes/classes/OIDplus.class.php (Translation)
 		//              plugins/adminPages/400_oidinfo_export/OIDplusPageAdminOIDInfoExport.class.php (Import OID from oid-info.com)
 		//              dev/translation/*.phps (only for developers)
+		// Note: This should not happen because of simplexml_supplement.inc.php
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			$install_hint = _L('On Windows, it should be installed by default');
 		} else {
