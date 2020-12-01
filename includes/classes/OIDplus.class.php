@@ -1132,12 +1132,12 @@ class OIDplus {
 	private static $translationArray = array();
 	protected static function getTranslationFileContents($translation_file) {
 		// First, try the cache
-		$cache_file = __DIR__ . '/../../userdata/cache/.translation_'.md5($translation_file).'.ser';
+		$cache_file = __DIR__ . '/../../userdata/cache/translation_'.md5($translation_file).'.ser';
 		if (file_exists($cache_file) && (filemtime($cache_file) == filemtime($translation_file))) {
 			$cac = @unserialize(file_get_contents($cache_file));
 			if ($cac) return $cac;
 		}
-	
+
 		// If not successful, then load the XML file
 		$xml = @simplexml_load_string(file_get_contents($translation_file));
 		if (!$xml) return array(); // if there is an UTF-8 or parsing error, don't output any errors, otherwise the JavaScript is corrupt and the page won't render correctly

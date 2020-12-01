@@ -85,4 +85,11 @@ if (file_exists(__DIR__ . '/userdata/styles/setup_add.css')) {
 
 # ---
 
-httpOutWithETag($out, 'text/css', 'oidplus_setup.css');
+if (OIDplus::baseConfig()->getValue('DEBUG')) {
+	// In debug mode, we might get PHP error messages (see "error_reporting" above),
+	// so it would be severe if we would allow ETAG! (since $out does not contain the PHP error messages!)
+	header('Content-Type:text/css');
+	echo $out;
+} else {
+	httpOutWithETag($out, 'text/css', 'oidplus_setup.css');
+}

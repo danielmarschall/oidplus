@@ -26,6 +26,8 @@ if (!isset($_GET['number'])) die("Argument 'number' is missing");
 
 require_once __DIR__ . '/../../../includes/functions.inc.php';
 
+error_reporting(0);
+
 $number = $_GET['number'];
 $number = preg_replace("/[^0-9]/", "", $number);
 $number = substr($number, 0, 20);

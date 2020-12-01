@@ -23,6 +23,8 @@ define('SPACER_PNG', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bK
 
 require_once __DIR__ . '/../../../includes/functions.inc.php';
 
+error_reporting(0);
+
 if (!isset($_REQUEST['file'])) {
 	httpOutWithETag(SPACER_PNG, 'image/png', 'spacer.png');
 } else {

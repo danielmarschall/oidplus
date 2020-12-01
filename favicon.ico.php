@@ -19,6 +19,8 @@
 
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
+error_reporting(0);
+
 if (file_exists(__DIR__.'/userdata/favicon.ico')) {
 	$out = file_get_contents(__DIR__.'/userdata/favicon.ico');
 } else {
