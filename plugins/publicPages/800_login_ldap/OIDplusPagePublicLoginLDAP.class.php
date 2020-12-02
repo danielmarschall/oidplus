@@ -20,11 +20,12 @@
 class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
 	protected function ldapAuthByEMail($email, $password) {
-		$cfg_ldap_server   = OIDplus::baseConfig()->getValue('LDAP_SERVER');
-		$cfg_ldap_port     = OIDplus::baseConfig()->getValue('LDAP_PORT', 389);
-		$cfg_ldap_base_dn  = OIDplus::baseConfig()->getValue('LDAP_BASE_DN');
-		$cfg_ldap_rdn      = OIDplus::baseConfig()->getValue('LDAP_CONTROLUSER_RDN');
-		$cfg_ldap_password = OIDplus::baseConfig()->getValue('LDAP_CONTROLUSER_PASSWORD');
+		$cfg_ldap_server      = OIDplus::baseConfig()->getValue('LDAP_SERVER');
+		$cfg_ldap_port        = OIDplus::baseConfig()->getValue('LDAP_PORT', 389);
+		$cfg_ldap_base_dn     = OIDplus::baseConfig()->getValue('LDAP_BASE_DN');
+		$cfg_ldap_rdn         = OIDplus::baseConfig()->getValue('LDAP_CONTROLUSER_RDN');
+		$cfg_ldap_password    = OIDplus::baseConfig()->getValue('LDAP_CONTROLUSER_PASSWORD');
+		$cfg_ldap_user_filter = OIDplus::baseConfig()->getValue('LDAP_USER_FILTER', '(&(objectClass=user)(cn=*))');
 
 		// Connect to the server
 		if (!empty($cfg_ldap_port)) {
@@ -47,7 +48,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		}
 
 		// Search the user using the email address
-		if (!($result = @ldap_search($ldapconn,$cfg_ldap_base_dn, '(&(objectClass=user)(cn=*))'))) throw new OIDplusException(_L('Error in search query: %1', ldap_error($ldapconn)));
+		if (!($result = @ldap_search($ldapconn,$cfg_ldap_base_dn, $cfg_ldap_user_filter))) throw new OIDplusException(_L('Error in search query: %1', ldap_error($ldapconn)));
 		$data = ldap_get_entries($ldapconn, $result);
 		$found_username = null;
 		for ($i=0; $i<$data['count']; $i++) {

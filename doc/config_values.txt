@@ -249,6 +249,7 @@ OIDplus::baseConfig()->setValue('LDAP_PORT',                 389);
 OIDplus::baseConfig()->setValue('LDAP_BASE_DN',              'DC=COMPANY,DC=local');
 OIDplus::baseConfig()->setValue('LDAP_CONTROLUSER_RDN',      'test@company.local'); // Can be any user that is able to search for users (in order to find who is owning an email address)
 OIDplus::baseConfig()->setValue('LDAP_CONTROLUSER_PASSWORD', 'foobar');
+OIDplus::baseConfig()->setValue('LDAP_USER_FILTER',          '(&(objectClass=user)(cn=*))');
 
 
 ----------------------------------------------------------------------
