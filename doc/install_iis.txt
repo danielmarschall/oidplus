@@ -88,4 +88,22 @@ Install OIDplus to Microsoft IIS
 	http://localhost/oidplus/dev/check_openssl_keygen.php
 	(You need to move the file out of the "dev" directory, because it is secured from being accessed)
 
-(7) Open http://localhost/oidplus and follow the setup instructions
+(7) Edit "C:\Program Files (x86)\PHP\v7.4\php.ini" (you need to run Notepad as administrator)
+
+	Make sure that following extensions are enabled by uncommenting the lines:
+
+	extension=curl
+	extension=openssl
+	extension=mbstring
+
+	And depending on your database connection, you need one of the following extensions:
+
+	extension=mysqli      (if you want to use MySQL/MariaDB)
+	extension=pgsql       (if you want to use PostgreSQL)
+	extension=sqlite3     (if you want to use SQLite)
+	extension=pdo_mysql   (if you want to use MySQL/MariaDB via PDO)
+	extension=pdo_pgsql   (if you want to use PostgreSQL via PDO)
+	extension=pdo_sqlite  (if you want to use SQLite via PDO)
+	extension=odbc        (if you want to use ODBC)
+
+(8) Open http://localhost/oidplus and follow the setup instructions
