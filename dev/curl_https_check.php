@@ -17,21 +17,6 @@
  * limitations under the License.
  */
 
-/*
-
-	If this does not work, do following:
-
-	Download:
-	https://curl.haxx.se/ca/cacert.pem
-
-	Place it somewhere.
-
-	Edit PHP.INI:
-	[curl]
-	curl.cainfo=C:\inetpub\cacert.pem
-
-*/
-
 $url = 'https://www.viathinksoft.de/';
 
 if (!function_exists("curl_init")) {

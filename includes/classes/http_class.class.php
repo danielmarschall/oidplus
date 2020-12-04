@@ -1497,7 +1497,7 @@ class http_class {
 
 			if ((ini_get('curl.cainfo') == '') && (file_exists(__DIR__.'/../../3p/certs/cacert.pem'))) {
 				// Added for ViaThinkSoft OIDplus to handle wrongly configured CURL installations (Windows)
-				curl_setopt($ch, CURLOPT_CAINFO, __DIR__.'/../../3p/certs/cacert.pem');
+				curl_setopt($this->connection, CURLOPT_CAINFO, __DIR__.'/../../3p/certs/cacert.pem');
 			}
 
 			if(strlen($error)==0)
