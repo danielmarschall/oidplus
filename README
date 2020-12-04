@@ -8,8 +8,8 @@ OIDplus is an OpenSource software solution by ViaThinkSoft that can be used by
 Registration Authorities to manage and publish information about
 Object Identifiers (OIDs), Globally Unique Identifiers (GUIDs), and much more.
 
-A demo version of OIDplus can be found here:
-https://oidplus.viathinksoft.com/oidplus_demo/
+More information as well as a demo version of OIDplus can be found here:
+https://www.oidplus.com/
 
 
 Operate your own copy of OIDplus
@@ -29,13 +29,10 @@ https://www.viathinksoft.com/projects/oidplus
 
 System requirements:
 - PHP compatible web server (tested with Apache 2, nginx and Microsoft IIS)
-- PHP 7.0 or higher
-	with extension GMP or BCMath (usually part of every PHP installation)
-	with extension MBString or iconv (usually part of every PHP installation)
-	with extension SimpleXML
-	with extension MySQLi, PostgreSQL, SQLite3, PDO or ODBC
+- PHP 7.0 or higher (also tested with PHP 8.0)
+	with extension MySQLi, PostgreSQL, SQLite3, PDO or ODBC, depending on your database
 - Database: MySQL/MariaDB (recommended), PostgreSQL, SQLite3 or Microsoft SQL Server
-- Independent of operating system (tested with Windows and Linux)
+- Independent of operating system (tested with Windows, Linux and macOS X)
 
 
 Reporting a bug
