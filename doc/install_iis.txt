@@ -49,27 +49,7 @@ Install OIDplus to Microsoft IIS
 
 	%windir%\system32\inetsrv\appcmd.exe unlock config -section:system.webServer/security/authentication/anonymousAuthentication
 
-(5) Solving problem "SSL Certificate Problem: Unable to get local issuer certificate"
-    (e.g. prevents you from registering your system in the admin control panel):
-
-	Download https://curl.haxx.se/ca/cacert.pem and place it in "C:\inetpub\"
-
-	Edit "C:\Program Files (x86)\PHP\v7.4\php.ini" (you need to run Notepad as administrator)
-	Search for "curl.cainfo" and change the line into:
-	curl.cainfo=C:\inetpub\cacert.pem
-
-	Attention: Placing the file in "C:\Program Files (x86)\PHP\v7.4\extras\ssl\"
-	           sometimes causes a lot of problems because PHP has problems with the SysWOW64 replacement.
-	           On some systems it works if "(x86)" is simply removed, but on other systems it
-	           does not work at all. Instead, weird things happen like "MBstring not found" if
-	           you set "curl.cainfo" to a wrong value (a bug in PHP?!)
-	           So to be sure, use a different path, e.g. "C:\inetpub\"
-
-	If you want to double-check that everything works, try running
-	http://localhost/oidplus/dev/curl_https_check.php
-	(You need to move the file out of the "dev" directory, because it is secured from being accessed)
-	
-(6) Configure OpenSSL
+(5) Configure OpenSSL
 
 	Create the directory
 	C:\Program Files (x86)\Common Files\SSL
@@ -88,7 +68,7 @@ Install OIDplus to Microsoft IIS
 	http://localhost/oidplus/dev/check_openssl_keygen.php
 	(You need to move the file out of the "dev" directory, because it is secured from being accessed)
 
-(7) Edit "C:\Program Files (x86)\PHP\v7.4\php.ini" (you need to run Notepad as administrator)
+(6) Edit "C:\Program Files (x86)\PHP\v7.4\php.ini" (you need to run Notepad as administrator)
 
 	Make sure that following extensions are enabled by uncommenting the lines:
 
@@ -106,4 +86,4 @@ Install OIDplus to Microsoft IIS
 	extension=pdo_sqlite  (if you want to use SQLite via PDO)
 	extension=odbc        (if you want to use ODBC)
 
-(8) Open http://localhost/oidplus and follow the setup instructions
+(7) Open http://localhost/oidplus and follow the setup instructions

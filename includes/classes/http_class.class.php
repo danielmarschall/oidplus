@@ -1494,6 +1494,12 @@ class http_class {
 		if($this->use_curl)
 		{
 			$error=(($this->connection=curl_init($this->protocol."://".$this->host_name.($host_port==$default_port ? "" : ":".strval($host_port))."/")) ? "" : "Could not initialize a CURL session");
+
+			if ((ini_get('curl.cainfo') == '') && (file_exists(__DIR__.'/../../3p/certs/cacert.pem'))) {
+				// Added for ViaThinkSoft OIDplus to handle wrongly configured CURL installations (Windows)
+				curl_setopt($ch, CURLOPT_CAINFO, __DIR__.'/../../3p/certs/cacert.pem');
+			}
+
 			if(strlen($error)==0)
 			{
 				if(IsSet($arguments["SSLCertificateFile"]))

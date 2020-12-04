@@ -36,11 +36,12 @@ if ($_GET['state'] != $_COOKIE['csrf_token']) {
 	die('Invalid CSRF token');
 }
 
-if (!function_exists('curl_exec')) {
+if (!function_exists('curl_init')) {
 	die(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 }
 
 $ch = curl_init();
+if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
 curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/token");
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS,
@@ -82,6 +83,7 @@ if (!empty($email)) {
 
 		// Query user infos
 		$ch = curl_init('https://www.googleapis.com/oauth2/v3/userinfo'); // Initialise cURL
+		if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
 		$data_string = '';
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 			'Content-Length: ' . strlen($data_string),
@@ -114,6 +116,7 @@ if (!empty($email)) {
 // We now have the data of the person that wanted to log in
 // So we can log off again
 $ch = curl_init();
+if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
 curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/revoke");
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS,

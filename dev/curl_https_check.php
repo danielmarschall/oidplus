@@ -34,7 +34,24 @@
 
 $url = 'https://www.viathinksoft.de/';
 
+if (!function_exists("curl_init")) {
+	echo '<p><font color="red">CURL not installed!</font></p>';
+	die();
+}
+
 $ch = curl_init();
+if (ini_get('curl.cainfo') == '') {
+	if (file_exists(__DIR__.'/../3p/certs/cacert.pem')) {
+		curl_setopt($ch, CURLOPT_CAINFO, __DIR__.'/../3p/certs/cacert.pem');
+		echo '<p>Loaded fallback CURLOPT_CAINFO from OIDplus</p>';
+	}
+	else if (file_exists(__DIR__.'/3p/certs/cacert.pem')) {
+		curl_setopt($ch, CURLOPT_CAINFO, __DIR__.'/3p/certs/cacert.pem');
+		echo '<p>Loaded fallback CURLOPT_CAINFO from OIDplus</p>';
+	} else {
+		echo '<p><font color="red">curl.cainfo is missing and fallback certificates (3p/certs/cacert.pem) not found</font></p>';
+	}
+}
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_HEADER, TRUE);
 curl_setopt($ch, CURLOPT_NOBODY, TRUE); // remove body
@@ -44,7 +61,7 @@ $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
 if ($httpCode != 0) {
-	echo '<font color="green">CURL to HTTPS works!</font>';
+	echo '<p><font color="green">CURL to HTTPS works!</font></p>';
 } else {
-	echo '<font color="red">CURL to HTTPS does not work!</font>';
+	echo '<p><font color="red">CURL to HTTPS does not work!</font></p>';
 }

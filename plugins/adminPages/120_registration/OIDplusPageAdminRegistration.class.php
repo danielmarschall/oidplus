@@ -129,11 +129,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				"signature" => base64_encode($signature)
 			);
 
-			if (!function_exists('curl_exec')) {
+			if (!function_exists('curl_init')) {
 				throw new Exception(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 			}
 
 			$ch = curl_init();
+			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
 			if (function_exists('gzdeflate')) {
@@ -231,11 +232,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 					"signature" => base64_encode($signature)
 				);
 
-				if (!function_exists('curl_exec')) {
+				if (!function_exists('curl_init')) {
 					return false; // throw new Exception(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 				}
 
 				$ch = curl_init();
+				if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
 				curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 				curl_setopt($ch, CURLOPT_POST, 1);
 				if (function_exists('gzdeflate')) {
@@ -329,11 +331,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			);
 
 
-			if (!function_exists('curl_exec')) {
+			if (!function_exists('curl_init')) {
 				return false; // throw new Exception(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 			}
 
 			$ch = curl_init();
+			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
 			if (function_exists('gzdeflate')) {
@@ -469,7 +472,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 		echo $info;
 
-		if (!function_exists('curl_exec')) {
+		if (!function_exists('curl_init')) {
 			echo '<p><font color="red">';
 			echo _L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl').' ';
 			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
@@ -482,6 +485,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 		$testurl = 'https://www.google.com/';
 		$ch = curl_init();
+		if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
 		curl_setopt($ch, CURLOPT_URL, $testurl);
 		curl_setopt($ch, CURLOPT_HEADER, TRUE);
 		curl_setopt($ch, CURLOPT_NOBODY, TRUE);

@@ -37,13 +37,14 @@ if ($_GET['state'] != $_COOKIE['csrf_token']) {
 	die('Invalid CSRF token');
 }
 
-if (!function_exists('curl_exec')) {
+if (!function_exists('curl_init')) {
 	die(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 }
 
 // Get access token
 
 $ch = curl_init();
+if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
 curl_setopt($ch, CURLOPT_URL,"https://graph.facebook.com/v8.0/oauth/access_token?".
 	"client_id=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID'))."&".
 	"redirect_uri=".urlencode(OIDplus::getSystemUrl(false).OIDplus::webpath(__DIR__).'oauth.php')."&".
@@ -64,6 +65,7 @@ $access_token = $data['access_token'];
 // Get user infos
 
 $ch = curl_init();
+if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
 curl_setopt($ch, CURLOPT_URL,"https://graph.facebook.com/v8.0/me?".
 	"fields=id,email,name&".
 	"access_token=".urlencode($access_token)
