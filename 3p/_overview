@@ -6,6 +6,10 @@ bignumber.js:
 	Version:  4d5ba0f on 29 September 2020 (Version 9.0.1)
 	Download: https://github.com/MikeMcl/bignumber.js
 
+Bundle of CA Root Certificates:
+	Version:  Wed Oct 14 03:12:15 2020 GMT
+	Download: https://curl.haxx.se/ca/cacert.pem
+
 jsTree:
 	License:  MIT
 	Version:  3.3.10
