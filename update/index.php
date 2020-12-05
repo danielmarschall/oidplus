@@ -113,31 +113,38 @@ if (isset($_REQUEST['update_now'])) {
 		}
 	}
 
-	echo '<p><u>'._L('There are two possibilities how to keep OIDplus up-to-date').':</u></p>';
+	echo '<p><u>'._L('There are three possibilities how to keep OIDplus up-to-date').':</u></p>';
 
 	echo '<p><b>'._L('Method A').'</b>: '._L('Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co %1</code> and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!',htmlentities(OIDPLUS_REPO).'/trunk').'</p>';
 
-	echo '<p><b>'._L('Method B').':</b> '._L('Install OIDplus by downloading a ZIP file from www.viathinksoft.com, which contains an SVN snapshot, and extract it to your webspace. The ZIP file contains a file named "oidplus_version.txt" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.').'</p>';
+	echo '<p><b>'._L('Method B').'</b>: '._L('Install OIDplus using the Git client in your SSH/Linux shell using the command <code>git clone %1</code> and update it regularly with the command <code>git pull</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!','https://github.com/danielmarschall/oidplus.git').'</p>';
+
+	echo '<p><b>'._L('Method C').':</b> '._L('Install OIDplus by downloading a ZIP file from www.viathinksoft.com, which contains an SVN snapshot, and extract it to your webspace. The ZIP file contains a file named "oidplus_version.txt" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.').'</p>';
 
 	echo '<hr>';
 
-	$svn_wc_exists = is_dir(OIDplus::basePath().'/.svn');
-	$snapshot_exists = file_exists(OIDplus::basePath().'/oidplus_version.txt');
+	//$svn_wc_exists = is_dir(OIDplus::basePath().'/.svn');
+	//$snapshot_exists = file_exists(OIDplus::basePath().'/oidplus_version.txt');
+	$installType = OIDplus::getInstallType();
 
-	if ($svn_wc_exists && $snapshot_exists) {
-		echo '<font color="red">'.strtoupper(_L('Error')).': '._L('Both, oidplus_version.txt and .svn directory exist! Therefore, the version is ambiguous!').'</font>';
-		$job = new VNagMonitorDummy(VNag::STATUS_CRITICAL, 'Both, oidplus_version.txt and .svn directory exist! Therefore, the version is ambiguous!'); // do not translate
+	if ($installType === 'ambigous') {
+		echo '<font color="red">'.strtoupper(_L('Error')).': '._L('Multiple version files/directories (oidplus_version.txt, .git and .svn) are existing! Therefore, the version is ambiguous!').'</font>';
+		$job = new VNagMonitorDummy(VNag::STATUS_CRITICAL, 'Multiple version files/directories (oidplus_version.txt, .git and .svn) are existing! Therefore, the version is ambiguous!'); // do not translate
 		$job->http_visual_output = VNag::OUTPUT_NEVER;
 		$job->run();
 		unset($job);
-	} else if (!$svn_wc_exists && !$snapshot_exists) {
-		echo '<font color="red">'.strtoupper(_L('Error')).': '._L('Neither oidplus_version.txt, nor .svn directory exist! Therefore, the version cannot be determined, and the update needs to be applied manually!').'</font>';
-		$job = new VNagMonitorDummy(VNag::STATUS_CRITICAL, 'Neither oidplus_version.txt, nor .svn directory exist! Therefore, the version cannot be determined, and the update needs to be applied manually!'); // do not translate
+	} else if ($installType === 'unknown') {
+		echo '<font color="red">'.strtoupper(_L('Error')).': '._L('The version cannot be determined, and the update needs to be applied manually!').'</font>';
+		$job = new VNagMonitorDummy(VNag::STATUS_CRITICAL, 'The version cannot be determined, and the update needs to be applied manually!'); // do not translate
 		$job->http_visual_output = VNag::OUTPUT_NEVER;
 		$job->run();
 		unset($job);
-	} else if ($svn_wc_exists) {
-		echo '<p>'._L('You are using <b>method A</b> (SVN working copy).').'</p>';
+	} else if (($installType === 'svn-wc') || ($installType === 'git-wc')) {
+		if ($installType === 'svn-wc') {
+			echo '<p>'._L('You are using <b>method A</b> (SVN working copy).').'</p>';
+		} else {
+			echo '<p>'._L('You are using <b>method B</b> (Git working copy).').'</p>';
+		}
 
 		$local_installation = OIDplus::getVersion();
 		$svn = new phpsvnclient(OIDPLUS_REPO);
@@ -146,10 +153,13 @@ if (isset($_REQUEST['update_now'])) {
 		echo _L('Local installation: %1',($local_installation ? $local_installation : _L('unknown'))).'<br>';
 		echo _L('Latest published version: %1',($newest_version ? $newest_version : _L('unknown'))).'<br>';
 
-		if (!$local_installation) {
-			echo '<p><font color="red">'._L('OIDplus could not determine its version. (Required: svnupdate shell access or SQLite3). Please update your system manually via the SVN "update" command regularly.').'</font></p>';
+		$requireInfo = ($installType === 'svn-wc') ? _L('shell access with svn/svnversion tool, or PDO/SQLite3 PHP extension') : _L('shell access with Git client');
+		$updateCommand = ($installType === 'svn-wc') ? 'svn update' : 'git pull';
 
-			$job = new VNagMonitorDummy(VNag::STATUS_WARNING, 'OIDplus could not determine its version. (Required: svnupdate shell access or SQLite3). Please update your system manually via the SVN "update" command regularly.'); // do not translate
+		if (!$local_installation) {
+			echo '<p><font color="red">'._L('OIDplus could not determine its version. (Required: %1). Please update your system manually via the "%2" command regularly.',$requireInfo,$updateCommand).'</font></p>';
+
+			$job = new VNagMonitorDummy(VNag::STATUS_WARNING, 'OIDplus could not determine its version. Please update your system manually via the "'.$updateCommand.'" command regularly.'); // do not translate
 			$job->http_visual_output = VNag::OUTPUT_NEVER;
 			$job->run();
 			unset($job);
@@ -161,7 +171,7 @@ if (isset($_REQUEST['update_now'])) {
 			$job->run();
 			unset($job);
 		} else {
-			echo '<p><font color="blue">'._L('Please enter <code>svn update</code> into the SSH shell to update OIDplus to the latest version.').'</font></p>';
+			echo '<p><font color="blue">'._L('Please enter %1 into the SSH shell to update OIDplus to the latest version.','<code>'.$updateCommand.'</code>').'</font></p>';
 
 			echo '<h2>'._L('Preview of update %1 &rarr; %2',$local_installation,$newest_version).'</h2>';
 			$svn = new phpsvnclient(OIDPLUS_REPO);
@@ -179,8 +189,8 @@ if (isset($_REQUEST['update_now'])) {
 			$job->run();
 			unset($job);
 		}
-	} else if ($snapshot_exists) {
-		echo '<p>'._L('You are using <b>method B</b> (Snapshot ZIP file with oidplus_version.txt file).').'</p>';
+	} else if ($installType === 'svn-snapshot') {
+		echo '<p>'._L('You are using <b>method C</b> (Snapshot ZIP file with oidplus_version.txt file).').'</p>';
 
 		$local_installation = OIDplus::getVersion();
 		$svn = new phpsvnclient(OIDPLUS_REPO);

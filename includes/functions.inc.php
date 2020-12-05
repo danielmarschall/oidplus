@@ -223,3 +223,64 @@ function sha3_512($password, $raw_output=false) {
 		return bb\Sha3\Sha3::hash($password, 512, $raw_output);
 	}
 }
+
+function get_svn_revision($dir='') {
+	if (!empty($dir)) $dir .= '/';
+
+	// Try to get the version via SQLite3
+	if (class_exists('SQLite3')) {
+		try {
+			$db = new SQLite3($dir.'.svn/wc.db');
+			$results = $db->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
+			while ($row = $results->fetchArray()) {
+				return ($cachedVersion = 'svn-'.$row['rev']); // do not translate
+			}
+			$db->close();
+			$db = null;
+		} catch (Exception $e) {
+		}
+	}
+	if (class_exists('PDO')) {
+		try {
+			$pdo = new PDO('sqlite:'.$dir.'.svn/wc.db');
+			$res = $pdo->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
+			$row = $res->fetch();
+			if ($row !== false) {
+				return ($cachedVersion = 'svn-'.$row['rev']); // do not translate
+			}
+			$pdo = null;
+		} catch (Exception $e) {
+		}
+	}
+
+	// Try to find out the SVN version using the shell
+	// We don't prioritize this method, because a failed shell access will flood the apache error log with STDERR messages
+	$output = @shell_exec('svnversion '.escapeshellarg($dir));
+	$match = array();
+	if (preg_match('/\d+/', $output, $match)) {
+		return ($cachedVersion = 'svn-'.$match[0]); // do not translate
+	}
+
+	$output = @shell_exec('svn info '.escapeshellarg($dir));
+	if (preg_match('/Revision:\s*(\d+)/m', $output, $match)) { // do not translate
+		return ($cachedVersion = 'svn-'.$match[1]); // do not translate
+	}
+}
+
+function get_gitsvn_revision($dir='') {
+	$ec = -1;
+	$out = array();
+	if (!empty($dir)) {
+		@exec('cd '.escapeshellarg($dir).' && git log', $out, $ec);
+	} else {
+		@exec('git log', $out, $ec);
+	}
+	if ($ec == 0) {
+		$out = implode("\n", $out);
+		$m = array();
+		if (preg_match('%git-svn-id: (.+)@(\\d+) %ismU', $out, $m)) {
+			return $m[2];
+		}
+	}
+	return false;
+}
