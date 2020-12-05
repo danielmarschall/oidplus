@@ -766,14 +766,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Both, oidplus_version.txt and .svn directory exist! Therefore, the version is ambiguous!
-		]]></source>
-		<target><![CDATA[
-		Es existieren sowohl die Datei oidplus_version.txt als auch das Verzeichnis ".svn". Die Version von OIDplus kann daher nicht eindeutig bestimmt werden.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Bytes
 		]]></source>
 		<target><![CDATA[
@@ -2438,6 +2430,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Install OIDplus using the Git client in your SSH/Linux shell using the command <code>git clone %1</code> and update it regularly with the command <code>git pull</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!
+		]]></source>
+		<target><![CDATA[
+		OIDplus durch einen Git-Client aus dem GitHub-Repository herunterladen und aktualisieren. Bei Linux ist eine SSH/Linux-Shell erforderlich. Der Befehl zum erstmaligen Herunterladen ist <code>git clone %1</code>. Im Anschluss wird bei jedem Update <code>git pull</code> ausgeführt . Dies wird automatisch die neuste Version herunterladen, und im Falle eines Änderungskonflikts wird der Anwender gefragt, was getan werden soll. Diese Methode wird empfohlen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co %1</code> and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!
 		]]></source>
 		<target><![CDATA[
@@ -2990,6 +2990,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Method C
+		]]></source>
+		<target><![CDATA[
+		Methode C
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		MiB
 		]]></source>
 		<target><![CDATA[
@@ -3026,6 +3034,14 @@
 		]]></source>
 		<target><![CDATA[
 		Mehr Informationen auf %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Multiple version files/directories (oidplus_version.txt, .git and .svn) are existing! Therefore, the version is ambiguous!
+		]]></source>
+		<target><![CDATA[
+		Mehrfache Versionsdateien und -verzeichnisse existieren (oidplus_version.txt, .git und .svn). Aus diesem Grund ist die Version mehrdeutig!
 		]]></target>
 	</message>
 	<message>
@@ -3082,14 +3098,6 @@
 		]]></source>
 		<target><![CDATA[
 		Namensbasierte Version 5 / SHA1 UUID mit Namensraum %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Neither oidplus_version.txt, nor .svn directory exist! Therefore, the version cannot be determined, and the update needs to be applied manually!
-		]]></source>
-		<target><![CDATA[
-		Weder oidplus_version.txt, noch das .svn-Verzeichnis existieren! Aus diesem Grund kann die OIDplus-Version nicht eindeutig bestimmt werden, und das Update muss manuell installiert werden!
 		]]></target>
 	</message>
 	<message>
@@ -3438,10 +3446,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		OIDplus could not determine its version. (Required: svnupdate shell access or SQLite3). Please update your system manually via the SVN "update" command regularly.
+		OIDplus could not determine its version. (Required: %1). Please update your system manually via the "%2" command regularly.
 		]]></source>
 		<target><![CDATA[
-		OIDplus konnte seine Version nicht bestimmen. (Erforderlich: svnupdate Shell-Zugriff oder SQLite3). Bitte aktualisieren Sie Ihre OIDplus-Installation mit dem "SVN Update" Programm regelmäßig.
+		Die OIDplus-Version konnte nicht ermittelt werden. (Erforderlich: %1). Bitte aktualisieren Sie OIDplus regelmäßig mit dem Befehl "%2".
 		]]></target>
 	</message>
 	<message>
@@ -3958,10 +3966,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Please enter <code>svn update</code> into the SSH shell to update OIDplus to the latest version.
+		Please create following directory and assign write permissions to it:
 		]]></source>
 		<target><![CDATA[
-		Bitte geben Sie <code>svn update</code> in der Shell/Eingabe-Aufforderung ein, um OIDplus auf die neuste Version zu aktualisieren.
+		Bitte erstellen Sie das folgende Verzeichnis und geben Sie diesem Schreibrechte:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter %1 into the SSH shell to update OIDplus to the latest version.
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie %1 in die SSH Shell ein, um OIDplus auf die neuste Version zu aktualisieren.
 		]]></target>
 	</message>
 	<message>
@@ -5606,10 +5622,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		There are two possibilities how to keep OIDplus up-to-date
+		The version cannot be determined, and the update needs to be applied manually!
 		]]></source>
 		<target><![CDATA[
-		Es gibt zwei Möglichkeiten, wie Sie OIDplus auf den aktuellsten Stand halten können
+		Die Version konnte nicht ermittelt werden und das Update muss daher manuell durchgeführt werden!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		There are three possibilities how to keep OIDplus up-to-date
+		]]></source>
+		<target><![CDATA[
+		Es gibt drei Möglichkeiten, um OIDplus auf dem aktuellsten Stand zu halten
 		]]></target>
 	</message>
 	<message>
@@ -6318,10 +6342,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		You are using <b>method B</b> (Snapshot ZIP file with oidplus_version.txt file).
+		You are using <b>method B</b> (Git working copy).
 		]]></source>
 		<target><![CDATA[
-		Sie verwenden <b>Methode B</b> (ZIP-Archiv mit SVN-Snapshot und oidplus_version.txt-Datei).
+		Sie verwenden <b>Methode B</b> (Git Arbeitskopie).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You are using <b>method C</b> (Snapshot ZIP file with oidplus_version.txt file).
+		]]></source>
+		<target><![CDATA[
+		Sie verwenden <b>Methode C</b> (ZIP-Archiv mit SVN-Snapshot und oidplus_version.txt-Datei).
 		]]></target>
 	</message>
 	<message>
@@ -6722,6 +6754,22 @@
 		]]></source>
 		<target><![CDATA[
 		reCAPTCHA aktiviert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		shell access with Git client
+		]]></source>
+		<target><![CDATA[
+		Shell-Zugriff mit Git-Client
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		shell access with svn/svnversion tool, or PDO/SQLite3 PHP extension
+		]]></source>
+		<target><![CDATA[
+		Shell-Zugriff mit svn oder svnversion Tool oder PDO/SQLite3 PHP-Erweiterung
 		]]></target>
 	</message>
 	<message>

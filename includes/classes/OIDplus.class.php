@@ -907,16 +907,28 @@ class OIDplus {
 	}
 
 	public static function getInstallType() {
-		if (!file_exists(OIDplus::basePath().'/oidplus_version.txt') && !is_dir(OIDplus::basePath().'/.svn')) {
+		$counter = 0;
+
+		if ($version_file_exists = file_exists(OIDplus::basePath().'/oidplus_version.txt'))
+			$counter++;
+		if ($svn_dir_exists = is_dir(OIDplus::basePath().'/.svn'))
+			$counter++;
+		if ($git_dir_exists = is_dir(OIDplus::basePath().'/.git'))
+			$counter++;
+
+		if ($counter === 0) {
 			return 'unknown'; // do not translate
 		}
-		if (file_exists(OIDplus::basePath().'/oidplus_version.txt') && is_dir(OIDplus::basePath().'/.svn')) {
+		if ($counter > 1) {
 			return 'ambigous'; // do not translate
 		}
-		if (is_dir(OIDplus::basePath().'/.svn')) {
+		if ($svn_dir_exists) {
 			return 'svn-wc'; // do not translate
 		}
-		if (file_exists(OIDplus::basePath().'/oidplus_version.txt')) {
+		if ($git_dir_exists) {
+			return 'git-wc'; // do not translate
+		}
+		if ($version_file_exists) {
 			return 'svn-snapshot'; // do not translate
 		}
 	}
@@ -940,59 +952,28 @@ class OIDplus {
 			return $cachedVersion;
 		}
 
-		if (file_exists(OIDplus::basePath().'/oidplus_version.txt') && is_dir(OIDplus::basePath().'/.svn')) {
-			return ($cachedVersion = false); // version is ambiguous
+		$installType = OIDplus::getInstallType();
+
+		if ($installType === 'svn-wc') {
+			$ver = get_svn_revision(OIDplus::basePath());
+			if ($ver)
+				return ($cachedVersion = 'svn-'.$ver);
 		}
 
-		if (is_dir(OIDplus::basePath().'/.svn')) {
-			// Try to get the version via SQLite3
-			if (class_exists('SQLite3')) {
-				try {
-					$db = new SQLite3(OIDplus::basePath().'/.svn/wc.db');
-					$results = $db->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
-					while ($row = $results->fetchArray()) {
-						return ($cachedVersion = 'svn-'.$row['rev']); // do not translate
-					}
-					$db->close();
-					$db = null;
-				} catch (Exception $e) {
-				}
-			}
-			if (class_exists('PDO')) {
-				try {
-					$pdo = new PDO('sqlite:' . OIDplus::basePath().'/.svn/wc.db');
-					$res = $pdo->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
-					$row = $res->fetch();
-					if ($row !== false) {
-						return ($cachedVersion = 'svn-'.$row['rev']); // do not translate
-					}
-					$pdo = null;
-				} catch (Exception $e) {
-				}
-			}
-
-			// Try to find out the SVN version using the shell
-			// We don't prioritize this method, because a failed shell access will flood the apache error log with STDERR messages
-			$output = @shell_exec('svnversion '.escapeshellarg(OIDplus::basePath()));
-			$match = array();
-			if (preg_match('/\d+/', $output, $match)) {
-				return ($cachedVersion = 'svn-'.$match[0]); // do not translate
-			}
-
-			$output = @shell_exec('svn info '.escapeshellarg(OIDplus::basePath()));
-			if (preg_match('/Revision:\s*(\d+)/m', $output, $match)) { // do not translate
-				return ($cachedVersion = 'svn-'.$match[1]); // do not translate
-			}
+		if ($installType === 'git-wc') {
+			$ver = get_gitsvn_revision(OIDplus::basePath());
+			if ($ver)
+				return ($cachedVersion = 'svn-'.$ver);
 		}
 
-		if (file_exists(OIDplus::basePath().'/oidplus_version.txt')) {
+		if ($installType === 'svn-snapshot') {
 			$cont = file_get_contents(OIDplus::basePath().'/oidplus_version.txt');
 			$m = array();
 			if (preg_match('@Revision (\d+)@', $cont, $m)) // do not translate
 				return ($cachedVersion = 'svn-'.$m[1]); // do not translate
 		}
 
-		return ($cachedVersion = false);
+		return ($cachedVersion = false); // version ambigous or unknown
 	}
 
 	private static $sslAvailableCache = null;
