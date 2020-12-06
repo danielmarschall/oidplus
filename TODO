@@ -41,11 +41,6 @@ WHOIS
 SETUP
 - There should be a "test database connection" button
 
-WEBSVN UPDATER
-- implement correct support for external repos!!!
-  the GitHub repository should also contain vts_vnag and vts_filetypes
-  ... maybe it would be better if we remove the external repository and include the files in a normal way?
-
 DATA TRANSFER PLUGIN
 - XML import: Let the user decide if existing OIDs shall be overwritten
 - XML import: Let the user decide if RAs should be created

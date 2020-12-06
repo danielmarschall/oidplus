@@ -90,56 +90,10 @@ require_once __DIR__ . '/ipv4_functions.inc.php';
 require_once __DIR__ . '/ipv6_functions.inc.php';
 require_once __DIR__ . '/anti_xss.inc.php';
 
-// ---
-
 if (PHP_SAPI != 'cli') {
-	if (!file_exists(__DIR__ . '/../3p/vts_vnag/vnag_framework.inc.php')) {
-		// There are two reasons why this can happen:
-		// 1. This can happen if WebSVN did not catch the external SVN repository right.
-		//    If WebSVN was the reason, then we are safe to assume that writing is possible
-		// 2. If OIDplus was checked out via GIT; the GIT repository currently
-		//    does not contain the external SVN repositories.
-		// So we will now try to get the third party scripts.
-		@mkdir(__DIR__ . '/../3p/vts_vnag');
-		@file_put_contents(__DIR__ . '/../3p/vts_vnag/vnag_framework.inc.php', file_get_contents('https://svn.viathinksoft.com/svn/vnag/trunk/framework/vnag_framework.inc.php'));
-	}
-	if (!file_exists(__DIR__ . '/../3p/vts_vnag/vnag_framework.inc.php')) {
-		echo '<!DOCTYPE HTML>';
-		echo '<html><head><title>'._L('OIDplus error').'</title></head><body>';
-		echo '<h1>'._L('OIDplus error').'</h1>';
-		echo '<p>'._L('Please create following directory and assign write permissions to it:').'</p>';
-		echo '<ul>';
-		echo '<li>3p/vts_vnag/</li>';
-		echo '</ul>';
-		echo '</body></html>';
-		die();
-	}
 	include_once __DIR__ . '/../3p/vts_vnag/vnag_framework.inc.php';
 }
 
-if (!file_exists(__DIR__ . '/../3p/vts_fileformats/VtsFileTypeDetect.class.php')) {
-	// There are two reasons why this can happen:
-	// 1. This can happen if WebSVN did not catch the external SVN repository right.
-	//    If WebSVN was the reason, then we are safe to assume that writing is possible
-	// 2. If OIDplus was checked out via GIT; the GIT repository currently
-	//    does not contain the external SVN repositories.
-	// So we will now try to get the third party scripts.
-	@mkdir(__DIR__ . '/../3p/vts_fileformats');
-	foreach (array('VtsFileTypeDetect.class.php', 'filetypes.conf', 'mimetype_lookup.inc.php') as $file) {
-		@file_put_contents(__DIR__ . '/../3p/vts_fileformats/'.$file, file_get_contents('https://svn.viathinksoft.com/svn/fileformats/trunk/'.$file));
-	}
-}
-if (!file_exists(__DIR__ . '/../3p/vts_fileformats/VtsFileTypeDetect.class.php')) {
-	echo '<!DOCTYPE HTML>';
-	echo '<html><head><title>'._L('OIDplus error').'</title></head><body>';
-	echo '<h1>'._L('OIDplus error').'</h1>';
-	echo '<p>'._L('Please create following directory and assign write permissions to it:').'</p>';
-	echo '<ul>';
-	echo '<li>3p/vts_fileformats/</li>';
-	echo '</ul>';
-	echo '</body></html>';
-	die();
-}
 include_once __DIR__ . '/../3p/vts_fileformats/VtsFileTypeDetect.class.php';
 
 // ---
