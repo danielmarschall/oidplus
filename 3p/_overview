@@ -87,9 +87,7 @@ Symfony MBString Polyfill:
 ViaThinkSoft FileFormats:
 	License:  Apache 2.0
 	Download: https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/fileformats/trunk/
-	Included via external SVN repository
 
 ViaThinkSoft VNag:
 	License:  Apache 2.0
 	Download: https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/vnag/trunk/
-	Included via external SVN repository

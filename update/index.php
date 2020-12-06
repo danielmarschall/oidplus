@@ -73,17 +73,6 @@ if (isset($_REQUEST['update_now'])) {
 			ob_start();
 			$svn->updateWorkingCopy(dirname(__DIR__).'/oidplus_version.txt', '/trunk', dirname(__DIR__), false);
 
-			// START DIRTY HACK: Manually update the external repos, since we cannot handle external repos at the moment (TODO)
-			@mkdir(__DIR__ . '/../3p/vts_vnag');
-			foreach (array('vnag_framework.inc.php') as $file) {
-				@file_put_contents(__DIR__ . '/../3p/vts_vnag/'.$file, file_get_contents('https://svn.viathinksoft.com/svn/vnag/trunk/framework/'.$file));
-			}
-			@mkdir(__DIR__ . '/../3p/vts_fileformats');
-			foreach (array('VtsFileTypeDetect.class.php', 'filetypes.conf', 'mimetype_lookup.inc.php') as $file) {
-				@file_put_contents(__DIR__ . '/../3p/vts_fileformats/'.$file, file_get_contents('https://svn.viathinksoft.com/svn/fileformats/trunk/'.$file));
-			}
-			// END DIRTY HACK
-
 			$cont = ob_get_contents();
 			$cont = str_replace(realpath(dirname(__DIR__)), '...', $cont);
 			ob_end_clean();
