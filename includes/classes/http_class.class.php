@@ -7,6 +7,7 @@
  *    by Manuel Lemos
  *    http://www.phpclasses.org/httpclient
  *    License: BSD License
+ *    with some small fixes by Daniel Marschall / ViaThinkSoft
  *
  *    http.php
  *        @(#) $Header: /opt2/ena/metal/http/http.php,v 1.94 2016/05/03 02:07:04 mlemos Exp $
@@ -845,6 +846,7 @@ class http_class {
 	public $data_timeout=0;
 	public $debug=0;
 	public $log_debug=0;
+	public $log_file_name="";
 	public $debug_response_body=1;
 	public $html_debug=0;
 	public $support_cookies=1;
@@ -867,6 +869,7 @@ class http_class {
 	public $state="Disconnected";
 	public $use_curl=0;
 	public $connection=0;
+	public $content_length_set=false;
 	public $content_length=0;
 	public $response="";
 	public $read_response=0;
@@ -967,7 +970,7 @@ class http_class {
 	{
 		if($this->log_debug)
 		{
-			if(strlen($this->log_file_name))
+			if(!empty($this->log_file_name))
 				error_log($message."\n", 3, $this->log_file_name);
 			else
 				error_log($message);

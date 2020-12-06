@@ -3,6 +3,7 @@
 /*
  * PHP MBString-Supplement (implemented using IConv) adapter
  * Copyright 2020 Daniel Marschall, ViaThinkSoft
+ * Version 2020-12-06
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +86,7 @@ if (function_exists('iconv') && ! function_exists('mb_language')) {
 	function mb_language($lang = null)
 	{
 		include_once __DIR__ . '/../3p/symfony-mbstring-polyfill/Mbstring.class.php';
-		return Symfony\Polyfill\Mbstring\Mbstring::mb_lang($lang);
+		return Symfony\Polyfill\Mbstring\Mbstring::mb_language($lang);
 	}
 }
 

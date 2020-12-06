@@ -140,7 +140,7 @@ class OIDplusGs1 extends OIDplusObject {
 		$curid = 'gs1:'.$this->number;
 
 		$res = OIDplus::db()->query("select id, title from ###objects where id = ?", array($curid));
-		if ($res->num_rows() == 0) return $this->number();
+		if ($res->num_rows() == 0) return $this->number;
 
 		$hints = array();
 		$lengths = array(strlen($curid));

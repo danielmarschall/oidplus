@@ -3,7 +3,7 @@
 /*
  * PHP GMP-Supplement implemented using BCMath
  * Copyright 2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-09-12
+ * Version 2020-12-06
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,9 +82,9 @@ if (function_exists('bcadd')) {
 
 		// gmp_clrbit ( GMP $a , int $index ) : void
 		// Clear bit
-		function gmp_clrbit($a, $index) {
+		function gmp_clrbit(&$a, $index) {
 			bcscale(0);
-			return gmp_setbit($a, $index, false);
+			gmp_setbit($a, $index, false);
 		}
 
 		// gmp_cmp ( GMP $a , GMP $b ) : int
@@ -591,7 +591,7 @@ if (function_exists('bcadd')) {
 
 		// gmp_setbit ( GMP $a , int $index [, bool $bit_on = TRUE ] ) : void
 		// Set bit
-		function gmp_setbit($a, $index, $bit_on=TRUE) {
+		function gmp_setbit(&$a, $index, $bit_on=TRUE) {
 			bcscale(0);
 			$ab = bc_dec2bin($a);
 
@@ -602,7 +602,7 @@ if (function_exists('bcadd')) {
 
 			$ab[strlen($ab)-1-$index] = $bit_on ? '1' : '0';
 
-			return bc_bin2dec($ab);
+			$a = bc_bin2dec($ab);
 		}
 
 		// gmp_sign ( GMP $a ) : int
