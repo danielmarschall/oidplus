@@ -12,26 +12,35 @@ More information as well as a demo version of OIDplus can be found here:
 https://www.oidplus.com/
 
 
-Operate your own copy of OIDplus
---------------------------------
+Download and install OIDplus
+----------------------------
 
-We are grateful for every person that wants to install OIDplus on their systems,
-as we love to see our product spreading and receive feedback about the user-experience.
-Therefore, if we can help you with installing OIDplus and migrating your data into OIDplus,
-please let us know ( https://www.viathinksoft.de/contact/daniel-marschall ).
-We will support you with this, free of charge!
+Method A - Download using SVN (recommended):
+	sudo apt-get update
+	sudo apt-get install svn
+	svn co https://svn.viathinksoft.com/svn/oidplus/trunk/
 
-Download using SVN (recommended):
-$ svn co https://svn.viathinksoft.com/svn/oidplus/trunk/
+Method B - Download using Git:
+	sudo apt-get update
+	sudo apt-get install git
+	git clone https://github.com/danielmarschall/oidplus.git
 
-Alternatively: Download a TAR.GZ file here:
-https://www.viathinksoft.com/projects/oidplus
+Method C - Download SVN snapshot:
+	Download a TAR.GZ file here:
+	https://www.viathinksoft.com/projects/oidplus
 
-System requirements:
+
+System requirements
+-------------------
+
 - PHP compatible web server (tested with Apache 2, nginx and Microsoft IIS)
 - PHP 7.0 or higher (also tested with PHP 8.0)
 	with extension MySQLi, PostgreSQL, SQLite3, PDO or ODBC, depending on your database
-- Database: MySQL/MariaDB (recommended), PostgreSQL, SQLite3 or Microsoft SQL Server
+- Supported databases:
+	MySQL/MariaDB
+	PostgreSQL
+	SQLite3
+	Microsoft SQL Server
 - Independent of operating system (tested with Windows, Linux and macOS X)
 
 
@@ -43,6 +52,9 @@ You can file a bug report here:
 - https://www.viathinksoft.com/contact/daniel-marschall
 - https://github.com/danielmarschall/oidplus/issues
 
+
+Support
+-------
 
 If you have any questions or need help, please contact us:
 https://www.viathinksoft.com/contact/daniel-marschall
