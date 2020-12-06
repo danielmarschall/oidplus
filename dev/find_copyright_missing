@@ -25,12 +25,14 @@ $dir = __DIR__ . '/../';
 $it = new RecursiveDirectoryIterator($dir);
 foreach(new RecursiveIteratorIterator($it) as $file) {
 	if (strpos(str_replace('\\','/',realpath($file)),'/3p/') !== false) continue; // ignore third-party-code
+	if (strpos(str_replace('\\','/',realpath($file)),'/setup/bcrypt_worker.js') !== false) continue;
 	if (strpos(str_replace('\\','/',realpath($file)),'/userdata/') !== false) continue;
 	if (strpos(str_replace('\\','/',realpath($file)),'/includes/classes/http_class.class.php') !== false) continue;
 	if (strpos(str_replace('\\','/',realpath($file)),'/plugins/objectTypes/oid/WeidOidConverter.class.php') !== false) continue;
 	if (($file->getExtension() == 'php') || ($file->getExtension() == 'js')) {
 		$cont = file_get_contents($file);
 		if (strpos($cont,'Daniel Marschall, ViaThinkSoft') === false) {
+			$file = realpath($file);
 			echo "Copyright missing: $file\n";
 		}
 	}
