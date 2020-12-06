@@ -67,7 +67,6 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 				$this->last_error = $ps->errorInfo()[2];
 				throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
 			}
-			$this->prepare_cache[$sql] = $ps;
 
 			if (!$ps->execute($prepared_args)) {
 				$this->last_error = $ps->errorInfo()[2];

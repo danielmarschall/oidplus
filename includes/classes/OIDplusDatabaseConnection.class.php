@@ -182,7 +182,7 @@ abstract class OIDplusDatabaseConnection {
 		if (!is_null($slang)) {
 			return $slang->sqlDate();
 		} else {
-			return "'" . datetime('Y-m-d H:i:s') . "'";
+			return "'" . date('Y-m-d H:i:s') . "'";
 		}
 	}
 

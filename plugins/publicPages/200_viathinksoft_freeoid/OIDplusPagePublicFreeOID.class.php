@@ -106,7 +106,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			// 2. step: Add the new OID to the database
 
 			$root_oid = self::getFreeRootOid(false);
-			$new_oid = OIDplusOID::parse('oid:'.$root_oid)->appendArcs($this->freeoid_max_id()+1)->nodeId(false);
+			$new_oid = OIDplusOid::parse('oid:'.$root_oid)->appendArcs($this->freeoid_max_id()+1)->nodeId(false);
 
 			OIDplus::logger()->log("[INFO]OID(oid:$root_oid)+OIDRA(oid:$root_oid)!", "Child OID '$new_oid' added automatically by '$email' (RA Name: '$ra_name')");
 			OIDplus::logger()->log("[INFO]OID(oid:$new_oid)+[OK]RA($email)!",            "Free OID '$new_oid' activated (RA Name: '$ra_name')");
@@ -194,7 +194,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				    <input type="submit" value="'._L('Request free OID').'">
 				  </form>';
 
-				$obj = OIDplusOID::parse(self::getFreeRootOid(true));
+				$obj = OIDplusOid::parse(self::getFreeRootOid(true));
 
 				if (file_exists(__DIR__ . '/tos$'.OIDplus::getCurrentLang().'.html')) {
 					$tos = file_get_contents(__DIR__ . '/tos$'.OIDplus::getCurrentLang().'.html');

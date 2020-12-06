@@ -3,7 +3,7 @@
 /*
  * XML Encoding Utilities
  * Copyright 2011-2020 Daniel Marschall, ViaThinkSoft
- * Version 1.7.1
+ * Version 1.7.2 (2020-12-06)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,50 +141,50 @@ function utf16_to_utf8($str) {
 }
 
 function html_named_to_numeric_entities($str) {
-	if (!function_exists('decodeNamedEntities')) {
-		function decodeNamedEntities($string) {
-			// https://stackoverflow.com/questions/20406599/how-to-encode-for-entity-igrave-not-defined-error-in-xml-feed
-			static $entities = NULL;
-			if (NULL === $entities) {
-				$entities = array_flip(
-					array_diff(
-						get_html_translation_table(HTML_ENTITIES, ENT_COMPAT | ENT_HTML401, 'UTF-8'),
-						get_html_translation_table(HTML_ENTITIES, ENT_COMPAT | ENT_XML1, 'UTF-8')
-					)
-				);
-			}
-			return str_replace(array_keys($entities), $entities, $string);
-		}
-	}
-
-	if (!function_exists('mb_convert_encoding')) {
-		// https://riptutorial.com/php/example/15633/converting-unicode-characters-to-their-numeric-value-and-or-html-entities-using-php
-		function mb_convert_encoding($str, $to_encoding, $from_encoding = NULL) {
-			return iconv(($from_encoding === NULL) ? mb_internal_encoding() : $from_encoding, $to_encoding, $str);
-		}
-	}
-
-	if (!function_exists('mb_ord')) {
-		// https://riptutorial.com/php/example/15633/converting-unicode-characters-to-their-numeric-value-and-or-html-entities-using-php
-		function mb_ord($char, $encoding = 'UTF-8') {
-			if ($encoding === 'UCS-4BE') {
-				list(, $ord) = (strlen($char) === 4) ? @unpack('N', $char) : @unpack('n', $char);
-				return $ord;
-			} else {
-				return mb_ord(mb_convert_encoding($char, 'UCS-4BE', $encoding), 'UCS-4BE');
-			}
-		}
-	}
-
-	if (!function_exists('mb_htmlentities')) {
-		// https://riptutorial.com/php/example/15633/converting-unicode-characters-to-their-numeric-value-and-or-html-entities-using-php
-		function mb_htmlentities($string, $hex = true, $encoding = 'UTF-8') {
-			return preg_replace_callback('/[\x{80}-\x{10FFFF}]/u', function ($match) use ($hex) {
-				return sprintf($hex ? '&#x%X;' : '&#%d;', mb_ord($match[0]));
-			}, $string);
-		}
-	}
-
 	if (!mb_detect_encoding($str, 'UTF-8', true)) $str = utf8_encode($str);
 	return mb_htmlentities(decodeNamedEntities($str));
+}
+
+if (!function_exists('decodeNamedEntities')) {
+	function decodeNamedEntities($string) {
+		// https://stackoverflow.com/questions/20406599/how-to-encode-for-entity-igrave-not-defined-error-in-xml-feed
+		static $entities = NULL;
+		if (NULL === $entities) {
+			$entities = array_flip(
+				array_diff(
+					get_html_translation_table(HTML_ENTITIES, ENT_COMPAT | ENT_HTML401, 'UTF-8'),
+					get_html_translation_table(HTML_ENTITIES, ENT_COMPAT | ENT_XML1, 'UTF-8')
+				)
+			);
+		}
+		return str_replace(array_keys($entities), $entities, $string);
+	}
+}
+
+if (!function_exists('mb_convert_encoding')) {
+	// https://riptutorial.com/php/example/15633/converting-unicode-characters-to-their-numeric-value-and-or-html-entities-using-php
+	function mb_convert_encoding($str, $to_encoding, $from_encoding = NULL) {
+		return iconv(($from_encoding === NULL) ? mb_internal_encoding() : $from_encoding, $to_encoding, $str);
+	}
+}
+
+if (!function_exists('mb_ord')) {
+	// https://riptutorial.com/php/example/15633/converting-unicode-characters-to-their-numeric-value-and-or-html-entities-using-php
+	function mb_ord($char, $encoding = 'UTF-8') {
+		if ($encoding === 'UCS-4BE') {
+			list(, $ord) = (strlen($char) === 4) ? @unpack('N', $char) : @unpack('n', $char);
+			return $ord;
+		} else {
+			return mb_ord(mb_convert_encoding($char, 'UCS-4BE', $encoding), 'UCS-4BE');
+		}
+	}
+}
+
+if (!function_exists('mb_htmlentities')) {
+	// https://riptutorial.com/php/example/15633/converting-unicode-characters-to-their-numeric-value-and-or-html-entities-using-php
+	function mb_htmlentities($string, $hex = true, $encoding = 'UTF-8') {
+		return preg_replace_callback('/[\x{80}-\x{10FFFF}]/u', function ($match) use ($hex) {
+			return sprintf($hex ? '&#x%X;' : '&#%d;', mb_ord($match[0]));
+		}, $string);
+	}
 }
