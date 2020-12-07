@@ -109,11 +109,22 @@ function test_color_theme() {
 		'&invert='+encodeURIComponent($("#icolor").val())+
 		'&h_shift='+encodeURIComponent($("#hshift").val()/360)+
 		'&s_shift='+encodeURIComponent($("#sshift" ).val()/100)+
-		'&v_shift='+encodeURIComponent($("#vshift" ).val()/100), 0);
+		'&v_shift='+encodeURIComponent($("#vshift" ).val()/100),
+		findLinkIndex('oidplus.min.css.php'));
+}
+
+function findLinkIndex(searchString) {
+	var links = document.getElementsByTagName("head").item(0).getElementsByTagName("link");
+
+	for (i=0; i<links.length; i++) {
+		if (links.item(i).href.includes(searchString)) return i;
+	}
+
+	return -1;
 }
 
 function changeCSS(cssFile, cssLinkIndex) {
-	var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
+	var oldlink = document.getElementsByTagName("head").item(0).getElementsByTagName("link").item(cssLinkIndex);
 
 	var newlink = document.createElement("link");
 	newlink.setAttribute("rel", "stylesheet");

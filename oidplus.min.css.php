@@ -68,7 +68,11 @@ function process_file($filename) {
 		}
 	}
 
-	$dir = dirname((strpos($filename, __DIR__.'/') === 0) ? substr($filename, strlen(__DIR__.'/')) : $filename);
+	$thisdir = __DIR__;
+	$thisdir = str_replace('\\', '/', $thisdir); // change Windows Backslashes into Web-Slashes
+	$filename = str_replace('\\', '/', $filename); // change Windows Backslashes into Web-Slashes
+	$dir = dirname((strpos($filename, $thisdir.'/') === 0) ? substr($filename, strlen($thisdir.'/')) : $filename);
+
 	$cont = preg_replace('@url\\(\s+@ism', 'url(', $cont);
 	$cont = str_ireplace('url("data:', 'url###("data:', $cont);
 	$cont = str_ireplace('url("', 'url###("'.$dir.'/', $cont);
