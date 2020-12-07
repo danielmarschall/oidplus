@@ -860,7 +860,7 @@ class http_class {
 	public $response_message="";
 	public $file_buffer_length=8000;
 	public $force_multipart_form_post=0;
-	public $prefer_curl = 0;
+	public $prefer_curl = true; // ViaThinkSoft 07.12.2020; changed false=>true (Important for Windows because the cacert.pem Workaround only works with CURL)
 	public $keep_alive = 1;
 	public $sasl_authenticate = 1;
 
