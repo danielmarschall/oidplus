@@ -41,7 +41,11 @@ function process_file($filename) {
 
 	if (!file_exists($filename)) return;
 
-	$dir = dirname((strpos($filename, __DIR__.'/') === 0) ? substr($filename, strlen(__DIR__.'/')) : $filename);
+	$thisdir = __DIR__;
+	$thisdir = str_replace('\\', '/', $thisdir); // change Windows Backslashes into Web-Slashes
+	$filename = str_replace('\\', '/', $filename); // change Windows Backslashes into Web-Slashes
+	$dir = dirname((strpos($filename, $thisdir.'/') === 0) ? substr($filename, strlen($thisdir.'/')) : $filename);
+
 	if ($do_minify) {
 		$minifier = new Minify\CSS($filename);
 		$cont = $minifier->minify();
