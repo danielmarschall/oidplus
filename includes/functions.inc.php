@@ -233,7 +233,7 @@ function get_svn_revision($dir='') {
 			$db = new SQLite3($dir.'.svn/wc.db');
 			$results = $db->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
 			while ($row = $results->fetchArray()) {
-				return ($cachedVersion = 'svn-'.$row['rev']); // do not translate
+				return ($cachedVersion = $row['rev']);
 			}
 			$db->close();
 			$db = null;
@@ -246,7 +246,7 @@ function get_svn_revision($dir='') {
 			$res = $pdo->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
 			$row = $res->fetch();
 			if ($row !== false) {
-				return ($cachedVersion = 'svn-'.$row['rev']); // do not translate
+				return ($cachedVersion = $row['rev']);
 			}
 			$pdo = null;
 		} catch (Exception $e) {
@@ -258,13 +258,15 @@ function get_svn_revision($dir='') {
 	$output = @shell_exec('svnversion '.escapeshellarg($dir));
 	$match = array();
 	if (preg_match('/\d+/', $output, $match)) {
-		return ($cachedVersion = 'svn-'.$match[0]); // do not translate
+		return ($cachedVersion = $match[0]);
 	}
 
 	$output = @shell_exec('svn info '.escapeshellarg($dir));
 	if (preg_match('/Revision:\s*(\d+)/m', $output, $match)) { // do not translate
-		return ($cachedVersion = 'svn-'.$match[1]); // do not translate
+		return ($cachedVersion = $match[1]);
 	}
+
+	return false;
 }
 
 function get_gitsvn_revision($dir='') {
