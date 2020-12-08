@@ -186,7 +186,7 @@ class phpsvnclient {
 				}
 				$from_revision = $m[1];
 
-				echo "Found $version_file with revision information $from_revision\n";
+				echo "Found ".basename($version_file)." with revision information $from_revision\n";
 				flush();
 			}
 		} else {
@@ -807,6 +807,7 @@ class phpsvnclient {
 			}
 			//            trigger_error("request to $args[RequestURI] failed: $http->response_status
 			//Error: $http->error");
+			//throw new Exception("HTTP Error: " . $http->response_status . ' at ' . $args['RequestURI']);
 			$http->close();
 			return false;
 		}

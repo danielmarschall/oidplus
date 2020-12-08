@@ -3454,6 +3454,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.
+		]]></source>
+		<target><![CDATA[
+		OIDplus konnte nicht die neuste Version ermitteln. Möglicherweise ist der ViaThinkSoft-Server nicht erreichbar.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OIDplus database with example data
 		]]></source>
 		<target><![CDATA[
@@ -3962,14 +3970,6 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte kontaktieren Sie den System-Administrator.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Please create following directory and assign write permissions to it:
-		]]></source>
-		<target><![CDATA[
-		Bitte erstellen Sie das folgende Verzeichnis und geben Sie diesem Schreibrechte:
 		]]></target>
 	</message>
 	<message>
