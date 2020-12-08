@@ -2188,9 +2188,21 @@ class http_class {
 			curl_setopt($this->connection,CURLOPT_SSL_VERIFYHOST,0);
 			$request=$this->request."\r\n".implode("\r\n",$headers)."\r\n\r\n".$request_body;
 			curl_setopt($this->connection,CURLOPT_CUSTOMREQUEST,$request);
-			if($this->debug)
-				$this->OutputDebug("C ".$request);
-			if(!($success=(strlen($this->response=@curl_exec($this->connection))!=0)))
+
+			// ViaThinkSoft 08.12.2020
+			// This seems to be necessary on some systems
+			// There seems to be a bug in DAV SVN on Debian Linux,
+			// where a REPORT request fails (HTTP 400) if it is invoked on an open
+			// connection where previously only PROPFIND requests were
+			// used. Client is a Windows 10 system.
+			curl_setopt($this->connection,CURLOPT_FORBID_REUSE,true);
+
+			if($this->debug) {
+				foreach (explode("\r\n",$request) as $stmp) { // ViaThinkSoft 08.12.2020 : Split lines using explode()
+					$this->OutputDebug("C ".$stmp);
+				}
+			}
+			if(!($success=(strlen($this->response=curl_exec($this->connection))!=0)))
 			{
 				$error=curl_error($this->connection);
 				$this->SetError("Could not execute the request".(strlen($error) ? ": ".$error : ""), self::HTTP_CLIENT_ERROR_PROTOCOL_FAILURE);

@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+// TODO: preview function can lead to DoS attacks because it is very slow
+
 declare(ticks=1);
 
 set_time_limit(0);
@@ -66,15 +68,19 @@ if (isset($_REQUEST['update_now'])) {
 			echo '<p><font color="red"><b>'._L('Wrong password').'</b></font></p>';
 			echo '<p><a href="index.php">'._L('Try again').'</a></p>';
 		} else {
-			$svn = new phpsvnclient(OIDPLUS_REPO);
-			$svn->versionFile = 'oidplus_version.txt';
 			echo '<h2>'._L('Updating ...').'</h2>';
 
 			ob_start();
-			$svn->updateWorkingCopy(dirname(__DIR__).'/oidplus_version.txt', '/trunk', dirname(__DIR__), false);
+			try {
+				$svn = new phpsvnclient(OIDPLUS_REPO);
+				$svn->versionFile = 'oidplus_version.txt';
+				$svn->updateWorkingCopy(realpath(__DIR__.'/../oidplus_version.txt'), '/trunk', dirname(__DIR__), false);
 
-			$cont = ob_get_contents();
-			$cont = str_replace(realpath(dirname(__DIR__)), '...', $cont);
+				$cont = ob_get_contents();
+				$cont = str_replace(realpath(__DIR__.'/../'), '...', $cont);
+			} catch (Exception $e) {
+				$cont = _L('Error: %1',$e->getMessage());
+			}
 			ob_end_clean();
 
 			echo '<pre>'.$cont.'</pre>';
@@ -136,8 +142,12 @@ if (isset($_REQUEST['update_now'])) {
 		}
 
 		$local_installation = OIDplus::getVersion();
-		$svn = new phpsvnclient(OIDPLUS_REPO);
-		$newest_version = 'svn-'.$svn->getVersion();
+		try {
+			$svn = new phpsvnclient(OIDPLUS_REPO);
+			$newest_version = 'svn-'.$svn->getVersion();
+		} catch (Exception $e) {
+			$newest_version = false;
+		}
 
 		echo _L('Local installation: %1',($local_installation ? $local_installation : _L('unknown'))).'<br>';
 		echo _L('Latest published version: %1',($newest_version ? $newest_version : _L('unknown'))).'<br>';
@@ -145,7 +155,10 @@ if (isset($_REQUEST['update_now'])) {
 		$requireInfo = ($installType === 'svn-wc') ? _L('shell access with svn/svnversion tool, or PDO/SQLite3 PHP extension') : _L('shell access with Git client');
 		$updateCommand = ($installType === 'svn-wc') ? 'svn update' : 'git pull';
 
-		if (!$local_installation) {
+		if (!$newest_version) {
+			echo '<p><font color="red">'._L('OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.').'</font></p>';
+		}
+		else if (!$local_installation) {
 			echo '<p><font color="red">'._L('OIDplus could not determine its version. (Required: %1). Please update your system manually via the "%2" command regularly.',$requireInfo,$updateCommand).'</font></p>';
 
 			$job = new VNagMonitorDummy(VNag::STATUS_WARNING, 'OIDplus could not determine its version. Please update your system manually via the "'.$updateCommand.'" command regularly.'); // do not translate
@@ -163,12 +176,16 @@ if (isset($_REQUEST['update_now'])) {
 			echo '<p><font color="blue">'._L('Please enter %1 into the SSH shell to update OIDplus to the latest version.','<code>'.$updateCommand.'</code>').'</font></p>';
 
 			echo '<h2>'._L('Preview of update %1 &rarr; %2',$local_installation,$newest_version).'</h2>';
-			$svn = new phpsvnclient(OIDPLUS_REPO);
 
 			ob_start();
-			$svn->updateWorkingCopy(str_replace('svn-', '', $local_installation), '/trunk', dirname(__DIR__), true);
-			$cont = ob_get_contents();
-			$cont = str_replace(realpath(dirname(__DIR__)), '...', $cont);
+			try {
+				$svn = new phpsvnclient(OIDPLUS_REPO);
+				$svn->updateWorkingCopy(str_replace('svn-', '', $local_installation), '/trunk', realpath(__DIR__.'/../'), true);
+				$cont = ob_get_contents();
+				$cont = str_replace(realpath(__DIR__.'/../'), '...', $cont);
+			} catch (Exception $e) {
+				$cont = _L('Error: %1',$e->getMessage());
+			}
 			ob_end_clean();
 
 			echo '<pre>'.$cont.'</pre>';
@@ -182,13 +199,20 @@ if (isset($_REQUEST['update_now'])) {
 		echo '<p>'._L('You are using <b>method C</b> (Snapshot ZIP file with oidplus_version.txt file).').'</p>';
 
 		$local_installation = OIDplus::getVersion();
-		$svn = new phpsvnclient(OIDPLUS_REPO);
-		$newest_version = 'svn-'.$svn->getVersion();
+		try {
+			$svn = new phpsvnclient(OIDPLUS_REPO);
+			$newest_version = 'svn-'.$svn->getVersion();
+		} catch (Exception $e) {
+			$newest_version = false;
+		}
 
-		echo _L('Local installation: %1',$local_installation).'<br>';
-		echo _L('Latest published version: %1',$newest_version).'<br>';
+		echo _L('Local installation: %1',($local_installation ? $local_installation : _L('unknown'))).'<br>';
+		echo _L('Latest published version: %1',($newest_version ? $newest_version : _L('unknown'))).'<br>';
 
-		if ($local_installation == $newest_version) {
+		if (!$newest_version) {
+			echo '<p><font color="red">'._L('OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.').'</font></p>';
+		}
+		else if ($local_installation == $newest_version) {
 			echo '<p><font color="green">'._L('You are already using the latest version of OIDplus.').'</font></p>';
 
 			$job = new VNagMonitorDummy(VNag::STATUS_OK, 'You are using the latest version of OIDplus ('.$local_installation.' local / '.$newest_version.' remote)'); // do not translate
@@ -214,12 +238,16 @@ if (isset($_REQUEST['update_now'])) {
 			echo '</form>';
 
 			echo '<h2>'._L('Preview of update %1 &rarr; %2',$local_installation,$newest_version).'</h2>';
-			$svn = new phpsvnclient(OIDPLUS_REPO);
 
 			ob_start();
-			$svn->updateWorkingCopy(dirname(__DIR__).'/oidplus_version.txt', '/trunk', dirname(__DIR__), true);
-			$cont = ob_get_contents();
-			$cont = str_replace(realpath(dirname(__DIR__)), '...', $cont);
+			try {
+				$svn = new phpsvnclient(OIDPLUS_REPO);
+				$svn->updateWorkingCopy(realpath(__DIR__.'/../oidplus_version.txt'), '/trunk', realpath(__DIR__.'/../'), true);
+				$cont = ob_get_contents();
+				$cont = str_replace(realpath(__DIR__.'/../'), '...', $cont);
+			} catch (Exception $e) {
+				$cont = _L('Error: %1',$e->getMessage());
+			}
 			ob_end_clean();
 
 			echo '<pre>'.$cont.'</pre>';
