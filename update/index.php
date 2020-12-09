@@ -17,11 +17,9 @@
  * limitations under the License.
  */
 
-// TODO: preview function can lead to DoS attacks because it is very slow
-
 declare(ticks=1);
 
-set_time_limit(0);
+@set_time_limit(0);
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
