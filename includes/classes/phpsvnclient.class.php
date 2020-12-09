@@ -212,8 +212,20 @@ class phpsvnclient {
 			}
 		}
 
+		// (In regards OIDplus:)
+		// We are caching the changed file logs here only in the preview mode.
+		// Reason: We want to avoid that the "update/" page becomes an
+		// DoS attack vector if there hasn't been an update for a long time,
+		// and the list is very large.
+		// But we don't want to use cache in the real update, because
+		// otherwise it might break the system if an update is made
+		// while the ViaThinkSoft server is down (because the file list
+		// is cached, and therefore "delete" actions can be made, while
+		// adding/downloading does not work)
+		$use_cache = $preview;
+
 		//Get a list of objects to be updated.
-		$objects_list = $this->getLogsForUpdate($folder, $from_revision + 1);
+		$objects_list = $this->getLogsForUpdate($folder, $use_cache, $from_revision + 1);
 		if (!is_null($objects_list)) {
 			// Output version information
 			foreach ($objects_list['revisions'] as $revision) {
@@ -563,7 +575,7 @@ class phpsvnclient {
 		return $body;
 	}
 
-	private function getLogsForUpdate($file, $vini = 0, $vend = -1)
+	private function getLogsForUpdate($file, $use_cache, $vini = 0, $vend = -1)
 	{
 		$fileLogs = array();
 
@@ -579,6 +591,15 @@ class phpsvnclient {
 			echo "Nothing updated\n";
 			flush();
 			return null;
+		}
+
+		// For OIDplus:
+		$cache_dir = __DIR__.'/../../userdata/cache';
+		if (is_dir($cache_dir)) {
+			$cache_file = $cache_dir.'/svnlog_'.md5($file).'_'.$vini.'_'.$vend.'.ser';
+			if ($use_cache && file_exists($cache_file)) {
+				return unserialize(file_get_contents($cache_file));
+			}
 		}
 
 		$url = $this->cleanURL($this->_url . "/!svn/bc/" . $this->actVersion . "/" . $file . "/");
@@ -718,6 +739,11 @@ class phpsvnclient {
 		$out['dirs']        = $dirs;
 		$out['dirsDelete']  = $dirsDelete;
 		$out['revisions']   = $revlogs;
+
+		if (is_dir($cache_dir)) {
+			@file_put_contents($cache_file, serialize($out));
+		}
+
 		return $out;
 	}
 
