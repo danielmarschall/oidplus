@@ -16,8 +16,9 @@ IDEAS FOR NEW FUNCTIONALITIES
 
 LDAP / OAUTH:
 - Implement other OAuth providers?
-- When someone is logged in using OAuth or LDAP, we must prohibit that the user changes their email address,
-  because this would make him lose his account and OIDs, since the account is *NOT* linked to the OAuth/LDAP uid, but to the email address!!!
+	Try out https://github.com/SocialConnect/auth
+	     or https://github.com/hybridauth/hybridauth
+- Credentials and API-Keys should be protected or obfuscated or encrypted? (JoomlaKeychainKeychain?)
 
 TINYMCE
 - mce dirty flag: call performCloseQueryCB()/performCloseCB(), if ...
