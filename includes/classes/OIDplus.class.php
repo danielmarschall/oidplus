@@ -791,7 +791,7 @@ class OIDplus {
 		} catch (Exception $e) {
 		}
 	}
-	
+
 	private static function getExecutingScriptPathDepth() {
 		if (PHP_SAPI == 'cli') {
 			global $argv;
@@ -1071,7 +1071,7 @@ class OIDplus {
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets a local path pointing to a resource
 	 * @param string $target Target resource (file or directory must exist), or null to get the OIDplus base directory
@@ -1087,10 +1087,10 @@ class OIDplus {
 			// First, try to find out how many levels we need to go up
 			$steps_up = self::getExecutingScriptPathDepth();
 			if ($steps_up === false) return false;
-			
+
 			// Virtually go back from the executing PHP script to the OIDplus base path
 			$res = str_repeat('../',$steps_up);
-			
+
 			// Then go to the desired location
 			$basedir = realpath(__DIR__.'/../../');
 			$target = realpath($target);
@@ -1099,9 +1099,9 @@ class OIDplus {
 		} else {
 			$res = realpath($target);
 		}
-		
+
 		if (!empty($res) && is_dir($res)) $res .= DIRECTORY_SEPARATOR;
-		
+
 		return $res;
 	}
 
@@ -1114,17 +1114,18 @@ class OIDplus {
 	public static function webpath($target=null, $relative=false) {
 		$res = self::getSystemUrl($relative); // Note: already contains a trailing path delimiter
 		if (!$res) return false;
-		
+
 		if (!is_null($target)) {
 			$basedir = realpath(__DIR__.'/../../');
 			$target = realpath($target);
 			$tmp = substr($target, strlen($basedir)+1);
 			$res .= str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // remove OS specific path delimiters introcued by realpath()
+			if (is_dir($target)) $res .= '/';
 		}
-		
+
 		return $res;
 	}
-	
+
 	public static function getAvailableLangs() {
 		$langs = array();
 		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
