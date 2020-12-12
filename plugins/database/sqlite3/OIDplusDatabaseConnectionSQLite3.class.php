@@ -120,7 +120,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 			$is_absolute_path = ((substr($filename,0,1) == '/') || (substr($filename,1,1) == ':'));
 			if (!$is_absolute_path) {
 				// Filename must be absolute path, since OIDplus can be called from several locations (e.g. registration wizard)
-				$filename = OIDplus::basePath().'/'.$filename;
+				$filename = OIDplus::localpath().$filename;
 			}
 
 			$this->conn = new SQLite3($filename, $flags, $encryption);

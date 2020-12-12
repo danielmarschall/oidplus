@@ -42,7 +42,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 			$target =
 				"https://www.facebook.com/v8.0/dialog/oauth?".
 				"client_id=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID'))."&".
-				"redirect_uri=".urlencode(OIDplus::getSystemUrl(false).OIDplus::webpath(__DIR__).'oauth.php')."&".
+				"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,false).'oauth.php')."&".
 				"state=".urlencode($_COOKIE['csrf_token'])."&".
 				"scope=email";
 			$out['text'] = '<p>'._L('Please wait...').'</p><script>window.location.href = '.js_escape($target).';</script>';

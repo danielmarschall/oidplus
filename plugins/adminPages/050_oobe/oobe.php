@@ -66,7 +66,7 @@ if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 	echo '</noscript>';
 	echo '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>';
 	echo '<p>'._L('Before logging in, please solve the following CAPTCHA').'</p>';
-	echo '<p>'._L('If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="%1">setup part 1</a> again or edit %2 manually).',OIDplus::getSystemUrl().'setup/','userdata/baseconfig/config.inc.php').'</p>';
+	echo '<p>'._L('If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="%1">setup part 1</a> again or edit %2 manually).',OIDplus::webpath().'setup/','userdata/baseconfig/config.inc.php').'</p>';
 	echo '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>';
 
 	if (isset($_REQUEST['sent'])) {
@@ -92,7 +92,7 @@ if (OIDplus::authUtils()->isAdminLoggedIn()) {
 
 	echo '<p>'._L('Please enter the administrator password you have entered before.').'</p>';
 
-	echo '<p><input type="password" name="admin_password" value=""> (<a href="'.OIDplus::getSystemUrl().'setup/">'._L('Forgot password?').'</a>) ';
+	echo '<p><input type="password" name="admin_password" value=""> (<a href="'.OIDplus::webpath().'setup/">'._L('Forgot password?').'</a>) ';
 
 	if (isset($_REQUEST['sent'])) {
 		if (!OIDplus::authUtils()->adminCheckPassword($_REQUEST['admin_password'])) {

@@ -55,7 +55,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'.(!$sysid_oid ? '<i>'._L('unknown').'</i>' : htmlentities($sysid_oid)).'</td>';
 			$out['text'] .= '	</tr>';
 
-			$sys_url = OIDplus::getSystemUrl();
+			$sys_url = OIDplus::webpath();
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('System URL').'</td>';
 			$out['text'] .= '		<td>'.htmlentities($sys_url).'</td>';

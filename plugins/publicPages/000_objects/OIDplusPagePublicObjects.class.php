@@ -151,7 +151,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						$parent_oid = $parentObj->nodeId();
 						OIDplus::logger()->log("[INFO]OID($parent_oid)", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
 					}
-					$this->ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mitändern
+					$this->ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mitï¿½ndern
 				}
 			}
 
@@ -373,10 +373,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$out['title'] = OIDplus::config()->getValue('system_title');
 			$out['icon'] = OIDplus::webpath(__DIR__).'system_big.png';
 
-			if (file_exists(OIDplus::basePath() . '/userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html')) {
-				$cont = file_get_contents(OIDplus::basePath() . '/userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html');
-			} else if (file_exists(OIDplus::basePath() . '/userdata/welcome/welcome.html')) {
-				$cont = file_get_contents(OIDplus::basePath() . '/userdata/welcome/welcome.html');
+			if (file_exists(OIDplus::localpath() . 'userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html')) {
+				$cont = file_get_contents(OIDplus::localpath() . 'userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html');
+			} else if (file_exists(OIDplus::localpath() . 'userdata/welcome/welcome.html')) {
+				$cont = file_get_contents(OIDplus::localpath() . 'userdata/welcome/welcome.html');
 			} else if (file_exists(__DIR__ . '/welcome$'.OIDplus::getCurrentLang().'.html')) {
 				$cont = file_get_contents(__DIR__ . '/welcome$'.OIDplus::getCurrentLang().'.html');
 			} else if (file_exists(__DIR__ . '/welcome.html')) {
@@ -666,7 +666,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				'text' => _L('Objects'),
 				'state' => array(
 					"opened" => true,
-					// "selected" => true)  // "selected" ist buggy: 1) Das select-Event wird beim Laden nicht gefeuert 2) Die direkt untergeordneten Knoten lassen sich nicht öffnen (laden für ewig)
+					// "selected" => true)  // "selected" ist buggy: 1) Das select-Event wird beim Laden nicht gefeuert 2) Die direkt untergeordneten Knoten lassen sich nicht ï¿½ffnen (laden fï¿½r ewig)
 				),
 				'icon' => OIDplus::webpath(__DIR__).'system.png',
 				'children' => $objTypesChildren
@@ -821,10 +821,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$prefix = is_null($objParent) ? '' : $objParent->crudInsertPrefix();
 			if ($parentNS == 'oid') {
 				if ($objParent->isWeid(true)) {
-					$output .= '     <td>'.$prefix.' <input oninput="frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>'; // TODO: idee classname vergeben, z.B. "OID" und dann mit einem oid-spezifischen css die breite einstellbar machen, somit hat das plugin mehr kontrolle über das aussehen und die mindestbreiten
+					$output .= '     <td>'.$prefix.' <input oninput="frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>'; // TODO: idee classname vergeben, z.B. "OID" und dann mit einem oid-spezifischen css die breite einstellbar machen, somit hat das plugin mehr kontrolle ï¿½ber das aussehen und die mindestbreiten
 					$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="frdl_weid_change()"></td>';
 				} else {
-					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:50px"></td>'; // TODO: idee classname vergeben, z.B. "OID" und dann mit einem oid-spezifischen css die breite einstellbar machen, somit hat das plugin mehr kontrolle über das aussehen und die mindestbreiten
+					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:50px"></td>'; // TODO: idee classname vergeben, z.B. "OID" und dann mit einem oid-spezifischen css die breite einstellbar machen, somit hat das plugin mehr kontrolle ï¿½ber das aussehen und die mindestbreiten
 					if ($one_weid_available) $output .= '     <td></td>'; // WEID-editor not available for root nodes. Do it manually, please
 				}
 			} else {
@@ -876,7 +876,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 	protected static function showMCE($name, $content) {
 		$mce_plugins = array();
-		foreach (glob(OIDplus::basePath().'/3p/tinymce/plugins/*') as $m) { // */
+		foreach (glob(OIDplus::localpath().'3p/tinymce/plugins/*') as $m) { // */
 			$mce_plugins[] = basename($m);
 		}
 
@@ -893,7 +893,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		);
 		$tinyMCELang = '';
 		foreach ($langCandidates as $candidate) {
-			if (file_exists(OIDplus::basePath().'/3p/tinymce/langs/'.$candidate.'.js')) {
+			if (file_exists(OIDplus::localpath().'3p/tinymce/langs/'.$candidate.'.js')) {
 				$tinyMCELang = $candidate;
 				break;
 			}
@@ -902,7 +902,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$out = '<script>
 				tinymce.EditorManager.baseURL = "3p/tinymce";
 				tinymce.init({
-					document_base_url: "'.OIDplus::getSystemUrl().'",
+					document_base_url: "'.OIDplus::webpath().'",
 					selector: "#'.$name.'",
 					height: 200,
 					statusbar: false,
