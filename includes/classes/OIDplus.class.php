@@ -802,7 +802,7 @@ class OIDplus {
 			if ($res !== '') {
 				return rtrim($res,'/').'/';
 			}
-			if (php_sapi_name() == 'cli') {
+			if (PHP_SAPI == 'cli') {
 				try {
 					return OIDplus::config()->getValue('last_known_system_url', false);
 				} catch (Exception $e) {
@@ -811,36 +811,48 @@ class OIDplus {
 			}
 		}
 
-		if (!isset($_SERVER["SCRIPT_NAME"]) && !isset($_SERVER["SCRIPT_FILENAME"])) return false;
-
 		// First, try to find out how many levels we need to go up
-		$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
+		if (PHP_SAPI == 'cli') {
+			global $argv;
+			$test_dir = dirname(realpath($argv[0]));
+		} else {
+			if (!isset($_SERVER["SCRIPT_FILENAME"])) return false;
+			$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
+		}
 		$test_dir = str_replace('\\', '/', $test_dir);
-		$c = 0;
+		$steps_up = 0;
 		while (!file_exists($test_dir.'/oidplus.min.css.php')) { // We just assume that only the OIDplus base directory contains "oidplus.min.css.php" and not any subsequent directory!
 			$test_dir = dirname($test_dir);
-			$c++;
-			if ($c == 1000) return false; // to make sure there will never be an infinite loop
+			$steps_up++;
+			if ($steps_up == 1000) return false; // to make sure there will never be an infinite loop
 		}
 
 		// Now go up these amount of levels, based on SCRIPT_NAME
-		$res = dirname($_SERVER['SCRIPT_NAME'].'index.php'); // This fake 'index.php' ensures that SCRIPT_NAME does not end with '/', which would make dirname() fail
-		for ($i=1; $i<=$c; $i++) {
-			$res = dirname($res);
+		if (PHP_SAPI == 'cli') {
+			if ($relative) {
+				return str_repeat('../',$steps_up);
+			} else {
+				return false;
+			}
+		} else {
+			$res = dirname($_SERVER['SCRIPT_NAME'].'index.php'); // This fake 'index.php' ensures that SCRIPT_NAME does not end with '/', which would make dirname() fail
+			for ($i=0; $i<$steps_up; $i++) {
+				$res = dirname($res);
+			}
+			$res = str_replace('\\', '/', $res);
+			if ($res == '/') $res = '';
+			$res .= '/';
+	
+			// Do we want to have an absolute URI?
+			if (!$relative) {
+				$is_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
+				$protocol = $is_ssl ? 'https' : 'http'; // do not translate
+				$host = $_SERVER['HTTP_HOST']; // includes port if it is not 80/443
+				$res = $protocol.'://'.$host.$res;
+			}
+	
+			return $res;
 		}
-		$res = str_replace('\\', '/', $res);
-		if ($res == '/') $res = '';
-		$res .= '/';
-
-		// Do we want to have an absolute URI?
-		if (!$relative) {
-			$is_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
-			$protocol = $is_ssl ? 'https' : 'http'; // do not translate
-			$host = $_SERVER['HTTP_HOST']; // includes port if it is not 80/443
-			$res = $protocol.'://'.$host.$res;
-		}
-
-		return $res;
 	}
 
 	private static $system_id_cache = null;
@@ -979,7 +991,7 @@ class OIDplus {
 	public static function isSslAvailable() {
 		if (!is_null(self::$sslAvailableCache)) return self::$sslAvailableCache;
 
-		if (php_sapi_name() == 'cli') {
+		if (PHP_SAPI == 'cli') {
 			self::$sslAvailableCache = false;
 			return false;
 		}
