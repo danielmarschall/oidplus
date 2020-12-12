@@ -1100,7 +1100,7 @@ class OIDplus {
 			$res = realpath($target);
 		}
 
-		if (!empty($res) && is_dir($res)) $res .= DIRECTORY_SEPARATOR;
+		if (is_null($target) || is_dir($target)) $res .= DIRECTORY_SEPARATOR;
 
 		return $res;
 	}
