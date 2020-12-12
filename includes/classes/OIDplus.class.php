@@ -800,33 +800,8 @@ class OIDplus {
 		if (!$relative) {
 			$res = OIDplus::baseConfig()->getValue('EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
 			if ($res !== '') {
-				return $res;
+				return rtrim($res,'/').'/';
 			}
-		}
-
-		if (!isset($_SERVER["SCRIPT_NAME"])) return false;
-
-		$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
-		$test_dir = str_replace('\\', '/', $test_dir);
-		$c = 0;
-		// We just assume that only the OIDplus base directory contains "oidplus.min.css.php" and not any subsequent directory!
-		while (!file_exists($test_dir.'/oidplus.min.css.php')) {
-			$test_dir = dirname($test_dir);
-			$c++;
-			if ($c == 1000) return false;
-		}
-
-		$res = dirname($_SERVER['SCRIPT_NAME'].'xxx');
-
-		for ($i=1; $i<=$c; $i++) {
-			$res = dirname($res);
-		}
-
-		$res = str_replace('\\', '/', $res);
-		if ($res == '/') $res = '';
-		$res .= '/';
-
-		if (!$relative) {
 			if (php_sapi_name() == 'cli') {
 				try {
 					return OIDplus::config()->getValue('last_known_system_url', false);
@@ -834,7 +809,31 @@ class OIDplus {
 					return false;
 				}
 			}
+		}
 
+		if (!isset($_SERVER["SCRIPT_NAME"]) && !isset($_SERVER["SCRIPT_FILENAME"])) return false;
+
+		// First, try to find out how many levels we need to go up
+		$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
+		$test_dir = str_replace('\\', '/', $test_dir);
+		$c = 0;
+		while (!file_exists($test_dir.'/oidplus.min.css.php')) { // We just assume that only the OIDplus base directory contains "oidplus.min.css.php" and not any subsequent directory!
+			$test_dir = dirname($test_dir);
+			$c++;
+			if ($c == 1000) return false; // to make sure there will never be an infinite loop
+		}
+
+		// Now go up these amount of levels, based on SCRIPT_NAME
+		$res = dirname($_SERVER['SCRIPT_NAME'].'index.php'); // This fake 'index.php' ensures that SCRIPT_NAME does not end with '/', which would make dirname() fail
+		for ($i=1; $i<=$c; $i++) {
+			$res = dirname($res);
+		}
+		$res = str_replace('\\', '/', $res);
+		if ($res == '/') $res = '';
+		$res .= '/';
+
+		// Do we want to have an absolute URI?
+		if (!$relative) {
 			$is_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
 			$protocol = $is_ssl ? 'https' : 'http'; // do not translate
 			$host = $_SERVER['HTTP_HOST']; // includes port if it is not 80/443
