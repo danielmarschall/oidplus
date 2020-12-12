@@ -366,7 +366,7 @@ if ($format == 'json') {
 		// https://code.visualstudio.com/docs/languages/json#_mapping-in-the-json
 		// Note that this syntax is VS Code-specific and not part of the JSON Schema specification.
 		//'$schema' => 'https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/json_schema.json',
-		'$schema' => OIDplus::getSystemUrl().'plugins/publicPages/100_whois/whois/json_schema.json',
+		'$schema' => OIDplus::webpath().'plugins/publicPages/100_whois/whois/json_schema.json',
 
 		// we need this NAMED root, otherwise PHP will name the sections "0", "1", "2" if the array is not sequencial (e.g. because "signature" is added)
 		'whois' => $ary
@@ -418,7 +418,7 @@ if ($format == 'xml') {
 	echo '<root xmlns="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.1.1"';
 	echo '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
 	//echo '      xsi:schemaLocation="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.1.1 https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/xml_schema.xsd">';
-	echo '      xsi:schemaLocation="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.1.1 '.OIDplus::getSystemUrl().'plugins/publicPages/100_whois/whois/xml_schema.xsd">';
+	echo '      xsi:schemaLocation="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.1.1 '.OIDplus::webpath().'plugins/publicPages/100_whois/whois/xml_schema.xsd">';
 	echo $xml;
 	echo '</root>';
 }

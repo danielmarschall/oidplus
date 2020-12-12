@@ -251,7 +251,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			$out['text'] .= '<p><font size="-1">'._L('<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of %1 minutes.', $mins);
 			$privacy_document_file = 'OIDplus/privacy_documentation.html';
 			$resourcePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.1.500'); // OIDplusPagePublicResources
-			if (!is_null($resourcePlugin) && file_exists(OIDplus::basePath().'/res/'.$privacy_document_file)) {
+			if (!is_null($resourcePlugin) && file_exists(OIDplus::localpath().'res/'.$privacy_document_file)) {
 				$out['text'] .= ' <a '.OIDplus::gui()->link('oidplus:resources$'.$privacy_document_file.'#cookies').'>'._L('More information about the cookies used').'</a>';
 			}
 			$out['text'] .= '</font></p></div>';

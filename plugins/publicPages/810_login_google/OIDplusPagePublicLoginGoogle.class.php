@@ -44,7 +44,7 @@ class OIDplusPagePublicLoginGoogle extends OIDplusPagePluginPublic {
 				"response_type=code&".
 				"client_id=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'))."&".
 				"scope=".implode('%20', array(/*'openid',*/ 'email', 'profile'))."&".
-				"redirect_uri=".urlencode(OIDplus::getSystemUrl(false).OIDplus::webpath(__DIR__).'oauth.php')."&".
+				"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,false).'oauth.php')."&".
 				"state=".urlencode($_COOKIE['csrf_token']);
 			$out['text'] = '<p>'._L('Please wait...').'</p><script>window.location.href = '.js_escape($target).';</script>';
 		}

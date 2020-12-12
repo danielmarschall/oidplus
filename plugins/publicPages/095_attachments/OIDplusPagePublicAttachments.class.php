@@ -20,7 +20,7 @@
 class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 	public static function getUploadDir($id) {
-		$path = realpath(OIDplus::basePath() . '/userdata/attachments/');
+		$path = realpath(OIDplus::localpath() . 'userdata/attachments/');
 
 		$obj = OIDplusObject::parse($id);
 		if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
@@ -242,12 +242,12 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			$output .= '<td>'.htmlentities(basename($file)).'</td>';
 			$output .= '<td>'.htmlentities(self::convert_filesize(filesize($file), 0)).'</td>';
 			$lookup_files = array(
-				OIDplus::basePath().'/userdata/attachments/filetypes$'.OIDplus::getCurrentLang().'.conf',
-				OIDplus::basePath().'/userdata/attachments/filetypes.conf',
-				OIDplus::basePath().'/3p/vts_fileformats/filetypes$'.OIDplus::getCurrentLang().'.local', // not recommended
-				OIDplus::basePath().'/3p/vts_fileformats/filetypes.local', // not recommended
-				OIDplus::basePath().'/3p/vts_fileformats/filetypes$'.OIDplus::getCurrentLang().'.conf',
-				OIDplus::basePath().'/3p/vts_fileformats/filetypes.conf'
+				OIDplus::localpath().'userdata/attachments/filetypes$'.OIDplus::getCurrentLang().'.conf',
+				OIDplus::localpath().'userdata/attachments/filetypes.conf',
+				OIDplus::localpath().'3p/vts_fileformats/filetypes$'.OIDplus::getCurrentLang().'.local', // not recommended
+				OIDplus::localpath().'3p/vts_fileformats/filetypes.local', // not recommended
+				OIDplus::localpath().'3p/vts_fileformats/filetypes$'.OIDplus::getCurrentLang().'.conf',
+				OIDplus::localpath().'3p/vts_fileformats/filetypes.conf'
 			);
 			$output .= '<td>'.htmlentities(VtsFileTypeDetect::getDescription($file, $lookup_files)).'</td>';
 
@@ -310,7 +310,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		$files = glob(self::getUploadDir($id).'/'.'*');
 		foreach ($files as $file) {
 			$out[] = 'attachment-name: '.basename($file);
-			$out[] = 'attachment-url: '.OIDplus::getSystemUrl().OIDplus::webpath(__DIR__).'download.php?id='.urlencode($id).'&filename='.urlencode(basename($file));
+			$out[] = 'attachment-url: '.OIDplus::webpath(__DIR__).'download.php?id='.urlencode($id).'&filename='.urlencode(basename($file));
 		}
 
 	}

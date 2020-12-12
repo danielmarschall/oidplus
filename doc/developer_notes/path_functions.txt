@@ -1,0 +1,31 @@
+
+
+How to get relative/absolute paths, e.g. when you are in a plugin?
+
+
+
+                          +---------------------------------------------------------------------------------
+                          |      Local path                               URL
+--------------------------+---------------------------------------------------------------------------------
+                          |
+   Get relative path      |      OIDplus::localpath(null, true)           OIDplus::webpath(null, true)
+   to base directory      |
+                          |
+                          |
+   Get relative path      |      OIDplus::localpath(__DIR__, true)        OIDplus::webpath(__DIR__,  true)
+   to any file/dir        |      OIDplus::localpath(__FILE__, true)       OIDplus::webpath(__FILE__, true)
+                          |
+                          |
+   Get absolute path      |      OIDplus::localpath(null, false)          OIDplus::webpath(null, false)
+   to base directory      |
+                          |
+                          |
+   Get absolute path      |      OIDplus::localpath(__DIR__, true)        OIDplus::webpath(__DIR__,  false)
+   to any file/dir        |      OIDplus::localpath(__FILE__, true)       OIDplus::webpath(__FILE__, false)
+                          |      or __DIR__.'/' and __FILE__
+                          |
+--------------------------+---------------------------------------------------------------------------------
+
+
+These function ensure that directories end with a trailing path delimiter
+

@@ -44,10 +44,10 @@ if (!function_exists('curl_init')) {
 // Get access token
 
 $ch = curl_init();
-if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
+if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
 curl_setopt($ch, CURLOPT_URL,"https://graph.facebook.com/v8.0/oauth/access_token?".
 	"client_id=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID'))."&".
-	"redirect_uri=".urlencode(OIDplus::getSystemUrl(false).OIDplus::webpath(__DIR__).'oauth.php')."&".
+	"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,false).'oauth.php')."&".
 	"client_secret=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_SECRET'))."&".
 	"code=".$_GET['code']
 );
@@ -65,7 +65,7 @@ $access_token = $data['access_token'];
 // Get user infos
 
 $ch = curl_init();
-if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
+if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
 curl_setopt($ch, CURLOPT_URL,"https://graph.facebook.com/v8.0/me?".
 	"fields=id,email,name&".
 	"access_token=".urlencode($access_token)
@@ -102,5 +102,5 @@ if (!empty($email)) {
 
 	// Go back to OIDplus
 
-	header('Location:'.OIDplus::getSystemUrl(false));
+	header('Location:'.OIDplus::webpath(null,false));
 }

@@ -40,7 +40,7 @@ class OIDplusSessionHandler {
 		// Uses a secure connection (HTTPS) if possible
 		@ini_set('session.cookie_secure', OIDplus::isSslAvailable());
 
-		$path = OIDplus::getSystemUrl(true);
+		$path = OIDplus::webpath(null,true);
 		if (!empty($path)) {
 			@ini_set('session.cookie_path', $path);
 		}

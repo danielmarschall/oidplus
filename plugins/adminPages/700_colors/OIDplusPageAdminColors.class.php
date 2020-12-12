@@ -69,7 +69,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('Invalid design folder name. Do only enter a folder name, not an absolute or relative path'));
 			}
 
-			if (!is_dir(OIDplus::basePath().'/plugins/design/'.$value)) {
+			if (!is_dir(OIDplus::localpath().'plugins/design/'.$value)) {
 				throw new OIDplusException(_L('The design "%1" does not exist in plugin directory %2',$value,'plugins/design/'));
 			}
 		});

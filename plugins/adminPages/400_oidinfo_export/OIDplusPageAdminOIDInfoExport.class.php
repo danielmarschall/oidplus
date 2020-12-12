@@ -91,7 +91,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 
 			$ch = curl_init();
-			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
+			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
 			if (function_exists('gzdeflate')) {
@@ -190,7 +190,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 
 			$ch = curl_init();
-			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
+			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
 			if (function_exists('gzdeflate')) {
@@ -329,7 +329,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 									$tmp_information .= '<br/><br/>';
 								}
 
-								$tmp_information .= 'See <a href="'.OIDplus::getSystemUrl(false).'?goto='.urlencode($id).'">more information</a>.'; // do not translate
+								$tmp_information .= 'See <a href="'.OIDplus::webpath(null,false).'?goto='.urlencode($id).'">more information</a>.'; // do not translate
 
 								if (explode(':',$id,2)[0] != 'oid') {
 									$tmp_information = "Object: $id\n\n" . $tmp_information; // do not translate
@@ -458,7 +458,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 
 			$ch = curl_init();
-			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
+			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
 			if (function_exists('gzdeflate')) {
@@ -705,7 +705,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 					$elements['information'] .= '<br/><br/>';
 				}
 
-				$elements['information'] .= 'See <a href="'.OIDplus::getSystemUrl(false).'?goto='.urlencode($id).'">more information</a>.'; // do not translate
+				$elements['information'] .= 'See <a href="'.OIDplus::webpath(null,false).'?goto='.urlencode($id).'">more information</a>.'; // do not translate
 
 				if (explode(':',$id,2)[0] != 'oid') {
 					$elements['information'] = "Object: $id\n\n" . $elements['information']; // do not translate
@@ -827,7 +827,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				if (stripos($url,'www.') === 0) {
 					$url .= 'http://' . $url;
 				} else {
-					$url = OIDplus::getSystemUrl() . $url;
+					$url = OIDplus::webpath() . $url;
 				}
 			}
 			return $treffer[1].$url.$treffer[4];

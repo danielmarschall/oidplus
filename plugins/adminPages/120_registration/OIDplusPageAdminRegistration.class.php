@@ -134,7 +134,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			}
 
 			$ch = curl_init();
-			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
+			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
 			if (function_exists('gzdeflate')) {
@@ -204,7 +204,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			$privacy_level = OIDplus::config()->getValue('reg_privacy');
 		}
 
-		$system_url = OIDplus::getSystemUrl();
+		$system_url = OIDplus::webpath();
 
 		// It is very important that we set the ping time NOW, because ViaThinkSoft might contact us during the ping,
 		// and this would cause an endless loop!
@@ -237,7 +237,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				}
 
 				$ch = curl_init();
-				if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
+				if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
 				curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 				curl_setopt($ch, CURLOPT_POST, 1);
 				if (function_exists('gzdeflate')) {
@@ -336,7 +336,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			}
 
 			$ch = curl_init();
-			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
+			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
 			curl_setopt($ch, CURLOPT_POST, 1);
 			if (function_exists('gzdeflate')) {
@@ -485,7 +485,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 		$testurl = 'https://www.google.com/';
 		$ch = curl_init();
-		if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
+		if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
 		curl_setopt($ch, CURLOPT_URL, $testurl);
 		curl_setopt($ch, CURLOPT_HEADER, TRUE);
 		curl_setopt($ch, CURLOPT_NOBODY, TRUE);

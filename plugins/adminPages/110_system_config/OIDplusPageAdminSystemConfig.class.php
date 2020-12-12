@@ -96,7 +96,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
 			$output .= '<br><p>'._L('See also').':</p>';
 			$output .= '<ul>';
-			$output .= '<li><a href="'.OIDplus::getSystemUrl().'setup/">'._L('Setup part 1: Create %1 (contains database settings, ReCAPTCHA, admin password and SSL enforcement)','userdata/baseconfig/config.inc.php').'</a></li>';
+			$output .= '<li><a href="'.OIDplus::webpath().'setup/">'._L('Setup part 1: Create %1 (contains database settings, ReCAPTCHA, admin password and SSL enforcement)','userdata/baseconfig/config.inc.php').'</a></li>';
 			$oobePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.3.50'); // OIDplusPageAdminOOBE
 			if (!is_null($oobePlugin)) {
 				$output .= '<li><a href="'.OIDplus::webpath($oobePlugin->getPluginDirectory()).'oobe.php">'._L('Setup part 2: Basic settings (they are all available above, too)').'</a></li>';

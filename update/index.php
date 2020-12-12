@@ -116,8 +116,6 @@ if (isset($_REQUEST['update_now'])) {
 
 	echo '<hr>';
 
-	//$svn_wc_exists = is_dir(OIDplus::basePath().'/.svn');
-	//$snapshot_exists = file_exists(OIDplus::basePath().'/oidplus_version.txt');
 	$installType = OIDplus::getInstallType();
 
 	if ($installType === 'ambigous') {

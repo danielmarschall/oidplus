@@ -52,12 +52,12 @@ class OIDplus {
 			// It is important to include it before userdata/baseconfig/config.inc.php was included,
 			// so we can give userdata/baseconfig/config.inc.php the chance to override the values.
 
-			include OIDplus::basePath().'/includes/oidplus_limits.inc.php';
+			include OIDplus::localpath().'includes/oidplus_limits.inc.php';
 
 			// Include config file
 
-			$config_file = OIDplus::basePath() . '/userdata/baseconfig/config.inc.php';
-			$config_file_old = OIDplus::basePath() . '/includes/config.inc.php'; // backwards compatibility
+			$config_file = OIDplus::localpath() . 'userdata/baseconfig/config.inc.php';
+			$config_file_old = OIDplus::localpath() . 'includes/config.inc.php'; // backwards compatibility
 
 			if (!file_exists($config_file) && file_exists($config_file_old)) {
 				$config_file = $config_file_old;
@@ -91,12 +91,12 @@ class OIDplus {
 					}
 				}
 			} else {
-				if (!is_dir(OIDplus::basePath().'/setup')) {
+				if (!is_dir(OIDplus::localpath().'setup')) {
 					throw new OIDplusConfigInitializationException(_L('File %1 is missing, but setup can\'t be started because its directory missing.','userdata/baseconfig/config.inc.php'));
 				} else {
 					if (self::$html) {
-						if (strpos($_SERVER['REQUEST_URI'], OIDplus::getSystemUrl(true).'setup/') !== 0) {
-							header('Location:'.OIDplus::getSystemUrl().'setup/');
+						if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,true).'setup/') !== 0) {
+							header('Location:'.OIDplus::webpath().'setup/');
 							die(_L('Redirecting to setup...'));
 						} else {
 							return self::$baseConfig;
@@ -198,7 +198,7 @@ class OIDplus {
 					throw new OIDplusException(_L('Invalid auth plugin folder name. Do only enter a folder name, not an absolute or relative path'));
 				}
 
-				if (!is_dir(OIDplus::basePath().'/plugins/auth/'.$value)) {
+				if (!is_dir(OIDplus::localpath().'plugins/auth/'.$value)) {
 					throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$value,'plugins/auth/'));
 				}
 			});
@@ -565,7 +565,7 @@ class OIDplus {
 		$out = array();
 		// Note: glob() will sort by default, so we do not need a page priority attribute.
 		//       So you just need to use a numeric plugin directory prefix (padded).
-		$ary = glob(OIDplus::basePath().'/plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.xml');
+		$ary = glob(OIDplus::localpath().'plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.xml');
 		sort($ary);
 		foreach ($ary as $ini) {
 			if (!file_exists($ini)) continue;
@@ -784,19 +784,33 @@ class OIDplus {
 
 	# --- System URL, System ID, PKI, and other functions
 
-	public static function basePath() {
-		return realpath(__DIR__ . '/../../');
-	}
-
 	private static function recognizeSystemUrl() {
 		try {
-			$url = OIDplus::getSystemUrl();
+			$url = OIDplus::webpath();
 			OIDplus::config()->setValue('last_known_system_url', $url);
 		} catch (Exception $e) {
 		}
 	}
+	
+	private static function getExecutingScriptPathDepth() {
+		if (PHP_SAPI == 'cli') {
+			global $argv;
+			$test_dir = dirname(realpath($argv[0]));
+		} else {
+			if (!isset($_SERVER["SCRIPT_FILENAME"])) return false;
+			$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
+		}
+		$test_dir = str_replace('\\', '/', $test_dir);
+		$steps_up = 0;
+		while (!file_exists($test_dir.'/oidplus.min.css.php')) { // We just assume that only the OIDplus base directory contains "oidplus.min.css.php" and not any subsequent directory!
+			$test_dir = dirname($test_dir);
+			$steps_up++;
+			if ($steps_up == 1000) return false; // to make sure there will never be an infinite loop
+		}
+		return $steps_up;
+	}
 
-	public static function getSystemUrl($relative=false) {
+	private static function getSystemUrl($relative=false) {
 		if (!$relative) {
 			$res = OIDplus::baseConfig()->getValue('EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
 			if ($res !== '') {
@@ -812,22 +826,10 @@ class OIDplus {
 		}
 
 		// First, try to find out how many levels we need to go up
-		if (PHP_SAPI == 'cli') {
-			global $argv;
-			$test_dir = dirname(realpath($argv[0]));
-		} else {
-			if (!isset($_SERVER["SCRIPT_FILENAME"])) return false;
-			$test_dir = dirname($_SERVER['SCRIPT_FILENAME']);
-		}
-		$test_dir = str_replace('\\', '/', $test_dir);
-		$steps_up = 0;
-		while (!file_exists($test_dir.'/oidplus.min.css.php')) { // We just assume that only the OIDplus base directory contains "oidplus.min.css.php" and not any subsequent directory!
-			$test_dir = dirname($test_dir);
-			$steps_up++;
-			if ($steps_up == 1000) return false; // to make sure there will never be an infinite loop
-		}
+		$steps_up = self::getExecutingScriptPathDepth();
+		if ($steps_up === false) return false;
 
-		// Now go up these amount of levels, based on SCRIPT_NAME
+		// Now go up these amount of levels, based on SCRIPT_NAME/argv[0]
 		if (PHP_SAPI == 'cli') {
 			if ($relative) {
 				return str_repeat('../',$steps_up);
@@ -842,7 +844,7 @@ class OIDplus {
 			$res = str_replace('\\', '/', $res);
 			if ($res == '/') $res = '';
 			$res .= '/';
-	
+
 			// Do we want to have an absolute URI?
 			if (!$relative) {
 				$is_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
@@ -850,7 +852,7 @@ class OIDplus {
 				$host = $_SERVER['HTTP_HOST']; // includes port if it is not 80/443
 				$res = $protocol.'://'.$host.$res;
 			}
-	
+
 			return $res;
 		}
 	}
@@ -920,11 +922,11 @@ class OIDplus {
 	public static function getInstallType() {
 		$counter = 0;
 
-		if ($version_file_exists = file_exists(OIDplus::basePath().'/oidplus_version.txt'))
+		if ($version_file_exists = file_exists(OIDplus::localpath().'oidplus_version.txt'))
 			$counter++;
-		if ($svn_dir_exists = is_dir(OIDplus::basePath().'/.svn'))
+			if ($svn_dir_exists = is_dir(OIDplus::localpath().'.svn'))
 			$counter++;
-		if ($git_dir_exists = is_dir(OIDplus::basePath().'/.git'))
+			if ($git_dir_exists = is_dir(OIDplus::localpath().'.git'))
 			$counter++;
 
 		if ($counter === 0) {
@@ -966,19 +968,19 @@ class OIDplus {
 		$installType = OIDplus::getInstallType();
 
 		if ($installType === 'svn-wc') {
-			$ver = get_svn_revision(OIDplus::basePath());
+			$ver = get_svn_revision(OIDplus::localpath());
 			if ($ver)
 				return ($cachedVersion = 'svn-'.$ver);
 		}
 
 		if ($installType === 'git-wc') {
-			$ver = get_gitsvn_revision(OIDplus::basePath());
+			$ver = get_gitsvn_revision(OIDplus::localpath());
 			if ($ver)
 				return ($cachedVersion = 'svn-'.$ver);
 		}
 
 		if ($installType === 'svn-snapshot') {
-			$cont = file_get_contents(OIDplus::basePath().'/oidplus_version.txt');
+			$cont = file_get_contents(OIDplus::localpath().'oidplus_version.txt');
 			$m = array();
 			if (preg_match('@Revision (\d+)@', $cont, $m)) // do not translate
 				return ($cachedVersion = 'svn-'.$m[1]); // do not translate
@@ -999,7 +1001,7 @@ class OIDplus {
 		$timeout = 2;
 		$already_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == "on");
 		$ssl_port = 443;
-		$cookie_path = OIDplus::getSystemUrl(true);
+		$cookie_path = OIDplus::webpath(null,true);
 		if (empty($cookie_path)) $cookie_path = '/';
 
 		$mode = OIDplus::baseConfig()->getValue('ENFORCE_SSL', 2/*auto*/);
@@ -1069,18 +1071,60 @@ class OIDplus {
 			}
 		}
 	}
-
-	public static function webpath($target) {
-		$dir = __DIR__;
-		$dir = dirname($dir);
-		$dir = dirname($dir);
-		$target = substr($target, strlen($dir)+1, strlen($target)-strlen($dir)-1);
-		if ($target != '') {
-			$target = str_replace('\\','/',$target).'/';
+	
+	/**
+	 * Gets a local path pointing to a resource
+	 * @param string $target Target resource (file or directory must exist), or null to get the OIDplus base directory
+	 * @param boolean $relative If true, the returning path is relative to the currently executed PHP file (not the CLI working directory)
+	 * @return string The local path, with guaranteed trailing path delimiter for directories
+	 */
+	public static function localpath($target=null, $relative=false) {
+		if (is_null($target)) {
+			$target = __DIR__.'/../../';
 		}
-		return $target;
+
+		if ($relative) {
+			// First, try to find out how many levels we need to go up
+			$steps_up = self::getExecutingScriptPathDepth();
+			if ($steps_up === false) return false;
+			
+			// Virtually go back from the executing PHP script to the OIDplus base path
+			$res = str_repeat('../',$steps_up);
+			
+			// Then go to the desired location
+			$basedir = realpath(__DIR__.'/../../');
+			$target = realpath($target);
+			$res .= substr($target, strlen($basedir)+1);
+			$res = rtrim($res,'/'); // avoid '..//' for localpath(null,true)
+		} else {
+			$res = realpath($target);
+		}
+		
+		if (!empty($res) && is_dir($res)) $res .= DIRECTORY_SEPARATOR;
+		
+		return $res;
 	}
 
+	/**
+	 * Gets a URL pointing to a resource
+	 * @param string $target Target resource (file or directory must exist), or null to get the OIDplus base directory
+	 * @param boolean $relative If true, the returning path is relative to the currently executed PHP script (i.e. index.php , not the plugin PHP script!)
+	 * @return string The URL, with guaranteed trailing path delimiter for directories
+	 */
+	public static function webpath($target=null, $relative=false) {
+		$res = self::getSystemUrl($relative); // Note: already contains a trailing path delimiter
+		if (!$res) return false;
+		
+		if (!is_null($target)) {
+			$basedir = realpath(__DIR__.'/../../');
+			$target = realpath($target);
+			$tmp = substr($target, strlen($basedir)+1);
+			$res .= str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // remove OS specific path delimiters introcued by realpath()
+		}
+		
+		return $res;
+	}
+	
 	public static function getAvailableLangs() {
 		$langs = array();
 		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
@@ -1111,11 +1155,11 @@ class OIDplus {
 			// the page in that language, but the cookie must be set, otherwise
 			// the menu and other stuff would be in their cookie-based-language and not the
 			// argument-based-language.
-			$cookie_path = OIDplus::getSystemUrl(true);
+			$cookie_path = OIDplus::webpath(null,true);
 			if (empty($cookie_path)) $cookie_path = '/';
 			setcookie('LANGUAGE', $_GET['lang'], 0, $cookie_path, '', false, false/*HttpOnly off, because JavaScript also needs translation*/);
 		} else if (isset($_POST['lang'])) {
-			$cookie_path = OIDplus::getSystemUrl(true);
+			$cookie_path = OIDplus::webpath(null,true);
 			if (empty($cookie_path)) $cookie_path = '/';
 			setcookie('LANGUAGE', $_POST['lang'], 0, $cookie_path, '', false, false/*HttpOnly off, because JavaScript also needs translation*/);
 		}

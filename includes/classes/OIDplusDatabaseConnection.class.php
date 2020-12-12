@@ -120,7 +120,7 @@ abstract class OIDplusDatabaseConnection {
 			throw new OIDplusConfigInitializationException(_L('Entry "database_version" inside the table "###config" seems to be wrong (expect number between 200 and 999)'));
 		}
 		
-		$update_files = glob(OIDplus::basePath().'/includes/db_updates/update*.inc.php');
+		$update_files = glob(OIDplus::localpath().'includes/db_updates/update*.inc.php');
 		foreach ($update_files as $update_file) {
 			include_once $update_file;
 		}

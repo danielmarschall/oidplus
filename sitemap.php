@@ -41,9 +41,9 @@ foreach (OIDplus::getPagePlugins() as $plugin) {
 
 $out2 = array();
 foreach ($out as $o) {
-	$out2[] = OIDplus::getSystemUrl().'?goto='.urlencode($o);
+	$out2[] = OIDplus::webpath().'?goto='.urlencode($o);
 	foreach ($non_default_languages as $lang) {
-		$out2[] = OIDplus::getSystemUrl().'?lang='.urlencode($lang).'&goto='.urlencode($o);
+		$out2[] = OIDplus::webpath().'?lang='.urlencode($lang).'&goto='.urlencode($o);
 	}
 }
 

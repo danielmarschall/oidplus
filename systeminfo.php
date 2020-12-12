@@ -37,7 +37,7 @@ $out['PublicKey'] = $pubKey;
 
 // Commented out due to security/privacy reasons
 /*
-$sys_url = OIDplus::getSystemUrl();
+$sys_url = OIDplus::webpath();
 $out['SystemURL'] = $sys_url;
 
 $sys_ver = OIDplus::getVersion();

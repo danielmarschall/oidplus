@@ -39,7 +39,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	private static function getDocumentContent($file) {
-		$file = rtrim(OIDplus::basePath(),'/').'/'.self::realname($file);
+		$file = OIDplus::localpath().self::realname($file);
 		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
 		if (file_exists($file2)) $file = $file2;
 
@@ -55,7 +55,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	private static function getDocumentTitle($file) {
-		$file = rtrim(OIDplus::basePath(),'/').'/'.self::realname($file);
+		$file = OIDplus::localpath().self::realname($file);
 		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
 		if (file_exists($file2)) $file = $file2;
 
@@ -81,8 +81,8 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		if (OIDplus::authUtils()::isAdminLoggedIn()) return true;
 
 		$candidates = array(
-			OIDplus::basePath().'/userdata/resources/security.ini',
-			OIDplus::basePath().'/res/security.ini'
+			OIDplus::localpath().'userdata/resources/security.ini',
+			OIDplus::localpath().'res/security.ini'
 		);
 		foreach ($candidates as $ini_file) {
 			if (file_exists($ini_file)) {
@@ -109,7 +109,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	private static function myglob($reldir, $onlydir=false) {
 		$out = array();
 
-		$root = OIDplus::basePath().'/userdata/resources/';
+		$root = OIDplus::localpath().'userdata/resources/';
 		$res = $onlydir ? glob($root.ltrim($reldir,'/'), GLOB_ONLYDIR) : glob($root.ltrim($reldir,'/'));
 		foreach ($res as &$x) {
 			$x = substr($x, strlen($root));
@@ -117,7 +117,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			$out[] = $x;
 		}
 
-		$root = OIDplus::basePath().'/res/';
+		$root = OIDplus::localpath().'res/';
 		$res = $onlydir ? glob($root.ltrim($reldir,'/'), GLOB_ONLYDIR) : glob($root.ltrim($reldir,'/'));
 		foreach ($res as $x) {
 			$x = substr($x, strlen($root));
@@ -133,16 +133,16 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	private static function realname($rel) {
-		$candidate1 = OIDplus::basePath().'/userdata/resources/'.$rel;
-		$candidate2 = OIDplus::basePath().'/res/'.$rel;
+		$candidate1 = OIDplus::localpath().'userdata/resources/'.$rel;
+		$candidate2 = OIDplus::localpath().'res/'.$rel;
 		if (file_exists($candidate1) || is_dir($candidate1)) return "userdata/resources/$rel";
 		if (file_exists($candidate2) || is_dir($candidate2)) return "res/$rel";
 	}
 
 	protected static function checkRedirect($source, &$target): bool {
 		$candidates = array(
-			OIDplus::basePath().'/userdata/resources/redirect.ini',
-			OIDplus::basePath().'/res/redirect.ini'
+			OIDplus::localpath().'userdata/resources/redirect.ini',
+			OIDplus::localpath().'res/redirect.ini'
 		);
 		foreach ($candidates as $ini_file) {
 			if (file_exists($ini_file)) {

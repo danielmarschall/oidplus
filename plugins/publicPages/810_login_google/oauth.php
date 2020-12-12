@@ -41,13 +41,13 @@ if (!function_exists('curl_init')) {
 }
 
 $ch = curl_init();
-if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
+if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
 curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/token");
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS,
 	"grant_type=authorization_code&".
 	"code=".$_GET['code']."&".
-	"redirect_uri=".urlencode(OIDplus::getSystemUrl(false).OIDplus::webpath(__DIR__).'oauth.php')."&".
+	"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,false).'oauth.php')."&".
 	"client_id=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'))."&".
 	"client_secret=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_SECRET'))
 );
@@ -83,7 +83,7 @@ if (!empty($email)) {
 
 		// Query user infos
 		$ch = curl_init('https://www.googleapis.com/oauth2/v3/userinfo'); // Initialise cURL
-		if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
+		if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
 		$data_string = '';
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 			'Content-Length: ' . strlen($data_string),
@@ -110,13 +110,13 @@ if (!empty($email)) {
 
 	// Go back to OIDplus
 
-	header('Location:'.OIDplus::getSystemUrl(false));
+	header('Location:'.OIDplus::webpath(null,false));
 }
 
 // We now have the data of the person that wanted to log in
 // So we can log off again
 $ch = curl_init();
-if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::basePath() . '/3p/certs/cacert.pem');
+if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
 curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/revoke");
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS,
