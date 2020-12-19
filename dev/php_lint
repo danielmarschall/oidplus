@@ -1,7 +1,8 @@
 #!/usr/bin/php
 <?php
 
-# Vorlage: /usr/share/gwhois/maintenance/global-syntax-check
+# Source:
+# https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/vgwhois/trunk/maintenance/qa-monitor/syntax/global-syntax-check?revision=HEAD&view=markup
 
 error_reporting(E_ALL | E_NOTICE | E_STRICT | E_DEPRECATED);
 

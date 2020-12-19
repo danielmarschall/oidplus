@@ -19,13 +19,13 @@
  * limitations under the License.
  */
 
-// TODO: getHeaders() als single string , attachments , remove headers etc, headers als array in/out, Braucht man auch ein addRawHeader()?
+// TODO: getHeaders() as single string , attachments , remove headers etc, headers as array in/out, do you also need addRawHeader()?
 
 class SecureMailer {
 	private $headers = '';
 
-	// TODO: sollte eher private sein, geht aber net
-	const endl = "\n"; // GMX will kein CRLF! wtf?! (Unter Postfix in Linux)
+	// TODO: This should rather be private, but it won't work
+	const endl = "\n"; // GMX doesn't like CRLF! wtf?! (tested in Postfix in Linux)
 
 	private function QB_SECURE_MAIL_PARAM($param_ = '', $level_ = 2) {
 		// Prevents eMail header injections
@@ -95,7 +95,7 @@ class SecureMailer {
 		return $this->_sendMail($recipient, $subject, $message, '');
 	}
 
-	// TODO: plain aus html berechnen als optional?
+	// TODO: generate plain from html (strip tags), optional
 	public function sendMailHTMLandPlainMultipart($to, $subject, $msg_html, $msg_plain) {
 		$boundary = uniqid('np');
 

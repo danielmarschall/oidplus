@@ -189,7 +189,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 	// document.title = ""; // <-- we may not do this, otherwise Firefox won't
 	//                            show titles in the browser history (right-click
 	//                            on back-button), although document.title() is
-	//                            set inside the AJAX-callback [FirefoxBug?!]
+	//                            set inside the AJAX-callback [Firefox bug?!]
 
 	$('#real_title').html("&nbsp;");
 	$('#real_content').html(_L("Loading..."));

@@ -20,7 +20,7 @@
 
 // All functions in this library are compatible with leading zeroes (not recommended) and leading dots
 
-// TODO: change some function names, so that they have a uniform naming schema, and rename "oid identifier" into "asn.1 alphanumeric identifier"
+// TODO: change some function names, so that they have a uniform naming schema, and rename "oid identifier" into "ASN.1 alphanumeric identifier"
 //       oid_id_is_valid() => asn1_alpha_id_valid()
 
 define('OID_DOT_FORBIDDEN', 0);
@@ -341,7 +341,7 @@ $oid_sanitize_cache = array();
 function sanitizeOID($oid, $leading_dot=false) {
 	if ($leading_dot) $leading_dot = substr($oid,0,1) == '.';
 
-	// We are using a cache, since this function is used very often by OID+
+	// We are using a cache, since this function is used very often by OIDplus
 	global $oid_sanitize_cache;
 	$v = ($leading_dot ? 'T' : 'F').$oid;
 	if (isset($oid_sanitize_cache[$v])) return $oid_sanitize_cache[$v];
@@ -813,7 +813,7 @@ function asn1_to_dot($asn) {
 	// Clean up
 	$count = -1;
 	$asn = preg_replace('@^\\{(.+)\\}$@', '\\1', $asn, -1, $count);
-	if ($count == 0) return false; // { and } are required. The asn.1 path will NOT be trimmed by this function
+	if ($count == 0) return false; // { and } are required. The ASN.1 path will NOT be trimmed by this function
 
 	// If identifier is set, apply it (no check if it overrides a standardized identifier)
 	$asn = preg_replace('|\s*([a-z][a-zA-Z0-9-]*)\s*\((\d+)\)|', ' \\2', $asn);

@@ -76,7 +76,7 @@ class OIDplusMenuUtils {
 		$parentObj = OIDplusObject::parse($parent);
 
 		@list($namespace, $oid) = explode(':', $parent, 2);
-		if ($namespace == 'oid') $oid = substr($oid, 1); // führenden Punkt entfernen
+		if ($namespace == 'oid') $oid = substr($oid, 1); // Remove leading dot
 
 		if (is_array($goto_path)) array_shift($goto_path);
 
@@ -96,7 +96,7 @@ class OIDplusMenuUtils {
 			$child = array();
 			$child['id'] = $row['id'];
 
-			// Anzeigenamen (relative OID) bestimmen
+			// Determine display name (relative OID)
 			$child['text'] = $obj->jsTreeNodeName($parentObj);
 			$child['text'] .= empty($row['title']) ? /*' -- <i>'.htmlentities('Title missing').'</i>'*/ '' : ' -- <b>' . htmlentities($row['title']) . '</b>';
 
@@ -108,10 +108,10 @@ class OIDplusMenuUtils {
 				$child['text'] = '<font color="gray"><i>'.$child['text'].'</i></font>';
 			}
 
-			// Icon bestimmen
+			// Determine icon
 			$child['icon'] = $obj->getIcon($row);
 
-			// Feststellen, ob es weitere Unter-OIDs gibt
+			// Check if there are more sub OIDs
 			if ($goto_path === true) {
 				$child['children'] = self::tree_populate($row['id'], $goto_path);
 				$child['state'] = array("opened" => true);

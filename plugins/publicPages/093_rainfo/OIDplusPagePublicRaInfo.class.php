@@ -30,7 +30,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 			$ra_email = str_replace('&', '@', $antispam_email);
 
 			$out['icon'] = OIDplus::webpath(__DIR__).'rainfo_big.png';
-			
+
 			$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:list_ra').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to RA listing').'</a></p>';
 
 			if (empty($ra_email)) {
@@ -146,8 +146,8 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 			if (trim($row['organization']) !== '') $out .= htmlentities($row['organization']).'<br>';
 			if (trim($row['office']) !== '') $out .= htmlentities($row['office']).'<br>';
 			if ($row['privacy']) {
-				// TODO: meldung nur anzeigen, wenn benutzer überhaupt straße, adresse etc hat
-				// TODO: aber der admin soll es sehen, und der user selbst (mit anmerkung, dass es privat ist)
+				// TODO: Only show the message if the user has a street, address, etc.
+				// TODO: But the admin and the own user should see it (with a note that the data is not visible to the public)
 				$out .= '<p>'._L('The RA does not want to publish their personal information.').'</p>';
 			} else {
 				if (trim($row['street']) !== '') $out .= htmlentities($row['street']).'<br>';

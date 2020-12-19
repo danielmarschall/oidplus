@@ -85,7 +85,7 @@ class OIDplusOther extends OIDplusObject {
 	}
 
 	public function defaultTitle() {
-		$ary = explode('\\', $this->other); // TODO: aber wenn ein arc ein "\" enthält, geht es nicht. besser von db ablesen?
+		$ary = explode('\\', $this->other); // TODO: but if an arc contains "\", this does not work. better read from db?
 		$ary = array_reverse($ary);
 		return $ary[0];
 	}

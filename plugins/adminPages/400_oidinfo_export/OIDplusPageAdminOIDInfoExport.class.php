@@ -292,15 +292,15 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 								while ($row2 = $res2->fetch_object()) {
 									$asn1_ids[] = $row2->name; // 'unicode-label' is currently not in the standard format (oid.xsd)
 								}
-								$url .= "&id=".array_shift($asn1_ids); // urlencode wurde schon oben gemacht
-								$url .= "&syn_id=".implode('%0A', $asn1_ids); // urlencode wurde schon oben gemacht
+								$url .= "&id=".array_shift($asn1_ids); // urlencode() is already done (see above)
+								$url .= "&syn_id=".implode('%0A', $asn1_ids); // urlencode() is already done (see above)
 
 								$iri_ids = array();
 								$res2 = OIDplus::db()->query("select * from ###iri where oid = ?", array($row->id));
 								while ($row2 = $res2->fetch_object()) {
 									$iri_ids[] = $row2->name;
 								}
-								$url .= "&unicode_label_list=".implode('%0A', $iri_ids); // urlencode wurde schon oben gemacht
+								$url .= "&unicode_label_list=".implode('%0A', $iri_ids); // urlencode() is already done (see above)
 
 								if (!empty($row->title)) {
 									$tmp_description = $row->title;

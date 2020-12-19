@@ -22,7 +22,7 @@
 
 // TODO: oop, exceptions?
 // TODO: variant without gmp ?
-// TODO: IPv6 auflösung 'ffff::192.168.69.1' -> 'ffff:0000:0000:0000:0000:0000:c0a8:4501' geht nicht!!!
+// TODO: IPv6 resolution 'ffff::192.168.69.1' -> 'ffff:0000:0000:0000:0000:0000:c0a8:4501' does not work!
 
 if (file_exists(__DIR__ . '/gmp_supplement.inc.php')) include_once __DIR__ . '/gmp_supplement.inc.php';
 
