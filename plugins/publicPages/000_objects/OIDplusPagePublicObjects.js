@@ -117,7 +117,7 @@ function crudActionInsert(parent) {
 					alert(_L("Insert OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID."));
 				}
 
-				// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts eine neue zeile zur tabelle hinzufügen
+				// TODO: Don't use reloadContent(); instead add a node at the tree at the left add at the right add a new row to the table
 				reloadContent();
 			} else {
 				alert(_L("Error: %1",data));
@@ -200,7 +200,7 @@ function crudActionDelete(id, parent) {
 				alert(_L("Error: %1",data.error));
 			} else if (data.status >= 0) {
 				reloadContent();
-				// TODO: auf reloadContent() verzichten. stattdessen nur tree links aktualisieren, und rechts die zeile aus der tabelle löschen
+				// TODO: Don't use reloadContent(); instead delete node at the left tree and remove the row at the right table
 			} else {
 				alert(_L("Error: %1",data.error));
 			}

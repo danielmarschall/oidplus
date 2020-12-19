@@ -33,8 +33,8 @@ function htmlentities_numeric($str, $allow_html=false, $encode_linebreaks=false)
 	}
 
 	// get rid of existing entities else double-escape
-// DM 24.08.2016 Auskommentiert wegen oid+ xml export
-//	$str = html_entity_decode(stripslashes($str),ENT_QUOTES,'UTF-8');
+	// DM 24.08.2016 Removed because of OIDplus 1.0 XML export
+	//$str = html_entity_decode(stripslashes($str),ENT_QUOTES,'UTF-8');
 
 	$ar = preg_split('/(?<!^)(?!$)/u', $str);  // return array of every multi-byte character
 	$str2 = '';
@@ -55,7 +55,7 @@ function htmlentities_numeric($str, $allow_html=false, $encode_linebreaks=false)
 				if ($c == '&#61;') $c = '=';
 				if ($c == '&#34;') $c = '"';
 				if ($c == '&#39;') $c = '\'';
-				if ($c == '&#38;') $c = '&'; // DM 24.08.2016 Re-Aktiviert wegen oid+ xml export
+				if ($c == '&#38;') $c = '&'; // DM 24.08.2016 Re-added because OIDplus 1.0 XML export
 			}
 
 			if (!$encode_linebreaks) {

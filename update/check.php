@@ -62,11 +62,11 @@ if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 
 if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_success->success==false)) {
 	echo '<p><font color="red"><b>'._L('CAPTCHA not successfully verified').'</b></font></p>';
-	//echo '<p><a href="index.php">Try again</a></p>';
+	//echo '<p><a href="index.php">'._L('Try again').'</a></p>';
 } else {
 	if (!OIDplus::authUtils()->adminCheckPassword($_REQUEST['admin_password'])) {
 		echo '<p><font color="red"><b>'._L('Wrong password').'</b></font></p>';
-		//echo '<p><a href="index.php">Try again</a></p>';
+		//echo '<p><a href="index.php">'._L('Try again').'</a></p>';
 	} else {
 		$svn = new phpsvnclient(OIDPLUS_REPO);
 

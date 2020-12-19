@@ -606,7 +606,7 @@ class OIDInfoAPI {
 				$elements['iri'] = array($elements['iri']);
 			}
 			foreach ($elements['iri'] as &$iri) {
-				// Numeric-only nicht erlauben. Das wäre ja nur in einem IRI-Pfad gültig, aber nicht als einzelner Identifier
+				// Do not allow Numeric-only. It would only be valid in an IRI path, but not in a single identifier
 				if (!iri_arc_valid($iri, false)) $iri = null;
 			}
 		}
@@ -988,7 +988,7 @@ class OIDSimplePingProvider implements IOIDSimplePingProvider {
 	protected $connected = false;
 	protected $socket = null;
 
-	const SPP_MAX_CONNECTION_ATTEMPTS = 3; // TODO: Auslagern in OIDInfoAPI Klasse...?
+	const SPP_MAX_CONNECTION_ATTEMPTS = 3; // TODO: Put into an OIDInfoAPI class...?
 
 	const DEFAULT_PORT = 49500;
 
@@ -1000,7 +1000,7 @@ class OIDSimplePingProvider implements IOIDSimplePingProvider {
 		$service_port = isset($ary[1]) ? $ary[1] : self::DEFAULT_PORT;
 		$address = @gethostbyname($host);
 		if ($address === false) {
-			echo "gethostbyname() failed.\n"; // TODO: exceptions? (Auch alle "echos" darunter)
+			echo "gethostbyname() failed.\n"; // TODO: exceptions? (also all "echos" below)
 			return false;
 		}
 		$this->socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);

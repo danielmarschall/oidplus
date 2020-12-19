@@ -151,7 +151,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						$parent_oid = $parentObj->nodeId();
 						OIDplus::logger()->log("[INFO]OID($parent_oid)", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
 					}
-					$this->ra_change_rec($id, $current_ra, $new_ra); // Inherited RAs rekursiv mit�ndern
+					$this->ra_change_rec($id, $current_ra, $new_ra); // Recursively change inherited RAs
 				}
 			}
 
@@ -666,7 +666,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				'text' => _L('Objects'),
 				'state' => array(
 					"opened" => true,
-					// "selected" => true)  // "selected" ist buggy: 1) Das select-Event wird beim Laden nicht gefeuert 2) Die direkt untergeordneten Knoten lassen sich nicht �ffnen (laden f�r ewig)
+					// "selected" => true)  // "selected" is buggy:
+					// 1) The select-event will not be triggered upon loading
+					// 2) The nodes directly blow cannot be opened (loading infinite time)
 				),
 				'icon' => OIDplus::webpath(__DIR__).'system.png',
 				'children' => $objTypesChildren
@@ -820,11 +822,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$output .= '<tr>';
 			$prefix = is_null($objParent) ? '' : $objParent->crudInsertPrefix();
 			if ($parentNS == 'oid') {
+				// TODO: Idea: Give a class name, e.g. "OID" and then with a oid-specific CSS make the width individual. So, every plugin has more control over the appearance and widths of the input fields
 				if ($objParent->isWeid(true)) {
-					$output .= '     <td>'.$prefix.' <input oninput="frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>'; // TODO: idee classname vergeben, z.B. "OID" und dann mit einem oid-spezifischen css die breite einstellbar machen, somit hat das plugin mehr kontrolle �ber das aussehen und die mindestbreiten
+					$output .= '     <td>'.$prefix.' <input oninput="frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
 					$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="frdl_weid_change()"></td>';
 				} else {
-					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:50px"></td>'; // TODO: idee classname vergeben, z.B. "OID" und dann mit einem oid-spezifischen css die breite einstellbar machen, somit hat das plugin mehr kontrolle �ber das aussehen und die mindestbreiten
+					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:50px"></td>';
 					if ($one_weid_available) $output .= '     <td></td>'; // WEID-editor not available for root nodes. Do it manually, please
 				}
 			} else {

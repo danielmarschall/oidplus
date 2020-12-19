@@ -311,7 +311,7 @@ function ipv4_normalize($ip) {
 	$ip = ipv4_complete($ip);
 	if (!$ip) return false;
 
-	# ip2long buggy: 001.0.0.0 wird nicht akzeptiert
+	# ip2long buggy: 001.0.0.0 is not accepted
 ##	$cry = explode('.', $ip);
 ##	$cry[0] = preg_replace('@^0+@', '', $cry[0]); if ($cry[0] == '') $cry[0] = '0';
 ##	$cry[1] = preg_replace('@^0+@', '', $cry[1]); if ($cry[1] == '') $cry[1] = '0';
