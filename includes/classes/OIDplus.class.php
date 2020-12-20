@@ -1094,6 +1094,7 @@ class OIDplus {
 			// Then go to the desired location
 			$basedir = realpath(__DIR__.'/../../');
 			$target = realpath($target);
+			if ($target === false) return false;
 			$res .= substr($target, strlen($basedir)+1);
 			$res = rtrim($res,'/'); // avoid '..//' for localpath(null,true)
 		} else {
@@ -1118,8 +1119,9 @@ class OIDplus {
 		if (!is_null($target)) {
 			$basedir = realpath(__DIR__.'/../../');
 			$target = realpath($target);
+			if ($target === false) return false;
 			$tmp = substr($target, strlen($basedir)+1);
-			$res .= str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // remove OS specific path delimiters introcued by realpath()
+			$res .= str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // remove OS specific path delimiters introduced by realpath()
 			if (is_dir($target)) $res .= '/';
 		}
 

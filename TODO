@@ -43,6 +43,8 @@ WHOIS
 
 SETUP
 - There should be a "test database connection" button
+	=> however, this button could be abused to brute-force database connections,
+	   and even abusing the server to connect (brute-force) to foreign database servers
 
 DATA TRANSFER PLUGIN
 - XML import: Let the user decide if existing OIDs shall be overwritten
