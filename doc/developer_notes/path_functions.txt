@@ -12,20 +12,44 @@ How to get relative/absolute paths, e.g. when you are in a plugin?
    to base directory      |
                           |
                           |
-   Get relative path      |      OIDplus::localpath(__DIR__, true)        OIDplus::webpath(__DIR__,  true)
-   to any file/dir        |      OIDplus::localpath(__FILE__, true)       OIDplus::webpath(__FILE__, true)
+   Get relative path      |      OIDplus::localpath('file.jpg', true)     OIDplus::webpath('file.jpg', true)
+   to any file/dir        |
                           |
                           |
    Get absolute path      |      OIDplus::localpath(null, false)          OIDplus::webpath(null, false)
    to base directory      |
                           |
                           |
-   Get absolute path      |      OIDplus::localpath(__DIR__, true)        OIDplus::webpath(__DIR__,  false)
-   to any file/dir        |      OIDplus::localpath(__FILE__, true)       OIDplus::webpath(__FILE__, false)
-                          |      or __DIR__.'/' and __FILE__
+   Get absolute path      |      OIDplus::localpath('file.jpg', true)     OIDplus::webpath('file.jpg', false)
+   to any file/dir        |
                           |
 --------------------------+---------------------------------------------------------------------------------
 
 
 These function ensure that directories end with a trailing path delimiter
 
+
+
+----
+
+Here are some ways to test it:
+
+echo "Rel Webpath null: ";print_r(OIDplus::webpath(null,true));echo "\n";
+echo "Rel Webpath non-existing: ";print_r(OIDplus::webpath('xxx',true));echo "\n";
+echo "Rel Webpath existing: ";print_r(OIDplus::webpath('test',true));echo "\n";
+echo "Rel Webpath self: ";print_r(OIDplus::webpath(__DIR__,true));echo "\n";
+
+echo "Abs Webpath null: ";print_r(OIDplus::webpath(null,false));echo "\n";
+echo "Abs Webpath non-existing: ";print_r(OIDplus::webpath('xxx',false));echo "\n";
+echo "Abs Webpath existing: ";print_r(OIDplus::webpath('test',false));echo "\n";
+echo "Abs Webpath self: ";print_r(OIDplus::webpath(__DIR__,false));echo "\n";
+
+echo "Rel localpath null: ";print_r(OIDplus::localpath(null,true));echo "\n";
+echo "Rel localpath non-existing: ";print_r(OIDplus::localpath('xxx',true));echo "\n";
+echo "Rel localpath existing: ";print_r(OIDplus::localpath('test',true));echo "\n";
+echo "Rel localpath self: ";print_r(OIDplus::localpath(__DIR__,true));echo "\n";
+
+echo "Abs localpath null: ";print_r(OIDplus::localpath(null,false));echo "\n";
+echo "Abs localpath non-existing: ";print_r(OIDplus::localpath('xxx',false));echo "\n";
+echo "Abs localpath existing: ";print_r(OIDplus::localpath('test',false));echo "\n";
+echo "Abs localpath self: ";print_r(OIDplus::localpath(__DIR__,false));echo "\n";
