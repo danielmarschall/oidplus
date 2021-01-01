@@ -47,7 +47,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 					$sql = substr_replace($sql, $replace, $pos, strlen($needle));
 				}
 			}
-			return OIDplusQueryResultODBC(@odbc_exec($this->conn, $sql));
+			return new OIDplusQueryResultODBC(@odbc_exec($this->conn, $sql));
 			*/
 			if (!is_array($prepared_args)) {
 				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));

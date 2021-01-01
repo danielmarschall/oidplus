@@ -47,7 +47,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 					$sql = substr_replace($sql, $replace, $pos, strlen($needle));
 				}
 			}
-			return OIDplusQueryResultPDO($this->conn->query($sql));
+			return new OIDplusQueryResultPDO($this->conn->query($sql));
 			*/
 
 			if (!is_array($prepared_args)) {
