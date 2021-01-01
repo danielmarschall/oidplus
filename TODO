@@ -15,6 +15,7 @@ IDEAS FOR NEW FUNCTIONALITIES
 - Make a plugin that shows warning from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
 	But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
 - Excel/CSV import tool for bulk data import (as alternative to XML import. Maybe previous Excel->XML import tool?)
+- External Syslog server
 
 LDAP / OAUTH
 - Implement other OAuth providers?
@@ -136,6 +137,7 @@ BUGS?
 	2. JQueryUI sliders cannot be dragged
 
 REJECTED IDEAS
+- well known OIDs: Should also the RA address be recorded? (so that you cannot create a 2.999 OID and telling that you are the RA?)
 - should there be more than one admin?
 - should there more than one person be able to manage an OID? (multiple emails per "RA" ?)
 - record first RA and current RA => X.660 does not have this requirement
@@ -156,8 +158,15 @@ LOGS
 - At "oidplus:system_log", user log section and object log section, the users and/or objects should be clickable
 
 IDEAS
-- Should object types be able to add additional sub-nodes/pages into the tree,
-  which are not "real" objects?
+- Official "host/domain" plugin
+- OID-WHOIS: For well-known OIDs, e.g. IANA PEN, show information where to retrieve information
+	=> Problem: Well-known OIDs are implemented as ASN/IRI identifiers only; no information in table "objects"!
+- Should plugins be able to add additional object sub-nodes/pages into the tree,
+  which are not "real" objects? For example, in the object tree,
+  you could include file attachments [by File Attachment Plugin].
+  Also, Object Type Plugins could add more sub-nodes/pages into the
+  tree, for example if you have object types where each object
+  consists of various components.
   => currently OIDplusMenuUtils::tree_populate() handles the object tree loading
      ... but shouldn't this task do the plugin publicPages/000_objects ?
      ... then we could establish an API which can give object type plugins the possibility to add additional children
@@ -205,7 +214,9 @@ IDEAS
 - have a menu item (plugin) "latest updates" which lists OIDs that have been changed or added recently?
 - (unsure:) would it be good if the superior RA comment is shown in the object page itself?
 - Protect attachments with a password? (Information objects?)
-- IPv4/IPv6 plugin: Should we allow that private IPs are put into categories (e.g. phyical locations?)
+- IPv4/IPv6 plugin: Should we allow that private IPs are put into categories (e.g. different physical locations having the same subnet?)
+- Like in OOBE, plugins should give the possibility to add an individual UI in the "oidplus:edit_config" page
+- Login area: The "administrator" node in the treeview could be clicked, leading to a page that contains a link to all sub pages (big icons ordered in a grid?)
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie
