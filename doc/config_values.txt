@@ -144,17 +144,10 @@ Information:             Please read the documentation in the file includes/oidp
 (3) "HIDDEN"/UNDOCUMENTED CONFIG SETTINGS
 -----------------------------------------
 
-OIDplus::baseConfig()->setValue('OIDINFO_SECRET_ADMIN_USERNAME', '<email address>');
-Old 2.0 format:          define('OIDINFO_SECRET_ADMIN_USERNAME', '<email address>');
-Information:             Currently only internal use for development utilities (dev/).
-
-OIDplus::baseConfig()->setValue('OIDINFO_SECRET_ADMIN_PASSWORD', '<plaintext password>');
-Old 2.0 format:          define('OIDINFO_SECRET_ADMIN_PASSWORD', '<plaintext password>');
-Information:             Currently only internal use for development utilities (dev/).
-
 OIDplus::baseConfig()->setValue('OIDINFO_API_URL', '<url>');
 Old 2.0 format:          define('OIDINFO_API_URL', '<url>');
 Information:             Currently only internal use for development utilities (dev/).
+                         The API to oid-info.com is currently not public.
 
 OIDplus::baseConfig()->setValue('REGISTRATION_HIDE_SYSTEM', true);
 Old 2.0 format:          define('REGISTRATION_HIDE_SYSTEM', true);
@@ -186,6 +179,13 @@ Old 2.0 format:          define('OIDPLUS_OBJECT_CACHING', true);
 OIDplus::baseConfig()->setValue('FORCE_DBMS_SLANG', '');
 Old 2.0 format:          define('DBMS_SLANG',       '');
 Information:             Currently valid values: mysql, mssql, pgsql, sqlite
+
+OIDplus::baseConfig()->setValue('PREPARED_STATEMENTS_EMULATION', 'auto');
+Old 2.0 format:          define('PREPARED_STATEMENTS_EMULATION', 'auto');
+Information:             Currently only for ODBC database plugin.
+                         'auto' = Auto detect if prepared statements should be emulated
+                         'on' = Always emulate prepared statements
+                         'off' = Never emulate prepared statements
 
 OIDplus::baseConfig()->setValue('MINIFY_CSS', true);
 Old 2.0 format:          define('DO_MINIFY',  true);

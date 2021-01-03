@@ -1230,6 +1230,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		DB-Slang detection failed: Multiple slangs were detected. Use base config setting FORCE_DBMS_SLANG to define one.
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Dialekt-Erkennung fehlgeschlagen: Mehrere Dialekte erkannt. Bitte Basiskonfiguration FORCE_DBMS_SLANG nutzen, um einen Dialekt festzulegen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		DOI
 		]]></source>
 		<target><![CDATA[
@@ -5490,6 +5498,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die "batch"-Felder werden eine automatische Kurzzeit-Anmeldung veranlassen. Die anderen Felder sind die Felder, die im normalen Betrieb von OIDplus gesendet werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The database driver has problems with "%1"
+		]]></source>
+		<target><![CDATA[
+		Der Datenbanktreiber hat Probleme mit "%1"
 		]]></target>
 	</message>
 	<message>

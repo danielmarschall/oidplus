@@ -84,4 +84,12 @@ class OIDplusSqlSlangPluginPgSQL extends OIDplusSqlSlangPlugin {
 	public function isNullFunction($expr1, $expr2): string {
 		return "coalesce($expr1, $expr2)";
 	}
+
+	public function filterQuery($sql): string {
+		return $sql;
+	}
+
+	public function getSQLBool($bool): string {
+		return $bool ? '1' : '0';
+	}
 }

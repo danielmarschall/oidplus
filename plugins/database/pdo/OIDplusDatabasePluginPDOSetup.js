@@ -74,5 +74,6 @@ rebuild_config_callbacks.push(function() {
 
 	return 'OIDplus::baseConfig()->setValue(\'PDO_DSN\',           \''+document.getElementById('pdo_dsn').value+'\');<br>' +
 	       'OIDplus::baseConfig()->setValue(\'PDO_USERNAME\',      \''+document.getElementById('pdo_username').value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'PDO_PASSWORD\',      base64_decode(\''+b64EncodeUnicode(document.getElementById('pdo_password').value)+'\'));<br>';
+	       'OIDplus::baseConfig()->setValue(\'PDO_PASSWORD\',      base64_decode(\''+b64EncodeUnicode(document.getElementById('pdo_password').value)+'\'));<br>' +
+	       'OIDplus::baseConfig()->setValue(\'FORCE_DBMS_SLANG\',  \''+document.getElementById('pdo_slang').value+'\');<br>'; // optional
 });

@@ -24,7 +24,8 @@ userdata/baseconfig/config.inc.php
 userdata/cache/*
 !userdata/cache/info.txt
 
-userdata/database/oidplus.db
+userdata/database/*
+!userdata/database/info.txt
 
 userdata/favicon/favicon.*
 

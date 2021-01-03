@@ -21,6 +21,7 @@ abstract class OIDplusDatabaseConnection {
 	protected /*bool*/ $connected = false;
 	protected /*?bool*/ $html = null;
 	protected /*?string*/ $last_query = null;
+	protected /*bool*/ $slangDetectionDone = false;
 
 	public abstract static function getPlugin(): OIDplusDatabasePlugin;
 	protected abstract function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult;
@@ -57,6 +58,14 @@ abstract class OIDplusDatabaseConnection {
 
 		$this->last_query = $sql;
 		$sql = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $sql);
+
+		if ($this->slangDetectionDone) {
+			$slang = $this->getSlang();
+			if ($slang) {
+				$sql = $slang->filterQuery($sql);
+			}
+		}
+
 		return $this->doQuery($sql, $prepared_args);
 	}
 
@@ -119,7 +128,7 @@ abstract class OIDplusDatabaseConnection {
 		if (!is_numeric($version) || ($version < 200) || ($version > 999)) {
 			throw new OIDplusConfigInitializationException(_L('Entry "database_version" inside the table "###config" seems to be wrong (expect number between 200 and 999)'));
 		}
-		
+
 		$update_files = glob(OIDplus::localpath().'includes/db_updates/update*.inc.php');
 		foreach ($update_files as $update_file) {
 			include_once $update_file;
@@ -186,29 +195,46 @@ abstract class OIDplusDatabaseConnection {
 		}
 	}
 
-	public function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
-		static /*?OIDplusSqlSlangPlugin*/ $slangCache = null;
+	protected function doGetSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
+		$res = null;
 
-		if (is_null($slangCache)) {
-			if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
-				$name = OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');
-				$slangCache = OIDplus::getSqlSlangPlugin($name);
-				if ($mustExist && is_null($slangCache)) {
-					throw new OIDplusConfigInitializationException(_L('Enforced SQL slang (via setting FORCE_DBMS_SLANG) "%1" does not exist.',$name));
-				}
-			} else {
-				foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
-					if ($plugin->detect($this)) {
-						$slangCache = $plugin;
+		if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
+			$name = OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');
+			$res = OIDplus::getSqlSlangPlugin($name);
+			if ($mustExist && is_null($res)) {
+				throw new OIDplusConfigInitializationException(_L('Enforced SQL slang (via setting FORCE_DBMS_SLANG) "%1" does not exist.',$name));
+			}
+		} else {
+			foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
+				if ($plugin->detect($this)) {
+					if (OIDplus::baseConfig()->getValue('DEBUG') && !is_null($res)) {
+						throw new OIDplusException(_L('DB-Slang detection failed: Multiple slangs were detected. Use base config setting FORCE_DBMS_SLANG to define one.'));
+					}
+
+					$res = $plugin;
+
+					if (!OIDplus::baseConfig()->getValue('DEBUG')) {
 						break;
 					}
 				}
-				if ($mustExist && is_null($slangCache)) {
-					throw new OIDplusException(_L('Cannot determine the SQL slang of your DBMS. Your DBMS is probably not supported.'));
-				}
+			}
+			if ($mustExist && is_null($res)) {
+				throw new OIDplusException(_L('Cannot determine the SQL slang of your DBMS. Your DBMS is probably not supported.'));
 			}
 		}
 
+		return $res;
+	}
+
+	public final function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
+		static /*?OIDplusSqlSlangPlugin*/ $slangCache = null;
+
+		if ($this->slangDetectionDone) {
+			return $slangCache;
+		}
+
+		$slangCache = $this->doGetSlang();
+		$this->slangDetectionDone = true;
 		return $slangCache;
 	}
 }

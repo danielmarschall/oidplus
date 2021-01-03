@@ -211,7 +211,7 @@ echo '-- Generator "generate_wellknown_other_mssql" checksum '.dechex(crc32($che
 # ---
 
 function ft_get_oid_data($oid) {
-	$url = OIDINFO_API_URL . '&oid='.urlencode($oid);
+	$url = OIDplus::baseConfig()->getValue('OIDINFO_API_URL') . '&oid='.urlencode($oid);
 	$cont_json = @file_get_contents($url);
 	if (!$cont_json) {
 		sleep(5);

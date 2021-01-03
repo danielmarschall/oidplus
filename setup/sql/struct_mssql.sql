@@ -211,7 +211,7 @@ CREATE TABLE [dbo].[log_user](
 	(
 		[username] ASC
 	),
-	CONSTRAINT [IX_log_object_log_id_username] UNIQUE
+	CONSTRAINT [IX_log_user_log_id_username] UNIQUE
 	(
 		[log_id],
 		[username]

@@ -20,9 +20,22 @@
 class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	private $conn;
 	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
+	private $transactions_supported = false;
 
 	public static function getPlugin(): OIDplusDatabasePlugin {
 		return new OIDplusDatabasePluginODBC();
+	}
+
+	protected function forcePrepareEmulation() {
+		$mode = OIDplus::baseConfig()->getValue('PREPARED_STATEMENTS_EMULATION', 'auto');
+		if ($mode === 'on') return true;
+		if ($mode === 'off') return false;
+
+		static $res = null;
+		if (is_null($res)) {
+			$res = @odbc_prepare($this->conn, "select * from config where name = ?") === false;
+		}
+		return $res;
 	}
 
 	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
@@ -37,39 +50,61 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 				return new OIDplusQueryResultODBC($res);
 			}
 		} else {
-			// TEST: Emulate the prepared statement
-			/*
-			foreach ($prepared_args as $arg) {
-				$needle = '?';
-				$replace = "'$arg'"; // TODO: types
-				$pos = strpos($sql, $needle);
-				if ($pos !== false) {
-					$sql = substr_replace($sql, $replace, $pos, strlen($needle));
-				}
-			}
-			return new OIDplusQueryResultODBC(@odbc_exec($this->conn, $sql));
-			*/
 			if (!is_array($prepared_args)) {
 				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
 			}
 
-			foreach ($prepared_args as &$value) {
-				// ODBC/SQLServer has problems converting "true" to the data type "bit"
-				// Error "Invalid character value for cast specification"
-				if (is_bool($value)) $value = $value ? '1' : '0';
-			}
+			if ($this->forcePrepareEmulation()) {
+				// For some drivers (e.g. Microsoft Access), we need to do this kind of emulation, because odbc_prepare() does not work
+				$sql = str_replace('?', chr(1), $sql);
+				foreach ($prepared_args as $arg) {
+					$needle = chr(1);
+					if (is_bool($arg)) {
+						if ($this->slangDetectionDone) {
+							$replace = $this->getSlang()->getSQLBool($arg);
+						} else {
+							$replace = $arg ? '1' : '0';
+						}
+					} else {
+						$replace = "'$arg'"; // TODO: types
+					}
+					$pos = strpos($sql, $needle);
+					if ($pos !== false) {
+						$sql = substr_replace($sql, $replace, $pos, strlen($needle));
+					}
+				}
+				$sql = str_replace(chr(1), '?', $sql);
+				$ps = @odbc_exec($this->conn, $sql);
+				if (!$ps) {
+					$this->last_error = odbc_errormsg($this->conn);
+					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
+				}
+				return new OIDplusQueryResultODBC($ps);
+			} else {
+				foreach ($prepared_args as &$value) {
+					// ODBC/SQLServer has problems converting "true" to the data type "bit"
+					// Error "Invalid character value for cast specification"
+					if (is_bool($value)) {
+						if ($this->slangDetectionDone) {
+							$value = $this->getSlang()->getSQLBool($value);
+						} else {
+							$value = $value ? '1' : '0';
+						}
+					}
+				}
 
-			$ps = @odbc_prepare($this->conn, $sql);
-			if (!$ps) {
-				$this->last_error = odbc_errormsg($this->conn);
-				throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
-			}
+				$ps = @odbc_prepare($this->conn, $sql);
+				if (!$ps) {
+					$this->last_error = odbc_errormsg($this->conn);
+					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
+				}
 
-			if (!@odbc_execute($ps, $prepared_args)) {
-				$this->last_error = odbc_errormsg($this->conn);
-				throw new OIDplusSQLException($sql, $this->error());
+				if (!@odbc_execute($ps, $prepared_args)) {
+					$this->last_error = odbc_errormsg($this->conn);
+					throw new OIDplusSQLException($sql, $this->error());
+				}
+				return new OIDplusQueryResultODBC($ps);
 			}
-			return new OIDplusQueryResultODBC($ps);
 		}
 	}
 
@@ -97,9 +132,17 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		$this->last_error = null;
 
 		try {
-			$this->query("SET NAMES 'utf8'"); // Does most likely NOT work with ODBC. Try adding ";CHARSET=UTF8" (or similar) to the DSN
+			@odbc_exec($this->conn, "SET NAMES 'utf8'"); // Does most likely NOT work with ODBC. Try adding ";CHARSET=UTF8" (or similar) to the DSN
 		} catch (Exception $e) {
 		}
+
+		// We check if the DBMS supports autocommit.
+		// Attention: Check it after you have sent a query already, because Microsoft Access doesn't seem to allow
+		// changing auto commit once a query was executed ("Attribute cannot be set now SQLState: S1011")
+		// Note: For some weird reason we *DO* need to redirect the output to "$dummy", otherwise it won't work!
+		$dummy = @odbc_exec($this->conn, "select name from config where 1=0");
+		$this->transactions_supported = @odbc_autocommit($this->conn, false);
+		@odbc_autocommit($this->conn, true);
 	}
 
 	protected function doDisconnect()/*: void*/ {
@@ -112,26 +155,42 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	private $intransaction = false;
 
 	public function transaction_supported(): bool {
-		return true;
+		return $this->transactions_supported;
 	}
 
 	public function transaction_level(): int {
+		if (!$this->transaction_supported()) {
+			// TODO?
+			return 0;
+		}
 		return $this->intransaction ? 1 : 0;
 	}
 
 	public function transaction_begin()/*: void*/ {
+		if (!$this->transaction_supported()) {
+			// TODO?
+			return;
+		}
 		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		odbc_autocommit($this->conn, false); // begin transaction
 		$this->intransaction = true;
 	}
 
 	public function transaction_commit()/*: void*/ {
+		if (!$this->transaction_supported()) {
+			// TODO?
+			return;
+		}
 		odbc_commit($this->conn);
 		odbc_autocommit($this->conn, true);
 		$this->intransaction = false;
 	}
 
 	public function transaction_rollback()/*: void*/ {
+		if (!$this->transaction_supported()) {
+			// TODO?
+			return;
+		}
 		odbc_rollback($this->conn);
 		odbc_autocommit($this->conn, true);
 		$this->intransaction = false;

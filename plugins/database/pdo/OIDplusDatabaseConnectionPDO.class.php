@@ -20,6 +20,7 @@
 class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	private $conn = null;
 	private $last_error = null; // we need that because PDO divides prepared statement errors and normal query errors, but we have only one "error()" method
+	private $transactions_supported = false;
 
 	public static function getPlugin(): OIDplusDatabasePlugin {
 		return new OIDplusDatabasePluginPDO();
@@ -37,34 +38,58 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 				return new OIDplusQueryResultPDO($res);
 			}
 		} else {
-			// TEST: Emulate the prepared statement
-			/*
-			foreach ($prepared_args as $arg) {
-				$needle = '?';
-				$replace = "'$arg'"; // TODO: types
-				$pos = strpos($sql, $needle);
-				if ($pos !== false) {
-					$sql = substr_replace($sql, $replace, $pos, strlen($needle));
-				}
-			}
-			return new OIDplusQueryResultPDO($this->conn->query($sql));
-			*/
-
 			if (!is_array($prepared_args)) {
 				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
 			}
+
+			/*
+			// Not required because PDO can emulate prepared statements by itself
+			if ($this->forcePrepareEmulation()) {
+				$sql = str_replace('?', chr(1), $sql);
+				foreach ($prepared_args as $arg) {
+					$needle = chr(1);
+					if (is_bool($arg)) {
+						if ($this->slangDetectionDone) {
+							$replace = $this->getSlang()->getSQLBool($arg);
+						} else {
+							$replace = $arg ? '1' : '0';
+						}
+					} else {
+						$replace = "'$arg'"; // TODO: types
+					}
+					$pos = strpos($sql, $needle);
+					if ($pos !== false) {
+						$sql = substr_replace($sql, $replace, $pos, strlen($needle));
+					}
+				}
+				$sql = str_replace(chr(1), '?', $sql);
+				$ps = $this->conn->query($sql);
+				if (!$ps) {
+					$this->last_error = $this->error();
+					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
+				}
+				return new OIDplusQueryResultPDO($ps);
+			}
+			*/
 
 			foreach ($prepared_args as &$value) {
 				// We need to manually convert booleans into strings, because there is a
 				// 14 year old bug that hasn't been adressed by the PDO developers:
 				// https://bugs.php.net/bug.php?id=57157
-				// Note: We are using '1' and '0' instead of 'true' and 'false' because MySQL converts boolean to tinyint(1)
-				if (is_bool($value)) $value = $value ? '1' : '0';
+				if (is_bool($value)) {
+					if ($this->slangDetectionDone) {
+						$value = $this->getSlang()->getSQLBool($value);
+					} else {
+						// This works for everything except Microsoft Access (which needs -1 and 0)
+						// Note: We are using '1' and '0' instead of 'true' and 'false' because MySQL converts boolean to tinyint(1)
+						$value = $value ? '1' : '0';
+					}
+				}
 			}
 
 			$ps = $this->conn->prepare($sql);
 			if (!$ps) {
-				$this->last_error = $ps->errorInfo()[2];
+				$this->last_error = $this->conn->errorInfo()[2];
 				throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
 			}
 
@@ -77,7 +102,13 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	}
 
 	public function insert_id(): int {
-		return $this->conn->lastInsertId();
+		try {
+			$out = @($this->conn->lastInsertId());
+			if ($out === false) return parent::insert_id(); // fallback method that uses the SQL slang
+			return $out;
+		} catch (Exception $e) {
+			return parent::insert_id(); // fallback method that uses the SQL slang
+		}
 	}
 
 	public function error(): string {
@@ -108,7 +139,23 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 
 		$this->last_error = null;
 
-		$this->query("SET NAMES 'utf8'");
+		try {
+			@$this->conn->exec("SET NAMES 'utf8'");
+		} catch (Exception $e) {
+		}
+
+		// We check if the DBMS supports autocommit.
+		// Attention: Check it after you have sent a query already, because Microsoft Access doesn't seem to allow
+		// changing auto commit once a query was executed ("Attribute cannot be set now SQLState: S1011")
+		// Note: For some weird reason we *DO* need to redirect the output to "$dummy", otherwise it won't work!
+		$dummy = $this->conn->query("select name from config where 1=0");
+		try {
+			$this->conn->beginTransaction();
+			$this->conn->rollBack();
+			$this->transactions_supported = true;
+		} catch (Exception $e) {
+			$this->transactions_supported = false;
+		}
 	}
 
 	protected function doDisconnect()/*: void*/ {
@@ -118,25 +165,41 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	private $intransaction = false;
 
 	public function transaction_supported(): bool {
-		return true;
+		return $this->transactions_supported;
 	}
 
 	public function transaction_level(): int {
+		if (!$this->transaction_supported()) {
+			// TODO?
+			return 0;
+		}
 		return $this->intransaction ? 1 : 0;
 	}
 
 	public function transaction_begin()/*: void*/ {
+		if (!$this->transaction_supported()) {
+			// TODO?
+			return;
+		}
 		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		$this->conn->beginTransaction();
 		$this->intransaction = true;
 	}
 
 	public function transaction_commit()/*: void*/ {
+		if (!$this->transaction_supported()) {
+			// TODO?
+			return;
+		}
 		$this->conn->commit();
 		$this->intransaction = false;
 	}
 
 	public function transaction_rollback()/*: void*/ {
+		if (!$this->transaction_supported()) {
+			// TODO?
+			return;
+		}
 		$this->conn->rollBack();
 		$this->intransaction = false;
 	}
