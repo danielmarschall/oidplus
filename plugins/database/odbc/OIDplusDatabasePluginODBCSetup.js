@@ -74,5 +74,6 @@ rebuild_config_callbacks.push(function() {
 
 	return 'OIDplus::baseConfig()->setValue(\'ODBC_DSN\',          \''+document.getElementById('odbc_dsn').value+'\');<br>' +
 	       'OIDplus::baseConfig()->setValue(\'ODBC_USERNAME\',     \''+document.getElementById('odbc_username').value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'ODBC_PASSWORD\',     base64_decode(\''+b64EncodeUnicode(document.getElementById('odbc_password').value)+'\'));<br>';
+	       'OIDplus::baseConfig()->setValue(\'ODBC_PASSWORD\',     base64_decode(\''+b64EncodeUnicode(document.getElementById('odbc_password').value)+'\'));<br>' +
+	       'OIDplus::baseConfig()->setValue(\'FORCE_DBMS_SLANG\',  \''+document.getElementById('odbc_slang').value+'\');<br>'; // optional
 });

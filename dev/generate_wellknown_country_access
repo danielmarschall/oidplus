@@ -1,0 +1,44 @@
+#!/usr/bin/php
+<?php
+
+// This script generates a part of ../setup/sql/wellknown_country_access.sql , based on Country OIDs at oid-info.com
+// If new countries are added to the ISO / ITU arcs, please re-run this script and update ../setup/sql/wellknown_country_access.sql accordingly
+
+require_once __DIR__ . '/../includes/oidplus.inc.php';
+
+OIDplus::init(true);
+
+// Generates countries for wellknown OIDs
+
+$options = array('http' => array('user_agent' => 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.84 Safari/537.36'));
+$context = stream_context_create($options);
+$cont = file_get_contents('http://oid-info.com/get/1.2', false, $context).
+     file_get_contents('http://oid-info.com/get/2.16', false, $context).
+     file_get_contents('http://oid-info.com/get/2.49.0.0', false, $context);
+
+preg_match_all('@<option value="https{0,1}://(www.){0,1}oid-info.com/get/([^"]+)">(..)\(.+\)</option>@ismU', $cont, $m, PREG_SET_ORDER);
+
+echo "select '-- Country OIDs';\n";
+echo "select '-- Use the tool dev/generate_wellknown_country_access to generate this file';\n";
+echo "\n";
+
+$check_sum = '';
+foreach ($m as $n) {
+	$check_sum .= $n[2].'='.$n[3].'/';
+
+	if (strpos($n[2], '2.49.0.0') === 0) {
+		// WMO Country OIDs (does not assign Unicode labels), 2.49.0.0
+		echo "INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:$n[2]', '$n[3]', '0', '1');\n";
+
+		// Country-Msg, 2.49.0.1
+		$n[2] = str_replace('2.49.0.0', '2.49.0.1', $n[2]);
+		echo "INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:$n[2]', '$n[3]', '0', '1');\n";
+	} else {
+		// ISO or Joint-ISO-ITU-T OID Countries (1.2 and 2.16)
+		echo "INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:$n[2]', '$n[3]', '0', '1');\n";
+		echo "INSERT INTO [iri] (oid, name, longarc, well_known) VALUES ('oid:$n[2]', '".strtoupper($n[3])."', '0', '1');\n";
+	}
+}
+
+echo "\n";
+echo "select '-- Generator \"generate_wellknown_country_access\" checksum ".dechex(crc32($check_sum))."';\n";

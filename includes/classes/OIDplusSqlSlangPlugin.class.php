@@ -42,4 +42,8 @@ abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 
 	public abstract function setupUseDatabase($database): string;
 
+	public abstract function filterQuery($sql): string;
+
+	public abstract function getSQLBool($bool): string;
+
 }

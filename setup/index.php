@@ -75,7 +75,7 @@ $sql_slang_selection = array();
 foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 	$slang_id = $plugin::id();
 	$pluginManifest = $plugin->getManifest();
-	$human_friendly_name = empty($pluginManifest->getName()) ? $pluginManifest->getName() : get_class($plugin);
+	$human_friendly_name = empty($pluginManifest->getName()) ? get_class($plugin) : $pluginManifest->getName();
 	$sql_slang_selection[] = '<option value="'.$slang_id.'">'.$human_friendly_name.'</option>';
 }
 $sql_slang_selection = implode("\n", $sql_slang_selection);

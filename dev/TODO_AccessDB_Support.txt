@@ -1,0 +1,84 @@
+
+Support for Microsoft Access Databases (mdb, accdb)	3 January 2021
+---------------------------------------------------
+
+Tested with Microsoft Access Database Engine 2010 (14.0)
+
+Following things need to be addressed in order to make OIDplus compatible with Microsoft Access:
+
+- Add DSN example strings as example how to connect to Access
+	C:\inetpub\wwwroot\oidplus\plugins\database\odbc\OIDplusDatabasePluginODBC.class.php
+	C:\inetpub\wwwroot\oidplus\plugins\database\pdo\OIDplusDatabasePluginPDO.class.php
+	OIDplus::baseConfig()->setValue('ODBC_DSN',         'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\inetpub\wwwroot\oidplus\userdata\database\oidplus.accdb;');
+	OIDplus::baseConfig()->setValue('ODBC_USERNAME',    '');
+	OIDplus::baseConfig()->setValue('ODBC_PASSWORD',    '');
+	OIDplus::baseConfig()->setValue('PDO_DSN',          'odbc:DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\inetpub\wwwroot\oidplus\userdata\database\oidplus.accdb;');
+	OIDplus::baseConfig()->setValue('PDO_USERNAME',     '');
+	OIDplus::baseConfig()->setValue('PDO_PASSWORD',     '');
+
+- Setup SQL scripts
+
+	* C:\inetpub\wwwroot\oidplus\setup\sql\struct_access.sql
+		"Drop table if exists"
+
+- Test if everything works, including Unicode and boolean flags (checkboxes etc.)
+
+- Especially look if there are some differences in the SQL language which affect us
+  https://support.microsoft.com/en-us/office/comparing-access-sql-with-sql-server-tsql-f09f180f-c005-4ff3-812f-14a5eb7902c8
+
+	* like 'X%' comes 'X*' ?
+		=> but in ADO it works?!
+		select 'aa' like 'a%' ==> -1
+		select 'aa' like 'a*' ==> 0
+
+	* datetime? #24.12.1987#
+		=> but in ADO it works with '24.12.1987' ???
+
+- Implement some kind of OID natural sort		
+
+- Make sure all database testcases work with PDO+ODBC and ODBC
+	http://localhost/oidplus/dev/test_database_plugins.php
+	The last result was:
+		Database: OIDplusDatabaseConnectionPDO
+		Detected slang: access
+		...
+		Boolean handling FALSE with normal statement: PASSED
+	=>	Transaction rollback: FAILED
+		Transaction commit: PASSED
+	=>	Natural OID Sorting (< 16 Bit): FAILED
+	=>	Natural OID Sorting (128 Bit): FAILED
+		Non-Natural Sorting for Non-OIDs: PASSED
+		Insert ID on non-insert: PASSED (0)
+		Insert ID on actual inserts: PASSED (124 => 125)
+	=>	Non-Insert query will reset insert ID: FAILED (125)	
+
+
+=======================
+
+Following things should be OK:
+
+Weirdness in regards boolean fields (-1 vs 1)
+	=> There is some weirdness. Sometimes '1' works and sometimes we need -1 ??
+	   ... Depends if you use it in "set" or "where"
+	   ... also depends if queried via PDO, ODBC or ADO ???!!
+
+	In PHP ODBC, this works:
+		$res = $db->query("select * from ###objects where id = 'test:1.1' and confidential = 1");
+	but in ADO (database desktop tool) this does not work
+		select * from objects where id = 'test:1.1' and confidential = 1
+		instead I need
+		select * from objects where id = 'test:1.1' and confidential = -1
+
+	Works:
+	select * from config where protected = -1
+	update config set protected = -1
+	update config set protected = 1
+	update config set protected = '1'  // no type conflict!
+
+	Does NOT work:
+	select * from config where protected = '1'  // type conflict
+	select * from config where protected = 1 // must be -1
+
+	We handled that in ODBC/PDO via slang. But it is important that you do not use static "1" or "0" in queries. Always use prepared statements!
+	=> RegEx to check it:
+		\s+(privacy|confidential|longarc|standardized|well_known|protected|visible)\s*=\s*('1'|'0'|0|1|-1)

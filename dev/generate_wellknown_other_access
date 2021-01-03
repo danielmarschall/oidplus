@@ -1,10 +1,10 @@
 #!/usr/bin/php
--- This file (wellknown_other_sqlite.sql) contains ASN.1 and IRI names of OIDs which are either
--- a) Root OIDs
--- b) Unicode labels which are long arcs
--- c) Standardized ASN.1 identifiers
--- d) OIDs where potential users of this software can register OIDs in these arcs (e.g. an "identified organization" arc)
--- Use the tool dev/generate_wellknown_other_sqlite to generate this file
+select '-- This file (wellknown_other_access.sql) contains ASN.1 and IRI names of OIDs which are either';
+select '-- a) Root OIDs';
+select '-- b) Unicode labels which are long arcs';
+select '-- c) Standardized ASN.1 identifiers';
+select '-- d) OIDs where potential users of this software can register OIDs in these arcs (e.g. an "identified organization" arc)';
+select '-- Use the tool dev/generate_wellknown_other_access to generate this file';
 
 <?php
 
@@ -51,10 +51,10 @@ function _process_oid($oid) {
 			foreach ($data['oid']['identifier'] as $asn1id) {
 				$output[$oid]['checksum'][] = $oid.'|ASN1|'.$asn1id.'|'.(_is_standardized($oid, $asn1id) ? '1' : '0').'|1||';
 				$std = _is_standardized($oid, $asn1id) ? "'1'" : "'0'";
-				$output[$oid]['asn1id'][] = "INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:$oid', '$asn1id', $std, '1');";
+				$output[$oid]['asn1id'][] = "INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:$oid', '$asn1id', $std, '1');";
 			}
 		} else {
-			//echo "-- Warning: Has no ASN.1 identifier: $oid\n";
+			//echo "select '-- Warning: Has no ASN.1 identifier: $oid';\n";
 		}
 		if (isset($data['oid']['unicode-label'])) {
 			foreach ($data['oid']['unicode-label'] as $iri) {
@@ -63,18 +63,18 @@ function _process_oid($oid) {
 				$std = _is_long($oid) ? "'1'" : "'0'";
 
 				if (strpos($iri, '&#') !== false) {
-$ucstr = html_entity_decode($iri, ENT_COMPAT | ENT_HTML401, "UTF-8");
-$tmp = array();
-preg_match_all('/./u', $ucstr, $m);
-foreach ($m[0] as $o) {
-	$tmp[] = mb_ord($o);
-}
-$iri = 'char('.implode(',',$tmp).')';
+					$iri = base64_encode(html_entity_decode($iri, ENT_COMPAT | ENT_HTML401, "UTF-8"));
+					$test = base64_decode($iri);
+					$iri = array();
+					for ($i=0; $i<strlen($test); $i++) {
+						$iri[] = 'chr('.ord($test[$i]).')';
+					}
+					$iri = implode('+',$iri);
 				} else {
 					$iri = "'$iri'";
 				}
 
-				$output[$oid]['iri'][] = "INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:$oid', $iri, $std, '1');";
+				$output[$oid]['iri'][] = "INSERT INTO [iri] (oid, name, longarc, well_known) VALUES ('oid:$oid', $iri, $std, '1');";
 			}
 		}
 	}
@@ -197,7 +197,7 @@ $check_sum = '';
 foreach ($output as $oid => $data) {
 	if (count($data['asn1id']) + count($data['iri']) == 0) continue;
 
-	echo "-- $oid\n";
+	echo "select '-- $oid';\n";
 	foreach ($data['asn1id'] as $line_asn1) {
 		echo "$line_asn1\n";
 	}
@@ -209,7 +209,7 @@ foreach ($output as $oid => $data) {
 	}
 	echo "\n";
 }
-echo '-- Generator "generate_wellknown_other_sqlite" checksum '.dechex(crc32($check_sum))."\n";
+echo "select '-- Generator \"generate_wellknown_other_access\" checksum ".dechex(crc32($check_sum))."';\n";
 
 # ---
 

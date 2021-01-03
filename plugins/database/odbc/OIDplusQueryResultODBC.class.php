@@ -37,9 +37,39 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 		return !$this->no_resultset;
 	}
 
+	private function num_rows_workaround(): int {
+		$dummy = 0;
+
+		// go to the end of the result set
+		$till_eof = 0;
+		while ($temp = odbc_fetch_into($this->res, $dummy)) $till_eof++;
+
+		// reset cursor
+		@odbc_fetch_row($this->res, 0);
+
+		// count the rows in the result set
+		$ret = 0;
+		while ($temp = odbc_fetch_into($this->res, $dummy)) $ret++;
+
+		// this would indicate that the odbc_fetch_row() could not reset the cursor
+		if ($ret < $till_eof) return -1;
+
+		// go back to the row were started with
+		@odbc_fetch_row($this->res, $ret-$till_eof);
+
+		return $ret;
+	}
+
 	public function num_rows(): int {
 		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-		return odbc_num_rows($this->res);
+		$ret = odbc_num_rows($this->res);
+
+		// Workaround for drivers that do not support odbc_num_rows (e.g. Microsoft Access)
+		if ($ret === -1) $ret = $this->num_rows_workaround();
+
+		if ($ret === -1) throw new OIDplusException(_L('The database driver has problems with "%1"','num_rows'));
+
+		return $ret;
 	}
 
 	public function fetch_array()/*: ?array*/ {
