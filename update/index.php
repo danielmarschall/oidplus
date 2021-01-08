@@ -29,13 +29,14 @@ OIDplus::baseConfig(); // This call will redirect to setup if userdata/baseconfi
 define('OIDPLUS_REPO', 'https://svn.viathinksoft.com/svn/oidplus');
 
 ?><!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo substr(OIDplus::getCurrentLang(),0,2); ?>">
 
 <head>
 	<title><?php echo _L('OIDplus Update'); ?></title>
 	<meta name="robots" content="noindex">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="../setup/setup.min.css.php">
+	<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico.php">
 	<?php
 	if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 	?>

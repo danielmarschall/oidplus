@@ -662,7 +662,7 @@ class phpsvnclient {
 			}
                         $revlogs[] = array('versionName' => $versionName,
 			                   'date' => $date,
-					   'comment' => $comment,
+					   'comment' => str_replace('@@@NEWLINE@@@', "\n", $comment),
 					   'creator' => $creator);
 		}
 		$files       = array();
@@ -875,6 +875,17 @@ class phpsvnclient {
 	 */
 	private static function xmlParse($strInputXML) {
 		$arrOutput = array();
+
+		// TODO: Added this dirty hack because XML parser somehow removes all new lines?! even if it is CDATA!
+		//       Maybe in future we should use simplexml (also test with OIDplus supplement)
+		$strInputXML = preg_replace_callback(
+		    '@<D:comment>(.+)</D:comment>@ismU',
+		    function ($treffer) {
+		      return '<D:comment>'.str_replace("\n","@@@NEWLINE@@@",$treffer[1]).'</D:comment>';
+		    },
+		    $strInputXML
+		  );
+
 
 		$resParser = xml_parser_create();
 		xml_set_element_handler($resParser,
