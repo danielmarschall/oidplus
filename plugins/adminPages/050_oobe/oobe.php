@@ -33,13 +33,14 @@ $errors_happened = false;
 $edits_possible = true;
 
 echo '<!DOCTYPE html>';
-echo '<html lang="en">';
+echo '<html lang="'.substr(OIDplus::getCurrentLang(),0,2).'">';
 
 echo '<head>';
 echo '	<title>'._L('OIDplus Setup').'</title>';
 echo '	<meta name="robots" content="noindex">';
 echo '	<meta name="viewport" content="width=device-width, initial-scale=1.0">';
 echo '	<link rel="stylesheet" href="../../../setup/setup.min.css.php">';
+echo '	<link rel="shortcut icon" type="image/x-icon" href="../../../favicon.ico.php">';
 if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 	echo '	<script src="https://www.google.com/recaptcha/api.js"></script>';
 }
