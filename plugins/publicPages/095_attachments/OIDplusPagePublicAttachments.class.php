@@ -40,13 +40,12 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		if (!is_null($oid) && ($oid != '')) {
 			// For OIDs, it is the OID, for other identifiers
 			// it it the OID alt ID (generated using the SystemID)
-			$path .= str_replace('.', '_', $oid);
-
+			$path .= DIRECTORY_SEPARATOR . str_replace('.', '_', $oid);
 		} else {
 			// Can happen if you don't have a system ID (due to missing OpenSSL plugin)
-			$path .= md5($obj->nodeId(true)); // we don't use $id, because $obj->nodeId(true) is possibly more canonical than $id
+			$path .= DIRECTORY_SEPARATOR . md5($obj->nodeId(true)); // we don't use $id, because $obj->nodeId(true) is possibly more canonical than $id
 		}
-
+		
 		return $path;
 	}
 
@@ -77,7 +76,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			if (strpos($req_filename, chr(0)) !== false) throw new OIDplusException(_L('Illegal file name'));
 
 			$uploaddir = self::getUploadDir($id);
-			$uploadfile = $uploaddir . '/' . basename($req_filename);
+			$uploadfile = $uploaddir . DIRECTORY_SEPARATOR . basename($req_filename);
 
 			if (!file_exists($uploadfile)) throw new OIDplusException(_L('File does not exist'));
 			@unlink($uploadfile);
@@ -91,7 +90,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				}
 			} else {
 				// If it was the last file, delete the empty directory
-				$ary = glob($uploaddir . '/' . '*');
+				$ary = glob($uploaddir . DIRECTORY_SEPARATOR . '*');
 				if (count($ary) == 0) @rmdir($uploaddir);
 			}
 
@@ -132,7 +131,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			if (strpos($req_filename, chr(0)) !== false) throw new OIDplusException(_L('Illegal file name'));
 
 			$uploaddir = self::getUploadDir($id);
-			$uploadfile = $uploaddir . '/' . basename($req_filename);
+			$uploadfile = $uploaddir . DIRECTORY_SEPARATOR . basename($req_filename);
 
 			if (!is_dir($uploaddir)) {
 				@mkdir($uploaddir, 0777, true);
@@ -208,7 +207,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function modifyContent($id, &$title, &$icon, &$text) {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.2
 
-		$files = glob(self::getUploadDir($id).'/'.'*');
+		$files = glob(self::getUploadDir($id) . DIRECTORY_SEPARATOR . '*');
 		$doshow = false;
 		$output = '';
 		$found_files = false;
@@ -285,7 +284,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		// Delete the attachment folder including all files in it (note: Subfolders are not possible)
 		$uploaddir = self::getUploadDir($id);
 		if ($uploaddir != '') {
-			$ary = glob($uploaddir . '/' . '*');
+			$ary = glob($uploaddir . DIRECTORY_SEPARATOR . '*');
 			foreach ($ary as $a) @unlink($a);
 			@rmdir($uploaddir);
 			if (is_dir($uploaddir)) {
@@ -307,7 +306,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function whoisObjectAttributes($id, &$out) {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.4
 
-		$files = glob(self::getUploadDir($id).'/'.'*');
+		$files = glob(self::getUploadDir($id) . DIRECTORY_SEPARATOR . '*');
 		foreach ($files as $file) {
 			$out[] = 'attachment-name: '.basename($file);
 			$out[] = 'attachment-url: '.OIDplus::webpath(__DIR__).'download.php?id='.urlencode($id).'&filename='.urlencode(basename($file));
