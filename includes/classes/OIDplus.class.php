@@ -111,11 +111,15 @@ class OIDplus {
 			// Check important config settings
 
 			if (self::$baseConfig->getValue('CONFIG_VERSION') != 2.1) {
-				throw new OIDplusConfigInitializationException(_L("The information located in %1 is outdated.",$config_file));
+				if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,true).'setup/') !== 0) {
+					throw new OIDplusConfigInitializationException(_L("The information located in %1 is outdated.",realpath($config_file)));
+				}
 			}
 
 			if (self::$baseConfig->getValue('SERVER_SECRET', '') === '') {
-				throw new OIDplusConfigInitializationException(_L("You must set a value for SERVER_SECRET in %1 for the system to operate secure.",$config_file));
+				if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,true).'setup/') !== 0) {
+					throw new OIDplusConfigInitializationException(_L("You must set a value for SERVER_SECRET in %1 for the system to operate secure.",realpath($config_file)));
+				}
 			}
 		}
 

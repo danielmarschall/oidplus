@@ -20,9 +20,9 @@
 class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 	// Based on https://www.php.net/manual/de/mysqli-stmt.get-result.php#113398
 
-	protected $stmt;
-	protected $nCols;
-	protected $no_resultset;
+	protected $stmt = null;
+	protected $nCols = null;
+	protected $no_resultset = null;
 
 	public function __construct($stmt) {
 		$metadata = mysqli_stmt_result_metadata($stmt);
@@ -34,6 +34,8 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 			$this->stmt = $stmt;
 
 			mysqli_free_result($metadata);
+
+			$this->stmt->store_result();
 		}
 	}
 
@@ -44,7 +46,7 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 	public function num_rows(): int {
 		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 
-		$this->stmt->store_result();
+		//$this->stmt->store_result();
 		return $this->stmt->num_rows;
 	}
 
@@ -53,7 +55,7 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 
 		// https://stackoverflow.com/questions/10752815/mysqli-get-result-alternative , modified
 		$stmt = $this->stmt;
-		$stmt->store_result();
+		//$this->stmt->store_result();
 		$resultkeys = array();
 		$thisName = "";
 
