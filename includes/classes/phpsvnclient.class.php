@@ -8,12 +8,11 @@
  *    Cesar D. Rodas
  *    https://code.google.com/archive/p/phpsvnclient/
  *    License: BSD License
- *    CHANGES by Daniel Marschall, ViaThinkSoft in 2019:
+ *    CHANGES by Daniel Marschall, ViaThinkSoft in 2019-2021:
  *    - The class has been customized and contains specific changes for the software "OIDplus"
  *    - Functions which are not used in the "SVN checkout" were removed.
  *      The only important functions are getVersion() and updateWorkingCopy()
- *    - The dependency class xml2array was converted from a class into a function and
- *      included into this class
+ *    - The dependency class xml2array was removed and instead, SimpleXML is used
  *    - Added "revision log/comment" functionality
  *
  * 2. "xml2array" class
@@ -23,7 +22,17 @@
  *    - Converted class into a single function and added that function into the phpsvnclient class
  */
 
-// TODO: Translate (OIDplus _L function)
+if (!function_exists('_L')) {
+	function _L($str, ...$sprintfArgs) {
+	        $n = 1;
+	        foreach ($sprintfArgs as $val) {
+	                $str = str_replace("%$n", $val, $str);
+	                $n++;
+	        }
+	        $str = str_replace("%%", "%", $str);
+	        return $str;
+	}
+}
 
 /**
  *  PHP SVN CLIENT
@@ -44,10 +53,13 @@ class phpsvnclient {
 
 	/*protected*/ const PHPSVN_LOGS_REQUEST = '<?xml version="1.0" encoding="utf-8"?> <S:log-report xmlns:S="svn:"> <S:start-revision>%d</S:start-revision><S:end-revision>%d</S:end-revision><S:path></S:path><S:discover-changed-paths/></S:log-report>';
 
-	/*protected*/ const NO_ERROR = 1;
-	/*protected*/ const NOT_FOUND = 2;
-	/*protected*/ const AUTH_REQUIRED = 3;
-	/*protected*/ const UNKNOWN_ERROR = 4;
+	/*public*/ const NO_ERROR = 1;
+	/*public*/ const NOT_FOUND = 2;
+	/*public*/ const AUTH_REQUIRED = 3;
+	/*public*/ const UNKNOWN_ERROR = 4;
+
+	public $use_cache = true;
+	public $cache_dir = __DIR__.'/../../userdata/cache';
 
 	/**
 	 *  SVN Repository URL
@@ -76,20 +88,21 @@ class phpsvnclient {
 	/**
 	 *  Last error number
 	 *
-	 *  Possible values are NOT_ERROR, NOT_FOUND, AUTH_REQUIRED, UNKOWN_ERROR
+	 *  Possible values are NO_ERROR, NOT_FOUND, AUTH_REQUIRED, UNKOWN_ERROR
 	 *
-	 *  @access public
+	 *  @access protected
 	 *  @var integer
 	 */
-	public $errNro;
+	protected $errNro = self::NO_ERROR;
+	public function getLastError() {
+		return $this->errNro;
+	}
 
 	/**
 	 * Number of actual revision local repository.
 	 * @var Integer, Long
 	 */
 	private $actVersion;
-	private $storeDirectoryFiles = array();
-	private $lastDirectoryFiles;
 	private $file_size;
 	private $file_size_founded = false;
 
@@ -160,7 +173,7 @@ class phpsvnclient {
 	public function updateWorkingCopy($from_revision='version.txt', $folder = '/trunk/', $outPath = '.', $preview = false)
 	{
 		if (!is_dir($outPath)) {
-			echo "ERROR: Local path $outPath not existing\n";
+			echo _L("ERROR: Local path %1 not existing",$outPath)."\n";
 			flush();
 			return false;
 		}
@@ -172,21 +185,21 @@ class phpsvnclient {
                         $from_revision = -1;
 
 			if (!file_exists($version_file)) {
-				echo "ERROR: $version_file missing\n";
+				echo _L("ERROR: %1 missing",$version_file)."\n";
 				flush();
 				return false;
 			} else {
 				//Obtain the number of current version number of the local copy.
 				$cont = file_get_contents($version_file);
 				$m = array();
-				if (!preg_match('@Revision (\d+)@', $cont, $m)) {
-					echo "ERROR: $version_file unknown format\n";
+				if (!preg_match('@Revision (\d+)@', $cont, $m)) { // do not translate
+					echo _L("ERROR: %1 unknown format",$version_file)."\n";
 					flush();
 					return false;
 				}
 				$from_revision = $m[1];
 
-				echo "Found ".basename($version_file)." with revision information $from_revision\n";
+				echo _L("Found ".basename($version_file)." with revision information $from_revision")."\n";
 				flush();
 			}
 		} else {
@@ -199,38 +212,26 @@ class phpsvnclient {
 			// First, do some read/write test (even if we are in preview mode, because we want to detect errors before it is too late)
 			$file = $outPath . '/dummy_'.uniqid().'.tmp';
 			$file = str_replace("///", "/", $file);
-			if (@file_put_contents($file, 'Write Test') === false) {
-				echo (!$preview ? "ERROR" : "WARNING").": Cannot write test file $file ! An update through the web browser will NOT be possible.\n";
+			if (@file_put_contents($file, 'Write Test') === false) { // do not translate
+				echo (!$preview ? _L("ERROR") : _L("WARNING")).": "._L("Cannot write test file %1 ! An update through the web browser will NOT be possible.",$file)."\n";
 				flush();
 				if (!$preview) return false;
 			}
 			@unlink($file);
 			if (file_exists($file)) {
-				echo (!$preview ? "ERROR" : "WARNING").": Cannot delete test file $file ! An update through the web browser will NOT be possible.\n";
+				echo (!$preview ? _L("ERROR") : _L("WARNING")).": "._L("Cannot delete test file %1 ! An update through the web browser will NOT be possible.",$file)."\n";
 				flush();
 				if (!$preview) return false;
 			}
 		}
 
-		// (In regards OIDplus:)
-		// We are caching the changed file logs here only in the preview mode.
-		// Reason: We want to avoid that the "update/" page becomes an
-		// DoS attack vector if there hasn't been an update for a long time,
-		// and the list is very large.
-		// But we don't want to use cache in the real update, because
-		// otherwise it might break the system if an update is made
-		// while the ViaThinkSoft server is down (because the file list
-		// is cached, and therefore "delete" actions can be made, while
-		// adding/downloading does not work)
-		$use_cache = $preview;
-
 		//Get a list of objects to be updated.
-		$objects_list = $this->getLogsForUpdate($folder, $use_cache, $from_revision + 1);
+		$objects_list = $this->getLogsForUpdate($folder, $from_revision + 1);
 		if (!is_null($objects_list)) {
 			// Output version information
 			foreach ($objects_list['revisions'] as $revision) {
-				$comment = empty($revision['comment']) ? 'No comment' : $revision['comment'];
-				$tex = "New revision ".$revision['versionName']." by ".$revision['creator']." (".date('Y-m-d H:i:s', strtotime($revision['date'])).") ";
+				$comment = empty($revision['comment']) ? _L('No comment') : $revision['comment'];
+				$tex = _L("New revision %1 by %2",$revision['versionName'],$revision['creator'])." (".date('Y-m-d H:i:s', strtotime($revision['date'])).") ";
 				echo trim($tex . str_replace("\n", "\n".str_repeat(' ', strlen($tex)), $comment));
 				echo "\n";
 			}
@@ -242,13 +243,13 @@ class phpsvnclient {
 					$localPath = str_replace($folder, "", $file);
                                         $localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
 
-					echo "Added or modified directory: $file\n";
+					echo _L("Added or modified directory: %1",$file)."\n";
 					flush();
 					if (!$preview) {
 						$this->createDirs($localPath);
 						if (!is_dir($localPath)) {
 							$errors_happened = true;
-							echo "=> FAILED\n";
+							echo "=> "._L("FAILED")."\n";
 							flush();
 						}
 					}
@@ -262,13 +263,13 @@ class phpsvnclient {
 					$localFile = str_replace($folder, "", $file);
                                         $localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
 
-					echo "Added or modified file: $file\n";
+					echo _L("Added or modified file: %1",$file)."\n";
 					flush();
 					if (!$preview) {
 						$contents = $this->getFile($file);
 						if (@file_put_contents($localFile, $contents) === false) {
 							$errors_happened = true;
-							echo "=> FAILED\n";
+							echo "=> "._L("FAILED")."\n";
 							flush();
 						}
 					}
@@ -282,14 +283,14 @@ class phpsvnclient {
 					$localFile = str_replace($folder, "", $file);
                                         $localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
 
-					echo "Removed file: $file\n";
+					echo _L("Removed file: %1",$file)."\n";
 					flush();
 
 					if (!$preview) {
 						@unlink($localFile);
 						if (file_exists($localFile)) {
 							$errors_happened = true;
-							echo "=> FAILED\n";
+							echo "=> "._L("FAILED")."\n";
 							flush();
 						}
 					}
@@ -304,14 +305,14 @@ class phpsvnclient {
 					$localPath = str_replace($folder, "", $file);
                                         $localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
 
-					echo "Removed directory: $file\n";
+					echo _L("Removed directory: %1",$file)."\n";
 					flush();
 
 					if (!$preview) {
 						$this->removeDirs($localPath);
 						if (is_dir($localPath)) {
 							$errors_happened = true;
-							echo "=> FAILED\n";
+							echo "=> "._L("FAILED")."\n";
 							flush();
 						}
 					}
@@ -322,17 +323,17 @@ class phpsvnclient {
 			// Changed by Daniel Marschall: Added $errors_happened
 			if (!$preview && !empty($version_file)) {
 				if (!$errors_happened) {
-					if (@file_put_contents($version_file, "Revision " . $this->actVersion . "\n") === false) {
-						echo "ERROR: Could not set the revision\n";
+					if (@file_put_contents($version_file, "Revision ".$this->actVersion."\n") === false) { // do not translate
+						echo _L("ERROR: Could not set the revision")."\n";
 						flush();
 						return false;
 					} else {
-						echo "Set revision to " . $this->actVersion . "\n";
+						echo _L("Set revision to %1", $this->actVersion) . "\n";
 						flush();
 						return true;
 					}
 				} else {
-					echo "Revision NOT set to " . $this->actVersion . " because some files/dirs could not be updated. Please try again.\n";
+					echo _L("Revision NOT set to %1 because some files/dirs could not be updated. Please try again.",$this->actVersion)."\n";
 					flush();
 					return false;
 				}
@@ -356,16 +357,25 @@ class phpsvnclient {
 		if ($version == -1 || $version > $this->actVersion) {
 			$version = $this->actVersion;
 		}
+
 		$url = $this->cleanURL($this->_url . "/!svn/bc/" . $version . "/" . $folder . "/");
 		$args = array();
 		$this->initQuery($args, "PROPFIND", $url);
 		$args['Body']                      = self::PHPSVN_NORMAL_REQUEST;
 		$args['Headers']['Content-Length'] = strlen(self::PHPSVN_NORMAL_REQUEST);
 
-		$headers = array();
-		$body = '';
-		if (!$this->Request($args, $headers, $body))
-			throw new OIDplusException("Cannot get rawDirectoryDump (Request failed)");
+		$cache_file = $this->cache_dir.'/svnpropfind_'.md5($url.'|'.$args['Body']).'.xml';
+		if ($this->use_cache && file_exists($cache_file)) {
+			$body = file_get_contents($cache_file);
+		} else {
+			$headers = array();
+			$body = '';
+			if (!$this->Request($args, $headers, $body))
+				throw new Exception(_L("Cannot get rawDirectoryDump (Request failed)"));
+			if (is_dir($this->cache_dir)) {
+				if ($body) @file_put_contents($cache_file, $body);
+			}
+		}
 
 		return self::xmlParse($body);
 	}
@@ -382,64 +392,49 @@ class phpsvnclient {
 	 */
 	private function getDirectoryFiles($folder = '/trunk/', $version = -1)
 	{
-		if ($arrOutput = $this->rawDirectoryDump($folder, $version)) {
+		$responses = $this->rawDirectoryDump($folder, $version);
+
+		if ($responses) {
 			$files = array();
-			foreach ($arrOutput['children'] as $key => $value) {
-				array_walk_recursive($value,
-					function ($item, $key) {
-						if ($key == 'name') {
-							if (($item == 'D:HREF') || ($item == 'LP1:GETLASTMODIFIED') || ($item == 'LP1:VERSION-NAME') || ($item == 'LP2:BASELINE-RELATIVE-PATH') || ($item == 'LP3:BASELINE-RELATIVE-PATH') || ($item == 'D:STATUS')) {
-								$this->lastDirectoryFiles = $item;
-							}
-						} elseif (($key == 'tagData') && ($this->lastDirectoryFiles != '')) {
+			foreach ($responses as $response) {
 
-							// Unsure if the 1st of two D:HREF's always returns the result we want, but for now...
-							if (($this->lastDirectoryFiles == 'D:HREF') && (isset($this->storeDirectoryFiles['type'])))
-								return;
+				if ((string)$response->{'D__propstat'}->{'D__prop'}->{'lp3__baseline-relative-path'} != '') {
+					$fn = (string)$response->{'D__propstat'}->{'D__prop'}->{'lp3__baseline-relative-path'};
+				} else {
+					$fn = (string)$response->{'D__propstat'}->{'D__prop'}->{'lp2__baseline-relative-path'};
+				}
 
-							// Dump into the array
-							switch ($this->lastDirectoryFiles) {
-								case 'D:HREF':
-									$var = 'type';
-									break;
-								case 'LP1:VERSION-NAME':
-									$var = 'version';
-									break;
-								case 'LP1:GETLASTMODIFIED':
-									$var = 'last-mod';
-									break;
-								case 'LP2:BASELINE-RELATIVE-PATH':
-								case 'LP3:BASELINE-RELATIVE-PATH':
-									$var = 'path';
-									break;
-								case 'D:STATUS':
-									$var = 'status';
-									break;
-							}
-							$this->storeDirectoryFiles[$var] = $item;
-							$this->lastDirectoryFiles        = '';
-
-							// Detect 'type' as either a 'directory' or 'file'
-							if ((isset($this->storeDirectoryFiles['type'])) && (isset($this->storeDirectoryFiles['last-mod'])) && (isset($this->storeDirectoryFiles['path'])) && (isset($this->storeDirectoryFiles['status']))) {
-								$this->storeDirectoryFiles['path'] = str_replace(' ', '%20', $this->storeDirectoryFiles['path']); //Hack to make filenames with spaces work.
-								$len                               = strlen($this->storeDirectoryFiles['path']);
-								if (substr($this->storeDirectoryFiles['type'], strlen($this->storeDirectoryFiles['type']) - $len) == $this->storeDirectoryFiles['path']) {
-									$this->storeDirectoryFiles['type'] = 'file';
-								} else {
-									$this->storeDirectoryFiles['type'] = 'directory';
-								}
-							}
-						} else {
-							$this->lastDirectoryFiles = '';
-						}
-					}
+				$storeDirectoryFiles = array(
+					'type' => (string)$response->{'D__href'},
+					'path' => $fn,
+					'last-mod' => (string)$response->{'D__propstat'}->{'D__prop'}->{'lp1__getlastmodified'},
+					'version' => (string)$response->{'D__propstat'}->{'D__prop'}->{'lp1__version-name'},
+					'status' => (string)$response->{'D__propstat'}->{'D__status'},
 				);
-				array_push($files, $this->storeDirectoryFiles);
-				unset($this->storeDirectoryFiles);
+
+				// Detect 'type' as either a 'directory' or 'file'
+				if (substr($storeDirectoryFiles['type'], strlen($storeDirectoryFiles['type']) - strlen($storeDirectoryFiles['path'])) == $storeDirectoryFiles['path']) {
+					// Example:
+					// <D:href>/svn/oidplus/!svn/bc/504/trunk/3p/vts_fileformats/VtsFileTypeDetect.class.php</D:href>
+					// <lp2:baseline-relative-path>trunk/3p/vts_fileformats/VtsFileTypeDetect.class.php</lp2:baseline-relative-path>
+					$storeDirectoryFiles['type'] = 'file';
+				} else {
+					// Example:
+					// <D:href>/svn/oidplus/!svn/bc/504/trunk/plugins/publicPages/820_login_facebook/</D:href>
+					// <lp2:baseline-relative-path>trunk/plugins/publicPages/820_login_facebook</lp2:baseline-relative-path>
+					$storeDirectoryFiles['type'] = 'directory';
+				}
+
+				array_push($files, $storeDirectoryFiles);
 			}
+
 			return $files;
+
+		} else {
+
+			throw new Exception(_L("Error communicating with SVN server"));
+
 		}
-		return false;
 	}
 
 	private static function dirToArray($dir, &$result) {
@@ -570,12 +565,12 @@ class phpsvnclient {
 		$headers = array();
 		$body = '';
 		if (!$this->Request($args, $headers, $body))
-			throw new OIDplusException("Cannot call getFile (Request failed)");
+			throw new Exception(_L("Cannot call getFile (Request failed)"));
 
 		return $body;
 	}
 
-	private function getLogsForUpdate($file, $use_cache, $vini = 0, $vend = -1)
+	private function getLogsForUpdate($file, $vini = 0, $vend = -1)
 	{
 		$fileLogs = array();
 
@@ -588,18 +583,14 @@ class phpsvnclient {
 
 		if ($vini > $vend) {
 			$vini = $vend;
-			echo "Nothing updated\n";
+			echo _L("Nothing updated")."\n";
 			flush();
 			return null;
 		}
 
-		// For OIDplus:
-		$cache_dir = __DIR__.'/../../userdata/cache';
-		if (is_dir($cache_dir)) {
-			$cache_file = $cache_dir.'/svnlog_'.md5($file).'_'.$vini.'_'.$vend.'.ser';
-			if ($use_cache && file_exists($cache_file)) {
-				return unserialize(file_get_contents($cache_file));
-			}
+		$cache_file = $this->cache_dir.'/svnlog_'.md5($file).'_'.$vini.'_'.$vend.'.ser';
+		if ($this->use_cache && file_exists($cache_file)) {
+			return unserialize(file_get_contents($cache_file));
 		}
 
 		$url = $this->cleanURL($this->_url . "/!svn/bc/" . $this->actVersion . "/" . $file . "/");
@@ -609,18 +600,25 @@ class phpsvnclient {
 		$args['Headers']['Content-Length'] = strlen($args['Body']);
 		$args['Headers']['Depth']          = 1;
 
-		$headers = array();
-		$body = '';
-		if (!$this->Request($args, $headers, $body))
-			throw new OIDplusException("Cannot call getLogsForUpdate (Request failed)");
+		$cache_file2 = $this->cache_dir.'/svnreport_'.md5($url.'|'.$args['Body']).'.xml';
+		if ($this->use_cache && file_exists($cache_file2)) {
+			$body = file_get_contents($cache_file2);
+		} else {
+			$headers = array();
+			$body = '';
+			if (!$this->Request($args, $headers, $body))
+				throw new Exception(_L("Cannot call getLogsForUpdate (Request failed)"));
+			if (is_dir($this->cache_dir)) {
+				if ($body) @file_put_contents($cache_file2, $body);
+			}
+		}
 
 		$arrOutput = self::xmlParse($body);
 
 		$revlogs = array();
 
 		$array = array();
-		if (!isset($arrOutput['children'])) $arrOutput['children'] = array();
-		foreach ($arrOutput['children'] as $value) {
+		foreach ($arrOutput as $xmlLogItem) {
 			/*
                         <S:log-item>
 			<D:version-name>164</D:version-name>
@@ -635,36 +633,41 @@ class phpsvnclient {
 			$versionName = '';
 			$date = '';
 			$comment = '';
-			foreach ($value['children'] as $entry) {
-				if (($entry['name'] == 'S:ADDED-PATH') || ($entry['name'] == 'S:MODIFIED-PATH') || ($entry['name'] == 'S:DELETED-PATH')) {
-					if ($entry['attrs']['NODE-KIND'] == "file") {
+			$creator = '';
+
+			foreach ($xmlLogItem as $tagName => $data) {
+				$tagName = strtoupper($tagName);
+				$tagName = str_replace('__', ':', $tagName);
+				if (($tagName == 'S:ADDED-PATH') || ($tagName == 'S:MODIFIED-PATH') || ($tagName == 'S:DELETED-PATH')) {
+					if ($data->attributes()['node-kind'] == "file") {
 						$array['objects'][] = array(
-							'object_name' => $entry['tagData'],
-							'action' => $entry['name'],
+							'object_name' => (string)$data,
+							'action' => $tagName,
 							'type' => 'file'
 						);
-					} else if ($entry['attrs']['NODE-KIND'] == "dir") {
+					} else if ($data->attributes()['node-kind'] == "dir") {
 						$array['objects'][] = array(
-							'object_name' => $entry['tagData'],
-							'action' => $entry['name'],
+							'object_name' => (string)$data,
+							'action' => $tagName,
 							'type' => 'dir'
 						);
 					}
-				} else if ($entry['name'] == 'D:VERSION-NAME') {
-					$versionName = isset($entry['tagData']) ? $entry['tagData'] : '';
-				} else if ($entry['name'] == 'S:DATE') {
-					$date = isset($entry['tagData']) ? $entry['tagData'] : '';
-				} else if ($entry['name'] == 'D:COMMENT') {
-					$comment = isset($entry['tagData']) ? $entry['tagData'] : '';
-				} else if ($entry['name'] == 'D:CREATOR-DISPLAYNAME') {
-					$creator = isset($entry['tagData']) ? $entry['tagData'] : '';
+				} else if ($tagName == 'D:VERSION-NAME') {
+					$versionName = (string)$data;
+				} else if ($tagName == 'S:DATE') {
+					$date = (string)$data;
+				} else if ($tagName == 'D:COMMENT') {
+					$comment = (string)$data;
+				} else if ($tagName == 'D:CREATOR-DISPLAYNAME') {
+					$creator = (string)$data;
 				}
 			}
                         $revlogs[] = array('versionName' => $versionName,
 			                   'date' => $date,
-					   'comment' => str_replace('@@@NEWLINE@@@', "\n", $comment),
+					   'comment' => $comment,
 					   'creator' => $creator);
 		}
+
 		$files       = array();
 		$filesDelete = array();
 		$dirs        = array();
@@ -740,8 +743,9 @@ class phpsvnclient {
 		$out['dirsDelete']  = $dirsDelete;
 		$out['revisions']   = $revlogs;
 
-		if (is_dir($cache_dir)) {
-			@file_put_contents($cache_file, serialize($out));
+		if (is_dir($this->cache_dir)) {
+			$data = serialize($out);
+			if ($data) @file_put_contents($cache_file, $data);
 		}
 
 		return $out;
@@ -768,14 +772,14 @@ class phpsvnclient {
 		$tmp = array();
 		$body = '';
 		if (!$this->Request($args, $tmp, $body))
-			throw new OIDplusException("Cannot get repository revision (Request failed)");
+			throw new Exception(_L("Cannot get repository revision (Request failed)"));
 
 		$this->_repVersion = null;
 		$m = array();
 		if (preg_match('@/(\d+)\s*</D:href>@ismU', $body, $m)) {
 			$this->_repVersion = $m[1];
 		} else {
-			throw new OIDplusException("Cannot get repository revision (RegEx failed)");
+			throw new Exception(_L("Cannot get repository revision (RegEx failed)"));
 		}
 
 		return $this->_repVersion;
@@ -831,9 +835,7 @@ class phpsvnclient {
 					$this->errNro = self::UNKNOWN_ERROR;
 					break;
 			}
-			//            trigger_error("request to $args[RequestURI] failed: $http->response_status
-			//Error: $http->error");
-			//throw new Exception("HTTP Error: " . $http->response_status . ' at ' . $args['RequestURI']);
+			//throw new Exception(_L('HTTP Error: %1 at %2,$http->response_status,$args['RequestURI']));
 			$http->close();
 			return false;
 		}
@@ -865,58 +867,9 @@ class phpsvnclient {
 		return preg_replace("/((^:)\/\/)/", "//", $url);
 	}
 
-	/*
-	  Taken from http://www.php.net/manual/en/function.xml-parse.php#52567
-	  Modified by Martin Guppy <http://www.deadpan110.com/>
-	  Usage
-	  Grab some XML data, either from a file, URL, etc. however you want.
-	  Assume storage in $strYourXML;
-	  Converted "class" into a single function by Daniel Marschall, ViaThinkSoft
-	 */
 	private static function xmlParse($strInputXML) {
-		$arrOutput = array();
-
-		// TODO: Added this dirty hack because XML parser somehow removes all new lines?! even if it is CDATA!
-		//       Maybe in future we should use simplexml (also test with OIDplus supplement)
-		$strInputXML = preg_replace_callback(
-		    '@<D:comment>(.+)</D:comment>@ismU',
-		    function ($treffer) {
-		      return '<D:comment>'.str_replace("\n","@@@NEWLINE@@@",$treffer[1]).'</D:comment>';
-		    },
-		    $strInputXML
-		  );
-
-
-		$resParser = xml_parser_create();
-		xml_set_element_handler($resParser,
-			function /*tagOpen*/($parser, $name, $attrs) use (&$arrOutput) {
-				$tag = array("name" => $name, "attrs" => $attrs);
-				array_push($arrOutput, $tag);
-			},
-			function /*tagClosed*/($parser, $name) use (&$arrOutput) {
-				$arrOutput[count($arrOutput) - 2]['children'][] = $arrOutput[count($arrOutput) - 1];
-				array_pop($arrOutput);
-			}
-		);
-		xml_set_character_data_handler($resParser,
-			function /*tagData*/($parser, $tagData) use (&$arrOutput) {
-				if (trim($tagData)) {
-					if (isset($arrOutput[count($arrOutput) - 1]['tagData'])) {
-						$arrOutput[count($arrOutput) - 1]['tagData'] .= $tagData;
-					} else {
-						$arrOutput[count($arrOutput) - 1]['tagData'] = $tagData;
-					}
-				}
-			}
-		);
-
-		if (!xml_parse($resParser, $strInputXML)) {
-			die(sprintf("XML error: %s at line %d", xml_error_string(xml_get_error_code($resParser)), xml_get_current_line_number($resParser)));
-		}
-
-		xml_parser_free($resParser);
-
-		return $arrOutput[0];
+		$strInputXML = preg_replace('@<([^>]+):@ismU','<\\1__',$strInputXML);
+		return simplexml_load_string($strInputXML);
 	}
 
 	/*

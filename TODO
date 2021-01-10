@@ -98,7 +98,6 @@ SMALL THINGS
 - Multilang
 	* Not yet translated:
 		- includes\classes\http_class.class.php [Problem: This is a third-party code!]
-		- includes\classes\phpsvnclient.class.php [Problem: This is a third-party code!]
 		- plugins\publicPages\100_whois\whois\index.php [Problem: This page is kinda standalone and does not include the OIDplus code]
 		- 3p\vts_fileformats\fileformats.conf [Problem: This is a third-party code!]
 		- includes\classes\VtsBrowserDownload.class.php [Problem: This is a third-party code!]
