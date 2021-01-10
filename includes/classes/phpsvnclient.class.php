@@ -199,7 +199,7 @@ class phpsvnclient {
 				}
 				$from_revision = $m[1];
 
-				echo _L("Found ".basename($version_file)." with revision information $from_revision")."\n";
+				echo _L("Found %1 with revision information %2",basename($version_file),$from_revision)."\n";
 				flush();
 			}
 		} else {

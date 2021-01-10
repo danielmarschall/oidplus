@@ -766,14 +766,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Back to update page
-		]]></source>
-		<target><![CDATA[
-		Zugriff zur Update-Seite
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Before logging in, please solve the following CAPTCHA
 		]]></source>
 		<target><![CDATA[
@@ -2022,10 +2014,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Found 
+		Found %1 with revision information %2
 		]]></source>
 		<target><![CDATA[
-		Gefunden
+		Revision %2 in Datei %1 gefunden
 		]]></target>
 	</message>
 	<message>
@@ -2194,6 +2186,14 @@
 		]]></source>
 		<target><![CDATA[
 		Zu den Registrierungs-Einstellungen zurückkehren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Go back to update page
+		]]></source>
+		<target><![CDATA[
+		Zurück zur Update-Seite
 		]]></target>
 	</message>
 	<message>

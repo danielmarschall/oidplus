@@ -112,11 +112,13 @@ foreach ($langs as $lang) {
 	$cont .= "\n";
 	foreach ($all_strings as $string) {
 		$stats_total++;
+		$string = trim($string);
 		$cont .= "	<message>\n";
 		$cont .= "		<source><![CDATA[\n";
 		$cont .= "		$string\n";
 		$cont .= "		]]></source>\n";
 		if (isset($translation_array[$string]) && !empty($translation_array[$string])) {
+			$translation_array[$string] = trim($translation_array[$string]);
 			$stats_translated++;
 			if (substr_count($string,'%') != substr_count($translation_array[$string],'%')) {
 				echo "\tAttention: Number of %-Replacements differs at translation of message '$string'\n";

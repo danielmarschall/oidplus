@@ -96,7 +96,8 @@ if (isset($_REQUEST['update_now'])) {
 
 			echo '<pre>'.$cont.'</pre>';
 
-			echo '<p><a href="index.php">'._L('Back to update page').'</a></p>';
+			echo '<p><input type="button" onclick="document.location=index.php" value="'._L('Go back to update page').'"></p>';
+
 			echo '<hr>';
 		}
 	}
