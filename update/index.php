@@ -73,6 +73,18 @@ if (isset($_REQUEST['update_now'])) {
 			try {
 				$svn = new phpsvnclient(OIDPLUS_REPO);
 				$svn->versionFile = 'oidplus_version.txt';
+
+				// We are caching the changed file logs here only in the preview mode.
+				// Reason: We want to avoid that the "update/" page becomes an
+				// DoS attack vector if there hasn't been an update for a long time,
+				// and the list is very large.
+				// But we don't want to use cache in the real update, because
+				// otherwise it might break the system if an update is made
+				// while the ViaThinkSoft server is down (because the file list
+				// is cached, and therefore "delete" actions can be made, while
+				// adding/downloading does not work)
+				$svn->use_cache = false;
+
 				$svn->updateWorkingCopy(realpath(__DIR__.'/../oidplus_version.txt'), '/trunk', dirname(__DIR__), false);
 
 				$cont = ob_get_contents();
@@ -177,6 +189,7 @@ if (isset($_REQUEST['update_now'])) {
 			ob_start();
 			try {
 				$svn = new phpsvnclient(OIDPLUS_REPO);
+				$svn->use_cache = true;
 				$svn->updateWorkingCopy(str_replace('svn-', '', $local_installation), '/trunk', realpath(__DIR__.'/../'), true);
 				$cont = ob_get_contents();
 				$cont = str_replace(realpath(__DIR__.'/../'), '...', $cont);
@@ -239,6 +252,7 @@ if (isset($_REQUEST['update_now'])) {
 			ob_start();
 			try {
 				$svn = new phpsvnclient(OIDPLUS_REPO);
+				$svn->use_cache = true;
 				$svn->updateWorkingCopy(realpath(__DIR__.'/../oidplus_version.txt'), '/trunk', realpath(__DIR__.'/../'), true);
 				$cont = ob_get_contents();
 				$cont = str_replace(realpath(__DIR__.'/../'), '...', $cont);
