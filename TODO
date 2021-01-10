@@ -93,8 +93,6 @@ SMALL THINGS
 - jstree select: automatically scroll down
 - things like RA: show more things, address, email etc.
 - note that we (and the RFC) talk about Objects, but actually OIDs only reference objects, but they are not the objects
-- Should oid_utils.inc.php, xml_utils.inc.php, oidinfo_api, etc. all be put into 3p/ (especially if they have an own ViaThinkSoft repository)?
-	Note that external SVN repos need to be "hard coded" into includes/oidplus.inc.php and update/index.php
 - Multilang
 	* Not yet translated:
 		- includes\classes\http_class.class.php [Problem: This is a third-party code!]
@@ -104,6 +102,13 @@ SMALL THINGS
 	* Is there some useful German translation of the Apache 2.0 license?
 - WEID UUID: Show the UUID 2.25/GUID equivalent as alternative ID
 - When an OID is edited/added/deleted, don't reload the whole tree. Instead, just change the tree! This looks much more fluid.
+
+UPDATER
+- Should oid_utils.inc.php, xml_utils.inc.php, oidinfo_api, etc. all be put into 3p/ (especially if they have an own ViaThinkSoft repository)?
+	Attention: WebSVN does not accept external SVN repositories
+- Internal problem with GIT distribution channel:
+	The GIT version might be behind the master SVN repository
+	So if you do "git pull", the update/index.php page might still show that an update is available!
 
 DATABASE
 - SQLite3: Implement Natural OID sorting (natSort)

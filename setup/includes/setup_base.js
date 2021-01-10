@@ -263,7 +263,7 @@ function getCurrentLang() {
 
 function _L() {
 	var args = Array.prototype.slice.call(arguments);
-	var str = args.shift();
+	var str = args.shift().trim();
 
 	var tmp = "";
 	if (typeof language_messages[getCurrentLang()] == "undefined") {

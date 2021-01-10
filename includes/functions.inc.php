@@ -170,6 +170,8 @@ function _L($str, ...$sprintfArgs) {
 	static $translation_array = array();
 	static $translation_loaded = null;
 
+	$str = trim($str);
+
 	if (!class_exists('OIDplus')) {
 		return my_vsprintf($str, $sprintfArgs);
 	}
