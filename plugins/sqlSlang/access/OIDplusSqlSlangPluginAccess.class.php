@@ -120,4 +120,8 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 	public function getSQLBool($bool): string {
 		return $bool ? '-1' : '0';
 	}
+
+	public function escapeString($str): string {
+		return str_replace("'", "''", $str);
+	}
 }

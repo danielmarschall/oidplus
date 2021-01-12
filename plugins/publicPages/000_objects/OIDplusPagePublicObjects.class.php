@@ -243,7 +243,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		// Action:     Insert
 		// Method:     POST
 		// Parameters: parent, id, ra_email, confidential, iris, asn1ids
-		// Outputs:    <0 Error, =0 Success, with following bitfields for further information:
+		// Outputs:    status=<0 Error, =0 Success, with following bitfields for further information:
 		//             1 = RA is not registered
 		//             2 = RA is not registered, but it cannot be invited
 		//             4 = OID is a well-known OID, so RA, ASN.1 and IRI identifiers were reset
@@ -356,7 +356,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 
-			return array("status" => $status);
+			return array(
+				"status" => $status,
+				"inserted_id" => $id
+			);
 		} else {
 			throw new OIDplusException(_L('Unknown action ID'));
 		}
