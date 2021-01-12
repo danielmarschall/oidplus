@@ -99,22 +99,36 @@ function crudActionInsert(parent) {
 				alert(_L("Error: %1",data.error));
 			} else if (data.status >= 0) {
 				if (data.status == 0/*OK*/) {
-					alert(_L("Insert OK"));
+					if (confirm(_L("Insert OK")+".\n\n"+_L("Do you want to open the newly created object now?"))) {
+						openAndSelectNode(data.inserted_id, parent);
+						return;
+					}
 				}
 
 				if ((data.status & 1) == 1/*RaNotExisting*/) {
 					if (confirm(_L("Insert OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",document.getElementById('ra_email').value))) {
 						crudActionSendInvitation(parent, document.getElementById('ra_email_'+id).value);
 						return;
+					} else {
+						if (confirm(_L("Do you want to open the newly created object now?"))) {
+							openAndSelectNode(data.inserted_id, parent);
+							return;
+						}
 					}
 				}
 
 				if ((data.status & 2) == 2/*RaNotExistingNoInvitation*/) {
-					alert(_L("Insert OK"));
+					if (confirm(_L("Insert OK.")+"\n\n"+_L("Do you want to open the newly created object now?"))) {
+						openAndSelectNode(data.inserted_id, parent);
+						return;
+					}
 				}
 
 				if ((data.status & 4) == 4/*IsWellKnownOID*/) {
-					alert(_L("Insert OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID."));
+					if (confirm(_L("Insert OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.")+"\n\n"+L("Do you want to open the newly created object now?"))) {
+						openAndSelectNode(data.inserted_id, parent);
+						return;
+					}
 				}
 
 				// TODO: Don't use reloadContent(); instead add a node at the tree at the left add at the right add a new row to the table
@@ -285,7 +299,7 @@ function frdl_oidid_change() {
 		if (isNaN(x)) {
 			$(to_control).val("");
 		} else {
-			$(to_control).val(x.toString(to_base));
+			$(to_control).val(x.toString(to_base).toUpperCase());
 		}
 	}
 }

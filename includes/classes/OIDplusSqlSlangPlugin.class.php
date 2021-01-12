@@ -46,4 +46,6 @@ abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 
 	public abstract function getSQLBool($bool): string;
 
+	public abstract function escapeString($str): string;
+
 }

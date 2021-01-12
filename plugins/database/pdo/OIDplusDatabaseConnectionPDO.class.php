@@ -55,7 +55,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 							$replace = $arg ? '1' : '0';
 						}
 					} else {
-						$replace = "'$arg'"; // TODO: types
+						$replace = "'".$this->getSlang()->escapeString($arg)."'"; // TODO: types
 					}
 					$pos = strpos($sql, $needle);
 					if ($pos !== false) {
@@ -148,7 +148,9 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		// Attention: Check it after you have sent a query already, because Microsoft Access doesn't seem to allow
 		// changing auto commit once a query was executed ("Attribute cannot be set now SQLState: S1011")
 		// Note: For some weird reason we *DO* need to redirect the output to "$dummy", otherwise it won't work!
-		$dummy = $this->conn->query("select name from config where 1=0");
+		$sql = "select name from ###config where 1=0";
+		$sql = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $sql);
+		$dummy = $this->conn->query($sql);
 		try {
 			$this->conn->beginTransaction();
 			$this->conn->rollBack();
@@ -203,4 +205,5 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		$this->conn->rollBack();
 		$this->intransaction = false;
 	}
+
 }

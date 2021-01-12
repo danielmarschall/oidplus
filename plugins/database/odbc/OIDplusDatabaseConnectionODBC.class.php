@@ -33,8 +33,11 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 
 		static $res = null;
 		if (is_null($res)) {
-			$res = @odbc_prepare($this->conn, "select * from config where name = ?") === false;
+			$sql = 'select name from ###config where name = ?';
+			$sql = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $sql);
+			$res = @odbc_prepare($this->conn, $sql) === false;
 		}
+
 		return $res;
 	}
 
@@ -66,7 +69,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 							$replace = $arg ? '1' : '0';
 						}
 					} else {
-						$replace = "'$arg'"; // TODO: types
+						$replace = "'".$this->getSlang()->escapeString($arg)."'"; // TODO: types
 					}
 					$pos = strpos($sql, $needle);
 					if ($pos !== false) {
@@ -140,7 +143,9 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		// Attention: Check it after you have sent a query already, because Microsoft Access doesn't seem to allow
 		// changing auto commit once a query was executed ("Attribute cannot be set now SQLState: S1011")
 		// Note: For some weird reason we *DO* need to redirect the output to "$dummy", otherwise it won't work!
-		$dummy = @odbc_exec($this->conn, "select name from config where 1=0");
+		$sql = "select name from ###config where 1=0";
+		$sql = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $sql);
+		$dummy = @odbc_exec($this->conn, $sql);
 		$this->transactions_supported = @odbc_autocommit($this->conn, false);
 		@odbc_autocommit($this->conn, true);
 	}

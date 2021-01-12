@@ -1510,6 +1510,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Do you want to open the newly created object now?
+		]]></source>
+		<target><![CDATA[
+		Möchten Sie das neu angelegte Objekt nun öffnen?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Documents and Resources
 		]]></source>
 		<target><![CDATA[
