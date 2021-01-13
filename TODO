@@ -180,7 +180,6 @@ IDEAS
 - system guid (name based pubkey)?
 - In regards multilinguality: Allow "oidplus_base$dede.css", so that languages can have their own CSS (e.g. wider "Go" button)
 	But this means that a language change also need to reload the style sheet (like the color-plugin does when you click "Test")
-- when a new oid is created, should we redirect to the newly created OID, so that the user can begin entering the description etc?
 - when an object was not found, the error message could show the next possible known object (like WebWHOIS does)
 - the "goto" quickbar (at the top right) could also be used to search something ...
 - ... alternatively, the "object not found" error page could link to the search plugin

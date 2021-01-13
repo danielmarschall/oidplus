@@ -55,7 +55,11 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 							$replace = $arg ? '1' : '0';
 						}
 					} else {
-						$replace = "'".$this->getSlang()->escapeString($arg)."'"; // TODO: types
+						if ($this->slangDetectionDone) {
+							$replace = "'".$this->getSlang()->escapeString($arg)."'"; // TODO: types
+						} else {
+							$replace = "'".str_replace("'", "''", $arg)."'"; // TODO: types
+						}
 					}
 					$pos = strpos($sql, $needle);
 					if ($pos !== false) {
