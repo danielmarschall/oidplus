@@ -128,18 +128,31 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
 			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
 			$out['text'] .= '	</tr>';
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('Operating System').'</td>';
-			$out['text'] .= '		<td>'.htmlentities(php_uname("s").' '.php_uname("r").' '.php_uname("v")).'</td>';
-			$out['text'] .= '	</tr>';
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('Machine type').'</td>';
-			$out['text'] .= '		<td>'.htmlentities(php_uname("m")).'</td>';
-			$out['text'] .= '	</tr>';
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('Hostname').'</td>';
-			$out['text'] .= '		<td>'.htmlentities(php_uname("n")).'</td>';
-			$out['text'] .= '	</tr>';
+			if (php_uname("m") == php_uname("n")) {
+				// At some hosts like Strato, php_uname() always returns the same string
+				// "Linux localhost 3.10.0-1127.10.1.el7.x86_64 #1 SMP"
+				$out['text'] .= '	<tr>';
+				$out['text'] .= '		<td>'._L('Operating System').'</td>';
+				$out['text'] .= '		<td>'.htmlentities(PHP_OS).'</td>';
+				$out['text'] .= '	</tr>';
+				$out['text'] .= '	<tr>';
+				$out['text'] .= '		<td>'._L('Hostname').'</td>';
+				$out['text'] .= '		<td>'.htmlentities(gethostname()).'</td>';
+				$out['text'] .= '	</tr>';
+			} else {
+				$out['text'] .= '	<tr>';
+				$out['text'] .= '		<td>'._L('Operating System').'</td>';
+				$out['text'] .= '		<td>'.htmlentities(php_uname("s").' '.php_uname("r").' '.php_uname("v")).'</td>';
+				$out['text'] .= '	</tr>';
+				$out['text'] .= '	<tr>';
+				$out['text'] .= '		<td>'._L('Machine type').'</td>';
+				$out['text'] .= '		<td>'.htmlentities(php_uname("m")).'</td>';
+				$out['text'] .= '	</tr>';
+				$out['text'] .= '	<tr>';
+				$out['text'] .= '		<td>'._L('Hostname').'</td>';
+				$out['text'] .= '		<td>'.htmlentities(php_uname("n")).'</td>';
+				$out['text'] .= '	</tr>';
+			}
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
 

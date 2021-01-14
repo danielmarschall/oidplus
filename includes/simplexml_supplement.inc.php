@@ -2,7 +2,7 @@
 
 /*
  * PHP SimpleXML-Supplement
- * Copyright 2020 Daniel Marschall, ViaThinkSoft
+ * Copyright 2020 - 2021 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,9 @@
 // - print_r() looks different
 // - The supplement requires that an XML string begins with "<!DOCTYPE" or "<?xml",
 //   otherwise, the first element will not be stripped away
-// - The supplement does not support attributes
 // - The supplement is slow because of regular expressions
 // - Many functions like "asXML" are not implemented
+// - There might be other incompatibilities
 //
 // So, if you want to use the SimpleXML supplement, then please carefully
 // test it with your application if it works.
@@ -63,16 +63,24 @@ if (!function_exists('simplexml_load_string')) {
 		}
 
 		$m = array();
-		preg_match_all('@<(\\S+?)[^>]*>(.*)</\\1>@smU', $testxml, $m, PREG_SET_ORDER);
+		preg_match_all('@<(\\S+?)([^>]*)>(.*)</\\1>@smU', $testxml, $m, PREG_SET_ORDER);
 		foreach ($m as $n) {
 			$name = $n[1];
-			$val  = $n[2];
+			$other = $n[2];
+			$val  = $n[3];
 
 			$val = str_replace('<![CDATA[', '', $val);
 			$val = str_replace(']]>', '', $val);
 			$val = trim($val);
 
-			$out->addChild($name, $val);
+			$new = $out->addChild($name, $val);
+
+			preg_match_all('@(\S+)=\\"([^\\"]+)\\"@smU', $other, $m2, PREG_SET_ORDER);
+			foreach ($m2 as $n2) {
+				$att_name = $n2[1];
+				$att_val = $n2[2];
+				$new->addAttribute($att_name, $att_val);
+			}
 		}
 
 		if (!is_null($root_element)) {
@@ -82,10 +90,57 @@ if (!function_exists('simplexml_load_string')) {
 		return $out;
 	}
 
-	class SimpleXMLElement implements ArrayAccess {
+	class SimpleXMLElement implements ArrayAccess, Iterator {
+
+		private $_attrs = array();
+
+		public function addAttribute($name, $val) {
+			$this->_attrs[$name] = $val;
+		}
+
+		public function attributes() {
+			return $this->_attrs;
+		}
 
 		public function isSupplement() {
 			return true;
+		}
+
+		public function __construct($val=null) {
+			if (!is_null($val)) {
+				$this->{0} = $val;
+			}
+		}
+
+		public function isArray() {
+			$vars = get_object_vars($this);
+			$max = -1;
+			foreach ($vars as $x => $dummy) {
+				if (($x == '_attrs') || ($x == 'position')) continue;
+				if (!is_numeric($x)) {
+					$max = -1;
+					break;
+				} else {
+					if ($x > $max) $max = $x;
+				}
+			}
+			return $max > 0;
+		}
+
+		public function addToArray($val) {
+			$vars = get_object_vars($this);
+			$max = -1;
+			foreach ($vars as $x => $dummy) {
+				if (($x == '_attrs') || ($x == 'position')) continue;
+				if (!is_numeric($x)) {
+					$max = -1;
+					break;
+				} else {
+					if ($x > $max) $max = $x;
+				}
+			}
+			$max++;
+			$this->{(string)$max} = $val;
 		}
 
 		public function __toString() {
@@ -130,125 +185,115 @@ if (!function_exists('simplexml_load_string')) {
 			}
 
 			$data = /*$this->data;*/get_object_vars($this);
+
 			if (!isset($data[$name])) {
-				if (is_object($val)) {
-					$data[$name] = $val;
+				if ($val instanceof SimpleXMLElement) {
+					//echo "First add $name already exist\n";
+					$this->$name = $val;
 				} else {
-					// Adding primitve value
-					$data[$name][] = $val;
-				}
-			} else if (is_array($data[$name])) {
-				// Add to an array of existing sub-nodes
-				$data[$name][] = $val;
-			} else if ($data[$name] instanceof SimpleXMLElement) {
-				$vars = get_object_vars($data[$name]);
-				$complex = false;
-				$max = -1;
-				foreach ($vars as $x => $dummy) {
-					if (!is_numeric($x)) {
-						$complex = true;
-						break;
-					} else {
-						if ($x > $max) $max = $x;
-					}
-				}
-				if ($complex) {
-					// Adding a primitive value to a node that contains a comlpex value
-					$data[$name] = array(
-						$data[$name],
-						$val
-					);
-				} else {
-					// Adding a primitive value to a "fake" array
-					// (Real SimpleXMLElement says that print_r($xml) says that member "a" is an array, but if you call print_r($xml->a), it is an SimpleXMLElement?!)
-					$max++;
-					$data[$name]->$max = $val;
+					$this->$name = new SimpleXMLElement($val);
+					//echo "First add $name with val\n";
 				}
 			} else {
-				// Adding a primitive value to a node that contains a single primitive value
-				$data[$name] = array(
-					$data[$name],
-					$val
-				);
-			}
-
-			if (is_array($data[$name])) {
-				$test = new SimpleXMLElement();
-				foreach ($data[$name] as $n => $val) {
-					$test->$n = $val;
+				if (!($val instanceof SimpleXMLElement)) {
+					$val = new SimpleXMLElement($val);
 				}
-				$this->$name = $test;
-			} else {
-				$this->$name = $data[$name];
+
+				if ($data[$name]->isArray()) {
+					$data[$name]->addToArray($val);
+				} else {
+					$tmp = new SimpleXMLElement();
+					$tmp->addToArray($data[$name]);
+					$tmp->addToArray($val);
+					$this->$name = $tmp;
+					$this->_attrs = array();
+				}
+				return $val;
 			}
 
-			return $val;
+			return $this->$name;
 		}
+
+		private $position = 0;
+
+		public function rewind() {
+			$this->position = 0;
+		}
+
+		public function current() {
+			$vars = get_object_vars($this);
+			$cnt = 0;
+			foreach ($vars as $x => $dummy) {
+				if (($x == '_attrs') || ($x == 'position')) continue;
+				if (($dummy instanceof SimpleXMLElement) && !is_numeric($x) && $dummy->isArray()) {
+					$vars2 = get_object_vars($dummy);
+					foreach ($vars2 as $x2 => $dummy2) {
+						if (($x2 == '_attrs') || ($x2 == 'position')) continue;
+						if ($cnt == $this->position) {
+							if ($dummy2 instanceof SimpleXMLElement) {
+								return $dummy2;
+							} else {
+								return new SimpleXMLElement($dummy2);
+							}
+						}
+						$cnt++;
+					}
+				} else {
+					if ($cnt == $this->position) {
+						if ($dummy instanceof SimpleXMLElement) {
+							return $dummy;
+						} else {
+							return new SimpleXMLElement($dummy);
+						}
+					}
+					$cnt++;
+				}
+			}
+
+
+		}
+
+		public function key() {
+			$vars = get_object_vars($this);
+			$cnt = 0;
+			foreach ($vars as $x => $dummy) {
+				if (($x == '_attrs') || ($x == 'position')) continue;
+				if (($dummy instanceof SimpleXMLElement) && !is_numeric($x) && $dummy->isArray()) {
+					$vars2 = get_object_vars($dummy);
+					foreach ($vars2 as $x2 => $dummy2) {
+						if (($x2 == '_attrs') || ($x2 == 'position')) continue;
+						if ($cnt == $this->position) return $x/*sic*/;
+						$cnt++;
+					}
+				} else {
+					if ($cnt == $this->position) return $x;
+					$cnt++;
+				}
+			}
+		}
+
+		public function next() {
+			++$this->position;
+		}
+
+		public function valid() {
+			$vars = get_object_vars($this);
+			$cnt = 0;
+			foreach ($vars as $x => $dummy) {
+				if (($x == '_attrs') || ($x == 'position')) continue;
+				if (($dummy instanceof SimpleXMLElement) && !is_numeric($x) && $dummy->isArray()) {
+					$vars2 = get_object_vars($dummy);
+					foreach ($vars2 as $x2 => $dummy2) {
+						if (($x2 == '_attrs') || ($x2 == 'position')) continue;
+						$cnt++;
+					}
+				} else {
+					$cnt++;
+				}
+			}
+
+			return $this->position < $cnt;
+		}
+
 	}
-
 }
-
-
-
-/*
-$testxml = <<<EOF
-<?xml version="1.0" ?>
-<translation>
-	<a>x</a>
-	<a>y</a>
-	<b>z</b>
-	<c>
-		<a>p</a>
-		<a>q</a>
-	</c>
-	<d>
-		<a>p</a>
-		<a>q</a>
-	</d>
-	<e></e>
-</translation>
-EOF;
-
-$xml = simplexml_load_string($testxml);
-$xml->addChild('a', 'm1');
-$xml->addChild('a', 'm2');
-$xml->addChild('d', 'n');
-$character = $xml->addChild('char');
-$character->addChild('name', 'Mr. Parser');
-$character->addChild('actor', 'John Doe');
-//echo "X=".$xml->ma;
-//$xml->ma = 3;
-//echo "X=".$xml->ma;
-//print_r($xml->a);
-//print_r($xml->d[0]);
-//print_r($xml);
-//print_r((string)($xml->a));
-//foreach ($xml->a as $x) {
-//	echo "$x\n";
-//}
-//foreach ((array)$xml->a as $x) {
-//	echo "$x\n";
-//}
-//foreach ((array)$xml->jsSetup->file as $js_file) {
-//}
-//$xml = simplexml_load_file(__DIR__.'/../plugins/database/mysqli/manifest.xml');
-//print_r($xml);
-//echo (string)$xml->php->mainclass;
-$testxml = <<<EOF
-<?xml version="1.0" ?>
-<oid-database>
-	<oid>
-		<dot-notation>2.999</dot-notation>
-	</oid>
-	<oid>
-		<dot-notation>2.999.2</dot-notation>
-	</oid>
-</oid-database>
-EOF;
-$xml = simplexml_load_string($testxml);
-print_r($xml);
-foreach ($xml->oid as $oid) {
-	echo $oid->{'dot-notation'}->__toString()."\n";
-}
-*/
-
