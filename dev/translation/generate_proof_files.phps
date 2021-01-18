@@ -3,7 +3,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2020 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
 
 // Use this script to create files containing all strings of a specific language
 // These files can be used for proofing (e.g. using Microsoft Word)
-
 
 $dir = __DIR__ . '/../../';
 

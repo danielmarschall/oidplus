@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@
  */
 
 // Before we do ANYTHING, check for dependencies! Do not include anything (except the GMP supplement) yet.
+
+define('INSIDE_OIDPLUS', true);
 
 require_once __DIR__ . '/functions.inc.php'; // Required for _L()
 

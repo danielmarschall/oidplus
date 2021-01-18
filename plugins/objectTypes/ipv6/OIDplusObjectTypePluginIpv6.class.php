@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusObjectTypePluginIpv6 extends OIDplusObjectTypePlugin {
 

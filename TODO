@@ -57,9 +57,6 @@ DATA TRANSFER PLUGIN
 SMALL THINGS
 - #gotobutton should have the same top and height as #gotoedit
 - Should plugins be able to change the "Content-Security-Policy" header (i.e. to include external JavaScripts frameworks)
-- Copyright notice:
-	* Currently, we have "2019", "2020" and "2019-2020". Change them all to "2019 - 2020"
-	* Copyright <BY> Daniel Marschall ("by" is missing)
 - RA address data: Country selection box like in OIDInfo
 	Possible data source: https://datahub.io/core/country-list#resource-data
 - offer signature checker tool to verify WHOIS responses
