@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@
 
 // ATTENTION: If you change something, please make sure that the changes
 //            are synchronous with OIDplusPageRaAutomatedAJAXCalls
+
+if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 
