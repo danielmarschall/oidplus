@@ -88,8 +88,8 @@ function getSystemUrl(relative) {
 function getTreeLoadURL() {
 	var url = new URL(window.location.href);
 	var goto = url.searchParams.get("goto");
-	return (goto != null) ? "ajax.php?csrf_token="+csrf_token+"&action=tree_load&goto="+encodeURIComponent(goto)
-	                      : "ajax.php?csrf_token="+csrf_token+"&action=tree_load";
+	return (goto != null) ? "ajax.php?csrf_token="+encodeURIComponent(csrf_token)+"&action=tree_load&goto="+encodeURIComponent(goto)
+	                      : "ajax.php?csrf_token="+encodeURIComponent(csrf_token)+"&action=tree_load";
 }
 
 function reloadContent() {
@@ -197,7 +197,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 	$("#gotoedit").val(id);
 
 	// Normal opening of a description
-	fetch("ajax.php?csrf_token="+csrf_token+"&action=get_description&id="+encodeURIComponent(id))
+	fetch("ajax.php?csrf_token="+encodeURIComponent(csrf_token)+"&action=get_description&id="+encodeURIComponent(id))
 	.then(function(response) {
 		response.json()
 		.then(function(data) {
