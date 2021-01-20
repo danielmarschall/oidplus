@@ -168,4 +168,14 @@ class OIDplusIpv6 extends OIDplusObject {
 		if (!($to instanceof $this)) return false;
 		return ipv6_distance($to->ipv6, $this->ipv6);
 	}
+
+	public function getDirectoryName() {
+		if ($this->isRoot()) return $this->ns();
+		$bare = str_replace(':','_',ipv6_normalize($this->bare));
+		if ($this->isLeafNode()) {
+			return $this->ns().'_'.$bare;
+		} else {
+			return $this->ns().'_'.$bare.'__'.$this->cidr;
+		}
+	}
 }

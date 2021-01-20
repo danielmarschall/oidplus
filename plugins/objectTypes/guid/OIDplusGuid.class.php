@@ -171,4 +171,18 @@ class OIDplusGuid extends OIDplusObject {
 		$ids[] = new OIDplusAltId('oid', uuid_to_oid($this->guid), _L('OID representation of UUID'));
 		return $ids;
 	}
+
+	public function getDirectoryName() {
+		if ($this->isLeafNode()) {
+			// Leaf (UUID)
+			// Example output: "guid_adb0b042_5b57_11eb_b0d9_3c4a92df8582"
+			$str = $this->nodeId(false);
+			$str = str_replace('-', '_', $str);
+			$str = strtolower($str);
+			return $this->ns().'_'.$str;
+		} else {
+			// Category
+			return parent::getDirectoryName();
+		}
+	}
 }

@@ -22,33 +22,17 @@ if (!defined('INSIDE_OIDPLUS')) die();
 class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 	public static function getUploadDir($id) {
-		$path = realpath(OIDplus::localpath() . 'userdata/attachments/');
-
 		$obj = OIDplusObject::parse($id);
 		if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
-		if ($obj::ns() == 'oid') {
-			$oid = $obj->nodeId(false);
-		} else {
-			$oid = null;
-			$alt_ids = $obj->getAltIds();
-			foreach ($alt_ids as $alt_id) {
-				if ($alt_id->getNamespace() == 'oid') {
-					$oid = $alt_id->getId();
-					break; // we prefer the first OID (for GUIDs, the first OID is the OIDplus-OID, and the second OID is the UUID OID)
-				}
-			}
-		}
 
-		if (!is_null($oid) && ($oid != '')) {
-			// For OIDs, it is the OID, for other identifiers
-			// it it the OID alt ID (generated using the SystemID)
-			$path .= DIRECTORY_SEPARATOR . str_replace('.', '_', $oid);
-		} else {
-			// Can happen if you don't have a system ID (due to missing OpenSSL plugin)
-			$path .= DIRECTORY_SEPARATOR . md5($obj->nodeId(true)); // we don't use $id, because $obj->nodeId(true) is possibly more canonical than $id
-		}
-		
-		return $path;
+		$path = realpath(OIDplus::localpath() . 'userdata/attachments/');
+		$path_a = $path . DIRECTORY_SEPARATOR . $obj->getDefaultDirectoryName();
+		$path_a_bug = $path . $obj->getDefaultDirectoryName();
+		$path_b = $path . DIRECTORY_SEPARATOR . $obj->getDirectoryName();
+
+		if (is_dir($path_a)) return $path_a; // backwards compatibility
+		if (is_dir($path_a_bug)) return $path_a_bug; // backwards compatibility
+		return $path_b;
 	}
 
 	private function raMayDelete() {

@@ -226,4 +226,9 @@ class OIDplusGs1 extends OIDplusObject {
 
 		return null;
 	}
+
+	public function getDirectoryName() {
+		if ($this->isRoot()) return $this->ns();
+		return $this->ns().'_'.$this->nodeId(false); // safe, because there are only numbers
+	}
 }
