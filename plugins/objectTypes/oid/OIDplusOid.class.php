@@ -437,4 +437,10 @@ class OIDplusOid extends OIDplusObject {
 		$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OID, $this->oid), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OID'));
 		return $ids;
 	}
+
+	public function getDirectoryName() {
+		if ($this->isRoot()) return $this->ns();
+		$oid = $this->nodeId(false);
+		return $this->ns().'_'.str_replace('.', '_', $oid);
+	}
 }

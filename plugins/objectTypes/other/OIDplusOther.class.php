@@ -166,4 +166,9 @@ class OIDplusOther extends OIDplusObject {
 
 		return count($ary) - count($bry);
 	}
+
+	public function getDirectoryName() {
+		if ($this->isRoot()) return $this->ns();
+		return $this->ns().'_'.md5($this->nodeId(false));
+	}
 }

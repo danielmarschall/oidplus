@@ -465,4 +465,37 @@ abstract class OIDplusObject {
 			}
 		}
 	}
+
+	// override this function if you want your object type to save
+	// attachments in directories with easy names.
+	// Take care that your custom directory name will not allow jailbreaks (../) !
+	public function getDirectoryName() {
+		return $this->getDefaultDirectoryName();
+	}
+
+	public final function getDefaultDirectoryName() {
+		if ($this->isRoot()) return $this->ns();
+
+		if ($this::ns() == 'oid') {
+			$oid = $this->nodeId(false);
+		} else {
+			$oid = null;
+			$alt_ids = $this->getAltIds();
+			foreach ($alt_ids as $alt_id) {
+				if ($alt_id->getNamespace() == 'oid') {
+					$oid = $alt_id->getId();
+					break; // we prefer the first OID (for GUIDs, the first OID is the OIDplus-OID, and the second OID is the UUID OID)
+				}
+			}
+		}
+
+		if (!is_null($oid) && ($oid != '')) {
+			// For OIDs, it is the OID, for other identifiers
+			// it it the OID alt ID (generated using the SystemID)
+			return str_replace('.', '_', $oid);
+		} else {
+			// Can happen if you don't have a system ID (due to missing OpenSSL plugin)
+			return md5($this->nodeId(true)); // we don't use $id, because $this->nodeId(true) is possibly more canonical than $id
+		}
+	}
 }
