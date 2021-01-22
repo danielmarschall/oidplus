@@ -75,6 +75,7 @@ if (!function_exists('simplexml_load_string')) {
 
 			$new = $out->addChild($name, $val);
 
+			$m2 = array();
 			preg_match_all('@(\S+)=\\"([^\\"]+)\\"@smU', $other, $m2, PREG_SET_ORDER);
 			foreach ($m2 as $n2) {
 				$att_name = $n2[1];

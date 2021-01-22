@@ -470,12 +470,11 @@ abstract class OIDplusObject {
 	// attachments in directories with easy names.
 	// Take care that your custom directory name will not allow jailbreaks (../) !
 	public function getDirectoryName() {
-		return $this->getDefaultDirectoryName();
+		if ($this->isRoot()) return $this->ns();
+		return $this->getLegacyDirectoryName();
 	}
 
-	public final function getDefaultDirectoryName() {
-		if ($this->isRoot()) return $this->ns();
-
+	public final function getLegacyDirectoryName() {
 		if ($this::ns() == 'oid') {
 			$oid = $this->nodeId(false);
 		} else {

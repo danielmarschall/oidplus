@@ -25,14 +25,14 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		$obj = OIDplusObject::parse($id);
 		if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
 
-		$path = realpath(OIDplus::localpath() . 'userdata/attachments/');
-		$path_a = $path . DIRECTORY_SEPARATOR . $obj->getDefaultDirectoryName();
-		$path_a_bug = $path . $obj->getDefaultDirectoryName();
-		$path_b = $path . DIRECTORY_SEPARATOR . $obj->getDirectoryName();
+		$path = OIDplus::localpath() . 'userdata' . DIRECTORY_SEPARATOR . 'attachments';
+		$path_v1 = $path . DIRECTORY_SEPARATOR . $obj->getLegacyDirectoryName();
+		$path_v1_bug = $path . $obj->getLegacyDirectoryName();
+		$path_v2 = $path . DIRECTORY_SEPARATOR . $obj->getDirectoryName();
 
-		if (is_dir($path_a)) return $path_a; // backwards compatibility
-		if (is_dir($path_a_bug)) return $path_a_bug; // backwards compatibility
-		return $path_b;
+		if (is_dir($path_v1)) return $path_v1; // backwards compatibility
+		if (is_dir($path_v1_bug)) return $path_v1_bug; // backwards compatibility
+		return $path_v2;
 	}
 
 	private function raMayDelete() {
