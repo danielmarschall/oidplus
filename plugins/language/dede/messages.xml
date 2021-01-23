@@ -86,6 +86,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		(Generate)
+		]]></source>
+		<target><![CDATA[
+		(Generieren)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		(Objects with undefined RA)
 		]]></source>
 		<target><![CDATA[
@@ -2550,10 +2558,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Insert OK
+		Insert OK.
 		]]></source>
 		<target><![CDATA[
-		Einfügen erfolgreich
+		Einfügen erfolgreich.
 		]]></target>
 	</message>
 	<message>
@@ -3674,6 +3682,14 @@
 		]]></source>
 		<target><![CDATA[
 		OK
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OK! Generated UUID %1 which resolves to OID %2
+		]]></source>
+		<target><![CDATA[
+		OK! Es wurde OID %2 erzeugt, die auf der UUID %1 basiert.
 		]]></target>
 	</message>
 	<message>

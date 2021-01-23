@@ -2,8 +2,8 @@
 
 /*
  * UUID utils for PHP
- * Copyright 2011 - 2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-11-14
+ * Copyright 2011 - 2021 Daniel Marschall, ViaThinkSoft
+ * Version 2021-01-23
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -295,6 +295,9 @@ function oid_to_uuid($oid) {
 		$oid = substr($oid, 1);
 	}
 	$ary = explode('.', $oid);
+
+	if (!isset($ary[2])) return false;
+
 	$val = $ary[2];
 
 	$x = gmp_init($val, 10);
@@ -314,6 +317,8 @@ function is_uuid_oid($oid, $only_allow_root=false) {
 
 	if ($only_allow_root) {
 		if (count($ary) != 3) return false;
+	} else {
+		if (count($ary) < 3) return false;
 	}
 
 	if ($ary[0] != '2') return false;

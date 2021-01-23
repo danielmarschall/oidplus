@@ -242,6 +242,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			return array("status" => 0);
 		}
 
+		// Generate UUID
+		else if ($actionID == 'generate_uuid') {
+			$uuid = gen_uuid();
+			if (!$uuid) return array("status" => 1);
+			return array(
+				"status" => 0,
+				"uuid" => $uuid,
+				"intval" => substr(uuid_to_oid($uuid),strlen('2.25.'))
+			);
+		}
+
 		// Action:     Insert
 		// Method:     POST
 		// Parameters: parent, id, ra_email, confidential, iris, asn1ids
@@ -705,6 +716,22 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$objParent = OIDplusObject::parse($parent);
 		$parentNS = $objParent::ns();
 
+		$no_asn1 = array(
+			'oid:1.3.6.1.4.1',
+			'oid:1.3.6.1.4.1.37476.9000',
+			'oid:1.3.6.1.4.1.37553.8.8',
+			'oid:2.25'
+		);
+		$no_iri = array(
+			'oid:1.3.6.1.4.1',
+			'oid:1.3.6.1.4.1.37476.9000',
+			'oid:1.3.6.1.4.1.37553.8.8',
+			'oid:2.25'
+		);
+
+		$accepts_asn1 = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), $no_asn1)) && (!is_uuid_oid($objParent->nodeId(),true));
+		$accepts_iri  = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), $no_iri)) && (!is_uuid_oid($objParent->nodeId(),true));
+
 		$result = OIDplus::db()->query("select o.*, r.ra_name " .
 		                               "from ###objects o " .
 		                               "left join ###ra r on r.email = o.ra_email " .
@@ -735,8 +762,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$output .= '	     <th>'._L('ID').(($parentNS == 'gs1') ? ' '._L('(without check digit)') : '').'</th>';
 		if ($parentNS == 'oid') {
 			if ($one_weid_available) $output .= '	     <th>'._L('WEID').'</th>';
-			$output .= '	     <th>'._L('ASN.1 IDs (comma sep.)').'</th>';
-			$output .= '	     <th>'._L('IRI IDs (comma sep.)').'</th>';
+			if ($accepts_asn1) $output .= '	     <th>'._L('ASN.1 IDs (comma sep.)').'</th>';
+			if ($accepts_iri)  $output .= '	     <th>'._L('IRI IDs (comma sep.)').'</th>';
 		}
 		$output .= '	     <th>'._L('RA').'</th>';
 		$output .= '	     <th>'._L('Comment').'</th>';
@@ -784,8 +811,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 							$output .= '	<td>'._L('n/a').'</td>';
 						}
 					}
-					$output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.implode(', ', $asn1ids).'"></td>';
-					$output .= '     <td><input type="text" id="iris_'.$row->id.'" value="'.implode(', ', $iris).'"></td>';
+					if ($accepts_asn1) $output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.implode(', ', $asn1ids).'"></td>';
+					if ($accepts_iri)  $output .= '     <td><input type="text" id="iris_'.$row->id.'" value="'.implode(', ', $iris).'"></td>';
 				}
 				$output .= '     <td><input type="text" id="ra_email_'.$row->id.'" value="'.htmlentities($row->ra_email).'"></td>';
 				$output .= '     <td><input type="text" id="comment_'.$row->id.'" value="'.htmlentities($row->comment).'"></td>';
@@ -809,8 +836,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					foreach ($asn1ids as $asn1id) {
 						$asn1ids_ext[] = '<a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.$asn1id.'</a>';
 					}
-					$output .= '     <td>'.implode(', ', $asn1ids_ext).'</td>';
-					$output .= '     <td>'.implode(', ', $iris).'</td>';
+					if ($accepts_asn1) $output .= '     <td>'.implode(', ', $asn1ids_ext).'</td>';
+					if ($accepts_iri)  $output .= '     <td>'.implode(', ', $iris).'</td>';
 				}
 				$output .= '     <td><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$row->ra_email)).'>'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
 				$output .= '     <td>'.htmlentities($row->comment).'</td>';
@@ -831,6 +858,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				if ($objParent->isWeid(true)) {
 					$output .= '     <td>'.$prefix.' <input oninput="frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
 					$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="frdl_weid_change()"></td>';
+				} else if ($objParent->nodeId() === 'oid:2.25') {
+					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:340px"><a href="javascript:generateRandomUUID()">'._L('(Generate)').'</a></td>';
+					if ($one_weid_available) $output .= '     <td></td>'; // WEID-editor not available for root nodes. Do it manually, please
 				} else {
 					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:50px"></td>';
 					if ($one_weid_available) $output .= '     <td></td>'; // WEID-editor not available for root nodes. Do it manually, please
@@ -838,8 +868,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			} else {
 				$output .= '     <td>'.$prefix.' <input type="text" id="id" value=""></td>';
 			}
-			if ($parentNS == 'oid') $output .= '     <td><input type="text" id="asn1ids" value=""></td>';
-			if ($parentNS == 'oid') $output .= '     <td><input type="text" id="iris" value=""></td>';
+			if ($accepts_asn1) $output .= '     <td><input type="text" id="asn1ids" value=""></td>';
+			if ($accepts_iri)  $output .= '     <td><input type="text" id="iris" value=""></td>';
 			$output .= '     <td><input type="text" id="ra_email" value="'.htmlentities($parent_ra_email).'"></td>';
 			$output .= '     <td><input type="text" id="comment" value=""></td>';
 			$output .= '     <td><input type="checkbox" id="hide"></td>';
