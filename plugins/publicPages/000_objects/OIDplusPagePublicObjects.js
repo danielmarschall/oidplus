@@ -15,6 +15,35 @@
  * limitations under the License.
  */
 
+function generateRandomUUID() {
+	$.ajax({
+		url:"ajax.php",
+		method:"POST",
+		data: {
+			csrf_token:csrf_token,
+			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
+			action:"generate_uuid"
+		},
+		error:function(jqXHR, textStatus, errorThrown) {
+			alert(_L("Error: %1",errorThrown));
+		},
+		success:function(data) {
+			if ("error" in data) {
+				alert(_L("Error: %1",data.error));
+			} else if (data.status >= 0) {
+				if (data.status == 0/*OK*/) {
+					$("#id").val(data.intval);
+					alert(_L("OK! Generated UUID %1 which resolves to OID %2", data.uuid, "2.25."+data.intval));
+				} else {
+					alert(_L("Error: %1",data.status));
+				}
+			} else {
+				alert(_L("Error: %1",data));
+			}
+		}
+	});
+}
+
 function cbRemoveTinyMCE(selector) {
 	if ((typeof tinymce == "undefined") || (tinymce == null)) {
 		// This should not happen
@@ -45,6 +74,8 @@ function checkMissingOrDoubleASN1(oid) {
 
 	//var curinput = $('#asn1ids'+suffix').value;
 	var curinput = $('input[id="asn1ids'+suffix+'"]')[0];
+	
+	if (typeof curinput == "undefined") return true;
 
 	if (curinput.value == '') {
 		// TODO: maybe we should only warn if ASN.1, IRI and Comment are all null, not just ASN.1?
@@ -99,7 +130,7 @@ function crudActionInsert(parent) {
 				alert(_L("Error: %1",data.error));
 			} else if (data.status >= 0) {
 				if (data.status == 0/*OK*/) {
-					if (confirm(_L("Insert OK")+".\n\n"+_L("Do you want to open the newly created object now?"))) {
+					if (confirm(_L("Insert OK.")+".\n\n"+_L("Do you want to open the newly created object now?"))) {
 						openAndSelectNode(data.inserted_id, parent);
 						return;
 					}
@@ -125,7 +156,7 @@ function crudActionInsert(parent) {
 				}
 
 				if ((data.status & 4) == 4/*IsWellKnownOID*/) {
-					if (confirm(_L("Insert OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.")+"\n\n"+L("Do you want to open the newly created object now?"))) {
+					if (confirm(_L("Insert OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.")+"\n\n"+_L("Do you want to open the newly created object now?"))) {
 						openAndSelectNode(data.inserted_id, parent);
 						return;
 					}
