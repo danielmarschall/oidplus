@@ -4,7 +4,7 @@
 
 INTERNET-DRAFT                                              D. Marschall
 Intended Status: Informational                              ViaThinkSoft
-Expires: <Expiry Date>                                      October 2020
+Expires: August 13, 2021                                   February 2021
 
 
             Retrieving information about Object Identifiers
@@ -19,43 +19,43 @@ Abstract
    Authorities (RAs) using the WHOIS protocol, in a way that is both
    human-readable and machine-readable.
 
-Status of this Memo
 
-   This Internet-Draft is submitted to IETF in full conformance with the
+
+
+
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
    provisions of BCP 78 and BCP 79.
 
    Internet-Drafts are working documents of the Internet Engineering
-   Task Force (IETF), its areas, and its working groups.  Note that
-   other groups may also distribute working documents as
-   Internet-Drafts.
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   The list of current Internet-Drafts can be accessed at
-   http://www.ietf.org/1id-abstracts.html
+   This Internet-Draft will expire on August 13, 2021.
 
-   The list of Internet-Draft Shadow Directories can be accessed at
-   http://www.ietf.org/shadow.html
+Copyright Notice
 
-
-Copyright and License Notice
-
-   Copyright (c) 2020 IETF Trust and the persons identified as the
+   Copyright (c) 2021 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
  
 
 
-Marschall                Expires <Expiry Date>                  [Page 1]
+Marschall               Expires August 13, 2021                 [Page 1]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
    carefully, as they describe your rights and restrictions with respect
@@ -63,7 +63,6 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
    include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
-
 
 
 Table of Contents
@@ -106,12 +105,13 @@ Table of Contents
 
 
 
+
  
 
 
-Marschall                Expires <Expiry Date>                  [Page 2]
+Marschall               Expires August 13, 2021                 [Page 2]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
 1  Introduction
@@ -165,9 +165,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                  [Page 3]
+Marschall               Expires August 13, 2021                 [Page 3]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
 1.1  Terminology
@@ -221,9 +221,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                  [Page 4]
+Marschall               Expires August 13, 2021                 [Page 4]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
    Each authentication token MUST be prepended by a dollar sign ("$").
@@ -277,9 +277,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                  [Page 5]
+Marschall               Expires August 13, 2021                 [Page 5]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
 3  Response
@@ -333,9 +333,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                  [Page 6]
+Marschall               Expires August 13, 2021                 [Page 6]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
    (4) Optional RA-Sections containing information about RAs which were
@@ -389,9 +389,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                  [Page 7]
+Marschall               Expires August 13, 2021                 [Page 7]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
    was found, etc.
@@ -445,9 +445,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                  [Page 8]
+Marschall               Expires August 13, 2021                 [Page 8]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
    (6) "url" (OPTIONAL, multiple values allowed) contains a URL (as
@@ -501,9 +501,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                  [Page 9]
+Marschall               Expires August 13, 2021                 [Page 9]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
    about the OID and/or its subordinate OIDs.  If the result is "Found"
@@ -557,9 +557,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                 [Page 10]
+Marschall               Expires August 13, 2021                [Page 10]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
    (17) "created" (OPTIONAL) contains the date and time (as specified in
@@ -613,9 +613,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                 [Page 11]
+Marschall               Expires August 13, 2021                [Page 11]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
    also just contain a rough location like city and country name, state
@@ -669,9 +669,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                 [Page 12]
+Marschall               Expires August 13, 2021                [Page 12]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
    Additional fields can be defined by the WHOIS service, but they MUST
@@ -725,9 +725,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                 [Page 13]
+Marschall               Expires August 13, 2021                [Page 13]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
    If parts of the date/time reference are uncertain, then they SHOULD
@@ -781,9 +781,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                 [Page 14]
+Marschall               Expires August 13, 2021                [Page 14]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
 4  Referral
@@ -837,9 +837,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                 [Page 15]
+Marschall               Expires August 13, 2021                [Page 15]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
 5  Full Example
@@ -893,9 +893,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                 [Page 16]
+Marschall               Expires August 13, 2021                [Page 16]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
 6  Alternative Namespaces
@@ -949,9 +949,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                 [Page 17]
+Marschall               Expires August 13, 2021                [Page 17]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
 6.1  Example: UUID Namespace
@@ -1005,9 +1005,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                 [Page 18]
+Marschall               Expires August 13, 2021                [Page 18]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
 8  Security Considerations
@@ -1061,9 +1061,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                 [Page 19]
+Marschall               Expires August 13, 2021                [Page 19]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
 10  References
@@ -1117,9 +1117,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
  
 
 
-Marschall                Expires <Expiry Date>                 [Page 20]
+Marschall               Expires August 13, 2021                [Page 20]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
    [X680]     "Information technology - Abstract Syntax Notation One
@@ -1129,8 +1129,9 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 10.2  Informative References
 
-   [RFC1157]  Case, J., Et. Al, "A Simple Network Management Protocol
-              (SNMP)", RFC 1157, DOI 10.17487/RFC1157, May 1990.
+   [RFC1157]  Case, J., Fedor, M., Schoffstall, M., Davin, J., "A Simple
+              Network Management Protocol (SNMP)", RFC 1157,
+              DOI 10.17487/RFC1157, May 1990.
               <http://www.rfc-editor.org/info/rfc1157>.
 
    [RFC4511]  Sermersheim, J., "Lightweight Directory Access Protocol
@@ -1138,7 +1139,8 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
               June 2006.
               <http://www.rfc-editor.org/info/rfc4511>.
 
-   [RFC4880]  Callas, J., Et. Al, "OpenPGP Message Format", RFC 4880,
+   [RFC4880]  Callas, J., Donnerhacke, L., Finney, H., Shaw, D., Thayer,
+              R., "OpenPGP Message Format", RFC 4880,
               DOI 10.17487/RFC4880, November 2007.
               <http://www.rfc-editor.org/info/rfc4880>.
 
@@ -1168,14 +1170,12 @@ INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
 
 
 
-
-
  
 
 
-Marschall                Expires <Expiry Date>                 [Page 21]
+Marschall               Expires August 13, 2021                [Page 21]
 
-INTERNET DRAFT                 OID-WHOIS                    <Issue Date>
+INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 
 Acknowledgements
@@ -1229,4 +1229,4 @@ Authors' Addresses
 
 
 
-Marschall                Expires <Expiry Date>                 [Page 22]
+Marschall               Expires August 13, 2021                [Page 22]

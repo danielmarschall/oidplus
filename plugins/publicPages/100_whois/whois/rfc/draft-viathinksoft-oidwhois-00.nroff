@@ -7,9 +7,9 @@
 .ds LF Marschall
 .ds RF FORMFEED[Page %]
 .ds LH INTERNET DRAFT
-.ds RH <Issue Date>
+.ds RH February 2021
 .ds CH OID-WHOIS
-.ds CF Expires <Expiry Date>
+.ds CF Expires August 13, 2021
 .hy 0
 .nh
 .ad l
@@ -18,7 +18,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: <Expiry Date>''October 2020'
+.tl 'Expires: August 13, 2021''February 2021'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -44,28 +44,44 @@ Abstract
 
 This document defines a method for retrieving information about Object Identifiers (OIDs) and their associated Registration Authorities (RAs) using the WHOIS protocol, in a way that is both human-readable and machine-readable.
 
-.ti 0
-Status of this Memo
 
-This Internet-Draft is submitted to IETF in full conformance with the provisions of BCP\078 and BCP\079.
 
-Internet-Drafts are working documents of the Internet Engineering Task Force (IETF), its areas, and its working groups.  Note that other groups may also distribute working documents as \%Internet-Drafts.
 
-Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."
-
-The list of current Internet-Drafts can be accessed at \%http://www.ietf.org/1id-abstracts.html
-
-The list of Internet-Draft Shadow Directories can be accessed at http://www.ietf.org/shadow.html
 
 
 .ti 0
-Copyright and License Notice\" Boilerplate from December 2009
+Status of This Memo
 
-.\" NOTE: Insert current <year> in the following paragraph
-Copyright (c) 2020 IETF Trust and the persons identified as the document authors.  All rights reserved.
+This Internet-Draft is submitted in full conformance with the
+provisions of BCP\078 and BCP\079.
 
-This document is subject to BCP\078 and the IETF Trust's Legal Provisions Relating to IETF Documents \%(http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section\04.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.
+Internet-Drafts are working documents of the Internet Engineering
+Task Force (IETF).  Note that other groups may also distribute
+working documents as Internet-Drafts.  The list of current Internet-
+Drafts is at https://datatracker.ietf.org/drafts/current/.
 
+Internet-Drafts are draft documents valid for a maximum of six months
+and may be updated, replaced, or obsoleted by other documents at any
+time.  It is inappropriate to use Internet-Drafts as reference
+material or to cite them other than as "work in progress."
+
+This Internet-Draft will expire on August 13, 2021.
+
+.ti 0
+Copyright Notice
+
+Copyright (c) 2021 IETF Trust and the persons identified as the
+document authors.  All rights reserved.
+
+This document is subject to BCP\078 and the IETF Trust's Legal
+Provisions Relating to IETF Documents
+(https://trustee.ietf.org/license-info) in effect on the date of
+publication of this document.  Please review these documents
+carefully, as they describe your rights and restrictions with respect
+to this document.  Code Components extracted from this document must
+include Simplified BSD License text as described in Section 4.e of
+the Trust Legal Provisions and are provided without warranty as
+described in the Simplified BSD License.
 
 
 .\" \# TD4  -- Set TOC depth by altering this value (TD5 = depth 5)
@@ -749,7 +765,7 @@ Recommendation ITU-T\0X.680 (2015) | ISO/IEC\08824-1:2015, August\02015.
 
 .ti 3
 .in 14
-[RFC1157]  Case, J., Et. Al, "A Simple Network Management Protocol (SNMP)", RFC\01157, DOI\010.17487/RFC1157, May\01990.
+[RFC1157]  Case, J., Fedor, M., Schoffstall, M., Davin, J., "A Simple Network Management Protocol (SNMP)", RFC\01157, DOI\010.17487/RFC1157, May\01990.
 .in 14
 <http://www.rfc-editor.org/info/rfc1157>.
 
@@ -761,7 +777,7 @@ Recommendation ITU-T\0X.680 (2015) | ISO/IEC\08824-1:2015, August\02015.
 
 .ti 3
 .in 14
-[RFC4880]  Callas, J., Et. Al, "OpenPGP Message Format", RFC\04880, DOI\010.17487/RFC4880, November\02007.
+[RFC4880]  Callas, J., Donnerhacke, L., Finney, H., Shaw, D., Thayer, R., "OpenPGP Message Format", RFC\04880, DOI\010.17487/RFC4880, November\02007.
 .in 14
 <http://www.rfc-editor.org/info/rfc4880>.
 
