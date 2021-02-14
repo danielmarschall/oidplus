@@ -73,7 +73,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__).'whois/webwhois.php" method="GET" target="_blank">';
 			$out['text'] .= '<br>'._L('Output format').':<br><fieldset id="whois_format">';
 			$out['text'] .= '    <input type="radio" id="txt" name="format" value="txt" checked onclick="refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="txt"> '._L('Text format').'</label> ('._L('RFC draft').': <a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.txt">'._L('TXT').'</a> | <a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois-00.nroff">'._L('NROFF').'</a>)<br>';
+			$out['text'] .= '    <label for="txt"> '._L('Text format').'</label> ('._L('RFC draft').': <a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois.txt">'._L('TXT').'</a> | <a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/rfc/draft-viathinksoft-oidwhois.nroff">'._L('NROFF').'</a>)<br>';
 			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="refresh_whois_url_bar()">';
 			$out['text'] .= '    <label for="json"> '._L('JSON').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/json_schema.json">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml" onclick="refresh_whois_url_bar()">';
