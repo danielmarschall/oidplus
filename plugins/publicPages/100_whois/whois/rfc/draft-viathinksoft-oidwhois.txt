@@ -9,7 +9,7 @@ Expires: August 13, 2021                                   February 2021
 
             Retrieving information about Object Identifiers
                         using the WHOIS protocol
-                     draft-viathinksoft-oidwhois-00
+                     draft-viathinksoft-oidwhois-01
 
 
 Abstract
@@ -91,7 +91,7 @@ Table of Contents
      6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 18
    7  Internationalization Considerations . . . . . . . . . . . . . . 18
    8  Security Considerations . . . . . . . . . . . . . . . . . . . . 19
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 19
+   9  Annotation about the deprecation of the WHOIS protocol  . . . . 19
    10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 20
      10.1  Normative References . . . . . . . . . . . . . . . . . . . 20
      10.2  Informative References . . . . . . . . . . . . . . . . . . 21
@@ -989,9 +989,9 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
 
 7  Internationalization Considerations
 
-   The original WHOIS protocol as defined in RFC 3912 [RFC3912] does not
-   define any character set and there is no mechanism for indicating
-   which character set is in use.
+   The WHOIS protocol as defined in RFC 3912 [RFC3912] does not define
+   any character set and there is no mechanism for indicating which
+   character set is in use.
 
    To enhance interoperability, this document specifies that the request
    and response MUST be UTF-8 encoded (as defined in RFC 3629
@@ -1046,18 +1046,18 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
    method was used.  Therefore, no interoperability of signature
    creation/validation is given at this time.
 
-9  IANA Considerations
+9  Annotation about the deprecation of the WHOIS protocol
 
-   (1) IANA is operating a WHOIS service at whois.iana.org.  This WHOIS
-   service could be extended by allowing requests starting with "oid:",
-   to serve information about OIDs owned or delegated by IANA, for
-   example, it could output information about Private Enterprise Numbers
-   (PEN) located at OID 1.3.6.1.4.1.
+   The WHOIS protocol is currently extensively used for querying
+   databases that store the registered users or assignees of an Internet
+   resource, such as a domain name, an IP address block, or an
+   autonomous system.  Due to various reasons, there are efforts in
+   deprecating the WHOIS protocol to introduce the Registration Data
+   Access Protocol (RDAP).  This document is not meant to interfere with
+   these efforts.
 
-   (2) Owners of Private Enterprise Numbers could store the addresses of
-   their WHOIS servers in the IANA PEN database so that these addresses
-   can be included in the WHOIS output of IANA.  This would enable the
-   referral functionality described in section 4 "Referral".
+
+
  
 
 
@@ -1065,6 +1065,19 @@ Marschall               Expires August 13, 2021                [Page 19]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
+
+   As this document describes a new way to use the WHOIS protocol, it
+   should be noted that while the usage of e.g. domain holder
+   information exchange will be deprecated, the protocol itself still
+   can be used for other purposes and therefore doesn't need to be
+   deprecated.
+
+   The WHOIS protocol was chosen as the base of OID-WHOIS because it is
+   better human-readable.  Furthermore, OID-WHOIS fixes some of the
+   weaknesses of the WHOIS protocol, for example, the format is
+   standardized, internationalization is addressed (UTF-8), users can be
+   authenticated, redirections are standardized, etc.  Therefore, a good
+   machine-readability is also ensured.
 
 10  References
 
@@ -1101,6 +1114,13 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
               Specifications: ABNF", STD 68, RFC 5234,
               DOI 10.17487/RFC5234, January 2008.
               <http://www.rfc-editor.org/info/rfc5234>.
+ 
+
+
+Marschall               Expires August 13, 2021                [Page 20]
+
+INTERNET DRAFT                 OID-WHOIS                   February 2021
+
 
    [RFC8141]  Saint-Andre, P., "Uniform Resource Names (URNs)",
               RFC 8141, DOI 10.17487/RFC8141, April 2017.
@@ -1112,15 +1132,6 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
               identifier tree", Recommendation ITU-T X.660 (2011) |
               ISO/IEC 9834-1:2012, July 2011.
               <http://handle.itu.int/11.1002/1000/11336>.
-
-
- 
-
-
-Marschall               Expires August 13, 2021                [Page 20]
-
-INTERNET DRAFT                 OID-WHOIS                   February 2021
-
 
    [X680]     "Information technology - Abstract Syntax Notation One
               (ASN.1): Specification of basic notation", Recommendation
@@ -1157,17 +1168,6 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
               ISO/IEC 9834-8:2014, October 2012.
               <http://handle.itu.int/11.1002/1000/11746>.
 
-   [X672]     "Information technology - Open systems interconnection -
-              Object identifier resolution system",
-              Recommendation ITU-T X.672 (2010) | ISO/IEC 29168-1:2011,
-              August 2010.
-              <http://handle.itu.int/11.1002/1000/10831>.
-
-
-
-
-
-
 
 
  
@@ -1177,6 +1177,12 @@ Marschall               Expires August 13, 2021                [Page 21]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
+
+   [X672]     "Information technology - Open systems interconnection -
+              Object identifier resolution system",
+              Recommendation ITU-T X.672 (2010) | ISO/IEC 29168-1:2011,
+              August 2010.
+              <http://handle.itu.int/11.1002/1000/10831>.
 
 Acknowledgements
 
@@ -1190,12 +1196,6 @@ Authors' Addresses
    Germany
 
    EMail: daniel-marschall@viathinksoft.de
-
-
-
-
-
-
 
 
 

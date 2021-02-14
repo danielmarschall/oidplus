@@ -716,16 +716,22 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$objParent = OIDplusObject::parse($parent);
 		$parentNS = $objParent::ns();
 
+		// http://www.oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20identifiers
 		$no_asn1 = array(
 			'oid:1.3.6.1.4.1',
 			'oid:1.3.6.1.4.1.37476.9000',
 			'oid:1.3.6.1.4.1.37553.8.8',
-			'oid:2.25'
+			'oid:2.16.276.1',
+			//TODO?'oid:2.25'
 		);
+
+		// http://www.oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20Unicode%20labels
 		$no_iri = array(
+			'oid:1.2.250.1',
 			'oid:1.3.6.1.4.1',
 			'oid:1.3.6.1.4.1.37476.9000',
 			'oid:1.3.6.1.4.1.37553.8.8',
+			'oid:2.16.276.1',
 			'oid:2.25'
 		);
 
