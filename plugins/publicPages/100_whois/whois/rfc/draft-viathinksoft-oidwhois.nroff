@@ -114,10 +114,11 @@ Table of Contents
      6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 18
    7  Internationalization Considerations . . . . . . . . . . . . . . 18
    8  Security Considerations . . . . . . . . . . . . . . . . . . . . 19
-   9  Annotation about the deprecation of the WHOIS protocol  . . . . 19
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 20
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 20
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 21
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 19
+   10  Annotation about the deprecation of the WHOIS protocol . . . . 20
+   11  References . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+     11.1  Normative References . . . . . . . . . . . . . . . . . . . 20
+     11.2  Informative References . . . . . . . . . . . . . . . . . . 21
    Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 22
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 22
 .fi
@@ -507,11 +508,11 @@ By using the field "whois-service", the WHOIS service can instruct the client to
 
 If Registration Authorities maintain up-to-date WHOIS service references of their OID delegations, it is possible to automatically retrieve information about any OID.
 
-Example: OID 2.999 is owned by Registration Authority "A", operating a WHOIS service at "a.example.com".
+Example: OID "2.999" is owned by Registration Authority "A", operating a WHOIS service at "a.example.com".
 
-Registration Authority "A" allocated OID 2.999.1000 to Registration Authority "B" who is operating a WHOIS service at "b.example.com".
+Registration Authority "A" allocated OID "2.999.1000" to Registration Authority "B" who is operating a WHOIS service at "b.example.com".
 
-The client asks a.example.com for information about OID 2.999.1000.1 and should receive the following reply:
+The client asks a.example.com for information about OID "2.999.1000.1" and should receive the following reply:
 
 .in 7
 .nf
@@ -529,7 +530,7 @@ ra-status:      Information unavailable
 .fi
 .in 3
 
-The client is now aware that "a.example.com" only knows OID 2.999.1000, and that there is a reference to another WHOIS service located at "b.example.com".  So, the client should then accordingly query "b.example.com", asking for information about OID 2.999.1000.1:
+The client is now aware that "a.example.com" only knows OID "2.999.1000", and that there is a reference to another WHOIS service located at "b.example.com".  So, the client should then accordingly query "b.example.com", asking for information about OID "2.999.1000.1":
 
 .in 7
 .nf
@@ -685,22 +686,28 @@ The WHOIS service can define additional field names, but they SHOULD be written 
 (6) The WHOIS protocol itself has no mechanism for verifying the integrity of data received.  Due to this fact, the information should not be trusted if it is transmitted through an untrusted network.  If integrity/authenticity is required, the WHOIS response can be signed, as described in section\03.3 "Digital Signature".  However, this document does not describe a mechanism for detecting which signature method was used.  Therefore, no interoperability of signature creation/validation is given at this time.
 
 .ti 0
-9  Annotation about the deprecation of the WHOIS protocol
+9  IANA Considerations
+
+This document has no actions for IANA.
+
+.bp
+.ti 0
+10  Annotation about the deprecation of the WHOIS protocol
 
 The WHOIS protocol is currently extensively used for querying databases that store the registered users or assignees of an Internet resource, such as a domain name, an IP address block, or an autonomous system.  Due to various reasons, there are efforts in deprecating the WHOIS protocol to introduce the Registration Data Access Protocol (RDAP).  This document is not meant to interfere with these efforts.
-.bp
+
 As this document describes a new way to use the WHOIS protocol, it should be noted that while the usage
-of e.g. domain holder information exchange will be deprecated, the protocol itself still can be used for other purposes and therefore doesn't need to be deprecated.
+of e.g. domain holder information exchange will be deprecated, the protocol itself still can be used for other purposes and therefore doesn't need to be completely deprecated.
 
 The WHOIS protocol was chosen as the base of OID-WHOIS because it is better human-readable.  Furthermore,
 OID-WHOIS fixes some of the weaknesses of the WHOIS protocol, for example, the format is standardized,
 internationalization is addressed (UTF-8), users can be authenticated, redirections are standardized, etc.  Therefore, a good machine-readability is also ensured.
 
 .ti 0
-10  References
+11  References
 
 .ti 0
-10.1  Normative References
+11.1  Normative References
 
 .ti 3
 .in 14
@@ -766,7 +773,7 @@ Recommendation ITU-T\0X.680 (2015) | ISO/IEC\08824-1:2015, August\02015.
 <http://handle.itu.int/11.1002/1000/12479>.
 
 .ti 0
-10.2  Informative References
+11.2  Informative References
 
 .ti 3
 .in 14
@@ -803,7 +810,7 @@ Recommendation ITU-T\0X.667 (2012) |
 ISO/IEC 9834-8:2014, October\02012.
 .in 14
 <http://handle.itu.int/11.1002/1000/11746>.
-.bp
+
 .ti 3  	
 .in 14
 [X672]     "Information technology - Open systems interconnection - Object identifier resolution system",
