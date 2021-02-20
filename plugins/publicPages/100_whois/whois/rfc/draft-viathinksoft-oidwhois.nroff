@@ -9,7 +9,7 @@
 .ds LH INTERNET DRAFT
 .ds RH February 2021
 .ds CH OID-WHOIS
-.ds CF Expires August 13, 2021
+.ds CF Expires August 24, 2021
 .hy 0
 .nh
 .ad l
@@ -18,7 +18,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: August 13, 2021''February 2021'
+.tl 'Expires: August 24, 2021''February 2021'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 

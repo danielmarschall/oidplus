@@ -4,7 +4,7 @@
 
 INTERNET-DRAFT                                              D. Marschall
 Intended Status: Informational                              ViaThinkSoft
-Expires: August 13, 2021                                   February 2021
+Expires: August 24, 2021                                   February 2021
 
 
             Retrieving information about Object Identifiers
@@ -53,7 +53,7 @@ Copyright Notice
  
 
 
-Marschall               Expires August 13, 2021                 [Page 1]
+Marschall               Expires August 24, 2021                 [Page 1]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -91,13 +91,13 @@ Table of Contents
      6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 18
    7  Internationalization Considerations . . . . . . . . . . . . . . 18
    8  Security Considerations . . . . . . . . . . . . . . . . . . . . 19
-   9  Annotation about the deprecation of the WHOIS protocol  . . . . 19
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 20
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 20
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 21
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 19
+   10  Annotation about the deprecation of the WHOIS protocol . . . . 20
+   11  References . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+     11.1  Normative References . . . . . . . . . . . . . . . . . . . 20
+     11.2  Informative References . . . . . . . . . . . . . . . . . . 21
    Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 22
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 22
-
 
 
 
@@ -109,7 +109,7 @@ Table of Contents
  
 
 
-Marschall               Expires August 13, 2021                 [Page 2]
+Marschall               Expires August 24, 2021                 [Page 2]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -165,7 +165,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                 [Page 3]
+Marschall               Expires August 24, 2021                 [Page 3]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -221,7 +221,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                 [Page 4]
+Marschall               Expires August 24, 2021                 [Page 4]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -277,7 +277,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                 [Page 5]
+Marschall               Expires August 24, 2021                 [Page 5]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -333,7 +333,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                 [Page 6]
+Marschall               Expires August 24, 2021                 [Page 6]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -389,7 +389,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                 [Page 7]
+Marschall               Expires August 24, 2021                 [Page 7]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -445,7 +445,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                 [Page 8]
+Marschall               Expires August 24, 2021                 [Page 8]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -501,7 +501,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                 [Page 9]
+Marschall               Expires August 24, 2021                 [Page 9]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -557,7 +557,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                [Page 10]
+Marschall               Expires August 24, 2021                [Page 10]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -613,7 +613,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                [Page 11]
+Marschall               Expires August 24, 2021                [Page 11]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -669,7 +669,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                [Page 12]
+Marschall               Expires August 24, 2021                [Page 12]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -725,7 +725,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                [Page 13]
+Marschall               Expires August 24, 2021                [Page 13]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -781,7 +781,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                [Page 14]
+Marschall               Expires August 24, 2021                [Page 14]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -796,14 +796,14 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
    references of their OID delegations, it is possible to automatically
    retrieve information about any OID.
 
-   Example: OID 2.999 is owned by Registration Authority "A", operating
-   a WHOIS service at "a.example.com".
+   Example: OID "2.999" is owned by Registration Authority "A",
+   operating a WHOIS service at "a.example.com".
 
-   Registration Authority "A" allocated OID 2.999.1000 to Registration
+   Registration Authority "A" allocated OID "2.999.1000" to Registration
    Authority "B" who is operating a WHOIS service at "b.example.com".
 
-   The client asks a.example.com for information about OID 2.999.1000.1
-   and should receive the following reply:
+   The client asks a.example.com for information about OID
+   "2.999.1000.1" and should receive the following reply:
 
        query:          oid:2.999.1000.1
        result:         Not found; superior object found
@@ -818,9 +818,10 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
        ra-status:      Information unavailable
 
    The client is now aware that "a.example.com" only knows OID
-   2.999.1000, and that there is a reference to another WHOIS service
+   "2.999.1000", and that there is a reference to another WHOIS service
    located at "b.example.com".  So, the client should then accordingly
-   query "b.example.com", asking for information about OID 2.999.1000.1:
+   query "b.example.com", asking for information about OID
+   "2.999.1000.1":
 
        query:          oid:2.999.1000.1
        result:         Found
@@ -833,11 +834,10 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
        ra-status:      Information unavailable
 
 
-
  
 
 
-Marschall               Expires August 13, 2021                [Page 15]
+Marschall               Expires August 24, 2021                [Page 15]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -893,7 +893,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                [Page 16]
+Marschall               Expires August 24, 2021                [Page 16]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -949,7 +949,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                [Page 17]
+Marschall               Expires August 24, 2021                [Page 17]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -1005,7 +1005,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
  
 
 
-Marschall               Expires August 13, 2021                [Page 18]
+Marschall               Expires August 24, 2021                [Page 18]
 
 INTERNET DRAFT                 OID-WHOIS                   February 2021
 
@@ -1046,7 +1046,27 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
    method was used.  Therefore, no interoperability of signature
    creation/validation is given at this time.
 
-9  Annotation about the deprecation of the WHOIS protocol
+9  IANA Considerations
+
+   This document has no actions for IANA.
+
+
+
+
+
+
+
+
+
+ 
+
+
+Marschall               Expires August 24, 2021                [Page 19]
+
+INTERNET DRAFT                 OID-WHOIS                   February 2021
+
+
+10  Annotation about the deprecation of the WHOIS protocol
 
    The WHOIS protocol is currently extensively used for querying
    databases that store the registered users or assignees of an Internet
@@ -1056,21 +1076,11 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
    Access Protocol (RDAP).  This document is not meant to interfere with
    these efforts.
 
-
-
- 
-
-
-Marschall               Expires August 13, 2021                [Page 19]
-
-INTERNET DRAFT                 OID-WHOIS                   February 2021
-
-
    As this document describes a new way to use the WHOIS protocol, it
    should be noted that while the usage of e.g. domain holder
    information exchange will be deprecated, the protocol itself still
    can be used for other purposes and therefore doesn't need to be
-   deprecated.
+   completely deprecated.
 
    The WHOIS protocol was chosen as the base of OID-WHOIS because it is
    better human-readable.  Furthermore, OID-WHOIS fixes some of the
@@ -1079,9 +1089,9 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
    authenticated, redirections are standardized, etc.  Therefore, a good
    machine-readability is also ensured.
 
-10  References
+11  References
 
-10.1  Normative References
+11.1  Normative References
 
    [E164]     "The international public telecommunication numbering
               plan", Recommendation ITU-T E.164 (2010), November 2010.
@@ -1104,6 +1114,13 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
    [RFC3912]  Daigle, L., "WHOIS Protocol Specification", RFC 3912,
               DOI 10.17487/RFC3912, September 2004.
               <http://www.rfc-editor.org/info/rfc3912>.
+ 
+
+
+Marschall               Expires August 24, 2021                [Page 20]
+
+INTERNET DRAFT                 OID-WHOIS                   February 2021
+
 
    [RFC3986]  Berners-Lee, T., "Uniform Resource Identifier (URI):
               Generic Syntax", STD 66, RFC 3986, DOI 10.17487/RFC3986,
@@ -1114,13 +1131,6 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
               Specifications: ABNF", STD 68, RFC 5234,
               DOI 10.17487/RFC5234, January 2008.
               <http://www.rfc-editor.org/info/rfc5234>.
- 
-
-
-Marschall               Expires August 13, 2021                [Page 20]
-
-INTERNET DRAFT                 OID-WHOIS                   February 2021
-
 
    [RFC8141]  Saint-Andre, P., "Uniform Resource Names (URNs)",
               RFC 8141, DOI 10.17487/RFC8141, April 2017.
@@ -1138,7 +1148,7 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
               ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, August 2015.
               <http://handle.itu.int/11.1002/1000/12479>.
 
-10.2  Informative References
+11.2  Informative References
 
    [RFC1157]  Case, J., Fedor, M., Schoffstall, M., Davin, J., "A Simple
               Network Management Protocol (SNMP)", RFC 1157,
@@ -1160,6 +1170,13 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
               frameworks", Recommendation ITU-T X.509 (2016) |
               ISO/IEC 9594-8:2017, October 2016.
               <http://handle.itu.int/11.1002/1000/13031>.
+ 
+
+
+Marschall               Expires August 24, 2021                [Page 21]
+
+INTERNET DRAFT                 OID-WHOIS                   February 2021
+
 
    [X667]     "Information technology - Procedures for the operation of
               object identifier registration authorities: Generation of
@@ -1167,16 +1184,6 @@ INTERNET DRAFT                 OID-WHOIS                   February 2021
               identifiers", Recommendation ITU-T X.667 (2012) |
               ISO/IEC 9834-8:2014, October 2012.
               <http://handle.itu.int/11.1002/1000/11746>.
-
-
-
- 
-
-
-Marschall               Expires August 13, 2021                [Page 21]
-
-INTERNET DRAFT                 OID-WHOIS                   February 2021
-
 
    [X672]     "Information technology - Open systems interconnection -
               Object identifier resolution system",
@@ -1222,11 +1229,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-Marschall               Expires August 13, 2021                [Page 22]
+Marschall               Expires August 24, 2021                [Page 22]
