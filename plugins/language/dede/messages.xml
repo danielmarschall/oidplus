@@ -3238,14 +3238,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		NROFF
-		]]></source>
-		<target><![CDATA[
-		NROFF
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Name based version 3 / MD5 UUID with namespace %1
 		]]></source>
 		<target><![CDATA[
@@ -4670,10 +4662,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		RFC draft
+		RFC Internet Draft
 		]]></source>
 		<target><![CDATA[
-		RFC-Entwurf
+		RFC Internet Draft
 		]]></target>
 	</message>
 	<message>
@@ -5546,14 +5538,6 @@
 		]]></source>
 		<target><![CDATA[
 		TLS
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		TXT
-		]]></source>
-		<target><![CDATA[
-		TXT
 		]]></target>
 	</message>
 	<message>
