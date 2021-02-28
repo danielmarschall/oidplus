@@ -298,11 +298,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				if (!$obj->isWellKnown()) {
 					$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
 					$ids = array_map('trim',$ids);
-					$obj->replaceAsn1Ids($ids, true);
+					$obj->replaceIris($ids, true);
 
 					$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
 					$ids = array_map('trim',$ids);
-					$obj->replaceIris($ids, true);
+					$obj->replaceAsn1Ids($ids, true);
 				}
 			}
 
