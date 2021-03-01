@@ -74,7 +74,7 @@ function checkMissingOrDoubleASN1(oid) {
 
 	//var curinput = $('#asn1ids'+suffix').value;
 	var curinput = $('input[id="asn1ids'+suffix+'"]')[0];
-	
+
 	if (typeof curinput == "undefined") return true;
 
 	if (curinput.value == '') {
@@ -130,7 +130,7 @@ function crudActionInsert(parent) {
 				alert(_L("Error: %1",data.error));
 			} else if (data.status >= 0) {
 				if (data.status == 0/*OK*/) {
-					if (confirm(_L("Insert OK.")+".\n\n"+_L("Do you want to open the newly created object now?"))) {
+					if (confirm(_L("Insert OK.")+"\n\n"+_L("Do you want to open the newly created object now?"))) {
 						openAndSelectNode(data.inserted_id, parent);
 						return;
 					}
