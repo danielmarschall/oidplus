@@ -202,8 +202,8 @@ class OIDplusOid extends OIDplusObject {
 		$out->oid = sanitizeOID($out->oid);
 		if ($out->oid === false) throw new OIDplusException(_L('%1 is not a valid OID!',$bak_oid));
 
-		if (strlen($out->oid) > OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:')) {
-			$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:');
+		$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:');
+		if (strlen($out->oid) > $maxlen) {
 			throw new OIDplusException(_L('The resulting OID "%1" is too long (max allowed length: %2).',$out->oid,$maxlen));
 		}
 

@@ -4766,6 +4766,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Registration successful! You received OID %1 and can now start using it.
+		]]></source>
+		<target><![CDATA[
+		Registrieren erfolgreich! Sie haben die OID %1 erhalten und können Sie nun verwenden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Regular login method
 		]]></source>
 		<target><![CDATA[
@@ -5918,18 +5926,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		This RA is already registered.
+		This email address already has a FreeOID registered (%1)
 		]]></source>
 		<target><![CDATA[
-		Diese Registrierungsstelle ist bereits registriert.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		This email address already exists.
-		]]></source>
-		<target><![CDATA[
-		Diese E-Mail-Adresse existiert bereits.
+		Diese E-Mail-Adresse hat bereits eine kostenlose OID (%1)
 		]]></target>
 	</message>
 	<message>
