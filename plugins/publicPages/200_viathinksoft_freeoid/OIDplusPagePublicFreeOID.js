@@ -71,7 +71,7 @@ function activateFreeOIDFormOnSubmit() {
 			if ("error" in data) {
 				alert(_L("Error: %1",data.error));
 			} else if (data.status >= 0) {
-				alert(_L("Registration successful! You can now log in."));
+				alert(_L("Registration successful! You received OID %1 and can now start using it.",data.new_oid));
 				window.location.href = '?goto=oidplus:login';
 				//reloadContent();
 			} else {
