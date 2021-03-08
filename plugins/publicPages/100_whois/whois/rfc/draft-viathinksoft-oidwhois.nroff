@@ -9,7 +9,7 @@
 .ds LH INTERNET DRAFT
 .ds RH March 2021
 .ds CH OID-WHOIS
-.ds CF Expires September 2, 2021
+.ds CF Expires September 9, 2021
 .hy 0
 .nh
 .ad l
@@ -18,7 +18,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: September 2, 2021''March 2021'
+.tl 'Expires: September 9, 2021''March 2021'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -34,7 +34,7 @@
 .ce 3
 Retrieving information about Object Identifiers
 using the WHOIS protocol
-draft-viathinksoft-oidwhois-02 (WIP)
+draft-viathinksoft-oidwhois-02
 .fi
 .in 3
 
@@ -65,7 +65,7 @@ and may be updated, replaced, or obsoleted by other documents at any
 time.  It is inappropriate to use Internet-Drafts as reference
 material or to cite them other than as "work in progress."
 
-This Internet-Draft will expire on September 2, 2021.
+This Internet-Draft will expire on September 9, 2021.
 
 .ti 0
 Copyright Notice
