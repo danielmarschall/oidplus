@@ -4,12 +4,12 @@
 
 INTERNET-DRAFT                                              D. Marschall
 Intended Status: Informational                              ViaThinkSoft
-Expires: September 2, 2021                                    March 2021
+Expires: September 9, 2021                                    March 2021
 
 
             Retrieving information about Object Identifiers
                         using the WHOIS protocol
-                  draft-viathinksoft-oidwhois-02 (WIP)
+                     draft-viathinksoft-oidwhois-02
 
 
 Abstract
@@ -39,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 2, 2021.
+   This Internet-Draft will expire on September 9, 2021.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
  
 
 
-Marschall              Expires September 2, 2021                [Page 1]
+Marschall              Expires September 9, 2021                [Page 1]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -109,7 +109,7 @@ Table of Contents
  
 
 
-Marschall              Expires September 2, 2021                [Page 2]
+Marschall              Expires September 9, 2021                [Page 2]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -165,7 +165,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021                [Page 3]
+Marschall              Expires September 9, 2021                [Page 3]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -221,7 +221,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021                [Page 4]
+Marschall              Expires September 9, 2021                [Page 4]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -277,7 +277,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021                [Page 5]
+Marschall              Expires September 9, 2021                [Page 5]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -333,7 +333,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021                [Page 6]
+Marschall              Expires September 9, 2021                [Page 6]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -389,7 +389,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021                [Page 7]
+Marschall              Expires September 9, 2021                [Page 7]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -445,7 +445,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021                [Page 8]
+Marschall              Expires September 9, 2021                [Page 8]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -501,7 +501,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021                [Page 9]
+Marschall              Expires September 9, 2021                [Page 9]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -557,7 +557,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021               [Page 10]
+Marschall              Expires September 9, 2021               [Page 10]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -613,7 +613,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021               [Page 11]
+Marschall              Expires September 9, 2021               [Page 11]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -669,7 +669,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021               [Page 12]
+Marschall              Expires September 9, 2021               [Page 12]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -725,7 +725,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021               [Page 13]
+Marschall              Expires September 9, 2021               [Page 13]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -781,7 +781,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021               [Page 14]
+Marschall              Expires September 9, 2021               [Page 14]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -837,7 +837,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021               [Page 15]
+Marschall              Expires September 9, 2021               [Page 15]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -893,7 +893,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021               [Page 16]
+Marschall              Expires September 9, 2021               [Page 16]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -949,7 +949,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021               [Page 17]
+Marschall              Expires September 9, 2021               [Page 17]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -1005,7 +1005,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021               [Page 18]
+Marschall              Expires September 9, 2021               [Page 18]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -1061,7 +1061,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021               [Page 19]
+Marschall              Expires September 9, 2021               [Page 19]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -1117,7 +1117,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021               [Page 20]
+Marschall              Expires September 9, 2021               [Page 20]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -1173,7 +1173,7 @@ INTERNET DRAFT                 OID-WHOIS                      March 2021
  
 
 
-Marschall              Expires September 2, 2021               [Page 21]
+Marschall              Expires September 9, 2021               [Page 21]
 
 INTERNET DRAFT                 OID-WHOIS                      March 2021
 
@@ -1229,4 +1229,4 @@ Authors' Addresses
 
 
 
-Marschall              Expires September 2, 2021               [Page 22]
+Marschall              Expires September 9, 2021               [Page 22]
