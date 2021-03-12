@@ -104,12 +104,25 @@ spl_autoload_register(function ($class_name) {
 	static $class_refs = null;
 
 	if (is_null($class_refs)) {
-		$class_refs = array();
-
-		$class_files = array_merge(
-			glob(__DIR__ . '/classes/'.'*'.'.class.php'),
-			glob(__DIR__ . '/../plugins/'.'*'.'/'.'*'.'/'.'*'.'.class.php')
+		$valid_plugin_folders = array(
+			'adminPages',
+			'auth',
+			'database',
+			'design',
+			'language',
+			'logger',
+			'objectTypes',
+			'publicPages',
+			'raPages',
+			'sqlSlang'
 		);
+
+		$class_files = glob(__DIR__ . '/classes/'.'*'.'.class.php');
+		foreach ($valid_plugin_folders as $folder) {
+			$class_files = array_merge($class_files, glob(__DIR__ . '/../plugins/'.$folder.'/'.'*'.'/'.'*'.'.class.php'));
+		}
+
+		$class_refs = array();
 		foreach ($class_files as $filename) {
 			$cn = basename($filename, '.class.php');
 			if (!isset($class_refs[$cn])) {
