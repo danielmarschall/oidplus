@@ -600,7 +600,14 @@ class OIDplus {
 
 	public static function registerAllPlugins($pluginDirName, $expectedPluginClass, $registerCallback): array {
 		$out = array();
-		$ary = self::getAllPluginManifests($pluginDirName, false);
+		if (is_array($pluginDirName)) {
+			$ary = array();
+			foreach ($pluginDirName as $pluginDirName_) {
+				$ary = array_merge($ary, self::getAllPluginManifests($pluginDirName_, false));
+			}
+		} else {
+			$ary = self::getAllPluginManifests($pluginDirName, false);
+		}
 		$known_plugin_oids = array();
 		if (OIDplus::baseConfig()->getValue('DEBUG')) {
 			$fake_feature = uuid_to_oid(gen_uuid());
@@ -754,7 +761,7 @@ class OIDplus {
 
 		// Register non-DB plugins
 
-		self::registerAllPlugins('*Pages', 'OIDplusPagePlugin', array('OIDplus','registerPagePlugin'));
+		self::registerAllPlugins(array('publicPages', 'raPages', 'adminPages'), 'OIDplusPagePlugin', array('OIDplus','registerPagePlugin'));
 		self::registerAllPlugins('auth', 'OIDplusAuthPlugin', array('OIDplus','registerAuthPlugin'));
 		self::registerAllPlugins('logger', 'OIDplusLoggerPlugin', array('OIDplus','registerLoggerPlugin'));
 		self::registerAllPlugins('objectTypes', 'OIDplusObjectTypePlugin', array('OIDplus','registerObjectTypePlugin'));
