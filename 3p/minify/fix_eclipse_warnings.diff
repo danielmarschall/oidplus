@@ -1,0 +1,148 @@
+Index: minify/path-converter/Converter.php
+===================================================================
+--- minify/path-converter/Converter.php	(revision 528)
++++ minify/path-converter/Converter.php	(working copy)
+@@ -85,6 +85,7 @@
+          * to
+          *     /home/forkcms/frontend/core/layout/images/img.gif
+          */
++        $count = 0;
+         do {
+             $path = preg_replace('/[^\/]+(?<!\.\.)\/\.\.\//', '', $path, -1, $count);
+         } while ($count);
+Index: minify/src/CSS.php
+===================================================================
+--- minify/src/CSS.php	(revision 528)
++++ minify/src/CSS.php	(working copy)
+@@ -86,6 +86,7 @@
+      */
+     protected function moveImportsToTop($content)
+     {
++    	$matches = array();
+         if (preg_match_all('/(;?)(@import (?<url>url\()?(?P<quotes>["\']?).+?(?P=quotes)(?(url)\)));?/', $content, $matches)) {
+             // remove from content
+             foreach ($matches[0] as $import) {
+@@ -189,6 +190,7 @@
+         // find all relative imports in css
+         $matches = array();
+         foreach ($importRegexes as $importRegex) {
++        	$regexMatches = array();
+             if (preg_match_all($importRegex, $content, $regexMatches, PREG_SET_ORDER)) {
+                 $matches = array_merge($matches, $regexMatches);
+             }
+@@ -249,6 +251,7 @@
+     protected function importFiles($source, $content)
+     {
+         $regex = '/url\((["\']?)(.+?)\\1\)/i';
++        $matches = array();
+         if ($this->importExtensions && preg_match_all($regex, $content, $matches, PREG_SET_ORDER)) {
+             $search = array();
+             $replace = array();
+@@ -288,8 +291,8 @@
+      * Minify the data.
+      * Perform CSS optimizations.
+      *
+-     * @param string[optional] $path    Path to write the data to
+-     * @param string[]         $parents Parent paths, for circular reference checks
++     * @param string [optional] $path    Path to write the data to
++     * @param string[]          $parents Parent paths, for circular reference checks
+      *
+      * @return string The minified data
+      */
+@@ -418,6 +421,7 @@
+         // find all relative urls in css
+         $matches = array();
+         foreach ($relativeRegexes as $relativeRegex) {
++        	$regexMatches = array();
+             if (preg_match_all($relativeRegex, $content, $regexMatches, PREG_SET_ORDER)) {
+                 $matches = array_merge($matches, $regexMatches);
+             }
+@@ -689,6 +693,7 @@
+ 
+         // PHP only supports $this inside anonymous functions since 5.4
+         $minifier = $this;
++        $callback = null;
+         $callback = function ($match) use ($minifier, $pattern, &$callback) {
+             $function = $match[1];
+             $length = strlen($match[2]);
+Index: minify/src/JS.php
+===================================================================
+--- minify/src/JS.php	(revision 528)
++++ minify/src/JS.php	(working copy)
+@@ -140,7 +140,7 @@
+      * Minify the data.
+      * Perform JS optimizations.
+      *
+-     * @param string[optional] $path Path to write the data to
++     * @param string [optional] $path Path to write the data to
+      *
+      * @return string The minified data
+      */
+@@ -549,6 +549,7 @@
+          * regex implementation doesn't allow unfixed-length look-behind
+          * assertions.
+          */
++        $previousChar = array();
+         preg_match('/(\[[^\]]+\])[^\]]*$/', static::REGEX_VARIABLE, $previousChar);
+         $previousChar = $previousChar[1];
+ 
+@@ -593,6 +594,7 @@
+         $content = preg_replace('/\bwhile\(!0\){/', 'for(;;){', $content);
+ 
+         // now make sure we didn't turn any do ... while(true) into do ... for(;;)
++        $dos = array();
+         preg_match_all('/\bdo\b/', $content, $dos, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+ 
+         // go backward to make sure positional offsets aren't altered when $content changes
+@@ -602,6 +604,7 @@
+ 
+             // find all `while` (now `for`) following `do`: one of those must be
+             // associated with the `do` and be turned back into `while`
++            $whiles = array();
+             preg_match_all('/\bfor\(;;\)/', $content, $whiles, PREG_OFFSET_CAPTURE | PREG_SET_ORDER, $offsetDo);
+             foreach ($whiles as $while) {
+                 $offsetWhile = $while[0][1];
+Index: minify/src/Minify.php
+===================================================================
+--- minify/src/Minify.php	(revision 528)
++++ minify/src/Minify.php	(working copy)
+@@ -140,7 +140,7 @@
+     /**
+      * Minify the data & (optionally) saves it to a file.
+      *
+-     * @param string[optional] $path Path to write the data to
++     * @param string [optional] $path Path to write the data to
+      *
+      * @return string The minified data
+      */
+@@ -159,8 +159,8 @@
+     /**
+      * Minify & gzip the data & (optionally) saves it to a file.
+      *
+-     * @param string[optional] $path  Path to write the data to
+-     * @param int[optional]    $level Compression level, from 0 to 9
++     * @param string [optional] $path  Path to write the data to
++     * @param int [optional]    $level Compression level, from 0 to 9
+      *
+      * @return string The minified & gzipped data
+      */
+@@ -195,7 +195,7 @@
+     /**
+      * Minify the data.
+      *
+-     * @param string[optional] $path Path to write the data to
++     * @param string [optional] $path Path to write the data to
+      *
+      * @return string The minified data
+      */
+@@ -371,8 +371,8 @@
+      * and after doing all other minifying, we can restore the original content
+      * via restoreStrings().
+      *
+-     * @param string[optional] $chars
+-     * @param string[optional] $placeholderPrefix
++     * @param string [optional] $chars
++     * @param string [optional] $placeholderPrefix
+      */
+     protected function extractStrings($chars = '\'"', $placeholderPrefix = '')
+     {

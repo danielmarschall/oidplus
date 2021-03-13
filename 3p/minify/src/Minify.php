@@ -140,7 +140,7 @@ abstract class Minify
     /**
      * Minify the data & (optionally) saves it to a file.
      *
-     * @param string[optional] $path Path to write the data to
+     * @param string [optional] $path Path to write the data to
      *
      * @return string The minified data
      */
@@ -159,8 +159,8 @@ abstract class Minify
     /**
      * Minify & gzip the data & (optionally) saves it to a file.
      *
-     * @param string[optional] $path  Path to write the data to
-     * @param int[optional]    $level Compression level, from 0 to 9
+     * @param string [optional] $path  Path to write the data to
+     * @param int [optional]    $level Compression level, from 0 to 9
      *
      * @return string The minified & gzipped data
      */
@@ -195,7 +195,7 @@ abstract class Minify
     /**
      * Minify the data.
      *
-     * @param string[optional] $path Path to write the data to
+     * @param string [optional] $path Path to write the data to
      *
      * @return string The minified data
      */
@@ -371,8 +371,8 @@ abstract class Minify
      * and after doing all other minifying, we can restore the original content
      * via restoreStrings().
      *
-     * @param string[optional] $chars
-     * @param string[optional] $placeholderPrefix
+     * @param string [optional] $chars
+     * @param string [optional] $placeholderPrefix
      */
     protected function extractStrings($chars = '\'"', $placeholderPrefix = '')
     {

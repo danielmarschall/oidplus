@@ -86,6 +86,7 @@ class CSS extends Minify
      */
     protected function moveImportsToTop($content)
     {
+    	$matches = array();
         if (preg_match_all('/(;?)(@import (?<url>url\()?(?P<quotes>["\']?).+?(?P=quotes)(?(url)\)));?/', $content, $matches)) {
             // remove from content
             foreach ($matches[0] as $import) {
@@ -189,6 +190,7 @@ class CSS extends Minify
         // find all relative imports in css
         $matches = array();
         foreach ($importRegexes as $importRegex) {
+        	$regexMatches = array();
             if (preg_match_all($importRegex, $content, $regexMatches, PREG_SET_ORDER)) {
                 $matches = array_merge($matches, $regexMatches);
             }
@@ -249,6 +251,7 @@ class CSS extends Minify
     protected function importFiles($source, $content)
     {
         $regex = '/url\((["\']?)(.+?)\\1\)/i';
+        $matches = array();
         if ($this->importExtensions && preg_match_all($regex, $content, $matches, PREG_SET_ORDER)) {
             $search = array();
             $replace = array();
@@ -288,8 +291,8 @@ class CSS extends Minify
      * Minify the data.
      * Perform CSS optimizations.
      *
-     * @param string[optional] $path    Path to write the data to
-     * @param string[]         $parents Parent paths, for circular reference checks
+     * @param string [optional] $path    Path to write the data to
+     * @param string[]          $parents Parent paths, for circular reference checks
      *
      * @return string The minified data
      */
@@ -418,6 +421,7 @@ class CSS extends Minify
         // find all relative urls in css
         $matches = array();
         foreach ($relativeRegexes as $relativeRegex) {
+        	$regexMatches = array();
             if (preg_match_all($relativeRegex, $content, $regexMatches, PREG_SET_ORDER)) {
                 $matches = array_merge($matches, $regexMatches);
             }
@@ -689,6 +693,7 @@ class CSS extends Minify
 
         // PHP only supports $this inside anonymous functions since 5.4
         $minifier = $this;
+        $callback = null;
         $callback = function ($match) use ($minifier, $pattern, &$callback) {
             $function = $match[1];
             $length = strlen($match[2]);

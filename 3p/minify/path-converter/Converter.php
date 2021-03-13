@@ -85,6 +85,7 @@ class Converter implements ConverterInterface
          * to
          *     /home/forkcms/frontend/core/layout/images/img.gif
          */
+        $count = 0;
         do {
             $path = preg_replace('/[^\/]+(?<!\.\.)\/\.\.\//', '', $path, -1, $count);
         } while ($count);
