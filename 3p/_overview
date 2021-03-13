@@ -3,17 +3,18 @@
 
 bignumber.js:
 	License:  MIT
-	Version:  4d5ba0f on 29 September 2020 (Version 9.0.1)
+	Version:  Commit 3e17191 on 19 Dec 2020 (Version 9.0.1+)
 	Download: https://github.com/MikeMcl/bignumber.js
 
 Bundle of CA Root Certificates:
-	Version:  Wed Oct 14 03:12:15 2020 GMT
+	Version:  Tue Jan 19 04:12:04 2021 GMT
 	Download: https://curl.haxx.se/ca/cacert.pem
 
 jsTree:
 	License:  MIT
-	Version:  3.3.10
-	Download: https://www.jstree.com/ (only dist directory)
+	Version:  Commit 2ab817 on 1 Mar 2021 (Version 3.3.11+)
+	Download: https://github.com/vakata/jstree/
+	          https://www.jstree.com/
 
 TinyMCE:
 	License:  LGPL 2.1
@@ -28,7 +29,7 @@ Bootstrap:
 
 jQuery (Core):
 	Liense:   MIT
-	Version:  3.5.1
+	Version:  3.6.0
 	Download: https://code.jquery.com/jquery/
 
 0xbb SHA3 implementation in PHP (for PHP<7.1 compatibility):
@@ -82,7 +83,7 @@ Polyfill:
 
 Symfony MBString Polyfill:
 	License:  MIT
-	Version:  Commit 401c9d9 on 26 Oct 2020 (Version 1.20)
+	Version:  Commit 5232de9 on 22 Jan 2021 (Version 1.22.1+)
 	Website:  https://github.com/symfony/polyfill-mbstring
 
 ViaThinkSoft FileFormats:
