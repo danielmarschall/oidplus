@@ -140,7 +140,7 @@ class JS extends Minify
      * Minify the data.
      * Perform JS optimizations.
      *
-     * @param string[optional] $path Path to write the data to
+     * @param string [optional] $path Path to write the data to
      *
      * @return string The minified data
      */
@@ -549,6 +549,7 @@ class JS extends Minify
          * regex implementation doesn't allow unfixed-length look-behind
          * assertions.
          */
+        $previousChar = array();
         preg_match('/(\[[^\]]+\])[^\]]*$/', static::REGEX_VARIABLE, $previousChar);
         $previousChar = $previousChar[1];
 
@@ -593,6 +594,7 @@ class JS extends Minify
         $content = preg_replace('/\bwhile\(!0\){/', 'for(;;){', $content);
 
         // now make sure we didn't turn any do ... while(true) into do ... for(;;)
+        $dos = array();
         preg_match_all('/\bdo\b/', $content, $dos, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         // go backward to make sure positional offsets aren't altered when $content changes
@@ -602,6 +604,7 @@ class JS extends Minify
 
             // find all `while` (now `for`) following `do`: one of those must be
             // associated with the `do` and be turned back into `while`
+            $whiles = array();
             preg_match_all('/\bfor\(;;\)/', $content, $whiles, PREG_OFFSET_CAPTURE | PREG_SET_ORDER, $offsetDo);
             foreach ($whiles as $while) {
                 $offsetWhile = $while[0][1];
