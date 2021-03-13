@@ -117,21 +117,25 @@ spl_autoload_register(function ($class_name) {
 			'sqlSlang'
 		);
 
-		$class_files = glob(__DIR__ . '/classes/'.'*'.'.class.php');
+		$class_files = array();
 		foreach ($valid_plugin_folders as $folder) {
 			$class_files = array_merge($class_files, glob(__DIR__ . '/../plugins/'.$folder.'/'.'*'.'/'.'*'.'.class.php'));
 		}
+		$class_files = array_merge($class_files, glob(__DIR__ . '/classes/'.'*'.'.class.php'));
 
 		$class_refs = array();
 		foreach ($class_files as $filename) {
 			$cn = basename($filename, '.class.php');
+			$cn = strtolower($cn);
 			if (!isset($class_refs[$cn])) {
 				$class_refs[$cn] = $filename;
 			}
 		}
 	}
 
+	$class_name = strtolower($class_name);
 	if (isset($class_refs[$class_name])) {
-		require_once $class_refs[$class_name];
+		require $class_refs[$class_name];
+		unset($class_refs[$class_name]); // this emulates a "require_once" and is faster
 	}
 });
