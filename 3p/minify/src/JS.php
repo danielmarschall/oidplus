@@ -140,7 +140,7 @@ class JS extends Minify
      * Minify the data.
      * Perform JS optimizations.
      *
-     * @param string [optional] $path Path to write the data to
+     * @param string[optional] $path Path to write the data to
      *
      * @return string The minified data
      */
@@ -198,15 +198,25 @@ class JS extends Minify
         // PHP only supports $this inside anonymous functions since 5.4
         $minifier = $this;
         $callback = function ($match) use ($minifier) {
-            $count = count($minifier->extracted);
-            $placeholder = '/*'.$count.'*/';
-            $minifier->extracted[$placeholder] = $match[0];
+            if (
+                substr($match[1], 0, 1) === '!' ||
+                strpos($match[1], '@license') !== false ||
+                strpos($match[1], '@preserve') !== false
+            ) {
+                // preserve multi-line comments that start with /*!
+                // or contain @license or @preserve annotations
+                $count = count($minifier->extracted);
+                $placeholder = '/*'.$count.'*/';
+                $minifier->extracted[$placeholder] = $match[0];
 
-            return $placeholder;
+                return $placeholder;
+            }
+
+            return '';
         };
+
         // multi-line comments
-        $this->registerPattern('/\n?\/\*(!|.*?@license|.*?@preserve).*?\*\/\n?/s', $callback);
-        $this->registerPattern('/\/\*.*?\*\//s', '');
+        $this->registerPattern('/\n?\/\*(.*?)\*\/\n?/s', $callback);
 
         // single-line comments
         $this->registerPattern('/\/\/.*$/m', '');
@@ -254,7 +264,7 @@ class JS extends Minify
         // of the RegExp methods (a `\` followed by a variable or value is
         // likely part of a division, not a regex)
         $keywords = array('do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return',  'typeof');
-        $before = '([=:,;\+\-\*\/\}\(\{\[&\|!]|^|'.implode('|', $keywords).')\s*';
+        $before = '(^|[=:,;\+\-\*\/\}\(\{\[&\|!]|'.implode('|', $keywords).')\s*';
         $propertiesAndMethods = array(
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Properties_2
             'constructor',
@@ -539,7 +549,6 @@ class JS extends Minify
          * regex implementation doesn't allow unfixed-length look-behind
          * assertions.
          */
-        $previousChar = array();
         preg_match('/(\[[^\]]+\])[^\]]*$/', static::REGEX_VARIABLE, $previousChar);
         $previousChar = $previousChar[1];
 
@@ -584,7 +593,6 @@ class JS extends Minify
         $content = preg_replace('/\bwhile\(!0\){/', 'for(;;){', $content);
 
         // now make sure we didn't turn any do ... while(true) into do ... for(;;)
-		$dos = array();
         preg_match_all('/\bdo\b/', $content, $dos, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         // go backward to make sure positional offsets aren't altered when $content changes
@@ -594,7 +602,6 @@ class JS extends Minify
 
             // find all `while` (now `for`) following `do`: one of those must be
             // associated with the `do` and be turned back into `while`
-            $whiles = array();
             preg_match_all('/\bfor\(;;\)/', $content, $whiles, PREG_OFFSET_CAPTURE | PREG_SET_ORDER, $offsetDo);
             foreach ($whiles as $while) {
                 $offsetWhile = $while[0][1];
