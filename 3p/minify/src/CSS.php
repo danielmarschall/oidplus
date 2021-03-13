@@ -86,7 +86,6 @@ class CSS extends Minify
      */
     protected function moveImportsToTop($content)
     {
-    	$matches = array();
         if (preg_match_all('/(;?)(@import (?<url>url\()?(?P<quotes>["\']?).+?(?P=quotes)(?(url)\)));?/', $content, $matches)) {
             // remove from content
             foreach ($matches[0] as $import) {
@@ -190,7 +189,6 @@ class CSS extends Minify
         // find all relative imports in css
         $matches = array();
         foreach ($importRegexes as $importRegex) {
-        	$regexMatches = array();
             if (preg_match_all($importRegex, $content, $regexMatches, PREG_SET_ORDER)) {
                 $matches = array_merge($matches, $regexMatches);
             }
@@ -218,7 +216,7 @@ class CSS extends Minify
 
             // grab referenced file & minify it (which may include importing
             // yet other @import statements recursively)
-            $minifier = new static($importPath);
+            $minifier = new self($importPath);
             $minifier->setMaxImportSize($this->maxImportSize);
             $minifier->setImportExtensions($this->importExtensions);
             $importContent = $minifier->execute($source, $parents);
@@ -251,7 +249,6 @@ class CSS extends Minify
     protected function importFiles($source, $content)
     {
         $regex = '/url\((["\']?)(.+?)\\1\)/i';
-        $matches = array();
         if ($this->importExtensions && preg_match_all($regex, $content, $matches, PREG_SET_ORDER)) {
             $search = array();
             $replace = array();
@@ -291,7 +288,7 @@ class CSS extends Minify
      * Minify the data.
      * Perform CSS optimizations.
      *
-     * @param string [optional] $path    Path to write the data to
+     * @param string[optional] $path    Path to write the data to
      * @param string[]         $parents Parent paths, for circular reference checks
      *
      * @return string The minified data
@@ -310,7 +307,8 @@ class CSS extends Minify
              */
             $this->extractStrings();
             $this->stripComments();
-            $this->extractCalcs();
+            $this->extractMath();
+            $this->extractCustomProperties();
             $css = $this->replace($css);
 
             $css = $this->stripWhitespace($css);
@@ -420,7 +418,6 @@ class CSS extends Minify
         // find all relative urls in css
         $matches = array();
         foreach ($relativeRegexes as $relativeRegex) {
-        	$regexMatches = array();
             if (preg_match_all($relativeRegex, $content, $regexMatches, PREG_SET_ORDER)) {
                 $matches = array_merge($matches, $regexMatches);
             }
@@ -682,19 +679,29 @@ class CSS extends Minify
     }
 
     /**
-     * Replace all `calc()` occurrences.
+     * Replace all occurrences of functions that may contain math, where
+     * whitespace around operators needs to be preserved (e.g. calc, clamp)
      */
-    protected function extractCalcs()
+    protected function extractMath()
     {
+        $functions = array('calc', 'clamp', 'min', 'max');
+        $pattern = '/\b('. implode('|', $functions) .')(\(.+?)(?=$|;|})/m';
+
         // PHP only supports $this inside anonymous functions since 5.4
         $minifier = $this;
-        $callback = function ($match) use ($minifier) {
-            $length = strlen($match[1]);
+        $callback = function ($match) use ($minifier, $pattern, &$callback) {
+            $function = $match[1];
+            $length = strlen($match[2]);
             $expr = '';
             $opened = 0;
 
+            // the regular expression for extracting math has 1 significant problem:
+            // it can't determine the correct closing parenthesis...
+            // instead, it'll match a larger portion of code to where it's certain that
+            // the calc() musts have ended, and we'll figure out which is the correct
+            // closing parenthesis here, by counting how many have opened
             for ($i = 0; $i < $length; $i++) {
-                $char = $match[1][$i];
+                $char = $match[2][$i];
                 $expr .= $char;
                 if ($char === '(') {
                     $opened++;
@@ -702,18 +709,41 @@ class CSS extends Minify
                     break;
                 }
             }
-            $rest = str_replace($expr, '', $match[1]);
-            $expr = trim(substr($expr, 1, -1));
 
+            // now that we've figured out where the calc() starts and ends, extract it
             $count = count($minifier->extracted);
-            $placeholder = 'calc('.$count.')';
-            $minifier->extracted[$placeholder] = 'calc('.$expr.')';
+            $placeholder = 'math('.$count.')';
+            $minifier->extracted[$placeholder] = $function.'('.trim(substr($expr, 1, -1)).')';
+
+            // and since we've captured more code than required, we may have some leftover
+            // calc() in here too - go recursive on the remaining but of code to go figure
+            // that out and extract what is needed
+            $rest = str_replace($function.$expr, '', $match[0]);
+            $rest = preg_replace_callback($pattern, $callback, $rest);
 
             return $placeholder.$rest;
         };
 
-        $this->registerPattern('/calc(\(.+?)(?=$|;|}|calc\()/', $callback);
-        $this->registerPattern('/calc(\(.+?)(?=$|;|}|calc\()/m', $callback);
+        $this->registerPattern($pattern, $callback);
+    }
+
+    /**
+     * Replace custom properties, whose values may be used in scenarios where
+     * we wouldn't want them to be minified (e.g. inside calc)
+     */
+    protected function extractCustomProperties()
+    {
+        // PHP only supports $this inside anonymous functions since 5.4
+        $minifier = $this;
+        $this->registerPattern(
+            '/(?<=^|[;}])(--[^:;{}"\'\s]+)\s*:([^;{}]+)/m',
+            function ($match) use ($minifier) {
+                $placeholder = '--custom-'. count($minifier->extracted) . ':0';
+                $minifier->extracted[$placeholder] = $match[1] .':'. trim($match[2]);
+                return $placeholder;
+
+            }
+        );
     }
 
     /**
