@@ -411,6 +411,11 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 	color:#000;
 }
 
+.btn-success, .btn-success:visited, .btn-success:hover, .btn-success:active {
+	/* TODO: When the mouse enters the button, the link will be orange for a short amount of time. Why??? */
+	color:white; !important;
+}
+
 /**
  *	Splitter / uiLayout
  */
