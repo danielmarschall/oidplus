@@ -85,6 +85,8 @@ $add_css_args = count($add_css_args) > 0 ? '?'.implode('&',$add_css_args) : '';
 
 <body>
 
+<div id="loading" style="display:none">Loading&#8230;</div>
+
 <div id="frames">
 	<div id="content_window" class="borderbox">
 		<?php

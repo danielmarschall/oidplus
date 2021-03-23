@@ -1,32 +1,32 @@
 <?php /* <ViaThinkSoftSignature>
-hlpE5yKfTqwDBnd6/lL8W0naLfVe9aAySNxSTjXQEU4bPneKLKVsA2MkLVp5ES4/b
-sAFOpWsIV5yqJZskdGesEOqIxiu0bPhFFSPU7pY4+g/CIl6zpq/97HLC+RadiThmh
-GVUTYAep9111aR0uQNouxAFMXKbzM69/MUsMayF4DAl4yG8TFVHGYd5hWV3h00+Al
-zoCTWwXs1a6ZXOhPLhq5zMaHypGznVXQNgueW8hSzKJxIbHiE4kkUGLhYpCSLaKMP
-guIhWKcRGsaTZbuUGnsmgX12vaeA2ExIgvSjvZbx+A1luoIcz5D+JNPO7t+7eOJ8A
-gcQPoNO9XoRg+gNnH0/1HkRXu8HGNdXn13glpxYnhmFsBPpbuZt+x/soAYH8XmaNQ
-kUc53u06yce9cNHMPEDRkZ2RoSdb/dANhzOIAXcSbwM0a//x+Ahe0hf7R658frK6O
-3pMwp5fCj4aam9AvxGx6yJY1x/irxEPwGuF8yRlvcwNSl394H07GavxjRp1jiysjM
-JHZ1L21IVUgGHfrsEPZugM3KvphfoOrPdnj3CDsEn9vNwOpI6+9yAe4VEbPHToEpi
-UgtPbmF7gJXFeU0phkqx0ThKDfjCXB7wWBq2Y9MNOKRI/qtSa2X6TY9dW3db6hKzX
-9VpRWe4LSz9XgIt6LRfMeqKVPlNFyOSLtqDwsgPE5s3XW8FPb356WX+F55EDGDSaC
-qzT2oypxyHZlyt2bJ1K32Lfqz1TqGmwI+EJT/LpH76RUY0DlrpDArA5WsjVtTaJmK
-leX91K2zPTKG13MPy9+N1OfuxDa8AVG2FLx/g2Pld7mnrbftTlryYTltEydxvGWAn
-DD8xFOYz2uwYen3KMuVFEgLvvWWCMZLFEQI5bF6OnB5rNWXJc4nTAqGa8w54bd36z
-MA7s/Z/ud/U3t1owBgD/6IFw64c76TlAYQjUf223GaI6cS2MVwZwg4hgWwMPpt3je
-qHBEfN7Xw5vkixz7hyiO2XqcvNfbFzkmZDHHklOC+qlBBGBtJR2wEi/c3wzGNBRDO
-c5OWrw0F3C5jOh5C0ulzswAgDQa3RzkSXLxIq3yNt8V/Hm9mhuSGQPrYAI9lAntAH
-WB9yVSQ0pm4DGN+BokpXmGUcQSDine4WjQQ6JKsTQ3BJ/JbjgJQ+btMGJtxbE7mD/
-BzgYM8dzmPDmcLng6Du9BjrxoSZuOm8PmP8foxTi+8u9m2Zf7GEe6aGVG1QJsaYgX
-NMTZyCzXpOsfZCUpTzgAwjUpT+dzP6HI7RfFQ8X41t0BqdeyfXzmWVeRhxD2mjL4o
-Yp3ywdjvTB7FI6NBY7qtWCY4HnILcEbo7++8s7E9J4/bZbe3p13EsCzrETsiF109P
-g==
+HrbDd/amRaxePAB/3etImWReGVZq3Id+EqkkxIqvWfmlR1WSCeAU5Y9tDeWXgBCXt
+x0zArKoecuVT0CCJX0IMtqb2TgnX1/osYvkMsXg9P2pc45hYRmrbaY/I4hU2QmriD
+dOr/ci0cq/HM1pyRVkfcfYY9BMjaqiQTKhMdPcbN57ymI3oYYU4iSby7M1oMa8uE+
+NJrtqJea+GtK269I/Kq3cyiuqDD3PIMMvMoZ+9/64whJng2SQBxwXSnc9bwPYhyok
+R73NF8ovZXsPxVQHN1SBGe9b+x3vkSdxG2P3DUPuIZLVrLQ4UhKIL78bL+nJVHLqZ
+025357ySHaE7meE+KUu79siZ3rZwa+PdHRJFpD6OB+LgsHhe+XovEd7tRgr3M5C6o
+eeXfzrvRt081f16tuUhXp+jjy1G4h9hI/dv09KDsPbEzzQHUkQMJ2J9J7vXtbHB9A
+MDxOoqfF9RzQOY5uAhot3pCabLxo2MIisEAQ1Nah24lm0zpfwjtZZK4hWPuT2z4uG
+XOwTvjJ9omiV8qDd2MrsEuKKd85LDcB1MmVsH3+tgbVrIuUqGxF6q6A43hN8CzUuz
+/vWUMiL87IQH+1a3Tz7tFN9G/+Bl9fdxhCOFoMzs5ySzWfBefF8YyWBagweBDftR0
+tkV8TRSa7OArUf/LU5LaPu1olOZnN2AR/nbyrW6PjFFQu1xXhVic3a0wKePzRdtWQ
+Lm+no5x3Stprvv3bY5q48bBiOKZRH0TSrm7QL6fRPECAigf7lL8bEQOElstLHaRCY
+hNUz/dzZGKpf7IjzetqmeJ9eAy507iq+toV2b5EfA6Gs1XUcMw1phSP1jqX3PhZz2
+yYbwi1JdyWeihrWsuFoP8+aIh9ErRZ85g88mIhvx2cCLrQGcF4rIAxpDslGvZVZNu
+66RBUldLcc9KbtmroVpvvhmyyDYXvSyfi9JSosK1NO/x7/yr5S5Deoc7FBxvEbJNG
+BgJrBuaenOJlIth5QF8Zc5iXELJRci7HdPQ8rdRxrWNWzlnJhsuMPQihkP3/Q9aLz
+hmYHJBIuXhOApuXgHk/uwyimFW/dDdkJbLEdDFvTaCrhbMaqa+MKx23GSGLO/H9bg
+z1IE0Hm4oqiv0qaTLIQ79w45zfo6ecpmGN4Hlmc0QWUhGLotSMJrOwLNiPMTRgBUa
+QNrwpmTHlxke7UjjD7f5RlsqYLIAGpXJKTxMJtFhYHB4v5xf5WQEzyNOxs+aYgrZf
+LZmi2JtO1QbNslOndrAqbEJKe/FAA6Sj4Tj5h8rBKha9mP+A6g5YybMZ3D5RH1S4N
+eM6K7VYei3hoW+1jz8cTDStgaV+2IhNrv96hRH2aMGut+fAwJo/8WDQ3ilsArB670
+Q==
 </ViaThinkSoftSignature> */ ?>
 <?php
 
 /*
 
-      VNag - Nagios Framework for PHP                  (C) 2014-2020
+      VNag - Nagios Framework for PHP                  (C) 2014-2021
       __     ___      _____ _     _       _     ____         __ _
       \ \   / (_) __ |_   _| |__ (_)_ __ | | __/ ___|  ___  / _| |_
        \ \ / /| |/ _` || | | '_ \| | '_ \| |/ /\___ \ / _ \| |_| __|
@@ -35,7 +35,7 @@ g==
 
       Developed by Daniel Marschall             www.viathinksoft.com
       Licensed under the terms of the Apache 2.0 license
-      Revision 2020-12-06
+      Revision 2021-03-23
 
 */
 
@@ -222,6 +222,15 @@ Encryption and Decryption:
 	you can encrypt the machine-readable part of your HTTP output by
 	setting $this->password_out . If you want to read the information,
 	you need to set $this->password_in at the web-reader plugin.
+	The visual output is not encrypted. So, if you want to hide the information,
+	then you must not enable visual HTML output.
+	If you don't want to encrypt the machine-readable output,
+	please set $this->password_out to null or empty string.
+
+	Attention!
+	- Encryption and decryption require the OpenSSL extension in PHP.
+
+Digital signature:
 
 	You can sign the output by setting $this->privkey with a filename containing
 	a private key created by OpenSSL. If it is encrypted, please also set
@@ -230,9 +239,7 @@ Encryption and Decryption:
 	the filename of the public key file.
 
 	Attention!
-	- An empty string is also considered as password. If you don't want to encrypt the
-	  machine-readable output, please set $this->password_out to null.
-	- Both features (encryption and signatures) require the OpenSSL plugin in PHP.
+	- Signatures require the OpenSSL extension in PHP.
 
 Performance data:
 
@@ -340,7 +347,7 @@ function _empty($x) {
 }
 
 abstract class VNag {
-	/*public*/ const VNAG_VERSION = '2020-04-21';
+	/*public*/ const VNAG_VERSION = '2021-03-23';
 
 	// Status 0..3 for STATUSMODEL_SERVICE (the default status model):
 	# The guideline states: "Higher-level errors (such as name resolution errors, socket timeouts, etc) are outside of the control of plugins and should generally NOT be reported as UNKNOWN states."
@@ -1046,13 +1053,17 @@ abstract class VNag {
 					}
 
 					if (!is_null($this->pubkey)) {
-						if (!file_exists($this->pubkey)) {
-							throw new VNagInvalidArgumentException(sprintf(VNagLang::$pubkey_file_not_found, $this->pubkey));
-						}
+						if (substr($this->pubkey,0,3) === '---') {
+							$public_key = $this->pubkey;
+						} else {
+							if (!file_exists($this->pubkey)) {
+								throw new VNagInvalidArgumentException(sprintf(VNagLang::$pubkey_file_not_found, $this->pubkey));
+							}
 
-						$public_key = @file_get_contents($this->pubkey);
-						if (!$public_key) {
-							throw new VNagPublicKeyException(sprintf(VNagLang::$pubkey_file_not_readable, $this->pubkey));
+							$public_key = @file_get_contents($this->pubkey);
+							if (!$public_key) {
+								throw new VNagPublicKeyException(sprintf(VNagLang::$pubkey_file_not_readable, $this->pubkey));
+							}
 						}
 
 						if (!isset($dataset['signature'])) {
@@ -1130,23 +1141,33 @@ abstract class VNag {
 				throw new VNagException(VNagLang::$openssl_missing);
 			}
 
-			if (!file_exists($this->privkey)) {
-				throw new VNagInvalidArgumentException(sprintf(VNagLang::$privkey_file_not_found, $this->privkey));
-			}
-			$pkeyid = @openssl_pkey_get_private('file://'.$this->privkey, $this->privkey_password);
-			if (!$pkeyid) {
-				throw new VNagPrivateKeyException(sprintf(VNagLang::$privkey_file_not_readable, $this->privkey));
+			if (substr($this->privkey,0,3) === '---') {
+				$pkeyid = @openssl_pkey_get_private($this->privkey, $this->privkey_password);
+				if (!$pkeyid) {
+					throw new VNagPrivateKeyException(sprintf(VNagLang::$privkey_not_readable));
+				}
+			} else {
+				if (!file_exists($this->privkey)) {
+					throw new VNagInvalidArgumentException(sprintf(VNagLang::$privkey_file_not_found, $this->privkey));
+				}
+				$pkeyid = @openssl_pkey_get_private('file://'.$this->privkey, $this->privkey_password);
+				if (!$pkeyid) {
+					throw new VNagPrivateKeyException(sprintf(VNagLang::$privkey_file_not_readable, $this->privkey));
+				}
 			}
 
 			$signature = '';
-			if (@openssl_sign($payload, $signature, $pkeyid, $this->sign_algo)) {
+			$sign_algo = is_null($this->sign_algo) ? OPENSSL_ALGO_SHA256 : $this->sign_algo;
+			if (@openssl_sign($payload, $signature, $pkeyid, $sign_algo)) {
 				openssl_free_key($pkeyid);
 
 				$dataset['signature'] = base64_encode($signature);
+			} else {
+				throw new VNagPrivateKeyException(sprintf(VNagLang::$signature_failed));
 			}
 		}
 
-		if (!is_null($this->password_out)) {
+		if (!is_null($this->password_out) && ($this->password_out !== '')) {
 			if (!function_exists('openssl_encrypt')) {
 				throw new VNagException(VNagLang::$openssl_missing);
 			}
@@ -2460,7 +2481,9 @@ class VNagLang {
 	static $pubkey_file_not_found = "Public key file %s was not found.";
 	static $pubkey_file_not_readable = "Public key file %s is not readable.";
 	static $privkey_file_not_found = "Private key file %s was not found.";
+	static $privkey_not_readable = "Private key is not readable.";
 	static $privkey_file_not_readable = "Private key file %s is not readable.";
+	static $signature_failed = "Signature failed.";
 	static $perfdata_line_invalid = "Performance data line %s is invalid.";
 	static $singlevalue_unexpected_at_symbol = 'This plugin does not allow the @-symbol at ranges for single values.';
 	static $illegalSingleValueBehavior = "Illegal value for 'singleValueBehavior'. Please contact the creator of the plugin.";

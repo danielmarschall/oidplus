@@ -3,10 +3,13 @@ RECENT STUFF
 - At a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Default language selection: Either always en-US, or automatical selection depending on browser language, or depending on admin setting (e.g. german companies offer a german repository by default)?
-- Make attachment upload path configurable
+- Re-implement "file completeness check", or better make it check all files with checksums
 
-RFC
-- RFC draft was sent to IETF on November 3rd, 2020. Waiting for reply.
+SECURITY Improvements:
+- Make attachment upload path configurable
+- Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")
+  and see which error message appears, or they could try to enter "plugin/adminPages/..." using the web browser and see if the result is HTTP 200 or HTTP 404.
+- Secure plugin adminPages/901_vnag_version_check with an optional encryption passwort
 
 IDEAS FOR NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:
@@ -57,6 +60,7 @@ DATA TRANSFER PLUGIN
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
 
 SMALL THINGS
+- Add show_waiting_anim() and hide_waiting_anim() to all AJAX queries, like it is done in plugin "Software update"
 - #gotobutton should have the same top and height as #gotoedit
 - Should plugins be able to change the "Content-Security-Policy" header (i.e. to include external JavaScripts frameworks)
 - RA address data: Country selection box like in OIDInfo

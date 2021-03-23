@@ -26,6 +26,10 @@ header('Content-Type:text/html; charset=UTF-8');
 OIDplus::init(true);
 set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
 
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPageAdminOOBE', false)) {
+	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
+}
+
 ob_start();
 
 $step = 1;

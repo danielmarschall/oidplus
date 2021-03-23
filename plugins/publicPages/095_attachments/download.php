@@ -22,6 +22,10 @@ require_once __DIR__ . '/../../../includes/oidplus.inc.php';
 try {
 	OIDplus::init(true);
 
+	if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPagePublicAttachments', false)) {
+		throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
+	}
+
 	originHeaders();
 
 	if (!isset($_REQUEST['filename'])) {

@@ -26,6 +26,10 @@ require_once __DIR__ . '/../../../includes/oidplus.inc.php';
 OIDplus::init(true);
 set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
 
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPagePublicLoginFacebook', false)) {
+	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
+}
+
 if (!OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {
 	throw new OIDplusException(_L('Facebook OAuth authentication is disabled on this system.'));
 }

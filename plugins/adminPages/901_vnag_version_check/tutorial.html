@@ -1,0 +1,71 @@
+<!-- TODO: Translte to German (tutorial$dede$.html) -->
+
+<p>VNag is a framework that makes it easy to develop plugins for Nagios compatible software. You can use VNag to automatically get notified when a new OIDplus version is released.
+<a href="https://www.viathinksoft.com/projects/vnag">More information about VNag</a></p>
+
+<h2>Variant A: OIDplus is hosted on a different system as the Icinga2/Nagios server</h2>
+
+<p>Example setup using Linux and Icinga2</p>
+
+<p><img src="%%REL_WEB_PATH%%/variant_a.png"></p>
+
+<ol>
+	<li>Download VNag here: <a href="https://www.viathinksoft.com/projects/vnag">www.viathinksoft.com/projects/vnag</a><br><br></li>
+
+	<li>Install Icinga2, in case it isn't installed yet. Follow the documentation of Icinga2 in order to setup everything correctly.<br><br></li>
+
+	<li>Extract VNag to e.g. <b>/daten/vnag/</b><br>
+	<i>Please change the paths so that these fit your environment.</i></p>
+
+	<li>Create a symlink:<br>
+	<code>ln -s /daten/vnag/plugins/webreader/icinga2.conf /etc/icinga2/conf.d/vnag_webreader.conf</code><br>
+	In this file, adjust the path /daten/vnag<br><br></li>
+
+	<li>Create a new file <b>/etc/icinga2/conf.d/oidplus_version.conf</b> with the following contents:<pre>
+apply Service "example_oidplus_version_check" {
+	import "generic-service"
+	check_command = "vnag_webreader"
+	vars = {
+		// The following page contains a machine-readable "VNag tag" which the VNag "web reader" plugin can read and redirect the output to the Nagios compatible software
+		vnag_webreader_url = "<a href="%%ABS_WEB_PATH%%vnag.php" target="_blank">%%ABS_WEB_PATH%%vnag.php</a>"<!--
+		vnag_webreader_password = ""-->
+	}
+	assign where host.name == NodeName
+}</pre></li>
+
+	<li>Restart Icinga2<br><br></li>
+
+	<li>You can use various apps for Android and iPhone, or even your web browser to monitor the OIDplus version using Icinga2</li>
+</ol>
+
+
+
+<h2>Variant B: OIDplus is hosted on the same system as the Icinga2/Nagios server</h2>
+
+<p>Example setup using Linux and Icinga2</p>
+
+<p><img src="%%REL_WEB_PATH%%/variant_b.png"></p>
+
+<ol>
+	<li>Install Icinga2, in case it isn't installed yet. Follow the documentation of Icinga2 in order to setup everything correctly.<br>
+	You don't need to install VNag.<br><br></li>
+
+	<li>Create a new file <b>/etc/icinga2/conf.d/oidplus_version.conf</b> with the following contents:<pre>
+object CheckCommand "cmd_oidplus" {
+	command = [ "$cmd_oidplus_dir$/%%REL_LOC_PATH%%vnag.sh" ]
+	arguments = {
+	}
+}
+apply Service "example_oidplus_version_check" {
+	import "generic-service"
+	check_command = "cmd_oidplus"
+	vars = {
+		cmd_oidplus_dir = "%%SYSTEM_URL%%"
+	}
+	assign where host.name == NodeName
+}</pre></li>
+
+	<li>Restart Icinga2<br><br></li>
+
+	<li>You can use various apps for Android and iPhone, or even your web browser to monitor the OIDplus version using Icinga2</li>
+</ol>
