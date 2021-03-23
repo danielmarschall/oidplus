@@ -1,3 +1,25 @@
+
+TODO: re-implement following tool,
+      maybe completely rewrite it so that it also checks checksums
+
+
+=== index.php ===
+
+$out['text'] .= '<br><h2>'._L('File Completeness Check').'</h2>';
+
+$out['text'] .= '<p>'._L('With this optional tool, you can check if your OIDplus installation is complete and no files are missing.').'</p>';
+
+$out['text'] .= '<form method="POST" action="check.php">';
+if (!isset($local_installation)) $local_installation = 'svn-';
+$out['text'] .= '<input type="hidden" name="svn_version" value="'.(substr($local_installation,strlen('svn-'))).'">';
+$out['text'] .= '<input type="password" name="admin_password">';
+$out['text'] .= '<input type="submit" value="'._L('Check').'">';
+$out['text'] .= '<p>'._L('Attention: This will take some time!').'</p>';
+$out['text'] .= '</form>';
+
+
+=== check.php ===
+
 <?php
 
 /*

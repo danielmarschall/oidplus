@@ -90,6 +90,7 @@ function process_file($filename) {
 $out .= process_file(__DIR__ . '/3p/jstree/themes/default/style.css');
 $out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui.css');
 $out .= process_file(__DIR__ . '/3p/bootstrap4/css/bootstrap.css');
+$out .= process_file(__DIR__ . '/includes/loading.css');
 
 // Find out base CSS
 if (isset($_REQUEST['theme'])) {

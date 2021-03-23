@@ -278,14 +278,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		ADDITIONAL FILES
-		]]></source>
-		<target><![CDATA[
-		ZUSÄTZLICHE DATEIEN
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		ASN.1 IDs (comma sep.)
 		]]></source>
 		<target><![CDATA[
@@ -602,14 +594,6 @@
 		]]></source>
 		<target><![CDATA[
 		Achtung: Dieser Benutzer hat kein Passwort, da er sich mittels einer alternativen Login-Methode wie z.B. LDAP oder Google OAuth anmeldet.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Attention: This will take some time!
-		]]></source>
-		<target><![CDATA[
-		Achtung: Dies wird einige Zeit dauern!
 		]]></target>
 	</message>
 	<message>
@@ -1022,14 +1006,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Check
-		]]></source>
-		<target><![CDATA[
-		Prüfen
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Check status of the registration and collected data
 		]]></source>
 		<target><![CDATA[
@@ -1074,22 +1050,6 @@
 		]]></source>
 		<target><![CDATA[
 		Kommunikation mit dem ViaThinkSoft-Server fehlgeschlagen: %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Compare local <--> svn-%1
-		]]></source>
-		<target><![CDATA[
-		Vergleiche Lokal <--> SVN-%1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Compare local <--> svn-head
-		]]></source>
-		<target><![CDATA[
-		Vergleiche Lokale <--> SVN-Head
 		]]></target>
 	</message>
 	<message>
@@ -1494,14 +1454,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Did you know that this page contains an invisible VNag tag? You can watch this page using the "webreader" plugin of VNag, and then monitor it with any Nagios compatible software! <a href="https://www.viathinksoft.com/projects/vnag">More information</a>.
-		]]></source>
-		<target><![CDATA[
-		Wussten Sie, dass diese Seite einen unsichtbaren VNag-Code beinhaltet? Sie können diese Seite mit dem "webreader"-Plugin von VNag überachten, und mit einer Nagios-Kompatiblen Software informiert werden, wenn sich der Status dieser Seite ändert (d.h. wenn es ein neues Update gibt). <a href="https://www.viathinksoft.de/projects/vnag">Mehr Informationen hier</a>.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Digital Object Identifier (DOI)
 		]]></source>
 		<target><![CDATA[
@@ -1782,14 +1734,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Everything OK
-		]]></source>
-		<target><![CDATA[
-		Alles OK
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Example for MySQL/MariaDB
 		]]></source>
 		<target><![CDATA[
@@ -1850,14 +1794,6 @@
 		]]></source>
 		<target><![CDATA[
 		FEHLGESCHLAGEN
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		FILES MISSING
-		]]></source>
-		<target><![CDATA[
-		FEHLENDE DATEIEN
 		]]></target>
 	</message>
 	<message>
@@ -1946,14 +1882,6 @@
 		]]></source>
 		<target><![CDATA[
 		Datei %1 wurde in Manifest deklariert, existiert aber nicht
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		File Completeness Check
-		]]></source>
-		<target><![CDATA[
-		Installationsdatei-Prüfung
 		]]></target>
 	</message>
 	<message>
@@ -2166,14 +2094,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Go back to OIDplus
-		]]></source>
-		<target><![CDATA[
-		Zu OIDplus zurückkehren
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Go back to RA listing
 		]]></source>
 		<target><![CDATA[
@@ -2202,22 +2122,6 @@
 		]]></source>
 		<target><![CDATA[
 		Zu den Registrierungs-Einstellungen zurückkehren
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Go back to update page
-		]]></source>
-		<target><![CDATA[
-		Zurück zur Update-Seite
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Go back to updater
-		]]></source>
-		<target><![CDATA[
-		Zum Updater zurückkehren
 		]]></target>
 	</message>
 	<message>
@@ -3574,14 +3478,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		OIDplus File Completeness Check
-		]]></source>
-		<target><![CDATA[
-		OIDplus Installationsdatei-Prüfung
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		OIDplus Information Object ID
 		]]></source>
 		<target><![CDATA[
@@ -3610,14 +3506,6 @@
 		]]></source>
 		<target><![CDATA[
 		OIDplus Setup - Grundlegende Einstellungen
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		OIDplus Update
-		]]></source>
-		<target><![CDATA[
-		OIDplus Aktualisierung
 		]]></target>
 	</message>
 	<message>
@@ -4238,14 +4126,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Please enter your administrator password to run the tool.
-		]]></source>
-		<target><![CDATA[
-		Bitte geben Sie Ihr Administrator-Passwort ein, um dieses Programm zu starten.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Please enter your personal name or the name of your group.
 		]]></source>
 		<target><![CDATA[
@@ -4262,10 +4142,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! In case the update fails, you can download and extract the complete <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot ZIP file</a> again. Since all your data should lay inside the folder "userdata", this should be safe.
+		Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! In case the update fails, you can download and extract the complete <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot ZIP file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.
 		]]></source>
 		<target><![CDATA[
-		Bitte fertigen Sie eine Datensicherung Ihrer Dateien vor der Aktualisierung an. Im Falle eines Fehlers könnte das OIDplus-System (inklusive diesem Update-Assistenten) ausfallen. Außerdem besitzt dieses WebSVN-Update keine Kollissions-Kontrolle, d.h. Datei-Änderungen, die Sie durchgeführt haben, können zurückgesetzt/verloren gehen. Im Falle eines Fehlschlags können Sie einen kompletten <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot als ZIP-Archiv</a> herunterladen und hier entpacken. Da alle Ihre Daten innerhalb des Ordners "userdata" liegen sollten, sollte dies sicher sein.
+		Bitte fertigen Sie eine Datensicherung Ihrer Dateien vor der Aktualisierung an. Im Falle eines Fehlers könnte das OIDplus-System (inklusive diesem Update-Assistenten) ausfallen. Außerdem besitzt dieses WebSVN-Update keine Kollissions-Kontrolle, d.h. Datei-Änderungen, die Sie durchgeführt haben, können zurückgesetzt/verloren gehen. Im Falle eines Fehlschlags können Sie einen kompletten <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot als ZIP-Archiv</a> herunterladen und hier entpacken. Da alle Ihre Daten innerhalb des Ordners "userdata" und "userdata_pub" liegen sollten, sollte dies sicher sein.
 		]]></target>
 	</message>
 	<message>
@@ -4862,6 +4742,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Result of update
+		]]></source>
+		<target><![CDATA[
+		Update-Protokoll
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Revision NOT set to %1 because some files/dirs could not be updated. Please try again.
 		]]></source>
 		<target><![CDATA[
@@ -5278,18 +5166,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Stacktrace
+		Some updates failed. Please see details in the update protocol.
 		]]></source>
 		<target><![CDATA[
-		Aufrufstapel
+		Einige Updates sind fehlgeschlagen. Bitte prüfen Sie das Update-Protokoll.
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		Start update assistant
+		Stacktrace
 		]]></source>
 		<target><![CDATA[
-		Starte Update-Assistent
+		Aufrufstapel
 		]]></target>
 	</message>
 	<message>
@@ -5966,6 +5854,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		This plugin was disabled by the system administrator!
+		]]></source>
+		<target><![CDATA[
+		Dieses Plugin wurde durch den System-Administrator deaktiviert!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		This request is invalid
 		]]></source>
 		<target><![CDATA[
@@ -6038,26 +5934,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		To update your OIDplus system, please enter the administrator password and click the button "Update NOW".
-		]]></source>
-		<target><![CDATA[
-		Um Ihr OIDplus-System zu aktualisieren, geben Sie das Administrator-Passwort ein und klicken Sie anschließend auf "Jetzt aktualisieren".
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		To use %1, please enable the lines "extension=%2" and "extension_dir=ext" in your PHP.ini file.
 		]]></source>
 		<target><![CDATA[
 		Um %1 nutzen zu können, müssen Sie die Zeilen "extension=%2" und "extension_dir=ext" in der PHP.ini Datei aktivieren.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Try again
-		]]></source>
-		<target><![CDATA[
-		Erneut versuchen
 		]]></target>
 	</message>
 	<message>
@@ -6174,14 +6054,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Update OIDplus
-		]]></source>
-		<target><![CDATA[
-		OIDplus aktualisieren
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Update OK
 		]]></source>
 		<target><![CDATA[
@@ -6222,14 +6094,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Updating ...
-		]]></source>
-		<target><![CDATA[
-		Aktualisieren ...
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Upload
 		]]></source>
 		<target><![CDATA[
@@ -6254,10 +6118,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		VNag integration
+		VNag version check
 		]]></source>
 		<target><![CDATA[
-		VNag-Integration
+		VNag Versions-Prüfung
 		]]></target>
 	</message>
 	<message>
@@ -6462,14 +6326,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		With this optional tool, you can check if your OIDplus installation is complete and no files are missing.
-		]]></source>
-		<target><![CDATA[
-		Mit diesem optionalen Werkzeug können Sie testen, ob Ihre OIDplus-Installation vollständig ist und keine Dateien fehlen.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Wrong CSRF Token
 		]]></source>
 		<target><![CDATA[
@@ -6602,14 +6458,6 @@
 		]]></source>
 		<target><![CDATA[
 		Die AJAX API bietet die Möglichkeit, Aufgaben automatisiert über Ihr OIDplus-Konto durchzuführen.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		You can perform a system update by clicking the button below.
-		]]></source>
-		<target><![CDATA[
-		Sie können ein System-Update mit der untenstehenden Schaltfläche ausführen.
 		]]></target>
 	</message>
 	<message>

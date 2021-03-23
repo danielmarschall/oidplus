@@ -23,6 +23,10 @@ header('Content-Type:text/html; charset=UTF-8');
 
 OIDplus::init(true);
 
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPageAdminOIDInfoExport', false)) {
+	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
+}
+
 # ---
 
 if (!OIDplus::authUtils()::isAdminLoggedIn()) {

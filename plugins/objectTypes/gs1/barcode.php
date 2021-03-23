@@ -26,6 +26,10 @@ if (!isset($_GET['number'])) die("Argument 'number' is missing");
 
 require_once __DIR__ . '/../../../includes/functions.inc.php';
 
+//if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusObjectTypePluginGs1', false)) {
+//	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
+//}
+
 error_reporting(0);
 
 $number = $_GET['number'];

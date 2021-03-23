@@ -174,7 +174,7 @@ class phpsvnclient {
 	{
 		if (!is_dir($outPath)) {
 			echo _L("ERROR: Local path %1 not existing",$outPath)."\n";
-			flush();
+			//flush();
 			return false;
 		}
 
@@ -186,7 +186,7 @@ class phpsvnclient {
 
 			if (!file_exists($version_file)) {
 				echo _L("ERROR: %1 missing",$version_file)."\n";
-				flush();
+				//flush();
 				return false;
 			} else {
 				//Obtain the number of current version number of the local copy.
@@ -194,13 +194,13 @@ class phpsvnclient {
 				$m = array();
 				if (!preg_match('@Revision (\d+)@', $cont, $m)) { // do not translate
 					echo _L("ERROR: %1 unknown format",$version_file)."\n";
-					flush();
+					//flush();
 					return false;
 				}
 				$from_revision = $m[1];
 
 				echo _L("Found %1 with revision information %2",basename($version_file),$from_revision)."\n";
-				flush();
+				//flush();
 			}
 		} else {
 			$version_file = '';
@@ -214,13 +214,13 @@ class phpsvnclient {
 			$file = str_replace("///", "/", $file);
 			if (@file_put_contents($file, 'Write Test') === false) { // do not translate
 				echo (!$preview ? _L("ERROR") : _L("WARNING")).": "._L("Cannot write test file %1 ! An update through the web browser will NOT be possible.",$file)."\n";
-				flush();
+				//flush();
 				if (!$preview) return false;
 			}
 			@unlink($file);
 			if (file_exists($file)) {
 				echo (!$preview ? _L("ERROR") : _L("WARNING")).": "._L("Cannot delete test file %1 ! An update through the web browser will NOT be possible.",$file)."\n";
-				flush();
+				//flush();
 				if (!$preview) return false;
 			}
 		}
@@ -244,13 +244,13 @@ class phpsvnclient {
                                         $localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
 
 					echo _L("Added or modified directory: %1",$file)."\n";
-					flush();
+					//flush();
 					if (!$preview) {
 						$this->createDirs($localPath);
 						if (!is_dir($localPath)) {
 							$errors_happened = true;
 							echo "=> "._L("FAILED")."\n";
-							flush();
+							//flush();
 						}
 					}
 				}
@@ -264,13 +264,13 @@ class phpsvnclient {
                                         $localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
 
 					echo _L("Added or modified file: %1",$file)."\n";
-					flush();
+					//flush();
 					if (!$preview) {
 						$contents = $this->getFile($file);
 						if (@file_put_contents($localFile, $contents) === false) {
 							$errors_happened = true;
 							echo "=> "._L("FAILED")."\n";
-							flush();
+							//flush();
 						}
 					}
 				}
@@ -284,14 +284,14 @@ class phpsvnclient {
                                         $localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
 
 					echo _L("Removed file: %1",$file)."\n";
-					flush();
+					//flush();
 
 					if (!$preview) {
 						@unlink($localFile);
 						if (file_exists($localFile)) {
 							$errors_happened = true;
 							echo "=> "._L("FAILED")."\n";
-							flush();
+							//flush();
 						}
 					}
 				}
@@ -306,14 +306,14 @@ class phpsvnclient {
                                         $localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
 
 					echo _L("Removed directory: %1",$file)."\n";
-					flush();
+					//flush();
 
 					if (!$preview) {
 						$this->removeDirs($localPath);
 						if (is_dir($localPath)) {
 							$errors_happened = true;
 							echo "=> "._L("FAILED")."\n";
-							flush();
+							//flush();
 						}
 					}
 				}
@@ -325,16 +325,16 @@ class phpsvnclient {
 				if (!$errors_happened) {
 					if (@file_put_contents($version_file, "Revision ".$this->actVersion."\n") === false) { // do not translate
 						echo _L("ERROR: Could not set the revision")."\n";
-						flush();
+						//flush();
 						return false;
 					} else {
 						echo _L("Set revision to %1", $this->actVersion) . "\n";
-						flush();
+						//flush();
 						return true;
 					}
 				} else {
 					echo _L("Revision NOT set to %1 because some files/dirs could not be updated. Please try again.",$this->actVersion)."\n";
-					flush();
+					//flush();
 					return false;
 				}
 			} else {
@@ -584,7 +584,7 @@ class phpsvnclient {
 		if ($vini > $vend) {
 			$vini = $vend;
 			echo _L("Nothing updated")."\n";
-			flush();
+			//flush();
 			return null;
 		}
 

@@ -546,3 +546,11 @@ function _L() {
 
 	return tmp;
 }
+
+function show_waiting_anim() {
+	$("#loading").show();
+}
+
+function hide_waiting_anim() {
+	$("#loading").hide();
+}

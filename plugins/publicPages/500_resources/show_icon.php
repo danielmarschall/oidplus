@@ -23,6 +23,10 @@ define('SPACER_PNG', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bK
 
 require_once __DIR__ . '/../../../includes/functions.inc.php';
 
+//if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPagePublicResources', false)) {
+//	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
+//}
+
 error_reporting(0);
 
 if (!isset($_REQUEST['file'])) {
