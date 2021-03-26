@@ -398,6 +398,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Additional file
+		]]></source>
+		<target><![CDATA[
+		Zusätzliche Datei
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Additional information
 		]]></source>
 		<target><![CDATA[
@@ -854,6 +862,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Cannot determine version of the system
+		]]></source>
+		<target><![CDATA[
+		Die Systemversion konnte nicht ermittelt werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Cannot download checksum file. Please try again later.
+		]]></source>
+		<target><![CDATA[
+		Die Prüfsummendatei konnte nicht heruntergeladen werden. Bitte versuchen Sie es später noch einmal.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Cannot find dot notation because fields asn1-notation and dot-notation are both not existing
 		]]></source>
 		<target><![CDATA[
@@ -1010,6 +1034,14 @@
 		]]></source>
 		<target><![CDATA[
 		Status der Registration und gesammelten Daten überprüfen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Checksum mismatch
+		]]></source>
+		<target><![CDATA[
+		Unterschiedlich
 		]]></target>
 	</message>
 	<message>
@@ -1454,6 +1486,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Differences could have various reasons, for example, a hotfix you have applied or additional plugins you have installed.
+		]]></source>
+		<target><![CDATA[
+		Unterschiede können verschiedene Gründe haben, beispielsweise ein Hotfix oder Plugins, die Sie installiert haben.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Digital Object Identifier (DOI)
 		]]></source>
 		<target><![CDATA[
@@ -1778,6 +1818,14 @@
 		]]></source>
 		<target><![CDATA[
 		Beispiel: OID 2.999.123 mittels VBScript hinzufügen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Expected file contents
+		]]></source>
+		<target><![CDATA[
+		Erwarteter Dateiinhalt
 		]]></target>
 	</message>
 	<message>
@@ -3070,6 +3118,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Missing file
+		]]></source>
+		<target><![CDATA[
+		Fehlende Datei
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Mobile
 		]]></source>
 		<target><![CDATA[
@@ -4150,6 +4206,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Please note: If you believe that you were hacked, you should not trust the output of this tool, because it might be compromised, too.
+		]]></source>
+		<target><![CDATA[
+		Vorsicht: Wenn Sie glauben, dass Sie gehackt wurden, sollten Sie sich nicht auf die Ausgabe dieses Werkzeugs verlassen, da es auch manipuliert worden sein könnte.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Please only submit one arc (not an absolute OID or multiple arcs).
 		]]></source>
 		<target><![CDATA[
@@ -4738,6 +4802,14 @@
 		]]></source>
 		<target><![CDATA[
 		%1 auflösen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Result
+		]]></source>
+		<target><![CDATA[
+		Ergebnis
 		]]></target>
 	</message>
 	<message>
@@ -5390,6 +5462,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		System file check
+		]]></source>
+		<target><![CDATA[
+		Systemdatei-Prüfung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		System information
 		]]></source>
 		<target><![CDATA[
@@ -5882,6 +5962,14 @@
 		]]></source>
 		<target><![CDATA[
 		Der Besitz der Wurzel-OID wurde noch nicht durch ViaThinkSoft verifiziert. Bitte senden Sie eine E-Mail an %1, um den Besitz dieser OID zu bestätigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This tool compares the checksums of the files of your OIDplus installation with the checksums of the OIDplus original SVN version.
+		]]></source>
+		<target><![CDATA[
+		Dieses Werkzeug vergleicht die Prüfsummen dieser OIDplus-Installation mit den Prüfsummen aus dem originalen Quelltext, der auf dem ViaThinkSoft Server liegt.
 		]]></target>
 	</message>
 	<message>
