@@ -1774,6 +1774,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Everything OK!
+		]]></source>
+		<target><![CDATA[
+		Alles in Ordnung!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Example for MySQL/MariaDB
 		]]></source>
 		<target><![CDATA[
@@ -4806,10 +4814,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Result
+		Result (comparison with SVN revision %1)
 		]]></source>
 		<target><![CDATA[
-		Ergebnis
+		Ergebnis (Vergleich mit SVN Revision %1)
 		]]></target>
 	</message>
 	<message>
