@@ -23,6 +23,10 @@
 $argc = $_SERVER['argc']; // to please Eclipse for PHP
 $argv = $_SERVER['argv']; // to please Eclipse for PHP
 
+if (PHP_SAPI != 'cli') {
+	die("This file can only be invoked in CLI mode.\n");
+}
+
 if ($argc != 2) {
 	echo "Usage: ".$argv[0]." <targetpath>\n";
 	exit(2);

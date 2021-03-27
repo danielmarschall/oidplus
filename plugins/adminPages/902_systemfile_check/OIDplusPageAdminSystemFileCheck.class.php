@@ -47,15 +47,14 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<p>'._L('Differences could have various reasons, for example, a hotfix you have applied or additional plugins you have installed.').'</p>';
 			$out['text'] .= '<p>'._L('Please note: If you believe that you were hacked, you should not trust the output of this tool, because it might be compromised, too.').'</p>';
 
-			$out['text'] .= '<h2>'._L('Result').'</h2>';
-
 			$ver = OIDplus::getVersion();
-
 			if (substr($ver,0,4) !== 'svn-') {
 				throw new OIDplusException(_L('Cannot determine version of the system'));
 			}
+			$ver = substr($ver,strlen('svn-'));
 
-			$ver = substr($ver,4);
+
+			$out['text'] .= '<h2>'._L('Result (comparison with SVN revision %1)', $ver).'</h2>';
 
 			$out['text'] .= '<pre>';
 
@@ -67,7 +66,11 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 
 				foreach ($mine as $filename_old => $hash_old) {
 					if (!isset($theirs[$filename_old])) {
-						if (substr($filename_old, 0, strlen('userdata/')) !== 'userdata/') {
+						if (
+						  (substr($filename_old, 0, strlen('userdata/')) !== 'userdata/') &&
+						  (substr($filename_old, 0, strlen('userdata_pub/')) !== 'userdata_pub/') &&
+						  ($filename_old !== 'oidplus_version.txt')
+						){
 							$num++;
 							$out['text'] .= "<b>"._L('Additional file').":</b> $filename_old\n";
 						}
@@ -92,7 +95,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 				}
 
 				if ($num == 0) {
-					$out['text'] .= 'Everything OK!';
+					$out['text'] .= _L('Everything OK!');
 				}
 			} catch (Exception $e) {
 				$out['text'] .= strtoupper(_L('Error')).': '.htmlentities($e->getMessage());
