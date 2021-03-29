@@ -49,7 +49,8 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 
 			$ver = OIDplus::getVersion();
 			if (substr($ver,0,4) !== 'svn-') {
-				throw new OIDplusException(_L('Cannot determine version of the system'));
+				$out['text'] = '<p><font color="red">'.strtoupper(_L('Error')).': '._L('Cannot determine version of the system').'</font></p>';
+				return;
 			}
 			$ver = substr($ver,strlen('svn-'));
 
