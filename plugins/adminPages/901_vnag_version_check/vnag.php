@@ -47,10 +47,10 @@ class VNagMonitorDummy extends VNag {
 $installType = OIDplus::getInstallType();
 
 if ($installType === 'ambigous') {
-	$out_stat = VNag::STATUS_CRITICAL;
+	$out_stat = VNag::STATUS_UNKNOWN;
 	$out_msg  = 'Multiple version files/directories (oidplus_version.txt, .git and .svn) are existing! Therefore, the version is ambiguous!'; // do not translate
 } else if ($installType === 'unknown') {
-	$out_stat = VNag::STATUS_CRITICAL;
+	$out_stat = VNag::STATUS_UNKNOWN;
 	$out_msg  = 'The version cannot be determined, and the update needs to be applied manually!'; // do not translate
 } else if (($installType === 'svn-wc') || ($installType === 'git-wc')) {
 	$local_installation = OIDplus::getVersion();
@@ -65,10 +65,10 @@ if ($installType === 'ambigous') {
 	$updateCommand = ($installType === 'svn-wc') ? 'svn update' : 'git pull';
 
 	if (!$newest_version) {
-		$out_stat = VNag::STATUS_CRITICAL;
+		$out_stat = VNag::STATUS_UNKNOWN;
 		$out_msg  = 'OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.'; // do not translate
 	} else if (!$local_installation) {
-		$out_stat = VNag::STATUS_WARNING;
+		$out_stat = VNag::STATUS_UNKNOWN;
 		$out_msg  = 'OIDplus could not determine its version (Required: ' . $requireInfo . '). Please update your system manually via the "' . $updateCommand . '" command regularly.'; // do not translate
 	} else if ($local_installation == $newest_version) {
 		$out_stat = VNag::STATUS_OK;
@@ -87,7 +87,7 @@ if ($installType === 'ambigous') {
 	}
 
 	if (!$newest_version) {
-		$out_stat = VNag::STATUS_CRITICAL;
+		$out_stat = VNag::STATUS_UNKNOWN;
 		$out_msg  = 'OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.'; // do not translate
 	} else if ($local_installation == $newest_version) {
 		$out_stat = VNag::STATUS_OK;
