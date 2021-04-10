@@ -4166,6 +4166,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Please enter either 0 ("off") or 1 ("on").
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie entweder 0 ("aus") oder 1 ("ein") ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Please enter either 0, 1 or 2.
 		]]></source>
 		<target><![CDATA[
@@ -5938,6 +5946,14 @@
 		]]></source>
 		<target><![CDATA[
 		Dies ist keine gültige E-Mail-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This page contains an encrypted VNag machine-readable status.
+		]]></source>
+		<target><![CDATA[
+		Diese Seite enthält einen von ViaThinkSoft VNag verschlüsselten, maschinen-lesbaren Status.
 		]]></target>
 	</message>
 	<message>
