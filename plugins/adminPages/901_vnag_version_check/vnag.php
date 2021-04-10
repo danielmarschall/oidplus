@@ -99,7 +99,13 @@ if ($installType === 'ambigous') {
 }
 
 $job = new VNagMonitorDummy($out_stat, $out_msg);
-$job->http_visual_output = VNag::OUTPUT_ALWAYS;
+if (OIDplus::config()->getValue('vnag_version_check_password_protected','1') == '1') {
+	$job->http_visual_output = VNag::OUTPUT_NEVER;
+	$job->password_out = smallhash(OIDplus::baseConfig()->getValue('SERVER_SECRET').'/VNAG');
+	$job->outputHTML(_L('This page contains an encrypted VNag machine-readable status.'));
+} else {
+	$job->http_visual_output = VNag::OUTPUT_ALWAYS;
+}
 if (OIDplus::getPkiStatus(true)) {
 	$job->privkey = OIDplus::config()->getValue('oidplus_private_key');
 }
