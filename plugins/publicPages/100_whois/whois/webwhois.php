@@ -324,7 +324,7 @@ if ($format == 'txt') {
 
 	echo $cont;
 
-	if (OIDplus::getPkiStatus(true)) {
+	if (OIDplus::getPkiStatus()) {
 		$signature = '';
 		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 			$signature = base64_encode($signature);
@@ -372,7 +372,7 @@ if ($format == 'json') {
 		'whois' => $ary
 	);
 
-	if (OIDplus::getPkiStatus(true)) {
+	if (OIDplus::getPkiStatus()) {
 		$cont = json_encode($ary);
 		$signature = '';
 		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
@@ -403,7 +403,7 @@ if ($format == 'xml') {
 
 	$xml = preg_replace('@<section><(.+)>(.+)</section>@ismU', '<\\1Section><\\1>\\2</\\1Section>', $xml);
 
-	if (OIDplus::getPkiStatus(true)) {
+	if (OIDplus::getPkiStatus()) {
 		$cont = $xml;
 		$signature = '';
 		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {

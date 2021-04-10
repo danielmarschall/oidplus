@@ -106,7 +106,7 @@ if (OIDplus::config()->getValue('vnag_version_check_password_protected','1') == 
 } else {
 	$job->http_visual_output = VNag::OUTPUT_ALWAYS;
 }
-if (OIDplus::getPkiStatus(true)) {
+if (OIDplus::getPkiStatus()) {
 	$job->privkey = OIDplus::config()->getValue('oidplus_private_key');
 }
 $job->run();

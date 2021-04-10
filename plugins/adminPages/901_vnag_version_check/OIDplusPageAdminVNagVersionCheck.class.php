@@ -67,10 +67,14 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 			} else {
 				$cont = str_replace('%%WEBREADER_PASSWORD%%','',$cont);
 			}
-			$pubkey = trim(OIDplus::config()->getValue('oidplus_public_key'));
-			$pubkey = str_replace("\\","\\\\",$pubkey);
-			$pubkey = str_replace("\r","\\r",$pubkey);
-			$pubkey = str_replace("\n","\\n",$pubkey);
+			if (OIDplus::getPkiStatus()) {
+				$pubkey = trim(OIDplus::config()->getValue('oidplus_public_key'));
+				$pubkey = str_replace("\\","\\\\",$pubkey);
+				$pubkey = str_replace("\r","\\r",$pubkey);
+				$pubkey = str_replace("\n","\\n",$pubkey);
+			} else {
+				$pubkey = "";
+			}
 			$cont = str_replace('%%WEBREADER_PUBKEY%%',$pubkey,$cont);
 
 			$out['text'] .= $cont;
