@@ -27,8 +27,9 @@ apply Service "example_oidplus_version_check" {
 	check_command = "vnag_webreader"
 	vars = {
 		// The following page contains a machine-readable "VNag tag" which the VNag "web reader" plugin can read and redirect the output to the Nagios compatible software
-		vnag_webreader_url = "<a href="%%ABS_WEB_PATH%%vnag.php" target="_blank">%%ABS_WEB_PATH%%vnag.php</a>"<!--
-		vnag_webreader_password = ""-->
+		vnag_webreader_url = "<a href="%%ABS_WEB_PATH%%vnag.php" target="_blank">%%ABS_WEB_PATH%%vnag.php</a>"
+		vnag_webreader_password = "%%WEBREADER_PASSWORD%%"
+		vnag_webreader_signPubKey = "%%WEBREADER_PUBKEY%%"
 	}
 	assign where host.name == NodeName
 }</pre></li>

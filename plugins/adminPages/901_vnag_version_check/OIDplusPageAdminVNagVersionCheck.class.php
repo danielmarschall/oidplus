@@ -22,6 +22,11 @@ if (!defined('INSIDE_OIDPLUS')) die();
 class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 
 	public function init($html=true) {
+		OIDplus::config()->prepareConfigKey('vnag_version_check_password_protected', 'If set to 1 ("on"), the VNag version check is password protected', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (($value != '0') && ($value != '1')) {
+				throw new OIDplusException(_L('Please enter either 0 ("off") or 1 ("on").'));
+			}
+		});
 	}
 
 	public function action($actionID, $params) {
@@ -57,6 +62,16 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 			$cont = str_replace('%%REL_WEB_PATH%%',OIDplus::webpath(__DIR__,true),$cont);
 			$cont = str_replace('%%ABS_LOC_PATH%%',OIDplus::localpath(__DIR__,false),$cont);
 			$cont = str_replace('%%ABS_WEB_PATH%%',OIDplus::webpath(__DIR__,false),$cont);
+			if (OIDplus::config()->getValue('vnag_version_check_password_protected','1') == '1') {
+				$cont = str_replace('%%WEBREADER_PASSWORD%%',smallhash(OIDplus::baseConfig()->getValue('SERVER_SECRET').'/VNAG'),$cont);
+			} else {
+				$cont = str_replace('%%WEBREADER_PASSWORD%%','',$cont);
+			}
+			$pubkey = trim(OIDplus::config()->getValue('oidplus_public_key'));
+			$pubkey = str_replace("\\","\\\\",$pubkey);
+			$pubkey = str_replace("\r","\\r",$pubkey);
+			$pubkey = str_replace("\n","\\n",$pubkey);
+			$cont = str_replace('%%WEBREADER_PUBKEY%%',$pubkey,$cont);
 
 			$out['text'] .= $cont;
 		} else {

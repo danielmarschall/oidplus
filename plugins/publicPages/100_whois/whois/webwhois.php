@@ -296,11 +296,11 @@ if ($format == 'txt') {
 		$longest_key = max($longest_key, strlen(trim(explode(':',$line,2)[0])));
 	}
 
-	//echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\n";
+	//echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\r\n";
 
 	foreach ($out as $line) {
 		if (trim($line) == '') {
-			echo "\n";
+			echo "\r\n";
 			continue;
 		}
 
@@ -310,14 +310,14 @@ if ($format == 'txt') {
 
 		$value = isset($ary[1]) ? trim($ary[1]) : '';
 		$value = mb_wordwrap($value, OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80) - $longest_key - strlen(':') - OIDplus::config()->getValue('webwhois_output_format_spacer', 2));
-		$value = str_replace("\n", "\n$key:".str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)), $value);
+		$value = str_replace("\r\n", "\r\n$key:".str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)), $value);
 
 		if (!empty($value)) {
-			echo $key.':' . str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)) . $value . "\n";
+			echo $key.':' . str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)) . $value . "\r\n";
 		}
 	}
 
-	//echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\n";
+	//echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\r\n";
 
 	$cont = ob_get_contents();
 	ob_end_clean();
@@ -328,10 +328,10 @@ if ($format == 'txt') {
 		$signature = '';
 		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 			$signature = base64_encode($signature);
-			$signature = mb_wordwrap($signature, OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80) - strlen('% '), "\n", true);
-			$signature = "% -----BEGIN RSA SIGNATURE-----\n".
-			             preg_replace('/^/m', '% ', $signature)."\n".
-			             "% -----END RSA SIGNATURE-----\n";
+			$signature = mb_wordwrap($signature, OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80) - strlen('% '), "\r\n", true);
+			$signature = "% -----BEGIN RSA SIGNATURE-----\r\n".
+			             preg_replace('/^/m', '% ', $signature)."\r\n".
+			             "% -----END RSA SIGNATURE-----\r\n";
 			echo $signature;
 		}
 	}
