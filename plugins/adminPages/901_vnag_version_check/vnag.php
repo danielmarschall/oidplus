@@ -101,7 +101,7 @@ if ($installType === 'ambigous') {
 $job = new VNagMonitorDummy($out_stat, $out_msg);
 if (OIDplus::config()->getValue('vnag_version_check_password_protected','1') == '1') {
 	$job->http_visual_output = VNag::OUTPUT_NEVER;
-	$job->password_out = smallhash(OIDplus::baseConfig()->getValue('SERVER_SECRET').'/VNAG');
+	$job->password_out = OIDplusPageAdminVNagVersionCheck::vnag_password();
 	$job->outputHTML(_L('This page contains an encrypted VNag machine-readable status.'));
 } else {
 	$job->http_visual_output = VNag::OUTPUT_ALWAYS;

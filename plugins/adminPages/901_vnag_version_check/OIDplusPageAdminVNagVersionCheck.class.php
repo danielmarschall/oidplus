@@ -63,7 +63,7 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 			$cont = str_replace('%%ABS_LOC_PATH%%',OIDplus::localpath(__DIR__,false),$cont);
 			$cont = str_replace('%%ABS_WEB_PATH%%',OIDplus::webpath(__DIR__,false),$cont);
 			if (OIDplus::config()->getValue('vnag_version_check_password_protected','1') == '1') {
-				$cont = str_replace('%%WEBREADER_PASSWORD%%',smallhash(OIDplus::baseConfig()->getValue('SERVER_SECRET').'/VNAG'),$cont);
+				$cont = str_replace('%%WEBREADER_PASSWORD%%',self::vnag_password(),$cont);
 			} else {
 				$cont = str_replace('%%WEBREADER_PASSWORD%%','',$cont);
 			}
@@ -104,4 +104,9 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 	public function tree_search($request) {
 		return false;
 	}
+
+	public static function vnag_password() {
+		return sha3_512(OIDplus::baseConfig()->getValue('SERVER_SECRET').'/VNAG');
+	}
+
 }
