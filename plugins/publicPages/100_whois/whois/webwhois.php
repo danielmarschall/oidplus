@@ -284,8 +284,6 @@ if ($continue) {
 
 // Step 2: Format output
 
-ob_start();
-
 $format = isset($_REQUEST['format']) ? $_REQUEST['format'] : 'txt';
 
 if ($format == 'txt') {
@@ -295,6 +293,8 @@ if ($format == 'txt') {
 	foreach ($out as $line) {
 		$longest_key = max($longest_key, strlen(trim(explode(':',$line,2)[0])));
 	}
+
+	ob_start();
 
 	//echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\r\n";
 

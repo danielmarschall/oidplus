@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2021 Daniel Marschall, ViaThinkSoft
- * Version 2021-01-23
+ * Version 2021-04-14
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ define('UUID_NAMEBASED_NS_X500_DN', '6ba7b814-9dad-11d1-80b4-00c04fd430c8');
 function uuid_valid($uuid) {
 	$uuid = str_replace(array('-', '{', '}'), '', $uuid);
 	$uuid = strtoupper($uuid);
+	#$uuid = trim($uuid);
 
 	if (strlen($uuid) != 32) return false;
 
@@ -43,6 +44,7 @@ function uuid_valid($uuid) {
 function uuid_info($uuid) {
 	if (!uuid_valid($uuid)) return false;
 
+	#$uuid = trim($uuid);
 	# $uuid = str_replace(array('-', '{', '}'), '', $uuid);
 	$uuid = strtoupper($uuid);
 	$uuid = preg_replace('@[^0-9A-F]@', '', $uuid);
@@ -373,7 +375,7 @@ function gen_uuid_timebased() {
 		$out = array();
 		$ec = -1;
 		exec('uuidgen -t 2>/dev/null', $out, $ec);
-		if ($ec == 0) return $out[0];
+		if ($ec == 0) return trim($out[0]);
 	}
 
 	# If we hadn't any success yet, then implement the time based generation routine ourselves!
@@ -569,11 +571,11 @@ function gen_uuid_random() {
 		$out = array();
 		$ec = -1;
 		exec('uuidgen -r 2>/dev/null', $out, $ec);
-		if ($ec == 0) return $out[0];
+		if ($ec == 0) return trim($out[0]);
 
 		# On Debian Jessie: UUID V4 (Random)
 		if (file_exists('/proc/sys/kernel/random/uuid')) {
-			return file_get_contents('/proc/sys/kernel/random/uuid');
+			return trim(file_get_contents('/proc/sys/kernel/random/uuid'));
 		}
 	}
 

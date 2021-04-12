@@ -1,26 +1,26 @@
 <?php /* <ViaThinkSoftSignature>
-HrbDd/amRaxePAB/3etImWReGVZq3Id+EqkkxIqvWfmlR1WSCeAU5Y9tDeWXgBCXt
-x0zArKoecuVT0CCJX0IMtqb2TgnX1/osYvkMsXg9P2pc45hYRmrbaY/I4hU2QmriD
-dOr/ci0cq/HM1pyRVkfcfYY9BMjaqiQTKhMdPcbN57ymI3oYYU4iSby7M1oMa8uE+
-NJrtqJea+GtK269I/Kq3cyiuqDD3PIMMvMoZ+9/64whJng2SQBxwXSnc9bwPYhyok
-R73NF8ovZXsPxVQHN1SBGe9b+x3vkSdxG2P3DUPuIZLVrLQ4UhKIL78bL+nJVHLqZ
-025357ySHaE7meE+KUu79siZ3rZwa+PdHRJFpD6OB+LgsHhe+XovEd7tRgr3M5C6o
-eeXfzrvRt081f16tuUhXp+jjy1G4h9hI/dv09KDsPbEzzQHUkQMJ2J9J7vXtbHB9A
-MDxOoqfF9RzQOY5uAhot3pCabLxo2MIisEAQ1Nah24lm0zpfwjtZZK4hWPuT2z4uG
-XOwTvjJ9omiV8qDd2MrsEuKKd85LDcB1MmVsH3+tgbVrIuUqGxF6q6A43hN8CzUuz
-/vWUMiL87IQH+1a3Tz7tFN9G/+Bl9fdxhCOFoMzs5ySzWfBefF8YyWBagweBDftR0
-tkV8TRSa7OArUf/LU5LaPu1olOZnN2AR/nbyrW6PjFFQu1xXhVic3a0wKePzRdtWQ
-Lm+no5x3Stprvv3bY5q48bBiOKZRH0TSrm7QL6fRPECAigf7lL8bEQOElstLHaRCY
-hNUz/dzZGKpf7IjzetqmeJ9eAy507iq+toV2b5EfA6Gs1XUcMw1phSP1jqX3PhZz2
-yYbwi1JdyWeihrWsuFoP8+aIh9ErRZ85g88mIhvx2cCLrQGcF4rIAxpDslGvZVZNu
-66RBUldLcc9KbtmroVpvvhmyyDYXvSyfi9JSosK1NO/x7/yr5S5Deoc7FBxvEbJNG
-BgJrBuaenOJlIth5QF8Zc5iXELJRci7HdPQ8rdRxrWNWzlnJhsuMPQihkP3/Q9aLz
-hmYHJBIuXhOApuXgHk/uwyimFW/dDdkJbLEdDFvTaCrhbMaqa+MKx23GSGLO/H9bg
-z1IE0Hm4oqiv0qaTLIQ79w45zfo6ecpmGN4Hlmc0QWUhGLotSMJrOwLNiPMTRgBUa
-QNrwpmTHlxke7UjjD7f5RlsqYLIAGpXJKTxMJtFhYHB4v5xf5WQEzyNOxs+aYgrZf
-LZmi2JtO1QbNslOndrAqbEJKe/FAA6Sj4Tj5h8rBKha9mP+A6g5YybMZ3D5RH1S4N
-eM6K7VYei3hoW+1jz8cTDStgaV+2IhNrv96hRH2aMGut+fAwJo/8WDQ3ilsArB670
-Q==
+k4m/Emj7hYYrZwtoLj9vpNheGIz7+qu1IqypYD9i3AwSjQI2PVtCgCkFZKypJZjwA
+B/G3Tg6U9RMJ/o2poK5iAvuyEguNumk0zncYRtydw+SxR7IEi9lwZct7A6RNnqcRK
+uaSYpCWXF27ucuQnWCt2bIN9vDs+3BN15uDxj3cDjuFtIjJpIBLW2UKRkLSCDsM3r
+xEmsX5q64IQIaX0mgJmHDI8fwOOIT2IY/WvRz+kGa8FswfiEnr2bm0X2hp3z0tP65
+NkpjhvbZ2sZNErNub+Ws1QOasM6OxvwU840h49kpHlBM6rAdsjO5GH9oQcl2w+vlR
+0ilqtGXo6nzTwoycbaSSVFelDM3xGBtJ0df9TNqWbLJ9kgjVTe7qVhbxZbFmXAb5O
+ZpKXMQVbsLnrfOboMErd5zBNj1aLCTvRbUC0cSN7CaD9a0oQpEO4SJU00M55ySimo
+pdb1uMDSaNydEZ/7cfWW8rnWTw5Jvxac5KDjNrgYEPZBWRzCNNfZTMaW1JX6NLQjn
+VjkFiwcxikZoHT0pOc1jHFa1/x+lzPp9gGqwx9fFQ6NlEbGv9DEBtySPwNUxG4EI6
+xNr5gJG9RxjYIKSDxO0WUA5mS5OrcU+cNGmYrEvSKS5ZYRZudzjVbtuduFFrmJdg9
+IAAccNv29Wwl9dn+zOD/FWf31Wc48JGPLiqM607WMQqkRyXX5ezYVxvaIIPSX6YIr
+YhxzckheRcEsq8ciu62Rz2InuB0NuILfoLOV3XRxEmkYZefNQi8RlYlVYRxY9E5YG
+AAB7Ai0ZP9fd9qkfZ3zhuN4shqVEBlve9QLBPlIbAi3H82ZpThrR94bhFNsTblRr5
+JCcBUCrG9wPJ8g2Aa7dSGIm8lPFdy5Mg/7kAI619+0DjLNL+qsBnkqsTAePbKK6sV
+M6WRWeEPMaSZ0qDjHdOQiUsBe4Dy8KEvJ1LxDL20S06wJ6lCoXgEPSchaGnv+3oGj
+ltuYmyllwofAA/QlpDLxlLw2O0D9esdJqpzKxsvO9c5F/dePWUzHZpQzR6smq2CyG
+PRojTUzpiCS2tcEzFUXk/nQHZQ1Qe8ZOlkEku5hDV+AMpGjLYP9u1cLHRHs5qtfN6
+/ucubUsvaFYfNHrpJLW8hcOBUQooFp3WB0asQl+0z1UTfq374+jh6gGosD0zm4lQg
+kvaKHqsh+jF/E/oHeLnD0r0LjG/7rJ8KYe7uBboW9jLtoaYNMXcp6G5kVyTWYppba
+IKlWiLUSNr4UYcmWnMMBdupepbxNGEJ9nEVzFuhOZfwLrQ6lRlkJqIL6Z6qBHAx+S
+pHVmoES/mOPUMzr9EP6/vQJhLqbpPQHH9LJsuzEzyNM74g0D7kcOUhOVNmOQoR+gu
+A==
 </ViaThinkSoftSignature> */ ?>
 <?php
 
@@ -35,7 +35,7 @@ Q==
 
       Developed by Daniel Marschall             www.viathinksoft.com
       Licensed under the terms of the Apache 2.0 license
-      Revision 2021-03-23
+      Revision 2021-04-10
 
 */
 
@@ -347,7 +347,7 @@ function _empty($x) {
 }
 
 abstract class VNag {
-	/*public*/ const VNAG_VERSION = '2021-03-23';
+	/*public*/ const VNAG_VERSION = '2021-04-10';
 
 	// Status 0..3 for STATUSMODEL_SERVICE (the default status model):
 	# The guideline states: "Higher-level errors (such as name resolution errors, socket timeouts, etc) are outside of the control of plugins and should generally NOT be reported as UNKNOWN states."
@@ -1052,7 +1052,7 @@ abstract class VNag {
 						$payload = openssl_decrypt($payload, $cryptInfo['method'], $password, 0, $cryptInfo['iv']);
 					}
 
-					if (!is_null($this->pubkey)) {
+					if (!is_null($this->pubkey) && ($this->pubkey !== '')) {
 						if (substr($this->pubkey,0,3) === '---') {
 							$public_key = $this->pubkey;
 						} else {
@@ -1136,7 +1136,7 @@ abstract class VNag {
 
 		$dataset = array();
 
-		if (!is_null($this->privkey)) {
+		if (!is_null($this->privkey) && ($this->privkey !== '')) {
 			if (!function_exists('openssl_pkey_get_private') || !function_exists('openssl_sign')) {
 				throw new VNagException(VNagLang::$openssl_missing);
 			}

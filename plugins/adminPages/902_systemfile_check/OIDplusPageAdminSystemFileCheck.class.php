@@ -90,7 +90,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 						$hash_new = $theirs[$filename_old];
 						if ($hash_old != $hash_new) {
 							$num++;
-							$out['text'] .= "<b>"._L('Checksum mismatch').":</b> $filename_old (<a target=\"_blank\" href=\"https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/oidplus/trunk/$filename_old?revision=520&view=co\">"._L('Expected file contents')."</a>)\n";
+							$out['text'] .= "<b>"._L('Checksum mismatch').":</b> $filename_old (<a target=\"_blank\" href=\"https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/oidplus/trunk/$filename_old?revision=$ver&view=co\">"._L('Expected file contents')."</a>)\n";
 						}
 					}
 				}
