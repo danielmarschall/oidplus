@@ -462,7 +462,8 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					'conditionalselect' => 'window.open('.js_escape(self::getHyperlinkURL($realfile)).'); false;',
 					'icon' => $tree_icon,
 					'text' => $this->getHyperlinkTitle($realfile).' '.$hyperlink_pic,
-					'state' => array("opened" => $depth <= OIDplus::config()->getValue('resource_plugin_autoopen_level', 1)-1)
+					'state' => array("opened" => $depth <= OIDplus::config()->getValue('resource_plugin_autoopen_level', 1)-1),
+					'a_attr' => array("href" => self::getHyperlinkURL($realfile))
 				);
 			} else {
 				$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_doc&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
