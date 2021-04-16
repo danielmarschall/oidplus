@@ -69,7 +69,21 @@ class OIDplusMenuUtils {
 			$json = self::tree_populate($req_id);
 		}
 
+		self::addHrefIfRequired($json);
+
 		return $json;
+	}
+
+	protected static function addHrefIfRequired(&$json) {
+		if (!is_array($json)) return;
+		foreach ($json as &$item) {
+			if (!isset($item['a_attr']) && isset($item['id'])) {
+				$item['a_attr'] = array("href" => "?goto=".urlencode($item['id']));
+			}
+			if (isset($item['children'])) {
+				self::addHrefIfRequired($item['children']);
+			}
+		}
 	}
 
 	public static function tree_populate($parent, $goto_path=null) {
