@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2021 Daniel Marschall, ViaThinkSoft
- * Version 2021-04-14
+ * Version 2021-04-17
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -551,6 +551,13 @@ function gen_uuid_md5_namebased($namespace_uuid, $name) {
 
 // Version 4 (Random) UUID
 function gen_uuid_random() {
+	# On Windows: Requires
+	#    extension_dir = "C:\php-8.0.3-nts-Win32-vs16-x64\ext"
+	#    extension=com_dotnet
+	if (function_exists('com_create_guid')) {
+		return strtolower(trim(com_create_guid(), '{}'));
+	}
+
 	# On Debian: apt-get install php-uuid
 	# extension_loaded('uuid')
 	if (function_exists('uuid_create')) {
