@@ -77,9 +77,16 @@ class OIDplusMenuUtils {
 	protected static function addHrefIfRequired(&$json) {
 		if (!is_array($json)) return;
 		foreach ($json as &$item) {
-			if (!isset($item['a_attr']) && isset($item['id'])) {
-				$item['a_attr'] = array("href" => "?goto=".urlencode($item['id']));
+			if (isset($item['id'])) {
+				if (!isset($item['conditionalselect']) || ($item['conditionalselect'] != 'false')) {
+					if (!isset($item['a_attr'])) {
+						$item['a_attr'] = array("href" => "?goto=".urlencode($item['id']));
+					} else if (!isset($item['a_attr']['href'])) {
+						$item['a_attr']['href'] = "?goto=".urlencode($item['id']);
+					}
+				}
 			}
+
 			if (isset($item['children'])) {
 				self::addHrefIfRequired($item['children']);
 			}
