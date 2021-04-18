@@ -22,6 +22,7 @@
 	</css>
 
 	<js>
+		<file>OIDplusPagePublicSearch.js</file>
 	</js>
 	
 </manifest>
