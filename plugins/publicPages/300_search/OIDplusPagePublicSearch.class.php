@@ -29,6 +29,97 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		});
 	}
 
+	private function doSearch($params) {
+
+					$output = '';
+
+					// Note: The SQL collation defines if search is case sensitive or case insensitive
+
+					$min_length = OIDplus::config()->getValue('search_min_term_length');
+
+					$search_term = isset($params['term']) ? $params['term'] : '';
+					$search_term = trim($search_term);
+
+					$ns = isset($params['namespace']) ? $params['namespace'] : '';
+
+					if (strlen($search_term) == 0) {
+						$output .= '<p><font color="red">'._L('Error: You must enter a search term.').'</font></p>';
+					} else if (strlen($search_term) < $min_length) {
+						$output .= '<p><font color="red">'._L('Error: Search term minimum length is %1 characters.',$min_length).'</font></p>';
+					} else {
+						if ($ns == 'oidplus:ra') {
+							$output .= '<h2>'._L('Search results for RA %1',htmlentities($search_term)).'</h2>';
+
+							$sql_where = array(); $prep_where = array();
+							$sql_where[] = "email like ?";   $prep_where[] = '%'.$search_term.'%';
+							$sql_where[] = "ra_name like ?"; $prep_where[] = '%'.$search_term.'%';
+
+							if (count($sql_where) == 0) $sql_where[] = '1=0';
+							$res = OIDplus::db()->query("select * from ###ra where (".implode(' or ', $sql_where).")", $prep_where);
+
+							$count = 0;
+							while ($row = $res->fetch_object()) {
+								$email = str_replace('@', '&', $row->email);
+								$output .= '<p><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
+								$count++;
+							}
+							if ($count == 0) {
+								$output .= '<p>'._L('Nothing found').'</p>';
+							}
+						} else {
+							$output .= '<h2>'._L('Search results for %1 (%2)',htmlentities($search_term),htmlentities($ns)).'</h2>';
+
+							$sql_where = array(); $prep_where = array();
+							$sql_where[] = "id like ?"; $prep_where[] = '%'.$search_term.'%'; // TODO: should we rather do findFitting(), so we can e.g. find GUIDs with different notation?
+							if (isset($params["search_title"]))       { $sql_where[] = "title like ?";       $prep_where[] = '%'.$search_term.'%'; }
+							if (isset($params["search_description"])) { $sql_where[] = "description like ?"; $prep_where[] = '%'.$search_term.'%'; }
+
+							if (isset($params["search_asn1id"])) {
+								$res = OIDplus::db()->query("select * from ###asn1id where name like ?", array('%'.$search_term.'%'));
+								while ($row = $res->fetch_object()) {
+									$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
+								}
+							}
+
+							if (isset($params["search_iri"])) {
+								$res = OIDplus::db()->query("select * from ###iri where name like ?", array('%'.$search_term.'%'));
+								while ($row = $res->fetch_object()) {
+									$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
+								}
+							}
+
+							if (count($sql_where) == 0) $sql_where[] = '1=0';
+							array_unshift($prep_where, $ns.':%');
+
+							$res = OIDplus::db()->query("select * from ###objects where id like ? and (".implode(' or ', $sql_where).")", $prep_where);
+
+							$count = 0;
+							while ($row = $res->fetch_object()) {
+								$output .= '<p><a '.OIDplus::gui()->link($row->id).'>'.htmlentities($row->id).'</a>: <b>'.htmlentities($row->title).'</b></p>'; // TODO: also show asn1id; highlight search match?
+								$count++;
+							}
+							if ($count == 0) {
+								$output .= '<p>'._L('Nothing found').'</p>';
+							}
+						}
+					}
+
+					return $output;
+
+
+
+	}
+
+	public function action($actionID, $params) {
+
+		if ($actionID == 'search') {
+			// Search with JavaScript/AJAX
+			$ret = $this->doSearch($params);
+			return array("status" => 0, "output" => $ret);
+		}
+
+	}
+
 	public function gui($id, &$out, &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:search') {
 			$handled = true;
@@ -83,78 +174,15 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				</div>
 				 <br>
 
-				<input type="submit" value="'._L('Search').'">
+				<input type="submit" value="'._L('Search').'" onclick="return search_button_click()">
 				</form>';
 
+				$out['text'] .= '<div id="search_output">'; // will be filled with either AJAX or staticly (HTML form submit)
 				if (isset($_POST['search'])) {
-					// Note: The SQL collation defines if search is case sensitive or case insensitive
-
-					$min_length = OIDplus::config()->getValue('search_min_term_length');
-
-					$search_term = trim($search_term);
-
-					if (strlen($search_term) == 0) {
-						$out['text'] .= '<p><font color="red">'._L('Error: You must enter a search term.').'</font></p>';
-					} else if (strlen($search_term) < $min_length) {
-						$out['text'] .= '<p><font color="red">'._L('Error: Search term minimum length is %1 characters.',$min_length).'</font></p>';
-					} else {
-						if ($ns == 'oidplus:ra') {
-							$out['text'] .= '<h2>'._L('Search results for RA %1',htmlentities($search_term)).'</h2>';
-
-							$sql_where = array(); $prep_where = array();
-							$sql_where[] = "email like ?";   $prep_where[] = '%'.$search_term.'%';
-							$sql_where[] = "ra_name like ?"; $prep_where[] = '%'.$search_term.'%';
-
-							if (count($sql_where) == 0) $sql_where[] = '1=0';
-							$res = OIDplus::db()->query("select * from ###ra where (".implode(' or ', $sql_where).")", $prep_where);
-
-							$count = 0;
-							while ($row = $res->fetch_object()) {
-								$email = str_replace('@', '&', $row->email);
-								$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
-								$count++;
-							}
-							if ($count == 0) {
-								$out['text'] .= '<p>'._L('Nothing found').'</p>';
-							}
-						} else {
-							$out['text'] .= '<h2>'._L('Search results for %1 (%2)',htmlentities($search_term),htmlentities($ns)).'</h2>';
-
-							$sql_where = array(); $prep_where = array();
-							$sql_where[] = "id like ?"; $prep_where[] = '%'.$search_term.'%'; // TODO: should we rather do findFitting(), so we can e.g. find GUIDs with different notation?
-							if (isset($_POST["search_title"]))       { $sql_where[] = "title like ?";       $prep_where[] = '%'.$search_term.'%'; }
-							if (isset($_POST["search_description"])) { $sql_where[] = "description like ?"; $prep_where[] = '%'.$search_term.'%'; }
-
-							if (isset($_POST["search_asn1id"])) {
-								$res = OIDplus::db()->query("select * from ###asn1id where name like ?", array('%'.$search_term.'%'));
-								while ($row = $res->fetch_object()) {
-									$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
-								}
-							}
-
-							if (isset($_POST["search_iri"])) {
-								$res = OIDplus::db()->query("select * from ###iri where name like ?", array('%'.$search_term.'%'));
-								while ($row = $res->fetch_object()) {
-									$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
-								}
-							}
-
-							if (count($sql_where) == 0) $sql_where[] = '1=0';
-							array_unshift($prep_where, $ns.':%');
-
-							$res = OIDplus::db()->query("select * from ###objects where id like ? and (".implode(' or ', $sql_where).")", $prep_where);
-
-							$count = 0;
-							while ($row = $res->fetch_object()) {
-								$out['text'] .= '<p><a '.OIDplus::gui()->link($row->id).'>'.htmlentities($row->id).'</a>: <b>'.htmlentities($row->title).'</b></p>'; // TODO: also show asn1id; highlight search match?
-								$count++;
-							}
-							if ($count == 0) {
-								$out['text'] .= '<p>'._L('Nothing found').'</p>';
-							}
-						}
-					}
+					// Search with NoJS/HTML
+					$out['text'] .= $this->doSearch($_POST);
 				}
+				$out['text'] .= '</div>';
 			} catch (Exception $e) {
 				$out['text'] = _L('Error: %1',$e->getMessage());
 			}
