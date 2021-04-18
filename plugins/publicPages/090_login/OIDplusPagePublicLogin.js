@@ -23,6 +23,13 @@ function raLogout(email) {
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.90",
@@ -30,6 +37,7 @@ function raLogout(email) {
 			email:email,
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
@@ -49,6 +57,13 @@ function raLogin(email, password) {
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.90",
@@ -58,6 +73,7 @@ function raLogin(email, password) {
 			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 			if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 		},
@@ -87,6 +103,13 @@ function adminLogin(password) {
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.90",
@@ -95,6 +118,7 @@ function adminLogin(password) {
 			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 			if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 		},
@@ -119,12 +143,20 @@ function adminLogout() {
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.90",
 			action:"admin_logout",
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {

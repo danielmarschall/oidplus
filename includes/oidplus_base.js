@@ -158,12 +158,20 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 				$.ajax({
 					url:"ajax.php",
 					method:"POST",
+					beforeSend: function(jqXHR, settings) {
+						$.xhrPool.abortAll();
+						$.xhrPool.add(jqXHR);
+					},
+					complete: function(jqXHR, text) {
+						$.xhrPool.remove(jqXHR);
+					},
 					data:{
 						csrf_token:csrf_token,
 						action:"tree_search",
 						search:id
 					},
 					error:function(jqXHR, textStatus, errorThrown) {
+						if (errorThrown == "abort") return;
 						console.error(_L("Error: %1",errorThrown));
 					},
 					success:function(data) {
@@ -553,4 +561,23 @@ function show_waiting_anim() {
 
 function hide_waiting_anim() {
 	$("#loading").hide();
+}
+
+/* Mini-framework to abort all AJAX requests if a new request is made */
+
+$.xhrPool = [];
+$.xhrPool.add = function(jqXHR) {
+	$.xhrPool.push(jqXHR);
+}
+$.xhrPool.remove = function(jqXHR) {
+	var index = $.xhrPool.indexOf(jqXHR);
+	if (index > -1) {
+		$.xhrPool.splice(index, 1);
+	}
+};
+$.xhrPool.abortAll = function() {
+	var calls = Array.from($.xhrPool);
+	$.each(calls, function(key, value) {
+		value.abort();
+	});
 }

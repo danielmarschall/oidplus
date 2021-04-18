@@ -20,6 +20,13 @@ function doUpdateOIDplus() {
 	$.ajax({
 		url: "ajax.php",
 		type: "POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.900",
@@ -27,6 +34,7 @@ function doUpdateOIDplus() {
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
 			hide_waiting_anim();
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 		},
 		success: function(data) {

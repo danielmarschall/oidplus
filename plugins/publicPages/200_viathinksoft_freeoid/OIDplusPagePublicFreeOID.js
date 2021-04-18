@@ -19,6 +19,13 @@ function freeOIDFormOnSubmit() {
 	$.ajax({
 		url: "ajax.php",
 		type: "POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.200",
@@ -27,6 +34,7 @@ function freeOIDFormOnSubmit() {
 			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 			if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 		},
@@ -51,6 +59,13 @@ function activateFreeOIDFormOnSubmit() {
 	$.ajax({
 		url: "ajax.php",
 		type: "POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.200",
@@ -65,6 +80,7 @@ function activateFreeOIDFormOnSubmit() {
 			timestamp: $("#timestamp").val()
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 		},
 		success: function(data) {

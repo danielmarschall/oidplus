@@ -29,90 +29,104 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		});
 	}
 
+	private function prepareSearchParams(&$params, $is_searching) {
+		$params['term'] = isset($params['term']) ? trim($params['term']) : '';
+		$params['namespace'] = isset($params['namespace']) ? trim($params['namespace']) : '';
+
+		// Default criteria selection:
+		if ($is_searching) {
+			$params['search_title'] = isset($params['search_title']) && $params['search_title'];
+			$params['search_description'] = isset($params['search_description']) && $params['search_description'];
+			$params['search_asn1id'] = isset($params['search_asn1id']) && $params['search_asn1id'];
+			$params['search_iri'] = isset($params['search_iri']) && $params['search_iri'];
+		} else {
+			$params['search_title'] = true;
+			$params['search_description'] = false;
+			$params['search_asn1id'] = true;
+			$params['search_iri'] = true;
+		}
+	}
+
 	private function doSearch($params) {
+		$output = '';
 
-					$output = '';
+		// Note: The SQL collation defines if search is case sensitive or case insensitive
 
-					// Note: The SQL collation defines if search is case sensitive or case insensitive
+		$min_length = OIDplus::config()->getValue('search_min_term_length');
 
-					$min_length = OIDplus::config()->getValue('search_min_term_length');
+		$this->prepareSearchParams($params, true);
 
-					$search_term = isset($params['term']) ? $params['term'] : '';
-					$search_term = trim($search_term);
+		if (strlen($params['term']) == 0) {
+			$output .= '<p><font color="red">'._L('Error: You must enter a search term.').'</font></p>';
+		} else if (strlen($params['term']) < $min_length) {
+			$output .= '<p><font color="red">'._L('Error: Search term minimum length is %1 characters.',$min_length).'</font></p>';
+		} else {
+			if ($params['namespace'] == 'oidplus:ra') {
+				$output .= '<h2>'._L('Search results for RA %1',htmlentities($params['term'])).'</h2>';
 
-					$ns = isset($params['namespace']) ? $params['namespace'] : '';
+				$sql_where = array(); $prep_where = array();
+				$sql_where[] = "email like ?";   $prep_where[] = '%'.$params['term'].'%';
+				$sql_where[] = "ra_name like ?"; $prep_where[] = '%'.$params['term'].'%';
 
-					if (strlen($search_term) == 0) {
-						$output .= '<p><font color="red">'._L('Error: You must enter a search term.').'</font></p>';
-					} else if (strlen($search_term) < $min_length) {
-						$output .= '<p><font color="red">'._L('Error: Search term minimum length is %1 characters.',$min_length).'</font></p>';
-					} else {
-						if ($ns == 'oidplus:ra') {
-							$output .= '<h2>'._L('Search results for RA %1',htmlentities($search_term)).'</h2>';
+				if (count($sql_where) == 0) $sql_where[] = '1=0';
+				$res = OIDplus::db()->query("select * from ###ra where (".implode(' or ', $sql_where).")", $prep_where);
 
-							$sql_where = array(); $prep_where = array();
-							$sql_where[] = "email like ?";   $prep_where[] = '%'.$search_term.'%';
-							$sql_where[] = "ra_name like ?"; $prep_where[] = '%'.$search_term.'%';
+				$count = 0;
+				while ($row = $res->fetch_object()) {
+					$email = str_replace('@', '&', $row->email);
+					$output .= '<p><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
+					$count++;
+				}
+				if ($count == 0) {
+					$output .= '<p>'._L('Nothing found').'</p>';
+				}
+			} else {
+				$output .= '<h2>'._L('Search results for %1 (%2)',htmlentities($params['term']),htmlentities($params['namespace'])).'</h2>';
 
-							if (count($sql_where) == 0) $sql_where[] = '1=0';
-							$res = OIDplus::db()->query("select * from ###ra where (".implode(' or ', $sql_where).")", $prep_where);
+				$sql_where = array(); $prep_where = array();
+				$sql_where[] = "id like ?"; $prep_where[] = '%'.$params['term'].'%'; // TODO: should we rather do findFitting(), so we can e.g. find GUIDs with different notation?
+				if ($params["search_title"])       { $sql_where[] = "title like ?";       $prep_where[] = '%'.$params['term'].'%'; }
+				if ($params["search_description"]) { $sql_where[] = "description like ?"; $prep_where[] = '%'.$params['term'].'%'; }
 
-							$count = 0;
-							while ($row = $res->fetch_object()) {
-								$email = str_replace('@', '&', $row->email);
-								$output .= '<p><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
-								$count++;
-							}
-							if ($count == 0) {
-								$output .= '<p>'._L('Nothing found').'</p>';
-							}
-						} else {
-							$output .= '<h2>'._L('Search results for %1 (%2)',htmlentities($search_term),htmlentities($ns)).'</h2>';
-
-							$sql_where = array(); $prep_where = array();
-							$sql_where[] = "id like ?"; $prep_where[] = '%'.$search_term.'%'; // TODO: should we rather do findFitting(), so we can e.g. find GUIDs with different notation?
-							if (isset($params["search_title"]))       { $sql_where[] = "title like ?";       $prep_where[] = '%'.$search_term.'%'; }
-							if (isset($params["search_description"])) { $sql_where[] = "description like ?"; $prep_where[] = '%'.$search_term.'%'; }
-
-							if (isset($params["search_asn1id"])) {
-								$res = OIDplus::db()->query("select * from ###asn1id where name like ?", array('%'.$search_term.'%'));
-								while ($row = $res->fetch_object()) {
-									$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
-								}
-							}
-
-							if (isset($params["search_iri"])) {
-								$res = OIDplus::db()->query("select * from ###iri where name like ?", array('%'.$search_term.'%'));
-								while ($row = $res->fetch_object()) {
-									$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
-								}
-							}
-
-							if (count($sql_where) == 0) $sql_where[] = '1=0';
-							array_unshift($prep_where, $ns.':%');
-
-							$res = OIDplus::db()->query("select * from ###objects where id like ? and (".implode(' or ', $sql_where).")", $prep_where);
-
-							$count = 0;
-							while ($row = $res->fetch_object()) {
-								$output .= '<p><a '.OIDplus::gui()->link($row->id).'>'.htmlentities($row->id).'</a>: <b>'.htmlentities($row->title).'</b></p>'; // TODO: also show asn1id; highlight search match?
-								$count++;
-							}
-							if ($count == 0) {
-								$output .= '<p>'._L('Nothing found').'</p>';
-							}
-						}
+				if ($params["search_asn1id"]) {
+					$res = OIDplus::db()->query("select * from ###asn1id where name like ?", array('%'.$params['term'].'%'));
+					while ($row = $res->fetch_object()) {
+						$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
 					}
+				}
 
-					return $output;
+				if ($params["search_iri"]) {
+					$res = OIDplus::db()->query("select * from ###iri where name like ?", array('%'.$params['term'].'%'));
+					while ($row = $res->fetch_object()) {
+						$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
+					}
+				}
 
+				if (count($sql_where) == 0) $sql_where[] = '1=0';
+				array_unshift($prep_where, $params['namespace'].':%');
 
+				$res = OIDplus::db()->query("select * from ###objects where id like ? and (".implode(' or ', $sql_where).")", $prep_where);
 
+				$count = 0;
+				while ($row = $res->fetch_object()) {
+					$output .= '<p><a '.OIDplus::gui()->link($row->id).'>'.htmlentities($row->id).'</a>: <b>'.htmlentities($row->title).'</b></p>'; // TODO: also show asn1id; highlight search match?
+					$count++;
+				}
+				if ($count == 0) {
+					$output .= '<p>'._L('Nothing found').'</p>';
+				}
+			}
+		}
+
+		return $output;
 	}
 
 	public function action($actionID, $params) {
 
 		if ($actionID == 'search') {
+
+sleep(2);
+
 			// Search with JavaScript/AJAX
 			$ret = $this->doSearch($params);
 			return array("status" => 0, "output" => $ret);
@@ -130,20 +144,13 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 			$out['text'] = '';
 
 			try {
-				$search_term = isset($_POST['term']) ? $_POST['term'] : '';
-				$ns = isset($_POST['namespace']) ? $_POST['namespace'] : '';
+				$params = $_POST;
 
-				if (!isset($_POST['search'])) {
-					// Default criteria selection
-					$_POST['search_title'] = '1';
-					$_POST['search_asn1id'] = '1';
-					$_POST['search_iri'] = '1';
-				}
+				$this->prepareSearchParams($params, isset($params['search']));
 
-				// TODO: make it via AJAX? Reloading the whole page is not good. But attention: Also allow NoScript
 				$out['text'] .= '<form id="searchForm" action="?goto=oidplus:search" method="POST">
 				                 <input type="hidden" name="search" value="1">
-				                 '._L('Search for').': <input type="text" id="term" name="term" value="'.htmlentities($search_term).'"><br><br>
+				                 '._L('Search for').': <input type="text" id="term" name="term" value="'.htmlentities($params['term']).'"><br><br>
 				                 <script>
 				                 function searchNsSelect(ns) {
 				                     document.getElementById("search_options_oid").style.display = (ns == "oid") ? "block" : "none";
@@ -157,19 +164,19 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				                 '._L('Search in').': <select name="namespace" id="namespace" onchange="searchNsSelect(this.value);"><br><br>';
 
 				foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-					$out['text'] .= '<option value="'.htmlentities($ot::ns()).'"'.(($ns == $ot::ns()) ? ' selected' : '').'>'.htmlentities($ot::objectTypeTitle()).'</option>';
+					$out['text'] .= '<option value="'.htmlentities($ot::ns()).'"'.(($params['namespace'] == $ot::ns()) ? ' selected' : '').'>'.htmlentities($ot::objectTypeTitle()).'</option>';
 				}
-				$out['text'] .= '<option value="oidplus:ra"'.(($ns == 'oidplus:ra') ? ' selected' : '').'>'._L('Registration Authority').'</option>
+				$out['text'] .= '<option value="oidplus:ra"'.(($params['namespace'] == 'oidplus:ra') ? ' selected' : '').'>'._L('Registration Authority').'</option>
 				                 </select><br><br>
 				<div id="search_options_ra">
 				<!-- TODO: RA specific selection criterias -->
 				</div>
 				<div id="search_options_object">
-				            <input type="checkbox" name="search_title" id="search_title" value="1"'.(isset($_POST["search_title"]) ? ' checked' : '').'> <label for="search_title">'._L('Search in field "Title"').'</label><br>
-				            <input type="checkbox" name="search_description" id="search_description" value="1"'.(isset($_POST["search_description"]) ? ' checked' : '').'> <label for="search_description">'._L('Search in field "Description"').'</label><br>
+				            <input type="checkbox" name="search_title" id="search_title" value="1"'.($params["search_title"] ? ' checked' : '').'> <label for="search_title">'._L('Search in field "Title"').'</label><br>
+				            <input type="checkbox" name="search_description" id="search_description" value="1"'.($params["search_description"] ? ' checked' : '').'> <label for="search_description">'._L('Search in field "Description"').'</label><br>
 				<div id="search_options_oid">
-			            <input type="checkbox" name="search_asn1id" id="search_asn1id" value="1"'.(isset($_POST["search_asn1id"]) ? ' checked' : '').'> <label for="search_asn1id">'._L('Search in field "ASN.1 identifier" (only OIDs)').'</label><br>
-			            <input type="checkbox" name="search_iri" id="search_iri" value="1"'.(isset($_POST["search_iri"]) ? ' checked' : '').'> <label for="search_iri">'._L('Search in field "Unicode label" (only OIDs)').'</label><br>
+			            <input type="checkbox" name="search_asn1id" id="search_asn1id" value="1"'.($params["search_asn1id"] ? ' checked' : '').'> <label for="search_asn1id">'._L('Search in field "ASN.1 identifier" (only OIDs)').'</label><br>
+			            <input type="checkbox" name="search_iri" id="search_iri" value="1"'.($params["search_iri"] ? ' checked' : '').'> <label for="search_iri">'._L('Search in field "Unicode label" (only OIDs)').'</label><br>
 				</div>
 				</div>
 				 <br>
@@ -178,9 +185,9 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				</form>';
 
 				$out['text'] .= '<div id="search_output">'; // will be filled with either AJAX or staticly (HTML form submit)
-				if (isset($_POST['search'])) {
+				if (isset($params['search'])) {
 					// Search with NoJS/HTML
-					$out['text'] .= $this->doSearch($_POST);
+					$out['text'] .= $this->doSearch($params);
 				}
 				$out['text'] .= '</div>';
 			} catch (Exception $e) {
