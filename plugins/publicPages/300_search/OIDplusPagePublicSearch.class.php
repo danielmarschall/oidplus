@@ -124,9 +124,6 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 	public function action($actionID, $params) {
 
 		if ($actionID == 'search') {
-
-sleep(2);
-
 			// Search with JavaScript/AJAX
 			$ret = $this->doSearch($params);
 			return array("status" => 0, "output" => $ret);
