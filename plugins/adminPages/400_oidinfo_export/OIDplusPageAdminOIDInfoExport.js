@@ -23,6 +23,13 @@ function importMissingOid(oid) {
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.400",
@@ -30,6 +37,7 @@ function importMissingOid(oid) {
 			oid:oid
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
@@ -59,8 +67,16 @@ function uploadXmlFile(file) {
 		method:"POST",
 		processData:false,
 		contentType:false,
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: form_data,
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {

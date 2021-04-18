@@ -21,6 +21,13 @@ function raLoginLdap(email, password) {
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.800",
@@ -30,6 +37,7 @@ function raLoginLdap(email, password) {
 			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 			if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
 		},

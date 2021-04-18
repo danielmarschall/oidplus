@@ -19,12 +19,20 @@ function generateRandomUUID() {
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
 			action:"generate_uuid"
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
@@ -109,7 +117,14 @@ function crudActionInsert(parent) {
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
-		data:{
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
+		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
 			action:"Insert",
@@ -123,6 +138,7 @@ function crudActionInsert(parent) {
 			parent:parent
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
@@ -177,6 +193,13 @@ function crudActionUpdate(id, parent) {
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
@@ -190,6 +213,7 @@ function crudActionUpdate(id, parent) {
 			parent:parent
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
@@ -230,6 +254,13 @@ function crudActionDelete(id, parent) {
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
@@ -238,6 +269,7 @@ function crudActionDelete(id, parent) {
 			parent:parent
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
@@ -257,6 +289,13 @@ function updateDesc() {
 	$.ajax({
 		url:"ajax.php",
 		method:"POST",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
 		data: {
 			csrf_token:csrf_token,
 			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
@@ -267,6 +306,7 @@ function updateDesc() {
 			description:tinyMCE.get('description').getContent()
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
 			alert(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
