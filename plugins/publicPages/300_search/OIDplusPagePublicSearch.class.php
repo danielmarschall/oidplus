@@ -61,6 +61,8 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		} else if (strlen($params['term']) < $min_length) {
 			$output .= '<p><font color="red">'._L('Error: Search term minimum length is %1 characters.',$min_length).'</font></p>';
 		} else {
+			// TODO: case insensitive comparison (or should we leave that to the DBMS?)
+
 			if ($params['namespace'] == 'oidplus:ra') {
 				$output .= '<h2>'._L('Search results for RA %1',htmlentities($params['term'])).'</h2>';
 
@@ -109,13 +111,29 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 
 				$count = 0;
 				while ($row = $res->fetch_object()) {
-					$output .= '<p><a '.OIDplus::gui()->link($row->id).'>'.htmlentities($row->id).'</a>: <b>'.htmlentities($row->title).'</b></p>'; // TODO: also show asn1id; highlight search match?
+					$output .= '<p><a '.OIDplus::gui()->link($row->id).'>'.htmlentities($row->id).'</a>';
+
+					$asn1ids = array();
+					$res2 = OIDplus::db()->query("select name from ###asn1id where oid = ?", array($row->id));
+					while ($row2 = $res2->fetch_object()) {
+						$asn1ids[] = $row2->name;
+					}
+					if (count($asn1ids) > 0) {
+						$asn1ids = implode(', ', $asn1ids);
+						$output .= ' ('.$asn1ids.')';
+					}
+
+					if (htmlentities($row->title) != '') $output .= ': <b>'.htmlentities($row->title).'</b></p>';
 					$count++;
 				}
 				if ($count == 0) {
 					$output .= '<p>'._L('Nothing found').'</p>';
 				}
 			}
+
+			// Highlight exact match
+			//$output = str_ireplace($params['term'], '<font color="red">'.$params['term'].'</font>', $output);
+			$output = preg_replace('@('.preg_quote($params['term'],'@').')@i', '<font color="red">\\1</font>', $output); // this variant keeps the case of the search term
 		}
 
 		return $output;
