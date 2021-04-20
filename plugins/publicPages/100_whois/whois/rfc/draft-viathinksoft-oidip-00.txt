@@ -1,0 +1,1232 @@
+ 
+
+
+
+INTERNET-DRAFT                                              D. Marschall
+Intended Status: Informational                              ViaThinkSoft
+Expires: October 22, 2021                                     April 2021
+
+
+            Retrieving information about Object Identifiers
+                      using a text-based protocol
+                      draft-viathinksoft-oidip-00
+
+
+Abstract
+
+   This document defines a method for retrieving information about
+   Object Identifiers (OIDs) and their associated Registration
+   Authorities (RAs) using a text-based protocol, in a way that is both
+   human-readable and machine-readable.
+
+
+
+
+
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on September 9, 2021.
+
+Copyright Notice
+
+   Copyright (c) 2021 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+ 
+
+
+Marschall               Expires October 22, 2021                [Page 1]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+Table of Contents
+
+   1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  3
+     1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  4
+   2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
+     2.1  Authentication Tokens . . . . . . . . . . . . . . . . . . .  5
+     2.2  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  5
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  6
+     3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  6
+       3.2.1  Query-Section (Information about Query and Result)  . .  7
+       3.2.2  Object-Section (Information about the OID)  . . . . . .  8
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 11
+       3.2.4  Sections for Previous Registration Authorities  . . . . 13
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 13
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 13
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 14
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 14
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+   5  Full Example  . . . . . . . . . . . . . . . . . . . . . . . . . 16
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 16
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 17
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 18
+   7  Internationalization Considerations . . . . . . . . . . . . . . 18
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 19
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 20
+     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 20
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 20
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 21
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 22
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 22
+
+
+
+
+
+
+
+
+ 
+
+
+Marschall               Expires October 22, 2021                [Page 2]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+1  Introduction
+
+   An Object Identifier (OID) is an extensively used identification
+   mechanism jointly developed by ITU-T and ISO/IEC for naming any type
+   of object with a globally unambiguous name.  OIDs provide a
+   persistent identification of objects based on a hierarchical
+   structure of Registration Authorities (RA), where each parent has an
+   Object Identifier and allocates Object Identifiers to child nodes. 
+   More information about Object Identifiers can be found in
+   Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660].
+
+   There are a few methods of retrieving information about an OID, like:
+
+   (A) Searching through web repositories like <http://www.oid-info.com>
+   or <http://www.alvestrand.no/objectid/>.  This has the disadvantage
+   that the information is usually not machine-readable without
+   functionalities like an API.
+
+   (B) Retrieving information using the Object Identifier Resolution
+   System (ORS) as defined in Recommendation ITU-T X.672 (2010) |
+   ISO/IEC 29168-1:2011 [X672].  This has the disadvantage that
+   Registration Authorities need to include specific DNS Resource
+   Records to their domains, and additionally, all RAs of the superior
+   OIDs must implement the ORS.
+
+   This document describes an additional method for retrieving
+   information about OIDs, which is both human-readable and machine-
+   readable.
+
+   Three of many possible use-case scenarios are:
+
+   (1) Many web-browsers and Operating Systems can handle ITU-T X.509
+   certificates [X509] and usually contain a viewer application that
+   shows the contents of these certificates.  Attributes that are
+   unknown by the application are either only displayed by their OID, or
+   hidden to avoid confusion to the user.  With OID-IP, the application
+   could query the name of these unknown OIDs or even retrieve
+   instructions on how the data described by this OID can be parsed and
+   displayed.
+
+   (2) Applications that handle SNMP (Simple Network Management
+   Protocol) [RFC1157] might need information about additional MIB files
+   or their OIDs.  OID-IP could aid these applications in gathering the
+   required information.
+
+   (3) In directory services like LDAP (Lightweight Directory Access
+   Protocol) [RFC4511], applications could query the name of attributes
+   that are described by an OID the application doesn't know.
+ 
+
+
+Marschall               Expires October 22, 2021                [Page 3]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+1.1  Terminology
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in RFC 2119 [RFC2119].
+
+   In this document, "RA" is an abbreviation for "Registration
+   Authority", "OID" is an abbreviation for "Object Identifier" and
+   "OID-IP" is an abbreviation for "Object Identifier Information
+   Protocol".
+
+2  Request
+
+   OID-IP is a text-based protocol similar to the WHOIS protocol
+   specified in RFC 3912 [RFC3912].
+
+   An OID-IP server listens on TCP port XXX for requests from OID-IP
+   clients.  The OID-IP client makes a text request to the OID-IP
+   server, then the OID-IP server replies with text content.  All
+   requests are terminated with ASCII CR followed by ASCII LF.  The
+   response contains multiple lines of text, separated by ASCII CR
+   followed by ASCII LF.  The OID-IP server closes its connection as
+   soon as the output is finished.  The closed TCP connection is the
+   indication to the client that the response has been received.
+
+   Alternatively to TCP port XXX, an OID-IP server can listen to the
+   WHOIS TCP port 43.  Existing WHOIS servers can add the
+   functionalities described in this document in addition to their usual
+   operation, i.e. they may accept queries beginning with "oid:" as well
+   as other types of queries.
+
+   During the request, the client sends a query beginning with "oid:",
+   followed by an OID in dot-notation, as defined in RFC 3061, section 2
+   [RFC3061], but with the following differences:
+
+   (1) The OID MAY contain a leading dot.
+
+   (2) To query the root of the OID tree, the OID MUST be either missing
+   or consisting only of a single dot.
+
+   Examples of valid queries are:
+
+       oid:
+       oid:.
+       oid:2.999
+       oid:.2.999
+
+   All OIDs MUST be interpreted as absolute OIDs.  Relative OIDs (e.g.
+ 
+
+
+Marschall               Expires October 22, 2021                [Page 4]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+   relative to the OID of the Registration Authority operating the OID-
+   IP service) are not allowed.
+
+   The namespace identifier (i.e. "oid") MUST be written in lower-case.
+
+2.1  Authentication Tokens
+
+   Some organizations might not want to present their OID information
+   (or part of it) to the public, e.g. for reasons like privacy or
+   confidentiality.  Therefore, at the end of the query, the client can
+   append case-sensitive, non-empty alphanumeric authentication tokens
+   to control the display of confidential information.
+
+   Each authentication token MUST be prepended by a dollar sign ("$").
+
+   Examples of valid queries are:
+
+       oid:2.999$firstToken
+       oid:2.999$firstToken$secondToken
+
+   Please note that authentication tokens are only weak protection.  For
+   more information, see section 8 "Security Considerations".
+
+2.2  Request ABNF Notation
+
+   To define the query string, the following Augmented BNF definitions
+   will be used.  They are based on the ABNF styles of RFC 5234
+   [RFC5234].
+
+   query           = namespace ":" optional-oid *( "$" authtoken )
+
+   namespace       = %x6F %x69 %x64  ; "oid"
+
+   optional-oid    = [ "." ] [ oid ]
+
+   oid             = unsigned-number *( "." unsigned-number )
+
+   authtoken       = 1*( char-or-digit )
+
+   digit           = %x30-39  ; 0-9
+
+   nonzero-digit   = %x31-39  ; 1-9
+
+   uppercase-char  = %x41-5A  ; A-Z
+
+   lowercase-char  = %x61-7A  ; a-z
+
+   char-or-digit   = uppercase-char / lowercase-char / digit
+ 
+
+
+Marschall               Expires October 22, 2021                [Page 5]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+   unsigned-number = "0" / nonzero-digit *( digit )
+
+3  Response
+
+3.1  Format and Encoding
+
+   (1) The response MUST be UTF-8 encoded (as defined in RFC 3629
+   [RFC3629]), without Byte-Order-Mark (BOM).
+
+   (2) The response contains multiple lines with field names and values,
+   which MUST be separated by a double colon (":").  Whitespace
+   characters after the double colon are allowed.
+
+   (3) If possible, each line SHOULD be limited to 80 characters,
+   including the field name, double colon, value, and whitespaces.
+
+   (4) Field names and values MUST be treated case-sensitive.
+
+   (5) If a value needs to be split into multiple lines, e.g. if the
+   line would exceed the length limit, the same field name including
+   double colon MUST be repeated at the beginning of the next line.
+
+   (6) If an attribute has multiple values (e.g. multiple Unicode
+   labels, alternative email addresses, etc.), each value MUST be
+   written in a new line with the same field name.
+
+   (7) Lines with the same field name SHALL be kept together.
+
+   (8) Comment lines MUST start with a percent sign ("%") at the
+   beginning of a line, without prepending whitespaces.  They MUST NOT
+   be evaluated by machines (except for signature validation, as
+   mentioned in section 3.3 "Digital Signature").
+
+3.2  Structure
+
+   A response consists of sections, which SHOULD be separated by at
+   least one empty line and/or comment line.
+
+   This document specifies the following sections (which SHALL stay in
+   this order):
+
+   (1) Query-Section which contains the request and the result.  This
+   section MUST start with the field "query".
+
+   (2) Object-Section which contains information about the OID.  This
+   section MUST start with the field "object".
+
+   (3) RA-Section which contains information about the current
+ 
+
+
+Marschall               Expires October 22, 2021                [Page 6]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+   Registration Authority.  This section MUST start with the field "ra".
+
+   (4) Optional RA-Sections containing information about RAs that were
+   previously in charge of managing the OID.
+
+   The OID-IP service MAY define additional sections after any of these
+   sections, but the Query-Section MUST be the first section in the
+   response.
+
+3.2.1  Query-Section (Information about Query and Result)
+
+   This section MUST always be present and MUST start with the field
+   "query".  It MUST be the first section in the response.
+
+   Possible fields are:
+
+   (1) "query" MUST be present and contain the request of the client
+   (beginning with the namespace identifier and double colon, i.e.
+   "oid:").  Canonization or sanitation (like removing a leading dot)
+   SHOULD NOT be applied at this step.  Authentication tokens SHOULD be
+   omitted, though.
+
+   (2) "result" MUST be present and SHALL be one of the following
+   values:
+
+       "Found" means that the OID-IP service can verify that the
+       requested OID exists.  The following sections will contain
+       information about this OID.
+
+       "Not found; superior object found" means that the OID-IP service
+       cannot verify that the requested OID exists, or it denies that
+       the OID exists (e.g. because it is confidential).  However, the
+       OID-IP service knows a superior OID which does exist.  The
+       following sections will contain information about that superior
+       OID instead.
+
+       "Not found" means that the OID-IP service cannot verify that the
+       requested OID exists, or it denies that the OID exists (e.g.
+       because it is confidential).  Additionally, the OID-IP service
+       does not have information about any superior OID, or their
+       existence is also denied.
+
+       "Service error" means that an internal error occurred, or that
+       the system is in maintenance mode.  The client should try again
+       later.
+
+   (3) "distance" SHOULD be present if it is applicable in the requested
+   namespace (it is always applicable for OIDs) and if the result is
+ 
+
+
+Marschall               Expires October 22, 2021                [Page 7]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+   "Not found; superior object found".  A distance of 1 means that the
+   direct parent was found.  A distance of 2 means that the grand-parent
+   was found, etc.
+
+   (4) "message" SHOULD be present if the result is "Service error".  It
+   contains a message explaining why the service is not available (e.g.
+   displaying an error message).  It MUST NOT be present if the result
+   has a different value.
+
+   The OID-IP service SHOULD NOT add additional fields to this section.
+
+3.2.2  Object-Section (Information about the OID)
+
+   This section MUST be present if the result is "Found" or "Not found;
+   superior object found".  It MUST start with the field "object".  It
+   MUST NOT be present if the result is "Not found" or "Service error".
+
+   Possible fields are:
+
+   (1) "object" contains the OID in dot-notation, prepended by the
+   namespace identifier and double colon ("oid:").  This field MUST be
+   present.
+
+   (2) "status" MUST be present and SHALL be one of the following
+   values:
+
+       "Information available" means that information about the OID is
+       fully available.
+
+       "Information partially available" means that part of the
+       information about the OID is not available.  Possible reasons
+       could be that part of the information is redacted due to
+       confidentiality, or the OID-IP service only knows basic
+       information, while the full information can be found somewhere
+       else (e.g. at a referred OID-IP service).  The field "attribute"
+       MAY be used with the value "confidential".
+
+       "Information unavailable" means that the information about the
+       OID is missing, redacted due to confidentiality, or otherwise
+       unavailable.  The field "attribute" MAY be used with the value
+       "confidential".
+
+   (3) "name" (OPTIONAL) contains the name of the OID.  It SHOULD be as
+   short as possible.
+
+   (4) "description" (OPTIONAL) contains a short description of the OID.
+    The description SHOULD only be a single sentence.
+
+ 
+
+
+Marschall               Expires October 22, 2021                [Page 8]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+   (5) "information" (OPTIONAL) contains additional information, e.g.
+   Management Information Base (MIB) definitions.
+
+   (6) "url" (OPTIONAL, multiple values allowed) contains a URL (as
+   defined in RFC 3986 [RFC3986]) leading to more information about the
+   OID.
+
+   (7) "asn1-notation" (OPTIONAL, multiple values allowed) contains one
+   or more possible notations in the ASN.1 syntax, as defined in
+   Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.3
+   [X680], e.g. {joint-iso-itu-t(2) example(999)}.
+
+       Note: A line-break, to break up lines that are too long, as
+       defined in section 3.1 ("Format and Encoding") SHOULD be used. 
+       This is no problem because multiple ASN.1 notations can be
+       distinguished by their opening curly bracket and their closing
+       curly bracket.
+
+   (8) "iri-notation" (OPTIONAL, multiple values allowed) contains one
+   or more possible notations in the OID-IRI syntax, as defined in
+   Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 34.3
+   [X680] (but without quotation marks), e.g. /Joint-ISO-ITU-T/Example.
+
+       Note: A line-break, to break up lines which are too long, as
+       defined in section 3.1 ("Format and Encoding") SHALL NOT be used,
+       otherwise, it would be ambiguous if the line-break was used to
+       shorten the line, or if the line-break indicates a new value in
+       case multiple OID-IRI notations are supplied.
+
+   (9) "identifier" (OPTIONAL, multiple values allowed) contains an
+   alphanumeric identifier ("NameForm") as defined in Recommendation
+   ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.3 [X680].
+
+   (10) "standardized-id" (OPTIONAL, multiple values allowed) contains
+   an alphanumeric identifier that has a standardized "NameForm", i.e.
+   in ASN.1 notation, it can be written without its associated number. 
+   See more information in Recommendation ITU-T X.680 (2015) | ISO/IEC
+   8824-1:2015, clause 32.7 [X680].
+
+   (11) "unicode-label" (OPTIONAL, multiple values allowed) contains a
+   Non-integer Unicode label, as defined in Recommendation ITU-T X.680
+   (2015) | ISO/IEC 8824-1:2015, clause 12.27 [X680].
+
+   (12) "long-arc" (OPTIONAL, multiple values allowed) contains a Non-
+   integer Unicode label that can be used as the first identifier in an
+   OID Internationalized Resource Identifier (OID-IRI), shortening it. 
+   More information can be found in Recommendation ITU-T X.660 (2011) |
+   ISO/IEC 9834-1:2012, clause 3.5.8 [X660].
+ 
+
+
+Marschall               Expires October 22, 2021                [Page 9]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+   (13) "oidip-service" (OPTIONAL) contains an IP address or hostname of
+   a system that offers an OID-IP service that can supply information
+   about the OID and/or its subordinate OIDs, followed by a double-colon
+   (:) and a port number.  If the result is "Found" (i.e. the OID is
+   existing in the local database), then the information "oidip-service"
+   is only informational; its existence is most likely a hint that
+   subordinate OIDs will be found at that OID-IP server.  If the result
+   is "Not found; superior object found", then the client SHOULD query
+   the referred OID-IP server to receive more information about the OID.
+    See more information in section 4 "Referral".
+
+   (14) "attribute" (OPTIONAL, multiple values allowed) contains
+   attributes of the OID.  An attribute MUST be one of the following
+   values:
+
+       "confidential" means that information about the OID or part of it
+       is confidential.
+
+       "draft" means that the allocation of the OID is not yet official
+       and the information is subject to change without notice.  This
+       includes deletion and relocation.
+
+       "frozen" means that no more child OIDs can be created under this
+       OID, e.g. because the RA has stopped operating, but the existing
+       child OIDs stay valid.
+
+       "leaf" means that no child OIDs can be allocated under this OID. 
+       The field "subordinate" SHALL therefore not be present.
+
+       "no-identifiers" means that the RA is not allocating alphanumeric
+       identifiers.
+
+       "no-unicode-labels" means that the RA is not allocating Non-
+       integer Unicode labels.
+
+       "retired" means that the OID is withdrawn, revoked, retired,
+       expired, etc.  Please consult Recommendation ITU-T X.660 (2011) |
+       ISO/IEC 9834-1:2012 [X660] for more information about such cases.
+
+   (15) "parent" (OPTIONAL) contains the OID of the nearest known parent
+   OID, prepended by namespace identifier and double colon, i.e. "oid:".
+    It MAY be followed by additional human-readable information, e.g. a
+   description or a list of ASN.1 identifiers.  There SHALL be at least
+   1 whitespace in between.
+
+   (16) "subordinate" (OPTIONAL, multiple values allowed) contains a
+   list of subordinate OIDs, prepended by namespace identifier and
+   double colon, i.e. "oid:".  It MAY be followed by additional human-
+ 
+
+
+Marschall               Expires October 22, 2021               [Page 10]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+   readable information, e.g. a description or a list of ASN.1
+   identifiers.  There SHALL be at least 1 whitespace in between.
+
+   (17) "created" (OPTIONAL) contains the date and time (as specified in
+   section 3.4 "Date/Time Format") when the OID was first allocated by
+   the RA of the superior OID.
+
+   (18) "updated" (OPTIONAL) contains the date and time (as specified in
+   section 3.4 "Date/Time Format") when the OID information was last
+   updated.
+
+   Additional fields can be defined by the OID-IP service.  The field
+   names SHALL only consist of the lower-case letters "a..z", hyphens
+   ("-"), and numbers, and SHOULD be written in the English language. 
+   The field name MUST NOT begin or end with a hyphen and a hyphen MUST
+   NOT be followed by another hyphen.
+
+3.2.3  RA-Section (Information about the Current RA)
+
+   This section MUST NOT be present if the result is "Not found" or
+   "Service error", otherwise it MAY be present.  If it is present, it
+   MUST start with the field "ra".
+
+   Possible fields are:
+
+   (1) "ra" contains a general name of the RA, like the name of a
+   person, the name of a group, or the name of an organization.  This
+   field MUST be present.
+
+   (2) "ra-status" MUST be present and SHALL be one of the following
+   values:
+
+       "Information available" means that information about this RA is
+       fully available.
+
+       "Information partially available" means that part of the
+       information is not available.  A possible reason could be that
+       part of the information is redacted due to confidentiality.  The
+       field "attribute" MAY be used with the value "confidential".
+
+       "Information unavailable" means that the data is missing (if the
+       OID-IP service only knows the name of the RA and nothing else),
+       redacted due to confidentiality, or otherwise unavailable.  The
+       field "attribute" MAY be used with the value "confidential".
+
+   (3) "ra-contact-name" (OPTIONAL, multiple values allowed) contains
+   the name of a person responsible for the allocation of subordinate
+   OIDs, in case "ra" is a group or organization.
+ 
+
+
+Marschall               Expires October 22, 2021               [Page 11]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+   (4) "ra-address" (OPTIONAL) contains the physical location of the RA.
+    While a fully qualified postal address is recommended, the field can
+   also just contain a rough location like city and country name, state
+   and country name, or just the country name, etc.  The name of the
+   country SHOULD always be present.
+
+   (5) "ra-phone" (OPTIONAL, multiple values allowed) contains a
+   landline phone number of the Registration Authority.  It SHOULD be
+   written in the international number format specified in
+   Recommendation ITU-T E.164 (2010) [E164], e.g. +1 206 555 0100.
+
+   (6) "ra-mobile" (OPTIONAL, multiple values allowed) contains a mobile
+   phone number of the Registration Authority.  It SHOULD be written in
+   the international number format specified in Recommendation ITU-T
+   E.164 (2010) [E164], e.g. +1 206 555 0100.
+
+   (7) "ra-fax" (OPTIONAL, multiple values allowed) contains a fax
+   number of the Registration Authority.  It SHOULD be written in the
+   international number format specified in Recommendation ITU-T E.164
+   (2010) [E164], e.g. +1 206 555 0100.
+
+   (8) "ra-email" (OPTIONAL, multiple values allowed) contains an email
+   address of the Registration Authority.
+
+   (9) "ra-url" (OPTIONAL, multiple values allowed) contains a URL (as
+   defined in RFC 3986 [RFC3986]) leading to more information about the
+   RA (usually the website of the RA).
+
+   (10) "ra-attribute" (OPTIONAL, multiple values allowed) contains
+   attributes of the RA.  An attribute MUST be one of the following
+   values:
+
+       "confidential" means that the information about the RA or part of
+       it is confidential.
+
+       "retired" means that the RA is defunct.  If this attribute is set
+       to the current RA, then the OID MUST have the attribute "frozen"
+       (until the responsibility is transferred to a non-defunct RA, or
+       until the current RA becomes active again).
+
+   (11) "ra-created" (OPTIONAL) contains the date and time (as specified
+   in section 3.4 "Date/Time Format") when the RA was created/registered
+   in the database.
+
+   (12) "ra-updated" (OPTIONAL) contains the date and time (as specified
+   in section 3.4 "Date/Time Format") when the RA information was last
+   modified.
+
+ 
+
+
+Marschall               Expires October 22, 2021               [Page 12]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+   Additional fields can be defined by the OID-IP service, but they MUST
+   begin with "ra-".  The field names SHALL only consist of the lower-
+   case letters "a..z", hyphens ("-"), and numbers, and SHOULD be
+   written in the English language.  The field name MUST NOT begin or
+   end with a hyphen and a hyphen MUST NOT be followed by another
+   hyphen.
+
+3.2.4  Sections for Previous Registration Authorities
+
+   To optionally display information about RAs that were previously in
+   charge of managing the OID, a new section per RA can be added with
+   the following field name prefixes:
+
+   "ra-" is the prefix of the current Registration Authority.
+
+   "ra1-" is the prefix of the first RA.  It is the very first person or
+   company to whom the OID was allocated by the RA of the superior OID.
+   "ra2-" is the prefix of the second RA, after the responsibility has
+   been transferred. etc.
+
+   The definition of these sections is identical to the definition of
+   the RA-Section (described in section 3.2.3 "RA-Section"), just with a
+   different prefix.
+
+   The history does not need to be complete, e.g. it is no problem to
+   only serve information about the first and the current RA, or only
+   serve information about the current RA.
+
+3.3  Digital Signature
+
+   If integrity/authenticity is required, the whole response can be
+   signed, e.g. by using S/MIME, RSA, or PGP.  This document does not
+   describe a mechanism for detecting which signature method was used. 
+   The creation and verification of the signature are therefore
+   implementation-specific and no interoperability regarding signature
+   creation and validation is given at this time.
+
+   Depending on the signature method being used, various things need to
+   be appended and/or prepended to the response.  These additional lines
+   MUST be prepended by a percent sign ("%") to avoid that an
+   application confuses these additional lines (e.g. lines belonging to
+   a PGP header, as defined in RFC 4880 [RFC4880]) with parts of the
+   actual OID-IP response.
+
+3.4  Date/Time Format
+
+   Date/Time references SHALL be formatted as described in
+   section 3.4.1.
+ 
+
+
+Marschall               Expires October 22, 2021               [Page 13]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+   If parts of the date/time reference are uncertain, then they SHOULD
+   be omitted until the date/time reference has the highest correctness.
+
+   Examples of valid date/time references can be found in section 3.4.2.
+
+3.4.1  Date/Time Format ABNF Notation
+
+   To define the format of a Date/Time reference, the following
+   Augmented BNF definitions will be used.  They are based on the ABNF
+   styles of RFC 5234 [RFC5234].
+
+   date-time = year [ "-" month [ "-" day [ " " time ] ] ]
+
+   year      = 4*4DIGIT
+
+   month     = ( "0" %x31-39 ) /
+               ( "1" %x30-32 )      ; 01-12
+
+   day       = ( "0" %x31-39 ) /
+               ( "1" %x30-39 ) /
+               ( "2" %x30-39 ) /
+               ( "3" %x30-31 ) /    ; 01-31
+
+   time      = hour ":" minute [ ":" second ] [ " " timezone ]
+
+   hour      = ( "0" %x30-39 ) /
+               ( "1" %x30-39 ) /
+               ( "2" %x30-33 )      ; 00-23
+
+   minute    = %x30-35 DIGIT        ; 00-59
+
+   second    = %x30-35 DIGIT        ; 00-59
+
+   timezone  = ( "+" / "-" ) hour minute
+
+3.4.2  Date/Time Format Examples
+
+   Examples of valid date/time references are:
+
+       2021-04-29 18:32:00 +0200
+       2021-04-29 18:32:00
+       2021-04-29 18:32 +0200
+       2021-04-29 18:32
+       2021-04-29
+       2021-04
+       2021
+
+
+ 
+
+
+Marschall               Expires October 22, 2021               [Page 14]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+4  Referral
+
+   By using the field "oidip-service", the OID-IP service can instruct
+   the client to query another OID-IP service that might have more
+   information about the requested OID.
+
+   If Registration Authorities maintain up-to-date OID-IP service
+   references of their OID delegations, it is possible to automatically
+   retrieve information about any OID.
+
+   Example: OID "2.999" is owned by Registration Authority "A",
+   operating an OID-IP service at "a.example.com".
+
+   Registration Authority "A" allocated OID "2.999.1000" to Registration
+   Authority "B" who is operating an OID-IP service at "b.example.com".
+
+   The client asks a.example.com for information about OID
+   "2.999.1000.1" and should receive the following reply:
+
+       query:          oid:2.999.1000.1
+       result:         Not found; superior object found
+       distance:       1
+
+       object:         oid:2.999.1000
+       status:         Information available
+       name:           Company "B"
+       oidip-service:  b.example.com:XXX
+
+       ra:             "B"
+       ra-status:      Information unavailable
+
+   The client is now aware that "a.example.com" only knows OID
+   "2.999.1000", and that there is a reference to another OID-IP service
+   located at "b.example.com".  So, the client should then accordingly
+   query "b.example.com", asking for information about OID
+   "2.999.1000.1":
+
+       query:          oid:2.999.1000.1
+       result:         Found
+
+       object:         oid:2.999.1000.1
+       status:         Information available
+       name:           Example OID 1
+
+       ra:             "B"
+       ra-status:      Information unavailable
+
+
+ 
+
+
+Marschall               Expires October 22, 2021               [Page 15]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+5  Full Example
+
+5.1  Request
+
+   oid:2.999
+
+5.2  Response
+
+   query:          oid:2.999
+   result:         Found
+
+   object:         oid:2.999
+   status:         Information available
+   name:           Example
+   description:    This OID can be used by anyone, for the purposes of
+   description:    documenting examples of Object Identifiers.
+   asn1-notation:  {joint-iso-itu-t(2) example(999)}
+   iri-notation:   /Example
+   identifier:     example
+   unicode-label:  Beispiel
+   unicode-label:  Ejemplo
+   unicode-label:  Example
+   unicode-label:  Exemple
+   unicode-label:  (Korean characters are omitted in this example)
+   unicode-label:  (Arabian characters are omitted in this example)
+   unicode-label:  (Japanese characters are omitted in this example)
+   unicode-label:  (Chinese characters are omitted in this example)
+   unicode-label:  (Russian characters are omitted in this example)
+   long-arc:       Beispiel
+   long-arc:       Ejemplo
+   long-arc:       Example
+   long-arc:       Exemple
+   long-arc:       (Korean characters are omitted in this example)
+   long-arc:       (Arabian characters are omitted in this example)
+   long-arc:       (Japanese characters are omitted in this example)
+   long-arc:       (Chinese characters are omitted in this example)
+   long-arc:       (Russian characters are omitted in this example)
+   parent:         oid:2 (joint-iso-itu-t)
+   created:        2011-06
+   updated:        2011-09
+
+   ra:             ITU-T SG 17 & ISO/IEC JTC 1/SC 6
+   ra-status:      Information unavailable
+   % -----BEGIN RSA SIGNATURE-----
+   % DwnqRtx/ONtPh4onXnrZPl9jF+G50RMLZkSwuClaoH2t/yK8CnYJrmzkzA5+gkfWkoQ
+   % cq+J8J9cvnwXvBfpVHh+7lyNOVW1N016TYFcBt8MVxb6K2KhkKclqeA6wz0kSUuE4qR
+   % ZohzrZBcCP7aLIpcaoVi6QACAt6J0vOvYBaf0=
+   % -----END RSA SIGNATURE-----
+ 
+
+
+Marschall               Expires October 22, 2021               [Page 16]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+6  Alternative Namespaces
+
+   This document describes the retrieval of information about OIDs using
+   the OID-IP protocol.  In addition to the OID namespace, the methods
+   described in this document can also be applied to other namespaces
+   like "uuid", "isbn", "gtin" etc.
+
+   Following things need to be considered if alternative namespaces are
+   implemented:
+
+   (1) The request MUST be UTF-8 encoded (as defined in RFC 3629
+   [RFC3629]), without Byte-Order-Mark (BOM).
+
+   (2) The namespace SHALL be a namespace identifier (NID) as defined in
+   RFC 8141 [RFC8141].
+
+   (3) The namespace identifier SHALL be written in lower-case (this is
+   already defined in section 2 "Request").
+
+   (4) If available, a formal URN namespace identifier (as defined in
+   RFC 8141, section 5.1 [RFC8141]) SHOULD be used, e.g. "uuid" should
+   be used instead of "guid".
+
+   (5) If things like "Owner", "Creator", "Manager", "Administrator",
+   etc., are relevant to the identifiers in the namespace, then the RA-
+   section as described in section 3.2.3 SHALL be used, even though the
+   word "Registration Authority" might not be appropriate in the
+   terminology of the namespace.
+
+   (6) The namespace-specific identifier MUST NOT contain dollar signs
+   ("$"), because section 2.1 "Authentication Tokens" defines them as a
+   separator for authentication tokens.
+
+   (7) The namespace-specific identifier MUST be treated case-sensitive
+   if the namespace distinguishes between lower-case and upper-case.
+
+   (8) Fields that can only be used in the OID namespace (e.g. "unicode-
+   label") MUST NOT be used for other namespaces.
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+Marschall               Expires October 22, 2021               [Page 17]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+6.1  Example: UUID Namespace
+
+   The following example shows the retrieval of information about
+   Universally Unique Identifiers (e.g. UUIDs used by the Microsoft
+   Common Object Model, also known as GUIDs).  The UUID namespace has no
+   hierarchical structure, which means that the OID-IP service can only
+   respond with the result "Found", "Not found" or "Service error" and
+   the fields "parent" and "subordinate" cannot be used.
+
+   Request:
+
+       uuid:b4bfcc3a-db2c-424c-b029-7fe99a87c641
+
+   Response:
+
+       query:        uuid:b4bfcc3a-db2c-424c-b029-7fe99a87c641
+       result:       Found
+
+       object:       uuid:b4bfcc3a-db2c-424c-b029-7fe99a87c641
+       status:       Information available
+       name:         Desktop
+       information:  GUID can be used in file dialogs as "Custom Place".
+
+       ra:           Microsoft Corp.
+       ra-status:    Information unavailable
+
+   More information about UUIDs can be found in Recommendation ITU-T
+   X.667 (2012) | ISO/IEC 9834-8:2014 [X667].
+
+   More information about the Microsoft Common Object Model (COM) can be
+   found at Microsoft Docs <https://docs.microsoft.com/en-
+   us/windows/win32/com/component-object-model--com--portal>.
+
+7  Internationalization Considerations
+
+   This document specifies that the request and response MUST be UTF-8
+   encoded (as defined in RFC 3629 [RFC3629]), without Byte-Order-Mark
+   (BOM).
+
+   The OID-IP service can define additional field names, but they SHOULD
+   be written in the English language so that there is consistency with
+   the field names defined in this document.
+
+
+
+
+
+
+ 
+
+
+Marschall               Expires October 22, 2021               [Page 18]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+8  Security Considerations
+
+   (1) The knowledge of existence or information about some OIDs could
+   be considered confidential.  In this case, the OID-IP service can
+   either deny the existence of the requested OID (by setting the result
+   to "Not found") or redact information in the Object-Section, as
+   defined in section 3.2.2 "Object-Section".
+
+   (2) Registration Authorities might demand that their data is kept
+   confidential, or at least be partially redacted to increase privacy
+   or as a measurement against spam.  In this case, the OID-IP service
+   can redact information in the RA-Section, as defined in section 3.2.3
+   "RA-Section".
+
+   (3) The OID-IP service can decide if confidential material is omitted
+   or shown, based on authentication mechanisms like white-listing
+   client IP addresses or by using authentication tokens supplied by the
+   client, as defined in section 2.1 "Authentication Tokens".
+
+   (4) The usage of authentication tokens is not recommended if the
+   traffic between client and server is transmitted through an untrusted
+   network, because the OID-IP protocol is not encrypted.
+
+   (5) Authentication tokens must have a sufficient length and
+   complexity to avoid successful brute force attacks, or the OID-IP
+   service must limit the number of requests per time.
+
+   (6) The OID-IP protocol itself has no mechanism for verifying the
+   integrity of data received.  Due to this fact, the information should
+   not be trusted if it is transmitted through an untrusted network.  If
+   integrity/authenticity is required, the OID-IP response can be
+   signed, as described in section 3.3 "Digital Signature".  However,
+   this document does not describe a mechanism for detecting which
+   signature method was used.  Therefore, no interoperability of
+   signature creation/validation is given at this time.
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+Marschall               Expires October 22, 2021               [Page 19]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+9  IANA Considerations
+
+9.1  Port Numbers
+
+   This document requires the assignment of a TCP port number.
+
+
+                  +--------------------+-----------------------------+
+                  | Service Name       | oidip                       |
+                  | Transport Protocol | TCP                         |
+                  | Assignee           | ...                         |
+                  | Contact            | ...                         |
+                  | Description        | OID Information Protocol    |
+                  | Reference          | [RFCyyyy]                   |
+                  | Port Number        | XXX                         |
+                  +--------------------+-----------------------------+
+
+
+   [Please change "yyyy" to the RFC number allocated to this document
+   before publication.]
+
+   [Please change "XXX" placed at various locations in this document to
+   the port number allocated by IANA.]
+
+10  References
+
+10.1  Normative References
+
+   [E164]     "The international public telecommunication numbering
+              plan", Recommendation ITU-T E.164 (2010), November 2010.
+              <http://handle.itu.int/11.1002/1000/10688>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997.
+              <http://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC3061]  Mealling, M., "A URN Namespace of Object Identifiers",
+              RFC 3061, DOI 10.17487/RFC3061, February 2001.
+              <http://www.rfc-editor.org/info/rfc3061>.
+
+   [RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO
+              10646", STD 63, RFC 3629, DOI 10.17487/RFC3629,
+              November 2003.
+              <http://www.rfc-editor.org/info/rfc3629>.
+
+   [RFC3912]  Daigle, L., "WHOIS Protocol Specification", RFC 3912,
+              DOI 10.17487/RFC3912, September 2004.
+ 
+
+
+Marschall               Expires October 22, 2021               [Page 20]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+              <http://www.rfc-editor.org/info/rfc3912>.
+
+   [RFC3986]  Berners-Lee, T., "Uniform Resource Identifier (URI):
+              Generic Syntax", STD 66, RFC 3986, DOI 10.17487/RFC3986,
+              January 2005.
+              <http://www.rfc-editor.org/info/rfc3986>.
+
+   [RFC5234]  Crocker, D. and P. Overell, "Augmented BNF for Syntax
+              Specifications: ABNF", STD 68, RFC 5234,
+              DOI 10.17487/RFC5234, January 2008.
+              <http://www.rfc-editor.org/info/rfc5234>.
+
+   [RFC8141]  Saint-Andre, P., "Uniform Resource Names (URNs)",
+              RFC 8141, DOI 10.17487/RFC8141, April 2017.
+              <http://www.rfc-editor.org/info/rfc8141>.
+
+   [X660]     "Information technology - Procedures for the operation of
+              object identifier registration authorities: General
+              procedures and top arcs of the international object
+              identifier tree", Recommendation ITU-T X.660 (2011) |
+              ISO/IEC 9834-1:2012, July 2011.
+              <http://handle.itu.int/11.1002/1000/11336>.
+
+   [X680]     "Information technology - Abstract Syntax Notation One
+              (ASN.1): Specification of basic notation", Recommendation
+              ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, August 2015.
+              <http://handle.itu.int/11.1002/1000/12479>.
+
+10.2  Informative References
+
+   [RFC1157]  Case, J., Fedor, M., Schoffstall, M., Davin, J., "A Simple
+              Network Management Protocol (SNMP)", RFC 1157,
+              DOI 10.17487/RFC1157, May 1990.
+              <http://www.rfc-editor.org/info/rfc1157>.
+
+   [RFC4511]  Sermersheim, J., "Lightweight Directory Access Protocol
+              (LDAP): The Protocol", RFC 4511, DOI 10.17487/RFC4511,
+              June 2006.
+              <http://www.rfc-editor.org/info/rfc4511>.
+
+   [RFC4880]  Callas, J., Donnerhacke, L., Finney, H., Shaw, D., Thayer,
+              R., "OpenPGP Message Format", RFC 4880,
+              DOI 10.17487/RFC4880, November 2007.
+              <http://www.rfc-editor.org/info/rfc4880>.
+
+   [X509]     "Information technology - Open Systems Interconnection -
+              The Directory: Public-key and attribute certificate
+              frameworks", Recommendation ITU-T X.509 (2016) |
+ 
+
+
+Marschall               Expires October 22, 2021               [Page 21]
+
+INTERNET DRAFT          OID Information Protocol              April 2021
+
+
+              ISO/IEC 9594-8:2017, October 2016.
+              <http://handle.itu.int/11.1002/1000/13031>.
+
+   [X667]     "Information technology - Procedures for the operation of
+              object identifier registration authorities: Generation of
+              universally unique identifiers and their use in object
+              identifiers", Recommendation ITU-T X.667 (2012) |
+              ISO/IEC 9834-8:2014, October 2012.
+              <http://handle.itu.int/11.1002/1000/11746>.
+
+   [X672]     "Information technology - Open systems interconnection -
+              Object identifier resolution system",
+              Recommendation ITU-T X.672 (2010) | ISO/IEC 29168-1:2011,
+              August 2010.
+              <http://handle.itu.int/11.1002/1000/10831>.
+
+Acknowledgements
+
+   Olivier Dubuisson
+
+Authors' Addresses
+
+   Daniel Marschall
+   Postfach 11 53
+   69243 Bammental
+   Germany
+
+   EMail: daniel-marschall@viathinksoft.de
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Marschall               Expires October 22, 2021               [Page 22]
