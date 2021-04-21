@@ -15,49 +15,53 @@
  * limitations under the License.
  */
 
-function raChangeContactDataFormOnSubmit() {
-	$.ajax({
-		url: "ajax.php",
-		type: "POST",
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: {
-			csrf_token:csrf_token,
-			plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.100",
-			action: "change_ra_data",
-			email: $("#email").val(),
-			ra_name: $("#ra_name").val(),
-			organization: $("#organization").val(),
-			office: $("#office").val(),
-			personal_name: $("#personal_name").val(),
-			privacy: $("#privacy").is(":checked") ? 1 : 0,
-			street: $("#street").val(),
-			zip_town: $("#zip_town").val(),
-			country: $("#country").val(),
-			phone: $("#phone").val(),
-			mobile: $("#mobile").val(),
-			fax: $("#fax").val()
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-		},
-		success: function(data) {
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
-			} else if (data.status >= 0) {
-				alert(_L("Done"));
-				//window.location.href = '?goto=oidplus:system';
-				//reloadContent();
-			} else {
-				alert(_L("Error: %1",data));
-			}
+var OIDplusPageRaEditContactData = {
+
+	raChangeContactDataFormOnSubmit: function() {
+		$.ajax({
+			url: "ajax.php",
+			type: "POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.100",
+				action: "change_ra_data",
+				email: $("#email").val(),
+				ra_name: $("#ra_name").val(),
+				organization: $("#organization").val(),
+				office: $("#office").val(),
+				personal_name: $("#personal_name").val(),
+				privacy: $("#privacy").is(":checked") ? 1 : 0,
+				street: $("#street").val(),
+				zip_town: $("#zip_town").val(),
+				country: $("#country").val(),
+				phone: $("#phone").val(),
+				mobile: $("#mobile").val(),
+				fax: $("#fax").val()
+			},
+			error:function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
+			},
+			success: function(data) {
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+				} else if (data.status >= 0) {
+					alert(_L("Done"));
+					//window.location.href = '?goto=oidplus:system';
+					//reloadContent();
+				} else {
+					alert(_L("Error: %1",data));
+				}
+		}
+		});
+		return false;
 	}
-	});
-	return false;
-}
+
+};

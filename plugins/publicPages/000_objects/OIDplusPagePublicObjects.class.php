@@ -528,7 +528,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					$desc .= '<div class="container box" style="display:none" id="descbox_'.$rand.'">';
 					$desc .= _L('Title').': <input type="text" name="title" id="titleedit" value="'.htmlentities($row['title']).'"><br><br>'._L('Description').':<br>';
 					$desc .= self::showMCE('description', $row['description']);
-					$desc .= '<button type="button" name="update_desc" id="update_desc" class="btn btn-success btn-xs update" onclick="updateDesc()">'._L('Update description').'</button>';
+					$desc .= '<button type="button" name="update_desc" id="update_desc" class="btn btn-success btn-xs update" onclick="OIDplusPagePublicObjects.updateDesc()">'._L('Update description').'</button>';
 					$desc .= '</div>';
 					$desc .= '<script>document.getElementById("descbox_'.$rand.'").style.display = "block";</script>';
 				}
@@ -823,8 +823,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$output .= '     <td><input type="text" id="ra_email_'.$row->id.'" value="'.htmlentities($row->ra_email).'"></td>';
 				$output .= '     <td><input type="text" id="comment_'.$row->id.'" value="'.htmlentities($row->comment).'"></td>';
 				$output .= '     <td><input type="checkbox" id="hide_'.$row->id.'" '.($row->confidential ? 'checked' : '').'></td>';
-				$output .= '     <td><button type="button" name="update_'.$row->id.'" id="update_'.$row->id.'" class="btn btn-success btn-xs update" onclick="crudActionUpdate('.js_escape($row->id).', '.js_escape($parent).')">'._L('Update').'</button></td>';
-				$output .= '     <td><button type="button" name="delete_'.$row->id.'" id="delete_'.$row->id.'" class="btn btn-danger btn-xs delete" onclick="crudActionDelete('.js_escape($row->id).', '.js_escape($parent).')">'._L('Delete').'</button></td>';
+				$output .= '     <td><button type="button" name="update_'.$row->id.'" id="update_'.$row->id.'" class="btn btn-success btn-xs update" onclick="OIDplusPagePublicObjects.crudActionUpdate('.js_escape($row->id).', '.js_escape($parent).')">'._L('Update').'</button></td>';
+				$output .= '     <td><button type="button" name="delete_'.$row->id.'" id="delete_'.$row->id.'" class="btn btn-danger btn-xs delete" onclick="OIDplusPagePublicObjects.crudActionDelete('.js_escape($row->id).', '.js_escape($parent).')">'._L('Delete').'</button></td>';
 				$output .= '     <td>'.$date_created.'</td>';
 				$output .= '     <td>'.$date_updated.'</td>';
 			} else {
@@ -862,10 +862,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if ($parentNS == 'oid') {
 				// TODO: Idea: Give a class name, e.g. "OID" and then with a oid-specific CSS make the width individual. So, every plugin has more control over the appearance and widths of the input fields
 				if ($objParent->isWeid(true)) {
-					$output .= '     <td>'.$prefix.' <input oninput="frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
-					$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="frdl_weid_change()"></td>';
+					$output .= '     <td>'.$prefix.' <input oninput="OIDplusPagePublicObjects.frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
+					$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="OIDplusPagePublicObjects.frdl_weid_change()"></td>';
 				} else if ($objParent->nodeId() === 'oid:2.25') {
-					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:340px"><a href="javascript:generateRandomUUID()">'._L('(Generate)').'</a></td>';
+					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:340px"><a href="javascript:OIDplusPagePublicObjects.generateRandomUUID()">'._L('(Generate)').'</a></td>';
 					if ($one_weid_available) $output .= '     <td></td>'; // WEID-editor not available for root nodes. Do it manually, please
 				} else {
 					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:50px"></td>';
@@ -879,7 +879,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$output .= '     <td><input type="text" id="ra_email" value="'.htmlentities($parent_ra_email).'"></td>';
 			$output .= '     <td><input type="text" id="comment" value=""></td>';
 			$output .= '     <td><input type="checkbox" id="hide"></td>';
-			$output .= '     <td><button type="button" name="insert" id="insert" class="btn btn-success btn-xs update" onclick="crudActionInsert('.js_escape($parent).')">'._L('Insert').'</button></td>';
+			$output .= '     <td><button type="button" name="insert" id="insert" class="btn btn-success btn-xs update" onclick="OIDplusPagePublicObjects.crudActionInsert('.js_escape($parent).')">'._L('Insert').'</button></td>';
 			$output .= '     <td></td>';
 			$output .= '     <td></td>';
 			$output .= '     <td></td>';
@@ -962,8 +962,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					'.($tinyMCELang == '' ? '' : ', language : "'.$tinyMCELang.'"').'
 				});
 
-				pageChangeRequestCallbacks.push([cbQueryTinyMCE, "#'.$name.'"]);
-				pageChangeCallbacks.push([cbRemoveTinyMCE, "#'.$name.'"]);
+				pageChangeRequestCallbacks.push([OIDplusPagePublicObjects.cbQueryTinyMCE, "#'.$name.'"]);
+				pageChangeCallbacks.push([OIDplusPagePublicObjects.cbRemoveTinyMCE, "#'.$name.'"]);
 			</script>';
 
 		$content = htmlentities($content); // For some reason, if we want to display the text "<xyz>" in TinyMCE, we need to double-encode things! &lt; will not be accepted, we need &amp;lt; ... why?

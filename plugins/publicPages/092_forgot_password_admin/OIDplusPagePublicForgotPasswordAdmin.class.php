@@ -28,7 +28,7 @@ class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePluginPublic {
 		if (explode('$',$id)[0] == 'oidplus:forgot_password_admin') {
 			$handled = true;
 
-			if (OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['title'] = _L('Change admin password');
 			} else {
 				$out['title'] = _L('Reset admin password');
@@ -36,10 +36,10 @@ class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePluginPublic {
 			$out['icon']  = OIDplus::webpath(__DIR__).'forgot_password_big.png';
 
 			$out['text']  = '<p>'._L('To reset the password of the administrator, create a hash below and then replace the entry in the file %1.','<b>userdata/baseconfig/config.inc.php</b>').'</p>';
-			$out['text'] .= '<div><label class="padding_label">'._L('New password').':</label><input type="password" id="admin_password" onkeypress="rehash_admin_pwd()" onkeyup="rehash_admin_pwd()"></div>';
-			$out['text'] .= '<div><label class="padding_label">'._L('Repeat').':</label><input type="password" id="admin_password2" onkeypress="rehash_admin_pwd()" onkeyup="rehash_admin_pwd()"></div>';
+			$out['text'] .= '<div><label class="padding_label">'._L('New password').':</label><input type="password" id="admin_password" onkeypress="OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd()" onkeyup="OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd()"></div>';
+			$out['text'] .= '<div><label class="padding_label">'._L('Repeat').':</label><input type="password" id="admin_password2" onkeypress="OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd()" onkeyup="OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd()"></div>';
 			$out['text'] .= '<p><pre id="config"></pre></p>';
-			$out['text'] .= '<script> rehash_admin_pwd(); </script>';
+			$out['text'] .= '<script> OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd(); </script>';
 		}
 	}
 

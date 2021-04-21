@@ -44,7 +44,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			OIDplus::logger()->log("[INFO]RA($email)!", "RA '$email' has been invited");
 
 			$timestamp = time();
-			$activate_url = OIDplus::webpath() . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('activate_ra;'.$email.';'.$timestamp));
+			$activate_url = OIDplus::webpath() . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('activate_ra;'.$email.';'.$timestamp));
 
 			$message = $this->getInvitationText($email);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
@@ -61,7 +61,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$auth = $params['auth'];
 			$timestamp = $params['timestamp'];
 
-			if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
+			if (!OIDplus::authUtils()->validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
 				throw new OIDplusException(_L('Invalid auth key'));
 			}
 
@@ -124,7 +124,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				$cont = $this->getInvitationText($email);
 
 				$out['text'] .= '<p>'._L('You have chosen to invite %1 as a Registration Authority. If you click "Send", the following email will be sent to %2:','<b>'.$email.'</b>',$email).'</p><p><i>'.nl2br(htmlentities($cont)).'</i></p>
-				  <form id="inviteForm" action="javascript:void(0);" onsubmit="return inviteFormOnSubmit();">
+				  <form id="inviteForm" action="javascript:void(0);" onsubmit="return OIDplusPageRaInvite.inviteFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="origin" value="'.htmlentities($origin).'"/>'.
 				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
@@ -161,14 +161,14 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			if ($res->num_rows() > 0) {
 				$out['text'] = _L('This RA is already registered and does not need to be invited.');
 			} else {
-				if (!OIDplus::authUtils()::validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
+				if (!OIDplus::authUtils()->validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
 					$out['icon'] = 'img/error_big.png';
 					$out['text'] = _L('Invalid authorization. Is the URL OK?');
 				} else {
 					// TODO: like in the FreeOID plugin, we could ask here at least for a name for the RA
 					$out['text'] = '<p>'._L('E-Mail-Address').': <b>'.$email.'</b></p>
 
-					  <form id="activateRaForm" action="javascript:void(0);" onsubmit="return activateRaFormOnSubmit();">
+					  <form id="activateRaForm" action="javascript:void(0);" onsubmit="return OIDplusPageRaInvite.activateRaFormOnSubmit();">
 					    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 					    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 					    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
@@ -183,7 +183,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		//if (!$ra_email) return false;
-		//if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		//if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		return false;
 	}
@@ -194,7 +194,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			throw new OIDplusException(_L('This RA is already registered and does not need to be invited.'));
 		}
 
-		if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 			// Check if the RA may invite the user (i.e. the they are the parent of an OID of that person)
 			$ok = false;
 			$res = OIDplus::db()->query("select parent from ###objects where ra_email = ?", array($email));
@@ -224,7 +224,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 		$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,false), $message);
 		$message = str_replace('{{OID_LIST}}', implode("\n", $list_of_oids), $message);
 		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
-		$message = str_replace('{{PARTY}}', OIDplus::authUtils()::isAdminLoggedIn() ? 'the system administrator' : 'a superior Registration Authority', $message);
+		$message = str_replace('{{PARTY}}', OIDplus::authUtils()->isAdminLoggedIn() ? 'the system administrator' : 'a superior Registration Authority', $message);
 
 		// {{ACTIVATE_URL}} will be resolved in ajax.php
 

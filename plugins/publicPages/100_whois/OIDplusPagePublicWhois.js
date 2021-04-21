@@ -15,69 +15,73 @@
  * limitations under the License.
  */
 
-function copyToClipboard(elem) {
-	// Source: https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
+var OIDplusPagePublicWhois = {
 
-	// create hidden text element, if it doesn't already exist
-	var targetId = "_hiddenCopyText_";
-	var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
-	var origSelectionStart, origSelectionEnd;
-	if (isInput) {
-		// can just use the original source element for the selection and copy
-		target = elem;
-		origSelectionStart = elem.selectionStart;
-		origSelectionEnd = elem.selectionEnd;
-	} else {
-		// must use a temporary form element for the selection and copy
-		target = document.getElementById(targetId);
-		if (!target) {
-			var target = document.createElement("textarea");
-			target.style.position = "absolute";
-			target.style.left = "-9999px";
-			target.style.top = "0";
-			target.id = targetId;
-			document.body.appendChild(target);
+	copyToClipboard: function(elem) {
+		// Source: https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
+
+		// create hidden text element, if it doesn't already exist
+		var targetId = "_hiddenCopyText_";
+		var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
+		var origSelectionStart, origSelectionEnd;
+		if (isInput) {
+			// can just use the original source element for the selection and copy
+			target = elem;
+			origSelectionStart = elem.selectionStart;
+			origSelectionEnd = elem.selectionEnd;
+		} else {
+			// must use a temporary form element for the selection and copy
+			target = document.getElementById(targetId);
+			if (!target) {
+				var target = document.createElement("textarea");
+				target.style.position = "absolute";
+				target.style.left = "-9999px";
+				target.style.top = "0";
+				target.id = targetId;
+				document.body.appendChild(target);
+			}
+			target.textContent = elem.textContent;
 		}
-		target.textContent = elem.textContent;
-	}
-	// select the content
-	var currentFocus = document.activeElement;
-	target.focus();
-	target.setSelectionRange(0, target.value.length);
+		// select the content
+		var currentFocus = document.activeElement;
+		target.focus();
+		target.setSelectionRange(0, target.value.length);
 
-	// copy the selection
-	var succeed;
-	try {
-		succeed = document.execCommand("copy");
-	} catch(e) {
-		succeed = false;
-	}
-	// restore original focus
-	if (currentFocus && typeof currentFocus.focus === "function") {
-		currentFocus.focus();
-	}
-
-	if (isInput) {
-		// restore prior selection
-		elem.setSelectionRange(origSelectionStart, origSelectionEnd);
-	} else {
-		// clear temporary content
-		target.textContent = "";
-	}
-	return succeed;
-}
-
-function refresh_whois_url_bar() {
-	document.getElementById('whois_url_bar_section').style.display = "Block"; // because of NoScript
-
-	var format = "";
-	var radios = document.getElementsByName('format');
-
-	for (var i = 0, length = radios.length; i < length; i++) {
-		if (radios[i].checked) {
-			format = radios[i].value;
+		// copy the selection
+		var succeed;
+		try {
+			succeed = document.execCommand("copy");
+		} catch(e) {
+			succeed = false;
 		}
+		// restore original focus
+		if (currentFocus && typeof currentFocus.focus === "function") {
+			currentFocus.focus();
+		}
+
+		if (isInput) {
+			// restore prior selection
+			elem.setSelectionRange(origSelectionStart, origSelectionEnd);
+		} else {
+			// clear temporary content
+			target.textContent = "";
+		}
+		return succeed;
+	},
+
+	refresh_whois_url_bar: function() {
+		document.getElementById('whois_url_bar_section').style.display = "Block"; // because of NoScript
+
+		var format = "";
+		var radios = document.getElementsByName('format');
+
+		for (var i = 0, length = radios.length; i < length; i++) {
+			if (radios[i].checked) {
+				format = radios[i].value;
+			}
+		}
+
+		document.getElementById('whois_url_bar').innerHTML = getSystemUrl() + 'plugins/publicPages/100_whois/whois/webwhois.php?format=' + format + '&query=' + encodeURIComponent(document.getElementById('whois_query').value);
 	}
 
-	document.getElementById('whois_url_bar').innerHTML = getSystemUrl() + 'plugins/publicPages/100_whois/whois/webwhois.php?format=' + format + '&query=' + encodeURIComponent(document.getElementById('whois_query').value);
-}
+};

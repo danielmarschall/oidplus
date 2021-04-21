@@ -182,7 +182,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			}
 
 			OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged in via LDAP");
-			OIDplus::authUtils()::raLogin($email);
+			OIDplus::authUtils()->raLogin($email);
 
 			OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 
@@ -234,13 +234,13 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			$login_list = OIDplus::authUtils()->loggedInRaList();
 			if (count($login_list) > 0) {
 				foreach ($login_list as $x) {
-					$out['text'] .= '<p>'._L('You are logged in as %1','<b>'.$x->raEmail().'</b>').' (<a href="#" onclick="return raLogout('.js_escape($x->raEmail()).');">'._L('Logout').'</a>)</p>';
+					$out['text'] .= '<p>'._L('You are logged in as %1','<b>'.$x->raEmail().'</b>').' (<a href="#" onclick="return OIDplusPagePublicLogin.raLogout('.js_escape($x->raEmail()).');">'._L('Logout').'</a>)</p>';
 				}
 				$out['text'] .= '<p>'._L('If you have more accounts, you can log in with another account here.').'</p>';
 			} else {
 				$out['text'] .= '<p>'._L('Enter your email address and your password to log in as Registration Authority.').'</p>';
 			}
-			$out['text'] .= '<form onsubmit="return raLoginLdapOnSubmit(this);">';
+			$out['text'] .= '<form onsubmit="return OIDplusPagePublicLoginLDAP.raLoginLdapOnSubmit(this);">';
 			$out['text'] .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" name="email" value="" id="raLoginLdapEMail"></div>';
 			$out['text'] .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginLdapPassword"></div>';
 			$out['text'] .= '<br><input type="submit" value="'._L('Login').'"><br><br>';

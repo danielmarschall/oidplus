@@ -35,7 +35,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 	// Attention: Needs to be public, because otherwise register_shutdown_function() won't work
 	public function shutdownLogout() {
 		if ($this->autoLoggedIn) {
-			OIDplus::authUtils()::adminLogout();
+			OIDplus::authUtils()->adminLogout();
 		}
 	}
 
@@ -52,9 +52,9 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 						throw new OIDplusException(_L('Invalid AJAX unlock key'));
 					}
 
-					if (OIDplus::authUtils()::adminCheckPassword($input['batch_login_password'])) {
+					if (OIDplus::authUtils()->adminCheckPassword($input['batch_login_password'])) {
 						OIDplus::sesHandler()->simulate = true; // do not change the user session
-						OIDplus::authUtils()::adminLogin();
+						OIDplus::authUtils()->adminLogin();
 						$this->autoLoggedIn = true;
 						register_shutdown_function(array($this,'shutdownLogout'));
 					} else {
@@ -71,7 +71,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 			$out['title'] = _L('Automated AJAX calls');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
@@ -117,7 +117,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
-		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';

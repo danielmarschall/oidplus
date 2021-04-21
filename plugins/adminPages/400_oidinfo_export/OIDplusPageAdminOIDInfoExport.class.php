@@ -27,7 +27,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	public function action($actionID, $params) {
 
 		if ($actionID == 'import_xml_file') {
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
 
@@ -60,7 +60,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				);
 			}
 		} else if ($actionID == 'import_oidinfo_oid') {
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
 
@@ -159,7 +159,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$out['title'] = _L('List OIDs in your system which are missing at oid-info.com');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
@@ -405,7 +405,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 								// Note: "Actions" is at the left, because it has a fixed width, so the user can continue clicking without the links moving if the OID length changes between lines
 								$out['text'] .= '<tr id="missing_oid_'.str_replace('.','_',$local_oid).'">'.
 								'<td><a '.OIDplus::gui()->link(isset($lookup_nonoid[$local_oid]) ? $lookup_nonoid[$local_oid] : 'oid:'.$local_oid, true).'>'._L('View local OID').'</a></td>'.
-								'<td><a href="javascript:removeMissingOid(\''.$local_oid.'\');">'._L('Ignore for now').'</a></td>'.
+								'<td><a href="javascript:OIDplusPageAdminOIDInfoExport.removeMissingOid(\''.$local_oid.'\');">'._L('Ignore for now').'</a></td>'.
 								'<td><a target="_blank" href="'.$url.'">'._L('Add to oid-info.com manually').'</a></td>'.
 								'<td>'.$local_oid.'</td>'.
 								'</tr>';
@@ -427,7 +427,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$out['title'] = _L('List OIDs at oid-info.com which are missing in your system');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
@@ -537,9 +537,9 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 								// Note: "Actions" is at the left, because it has a fixed width, so the user can continue clicking without the links moving if the OID length changes between lines
 								$out['text'] .= '<tr id="missing_oid_'.str_replace('.','_',$child_oid).'">'.
 								'<td><a target="_blank" href="http://www.oid-info.com/get/'.$child_oid.'">'._L('View OID at oid-info.com').'</a></td>'.
-								'<td><a href="javascript:removeMissingOid(\''.$child_oid.'\');">'._L('Ignore for now').'</a></td>'.
+								'<td><a href="javascript:OIDplusPageAdminOIDInfoExport.removeMissingOid(\''.$child_oid.'\');">'._L('Ignore for now').'</a></td>'.
 								'<td><a href="mailto:admin@oid-info.com">'._L('Report illegal OID').'</a></td>'.
-								(strpos($child_oid,'1.3.6.1.4.1.37476.30.9.') === 0 ? '<td>&nbsp;</td>' : '<td><a href="javascript:importMissingOid(\''.$child_oid.'\');">'._L('Import OID').'</a></td>').
+								(strpos($child_oid,'1.3.6.1.4.1.37476.30.9.') === 0 ? '<td>&nbsp;</td>' : '<td><a href="javascript:OIDplusPageAdminOIDInfoExport.importMissingOid(\''.$child_oid.'\');">'._L('Import OID').'</a></td>').
 								'<td>'.$child_oid.'</td>'.
 								'</tr>';
 							}
@@ -560,7 +560,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$out['title'] = _L('Data Transfer');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
@@ -595,7 +595,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$tabcont  = '<h2>'._L('Import XML file').'</h2>';
 			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>.','href="http://www.oid-info.com/oid.xsd" target="_blank"').'</p>';
 			// TODO: we need a waiting animation!
-			$tabcont .= '<form action="javascript:void(0);" onsubmit="return uploadXmlFileOnSubmit(this);" enctype="multipart/form-data" id="uploadXmlFileForm">';
+			$tabcont .= '<form action="javascript:void(0);" onsubmit="return OIDplusPageAdminOIDInfoExport.uploadXmlFileOnSubmit(this);" enctype="multipart/form-data" id="uploadXmlFileForm">';
 			$tabcont .= '<div>'._L('Choose XML file here').':<input type="file" name="userfile" value="" id="userfile">';
 			$tabcont .= '<br><input type="submit" value="'._L('Import XML').'"></div>';
 			$tabcont .= '</form>';
@@ -611,7 +611,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
-		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';

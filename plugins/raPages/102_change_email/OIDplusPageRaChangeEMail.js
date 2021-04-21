@@ -15,86 +15,90 @@
  * limitations under the License.
  */
 
-function changeRaEmailFormOnSubmit(isadmin) {
-	$.ajax({
-		url: "ajax.php",
-		type: "POST",
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: {
-			csrf_token:csrf_token,
-			plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.102",
-			action: "change_ra_email",
-			old_email: $("#old_email").val(),
-			new_email: $("#new_email").val(),
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-		},
-		success: function(data) {
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
-			} else if (data.status >= 0) {
-				if (isadmin) {
-					alert(_L("eMail address of RA changed"));
-					//openOidInPanel('oidplus:rainfo$'+$("#new_email").val(),true);
-					// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs
-					window.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#new_email").val());
-				} else {
-					alert(_L("Verification eMail sent"));
-					//window.location.href = '?goto=oidplus:system';
-					//reloadContent();
-				}
-			} else {
-				alert(_L("Error: %1",data));
-			}
-		}
-	});
-	return false;
-}
+var OIDplusPageRaChangeEMail = {
 
-function activateNewRaEmailFormOnSubmit() {
-	$.ajax({
-		url: "ajax.php",
-		type: "POST",
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: {
-			csrf_token:csrf_token,
-			plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.102",
-			action: "activate_new_ra_email",
-			password: $("#password").val(),
-			old_email: $("#old_email").val(),
-			new_email: $("#new_email").val(),
-			auth: $("#auth").val(),
-			timestamp: $("#timestamp").val()
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-		},
-		success: function(data) {
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
-			} else if (data.status >= 0) {
-				alert(_L("Done"));
-				window.location.href = '?goto=oidplus:system';
-				//reloadContent();
-			} else {
-				alert(_L("Error: %1",data));
+	changeRaEmailFormOnSubmit: function(isadmin) {
+		$.ajax({
+			url: "ajax.php",
+			type: "POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.102",
+				action: "change_ra_email",
+				old_email: $("#old_email").val(),
+				new_email: $("#new_email").val(),
+			},
+			error:function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
+			},
+			success: function(data) {
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+				} else if (data.status >= 0) {
+					if (isadmin) {
+						alert(_L("eMail address of RA changed"));
+						//openOidInPanel('oidplus:rainfo$'+$("#new_email").val(),true);
+						// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs
+						window.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#new_email").val());
+					} else {
+						alert(_L("Verification eMail sent"));
+						//window.location.href = '?goto=oidplus:system';
+						//reloadContent();
+					}
+				} else {
+					alert(_L("Error: %1",data));
+				}
 			}
-		}
-	});
-	return false;
-}
+		});
+		return false;
+	},
+
+	activateNewRaEmailFormOnSubmit: function() {
+		$.ajax({
+			url: "ajax.php",
+			type: "POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.102",
+				action: "activate_new_ra_email",
+				password: $("#password").val(),
+				old_email: $("#old_email").val(),
+				new_email: $("#new_email").val(),
+				auth: $("#auth").val(),
+				timestamp: $("#timestamp").val()
+			},
+			error:function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
+			},
+			success: function(data) {
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+				} else if (data.status >= 0) {
+					alert(_L("Done"));
+					window.location.href = '?goto=oidplus:system';
+					//reloadContent();
+				} else {
+					alert(_L("Error: %1",data));
+				}
+			}
+		});
+		return false;
+	}
+
+};

@@ -50,7 +50,7 @@ if (class_exists('OIDplusPageAdminColors')) {
 	// but there are following reasons why we DON'T do it:
 	// 1. Just having a "CSS URL parameter feature" would change the URL parameter,
 	//    but it would not affect the custom code in oidplus.min.css.php
-	// 2. The JS function test_color_theme() has an hardcoded set of parameters
+	// 2. The JS function OIDplusPageAdminColors.test_color_theme() has an hardcoded set of parameters
 	//    and does not follow the arguments that might be set by other plugins.
 	$add_css_args[] = 'theme='.urlencode(OIDplus::config()->getValue('design'));
 	$add_css_args[] = 'invert='.urlencode(OIDplus::config()->getValue('color_invert'));

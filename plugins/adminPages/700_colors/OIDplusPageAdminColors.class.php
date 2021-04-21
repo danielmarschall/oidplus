@@ -23,7 +23,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 
 	public function action($actionID, $params) {
 		if ($actionID == 'color_update') {
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
 
@@ -84,7 +84,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			$out['title'] = _L('Design');
 			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
 
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
@@ -126,24 +126,24 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<div id="slider-icolor"></div>';
 
 			$out['text'] .= '<script>';
-			$out['text'] .= 'if (g_hue_shift == null) g_hue_shift = g_hue_shift_saved = '.OIDplus::config()->getValue('color_hue_shift').";\n";
-			$out['text'] .= 'if (g_sat_shift == null) g_sat_shift = g_sat_shift_saved = '.OIDplus::config()->getValue('color_sat_shift').";\n";
-			$out['text'] .= 'if (g_val_shift == null) g_val_shift = g_val_shift_saved = '.OIDplus::config()->getValue('color_val_shift').";\n";
-			$out['text'] .= 'if (g_invcolors == null) g_invcolors = g_invcolors_saved = '.OIDplus::config()->getValue('color_invert').";\n";
-			$out['text'] .= 'if (g_activetheme == null) g_activetheme_saved = '.js_escape(OIDplus::config()->getValue('design')).";\n";
-			$out['text'] .= 'setup_color_sliders();';
+			$out['text'] .= 'if (OIDplusPageAdminColors.hue_shift == null) OIDplusPageAdminColors.hue_shift = OIDplusPageAdminColors.hue_shift_saved = '.OIDplus::config()->getValue('color_hue_shift').";\n";
+			$out['text'] .= 'if (OIDplusPageAdminColors.sat_shift == null) OIDplusPageAdminColors.sat_shift = OIDplusPageAdminColors.sat_shift_saved = '.OIDplus::config()->getValue('color_sat_shift').";\n";
+			$out['text'] .= 'if (OIDplusPageAdminColors.val_shift == null) OIDplusPageAdminColors.val_shift = OIDplusPageAdminColors.val_shift_saved = '.OIDplus::config()->getValue('color_val_shift').";\n";
+			$out['text'] .= 'if (OIDplusPageAdminColors.invcolors == null) OIDplusPageAdminColors.invcolors = OIDplusPageAdminColors.invcolors_saved = '.OIDplus::config()->getValue('color_invert').";\n";
+			$out['text'] .= 'if (OIDplusPageAdminColors.activetheme == null) OIDplusPageAdminColors.activetheme_saved = '.js_escape(OIDplus::config()->getValue('design')).";\n";
+			$out['text'] .= 'OIDplusPageAdminColors.setup_color_sliders();';
 			$out['text'] .= '</script>';
 
 			$out['text'] .= '<br>';
-			$out['text'] .= '<input type="button" onclick="color_reset_sliders_cfg()" value="'._L('Reset to last saved config').'">'.str_repeat('&nbsp;',5);
-			$out['text'] .= '<input type="button" onclick="color_reset_sliders_factory()" value="'._L('Reset default setting').'">'.str_repeat('&nbsp;',5);
-			$out['text'] .= '<input type="button" onclick="test_color_theme()" value="'._L('Test').'">'.str_repeat('&nbsp;',5);
-			$out['text'] .= '<input type="button" onclick="crudActionColorUpdate()" value="'._L('Set permanently').'">';
+			$out['text'] .= '<input type="button" onclick="OIDplusPageAdminColors.color_reset_sliders_cfg()" value="'._L('Reset to last saved config').'">'.str_repeat('&nbsp;',5);
+			$out['text'] .= '<input type="button" onclick="OIDplusPageAdminColors.color_reset_sliders_factory()" value="'._L('Reset default setting').'">'.str_repeat('&nbsp;',5);
+			$out['text'] .= '<input type="button" onclick="OIDplusPageAdminColors.test_color_theme()" value="'._L('Test').'">'.str_repeat('&nbsp;',5);
+			$out['text'] .= '<input type="button" onclick="OIDplusPageAdminColors.crudActionColorUpdate()" value="'._L('Set permanently').'">';
 		}
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
-		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
                 if (file_exists(__DIR__.'/treeicon.png')) {
                         $tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';

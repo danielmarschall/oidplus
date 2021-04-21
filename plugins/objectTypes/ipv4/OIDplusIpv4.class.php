@@ -122,7 +122,7 @@ class OIDplusIpv4 extends OIDplusObject {
 			}
 
 			if (!$this->isLeafNode()) {
-				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+				if (OIDplus::authUtils()->isAdminLoggedIn()) {
 					$content .= '<h2>'._L('Manage root objects').'</h2>';
 				} else {
 					$content .= '<h2>'._L('Available objects').'</h2>';

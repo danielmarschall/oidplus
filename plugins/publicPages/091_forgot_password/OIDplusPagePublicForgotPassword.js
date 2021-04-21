@@ -15,82 +15,86 @@
  * limitations under the License.
  */
 
-function forgotPasswordFormOnSubmit() {
-	$.ajax({
-		url: "ajax.php",
-		type: "POST",
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: {
-			csrf_token:csrf_token,
-			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.91",
-			action: "forgot_password",
-			email: $("#email").val(),
-			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-			if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
-		},
-		success: function(data) {
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
-				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
-			} else if (data.status >= 0) {
-				alert(_L("E-Mail sent."));
-				window.location.href = '?goto=oidplus:login';
-				//reloadContent();
-			} else {
-				alert(_L("Error: %1",data));
-				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
-			}
-		}
-	});
-	return false;
-}
+var OIDplusPagePublicForgotPassword = {
 
-function resetPasswordFormOnSubmit() {
-	$.ajax({
-		url: "ajax.php",
-		type: "POST",
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: {
-			csrf_token:csrf_token,
-			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.91",
-			action: "reset_password",
-			email: $("#email").val(),
-			auth: $("#auth").val(),
-			password1: $("#password1").val(),
-			password2: $("#password2").val(),
-			timestamp: $("#timestamp").val()
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-		},
-		success: function(data) {
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
-			} else if (data.status >= 0) {
-				alert(_L("Password successfully changed. You can now log in."));
-				window.location.href = '?goto=oidplus:login';
-				//reloadContent();
-			} else {
-				alert(_L("Error: %1",data));
+	forgotPasswordFormOnSubmit: function() {
+		$.ajax({
+			url: "ajax.php",
+			type: "POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.91",
+				action: "forgot_password",
+				email: $("#email").val(),
+				captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
+			},
+			error:function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
+				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+			},
+			success: function(data) {
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+					if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+				} else if (data.status >= 0) {
+					alert(_L("E-Mail sent."));
+					window.location.href = '?goto=oidplus:login';
+					//reloadContent();
+				} else {
+					alert(_L("Error: %1",data));
+					if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+				}
 			}
-		}
-	});
-	return false;
-}
+		});
+		return false;
+	},
+
+	resetPasswordFormOnSubmit: function() {
+		$.ajax({
+			url: "ajax.php",
+			type: "POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.91",
+				action: "reset_password",
+				email: $("#email").val(),
+				auth: $("#auth").val(),
+				password1: $("#password1").val(),
+				password2: $("#password2").val(),
+				timestamp: $("#timestamp").val()
+			},
+			error:function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
+			},
+			success: function(data) {
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+				} else if (data.status >= 0) {
+					alert(_L("Password successfully changed. You can now log in."));
+					window.location.href = '?goto=oidplus:login';
+					//reloadContent();
+				} else {
+					alert(_L("Error: %1",data));
+				}
+			}
+		});
+		return false;
+	}
+
+};

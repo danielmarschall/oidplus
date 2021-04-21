@@ -29,7 +29,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 			@set_time_limit(0);
 
 
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
 
@@ -78,7 +78,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 			$out['title'] = _L('Software update');
 			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
 
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
@@ -170,7 +170,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<p><font color="red">'.strtoupper(_L('Warning')).': '._L('Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! In case the update fails, you can download and extract the complete <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot ZIP file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.').'</font></p>';
 					$out['text'] .= '<form method="POST" action="index.php">';
 
-					$out['text'] .= '<p><input type="button" onclick="doUpdateOIDplus()" value="'._L('Update NOW').'"></p>';
+					$out['text'] .= '<p><input type="button" onclick="OIDplusPageAdminSoftwareUpdate.doUpdateOIDplus()" value="'._L('Update NOW').'"></p>';
 
 					$out['text'] .= '<h2 id="update_header">'._L('Preview of update %1 &rarr; %2',$local_installation,$newest_version).'</h2>';
 
@@ -195,7 +195,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
-		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';

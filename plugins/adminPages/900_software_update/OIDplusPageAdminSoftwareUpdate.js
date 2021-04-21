@@ -15,46 +15,49 @@
  * limitations under the License.
  */
 
-function doUpdateOIDplus() {
-	show_waiting_anim();
-	$.ajax({
-		url: "ajax.php",
-		type: "POST",
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: {
-			csrf_token:csrf_token,
-			plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.900",
-			action: "update_now",
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			hide_waiting_anim();
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-		},
-		success: function(data) {
-			hide_waiting_anim();
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
-			} else if (data.status >= 0) {
-				alert(_L("Update OK"));
-				reloadContent();
-				return;
-			} else {
-				alert(_L("Error: %1",data));
-			}
-			if ("content" in data) {
-				$("#update_infobox").text(data.content);
-			}
-			$("#update_header").text(_L("Result of update"));
-		},
-		timeout:0 // infinite
-	});
-	return false;
-}
+var OIDplusPageAdminSoftwareUpdate = {
 
+	doUpdateOIDplus: function() {
+		show_waiting_anim();
+		$.ajax({
+			url: "ajax.php",
+			type: "POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.900",
+				action: "update_now",
+			},
+			error:function(jqXHR, textStatus, errorThrown) {
+				hide_waiting_anim();
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
+			},
+			success: function(data) {
+				hide_waiting_anim();
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+				} else if (data.status >= 0) {
+					alert(_L("Update OK"));
+					reloadContent();
+					return;
+				} else {
+					alert(_L("Error: %1",data));
+				}
+				if ("content" in data) {
+					$("#update_infobox").text(data.content);
+				}
+				$("#update_header").text(_L("Result of update"));
+			},
+			timeout:0 // infinite
+		});
+		return false;
+	}
+
+};

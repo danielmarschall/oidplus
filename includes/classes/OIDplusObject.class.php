@@ -87,7 +87,7 @@ abstract class OIDplusObject {
 				                            "left join ###objects as oParent on oChild.parent = oParent.id ".
 				                            "order by ".OIDplus::db()->natOrder('oChild.id'));
 				while ($row = $res->fetch_array()) {
-					if (!OIDplus::authUtils()::isRaLoggedIn($row['parent_mail']) && OIDplus::authUtils()::isRaLoggedIn($row['child_mail'])) {
+					if (!OIDplus::authUtils()->isRaLoggedIn($row['parent_mail']) && OIDplus::authUtils()->isRaLoggedIn($row['child_mail'])) {
 						$x = self::parse($row['id']); // can be FALSE if namespace was disabled
 						if ($x) $out[] = $x;
 					}
@@ -266,10 +266,10 @@ abstract class OIDplusObject {
 
 		if (is_null($ra_email)) {
 			// Admin may do everything
-			if (OIDplus::authUtils()::isAdminLoggedIn()) return true;
+			if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 
 			// If the RA is logged in, then they can see the OID.
-			if (OIDplus::authUtils()::isRaLoggedIn($this->getRaMail())) return true;
+			if (OIDplus::authUtils()->isRaLoggedIn($this->getRaMail())) return true;
 		} else {
 			// If this OID belongs to the requested RA, then they may see it.
 			if ($this->getRaMail() == $ra_email) return true;
@@ -295,7 +295,7 @@ abstract class OIDplusObject {
 			$ra_email = $row['ra_email'];
 		}
 		// TODO: have different icons for Leaf-Nodes
-		if (OIDplus::authUtils()::isRaLoggedIn($ra_email)) {
+		if (OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
 			$icon = 'plugins/objectTypes/'.$namespace.'/img/treeicon_own.png';
 		} else {
 			$icon = 'plugins/objectTypes/'.$namespace.'/img/treeicon_general.png';
@@ -383,7 +383,7 @@ abstract class OIDplusObject {
 		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
 
 		if (is_null($ra_email)) {
-			if (OIDplus::authUtils()::isAdminLoggedIn()) return true;
+			if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 		}
 
 		$objParent = $this->getParent();
@@ -395,8 +395,8 @@ abstract class OIDplusObject {
 		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
 
 		if (is_null($ra_email)) {
-			if (OIDplus::authUtils()::isAdminLoggedIn()) return true;
-			return OIDplus::authUtils()::isRaLoggedIn($this->getRaMail());
+			if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
+			return OIDplus::authUtils()->isRaLoggedIn($this->getRaMail());
 		} else {
 			return $this->getRaMail() == $ra_email;
 		}

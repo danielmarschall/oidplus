@@ -111,7 +111,7 @@ class OIDplusOid extends OIDplusObject {
 			}
 
 			if (!$this->isLeafNode()) {
-				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+				if (OIDplus::authUtils()->isAdminLoggedIn()) {
 					$content .= '<h2>'._L('Manage your root OIDs').'</h2>';
 				} else {
 					$content .= '<h2>'._L('Root OIDs').'</h2>';

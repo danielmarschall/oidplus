@@ -15,41 +15,45 @@
  * limitations under the License.
  */
 
-function adminCreateRaFormOnSubmit() {
-	$.ajax({
-		url: "ajax.php",
-		type: "POST",
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: {
-			csrf_token:csrf_token,
-			plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.130",
-			action: "create_ra",
-			email: $("#email").val(),
-			password1: $("#password1").val(),
-			password2: $("#password2").val()
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-		},
-		success: function(data) {
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
-			} else if (data.status >= 0) {
-				alert(_L("Account created"));
-				//openOidInPanel('oidplus:rainfo$'+$("#email").val(),true);
-				// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs
-				window.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#email").val());
-			} else {
-				alert(_L("Error: %1",data));
+var OIDplusPageAdminCreateRa = {
+
+	adminCreateRaFormOnSubmit: function() {
+		$.ajax({
+			url: "ajax.php",
+			type: "POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.130",
+				action: "create_ra",
+				email: $("#email").val(),
+				password1: $("#password1").val(),
+				password2: $("#password2").val()
+			},
+			error:function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
+			},
+			success: function(data) {
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+				} else if (data.status >= 0) {
+					alert(_L("Account created"));
+					//openOidInPanel('oidplus:rainfo$'+$("#email").val(),true);
+					// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs
+					window.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#email").val());
+				} else {
+					alert(_L("Error: %1",data));
+				}
 			}
-		}
-	});
-	return false;
-}
+		});
+		return false;
+	}
+
+};

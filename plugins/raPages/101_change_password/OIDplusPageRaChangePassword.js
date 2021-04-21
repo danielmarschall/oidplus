@@ -15,41 +15,45 @@
  * limitations under the License.
  */
 
-function raChangePasswordFormOnSubmit() {
-	$.ajax({
-		url: "ajax.php",
-		type: "POST",
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: {
-			csrf_token:csrf_token,
-			plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.101",
-			action: "change_ra_password",
-			email: $("#email").val(),
-			old_password: $("#old_password").val(),
-			new_password1: $("#new_password1").val(),
-			new_password2: $("#new_password2").val()
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-		},
-		success: function(data) {
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
-			} else if (data.status >= 0) {
-				alert(_L("Done"));
-				//window.location.href = '?goto=oidplus:system';
-				//reloadContent();
-			} else {
-				alert(_L("Error: %1",data));
+var OIDplusPageRaChangePassword = {
+
+	raChangePasswordFormOnSubmit: function() {
+		$.ajax({
+			url: "ajax.php",
+			type: "POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.101",
+				action: "change_ra_password",
+				email: $("#email").val(),
+				old_password: $("#old_password").val(),
+				new_password1: $("#new_password1").val(),
+				new_password2: $("#new_password2").val()
+			},
+			error:function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
+			},
+			success: function(data) {
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+				} else if (data.status >= 0) {
+					alert(_L("Done"));
+					//window.location.href = '?goto=oidplus:system';
+					//reloadContent();
+				} else {
+					alert(_L("Error: %1",data));
+				}
 			}
-		}
-	});
-	return false;
-}
+		});
+		return false;
+	}
+
+};

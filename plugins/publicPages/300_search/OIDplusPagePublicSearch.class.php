@@ -196,7 +196,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				</div>
 				 <br>
 
-				<input type="submit" value="'._L('Search').'" onclick="return search_button_click()">
+				<input type="submit" value="'._L('Search').'" onclick="return OIDplusPagePublicSearch.search_button_click()">
 				</form>';
 
 				$out['text'] .= '<div id="search_output">'; // will be filled with either AJAX or staticly (HTML form submit)
