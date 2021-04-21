@@ -17,6 +17,8 @@
 
 var OIDplusPageAdminColors = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.3.700",
+
 	g_hue_shift: null,
 	g_sat_shift: null,
 	g_val_shift: null,
@@ -150,14 +152,14 @@ var OIDplusPageAdminColors = {
 				$.xhrPool.remove(jqXHR);
 			},
 			data: {
-				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.700",
-				action:"color_update",
-				hue_shift:document.getElementById('hshift').value,
-				sat_shift:document.getElementById('sshift').value,
-				val_shift:document.getElementById('vshift').value,
-				invcolors:document.getElementById('icolor').value,
-				theme:document.getElementById('theme').value,
+				csrf_token: csrf_token,
+				plugin: OIDplusPageAdminColors.oid,
+				action: "color_update",
+				hue_shift: document.getElementById('hshift').value,
+				sat_shift: document.getElementById('sshift').value,
+				val_shift: document.getElementById('vshift').value,
+				invcolors: document.getElementById('icolor').value,
+				theme: document.getElementById('theme').value,
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;

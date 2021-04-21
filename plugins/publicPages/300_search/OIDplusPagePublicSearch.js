@@ -17,6 +17,8 @@
 
 var OIDplusPagePublicSearch = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.1.300",
+
 	search_button_click: function() {
 		$.ajax({
 			url:"ajax.php",
@@ -30,7 +32,7 @@ var OIDplusPagePublicSearch = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.300",
+				plugin: OIDplusPagePublicSearch.oid,
 				action:"search",
 				namespace: $("#namespace").val(),
 				term: $("#term").val(),

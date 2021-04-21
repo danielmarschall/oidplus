@@ -17,6 +17,8 @@
 
 var OIDplusPageRaChangePassword = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.2.101",
+
 	raChangePasswordFormOnSubmit: function() {
 		$.ajax({
 			url: "ajax.php",
@@ -30,7 +32,7 @@ var OIDplusPageRaChangePassword = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.101",
+				plugin: OIDplusPageRaChangePassword.oid,
 				action: "change_ra_password",
 				email: $("#email").val(),
 				old_password: $("#old_password").val(),

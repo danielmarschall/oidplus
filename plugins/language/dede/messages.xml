@@ -5470,6 +5470,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		System configuration plugin is not installed.
+		]]></source>
+		<target><![CDATA[
+		System-Konfiguration Plugin ist nicht installiert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		System directory
 		]]></source>
 		<target><![CDATA[

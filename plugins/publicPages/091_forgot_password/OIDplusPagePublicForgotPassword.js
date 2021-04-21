@@ -17,6 +17,8 @@
 
 var OIDplusPagePublicForgotPassword = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.1.91",
+
 	forgotPasswordFormOnSubmit: function() {
 		$.ajax({
 			url: "ajax.php",
@@ -30,7 +32,7 @@ var OIDplusPagePublicForgotPassword = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.91",
+				plugin:OIDplusPagePublicForgotPassword.oid,
 				action: "forgot_password",
 				email: $("#email").val(),
 				captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
@@ -70,7 +72,7 @@ var OIDplusPagePublicForgotPassword = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.91",
+				plugin:OIDplusPagePublicForgotPassword.oid,
 				action: "reset_password",
 				email: $("#email").val(),
 				auth: $("#auth").val(),
