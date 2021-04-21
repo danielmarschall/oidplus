@@ -17,6 +17,8 @@
 
 var OIDplusPagePublicLoginLDAP = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.1.800",
+
 	/* RA */
 
 	raLoginLdap: function(email, password) {
@@ -32,7 +34,7 @@ var OIDplusPagePublicLoginLDAP = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.800",
+				plugin:OIDplusPagePublicLoginLDAP.oid,
 				action:"ra_login_ldap",
 				email:email,
 				password:password,

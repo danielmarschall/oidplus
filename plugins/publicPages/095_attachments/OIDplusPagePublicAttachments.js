@@ -17,6 +17,8 @@
 
 var OIDplusPagePublicAttachments = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.1.95",
+
 	downloadAttachment: function(webpath, id, file) {
 
 		//OIDplus::webpath(__DIR__).'download.php?id='.urlencode($id).'&filename='.urlencode(basename($file)).'
@@ -40,7 +42,7 @@ var OIDplusPagePublicAttachments = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.95",
+				plugin:OIDplusPagePublicAttachments.oid,
 				action:"deleteAttachment",
 				id:id,
 				filename:file,
@@ -65,11 +67,10 @@ var OIDplusPagePublicAttachments = {
 	uploadAttachment: function(id, file) {
 		var file_data = $('#fileAttachment').prop('files')[0];
 
-		// TODO: Check if it is possible if we just say   data: { csrf_token: ..., userfile: ...,   }  like we always do
 		var form_data = new FormData();
 		form_data.append('csrf_token', csrf_token);
 		form_data.append('userfile', file_data);
-		form_data.append('plugin', "1.3.6.1.4.1.37476.2.5.2.4.1.95");
+		form_data.append('plugin', OIDplusPagePublicAttachments.oid);
 		form_data.append('action', "uploadAttachment");
 		form_data.append('id', id);
 

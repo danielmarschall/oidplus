@@ -17,6 +17,8 @@
 
 var OIDplusPagePublicFreeOID = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.1.200",
+
 	freeOIDFormOnSubmit: function() {
 		$.ajax({
 			url: "ajax.php",
@@ -30,7 +32,7 @@ var OIDplusPagePublicFreeOID = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.200",
+				plugin:OIDplusPagePublicFreeOID.oid,
 				action: "request_freeoid",
 				email: $("#email").val(),
 				captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
@@ -70,7 +72,7 @@ var OIDplusPagePublicFreeOID = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.200",
+				plugin:OIDplusPagePublicFreeOID.oid,
 				action: "activate_freeoid",
 				email: $("#email").val(),
 				ra_name: $("#ra_name").val(),

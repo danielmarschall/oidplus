@@ -17,6 +17,8 @@
 
 var OIDplusPageAdminSoftwareUpdate = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.3.900",
+
 	doUpdateOIDplus: function() {
 		show_waiting_anim();
 		$.ajax({
@@ -31,7 +33,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.900",
+				plugin: OIDplusPageAdminSoftwareUpdate.oid,
 				action: "update_now",
 			},
 			error:function(jqXHR, textStatus, errorThrown) {

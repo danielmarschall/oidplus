@@ -17,6 +17,8 @@
 
 var OIDplusPagePublicObjects = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.1.0",
+
 	generateRandomUUID: function() {
 		$.ajax({
 			url:"ajax.php",
@@ -30,7 +32,7 @@ var OIDplusPagePublicObjects = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
+				plugin:OIDplusPagePublicObjects.oid,
 				action:"generate_uuid"
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
@@ -128,7 +130,7 @@ var OIDplusPagePublicObjects = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
+				plugin:OIDplusPagePublicObjects.oid,
 				action:"Insert",
 				id:document.getElementById('id').value,
 				ra_email:document.getElementById('ra_email').value,
@@ -204,7 +206,7 @@ var OIDplusPagePublicObjects = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
+				plugin:OIDplusPagePublicObjects.oid,
 				action:"Update",
 				id:id,
 				ra_email:document.getElementById('ra_email_'+id).value,
@@ -265,7 +267,7 @@ var OIDplusPagePublicObjects = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
+				plugin:OIDplusPagePublicObjects.oid,
 				action:"Delete",
 				id:id,
 				parent:parent
@@ -300,7 +302,7 @@ var OIDplusPagePublicObjects = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.0",
+				plugin:OIDplusPagePublicObjects.oid,
 				action:"Update2",
 				id:current_node,
 				title:(document.getElementById('titleedit') ? document.getElementById('titleedit').value : null),

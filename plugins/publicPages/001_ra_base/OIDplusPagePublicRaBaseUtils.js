@@ -17,6 +17,8 @@
 
 var OIDplusPagePublicRaBaseUtils = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.1.1",
+
 	// Is currently used by plugin public-093 (rainfo) and ra-100 (edit-contact-data)!
 	deleteRa: function(email, goto) {
 		if(!window.confirm(_L("Are you sure that you want to delete %1? (The OIDs stay active)",email))) return false;
@@ -33,7 +35,7 @@ var OIDplusPagePublicRaBaseUtils = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.1",
+				plugin:OIDplusPagePublicRaBaseUtils.oid,
 				action:"delete_ra",
 				email:email,
 			},

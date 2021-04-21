@@ -17,6 +17,8 @@
 
 var OIDplusPageRaInvite = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.2.92",
+
 	inviteFormOnSubmit: function() {
 		$.ajax({
 			url: "ajax.php",
@@ -29,8 +31,8 @@ var OIDplusPageRaInvite = {
 				$.xhrPool.remove(jqXHR);
 			},
 			data: {
-				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.92",
+				csrf_token: csrf_token,
+				plugin: OIDplusPageRaInvite.oid,
 				action: "invite_ra",
 				email: $("#email").val(),
 				captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
@@ -70,7 +72,7 @@ var OIDplusPageRaInvite = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.2.92",
+				plugin: OIDplusPageRaInvite.oid,
 				action: "activate_ra",
 				email: $("#email").val(),
 				auth: $("#auth").val(),

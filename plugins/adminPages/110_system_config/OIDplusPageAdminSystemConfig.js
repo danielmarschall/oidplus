@@ -17,6 +17,8 @@
 
 var OIDplusPageAdminSystemConfig = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.3.110",
+
 	crudActionConfigUpdate: function(name) {
 		$.ajax({
 			url:"ajax.php",
@@ -29,11 +31,11 @@ var OIDplusPageAdminSystemConfig = {
 				$.xhrPool.remove(jqXHR);
 			},
 			data: {
-				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.110",
-				action:"config_update",
-				name:name,
-				value:document.getElementById('config_'+name).value,
+				csrf_token: csrf_token,
+				plugin: OIDplusPageAdminSystemConfig.oid,
+				action: "config_update",
+				name: name,
+				value: document.getElementById('config_'+name).value,
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;

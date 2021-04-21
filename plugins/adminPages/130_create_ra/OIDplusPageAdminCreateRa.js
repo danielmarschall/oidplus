@@ -17,6 +17,8 @@
 
 var OIDplusPageAdminCreateRa = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.3.130",
+
 	adminCreateRaFormOnSubmit: function() {
 		$.ajax({
 			url: "ajax.php",
@@ -29,8 +31,8 @@ var OIDplusPageAdminCreateRa = {
 				$.xhrPool.remove(jqXHR);
 			},
 			data: {
-				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.130",
+				csrf_token: csrf_token,
+				plugin: OIDplusPageAdminCreateRa.oid,
 				action: "create_ra",
 				email: $("#email").val(),
 				password1: $("#password1").val(),

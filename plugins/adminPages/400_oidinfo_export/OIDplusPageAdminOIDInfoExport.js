@@ -17,6 +17,8 @@
 
 var OIDplusPageAdminOIDInfoExport = {
 
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.3.400",
+
 	removeMissingOid: function(oid) {
 		$('#missing_oid_'+oid.replace(/\./g,'_')).remove();
 	},
@@ -33,10 +35,10 @@ var OIDplusPageAdminOIDInfoExport = {
 				$.xhrPool.remove(jqXHR);
 			},
 			data: {
-				csrf_token:csrf_token,
-				plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.400",
-				action:"import_oidinfo_oid",
-				oid:oid
+				csrf_token: csrf_token,
+				plugin: OIDplusPageAdminOIDInfoExport.oid,
+				action: "import_oidinfo_oid",
+				oid: oid
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
@@ -60,7 +62,7 @@ var OIDplusPageAdminOIDInfoExport = {
 
 		var form_data = new FormData();
 		form_data.append('userfile', file_data);
-		form_data.append('plugin', "1.3.6.1.4.1.37476.2.5.2.4.3.400");
+		form_data.append('plugin', OIDplusPageAdminOIDInfoExport.oid),
 		form_data.append('action', "import_xml_file");
 		form_data.append('csrf_token', csrf_token);
 
