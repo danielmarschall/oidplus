@@ -32,7 +32,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			$out['title'] = _L('System registration settings');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
@@ -95,7 +95,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 				# ---
 
-				$out['text'] .= '</select> <input type="button" value="'._L('Change').'" onclick="crudActionRegPrivacyUpdate()"></p>';
+				$out['text'] .= '</select> <input type="button" value="'._L('Change').'" onclick="OIDplusPageAdminRegistration.crudActionRegPrivacyUpdate()"></p>';
 
 				$out['text'] .= '<p>'._L('After clicking "change", your OIDplus system will contact the ViaThinkSoft server to adjust (add or remove information) your privacy setting. This may take a few minutes.').'</p>';
 
@@ -107,7 +107,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			$out['title'] = _L('Registration live status');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
@@ -424,7 +424,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
-		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';

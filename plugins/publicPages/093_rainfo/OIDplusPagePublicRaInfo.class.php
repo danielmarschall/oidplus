@@ -69,18 +69,18 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 			if (!empty($ra_email)) {
 				$res = OIDplus::db()->query("select * from ###ra where email = ?", array($ra_email));
 				if ($res->num_rows() > 0) {
-					if (OIDplus::authUtils()::isRALoggedIn($ra_email) || OIDplus::authUtils()::isAdminLoggedIn()) {
+					if (OIDplus::authUtils()->isRALoggedIn($ra_email) || OIDplus::authUtils()->isAdminLoggedIn()) {
 						$editContactDataPlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.100'); // OIDplusPageRaEditContactData
 						if (!is_null($editContactDataPlugin)) {
 							$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:edit_ra$'.$ra_email).'>'._L('Edit contact data').'</a></p>';
 						}
 					}
 
-					if (OIDplus::authUtils()::isAdminLoggedIn()) {
+					if (OIDplus::authUtils()->isAdminLoggedIn()) {
 						if (class_exists("OIDplusPageAdminListRAs")) {
-							$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">'._L('Delete this RA').'</a></p>';
+							$out['text'] .= '<p><a href="#" onclick="return OIDplusPagePublicRaBaseUtils.deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">'._L('Delete this RA').'</a></p>';
 						} else {
-							$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">'._L('Delete this RA').'</a></p>';
+							$out['text'] .= '<p><a href="#" onclick="return OIDplusPagePublicRaBaseUtils.deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">'._L('Delete this RA').'</a></p>';
 						}
 
 						$changePasswordPlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.101'); // OIDplusPageRaChangePassword
@@ -90,7 +90,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 					}
 				}
 
-				if (OIDplus::authUtils()::isRALoggedIn($ra_email) || OIDplus::authUtils()::isAdminLoggedIn()) {
+				if (OIDplus::authUtils()->isRALoggedIn($ra_email) || OIDplus::authUtils()->isAdminLoggedIn()) {
 					$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event from ###log lo ".
 					                            "left join ###log_user lu on lu.log_id = lo.id ".
 					                            "where lu.username = ? " .

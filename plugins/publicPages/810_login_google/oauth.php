@@ -108,7 +108,7 @@ if (!empty($email)) {
 	}
 
 	OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged in via Google OAuth2");
-	OIDplus::authUtils()::raLogin($email);
+	OIDplus::authUtils()->raLogin($email);
 
 	OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 

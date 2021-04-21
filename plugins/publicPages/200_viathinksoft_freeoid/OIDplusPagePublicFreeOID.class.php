@@ -61,7 +61,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			OIDplus::logger()->log("[INFO]OID(oid:$root_oid)+RA($email)!", "Requested a free OID for email '$email' to be placed into root '$root_oid'");
 
 			$timestamp = time();
-			$activate_url = OIDplus::webpath(null,false) . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp));
+			$activate_url = OIDplus::webpath(null,false) . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp));
 
 			$message = file_get_contents(__DIR__ . '/request_msg.tpl');
 			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,false), $message);
@@ -79,7 +79,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$auth = $params['auth'];
 			$timestamp = $params['timestamp'];
 
-			if (!OIDplus::authUtils()::validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
+			if (!OIDplus::authUtils()->validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
 				throw new OIDplusException(_L('Invalid auth key'));
 			}
 
@@ -204,7 +204,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 			try {
 				$out['text'] .= '
-				  <form id="freeOIDForm" action="javascript:void(0);" onsubmit="return freeOIDFormOnSubmit();">
+				  <form id="freeOIDForm" action="javascript:void(0);" onsubmit="return OIDplusPagePublicFreeOID.freeOIDFormOnSubmit();">
 				    '._L('E-Mail').': <input type="text" id="email" value=""/><br><br>'.
 				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
 				 '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
@@ -250,7 +250,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			if ($already_registered_oid = $this->alreadyHasFreeOid($email, true)) {
 				throw new OIDplusException(_L('This email address already has a FreeOID registered (%1)', $already_registered_oid));
 			} else {
-				if (!OIDplus::authUtils()::validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
+				if (!OIDplus::authUtils()->validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
 					$out['icon'] = 'img/error_big.png';
 					$out['text'] = _L('Invalid authorization. Is the URL OK?');
 				} else {
@@ -259,7 +259,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 					$out['text'] = '<p>'._L('eMail-Address').': <b>'.$email.'</b></p>';
 
-					$out['text'] .= '  <form id="activateFreeOIDForm" action="javascript:void(0);" onsubmit="return activateFreeOIDFormOnSubmit();">';
+					$out['text'] .= '  <form id="activateFreeOIDForm" action="javascript:void(0);" onsubmit="return OIDplusPagePublicFreeOID.activateFreeOIDFormOnSubmit();">';
 					$out['text'] .= '    <input type="hidden" id="email" value="'.htmlentities($email).'"/>';
 					$out['text'] .= '    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>';
 					$out['text'] .= '    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>';

@@ -106,7 +106,7 @@ class OIDplusGuid extends OIDplusObject {
 			}
 
 			if (!$this->isLeafNode()) {
-				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+				if (OIDplus::authUtils()->isAdminLoggedIn()) {
 					$content .= '<h2>'._L('Manage root objects / categories').'</h2>';
 				} else {
 					$content .= '<h2>'._L('Available objects / categories').'</h2>';

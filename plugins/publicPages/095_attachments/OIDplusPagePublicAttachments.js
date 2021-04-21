@@ -15,96 +15,101 @@
  * limitations under the License.
  */
 
-function downloadAttachment(webpath, id, file) {
+var OIDplusPagePublicAttachments = {
 
-	//OIDplus::webpath(__DIR__).'download.php?id='.urlencode($id).'&filename='.urlencode(basename($file)).'
+	downloadAttachment: function(webpath, id, file) {
 
-	window.open(webpath + 'download.php?id='+encodeURI(id)+'&filename='+encodeURI(file), '_blank');
+		//OIDplus::webpath(__DIR__).'download.php?id='.urlencode($id).'&filename='.urlencode(basename($file)).'
 
-}
+		window.open(webpath + 'download.php?id='+encodeURI(id)+'&filename='+encodeURI(file), '_blank');
 
-function deleteAttachment(id, file) {
-	if(!window.confirm(_L("Are you sure that you want to delete %1?",file))) return false;
+	},
 
-	$.ajax({
-		url:"ajax.php",
-		method:"POST",
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: {
-			csrf_token:csrf_token,
-			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.95",
-			action:"deleteAttachment",
-			id:id,
-			filename:file,
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-		},
-		success:function(data) {
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
-			} else if (data.status >= 0) {
-				alert(_L("OK"));
-				reloadContent();
-			} else {
-				alert(_L("Error: %1",data));
+	deleteAttachment: function(id, file) {
+		if(!window.confirm(_L("Are you sure that you want to delete %1?",file))) return false;
+
+		$.ajax({
+			url:"ajax.php",
+			method:"POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.95",
+				action:"deleteAttachment",
+				id:id,
+				filename:file,
+			},
+			error:function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
+			},
+			success:function(data) {
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+				} else if (data.status >= 0) {
+					alert(_L("OK"));
+					reloadContent();
+				} else {
+					alert(_L("Error: %1",data));
+				}
 			}
-		}
-	});
-}
+		});
+	},
 
-function uploadAttachment(id, file) {
-	var file_data = $('#fileAttachment').prop('files')[0];
+	uploadAttachment: function(id, file) {
+		var file_data = $('#fileAttachment').prop('files')[0];
 
-	var form_data = new FormData();
-	form_data.append('csrf_token', csrf_token);
-	form_data.append('userfile', file_data);
-	form_data.append('plugin', "1.3.6.1.4.1.37476.2.5.2.4.1.95");
-	form_data.append('action', "uploadAttachment");
-	form_data.append('id', id);
+		// TODO: Check if it is possible if we just say   data: { csrf_token: ..., userfile: ...,   }  like we always do
+		var form_data = new FormData();
+		form_data.append('csrf_token', csrf_token);
+		form_data.append('userfile', file_data);
+		form_data.append('plugin', "1.3.6.1.4.1.37476.2.5.2.4.1.95");
+		form_data.append('action', "uploadAttachment");
+		form_data.append('id', id);
 
-	$.ajax({
-		url:"ajax.php",
-		method:"POST",
-		processData:false,
-		contentType:false,
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: form_data,
-		error:function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-		},
-		success:function(data) {
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
-			} else if (data.status >= 0) {
-				alert(_L("OK"));
-				$('#fileAttachment').val('');
-				reloadContent();
-			} else {
-				alert(_L("Error: %1",data));
+		$.ajax({
+			url:"ajax.php",
+			method:"POST",
+			processData:false,
+			contentType:false,
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: form_data,
+			error:function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
+			},
+			success:function(data) {
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+				} else if (data.status >= 0) {
+					alert(_L("OK"));
+					$('#fileAttachment').val('');
+					reloadContent();
+				} else {
+					alert(_L("Error: %1",data));
+				}
 			}
-		}
-	});
-}
+		});
+	},
 
-function uploadAttachmentOnSubmit() {
-	try {
-		uploadAttachment(current_node, document.getElementById("fileAttachment").value);
-	} finally {
-		return false;
+	uploadAttachmentOnSubmit: function() {
+		try {
+			OIDplusPagePublicAttachments.uploadAttachment(current_node, document.getElementById("fileAttachment").value);
+		} finally {
+			return false;
+		}
 	}
-}
+
+};

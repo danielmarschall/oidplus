@@ -23,7 +23,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
 	public function action($actionID, $params) {
 		if ($actionID == 'config_update') {
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
 
@@ -58,7 +58,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 			$out['title'] = _L('System configuration');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
@@ -88,7 +88,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 					$output .= '     <td>&nbsp;</td>';
 				} else {
 					$output .= '     <td><input type="text" id="config_'.$row->name.'" value="'.htmlentities($row->value).'"></td>';
-					$output .= '     <td><button type="button" name="config_update_'.$row->name.'" id="config_update_'.$row->name.'" class="btn btn-success btn-xs update" onclick="crudActionConfigUpdate('.js_escape($row->name).')">'._L('Update').'</button></td>';
+					$output .= '     <td><button type="button" name="config_update_'.$row->name.'" id="config_update_'.$row->name.'" class="btn btn-success btn-xs update" onclick="OIDplusPageAdminSystemConfig.crudActionConfigUpdate('.js_escape($row->name).')">'._L('Update').'</button></td>';
 				}
 				$output .= '</tr>';
 			}
@@ -112,7 +112,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
-		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';

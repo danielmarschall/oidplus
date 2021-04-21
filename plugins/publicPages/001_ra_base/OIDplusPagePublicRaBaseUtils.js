@@ -15,43 +15,47 @@
  * limitations under the License.
  */
 
-// Is currently used by plugin public-093 (rainfo) and ra-100 (edit-contact-data)!
-function deleteRa(email, goto) {
-	if(!window.confirm(_L("Are you sure that you want to delete %1? (The OIDs stay active)",email))) return false;
+var OIDplusPagePublicRaBaseUtils = {
 
-	$.ajax({
-		url:"ajax.php",
-		method:"POST",
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: {
-			csrf_token:csrf_token,
-			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.1",
-			action:"delete_ra",
-			email:email,
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-		},
-		success:function(data) {
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
-			} else if (data.status >= 0) {
-				alert(_L("Done"));
-				if (goto != null) {
-					$("#gotoedit").val(goto);
-					window.location.href = "?goto="+encodeURIComponent(goto);
+	// Is currently used by plugin public-093 (rainfo) and ra-100 (edit-contact-data)!
+	deleteRa: function(email, goto) {
+		if(!window.confirm(_L("Are you sure that you want to delete %1? (The OIDs stay active)",email))) return false;
+
+		$.ajax({
+			url:"ajax.php",
+			method:"POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.1",
+				action:"delete_ra",
+				email:email,
+			},
+			error:function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
+			},
+			success:function(data) {
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+				} else if (data.status >= 0) {
+					alert(_L("Done"));
+					if (goto != null) {
+						$("#gotoedit").val(goto);
+						window.location.href = "?goto="+encodeURIComponent(goto);
+					}
+					// reloadContent();
+				} else {
+					alert(_L("Error: %1",data.error));
 				}
-				// reloadContent();
-			} else {
-				alert(_L("Error: %1",data.error));
 			}
-		}
-	});
-}
+		});
+	}
+
+};

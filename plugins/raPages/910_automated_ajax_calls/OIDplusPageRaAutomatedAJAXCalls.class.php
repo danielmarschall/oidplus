@@ -35,7 +35,7 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 	// Attention: Needs to be public, because otherwise register_shutdown_function() won't work
 	public function shutdownLogout() {
 		foreach ($this->autoLoginList as $username) {
-			OIDplus::authUtils()::raLogout($username);
+			OIDplus::authUtils()->raLogout($username);
 		}
 	}
 
@@ -52,9 +52,9 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 						throw new OIDplusException(_L('Invalid AJAX unlock key'));
 					}
 
-					if (OIDplus::authUtils()::raCheckPassword($input['batch_login_username'], $input['batch_login_password'])) {
+					if (OIDplus::authUtils()->raCheckPassword($input['batch_login_username'], $input['batch_login_password'])) {
 						OIDplus::sesHandler()->simulate = true; // do not change the user session
-						OIDplus::authUtils()::raLogin($input['batch_login_username']);
+						OIDplus::authUtils()->raLogin($input['batch_login_username']);
 						$this->autoLoginList[] = $input['batch_login_username'];
 						register_shutdown_function(array($this,'shutdownLogout'));
 					} else {
@@ -74,7 +74,7 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 			$out['title'] = _L('Automated AJAX calls');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as the requested RA %2 or as admin.',OIDplus::gui()->link('oidplus:login'),'<b>'.htmlentities($ra_email).'</b>').'</p>';
 				return;
@@ -121,7 +121,7 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!$ra_email) return false;
-		if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';

@@ -15,36 +15,40 @@
  * limitations under the License.
  */
 
-function crudActionConfigUpdate(name) {
-	$.ajax({
-		url:"ajax.php",
-		method:"POST",
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: {
-			csrf_token:csrf_token,
-			plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.110",
-			action:"config_update",
-			name:name,
-			value:document.getElementById('config_'+name).value,
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-		},
-		success:function(data) {
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
-			} else if (data.status >= 0) {
-				alert(_L("Update OK"));
-			} else {
-				alert(_L("Error: %1",data));
+var OIDplusPageAdminSystemConfig = {
+
+	crudActionConfigUpdate: function(name) {
+		$.ajax({
+			url:"ajax.php",
+			method:"POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:"1.3.6.1.4.1.37476.2.5.2.4.3.110",
+				action:"config_update",
+				name:name,
+				value:document.getElementById('config_'+name).value,
+			},
+			error:function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
+			},
+			success:function(data) {
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+				} else if (data.status >= 0) {
+					alert(_L("Update OK"));
+				} else {
+					alert(_L("Error: %1",data));
+				}
 			}
-		}
-	});
-}
+		});
+	}
+
+};

@@ -29,7 +29,7 @@ if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPageAdminOIDInfoExpor
 
 # ---
 
-if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 	if (PHP_SAPI == 'cli') {
 		#echo "You need to log in as administrator.\n";
 		#die();

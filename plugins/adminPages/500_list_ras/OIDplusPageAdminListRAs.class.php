@@ -58,7 +58,7 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 			$out['title'] = _L('RA Listing');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
@@ -67,7 +67,7 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 			$out['text'] = '';
 
 			$tmp = $this->get_ralist();
-			
+
 			$raCreatePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.3.130'); // OIDplusPageAdminCreateRa
 			if (!is_null($raCreatePlugin)) {
 				$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:create_ra').'>Create a new RA manually</a></p>';
@@ -96,7 +96,7 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
-		if (!OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
@@ -153,7 +153,7 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 		// so the node does not need to be searched
 		/*
 		if (strpos($request, 'oidplus:rainfo$') === 0) {
-			if (OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (OIDplus::authUtils()->isAdminLoggedIn()) {
 				return array('oidplus:login', ...dummy..., 'oidplus:list_ra', $request);
 			}
 		}

@@ -29,7 +29,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		//if (!$ra_email) return false;
-		//if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		//if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		return false;
 	}

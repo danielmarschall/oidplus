@@ -80,7 +80,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	protected static function mayAccessResource($source) {
-		if (OIDplus::authUtils()::isAdminLoggedIn()) return true;
+		if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 
 		$candidates = array(
 			OIDplus::localpath().'userdata/resources/security.ini',
@@ -95,10 +95,10 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 						return true;
 					} else if ($level == 'RA') {
 						return
-							((OIDplus::authUtils()::raNumLoggedIn() > 0) ||
-							(OIDplus::authUtils()::isAdminLoggedIn()));
+							((OIDplus::authUtils()->raNumLoggedIn() > 0) ||
+							(OIDplus::authUtils()->isAdminLoggedIn()));
 					} else if ($level == 'ADMIN') {
-						return OIDplus::authUtils()::isAdminLoggedIn();
+						return OIDplus::authUtils()->isAdminLoggedIn();
 					} else {
 						throw new OIDplusException(_L('Unexpected security level in %1 (expect PUBLIC, RA or ADMIN)', $ini_file));
 					}

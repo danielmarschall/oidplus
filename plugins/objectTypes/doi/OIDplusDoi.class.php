@@ -112,7 +112,7 @@ class OIDplusDoi extends OIDplusObject {
 			}
 
 			if (!$this->isLeafNode()) {
-				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+				if (OIDplus::authUtils()->isAdminLoggedIn()) {
 					$content .= '<h2>'._L('Manage your DOIs').'</h2>';
 				} else {
 					$content .= '<h2>'._L('Available DOIs').'</h2>';

@@ -30,11 +30,11 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 				throw new OIDplusException(_L('RA does not exist'));
 			}
 
-			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isRaLoggedIn($email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA to update its data.'));
 			}
 
-			if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$old_password = $params['old_password'];
 			}
 			$password1 = $params['new_password1'];
@@ -51,7 +51,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 
 			$ra = new OIDplusRA($email);
 			if (!$ra->isPasswordLess()) {
-				if (!OIDplus::authUtils()::isAdminLoggedIn()) {
+				if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 					if (!$ra->checkPassword($old_password)) {
 						throw new OIDplusException(_L('Old password incorrect'));
 					}
@@ -82,7 +82,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 			$out['title'] = $ra->isPasswordLess() ? _L('Create password') : _L('Change RA password');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as the requested RA %2.',OIDplus::gui()->link('oidplus:login'),'<b>'.htmlentities($ra_email).'</b>').'</p>';
 				return;
@@ -95,11 +95,11 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 				return;
 			}
 
-			$out['text'] .= '<form id="raChangePasswordForm" action="javascript:void(0);" onsubmit="return raChangePasswordFormOnSubmit();">';
+			$out['text'] .= '<form id="raChangePasswordForm" action="javascript:void(0);" onsubmit="return OIDplusPageRaChangePassword.raChangePasswordFormOnSubmit();">';
 			$out['text'] .= '<input type="hidden" id="email" value="'.htmlentities($ra_email).'"/><br>';
 			$out['text'] .= '<div><label class="padding_label">'._L('E-Mail').':</label><b>'.htmlentities($ra_email).'</b></div>';
 			if (!$ra->isPasswordLess()) {
-				if (OIDplus::authUtils()::isAdminLoggedIn()) {
+				if (OIDplus::authUtils()->isAdminLoggedIn()) {
 					$out['text'] .= '<div><label class="padding_label">'._L('Old password').':</label><i>'._L('Admin can change the password without verification of the old password.').'</i></div>';
 				} else {
 					$out['text'] .= '<div><label class="padding_label">'._L('Old password').':</label><input type="password" id="old_password" value=""/></div>';
@@ -113,7 +113,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!$ra_email) return false;
-		if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';

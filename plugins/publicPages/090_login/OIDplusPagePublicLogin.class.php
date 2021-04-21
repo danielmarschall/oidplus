@@ -44,7 +44,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 			if ($ra->checkPassword($params['password'])) {
 				OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged in");
-				OIDplus::authUtils()::raLogin($email);
+				OIDplus::authUtils()->raLogin($email);
 
 				OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 
@@ -65,7 +65,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$email = $params['email'];
 
 			OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged out");
-			OIDplus::authUtils()::raLogout($email);
+			OIDplus::authUtils()->raLogout($email);
 			return array("status" => 0);
 		}
 
@@ -82,9 +82,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				}
 			}
 
-			if (OIDplus::authUtils()::adminCheckPassword($params['password'])) {
+			if (OIDplus::authUtils()->adminCheckPassword($params['password'])) {
 				OIDplus::logger()->log("[OK]A!", "Admin logged in");
-				OIDplus::authUtils()::adminLogin();
+				OIDplus::authUtils()->adminLogin();
 				return array("status" => 0);
 			} else {
 				if (OIDplus::config()->getValue('log_failed_admin_logins', false)) {
@@ -95,7 +95,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		}
 		else if ($actionID == 'admin_logout') {
 			OIDplus::logger()->log("[OK]A!", "Admin logged out");
-			OIDplus::authUtils()::adminLogout();
+			OIDplus::authUtils()->adminLogout();
 			return array("status" => 0);
 		}
 		else {
@@ -153,13 +153,13 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$login_list = OIDplus::authUtils()->loggedInRaList();
 			if (count($login_list) > 0) {
 				foreach ($login_list as $x) {
-					$tabcont .= '<p>'._L('You are logged in as %1','<b>'.$x->raEmail().'</b>').' (<a href="#" onclick="return raLogout('.js_escape($x->raEmail()).');">'._L('Logout').'</a>)</p>';
+					$tabcont .= '<p>'._L('You are logged in as %1','<b>'.$x->raEmail().'</b>').' (<a href="#" onclick="return OIDplusPagePublicLogin.raLogout('.js_escape($x->raEmail()).');">'._L('Logout').'</a>)</p>';
 				}
 				$tabcont .= '<p>'._L('If you have more accounts, you can log in with another account here.').'</p>';
 			} else {
 				$tabcont .= '<p>'._L('Enter your email address and your password to log in as Registration Authority.').'</p>';
 			}
-			$tabcont .= '<form action="javascript:void(0);" onsubmit="return raLoginOnSubmit(this);">';
+			$tabcont .= '<form action="javascript:void(0);" onsubmit="return OIDplusPagePublicLogin.raLoginOnSubmit(this);">';
 			$tabcont .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" name="email" value="" id="raLoginEMail"></div>';
 			$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginPassword"></div>';
 			$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
@@ -200,11 +200,11 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$out['text'] .= OIDplus::gui()->tabContentPage('ra', $tabcont, $tab === 'ra');
 			// ---------------- "Administrator" tab
 			$tabcont = '<h2>'._L('Login as administrator').'</h2>';
-			if (OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (OIDplus::authUtils()->isAdminLoggedIn()) {
 				$tabcont .= '<p>'._L('You are logged in as administrator.').'</p>';
-				$tabcont .= '<a href="#" onclick="return adminLogout();">'._L('Logout').'</a>';
+				$tabcont .= '<a href="#" onclick="return OIDplusPagePublicLogin.adminLogout();">'._L('Logout').'</a>';
 			} else {
-				$tabcont .= '<form action="javascript:void(0);" onsubmit="return adminLoginOnSubmit(this);">';
+				$tabcont .= '<form action="javascript:void(0);" onsubmit="return OIDplusPagePublicLogin.adminLoginOnSubmit(this);">';
 				$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="adminLoginPassword"></div>';
 				$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
 				$tabcont .= '</form>';
@@ -236,7 +236,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		$loginChildren = array();
 
-		if (OIDplus::authUtils()::isAdminLoggedIn()) {
+		if (OIDplus::authUtils()->isAdminLoggedIn()) {
 			$ra_roots = array();
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
@@ -248,7 +248,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$ra_roots[] = array(
 				'id'       => 'oidplus:logout$admin',
 				'icon'     => OIDplus::webpath(__DIR__).'treeicon_logout.png',
-				'conditionalselect' => 'adminLogout(); false;', // defined in oidplus_base.js
+				'conditionalselect' => 'OIDplusPagePublicLogin.adminLogout(); false;',
 				'text'     => _L('Log out')
 			);
 			$loginChildren[] = array(
@@ -261,7 +261,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			);
 		}
 
-		foreach (OIDplus::authUtils()::loggedInRaList() as $ra) {
+		foreach (OIDplus::authUtils()->loggedInRaList() as $ra) {
 			$ra_email = $ra->raEmail();
 			$ra_roots = array();
 
@@ -273,7 +273,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 			$ra_roots[] = array(
 				'id'       => 'oidplus:logout$'.$ra_email,
-				'conditionalselect' => 'raLogout('.js_escape($ra_email).'); false;', // defined in oidplus_base.js
+				'conditionalselect' => 'OIDplusPagePublicLogin.raLogout('.js_escape($ra_email).'); false;',
 				'icon'     => OIDplus::webpath(__DIR__).'treeicon_logout.png',
 				'text'     => _L('Log out')
 			);

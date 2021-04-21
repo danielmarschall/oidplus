@@ -25,7 +25,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 		if ($actionID == 'change_ra_data') {
 			$email = $params['email'];
 
-			if (!OIDplus::authUtils()::isRaLoggedIn($email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isRaLoggedIn($email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA to update its data.'));
 			}
 
@@ -86,7 +86,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			$out['title'] = _L('Edit RA contact data');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
-			if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) {
+			if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as the requested RA %2.',OIDplus::gui()->link('oidplus:login'),'<b>'.htmlentities($ra_email).'</b>').'</p>';
 				return;
@@ -112,7 +112,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			// ---
 
 			$out['text'] .= '<p>'._L('Change basic information (public)').':</p>
-			  <form id="raChangeContactDataForm" action="javascript:void(0);" onsubmit="return raChangeContactDataFormOnSubmit();">
+			  <form id="raChangeContactDataForm" action="javascript:void(0);" onsubmit="return OIDplusPageRaEditContactData.raChangeContactDataFormOnSubmit();">
 			    <input type="hidden" id="email" value="'.htmlentities($ra_email).'"/>
 			    <div><label class="padding_label">'._L('RA Name').':</label><input type="text" id="ra_name" value="'.htmlentities($row['ra_name']).'"/></div>
 			    <div><label class="padding_label">'._L('Organization').':</label><input type="text" id="organization" value="'.htmlentities($row['organization']).'"/></div>
@@ -129,13 +129,13 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			    <br><input type="submit" value="'._L('Change data').'">
 			  </form><br><br>';
 
-			$out['text'] .= '<p><a href="#" onclick="return deleteRa('.js_escape($ra_email).',\'oidplus:system\')">'._L('Delete profile').'</a> '._L('(objects stay active)').'</p>';
+			$out['text'] .= '<p><a href="#" onclick="return OIDplusPagePublicRaBaseUtils.deleteRa('.js_escape($ra_email).',\'oidplus:system\')">'._L('Delete profile').'</a> '._L('(objects stay active)').'</p>';
 		}
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!$ra_email) return false;
-		if (!OIDplus::authUtils()::isRaLoggedIn($ra_email) && !OIDplus::authUtils()::isAdminLoggedIn()) return false;
+		if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/treeicon.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';

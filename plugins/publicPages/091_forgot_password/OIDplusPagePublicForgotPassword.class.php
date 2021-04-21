@@ -42,7 +42,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			OIDplus::logger()->log("[WARN]RA($email)!", "A new password for '$email' was requested (forgot password)");
 
 			$timestamp = time();
-			$activate_url = OIDplus::webpath(null,false) . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()::makeAuthKey('reset_password;'.$email.';'.$timestamp));
+			$activate_url = OIDplus::webpath(null,false) . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('reset_password;'.$email.';'.$timestamp));
 
 			$message = $this->getForgotPasswordText($params['email']);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
@@ -59,7 +59,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$auth = $params['auth'];
 			$timestamp = $params['timestamp'];
 
-			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
+			if (!OIDplus::authUtils()->validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
 				throw new OIDplusException(_L('Invalid auth key'));
 			}
 
@@ -104,7 +104,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 			try {
 				$out['text'] .= '<p>'._L('Please enter the email address of your account, and information about the password reset will be sent to you.').'</p>
-				  <form id="forgotPasswordForm" action="javascript:void(0);" onsubmit="return forgotPasswordFormOnSubmit();">
+				  <form id="forgotPasswordForm" action="javascript:void(0);" onsubmit="return OIDplusPagePublicForgotPassword.forgotPasswordFormOnSubmit();">
 				    '._L('E-Mail').': <input type="text" id="email" value=""/><br><br>'.
 				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
 				 '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
@@ -129,13 +129,13 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$out['title'] = _L('Reset password');
 			$out['icon'] = OIDplus::webpath(__DIR__).'reset_password_big.png';
 
-			if (!OIDplus::authUtils()::validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
+			if (!OIDplus::authUtils()->validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = _L('Invalid authorization. Is the URL OK?');
 			} else {
 				$out['text'] = '<p>'._L('E-Mail-Address: %1','<b>'.$email.'</b>').'</p>
 
-				  <form id="resetPasswordForm" action="javascript:void(0);" onsubmit="return resetPasswordFormOnSubmit();">
+				  <form id="resetPasswordForm" action="javascript:void(0);" onsubmit="return OIDplusPagePublicForgotPassword.resetPasswordFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 				    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>

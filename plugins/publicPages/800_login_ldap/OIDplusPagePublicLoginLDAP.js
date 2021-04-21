@@ -15,48 +15,52 @@
  * limitations under the License.
  */
 
-/* RA */
+var OIDplusPagePublicLoginLDAP = {
 
-function raLoginLdap(email, password) {
-	$.ajax({
-		url:"ajax.php",
-		method:"POST",
-		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
-			$.xhrPool.add(jqXHR);
-		},
-		complete: function(jqXHR, text) {
-			$.xhrPool.remove(jqXHR);
-		},
-		data: {
-			csrf_token:csrf_token,
-			plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.800",
-			action:"ra_login_ldap",
-			email:email,
-			password:password,
-			captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
-		},
-		error:function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown == "abort") return;
-			alert(_L("Error: %1",errorThrown));
-			if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
-		},
-		success:function(data) {
-			if ("error" in data) {
-				alert(_L("Error: %1",data.error));
+	/* RA */
+
+	raLoginLdap: function(email, password) {
+		$.ajax({
+			url:"ajax.php",
+			method:"POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:"1.3.6.1.4.1.37476.2.5.2.4.1.800",
+				action:"ra_login_ldap",
+				email:email,
+				password:password,
+				captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
+			},
+			error:function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "abort") return;
+				alert(_L("Error: %1",errorThrown));
 				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
-			} else if (data.status >= 0) {
-				window.location.href = '?goto=oidplus:system';
-				// reloadContent();
-			} else {
-				alert(_L("Error: %1",data));
-				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+			},
+			success:function(data) {
+				if ("error" in data) {
+					alert(_L("Error: %1",data.error));
+					if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+				} else if (data.status >= 0) {
+					window.location.href = '?goto=oidplus:system';
+					// reloadContent();
+				} else {
+					alert(_L("Error: %1",data));
+					if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+				}
 			}
-		}
-	});
-}
+		});
+	},
 
-function raLoginLdapOnSubmit() {
-	raLoginLdap(document.getElementById("raLoginLdapEMail").value, document.getElementById("raLoginLdapPassword").value);
-	return false;
-}
+	raLoginLdapOnSubmit: function() {
+		OIDplusPagePublicLoginLDAP.raLoginLdap(document.getElementById("raLoginLdapEMail").value, document.getElementById("raLoginLdapPassword").value);
+		return false;
+	}
+
+};
