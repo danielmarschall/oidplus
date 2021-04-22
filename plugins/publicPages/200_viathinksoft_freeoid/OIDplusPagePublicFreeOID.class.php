@@ -37,6 +37,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 		if (empty(self::getFreeRootOid(false))) throw new OIDplusException(_L('FreeOID service not available. Please ask your administrator.'));
 
 		if ($actionID == 'request_freeoid') {
+			_CheckParamExists($params, 'email');
 			$email = $params['email'];
 
 			if ($already_registered_oid = $this->alreadyHasFreeOid($email, true)) {
@@ -49,6 +50,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
+				_CheckParamExists($params, 'captcha');
 				$response=$params["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
@@ -74,6 +76,9 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			return array("status" => 0);
 
 		} else if ($actionID == 'activate_freeoid') {
+			_CheckParamExists($params, 'email');
+			_CheckParamExists($params, 'auth');
+			_CheckParamExists($params, 'timestamp');
 
 			$email = $params['email'];
 			$auth = $params['auth'];
@@ -91,6 +96,10 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 			$ra = new OIDplusRA($email);
 			if (!$ra->existing()) {
+				_CheckParamExists($params, 'password1');
+				_CheckParamExists($params, 'password2');
+				_CheckParamExists($params, 'ra_name');
+				
 				$password1 = $params['password1'];
 				$password2 = $params['password2'];
 				$ra_name = $params['ra_name'];
@@ -117,8 +126,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 			// 2. step: Add the new OID to the database
 
-			$url = $params['url'];
-			$title = $params['title'];
+			$url = isset($params['url']) ? $params['url'] : '';
+			$title = isset($params['title']) ? $params['title'] : '';
 
 			$root_oid = self::getFreeRootOid(false);
 			$new_oid = OIDplusOid::parse('oid:'.$root_oid)->appendArcs($this->freeoid_max_id()+1)->nodeId(false);

@@ -153,6 +153,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
+				_CheckParamExists($params, 'captcha');
 				$response=$params["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
@@ -160,6 +161,9 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
 				}
 			}
+			
+			_CheckParamExists($params, 'email');
+			_CheckParamExists($params, 'password');
 
 			$email = $params['email'];
 			$password = $params['password'];

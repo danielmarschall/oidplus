@@ -27,6 +27,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		if ($actionID == 'ra_login') {
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
+				_CheckParamExists($params, 'captcha');
 				$response=$params["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
@@ -34,6 +35,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
 				}
 			}
+
+			_CheckParamExists($params, 'email');
+			_CheckParamExists($params, 'password');
 
 			$email = $params['email'];
 			$ra = new OIDplusRA($email);
@@ -62,6 +66,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 		} else if ($actionID == 'ra_logout') {
 
+			_CheckParamExists($params, 'email');
+		
 			$email = $params['email'];
 
 			OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged out");
@@ -74,6 +80,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		else if ($actionID == 'admin_login') {
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
+				_CheckParamExists($params, 'captcha');
 				$response=$params["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 				$captcha_success=json_decode($verify);
@@ -82,6 +89,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				}
 			}
 
+			_CheckParamExists($params, 'password');
 			if (OIDplus::authUtils()->adminCheckPassword($params['password'])) {
 				OIDplus::logger()->log("[OK]A!", "Admin logged in");
 				OIDplus::authUtils()->adminLogin();

@@ -23,6 +23,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 	public function action($actionID, $params) {
 		if ($actionID == 'forgot_password') {
+			_CheckParamExists($params, 'email');
 			$email = $params['email'];
 
 			if (!OIDplus::mailUtils()->validMailAddress($email)) {
@@ -30,6 +31,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			}
 
 			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
+				_CheckParamExists($params, 'captcha');
 				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 				$response=$params["captcha"];
 				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
@@ -52,6 +54,12 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			return array("status" => 0);
 
 		} else if ($actionID == 'reset_password') {
+			
+			_CheckParamExists($params, 'password1');
+			_CheckParamExists($params, 'password2');
+			_CheckParamExists($params, 'email');
+			_CheckParamExists($params, 'auth');
+			_CheckParamExists($params, 'timestamp');
 
 			$password1 = $params['password1'];
 			$password2 = $params['password2'];

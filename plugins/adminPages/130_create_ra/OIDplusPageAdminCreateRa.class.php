@@ -27,6 +27,10 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
 
+			_CheckParamExists($params, 'name');
+			_CheckParamExists($params, 'password1');
+			_CheckParamExists($params, 'password2');
+
 			$email = $params['email'];
 			$password1 = $params['password1'];
 			$password2 = $params['password2'];

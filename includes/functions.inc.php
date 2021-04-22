@@ -187,6 +187,10 @@ function _L($str, ...$sprintfArgs) {
 	return $res;
 }
 
+function _CheckParamExists($params, $key) {
+	if (!isset($params[$key])) throw new OIDplusException(_L('Parameter %1 is missing', $key));
+}
+
 function extractHtmlContents($cont) {
 	// make sure the program works even if the user provided HTML is not UTF-8
 	$cont = iconv(mb_detect_encoding($cont, mb_detect_order(), true), 'UTF-8//IGNORE', $cont);
