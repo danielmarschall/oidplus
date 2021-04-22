@@ -23,6 +23,8 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 
 	public function action($actionID, $params) {
 		if ($actionID == 'change_ra_password') {
+			_CheckParamExists($params, 'email');
+			
 			$email = $params['email'];
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
@@ -35,8 +37,13 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 			}
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+				_CheckParamExists($params, 'old_password');
 				$old_password = $params['old_password'];
 			}
+			
+			_CheckParamExists($params, 'new_password1');
+			_CheckParamExists($params, 'new_password2');
+			
 			$password1 = $params['new_password1'];
 			$password2 = $params['new_password2'];
 

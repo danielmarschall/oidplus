@@ -27,6 +27,9 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
 
+			_CheckParamExists($params, 'name');
+			_CheckParamExists($params, 'value');
+			
 			$name = $params['name'];
 			$value = $params['value'];
 

@@ -29,6 +29,8 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 		// Parameters: email
 		// Outputs:    Text
 		if ($actionID == 'delete_ra') {
+			_CheckParamExists($params, 'email');
+
 			$email = $params['email'];
 
 			$ra_logged_in = OIDplus::authUtils()->isRaLoggedIn($email);

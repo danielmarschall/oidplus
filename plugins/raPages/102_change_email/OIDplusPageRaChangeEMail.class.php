@@ -27,6 +27,9 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				throw new OIDplusException(_L('This functionality has been disabled by the administrator.'));
 			}
 
+			_CheckParamExists($params, 'old_email');
+			_CheckParamExists($params, 'new_email');
+
 			$old_email = $params['old_email'];
 			$new_email = $params['new_email'];
 
@@ -99,6 +102,12 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			if (!OIDplus::config()->getValue('allow_ra_email_change')) {
 				throw new OIDplusException(_L('This functionality has been disabled by the administrator.'));
 			}
+
+			_CheckParamExists($params, 'old_email');
+			_CheckParamExists($params, 'new_email');
+			_CheckParamExists($params, 'password');
+			_CheckParamExists($params, 'auth');
+			_CheckParamExists($params, 'timestamp');
 
 			$old_email = $params['old_email'];
 			$new_email = $params['new_email'];

@@ -22,6 +22,7 @@ if (!defined('INSIDE_OIDPLUS')) die();
 class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 	private function ra_change_rec($id, $old_ra, $new_ra) {
+		if (is_null($old_ra)) $old_ra = '';
 		OIDplus::db()->query("update ###objects set ra_email = ?, updated = ".OIDplus::db()->sqlDate()." where id = ? and ".OIDplus::db()->getSlang()->isNullFunction('ra_email',"''")." = ?", array($new_ra, $id, $old_ra));
 
 		$res = OIDplus::db()->query("select id from ###objects where parent = ? and ".OIDplus::db()->getSlang()->isNullFunction('ra_email',"''")." = ?", array($id, $old_ra));
@@ -37,6 +38,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		// Parameters: id
 		// Outputs:    <0 Error, =0 Success
 		if ($actionID == 'Delete') {
+			_CheckParamExists($params, 'id');
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','DELETE',$id));
@@ -100,6 +102,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		//             2 = RA is not registered, but it cannot be invited
 		//             4 = OID is a well-known OID, so RA, ASN.1 and IRI identifiers were reset
 		else if ($actionID == 'Update') {
+			_CheckParamExists($params, 'id');
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE',$id));
@@ -117,43 +120,50 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 
-			// Validate RA email address
-			$new_ra = $params['ra_email'];
-			if ($obj::ns() == 'oid') {
-				if ($obj->isWellKnown()) {
-					$new_ra = '';
-				}
-			}
-			if (!empty($new_ra) && !OIDplus::mailUtils()->validMailAddress($new_ra)) {
-				throw new OIDplusException(_L('Invalid RA email address'));
-			}
-
 			// First, do a simulation for ASN.1 IDs and IRIs to check if there are any problems (then an Exception will be thrown)
 			if ($obj::ns() == 'oid') {
 				if (!$obj->isWellKnown()) {
-					$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
-					$ids = array_map('trim',$ids);
-					$obj->replaceIris($ids, true);
+					if (isset($params['iris'])) {
+						$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
+						$ids = array_map('trim',$ids);
+						$obj->replaceIris($ids, true);
+					}
 
-					$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
-					$ids = array_map('trim',$ids);
-					$obj->replaceAsn1Ids($ids, true);
+					if (isset($params['asn1ids'])) {
+						$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
+						$ids = array_map('trim',$ids);
+						$obj->replaceAsn1Ids($ids, true);
+					}
 				}
 			}
 
-			// Change RA recursively
-			$res = OIDplus::db()->query("select ra_email from ###objects where id = ?", array($id));
-			if ($row = $res->fetch_array()) {
-				$current_ra = $row['ra_email'];
-				if ($new_ra != $current_ra) {
-					OIDplus::logger()->log("[INFO]OID($id)+[?INFO/!OK]SUPOIDRA($id)?/[?INFO/!OK]A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
-					OIDplus::logger()->log("[WARN]RA($current_ra)!",           "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
-					OIDplus::logger()->log("[INFO]RA($new_ra)!",               "Gained ownership of object '$id' due to RA transfer of superior RA / admin.");
-					if ($parentObj = $obj->getParent()) {
-						$parent_oid = $parentObj->nodeId();
-						OIDplus::logger()->log("[INFO]OID($parent_oid)", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
+			// RA E-Mail change
+			if (isset($params['ra_email'])) {
+				// Validate RA email address
+				$new_ra = $params['ra_email'];
+				if ($obj::ns() == 'oid') {
+					if ($obj->isWellKnown()) {
+						$new_ra = '';
 					}
-					$this->ra_change_rec($id, $current_ra, $new_ra); // Recursively change inherited RAs
+				}
+				if (!empty($new_ra) && !OIDplus::mailUtils()->validMailAddress($new_ra)) {
+					throw new OIDplusException(_L('Invalid RA email address'));
+				}
+
+				// Change RA recursively
+				$res = OIDplus::db()->query("select ra_email from ###objects where id = ?", array($id));
+				if ($row = $res->fetch_array()) {
+					$current_ra = $row['ra_email'];
+					if ($new_ra != $current_ra) {
+						OIDplus::logger()->log("[INFO]OID($id)+[?INFO/!OK]SUPOIDRA($id)?/[?INFO/!OK]A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
+						OIDplus::logger()->log("[WARN]RA($current_ra)!",           "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
+						OIDplus::logger()->log("[INFO]RA($new_ra)!",               "Gained ownership of object '$id' due to RA transfer of superior RA / admin.");
+						if ($parentObj = $obj->getParent()) {
+							$parent_oid = $parentObj->nodeId();
+							OIDplus::logger()->log("[INFO]OID($parent_oid)", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
+						}
+						$this->ra_change_rec($id, $current_ra, $new_ra); // Recursively change inherited RAs
+					}
 				}
 			}
 
@@ -167,22 +177,34 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Replace ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
 				if (!$obj->isWellKnown()) {
-					$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
-					$ids = array_map('trim',$ids);
-					$obj->replaceIris($ids, false);
+					if (isset($params['iris'])) {
+						$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
+						$ids = array_map('trim',$ids);
+						$obj->replaceIris($ids, false);
+					}
 
-					$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
-					$ids = array_map('trim',$ids);
-					$obj->replaceAsn1Ids($ids, false);
+					if (isset($params['asn1ids'])) {
+						$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
+						$ids = array_map('trim',$ids);
+						$obj->replaceAsn1Ids($ids, false);
+					}
 				}
 
 				// TODO: Check if any identifiers have been actually changed,
 				// and log it to OID($id), OID($parent), ... (see above)
 			}
 
-			$confidential = $params['confidential'] == 'true';
-			$comment = $params['comment'];
-			OIDplus::db()->query("UPDATE ###objects SET confidential = ?, comment = ?, updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($confidential, $comment, $id));
+			if (isset($params['confidential'])) {
+				$confidential = $params['confidential'] == 'true';
+				OIDplus::db()->query("UPDATE ###objects SET confidential = ? WHERE id = ?", array($confidential, $id));
+			}
+
+			if (isset($params['comment'])) {
+				$comment = $params['comment'];
+				OIDplus::db()->query("UPDATE ###objects SET comment = ? WHERE id = ?", array($comment, $id));
+			}
+
+			OIDplus::db()->query("UPDATE ###objects SET updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($id));
 
 			$status = 0;
 
@@ -212,6 +234,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		// Parameters: id, title, description
 		// Outputs:    <0 Error, =0 Success
 		else if ($actionID == 'Update2') {
+			_CheckParamExists($params, 'id');
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE2',$id));
@@ -231,7 +254,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			OIDplus::logger()->log("[INFO]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Title/Description of object '$id' updated");
 
-			OIDplus::db()->query("UPDATE ###objects SET title = ?, description = ?, updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($params['title'], $params['description'], $id));
+			if (isset($params['title'])) {
+				$title = $params['title'];
+				OIDplus::db()->query("UPDATE ###objects SET title = ? WHERE id = ?", array($title, $id));
+			}
+
+			if (isset($params['description'])) {
+				$description = $params['description'];
+				OIDplus::db()->query("UPDATE ###objects SET description = ? WHERE id = ?", array($description, $id));
+			}
+
+			OIDplus::db()->query("UPDATE ###objects SET updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($id));
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
@@ -262,6 +295,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		//             4 = OID is a well-known OID, so RA, ASN.1 and IRI identifiers were reset
 		else if ($actionID == 'Insert') {
 			// Check if you have write rights on the parent (to create a new object)
+			_CheckParamExists($params, 'parent');
 			$objParent = OIDplusObject::parse($params['parent']);
 			if ($objParent === null) throw new OIDplusException(_L('%1 action failed because parent object "%2" cannot be parsed!','INSERT',$params['parent']));
 
@@ -272,6 +306,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (!$objParent->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the correct RA to insert an OID at this arc.'));
 
 			// Check if the ID is valid
+			_CheckParamExists($params, 'id');
 			if ($params['id'] == '') throw new OIDplusException(_L('ID may not be empty'));
 
 			// Determine absolute OID name
@@ -296,19 +331,23 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// First simulate if there are any problems of ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
 				if (!$obj->isWellKnown()) {
-					$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
-					$ids = array_map('trim',$ids);
-					$obj->replaceIris($ids, true);
+					if (isset($params['iris'])) {
+						$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
+						$ids = array_map('trim',$ids);
+						$obj->replaceIris($ids, true);
+					}
 
-					$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
-					$ids = array_map('trim',$ids);
-					$obj->replaceAsn1Ids($ids, true);
+					if (isset($params['asn1ids'])) {
+						$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
+						$ids = array_map('trim',$ids);
+						$obj->replaceAsn1Ids($ids, true);
+					}
 				}
 			}
 
 			// Apply superior RA change
 			$parent = $params['parent'];
-			$ra_email = $params['ra_email'];
+			$ra_email = isset($params['ra_email']) ? $params['ra_email'] : '';
 			if ($obj::ns() == 'oid') {
 				if ($obj->isWellKnown()) {
 					$ra_email = '';
@@ -323,8 +362,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				OIDplus::logger()->log("[INFO]RA($ra_email)!", "Gained ownership of newly created object '$id'");
 			}
 
-			$confidential = $params['confidential'] == 'true';
-			$comment = $params['comment'];
+			$confidential = isset($params['confidential']) ? ($params['confidential'] == 'true') : false;
+			$comment = isset($params['comment']) ? $params['comment'] : '';
 			$title = '';
 			$description = '';
 
@@ -338,13 +377,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Set ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
 				if (!$obj->isWellKnown()) {
-					$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
-					$ids = array_map('trim',$ids);
-					$obj->replaceIris($ids, false);
+					if (isset($params['iris'])) {
+						$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
+						$ids = array_map('trim',$ids);
+						$obj->replaceIris($ids, false);
+					}
 
-					$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
-					$ids = array_map('trim',$ids);
-					$obj->replaceAsn1Ids($ids, false);
+					if (isset($params['asn1ids'])) {
+						$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
+						$ids = array_map('trim',$ids);
+						$obj->replaceAsn1Ids($ids, false);
+					}
 				}
 			}
 

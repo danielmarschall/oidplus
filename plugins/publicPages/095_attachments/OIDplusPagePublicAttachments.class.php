@@ -46,6 +46,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function action($actionID, $params) {
 
 		if ($actionID == 'deleteAttachment') {
+			_CheckParamExists($params, 'id');
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
@@ -55,6 +56,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				throw new OIDplusException(_L('The administrator has disabled deleting attachments by RAs.'));
 			}
 
+			_CheckParamExists($params, 'filename');
 			$req_filename = $params['filename'];
 			if (strpos($req_filename, '/') !== false) throw new OIDplusException(_L('Illegal file name'));
 			if (strpos($req_filename, '\\') !== false) throw new OIDplusException(_L('Illegal file name'));
@@ -85,7 +87,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			return array("status" => 0);
 
 		} else if ($actionID == 'uploadAttachment') {
-
+			_CheckParamExists($params, 'id');
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));

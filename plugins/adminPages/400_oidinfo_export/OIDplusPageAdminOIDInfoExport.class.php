@@ -63,6 +63,8 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
+			
+			_CheckParamExists($params, 'oid');
 
 			$oid = $params['oid'];
 

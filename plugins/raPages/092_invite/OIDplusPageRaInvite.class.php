@@ -55,6 +55,12 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 		} else if ($actionID == 'activate_ra') {
 
+			_CheckParamExists($params, 'password1');
+			_CheckParamExists($params, 'password2');
+			_CheckParamExists($params, 'email');
+			_CheckParamExists($params, 'auth');
+			_CheckParamExists($params, 'timestamp');
+
 			$password1 = $params['password1'];
 			$password2 = $params['password2'];
 			$email = $params['email'];
