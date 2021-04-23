@@ -1014,8 +1014,6 @@ class OIDplus {
 		$timeout = 2;
 		$already_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == "on");
 		$ssl_port = 443;
-		$cookie_path = OIDplus::webpath(null,true);
-		if (empty($cookie_path)) $cookie_path = '/';
 
 		$mode = OIDplus::baseConfig()->getValue('ENFORCE_SSL', 2/*auto*/);
 
@@ -1044,7 +1042,7 @@ class OIDplus {
 
 			if ($already_ssl) {
 				// we are already on HTTPS
-				setcookie('SSL_CHECK', '1', 0, $cookie_path, '', false, true);
+				op_setcookie('SSL_CHECK', '1', 0, false);
 				self::$sslAvailableCache = true;
 				return true;
 			} else {
@@ -1068,7 +1066,7 @@ class OIDplus {
 					$errstr = '';
 					if (@fsockopen($_SERVER['HTTP_HOST'], $ssl_port, $errno, $errstr, $timeout)) {
 						// HTTPS detected. Redirect now, and remember that we had detected HTTPS
-						setcookie('SSL_CHECK', '1', 0, $cookie_path, '', false, true);
+						op_setcookie('SSL_CHECK', '1', 0, false);
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
 						die(_L('Redirecting to HTTPS...'));
@@ -1076,7 +1074,7 @@ class OIDplus {
 						return true;
 					} else {
 						// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.
-						setcookie('SSL_CHECK', '0', 0, $cookie_path, '', false, true);
+						op_setcookie('SSL_CHECK', '0', 0, false);
 						self::$sslAvailableCache = false;
 						return false;
 					}
@@ -1171,13 +1169,9 @@ class OIDplus {
 			// the page in that language, but the cookie must be set, otherwise
 			// the menu and other stuff would be in their cookie-based-language and not the
 			// argument-based-language.
-			$cookie_path = OIDplus::webpath(null,true);
-			if (empty($cookie_path)) $cookie_path = '/';
-			setcookie('LANGUAGE', $_GET['lang'], 0, $cookie_path, '', false, false/*HttpOnly off, because JavaScript also needs translation*/);
+			op_setcookie('LANGUAGE', $_GET['lang'], 0, true/*HttpOnly off, because JavaScript also needs translation*/);
 		} else if (isset($_POST['lang'])) {
-			$cookie_path = OIDplus::webpath(null,true);
-			if (empty($cookie_path)) $cookie_path = '/';
-			setcookie('LANGUAGE', $_POST['lang'], 0, $cookie_path, '', false, false/*HttpOnly off, because JavaScript also needs translation*/);
+			op_setcookie('LANGUAGE', $_POST['lang'], 0, true/*HttpOnly off, because JavaScript also needs translation*/);
 		}
 	}
 

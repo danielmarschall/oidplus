@@ -43,11 +43,10 @@ class OIDplusSessionHandler {
 		@ini_set('session.cookie_secure', OIDplus::isSslAvailable());
 
 		$path = OIDplus::webpath(null,true);
-		if (!empty($path)) {
-			@ini_set('session.cookie_path', $path);
-		}
+		if (empty($path)) $path = '/';
+		@ini_set('session.cookie_path', $path);
 
-		@ini_set('session.cookie_samesite', 'Lax');
+		@ini_set('session.cookie_samesite', 'Strict');
 
 		@ini_set('session.use_strict_mode', 1);
 
@@ -76,7 +75,7 @@ class OIDplusSessionHandler {
 				$_SESSION = array();
 				session_destroy();
 				session_write_close();
-				setcookie(session_name(), "", time()-3600, ini_get('session.cookie_path')); // remove cookie, so GDPR people are happy
+				op_setcookie(session_name(), '', time()-3600); // remove cookie, so GDPR people are happy
 			}
 		}
 	}
@@ -92,7 +91,7 @@ class OIDplusSessionHandler {
 		if ($this->simulate) return;
 
 		$this->sessionSafeStart();
-		setcookie(session_name(),session_id(),time()+$this->sessionLifetime, ini_get('session.cookie_path'));
+		op_setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
 
 		$_SESSION[$name] = self::encrypt($value, $this->secret);
 	}
@@ -103,7 +102,7 @@ class OIDplusSessionHandler {
 
 		if (!isset($_COOKIE[session_name()])) return null; // GDPR: Only start a session when we really need one
 		$this->sessionSafeStart();
-		setcookie(session_name(),session_id(),time()+$this->sessionLifetime, ini_get('session.cookie_path'));
+		op_setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
 
 		if (!isset($_SESSION[$name])) return null;
 		return self::decrypt($_SESSION[$name], $this->secret);
@@ -113,12 +112,12 @@ class OIDplusSessionHandler {
 		if (!isset($_COOKIE[session_name()])) return;
 
 		$this->sessionSafeStart();
-		setcookie(session_name(),session_id(),time()+$this->sessionLifetime, ini_get('session.cookie_path'));
+		op_setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
 
 		$_SESSION = array();
 		session_destroy();
 		session_write_close();
-		setcookie(session_name(), "", time()-3600, ini_get('session.cookie_path')); // remove cookie, so GDPR people are happy
+		op_setcookie(session_name(), "", time()-3600); // remove cookie, so GDPR people are happy
 	}
 
 	public function exists($name) {
