@@ -33,6 +33,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('You need to log in as administrator.'));
 			}
 
+			ob_start();
 			$error = "";
 			try {
 				$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
@@ -49,16 +50,15 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				// adding/downloading does not work)
 				$svn->use_cache = false;
 
-				ob_start();
 				if (!$svn->updateWorkingCopy(OIDplus::localpath().'oidplus_version.txt', '/trunk', OIDplus::localpath(), false)) {
 					$error = _L("Some updates failed. Please see details in the update protocol.");
 				}
-				$cont = ob_get_contents();
-				$cont = str_replace(OIDplus::localpath(), '...', $cont);
-				ob_end_clean();
 			} catch (Exception $e) {
 				$error = $e->getMessage();
 			}
+			$cont = ob_get_contents();
+			$cont = str_replace(OIDplus::localpath(), '...', $cont);
+			ob_end_clean();
 
 			if ($error != "") {
 				return array("status" => -1, "error" => $error, "content" => $cont);

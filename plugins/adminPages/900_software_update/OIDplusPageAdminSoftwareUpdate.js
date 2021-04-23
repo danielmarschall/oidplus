@@ -45,17 +45,21 @@ var OIDplusPageAdminSoftwareUpdate = {
 				hide_waiting_anim();
 				if ("error" in data) {
 					alert(_L("Error: %1",data.error));
+					if ("content" in data) {
+						$("#update_header").text(_L("Result of update"));
+						$("#update_infobox").text(data.content + "\n\n" + _L("Error: %1",data.error));
+					}
 				} else if (data.status >= 0) {
 					alert(_L("Update OK"));
 					reloadContent();
 					return;
 				} else {
 					alert(_L("Error: %1",data));
+					if ("content" in data) {
+						$("#update_header").text(_L("Result of update"));
+						$("#update_infobox").text(data.content + "\n\n" + _L("Error: %1",data));
+					}
 				}
-				if ("content" in data) {
-					$("#update_infobox").text(data.content);
-				}
-				$("#update_header").text(_L("Result of update"));
 			},
 			timeout:0 // infinite
 		});
