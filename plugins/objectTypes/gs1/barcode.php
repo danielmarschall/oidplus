@@ -22,9 +22,9 @@
 // ourselves) and also allows us to be conform with the GDPR, since the IP address / referrer is
 // not transferred to metafloor.com
 
-if (!isset($_GET['number'])) die("Argument 'number' is missing");
-
 require_once __DIR__ . '/../../../includes/functions.inc.php';
+
+_CheckParamExists($_GET, 'number');
 
 //if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusObjectTypePluginGs1', false)) {
 //	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));

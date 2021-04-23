@@ -76,6 +76,7 @@ if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
 
 	if (isset($_REQUEST['sent'])) {
 		$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
+		_CheckParamExists($_POST, 'g-recaptcha-response');
 		$response=$_POST["g-recaptcha-response"];
 		$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
 		$captcha_success=json_decode($verify);
@@ -100,7 +101,7 @@ if (OIDplus::authUtils()->isAdminLoggedIn()) {
 	echo '<p><input type="password" name="admin_password" value=""> (<a href="'.OIDplus::webpath().'setup/">'._L('Forgot password?').'</a>) ';
 
 	if (isset($_REQUEST['sent'])) {
-		if (!OIDplus::authUtils()->adminCheckPassword($_REQUEST['admin_password'])) {
+		if (!OIDplus::authUtils()->adminCheckPassword(isset($_REQUEST['admin_password']) ? $_REQUEST['admin_password'] : '')) {
 			$errors_happened = true;
 			$edits_possible = false;
 			echo '<font color="red"><b>'._L('Wrong password').'</b></font>';
@@ -122,10 +123,10 @@ function step_admin_email($step, $do_edits, &$errors_happened) {
 
 	$msg = '';
 	if (isset($_REQUEST['sent'])) {
-		echo htmlentities($_REQUEST['admin_email']);
+		echo htmlentities(isset($_REQUEST['admin_email']) ? $_REQUEST['admin_email'] : '');
 		if ($do_edits) {
 			try {
-				OIDplus::config()->setValue('admin_email', $_REQUEST['admin_email']);
+				OIDplus::config()->setValue('admin_email', isset($_REQUEST['admin_email']) ? $_REQUEST['admin_email'] : '');
 			} catch (Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;
@@ -147,10 +148,10 @@ function step_system_title($step, $do_edits, &$errors_happened) {
 
 	$msg = '';
 	if (isset($_REQUEST['sent'])) {
-		echo htmlentities($_REQUEST['system_title']);
+		echo htmlentities(isset($_REQUEST['system_title']) ? $_REQUEST['system_title'] : '');
 		if ($do_edits) {
 			try {
-				OIDplus::config()->setValue('system_title', $_REQUEST['system_title']);
+				OIDplus::config()->setValue('system_title', isset($_REQUEST['system_title']) ? $_REQUEST['system_title'] : '');
 			} catch (Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;

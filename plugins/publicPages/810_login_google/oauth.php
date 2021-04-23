@@ -33,8 +33,9 @@ if (!OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_ENABLED', false)) {
 	throw new OIDplusException(_L('Google OAuth authentication is disabled on this system.'));
 }
 
-if (!isset($_GET['code'])) die();
-if (!isset($_GET['state'])) die();
+_CheckParamExists($_GET, 'code');
+_CheckParamExists($_GET, 'state');
+_CheckParamExists($_COOKIE, 'csrf_token');
 
 if ($_GET['state'] != $_COOKIE['csrf_token']) {
 	die('Invalid CSRF token');

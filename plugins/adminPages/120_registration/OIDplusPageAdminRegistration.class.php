@@ -570,7 +570,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		$msg = '';
 		if ($do_edits) {
 			try {
-				OIDplus::config()->setValue('reg_privacy', $_REQUEST['reg_privacy']);
+				OIDplus::config()->setValue('reg_privacy', isset($_REQUEST['reg_privacy']) ? $_REQUEST['reg_privacy'] : 1);
 				OIDplus::config()->setValue('oobe_registration_done', '1');
 			} catch (Exception $e) {
 				$msg = $e->getMessage();
