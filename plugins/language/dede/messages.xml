@@ -1902,6 +1902,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		File %1 is detected as directory. Cannot receive file contents.
+		]]></source>
+		<target><![CDATA[
+		Datei %1 wurde als Verzeichnis erkannt und deshalb können keine Dateiinhalte gelesen werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		File %1 is missing, but setup can't be started because its directory missing.
 		]]></source>
 		<target><![CDATA[

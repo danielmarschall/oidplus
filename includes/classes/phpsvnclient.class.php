@@ -267,7 +267,7 @@ class phpsvnclient {
 					//flush();
 					if (!$preview) {
 						$contents = $this->getFile($file);
-						if (@file_put_contents($localFile, $contents) === false) {
+						if (($contents === false) || (@file_put_contents($localFile, $contents) === false)) {
 							$errors_happened = true;
 							echo "=> "._L("FAILED")."\n";
 							//flush();
@@ -413,6 +413,10 @@ class phpsvnclient {
 				);
 
 				// Detect 'type' as either a 'directory' or 'file'
+				// $storeDirectoryFiles['file'] == /svn/oidplus/!svn/bc/553/trunk/plugins/publicPages/100_whois/whois/rfc/Internet%20Draft.url
+				// $storeDirectoryFiles['path'] == trunk/plugins/publicPages/100_whois/whois/rfc/Internet Draft.url
+
+				$storeDirectoryFiles['path'] = str_replace(' ', '%20', $storeDirectoryFiles['path']);
 				if (substr($storeDirectoryFiles['type'], strlen($storeDirectoryFiles['type']) - strlen($storeDirectoryFiles['path'])) == $storeDirectoryFiles['path']) {
 					// Example:
 					// <D:href>/svn/oidplus/!svn/bc/504/trunk/3p/vts_fileformats/VtsFileTypeDetect.class.php</D:href>
@@ -556,8 +560,10 @@ class phpsvnclient {
 		// This is maybe a bit heavy since it makes another connection to the
 		// SVN server. Maybe add this as an option/parameter? ES 23/06/08
 		$fileInfo = $this->getDirectoryTree($file, $version, false);
-		if ($fileInfo["type"] == "directory")
-			return false;
+		if ($fileInfo["type"] == "directory") {
+			throw new OIDplusException(_L("File %1 is detected as directory. Cannot receive file contents.", $file));
+			//return false;
+		}
 
 		$args = array();
 		$url = $this->cleanURL($this->_url . "/!svn/bc/" . $version . "/" . $file . "/");
