@@ -22,8 +22,6 @@ require_once __DIR__ . '/includes/oidplus.inc.php';
 try {
 	OIDplus::init(false);
 
-	if (!isset($_REQUEST['action'])) throw new OIDplusException(_L('Action ID is missing'));
-
 	$json_out = null;
 
 	OIDplus::authUtils()->checkCSRF();
@@ -48,14 +46,18 @@ try {
 			}
 		}
 
-		$json_out = $plugin->action($_REQUEST['action'], $params);
-		if (!is_array($json_out)) {
-			throw new OIDplusException(_L('Plugin with OID %1 did not output array of result data',$_REQUEST['plugin']));
-		}
-		if (!isset($json_out['status'])) $json_out['status'] = -1;
+		if (isset($_REQUEST['action']) && ($_REQUEST['action'] != '')) {
+			$json_out = $plugin->action($_REQUEST['action'], $params);
+			if (!is_array($json_out)) {
+				throw new OIDplusException(_L('Plugin with OID %1 did not output array of result data',$_REQUEST['plugin']));
+			}
+			if (!isset($json_out['status'])) $json_out['status'] = -1;
 
-		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
-			OIDplus::db()->transaction_commit();
+			if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
+				OIDplus::db()->transaction_commit();
+			}
+		} else {
+			throw new OIDplusException(_L('Invalid action ID'));
 		}
 
 	} else {
@@ -67,7 +69,7 @@ try {
 			// Method:     GET / POST
 			// Parameters: id
 			// Outputs:    JSON
-			if (!isset($_REQUEST['id'])) throw new OIDplusException(_L('Invalid arguments'));
+			_CheckParamExists($_REQUEST, 'id');
 			try {
 				$json_out = OIDplus::gui()::generateContentPage($_REQUEST['id']);
 			} catch (Exception $e) {
@@ -81,7 +83,7 @@ try {
 			// Method:     GET / POST
 			// Parameters: search
 			// Outputs:    JSON
-			if (!isset($_REQUEST['search'])) throw new OIDplusException(_L('Invalid arguments'));
+			_CheckParamExists($_REQUEST, 'search');
 
 			$found = false;
 			foreach (OIDplus::getPagePlugins() as $plugin) {
@@ -100,7 +102,7 @@ try {
 			// Method:     GET / POST
 			// Parameters: id; goto (optional)
 			// Outputs:    JSON
-			if (!isset($_REQUEST['id'])) throw new OIDplusException(_L('Invalid arguments'));
+			_CheckParamExists($_REQUEST, 'id');
 			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], isset($_REQUEST['goto']) ? $_REQUEST['goto'] : '');
 		} else {
 			throw new OIDplusException(_L('Invalid action ID'));
