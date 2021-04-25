@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 
 /*
@@ -48,9 +48,11 @@ foreach ($files as $filename) {
                 $interpreter = $m[1];
 
                 switch ($interpreter) {
+                        case '/usr/bin/env php':
                         case '/usr/bin/php':
                                 $scripttype = 'PHP';
                                 break;
+                        case '/usr/bin/env perl':
                         case '/usr/bin/perl':
                                 $scripttype = 'Perl';
                                 break;

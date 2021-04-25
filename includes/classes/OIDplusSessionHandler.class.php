@@ -75,7 +75,7 @@ class OIDplusSessionHandler {
 				$_SESSION = array();
 				session_destroy();
 				session_write_close();
-				op_setcookie(session_name(), '', time()-3600); // remove cookie, so GDPR people are happy
+				OIDplus::cookieUtils()->unsetcookie(session_name()); // remove cookie, so GDPR people are happy
 			}
 		}
 	}
@@ -91,7 +91,7 @@ class OIDplusSessionHandler {
 		if ($this->simulate) return;
 
 		$this->sessionSafeStart();
-		op_setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
+		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
 
 		$_SESSION[$name] = self::encrypt($value, $this->secret);
 	}
@@ -102,7 +102,7 @@ class OIDplusSessionHandler {
 
 		if (!isset($_COOKIE[session_name()])) return null; // GDPR: Only start a session when we really need one
 		$this->sessionSafeStart();
-		op_setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
+		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
 
 		if (!isset($_SESSION[$name])) return null;
 		return self::decrypt($_SESSION[$name], $this->secret);
@@ -112,12 +112,12 @@ class OIDplusSessionHandler {
 		if (!isset($_COOKIE[session_name()])) return;
 
 		$this->sessionSafeStart();
-		op_setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
+		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
 
 		$_SESSION = array();
 		session_destroy();
 		session_write_close();
-		op_setcookie(session_name(), "", time()-3600); // remove cookie, so GDPR people are happy
+		OIDplus::cookieUtils()->unsetcookie(session_name()); // remove cookie, so GDPR people are happy
 	}
 
 	public function exists($name) {
