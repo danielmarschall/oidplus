@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 select '-- This file (wellknown_other_access.sql) contains ASN.1 and IRI names of OIDs which are either';
 select '-- a) Root OIDs';
 select '-- b) Unicode labels which are long arcs';

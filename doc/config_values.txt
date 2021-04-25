@@ -238,6 +238,17 @@ Old 2.0 format:          (Not available)
                          However, after installing a new plugin, you might want to enable
                          it for a few minutes, to make sure the plugin is working correctly.
 
+OIDplus::baseConfig()->setValue('COOKIE_SAMESITE_POLICY', 'Strict');
+Old 2.0 format:          (Not available)
+                         Defined which "SameSite" policy should be used for the cookies OIDplus uses.
+                         Can be "None", "Lax" or "Strict".
+                         "Strict" is the most secure setting.
+                         "Lax" allows that people stay logged in if they follow a link pointing
+                         to your OIDplus installation.
+                         "None" is not recommended and is deprecated by modern web browsers.
+                         However, OIDplus itself provides an Anti-CSRF mechanism, so you should be
+                         still safe.
+
 
 ----------------------------------------------------
 (4) LDAP FIELDS (see document ldap_installation.txt)

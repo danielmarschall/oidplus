@@ -292,28 +292,3 @@ function get_gitsvn_revision($dir='') {
 	}
 	return false;
 }
-
-function op_setcookie($name, $value, $expires=0, $allowJS=false) {
-	// $path = ini_get('session.cookie_path');
-	$path = OIDplus::webpath(null,true);
-	if (empty($path)) $path = '/';
-
-	$domain = '';
-	$secure = false;
-	$httponly = !$allowJS;
-	$samesite = 'Strict';
-
-	if (strnatcmp(phpversion(),'7.3.0') >= 0) {
-		$options = array(
-			"expires" => $expires,
-			"path" => $path,
-			"domain" => $domain,
-			"secure" => $secure,
-			"httponly" => $httponly,
-			"samesite" => $samesite
-		);
-		setcookie($name, $value, $options);
-	} else {
-		setcookie($name, $value, $expires, $path.'; samesite='.$samesite, $domain, $secure, $httponly);
-	}
-}

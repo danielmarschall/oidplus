@@ -237,6 +237,14 @@ class OIDplus {
 		return self::$mailUtils;
 	}
 
+	private static $cookieUtils = null;
+	public static function cookieUtils() {
+		if (is_null(self::$cookieUtils)) {
+			self::$cookieUtils = new OIDplusCookieUtils();
+		}
+		return self::$cookieUtils;
+	}
+
 	private static $menuUtils = null;
 	public static function menuUtils() {
 		if (is_null(self::$menuUtils)) {
@@ -1042,7 +1050,7 @@ class OIDplus {
 
 			if ($already_ssl) {
 				// we are already on HTTPS
-				op_setcookie('SSL_CHECK', '1', 0, false);
+				OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, false);
 				self::$sslAvailableCache = true;
 				return true;
 			} else {
@@ -1066,7 +1074,7 @@ class OIDplus {
 					$errstr = '';
 					if (@fsockopen($_SERVER['HTTP_HOST'], $ssl_port, $errno, $errstr, $timeout)) {
 						// HTTPS detected. Redirect now, and remember that we had detected HTTPS
-						op_setcookie('SSL_CHECK', '1', 0, false);
+						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, false);
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
 						die(_L('Redirecting to HTTPS...'));
@@ -1074,7 +1082,7 @@ class OIDplus {
 						return true;
 					} else {
 						// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.
-						op_setcookie('SSL_CHECK', '0', 0, false);
+						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '0', 0, false);
 						self::$sslAvailableCache = false;
 						return false;
 					}
@@ -1169,9 +1177,9 @@ class OIDplus {
 			// the page in that language, but the cookie must be set, otherwise
 			// the menu and other stuff would be in their cookie-based-language and not the
 			// argument-based-language.
-			op_setcookie('LANGUAGE', $_GET['lang'], 0, true/*HttpOnly off, because JavaScript also needs translation*/);
+			OIDplus::cookieUtils()->setcookie('LANGUAGE', $_GET['lang'], 0, true/*HttpOnly off, because JavaScript also needs translation*/);
 		} else if (isset($_POST['lang'])) {
-			op_setcookie('LANGUAGE', $_POST['lang'], 0, true/*HttpOnly off, because JavaScript also needs translation*/);
+			OIDplus::cookieUtils()->setcookie('LANGUAGE', $_POST['lang'], 0, true/*HttpOnly off, because JavaScript also needs translation*/);
 		}
 	}
 
