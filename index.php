@@ -28,7 +28,7 @@ ob_start(); // allow cookie headers to be sent
 OIDplus::init(true);
 
 $static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
-$static = OIDplus::gui()::generateContentPage($static_node_id);
+$static = OIDplus::gui()->generateContentPage($static_node_id);
 $static_title = $static['title'];
 $static_icon = $static['icon'];
 $static_content = $static['text'];

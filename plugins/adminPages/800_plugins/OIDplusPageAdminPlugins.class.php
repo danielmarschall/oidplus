@@ -368,7 +368,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '		<th width="25%">'._L('Plugin author').'</th>';
 					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
-						$active = $plugin::id() == OIDplus::db()->getSlang()::id();
+						$active = $plugin::id() == OIDplus::db()->getSlang()->id();
 						if ($active && !$show_sql_active) continue;
 						if (!$active && !$show_sql_inactive) continue;
 
@@ -595,7 +595,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 			$txt = (empty($plugin->getManifest()->getName())) ? get_class($plugin) : $plugin->getManifest()->getName();
 
-			if ($plugin::id() == OIDplus::db()->getSlang()::id()) {
+			if ($plugin::id() == OIDplus::db()->getSlang()->id()) {
 				$sql_plugins[] = array(
 					'id' => 'oidplus:system_plugins$'.get_class($plugin),
 					'icon' => $tree_icon_db_active,

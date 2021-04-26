@@ -71,7 +71,7 @@ try {
 			// Outputs:    JSON
 			_CheckParamExists($_REQUEST, 'id');
 			try {
-				$json_out = OIDplus::gui()::generateContentPage($_REQUEST['id']);
+				$json_out = OIDplus::gui()->generateContentPage($_REQUEST['id']);
 			} catch (Exception $e) {
 				$json_out = array();
 				$json_out['title'] = _L('Error');

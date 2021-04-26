@@ -25,26 +25,26 @@
  */
 function oidplus_dbupdate_203_204(OIDplusDatabaseConnection $db, string &$version) {
     if ($db->transaction_supported()) $db->transaction_begin();
-    
-    if ($db->getSlang()::id() == 'mssql') {
+
+    if ($db->getSlang()->id() == 'mssql') {
     	$db->query("ALTER TABLE ###log_object ADD severity [int]");
     	$db->query("ALTER TABLE ###log_user ADD severity [int]");
     }
-    else if ($db->getSlang()::id() == 'mysql') {
+    else if ($db->getSlang()->id() == 'mysql') {
     	$db->query("ALTER TABLE ###log_object ADD severity int(11)");
     	$db->query("ALTER TABLE ###log_user ADD severity int(11)");
     }
-    else if ($db->getSlang()::id() == 'pgsql') {
+    else if ($db->getSlang()->id() == 'pgsql') {
     	$db->query("ALTER TABLE ###log_object ADD severity integer");
     	$db->query("ALTER TABLE ###log_user ADD severity integer");
     }
-    else if ($db->getSlang()::id() == 'sqlite') {
+    else if ($db->getSlang()->id() == 'sqlite') {
     	$db->query("ALTER TABLE ###log_object ADD severity integer");
     	$db->query("ALTER TABLE ###log_user ADD severity integer");
     }
-    
+
     $version = 204;
     $db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
-    
+
     if ($db->transaction_supported()) $db->transaction_commit();
 }
