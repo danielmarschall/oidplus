@@ -24,7 +24,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 	public function action($actionID, $params) {
 		if ($actionID == 'color_update') {
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusException(_L('You need to log in as administrator.'));
+				throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
 			}
 
 			_CheckParamExists($params, 'color_hue_shift');
@@ -32,7 +32,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			_CheckParamExists($params, 'color_val_shift');
 			_CheckParamExists($params, 'color_invert');
 			_CheckParamExists($params, 'design');
-			
+
 			OIDplus::config()->setValue('color_hue_shift', $params['hue_shift']);
 			OIDplus::config()->setValue('color_sat_shift', $params['sat_shift']);
 			OIDplus::config()->setValue('color_val_shift', $params['val_shift']);
@@ -92,7 +92,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
-				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login')).'</p>';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
 				return;
 			}
 
