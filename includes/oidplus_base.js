@@ -205,53 +205,64 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 	$("#gotoedit").val(id);
 
 	// Normal opening of a description
-	fetch("ajax.php?csrf_token="+encodeURIComponent(csrf_token)+"&action=get_description&id="+encodeURIComponent(id))
-	.then(function(response) {
-		response.json()
-		.then(function(data) {
+	$.ajax({
+		url:"ajax.php",
+		method:"GET",
+		beforeSend: function(jqXHR, settings) {
+			$.xhrPool.abortAll();
+			$.xhrPool.add(jqXHR);
+		},
+		complete: function(jqXHR, text) {
+			$.xhrPool.remove(jqXHR);
+		},
+		data:{
+			csrf_token:csrf_token,
+			action:"get_description",
+			id:id
+		},
+		error:function(jqXHR, textStatus, errorThrown) {
+			if (errorThrown == "abort") return;
+			alert(_L("Failed to load content: %1",errorThrown));
+			console.error(_L("Error: %1",errorThrown));
+		},
+		success:function(data) {
 			if ("error" in data) {
 				alert(_L("Failed to load content: %1",data.error));
 				console.error(data.error);
-				return;
-			}
+			} else if (data.status >= 0) {
+				data.id = id;
 
-			data.id = id;
+				var state = {
+					"node_id":id,
+					"titleHTML":(data.icon ? '<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' : '') + data.title.htmlentities(),
+					"textHTML":data.text,
+					"staticlinkHREF":"index.php?goto="+encodeURIComponent(id),
+				};
+				if (current_node != id) {
+					window.history.pushState(state, data.title, "?goto="+encodeURIComponent(id));
+				} else {
+					window.history.replaceState(state, data.title, "?goto="+encodeURIComponent(id));
+				}
 
-			var state = {
-				"node_id":id,
-				"titleHTML":(data.icon ? '<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' : '') + data.title.htmlentities(),
-				"textHTML":data.text,
-				"staticlinkHREF":"index.php?goto="+encodeURIComponent(id),
-			};
-			if (current_node != id) {
-				window.history.pushState(state, data.title, "?goto="+encodeURIComponent(id));
+				document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
+
+				if (data.icon) {
+					$('#real_title').html('<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' + data.title.htmlentities());
+				} else {
+					$('#real_title').html(data.title.htmlentities());
+				}
+				$('#real_content').html(data.text);
+				document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
+				current_node = id;
+
+				if (anchor != '') {
+					jumpToAnchor(anchor);
+				}
 			} else {
-				window.history.replaceState(state, data.title, "?goto="+encodeURIComponent(id));
+				alert(_L("Failed to load content: %1",data.status));
+				console.error(data);
 			}
-
-			document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
-
-			if (data.icon) {
-				$('#real_title').html('<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' + data.title.htmlentities());
-			} else {
-				$('#real_title').html(data.title.htmlentities());
-			}
-			$('#real_content').html(data.text);
-			document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
-			current_node = id;
-
-			if (anchor != '') {
-				jumpToAnchor(anchor);
-			}
-		})
-		.catch(function(error) {
-			alert(_L("Failed to load content: %1",error));
-			console.error(error);
-		});
-	})
-	.catch(function(error) {
-		alert(_L("Failed to load content: %1",error));
-		console.error(error);
+		}
 	});
 
 	return true;

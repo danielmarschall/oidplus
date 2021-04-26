@@ -78,6 +78,7 @@ try {
 				$json_out['icon'] = 'img/error_big.png';
 				$json_out['text'] = $e->getMessage();
 			}
+			$json_out['status'] = 0;
 		} else if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'tree_search')) {
 			// Action:     tree_search
 			// Method:     GET / POST
