@@ -67,7 +67,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		} else if ($actionID == 'ra_logout') {
 
 			_CheckParamExists($params, 'email');
-		
+
 			$email = $params['email'];
 
 			OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged out");
@@ -126,9 +126,13 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 	public function gui($id, &$out, &$handled) {
 		$ary = explode('$', $id);
+		$desired_ra = '';
 		if (isset($ary[1])) {
 			$id = $ary[0];
 			$tab = $ary[1];
+			if (isset($ary[2])) {
+				$desired_ra = $ary[2];
+			}
 		} else {
 			$tab = 'ra';
 		}
@@ -168,7 +172,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				$tabcont .= '<p>'._L('Enter your email address and your password to log in as Registration Authority.').'</p>';
 			}
 			$tabcont .= '<form action="javascript:void(0);" onsubmit="return OIDplusPagePublicLogin.raLoginOnSubmit(this);">';
-			$tabcont .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" name="email" value="" id="raLoginEMail"></div>';
+			$tabcont .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" name="email" value="'.htmlentities($desired_ra).'" id="raLoginEMail"></div>';
 			$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginPassword"></div>';
 			$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
 			$tabcont .= '</form>';
