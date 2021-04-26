@@ -25,23 +25,23 @@
  */
 function oidplus_dbupdate_202_203(OIDplusDatabaseConnection $db, string &$version) {
     if ($db->transaction_supported()) $db->transaction_begin();
-    
-    if ($db->getSlang()::id() == 'mssql') {
+
+    if ($db->getSlang()->id() == 'mssql') {
     	$db->query("CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @maxArcLen int, @occurence int)
     	RETURNS varchar(512) AS
     	BEGIN
     		DECLARE @intPos int
-    
+
     		DECLARE @cnt int
     		SET @cnt = 0
-    
+
     		if SUBSTRING(@strList, 1, 4) <> 'oid:'
     		begin
     			RETURN ''
     		end
-    
+
     		SET @strList = RIGHT(@strList, LEN(@strList)-4)
-    
+
     		WHILE CHARINDEX('.',@strList) > 0
     		BEGIN
     			SET @intPos=CHARINDEX('.',@strList)
@@ -61,13 +61,13 @@ function oidplus_dbupdate_202_203(OIDplusDatabaseConnection $db, string &$versio
     				RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
     			END
     		END
-    
+
     		RETURN REPLICATE('0', @maxArcLen)
     	END");
     }
-    
+
     $version = 203;
     $db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
-    
+
     if ($db->transaction_supported()) $db->transaction_commit();
 }

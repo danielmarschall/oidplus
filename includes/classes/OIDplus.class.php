@@ -945,7 +945,8 @@ class OIDplus {
 
 		if ($version_file_exists = file_exists(OIDplus::localpath().'oidplus_version.txt'))
 			$counter++;
-			if ($svn_dir_exists = is_dir(OIDplus::localpath().'.svn'))
+			if ($svn_dir_exists = is_dir(OIDplus::localpath().'.svn') ||
+			                      is_dir(OIDplus::localpath().'../.svn')) // in case we checked out the root instead of the "trunk"
 			$counter++;
 			if ($git_dir_exists = is_dir(OIDplus::localpath().'.git'))
 			$counter++;
@@ -990,6 +991,9 @@ class OIDplus {
 
 		if ($installType === 'svn-wc') {
 			$ver = get_svn_revision(OIDplus::localpath());
+			if ($ver)
+				return ($cachedVersion = 'svn-'.$ver);
+			$ver = get_svn_revision(OIDplus::localpath().'../'); // in case we checked out the root instead of the "trunk"
 			if ($ver)
 				return ($cachedVersion = 'svn-'.$ver);
 		}

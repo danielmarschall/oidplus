@@ -26,7 +26,7 @@
 function oidplus_dbupdate_204_205(OIDplusDatabaseConnection $db, string &$version) {
     if ($db->transaction_supported()) $db->transaction_begin();
 
-    if ($db->getSlang()::id() == 'mssql') {
+    if ($db->getSlang()->id() == 'mssql') {
 	$db->query("alter table ###ra alter column [ra_name] [varchar](100) NULL;");
 	$db->query("alter table ###ra alter column [personal_name] [varchar](100) NULL;");
 	$db->query("alter table ###ra alter column [organization] [varchar](100) NULL;");
@@ -43,7 +43,7 @@ function oidplus_dbupdate_204_205(OIDplusDatabaseConnection $db, string &$versio
 	$db->query("alter table ###objects alter column [title] [varchar](255) NULL;");
 	$db->query("alter table ###objects alter column [description] [text] NULL;");
     }
-    else if ($db->getSlang()::id() == 'mysql') {
+    else if ($db->getSlang()->id() == 'mysql') {
 	$db->query("alter table ###ra modify ra_name varchar(100) NULL;");
 	$db->query("alter table ###ra modify personal_name varchar(100) NULL;");
 	$db->query("alter table ###ra modify organization varchar(100) NULL;");
@@ -60,7 +60,7 @@ function oidplus_dbupdate_204_205(OIDplusDatabaseConnection $db, string &$versio
 	$db->query("alter table ###objects modify title varchar(255) NULL;");
 	$db->query("alter table ###objects modify description text NULL;");
     }
-    else if ($db->getSlang()::id() == 'pgsql') {
+    else if ($db->getSlang()->id() == 'pgsql') {
 	$db->query("alter table ###ra alter column ra_name DROP NOT NULL");
 	$db->query("alter table ###ra alter column personal_name DROP NOT NULL");
 	$db->query("alter table ###ra alter column organization DROP NOT NULL");
@@ -77,7 +77,7 @@ function oidplus_dbupdate_204_205(OIDplusDatabaseConnection $db, string &$versio
 	$db->query("alter table ###objects alter column title DROP NOT NULL");
 	$db->query("alter table ###objects alter column description DROP NOT NULL");
     }
-    else if ($db->getSlang()::id() == 'sqlite') {
+    else if ($db->getSlang()->id() == 'sqlite') {
 	$db->query("CREATE TABLE `###ra2` (".
 	           "  `ra_id` INTEGER PRIMARY KEY AUTOINCREMENT,".
 	           "  `email` TEXT NOT NULL UNIQUE,".
