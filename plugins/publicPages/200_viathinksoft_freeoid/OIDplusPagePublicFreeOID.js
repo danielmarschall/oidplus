@@ -35,24 +35,24 @@ var OIDplusPagePublicFreeOID = {
 				plugin:OIDplusPagePublicFreeOID.oid,
 				action: "request_freeoid",
 				email: $("#email").val(),
-				captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
+				captcha: $(".g-recaptcha").length > 0 ? grecaptcha.getResponse() : null
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
 				alert(_L("Error: %1",errorThrown));
-				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+				if ($(".g-recaptcha").length > 0) grecaptcha.reset();
 			},
 			success: function(data) {
 				if ("error" in data) {
 					alert(_L("Error: %1",data.error));
-					if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+					if ($(".g-recaptcha").length > 0) grecaptcha.reset();
 				} else if (data.status >= 0) {
 					alert(_L("Instructions have been sent via email."));
 					window.location.href = '?goto=oidplus:system';
 					//reloadContent();
 				} else {
 					alert(_L("Error: %1",data));
-					if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+					if ($(".g-recaptcha").length > 0) grecaptcha.reset();
 				}
 			}
 		});

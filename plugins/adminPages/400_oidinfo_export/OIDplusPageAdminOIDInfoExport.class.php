@@ -608,7 +608,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$out['text'] .= OIDplus::gui()->tabContentEnd();
 			// ---------------- Tab control END
 
-			$out['text'] .= '</div></div><script>document.getElementById("dataTransferArea").style.visibility = "visible";</script>';
+			$out['text'] .= '</div></div><script>$("#dataTransferArea")[0].style.visibility = "visible";</script>';
 		}
 	}
 

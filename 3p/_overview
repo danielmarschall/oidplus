@@ -1,6 +1,11 @@
 3P ("Third party") assets, code and frameworks
 ==============================================
 
+bcrypt.js:
+	License:  BSD 3-Clause / Apache 2.0 (?)
+	Version:  Commit b09f7f2 on 5 Mar 2018
+	Download: https://github.com/dcodeIO/bcrypt.js/blob/master/dist/bcrypt.js
+
 bignumber.js:
 	License:  MIT
 	Version:  Commit 3e17191 on 19 Dec 2020 (Version 9.0.1+)

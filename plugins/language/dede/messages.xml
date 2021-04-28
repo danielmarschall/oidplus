@@ -4118,6 +4118,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Please enable JavaScript in order to use setup!
+		]]></source>
+		<target><![CDATA[
+		Bitte aktivieren Sie JavaScript um mit Setup fortzufahren!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Please enter %1 into the SSH shell to update OIDplus to the latest version.
 		]]></source>
 		<target><![CDATA[
@@ -6674,14 +6682,6 @@
 		]]></source>
 		<target><![CDATA[
 		Sie müssen JavaScript aktivieren, um den Anmeldebereich zu verwenden.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		You need to log in as administrator.
-		]]></source>
-		<target><![CDATA[
-		Sie müssen sich als Administrator anmelden.
 		]]></target>
 	</message>
 	<message>

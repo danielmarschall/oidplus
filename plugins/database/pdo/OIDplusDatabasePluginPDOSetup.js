@@ -16,64 +16,64 @@
  */
 
 plugin_combobox_change_callbacks.push(function(strPlugin) {
-	document.getElementById('DBPLUGIN_PARAMS_PDO').style.display = (strPlugin == 'PDO') ? "Block" : "None";
+	$("#DBPLUGIN_PARAMS_PDO")[0].style.display = (strPlugin == 'PDO') ? "Block" : "None";
 });
 
 rebuild_callbacks.push(function() {
-	var e = document.getElementById("db_plugin");
+	var e = $("#db_plugin")[0];
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'PDO') return true;
 
-	document.getElementById('struct_cli_1').innerHTML = '';
-	document.getElementById('struct_cli_2').innerHTML = '';
-	document.getElementById('struct_1').href = 'struct_empty.sql.php';
-	document.getElementById('struct_2').href = 'struct_with_examples.sql.php';
+	$("#struct_cli_1")[0].innerHTML = '';
+	$("#struct_cli_2")[0].innerHTML = '';
+	$("#struct_1")[0].href = 'struct_empty.sql.php';
+	$("#struct_2")[0].href = 'struct_with_examples.sql.php';
 
 	error = false;
 
 	// Check 1: dsn must not be empty
-	if (document.getElementById('pdo_dsn').value.length == 0)
+	if ($("#pdo_dsn")[0].value.length == 0)
 	{
-		document.getElementById('pdo_dsn_warn').innerHTML = '<font color="red">'+_L('Please specify a DSN!')+'</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a DSN!</i>'; // do not translate
+		$("#pdo_dsn_warn")[0].innerHTML = '<font color="red">'+_L('Please specify a DSN!')+'</font>';
+		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a DSN!</i>'; // do not translate
 		error = true;
 	} else {
-		document.getElementById('pdo_dsn_warn').innerHTML = '';
+		$("#pdo_dsn_warn")[0].innerHTML = '';
 	}
 
 	// Check 2: Username must not be empty
-	if (document.getElementById('pdo_username').value.length == 0)
+	if ($("#pdo_username")[0].value.length == 0)
 	{
-		document.getElementById('pdo_username_warn').innerHTML = '<font color="red">'+_L('Please specify a username!')+'</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a username!</i>'; // do not translate
+		$("#pdo_username_warn")[0].innerHTML = '<font color="red">'+_L('Please specify a username!')+'</font>';
+		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a username!</i>'; // do not translate
 		error = true;
 	} else {
-		document.getElementById('pdo_username_warn').innerHTML = '';
+		$("#pdo_username_warn")[0].innerHTML = '';
 	}
 
-	document.getElementById('struct_1').href = setupdir+'struct_empty.sql.php?plugin=pdo&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&slang='+encodeURI(document.getElementById('pdo_slang').value);
-	document.getElementById('struct_2').href = setupdir+'struct_with_examples.sql.php?plugin=pdo&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&slang='+encodeURI(document.getElementById('pdo_slang').value);
-	if (document.getElementById('pdo_slang').value == 'mysql') {
-		document.getElementById('struct_cli_1').innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+document.getElementById('struct_1').href+'" | mysql -u '+document.getElementById('pdo_username').value+' -p</code>';
-		document.getElementById('struct_cli_2').innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+document.getElementById('struct_2').href+'" | mysql -u '+document.getElementById('pdo_username').value+' -p</code>';
-	} else if (document.getElementById('pdo_slang').value == 'pgsql') {
-		document.getElementById('struct_cli_1').innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+document.getElementById('struct_1').href+'" | psql -h <font color="red">localhost</font> -U '+document.getElementById('pdo_username').value+' -d <font color="red">oidplus</font> -a</code>';
-		document.getElementById('struct_cli_2').innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+document.getElementById('struct_2').href+'" | psql -h <font color="red">localhost</font> -U '+document.getElementById('pdo_username').value+' -d <font color="red">oidplus</font> -a</code>';
+	$("#struct_1")[0].href = setupdir+'struct_empty.sql.php?plugin=pdo&prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang='+encodeURI($("#pdo_slang")[0].value);
+	$("#struct_2")[0].href = setupdir+'struct_with_examples.sql.php?plugin=pdo&prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang='+encodeURI($("#pdo_slang")[0].value);
+	if ($("#pdo_slang")[0].value == 'mysql') {
+		$("#struct_cli_1")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+$("#struct_1")[0].href+'" | mysql -u '+$("#pdo_username")[0].value+' -p</code>';
+		$("#struct_cli_2")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+$("#struct_2")[0].href+'" | mysql -u '+$("#pdo_username")[0].value+' -p</code>';
+	} else if ($("#pdo_slang")[0].value == 'pgsql') {
+		$("#struct_cli_1")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+$("#struct_1")[0].href+'" | psql -h <font color="red">localhost</font> -U '+$("#pdo_username")[0].value+' -d <font color="red">oidplus</font> -a</code>';
+		$("#struct_cli_2")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+$("#struct_2")[0].href+'" | psql -h <font color="red">localhost</font> -U '+$("#pdo_username")[0].value+' -d <font color="red">oidplus</font> -a</code>';
 	} else {
-		document.getElementById('struct_cli_1').innerHTML = '';
-		document.getElementById('struct_cli_2').innerHTML = '';
+		$("#struct_cli_1")[0].innerHTML = '';
+		$("#struct_cli_2")[0].innerHTML = '';
 	}
 
 	return !error;
 });
 
 rebuild_config_callbacks.push(function() {
-	var e = document.getElementById("db_plugin");
+	var e = $("#db_plugin")[0];
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'PDO') return '';
 
-	return 'OIDplus::baseConfig()->setValue(\'PDO_DSN\',           \''+document.getElementById('pdo_dsn').value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'PDO_USERNAME\',      \''+document.getElementById('pdo_username').value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'PDO_PASSWORD\',      base64_decode(\''+b64EncodeUnicode(document.getElementById('pdo_password').value)+'\'));<br>' +
-	       'OIDplus::baseConfig()->setValue(\'FORCE_DBMS_SLANG\',  \''+document.getElementById('pdo_slang').value+'\');<br>'; // optional
+	return 'OIDplus::baseConfig()->setValue(\'PDO_DSN\',           \''+$("#pdo_dsn")[0].value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'PDO_USERNAME\',      \''+$("#pdo_username")[0].value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'PDO_PASSWORD\',      base64_decode(\''+b64EncodeUnicode($("#pdo_password")[0].value)+'\'));<br>' +
+	       'OIDplus::baseConfig()->setValue(\'FORCE_DBMS_SLANG\',  \''+$("#pdo_slang")[0].value+'\');<br>'; // optional
 });

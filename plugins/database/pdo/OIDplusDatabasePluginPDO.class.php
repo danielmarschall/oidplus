@@ -41,7 +41,7 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 		       '	<i>'._L('Attention: If your DBMS is not listed, OIDplus will most likely not work. If you know that your DBMS is compatible with one of these listed SQL dialects, you can choose that dialect.').'</i><br>'.
 		       '	<select name="pdo_slang" id="pdo_slang" onChange="dbplugin_changed()">'.
 		       '	<!-- %SQL_SLANG_SELECTION% -->'.
-		       '	</select></p></div>'.
+		       '	</select></p>'.
 		       '</div>';
 	}
 

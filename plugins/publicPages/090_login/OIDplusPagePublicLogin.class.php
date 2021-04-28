@@ -149,9 +149,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 			$out['text'] .= '<div id="loginArea" style="visibility: hidden"><div id="loginTab" class="container" style="width:100%;">';
 			$out['text'] .= (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
-			                '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
 			                '<p>'._L('Before logging in, please solve the following CAPTCHA').'</p>'.
-					'<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '');
+					'<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>'.
+			                '<script> grecaptcha.render($("#g-recaptcha")[0], { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>' : '');
 			$out['text'] .= '<br>';
 
 			// ---------------- Tab control
@@ -237,7 +237,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			}
 			$out['text'] .= '</font></p></div>';
 
-			$out['text'] .= '<script>document.getElementById("loginArea").style.visibility = "visible";</script>';
+			$out['text'] .= '<script>$("#loginArea")[0].style.visibility = "visible";</script>';
 		}
 	}
 

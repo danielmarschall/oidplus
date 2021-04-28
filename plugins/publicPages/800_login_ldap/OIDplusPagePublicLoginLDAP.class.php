@@ -226,9 +226,9 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
 			$out['text'] .= '<div id="loginLdapArea" style="visibility: hidden">';
 			$out['text'] .= (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
-			                '<script> grecaptcha.render(document.getElementById("g-recaptcha"), { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>'.
 			                '<p>'._L('Before logging in, please solve the following CAPTCHA').'</p>'.
-			                '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>' : '');
+			                '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>'.
+			                '<script> grecaptcha.render($("#g-recaptcha")[0], { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>' : '');
 			$out['text'] .= '<br>';
 
 			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:login').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Regular login method').'</a></p>';
@@ -262,7 +262,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			}
 			$out['text'] .= '</font></p></div>';
 
-			$out['text'] .= '<script>document.getElementById("loginLdapArea").style.visibility = "visible";</script>';
+			$out['text'] .= '<script>$("#loginLdapArea")[0].style.visibility = "visible";</script>';
 		}
 	}
 

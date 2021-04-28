@@ -35,29 +35,29 @@ var OIDplusPagePublicForgotPasswordAdmin = {
 	rehash_admin_pwd: function() {
 		var error = "";
 
-		if (document.getElementById('admin_password').value.length == 0) {
-			document.getElementById('config').innerHTML = "";
+		if ($("#admin_password")[0].value.length == 0) {
+			$("#config")[0].innerHTML = "";
 			return;
 		}
 
-		if (document.getElementById('admin_password').value.length < min_password_length) {
+		if ($("#admin_password")[0].value.length < min_password_length) {
 			error += _L("Password is too short. Need at least %1 characters",min_password_length)+"<br>";
 		}
 
-		if (document.getElementById('admin_password').value != document.getElementById('admin_password2').value) {
+		if ($("#admin_password")[0].value != $("#admin_password2")[0].value) {
 			error += _L("Passwords do not match")+"<br>";
 		}
 
 		if (error != "") {
-			document.getElementById('config').innerHTML = error;
+			$("#config")[0].innerHTML = error;
 		} else {
-			var pw = document.getElementById('admin_password').value;
+			var pw = $("#admin_password")[0].value;
 
 			if (pw != g_prevBcryptPw) {
 				// sync call to calculate SHA3
 				var admPwdHash = hexToBase64(sha3_512(pw))
 				var pwComment = 'salted, base64 encoded SHA3-512 hash';
-				document.getElementById('config').innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + admPwdHash + '\'); // '+pwComment+'<br>';
+				$("#config")[0].innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + admPwdHash + '\'); // '+pwComment+'<br>';
 				g_last_admPwdHash = admPwdHash;
 				g_last_pwComment = pwComment;
 
@@ -66,18 +66,18 @@ var OIDplusPagePublicForgotPasswordAdmin = {
 					g_prevBcryptPw = null;
 					bCryptWorker.terminate();
 				}
-				bCryptWorker = new Worker('setup/bcrypt_worker.js');
+				bCryptWorker = new Worker('3p/bcrypt.js/bcrypt_worker.js');
 				bCryptWorker.postMessage(pw);
 				bCryptWorker.onmessage = function (event) {
 					var admPwdHash = event.data;
 					var pwComment = 'bcrypt encoded hash';
-					document.getElementById('config').innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + admPwdHash + '\'); // '+pwComment+'<br>';
+					$("#config")[0].innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + admPwdHash + '\'); // '+pwComment+'<br>';
 					g_last_admPwdHash = admPwdHash;
 					g_last_pwComment = pwComment;
 					g_prevBcryptPw = pw;
 				};
 			} else {
-				document.getElementById('config').innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + g_last_admPwdHash + '\'); // '+g_last_pwComment+'<br>';
+				$("#config")[0].innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + g_last_admPwdHash + '\'); // '+g_last_pwComment+'<br>';
 			}
 		}
 	}

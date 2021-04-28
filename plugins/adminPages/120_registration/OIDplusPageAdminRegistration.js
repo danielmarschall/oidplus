@@ -40,7 +40,7 @@ var OIDplusPageAdminRegistration = {
 				plugin: OIDplusPageAdminSystemConfig.oid, // sic!! This is really OIDplusPageAdminSystemConfig.oid, not OIDplusPageAdminRegistration.oid !
 				action: "config_update",
 				name: 'reg_privacy',
-				value: document.getElementById('reg_privacy').value,
+				value: $("#reg_privacy")[0].value,
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;

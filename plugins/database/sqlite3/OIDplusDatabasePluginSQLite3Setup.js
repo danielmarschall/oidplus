@@ -16,44 +16,44 @@
  */
 
 plugin_combobox_change_callbacks.push(function(strPlugin) {
-	document.getElementById('DBPLUGIN_PARAMS_SQLite3').style.display = (strPlugin == 'SQLite3') ? "Block" : "None";
+	$("#DBPLUGIN_PARAMS_SQLite3")[0].style.display = (strPlugin == 'SQLite3') ? "Block" : "None";
 });
 
 rebuild_callbacks.push(function() {
-	var e = document.getElementById("db_plugin");
+	var e = $("#db_plugin")[0];
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'SQLite3') return true;
 
-	document.getElementById('struct_cli_1').innerHTML = '';
-	document.getElementById('struct_cli_2').innerHTML = '';
-	document.getElementById('struct_1').href = 'struct_empty.sql.php';
-	document.getElementById('struct_2').href = 'struct_with_examples.sql.php';
+	$("#struct_cli_1")[0].innerHTML = '';
+	$("#struct_cli_2")[0].innerHTML = '';
+	$("#struct_1")[0].href = 'struct_empty.sql.php';
+	$("#struct_2")[0].href = 'struct_with_examples.sql.php';
 
 	error = false;
 
 	// Check 1: Filename must not be empty
-	if (document.getElementById('sqlite3_file').value.length == 0)
+	if ($("#sqlite3_file")[0].value.length == 0)
 	{
-		document.getElementById('sqlite3_file_warn').innerHTML = '<font color="red">'+_L('Please specify a filename!')+'</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a filename!</i>'; // do not translate
+		$("#sqlite3_file_warn")[0].innerHTML = '<font color="red">'+_L('Please specify a filename!')+'</font>';
+		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a filename!</i>'; // do not translate
 		error = true;
 	} else {
-		document.getElementById('sqlite3_file_warn').innerHTML = '';
+		$("#sqlite3_file_warn")[0].innerHTML = '';
 	}
 
-	document.getElementById('struct_1').href = setupdir+'struct_empty.sql.php?plugin=sqlite&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&slang=sqlite';
-	document.getElementById('struct_2').href = setupdir+'struct_with_examples.sql.php?plugin=sqlite&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&slang=sqlite';
-	document.getElementById('struct_cli_1').innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+document.getElementById('struct_1').href+'" | sqlite3 '+document.getElementById('sqlite3_file').value+'<!-- TODO: encryption key? --></code>';
-	document.getElementById('struct_cli_2').innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+document.getElementById('struct_2').href+'" | sqlite3 '+document.getElementById('sqlite3_file').value+'<!-- TODO: encryption key? --></code>';
+	$("#struct_1")[0].href = setupdir+'struct_empty.sql.php?plugin=sqlite&prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang=sqlite';
+	$("#struct_2")[0].href = setupdir+'struct_with_examples.sql.php?plugin=sqlite&prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang=sqlite';
+	$("#struct_cli_1")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+$("#struct_1")[0].href+'" | sqlite3 '+$("#sqlite3_file")[0].value+'<!-- TODO: encryption key? --></code>';
+	$("#struct_cli_2")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+$("#struct_2")[0].href+'" | sqlite3 '+$("#sqlite3_file")[0].value+'<!-- TODO: encryption key? --></code>';
 
 	return !error;
 });
 
 rebuild_config_callbacks.push(function() {
-	var e = document.getElementById("db_plugin");
+	var e = $("#db_plugin")[0];
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'SQLite3') return '';
 
-	return 'OIDplus::baseConfig()->setValue(\'SQLITE3_FILE\',      \''+document.getElementById('sqlite3_file').value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'SQLITE3_ENCRYPTION\',base64_decode(\''+b64EncodeUnicode(document.getElementById('sqlite3_encryption').value)+'\'));<br>';
+	return 'OIDplus::baseConfig()->setValue(\'SQLITE3_FILE\',      \''+$("#sqlite3_file")[0].value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'SQLITE3_ENCRYPTION\',base64_decode(\''+b64EncodeUnicode($("#sqlite3_encryption")[0].value)+'\'));<br>';
 });

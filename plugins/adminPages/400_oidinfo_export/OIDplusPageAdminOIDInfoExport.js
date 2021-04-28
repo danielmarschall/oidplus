@@ -124,7 +124,7 @@ var OIDplusPageAdminOIDInfoExport = {
 
 	uploadXmlFileOnSubmit: function() {
 		try {
-			OIDplusPageAdminOIDInfoExport.uploadXmlFile(document.getElementById("userfile").value);
+			OIDplusPageAdminOIDInfoExport.uploadXmlFile($("#userfile")[0].value);
 		} finally {
 			return false;
 		}

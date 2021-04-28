@@ -16,64 +16,64 @@
  */
 
 plugin_combobox_change_callbacks.push(function(strPlugin) {
-	document.getElementById('DBPLUGIN_PARAMS_ODBC').style.display = (strPlugin == 'ODBC') ? "Block" : "None";
+	$("#DBPLUGIN_PARAMS_ODBC")[0].style.display = (strPlugin == 'ODBC') ? "Block" : "None";
 });
 
 rebuild_callbacks.push(function() {
-	var e = document.getElementById("db_plugin");
+	var e = $("#db_plugin")[0];
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'ODBC') return true;
 
-	document.getElementById('struct_cli_1').innerHTML = '';
-	document.getElementById('struct_cli_2').innerHTML = '';
-	document.getElementById('struct_1').href = 'struct_empty.sql.php';
-	document.getElementById('struct_2').href = 'struct_with_examples.sql.php';
+	$("#struct_cli_1")[0].innerHTML = '';
+	$("#struct_cli_2")[0].innerHTML = '';
+	$("#struct_1")[0].href = 'struct_empty.sql.php';
+	$("#struct_2")[0].href = 'struct_with_examples.sql.php';
 
 	error = false;
 
 	// Check 1: dsn must not be empty
-	if (document.getElementById('odbc_dsn').value.length == 0)
+	if ($("#odbc_dsn")[0].value.length == 0)
 	{
-		document.getElementById('odbc_dsn_warn').innerHTML = '<font color="red">'+_L('Please specify a DSN!')+'</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a DSN!</i>'; // do not translate
+		$("#odbc_dsn_warn")[0].innerHTML = '<font color="red">'+_L('Please specify a DSN!')+'</font>';
+		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a DSN!</i>'; // do not translate
 		error = true;
 	} else {
-		document.getElementById('odbc_dsn_warn').innerHTML = '';
+		$("#odbc_dsn_warn")[0].innerHTML = '';
 	}
 
 	// Check 2: Username must not be empty
-	if (document.getElementById('odbc_username').value.length == 0)
+	if ($("#odbc_username")[0].value.length == 0)
 	{
-		document.getElementById('odbc_username_warn').innerHTML = '<font color="red">'+_L('Please specify a username!')+'</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a username!</i>'; // do not translate
+		$("#odbc_username_warn")[0].innerHTML = '<font color="red">'+_L('Please specify a username!')+'</font>';
+		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a username!</i>'; // do not translate
 		error = true;
 	} else {
-		document.getElementById('odbc_username_warn').innerHTML = '';
+		$("#odbc_username_warn")[0].innerHTML = '';
 	}
 
-	document.getElementById('struct_1').href = setupdir+'struct_empty.sql.php?plugin=odbc&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&slang='+encodeURI(document.getElementById('odbc_slang').value);
-	document.getElementById('struct_2').href = setupdir+'struct_with_examples.sql.php?plugin=odbc&prefix='+encodeURI(document.getElementById('tablename_prefix').value)+'&slang='+encodeURI(document.getElementById('odbc_slang').value);
-	if (document.getElementById('odbc_slang').value == 'mysql') {
-		document.getElementById('struct_cli_1').innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+document.getElementById('struct_1').href+'" | mysql -u '+document.getElementById('odbc_username').value+' -p</code>';
-		document.getElementById('struct_cli_2').innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+document.getElementById('struct_2').href+'" | mysql -u '+document.getElementById('odbc_username').value+' -p</code>';
-	} else if (document.getElementById('odbc_slang').value == 'pgsql') {
-		document.getElementById('struct_cli_1').innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+document.getElementById('struct_1').href+'" | psql -h <font color="red">localhost</font> -U '+document.getElementById('odbc_username').value+' -d <font color="red">oidplus</font> -a</code>';
-		document.getElementById('struct_cli_2').innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+document.getElementById('struct_2').href+'" | psql -h <font color="red">localhost</font> -U '+document.getElementById('odbc_username').value+' -d <font color="red">oidplus</font> -a</code>';
+	$("#struct_1")[0].href = setupdir+'struct_empty.sql.php?plugin=odbc&prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang='+encodeURI($("#odbc_slang")[0].value);
+	$("#struct_2")[0].href = setupdir+'struct_with_examples.sql.php?plugin=odbc&prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang='+encodeURI($("#odbc_slang")[0].value);
+	if ($("#odbc_slang")[0].value == 'mysql') {
+		$("#struct_cli_1")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+$("#struct_1")[0].href+'" | mysql -u '+$("#odbc_username")[0].value+' -p</code>';
+		$("#struct_cli_2")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+$("#struct_2")[0].href+'" | mysql -u '+$("#odbc_username")[0].value+' -p</code>';
+	} else if ($("#odbc_slang")[0].value == 'pgsql') {
+		$("#struct_cli_1")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+$("#struct_1")[0].href+'" | psql -h <font color="red">localhost</font> -U '+$("#odbc_username")[0].value+' -d <font color="red">oidplus</font> -a</code>';
+		$("#struct_cli_2")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+$("#struct_2")[0].href+'" | psql -h <font color="red">localhost</font> -U '+$("#odbc_username")[0].value+' -d <font color="red">oidplus</font> -a</code>';
 	} else {
-		document.getElementById('struct_cli_1').innerHTML = '';
-		document.getElementById('struct_cli_2').innerHTML = '';
+		$("#struct_cli_1")[0].innerHTML = '';
+		$("#struct_cli_2")[0].innerHTML = '';
 	}
 
 	return !error;
 });
 
 rebuild_config_callbacks.push(function() {
-	var e = document.getElementById("db_plugin");
+	var e = $("#db_plugin")[0];
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'ODBC') return '';
 
-	return 'OIDplus::baseConfig()->setValue(\'ODBC_DSN\',          \''+document.getElementById('odbc_dsn').value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'ODBC_USERNAME\',     \''+document.getElementById('odbc_username').value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'ODBC_PASSWORD\',     base64_decode(\''+b64EncodeUnicode(document.getElementById('odbc_password').value)+'\'));<br>' +
-	       'OIDplus::baseConfig()->setValue(\'FORCE_DBMS_SLANG\',  \''+document.getElementById('odbc_slang').value+'\');<br>'; // optional
+	return 'OIDplus::baseConfig()->setValue(\'ODBC_DSN\',          \''+$("#odbc_dsn")[0].value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'ODBC_USERNAME\',     \''+$("#odbc_username")[0].value+'\');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'ODBC_PASSWORD\',     base64_decode(\''+b64EncodeUnicode($("#odbc_password")[0].value)+'\'));<br>' +
+	       'OIDplus::baseConfig()->setValue(\'FORCE_DBMS_SLANG\',  \''+$("#odbc_slang")[0].value+'\');<br>'; // optional
 });

@@ -37,6 +37,12 @@ echo '<body>';
 
 echo '<h1>'._L('OIDplus Setup - Configuration File Generator').'</h1>';
 
+echo '<noscript>';
+echo '<h2>'._L('Please enable JavaScript in order to use setup!').'</h2>';
+echo '</noscript>';
+
+echo '<span id="setupPageContent" style="display:None">';
+
 echo OIDplusGui::getLanguageBox(null, false);
 
 echo '<p>'._L('Thank you very much for choosing OIDplus! This setup assistant will help you creating or updating the file <b>%1</b>. Setup does not automatically write to this file. Instead, you need to copy-paste the contents into the file. Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.','userdata/baseconfig/config.inc.php').'</p>';
@@ -136,6 +142,9 @@ echo '<p><input type="button" onclick="window.location.href=\'../\'" value="'._L
 echo '</div>';
 
 echo '<br><br><br>'; // because of iPhone Safari
+
+echo '</span>';
+echo '<script> $("#setupPageContent")[0].style.display = "Block"; </script>';
 
 echo '</body>';
 echo '</html>';

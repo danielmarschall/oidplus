@@ -25,6 +25,7 @@ var popstate_running = false;
 // language_messages will be set by oidplus.min.js.php
 // language_tblprefix will be set by oidplus.min.js.php
 // csrf_token will be set by oidplus.min.js.php
+// samesite_policy will bet set by oidplus.min.js.php
 
 var pageChangeCallbacks = [];
 var pageChangeRequestCallbacks = [];
@@ -52,15 +53,8 @@ String.prototype.html_entity_decode = function () {
 };
 
 function getMeta(metaName) {
-	const metas = document.getElementsByTagName('meta');
-
-	for (let i = 0; i < metas.length; i++) {
-		if (metas[i].getAttribute('name') === metaName) {
-			return metas[i].getAttribute('content');
-		}
-	}
-
-	return '';
+	const metas = $('meta[name='+metaName+']');
+	return (metas.length == 0) ? '' : metas[0].content;
 }
 
 function getOidPlusSystemTitle() {
@@ -389,7 +383,7 @@ $(document).ready(function () {
 
 	// --- Layout
 
-	document.getElementById('system_title_menu').style.display = "block";
+	$("#system_title_menu")[0].style.display = "block";
 
 	var tmpObjectTree = _L("OBJECT TREE").replace(/(.{1})/g,"$1<br>");
 	tmpObjectTree = tmpObjectTree.substring(0, tmpObjectTree.length-"<br>".length);
@@ -415,7 +409,7 @@ $(document).ready(function () {
 
 	$("#gotobox").addClass("mobilehidden");
 	$("#languageBox").addClass("mobilehidden");
-	document.getElementById('gotobox').style.display = "block";
+	$("#gotobox")[0].style.display = "block";
 	$('#gotoedit').keypress(function(event) {
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if (keycode == '13') {
@@ -434,12 +428,12 @@ function glayoutWorkaroundA() {
 
 	// "Bug C": With Firefox (And sometimes with Chrome), there is a gap between the content-window (including scroll bars)
 	//          and the right corner of the screen. Removing the explicit width solves this problem.
-	document.getElementById("content_window").style.removeProperty("width");
+	$("#content_window")[0].style.removeProperty("width");
 }
 
 function glayoutWorkaroundB() {
 	// "Bug B": Sometimes, after reload, weird space between oidtree and content window, because oidtree has size of 438px
-	document.getElementById("oidtree").style.width = "450px";
+	$("#oidtree")[0].style.width = "450px";
 }
 
 function mobileNavClose() {
@@ -510,7 +504,7 @@ function setCookie(cname, cvalue, exdays, path) {
 	var d = new Date();
 	d.setTime(d.getTime() + (exdays*24*60*60*1000));
 	var expires = exdays == 0 ? "" : "; expires="+d.toUTCString();
-	document.cookie = cname + "=" + cvalue + expires + ";path=" + path;
+	document.cookie = cname + "=" + cvalue + expires + ";path=" + path + ";SameSite=" + samesite_policy;
 }
 
 function setLanguage(lngid) {
@@ -525,6 +519,7 @@ function setLanguage(lngid) {
 		// Internet Explorer has problems with sending new cookies to new AJAX requests, so we reload the page completely
 		window.location.reload();
 	} else {
+		// TODO: Small detail: The "Go" button also needs to be re-translated
 		reloadContent();
 		mobileNavClose();
 	}
