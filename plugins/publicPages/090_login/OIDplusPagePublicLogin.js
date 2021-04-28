@@ -74,30 +74,30 @@ var OIDplusPagePublicLogin = {
 				action:"ra_login",
 				email:email,
 				password:password,
-				captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
+				captcha: $(".g-recaptcha").length > 0 ? grecaptcha.getResponse() : null
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
 				alert(_L("Error: %1",errorThrown));
-				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+				if ($(".g-recaptcha").length > 0) grecaptcha.reset();
 			},
 			success:function(data) {
 				if ("error" in data) {
 					alert(_L("Error: %1",data.error));
-					if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+					if ($(".g-recaptcha").length > 0) grecaptcha.reset();
 				} else if (data.status >= 0) {
 					window.location.href = '?goto=oidplus:system';
 					// reloadContent();
 				} else {
 					alert(_L("Error: %1",data));
-					if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+					if ($(".g-recaptcha").length > 0) grecaptcha.reset();
 				}
 			}
 		});
 	},
 
 	raLoginOnSubmit: function() {
-		OIDplusPagePublicLogin.raLogin(document.getElementById("raLoginEMail").value, document.getElementById("raLoginPassword").value);
+		OIDplusPagePublicLogin.raLogin($("#raLoginEMail")[0].value, $("#raLoginPassword")[0].value);
 		return false;
 	},
 
@@ -119,23 +119,23 @@ var OIDplusPagePublicLogin = {
 				plugin:OIDplusPagePublicLogin.oid,
 				action:"admin_login",
 				password:password,
-				captcha: document.getElementsByClassName('g-recaptcha').length > 0 ? grecaptcha.getResponse() : null
+				captcha: $(".g-recaptcha").length > 0 ? grecaptcha.getResponse() : null
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
 				alert(_L("Error: %1",errorThrown));
-				if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+				if ($(".g-recaptcha").length > 0) grecaptcha.reset();
 			},
 			success:function(data) {
 				if ("error" in data) {
 					alert(_L("Error: %1",data.error));
-					if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+					if ($(".g-recaptcha").length > 0) grecaptcha.reset();
 				} else if (data.status >= 0) {
 					window.location.href = '?goto=oidplus:system';
 					// reloadContent();
 				} else {
 					alert(_L("Error: %1",data));
-					if (document.getElementsByClassName('g-recaptcha').length > 0) grecaptcha.reset();
+					if ($(".g-recaptcha").length > 0) grecaptcha.reset();
 				}
 			}
 		});
@@ -177,7 +177,7 @@ var OIDplusPagePublicLogin = {
 	},
 
 	adminLoginOnSubmit: function() {
-		OIDplusPagePublicLogin.adminLogin(document.getElementById("adminLoginPassword").value);
+		OIDplusPagePublicLogin.adminLogin($("#adminLoginPassword")[0].value);
 		return false;
 	}
 

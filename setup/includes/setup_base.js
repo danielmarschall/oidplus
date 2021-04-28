@@ -75,7 +75,7 @@ var g_last_admPwdHash = null;
 var g_last_pwComment = null;
 
 function rebuild() {
-	var pw = document.getElementById('admin_password').value;
+	var pw = $("#admin_password")[0].value;
 
 	if (pw != g_prevBcryptPw) {
 		// sync call to calculate SHA3
@@ -88,7 +88,7 @@ function rebuild() {
 			g_prevBcryptPw = null;
 			bCryptWorker.terminate();
 		}
-		bCryptWorker = new Worker('bcrypt_worker.js');
+		bCryptWorker = new Worker('../3p/bcrypt.js/bcrypt_worker.js');
 		bCryptWorker.postMessage(pw);
 		bCryptWorker.onmessage = function (event) {
 			var admPwdHash = event.data;
@@ -107,24 +107,24 @@ function doRebuild(admPwdHash, pwComment) {
 
 	var error = false;
 
-	if (document.getElementById('config') == null) return;
+	if ($("#config")[0] == null) return;
 
 	// Check 1: Has the password the correct length?
-	if (document.getElementById('admin_password').value.length < min_password_length)
+	if ($("#admin_password")[0].value.length < min_password_length)
 	{
-		document.getElementById('password_warn').innerHTML = '<font color="red">'+_L('Password must be at least %1 characters long',min_password_length)+'</font>';
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Password must be at least '+min_password_length+' characters long</i>'; // do not translate
+		$("#password_warn")[0].innerHTML = '<font color="red">'+_L('Password must be at least %1 characters long',min_password_length)+'</font>';
+		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Password must be at least '+min_password_length+' characters long</i>'; // do not translate
 		error = true;
 	} else {
-		document.getElementById('password_warn').innerHTML = '';
+		$("#password_warn")[0].innerHTML = '';
 	}
 
 	// Check 2: Do the passwords match?
-	if (document.getElementById('admin_password').value != document.getElementById('admin_password2').value) {
-		document.getElementById('password_warn2').innerHTML = '<font color="red">'+_L('The passwords do not match!')+'</font>';
+	if ($("#admin_password")[0].value != $("#admin_password2")[0].value) {
+		$("#password_warn2")[0].innerHTML = '<font color="red">'+_L('The passwords do not match!')+'</font>';
 		error = true;
 	} else {
-		document.getElementById('password_warn2').innerHTML = '';
+		$("#password_warn2")[0].innerHTML = '';
 	}
 
 	// Check 3: Ask the database plugins for verification of their data
@@ -138,10 +138,10 @@ function doRebuild(admPwdHash, pwComment) {
 	// Continue
 	if (!error)
 	{
-		var e = document.getElementById("db_plugin");
+		var e = $("#db_plugin")[0];
 		var strPlugin = e.options[e.selectedIndex].value;
 
-		document.getElementById('config').innerHTML = '<b>&lt?php</b><br><br>' +
+		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br>' +
 			'<i>// To renew this file, please run setup/ in your browser.</i><br>' + // do not translate
 			'<i>// If you don\'t want to run setup again, you can also change most of the settings directly in this file.</i><br>' + // do not translate
 			'<br>' +
@@ -156,33 +156,33 @@ function doRebuild(admPwdHash, pwComment) {
 			var f = rebuild_config_callbacks[i];
 			var cont = f();
 			if (cont) {
-				document.getElementById('config').innerHTML = document.getElementById('config').innerHTML + cont;
+				$("#config")[0].innerHTML = $("#config")[0].innerHTML + cont;
 			}
 		}
-		document.getElementById('config').innerHTML = document.getElementById('config').innerHTML +
+		$("#config")[0].innerHTML = $("#config")[0].innerHTML +
 			'<br>' +
-			'OIDplus::baseConfig()->setValue(\'TABLENAME_PREFIX\',  \''+document.getElementById('tablename_prefix').value+'\');<br>' +
+			'OIDplus::baseConfig()->setValue(\'TABLENAME_PREFIX\',  \''+$("#tablename_prefix")[0].value+'\');<br>' +
 			'<br>' +
 			'OIDplus::baseConfig()->setValue(\'SERVER_SECRET\',     \''+generateRandomString(32)+'\');<br>' +
 			'<br>' +
-			'OIDplus::baseConfig()->setValue(\'RECAPTCHA_ENABLED\', '+(document.getElementById('recaptcha_enabled').checked ? 'true' : 'false')+');<br>' +
-			'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PUBLIC\',  \''+document.getElementById('recaptcha_public').value+'\');<br>' +
-			'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PRIVATE\', \''+document.getElementById('recaptcha_private').value+'\');<br>' +
+			'OIDplus::baseConfig()->setValue(\'RECAPTCHA_ENABLED\', '+($("#recaptcha_enabled")[0].checked ? 'true' : 'false')+');<br>' +
+			'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PUBLIC\',  \''+$("#recaptcha_public")[0].value+'\');<br>' +
+			'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PRIVATE\', \''+$("#recaptcha_private")[0].value+'\');<br>' +
 			'<br>' +
-			'OIDplus::baseConfig()->setValue(\'ENFORCE_SSL\',       '+document.getElementById('enforce_ssl').value+');<br>';
+			'OIDplus::baseConfig()->setValue(\'ENFORCE_SSL\',       '+$("#enforce_ssl")[0].value+');<br>';
 
-		document.getElementById('config').innerHTML = document.getElementById('config').innerHTML.replaceAll(' ', '&nbsp;');
+		$("#config")[0].innerHTML = $("#config")[0].innerHTML.replaceAll(' ', '&nbsp;');
 	}
 
 	// In case something is not good, do not allow the user to continue with the other configuration steps:
 	if (error) {
-		document.getElementById('step2').style.display = "None";
-		document.getElementById('step3').style.display = "None";
-		document.getElementById('step4').style.display = "None";
+		$("#step2")[0].style.display = "None";
+		$("#step3")[0].style.display = "None";
+		$("#step4")[0].style.display = "None";
 	} else {
-		document.getElementById('step2').style.display = "Block";
-		document.getElementById('step3').style.display = "Block";
-		document.getElementById('step4').style.display = "Block";
+		$("#step2")[0].style.display = "Block";
+		$("#step3")[0].style.display = "Block";
+		$("#step4")[0].style.display = "Block";
 	}
 }
 
@@ -200,8 +200,8 @@ function checkAccess(dir) {
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState === 4) {
 			if (xhr.status === 200) {
-				document.getElementById('systemCheckCaption').style.display = 'block';
-				document.getElementById('dirAccessWarning').innerHTML = document.getElementById('dirAccessWarning').innerHTML + _L('Attention: The following directory is world-readable: %1 ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>).','<a target="_blank" href="'+url+'">'+visibleUrl+'</a>') + '<br>';
+				$("#systemCheckCaption")[0].style.display = 'block';
+				$("#dirAccessWarning")[0].innerHTML = $("#dirAccessWarning")[0].innerHTML + _L('Attention: The following directory is world-readable: %1 ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>).','<a target="_blank" href="'+url+'">'+visibleUrl+'</a>') + '<br>';
 			}
 		}
 	};
@@ -211,7 +211,7 @@ function checkAccess(dir) {
 }
 
 function dbplugin_changed() {
-	var e = document.getElementById("db_plugin");
+	var e = $("#db_plugin")[0];
 	var strPlugin = e.options[e.selectedIndex].value;
 
 	for (var i = 0; i < plugin_combobox_change_callbacks.length; i++) {
@@ -223,7 +223,7 @@ function dbplugin_changed() {
 }
 
 function performAccessCheck() {
-	document.getElementById("dirAccessWarning").innerHTML = "";
+	$("#dirAccessWarning")[0].innerHTML = "";
 	checkAccess("userdata/index.html");
 	checkAccess("res/ATTENTION.TXT");
 	checkAccess("dev/index.html");

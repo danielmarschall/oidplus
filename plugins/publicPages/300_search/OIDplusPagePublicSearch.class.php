@@ -168,12 +168,12 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				                 '._L('Search for').': <input type="text" id="term" name="term" value="'.htmlentities($params['term']).'"><br><br>
 				                 <script>
 				                 function searchNsSelect(ns) {
-				                     document.getElementById("search_options_oid").style.display = (ns == "oid") ? "block" : "none";
-				                     document.getElementById("search_options_object").style.display = (ns == "oidplus:ra") ? "none" : "block";
-				                     document.getElementById("search_options_ra").style.display = (ns == "oidplus:ra") ? "block" : "none";
+				                     $("#search_options_oid")[0].style.display = (ns == "oid") ? "block" : "none";
+				                     $("#search_options_object")[0].style.display = (ns == "oidplus:ra") ? "none" : "block";
+				                     $("#search_options_ra")[0].style.display = (ns == "oidplus:ra") ? "block" : "none";
 				                 }
 				                 $( document ).ready(function() {
-				                     searchNsSelect(document.getElementById("namespace").value);
+				                     searchNsSelect($("#namespace")[0].value);
 				                 });
 				                 </script>
 				                 '._L('Search in').': <select name="namespace" id="namespace" onchange="searchNsSelect(this.value);"><br><br>';

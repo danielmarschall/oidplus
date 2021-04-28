@@ -107,7 +107,7 @@ var OIDplusPagePublicAttachments = {
 
 	uploadAttachmentOnSubmit: function() {
 		try {
-			OIDplusPagePublicAttachments.uploadAttachment(current_node, document.getElementById("fileAttachment").value);
+			OIDplusPagePublicAttachments.uploadAttachment(current_node, $("#fileAttachment")[0].value);
 		} finally {
 			return false;
 		}

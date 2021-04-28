@@ -70,10 +70,10 @@ var OIDplusPagePublicWhois = {
 	},
 
 	refresh_whois_url_bar: function() {
-		document.getElementById('whois_url_bar_section').style.display = "Block"; // because of NoScript
+		$("#whois_url_bar_section")[0].style.display = "Block"; // because of NoScript
 
 		var format = "";
-		var radios = document.getElementsByName('format');
+		var radios = $("[name=format]");
 
 		for (var i = 0, length = radios.length; i < length; i++) {
 			if (radios[i].checked) {
@@ -81,7 +81,7 @@ var OIDplusPagePublicWhois = {
 			}
 		}
 
-		document.getElementById('whois_url_bar').innerHTML = getSystemUrl() + 'plugins/publicPages/100_whois/whois/webwhois.php?format=' + format + '&query=' + encodeURIComponent(document.getElementById('whois_query').value);
+		$("#whois_url_bar")[0].innerHTML = getSystemUrl() + 'plugins/publicPages/100_whois/whois/webwhois.php?format=' + format + '&query=' + encodeURIComponent($("#whois_query")[0].value);
 	}
 
 };

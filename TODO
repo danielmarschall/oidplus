@@ -61,6 +61,9 @@ DATA TRANSFER PLUGIN
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
 
 SMALL THINGS
+- Login page etc.: If user clicks on a tab, then the gotoedit and static link should change to e.g. "oidplus:login$admin" or "oidplus:login$ra", respectively.
+        $('#static_link').attr("href", "index.php?goto="+encodeURIComponent(id));
+        $("#gotoedit").val(id);
 - Add show_waiting_anim() and hide_waiting_anim() to all AJAX queries, like it is done in plugin "Software update"
 - #gotobutton should have the same top and height as #gotoedit
 - Should plugins be able to change the "Content-Security-Policy" header (i.e. to include external JavaScripts frameworks)

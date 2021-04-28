@@ -118,24 +118,17 @@ var OIDplusPageAdminColors = {
 	},
 
 	findLinkIndex: function(searchString) {
-		var links = document.getElementsByTagName("head").item(0).getElementsByTagName("link");
+		var links = $("head link");
 
 		for (i=0; i<links.length; i++) {
-			if (links.item(i).href.includes(searchString)) return i;
+			if (links[i].href.includes(searchString)) return i;
 		}
 
 		return -1;
 	},
 
 	changeCSS: function(cssFile, cssLinkIndex) {
-		var oldlink = document.getElementsByTagName("head").item(0).getElementsByTagName("link").item(cssLinkIndex);
-
-		var newlink = document.createElement("link");
-		newlink.setAttribute("rel", "stylesheet");
-		newlink.setAttribute("type", "text/css");
-		newlink.setAttribute("href", cssFile);
-
-		document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
+		$("head link")[cssLinkIndex].href = cssFile;
 	},
 
 	crudActionColorUpdate: function(name) {
@@ -155,11 +148,11 @@ var OIDplusPageAdminColors = {
 				csrf_token: csrf_token,
 				plugin: OIDplusPageAdminColors.oid,
 				action: "color_update",
-				hue_shift: document.getElementById('hshift').value,
-				sat_shift: document.getElementById('sshift').value,
-				val_shift: document.getElementById('vshift').value,
-				invcolors: document.getElementById('icolor').value,
-				theme: document.getElementById('theme').value,
+				hue_shift: $("#hshift")[0].value,
+				sat_shift: $("#sshift")[0].value,
+				val_shift: $("#vshift")[0].value,
+				invcolors: $("#icolor")[0].value,
+				theme: $("#theme")[0].value,
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;

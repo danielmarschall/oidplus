@@ -132,13 +132,13 @@ var OIDplusPagePublicObjects = {
 				csrf_token:csrf_token,
 				plugin:OIDplusPagePublicObjects.oid,
 				action:"Insert",
-				id:document.getElementById('id').value,
-				ra_email:document.getElementById('ra_email').value,
-				comment:document.getElementById('comment').value,
-				asn1ids:(document.getElementById('asn1ids') ? document.getElementById('asn1ids').value : null),
-				iris:(document.getElementById('iris') ? document.getElementById('iris').value : null),
-				confidential:(document.getElementById('hide') ? document.getElementById('hide').checked : null),
-				weid:(document.getElementById('weid') ? document.getElementById('weid').checked : null),
+				id:$("#id")[0].value,
+				ra_email:$("#ra_email")[0].value,
+				comment:$("#comment")[0].value,
+				asn1ids:($("#asn1ids")[0] ? $("#asn1ids")[0].value : null),
+				iris:($("#iris")[0] ? $("#iris")[0].value : null),
+				confidential:($("#hide")[0] ? $("#hide")[0].checked : null),
+				weid:($("#weid")[0] ? $("#weid")[0].checked : null),
 				parent:parent
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
@@ -157,8 +157,8 @@ var OIDplusPagePublicObjects = {
 					}
 
 					if ((data.status & 1) == 1/*RaNotExisting*/) {
-						if (confirm(_L("Insert OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",document.getElementById('ra_email').value))) {
-							OIDplusPagePublicObjects.crudActionSendInvitation(parent, document.getElementById('ra_email_'+id).value);
+						if (confirm(_L("Insert OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",$("#ra_email")[0].value))) {
+							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email_"+id)[0].value);
 							return;
 						} else {
 							if (confirm(_L("Do you want to open the newly created object now?"))) {
@@ -209,11 +209,11 @@ var OIDplusPagePublicObjects = {
 				plugin:OIDplusPagePublicObjects.oid,
 				action:"Update",
 				id:id,
-				ra_email:document.getElementById('ra_email_'+id).value,
-				comment:document.getElementById('comment_'+id).value,
-				asn1ids:(document.getElementById('asn1ids_'+id) ? document.getElementById('asn1ids_'+id).value : null),
-				iris:(document.getElementById('iris_'+id) ? document.getElementById('iris_'+id).value : null),
-				confidential:(document.getElementById('hide_'+id) ? document.getElementById('hide_'+id).checked : null),
+				ra_email:$("#ra_email_"+id)[0].value,
+				comment:$("#comment_"+id)[0].value,
+				asn1ids:($("#asn1ids_"+id)[0] ? $("#asn1ids_"+id)[0].value : null),
+				iris:($("#iris_"+id)[0] ? $("#iris_"+id)[0].value : null),
+				confidential:($("#hide_"+id)[0] ? $("#hide_"+id)[0].checked : null),
 				parent:parent
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
@@ -229,8 +229,8 @@ var OIDplusPagePublicObjects = {
 					}
 
 					if ((data.status & 1) == 1/*RaNotExisting*/) {
-						if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",document.getElementById('ra_email_'+id).value))) {
-							OIDplusPagePublicObjects.crudActionSendInvitation(parent, document.getElementById('ra_email_'+id).value);
+						if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",$("#ra_email_"+id)[0].value))) {
+							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email_"+id)[0].value);
 							return;
 						}
 					}
@@ -305,8 +305,8 @@ var OIDplusPagePublicObjects = {
 				plugin:OIDplusPagePublicObjects.oid,
 				action:"Update2",
 				id:current_node,
-				title:(document.getElementById('titleedit') ? document.getElementById('titleedit').value : null),
-				//description:(document.getElementById('description') ? document.getElementById('description').value : null)
+				title:($("#titleedit")[0] ? $("#titleedit")[0].value : null),
+				//description:($("#description")[0] ? $("#description")[0].value : null)
 				description:tinyMCE.get('description').getContent()
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
@@ -320,12 +320,12 @@ var OIDplusPagePublicObjects = {
 					alert(_L("Update OK"));
 					//reloadContent();
 					$('#oidtree').jstree("refresh");
-					var h1s = document.getElementsByTagName("h1");
+					var h1s = $("h1");
 					for (var i = 0; i < h1s.length; i++) {
 						var h1 = h1s[i];
-						h1.innerHTML = document.getElementById('titleedit').value.htmlentities();
+						h1.innerHTML = $("#titleedit")[0].value.htmlentities();
 					}
-					document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), document.getElementById('titleedit').value);
+					document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), $("#titleedit")[0].value);
 
 					var mce = tinymce.get('description');
 					if (mce != null) mce.setDirty(false);
