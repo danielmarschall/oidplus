@@ -20,6 +20,8 @@
 include '../../../3p/vts_vnag/vnag_framework.inc.php';
 include '../../../includes/oidplus.inc.php';
 
+define('OIDPLUS_VNAG_MAX_CACHE_AGE', 60); // seconds (TODO: in base config?)
+
 OIDplus::init(false);
 
 if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPageAdminVNagVersionCheck', false)) {
@@ -44,58 +46,73 @@ class VNagMonitorDummy extends VNag {
 	}
 }
 
-$installType = OIDplus::getInstallType();
+$cache_file = OIDplus::localpath() . 'userdata/cache/vnag_version_check.ser';
 
-if ($installType === 'ambigous') {
-	$out_stat = VNag::STATUS_UNKNOWN;
-	$out_msg  = 'Multiple version files/directories (oidplus_version.txt, .git and .svn) are existing! Therefore, the version is ambiguous!'; // do not translate
-} else if ($installType === 'unknown') {
-	$out_stat = VNag::STATUS_UNKNOWN;
-	$out_msg  = 'The version cannot be determined, and the update needs to be applied manually!'; // do not translate
-} else if (($installType === 'svn-wc') || ($installType === 'git-wc')) {
-	$local_installation = OIDplus::getVersion();
-	try {
-		$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
-		$newest_version = 'svn-' . $svn->getVersion();
-	} catch (Exception $e) {
-		$newest_version = false;
-	}
+if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= OIDPLUS_VNAG_MAX_CACHE_AGE)) {
+	// Anti DoS
 
-	$requireInfo = ($installType === 'svn-wc') ? 'shell access with svn/svnversion tool, or PDO/SQLite3 PHP extension' : 'shell access with Git client'; // do not translate
-	$updateCommand = ($installType === 'svn-wc') ? 'svn update' : 'git pull';
+	// TODO: There is a small flaw: If the admin fails to secure the "cache/" folder
+	//       from the public, then people can read the version file, even if the
+	//       VNag script is intended to be protected by a vnag_password.
+	list($out_stat, $out_msg) = unserialize(file_get_contents($cache_file));
 
-	if (!$newest_version) {
+} else {
+
+	$installType = OIDplus::getInstallType();
+
+	if ($installType === 'ambigous') {
 		$out_stat = VNag::STATUS_UNKNOWN;
-		$out_msg  = 'OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.'; // do not translate
-	} else if (!$local_installation) {
+		$out_msg  = 'Multiple version files/directories (oidplus_version.txt, .git and .svn) are existing! Therefore, the version is ambiguous!'; // do not translate
+	} else if ($installType === 'unknown') {
 		$out_stat = VNag::STATUS_UNKNOWN;
-		$out_msg  = 'OIDplus could not determine its version (Required: ' . $requireInfo . '). Please update your system manually via the "' . $updateCommand . '" command regularly.'; // do not translate
-	} else if ($local_installation == $newest_version) {
-		$out_stat = VNag::STATUS_OK;
-		$out_msg  = 'You are using the latest version of OIDplus (' . $local_installation . ' local / ' . $newest_version . ' remote)'; // do not translate
-	} else {
-		$out_stat = VNag::STATUS_WARNING;
-		$out_msg  = 'OIDplus is outdated. (' . $local_installation . ' local / ' . $newest_version . ' remote)'; // do not translate
-	}
-} else if ($installType === 'svn-snapshot') {
-	$local_installation = OIDplus::getVersion();
-	try {
-		$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
-		$newest_version = 'svn-' . $svn->getVersion();
-	} catch (Exception $e) {
-		$newest_version = false;
+		$out_msg  = 'The version cannot be determined, and the update needs to be applied manually!'; // do not translate
+	} else if (($installType === 'svn-wc') || ($installType === 'git-wc')) {
+		$local_installation = OIDplus::getVersion();
+		try {
+			$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
+			$newest_version = 'svn-' . $svn->getVersion();
+		} catch (Exception $e) {
+			$newest_version = false;
+		}
+
+		$requireInfo = ($installType === 'svn-wc') ? 'shell access with svn/svnversion tool, or PDO/SQLite3 PHP extension' : 'shell access with Git client'; // do not translate
+		$updateCommand = ($installType === 'svn-wc') ? 'svn update' : 'git pull';
+
+		if (!$newest_version) {
+			$out_stat = VNag::STATUS_UNKNOWN;
+			$out_msg  = 'OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.'; // do not translate
+		} else if (!$local_installation) {
+			$out_stat = VNag::STATUS_UNKNOWN;
+			$out_msg  = 'OIDplus could not determine its version (Required: ' . $requireInfo . '). Please update your system manually via the "' . $updateCommand . '" command regularly.'; // do not translate
+		} else if ($local_installation == $newest_version) {
+			$out_stat = VNag::STATUS_OK;
+			$out_msg  = 'You are using the latest version of OIDplus (' . $local_installation . ' local / ' . $newest_version . ' remote)'; // do not translate
+		} else {
+			$out_stat = VNag::STATUS_WARNING;
+			$out_msg  = 'OIDplus is outdated. (' . $local_installation . ' local / ' . $newest_version . ' remote)'; // do not translate
+		}
+	} else if ($installType === 'svn-snapshot') {
+		$local_installation = OIDplus::getVersion();
+		try {
+			$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
+			$newest_version = 'svn-' . $svn->getVersion();
+		} catch (Exception $e) {
+			$newest_version = false;
+		}
+
+		if (!$newest_version) {
+			$out_stat = VNag::STATUS_UNKNOWN;
+			$out_msg  = 'OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.'; // do not translate
+		} else if ($local_installation == $newest_version) {
+			$out_stat = VNag::STATUS_OK;
+			$out_msg  = 'You are using the latest version of OIDplus (' . $local_installation . ' local / ' . $newest_version . ' remote)'; // do not translate
+		} else {
+			$out_stat = VNag::STATUS_WARNING;
+			$out_msg  = 'OIDplus is outdated. (' . $local_installation . ' local / ' . $newest_version . ' remote)'; // do not translate
+		}
 	}
 
-	if (!$newest_version) {
-		$out_stat = VNag::STATUS_UNKNOWN;
-		$out_msg  = 'OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.'; // do not translate
-	} else if ($local_installation == $newest_version) {
-		$out_stat = VNag::STATUS_OK;
-		$out_msg  = 'You are using the latest version of OIDplus (' . $local_installation . ' local / ' . $newest_version . ' remote)'; // do not translate
-	} else {
-		$out_stat = VNag::STATUS_WARNING;
-		$out_msg  = 'OIDplus is outdated. (' . $local_installation . ' local / ' . $newest_version . ' remote)'; // do not translate
-	}
+	@file_put_contents($cache_file, serialize(array($out_stat, $out_msg)));
 }
 
 $job = new VNagMonitorDummy($out_stat, $out_msg);
