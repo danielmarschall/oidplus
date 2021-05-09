@@ -35,7 +35,17 @@ class OIDplusPagePublicLoginGoogle extends OIDplusPagePluginPublic {
 			$out['title'] = _L('Login using Google');
 			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
 
+			if (strtolower(OIDplus::baseConfig()->getValue('COOKIE_SAMESITE_POLICY', 'Strict')) == 'strict') {
+				// TODO: Is there a different way we can do this?
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = _L('The OIDplus administrator needs to set the base config COOKIE_SAMESITE_POLICY to "Lax" instead of "Strict", otherwise this plugin will not work!');
+				return;
+			}
+
 			if (!OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_ENABLED', false)) {
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = _L('Google OAuth authentication is disabled on this system.');
+				return;
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = _L('Google OAuth authentication is disabled on this system.');
 				return;
