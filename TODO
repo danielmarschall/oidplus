@@ -11,6 +11,9 @@ SECURITY Improvements:
 - Make attachment upload path configurable
 - Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")
   and see which error message appears, or they could try to enter "plugin/adminPages/..." using the web browser and see if the result is HTTP 200 or HTTP 404.
+- If SameSite=Strict, the OAuth plugins won't work.
+  Maybe we should not use the CSRF-Token cookie, but instead create a new cookie, which is always "Lax" while all others are "Strict"?
+  https://www.viathinksoft.de/thinkbug/thinkbug.php?id=97&readid=700
 
 IDEAS FOR NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:

@@ -46,7 +46,7 @@ class OIDplusSessionHandler {
 		if (empty($path)) $path = '/';
 		@ini_set('session.cookie_path', $path);
 
-		@ini_set('session.cookie_samesite', 'Strict');
+		@ini_set('session.cookie_samesite', OIDplus::baseConfig()->getValue('COOKIE_SAMESITE_POLICY', 'Strict'));
 
 		@ini_set('session.use_strict_mode', 1);
 

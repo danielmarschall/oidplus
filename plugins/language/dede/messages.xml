@@ -5646,6 +5646,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The OIDplus administrator needs to set the base config COOKIE_SAMESITE_POLICY to "Lax" instead of "Strict", otherwise this plugin will not work!
+		]]></source>
+		<target><![CDATA[
+		Der OIDplus-Administrator muss den Basiskonfigurations-Eintrag COOKIE_SAMESITE_POLICY von "Strict" auf "Lax" umstellen, da dieses Plugin ansonsten nicht arbeiten kann!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The RA %1 is not registered in the database.
 		]]></source>
 		<target><![CDATA[

@@ -39,7 +39,7 @@ _CheckParamExists($_GET, 'state');
 _CheckParamExists($_COOKIE, 'csrf_token');
 
 if ($_GET['state'] != $_COOKIE['csrf_token']) {
-	die('Invalid CSRF token');
+	die(_L('Wrong CSRF Token'));
 }
 
 if (!function_exists('curl_init')) {
