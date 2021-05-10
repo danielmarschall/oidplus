@@ -36,9 +36,9 @@ if (!OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {
 
 _CheckParamExists($_GET, 'code');
 _CheckParamExists($_GET, 'state');
-_CheckParamExists($_COOKIE, 'csrf_token');
+_CheckParamExists($_COOKIE, 'csrf_token_weak');
 
-if ($_GET['state'] != $_COOKIE['csrf_token']) {
+if ($_GET['state'] != $_COOKIE['csrf_token_weak']) {
 	die(_L('Wrong CSRF Token'));
 }
 

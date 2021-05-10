@@ -33,6 +33,21 @@ $static_title = $static['title'];
 $static_icon = $static['icon'];
 $static_content = $static['text'];
 
+if (!isset($_COOKIE['csrf_token'])) {
+	// This is the main CSRF token used for AJAX.
+	$token = OIDplus::authUtils()->genCSRFToken();
+	OIDplus::cookieUtils()->setcookie('csrf_token', $token, 0, false);
+	unset($token);
+}
+
+if (!isset($_COOKIE['csrf_token_weak'])) {
+	// This CSRF token is created with SameSite=Lax and must be used
+	// for OAuth 2.0 redirects or similar purposes.
+	$token = OIDplus::authUtils()->genCSRFToken();
+	OIDplus::cookieUtils()->setcookie('csrf_token_weak', $token, 0, false, 'Lax');
+	unset($token);
+}
+
 OIDplus::handleLangArgument();
 
 function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
@@ -129,7 +144,7 @@ $add_css_args = count($add_css_args) > 0 ? '?'.implode('&',$add_css_args) : '';
 	</div>
 
 	<?php
-	echo OIDplusGui::getLanguageBox($static_node_id, true);
+	echo OIDplus::gui()->getLanguageBox($static_node_id, true);
 	?>
 
 	<div id="gotobox">

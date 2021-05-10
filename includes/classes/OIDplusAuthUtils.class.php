@@ -215,13 +215,13 @@ class OIDplusAuthUtils {
 	}
 
 	public function genCSRFToken() {
-		return bin2hex(OIDplusAuthUtils::getRandomBytes(64));
+		return bin2hex(self::getRandomBytes(64));
 	}
 
 	public function checkCSRF() {
 		if (!$this->enable_csrf) return;
-		if (!isset($_REQUEST['csrf_token']) || !isset($_COOKIE['csrf_token']) || ($_REQUEST['csrf_token'] != $_COOKIE['csrf_token'])) {
-			throw new Exception(_L('Wrong CSRF Token'));
+		if (!isset($_REQUEST['csrf_token']) || !isset($_COOKIE['csrf_token']) || ($_REQUEST['csrf_token'] !== $_COOKIE['csrf_token'])) {
+			throw new OIDplusException(_L('Wrong CSRF Token'));
 		}
 	}
 

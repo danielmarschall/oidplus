@@ -55,7 +55,7 @@ echo '<body>';
 echo '<h1>'._L('OIDplus Setup - Initial Settings').'</h1>';
 
 OIDplus::handleLangArgument();
-echo OIDplusGui::getLanguageBox(null, false);
+echo OIDplus::gui()->getLanguageBox(null, false);
 
 echo '<p>'._L('If you can read this, then your database login credentials are correct.').'</p>';
 

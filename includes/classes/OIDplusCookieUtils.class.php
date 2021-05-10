@@ -25,7 +25,7 @@ class OIDplusCookieUtils {
 		$this->setcookie($name, '', time()-9999, true);
 	}
 
-	public function setcookie($name, $value, $expires=0, $allowJS=false) {
+	public function setcookie($name, $value, $expires=0, $allowJS=false, $samesite=null) {
 		// $path = ini_get('session.cookie_path');
 		$path = OIDplus::webpath(null,true);
 		if (empty($path)) $path = '/';
@@ -33,7 +33,9 @@ class OIDplusCookieUtils {
 		$domain = '';
 		$secure = false;
 		$httponly = !$allowJS;
-		$samesite = OIDplus::baseConfig()->getValue('COOKIE_SAMESITE_POLICY', 'Strict');
+		if (is_null($samesite)) {
+			$samesite = OIDplus::baseConfig()->getValue('COOKIE_SAMESITE_POLICY', 'Strict');
+		}
 
 		if (strnatcmp(phpversion(),'7.3.0') >= 0) {
 			$options = array(
