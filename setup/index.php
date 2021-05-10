@@ -43,7 +43,7 @@ echo '</noscript>';
 
 echo '<span id="setupPageContent" style="display:None">';
 
-echo OIDplusGui::getLanguageBox(null, false);
+echo OIDplus::gui()->getLanguageBox(null, false);
 
 echo '<p>'._L('Thank you very much for choosing OIDplus! This setup assistant will help you creating or updating the file <b>%1</b>. Setup does not automatically write to this file. Instead, you need to copy-paste the contents into the file. Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.','userdata/baseconfig/config.inc.php').'</p>';
 
