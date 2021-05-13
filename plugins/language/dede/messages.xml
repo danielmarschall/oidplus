@@ -2806,6 +2806,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		JWT token could not be decoded
+		]]></source>
+		<target><![CDATA[
+		JWT-Token konnte nicht dekodiert werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Java Package Names
 		]]></source>
 		<target><![CDATA[
@@ -5642,14 +5650,6 @@
 		]]></source>
 		<target><![CDATA[
 		Die OID "%1" wird bereits im Plugin %2 verwendet
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		The OIDplus administrator needs to set the base config COOKIE_SAMESITE_POLICY to "Lax" instead of "Strict", otherwise this plugin will not work!
-		]]></source>
-		<target><![CDATA[
-		Der OIDplus-Administrator muss den Basiskonfigurations-Eintrag COOKIE_SAMESITE_POLICY von "Strict" auf "Lax" umstellen, da dieses Plugin ansonsten nicht arbeiten kann!
 		]]></target>
 	</message>
 	<message>
