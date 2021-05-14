@@ -25,9 +25,9 @@ abstract class OIDplusAuthContentStore {
 
 	// Getter / Setter
 
-	public abstract function getValue($name);
+	protected abstract function getValue($name);
 
-	public abstract function setValue($name, $value);
+	protected abstract function setValue($name, $value);
 
 	protected abstract function destroySession();
 
@@ -72,10 +72,6 @@ abstract class OIDplusAuthContentStore {
 	}
 
 	public function loggedInRaList() {
-		if (OIDplus::authUtils()->forceAllLoggedOut()) {
-			return array();
-		}
-
 		$list = $this->getValue('oidplus_logged_in');
 		if (is_null($list)) $list = '';
 
@@ -110,9 +106,6 @@ abstract class OIDplusAuthContentStore {
 	}
 
 	public function isAdminLoggedIn() {
-		if (OIDplus::authUtils()->forceAllLoggedOut()) {
-			return false;
-		}
 		return $this->getValue('oidplus_admin_logged_in') == '1';
 	}
 

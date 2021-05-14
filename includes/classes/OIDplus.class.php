@@ -261,14 +261,6 @@ class OIDplus {
 		return self::$logger;
 	}
 
-	private static $sesHandler = null;
-	public static function sesHandler() {
-		if (is_null(self::$sesHandler)) {
-			self::$sesHandler = new OIDplusSessionHandler();
-		}
-		return self::$sesHandler;
-	}
-
 	# --- SQL slang plugin
 
 	private static function registerSqlSlangPlugin(OIDplusSqlSlangPlugin $plugin) {
@@ -717,7 +709,6 @@ class OIDplus {
 		self::$mailUtils = null;
 		self::$menuUtils = null;
 		self::$logger = null;
-		self::$sesHandler = null;
 		self::$dbMainSession = null;
 		self::$dbIsolatedSession = null;
 		self::$pagePlugins = array();
