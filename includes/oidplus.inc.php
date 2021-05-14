@@ -45,6 +45,13 @@ if (version_compare(PHP_VERSION, '7.0.0') < 0) {
 
 include_once __DIR__ . '/gmp_supplement.inc.php';
 include_once __DIR__ . '/../3p/symfony-mbstring-polyfill/bootstrap.php';
+
+include_once __DIR__ . '/../3p/php-jwt/ExpiredException.php';
+include_once __DIR__ . '/../3p/php-jwt/BeforeValidException.php';
+include_once __DIR__ . '/../3p/php-jwt/SignatureInvalidException.php';
+include_once __DIR__ . '/../3p/php-jwt/JWT.php';
+include_once __DIR__ . '/../3p/php-jwt/JWK.php';
+
 include_once __DIR__ . '/simplexml_supplement.inc.php';
 
 require_once __DIR__ . '/oidplus_dependency.inc.php';
