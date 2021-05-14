@@ -81,6 +81,11 @@ Minify:
 		Note:     The latest version does not work with PHP 7.0
 		Website:  https://github.com/php-fig/cache
 
+php-jwt:
+	License:  BSD-3-Clause
+	Version:  Commit 474047d on 5 Mar 2021
+	Website:  https://github.com/firebase/php-jwt
+
 Polyfill:
 	License:  MIT
 	Website:  https://polyfill.io/v3/

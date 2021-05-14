@@ -5646,6 +5646,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The JWT-token (secret!) will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.
+		]]></source>
+		<target><![CDATA[
+		Der JWT-Token (Geheim!) werden eine automatische Kurzzeit-Anmeldung veranlassen. Die anderen Felder sind die Felder, die im normalen Betrieb von OIDplus gesendet werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The OID "%1" is already used by the plugin "%2"
 		]]></source>
 		<target><![CDATA[
@@ -5714,14 +5722,6 @@
 		]]></source>
 		<target><![CDATA[
 		Authentifizierungs-Plugin "%1" wurde im Ordner %2 nicht gefunden
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		The batch-fields will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.
-		]]></source>
-		<target><![CDATA[
-		Die "batch"-Felder werden eine automatische Kurzzeit-Anmeldung veranlassen. Die anderen Felder sind die Felder, die im normalen Betrieb von OIDplus gesendet werden.
 		]]></target>
 	</message>
 	<message>

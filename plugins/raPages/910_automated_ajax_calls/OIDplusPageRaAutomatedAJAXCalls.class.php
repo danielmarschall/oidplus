@@ -43,7 +43,17 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 		if (isset($_SERVER['SCRIPT_FILENAME']) && (basename($_SERVER['SCRIPT_FILENAME']) == 'ajax.php')) {
 			$input = array_merge($_POST,$_GET);
 
-			if (isset($input['batch_ajax_unlock_key']) && isset($input['batch_login_username']) && isset($input['batch_login_password'])) {
+			if (isset($input['OIDPLUS_AUTH_JWT'])) {
+
+				originHeaders(); // Allows queries from other domains
+				OIDplus::authUtils()->disableCSRF(); // allow access to ajax.php without valid CSRF token
+
+				// Nothing else to do. The OIDplusAuthUtils->getAuthContentStore() will automatically care if OIDPLUS_AUTH_JWT exists!
+
+			} else if (isset($input['batch_ajax_unlock_key']) && isset($input['batch_login_username']) && isset($input['batch_login_password'])) {
+
+				// batch_* fields are for backwards compatibility!
+
 				originHeaders(); // Allows queries from other domains
 				OIDplus::authUtils()->disableCSRF(); // allow access to ajax.php without valid CSRF token
 
@@ -53,7 +63,8 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 					}
 
 					if (OIDplus::authUtils()->raCheckPassword($input['batch_login_username'], $input['batch_login_password'])) {
-						OIDplus::sesHandler()->simulate = true; // do not change the user session
+						// OIDplusAuthUtils->getAuthContentStore() will use a OIDplusAuthContentStoreDummy instead of a OIDplusAuthContentStoreSession
+						// if the argument "batch_ajax_unlock_key" exists. Therefore, the user session will be ignored and not modified.
 						OIDplus::authUtils()->raLogin($input['batch_login_username']);
 						$this->autoLoginList[] = $input['batch_login_username'];
 						register_shutdown_function(array($this,'shutdownLogout'));
@@ -80,17 +91,18 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 				return;
 			}
 
+			$authSimulation = new OIDplusAuthContentStoreJWT();
+			$authSimulation->raLogin($ra_email);
+
 			$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling the AJAX API.').'</p>';
 			$out['text'] .= '<p>'._L('The URL for the AJAX script is:').':</p>';
 			$out['text'] .= '<p><b>'.OIDplus::webpath(null,false).'ajax.php</b></p>';
 			$out['text'] .= '<p>'._L('You must at least provide following fields').':</p>';
 			$out['text'] .= '<p><pre>';
-			$out['text'] .= 'batch_login_username  = "'.htmlentities($ra_email).'"'."\n";
-			$out['text'] .= 'batch_login_password  = "........."'."\n";
-			$out['text'] .= 'batch_ajax_unlock_key = "'.$this->getUnlockKey($ra_email).'"'."\n";
+			$out['text'] .= 'OIDPLUS_AUTH_JWT = "'.$authSimulation->GetJWTToken().'"'."\n";
 			$out['text'] .= '</pre></p>';
 			$out['text'] .= '<p>'._L('Please keep this information confidential!').'</p>';
-			$out['text'] .= '<p>'._L('The batch-fields will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.').'</p>';
+			$out['text'] .= '<p>'._L('The JWT-token (secret!) will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.').'</p>';
 			$out['text'] .= '<p>'._L('Currently, there is no documentation for the AJAX calls. However, you can look at the <b>script.js</b> files of the plugins to see the field names being used. You can also enable network analysis in your web browser debugger (F12) to see the request headers sent to the server during the operation of OIDplus.').'</p>';
 
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using JavaScript').'</h2>';

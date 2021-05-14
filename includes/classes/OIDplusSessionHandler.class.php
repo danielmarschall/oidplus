@@ -23,7 +23,6 @@ class OIDplusSessionHandler {
 
 	private $secret = '';
 	protected $sessionLifetime = '';
-	public $simulate = false;
 
 	public function __construct() {
 		$this->sessionLifetime = OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60);
@@ -88,7 +87,6 @@ class OIDplusSessionHandler {
 
 	public function setValue($name, $value) {
 		$this->cacheSetValues[$name] = self::encrypt($value, $this->secret);
-		if ($this->simulate) return;
 
 		$this->sessionSafeStart();
 		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
@@ -98,7 +96,6 @@ class OIDplusSessionHandler {
 
 	public function getValue($name) {
 		if (isset($this->cacheSetValues[$name])) return self::decrypt($this->cacheSetValues[$name], $this->secret);
-		if ($this->simulate) return null;
 
 		if (!isset($_COOKIE[session_name()])) return null; // GDPR: Only start a session when we really need one
 		$this->sessionSafeStart();

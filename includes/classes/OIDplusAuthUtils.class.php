@@ -21,6 +21,8 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusAuthUtils {
 
+	// Useful functions
+
 	public static function getRandomBytes($len) {
 		if (function_exists('openssl_random_pseudo_bytes')) {
 			$a = openssl_random_pseudo_bytes($len);
@@ -46,41 +48,36 @@ class OIDplusAuthUtils {
 		return hex2bin($a);
 	}
 
+	// Content provider
+
+	protected function getAuthContentStore() {
+		static $contentProvider = null;
+
+		if (is_null($contentProvider)) {
+			if (isset($_REQUEST['OIDPLUS_AUTH_JWT'])) {
+				$contentProvider = new OIDplusAuthContentStoreJWT();
+				$contentProvider->loadJWT($_REQUEST['OIDPLUS_AUTH_JWT']);
+			} else if (isset($_REQUEST['batch_ajax_unlock_key'])) {
+				$contentProvider = new OIDplusAuthContentStoreDummy();
+			} else {
+				$contentProvider = new OIDplusAuthContentStoreSession();
+			}
+		}
+
+		return $contentProvider;
+	}
+
 	// RA authentication functions
 
-	public static function raLogin($email) {
-		if (strpos($email, '|') !== false) return;
-
-		$ses = OIDplus::sesHandler();
-		$list = $ses->getValue('oidplus_logged_in');
-		if (is_null($list)) $list = '';
-
-		$ary = ($list == '') ? array() : explode('|', $list);
-		if (!in_array($email, $ary)) $ary[] = $email;
-		$list = implode('|', $ary);
-
-		$ses->setValue('oidplus_logged_in', $list);
+	public function raLogin($email) {
+		return $this->getAuthContentStore()->raLogin($email);
 	}
 
-	public static function raLogout($email) {
-		$ses = OIDplus::sesHandler();
-		$list = $ses->getValue('oidplus_logged_in');
-		if (is_null($list)) $list = '';
-
-		$ary = ($list == '') ? array() : explode('|', $list);
-		$key = array_search($email, $ary);
-		if ($key !== false) unset($ary[$key]);
-		$list = implode('|', $ary);
-
-		$ses->setValue('oidplus_logged_in', $list);
-
-		if (($list == '') && (!self::isAdminLoggedIn())) {
-			// Nobody logged in anymore. Destroy session cookie to make GDPR people happy
-			$ses->destroySession();
-		}
+	public function raLogout($email) {
+		return $this->getAuthContentStore()->raLogout($email);
 	}
 
-	public static function raCheckPassword($ra_email, $password) {
+	public function raCheckPassword($ra_email, $password) {
 		$ra = new OIDplusRA($ra_email);
 
 		$authInfo = $ra->getAuthInfo();
@@ -96,57 +93,33 @@ class OIDplusAuthUtils {
 		return false;
 	}
 
-	public static function raNumLoggedIn() {
-		return count(self::loggedInRaList());
+	public function raNumLoggedIn() {
+		return $this->getAuthContentStore()->raNumLoggedIn();
 	}
 
-	public static function raLogoutAll() {
-		$ses = OIDplus::sesHandler();
-		$ses->setValue('oidplus_logged_in', '');
+	public function raLogoutAll() {
+		return $this->getAuthContentStore()->raLogoutAll();
 	}
 
-	public static function loggedInRaList() {
-		if (self::forceAllLoggedOut()) {
-			return array();
-		}
-
-		$ses = OIDplus::sesHandler();
-		$list = $ses->getValue('oidplus_logged_in');
-		if (is_null($list)) $list = '';
-
-		$res = array();
-		foreach (array_unique(explode('|',$list)) as $ra_email) {
-			if ($ra_email == '') continue;
-			$res[] = new OIDplusRA($ra_email);
-		}
-		return $res;
+	public function loggedInRaList() {
+		return $this->getAuthContentStore()->loggedInRaList();
 	}
 
-	public static function isRaLoggedIn($email) {
-		foreach (self::loggedInRaList() as $ra) {
-			if ($email == $ra->raEmail()) return true;
-		}
-		return false;
+	public function isRaLoggedIn($email) {
+		return $this->getAuthContentStore()->isRaLoggedIn($email);
 	}
 
 	// Admin authentication functions
 
-	public static function adminLogin() {
-		$ses = OIDplus::sesHandler();
-		$ses->setValue('oidplus_admin_logged_in', '1');
+	public function adminLogin() {
+		return $this->getAuthContentStore()->adminLogin();
 	}
 
-	public static function adminLogout() {
-		$ses = OIDplus::sesHandler();
-		$ses->setValue('oidplus_admin_logged_in', '0');
-
-		if (self::raNumLoggedIn() == 0) {
-			// Nobody logged in anymore. Destroy session cookie to make GDPR people happy
-			$ses->destroySession();
-		}
+	public function adminLogout() {
+		return $this->getAuthContentStore()->adminLogout();
 	}
 
-	public static function adminCheckPassword($password) {
+	public function adminCheckPassword($password) {
 		$passwordData = OIDplus::baseConfig()->getValue('ADMIN_PASSWORD', '');
 		if (empty($passwordData)) {
 			throw new OIDplusException(_L('No admin password set in %1','userdata/baseconfig/config.inc.php'));
@@ -168,12 +141,8 @@ class OIDplusAuthUtils {
 		return strcmp(sha3_512($s_salt.$password, true), base64_decode($hash)) === 0;
 	}
 
-	public static function isAdminLoggedIn() {
-		if (self::forceAllLoggedOut()) {
-			return false;
-		}
-		$ses = OIDplus::sesHandler();
-		return $ses->getValue('oidplus_admin_logged_in') == '1';
+	public function isAdminLoggedIn() {
+		return $this->getAuthContentStore()->isAdminLoggedIn();
 	}
 
 	// Authentication keys for validating arguments (e.g. sent by mail)
