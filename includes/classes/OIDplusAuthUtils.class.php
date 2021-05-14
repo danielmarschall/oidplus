@@ -102,7 +102,11 @@ class OIDplusAuthUtils {
 	}
 
 	public function loggedInRaList() {
-		return $this->getAuthContentStore()->loggedInRaList();
+		if (OIDplus::authUtils()->forceAllLoggedOut()) {
+			return array();
+		} else {
+			return $this->getAuthContentStore()->loggedInRaList();
+		}
 	}
 
 	public function isRaLoggedIn($email) {
@@ -142,7 +146,11 @@ class OIDplusAuthUtils {
 	}
 
 	public function isAdminLoggedIn() {
-		return $this->getAuthContentStore()->isAdminLoggedIn();
+		if (OIDplus::authUtils()->forceAllLoggedOut()) {
+			return false;
+		} else {
+			return $this->getAuthContentStore()->isAdminLoggedIn();
+		}
 	}
 
 	// Authentication keys for validating arguments (e.g. sent by mail)

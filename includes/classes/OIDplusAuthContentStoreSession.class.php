@@ -21,21 +21,26 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 
-	// Override abstract functions
-
-	public function getValue($name) {
-		$ses = OIDplus::sesHandler();
-		return $ses->getValue($name);
+	protected function getSessionHandler() {
+		static $sesHandler = null;
+		if (is_null($sesHandler)) {
+			$sesHandler = new OIDplusSessionHandler();
+		}
+		return $sesHandler;
 	}
 
-	public function setValue($name, $value) {
-		$ses = OIDplus::sesHandler();
-		return $ses->setValue($name, $value);
+	// Override abstract functions
+
+	protected function getValue($name) {
+		return $this->getSessionHandler()->getValue($name);
+	}
+
+	protected function setValue($name, $value) {
+		return $this->getSessionHandler()->setValue($name, $value);
 	}
 
 	protected function destroySession() {
-		$ses = OIDplus::sesHandler();
-		return $ses->destroySession();
+		return $this->getSessionHandler()->destroySession();
 	}
 
 }
