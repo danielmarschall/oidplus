@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-interface OIDplusConfigInterface {
+interface OIDplusGetterSetterInterface {
 
 	public function getValue($name, $default=null);
 	public function setValue($name, $value);

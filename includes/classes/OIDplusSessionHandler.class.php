@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusSessionHandler implements OIDplusConfigInterface {
+class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 
 	private $secret = '';
 	protected $sessionLifetime = '';
