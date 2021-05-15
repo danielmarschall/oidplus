@@ -23,21 +23,33 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 
 	// Individual functions
 
-	public function loadJWT($jwt, $additional_secret='') {
-		$key = OIDplus::baseConfig()->getValue('SERVER_SECRET', '').$additional_secret;
-		$algo = OIDplus::baseConfig()->getValue('JWK_ALGORITHM', 'HS256');
-		$this->content = (array) \Firebase\JWT\JWT::decode($jwt, $key, array($algo));
+	public function loadJWT($jwt) {
+		if (OIDplus::getPkiStatus()) {
+			$pubKey = OIDplus::config()->getValue('oidplus_public_key');
+			$this->content = (array) \Firebase\JWT\JWT::decode($jwt, $pubKey, array('RS256', 'RS384', 'RS512'));
+		} else {
+			$key = OIDplus::baseConfig()->getValue('SERVER_SECRET', '');
+			$key = hash_pbkdf2('sha512', $key, '', 10000, 64/*256bit*/, false);
+			$this->content = (array) \Firebase\JWT\JWT::decode($jwt, $key, array('HS256', 'HS384', 'HS512'));
+		}
 	}
 
-	public function getJWTToken($lifetime=100*365*24*60*60, $additional_secret='') {
-		$key = OIDplus::baseConfig()->getValue('SERVER_SECRET', '').$additional_secret;
+	public function getJWTToken($lifetime=100*365*24*60*60) {
 		$payload = $this->content;
 		$payload["iss"] = "http://oidplus.com";
 		$payload["aud"] = "http://oidplus.com";
+		$payload["jti"] = gen_uuid();
 		$payload["iat"] = time();
 		$payload["exp"] = time() + $lifetime;
-		$algo = OIDplus::baseConfig()->getValue('JWK_ALGORITHM', 'HS256');
-		return \Firebase\JWT\JWT::encode($payload, $key, $algo);
+
+		if (OIDplus::getPkiStatus()) {
+			$privKey = OIDplus::config()->getValue('oidplus_private_key');
+			return \Firebase\JWT\JWT::encode($payload, $privKey, 'RS512');
+		} else {
+			$key = OIDplus::baseConfig()->getValue('SERVER_SECRET', '');
+			$key = hash_pbkdf2('sha512', $key, '', 10000, 64/*256bit*/, false);
+			return \Firebase\JWT\JWT::encode($payload, $key, 'HS512');
+		}
 	}
 
 }

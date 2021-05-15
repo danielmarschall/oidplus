@@ -97,11 +97,11 @@ abstract class OIDplusAuthContentStore implements OIDplusConfigInterface {
 	// Admin authentication functions
 
 	public function adminLogin() {
-		$this->setValue('oidplus_admin_logged_in', '1');
+		$this->setValue('oidplus_admin_logged_in', 1);
 	}
 
 	public function adminLogout() {
-		$this->setValue('oidplus_admin_logged_in', '0');
+		$this->setValue('oidplus_admin_logged_in', 0);
 
 		if (self::raNumLoggedIn() == 0) {
 			// Nobody logged in anymore. Destroy session cookie to make GDPR people happy
@@ -110,7 +110,7 @@ abstract class OIDplusAuthContentStore implements OIDplusConfigInterface {
 	}
 
 	public function isAdminLoggedIn() {
-		return $this->getValue('oidplus_admin_logged_in') == '1';
+		return $this->getValue('oidplus_admin_logged_in') == 1;
 	}
 
 }

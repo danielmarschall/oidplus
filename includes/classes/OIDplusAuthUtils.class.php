@@ -55,11 +55,15 @@ class OIDplusAuthUtils {
 
 		if (is_null($contentProvider)) {
 			if (isset($_REQUEST['OIDPLUS_AUTH_JWT'])) {
+				// Automated AJAX requests (new version)
 				$contentProvider = new OIDplusAuthContentStoreJWT();
 				$contentProvider->loadJWT($_REQUEST['OIDPLUS_AUTH_JWT']);
 			} else if (isset($_REQUEST['batch_ajax_unlock_key'])) {
+				// Automated AJAX requests (backwards compatibility)
+				// The login procedure will be performaned in RA plugin 910 and Admin plugin 910
 				$contentProvider = new OIDplusAuthContentStoreDummy();
 			} else {
+				// Normal login via web-browser
 				$contentProvider = new OIDplusAuthContentStoreSession();
 			}
 		}
