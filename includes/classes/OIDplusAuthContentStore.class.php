@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-abstract class OIDplusAuthContentStore implements OIDplusConfigInterface {
+abstract class OIDplusAuthContentStore implements OIDplusGetterSetterInterface {
 
 	protected $content = array();
 

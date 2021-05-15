@@ -24,6 +24,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	// Individual functions
 
 	public function loadJWT($jwt) {
+		\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
 		if (OIDplus::getPkiStatus()) {
 			$pubKey = OIDplus::config()->getValue('oidplus_public_key');
 			$this->content = (array) \Firebase\JWT\JWT::decode($jwt, $pubKey, array('RS256', 'RS384', 'RS512'));

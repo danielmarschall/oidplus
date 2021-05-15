@@ -45,13 +45,6 @@ if (version_compare(PHP_VERSION, '7.0.0') < 0) {
 
 include_once __DIR__ . '/gmp_supplement.inc.php';
 include_once __DIR__ . '/../3p/symfony-mbstring-polyfill/bootstrap.php';
-
-include_once __DIR__ . '/../3p/php-jwt/ExpiredException.php';
-include_once __DIR__ . '/../3p/php-jwt/BeforeValidException.php';
-include_once __DIR__ . '/../3p/php-jwt/SignatureInvalidException.php';
-include_once __DIR__ . '/../3p/php-jwt/JWT.php';
-include_once __DIR__ . '/../3p/php-jwt/JWK.php';
-
 include_once __DIR__ . '/simplexml_supplement.inc.php';
 
 require_once __DIR__ . '/oidplus_dependency.inc.php';
@@ -90,16 +83,12 @@ if (PHP_SAPI != 'cli') {
 	header('Referrer-Policy: no-referrer-when-downgrade');
 }
 
-require_once __DIR__ . '/../3p/0xbb/Sha3.php';
-
 require_once __DIR__ . '/oid_utils.inc.php';
 require_once __DIR__ . '/uuid_utils.inc.php';
 require_once __DIR__ . '/color_utils.inc.php';
 require_once __DIR__ . '/ipv4_functions.inc.php';
 require_once __DIR__ . '/ipv6_functions.inc.php';
 require_once __DIR__ . '/anti_xss.inc.php';
-
-include_once __DIR__ . '/../3p/vts_fileformats/VtsFileTypeDetect.class.php';
 
 // ---
 
@@ -120,20 +109,39 @@ spl_autoload_register(function ($class_name) {
 			'sqlSlang'
 		);
 
+		$func = function(&$class_refs, $class_files, $namespace='') {
+			foreach ($class_files as $filename) {
+				$cn = strtolower(basename($filename));
+				$cn = preg_replace('@(\\.class){0,1}\\.php$@', '', $cn);
+				if (!empty($namespace)) {
+					if (substr($namespace,-1,1) !== '\\') $namespace .= '\\';
+					$cn = strtolower($namespace) . $cn;
+				}
+				if (!isset($class_refs[$cn])) {
+					$class_refs[$cn] = $filename;
+				}
+			}
+		};
+
 		$class_files = array();
+
+		// Global namespace / OIDplus
 		foreach ($valid_plugin_folders as $folder) {
 			$class_files = array_merge($class_files, glob(__DIR__ . '/../plugins/'.$folder.'/'.'*'.'/'.'*'.'.class.php'));
 		}
 		$class_files = array_merge($class_files, glob(__DIR__ . '/classes/'.'*'.'.class.php'));
+		$class_files = array_merge($class_files, glob(__DIR__ . '/../3p/vts_fileformats/'.'*'.'.class.php'));
+		$func($class_refs, $class_files);
 
-		$class_refs = array();
-		foreach ($class_files as $filename) {
-			$cn = basename($filename, '.class.php');
-			$cn = strtolower($cn);
-			if (!isset($class_refs[$cn])) {
-				$class_refs[$cn] = $filename;
-			}
-		}
+		// Namespace of php-jwt
+		$class_files = glob(__DIR__ . '/../3p/php-jwt/'.'*'.'.php');
+		$namespace = "Firebase\\JWT\\";
+		$func($class_refs, $class_files, $namespace);
+
+		// Namespace of 0xbb SHA3
+		$class_files = glob(__DIR__ . '/../3p/0xbb/'.'*'.'.php');
+		$namespace = "bb\\Sha3\\";
+		$func($class_refs, $class_files, $namespace);
 	}
 
 	$class_name = strtolower($class_name);
