@@ -279,3 +279,37 @@ OIDplus::baseConfig()->setValue('GOOGLE_OAUTH2_CLIENT_SECRET', '.............');
 OIDplus::baseConfig()->setValue('FACEBOOK_OAUTH2_ENABLED',       true);
 OIDplus::baseConfig()->setValue('FACEBOOK_OAUTH2_CLIENT_ID',     '.............'); // Your App ID
 OIDplus::baseConfig()->setValue('FACEBOOK_OAUTH2_CLIENT_SECRET', '.............'); // Your App Secret
+
+
+----------------------------------------------------
+(7) JWT AUTHENTICATION FIELDS
+----------------------------------------------------
+
+If a web request contains the field "OIDPLUS_AUTH_JWT" containing a signed JWT token,
+an automatic one-time login is performed in order to execute commands.
+This feature is used in the plugins "Automated AJAX calls" for admins and RAs.
+With these switches you can disable this feature.
+
+OIDplus::baseConfig()->setValue('JWT_ALLOW_AJAX_ADMIN', true);
+Old 2.0 format:          (Not available)
+                         Allow JWT tokens that were created using the admin-plugin
+                         "Automated AJAX calls".
+
+OIDplus::baseConfig()->setValue('JWT_ALLOW_AJAX_USER', true);
+Old 2.0 format:          (Not available)
+                         Allow JWT tokens that were created using the RA-plugin
+                         "Automated AJAX calls".
+
+OIDplus::baseConfig()->setValue('JWT_ALLOW_LOGIN_ADMIN', true);
+Old 2.0 format:          (Not available)
+                         Reserved for future use.
+
+OIDplus::baseConfig()->setValue('JWT_ALLOW_LOGIN_USER', true);
+Old 2.0 format:          (Not available)
+                         Reserved for future use.
+
+OIDplus::baseConfig()->setValue('JWT_ALLOW_MANUAL', true);
+Old 2.0 format:          (Not available)
+                         Allow JWT tokens which were manually created "by hand".
+                         These can have any content you like, but they must
+                         contain the claim "oidplus_generator" with value "2".

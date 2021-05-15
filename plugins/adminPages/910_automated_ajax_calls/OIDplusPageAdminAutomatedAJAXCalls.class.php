@@ -90,14 +90,14 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 
 			$authSimulation = new OIDplusAuthContentStoreJWT();
 			$authSimulation->adminLogin();
-			$authSimulation->setValue('oidplus_tokentype', 0); // 0=Automated AJAX, 1=Reserved for normal login
+			$authSimulation->setValue('oidplus_generator', 0); // 0=Automated AJAX, 1=Reserved for normal login, 2=Manually "crafted"
 			$authSimulation->setValue('sub', 'admin'); // JWT "sub" attribute
 			$token = $authSimulation->GetJWTToken();
 
 			$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling the AJAX API.').'</p>';
-			$out['text'] .= '<p>'._L('The URL for the AJAX script is:').':</p>';
+			$out['text'] .= '<p>'._L('The URL for the AJAX script is:').'</p>';
 			$out['text'] .= '<p><b>'.OIDplus::webpath(null,false).'ajax.php</b></p>';
-			$out['text'] .= '<p>'._L('You must at least provide following fields').':</p>';
+			$out['text'] .= '<p>'._L('You must at least provide following fields:').'</p>';
 			$out['text'] .= '<p><pre>';
 			$out['text'] .= 'OIDPLUS_AUTH_JWT = "'.htmlentities($token).'"'."\n";
 			$out['text'] .= '</pre></p>';
