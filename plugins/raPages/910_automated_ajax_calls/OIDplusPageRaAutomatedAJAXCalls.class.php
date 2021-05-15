@@ -43,14 +43,7 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 		if (isset($_SERVER['SCRIPT_FILENAME']) && (basename($_SERVER['SCRIPT_FILENAME']) == 'ajax.php')) {
 			$input = array_merge($_POST,$_GET);
 
-			if (isset($input['OIDPLUS_AUTH_JWT'])) {
-
-				originHeaders(); // Allows queries from other domains
-				OIDplus::authUtils()->disableCSRF(); // allow access to ajax.php without valid CSRF token
-
-				// Nothing else to do. The OIDplusAuthUtils->getAuthContentStore() will automatically care if OIDPLUS_AUTH_JWT exists!
-
-			} else if (isset($input['batch_ajax_unlock_key']) && isset($input['batch_login_username']) && isset($input['batch_login_password'])) {
+			if (isset($input['batch_ajax_unlock_key']) && isset($input['batch_login_username']) && isset($input['batch_login_password'])) {
 
 				// batch_* fields are for backwards compatibility!
 

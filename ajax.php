@@ -22,6 +22,11 @@ require_once __DIR__ . '/includes/oidplus.inc.php';
 try {
 	OIDplus::init(false);
 
+	if (isset($_REQUEST['OIDPLUS_AUTH_JWT'])) {
+		originHeaders(); // Allows queries from other domains
+		OIDplus::authUtils()->disableCSRF(); // allow access to ajax.php without valid CSRF token
+	}
+
 	$json_out = null;
 
 	OIDplus::authUtils()->checkCSRF();
