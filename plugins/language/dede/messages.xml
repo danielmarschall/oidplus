@@ -5918,6 +5918,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		This JWT token is not valid or the administrator has disabled the functionality.
+		]]></source>
+		<target><![CDATA[
+		Dieser JWT-Token ist nicht gültig oder der System-Administrator hat diese Funktionalität deaktiviert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		This RA does not exist.
 		]]></source>
 		<target><![CDATA[
@@ -6630,10 +6638,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		You must at least provide following fields
+		You must at least provide following fields:
 		]]></source>
 		<target><![CDATA[
-		Sie müssen die folgenden Felder ausfüllen
+		Sie müssen die folgenden Felder ausfüllen:
 		]]></target>
 	</message>
 	<message>

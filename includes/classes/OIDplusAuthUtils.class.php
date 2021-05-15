@@ -58,6 +58,25 @@ class OIDplusAuthUtils {
 				// Automated AJAX requests (new version)
 				$contentProvider = new OIDplusAuthContentStoreJWT();
 				$contentProvider->loadJWT($_REQUEST['OIDPLUS_AUTH_JWT']);
+
+				// First check: Check if the token generator is allowed
+				$gen = $contentProvider->getValue('oidplus_generator', -1);
+				$sub = $contentProvider->getValue('sub', '');
+				$ok = false;
+				if (($gen === 0) && ($sub === 'admin') && OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_ADMIN', true)) $ok = true;
+				else if (($gen === 0) && ($sub !== 'admin') && OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_USER', true)) $ok = true;
+				// Reserved for future use (use JWT token in a cookie as alternative to PHP session):
+				//else if (($gen === 1) && ($sub === 'admin') && OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) $ok = true;
+				//else if (($gen === 1) && ($sub !== 'admin') && OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) $ok = true;
+				else if (($gen === 2) && OIDplus::baseConfig()->getValue('JWT_ALLOW_MANUAL', true)) $ok = true;
+				if (!$ok) {
+					throw new OIDplusException(_L('This JWT token is not valid or the administrator has disabled the functionality.'));
+				}
+
+				// Second check: Make sure that the IAT (issued at time) isn't in a blacklisted timeframe
+				// When a user believes that a token was compromised, then they can define a virtual NBT ("not before time") attribute to all of their tokens
+				// TODO
+
 			} else if (isset($_REQUEST['batch_ajax_unlock_key'])) {
 				// Automated AJAX requests (backwards compatibility)
 				// The login procedure will be performaned in RA plugin 910 and Admin plugin 910
