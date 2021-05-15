@@ -249,11 +249,6 @@ Old 2.0 format:          (Not available)
                          However, OIDplus itself provides an Anti-CSRF mechanism, so you should be
                          still safe.
 
-OIDplus::baseConfig()->setValue('JWK_ALGORITHM', 'HS256');
-Old 2.0 format:          (Not available)
-                         The JWK signature algorithm used for Automated AJAX requests.
-						 Valid values are HS256, HS384, and HS512.
-
 
 ----------------------------------------------------
 (4) LDAP FIELDS (see document ldap_installation.txt)

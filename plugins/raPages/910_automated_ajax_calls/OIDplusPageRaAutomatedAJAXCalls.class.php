@@ -93,6 +93,8 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 
 			$authSimulation = new OIDplusAuthContentStoreJWT();
 			$authSimulation->raLogin($ra_email);
+			$authSimulation->setValue('oidplus_tokentype', 0); // 0=Automated AJAX, 1=Reserved for normal login
+			$authSimulation->setValue('sub', $ra_email); // JWT "sub" attribute
 			$token = $authSimulation->GetJWTToken();
 
 			$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling the AJAX API.').'</p>';
