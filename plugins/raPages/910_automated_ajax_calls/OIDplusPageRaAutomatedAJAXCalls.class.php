@@ -93,13 +93,14 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 
 			$authSimulation = new OIDplusAuthContentStoreJWT();
 			$authSimulation->raLogin($ra_email);
+			$token = $authSimulation->GetJWTToken();
 
 			$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling the AJAX API.').'</p>';
 			$out['text'] .= '<p>'._L('The URL for the AJAX script is:').':</p>';
 			$out['text'] .= '<p><b>'.OIDplus::webpath(null,false).'ajax.php</b></p>';
 			$out['text'] .= '<p>'._L('You must at least provide following fields').':</p>';
 			$out['text'] .= '<p><pre>';
-			$out['text'] .= 'OIDPLUS_AUTH_JWT = "'.$authSimulation->GetJWTToken().'"'."\n";
+			$out['text'] .= 'OIDPLUS_AUTH_JWT = "'.htmlentities($token).'"'."\n";
 			$out['text'] .= '</pre></p>';
 			$out['text'] .= '<p>'._L('Please keep this information confidential!').'</p>';
 			$out['text'] .= '<p>'._L('The JWT-token (secret!) will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.').'</p>';
@@ -108,25 +109,19 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using JavaScript').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_js.html');
 			$cont = str_replace('<url>', OIDplus::webpath(null,false).'ajax.php', $cont);
-			$cont = str_replace('<username>', $ra_email, $cont);
-			$cont = str_replace('<password>', '.........', $cont);
-			$cont = str_replace('<unlock key>', $this->getUnlockKey($ra_email), $cont);
+			$cont = str_replace('<token>', $token, $cont);
 			$out['text'] .= '<pre>'.htmlentities($cont).'</pre>';
 
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using PHP (located at a foreign server)').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_php.phps');
 			$cont = str_replace('<url>', OIDplus::webpath(null,false).'ajax.php', $cont);
-			$cont = str_replace('<username>', $ra_email, $cont);
-			$cont = str_replace('<password>', '.........', $cont);
-			$cont = str_replace('<unlock key>', $this->getUnlockKey($ra_email), $cont);
+			$cont = str_replace('<token>', $token, $cont);
 			$out['text'] .= '<pre>'.preg_replace("@<br.*>@ismU","",highlight_string($cont,true)).'</pre>';
 
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using VBScript').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_vbs.vbs');
 			$cont = str_replace('<url>', OIDplus::webpath(null,false).'ajax.php', $cont);
-			$cont = str_replace('<username>', $ra_email, $cont);
-			$cont = str_replace('<password>', '.........', $cont);
-			$cont = str_replace('<unlock key>', $this->getUnlockKey($ra_email), $cont);
+			$cont = str_replace('<token>', $token, $cont);
 			$out['text'] .= '<pre>'.htmlentities($cont).'</pre>';
 		}
 	}

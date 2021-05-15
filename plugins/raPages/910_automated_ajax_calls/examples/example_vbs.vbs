@@ -16,9 +16,7 @@ argstr = "plugin=1.3.6.1.4.1.37476.2.5.2.4.1.0" & _
 	"&iris=" & _
 	"&confidential=0" & _
 	"&weid=" & _
-	"&batch_login_username=<username>" & _
-	"&batch_login_password=<password>" & _
-	"&batch_ajax_unlock_key=<unlock key>"
+	"&OIDPLUS_AUTH_JWT=<token>"
 
 Set http = CreateObject("MSXML2.XMLHTTP.3.0")
 http.Open "POST", url, False

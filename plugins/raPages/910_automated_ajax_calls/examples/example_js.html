@@ -23,9 +23,7 @@ function testInsertOID() {
 			iris:null,
 			confidential:false,
 			weid:null,
-			batch_login_username:"<username>",
-			batch_login_password:"<password>",
-			batch_ajax_unlock_key:"<unlock key>"
+			OIDPLUS_AUTH_JWT:"<token>"
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
 			alert("Error: " + errorThrown);

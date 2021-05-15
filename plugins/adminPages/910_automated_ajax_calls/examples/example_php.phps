@@ -14,9 +14,7 @@ $request = array(
 	"iris" => "",
 	"confidential" => 0,
 	"weid" => "",
-	"batch_login_username" => "<username>",
-	"batch_login_password" => "<password>",
-	"batch_ajax_unlock_key" => "<unlock key>"
+	"OIDPLUS_AUTH_JWT" => "<token>"
 );
 
 $ch = curl_init();
