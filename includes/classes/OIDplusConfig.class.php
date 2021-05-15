@@ -149,7 +149,7 @@ class OIDplusConfig implements OIDplusConfigInterface {
 		$this->values[$name] = $value;
 	}
 
-	public function deleteConfigKey($name) {
+	public function delete($name) {
 		if ($this->configTableReadOnce) {
 			if (isset($this->values[$name])) {
 				OIDplus::db()->query("delete from ###config where name = ?", array($name));

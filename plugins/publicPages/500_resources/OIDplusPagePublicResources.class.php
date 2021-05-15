@@ -31,8 +31,8 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
-		OIDplus::config()->deleteConfigKey('resource_plugin_title');
-		OIDplus::config()->deleteConfigKey('resource_plugin_path');
+		OIDplus::config()->delete('resource_plugin_title');
+		OIDplus::config()->delete('resource_plugin_path');
 		OIDplus::config()->prepareConfigKey('resource_plugin_hide_empty_path','Resource plugin: Hide empty paths? (0=no, 1=yes)', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || (($value != 0) && ($value != 1))) {
 				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));

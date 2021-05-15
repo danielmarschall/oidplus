@@ -31,21 +31,19 @@ class OIDplusBaseConfig implements OIDplusConfigInterface {
 	}
 
 	public function setValue($name, $value) {
-		// Note: The set value is only at run time level!
+		// Note: The value is only set at run time level!
 		// This function will NOT change the userdata/baseconfig/config.inc.php file!
 		$this->data[$name] = $value;
 	}
 
 	public function delete($name) {
+		// Note: The value is only deleted at run time level!
+		// This function will NOT change the userdata/baseconfig/config.inc.php file!
 		unset($this->data[$name]);
 	}
 
 	public function exists($name) {
 		return isset($this->data[$name]);
-	}
-
-	public function deleteAll() {
-		$this->data = array();
 	}
 
 }

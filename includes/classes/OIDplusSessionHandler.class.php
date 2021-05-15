@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusSessionHandler {
+class OIDplusSessionHandler implements OIDplusConfigInterface {
 
 	private $secret = '';
 	protected $sessionLifetime = '';
@@ -94,15 +94,35 @@ class OIDplusSessionHandler {
 		$_SESSION[$name] = self::encrypt($value, $this->secret);
 	}
 
-	public function getValue($name) {
+	public function getValue($name, $default = NULL) {
 		if (isset($this->cacheSetValues[$name])) return self::decrypt($this->cacheSetValues[$name], $this->secret);
 
-		if (!isset($_COOKIE[session_name()])) return null; // GDPR: Only start a session when we really need one
+		if (!isset($_COOKIE[session_name()])) return $default; // GDPR: Only start a session when we really need one
 		$this->sessionSafeStart();
 		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
 
-		if (!isset($_SESSION[$name])) return null;
+		if (!isset($_SESSION[$name])) return $default;
 		return self::decrypt($_SESSION[$name], $this->secret);
+	}
+
+	public function exists($name) {
+		if (isset($this->cacheSetValues[$name])) return true;
+
+		if (!isset($_COOKIE[session_name()])) return false; // GDPR: Only start a session when we really need one
+		$this->sessionSafeStart();
+		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
+
+		if (!isset($_SESSION[$name])) return false;
+	}
+
+	public function delete($name) {
+		if (isset($this->cacheSetValues[$name])) unset($this->cacheSetValues[$name]);
+
+		if (!isset($_COOKIE[session_name()])) return; // GDPR: Only start a session when we really need one
+		$this->sessionSafeStart();
+		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
+
+		unset($_SESSION[$name]);
 	}
 
 	public function destroySession() {
@@ -115,10 +135,6 @@ class OIDplusSessionHandler {
 		session_destroy();
 		session_write_close();
 		OIDplus::cookieUtils()->unsetcookie(session_name()); // remove cookie, so GDPR people are happy
-	}
-
-	public function exists($name) {
-		return isset($_SESSION[$name]);
 	}
 
 	protected static function encrypt($data, $key) {

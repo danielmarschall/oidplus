@@ -36,15 +36,15 @@ if (!$json) {
 }
 
 if (isset($json['error'])) {
-	die($json['error']);
+	die($json['error']."\n");
 } else if ($json['status'] == 0/*OK*/) {
-	die("Insert OK");
+	die("Insert OK\n");
 } else if ($json['status'] == 1/*RaNotExisting*/) {
-	die("Insert OK");
+	die("Insert OK\n");
 } else if ($json['status'] == 2/*RaNotExistingNoInvitation*/) {
-	die("Insert OK");
+	die("Insert OK\n");
 } else {
-	die("Error ".print_r($json,true));
+	die("Error ".print_r($json,true)."\n");
 }
 
 ?>

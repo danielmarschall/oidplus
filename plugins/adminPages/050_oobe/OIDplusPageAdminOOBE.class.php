@@ -41,7 +41,7 @@ class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 	}
 
 	public function init($html=true) {
-		OIDplus::config()->deleteConfigKey('reg_wizard_done');
+		OIDplus::config()->delete('reg_wizard_done');
 		OIDplus::config()->prepareConfigKey('oobe_main_done', '"Out Of Box Experience" wizard for the system settings done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 
 		if ($this->oobeRequired()) {
