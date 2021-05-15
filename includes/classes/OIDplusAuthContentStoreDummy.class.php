@@ -25,12 +25,20 @@ class OIDplusAuthContentStoreDummy extends OIDplusAuthContentStore {
 
 	// Override abstract functions
 
-	protected function getValue($name) {
-		return isset($this->content[$name]) ? $this->content[$name] : null;
+	public function getValue($name, $default = NULL) {
+		return isset($this->content[$name]) ? $this->content[$name] : $default;
 	}
 
-	protected function setValue($name, $value) {
+	public function setValue($name, $value) {
 		$this->content[$name] = $value;
+	}
+
+	public function exists($name) {
+		return isset($this->content[$name]);
+	}
+
+	public function delete($name) {
+		unset($this->content[$name]);
 	}
 
 	protected function destroySession() {

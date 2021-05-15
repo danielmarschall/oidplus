@@ -31,12 +31,21 @@ class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 
 	// Override abstract functions
 
-	protected function getValue($name) {
-		return $this->getSessionHandler()->getValue($name);
+	public function getValue($name, $default = NULL) {
+		return $this->getSessionHandler()->getValue($name, $default);
+
 	}
 
-	protected function setValue($name, $value) {
+	public function setValue($name, $value) {
 		return $this->getSessionHandler()->setValue($name, $value);
+	}
+
+	public function exists($name) {
+		return $this->getSessionHandler()->exists($name);
+	}
+
+	public function delete($name) {
+		return $this->getSessionHandler()->delete($name);
 	}
 
 	protected function destroySession() {

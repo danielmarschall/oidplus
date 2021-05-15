@@ -24,5 +24,6 @@ interface OIDplusConfigInterface {
 	public function getValue($name, $default=null);
 	public function setValue($name, $value);
 	public function exists($name);
+	public function delete($name);
 
 }

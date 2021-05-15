@@ -19,15 +19,19 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-abstract class OIDplusAuthContentStore {
+abstract class OIDplusAuthContentStore implements OIDplusConfigInterface {
 
 	protected $content = array();
 
 	// Getter / Setter
 
-	protected abstract function getValue($name);
+	public abstract function getValue($name, $default = NULL);
 
-	protected abstract function setValue($name, $value);
+	public abstract function setValue($name, $value);
+
+	public abstract function exists($name);
+
+	public abstract function delete($name);
 
 	protected abstract function destroySession();
 
