@@ -662,14 +662,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Authentication error. Please log in as admin, or as the RA to blacklist the tokens.
-		]]></source>
-		<target><![CDATA[
-		Zugriff verweigert! Bitte melden Sie sich als Administrator oder RA an, um diese Token zu widerrufen.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Authentication error. Please log in as admin, or as the RA to update its data.
 		]]></source>
 		<target><![CDATA[

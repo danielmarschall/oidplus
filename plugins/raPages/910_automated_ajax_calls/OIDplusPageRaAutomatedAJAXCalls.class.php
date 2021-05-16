@@ -26,17 +26,22 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 
 	public function action($actionID, $params) {
 		if ($actionID == 'blacklistJWT') {
+			if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_USER', true)) {
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_USER'));
+			}
+
 			_CheckParamExists($params, 'user');
 			$ra_email = $params['user'];
+
 			if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA to blacklist the tokens.'));
+				throw new OIDplusException(_L('You need to <a %1>log in</a> as the requested RA %2 or as admin.',OIDplus::gui()->link('oidplus:login$ra$'.$ra_email),'<b>'.htmlentities($ra_email).'</b>'));
 			}
 
 			$gen = 0; // 0=Automated AJAX, 1=Reserved for normal login, 2=Manually "crafted"
 			$sub = $ra_email;
 
 			$cfg = 'jwt_nbf_gen('.$gen.')_sub('.base64_encode(md5($sub,true)).')';
-			OIDplus::config()->prepareConfigKey($cfg, 'Blacklist (NBF) of JWT token for $sub with generator $gen', time()-1, OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
+			OIDplus::config()->prepareConfigKey($cfg, 'Blacklist (NBF) of JWT token for $sub with generator $gen (Automated AJAX)', time()-1, OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 			OIDplus::config()->setValue($cfg,time()-1);
 
 			return array("status" => 0);
@@ -91,7 +96,7 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 			if ($nbf == 0) {
 				$out['text'] .= '<p>'._L('None of the previously generated JWT tokens have been blacklisted.').'</p>';
 			} else {
-				$out['text'] .= '<p>'._L('All tokens generated before %1 have been blacklisted.',date('d F Y, H:i:s',$nbf)).'</p>';
+				$out['text'] .= '<p>'._L('All tokens generated before %1 have been blacklisted.',date('d F Y, H:i:s',$nbf+1)).'</p>';
 			}
 			$out['text'] .= '<button type="button" name="btn_blacklist_jwt" id="btn_blacklist_jwt" class="btn btn-danger btn-xs" onclick="OIDplusPageRaAutomatedAJAXCalls.blacklistJWT('.js_escape($ra_email).')">'._L('Blacklist all previously generated tokens').'</button>';
 

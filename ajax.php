@@ -127,17 +127,22 @@ try {
 	} catch (Exception $e1) {
 	}
 
+	$errmsg = $e->getMessage();
+	$errmsg = strip_tags($errmsg);
+	$errmsg = html_entity_decode($errmsg, ENT_QUOTES, 'UTF-8');
+
 	$json_out = array();
 	$json_out['status'] = -2;
-	$json_out['error'] = $e->getMessage();
+	$json_out['error'] = $errmsg;
 	$out = json_encode($json_out);
 
 	if ($out === false) {
 		// Some modules (like ODBC) might output non-UTF8 data
-		$json_out['error'] = utf8_encode($e->getMessage());
+		$json_out['error'] = utf8_encode($errmsg);
 		$out = json_encode($json_out);
 	}
 
 	@header('Content-Type:application/json; charset=utf-8');
+
 	echo $out;
 }
