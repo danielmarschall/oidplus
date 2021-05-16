@@ -6038,6 +6038,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		This kind of JWT token can only be used in ajax.php
+		]]></source>
+		<target><![CDATA[
+		Dieser JWT Token kann nur in ajax.php verwendet werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		This page contains an encrypted VNag machine-readable status.
 		]]></source>
 		<target><![CDATA[
@@ -6754,6 +6762,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ihr Facebook-Konto hat keine E-Mail-Adresse.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Your IP address is not allowed to use this token
+		]]></source>
+		<target><![CDATA[
+		Ihre IP-Adresse ist in diesem Token nicht zugelassen
 		]]></target>
 	</message>
 	<message>

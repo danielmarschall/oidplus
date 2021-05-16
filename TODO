@@ -11,7 +11,6 @@ SECURITY Improvements:
 - Make attachment upload path configurable
 - Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")
   and see which error message appears, or they could try to enter "plugin/adminPages/..." using the web browser and see if the result is HTTP 200 or HTTP 404.
-- Automated AJAX requests: Should the admin define a max lifetime for the JWT tokens?
 
 IDEAS FOR NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:
@@ -113,6 +112,9 @@ SMALL THINGS
 - When an OID is edited/added/deleted, don't reload the whole tree. Instead, just change the tree! This looks much more fluid.
 - When you call index.php using PHP command line and you are not in the correct working directory, you get following error
 	"File res/Object Identifiers/free_iana_oid.link has an invalid INI format"
+- adminPages/902_systemfile_check/OIDplusPageAdminSystemFileCheck.class.php
+	Should thumbs.db (case insensitive) and Apple turds be excluded?
+	On the other hand, these files could then be used to hide malicious data
 
 UPDATER
 - Should oid_utils.inc.php, xml_utils.inc.php, oidinfo_api, etc. all be put into 3p/ (especially if they have an own ViaThinkSoft repository)?

@@ -121,6 +121,23 @@ class OIDplusAuthUtils {
 		if ($iat <= $bl_time) {
 			throw new OIDplusException(_L('The JWT token was blacklisted on %1. Please generate a new one',date('d F Y, H:i:s',$bl_time)));
 		}
+
+		// Optional feature: Limit the JWT to a specific IP address
+		// This could become handy if JWTs are used instead of Login sessions,
+		// and you want to avoid session/JWT hijacking
+		$ip = $contentProvider->getValue('ip','');
+		if ($ip !== '') {
+			if (isset($_SERVER['REMOTE_ADDR']) && ($ip !== $_SERVER['REMOTE_ADDR'])) {
+				throw new OIDplusException(_L('Your IP address is not allowed to use this token'));
+			}
+		}
+
+		// Checks which are dependent on the generator
+		if ($gen === self::JWT_GENERATOR_AJAX) {
+			if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) {
+				throw new OIDplusException(_L('This kind of JWT token can only be used in ajax.php'));
+			}
+		}
 	}
 
 	// Content provider
@@ -139,6 +156,7 @@ class OIDplusAuthUtils {
 					// Do various checks if the token is allowed and not blacklisted
 					$this->jwtSecurityCheck($contentProvider);
 				} catch (Exception $e) {
+					$contentProvider = null;
 					throw new OIDplusException(_L('The JWT token was rejected: %1',$e->getMessage()));
 				}
 			} else {
