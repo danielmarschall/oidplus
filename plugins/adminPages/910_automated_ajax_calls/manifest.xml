@@ -22,6 +22,7 @@
 	</css>
 
 	<js>
+		<file>OIDplusPageAdminAutomatedAJAXCalls.js</file>
 	</js>
 	
 </manifest>

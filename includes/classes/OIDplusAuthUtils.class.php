@@ -55,11 +55,15 @@ class OIDplusAuthUtils {
 
 		if (is_null($contentProvider)) {
 			if (isset($_REQUEST['OIDPLUS_AUTH_JWT'])) {
-				// Automated AJAX requests (new version)
 				$contentProvider = new OIDplusAuthContentStoreJWT();
 				$contentProvider->loadJWT($_REQUEST['OIDPLUS_AUTH_JWT']);
 
-				// First check: Check if the token generator is allowed
+				// Check if the token is intended for us
+				if ($contentProvider->getValue('aud','') !== "http://oidplus.com") {
+					throw new OIDplusException(_L('This JWT token is not valid'));
+				}
+
+				// Check if the token generator is allowed
 				$gen = $contentProvider->getValue('oidplus_generator', -1);
 				$sub = $contentProvider->getValue('sub', '');
 				$ok = false;
@@ -73,14 +77,14 @@ class OIDplusAuthUtils {
 					throw new OIDplusException(_L('This JWT token is not valid or the administrator has disabled the functionality.'));
 				}
 
-				// Second check: Make sure that the IAT (issued at time) isn't in a blacklisted timeframe
-				// When a user believes that a token was compromised, then they can define a virtual NBT ("not before time") attribute to all of their tokens
-				// TODO
-
-			} else if (isset($_REQUEST['batch_ajax_unlock_key'])) {
-				// Automated AJAX requests (backwards compatibility)
-				// The login procedure will be performaned in RA plugin 910 and Admin plugin 910
-				$contentProvider = new OIDplusAuthContentStoreDummy();
+				// Make sure that the IAT (issued at time) isn't in a blacklisted timeframe
+				// When an user believes that a token was compromised, then they can define a virtual NBF ("not before") attribute to all of their tokens
+				$cfg = 'jwt_nbf_gen('.$gen.')_sub('.base64_encode(md5($sub,true)).')';
+				$nbf = OIDplus::config()->getValue($cfg,0);
+				$iat = $contentProvider->getValue('iat',0);
+				if ($iat <= $nbf) {
+					throw new OIDplusException(_L('The JWT token was blacklisted (NBF). Please generate a new one'));
+				}
 			} else {
 				// Normal login via web-browser
 				$contentProvider = new OIDplusAuthContentStoreSession();
