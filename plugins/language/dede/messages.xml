@@ -462,6 +462,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		All tokens generated before %1 have been blacklisted.
+		]]></source>
+		<target><![CDATA[
+		Alle Token vor dem %1 sind gesperrt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		All your OIDs will automatically submitted to oid-info.com through the remote directory service in regular intervals.
 		]]></source>
 		<target><![CDATA[
@@ -654,6 +662,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Authentication error. Please log in as admin, or as the RA to blacklist the tokens.
+		]]></source>
+		<target><![CDATA[
+		Zugriff verweigert! Bitte melden Sie sich als Administrator oder RA an, um diese Token zu widerrufen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Authentication error. Please log in as admin, or as the RA to update its data.
 		]]></source>
 		<target><![CDATA[
@@ -762,6 +778,22 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte lösen Sie das folgende CAPTCHA, bevor Sie sich anmelden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Blacklist all previously generated tokens
+		]]></source>
+		<target><![CDATA[
+		Alle in der Vergangenheit erzeugten Token sperren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Blacklisted tokens
+		]]></source>
+		<target><![CDATA[
+		Gesperrte Token
 		]]></target>
 	</message>
 	<message>
@@ -1090,6 +1122,14 @@
 		]]></source>
 		<target><![CDATA[
 		Konfigurations-Schlüsselname "%1" ist zu lang (max. Länge: %2)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Config value "%1" cannot be written because it was not prepared!
+		]]></source>
+		<target><![CDATA[
+		Konfigurations-Wert "%1" kann nicht geschrieben werden, da er nicht vorbereitet wurde!
 		]]></target>
 	</message>
 	<message>
@@ -2598,14 +2638,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Invalid AJAX unlock key
-		]]></source>
-		<target><![CDATA[
-		Ungültiger AJAX-Entsperr-Schlüssel
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Invalid DOI %1 . It must have syntax 10.xxxx
 		]]></source>
 		<target><![CDATA[
@@ -3370,6 +3402,14 @@
 		]]></source>
 		<target><![CDATA[
 		Keine
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		None of the previously generated JWT tokens have been blacklisted.
+		]]></source>
+		<target><![CDATA[
+		Keine der in der Vergangenheit erstellten JWT Token wurden gesperrt.
 		]]></target>
 	</message>
 	<message>
@@ -5646,6 +5686,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The JWT token was blacklisted (NBF). Please generate a new one
+		]]></source>
+		<target><![CDATA[
+		Dieser JWT-Token wurde gesperrt (NBF). Bitte erstellen Sie einen neuen Token.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The JWT-token (secret!) will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.
 		]]></source>
 		<target><![CDATA[
@@ -5698,6 +5746,14 @@
 		]]></source>
 		<target><![CDATA[
 		Der Administrator hat das Löschen von Dateianhängen durch Registrierungsstellen deaktiviert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The administrator has disabled this feature. (Base configuration setting %1).
+		]]></source>
+		<target><![CDATA[
+		Der Administrator hat dieses Feature deaktiviert. (Basiskonfigurations-Einstellung %1).
 		]]></target>
 	</message>
 	<message>
@@ -5914,6 +5970,14 @@
 		]]></source>
 		<target><![CDATA[
 		Diese XML-Dateien folgende dem <a %1>XML-Schema</a> von <b>oid-info.com</b>. Sie können jedoch auch für andere Zwecke verwendet werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This JWT token is not valid
+		]]></source>
+		<target><![CDATA[
+		Dieser JWT-Token ist nicht gültig
 		]]></target>
 	</message>
 	<message>
@@ -6482,22 +6546,6 @@
 		]]></source>
 		<target><![CDATA[
 		Falscher CSRF Token
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Wrong RA username or password
-		]]></source>
-		<target><![CDATA[
-		Falscher RA Benutzername oder Passwort
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Wrong admin password
-		]]></source>
-		<target><![CDATA[
-		Falsches Administrator-Passwort
 		]]></target>
 	</message>
 	<message>

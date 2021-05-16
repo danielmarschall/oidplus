@@ -24,48 +24,18 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 
-	private static function getUnlockKey($user) {
-		// This key prevents that the system gets hacked with brute
-		// force of the user passwords.
-		return sha3_512('ANTI-BRUTEFORCE-AJAX/'.$user.'/'.OIDplus::baseConfig()->getValue('SERVER_SECRET',''));
-	}
+	public function action($actionID, $params) {
+		if ($actionID == 'blacklistJWT') {
+			$gen = 0; // 0=Automated AJAX, 1=Reserved for normal login, 2=Manually "crafted"
+			$sub = 'admin';
 
-	private $autoLoggedIn = false;
+			$cfg = 'jwt_nbf_gen('.$gen.')_sub('.base64_encode(md5($sub,true)).')';
+			OIDplus::config()->prepareConfigKey($cfg, 'Blacklist (NBF) of JWT token for $sub with generator $gen', time()-1, OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
+			OIDplus::config()->setValue($cfg,time()-1);
 
-	// Attention: Needs to be public, because otherwise register_shutdown_function() won't work
-	public function shutdownLogout() {
-		if ($this->autoLoggedIn) {
-			OIDplus::authUtils()->adminLogout();
-		}
-	}
-
-	public function init($html=true) {
-		if (isset($_SERVER['SCRIPT_FILENAME']) && (basename($_SERVER['SCRIPT_FILENAME']) == 'ajax.php')) {
-			$input = array_merge($_POST,$_GET);
-
-			if (isset($input['batch_ajax_unlock_key']) && isset($input['batch_login_username']) && isset($input['batch_login_password'])) {
-
-				// batch_* fields are for backwards compatibility only!
-
-				originHeaders(); // Allows queries from other domains
-				OIDplus::authUtils()->disableCSRF(); // allow access to ajax.php without valid CSRF token
-
-				if ($input['batch_login_username'] == 'admin') {
-					if ($input['batch_ajax_unlock_key'] != self::getUnlockKey($input['batch_login_username'])) {
-						throw new OIDplusException(_L('Invalid AJAX unlock key'));
-					}
-
-					if (OIDplus::authUtils()->adminCheckPassword($input['batch_login_password'])) {
-						// OIDplusAuthUtils->getAuthContentStore() will use a OIDplusAuthContentStoreDummy instead of a OIDplusAuthContentStoreSession
-						// if the argument "batch_ajax_unlock_key" exists. Therefore, the user session will be ignored and not modified.
-						OIDplus::authUtils()->adminLogin();
-						$this->autoLoggedIn = true;
-						register_shutdown_function(array($this,'shutdownLogout'));
-					} else {
-						throw new OIDplusException(_L('Wrong admin password'));
-					}
-				}
-			}
+			return array("status" => 0);
+		} else {
+			throw new OIDplusException(_L('Unknown action ID'));
 		}
 	}
 
@@ -81,10 +51,18 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 				return;
 			}
 
+			if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_ADMIN', true)) {
+				$out['text'] = '<p>'._L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_ADMIN').'</p>';
+				return;
+			}
+
+			$gen = 0; // 0=Automated AJAX, 1=Reserved for normal login, 2=Manually "crafted"
+			$sub = 'admin';
+
 			$authSimulation = new OIDplusAuthContentStoreJWT();
 			$authSimulation->adminLogin();
-			$authSimulation->setValue('oidplus_generator', 0); // 0=Automated AJAX, 1=Reserved for normal login, 2=Manually "crafted"
-			$authSimulation->setValue('sub', 'admin'); // JWT "sub" attribute
+			$authSimulation->setValue('oidplus_generator', $gen);
+			$authSimulation->setValue('sub', $sub); // JWT "sub" attribute
 			$token = $authSimulation->GetJWTToken();
 
 			$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling the AJAX API.').'</p>';
@@ -97,6 +75,16 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<p>'._L('Please keep this information confidential!').'</p>';
 			$out['text'] .= '<p>'._L('The JWT-token (secret!) will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.').'</p>';
 			$out['text'] .= '<p>'._L('Currently, there is no documentation for the AJAX calls. However, you can look at the <b>script.js</b> files of the plugins to see the field names being used. You can also enable network analysis in your web browser debugger (F12) to see the request headers sent to the server during the operation of OIDplus.').'</p>';
+
+			$out['text'] .= '<h2>'._L('Blacklisted tokens').'</h2>';
+			$cfg = 'jwt_nbf_gen('.$gen.')_sub('.base64_encode(md5($sub,true)).')';
+			$nbf = OIDplus::config()->getValue($cfg,0);
+			if ($nbf == 0) {
+				$out['text'] .= '<p>'._L('None of the previously generated JWT tokens have been blacklisted.').'</p>';
+			} else {
+				$out['text'] .= '<p>'._L('All tokens generated before %1 have been blacklisted.',date('d F Y, H:i:s',$nbf)).'</p>';
+			}
+			$out['text'] .= '<button type="button" name="btn_blacklist_jwt" id="btn_blacklist_jwt" class="btn btn-danger btn-xs" onclick="OIDplusPageAdminAutomatedAJAXCalls.blacklistJWT()">'._L('Blacklist all previously generated tokens').'</button>';
 
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using JavaScript').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_js.html');

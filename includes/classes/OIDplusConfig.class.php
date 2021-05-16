@@ -108,14 +108,6 @@ class OIDplusConfig implements OIDplusGetterSetterInterface {
 	}
 
 	public function getValue($name, $default=null) {
-		if (isset($this->values[$name])) {
-			// There is a rare case where this might succeed even
-			// before buildConfigArray() was called once:
-			// If a setValue() was called, and then getValue() for
-			// that same name!
-			return $this->values[$name];
-		}
-
 		// Read all config settings once and write them in array $this->values
 		$this->buildConfigArray();
 
@@ -132,10 +124,14 @@ class OIDplusConfig implements OIDplusGetterSetterInterface {
 	}
 
 	public function setValue($name, $value) {
-		// Avoid unnecessary database writes
-		// We do not call getValue() or buildConfigArray(), because they could cause an unnecessary database read
+		// Read all config settings once and write them in array $this->values
+		$this->buildConfigArray();
+
 		if (isset($this->values[$name])) {
+			// Avoid unnecessary database writes
 			if ($this->values[$name] == $value) return;
+		} else {
+			throw new OIDplusException(_L('Config value "%1" cannot be written because it was not prepared!', $name));
 		}
 
 		// Give plugins the possibility to stop the process by throwing an Exception (e.g. if the value is invalid)
