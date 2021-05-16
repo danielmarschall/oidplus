@@ -48,6 +48,81 @@ class OIDplusAuthUtils {
 		return hex2bin($a);
 	}
 
+	// JWT handling
+
+	const JWT_GENERATOR_AJAX   = 0;
+	//const JWT_GENERATOR_LOGIN  = 1;
+	const JWT_GENERATOR_MANUAL = 2;
+
+	private function jwtGetBlacklistConfigKey($gen, $sub) {
+		// Note: Needs to be <= 50 characters!
+		return 'jwt_blacklist_gen('.$gen.')_sub('.trim(base64_encode(md5($sub,true)),'=').')';
+	}
+
+	public function jwtBlacklist($gen, $sub) {
+		$cfg = $this->jwtGetBlacklistConfigKey($gen, $sub);
+		$bl_time = time()-1;
+
+		$gen_desc = 'Unknown';
+		if ($gen === self::JWT_GENERATOR_AJAX)   $gen_desc = 'Automated AJAX calls';
+		//if ($gen === self::JWT_GENERATOR_LOGIN)  $gen_desc = 'Login';
+		if ($gen === self::JWT_GENERATOR_MANUAL) $gen_desc = 'Manually created';
+
+		OIDplus::config()->prepareConfigKey($cfg, 'Revoke timestamp of all JWT tokens for $sub with generator $gen ($gen_desc)', $bl_time, OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
+		OIDplus::config()->setValue($cfg, $bl_time);
+	}
+
+	public function jwtGetBlacklistTime($gen, $sub) {
+		$cfg = $this->jwtGetBlacklistConfigKey($gen, $sub);
+		return OIDplus::config()->getValue($cfg,0);
+	}
+
+	protected function jwtSecurityCheck($contentProvider) {
+		// Check if the token is intended for us
+		if ($contentProvider->getValue('aud','') !== "http://oidplus.com") {
+			throw new OIDplusException(_L('Token has wrong audience'));
+		}
+		$gen = $contentProvider->getValue('oidplus_generator', -1);
+		$sub = $contentProvider->getValue('sub', '');
+
+		// Check if the token generator is allowed
+		if ($gen === self::JWT_GENERATOR_AJAX) {
+			if (($sub === 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_ADMIN', true)) {
+				// Generator: plugins/adminPages/910_automated_ajax_calls/OIDplusPageAdminAutomatedAJAXCalls.class.php
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_ADMIN'));
+			}
+			else if (($sub !== 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_USER', true)) {
+				// Generator: plugins/raPages/910_automated_ajax_calls/OIDplusPageRaAutomatedAJAXCalls.class.php
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_USER'));
+			}
+		}
+		/* else if ($gen === self::JWT_GENERATOR_LOGIN) {
+			// Reserved for future use (use JWT token in a cookie as alternative to PHP session):
+			if (($sub === 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) {
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_ADMIN'));
+			}
+			else if (($sub !== 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_USER'));
+			}
+		} */
+		else if ($gen === self::JWT_GENERATOR_MANUAL) {
+			// Generator 2 are "hand-crafted" tokens
+			if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_MANUAL', true)) {
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_MANUAL'));
+			}
+		} else {
+			throw new OIDplusException(_L('Token generator %1 not recognized',$gen));
+		}
+
+		// Make sure that the IAT (issued at time) isn't in a blacklisted timeframe
+		// When an user believes that a token was compromised, then they can blacklist the tokens identified by their "iat" ("Issued at") property
+		$bl_time = $this->jwtGetBlacklistTime($gen, $sub);
+		$iat = $contentProvider->getValue('iat',0);
+		if ($iat <= $bl_time) {
+			throw new OIDplusException(_L('The JWT token was blacklisted on %1. Please generate a new one',date('d F Y, H:i:s',$bl_time)));
+		}
+	}
+
 	// Content provider
 
 	protected function getAuthContentStore() {
@@ -57,56 +132,14 @@ class OIDplusAuthUtils {
 			if (isset($_REQUEST['OIDPLUS_AUTH_JWT'])) {
 				$contentProvider = new OIDplusAuthContentStoreJWT();
 
-				// Decode the JWT. In this step, the signature as well as EXP/NBF times will be checked
 				try {
+					// Decode the JWT. In this step, the signature as well as EXP/NBF times will be checked
 					$contentProvider->loadJWT($_REQUEST['OIDPLUS_AUTH_JWT']);
+
+					// Do various checks if the token is allowed and not blacklisted
+					$this->jwtSecurityCheck($contentProvider);
 				} catch (Exception $e) {
 					throw new OIDplusException(_L('The JWT token was rejected: %1',$e->getMessage()));
-				}
-
-				// Check if the token is intended for us
-				if ($contentProvider->getValue('aud','') !== "http://oidplus.com") {
-					throw new OIDplusException(_L('This JWT token is not valid'));
-				}
-				$gen = $contentProvider->getValue('oidplus_generator', -1);
-				$sub = $contentProvider->getValue('sub', '');
-
-				// Check if the token generator is allowed
-				if ($gen === 0) {
-					if (($sub === 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_ADMIN', true)) {
-						// Generator: plugins/adminPages/910_automated_ajax_calls/OIDplusPageAdminAutomatedAJAXCalls.class.php
-						throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_ADMIN'));
-					}
-					else if (($sub !== 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_USER', true)) {
-						// Generator: plugins/raPages/910_automated_ajax_calls/OIDplusPageRaAutomatedAJAXCalls.class.php
-						throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_USER'));
-					}
-				}
-				/* else if ($gen === 1) {
-					// Reserved for future use (use JWT token in a cookie as alternative to PHP session):
-					if (($sub === 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) {
-						throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_ADMIN'));
-					}
-					else if (($sub !== 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
-						throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_USER'));
-					}
-				} */
-				else if ($gen === 2) {
-					// Generator 2 are "hand-crafted" tokens
-					if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_MANUAL', true)) {
-						throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_MANUAL'));
-					}
-				} else {
-					throw new OIDplusException(_L('Token generator %1 not recognized',$gen));
-				}
-
-				// Make sure that the IAT (issued at time) isn't in a blacklisted timeframe
-				// When an user believes that a token was compromised, then they can blacklist the tokens identified by their "iat" ("Issued at") property
-				$cfg = 'jwt_blacklist_gen('.$gen.')_sub('.trim(base64_encode(md5($sub,true)),'=').')';
-				$bl_time = OIDplus::config()->getValue($cfg,0);
-				$iat = $contentProvider->getValue('iat',0);
-				if ($iat <= $bl_time) {
-					throw new OIDplusException(_L('The JWT token was blacklisted on %1. Please generate a new one',date('d F Y, H:i:s',$bl_time)));
 				}
 			} else {
 				// Normal login via web-browser
