@@ -5678,10 +5678,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The JWT token was blacklisted (NBF). Please generate a new one
+		The JWT token was blacklisted on %1. Please generate a new one
 		]]></source>
 		<target><![CDATA[
-		Dieser JWT-Token wurde gesperrt (NBF). Bitte erstellen Sie einen neuen Token.
+		Dieser JWT-Token wurde am %1 gesperrt. Bitte erstellen Sie einen neuen Token.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The JWT token was rejected: %1
+		]]></source>
+		<target><![CDATA[
+		Der JWT-Token wurde zurückgewiesen: %1
 		]]></target>
 	</message>
 	<message>
@@ -5974,14 +5982,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		This JWT token is not valid or the administrator has disabled the functionality.
-		]]></source>
-		<target><![CDATA[
-		Dieser JWT-Token ist nicht gültig oder der System-Administrator hat diese Funktionalität deaktiviert.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		This RA does not exist.
 		]]></source>
 		<target><![CDATA[
@@ -6146,6 +6146,14 @@
 		]]></source>
 		<target><![CDATA[
 		Um %1 nutzen zu können, müssen Sie die Zeilen "extension=%2" und "extension_dir=ext" in der PHP.ini Datei aktivieren.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Token generator %1 not recognized
+		]]></source>
+		<target><![CDATA[
+		Token-Generator %1 ist unbekannt
 		]]></target>
 	</message>
 	<message>

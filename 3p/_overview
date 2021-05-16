@@ -85,6 +85,7 @@ php-jwt:
 	License:  BSD-3-Clause
 	Version:  Commit 474047d on 5 Mar 2021
 	Website:  https://github.com/firebase/php-jwt
+	Manually applied fix: https://github.com/firebase/php-jwt/issues/226
 
 Polyfill:
 	License:  MIT
