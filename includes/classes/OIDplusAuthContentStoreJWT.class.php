@@ -35,13 +35,13 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		}
 	}
 
-	public function getJWTToken($lifetime=100*365*24*60*60) {
+	public function getJWTToken($lifetime=null) {
 		$payload = $this->content;
 		$payload["iss"] = "http://oidplus.com";
 		$payload["aud"] = "http://oidplus.com";
 		$payload["jti"] = gen_uuid();
 		$payload["iat"] = time();
-		$payload["exp"] = time() + $lifetime;
+		if (!is_null($lifetime)) $payload["exp"] = time() + $lifetime;
 
 		if (OIDplus::getPkiStatus()) {
 			$privKey = OIDplus::config()->getValue('oidplus_private_key');
