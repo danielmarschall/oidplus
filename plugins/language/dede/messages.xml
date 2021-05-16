@@ -5974,14 +5974,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		This JWT token is not valid
-		]]></source>
-		<target><![CDATA[
-		Dieser JWT-Token ist nicht gültig
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		This RA does not exist.
 		]]></source>
 		<target><![CDATA[
@@ -6154,6 +6146,14 @@
 		]]></source>
 		<target><![CDATA[
 		Token-Generator %1 ist unbekannt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Token has wrong audience
+		]]></source>
+		<target><![CDATA[
+		Der Token hat das falsche Publikum (aud)
 		]]></target>
 	</message>
 	<message>

@@ -34,13 +34,10 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_ADMIN'));
 			}
 
-			$gen = 0; // 0=Automated AJAX, 1=Reserved for normal login, 2=Manually "crafted"
+			$gen = OIDplusAuthUtils::JWT_GENERATOR_AJAX;
 			$sub = 'admin';
 
-			$cfg = 'jwt_blacklist_gen('.$gen.')_sub('.trim(base64_encode(md5($sub,true)),'=').')';
-			$bl_time = time()-1;
-			OIDplus::config()->prepareConfigKey($cfg, 'Revoke timestamp of all JWT tokens for $sub with generator $gen (Automated AJAX)', $bl_time, OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
-			OIDplus::config()->setValue($cfg,$bl_time);
+			OIDplus::authUtils()->jwtBlacklist($gen, $sub);
 
 			return array("status" => 0);
 		} else {
@@ -65,7 +62,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$gen = 0; // 0=Automated AJAX, 1=Reserved for normal login, 2=Manually "crafted"
+			$gen = OIDplusAuthUtils::JWT_GENERATOR_AJAX;
 			$sub = 'admin';
 
 			$authSimulation = new OIDplusAuthContentStoreJWT();
@@ -86,8 +83,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<p>'._L('Currently, there is no documentation for the AJAX calls. However, you can look at the <b>script.js</b> files of the plugins to see the field names being used. You can also enable network analysis in your web browser debugger (F12) to see the request headers sent to the server during the operation of OIDplus.').'</p>';
 
 			$out['text'] .= '<h2>'._L('Blacklisted tokens').'</h2>';
-			$cfg = 'jwt_blacklist_gen('.$gen.')_sub('.trim(base64_encode(md5($sub,true)),'=').')';
-			$bl_time = OIDplus::config()->getValue($cfg,0);
+			$bl_time = OIDplus::authUtils()->jwtGetBlacklistTime($gen, $sub);
 			if ($bl_time == 0) {
 				$out['text'] .= '<p>'._L('None of the previously generated JWT tokens have been blacklisted.').'</p>';
 			} else {
