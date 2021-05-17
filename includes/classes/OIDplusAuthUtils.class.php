@@ -51,7 +51,7 @@ class OIDplusAuthUtils {
 	// JWT handling
 
 	const JWT_GENERATOR_AJAX   = 0;
-	//const JWT_GENERATOR_LOGIN  = 1;
+	const JWT_GENERATOR_LOGIN  = 1;
 	const JWT_GENERATOR_MANUAL = 2;
 
 	private function jwtGetBlacklistConfigKey($gen, $sub) {
@@ -65,7 +65,7 @@ class OIDplusAuthUtils {
 
 		$gen_desc = 'Unknown';
 		if ($gen === self::JWT_GENERATOR_AJAX)   $gen_desc = 'Automated AJAX calls';
-		//if ($gen === self::JWT_GENERATOR_LOGIN)  $gen_desc = 'Login';
+		if ($gen === self::JWT_GENERATOR_LOGIN)  $gen_desc = 'Login';
 		if ($gen === self::JWT_GENERATOR_MANUAL) $gen_desc = 'Manually created';
 
 		OIDplus::config()->prepareConfigKey($cfg, 'Revoke timestamp of all JWT tokens for $sub with generator $gen ($gen_desc)', $bl_time, OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
@@ -96,15 +96,18 @@ class OIDplusAuthUtils {
 				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_USER'));
 			}
 		}
-		/* else if ($gen === self::JWT_GENERATOR_LOGIN) {
-			// Reserved for future use (use JWT token in a cookie as alternative to PHP session):
+		else if ($gen === self::JWT_GENERATOR_LOGIN) {
+			// Used for feature "stay logged in" (use JWT token in a cookie as alternative to PHP session):
+			// - No PHP session will be used
+			// - Session will not be bound to IP address (therefore, you can switch between mobile/WiFi for example)
+			// - No server-side session needed
 			if (($sub === 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) {
 				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_ADMIN'));
 			}
 			else if (($sub !== 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
 				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_USER'));
 			}
-		} */
+		}
 		else if ($gen === self::JWT_GENERATOR_MANUAL) {
 			// Generator 2 are "hand-crafted" tokens
 			if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_MANUAL', true)) {
@@ -133,7 +136,15 @@ class OIDplusAuthUtils {
 		}
 
 		// Checks which are dependent on the generator
+		if ($gen === self::JWT_GENERATOR_LOGIN) {
+			if (!isset($_COOKIE['OIDPLUS_AUTH_JWT'])) {
+				throw new OIDplusException(_L('This kind of JWT token can only be used with the %1 request type','COOKIE'));
+			}
+		}
 		if ($gen === self::JWT_GENERATOR_AJAX) {
+			if (!isset($_GET['OIDPLUS_AUTH_JWT']) && !isset($_POST['OIDPLUS_AUTH_JWT'])) {
+				throw new OIDplusException(_L('This kind of JWT token can only be used with the %1 request type','GET/POST'));
+			}
 			if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) {
 				throw new OIDplusException(_L('This kind of JWT token can only be used in ajax.php'));
 			}
@@ -146,18 +157,30 @@ class OIDplusAuthUtils {
 		static $contentProvider = null;
 
 		if (is_null($contentProvider)) {
-			if (isset($_REQUEST['OIDPLUS_AUTH_JWT'])) {
+			$jwt = '';
+			if (isset($_COOKIE['OIDPLUS_AUTH_JWT'])) $jwt = $_COOKIE['OIDPLUS_AUTH_JWT'];
+			if (isset($_POST['OIDPLUS_AUTH_JWT']))   $jwt = $_POST['OIDPLUS_AUTH_JWT'];
+			if (isset($_GET['OIDPLUS_AUTH_JWT']))    $jwt = $_GET['OIDPLUS_AUTH_JWT'];
+
+			if (!empty($jwt)) {
 				$contentProvider = new OIDplusAuthContentStoreJWT();
 
 				try {
 					// Decode the JWT. In this step, the signature as well as EXP/NBF times will be checked
-					$contentProvider->loadJWT($_REQUEST['OIDPLUS_AUTH_JWT']);
+					$contentProvider->loadJWT($jwt);
 
 					// Do various checks if the token is allowed and not blacklisted
 					$this->jwtSecurityCheck($contentProvider);
 				} catch (Exception $e) {
-					$contentProvider = null;
-					throw new OIDplusException(_L('The JWT token was rejected: %1',$e->getMessage()));
+					if (isset($_GET['OIDPLUS_AUTH_JWT']) || isset($_POST['OIDPLUS_AUTH_JWT'])) {
+						// Most likely an AJAX request. We can throw an Exception
+						$contentProvider = null;
+						throw new OIDplusException(_L('The JWT token was rejected: %1',$e->getMessage()));
+					} else {
+						// Most likely an expired Cookie/Login session. We must not throw an Exception, otherwise we will break jsTree
+						$contentProvider = new OIDplusAuthContentStoreSession();
+						OIDplus::cookieUtils()->unsetcookie('OIDPLUS_AUTH_JWT');
+					}
 				}
 			} else {
 				// Normal login via web-browser
@@ -206,12 +229,12 @@ class OIDplusAuthUtils {
 		if (OIDplus::authUtils()->forceAllLoggedOut()) {
 			return array();
 		} else {
-			return $this->getAuthContentStore()->loggedInRaList();
+				return $this->getAuthContentStore()->loggedInRaList();
 		}
 	}
 
 	public function isRaLoggedIn($email) {
-		return $this->getAuthContentStore()->isRaLoggedIn($email);
+			return $this->getAuthContentStore()->isRaLoggedIn($email);
 	}
 
 	// Admin authentication functions
@@ -250,7 +273,7 @@ class OIDplusAuthUtils {
 		if (OIDplus::authUtils()->forceAllLoggedOut()) {
 			return false;
 		} else {
-			return $this->getAuthContentStore()->isAdminLoggedIn();
+				return $this->getAuthContentStore()->isAdminLoggedIn();
 		}
 	}
 
