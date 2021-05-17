@@ -103,6 +103,12 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 			$cont = str_replace('<token>', $token, $cont);
 			$out['text'] .= '<pre>'.preg_replace("@<br.*>@ismU","",highlight_string($cont,true)).'</pre>';
 
+			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using Python').'</h2>';
+			$cont = file_get_contents(__DIR__.'/examples/example_python.py');
+			$cont = str_replace('<url>', OIDplus::webpath(null,false).'ajax.php', $cont);
+			$cont = str_replace('<token>', $token, $cont);
+			$out['text'] .= '<pre>'.htmlentities($cont).'</pre>';
+
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using VBScript').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_vbs.vbs');
 			$cont = str_replace('<url>', OIDplus::webpath(null,false).'ajax.php', $cont);
