@@ -23,7 +23,7 @@
 
 <body>
 	<h1>Datenschutz Verfahrensbeschreibung</h1>
-	<p><em>Revision: 18. Oktober 2020</em></p>
+	<p><em>Revision: 17. Mai 2021</em></p>
 	<p><strong><em>Wichtig</em></strong><em> : Dieses Dokument wurde von ViaThinkSoft (dem Entwickler der Software OIDplus) verfasst und enthält allgemeine Informationen zur Funktionsweise von OIDplus in Bezug auf datenschutzbezogene Themen. Da OIDplus eine Web-Software ist, die
 	heruntergeladen und auf einem eigenen Server betrieben werden kann, beschreibt dieses Dokument NICHT, wie die Eigentümer / Administratoren dieser Installation von OIDplus mit Ihren Daten umgehen. Daher sollte der Eigentümer dieses Systems eine zusätzliche / individuelle Datenschutzerklärung vorlegen.</em></p>
 	<a id="terminology"></a><h2>Parteien / Terminologie</h2>
@@ -70,342 +70,144 @@
 	Unter-OIDs ausgeblendet werden, die Sie an sich selbst oder andere RAs delegieren.</p>
 	<h3>Übersicht: Verwaltete Informationen zu OIDs:</h3>
 	<table border="1">
-	<tbody>
 	<tr>
-	<td width="111">
-	<p><strong>Attribut:</strong></p>
-	</td>
-	<td width="196">
-	<p><strong>Kann nur geändert werden durch:</strong></p>
-	</td>
-	<td width="154">
-	<p><strong>Wenn nicht als "versteckt" markiert, dann sichtbar für:</strong></p>
-	</td>
-	<td width="154">
-	<p><strong>Wenn &nbsp;"versteckt",
-	dann sichtbar für:</strong></p>
-	</td>
+		<td width="111"><strong>Attribut:</strong></td>
+		<td width="196"><strong>Kann nur geändert werden durch:</strong></td>
+		<td width="154"><strong>Wenn nicht als "versteckt" markiert, dann sichtbar für:</strong></td>
+		<td width="154"><strong>Wenn &nbsp;"versteckt", dann sichtbar für:</strong></td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Numerische Kennung</p>
-	</td>
-	<td width="196">
-	<p>Übergeordnete RA- <br>Systemadministrator <br>(kann nur während der Erstellung definiert und niemals aktualisiert werden!)</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>RA <br>
-	Übergeordnete RA <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">Numerische Kennung</td>
+		<td width="196">Übergeordnete RA- <br>Systemadministrator <br>(kann nur während der Erstellung definiert und niemals aktualisiert werden!)</td>
+		<td width="154">Öffentlichkeit<br>RA <br>Übergeordnete RA <br>Systemadministrator</td>
+		<td width="154">Übergeordnete RA- <br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Alphanumerische Kennung (für ASN.1-Notation)</p>
-	</td>
-	<td width="196">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>RA <br>
-	Übergeordnete RA <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">Alphanumerische Kennung (für ASN.1-Notation)</td>
+		<td width="196">Übergeordnete RA- <br>Systemadministrator</td>
+		<td width="154">Öffentlichkeit<br>RA <br>Übergeordnete RA <br>Systemadministrator</td>
+		<td width="154">Übergeordnete RA- <br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Unicode-Label</p>
-	<p>(für IRI-Notation)</p>
-	</td>
-	<td width="196">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>RA <br>
-	Übergeordnete RA <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">Unicode-Label<br>(für IRI-Notation)</td>
+		<td width="196">Übergeordnete RA- <br>Systemadministrator</td>
+		<td width="154">Öffentlichkeit<br>RA <br>Übergeordnete RA <br>Systemadministrator</td>
+		<td width="154">Übergeordnete RA- <br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>RA</p>
-	</td>
-	<td width="196">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>RA <br>
-	Übergeordnete RA <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">RA</td>
+		<td width="196">Übergeordnete RA- <br>Systemadministrator</td>
+		<td width="154">Öffentlichkeit<br>RA <br>Übergeordnete RA <br>Systemadministrator</td>
+		<td width="154">Übergeordnete RA- <br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Kommentar</p>
-	</td>
-	<td width="196">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>RA <br>
-	Übergeordnete RA <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">Kommentar</td>
+		<td width="196">Übergeordnete RA- <br>Systemadministrator</td>
+		<td width="154">Öffentlichkeit<br>RA <br>Übergeordnete RA <br>Systemadministrator</td>
+		<td width="154">Übergeordnete RA- <br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>"Versteckt" Kennzeichen</p>
-	</td>
-	<td width="196">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>RA <br>
-	Übergeordnete RA <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">"Versteckt" Kennzeichen</td>
+		<td width="196">Übergeordnete RA- <br>Systemadministrator</td>
+		<td width="154">Öffentlichkeit<br>RA <br>Übergeordnete RA <br>Systemadministrator</td>
+		<td width="154">Übergeordnete RA- <br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Titel</p>
-	</td>
-	<td width="196">
-	<p>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>RA <br>
-	Übergeordnete RA <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">Titel</td>
+		<td width="196">RA- <br>Systemadministrator</td>
+		<td width="154">Öffentlichkeit<br>RA <br>Übergeordnete RA <br>Systemadministrator</td>
+		<td width="154">Übergeordnete RA- <br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Beschreibung</p>
-	</td>
-	<td width="196">
-	<p>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>RA <br>
-	Übergeordnete RA <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Übergeordnete RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">Beschreibung</td>
+		<td width="196">RA- <br>Systemadministrator</td>
+		<td width="154">Öffentlichkeit<br>RA <br>Übergeordnete RA <br>Systemadministrator</td>
+		<td width="154">Übergeordnete RA- <br>Systemadministrator</td>
 	</tr>
-	</tbody>
 	</table>
 	<a id="ra_information"></a><h2>RA-Informationen</h2>
 	<p>Die Informationen zu RAs, die OIDs besitzen, können öffentlich eingesehen werden. Eine RA kann ihre Kontaktdaten im OIDplus-System (Anmeldebereich) verwalten und ihre Informationen als "privat" markieren, um die für die Öffentlichkeit sichtbaren Informationen einzuschränken.</p>
 	<p>Folgende RA-Informationen werden immer angezeigt (auch wenn sie als "privat" markiert sind):</p>
 	<h3>Übersicht: Verwaltete Informationen zu RAs:</h3>
 	<table border="1">
-	<tbody>
 	<tr>
-	<td width="111">
-	<p><strong>Attribut:</strong></p>
-	</td>
-	<td width="196">
-	<p><strong>Kann nur geändert werden durch:</strong></p>
-	</td>
-	<td width="154">
-	<p><strong>Wenn nicht als "privat" markiert, sichtbar für:</strong></p>
-	</td>
-	<td width="154">
-	<p><strong>Wenn als "privat" markiert, sichtbar für:</strong></p>
-	</td>
+		<td width="111"><strong>Attribut:</strong></td>
+		<td width="196"><strong>Kann nur geändert werden durch:</strong></td>
+		<td width="154"><strong>Wenn nicht als "privat" markiert, sichtbar für:</strong></td>
+		<td width="154"><strong>Wenn als "privat" markiert, sichtbar für:</strong></td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>E-Mail-Addresse</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA<br>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA <br>RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">E-Mail-Addresse</td>
+		<td width="196">RA</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA<br>RA <br>Systemadministrator</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA <br>RA <br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Name</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA<br>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA<br>RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">Name</td>
+		<td width="196">RA</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA<br>RA <br>Systemadministrator</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA<br>RA <br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Organisation</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA <br>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA <br>RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">Organisation</td>
+		<td width="196">RA</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA <br>RA <br>Systemadministrator</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA <br>RA <br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Büro</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA <br>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA <br>RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">Büro</td>
+		<td width="196">RA</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA <br>RA <br>Systemadministrator</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA <br>RA <br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Personenname</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA <br>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA<br>RA- <br>Systemadministrator</p>
-	</td>
+		<td width="111">Personenname</td>
+		<td width="196">RA</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA <br>RA <br>Systemadministrator</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA<br>RA <br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>"Privat" Markierung</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>Systemadministrator</p>
-	</td>
+		<td width="111">"Privat" Markierung</td>
+		<td width="196">RA</td>
+		<td width="154">RA<br>Systemadministrator</td>
+		<td width="154">RASystemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Straße</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA <br>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>Systemadministrator</p>
-	</td>
+		<td width="111">Straße</td>
+		<td width="196">RA</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA <br>RA <br>Systemadministrator</td>
+		<td width="154">RA<br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>PLZ / Ort</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA <br>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>Systemadministrator</p>
-	</td>
+		<td width="111">PLZ / Ort</td>
+		<td width="196">RA</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA <br>RA <br>Systemadministrator</td>
+		<td width="154">RA<br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Land</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA <br>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>Systemadministrator</p>
-	</td>
+		<td width="111">Land</td>
+		<td width="196">RA</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA <br>RA <br>Systemadministrator</td>
+		<td width="154">RA<br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Telefon</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA <br>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>Systemadministrator</p>
-	</td>
+		<td width="111">Telefon</td>
+		<td width="196">RA</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA <br>RA <br>Systemadministrator</td>
+		<td width="154">RA<br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Mobiltelefon</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA <br>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>Systemadministrator</p>
-	</td>
+		<td width="111">Mobiltelefon</td>
+		<td width="196">RA</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA <br>RA <br>Systemadministrator</td>
+		<td width="154">RA<br>Systemadministrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Fax</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Öffentlichkeit<br>Übergeordnete RA <br>RA- <br>Systemadministrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>Systemadministrator</p>
-	</td>
+		<td width="111">Fax</td>
+		<td width="196">RA</td>
+		<td width="154">Öffentlichkeit<br>Übergeordnete RA <br>RA <br>Systemadministrator</td>
+		<td width="154">RA<br>Systemadministrator</td>
 	</tr>
-	</tbody>
 	</table>
 	<a id="ra_invitation"></a><h2>Einladung von RAs</h2>
 	<p>Wenn eine OID von einer RA oder vom Systemadministrator erstellt wird, wird der Eigentümer der OID durch eine E-Mail-Adresse definiert (die öffentlich angezeigt wird). Daher ist es möglich, eine OID zu besitzen, auch wenn Sie nicht im OIDplus-System registriert sind.</p>
@@ -524,95 +326,48 @@
 	z.B. um Sie als eingeloggten Benutzer zu identifizieren.</p>
 	<p>OIDplus verwendet Cookies nur für die folgende Zwecke:</p>
 	<table border="1">
-	<tbody>
 	<tr>
-	<td width="122">
-	<p><strong>Cookie-Name</strong></p>
-	</td>
-	<td width="114">
-	<p><strong>Kategorie</strong></p>
-	</td>
-	<td width="139">
-	<p><strong>Verwendung</strong></p>
-	</td>
-	<td width="118">
-	<p><strong>Wird erstellt:</strong></p>
-	</td>
-	<td width="126">
-	<p><strong>Wird gelöscht:</strong></p>
-	</td>
+		<td width="122"><strong>Cookie-Name</strong></td>
+		<td width="114"><strong>Kategorie</strong></td>
+		<td width="139"><strong>Verwendung</strong></td>
+		<td width="118"><strong>Wird erstellt:</strong></td>
+		<td width="126"><strong>Wird gelöscht:</strong></td>
 	</tr>
 	<tr>
-	<td width="122">
-	<p>Login-Cookie</p>
-	</td>
-	<td width="114">
-	<p>Essentiell</p>
-	</td>
-	<td width="139">
-	<p>Enthält einen Sitzungsschlüssel, mit dem der Anmeldestatus des Benutzers und die Berechtigungen ermittelt werden.</p>
-	</td>
-	<td width="118">
-	<p>Während der Anmeldung eines Benutzers oder Administrators mit seinem Passwort.</p>
-	</td>
-	<td width="126">
-	<p>Wenn der Benutzer abgemeldet und / oder die Browsersitzung geschlossen
-	wird.</p>
-	</td>
+		<td width="122">Login-Cookie<br>(Regulärer Login)</td>
+		<td width="114">Essentiell</td>
+		<td width="139">Enthält einen Sitzungsschlüssel, mit dem der Anmeldestatus des Benutzers und die Berechtigungen ermittelt werden.</td>
+		<td width="118">Während der Anmeldung eines Benutzers oder Administrators mit seinem Passwort, wenn die Option "Angemeldet bleiben" nicht aktiviert ist.</td>
+		<td width="126">Wenn der Benutzer abgemeldet und / oder die Browsersitzung geschlossen wird.</td>
 	</tr>
 	<tr>
-	<td width="122">
-	<p>SSL-Detect-Cookie</p>
-	</td>
-	<td width="114">
-	<p>Essentiell</p>
-	</td>
-	<td width="139">
-	<p>Wenn der Systemadministrator die Option "Automatische SSL-Erkennung" aktiviert, überprüft dieses Cookie, ob der SSL-Port geöffnet ist, um die automatische Umleitung von HTTP zu HTTPS zu ermöglichen.</p>
-	</td>
-	<td width="118">
-	<p>Während dem ersten Besuch der Seite</p>
-	</td>
-	<td width="126">
-	<p>Wenn die Browsersitzung geschlossen wird.</p>
-	</td>
+		<td width="122">Login-Cookie<br>("Angemeldet bleiben" Option)</td>
+		<td width="114">Essentiell</td>
+		<td width="139">Enthält einen vom Server signierten "JSON Web Token", der den Benutzernamen enthält.</td>
+		<td width="118">Während der Anmeldung eines Benutzers oder Administrators mit seinem Passwort, wenn die Option "Angemeldet bleiben" aktiviert ist.</td>
+		<td width="126">Wenn der Benutzer sich abmeldet.</td>
 	</tr>
 	<tr>
-	<td width="122">
-	<p>Sprach-Cookie</p>
-	</td>
-	<td width="114">
-	<p>Essentiell</p>
-	</td>
-	<td width="139">
-	<p>Das Sprachcookie enthält die gewünschte Sprache.</p>
-	</td>
-	<td width="118">
-	<p>Sobald auf eine Länderflagge geklickt wird oder wenn eine URL mit einem <code>lang=...</code>Argument
-	geöffnet wird</p>
-	</td>
-	<td width="126">
-	<p>Wenn die Browsersitzung geschlossen wird.</p>
-	</td>
+		<td width="122">SSL-Detect-Cookie</td>
+		<td width="114">Essentiell</td>
+		<td width="139">Wenn der Systemadministrator die Option "Automatische SSL-Erkennung" aktiviert, überprüft dieses Cookie, ob der SSL-Port geöffnet ist, um die automatische Umleitung von HTTP zu HTTPS zu ermöglichen.</td>
+		<td width="118">Während dem ersten Besuch der Seite</td>
+		<td width="126">Wenn die Browsersitzung geschlossen wird.</td>
 	</tr>
 	<tr>
-	<td width="122">
-	<p>CSRF-Token (2x)</p>
-	</td>
-	<td width="114">
-	<p>Essentiell</p>
-	</td>
-	<td width="139">
-	<p>Enthält eine zufällig generierte Zeichenfolge, die in die Seite eingebettet wird, um "Cross-site request forgery"-Angriffen entgegenzuwirken.</p>
-	</td>
-	<td width="118">
-	<p>Sobald die Seite besucht mit einem JavaScript-Kompatiblen Web-Browser geöffnet wird.</p>
-	</td>
-	<td width="126">
-	<p>Wenn die Browsersitzung geschlossen wird.</p>
-	</td>
+		<td width="122">Sprach-Cookie</td>
+		<td width="114">Essentiell</td>
+		<td width="139">Das Sprachcookie enthält die gewünschte Sprache.</td>
+		<td width="118">Sobald auf eine Länderflagge geklickt wird oder wenn eine URL mit einem <code>lang=...</code>Argument geöffnet wird</td>
+		<td width="126">Wenn die Browsersitzung geschlossen wird.</td>
 	</tr>
-	</tbody>
+	<tr>
+		<td width="122">CSRF-Token (2x)</td>
+		<td width="114">Essentiell</td>
+		<td width="139">Enthält eine zufällig generierte Zeichenfolge, die in die Seite eingebettet wird, um "Cross-site request forgery"-Angriffen entgegenzuwirken.</td>
+		<td width="118">Sobald die Seite besucht mit einem JavaScript-Kompatiblen Web-Browser geöffnet wird.</td>
+		<td width="126">Wenn die Browsersitzung geschlossen wird.</td>
+	</tr>
 	</table>
 	<a id="external_javascripts"></a><h2>Externe JavaScripts</h2>
 	<p>Während des Ladens der Webseite werden verschiedene JavaScripts hinzugefügt, um die Benutzererfahrung zu verbessern und wichtige Funktionen

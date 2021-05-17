@@ -23,7 +23,7 @@
 
 <body>
 	<h1>Procedural documentation related to privacy</h1>
-	<p><em>Revision: 18 October 2020</em></p>
+	<p><em>Revision: 17 May 2021</em></p>
 	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software &ldquo;OIDplus&rdquo;) and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web-software that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
 	<a id="terminology"></a><h2>Parties / Terminology</h2>
 	<p><strong>ViaThinkSoft</strong> is the developer of the software solution &ldquo;OIDplus&rdquo;.</p>
@@ -52,333 +52,144 @@
 	<p>If you are an <strong>owner of an OID</strong> and want to make your OID hidden from the public, please contact your <strong>superior RA</strong> (preferential) or the <strong>system administrator</strong> and ask them to mark your OID as hidden. Please note that this will also hide all OIDs that you delegate to yourself or other RAs.</p>
 	<h3>Overview: Managed information about OIDs:</h3>
 	<table border="1">
-	<tbody>
 	<tr>
-	<td width="111">
-	<p><strong>Attribute:</strong></p>
-	</td>
-	<td width="196">
-	<p><strong>Can only be changed by:</strong></p>
-	</td>
-	<td width="154">
-	<p><strong>If not marked &ldquo;hidden&ldquo;, visible to:</strong></p>
-	</td>
-	<td width="154">
-	<p><strong>If marked &ldquo;hidden&ldquo;, visible to:</strong></p>
-	</td>
+		<td width="111"><strong>Attribute:</strong></td>
+		<td width="196"><strong>Can only be changed by:</strong></td>
+		<td width="154"><strong>If not marked &ldquo;hidden&ldquo;, visible to:</strong></td>
+		<td width="154"><strong>If marked &ldquo;hidden&ldquo;, visible to:</strong></td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Numeric Identifier</p>
-	</td>
-	<td width="196">
-	<p>Superior RA<br /> System administrator<br /> (can only be defined during creation and never be updated!)</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> RA<br /> Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
+		<td width="111">Numeric Identifier</td>
+		<td width="196">Superior RA<br> System administrator<br> (can only be defined during creation and never be updated!)</td>
+		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
+		<td width="154">Superior RA<br> System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Alphanumeric identifier (for ASN.1 notation)</p>
-	</td>
-	<td width="196">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> RA<br /> Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
+		<td width="111">Alphanumeric identifier (for ASN.1 notation)</td>
+		<td width="196">Superior RA<br> System administrator</td>
+		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
+		<td width="154">Superior RA<br> System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Unicode label</p>
-	<p>(for IRI notation)</p>
-	</td>
-	<td width="196">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> RA<br /> Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
+		<td width="111">Unicode label<br>(for IRI notation)</td>
+		<td width="196">Superior RA<br> System administrator</td>
+		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
+		<td width="154">Superior RA<br> System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>RA</p>
-	</td>
-	<td width="196">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> RA<br /> Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
+		<td width="111">RA</td>
+		<td width="196">Superior RA<br> System administrator</td>
+		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
+		<td width="154">Superior RA<br> System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Comment</p>
-	</td>
-	<td width="196">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> RA<br /> Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
+		<td width="111">Comment</td>
+		<td width="196">Superior RA<br> System administrator</td>
+		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
+		<td width="154">Superior RA<br> System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>&ldquo;Hidden&rdquo; flag</p>
-	</td>
-	<td width="196">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> RA<br /> Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
+		<td width="111">&ldquo;Hidden&rdquo; flag</td>
+		<td width="196">Superior RA<br> System administrator</td>
+		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
+		<td width="154">Superior RA<br> System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Title</p>
-	</td>
-	<td width="196">
-	<p>RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> RA<br /> Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
+		<td width="111">Title</td>
+		<td width="196">RA<br> System administrator</td>
+		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
+		<td width="154">Superior RA<br> System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Description</p>
-	</td>
-	<td width="196">
-	<p>RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> RA<br /> Superior RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Superior RA<br /> System administrator</p>
-	</td>
+		<td width="111">Description</td>
+		<td width="196">RA<br> System administrator</td>
+		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
+		<td width="154">Superior RA<br> System administrator</td>
 	</tr>
-	</tbody>
 	</table>
 	<a id="ra_information"></a><h2>RA information</h2>
 	<p>The information about RAs owning OIDs can be seen publicly. A RA can manage their contact data in the OIDplus system (login-area) and mark their information as &ldquo;private&rdquo; to limit the information visible to the public.</p>
 	<p>Following RA information is always displayed (even if marked &ldquo;private&rdquo;):</p>
 	<h3>Overview: Managed information about RAs:</h3>
 	<table border="1">
-	<tbody>
 	<tr>
-	<td width="111">
-	<p><strong>Attribute:</strong></p>
-	</td>
-	<td width="196">
-	<p><strong>Can only be changed by:</strong></p>
-	</td>
-	<td width="154">
-	<p><strong>If not marked &ldquo;private&ldquo;, visible to:</strong></p>
-	</td>
-	<td width="154">
-	<p><strong>If marked &ldquo;private&ldquo;, visible to:</strong></p>
-	</td>
+		<td width="111"><strong>Attribute:</strong></td>
+		<td width="196"><strong>Can only be changed by:</strong></td>
+		<td width="154"><strong>If not marked &ldquo;private&ldquo;, visible to:</strong></td>
+		<td width="154"><strong>If marked &ldquo;private&ldquo;, visible to:</strong></td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Email-Address</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
+		<td width="111">Email-Address</td>
+		<td width="196">RA</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Name</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
+		<td width="111">Name</td>
+		<td width="196">RA</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Organization</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
+		<td width="111">Organization</td>
+		<td width="196">RA</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Office</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
+		<td width="111">Office</td>
+		<td width="196">RA</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Personal name</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
+		<td width="111">Personal name</td>
+		<td width="196">RA</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Privacy flag</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>System administrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>System administrator</p>
-	</td>
+		<td width="111">Privacy flag</td>
+		<td width="196">RA</td>
+		<td width="154">RA<br>System administrator</td>
+		<td width="154">RA<br>System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Street</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>System administrator</p>
-	</td>
+		<td width="111">Street</td>
+		<td width="196">RA</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
+		<td width="154">RA<br>System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>ZIP/Town</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>System administrator</p>
-	</td>
+		<td width="111">ZIP/Town</td>
+		<td width="196">RA</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
+		<td width="154">RA<br>System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Country</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>System administrator</p>
-	</td>
+		<td width="111">Country</td>
+		<td width="196">RA</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
+		<td width="154">RA<br>System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Phone</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>System administrator</p>
-	</td>
+		<td width="111">Phone</td>
+		<td width="196">RA</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
+		<td width="154">RA<br>System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Mobile</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>System administrator</p>
-	</td>
+		<td width="111">Mobile</td>
+		<td width="196">RA</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
+		<td width="154">RA<br>System administrator</td>
 	</tr>
 	<tr>
-	<td width="111">
-	<p>Fax</p>
-	</td>
-	<td width="196">
-	<p>RA</p>
-	</td>
-	<td width="154">
-	<p>Public<br /> Superior RA<br /> RA<br /> System administrator</p>
-	</td>
-	<td width="154">
-	<p>RA</p>
-	<p>System administrator</p>
-	</td>
+		<td width="111">Fax</td>
+		<td width="196">RA</td>
+		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
+		<td width="154">RA<br>System administrator</td>
 	</tr>
-	</tbody>
 	</table>
 	<a id="ra_invitation"></a><h2>Invitation of RAs</h2>
 	<p>When an OID is created by a RA or by the system administrator, the owner of the OID will be defined by an email address (which will be shown publicly). Therefore, it is possible to own an OID, even if you are not registered in the OIDplus system.</p>
@@ -399,7 +210,7 @@
 	<p>From this public key, a unique system ID will be derivated. The unique system ID and the public key can be seen in the setup screen.</p>
 	<a id="system_registration"></a><h2>System registration and automatic publishing to oid-info.com</h2>
 	<p>During initial setup, the system administrator can choose between the following options:</p>
-	<p>0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Register to directory service and automatically publish RA/OID data at oid-info.com<br /> 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Only register to directory service<br /> 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hide system</p>
+	<p>0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Register to directory service and automatically publish RA/OID data at oid-info.com<br> 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Only register to directory service<br> 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hide system</p>
 	<p>This setting can always be changed in the administrator login/control panel.</p>
 	<h3>Registering the system to the directory service (option 0 and 1)</h3>
 	<p>The registration of the OIDplus system has various advantages:</p><!-- please keep in sync with plugins/adminPages/120_registration/info.html document -->
@@ -456,93 +267,48 @@
 	as a logged in user.</p>
 	<p>OIDplus does only use cookies for the following purposes:</p>
 	<table border="1">
-	<tbody>
 	<tr>
-	<td width="122">
-	<p><strong>Cookie</strong></p>
-	</td>
-	<td width="114">
-	<p><strong>Category</strong></p>
-	</td>
-	<td width="139">
-	<p><strong>Usage</strong></p>
-	</td>
-	<td width="118">
-	<p><strong>Will be created:</strong></p>
-	</td>
-	<td width="126">
-	<p><strong>Will be deleted:</strong></p>
-	</td>
+		<td width="122"><strong>Cookie</strong></td>
+		<td width="114"><strong>Category</strong></td>
+		<td width="139"><strong>Usage</strong></td>
+		<td width="118"><strong>Will be created:</strong></td>
+		<td width="126"><strong>Will be deleted:</strong></td>
 	</tr>
 	<tr>
-	<td width="122">
-	<p>Login-Cookie</p>
-	</td>
-	<td width="114">
-	<p>Essential</p>
-	</td>
-	<td width="139">
-	<p>Contains a session key that is used to determine the user&rsquo;s log-in-state and the permissions.</p>
-	</td>
-	<td width="118">
-	<p>During the login of a user or administrator using their password.</p>
-	</td>
-	<td width="126">
-	<p>When the user is logged out, and/or the browser session closed.</p>
-	</td>
+		<td width="122">Login-Cookie<br>(Regular login)</td>
+		<td width="114">Essential</td>
+		<td width="139">Contains a session key that is used to determine the user&rsquo;s log-in-state and the permissions.</td>
+		<td width="118">During the login of a user or administrator using their password, if the "remember me" option is NOT selected.</td>
+		<td width="126">When the user is logged out, or the browser session closed.</td>
 	</tr>
 	<tr>
-	<td width="122">
-	<p>SSL-Detect-Cookie</p>
-	</td>
-	<td width="114">
-	<p>Essential</p>
-	</td>
-	<td width="139">
-	<p>If the option &ldquo;automatic SSL detection&rdquo; is enabled by the system administrator, this cookie will check if the SSL port is open, to allow automatic redirection of HTTP to HTTPS.</p>
-	</td>
-	<td width="118">
-	<p>During the first page visit</p>
-	</td>
-	<td width="126">
-	<p>When the browser session is closed.</p>
-	</td>
+		<td width="122">Login-Cookie<br>("Remember me" option)</td>
+		<td width="114">Essential</td>
+		<td width="139">Contains a server-signed "JSON Web Token" that contains the username.</td>
+		<td width="118">During the login of a user or administrator using their password, if the "remember me" option is selected.</td>
+		<td width="126">When the user logs out.</td>
 	</tr>
 	<tr>
-	<td width="122">
-	<p>Language Cookie</p>
-	</td>
-	<td width="114">
-	<p>Essential</p>
-	</td>
-	<td width="139">
-	<p>The language cookie contains the desired language.</p>
-	</td>
-	<td width="118">
-	<p>As soon as a flag is clicked, or if an URL was opened that has a <code>lang=...</code> argument</p>
-	</td>
-	<td width="126">
-	<p>When the browser session is closed.</p>
-	</td>
+		<td width="122">SSL-Detect-Cookie</td>
+		<td width="114">Essential</td>
+		<td width="139">If the option &ldquo;automatic SSL detection&rdquo; is enabled by the system administrator, this cookie will check if the SSL port is open, to allow automatic redirection of HTTP to HTTPS.</td>
+		<td width="118">During the first page visit</td>
+		<td width="126">When the browser session is closed.</td>
 	</tr>
 	<tr>
-	<td width="122">
-	<p>CSRF token (2x)</p>
-	</td>
-	<td width="114">
-	<p>Essential</p>
-	</td>
-	<td width="139">
-	<p>Contains a random string that will be embedded into the page, as counter-measure against "Cross-site request forgery" attacks.</p>
-	</td>
-	<td width="118">
-	<p>As soon as the page is opened using a JavaScript compatible web browser.</p>
-	</td>
-	<td width="126">
-	<p>When the browser session is closed.</p>
-	</td>
+		<td width="122">Language Cookie</td>
+		<td width="114">Essential</td>
+		<td width="139">The language cookie contains the desired language.</td>
+		<td width="118">As soon as a flag is clicked, or if an URL was opened that has a <code>lang=...</code> argument</td>
+		<td width="126">When the browser session is closed.</td>
 	</tr>
-	</tbody>
+	<tr>
+		<td width="122">CSRF token (2x)</td>
+		<td width="114">Essential</td>
+		<td width="139">Contains a random string that will be embedded into the page, as counter-measure against "Cross-site request forgery" attacks.</td>
+		<td width="118">As soon as the page is opened using a JavaScript compatible web browser.</td>
+		<td width="126">When the browser session is closed.</td>
+	</tr>
 	</table>
 	<a id="external_javascripts"></a><h2>External JavaScripts</h2>
 	<p>During the loading of the web page, various JavaScripts are included to improve the user experience and add essential functionalities. The basic scripts are the JavaScript files of OIDplus itself, which are stored on the server of the particular OIDplus installation.</p>
