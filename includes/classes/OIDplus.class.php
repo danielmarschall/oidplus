@@ -821,6 +821,10 @@ class OIDplus {
 		}
 		return $steps_up;
 	}
+	
+	public static function isSSL() {
+		return isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
+	}
 
 	private static function getSystemUrl($relative=false) {
 		if (!$relative) {
@@ -859,7 +863,7 @@ class OIDplus {
 
 			// Do we want to have an absolute URI?
 			if (!$relative) {
-				$is_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
+				$is_ssl = self::isSSL();
 				$protocol = $is_ssl ? 'https' : 'http'; // do not translate
 				$host = $_SERVER['HTTP_HOST']; // includes port if it is not 80/443
 				$res = $protocol.'://'.$host.$res;
@@ -1015,7 +1019,7 @@ class OIDplus {
 		}
 
 		$timeout = 2;
-		$already_ssl = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == "on");
+		$already_ssl = self::isSSL();
 		$ssl_port = 443;
 
 		$mode = OIDplus::baseConfig()->getValue('ENFORCE_SSL', 2/*auto*/);
