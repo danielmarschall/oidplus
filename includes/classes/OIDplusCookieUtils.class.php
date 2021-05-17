@@ -31,7 +31,7 @@ class OIDplusCookieUtils {
 		if (empty($path)) $path = '/';
 
 		$domain = '';
-		$secure = false;
+		$secure = OIDplus::isSSL();
 		$httponly = !$allowJS;
 		if (is_null($samesite)) {
 			$samesite = OIDplus::baseConfig()->getValue('COOKIE_SAMESITE_POLICY', 'Strict');
