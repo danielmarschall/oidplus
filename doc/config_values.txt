@@ -302,11 +302,11 @@ Old 2.0 format:          (Not available)
 
 OIDplus::baseConfig()->setValue('JWT_ALLOW_LOGIN_ADMIN', true);
 Old 2.0 format:          (Not available)
-                         Reserved for future use.
+                         Allow "Remember me" logins for the administrator account.
 
 OIDplus::baseConfig()->setValue('JWT_ALLOW_LOGIN_USER', true);
 Old 2.0 format:          (Not available)
-                         Reserved for future use.
+                         Allow "Remember me" logins for a RA.
 
 OIDplus::baseConfig()->setValue('JWT_ALLOW_MANUAL', true);
 Old 2.0 format:          (Not available)

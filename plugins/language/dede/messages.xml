@@ -4798,6 +4798,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Remember me
+		]]></source>
+		<target><![CDATA[
+		Angemeldet bleiben
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Removed directory: %1
 		]]></source>
 		<target><![CDATA[
@@ -6042,6 +6050,14 @@
 		]]></source>
 		<target><![CDATA[
 		Dieser JWT Token kann nur in ajax.php verwendet werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This kind of JWT token can only be used with the %1 request type
+		]]></source>
+		<target><![CDATA[
+		Dieser JWT Token kann nur mit dem %1 Anfragetyp verwendet werden
 		]]></target>
 	</message>
 	<message>
