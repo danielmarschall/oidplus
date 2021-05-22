@@ -313,3 +313,13 @@ Old 2.0 format:          (Not available)
                          Allow JWT tokens which were manually created "by hand".
                          These can have any content you like, but they must
                          contain the claim "oidplus_generator" with value "2".
+
+OIDplus::baseConfig()->setValue('JWT_TTL_LOGIN_USER', 10*365*24*60*60);
+Old 2.0 format:          (Not available)
+                         How many seconds will a "remember me" login JWT token be valid?
+                         (RA login)
+
+OIDplus::baseConfig()->setValue('JWT_TTL_LOGIN_ADMIN', 10*365*24*60*60);
+Old 2.0 format:          (Not available)
+                         How many seconds will a "remember me" login JWT token be valid?
+                         (Administrator login)

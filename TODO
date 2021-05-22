@@ -4,9 +4,6 @@ RECENT STUFF
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Default language selection: Either always en-US, or automatical selection depending on browser language, or depending on admin setting (e.g. german companies offer a german repository by default)?
 
-RFC:
-- Line endings must be CR LF
-
 SECURITY Improvements:
 - Make attachment upload path configurable
 - Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")

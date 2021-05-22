@@ -65,7 +65,7 @@ class OIDplusAuthUtils {
 
 		$gen_desc = 'Unknown';
 		if ($gen === self::JWT_GENERATOR_AJAX)   $gen_desc = 'Automated AJAX calls';
-		if ($gen === self::JWT_GENERATOR_LOGIN)  $gen_desc = 'Login';
+		if ($gen === self::JWT_GENERATOR_LOGIN)  $gen_desc = 'Login ("Remember me")';
 		if ($gen === self::JWT_GENERATOR_MANUAL) $gen_desc = 'Manually created';
 
 		OIDplus::config()->prepareConfigKey($cfg, 'Revoke timestamp of all JWT tokens for $sub with generator $gen ($gen_desc)', $bl_time, OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
@@ -97,7 +97,7 @@ class OIDplusAuthUtils {
 			}
 		}
 		else if ($gen === self::JWT_GENERATOR_LOGIN) {
-			// Used for feature "stay logged in" (use JWT token in a cookie as alternative to PHP session):
+			// Used for feature "Remember me" (use JWT token in a cookie as alternative to PHP session):
 			// - No PHP session will be used
 			// - Session will not be bound to IP address (therefore, you can switch between mobile/WiFi for example)
 			// - No server-side session needed

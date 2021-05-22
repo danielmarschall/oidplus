@@ -54,8 +54,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 					$authSimulation->raLogin($email);
 					$authSimulation->setValue('oidplus_generator', OIDplusAuthUtils::JWT_GENERATOR_LOGIN);
 					$authSimulation->setValue('sub', $email); // JWT "sub" attribute
-					$token = $authSimulation->GetJWTToken();
-					OIDplus::cookieUtils()->setcookie('OIDPLUS_AUTH_JWT', $token, time()+10*365*24*60*60, false);
+					$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_USER', 10*365*24*60*60);
+					$token = $authSimulation->GetJWTToken($ttl);
+					OIDplus::cookieUtils()->setcookie('OIDPLUS_AUTH_JWT', $token, time()+$ttl, false);
 				} else {
 					OIDplus::authUtils()->raLogin($email);
 				}
@@ -115,8 +116,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 					$authSimulation->adminLogin();
 					$authSimulation->setValue('oidplus_generator', OIDplusAuthUtils::JWT_GENERATOR_LOGIN);
 					$authSimulation->setValue('sub', 'admin'); // JWT "sub" attribute
-					$token = $authSimulation->GetJWTToken();
-					OIDplus::cookieUtils()->setcookie('OIDPLUS_AUTH_JWT', $token, time()+10*365*24*60*60, false);
+					$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_ADMIN', 10*365*24*60*60);
+					$token = $authSimulation->GetJWTToken($ttl);
+					OIDplus::cookieUtils()->setcookie('OIDPLUS_AUTH_JWT', $token, time()+$ttl, false);
 				} else {
 					OIDplus::authUtils()->adminLogin();
 				}
