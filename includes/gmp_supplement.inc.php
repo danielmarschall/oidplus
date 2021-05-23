@@ -2,8 +2,8 @@
 
 /*
  * PHP GMP-Supplement implemented using BCMath
- * Copyright 2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-12-06
+ * Copyright 2020-2021 Daniel Marschall, ViaThinkSoft
+ * Version 2021-05-21
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
