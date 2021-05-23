@@ -214,7 +214,6 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_AJAX :
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_MANUAL :
 					throw new OIDplusException(_L('This kind of JWT token cannot be altered. Therefore you cannot do this action.'));
-					break;
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN :
 					if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
 						throw new OIDplusException(_L('You cannot add this login credential to your existing "remember me" session. You need to log-out first.'));
@@ -239,7 +238,6 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_AJAX :
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_MANUAL :
 					throw new OIDplusException(_L('This kind of JWT token cannot be altered. Therefore you cannot do this action.'));
-					break;
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN :
 					if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) {
 						throw new OIDplusException(_L('You cannot add this login credential to your existing "remember me" session. You need to log-out first.'));

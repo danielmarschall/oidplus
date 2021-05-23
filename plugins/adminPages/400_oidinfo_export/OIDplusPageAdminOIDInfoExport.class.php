@@ -373,7 +373,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 									$url .= "&current_registrant_last_name=".urlencode($tmp_last_name);
 
 									if ((count($tmp) > 0) && ($tmp[0] == $row2->ra_name)) array_shift($tmp);
-									array_unique($tmp);
+									$tmp = array_unique($tmp);
 
 									if (!$row2->privacy) {
 										if (!empty($row2->street))   $tmp[] = $row2->street;
@@ -754,7 +754,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 					}
 
 					if ((count($tmp) > 0) && ($tmp[0] == $row2->ra_name)) array_shift($tmp);
-					array_unique($tmp);
+					$tmp = array_unique($tmp);
 
 					if (!$row2->privacy) {
 						if (!empty($row2->street))   $tmp[] = $row2->street;

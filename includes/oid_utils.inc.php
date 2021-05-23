@@ -871,7 +871,7 @@ function asn1_last_identifier($asn1id) {
 	$asn1id = trim(str_replace(array('{', '}', "\t"), ' ', $asn1id));
 	$ary = explode(' ', $asn1id);
 	$asn1id = $ary[count($ary)-1];
-	return preg_match('#[^0-9]#',$asn1id) ? $asn1id : false;
+	return preg_match('#[^0-9]#',$asn1id) ? (int)$asn1id : false;
 }
 
 /**
