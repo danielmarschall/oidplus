@@ -567,6 +567,9 @@ class OIDplus {
 		return null;
 	}
 
+	/**
+	* @return array<OIDplusPluginManifest>|array<string,array<string,OIDplusPluginManifest>>
+	*/
 	public static function getAllPluginManifests($pluginFolderMask='*', $flat=true): array {
 		$out = array();
 		// Note: glob() will sort by default, so we do not need a page priority attribute.
@@ -598,6 +601,9 @@ class OIDplus {
 		return $out;
 	}
 
+	/**
+	* @return array<string>
+	*/
 	public static function registerAllPlugins($pluginDirName, $expectedPluginClass, $registerCallback): array {
 		$out = array();
 		if (is_array($pluginDirName)) {

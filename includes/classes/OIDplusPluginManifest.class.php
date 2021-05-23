@@ -76,18 +76,30 @@ class OIDplusPluginManifest {
 		return $this->phpMainClass;
 	}
 
+	/**
+	* @return array<string>
+	*/
 	public function getCSSFiles(): array {
 		return $this->cssFiles;
 	}
 
+	/**
+	* @return array<string>
+	*/
 	public function getJSFiles(): array {
 		return $this->jsFiles;
 	}
 
+	/**
+	* @return array<string>
+	*/
 	public function getCSSFilesSetup(): array {
 		return $this->cssFilesSetup;
 	}
 
+	/**
+	* @return array<string>
+	*/
 	public function getJSFilesSetup(): array {
 		return $this->jsFilesSetup;
 	}
