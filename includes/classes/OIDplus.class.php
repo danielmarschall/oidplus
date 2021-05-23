@@ -1096,7 +1096,7 @@ class OIDplus {
 	 * Gets a local path pointing to a resource
 	 * @param string $target Target resource (file or directory must exist), or null to get the OIDplus base directory
 	 * @param boolean $relative If true, the returning path is relative to the currently executed PHP file (not the CLI working directory)
-	 * @return string The local path, with guaranteed trailing path delimiter for directories
+	 * @return string|false The local path, with guaranteed trailing path delimiter for directories
 	 */
 	public static function localpath($target=null, $relative=false) {
 		if (is_null($target)) {
@@ -1130,7 +1130,7 @@ class OIDplus {
 	 * Gets a URL pointing to a resource
 	 * @param string $target Target resource (file or directory must exist), or null to get the OIDplus base directory
 	 * @param boolean $relative If true, the returning path is relative to the currently executed PHP script (i.e. index.php , not the plugin PHP script!)
-	 * @return string The URL, with guaranteed trailing path delimiter for directories
+	 * @return string|false The URL, with guaranteed trailing path delimiter for directories
 	 */
 	public static function webpath($target=null, $relative=false) {
 		$res = self::getSystemUrl($relative); // Note: already contains a trailing path delimiter

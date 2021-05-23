@@ -315,7 +315,7 @@ function oidSort(&$ary, $output_with_leading_dot=false) {
  *              First OID
  * @param   string $oidB<br />
  *              Second OID
- * @return  boolean True if the OIDs are equal
+ * @return  boolean|null True if the OIDs are equal, null if one of the OIDs are invalid
  **/
 function oid_dotnotation_equal($oidA, $oidB) {
 	$oidA = sanitizeOID($oidA, false);
@@ -453,7 +453,7 @@ assert(oid_distance('2.999', '2.999.1.2') === -2);
  * @version 2014-12-20
  * @param   string $oid<br />
  *              An OID.
- * @return  string The OID with a leading dot or false if the OID is syntactially wrong.
+ * @return  string|false The OID with a leading dot or false if the OID is syntactially wrong.
  **/
 function oid_add_leading_dot($oid) {
 	$oid = sanitizeOID($oid, 'auto');
@@ -470,7 +470,7 @@ function oid_add_leading_dot($oid) {
  * @version 2014-12-20
  * @param   string $oid<br />
  *              An OID.
- * @return  string The OID without a leading dot or false if the OID is syntactially wrong.
+ * @return  string|false The OID without a leading dot or false if the OID is syntactially wrong.
  **/
 function oid_remove_leading_dot($oid) {
 	$oid = sanitizeOID($oid, 'auto');
@@ -864,7 +864,7 @@ assert(asn1_to_dot('{  iso 3 }') == '1.3');
  * @version 2020-06-11
  * @param   string $asn1id<br />
  *              An ASN.1 identifier string, e.g. { 2 example(999) test(1) }
- * @return  int The last numeric identifier arc, e.g. "1"
+ * @return  int|false The last numeric identifier arc, e.g. "1" or false if the ID is invalid
  **/
 function asn1_last_identifier($asn1id) {
 	$asn1id = preg_replace('@\(\s*\d+\s*\)@', '', $asn1id);

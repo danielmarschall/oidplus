@@ -76,9 +76,9 @@ class OIDplusRA {
 		OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered, ra_name, personal_name, organization, office, street, zip_town, country, phone, mobile, fax) values (?, ?, ?, ".OIDplus::db()->sqlDate().", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($s_salt, $calc_authkey, $this->email, "", "", "", "", "", "", "", "", "", ""));
 	}
 
-	public function getAuthInfo(): OIDplusRAAuthInfo {
+	public function getAuthInfo()/*: ?OIDplusRAAuthInfo*/ {
 		$ra_res = OIDplus::db()->query("select authkey, salt from ###ra where email = ?", array($this->email));
-		if ($ra_res->num_rows() == 0) return false; // User not found
+		if ($ra_res->num_rows() == 0) return null; // User not found
 		$ra_row = $ra_res->fetch_array();
 
 		return new OIDplusRAAuthInfo($ra_row['salt'], $ra_row['authkey']);
@@ -97,6 +97,8 @@ class OIDplusRA {
 	}
 
 	public function isPasswordLess() {
-		return $this->getAuthInfo()->isPasswordLess();
+		$authInfo = $this->getAuthInfo();
+		if (!$authInfo) return null; // user not found
+		return $authInfo->isPasswordLess();
 	}
 }

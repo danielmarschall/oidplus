@@ -185,12 +185,8 @@ class OIDplusOid extends OIDplusObject {
 		return '<p>'.implode('<br>',$out).'</p>';
 	}
 
-	public function __clone() {
-		return new self($this->oid);
-	}
-
 	public function appendArcs(String $arcs) {
-		$out = clone $this;
+		$out = new self($this->oid);
 
 		if ($out->isRoot()) {
 			$out->oid .= $arcs;
