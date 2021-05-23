@@ -308,8 +308,8 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 								if (!empty($row->title)) {
 									$tmp_description = $row->title;
-									$tmp_information = $row->description;
-									if (trim($row->title) == trim(strip_tags($row->description))) {
+									$tmp_information = $row->description;/** @phpstan-ignore-line */
+									if (trim($row->title) == trim(strip_tags($row->description))) {/** @phpstan-ignore-line */
 										$tmp_information = '';
 									}
 								} else if (isset($asn1_ids[0])) {
@@ -684,8 +684,8 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 				if (!empty($row->title)) {
 					$elements['description'] = $row->title;
-					$elements['information'] = $row->description;
-					if (trim($row->title) == trim(strip_tags($row->description))) {
+					$elements['information'] = $row->description;/** @phpstan-ignore-line */
+					if (trim($row->title) == trim(strip_tags($row->description))) {/** @phpstan-ignore-line */
 						$elements['information'] = '';
 					}
 				} else if (isset($elements['identifier'][0])) {

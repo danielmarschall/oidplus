@@ -44,7 +44,7 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 		try {
 			$x = new COM(self::CLASS_ViaThinkSoftSimpleEventLog);
 			$reason = '?'; // LogSimulate() must actively clear it if everything is OK
-			$x->LogSimulate(self::LOGPROVIDER, self::LOGEVENT_MSG_SUCCESS, 'TEST', $reason);
+			$x->LogSimulate(self::LOGPROVIDER, self::LOGEVENT_MSG_SUCCESS, 'TEST', $reason);/** @phpstan-ignore-line */
 			return $reason != '';
 		} catch (Exception $e) {
 			$reason = $e->getMessage();
@@ -89,7 +89,7 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 				if ($username == 'admin') $admin_severity = $severity;
 			}
 
-			$x->LogEvent(self::LOGPROVIDER, self::convertOIDplusToWindowsSeverity($admin_severity), $event);
+			$x->LogEvent(self::LOGPROVIDER, self::convertOIDplusToWindowsSeverity($admin_severity), $event);/** @phpstan-ignore-line */
 
 			return true;
 		} catch (Exception $e) {
