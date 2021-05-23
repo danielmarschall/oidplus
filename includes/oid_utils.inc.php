@@ -31,13 +31,13 @@ define('OID_DOT_REQUIRED',  2);
  * Checks if an OID has a valid dot notation.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-09
- * @param   $oid (string)<br />
+ * @param   string $oid<br />
  *              An OID in dot notation.
- * @param   $allow_leading_zeroes (bool)<br />
+ * @param   boolean $allow_leading_zeroes<br />
  *              true of leading zeroes are allowed or not.
- * @param   $allow_leading_dot (bool)<br />
+ * @param   boolean $allow_leading_dot<br />
  *              true of leading dots are allowed or not.
- * @return  (bool) true if the dot notation is valid.
+ * @return  boolean true if the dot notation is valid.
  **/
 function oid_valid_dotnotation($oid, $allow_leading_zeroes=true, $allow_leading_dot=false, $min_len=0) {
 	$regex = oid_validation_regex($allow_leading_zeroes, $allow_leading_dot, $min_len);
@@ -50,11 +50,11 @@ function oid_valid_dotnotation($oid, $allow_leading_zeroes=true, $allow_leading_
  * Returns a full regular expression to validate an OID in dot-notation
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-09
- * @param   $allow_leading_zeroes (bool)<br />
+ * @param   boolean $allow_leading_zeroes<br />
  *              true of leading zeroes are allowed or not.
- * @param   $allow_leading_dot (bool)<br />
+ * @param   boolean $allow_leading_dot<br />
  *              true of leading dots are allowed or not.
- * @return  (string) The regular expression
+ * @return  string The regular expression
  **/
 function oid_validation_regex($allow_leading_zeroes=true, $allow_leading_dot=false, $min_len=0) {
 	$leading_dot_policy = $allow_leading_dot ? OID_DOT_OPTIONAL : OID_DOT_FORBIDDEN;
@@ -69,19 +69,19 @@ function oid_validation_regex($allow_leading_zeroes=true, $allow_leading_dot=fal
  * It can be inserted into regular expressions.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-09
- * @param   $min_len (int)<br />
+ * @param   int $min_len<br />
  *              0="." and greater will be recognized, but not ""<br />
  *              1=".2" and greater will be recognized<br />
  *              2=".2.999" and greater will be recognized (default)<br />
  *              etc.
- * @param   $allow_leading_zeroes (bool)<br />
+ * @param   boolean $allow_leading_zeroes<br />
  *              true:  ".2.0999" will be recognized<br />
  *              false: ".2.0999" won't be recognized (default)
- * @param   $leading_dot_policy (int)<br />
+ * @param   int $leading_dot_policy<br />
  *              0 (OID_DOT_FORBIDDEN): forbidden<br />
  *              1 (OID_DOT_OPTIONAL) : optional (default)<br />
  *              2 (OID_DOT_REQUIRED) : enforced
- * @return  (string) A regular expression which matches OIDs in dot notation
+ * @return  string|false A regular expression which matches OIDs in dot notation
  **/
 function oid_part_regex($min_len=2, $allow_leading_zeroes=false, $leading_dot_policy=OID_DOT_OPTIONAL) {
 	switch ($leading_dot_policy) {
@@ -133,24 +133,24 @@ function oid_part_regex($min_len=2, $allow_leading_zeroes=false, $leading_dot_po
  * Searches all OIDs in $text and outputs them as array.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-09
- * @param   $text (string)<br />
+ * @param   string $text<br />
  *              The text to be parsed
- * @param   $min_len (int)<br />
+ * @param   int $min_len<br />
  *              0="." and greater will be recognized, but not ""<br />
  *              1=".2" and greater will be recognized<br />
  *              2=".2.999" and greater will be recognized (default)<br />
  *              etc.
- * @param   $allow_leading_zeroes (bool)<br />
+ * @param   boolean $allow_leading_zeroes<br />
  *              true:  ".2.0999" will be recognized<br />
  *              false: ".2.0999" won't be recognized (default)
- * @param   $leading_dot_policy (int)<br />
+ * @param   int $leading_dot_policy<br />
  *              0 (OID_DOT_FORBIDDEN): forbidden<br />
  *              1 (OID_DOT_OPTIONAL) : optional (default)<br />
  *              2 (OID_DOT_REQUIRED) : enforced
- * @param   $requires_whitespace_delimiters (bool)<br />
+ * @param   boolean $requires_whitespace_delimiters<br />
  *              true:  "2.999" will be recognized, as well as " 2.999 " (default)<br />
  *              false: "2.999!" will be reconigzed, as well as "2.999.c" (this might be used in in documentations with templates)
- * @return  (array<string>) An array of OIDs in dot notation
+ * @return  string[] An array of OIDs in dot notation
  **/
 function parse_oids($text, $min_len=2, $allow_leading_zeroes=false, $leading_dot_policy=OID_DOT_OPTIONAL, $requires_whitespace_delimiters=true) {
 	$regex = oid_detection_regex($min_len, $allow_leading_zeroes, $leading_dot_policy, $requires_whitespace_delimiters);
@@ -164,22 +164,22 @@ function parse_oids($text, $min_len=2, $allow_leading_zeroes=false, $leading_dot
  * Returns a full regular expression for detecting OIDs in dot notation inside a text.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-09
- * @param   $min_len (int)<br />
+ * @param   int $min_len<br />
  *              0="." and greater will be recognized, but not ""<br />
  *              1=".2" and greater will be recognized<br />
  *              2=".2.999" and greater will be recognized (default)<br />
  *              etc.
- * @param   $allow_leading_zeroes (bool)<br />
+ * @param   boolean $allow_leading_zeroes<br />
  *              true:  ".2.0999" will be recognized<br />
  *              false: ".2.0999" won't be recognized (default)
- * @param   $leading_dot_policy (int)<br />
+ * @param   int $leading_dot_policy<br />
  *              0 (OID_DOT_FORBIDDEN): forbidden<br />
  *              1 (OID_DOT_OPTIONAL) : optional (default)<br />
  *              2 (OID_DOT_REQUIRED) : enforced
- * @param   $requires_whitespace_delimiters (bool)<br />
+ * @param   boolean $requires_whitespace_delimiters<br />
  *              true:  "2.999" will be recognized, as well as " 2.999 " (default)<br />
  *              false: "2.999!" will be reconigzed, as well as "2.999.c" (this might be used in in documentations with templates)
- * @return  (string) The regular expression
+ * @return  string The regular expression
  **/
 function oid_detection_regex($min_len=2, $allow_leading_zeroes=false, $leading_dot_policy=OID_DOT_OPTIONAL, $requires_whitespace_delimiters=true) {
 	if ($requires_whitespace_delimiters) {
@@ -202,9 +202,9 @@ function oid_detection_regex($min_len=2, $allow_leading_zeroes=false, $leading_d
  * Leading dots and leading zeroes are tolerated.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-16
- * @param   $oid (string)<br />
+ * @param   string $oid<br />
  *              An OID in dot notation.
- * @return  (string) The parent OID in dot notation.
+ * @return  string|false The parent OID in dot notation.
  **/
 function oid_up($oid) {
 	$oid = sanitizeOID($oid, 'auto');
@@ -221,7 +221,7 @@ function oid_up($oid) {
  * Outputs the depth of an OID.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-09
- * @param   $oid (string) An OID in dot notation (with or without leading dot)
+ * @param   string $oid An OID in dot notation (with or without leading dot)
  * @return  (int) The depth of the OID, e.g. 2.999 and .2.999 has the length 2.
  **/
 function oid_len($oid) {
@@ -239,9 +239,9 @@ function oid_depth($oid) {
  * The OID will not be checked for validity!
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-17
- * @param   $oid (string)<br />
+ * @param   string $oid<br />
  *              An OID in dot notation.
- * @return  (array<string>) An array with all parent OIDs.
+ * @return  string[] An array with all parent OIDs.
  **/
 function oid_parents($oid) {
 	$parents = array();
@@ -267,10 +267,10 @@ assert(oid_parents('') == array());
  * Sorts an array containing OIDs in dot notation.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-09
- * @param   $ary (array<string>)<br />
+ * @param   string[] $ary<br />
  *              An array of OIDs in dot notation.<br />
  *              This array will be changed by this method.
- * @param   $output_with_leading_dot (bool)<br />
+ * @param   boolean $output_with_leading_dot<br />
  *              true: The array will be normalized to OIDs with a leading dot.
  *              false: The array will be normalized to OIDs without a leading dot. (default)
  **/
@@ -280,6 +280,7 @@ function oidSort(&$ary, $output_with_leading_dot=false) {
 	$none = $output_with_leading_dot ? '.' : '';
 
 	$d = array();
+	$oid = null;
 	foreach ($ary as &$oid) {
 		if (($oid == '') || ($oid == '.')) {
 			$out[] = $none;
@@ -294,6 +295,7 @@ function oidSort(&$ary, $output_with_leading_dot=false) {
 	unset($oid);
 	ksort($d);
 
+	$data = null;
 	foreach ($d as $firstarc => &$data) {
 		oidSort($data);
 		foreach ($data as &$rest) {
@@ -309,11 +311,11 @@ function oidSort(&$ary, $output_with_leading_dot=false) {
  * Checks if two OIDs in dot-notation are equal
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2020-05-27
- * @param   $oidA (string)<br />
+ * @param   string $oidA<br />
  *              First OID
- * @param   $oidB (string)<br />
+ * @param   string $oidB<br />
  *              Second OID
- * @return  (bool) True if the OIDs are equal
+ * @return  boolean True if the OIDs are equal
  **/
 function oid_dotnotation_equal($oidA, $oidB) {
 	$oidA = sanitizeOID($oidA, false);
@@ -329,13 +331,13 @@ function oid_dotnotation_equal($oidA, $oidB) {
  * Removes leading zeroes from an OID in dot notation.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2015-08-17
- * @param   $oid (string)<br />
+ * @param   string $oid<br />
  *              An OID in dot notation.
- * @param   $leading_dot (bool)<br />
+ * @param   boolean $leading_dot<br />
  *              true: The OID is valid, if it contains a leading dot.<br />
  *              false (default): The OID is valid, if it does not contain a leading dot.
  *              'auto: Allow both
- * @return  (mixed) The OID without leading dots, or <code>false</code> if the OID is syntactically wrong.
+ * @return  string|false The OID without leading dots, or <code>false</code> if the OID is syntactically wrong.
  **/
 $oid_sanitize_cache = array();
 function sanitizeOID($oid, $leading_dot=false) {
@@ -381,9 +383,9 @@ function sanitizeOID($oid, $leading_dot=false) {
  * This function tolerates leading dots.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-16
- * @param   $oid (string)<br />
+ * @param   string $oid<br />
  *              An OID in dot notation.
- * @return  (mixed) The top arc of the OID or empty string if it is already the root ('.')
+ * @return  string|false The top arc of the OID or empty string if it is already the root ('.')
  **/
 function oid_toparc($oid) {
 	$leadingdot = substr($oid,0,1) == '.';
@@ -410,11 +412,11 @@ function oid_toparc($oid) {
  * This function tolerates leading dots and leading zeroes.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-20
- * @param   $a (string)<br />
+ * @param   string $a<br />
  *              An OID.
- * @param   $b (string)<br />
+ * @param   string $b<br />
  *              An OID.
- * @return  (string) false if both OIDs do not have a child-parent or parent-child relation, e.g. oid_distance('2.999.1.2.3', '2.999.4.5') = false, or if one of the OIDs is syntactially invalid<br />
+ * @return  int|false  false if both OIDs do not have a child-parent or parent-child relation, e.g. oid_distance('2.999.1.2.3', '2.999.4.5') = false, or if one of the OIDs is syntactially invalid<br />
  *              >0 if $a is more specific than $b , e.g. oid_distance('2.999.1.2', '2.999') = 2<br />
  *              <0 if $a is more common than $b , e.g. oid_distance('2.999', '2.999.1.2') = -2
  **/
@@ -449,9 +451,9 @@ assert(oid_distance('2.999', '2.999.1.2') === -2);
  * Leading zeroes are tolerated.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-20
- * @param   $oid (string)<br />
+ * @param   string $oid<br />
  *              An OID.
- * @return  (string) The OID with a leading dot or false if the OID is syntactially wrong.
+ * @return  string The OID with a leading dot or false if the OID is syntactially wrong.
  **/
 function oid_add_leading_dot($oid) {
 	$oid = sanitizeOID($oid, 'auto');
@@ -466,9 +468,9 @@ function oid_add_leading_dot($oid) {
  * Leading zeroes are tolerated.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-20
- * @param   $oid (string)<br />
+ * @param   string $oid<br />
  *              An OID.
- * @return  (string) The OID without a leading dot or false if the OID is syntactially wrong.
+ * @return  string The OID without a leading dot or false if the OID is syntactially wrong.
  **/
 function oid_remove_leading_dot($oid) {
 	$oid = sanitizeOID($oid, 'auto');
@@ -482,9 +484,9 @@ function oid_remove_leading_dot($oid) {
  * Find the common ancestor of two or more OIDs
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2020-05-27
- * @param   $oids (array)<br />
+ * @param   string[] $oids<br />
  *              An array of multiple OIDs, e.g. 2.999.1 and 2.999.2.3.4
- * @return  (mixed) The common ancestor, e.g. 2.999, or false if there is no common ancestor.
+ * @return  string|false The common ancestor, e.g. 2.999, or false if there is no common ancestor.
  **/
 function oid_common_ancestor(array $oids) {
 	$shared = array();
@@ -599,9 +601,9 @@ function iri_arc_valid($arc, $allow_numeric=true) {
  * Checks if an IRI identifier is valid or not.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-17
- * @param   $iri (string)<br />
+ * @param   string $iri<br />
  *              An OID in OID-IRI notation, e.g. /Example/test
- * @return  (bool) true if the IRI identifier is valid.
+ * @return  boolean true if the IRI identifier is valid.
  **/
 function iri_valid($iri) {
 	if ($iri == '/') return true; // OK?
@@ -670,9 +672,9 @@ function iri_get_long_arcs() {
  * Tries to shorten/simplify an IRI by applying "long arcs", e.g. /2/999/123 -> /Example/123 .
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2020-05-22
- * @param   $iri (string)<br />
+ * @param   string $iri<br />
  *              An OID in OID-IRI notation, e.g. /Example/test
- * @return  (string) The modified IRI.
+ * @return  string|false The modified IRI.
  **/
 function iri_add_longarcs($iri) {
 	$iri_long_arcs = iri_get_long_arcs();
@@ -712,10 +714,10 @@ assert(iri_add_longarcs('/2/999/123') === '/Example/123');
  * Checks if an ASN.1 identifier is valid.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2020-05-22
- * @param   $id (string)<br />
+ * @param   string $id<br />
  *              An ASN.1 identifier, e.g. "example". Not "example(99)" or "99" and not a path like "{ 2 999 }"
  *              Note: Use asn1_path_valid() for validating a whole ASN.1 notation path.
- * @return  (bool) true, if the identifier is valid: It begins with an lowercase letter and contains only 0-9, a-z, A-Z and "-"
+ * @return  boolean true, if the identifier is valid: It begins with an lowercase letter and contains only 0-9, a-z, A-Z and "-"
  **/
 function oid_id_is_valid($id) {
 	// see Rec. ITU-T X.660 | ISO/IEC 9834-1, clause 7.7
@@ -731,9 +733,9 @@ function oid_id_is_valid($id) {
  * This function will fail (return false) if there are unresolved symbols, e.g. {iso test} is not valid while { iso 123 } is valid.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-17
- * @param   $asn (string)<br />
+ * @param   string $asn1<br />
  *              An OID in ASN.1 notation.
- * @return  (bools) true if the identifier is valid.
+ * @return  boolean true if the identifier is valid.
  **/
 function asn1_path_valid($asn1) {
 	return asn1_to_dot($asn1) != false;
@@ -803,9 +805,9 @@ function asn1_get_standardized_array() {
  * This function will fail (return false) if there are unresolved symbols, e.g. {iso test} will not be resolved to 1.test
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-17
- * @param   $asn (string)<br />
+ * @param   string $asn<br />
  *              An OID in ASN.1 notation.
- * @return  (string) An OID in dot notation without leading dot or false if the path is invalid.
+ * @return  string|false An OID in dot notation without leading dot or false if the path is invalid.
  **/
 function asn1_to_dot($asn) {
 	$standardized = asn1_get_standardized_array();
@@ -860,9 +862,9 @@ assert(asn1_to_dot('{  iso 3 }') == '1.3');
  * Gets the last numeric identifier of an ASN.1 notation OID.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2020-06-11
- * @param   $asn1id (string)<br />
+ * @param   string $asn1id<br />
  *              An ASN.1 identifier string, e.g. { 2 example(999) test(1) }
- * @return  (int) The last numeric identifier arc, e.g. "1"
+ * @return  int The last numeric identifier arc, e.g. "1"
  **/
 function asn1_last_identifier($asn1id) {
 	$asn1id = preg_replace('@\(\s*\d+\s*\)@', '', $asn1id);
@@ -877,12 +879,12 @@ function asn1_last_identifier($asn1id) {
  * Attention, by "soft correcting" the ID, it is not authoritative anymore, and might not be able to be resolved by ORS.
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2020-05-22
- * @param   $id (string)<br />
+ * @param   string $id<br />
  *              An ASN.1 identifier.
- * @param   $append_id_prefix (bool)<br />
+ * @param   boolean $append_id_prefix<br />
  *              true (default): If the identifier doesn't start with a-Z, the problem will be solved by prepending "id-" to the identifier.<br />
  *              false: If the identifier doesn't start with a-Z, then the problem cannot be solved (method returns empty string).
- * @return  (string) The "soft corrected" ASN.1 identifier.<br />
+ * @return  string The "soft corrected" ASN.1 identifier.<br />
  *              Invalid characters will be removed.<br />
  *              Uncorrectable start elements (0-9 or "-") will be either removed or solved by prepending "id-" (see <code>$append_id_prefix</code>)<br />
  *              If the identifier begins with an upper case letter, the letter will be converted into lower case.
