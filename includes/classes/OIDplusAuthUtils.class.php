@@ -94,6 +94,7 @@ class OIDplusAuthUtils {
 		$ra = new OIDplusRA($ra_email);
 
 		$authInfo = $ra->getAuthInfo();
+		if (!$authInfo) return false; // user not found
 
 		$plugins = OIDplus::getAuthPlugins();
 		if (count($plugins) == 0) {
