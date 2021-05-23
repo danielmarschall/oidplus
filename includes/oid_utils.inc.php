@@ -222,7 +222,7 @@ function oid_up($oid) {
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2014-12-09
  * @param   string $oid An OID in dot notation (with or without leading dot)
- * @return  (int) The depth of the OID, e.g. 2.999 and .2.999 has the length 2.
+ * @return  int The depth of the OID, e.g. 2.999 and .2.999 has the length 2.
  **/
 function oid_len($oid) {
 	if ($oid == '') return 0;
@@ -641,7 +641,7 @@ assert(!iri_valid('/hello/-super-/sd'));
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2018-01-05
  * @see http://itu.int/go/X660
- * @return  (array) An associative array in the form 'ASN.1' => '/2/1' .
+ * @return array<string,string> An associative array in the form 'ASN.1' => '/2/1' .
  **/
 function iri_get_long_arcs() {
 	$iri_long_arcs = array();
@@ -747,7 +747,7 @@ function asn1_path_valid($asn1) {
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2019-03-25
  * @see http://www.oid-info.com/name-forms.htm
- * @return  (array) Associative array of standardized ASN.1 alphanumeric identifiers
+ * @return  array<string,string> Associative array of standardized ASN.1 alphanumeric identifiers
  **/
 function asn1_get_standardized_array() {
 

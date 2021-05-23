@@ -357,7 +357,7 @@ class phpsvnclient {
 	 *
 	 *  @param string  $folder Folder to get data
 	 *  @param integer $version Repository version, -1 means actual
-	 *  @return array SVN data dump.
+	 *  @return SimpleXMLElement SVN data dump.
 	 */
 	private function rawDirectoryDump($folder = '/trunk/', $version = -1)
 	{
@@ -395,7 +395,7 @@ class phpsvnclient {
 	 *
 	 *  @param string  $folder Folder to get files
 	 *  @param integer $version Repository version, -1 means actual
-	 *  @return array List of files.
+	 *  @return array<array<string,string>> List of files.
 	 */
 	private function getDirectoryFiles($folder = '/trunk/', $version = -1)
 	{
@@ -516,7 +516,7 @@ class phpsvnclient {
 	 *  @param boolean $recursive Whether to get the tree recursively, or just
 	 *  the specified directory/file.
 	 *
-	 *  @return array|false List of files and directories.
+	 *  @return array<string,string>|array<array<string,string>>|false List of files and directories.
 	 */
 	private function getDirectoryTree($folder = '/trunk/', $version = -1, $recursive = true)
 	{
@@ -805,9 +805,10 @@ class phpsvnclient {
 	/**
 	 *  Prepare HTTP CLIENT object
 	 *
-	 *  @param array $arguments Byreferences variable.
+	 *  @param array<string,string|array<string,string>> $arguments Byreferences variable.
 	 *  @param string $method Method for the request (GET,POST,PROPFIND, REPORT,ETC).
 	 *  @param string $url URL for the action.
+	 *  @return void
 	 *  @access private
 	 */
 	private function initQuery(&$arguments, $method, $url)
@@ -823,8 +824,8 @@ class phpsvnclient {
 	 *  Open a connection, send request, read header
 	 *  and body.
 	 *
-	 *  @param Array $args Connetion's argument
-	 *  @param Array $headers Array with the header response.
+	 *  @param Array<string,string> $args Connetion's argument
+	 *  @param Array<string,string> $headers Array with the header response.
 	 *  @param string $body Body response.
 	 *  @return boolean True is query success
 	 *  @access private
@@ -880,6 +881,9 @@ class phpsvnclient {
 		return preg_replace("/((^:)\/\/)/", "//", $url);
 	}
 
+	/**
+	* @return SimpleXMLElement
+	*/
 	private static function xmlParse($strInputXML) {
 		$strInputXML = preg_replace('@<([^>]+):@ismU','<\\1__',$strInputXML);
 		return simplexml_load_string($strInputXML);
