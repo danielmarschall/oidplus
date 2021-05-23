@@ -7,6 +7,13 @@
 # svn propget svn:ignore */*/*/*/* 2>/dev/null
 # ...
 
+# Recommendation in https://phpstan.org/config-reference
+# "The usual practice is to have phpstan.neon.dist under version control,
+# and allow the user to override certain settings in their environment
+# (on their own computer or on a continuous integration server) by creating
+# phpstan.neon that’s present in .gitignore file."
+phpstan.neon
+
 # (ViaThinkSoft internal)
 dev/oidplus_1_with_token.html
 
