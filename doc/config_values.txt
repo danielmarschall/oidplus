@@ -308,7 +308,7 @@ OIDplus::baseConfig()->setValue('JWT_ALLOW_LOGIN_USER', true);
 Old 2.0 format:          (Not available)
                          Allow "Remember me" logins for a RA.
 
-OIDplus::baseConfig()->setValue('JWT_ALLOW_MANUAL', true);
+OIDplus::baseConfig()->setValue('JWT_ALLOW_MANUAL', false);
 Old 2.0 format:          (Not available)
                          Allow JWT tokens which were manually created "by hand".
                          These can have any content you like, but they must

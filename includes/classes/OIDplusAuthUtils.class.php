@@ -48,157 +48,46 @@ class OIDplusAuthUtils {
 		return hex2bin($a);
 	}
 
-	// JWT handling
-
-	const JWT_GENERATOR_AJAX   = 0;
-	const JWT_GENERATOR_LOGIN  = 1;
-	const JWT_GENERATOR_MANUAL = 2;
-
-	private function jwtGetBlacklistConfigKey($gen, $sub) {
-		// Note: Needs to be <= 50 characters!
-		return 'jwt_blacklist_gen('.$gen.')_sub('.trim(base64_encode(md5($sub,true)),'=').')';
-	}
-
-	public function jwtBlacklist($gen, $sub) {
-		$cfg = $this->jwtGetBlacklistConfigKey($gen, $sub);
-		$bl_time = time()-1;
-
-		$gen_desc = 'Unknown';
-		if ($gen === self::JWT_GENERATOR_AJAX)   $gen_desc = 'Automated AJAX calls';
-		if ($gen === self::JWT_GENERATOR_LOGIN)  $gen_desc = 'Login ("Remember me")';
-		if ($gen === self::JWT_GENERATOR_MANUAL) $gen_desc = 'Manually created';
-
-		OIDplus::config()->prepareConfigKey($cfg, 'Revoke timestamp of all JWT tokens for $sub with generator $gen ($gen_desc)', $bl_time, OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
-		OIDplus::config()->setValue($cfg, $bl_time);
-	}
-
-	public function jwtGetBlacklistTime($gen, $sub) {
-		$cfg = $this->jwtGetBlacklistConfigKey($gen, $sub);
-		return OIDplus::config()->getValue($cfg,0);
-	}
-
-	protected function jwtSecurityCheck($contentProvider) {
-		// Check if the token is intended for us
-		if ($contentProvider->getValue('aud','') !== "http://oidplus.com") {
-			throw new OIDplusException(_L('Token has wrong audience'));
-		}
-		$gen = $contentProvider->getValue('oidplus_generator', -1);
-		$sub = $contentProvider->getValue('sub', '');
-
-		// Check if the token generator is allowed
-		if ($gen === self::JWT_GENERATOR_AJAX) {
-			if (($sub === 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_ADMIN', true)) {
-				// Generator: plugins/adminPages/910_automated_ajax_calls/OIDplusPageAdminAutomatedAJAXCalls.class.php
-				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_ADMIN'));
-			}
-			else if (($sub !== 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_USER', true)) {
-				// Generator: plugins/raPages/910_automated_ajax_calls/OIDplusPageRaAutomatedAJAXCalls.class.php
-				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_USER'));
-			}
-		}
-		else if ($gen === self::JWT_GENERATOR_LOGIN) {
-			// Used for feature "Remember me" (use JWT token in a cookie as alternative to PHP session):
-			// - No PHP session will be used
-			// - Session will not be bound to IP address (therefore, you can switch between mobile/WiFi for example)
-			// - No server-side session needed
-			if (($sub === 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) {
-				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_ADMIN'));
-			}
-			else if (($sub !== 'admin') && !OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
-				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_USER'));
-			}
-		}
-		else if ($gen === self::JWT_GENERATOR_MANUAL) {
-			// Generator 2 are "hand-crafted" tokens
-			if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_MANUAL', true)) {
-				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_MANUAL'));
-			}
-		} else {
-			throw new OIDplusException(_L('Token generator %1 not recognized',$gen));
-		}
-
-		// Make sure that the IAT (issued at time) isn't in a blacklisted timeframe
-		// When an user believes that a token was compromised, then they can blacklist the tokens identified by their "iat" ("Issued at") property
-		$bl_time = $this->jwtGetBlacklistTime($gen, $sub);
-		$iat = $contentProvider->getValue('iat',0);
-		if ($iat <= $bl_time) {
-			throw new OIDplusException(_L('The JWT token was blacklisted on %1. Please generate a new one',date('d F Y, H:i:s',$bl_time)));
-		}
-
-		// Optional feature: Limit the JWT to a specific IP address
-		// This could become handy if JWTs are used instead of Login sessions,
-		// and you want to avoid session/JWT hijacking
-		$ip = $contentProvider->getValue('ip','');
-		if ($ip !== '') {
-			if (isset($_SERVER['REMOTE_ADDR']) && ($ip !== $_SERVER['REMOTE_ADDR'])) {
-				throw new OIDplusException(_L('Your IP address is not allowed to use this token'));
-			}
-		}
-
-		// Checks which are dependent on the generator
-		if ($gen === self::JWT_GENERATOR_LOGIN) {
-			if (!isset($_COOKIE['OIDPLUS_AUTH_JWT'])) {
-				throw new OIDplusException(_L('This kind of JWT token can only be used with the %1 request type','COOKIE'));
-			}
-		}
-		if ($gen === self::JWT_GENERATOR_AJAX) {
-			if (!isset($_GET['OIDPLUS_AUTH_JWT']) && !isset($_POST['OIDPLUS_AUTH_JWT'])) {
-				throw new OIDplusException(_L('This kind of JWT token can only be used with the %1 request type','GET/POST'));
-			}
-			if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) {
-				throw new OIDplusException(_L('This kind of JWT token can only be used in ajax.php'));
-			}
-		}
-	}
-
 	// Content provider
 
+	public function getAuthMethod() {
+		$acs = $this->getAuthContentStore();
+		if (is_null($acs)) return 'null';
+		return get_class($acs);
+	}
+
 	protected function getAuthContentStore() {
-		static $contentProvider = null;
+		// Logged in via JWT
+		$tmp = OIDplusAuthContentStoreJWT::getActiveProvider();
+		if ($tmp) return $tmp;
 
-		if (is_null($contentProvider)) {
-			$jwt = '';
-			if (isset($_COOKIE['OIDPLUS_AUTH_JWT'])) $jwt = $_COOKIE['OIDPLUS_AUTH_JWT'];
-			if (isset($_POST['OIDPLUS_AUTH_JWT']))   $jwt = $_POST['OIDPLUS_AUTH_JWT'];
-			if (isset($_GET['OIDPLUS_AUTH_JWT']))    $jwt = $_GET['OIDPLUS_AUTH_JWT'];
+		// Normal login via web-browser
+		// Cookie will only be created once content is stored
+		$tmp = OIDplusAuthContentStoreSession::getActiveProvider();
+		if ($tmp) return $tmp;
 
-			if (!empty($jwt)) {
-				$contentProvider = new OIDplusAuthContentStoreJWT();
+		// No active session and no JWT token available. User is not logged in.
+		return null;
+	}
 
-				try {
-					// Decode the JWT. In this step, the signature as well as EXP/NBF times will be checked
-					$contentProvider->loadJWT($jwt);
-
-					// Do various checks if the token is allowed and not blacklisted
-					$this->jwtSecurityCheck($contentProvider);
-				} catch (Exception $e) {
-					if (isset($_GET['OIDPLUS_AUTH_JWT']) || isset($_POST['OIDPLUS_AUTH_JWT'])) {
-						// Most likely an AJAX request. We can throw an Exception
-						$contentProvider = null;
-						throw new OIDplusException(_L('The JWT token was rejected: %1',$e->getMessage()));
-					} else {
-						// Most likely an expired Cookie/Login session. We must not throw an Exception, otherwise we will break jsTree
-						$contentProvider = new OIDplusAuthContentStoreSession();
-						OIDplus::cookieUtils()->unsetcookie('OIDPLUS_AUTH_JWT');
-					}
-				}
-			} else {
-				// Normal login via web-browser
-				$contentProvider = new OIDplusAuthContentStoreSession();
-			}
-		}
-
-		return $contentProvider;
+	public function getExtendedAttribute($name, $default=NULL) {
+		$acs = $this->getAuthContentStore();
+		if (is_null($acs)) return $default;
+		return $acs->getValue($name, $default);
 	}
 
 	// RA authentication functions
 
 	public function raLogin($email) {
-		return $this->getAuthContentStore()->raLogin($email);
+		$acs = $this->getAuthContentStore();
+		if (is_null($acs)) return;
+		return $acs->raLogin($email);
 	}
 
 	public function raLogout($email) {
-		return $this->getAuthContentStore()->raLogout($email);
+		$acs = $this->getAuthContentStore();
+		if (is_null($acs)) return;
+		return $acs->raLogout($email);
 	}
 
 	public function raCheckPassword($ra_email, $password) {
@@ -218,33 +107,89 @@ class OIDplusAuthUtils {
 	}
 
 	public function raNumLoggedIn() {
-		return $this->getAuthContentStore()->raNumLoggedIn();
-	}
-
-	public function raLogoutAll() {
-		return $this->getAuthContentStore()->raLogoutAll();
+		$acs = $this->getAuthContentStore();
+		if (is_null($acs)) return 0;
+		return $acs->raNumLoggedIn();
 	}
 
 	public function loggedInRaList() {
-		if (OIDplus::authUtils()->forceAllLoggedOut()) {
+		if ($this->forceAllLoggedOut()) {
 			return array();
 		} else {
-				return $this->getAuthContentStore()->loggedInRaList();
+			$acs = $this->getAuthContentStore();
+			if (is_null($acs)) return array();
+			return $acs->loggedInRaList();
 		}
 	}
 
 	public function isRaLoggedIn($email) {
-			return $this->getAuthContentStore()->isRaLoggedIn($email);
+		$acs = $this->getAuthContentStore();
+		if (is_null($acs)) return false;
+		return $acs->isRaLoggedIn($email);
+	}
+
+	// "High level" function including logging and checking for valid JWT alternations
+	public function raLoginEx($email, $remember_me, $origin) {
+		$loginfo = '';
+		$acs = $this->getAuthContentStore();
+		if (!is_null($acs)) {
+			$acs->raLoginEx($email, $loginfo);
+			$acs->activate();
+		} else {
+			if ($remember_me) {
+				if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
+					throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_USER'));
+				}
+				$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_USER', 10*365*24*60*60);
+				$authSimulation = new OIDplusAuthContentStoreJWT();
+				$authSimulation->raLoginEx($email, $loginfo);
+				$authSimulation->setValue('oidplus_generator', OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
+				$authSimulation->setValue('exp', time()+$ttl); // JWT "exp" attribute
+				$authSimulation->activate();
+			} else {
+				$authSimulation = new OIDplusAuthContentStoreSession();
+				$authSimulation->raLoginEx($email, $loginfo);
+				$authSimulation->activate();
+			}
+		}
+		$logmsg = "RA '$email' logged in";
+		if ($origin != '') $logmsg .= " via $origin";
+		if ($loginfo != '') $logmsg .= " ($loginfo)";
+		OIDplus::logger()->log("[OK]RA($email)!", $logmsg);
+	}
+
+	public function raLogoutEx($email) {
+		$loginfo = '';
+
+		$acs = $this->getAuthContentStore();
+		if (is_null($acs)) return;
+		$res = $acs->raLogoutEx($email, $loginfo);
+
+		OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged out ($loginfo)");
+
+		if (($this->raNumLoggedIn() == 0) && (!$this->isAdminLoggedIn())) {
+			// Nobody logged in anymore. Destroy session cookie to make GDPR people happy
+			$acs->destroySession();
+		} else {
+			// Get a new token for the remaining users
+			$acs->activate();
+		}
+
+		return $res;
 	}
 
 	// Admin authentication functions
 
 	public function adminLogin() {
-		return $this->getAuthContentStore()->adminLogin();
+		$acs = $this->getAuthContentStore();
+		if (is_null($acs)) return;
+		return $acs->adminLogin();
 	}
 
 	public function adminLogout() {
-		return $this->getAuthContentStore()->adminLogout();
+		$acs = $this->getAuthContentStore();
+		if (is_null($acs)) return;
+		return $acs->adminLogout();
 	}
 
 	public function adminCheckPassword($password) {
@@ -270,11 +215,62 @@ class OIDplusAuthUtils {
 	}
 
 	public function isAdminLoggedIn() {
-		if (OIDplus::authUtils()->forceAllLoggedOut()) {
+		if ($this->forceAllLoggedOut()) {
 			return false;
 		} else {
-				return $this->getAuthContentStore()->isAdminLoggedIn();
+			$acs = $this->getAuthContentStore();
+			if (is_null($acs)) return false;
+			return $acs->isAdminLoggedIn();
 		}
+	}
+
+	// "High level" function including logging and checking for valid JWT alternations
+	public function adminLoginEx($remember_me, $origin) {
+		$loginfo = '';
+		$acs = $this->getAuthContentStore();
+		if (!is_null($acs)) {
+			$acs->adminLoginEx($loginfo);
+			$acs->activate();
+		} else {
+			if ($remember_me) {
+				if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) {
+					throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_ADMIN'));
+				}
+				$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_ADMIN', 10*365*24*60*60);
+				$authSimulation = new OIDplusAuthContentStoreJWT();
+				$authSimulation->adminLoginEx($loginfo);
+				$authSimulation->setValue('oidplus_generator', OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
+				$authSimulation->setValue('exp', time()+$ttl); // JWT "exp" attribute
+				$authSimulation->activate();
+			} else {
+				$authSimulation = new OIDplusAuthContentStoreSession();
+				$authSimulation->adminLoginEx($loginfo);
+				$authSimulation->activate();
+			}
+		}
+		$logmsg = "Admin logged in";
+		if ($origin != '') $logmsg .= " via $origin";
+		if ($loginfo != '') $logmsg .= " ($loginfo)";
+		OIDplus::logger()->log("[OK]A!", $logmsg);
+	}
+
+	public function adminLogoutEx() {
+		$loginfo = '';
+
+		$acs = $this->getAuthContentStore();
+		if (is_null($acs)) return;
+		$res = $acs->adminLogoutEx($loginfo);
+
+		if ($this->raNumLoggedIn() == 0) {
+			// Nobody here anymore. Destroy the cookie to make GDPR people happy
+			$acs->destroySession();
+		} else {
+			// Get a new token for the remaining users
+			$acs->activate();
+		}
+
+		OIDplus::logger()->log("[OK]A!", "Admin logged out ($loginfo)");
+		return $res;
 	}
 
 	// Authentication keys for validating arguments (e.g. sent by mail)
@@ -291,7 +287,7 @@ class OIDplusAuthUtils {
 
 	// "Veto" functions to force logout state
 
-	public static function forceAllLoggedOut() {
+	protected function forceAllLoggedOut() {
 		if (isset($_SERVER['SCRIPT_FILENAME']) && (basename($_SERVER['SCRIPT_FILENAME']) == 'sitemap.php')) {
 			// The sitemap may not contain any confidential information,
 			// even if the user is logged in, because the admin could
@@ -342,6 +338,6 @@ class OIDplusAuthUtils {
 
 	// Generate admin password
 
-	/* Nothing here; the admin password will be generated in setup_base.js */
+	/* Nothing here; the admin password will be generated in setup_base.js , purely in the web-browser */
 
 }

@@ -34,10 +34,10 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_ADMIN'));
 			}
 
-			$gen = OIDplusAuthUtils::JWT_GENERATOR_AJAX;
+			$gen = OIDplusAuthContentStoreJWT::JWT_GENERATOR_AJAX;
 			$sub = 'admin';
 
-			OIDplus::authUtils()->jwtBlacklist($gen, $sub);
+			OIDplusAuthContentStoreJWT::jwtBlacklist($gen, $sub);
 
 			return array("status" => 0);
 		} else {
@@ -62,14 +62,13 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$gen = OIDplusAuthUtils::JWT_GENERATOR_AJAX;
+			$gen = OIDplusAuthContentStoreJWT::JWT_GENERATOR_AJAX;
 			$sub = 'admin';
 
 			$authSimulation = new OIDplusAuthContentStoreJWT();
 			$authSimulation->adminLogin();
 			$authSimulation->setValue('oidplus_generator', $gen);
-			$authSimulation->setValue('sub', $sub); // JWT "sub" attribute
-			$token = $authSimulation->GetJWTToken();
+			$token = $authSimulation->getJWTToken();
 
 			$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling the AJAX API.').'</p>';
 			$out['text'] .= '<p>'._L('The URL for the AJAX script is:').'</p>';
@@ -83,7 +82,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<p>'._L('Currently, there is no documentation for the AJAX calls. However, you can look at the <b>script.js</b> files of the plugins to see the field names being used. You can also enable network analysis in your web browser debugger (F12) to see the request headers sent to the server during the operation of OIDplus.').'</p>';
 
 			$out['text'] .= '<h2>'._L('Blacklisted tokens').'</h2>';
-			$bl_time = OIDplus::authUtils()->jwtGetBlacklistTime($gen, $sub);
+			$bl_time = OIDplusAuthContentStoreJWT::jwtGetBlacklistTime($gen, $sub);
 			if ($bl_time == 0) {
 				$out['text'] .= '<p>'._L('None of the previously generated JWT tokens have been blacklisted.').'</p>';
 			} else {

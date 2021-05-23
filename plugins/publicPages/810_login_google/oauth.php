@@ -75,6 +75,7 @@ try {
 	// Note: We do not need to verify the signature because the token comes directly from Google,
 	//       but we do it anyway. Just to be sure!
 	$verification_certs = json_decode(file_get_contents('https://www.googleapis.com/oauth2/v1/certs'), true);
+	\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
 	$data = (array) \Firebase\JWT\JWT::decode($id_token, $verification_certs, array('ES256', 'RS256', 'RS384', 'RS512'));
 	if (($data === false) || !isset($data['iss']) || ($data['iss'] !== 'https://accounts.google.com')) {
 		throw new OIDplusException(_L('JWT token could not be decoded'));
@@ -114,8 +115,7 @@ try {
 			OIDplus::logger()->log("[INFO]RA($email)!", "RA '$email' was created because of successful Google OAuth2 login");
 		}
 
-		OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged in via Google OAuth2");
-		OIDplus::authUtils()->raLogin($email);
+		OIDplus::authUtils()->raLoginEx($email, $remember_me=false, 'Google-OAuth2');
 
 		OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 

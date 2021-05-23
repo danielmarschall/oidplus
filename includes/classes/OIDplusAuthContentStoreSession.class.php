@@ -21,7 +21,7 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 
-	protected function getSessionHandler() {
+	protected static function getSessionHandler() {
 		static $sesHandler = null;
 		if (is_null($sesHandler)) {
 			$sesHandler = new OIDplusSessionHandler();
@@ -30,26 +30,71 @@ class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 	}
 
 	// Override abstract functions
+	# TODO: shouldn't we just include OIDplusSessionHandler in this class?
 
 	public function getValue($name, $default = NULL) {
-		return $this->getSessionHandler()->getValue($name, $default);
-
+		return self::getSessionHandler()->getValue($name, $default);
 	}
 
 	public function setValue($name, $value) {
-		return $this->getSessionHandler()->setValue($name, $value);
+		return self::getSessionHandler()->setValue($name, $value);
 	}
 
 	public function exists($name) {
-		return $this->getSessionHandler()->exists($name);
+		return self::getSessionHandler()->exists($name);
 	}
 
 	public function delete($name) {
-		return $this->getSessionHandler()->delete($name);
+		return self::getSessionHandler()->delete($name);
 	}
 
-	protected function destroySession() {
-		return $this->getSessionHandler()->destroySession();
+	public function destroySession() {
+		return self::getSessionHandler()->destroySession();
+	}
+
+	public static function getActiveProvider() {
+		static $contentProvider = null;
+
+		if (!$contentProvider) {
+			if (self::getSessionHandler()->isActive()) {
+				$contentProvider = new OIDplusAuthContentStoreSession();
+			}
+		}
+
+		return $contentProvider;
+	}
+
+	public function raLoginEx($email, &$loginfo) {
+		$this->raLogin($email);
+		if (is_null(self::getActiveProvider())) {
+			$loginfo = 'into new PHP session';
+		} else {
+			$loginfo = 'into existing PHP session';
+		}
+	}
+
+	public function adminLoginEx(&$loginfo) {
+		$this->adminLogin();
+		if (is_null(self::getActiveProvider())) {
+			$loginfo = 'into new PHP session';
+		} else {
+			$loginfo = 'into existing PHP session';
+		}
+	}
+
+	public function raLogoutEx($email, &$loginfo) {
+		$this->raLogout($email);
+		$loginfo = 'from PHP session';
+	}
+
+	public function adminLogoutEx(&$loginfo) {
+		$this->adminLogout();
+		$loginfo = 'from PHP session';
+	}
+
+	public function activate() {
+		# Sessions automatically activate during setValue()
+		return;
 	}
 
 }

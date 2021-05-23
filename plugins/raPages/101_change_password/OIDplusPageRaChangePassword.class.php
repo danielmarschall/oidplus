@@ -39,6 +39,8 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				_CheckParamExists($params, 'old_password');
 				$old_password = $params['old_password'];
+			} else {
+				$old_password = '';
 			}
 
 			_CheckParamExists($params, 'new_password1');

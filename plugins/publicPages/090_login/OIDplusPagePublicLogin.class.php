@@ -47,19 +47,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			}
 
 			if ($ra->checkPassword($params['password'])) {
-				OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged in");
-
-				if (isset($params['remember_me']) && ($params['remember_me'])) {
-					$authSimulation = new OIDplusAuthContentStoreJWT();
-					$authSimulation->raLogin($email);
-					$authSimulation->setValue('oidplus_generator', OIDplusAuthUtils::JWT_GENERATOR_LOGIN);
-					$authSimulation->setValue('sub', $email); // JWT "sub" attribute
-					$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_USER', 10*365*24*60*60);
-					$token = $authSimulation->GetJWTToken($ttl);
-					OIDplus::cookieUtils()->setcookie('OIDPLUS_AUTH_JWT', $token, time()+$ttl, false);
-				} else {
-					OIDplus::authUtils()->raLogin($email);
-				}
+				$remember_me = isset($params['remember_me']) && ($params['remember_me']);
+				OIDplus::authUtils()->raLoginEx($email, $remember_me, 'Regular login');
 
 				OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 
@@ -81,14 +70,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 			$email = $params['email'];
 
-			OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged out");
-
-			if (isset($_COOKIE['OIDPLUS_AUTH_JWT'])) {
-				OIDplus::cookieUtils()->unsetcookie('OIDPLUS_AUTH_JWT');
-				OIDplus::authUtils()->jwtBlacklist(OIDplusAuthUtils::JWT_GENERATOR_LOGIN, $email);
-			} else {
-				OIDplus::authUtils()->raLogout($email);
-			}
+			OIDplus::authUtils()->raLogoutEx($email);
 
 			return array("status" => 0);
 		}
@@ -109,19 +91,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 			_CheckParamExists($params, 'password');
 			if (OIDplus::authUtils()->adminCheckPassword($params['password'])) {
-				OIDplus::logger()->log("[OK]A!", "Admin logged in");
-
-				if (isset($params['remember_me']) && ($params['remember_me'])) {
-					$authSimulation = new OIDplusAuthContentStoreJWT();
-					$authSimulation->adminLogin();
-					$authSimulation->setValue('oidplus_generator', OIDplusAuthUtils::JWT_GENERATOR_LOGIN);
-					$authSimulation->setValue('sub', 'admin'); // JWT "sub" attribute
-					$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_ADMIN', 10*365*24*60*60);
-					$token = $authSimulation->GetJWTToken($ttl);
-					OIDplus::cookieUtils()->setcookie('OIDPLUS_AUTH_JWT', $token, time()+$ttl, false);
-				} else {
-					OIDplus::authUtils()->adminLogin();
-				}
+				$remember_me = isset($params['remember_me']) && ($params['remember_me']);
+				OIDplus::authUtils()->adminLoginEx($remember_me, 'Regular login');
 
 				// TODO: Write a "last login" entry in config table?
 
@@ -134,14 +105,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			}
 		}
 		else if ($actionID == 'admin_logout') {
-			OIDplus::logger()->log("[OK]A!", "Admin logged out");
-
-			if (isset($_COOKIE['OIDPLUS_AUTH_JWT'])) {
-				OIDplus::cookieUtils()->unsetcookie('OIDPLUS_AUTH_JWT');
-				OIDplus::authUtils()->jwtBlacklist(OIDplusAuthUtils::JWT_GENERATOR_LOGIN, 'admin');
-			} else {
-				OIDplus::authUtils()->adminLogout();
-			}
+			OIDplus::authUtils()->adminLogoutEx();
 
 			return array("status" => 0);
 		}
@@ -214,7 +178,18 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$tabcont .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" name="email" value="'.htmlentities($desired_ra).'" id="raLoginEMail"></div>';
 			$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginPassword"></div>';
 			if (OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
-				$tabcont .= '<div><input type="checkbox" value="1" id="remember_me_ra" name="remember_me_ra"> <label for="remember_me_ra">'._L('Remember me').'</label></div>';
+				if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreJWT::class)) {
+					if (OIDplus::authUtils()->getExtendedAttribute('oidplus_generator',-1) === OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN) {
+						$att = 'disabled checked';
+					} else {
+						$att = 'disabled';
+					}
+				} else if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreSession::class)) {
+					$att = 'disabled';
+				} else {
+					$att = '';
+				}
+				$tabcont .= '<div><input '.$att.' type="checkbox" value="1" id="remember_me_ra" name="remember_me_ra"> <label for="remember_me_ra">'._L('Remember me').'</label></div>';
 			}
 			$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
 			$tabcont .= '</form>';
@@ -261,7 +236,18 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				$tabcont .= '<form action="javascript:void(0);" onsubmit="return OIDplusPagePublicLogin.adminLoginOnSubmit(this);">';
 				$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="adminLoginPassword"></div>';
 				if (OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) {
-					$tabcont .= '<div><input type="checkbox" value="1" id="remember_me_admin" name="remember_me_admin"> <label for="remember_me_admin">'._L('Remember me').'</label></div>';
+					if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreJWT::class)) {
+						if (OIDplus::authUtils()->getExtendedAttribute('oidplus_generator',-1) === OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN) {
+							$att = 'disabled checked';
+						} else {
+							$att = 'disabled';
+						}
+					} else if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreSession::class)) {
+						$att = 'disabled';
+					} else {
+						$att = '';
+					}
+					$tabcont .= '<div><input '.$att.' type="checkbox" value="1" id="remember_me_admin" name="remember_me_admin"> <label for="remember_me_admin">'._L('Remember me').'</label></div>';
 				}
 				$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
 				$tabcont .= '</form>';

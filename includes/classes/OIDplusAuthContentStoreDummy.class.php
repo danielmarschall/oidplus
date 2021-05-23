@@ -19,11 +19,12 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusAuthContentStoreDummy extends OIDplusAuthContentStore {
+# TODO: Rename class?
+abstract class OIDplusAuthContentStoreDummy extends OIDplusAuthContentStore {
 
 	protected $content = array();
 
-	// Override abstract functions
+	// Override some abstract functions
 
 	public function getValue($name, $default = NULL) {
 		return isset($this->content[$name]) ? $this->content[$name] : $default;
@@ -39,10 +40,6 @@ class OIDplusAuthContentStoreDummy extends OIDplusAuthContentStore {
 
 	public function delete($name) {
 		unset($this->content[$name]);
-	}
-
-	protected function destroySession() {
-		// Nothing to do
 	}
 
 }

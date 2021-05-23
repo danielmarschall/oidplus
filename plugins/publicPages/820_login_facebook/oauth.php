@@ -100,8 +100,7 @@ if (!empty($email)) {
 		OIDplus::logger()->log("[INFO]RA($email)!", "RA '$email' was created because of successful Facebook OAuth2 login");
 	}
 
-	OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged in via Facebook OAuth2");
-	OIDplus::authUtils()->raLogin($email);
+	OIDplus::authUtils()->raLoginEx($email, $remember_me=false, 'Facebook-OAuth2');
 
 	OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 

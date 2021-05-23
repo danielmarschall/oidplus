@@ -3,6 +3,7 @@ RECENT STUFF
 - At a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Default language selection: Either always en-US, or automatical selection depending on browser language, or depending on admin setting (e.g. german companies offer a german repository by default)?
+- Check code with PHPStan level 1, 2, 3, ...
 
 SECURITY Improvements:
 - Make attachment upload path configurable
