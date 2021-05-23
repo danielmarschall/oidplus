@@ -73,7 +73,6 @@ class VtsBrowserDownload {
 
 			default:
 				throw new Exception('Invalid value for inline_mode');
-				break;
 		}
 
 		if(ini_get('zlib.output_compression')){

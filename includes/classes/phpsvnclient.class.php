@@ -119,7 +119,7 @@ class phpsvnclient {
 
 	/**
 	 * Function for creating directories.
-	 * @param $path (string) The path to the directory that will be created.
+	 * @param string $path The path to the directory that will be created.
 	 */
 	private function createDirs($path)
 	{
@@ -135,8 +135,8 @@ class phpsvnclient {
 
 	/**
 	 * Function for the recursive removal of directories.
-	 * @param $path (string) The path to the directory to be deleted.
-	 * @return (string) Returns the status of a function or function rmdir unlink.
+	 * @param string $path The path to the directory to be deleted.
+	 * @return boolean Returns the status of a function or function rmdir unlink.
 	 */
 	private function removeDirs($path)
 	{
@@ -162,13 +162,14 @@ class phpsvnclient {
 
 	/**
 	* Updates a working copy
-	* @param $from_revision (string) Either a revision number or a text file with the
+	* @param string $from_revision Either a revision number or a text file with the
 	*                       contents "Revision ..." (if it is a file,
 	*                       the file revision will be updated if everything
 	*                       was successful)
-	* @param $folder        (string) SVN remote folder
-	* @param $outpath       (string) Local path of the working copy
-	* @param $preview       (bool) Only simulate, do not write to files
+	* @param string $folder     SVN remote folder
+	* @param string $outPath    Local path of the working copy
+	* @param boolean $preview   Only simulate, do not write to files
+	* @return boolean true if everything is OK
 	**/
 	public function updateWorkingCopy($from_revision='version.txt', $folder = '/trunk/', $outPath = '.', $preview = false)
 	{
@@ -266,7 +267,11 @@ class phpsvnclient {
 					echo _L("Added or modified file: %1",$file)."\n";
 					//flush();
 					if (!$preview) {
-						$contents = $this->getFile($file);
+						try {
+							$contents = $this->getFile($file);
+						} catch (Exception $e) {
+							$contents = false;
+						}
 						if (($contents === false) || (@file_put_contents($localFile, $contents) === false)) {
 							$errors_happened = true;
 							echo "=> "._L("FAILED")."\n";
@@ -340,6 +345,8 @@ class phpsvnclient {
 			} else {
 				return true;
 			}
+		} else {
+			return true;
 		}
 	}
 
@@ -509,7 +516,7 @@ class phpsvnclient {
 	 *  @param boolean $recursive Whether to get the tree recursively, or just
 	 *  the specified directory/file.
 	 *
-	 *  @return array List of files and directories.
+	 *  @return array|false List of files and directories.
 	 */
 	private function getDirectoryTree($folder = '/trunk/', $version = -1, $recursive = true)
 	{
@@ -780,7 +787,7 @@ class phpsvnclient {
 		if (!$this->Request($args, $tmp, $body))
 			throw new Exception(_L("Cannot get repository revision (Request failed)"));
 
-		$this->_repVersion = null;
+		$this->_repVersion = -1;
 		$m = array();
 		if (preg_match('@/(\d+)\s*</D:href>@ismU', $body, $m)) {
 			$this->_repVersion = $m[1];
@@ -798,7 +805,7 @@ class phpsvnclient {
 	/**
 	 *  Prepare HTTP CLIENT object
 	 *
-	 *  @param array &$arguments Byreferences variable.
+	 *  @param array $arguments Byreferences variable.
 	 *  @param string $method Method for the request (GET,POST,PROPFIND, REPORT,ETC).
 	 *  @param string $url URL for the action.
 	 *  @access private
@@ -817,8 +824,8 @@ class phpsvnclient {
 	 *  and body.
 	 *
 	 *  @param Array $args Connetion's argument
-	 *  @param Array &$headers Array with the header response.
-	 *  @param string &$body Body response.
+	 *  @param Array $headers Array with the header response.
+	 *  @param string $body Body response.
 	 *  @return boolean True is query success
 	 *  @access private
 	 */

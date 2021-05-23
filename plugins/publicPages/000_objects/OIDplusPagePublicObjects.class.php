@@ -649,15 +649,15 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					//       on the other hand, for giving search engines content, this is good enough
 					if (empty($parent)) {
 						$res = OIDplus::db()->query("select * from ###objects where " .
-										   "parent = ? or " .
-										   "id = ? " .
-										   "order by ".OIDplus::db()->natOrder('id'), array($req_goto, $req_goto));
+						                            "parent = ? or " .
+						                            "id = ? " .
+						                            "order by ".OIDplus::db()->natOrder('id'), array($req_goto, $req_goto));
 					} else {
 						$res = OIDplus::db()->query("select * from ###objects where " .
-										   "parent = ? or " .
-										   "id = ? or " .
-										   "id = ? ".
-										   "order by ".OIDplus::db()->natOrder('id'), array($req_goto, $req_goto, $parent));
+						                            "parent = ? or " .
+						                            "id = ? or " .
+						                            "id = ? ".
+						                            "order by ".OIDplus::db()->natOrder('id'), array($req_goto, $req_goto, $parent));
 					}
 
 					$z_used = 0;
@@ -689,9 +689,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			return true;
 		} else {
-		 	if ($req_goto === true) {
-		 		$goto_path = true; // display everything recursively
-		 	} else if (isset($req_goto)) {
+			if ($req_goto === true) {
+				$goto_path = true; // display everything recursively
+			} else if (isset($req_goto)) {
 				$goto = $req_goto;
 				$path = array();
 				while (true) {

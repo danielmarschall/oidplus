@@ -116,9 +116,9 @@ function changeHueOfCSS($css_content, $h_shift=0, $s_shift=0, $v_shift=0) {
 				$b = hexdec($x[1][4].$x[1][5]);
 			}
 			list ($h,$s,$v) = RGB_TO_HSV($r, $g, $b);
-			$h = (int)$h;
-			$s = (int)$s;
-			$v = (int)$v;
+			$h = (float)$h;
+			$s = (float)$s;
+			$v = (float)$v;
 			$h = ($h + $h_shift); while ($h > 1) $h -= 1; while ($h < 0) $h += 1;
 			$s = ($s + $s_shift); while ($s > 1) $s  = 1; while ($s < 0) $s  = 0;
 			$v = ($v + $v_shift); while ($v > 1) $v  = 1; while ($v < 0) $v  = 0;

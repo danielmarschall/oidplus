@@ -265,7 +265,7 @@ class OIDplus {
 
 	private static function registerSqlSlangPlugin(OIDplusSqlSlangPlugin $plugin) {
 		$name = $plugin::id();
-		if ($name === false) return false;
+		if ($name === '') return false;
 
 		if (isset(self::$sqlSlangPlugins[$name])) {
 			$plugintype_hf = _L('SQL slang');
@@ -293,7 +293,7 @@ class OIDplus {
 
 	private static function registerDatabasePlugin(OIDplusDatabasePlugin $plugin) {
 		$name = $plugin::id();
-		if ($name === false) return false;
+		if ($name === '') return false;
 
 		if (isset(self::$dbPlugins[$name])) {
 			$plugintype_hf = _L('Database');
@@ -940,27 +940,30 @@ class OIDplus {
 	public static function getInstallType() {
 		$counter = 0;
 
-		if ($version_file_exists = file_exists(OIDplus::localpath().'oidplus_version.txt'))
+		if ($version_file_exists = file_exists(OIDplus::localpath().'oidplus_version.txt')) {
 			$counter++;
-			if ($svn_dir_exists = is_dir(OIDplus::localpath().'.svn') ||
-			                      is_dir(OIDplus::localpath().'../.svn')) // in case we checked out the root instead of the "trunk"
+		}
+		if ($svn_dir_exists = is_dir(OIDplus::localpath().'.svn') ||
+		                      is_dir(OIDplus::localpath().'../.svn')) { // in case we checked out the root instead of the "trunk"
 			$counter++;
-			if ($git_dir_exists = is_dir(OIDplus::localpath().'.git'))
+		}
+		if ($git_dir_exists = is_dir(OIDplus::localpath().'.git')) {
 			$counter++;
+		}
 
 		if ($counter === 0) {
 			return 'unknown'; // do not translate
 		}
-		if ($counter > 1) {
+		else if ($counter > 1) {
 			return 'ambigous'; // do not translate
 		}
-		if ($svn_dir_exists) {
+		else if ($svn_dir_exists) {
 			return 'svn-wc'; // do not translate
 		}
-		if ($git_dir_exists) {
+		else if ($git_dir_exists) {
 			return 'git-wc'; // do not translate
 		}
-		if ($version_file_exists) {
+		else if ($version_file_exists) {
 			return 'svn-snapshot'; // do not translate
 		}
 	}
@@ -1041,8 +1044,8 @@ class OIDplus {
 				$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 				header('Location:'.$location);
 				die(_L('Redirecting to HTTPS...'));
-				self::$sslAvailableCache = true;
-				return true;
+				#self::$sslAvailableCache = true;
+				#return true;
 			}
 		}
 
@@ -1062,8 +1065,8 @@ class OIDplus {
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
 						die(_L('Redirecting to HTTPS...'));
-						self::$sslAvailableCache = true;
-						return true;
+						#self::$sslAvailableCache = true;
+						#return true;
 					} else {
 						// No HTTPS available. Do nothing.
 						self::$sslAvailableCache = false;
@@ -1079,8 +1082,8 @@ class OIDplus {
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
 						die(_L('Redirecting to HTTPS...'));
-						self::$sslAvailableCache = true;
-						return true;
+						#self::$sslAvailableCache = true;
+						#return true;
 					} else {
 						// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.
 						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '0', 0, false);
@@ -1121,7 +1124,7 @@ class OIDplus {
 			$res = realpath($target);
 		}
 
-		if (is_null($target) || is_dir($target)) $res .= DIRECTORY_SEPARATOR;
+		if (is_dir($target)) $res .= DIRECTORY_SEPARATOR;
 
 		return $res;
 	}

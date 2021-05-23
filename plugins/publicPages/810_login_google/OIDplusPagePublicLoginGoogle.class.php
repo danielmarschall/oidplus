@@ -39,9 +39,6 @@ class OIDplusPagePublicLoginGoogle extends OIDplusPagePluginPublic {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = _L('Google OAuth authentication is disabled on this system.');
 				return;
-				$out['icon'] = 'img/error_big.png';
-				$out['text'] = _L('Google OAuth authentication is disabled on this system.');
-				return;
 			}
 
 			$target =

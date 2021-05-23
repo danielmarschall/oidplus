@@ -1,14 +1,17 @@
 parameters:
-	level: 3
+	level: 4
 	paths:
 		- .
 	excludePaths:
 		analyse:
 			- 3p
 			- includes/classes/http_class.class.php
-			- includes/classes/phpsvnclient.class.php
 		analyseAndScan:
 			- userdata/cache/phpstan
 	tmpDir: userdata/cache/phpstan
 	bootstrapFiles:
 		- includes/oidplus.inc.php
+		- includes/classes/http_class.class.php
+	ignoreErrors:
+		- '#is always (true|false)\.#'
+		- '#Call to function assert\(\) with false will always evaluate to false\.#'
