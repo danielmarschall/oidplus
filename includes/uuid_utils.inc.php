@@ -54,7 +54,7 @@ function uuid_info($uuid) {
 	else if ($x >= 12 /* 1100 */) $variant = 2;
 	else if ($x >=  8 /* 1000 */) $variant = 1;
 	else if ($x >=  0 /* 0000 */) $variant = 0;
-
+	else $variant = -1; // should not happen
 
 	switch ($variant) {
 		case 0:

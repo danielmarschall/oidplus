@@ -113,6 +113,7 @@ class VtsBrowserDownload {
 			header("Content-Length: $new_length");
 			header("Content-Range: bytes $range-$range_end/$size");
 		} else {
+			$range = 0;
 			$etag = md5_file($file);
 			header("Etag: $etag");
 			if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag)) {

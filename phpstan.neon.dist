@@ -1,5 +1,5 @@
 parameters:
-	level: 0
+	level: 1
 	paths:
 		- .
 	excludePaths:
@@ -10,4 +10,5 @@ parameters:
 		analyseAndScan:
 			- userdata/cache/phpstan
 	tmpDir: userdata/cache/phpstan
-
+	bootstrapFiles:
+		- includes/oidplus.inc.php

@@ -611,6 +611,8 @@ class OIDplus {
 		$known_plugin_oids = array();
 		if (OIDplus::baseConfig()->getValue('DEBUG')) {
 			$fake_feature = uuid_to_oid(gen_uuid());
+		} else {
+			$fake_feature = null;
 		}
 		foreach ($ary as $plugintype_folder => $bry) {
 			foreach ($bry as $pluginname_folder => $manifest) {

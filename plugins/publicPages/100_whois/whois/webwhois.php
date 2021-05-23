@@ -68,6 +68,7 @@ $continue = false;
 if (!$obj) {
 	$out[] = "result: Not found"; // DO NOT TRANSLATE!
 	$continue = false;
+	$res = null;
 } else {
 	$obj = null;
 	$distance = 0;

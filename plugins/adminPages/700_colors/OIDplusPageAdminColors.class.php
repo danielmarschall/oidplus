@@ -192,7 +192,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 				echo ' checked';
 			}
 		} else {
-			if (OIDplus::config()->getValue('color_invert') == 1) {
+			if ($set_value = (OIDplus::config()->getValue('color_invert') == 1)) {
 				echo ' checked';
 			}
 		}
