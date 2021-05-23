@@ -277,7 +277,7 @@ if (function_exists('bcadd')) {
 
 			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L246
 
-			while (bccomp($a, 0)==-1) {
+			while (bccomp($a, '0')==-1) {
 				$a=bcadd($b, $a);
 			}
 			while (bccomp($b, $a)==-1) {
@@ -289,7 +289,7 @@ if (function_exists('bcadd')) {
 			$vc=0;
 			$ud=0;
 			$vd=1;
-			while (bccomp($c, 0)!=0) {
+			while (bccomp($c, '0')!=0) {
 				$temp1=$c;
 				$q=bcdiv($d, $c, 0);
 				$c=bcmod($d, $c);
@@ -302,8 +302,8 @@ if (function_exists('bcadd')) {
 				$vd=$temp3;
 			}
 			$result='';
-			if (bccomp($d, 1)==0) {
-				if (bccomp($ud, 0)==1) {
+			if (bccomp($d, '1')==0) {
+				if (bccomp($ud, '0')==1) {
 					$result=$ud;
 				} else {
 					$result=bcadd($ud, $b);
@@ -323,18 +323,18 @@ if (function_exists('bcadd')) {
 
 			if ($p>=3 && $p%2==1) {
 				$a = bcmod($a, $p);
-				if ($a == 0) return 0;
-				if ($a == 1) return 1;
+				if ($a == '0') return '0';
+				if ($a == '1') return '1';
 				$a1 = $a;
 				$e = 0;
-				while (bcmod($a1, 2) == 0) {
-					$a1 = bcdiv($a1, 2);
-					$e = bcadd($e, 1);
+				while (bcmod($a1, '2') == '0') {
+					$a1 = bcdiv($a1, '2');
+					$e = bcadd($e, '1');
 				}
-				$s = (bcmod($e, 2)==0 || bcmod($p, 8)==1 || bcmod($p, 8)==7) ? 1 : -1;
-				if ($a1 == 1) return $s;
-				if (bcmod($p, 4)==3 && bcmod($a1, 4)==3) $s = -$s;
-				return bcmul($s, gmp_jacobi(bcmod($p, $a1), $a1));
+				$s = (bcmod($e, '2')=='0' || bcmod($p, '8')=='1' || bcmod($p, '8')=='7') ? '1' : '-1';
+				if ($a1 == '1') return $s;
+				if (bcmod($p, '4')=='3' && bcmod($a1, '4')=='3') $s = -$s;
+				return bcmul($s, (string)gmp_jacobi(bcmod($p, $a1), $a1));
 			} else {
 				return false;
 			}
@@ -353,7 +353,7 @@ if (function_exists('bcadd')) {
 			bcscale(0);
 
 			if ((bccomp($a,'0')==0) && (bccomp($b,'0')==0)) {
-				return 0;
+				return '0';
 			} else {
 				return gmp_div(gmp_abs(gmp_mul($a,$b)), gmp_gcd($a,$b));
 			}
@@ -398,12 +398,12 @@ if (function_exists('bcadd')) {
 
 			// Source: https://github.com/CityOfZion/neo-php/blob/master/src/Crypto/NumberTheory.php#L692
 
-			if (bccomp($a, 2) == -1) {
-				return 2;
+			if (bccomp($a, '2') == '-1') {
+				return '2';
 			}
-			$result = gmp_or(bcadd($a, 1), 1);
+			$result = gmp_or(bcadd($a, '1'), '1');
 			while (!gmp_prob_prime($result)) {
-				$result = bcadd($result, 2);
+				$result = bcadd($result, '2');
 			}
 			return $result;
 		}
@@ -478,28 +478,28 @@ if (function_exists('bcadd')) {
 
 			$t = 40;
 			$k = 0;
-			$m = bcsub($reps, 1);
-			while (bcmod($m, 2) == 0) {
-				$k = bcadd($k, 1);
-				$m = bcdiv($m, 2);
+			$m = bcsub($reps, '1');
+			while (bcmod($m, '2') == '0') {
+				$k = bcadd($k, '1');
+				$m = bcdiv($m, '2');
 			}
 			for ($i=0; $i<$t; $i++) {
-				$a = bcrand(1, bcsub($reps, 1));
+				$a = bcrand('1', bcsub($reps, '1'));
 				if ($m < 0) {
 					return new ErrorException("Negative exponents ($m) not allowed");
 				} else {
 					$b0 = bcpowmod($a, $m, $reps);
 				}
-				if ($b0!=1 && $b0!=bcsub($reps, 1)) {
+				if ($b0!=1 && $b0!=bcsub($reps, '1')) {
 					$j = 1;
-					while ($j<=$k-1 && $b0!=bcsub($reps, 1)) {
-						$b0 = bcpowmod($b0, 2, $reps);
+					while ($j<=$k-1 && $b0!=bcsub($reps, '1')) {
+						$b0 = bcpowmod($b0, '2', $reps);
 						if ($b0 == 1) {
 							return false;
 						}
 						$j++;
 					}
-					if ($b0 != bcsub($reps, 1)) {
+					if ($b0 != bcsub($reps, '1')) {
 						return false;
 					}
 				}
@@ -687,12 +687,12 @@ if (function_exists('bcadd')) {
 	function base_convert_bigint($numstring, $frombase, $tobase) {
 		$frombase_str = '';
 		for ($i=0; $i<$frombase; $i++) {
-			$frombase_str .= strtoupper(base_convert($i, 10, 36));
+			$frombase_str .= strtoupper(base_convert((string)$i, 10, 36));
 		}
 
 		$tobase_str = '';
 		for ($i=0; $i<$tobase; $i++) {
-			$tobase_str .= strtoupper(base_convert($i, 10, 36));
+			$tobase_str .= strtoupper(base_convert((string)$i, 10, 36));
 		}
 
 		$length = strlen($numstring);
@@ -818,7 +818,7 @@ if (function_exists('bcadd')) {
 			$max = $min;
 			$min = 0;
 		}
-		return bcadd(bcmul(bcdiv(mt_rand(), mt_getrandmax(), strlen($max)), bcsub(bcadd($max, 1), $min)), $min);
+		return bcadd(bcmul(bcdiv((string)mt_rand(), (string)mt_getrandmax(), strlen($max)), bcsub(bcadd($max, '1'), $min)), $min);
 	}
 
 	// Newly added (used by gmp_random_seed)

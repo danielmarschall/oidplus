@@ -3206,6 +3206,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Multiple %1 plugins use the ID %2
+		]]></source>
+		<target><![CDATA[
+		Mehrere %1-Plugins nutzen die ID %2
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Multiple version files/directories (oidplus_version.txt, .git and .svn) are existing! Therefore, the version is ambiguous!
 		]]></source>
 		<target><![CDATA[

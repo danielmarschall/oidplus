@@ -102,7 +102,7 @@ function uuid_info($uuid) {
 			$ts = gmp_div($ts, gmp_init("250000"));
 			$ts = gmp_strval($ts);
 			$ms = gmp_strval($ms);
-			$ts = gmdate('Y-m-d H:i:s', $ts)."'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT';
+			$ts = gmdate('Y-m-d H:i:s', intval($ts))."'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT';
 			echo sprintf("%-24s %s\n", "Timestamp:", "[0x$timestamp] $ts");
 
 			$reserved = substr($uuid, 12, 4);
@@ -144,7 +144,7 @@ function uuid_info($uuid) {
 					$ts = gmp_div($ts, gmp_init("10000000"));
 					$ts = gmp_strval($ts);
 					$ms = gmp_strval($ms);
-					$ts = gmdate('Y-m-d H:i:s', $ts)."'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT';
+					$ts = gmdate('Y-m-d H:i:s', intval($ts))."'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT';
 					echo sprintf("%-24s %s\n", "Timestamp:", "[0x$timestamp] $ts");
 
 					$x = hexdec(substr($uuid, 16, 4));
@@ -189,7 +189,7 @@ function uuid_info($uuid) {
 					$ts = gmp_div($ts, gmp_init("10000000"));
 					$ts = gmp_strval($ts);
 					$ms = gmp_strval($ms);
-					$ts_min = gmdate('Y-m-d H:i:s', $ts)."'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT';
+					$ts_min = gmdate('Y-m-d H:i:s', intval($ts))."'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT';
 
 					$timestamp = substr($uuid, 13, 3).substr($uuid, 8, 4).'FFFFFFFF';
 					$ts = gmp_init($timestamp, 16);
@@ -198,7 +198,7 @@ function uuid_info($uuid) {
 					$ts = gmp_div($ts, gmp_init("10000000"));
 					$ts = gmp_strval($ts);
 					$ms = gmp_strval($ms);
-					$ts_max = gmdate('Y-m-d H:i:s', $ts)."'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT';
+					$ts_max = gmdate('Y-m-d H:i:s', intval($ts))."'".str_pad($ms, 7, '0', STR_PAD_LEFT).' GMT';
 
 					$timestamp = substr($uuid, 13, 3).substr($uuid, 8, 4).'xxxxxxxx';
 					echo sprintf("%-24s %s\n", "Timestamp:", "[0x$timestamp] $ts_min - $ts_max");

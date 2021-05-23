@@ -30,13 +30,13 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 
 		// **PREVENTING SESSION HIJACKING**
 		// Prevents javascript XSS attacks aimed to steal the session ID
-		@ini_set('session.cookie_httponly', 1);
+		@ini_set('session.cookie_httponly', '1');
 
 		// **PREVENTING SESSION FIXATION**
 		// Session ID cannot be passed through URLs
-		@ini_set('session.use_only_cookies', 1);
+		@ini_set('session.use_only_cookies', '1');
 
-		@ini_set('session.use_trans_sid', 0);
+		@ini_set('session.use_trans_sid', '0');
 
 		// Uses a secure connection (HTTPS) if possible
 		@ini_set('session.cookie_secure', OIDplus::isSslAvailable());
@@ -47,7 +47,7 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 
 		@ini_set('session.cookie_samesite', OIDplus::baseConfig()->getValue('COOKIE_SAMESITE_POLICY', 'Strict'));
 
-		@ini_set('session.use_strict_mode', 1);
+		@ini_set('session.use_strict_mode', '1');
 
 		@ini_set('session.gc_maxlifetime', $this->sessionLifetime);
 	}
@@ -154,7 +154,7 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 			);
 			// Authentication
 			$hmac = hash_hmac(
-				'SHA256',
+				'sha256',
 				$iv . $ciphertext,
 				mb_substr($key, 32, null, '8bit'),
 				true
@@ -163,7 +163,7 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 		} else {
 			// When OpenSSL is not available, then we just do a HMAC
 			$hmac = hash_hmac(
-				'SHA256',
+				'sha256',
 				$data,
 				mb_substr($key, 32, null, '8bit'),
 				true
@@ -179,7 +179,7 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 			$ciphertext = mb_substr($data, 48, null, '8bit');
 			// Authentication
 			$hmacNew = hash_hmac(
-				'SHA256',
+				'sha256',
 				$iv . $ciphertext,
 				mb_substr($key, 32, null, '8bit'),
 				true
@@ -200,7 +200,7 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 			$hmac       = mb_substr($data, 0, 32, '8bit');
 			$cleartext  = mb_substr($data, 32, null, '8bit');
 			$hmacNew = hash_hmac(
-				'SHA256',
+				'sha256',
 				$cleartext,
 				mb_substr($key, 32, null, '8bit'),
 				true

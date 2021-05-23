@@ -295,7 +295,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				'text'     => _L('Log out')
 			);
 			$loginChildren[] = array(
-				'id'       => 'oidplus:dummy$'.md5(rand()),
+				'id'       => 'oidplus:dummy$'.md5((string)rand()),
 				'text'     => _L("Logged in as admin"),
 				'icon'     => OIDplus::webpath(__DIR__).'treeicon_admin.png',
 				'conditionalselect' => 'false', // dummy node that can't be selected
@@ -332,7 +332,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$ra_email_or_name = (new OIDplusRA($ra_email))->raName();
 			if ($ra_email_or_name == '') $ra_email_or_name = $ra_email;
 			$loginChildren[] = array(
-				'id'       => 'oidplus:dummy$'.md5(rand()),
+				'id'       => 'oidplus:dummy$'.md5((string)rand()),
 				'text'     => _L('Logged in as %1',htmlentities($ra_email_or_name)),
 				'icon'     => OIDplus::webpath(__DIR__).'treeicon_ra.png',
 				'conditionalselect' => 'false', // dummy node that can't be selected

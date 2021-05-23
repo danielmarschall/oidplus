@@ -1,25 +1,25 @@
 <?php /* <ViaThinkSoftSignature>
-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
+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
 A==
 </ViaThinkSoftSignature> */ ?>
 <?php
@@ -35,7 +35,7 @@ A==
 
       Developed by Daniel Marschall             www.viathinksoft.com
       Licensed under the terms of the Apache 2.0 license
-      Revision 2021-04-10
+      Revision 2021-05-21
 
 */
 
@@ -347,7 +347,7 @@ function _empty($x) {
 }
 
 abstract class VNag {
-	/*public*/ const VNAG_VERSION = '2021-04-10';
+	/*public*/ const VNAG_VERSION = '2021-05-21';
 
 	// Status 0..3 for STATUSMODEL_SERVICE (the default status model):
 	# The guideline states: "Higher-level errors (such as name resolution errors, socket timeouts, etc) are outside of the control of plugins and should generally NOT be reported as UNKNOWN states."
@@ -553,7 +553,7 @@ abstract class VNag {
 				default:
 					$letter = $args[$i];
 					throw new VNagInvalidStandardArgument(sprintf(VNagLang::$no_standard_arguments_with_letter, $letter));
-					break;
+					#break;
 			}
 		}
 	}
@@ -746,8 +746,7 @@ abstract class VNag {
 		}
 	}
 
-	// $optional_args will be forwarded to the callback function cbRun()
-	public function run($optional_args=array()) {
+	public function run() {
 		global $inside_vnag_run;
 
 		$inside_vnag_run = true;
@@ -827,7 +826,7 @@ abstract class VNag {
 				ob_start();
 				$init_ob_level = ob_get_level();
 				try {
-					$this->cbRun($optional_args);
+					$this->cbRun();
 
 					// This will NOT be put in the 'finally' block, because otherwise it would trigger if an Exception happened (Which clears the OB)
 					if (ob_get_level() < $init_ob_level) throw new VNagImplementationErrorException(VNagLang::$output_level_lowered);
@@ -1543,11 +1542,9 @@ class VNagArgument {
 		}
 
 		if (is_array($longopts)) { // $longopts is an array
-			if (!is_null($longopts)) {
-				foreach ($longopts as $longopt) {
-					if (!self::validateLongOpt($longopt)) {
-						throw new VNagInvalidLongOpt(sprintf(VNagLang::$illegal_longopt, $longopt));
-					}
+			foreach ($longopts as $longopt) {
+				if (!self::validateLongOpt($longopt)) {
+					throw new VNagInvalidLongOpt(sprintf(VNagLang::$illegal_longopt, $longopt));
 				}
 			}
 		} else if (!_empty($longopts)) { // $longopts is a string
@@ -1575,7 +1572,7 @@ class VNagArgument {
 		}
 
 		if ((!is_null($shortopt)) && ($shortopt != '?')) self::$all_short .= $shortopt.$policyApdx;
-		if (!is_null($longopts)) {
+		if (is_array($longopts)) {
 			foreach ($longopts as $longopt) {
 				self::$all_long[] = $longopt.$policyApdx;
 			}
@@ -1904,7 +1901,7 @@ class VNagValueUomPair {
 		}
 	}
 
-	public static function isKnownUOM($uom) {
+	public static function isKnownUOM(string $uom) {
 		// see https://nagios-plugins.org/doc/guidelines.html#AEN200
 		// 10. UOM (unit of measurement) is one of:
 		return (
@@ -2385,37 +2382,37 @@ class VNagLang {
 				switch ($code) {
 					case VNag::STATUS_OK:
 						return 'OK';
-						break;
+						#break;
 					case VNag::STATUS_WARNING:
 						return 'Warning';
-						break;
+						#break;
 					case VNag::STATUS_CRITICAL:
 						return 'Critical';
-						break;
+						#break;
 					case VNag::STATUS_UNKNOWN:
 						return 'Unknown';
-						break;
+						#break;
 					default:
 						return sprintf('Error (%d)', $code);
-						break;
+						#break;
 				}
-				break;
+				#break;
 			case VNag::STATUSMODEL_HOST:
 				switch ($code) {
 					case VNag::STATUS_UP:
 						return 'Up';
-						break;
+						#break;
 					case VNag::STATUS_DOWN:
 						return 'Down';
-						break;
+						#break;
 					default:
 						return sprintf('Maintain last state (%d)', $code);
-						break;
+						#break;
 				}
-				break;
+				#break;
 			default:
 				throw new VNagIllegalStatusModel(sprintf(self::$illegal_statusmodel, $statusmodel));
-				break;
+				#break;
 		}
 	}
 
@@ -2545,7 +2542,7 @@ function vnagErrorHandler($errorkind, $errortext, $file, $line) {
 	throw new VNagException(VNagLang::$php_error . " $errortext at $file:$line (kind $errorkind)");
 
 	// true = the PHP internal error handling will NOT be called.
-	return true;
+	#return true;
 }
 
 $inside_vnag_run = false;

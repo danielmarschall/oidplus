@@ -10,7 +10,7 @@ class WeidOidConverter {
 	protected static function weLuhnGetCheckDigit($str) {
 		$wrkstr = str_replace('-', '', $str); // remove separators
 		for ($i=0; $i<36; $i++) {
-			$wrkstr = str_ireplace(chr(ord('a')+$i), $i+10, $wrkstr);
+			$wrkstr = str_ireplace(chr(ord('a')+$i), (string)($i+10), $wrkstr);
 		}
 		$nbdigits = strlen($wrkstr);
 		$parity = $nbdigits & 1;
@@ -63,12 +63,12 @@ class WeidOidConverter {
 	protected static function base_convert_bigint($numstring, $frombase, $tobase) {
 		$frombase_str = '';
 		for ($i=0; $i<$frombase; $i++) {
-			$frombase_str .= strtoupper(base_convert($i, 10, 36));
+			$frombase_str .= strtoupper(base_convert((string)$i, 10, 36));
 		}
 
 		$tobase_str = '';
 		for ($i=0; $i<$tobase; $i++) {
-			$tobase_str .= strtoupper(base_convert($i, 10, 36));
+			$tobase_str .= strtoupper(base_convert((string)$i, 10, 36));
 		}
 
 		$length = strlen($numstring);
