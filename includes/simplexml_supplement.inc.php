@@ -47,7 +47,7 @@ if (!function_exists('simplexml_load_string')) {
 	}
 
 	function simplexml_load_string($testxml): SimpleXMLElement {
-		$out = new SimpleXMLElement();
+		$out = new SimpleXMLElement(); /** @phpstan-ignore-line */
 
 		$testxml = preg_replace('@<!\\-\\-.+\\-\\->@','',$testxml); // remove comments
 		$testxml = preg_replace('@<(\\S+)[^>]*/>@smU','<\\1></\\1>',$testxml); // <x/> => <x></x>
@@ -175,11 +175,11 @@ if (!function_exists('simplexml_load_string')) {
 
 		public function __get($name) {
 			// Output nothing
-			return new SimpleXMLElement();
+			return new SimpleXMLElement(); /** @phpstan-ignore-line */
 		}
 
 		public function addChild($name, $val=null) {
-			if ($val == null) $val = new SimpleXMLElement();
+			if ($val == null) $val = new SimpleXMLElement(); /** @phpstan-ignore-line */
 
 			if ((substr(trim($val),0,1) === '<') || (trim($val) == '')) {
 				$val = simplexml_load_string($val);
@@ -203,7 +203,7 @@ if (!function_exists('simplexml_load_string')) {
 				if ($data[$name]->isArray()) {
 					$data[$name]->addToArray($val);
 				} else {
-					$tmp = new SimpleXMLElement();
+					$tmp = new SimpleXMLElement(); /** @phpstan-ignore-line */
 					$tmp->addToArray($data[$name]);
 					$tmp->addToArray($val);
 					$this->$name = $tmp;

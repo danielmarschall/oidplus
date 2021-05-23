@@ -21,8 +21,6 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 abstract class OIDplusAuthContentStore implements OIDplusGetterSetterInterface {
 
-	protected $content = array();
-
 	// Getter / Setter
 
 	public abstract function getValue($name, $default = NULL);
@@ -33,25 +31,37 @@ abstract class OIDplusAuthContentStore implements OIDplusGetterSetterInterface {
 
 	public abstract function delete($name);
 
-	protected abstract function destroySession();
+	public abstract static function getActiveProvider();
 
-	// RA authentication functions
+	public abstract function destroySession();
+
+	public abstract function activate();
+
+	public abstract function raLoginEx($email, &$loginfo);
+
+	public abstract function raLogoutEx($email, &$loginfo);
+
+	public abstract function adminLoginEx(&$loginfo);
+
+	public abstract function adminLogoutEx(&$loginfo);
+
+	// RA authentication functions (low-level)
 
 	public function raLogin($email) {
 		if (strpos($email, '|') !== false) return;
 
-		$list = $this->getValue('oidplus_logged_in');
+		$list = $this->getValue('oidplus_ra_logged_in');
 		if (is_null($list)) $list = '';
 
 		$ary = ($list == '') ? array() : explode('|', $list);
 		if (!in_array($email, $ary)) $ary[] = $email;
 		$list = implode('|', $ary);
 
-		$this->setValue('oidplus_logged_in', $list);
+		$this->setValue('oidplus_ra_logged_in', $list);
 	}
 
 	public function raLogout($email) {
-		$list = $this->getValue('oidplus_logged_in');
+		$list = $this->getValue('oidplus_ra_logged_in');
 		if (is_null($list)) $list = '';
 
 		$ary = ($list == '') ? array() : explode('|', $list);
@@ -59,24 +69,15 @@ abstract class OIDplusAuthContentStore implements OIDplusGetterSetterInterface {
 		if ($key !== false) unset($ary[$key]);
 		$list = implode('|', $ary);
 
-		$this->setValue('oidplus_logged_in', $list);
-
-		if (($list == '') && (!self::isAdminLoggedIn())) {
-			// Nobody logged in anymore. Destroy session cookie to make GDPR people happy
-			$this->destroySession();
-		}
+		$this->setValue('oidplus_ra_logged_in', $list);
 	}
 
 	public function raNumLoggedIn() {
-		return count(self::loggedInRaList());
-	}
-
-	public function raLogoutAll() {
-		$this->setValue('oidplus_logged_in', '');
+		return count($this->loggedInRaList());
 	}
 
 	public function loggedInRaList() {
-		$list = $this->getValue('oidplus_logged_in');
+		$list = $this->getValue('oidplus_ra_logged_in');
 		if (is_null($list)) $list = '';
 
 		$res = array();
@@ -88,13 +89,13 @@ abstract class OIDplusAuthContentStore implements OIDplusGetterSetterInterface {
 	}
 
 	public function isRaLoggedIn($email) {
-		foreach (self::loggedInRaList() as $ra) {
+		foreach ($this->loggedInRaList() as $ra) {
 			if ($email == $ra->raEmail()) return true;
 		}
 		return false;
 	}
 
-	// Admin authentication functions
+	// Admin authentication functions (low-level)
 
 	public function adminLogin() {
 		$this->setValue('oidplus_admin_logged_in', 1);
@@ -102,11 +103,6 @@ abstract class OIDplusAuthContentStore implements OIDplusGetterSetterInterface {
 
 	public function adminLogout() {
 		$this->setValue('oidplus_admin_logged_in', 0);
-
-		if (self::raNumLoggedIn() == 0) {
-			// Nobody logged in anymore. Destroy session cookie to make GDPR people happy
-			$this->destroySession();
-		}
 	}
 
 	public function isAdminLoggedIn() {

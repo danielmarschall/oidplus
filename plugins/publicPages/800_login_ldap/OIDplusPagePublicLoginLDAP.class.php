@@ -161,7 +161,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
 				}
 			}
-			
+
 			_CheckParamExists($params, 'email');
 			_CheckParamExists($params, 'password');
 
@@ -185,8 +185,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 				OIDplus::logger()->log("[INFO]RA($email)!", "RA '$email' was created because of successful LDAP login");
 			}
 
-			OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged in via LDAP");
-			OIDplus::authUtils()->raLogin($email);
+			OIDplus::authUtils()->raLoginEx($email, $remember_me=false, 'LDAP');
 
 			OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 

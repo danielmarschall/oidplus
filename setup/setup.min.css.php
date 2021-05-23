@@ -28,7 +28,7 @@ require_once __DIR__ . '/../3p/minify/src/CSS.php';
 require_once __DIR__ . '/../3p/minify/src/Exception.php';
 
 error_reporting(OIDplus::baseConfig()->getValue('DEBUG') ? E_ALL : 0);
-@ini_set('display_errors', OIDplus::baseConfig()->getValue('DEBUG') ? 1 : 0);
+@ini_set('display_errors', OIDplus::baseConfig()->getValue('DEBUG') ? '1' : '0');
 
 $out = '';
 

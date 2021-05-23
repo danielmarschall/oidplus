@@ -116,6 +116,8 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			$auth = $params['auth'];
 			$timestamp = $params['timestamp'];
 
+			$ra_was_logged_in = OIDplus::authUtils()->isRaLoggedIn($old_email);
+
 			$ra = new OIDplusRA($old_email);
 			if ($ra->isPasswordLess() && !OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('E-Mail-Address cannot be changed because this user does not have a password'));
@@ -158,8 +160,10 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			OIDplus::db()->query("update ###objects set ra_email = ? where ra_email = ?", array($new_email, $old_email));
 
 			// Re-login
-			OIDplus::authUtils()->raLogout($old_email);
-			OIDplus::authUtils()->raLogin($new_email);
+			if ($ra_was_logged_in) {
+				OIDplus::authUtils()->raLogout($old_email);
+				OIDplus::authUtils()->raLogin($new_email);
+			}
 
 			// Send email
 			$message = file_get_contents(__DIR__ . '/email_change_confirmation.tpl');

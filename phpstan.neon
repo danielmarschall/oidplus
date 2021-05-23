@@ -1,0 +1,13 @@
+parameters:
+	level: 0
+	paths:
+		- .
+	excludePaths:
+		analyse:
+			- 3p
+			- includes/classes/http_class.class.php
+			- includes/classes/phpsvnclient.class.php
+		analyseAndScan:
+			- userdata/cache/phpstan
+	tmpDir: userdata/cache/phpstan
+

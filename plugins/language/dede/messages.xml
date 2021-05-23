@@ -1846,6 +1846,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Example for adding OID 2.999.123 using Python
+		]]></source>
+		<target><![CDATA[
+		Beispiel: OID 2.999.123 mittels Python hinzufügen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Example for adding OID 2.999.123 using VBScript
 		]]></source>
 		<target><![CDATA[
@@ -6062,6 +6070,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		This kind of JWT token cannot be altered. Therefore you cannot do this action.
+		]]></source>
+		<target><![CDATA[
+		Diese Art von JWT-Token kann nicht geändert werden. Daher können Sie diese Aktion nicht durchführen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		This page contains an encrypted VNag machine-readable status.
 		]]></source>
 		<target><![CDATA[
@@ -6682,6 +6698,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die AJAX API bietet die Möglichkeit, Aufgaben automatisiert über Ihr OIDplus-Konto durchzuführen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You cannot add this login credential to your existing "remember me" session. You need to log-out first.
+		]]></source>
+		<target><![CDATA[
+		Sie können die Anmeldedaten nicht zu Ihrer bestehenden "Angemeldet bleiben" Sitzung hinzufügen. Sie müssen sich zuerst abmelden.
 		]]></target>
 	</message>
 	<message>

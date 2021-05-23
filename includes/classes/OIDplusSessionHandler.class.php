@@ -97,7 +97,7 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 	public function getValue($name, $default = NULL) {
 		if (isset($this->cacheSetValues[$name])) return self::decrypt($this->cacheSetValues[$name], $this->secret);
 
-		if (!isset($_COOKIE[session_name()])) return $default; // GDPR: Only start a session when we really need one
+		if (!$this->isActive()) return $default; // GDPR: Only start a session when we really need one
 		$this->sessionSafeStart();
 		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
 
@@ -108,7 +108,7 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 	public function exists($name) {
 		if (isset($this->cacheSetValues[$name])) return true;
 
-		if (!isset($_COOKIE[session_name()])) return false; // GDPR: Only start a session when we really need one
+		if (!$this->isActive()) return false; // GDPR: Only start a session when we really need one
 		$this->sessionSafeStart();
 		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
 
@@ -118,7 +118,7 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 	public function delete($name) {
 		if (isset($this->cacheSetValues[$name])) unset($this->cacheSetValues[$name]);
 
-		if (!isset($_COOKIE[session_name()])) return; // GDPR: Only start a session when we really need one
+		if (!$this->isActive()) return; // GDPR: Only start a session when we really need one
 		$this->sessionSafeStart();
 		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
 
@@ -126,7 +126,7 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 	}
 
 	public function destroySession() {
-		if (!isset($_COOKIE[session_name()])) return;
+		if (!$this->isActive()) return;
 
 		$this->sessionSafeStart();
 		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
@@ -135,6 +135,10 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 		session_destroy();
 		session_write_close();
 		OIDplus::cookieUtils()->unsetcookie(session_name()); // remove cookie, so GDPR people are happy
+	}
+
+	public function isActive() {
+		return isset($_COOKIE[session_name()]);
 	}
 
 	protected static function encrypt($data, $key) {

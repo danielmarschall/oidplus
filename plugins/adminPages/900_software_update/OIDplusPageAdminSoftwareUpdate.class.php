@@ -37,7 +37,6 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 			$error = "";
 			try {
 				$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
-				$svn->versionFile = 'oidplus_version.txt';
 
 				// We are caching the changed file logs here only in the preview mode.
 				// Reason: We want to avoid that the "update/" page becomes an
