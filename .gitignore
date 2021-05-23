@@ -11,7 +11,7 @@
 # "The usual practice is to have phpstan.neon.dist under version control,
 # and allow the user to override certain settings in their environment
 # (on their own computer or on a continuous integration server) by creating
-# phpstan.neon that’s present in .gitignore file."
+# phpstan.neon that's present in .gitignore file."
 phpstan.neon
 
 # (ViaThinkSoft internal)

@@ -2,8 +2,8 @@
 
 /*
  * OID-Utilities for PHP
- * Copyright 2011-2020 Daniel Marschall, ViaThinkSoft
- * Version 2020-09-12
+ * Copyright 2011-2021 Daniel Marschall, ViaThinkSoft
+ * Version 2021-05-21
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
