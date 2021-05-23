@@ -31,12 +31,14 @@ error_reporting(0);
 
 if (!isset($_REQUEST['file'])) {
 	httpOutWithETag(SPACER_PNG, 'image/png', 'spacer.png');
+	die();
 } else {
 	$file = $_REQUEST['file'];
 }
 
 if (!isset($_REQUEST['mode'])) {
 	httpOutWithETag(SPACER_PNG, 'image/png', 'spacer.png');
+	die();
 } else {
 	$mode = $_REQUEST['mode'];
 }

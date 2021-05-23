@@ -96,7 +96,7 @@ function oid_part_regex($min_len=2, $allow_leading_zeroes=false, $leading_dot_po
 			break;
 		default:
 			assert(false);
-			break;
+			return false;
 	}
 
 	$lead_zero            = $allow_leading_zeroes ? '0*' : '';

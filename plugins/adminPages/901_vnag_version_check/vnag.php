@@ -110,6 +110,9 @@ if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= OIDPLUS_VNAG
 			$out_stat = VNag::STATUS_WARNING;
 			$out_msg  = 'OIDplus is outdated. (' . $local_installation . ' local / ' . $newest_version . ' remote)'; // do not translate
 		}
+	} else {
+		assert(false);
+		die();
 	}
 
 	@file_put_contents($cache_file, serialize(array($out_stat, $out_msg)));

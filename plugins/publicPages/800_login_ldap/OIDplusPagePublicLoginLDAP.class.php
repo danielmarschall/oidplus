@@ -53,10 +53,10 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		if (!($result = @ldap_search($ldapconn,$cfg_ldap_base_dn, $cfg_ldap_user_filter))) throw new OIDplusException(_L('Error in search query: %1', ldap_error($ldapconn)));
 		$data = ldap_get_entries($ldapconn, $result);
 		$found_username = null;
+		$ldap_userinfo = array();
 		for ($i=0; $i<$data['count']; $i++) {
 			if ((isset($data[$i]['mail'][0])) && ($data[$i]['mail'][0] == $email)) {
 				$found_username = $data[$i]['userprincipalname'][0];
-				$ldap_userinfo = array();
 				foreach ($data[$i] as $x => $y) {
 					if (is_int($x)) continue;
 					if (!is_array($y)) continue;
