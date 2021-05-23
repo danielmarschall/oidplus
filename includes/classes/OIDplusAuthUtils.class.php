@@ -42,7 +42,7 @@ class OIDplusAuthUtils {
 		// Fallback to non-secure RNG
 		$a = '';
 		while (strlen($a) < $len*2) {
-			$a .= sha1(uniqid(mt_rand(), true));
+			$a .= sha1(uniqid((string)mt_rand(), true));
 		}
 		$a = substr($a, 0, $len*2);
 		return hex2bin($a);

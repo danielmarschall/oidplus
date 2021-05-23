@@ -49,7 +49,7 @@ abstract class OIDplusDatabaseConnection {
 		$query_logfile = OIDplus::baseConfig()->getValue('QUERY_LOGFILE', '');
 		if (!empty($query_logfile)) {
 			$ts = explode(" ",microtime());
-			$ts = date("Y-m-d H:i:s",$ts[1]).substr((string)$ts[0],1,4);
+			$ts = date("Y-m-d H:i:s",intval($ts[1])).substr((string)$ts[0],1,4);
 			static $log_session_id = "";
 			if (empty($log_session_id)) {
 				$log_session_id = rand(10000,99999);

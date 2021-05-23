@@ -69,9 +69,9 @@ if (class_exists('OIDplusPageAdminColors')) {
 	//    and does not follow the arguments that might be set by other plugins.
 	$add_css_args[] = 'theme='.urlencode(OIDplus::config()->getValue('design'));
 	$add_css_args[] = 'invert='.urlencode(OIDplus::config()->getValue('color_invert'));
-	$add_css_args[] = 'h_shift='.urlencode(OIDplus::config()->getValue('color_hue_shift')/360);
-	$add_css_args[] = 's_shift='.urlencode(OIDplus::config()->getValue('color_sat_shift')/100);
-	$add_css_args[] = 'v_shift='.urlencode(OIDplus::config()->getValue('color_val_shift')/100);
+	$add_css_args[] = 'h_shift='.urlencode(number_format(OIDplus::config()->getValue('color_hue_shift')/360,5,'.',''));
+	$add_css_args[] = 's_shift='.urlencode(number_format(OIDplus::config()->getValue('color_sat_shift')/100,5,'.',''));
+	$add_css_args[] = 'v_shift='.urlencode(number_format(OIDplus::config()->getValue('color_val_shift')/100,5,'.',''));
 }
 $add_css_args = count($add_css_args) > 0 ? '?'.implode('&',$add_css_args) : '';
 

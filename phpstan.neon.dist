@@ -1,10 +1,15 @@
 parameters:
-	level: 4
+	level: 5
 	paths:
 		- .
+		#- 3p/vts_vnag/
+		#- 3p/vts_fileformats/
 	excludePaths:
 		analyse:
-			- 3p
+			- 3p/minify
+			- 3p/0xbb
+			- 3p/php-jwt
+			- 3p/symfony-mbstring-polyfill
 			- includes/classes/http_class.class.php
 		analyseAndScan:
 			- userdata/cache/phpstan
@@ -15,3 +20,13 @@ parameters:
 	ignoreErrors:
 		- '#is always (true|false)\.#'
 		- '#Call to function assert\(\) with false will always evaluate to false\.#'
+
+# BUGS in PHPStan:
+# - gmp_div' => ['resource', 'a'=>'GMP|resource|string', 'b'=>'GMP|resource|string', 'round='=>'int'],
+#   => Return type is GMP, according to PHP manual
+# - 'odbc_exec' => ['resource', 'connection_id'=>'resource', 'query'=>'string', 'flags='=>'int'],
+#   => Return type is resource|false , not resource , according to PHP manual
+# - 'unregister_tick_function' => ['void', 'function_name'=>'string'],
+#   => argument #1 can also be an array array(&$object, 'my_method') or array('Objekt', 'my_method')
+# TODO: Pull request to https://github.com/phpstan/phpstan-src/blob/master/resources/functionMap.php
+

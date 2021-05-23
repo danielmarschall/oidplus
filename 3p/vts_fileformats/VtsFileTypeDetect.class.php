@@ -22,10 +22,11 @@
 class VtsFileTypeDetect {
 
 	public static function getMimeType($filename) {
-	    $mime_types = array();
-	    
+		$mime_types = array();
+
 		include __DIR__ . '/mimetype_lookup.inc.php';
 
+		/** @phpstan-ignore-next-line */
 		foreach ($mime_types as $ext => $mime) {
 			if (strtoupper(substr($filename, -strlen($ext)-1)) == strtoupper('.'.$ext)) {
 				return $mime;
@@ -83,7 +84,12 @@ class VtsFileTypeDetect {
 			}
 		}
 
-		return $ini['Static']['LngUnknown'];
+		foreach ($inis as $ini) {
+			if (isset($ini['Static']['LngUnknown'])) {
+				return $ini['Static']['LngUnknown'];
+			}
+		}
+		return 'Unknown';
 	}
 
 }

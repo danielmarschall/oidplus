@@ -77,7 +77,9 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	public function crudShowId(OIDplusObject $parent) {
-		return $this->deltaDotNotation($parent);
+		if ($parent instanceof OIDplusOid) {
+			return $this->deltaDotNotation($parent);
+		}
 	}
 
 	public function crudInsertPrefix() {
@@ -86,7 +88,11 @@ class OIDplusOid extends OIDplusObject {
 
 	public function jsTreeNodeName(OIDplusObject $parent = null) {
 		if ($parent == null) return $this->objectTypeTitle();
-		return $this->viewGetArcAsn1s($parent);
+		if ($parent instanceof OIDplusOid) {
+			return $this->viewGetArcAsn1s($parent);
+		} else {
+			return '';
+		}
 	}
 
 	public function defaultTitle() {

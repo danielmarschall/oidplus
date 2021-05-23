@@ -269,7 +269,7 @@ class OIDplus {
 
 		if (isset(self::$sqlSlangPlugins[$name])) {
 			$plugintype_hf = _L('SQL slang');
-			throw new OIDplusException('Multiple %1 plugins use the ID %2', $plugintype_hf, $name);
+			throw new OIDplusException(_L('Multiple %1 plugins use the ID %2', $plugintype_hf, $name));
 		}
 
 		self::$sqlSlangPlugins[$name] = $plugin;
@@ -297,7 +297,7 @@ class OIDplus {
 
 		if (isset(self::$dbPlugins[$name])) {
 			$plugintype_hf = _L('Database');
-			throw new OIDplusException('Multiple %1 plugins use the ID %2', $plugintype_hf, $name);
+			throw new OIDplusException(_L('Multiple %1 plugins use the ID %2', $plugintype_hf, $name));
 		}
 
 		self::$dbPlugins[$name] = $plugin;

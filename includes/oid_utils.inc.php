@@ -500,9 +500,9 @@ function oid_common_ancestor(array $oids) {
 		$oid = explode('.', $oid);
 	}
 
-	$max_ok = count($oids[0]);
+	$max_ok = strlen($oids[0]);
 	for ($i=1; $i<count($oids); $i++) {
-		for ($j=0; $j<min(count($oids[$i]),count($oids[0])); $j++) {
+		for ($j=0; $j<min(strlen($oids[$i]),strlen($oids[0])); $j++) {
 			if ($oids[$i][$j] != $oids[0][$j]) {
 				if ($j < $max_ok) $max_ok = $j;
 				break;
