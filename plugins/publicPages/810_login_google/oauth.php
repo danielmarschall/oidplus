@@ -46,7 +46,7 @@ if (!function_exists('curl_init')) {
 }
 
 $ch = curl_init();
-if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
+if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/token");
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS,
@@ -95,7 +95,7 @@ try {
 
 			// Query user infos
 			$ch = curl_init('https://www.googleapis.com/oauth2/v3/userinfo'); // Initialise cURL
-			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
+			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 			$data_string = '';
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 				'Content-Length: ' . strlen($data_string),
@@ -129,7 +129,7 @@ try {
 	// We now have the data of the person that wanted to log in
 	// So we can log off again
 	$ch = curl_init();
-	if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . '3p/certs/cacert.pem');
+	if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 	curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/revoke");
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,

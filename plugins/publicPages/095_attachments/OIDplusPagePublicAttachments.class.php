@@ -231,10 +231,10 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			$lookup_files = array(
 				OIDplus::localpath().'userdata/attachments/filetypes$'.OIDplus::getCurrentLang().'.conf',
 				OIDplus::localpath().'userdata/attachments/filetypes.conf',
-				OIDplus::localpath().'3p/vts_fileformats/filetypes$'.OIDplus::getCurrentLang().'.local', // not recommended
-				OIDplus::localpath().'3p/vts_fileformats/filetypes.local', // not recommended
-				OIDplus::localpath().'3p/vts_fileformats/filetypes$'.OIDplus::getCurrentLang().'.conf',
-				OIDplus::localpath().'3p/vts_fileformats/filetypes.conf'
+				OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes$'.OIDplus::getCurrentLang().'.local', // not recommended
+				OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes.local', // not recommended
+				OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes$'.OIDplus::getCurrentLang().'.conf',
+				OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes.conf'
 			);
 			$output .= '<td>'.htmlentities(VtsFileTypeDetect::getDescription($file, $lookup_files)).'</td>';
 

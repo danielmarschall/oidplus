@@ -46,7 +46,7 @@ $all_strings = array();
 
 $it = new RecursiveDirectoryIterator($dir);
 foreach(new RecursiveIteratorIterator($it) as $file) {
-	if (strpos(str_replace('\\','/',realpath($file)),'/3p/') !== false) continue; // ignore third-party-code
+	if (strpos(str_replace('\\','/',realpath($file)),'/vendor/') !== false) continue; // ignore third-party-code
 	if (strpos(str_replace('\\','/',realpath($file)),'/dev/') !== false) continue; // ignore development utilities
 	if ($file->getExtension() == 'php') {
 		$cont = file_get_contents($file);

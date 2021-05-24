@@ -963,7 +963,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 	protected static function showMCE($name, $content) {
 		$mce_plugins = array();
-		foreach (glob(OIDplus::localpath().'3p/tinymce/plugins/*') as $m) { // */
+		foreach (glob(OIDplus::localpath().'vendor/tinymce/tinymce/plugins/*') as $m) { // */
 			$mce_plugins[] = basename($m);
 		}
 
@@ -980,14 +980,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		);
 		$tinyMCELang = '';
 		foreach ($langCandidates as $candidate) {
-			if (file_exists(OIDplus::localpath().'3p/tinymce/langs/'.$candidate.'.js')) {
+			if (file_exists(OIDplus::localpath().'vendor/tweeb/tinymce-i18n/langs/'.$candidate.'.js')) {
 				$tinyMCELang = $candidate;
 				break;
 			}
 		}
 
 		$out = '<script>
-				tinymce.EditorManager.baseURL = "3p/tinymce";
+				tinymce.EditorManager.baseURL = "vendor/tinymce/tinymce";
 				tinymce.init({
 					document_base_url: "'.OIDplus::webpath().'",
 					selector: "#'.$name.'",
@@ -1001,8 +1001,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						theme: "mobile",
 						toolbar: "undo redo | styleselect | bold italic underline forecolor | bullist numlist | outdent indent | table | fontsizeselect",
 						plugins: "'.implode(' ', $mce_plugins).'"
-    }
+					}
 					'.($tinyMCELang == '' ? '' : ', language : "'.$tinyMCELang.'"').'
+					'.($tinyMCELang == '' ? '' : ', language_url : "'.OIDplus::webpath().'vendor/tweeb/tinymce-i18n/langs/'.$tinyMCELang.'.js"').'
 				});
 
 				pageChangeRequestCallbacks.push([OIDplusPagePublicObjects.cbQueryTinyMCE, "#'.$name.'"]);

@@ -1,0 +1,21 @@
+#!/usr/bin/php
+<?php
+
+$file = $argv[1];
+
+$cont = file_get_contents($file);
+
+if (!preg_match('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', $cont, $m)) {
+	die("File $file not signed\n");
+}
+$signature = base64_decode($m[1]);
+
+$naked = preg_replace('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', '', $cont);
+$hash = hash("sha256", $naked.basename($file));
+
+$public_key = file_get_contents(__DIR__.'/public.pem');
+if (!openssl_verify($hash, $signature, $public_key, OPENSSL_ALGO_SHA256)) {
+	die("Signature invalid\n");
+}
+
+echo "Signature valid\n";

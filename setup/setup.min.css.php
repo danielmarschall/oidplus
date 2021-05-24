@@ -21,12 +21,6 @@ use MatthiasMullie\Minify;
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
-require_once __DIR__ . '/../3p/minify/path-converter/ConverterInterface.php';
-require_once __DIR__ . '/../3p/minify/path-converter/Converter.php';
-require_once __DIR__ . '/../3p/minify/src/Minify.php';
-require_once __DIR__ . '/../3p/minify/src/CSS.php';
-require_once __DIR__ . '/../3p/minify/src/Exception.php';
-
 error_reporting(OIDplus::baseConfig()->getValue('DEBUG') ? E_ALL : 0);
 @ini_set('display_errors', OIDplus::baseConfig()->getValue('DEBUG') ? '1' : '0');
 

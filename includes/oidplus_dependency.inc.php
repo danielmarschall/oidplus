@@ -46,8 +46,8 @@ function oidplus_get_missing_dependencies() {
 	if (!function_exists('mb_substr')) {
 		// Required for includes/classes/OIDplusSessionHandler.class.php
 		//              includes/oid_utils.inc.php
-		//              3p/minify/path-converter/Converter.php
-		//              3p/0xbb/Sha3.class.php
+		//              vendor/matthiasmullie/path-converter/src/Converter.php
+		//              vendor/n-other/php-sha3/src/Sha3.php
 		// Note that mbstring_supplement.inc.php will implement the MBString functions if iconv is present.
 		// This is the reason why we use function_exists('mb_substr') instead of extension_loaded('mbstring')
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {

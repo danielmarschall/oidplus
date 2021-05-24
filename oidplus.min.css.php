@@ -21,13 +21,6 @@ use MatthiasMullie\Minify;
 
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
-require_once __DIR__ . '/3p/minify/path-converter/ConverterInterface.php';
-require_once __DIR__ . '/3p/minify/path-converter/Converter.php';
-require_once __DIR__ . '/3p/minify/php-fig-cache/CacheItemInterface.php';
-require_once __DIR__ . '/3p/minify/src/Minify.php';
-require_once __DIR__ . '/3p/minify/src/CSS.php';
-require_once __DIR__ . '/3p/minify/src/Exception.php';
-
 error_reporting(OIDplus::baseConfig()->getValue('DEBUG') ? E_ALL : 0);
 @ini_set('display_errors', OIDplus::baseConfig()->getValue('DEBUG') ? '1' : '0');
 
@@ -87,9 +80,9 @@ function process_file($filename) {
 # ---
 
 // Third-party products
-$out .= process_file(__DIR__ . '/3p/jstree/themes/default/style.css');
-$out .= process_file(__DIR__ . '/3p/jquery-ui/jquery-ui.css');
-$out .= process_file(__DIR__ . '/3p/bootstrap4/css/bootstrap.css');
+$out .= process_file(__DIR__ . '/vendor/vakata/jstree/dist/themes/default/style.css');
+$out .= process_file(__DIR__ . '/vendor/components/jqueryui/themes/base/jquery-ui.css');
+$out .= process_file(__DIR__ . '/vendor/twbs/bootstrap/dist/css/bootstrap.css');
 $out .= process_file(__DIR__ . '/includes/loading.css');
 
 // Find out base CSS
