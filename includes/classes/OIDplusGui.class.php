@@ -1,4 +1,4 @@
-<?php
+<<?php
 
 /*
  * OIDplus 2.0
@@ -49,7 +49,7 @@ class OIDplusGui {
 		return $out;
 	}
 
-	public static function link($goto, $new_window=false) {
+	public static function link($goto, $new_window=false): string {
 		if ($new_window) {
 			return 'href="?goto='.urlencode($goto).'" target="_blank"';
 		} else {

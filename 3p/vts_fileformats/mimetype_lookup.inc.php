@@ -1,6 +1,6 @@
 <?php
 
-// Generated 2020-05-17 23:12:05
+// Generated 2021-05-24 02:11:24
 // Source: https://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
 
 $mime_types = array(
@@ -547,6 +547,7 @@ $mime_types = array(
 	'opf' => 'application/oebps-package+xml',
 	'opml' => 'text/x-opml',
 	'oprc' => 'application/vnd.palm',
+	'opus' => 'audio/ogg',
 	'org' => 'application/vnd.lotus-organizer',
 	'osf' => 'application/vnd.yamaha.openscoreformat',
 	'osfpvg' => 'application/vnd.yamaha.openscoreformat.osfpvg+xml',
@@ -758,7 +759,6 @@ $mime_types = array(
 	'str' => 'application/vnd.pg.format',
 	'stw' => 'application/vnd.sun.xml.writer.template',
 	'sub' => 'image/vnd.dvb.subtitle',
-	'sub' => 'text/vnd.dvb.subtitle',
 	'sus' => 'application/vnd.sus-calendar',
 	'susp' => 'application/vnd.sus-calendar',
 	'sv4cpio' => 'application/x-sv4cpio',
@@ -901,7 +901,6 @@ $mime_types = array(
 	'wmv' => 'video/x-ms-wmv',
 	'wmx' => 'video/x-ms-wmx',
 	'wmz' => 'application/x-ms-wmz',
-	'wmz' => 'application/x-msmetafile',
 	'woff' => 'font/woff',
 	'woff2' => 'font/woff2',
 	'wpd' => 'application/vnd.wordperfect',
