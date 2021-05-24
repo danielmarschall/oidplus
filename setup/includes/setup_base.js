@@ -88,7 +88,7 @@ function rebuild() {
 			g_prevBcryptPw = null;
 			bCryptWorker.terminate();
 		}
-		bCryptWorker = new Worker('../includes/bcrypt_worker.js');
+		bCryptWorker = new Worker('../bcrypt_worker.js');
 		bCryptWorker.postMessage(pw);
 		bCryptWorker.onmessage = function (event) {
 			var admPwdHash = event.data;
