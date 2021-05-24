@@ -1,4 +1,4 @@
-<<?php
+<?php
 
 /*
  * OIDplus 2.0
