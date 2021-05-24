@@ -1,13 +1,10 @@
 parameters:
-	level: 6
+	level: 5
 	paths:
 		- .
 	excludePaths:
 		analyse:
-			- 3p/minify
-			- 3p/0xbb
-			- 3p/php-jwt
-			- 3p/symfony-mbstring-polyfill
+			- vendor
 			- includes/classes/http_class.class.php
 		analyseAndScan:
 			- userdata/cache/phpstan
@@ -18,15 +15,9 @@ parameters:
 	ignoreErrors:
 		- '#is always (true|false)\.#'
 		- '#Call to function assert\(\) with false will always evaluate to false\.#'
-		- '#typehint specified\.#'
-	checkGenericClassInNonGenericObjectType: false
 
-# BUGS in PHPStan:
-# - gmp_div' => ['resource', 'a'=>'GMP|resource|string', 'b'=>'GMP|resource|string', 'round='=>'int'],
-#   => Return is "resource" but should be "GMP"
-# - 'odbc_exec' => ['resource', 'connection_id'=>'resource', 'query'=>'string', 'flags='=>'int'],
-#   => Return is "resource" but should be "resource|false"
-# - 'unregister_tick_function' => ['void', 'function_name'=>'string'],
-#   => Argument #1 is "string" but should be "callable"
-# TODO: Pull request to https://github.com/phpstan/phpstan-src/blob/master/resources/functionMap.php
-
+# Bugs in PHPStan:
+# - "Strict comparison using === between *NEVER* and 'TB' will always evaluate to false."
+#   https://github.com/phpstan/phpstan/issues/5062
+# - Wrong signatures of gmp_div, odbc_exec and unregister_tick_function
+#   https://github.com/phpstan/phpstan-src/pull/533

@@ -3,6 +3,8 @@ RECENT STUFF
 - At a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
 - Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Default language selection: Either always en-US, or automatical selection depending on browser language, or depending on admin setting (e.g. german companies offer a german repository by default)?
+- SimpleXML supplement doesn't seem to work correctly:
+	File /daten/htdocs/intern/oidplus_dev/plugins/sqlSlang/access/Array was defined in manifest, but it is not existing
 
 SECURITY Improvements:
 - Make attachment upload path configurable
@@ -102,7 +104,7 @@ SMALL THINGS
 	* Not yet translated:
 		- includes\classes\http_class.class.php [Problem: This is a third-party code!]
 		- plugins\publicPages\100_whois\whois\index.php [Problem: This page is kinda standalone and does not include the OIDplus code]
-		- 3p\vts_fileformats\fileformats.conf [Problem: This is a third-party code!]
+		- vendor\danielmarschall\fileformats\fileformats.conf [Problem: This is a third-party code!]
 		- includes\classes\VtsBrowserDownload.class.php [Problem: This is a third-party code!]
 	* Is there some useful German translation of the Apache 2.0 license?
 - WEID UUID: Show the UUID 2.25/GUID equivalent as alternative ID
@@ -114,7 +116,7 @@ SMALL THINGS
 	On the other hand, these files could then be used to hide malicious data
 
 UPDATER
-- Should oid_utils.inc.php, xml_utils.inc.php, oidinfo_api, etc. all be put into 3p/ (especially if they have an own ViaThinkSoft repository)?
+- Should oid_utils.inc.php, xml_utils.inc.php, oidinfo_api, etc. all be put into vendor/ (especially if they have an own ViaThinkSoft repository)?
 	Attention: WebSVN does not accept external SVN repositories
 - Internal problem with GIT distribution channel:
 	The GIT version might be behind the master SVN repository
@@ -129,9 +131,6 @@ DATABASE
 	c) not every object should have a registered RA. There should be "unknown" RAs where only the email address is known
 
 FUTURE
-- make use of Composer. Problems:
-  * What if composer installs a version of a component, which is incompatible?
-  * We need a new publishing script, because simply checking out SVN is not enough anymore. The user needs to execute composer. But what is if the user don't have composer (or dont have shell access at all?)
 - implement sitemaps xml
 - admin should be able to change wellknown oids?
 - move oid to different arc
@@ -239,10 +238,10 @@ QUESTIONS
 - "Documents" section: Can base of URLs/images inside the HTML be changed automatically?
 
 PRIVACY
-- bring back "3p/cookiecontent"? DM 28 May 2019: Removed CookieConsent temporarily, because it is placed at the beginning of the page and therefore ruins the Google index ...
+- bring back "vendor/cookiecontent"? DM 28 May 2019: Removed CookieConsent temporarily, because it is placed at the beginning of the page and therefore ruins the Google index ...
 	=> We might not need it, because cookies are only set during login, and at the login page itself, we already warn about cookies, in addition to the Privacy documentation
 - Cookie law:
-	Download CookieConsent code into _3p folder, do not hotlink it
+	Download CookieConsent code into vendor folder, do not hotlink it
 	we need to log all consents
 	do we need an explicit consent at the login form?
 	do we need a consent for the cookie SSL_CHECK?

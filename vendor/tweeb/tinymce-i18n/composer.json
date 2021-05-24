@@ -1,0 +1,16 @@
+{
+  "name": "tweeb/tinymce-i18n",
+  "description": "Languages for TinyMCE 5",
+  "keywords": [
+    "i18n",
+    "languages",
+    "tinymce"
+  ],
+  "homepage": "https://github.com/tweeb/tinymce-i18n",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "TinyMCE Community"
+    }
+  ]
+}

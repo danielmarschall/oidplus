@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-include '../../../3p/vts_vnag/vnag_framework.inc.php';
+include '../../../vendor/danielmarschall/vnag/framework/vnag_framework.inc.php';
 include '../../../includes/oidplus.inc.php';
 
 define('OIDPLUS_VNAG_MAX_CACHE_AGE', 60); // seconds (TODO: in base config?)

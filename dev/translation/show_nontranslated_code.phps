@@ -30,7 +30,7 @@ $all_cont .= "?>\n";
 
 $it = new RecursiveDirectoryIterator($dir);
 foreach(new RecursiveIteratorIterator($it) as $file) {
-	if (strpos(str_replace('\\','/',realpath($file)),'/3p/') !== false) continue; // ignore third-party-code
+	if (strpos(str_replace('\\','/',realpath($file)),'/vendor/') !== false) continue; // ignore third-party-code
 	if (strpos(str_replace('\\','/',realpath($file)),'/dev/') !== false) continue; // ignore development utilities
 	if (basename($file) == 'ipv4_functions.inc.php') continue; // 3P
 	if (basename($file) == 'ipv6_functions.inc.php') continue; // 3P

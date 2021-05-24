@@ -17,13 +17,13 @@
 
 DIR=$( dirname "$1" )
 
-# 1. Convert everything to DOS except ".svn" and "3p"
+# 1. Convert everything to DOS except ".svn" and "vendor"
 cd "$DIR"/..
 mv ".svn" ../_svn
-mv "3p" ../_3p
+mv "vendor" ../_vendor
 find . -type f -exec unix2dos {} \;
 mv ../_svn ".svn"
-mv ../_3p "3p"
+mv ../_vendor "vendor"
 
 # 2. Convert Linux shell script back to Unix format
 dos2unix plugins/publicPages/100_whois/whois/cli/whois

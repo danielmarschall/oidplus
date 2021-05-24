@@ -26,15 +26,15 @@ if (!function_exists("curl_init")) {
 
 $ch = curl_init();
 if (ini_get('curl.cainfo') == '') {
-	if (file_exists(__DIR__.'/../3p/certs/cacert.pem')) {
-		curl_setopt($ch, CURLOPT_CAINFO, __DIR__.'/../3p/certs/cacert.pem');
+	if (file_exists(__DIR__.'/../vendor/cacert.pem')) {
+		curl_setopt($ch, CURLOPT_CAINFO, __DIR__.'/../vendor/cacert.pem');
 		echo '<p>Loaded fallback CURLOPT_CAINFO from OIDplus</p>';
 	}
-	else if (file_exists(__DIR__.'/3p/certs/cacert.pem')) {
-		curl_setopt($ch, CURLOPT_CAINFO, __DIR__.'/3p/certs/cacert.pem');
+	else if (file_exists(__DIR__.'/vendor/cacert.pem')) {
+		curl_setopt($ch, CURLOPT_CAINFO, __DIR__.'/vendor/cacert.pem');
 		echo '<p>Loaded fallback CURLOPT_CAINFO from OIDplus</p>';
 	} else {
-		echo '<p><font color="red">curl.cainfo is missing and fallback certificates (3p/certs/cacert.pem) not found</font></p>';
+		echo '<p><font color="red">curl.cainfo is missing and fallback certificates (vendor/cacert.pem) not found</font></p>';
 	}
 }
 curl_setopt($ch, CURLOPT_URL, $url);

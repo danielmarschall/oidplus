@@ -18,7 +18,7 @@
 DIR=$( dirname "$0" )
 
 cd "$DIR/.."
-grep -ir todo | grep -v "3p/" | grep -v ".svn/"
+grep -ir todo | grep -v "vendor/" | grep -v ".svn/"
 
 cat "TODO"
 

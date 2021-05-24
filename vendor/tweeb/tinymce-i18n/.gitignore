@@ -1,0 +1,7 @@
+# https://help.github.com/articles/ignoring-files/
+
+# macOS
+*.DS_Store
+
+# tweeb
+langs.zip

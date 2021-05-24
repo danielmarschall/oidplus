@@ -24,17 +24,8 @@ define('INSIDE_OIDPLUS', true);
 require_once __DIR__ . '/functions.inc.php'; // Required for _L()
 
 if (version_compare(PHP_VERSION, '7.0.0') < 0) {
-	// Reasons why we currently require PHP 7.0:
-	// - Return values (e.g. "function foo(): array") (added 2020-04-06 at the database classes)
-	//   Note: By removing these return values (e.g. removing ": array"), you *might* be
-	//   able to run OIDplus with PHP lower than version 7.0 (not tested)
-	//
-	// Currently we do NOT require 7.1, because some (old-)stable distros are still using PHP 7.0
-	// (e.g. Debian 9 which has LTS support till May 2022).
-	// Therefore we commented out following features which would require PHP 7.1:
-	// - Nullable return values (e.g. "function foo(): ?array")
-	// - void return value (e.g. "function foo(): void")
-	// - private/protected/public consts
+	// More information about the required PHP version:
+	// doc/developer_notes/php7_compat
 	echo '<!DOCTYPE HTML>';
 	echo '<html><head><title>'._L('OIDplus error').'</title></head><body>';
 	echo '<h1>'._L('OIDplus error').'</h1>';
@@ -43,8 +34,10 @@ if (version_compare(PHP_VERSION, '7.0.0') < 0) {
 	die();
 }
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 include_once __DIR__ . '/gmp_supplement.inc.php';
-include_once __DIR__ . '/../3p/symfony-mbstring-polyfill/bootstrap.php';
+include_once __DIR__ . '/../vendor/symfony/polyfill-mbstring/bootstrap.php';
 include_once __DIR__ . '/simplexml_supplement.inc.php';
 
 require_once __DIR__ . '/oidplus_dependency.inc.php';
@@ -130,18 +123,8 @@ spl_autoload_register(function ($class_name) {
 			$class_files = array_merge($class_files, glob(__DIR__ . '/../plugins/'.$folder.'/'.'*'.'/'.'*'.'.class.php'));
 		}
 		$class_files = array_merge($class_files, glob(__DIR__ . '/classes/'.'*'.'.class.php'));
-		$class_files = array_merge($class_files, glob(__DIR__ . '/../3p/vts_fileformats/'.'*'.'.class.php'));
+		$class_files = array_merge($class_files, glob(__DIR__ . '/../vendor/danielmarschall/fileformats/'.'*'.'.class.php'));
 		$func($class_refs, $class_files);
-
-		// Namespace of php-jwt
-		$class_files = glob(__DIR__ . '/../3p/php-jwt/'.'*'.'.php');
-		$namespace = "Firebase\\JWT\\";
-		$func($class_refs, $class_files, $namespace);
-
-		// Namespace of 0xbb SHA3
-		$class_files = glob(__DIR__ . '/../3p/0xbb/'.'*'.'.php');
-		$namespace = "bb\\Sha3\\";
-		$func($class_refs, $class_files, $namespace);
 	}
 
 	$class_name = strtolower($class_name);

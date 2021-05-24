@@ -5,7 +5,8 @@ About the folder "userdata/attachments"
 This folder is used by the plugin "publicPages/095_attachments".
 
 Contents:
-- userdata/attachments/filetypes.conf (optional) to define/overwrite fileformat descriptions placed in 3p/vts_fileformats/filetypes.conf
+- userdata/attachments/filetypes.conf (optional) to define/overwrite fileformat descriptions placed in
+  vendor/danielmarschall/fileformats/filetypes.conf
 - Folders with attachments users have uploaded.
 
 	Example for folder names:
