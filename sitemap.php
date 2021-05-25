@@ -35,7 +35,6 @@ $out = array();
 foreach (OIDplus::getPagePlugins() as $plugin) {
 	if (is_subclass_of($plugin, OIDplusPagePluginPublic::class)) {
 		$plugin->publicSitemap($out);
-
 	}
 }
 

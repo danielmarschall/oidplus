@@ -15,9 +15,4 @@ parameters:
 	ignoreErrors:
 		- '#is always (true|false)\.#'
 		- '#Call to function assert\(\) with false will always evaluate to false\.#'
-
-# Bugs in PHPStan:
-# - "Strict comparison using === between *NEVER* and 'TB' will always evaluate to false."
-#   https://github.com/phpstan/phpstan/issues/5062
-# - Wrong signatures of gmp_div, odbc_exec and unregister_tick_function
-#   https://github.com/phpstan/phpstan-src/pull/533
+		- '#with no typehint specified\.#'
