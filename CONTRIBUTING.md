@@ -1,15 +1,9 @@
-
-Contributing to the development of OIDplus 2.0
-==============================================
+# Contributing to the development of OIDplus 2.0
 
 Currently, the main repository of OIDplus is
 https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/oidplus/
 
-The GitHub repository located at
-https://github.com/danielmarschall/oidplus
-is currently only a mirror.
-(This might change in the future, but for now,
-SVN is the main source)
+The GitHub repository located at https://github.com/danielmarschall/oidplus is currently only a mirror. (This might change in the future, but for now, SVN is the main source)
 
 How you can contribute:
 

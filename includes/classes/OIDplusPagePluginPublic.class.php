@@ -24,4 +24,3 @@ abstract class OIDplusPagePluginPublic extends OIDplusPagePlugin {
 	public function publicSitemap(&$out) {}
 
 }
-
