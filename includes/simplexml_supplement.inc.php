@@ -3,6 +3,7 @@
 /*
  * PHP SimpleXML-Supplement
  * Copyright 2020 - 2021 Daniel Marschall, ViaThinkSoft
+ * Revision 2021-05-25
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +43,26 @@
 
 if (!function_exists('simplexml_load_string')) {
 
+	// We cannot store the number 0, 1, 2, ... as items in the SimpleXMLElement, because PHP 7.0 had a bug
+	// that prevented /get_object_vars() from working correctly
+	// https://stackoverflow.com/questions/46000541/get-object-vars-returning-different-results-depending-on-php-version
+	// https://stackoverflow.com/questions/4914376/failed-to-get-dynamic-instance-variables-via-phps-reflection/4914405#comment76610293_4914405
+	define('SIMPLEXML_SUPPLEMENT_MAGIC', '_SIMPLEXML_SUPPLEMENT_IDX_');
+
+	function _simplexml_supplement_isnumeric($x) {
+		return substr($x,0,strlen(SIMPLEXML_SUPPLEMENT_MAGIC)) === SIMPLEXML_SUPPLEMENT_MAGIC;
+	}
+	function _simplexml_supplement_getnumber($x) {
+		return (int)substr($x,strlen(SIMPLEXML_SUPPLEMENT_MAGIC));
+	}
+	function _simplexml_supplement_addnumberprefix($x) {
+		return SIMPLEXML_SUPPLEMENT_MAGIC.$x;
+	}
+
+	// We may not store the fields "position" and "attrs" in the SimpleXMLElement object,
+	// otherweise the typecast SimpleXMLElement=>array will include them
+	$_simplexml_supplement_properties = array();
+
 	function simplexml_load_file($file): SimpleXMLElement {
 		return simplexml_load_string(file_get_contents($file));
 	}
@@ -50,7 +71,7 @@ if (!function_exists('simplexml_load_string')) {
 		$out = new SimpleXMLElement(); /** @phpstan-ignore-line */
 
 		$testxml = preg_replace('@<!\\-\\-.+\\-\\->@','',$testxml); // remove comments
-		$testxml = preg_replace('@<(\\S+)[^>]*/>@smU','<\\1></\\1>',$testxml); // <x/> => <x></x>
+		$testxml = preg_replace('@<([^>\\s]+)\\s*/>@smU','<\\1></\\1>',$testxml); // <x/> => <x></x>
 
 		if ((stripos($testxml, '<?xml') !== false) || (stripos($testxml, '<!doctype') !== false)) {
 			$testxml = preg_replace('@<\\?.+\\?>@','',$testxml);
@@ -93,14 +114,19 @@ if (!function_exists('simplexml_load_string')) {
 
 	class SimpleXMLElement implements ArrayAccess, Iterator {
 
-		private $_attrs = array();
+		function __destruct() {
+			global $_simplexml_supplement_properties;
+			unset($_simplexml_supplement_properties[spl_object_hash($this)]);
+		}
 
 		public function addAttribute($name, $val) {
-			$this->_attrs[$name] = $val;
+			global $_simplexml_supplement_properties;
+			$_simplexml_supplement_properties[spl_object_hash($this)]['attrs'][$name] = $val;
 		}
 
 		public function attributes() {
-			return $this->_attrs;
+			global $_simplexml_supplement_properties;
+			return $_simplexml_supplement_properties[spl_object_hash($this)]['attrs'];
 		}
 
 		public function isSupplement() {
@@ -108,8 +134,13 @@ if (!function_exists('simplexml_load_string')) {
 		}
 
 		public function __construct($val=null) {
+			global $_simplexml_supplement_properties;
+			$_simplexml_supplement_properties[spl_object_hash($this)] = array(
+				"position" => 0,
+				"attrs" => array()
+			);
 			if (!is_null($val)) {
-				$this->{0} = $val;
+				$this->{_simplexml_supplement_addnumberprefix(0)} = $val;
 			}
 		}
 
@@ -117,12 +148,12 @@ if (!function_exists('simplexml_load_string')) {
 			$vars = get_object_vars($this);
 			$max = -1;
 			foreach ($vars as $x => $dummy) {
-				if (($x == '_attrs') || ($x == 'position')) continue;
-				if (!is_numeric($x)) {
+				if (!_simplexml_supplement_isnumeric($x)) {
 					$max = -1;
 					break;
 				} else {
-					if ($x > $max) $max = $x;
+					$num = _simplexml_supplement_getnumber($x);
+					if ($num > $max) $max = $num;
 				}
 			}
 			return $max > 0;
@@ -132,23 +163,23 @@ if (!function_exists('simplexml_load_string')) {
 			$vars = get_object_vars($this);
 			$max = -1;
 			foreach ($vars as $x => $dummy) {
-				if (($x == '_attrs') || ($x == 'position')) continue;
-				if (!is_numeric($x)) {
+				if (!_simplexml_supplement_isnumeric($x)) {
 					$max = -1;
 					break;
 				} else {
-					if ($x > $max) $max = $x;
+					$num = _simplexml_supplement_getnumber($x);
+					if ($num > $max) $max = $num;
 				}
 			}
 			$max++;
-			$this->{(string)$max} = $val;
+			$this->{_simplexml_supplement_addnumberprefix($max)} = $val;
 		}
 
 		public function __toString() {
-			$data = /*$this->data;*/get_object_vars($this);
+			$data = get_object_vars($this);
 			if (is_array($data)) {
-				if (isset($data[0])) {
-					return $data[0];
+				if (isset($data[_simplexml_supplement_addnumberprefix(0)])) {
+					return $data[_simplexml_supplement_addnumberprefix(0)];
 				} else {
 					return '';
 				}
@@ -179,21 +210,21 @@ if (!function_exists('simplexml_load_string')) {
 		}
 
 		public function addChild($name, $val=null) {
+			global $_simplexml_supplement_properties;
+
 			if ($val == null) $val = new SimpleXMLElement(); /** @phpstan-ignore-line */
 
 			if ((substr(trim($val),0,1) === '<') || (trim($val) == '')) {
 				$val = simplexml_load_string($val);
 			}
 
-			$data = /*$this->data;*/get_object_vars($this);
+			$data = get_object_vars($this);
 
 			if (!isset($data[$name])) {
 				if ($val instanceof SimpleXMLElement) {
-					//echo "First add $name already exist\n";
 					$this->$name = $val;
 				} else {
 					$this->$name = new SimpleXMLElement($val);
-					//echo "First add $name with val\n";
 				}
 			} else {
 				if (!($val instanceof SimpleXMLElement)) {
@@ -207,7 +238,7 @@ if (!function_exists('simplexml_load_string')) {
 					$tmp->addToArray($data[$name]);
 					$tmp->addToArray($val);
 					$this->$name = $tmp;
-					$this->_attrs = array();
+					$_simplexml_supplement_properties[spl_object_hash($this)]['attrs'] = array();
 				}
 				return $val;
 			}
@@ -215,22 +246,20 @@ if (!function_exists('simplexml_load_string')) {
 			return $this->$name;
 		}
 
-		private $position = 0;
-
 		public function rewind() {
-			$this->position = 0;
+			global $_simplexml_supplement_properties;
+			$_simplexml_supplement_properties[spl_object_hash($this)]['position'] = 0;
 		}
 
 		public function current() {
+			global $_simplexml_supplement_properties;
 			$vars = get_object_vars($this);
 			$cnt = 0;
 			foreach ($vars as $x => $dummy) {
-				if (($x == '_attrs') || ($x == 'position')) continue;
-				if (($dummy instanceof SimpleXMLElement) && !is_numeric($x) && $dummy->isArray()) {
+				if (($dummy instanceof SimpleXMLElement) && !_simplexml_supplement_isnumeric($x) && $dummy->isArray()) {
 					$vars2 = get_object_vars($dummy);
 					foreach ($vars2 as $x2 => $dummy2) {
-						if (($x2 == '_attrs') || ($x2 == 'position')) continue;
-						if ($cnt == $this->position) {
+						if ($cnt == $_simplexml_supplement_properties[spl_object_hash($this)]['position']) {
 							if ($dummy2 instanceof SimpleXMLElement) {
 								return $dummy2;
 							} else {
@@ -240,7 +269,7 @@ if (!function_exists('simplexml_load_string')) {
 						$cnt++;
 					}
 				} else {
-					if ($cnt == $this->position) {
+					if ($cnt == $_simplexml_supplement_properties[spl_object_hash($this)]['position']) {
 						if ($dummy instanceof SimpleXMLElement) {
 							return $dummy;
 						} else {
@@ -255,37 +284,37 @@ if (!function_exists('simplexml_load_string')) {
 		}
 
 		public function key() {
+			global $_simplexml_supplement_properties;
 			$vars = get_object_vars($this);
 			$cnt = 0;
 			foreach ($vars as $x => $dummy) {
-				if (($x == '_attrs') || ($x == 'position')) continue;
-				if (($dummy instanceof SimpleXMLElement) && !is_numeric($x) && $dummy->isArray()) {
+				if (($dummy instanceof SimpleXMLElement) && !_simplexml_supplement_isnumeric($x) && $dummy->isArray()) {
 					$vars2 = get_object_vars($dummy);
 					foreach ($vars2 as $x2 => $dummy2) {
-						if (($x2 == '_attrs') || ($x2 == 'position')) continue;
-						if ($cnt == $this->position) return $x/*sic*/;
+						if ($cnt == $_simplexml_supplement_properties[spl_object_hash($this)]['position']) return $x/*sic*/;
 						$cnt++;
 					}
 				} else {
-					if ($cnt == $this->position) return $x;
+					if ($cnt == $_simplexml_supplement_properties[spl_object_hash($this)]['position']) return $x;
 					$cnt++;
 				}
 			}
 		}
 
 		public function next() {
-			++$this->position;
+			global $_simplexml_supplement_properties;
+			++$_simplexml_supplement_properties[spl_object_hash($this)]['position'];
 		}
 
 		public function valid() {
+			global $_simplexml_supplement_properties;
+
 			$vars = get_object_vars($this);
 			$cnt = 0;
 			foreach ($vars as $x => $dummy) {
-				if (($x == '_attrs') || ($x == 'position')) continue;
-				if (($dummy instanceof SimpleXMLElement) && !is_numeric($x) && $dummy->isArray()) {
+				if (($dummy instanceof SimpleXMLElement) && !_simplexml_supplement_isnumeric($x) && $dummy->isArray()) {
 					$vars2 = get_object_vars($dummy);
 					foreach ($vars2 as $x2 => $dummy2) {
-						if (($x2 == '_attrs') || ($x2 == 'position')) continue;
 						$cnt++;
 					}
 				} else {
@@ -293,7 +322,7 @@ if (!function_exists('simplexml_load_string')) {
 				}
 			}
 
-			return $this->position < $cnt;
+			return $_simplexml_supplement_properties[spl_object_hash($this)]['position'] < $cnt;
 		}
 
 	}
