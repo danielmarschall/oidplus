@@ -52,6 +52,9 @@ rm vendor/danielmarschall/fileformats/example.php
 rm -rf vendor/danielmarschall/vnag/logos
 rm -rf vendor/danielmarschall/vnag/doc
 rm -rf vendor/danielmarschall/vnag/plugins
+rm -rf vendor/danielmarschall/uuid_mac_utils/*.php
+rm -rf vendor/danielmarschall/uuid_mac_utils/*.sh
+rm -rf vendor/danielmarschall/uuid_mac_utils/*.css
 
 # It is important that symlinks are not existing, otherwise the .tar.gz dir
 # cannot be correctly extracted in Windows
@@ -62,4 +65,6 @@ rm -rf vendor/matthiasmullie/minify/bin
 if [ -d "_svn" ]; then
 	mv _svn .svn
 fi
+
+composer license > vendor/licenses
 

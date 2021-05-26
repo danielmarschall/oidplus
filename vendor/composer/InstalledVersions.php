@@ -73,6 +73,15 @@ private static $installed = array (
       ),
       'reference' => NULL,
     ),
+    'danielmarschall/uuid_mac_utils' => 
+    array (
+      'pretty_version' => 'master',
+      'version' => 'dev-master',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'trunk/',
+    ),
     'danielmarschall/vnag' => 
     array (
       'pretty_version' => 'master',
