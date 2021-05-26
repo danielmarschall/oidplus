@@ -161,6 +161,22 @@
             "install-path": "../danielmarschall/fileformats"
         },
         {
+            "name": "danielmarschall/php_utils",
+            "version": "master",
+            "version_normalized": "dev-master",
+            "source": {
+                "type": "svn",
+                "url": "https://svn.viathinksoft.com/svn/php_utils/",
+                "reference": "trunk/"
+            },
+            "type": "library",
+            "installation-source": "source",
+            "license": [
+                "Apache-2.0"
+            ],
+            "install-path": "../danielmarschall/php_utils"
+        },
+        {
             "name": "danielmarschall/uuid_mac_utils",
             "version": "master",
             "version_normalized": "dev-master",

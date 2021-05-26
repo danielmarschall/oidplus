@@ -58,6 +58,20 @@
 				}
 			}
 		},
+		"danielmarschall/php_utils": {
+			"type": "package",
+			"packagist.org": false,
+			"package": {
+				"name": "danielmarschall/php_utils",
+				"version": "master",
+				"license": "Apache-2.0",
+				"source": {
+					"url": "https://svn.viathinksoft.com/svn/php_utils/",
+					"type": "svn",
+					"reference": "trunk/"
+				}
+			}
+		},
 		"mikemcl/bignumber.js": {
 			"type": "package",
 			"packagist.org": false,
@@ -150,6 +164,7 @@
 		"dcodeio/bcrypt.js": "*@dev",
 		"danielmarschall/vnag": "*@dev",
 		"danielmarschall/uuid_mac_utils": "*@dev",
+		"danielmarschall/php_utils": "*@dev",
 		"danielmarschall/fileformats": "*@dev",
 		"spamspan/spamspan": "*@dev",
 		"vakata/jstree": "^3.3",

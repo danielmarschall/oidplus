@@ -47,6 +47,15 @@
       ),
       'reference' => NULL,
     ),
+    'danielmarschall/php_utils' => 
+    array (
+      'pretty_version' => 'master',
+      'version' => 'dev-master',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'trunk/',
+    ),
     'danielmarschall/uuid_mac_utils' => 
     array (
       'pretty_version' => 'master',
