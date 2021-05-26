@@ -15,4 +15,4 @@ parameters:
 	ignoreErrors:
 		- '#is always (true|false)\.#'
 		- '#Call to function assert\(\) with false will always evaluate to false\.#'
-		- '#with no typehint specified\.#'
+		#- '#with no typehint specified\.#'

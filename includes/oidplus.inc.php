@@ -36,9 +36,9 @@ if (version_compare(PHP_VERSION, '7.0.0') < 0) {
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-include_once __DIR__ . '/gmp_supplement.inc.php';
+include_once __DIR__ . '/../vendor/danielmarschall/php_utils/gmp_supplement.inc.php';
 include_once __DIR__ . '/../vendor/symfony/polyfill-mbstring/bootstrap.php';
-include_once __DIR__ . '/simplexml_supplement.inc.php';
+include_once __DIR__ . '/../vendor/danielmarschall/php_utils/simplexml_supplement.inc.php';
 
 require_once __DIR__ . '/oidplus_dependency.inc.php';
 
@@ -76,12 +76,12 @@ if (PHP_SAPI != 'cli') {
 	header('Referrer-Policy: no-referrer-when-downgrade');
 }
 
-require_once __DIR__ . '/oid_utils.inc.php';
-require_once __DIR__ . '/../vendor/danielmarschall/uuid_mac_utils/includes/uuid_utils.inc.phps';
-require_once __DIR__ . '/color_utils.inc.php';
-require_once __DIR__ . '/ipv4_functions.inc.php';
-require_once __DIR__ . '/ipv6_functions.inc.php';
-require_once __DIR__ . '/anti_xss.inc.php';
+require_once __DIR__ . '/../vendor/danielmarschall/php_utils/oid_utils.inc.php';
+require_once __DIR__ . '/../vendor/danielmarschall/uuid_mac_utils/includes/uuid_utils.inc.php';
+require_once __DIR__ . '/../vendor/danielmarschall/php_utils/color_utils.inc.php';
+require_once __DIR__ . '/../vendor/danielmarschall/php_utils/ipv4_functions.inc.php';
+require_once __DIR__ . '/../vendor/danielmarschall/php_utils/ipv6_functions.inc.php';
+require_once __DIR__ . '/../vendor/danielmarschall/php_utils/anti_xss.inc.php';
 
 // ---
 
@@ -124,6 +124,7 @@ spl_autoload_register(function ($class_name) {
 		}
 		$class_files = array_merge($class_files, glob(__DIR__ . '/classes/'.'*'.'.class.php'));
 		$class_files = array_merge($class_files, glob(__DIR__ . '/../vendor/danielmarschall/fileformats/'.'*'.'.class.php'));
+		$class_files = array_merge($class_files, glob(__DIR__ . '/../vendor/danielmarschall/php_utils/'.'*'.'.class.php'));
 		$func($class_refs, $class_files);
 	}
 
