@@ -1,0 +1,8 @@
+bitfuncs
+mask funcs
+
+funktion, um etwas aus einem $data herauszunehmen, achtung: [3-6] ohne [3-4] wird zu [5-6], achtung [0-100] ohne [3-5] wird zu [0-2] und [6-100]
+
+ipv4: alle funktionen sollen incomplete akzeptieren
+[$topip, $baseip] alternative auch einen $rng[0,1] akzeptieren
+
