@@ -24,13 +24,13 @@
 
 if (!function_exists('_L')) {
 	function _L($str, ...$sprintfArgs) {
-	        $n = 1;
-	        foreach ($sprintfArgs as $val) {
-	                $str = str_replace("%$n", $val, $str);
-	                $n++;
-	        }
-	        $str = str_replace("%%", "%", $str);
-	        return $str;
+		$n = 1;
+		foreach ($sprintfArgs as $val) {
+			$str = str_replace("%$n", $val, $str);
+			$n++;
+		}
+		$str = str_replace("%%", "%", $str);
+		return $str;
 	}
 }
 
@@ -163,13 +163,13 @@ class phpsvnclient {
 	/**
 	* Updates a working copy
 	* @param string $from_revision Either a revision number or a text file with the
-	*                       contents "Revision ..." (if it is a file,
-	*                       the file revision will be updated if everything
-	*                       was successful)
-	* @param string $folder     SVN remote folder
-	* @param string $outPath    Local path of the working copy
-	* @param boolean $preview   Only simulate, do not write to files
-	* @return boolean true if everything is OK
+	*                              contents "Revision ..." (if it is a file,
+	*                              the file revision will be updated if everything
+	*                              was successful)
+	* @param string $folder        SVN remote folder
+	* @param string $outPath       Local path of the working copy
+	* @param boolean $preview      Only simulate, do not write to files
+	* @return boolean              true if everything is OK
 	**/
 	public function updateWorkingCopy($from_revision='version.txt', $folder = '/trunk/', $outPath = '.', $preview = false)
 	{
@@ -183,7 +183,7 @@ class phpsvnclient {
 
 		if (!is_numeric($from_revision)) {
 			$version_file = $from_revision;
-                        $from_revision = -1;
+			$from_revision = -1;
 
 			if (!file_exists($version_file)) {
 				echo _L("ERROR: %1 missing",$version_file)."\n";
@@ -242,7 +242,7 @@ class phpsvnclient {
 			foreach ($objects_list['dirs'] as $file) {
 				if ($file != '') {
 					$localPath = str_replace($folder, "", $file);
-                                        $localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
+					$localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
 
 					echo _L("Added or modified directory: %1",$file)."\n";
 					//flush();
@@ -262,7 +262,7 @@ class phpsvnclient {
 			foreach ($objects_list['files'] as $file) {
 				if ($file != '') {
 					$localFile = str_replace($folder, "", $file);
-                                        $localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
+					$localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
 
 					echo _L("Added or modified file: %1",$file)."\n";
 					//flush();
@@ -286,7 +286,7 @@ class phpsvnclient {
 			foreach ($objects_list['filesDelete'] as $file) {
 				if ($file != '') {
 					$localFile = str_replace($folder, "", $file);
-                                        $localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
+					$localFile = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localFile,DIRECTORY_SEPARATOR);
 
 					echo _L("Removed file: %1",$file)."\n";
 					//flush();
@@ -308,7 +308,7 @@ class phpsvnclient {
 			foreach ($objects_list['dirsDelete'] as $file) {
 				if ($file != '') {
 					$localPath = str_replace($folder, "", $file);
-                                        $localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
+					$localPath = rtrim($outPath,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($localPath,DIRECTORY_SEPARATOR);
 
 					echo _L("Removed directory: %1",$file)."\n";
 					//flush();
@@ -353,7 +353,7 @@ class phpsvnclient {
 	/**
 	 *  rawDirectoryDump
 	 *
-	 * Dumps SVN data for $folder in the version $version of the repository.
+	 *  Dumps SVN data for $folder in the version $version of the repository.
 	 *
 	 *  @param string  $folder Folder to get data
 	 *  @param integer $version Repository version, -1 means actual
@@ -551,10 +551,10 @@ class phpsvnclient {
 	/**
 	 *  Returns file contents
 	 *
-	 *  @param	string  $file File pathname
-	 *  @param	integer	$version File Version
-	 *  @return	string	File content and information, false on error, or if a
-	 *              directory is requested
+	 *  @param  string  $file File pathname
+	 *  @param  integer $version File Version
+	 *  @return string  File content and information, false on error, or if a
+	 *                  directory is requested
 	 */
 	private function getFile($file, $version = -1)
 	{
@@ -568,7 +568,7 @@ class phpsvnclient {
 		// SVN server. Maybe add this as an option/parameter? ES 23/06/08
 		$fileInfo = $this->getDirectoryTree($file, $version, false);
 		if ($fileInfo["type"] == "directory") {
-			throw new OIDplusException(_L("File %1 is detected as directory. Cannot receive file contents.", $file));
+			throw new Exception(_L("File %1 is detected as directory. Cannot receive file contents.", $file));
 			//return false;
 		}
 
@@ -633,7 +633,7 @@ class phpsvnclient {
 		$array = array();
 		foreach ($arrOutput as $xmlLogItem) {
 			/*
-                        <S:log-item>
+			<S:log-item>
 			<D:version-name>164</D:version-name>
 			<S:date>2019-08-13T13:12:13.915920Z</S:date>
 			<D:comment>Update assistant bugfix</D:comment>
@@ -675,10 +675,10 @@ class phpsvnclient {
 					$creator = (string)$data;
 				}
 			}
-                        $revlogs[] = array('versionName' => $versionName,
+			$revlogs[] = array('versionName' => $versionName,
 			                   'date' => $date,
-					   'comment' => $comment,
-					   'creator' => $creator);
+			                   'comment' => $comment,
+			                   'creator' => $creator);
 		}
 
 		$files       = array();
