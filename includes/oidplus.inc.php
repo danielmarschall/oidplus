@@ -77,6 +77,7 @@ if (PHP_SAPI != 'cli') {
 }
 
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/oid_utils.inc.php';
+require_once __DIR__ . '/../vendor/danielmarschall/php_utils/xml_utils.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/uuid_mac_utils/includes/uuid_utils.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/color_utils.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/ipv4_functions.inc.php';
