@@ -41,7 +41,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	private static function getDocumentContent($file) {
-		$file = OIDplus::localpath().self::realname($file);
+		$file = self::realname($file);
 		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
 		if (file_exists($file2)) $file = $file2;
 
@@ -57,7 +57,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	private static function getDocumentTitle($file) {
-		$file = OIDplus::localpath().self::realname($file);
+		$file = self::realname($file);
 		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
 		if (file_exists($file2)) $file = $file2;
 
@@ -137,8 +137,9 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	private static function realname($rel) {
 		$candidate1 = OIDplus::localpath().'userdata/resources/'.$rel;
 		$candidate2 = OIDplus::localpath().'res/'.$rel;
-		if (file_exists($candidate1) || is_dir($candidate1)) return "userdata/resources/$rel";
-		if (file_exists($candidate2) || is_dir($candidate2)) return "res/$rel";
+		if (file_exists($candidate1) || is_dir($candidate1)) return $candidate1;
+		if (file_exists($candidate2) || is_dir($candidate2)) return $candidate2;
+		return null;
 	}
 
 	protected static function checkRedirect($source, &$target): bool {
