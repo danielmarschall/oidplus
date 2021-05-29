@@ -108,8 +108,6 @@ SMALL THINGS
 	* Is there some useful German translation of the Apache 2.0 license?
 - WEID UUID: Show the UUID 2.25/GUID equivalent as alternative ID
 - When an OID is edited/added/deleted, don't reload the whole tree. Instead, just change the tree! This looks much more fluid.
-- When you call index.php using PHP command line and you are not in the correct working directory, you get following error
-	"File res/Object Identifiers/free_iana_oid.link has an invalid INI format"
 - adminPages/902_systemfile_check/OIDplusPageAdminSystemFileCheck.class.php
 	Should thumbs.db (case insensitive) and Apple turds be excluded?
 	On the other hand, these files could then be used to hide malicious data
