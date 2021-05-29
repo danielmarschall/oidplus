@@ -29,8 +29,6 @@ try {
 
 	$json_out = null;
 
-	OIDplus::authUtils()->checkCSRF();
-
 	if (isset($_REQUEST['plugin']) && ($_REQUEST['plugin'] != '')) {
 
 		// Actions handled by plugins
@@ -38,10 +36,6 @@ try {
 		$plugin = OIDplus::getPluginByOid($_REQUEST['plugin']);
 		if (!$plugin) {
 			throw new OIDplusException(_L('Plugin with OID "%1" not found',$_REQUEST['plugin']));
-		}
-
-		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
-			OIDplus::db()->transaction_begin();
 		}
 
 		$params = array();
@@ -52,6 +46,17 @@ try {
 		}
 
 		if (isset($_REQUEST['action']) && ($_REQUEST['action'] != '')) {
+			if ($plugin->csrfUnlock($_REQUEST['action'])) {
+				originHeaders(); // Allows queries from other domains
+				OIDplus::authUtils()->disableCSRF(); // allow access to ajax.php without valid CSRF token
+			}
+
+			OIDplus::authUtils()->checkCSRF();
+
+			if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
+				OIDplus::db()->transaction_begin();
+			}
+
 			$json_out = $plugin->action($_REQUEST['action'], $params);
 			if (!is_array($json_out)) {
 				throw new OIDplusException(_L('Plugin with OID %1 did not output array of result data',$_REQUEST['plugin']));
@@ -68,6 +73,8 @@ try {
 	} else {
 
 		// Actions handled by the system (base functionality like the JS tree)
+
+		OIDplus::authUtils()->checkCSRF();
 
 		if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'get_description')) {
 			// Action:     get_description

@@ -24,4 +24,11 @@ abstract class OIDplusPagePlugin extends OIDplusPlugin {
 	public function gui($id, &$out, &$handled) {}
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {}
 	public function tree_search($request) {}
+
+	public function csrfUnlock($actionID) {
+		// override this method if you want that your plugin
+		// can accept ajax.php requests from outside, without CSRF check
+		return false;
+	}
+
 }
