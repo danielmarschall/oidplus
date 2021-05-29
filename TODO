@@ -15,8 +15,9 @@ IDEAS FOR NEW FUNCTIONALITIES
 	  (Alternatively they can just look in the userdata directory using FTP)
 	* Give the ability to enable/disable RA uploading/deleting
 	  (Alternatively they need to do it in the configuration module and enter '0' and '1' by hand)
-- Make a plugin that shows warning from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
+- Make a plugin that shows warnings from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
 	But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
+	And what can we do with checks that need a long time to compute?
 - Excel/CSV import tool for bulk data import (as alternative to XML import. Maybe previous Excel->XML import tool?)
 - External Syslog server
 
@@ -147,7 +148,6 @@ BUGS?
 
 REJECTED IDEAS
 - well known OIDs: Should also the RA address be recorded? (so that you cannot create a 2.999 OID and telling that you are the RA?)
-- should there be more than one admin?
 - should there more than one person be able to manage an OID? (multiple emails per "RA" ?)
 - record first RA and current RA => X.660 does not have this requirement
 - markers DRAFT, LEAF and FROZEN etc. => use "Protected" if you want to make it invisible
