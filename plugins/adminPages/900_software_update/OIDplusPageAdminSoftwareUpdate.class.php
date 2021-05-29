@@ -89,7 +89,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 			$out['text'] .= '<p><b>'._L('Method B').'</b>: '._L('Install OIDplus using the Git client in your SSH/Linux shell using the command <code>git clone %1</code> and update it regularly with the command <code>git pull</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!','https://github.com/danielmarschall/oidplus.git').'</p>';
 
-			$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Install OIDplus by downloading a ZIP file from www.viathinksoft.com, which contains an SVN snapshot, and extract it to your webspace. The ZIP file contains a file named "oidplus_version.txt" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.').'</p>';
+			$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Install OIDplus by downloading a TAR.GZ file from www.viathinksoft.com, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named "oidplus_version.txt" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.').'</p>';
 
 			$out['text'] .= '<hr>';
 
@@ -147,7 +147,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<pre id="update_infobox">'.$cont.'</pre>';
 				}
 			} else if ($installType === 'svn-snapshot') {
-				$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot ZIP file with oidplus_version.txt file).').'</p>';
+				$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot TAR.GZ file with oidplus_version.txt file).').'</p>';
 
 				$local_installation = OIDplus::getVersion();
 				try {
@@ -166,7 +166,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				else if ($local_installation == $newest_version) {
 					$out['text'] .= '<p><font color="green">'._L('You are already using the latest version of OIDplus.').'</font></p>';
 				} else {
-					$out['text'] .= '<p><font color="red">'.strtoupper(_L('Warning')).': '._L('Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! In case the update fails, you can download and extract the complete <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot ZIP file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.').'</font></p>';
+					$out['text'] .= '<p><font color="red">'.strtoupper(_L('Warning')).': '._L('Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! In case the update fails, you can download and extract the complete <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.').'</font></p>';
 					$out['text'] .= '<form method="POST" action="index.php">';
 
 					$out['text'] .= '<p><input type="button" onclick="OIDplusPageAdminSoftwareUpdate.doUpdateOIDplus()" value="'._L('Update NOW').'"></p>';
