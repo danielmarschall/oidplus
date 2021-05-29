@@ -22,6 +22,10 @@ require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 OIDplus::init(true);
 set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
 
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPagePublicWhois', false)) {
+	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
+}
+
 originHeaders();
 
 // Step 0: Get request parameter

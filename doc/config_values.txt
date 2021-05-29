@@ -26,6 +26,9 @@ Old 2.0 format:          define('OIDPLUS_CONFIG_VERSION',   2.0);
 
 OIDplus::baseConfig()->setValue('ADMIN_PASSWORD',           '<BCrypt hash, or base64 encoded SHA3-512 hash>');
 Old 2.0 format:          define('OIDPLUS_ADMIN_PASSWORD',   '<BCrypt hash, or base64 encoded SHA3-512 hash>');
+                         If you want to have multiple valid administrator passwords
+                         (e.g. if you want multiple users), then this value can
+                         also be an array containing hashes.
 
 OIDplus::baseConfig()->setValue('DATABASE_PLUGIN',          '');
 Old 2.0 format:          define('OIDPLUS_DATABASE_PLUGIN',  '');

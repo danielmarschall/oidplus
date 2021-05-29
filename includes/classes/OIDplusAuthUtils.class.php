@@ -194,25 +194,36 @@ class OIDplusAuthUtils {
 	}
 
 	public function adminCheckPassword($password) {
-		$passwordData = OIDplus::baseConfig()->getValue('ADMIN_PASSWORD', '');
-		if (empty($passwordData)) {
+		$cfgData = OIDplus::baseConfig()->getValue('ADMIN_PASSWORD', '');
+		if (empty($cfgData)) {
 			throw new OIDplusException(_L('No admin password set in %1','userdata/baseconfig/config.inc.php'));
 		}
-
-		if (strpos($passwordData, '$') !== false) {
-			if ($passwordData[0] == '$') {
-				// Version 3: BCrypt
-				return password_verify($password, $passwordData);
-			} else {
-				// Version 2: SHA3-512 with salt
-				list($s_salt, $hash) = explode('$', $passwordData, 2);
-			}
+		
+		if (!is_array($cfgData)) {
+			$passwordDataArray = array($cfgData);
 		} else {
-			// Version 1: SHA3-512 without salt
-			$s_salt = '';
-			$hash = $passwordData;
+			$passwordDataArray = $cfgData;
 		}
-		return strcmp(sha3_512($s_salt.$password, true), base64_decode($hash)) === 0;
+		
+		foreach ($passwordDataArray as $passwordData) {
+			if (strpos($passwordData, '$') !== false) {
+				if ($passwordData[0] == '$') {
+					// Version 3: BCrypt
+					return password_verify($password, $passwordData);
+				} else {
+					// Version 2: SHA3-512 with salt
+					list($s_salt, $hash) = explode('$', $passwordData, 2);
+				}
+			} else {
+				// Version 1: SHA3-512 without salt
+				$s_salt = '';
+				$hash = $passwordData;
+			}
+
+			if (strcmp(sha3_512($s_salt.$password, true), base64_decode($hash)) === 0) return true;
+		}
+
+		return false;
 	}
 
 	public function isAdminLoggedIn() {
