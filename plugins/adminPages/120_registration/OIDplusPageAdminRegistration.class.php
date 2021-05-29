@@ -26,6 +26,31 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	/*private*/ const QUERY_LISTALLSYSTEMIDS_V1 = '1.3.6.1.4.1.37476.2.5.2.1.3.1';
 	/*private*/ const QUERY_LIVESTATUS_V1 =       '1.3.6.1.4.1.37476.2.5.2.1.4.1';
 
+	public function csrfUnlock($actionID) {
+		if ($actionID == 'verify_pubkey') return true;
+		return parent::csrfUnlock($actionID);
+	}
+
+	public function action($actionID, $params) {
+		if ($actionID == 'verify_pubkey') {
+			_CheckParamExists($params, 'challenge');
+
+			$payload = 'oidplus-verify-pubkey:'.sha3_512($params['challenge']);
+
+			$signature = '';
+			if (!OIDplus::getPkiStatus() || !@openssl_sign($payload, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+				throw new OIDplusException(_L('Signature failed'));
+			}
+
+			return array(
+				"status" => 0,
+				"response" => base64_encode($signature)
+			);
+		} else {
+			throw new OIDplusException(_L('Unknown action ID'));
+		}
+	}
+
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:srv_registration') {
 			$handled = true;
