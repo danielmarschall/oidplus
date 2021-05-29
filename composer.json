@@ -180,7 +180,8 @@
 		"secure-http": false,
 		"preferred-install": {
 			"*": "dist"
-		}
+		},
+		"autoloader-suffix": "OidPlusComposer"
 	},
 	"scripts": {
 		"post-update-cmd": [
