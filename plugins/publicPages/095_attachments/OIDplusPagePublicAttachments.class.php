@@ -83,7 +83,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		self::checkUploadDir($basepath);
 
 		// Get object-specific path
-		if (is_null($id)) {
+		if (!is_null($id)) {
 			$path_v1 = $basepath . DIRECTORY_SEPARATOR . $obj->getLegacyDirectoryName();
 			$path_v1_bug = $basepath . $obj->getLegacyDirectoryName();
 			$path_v2 = $basepath . DIRECTORY_SEPARATOR . $obj->getDirectoryName();
