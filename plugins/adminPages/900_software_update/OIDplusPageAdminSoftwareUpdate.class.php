@@ -26,8 +26,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 	public function action($actionID, $params) {
 		if ($actionID == 'update_now') {
-			@set_time_limit(0);
-
+			@set_time_limit(0); // TODO: what to do if the server does not accept it?
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));

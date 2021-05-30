@@ -6086,10 +6086,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		This functionality is not available due to a misconfiguration.
+		This functionality is not available due to a misconfiguration
 		]]></source>
 		<target><![CDATA[
-		Diese Funktionalität ist aufgrund einer Fehlkonfiguration nicht verfügbar.
+		Diese Funktionalität ist aufgrund einer Fehlkonfiguration nicht verfügbar
 		]]></target>
 	</message>
 	<message>

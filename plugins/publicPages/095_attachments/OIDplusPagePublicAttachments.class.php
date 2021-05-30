@@ -23,7 +23,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 	const DIR_UNLOCK_FILE = 'oidplus_upload.dir';
 
-	protected static function checkUploadDir($dir) {
+	private static function checkUploadDir($dir) {
 		if (!is_dir($dir)) {
 			throw new OIDplusException(_L('The attachment directory "%1" is not existing.', $dir));
 		}
@@ -69,9 +69,6 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	}
 
 	public static function getUploadDir($id=null) {
-		$obj = OIDplusObject::parse($id);
-		if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
-
 		// Get base path
 		$cfg = OIDplus::config()->getValue('attachment_upload_dir', '');
 		$cfg = trim($cfg);
@@ -80,10 +77,24 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		} else {
 			$basepath = $cfg;
 		}
-		self::checkUploadDir($basepath);
+
+		try {
+			self::checkUploadDir($basepath);
+		} catch (Exception $e) {
+			$error = _L('This functionality is not available due to a misconfiguration');
+			if (OIDplus::authUtils()->isAdminLoggedIn()) {
+				$error .= ': '.$e->getMessage();
+			} else {
+				$error .= '. '._L('Please notify the system administrator. After they log-in, they can see the reason at this place.');
+			}
+			throw new OIDplusException($error);
+		}
 
 		// Get object-specific path
 		if (!is_null($id)) {
+			$obj = OIDplusObject::parse($id);
+			if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
+
 			$path_v1 = $basepath . DIRECTORY_SEPARATOR . $obj->getLegacyDirectoryName();
 			$path_v1_bug = $basepath . $obj->getLegacyDirectoryName();
 			$path_v2 = $basepath . DIRECTORY_SEPARATOR . $obj->getDirectoryName();
@@ -336,12 +347,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			}
 		} catch (Exception $e) {
 			$doshow = true;
-			$output = '<p>'._L('This functionality is not available due to a misconfiguration.').'</p>';
-			if (OIDplus::authUtils()->isAdminLoggedIn()) {
-				$output .= '<p>'.$e->getMessage().'</p>';
-			} else {
-				$output .= '<p>'._L('Please notify the system administrator. After they log-in, they can see the reason at this place.').'</p>';
-			}
+			$output = '<p>'.$e->getMessage().'</p>';
 		}
 
 		$output = '<h2>'._L('File attachments').'</h2>' .
