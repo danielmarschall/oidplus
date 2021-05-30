@@ -5830,6 +5830,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The attachment directory must not be inside a critical system directory!
+		]]></source>
+		<target><![CDATA[
+		Das Anhangs-Verzeichnis darf nicht in einem kritischen System-Verzeichnis liegen!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The auth plugin "%1" does not exist in plugin directory %2
 		]]></source>
 		<target><![CDATA[
