@@ -5,7 +5,6 @@ RECENT STUFF
 - Default language selection: Either always en-US, or automatical selection depending on browser language, or depending on admin setting (e.g. german companies offer a german repository by default)?
 
 SECURITY Improvements:
-- Make attachment upload path configurable
 - Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")
   and see which error message appears, or they could try to enter "plugin/adminPages/..." using the web browser and see if the result is HTTP 200 or HTTP 404.
 
@@ -165,7 +164,9 @@ LOGS
 - At "oidplus:system_log", user log section and object log section, the users and/or objects should be clickable
 
 IDEAS
-- Official "host/domain" plugin
+- Give configuration settings a type (int, bool, enum, etc.) so that the configuration page can be more user friendly (use a checkbox rather than typing "1" and "0")
+	Even better: Give plugins the opportunity to display their own config GUI, exactly like OOBE does
+- Host/Domain ObjectType?
 - OID-WHOIS: For well-known OIDs, e.g. IANA PEN, show information where to retrieve information
 	=> Problem: Well-known OIDs are implemented as ASN/IRI identifiers only; no information in table "objects"!
 - Should plugins be able to add additional object sub-nodes/pages into the tree,
@@ -177,7 +178,6 @@ IDEAS
   => currently OIDplus::menuUtils()->tree_populate() handles the object tree loading
      ... but shouldn't this task do the plugin publicPages/000_objects ?
      ... then we could establish an API which can give object type plugins the possibility to add additional children
-- Host/Domain ObjectType?
 - Hide/Proxy RA E-Mails from public requests
 - let users choose their own creation arc
 - system guid (name based pubkey)?
@@ -223,6 +223,7 @@ IDEAS
 - IPv4/IPv6 plugin: Should we allow that private IPs are put into categories (e.g. different physical locations having the same subnet?)
 - Like in OOBE, plugins should give the possibility to add an individual UI in the "oidplus:edit_config" page
 - Login area: The "administrator" node in the treeview could be clicked, leading to a page that contains a link to all sub pages (big icons ordered in a grid?)
+- "Invisible/service" plugin type, like page plugins, but they have no gui() method
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie

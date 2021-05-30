@@ -21,18 +21,79 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
-	public static function getUploadDir($id) {
+	const DIR_UNLOCK_FILE = 'oidplus_upload.dir';
+
+	protected static function checkUploadDir($dir) {
+		if (!is_dir($dir)) {
+			throw new OIDplusException(_L('The attachment directory "%1" is not existing.', $dir));
+		}
+
+		$realdir = realpath($dir);
+		if ($realdir === false) {
+			throw new OIDplusException(_L('The attachment directory "%1" cannot be resolved (realpath).', $dir));
+		}
+
+		$unlock_file = $realdir . DIRECTORY_SEPARATOR . self::DIR_UNLOCK_FILE;
+		if (!file_exists($unlock_file)) {
+			throw new OIDplusException(_L('Unlock file "%1" is not existing in attachment directory "%2".', self::DIR_UNLOCK_FILE, $dir));
+		}
+
+		// Note: We will not query the file owner in Windows systems.
+		// It would be possible, however, on Windows systems, the file
+		// ownership is rather hidden to the user and the user needs
+		// to go into several menus and windows in order to see/change
+		// the owner. We don't want to over-complicate it to the Windows admin.
+		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+			$file_owner_a = fileowner(OIDplus::localpath().'index.php');
+			if ($file_owner_a === false) {
+				$file_owner_a = -1;
+				$file_owner_a_name = '???';
+			} else {
+				$tmp = posix_getpwuid($file_owner_a);
+				$file_owner_a_name = $tmp !== false ? $tmp['name'] : 'UID '.$file_owner_a;
+			}
+
+			$file_owner_b = fileowner($unlock_file);
+			if ($file_owner_b === false) {
+				$file_owner_b = -1;
+				$file_owner_b_name = '???';
+			} else {
+				$tmp = posix_getpwuid($file_owner_b);
+				$file_owner_b_name = $tmp !== false ? $tmp['name'] : 'UID '.$file_owner_b;
+			}
+
+			if ($file_owner_a != $file_owner_b) {
+				throw new OIDplusException(_L('Owner of unlock file "%1" is wrong. It is "%2", but it should be "%3".', $unlock_file, $file_owner_b_name, $file_owner_a_name));
+			}
+		}
+	}
+
+	public static function getUploadDir($id=null) {
 		$obj = OIDplusObject::parse($id);
 		if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
 
-		$path = OIDplus::localpath() . 'userdata' . DIRECTORY_SEPARATOR . 'attachments';
-		$path_v1 = $path . DIRECTORY_SEPARATOR . $obj->getLegacyDirectoryName();
-		$path_v1_bug = $path . $obj->getLegacyDirectoryName();
-		$path_v2 = $path . DIRECTORY_SEPARATOR . $obj->getDirectoryName();
+		// Get base path
+		$cfg = OIDplus::config()->getValue('attachment_upload_dir', '');
+		$cfg = trim($cfg);
+		if ($cfg === '') {
+			$basepath = OIDplus::localpath() . 'userdata' . DIRECTORY_SEPARATOR . 'attachments';
+		} else {
+			$basepath = $cfg;
+		}
+		self::checkUploadDir($basepath);
 
-		if (is_dir($path_v1)) return $path_v1; // backwards compatibility
-		if (is_dir($path_v1_bug)) return $path_v1_bug; // backwards compatibility
-		return $path_v2;
+		// Get object-specific path
+		if (is_null($id)) {
+			$path_v1 = $basepath . DIRECTORY_SEPARATOR . $obj->getLegacyDirectoryName();
+			$path_v1_bug = $basepath . $obj->getLegacyDirectoryName();
+			$path_v2 = $basepath . DIRECTORY_SEPARATOR . $obj->getDirectoryName();
+
+			if (is_dir($path_v1)) return $path_v1; // backwards compatibility
+			if (is_dir($path_v1_bug)) return $path_v1_bug; // backwards compatibility
+			return $path_v2;
+		} else {
+			return $basepath;
+		}
 	}
 
 	private function raMayDelete() {
@@ -165,6 +226,19 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
 			}
 		});
+
+		$info_txt  = 'Alternative directory for attachments. It must contain a file named "';
+		$info_txt .= self::DIR_UNLOCK_FILE;
+		$info_txt .= '"';
+		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+			$info_txt .= ' with the same owner as index.php';
+		}
+		$info_txt .= '. If this setting is empty, then the userdata directory is used.';
+		OIDplus::config()->prepareConfigKey('attachment_upload_dir', $info_txt, '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (trim($value) !== '') {
+				self::checkUploadDir($value);
+			}
+		});
 	}
 
 	public function gui($id, &$out, &$handled) {
@@ -195,74 +269,85 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function modifyContent($id, &$title, &$icon, &$text) {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.2
 
-		$files = glob(self::getUploadDir($id) . DIRECTORY_SEPARATOR . '*');
-		$doshow = false;
 		$output = '';
-		$found_files = false;
+		$doshow = false;
 
-		$obj = OIDplusObject::parse($id);
-		if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
-		$can_upload = OIDplus::authUtils()->isAdminLoggedIn() || ($this->raMayUpload() && $obj->userHasWriteRights());
-		$can_delete = OIDplus::authUtils()->isAdminLoggedIn() || ($this->raMayDelete() && $obj->userHasWriteRights());
+		try {
+			$upload_dir = self::getUploadDir($id);
+			$files = glob($upload_dir . DIRECTORY_SEPARATOR . '*');
+			$found_files = false;
 
-		$output .= '<h2>'._L('File attachments').'</h2>';
-		$output .= '<div class="container box">';
+			$obj = OIDplusObject::parse($id);
+			if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
+			$can_upload = OIDplus::authUtils()->isAdminLoggedIn() || ($this->raMayUpload() && $obj->userHasWriteRights());
+			$can_delete = OIDplus::authUtils()->isAdminLoggedIn() || ($this->raMayDelete() && $obj->userHasWriteRights());
 
-		if (OIDplus::authUtils()->isAdminLoggedIn()) {
-			$output .= '<p>'._L('Admin info: The directory is %1','<b>'.htmlentities(self::getUploadDir($id)).'</b>').'</p>';
-			$doshow = true;
-		}
-
-		$output .= '<div id="fileattachments_table" class="table-responsive">';
-		$output .= '<table class="table table-bordered table-striped">';
-		$output .= '<tr>';
-		$output .= '<th>'._L('Filename').'</th>';
-		$output .= '<th>'._L('Size').'</th>';
-		$output .= '<th>'._L('File type').'</th>';
-		$output .= '<th>'._L('Download').'</th>';
-		if ($can_delete) $output .= '<th>'._L('Delete').'</th>';
-		$output .= '</tr>';
-		foreach ($files as $file) {
-			if (is_dir($file)) continue;
-
-			$output .= '<tr>';
-			$output .= '<td>'.htmlentities(basename($file)).'</td>';
-			$output .= '<td>'.htmlentities(self::convert_filesize(filesize($file), 0)).'</td>';
-			$lookup_files = array(
-				OIDplus::localpath().'userdata/attachments/filetypes$'.OIDplus::getCurrentLang().'.conf',
-				OIDplus::localpath().'userdata/attachments/filetypes.conf',
-				OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes$'.OIDplus::getCurrentLang().'.local', // not recommended
-				OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes.local', // not recommended
-				OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes$'.OIDplus::getCurrentLang().'.conf',
-				OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes.conf'
-			);
-			$output .= '<td>'.htmlentities(VtsFileTypeDetect::getDescription($file, $lookup_files)).'</td>';
-
-			$output .= '     <td><button type="button" name="download_'.md5($file).'" id="download_'.md5($file).'" class="btn btn-success btn-xs download" onclick="OIDplusPagePublicAttachments.downloadAttachment('.js_escape(OIDplus::webpath(__DIR__)).', current_node,'.js_escape(basename($file)).')">'._L('Download').'</button></td>';
-			if ($can_delete) {
-				$output .= '     <td><button type="button" name="delete_'.md5($file).'" id="delete_'.md5($file).'" class="btn btn-danger btn-xs delete" onclick="OIDplusPagePublicAttachments.deleteAttachment(current_node,'.js_escape(basename($file)).')">'._L('Delete').'</button></td>';
+			if (OIDplus::authUtils()->isAdminLoggedIn()) {
+				$output .= '<p>'._L('Admin info: The directory is %1','<b>'.htmlentities($upload_dir).'</b>').'</p>';
+				$doshow = true;
 			}
 
+			$output .= '<div id="fileattachments_table" class="table-responsive">';
+			$output .= '<table class="table table-bordered table-striped">';
+			$output .= '<tr>';
+			$output .= '<th>'._L('Filename').'</th>';
+			$output .= '<th>'._L('Size').'</th>';
+			$output .= '<th>'._L('File type').'</th>';
+			$output .= '<th>'._L('Download').'</th>';
+			if ($can_delete) $output .= '<th>'._L('Delete').'</th>';
 			$output .= '</tr>';
+			foreach ($files as $file) {
+				if (is_dir($file)) continue;
+
+				$output .= '<tr>';
+				$output .= '<td>'.htmlentities(basename($file)).'</td>';
+				$output .= '<td>'.htmlentities(self::convert_filesize(filesize($file), 0)).'</td>';
+				$lookup_files = array(
+					OIDplus::localpath().'userdata/attachments/filetypes$'.OIDplus::getCurrentLang().'.conf',
+					OIDplus::localpath().'userdata/attachments/filetypes.conf',
+					OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes$'.OIDplus::getCurrentLang().'.local', // not recommended
+					OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes.local', // not recommended
+					OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes$'.OIDplus::getCurrentLang().'.conf',
+					OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes.conf'
+				);
+				$output .= '<td>'.htmlentities(VtsFileTypeDetect::getDescription($file, $lookup_files)).'</td>';
+
+				$output .= '     <td><button type="button" name="download_'.md5($file).'" id="download_'.md5($file).'" class="btn btn-success btn-xs download" onclick="OIDplusPagePublicAttachments.downloadAttachment('.js_escape(OIDplus::webpath(__DIR__)).', current_node,'.js_escape(basename($file)).')">'._L('Download').'</button></td>';
+				if ($can_delete) {
+					$output .= '     <td><button type="button" name="delete_'.md5($file).'" id="delete_'.md5($file).'" class="btn btn-danger btn-xs delete" onclick="OIDplusPagePublicAttachments.deleteAttachment(current_node,'.js_escape(basename($file)).')">'._L('Delete').'</button></td>';
+				}
+
+				$output .= '</tr>';
+				$doshow = true;
+				$found_files = true;
+			}
+
+			if (!$found_files) $output .= '<tr><td colspan="'.($can_delete ? 5 : 4).'"><i>'._L('No attachments').'</i></td></tr>';
+
+			$output .= '</table></div>';
+
+			if ($can_upload) {
+				$output .= '<form action="javascript:void(0);" onsubmit="return OIDplusPagePublicAttachments.uploadAttachmentOnSubmit(this);" enctype="multipart/form-data" id="uploadAttachmentForm">';
+				$output .= '<input type="hidden" name="id" value="'.htmlentities($id).'">';
+				$output .= '<div>'._L('Add a file attachment').':<input type="file" name="userfile" value="" id="fileAttachment">';
+				$output .= '<br><input type="submit" value="'._L('Upload').'"></div>';
+				$output .= '</form>';
+				$doshow = true;
+			}
+		} catch (Exception $e) {
 			$doshow = true;
-			$found_files = true;
+			$output = '<p>'._L('This functionality is not available due to a misconfiguration.').'</p>';
+			if (OIDplus::authUtils()->isAdminLoggedIn()) {
+				$output .= '<p>'.$e->getMessage().'</p>';
+			} else {
+				$output .= '<p>'._L('Please notify the system administrator. After they log-in, they can see the reason at this place.').'</p>';
+			}
 		}
 
-		if (!$found_files) $output .= '<tr><td colspan="'.($can_delete ? 5 : 4).'"><i>'._L('No attachments').'</i></td></tr>';
-
-		$output .= '</table></div>';
-
-		if ($can_upload) {
-			$output .= '<form action="javascript:void(0);" onsubmit="return OIDplusPagePublicAttachments.uploadAttachmentOnSubmit(this);" enctype="multipart/form-data" id="uploadAttachmentForm">';
-			$output .= '<input type="hidden" name="id" value="'.htmlentities($id).'">';
-			$output .= '<div>'._L('Add a file attachment').':<input type="file" name="userfile" value="" id="fileAttachment">';
-			$output .= '<br><input type="submit" value="'._L('Upload').'"></div>';
-			$output .= '</form>';
-			$doshow = true;
-		}
-
-		$output .= '</div>';
-
+		$output = '<h2>'._L('File attachments').'</h2>' .
+		          '<div class="container box">' .
+		          $output .
+		          '</div>';
 		if ($doshow) $text .= $output;
 	}
 

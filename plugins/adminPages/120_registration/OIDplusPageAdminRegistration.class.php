@@ -157,7 +157,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			);
 
 			if (!function_exists('curl_init')) {
-				throw new Exception(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
+				throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 			}
 
 			$ch = curl_init();
@@ -260,7 +260,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				);
 
 				if (!function_exists('curl_init')) {
-					return false; // throw new Exception(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
+					return false; // throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 				}
 
 				$ch = curl_init();
@@ -359,7 +359,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 
 			if (!function_exists('curl_init')) {
-				return false; // throw new Exception(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
+				return false; // throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 			}
 
 			$ch = curl_init();
