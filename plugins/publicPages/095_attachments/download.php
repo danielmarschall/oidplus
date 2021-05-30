@@ -30,7 +30,7 @@ try {
 
 	if (!isset($_REQUEST['filename'])) {
 		http_response_code(400);
-		throw new Exception(_L('Argument "%1" is missing','filename'));
+		throw new OIDplusException(_L('Argument "%1" is missing','filename'));
 	}
 	$filename = $_REQUEST['filename'];
 	if (strpos($filename, '/') !== false) throw new OIDplusException(_L('Illegal file name'));
@@ -40,7 +40,7 @@ try {
 
 	if (!isset($_REQUEST['id'])) {
 		http_response_code(400);
-		throw new Exception(_L('Argument "%1" is missing','id'));
+		throw new OIDplusException(_L('Argument "%1" is missing','id'));
 	}
 	$id = $_REQUEST['id'];
 
@@ -49,7 +49,7 @@ try {
 
 	if (!file_exists($local_file)) {
 		http_response_code(404);
-		throw new Exception(_L('The file does not exist'));
+		throw new OIDplusException(_L('The file does not exist'));
 	}
 
 	VtsBrowserDownload::output_file($local_file);

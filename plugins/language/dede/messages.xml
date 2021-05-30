@@ -3934,6 +3934,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Owner of unlock file "%1" is wrong. It is "%2", but it should be "%3".
+		]]></source>
+		<target><![CDATA[
+		Eigentümer der Entsperr-Datei "%1" ist falsch. Er ist derzeit "%2" aber sollte "%3" sein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		PDO Password
 		]]></source>
 		<target><![CDATA[
@@ -4298,6 +4306,14 @@
 		]]></source>
 		<target><![CDATA[
 		Vorsicht: Wenn Sie glauben, dass Sie gehackt wurden, sollten Sie sich nicht auf die Ausgabe dieses Werkzeugs verlassen, da es auch manipuliert worden sein könnte.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please notify the system administrator. After they log-in, they can see the reason at this place.
+		]]></source>
+		<target><![CDATA[
+		Bitte informieren Sie den System-Administrator. Nach der Anmeldung kann er an dieser Stelle die genaue Fehlermeldung einsehen.
 		]]></target>
 	</message>
 	<message>
@@ -5798,6 +5814,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The attachment directory "%1" cannot be resolved (realpath).
+		]]></source>
+		<target><![CDATA[
+		Das Anhangs-Verzeichnis "%1" kann nicht aufgelöst werden (realpath).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The attachment directory "%1" is not existing.
+		]]></source>
+		<target><![CDATA[
+		Das Anhangs-Verzeichnis "%1" existiert nicht.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The auth plugin "%1" does not exist in plugin directory %2
 		]]></source>
 		<target><![CDATA[
@@ -6054,6 +6086,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		This functionality is not available due to a misconfiguration.
+		]]></source>
+		<target><![CDATA[
+		Diese Funktionalität ist aufgrund einer Fehlkonfiguration nicht verfügbar.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		This is not a correct email address
 		]]></source>
 		<target><![CDATA[
@@ -6298,6 +6338,14 @@
 		]]></source>
 		<target><![CDATA[
 		Unbekannt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unlock file "%1" is not existing in attachment directory "%2".
+		]]></source>
+		<target><![CDATA[
+		Entsperr-Datei "%1" existiert nicht im Anhangs-Verzeichnis "%2".
 		]]></target>
 	</message>
 	<message>
