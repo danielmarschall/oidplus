@@ -68,7 +68,14 @@ class OIDplusConfig implements OIDplusGetterSetterInterface {
 		// Figure out if we need to create/update something at database level
 		if (!isset($this->values[$name])) {
 			// Case A: The config setting does not exist in the database. So we create it now.
-			OIDplus::db()->query("insert into ###config (name, description, value, protected, visible) values (?, ?, ?, ?, ?)", array($name, $description, $init_value, $protected, $visible));
+			try {
+				OIDplus::db()->query("insert into ###config (name, description, value, protected, visible) values (?, ?, ?, ?, ?)", array($name, $description, $init_value, $protected, $visible));
+			} catch (Exception $e) {
+				// After a software update that introduced a new config setting,
+				// there will be a race-condition at this place, because
+				// jsTree and content are loading simultaneously!
+				// So we ignore the error here.
+			}
 			$this->values[$name] = $init_value;
 			$this->descriptions[$name] = $description;
 		} else {
