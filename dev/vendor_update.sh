@@ -41,9 +41,19 @@ composer update
 shopt -s globstar
 rm -rf vendor/**/.svn
 rm -rf vendor/**/.git
+rm -rf vendor/**/.gitignore
+rm -rf vendor/**/.gitattributes
 rm -rf vendor/**/.github
 rm -rf vendor/**/demo
 rm -rf vendor/**/demos
+rm -rf vendor/twbs/bootstrap/package*
+rm -rf vendor/twbs/bootstrap/*.js
+rm -rf vendor/twbs/bootstrap/*.yml
+rm -rf vendor/twbs/bootstrap/.* 2>/dev/null
+rm -rf vendor/twbs/bootstrap/nuget/
+rm -rf vendor/twbs/bootstrap/scss/
+rm -rf vendor/twbs/bootstrap/js/
+rm -rf vendor/twbs/bootstrap/build/
 rm -rf vendor/twbs/bootstrap/site/
 rm -rf vendor/google/recaptcha/examples/
 rm -rf vendor/**/tests
@@ -67,4 +77,3 @@ if [ -d "_svn" ]; then
 fi
 
 composer license > vendor/licenses
-
