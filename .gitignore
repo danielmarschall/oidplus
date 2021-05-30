@@ -25,6 +25,7 @@ plugins/publicPages/000_objects/welcome.local.html
 
 userdata/attachments/*
 !userdata/attachments/info.txt
+!userdata/attachments/oidplus_upload.dir
 
 userdata/baseconfig/config.inc.php
 
@@ -42,4 +43,3 @@ userdata/resources/*
 !userdata/resources/info.txt
 
 userdata/welcome/welcome.html
-

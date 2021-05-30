@@ -17,6 +17,7 @@ IDEAS FOR NEW FUNCTIONALITIES
 - Make a plugin that shows warnings from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
 	But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
 	And what can we do with checks that need a long time to compute?
+	Also offer VNag?
 - Excel/CSV import tool for bulk data import (as alternative to XML import. Maybe previous Excel->XML import tool?)
 - External Syslog server
 

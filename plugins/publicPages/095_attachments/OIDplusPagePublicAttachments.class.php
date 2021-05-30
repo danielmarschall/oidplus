@@ -38,12 +38,13 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			throw new OIDplusException(_L('Unlock file "%1" is not existing in attachment directory "%2".', self::DIR_UNLOCK_FILE, $dir));
 		}
 
-		// Note: We will not query the file owner in Windows systems.
-		// It would be possible, however, on Windows systems, the file
-		// ownership is rather hidden to the user and the user needs
-		// to go into several menus and windows in order to see/change
-		// the owner. We don't want to over-complicate it to the Windows admin.
 		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+			// Linux check 1: Check for critical directories
+			if (self::isCriticalLinuxDirectory($realdir)) {
+				throw new OIDplusException(_L('The attachment directory must not be inside a critical system directory!'));
+			}
+
+			// Linux check 2: Check file owner
 			$file_owner_a = fileowner(OIDplus::localpath().'index.php');
 			if ($file_owner_a === false) {
 				$file_owner_a = -1;
@@ -65,7 +66,57 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			if ($file_owner_a != $file_owner_b) {
 				throw new OIDplusException(_L('Owner of unlock file "%1" is wrong. It is "%2", but it should be "%3".', $unlock_file, $file_owner_b_name, $file_owner_a_name));
 			}
+		} else {
+			// Windows check 1: Check for critical directories
+			if (self::isCriticalWindowsDirectory($realdir)) {
+				throw new OIDplusException(_L('The attachment directory must not be inside a critical system directory!'));
+			}
+
+			// Note: We will not query the file owner in Windows systems.
+			// It would be possible, however, on Windows systems, the file
+			// ownership is rather hidden to the user and the user needs
+			// to go into several menus and windows in order to see/change
+			// the owner. We don't want to over-complicate it to the Windows admin.
 		}
+	}
+
+	private static function isCriticalWindowsDirectory($dir) {
+		$dir .= '\\';
+		$windir = isset($_SERVER['SystemRoot']) ? $_SERVER['SystemRoot'].'\\' : 'C:\\Windows\\';
+		if (stripos($dir,$windir) === 0) return true;
+		return false;
+	}
+
+	private static function isCriticalLinuxDirectory($dir) {
+		if ($dir == '/') return true;
+		$dir .= '/';
+		if (strpos($dir,'/bin/') === 0) return true;
+		if (strpos($dir,'/boot/') === 0) return true;
+		if (strpos($dir,'/dev/') === 0) return true;
+		if (strpos($dir,'/etc/') === 0) return true;
+		if (strpos($dir,'/lib') === 0) return true;
+		if (strpos($dir,'/opt/') === 0) return true;
+		if (strpos($dir,'/proc/') === 0) return true;
+		if (strpos($dir,'/root/') === 0) return true;
+		if (strpos($dir,'/run/') === 0) return true;
+		if (strpos($dir,'/sbin/') === 0) return true;
+		if (strpos($dir,'/sys/') === 0) return true;
+		if (strpos($dir,'/tmp/') === 0) return true;
+		if (strpos($dir,'/usr/bin/') === 0) return true;
+		if (strpos($dir,'/usr/include/') === 0) return true;
+		if (strpos($dir,'/usr/lib') === 0) return true;
+		if (strpos($dir,'/usr/sbin/') === 0) return true;
+		if (strpos($dir,'/usr/src/') === 0) return true;
+		if (strpos($dir,'/var/cache/') === 0) return true;
+		if (strpos($dir,'/var/lib') === 0) return true;
+		if (strpos($dir,'/var/lock/') === 0) return true;
+		if (strpos($dir,'/var/log/') === 0) return true;
+		if (strpos($dir,'/var/mail/') === 0) return true;
+		if (strpos($dir,'/var/opt/') === 0) return true;
+		if (strpos($dir,'/var/run/') === 0) return true;
+		if (strpos($dir,'/var/spool/') === 0) return true;
+		if (strpos($dir,'/var/tmp/') === 0) return true;
+		return false;
 	}
 
 	public static function getUploadDir($id=null) {
