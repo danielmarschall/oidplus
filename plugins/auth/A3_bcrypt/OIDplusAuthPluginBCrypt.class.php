@@ -21,6 +21,14 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 
+	public function init($html=true) {
+		OIDplus::config()->prepareConfigKey('ra_bcrypt_cost', 'How complex should the BCrypt hash of RA passwords be? (Only for plugin A3_bcrypt)', 10, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (empty($value) || !is_int($value) || ($value<4)) {
+				throw new OIDplusException(_L('Invalid value for "cost".'));
+			}
+		});
+	}
+
 	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
 		$authKey = $authInfo->getAuthKey();
 		$salt = $authInfo->getSalt();
@@ -29,7 +37,7 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 		if ($s_authmethod == 'A3') {
 			// A3#$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
 			//    \__/\/ \____________________/\_____________________________/
-			//     Alg Cost      Salt                        Hash
+			//    Alg Cost   Salt (128 bit)             Hash
 			if ($salt != '') {
 				throw new OIDplusException(_L('This function does not accept a salt'));
 			}
@@ -42,7 +50,8 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 
 	public function generate($password): OIDplusRAAuthInfo {
 		$s_salt = ''; // BCrypt automatically generates a salt
-		$calc_authkey = 'A3#'.password_hash($password, PASSWORD_BCRYPT);
+		$cost = OIDplus::config()->getValue('ra_bcrypt_cost', 10);
+		$calc_authkey = 'A3#'.password_hash($password, PASSWORD_BCRYPT, array("cost" => $cost));
 		return new OIDplusRAAuthInfo($s_salt, $calc_authkey);
 	}
 

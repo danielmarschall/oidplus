@@ -2230,6 +2230,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		HMAC failed
+		]]></source>
+		<target><![CDATA[
+		HMAC fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Hide
 		]]></source>
 		<target><![CDATA[
@@ -2786,6 +2794,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ungültiger Protection-Flag. Bitte nutzen Sie die OIDplusConfig::PROTECTION_* Kontanten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid value for "cost".
+		]]></source>
+		<target><![CDATA[
+		Ungültiger Wert für "cost" (Zeitaufwands-Faktor).
 		]]></target>
 	</message>
 	<message>
