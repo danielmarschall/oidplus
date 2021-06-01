@@ -48,6 +48,25 @@ class OIDplusAuthUtils {
 		return hex2bin($a);
 	}
 
+	private static function raPepperProcessing(string $password): string {
+		// Additional feature: Pepper
+		// The pepper is stored inside the base configuration file
+		// It prevents that an attacker with SQL write rights can
+		// create accounts.
+		// ATTENTION!!! If a pepper is used, then the
+		// hashes are bound to that pepper. If you change the pepper,
+		// then ALL passwords of RAs become INVALID!
+		$pepper = OIDplus::baseConfig()->getValue('RA_PASSWORD_PEPPER','');
+		if ($pepper !== '') {
+			// sha512 works with PHP 7.0
+			$hmac = hash_hmac('sha512', $password, $pepper);
+			if ($hmac === false) throw new OIDplusException(_L('HMAC failed'));
+			return $hmac;
+		} else {
+			return $password;
+		}
+	}
+
 	// Content provider
 
 	public function getAuthMethod() {
@@ -93,15 +112,17 @@ class OIDplusAuthUtils {
 	public function raCheckPassword($ra_email, $password) {
 		$ra = new OIDplusRA($ra_email);
 
+		// Get RA info from RA
 		$authInfo = $ra->getAuthInfo();
 		if (!$authInfo) return false; // user not found
-
+		
+		// Ask plugins if they can verify this hash
 		$plugins = OIDplus::getAuthPlugins();
 		if (count($plugins) == 0) {
 			throw new OIDplusException(_L('No RA authentication plugins found'));
 		}
 		foreach ($plugins as $plugin) {
-			if ($plugin->verify($authInfo, $password)) return true;
+			if ($plugin->verify($authInfo, self::raPepperProcessing($password))) return true;
 		}
 
 		return false;
@@ -130,7 +151,7 @@ class OIDplusAuthUtils {
 	}
 
 	// "High level" function including logging and checking for valid JWT alternations
-	public function raLoginEx($email, $remember_me, $origin) {
+	public function raLoginEx($email, $remember_me, $origin='') {
 		$loginfo = '';
 		$acs = $this->getAuthContentStore();
 		if (!is_null($acs)) {
@@ -220,7 +241,7 @@ class OIDplusAuthUtils {
 				$hash = $passwordData;
 			}
 
-			if (strcmp(sha3_512($s_salt.$password, true), base64_decode($hash)) === 0) return true;
+			if (hash_equals(sha3_512($s_salt.$password, true), base64_decode($hash))) return true;
 		}
 
 		return false;
@@ -237,7 +258,7 @@ class OIDplusAuthUtils {
 	}
 
 	// "High level" function including logging and checking for valid JWT alternations
-	public function adminLoginEx($remember_me, $origin) {
+	public function adminLoginEx($remember_me, $origin='') {
 		$loginfo = '';
 		$acs = $this->getAuthContentStore();
 		if (!is_null($acs)) {
@@ -294,7 +315,7 @@ class OIDplusAuthUtils {
 	}
 
 	public static function validateAuthKey($data, $auth_key) {
-		return strcmp(self::makeAuthKey($data), $auth_key) === 0;
+		return hash_equals(self::makeAuthKey($data), $auth_key);
 	}
 
 	// "Veto" functions to force logout state
@@ -335,14 +356,14 @@ class OIDplusAuthUtils {
 	}
 
 	// Generate RA passwords
-
+	
 	public static function raGeneratePassword($password): OIDplusRAAuthInfo {
 		$def_method = OIDplus::config()->getValue('default_ra_auth_method');
 
 		$plugins = OIDplus::getAuthPlugins();
 		foreach ($plugins as $plugin) {
 			if (basename($plugin->getPluginDirectory()) === $def_method) {
-				return $plugin->generate($password);
+				return $plugin->generate(self::raPepperProcessing($password));
 			}
 		}
 		throw new OIDplusException(_L('Default RA auth method/plugin "%1" not found',$def_method));
