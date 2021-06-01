@@ -44,7 +44,7 @@ class OidDerConverter {
 	}
 
 	/**
-	 * @return Outputs .<oid> for an absolute OID and <oid> for a relative OID.
+	 * @return string Outputs .<oid> for an absolute OID and <oid> for a relative OID.
 	 */
 	public static function derToOID($abBinary, $verbose=false) {
 		$output_oid = array();

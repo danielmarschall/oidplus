@@ -76,7 +76,7 @@ try {
 	//       but we do it anyway. Just to be sure!
 	$verification_certs = json_decode(file_get_contents('https://www.googleapis.com/oauth2/v1/certs'), true);
 	\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
-	$data = (array) \Firebase\JWT\JWT::decode($id_token, $verification_certs, array('ES256', 'RS256', 'RS384', 'RS512'));
+	$data = (array) \Firebase\JWT\JWT::decode($id_token, $verification_certs, array('ES256', 'ES384', 'RS256', 'RS384', 'RS512'));
 	if (!isset($data['iss']) || ($data['iss'] !== 'https://accounts.google.com')) {
 		throw new OIDplusException(_L('JWT token could not be decoded'));
 	}
