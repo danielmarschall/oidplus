@@ -639,5 +639,5 @@ function bcrypt_hash(s, rounds/*=10*/) {
 }
 
 self.addEventListener("message", function(e) {
-    postMessage(bcrypt_hash(e.data));
+    postMessage(bcrypt_hash(e.data[0], e.data[1]));
 }, false);

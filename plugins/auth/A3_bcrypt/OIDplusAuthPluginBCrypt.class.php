@@ -22,9 +22,9 @@ if (!defined('INSIDE_OIDPLUS')) die();
 class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 
 	public function init($html=true) {
-		OIDplus::config()->prepareConfigKey('ra_bcrypt_cost', 'How complex should the BCrypt hash of RA passwords be? (Only for plugin A3_bcrypt)', 10, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
-			if (empty($value) || !is_int($value) || ($value<4)) {
-				throw new OIDplusException(_L('Invalid value for "cost".'));
+		OIDplus::config()->prepareConfigKey('ra_bcrypt_cost', 'How complex should the BCrypt hash of RA passwords be? (Only for plugin A3_bcrypt; values 4-31, default 10)', 10, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (empty($value) || !is_int($value) || ($value<4) || ($value>31)) {
+				throw new OIDplusException(_L('Invalid value for "cost" (must be 4-31, default 10).'));
 			}
 		});
 	}

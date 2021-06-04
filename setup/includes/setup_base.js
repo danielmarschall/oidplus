@@ -89,7 +89,8 @@ function rebuild() {
 			bCryptWorker.terminate();
 		}
 		bCryptWorker = new Worker('../bcrypt_worker.js');
-		bCryptWorker.postMessage(pw);
+		var rounds = 10; // TODO: make configurable
+		bCryptWorker.postMessage([pw, rounds]);
 		bCryptWorker.onmessage = function (event) {
 			var admPwdHash = event.data;
 			var pwComment = 'bcrypt encoded hash';
