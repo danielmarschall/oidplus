@@ -15,63 +15,8 @@
 		"Apache-2.0"
 	],
 	"prefer-dist": true,
+	"minimum-stability": "dev",
 	"repositories": {
-		"danielmarschall/vnag": {
-			"type": "package",
-			"packagist.org": false,
-			"package": {
-				"name": "danielmarschall/vnag",
-				"version": "master",
-				"license": "Apache-2.0",
-				"source": {
-					"url": "https://svn.viathinksoft.com/svn/vnag/",
-					"type": "svn",
-					"reference": "trunk/"
-				}
-			}
-		},
-		"danielmarschall/fileformats": {
-			"type": "package",
-			"packagist.org": false,
-			"package": {
-				"name": "danielmarschall/fileformats",
-				"version": "master",
-				"license": "Apache-2.0",
-				"source": {
-					"url": "https://svn.viathinksoft.com/svn/fileformats/",
-					"type": "svn",
-					"reference": "trunk/"
-				}
-			}
-		},
-		"danielmarschall/uuid_mac_utils": {
-			"type": "package",
-			"packagist.org": false,
-			"package": {
-				"name": "danielmarschall/uuid_mac_utils",
-				"version": "master",
-				"license": "Apache-2.0",
-				"source": {
-					"url": "https://svn.viathinksoft.com/svn/uuid_mac_utils/",
-					"type": "svn",
-					"reference": "trunk/"
-				}
-			}
-		},
-		"danielmarschall/php_utils": {
-			"type": "package",
-			"packagist.org": false,
-			"package": {
-				"name": "danielmarschall/php_utils",
-				"version": "master",
-				"license": "Apache-2.0",
-				"source": {
-					"url": "https://svn.viathinksoft.com/svn/php_utils/",
-					"type": "svn",
-					"reference": "trunk/"
-				}
-			}
-		},
 		"mikemcl/bignumber.js": {
 			"type": "package",
 			"packagist.org": false,

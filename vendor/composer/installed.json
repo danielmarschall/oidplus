@@ -146,66 +146,166 @@
         },
         {
             "name": "danielmarschall/fileformats",
-            "version": "master",
+            "version": "dev-master",
             "version_normalized": "dev-master",
             "source": {
-                "type": "svn",
-                "url": "https://svn.viathinksoft.com/svn/fileformats/",
-                "reference": "trunk/"
+                "type": "git",
+                "url": "https://github.com/danielmarschall/fileformats.git",
+                "reference": "3f2da6065ccc59971cccf8e8c2e1aeb9b2ff8807"
             },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielmarschall/fileformats/zipball/3f2da6065ccc59971cccf8e8c2e1aeb9b2ff8807",
+                "reference": "3f2da6065ccc59971cccf8e8c2e1aeb9b2ff8807",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "time": "2021-06-10T21:48:03+00:00",
+            "default-branch": true,
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
+            "authors": [
+                {
+                    "name": "Daniel Marschall",
+                    "email": "info@daniel-marschall.de",
+                    "homepage": "https://www.daniel-marschall.de/"
+                }
+            ],
+            "description": "File format detection in PHP",
+            "homepage": "https://www.viathinksoft.com/projects/fileformats",
+            "support": {
+                "issues": "https://github.com/danielmarschall/fileformats/issues",
+                "source": "https://github.com/danielmarschall/fileformats/tree/master"
+            },
             "install-path": "../danielmarschall/fileformats"
         },
         {
             "name": "danielmarschall/php_utils",
-            "version": "master",
+            "version": "dev-master",
             "version_normalized": "dev-master",
             "source": {
-                "type": "svn",
-                "url": "https://svn.viathinksoft.com/svn/php_utils/",
-                "reference": "trunk/"
+                "type": "git",
+                "url": "https://github.com/danielmarschall/php_utils.git",
+                "reference": "bf37d3dbc469592ce2efa3cf8f505b7dbbaae70e"
             },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/bf37d3dbc469592ce2efa3cf8f505b7dbbaae70e",
+                "reference": "bf37d3dbc469592ce2efa3cf8f505b7dbbaae70e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "time": "2021-06-10T21:40:27+00:00",
+            "default-branch": true,
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
+            "authors": [
+                {
+                    "name": "Daniel Marschall",
+                    "email": "info@daniel-marschall.de",
+                    "homepage": "https://www.daniel-marschall.de/"
+                }
+            ],
+            "description": "PHP functions",
+            "homepage": "https://www.viathinksoft.com/projects/php_utils",
+            "support": {
+                "issues": "https://github.com/danielmarschall/php_utils/issues",
+                "source": "https://github.com/danielmarschall/php_utils/tree/master"
+            },
             "install-path": "../danielmarschall/php_utils"
         },
         {
             "name": "danielmarschall/uuid_mac_utils",
-            "version": "master",
+            "version": "dev-master",
             "version_normalized": "dev-master",
             "source": {
-                "type": "svn",
-                "url": "https://svn.viathinksoft.com/svn/uuid_mac_utils/",
-                "reference": "trunk/"
+                "type": "git",
+                "url": "https://github.com/danielmarschall/uuid_mac_utils.git",
+                "reference": "7b292091da6fd9ab93b06be767754ee668ff457c"
             },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/7b292091da6fd9ab93b06be767754ee668ff457c",
+                "reference": "7b292091da6fd9ab93b06be767754ee668ff457c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "time": "2021-06-10T22:08:19+00:00",
+            "default-branch": true,
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
+            "authors": [
+                {
+                    "name": "Daniel Marschall",
+                    "email": "info@daniel-marschall.de",
+                    "homepage": "https://www.daniel-marschall.de/"
+                }
+            ],
+            "description": "UUID & MAC Utils for PHP",
+            "homepage": "https://www.viathinksoft.com/projects/uuid_mac_utils",
+            "support": {
+                "issues": "https://github.com/danielmarschall/uuid_mac_utils/issues",
+                "source": "https://github.com/danielmarschall/uuid_mac_utils/tree/master"
+            },
             "install-path": "../danielmarschall/uuid_mac_utils"
         },
         {
             "name": "danielmarschall/vnag",
-            "version": "master",
+            "version": "dev-master",
             "version_normalized": "dev-master",
             "source": {
-                "type": "svn",
-                "url": "https://svn.viathinksoft.com/svn/vnag/",
-                "reference": "trunk/"
+                "type": "git",
+                "url": "https://github.com/danielmarschall/vnag.git",
+                "reference": "84de0b0b0a2523137fd2c1a569660bad87230376"
             },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/84de0b0b0a2523137fd2c1a569660bad87230376",
+                "reference": "84de0b0b0a2523137fd2c1a569660bad87230376",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "time": "2021-06-10T22:10:36+00:00",
+            "default-branch": true,
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
+            "authors": [
+                {
+                    "name": "Daniel Marschall",
+                    "email": "info@daniel-marschall.de",
+                    "homepage": "https://www.daniel-marschall.de/"
+                }
+            ],
+            "description": "VNag - Framework for developing Nagios plugins with PHP",
+            "homepage": "https://www.viathinksoft.com/projects/vnag",
+            "support": {
+                "issues": "https://github.com/danielmarschall/vnag/issues",
+                "source": "https://github.com/danielmarschall/vnag/tree/master"
+            },
             "install-path": "../danielmarschall/vnag"
         },
         {
@@ -317,17 +417,17 @@
         },
         {
             "name": "google/recaptcha",
-            "version": "1.2.4",
-            "version_normalized": "1.2.4.0",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/recaptcha.git",
-                "reference": "614f25a9038be4f3f2da7cbfd778dc5b357d2419"
+                "reference": "f911286ad361c9fba1b422c07f040852c0c193a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/recaptcha/zipball/614f25a9038be4f3f2da7cbfd778dc5b357d2419",
-                "reference": "614f25a9038be4f3f2da7cbfd778dc5b357d2419",
+                "url": "https://api.github.com/repos/google/recaptcha/zipball/f911286ad361c9fba1b422c07f040852c0c193a3",
+                "reference": "f911286ad361c9fba1b422c07f040852c0c193a3",
                 "shasum": ""
             },
             "require": {
@@ -338,7 +438,8 @@
                 "php-coveralls/php-coveralls": "^2.1",
                 "phpunit/phpunit": "^4.8.36|^5.7.27|^6.59|^7.5.11"
             },
-            "time": "2020-03-31T17:50:54+00:00",
+            "time": "2020-10-01T15:14:41+00:00",
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {

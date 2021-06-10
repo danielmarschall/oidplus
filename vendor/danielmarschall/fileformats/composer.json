@@ -1,0 +1,22 @@
+{
+	"name": "danielmarschall/fileformats",
+	"description": "File format detection in PHP",
+	"version": "1.0",
+	"type": "library",
+	"homepage": "https://www.viathinksoft.com/projects/fileformats",
+	"authors": [
+		{
+			"name": "Daniel Marschall",
+			"email": "info@daniel-marschall.de",
+			"homepage": "https://www.daniel-marschall.de/"
+		}
+	],
+	"license": [
+		"Apache-2.0"
+	],
+	"prefer-dist": true,
+	"minimum-stability": "dev",
+	"require": {
+		"php": ">=7.0"
+	}
+}

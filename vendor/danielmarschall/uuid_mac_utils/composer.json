@@ -1,0 +1,22 @@
+{
+	"name": "danielmarschall/uuid_mac_utils",
+	"description": "UUID & MAC Utils for PHP",
+	"version": "1.0",
+	"type": "library",
+	"homepage": "https://www.viathinksoft.com/projects/uuid_mac_utils",
+	"authors": [
+		{
+			"name": "Daniel Marschall",
+			"email": "info@daniel-marschall.de",
+			"homepage": "https://www.daniel-marschall.de/"
+		}
+	],
+	"license": [
+		"Apache-2.0"
+	],
+	"prefer-dist": true,
+	"minimum-stability": "dev",
+	"require": {
+		"php": ">=7.0"
+	}
+}

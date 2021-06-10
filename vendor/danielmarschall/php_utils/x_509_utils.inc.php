@@ -2,8 +2,8 @@
 
 /*
  * X.509 Utilities for PHP
- * Copyright 2011-2014 Daniel Marschall, ViaThinkSoft
- * Version 2014-11-17
+ * Copyright 2011-2021 Daniel Marschall, ViaThinkSoft
+ * Version 2021-06-10
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -374,6 +374,8 @@ function openssl_get_sig_base64($cert, $mode = 0) {
 	# mode
 	# 0 = cert is a file
 	# 1 = cert is pem string
+
+	$params = '';
 
 	$out = array();
 	if ($mode == 0) {
