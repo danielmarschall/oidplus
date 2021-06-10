@@ -296,7 +296,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			);
 			$loginChildren[] = array(
 				'id'       => 'oidplus:dummy$'.md5((string)rand()),
-				'text'     => _L("Logged in as admin"),
+				'text'     => _L("Logged in as <b>admin</b>"),
 				'icon'     => OIDplus::webpath(__DIR__).'treeicon_admin.png',
 				'conditionalselect' => 'false', // dummy node that can't be selected
 				'state'    => array("opened" => true),
@@ -330,10 +330,17 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				);
 			}
 			$ra_email_or_name = (new OIDplusRA($ra_email))->raName();
-			if ($ra_email_or_name == '') $ra_email_or_name = $ra_email;
+			if ($ra_email_or_name == '') {
+				$ra_email_html = htmlentities($ra_email);
+				$ra_email_or_name = '<b>'.$ra_email_html.'</b>';
+			} else {
+				$ra_email_html = htmlentities($ra_email);
+				$ra_email_or_name_html = htmlentities($ra_email_or_name);
+				$ra_email_or_name = "<b>$ra_email_or_name_html</b> ($ra_email_html)";
+			}
 			$loginChildren[] = array(
 				'id'       => 'oidplus:dummy$'.md5((string)rand()),
-				'text'     => _L('Logged in as %1',htmlentities($ra_email_or_name)),
+				'text'     => _L('Logged in as %1',$ra_email_or_name),
 				'icon'     => OIDplus::webpath(__DIR__).'treeicon_ra.png',
 				'conditionalselect' => 'false', // dummy node that can't be selected
 				'state'    => array("opened" => true),

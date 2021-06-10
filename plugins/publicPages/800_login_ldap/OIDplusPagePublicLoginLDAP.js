@@ -21,7 +21,7 @@ var OIDplusPagePublicLoginLDAP = {
 
 	/* RA */
 
-	raLoginLdap: function(email, password) {
+	raLoginLdap: function(email, password, remember_me) {
 		$.ajax({
 			url:"ajax.php",
 			method:"POST",
@@ -38,6 +38,7 @@ var OIDplusPagePublicLoginLDAP = {
 				action:"ra_login_ldap",
 				email:email,
 				password:password,
+				remember_me:remember_me?1:0,
 				captcha: $(".g-recaptcha").length > 0 ? grecaptcha.getResponse() : null
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
@@ -61,7 +62,8 @@ var OIDplusPagePublicLoginLDAP = {
 	},
 
 	raLoginLdapOnSubmit: function() {
-		OIDplusPagePublicLoginLDAP.raLoginLdap($("#raLoginLdapEMail")[0].value, $("#raLoginLdapPassword")[0].value);
+		var remember_me = $("#remember_me_ldap").length == 0 ? false : $("#remember_me_ldap")[0].checked;
+		OIDplusPagePublicLoginLDAP.raLoginLdap($("#raLoginLdapEMail")[0].value, $("#raLoginLdapPassword")[0].value, remember_me);
 		return false;
 	}
 
