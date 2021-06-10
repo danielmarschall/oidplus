@@ -1718,6 +1718,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Enter your domain username (e.g. <b>username@contoso.local</b>) and your password to log in as Registration Authority.
+		]]></source>
+		<target><![CDATA[
+		Geben Sie Ihren Domänen-Benutzernamen (z.B. <b>benutzername@firmenname.local</b>) und Ihr Passwort ein, um sich als Registrierungsstelle anzumelden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Enter your email address and your password to log in as Registration Authority.
 		]]></source>
 		<target><![CDATA[
@@ -1746,6 +1754,14 @@
 		]]></source>
 		<target><![CDATA[
 		Fehler beim Kommunizieren mit dem SVN-Server
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Error in base config: %1 and %2 cannot be both disabled
+		]]></source>
+		<target><![CDATA[
+		Fehler in Basiskonfiguration: %1 und %2 dürfen nicht beide deaktiviert sein
 		]]></target>
 	</message>
 	<message>
@@ -2798,10 +2814,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Invalid value for "cost".
+		Invalid value for "cost" (must be 4-31, default 10).
 		]]></source>
 		<target><![CDATA[
-		Ungültiger Wert für "cost" (Zeitaufwands-Faktor).
+		Ungültiger Wert für "cost" (muss zwischen 4 und 31 liegen. Standardwert 10)
 		]]></target>
 	</message>
 	<message>
@@ -2998,10 +3014,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Logged in as admin
+		Logged in as <b>admin</b>
 		]]></source>
 		<target><![CDATA[
-		Angemeldet als Administrator
+		Als <b>Administrator</b> eingeloggt
 		]]></target>
 	</message>
 	<message>
@@ -4234,6 +4250,14 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte geben Sie eine gültige Passwort-Länge ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter a valid username
+		]]></source>
+		<target><![CDATA[
+		Bitte einen gültigen Benutzernamen eingeben
 		]]></target>
 	</message>
 	<message>
@@ -5558,14 +5582,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		System cannot login to LDAP in order to search the user
-		]]></source>
-		<target><![CDATA[
-		System kann nicht zum LDAP-Server verbinden, um den Benutzer zu suchen
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		System check
 		]]></source>
 		<target><![CDATA[
@@ -6450,6 +6466,14 @@
 		]]></source>
 		<target><![CDATA[
 		Hochladen von Dateianhang "%1" zu Objekt "%2" fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Username
+		]]></source>
+		<target><![CDATA[
+		Benutzername
 		]]></target>
 	</message>
 	<message>

@@ -266,13 +266,37 @@ Old 2.0 format:          (Not available)
 (4) LDAP FIELDS (see document ldap_installation.txt)
 ----------------------------------------------------
 
-OIDplus::baseConfig()->setValue('LDAP_ENABLED',              true);
-OIDplus::baseConfig()->setValue('LDAP_SERVER',               'ldap://shs.company.local');
-OIDplus::baseConfig()->setValue('LDAP_PORT',                 389);
-OIDplus::baseConfig()->setValue('LDAP_BASE_DN',              'DC=COMPANY,DC=local');
-OIDplus::baseConfig()->setValue('LDAP_CONTROLUSER_RDN',      'test@company.local'); // Can be any user that is able to search for users (in order to find who is owning an email address)
-OIDplus::baseConfig()->setValue('LDAP_CONTROLUSER_PASSWORD', 'foobar');
-OIDplus::baseConfig()->setValue('LDAP_USER_FILTER',          '(&(objectClass=user)(cn=*))');
+OIDplus::baseConfig()->setValue('LDAP_ENABLED',                true);
+                         Set to true if you want to enable that users can log-in using LDAP / ActiveDirectory.
+
+OIDplus::baseConfig()->setValue('LDAP_SERVER',                 'ldap://server1.contoso.local');
+                         The LDAP server of your company.
+
+OIDplus::baseConfig()->setValue('LDAP_PORT',                   389);
+                         The port of the LDAP server
+
+OIDplus::baseConfig()->setValue('LDAP_BASE_DN',                'DC=CONTOSO,DC=local');
+                         The base Distinguished Name (DN) of your directory.
+
+OIDplus::baseConfig()->setValue('LDAP_AUTHENTICATE_UPN',       true)
+                         In the login mask, the users will log in using the UPN ("principal name") e.g. username@contoso.local,
+                         and in OIDplus, a RA account with an email equal to the UPN will be created.
+
+OIDplus::baseConfig()->setValue('LDAP_AUTHENTICATE_EMAIL',     false);
+                         In the login mask, the users will log in using the UPN ("principal name") e.g. username@contoso.local,
+                         and in OIDplus, a RA account with an email equal to the "E-Mail-Address" field of the user in the directory will be created.
+                         Note: If you did not set an email address to the user in the LDAP/ActiveDirectory, then the login will not be possible,
+                         except if LDAP_AUTHENTICATE_UPN is additionally enabled.
+                         Attention: Depending on your domain configuration, users might be able to change their own data,
+                         e.g. email address. If this is the case, you must not enable this setting, otherwise,
+                         users could authenticate with any address!
+
+OIDplus::baseConfig()->setValue('LDAP_ADMIN_IS_OIDPLUS_ADMIN', false);
+                         In the login mask, the users will log in using the UPN ("principal name") e.g. username@contoso.local,
+                         and if the user has the "adminCount" flag set to '!', then the user will be authenticated
+                         as an administrator in OIDplus.
+                         More information at http://www.selfadsi.de/ads-attributes/user-adminCount.htm
+                         Obviously, you need to be very careful with this setting!
 
 
 ----------------------------------------------------------------------

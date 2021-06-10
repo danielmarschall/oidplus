@@ -137,6 +137,11 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	// Override abstract functions
 
 	public function activate() {
+		// Send cookie at the end of the HTTP request, in case there are multiple activate() calls
+		register_shutdown_function(array($this,'activateNow'));
+	}
+
+	public function activateNow() {
 		$token = $this->getJWTToken();
 		$exp = $this->getValue('exp',0);
 		OIDplus::cookieUtils()->setcookie(self::COOKIE_NAME, $token, $exp, false);
@@ -168,10 +173,9 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		$loginfo = 'from JWT session';
 	}
 
+	private static $contentProvider = null;
 	public static function getActiveProvider() {
-		static $contentProvider = null;
-
-		if (!$contentProvider) {
+		if (!self::$contentProvider) {
 			$jwt = '';
 			if (isset($_COOKIE[self::COOKIE_NAME])) $jwt = $_COOKIE[self::COOKIE_NAME];
 			if (isset($_POST[self::COOKIE_NAME]))   $jwt = $_POST[self::COOKIE_NAME];
@@ -197,17 +201,18 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 					}
 				}
 
-				$contentProvider = $tmp;
+				self::$contentProvider = $tmp;
 			}
 		}
 
-		return $contentProvider;
+		return self::$contentProvider;
 	}
 
 	public function raLoginEx($email, &$loginfo) {
 		if (is_null(self::getActiveProvider())) {
 			$this->raLogin($email);
 			$loginfo = 'into new JWT session';
+			self::$contentProvider = $this;
 		} else {
 			$gen = $this->getValue('oidplus_generator',-1);
 			switch ($gen) {
@@ -232,6 +237,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		if (is_null(self::getActiveProvider())) {
 			$this->adminLogin();
 			$loginfo = 'into new JWT session';
+			self::$contentProvider = $this;
 		} else {
 			$gen = $this->getValue('oidplus_generator',-1);
 			switch ($gen) {

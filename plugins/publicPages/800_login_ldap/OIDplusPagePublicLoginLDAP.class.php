@@ -21,13 +21,10 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
-	protected function ldapAuthByEMail($email, $password) {
+	protected function ldapLogin($username, $password) {
 		$cfg_ldap_server      = OIDplus::baseConfig()->getValue('LDAP_SERVER');
 		$cfg_ldap_port        = OIDplus::baseConfig()->getValue('LDAP_PORT', 389);
 		$cfg_ldap_base_dn     = OIDplus::baseConfig()->getValue('LDAP_BASE_DN');
-		$cfg_ldap_rdn         = OIDplus::baseConfig()->getValue('LDAP_CONTROLUSER_RDN');
-		$cfg_ldap_password    = OIDplus::baseConfig()->getValue('LDAP_CONTROLUSER_PASSWORD');
-		$cfg_ldap_user_filter = OIDplus::baseConfig()->getValue('LDAP_USER_FILTER', '(&(objectClass=user)(cn=*))');
 
 		// Connect to the server
 		if (!empty($cfg_ldap_port)) {
@@ -38,40 +35,32 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 		ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0);
 
-		// Login in order to search for the user
-		if (!empty($cfg_ldap_rdn)) {
-			if (!empty($cfg_ldap_password)) {
-				if (!($ldapbind = @ldap_bind($ldapconn, $cfg_ldap_rdn, $cfg_ldap_password))) throw new OIDplusException(_L('System cannot login to LDAP in order to search the user'));
-			} else {
-				if (!($ldapbind = @ldap_bind($ldapconn, $cfg_ldap_rdn))) throw new OIDplusException(_L('System cannot login to LDAP in order to search the user'));
-			}
-		} else {
-			if (!($ldapbind = @ldap_bind($ldapconn))) throw new OIDplusException(_L('System cannot login to LDAP in order to search the user'));
-		}
+		if (!strstr($username,'@')) throw new OIDplusException('Please use the username schema "username@domainname.local" (userPrincipalName).');
 
-		// Search the user using the email address
-		if (!($result = @ldap_search($ldapconn,$cfg_ldap_base_dn, $cfg_ldap_user_filter))) throw new OIDplusException(_L('Error in search query: %1', ldap_error($ldapconn)));
-		$data = ldap_get_entries($ldapconn, $result);
-		$found_username = null;
-		$ldap_userinfo = array();
-		for ($i=0; $i<$data['count']; $i++) {
-			if ((isset($data[$i]['mail'][0])) && ($data[$i]['mail'][0] == $email)) {
-				$found_username = $data[$i]['userprincipalname'][0];
+		// Login as the new user in order to check the credentials
+		if ($ldapbind = @ldap_bind($ldapconn, $username, $password)) {
+
+			// Search the user using the email address
+
+			$cfg_ldap_user_filter = "(&(objectClass=user)(objectCategory=person)(userPrincipalName=".ldap_escape($username, null, LDAP_ESCAPE_FILTER)."))";
+
+			if (!($result = @ldap_search($ldapconn,$cfg_ldap_base_dn, $cfg_ldap_user_filter))) throw new OIDplusException(_L('Error in search query: %1', ldap_error($ldapconn)));
+			$data = ldap_get_entries($ldapconn, $result);
+			$ldap_userinfo = array();
+
+			for ($i=0; $i<$data['count']; $i++) {
 				foreach ($data[$i] as $x => $y) {
 					if (is_int($x)) continue;
 					if (!is_array($y)) continue;
 					$ldap_userinfo[$x] = $y[0];
 				}
 			}
-		}
-		if (is_null($found_username)) return false;
 
-		// Login as the new user in order to check the credentials
-		//ldap_unbind($ldapconn); // commented out because ldap_unbind() kills the link descriptor
-		if ($ldapbind = @ldap_bind($ldapconn, $found_username, $password)) {
-			//ldap_unbind($ldapconn);
+			//ldap_unbind($ldapconn); // commented out because ldap_unbind() kills the link descriptor
 			ldap_close($ldapconn);
-			return $ldap_userinfo;
+
+			// empty($ldap_userinfo) can happen if the user did not log-in using their correct userPrincipalName (e.g. "username@domainname" instead of "username@domainname.local")
+			return empty($ldap_userinfo) ? false : $ldap_userinfo;
 		} else {
 			return false;
 		}
@@ -115,6 +104,10 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		if (!isset($ldap_userinfo['mobile']))                     $ldap_userinfo['mobile'] = '';
 		if (!isset($ldap_userinfo['facsimiletelephonenumber']))   $ldap_userinfo['facsimiletelephonenumber'] = '';
 		//if (!isset($ldap_userinfo['wwwhomepage']))                $ldap_userinfo['wwwhomepage'] = '';
+		if (!isset($ldap_userinfo['admincount']))                 $ldap_userinfo['admincount'] = '0';
+
+		//file_put_contents('d:/ldap_info.txt',print_r($ldap_userinfo,true));
+
 
 		$opuserdata = array();
 		$opuserdata['ra_name'] = $ldap_userinfo['cn'];
@@ -143,6 +136,18 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		}
 	}
 
+	private function doLoginRA($remember_me, $email, $ldap_userinfo) {
+		$ra = new OIDplusRA($email);
+		if (!$ra->existing()) {
+			$this->registerRA($ra, $ldap_userinfo);
+			OIDplus::logger()->log("[INFO]RA($email)!", "RA '$email' was created because of successful LDAP login");
+		}
+
+		OIDplus::authUtils()->raLoginEx($email, $remember_me, 'LDAP');
+
+		OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
+	}
+
 	public function action($actionID, $params) {
 		if ($actionID == 'ra_login_ldap') {
 			if (!OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {
@@ -169,25 +174,39 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			$password = $params['password'];
 
 			if (empty($email)) {
-				throw new OIDplusException(_L('Please enter a valid email address'));
+				throw new OIDplusException(_L('Please enter a valid username'));
 			}
 
-			if (!($ldap_userinfo = $this->ldapAuthByEMail($email, $password))) {
+			if (!($ldap_userinfo = $this->ldapLogin($email, $password))) {
 				if (OIDplus::config()->getValue('log_failed_ra_logins', false)) {
 					OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '$email' using LDAP");
 				}
 				throw new OIDplusException(_L('Wrong password or user not registered'));
 			}
 
-			$ra = new OIDplusRA($email);
-			if (!$ra->existing()) {
-				$this->registerRA($ra, $ldap_userinfo);
-				OIDplus::logger()->log("[INFO]RA($email)!", "RA '$email' was created because of successful LDAP login");
+			if (!OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN',true) &&
+			    !OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL',false)) {
+			    throw new OIDplusException(_L('Error in base config: %1 and %2 cannot be both disabled','LDAP_AUTHENTICATE_UPN','LDAP_AUTHENTICATE_EMAIL'));
 			}
 
-			OIDplus::authUtils()->raLoginEx($email, $remember_me=false, 'LDAP');
+			if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN',true)) {
+				$remember_me = isset($params['remember_me']) && ($params['remember_me']);
+				$this->doLoginRA($remember_me, $email, $ldap_userinfo);
+			}
 
-			OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
+			if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL',false)) {
+				if (isset($ldap_userinfo['mail']) && (!empty($ldap_userinfo['mail']))) {
+					$remember_me = isset($params['remember_me']) && ($params['remember_me']);
+					$this->doLoginRA($remember_me, $ldap_userinfo['mail'], $ldap_userinfo);
+				}
+			}
+
+			if (OIDplus::baseConfig()->getValue('LDAP_ADMIN_IS_OIDPLUS_ADMIN',false)) {
+				if ($ldap_userinfo['admincount'] == 1) {
+					$remember_me = isset($params['remember_me']) && ($params['remember_me']);
+					OIDplus::authUtils()->adminLoginEx($remember_me, 'LDAP login (admincount)');
+				}
+			}
 
 			return array("status" => 0);
 		} else {
@@ -241,11 +260,25 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 				}
 				$out['text'] .= '<p>'._L('If you have more accounts, you can log in with another account here.').'</p>';
 			} else {
-				$out['text'] .= '<p>'._L('Enter your email address and your password to log in as Registration Authority.').'</p>';
+				$out['text'] .= '<p>'._L('Enter your domain username (e.g. <b>username@contoso.local</b>) and your password to log in as Registration Authority.').'</p>';
 			}
 			$out['text'] .= '<form onsubmit="return OIDplusPagePublicLoginLDAP.raLoginLdapOnSubmit(this);">';
-			$out['text'] .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" name="email" value="" id="raLoginLdapEMail"></div>';
+			$out['text'] .= '<div><label class="padding_label">'._L('Username').':</label><input type="text" name="email" value="" id="raLoginLdapEMail"></div>';
 			$out['text'] .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginLdapPassword"></div>';
+			if (OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
+				if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreJWT::class)) {
+					if (OIDplus::authUtils()->getExtendedAttribute('oidplus_generator',-1) === OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN) {
+						$att = 'disabled checked';
+					} else {
+						$att = 'disabled';
+					}
+				} else if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreSession::class)) {
+					$att = 'disabled';
+				} else {
+					$att = '';
+				}
+				$out['text'] .= '<div><input '.$att.' type="checkbox" value="1" id="remember_me_ldap" name="remember_me_ldap"> <label for="remember_me_ldap">'._L('Remember me').'</label></div>';
+			}
 			$out['text'] .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
 			$out['text'] .= '</form>';
 
