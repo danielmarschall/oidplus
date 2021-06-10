@@ -57,12 +57,13 @@ private static $installed = array (
     ),
     'danielmarschall/fileformats' => 
     array (
-      'pretty_version' => 'master',
+      'pretty_version' => 'dev-master',
       'version' => 'dev-master',
       'aliases' => 
       array (
+        0 => '9999999-dev',
       ),
-      'reference' => 'trunk/',
+      'reference' => '3f2da6065ccc59971cccf8e8c2e1aeb9b2ff8807',
     ),
     'danielmarschall/oidplus' => 
     array (
@@ -75,30 +76,33 @@ private static $installed = array (
     ),
     'danielmarschall/php_utils' => 
     array (
-      'pretty_version' => 'master',
+      'pretty_version' => 'dev-master',
       'version' => 'dev-master',
       'aliases' => 
       array (
+        0 => '9999999-dev',
       ),
-      'reference' => 'trunk/',
+      'reference' => 'bf37d3dbc469592ce2efa3cf8f505b7dbbaae70e',
     ),
     'danielmarschall/uuid_mac_utils' => 
     array (
-      'pretty_version' => 'master',
+      'pretty_version' => 'dev-master',
       'version' => 'dev-master',
       'aliases' => 
       array (
+        0 => '9999999-dev',
       ),
-      'reference' => 'trunk/',
+      'reference' => '7b292091da6fd9ab93b06be767754ee668ff457c',
     ),
     'danielmarschall/vnag' => 
     array (
-      'pretty_version' => 'master',
+      'pretty_version' => 'dev-master',
       'version' => 'dev-master',
       'aliases' => 
       array (
+        0 => '9999999-dev',
       ),
-      'reference' => 'trunk/',
+      'reference' => '84de0b0b0a2523137fd2c1a569660bad87230376',
     ),
     'dcodeio/bcrypt.js' => 
     array (
@@ -138,12 +142,13 @@ private static $installed = array (
     ),
     'google/recaptcha' => 
     array (
-      'pretty_version' => '1.2.4',
-      'version' => '1.2.4.0',
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
       'aliases' => 
       array (
+        0 => '1.2.x-dev',
       ),
-      'reference' => '614f25a9038be4f3f2da7cbfd778dc5b357d2419',
+      'reference' => 'f911286ad361c9fba1b422c07f040852c0c193a3',
     ),
     'matthiasmullie/minify' => 
     array (

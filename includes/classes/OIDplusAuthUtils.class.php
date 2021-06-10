@@ -60,7 +60,7 @@ class OIDplusAuthUtils {
 		if ($pepper !== '') {
 			// sha512 works with PHP 7.0
 			$hmac = hash_hmac('sha512', $password, $pepper);
-			if ($hmac === false) throw new OIDplusException(_L('HMAC failed'));
+			if ($hmac === false) throw new OIDplusException(_L('HMAC failed')); /** @phpstan-ignore-line */
 			return $hmac;
 		} else {
 			return $password;
