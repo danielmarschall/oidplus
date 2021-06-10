@@ -266,7 +266,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 			$pubKey = OIDplus::config()->getValue('oidplus_public_key');
 			$this->content = (array) \Firebase\JWT\JWT::decode($jwt, $pubKey, array('RS256', 'RS384', 'RS512'));
 		} else {
-			$key = OIDplus::baseConfig()->getValue('SERVER_SECRET', '');
+			$key = OIDplus::baseConfig()->getValue('SERVER_SECRET', '').'/OIDplusAuthContentStoreJWT';
 			$key = hash_pbkdf2('sha512', $key, '', 10000, 64/*256bit*/, false);
 			$this->content = (array) \Firebase\JWT\JWT::decode($jwt, $key, array('HS256', 'HS384', 'HS512'));
 		}
@@ -283,7 +283,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 			$privKey = OIDplus::config()->getValue('oidplus_private_key');
 			return \Firebase\JWT\JWT::encode($payload, $privKey, 'RS512');
 		} else {
-			$key = OIDplus::baseConfig()->getValue('SERVER_SECRET', '');
+			$key = OIDplus::baseConfig()->getValue('SERVER_SECRET', '').'/OIDplusAuthContentStoreJWT';
 			$key = hash_pbkdf2('sha512', $key, '', 10000, 64/*256bit*/, false);
 			return \Firebase\JWT\JWT::encode($payload, $key, 'HS512');
 		}

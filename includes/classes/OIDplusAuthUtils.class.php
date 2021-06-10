@@ -115,7 +115,7 @@ class OIDplusAuthUtils {
 		// Get RA info from RA
 		$authInfo = $ra->getAuthInfo();
 		if (!$authInfo) return false; // user not found
-		
+
 		// Ask plugins if they can verify this hash
 		$plugins = OIDplus::getAuthPlugins();
 		if (count($plugins) == 0) {
@@ -219,13 +219,13 @@ class OIDplusAuthUtils {
 		if (empty($cfgData)) {
 			throw new OIDplusException(_L('No admin password set in %1','userdata/baseconfig/config.inc.php'));
 		}
-		
+
 		if (!is_array($cfgData)) {
 			$passwordDataArray = array($cfgData);
 		} else {
 			$passwordDataArray = $cfgData;
 		}
-		
+
 		foreach ($passwordDataArray as $passwordData) {
 			if (strpos($passwordData, '$') !== false) {
 				if ($passwordData[0] == '$') {
@@ -356,7 +356,7 @@ class OIDplusAuthUtils {
 	}
 
 	// Generate RA passwords
-	
+
 	public static function raGeneratePassword($password): OIDplusRAAuthInfo {
 		$def_method = OIDplus::config()->getValue('default_ra_auth_method');
 

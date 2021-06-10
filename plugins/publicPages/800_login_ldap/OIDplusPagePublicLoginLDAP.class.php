@@ -42,7 +42,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
 			// Search the user using the email address
 
-			$cfg_ldap_user_filter = "(&(objectClass=user)(objectCategory=person)(userPrincipalName=".ldap_escape($username, null, LDAP_ESCAPE_FILTER)."))";
+			$cfg_ldap_user_filter = "(&(objectClass=user)(objectCategory=person)(userPrincipalName=".ldap_escape($username, '', LDAP_ESCAPE_FILTER)."))";
 
 			if (!($result = @ldap_search($ldapconn,$cfg_ldap_base_dn, $cfg_ldap_user_filter))) throw new OIDplusException(_L('Error in search query: %1', ldap_error($ldapconn)));
 			$data = ldap_get_entries($ldapconn, $result);
