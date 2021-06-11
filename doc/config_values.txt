@@ -291,12 +291,19 @@ OIDplus::baseConfig()->setValue('LDAP_AUTHENTICATE_EMAIL',     false);
                          e.g. email address. If this is the case, you must not enable this setting, otherwise,
                          users could authenticate with any address!
 
-OIDplus::baseConfig()->setValue('LDAP_ADMIN_IS_OIDPLUS_ADMIN', false);
-                         In the login mask, the users will log in using the UPN ("principal name") e.g. username@contoso.local,
-                         and if the user has the "adminCount" flag set to '!', then the user will be authenticated
-                         as an administrator in OIDplus.
-                         More information at http://www.selfadsi.de/ads-attributes/user-adminCount.htm
-                         Obviously, you need to be very careful with this setting!
+OIDplus::baseConfig()->setValue('LDAP_ADMIN_GROUP',            '');
+                         If set to an empty string, the OIDplus administrator account cannot be accessed using LDAP authentication.
+                         Otherwise, the user will be authenticated as administrator, if the LDAP user is a
+                         (direct) member of the group specified in this setting.
+                         Example values: CN=Administrators,CN=Builtin,DC=CONTOSO,DC=local
+                                         makes every domain administrator also an OIDplus administrator
+                                         CN=OIDplus Administrators,CN=Users,DC=CONTOSO,DC=local
+                                         makes every user of the group (OIDplus Administrators) to OIDplus administrators
+                         
+OIDplus::baseConfig()->setValue('LDAP_RA_GROUP',               '');
+                         If set to an empty string, every LDAP user can authenticate as RA, depending
+                         on whether LDAP_AUTHENTICATE_UPN and/or LDAP_AUTHENTICATE_EMAIL is set.
+                         Otherwise, the LDAP users must be a (direct) member of the group specified in this setting.
 
 
 ----------------------------------------------------------------------
