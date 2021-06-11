@@ -1758,14 +1758,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Error in base config: %1 and %2 cannot be both disabled
-		]]></source>
-		<target><![CDATA[
-		Fehler in Basiskonfiguration: %1 und %2 dürfen nicht beide deaktiviert sein
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Error in search query: %1
 		]]></source>
 		<target><![CDATA[
@@ -1794,6 +1786,14 @@
 		]]></source>
 		<target><![CDATA[
 		Fehler: Suchwort muss mindestens %1 Zeichen lang sein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Error: These credentials cannot be used with OIDplus. Please check the base configuration.
+		]]></source>
+		<target><![CDATA[
+		Fehler: Diese Zugangsdaten können nicht mit OIDplus verwendet werden. Bitte prüfen Sie die Basiskonfiguration.
 		]]></target>
 	</message>
 	<message>

@@ -21,7 +21,31 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
-	protected function ldapLogin($username, $password) {
+	private static function ldapGetString($ldap_userinfo, $attributeName) {
+		$ary = self::ldapGetArray($ldap_userinfo, $attributeName);
+		return implode("\n", $ary);
+	}
+
+	private static function ldapGetArray($ldap_userinfo, $attributeName) {
+		$ary = array();
+		if (isset($ldap_userinfo[$attributeName])) {
+			$cnt = $ldap_userinfo[$attributeName]['count'];
+			for ($i=0; $i<$cnt; $i++) {
+				$ary[] = $ldap_userinfo[$attributeName][$i];
+			}
+		}
+		return $ary;
+	}
+
+	private static function ldapIsMemberOf($ldap_userinfo, $groupDN) {
+		$memberof = self::ldapGetArray($ldap_userinfo, 'memberof');
+		foreach ($memberof as $groupName) {
+			if (strtolower($groupName) === strtolower($groupDN)) return true;
+		}
+		return false;
+	}
+
+	private static function ldapLogin($username, $password) {
 		$cfg_ldap_server      = OIDplus::baseConfig()->getValue('LDAP_SERVER');
 		$cfg_ldap_port        = OIDplus::baseConfig()->getValue('LDAP_PORT', 389);
 		$cfg_ldap_base_dn     = OIDplus::baseConfig()->getValue('LDAP_BASE_DN');
@@ -48,13 +72,8 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			$data = ldap_get_entries($ldapconn, $result);
 			$ldap_userinfo = array();
 
-			for ($i=0; $i<$data['count']; $i++) {
-				foreach ($data[$i] as $x => $y) {
-					if (is_int($x)) continue;
-					if (!is_array($y)) continue;
-					$ldap_userinfo[$x] = $y[0];
-				}
-			}
+			if ($data['count'] == 0) return false;
+			$ldap_userinfo = $data[0];
 
 			//ldap_unbind($ldapconn); // commented out because ldap_unbind() kills the link descriptor
 			ldap_close($ldapconn);
@@ -87,47 +106,25 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		(none)                    wwwhomepage
 		*/
 
-		if (!isset($ldap_userinfo['cn']))                         $ldap_userinfo['cn'] = '';
-		if (!isset($ldap_userinfo['displayname']))                $ldap_userinfo['displayname'] = '';
-		if (!isset($ldap_userinfo['givenname']))                  $ldap_userinfo['givenname'] = '';
-		if (!isset($ldap_userinfo['sn']))                         $ldap_userinfo['sn'] = '';
-		if (!isset($ldap_userinfo['company']))                    $ldap_userinfo['company'] = '';
-		if (!isset($ldap_userinfo['physicaldeliveryofficename'])) $ldap_userinfo['physicaldeliveryofficename'] = '';
-		if (!isset($ldap_userinfo['department']))                 $ldap_userinfo['department'] = '';
-		if (!isset($ldap_userinfo['streetaddress']))              $ldap_userinfo['streetaddress'] = '';
-		if (!isset($ldap_userinfo['postalcode']))                 $ldap_userinfo['postalcode'] = '';
-		if (!isset($ldap_userinfo['l']))                          $ldap_userinfo['l'] = '';
-		if (!isset($ldap_userinfo['co']))                         $ldap_userinfo['co'] = '';
-		if (!isset($ldap_userinfo['c']))                          $ldap_userinfo['c'] = '';
-		if (!isset($ldap_userinfo['telephonenumber']))            $ldap_userinfo['telephonenumber'] = '';
-		if (!isset($ldap_userinfo['homephone']))                  $ldap_userinfo['homephone'] = '';
-		if (!isset($ldap_userinfo['mobile']))                     $ldap_userinfo['mobile'] = '';
-		if (!isset($ldap_userinfo['facsimiletelephonenumber']))   $ldap_userinfo['facsimiletelephonenumber'] = '';
-		//if (!isset($ldap_userinfo['wwwhomepage']))                $ldap_userinfo['wwwhomepage'] = '';
-		if (!isset($ldap_userinfo['admincount']))                 $ldap_userinfo['admincount'] = '0';
-
-		//file_put_contents('d:/ldap_info.txt',print_r($ldap_userinfo,true));
-
-
 		$opuserdata = array();
-		$opuserdata['ra_name'] = $ldap_userinfo['cn'];
-		if (!empty($ldap_userinfo['displayname'])) {
-			$opuserdata['personal_name'] = $ldap_userinfo['displayname'];
+		$opuserdata['ra_name'] = self::ldapGetString($ldap_userinfo,'cn');
+		if (!empty(self::ldapGetString($ldap_userinfo,'displayname'))) {
+			$opuserdata['personal_name'] = self::ldapGetString($ldap_userinfo,'displayname');
 		} else {
-			$opuserdata['personal_name'] = trim($ldap_userinfo['givenname'].' '.$ldap_userinfo['sn']);
+			$opuserdata['personal_name'] = trim(self::ldapGetString($ldap_userinfo,'givenname').' '.self::ldapGetString($ldap_userinfo,'sn'));
 		}
-		$opuserdata['organization'] = $ldap_userinfo['company'];
-		if (!empty($ldap_userinfo['physicaldeliveryofficename'])) {
-			$opuserdata['office'] = $ldap_userinfo['physicaldeliveryofficename'];
+		$opuserdata['organization'] = self::ldapGetString($ldap_userinfo,'company');
+		if (!empty(self::ldapGetString($ldap_userinfo,'physicaldeliveryofficename'))) {
+			$opuserdata['office'] = self::ldapGetString($ldap_userinfo,'physicaldeliveryofficename');
 		} else {
-			$opuserdata['office'] = $ldap_userinfo['department'];
+			$opuserdata['office'] = self::ldapGetString($ldap_userinfo,'department');
 		}
-		$opuserdata['street'] = $ldap_userinfo['streetaddress'];
-		$opuserdata['zip_town'] = trim($ldap_userinfo['postalcode'].' '.$ldap_userinfo['l']);
-		$opuserdata['country'] = $ldap_userinfo['co']; // ISO country code: $ldap_userinfo['c']
-		$opuserdata['phone'] = $ldap_userinfo['telephonenumber']; // homephone for private phone number
-		$opuserdata['mobile'] = $ldap_userinfo['mobile'];
-		$opuserdata['fax'] = $ldap_userinfo['facsimiletelephonenumber'];
+		$opuserdata['street'] = self::ldapGetString($ldap_userinfo,'streetaddress');
+		$opuserdata['zip_town'] = trim(self::ldapGetString($ldap_userinfo,'postalcode').' '.self::ldapGetString($ldap_userinfo,'l'));
+		$opuserdata['country'] = self::ldapGetString($ldap_userinfo,'co'); // ISO country code: self::ldapGetString($ldap_userinfo,'c')
+		$opuserdata['phone'] = self::ldapGetString($ldap_userinfo,'telephonenumber'); // homephone for private phone number
+		$opuserdata['mobile'] = self::ldapGetString($ldap_userinfo,'mobile');
+		$opuserdata['fax'] = self::ldapGetString($ldap_userinfo,'facsimiletelephonenumber');
 
 		foreach ($opuserdata as $dbfield => $val) {
 			if (!empty($val)) {
@@ -177,35 +174,58 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 				throw new OIDplusException(_L('Please enter a valid username'));
 			}
 
-			if (!($ldap_userinfo = $this->ldapLogin($email, $password))) {
+			if (!($ldap_userinfo = self::ldapLogin($email, $password))) {
 				if (OIDplus::config()->getValue('log_failed_ra_logins', false)) {
 					OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '$email' using LDAP");
 				}
 				throw new OIDplusException(_L('Wrong password or user not registered'));
 			}
 
-			if (!OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN',true) &&
-			    !OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL',false)) {
-			    throw new OIDplusException(_L('Error in base config: %1 and %2 cannot be both disabled','LDAP_AUTHENTICATE_UPN','LDAP_AUTHENTICATE_EMAIL'));
-			}
+			$foundSomething = false;
 
-			if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN',true)) {
+			// ---
+
+			$cfgAdminGroup = OIDplus::baseConfig()->getValue('LDAP_ADMIN_GROUP','');
+			if (!empty($cfgAdminGroup)) {
+				$isAdmin = self::ldapIsMemberOf($ldap_userinfo, $cfgAdminGroup);
+			} else {
+				$isAdmin = false;
+			}
+			if ($isAdmin) {
+				$foundSomething = true;
 				$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-				$this->doLoginRA($remember_me, $email, $ldap_userinfo);
+				OIDplus::authUtils()->adminLoginEx($remember_me, 'LDAP login');
 			}
 
-			if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL',false)) {
-				if (isset($ldap_userinfo['mail']) && (!empty($ldap_userinfo['mail']))) {
+			// ---
+
+			$cfgRaGroup = OIDplus::baseConfig()->getValue('LDAP_RA_GROUP','');
+			if (!empty($cfgRaGroup)) {
+				$isRA = self::ldapIsMemberOf($ldap_userinfo, $cfgRaGroup);
+			} else {
+				$isRA = true;
+			}
+			if ($isRA) {
+				if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN',true)) {
+					$mail = self::ldapGetString($ldap_userinfo, 'userprincipalname');
+					$foundSomething = true;
 					$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-					$this->doLoginRA($remember_me, $ldap_userinfo['mail'], $ldap_userinfo);
+					$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
+				}
+				if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL',false)) {
+					$mails = self::ldapGetArray($ldap_userinfo, 'mail');
+					foreach ($mails as $mail) {
+						$foundSomething = true;
+						$remember_me = isset($params['remember_me']) && ($params['remember_me']);
+						$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
+					}
 				}
 			}
 
-			if (OIDplus::baseConfig()->getValue('LDAP_ADMIN_IS_OIDPLUS_ADMIN',false)) {
-				if ($ldap_userinfo['admincount'] == 1) {
-					$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-					OIDplus::authUtils()->adminLoginEx($remember_me, 'LDAP login (admincount)');
-				}
+			// ---
+
+			if (!$foundSomething) {
+				throw new OIDplusException(_L("Error: These credentials cannot be used with OIDplus. Please check the base configuration."));
 			}
 
 			return array("status" => 0);
