@@ -294,7 +294,7 @@ OIDplus::baseConfig()->setValue('LDAP_AUTHENTICATE_EMAIL',     false);
 OIDplus::baseConfig()->setValue('LDAP_ADMIN_GROUP',            '');
                          If set to an empty string, the OIDplus administrator account cannot be accessed using LDAP authentication.
                          Otherwise, the user will be authenticated as administrator, if the LDAP user is a
-                         (direct) member of the group specified in this setting.
+                         member of the group specified in this setting.
                          Example values: CN=Administrators,CN=Builtin,DC=CONTOSO,DC=local
                                          makes every domain administrator also an OIDplus administrator
                                          CN=OIDplus Administrators,CN=Users,DC=CONTOSO,DC=local
@@ -303,7 +303,7 @@ OIDplus::baseConfig()->setValue('LDAP_ADMIN_GROUP',            '');
 OIDplus::baseConfig()->setValue('LDAP_RA_GROUP',               '');
                          If set to an empty string, every LDAP user can authenticate as RA, depending
                          on whether LDAP_AUTHENTICATE_UPN and/or LDAP_AUTHENTICATE_EMAIL is set.
-                         Otherwise, the LDAP users must be a (direct) member of the group specified in this setting.
+                         Otherwise, the LDAP users must be a member of the group specified in this setting.
 
 
 ----------------------------------------------------------------------
