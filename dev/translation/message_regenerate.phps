@@ -46,12 +46,13 @@ $all_strings = array();
 
 $it = new RecursiveDirectoryIterator($dir);
 foreach(new RecursiveIteratorIterator($it) as $file) {
-	if (strpos(str_replace('\\','/',realpath($file)),'/vendor/') !== false) continue; // ignore third-party-code
+	if ((strpos(str_replace('\\','/',realpath($file)),'/vendor/') !== false) && (strpos(str_replace('\\','/',realpath($file)),'/vendor/danielmarschall/') === false)) continue; // ignore third-party-code
 	if (strpos(str_replace('\\','/',realpath($file)),'/dev/') !== false) continue; // ignore development utilities
 	if ($file->getExtension() == 'php') {
 		$cont = file_get_contents($file);
 		$cont = phpRemoveComments($cont);
-		$cont = str_replace('function _L($str, ...$sprintfArgs) {', '', $cont);
+#		$cont = str_replace('function _L($str, ...$sprintfArgs) {', '', $cont);
+		$cont = str_replace('_L($', '', $cont);
 		$strings = get_php_L_strings($cont);
 		$strings_test = get_js_L_strings($cont);
 

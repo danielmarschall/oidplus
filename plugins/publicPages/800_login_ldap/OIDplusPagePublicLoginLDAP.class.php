@@ -21,70 +21,6 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
-	private static function ldapGetString($ldap_userinfo, $attributeName) {
-		$ary = self::ldapGetArray($ldap_userinfo, $attributeName);
-		return implode("\n", $ary);
-	}
-
-	private static function ldapGetArray($ldap_userinfo, $attributeName) {
-		$ary = array();
-		if (isset($ldap_userinfo[$attributeName])) {
-			$cnt = $ldap_userinfo[$attributeName]['count'];
-			for ($i=0; $i<$cnt; $i++) {
-				$ary[] = $ldap_userinfo[$attributeName][$i];
-			}
-		}
-		return $ary;
-	}
-
-	private static function ldapIsMemberOf($ldap_userinfo, $groupDN) {
-		$memberof = self::ldapGetArray($ldap_userinfo, 'memberof');
-		foreach ($memberof as $groupName) {
-			if (strtolower($groupName) === strtolower($groupDN)) return true;
-		}
-		return false;
-	}
-
-	private static function ldapLogin($username, $password) {
-		$cfg_ldap_server      = OIDplus::baseConfig()->getValue('LDAP_SERVER');
-		$cfg_ldap_port        = OIDplus::baseConfig()->getValue('LDAP_PORT', 389);
-		$cfg_ldap_base_dn     = OIDplus::baseConfig()->getValue('LDAP_BASE_DN');
-
-		// Connect to the server
-		if (!empty($cfg_ldap_port)) {
-			if (!($ldapconn = @ldap_connect($cfg_ldap_server, $cfg_ldap_port))) throw new OIDplusException(_L('Cannot connect to LDAP server'));
-		} else {
-			if (!($ldapconn = @ldap_connect($cfg_ldap_server))) throw new OIDplusException(_L('Cannot connect to LDAP server'));
-		}
-		ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
-		ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0);
-
-		if (!strstr($username,'@')) throw new OIDplusException('Please use the username schema "username@domainname.local" (userPrincipalName).');
-
-		// Login as the new user in order to check the credentials
-		if ($ldapbind = @ldap_bind($ldapconn, $username, $password)) {
-
-			// Search the user using the email address
-
-			$cfg_ldap_user_filter = "(&(objectClass=user)(objectCategory=person)(userPrincipalName=".ldap_escape($username, '', LDAP_ESCAPE_FILTER)."))";
-
-			if (!($result = @ldap_search($ldapconn,$cfg_ldap_base_dn, $cfg_ldap_user_filter))) throw new OIDplusException(_L('Error in search query: %1', ldap_error($ldapconn)));
-			$data = ldap_get_entries($ldapconn, $result);
-			$ldap_userinfo = array();
-
-			if ($data['count'] == 0) return false;
-			$ldap_userinfo = $data[0];
-
-			//ldap_unbind($ldapconn); // commented out because ldap_unbind() kills the link descriptor
-			ldap_close($ldapconn);
-
-			// empty($ldap_userinfo) can happen if the user did not log-in using their correct userPrincipalName (e.g. "username@domainname" instead of "username@domainname.local")
-			return empty($ldap_userinfo) ? false : $ldap_userinfo;
-		} else {
-			return false;
-		}
-	}
-
 	private function registerRA($ra, $ldap_userinfo) {
 		$email = $ra->raEmail();
 
@@ -107,24 +43,24 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		*/
 
 		$opuserdata = array();
-		$opuserdata['ra_name'] = self::ldapGetString($ldap_userinfo,'cn');
-		if (!empty(self::ldapGetString($ldap_userinfo,'displayname'))) {
-			$opuserdata['personal_name'] = self::ldapGetString($ldap_userinfo,'displayname');
+		$opuserdata['ra_name'] = VtsLDAPUtils::getString($ldap_userinfo,'cn');
+		if (!empty(VtsLDAPUtils::getString($ldap_userinfo,'displayname'))) {
+			$opuserdata['personal_name'] = VtsLDAPUtils::getString($ldap_userinfo,'displayname');
 		} else {
-			$opuserdata['personal_name'] = trim(self::ldapGetString($ldap_userinfo,'givenname').' '.self::ldapGetString($ldap_userinfo,'sn'));
+			$opuserdata['personal_name'] = trim(VtsLDAPUtils::getString($ldap_userinfo,'givenname').' '.VtsLDAPUtils::getString($ldap_userinfo,'sn'));
 		}
-		$opuserdata['organization'] = self::ldapGetString($ldap_userinfo,'company');
-		if (!empty(self::ldapGetString($ldap_userinfo,'physicaldeliveryofficename'))) {
-			$opuserdata['office'] = self::ldapGetString($ldap_userinfo,'physicaldeliveryofficename');
+		$opuserdata['organization'] = VtsLDAPUtils::getString($ldap_userinfo,'company');
+		if (!empty(VtsLDAPUtils::getString($ldap_userinfo,'physicaldeliveryofficename'))) {
+			$opuserdata['office'] = VtsLDAPUtils::getString($ldap_userinfo,'physicaldeliveryofficename');
 		} else {
-			$opuserdata['office'] = self::ldapGetString($ldap_userinfo,'department');
+			$opuserdata['office'] = VtsLDAPUtils::getString($ldap_userinfo,'department');
 		}
-		$opuserdata['street'] = self::ldapGetString($ldap_userinfo,'streetaddress');
-		$opuserdata['zip_town'] = trim(self::ldapGetString($ldap_userinfo,'postalcode').' '.self::ldapGetString($ldap_userinfo,'l'));
-		$opuserdata['country'] = self::ldapGetString($ldap_userinfo,'co'); // ISO country code: self::ldapGetString($ldap_userinfo,'c')
-		$opuserdata['phone'] = self::ldapGetString($ldap_userinfo,'telephonenumber'); // homephone for private phone number
-		$opuserdata['mobile'] = self::ldapGetString($ldap_userinfo,'mobile');
-		$opuserdata['fax'] = self::ldapGetString($ldap_userinfo,'facsimiletelephonenumber');
+		$opuserdata['street'] = VtsLDAPUtils::getString($ldap_userinfo,'streetaddress');
+		$opuserdata['zip_town'] = trim(VtsLDAPUtils::getString($ldap_userinfo,'postalcode').' '.VtsLDAPUtils::getString($ldap_userinfo,'l'));
+		$opuserdata['country'] = VtsLDAPUtils::getString($ldap_userinfo,'co'); // ISO country code: VtsLDAPUtils::getString($ldap_userinfo,'c')
+		$opuserdata['phone'] = VtsLDAPUtils::getString($ldap_userinfo,'telephonenumber'); // homephone for private phone number
+		$opuserdata['mobile'] = VtsLDAPUtils::getString($ldap_userinfo,'mobile');
+		$opuserdata['fax'] = VtsLDAPUtils::getString($ldap_userinfo,'facsimiletelephonenumber');
 
 		foreach ($opuserdata as $dbfield => $val) {
 			if (!empty($val)) {
@@ -167,62 +103,84 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			_CheckParamExists($params, 'email');
 			_CheckParamExists($params, 'password');
 
-			$email = $params['email'];
+			$username = $params['email'];
 			$password = $params['password'];
 
-			if (empty($email)) {
+			if (empty($username)) {
 				throw new OIDplusException(_L('Please enter a valid username'));
 			}
 
-			if (!($ldap_userinfo = self::ldapLogin($email, $password))) {
-				if (OIDplus::config()->getValue('log_failed_ra_logins', false)) {
-					OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '$email' using LDAP");
+			if (!strstr($username,'@')) {
+				// $ldap->login() will work with pre-2000 samaccountname, but
+				// $ldap->getUserInfo() will not
+				throw new Exception('Please use the username schema "username@domainname.local" (userPrincipalName).');
+			}
+
+			$ldap = new VtsLDAPUtils();
+
+			try {
+
+				$cfg_ldap_server      = OIDplus::baseConfig()->getValue('LDAP_SERVER');
+				$cfg_ldap_port        = OIDplus::baseConfig()->getValue('LDAP_PORT', 389);
+				$cfg_ldap_base_dn     = OIDplus::baseConfig()->getValue('LDAP_BASE_DN');
+
+				// Note: Will throw an Exception if connect fails
+				$ldap->connect($cfg_ldap_server, $cfg_ldap_port);
+
+				if (!$ldap->login($username, $password)) {
+					if (OIDplus::config()->getValue('log_failed_ra_logins', false)) {
+						OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '$username' using LDAP");
+					}
+					throw new OIDplusException(_L('Wrong password or user not registered'));
 				}
-				throw new OIDplusException(_L('Wrong password or user not registered'));
-			}
 
-			$foundSomething = false;
+				$ldap_userinfo = $ldap->getUserInfo($username, $cfg_ldap_base_dn);
 
-			// ---
+				$foundSomething = false;
 
-			$cfgAdminGroup = OIDplus::baseConfig()->getValue('LDAP_ADMIN_GROUP','');
-			if (!empty($cfgAdminGroup)) {
-				$isAdmin = self::ldapIsMemberOf($ldap_userinfo, $cfgAdminGroup);
-			} else {
-				$isAdmin = false;
-			}
-			if ($isAdmin) {
-				$foundSomething = true;
-				$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-				OIDplus::authUtils()->adminLoginEx($remember_me, 'LDAP login');
-			}
+				// ---
 
-			// ---
-
-			$cfgRaGroup = OIDplus::baseConfig()->getValue('LDAP_RA_GROUP','');
-			if (!empty($cfgRaGroup)) {
-				$isRA = self::ldapIsMemberOf($ldap_userinfo, $cfgRaGroup);
-			} else {
-				$isRA = true;
-			}
-			if ($isRA) {
-				if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN',true)) {
-					$mail = self::ldapGetString($ldap_userinfo, 'userprincipalname');
+				$cfgAdminGroup = OIDplus::baseConfig()->getValue('LDAP_ADMIN_GROUP','');
+				if (!empty($cfgAdminGroup)) {
+					$isAdmin = $ldap->isMemberOfRec($ldap_userinfo, $cfgAdminGroup);
+				} else {
+					$isAdmin = false;
+				}
+				if ($isAdmin) {
 					$foundSomething = true;
 					$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-					$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
+					OIDplus::authUtils()->adminLoginEx($remember_me, 'LDAP login');
 				}
-				if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL',false)) {
-					$mails = self::ldapGetArray($ldap_userinfo, 'mail');
-					foreach ($mails as $mail) {
+
+				// ---
+
+				$cfgRaGroup = OIDplus::baseConfig()->getValue('LDAP_RA_GROUP','');
+				if (!empty($cfgRaGroup)) {
+					$isRA = $ldap->isMemberOfRec($ldap_userinfo, $cfgRaGroup);
+				} else {
+					$isRA = true;
+				}
+				if ($isRA) {
+					if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN',true)) {
+						$mail = VtsLDAPUtils::getString($ldap_userinfo, 'userprincipalname');
 						$foundSomething = true;
 						$remember_me = isset($params['remember_me']) && ($params['remember_me']);
 						$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
 					}
+					if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL',false)) {
+						$mails = VtsLDAPUtils::getArray($ldap_userinfo, 'mail');
+						foreach ($mails as $mail) {
+							$foundSomething = true;
+							$remember_me = isset($params['remember_me']) && ($params['remember_me']);
+							$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
+						}
+					}
 				}
-			}
 
-			// ---
+			} finally {
+				$ldap->disconnect();
+				$ldap = null;
+			}
 
 			if (!$foundSomething) {
 				throw new OIDplusException(_L("Error: These credentials cannot be used with OIDplus. Please check the base configuration."));
