@@ -7,6 +7,10 @@
 # svn propget svn:ignore */*/*/*/* 2>/dev/null
 # ...
 
+composer.lock
+composer.phar
+/vendor/
+
 # Recommendation in https://phpstan.org/config-reference
 # "The usual practice is to have phpstan.neon.dist under version control,
 # and allow the user to override certain settings in their environment
