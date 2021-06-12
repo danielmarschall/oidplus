@@ -3,7 +3,7 @@
 /*
  * PHP SimpleXML-Supplement
  * Copyright 2020 - 2021 Daniel Marschall, ViaThinkSoft
- * Revision 2021-05-25
+ * Revision 2021-06-12
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,8 +90,9 @@ if (!function_exists('simplexml_load_string')) {
 			$other = $n[2];
 			$val  = $n[3];
 
-			$val = str_replace('<![CDATA[', '', $val);
-			$val = str_replace(']]>', '', $val);
+			// We are using chr(1) to avoid that <x> is parsed as child if it follows CDATA immediately
+			$val = str_replace('<![CDATA[', chr(1), $val);
+			$val = str_replace(']]>', chr(1), $val);
 			$val = trim($val);
 
 			$new = $out->addChild($name, $val);
@@ -217,6 +218,8 @@ if (!function_exists('simplexml_load_string')) {
 			if ((substr(trim($val),0,1) === '<') || (trim($val) == '')) {
 				$val = simplexml_load_string($val);
 			}
+
+			if (is_string($val)) $val = str_replace(chr(1), '', $val);
 
 			$data = get_object_vars($this);
 
