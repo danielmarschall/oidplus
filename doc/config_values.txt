@@ -269,6 +269,14 @@ Old 2.0 format:          (Not available)
 OIDplus::baseConfig()->setValue('LDAP_ENABLED',                true);
                          Set to true if you want to enable that users can log-in using LDAP / ActiveDirectory.
 
+OIDplus::baseConfig()->setValue('LDAP_NUM_DOMAINS',            1);
+                         Contains the number of domains/servers which are used.
+                         For 2nd, 3rd, 4th, ... domain use the fields LDAP_xxx__2, LDAP_xxx__3, ...
+                         e.g.   LDAP_SERVER__2
+                                LDAP_PORT__2
+                                LDAP_BASE_DN__2
+                                ...
+
 OIDplus::baseConfig()->setValue('LDAP_SERVER',                 'ldap://server1.contoso.local');
                          The LDAP server of your company.
 
@@ -278,7 +286,10 @@ OIDplus::baseConfig()->setValue('LDAP_PORT',                   389);
 OIDplus::baseConfig()->setValue('LDAP_BASE_DN',                'DC=CONTOSO,DC=local');
                          The base Distinguished Name (DN) of your directory.
 
-OIDplus::baseConfig()->setValue('LDAP_AUTHENTICATE_UPN',       true)
+OIDplus::baseConfig()->setValue('LDAP_UPN_SUFFIX',             '@contoso.local');
+                         The UPN suffix of this domain.
+
+OIDplus::baseConfig()->setValue('LDAP_AUTHENTICATE_UPN',       true);
                          In the login mask, the users will log in using the UPN ("principal name") e.g. username@contoso.local,
                          and in OIDplus, a RA account with an email equal to the UPN will be created.
 

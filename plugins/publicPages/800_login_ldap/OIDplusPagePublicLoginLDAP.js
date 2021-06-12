@@ -63,7 +63,7 @@ var OIDplusPagePublicLoginLDAP = {
 
 	raLoginLdapOnSubmit: function() {
 		var remember_me = $("#remember_me_ldap").length == 0 ? false : $("#remember_me_ldap")[0].checked;
-		OIDplusPagePublicLoginLDAP.raLoginLdap($("#raLoginLdapEMail")[0].value, $("#raLoginLdapPassword")[0].value, remember_me);
+		OIDplusPagePublicLoginLDAP.raLoginLdap($("#raLoginLdapUsername").val() + $("#ldapUpnSuffix").val(), $("#raLoginLdapPassword").val(), remember_me);
 		return false;
 	}
 

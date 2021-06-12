@@ -14,7 +14,7 @@ How to use LDAP / ActiveDirectory login
 	OIDplus::baseConfig()->setValue('LDAP_SERVER',                 'ldap://server1.contoso.local');
 	OIDplus::baseConfig()->setValue('LDAP_PORT',                   389);
 	OIDplus::baseConfig()->setValue('LDAP_BASE_DN',                'DC=CONTOSO,DC=local');
-	OIDplus::baseConfig()->setValue('LDAP_AUTHENTICATE_UPN',       true)
+	OIDplus::baseConfig()->setValue('LDAP_AUTHENTICATE_UPN',       true);
 	OIDplus::baseConfig()->setValue('LDAP_AUTHENTICATE_EMAIL',     false);
 	OIDplus::baseConfig()->setValue('LDAP_ADMIN_GROUP',            '');
 	OIDplus::baseConfig()->setValue('LDAP_RA_GROUP',               '');

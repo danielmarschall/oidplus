@@ -81,6 +81,16 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 	}
 
+	private function getDomainNumber($upn) {
+		$numDomains = OIDplus::baseConfig()->getValue('LDAP_NUM_DOMAINS', 1);
+		for ($i=1; $i<=$numDomains; $i++) {
+			$cfgSuffix = $i == 1 ? '' : "__$i";
+			$upnSuffix = OIDplus::baseConfig()->getValue('LDAP_UPN_SUFFIX'.$cfgSuffix, '');
+			if (str_ends_with($upn, $upnSuffix)) return $i;
+		}
+		return -1;
+	}
+
 	public function action($actionID, $params) {
 		if ($actionID == 'ra_login_ldap') {
 			if (!OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {
@@ -103,44 +113,48 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			_CheckParamExists($params, 'email');
 			_CheckParamExists($params, 'password');
 
-			$username = $params['email'];
+			$upn = $params['email'];
 			$password = $params['password'];
 
-			if (empty($username)) {
-				throw new OIDplusException(_L('Please enter a valid username'));
+			$domainNumber = $this->getDomainNumber($upn);
+			if ($domainNumber <= 0) {
+				throw new OIDplusException(_L('The server is not configured to handle this domain (the part behind the at-sign)'));
 			}
+			$cfgSuffix = $domainNumber == 1 ? '' : "__$domainNumber";
 
-			if (!strstr($username,'@')) {
-				// $ldap->login() will work with pre-2000 samaccountname, but
-				// $ldap->getUserInfo() will not
-				throw new Exception('Please use the username schema "username@domainname.local" (userPrincipalName).');
+			if (empty($upn)) {
+				throw new OIDplusException(_L('Please enter a valid username'));
 			}
 
 			$ldap = new VtsLDAPUtils();
 
 			try {
 
-				$cfg_ldap_server      = OIDplus::baseConfig()->getValue('LDAP_SERVER');
-				$cfg_ldap_port        = OIDplus::baseConfig()->getValue('LDAP_PORT', 389);
-				$cfg_ldap_base_dn     = OIDplus::baseConfig()->getValue('LDAP_BASE_DN');
+				$cfg_ldap_server      = OIDplus::baseConfig()->getValue('LDAP_SERVER'.$cfgSuffix);
+				$cfg_ldap_port        = OIDplus::baseConfig()->getValue('LDAP_PORT'.$cfgSuffix, 389);
+				$cfg_ldap_base_dn     = OIDplus::baseConfig()->getValue('LDAP_BASE_DN'.$cfgSuffix);
 
 				// Note: Will throw an Exception if connect fails
 				$ldap->connect($cfg_ldap_server, $cfg_ldap_port);
 
-				if (!$ldap->login($username, $password)) {
+				if (!$ldap->login($upn, $password)) {
 					if (OIDplus::config()->getValue('log_failed_ra_logins', false)) {
-						OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '$username' using LDAP");
+						OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '$upn' using LDAP");
 					}
 					throw new OIDplusException(_L('Wrong password or user not registered'));
 				}
 
-				$ldap_userinfo = $ldap->getUserInfo($username, $cfg_ldap_base_dn);
+				$ldap_userinfo = $ldap->getUserInfo($upn, $cfg_ldap_base_dn);
+
+				if ($ldap_userinfo) {
+					throw new OIDplusException(_L('The LDAP login was successful, but the own user cannot be found. Please check the base configuration setting %1', 'LDAP_BASE_DN'.$cfgSuffix));
+				}
 
 				$foundSomething = false;
 
 				// ---
 
-				$cfgAdminGroup = OIDplus::baseConfig()->getValue('LDAP_ADMIN_GROUP','');
+				$cfgAdminGroup = OIDplus::baseConfig()->getValue('LDAP_ADMIN_GROUP'.$cfgSuffix,'');
 				if (!empty($cfgAdminGroup)) {
 					$isAdmin = $ldap->isMemberOfRec($ldap_userinfo, $cfgAdminGroup);
 				} else {
@@ -154,20 +168,20 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
 				// ---
 
-				$cfgRaGroup = OIDplus::baseConfig()->getValue('LDAP_RA_GROUP','');
+				$cfgRaGroup = OIDplus::baseConfig()->getValue('LDAP_RA_GROUP'.$cfgSuffix,'');
 				if (!empty($cfgRaGroup)) {
 					$isRA = $ldap->isMemberOfRec($ldap_userinfo, $cfgRaGroup);
 				} else {
 					$isRA = true;
 				}
 				if ($isRA) {
-					if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN',true)) {
+					if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN'.$cfgSuffix,true)) {
 						$mail = VtsLDAPUtils::getString($ldap_userinfo, 'userprincipalname');
 						$foundSomething = true;
 						$remember_me = isset($params['remember_me']) && ($params['remember_me']);
 						$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
 					}
-					if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL',false)) {
+					if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL'.$cfgSuffix,false)) {
 						$mails = VtsLDAPUtils::getArray($ldap_userinfo, 'mail');
 						foreach ($mails as $mail) {
 							$foundSomething = true;
@@ -238,10 +252,23 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 				}
 				$out['text'] .= '<p>'._L('If you have more accounts, you can log in with another account here.').'</p>';
 			} else {
-				$out['text'] .= '<p>'._L('Enter your domain username (e.g. <b>username@contoso.local</b>) and your password to log in as Registration Authority.').'</p>';
+				$out['text'] .= '<p>'._L('Enter your domain username and your password to log in as Registration Authority.').'</p>';
 			}
 			$out['text'] .= '<form onsubmit="return OIDplusPagePublicLoginLDAP.raLoginLdapOnSubmit(this);">';
-			$out['text'] .= '<div><label class="padding_label">'._L('Username').':</label><input type="text" name="email" value="" id="raLoginLdapEMail"></div>';
+			$out['text'] .= '<div><label class="padding_label">'._L('Username').':</label><input type="text" name="username" value="" id="raLoginLdapUsername">';
+			$out['text'] .= '&nbsp;&nbsp;';
+			$out['text'] .= '<select id="ldapUpnSuffix" name="upnSuffix">';
+
+			$numDomains = OIDplus::baseConfig()->getValue('LDAP_NUM_DOMAINS', 1);
+			for ($i=1; $i<=$numDomains; $i++) {
+				$cfgSuffix = $i == 1 ? '' : "__$i";
+				$upnSuffix = OIDplus::baseConfig()->getValue('LDAP_UPN_SUFFIX'.$cfgSuffix, '');
+				if ($upnSuffix == '') throw new OIDplusException(_L('Invalid base configuration setting: %1 is missing or empty', 'LDAP_UPN_SUFFIX'.$cfgSuffix));
+				$out['text'] .= '<option value="'.htmlentities($upnSuffix).'">'.htmlentities($upnSuffix).'</option>';
+			}
+
+			$out['text'] .= '</select>';
+			$out['text'] .= '</div>';
 			$out['text'] .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginLdapPassword"></div>';
 			if (OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
 				if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreJWT::class)) {
@@ -264,7 +291,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			$out['text'] .= '<p><abbr title="'._L('You don\'t need to register. Just enter your Windows/Company credentials.').'">'._L('How to register?').'</abbr></p>';
 
 			$mins = ceil(OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60)/60);
-			$out['text'] .= '<p><font size="-1">'._L('<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of %1 minutes.', $mins);
+			$out['text'] .= '<p><font size="-1">'._L('<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of %1 minutes (except if the "Remember me" option is used).', $mins);
 			$privacy_document_file = 'OIDplus/privacy_documentation.html';
 			$resourcePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.1.500'); // OIDplusPagePublicResources
 			if (!is_null($resourcePlugin) && file_exists(OIDplus::localpath().'res/'.$privacy_document_file)) {

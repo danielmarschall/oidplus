@@ -254,10 +254,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of %1 minutes.
+		<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of %1 minutes (except if the "Remember me" option is used).
 		]]></source>
 		<target><![CDATA[
-		<i>Datenschutz-Hinweis</i>: Durch das Benutzen der Login-Funktion erklären Sie sich einverstanden, dass ein Sitzungs-Cookie temporär in Ihrem Browser abgespeichert wird. Ein Sitzungs-Cookie ist eine kleine Textdatei, die bei jedem Aufruf dieser Seite an den Webserver gesendet wird, um Sie als eingeloggten Benutzer zu identifizieren. Das Sitzungs-Cookie wird nicht Ihre Surfverhalten außerhalb OIDplus verfolgen. Das Cookie wird zerstört, wenn Sie sich ausloggen oder nach einer Inaktivität von %1 Minuten.
+		<i>Datenschutz-Hinweis</i>: Durch das Benutzen der Login-Funktion erklären Sie sich einverstanden, dass ein Sitzungs-Cookie temporär in Ihrem Browser abgespeichert wird. Ein Sitzungs-Cookie ist eine kleine Textdatei, die bei jedem Aufruf dieser Seite an den Webserver gesendet wird, um Sie als eingeloggten Benutzer zu identifizieren. Das Sitzungs-Cookie wird nicht Ihre Surfverhalten außerhalb OIDplus verfolgen. Das Cookie wird zerstört, wenn Sie sich ausloggen oder nach einer Inaktivität von %1 Minuten (außer wenn die "Angemeldet bleiben" Option genutzt wird).
 		]]></target>
 	</message>
 	<message>
@@ -1718,10 +1718,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Enter your domain username (e.g. <b>username@contoso.local</b>) and your password to log in as Registration Authority.
+		Enter your domain username and your password to log in as Registration Authority.
 		]]></source>
 		<target><![CDATA[
-		Geben Sie Ihren Domänen-Benutzernamen (z.B. <b>benutzername@firmenname.local</b>) und Ihr Passwort ein, um sich als Registrierungsstelle anzumelden.
+		Geben Sie Ihren Domänen-Benutzernamen und Ihr Passwort ein, um sich als Registrierungsstelle anzumelden.
 		]]></target>
 	</message>
 	<message>
@@ -2754,6 +2754,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ungültige Authentifizierung. Ist die Link-Adresse OK?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid base configuration setting: %1 is missing or empty
+		]]></source>
+		<target><![CDATA[
+		Ungültige Basiskonfigurations-Einstellung: %1 fehlt oder ist leer
 		]]></target>
 	</message>
 	<message>
@@ -5774,6 +5782,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The LDAP login was successful, but the own user cannot be found. Please check the base configuration setting %1
+		]]></source>
+		<target><![CDATA[
+		Der LDAP-Login war erfolgreich, aber der eigene Benutzer konnte nicht gefunden werden. Bitte prüfen Sie die Basiskonfigurations-Einstellung %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The OID "%1" is already used by the plugin "%2"
 		]]></source>
 		<target><![CDATA[
@@ -5994,6 +6010,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die resultierende OID %1 ist zu lang (Maximale Länge: %2)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The server is not configured to handle this domain (the part behind the at-sign)
+		]]></source>
+		<target><![CDATA[
+		Der Server ist für die Verwendung dieser Domäne nicht konfiguriert
 		]]></target>
 	</message>
 	<message>
