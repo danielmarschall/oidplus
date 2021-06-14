@@ -5782,10 +5782,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The LDAP login was successful, but the own user cannot be found. Please check the base configuration setting %1
+		The LDAP login was successful, but the own user %1 cannot be found. Please check the base configuration setting %2 and %3
 		]]></source>
 		<target><![CDATA[
-		Der LDAP-Login war erfolgreich, aber der eigene Benutzer konnte nicht gefunden werden. Bitte prüfen Sie die Basiskonfigurations-Einstellung %1
+		Der LDAP-Login war erfolgreich, aber der eigene Benutzer %1 konnte nicht gefunden werden. Bitte prüfen Sie die Basiskonfigurations-Einstellung %2 und %3
 		]]></target>
 	</message>
 	<message>

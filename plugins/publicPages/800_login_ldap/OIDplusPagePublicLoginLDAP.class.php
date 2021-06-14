@@ -146,8 +146,8 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
 				$ldap_userinfo = $ldap->getUserInfo($upn, $cfg_ldap_base_dn);
 
-				if ($ldap_userinfo) {
-					throw new OIDplusException(_L('The LDAP login was successful, but the own user cannot be found. Please check the base configuration setting %1', 'LDAP_BASE_DN'.$cfgSuffix));
+				if (!$ldap_userinfo) {
+					throw new OIDplusException(_L('The LDAP login was successful, but the own user %1 cannot be found. Please check the base configuration setting %2 and %3', $upn, "LDAP_BASE_DN$cfgSuffix", "LDAP_UPN_SUFFIX$cfgSuffix"));
 				}
 
 				$foundSomething = false;
