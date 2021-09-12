@@ -3,7 +3,7 @@
 /*
  * OID-Info.com API for PHP
  * Copyright 2019-2021 Daniel Marschall, ViaThinkSoft
- * Version 2021-05-21
+ * Version 2021-06-19
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1003,8 +1003,10 @@ class OIDSimplePingProvider implements IOIDSimplePingProvider {
 		if (!$is_ip) {
 			$address = @gethostbyname($host);
 			if ($address === $host) {
-				echo "gethostbyname() failed.\n"; // TODO: exceptions? (also all "echos" below)
-				return false;
+				$msg = "gethostbyname() failed.\n"; // TODO: exceptions? (also all "echos" below)
+				throw new Exception($msg);
+				// echo $msg;
+				// return false;
 			}
 		} else {
 			$address = $host;
@@ -1012,13 +1014,17 @@ class OIDSimplePingProvider implements IOIDSimplePingProvider {
 
 		$this->socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 		if ($this->socket === false) {
-			echo "socket_create() failed: " . socket_strerror(socket_last_error()) . "\n";
-			return false;
+			$msg = "socket_create() failed: " . socket_strerror(socket_last_error()) . "\n";
+			throw new Exception($msg);
+			// echo $msg;
+			// return false;
 		}
 		$result = @socket_connect($this->socket, $address, $service_port);
 		if ($result === false) {
-			echo "socket_connect() failed: " . socket_strerror(socket_last_error($this->socket)) . "\n";
-			return false;
+			$msg = "socket_connect() failed: " . socket_strerror(socket_last_error($this->socket)) . "\n";
+			throw new Exception($msg);
+			// echo $msg;
+			// return false;
 		}
 
 		$this->connected = true;
@@ -1028,8 +1034,10 @@ class OIDSimplePingProvider implements IOIDSimplePingProvider {
 		$in = "${oid}\n\0"; // PHP's socket_send() does not send a trailing \n . There needs to be something after the \n ... :(
 
 		if ($failcount >= self::SPP_MAX_CONNECTION_ATTEMPTS) {
-			echo "Query $oid: CONNECTION TO SIMPLE PING PROVIDER FAILED!\n";
-			return null;
+			$msg = "Query $oid: CONNECTION TO SIMPLE PING PROVIDER FAILED!\n";
+			throw new Exception($msg);
+			// echo $msg;
+			// return null;
 		}
 
 		if (!$this->connected) {

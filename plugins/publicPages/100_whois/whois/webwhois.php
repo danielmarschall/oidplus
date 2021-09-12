@@ -44,8 +44,19 @@ if (PHP_SAPI == 'cli') {
 	$query = $_REQUEST['query'];
 }
 
-$authTokens = explode('$', $query);
-$query = array_shift($authTokens);
+// Split input into query, authTokens and serverCommands
+$tokens = explode('$', $query);
+$query = array_shift($tokens);
+$authTokens[] = array();
+$serverCommands = array();
+foreach ($tokens as $token) {
+	if (strpos($token,'=') !== false) {
+		$tmp = explode('=',$token,2);
+		$serverCommands[strtolower($tmp[0])] = $tmp[1];
+	} else {
+		$authTokens[] = $token;
+	}
+}
 
 $query = str_replace('oid:.', 'oid:', $query); // allow leading dot
 
@@ -289,7 +300,17 @@ if ($continue) {
 
 // Step 2: Format output
 
-$format = isset($_REQUEST['format']) ? $_REQUEST['format'] : 'txt';
+if (isset($_REQUEST['format'])) {
+	$format = $_REQUEST['format'];
+} else if (isset($serverCommands['format'])) {
+	$format = $serverCommands['format'];
+} else {
+	$format = 'txt'; // default
+}
+
+if (($format != 'txt') && ($format != 'json') && ($format != 'xml')) {
+	$format = 'txt'; // default
+}
 
 if ($format == 'txt') {
 	header('Content-Type:text/plain; charset=UTF-8');
