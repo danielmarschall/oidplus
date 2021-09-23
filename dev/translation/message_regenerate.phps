@@ -32,7 +32,9 @@ $dir = __DIR__ . '/../../';
 // ---
 
 $langs = array();
-$tmp = glob($dir.'/plugins/language/*/messages.xml');
+$tmp1 = glob($dir.'/plugins/language/'.'*'.'/messages.xml');
+$tmp2 = glob($dir.'/plugins/_thirdParty/'.'*'.'/language/'.'*'.'/messages.xml');
+$tmp = array_merge($tmp1, $tmp2);
 foreach ($tmp as $tmp2) {
 	$tmp3 = explode('/', $tmp2);
 	$lang = $tmp3[count($tmp3)-2];
@@ -81,14 +83,18 @@ sort($all_strings);
 
 foreach ($langs as $lang) {
 	$translation_array = array();
-	$translation_file = $dir.'/plugins/language/'.$lang.'/messages.xml';
+	$translation_files = array_merge(
+		glob($dir.'/plugins/language/'.$lang.'/messages.xml'),
+		glob($dir.'/plugins/_thirdParty/'.'*'.'/language/'.$lang.'/messages.xml')
+	);
+	$translation_file = count($translation_files) > 0 ? $translation_files[0] : null;
 	if (file_exists($translation_file)) {
-	$xml = simplexml_load_string(file_get_contents($translation_file));
-	if (!$xml) {
-		echo "STOP: Cannot load $translation_file\n";
-		continue;
-	}
-	foreach ($xml->message as $msg) {
+		$xml = simplexml_load_string(file_get_contents($translation_file));
+		if (!$xml) {
+			echo "STOP: Cannot load $translation_file\n";
+			continue;
+		}
+		foreach ($xml->message as $msg) {
 			$src = trim($msg->source->__toString());
 			$dst = trim($msg->target->__toString());
 			$translation_array[$src] = $dst;

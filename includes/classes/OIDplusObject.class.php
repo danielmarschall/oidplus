@@ -295,12 +295,24 @@ abstract class OIDplusObject {
 			$ra_email = $row['ra_email'];
 		}
 		// TODO: have different icons for Leaf-Nodes
+
+		$dirs = array_merge(
+			glob(OIDplus::localpath().'plugins/objectTypes/'.$namespace.'/'),
+			glob(OIDplus::localpath().'plugins/_thirdParty/'.'*'.'/objectTypes/'.$namespace.'/')
+		);
+
+		if (count($dirs) == 0) return null; // default icon (folder)
+
+		$dir = substr($dirs[0], strlen(OIDplus::localpath()));
+
 		if (OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
-			$icon = 'plugins/objectTypes/'.$namespace.'/img/treeicon_own.png';
+			$icon = $dir.'/img/treeicon_own.png';
 		} else {
-			$icon = 'plugins/objectTypes/'.$namespace.'/img/treeicon_general.png';
+			$icon = $dir.'/img/treeicon_general.png';
 		}
-		if (!file_exists($icon)) $icon = null; // default icon (folder)
+
+		if (!file_exists($icon)) return null; // default icon (folder)
+
 		return $icon;
 	}
 

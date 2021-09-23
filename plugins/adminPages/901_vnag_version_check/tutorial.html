@@ -17,8 +17,8 @@
 	<li>Extract VNag to e.g. <b>/daten/vnag/</b><br>
 	<i>Please change the paths so that these fit your environment.</i></li>
 
-	<li>Create a symlink:<br>
-	<code>ln -s /daten/vnag/plugins/webreader/icinga2.conf /etc/icinga2/conf.d/vnag_webreader.conf</code><br>
+	<li>Create a symlink, e.g.:<br>
+	<code>ln -s /var/www/vnag/plugins/webreader/icinga2.conf /etc/icinga2/conf.d/vnag_webreader.conf</code><br>
 	In this file, adjust the path /daten/vnag<br><br></li>
 
 	<li>Create a new file <b>/etc/icinga2/conf.d/oidplus_version.conf</b> with the following contents:<pre>

@@ -21,6 +21,24 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
+	private function get_treeicon_root($ot) {
+		$dirs = array_merge(
+			glob(OIDplus::localpath().'plugins/objectTypes/'.$ot::ns()),
+			glob(OIDplus::localpath().'plugins/_thirdParty/'.'*'.'/objectTypes/'.$ot::ns())
+		);
+
+		if (count($dirs) == 0) {
+			$icon = null;
+		} else {
+			$dir = $dirs[0];
+			$icon = $dir.'/img/treeicon_root.png';
+			if (!file_exists($icon)) $icon = null;
+			$icon = substr($icon, strlen(OIDplus::localpath()));
+		}
+
+		return $icon;
+	}
+
 	private function ra_change_rec($id, $old_ra, $new_ra) {
 		if (is_null($old_ra)) $old_ra = '';
 		OIDplus::db()->query("update ###objects set ra_email = ?, updated = ".OIDplus::db()->sqlDate()." where id = ? and ".OIDplus::db()->getSlang()->isNullFunction('ra_email',"''")." = ?", array($new_ra, $id, $old_ra));
@@ -626,7 +644,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if ($nonjs) {
-			$json[] = array('id' => 'oidplus:system', 'icon' => OIDplus::webpath(__DIR__).'system.png', 'text' => _L('System'));
+			$json[] = array(
+				'id' => 'oidplus:system',
+				'icon' => OIDplus::webpath(__DIR__).'system.png',
+				'text' => _L('System')
+			);
 
 			$parent = '';
 			$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($req_goto));
@@ -636,8 +658,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			$objTypesChildren = array();
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-				$icon = 'plugins/objectTypes/'.$ot::ns().'/img/treeicon_root.png';
-				$json[] = array('id' => $ot::root(), 'icon' => $icon, 'text' => $ot::objectTypeTitle());
+				$icon = $this->get_treeicon_root($ot);
+
+				$json[] = array(
+					'id' => $ot::root(),
+					'icon' => $icon,
+					'text' => $ot::objectTypeTitle()
+				);
 
 				try {
 					$tmp = OIDplusObject::parse($req_goto);
@@ -710,10 +737,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			$objTypesChildren = array();
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
+				$icon = $this->get_treeicon_root($ot);
+
 				$child = array('id' => $ot::root(),
 				               'text' => $ot::objectTypeTitle(),
 				               'state' => array("opened" => true),
-				               'icon' => 'plugins/objectTypes/'.$ot::ns().'/img/treeicon_root.png',
+				               'icon' => $icon,
 				               'children' => OIDplus::menuUtils()->tree_populate($ot::root(), $goto_path)
 				               );
 				if (!file_exists($child['icon'])) $child['icon'] = null; // default icon (folder)

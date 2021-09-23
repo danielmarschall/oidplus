@@ -120,7 +120,9 @@ spl_autoload_register(function ($class_name) {
 		$class_files = array();
 
 		// Global namespace / OIDplus
+		// (the last has the highest priority)
 		foreach ($valid_plugin_folders as $folder) {
+			$class_files = array_merge($class_files, glob(__DIR__ . '/../plugins/_thirdParty/'.'*'.'/'.$folder.'/'.'*'.'/'.'*'.'.class.php'));
 			$class_files = array_merge($class_files, glob(__DIR__ . '/../plugins/'.$folder.'/'.'*'.'/'.'*'.'.class.php'));
 		}
 		$class_files = array_merge($class_files, glob(__DIR__ . '/classes/'.'*'.'.class.php'));

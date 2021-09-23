@@ -8,7 +8,8 @@ This folder can contain following files:
 
 - oidplus_base.css : This file REPLACES the oidplus_base.css file of the currently active design.
                      Please see a WARNING below.
-                     *DEPRECATED*: Please use a design plugin (located in plugins/design/)
+                     *DEPRECATED*: Please use a design plugin (located in plugins/design/ or
+                     plugins/_thirdParty/"vendorname"/design/)
                      in order to define individual designs for your system.
                      Design plugins also allow you to include graphics in the plugin
                      directory itself (so you don't need "userdata_pub").
@@ -21,7 +22,7 @@ This folder can contain following files:
                      create an oidplus_add.css file which overrides "#system_title_logo"
                      using the "!important" statement. The logo is put into
                      userdata_pub.
-                     You shall not edit plugins/design/*/logo.png, because things might
+                     You shall not edit "logo.png", because things might
                      change during software updates.
 
 - setup_base.css   : This file REPLACES the setup/setup_base.css file.

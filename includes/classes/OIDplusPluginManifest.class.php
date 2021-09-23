@@ -21,6 +21,7 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusPluginManifest {
 
+	private $manifestFile = null;
 	private $rawXML = null;
 
 	// All plugins
@@ -104,6 +105,10 @@ class OIDplusPluginManifest {
 		return $this->jsFilesSetup;
 	}
 
+	public function getManifestFile(): string {
+		return $this->manifestFile;
+	}
+
 	public function getRawXml(): SimpleXMLElement {
 		return $this->rawXML;
 	}
@@ -125,6 +130,7 @@ class OIDplusPluginManifest {
 		$xmldata = @simplexml_load_file($filename);
 		if ($xmldata === false) return false;
 
+		$this->manifestFile = $filename;
 		$this->rawXML = $xmldata;
 
 		// The following attributes are available for every plugin

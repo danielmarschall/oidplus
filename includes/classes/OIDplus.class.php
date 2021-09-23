@@ -195,7 +195,7 @@ class OIDplus {
 			self::$config->prepareConfigKey('last_known_version', 'Last known OIDplus Version', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
 				// Nothing here yet
 			});
-			self::$config->prepareConfigKey('default_ra_auth_method', 'Default auth method used for generating password of RAs (must exist in plugins/auth/)?', 'A3_bcrypt', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			self::$config->prepareConfigKey('default_ra_auth_method', 'Default auth method used for generating password of RAs (must exist in plugins/auth/ or plugins/_thirdParty/vendorname/auth/)?', 'A3_bcrypt', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 				$good = true;
 				if (strpos($value,'/') !== false) $good = false;
 				if (strpos($value,'\\') !== false) $good = false;
@@ -204,8 +204,8 @@ class OIDplus {
 					throw new OIDplusException(_L('Invalid auth plugin folder name. Do only enter a folder name, not an absolute or relative path'));
 				}
 
-				if (!is_dir(OIDplus::localpath().'plugins/auth/'.$value)) {
-					throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$value,'plugins/auth/'));
+				if (!is_dir(OIDplus::localpath().'plugins/auth/'.$value) && !rec_is_dir(OIDplus::localpath().'plugins/_thirdParty/'.'*'.'/auth/'.$value)) {
+					throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2 or %3',$value,'plugins/auth/','plugins/_thirdParty/vendorname/auth/'));
 				}
 			});
 		}
@@ -574,7 +574,9 @@ class OIDplus {
 		$out = array();
 		// Note: glob() will sort by default, so we do not need a page priority attribute.
 		//       So you just need to use a numeric plugin directory prefix (padded).
-		$ary = glob(OIDplus::localpath().'plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.xml');
+		$ary1 = glob(OIDplus::localpath().'plugins/'.$pluginFolderMask.'/'.'*'.'/manifest.xml');
+		$ary2 = glob(OIDplus::localpath().'plugins/_thirdParty/'.'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.xml');
+		$ary = array_merge($ary1, $ary2);
 		sort($ary);
 		foreach ($ary as $ini) {
 			if (!file_exists($ini)) continue;
@@ -655,9 +657,14 @@ class OIDplus {
 				}
 				if (isset($known_plugin_oids[$plugin_oid])) {
 					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('The OID "%1" is already used by the plugin "%2"',$plugin_oid,$known_plugin_oids[$plugin_oid]));
-				} else {
-					$known_plugin_oids[$plugin_oid] = $plugintype_folder.'/'.$pluginname_folder;
 				}
+				$full_plugin_dir = dirname($manifest->getManifestFile());
+				$full_plugin_dir = substr($full_plugin_dir, strlen(OIDplus::localpath()));
+				if (str_starts_with($full_plugin_dir, 'plugins/_thirdParty/') != !str_starts_with($plugin_oid, '1.3.6.1.4.1.37476.2.5.2.4.')) {
+					throw new OIDplusException(_L('Plugin "%1/%2" is misplaced',$plugintype_folder,$pluginname_folder).': '._L('The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins, while the folder %2 can only be used for third-party plugins','plugins/','plugins/_thirdParty/"vendorname"/'));
+				}
+
+				$known_plugin_oids[$plugin_oid] = $plugintype_folder.'/'.$pluginname_folder;
 
 				$obj = new $class_name();
 
@@ -829,7 +836,7 @@ class OIDplus {
 		}
 		return $steps_up;
 	}
-	
+
 	public static function isSSL() {
 		return isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
 	}
@@ -1232,7 +1239,9 @@ class OIDplus {
 				if (strpos($wildcard,'\\') !== false) continue; // just to be sure
 				if (strpos($wildcard,'..') !== false) continue; // just to be sure
 
-				$translation_files = glob(__DIR__.'/../../plugins/language/'.$lang.'/'.$wildcard);
+				$translation_files1 = glob(__DIR__.'/../../plugins/language/'.$lang.'/'.$wildcard);
+				$translation_files2 = glob(__DIR__.'/../../plugins/_thirdParty/'.'*'.'/language/'.$lang.'/'.$wildcard);
+				$translation_files = array_merge($translation_files1, $translation_files2);
 				sort($translation_files);
 				foreach ($translation_files as $translation_file) {
 					if (!file_exists($translation_file)) continue;

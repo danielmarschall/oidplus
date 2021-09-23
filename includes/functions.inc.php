@@ -309,3 +309,11 @@ if (!function_exists('str_starts_with')) {
 	}
 }
 
+function rec_is_dir($dir) {
+	$dirs = glob($dir);
+	foreach ($dirs as $dir) {
+		if (is_dir($dir)) return true;
+	}
+	return false;
+}
+

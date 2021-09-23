@@ -68,7 +68,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
 			}
 		});
-		OIDplus::config()->prepareConfigKey('design', 'Which design to use (must exist in plugins/design/)?', 'default', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		OIDplus::config()->prepareConfigKey('design', 'Which design to use (must exist in plugins/design/ or plugins/_thirdParty/vendorname/design/)?', 'default', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			$good = true;
 			if (strpos($value,'/') !== false) $good = false;
 			if (strpos($value,'\\') !== false) $good = false;
@@ -77,8 +77,8 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('Invalid design folder name. Do only enter a folder name, not an absolute or relative path'));
 			}
 
-			if (!is_dir(OIDplus::localpath().'plugins/design/'.$value)) {
-				throw new OIDplusException(_L('The design "%1" does not exist in plugin directory %2',$value,'plugins/design/'));
+			if (!is_dir(OIDplus::localpath().'plugins/design/'.$value) && !rec_is_dir(OIDplus::localpath().'plugins/_thirdParty/'.'*'.'/design/'.$value)) {
+				throw new OIDplusException(_L('The design "%1" does not exist in plugin directory %2 or %3',$value,'plugins/design/','plugins/_thirdParty/vendorname/design/'));
 			}
 		});
 		OIDplus::config()->prepareConfigKey('oobe_colors_done', '"Out Of Box Experience" wizard for OIDplusPageAdminColors done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});

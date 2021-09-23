@@ -4510,6 +4510,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Plugin "%1/%2" is misplaced
+		]]></source>
+		<target><![CDATA[
+		Plugin "%1/%2" ist am falschen Ort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Plugin %1 not found.
 		]]></source>
 		<target><![CDATA[
@@ -5886,10 +5894,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The auth plugin "%1" does not exist in plugin directory %2
+		The auth plugin "%1" does not exist in plugin directory %2 or %3
 		]]></source>
 		<target><![CDATA[
-		Authentifizierungs-Plugin "%1" wurde im Ordner %2 nicht gefunden
+		Das Authentizifierungs-Plugin "%1" konnte in den Plugin-Verzeichnissen %2 und %3 nicht gefunden werden
 		]]></target>
 	</message>
 	<message>
@@ -5902,10 +5910,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The design "%1" does not exist in plugin directory %2
+		The design "%1" does not exist in plugin directory %2 or %3
 		]]></source>
 		<target><![CDATA[
-		Das Design "%1" existiert nicht im Plugin-Verzeichnis %2
+		Das Design-Plugin "%1" konnte in den Plugin-Verzeichnissen %2 und %3 nicht gefunden werden
 		]]></target>
 	</message>
 	<message>
@@ -5978,6 +5986,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die Passwörter stimmen nicht überein!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins, while the folder %2 can only be used for third-party plugins
+		]]></source>
+		<target><![CDATA[
+		Das Plugin befindet sich im falschen Verzeichnis. Das Verzeichnis %1 darf nur noch für offizielle ViaThinkSoft-Plugins verwendet werden, während das Verzeichnis %2 für Plugins von Drittanbietern bestimmt ist
 		]]></target>
 	</message>
 	<message>
