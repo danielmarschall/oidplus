@@ -143,6 +143,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 					}
 					ob_end_clean();
 
+					$cont = preg_replace('@!!!(.+)\\n@', '<font color="red">!!!\\1</font>'."\n", $cont);
+
 					$out['text'] .= '<pre id="update_infobox">'.$cont.'</pre>';
 				}
 			} else if ($installType === 'svn-snapshot') {
@@ -183,6 +185,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 						$cont = _L('Error: %1',$e->getMessage());
 					}
 					ob_end_clean();
+
+					$cont = preg_replace('@!!!(.+)\\n@', '<font color="red">!!!\\1</font>'."\n", $cont);
 
 					$out['text'] .= '<pre id="update_infobox">'.$cont.'</pre>';
 				}

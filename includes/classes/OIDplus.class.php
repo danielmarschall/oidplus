@@ -660,6 +660,7 @@ class OIDplus {
 				}
 				$full_plugin_dir = dirname($manifest->getManifestFile());
 				$full_plugin_dir = substr($full_plugin_dir, strlen(OIDplus::localpath()));
+				// { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) oidplus(5) v2(2) plugins(4) }
 				if (str_starts_with($full_plugin_dir, 'plugins/_thirdParty/') != !str_starts_with($plugin_oid, '1.3.6.1.4.1.37476.2.5.2.4.')) {
 					throw new OIDplusException(_L('Plugin "%1/%2" is misplaced',$plugintype_folder,$pluginname_folder).': '._L('The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins, while the folder %2 can only be used for third-party plugins','plugins/','plugins/_thirdParty/"vendorname"/'));
 				}
