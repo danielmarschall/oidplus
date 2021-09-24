@@ -7,7 +7,6 @@ RECENT STUFF
 	Make #rounds and length of admin password configurable (pre-baseconfig?)
 	Include dev/bcrypt_cost_calculator somewhere in the configuration page?
 	... At least give a hint to the documentation, so they know how to run the tool and how to enter the cost in the configuration (for RA and Admin)
-- SVN: XML and JS files are sometimes marked as binary, because they have the mime type "application". We need to undo that!
 
 SECURITY Improvements:
 - Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")
