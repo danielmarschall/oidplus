@@ -32,9 +32,7 @@ $dir = __DIR__ . '/../../';
 // ---
 
 $langs = array();
-$tmp1 = glob($dir.'/plugins/language/'.'*'.'/messages.xml');
-$tmp2 = glob($dir.'/plugins/_thirdParty/'.'*'.'/language/'.'*'.'/messages.xml');
-$tmp = array_merge($tmp1, $tmp2);
+$tmp = glob($dir.'/plugins/'.'*'.'/language/'.'*'.'/messages.xml');
 foreach ($tmp as $tmp2) {
 	$tmp3 = explode('/', $tmp2);
 	$lang = $tmp3[count($tmp3)-2];
@@ -82,11 +80,7 @@ sort($all_strings);
 // ---
 
 foreach ($langs as $lang) {
-	$translation_array = array();
-	$translation_files = array_merge(
-		glob($dir.'/plugins/language/'.$lang.'/messages.xml'),
-		glob($dir.'/plugins/_thirdParty/'.'*'.'/language/'.$lang.'/messages.xml')
-	);
+	$translation_files = glob($dir.'/plugins/'.'*'.'/language/'.$lang.'/messages.xml');
 	$translation_file = count($translation_files) > 0 ? $translation_files[0] : null;
 	if (file_exists($translation_file)) {
 		$xml = simplexml_load_string(file_get_contents($translation_file));

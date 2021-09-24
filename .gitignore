@@ -25,7 +25,7 @@ dev/oidplus_1_with_token.html
 includes/config.inc.php
 
 # (deprecated)
-plugins/publicPages/000_objects/welcome.local.html
+plugins/viathinksoft/publicPages/000_objects/welcome.local.html
 
 userdata/attachments/*
 !userdata/attachments/info.txt

@@ -19,7 +19,7 @@
 // language_messages will be set by setup.js.php
 // language_tblprefix will be set by setup.js.php
 
-min_password_length = 10; // see also plugins/publicPages/092_forgot_password_admin/script.js
+min_password_length = 10; // see also plugins/viathinksoft/publicPages/092_forgot_password_admin/script.js
 password_salt_length = 10;
 
 function btoa(bin) {
@@ -230,7 +230,7 @@ function performAccessCheck() {
 	checkAccess("dev/index.html");
 	checkAccess("includes/index.html");
 	checkAccess("setup/includes/index.html");
-	//checkAccess("plugins/publicPages/100_whois/whois/cli/index.html");
+	//checkAccess("plugins/viathinksoft/publicPages/100_whois/whois/cli/index.html");
 }
 
 function setupOnLoad() {

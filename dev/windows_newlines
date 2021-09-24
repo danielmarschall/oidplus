@@ -26,7 +26,7 @@ mv ../_svn ".svn"
 mv ../_vendor "vendor"
 
 # 2. Convert Linux shell script back to Unix format
-dos2unix plugins/publicPages/100_whois/whois/cli/whois
+dos2unix plugins/viathinksoft/publicPages/100_whois/whois/cli/whois
 
 cd dev
 find . -type f -exec dos2unix {} \;

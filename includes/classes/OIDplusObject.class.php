@@ -296,10 +296,7 @@ abstract class OIDplusObject {
 		}
 		// TODO: have different icons for Leaf-Nodes
 
-		$dirs = array_merge(
-			glob(OIDplus::localpath().'plugins/objectTypes/'.$namespace.'/'),
-			glob(OIDplus::localpath().'plugins/_thirdParty/'.'*'.'/objectTypes/'.$namespace.'/')
-		);
+		$dirs = glob(OIDplus::localpath().'plugins/'.'*'.'/objectTypes/'.$namespace.'/');
 
 		if (count($dirs) == 0) return null; // default icon (folder)
 

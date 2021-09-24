@@ -63,11 +63,11 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		// Check if the token generator is allowed
 		if ($gen === self::JWT_GENERATOR_AJAX) {
 			if (($has_admin) && !OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_ADMIN', true)) {
-				// Generator: plugins/adminPages/910_automated_ajax_calls/OIDplusPageAdminAutomatedAJAXCalls.class.php
+				// Generator: plugins/viathinksoft/adminPages/910_automated_ajax_calls/OIDplusPageAdminAutomatedAJAXCalls.class.php
 				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_ADMIN'));
 			}
 			if (($has_ra) && !OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_USER', true)) {
-				// Generator: plugins/raPages/910_automated_ajax_calls/OIDplusPageRaAutomatedAJAXCalls.class.php
+				// Generator: plugins/viathinksoft/raPages/910_automated_ajax_calls/OIDplusPageRaAutomatedAJAXCalls.class.php
 				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_USER'));
 			}
 		}

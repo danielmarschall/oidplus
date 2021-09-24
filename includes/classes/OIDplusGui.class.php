@@ -77,10 +77,7 @@ class OIDplusGui {
 			}
 			$add = (!is_null($goto)) ? '&amp;goto='.urlencode($goto) : '';
 
-			$dirs = array_merge(
-				glob(OIDplus::localpath().'plugins/language/'.$code.'/'),
-				glob(OIDplus::localpath().'plugins/_thirdParty/'.'*'.'/language/'.$code.'/')
-			);
+			$dirs = glob(OIDplus::localpath().'plugins/'.'*'.'/language/'.$code.'/');
 
 			if (count($dirs) > 0) {
 				$dir = substr($dirs[0], strlen(OIDplus::localpath()));

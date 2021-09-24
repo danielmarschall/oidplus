@@ -22,7 +22,7 @@ How to setup Google Authentication
     - Name: OIDplus 2.0
     - Authorized JavaScript origins: None
     - Authorized redirect URIs:
-      Add https://<Your OIDplus URL>/plugins/publicPages/810_login_google/oauth.php
+      Add https://<Your OIDplus URL>/plugins/viathinksoft/publicPages/810_login_google/oauth.php
 
     You will now receive a client ID and a client key (secret!)
 

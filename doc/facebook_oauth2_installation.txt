@@ -19,7 +19,7 @@ Select "Web", enter your OIDplus system URL and ignore all other steps.
 (5) "Facebook Login" product settings:
 
 	Verified oauth redirect target:
-	https://<...>/plugins/publicPages/820_login_facebook/oauth.php
+	https://<...>/plugins/viathinksoft/publicPages/820_login_facebook/oauth.php
 
 (6) In userdata/baseconfig/config.inc.php, add following lines:
 
