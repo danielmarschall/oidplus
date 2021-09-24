@@ -369,7 +369,7 @@ $(document).ready(function () {
 
 		if (goto != null) data.instance.select_node([goto]);
 
-		setTimeout(glayoutWorkaroundA, 100);
+		setTimeout(glayoutWorkaroundAC, 100);
 		setTimeout(glayoutWorkaroundB, 100);
 	})
 	.on('select_node.jstree', function (node, selected, event) {
@@ -421,17 +421,18 @@ $(document).ready(function () {
 	});
 });
 
-function glayoutWorkaroundA() {
+function glayoutWorkaroundAC() {
 	// "Bug A": Sometimes, the design is completely destroyed after reloading the page. It does not help when glayout.resizeAll()
 	//          is called at the beginning (e.g. during the ready function), and it does not help if we wait 500ms.
 	//          So we do it all the time. It has probably something to do with slow loading times, since the error
 	//          does only appear when the page is "blank" for a short while while it is loading.
 	glayout.resizeAll();
-	setTimeout(glayoutWorkaroundA, 100);
 
 	// "Bug C": With Firefox (And sometimes with Chrome), there is a gap between the content-window (including scroll bars)
 	//          and the right corner of the screen. Removing the explicit width solves this problem.
 	$("#content_window")[0].style.removeProperty("width");
+
+	setTimeout(glayoutWorkaroundAC, 100);
 }
 
 function glayoutWorkaroundB() {
