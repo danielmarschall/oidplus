@@ -1,6 +1,14 @@
 #!/usr/bin/php
 <?php
 
+/*
+ * VNag - Nagios Framework for PHP
+ * Developed by Daniel Marschall, ViaThinkSoft <www.viathinksoft.com>
+ * Licensed under the terms of the Apache 2.0 license
+ *
+ * Revision 2018-07-11
+ */
+
 $file = $argv[1];
 
 $cont = file_get_contents($file);

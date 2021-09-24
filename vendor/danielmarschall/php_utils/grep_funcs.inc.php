@@ -39,5 +39,3 @@ function antigrep(&$array, $substr) {
 	}
 	return $ret;
 }
-
-?>

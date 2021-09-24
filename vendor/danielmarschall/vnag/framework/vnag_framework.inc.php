@@ -1,25 +1,25 @@
 <?php /* <ViaThinkSoftSignature>
-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
+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
 A==
 </ViaThinkSoftSignature> */ ?>
 <?php
@@ -35,7 +35,7 @@ A==
 
       Developed by Daniel Marschall             www.viathinksoft.com
       Licensed under the terms of the Apache 2.0 license
-      Revision 2021-05-21
+      Revision 2021-06-24
 
 */
 
@@ -347,7 +347,7 @@ function _empty($x) {
 }
 
 abstract class VNag {
-	/*public*/ const VNAG_VERSION = '2021-05-21';
+	/*public*/ const VNAG_VERSION = '2021-06-24';
 
 	// Status 0..3 for STATUSMODEL_SERVICE (the default status model):
 	# The guideline states: "Higher-level errors (such as name resolution errors, socket timeouts, etc) are outside of the control of plugins and should generally NOT be reported as UNKNOWN states."
@@ -1904,18 +1904,20 @@ class VNagValueUomPair {
 	public static function isKnownUOM(string $uom) {
 		// see https://nagios-plugins.org/doc/guidelines.html#AEN200
 		// 10. UOM (unit of measurement) is one of:
-		return (
-				// no unit specified - assume a number (int or float) of things (eg, users, processes, load averages)
-				($uom === '') ||
-				// s - seconds (also us, ms)
-				($uom === 's') || ($uom === 'ms') || ($uom === 'us') ||
-				// % - percentage
-				($uom === '%') ||
-				// B - bytes (also KB, MB, TB)
-				($uom === 'B') || ($uom === 'KB') || ($uom === 'MB') || ($uom === 'GB') || ($uom === 'TB') || // NOTE: GB is not in the official development guidelines,probably due to an error, so I've added them anyway
-				// c - a continous counter (such as bytes transmitted on an interface)
-				($uom === 'c')
-			);
+
+		// no unit specified - assume a number (int or float) of things (eg, users, processes, load averages)
+		$no_unit = ($uom === '');
+		// s - seconds (also us, ms)
+		$seconds = ($uom === 's') || ($uom === 'ms') || ($uom === 'us');
+		// % - percentage
+		$percentage = ($uom === '%');
+		// B - bytes (also KB, MB, TB)
+		// NOTE: GB is not in the official development guidelines,probably due to an error, so I've added them anyway
+		$bytes = ($uom === 'B') || ($uom === 'KB') || ($uom === 'MB') || ($uom === 'GB') || ($uom === 'TB');
+		// c - a continous counter (such as bytes transmitted on an interface)
+		$counter = ($uom === 'c');
+
+		return ($no_unit || $seconds || $percentage || $bytes || $counter);
 	}
 
 	public function normalize($target=null) {

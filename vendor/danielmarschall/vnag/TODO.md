@@ -1,4 +1,9 @@
 
+Important
+---------
+
+- New plugin: hp_ssa
+
 TODO
 ----
 

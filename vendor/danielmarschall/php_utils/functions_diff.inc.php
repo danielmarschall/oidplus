@@ -80,5 +80,3 @@ function html_format($x) {
 	$x = str_replace(' ', '&nbsp;', $x);
 	return $x;
 }
-
-?>

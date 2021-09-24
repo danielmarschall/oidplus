@@ -8,5 +8,3 @@ function file_get_contents2($url) {
 	if ($code != 0) return false;
 	return implode("\n", $out);
 }
-
-?>

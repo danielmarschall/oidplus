@@ -2,20 +2,20 @@
     "packages": [
         {
             "name": "components/jquery",
-            "version": "3.5.1",
-            "version_normalized": "3.5.1.0",
+            "version": "3.6.0",
+            "version_normalized": "3.6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/jquery.git",
-                "reference": "b33e8f0f9a1cb2ae390cf05d766a900b53d2125b"
+                "reference": "6cf38ee1fd04b6adf8e7dda161283aa35be818c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/jquery/zipball/b33e8f0f9a1cb2ae390cf05d766a900b53d2125b",
-                "reference": "b33e8f0f9a1cb2ae390cf05d766a900b53d2125b",
+                "url": "https://api.github.com/repos/components/jquery/zipball/6cf38ee1fd04b6adf8e7dda161283aa35be818c3",
+                "reference": "6cf38ee1fd04b6adf8e7dda161283aa35be818c3",
                 "shasum": ""
             },
-            "time": "2020-05-05T13:21:02+00:00",
+            "time": "2021-03-20T19:13:42+00:00",
             "type": "component",
             "extra": {
                 "component": {
@@ -151,18 +151,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/fileformats.git",
-                "reference": "3f2da6065ccc59971cccf8e8c2e1aeb9b2ff8807"
+                "reference": "acfeaf40523a3a3cd0b6dbf18f3dc2349a3bec25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/fileformats/zipball/3f2da6065ccc59971cccf8e8c2e1aeb9b2ff8807",
-                "reference": "3f2da6065ccc59971cccf8e8c2e1aeb9b2ff8807",
+                "url": "https://api.github.com/repos/danielmarschall/fileformats/zipball/acfeaf40523a3a3cd0b6dbf18f3dc2349a3bec25",
+                "reference": "acfeaf40523a3a3cd0b6dbf18f3dc2349a3bec25",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2021-06-10T21:48:03+00:00",
+            "time": "2021-07-19T21:30:13+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -192,18 +192,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "7da9e7de44bb0a8311f2384aa54dae204d748c4d"
+                "reference": "af64b8b5135045ee4e2cf0e5471c4d896d427e05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/7da9e7de44bb0a8311f2384aa54dae204d748c4d",
-                "reference": "7da9e7de44bb0a8311f2384aa54dae204d748c4d",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/af64b8b5135045ee4e2cf0e5471c4d896d427e05",
+                "reference": "af64b8b5135045ee4e2cf0e5471c4d896d427e05",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2021-06-12T21:33:15+00:00",
+            "time": "2021-09-23T20:24:11+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -274,18 +274,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/vnag.git",
-                "reference": "84de0b0b0a2523137fd2c1a569660bad87230376"
+                "reference": "4f729d8b09e4750c1b9ae762519d50ad8d25609a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/84de0b0b0a2523137fd2c1a569660bad87230376",
-                "reference": "84de0b0b0a2523137fd2c1a569660bad87230376",
+                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/4f729d8b09e4750c1b9ae762519d50ad8d25609a",
+                "reference": "4f729d8b09e4750c1b9ae762519d50ad8d25609a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2021-06-10T22:10:36+00:00",
+            "time": "2021-08-07T22:04:34+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -343,17 +343,17 @@
         },
         {
             "name": "firebase/php-jwt",
-            "version": "v5.3.0",
-            "version_normalized": "5.3.0.0",
+            "version": "v5.4.0",
+            "version_normalized": "5.4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "3c2d70f2e64e2922345e89f2ceae47d2463faae1"
+                "reference": "d2113d9b2e0e349796e72d2a63cf9319100382d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/3c2d70f2e64e2922345e89f2ceae47d2463faae1",
-                "reference": "3c2d70f2e64e2922345e89f2ceae47d2463faae1",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/d2113d9b2e0e349796e72d2a63cf9319100382d2",
+                "reference": "d2113d9b2e0e349796e72d2a63cf9319100382d2",
                 "shasum": ""
             },
             "require": {
@@ -362,7 +362,10 @@
             "require-dev": {
                 "phpunit/phpunit": ">=4.8 <=9"
             },
-            "time": "2021-05-20T17:37:02+00:00",
+            "suggest": {
+                "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present"
+            },
+            "time": "2021-06-23T19:00:23+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -394,7 +397,7 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v5.3.0"
+                "source": "https://github.com/firebase/php-jwt/tree/v5.4.0"
             },
             "install-path": "../firebase/php-jwt"
         },
@@ -777,20 +780,20 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "5.8.1",
-            "version_normalized": "5.8.1.0",
+            "version": "5.9.2",
+            "version_normalized": "5.9.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "7bbf6f5f7cfa927286523a7681fd20b8489f0709"
+                "reference": "48c665ad12ba0e4d8068ba0784026c7488aa4746"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/7bbf6f5f7cfa927286523a7681fd20b8489f0709",
-                "reference": "7bbf6f5f7cfa927286523a7681fd20b8489f0709",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/48c665ad12ba0e4d8068ba0784026c7488aa4746",
+                "reference": "48c665ad12ba0e4d8068ba0784026c7488aa4746",
                 "shasum": ""
             },
-            "time": "2021-05-20T02:06:43+00:00",
+            "time": "2021-09-08T03:45:09+00:00",
             "type": "component",
             "extra": {
                 "component": {
@@ -815,39 +818,45 @@
                 "LGPL-2.1-only"
             ],
             "description": "Web based JavaScript HTML WYSIWYG editor control.",
-            "homepage": "http://www.tinymce.com",
+            "homepage": "https://www.tiny.cloud/",
             "keywords": [
-                "editor",
+                "contenteditable",
+                "editing",
                 "html",
                 "javascript",
+                "rich editor",
+                "rich text",
+                "rich text editor",
                 "richtext",
+                "rte",
+                "text",
                 "tinymce",
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/5.8.1"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/5.9.2"
             },
             "install-path": "../tinymce/tinymce"
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v5.0.1",
-            "version_normalized": "5.0.1.0",
+            "version": "v5.1.1",
+            "version_normalized": "5.1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "58b1be927f43c779377e478df2d119f2ddf956ca"
+                "reference": "0d81d3cbc14dfcdca8a868e3f25189a4f1ab273c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/58b1be927f43c779377e478df2d119f2ddf956ca",
-                "reference": "58b1be927f43c779377e478df2d119f2ddf956ca",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/0d81d3cbc14dfcdca8a868e3f25189a4f1ab273c",
+                "reference": "0d81d3cbc14dfcdca8a868e3f25189a4f1ab273c",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2021-05-13T16:22:20+00:00",
+            "time": "2021-09-07T15:37:44+00:00",
             "type": "library",
             "installation-source": "dist",
             "notification-url": "https://packagist.org/downloads/",
@@ -878,14 +887,8 @@
             ],
             "support": {
                 "issues": "https://github.com/twbs/bootstrap/issues",
-                "source": "https://github.com/twbs/bootstrap/tree/v5.0.1"
+                "source": "https://github.com/twbs/bootstrap/tree/v5.1.1"
             },
-            "funding": [
-                {
-                    "url": "https://opencollective.com/bootstrap",
-                    "type": "open_collective"
-                }
-            ],
             "install-path": "../twbs/bootstrap"
         },
         {
@@ -929,17 +932,17 @@
         },
         {
             "name": "vakata/jstree",
-            "version": "3.3.11",
-            "version_normalized": "3.3.11.0",
+            "version": "3.3.12",
+            "version_normalized": "3.3.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vakata/jstree.git",
-                "reference": "4a77e59a3f67b0beb1b576cc211cb7e7a76a9879"
+                "reference": "7a03954015eaea2467956dc05e6be78f4d1a1ff0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vakata/jstree/zipball/4a77e59a3f67b0beb1b576cc211cb7e7a76a9879",
-                "reference": "4a77e59a3f67b0beb1b576cc211cb7e7a76a9879",
+                "url": "https://api.github.com/repos/vakata/jstree/zipball/7a03954015eaea2467956dc05e6be78f4d1a1ff0",
+                "reference": "7a03954015eaea2467956dc05e6be78f4d1a1ff0",
                 "shasum": ""
             },
             "require": {
@@ -948,7 +951,7 @@
             "suggest": {
                 "robloach/component-installer": "Allows installation of Components via Composer"
             },
-            "time": "2020-12-18T20:56:30+00:00",
+            "time": "2021-09-03T12:55:53+00:00",
             "type": "component",
             "extra": {
                 "component": {

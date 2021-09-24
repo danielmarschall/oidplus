@@ -101,5 +101,3 @@ function gethostbynamel6($host, $try_a = /* false */ true) {
 		return $ip6;
 	}
 }
-
-?>

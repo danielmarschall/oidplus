@@ -13,12 +13,12 @@
   array (
     'components/jquery' => 
     array (
-      'pretty_version' => '3.5.1',
-      'version' => '3.5.1.0',
+      'pretty_version' => '3.6.0',
+      'version' => '3.6.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b33e8f0f9a1cb2ae390cf05d766a900b53d2125b',
+      'reference' => '6cf38ee1fd04b6adf8e7dda161283aa35be818c3',
     ),
     'components/jqueryui' => 
     array (
@@ -37,7 +37,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '3f2da6065ccc59971cccf8e8c2e1aeb9b2ff8807',
+      'reference' => 'acfeaf40523a3a3cd0b6dbf18f3dc2349a3bec25',
     ),
     'danielmarschall/oidplus' => 
     array (
@@ -56,7 +56,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '7da9e7de44bb0a8311f2384aa54dae204d748c4d',
+      'reference' => 'af64b8b5135045ee4e2cf0e5471c4d896d427e05',
     ),
     'danielmarschall/uuid_mac_utils' => 
     array (
@@ -76,7 +76,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '84de0b0b0a2523137fd2c1a569660bad87230376',
+      'reference' => '4f729d8b09e4750c1b9ae762519d50ad8d25609a',
     ),
     'dcodeio/bcrypt.js' => 
     array (
@@ -98,12 +98,12 @@
     ),
     'firebase/php-jwt' => 
     array (
-      'pretty_version' => 'v5.3.0',
-      'version' => '5.3.0.0',
+      'pretty_version' => 'v5.4.0',
+      'version' => '5.4.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '3c2d70f2e64e2922345e89f2ceae47d2463faae1',
+      'reference' => 'd2113d9b2e0e349796e72d2a63cf9319100382d2',
     ),
     'gedmarc/layout' => 
     array (
@@ -181,21 +181,21 @@
     ),
     'tinymce/tinymce' => 
     array (
-      'pretty_version' => '5.8.1',
-      'version' => '5.8.1.0',
+      'pretty_version' => '5.9.2',
+      'version' => '5.9.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '7bbf6f5f7cfa927286523a7681fd20b8489f0709',
+      'reference' => '48c665ad12ba0e4d8068ba0784026c7488aa4746',
     ),
     'twbs/bootstrap' => 
     array (
-      'pretty_version' => 'v5.0.1',
-      'version' => '5.0.1.0',
+      'pretty_version' => 'v5.1.1',
+      'version' => '5.1.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '58b1be927f43c779377e478df2d119f2ddf956ca',
+      'reference' => '0d81d3cbc14dfcdca8a868e3f25189a4f1ab273c',
     ),
     'tweeb/tinymce-i18n' => 
     array (
@@ -210,17 +210,17 @@
     array (
       'replaced' => 
       array (
-        0 => 'v5.0.1',
+        0 => 'v5.1.1',
       ),
     ),
     'vakata/jstree' => 
     array (
-      'pretty_version' => '3.3.11',
-      'version' => '3.3.11.0',
+      'pretty_version' => '3.3.12',
+      'version' => '3.3.12.0',
       'aliases' => 
       array (
       ),
-      'reference' => '4a77e59a3f67b0beb1b576cc211cb7e7a76a9879',
+      'reference' => '7a03954015eaea2467956dc05e6be78f4d1a1ff0',
     ),
   ),
 );
