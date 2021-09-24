@@ -138,7 +138,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 
 	public function activate() {
 		// Send cookie at the end of the HTTP request, in case there are multiple activate() calls
-		register_shutdown_function(array($this,'activateNow'));
+		OIDplus::register_shutdown_function(array($this,'activateNow'));
 	}
 
 	public function activateNow() {

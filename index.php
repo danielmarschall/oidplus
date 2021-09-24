@@ -171,4 +171,6 @@ $add_css_args = count($add_css_args) > 0 ? '?'.implode('&',$add_css_args) : '';
 $cont = ob_get_contents();
 ob_end_clean();
 
+OIDplus::invoke_shutdown();
+
 echo $cont;

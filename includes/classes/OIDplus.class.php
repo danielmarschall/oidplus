@@ -1163,6 +1163,17 @@ class OIDplus {
 		return $res;
 	}
 
+	private static $shutdown_functions = array();
+	public static function register_shutdown_function($func) {
+		self::$shutdown_functions[] = $func;
+	}
+
+	public static function invoke_shutdown() {
+		foreach (self::$shutdown_functions as $func) {
+			$func();
+		}
+	}
+
 	public static function getAvailableLangs() {
 		$langs = array();
 		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {

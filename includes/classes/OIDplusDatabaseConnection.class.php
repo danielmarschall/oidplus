@@ -76,7 +76,7 @@ abstract class OIDplusDatabaseConnection {
 		$this->beforeConnect();
 		$this->doConnect();
 		$this->connected = true;
-		register_shutdown_function(array($this, 'disconnect'));
+		OIDplus::register_shutdown_function(array($this, 'disconnect'));
 		$this->afterConnectMandatory();
 		$this->afterConnect();
 	}

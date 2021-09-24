@@ -54,5 +54,6 @@ $admin_email = OIDplus::config()->getValue('admin_email');
 $out['AdminEMail'] = $admin_email;
 */
 
-echo json_encode($out);
+OIDplus::invoke_shutdown();
 
+echo json_encode($out);

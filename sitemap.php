@@ -46,4 +46,6 @@ foreach ($out as $o) {
 	}
 }
 
+OIDplus::invoke_shutdown();
+
 echo implode("\r\n", $out2);
