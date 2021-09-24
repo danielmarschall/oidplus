@@ -74,6 +74,10 @@ if (PHP_SAPI != 'cli') {
 	       "object-src 'none'");
 	header('X-Frame-Options: SAMEORIGIN');
 	header('Referrer-Policy: no-referrer-when-downgrade');
+	header('Cache-control: no-cache');
+	header('Cache-control: no-store');
+	header('Pragma: no-cache');
+	header('Expires: 0');
 }
 
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/oid_utils.inc.php';

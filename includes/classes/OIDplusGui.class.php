@@ -132,7 +132,9 @@ class OIDplusGui {
 	}
 
 	public function tabBarElement($id, $title, $active) {
-		return '<li class="nav-item"><a class="nav-link'.($active ? ' active' : '').'" id="'.$id.'-tab" data-bs-toggle="tab" href="#'.$id.'" role="tab" aria-controls="'.$id.'" aria-selected="'.($active ? 'true' : 'false').'">'.$title.'</a></li>';
+		// data-bs-toggle is for Bootstrap 5
+		// data-toggle is for Bootstrap 4 (InternetExplorer compatibility)
+		return '<li class="nav-item"><a class="nav-link'.($active ? ' active' : '').'" id="'.$id.'-tab" data-bs-toggle="tab" data-toggle="tab" href="#'.$id.'" role="tab" aria-controls="'.$id.'" aria-selected="'.($active ? 'true' : 'false').'">'.$title.'</a></li>';
 	}
 
 	public function tabContentStart() {

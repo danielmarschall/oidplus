@@ -31,6 +31,7 @@ var pageChangeCallbacks = [];
 var pageChangeRequestCallbacks = [];
 
 function isInternetExplorer() {
+	// see also includes/functions.inc.php
 	var ua = window.navigator.userAgent;
 	return ((ua.indexOf("MSIE ") > 0) || (ua.indexOf("Trident/") > 0));
 }
@@ -82,8 +83,8 @@ function getSystemUrl(relative) {
 function getTreeLoadURL() {
 	var url = new URL(window.location.href);
 	var goto = url.searchParams.get("goto");
-	return (goto != null) ? "ajax.php?csrf_token="+encodeURIComponent(csrf_token)+"&action=tree_load&goto="+encodeURIComponent(goto)
-	                      : "ajax.php?csrf_token="+encodeURIComponent(csrf_token)+"&action=tree_load";
+	return (goto != null) ? "ajax.php?csrf_token="+encodeURIComponent(csrf_token)+"&action=tree_load&anticache="+Date.now()+"&goto="+encodeURIComponent(goto)
+	                      : "ajax.php?csrf_token="+encodeURIComponent(csrf_token)+"&action=tree_load&anticache="+Date.now();
 }
 
 function reloadContent() {
@@ -162,7 +163,8 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 					data:{
 						csrf_token:csrf_token,
 						action:"tree_search",
-						search:id
+						search:id,
+						anticache:Date.now()
 					},
 					error:function(jqXHR, textStatus, errorThrown) {
 						if (errorThrown == "abort") return;
@@ -212,7 +214,8 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 		data:{
 			csrf_token:csrf_token,
 			action:"get_description",
-			id:id
+			id:id,
+			anticache:Date.now()
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
 			if (errorThrown == "abort") return;

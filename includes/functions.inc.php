@@ -317,3 +317,8 @@ function rec_is_dir($dir) {
 	return false;
 }
 
+function isInternetExplorer() {
+	// see also includes/oidplus_base.js
+	$ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+	return ((strpos($ua,'MSIE ') !== false) || (strpos($ua,'Trident/') !== false));
+}
