@@ -985,7 +985,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	//                                 2. When you load a page without TinyMCE using the left menu, the quickbar is still visible, although there is no edit
 	// 'colorpicker', 'textcolor' and 'contextmenu' added in 07 April 2020, because it is built in in the core.
 	// 'importcss' added 17 September 2020, because it breaks the "Format/Style" dropdown box ("styleselect" toolbar)
-	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode', 'quickbars', 'colorpicker', 'textcolor', 'contextmenu', 'importcss');
+	// 'legacyoutput' added 24 September 2021, because it is marked as deprecated
+	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode', 'quickbars', 'colorpicker', 'textcolor', 'contextmenu', 'importcss', 'legacyoutput');
 
 	protected static function showMCE($name, $content) {
 		$mce_plugins = array();
