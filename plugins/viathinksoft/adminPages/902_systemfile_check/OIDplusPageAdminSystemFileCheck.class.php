@@ -87,7 +87,11 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 						  ($filename_old !== 'composer.lock')
 						){
 							$num++;
-							$out['text'] .= "<b>"._L('Additional file').":</b> $filename_old\n";
+							if (is_dir(OIDplus::localpath().$filename_old)) {
+								$out['text'] .= "<b>"._L('Additional directory').":</b> $filename_old\n";
+							} else {
+								$out['text'] .= "<b>"._L('Additional file').":</b> $filename_old\n";
+							}
 						}
 					}
 				}

@@ -575,7 +575,34 @@ class OIDplus {
 		// Note: glob() will sort by default, so we do not need a page priority attribute.
 		//       So you just need to use a numeric plugin directory prefix (padded).
 		$ary = glob(OIDplus::localpath().'plugins/'.'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.xml');
-		sort($ary);
+
+		// Sort the plugins by their type and name, as if they would be in a single vendor-folder!
+		uasort($ary, function($a,$b) {
+			if ($a == $b) return 0;
+
+			$ary = explode('/',$a);
+			$bry = explode('/',$b);
+
+			// First sort by type (publicPage, auth, database, language, ...)
+			$a_type = $ary[count($ary)-1-2];
+			$b_type = $bry[count($bry)-1-2];
+			if ($a_type < $b_type) return -1;
+			if ($a_type > $b_type) return 1;
+
+			// Then sort by name (090_login, 100_whois, etc.)
+			$a_name = $ary[count($ary)-1-1];
+			$b_name = $bry[count($bry)-1-1];
+			if ($a_name < $b_name) return -1;
+			if ($a_name > $b_name) return 1;
+
+			// If it is still equal, then finally sort by vendorname
+			$a_vendor = $ary[count($ary)-1-3];
+			$b_vendor = $bry[count($bry)-1-3];
+			if ($a_vendor < $b_vendor) return -1;
+			if ($a_vendor > $b_vendor) return 1;
+			return 0;
+		});
+
 		foreach ($ary as $ini) {
 			if (!file_exists($ini)) continue;
 
@@ -656,6 +683,7 @@ class OIDplus {
 				if (isset($known_plugin_oids[$plugin_oid])) {
 					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('The OID "%1" is already used by the plugin "%2"',$plugin_oid,$known_plugin_oids[$plugin_oid]));
 				}
+
 				$full_plugin_dir = dirname($manifest->getManifestFile());
 				$full_plugin_dir = substr($full_plugin_dir, strlen(OIDplus::localpath()));
 				// { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) oidplus(5) v2(2) plugins(4) }
