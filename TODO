@@ -65,6 +65,7 @@ DATA TRANSFER PLUGIN
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
 
 SMALL THINGS
+- WebSVN often fails to update larger changes, due to timeouts? And then the whole installation is broken!
 - Login page etc.: If user clicks on a tab, then the gotoedit and static link should change to e.g. "oidplus:login$admin" or "oidplus:login$ra", respectively.
         $('#static_link').attr("href", "index.php?goto="+encodeURIComponent(id));
         $("#gotoedit").val(id);

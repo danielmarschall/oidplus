@@ -88,7 +88,7 @@ class OIDplusGs1 extends OIDplusObject {
 	}
 
 	public function getContentPage(&$title, &$content, &$icon) {
-		$icon = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webPath(__DIR__,true).'/icon_big.png' : '';
+		$icon = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webPath(__DIR__,true).'icon_big.png' : '';
 
 		if ($this->isRoot()) {
 			$title = OIDplusGs1::objectTypeTitle();
@@ -116,7 +116,7 @@ class OIDplusGs1 extends OIDplusObject {
 				$checkDigit = $this->checkDigit();
 				$content = '<h2>'.$chunked.' - <abbr title="'._L('check digit').'">'.$checkDigit.'</abbr></h2>';
 				$content .= '<p><a target="_blank" href="https://www.ean-search.org/?q='.htmlentities($this->fullNumber()).'">'._L('Lookup at ean-search.org').'</a></p>';
-				$content .= '<img src="'.OIDplus::webPath(__DIR__,true).'/barcode.php?number='.urlencode($this->fullNumber()).'">';
+				$content .= '<img src="'.OIDplus::webPath(__DIR__,true).'barcode.php?number='.urlencode($this->fullNumber()).'">';
 				$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 			} else {
 				$chunked = $this->chunkedNotation(true);
