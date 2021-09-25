@@ -43,8 +43,9 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$out['text'] = '<p>'._L('This tool compares the checksums of the files of your OIDplus installation with the checksums of the OIDplus original SVN version.').'</p>';
-			$out['text'] .= '<p>'._L('Differences could have various reasons, for example, a hotfix you have applied or additional plugins you have installed.').'</p>';
+			$out['text'] = '<p>'._L('This tool compares the checksums of the files of your OIDplus installation with the checksums of the OIDplus original SVN version.').'<br>';
+			$out['text'] .= _L('Differences could have various reasons, for example, a hotfix you have applied.').'<br>';
+			$out['text'] .= _L('The folders "userdata" and "userdata_pub" as well as third-party-plugins (folder "plugins" excluding "viathinksoft") are not listed.').'</p>';
 			$out['text'] .= '<p>'._L('Please note: If you believe that you were hacked, you should not trust the output of this tool, because it might be compromised, too.').'</p>';
 
 			$ver = OIDplus::getVersion();
@@ -66,11 +67,24 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 				$num = 0;
 
 				foreach ($mine as $filename_old => $hash_old) {
+					$filename_old = str_replace('\\', '/', $filename_old);
 					if (!isset($theirs[$filename_old])) {
 						if (
 						  (substr($filename_old, 0, strlen('userdata/')) !== 'userdata/') &&
 						  (substr($filename_old, 0, strlen('userdata_pub/')) !== 'userdata_pub/') &&
-						  ($filename_old !== 'oidplus_version.txt')
+
+						  // Don't list third-party plugins
+						  ((
+						    (substr($filename_old, 0, strlen('plugins/')) === 'plugins/') &&
+						    (
+						      (explode('/',$filename_old)[1] === 'viathinksoft') ||
+						      (explode('/',$filename_old)[1] === 'index.html') ||
+						      (substr(explode('/',$filename_old)[1],-4) === '.xsd')
+						    )
+						  ) || (substr($filename_old, 0, strlen('plugins/')) !== 'plugins/')) &&
+
+						  ($filename_old !== 'oidplus_version.txt') &&
+						  ($filename_old !== 'composer.lock')
 						){
 							$num++;
 							$out['text'] .= "<b>"._L('Additional file').":</b> $filename_old\n";

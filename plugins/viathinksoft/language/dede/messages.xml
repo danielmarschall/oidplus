@@ -1510,10 +1510,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Differences could have various reasons, for example, a hotfix you have applied or additional plugins you have installed.
+		Differences could have various reasons, for example, a hotfix you have applied.
 		]]></source>
 		<target><![CDATA[
-		Unterschiede können verschiedene Gründe haben, beispielsweise ein Hotfix oder Plugins, die Sie installiert haben.
+		Unterschiede können verschiedene Gründe haben, beispielsweise ein Hotfix, die Sie eingespielt haben.
 		]]></target>
 	</message>
 	<message>
@@ -5938,6 +5938,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die Dateinamens-Erweiterung "%1" ist durch den Administrator verboten worden (Diese Datei kann jedoch durch den Administrator selbst hochgeladen werden)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The folders "userdata" and "userdata_pub" as well as third-party-plugins (folder "plugins" excluding "viathinksoft") are not listed.
+		]]></source>
+		<target><![CDATA[
+		Die Ordner "userdata" und "userdata_pub" sowie Drittanbieter-Plugins (Inhalte in "plugins", die nicht "viathinksoft" sind) werden nicht aufgelistet.
 		]]></target>
 	</message>
 	<message>
