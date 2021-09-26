@@ -26,43 +26,26 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 	public function action($actionID, $params) {
 		if ($actionID == 'update_now') {
-			@set_time_limit(0); // TODO: what to do if the server does not accept it?
+			@set_time_limit(0);
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
 			}
 
-			ob_start();
-			$error = "";
-			try {
-				$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
+			$rev = $params['rev'];
 
-				// We are caching the changed file logs here only in the preview mode.
-				// Reason: We want to avoid that the "update/" page becomes an
-				// DoS attack vector if there hasn't been an update for a long time,
-				// and the list is very large.
-				// But we don't want to use cache in the real update, because
-				// otherwise it might break the system if an update is made
-				// while the ViaThinkSoft server is down (because the file list
-				// is cached, and therefore "delete" actions can be made, while
-				// adding/downloading does not work)
-				$svn->use_cache = false;
+			$url = "https://www.oidplus.com/updates/update_".($rev-1)."_to_".($rev).".txt"; // TODO: in consts.ini
+			$cont = @file_get_contents($url);
 
-				if (!$svn->updateWorkingCopy(OIDplus::localpath().'oidplus_version.txt', '/trunk', OIDplus::localpath(), false)) {
-					$error = _L("Some updates failed. Please see details in the update protocol.");
-				}
-			} catch (Exception $e) {
-				$error = $e->getMessage();
-			}
-			$cont = ob_get_contents();
-			$cont = str_replace(OIDplus::localpath(), '...', $cont);
-			ob_end_clean();
+			if ($cont === false) throw new OIDplusException(_L("Update could not be downloaded from ViaThinkSoft server. Please try again later."));
+			file_put_contents(OIDplus::localpath().'update.tmp.php', $cont);
 
-			if ($error != "") {
-				return array("status" => -1, "error" => $error, "content" => $cont);
-			} else {
-				return array("status" => 0, "content" => $cont);
-			}
+			# TODO: instead use cURL?
+			// Note: we may not use eval() because script uses die()
+			$cont = @file_get_contents(OIDplus::webpath().'update.tmp.php');
+			if ($cont === false) throw new OIDplusException(_L("Failed to execute update-script. Probably file_get_contents() may not open URLs!"));
+
+			return array("status" => 0, "content" => $cont);
 		}
 	}
 
@@ -131,6 +114,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 					$out['text'] .= '<h2 id="update_header">'._L('Preview of update %1 &rarr; %2',$local_installation,$newest_version).'</h2>';
 
+					// TODO: Completely remove PHP SVN client and instead get log files hard coded from VTS
 					ob_start();
 					try {
 						$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
@@ -148,6 +132,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<pre id="update_infobox">'.$cont.'</pre>';
 				}
 			} else if ($installType === 'svn-snapshot') {
+				$out['text'] .= '<div id="update_versioninfo">';
+
 				$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot TAR.GZ file with oidplus_version.txt file).').'</p>';
 
 				$local_installation = OIDplus::getVersion();
@@ -163,14 +149,18 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 				if (!$newest_version) {
 					$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.').'</font></p>';
+					$out['text'] .= '</div>';
 				}
 				else if ($local_installation == $newest_version) {
 					$out['text'] .= '<p><font color="green">'._L('You are already using the latest version of OIDplus.').'</font></p>';
+					$out['text'] .= '</div>';
 				} else {
 					$out['text'] .= '<p><font color="red">'.strtoupper(_L('Warning')).': '._L('Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! In case the update fails, you can download and extract the complete <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.').'</font></p>';
 					$out['text'] .= '<form method="POST" action="index.php">';
 
-					$out['text'] .= '<p><input type="button" onclick="OIDplusPageAdminSoftwareUpdate.doUpdateOIDplus()" value="'._L('Update NOW').'"></p>';
+					$out['text'] .= '<p><input type="button" onclick="OIDplusPageAdminSoftwareUpdate.doUpdateOIDplus('.(substr($local_installation,4)+1).', '.substr($newest_version,4).')" value="'._L('Update NOW').'"></p>';
+
+					$out['text'] .= '</div>';
 
 					$out['text'] .= '<h2 id="update_header">'._L('Preview of update %1 &rarr; %2',$local_installation,$newest_version).'</h2>';
 

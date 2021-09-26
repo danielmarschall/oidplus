@@ -67,12 +67,12 @@ $max_svn = implode("", $out);
 
 for ($i=1; $i<=$max_svn; $i++) {
 	echo "SVN revision $i / $max_svn\r";
-	$outdir = "/tmp/oidplus_svntmp_$i/";
 	$outfile = "$output_dir/svn-rev$i.txt";
-	if (is_dir($outdir)) {
-		exec("rm -rf $outdir", $out, $ec);
-	}
 	if (!file_exists($outfile)) {
+		$outdir = "/tmp/oidplus_svntmp_$i/";
+		if (is_dir($outdir)) {
+			exec("rm -rf $outdir", $out, $ec);
+		}
 		exec("svn co https://svn.viathinksoft.com/svn/oidplus/@$i $outdir", $out, $ec);
 		if ($ec != 0) continue;
 		$ary = getDirContents($outdir, $outdir);

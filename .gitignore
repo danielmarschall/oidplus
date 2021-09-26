@@ -9,7 +9,8 @@
 
 composer.lock
 composer.phar
-/vendor/
+oidplus_version.txt
+update.tmp.php
 
 # Recommendation in https://phpstan.org/config-reference
 # "The usual practice is to have phpstan.neon.dist under version control,

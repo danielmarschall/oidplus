@@ -390,6 +390,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Additional directory
+		]]></source>
+		<target><![CDATA[
+		Zusätzliches Verzeichnis
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Additional file
 		]]></source>
 		<target><![CDATA[
@@ -1906,6 +1914,14 @@
 		]]></source>
 		<target><![CDATA[
 		Facebook OAuth-Authentifizierung ist in diesem System deaktiviert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Failed to execute update-script. Probably file_get_contents() may not open URLs!
+		]]></source>
+		<target><![CDATA[
+		Konnte Update-Script nicht ausführen. Eventuell darf file_get_contents() keine URLs öffnen!
 		]]></target>
 	</message>
 	<message>
@@ -4982,14 +4998,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Result of update
-		]]></source>
-		<target><![CDATA[
-		Update-Protokoll
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Revision NOT set to %1 because some files/dirs could not be updated. Please try again.
 		]]></source>
 		<target><![CDATA[
@@ -5406,18 +5414,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Some updates failed. Please see details in the update protocol.
-		]]></source>
-		<target><![CDATA[
-		Einige Updates sind fehlgeschlagen. Bitte prüfen Sie das Update-Protokoll.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Stacktrace
 		]]></source>
 		<target><![CDATA[
 		Aufrufstapel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Started update from %1 to %2
+		]]></source>
+		<target><![CDATA[
+		Update von %1 nach %2 gestartet
 		]]></target>
 	</message>
 	<message>
@@ -6478,6 +6486,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Update could not be downloaded from ViaThinkSoft server. Please try again later.
+		]]></source>
+		<target><![CDATA[
+		Das Update konnte nicht vom ViaThinkSoft server heruntergeladen werden. Bitte versuchen Sie es später noch einmal.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Update description
 		]]></source>
 		<target><![CDATA[
@@ -6486,10 +6502,34 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Update failed
+		]]></source>
+		<target><![CDATA[
+		Update fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update finished
+		]]></source>
+		<target><![CDATA[
+		Update abgeschlossen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Updated
 		]]></source>
 		<target><![CDATA[
 		Geändert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Updating to Revision %1 ...
+		]]></source>
+		<target><![CDATA[
+		Aktualisieren zu Version %1 ...
 		]]></target>
 	</message>
 	<message>

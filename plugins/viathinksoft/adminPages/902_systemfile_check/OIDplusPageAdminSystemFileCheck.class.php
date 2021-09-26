@@ -62,7 +62,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 
 			try {
 				$mine = self::getDirContents(OIDplus::localpath());
-				$theirs = self::checksumFileToArray('https://www.oidplus.com/checksums/svn-rev'.$ver.'.txt');
+				$theirs = self::checksumFileToArray('https://www.oidplus.com/checksums/svn-rev'.$ver.'.txt'); // TODO: in consts.ini
 
 				$num = 0;
 

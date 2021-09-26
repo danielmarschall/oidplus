@@ -1,0 +1,245 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * OIDplus 2.0
+ * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// This script will be called at the ViaThinkSoft server side
+
+$argc = $_SERVER['argc']; // to please Eclipse for PHP
+$argv = $_SERVER['argv']; // to please Eclipse for PHP
+
+if (PHP_SAPI != 'cli') {
+	die("This file can only be invoked in CLI mode.\n");
+}
+
+if ($argc != 2) {
+	echo "Usage: ".$argv[0]." <targetpath>\n";
+	exit(2);
+}
+
+$output_dir = $argv[1];
+
+if (!is_dir($output_dir)) {
+	echo "Path $output_dir does not exist!\n";
+	exit(1);
+}
+
+$outscript = '';
+
+function getDirContents_del($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
+	global $outscript;
+
+	if (is_null($basepath_old)) $basepath_old = $dir_old;
+	$basepath_old = realpath($basepath_old) . DIRECTORY_SEPARATOR;
+	if ($basepath_old == '/') die('ARG');
+
+	$dir_old = realpath($dir_old) . DIRECTORY_SEPARATOR;
+	$dir_new = realpath($dir_new) . DIRECTORY_SEPARATOR;
+	$files_old = scandir($dir_old);
+	$files_new = scandir($dir_new);
+
+	foreach ($files_old as $file_old) {
+		if ($file_old === '.') continue;
+		if ($file_old === '..') continue;
+		if ($file_old === '.svn') continue;
+		if ($file_old === '.git') continue;
+
+		$path_old = realpath($dir_old . DIRECTORY_SEPARATOR . $file_old);
+		$path_new = realpath($dir_new . DIRECTORY_SEPARATOR . $file_old);
+
+		$xpath_old = substr($path_old, strlen($basepath_old));
+
+		if (is_dir($path_old)) {
+			getDirContents_del($path_old, $path_new, $basepath_old, $basepath_new);
+		}
+
+		if (is_dir($path_old) && !is_dir($path_new)) {
+			$outscript .= "// Dir deleted: $xpath_old\n";
+			$outscript .= "@rmdir('$xpath_old');\n";
+			$outscript .= "if (is_dir('$xpath_old'))\n\twarn('Directory could not be deleted (was not empty?): $xpath_old');\n\n";
+
+		} else if (file_exists($path_old) && !file_exists($path_new)) {
+			$outscript .= "// File deleted: $xpath_old\n";
+			$outscript .= "@unlink('$xpath_old');\n";
+			$outscript .= "if (file_exists('$xpath_old'))\n\twarn('File could not be deleted: $xpath_old');\n\n";
+		}
+	}
+}
+
+function getDirContents_diff($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
+	global $outscript;
+
+	if (is_null($basepath_old)) $basepath_old = $dir_old;
+	$basepath_old = realpath($basepath_old) . DIRECTORY_SEPARATOR;
+	if ($basepath_old == '/') die('ARG');
+
+	$dir_old = realpath($dir_old) . DIRECTORY_SEPARATOR;
+	$dir_new = realpath($dir_new) . DIRECTORY_SEPARATOR;
+	$files_old = scandir($dir_old);
+	$files_new = scandir($dir_new);
+
+	foreach ($files_old as $file_old) {
+		if ($file_old === '.') continue;
+		if ($file_old === '..') continue;
+		if ($file_old === '.svn') continue;
+		if ($file_old === '.git') continue;
+
+		$path_old = realpath($dir_old . DIRECTORY_SEPARATOR . $file_old);
+		$path_new = realpath($dir_new . DIRECTORY_SEPARATOR . $file_old);
+
+		$xpath_old = substr($path_old, strlen($basepath_old));
+
+		if (file_exists($path_old) && file_exists($path_new)) {
+			if (file_get_contents($path_old) != file_get_contents($path_new)) {
+				$outscript .= "// Files different: $xpath_old\n";
+				$outscript .= "if (@sha1_file('$xpath_old') !== '".sha1_file($path_old)."')\n\twarn('File was probably modified. Will overwrite the changes now: $xpath_old');\n";
+				$outscript .= "@file_put_contents('$xpath_old', base64_decode('".base64_encode(file_get_contents($path_new))."'));\n";
+				$outscript .= "if (@sha1_file('$xpath_old') !== '".sha1_file($path_new)."')\n\twarn('File cannot be written (checksum mismatch): $xpath_old');\n\n";
+			}
+			if ((fileperms($path_old) & 0777) != (fileperms($path_new) & 0777)) {
+				$outscript .= "// Different file chmod: $xpath_old\n";
+				$outscript .= "if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777)."))\n\twarn('Could not change file permissions of ".$xpath_old."');\n\n";
+			}
+		} else if (is_dir($path_old) && is_dir($path_new)) {
+			if ((fileperms($path_old) & 0777) != (fileperms($path_new) & 0777)) {
+				$outscript .= "// Different dir chmod: $xpath_old\n";
+				$outscript .= "if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777)."))\n\twarn('Could not change dir permissions of ".$xpath_old."');\n\n";
+			}
+		}
+
+		if (is_dir($path_old)) {
+			getDirContents_diff($path_old, $path_new, $basepath_old, $basepath_new);
+		}
+	}
+}
+
+function getDirContents_add($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
+	global $outscript;
+
+	if (is_null($basepath_new)) $basepath_new = $dir_new;
+	$basepath_new = realpath($basepath_new) . DIRECTORY_SEPARATOR;
+	if ($basepath_new == '/') die('ARG');
+
+	$dir_old = realpath($dir_old) . DIRECTORY_SEPARATOR;
+	$dir_new = realpath($dir_new) . DIRECTORY_SEPARATOR;
+	$files_old = scandir($dir_old);
+	$files_new = scandir($dir_new);
+
+	foreach ($files_new as $file_new) {
+		if ($file_new === '.') continue;
+		if ($file_new === '..') continue;
+		if ($file_new === '.svn') continue;
+		if ($file_new === '.git') continue;
+
+		$path_old = realpath($dir_old . DIRECTORY_SEPARATOR . $file_new);
+		$path_new = realpath($dir_new . DIRECTORY_SEPARATOR . $file_new);
+
+		$xpath_new = substr($path_new, strlen($basepath_new));
+
+		if (is_dir($path_new) && !is_dir($path_old)) {
+			$outscript .= "// Dir added: $xpath_new\n";
+			$outscript .= "@mkdir('$xpath_new');\n";
+			$outscript .= "if (!is_dir('$xpath_new'))\n\twarn('Directory could not be created: $xpath_new');\n";
+			$outscript .= "else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_new', 0".sprintf('%o', fileperms($path_new) & 0777)."))\n\twarn('Could not change directory permissions of ".$xpath_new."');\n\n";
+		} else if (file_exists($path_new) && !file_exists($path_old)) {
+			$outscript .= "// File added: $xpath_new\n";
+			$outscript .= "@file_put_contents('$xpath_new', base64_decode('".base64_encode(file_get_contents($path_new))."'));\n";
+			$outscript .= "if (!file_exists('$xpath_new'))\n\twarn('File cannot be created (not existing): $xpath_new');\n";
+			$outscript .= "else if (sha1_file('$xpath_new') != '".sha1_file($path_new)."')\n\twarn('File cannot be created (checksum mismatch): $xpath_new');\n";
+			$outscript .= "else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_new', 0".sprintf('%o', fileperms($path_new) & 0777)."))\n\twarn('Could not change file permissions of ".$xpath_new."');\n\n";
+		}
+
+		if (is_dir($path_new)) {
+			getDirContents_add($path_old, $path_new, $basepath_old, $basepath_new);
+		}
+	}
+}
+
+function getDirContents($dir_old, $dir_new) {
+	getDirContents_del($dir_old, $dir_new);
+	getDirContents_add($dir_old, $dir_new);
+	getDirContents_diff($dir_old, $dir_new);
+}
+
+
+$out = array();
+$ec = -1;
+exec('svn info https://svn.viathinksoft.com/svn/oidplus/trunk/ | grep "Revision:" | cut -d " " -f 2', $out, $ec);
+$max_svn = implode("", $out);
+
+
+for ($i=2; $i<=$max_svn; $i++) {
+	echo "SVN revision $i / $max_svn\r";
+
+	$outfile = $output_dir."/update_".($i-1)."_to_$i.txt";
+	if (file_exists($outfile)) continue;
+
+	$outdir_old = "/tmp/oidplus_svntmp2_".($i-1)."/";
+	if (is_dir($outdir_old)) exec("rm -rf $outdir_old", $out, $ec);
+	exec("svn co https://svn.viathinksoft.com/svn/oidplus/trunk/@".($i-1)." $outdir_old", $out, $ec);
+
+	$outdir_new = "/tmp/oidplus_svntmp2_$i/";
+	if (is_dir($outdir_new)) exec("rm -rf $outdir_new", $out, $ec);
+	exec("svn co https://svn.viathinksoft.com/svn/oidplus/trunk/@$i $outdir_new", $out, $ec);
+
+	// TODO: check for PHP version etc.
+	$outscript  = "<?php\n";
+	$outscript .= "\n";
+	$outscript .= "/*\n";
+	$outscript .= " * OIDplus 2.0\n";
+	$outscript .= " * Copyright 2019 - ".date('Y')." Daniel Marschall, ViaThinkSoft\n";
+	$outscript .= " *\n";
+	$outscript .= " * Licensed under the Apache License, Version 2.0 (the \"License\");\n";
+	$outscript .= " * you may not use this file except in compliance with the License.\n";
+	$outscript .= " * You may obtain a copy of the License at\n";
+	$outscript .= " *\n";
+	$outscript .= " *     http://www.apache.org/licenses/LICENSE-2.0\n";
+	$outscript .= " *\n";
+	$outscript .= " * Unless required by applicable law or agreed to in writing, software\n";
+	$outscript .= " * distributed under the License is distributed on an \"AS IS\" BASIS,\n";
+	$outscript .= " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n";
+	$outscript .= " * See the License for the specific language governing permissions and\n";
+	$outscript .= " * limitations under the License.\n";
+	$outscript .= " */\n";
+	$outscript .= "\n";
+	$outscript .= "function info(\$str) { echo \"INFO: \$str\\n\"; }\n";
+	$outscript .= "function warn(\$str) { echo \"WARNING: \$str\\n\"; }\n";
+	$outscript .= "function err(\$str) { die(\"FATAL ERROR: \$str\\n\"); }\n";
+	$outscript .= "\n";
+	$outscript .= "chdir(__DIR__);\n";
+	$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision ".($i-1)."') err('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
+	$outscript .= "\n";
+	$outscript .= "info('Update to SVN Rev $i...');\n";
+	$outscript .= "\n";
+	getDirContents($outdir_old, $outdir_new);
+	$outscript .= "\n";
+	$outscript .= "file_put_contents('oidplus_version.txt', \"Revision $i\\n\");\n";
+	$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision $i') err('Could not write to oidplus_version.txt!');\n";
+	$outscript .= "\n";
+	$outscript .= "\n";
+	$outscript .= "info('Update to SVN Rev $i done!');\n";
+	$outscript .= "\n";
+	$outscript .= "unlink(__FILE__);\n";
+	$outscript .= "\n";
+
+	exec("rm -rf $outdir_old", $out, $ec);
+	exec("rm -rf $outdir_new", $out, $ec);
+
+	file_put_contents($outfile, $outscript);
+}
+echo "\n";

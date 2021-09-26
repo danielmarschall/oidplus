@@ -19,8 +19,15 @@ var OIDplusPageAdminSoftwareUpdate = {
 
 	oid: "1.3.6.1.4.1.37476.2.5.2.4.3.900",
 
-	doUpdateOIDplus: function() {
-		show_waiting_anim();
+	doUpdateOIDplus: function(rev, max) {
+		$("#update_versioninfo").hide();
+		$("#update_infobox").text(_L("Started update from %1 to %2",rev,max)+"\n");
+		OIDplusPageAdminSoftwareUpdate._doUpdateOIDplus(rev, max);
+	},
+
+	_doUpdateOIDplus: function(rev, max) {
+		$("#update_header").text(_L("Updating to Revision %1 ...",rev)+"\n");
+		//show_waiting_anim();
 		$.ajax({
 			url: "ajax.php",
 			type: "POST",
@@ -34,6 +41,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 			data: {
 				csrf_token:csrf_token,
 				plugin: OIDplusPageAdminSoftwareUpdate.oid,
+				rev: rev,
 				action: "update_now",
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
@@ -42,22 +50,32 @@ var OIDplusPageAdminSoftwareUpdate = {
 				alert(_L("Error: %1",errorThrown));
 			},
 			success: function(data) {
-				hide_waiting_anim();
+				//hide_waiting_anim();
 				if ("error" in data) {
 					alert(_L("Error: %1",data.error));
 					if ("content" in data) {
-						$("#update_header").text(_L("Result of update"));
-						$("#update_infobox").text(data.content + "\n\n" + _L("Error: %1",data.error));
+						$("#update_header").text(_L("Update failed"));
+						$("#update_infobox").text($("#update_infobox").text() + "\n\n" + data.content + "\n\n" + _L("Error: %1",data.error) + "\n\n");
 					}
 				} else if (data.status >= 0) {
-					alert(_L("Update OK"));
-					reloadContent();
+					output = data.content.trim();
+					output = output.replace(/INFO:/g, '<span class="severity_2"><strong>INFO:</strong></span>');
+					output = output.replace(/WARNING:/g, '<span class="severity_3"><strong>WARNING:</strong></span>');
+					output = output.replace(/FATAL ERROR:/g, '<span class="severity_4"><strong>FATAL ERROR:</strong></span>');
+					$("#update_infobox").html($("#update_infobox").html() + output + "\n");
+					if (rev >= max) {
+						//alert(_L("Update OK"));
+						$("#update_header").text(_L("Update finished"));
+						// reloadContent(); // don't reload... let the user read the messages?
+					} else {
+						OIDplusPageAdminSoftwareUpdate._doUpdateOIDplus(rev+1, max);
+					}
 					return;
 				} else {
 					alert(_L("Error: %1",data));
 					if ("content" in data) {
-						$("#update_header").text(_L("Result of update"));
-						$("#update_infobox").text(data.content + "\n\n" + _L("Error: %1",data));
+						$("#update_header").text(_L("Update failed"));
+						$("#update_infobox").text($("#update_infobox").text() + "\n\n" + data.content + "\n\n" + _L("Error: %1",data) + "\n\n");
 					}
 				}
 			},

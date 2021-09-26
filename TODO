@@ -8,7 +8,10 @@ RECENT STUFF
 	Include dev/bcrypt_cost_calculator somewhere in the configuration page?
 	... At least give a hint to the documentation, so they know how to run the tool and how to enter the cost in the configuration (for RA and Admin)
 	... or in the setup page make an extra control how complex the admin password should be? but be aware that nobody enters a too big number (it makes DoS possible!)
-- SVN: XML and JS files are sometimes marked as binary, because they have the mime type "application". We need to undo that!
+- Get rid of phpsvn completely! So, 901_vnag and 900_softwareupdate need to get log files from an XML file located at viathinksoft.com
+  This also solves the problem that a revision is detected before the update+checksum files have been created!
+	svn log https://svn.viathinksoft.com/svn/oidplus/trunk --xml
+
 
 SECURITY Improvements:
 - Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")
