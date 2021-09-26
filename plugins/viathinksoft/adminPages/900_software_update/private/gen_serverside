@@ -197,7 +197,6 @@ for ($i=2; $i<=$max_svn; $i++) {
 	if (is_dir($outdir_new)) exec("rm -rf $outdir_new", $out, $ec);
 	exec("svn co https://svn.viathinksoft.com/svn/oidplus/trunk/@$i $outdir_new", $out, $ec);
 
-	// TODO: check for PHP version etc.
 	$outscript  = "<?php\n";
 	$outscript .= "\n";
 	$outscript .= "/*\n";
@@ -222,7 +221,18 @@ for ($i=2; $i<=$max_svn; $i++) {
 	$outscript .= "function err(\$str) { die(\"FATAL ERROR: \$str\\n\"); }\n";
 	$outscript .= "\n";
 	$outscript .= "chdir(__DIR__);\n";
-	$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision ".($i-1)."') err('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
+	$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision ".($i-1)."')\n\terr('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
+	$outscript .= "\n";
+	/*
+	if ($i >= 99999) {
+		... once we require PHP 7.1, we add the requirement here
+		... also if we require fancy new PHP modules, we must add it here
+		... the checks avoid that someone breaks their OIDplus installation if they update
+	} else
+	*/if ($i >= 2) {
+		// Rev 2+ requires PHP 7.0.0
+		$outscript .= "if (version_compare(PHP_VERSION, '7.0.0') < 0)\n\terr('You need PHP Version 7.0 to update to this version');\n";
+	}
 	$outscript .= "\n";
 	$outscript .= "info('Update to SVN Rev $i...');\n";
 	$outscript .= "\n";
@@ -245,7 +255,7 @@ for ($i=2; $i<=$max_svn; $i++) {
 echo "\n";
 
 
-// Now write the release messages
+// Now write the release messages (required by software update and vnag)
 
 
 $out = array();
@@ -274,4 +284,3 @@ foreach ($xml as $a) {
 ksort($out);
 
 file_put_contents($output_dir.'/releases.ser', serialize($out));
-

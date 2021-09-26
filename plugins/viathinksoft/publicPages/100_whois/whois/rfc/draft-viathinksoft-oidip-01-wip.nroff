@@ -160,7 +160,7 @@ In this document, "RA" is an abbreviation for "Registration Authority", "OID" is
 .ti 0
 2  Request
 
-OID-IP is a text-based protocol similar to the WHOIS protocol specified in RFC\03912 [RFC3912].
+OID-IP is a text-based protocol.
 
 An OID-IP server listens on TCP port XXX for requests from OID-IP clients.  The OID-IP client makes a text request to the OID-IP server, then the OID-IP server replies with text content.  All requests are terminated with ASCII CR followed by ASCII LF.  The response contains multiple lines of text, separated by ASCII CR followed by ASCII LF.  The OID-IP server closes its connection as soon as the output is finished.  The closed TCP connection is the indication to the client that the response has been received.
 
@@ -210,22 +210,23 @@ Please note that authentication tokens are only weak protection.  For more infor
 2.2  Server Commands
 
 The client can send additional information to the server using "server commands".  These are similar to
-Authentication Tokens, with the difference that they contain an equal sign ("=") which divide the "name"
+Authentication Tokens, with the difference that they contain an equal sign ("=") which divides the "name"
 from the "value".  Names and values are case-sensitive alphanumeric strings.  A request can
 contain multiple server commands which are each prepended by a dollar sign ("$").
 
-The usage of server commands is individual for each server.  This document does not define any commands.
+The usage of server commands is individual for each server and implementation.  However, this
+document only defines/reserves the server-command "format" with the default value "txt".  Other
+values like "json" and "xml" are subject to be defined by a future specification.
 
-This is an example of a valid query where the client sends a "format" command with the value "xml"
-and an "antispam" command with the value "1":
+The following request is an example of a valid query where the client sends a "format" command
+with the value "txt" and an "antispam" command with the value "1":
 
 .in 7
 .nf
-oid:2.999$format=xml$antispam=1
+oid:2.999$format=txt$antispam=1
 .fi
 .in 3
 
-Both commands are just hypothetical and are not part of this specification.
 .bp
 .ti 0
 2.3  Request ABNF Notation
@@ -770,12 +771,6 @@ Recommendation ITU-T\0E.164 (2010), November 2010.
 [RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO 10646", STD\063, RFC\03629, DOI\010.17487/RFC3629, November\02003.
 .in 14
 <http://www.rfc-editor.org/info/rfc3629>.
-
-.ti 3
-.in 14
-[RFC3912]  Daigle, L., "WHOIS Protocol Specification", RFC\03912, DOI\010.17487/RFC3912, September\02004.
-.in 14
-<http://www.rfc-editor.org/info/rfc3912>.
 
 .ti 3
 .in 14

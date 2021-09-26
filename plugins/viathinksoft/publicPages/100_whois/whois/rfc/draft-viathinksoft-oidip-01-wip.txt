@@ -183,8 +183,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 2  Request
 
-   OID-IP is a text-based protocol similar to the WHOIS protocol
-   specified in RFC 3912 [RFC3912].
+   OID-IP is a text-based protocol.
 
    An OID-IP server listens on TCP port XXX for requests from OID-IP
    clients.  The OID-IP client makes a text request to the OID-IP
@@ -218,6 +217,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
        oid:.2.999
 
    All OIDs MUST be interpreted as absolute OIDs.  Relative OIDs (e.g.
+   relative to the OID of the Registration Authority operating the OID-
  
 
 
@@ -226,7 +226,6 @@ Marschall                Expires April 4, 2022                  [Page 4]
 INTERNET DRAFT          OID Information Protocol            October 2021
 
 
-   relative to the OID of the Registration Authority operating the OID-
    IP service) are not allowed.
 
    The namespace identifier (i.e. "oid") MUST be written in lower-case.
@@ -253,22 +252,23 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
    The client can send additional information to the server using
    "server commands".  These are similar to Authentication Tokens, with
-   the difference that they contain an equal sign ("=") which divide the
-   "name" from the "value".  Names and values are case-sensitive
+   the difference that they contain an equal sign ("=") which divides
+   the "name" from the "value".  Names and values are case-sensitive
    alphanumeric strings.  A request can contain multiple server commands
    which are each prepended by a dollar sign ("$").
 
-   The usage of server commands is individual for each server.  This
-   document does not define any commands.
-
-   This is an example of a valid query where the client sends a "format"
-   command with the value "xml" and an "antispam" command with the value
-   "1":
-
-       oid:2.999$format=xml$antispam=1
-
-   Both commands are just hypothetical and are not part of this
+   The usage of server commands is individual for each server and
+   implementation.  However, this document only defines/reserves the
+   server-command "format" with the default value "txt".  Other values
+   like "json" and "xml" are subject to be defined by a future
    specification.
+
+   The following request is an example of a valid query where the client
+   sends a "format" command with the value "txt" and an "antispam"
+   command with the value "1":
+
+       oid:2.999$format=txt$antispam=1
+
 
 
 
@@ -1168,8 +1168,8 @@ INTERNET DRAFT          OID Information Protocol            October 2021
               November 2003.
               <http://www.rfc-editor.org/info/rfc3629>.
 
-   [RFC3912]  Daigle, L., "WHOIS Protocol Specification", RFC 3912,
-              DOI 10.17487/RFC3912, September 2004.
+   [RFC3986]  Berners-Lee, T., "Uniform Resource Identifier (URI):
+              Generic Syntax", STD 66, RFC 3986, DOI 10.17487/RFC3986,
  
 
 
@@ -1178,10 +1178,6 @@ Marschall                Expires April 4, 2022                 [Page 21]
 INTERNET DRAFT          OID Information Protocol            October 2021
 
 
-              <http://www.rfc-editor.org/info/rfc3912>.
-
-   [RFC3986]  Berners-Lee, T., "Uniform Resource Identifier (URI):
-              Generic Syntax", STD 66, RFC 3986, DOI 10.17487/RFC3986,
               January 2005.
               <http://www.rfc-editor.org/info/rfc3986>.
 
@@ -1226,6 +1222,10 @@ INTERNET DRAFT          OID Information Protocol            October 2021
    [X509]     "Information technology - Open Systems Interconnection -
               The Directory: Public-key and attribute certificate
               frameworks", Recommendation ITU-T X.509 (2016) |
+              ISO/IEC 9594-8:2017, October 2016.
+              <http://handle.itu.int/11.1002/1000/13031>.
+
+   [X667]     "Information technology - Procedures for the operation of
  
 
 
@@ -1234,10 +1234,6 @@ Marschall                Expires April 4, 2022                 [Page 22]
 INTERNET DRAFT          OID Information Protocol            October 2021
 
 
-              ISO/IEC 9594-8:2017, October 2016.
-              <http://handle.itu.int/11.1002/1000/13031>.
-
-   [X667]     "Information technology - Procedures for the operation of
               object identifier registration authorities: Generation of
               universally unique identifiers and their use in object
               identifiers", Recommendation ITU-T X.667 (2012) |
@@ -1262,6 +1258,10 @@ Authors' Addresses
    Germany
 
    EMail: daniel-marschall@viathinksoft.de
+
+
+
+
 
 
 
