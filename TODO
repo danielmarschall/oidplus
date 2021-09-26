@@ -8,9 +8,6 @@ RECENT STUFF
 	Include dev/bcrypt_cost_calculator somewhere in the configuration page?
 	... At least give a hint to the documentation, so they know how to run the tool and how to enter the cost in the configuration (for RA and Admin)
 	... or in the setup page make an extra control how complex the admin password should be? but be aware that nobody enters a too big number (it makes DoS possible!)
-- Get rid of phpsvn completely! So, 901_vnag and 900_softwareupdate need to get log files from an XML file located at viathinksoft.com
-  This also solves the problem that a revision is detected before the update+checksum files have been created!
-	svn log https://svn.viathinksoft.com/svn/oidplus/trunk --xml
 
 
 SECURITY Improvements:
@@ -68,7 +65,6 @@ DATA TRANSFER PLUGIN
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
 
 SMALL THINGS
-- WebSVN often fails to update larger changes, due to timeouts? And then the whole installation is broken!
 - Login page etc.: If user clicks on a tab, then the gotoedit and static link should change to e.g. "oidplus:login$admin" or "oidplus:login$ra", respectively.
         $('#static_link').attr("href", "index.php?goto="+encodeURIComponent(id));
         $("#gotoedit").val(id);
@@ -111,7 +107,6 @@ SMALL THINGS
 - note that we (and the RFC) talk about Objects, but actually OIDs only reference objects, but they are not the objects
 - Multilang
 	* Not yet translated:
-		- includes\classes\http_class.class.php [Problem: This is a third-party code!]
 		- plugins\publicPages\100_whois\whois\index.php [Problem: This page is kinda standalone and does not include the OIDplus code]
 		- vendor\danielmarschall\fileformats\fileformats.conf [Problem: This is a third-party code!]
 		- includes\classes\VtsBrowserDownload.class.php [Problem: This is a third-party code!]

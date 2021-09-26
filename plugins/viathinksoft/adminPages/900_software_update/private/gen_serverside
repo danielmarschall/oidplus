@@ -243,3 +243,35 @@ for ($i=2; $i<=$max_svn; $i++) {
 	file_put_contents($outfile, $outscript);
 }
 echo "\n";
+
+
+// Now write the release messages
+
+
+$out = array();
+$ec = 0;
+exec('svn log https://svn.viathinksoft.com/svn/oidplus/trunk --xml', $out, $ec);
+if ($ec != 0) die();
+
+$str = implode("\n",$out);
+
+$xml = simplexml_load_string($str);
+
+$out = array();
+
+foreach ($xml as $a) {
+
+	$out[(int)$a->attributes()->revision] = array(
+
+		'date' => date('Y-m-d H:i:s',strtotime((string)$a->date)),
+		'author' => (string)$a->author,
+		'msg' => trim((string)$a->msg),
+
+	);
+
+}
+
+ksort($out);
+
+file_put_contents($output_dir.'/releases.ser', serialize($out));
+

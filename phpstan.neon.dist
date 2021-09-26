@@ -5,13 +5,11 @@ parameters:
 	excludePaths:
 		analyse:
 			- vendor
-			- includes/classes/http_class.class.php
 		analyseAndScan:
 			- userdata/cache/phpstan
 	tmpDir: userdata/cache/phpstan
 	bootstrapFiles:
 		- includes/oidplus.inc.php
-		- includes/classes/http_class.class.php
 	ignoreErrors:
 		- '#is always (true|false)\.#'
 		- '#Call to function assert\(\) with false will always evaluate to false\.#'

@@ -17,8 +17,8 @@
  * limitations under the License.
  */
 
-include '../../../../vendor/danielmarschall/vnag/framework/vnag_framework.inc.php';
-include '../../../../includes/oidplus.inc.php';
+include __DIR__ . '/../../../../vendor/danielmarschall/vnag/framework/vnag_framework.inc.php';
+include __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 define('OIDPLUS_VNAG_MAX_CACHE_AGE', 60); // seconds (TODO: in base config?)
 
@@ -68,12 +68,7 @@ if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= OIDPLUS_VNAG
 		$out_msg  = 'The version cannot be determined, and the update needs to be applied manually!'; // do not translate
 	} else if (($installType === 'svn-wc') || ($installType === 'git-wc')) {
 		$local_installation = OIDplus::getVersion();
-		try {
-			$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
-			$newest_version = 'svn-' . $svn->getVersion();
-		} catch (Exception $e) {
-			$newest_version = false;
-		}
+		$newest_version = getLatestRevision();
 
 		$requireInfo = ($installType === 'svn-wc') ? 'shell access with svn/svnversion tool, or PDO/SQLite3 PHP extension' : 'shell access with Git client'; // do not translate
 		$updateCommand = ($installType === 'svn-wc') ? 'svn update' : 'git pull';
@@ -93,12 +88,7 @@ if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= OIDPLUS_VNAG
 		}
 	} else if ($installType === 'svn-snapshot') {
 		$local_installation = OIDplus::getVersion();
-		try {
-			$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
-			$newest_version = 'svn-' . $svn->getVersion();
-		} catch (Exception $e) {
-			$newest_version = false;
-		}
+		$newest_version = getLatestRevision();
 
 		if (!$newest_version) {
 			$out_stat = VNag::STATUS_UNKNOWN;
@@ -131,3 +121,21 @@ if (OIDplus::getPkiStatus()) {
 }
 $job->run();
 unset($job);
+
+# ---
+
+function getLatestRevision() {
+	try {
+		$url = "https://www.oidplus.com/updates/releases.ser"; // TODO: in consts.ini
+		$cont = @file_get_contents($url);
+		if ($cont === false) return false;
+		$ary = @unserialize($cont);
+		if ($ary === false) return false;
+		krsort($ary);
+		$max_rev = array_keys($ary)[0];
+		return 'svn-' . $max_rev;
+	} catch (Exception $e) {
+		return false;
+	}
+}
+

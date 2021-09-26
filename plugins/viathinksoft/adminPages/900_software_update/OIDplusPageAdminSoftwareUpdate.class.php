@@ -89,12 +89,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				}
 
 				$local_installation = OIDplus::getVersion();
-				try {
-					$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
-					$newest_version = 'svn-'.$svn->getVersion();
-				} catch (Exception $e) {
-					$newest_version = false;
-				}
+				$newest_version = $this->getLatestRevision();
 
 				$out['text'] .= _L('Local installation: %1',($local_installation ? $local_installation : _L('unknown'))).'<br>';
 				$out['text'] .= _L('Latest published version: %1',($newest_version ? $newest_version : _L('unknown'))).'<br>';
@@ -114,14 +109,9 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 					$out['text'] .= '<h2 id="update_header">'._L('Preview of update %1 &rarr; %2',$local_installation,$newest_version).'</h2>';
 
-					// TODO: Completely remove PHP SVN client and instead get log files hard coded from VTS
 					ob_start();
 					try {
-						$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
-						$svn->use_cache = true;
-						$svn->updateWorkingCopy(str_replace('svn-', '', $local_installation), '/trunk', OIDplus::localpath(), true);
-						$cont = ob_get_contents();
-						$cont = str_replace(OIDplus::localpath(), '...', $cont);
+						$cont = $this->showChangelog($local_installation);
 					} catch (Exception $e) {
 						$cont = _L('Error: %1',$e->getMessage());
 					}
@@ -137,12 +127,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot TAR.GZ file with oidplus_version.txt file).').'</p>';
 
 				$local_installation = OIDplus::getVersion();
-				try {
-					$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
-					$newest_version = 'svn-'.$svn->getVersion();
-				} catch (Exception $e) {
-					$newest_version = false;
-				}
+				$newest_version = $this->getLatestRevision();
 
 				$out['text'] .= _L('Local installation: %1',($local_installation ? $local_installation : _L('unknown'))).'<br>';
 				$out['text'] .= _L('Latest published version: %1',($newest_version ? $newest_version : _L('unknown'))).'<br>';
@@ -158,7 +143,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<p><font color="red">'.strtoupper(_L('Warning')).': '._L('Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! In case the update fails, you can download and extract the complete <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.').'</font></p>';
 					$out['text'] .= '<form method="POST" action="index.php">';
 
-					$out['text'] .= '<p><input type="button" onclick="OIDplusPageAdminSoftwareUpdate.doUpdateOIDplus('.(substr($local_installation,4)+1).', '.substr($newest_version,4).')" value="'._L('Update NOW').'"></p>';
+					$out['text'] .= '<p><input type="button" onclick="OIDplusPageAdminSoftwareUpdate.doUpdateOIDplus('.((int)substr($local_installation,4)+1).', '.substr($newest_version,4).')" value="'._L('Update NOW').'"></p>';
 
 					$out['text'] .= '</div>';
 
@@ -166,11 +151,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 					ob_start();
 					try {
-						$svn = new phpsvnclient(parse_ini_file(__DIR__.'/consts.ini')['svn']);
-						$svn->use_cache = true;
-						$svn->updateWorkingCopy(OIDplus::localpath().'/oidplus_version.txt', '/trunk', OIDplus::localpath(), true);
-						$cont = ob_get_contents();
-						$cont = str_replace(OIDplus::localpath(), '...', $cont);
+						$cont = $this->showChangelog($local_installation);
 					} catch (Exception $e) {
 						$cont = _L('Error: %1',$e->getMessage());
 					}
@@ -206,5 +187,57 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 	public function tree_search($request) {
 		return false;
+	}
+
+	private $releases_ser = null;
+
+	private function showChangelog($local_ver) {
+
+		try {
+			if (is_null($this->releases_ser)) {
+				$url = "https://www.oidplus.com/updates/releases.ser"; // TODO: in consts.ini
+				$cont = @file_get_contents($url);
+				if ($cont === false) return false;
+				$this->releases_ser = $cont;
+			} else {
+				$cont = $this->releases_ser;
+			}
+			$content = '';
+			$ary = @unserialize($cont);
+			if ($ary === false) return false;
+			krsort($ary);
+			foreach ($ary as $rev => $data) {
+				if ($rev <= substr($local_ver,4)) continue;
+				$comment = empty($data['msg']) ? _L('No comment') : $data['msg'];
+				$tex = _L("New revision %1 by %2",$rev,$data['author'])." (".$data['date'].") ";
+				$content .= trim($tex . str_replace("\n", "\n".str_repeat(' ', strlen($tex)), $comment));
+				$content .= "\n";
+			}
+			return $content;
+		} catch (Exception $e) {
+			return false;
+		}
+
+	}
+
+	private function getLatestRevision() {
+		try {
+			if (is_null($this->releases_ser)) {
+				$url = "https://www.oidplus.com/updates/releases.ser"; // TODO: in consts.ini
+				$cont = @file_get_contents($url);
+				if ($cont === false) return false;
+				$this->releases_ser = $cont;
+			} else {
+				$cont = $this->releases_ser;
+			}
+			$ary = @unserialize($cont);
+			if ($ary === false) return false;
+			krsort($ary);
+			$max_rev = array_keys($ary)[0];
+			$newest_version = 'svn-' . $max_rev;
+			return $newest_version;
+		} catch (Exception $e) {
+			return false;
+		}
 	}
 }
