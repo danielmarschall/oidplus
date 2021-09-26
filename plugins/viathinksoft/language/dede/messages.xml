@@ -374,22 +374,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Added or modified directory: %1
-		]]></source>
-		<target><![CDATA[
-		Verzeichnis hinzugefügt oder geändert: %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Added or modified file: %1
-		]]></source>
-		<target><![CDATA[
-		Datei hinzugefügt oder geändert: %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Additional directory
 		]]></source>
 		<target><![CDATA[
@@ -830,22 +814,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Cannot call getFile (Request failed)
-		]]></source>
-		<target><![CDATA[
-		Fehler beim Aufrufen von getFile (Anfrage fehlgeschlagen)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Cannot call getLogsForUpdate (Request failed)
-		]]></source>
-		<target><![CDATA[
-		Fehler beim Aufrufen von getLogsForUpdate (Anfrage fehlgeschlagen)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Cannot connect to LDAP server
 		]]></source>
 		<target><![CDATA[
@@ -858,14 +826,6 @@
 		]]></source>
 		<target><![CDATA[
 		Verzeichnis "%1" kann nicht erstellt werden (Problem mit Berechtigungen?)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Cannot delete test file %1 ! An update through the web browser will NOT be possible.
-		]]></source>
-		<target><![CDATA[
-		Kann Testdatei %1 nicht löschen ! Ein Update über den Webbrowser wird nicht möglich sein.
 		]]></target>
 	</message>
 	<message>
@@ -910,30 +870,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Cannot get rawDirectoryDump (Request failed)
-		]]></source>
-		<target><![CDATA[
-		Fehler bei rawDirectoryDump (Anfrage fehlgeschlagen)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Cannot get repository revision (RegEx failed)
-		]]></source>
-		<target><![CDATA[
-		Kann SVN-Revision nicht einholen (Regulärer Ausdruck fehlgeschlagen)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Cannot get repository revision (Request failed)
-		]]></source>
-		<target><![CDATA[
-		Kann SVN-Revision nicht einholen (Anfrage fehlgeschlagen)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Cannot import %1, because its parent is not in the database.
 		]]></source>
 		<target><![CDATA[
@@ -962,14 +898,6 @@
 		]]></source>
 		<target><![CDATA[
 		XML-Daten konnten nicht gelesen werden. Die XML-Datei ist möglicherweise ungültig.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Cannot write test file %1 ! An update through the web browser will NOT be possible.
-		]]></source>
-		<target><![CDATA[
-		Kann Test-Datei %1 nicht schreiben! Ein Update über den Webbrowser wird nicht möglich sein.
 		]]></target>
 	</message>
 	<message>
@@ -1630,46 +1558,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		ERROR
-		]]></source>
-		<target><![CDATA[
-		FEHLER
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		ERROR: %1 missing
-		]]></source>
-		<target><![CDATA[
-		FEHLER: %1 fehlt
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		ERROR: %1 unknown format
-		]]></source>
-		<target><![CDATA[
-		FEHLER: %1 unbekanntes Format
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		ERROR: Could not set the revision
-		]]></source>
-		<target><![CDATA[
-		FEHLER: Kann die Revision nicht setzen
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		ERROR: Local path %1 not existing
-		]]></source>
-		<target><![CDATA[
-		FEHLER: Lokaler Pfad %1 existiert nicht
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		ERROR: No database plugins were found! You CANNOT use OIDplus without database connection.
 		]]></source>
 		<target><![CDATA[
@@ -1754,14 +1642,6 @@
 		]]></source>
 		<target><![CDATA[
 		Fehler
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Error communicating with SVN server
-		]]></source>
-		<target><![CDATA[
-		Fehler beim Kommunizieren mit dem SVN-Server
 		]]></target>
 	</message>
 	<message>
@@ -1902,14 +1782,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		FAILED
-		]]></source>
-		<target><![CDATA[
-		FEHLGESCHLAGEN
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Facebook OAuth authentication is disabled on this system.
 		]]></source>
 		<target><![CDATA[
@@ -1970,14 +1842,6 @@
 		]]></source>
 		<target><![CDATA[
 		Datei %1 hat ein ungültiges INI-Format!
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		File %1 is detected as directory. Cannot receive file contents.
-		]]></source>
-		<target><![CDATA[
-		Datei %1 wurde als Verzeichnis erkannt und deshalb können keine Dateiinhalte gelesen werden.
 		]]></target>
 	</message>
 	<message>
@@ -2082,14 +1946,6 @@
 		]]></source>
 		<target><![CDATA[
 		Passwort vergessen?
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Found %1 with revision information %2
-		]]></source>
-		<target><![CDATA[
-		Revision %2 in Datei %1 gefunden
 		]]></target>
 	</message>
 	<message>
@@ -3510,14 +3366,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Nothing updated
-		]]></source>
-		<target><![CDATA[
-		Nichts aktualisiert
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Numeric value
 		]]></source>
 		<target><![CDATA[
@@ -4910,22 +4758,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Removed directory: %1
-		]]></source>
-		<target><![CDATA[
-		Verzeichnis gelöscht: %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Removed file: %1
-		]]></source>
-		<target><![CDATA[
-		Datei gelöscht: %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Repeat
 		]]></source>
 		<target><![CDATA[
@@ -4994,14 +4826,6 @@
 		]]></source>
 		<target><![CDATA[
 		Ergebnis (Vergleich mit SVN Revision %1)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Revision NOT set to %1 because some files/dirs could not be updated. Please try again.
-		]]></source>
-		<target><![CDATA[
-		Revision nicht auf %1 gesetzt da einige Dateien/Verzeichnisse nicht aktualisiert werden konnten. Bitte versuchen Sie es erneut.
 		]]></target>
 	</message>
 	<message>
@@ -5298,14 +5122,6 @@
 		]]></source>
 		<target><![CDATA[
 		Permanent setzen
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Set revision to %1
-		]]></source>
-		<target><![CDATA[
-		Revision auf %1 gesetzt
 		]]></target>
 	</message>
 	<message>
@@ -6626,14 +6442,6 @@
 		]]></source>
 		<target><![CDATA[
 		Lokale OID anzeigen
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		WARNING
-		]]></source>
-		<target><![CDATA[
-		WARNUNG
 		]]></target>
 	</message>
 	<message>

@@ -251,6 +251,7 @@ for ($i=2; $i<=$max_svn; $i++) {
 	exec("rm -rf $outdir_new", $out, $ec);
 
 	file_put_contents($outfile, $outscript);
+	file_put_contents($outfile.'.gz', gzencode($outscript));
 }
 echo "\n";
 

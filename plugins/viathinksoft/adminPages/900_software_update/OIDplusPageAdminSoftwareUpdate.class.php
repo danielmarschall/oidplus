@@ -34,10 +34,17 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 			$rev = $params['rev'];
 
-			$url = "https://www.oidplus.com/updates/update_".($rev-1)."_to_".($rev).".txt"; // TODO: in consts.ini
-			$cont = @file_get_contents($url);
+			if (function_exists('gzdecode')) {
+				$url = "https://www.oidplus.com/updates/update_".($rev-1)."_to_".($rev).".txt.gz"; // TODO: in consts.ini
+				$cont = @file_get_contents($url);
+				if ($cont !== false) $cont = @gzdecode($cont);
+			} else {
+				$url = "https://www.oidplus.com/updates/update_".($rev-1)."_to_".($rev).".txt"; // TODO: in consts.ini
+				$cont = @file_get_contents($url);
+			}
 
 			if ($cont === false) throw new OIDplusException(_L("Update could not be downloaded from ViaThinkSoft server. Please try again later."));
+
 			file_put_contents(OIDplus::localpath().'update.tmp.php', $cont);
 
 			# TODO: instead use cURL?
