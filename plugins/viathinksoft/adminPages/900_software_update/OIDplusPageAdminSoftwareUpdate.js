@@ -21,7 +21,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 
 	doUpdateOIDplus: function(rev, max) {
 		$("#update_versioninfo").hide();
-		$("#update_infobox").text(_L("Started update from %1 to %2",rev,max)+"\n");
+		$("#update_infobox").html(_L("Started update from %1 to %2",rev,max)+"\n");
 		OIDplusPageAdminSoftwareUpdate._doUpdateOIDplus(rev, max);
 	},
 
@@ -45,17 +45,25 @@ var OIDplusPageAdminSoftwareUpdate = {
 				action: "update_now",
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
-				hide_waiting_anim();
-				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				//hide_waiting_anim();
+				if (errorThrown == "abort") {
+					$("#update_header").text(_L("Update aborted"));
+					return;
+				} else {
+					$("#update_header").text(_L("Update failed"));
+					//alert(_L("Error: %1",errorThrown));
+					$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>FATAL ERROR:</strong></span> ' + errorThrown + "\n\n");
+				}
 			},
 			success: function(data) {
 				//hide_waiting_anim();
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					$("#update_header").text(_L("Update failed"));
+					//alert(_L("Error: %1",data.error));
 					if ("content" in data) {
-						$("#update_header").text(_L("Update failed"));
-						$("#update_infobox").text($("#update_infobox").text() + "\n\n" + data.content + "\n\n" + _L("Error: %1",data.error) + "\n\n");
+						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + data.content + "\n\n" + '<span class="severity_4"><strong>FATAL ERROR:</strong></span> ' + data.error + "\n\n");
+					} else {
+						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>FATAL ERROR:</strong></span> ' + data.error + "\n\n");
 					}
 				} else if (data.status >= 0) {
 					output = data.content.trim();
@@ -66,16 +74,22 @@ var OIDplusPageAdminSoftwareUpdate = {
 					if (rev >= max) {
 						//alert(_L("Update OK"));
 						$("#update_header").text(_L("Update finished"));
-						// reloadContent(); // don't reload... let the user read the messages?
+						// reloadContent(); // don't reload... let the user read the messages!
 					} else {
-						OIDplusPageAdminSoftwareUpdate._doUpdateOIDplus(rev+1, max);
+						if (output.includes("FATAL ERROR:")) {
+							$("#update_header").text(_L("Update failed"));
+						} else {
+							OIDplusPageAdminSoftwareUpdate._doUpdateOIDplus(rev+1, max);
+						}
 					}
 					return;
 				} else {
-					alert(_L("Error: %1",data));
+					$("#update_header").text(_L("Update failed"));
+					//alert(_L("Error: %1",data));
 					if ("content" in data) {
-						$("#update_header").text(_L("Update failed"));
-						$("#update_infobox").text($("#update_infobox").text() + "\n\n" + data.content + "\n\n" + _L("Error: %1",data) + "\n\n");
+						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + data.content + "\n\n" + '<span class="severity_4"><strong>FATAL ERROR:</strong></span> ' + data + "\n\n");
+					} else {
+						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>FATAL ERROR:</strong></span> ' + data + "\n\n");
 					}
 				}
 			},

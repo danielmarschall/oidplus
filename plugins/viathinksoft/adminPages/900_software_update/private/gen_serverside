@@ -20,6 +20,10 @@
 
 // This script will be called at the ViaThinkSoft server side
 
+// Generate keypair with:
+//	openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:8192
+//	openssl rsa -pubout -in private.pem -out public.pem
+
 $argc = $_SERVER['argc']; // to please Eclipse for PHP
 $argv = $_SERVER['argv']; // to please Eclipse for PHP
 
@@ -27,15 +31,27 @@ if (PHP_SAPI != 'cli') {
 	die("This file can only be invoked in CLI mode.\n");
 }
 
-if ($argc != 2) {
-	echo "Usage: ".$argv[0]." <targetpath>\n";
+if ($argc != 4) {
+	echo "Usage: ".$argv[0]." <targetpath> <privkey> <force(1|0)>\n";
 	exit(2);
 }
 
 $output_dir = $argv[1];
+$priv_key = $argv[2];
+$force = $argv[3];
 
 if (!is_dir($output_dir)) {
 	echo "Path $output_dir does not exist!\n";
+	exit(1);
+}
+
+if (!file_exists($priv_key)) {
+	echo "Private key file $priv_key does not exist!\n";
+	exit(1);
+}
+
+if (($force != '1') && ($force != '0')) {
+	echo "Argument 'force' must be 0 or 1\n";
 	exit(1);
 }
 
@@ -187,7 +203,7 @@ for ($i=2; $i<=$max_svn; $i++) {
 	echo "SVN revision $i / $max_svn\r";
 
 	$outfile = $output_dir."/update_".($i-1)."_to_$i.txt";
-	if (file_exists($outfile)) continue;
+	if (!$force && file_exists($outfile)) continue;
 
 	$outdir_old = "/tmp/oidplus_svntmp2_".($i-1)."/";
 	if (is_dir($outdir_old)) exec("rm -rf $outdir_old", $out, $ec);
@@ -247,11 +263,48 @@ for ($i=2; $i<=$max_svn; $i++) {
 	$outscript .= "unlink(__FILE__);\n";
 	$outscript .= "\n";
 
-	exec("rm -rf $outdir_old", $out, $ec);
-	exec("rm -rf $outdir_new", $out, $ec);
+	// Now add digital signature
+
+	if (strpos($outscript, '<?php') === false) {
+		echo "Not a PHP file\n"; // Should not happen
+		continue;
+	}
+
+	$naked = preg_replace('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', '', $outscript);
+
+	$hash = hash("sha256", $naked.basename($outfile));
+
+	$pkeyid = openssl_pkey_get_private('file://'.$priv_key);
+	openssl_sign($hash, $signature, $pkeyid, OPENSSL_ALGO_SHA256);
+	openssl_free_key($pkeyid);
+
+	if (!$signature) {
+		echo "ERROR: Signature failed\n";
+		continue;
+	}
+
+	$sign_line = '<?php /* <ViaThinkSoftSignature>'."\n".split_equal_length(base64_encode($signature),65).'</ViaThinkSoftSignature> */ ?>';
+
+	// We have to put the signature at the beginning, because we don't know if the end of the file lacks a PHP closing tag
+	if (substr($outscript,0,2) === '#!') {
+		// Preserve shebang
+		$shebang_pos = strpos($naked, "\n");
+		$shebang = substr($naked, 0, $shebang_pos);
+		$rest = substr($naked, $shebang_pos+1);
+		$outscript = $shebang."\n".$sign_line."\n".$rest;
+	} else {
+		$outscript = $sign_line."\n".$naked;
+	}
+
+	// Write the file
 
 	file_put_contents($outfile, $outscript);
 	file_put_contents($outfile.'.gz', gzencode($outscript));
+
+	// Delete temp dirs
+
+	exec("rm -rf $outdir_old", $out, $ec);
+	exec("rm -rf $outdir_new", $out, $ec);
 }
 echo "\n";
 
@@ -285,3 +338,13 @@ foreach ($xml as $a) {
 ksort($out);
 
 file_put_contents($output_dir.'/releases.ser', serialize($out));
+
+# ---
+
+function split_equal_length($data, $width=65) {
+	$out = '';
+	for ($i=0; $i<strlen($data); $i+=$width) {
+		$out .= substr($data, $i, $width)."\n";
+	}
+	return $out;
+}

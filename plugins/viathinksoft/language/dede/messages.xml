@@ -6270,6 +6270,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Update %1 could not be downloaded from ViaThinkSoft server. Please try again later.
+		]]></source>
+		<target><![CDATA[
+		Update %1 konnte nicht vom ViaThinkSoft-Server heruntergeladen werden. Bitte versuchen Sie es später noch einmal.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Update NOW
 		]]></source>
 		<target><![CDATA[
@@ -6302,10 +6310,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Update could not be downloaded from ViaThinkSoft server. Please try again later.
+		Update aborted
 		]]></source>
 		<target><![CDATA[
-		Das Update konnte nicht vom ViaThinkSoft server heruntergeladen werden. Bitte versuchen Sie es später noch einmal.
+		Update abgebrochen
 		]]></target>
 	</message>
 	<message>
@@ -6330,6 +6338,22 @@
 		]]></source>
 		<target><![CDATA[
 		Update abgeschlossen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update package file of revision %1 not digitally signed
+		]]></source>
+		<target><![CDATA[
+		Update-Paket revision %1 ist nicht digital signiert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update package file of revision %1: Signature invalid
+		]]></source>
+		<target><![CDATA[
+		Update-Paket revision %1 hat eine ungültige Signatur
 		]]></target>
 	</message>
 	<message>

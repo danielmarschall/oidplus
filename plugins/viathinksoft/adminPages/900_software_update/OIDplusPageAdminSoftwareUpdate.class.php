@@ -34,6 +34,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 			$rev = $params['rev'];
 
+			// Download and unzip
+
 			if (function_exists('gzdecode')) {
 				$url = "https://www.oidplus.com/updates/update_".($rev-1)."_to_".($rev).".txt.gz"; // TODO: in consts.ini
 				$cont = @file_get_contents($url);
@@ -43,7 +45,28 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				$cont = @file_get_contents($url);
 			}
 
-			if ($cont === false) throw new OIDplusException(_L("Update could not be downloaded from ViaThinkSoft server. Please try again later."));
+			if ($cont === false) throw new OIDplusException(_L("Update %1 could not be downloaded from ViaThinkSoft server. Please try again later.",$rev));
+
+			// Check signature...
+
+			if (function_exists('openssl_verify')) {
+
+				if (!preg_match('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', $cont, $m)) {
+					throw new OIDplusException(_L("Update package file of revision %1 not digitally signed",$rev));
+				}
+				$signature = base64_decode($m[1]);
+
+				$naked = preg_replace('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', '', $cont);
+				$hash = hash("sha256", $naked."update_".($rev-1)."_to_".($rev).".txt");
+
+				$public_key = file_get_contents(__DIR__.'/public.pem');
+				if (!openssl_verify($hash, $signature, $public_key, OPENSSL_ALGO_SHA256)) {
+					throw new OIDplusException(_L("Update package file of revision %1: Signature invalid",$rev));
+				}
+
+			}
+
+			// All OK! Write file
 
 			file_put_contents(OIDplus::localpath().'update.tmp.php', $cont);
 
