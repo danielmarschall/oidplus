@@ -51,6 +51,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 			if (function_exists('openssl_verify')) {
 
+				$m = array();
 				if (!preg_match('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', $cont, $m)) {
 					throw new OIDplusException(_L("Update package file of revision %1 not digitally signed",$rev));
 				}

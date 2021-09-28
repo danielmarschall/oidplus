@@ -187,9 +187,9 @@ function getDirContents_add($dir_old, $dir_new, $basepath_old=null, $basepath_ne
 }
 
 function getDirContents($dir_old, $dir_new) {
-	getDirContents_del($dir_old, $dir_new);
 	getDirContents_add($dir_old, $dir_new);
 	getDirContents_diff($dir_old, $dir_new);
+	getDirContents_del($dir_old, $dir_new);
 }
 
 
@@ -235,6 +235,10 @@ for ($i=2; $i<=$max_svn; $i++) {
 	$outscript .= "function info(\$str) { echo \"INFO: \$str\\n\"; }\n";
 	$outscript .= "function warn(\$str) { echo \"WARNING: \$str\\n\"; }\n";
 	$outscript .= "function err(\$str) { die(\"FATAL ERROR: \$str\\n\"); }\n";
+	$outscript .= "\n";
+	$outscript .= "@set_time_limit(0);\n";
+	$outscript .= "\n";
+	$outscript .= "@header('Content-Type: text/plain');\n";
 	$outscript .= "\n";
 	$outscript .= "chdir(__DIR__);\n";
 	$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision ".($i-1)."')\n\terr('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
