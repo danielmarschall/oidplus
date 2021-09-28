@@ -41,11 +41,11 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 			// Download and unzip
 
 			if (function_exists('gzdecode')) {
-				$url = "https://www.oidplus.com/updates/update_".($rev-1)."_to_".($rev).".txt.gz"; // TODO: in consts.ini
+				$url = sprintf(parse_ini_file(__DIR__.'/consts.ini')['update_package_gz'], $rev-1, $rev);
 				$cont = url_get_contents($url);
 				if ($cont !== false) $cont = @gzdecode($cont);
 			} else {
-				$url = "https://www.oidplus.com/updates/update_".($rev-1)."_to_".($rev).".txt"; // TODO: in consts.ini
+				$url = sprintf(parse_ini_file(__DIR__.'/consts.ini')['update_package'], $rev-1, $rev);
 				$cont = url_get_contents($url);
 			}
 
@@ -145,10 +145,9 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 				if (!$newest_version) {
 					$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.').'</font></p>';
-				}
-				else if (!$local_installation) {
+				} else if (!$local_installation) {
 					$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine its version. (Required: %1). Please update your system manually via the "%2" command regularly.',$requireInfo,$updateCommand).'</font></p>';
-				} else if ($local_installation == $newest_version) {
+				} else if (substr($local_installation,4) >= substr($newest_version,4)) {
 					$out['text'] .= '<p><font color="green">'._L('You are already using the latest version of OIDplus.').'</font></p>';
 				} else {
 					$out['text'] .= '<p><font color="blue">'._L('Please enter %1 into the SSH shell to update OIDplus to the latest version.','<code>'.$updateCommand.'</code>').'</font></p>';
@@ -181,8 +180,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				if (!$newest_version) {
 					$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.').'</font></p>';
 					$out['text'] .= '</div>';
-				}
-				else if ($local_installation == $newest_version) {
+				} else if (substr($local_installation,4) >= substr($newest_version,4)) {
 					$out['text'] .= '<p><font color="green">'._L('You are already using the latest version of OIDplus.').'</font></p>';
 					$out['text'] .= '</div>';
 				} else {
@@ -241,7 +239,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 		try {
 			if (is_null($this->releases_ser)) {
-				$url = "https://www.oidplus.com/updates/releases.ser"; // TODO: in consts.ini
+				$url = parse_ini_file(__DIR__.'/consts.ini')['revisionlog'];
 				$cont = url_get_contents($url);
 				if ($cont === false) return false;
 				$this->releases_ser = $cont;
@@ -269,7 +267,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 	private function getLatestRevision() {
 		try {
 			if (is_null($this->releases_ser)) {
-				$url = "https://www.oidplus.com/updates/releases.ser"; // TODO: in consts.ini
+				$url = parse_ini_file(__DIR__.'/consts.ini')['revisionlog'];
 				$cont = url_get_contents($url);
 				if ($cont === false) return false;
 				$this->releases_ser = $cont;

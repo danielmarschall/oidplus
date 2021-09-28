@@ -62,7 +62,10 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 
 			try {
 				$mine = self::getDirContents(OIDplus::localpath());
-				$theirs = self::checksumFileToArray('https://www.oidplus.com/checksums/svn-rev'.$ver.'.txt'); // TODO: in consts.ini
+				$theirs = self::checksumFileToArray(sprintf(parse_ini_file(__DIR__.'/consts.ini')['checksum_file'],$ver));
+				if ($theirs === false) {
+					throw new OIDplusException(_L("Cannot download checksum file. Please try again later."));
+				}
 
 				$num = 0;
 
@@ -171,10 +174,11 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 
 	private static function checksumFileToArray($checksumfile) {
 		$out = array();
-		$lines = @file($checksumfile);
-		if (!$lines) {
-			throw new OIDplusException(_L("Cannot download checksum file. Please try again later."));
-		}
+
+		$cont = url_get_contents($checksumfile);
+		if ($cont === false) return false;
+		$lines = explode("\n", $cont);
+
 		foreach ($lines as $line) {
 			$line = trim($line);
 			if ($line == '') continue;
