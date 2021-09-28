@@ -32,17 +32,21 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
 			}
 
+			if (OIDplus::getInstallType() !== 'svn-snapshot') {
+				throw new OIDplusException(_L('The web-update can only be applied on a SVN-Snapshot installation.'));
+			}
+
 			$rev = $params['rev'];
 
 			// Download and unzip
 
 			if (function_exists('gzdecode')) {
 				$url = "https://www.oidplus.com/updates/update_".($rev-1)."_to_".($rev).".txt.gz"; // TODO: in consts.ini
-				$cont = @file_get_contents($url);
+				$cont = url_get_contents($url);
 				if ($cont !== false) $cont = @gzdecode($cont);
 			} else {
 				$url = "https://www.oidplus.com/updates/update_".($rev-1)."_to_".($rev).".txt"; // TODO: in consts.ini
-				$cont = @file_get_contents($url);
+				$cont = url_get_contents($url);
 			}
 
 			if ($cont === false) throw new OIDplusException(_L("Update %1 could not be downloaded from ViaThinkSoft server. Please try again later.",$rev));
@@ -67,16 +71,27 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 			}
 
-			// All OK! Write file
+			// All OK! Now write file
 
-			file_put_contents(OIDplus::localpath().'update.tmp.php', $cont);
+			$tmp_filename = 'update_'.generateRandomString(10).'.tmp.php';
+			$local_file = OIDplus::localpath().$tmp_filename;
+			$web_file = OIDplus::webpath().$tmp_filename;
 
-			# TODO: instead use cURL?
-			// Note: we may not use eval() because script uses die()
-			$cont = @file_get_contents(OIDplus::webpath().'update.tmp.php');
-			if ($cont === false) throw new OIDplusException(_L("Failed to execute update-script. Probably file_get_contents() may not open URLs!"));
+			@file_put_contents($local_file, $cont);
 
-			return array("status" => 0, "content" => $cont);
+			if (!file_exists($local_file) || (@file_get_contents($local_file) !== $cont)) {
+				throw new OIDplusException(_L('Update file could not written. Probably there are no write-permissions to the root folder.'));
+			}
+
+			// Now call the written file
+			// Note: we may not use eval($cont) because script uses die()
+
+			$res = url_get_contents($web_file);
+			if ($res === false) {
+				throw new OIDplusException(_L('Communication with ViaThinkSoft server failed'));
+			}
+
+			return array("status" => 0, "content" => $res);
 		}
 	}
 
@@ -227,7 +242,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 		try {
 			if (is_null($this->releases_ser)) {
 				$url = "https://www.oidplus.com/updates/releases.ser"; // TODO: in consts.ini
-				$cont = @file_get_contents($url);
+				$cont = url_get_contents($url);
 				if ($cont === false) return false;
 				$this->releases_ser = $cont;
 			} else {
@@ -255,7 +270,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 		try {
 			if (is_null($this->releases_ser)) {
 				$url = "https://www.oidplus.com/updates/releases.ser"; // TODO: in consts.ini
-				$cont = @file_get_contents($url);
+				$cont = url_get_contents($url);
 				if ($cont === false) return false;
 				$this->releases_ser = $cont;
 			} else {

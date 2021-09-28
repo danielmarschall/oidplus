@@ -36,6 +36,8 @@ function trim_br($html) {
 }
 
 function generateRandomString($length) {
+	// Note: This function can be used in temporary file names, so you
+	// may not generate illegal file name characters.
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$charactersLength = strlen($characters);
 	$randomString = '';
@@ -321,4 +323,22 @@ function isInternetExplorer() {
 	// see also includes/oidplus_base.js
 	$ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 	return ((strpos($ua,'MSIE ') !== false) || (strpos($ua,'Trident/') !== false));
+}
+
+function url_get_contents($url) {
+	if (function_exists('curl_init')) {
+		$ch = curl_init();
+		if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POST, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+		if (!($res = @curl_exec($ch))) return false;
+		curl_close($ch);
+	} else {
+		$res = @file_get_contents($url);
+		if ($res === false) return false;
+	}
+	return $res;
 }

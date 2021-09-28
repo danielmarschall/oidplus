@@ -1030,6 +1030,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Communication with ViaThinkSoft server failed
+		]]></source>
+		<target><![CDATA[
+		Kommunikation mit dem ViaThinkSoft-Server fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Communication with ViaThinkSoft server failed: %1
 		]]></source>
 		<target><![CDATA[
@@ -1786,14 +1794,6 @@
 		]]></source>
 		<target><![CDATA[
 		Facebook OAuth-Authentifizierung ist in diesem System deaktiviert.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Failed to execute update-script. Probably file_get_contents() may not open URLs!
-		]]></source>
-		<target><![CDATA[
-		Konnte Update-Script nicht ausführen. Eventuell darf file_get_contents() keine URLs öffnen!
 		]]></target>
 	</message>
 	<message>
@@ -5726,6 +5726,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The web-update can only be applied on a SVN-Snapshot installation.
+		]]></source>
+		<target><![CDATA[
+		Das Web-Update kann nur auf einer SVN-Snapshot-Installation angewendet werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The database driver has problems with "%1"
 		]]></source>
 		<target><![CDATA[
@@ -6330,6 +6338,14 @@
 		]]></source>
 		<target><![CDATA[
 		Update fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update file could not written. Probably there are no write-permissions to the root folder.
+		]]></source>
+		<target><![CDATA[
+		Update-Datei konnte nicht geschrieben werden. Möglicherweise fehlen Schreibberechtigungen am OIDplus-Wurzelverzeichnis.
 		]]></target>
 	</message>
 	<message>
