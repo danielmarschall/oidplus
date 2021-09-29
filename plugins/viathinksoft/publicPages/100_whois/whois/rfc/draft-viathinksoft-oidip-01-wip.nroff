@@ -101,8 +101,8 @@ Table of Contents
      3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  7
        3.2.1  Query-Section (Information about Query and Result)  . .  7
        3.2.2  Object-Section (Information about the OID)  . . . . . .  8
-       3.2.3  RA-Section (Information about the Current RA) . . . . . 11
-       3.2.4  Sections for Previous Registration Authorities  . . . . 14
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 12
+       3.2.4  Sections for Previous Registration Authorities  . . . . 13
      3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 14
      3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 14
        3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 15
@@ -214,9 +214,10 @@ Authentication Tokens, with the difference that they contain an equal sign ("=")
 from the "value".  Names and values are case-sensitive alphanumeric strings.  A request can
 contain multiple server commands which are each prepended by a dollar sign ("$").
 
-The usage of server commands is individual for each server and implementation.  However, this
-document only defines/reserves the server-command "format" with the default value "txt".  Other
-values like "json" and "xml" are subject to be defined by a future specification.
+The usage of server commands is individual for each server and implementation.  This
+document defines/reserves the server-command "format" with the default value "txt" which
+instructs the server to output in the text-based format described in this document.  Other
+values like "json", "xml", or "html" are subject to be defined by future specifications.
 
 The following request is an example of a valid query where the client sends a "format" command
 with the value "txt" and an "antispam" command with the value "1":
@@ -404,7 +405,7 @@ Note: A line-break, to break up lines which are too long, as defined in section\
 (18) "updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID information was last updated.
 
 Additional fields can be defined by the OID-IP service.  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-"), and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
-
+.bp
 .ti 0
 3.2.3  RA-Section (Information about the Current RA)
 
@@ -449,7 +450,7 @@ Possible fields are:
 (11) "ra-created" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the RA was created/registered in the database.
 
 (12) "ra-updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the RA information was last modified.
-.bp
+
 Additional fields can be defined by the OID-IP service, but they MUST begin with "ra-".  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-"), and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
 
 .ti 0
@@ -482,7 +483,7 @@ Date/Time references SHALL be formatted as described in section\03.4.1.
 If parts of the date/time reference are uncertain, then they SHOULD be omitted until the date/time reference has the highest correctness.
 
 Examples of valid date/time references can be found in section\03.4.2.
-
+.bp
 .ti 0
 3.4.1  Date/Time Format ABNF Notation
 
