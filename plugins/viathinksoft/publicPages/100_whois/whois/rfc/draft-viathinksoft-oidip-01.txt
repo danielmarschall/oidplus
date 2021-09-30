@@ -4,7 +4,7 @@
 
 INTERNET-DRAFT                                              D. Marschall
 Intended Status: Informational                              ViaThinkSoft
-Expires: April 4, 2022                                      October 2021
+Expires: April 4, 2022                                   October 1, 2021
 
 
             Retrieving information about Object Identifiers
@@ -55,7 +55,7 @@ Copyright Notice
 
 Marschall                Expires April 4, 2022                  [Page 1]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
    carefully, as they describe your rights and restrictions with respect
@@ -72,6 +72,7 @@ Table of Contents
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
      2.1  Authentication Tokens . . . . . . . . . . . . . . . . . . .  5
      2.2  Server Commands . . . . . . . . . . . . . . . . . . . . . .  5
+       2.2.1  "Format" command  . . . . . . . . . . . . . . . . . . .  5
      2.3  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  6
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  6
@@ -105,13 +106,12 @@ Table of Contents
 
 
 
-
  
 
 
 Marschall                Expires April 4, 2022                  [Page 2]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
 1  Introduction
@@ -167,7 +167,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                  [Page 3]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
 1.1  Terminology
@@ -223,7 +223,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                  [Page 4]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
    IP service) are not allowed.
@@ -255,14 +255,8 @@ INTERNET DRAFT          OID Information Protocol            October 2021
    the difference that they contain an equal sign ("=") which divides
    the "name" from the "value".  Names and values are case-sensitive
    alphanumeric strings.  A request can contain multiple server commands
-   which are each prepended by a dollar sign ("$").
-
-   The usage of server commands is individual for each server and
-   implementation.  This document defines/reserves the server-command
-   "format" with the default value "text" which instructs the server to
-   output in the text-based format described in this document.  Other
-   values like "json", "xml", or "html" are subject to be defined by
-   future specifications.
+   which are each prepended by a dollar sign ("$").  The usage of server
+   commands is individual for each server and implementation.
 
    The following request is an example of a valid query where the client
    sends a "format" command with the value "text" and an "antispam"
@@ -270,16 +264,22 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
        oid:2.999$format=text$antispam=1
 
+2.2.1  "Format" command
 
+   The "format" command defines the output format of the server
+   response.  The default value "text", which is assumed if the "format"
+   command is omitted, instructs the server to reply with the text-based
+   format described in this document.
 
-
+   Other values like "json", "xml", or "html" are subject to be defined
+   by future specifications.
 
  
 
 
 Marschall                Expires April 4, 2022                  [Page 5]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
 2.3  Request ABNF Notation
@@ -335,7 +335,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                  [Page 6]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
    (5) If a value needs to be split into multiple lines, e.g. if the
@@ -391,7 +391,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                  [Page 7]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
    "oid:").  Canonization or sanitation (like removing a leading dot)
@@ -447,7 +447,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                  [Page 8]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
    (1) "object" contains the OID in dot-notation, prepended by the
@@ -503,7 +503,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                  [Page 9]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
    or more possible notations in the OID-IRI syntax, as defined in
@@ -559,7 +559,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 10]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
        "draft" means that the allocation of the OID is not yet official
@@ -615,7 +615,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 11]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
 3.2.3  RA-Section (Information about the Current RA)
@@ -671,7 +671,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 12]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
    (7) "ra-fax" (OPTIONAL, multiple values allowed) contains a fax
@@ -727,7 +727,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 13]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
    company to whom the OID was allocated by the RA of the superior OID.
@@ -783,7 +783,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 14]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
 3.4.1  Date/Time Format ABNF Notation
@@ -839,7 +839,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 15]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
 4  Referral
@@ -895,7 +895,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 16]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
 5  Full Example
@@ -951,7 +951,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 17]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
 6  Alternative Namespaces
@@ -1007,7 +1007,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 18]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
 6.1  Example: UUID Namespace
@@ -1063,7 +1063,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 19]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
 8  Security Considerations
@@ -1119,7 +1119,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 20]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
 9  IANA Considerations
@@ -1175,7 +1175,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 21]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
               January 2005.
@@ -1231,7 +1231,7 @@ INTERNET DRAFT          OID Information Protocol            October 2021
 
 Marschall                Expires April 4, 2022                 [Page 22]
 
-INTERNET DRAFT          OID Information Protocol            October 2021
+INTERNET DRAFT          OID Information Protocol         October 1, 2021
 
 
               object identifier registration authorities: Generation of
