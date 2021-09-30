@@ -215,16 +215,16 @@ from the "value".  Names and values are case-sensitive alphanumeric strings.  A 
 contain multiple server commands which are each prepended by a dollar sign ("$").
 
 The usage of server commands is individual for each server and implementation.  This
-document defines/reserves the server-command "format" with the default value "txt" which
+document defines/reserves the server-command "format" with the default value "text" which
 instructs the server to output in the text-based format described in this document.  Other
 values like "json", "xml", or "html" are subject to be defined by future specifications.
 
 The following request is an example of a valid query where the client sends a "format" command
-with the value "txt" and an "antispam" command with the value "1":
+with the value "text" and an "antispam" command with the value "1":
 
 .in 7
 .nf
-oid:2.999$format=txt$antispam=1
+oid:2.999$format=text$antispam=1
 .fi
 .in 3
 

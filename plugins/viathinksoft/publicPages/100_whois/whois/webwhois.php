@@ -305,14 +305,14 @@ if (isset($_REQUEST['format'])) {
 } else if (isset($serverCommands['format'])) {
 	$format = $serverCommands['format'];
 } else {
-	$format = 'txt'; // default
+	$format = 'text'; // default
 }
 
-if (($format != 'txt') && ($format != 'json') && ($format != 'xml')) {
-	$format = 'txt'; // default
+if (($format != 'txt') && ($format != 'text') && ($format != 'json') && ($format != 'xml')) {
+	$format = 'text'; // default
 }
 
-if ($format == 'txt') {
+if (($format == 'text') || ($format == 'txt')) {
 	header('Content-Type:text/plain; charset=UTF-8');
 
 	$longest_key = 0;
