@@ -1790,6 +1790,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		FATAL ERROR
+		]]></source>
+		<target><![CDATA[
+		FEHLER
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Facebook OAuth authentication is disabled on this system.
 		]]></source>
 		<target><![CDATA[
@@ -2194,6 +2202,14 @@
 		]]></source>
 		<target><![CDATA[
 		ID darf nicht leer sein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		INFO
+		]]></source>
+		<target><![CDATA[
+		INFO
 		]]></target>
 	</message>
 	<message>
@@ -6182,6 +6198,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		UPDATE FINISHED
+		]]></source>
+		<target><![CDATA[
+		UPDATE FERTIG
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		URL for more information about your project(s) (optional)
 		]]></source>
 		<target><![CDATA[
@@ -6494,6 +6518,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		WARNING
+		]]></source>
+		<target><![CDATA[
+		WARNUNG
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		WEID
 		]]></source>
 		<target><![CDATA[
@@ -6698,6 +6730,14 @@
 		]]></source>
 		<target><![CDATA[
 		Sie sind als Administrator angemeldet.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You are now at SVN revision %1
+		]]></source>
+		<target><![CDATA[
+		Das System ist nun bei SVN Revision %1
 		]]></target>
 	</message>
 	<message>

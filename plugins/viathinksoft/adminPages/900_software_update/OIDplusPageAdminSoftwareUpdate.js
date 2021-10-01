@@ -52,7 +52,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 				} else {
 					$("#update_header").text(_L("Update failed"));
 					//alert(_L("Error: %1",errorThrown));
-					$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>FATAL ERROR:</strong></span> ' + errorThrown + "\n\n");
+					$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + errorThrown + "\n\n");
 				}
 			},
 			success: function(data) {
@@ -61,19 +61,19 @@ var OIDplusPageAdminSoftwareUpdate = {
 					$("#update_header").text(_L("Update failed"));
 					//alert(_L("Error: %1",data.error));
 					if ("content" in data) {
-						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + data.content + "\n\n" + '<span class="severity_4"><strong>FATAL ERROR:</strong></span> ' + data.error + "\n\n");
+						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + data.content + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data.error + "\n\n");
 					} else {
-						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>FATAL ERROR:</strong></span> ' + data.error + "\n\n");
+						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data.error + "\n\n");
 					}
 				} else if (data.status >= 0) {
 					output = data.content.trim();
-					output = output.replace(/INFO:/g, '<span class="severity_2"><strong>INFO:</strong></span>');
-					output = output.replace(/WARNING:/g, '<span class="severity_3"><strong>WARNING:</strong></span>');
-					output = output.replace(/FATAL ERROR:/g, '<span class="severity_4"><strong>FATAL ERROR:</strong></span>');
+					output = output.replace(/INFO:/g, '<span class="severity_2"><strong>' + _L('INFO') + ':</strong></span>');
+					output = output.replace(/WARNING:/g, '<span class="severity_3"><strong>' + _L('WARNING') + ':</strong></span>');
+					output = output.replace(/FATAL ERROR:/g, '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span>');
 					$("#update_infobox").html($("#update_infobox").html() + output + "\n");
 					if (rev >= max) {
 						$("#update_header").text(_L("Update finished"));
-						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_1"><strong>UPDATE FINISHED:</strong></span> You are now at SVN revision ' + rev + '\n\n<p><input type="button" onclick="location.reload()" value="'+_L('Reload page')+'"></p>');
+						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_1"><strong> ' + _L('UPDATE FINISHED') + ':</strong></span> ' + _L('You are now at SVN revision %1', rev) + '\n\n<p><input type="button" onclick="location.reload()" value="'+_L('Reload page')+'"></p>');
 					} else {
 						if (output.includes("FATAL ERROR:")) {
 							$("#update_header").text(_L("Update failed"));
@@ -86,9 +86,9 @@ var OIDplusPageAdminSoftwareUpdate = {
 					$("#update_header").text(_L("Update failed"));
 					//alert(_L("Error: %1",data));
 					if ("content" in data) {
-						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + data.content + "\n\n" + '<span class="severity_4"><strong>FATAL ERROR:</strong></span> ' + data + "\n\n");
+						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + data.content + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data + "\n\n");
 					} else {
-						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>FATAL ERROR:</strong></span> ' + data + "\n\n");
+						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data + "\n\n");
 					}
 				}
 			},
