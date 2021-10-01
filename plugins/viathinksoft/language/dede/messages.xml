@@ -4750,6 +4750,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Reload page
+		]]></source>
+		<target><![CDATA[
+		Seite neu laden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Remember me
 		]]></source>
 		<target><![CDATA[
@@ -5726,14 +5734,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The web-update can only be applied on a SVN-Snapshot installation.
-		]]></source>
-		<target><![CDATA[
-		Das Web-Update kann nur auf einer SVN-Snapshot-Installation angewendet werden.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		The database driver has problems with "%1"
 		]]></source>
 		<target><![CDATA[
@@ -5898,6 +5898,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die Version konnte nicht ermittelt werden und das Update muss daher manuell durchgeführt werden!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The web-update can only be applied on a SVN-Snapshot installation.
+		]]></source>
+		<target><![CDATA[
+		Das Web-Update kann nur auf einer SVN-Snapshot-Installation angewendet werden.
 		]]></target>
 	</message>
 	<message>

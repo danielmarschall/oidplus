@@ -72,9 +72,8 @@ var OIDplusPageAdminSoftwareUpdate = {
 					output = output.replace(/FATAL ERROR:/g, '<span class="severity_4"><strong>FATAL ERROR:</strong></span>');
 					$("#update_infobox").html($("#update_infobox").html() + output + "\n");
 					if (rev >= max) {
-						//alert(_L("Update OK"));
 						$("#update_header").text(_L("Update finished"));
-						// reloadContent(); // don't reload... let the user read the messages!
+						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_1"><strong>UPDATE FINISHED:</strong></span> You are now at SVN revision ' + rev + '\n\n<p><input type="button" onclick="location.reload()" value="'+_L('Reload page')+'"></p>');
 					} else {
 						if (output.includes("FATAL ERROR:")) {
 							$("#update_header").text(_L("Update failed"));
