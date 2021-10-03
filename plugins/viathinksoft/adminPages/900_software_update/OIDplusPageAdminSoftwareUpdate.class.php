@@ -117,14 +117,14 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 			$out['text'] .= '<p><b>'._L('Method B').'</b>: '._L('Install OIDplus using the Git client in your SSH/Linux shell using the command <code>git clone %1</code> and update it regularly with the command <code>git pull</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!','https://github.com/danielmarschall/oidplus.git').'</p>';
 
-			$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Install OIDplus by downloading a TAR.GZ file from www.viathinksoft.com, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named "oidplus_version.txt" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.').'</p>';
+			$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Install OIDplus by downloading a TAR.GZ file from www.viathinksoft.com, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named ".version.php" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.').'</p>';
 
 			$out['text'] .= '<hr>';
 
 			$installType = OIDplus::getInstallType();
 
 			if ($installType === 'ambigous') {
-				$out['text'] .= '<font color="red">'.strtoupper(_L('Error')).': '._L('Multiple version files/directories (oidplus_version.txt, .git and .svn) are existing! Therefore, the version is ambiguous!').'</font>';
+				$out['text'] .= '<font color="red">'.strtoupper(_L('Error')).': '._L('Multiple version files/directories (oidplus_version.txt, .version.php, .git and .svn) are existing! Therefore, the version is ambiguous!').'</font>';
 			} else if ($installType === 'unknown') {
 				$out['text'] .= '<font color="red">'.strtoupper(_L('Error')).': '._L('The version cannot be determined, and the update needs to be applied manually!').'</font>';
 			} else if (($installType === 'svn-wc') || ($installType === 'git-wc')) {
@@ -169,7 +169,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 			} else if ($installType === 'svn-snapshot') {
 				$out['text'] .= '<div id="update_versioninfo">';
 
-				$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot TAR.GZ file with oidplus_version.txt file).').'</p>';
+				$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot TAR.GZ file with .version.php file).').'</p>';
 
 				$local_installation = OIDplus::getVersion();
 				$newest_version = $this->getLatestRevision();
@@ -180,6 +180,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				if (!$newest_version) {
 					$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.').'</font></p>';
 					$out['text'] .= '</div>';
+				} else if (!$local_installation) {
+					$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine its version.').'</font></p>';
 				} else if (substr($local_installation,4) >= substr($newest_version,4)) {
 					$out['text'] .= '<p><font color="green">'._L('You are already using the latest version of OIDplus.').'</font></p>';
 					$out['text'] .= '</div>';

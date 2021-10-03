@@ -10,6 +10,7 @@
 composer.lock
 composer.phar
 oidplus_version.txt
+.version.php
 update.tmp.php
 
 # Recommendation in https://phpstan.org/config-reference

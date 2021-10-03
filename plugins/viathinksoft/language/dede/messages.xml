@@ -2494,10 +2494,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Install OIDplus by downloading a TAR.GZ file from www.viathinksoft.com, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named "oidplus_version.txt" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.
+		Install OIDplus by downloading a TAR.GZ file from www.viathinksoft.com, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named ".version.php" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.
 		]]></source>
 		<target><![CDATA[
-		OIDplus durch das Downloaden und Entpacken eines TAR.GZ-Archivs von www.viathinksoft.de installieren. Dieses TAR.GZ-Archiv enthält einen Snapshot der aktuellen SVN-Revision, sowie eine Datei "oidplus_version.txt", die die SVN-Revisionsnummer enthält. Dieses Update-Tool wird versuchen, die geänderten Dateien "on-the-fly" aus dem ViaThinkSoft SVN-Repository herunterzuladen und im Serververzeichnis zu entpacken (Schreibrechte erforderlich). Achtung: Ein Änderungskonflikt wird nicht erkannt und führt zum Überschreiben der Datei! Die TAR.GZ-Archiv-Methode ist nur empfohlen, wenn die andere Methode (Verwenden eines Subversion-Clients) nicht möglich ist.
+		OIDplus durch das Downloaden und Entpacken eines TAR.GZ-Archivs von www.viathinksoft.de installieren. Dieses TAR.GZ-Archiv enthält einen Snapshot der aktuellen SVN-Revision, sowie eine Datei ".version.php", die die SVN-Revisionsnummer enthält. Dieses Update-Tool wird versuchen, die geänderten Dateien "on-the-fly" aus dem ViaThinkSoft SVN-Repository herunterzuladen und im Serververzeichnis zu entpacken (Schreibrechte erforderlich). Achtung: Ein Änderungskonflikt wird nicht erkannt und führt zum Überschreiben der Datei! Die TAR.GZ-Archiv-Methode ist nur empfohlen, wenn die andere Methode (Verwenden eines Subversion-Clients) nicht möglich ist.
 		]]></target>
 	</message>
 	<message>
@@ -3142,10 +3142,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Multiple version files/directories (oidplus_version.txt, .git and .svn) are existing! Therefore, the version is ambiguous!
+		Multiple version files/directories (oidplus_version.txt, .version.php, .git and .svn) are existing! Therefore, the version is ambiguous!
 		]]></source>
 		<target><![CDATA[
-		Mehrfache Versionsdateien und -verzeichnisse existieren (oidplus_version.txt, .git und .svn). Aus diesem Grund ist die Version mehrdeutig!
+		Mehrfache Versionsdateien und -verzeichnisse existieren (oidplus_version.txt, .version.php, .git und .svn). Aus diesem Grund ist die Version mehrdeutig!
 		]]></target>
 	</message>
 	<message>
@@ -3546,6 +3546,14 @@
 		]]></source>
 		<target><![CDATA[
 		OIDplus Setup - Grundlegende Einstellungen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus could not determine its version.
+		]]></source>
+		<target><![CDATA[
+		Die OIDplus-Version konnte nicht ermittelt werden.
 		]]></target>
 	</message>
 	<message>
@@ -6758,10 +6766,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		You are using <b>method C</b> (Snapshot TAR.GZ file with oidplus_version.txt file).
+		You are using <b>method C</b> (Snapshot TAR.GZ file with .version.php file).
 		]]></source>
 		<target><![CDATA[
-		Sie verwenden <b>Methode C</b> (TAR.GZ-Archiv mit SVN-Snapshot und oidplus_version.txt-Datei).
+		Sie verwenden <b>Methode C</b> (TAR.GZ-Archiv mit SVN-Snapshot und .version.php-Datei).
 		]]></target>
 	</message>
 	<message>

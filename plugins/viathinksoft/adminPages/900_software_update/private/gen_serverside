@@ -241,7 +241,11 @@ for ($i=2; $i<=$max_svn; $i++) {
 	$outscript .= "@header('Content-Type: text/plain');\n";
 	$outscript .= "\n";
 	$outscript .= "chdir(__DIR__);\n";
-	$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision ".($i-1)."')\n\terr('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
+	if ($i >= 662) {
+		$outscript .= "if (trim(@file_get_contents('.version.php')) !== '<?php // Revision ".($i-1)."')\n\terr('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
+	} else {
+		$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision ".($i-1)."')\n\terr('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
+	}
 	$outscript .= "\n";
 	/*
 	if ($i >= 99999) {
@@ -258,8 +262,17 @@ for ($i=2; $i<=$max_svn; $i++) {
 	$outscript .= "\n";
 	getDirContents($outdir_old, $outdir_new);
 	$outscript .= "\n";
-	$outscript .= "file_put_contents('oidplus_version.txt', \"Revision $i\\n\");\n";
-	$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision $i') err('Could not write to oidplus_version.txt!');\n";
+	if ($i >= 661) {
+		$outscript .= "file_put_contents('.version.php', \"<?php // Revision $i\\n\");\n";
+		$outscript .= "if (trim(@file_get_contents('.version.php')) !== '<?php // Revision $i') err('Could not write to .version.php!');\n";
+		if ($i == 661) {
+			$outscript .= "@unlink('oidplus_version.txt');\n";
+			$outscript .= "if (file_exists('oidplus_version.txt')) err('Could not delete oidplus_version.txt! Please delete it manually');\n";
+		}
+	} else {
+		$outscript .= "file_put_contents('oidplus_version.txt', \"Revision $i\\n\");\n";
+		$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision $i') err('Could not write to oidplus_version.txt!');\n";
+	}
 	$outscript .= "\n";
 	$outscript .= "\n";
 	$outscript .= "info('Update to SVN Rev $i done!');\n";

@@ -87,6 +87,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 						  ) || (substr($filename_old, 0, strlen('plugins/')) !== 'plugins/')) &&
 
 						  ($filename_old !== 'oidplus_version.txt') &&
+						  ($filename_old !== '.version.php') &&
 						  ($filename_old !== 'composer.lock')
 						){
 							$num++;

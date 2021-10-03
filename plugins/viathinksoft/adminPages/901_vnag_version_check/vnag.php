@@ -62,7 +62,7 @@ if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= OIDPLUS_VNAG
 
 	if ($installType === 'ambigous') {
 		$out_stat = VNag::STATUS_UNKNOWN;
-		$out_msg  = 'Multiple version files/directories (oidplus_version.txt, .git and .svn) are existing! Therefore, the version is ambiguous!'; // do not translate
+		$out_msg  = 'Multiple version files/directories (oidplus_version.txt, .version.php, .git and .svn) are existing! Therefore, the version is ambiguous!'; // do not translate
 	} else if ($installType === 'unknown') {
 		$out_stat = VNag::STATUS_UNKNOWN;
 		$out_msg  = 'The version cannot be determined, and the update needs to be applied manually!'; // do not translate

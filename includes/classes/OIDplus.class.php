@@ -980,9 +980,13 @@ class OIDplus {
 	public static function getInstallType() {
 		$counter = 0;
 
-		if ($version_file_exists = file_exists(OIDplus::localpath().'oidplus_version.txt')) {
+		if ($new_version_file_exists = file_exists(OIDplus::localpath().'.version.php')) {
 			$counter++;
 		}
+		if ($old_version_file_exists = file_exists(OIDplus::localpath().'oidplus_version.txt')) {
+			$counter++;
+		}
+		$version_file_exists = $old_version_file_exists | $new_version_file_exists;
 		if ($svn_dir_exists = is_dir(OIDplus::localpath().'.svn') ||
 		                      is_dir(OIDplus::localpath().'../.svn')) { // in case we checked out the root instead of the "trunk"
 			$counter++;
@@ -1045,7 +1049,11 @@ class OIDplus {
 		}
 
 		if ($installType === 'svn-snapshot') {
-			$cont = file_get_contents(OIDplus::localpath().'oidplus_version.txt');
+			$cont = '';
+			if (file_exists($filename = OIDplus::localpath().'oidplus_version.txt'))
+				$cont = file_get_contents($filename);
+			if (file_exists($filename = OIDplus::localpath().'.version.php'))
+				$cont = file_get_contents($filename);
 			$m = array();
 			if (preg_match('@Revision (\d+)@', $cont, $m)) // do not translate
 				return ($cachedVersion = 'svn-'.$m[1]); // do not translate

@@ -183,7 +183,8 @@ function git_read_object($object_wanted, $idx_file, $pack_file, $debug=false) {
 	$compressed = fread($fp,$size);
 
 	// Uncompress
-	$uncompressed = gzuncompress($compressed);
+	$uncompressed = @gzuncompress($compressed);
+	if ($uncompressed === false) throw new Exception("Decompression failed");
 	if ($debug) echo "$uncompressed\n";
 
 	// Close pack file

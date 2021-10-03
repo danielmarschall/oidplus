@@ -82,7 +82,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'af64b8b5135045ee4e2cf0e5471c4d896d427e05',
+      'reference' => 'f5e662c1d9af308613277de02adbf109ca1fa368',
     ),
     'danielmarschall/uuid_mac_utils' => 
     array (

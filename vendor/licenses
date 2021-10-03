@@ -7,7 +7,7 @@ Name                            Version             License
 components/jquery               3.6.0               MIT                    
 components/jqueryui             1.12.1              MIT                    
 danielmarschall/fileformats     dev-master acfeaf4  Apache-2.0             
-danielmarschall/php_utils       dev-master af64b8b  Apache-2.0             
+danielmarschall/php_utils       dev-master f5e662c  Apache-2.0             
 danielmarschall/uuid_mac_utils  dev-master 7b29209  Apache-2.0             
 danielmarschall/vnag            dev-master 4f729d8  Apache-2.0             
 dcodeio/bcrypt.js               master master       BSD-3-Clause, MIT      
