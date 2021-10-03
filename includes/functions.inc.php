@@ -278,21 +278,31 @@ function get_svn_revision($dir='') {
 }
 
 function get_gitsvn_revision($dir='') {
-	$ec = -1;
-	$out = array();
-	if (!empty($dir)) {
-		@exec('cd '.escapeshellarg($dir).' && git log', $out, $ec);
-	} else {
-		@exec('git log', $out, $ec);
-	}
-	if ($ec == 0) {
-		$out = implode("\n", $out);
-		$m = array();
-		if (preg_match('%git-svn-id: (.+)@(\\d+) %ismU', $out, $m)) {
-			return $m[2];
+	try {
+		// requires danielmarschall/git_utils.inc.php
+		$commit_msg = git_get_latest_commit_message($dir.'/.git');
+	} catch (Exception $e) {
+		// Try command-line
+		$ec = -1;
+		$out = array();
+		if (!empty($dir)) {
+			@exec('cd '.escapeshellarg($dir).' && git log', $out, $ec);
+		} else {
+			@exec('git log', $out, $ec);
+		}
+		if ($ec == 0) {
+			$commit_msg = implode("\n", $out);
+		} else {
+			return false;
 		}
 	}
-	return false;
+
+	$m = array();
+	if (preg_match('%git-svn-id: (.+)@(\\d+) %ismU', $commit_msg, $m)) {
+		return $m[2];
+	} else {
+		return false;
+	}
 }
 
 if (!function_exists('str_ends_with')) {

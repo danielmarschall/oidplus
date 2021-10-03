@@ -87,6 +87,7 @@ require_once __DIR__ . '/../vendor/danielmarschall/php_utils/color_utils.inc.php
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/ipv4_functions.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/ipv6_functions.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/anti_xss.inc.php';
+include_once __DIR__ . '/../vendor/danielmarschall/php_utils/git_utils.inc.php';
 
 // ---
 
