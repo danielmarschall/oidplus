@@ -71,9 +71,10 @@ var OIDplusPageAdminSoftwareUpdate = {
 					output = output.replace(/WARNING:/g, '<span class="severity_3"><strong>' + _L('WARNING') + ':</strong></span>');
 					output = output.replace(/FATAL ERROR:/g, '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span>');
 					$("#update_infobox").html($("#update_infobox").html() + output + "\n");
+					rev = data.rev=="HEAD" ? max : data.rev;
 					if (rev >= max) {
 						$("#update_header").text(_L("Update finished"));
-						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_1"><strong> ' + _L('UPDATE FINISHED') + ':</strong></span> ' + _L('You are now at SVN revision %1', rev) + '\n\n<p><input type="button" onclick="location.reload()" value="'+_L('Reload page')+'"></p>');
+						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_1"><strong> ' + _L('UPDATE FINISHED') + ':</strong></span> ' + _L('You are now at SVN revision %1', rev) + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 					} else {
 						if (output.includes("FATAL ERROR:")) {
 							$("#update_header").text(_L("Update failed"));

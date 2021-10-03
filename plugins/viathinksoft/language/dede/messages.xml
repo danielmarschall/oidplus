@@ -486,6 +486,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Alternatively, click this button to execute the command through the web-interface (command execution and write permissions required).
+		]]></source>
+		<target><![CDATA[
+		Alternativ klicken Sie hier, um den Befehl über die Web-Schnittstelle durchzuführen (Hierfür benötigt das Webserver-Benutzerkonto Rechte zum Ausführen des Befehls sowie Schreib-Rechte).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Arc "%1" is too long and therefore cannot be appended to the OID "%2" (max allowed arc size is "%3")
 		]]></source>
 		<target><![CDATA[
@@ -1770,6 +1778,14 @@
 		]]></source>
 		<target><![CDATA[
 		Beispiel: OID 2.999.123 mittels VBScript hinzufügen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Execute command:
+		]]></source>
+		<target><![CDATA[
+		Befehl ausführen:
 		]]></target>
 	</message>
 	<message>
@@ -4230,10 +4246,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! In case the update fails, you can download and extract the complete <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.
+		Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! (<a href="%1">Click here to check which files have been modified</a>) In case the update fails, you can download and extract the complete <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.
 		]]></source>
 		<target><![CDATA[
-		Bitte fertigen Sie eine Datensicherung Ihrer Dateien vor der Aktualisierung an. Im Falle eines Fehlers könnte das OIDplus-System (inklusive diesem Update-Assistenten) ausfallen. Außerdem besitzt dieses WebSVN-Update keine Kollissions-Kontrolle, d.h. Datei-Änderungen, die Sie durchgeführt haben, können zurückgesetzt/verloren gehen. Im Falle eines Fehlschlags können Sie einen kompletten <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot als TAR.GZ-Archiv</a> herunterladen und hier entpacken. Da alle Ihre Daten innerhalb des Ordners "userdata" und "userdata_pub" liegen sollten, sollte dies sicher sein.
+		Bitte fertigen Sie eine Datensicherung Ihrer Dateien vor der Aktualisierung an. Im Falle eines Fehlers könnte das OIDplus-System (inklusive diesem Update-Assistenten) ausfallen. Außerdem besitzt dieses WebSVN-Update keine Kollissions-Kontrolle, d.h. Datei-Änderungen, die Sie durchgeführt haben, können zurückgesetzt/verloren gehen. (<a href="%1">Klicken Sie hier um zu sehen, welche Dateien geändert wurden</a>) Im Falle eines Fehlschlags können Sie einen kompletten <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot als TAR.GZ-Archiv</a> herunterladen und hier entpacken. Da alle Ihre Daten innerhalb des Ordners "userdata" und "userdata_pub" liegen sollten, sollte dies sicher sein.
 		]]></target>
 	</message>
 	<message>
@@ -5926,14 +5942,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The web-update can only be applied on a SVN-Snapshot installation.
-		]]></source>
-		<target><![CDATA[
-		Das Web-Update kann nur auf einer SVN-Snapshot-Installation angewendet werden.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		There are three possibilities how to keep OIDplus up-to-date
 		]]></source>
 		<target><![CDATA[
@@ -6450,6 +6458,14 @@
 		]]></source>
 		<target><![CDATA[
 		Hochladen von Dateianhang "%1" zu Objekt "%2" fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		User account
+		]]></source>
+		<target><![CDATA[
+		Benutzerkonto
 		]]></target>
 	</message>
 	<message>
