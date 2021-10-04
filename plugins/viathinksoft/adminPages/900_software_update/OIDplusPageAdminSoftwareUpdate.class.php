@@ -143,6 +143,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				return;
 			}
 
+			$out['text'] .= '<div id="update_versioninfo">';
+
 			$out['text'] .= '<p><u>'._L('There are three possibilities how to keep OIDplus up-to-date').':</u></p>';
 
 			$out['text'] .= '<p><b>'._L('Method A').'</b>: '._L('Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co %1</code> and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!',htmlentities(parse_ini_file(__DIR__.'/consts.ini')['svn']).'/trunk').'</p>';
@@ -157,11 +159,11 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 			if ($installType === 'ambigous') {
 				$out['text'] .= '<font color="red">'.strtoupper(_L('Error')).': '._L('Multiple version files/directories (oidplus_version.txt, .version.php, .git and .svn) are existing! Therefore, the version is ambiguous!').'</font>';
+				$out['text'] .= '</div>';
 			} else if ($installType === 'unknown') {
 				$out['text'] .= '<font color="red">'.strtoupper(_L('Error')).': '._L('The version cannot be determined, and the update needs to be applied manually!').'</font>';
+				$out['text'] .= '</div>';
 			} else if (($installType === 'svn-wc') || ($installType === 'git-wc') || ($installType === 'svn-snapshot')) {
-				$out['text'] .= '<div id="update_versioninfo">';
-
 				if ($installType === 'svn-wc') {
 					$out['text'] .= '<p>'._L('You are using <b>method A</b> (SVN working copy).').'</p>';
 					$requireInfo = _L('shell access with svn/svnversion tool, or PDO/SQLite3 PHP extension');
