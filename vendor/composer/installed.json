@@ -425,12 +425,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/recaptcha.git",
-                "reference": "f911286ad361c9fba1b422c07f040852c0c193a3"
+                "reference": "ed5645e799e43afa9eb181f214dc52f22982682d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/recaptcha/zipball/f911286ad361c9fba1b422c07f040852c0c193a3",
-                "reference": "f911286ad361c9fba1b422c07f040852c0c193a3",
+                "url": "https://api.github.com/repos/google/recaptcha/zipball/ed5645e799e43afa9eb181f214dc52f22982682d",
+                "reference": "ed5645e799e43afa9eb181f214dc52f22982682d",
                 "shasum": ""
             },
             "require": {
@@ -441,7 +441,7 @@
                 "php-coveralls/php-coveralls": "^2.1",
                 "phpunit/phpunit": "^4.8.36|^5.7.27|^6.59|^7.5.11"
             },
-            "time": "2020-10-01T15:14:41+00:00",
+            "time": "2021-10-04T09:40:45+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {

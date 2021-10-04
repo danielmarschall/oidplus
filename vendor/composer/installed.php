@@ -122,7 +122,7 @@
       array (
         0 => '1.2.x-dev',
       ),
-      'reference' => 'f911286ad361c9fba1b422c07f040852c0c193a3',
+      'reference' => 'ed5645e799e43afa9eb181f214dc52f22982682d',
     ),
     'matthiasmullie/minify' => 
     array (

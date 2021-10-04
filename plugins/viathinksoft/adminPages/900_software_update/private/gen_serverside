@@ -28,7 +28,8 @@ $argc = $_SERVER['argc']; // to please Eclipse for PHP
 $argv = $_SERVER['argv']; // to please Eclipse for PHP
 
 if (PHP_SAPI != 'cli') {
-	die("This file can only be invoked in CLI mode.\n");
+	fwrite(STDERR, "This file can only be invoked in CLI mode.\n");
+	die();
 }
 
 if ($argc != 4) {
@@ -56,13 +57,17 @@ if (($force != '1') && ($force != '0')) {
 }
 
 $outscript = '';
+$func_idx = 0;
 
 function getDirContents_del($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
 	global $outscript;
 
 	if (is_null($basepath_old)) $basepath_old = $dir_old;
 	$basepath_old = realpath($basepath_old) . DIRECTORY_SEPARATOR;
-	if ($basepath_old == '/') die('ARG');
+	if ($basepath_old == '/') {
+		fwrite(STDERR, 'ARG');
+		die();
+	}
 
 	$dir_old = realpath($dir_old) . DIRECTORY_SEPARATOR;
 	$dir_new = realpath($dir_new) . DIRECTORY_SEPARATOR;
@@ -84,15 +89,21 @@ function getDirContents_del($dir_old, $dir_new, $basepath_old=null, $basepath_ne
 			getDirContents_del($path_old, $path_new, $basepath_old, $basepath_new);
 		}
 
+		// Note: We don't warn if a file-to-be-deleted has vanished. It would not be necessary to warn about it
 		if (is_dir($path_old) && !is_dir($path_new)) {
 			$outscript .= "// Dir deleted: $xpath_old\n";
 			$outscript .= "@rmdir('$xpath_old');\n";
-			$outscript .= "if (is_dir('$xpath_old'))\n\twarn('Directory could not be deleted (was not empty?): $xpath_old');\n\n";
-
+			$outscript .= "if (is_dir('$xpath_old')) {\n";
+			$outscript .= "\twarn('Directory could not be deleted (was not empty?): $xpath_old');\n";
+			$outscript .= "}\n";
+			$outscript .= "\n";
 		} else if (file_exists($path_old) && !file_exists($path_new)) {
 			$outscript .= "// File deleted: $xpath_old\n";
 			$outscript .= "@unlink('$xpath_old');\n";
-			$outscript .= "if (file_exists('$xpath_old'))\n\twarn('File could not be deleted: $xpath_old');\n\n";
+			$outscript .= "if (file_exists('$xpath_old')) {\n";
+			$outscript .= "\twarn('File could not be deleted: $xpath_old');\n";
+			$outscript .= "}\n";
+			$outscript .= "\n";
 		}
 	}
 }
@@ -102,7 +113,10 @@ function getDirContents_diff($dir_old, $dir_new, $basepath_old=null, $basepath_n
 
 	if (is_null($basepath_old)) $basepath_old = $dir_old;
 	$basepath_old = realpath($basepath_old) . DIRECTORY_SEPARATOR;
-	if ($basepath_old == '/') die('ARG');
+	if ($basepath_old == '/') {
+		fwrite(STDERR, 'ARG');
+		die();
+	}
 
 	$dir_old = realpath($dir_old) . DIRECTORY_SEPARATOR;
 	$dir_new = realpath($dir_new) . DIRECTORY_SEPARATOR;
@@ -123,18 +137,66 @@ function getDirContents_diff($dir_old, $dir_new, $basepath_old=null, $basepath_n
 		if (file_exists($path_old) && file_exists($path_new)) {
 			if (file_get_contents($path_old) != file_get_contents($path_new)) {
 				$outscript .= "// Files different: $xpath_old\n";
-				$outscript .= "if (@sha1_file('$xpath_old') !== '".sha1_file($path_old)."')\n\twarn('File was probably modified. Will overwrite the changes now: $xpath_old');\n";
-				$outscript .= "@file_put_contents('$xpath_old', base64_decode('".base64_encode(file_get_contents($path_new))."'));\n";
-				$outscript .= "if (@sha1_file('$xpath_old') !== '".sha1_file($path_new)."')\n\twarn('File cannot be written (checksum mismatch): $xpath_old');\n\n";
+
+				global $func_idx;
+				$func_idx++;
+				$outscript .= "function writefile_".$func_idx."() {\n";
+				special_save_file($xpath_old, $path_new, $outscript, "\t@");
+				$outscript .= "\t@touch('$xpath_old',".filemtime($path_new).");\n";
+				$outscript .= "}\n";
+
+				$outscript .= "if (!file_exists('$xpath_old')) {\n";
+				$outscript .= "\twarn('File has vanished! Will re-create it: $xpath_old');\n";
+				$outscript .= "\twritefile_".$func_idx."();\n";
+				$outscript .= "\tif (!file_exists('$xpath_old')) {\n";
+				$outscript .= "\t\twarn('File cannot be created (not existing): $xpath_old');\n";
+				$outscript .= "\t} else if (sha1_file('$xpath_old') != '".sha1_file($path_new)."') {\n";
+				$outscript .= "\t\twarn('File cannot be created (checksum mismatch): $xpath_old');\n";
+				$outscript .= "\t} else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
+				$outscript .= "\t\twarn('Could not change file permissions of ".$xpath_old."');\n";
+				$outscript .= "\t}\n";
+
+				$outscript .= "} else {\n";
+
+				$outscript .= "\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_old)."') {\n";
+				$outscript .= "\t\twarn('File was modified. Will overwrite the changes now: $xpath_old');\n";
+				$outscript .= "\t\t\$backup_name = '$xpath_old.'.date('Ymdhis',@filemtime('$xpath_old'));\n";
+				$outscript .= "\t\twarn('Creating a backup as '.\$backup_name);\n";
+				$outscript .= "\t\tif (!@copy('$xpath_old', \$backup_name)) {\n";
+				$outscript .= "\t\t\twarn('Creation of backup failed');\n";
+				$outscript .= "\t\t}\n";
+				$outscript .= "\t}\n";
+				$outscript .= "\twritefile_".$func_idx."();\n";
+				$outscript .= "\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_new)."') {\n";
+				$outscript .= "\t\twarn('File cannot be written (checksum mismatch): $xpath_old');\n";
+				$outscript .= "\t}\n";
+				$outscript .= "}\n";
+				$outscript .= "\n";
 			}
 			if ((fileperms($path_old) & 0777) != (fileperms($path_new) & 0777)) {
 				$outscript .= "// Different file chmod: $xpath_old\n";
-				$outscript .= "if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777)."))\n\twarn('Could not change file permissions of ".$xpath_old."');\n\n";
+				$outscript .= "if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
+				$outscript .= "\twarn('Could not change file permissions of ".$xpath_old."');\n";
+				$outscript .= "}\n";
+				$outscript .= "\n";
 			}
 		} else if (is_dir($path_old) && is_dir($path_new)) {
+			$outscript .= "// Verify that directory exists: $xpath_old\n";
+			$outscript .= "if (!is_dir('$xpath_old')) {\n";
+			$outscript .= "\twarn('Directory has vanished! Will re-create it: $xpath_old');\n";
+			$outscript .= "\t@mkdir('$xpath_old');\n";
+			$outscript .= "\tif (!is_dir('$xpath_old')) {\n";
+			$outscript .= "\t\twarn('Directory could not be created: $xpath_old');\n";
+			$outscript .= "\t}\n";
+			$outscript .= "}\n";
+			$outscript .= "\n";
+
 			if ((fileperms($path_old) & 0777) != (fileperms($path_new) & 0777)) {
 				$outscript .= "// Different dir chmod: $xpath_old\n";
-				$outscript .= "if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777)."))\n\twarn('Could not change dir permissions of ".$xpath_old."');\n\n";
+				$outscript .= "if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
+				$outscript .= "\twarn('Could not change dir permissions of ".$xpath_old."');\n";
+				$outscript .= "}\n";
+				$outscript .= "\n";
 			}
 		}
 
@@ -149,7 +211,10 @@ function getDirContents_add($dir_old, $dir_new, $basepath_old=null, $basepath_ne
 
 	if (is_null($basepath_new)) $basepath_new = $dir_new;
 	$basepath_new = realpath($basepath_new) . DIRECTORY_SEPARATOR;
-	if ($basepath_new == '/') die('ARG');
+	if ($basepath_new == '/') {
+		fwrite(STDERR, 'ARG');
+		die();
+	}
 
 	$dir_old = realpath($dir_old) . DIRECTORY_SEPARATOR;
 	$dir_new = realpath($dir_new) . DIRECTORY_SEPARATOR;
@@ -168,16 +233,44 @@ function getDirContents_add($dir_old, $dir_new, $basepath_old=null, $basepath_ne
 		$xpath_new = substr($path_new, strlen($basepath_new));
 
 		if (is_dir($path_new) && !is_dir($path_old)) {
+			// Note: We are not warning if the dir was already created by the user
 			$outscript .= "// Dir added: $xpath_new\n";
 			$outscript .= "@mkdir('$xpath_new');\n";
-			$outscript .= "if (!is_dir('$xpath_new'))\n\twarn('Directory could not be created: $xpath_new');\n";
-			$outscript .= "else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_new', 0".sprintf('%o', fileperms($path_new) & 0777)."))\n\twarn('Could not change directory permissions of ".$xpath_new."');\n\n";
+			$outscript .= "if (!is_dir('$xpath_new')) {\n";
+			$outscript .= "\twarn('Directory could not be created: $xpath_new');\n";
+			$outscript .= "} else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_new', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
+			$outscript .= "\twarn('Could not change directory permissions of ".$xpath_new."');\n";
+			$outscript .= "}\n";
+			$outscript .= "\n";
 		} else if (file_exists($path_new) && !file_exists($path_old)) {
 			$outscript .= "// File added: $xpath_new\n";
-			$outscript .= "@file_put_contents('$xpath_new', base64_decode('".base64_encode(file_get_contents($path_new))."'));\n";
-			$outscript .= "if (!file_exists('$xpath_new'))\n\twarn('File cannot be created (not existing): $xpath_new');\n";
-			$outscript .= "else if (sha1_file('$xpath_new') != '".sha1_file($path_new)."')\n\twarn('File cannot be created (checksum mismatch): $xpath_new');\n";
-			$outscript .= "else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_new', 0".sprintf('%o', fileperms($path_new) & 0777)."))\n\twarn('Could not change file permissions of ".$xpath_new."');\n\n";
+
+			global $func_idx;
+			$func_idx++;
+			$outscript .= "function writefile_".$func_idx."() {\n";
+			special_save_file($xpath_new, $path_new, $outscript, "\t@");
+			$outscript .= "\t@touch('$xpath_new',".filemtime($path_new).");\n";
+			$outscript .= "}\n";
+
+			// Note: We will not warn if the file was created and is exactly the file we want
+			$outscript .= "if (file_exists('$xpath_new') && (sha1_file('$xpath_new') != '".sha1_file($path_new)."')) {\n";
+			$outscript .= "\twarn('File was created by someone else. Will overwrite the changes now: $xpath_new');\n";
+			$outscript .= "\t\$backup_name = '$xpath_new.'.date('Ymdhis',@filemtime('$xpath_new'));\n";
+			$outscript .= "\twarn('Creating a backup as '.\$backup_name);\n";
+			$outscript .= "\tif (!@copy('$xpath_new', \$backup_name)) {\n";
+			$outscript .= "\t\twarn('Creation of backup failed');\n";
+			$outscript .= "\t}\n";
+			$outscript .= "}\n";
+
+			$outscript .= "writefile_".$func_idx."();\n";
+			$outscript .= "if (!file_exists('$xpath_new')) {\n";
+			$outscript .= "\twarn('File cannot be created (not existing): $xpath_new');\n";
+			$outscript .= "} else if (sha1_file('$xpath_new') != '".sha1_file($path_new)."') {\n";
+			$outscript .= "\twarn('File cannot be created (checksum mismatch): $xpath_new');\n";
+			$outscript .= "} else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_new', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
+			$outscript .= "\twarn('Could not change file permissions of ".$xpath_new."');\n";
+			$outscript .= "}\n";
+			$outscript .= "\n";
 		}
 
 		if (is_dir($path_new)) {
@@ -187,17 +280,17 @@ function getDirContents_add($dir_old, $dir_new, $basepath_old=null, $basepath_ne
 }
 
 function getDirContents($dir_old, $dir_new) {
+	global $func_idx;
+	$func_idx = 0;
 	getDirContents_add($dir_old, $dir_new);
 	getDirContents_diff($dir_old, $dir_new);
 	getDirContents_del($dir_old, $dir_new);
 }
 
-
 $out = array();
 $ec = -1;
 exec('svn info https://svn.viathinksoft.com/svn/oidplus/trunk/ | grep "Revision:" | cut -d " " -f 2', $out, $ec);
 $max_svn = implode("", $out);
-
 
 for ($i=2; $i<=$max_svn; $i++) {
 	echo "SVN revision $i / $max_svn\r";
@@ -242,9 +335,13 @@ for ($i=2; $i<=$max_svn; $i++) {
 	$outscript .= "\n";
 	$outscript .= "chdir(__DIR__);\n";
 	if ($i >= 662) {
-		$outscript .= "if (trim(@file_get_contents('.version.php')) !== '<?php // Revision ".($i-1)."')\n\terr('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
+		$outscript .= "if (trim(@file_get_contents('.version.php')) !== '<?php // Revision ".($i-1)."') {\n";
+		$outscript .= "\terr('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
+		$outscript .= "}\n";
 	} else {
-		$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision ".($i-1)."')\n\terr('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
+		$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision ".($i-1)."') {\n";
+		$outscript .= "\terr('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
+		$outscript .= "}\n";
 	}
 	$outscript .= "\n";
 	/*
@@ -255,7 +352,9 @@ for ($i=2; $i<=$max_svn; $i++) {
 	} else
 	*/if ($i >= 2) {
 		// Rev 2+ requires PHP 7.0.0
-		$outscript .= "if (version_compare(PHP_VERSION, '7.0.0') < 0)\n\terr('You need PHP Version 7.0 to update to this version');\n";
+		$outscript .= "if (version_compare(PHP_VERSION, '7.0.0') < 0) {\n";
+		$outscript .= "\terr('You need PHP Version 7.0 to update to this version');\n";
+		$outscript .= "}\n";
 	}
 	$outscript .= "\n";
 	$outscript .= "info('Update to SVN Rev $i...');\n";
@@ -316,10 +415,21 @@ for ($i=2; $i<=$max_svn; $i++) {
 	// Write the file
 
 	file_put_contents($outfile, $outscript);
+
+	$ec = -1;
+	$out = array();
+	exec('php -l '.escapeshellarg($outfile), $out, $ec);
+	if ($ec != 0) {
+		fwrite(STDERR, "STOP! $outfile PHP syntax error!\n");
+		unlink($outfile);
+		break;
+	}
 	file_put_contents($outfile.'.gz', gzencode($outscript));
 
 	// Delete temp dirs
 
+	$ec = -1;
+	$out = array();
 	exec("rm -rf $outdir_old", $out, $ec);
 	exec("rm -rf $outdir_new", $out, $ec);
 }
@@ -329,39 +439,61 @@ echo "\n";
 // Now write the release messages (required by software update and vnag)
 
 
+$ec = -1;
 $out = array();
-$ec = 0;
 exec('svn log https://svn.viathinksoft.com/svn/oidplus/trunk --xml', $out, $ec);
-if ($ec != 0) die();
+if ($ec != 0) {
+	fwrite(STDERR, "SVN Log failed\n");
+} else {
+	$str = implode("\n",$out);
 
-$str = implode("\n",$out);
+	$xml = simplexml_load_string($str);
 
-$xml = simplexml_load_string($str);
+	$out = array();
 
-$out = array();
+	foreach ($xml as $a) {
 
-foreach ($xml as $a) {
+		$out[(int)$a->attributes()->revision] = array(
 
-	$out[(int)$a->attributes()->revision] = array(
+			'date' => date('Y-m-d H:i:s',strtotime((string)$a->date)),
+			'author' => (string)$a->author,
+			'msg' => trim((string)$a->msg),
 
-		'date' => date('Y-m-d H:i:s',strtotime((string)$a->date)),
-		'author' => (string)$a->author,
-		'msg' => trim((string)$a->msg),
+		);
 
-	);
+	}
 
+	ksort($out);
+
+	file_put_contents($output_dir.'/releases.ser', serialize($out));
 }
-
-ksort($out);
-
-file_put_contents($output_dir.'/releases.ser', serialize($out));
 
 # ---
 
 function split_equal_length($data, $width=65) {
-	$out = '';
+	$res = '';
 	for ($i=0; $i<strlen($data); $i+=$width) {
-		$out .= substr($data, $i, $width)."\n";
+		$res .= substr($data, $i, $width)."\n";
 	}
-	return $out;
+	return $res;
+}
+
+function special_save_file($out_file, $in_file, &$res, $line_prefix, $width=50) {
+	$handle = @fopen($in_file, "rb");
+	if (!$handle) {
+		throw new Exception("Cannot open file $in_file");
+	}
+	$first = true;
+	while (!feof($handle)) {
+		// important: must be a multiple of 3, otherwise we have base64 paddings!
+		$buffer = fread($handle, $width*3);
+		$base64 = base64_encode($buffer);
+		$res .= $line_prefix."file_put_contents('$out_file', base64_decode('".$base64."')".($first ? '' : ', FILE_APPEND').");\n";
+		$first = false;
+	}
+	if ($first) {
+		// It is an empty file
+		$res .= $line_prefix."file_put_contents('$out_file', '');\n";
+	}
+	fclose($handle);
 }
