@@ -1,7 +1,6 @@
 
 RECENT STUFF
 - At a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
-- Create a possibility to invoke cronjobs (VTS registration / automatic publishing) via crontab?
 - Default language selection: Either always en-US, or automatical selection depending on browser language, or depending on admin setting (e.g. german companies offer a german repository by default)?
 - BCrypt
 	Make #rounds and length of admin password configurable (pre-baseconfig?)
@@ -250,8 +249,3 @@ PRIVACY
 GUID Management
 - Leaf nodes (GUIDs) should show/edit the Title in the CRUD, so you dont have to click the GUID to see the title
 - weird bug: when i edit "guid:oidplus", then, after reload the treeview after the update, "guid:activedirectory" will be opened. somehow, the last opened node will be opened during the reload?!
-
-RFC (OID-IP)
-- still waiting for IETF review
-- servercommand case sensitive?
-- servercommand "format" reserve?
