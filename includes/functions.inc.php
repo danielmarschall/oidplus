@@ -263,13 +263,13 @@ function get_svn_revision($dir='') {
 
 	// Try to find out the SVN version using the shell
 	// We don't prioritize this method, because a failed shell access will flood the apache error log with STDERR messages
-	$output = @shell_exec('svnversion '.escapeshellarg($dir));
+	$output = @shell_exec('svnversion '.escapeshellarg($dir).' 2>&1');
 	$match = array();
 	if (preg_match('/\d+/', $output, $match)) {
 		return ($cachedVersion = $match[0]);
 	}
 
-	$output = @shell_exec('svn info '.escapeshellarg($dir));
+	$output = @shell_exec('svn info '.escapeshellarg($dir).' 2>&1');
 	if (preg_match('/Revision:\s*(\d+)/m', $output, $match)) { // do not translate
 		return ($cachedVersion = $match[1]);
 	}

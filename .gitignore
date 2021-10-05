@@ -12,6 +12,7 @@ composer.phar
 oidplus_version.txt
 .version.php
 update.tmp.php
+update_*.tmp.php
 
 # Recommendation in https://phpstan.org/config-reference
 # "The usual practice is to have phpstan.neon.dist under version control,

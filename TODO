@@ -64,6 +64,9 @@ DATA TRANSFER PLUGIN
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
 
 SMALL THINGS
+- cron.sh: set a global flag that tells the plugins whether we are calling from crontab,
+  so that auto publishing et al prefer cron calls and only execute their code
+  for random visitors, if the crontab is not running.
 - Login page etc.: If user clicks on a tab, then the gotoedit and static link should change to e.g. "oidplus:login$admin" or "oidplus:login$ra", respectively.
         $('#static_link').attr("href", "index.php?goto="+encodeURIComponent(id));
         $("#gotoedit").val(id);
