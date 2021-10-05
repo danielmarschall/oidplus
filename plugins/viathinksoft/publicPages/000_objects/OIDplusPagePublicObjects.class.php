@@ -813,7 +813,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		                               "where parent = ? " .
 		                               "order by ".OIDplus::db()->natOrder('id'), array($parent));
 		$rows = array();
-		if ($parentNS == 'oid') {
+		if ($parentNS == 'weid') {
+			// Custom plugin for registry.frdl.de:
+			// Parent NS (oid:) is *NOT* equal to child NS (weid:)
+			$one_weid_available = true;
+		} else if ($parentNS == 'oid') {
 			$one_weid_available = $objParent->isWeid(true);
 			while ($row = $result->fetch_object()) {
 				$obj = OIDplusObject::parse($row->id);
@@ -835,8 +839,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$output .= '<table class="table table-bordered table-striped">';
 		$output .= '	<tr>';
 		$output .= '	     <th>'._L('ID').(($parentNS == 'gs1') ? ' '._L('(without check digit)') : '').'</th>';
+		if ($one_weid_available) $output .= '	     <th>'._L('WEID').'</th>';
 		if ($parentNS == 'oid') {
-			if ($one_weid_available) $output .= '	     <th>'._L('WEID').'</th>';
 			if ($accepts_asn1) $output .= '	     <th>'._L('ASN.1 IDs (comma sep.)').'</th>';
 			if ($accepts_iri)  $output .= '	     <th>'._L('IRI IDs (comma sep.)').'</th>';
 		}
@@ -878,14 +882,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$output .= '<tr>';
 			$output .= '     <td><a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.htmlentities($show_id).'</a></td>';
 			if ($objParent->userHasWriteRights()) {
-				if ($parentNS == 'oid') {
-					if ($one_weid_available) {
-						if ($obj->isWeid(false)) {
-							$output .= '	<td>'.$obj->weidArc().'</td>';
-						} else {
-							$output .= '	<td>'._L('n/a').'</td>';
-						}
+				if ($one_weid_available) {
+					if ($obj->isWeid(false)) {
+						$output .= '	<td>'.$obj->weidArc().'</td>';
+					} else {
+						$output .= '	<td>'._L('n/a').'</td>';
 					}
+				}
+				if ($parentNS == 'oid') {
 					if ($accepts_asn1) $output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.implode(', ', $asn1ids).'"></td>';
 					if ($accepts_iri)  $output .= '     <td><input type="text" id="iris_'.$row->id.'" value="'.implode(', ', $iris).'"></td>';
 				}
@@ -899,14 +903,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			} else {
 				if ($asn1ids == '') $asn1ids = '<i>'._L('(none)').'</i>';
 				if ($iris == '') $iris = '<i>'._L('(none)').'</i>';
-				if ($parentNS == 'oid') {
-					if ($one_weid_available) {
-						if ($obj->isWeid(false)) {
-							$output .= '	<td>'.$obj->weidArc().'</td>';
-						} else {
-							$output .= '	<td>'._L('n/a').'</td>';
-						}
+				if ($one_weid_available) {
+					if ($obj->isWeid(false)) {
+						$output .= '	<td>'.$obj->weidArc().'</td>';
+					} else {
+						$output .= '	<td>'._L('n/a').'</td>';
 					}
+				}
+				if ($parentNS == 'oid') {
 					$asn1ids_ext = array();
 					foreach ($asn1ids as $asn1id) {
 						$asn1ids_ext[] = '<a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.$asn1id.'</a>';
@@ -928,7 +932,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		if ($objParent->userHasWriteRights()) {
 			$output .= '<tr>';
 			$prefix = is_null($objParent) ? '' : $objParent->crudInsertPrefix();
-			if ($parentNS == 'oid') {
+			if ($parentNS == 'weid') {
+				$output .= '     <td>'.$prefix.' <input oninput="OIDplusPagePublicObjects.frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
+				$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="OIDplusPagePublicObjects.frdl_weid_change()"></td>';
+			} else if ($parentNS == 'oid') {
 				// TODO: Idea: Give a class name, e.g. "OID" and then with a oid-specific CSS make the width individual. So, every plugin has more control over the appearance and widths of the input fields
 				if ($objParent->isWeid(true)) {
 					$output .= '     <td>'.$prefix.' <input oninput="OIDplusPagePublicObjects.frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
