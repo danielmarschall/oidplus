@@ -79,7 +79,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 						if (output.includes("FATAL ERROR:")) {
 							$("#update_header").text(_L("Update failed"));
 						} else {
-							OIDplusPageAdminSoftwareUpdate._doUpdateOIDplus(rev+1, max);
+							OIDplusPageAdminSoftwareUpdate._doUpdateOIDplus(parseInt(rev)+1, max);
 						}
 					}
 					return;
