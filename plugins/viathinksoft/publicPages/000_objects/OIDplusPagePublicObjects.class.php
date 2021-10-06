@@ -993,7 +993,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	// 'colorpicker', 'textcolor' and 'contextmenu' added in 07 April 2020, because it is built in in the core.
 	// 'importcss' added 17 September 2020, because it breaks the "Format/Style" dropdown box ("styleselect" toolbar)
 	// 'legacyoutput' added 24 September 2021, because it is marked as deprecated
-	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode', 'quickbars', 'colorpicker', 'textcolor', 'contextmenu', 'importcss', 'legacyoutput');
+	// 'spellchecker' added 6 October 2021, because it is marked as deprecated and marked for removal in TinyMCE 6.0
+	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode', 'quickbars', 'colorpicker', 'textcolor', 'contextmenu', 'importcss', 'legacyoutput', 'spellchecker');
 
 	protected static function showMCE($name, $content) {
 		$mce_plugins = array();
