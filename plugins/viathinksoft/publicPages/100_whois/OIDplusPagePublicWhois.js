@@ -81,7 +81,7 @@ var OIDplusPagePublicWhois = {
 			}
 		}
 
-		$("#whois_url_bar")[0].innerHTML = getSystemUrl() + 'plugins/publicPages/100_whois/whois/webwhois.php?format=' + format + '&query=' + encodeURIComponent($("#whois_query")[0].value);
+		$("#whois_url_bar")[0].innerHTML = getSystemUrl() + 'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?format=' + format + '&query=' + encodeURIComponent($("#whois_query")[0].value);
 	}
 
 };
