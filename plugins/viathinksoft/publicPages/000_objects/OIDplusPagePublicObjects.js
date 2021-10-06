@@ -347,7 +347,7 @@ var OIDplusPagePublicObjects = {
 		var to_base = 10;
 		var to_control = "#id";
 
-		var inp = $(from_control).val().trim();
+		var inp = $(from_control).val().toUpperCase().trim();
 		if (inp == "") {
 			$(to_control).val("");
 		} else {

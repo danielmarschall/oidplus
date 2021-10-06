@@ -152,6 +152,22 @@ class OIDplusConfig implements OIDplusGetterSetterInterface {
 		$this->values[$name] = $value;
 	}
 
+	public function setValueNoCallback($name, $value) {
+		// Read all config settings once and write them in array $this->values
+		$this->buildConfigArray();
+
+		if (isset($this->values[$name])) {
+			// Avoid unnecessary database writes
+			if ($this->values[$name] == $value) return;
+		} else {
+			throw new OIDplusException(_L('Config value "%1" cannot be written because it was not prepared!', $name));
+		}
+
+		// Now change the value in the database
+		OIDplus::db()->query("update ###config set value = ? where name = ?", array($value, $name));
+		$this->values[$name] = $value;
+	}
+
 	public function delete($name) {
 		if ($this->configTableReadOnce) {
 			if (isset($this->values[$name])) {

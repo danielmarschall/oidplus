@@ -494,7 +494,8 @@ class OIDplus {
 
 			if ($do_enable) {
 				$enabled_ary[] = $ns;
-				OIDplus::config()->setValue("objecttypes_enabled", implode(';', $enabled_ary));
+				// Important: Don't validate the input, because the other object types might not be initialized yet! So use setValueNoCallback() instead setValue().
+				OIDplus::config()->setValueNoCallback("objecttypes_enabled", implode(';', $enabled_ary));
 			}
 
 			$init_ary[] = $ns;
