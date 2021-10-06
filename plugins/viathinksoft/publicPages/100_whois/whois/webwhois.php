@@ -335,6 +335,12 @@ if (($format == 'text') || ($format == 'txt')) {
 		$key = trim($ary[0]);
 
 		$value = isset($ary[1]) ? trim($ary[1]) : '';
+
+		// Normalize line-breaks to \r\n, otherwise mb_wordwrap won't work correctly
+		$value = str_replace("\r\n", "\n", $value);
+		$value = str_replace("\r", "\n", $value);
+		$value = str_replace("\n", "\r\n", $value);
+
 		$value = mb_wordwrap($value, OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80) - $longest_key - strlen(':') - OIDplus::config()->getValue('webwhois_output_format_spacer', 2), "\r\n");
 		$value = str_replace("\r\n", "\r\n$key:".str_repeat(' ', $longest_key-strlen($key)) . str_repeat(' ', OIDplus::config()->getValue('webwhois_output_format_spacer', 2)), $value);
 
