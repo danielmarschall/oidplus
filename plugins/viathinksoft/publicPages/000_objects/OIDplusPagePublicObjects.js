@@ -158,7 +158,7 @@ var OIDplusPagePublicObjects = {
 
 					if ((data.status & 1) == 1/*RaNotExisting*/) {
 						if (confirm(_L("Insert OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",$("#ra_email")[0].value))) {
-							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email_"+id)[0].value);
+							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email_"+$.escapeSelector(id))[0].value);
 							return;
 						} else {
 							if (confirm(_L("Do you want to open the newly created object now?"))) {
@@ -209,11 +209,11 @@ var OIDplusPagePublicObjects = {
 				plugin:OIDplusPagePublicObjects.oid,
 				action:"Update",
 				id:id,
-				ra_email:$("#ra_email_"+id)[0].value,
-				comment:$("#comment_"+id)[0].value,
-				asn1ids:($("#asn1ids_"+id)[0] ? $("#asn1ids_"+id)[0].value : null),
-				iris:($("#iris_"+id)[0] ? $("#iris_"+id)[0].value : null),
-				confidential:($("#hide_"+id)[0] ? $("#hide_"+id)[0].checked : null),
+				ra_email:$("#ra_email_"+$.escapeSelector(id))[0].value,
+				comment:$("#comment_"+$.escapeSelector(id))[0].value,
+				asn1ids:($("#asn1ids_"+$.escapeSelector(id))[0] ? $("#asn1ids_"+$.escapeSelector(id))[0].value : null),
+				iris:($("#iris_"+$.escapeSelector(id))[0] ? $("#iris_"+$.escapeSelector(id))[0].value : null),
+				confidential:($("#hide_"+$.escapeSelector(id))[0] ? $("#hide_"+$.escapeSelector(id))[0].checked : null),
 				parent:parent
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
@@ -229,8 +229,8 @@ var OIDplusPagePublicObjects = {
 					}
 
 					if ((data.status & 1) == 1/*RaNotExisting*/) {
-						if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",$("#ra_email_"+id)[0].value))) {
-							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email_"+id)[0].value);
+						if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",$("#ra_email_"+$.escapeSelector(id))[0].value))) {
+							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email_"+$.escapeSelector(id))[0].value);
 							return;
 						}
 					}

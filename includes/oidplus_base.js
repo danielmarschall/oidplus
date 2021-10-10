@@ -517,7 +517,7 @@ function setLanguage(lngid) {
 	$(".lng_flag").each(function(){
 		$(this).addClass("picture_ghost");
 	});
-	$("#lng_flag_"+lngid).removeClass("picture_ghost");
+	$("#lng_flag_"+$.escapeSelector(lngid)).removeClass("picture_ghost");
 
 	if (isInternetExplorer()) {
 		// Internet Explorer has problems with sending new cookies to new AJAX requests, so we reload the page completely

@@ -35,7 +35,7 @@ var OIDplusPageAdminSystemConfig = {
 				plugin: OIDplusPageAdminSystemConfig.oid,
 				action: "config_update",
 				name: name,
-				value: $("#config_"+name)[0].value,
+				value: $("#config_"+$.escapeSelector(name))[0].value,
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
