@@ -140,6 +140,14 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 		if ($res->num_rows() === 0) {
 			$out = '<p>'._L('The RA %1 is not registered in the database.','<a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a>').'</p>';
+
+			if (OIDplus::authUtils()->isAdminLoggedIn()) {
+				$createRAPlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.3.130'); // OIDplusPageAdminCreateRa
+				if (!is_null($createRAPlugin)) {
+					$out .= '<p><a '.OIDplus::gui()->link('oidplus:create_ra$'.$email).'>'._L('Create RA manually').'</a></p>';
+				}
+			}
+
 		} else {
 			$row = $res->fetch_array();
 			$out = '<b>'.htmlentities($row['ra_name']).'</b><br>'; // TODO: if you are not already at the page "oidplus:rainfo", then link to it now

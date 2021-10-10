@@ -69,8 +69,12 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 	}
 
 	public function gui($id, &$out, &$handled) {
+		$parts = explode('$',$id);
+		$id = $parts[0];
+
 		if ($id == 'oidplus:create_ra') {
 			$handled = true;
+			$email = isset($parts[1]) ? $parts[1] : '';
 			$out['title'] = _L('Manual creation of a RA');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
@@ -81,7 +85,7 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 			}
 
 			$out['text'] .= '<form id="adminCreateRaFrom" action="javascript:void(0);" onsubmit="return OIDplusPageAdminCreateRa.adminCreateRaFormOnSubmit();">';
-			$out['text'] .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" id="email" value=""></div>';
+			$out['text'] .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" id="email" value="'.htmlentities($email).'"></div>';
 			$out['text'] .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" id="password1" value=""/></div>';
 			$out['text'] .= '<div><label class="padding_label">'._L('Repeat').':</label><input type="password" id="password2" value=""/></div>';
 			$out['text'] .= '<br><input type="submit" value="'._L('Create').'"></form>';
