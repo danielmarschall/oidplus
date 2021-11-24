@@ -2,8 +2,8 @@
 
 /*
  * XML Encoding Utilities
- * Copyright 2011-2020 Daniel Marschall, ViaThinkSoft
- * Version 1.7.2 (2020-12-06)
+ * Copyright 2011-2021 Daniel Marschall, ViaThinkSoft
+ * Version 1.8 (2021-11-24)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -182,9 +182,11 @@ if (!function_exists('mb_ord')) {
 
 if (!function_exists('mb_htmlentities')) {
 	// https://riptutorial.com/php/example/15633/converting-unicode-characters-to-their-numeric-value-and-or-html-entities-using-php
+	// modified
 	function mb_htmlentities($string, $hex = true, $encoding = 'UTF-8') {
-		return preg_replace_callback('/[\x{80}-\x{10FFFF}]/u', function ($match) use ($hex) {
-			return sprintf($hex ? '&#x%X;' : '&#%d;', mb_ord($match[0]));
+		return preg_replace_callback('/[\x{80}-\x{10FFFF}]/u', function ($match) use ($hex, $encoding) {
+			$ord = (strtoupper($encoding) == 'UTF-8') ? ordUTF8($match[0]) : mb_ord($match[0]);
+			return sprintf($hex ? '&#x%X;' : '&#%d;', $ord);
 		}, $string);
 	}
 }

@@ -3,7 +3,7 @@
 /*
  * OID-Info.com API for PHP
  * Copyright 2019-2021 Daniel Marschall, ViaThinkSoft
- * Version 2021-06-19
+ * Version 2021-11-24
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,6 +179,8 @@ class OIDInfoAPI {
 	}
 
 	public function softCorrectEMail($email, $params) {
+		$params = $this->init_params($params);
+
 		$email = str_replace(' ', '', $email);
 		$email = str_replace('&', '@', $email);
 		$email = str_replace('(at)', '@', $email);
@@ -195,6 +197,8 @@ class OIDInfoAPI {
 	}
 
 	public function softCorrectPhone($phone, $params) {
+		$params = $this->init_params($params);
+
 		// TODO: if no "+", add "+1" , but only if address is in USA
 		// TODO: or use param to fixate country if it is not known
 		/*
@@ -258,6 +262,8 @@ class OIDInfoAPI {
 	const OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT = 2;
 
 	public function correctDesc($desc, $params, $ending_dot_policy=self::OIDINFO_CORRECT_DESC_OPTIONAL_ENDING_DOT, $enforce_xhtml_light=false) {
+		$params = $this->init_params($params);
+
 		$desc = trim($desc);
 
 		$desc = preg_replace('@<!\\[CDATA\\[(.+)\\]\\]>@ismU', '\\1', $desc);
@@ -485,7 +491,7 @@ class OIDInfoAPI {
 
 		echo $oa->createXMLEntry($oid, $elements, $params, $comment);
 	*/
-	public function createXMLEntry($oid, $elements, $params, $comment='') {
+	private function init_params($params) {
 		// Backward compatibility
 		if (!isset($params['do_csv_check']))           $params['do_simpleping_check'] = true;
 
@@ -502,6 +508,11 @@ class OIDInfoAPI {
 		if (!isset($params['creation_allowed_check'])) $params['creation_allowed_check'] = true;
 		if (!isset($params['tolerant_htmlentities']))  $params['tolerant_htmlentities'] = true;
 		if (!isset($params['ignore_xhtml_light']))     $params['ignore_xhtml_light'] = false;
+
+		return $params;
+	}
+	public function createXMLEntry($oid, $elements, $params, $comment='') {
+		$params = $this->init_params($params);
 
 		$out = '';
 		if (!empty($comment)) $out .= "\t\t<!-- $comment -->\n";

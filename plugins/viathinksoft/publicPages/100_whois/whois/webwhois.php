@@ -205,7 +205,7 @@ if ($continue) {
 		}
 
 		if ($obj->isConfidential()) { // yes, we use isConfidential() instead of allowObjectView()!
-			$out[] = 'attribute: confidential';
+			$out[] = 'attribute: confidential'; // DO NOT TRANSLATE!
 		}
 
 		foreach (OIDplus::getPagePlugins() as $plugin) {
@@ -279,7 +279,7 @@ if ($continue) {
 			}
 
 			if ($row2->privacy) { // yes, we use row2->privacy() instead of allowRAView()!
-				$out[] = 'ra-attribute: confidential';
+				$out[] = 'ra-attribute: confidential'; // DO NOT TRANSLATE!
 			}
 
 			if ($row2->registered) $out[] = 'ra-created: ' . date('Y-m-d H:i:s', strtotime($row2->registered)); // DO NOT TRANSLATE!
