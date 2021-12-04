@@ -192,18 +192,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "f5e662c1d9af308613277de02adbf109ca1fa368"
+                "reference": "9d1bfa9a1d8f0949746df5b183b581f395b063d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/f5e662c1d9af308613277de02adbf109ca1fa368",
-                "reference": "f5e662c1d9af308613277de02adbf109ca1fa368",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/9d1bfa9a1d8f0949746df5b183b581f395b063d2",
+                "reference": "9d1bfa9a1d8f0949746df5b183b581f395b063d2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2021-10-03T10:16:29+00:00",
+            "time": "2021-11-24T22:03:32+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -343,17 +343,17 @@
         },
         {
             "name": "firebase/php-jwt",
-            "version": "v5.4.0",
-            "version_normalized": "5.4.0.0",
+            "version": "v5.5.1",
+            "version_normalized": "5.5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "d2113d9b2e0e349796e72d2a63cf9319100382d2"
+                "reference": "83b609028194aa042ea33b5af2d41a7427de80e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/d2113d9b2e0e349796e72d2a63cf9319100382d2",
-                "reference": "d2113d9b2e0e349796e72d2a63cf9319100382d2",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/83b609028194aa042ea33b5af2d41a7427de80e6",
+                "reference": "83b609028194aa042ea33b5af2d41a7427de80e6",
                 "shasum": ""
             },
             "require": {
@@ -365,7 +365,7 @@
             "suggest": {
                 "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present"
             },
-            "time": "2021-06-23T19:00:23+00:00",
+            "time": "2021-11-08T20:18:51+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -397,7 +397,7 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v5.4.0"
+                "source": "https://github.com/firebase/php-jwt/tree/v5.5.1"
             },
             "install-path": "../firebase/php-jwt"
         },
@@ -780,20 +780,20 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "5.9.2",
-            "version_normalized": "5.9.2.0",
+            "version": "5.10.2",
+            "version_normalized": "5.10.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "48c665ad12ba0e4d8068ba0784026c7488aa4746"
+                "reference": "ef9962f1d40abbb80a4fd4f023151fd28f891a6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/48c665ad12ba0e4d8068ba0784026c7488aa4746",
-                "reference": "48c665ad12ba0e4d8068ba0784026c7488aa4746",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/ef9962f1d40abbb80a4fd4f023151fd28f891a6c",
+                "reference": "ef9962f1d40abbb80a4fd4f023151fd28f891a6c",
                 "shasum": ""
             },
-            "time": "2021-09-08T03:45:09+00:00",
+            "time": "2021-11-17T04:34:27+00:00",
             "type": "component",
             "extra": {
                 "component": {
@@ -834,29 +834,29 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/5.9.2"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/5.10.2"
             },
             "install-path": "../tinymce/tinymce"
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v5.1.1",
-            "version_normalized": "5.1.1.0",
+            "version": "v5.1.3",
+            "version_normalized": "5.1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "0d81d3cbc14dfcdca8a868e3f25189a4f1ab273c"
+                "reference": "1a6fdfae6be09b09eaced8f0e442ca6f7680a61e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/0d81d3cbc14dfcdca8a868e3f25189a4f1ab273c",
-                "reference": "0d81d3cbc14dfcdca8a868e3f25189a4f1ab273c",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/1a6fdfae6be09b09eaced8f0e442ca6f7680a61e",
+                "reference": "1a6fdfae6be09b09eaced8f0e442ca6f7680a61e",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2021-09-07T15:37:44+00:00",
+            "time": "2021-10-09T06:43:19+00:00",
             "type": "library",
             "installation-source": "dist",
             "notification-url": "https://packagist.org/downloads/",
@@ -887,7 +887,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twbs/bootstrap/issues",
-                "source": "https://github.com/twbs/bootstrap/tree/v5.1.1"
+                "source": "https://github.com/twbs/bootstrap/tree/v5.1.3"
             },
             "install-path": "../twbs/bootstrap"
         },

@@ -82,7 +82,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'f5e662c1d9af308613277de02adbf109ca1fa368',
+      'reference' => '9d1bfa9a1d8f0949746df5b183b581f395b063d2',
     ),
     'danielmarschall/uuid_mac_utils' => 
     array (
@@ -124,12 +124,12 @@ private static $installed = array (
     ),
     'firebase/php-jwt' => 
     array (
-      'pretty_version' => 'v5.4.0',
-      'version' => '5.4.0.0',
+      'pretty_version' => 'v5.5.1',
+      'version' => '5.5.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd2113d9b2e0e349796e72d2a63cf9319100382d2',
+      'reference' => '83b609028194aa042ea33b5af2d41a7427de80e6',
     ),
     'gedmarc/layout' => 
     array (
@@ -207,21 +207,21 @@ private static $installed = array (
     ),
     'tinymce/tinymce' => 
     array (
-      'pretty_version' => '5.9.2',
-      'version' => '5.9.2.0',
+      'pretty_version' => '5.10.2',
+      'version' => '5.10.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '48c665ad12ba0e4d8068ba0784026c7488aa4746',
+      'reference' => 'ef9962f1d40abbb80a4fd4f023151fd28f891a6c',
     ),
     'twbs/bootstrap' => 
     array (
-      'pretty_version' => 'v5.1.1',
-      'version' => '5.1.1.0',
+      'pretty_version' => 'v5.1.3',
+      'version' => '5.1.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => '0d81d3cbc14dfcdca8a868e3f25189a4f1ab273c',
+      'reference' => '1a6fdfae6be09b09eaced8f0e442ca6f7680a61e',
     ),
     'tweeb/tinymce-i18n' => 
     array (
@@ -236,7 +236,7 @@ private static $installed = array (
     array (
       'replaced' => 
       array (
-        0 => 'v5.1.1',
+        0 => 'v5.1.3',
       ),
     ),
     'vakata/jstree' => 
