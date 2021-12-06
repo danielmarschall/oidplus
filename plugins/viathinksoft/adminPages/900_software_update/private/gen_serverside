@@ -292,6 +292,7 @@ function getDirContents($dir_old, $dir_new) {
 $out = array();
 $ec = -1;
 exec('svn info https://svn.viathinksoft.com/svn/oidplus/trunk/ | grep "Revision:" | cut -d " " -f 2', $out, $ec);
+if ($ec != 0) die("SVN Info failed!!!\n");
 $max_svn = implode("", $out);
 
 for ($i=2; $i<=$max_svn; $i++) {
@@ -301,12 +302,14 @@ for ($i=2; $i<=$max_svn; $i++) {
 	if (!$force && file_exists($outfile)) continue;
 
 	$outdir_old = "/tmp/oidplus_svntmp2_".($i-1)."/";
-	if (is_dir($outdir_old)) exec("rm -rf $outdir_old", $out, $ec);
+	if ($outdir_old && is_dir($outdir_old)) exec("rm -rf $outdir_old", $out, $ec);
 	exec("svn co https://svn.viathinksoft.com/svn/oidplus/trunk/@".($i-1)." $outdir_old", $out, $ec);
+	if ($ec != 0) die("Checkout of SVN Rev ".($i-1)." failed!!!\n");
 
 	$outdir_new = "/tmp/oidplus_svntmp2_$i/";
-	if (is_dir($outdir_new)) exec("rm -rf $outdir_new", $out, $ec);
+	if ($outdir_new && is_dir($outdir_new)) exec("rm -rf $outdir_new", $out, $ec);
 	exec("svn co https://svn.viathinksoft.com/svn/oidplus/trunk/@$i $outdir_new", $out, $ec);
+	if ($ec != 0) die("Checkout of SVN Rev ".($i)." failed!!!\n");
 
 	$outscript  = "<?php\n";
 	$outscript .= "\n";
@@ -432,8 +435,8 @@ for ($i=2; $i<=$max_svn; $i++) {
 
 	$ec = -1;
 	$out = array();
-	exec("rm -rf $outdir_old", $out, $ec);
-	exec("rm -rf $outdir_new", $out, $ec);
+	if ($outdir_old && is_dir($outdir_old)) exec("rm -rf $outdir_old", $out, $ec);
+	if ($outdir_new && is_dir($outdir_new)) exec("rm -rf $outdir_new", $out, $ec);
 }
 echo "\n";
 
