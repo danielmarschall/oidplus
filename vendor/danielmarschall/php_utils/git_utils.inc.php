@@ -3,7 +3,7 @@
 /*
  * PHP git functions
  * Copyright 2021 Daniel Marschall, ViaThinkSoft
- * Revision 2021-10-03
+ * Revision 2021-12-07
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,19 @@
 function git_get_latest_commit_message($git_dir) {
 	$cont = file_get_contents($git_dir.'/HEAD');
 	if (!preg_match('@ref: (.+)[\r\n]@', "$cont\n", $m)) throw new Exception("Cannot find HEAD ref");
-	$commit_object = trim(file_get_contents($git_dir.'/'.$m[1]));
+	if (file_exists($git_dir.'/'.$m[1])) {
+		// Example content of a .git folder file:
+		// 091a5fa6b157be035e88f5d24aa329ba44d20d63
+		$commit_object = trim(file_get_contents($git_dir.'/'.$m[1]));
+	} else if (file_exists($git_dir.'/FETCH_HEAD')) {
+		// Example content of a Plesk Git folder:
+		// 091a5fa6b157be035e88f5d24aa329ba44d20d63	not-for-merge	branch 'master' of https://github.com/danielmarschall/oidplus
+		// 091a5fa6b157be035e88f5d24aa329ba44d20d63	not-for-merge	remote-tracking branch 'origin/trunk' of https://github.com/danielmarschall/oidplus
+		$cont = file_get_contents($git_dir.'/FETCH_HEAD');
+		$commit_object = substr(trim($cont),0,40);
+	} else {
+		throw new Exception("Cannot detect last commit object");
+	}
 
 	$objects_dir = $git_dir . '/objects';
 

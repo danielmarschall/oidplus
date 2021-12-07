@@ -82,7 +82,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '9d1bfa9a1d8f0949746df5b183b581f395b063d2',
+      'reference' => '85d79a2f68e1465ba4d2e6aaaec7f7dbbe67b25c',
     ),
     'danielmarschall/uuid_mac_utils' => 
     array (
@@ -102,7 +102,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '4f729d8b09e4750c1b9ae762519d50ad8d25609a',
+      'reference' => '6415a5163813f5f9172c90947e54fdd8f40d2ee4',
     ),
     'dcodeio/bcrypt.js' => 
     array (

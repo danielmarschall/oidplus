@@ -277,10 +277,33 @@ function get_svn_revision($dir='') {
 	return false;
 }
 
+function find_git_folder() {
+	// Git command line saves git information in folder ".git"
+	// Plesk git saves git information in folder "../../../git/oidplus/" (or similar)
+	$dir = realpath(__DIR__);
+	if (is_dir($dir.'/.git')) return $dir.'/.git';
+	$i = 0;
+	do {
+		if (is_dir($dir.'/git')) {
+			$confs = glob($dir.'/git/'.'*'.'/config');
+			foreach ($confs as $conf) {
+				$cont = file_get_contents($conf);
+				if (strpos($cont, '://github.com/danielmarschall/oidplus') !== false) {
+					return dirname($conf);
+				}
+			}
+		}
+		$i++;
+	} while (($i<100) && ($dir != ($new_dir = realpath($dir.'/../'))) && ($dir = $new_dir));
+	return false;
+}
+
 function get_gitsvn_revision($dir='') {
 	try {
 		// requires danielmarschall/git_utils.inc.php
-		$commit_msg = git_get_latest_commit_message($dir.'/.git');
+		$git_dir = find_git_folder();
+		if ($git_dir === false) return false;
+		$commit_msg = git_get_latest_commit_message($git_dir);
 	} catch (Exception $e) {
 		// Try command-line
 		$ec = -1;

@@ -988,11 +988,12 @@ class OIDplus {
 			$counter++;
 		}
 		$version_file_exists = $old_version_file_exists | $new_version_file_exists;
-		if ($svn_dir_exists = is_dir(OIDplus::localpath().'.svn') ||
-		                      is_dir(OIDplus::localpath().'../.svn')) { // in case we checked out the root instead of the "trunk"
+		if ($svn_dir_exists = (is_dir(OIDplus::localpath().'.svn') ||
+		                       is_dir(OIDplus::localpath().'../.svn'))) { // in case we checked out the root instead of the "trunk"
 			$counter++;
 		}
-		if ($git_dir_exists = is_dir(OIDplus::localpath().'.git')) {
+		// if ($git_dir_exists = is_dir(OIDplus::localpath().'.git')) {
+		if ($git_dir_exists = (find_git_folder() !== false)) {
 			$counter++;
 		}
 
