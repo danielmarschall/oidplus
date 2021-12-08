@@ -33,6 +33,8 @@ class OIDplusConfig implements OIDplusGetterSetterInterface {
 
 	protected $values = array();
 	protected $descriptions = array();
+	protected $protectSettings = array();
+	protected $visibleSettings = array();
 	protected $validateCallbacks = array();
 
 	public function prepareConfigKey($name, $description, $init_value, $protection, $validateCallback) {
@@ -78,6 +80,8 @@ class OIDplusConfig implements OIDplusGetterSetterInterface {
 			}
 			$this->values[$name] = $init_value;
 			$this->descriptions[$name] = $description;
+			$this->protectSettings[$name] = $protected;
+			$this->visibleSettings[$name] = $visible;
 		} else {
 			// Case B: The config setting exists ...
 			if ($this->descriptions[$name] != $description) {
@@ -86,6 +90,14 @@ class OIDplusConfig implements OIDplusGetterSetterInterface {
 				// So we just edit the description
 				OIDplus::db()->query("update ###config set description = ? where name = ?", array($description, $name));
 				$this->descriptions[$name] = $description;
+			}
+			if ($this->protectSettings[$name] != $protected) {
+				OIDplus::db()->query("update ###config set protected = ? where name = ?", array($protected, $name));
+				$this->protectSettings[$name] = $protected;
+			}
+			if ($this->visibleSettings[$name] != $visible) {
+				OIDplus::db()->query("update ###config set visible = ? where name = ?", array($visible, $name));
+				$this->visibleSettings[$name] = $visible;
 			}
 		}
 
@@ -105,10 +117,14 @@ class OIDplusConfig implements OIDplusGetterSetterInterface {
 
 		$this->values = array();
 		$this->descriptions = array();
-		$res = OIDplus::db()->query("select name, description, value from ###config");
+		$this->protectSettings = array();
+		$this->visibleSettings = array();
+		$res = OIDplus::db()->query("select name, description, protected, visible, value from ###config");
 		while ($row = $res->fetch_object()) {
 			$this->values[$row->name] = $row->value;
 			$this->descriptions[$row->name] = $row->description;
+			$this->protectSettings[$row->name] = $row->protected;
+			$this->visibleSettings[$row->name] = $row->visible;
 		}
 
 		$this->configTableReadOnce = true;
@@ -183,6 +199,8 @@ class OIDplusConfig implements OIDplusGetterSetterInterface {
 		unset($this->values[$name]);
 		unset($this->descriptions[$name]);
 		unset($this->validateCallbacks[$name]);
+		unset($this->protectSettings[$name]);
+		unset($this->visibleSettings[$name]);
 	}
 
 }
