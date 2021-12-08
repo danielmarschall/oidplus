@@ -158,19 +158,22 @@ function getDirContents_diff($dir_old, $dir_new, $basepath_old=null, $basepath_n
 
 				$outscript .= "} else {\n";
 
-				$outscript .= "\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_old)."') {\n";
-				$outscript .= "\t\twarn('File was modified. Will overwrite the changes now: $xpath_old');\n";
-				$outscript .= "\t\t\$tmp = pathinfo('$xpath_old');\n";
-				$outscript .= "\t\t\$backup_name = \$tmp['dirname'].DIRECTORY_SEPARATOR.\$tmp['filename'].'.'.date('Ymdhis',@filemtime('$xpath_old')).(isset(\$tmp['extension']) ? '.'.\$tmp['extension'] : '');\n";
-				$outscript .= "\t\twarn('Creating a backup as '.\$backup_name);\n";
-				$outscript .= "\t\tif (!@copy('$xpath_old', \$backup_name)) {\n";
-				$outscript .= "\t\t\twarn('Creation of backup failed');\n";
+				$outscript .= "\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_new)."') {\n"; // it is possible that the file is already updated (e.g. by a manual hotfix)
+				$outscript .= "\t\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_old)."') {\n";
+				$outscript .= "\t\t\twarn('File was modified. Will overwrite the changes now: $xpath_old');\n";
+				$outscript .= "\t\t\t\$tmp = pathinfo('$xpath_old');\n";
+				$outscript .= "\t\t\t\$backup_name = \$tmp['dirname'].DIRECTORY_SEPARATOR.\$tmp['filename'].'.'.date('Ymdhis',@filemtime('$xpath_old')).(isset(\$tmp['extension']) ? '.'.\$tmp['extension'] : '');\n";
+				$outscript .= "\t\t\twarn('Creating a backup as '.\$backup_name);\n";
+				$outscript .= "\t\t\tif (!@copy('$xpath_old', \$backup_name)) {\n";
+				$outscript .= "\t\t\t\twarn('Creation of backup failed');\n";
+				$outscript .= "\t\t\t}\n";
+				$outscript .= "\t\t}\n";
+				$outscript .= "\t\twritefile_".$func_idx."();\n";
+				$outscript .= "\t\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_new)."') {\n";
+				$outscript .= "\t\t\twarn('File cannot be written (checksum mismatch): $xpath_old');\n";
 				$outscript .= "\t\t}\n";
 				$outscript .= "\t}\n";
-				$outscript .= "\twritefile_".$func_idx."();\n";
-				$outscript .= "\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_new)."') {\n";
-				$outscript .= "\t\twarn('File cannot be written (checksum mismatch): $xpath_old');\n";
-				$outscript .= "\t}\n";
+
 				$outscript .= "}\n";
 				$outscript .= "\n";
 			}

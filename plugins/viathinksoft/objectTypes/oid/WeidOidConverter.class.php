@@ -27,21 +27,33 @@
 class WeidOidConverter {
 
 	protected static function weLuhnGetCheckDigit($str) {
-
 		// Padding zeros don't count to the check digit (December 2021)
 		$ary = explode('-', $str);
-		foreach ($ary as &$a) $a = ltrim($a, '0');
+		foreach ($ary as &$a) {
+			$a = ltrim($a, '0');
+			if ($a === '') $a = '0';
+		}
 		$str = implode('-', $ary);
 
-		$wrkstr = str_replace('-', '', $str); // remove separators
-		for ($i=0; $i<36; $i++) {
+		// remove separators of the WEID string
+		$wrkstr = str_replace('-', '', $str);
+
+		// Replace 'a' with '10', 'b' with '11', etc.
+		for ($i=0; $i<26; $i++) {
 			$wrkstr = str_ireplace(chr(ord('a')+$i), (string)($i+10), $wrkstr);
 		}
+
+		// At the end, $wrkstr should only contain digits! Verify it!
+		for ($i=0; $i<strlen($wrkstr); $i++) {
+			if (($wrkstr[$i]<'0') || ($wrkstr[$i]>'9')) return false;
+		}
+
+		// Now do the standard Luhn algorithm
 		$nbdigits = strlen($wrkstr);
-		$parity = $nbdigits & 1;
+		$parity = $nbdigits & 1; // mod 2
 		$sum = 0;
 		for ($n=$nbdigits-1; $n>=0; $n--) {
-			$digit = $wrkstr[$n];
+			$digit = (int)$wrkstr[$n];
 			if (($n & 1) != $parity) $digit *= 2;
 			if ($digit > 9) $digit -= 9;
 			$sum += $digit;
@@ -132,6 +144,9 @@ class WeidOidConverter {
 		} else if ($is_class_a) {
 			// $weidstr stays
 			$namespace = 'weid:root:';
+		} else {
+			// should not happen
+			return false;
 		}
 
 		return $namespace . ($weidstr == '' ? $checksum : $weidstr . '-' . $checksum);
