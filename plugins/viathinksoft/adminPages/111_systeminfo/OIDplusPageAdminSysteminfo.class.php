@@ -120,7 +120,15 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('User account').'</td>';
-			$out['text'] .= '		<td>'.(htmlentities(get_current_user())).'</td>';
+			// Note: get_current_user() will get the owner of the PHP script, not the process owner!
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+				$current_user = getenv('USERNAME');
+			} else {
+				$uid = posix_geteuid();
+				$current_user = posix_getpwuid($uid);
+				if ($current_user === false) $current_user = '#'.$uid;
+			}
+			$out['text'] .= '		<td>'.($current_user === false ? '<i>'._L('unknown').'</i>' : htmlentities($current_user)).'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
