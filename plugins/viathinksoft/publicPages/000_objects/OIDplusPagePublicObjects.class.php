@@ -818,6 +818,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Parent NS (oid:) is *NOT* equal to child NS (weid:)
 			$one_weid_available = true;
 		} else if ($parentNS == 'oid') {
+			// TODO: The admin should be able to disable the "Base36" feature!!!
 			$one_weid_available = $objParent->isWeid(true);
 			while ($row = $result->fetch_object()) {
 				$obj = OIDplusObject::parse($row->id);
@@ -839,7 +840,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$output .= '<table class="table table-bordered table-striped">';
 		$output .= '	<tr>';
 		$output .= '	     <th>'._L('ID').(($parentNS == 'gs1') ? ' '._L('(without check digit)') : '').'</th>';
-		if ($one_weid_available) $output .= '	     <th>'._L('WEID').'</th>';
+		if ($one_weid_available) $output .= '	     <th><abbr title="'._L('Binary-to-text encoding used for WEIDs').'">'._L('Base36').'</a></th>';
 		if ($parentNS == 'oid') {
 			if ($accepts_asn1) $output .= '	     <th>'._L('ASN.1 IDs (comma sep.)').'</th>';
 			if ($accepts_iri)  $output .= '	     <th>'._L('IRI IDs (comma sep.)').'</th>';

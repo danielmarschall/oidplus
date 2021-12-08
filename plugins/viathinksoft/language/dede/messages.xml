@@ -766,10 +766,34 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Base OID
+		]]></source>
+		<target><![CDATA[
+		Basis-OID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Base36
+		]]></source>
+		<target><![CDATA[
+		Base36
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Before logging in, please solve the following CAPTCHA
 		]]></source>
 		<target><![CDATA[
 		Bitte lösen Sie das folgende CAPTCHA, bevor Sie sich anmelden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Binary-to-text encoding used for WEIDs
+		]]></source>
+		<target><![CDATA[
+		Binär-zu-Text Kodierung; für WEIDs verwendet
 		]]></target>
 	</message>
 	<message>
@@ -4894,14 +4918,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Root arc
-		]]></source>
-		<target><![CDATA[
-		Wurzel-Knoten
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		SQL slang
 		]]></source>
 		<target><![CDATA[
@@ -6546,14 +6562,6 @@
 		]]></source>
 		<target><![CDATA[
 		WARNUNG
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		WEID
-		]]></source>
-		<target><![CDATA[
-		WEID
 		]]></target>
 	</message>
 	<message>

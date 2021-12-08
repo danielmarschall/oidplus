@@ -146,14 +146,19 @@ class OIDplusOid extends OIDplusObject {
 
 	public function isWeid($allow_root) {
 		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
-		if (!$allow_root && ($weid === 'weid:4')) return false;
+		//if (!$allow_root && ($weid === 'weid:4')) return false; // Root of class C WEID
+		//if (!$allow_root && ($weid === 'weid:pen:9')) return false; // Root of class B WEID
+		// With the December 2021 definition, every OID can be a WEID!
+		if (!$allow_root && ($weid === 'weid:root:0')) return false; // Root of class A WEID
 		return $weid !== false;
 	}
 
+	// Gets the last arc of an WEID
 	public function weidArc() {
 		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
 		if ($weid === false) return false;
-		list($ns,$weid) = explode(':', $weid, 2);
+		$ary = explode(':', $weid);
+		$weid = array_pop($ary); // remove namespace and sub-namespace if existing
 		$x = explode('-', $weid);
 		if (count($x) < 2) return ''; // WEID root arc. Has no name
 		return $x[count($x)-2];
@@ -162,7 +167,10 @@ class OIDplusOid extends OIDplusObject {
 	public function getWeidNotation($withAbbr=true) {
 		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
 		if ($withAbbr) {
-			list($ns,$weid) = explode(':', $weid);
+			$ary = explode(':', $weid);
+			$weid = array_pop($ary); // remove namespace and sub-namespace if existing
+			$ns = implode(':', $ary).':';
+
 			$weid_arcs = explode('-', $weid);
 			foreach ($weid_arcs as $i => &$weid) {
 				if ($i == count($weid_arcs)-1) {
@@ -175,7 +183,12 @@ class OIDplusOid extends OIDplusObject {
 					}
 				}
 			}
-			$weid = '<abbr title="'._L('Root arc').': 1.3.6.1.4.1.37553.8">' . $ns . '</abbr>:' . implode('-',$weid_arcs);
+			$base_arc = '???';
+			if ($ns === 'weid:')      $base_arc = '1.3.6.1.4.1.37553.8';
+			if ($ns === 'weid:pen:')  $base_arc = '1.3.6.1.4.1';
+			if ($ns === 'weid:root:') $base_arc = 'OID tree root';
+
+			$weid = '<abbr title="'._L('Base OID').': '.$base_arc.'">' . rtrim($ns,':') . '</abbr>:' . implode('-',$weid_arcs);
 		}
 		return $weid;
 	}
