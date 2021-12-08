@@ -817,7 +817,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Custom plugin for registry.frdl.de:
 			// Parent NS (oid:) is *NOT* equal to child NS (weid:)
 			$one_weid_available = true;
-		} else if ($parentNS == 'oid') {
+			while ($row = $result->fetch_object()) {
+				$obj = OIDplusObject::parse($row->id);
+				$rows[] = array($obj,$row);
+			}
+		} else if (($parentNS == 'oid') && ($parent != 'oid:')) {
 			// TODO: The admin should be able to disable the "Base36" feature!!!
 			$one_weid_available = $objParent->isWeid(true);
 			while ($row = $result->fetch_object()) {
@@ -935,12 +939,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$prefix = is_null($objParent) ? '' : $objParent->crudInsertPrefix();
 			if ($parentNS == 'weid') {
 				$output .= '     <td>'.$prefix.' <input oninput="OIDplusPagePublicObjects.frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
-				$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="OIDplusPagePublicObjects.frdl_weid_change()"></td>';
+				$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="OIDplusPagePublicObjects.frdl_weid_change()" style="width:100%;min-width:100px"></td>';
 			} else if ($parentNS == 'oid') {
 				// TODO: Idea: Give a class name, e.g. "OID" and then with a oid-specific CSS make the width individual. So, every plugin has more control over the appearance and widths of the input fields
-				if ($objParent->isWeid(true)) {
+				if ($objParent->isWeid(false)) {
 					$output .= '     <td>'.$prefix.' <input oninput="OIDplusPagePublicObjects.frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
-					$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="OIDplusPagePublicObjects.frdl_weid_change()"></td>';
+					$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="OIDplusPagePublicObjects.frdl_weid_change()" style="width:100%;min-width:100px"></td>';
 				} else if ($objParent->nodeId() === 'oid:2.25') {
 					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:340px"><a href="javascript:OIDplusPagePublicObjects.generateRandomUUID()">'._L('(Generate)').'</a></td>';
 					if ($one_weid_available) $output .= '     <td></td>'; // WEID-editor not available for root nodes. Do it manually, please
@@ -949,7 +953,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					if ($one_weid_available) $output .= '     <td></td>'; // WEID-editor not available for root nodes. Do it manually, please
 				}
 			} else {
-				$output .= '     <td>'.$prefix.' <input type="text" id="id" value=""></td>';
+				$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
 			}
 			if ($accepts_asn1) $output .= '     <td><input type="text" id="asn1ids" value=""></td>';
 			if ($accepts_iri)  $output .= '     <td><input type="text" id="iris" value=""></td>';
