@@ -3,7 +3,7 @@
 /*
  * OID-Info.com API for PHP
  * Copyright 2019-2021 Daniel Marschall, ViaThinkSoft
- * Version 2021-11-24
+ * Version 2021-12-08
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -508,6 +508,7 @@ class OIDInfoAPI {
 		if (!isset($params['creation_allowed_check'])) $params['creation_allowed_check'] = true;
 		if (!isset($params['tolerant_htmlentities']))  $params['tolerant_htmlentities'] = true;
 		if (!isset($params['ignore_xhtml_light']))     $params['ignore_xhtml_light'] = false;
+		if (!isset($params['show_errors']))            $params['show_errors'] = true;
 
 		return $params;
 	}
@@ -534,21 +535,24 @@ class OIDInfoAPI {
 		$bak_oid = $oid;
 		$oid = self::trySanitizeOID($oid);
 		if ($oid === false) {
-			fwrite(STDOUT/*STDERR*/,"<!-- ERROR: Ignored '$bak_oid', because it is not a valid OID -->\n");
+			if ($params['show_errors']) fwrite(STDOUT/*STDERR*/,"<!-- ERROR: Ignored '$bak_oid', because it is not a valid OID -->\n");
 			return $err;
 		}
 
 		if ($params['creation_allowed_check']) {
 			if (!$this->oidMayCreate($oid, $params['do_online_check'], $params['do_simpleping_check'], $params['do_illegality_check'])) {
-				fwrite(STDOUT/*STDERR*/,"<!-- ERROR: Creation of $oid disallowed -->\n");
+				if ($params['show_errors']) fwrite(STDOUT/*STDERR*/,"<!-- ERROR: Creation of $oid disallowed -->\n");
 				return $err;
 			}
 		} else {
 			if ($params['do_illegality_check'] && ($this->illegalOid($oid))) {
-				fwrite(STDOUT/*STDERR*/,"<!-- ERROR: Creation of $oid disallowed -->\n");
+				if ($params['show_errors']) fwrite(STDOUT/*STDERR*/,"<!-- ERROR: Creation of $oid disallowed -->\n");
 				return $err;
 			}
 		}
+
+		if (!isset($elements['description'])) $elements['description'] = '';
+		if (!isset($elements['information'])) $elements['information'] = '';
 
 		$elements['description'] = $this->correctDesc($elements['description'], $params, self::OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT, true);
 		$elements['information'] = $this->correctDesc($elements['information'], $params, self::OIDINFO_CORRECT_DESC_ENFORCE_ENDING_DOT, true);

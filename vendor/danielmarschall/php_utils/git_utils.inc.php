@@ -3,7 +3,7 @@
 /*
  * PHP git functions
  * Copyright 2021 Daniel Marschall, ViaThinkSoft
- * Revision 2021-12-07
+ * Revision 2021-12-09
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,17 @@
  */
 
 function git_get_latest_commit_message($git_dir) {
-	$cont = file_get_contents($git_dir.'/HEAD');
-	if (!preg_match('@ref: (.+)[\r\n]@', "$cont\n", $m)) throw new Exception("Cannot find HEAD ref");
-	if (file_exists($git_dir.'/'.$m[1])) {
+	$cont = @file_get_contents($git_dir.'/HEAD');
+	if (preg_match('@ref: (.+)[\r\n]@', "$cont\n", $m) && file_exists($git_dir.'/'.$m[1])) {
 		// Example content of a .git folder file:
 		// 091a5fa6b157be035e88f5d24aa329ba44d20d63
+		// Not available
 		$commit_object = trim(file_get_contents($git_dir.'/'.$m[1]));
+	} else if (file_exists($git_dir.'/refs/heads/master')) {
+		// Missing at Plesk Git initial checkout, but available on update.
+		$commit_object = trim(file_get_contents($git_dir.'/refs/heads/master'));
 	} else if (file_exists($git_dir.'/FETCH_HEAD')) {
-		// Example content of a Plesk Git folder:
+		// Example content of a Plesk Git folder (fresh):
 		// 091a5fa6b157be035e88f5d24aa329ba44d20d63	not-for-merge	branch 'master' of https://github.com/danielmarschall/oidplus
 		// 091a5fa6b157be035e88f5d24aa329ba44d20d63	not-for-merge	remote-tracking branch 'origin/trunk' of https://github.com/danielmarschall/oidplus
 		$cont = file_get_contents($git_dir.'/FETCH_HEAD');
@@ -37,21 +40,42 @@ function git_get_latest_commit_message($git_dir) {
 
 	$objects_dir = $git_dir . '/objects';
 
-	$pack_files = glob($objects_dir.'/pack/pack-*.pack');
-	$last_exception = 'No pack files found';
-	foreach ($pack_files as $basename) {
-		$basename = substr(basename($basename),0,strlen(basename($basename))-5);
-		try {
-			return git_read_object($commit_object,
-				$objects_dir.'/pack/'.$basename.'.idx',
-				$objects_dir.'/pack/'.$basename.'.pack',
-				false
-			);
-		} catch (Exception $e) {
-			$last_exception = $e;
+
+	// Sometimes, objects are uncompressed, sometimes compressed in a pack file
+	// Plesk initial checkout is compressed, but pulls via web interface
+	// save uncompressed files
+
+	$uncompressed_file = $objects_dir . '/' . substr($commit_object,0,2) . '/' . substr($commit_object,2);
+	if (file_exists($uncompressed_file)) {
+		// Read compressed data
+		$compressed = file_get_contents($uncompressed_file);
+
+		// Uncompress
+		$uncompressed = @gzuncompress($compressed);
+		if ($uncompressed === false) throw new Exception("Decompression failed");
+
+		// The format is "commit <nnn>\0<Message>"
+		$ary = explode(chr(0), $uncompressed);
+		$uncompressed = array_pop($ary);
+
+		return $uncompressed;
+	} else {
+		$pack_files = glob($objects_dir.'/pack/pack-*.pack');
+		$last_exception = 'No pack files found';
+		foreach ($pack_files as $basename) {
+			$basename = substr(basename($basename),0,strlen(basename($basename))-5);
+			try {
+				return git_read_object($commit_object,
+					$objects_dir.'/pack/'.$basename.'.idx',
+					$objects_dir.'/pack/'.$basename.'.pack',
+					false
+				);
+			} catch (Exception $e) {
+				$last_exception = $e;
+			}
 		}
+		throw new Exception($last_exception);
 	}
-	throw new Exception($last_exception);
 }
 
 function git_read_object($object_wanted, $idx_file, $pack_file, $debug=false) {
@@ -174,7 +198,7 @@ function git_read_object($object_wanted, $idx_file, $pack_file, $debug=false) {
 		$size_info = unpack('C', fread($fp,1))[1];
 		$size = (($size_info & 0x7F) << $shift_info) + $size;
 		$shift_info += 8;
-	} while ($offset_info >= 0x80000000);
+	} while ($size_info >= 0x80);
 
 	if ($debug) echo "Packed size = ".sprintf('0x%x',$size)."\n";
 
@@ -203,7 +227,7 @@ function git_read_object($object_wanted, $idx_file, $pack_file, $debug=false) {
 	fclose($fp);
 
 	// Check CRC32
-	// TODO: Does not fit, not crc32 nor crc32b...
+	// TODO: Does not fit; neither crc32, nor crc32b...
 	// if ($debug) echo "CRC32 found = 0x".hash('crc32',$compressed)."\n";
 
 	return $uncompressed;
