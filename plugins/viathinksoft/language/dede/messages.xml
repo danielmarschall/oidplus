@@ -3510,6 +3510,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OID tree root
+		]]></source>
+		<target><![CDATA[
+		OID-Wurzelknoten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OID-IRI notation
 		]]></source>
 		<target><![CDATA[

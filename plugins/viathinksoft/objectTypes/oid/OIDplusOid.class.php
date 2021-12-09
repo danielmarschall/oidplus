@@ -186,7 +186,7 @@ class OIDplusOid extends OIDplusObject {
 			$base_arc = '???';
 			if ($ns === 'weid:')      $base_arc = '1.3.6.1.4.1.37553.8';
 			if ($ns === 'weid:pen:')  $base_arc = '1.3.6.1.4.1';
-			if ($ns === 'weid:root:') $base_arc = 'OID tree root';
+			if ($ns === 'weid:root:') $base_arc = _L('OID tree root');
 
 			$weid = '<abbr title="'._L('Base OID').': '.$base_arc.'">' . rtrim($ns,':') . '</abbr>:' . implode('-',$weid_arcs);
 		}

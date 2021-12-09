@@ -50,9 +50,20 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
 			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
 			$out['text'] .= '	</tr>';
+
+			$sys_title = OIDplus::config()->getValue('system_title');
 			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('System title').'</td>';
+			$out['text'] .= '		<td>'.htmlentities($sys_title).'</td>';
+			$out['text'] .= '	</tr>';
+
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('System directory').'</td>';
+			$out['text'] .= '		<td>'.(isset($_SERVER['SCRIPT_FILENAME']) ? htmlentities(dirname($_SERVER['SCRIPT_FILENAME'])) : '<i>'._L('unknown').'</i>').'</td>';
+			$out['text'] .= '	</tr>';
 
 			$sysid_oid = OIDplus::getSystemId(true);
+			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('System OID').'</td>';
 			$out['text'] .= '		<td>'.(!$sysid_oid ? '<i>'._L('unknown').'</i>' : htmlentities($sysid_oid)).'</td>';
 			$out['text'] .= '	</tr>';
@@ -73,17 +84,6 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('Installation type').'</td>';
 			$out['text'] .= '		<td>'.htmlentities($sys_install_type).'</td>';
-			$out['text'] .= '	</tr>';
-
-			$sys_title = OIDplus::config()->getValue('system_title');
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('System title').'</td>';
-			$out['text'] .= '		<td>'.htmlentities($sys_title).'</td>';
-			$out['text'] .= '	</tr>';
-
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('System directory').'</td>';
-			$out['text'] .= '		<td>'.(isset($_SERVER['SCRIPT_FILENAME']) ? htmlentities(dirname($_SERVER['SCRIPT_FILENAME'])) : '<i>'._L('unknown').'</i>').'</td>';
 			$out['text'] .= '	</tr>';
 
 			$out['text'] .= '</table>';
@@ -120,15 +120,30 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('User account').'</td>';
-			// Note: get_current_user() will get the owner of the PHP script, not the process owner!
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-				$current_user = getenv('USERNAME');
-			} else {
-				$uid = posix_geteuid();
-				$current_user = posix_getpwuid($uid);
-				if ($current_user === false) $current_user = '#'.$uid;
+			$current_user = exec('whoami');
+			if ($current_user == '') {
+				if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+					// Windows on an IIS server:
+					//     getenv('USERNAME')     MARSCHALL$                (That is the "machine account", see https://docs.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities#accessing-the-network )
+					//     get_current_user()     DefaultAppPool
+					//     exec('whoami')         iis apppool\defaultapppool
+					// Windows with XAMPP:
+					//     getenv('USERNAME')     dmarschall
+					//     get_current_user()     dmarschall               (even if script has a different NTFS owner!)
+					//     exec('whoami')         hickelsoft\dmarschall
+					$current_user = get_current_user();
+					if ($current_user == '') $current_user = getenv('USERNAME');
+				} else {
+					// On Linux:
+					// get_current_user() will get the owner of the PHP script, not the process owner!
+					// We want the process owner, so we use posix_geteuid().
+					$uid = posix_geteuid();
+					$current_user = posix_getpwuid($uid); // receive username (required read access to /etc/passwd )
+					if ($current_user == '') $current_user = get_current_user();
+					if ($current_user == '') $current_user = '#'.$uid;
+				}
 			}
-			$out['text'] .= '		<td>'.($current_user === false ? '<i>'._L('unknown').'</i>' : htmlentities($current_user)).'</td>';
+			$out['text'] .= '		<td>'.($current_user == '' ? '<i>'._L('unknown').'</i>' : htmlentities($current_user)).'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
