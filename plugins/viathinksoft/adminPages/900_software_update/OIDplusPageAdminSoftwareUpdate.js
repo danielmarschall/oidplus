@@ -48,11 +48,13 @@ var OIDplusPageAdminSoftwareUpdate = {
 				//hide_waiting_anim();
 				if (errorThrown == "abort") {
 					$("#update_header").text(_L("Update aborted"));
+					$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 					return;
 				} else {
 					$("#update_header").text(_L("Update failed"));
 					//alert(_L("Error: %1",errorThrown));
 					$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + errorThrown + "\n\n");
+					$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 				}
 			},
 			success: function(data) {
@@ -65,6 +67,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 					} else {
 						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data.error + "\n\n");
 					}
+					$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 				} else if (data.status >= 0) {
 					output = data.content.trim();
 					output = output.replace(/INFO:/g, '<span class="severity_2"><strong>' + _L('INFO') + ':</strong></span>');
@@ -74,7 +77,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 					rev = data.rev=="HEAD" ? max : data.rev;
 					if (rev >= max) {
 						$("#update_header").text(_L("Update finished"));
-						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_1"><strong> ' + _L('UPDATE FINISHED') + ':</strong></span> ' + _L('You are now at SVN revision %1', rev) + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
+						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_1"><strong> ' + _L('UPDATE FINISHED') + ':</strong></span> ' + _L('You are now at SVN revision %1', rev));
 					} else {
 						if (output.includes("FATAL ERROR:")) {
 							$("#update_header").text(_L("Update failed"));
@@ -82,6 +85,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 							OIDplusPageAdminSoftwareUpdate._doUpdateOIDplus(parseInt(rev)+1, max);
 						}
 					}
+					$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 					return;
 				} else {
 					$("#update_header").text(_L("Update failed"));
@@ -91,6 +95,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 					} else {
 						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data + "\n\n");
 					}
+					$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 				}
 			},
 			timeout:0 // infinite
