@@ -155,7 +155,10 @@ class OIDplusOid extends OIDplusObject {
 
 	// Gets the last arc of an WEID
 	public function weidArc() {
-		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
+		// Dirty hack: We prepend '0.' in front of the OID to enforce the
+		//             creation of a Class A weid (weid:root:) . Otherwise we could not
+		//             get the hidden arc value "8" from "weid:4" (which is actually "weid:pen:SZ5-8-?"
+		$weid = WeidOidConverter::oid2weid('0.'.$this->getDotNotation());
 		if ($weid === false) return false;
 		$ary = explode(':', $weid);
 		$weid = array_pop($ary); // remove namespace and sub-namespace if existing
