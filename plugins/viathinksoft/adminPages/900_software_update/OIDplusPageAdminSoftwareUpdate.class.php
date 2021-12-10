@@ -33,7 +33,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 			}
 
 			if (OIDplus::getInstallType() === 'git-wc') {
-				$cmd = 'git pull -s recursive -X theirs 2>&1';
+				$cmd = 'git --git-dir='.escapeshellarg(find_git_folder().'/').' --work-tree='.escapeshellarg(OIDplus::localpath()).' -C "" pull -s recursive -X theirs 2>&1';
 
 				$ec = -1;
 				$out = array();
