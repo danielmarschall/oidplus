@@ -144,15 +144,6 @@ class OIDplusOid extends OIDplusObject {
 
 	# ---
 
-	public function isWeid($allow_root) {
-		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
-		//if (!$allow_root && ($weid === 'weid:4')) return false; // Root of class C WEID
-		//if (!$allow_root && ($weid === 'weid:pen:9')) return false; // Root of class B WEID
-		// With the December 2021 definition, every OID can be a WEID!
-		if (!$allow_root && ($weid === 'weid:root:0')) return false; // Root of class A WEID
-		return $weid !== false;
-	}
-
 	// Gets the last arc of an WEID
 	public function weidArc() {
 		// Dirty hack: We prepend '0.' in front of the OID to enforce the
@@ -201,9 +192,7 @@ class OIDplusOid extends OIDplusObject {
 		$out[] = _L('Dot notation').': <code>' . $this->getDotNotation() . '</code>';
 		$out[] = _L('ASN.1 notation').': <code>' . $this->getAsn1Notation(true) . '</code>';
 		$out[] = _L('OID-IRI notation').': <code>' . $this->getIriNotation(true) . '</code>';
-		if ($this->isWeid(true)) {
-			$out[] = _L('WEID notation').': <code>' . $this->getWeidNotation() . '</code>';
-		}
+		$out[] = _L('WEID notation').': <code>' . $this->getWeidNotation() . '</code>';
 		return '<p>'.implode('<br>',$out).'</p>';
 	}
 

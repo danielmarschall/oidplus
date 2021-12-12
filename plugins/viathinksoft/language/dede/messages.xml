@@ -86,10 +86,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		(Generate)
+		(Generate random GUID)
 		]]></source>
 		<target><![CDATA[
-		(Generieren)
+		(Neue zufällige GUID erzeugen)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		(Generate random UUID OID)
+		]]></source>
+		<target><![CDATA[
+		(Neue zufällige UUID OID erzeugen)
 		]]></target>
 	</message>
 	<message>

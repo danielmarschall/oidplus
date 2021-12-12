@@ -438,6 +438,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 	public function init($html=true) {
 		OIDplus::config()->prepareConfigKey('oobe_objects_done', '"Out Of Box Experience" wizard for OIDplusPagePublicObjects done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
+		OIDplus::config()->prepareConfigKey('oid_grid_show_weid', 'Show WEID/Base36 column in CRUD grid of OIDs?', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
+				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
+			}
+		});
 	}
 
 	public function gui($id, &$out, &$handled) {
@@ -812,39 +817,23 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		                               "left join ###ra r on r.email = o.ra_email " .
 		                               "where parent = ? " .
 		                               "order by ".OIDplus::db()->natOrder('id'), array($parent));
+
 		$rows = array();
-		if ($parentNS == 'weid') {
-			// Custom plugin for registry.frdl.de:
-			// Parent NS (oid:) is *NOT* equal to child NS (weid:)
-			$one_weid_available = true;
-			while ($row = $result->fetch_object()) {
-				$obj = OIDplusObject::parse($row->id);
-				$rows[] = array($obj,$row);
-			}
-		} else if (($parentNS == 'oid') && ($parent != 'oid:')) {
-			// TODO: The admin should be able to disable the "Base36" feature!!!
-			$one_weid_available = $objParent->isWeid(true);
-			while ($row = $result->fetch_object()) {
-				$obj = OIDplusObject::parse($row->id);
-				$rows[] = array($obj,$row);
-				if (!$one_weid_available) {
-					if ($obj->isWeid(true)) $one_weid_available = true;
-				}
-			}
-		} else {
-			$one_weid_available = false;
-			while ($row = $result->fetch_object()) {
-				$obj = OIDplusObject::parse($row->id);
-				$rows[] = array($obj,$row);
-			}
+		while ($row = $result->fetch_object()) {
+			$obj = OIDplusObject::parse($row->id);
+			$rows[] = array($obj,$row);
 		}
+
+		$enable_weid_presentation = OIDplus::config()->getValue('oid_grid_show_weid');
 
 		$output = '';
 		$output .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 		$output .= '<table class="table table-bordered table-striped">';
 		$output .= '	<tr>';
 		$output .= '	     <th>'._L('ID').(($parentNS == 'gs1') ? ' '._L('(without check digit)') : '').'</th>';
-		if ($one_weid_available) $output .= '	     <th><abbr title="'._L('Binary-to-text encoding used for WEIDs').'">'._L('Base36').'</a></th>';
+		if ($enable_weid_presentation && ($parentNS == 'oid') && !$objParent->isRoot()) {
+			$output .= '	     <th><abbr title="'._L('Binary-to-text encoding used for WEIDs').'">'._L('Base36').'</abbr></th>';
+		}
 		if ($parentNS == 'oid') {
 			if ($accepts_asn1) $output .= '	     <th>'._L('ASN.1 IDs (comma sep.)').'</th>';
 			if ($accepts_iri)  $output .= '	     <th>'._L('IRI IDs (comma sep.)').'</th>';
@@ -885,15 +874,16 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$date_updated = explode(' ', $row->updated)[0] == '0000-00-00' ? '' : explode(' ', $row->updated)[0];
 
 			$output .= '<tr>';
-			$output .= '     <td><a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.htmlentities($show_id).'</a></td>';
+			$output .= '     <td><a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.htmlentities($show_id).'</a>';
+			if ($enable_weid_presentation && ($parentNS == 'oid') && $objParent->isRoot()) {
+				// To save space horizontal space, the WEIDs were written below the OIDs
+				$output .= '<br>'.$obj->getWeidNotation(true);
+			}
+			$output .= '</td>';
+			if ($enable_weid_presentation && ($parentNS == 'oid') && !$objParent->isRoot()) {
+				$output .= '	<td>'.htmlentities($obj->weidArc()).'</td>';
+			}
 			if ($objParent->userHasWriteRights()) {
-				if ($one_weid_available) {
-					if ($obj->isWeid(false)) {
-						$output .= '	<td>'.$obj->weidArc().'</td>';
-					} else {
-						$output .= '	<td>'._L('n/a').'</td>';
-					}
-				}
 				if ($parentNS == 'oid') {
 					if ($accepts_asn1) $output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.implode(', ', $asn1ids).'"></td>';
 					if ($accepts_iri)  $output .= '     <td><input type="text" id="iris_'.$row->id.'" value="'.implode(', ', $iris).'"></td>';
@@ -906,16 +896,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$output .= '     <td>'.$date_created.'</td>';
 				$output .= '     <td>'.$date_updated.'</td>';
 			} else {
-				if ($asn1ids == '') $asn1ids = '<i>'._L('(none)').'</i>';
-				if ($iris == '') $iris = '<i>'._L('(none)').'</i>';
-				if ($one_weid_available) {
-					if ($obj->isWeid(false)) {
-						$output .= '	<td>'.$obj->weidArc().'</td>';
-					} else {
-						$output .= '	<td>'._L('n/a').'</td>';
-					}
-				}
 				if ($parentNS == 'oid') {
+					if ($asn1ids == '') $asn1ids = '<i>'._L('(none)').'</i>';
+					if ($iris == '') $iris = '<i>'._L('(none)').'</i>';
 					$asn1ids_ext = array();
 					foreach ($asn1ids as $asn1id) {
 						$asn1ids_ext[] = '<a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.$asn1id.'</a>';
@@ -934,23 +917,33 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$result = OIDplus::db()->query("select * from ###objects where id = ?", array($parent));
 		$parent_ra_email = $result->num_rows() > 0 ? $result->fetch_object()->ra_email : '';
 
+		// "Create OID" row
 		if ($objParent->userHasWriteRights()) {
 			$output .= '<tr>';
 			$prefix = is_null($objParent) ? '' : $objParent->crudInsertPrefix();
-			if ($parentNS == 'weid') {
-				$output .= '     <td>'.$prefix.' <input oninput="OIDplusPagePublicObjects.frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
-				$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="OIDplusPagePublicObjects.frdl_weid_change()" style="width:100%;min-width:100px"></td>';
-			} else if ($parentNS == 'oid') {
-				// TODO: Idea: Give a class name, e.g. "OID" and then with a oid-specific CSS make the width individual. So, every plugin has more control over the appearance and widths of the input fields
-				if ($objParent->isWeid(false)) {
-					$output .= '     <td>'.$prefix.' <input oninput="OIDplusPagePublicObjects.frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
-					$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="OIDplusPagePublicObjects.frdl_weid_change()" style="width:100%;min-width:100px"></td>';
-				} else if ($objParent->nodeId() === 'oid:2.25') {
-					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:340px"><a href="javascript:OIDplusPagePublicObjects.generateRandomUUID()">'._L('(Generate)').'</a></td>';
-					if ($one_weid_available) $output .= '     <td></td>'; // WEID-editor not available for root nodes. Do it manually, please
+			if ($parentNS == 'guid') {
+				if ($objParent->isRoot()) {
+					// TODO: Should we give ObjectType plugins the ability to define such "Generate" links? (Via feature-interface?)
+					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:275px"><br><a href="javascript:OIDplusPagePublicObjects.generateRandomGUID(false)">'._L('(Generate random GUID)').'</a></td>';
 				} else {
-					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:50px"></td>';
-					if ($one_weid_available) $output .= '     <td></td>'; // WEID-editor not available for root nodes. Do it manually, please
+					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:275px"></td>';
+				}
+			}
+			if ($parentNS == 'oid') {
+				// TODO: Idea: Give a class name, e.g. "OID" and then with a oid-specific CSS make the width individual. So, every plugin has more control over the appearance and widths of the input fields
+				if ($objParent->nodeId() === 'oid:2.25') {
+					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:345px"><br><a href="javascript:OIDplusPagePublicObjects.generateRandomUUID(false)">'._L('(Generate random UUID OID)').'</a></td>';
+					if ($enable_weid_presentation) $output .= '     <td>&nbsp;</td>'; // For UUID-OIDs, you must generate a valid one. Don't be tempted to create one using the Base36 input!
+				} else if ($objParent->isRoot()) {
+					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:345px"><br><a href="javascript:OIDplusPagePublicObjects.generateRandomUUID(true)">'._L('(Generate random UUID OID)').'</a></td>';
+					if ($enable_weid_presentation) $output .= ''; // WEID-editor not available for root nodes at the moment. For the moment you need to enter the OID (TODO: Create JavaScript WEID encoder/decoder)
+				} else {
+					if ($enable_weid_presentation) {
+						$output .= '     <td>'.$prefix.' <input oninput="OIDplusPagePublicObjects.frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
+						$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="OIDplusPagePublicObjects.frdl_weid_change()" style="width:100%;min-width:100px"></td>';
+					} else {
+						$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
+					}
 				}
 			} else {
 				$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
@@ -968,7 +961,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		} else {
 			if ($items_total-$items_hidden == 0) {
 				$cols = ($parentNS == 'oid') ? 7 : 5;
-				if ($one_weid_available) $cols++;
+				if ($enable_weid_presentation && ($parentNS == 'oid') && !$objParent->isRoot()) {
+					$cols++;
+				}
 				$output .= '<tr><td colspan="'.$cols.'">'._L('No items available').'</td></tr>';
 			}
 		}
