@@ -78,14 +78,15 @@ var OIDplusPageAdminSoftwareUpdate = {
 					if (rev >= max) {
 						$("#update_header").text(_L("Update finished"));
 						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_1"><strong> ' + _L('UPDATE FINISHED') + ':</strong></span> ' + _L('You are now at SVN revision %1', rev));
+						$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 					} else {
 						if (output.includes("FATAL ERROR:")) {
 							$("#update_header").text(_L("Update failed"));
+							$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 						} else {
 							OIDplusPageAdminSoftwareUpdate._doUpdateOIDplus(parseInt(rev)+1, max);
 						}
 					}
-					$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 					return;
 				} else {
 					$("#update_header").text(_L("Update failed"));
