@@ -380,6 +380,10 @@ h3 {
 	font-size:1.5em !important;
 }
 
+a[target='_blank']::after {
+	content: '\1F5D7';
+}
+
 textarea,input[type="text"],input[type="password"],select {
 	/* for dark themes, this looks better */
 	/*background:transparent;*/

@@ -925,7 +925,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$append = '';
 			foreach (OIDplus::getObjectTypePlugins() as $plugin) {
 				if (($plugin::getObjectTypeClassName()::ns() == $parentNS) && $plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.6')) {
-					$append .= '<br>'.$plugin->crudNewGenerateLinks($objParent);
+					$append .= $plugin->crudNewGenerateLinks($objParent);
 				}
 			}
 

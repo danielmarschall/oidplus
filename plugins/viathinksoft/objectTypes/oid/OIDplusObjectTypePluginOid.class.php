@@ -33,9 +33,11 @@ class OIDplusObjectTypePluginOid extends OIDplusObjectTypePlugin {
 	public function crudNewGenerateLinks($objParent) { // Interface 1.3.6.1.4.1.37476.2.5.2.3.6
 
 		if ($objParent->nodeId() === 'oid:2.25') {
-			return '<a href="javascript:OIDplusObjectTypePluginOid.generateRandomUUID(false)">'._L('(Generate random UUID OID)').'</a>';
+			return '<br><a href="javascript:OIDplusObjectTypePluginOid.generateRandomUUID(false)">('._L('Generate random UUID OID').')</a>';
 		} else if ($objParent->isRoot()) {
-			return '<a href="javascript:OIDplusObjectTypePluginOid.generateRandomUUID(true)">'._L('(Generate random UUID OID)').'</a>';
+			return '<br><a href="javascript:OIDplusObjectTypePluginOid.generateRandomUUID(true)">('._L('Generate random UUID OID').')</a>'.
+			       '<br><a href="https://oidplus.viathinksoft.com/oidplus/?goto=oidplus:com.viathinksoft.freeoid" target="_blank">('._L('Request free OID from ViaThinkSoft').')</a>'.
+			       '<br><a href="https://pen.iana.org/pen/PenApplication.page" target="_blank">('._L('Request free PEN/OID from IANA').')</a>';
 		} else {
 			// No generation for normal OIDs atm. TODO: MAYBE in future a feature "next free"
 			return '';

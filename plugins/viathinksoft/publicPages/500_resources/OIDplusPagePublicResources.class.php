@@ -365,9 +365,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 						$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
 
-						$hyperlink_pic = ' <img src="'.OIDplus::webpath(__DIR__).'hyperlink.png" widht="13" height="13" alt="Hyperlink" style="top:-3px;position:relative">';
-
-						$out['text'] .= '<p><a href="'.htmlentities(self::getHyperlinkURL($realfile)).'" target="_blank">'.$ic.' '.htmlentities($this->getHyperlinkTitle($realfile)).' '.$hyperlink_pic.'</a></p>';
+						$out['text'] .= '<p><a href="'.htmlentities(self::getHyperlinkURL($realfile)).'" target="_blank">'.$ic.' '.htmlentities($this->getHyperlinkTitle($realfile)).'</a></p>';
 						$count++;
 					} else {
 						$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_doc&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
@@ -456,13 +454,11 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				}
 				*/
 
-				$hyperlink_pic = ' <img src="'.OIDplus::webpath(__DIR__).'hyperlink.png" widht="13" height="13" alt="Hyperlink" style="top:-3px;position:relative">';
-
 				$children[] = array(
 					'id' => 'oidplus:resources$'.$file,
 					'conditionalselect' => 'window.open('.js_escape(self::getHyperlinkURL($realfile)).'); false;',
 					'icon' => $tree_icon,
-					'text' => $this->getHyperlinkTitle($realfile).' '.$hyperlink_pic,
+					'text' => $this->getHyperlinkTitle($realfile),
 					'state' => array("opened" => $depth <= OIDplus::config()->getValue('resource_plugin_autoopen_level', 1)-1),
 					'a_attr' => array(
 						'href' => self::getHyperlinkURL($realfile),

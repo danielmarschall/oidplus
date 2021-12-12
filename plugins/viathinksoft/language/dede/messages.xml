@@ -86,22 +86,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		(Generate random GUID)
-		]]></source>
-		<target><![CDATA[
-		(Neue zufällige GUID erzeugen)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		(Generate random UUID OID)
-		]]></source>
-		<target><![CDATA[
-		(Neue zufällige UUID OID erzeugen)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		(Objects with undefined RA)
 		]]></source>
 		<target><![CDATA[
@@ -2090,6 +2074,22 @@
 		]]></source>
 		<target><![CDATA[
 		XML-Datei mit allen OIDs generieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Generate random GUID
+		]]></source>
+		<target><![CDATA[
+		Neue GUID erzeugen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Generate random UUID OID
+		]]></source>
+		<target><![CDATA[
+		Neue zufällige UUID OID erzeugen
 		]]></target>
 	</message>
 	<message>
@@ -4866,6 +4866,22 @@
 		]]></source>
 		<target><![CDATA[
 		Eine kostenlose OID registrieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Request free OID from ViaThinkSoft
+		]]></source>
+		<target><![CDATA[
+		Kostenlose OID von ViaThinkSoft beantragen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Request free PEN/OID from IANA
+		]]></source>
+		<target><![CDATA[
+		Kostenlose PEN/OID von IANA beantragen
 		]]></target>
 	</message>
 	<message>
