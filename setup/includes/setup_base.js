@@ -19,8 +19,10 @@
 // language_messages will be set by setup.js.php
 // language_tblprefix will be set by setup.js.php
 
+// TODO: Put these settings in a "setup configuration file" (hardcoded)
 min_password_length = 10; // see also plugins/viathinksoft/publicPages/092_forgot_password_admin/script.js
 password_salt_length = 10;
+bcrypt_rounds = 10;
 
 function btoa(bin) {
 	var tableStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -89,8 +91,7 @@ function rebuild() {
 			bCryptWorker.terminate();
 		}
 		bCryptWorker = new Worker('../bcrypt_worker.js');
-		var rounds = 10; // TODO: make configurable
-		bCryptWorker.postMessage([pw, rounds]);
+		bCryptWorker.postMessage([pw, bcrypt_rounds]);
 		bCryptWorker.onmessage = function (event) {
 			var admPwdHash = event.data;
 			var pwComment = 'bcrypt encoded hash';

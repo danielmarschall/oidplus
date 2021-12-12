@@ -26,11 +26,11 @@ class OIDplusObjectTypePluginGuid extends OIDplusObjectTypePlugin {
 	}
 
 	public function implementsFeature($id) {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.6') return true; // crudNewGenerateLinks
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.6') return true; // gridGeneratorLinks
 		return false;
 	}
 
-	public function crudNewGenerateLinks($objParent) { // Interface 1.3.6.1.4.1.37476.2.5.2.3.6
+	public function gridGeneratorLinks($objParent) { // Interface 1.3.6.1.4.1.37476.2.5.2.3.6
 		return '<br><a href="javascript:OIDplusObjectTypePluginGuid.generateRandomGUID(false)">('._L('Generate random GUID').')</a>';
 	}
 

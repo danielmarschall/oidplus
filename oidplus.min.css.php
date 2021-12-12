@@ -114,7 +114,7 @@ if (file_exists(__DIR__ . '/userdata/styles/oidplus_base.css')) {
 }
 
 // Then plugins
-$manifests = OIDplus::getAllPluginManifests('*Pages,objectTypes', true); // due to interface crudNewGenerateLinks (1.3.6.1.4.1.37476.2.5.2.3.6) this plugin type can also have CSS
+$manifests = OIDplus::getAllPluginManifests('*Pages,objectTypes', true); // due to interface gridGeneratorLinks (1.3.6.1.4.1.37476.2.5.2.3.6) this plugin type can also have CSS
 foreach ($manifests as $manifest) {
 	foreach ($manifest->getCSSFiles() as $css_file) {
 		$out .= process_file($css_file);

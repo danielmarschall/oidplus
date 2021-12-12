@@ -402,7 +402,7 @@ $(document).ready(function () {
 		west__size:                   450,
 		west__spacing_closed:         20,
 		west__togglerLength_closed:   230,
-		west__togglerAlign_closed:    "top",
+		west__togglerAlign_closed:    "center", // TODO: does not work! The text "OBJECT TREE" is still at the top and nearly cut off by the title bar!!!
 		west__togglerContent_closed:  tmpObjectTree,
 		west__togglerTip_closed:      _L("Open & Pin Menu"),
 		west__sliderTip:              _L("Slide Open Menu"),
