@@ -2574,6 +2574,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Installed extensions
+		]]></source>
+		<target><![CDATA[
+		Installierte Erweiterungen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Installed plugins
 		]]></source>
 		<target><![CDATA[

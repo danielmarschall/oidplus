@@ -24,6 +24,14 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 	public function init($html=true) {
 	}
 
+	private function getGitCommand() {
+		return 'git --git-dir='.escapeshellarg(find_git_folder().'/').' --work-tree='.escapeshellarg(OIDplus::localpath()).' -C "" pull origin master -s recursive -X theirs';
+	}
+
+	private function getSvnCommand() {
+		return 'svn update --accept theirs-full';
+	}
+
 	public function action($actionID, $params) {
 		if ($actionID == 'update_now') {
 			@set_time_limit(0);
@@ -33,7 +41,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 			}
 
 			if (OIDplus::getInstallType() === 'git-wc') {
-				$cmd = 'git --git-dir='.escapeshellarg(find_git_folder().'/').' --work-tree='.escapeshellarg(OIDplus::localpath()).' -C "" pull -s recursive -X theirs 2>&1';
+				$cmd = $this->getGitCommand().' 2>&1';
 
 				$ec = -1;
 				$out = array();
@@ -48,7 +56,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				}
 			}
 			else if (OIDplus::getInstallType() === 'svn-wc') {
-				$cmd = 'svn update --accept theirs-full 2>&1';
+				$cmd = $this->getSvnCommand().' 2>&1';
 
 				$ec = -1;
 				$out = array();
@@ -167,11 +175,11 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				if ($installType === 'svn-wc') {
 					$out['text'] .= '<p>'._L('You are using <b>method A</b> (SVN working copy).').'</p>';
 					$requireInfo = _L('shell access with svn/svnversion tool, or PDO/SQLite3 PHP extension');
-					$updateCommand = 'svn update';
+					$updateCommand = $this->getSvnCommand();
 				} else if ($installType === 'git-wc') {
 					$out['text'] .= '<p>'._L('You are using <b>method B</b> (Git working copy).').'</p>';
 					$requireInfo = _L('shell access with Git client');
-					$updateCommand = 'git pull';
+					$updateCommand = $this->getGitCommand();
 				} else if ($installType === 'svn-snapshot') {
 					$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot TAR.GZ file with .version.php file).').'</p>';
 					$requireInfo = ''; // unused

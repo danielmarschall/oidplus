@@ -102,6 +102,10 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'._L('PHP version').'</td>';
 			$out['text'] .= '		<td>'.PHP_VERSION.'</td>';
 			$out['text'] .= '	</tr>';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Installed extensions').'</td>';
+			$out['text'] .= '		<td>'.htmlentities(implode(', ',get_loaded_extensions())).'</td>';
+			$out['text'] .= '	</tr>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
 
