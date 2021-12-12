@@ -43,14 +43,6 @@
 					</xs:complexType>
 				</xs:element>
 
-				<xs:element name="js" minOccurs="0" maxOccurs="1">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element type="xs:string" name="file" minOccurs="0"
-								maxOccurs="unbounded" />
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

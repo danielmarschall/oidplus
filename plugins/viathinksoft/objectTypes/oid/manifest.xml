@@ -17,5 +17,9 @@
 	<php>
 		<mainclass>OIDplusObjectTypePluginOid</mainclass>
 	</php>
+
+	<js>
+		<file>OIDplusObjectTypePluginOid.js</file>
+	</js>
 	
 </manifest>

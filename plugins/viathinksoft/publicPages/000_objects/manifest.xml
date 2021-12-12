@@ -19,6 +19,7 @@
 	</php>
 
 	<css>
+		<file>OIDplusPagePublicObjects.css</file>
 	</css>
 
 	<js>

@@ -54,6 +54,11 @@ Interface <1.3.6.1.4.1.37476.2.5.2.3.5> {
 	public function alternativeLoginMethods();
 }
 
+Interface <1.3.6.1.4.1.37476.2.5.2.3.6> {
+	// called by publicPages/000_objects
+	public function crudNewGenerateLinks($objParent);
+}
+
 
 TL;DR:
 Plugins communicate with other plugins using the OIDplusPlugin::implementsFeature()

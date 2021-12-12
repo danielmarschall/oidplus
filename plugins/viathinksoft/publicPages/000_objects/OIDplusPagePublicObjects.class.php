@@ -921,32 +921,34 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		if ($objParent->userHasWriteRights()) {
 			$output .= '<tr>';
 			$prefix = is_null($objParent) ? '' : $objParent->crudInsertPrefix();
-			if ($parentNS == 'guid') {
-				if ($objParent->isRoot()) {
-					// TODO: Should we give ObjectType plugins the ability to define such "Generate" links? (Via feature-interface?)
-					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:275px"><br><a href="javascript:OIDplusPagePublicObjects.generateRandomGUID(false)">'._L('(Generate random GUID)').'</a></td>';
-				} else {
-					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:275px"></td>';
+
+			$append = '';
+			foreach (OIDplus::getObjectTypePlugins() as $plugin) {
+				if (($plugin::getObjectTypeClassName()::ns() == $parentNS) && $plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.6')) {
+					$append .= '<br>'.$plugin->crudNewGenerateLinks($objParent);
 				}
 			}
-			if ($parentNS == 'oid') {
+
+			if ($parentNS == 'guid') {
+				$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:275px">'.$append.'</td>';
+			} else if ($parentNS == 'oid') {
 				// TODO: Idea: Give a class name, e.g. "OID" and then with a oid-specific CSS make the width individual. So, every plugin has more control over the appearance and widths of the input fields
 				if ($objParent->nodeId() === 'oid:2.25') {
-					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:345px"><br><a href="javascript:OIDplusPagePublicObjects.generateRandomUUID(false)">'._L('(Generate random UUID OID)').'</a></td>';
+					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:345px">'.$append.'</td>';
 					if ($enable_weid_presentation) $output .= '     <td>&nbsp;</td>'; // For UUID-OIDs, you must generate a valid one. Don't be tempted to create one using the Base36 input!
 				} else if ($objParent->isRoot()) {
-					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:345px"><br><a href="javascript:OIDplusPagePublicObjects.generateRandomUUID(true)">'._L('(Generate random UUID OID)').'</a></td>';
+					$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:345px">'.$append.'</td>';
 					if ($enable_weid_presentation) $output .= ''; // WEID-editor not available for root nodes at the moment. For the moment you need to enter the OID (TODO: Create JavaScript WEID encoder/decoder)
 				} else {
 					if ($enable_weid_presentation) {
-						$output .= '     <td>'.$prefix.' <input oninput="OIDplusPagePublicObjects.frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
+						$output .= '     <td>'.$prefix.' <input oninput="OIDplusPagePublicObjects.frdl_oidid_change()" type="text" id="id" value="" style="width:100%;min-width:100px">'.$append.'</td>';
 						$output .= '     <td><input type="text" name="weid" id="weid" value="" oninput="OIDplusPagePublicObjects.frdl_weid_change()" style="width:100%;min-width:100px"></td>';
 					} else {
-						$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
+						$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:100px">'.$append.'</td>';
 					}
 				}
 			} else {
-				$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:100px"></td>';
+				$output .= '     <td>'.$prefix.' <input type="text" id="id" value="" style="width:100%;min-width:100px">'.$append.'</td>';
 			}
 			if ($accepts_asn1) $output .= '     <td><input type="text" id="asn1ids" value=""></td>';
 			if ($accepts_iri)  $output .= '     <td><input type="text" id="iris" value=""></td>';

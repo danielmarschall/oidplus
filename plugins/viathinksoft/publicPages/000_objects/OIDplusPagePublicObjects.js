@@ -19,59 +19,6 @@ var OIDplusPagePublicObjects = {
 
 	oid: "1.3.6.1.4.1.37476.2.5.2.4.1.0",
 
-	generateRandomUUID: function(absolute) {
-		$.ajax({
-			url:"ajax.php",
-			method:"POST",
-			beforeSend: function(jqXHR, settings) {
-				$.xhrPool.abortAll();
-				$.xhrPool.add(jqXHR);
-			},
-			complete: function(jqXHR, text) {
-				$.xhrPool.remove(jqXHR);
-			},
-			data: {
-				csrf_token:csrf_token,
-				plugin:OIDplusPagePublicObjects.oid,
-				action:"generate_uuid"
-			},
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
-			},
-			success:function(data) {
-				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
-				} else if (data.status >= 0) {
-					if (data.status == 0/*OK*/) {
-						$("#id").val(absolute ? "2.25." + data.intval : data.intval);
-						alert(_L("OK! Generated UUID %1 which resolves to OID %2", data.uuid, "2.25."+data.intval));
-					} else {
-						alert(_L("Error: %1",data.status));
-					}
-				} else {
-					alert(_L("Error: %1",data));
-				}
-			}
-		});
-	},
-
-	generateRandomGUID: function() {
-		// https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid
-	    // http://www.ietf.org/rfc/rfc4122.txt
-	    var s = [];
-	    var hexDigits = "0123456789abcdef";
-	    for (var i = 0; i < 36; i++) {
-	        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-	    }
-	    s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
-	    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
-	    s[8] = s[13] = s[18] = s[23] = "-";
-
-	    var uuid = s.join("");
-	    $("#id").val(uuid);
-	},
-
 	cbRemoveTinyMCE: function(selector) {
 		if ((typeof tinymce == "undefined") || (tinymce == null)) {
 			// This should not happen

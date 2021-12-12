@@ -25,4 +25,21 @@ class OIDplusObjectTypePluginOid extends OIDplusObjectTypePlugin {
 		return OIDplusOid::class;
 	}
 
+	public function implementsFeature($id) {
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.6') return true; // crudNewGenerateLinks
+		return false;
+	}
+
+	public function crudNewGenerateLinks($objParent) { // Interface 1.3.6.1.4.1.37476.2.5.2.3.6
+
+		if ($objParent->nodeId() === 'oid:2.25') {
+			return '<a href="javascript:OIDplusObjectTypePluginOid.generateRandomUUID(false)">'._L('(Generate random UUID OID)').'</a>';
+		} else if ($objParent->isRoot()) {
+			return '<a href="javascript:OIDplusObjectTypePluginOid.generateRandomUUID(true)">'._L('(Generate random UUID OID)').'</a>';
+		} else {
+			// No generation for normal OIDs atm. TODO: MAYBE in future a feature "next free"
+			return '';
+		}
+	}
+
 }

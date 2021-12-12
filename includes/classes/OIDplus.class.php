@@ -571,11 +571,14 @@ class OIDplus {
 	/**
 	* @return array<OIDplusPluginManifest>|array<string,array<string,OIDplusPluginManifest>>
 	*/
-	public static function getAllPluginManifests($pluginFolderMask='*', $flat=true): array {
+	public static function getAllPluginManifests($pluginFolderMasks='*', $flat=true): array {
 		$out = array();
 		// Note: glob() will sort by default, so we do not need a page priority attribute.
 		//       So you just need to use a numeric plugin directory prefix (padded).
-		$ary = glob(OIDplus::localpath().'plugins/'.'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.xml');
+		$ary = array();
+		foreach (explode(',',$pluginFolderMasks) as $pluginFolderMask) {
+			$ary = array_merge($ary,glob(OIDplus::localpath().'plugins/'.'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.xml'));
+		}
 
 		// Sort the plugins by their type and name, as if they would be in a single vendor-folder!
 		uasort($ary, function($a,$b) {

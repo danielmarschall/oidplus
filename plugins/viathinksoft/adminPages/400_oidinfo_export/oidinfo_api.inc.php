@@ -397,6 +397,9 @@ class OIDInfoAPI {
 		$desc = preg_replace("@ OID$@i",                                '', $desc);
 		$desc = preg_replace("@ OID Namespace$@i",                      '', $desc);
 		$desc = preg_replace("@^OID for @i",                            '', $desc);
+		$desc = preg_replace("@OID root$@i",                            '', $desc);
+		$desc = preg_replace("@Object Identifier$@i",                   '', $desc);
+		$desc = preg_replace("@^The @i",                                '', $desc);
 
 		$desc = rtrim($desc);
 		if ($ending_dot_policy == self::OIDINFO_CORRECT_DESC_ENFORCE_ENDING_DOT) {
@@ -404,6 +407,9 @@ class OIDInfoAPI {
 		} else if ($ending_dot_policy == self::OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT) {
 			$desc = preg_replace('@\\.$@', '', $desc);
 		}
+
+		// Required for XML importer of oid-info.com (E-Mail 09.12.2021)
+		$desc = str_replace('&amp;', '&amp;amp;', $desc);
 
 		return $desc;
 	}
