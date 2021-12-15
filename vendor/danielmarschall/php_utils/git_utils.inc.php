@@ -3,7 +3,7 @@
 /*
  * PHP git functions
  * Copyright 2021 Daniel Marschall, ViaThinkSoft
- * Revision 2021-12-09
+ * Revision 2021-12-13
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,15 @@
  */
 
 function git_get_latest_commit_message($git_dir) {
+	// First try an official git client
+	$cmd = "git --git-dir=".escapeshellarg("$git_dir")." log -1 2>&1";
+	$ec = -1;
+	$out = array();
+	@exec($cmd, $out, $ec);
+	$out = implode("\n",$out);
+	if (($ec == 0) && ($out != '')) return $out;
+
+	// If that failed, try to decode the binary files outselves
 	$cont = @file_get_contents($git_dir.'/HEAD');
 	if (preg_match('@ref: (.+)[\r\n]@', "$cont\n", $m) && file_exists($git_dir.'/'.$m[1])) {
 		// Example content of a .git folder file:
@@ -54,7 +63,7 @@ function git_get_latest_commit_message($git_dir) {
 		$uncompressed = @gzuncompress($compressed);
 		if ($uncompressed === false) throw new Exception("Decompression failed");
 
-		// The format is "commit <nnn>\0<Message>"
+		// The format is "commit <nnn>\0<Message>" where <nnn> is only a 3 digit number?!
 		$ary = explode(chr(0), $uncompressed);
 		$uncompressed = array_pop($ary);
 

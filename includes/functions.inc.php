@@ -190,7 +190,11 @@ function _L($str, ...$sprintfArgs) {
 }
 
 function _CheckParamExists($params, $key) {
-	if (!isset($params[$key])) throw new OIDplusException(_L('Parameter %1 is missing', $key));
+	if (class_exists('OIDplusException')) {
+		if (!isset($params[$key])) throw new OIDplusException(_L('Parameter %1 is missing', $key));
+	} else {
+		if (!isset($params[$key])) throw new Exception(_L('Parameter %1 is missing', $key));
+	}
 }
 
 function extractHtmlContents($cont) {
@@ -232,102 +236,6 @@ function sha3_512($password, $raw_output=false) {
 	}
 }
 
-function get_svn_revision($dir='') {
-	if (!empty($dir)) $dir .= '/';
-
-	// Try to get the version via SQLite3
-	if (class_exists('SQLite3')) {
-		try {
-			$db = new SQLite3($dir.'.svn/wc.db');
-			$results = $db->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
-			while ($row = $results->fetchArray()) {
-				return ($cachedVersion = $row['rev']);
-			}
-			$db->close();
-			$db = null;
-		} catch (Exception $e) {
-		}
-	}
-	if (class_exists('PDO')) {
-		try {
-			$pdo = new PDO('sqlite:'.$dir.'.svn/wc.db');
-			$res = $pdo->query('SELECT MIN(revision) AS rev FROM NODES_BASE');
-			$row = $res->fetch();
-			if ($row !== false) {
-				return ($cachedVersion = $row['rev']);
-			}
-			$pdo = null;
-		} catch (Exception $e) {
-		}
-	}
-
-	// Try to find out the SVN version using the shell
-	// We don't prioritize this method, because a failed shell access will flood the apache error log with STDERR messages
-	$output = @shell_exec('svnversion '.escapeshellarg($dir).' 2>&1');
-	$match = array();
-	if (preg_match('/\d+/', $output, $match)) {
-		return ($cachedVersion = $match[0]);
-	}
-
-	$output = @shell_exec('svn info '.escapeshellarg($dir).' 2>&1');
-	if (preg_match('/Revision:\s*(\d+)/m', $output, $match)) { // do not translate
-		return ($cachedVersion = $match[1]);
-	}
-
-	return false;
-}
-
-function find_git_folder() {
-	// Git command line saves git information in folder ".git"
-	// Plesk git saves git information in folder "../../../git/oidplus/" (or similar)
-	$dir = realpath(__DIR__);
-	if (is_dir($dir.'/.git')) return $dir.'/.git';
-	$i = 0;
-	do {
-		if (is_dir($dir.'/git')) {
-			$confs = glob($dir.'/git/'.'*'.'/config');
-			foreach ($confs as $conf) {
-				$cont = file_get_contents($conf);
-				if (strpos($cont, '://github.com/danielmarschall/oidplus') !== false) {
-					return dirname($conf);
-				}
-			}
-		}
-		$i++;
-	} while (($i<100) && ($dir != ($new_dir = realpath($dir.'/../'))) && ($dir = $new_dir));
-	return false;
-}
-
-function get_gitsvn_revision($dir='') {
-	try {
-		// requires danielmarschall/git_utils.inc.php
-		$git_dir = find_git_folder();
-		if ($git_dir === false) return false;
-		$commit_msg = git_get_latest_commit_message($git_dir);
-	} catch (Exception $e) {
-		// Try command-line
-		$ec = -1;
-		$out = array();
-		if (!empty($dir)) {
-			@exec('cd '.escapeshellarg($dir).' && git log', $out, $ec);
-		} else {
-			@exec('git log', $out, $ec);
-		}
-		if ($ec == 0) {
-			$commit_msg = implode("\n", $out);
-		} else {
-			return false;
-		}
-	}
-
-	$m = array();
-	if (preg_match('%git-svn-id: (.+)@(\\d+) %ismU', $commit_msg, $m)) {
-		return $m[2];
-	} else {
-		return false;
-	}
-}
-
 if (!function_exists('str_ends_with')) {
 	// PHP 7.x compatibility
 	function str_ends_with($haystack, $needle) {
@@ -335,7 +243,6 @@ if (!function_exists('str_ends_with')) {
 		return $length > 0 ? substr($haystack, -$length) === $needle : true;
 	}
 }
-
 
 if (!function_exists('str_starts_with')) {
 	// PHP 7.x compatibility
@@ -361,7 +268,9 @@ function isInternetExplorer() {
 function url_get_contents($url) {
 	if (function_exists('curl_init')) {
 		$ch = curl_init();
-		if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
+		if (class_exists('OIDplus')) {
+			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
+		}
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_POST, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

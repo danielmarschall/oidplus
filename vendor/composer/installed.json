@@ -192,18 +192,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "800dc543c489e360497f374e2d55bd04808948bc"
+                "reference": "861975efb89d07ed67953884e1ba5bf4b8677d80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/800dc543c489e360497f374e2d55bd04808948bc",
-                "reference": "800dc543c489e360497f374e2d55bd04808948bc",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/861975efb89d07ed67953884e1ba5bf4b8677d80",
+                "reference": "861975efb89d07ed67953884e1ba5bf4b8677d80",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2021-12-09T22:55:55+00:00",
+            "time": "2021-12-15T15:45:59+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -274,18 +274,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/vnag.git",
-                "reference": "6415a5163813f5f9172c90947e54fdd8f40d2ee4"
+                "reference": "3649c34431563c5eaaf8e5d011fb711e28dffff9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/6415a5163813f5f9172c90947e54fdd8f40d2ee4",
-                "reference": "6415a5163813f5f9172c90947e54fdd8f40d2ee4",
+                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/3649c34431563c5eaaf8e5d011fb711e28dffff9",
+                "reference": "3649c34431563c5eaaf8e5d011fb711e28dffff9",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2021-12-06T20:23:51+00:00",
+            "time": "2021-12-13T19:17:05+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

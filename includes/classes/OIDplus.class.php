@@ -996,7 +996,7 @@ class OIDplus {
 			$counter++;
 		}
 		// if ($git_dir_exists = is_dir(OIDplus::localpath().'.git')) {
-		if ($git_dir_exists = (find_git_folder() !== false)) {
+		if ($git_dir_exists = (OIDplus::findGitFolder() !== false)) {
 			$counter++;
 		}
 
@@ -1048,7 +1048,7 @@ class OIDplus {
 		}
 
 		if ($installType === 'git-wc') {
-			$ver = get_gitsvn_revision(OIDplus::localpath());
+			$ver = OIDplus::getGitsvnRevision(OIDplus::localpath());
 			if ($ver)
 				return ($cachedVersion = 'svn-'.$ver);
 		}
@@ -1302,6 +1302,46 @@ class OIDplus {
 			}
 		}
 		return self::$translationArray;
+	}
+
+	public static function findGitFolder() {
+		// Git command line saves git information in folder ".git"
+		// Plesk git saves git information in folder "../../../git/oidplus/" (or similar)
+		$dir = realpath(__DIR__);
+		if (is_dir($dir.'/.git')) return $dir.'/.git';
+		$i = 0;
+		do {
+			if (is_dir($dir.'/git')) {
+				$confs = glob($dir.'/git/'.'*'.'/config');
+				foreach ($confs as $conf) {
+					$cont = file_get_contents($conf);
+					if (strpos($cont, '://github.com/danielmarschall/oidplus') !== false) {
+						return dirname($conf);
+					}
+				}
+			}
+			$i++;
+		} while (($i<100) && ($dir != ($new_dir = realpath($dir.'/../'))) && ($dir = $new_dir));
+		return false;
+	}
+
+	public static function getGitsvnRevision($dir='') {
+		try {
+			// tries command line and binary parsing
+			// requires danielmarschall/git_utils.inc.php
+			$git_dir = OIDplus::findGitFolder();
+			if ($git_dir === false) return false;
+			$commit_msg = git_get_latest_commit_message($git_dir);
+		} catch (Exception $e) {
+			return false;
+		}
+
+		$m = array();
+		if (preg_match('%git-svn-id: (.+)@(\\d+) %ismU', $commit_msg, $m)) {
+			return $m[2];
+		} else {
+			return false;
+		}
 	}
 
 }
