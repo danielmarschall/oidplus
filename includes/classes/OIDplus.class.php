@@ -1304,6 +1304,10 @@ class OIDplus {
 		return self::$translationArray;
 	}
 
+	public static function getEditionInfo() {
+		return @parse_ini_file(__DIR__.'/../edition.ini', true)['Edition'];
+	}
+
 	public static function findGitFolder() {
 		// Git command line saves git information in folder ".git"
 		// Plesk git saves git information in folder "../../../git/oidplus/" (or similar)
@@ -1315,7 +1319,7 @@ class OIDplus {
 				$confs = glob($dir.'/git/'.'*'.'/config');
 				foreach ($confs as $conf) {
 					$cont = file_get_contents($conf);
-					if (strpos($cont, '://github.com/danielmarschall/oidplus') !== false) {
+					if (isset(OIDplus::getEditionInfo()['gitrepo']) && (OIDplus::getEditionInfo()['gitrepo'] != '') && (strpos($cont, OIDplus::getEditionInfo()['gitrepo']) !== false)) {
 						return dirname($conf);
 					}
 				}
@@ -1328,7 +1332,7 @@ class OIDplus {
 	public static function getGitsvnRevision($dir='') {
 		try {
 			// tries command line and binary parsing
-			// requires danielmarschall/git_utils.inc.php
+			// requires vendor/danielmarschall/git_utils.inc.php
 			$git_dir = OIDplus::findGitFolder();
 			if ($git_dir === false) return false;
 			$commit_msg = git_get_latest_commit_message($git_dir);

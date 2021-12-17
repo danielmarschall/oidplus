@@ -132,9 +132,9 @@ function performCloseCB() {
 }
 
 function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) {
-	reselect = (typeof reselect === 'undefined') ? false : reselect;
-	anchor = (typeof anchor === 'undefined') ? '' : anchor;
-	force = (typeof force === 'undefined') ? false : force;
+	reselect = (typeof reselect === 'undefined') ? false : reselect; // do not translate
+	anchor = (typeof anchor === 'undefined') ? '' : anchor; // do not translate
+	force = (typeof force === 'undefined') ? false : force; // do not translate
 
 	var mayClose = performCloseQueryCB();
 	if (!force && !mayClose) return false;
@@ -531,8 +531,8 @@ function setLanguage(lngid) {
 
 function getCurrentLang() {
 	// Note: If the argument "?lang=" is used, PHP will automatically set a Cookie, so it is OK when we only check for the cookie
-	var lang = getCookie('LANGUAGE');
-	return (typeof lang != "undefined") ? lang : DEFAULT_LANGUAGE;
+	var lang = getCookie('LANGUAGE'); // do not translate
+	return (typeof lang != 'undefined') ? lang : DEFAULT_LANGUAGE; // do not translate
 }
 
 function _L() {
@@ -540,11 +540,11 @@ function _L() {
 	var str = args.shift().trim();
 
 	var tmp = "";
-	if (typeof language_messages[getCurrentLang()] == "undefined") {
+	if (typeof language_messages[getCurrentLang()] == 'undefined') { // do not translate
 		tmp = str;
 	} else {
 		var msg = language_messages[getCurrentLang()][str];
-		if (typeof msg != "undefined") {
+		if (typeof msg != 'undefined') { // do not translate
 			tmp = msg;
 		} else {
 			tmp = str;

@@ -412,6 +412,10 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	public function init($html=true) {
+		if (OIDplus::getEditionInfo()['vendor'] != 'ViaThinkSoft') {
+			throw new OIDplusException(_L('This plugin is only available in the ViaThinkSoft edition of OIDplus'));
+		}
+
 		// Note: It is important that the default value is '2', otherwise, systems which don't have CURL will fail
 		OIDplus::config()->prepareConfigKey('reg_privacy', '2=Hide your system, 1=Register your system to the ViaThinkSoft directory and oid-info.com, 0=Publish your system to ViaThinkSoft directory and all public contents (RA/OID) to oid-info.com', '2', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != '0') && ($value != '1') && ($value != '2')) {

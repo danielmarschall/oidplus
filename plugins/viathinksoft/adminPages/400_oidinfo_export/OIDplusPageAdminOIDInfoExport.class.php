@@ -94,6 +94,11 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 			}
 
+			if (OIDplus::getEditionInfo()['vendor'] != 'ViaThinkSoft') {
+				// The oid-info.com import functionality is a confidential API between ViaThinkSoft and oid-info.com and cannot be used in forks of OIDplus
+				throw new OIDplusException(_L('This feature is only available in the ViaThinkSoft edition of OIDplus'));
+			}
+
 			$ch = curl_init();
 			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
@@ -191,6 +196,11 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 			if (!function_exists('curl_init')) {
 				throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
+			}
+
+			if (OIDplus::getEditionInfo()['vendor'] != 'ViaThinkSoft') {
+				// The oid-info.com import functionality is a confidential API between ViaThinkSoft and oid-info.com and cannot be used in forks of OIDplus
+				throw new OIDplusException(_L('This feature is only available in the ViaThinkSoft edition of OIDplus'));
 			}
 
 			$ch = curl_init();
@@ -459,6 +469,11 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 			if (!function_exists('curl_init')) {
 				throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
+			}
+
+			if (OIDplus::getEditionInfo()['vendor'] != 'ViaThinkSoft') {
+				// The oid-info.com import functionality is a confidential API between ViaThinkSoft and oid-info.com and cannot be used in forks of OIDplus
+				throw new OIDplusException(_L('This feature is only available in the ViaThinkSoft edition of OIDplus'));
 			}
 
 			$ch = curl_init();

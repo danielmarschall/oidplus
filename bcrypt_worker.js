@@ -33,7 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
 function bcrypt_hash(s, rounds/*=10*/) {
-	rounds = (typeof rounds === 'undefined') ? 10 : rounds;
+	rounds = (typeof rounds === 'undefined') ? 10 : rounds; // do not translate
 
 	var BCRYPT_SALT_LEN = 16;
 

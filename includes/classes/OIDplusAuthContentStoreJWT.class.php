@@ -52,7 +52,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 
 	private static function jwtSecurityCheck($contentProvider) {
 		// Check if the token is intended for us
-		if ($contentProvider->getValue('aud','') !== "http://oidplus.com") {
+		if ($contentProvider->getValue('aud','') !== OIDplus::getEditionInfo()['jwtaud']) {
 			throw new OIDplusException(_L('Token has wrong audience'));
 		}
 		$gen = $contentProvider->getValue('oidplus_generator', -1);
@@ -276,8 +276,8 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 
 	public function getJWTToken() {
 		$payload = $this->content;
-		$payload["iss"] = "http://oidplus.com";
-		$payload["aud"] = "http://oidplus.com";
+		$payload["iss"] = OIDplus::getEditionInfo()['jwtaud'];
+		$payload["aud"] = OIDplus::getEditionInfo()['jwtaud'];
 		$payload["jti"] = gen_uuid();
 		$payload["iat"] = time();
 

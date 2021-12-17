@@ -126,7 +126,8 @@ unset($job);
 
 function getLatestRevision() {
 	try {
-		$url = "https://www.oidplus.com/updates/releases.ser"; // TODO: in consts.ini
+		$url = OIDplus::getEditionInfo()['revisionlog'];
+		OIDplus::getEditionInfo()
 		$cont = @file_get_contents($url);
 		if ($cont === false) return false;
 		$ary = @unserialize($cont);

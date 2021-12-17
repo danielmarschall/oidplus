@@ -77,11 +77,11 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				// Download and unzip
 
 				if (function_exists('gzdecode')) {
-					$url = sprintf(parse_ini_file(__DIR__.'/consts.ini')['update_package_gz'], $rev-1, $rev);
+					$url = sprintf(OIDplus::getEditionInfo()['update_package_gz'], $rev-1, $rev);
 					$cont = url_get_contents($url);
 					if ($cont !== false) $cont = @gzdecode($cont);
 				} else {
-					$url = sprintf(parse_ini_file(__DIR__.'/consts.ini')['update_package'], $rev-1, $rev);
+					$url = sprintf(OIDplus::getEditionInfo()['update_package'], $rev-1, $rev);
 					$cont = url_get_contents($url);
 				}
 
@@ -155,11 +155,24 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 			$out['text'] .= '<p><u>'._L('There are three possibilities how to keep OIDplus up-to-date').':</u></p>';
 
-			$out['text'] .= '<p><b>'._L('Method A').'</b>: '._L('Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co %1</code> and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!',htmlentities(parse_ini_file(__DIR__.'/consts.ini')['svn']).'/trunk').'</p>';
+			if (isset(OIDplus::getEditionInfo()['gitrepo']) && (OIDplus::getEditionInfo()['gitrepo'] != '')) {
+				$out['text'] .= '<p><b>'._L('Method A').'</b>: '._L('Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co %1</code> and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!',htmlentities(OIDplus::getEditionInfo()['svnrepo'])).'</p>';
+			} else {
+				$out['text'] .= '<p><b>'._L('Method A').'</b>: '._L('Distribution via %1 is not possible with this edition of OIDplus','GIT').'</p>';
+			}
 
-			$out['text'] .= '<p><b>'._L('Method B').'</b>: '._L('Install OIDplus using the Git client in your SSH/Linux shell using the command <code>git clone %1</code> and update it regularly with the command <code>git pull</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!','https://github.com/danielmarschall/oidplus.git').'</p>';
+			if (isset(OIDplus::getEditionInfo()['svnrepo']) && (OIDplus::getEditionInfo()['svnrepo'] != '')) {
+				$out['text'] .= '<p><b>'._L('Method B').'</b>: '._L('Install OIDplus using the Git client in your SSH/Linux shell using the command <code>git clone %1</code> and update it regularly with the command <code>git pull</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!',htmlentities(OIDplus::getEditionInfo()['gitrepo'].'.git')).'</p>';
+			} else {
+				$out['text'] .= '<p><b>'._L('Method B').'</b>: '._L('Distribution via %1 is not possible with this edition of OIDplus','SVN').'</p>';
+			}
 
-			$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Install OIDplus by downloading a TAR.GZ file from www.viathinksoft.com, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named ".version.php" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.').'</p>';
+			if (isset(OIDplus::getEditionInfo()['downloadpage']) && (OIDplus::getEditionInfo()['downloadpage'] != '')) {
+				$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Install OIDplus by downloading a TAR.GZ file from %1, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named ".version.php" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.','<a href="'.OIDplus::getEditionInfo()['downloadpage'].'">'.parse_url(OIDplus::getEditionInfo()['downloadpage'])['host'].'</a>').'</p>';
+			} else {
+				$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Distribution via %1 is not possible with this edition of OIDplus','Snapshot').'</p>';
+			}
+
 
 			$out['text'] .= '<hr>';
 
@@ -215,7 +228,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 					// TODO: Open "system_file_check" without page reload.
 					// TODO: Only show link if the plugin is installed
-					$out['text'] .= '<p><font color="red">'.strtoupper(_L('Warning')).': '._L('Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! (<a href="%1">Click here to check which files have been modified</a>) In case the update fails, you can download and extract the complete <a href="https://www.viathinksoft.com/projects/oidplus">SVN-Snapshot TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.','?goto='.urlencode('oidplus:system_file_check')).'</font></p>';
+					$out['text'] .= '<p><font color="red">'.strtoupper(_L('Warning')).': '._L('Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! (<a href="%1">Click here to check which files have been modified</a>) In case the update fails, you can download and extract the complete <a href="%s">SVN-Snapshot TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.','?goto='.urlencode('oidplus:system_file_check',OIDplus::getEditionInfo()['downloadpage'])).'</font></p>';
 
 					$out['text'] .= '</div>';
 
@@ -255,7 +268,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 		try {
 			if (is_null($this->releases_ser)) {
-				$url = parse_ini_file(__DIR__.'/consts.ini')['revisionlog'];
+				$url = OIDplus::getEditionInfo()['revisionlog'];
 				$cont = url_get_contents($url);
 				if ($cont === false) return false;
 				$this->releases_ser = $cont;
@@ -283,7 +296,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 	private function getLatestRevision() {
 		try {
 			if (is_null($this->releases_ser)) {
-				$url = parse_ini_file(__DIR__.'/consts.ini')['revisionlog'];
+				$url = OIDplus::getEditionInfo()['revisionlog'];
 				$cont = url_get_contents($url);
 				if ($cont === false) return false;
 				$this->releases_ser = $cont;

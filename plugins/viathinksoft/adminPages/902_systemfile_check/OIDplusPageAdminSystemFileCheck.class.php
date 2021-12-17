@@ -62,7 +62,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 
 			try {
 				$mine = self::getDirContents(OIDplus::localpath());
-				$theirs = self::checksumFileToArray(sprintf(parse_ini_file(__DIR__.'/consts.ini')['checksum_file'],$ver));
+				$theirs = self::checksumFileToArray(sprintf(OIDplus::getEditionInfo()['checksum_file'],$ver));
 				if ($theirs === false) {
 					throw new OIDplusException(_L("Cannot download checksum file. Please try again later."));
 				}
