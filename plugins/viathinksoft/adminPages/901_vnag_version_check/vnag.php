@@ -127,7 +127,6 @@ unset($job);
 function getLatestRevision() {
 	try {
 		$url = OIDplus::getEditionInfo()['revisionlog'];
-		OIDplus::getEditionInfo()
 		$cont = @file_get_contents($url);
 		if ($cont === false) return false;
 		$ary = @unserialize($cont);
