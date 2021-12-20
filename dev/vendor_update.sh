@@ -71,6 +71,10 @@ rm -rf vendor/danielmarschall/uuid_mac_utils/*.css
 rm -rf vendor/bin
 rm -rf vendor/matthiasmullie/minify/bin
 
+# Remove docker stuff since it might confuse services like synk
+rm vendor/matthiasmullie/minify/Dockerfile
+rm vendor/matthiasmullie/minify/docker-compose.yml
+
 # Enable SVN again
 if [ -d "_svn" ]; then
 	mv _svn .svn
