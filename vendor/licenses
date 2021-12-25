@@ -9,7 +9,7 @@ components/jqueryui             1.12.1              MIT
 danielmarschall/fileformats     dev-master acfeaf4  Apache-2.0             
 danielmarschall/php_utils       dev-master 861975e  Apache-2.0             
 danielmarschall/uuid_mac_utils  dev-master 7b29209  Apache-2.0             
-danielmarschall/vnag            dev-master 3649c34  Apache-2.0             
+danielmarschall/vnag            dev-master 8bf513c  Apache-2.0             
 dcodeio/bcrypt.js               master master       BSD-3-Clause, MIT      
 emn178/js-sha3                  master master       MIT                    
 firebase/php-jwt                v5.5.1              BSD-3-Clause           

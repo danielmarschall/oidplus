@@ -854,6 +854,30 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		CAPTCHA plugins
+		]]></source>
+		<target><![CDATA[
+		CAPTCHA-Plugins
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		CAPTCHA plugins (active)
+		]]></source>
+		<target><![CDATA[
+		CAPTCHA-Plugins (aktiv)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		CAPTCHA plugins (inactive)
+		]]></source>
+		<target><![CDATA[
+		CAPTCHA-Plugins (inaktiv)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Cannot add this address, because it must be inside the address range of the superior range.
 		]]></source>
 		<target><![CDATA[

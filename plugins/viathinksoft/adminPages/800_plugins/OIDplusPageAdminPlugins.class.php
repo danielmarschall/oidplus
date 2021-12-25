@@ -63,6 +63,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			if (get_parent_class($classname) == 'OIDplusLoggerPlugin') $back_link = 'oidplus:system_plugins.logger';
 			if (get_parent_class($classname) == 'OIDplusLanguagePlugin') $back_link = 'oidplus:system_plugins.language';
 			if (get_parent_class($classname) == 'OIDplusDesignPlugin') $back_link = 'oidplus:system_plugins.design';
+			if (get_parent_class($classname) == 'OIDplusCaptchaPlugin') $back_link = 'oidplus:system_plugins.captcha';
 			$out['text'] = '<p><a '.OIDplus::gui()->link($back_link).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 
 			$out['text'] .= '<div><label class="padding_label">'._L('Class name').'</label><b>'.htmlentities($classname).'</b></div>'.
@@ -89,6 +90,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			$show_language = false;
 			$show_design_active = false;
 			$show_design_inactive = false;
+			$show_captcha_active = false;
+			$show_captcha_inactive = false;
 
 			if ($parts[1] == '') {
 				$out['title'] = _L('Installed plugins');
@@ -107,6 +110,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				$show_language = true;
 				$show_design_active = true;
 				$show_design_inactive = true;
+				$show_captcha_active = true;
+				$show_captcha_inactive = true;
 			} else if ($parts[1] == 'pages') {
 				$out['title'] = _L('Page plugins');
 				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
@@ -198,6 +203,22 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_design_active = true;
 				$show_design_inactive = true;
+			} else if ($parts[1] == 'captcha') {
+				$out['title'] = _L('CAPTCHA plugins');
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
+				$show_captcha_active = true;
+				$show_captcha_inactive = true;
+			} else if ($parts[1] == 'captcha.enabled') {
+				$out['title'] = _L('CAPTCHA plugins (active)');
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
+				$show_captcha_active = true;
+			} else if ($parts[1] == 'captcha.disabled') {
+				$out['title'] = _L('CAPTCHA plugins (inactive)');
+				$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
+				$show_captcha_inactive = true;
 			} else {
 				$out['title'] = _L('Error');
 				$out['icon'] = 'img/error_big.png';
@@ -498,6 +519,45 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '</div></div>';
 				}
 			}
+
+			if ($show_captcha_active || $show_captcha_inactive) {
+				if (count($plugins = OIDplus::getCaptchaPlugins()) > 0) {
+					$out['text'] .= '<h2>'._L('CAPTCHA plugins').'</h2>';
+					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '	<tr>';
+					$out['text'] .= '		<th width="25%">'._L('Class name').'</th>';
+					$out['text'] .= '		<th width="25%">'._L('Plugin name').'</th>';
+					$out['text'] .= '		<th width="25%">'._L('Plugin version').'</th>';
+					$out['text'] .= '		<th width="25%">'._L('Plugin author').'</th>';
+					$out['text'] .= '	</tr>';
+					foreach ($plugins as $plugin) {
+
+						$captcha_plugin_name = OIDplus::baseConfig()->getValue('CAPTCHA_PLUGIN', '');
+						if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_plugin_name === '')) {
+							// Legacy config file support!
+							$captcha_plugin_name = 'ReCAPTCHA';
+						}
+
+						$active = $plugin::id() == $captcha_plugin_name;
+						if ($active && !$show_captcha_active) continue;
+						if (!$active && !$show_captcha_inactive) continue;
+
+						$out['text'] .= '	<tr>';
+						if ($active) {
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b> '._L('(active)').'</a></td>';
+						} else {
+							$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+						}
+						$out['text'] .= '<td>' . htmlentities(empty($plugin->getManifest()->getName()) ? _L('n/a') : $plugin->getManifest()->getName()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($plugin->getManifest()->getVersion()) ? _L('n/a') : $plugin->getManifest()->getVersion()) . '</td>';
+						$out['text'] .= '<td>' . htmlentities(empty($plugin->getManifest()->getAuthor()) ? _L('n/a') : $plugin->getManifest()->getAuthor()) . '</td>';
+						$out['text'] .= '	</tr>';
+					}
+					$out['text'] .= '</table>';
+					$out['text'] .= '</div></div>';
+				}
+			}
 		}
 	}
 
@@ -525,6 +585,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		$tree_icon_language = $tree_icon; // TODO
 		$tree_icon_design_active = $tree_icon; // TODO
 		$tree_icon_design_inactive = $tree_icon; // TODO
+		$tree_icon_captcha_active = $tree_icon; // TODO
+		$tree_icon_captcha_inactive = $tree_icon; // TODO
 
 		$pp_public = array();
 		$pp_ra = array();
@@ -598,13 +660,13 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			if ($plugin::id() == OIDplus::db()->getSlang()->id()) {
 				$sql_plugins[] = array(
 					'id' => 'oidplus:system_plugins$'.get_class($plugin),
-					'icon' => $tree_icon_db_active,
+					'icon' => $tree_icon_sql_active,
 					'text' => $txt,
 				 );
 			} else {
 				$sql_plugins[] = array(
 					'id' => 'oidplus:system_plugins$'.get_class($plugin),
-					'icon' => $tree_icon_db_inactive,
+					'icon' => $tree_icon_sql_inactive,
 					'text' => '<font color="gray">'.$txt.'</font>',
 				 );
 			}
@@ -680,6 +742,30 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				);
 			}
 		}
+		$captcha_plugins = array();
+		foreach (OIDplus::getCaptchaPlugins() as $plugin) {
+			$txt = (empty($plugin->getManifest()->getName())) ? get_class($plugin) : $plugin->getManifest()->getName();
+
+			$captcha_plugin_name = OIDplus::baseConfig()->getValue('CAPTCHA_PLUGIN', '');
+			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_plugin_name === '')) {
+				// Legacy config file support!
+				$captcha_plugin_name = 'ReCAPTCHA';
+			}
+
+			if ($plugin::id() == $captcha_plugin_name) {
+				$captcha_plugins[] = array(
+					'id' => 'oidplus:system_plugins$'.get_class($plugin),
+					'icon' => $tree_icon_captcha_active,
+					'text' => $txt,
+				 );
+			} else {
+				$captcha_plugins[] = array(
+					'id' => 'oidplus:system_plugins$'.get_class($plugin),
+					'icon' => $tree_icon_captcha_inactive,
+					'text' => '<font color="gray">'.$txt.'</font>',
+				 );
+			}
+		}
 		$json[] = array(
 			'id' => 'oidplus:system_plugins',
 			'icon' => $tree_icon,
@@ -751,6 +837,12 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					'icon' => $tree_icon,
 					'text' => _L('Designs'),
 					'children' => $design_plugins
+				),
+				array(
+					'id' => 'oidplus:system_plugins.captcha',
+					'icon' => $tree_icon,
+					'text' => _L('CAPTCHA plugins'),
+					'children' => $captcha_plugins
 				)
 			)
 		);
