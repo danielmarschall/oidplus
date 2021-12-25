@@ -45,9 +45,7 @@ echo '	<meta name="robots" content="noindex">';
 echo '	<meta name="viewport" content="width=device-width, initial-scale=1.0">';
 echo '	<link rel="stylesheet" href="../../../../setup/setup.min.css.php">';
 echo '	<link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico.php">';
-if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
-	echo '	<script src="https://www.google.com/recaptcha/api.js"></script>';
-}
+echo OIDplus::getActiveCaptchaPlugin()->captchaDomHead();
 echo '</head>';
 
 echo '<body>';
@@ -64,28 +62,18 @@ echo '<p>'._L('The following settings need to be configured once.<br>After setup
 echo '<form method="POST" action="oobe.php">';
 echo '<input type="hidden" name="sent" value="1">';
 
-if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
+if (OIDplus::getActiveCaptchaPlugin()::id() !== 'None') {
 	echo '<p><u>'._L('Step %1: Solve CAPTCHA',$step++).'</u></p>';
-	echo '<noscript>';
-	echo '<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>';
-	echo '</noscript>';
-	echo '<p>'._L('Before logging in, please solve the following CAPTCHA').'</p>';
-	echo '<p>'._L('If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="%1">setup part 1</a> again or edit %2 manually).',OIDplus::webpath().'setup/','userdata/baseconfig/config.inc.php').'</p>';
-	echo '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>';
-	echo '<script> grecaptcha.render($("#g-recaptcha")[0], { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>';
-
 	if (isset($_REQUEST['sent'])) {
-		$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
-		_CheckParamExists($_POST, 'g-recaptcha-response');
-		$response=$_POST["g-recaptcha-response"];
-		$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-		$captcha_success=json_decode($verify);
-		if ($captcha_success->success==false) {
-			echo '<p><font color="red"><b>CAPTCHA not successfully verified</b></font></p>';
+		try {
+			OIDplus::getActiveCaptchaPlugin()->captchaVerify($_POST);
+		} catch (Exception $e) {
+			echo '<p><font color="red"><b>'.htmlentities($e->getMessage()).'</b></font></p>';
 			$errors_happened = true;
 			$edits_possible = false;
 		}
 	}
+	echo OIDplus::getActiveCaptchaPlugin()->captchaGenerate(_L('Before logging in, please solve the following CAPTCHA'), _L('If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="%1">setup part 1</a> again or edit %2 manually).',OIDplus::webpath().'setup/','userdata/baseconfig/config.inc.php'));
 }
 
 echo '<p><u>'._L('Step %1: Authenticate',$step++).'</u></p>';

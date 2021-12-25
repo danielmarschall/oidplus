@@ -35,24 +35,24 @@ var OIDplusPagePublicForgotPassword = {
 				plugin:OIDplusPagePublicForgotPassword.oid,
 				action: "forgot_password",
 				email: $("#email").val(),
-				captcha: $(".g-recaptcha").length > 0 ? grecaptcha.getResponse() : null
+				captcha: oidplus_captcha_response()
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
 				alert(_L("Error: %1",errorThrown));
-				if ($(".g-recaptcha").length > 0) grecaptcha.reset();
+				oidplus_captcha_reset();
 			},
 			success: function(data) {
 				if ("error" in data) {
 					alert(_L("Error: %1",data.error));
-					if ($(".g-recaptcha").length > 0) grecaptcha.reset();
+					oidplus_captcha_reset();
 				} else if (data.status >= 0) {
 					alert(_L("E-Mail sent."));
 					window.location.href = '?goto=oidplus:login';
 					//reloadContent();
 				} else {
 					alert(_L("Error: %1",data));
-					if ($(".g-recaptcha").length > 0) grecaptcha.reset();
+					oidplus_captcha_reset();
 				}
 			}
 		});

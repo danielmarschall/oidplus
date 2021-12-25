@@ -88,9 +88,7 @@ $add_css_args = count($add_css_args) > 0 ? '?'.implode('&',$add_css_args) : '';
 
 	<script src="polyfill.min.js.php"></script>
 	<?php
-	if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) == true) {
-		echo '<script src="https://www.google.com/recaptcha/api.js"></script>';
-	}
+	echo OIDplus::getActiveCaptchaPlugin()->captchaDomHead();
 	?>
 	<script src="oidplus.min.js.php"></script>
 

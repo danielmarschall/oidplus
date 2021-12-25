@@ -25,16 +25,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		// === RA LOGIN/LOGOUT ===
 
 		if ($actionID == 'ra_login') {
-			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
-				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
-				_CheckParamExists($params, 'captcha');
-				$response=$params["captcha"];
-				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-				$captcha_success=json_decode($verify);
-				if ($captcha_success->success==false) {
-					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
-				}
-			}
+			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
 
 			_CheckParamExists($params, 'email');
 			_CheckParamExists($params, 'password');
@@ -78,16 +69,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		// === ADMIN LOGIN/LOGOUT ===
 
 		else if ($actionID == 'admin_login') {
-			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
-				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
-				_CheckParamExists($params, 'captcha');
-				$response=$params["captcha"];
-				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-				$captcha_success=json_decode($verify);
-				if ($captcha_success->success==false) {
-					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
-				}
-			}
+			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
 
 			_CheckParamExists($params, 'password');
 			if (OIDplus::authUtils()->adminCheckPassword($params['password'])) {
@@ -151,10 +133,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$out['text'] .= '</noscript>';
 
 			$out['text'] .= '<div id="loginArea" style="visibility: hidden"><div id="loginTab" class="container" style="width:100%;">';
-			$out['text'] .= (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
-			                '<p>'._L('Before logging in, please solve the following CAPTCHA').'</p>'.
-					'<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>'.
-			                '<script> grecaptcha.render($("#g-recaptcha")[0], { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>' : '');
+
+			$out['text'] .= OIDplus::getActiveCaptchaPlugin()->captchaGenerate(_L('Before logging in, please solve the following CAPTCHA'));
 			$out['text'] .= '<br>';
 
 			// ---------------- Tab control

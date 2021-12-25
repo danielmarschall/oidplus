@@ -99,16 +99,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
 			if (!function_exists('ldap_connect')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','LDAP'));
 
-			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
-				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
-				_CheckParamExists($params, 'captcha');
-				$response=$params["captcha"];
-				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-				$captcha_success=json_decode($verify);
-				if ($captcha_success->success==false) {
-					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
-				}
-			}
+			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
 
 			_CheckParamExists($params, 'email');
 			_CheckParamExists($params, 'password');
@@ -235,10 +226,8 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			$out['text'] .= '</noscript>';
 
 			$out['text'] .= '<div id="loginLdapArea" style="visibility: hidden">';
-			$out['text'] .= (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
-			                '<p>'._L('Before logging in, please solve the following CAPTCHA').'</p>'.
-			                '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>'.
-			                '<script> grecaptcha.render($("#g-recaptcha")[0], { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>' : '');
+
+			$out['text'] .= OIDplus::getActiveCaptchaPlugin()->captchaGenerate(_L('Before logging in, please solve the following CAPTCHA'));
 			$out['text'] .= '<br>';
 
 			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:login').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Regular login method').'</a></p>';

@@ -48,16 +48,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				throw new OIDplusException(_L('Invalid email address'));
 			}
 
-			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
-				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
-				_CheckParamExists($params, 'captcha');
-				$response=$params["captcha"];
-				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-				$captcha_success=json_decode($verify);
-				if ($captcha_success->success==false) {
-					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
-				}
-			}
+			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
 
 			$root_oid = self::getFreeRootOid(false);
 			OIDplus::logger()->log("[INFO]OID(oid:$root_oid)+RA($email)!", "Requested a free OID for email '$email' to be placed into root '$root_oid'");
@@ -99,7 +90,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				_CheckParamExists($params, 'password1');
 				_CheckParamExists($params, 'password2');
 				_CheckParamExists($params, 'ra_name');
-				
+
 				$password1 = $params['password1'];
 				$password2 = $params['password2'];
 				$ra_name = $params['ra_name'];
@@ -214,11 +205,9 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			try {
 				$out['text'] .= '
 				  <form id="freeOIDForm" action="javascript:void(0);" onsubmit="return OIDplusPagePublicFreeOID.freeOIDFormOnSubmit();">
-				    '._L('E-Mail').': <input type="text" id="email" value=""/><br><br>'.
-				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
-				 '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>'.
-				 '<script> grecaptcha.render($("#g-recaptcha")[0], { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>' : '').
-				' <br>
+				    '._L('E-Mail').': <input type="text" id="email" value=""/><br><br>
+				    '.OIDplus::getActiveCaptchaPlugin()->captchaGenerate().'
+				    <br>
 				    <input type="submit" value="'._L('Request free OID').'">
 				  </form>';
 

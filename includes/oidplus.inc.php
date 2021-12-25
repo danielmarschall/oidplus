@@ -106,7 +106,8 @@ spl_autoload_register(function ($class_name) {
 			'objectTypes',
 			'publicPages',
 			'raPages',
-			'sqlSlang'
+			'sqlSlang',
+			'captcha'
 		);
 
 		$func = function(&$class_refs, $class_files, $namespace='') {

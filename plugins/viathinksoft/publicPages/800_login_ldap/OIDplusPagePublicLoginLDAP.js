@@ -39,23 +39,23 @@ var OIDplusPagePublicLoginLDAP = {
 				email:email,
 				password:password,
 				remember_me:remember_me?1:0,
-				captcha: $(".g-recaptcha").length > 0 ? grecaptcha.getResponse() : null
+				captcha: oidplus_captcha_response()
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
 				alert(_L("Error: %1",errorThrown));
-				if ($(".g-recaptcha").length > 0) grecaptcha.reset();
+				oidplus_captcha_reset();
 			},
 			success:function(data) {
 				if ("error" in data) {
 					alert(_L("Error: %1",data.error));
-					if ($(".g-recaptcha").length > 0) grecaptcha.reset();
+					oidplus_captcha_reset();
 				} else if (data.status >= 0) {
 					window.location.href = '?goto=oidplus:system';
 					// reloadContent();
 				} else {
 					alert(_L("Error: %1",data));
-					if ($(".g-recaptcha").length > 0) grecaptcha.reset();
+					oidplus_captcha_reset();
 				}
 			}
 		});

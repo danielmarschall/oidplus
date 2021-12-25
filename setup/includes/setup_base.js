@@ -129,7 +129,7 @@ function doRebuild(admPwdHash, pwComment) {
 		$("#password_warn2")[0].innerHTML = '';
 	}
 
-	// Check 3: Ask the database plugins for verification of their data
+	// Check 3: Ask the database or captcha plugins for verification of their data
 	for (var i = 0; i < rebuild_callbacks.length; i++) {
 		var f = rebuild_callbacks[i];
 		if (!f()) {
@@ -141,7 +141,9 @@ function doRebuild(admPwdHash, pwComment) {
 	if (!error)
 	{
 		var e = $("#db_plugin")[0];
-		var strPlugin = e.options[e.selectedIndex].value;
+		var strDatabasePlugin = e.options[e.selectedIndex].value;
+		var e = $("#captcha_plugin")[0];
+		var strCaptchaPlugin = e.options[e.selectedIndex].value;
 
 		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br>' +
 			'<i>// To renew this file, please run setup/ in your browser.</i><br>' + // do not translate
@@ -153,7 +155,7 @@ function doRebuild(admPwdHash, pwComment) {
 			// e.g. if collegues are looking over your shoulder while you accidently open (and quickly close) userdata/baseconfig/config.inc.php
 			'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + admPwdHash + '\'); // '+pwComment+'<br>' +
 			'<br>' +
-			'OIDplus::baseConfig()->setValue(\'DATABASE_PLUGIN\',   \''+strPlugin+'\');<br>';
+			'OIDplus::baseConfig()->setValue(\'DATABASE_PLUGIN\',   \''+strDatabasePlugin+'\');<br>';
 		for (var i = 0; i < rebuild_config_callbacks.length; i++) {
 			var f = rebuild_config_callbacks[i];
 			var cont = f();
@@ -167,9 +169,16 @@ function doRebuild(admPwdHash, pwComment) {
 			'<br>' +
 			'OIDplus::baseConfig()->setValue(\'SERVER_SECRET\',     \''+generateRandomString(32)+'\');<br>' +
 			'<br>' +
-			'OIDplus::baseConfig()->setValue(\'RECAPTCHA_ENABLED\', '+($("#recaptcha_enabled")[0].checked ? 'true' : 'false')+');<br>' +
-			'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PUBLIC\',  \''+$("#recaptcha_public")[0].value+'\');<br>' +
-			'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PRIVATE\', \''+$("#recaptcha_private")[0].value+'\');<br>' +
+			'OIDplus::baseConfig()->setValue(\'CAPTCHA_PLUGIN\',    \''+strCaptchaPlugin+'\');<br>';
+		for (var i = 0; i < captcha_rebuild_config_callbacks.length; i++) {
+			var f = captcha_rebuild_config_callbacks[i];
+			var cont = f();
+			if (cont) {
+				$("#config")[0].innerHTML = $("#config")[0].innerHTML + cont;
+			}
+		}
+
+		$("#config")[0].innerHTML = $("#config")[0].innerHTML +
 			'<br>' +
 			'OIDplus::baseConfig()->setValue(\'ENFORCE_SSL\',       '+$("#enforce_ssl")[0].value+');<br>';
 
@@ -214,11 +223,23 @@ function checkAccess(dir) {
 
 function dbplugin_changed() {
 	var e = $("#db_plugin")[0];
-	var strPlugin = e.options[e.selectedIndex].value;
+	var strDatabasePlugin = e.options[e.selectedIndex].value;
 
 	for (var i = 0; i < plugin_combobox_change_callbacks.length; i++) {
 		var f = plugin_combobox_change_callbacks[i];
-		f(strPlugin);
+		f(strDatabasePlugin);
+	}
+
+	rebuild();
+}
+
+function captchaplugin_changed() {
+	var e = $("#captcha_plugin")[0];
+	var strCaptchaPlugin = e.options[e.selectedIndex].value;
+
+	for (var i = 0; i < captcha_plugin_combobox_change_callbacks.length; i++) {
+		var f = captcha_plugin_combobox_change_callbacks[i];
+		f(strCaptchaPlugin);
 	}
 
 	rebuild();
@@ -237,6 +258,7 @@ function performAccessCheck() {
 function setupOnLoad() {
 	rebuild();
 	dbplugin_changed();
+	captchaplugin_changed();
 	performAccessCheck();
 }
 
