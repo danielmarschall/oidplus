@@ -112,6 +112,8 @@ echo '<p>'._L('Table name prefix (e.g. <b>oidplus_</b>)').':<br><input id="table
 
 echo '<h3>'._L('CAPTCHA').'</h3>';
 
+// TODO: Add a small explanation here, in case somebody does not know what CAPTCHA is
+
 echo _L('CAPTCHA plugin').': <select name="captcha_plugin" onChange="captchaplugin_changed()" id="captcha_plugin">';
 
 OIDplus::registerAllPlugins('captcha', 'OIDplusCaptchaPlugin', array('OIDplus','registerCaptchaPlugin'));
