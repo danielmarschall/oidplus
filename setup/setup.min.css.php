@@ -69,8 +69,7 @@ if (file_exists(__DIR__ . '/../userdata/styles/setup_base.css')) {
 }
 
 // Then plugins
-OIDplus::registerAllPlugins('database', 'OIDplusDatabasePlugin', array('OIDplus','registerDatabasePlugin'));
-$manifests = OIDplus::getAllPluginManifests('database', true);
+$manifests = OIDplus::getAllPluginManifests('database,captcha', true);
 foreach ($manifests as $manifest) {
 	foreach ($manifest->getCSSFilesSetup() as $css_file) {
 		$out .= process_file($css_file);

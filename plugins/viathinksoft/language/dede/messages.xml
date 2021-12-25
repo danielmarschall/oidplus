@@ -822,10 +822,34 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		CAPTCHA
+		]]></source>
+		<target><![CDATA[
+		CAPTCHA
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		CAPTCHA not successfully verified
 		]]></source>
 		<target><![CDATA[
 		CAPTCHA wurde nicht richtig gelöst
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		CAPTCHA plugin
+		]]></source>
+		<target><![CDATA[
+		CAPTCHA-Plugin
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		CAPTCHA plugin "%1" not found
+		]]></source>
+		<target><![CDATA[
+		CAPTCHA-Plugin "%1" nicht gefunden
 		]]></target>
 	</message>
 	<message>
@@ -1594,6 +1618,14 @@
 		]]></source>
 		<target><![CDATA[
 		E-Mail-Adresse: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ERROR: No CAPTCHA plugins were found! You CANNOT use OIDplus without the "%1" CAPTCHA plugin.
+		]]></source>
+		<target><![CDATA[
+		FEHLER: Keine CAPTCHA-Plugins gefunden! Sie können OIDplus ohne das "%1" CAPTCHA-Plugin nicht ausführen!
 		]]></target>
 	</message>
 	<message>
@@ -3310,6 +3342,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		No CAPTCHA will be used. Please note that your system will be prone to "Brute force" attacks.
+		]]></source>
+		<target><![CDATA[
+		Kein CAPTCHA wird verwendet werden. Bitte beachten Sie, dass Ihr System dann angreifbar für "Brute force" Angriffe ist.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		No RA authentication plugins found
 		]]></source>
 		<target><![CDATA[
@@ -4438,6 +4478,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Please specify a private key!
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie einen privaten Schlüssel ein!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please specify a public key!
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie einen öffentlichen Schlüssel ein!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Please specify a username!
 		]]></source>
 		<target><![CDATA[
@@ -4730,14 +4786,6 @@
 		]]></source>
 		<target><![CDATA[
 		RFC Internet Draft
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		ReCAPTCHA
-		]]></source>
-		<target><![CDATA[
-		ReCAPTCHA
 		]]></target>
 	</message>
 	<message>
@@ -7250,14 +7298,6 @@
 		]]></source>
 		<target><![CDATA[
 		reCAPTCHA öffentlicher Schlüssel
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		reCAPTCHA enabled
-		]]></source>
-		<target><![CDATA[
-		reCAPTCHA aktiviert
 		]]></target>
 	</message>
 	<message>

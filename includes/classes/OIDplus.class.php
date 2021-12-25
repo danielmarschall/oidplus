@@ -27,6 +27,7 @@ class OIDplus {
 	private static /*string[]*/ $enabledObjectTypes = array();
 	private static /*string[]*/ $disabledObjectTypes = array();
 	private static /*OIDplusDatabasePlugin[]*/ $dbPlugins = array();
+	private static /*OIDplusCaptchaPlugin[]*/ $captchaPlugins = array();
 	private static /*OIDplusSqlSlangPlugin[]*/ $sqlSlangPlugins = array();
 	private static /*OIDplusLanguagePlugin[]*/ $languagePlugins = array();
 	private static /*OIDplusDesignPlugin[]*/ $designPlugins = array();
@@ -310,14 +311,14 @@ class OIDplus {
 	}
 
 	public static function getActiveDatabasePlugin() {
-		if (OIDplus::baseConfig()->getValue('DATABASE_PLUGIN', '') === '') {
+		$db_plugin_name = OIDplus::baseConfig()->getValue('DATABASE_PLUGIN','');
+		if ($db_plugin_name === '') {
 			throw new OIDplusConfigInitializationException(_L('No database plugin selected in config file'));
 		}
-		if (!isset(self::$dbPlugins[OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')])) {
-			$db_plugin_name = OIDplus::baseConfig()->getValue('DATABASE_PLUGIN');
+		if (!isset(self::$dbPlugins[$db_plugin_name])) {
 			throw new OIDplusConfigInitializationException(_L('Database plugin "%1" not found',$db_plugin_name));
 		}
-		return self::$dbPlugins[OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')];
+		return self::$dbPlugins[$db_plugin_name];
 	}
 
 	private static $dbMainSession = null;
@@ -336,6 +337,43 @@ class OIDplus {
 		}
 		if (!self::$dbIsolatedSession->isConnected()) self::$dbIsolatedSession->connect();
 		return self::$dbIsolatedSession;
+	}
+
+	# --- CAPTCHA plugin
+
+	private static function registerCaptchaPlugin(OIDplusCaptchaPlugin $plugin) {
+		$name = $plugin::id();
+		if ($name === '') return false;
+
+		if (isset(self::$captchaPlugins[$name])) {
+			$plugintype_hf = _L('CAPTCHA');
+			throw new OIDplusException(_L('Multiple %1 plugins use the ID %2', $plugintype_hf, $name));
+		}
+
+		self::$captchaPlugins[$name] = $plugin;
+
+		return true;
+	}
+
+	public static function getCaptchaPlugins() {
+		return self::$captchaPlugins;
+	}
+
+	public static function getActiveCaptchaPlugin() {
+
+		$captcha_plugin_name = OIDplus::baseConfig()->getValue('CAPTCHA_PLUGIN', '');
+
+		if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_plugin_name === '')) {
+			// Legacy config file support!
+			$captcha_plugin_name = 'ReCAPTCHA';
+		}
+
+		if ($captcha_plugin_name === '') $captcha_plugin_name = 'None';
+
+		if (!isset(self::$captchaPlugins[$captcha_plugin_name])) {
+			throw new OIDplusConfigInitializationException(_L('CAPTCHA plugin "%1" not found',$captcha_plugin_name));
+		}
+		return self::$captchaPlugins[$captcha_plugin_name];
 	}
 
 	# --- Page plugin
@@ -542,6 +580,7 @@ class OIDplus {
 		$res = array_merge($res, self::$loggerPlugins);
 		$res = array_merge($res, self::$objectTypePlugins);
 		$res = array_merge($res, self::$dbPlugins);
+		$res = array_merge($res, self::$captchaPlugins);
 		$res = array_merge($res, self::$sqlSlangPlugins);
 		$res = array_merge($res, self::$languagePlugins);
 		$res = array_merge($res, self::$designPlugins);
@@ -764,6 +803,7 @@ class OIDplus {
 		self::$enabledObjectTypes = array();
 		self::$disabledObjectTypes = array();
 		self::$dbPlugins = array();
+		self::$captchaPlugins = array();
 		self::$sqlSlangPlugins = array();
 		self::$languagePlugins = array();
 		self::$designPlugins = array();
@@ -789,6 +829,13 @@ class OIDplus {
 
 		self::registerAllPlugins('database', 'OIDplusDatabasePlugin', array('OIDplus','registerDatabasePlugin'));
 		foreach (OIDplus::getDatabasePlugins() as $plugin) {
+			$plugin->init($html);
+		}
+
+		// CAPTCHA plugins
+
+		self::registerAllPlugins('captcha', 'OIDplusCaptchaPlugin', array('OIDplus','registerCaptchaPlugin'));
+		foreach (OIDplus::getCaptchaPlugins() as $plugin) {
 			$plugin->init($html);
 		}
 

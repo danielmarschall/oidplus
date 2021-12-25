@@ -1,4 +1,7 @@
 
+DECEMBER 2021
+- When you enter an OID e.g. "oid:1.3.6.1.4.1.37476.2.5.2.5.11" in the goto box, then the menu at the left does not open. If you open the URL directly https://oidplus.viathinksoft.com/oidplus/?goto=oid%3A1.3.6.1.4.1.37476.2.5.2.5.11 , then the OID is opened at the left tree (tree search)
+
 RECENT STUFF
 - At a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
 - Default language selection: Either always en-US, or automatical selection depending on browser language, or depending on admin setting (e.g. german companies offer a german repository by default)?
@@ -8,7 +11,6 @@ RECENT STUFF
 	... At least give a hint to the documentation, so they know how to run the tool and how to enter the cost in the configuration (for RA and Admin)
 	... or in the setup page make an extra control how complex the admin password should be? but be aware that nobody enters a too big number (it makes DoS possible!)
 - system log plugin: Only show 100 events and let the user switch pages. To avoid that you load a page with 10000+ log entries!
-
 
 SECURITY Improvements:
 - Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")

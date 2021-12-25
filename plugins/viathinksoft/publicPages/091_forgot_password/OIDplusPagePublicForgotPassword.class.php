@@ -30,16 +30,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 				throw new OIDplusException(_L('Invalid email address'));
 			}
 
-			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
-				_CheckParamExists($params, 'captcha');
-				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
-				$response=$params["captcha"];
-				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-				$captcha_success=json_decode($verify);
-				if ($captcha_success->success==false) {
-					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
-				}
-			}
+			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
 
 			OIDplus::logger()->log("[WARN]RA($email)!", "A new password for '$email' was requested (forgot password)");
 
@@ -54,7 +45,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			return array("status" => 0);
 
 		} else if ($actionID == 'reset_password') {
-			
+
 			_CheckParamExists($params, 'password1');
 			_CheckParamExists($params, 'password2');
 			_CheckParamExists($params, 'email');
@@ -113,11 +104,9 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			try {
 				$out['text'] .= '<p>'._L('Please enter the email address of your account, and information about the password reset will be sent to you.').'</p>
 				  <form id="forgotPasswordForm" action="javascript:void(0);" onsubmit="return OIDplusPagePublicForgotPassword.forgotPasswordFormOnSubmit();">
-				    '._L('E-Mail').': <input type="text" id="email" value=""/><br><br>'.
-				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
-				 '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>'.
-				 '<script> grecaptcha.render($("#g-recaptcha")[0], { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>' : '').
-				' <br>
+				    '._L('E-Mail').': <input type="text" id="email" value=""/><br><br>
+				    '.OIDplus::getActiveCaptchaPlugin()->captchaGenerate().'
+				    <br>
 				    <input type="submit" value="'._L('Send recovery information').'">
 				  </form>';
 

@@ -53,11 +53,15 @@ echo '<div id="dirAccessWarning"></div>';
 echo '<div id="step1">';
 echo '<h2>'._L('Step %1: Enter setup information',1).'</h2>';
 
+// ----------------------------------------
+
 echo '<h3>'._L('Administrator password').'</h3>';
 
 echo '<form id="step1_form">';
 echo '<p>'._L('Which admin password do you want?').'<br><input id="admin_password" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="password_warn"></span></p>';
 echo '<p>'._L('Please repeat the password input:').'<br><input id="admin_password2" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="password_warn2"></span></p>';
+
+// ----------------------------------------
 
 echo '<h3>'._L('Database connectivity').'</h3>';
 
@@ -104,10 +108,39 @@ echo '</div>';
 
 echo '<p>'._L('Table name prefix (e.g. <b>oidplus_</b>)').':<br><input id="tablename_prefix" type="text" value="oidplus_" onkeypress="rebuild()" onkeyup="rebuild()"></p>';
 
-echo '<h3>'._L('ReCAPTCHA').'</h3>';
-echo '<p><input id="recaptcha_enabled" type="checkbox" onclick="rebuild()"> <label for="recaptcha_enabled">'._L('reCAPTCHA enabled').'</label> (<a href="https://developers.google.com/recaptcha/intro" target="_blank">'._L('more information and obtain key').'</a>)</p>';
-echo '<p>'._L('reCAPTCHA Public key').'<br><input id="recaptcha_public" type="text" onkeypress="rebuild()" onkeyup="rebuild()"></p>';
-echo '<p>'._L('reCAPTCHA Private key').'<br><input id="recaptcha_private" type="text" onkeypress="rebuild()" onkeyup="rebuild()"></p>';
+// ----------------------------------------
+
+echo '<h3>'._L('CAPTCHA').'</h3>';
+
+echo _L('CAPTCHA plugin').': <select name="captcha_plugin" onChange="captchaplugin_changed()" id="captcha_plugin">';
+
+OIDplus::registerAllPlugins('captcha', 'OIDplusCaptchaPlugin', array('OIDplus','registerCaptchaPlugin'));
+foreach (OIDplus::getCaptchaPlugins() as $plugin) {
+	$selected = $plugin::id() === 'None' ? ' selected="true"' : '';
+	echo '<option value="'.htmlentities($plugin::id()).'"'.$selected.'>'.htmlentities($plugin::id()).'</option>';
+}
+
+echo '</select>';
+
+echo '<div style="margin-left:50px">';
+
+$found_captcha_plugins = 0;
+foreach (OIDplus::getCaptchaPlugins() as $plugin) {
+	$found_captcha_plugins++;
+	$cont = $plugin->setupHTML();
+	echo $cont;
+}
+
+if ($found_captcha_plugins == 0) {
+	echo '<p><font color="red">'._L('ERROR: No CAPTCHA plugins were found! You CANNOT use OIDplus without the "%1" CAPTCHA plugin.','None').'</font></p>';
+}
+
+echo '</div>';
+
+// Commented out, because it might confuse people during the OOBE
+//echo '<p>'._L('Note: In case you are already operating a system, the users need to reload the webpage in order to receive the new CAPTCHA settings.').'</p>';
+
+// ----------------------------------------
 
 echo '<h3>'._L('TLS').'</h3>';
 echo '<p>'._L('SSL enforcement').'<br><select name="enforce_ssl" id="enforce_ssl" onclick="rebuild()">';
@@ -117,6 +150,8 @@ echo '<option value="2" selected>'._L('Intelligent SSL detection (redirect if po
 echo '</select></p>';
 echo '</form>';
 echo '</div>';
+
+// ----------------------------------------
 
 echo '<div id="step2">';
 echo '<h2>'._L('Step %1: Initialize database',2).'</h2>';
@@ -129,11 +164,15 @@ echo '</ul></p>';
 echo '<p><font color="red">'._L('Warning: All data from the previous OIDplus instance will be deleted during the import.<br>If you already have an OIDplus database, skip to Step 3.').'</font></p>';
 echo '</div>';
 
+// ----------------------------------------
+
 echo '<div id="step3">';
 echo '<h2>'._L('Step %1: Save %2 file',3,'userdata/baseconfig/config.inc.php').'</h2>';
 echo '<p>'._L('Save following contents into the file <b>%1</b>','userdata/baseconfig/config.inc.php').'</p>';
 echo '<code><font color="darkblue"><div id="config"></div></font></code>';
 echo '</div>';
+
+// ----------------------------------------
 
 echo '<div id="step4">';
 echo '<h2>'._L('Step %1: Continue to next step',4).'</h2>';

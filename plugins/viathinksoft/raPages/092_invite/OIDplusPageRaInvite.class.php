@@ -29,15 +29,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				throw new OIDplusException(_L('Invalid email address'));
 			}
 
-			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false)) {
-				$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
-				$response=$params["captcha"];
-				$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-				$captcha_success=json_decode($verify);
-				if ($captcha_success->success==false) {
-					throw new OIDplusException(_L('CAPTCHA not successfully verified'));
-				}
-			}
+			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
 
 			$this->inviteSecurityCheck($email);
 			// TODO: should we also log who has invited?
@@ -132,11 +124,9 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				$out['text'] .= '<p>'._L('You have chosen to invite %1 as a Registration Authority. If you click "Send", the following email will be sent to %2:','<b>'.$email.'</b>',$email).'</p><p><i>'.nl2br(htmlentities($cont)).'</i></p>
 				  <form id="inviteForm" action="javascript:void(0);" onsubmit="return OIDplusPageRaInvite.inviteFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
-				    <input type="hidden" id="origin" value="'.htmlentities($origin).'"/>'.
-				 (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) ?
-				 '<div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'"></div>'.
-				 '<script> grecaptcha.render($("#g-recaptcha")[0], { "sitekey" : "'.OIDplus::baseConfig()->getValue('RECAPTCHA_PUBLIC', '').'" }); </script>' : '').
-				' <br>
+				    <input type="hidden" id="origin" value="'.htmlentities($origin).'"/>
+				    '.OIDplus::getActiveCaptchaPlugin()->captchaGenerate().'
+				    <br>
 				    <input type="submit" value="'._L('Send invitation').'">
 				  </form>';
 

@@ -106,6 +106,9 @@ Information:             It is very very important that you choose a long sequen
 
 OIDplus::baseConfig()->setValue('RECAPTCHA_ENABLED',        true);
 Old 2.0 format:          define('RECAPTCHA_ENABLED',        0);
+                         Deprecated!
+                         RECAPTCHA_ENABLED=true  becomes CAPTCHA_PLUGIN=ReCAPTCHA
+                         RECAPTCHA_ENABLED=false becomes CAPTCHA_PLUGIN=None
 
 OIDplus::baseConfig()->setValue('RECAPTCHA_PUBLIC',         '');
 Old 2.0 format:          define('RECAPTCHA_PUBLIC',         '');

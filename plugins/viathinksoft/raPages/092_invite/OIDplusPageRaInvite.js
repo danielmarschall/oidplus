@@ -35,24 +35,24 @@ var OIDplusPageRaInvite = {
 				plugin: OIDplusPageRaInvite.oid,
 				action: "invite_ra",
 				email: $("#email").val(),
-				captcha: $(".g-recaptcha").length > 0 ? grecaptcha.getResponse() : null
+				captcha: oidplus_captcha_response()
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
 				alert(_L("Error: %1",errorThrown));
-				if ($(".g-recaptcha").length > 0) grecaptcha.reset();
+				oidplus_captcha_reset();
 			},
 			success: function(data) {
 				if ("error" in data) {
 					alert(_L("Error: %1",data.error));
-					if ($(".g-recaptcha").length > 0) grecaptcha.reset();
+					oidplus_captcha_reset();
 				} else if (data.status >= 0) {
 					alert(_L("The RA has been invited via email."));
 					window.location.href = '?goto='+$("#origin").val();
 					//reloadContent();
 				} else {
 					alert(_L("Error: %1",data));
-					if ($(".g-recaptcha").length > 0) grecaptcha.reset();
+					oidplus_captcha_reset();
 				}
 			}
 		});
