@@ -109,6 +109,8 @@ if (!$obj) {
 			if ($query == $query_prev) break;
 			$distance++;
 		} else {
+			// getParent() will find the parent which DOES exist in the DB.
+			// It does not need to be the direct parent (like ->one_up() does)
 			$obj = OIDplusObject::parse($query)->getParent(); // For objects, we assume that they are parents of each other
 			if ($obj) {
 				$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
@@ -117,6 +119,13 @@ if (!$obj) {
 
 				$query = $obj->nodeId();
 			}
+
+			if ($distance > 0) {
+				$out[] = "result: Not found; superior object found"; // DO NOT TRANSLATE!
+				$out[] = "distance: $distance"; // DO NOT TRANSLATE
+			}
+			$continue = true;
+
 			break;
 		}
 	}
@@ -210,6 +219,8 @@ if ($continue) {
 
 		foreach (OIDplus::getPagePlugins() as $plugin) {
 			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
+				// TODO: Also ask $obj for extra attributes (although it is not a plugin)?
+				//       This way we could add various additional information, e.g. IPv4/6 range analysis, interpretation of GUID, etc.
 				$plugin->whoisObjectAttributes($obj->nodeId(), $out);
 			}
 		}
@@ -274,6 +285,7 @@ if ($continue) {
 			$out[] = 'ra-email: ' . $row->ra_email; // DO NOT TRANSLATE!
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
+					// TODO: Also ask $ra for extra attributes (although it is not a plugin)?
 					$plugin->whoisRaAttributes($row->ra_email, $out);
 				}
 			}

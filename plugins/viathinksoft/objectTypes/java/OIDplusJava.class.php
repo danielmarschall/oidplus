@@ -130,8 +130,8 @@ class OIDplusJava extends OIDplusObject {
 		$oid = $this->java;
 
 		$p = strrpos($oid, '.');
-		if ($p === false) return $oid;
-		if ($p == 0) return '.';
+		if ($p === false) return self::parse($oid);
+		if ($p == 0) return self::parse('.');
 
 		$oid_up = substr($oid, 0, $p);
 

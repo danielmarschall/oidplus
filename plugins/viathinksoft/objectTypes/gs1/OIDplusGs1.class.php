@@ -187,7 +187,7 @@ class OIDplusGs1 extends OIDplusObject {
 	}
 
 	public function one_up() {
-		return  OIDplusObject::parse($this->ns().':'.substr($this->number,0,strlen($this->number)-1));
+		return OIDplusObject::parse($this->ns().':'.substr($this->number,0,strlen($this->number)-1));
 	}
 
 	private static function distance_($a, $b) {
