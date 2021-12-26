@@ -240,7 +240,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					}
 					*/
 
-					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
+					$ic = /*empty($tree_icon) ? '' : */'<img src="'.$tree_icon.'" alt="">';
 
 					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.rtrim($dir,'/').'/').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to').': '.$ic.' '.htmlentities(self::getFolderTitle($realdir)).'</a></p><br>';
 				}
@@ -335,7 +335,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					}
 					*/
 
-					$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
+					$ic = /*empty($tree_icon) ? '' : */'<img src="'.$tree_icon.'" alt="">';
 
 					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.rtrim($dir,'/').'/').'>'.$ic.' '.htmlentities(self::getFolderTitle($realdir)).'</a></p>';
 					$count++;
@@ -363,7 +363,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 						}
 						*/
 
-						$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
+						$ic = /*empty($tree_icon) ? '' : */'<img src="'.$tree_icon.'" alt="">';
 
 						$out['text'] .= '<p><a href="'.htmlentities(self::getHyperlinkURL($realfile)).'" target="_blank">'.$ic.' '.htmlentities($this->getHyperlinkTitle($realfile)).'</a></p>';
 						$count++;
@@ -380,7 +380,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 						}
 						*/
 
-						$ic = empty($tree_icon) ? '' : '<img src="'.$tree_icon.'" alt="">';
+						$ic = /*empty($tree_icon) ? '' : */'<img src="'.$tree_icon.'" alt="">';
 
 						$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:resources$'.$file).'>'.$ic.' '.htmlentities($this->getDocumentTitle($file)).'</a></p>';
 						$count++;
