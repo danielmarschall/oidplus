@@ -19,10 +19,6 @@ class ComposerStaticInitOidPlusComposer
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
         ),
-        'R' => 
-        array (
-            'ReCaptcha\\' => 10,
-        ),
         'M' => 
         array (
             'MatthiasMullie\\PathConverter\\' => 29,
@@ -42,10 +38,6 @@ class ComposerStaticInitOidPlusComposer
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
-        ),
-        'ReCaptcha\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/google/recaptcha/src/ReCaptcha',
         ),
         'MatthiasMullie\\PathConverter\\' => 
         array (

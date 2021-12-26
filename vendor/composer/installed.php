@@ -114,16 +114,6 @@
       ),
       'reference' => 'master',
     ),
-    'google/recaptcha' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-        0 => '1.2.x-dev',
-      ),
-      'reference' => 'ed5645e799e43afa9eb181f214dc52f22982682d',
-    ),
     'matthiasmullie/minify' => 
     array (
       'pretty_version' => '1.3.66',
