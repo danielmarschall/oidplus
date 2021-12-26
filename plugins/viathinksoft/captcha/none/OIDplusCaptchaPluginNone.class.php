@@ -25,6 +25,10 @@ class OIDplusCaptchaPluginNone extends OIDplusCaptchaPlugin {
 		return 'None';
 	}
 
+	public static function isVisible(): bool {
+		return false;
+	}
+
 	public function captchaDomHead() {
 		// Here you can add styles and scripts to be included into the HTML <head> part
 		return '<script>
@@ -50,5 +54,5 @@ class OIDplusCaptchaPluginNone extends OIDplusCaptchaPlugin {
 		       '<p>'._L('No CAPTCHA will be used. Please note that your system will be prone to "Brute force" attacks.').'</p>'.
 		       '</div>';
 	}
-	
+
 }

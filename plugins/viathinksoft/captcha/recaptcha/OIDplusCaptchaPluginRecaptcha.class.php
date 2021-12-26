@@ -25,6 +25,11 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 		return 'ReCAPTCHA';
 	}
 
+	public static function isVisible(): bool {
+		// TODO: Also implement Google invisible CAPTCHAs
+		return true;
+	}
+
 	public function captchaDomHead() {
 		// Here you can add styles and scripts to be included into the HTML <head> part
 		return '<script>
