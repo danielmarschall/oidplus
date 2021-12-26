@@ -33,7 +33,9 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 
 			$out['icon'] = OIDplus::webpath(__DIR__).'rainfo_big.png';
 
-			$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:list_ra').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to RA listing').'</a></p>';
+			if (OIDplus::authUtils()->isAdminLoggedIn()) {
+				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:list_ra').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to RA listing').'</a></p>';
+			}
 
 			if (empty($ra_email)) {
 				$out['title'] = _L('Object roots without RA');

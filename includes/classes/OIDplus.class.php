@@ -359,8 +359,7 @@ class OIDplus {
 		return self::$captchaPlugins;
 	}
 
-	public static function getActiveCaptchaPlugin() {
-
+	public static function getActiveCaptchaPluginId() {
 		$captcha_plugin_name = OIDplus::baseConfig()->getValue('CAPTCHA_PLUGIN', '');
 
 		if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_plugin_name === '')) {
@@ -368,7 +367,13 @@ class OIDplus {
 			$captcha_plugin_name = 'ReCAPTCHA';
 		}
 
-		if ($captcha_plugin_name === '') $captcha_plugin_name = 'None';
+		if ($captcha_plugin_name === '') $captcha_plugin_name = 'None'; // the "None" plugin is a must-have!
+
+		return $captcha_plugin_name;
+	}
+
+	public static function getActiveCaptchaPlugin() {
+		$captcha_plugin_name = OIDplus::getActiveCaptchaPluginId();
 
 		if (!isset(self::$captchaPlugins[$captcha_plugin_name])) {
 			throw new OIDplusConfigInitializationException(_L('CAPTCHA plugin "%1" not found',$captcha_plugin_name));

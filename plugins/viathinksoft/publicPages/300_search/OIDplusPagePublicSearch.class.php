@@ -47,6 +47,10 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		}
 	}
 
+	private function highlight_match($html, $term) {
+		return str_replace(htmlentities($term), '<font color="red">'.htmlentities($term).'</font>', $html);
+	}
+
 	private function doSearch($params) {
 		$output = '';
 
@@ -64,7 +68,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 			// TODO: case insensitive comparison (or should we leave that to the DBMS?)
 
 			if ($params['namespace'] == 'oidplus:ra') {
-				$output .= '<h2>'._L('Search results for RA %1',htmlentities($params['term'])).'</h2>';
+				$output .= '<h2>'._L('Search results for RA %1','<font color="red">'.htmlentities($params['term']).'</font>').'</h2>';
 
 				$sql_where = array(); $prep_where = array();
 				$sql_where[] = "email like ?";   $prep_where[] = '%'.$params['term'].'%';
@@ -76,14 +80,14 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				$count = 0;
 				while ($row = $res->fetch_object()) {
 					$email = str_replace('@', '&', $row->email);
-					$output .= '<p><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.htmlentities($email).'</a>: <b>'.htmlentities($row->ra_name).'</b></p>';
+					$output .= '<p><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.$this->highlight_match(htmlentities($email),$params['term']).'</a>: <b>'.$this->highlight_match(htmlentities($row->ra_name),$params['term']).'</b></p>';
 					$count++;
 				}
 				if ($count == 0) {
 					$output .= '<p>'._L('Nothing found').'</p>';
 				}
 			} else {
-				$output .= '<h2>'._L('Search results for %1 (%2)',htmlentities($params['term']),htmlentities($params['namespace'])).'</h2>';
+				$output .= '<h2>'._L('Search results for %1 (%2)','<font color="red">'.htmlentities($params['term']).'</font>',htmlentities($params['namespace'])).'</h2>';
 
 				$sql_where = array(); $prep_where = array();
 				$sql_where[] = "id like ?"; $prep_where[] = '%'.$params['term'].'%'; // TODO: should we rather do findFitting(), so we can e.g. find GUIDs with different notation?
@@ -111,7 +115,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 
 				$count = 0;
 				while ($row = $res->fetch_object()) {
-					$output .= '<p><a '.OIDplus::gui()->link($row->id).'>'.htmlentities($row->id).'</a>';
+					$output .= '<p><a '.OIDplus::gui()->link($row->id).'>'.$this->highlight_match(htmlentities($row->id),$params['term']).'</a>';
 
 					$asn1ids = array();
 					$res2 = OIDplus::db()->query("select name from ###asn1id where oid = ?", array($row->id));
@@ -120,20 +124,16 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 					}
 					if (count($asn1ids) > 0) {
 						$asn1ids = implode(', ', $asn1ids);
-						$output .= ' ('.$asn1ids.')';
+						$output .= ' ('.$this->highlight_match(htmlentities($asn1ids),$params['term']).')';
 					}
 
-					if (htmlentities($row->title) != '') $output .= ': <b>'.htmlentities($row->title).'</b></p>';
+					if (htmlentities($row->title) != '') $output .= ': <b>'.$this->highlight_match(htmlentities($row->title),$params['term']).'</b></p>';
 					$count++;
 				}
 				if ($count == 0) {
 					$output .= '<p>'._L('Nothing found').'</p>';
 				}
 			}
-
-			// Highlight exact match
-			//$output = str_ireplace($params['term'], '<font color="red">'.$params['term'].'</font>', $output);
-			$output = preg_replace('@('.preg_quote($params['term'],'@').')@i', '<font color="red">\\1</font>', $output); // this variant keeps the case of the search term
 		}
 
 		return $output;
