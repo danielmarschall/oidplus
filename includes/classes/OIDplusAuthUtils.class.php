@@ -64,7 +64,7 @@ class OIDplusAuthUtils {
 			} else {
 				$hmac = hash_hmac($algo, $password, $pepper);
 			}
-			if ($hmac === false) throw new OIDplusException(_L('HMAC failed')); /** @phpstan-ignore-line */
+			if ($hmac === false) throw new OIDplusException(_L('HMAC failed'));
 			return $hmac;
 		} else {
 			return $password;
