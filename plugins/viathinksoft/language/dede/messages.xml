@@ -1486,6 +1486,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Decryption failed
+		]]></source>
+		<target><![CDATA[
+		Entschlüsselung fehlgeschlagen!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Default RA auth method/plugin "%1" not found
 		]]></source>
 		<target><![CDATA[

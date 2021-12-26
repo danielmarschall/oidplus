@@ -148,63 +148,47 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 			$ciphertext = openssl_encrypt(
 				$data,
 				'AES-256-CBC',
-				mb_substr($key, 0, 32, '8bit'),
+				hash_pbkdf2('sha512', $key, '', 10000, 64/*256bit*/, true),
 				OPENSSL_RAW_DATA,
 				$iv
 			);
 			// Authentication
-			$hmac = hash_hmac(
-				'sha256',
-				$iv . $ciphertext,
-				mb_substr($key, 32, null, '8bit'),
-				true
-			);
+			$hmac = sha3_512_hmac($iv . $ciphertext, $key, true);
 			return $hmac . $iv . $ciphertext;
 		} else {
 			// When OpenSSL is not available, then we just do a HMAC
-			$hmac = hash_hmac(
-				'sha256',
-				$data,
-				mb_substr($key, 32, null, '8bit'),
-				true
-			);
+			$hmac = sha3_512_hmac($data, $key, true);
 			return $hmac . $data;
 		}
 	}
 
 	protected static function decrypt($data, $key) {
 		if (function_exists('openssl_decrypt')) {
-			$hmac       = mb_substr($data, 0, 32, '8bit');
-			$iv         = mb_substr($data, 32, 16, '8bit');
-			$ciphertext = mb_substr($data, 48, null, '8bit');
+			$hmac       = mb_substr($data, 0, 64, '8bit');
+			$iv         = mb_substr($data, 64, 16, '8bit');
+			$ciphertext = mb_substr($data, 80, null, '8bit');
 			// Authentication
-			$hmacNew = hash_hmac(
-				'sha256',
-				$iv . $ciphertext,
-				mb_substr($key, 32, null, '8bit'),
-				true
-			);
+			$hmacNew = sha3_512_hmac($iv . $ciphertext, $key, true);
 			if (!hash_equals($hmac, $hmacNew)) {
 				throw new OIDplusException(_L('Authentication failed'));
 			}
 			// Decryption
-			return openssl_decrypt(
+			$cleartext = openssl_decrypt(
 				$ciphertext,
 				'AES-256-CBC',
-				mb_substr($key, 0, 32, '8bit'),
+				hash_pbkdf2('sha512', $key, '', 10000, 64/*256bit*/, true),
 				OPENSSL_RAW_DATA,
 				$iv
 			);
+			if ($cleartext === false) {
+				throw new OIDplusException(_L('Decryption failed'));
+			}
+			return $cleartext;
 		} else {
 			// When OpenSSL is not available, then we just do a HMAC
-			$hmac       = mb_substr($data, 0, 32, '8bit');
-			$cleartext  = mb_substr($data, 32, null, '8bit');
-			$hmacNew = hash_hmac(
-				'sha256',
-				$cleartext,
-				mb_substr($key, 32, null, '8bit'),
-				true
-			);
+			$hmac       = mb_substr($data, 0, 64, '8bit');
+			$cleartext  = mb_substr($data, 64, null, '8bit');
+			$hmacNew    = sha3_512_hmac($cleartext, $key, true);
 			if (!hash_equals($hmac, $hmacNew)) {
 				throw new OIDplusException(_L('Authentication failed'));
 			}

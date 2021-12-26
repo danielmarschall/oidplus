@@ -264,6 +264,15 @@ Old 2.0 format:          (Not available)
                          hashes are bound to that pepper. If you change the pepper,
                          then ALL passwords of RAs become INVALID!
 
+OIDplus::baseConfig()->getValue('RA_PASSWORD_PEPPER_ALGO','sha512');
+Old 2.0 format:          (Not available)
+                         The pepper is stored inside the base configuration file
+                         It prevents that an attacker with SQL write rights can
+                         create accounts.
+                         ATTENTION!!! If a pepper is used, then the
+                         hashes are bound to that pepper. If you change the pepper,
+                         then ALL passwords of RAs become INVALID!
+
 
 ----------------------------------------------------
 (4) LDAP FIELDS (see document ldap_installation.txt)
