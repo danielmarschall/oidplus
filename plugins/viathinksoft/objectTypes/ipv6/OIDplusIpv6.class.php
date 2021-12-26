@@ -91,10 +91,6 @@ class OIDplusIpv6 extends OIDplusObject {
 		return $this->ipv6;
 	}
 
-	public function crudInsertPrefix() {
-		return '';
-	}
-
 	public function jsTreeNodeName(OIDplusObject $parent = null) {
 		if ($parent == null) return $this->objectTypeTitle();
 		return $this->ipv6;

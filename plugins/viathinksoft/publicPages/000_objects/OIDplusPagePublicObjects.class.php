@@ -922,7 +922,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$output .= '<tr>';
 			$prefix = is_null($objParent) ? '' : $objParent->crudInsertPrefix();
 
-			$suffix = '';
+			$suffix = is_null($objParent) ? '' : $objParent->crudInsertSuffix();
 			foreach (OIDplus::getObjectTypePlugins() as $plugin) {
 				if (($plugin::getObjectTypeClassName()::ns() == $parentNS) && $plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.6')) {
 					$suffix .= $plugin->gridGeneratorLinks($objParent);

@@ -175,7 +175,6 @@ LOGS
 IDEAS
 - Give configuration settings a type (int, bool, enum, etc.) so that the configuration page can be more user friendly (use a checkbox rather than typing "1" and "0")
 	Even better: Give plugins the opportunity to display their own config GUI, exactly like OOBE does
-- Host/Domain ObjectType?
 - OID-WHOIS: For well-known OIDs, e.g. IANA PEN, show information where to retrieve information
 	=> Problem: Well-known OIDs are implemented as ASN/IRI identifiers only; no information in table "objects"!
 - Should plugins be able to add additional object sub-nodes/pages into the tree,
