@@ -90,21 +90,19 @@ if (empty($email)) {
 
 // Everything's done! Now login and/or create account
 
-if (!empty($email)) {
-	$ra = new OIDplusRA($email);
-	if (!$ra->existing()) {
-		$ra->register_ra(null); // create a user account without password
+$ra = new OIDplusRA($email);
+if (!$ra->existing()) {
+	$ra->register_ra(null); // create a user account without password
 
-		OIDplus::db()->query("update ###ra set ra_name = ?, personal_name = ? where email = ?", array($personal_name, $personal_name, $email));
+	OIDplus::db()->query("update ###ra set ra_name = ?, personal_name = ? where email = ?", array($personal_name, $personal_name, $email));
 
-		OIDplus::logger()->log("[INFO]RA($email)!", "RA '$email' was created because of successful Facebook OAuth2 login");
-	}
-
-	OIDplus::authUtils()->raLoginEx($email, $remember_me=false, 'Facebook-OAuth2');
-
-	OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
-
-	// Go back to OIDplus
-
-	header('Location:'.OIDplus::webpath(null,false));
+	OIDplus::logger()->log("[INFO]RA($email)!", "RA '$email' was created because of successful Facebook OAuth2 login");
 }
+
+OIDplus::authUtils()->raLoginEx($email, $remember_me=false, 'Facebook-OAuth2');
+
+OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
+
+// Go back to OIDplus
+
+header('Location:'.OIDplus::webpath(null,false));
