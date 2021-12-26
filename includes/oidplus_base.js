@@ -141,6 +141,8 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 
 	performCloseCB();
 
+	$.xhrPool.abortAll();
+
 	if (reselect) {
 		$('#oidtree').jstree('deselect_all');
 
@@ -154,7 +156,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 					url:"ajax.php",
 					method:"POST",
 					beforeSend: function(jqXHR, settings) {
-						$.xhrPool.abortAll();
+						//$.xhrPool.abortAll();
 						$.xhrPool.add(jqXHR);
 					},
 					complete: function(jqXHR, text) {
@@ -205,7 +207,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 		url:"ajax.php",
 		method:"GET",
 		beforeSend: function(jqXHR, settings) {
-			$.xhrPool.abortAll();
+			//$.xhrPool.abortAll();
 			$.xhrPool.add(jqXHR);
 		},
 		complete: function(jqXHR, text) {
@@ -480,7 +482,7 @@ function mobileNavButtonHover(sender) {
 }
 
 function gotoButtonClicked() {
-	openOidInPanel($("#gotoedit").val(), 1);
+	openOidInPanel($("#gotoedit").val(), true);
 }
 
 function jumpToAnchor(anchor) {

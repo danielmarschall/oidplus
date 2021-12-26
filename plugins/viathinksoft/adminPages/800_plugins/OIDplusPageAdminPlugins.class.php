@@ -533,12 +533,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '	</tr>';
 					foreach ($plugins as $plugin) {
 
-						$captcha_plugin_name = OIDplus::baseConfig()->getValue('CAPTCHA_PLUGIN', '');
-						if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_plugin_name === '')) {
-							// Legacy config file support!
-							$captcha_plugin_name = 'ReCAPTCHA';
-						}
-
+						$captcha_plugin_name = OIDplus::getActiveCaptchaPluginId();
 						$active = $plugin::id() == $captcha_plugin_name;
 						if ($active && !$show_captcha_active) continue;
 						if (!$active && !$show_captcha_inactive) continue;
@@ -746,12 +741,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		foreach (OIDplus::getCaptchaPlugins() as $plugin) {
 			$txt = (empty($plugin->getManifest()->getName())) ? get_class($plugin) : $plugin->getManifest()->getName();
 
-			$captcha_plugin_name = OIDplus::baseConfig()->getValue('CAPTCHA_PLUGIN', '');
-			if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_plugin_name === '')) {
-				// Legacy config file support!
-				$captcha_plugin_name = 'ReCAPTCHA';
-			}
-
+			$captcha_plugin_name = OIDplus::getActiveCaptchaPluginId();
 			if ($plugin::id() == $captcha_plugin_name) {
 				$captcha_plugins[] = array(
 					'id' => 'oidplus:system_plugins$'.get_class($plugin),
