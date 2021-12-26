@@ -19,73 +19,68 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusOther extends OIDplusObject {
-	private $other;
+class OIDplusDomain extends OIDplusObject {
+	private $domain;
 
-	public function __construct($other) {
-		// No syntax checks
-		$this->other = $other;
+	public function __construct($domain) {
+		// TODO: syntax checks
+		$this->domain = $domain;
 	}
 
 	public static function parse($node_id) {
-		@list($namespace, $other) = explode(':', $node_id, 2);
-		if ($namespace !== 'other') return false;
-		return new self($other);
+		@list($namespace, $domain) = explode(':', $node_id, 2);
+		if ($namespace !== 'domain') return false;
+		return new self($domain);
 	}
 
 	public static function objectTypeTitle() {
-		return _L('Other objects');
+		return _L('Domain Names');
 	}
 
 	public static function objectTypeTitleShort() {
-		return _L('Object');
+		return _L('Domain');
 	}
 
 	public static function ns() {
-		return 'other';
+		return 'domain';
 	}
 
 	public static function root() {
-		return 'other:';
+		return 'domain:';
 	}
 
 	public function isRoot() {
-		return $this->other == '';
+		return $this->domain == '';
 	}
 
 	public function nodeId($with_ns=true) {
-		return $with_ns ? 'other:'.$this->other : $this->other;
+		return $with_ns ? 'domain:'.$this->domain : $this->domain;
 	}
 
 	public function addString($str) {
 		if ($this->isRoot()) {
-			return 'other:'.$str;
+			return 'domain:'.$str;
 		} else {
-			return $this->nodeId() . '\\' . $str;
+			if (strpos($str,'.') !== false) throw new OIDplusException(_L('Please only submit one arc.'));
+			return 'domain:'.$str.'.'.$this->nodeId(false);
 		}
 	}
 
 	public function crudShowId(OIDplusObject $parent) {
-		if ($parent->isRoot()) {
-			return substr($this->nodeId(), strlen($parent->nodeId()));
-		} else {
-			return substr($this->nodeId(), strlen($parent->nodeId())+1);
-		}
+		return $this->domain;
+	}
+
+	public function crudInsertSuffix() {
+		return $this->isRoot() ? '' : substr($this->addString(''), strlen(self::ns())+1);
 	}
 
 	public function jsTreeNodeName(OIDplusObject $parent = null) {
 		if ($parent == null) return $this->objectTypeTitle();
-		if ($parent->isRoot()) {
-			return substr($this->nodeId(), strlen($parent->nodeId()));
-		} else {
-			return substr($this->nodeId(), strlen($parent->nodeId())+1);
-		}
+		return $this->domain;
 	}
 
 	public function defaultTitle() {
-		$ary = explode('\\', $this->other); // TODO: but if an arc contains "\", this does not work. better read from db?
-		$ary = array_reverse($ary);
-		return $ary[0];
+		return $this->domain;
 	}
 
 	public function isLeafNode() {
@@ -96,13 +91,13 @@ class OIDplusOther extends OIDplusObject {
 		$icon = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webPath(__DIR__,true).'icon_big.png' : '';
 
 		if ($this->isRoot()) {
-			$title = OIDplusOther::objectTypeTitle();
+			$title = OIDplusDomain::objectTypeTitle();
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
 			if ($res->num_rows() > 0) {
-				$content  = _L('Please select an object in the tree view at the left to show its contents.');
+				$content  = _L('Please select a Domain Name in the tree view at the left to show its contents.');
 			} else {
-				$content  = _L('Currently, no misc. objects are registered in the system.');
+				$content  = _L('Currently, no Domain Name is registered in the system.');
 			}
 
 			if (!$this->isLeafNode()) {
@@ -116,7 +111,9 @@ class OIDplusOther extends OIDplusObject {
 		} else {
 			$title = $this->getTitle();
 
-			$content = '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
+			$content = '<h3>'.explode(':',$this->nodeId())[1].'</h3>';
+
+			$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
@@ -130,13 +127,12 @@ class OIDplusOther extends OIDplusObject {
 	}
 
 	public function one_up() {
-		$oid = $this->other;
+		$oid = $this->domain;
 
-		$p = strrpos($oid, '\\');
+		$p = strpos($oid, '.');
 		if ($p === false) return $oid;
-		if ($p == 0) return '\\';
 
-		$oid_up = substr($oid, 0, $p);
+		$oid_up = substr($oid, $p+1);
 
 		return self::parse(self::ns().':'.$oid_up);
 	}
@@ -145,14 +141,17 @@ class OIDplusOther extends OIDplusObject {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
 		if (!($to instanceof $this)) return false;
 
-		$a = $to->other;
-		$b = $this->other;
+		$a = $to->domain;
+		$b = $this->domain;
 
-		if (substr($a,0,1) == '\\') $a = substr($a,1);
-		if (substr($b,0,1) == '\\') $b = substr($b,1);
+		if (substr($a,-1) == '.') $a = substr($a,0,strlen($a)-1);
+		if (substr($b,-1) == '.') $b = substr($b,0,strlen($b)-1);
 
-		$ary = explode('\\', $a);
-		$bry = explode('\\', $b);
+		$ary = explode('.', $a);
+		$bry = explode('.', $b);
+
+		$ary = array_reverse($ary);
+		$bry = array_reverse($bry);
 
 		$min_len = min(count($ary), count($bry));
 

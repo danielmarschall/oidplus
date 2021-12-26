@@ -66,7 +66,13 @@ abstract class OIDplusObject {
 
 	public abstract function crudShowId(OIDplusObject $parent);
 
-	public abstract function crudInsertPrefix();
+	public function crudInsertPrefix() {
+		return '';
+	}
+
+	public function crudInsertSuffix() {
+		return '';
+	}
 
 	public abstract function jsTreeNodeName(OIDplusObject $parent = null);
 
