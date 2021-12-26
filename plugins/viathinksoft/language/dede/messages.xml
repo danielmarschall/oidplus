@@ -974,6 +974,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Challenge expired
+		]]></source>
+		<target><![CDATA[
+		Challenge abgelaufen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Challenge integrity failed
+		]]></source>
+		<target><![CDATA[
+		Challenge ist möglicherweise manipuliert worden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Change
 		]]></source>
 		<target><![CDATA[
@@ -1278,6 +1294,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Currently, no Domain Name is registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine Domain-Namen in diesem System registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Currently, no GS1 based numbers are registered in the system.
 		]]></source>
 		<target><![CDATA[
@@ -1578,6 +1602,22 @@
 		]]></source>
 		<target><![CDATA[
 		Hat keine OID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Domain
+		]]></source>
+		<target><![CDATA[
+		Domain
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Domain Names
+		]]></source>
+		<target><![CDATA[
+		Domain-Namen
 		]]></target>
 	</message>
 	<message>
@@ -4414,6 +4454,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Please select a Domain Name in the tree view at the left to show its contents.
+		]]></source>
+		<target><![CDATA[
+		Bitte selektieren Sie eine Domain in der Baumansicht, um dessen Inhalt anzuzeigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Please select a GUID in the tree view at the left to show its contents.
 		]]></source>
 		<target><![CDATA[
@@ -5334,10 +5382,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Setup part 1: Create %1 (contains database settings, ReCAPTCHA, admin password and SSL enforcement)
+		Setup part 1: Create %1 (contains database settings, CAPTCHA, admin password and SSL enforcement)
 		]]></source>
 		<target><![CDATA[
-		Setup Teil 1: Erstelle %1 (beinhaltet Datenbank-Einstellungen, ReCAPTCHA, Administrator-Passwort und SSL-Einstellungen)
+		Setup Teil 1: Erstelle %1 (beinhaltet Datenbank-Einstellungen, CAPTCHA, Administrator-Passwort und SSL-Einstellungen)
 		]]></target>
 	</message>
 	<message>
@@ -6670,6 +6718,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		ViaThinkSoft Client Challenge lets the client computer solve a cryptographic problem instead of letting the user solve a CAPTCHA. This slows down brute-force attacks.
+		]]></source>
+		<target><![CDATA[
+		ViaThinkSoft Client Challenge lässt den Computer des Anwenders eine kryptografisches Problem lösen. Somit muss der Benutzer keine CAPTCHA beantworten und trotzdem werden Brute-Force-Angriffe verlangsamt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		ViaThinkSoft OIDplus 2.0
 		]]></source>
 		<target><![CDATA[
@@ -6834,6 +6890,22 @@
 		]]></source>
 		<target><![CDATA[
 		Falscher CSRF Token
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Wrong IP address
+		]]></source>
+		<target><![CDATA[
+		Falsche IP-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Wrong answer
+		]]></source>
+		<target><![CDATA[
+		Falsche Antwort
 		]]></target>
 	</message>
 	<message>
