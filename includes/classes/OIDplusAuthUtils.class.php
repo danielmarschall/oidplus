@@ -58,8 +58,12 @@ class OIDplusAuthUtils {
 		// then ALL passwords of RAs become INVALID!
 		$pepper = OIDplus::baseConfig()->getValue('RA_PASSWORD_PEPPER','');
 		if ($pepper !== '') {
-			// sha512 works with PHP 7.0
-			$hmac = hash_hmac('sha512', $password, $pepper);
+			$algo = OIDplus::baseConfig()->getValue('RA_PASSWORD_PEPPER_ALGO','sha512'); // sha512 works with PHP 7.0
+			if (strtolower($algo) === 'sha3-512') {
+				$hmac = sha3_512_hmac($password, $pepper);
+			} else {
+				$hmac = hash_hmac($algo, $password, $pepper);
+			}
 			if ($hmac === false) throw new OIDplusException(_L('HMAC failed')); /** @phpstan-ignore-line */
 			return $hmac;
 		} else {
@@ -309,9 +313,7 @@ class OIDplusAuthUtils {
 	// Authentication keys for validating arguments (e.g. sent by mail)
 
 	public static function makeAuthKey($data) {
-		$data = OIDplus::baseConfig()->getValue('SERVER_SECRET') . '/AUTHKEY/' . $data;
-		$calc_authkey = sha3_512($data, false);
-		return $calc_authkey;
+		return sha3_512_hmac($data, 'authkey:'.OIDplus::baseConfig()->getValue('SERVER_SECRET'), false);
 	}
 
 	public static function validateAuthKey($data, $auth_key) {
