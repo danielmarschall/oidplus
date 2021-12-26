@@ -22,103 +22,82 @@ Please note that a plugin can define any key.
 -------------------------------------
 
 OIDplus::baseConfig()->setValue('CONFIG_VERSION',           2.1);
-Old 2.0 format:          define('OIDPLUS_CONFIG_VERSION',   2.0);
 
 OIDplus::baseConfig()->setValue('ADMIN_PASSWORD',           '<BCrypt hash, or base64 encoded SHA3-512 hash>');
-Old 2.0 format:          define('OIDPLUS_ADMIN_PASSWORD',   '<BCrypt hash, or base64 encoded SHA3-512 hash>');
                          If you want to have multiple valid administrator passwords
                          (e.g. if you want multiple users), then this value can
                          also be an array containing hashes.
 
 OIDplus::baseConfig()->setValue('DATABASE_PLUGIN',          '');
-Old 2.0 format:          define('OIDPLUS_DATABASE_PLUGIN',  '');
 
 OIDplus::baseConfig()->setValue('ODBC_DSN',                 'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
-Old 2.0 format:          define('OIDPLUS_ODBC_DSN',         'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
 
 OIDplus::baseConfig()->setValue('ODBC_USERNAME',            'sa');
-Old 2.0 format:          define('OIDPLUS_ODBC_USERNAME',    'sa');
 
 OIDplus::baseConfig()->setValue('ODBC_PASSWORD',            base64_decode('<base64_encoded_password>')); // alternatively as plaintext
-Old 2.0 format:          define('OIDPLUS_ODBC_PASSWORD',    '<base64_encoded_password>'); // must be base64 encoded
-Information:             The base64 encoding "protects" your password from being read if
+                         The base64 encoding "protects" your password from being read if
                          someone quickly looks at your display while you have the configuration file opened.
 
 OIDplus::baseConfig()->setValue('PDO_DSN',                  'pgsql:host=localhost;dbname=oidplus');
-Old 2.0 format:          define('OIDPLUS_PDO_DSN',          'pgsql:host=localhost;dbname=oidplus');
 
 OIDplus::baseConfig()->setValue('PDO_USERNAME',             'postgres');
-Old 2.0 format:          define('OIDPLUS_PDO_USERNAME',     'postgres');
 
 OIDplus::baseConfig()->setValue('PDO_PASSWORD',             base64_decode('<base64_encoded_password>')); // alternatively as plaintext
-Old 2.0 format:          define('OIDPLUS_PDO_PASSWORD',     '<base64_encoded_password>'); // must be base64 encoded
-Information:             The base64 encoding "protects" your password from being read if
+                         The base64 encoding "protects" your password from being read if
                          someone quickly looks at your display while you have the configuration file opened.
 
 OIDplus::baseConfig()->setValue('MYSQL_HOST',               'localhost:3306');
-Old 2.0 format:          define('OIDPLUS_MYSQL_HOST',       'localhost:3306');
-Information:             Port is optional
+                         Port is optional
 
 OIDplus::baseConfig()->setValue('MYSQL_USERNAME',           'root');
-Old 2.0 format:          define('OIDPLUS_MYSQL_USERNAME',   'root');
 
 OIDplus::baseConfig()->setValue('MYSQL_PASSWORD',           base64_decode('<base64_encoded_password>')); // alternatively as plaintext
-Old 2.0 format:          define('OIDPLUS_MYSQL_PASSWORD',   '<base64_encoded_password>'); // must be base64 encoded
-Information:             The base64 encoding "protects" your password from being read if
+                         The base64 encoding "protects" your password from being read if
                          someone quickly looks at your display while you have the configuration file opened.
 
 OIDplus::baseConfig()->setValue('MYSQL_DATABASE',           'oidplus');
-Old 2.0 format:          define('OIDPLUS_MYSQL_DATABASE',   'oidplus');
 
 OIDplus::baseConfig()->setValue('PGSQL_HOST',               'localhost:5432');
-Old 2.0 format:          define('OIDPLUS_PGSQL_HOST',       'localhost:5432');
-Information:             Port is optional
+                         Port is optional
 
 OIDplus::baseConfig()->setValue('PGSQL_USERNAME',           'postgres');
-Old 2.0 format:          define('OIDPLUS_PGSQL_USERNAME',   'postgres');
 
 OIDplus::baseConfig()->setValue('PGSQL_PASSWORD',           base64_decode('<base64_encoded_password>')); // alternatively as plaintext
-Old 2.0 format:          define('OIDPLUS_PGSQL_PASSWORD',   '<base64_encoded_password>'); // must be base64 encoded
-Information:             The base64 encoding "protects" your password from being read if
+                         The base64 encoding "protects" your password from being read if
                          someone quickly looks at your display while you have the configuration file opened.
 
 OIDplus::baseConfig()->setValue('PGSQL_DATABASE',           'oidplus');
-Old 2.0 format:          define('OIDPLUS_PGSQL_DATABASE',   'oidplus');
 
 
-OIDplus::baseConfig()->setValue('SQLITE3_FILE',           'userdata/database/oidplus.db');
-Old 2.0 format:          define('OIDPLUS_SQLITE3_FILE',   'userdata/database/oidplus.db');
-Attention:               This file must be located in a location that is not world-readable/downloadable!
+OIDplus::baseConfig()->setValue('SQLITE3_FILE',             'userdata/database/oidplus.db');
+                         Attention: This file must be located in a location that is not world-readable/downloadable!
 
-OIDplus::baseConfig()->setValue('SQLITE3_ENCRYPTION',           '');
-Old 2.0 format:          define('OIDPLUS_SQLITE3_ENCRYPTION',   '');
-Note:                    Options
+OIDplus::baseConfig()->setValue('SQLITE3_ENCRYPTION',       '');
+                         Optional encryption
 
 OIDplus::baseConfig()->setValue('TABLENAME_PREFIX',         'oidplus_');
-Old 2.0 format:          define('OIDPLUS_TABLENAME_PREFIX', 'oidplus_');
 
 OIDplus::baseConfig()->setValue('SERVER_SECRET',            'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-Old 2.0 format:          define('OIDPLUS_SESSION_SECRET',   'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-Information:             It is very very important that you choose a long sequence of
+                         It is very very important that you choose a long sequence of
                          random characters. OIDplus uses this secret for various
                          security related purposes. If someone accidently received this secret,
                          please change the sequence.
 
+OIDplus::baseConfig()->setValue('CAPTCHA_PLUGIN',           'None');
+
 OIDplus::baseConfig()->setValue('RECAPTCHA_ENABLED',        true);
-Old 2.0 format:          define('RECAPTCHA_ENABLED',        0);
                          Deprecated!
                          RECAPTCHA_ENABLED=true  becomes CAPTCHA_PLUGIN=ReCAPTCHA
                          RECAPTCHA_ENABLED=false becomes CAPTCHA_PLUGIN=None
 
 OIDplus::baseConfig()->setValue('RECAPTCHA_PUBLIC',         '');
-Old 2.0 format:          define('RECAPTCHA_PUBLIC',         '');
+                         Only used if CAPTCHA_PLUGIN=ReCAPTCHA
 
 OIDplus::baseConfig()->setValue('RECAPTCHA_PRIVATE',        '');
-Old 2.0 format:          define('RECAPTCHA_PRIVATE',        '');
+                         Only used if CAPTCHA_PLUGIN=ReCAPTCHA
 
 OIDplus::baseConfig()->setValue('ENFORCE_SSL',              2);
-Old 2.0 format:          define('OIDPLUS_ENFORCE_SSL',      2);
-Information:             Values 0 (off), 1 (on), 2 (auto detect)
+                         Values 0 (off), 1 (on), 2 (auto detect)
 
 
 ----------------------
@@ -126,24 +105,19 @@ Information:             Values 0 (off), 1 (on), 2 (auto detect)
 ----------------------
 
 OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_DEPTH',  30);
-Old 2.0 format:          define('OIDPLUS_MAX_OID_DEPTH', 30);
-Information:             Please read the documentation in the file includes/oidplus_limits.inc.php
+                         Please read the documentation in the file includes/oidplus_limits.inc.php
 
 OIDplus::baseConfig()->setValue('LIMITS_MAX_ID_LENGTH',     255);
-Old 2.0 format:          define('OIDPLUS_MAX_OID_ARC_SIZE', 255);
-Information:             Please read the documentation in the file includes/oidplus_limits.inc.php
+                         Please read the documentation in the file includes/oidplus_limits.inc.php
 
 OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ARC_SIZE',  50);
-Old 2.0 format:          define('OIDPLUS_MAX_OID_ARC_SIZE', 50);
-Information:             Please read the documentation in the file includes/oidplus_limits.inc.php
+                         Please read the documentation in the file includes/oidplus_limits.inc.php
 
 OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ASN1_ID_LEN',  255);
-Old 2.0 format:          define('OIDPLUS_MAX_OID_ASN1_ID_LEN', 255);
-Information:             Please read the documentation in the file includes/oidplus_limits.inc.php
+                         Please read the documentation in the file includes/oidplus_limits.inc.php
 
 OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_UNICODE_LABEL_LEN',  255);
-Old 2.0 format:          define('OIDPLUS_MAX_OID_UNICODE_LABEL_LEN', 255);
-Information:             Please read the documentation in the file includes/oidplus_limits.inc.php
+                         Please read the documentation in the file includes/oidplus_limits.inc.php
 
 
 -----------------------------------------
@@ -151,56 +125,46 @@ Information:             Please read the documentation in the file includes/oidp
 -----------------------------------------
 
 OIDplus::baseConfig()->setValue('OIDINFO_API_URL', '<url>');
-Old 2.0 format:          define('OIDINFO_API_URL', '<url>');
-Information:             Currently only internal use for development utilities (dev/).
+                         Currently only internal use for development utilities (dev/).
                          The API to oid-info.com is currently not public.
 
 OIDplus::baseConfig()->setValue('REGISTRATION_HIDE_SYSTEM', true);
-Old 2.0 format:          define('REGISTRATION_HIDE_SYSTEM', true);
-Information:             Set this if you have a clone of a productive system and you want
+                         Set this if you have a clone of a productive system and you want
                          to avoid that the clone registers at the ViaThinkSoft directory
                          (which would overwrite the URL of the productive system and reveal
                          the URL of your testing system)
 
 OIDplus::baseConfig()->setValue('MYSQL_FORCE_MYSQLND_SUPPLEMENT',         false);
-Old 2.0 format:          define('OIDPLUS_MYSQL_FORCE_MYSQLND_SUPPLEMENT', false);
-Information:             The MySQLi plugin contains a supplement code to handle
+                         The MySQLi plugin contains a supplement code to handle
                          prepared statements on servers which do not have the MySQLnd extension
                          installed. Set this flag to force the supplement to be used,
                          even if MySQLnd is available. (For testing purposes only)
 
 OIDplus::baseConfig()->setValue('QUERY_LOGFILE',          '');
-Old 2.0 format:          define('OIDPLUS_MYSQL_QUERYLOG', false);
-Information:             Set this setting to a filename where all queries including timestamps would be written.
+                         Set this setting to a filename where all queries including timestamps would be written.
                          This is used for performance analysis.
                          Please choose a directory that cannot be accessed by world-wide.
 
 OIDplus::baseConfig()->setValue('SESSION_LIFETIME', 30*60);
-Old 2.0 format:          define('SESSION_LIFETIME', 30*60);
-Information:             Session lifetime in seconds.
+                         Session lifetime in seconds.
 
 OIDplus::baseConfig()->setValue('OBJECT_CACHING',         true);
-Old 2.0 format:          define('OIDPLUS_OBJECT_CACHING', true);
 
 OIDplus::baseConfig()->setValue('FORCE_DBMS_SLANG', '');
-Old 2.0 format:          define('DBMS_SLANG',       '');
-Information:             Currently valid values: mysql, mssql, pgsql, sqlite
+                         Currently valid values: mysql, mssql, pgsql, sqlite
 
 OIDplus::baseConfig()->setValue('PREPARED_STATEMENTS_EMULATION', 'auto');
-Old 2.0 format:          define('PREPARED_STATEMENTS_EMULATION', 'auto');
-Information:             Currently only for ODBC database plugin.
+                         Currently only for ODBC database plugin.
                          'auto' = Auto detect if prepared statements should be emulated
                          'on' = Always emulate prepared statements
                          'off' = Never emulate prepared statements
 
 OIDplus::baseConfig()->setValue('MINIFY_CSS', true);
-Old 2.0 format:          define('DO_MINIFY',  true);
                          This enables the compression of CSS definitions.
                          Compressed approx:   220 KB
                          Uncompressed approx: 224 KB
 
 OIDplus::baseConfig()->setValue('MINIFY_JS',  true);
-Old 2.0 format:          (Not available)
                          This enables the compression of JavaScript code.
                          Please only disable this, if you want to debug
                          the code! You should not disable it on a productive
@@ -210,8 +174,7 @@ Old 2.0 format:          (Not available)
                          Unompressed approx: 2761 KB
 
 OIDplus::baseConfig()->setValue('DISABLE_PLUGIN_...', true);
-Old 2.0 format:          define('OIDPLUS_DISABLE_PLUGIN_...', true);
-Information:             This gives you the possibility to disable a plugin without
+                         This gives you the possibility to disable a plugin without
                          requiring it to be removed from the file system.
                          (Removing a plugin from the file system can result in various
                          problems, e.g. they can be re-added during a SVN/software update.)
@@ -221,21 +184,18 @@ Information:             This gives you the possibility to disable a plugin with
                          disables the plugin "logger/300_userdata_logfile".
 
 OIDplus::baseConfig()->setValue('DISABLE_AJAX_TRANSACTIONS', false);
-Old 2.0 format:          define('OIDPLUS_DISABLE_AJAX_TRANSACTIONS', false);
                          This will disable the usage of database transactions in ajax.php
                          Do only use this if you have severe problems with the system running.
                          It might result in inconsistent data e.g. if you update an OID
                          and an error occurs in the middle of that process.
 
 OIDplus::baseConfig()->setValue('EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
-Old 2.0 format:          define('OIDPLUS_EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
                          This setting can override the absolute system URL, which is used at CLI WHOIS
                          and possibly other modules. It has no effect on relative URLs.
                          If this setting is not set, the last known absolute URL
                          will be remembered and used when a CLI call is made.
 
 OIDplus::baseConfig()->setValue('DEBUG', false);
-Old 2.0 format:          (Not available)
                          Enables some special checks for plugins (e.g. a self-test for auth plugins).
                          It is highly recommended that you enable DEBUG if you are developing
                          plugins!
@@ -245,7 +205,6 @@ Old 2.0 format:          (Not available)
                          it for a few minutes, to make sure the plugin is working correctly.
 
 OIDplus::baseConfig()->setValue('COOKIE_SAMESITE_POLICY', 'Strict');
-Old 2.0 format:          (Not available)
                          Defined which "SameSite" policy should be used for the cookies OIDplus uses.
                          Can be "None", "Lax" or "Strict".
                          "Strict" is the most secure setting.
@@ -255,8 +214,7 @@ Old 2.0 format:          (Not available)
                          However, OIDplus itself provides an Anti-CSRF mechanism, so you should be
                          still safe.
 
-OIDplus::baseConfig()->getValue('RA_PASSWORD_PEPPER','');
-Old 2.0 format:          (Not available)
+OIDplus::baseConfig()->getValue('RA_PASSWORD_PEPPER', '');
                          The pepper is stored inside the base configuration file
                          It prevents that an attacker with SQL write rights can
                          create accounts.
@@ -264,8 +222,7 @@ Old 2.0 format:          (Not available)
                          hashes are bound to that pepper. If you change the pepper,
                          then ALL passwords of RAs become INVALID!
 
-OIDplus::baseConfig()->getValue('RA_PASSWORD_PEPPER_ALGO','sha512');
-Old 2.0 format:          (Not available)
+OIDplus::baseConfig()->getValue('RA_PASSWORD_PEPPER_ALGO', 'sha512');
                          The pepper is stored inside the base configuration file
                          It prevents that an attacker with SQL write rights can
                          create accounts.
@@ -357,35 +314,28 @@ This feature is used in the plugins "Automated AJAX calls" for admins and RAs.
 With these switches you can disable this feature.
 
 OIDplus::baseConfig()->setValue('JWT_ALLOW_AJAX_ADMIN', true);
-Old 2.0 format:          (Not available)
                          Allow JWT tokens that were created using the admin-plugin
                          "Automated AJAX calls".
 
 OIDplus::baseConfig()->setValue('JWT_ALLOW_AJAX_USER', true);
-Old 2.0 format:          (Not available)
                          Allow JWT tokens that were created using the RA-plugin
                          "Automated AJAX calls".
 
 OIDplus::baseConfig()->setValue('JWT_ALLOW_LOGIN_ADMIN', true);
-Old 2.0 format:          (Not available)
                          Allow "Remember me" logins for the administrator account.
 
 OIDplus::baseConfig()->setValue('JWT_ALLOW_LOGIN_USER', true);
-Old 2.0 format:          (Not available)
                          Allow "Remember me" logins for a RA.
 
 OIDplus::baseConfig()->setValue('JWT_ALLOW_MANUAL', false);
-Old 2.0 format:          (Not available)
                          Allow JWT tokens which were manually created "by hand".
                          These can have any content you like, but they must
                          contain the claim "oidplus_generator" with value "2".
 
 OIDplus::baseConfig()->setValue('JWT_TTL_LOGIN_USER', 10*365*24*60*60);
-Old 2.0 format:          (Not available)
                          How many seconds will a "remember me" login JWT token be valid?
                          (RA login)
 
 OIDplus::baseConfig()->setValue('JWT_TTL_LOGIN_ADMIN', 10*365*24*60*60);
-Old 2.0 format:          (Not available)
                          How many seconds will a "remember me" login JWT token be valid?
                          (Administrator login)

@@ -130,7 +130,7 @@ class OIDplusDomain extends OIDplusObject {
 		$oid = $this->domain;
 
 		$p = strpos($oid, '.');
-		if ($p === false) return $oid;
+		if ($p === false) return self::parse('');
 
 		$oid_up = substr($oid, $p+1);
 
