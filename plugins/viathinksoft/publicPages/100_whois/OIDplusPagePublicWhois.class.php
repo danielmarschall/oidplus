@@ -118,7 +118,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 	public function modifyContent($id, &$title, &$icon, &$text) {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.2
 
-		$text .= '<br><img src="'.OIDplus::webpath(__DIR__).'page_pictogram.png" height="15" alt=""> <a href="'.OIDplus::webpath(__DIR__).'whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font">'._L('Whois').'</a>';
+		$text .= '<br><img src="'.OIDplus::webpath(__DIR__).'page_pictogram.png" height="15" alt=""> <a href="'.OIDplus::webpath(__DIR__).'whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('Whois').'</a>';
 
 		$obj = OIDplusObject::parse($id);
 		if ($obj->userHasParentalWriteRights()) {
