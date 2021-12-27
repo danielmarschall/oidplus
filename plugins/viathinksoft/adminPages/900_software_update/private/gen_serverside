@@ -32,6 +32,11 @@ if (PHP_SAPI != 'cli') {
 	die();
 }
 
+if (DIRECTORY_SEPARATOR != '/') {
+	echo "This script can only run on Unix like systems\n";
+	exit(2);
+}
+
 if ($argc != 4) {
 	echo "Usage: ".$argv[0]." <targetpath> <privkey> <force(1|0)>\n";
 	exit(2);
@@ -46,7 +51,7 @@ if (!is_dir($output_dir)) {
 	exit(1);
 }
 
-if (!file_exists($priv_key)) {
+if (!is_file($priv_key)) {
 	echo "Private key file $priv_key does not exist!\n";
 	exit(1);
 }
@@ -59,238 +64,8 @@ if (($force != '1') && ($force != '0')) {
 $outscript = '';
 $func_idx = 0;
 
-function getDirContents_del($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
-	global $outscript;
 
-	if (is_null($basepath_old)) $basepath_old = $dir_old;
-	$basepath_old = realpath($basepath_old) . DIRECTORY_SEPARATOR;
-	if ($basepath_old == '/') {
-		fwrite(STDERR, 'ARG');
-		die();
-	}
-
-	$dir_old = realpath($dir_old) . DIRECTORY_SEPARATOR;
-	$dir_new = realpath($dir_new) . DIRECTORY_SEPARATOR;
-	$files_old = scandir($dir_old);
-	$files_new = scandir($dir_new);
-
-	foreach ($files_old as $file_old) {
-		if ($file_old === '.') continue;
-		if ($file_old === '..') continue;
-		if ($file_old === '.svn') continue;
-		if ($file_old === '.git') continue;
-
-		$path_old = realpath($dir_old . DIRECTORY_SEPARATOR . $file_old);
-		$path_new = realpath($dir_new . DIRECTORY_SEPARATOR . $file_old);
-
-		$xpath_old = substr($path_old, strlen($basepath_old));
-
-		if (is_dir($path_old)) {
-			getDirContents_del($path_old, $path_new, $basepath_old, $basepath_new);
-		}
-
-		// Note: We don't warn if a file-to-be-deleted has vanished. It would not be necessary to warn about it
-		if (is_dir($path_old) && !is_dir($path_new)) {
-			$outscript .= "// Dir deleted: $xpath_old\n";
-			$outscript .= "@rmdir('$xpath_old');\n";
-			$outscript .= "if (is_dir('$xpath_old')) {\n";
-			$outscript .= "\twarn('Directory could not be deleted (was not empty?): $xpath_old');\n";
-			$outscript .= "}\n";
-			$outscript .= "\n";
-		} else if (file_exists($path_old) && !file_exists($path_new)) {
-			$outscript .= "// File deleted: $xpath_old\n";
-			$outscript .= "@unlink('$xpath_old');\n";
-			$outscript .= "if (file_exists('$xpath_old')) {\n";
-			$outscript .= "\twarn('File could not be deleted: $xpath_old');\n";
-			$outscript .= "}\n";
-			$outscript .= "\n";
-		}
-	}
-}
-
-function getDirContents_diff($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
-	global $outscript;
-
-	if (is_null($basepath_old)) $basepath_old = $dir_old;
-	$basepath_old = realpath($basepath_old) . DIRECTORY_SEPARATOR;
-	if ($basepath_old == '/') {
-		fwrite(STDERR, 'ARG');
-		die();
-	}
-
-	$dir_old = realpath($dir_old) . DIRECTORY_SEPARATOR;
-	$dir_new = realpath($dir_new) . DIRECTORY_SEPARATOR;
-	$files_old = scandir($dir_old);
-	$files_new = scandir($dir_new);
-
-	foreach ($files_old as $file_old) {
-		if ($file_old === '.') continue;
-		if ($file_old === '..') continue;
-		if ($file_old === '.svn') continue;
-		if ($file_old === '.git') continue;
-
-		$path_old = realpath($dir_old . DIRECTORY_SEPARATOR . $file_old);
-		$path_new = realpath($dir_new . DIRECTORY_SEPARATOR . $file_old);
-
-		$xpath_old = substr($path_old, strlen($basepath_old));
-
-		if (file_exists($path_old) && file_exists($path_new)) {
-			if (file_get_contents($path_old) != file_get_contents($path_new)) {
-				$outscript .= "// Files different: $xpath_old\n";
-
-				global $func_idx;
-				$func_idx++;
-				$outscript .= "function writefile_".$func_idx."() {\n";
-				special_save_file($xpath_old, $path_new, $outscript, "\t@");
-				$outscript .= "\t@touch('$xpath_old',".filemtime($path_new).");\n";
-				$outscript .= "}\n";
-
-				$outscript .= "if (!file_exists('$xpath_old')) {\n";
-				$outscript .= "\twarn('File has vanished! Will re-create it: $xpath_old');\n";
-				$outscript .= "\twritefile_".$func_idx."();\n";
-				$outscript .= "\tif (!file_exists('$xpath_old')) {\n";
-				$outscript .= "\t\twarn('File cannot be created (not existing): $xpath_old');\n";
-				$outscript .= "\t} else if (sha1_file('$xpath_old') != '".sha1_file($path_new)."') {\n";
-				$outscript .= "\t\twarn('File cannot be created (checksum mismatch): $xpath_old');\n";
-				$outscript .= "\t} else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
-				$outscript .= "\t\twarn('Could not change file permissions of ".$xpath_old."');\n";
-				$outscript .= "\t}\n";
-
-				$outscript .= "} else {\n";
-
-				$outscript .= "\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_new)."') {\n"; // it is possible that the file is already updated (e.g. by a manual hotfix)
-				$outscript .= "\t\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_old)."') {\n";
-				$outscript .= "\t\t\twarn('File was modified. Will overwrite the changes now: $xpath_old');\n";
-				$outscript .= "\t\t\t\$tmp = pathinfo('$xpath_old');\n";
-				$outscript .= "\t\t\t\$backup_name = \$tmp['dirname'].DIRECTORY_SEPARATOR.\$tmp['filename'].'.'.date('Ymdhis',@filemtime('$xpath_old')).(isset(\$tmp['extension']) ? '.'.\$tmp['extension'] : '');\n";
-				$outscript .= "\t\t\twarn('Creating a backup as '.\$backup_name);\n";
-				$outscript .= "\t\t\tif (!@copy('$xpath_old', \$backup_name)) {\n";
-				$outscript .= "\t\t\t\twarn('Creation of backup failed');\n";
-				$outscript .= "\t\t\t}\n";
-				$outscript .= "\t\t}\n";
-				$outscript .= "\t\twritefile_".$func_idx."();\n";
-				$outscript .= "\t\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_new)."') {\n";
-				$outscript .= "\t\t\twarn('File cannot be written (checksum mismatch): $xpath_old');\n";
-				$outscript .= "\t\t}\n";
-				$outscript .= "\t}\n";
-
-				$outscript .= "}\n";
-				$outscript .= "\n";
-			}
-			if ((fileperms($path_old) & 0777) != (fileperms($path_new) & 0777)) {
-				$outscript .= "// Different file chmod: $xpath_old\n";
-				$outscript .= "if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
-				$outscript .= "\twarn('Could not change file permissions of ".$xpath_old."');\n";
-				$outscript .= "}\n";
-				$outscript .= "\n";
-			}
-		} else if (is_dir($path_old) && is_dir($path_new)) {
-			$outscript .= "// Verify that directory exists: $xpath_old\n";
-			$outscript .= "if (!is_dir('$xpath_old')) {\n";
-			$outscript .= "\twarn('Directory has vanished! Will re-create it: $xpath_old');\n";
-			$outscript .= "\t@mkdir('$xpath_old');\n";
-			$outscript .= "\tif (!is_dir('$xpath_old')) {\n";
-			$outscript .= "\t\twarn('Directory could not be created: $xpath_old');\n";
-			$outscript .= "\t}\n";
-			$outscript .= "}\n";
-			$outscript .= "\n";
-
-			if ((fileperms($path_old) & 0777) != (fileperms($path_new) & 0777)) {
-				$outscript .= "// Different dir chmod: $xpath_old\n";
-				$outscript .= "if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
-				$outscript .= "\twarn('Could not change dir permissions of ".$xpath_old."');\n";
-				$outscript .= "}\n";
-				$outscript .= "\n";
-			}
-		}
-
-		if (is_dir($path_old)) {
-			getDirContents_diff($path_old, $path_new, $basepath_old, $basepath_new);
-		}
-	}
-}
-
-function getDirContents_add($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
-	global $outscript;
-
-	if (is_null($basepath_new)) $basepath_new = $dir_new;
-	$basepath_new = realpath($basepath_new) . DIRECTORY_SEPARATOR;
-	if ($basepath_new == '/') {
-		fwrite(STDERR, 'ARG');
-		die();
-	}
-
-	$dir_old = realpath($dir_old) . DIRECTORY_SEPARATOR;
-	$dir_new = realpath($dir_new) . DIRECTORY_SEPARATOR;
-	$files_old = scandir($dir_old);
-	$files_new = scandir($dir_new);
-
-	foreach ($files_new as $file_new) {
-		if ($file_new === '.') continue;
-		if ($file_new === '..') continue;
-		if ($file_new === '.svn') continue;
-		if ($file_new === '.git') continue;
-
-		$path_old = realpath($dir_old . DIRECTORY_SEPARATOR . $file_new);
-		$path_new = realpath($dir_new . DIRECTORY_SEPARATOR . $file_new);
-
-		$xpath_new = substr($path_new, strlen($basepath_new));
-
-		if (is_dir($path_new) && !is_dir($path_old)) {
-			// Note: We are not warning if the dir was already created by the user
-			$outscript .= "// Dir added: $xpath_new\n";
-			$outscript .= "@mkdir('$xpath_new');\n";
-			$outscript .= "if (!is_dir('$xpath_new')) {\n";
-			$outscript .= "\twarn('Directory could not be created: $xpath_new');\n";
-			$outscript .= "} else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_new', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
-			$outscript .= "\twarn('Could not change directory permissions of ".$xpath_new."');\n";
-			$outscript .= "}\n";
-			$outscript .= "\n";
-		} else if (file_exists($path_new) && !file_exists($path_old)) {
-			$outscript .= "// File added: $xpath_new\n";
-
-			global $func_idx;
-			$func_idx++;
-			$outscript .= "function writefile_".$func_idx."() {\n";
-			special_save_file($xpath_new, $path_new, $outscript, "\t@");
-			$outscript .= "\t@touch('$xpath_new',".filemtime($path_new).");\n";
-			$outscript .= "}\n";
-
-			// Note: We will not warn if the file was created and is exactly the file we want
-			$outscript .= "if (file_exists('$xpath_new') && (sha1_file('$xpath_new') != '".sha1_file($path_new)."')) {\n";
-			$outscript .= "\twarn('File was created by someone else. Will overwrite the changes now: $xpath_new');\n";
-			$outscript .= "\t\$tmp = pathinfo('$xpath_new');\n";
-			$outscript .= "\t\$backup_name = \$tmp['dirname'].DIRECTORY_SEPARATOR.\$tmp['filename'].'.'.date('Ymdhis',@filemtime('$xpath_new')).(isset(\$tmp['extension']) ? '.'.\$tmp['extension'] : '');\n";
-			$outscript .= "\twarn('Creating a backup as '.\$backup_name);\n";
-			$outscript .= "\tif (!@copy('$xpath_new', \$backup_name)) {\n";
-			$outscript .= "\t\twarn('Creation of backup failed');\n";
-			$outscript .= "\t}\n";
-			$outscript .= "}\n";
-
-			$outscript .= "writefile_".$func_idx."();\n";
-			$outscript .= "if (!file_exists('$xpath_new')) {\n";
-			$outscript .= "\twarn('File cannot be created (not existing): $xpath_new');\n";
-			$outscript .= "} else if (sha1_file('$xpath_new') != '".sha1_file($path_new)."') {\n";
-			$outscript .= "\twarn('File cannot be created (checksum mismatch): $xpath_new');\n";
-			$outscript .= "} else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_new', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
-			$outscript .= "\twarn('Could not change file permissions of ".$xpath_new."');\n";
-			$outscript .= "}\n";
-			$outscript .= "\n";
-		}
-
-		if (is_dir($path_new)) {
-			getDirContents_add($path_old, $path_new, $basepath_old, $basepath_new);
-		}
-	}
-}
-
-function getDirContents($dir_old, $dir_new) {
-	global $func_idx;
-	$func_idx = 0;
-	getDirContents_add($dir_old, $dir_new);
-	getDirContents_diff($dir_old, $dir_new);
-	getDirContents_del($dir_old, $dir_new);
-}
+// First, write the change scripts
 
 $out = array();
 $ec = -1;
@@ -298,37 +73,23 @@ exec('svn info https://svn.viathinksoft.com/svn/oidplus/trunk/ | grep "Revision:
 if ($ec != 0) die("SVN Info failed!!!\n");
 $max_svn = implode("", $out);
 
-function fix_rev699_bug($dir) {
-	// Fix syntax error that lead to a stalled update!
-	$file = $dir.'/plugins/viathinksoft/adminPages/900_software_update/OIDplusPageAdminSoftwareUpdate.class.php';
-	$cont = file_get_contents($file);
-	$cont = str_replace("urlencode('oidplus:system_file_check',OIDplus::getEditionInfo()['downloadpage']))", "urlencode('oidplus:system_file_check'),OIDplus::getEditionInfo()['downloadpage'])", $cont);
-	file_put_contents($file, $cont);
-
-	// Fix syntax error that lead to a stalled update!
-	$file = $dir.'/plugins/viathinksoft/adminPages/901_vnag_version_check/vnag.php';
-	$cont = file_get_contents($file);
-	$cont = str_replace("\t\tOIDplus::getEditionInfo()", "", $cont);
-	file_put_contents($file, $cont);
-}
-
 for ($i=2; $i<=$max_svn; $i++) {
 	echo "SVN revision $i / $max_svn\r";
 
 	$outfile = $output_dir."/update_".($i-1)."_to_$i.txt";
-	if (!$force && file_exists($outfile)) continue;
+	if (!$force && is_file($outfile)) continue;
 
 	$outdir_old = "/tmp/oidplus_svntmp2_".($i-1)."/";
 	if ($outdir_old && is_dir($outdir_old)) exec("rm -rf $outdir_old", $out, $ec);
 	exec("svn co https://svn.viathinksoft.com/svn/oidplus/trunk/@".($i-1)." $outdir_old", $out, $ec);
 	if ($ec != 0) die("Checkout of SVN Rev ".($i-1)." failed!!!\n");
-	if ($i-1 == 699) fix_rev699_bug($outdir_old);
+	hotfix_dir($i-1, $outdir_old);
 
 	$outdir_new = "/tmp/oidplus_svntmp2_$i/";
 	if ($outdir_new && is_dir($outdir_new)) exec("rm -rf $outdir_new", $out, $ec);
 	exec("svn co https://svn.viathinksoft.com/svn/oidplus/trunk/@$i $outdir_new", $out, $ec);
 	if ($ec != 0) die("Checkout of SVN Rev ".($i)." failed!!!\n");
-	if ($i == 699) fix_rev699_bug($outdir_new);
+	hotfix_dir($i, $outdir_new);
 
 	$outscript  = "<?php\n";
 	$outscript .= "\n";
@@ -360,11 +121,11 @@ for ($i=2; $i<=$max_svn; $i++) {
 	$outscript .= "chdir(__DIR__);\n";
 	if ($i >= 662) {
 		$outscript .= "if (trim(@file_get_contents('.version.php')) !== '<?php // Revision ".($i-1)."') {\n";
-		$outscript .= "\terr('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
+		$outscript .= "\terr('This update can only be applied to OIDplus version svn-".($i-1)."!');\n";
 		$outscript .= "}\n";
 	} else {
 		$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision ".($i-1)."') {\n";
-		$outscript .= "\terr('This update can only be applied to OIDplus SVN Rev ".($i-1)."!');\n";
+		$outscript .= "\terr('This update can only be applied to OIDplus version svn-".($i-1)."!');\n";
 		$outscript .= "}\n";
 	}
 	$outscript .= "\n";
@@ -381,7 +142,7 @@ for ($i=2; $i<=$max_svn; $i++) {
 		$outscript .= "}\n";
 	}
 	$outscript .= "\n";
-	$outscript .= "info('Update to SVN Rev $i...');\n";
+	$outscript .= "info('Update to OIDplus version svn-$i running...');\n";
 	$outscript .= "\n";
 	getDirContents($outdir_old, $outdir_new);
 	$outscript .= "\n";
@@ -390,7 +151,7 @@ for ($i=2; $i<=$max_svn; $i++) {
 		$outscript .= "if (trim(@file_get_contents('.version.php')) !== '<?php // Revision $i') err('Could not write to .version.php!');\n";
 		if ($i == 661) {
 			$outscript .= "@unlink('oidplus_version.txt');\n";
-			$outscript .= "if (file_exists('oidplus_version.txt')) err('Could not delete oidplus_version.txt! Please delete it manually');\n";
+			$outscript .= "if (is_file('oidplus_version.txt')) err('Could not delete oidplus_version.txt! Please delete it manually');\n";
 		}
 	} else {
 		$outscript .= "file_put_contents('oidplus_version.txt', \"Revision $i\\n\");\n";
@@ -398,7 +159,7 @@ for ($i=2; $i<=$max_svn; $i++) {
 	}
 	$outscript .= "\n";
 	$outscript .= "\n";
-	$outscript .= "info('Update to SVN Rev $i done!');\n";
+	$outscript .= "info('Update to OIDplus version svn-$i done!');\n";
 	$outscript .= "\n";
 	$outscript .= "unlink(__FILE__);\n";
 	$outscript .= "\n";
@@ -462,7 +223,6 @@ echo "\n";
 
 // Now write the release messages (required by software update and vnag)
 
-
 $ec = -1;
 $out = array();
 exec('svn log https://svn.viathinksoft.com/svn/oidplus/trunk --xml', $out, $ec);
@@ -489,11 +249,268 @@ if ($ec != 0) {
 
 	ksort($out);
 
+	// TODO: We should also digitally sign these files?
 	file_put_contents($output_dir.'/releases.ser', serialize($out));
 	file_put_contents($output_dir.'/releases.ser.gz', gzencode(serialize($out)));
 }
 
-# ---
+# ------------------------------------------------------------------------------------------
+
+function getDirContents_del($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
+	global $outscript;
+
+	if (is_null($basepath_old)) $basepath_old = $dir_old;
+	$basepath_old = my_realpath($basepath_old) . DIRECTORY_SEPARATOR;
+	if ($basepath_old == '/') {
+		fwrite(STDERR, 'ARG');
+		die();
+	}
+
+	$dir_old = my_realpath($dir_old) . DIRECTORY_SEPARATOR;
+	$dir_new = my_realpath($dir_new) . DIRECTORY_SEPARATOR;
+	$files_old = my_scandir($dir_old);
+	//$files_new = my_scandir($dir_new);
+
+	foreach ($files_old as $file_old) {
+		if ($file_old === '.') continue;
+		if ($file_old === '..') continue;
+		if ($file_old === '.svn') continue;
+		if ($file_old === '.git') continue;
+
+		$path_old = my_realpath($dir_old . DIRECTORY_SEPARATOR . $file_old);
+		$path_new = my_realpath($dir_new . DIRECTORY_SEPARATOR . $file_old);
+
+		$xpath_old = substr($path_old, strlen($basepath_old));
+
+		if (is_dir($path_old)) {
+			getDirContents_del($path_old, $path_new, $basepath_old, $basepath_new);
+		}
+
+		// Note: We don't warn if a file-to-be-deleted has vanished. It would not be necessary to warn about it
+		if (is_dir($path_old) && !is_dir($path_new)) {
+			$outscript .= "// Dir deleted: $xpath_old\n";
+			$outscript .= "@rmdir('$xpath_old');\n";
+			$outscript .= "if (is_dir('$xpath_old')) {\n";
+			$outscript .= "\twarn('Directory could not be deleted (was not empty?): $xpath_old');\n";
+			$outscript .= "}\n";
+			$outscript .= "\n";
+		} else if (is_file($path_old) && !is_file($path_new)) {
+			$outscript .= "// File deleted: $xpath_old\n";
+			$outscript .= "@unlink('$xpath_old');\n";
+			$outscript .= "if (is_file('$xpath_old')) {\n";
+			$outscript .= "\twarn('File could not be deleted: $xpath_old');\n";
+			$outscript .= "}\n";
+			$outscript .= "\n";
+		}
+	}
+}
+
+function getDirContents_diff($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
+	global $outscript;
+
+	if (is_null($basepath_old)) $basepath_old = $dir_old;
+	$basepath_old = my_realpath($basepath_old) . DIRECTORY_SEPARATOR;
+	if ($basepath_old == '/') {
+		fwrite(STDERR, 'ARG');
+		die();
+	}
+
+	$dir_old = my_realpath($dir_old) . DIRECTORY_SEPARATOR;
+	$dir_new = my_realpath($dir_new) . DIRECTORY_SEPARATOR;
+	$files_old = my_scandir($dir_old);
+	$files_new = my_scandir($dir_new);
+
+	foreach ($files_old as $file_old) {
+		if ($file_old === '.') continue;
+		if ($file_old === '..') continue;
+		if ($file_old === '.svn') continue;
+		if ($file_old === '.git') continue;
+
+		$path_old = my_realpath($dir_old . DIRECTORY_SEPARATOR . $file_old);
+		$path_new = my_realpath($dir_new . DIRECTORY_SEPARATOR . $file_old);
+
+		$xpath_old = substr($path_old, strlen($basepath_old));
+
+		if (is_file($path_old) && is_file($path_new)) {
+			if (file_get_contents($path_old) != file_get_contents($path_new)) {
+				$outscript .= "// Files different: $xpath_old\n";
+
+				global $func_idx;
+				$func_idx++;
+				$outscript .= "function writefile_".$func_idx."() {\n";
+				special_save_file($xpath_old, $path_new, $outscript, "\t@");
+				$outscript .= "\t@touch('$xpath_old',".filemtime($path_new).");\n";
+				$outscript .= "}\n";
+
+				$outscript .= "if (!is_file('$xpath_old')) {\n";
+				$outscript .= "\twarn('File has vanished! Will re-create it: $xpath_old');\n";
+				$outscript .= "\twritefile_".$func_idx."();\n";
+				$outscript .= "\tif (!is_file('$xpath_old')) {\n";
+				$outscript .= "\t\twarn('File cannot be created (not existing): $xpath_old');\n";
+				$outscript .= "\t} else if (sha1_file('$xpath_old') != '".sha1_file($path_new)."') {\n";
+				$outscript .= "\t\twarn('File cannot be created (checksum mismatch): $xpath_old');\n";
+				$outscript .= "\t} else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
+				$outscript .= "\t\twarn('Could not change file permissions of ".$xpath_old."');\n";
+				$outscript .= "\t}\n";
+
+				$outscript .= "} else {\n";
+
+				$outscript .= "\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_new)."') {\n"; // it is possible that the file is already updated (e.g. by a manual hotfix)
+				$outscript .= "\t\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_old)."') {\n";
+				$outscript .= "\t\t\twarn('File was modified. Will overwrite the changes now: $xpath_old');\n";
+				$outscript .= "\t\t\t\$tmp = pathinfo('$xpath_old');\n";
+				$outscript .= "\t\t\t\$backup_name = \$tmp['dirname'].DIRECTORY_SEPARATOR.\$tmp['filename'].'.'.date('Ymdhis',@filemtime('$xpath_old')).(isset(\$tmp['extension']) ? '.'.\$tmp['extension'] : '');\n";
+				$outscript .= "\t\t\twarn('Creating a backup as '.\$backup_name);\n";
+				$outscript .= "\t\t\tif (!@copy('$xpath_old', \$backup_name)) {\n";
+				$outscript .= "\t\t\t\twarn('Creation of backup failed');\n";
+				$outscript .= "\t\t\t}\n";
+				$outscript .= "\t\t}\n";
+				$outscript .= "\t\twritefile_".$func_idx."();\n";
+				$outscript .= "\t\tif (@sha1_file('$xpath_old') !== '".sha1_file($path_new)."') {\n";
+				$outscript .= "\t\t\twarn('File cannot be written (checksum mismatch): $xpath_old');\n";
+				$outscript .= "\t\t}\n";
+				$outscript .= "\t}\n";
+
+				$outscript .= "}\n";
+				$outscript .= "\n";
+			}
+			if ((fileperms($path_old) & 0777) != (fileperms($path_new) & 0777)) {
+				$outscript .= "// Different file chmod: $xpath_old\n";
+				$outscript .= "if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
+				$outscript .= "\twarn('Could not change file permissions of ".$xpath_old."');\n";
+				$outscript .= "}\n";
+				$outscript .= "\n";
+			}
+		} else if (is_dir($path_old) && is_dir($path_new)) {
+			/*
+			$outscript .= "// Verify that directory exists: $xpath_old\n";
+			$outscript .= "if (!is_dir('$xpath_old')) {\n";
+			$outscript .= "\twarn('Directory has vanished! Will re-create it: $xpath_old');\n";
+			$outscript .= "\t@mkdir('$xpath_old');\n";
+			$outscript .= "\tif (!is_dir('$xpath_old')) {\n";
+			$outscript .= "\t\twarn('Directory could not be created: $xpath_old');\n";
+			$outscript .= "\t}\n";
+			$outscript .= "}\n";
+			$outscript .= "\n";
+			*/
+
+			if ((fileperms($path_old) & 0777) != (fileperms($path_new) & 0777)) {
+				$outscript .= "// Different dir chmod: $xpath_old\n";
+				$outscript .= "if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_old', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
+				$outscript .= "\twarn('Could not change dir permissions of ".$xpath_old."');\n";
+				$outscript .= "}\n";
+				$outscript .= "\n";
+			}
+		}
+
+		if (is_dir($path_old)) {
+			getDirContents_diff($path_old, $path_new, $basepath_old, $basepath_new);
+		}
+	}
+}
+
+function getDirContents_add($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
+	global $outscript;
+
+	if (is_null($basepath_new)) $basepath_new = $dir_new;
+	$basepath_new = my_realpath($basepath_new) . DIRECTORY_SEPARATOR;
+	if ($basepath_new == '/') {
+		fwrite(STDERR, 'ARG');
+		die();
+	}
+
+	$dir_old = my_realpath($dir_old) . DIRECTORY_SEPARATOR;
+	$dir_new = my_realpath($dir_new) . DIRECTORY_SEPARATOR;
+	//$files_old = my_scandir($dir_old);
+	$files_new = my_scandir($dir_new);
+
+	foreach ($files_new as $file_new) {
+		if ($file_new === '.') continue;
+		if ($file_new === '..') continue;
+		if ($file_new === '.svn') continue;
+		if ($file_new === '.git') continue;
+
+		$path_old = my_realpath($dir_old . DIRECTORY_SEPARATOR . $file_new);
+		$path_new = my_realpath($dir_new . DIRECTORY_SEPARATOR . $file_new);
+
+		$xpath_new = substr($path_new, strlen($basepath_new));
+
+		if (is_dir($path_new) && !is_dir($path_old)) {
+			// Note: We are not warning if the dir was already created by the user
+			$outscript .= "// Dir added: $xpath_new\n";
+			$outscript .= "@mkdir('$xpath_new');\n";
+			$outscript .= "if (!is_dir('$xpath_new')) {\n";
+			$outscript .= "\twarn('Directory could not be created: $xpath_new');\n";
+			$outscript .= "} else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_new', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
+			$outscript .= "\twarn('Could not change directory permissions of ".$xpath_new."');\n";
+			$outscript .= "}\n";
+			$outscript .= "\n";
+			
+			// we create it locally, so that the recursive code still works
+			mkdir($dir_old . DIRECTORY_SEPARATOR . $file_new);
+			$path_old = my_realpath($dir_old . DIRECTORY_SEPARATOR . $file_new);
+			
+		} else if (is_file($path_new) && !is_file($path_old)) {
+			$outscript .= "// File added: $xpath_new\n";
+
+			global $func_idx;
+			$func_idx++;
+			$outscript .= "function writefile_".$func_idx."() {\n";
+			special_save_file($xpath_new, $path_new, $outscript, "\t@");
+			$outscript .= "\t@touch('$xpath_new',".filemtime($path_new).");\n";
+			$outscript .= "}\n";
+
+			// Note: We will not warn if the file was created and is exactly the file we want
+			$outscript .= "if (is_file('$xpath_new') && (sha1_file('$xpath_new') != '".sha1_file($path_new)."')) {\n";
+			$outscript .= "\twarn('File was created by someone else. Will overwrite the changes now: $xpath_new');\n";
+			$outscript .= "\t\$tmp = pathinfo('$xpath_new');\n";
+			$outscript .= "\t\$backup_name = \$tmp['dirname'].DIRECTORY_SEPARATOR.\$tmp['filename'].'.'.date('Ymdhis',@filemtime('$xpath_new')).(isset(\$tmp['extension']) ? '.'.\$tmp['extension'] : '');\n";
+			$outscript .= "\twarn('Creating a backup as '.\$backup_name);\n";
+			$outscript .= "\tif (!@copy('$xpath_new', \$backup_name)) {\n";
+			$outscript .= "\t\twarn('Creation of backup failed');\n";
+			$outscript .= "\t}\n";
+			$outscript .= "}\n";
+
+			$outscript .= "writefile_".$func_idx."();\n";
+			$outscript .= "if (!is_file('$xpath_new')) {\n";
+			$outscript .= "\twarn('File cannot be created (not existing): $xpath_new');\n";
+			$outscript .= "} else if (sha1_file('$xpath_new') != '".sha1_file($path_new)."') {\n";
+			$outscript .= "\twarn('File cannot be created (checksum mismatch): $xpath_new');\n";
+			$outscript .= "} else if ((DIRECTORY_SEPARATOR === '/') && !@chmod('$xpath_new', 0".sprintf('%o', fileperms($path_new) & 0777).")) {\n";
+			$outscript .= "\twarn('Could not change file permissions of ".$xpath_new."');\n";
+			$outscript .= "}\n";
+			$outscript .= "\n";
+		}
+
+		if (is_dir($path_new)) {
+			getDirContents_add($path_old, $path_new, $basepath_old, $basepath_new);
+		}
+	}
+}
+
+function getDirContents($dir_old, $dir_new) {
+	global $func_idx;
+	$func_idx = 0;
+	getDirContents_add($dir_old, $dir_new);
+	getDirContents_diff($dir_old, $dir_new);
+	getDirContents_del($dir_old, $dir_new);
+}
+
+function hotfix_dir($rev, $dir) {
+	if ($rev == 699) {
+		// Fix syntax error that lead to a stalled update!
+		$file = $dir.'/plugins/viathinksoft/adminPages/900_software_update/OIDplusPageAdminSoftwareUpdate.class.php';
+		$cont = file_get_contents($file);
+		$cont = str_replace("urlencode('oidplus:system_file_check',OIDplus::getEditionInfo()['downloadpage']))", "urlencode('oidplus:system_file_check'),OIDplus::getEditionInfo()['downloadpage'])", $cont);
+		file_put_contents($file, $cont);
+
+		// Fix syntax error that lead to a stalled update!
+		$file = $dir.'/plugins/viathinksoft/adminPages/901_vnag_version_check/vnag.php';
+		$cont = file_get_contents($file);
+		$cont = str_replace("\t\tOIDplus::getEditionInfo()", "", $cont);
+		file_put_contents($file, $cont);
+	}
+}
 
 function split_equal_length($data, $width=65) {
 	$res = '';
@@ -521,4 +538,15 @@ function special_save_file($out_file, $in_file, &$res, $line_prefix, $width=50) 
 		$res .= $line_prefix."file_put_contents('$out_file', '');\n";
 	}
 	fclose($handle);
+}
+
+function my_realpath($name) {
+	$ret = realpath($name);
+	return ($ret === false) ? $name : $ret;
+}
+
+function my_scandir($dir) {
+	$ret = @scandir($dir);
+	if ($ret === false) return array();
+	return $ret;
 }
