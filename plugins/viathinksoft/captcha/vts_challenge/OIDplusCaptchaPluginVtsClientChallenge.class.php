@@ -95,18 +95,18 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 		$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
 		$max_time = 10*60; // 10min. TODO: make configurable!
 
-		if (!isset($params[$fieldname])) throw new \Exception('No challenge response found');
+		if (!isset($params[$fieldname])) throw new OIDplusException('No challenge response found');
 
 		list($starttime, $ip_target, $challenge, $answer, $challenge_integrity) = @json_decode($params[$fieldname], true);
 
 		if ($ip_target != (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown')) {
-			throw new \Exception(_L('Wrong IP address'));
+			throw new OIDplusException(_L('Wrong IP address'));
 		} else if (time()-$starttime > $max_time) {
-			throw new \Exception(_L('Challenge expired'));
+			throw new OIDplusException(_L('Challenge expired'));
 		} else if ($challenge_integrity != sha3_512_hmac($challenge,$server_secret)) {
-			throw new \Exception(_L('Challenge integrity failed'));
+			throw new OIDplusException(_L('Challenge integrity failed'));
 		} else if ($challenge !== sha3_512($starttime.'/'.$ip_target.'/'.$answer)) {
-			throw new \Exception(_L('Wrong answer'));
+			throw new OIDplusException(_L('Wrong answer'));
 		}
 	}
 
