@@ -48,6 +48,7 @@ if (!function_exists('curl_init')) {
 $ch = curl_init();
 if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/token");
+curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS,
 	"grant_type=authorization_code&".
@@ -74,7 +75,7 @@ try {
 	// see https://medium.com/@darutk/understanding-id-token-5f83f50fa02e
 	// Note: We do not need to verify the signature because the token comes directly from Google,
 	//       but we do it anyway. Just to be sure!
-	$verification_certs = json_decode(file_get_contents('https://www.googleapis.com/oauth2/v1/certs'), true);
+	$verification_certs = json_decode(url_get_contents('https://www.googleapis.com/oauth2/v1/certs'), true);
 	\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
 	$data = (array) \Firebase\JWT\JWT::decode($id_token, $verification_certs, array('ES256', 'ES384', 'RS256', 'RS384', 'RS512'));
 	if (!isset($data['iss']) || ($data['iss'] !== 'https://accounts.google.com')) {
@@ -131,6 +132,7 @@ try {
 	$ch = curl_init();
 	if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 	curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/revoke");
+	curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,
 		"client_id=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'))."&".

@@ -62,7 +62,7 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 		$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 		_CheckParamExists($params, $fieldname);
 		$response=$params[$fieldname];
-		$verify=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".urlencode($secret)."&response=".urlencode($response));
+		$verify=url_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($secret).'&response='.urlencode($response));
 		if (!$verify) {
 			throw new OIDplusException(_L('CAPTCHA not successfully verified'));
 		}

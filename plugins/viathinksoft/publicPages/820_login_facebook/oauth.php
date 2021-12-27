@@ -56,6 +56,7 @@ curl_setopt($ch, CURLOPT_URL,"https://graph.facebook.com/v8.0/oauth/access_token
 	"client_secret=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_SECRET'))."&".
 	"code=".$_GET['code']
 );
+curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $cont = curl_exec($ch);
 curl_close($ch);
@@ -75,6 +76,7 @@ curl_setopt($ch, CURLOPT_URL,"https://graph.facebook.com/v8.0/me?".
 	"fields=id,email,name&".
 	"access_token=".urlencode($access_token)
 );
+curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $cont = curl_exec($ch);
 curl_close($ch);

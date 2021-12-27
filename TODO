@@ -173,6 +173,7 @@ LOGS
 - At "oidplus:system_log", user log section and object log section, the users and/or objects should be clickable
 
 IDEAS
+- have an option to assign a custom icon to any object in the system (file attachment with name "icon.*"?). Especially useful for easy visual distinguishing between root objects inside 'Other objects', but may be useful for other object types too.
 - Give configuration settings a type (int, bool, enum, etc.) so that the configuration page can be more user friendly (use a checkbox rather than typing "1" and "0")
 	Even better: Give plugins the opportunity to display their own config GUI, exactly like OOBE does
 - OID-WHOIS: For well-known OIDs, e.g. IANA PEN, show information where to retrieve information
