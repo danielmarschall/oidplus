@@ -27,11 +27,11 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
 			}
 
-			_CheckParamExists($params, 'color_hue_shift');
-			_CheckParamExists($params, 'color_sat_shift');
-			_CheckParamExists($params, 'color_val_shift');
-			_CheckParamExists($params, 'color_invert');
-			_CheckParamExists($params, 'design');
+			_CheckParamExists($params, 'hue_shift');
+			_CheckParamExists($params, 'sat_shift');
+			_CheckParamExists($params, 'val_shift');
+			_CheckParamExists($params, 'invcolors');
+			_CheckParamExists($params, 'theme');
 
 			OIDplus::config()->setValue('color_hue_shift', $params['hue_shift']);
 			OIDplus::config()->setValue('color_sat_shift', $params['sat_shift']);
