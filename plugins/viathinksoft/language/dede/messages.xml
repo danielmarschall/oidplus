@@ -2718,6 +2718,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Internal error with session. Please reload the page and log-in again. %1
+		]]></source>
+		<target><![CDATA[
+		Interner Fehler beim Laden der Sitzung. Bitte laden Sie die Seite neu und loggen Sie sich erneut ein. %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Invalid DOI %1 . It must have syntax 10.xxxx
 		]]></source>
 		<target><![CDATA[
@@ -3310,10 +3318,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Multiple version files/directories (oidplus_version.txt, .version.php, .git and .svn) are existing! Therefore, the version is ambiguous!
+		Multiple version files/directories (oidplus_version.txt, .version.php, .git, or .svn) are existing! Therefore, the version is ambiguous!
 		]]></source>
 		<target><![CDATA[
-		Mehrfache Versionsdateien und -verzeichnisse existieren (oidplus_version.txt, .version.php, .git und .svn). Aus diesem Grund ist die Version mehrdeutig!
+		Mehrfache Versionsdateien und -verzeichnisse existieren (oidplus_version.txt, .version.php, .git oder .svn). Aus diesem Grund ist die Version mehrdeutig!
 		]]></target>
 	</message>
 	<message>

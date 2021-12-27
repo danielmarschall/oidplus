@@ -86,12 +86,14 @@ class OIDplusSessionHandler implements OIDplusGetterSetterInterface {
 	private $cacheSetValues = array(); // Important if you do a setValue() followed by an getValue()
 
 	public function setValue($name, $value) {
-		$this->cacheSetValues[$name] = self::encrypt($value, $this->secret);
+		$enc_data = self::encrypt($value, $this->secret);
+
+		$this->cacheSetValues[$name] = $enc_data;
 
 		$this->sessionSafeStart();
 		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
 
-		$_SESSION[$name] = self::encrypt($value, $this->secret);
+		$_SESSION[$name] = $enc_data;
 	}
 
 	public function getValue($name, $default = NULL) {
