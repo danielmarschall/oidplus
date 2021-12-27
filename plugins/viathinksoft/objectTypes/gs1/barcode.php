@@ -35,6 +35,6 @@ error_reporting(0);
 $number = $_GET['number'];
 $number = preg_replace("/[^0-9]/", "", $number);
 $number = substr($number, 0, 20);
-$out = file_get_contents('http://bwipjs-api.metafloor.com/?bcid=code128&text='.urlencode($number).'&scale=1&includetext');
+$out = url_get_contents('https://bwipjs-api.metafloor.com/?bcid=code128&text='.urlencode($number).'&scale=1&includetext');
 
 httpOutWithETag($out, 'image/png', "barcode_$number.png");

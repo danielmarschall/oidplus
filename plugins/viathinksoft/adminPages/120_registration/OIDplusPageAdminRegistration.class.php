@@ -163,6 +163,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			$ch = curl_init();
 			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
+			curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
 			curl_setopt($ch, CURLOPT_POST, 1);
 			if (function_exists('gzdeflate')) {
 				$compressed = "1";
@@ -205,7 +206,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 	protected function areWeRegistered() {
 		// To check if we are registered. Check it "anonymously" (i.e. without revealing our system ID)
-		$res = file_get_contents('https://oidplus.viathinksoft.com/reg2/query.php?query='.self::QUERY_LISTALLSYSTEMIDS_V1);
+		$res = url_get_contents('https://oidplus.viathinksoft.com/reg2/query.php?query='.self::QUERY_LISTALLSYSTEMIDS_V1);
 
 		$json = @json_decode($res, true);
 
@@ -266,6 +267,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				$ch = curl_init();
 				if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 				curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
+				curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
 				curl_setopt($ch, CURLOPT_POST, 1);
 				if (function_exists('gzdeflate')) {
 					$compressed = "1";
@@ -365,6 +367,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			$ch = curl_init();
 			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
+			curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
 			curl_setopt($ch, CURLOPT_POST, 1);
 			if (function_exists('gzdeflate')) {
 				$compressed = "1";
@@ -518,6 +521,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		$ch = curl_init();
 		if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 		curl_setopt($ch, CURLOPT_URL, $testurl);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
 		curl_setopt($ch, CURLOPT_HEADER, TRUE);
 		curl_setopt($ch, CURLOPT_NOBODY, TRUE);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
