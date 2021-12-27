@@ -33,7 +33,12 @@ class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 	# TODO: shouldn't we just include OIDplusSessionHandler in this class?
 
 	public function getValue($name, $default = NULL) {
-		return self::getSessionHandler()->getValue($name, $default);
+		try {
+			return self::getSessionHandler()->getValue($name, $default);
+		} catch (Exception $e) {
+			self::getSessionHandler()->destroySession();
+			throw new OIDplusException(_L('Internal error with session. Please reload the page and log-in again. %1', $e->getMessage()));
+		}
 	}
 
 	public function setValue($name, $value) {

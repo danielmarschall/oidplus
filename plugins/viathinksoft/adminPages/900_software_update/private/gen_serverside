@@ -298,6 +298,20 @@ exec('svn info https://svn.viathinksoft.com/svn/oidplus/trunk/ | grep "Revision:
 if ($ec != 0) die("SVN Info failed!!!\n");
 $max_svn = implode("", $out);
 
+function fix_rev699_bug($dir) {
+	// Fix syntax error that lead to a stalled update!
+	$file = $dir.'/plugins/viathinksoft/adminPages/900_software_update/OIDplusPageAdminSoftwareUpdate.class.php';
+	$cont = file_get_contents($file);
+	$cont = str_replace("urlencode('oidplus:system_file_check',OIDplus::getEditionInfo()['downloadpage']))", "urlencode('oidplus:system_file_check'),OIDplus::getEditionInfo()['downloadpage'])", $cont);
+	file_put_contents($file, $cont);
+
+	// Fix syntax error that lead to a stalled update!
+	$file = $dir.'/plugins/viathinksoft/adminPages/901_vnag_version_check/vnag.php';
+	$cont = file_get_contents($file);
+	$cont = str_replace("\t\tOIDplus::getEditionInfo()", "", $cont);
+	file_put_contents($file, $cont);
+}
+
 for ($i=2; $i<=$max_svn; $i++) {
 	echo "SVN revision $i / $max_svn\r";
 
@@ -308,11 +322,13 @@ for ($i=2; $i<=$max_svn; $i++) {
 	if ($outdir_old && is_dir($outdir_old)) exec("rm -rf $outdir_old", $out, $ec);
 	exec("svn co https://svn.viathinksoft.com/svn/oidplus/trunk/@".($i-1)." $outdir_old", $out, $ec);
 	if ($ec != 0) die("Checkout of SVN Rev ".($i-1)." failed!!!\n");
+	if ($i-1 == 699) fix_rev699_bug($outdir_old);
 
 	$outdir_new = "/tmp/oidplus_svntmp2_$i/";
 	if ($outdir_new && is_dir($outdir_new)) exec("rm -rf $outdir_new", $out, $ec);
 	exec("svn co https://svn.viathinksoft.com/svn/oidplus/trunk/@$i $outdir_new", $out, $ec);
 	if ($ec != 0) die("Checkout of SVN Rev ".($i)." failed!!!\n");
+	if ($i == 699) fix_rev699_bug($outdir_new);
 
 	$outscript  = "<?php\n";
 	$outscript .= "\n";
@@ -474,6 +490,7 @@ if ($ec != 0) {
 	ksort($out);
 
 	file_put_contents($output_dir.'/releases.ser', serialize($out));
+	file_put_contents($output_dir.'/releases.ser.gz', gzencode(serialize($out)));
 }
 
 # ---

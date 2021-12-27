@@ -76,15 +76,22 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 				// Download and unzip
 
-				if (function_exists('gzdecode')) {
-					$url = sprintf(OIDplus::getEditionInfo()['update_package_gz'], $rev-1, $rev);
-					$cont = url_get_contents($url);
-					if ($cont !== false) $cont = @gzdecode($cont);
-				} else {
-					$url = sprintf(OIDplus::getEditionInfo()['update_package'], $rev-1, $rev);
-					$cont = url_get_contents($url);
+				$cont = false;
+				for ($retry=1; $retry<=3; $retry++) {
+					if (function_exists('gzdecode')) {
+						$url = sprintf(OIDplus::getEditionInfo()['update_package_gz'], $rev-1, $rev);
+						$cont = url_get_contents($url);
+						if ($cont !== false) $cont = @gzdecode($cont);
+					} else {
+						$url = sprintf(OIDplus::getEditionInfo()['update_package'], $rev-1, $rev);
+						$cont = url_get_contents($url);
+					}
+					if ($cont !== false) {
+						break;
+					} else {
+						sleep(1);
+					}
 				}
-
 				if ($cont === false) throw new OIDplusException(_L("Update %1 could not be downloaded from ViaThinkSoft server. Please try again later.",$rev));
 
 				// Check signature...
@@ -130,7 +137,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				return array("status" => 0, "content" => $res, "rev" => $rev);
 			}
 			else {
-				throw new OIDplusException(_L('Multiple version files/directories (oidplus_version.txt, .version.php, .git and .svn) are existing! Therefore, the version is ambiguous!'));
+				throw new OIDplusException(_L('Multiple version files/directories (oidplus_version.txt, .version.php, .git, or .svn) are existing! Therefore, the version is ambiguous!'));
 			}
 		}
 	}
@@ -179,7 +186,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 			$installType = OIDplus::getInstallType();
 
 			if ($installType === 'ambigous') {
-				$out['text'] .= '<font color="red">'.strtoupper(_L('Error')).': '._L('Multiple version files/directories (oidplus_version.txt, .version.php, .git and .svn) are existing! Therefore, the version is ambiguous!').'</font>';
+				$out['text'] .= '<font color="red">'.strtoupper(_L('Error')).': '._L('Multiple version files/directories (oidplus_version.txt, .version.php, .git, or .svn) are existing! Therefore, the version is ambiguous!').'</font>';
 				$out['text'] .= '</div>';
 			} else if ($installType === 'unknown') {
 				$out['text'] .= '<font color="red">'.strtoupper(_L('Error')).': '._L('The version cannot be determined, and the update needs to be applied manually!').'</font>';
@@ -268,8 +275,14 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 		try {
 			if (is_null($this->releases_ser)) {
-				$url = OIDplus::getEditionInfo()['revisionlog'];
-				$cont = url_get_contents($url);
+				if (function_exists('gzdecode')) {
+					$url = OIDplus::getEditionInfo()['revisionlog_gz'];
+					$cont = url_get_contents($url);
+					if ($cont !== false) $cont = @gzdecode($cont);
+				} else {
+					$url = OIDplus::getEditionInfo()['revisionlog'];
+					$cont = url_get_contents($url);
+				}
 				if ($cont === false) return false;
 				$this->releases_ser = $cont;
 			} else {
@@ -296,8 +309,14 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 	private function getLatestRevision() {
 		try {
 			if (is_null($this->releases_ser)) {
-				$url = OIDplus::getEditionInfo()['revisionlog'];
-				$cont = url_get_contents($url);
+				if (function_exists('gzdecode')) {
+					$url = OIDplus::getEditionInfo()['revisionlog_gz'];
+					$cont = url_get_contents($url);
+					if ($cont !== false) $cont = @gzdecode($cont);
+				} else {
+					$url = OIDplus::getEditionInfo()['revisionlog'];
+					$cont = url_get_contents($url);
+				}
 				if ($cont === false) return false;
 				$this->releases_ser = $cont;
 			} else {

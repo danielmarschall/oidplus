@@ -304,7 +304,14 @@ function url_get_contents($url) {
 		if (!($res = @curl_exec($ch))) return false;
 		curl_close($ch);
 	} else {
-		$res = @file_get_contents($url);
+		$opts = [
+			"http" => [
+				"method" => "GET",
+				"header" => "User-Agent: ViaThinkSoft-OIDplus/2.0\r\n"
+			]
+		];
+		$context = stream_context_create($opts);
+		$res = @file_get_contents($url, false, $context);
 		if ($res === false) return false;
 	}
 	return $res;
