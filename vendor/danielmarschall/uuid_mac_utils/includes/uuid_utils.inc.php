@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2021 Daniel Marschall, ViaThinkSoft
- * Version 2021-05-21
+ * Version 2021-05-29
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -293,7 +293,7 @@ function uuid_canonize($uuid) {
 function oid_to_uuid($oid) {
 	if (!is_uuid_oid($oid)) return false;
 
-	if ($oid[0] == '.') {
+	if (substr($oid,0,1) == '.') {
 		$oid = substr($oid, 1);
 	}
 	$ary = explode('.', $oid);
@@ -313,7 +313,7 @@ function oid_to_uuid($oid) {
 }
 
 function is_uuid_oid($oid, $only_allow_root=false) {
-	if ($oid[0] == '.') $oid = substr($oid, 1); // remove leading dot
+	if (substr($oid,0,1) == '.') $oid = substr($oid, 1); // remove leading dot
 
 	$ary = explode('.', $oid);
 
@@ -485,7 +485,8 @@ function get_mac_address() {
 		}
 	} else {
 		// Linux
-		foreach (glob('/sys/class/net/'.'*'.'/address') as $x) {
+		$addresses = @glob('/sys/class/net/'.'*'.'/address');
+		if ($addresses) foreach ($addresses as $x) {
 			if (!strstr($x,'/lo/')) {
 				$detected_mac = trim(file_get_contents($x));
 				return $detected_mac;

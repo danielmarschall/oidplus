@@ -201,8 +201,8 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				}
 			} else {
 				// If it was the last file, delete the empty directory
-				$ary = glob($uploaddir . DIRECTORY_SEPARATOR . '*');
-				if (count($ary) == 0) @rmdir($uploaddir);
+				$ary = @glob($uploaddir . DIRECTORY_SEPARATOR . '*');
+				if (is_array($ary) && (count($ary) == 0)) @rmdir($uploaddir);
 			}
 
 			OIDplus::logger()->log("[OK]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Deleted attachment '".basename($uploadfile)."' from object '$id'");
@@ -336,7 +336,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 		try {
 			$upload_dir = self::getUploadDir($id);
-			$files = glob($upload_dir . DIRECTORY_SEPARATOR . '*');
+			$files = @glob($upload_dir . DIRECTORY_SEPARATOR . '*');
 			$found_files = false;
 
 			$obj = OIDplusObject::parse($id);
@@ -358,7 +358,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			$output .= '<th>'._L('Download').'</th>';
 			if ($can_delete) $output .= '<th>'._L('Delete').'</th>';
 			$output .= '</tr>';
-			foreach ($files as $file) {
+			if ($files) foreach ($files as $file) {
 				if (is_dir($file)) continue;
 
 				$output .= '<tr>';
@@ -414,8 +414,8 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		// Delete the attachment folder including all files in it (note: Subfolders are not possible)
 		$uploaddir = self::getUploadDir($id);
 		if ($uploaddir != '') {
-			$ary = glob($uploaddir . DIRECTORY_SEPARATOR . '*');
-			foreach ($ary as $a) @unlink($a);
+			$ary = @glob($uploaddir . DIRECTORY_SEPARATOR . '*');
+			if ($ary) foreach ($ary as $a) @unlink($a);
 			@rmdir($uploaddir);
 			if (is_dir($uploaddir)) {
 				OIDplus::logger()->log("[WARN]OID($id)+[WARN]A!", "Attachment directory '$uploaddir' could not be deleted during the deletion of the OID");
@@ -436,8 +436,8 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function whoisObjectAttributes($id, &$out) {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.4
 
-		$files = glob(self::getUploadDir($id) . DIRECTORY_SEPARATOR . '*');
-		foreach ($files as $file) {
+		$files = @glob(self::getUploadDir($id) . DIRECTORY_SEPARATOR . '*');
+		if ($files) foreach ($files as $file) {
 			$out[] = 'attachment-name: '.basename($file);
 			$out[] = 'attachment-url: '.OIDplus::webpath(__DIR__).'download.php?id='.urlencode($id).'&filename='.urlencode(basename($file));
 		}

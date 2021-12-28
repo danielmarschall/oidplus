@@ -796,7 +796,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			'oid:1.3.6.1.4.1.37476.9000',
 			'oid:1.3.6.1.4.1.37553.8.8',
 			'oid:2.16.276.1',
-			//TODO?'oid:2.25'
+			//'oid:2.25', // according to Olivier, it is OK that UUID owners define their own ASN.1 ID, since the ASN.1 ID is not required to be unique
+			//'oid:1.2.840.113556.1.8000.2554' // Adhoc (GUID/UUID-based) customer use. It is probably the same case as the UUID OIDs, after all, these are UUIDs, too.
 		);
 
 		// http://www.oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20Unicode%20labels

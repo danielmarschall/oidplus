@@ -3,7 +3,7 @@
 /*
  * PHP git functions
  * Copyright 2021 Daniel Marschall, ViaThinkSoft
- * Revision 2021-12-13
+ * Revision 2021-12-29
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,9 +69,9 @@ function git_get_latest_commit_message($git_dir) {
 
 		return $uncompressed;
 	} else {
-		$pack_files = glob($objects_dir.'/pack/pack-*.pack');
+		$pack_files = @glob($objects_dir.'/pack/pack-*.pack');
 		$last_exception = 'No pack files found';
-		foreach ($pack_files as $basename) {
+		if ($pack_files) foreach ($pack_files as $basename) {
 			$basename = substr(basename($basename),0,strlen(basename($basename))-5);
 			try {
 				return git_read_object($commit_object,
