@@ -1368,8 +1368,8 @@ class OIDplus {
 		$i = 0;
 		do {
 			if (is_dir($dir.'/git')) {
-				$confs = glob($dir.'/git/'.'*'.'/config');
-				foreach ($confs as $conf) {
+				$confs = @glob($dir.'/git/'.'*'.'/config');
+				if ($confs) foreach ($confs as $conf) {
 					$cont = file_get_contents($conf);
 					if (isset(OIDplus::getEditionInfo()['gitrepo']) && (OIDplus::getEditionInfo()['gitrepo'] != '') && (strpos($cont, OIDplus::getEditionInfo()['gitrepo']) !== false)) {
 						return dirname($conf);
@@ -1377,7 +1377,7 @@ class OIDplus {
 				}
 			}
 			$i++;
-		} while (($i<100) && ($dir != ($new_dir = realpath($dir.'/../'))) && ($dir = $new_dir));
+		} while (($i<100) && ($dir != ($new_dir = @realpath($dir.'/../'))) && ($dir = $new_dir));
 		return false;
 	}
 

@@ -3,7 +3,7 @@
 /*
  * X.509 Utilities for PHP
  * Copyright 2011-2021 Daniel Marschall, ViaThinkSoft
- * Version 2021-06-10
+ * Version 2021-06-29
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,8 +61,8 @@ function x_509_chain($infile, $CApath) {
 
 		$ary = array();
 		$aryr = array();
-		$all_trusted = glob($CApath . '*.pem');
-		foreach ($all_trusted as &$a) {
+		$all_trusted = @glob($CApath . '*.pem');
+		if ($all_trusted) foreach ($all_trusted as &$a) {
 			if (x_509_is_crl_file($a)) {
 				$out = array();
 				exec(OPENSSL_EXEC.' crl -hash -noout -in '.escapeshellarg($a), $out, $code);
