@@ -50,7 +50,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				$file_owner_a = -1;
 				$file_owner_a_name = '???';
 			} else {
-				$tmp = posix_getpwuid($file_owner_a);
+				$tmp = function_exists('posix_getpwuid') ? posix_getpwuid($file_owner_a) : false;
 				$file_owner_a_name = $tmp !== false ? $tmp['name'] : 'UID '.$file_owner_a;
 			}
 
@@ -59,7 +59,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				$file_owner_b = -1;
 				$file_owner_b_name = '???';
 			} else {
-				$tmp = posix_getpwuid($file_owner_b);
+				$tmp = function_exists('posix_getpwuid') ? posix_getpwuid($file_owner_b) : false;
 				$file_owner_b_name = $tmp !== false ? $tmp['name'] : 'UID '.$file_owner_b;
 			}
 

@@ -141,10 +141,14 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 					// On Linux:
 					// get_current_user() will get the owner of the PHP script, not the process owner!
 					// We want the process owner, so we use posix_geteuid().
-					$uid = posix_geteuid();
-					$current_user = posix_getpwuid($uid); // receive username (required read access to /etc/passwd )
+					if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
+						$uid = posix_geteuid();
+						$current_user = posix_getpwuid($uid); // receive username (required read access to /etc/passwd )
+					} else {
+						$uid = -1;
+					}
 					if ($current_user == '') $current_user = get_current_user();
-					if ($current_user == '') $current_user = '#'.$uid;
+					if (($current_user == '') && ($uid >= 0)) $current_user = '#'.$uid;
 				}
 			}
 			$out['text'] .= '		<td>'.($current_user == '' ? '<i>'._L('unknown').'</i>' : htmlentities($current_user)).'</td>';

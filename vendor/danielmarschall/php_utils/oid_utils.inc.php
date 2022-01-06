@@ -2,8 +2,8 @@
 
 /*
  * OID-Utilities for PHP
- * Copyright 2011-2021 Daniel Marschall, ViaThinkSoft
- * Version 2021-09-23
+ * Copyright 2011-2022 Daniel Marschall, ViaThinkSoft
+ * Version 2022-01-06
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -362,7 +362,7 @@ function sanitizeOID($oid, $leading_dot=false) {
 			continue;
 		}
 
-		if (!ctype_digit($a)) return false; // does contain something other than digits
+		if (!preg_match('@^(\\d+)$@', $a, $m)) return false; // does contain something other than digits
 
 		// strike leading zeroes
 		$a = preg_replace("@^0+@", '', $a);

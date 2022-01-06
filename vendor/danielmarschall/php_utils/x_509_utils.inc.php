@@ -3,7 +3,7 @@
 /*
  * X.509 Utilities for PHP
  * Copyright 2011-2021 Daniel Marschall, ViaThinkSoft
- * Version 2021-06-29
+ * Version 2021-12-29
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
