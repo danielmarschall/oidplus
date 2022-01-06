@@ -56,7 +56,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '861975efb89d07ed67953884e1ba5bf4b8677d80',
+      'reference' => 'eb0b3f8ba434d9ee5bc933e83fca2cf25b92bd4b',
     ),
     'danielmarschall/uuid_mac_utils' => 
     array (
@@ -66,7 +66,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '7b292091da6fd9ab93b06be767754ee668ff457c',
+      'reference' => '2f646245865273217be08873a9c158f81f753797',
     ),
     'danielmarschall/vnag' => 
     array (
