@@ -500,9 +500,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		}
 
 		// make sure the program works even if the user provided HTML is not UTF-8
-		$info = iconv(mb_detect_encoding($info, mb_detect_order(), true), 'UTF-8//IGNORE', $info);
-		$bom = pack('H*','EFBBBF');
-		$info = preg_replace("/^$bom/", '', $info);
+		$info = convert_to_utf8_no_bom($info);
 
 		echo $info;
 

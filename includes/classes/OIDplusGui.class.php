@@ -81,7 +81,7 @@ class OIDplusGui {
 
 			if (count($dirs) > 0) {
 				$dir = substr($dirs[0], strlen(OIDplus::localpath()));
-				$langbox_entries[$code] = '<span class="lang_flag_bg"><a '.($useJs ? 'onclick="setLanguage(\''.$code.'\'); return false" ' : '').'href="?lang='.$code.$add.'"><img src="'.OIDplus::webpath(null,true).$dir.'/'.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20"></a></span> ';
+				$langbox_entries[$code] = '<span class="lang_flag_bg"><a '.($useJs ? 'onclick="setLanguage(\''.$code.'\'); return false" ' : '').'href="?lang='.$code.$add.'"><img src="'.OIDplus::webpath(null,true).$dir.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20"></a></span> ';
 			}
 		}
 		if ($non_default_languages > 0) {

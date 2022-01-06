@@ -48,6 +48,7 @@ function generateRandomString($length) {
 }
 
 function verify_private_public_key($privKey, $pubKey) {
+	if (!function_exists('openssl_public_encrypt')) return false;
 	try {
 		if (empty($privKey)) return false;
 		if (empty($pubKey)) return false;
@@ -197,11 +198,22 @@ function _CheckParamExists($params, $key) {
 	}
 }
 
-function extractHtmlContents($cont) {
-	// make sure the program works even if the user provided HTML is not UTF-8
-	$cont = iconv(mb_detect_encoding($cont, mb_detect_order(), true), 'UTF-8//IGNORE', $cont);
+function convert_to_utf8_no_bom($cont) {
+	$encoding = mb_detect_encoding($cont, mb_detect_order(), true);
+
+	if (($encoding !== false) && ($encoding !== 'ASCII') && ($encoding !== 'UTF-8')) {
+		$cont = iconv($encoding, 'UTF-8//IGNORE', $cont);
+	}
+
+	// Remove BOM
 	$bom = pack('H*','EFBBBF');
 	$cont = preg_replace("/^$bom/", '', $cont);
+	return $cont;
+}
+
+function extractHtmlContents($cont) {
+	// make sure the program works even if the user provided HTML is not UTF-8
+	$cont = convert_to_utf8_no_bom($cont);
 
 	$out_js = '';
 	$m = array();

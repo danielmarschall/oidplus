@@ -66,7 +66,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '2f646245865273217be08873a9c158f81f753797',
+      'reference' => '53cc75763e247535acd013f4aad7e0b1a41cee34',
     ),
     'danielmarschall/vnag' => 
     array (
