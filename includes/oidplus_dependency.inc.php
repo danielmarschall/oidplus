@@ -20,6 +20,37 @@
 function oidplus_get_missing_dependencies() {
 	$missing_dependencies = array();
 
+	if (!extension_loaded('iconv')) {
+		// Alpine Linux: apk add php-iconv
+		$missing_dependencies[] = 'iconv';
+	}
+
+	if (!extension_loaded('session')) {
+		// Alpine Linux: apk add php-session
+		$missing_dependencies[] = 'session';
+	}
+
+	if (!extension_loaded('json')) {
+		// Alpine Linux: apk add php-json
+		$missing_dependencies[] = 'json';
+	}
+
+	if (!extension_loaded('date')) {
+		$missing_dependencies[] = 'date';
+	}
+
+	if (!extension_loaded('filter')) {
+		$missing_dependencies[] = 'filter';
+	}
+
+	if (!extension_loaded('hash')) {
+		$missing_dependencies[] = 'hash';
+	}
+
+	if (!extension_loaded('pcre')) {
+		$missing_dependencies[] = 'pcre';
+	}
+
 	if (!function_exists('gmp_init')) {
 		// GMP Required for includes/uuid_functions.inc.php
 		//                  includes/ipv6_functions.inc.php
