@@ -40,7 +40,17 @@ apk add php apache2 php-apache2 php-mysqli
 service apache2 start
 rc-update add apache2 default
 
-# Download OIDplus
+# Download OIDplus (Installation method A: Download using SVN)
+#apk add subversion
+#cd /var/www/localhost/htdocs/
+#svn co https://svn.viathinksoft.com/svn/oidplus/trunk/ oidplus
+
+# Download OIDplus (Installation method B: Download using Git)
+#apk add git
+#cd /var/www/localhost/htdocs/
+#git clone https://github.com/danielmarschall/oidplus.git
+
+# Download OIDplus (Installation method C: Download SVN snapshot)
 cd /var/www/localhost/htdocs/
 wget https://www.viathinksoft.com/download/235/oidplus2_svn.tar.gz
 tar -zxvf oidplus2_svn.tar.gz
@@ -53,7 +63,7 @@ chown -R apache:apache /var/www/localhost/htdocs/oidplus/
 # Required
 apk add php-gmp php-session php-mbstring php-json
 # Optional (required for some features)
-apk add php-curl php-sockets php-simplexml php-openssl
+apk add php-curl php-sockets php-simplexml php-openssl php-posix
 # Apply changes
 service apache2 restart
 
