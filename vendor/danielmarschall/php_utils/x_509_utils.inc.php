@@ -121,9 +121,8 @@ function x_509_get_ocsp_uris($infile) {
 }
 
 
+// TODO: Needs caching, otherwise the page is too slow
 function x_509_ocsp_check_chain($infile, $CApath) {
-	return '(Skipped)'; # TODO: we need caching, otherwise the page is too slow
-
 	$x = x_509_chain($infile, $CApath);
 
 	if ($x === false) {

@@ -79,14 +79,14 @@ function gethostbynamel6($host, $try_a = /* false */ true) {
 		}
 	}
 
-	# VTS-Modified: IP4+IP6 merged
+	# VTS-Modified: Output IP4+IP6 merged instead of giving only IPv6 or IPv4
 	$merged = array_merge($ip4, $ip6);
 	if (count($merged) < 1) {
 		return false;
 	} else {
 		return $merged;
 	}
-
+	/*
 	if (count($ip6) < 1) {
 		if ($try_a == true) {
 			if (count($ip4) < 1) {
@@ -100,4 +100,5 @@ function gethostbynamel6($host, $try_a = /* false */ true) {
 	} else {
 		return $ip6;
 	}
+	*/
 }

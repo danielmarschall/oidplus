@@ -192,18 +192,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "eb0b3f8ba434d9ee5bc933e83fca2cf25b92bd4b"
+                "reference": "20893f173243e648e0f5a726e908cade11ae1a6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/eb0b3f8ba434d9ee5bc933e83fca2cf25b92bd4b",
-                "reference": "eb0b3f8ba434d9ee5bc933e83fca2cf25b92bd4b",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/20893f173243e648e0f5a726e908cade11ae1a6c",
+                "reference": "20893f173243e648e0f5a726e908cade11ae1a6c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2022-01-06T20:55:14+00:00",
+            "time": "2022-01-07T22:37:29+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -233,18 +233,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/uuid_mac_utils.git",
-                "reference": "53cc75763e247535acd013f4aad7e0b1a41cee34"
+                "reference": "f99346b5382b1debcdb84c4541941151f700c1be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/53cc75763e247535acd013f4aad7e0b1a41cee34",
-                "reference": "53cc75763e247535acd013f4aad7e0b1a41cee34",
+                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/f99346b5382b1debcdb84c4541941151f700c1be",
+                "reference": "f99346b5382b1debcdb84c4541941151f700c1be",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2022-01-06T22:36:33+00:00",
+            "time": "2022-01-07T23:04:32+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

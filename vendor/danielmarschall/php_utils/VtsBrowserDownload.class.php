@@ -33,6 +33,10 @@ class VtsBrowserDownload {
 
 	private static function getMimeType($file_extension) {
 		$file_extension = strtolower($file_extension);
+		if (!class_exists('VtsFileTypeDetect')) {
+			// https://github.com/danielmarschall/fileformats
+			throw new Exception("Require 'fileformats' package");
+		}
 		return VtsFileTypeDetect::getMimeType('dummy.'.$file_extension);
 	}
 
