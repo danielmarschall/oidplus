@@ -32,11 +32,6 @@ function oidplus_get_missing_dependencies() {
 		$missing_dependencies[] = 'SPL';
 	}
 
-	if (!extension_loaded('iconv')) {
-		// Alpine Linux: apk add php-iconv
-		$missing_dependencies[] = 'iconv';
-	}
-
 	if (!extension_loaded('session')) {
 		// Alpine Linux: apk add php-session
 		$missing_dependencies[] = 'session';
@@ -86,13 +81,14 @@ function oidplus_get_missing_dependencies() {
 		                          'BCMath ('.$install_hint2.')';
 	}
 
-	if (!function_exists('mb_substr')) {
+	if (!extension_loaded('mbstring') && !extension_loaded('iconv')) {
 		// Required for includes/classes/OIDplusSessionHandler.class.php
 		//              includes/oid_utils.inc.php
 		//              vendor/matthiasmullie/path-converter/src/Converter.php
 		//              vendor/n-other/php-sha3/src/Sha3.php
-		// Note that vendor/symfony/polyfill-mbstring/ will implement the MBString functions if iconv is present.
-		// This is the reason why we use function_exists('mb_substr') instead of extension_loaded('mbstring')
+		//              includes/functions.inc.php (convert_to_utf8_no_bom)
+		// Note that vendor/symfony/polyfill-mbstring/ will always implement the MBString functions, but they only work if iconv is present.
+		// This is the reason why we use extension_loaded('mbstring') instead of function_exists('mb_substr')
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			$install_hint1 = _L('On Windows, install it by enabling the line %1 in your PHP.ini',
 				'extension=php_mbstring.dll');
@@ -101,7 +97,7 @@ function oidplus_get_missing_dependencies() {
 			$install_hint1 = _L('On Linux, install it by running e.g. %1, and then restart your webserver service, e.g. by running %2',
 				'<code>sudo apt-get update && sudo apt-get install php-mbstring</code>',
 				'<code>sudo service apache2 restart</code>');
-			$install_hint2 = _L('On Linux, it should be installed by default');
+			$install_hint2 = _L('On Linux, it should be installed by default'); // Alpine Linux: apk add php-iconv
 		}
 		$missing_dependencies[] = 'MBString ('.$install_hint1.')'.
 		                          '<br>'._L('or alternatively').'<br>' .
