@@ -38,7 +38,6 @@ function oidplus_get_missing_dependencies() {
 	}
 
 	if (!extension_loaded('json')) {
-		// Alpine Linux: apk add php-json
 		$missing_dependencies[] = 'json';
 	}
 
