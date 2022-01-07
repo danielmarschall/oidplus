@@ -7086,6 +7086,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		You must install the PHP "sockets" in order to check for non-existing OIDs.
+		]]></source>
+		<target><![CDATA[
+		Sie müssen die PHP-Erweiterung "sockets" installieren, um auf nicht-verfügbare OIDs zu prüfen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		You must set a value for SERVER_SECRET in %1 for the system to operate secure.
 		]]></source>
 		<target><![CDATA[

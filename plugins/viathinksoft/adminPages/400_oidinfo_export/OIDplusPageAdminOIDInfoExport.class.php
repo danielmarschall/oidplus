@@ -662,12 +662,22 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		require_once __DIR__ . '/oidinfo_api.inc.php';
 
 		$oa = new OIDInfoAPI();
-		$oa->addSimplePingProvider('viathinksoft.de:49500');
+		if ($only_non_existing) {
+			if (!function_exists('socket_create')) {
+				throw new OIDplusException(_L('You must install the PHP "sockets" in order to check for non-existing OIDs.'));
+			}
+			$oa->addSimplePingProvider('viathinksoft.de:49500');
+		}
+
+		@header('Content-Type:text/xml');
 
 		$email = OIDplus::config()->getValue('admin_email');
 		if (empty($email)) $email = 'unknown@example.com';
 
-		echo $oa->xmlAddHeader(OIDplus::config()->getValue('system_title'), isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Export interface', $email); // do not translate
+		$sys_title = OIDplus::config()->getValue('system_title');
+		$name1 = !empty($sys_title) ? $sys_title : 'OIDplus 2.0';
+		$name2 = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Export interface';
+		echo $oa->xmlAddHeader($name1, $name2, $email); // do not translate
 
 		$params['allow_html'] = true;
 		$params['allow_illegal_email'] = true; // It should be enabled, because the creator could have used some kind of human-readable anti-spam technique
