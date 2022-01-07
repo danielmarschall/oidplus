@@ -20,6 +20,18 @@
 function oidplus_get_missing_dependencies() {
 	$missing_dependencies = array();
 
+	if (!extension_loaded('standard')) {
+		$missing_dependencies[] = 'standard';
+	}
+
+	if (!extension_loaded('Core')) {
+		$missing_dependencies[] = 'Core';
+	}
+
+	if (!extension_loaded('SPL')) {
+		$missing_dependencies[] = 'SPL';
+	}
+
 	if (!extension_loaded('iconv')) {
 		// Alpine Linux: apk add php-iconv
 		$missing_dependencies[] = 'iconv';
