@@ -39,6 +39,4 @@ if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 	}
 }
 
-header('Content-Type:text/xml');
-
-OIDplusPageAdminOIDInfoExport::outputXML(isset($_GET['online']) && $_GET['online']);
+OIDplusPageAdminOIDInfoExport::outputXML(isset($_REQUEST['online']) && $_REQUEST['online']);

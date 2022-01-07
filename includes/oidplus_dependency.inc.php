@@ -67,7 +67,7 @@ function oidplus_get_missing_dependencies() {
 		// GMP Required for includes/uuid_functions.inc.php
 		//                  includes/ipv6_functions.inc.php
 		//                  plugins/viathinksoft/adminPages/400_oidinfo_export/oidinfo_api.inc.php (if GMP is not available, BC will be used)
-		// Note that gmp_supplement.inc.php will implement the GMP functions if BCMath is present.
+		// Note that vendor/danielmarschall/php_utils/gmp_supplement.inc.php will implement the GMP functions if BCMath is present.
 		// This is the reason why we use function_exists('gmp_init') instead of extension_loaded('gmp')
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			$install_hint1 = _L('On Windows, install it by enabling the line %1 in your PHP.ini',
@@ -91,7 +91,7 @@ function oidplus_get_missing_dependencies() {
 		//              includes/oid_utils.inc.php
 		//              vendor/matthiasmullie/path-converter/src/Converter.php
 		//              vendor/n-other/php-sha3/src/Sha3.php
-		// Note that mbstring_supplement.inc.php will implement the MBString functions if iconv is present.
+		// Note that vendor/symfony/polyfill-mbstring/ will implement the MBString functions if iconv is present.
 		// This is the reason why we use function_exists('mb_substr') instead of extension_loaded('mbstring')
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			$install_hint1 = _L('On Windows, install it by enabling the line %1 in your PHP.ini',
@@ -113,7 +113,7 @@ function oidplus_get_missing_dependencies() {
 		//              includes/classes/OIDplus.class.php (Translation)
 		//              plugins/viathinksoft/adminPages/400_oidinfo_export/OIDplusPageAdminOIDInfoExport.class.php (Import OID from oid-info.com)
 		//              dev/translation/*.phps (only for developers)
-		// Note: This should not happen because of simplexml_supplement.inc.php
+		// Note: This should not happen because of vendor/danielmarschall/php_utils/simplexml_supplement.inc.php
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			$install_hint = _L('On Windows, it should be installed by default');
 		} else {
