@@ -1363,7 +1363,7 @@ class OIDplus {
 	public static function findGitFolder() {
 		// Git command line saves git information in folder ".git"
 		// Plesk git saves git information in folder "../../../git/oidplus/" (or similar)
-		$dir = realpath(__DIR__);
+		$dir = OIDplus::localpath();
 		if (is_dir($dir.'/.git')) return $dir.'/.git';
 		$i = 0;
 		do {
