@@ -162,7 +162,7 @@ function uuid_info($uuid) {
 
 					if (function_exists('decode_mac')) {
 						echo "\nIn case that this Node ID is a MAC address, here is the interpretation of that MAC address:\n";
-						echo decode_mac($nodeid); /** @phpstan-ignore-line */
+						echo decode_mac($nodeid);
 					}
 
 					break;
@@ -220,7 +220,7 @@ function uuid_info($uuid) {
 
 					if (function_exists('decode_mac')) {
 						echo "\nIn case that this Node ID is a MAC address, here is the interpretation of that MAC address:\n";
-						echo decode_mac($nodeid); /** @phpstan-ignore-line */
+						echo decode_mac($nodeid);
 					}
 
 					break;

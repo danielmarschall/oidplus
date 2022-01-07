@@ -25,8 +25,16 @@ class VtsLDAPUtils {
 	private static function _L($str, ...$sprintfArgs) {
 		if (function_exists('_L')) {
 			return _L($str, $sprintfArgs);
-		} else {
+		} else if (function_exists('my_vsprintf')) {
 			return my_vsprintf($str, $sprintfArgs);
+		} else {
+		        $n = 1;
+		        foreach ($sprintfArgs as $val) {
+		                $str = str_replace("%$n", $val, $str);
+		                $n++;
+		        }
+		        $str = str_replace("%%", "%", $str);
+		        return $str;
 		}
 	}
 

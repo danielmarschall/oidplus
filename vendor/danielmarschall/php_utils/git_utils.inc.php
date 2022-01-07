@@ -127,6 +127,7 @@ function git_read_object($object_wanted, $idx_file, $pack_file, $debug=false) {
 	// Find the exact object number
 	fseek($fp, $fanout_offset + 4*256 + 20*$object_no);
 	$object_no--;
+	$pack_offset = -1; // avoid that phpstan complains
 	do {
 		$object_no++;
 		if ($version == 1) {

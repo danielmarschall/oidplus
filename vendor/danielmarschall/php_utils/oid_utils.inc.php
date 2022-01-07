@@ -3,7 +3,7 @@
 /*
  * OID-Utilities for PHP
  * Copyright 2011-2022 Daniel Marschall, ViaThinkSoft
- * Version 2022-01-06
+ * Version 2022-01-07
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -333,14 +333,15 @@ function oid_dotnotation_equal($oidA, $oidB) {
  * @version 2015-08-17
  * @param   string $oid<br/>
  *              An OID in dot notation.
- * @param   boolean $leading_dot<br/>
+ * @param   mixed $leading_dot<br/>
  *              true: The OID is valid, if it contains a leading dot.<br/>
  *              false (default): The OID is valid, if it does not contain a leading dot.
  *              'auto: Allow both
  * @return  string|false The OID without leading dots, or <code>false</code> if the OID is syntactically wrong.
  **/
-$oid_sanitize_cache = array();
 function sanitizeOID($oid, $leading_dot=false) {
+	static $oid_sanitize_cache = array();
+
 	if ($leading_dot) $leading_dot = substr($oid,0,1) == '.';
 
 	// We are using a cache, since this function is used very often by OIDplus
