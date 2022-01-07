@@ -199,10 +199,10 @@ function _CheckParamExists($params, $key) {
 }
 
 function convert_to_utf8_no_bom($cont) {
-	$encoding = mb_detect_encoding($cont, mb_detect_order(), true);
-
-	if (($encoding !== false) && ($encoding !== 'ASCII') && ($encoding !== 'UTF-8')) {
-		$cont = iconv($encoding, 'UTF-8//IGNORE', $cont);
+	if (mb_detect_encoding($cont, "auto", true) != 'UTF-8') {
+		# $cont = mb_convert_encoding($cont, 'UTF-8', 'Windows-1252');
+		# $cont = mb_convert_encoding($cont, 'UTF-8', 'auto');
+		$cont = mb_convert_encoding($cont, 'UTF-8');
 	}
 
 	// Remove BOM

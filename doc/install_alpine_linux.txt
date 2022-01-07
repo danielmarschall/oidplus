@@ -45,9 +45,11 @@ chown -R apache:apache /var/www/localhost/htdocs/oidplus/
 
 # Install packages required for OIDplus
 # Required
-apk add php-bcmath php-session php-iconv php-json
+# If php-gmp cannot be installed, you can use php-bcmath
+# If php-mbstring cannot be installed, you can use php-iconv (however, there is currently a bug in Alpine? https://github.com/symfony/polyfill/issues/387 )
+apk add php-gmp php-session php-mbstring php-json
 # Optional (recommended)
-apk add php-curl php-sockets php-simplexml php-mbstring php-openssl php-gmp
+apk add php-curl php-sockets php-simplexml php-openssl
 # Apply changes
 service apache2 restart
 
