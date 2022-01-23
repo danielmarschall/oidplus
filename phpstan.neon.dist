@@ -1,5 +1,8 @@
 parameters:
 	level: 5
+	fileExtensions:
+		- php
+		- phps
 	paths:
 		- .
 	excludePaths:

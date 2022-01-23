@@ -217,10 +217,14 @@ if ($continue) {
 			$out[] = 'attribute: confidential'; // DO NOT TRANSLATE!
 		}
 
+		if ($obj->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
+			// Also ask $obj for extra attributes:
+			// This way we could add various additional information, e.g. IPv4/6 range analysis, interpretation of GUID, etc. (TODO)
+			$obj->whoisObjectAttributes($obj->nodeId(), $out);
+		}
+
 		foreach (OIDplus::getPagePlugins() as $plugin) {
 			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-				// TODO: Also ask $obj for extra attributes (although it is not a plugin)?
-				//       This way we could add various additional information, e.g. IPv4/6 range analysis, interpretation of GUID, etc.
 				$plugin->whoisObjectAttributes($obj->nodeId(), $out);
 			}
 		}
@@ -283,9 +287,16 @@ if ($continue) {
 				$out[] = 'ra-fax: ' . $row2->fax; // DO NOT TRANSLATE!
 			}
 			$out[] = 'ra-email: ' . $row->ra_email; // DO NOT TRANSLATE!
+
+			$ra = new OIDplusRA($row->ra_email);
+			if ($ra->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
+				// Also ask $obj for extra attributes:
+				// This way we could add various additional information, e.g. IPv4/6 range analysis, interpretation of GUID, etc.
+				$ra->whoisRaAttributes($row->ra_email, $out);
+			}
+
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-					// TODO: Also ask $ra for extra attributes (although it is not a plugin)?
 					$plugin->whoisRaAttributes($row->ra_email, $out);
 				}
 			}

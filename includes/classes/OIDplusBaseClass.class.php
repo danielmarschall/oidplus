@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,16 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-abstract class OIDplusQueryResult extends OIDplusBaseClass {
-	abstract public function containsResultSet(): bool;
-	abstract public function num_rows(): int;
-	abstract public function fetch_array()/*: ?array*/;
-	abstract public function fetch_object()/*: ?object*/;
-}
+abstract class OIDplusBaseClass {
 
+	public function implementsFeature($id) {
+
+		// Use this function to query the plugin if it supports some specific interface
+		// Usually, you would use PHP Interfaces. However, the problem with PHP interfaces
+		// is, that there will be a fatal error if the interface can't be found (e.g. because
+		// the OIDplus plugin is not installed). So we need an "optional" interface.
+
+		return false;
+	}
+
+}

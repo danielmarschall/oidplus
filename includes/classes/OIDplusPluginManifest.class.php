@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusPluginManifest {
+class OIDplusPluginManifest extends OIDplusBaseClass {
 
 	private $manifestFile = null;
 	private $rawXML = null;

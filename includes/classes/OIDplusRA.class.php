@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusRA {
+class OIDplusRA extends OIDplusBaseClass {
 	private $email = null;
 
 	public function __construct($email) {

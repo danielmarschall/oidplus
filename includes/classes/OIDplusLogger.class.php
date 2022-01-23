@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusLogger {
+class OIDplusLogger extends OIDplusBaseClass {
 
 	private static function split_maskcodes($maskcodes) {
 		// This function splits a mask code containing multiple components

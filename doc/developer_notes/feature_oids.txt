@@ -1,5 +1,5 @@
 
-FEATURE OIDS
+FEATURE OIDS ("Weak interfaces")
 ============
 
 PHP classes belonging to the OIDplus system (such as the class handling the tree menu structure,
@@ -14,9 +14,14 @@ a PHP interface and the other plugins implementing it), the plugins would not wo
 anymore if the plugin offering the interface is missing, due to a PHP compilation error.
 Therefore, we use a functionality called "features".
 A plugin can ask another plugin if it supports a feature (defined as OID) using
-the function OIDplusPlugin::implementsFeature().
+the function implementsFeature().
 If it supports the feature with a given OID, the plugin promises that it
 contains a set of functions defined by that OID.
+
+All classes of OIDplus inherit from OIDplusBaseClass, which implements
+OIDplusBaseClass::implementsFeature(). Therefore, the "feature OID" functionality
+works also for plugin-like classes (e.g. OIDplusObject) and not only for the
+real plugin classes (OIDplusPlugin).
 
 Currently, there are following features defined in the standard plugins of OIDplus:
 

@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusMailUtils {
+class OIDplusMailUtils extends OIDplusBaseClass {
 
 	public static function validMailAddress($email) {
 		return !empty(filter_var($email, FILTER_VALIDATE_EMAIL));

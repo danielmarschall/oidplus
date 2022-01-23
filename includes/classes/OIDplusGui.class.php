@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusGui {
+class OIDplusGui extends OIDplusBaseClass {
 
 	public static function generateContentPage($id) {
 		$out = array();

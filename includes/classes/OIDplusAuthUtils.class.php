@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusAuthUtils {
+class OIDplusAuthUtils extends OIDplusBaseClass {
 
 	// Useful functions
 
