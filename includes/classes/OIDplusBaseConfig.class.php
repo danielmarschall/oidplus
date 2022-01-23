@@ -22,7 +22,7 @@ if (!defined('INSIDE_OIDPLUS')) die();
 // OIDplusBaseConfig is the basic ("static") configuration stored in userdata/baseconfig/config.inc.php,
 // e.g. database access credentials.
 // Not to be confused with OIDplusConfig which are settings that are stored in the database.
-class OIDplusBaseConfig implements OIDplusGetterSetterInterface {
+class OIDplusBaseConfig extends OIDplusBaseClass implements OIDplusGetterSetterInterface {
 
 	protected $data = array();
 

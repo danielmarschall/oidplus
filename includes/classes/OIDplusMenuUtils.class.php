@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusMenuUtils {
+class OIDplusMenuUtils extends OIDplusBaseClass {
 
 	public static function nonjs_menu() {
 		$json = array();

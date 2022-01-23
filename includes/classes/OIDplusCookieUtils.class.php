@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusCookieUtils {
+class OIDplusCookieUtils extends OIDplusBaseClass {
 
 	public function unsetcookie($name) {
 		$this->setcookie($name, '', time()-9999, true);

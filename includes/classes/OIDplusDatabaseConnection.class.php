@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-abstract class OIDplusDatabaseConnection {
+abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	protected /*bool*/ $connected = false;
 	protected /*?bool*/ $html = null;
 	protected /*?string*/ $last_query = null;

@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-abstract class OIDplusObject {
+abstract class OIDplusObject extends OIDplusBaseClass {
 	const UUID_NAMEBASED_NS_OidPlusMisc = 'ad1654e6-7e15-11e4-9ef6-78e3b5fc7f22';
 
 	public static function parse($node_id) { // please overwrite this function!

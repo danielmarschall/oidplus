@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusRAAuthInfo {
+class OIDplusRAAuthInfo extends OIDplusBaseClass {
 
 	private $salt;
 	private $authKey;

@@ -19,18 +19,18 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusAltId {
+class OIDplusAltId extends OIDplusBaseClass {
 
 	private $ns;
 	private $id;
 	private $desc;
-	
+
 	function __construct($ns, $id, $desc) {
 		$this->ns = $ns;
 		$this->id = $id;
 		$this->desc = $desc;
 	}
-	
+
 	function getNamespace() {
 		return $this->ns;
 	}

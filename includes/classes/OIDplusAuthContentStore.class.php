@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-abstract class OIDplusAuthContentStore implements OIDplusGetterSetterInterface {
+abstract class OIDplusAuthContentStore extends OIDplusBaseClass implements OIDplusGetterSetterInterface {
 
 	// Getter / Setter
 

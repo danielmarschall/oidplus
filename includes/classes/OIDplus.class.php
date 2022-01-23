@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplus {
+class OIDplus extends OIDplusBaseClass {
 	private static /*OIDplusPagePlugin[]*/ $pagePlugins = array();
 	private static /*OIDplusAuthPlugin[]*/ $authPlugins = array();
 	private static /*OIDplusLoggerPlugin[]*/ $loggerPlugins = array();
