@@ -44,12 +44,13 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 		$firsts = array();
 		$first_ns = null;
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-			if (is_null($first_ns)) $first_ns = $ot::ns();
 			$res = OIDplus::db()->query("SELECT id FROM ###objects WHERE parent = ? ORDER BY id", array($ot::ns().':'));
-			if ($row = $res->fetch_array())
+			if ($row = $res->fetch_array()) {
+				if (is_null($first_ns)) $first_ns = $ot::ns();
 				$firsts[$ot::ns()] = $row['id'];
+			}
 		}
-		if (count($firsts) == 0) {
+		if ((count($firsts) == 0) || is_null($first_ns)) {
 			return 'oid:2.999';
 		} elseif (isset($firsts['oid'])) {
 			return  $firsts['oid'];
