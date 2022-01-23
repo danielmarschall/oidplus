@@ -290,9 +290,7 @@ if ($continue) {
 
 			$ra = new OIDplusRA($row->ra_email);
 			if ($ra->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-				// Also ask $obj for extra attributes:
-				// This way we could add various additional information, e.g. IPv4/6 range analysis, interpretation of GUID, etc.
-				$ra->whoisRaAttributes($row->ra_email, $out);
+				$ra->whoisRaAttributes($row->ra_email, $out); /** @phpstan-ignore-line */
 			}
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
