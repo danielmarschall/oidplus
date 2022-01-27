@@ -151,18 +151,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/fileformats.git",
-                "reference": "acfeaf40523a3a3cd0b6dbf18f3dc2349a3bec25"
+                "reference": "880e97b497710dc14ee8f38b4e48250ce49202ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/fileformats/zipball/acfeaf40523a3a3cd0b6dbf18f3dc2349a3bec25",
-                "reference": "acfeaf40523a3a3cd0b6dbf18f3dc2349a3bec25",
+                "url": "https://api.github.com/repos/danielmarschall/fileformats/zipball/880e97b497710dc14ee8f38b4e48250ce49202ee",
+                "reference": "880e97b497710dc14ee8f38b4e48250ce49202ee",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2021-07-19T21:30:13+00:00",
+            "time": "2022-01-09T15:19:14+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -192,18 +192,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "20893f173243e648e0f5a726e908cade11ae1a6c"
+                "reference": "0f6f43b78e7ffef69e23710e9e006c33d3d732bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/20893f173243e648e0f5a726e908cade11ae1a6c",
-                "reference": "20893f173243e648e0f5a726e908cade11ae1a6c",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/0f6f43b78e7ffef69e23710e9e006c33d3d732bc",
+                "reference": "0f6f43b78e7ffef69e23710e9e006c33d3d732bc",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2022-01-07T22:37:29+00:00",
+            "time": "2022-01-09T19:10:13+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -274,18 +274,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/vnag.git",
-                "reference": "8bf513c1f2b193fa3f4ac9e00bc6ba2a021ebadd"
+                "reference": "4cee6e674e6628b4deeb0327ab65109da4f28f4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/8bf513c1f2b193fa3f4ac9e00bc6ba2a021ebadd",
-                "reference": "8bf513c1f2b193fa3f4ac9e00bc6ba2a021ebadd",
+                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/4cee6e674e6628b4deeb0327ab65109da4f28f4d",
+                "reference": "4cee6e674e6628b4deeb0327ab65109da4f28f4d",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2021-12-23T00:35:37+00:00",
+            "time": "2022-01-12T00:33:52+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

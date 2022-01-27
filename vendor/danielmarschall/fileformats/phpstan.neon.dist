@@ -1,0 +1,15 @@
+parameters:
+	level: 5
+	fileExtensions:
+		- php
+		- phps
+	paths:
+		- .
+	excludePaths:
+		analyseAndScan:
+			- .phpstan.tmp
+	tmpDir: .phpstan.tmp
+	ignoreErrors:
+		#- '#is always (true|false)\.#'
+		#- '#Call to function assert\(\) with false will always evaluate to false\.#'
+		#- '#with no typehint specified\.#'
