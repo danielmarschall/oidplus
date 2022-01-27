@@ -1,5 +1,8 @@
 parameters:
 	level: 5
+	fileExtensions:
+		- php
+		- phps
 	paths:
 		- .
 	excludePaths:
@@ -9,6 +12,8 @@ parameters:
 			- plugins_intern/*/vnag_framework.inc.php
 		analyseAndScan:
 			- _mock
+			- .phpstan.tmp
+	tmpDir: .phpstan.tmp
 	ignoreErrors:
 		- '#is always (true|false)\.#'
 		- '#Call to function assert\(\) with false will always evaluate to false\.#'

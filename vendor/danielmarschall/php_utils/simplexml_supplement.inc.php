@@ -113,7 +113,7 @@ if (!function_exists('simplexml_load_string')) {
 		return $out;
 	}
 
-	class SimpleXMLElement implements ArrayAccess, Iterator {
+	class SimpleXMLElement implements ArrayAccess, Iterator { /** @phpstan-ignore-line */
 
 		function __destruct() {
 			global $_simplexml_supplement_properties;
@@ -184,7 +184,7 @@ if (!function_exists('simplexml_load_string')) {
 				} else {
 					return '';
 				}
-			} else {
+			} else { /** @phpstan-ignore-line */
 				return $data;
 			}
 		}
@@ -258,15 +258,15 @@ if (!function_exists('simplexml_load_string')) {
 			global $_simplexml_supplement_properties;
 			$vars = get_object_vars($this);
 			$cnt = 0;
-			foreach ($vars as $x => $dummy) {
+			foreach ($vars as $x => $dummy) { /** @phpstan-ignore-line */
 				if (($dummy instanceof SimpleXMLElement) && !_simplexml_supplement_isnumeric($x) && $dummy->isArray()) {
 					$vars2 = get_object_vars($dummy);
 					foreach ($vars2 as $x2 => $dummy2) {
 						if ($cnt == $_simplexml_supplement_properties[spl_object_hash($this)]['position']) {
 							if ($dummy2 instanceof SimpleXMLElement) {
-								return $dummy2;
+								return $dummy2; /** @phpstan-ignore-line */
 							} else {
-								return new SimpleXMLElement($dummy2);
+								return new SimpleXMLElement($dummy2); /** @phpstan-ignore-line */
 							}
 						}
 						$cnt++;
@@ -274,9 +274,9 @@ if (!function_exists('simplexml_load_string')) {
 				} else {
 					if ($cnt == $_simplexml_supplement_properties[spl_object_hash($this)]['position']) {
 						if ($dummy instanceof SimpleXMLElement) {
-							return $dummy;
+							return $dummy; /** @phpstan-ignore-line */
 						} else {
-							return new SimpleXMLElement($dummy);
+							return new SimpleXMLElement($dummy); /** @phpstan-ignore-line */
 						}
 					}
 					$cnt++;
@@ -290,7 +290,7 @@ if (!function_exists('simplexml_load_string')) {
 			global $_simplexml_supplement_properties;
 			$vars = get_object_vars($this);
 			$cnt = 0;
-			foreach ($vars as $x => $dummy) {
+			foreach ($vars as $x => $dummy) { /** @phpstan-ignore-line */
 				if (($dummy instanceof SimpleXMLElement) && !_simplexml_supplement_isnumeric($x) && $dummy->isArray()) {
 					$vars2 = get_object_vars($dummy);
 					foreach ($vars2 as $x2 => $dummy2) {

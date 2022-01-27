@@ -2,8 +2,8 @@
 
 /*
  * OID-Info.com API for PHP
- * Copyright 2019-2021 Daniel Marschall, ViaThinkSoft
- * Version 2021-12-08
+ * Copyright 2019-2022 Daniel Marschall, ViaThinkSoft
+ * Version 2022-01-10
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -652,35 +652,44 @@ class OIDInfoAPI {
 
 		// TODO: if name is empty, but address has 1 line, take it as firstname (but remove hyperlink)
 
+		$ignore_current_registrant = false;
+		$test_keys = array_keys($elements['current-registrant']);
+		if ((count($test_keys) == 1) && ($test_keys[0] == 'modification-date')) {
+			// Modification dates without information about the current RA which are rejected by the OID repository
+			$ignore_current_registrant = true;
+		}
+
 		$out_loc = '';
 		foreach ($elements as $name => $val) {
 			if (($name == 'first-registrant') || ($name == 'current-registrant')) {
-				$out_loc2 = '';
-				foreach ($val as $name2 => $val2) {
-					if (is_null($val2)) continue;
-					if (empty($val2)) continue;
+				if (($name != 'current-registrant') || !$ignore_current_registrant) {
+					$out_loc2 = '';
+					foreach ($val as $name2 => $val2) {
+						if (is_null($val2)) continue;
+						if (empty($val2)) continue;
 
-					if (!is_array($val2)) $val2 = array($val2);
+						if (!is_array($val2)) $val2 = array($val2);
 
-					foreach ($val2 as $val3) {
-						// if (is_null($val3)) continue;
-						if (empty($val3)) continue;
+						foreach ($val2 as $val3) {
+							// if (is_null($val3)) continue;
+							if (empty($val3)) continue;
 
-						if ($name2 == 'address') {
-							// $val3 = htmlentities_numeric($val3);
-							$val3 = $this->correctDesc($val3, $params, self::OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT, true);
-						} else {
-							// $val3 = htmlentities_numeric($val3);
-							$val3 = $this->correctDesc($val3, $params, self::OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT, false);
+							if ($name2 == 'address') {
+								// $val3 = htmlentities_numeric($val3);
+								$val3 = $this->correctDesc($val3, $params, self::OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT, true);
+							} else {
+								// $val3 = htmlentities_numeric($val3);
+								$val3 = $this->correctDesc($val3, $params, self::OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT, false);
+							}
+							$out_loc2 .= "\t\t\t<$name2>".$val3."</$name2>\n";
 						}
-						$out_loc2 .= "\t\t\t<$name2>".$val3."</$name2>\n";
 					}
-				}
 
-				if (!empty($out_loc2)) {
-					$out_loc .= "\t\t<$name>\n";
-					$out_loc .= $out_loc2;
-					$out_loc .= "\t\t</$name>\n";
+					if (!empty($out_loc2)) {
+						$out_loc .= "\t\t<$name>\n";
+						$out_loc .= $out_loc2;
+						$out_loc .= "\t\t</$name>\n";
+					}
 				}
 			} else {
 				// if (is_null($val)) continue;
