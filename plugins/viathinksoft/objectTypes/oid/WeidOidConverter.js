@@ -155,9 +155,9 @@ var WeidOidConverter = {
 
 	base_convert_bigint: function(numstring, frombase, tobase) {
 
-		// Requires "mikemcl/bignumber.js" library
+		// This variant would require the "mikemcl/bignumber.js" library:
 		//var x = BigNumber(numstr, frombase);
-		//return x.toString(tobase).toUpperCase();
+		//return isNaN(x) ? false : x.toString(tobase).toUpperCase();
 
 		var frombase_str = '';
 		for (var i=0; i<frombase; i++) {
@@ -169,7 +169,14 @@ var WeidOidConverter = {
 			tobase_str += parseInt(i, 10).toString(36).toUpperCase();
 		}
 
-		var length = numstring.length;
+        for (var i=0; i<numstring.length; i++) {
+            if (frombase_str.toLowerCase().indexOf(numstring.substr(i,1).toLowerCase()) < 0) {
+                console.error("base_convert_bigint: Invalid input");
+                return false;
+            }
+        }
+
+        var length = numstring.length;
 		var result = '';
 		var number = [];
 		for (var i=0; i<length; i++) {

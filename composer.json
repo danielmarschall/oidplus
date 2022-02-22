@@ -17,22 +17,6 @@
 	"prefer-dist": true,
 	"minimum-stability": "dev",
 	"repositories": {
-		"mikemcl/bignumber.js": {
-			"type": "package",
-			"packagist.org": false,
-			"package": {
-				"name": "mikemcl/bignumber.js",
-				"version": "master",
-				"license": [
-					"MIT"
-				],
-				"source": {
-					"url": "https://github.com/MikeMcl/bignumber.js",
-					"type": "git",
-					"reference": "master"
-				}
-			}
-		},
 		"emn178/js-sha3": {
 			"type": "package",
 			"packagist.org": false,
@@ -117,7 +101,6 @@
 		"gedmarc/layout": "*@dev",
 		"emn178/js-sha3": "*@dev",
 		"n-other/php-sha3": "*@dev",
-		"mikemcl/bignumber.js": "*@dev",
 		"tweeb/tinymce-i18n": "^2.0"
 	},
 	"config": {

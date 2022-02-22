@@ -556,22 +556,6 @@
             "install-path": "../matthiasmullie/path-converter"
         },
         {
-            "name": "mikemcl/bignumber.js",
-            "version": "master",
-            "version_normalized": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/MikeMcl/bignumber.js",
-                "reference": "master"
-            },
-            "type": "library",
-            "installation-source": "source",
-            "license": [
-                "MIT"
-            ],
-            "install-path": "../mikemcl/bignumber.js"
-        },
-        {
             "name": "n-other/php-sha3",
             "version": "dev-master",
             "version_normalized": "dev-master",
