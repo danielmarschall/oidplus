@@ -105,7 +105,7 @@ class WeidOidConverter {
 		}
 		$oidstr = implode('.', $elements);
 
-		$weid = $namespace . $weid; // add namespace again
+		$weid = strtolower($namespace) . strtoupper($weid); // add namespace again
 
 		return $oidstr;
 	}
