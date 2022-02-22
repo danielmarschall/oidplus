@@ -23,8 +23,6 @@
 //     - Padding with '0' characters is valid (e.g. weid:000EXAMPLE-3)
 //       The paddings do not count into the WeLuhn check-digit.
 
-// Requires "mikemcl/bignumber.js" library
-
 var WeidOidConverter = {
 
 	weLuhnCheckDigit: function(str) {
@@ -44,7 +42,10 @@ var WeidOidConverter = {
 		}
 
 		// At the end, wrkstr should only contain digits! Verify it!
-		if (!wrkstr.match(/^\d+$/)) return false;
+		if (!wrkstr.match(/^\d+$/)) {
+			console.error("weLuhnCheckDigit: Invalid input");
+			return false;
+		}
 
 		// Now do the standard Luhn algorithm
 		var nbdigits = wrkstr.length;
@@ -84,6 +85,7 @@ var WeidOidConverter = {
 			var base = '';
 		} else {
 			// Wrong namespace
+			console.error("weid2oid: Wrong input");
 			return false;
 		}
 
@@ -91,16 +93,19 @@ var WeidOidConverter = {
 
 		var elements = ((base != '') ? base.split('-') : []).concat(weid.split('-'));
 		var actual_checksum = elements.pop();
-		var expected_checksum = weLuhnCheckDigit(elements.join('-'));
+		var expected_checksum = WeidOidConverter.weLuhnCheckDigit(elements.join('-'));
 		if (actual_checksum != '?') {
-			if (actual_checksum != expected_checksum) return false; // wrong checksum
+			if (actual_checksum != expected_checksum) {
+				console.error("weid2oid: Wrong checksum");
+				return false; // wrong checksum
+			}
 		} else {
 			// If checksum is '?', it will be replaced by the actual checksum,
 			// e.g. weid:EXAMPLE-? becomes weid:EXAMPLE-3
 			weid = weid.replace('?', expected_checksum);
 		}
 		elements.forEach((o,i,a) => {
-			a[i] = BigNumber(a[i],36).toString(10).toUpperCase();
+			a[i] = WeidOidConverter.base_convert_bigint(a[i], 36, 10);
 		});
 		var oidstr = elements.join('.');
 
@@ -116,9 +121,8 @@ var WeidOidConverter = {
 
 		if (oid != '') {
 			var elements = oid.split('.');
-			elements.forEach((o,i,a) => { 
-				var x = BigNumber(a[i],10);
-				a[i] = x.toString(36).toUpperCase();
+			elements.forEach((o,i,a) => {
+				a[i] = WeidOidConverter.base_convert_bigint(a[i], 10, 36);
 			});
 			var weidstr = elements.join("-");
 		} else {
@@ -129,7 +133,7 @@ var WeidOidConverter = {
 		var is_class_b = (weidstr.startsWith('1-3-6-1-4-1-') || (weidstr == '1-3-6-1-4-1'));
 		var is_class_a = !is_class_b && !is_class_c;
 
-		var checksum = weLuhnCheckDigit(weidstr);
+		var checksum = WeidOidConverter.weLuhnCheckDigit(weidstr);
 
 		if (is_class_c) {
 			weidstr = weidstr.substr('1-3-6-1-4-1-SZ5-8-'.length);
@@ -146,7 +150,48 @@ var WeidOidConverter = {
 			return false;
 		}
 
-		return namespace + (weidstr == '' ? checksum : weidstr + '-' + checksum);
-	}
+		return { "weid": namespace + (weidstr == '' ? checksum : weidstr + '-' + checksum), "oid": oid };
+	},
 
+	base_convert_bigint: function(numstring, frombase, tobase) {
+
+		// Requires "mikemcl/bignumber.js" library
+		//var x = BigNumber(numstr, frombase);
+		//return x.toString(tobase).toUpperCase();
+
+		var frombase_str = '';
+		for (var i=0; i<frombase; i++) {
+			frombase_str += parseInt(i, 10).toString(36).toUpperCase();
+		}
+
+		var tobase_str = '';
+		for (var i=0; i<tobase; i++) {
+			tobase_str += parseInt(i, 10).toString(36).toUpperCase();
+		}
+
+		var length = numstring.length;
+		var result = '';
+		var number = [];
+		for (var i=0; i<length; i++) {
+			number[i] = frombase_str.toLowerCase().indexOf(numstring[i].toLowerCase());
+		}
+		do { // Loop until whole number is converted
+			var divide = 0;
+			var newlen = 0;
+			for (var i=0; i<length; i++) { // Perform division manually (which is why this works with big numbers)
+				divide = divide * frombase + parseInt(number[i]);
+				if (divide >= tobase) {
+					number[newlen++] = (divide / tobase);
+					divide = divide % tobase;
+				} else if (newlen > 0) {
+					number[newlen++] = 0;
+				}
+			}
+			length = newlen;
+			result = tobase_str.substr(divide,1) + result; // Divide is basically numstring % tobase (i.e. the new character)
+		}
+		while (newlen != 0);
+
+		return result;
+	}
 }
