@@ -20,6 +20,7 @@
 
 	<js>
 		<file>OIDplusObjectTypePluginOid.js</file>
+		<file>WeidOidConverter.js</file>
 	</js>
 	
 </manifest>

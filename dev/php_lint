@@ -30,7 +30,7 @@ $files = array();
 $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname(__DIR__))); // dirname() to check the parent directory
 foreach ($rii as $file) {
         $filename = $file->getPathname();
-        if (strpos($filename, '/.') !== false) continue; # also hide ".dir" and ".file"
+        if (strpos($filename, DIRECTORY_SEPARATOR.'.') !== false) continue; # also hide ".dir" and ".file"
         if (!file_exists($filename)) continue;
         $files[] = $filename;
 }

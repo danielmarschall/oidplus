@@ -314,11 +314,11 @@ var OIDplusPagePublicObjects = {
 		if (inp == "") {
 			$(to_control).val("");
 		} else {
-			var x = BigNumber(inp, from_base);
-			if (isNaN(x)) {
+			var x = WeidOidConverter.base_convert_bigint(inp, from_base, to_base);
+			if (x == false) {
 				$(to_control).val("");
 			} else {
-				$(to_control).val(x.toString(to_base));
+				$(to_control).val(x);
 			}
 		}
 	},
@@ -333,11 +333,11 @@ var OIDplusPagePublicObjects = {
 		if (inp == "") {
 			$(to_control).val("");
 		} else {
-			var x = BigNumber(inp, from_base);
-			if (isNaN(x)) {
+			var x = WeidOidConverter.base_convert_bigint(inp, from_base, to_base);
+			if (x == false) {
 				$(to_control).val("");
 			} else {
-				$(to_control).val(x.toString(to_base).toUpperCase());
+				$(to_control).val(x.toUpperCase());
 			}
 		}
 	}
