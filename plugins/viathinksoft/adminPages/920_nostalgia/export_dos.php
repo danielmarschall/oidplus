@@ -29,6 +29,10 @@ if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPageAdminOIDInfoExpor
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 
+if (!class_exists('ZipArchive')) {
+	throw new OIDplusException(_L('The PHP extension "ZipArchive" needs to be installed to create a ZIP archive with an included database. Otherwise, you can just download the plain program without data.'));
+}
+
 $dos_ids = array();
 $parent_oids = array();
 $i = 0;
