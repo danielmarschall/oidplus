@@ -1673,15 +1673,23 @@
 		Download OIDplus for DOS
 		]]></source>
 		<target><![CDATA[
-		Download OIDplus für DOS
+		OIDplus für DOS herunterladen
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		Download OIDplus for Windows 3.11 or Windows 95
+		Download OIDplus for Windows 3.11
 		]]></source>
 		<target><![CDATA[
-		Download OIDplus für Windows 3.11 oder Windows 95
+		OIDplus für Windows 3.11 herunterladen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Download OIDplus for Windows 95 or later
+		]]></source>
+		<target><![CDATA[
+		OIDplus für Windows 95 oder neuer herunterladen
 		]]></target>
 	</message>
 	<message>
@@ -5926,6 +5934,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The PHP extension "ZipArchive" needs to be installed to create a ZIP archive with an included database. Otherwise, you can just download the plain program without data.
+		]]></source>
+		<target><![CDATA[
+		Die PHP-Erweiterung "ZipArchive" muss installiert werden, um eine ZIP-Datei mit Ihren Daten zu erzeugen. Ansonsten können Sie nur das Programm ohne Daten herunterladen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The RA %1 is not registered in the database.
 		]]></source>
 		<target><![CDATA[
@@ -7514,6 +7530,14 @@
 		]]></source>
 		<target><![CDATA[
 		weLuhn-Prüfsumme
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		without data
+		]]></source>
+		<target><![CDATA[
+		ohne Daten
 		]]></target>
 	</message>
 </translation>
