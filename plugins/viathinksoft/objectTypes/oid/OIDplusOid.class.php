@@ -99,6 +99,28 @@ class OIDplusOid extends OIDplusObject {
 		return false;
 	}
 
+	private function getTechInfo() {
+		$tech_info = array();
+
+		$tmp = _L('Dot notation');
+		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="http://oid-info.com/faq.htm#14" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
+		$tech_info[$tmp] = $this->getDotNotation();
+
+		$tmp = _L('ASN.1 notation');
+		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="http://oid-info.com/faq.htm#17" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
+		$tech_info[$tmp] = $this->getAsn1Notation();
+
+		$tmp = _L('OID-IRI notation');
+		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="http://oid-info.com/faq.htm#iri" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
+		$tech_info[$tmp] = $this->getIriNotation();
+
+		$tmp = _L('WEID notation');
+		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="https://weid.info/" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
+		$tech_info[$tmp] = $this->getWeidNotation();
+
+		return $tech_info;
+	}
+
 	public function getContentPage(&$title, &$content, &$icon) {
 		$icon = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webPath(__DIR__,true).'icon_big.png' : '';
 
@@ -123,9 +145,21 @@ class OIDplusOid extends OIDplusObject {
 		} else {
 			$title = $this->getTitle();
 
-			$content = '<h2>'._L('Technical information').'</h2>'.$this->oidInformation().
-			           '<h2>'._L('Description').'</h2>%%DESC%%'.
-			           '<h2>'._L('Registration Authority').'</h2>%%RA_INFO%%';
+			$tech_info = $this->getTechInfo();
+			$tech_info_html = '';
+			if (count($tech_info) > 0) {
+				$tech_info_html .= '<h2>'._L('Technical information').'</h2>';
+				$tech_info_html .= '<table border="0">';
+				foreach ($tech_info as $key => $value) {
+					$tech_info_html .= '<tr><td>'.$key.': </td><td><code>'.$value.'</code></td></tr>';
+				}
+				$tech_info_html .= '</table>';
+			}
+
+			$content = $tech_info_html;
+
+			$content .= '<h2>'._L('Description').'</h2>%%DESC%%'.
+			            '<h2>'._L('Registration Authority').'</h2>%%RA_INFO%%';
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
@@ -181,15 +215,6 @@ class OIDplusOid extends OIDplusObject {
 			$weid = '<abbr title="'._L('Base OID').': '.$base_arc.'">' . rtrim($ns,':') . '</abbr>:' . implode('-',$weid_arcs);
 		}
 		return $weid;
-	}
-
-	private function oidInformation() {
-		$out = array();
-		$out[] = _L('Dot notation').': <code>' . $this->getDotNotation() . '</code>';
-		$out[] = _L('ASN.1 notation').': <code>' . $this->getAsn1Notation(true) . '</code>';
-		$out[] = _L('OID-IRI notation').': <code>' . $this->getIriNotation(true) . '</code>';
-		$out[] = _L('WEID notation').': <code>' . $this->getWeidNotation() . '</code>';
-		return '<p>'.implode('<br>',$out).'</p>';
 	}
 
 	public function appendArcs(String $arcs) {
