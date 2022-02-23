@@ -169,14 +169,14 @@ var WeidOidConverter = {
 			tobase_str += parseInt(i, 10).toString(36).toUpperCase();
 		}
 
-        for (var i=0; i<numstring.length; i++) {
-            if (frombase_str.toLowerCase().indexOf(numstring.substr(i,1).toLowerCase()) < 0) {
-                console.error("base_convert_bigint: Invalid input");
-                return false;
-            }
-        }
+	        for (var i=0; i<numstring.length; i++) {
+	            if (frombase_str.toLowerCase().indexOf(numstring.substr(i,1).toLowerCase()) < 0) {
+	                console.error("base_convert_bigint: Invalid input");
+	                return false;
+	            }
+	        }
 
-        var length = numstring.length;
+	        var length = numstring.length;
 		var result = '';
 		var number = [];
 		for (var i=0; i<length; i++) {

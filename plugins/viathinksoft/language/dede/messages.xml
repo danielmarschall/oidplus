@@ -934,6 +934,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Cannot download the binary file from GitHub (%1)
+		]]></source>
+		<target><![CDATA[
+		Kann Binärdatei nicht von GitHub herunterladen (%1)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Cannot find dot notation because fields asn1-notation and dot-notation are both not existing
 		]]></source>
 		<target><![CDATA[
@@ -1558,6 +1566,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Did you ever wonder what OIDplus would look like if it had been created in the era of MS-DOS, Windows 3.11, or Windows 95? Just download the ZIP files below and have a look!
+		]]></source>
+		<target><![CDATA[
+		Haben Sie sich einmal gefragt, wie OIDplus aussehen würde, wenn es in der Ära von MS-DOS, Windows 3.11 oder Windows 95 entwickelt worden wäre? Laden Sie einfach die ZIP-Dateien herunter und schauen Sie selbst!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Differences could have various reasons, for example, a hotfix you have applied.
 		]]></source>
 		<target><![CDATA[
@@ -1650,6 +1666,22 @@
 		]]></source>
 		<target><![CDATA[
 		Herunterladen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Download OIDplus for DOS
+		]]></source>
+		<target><![CDATA[
+		Download OIDplus für DOS
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Download OIDplus for Windows 3.11 or Windows 95
+		]]></source>
+		<target><![CDATA[
+		Download OIDplus für Windows 3.11 oder Windows 95
 		]]></target>
 	</message>
 	<message>
@@ -3534,6 +3566,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Nostalgia
+		]]></source>
+		<target><![CDATA[
+		Nostalgie
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Not found
 		]]></source>
 		<target><![CDATA[
@@ -4426,6 +4466,14 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte fertigen Sie eine Datensicherung Ihrer Dateien vor der Aktualisierung an. Im Falle eines Fehlers könnte das OIDplus-System (inklusive diesem Update-Assistenten) ausfallen. Außerdem besitzt dieses WebSVN-Update keine Kollissions-Kontrolle, d.h. Datei-Änderungen, die Sie durchgeführt haben, können zurückgesetzt/verloren gehen. (<a href="%1">Klicken Sie hier um zu sehen, welche Dateien geändert wurden</a>) Im Falle eines Fehlschlags können Sie einen kompletten <a href="%s">SVN-Snapshot als TAR.GZ-Archiv</a> herunterladen und hier entpacken. Da alle Ihre Daten innerhalb des Ordners "userdata" und "userdata_pub" liegen sollten, sollte dies sicher sein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please note that the download might be delayed since your OID database is exported and added to the ZIP file.
+		]]></source>
+		<target><![CDATA[
+		Bitte beachten Sie, dass der Download etwas verzögert startet, da Ihre kompeltte Datenbank in die ZIP-Datei geschrieben wird.
 		]]></target>
 	</message>
 	<message>
@@ -7330,6 +7378,14 @@
 		]]></source>
 		<target><![CDATA[
 		implementsFeature() gibt immer TRUE zurück
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		including your database (only OIDs)
+		]]></source>
+		<target><![CDATA[
+		inklusive Ihrer Datenbank (nur OIDs)
 		]]></target>
 	</message>
 	<message>
