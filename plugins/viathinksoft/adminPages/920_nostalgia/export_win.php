@@ -27,8 +27,12 @@ ob_start(); // allow cookie headers to be sent
 
 OIDplus::init(true);
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPageAdminOIDInfoExport', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPageAdminNostalgia', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
+}
+
+if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+	throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
 }
 
 if (!class_exists('ZipArchive')) {
