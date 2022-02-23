@@ -88,6 +88,25 @@ class OIDplusGuid extends OIDplusObject {
 		return uuid_valid($this->guid);
 	}
 
+	private function getTechInfo() {
+		$tech_info = array();
+		$tech_info[_L('UUID')] = uuid_canonize($this->guid);
+		$tech_info[_L('C++ notation')] = uuid_c_syntax($this->guid);
+
+		ob_start();
+		uuid_info($this->guid);
+		$info = ob_get_contents();
+		preg_match_all('@([^:]+):\s*(.+)\n@ismU', $info, $m, PREG_SET_ORDER);
+		foreach ($m as $m1) {
+			$key = $m1[1];
+			$value = $m1[2];
+			$tech_info[$key] = $value;
+		}
+		ob_end_clean();
+
+		return $tech_info;
+	}
+
 	public function getContentPage(&$title, &$content, &$icon) {
 		$icon = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webPath(__DIR__,true).'icon_big.png' : '';
 
@@ -113,17 +132,20 @@ class OIDplusGuid extends OIDplusObject {
 			$title = $this->getTitle();
 
 			if ($this->isLeafNode()) {
-				ob_start();
-				uuid_info($this->guid);
-				$info = ob_get_contents();
-				ob_end_clean();
-				$info = preg_replace('@:\s*(.+)\n@ismU', ": <code>\\1</code><br>", $info);
+				$tech_info = $this->getTechInfo();
+				$tech_info_html = '';
+				if (count($tech_info) > 0) {
+					$tech_info_html .= '<h2>'._L('Technical information').'</h2>';
+					$tech_info_html .= '<table border="0">';
+					foreach ($tech_info as $key => $value) {
+						$tech_info_html .= '<tr><td>'.$key.': </td><td><code>'.$value.'</code></td></tr>';
+					}
+					$tech_info_html .= '</table>';
+				}
 
-				$content = '<h2>'._L('Technical information').'</h2>' .
-				       '<p>'._L('UUID').': <code>' . uuid_canonize($this->guid) . '</code><br>' .
-				       ''._L('C++ notation').': <code>' . uuid_c_syntax($this->guid) . '</code><br>' .
-				       "$info";
-				//      "<a href=\"https://misc.daniel-marschall.de/tools/uuid_mac_decoder/interprete_uuid.php?uuid=".urlencode($this->guid)."\">More technical information</a></p>";
+				$content = $tech_info_html;
+
+				// $content .= "<p><a href=\"https://misc.daniel-marschall.de/tools/uuid_mac_decoder/interprete_uuid.php?uuid=".urlencode($this->guid)."\">More technical information</a></p>";
 			} else {
 				$content = '';
 			}

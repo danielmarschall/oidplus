@@ -104,6 +104,20 @@ class OIDplusIpv4 extends OIDplusObject {
 		return $this->cidr >= 32;
 	}
 
+	private function getTechInfo() {
+		if ($this->isRoot()) return array();
+
+		$tech_info = array();
+
+		$tech_info[_L('IPv4/CIDR')] = ipv4_normalize($this->bare) . '/' . $this->cidr;
+		if ($this->cidr < 32) {
+			$tech_info[_L('First address')] = ipv4_cidr_min_ip($this->bare . '/' . $this->cidr);
+			$tech_info[_L('Last address')]  = ipv4_cidr_max_ip($this->bare . '/' . $this->cidr);
+		}
+
+		return $tech_info;
+	}
+
 	public function getContentPage(&$title, &$content, &$icon) {
 		$icon = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webPath(__DIR__,true).'icon_big.png' : '';
 
@@ -128,15 +142,19 @@ class OIDplusIpv4 extends OIDplusObject {
 		} else {
 			$title = $this->getTitle();
 
-			$content = '<h2>'._L('Technical information').'</h2>';
-
-			$content .= '<p>'._L('IPv4/CIDR').': <code>' . ipv4_normalize($this->bare) . '/' . $this->cidr . '</code><br>';
-			if ($this->cidr < 32) {
-				$content .= _L('First address').': <code>' . ipv4_cidr_min_ip($this->bare . '/' . $this->cidr) . '</code><br>';
-				$content .= _L('Last address').': <code>' . ipv4_cidr_max_ip($this->bare . '/' . $this->cidr) . '</code></p>';
-			} else {
-				$content .= _L('Single host address').'</p>';
+			$tech_info = $this->getTechInfo();
+			$tech_info_html = '';
+			if (count($tech_info) > 0) {
+				$tech_info_html .= '<h2>'._L('Technical information').'</h2>';
+				$tech_info_html .= '<table border="0">';
+				foreach ($tech_info as $key => $value) {
+					$tech_info_html .= '<tr><td>'.$key.': </td><td><code>'.$value.'</code></td></tr>';
+				}
+				$tech_info_html .= '</table>';
 			}
+			if ($this->cidr == 32) $tech_info_html .= _L('Single host address');
+
+			$content = $tech_info_html;
 
 			$content .= '<h2>'._L('Description').'</h2>%%DESC%%';
 
