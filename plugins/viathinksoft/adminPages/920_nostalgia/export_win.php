@@ -23,7 +23,7 @@ require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
 
-ob_start(); // allow cookie headers to be sent
+@set_time_limit(0);
 
 OIDplus::init(true);
 
@@ -45,12 +45,12 @@ $i = 0;
 $dos_ids[''] = '00000000';
 $parent_oids[''] = '';
 
-$dos_ids[''] = str_pad($i++, 8, '0', STR_PAD_LEFT);
+$dos_ids[''] = str_pad(strval($i++), 8, '0', STR_PAD_LEFT);
 $res = OIDplus::db()->query("select * from ###objects where id like 'oid:%' order by ".OIDplus::db()->natOrder('id'));
 while ($row = $res->fetch_object()) {
 	$oid = substr($row->id, strlen('oid:'));
 	$parent_oid = substr($row->parent, strlen('oid:'));
-	$dos_ids[$oid] = str_pad($i++, 8, '0', STR_PAD_LEFT);
+	$dos_ids[$oid] = str_pad(strval($i++), 8, '0', STR_PAD_LEFT);
 	if ($parent_oid == '') {
 		$parent_oids[$oid] = '';
 	} else {
