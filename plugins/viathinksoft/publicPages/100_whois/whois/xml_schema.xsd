@@ -131,7 +131,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="signature">
+        <xs:element name="signatureSection">
           <xs:complexType>
             <xs:sequence>
               <xs:element type="xs:string" name="content"/>

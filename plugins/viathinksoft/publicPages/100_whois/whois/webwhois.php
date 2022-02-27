@@ -461,7 +461,8 @@ if ($format == 'xml') {
 		$signature = '';
 		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
 			$signature = base64_encode($signature);
-			$xml .= "<signature><content>".htmlspecialchars($cont)."</content><signature>".htmlspecialchars($signature)."</signature></signature>";
+			$cdata = '<![CDATA['.str_replace(']]>', ']]]]><![CDATA[>', $cont).']]>';
+			$xml .= "<signatureSection><content>".$cdata."</content><signature>".htmlspecialchars($signature)."</signature></signatureSection>";
 		}
 	}
 
