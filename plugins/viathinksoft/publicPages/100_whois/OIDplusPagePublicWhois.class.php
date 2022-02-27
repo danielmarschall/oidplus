@@ -74,11 +74,13 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__).'whois/webwhois.php" method="GET" target="_blank">';
 			$out['text'] .= '<br>'._L('Output format').':<br><fieldset id="whois_format">';
 			$out['text'] .= '    <input type="radio" id="txt" name="format" value="txt" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="txt"> '._L('Text format').'</label> ('._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip</a>)<br>';
+			$out['text'] .= '    <label for="txt"> '._L('Text format').'</label> ('._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-02</a>)<br>';
 			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			$out['text'] .= '    <label for="json"> '._L('JSON').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/json_schema.json">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			$out['text'] .= '    <label for="xml"> '._L('XML').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/xml_schema.xsd">'._L('Schema').'</a>)<br>';
+			//$out['text'] .= '    <input type="radio" id="html" name="format" value="html" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
+			//$out['text'] .= '    <label for="html"> '._L('HTML').'</label><br>';
 			$out['text'] .= '</fieldset><br>';
 			$out['text'] .= '	<!--<label class="padding_label">-->'._L('Query').':<!--</label>--> <input type="text" id="whois_query" name="query" value="'.htmlentities($example).'" style="width:250px" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			$out['text'] .= '	<input type="submit" value="'._L('Query').'">';

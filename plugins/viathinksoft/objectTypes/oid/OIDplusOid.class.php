@@ -312,7 +312,7 @@ class OIDplusOid extends OIDplusObject {
 			}
 		}
 
-		return "{ $asn1_notation }";
+		return "{ ".trim($asn1_notation)." }";
 	}
 
 	public function getIriNotation($withAbbr=true) {
