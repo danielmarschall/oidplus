@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -178,9 +178,9 @@ if ($continue) {
 
 		$row = $res ? $res->fetch_object() : null;
 
-		if (!is_null($row)) $out[] = 'name: ' . $row->title; // DO NOT TRANSLATE!
-
 		if (!is_null($row)) {
+			$out[] = 'name: ' . $row->title; // DO NOT TRANSLATE!
+
 			$cont = $row->description;
 			$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
 			$cont = preg_replace('@<br.*>@', "\n", $cont);
@@ -329,7 +329,7 @@ if (isset($_REQUEST['format'])) {
 	$format = 'text'; // default
 }
 
-if (($format != 'txt') && ($format != 'text') && ($format != 'json') && ($format != 'xml')) {
+if (($format != 'txt') && ($format != 'text') && ($format != 'json') && ($format != 'xml') && ($format != 'html')) {
 	$format = 'text'; // default
 }
 
@@ -422,7 +422,7 @@ if ($format == 'json') {
 		'$schema' => OIDplus::webpath(__DIR__,true).'json_schema.json',
 
 		// we need this NAMED root, otherwise PHP will name the sections "0", "1", "2" if the array is not sequencial (e.g. because "signature" is added)
-		'whois' => $ary
+		'oidip' => $ary
 	);
 
 	if (OIDplus::getPkiStatus()) {
@@ -440,7 +440,7 @@ if ($format == 'json') {
 }
 
 if ($format == 'xml') {
-	$xml = '<whois><section>';
+	$xml = '<oidip><section>';
 	foreach ($out as $line) {
 		if ($line == '') {
 			$xml .= '</section><section>';
@@ -452,7 +452,7 @@ if ($format == 'xml') {
 			}
 		}
 	}
-	$xml .= '</section></whois>';
+	$xml .= '</section></oidip>';
 
 	$xml = preg_replace('@<section><(.+)>(.+)</section>@ismU', '<\\1Section><\\1>\\2</\\1Section>', $xml);
 
@@ -474,6 +474,11 @@ if ($format == 'xml') {
 	echo '      xsi:schemaLocation="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.1.1 '.OIDplus::webpath(__DIR__,true).'xml_schema.xsd">';
 	echo $xml;
 	echo '</root>';
+}
+
+if ($format == 'html') {
+	// TODO
+	throw new OIDplusException(_L('The output format "%1" has not yet been implemented!'));
 }
 
 # ---

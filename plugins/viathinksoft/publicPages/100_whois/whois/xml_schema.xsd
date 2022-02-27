@@ -3,7 +3,7 @@
   <xs:element name="root">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="whois">
+        <xs:element name="oidip">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="querySection" minOccurs="1" maxOccurs="1">
@@ -48,7 +48,7 @@
                     <xs:element type="xs:string" name="standardized-id" minOccurs="0"/>
                     <xs:element type="xs:string" name="unicode-label" minOccurs="0"/>
                     <xs:element type="xs:string" name="long-arc" minOccurs="0"/>
-                    <xs:element type="xs:string" name="whois-service" minOccurs="0"/>
+                    <xs:element type="xs:string" name="oidip-service" minOccurs="0"/>
                     <xs:element name="attribute" minOccurs="0">
                       <xs:simpleType>
                         <xs:restriction base="xs:string">

@@ -2,7 +2,7 @@
    "$schema":"http://json-schema.org/draft-07/schema#",
    "type":"object",
    "properties":{
-      "whois":{
+      "oidip":{
          "type":"array",
          "items":[
             {
@@ -127,7 +127,7 @@
                         }
                      ]
                   },
-                  "whois-service":{
+                  "oidip-service":{
                      "type":"string"
                   },
                   "attribute":{
@@ -280,6 +280,6 @@
       }
    },
    "required":[
-      "whois"
+      "oidip"
    ]
 }
