@@ -90,43 +90,49 @@ described in the Simplified BSD License.
 Table of Contents
 
 .nf
-   1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  3
-     1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  4
-   2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
-     2.1  Authentication Tokens . . . . . . . . . . . . . . . . . . .  5
-     2.2  Server Commands . . . . . . . . . . . . . . . . . . . . . .  5
-       2.2.1  "Format" command  . . . . . . . . . . . . . . . . . . .  5
-     2.3  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  6
-   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  7
-     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  7
-     3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  7
-       3.2.1  Query-Section (Information about Query and Result)  . .  8
-       3.2.2  Object-Section (Information about the OID)  . . . . . .  9
-       3.2.3  RA-Section (Information about the Current RA) . . . . . 13
-       3.2.4  Sections for Previous Registration Authorities  . . . . 14
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 15
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 15
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 16
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 16
-   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
-   5  Full Example  . . . . . . . . . . . . . . . . . . . . . . . . . 18
-     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 18
-     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 18
-   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 19
-     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 20
-   7  Internationalization Considerations . . . . . . . . . . . . . . 20
-   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 21
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 22
-     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 22
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 22
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 22
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 23
-   Appendix A.1: JSON Schema  . . . . . . . . . . . . . . . . . . . . 25
-   Appendix A.2: Example of output  . . . . . . . . . . . . . . . . . 31
-   Appendix B.1: XML Schema . . . . . . . . . . . . . . . . . . . . . 33
-   Appendix B.2: Example of output  . . . . . . . . . . . . . . . . . 36
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 37
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 37
+   1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  4
+     1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  5
+   2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
+     2.1  Authentication Tokens . . . . . . . . . . . . . . . . . . .  6
+     2.2  Server Commands . . . . . . . . . . . . . . . . . . . . . .  6
+       2.2.1  "Format" command  . . . . . . . . . . . . . . . . . . .  6
+     2.3  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  7
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  8
+       3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . .  8
+       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . .  8
+       3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . .  8
+       3.1.4 "html" Format  . . . . . . . . . . . . . . . . . . . . .  8
+     3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  9
+       3.2.1  Query-Section (Information about Query and Result)  . .  9
+       3.2.2  Object-Section (Information about the OID)  . . . . . . 10
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 14
+       3.2.4  Sections for Previous Registration Authorities  . . . . 15
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 16
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 16
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 17
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 17
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 19
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 19
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 20
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 21
+   7  Internationalization Considerations . . . . . . . . . . . . . . 21
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 22
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 23
+     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 23
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 23
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 24
+   Appendix A: JSON Schema  . . . . . . . . . . . . . . . . . . . . . 26
+     A.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+     A.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 33
+   Appendix B: XML Schema . . . . . . . . . . . . . . . . . . . . . . 34
+     B.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+     B.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 38
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 39
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 39
 .fi
 .in 3
 
@@ -236,13 +242,13 @@ The "format" command defines the desired output format of the server response.
 
 Currently, there are four valid formats:
 
-(1) "text": Text representation as described in section 3 in this document. (MANDATORY)
+(1) "text": A text representation as defined in section 3.1.1. (MANDATORY)
 
-(2) "json": The JavaScript Object Notation (JSON, [RFC8259]) representation as defined in Appendix A in this document. (OPTIONAL)
+(2) "json": The JavaScript Object Notation (JSON, [RFC8259]) representation as defined in section 3.1.2. (OPTIONAL)
 
-(3) "xml": Extensible Markup Language (XML, [XML]) representation as defined in Appendix B in this document. (OPTIONAL)
+(3) "xml": Extensible Markup Language (XML, [XML]) representation as defined in section 3.1.3. (OPTIONAL)
 
-(4) "html": Hypertext Markup Language (HTML) representation, not necessarily machine-readable. (OPTIONAL)
+(4) "html": Hypertext Markup Language (HTML) representation as defined in section 3.1.4. (OPTIONAL)
 
 The default format is "text", which is assumed if the "format" command is omitted.
 
@@ -287,6 +293,9 @@ unsigned-number = "0" / nonzero-digit *( digit )
 .ti 0
 3.1  Format and Encoding
 
+.ti 0
+3.1.1 "text" Format
+
 (1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
 
 (2) The response contains multiple lines with field names and values, which MUST be separated by a double colon (":").  Whitespace characters after the double colon are allowed.
@@ -302,6 +311,21 @@ unsigned-number = "0" / nonzero-digit *( digit )
 (7) Lines with the same field name SHALL be kept together.
 
 (8) Comment lines MUST start with a percent sign ("%") at the beginning of a line, without prepending whitespaces.  They MUST NOT be evaluated by machines (except for signature validation, as mentioned in section\03.3 "Digital Signature").
+
+.ti 0
+3.1.2 "json" Format
+
+The JavaScript Object Notation (JSON, [RFC8259]) output MUST match the schema defined in Appendix A of this document.
+
+.ti 0
+3.1.3 "xml" Format
+
+The Extensible Markup Language (XML, [XML]) output MUST match the schema defined in Appendix B of this document.
+
+.ti 0
+3.1.4 "html" Format
+
+There are no special requirements for the HTML output format, as it is only intended as human-readable output.
 
 .ti 0
 3.2  Structure
@@ -596,7 +620,7 @@ ra-status:      Information unavailable
 .in 3
 .bp
 .ti 0
-5  Full Example
+5  Full Example ("text" Format)
 
 .ti 0
 5.1  Request
@@ -890,7 +914,10 @@ Recommendation ITU-T\0X.672 (2010) | ISO/IEC 29168-1:2011, August\02010.
 
 .bp
 .ti 0
-Appendix A.1: JSON Schema
+Appendix A: JSON Schema
+
+.ti 0
+A.1 Schema
 
 .in 0
 .nf
@@ -1210,8 +1237,9 @@ Appendix A.1: JSON Schema
 }
 .fi
 
+.bp
 .ti 0
-Appendix A.2: Example of output
+A.2 Example of output
 
 .nf
 {
@@ -1231,17 +1259,17 @@ Appendix A.2: Example of output
       "iri-notation": "/Example",
       "identifier": "example"
       "unicode-label": ["Beispiel", "Ejemplo", "Example", "Exemple",
-            "<Korean characters are omitted in this example>",
-            "<Arabian characters are omitted in this example>",
-            "<Japanese characters are omitted in this example>",
-            "<Chinese characters are omitted in this example>",
-            "<Russian characters are omitted in this example>" ]
+            "(Korean characters are omitted in this example)",
+            "(Arabian characters are omitted in this example)",
+            "(Japanese characters are omitted in this example)",
+            "(Chinese characters are omitted in this example)",
+            "(Russian characters are omitted in this example)" ]
       "long-arc": ["Beispiel", "Ejemplo", "Example", "Exemple",
-            "<Korean characters are omitted in this example>",
-            "<Arabian characters are omitted in this example>",
-            "<Japanese characters are omitted in this example>",
-            "<Chinese characters are omitted in this example>",
-            "<Russian characters are omitted in this example>" ]
+            "(Korean characters are omitted in this example)",
+            "(Arabian characters are omitted in this example)",
+            "(Japanese characters are omitted in this example)",
+            "(Chinese characters are omitted in this example)",
+            "(Russian characters are omitted in this example)" ]
       "parent": "oid:2 (joint-iso-ccitt, joint-iso-itu-t)",
       "subordinate": [],
       "created": "2011-06",
@@ -1253,16 +1281,19 @@ Appendix A.2: Example of output
     }
   ],
   "signature": {
-    "content": "{\\"oidip\\":[{...<The contents of the "oidip"
-       field are repeated here; ideally minified>...}]}",
-    "signature": <Base36 signature here>
+    "content": "{\\"oidip\\":[{...(The contents of the "oidip"
+       field are repeated here; ideally minified)...}]}",
+    "signature": "(Base36 signature here)"
   }
 }
 .fi
 
 .bp
 .ti 0
-Appendix B.1: XML Schema
+Appendix B: XML Schema
+
+.ti 0
+B.1 Schema
 
 [Please change "yyyy" to the RFC number allocated to this document before publication.]
 
@@ -1413,7 +1444,7 @@ maxOccurs="unbounded" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 </xs:element>
-<xs:element name="signature">
+<xs:element name="signatureSection">
 <xs:complexType>
 <xs:sequence>
 <xs:element type="xs:string" name="content"/>
@@ -1427,9 +1458,9 @@ maxOccurs="unbounded" minOccurs="0"/>
 </xs:schema>
 .fi
 
-
+.bp
 .ti 0
-Appendix B.2: Example of output
+B.2 Example of output
 
 [Please change "yyyy" to the RFC number allocated to this document before publication.]
 
@@ -1453,20 +1484,20 @@ xsi:schemaLocation="urn:ietf:rfc:yyyy .../oidip_schema.xsd">
 <unicode-label>Ejemplo</unicode-label>
 <unicode-label>Example</unicode-label>
 <unicode-label>Exemple</unicode-label>
-<unicode-label><Korean characters are omitted></unicode-label>
-<unicode-label><Arabian characters are omitted></unicode-label>
-<unicode-label><Japanese characters are omitted></unicode-label>
-<unicode-label><Chinese characters are omitted></unicode-label>
-<unicode-label><Russian characters are omitted></unicode-label>
+<unicode-label>(Korean characters are omitted)</unicode-label>
+<unicode-label>(Arabian characters are omitted)</unicode-label>
+<unicode-label>(Japanese characters are omitted)</unicode-label>
+<unicode-label>(Chinese characters are omitted)</unicode-label>
+<unicode-label>(Russian characters are omitted)</unicode-label>
 <long-arc>Beispiel</long-arc>
 <long-arc>Ejemplo</long-arc>
 <long-arc>Example</long-arc>
 <long-arc>Exemple</long-arc>
-<long-arc><Korean characters are omitted></long-arc>
-<long-arc><Arabian characters are omitted></long-arc>
-<long-arc><Japanese characters are omitted></long-arc>
-<long-arc><Chinese characters are omitted></long-arc>
-<long-arc><Russian characters are omitted></long-arc>
+<long-arc>(Korean characters are omitted)</long-arc>
+<long-arc>(Arabian characters are omitted)</long-arc>
+<long-arc>(Japanese characters are omitted)</long-arc>
+<long-arc>(Chinese characters are omitted)</long-arc>
+<long-arc>(Russian characters are omitted)</long-arc>
 <parent>oid:2 (joint-iso-ccitt, joint-iso-itu-t)</parent>
 </objectSection>
 <raSection>
@@ -1474,11 +1505,13 @@ xsi:schemaLocation="urn:ietf:rfc:yyyy .../oidip_schema.xsd">
 <ra-status>Information unavailable</ra-status>
 </raSection>
 </oidip>
-<signature>
-<content><oidip><The contents of the "oidip" field are
-repeated here; ideally minified></oidip></content>
-<signature><Base36 signature here></signature>
-</signature>
+<signatureSection>
+<content><![CDATA[
+<oidip>(The contents of the "oidip" field are
+repeated here; ideally minified)</oidip>
+]]></content>
+<signature>(Base36 signature here)</signature>
+</signatureSection>
 </root>
 .fi
 
