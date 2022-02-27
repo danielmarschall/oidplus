@@ -8,8 +8,8 @@ components/jquery               3.6.0               MIT
 components/jqueryui             1.12.1              MIT                    
 danielmarschall/fileformats     dev-master 880e97b  Apache-2.0             
 danielmarschall/php_utils       dev-master 0f6f43b  Apache-2.0             
-danielmarschall/uuid_mac_utils  dev-master f99346b  Apache-2.0             
-danielmarschall/vnag            dev-master 4cee6e6  Apache-2.0             
+danielmarschall/uuid_mac_utils  dev-master 31174ea  Apache-2.0             
+danielmarschall/vnag            dev-master 117090c  Apache-2.0             
 dcodeio/bcrypt.js               master master       BSD-3-Clause, MIT      
 emn178/js-sha3                  master master       MIT                    
 firebase/php-jwt                v5.5.1              BSD-3-Clause           
@@ -19,7 +19,7 @@ matthiasmullie/path-converter   1.1.3               MIT
 n-other/php-sha3                dev-master 54ee3b9  MIT                    
 spamspan/spamspan               master              GPL-2.0-only           
 symfony/polyfill-mbstring       v1.19.0             MIT                    
-tinymce/tinymce                 5.10.2              LGPL-2.1-only          
+tinymce/tinymce                 5.10.3              LGPL-2.1-only          
 twbs/bootstrap                  v5.1.3              MIT                    
 tweeb/tinymce-i18n              2.0.3               MIT                    
 vakata/jstree                   3.3.12              MIT                    
