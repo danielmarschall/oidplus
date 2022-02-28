@@ -19,6 +19,12 @@
 
 require_once __DIR__ . '/../../../../../includes/oidplus.inc.php';
 
+//define('XML_URN', 'urn:oid:1.3.6.1.4.1.37476.2.5.2.5.1.1');
+define('XML_URN', 'urn:ietf:id:viathinksoft-oidip-02');
+
+// define('XML_URN_URL', 'https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/xml_schema.xsd');
+define('XML_URN_URL', OIDplus::webpath(__DIR__,true).'xml_schema.xsd');
+
 OIDplus::init(true);
 set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
 
@@ -468,17 +474,10 @@ if ($format == 'xml') {
 
 	// Good XSD validator here: https://www.liquid-technologies.com/online-xsd-validator
 	header('Content-Type:application/xml; charset=UTF-8');
-
-	//define('URN', 'urn:oid:1.3.6.1.4.1.37476.2.5.2.5.1.1');
-	define('URN', 'urn:ietf:id:viathinksoft-oidip-02');
-
-	// define('URN_URL', 'https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/xml_schema.xsd');
-	define('URN_URL', OIDplus::webpath(__DIR__,true).'xml_schema.xsd');
-
 	echo '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>';
-	echo '<root xmlns="'.URN.'"';
+	echo '<root xmlns="'.XML_URN.'"';
 	echo '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
-	echo '      xsi:schemaLocation="'.URN.' '.URN_URL.'">';
+	echo '      xsi:schemaLocation="'.XML_URN.' '.XML_URN_URL.'">';
 	echo $xml;
 	echo '</root>';
 }

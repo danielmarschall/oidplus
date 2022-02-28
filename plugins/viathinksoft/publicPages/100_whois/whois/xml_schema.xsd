@@ -63,8 +63,6 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:element>
-                    <xs:element type="xs:string" name="attachment-name" minOccurs="0"/><!-- OIDplus specific, not part of the RFC -->
-                    <xs:element type="xs:string" name="attachment-url" minOccurs="0"/><!-- OIDplus specific, not part of the RFC -->
                     <xs:element type="xs:string" name="parent" minOccurs="0"/>
                     <xs:element type="xs:string" name="subordinate" maxOccurs="unbounded" minOccurs="0"/>
                     <xs:element name="created" minOccurs="0">
