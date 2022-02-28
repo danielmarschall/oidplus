@@ -7,9 +7,9 @@
 .ds LF Marschall
 .ds RF FORMFEED[Page %]
 .ds LH INTERNET DRAFT
-.ds RH March 15, 2022
+.ds RH March 1, 2022
 .ds CH OID Information Protocol
-.ds CF Expires September 16, 2022
+.ds CF Expires September 2, 2022
 .hy 0
 .nh
 .ad l
@@ -18,7 +18,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: September 16, 2022''March 15, 2022'
+.tl 'Expires: September 2, 2022''March 1, 2022'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -65,7 +65,7 @@ and may be updated, replaced, or obsoleted by other documents at any
 time.  It is inappropriate to use Internet-Drafts as reference
 material or to cite them other than as "work in progress."
 
-This Internet-Draft will expire on September 16, 2022.
+This Internet-Draft will expire on September 2, 2022.
 
 .ti 0
 Copyright Notice
@@ -780,9 +780,9 @@ This document requires the assignment of a TCP port number.
 .fi
 .in3
 
-[Please change "yyyy" to the RFC number allocated to this document before publication.]
+[To RFC Editor: Please change "yyyy" to the RFC number allocated to this document before publication.]
 
-[Please change "XXX" placed at various locations in this document to the port number allocated by IANA.]
+[To RFC Editor: Please change "XXX" placed at various locations in this document to the port number allocated by IANA.]
 
 .ti 0
 10  References
@@ -1295,12 +1295,12 @@ Appendix B: XML Schema
 .ti 0
 B.1 Schema
 
-[Please change "yyyy" to the RFC number allocated to this document before publication.]
+[To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-02" to "urn:ietf:rfc:yyyy" before publication.]
 
 .in 0
 .nf
 <?xml version="1.0"?>
-<xs:schema targetNamespace="urn:ietf:rfc:yyyy"
+<xs:schema targetNamespace="urn:ietf:id:viathinksoft-oidip-02"
 attributeFormDefault="unqualified"
 elementFormDefault="qualified"
 xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -1312,7 +1312,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:sequence>
 <xs:element name="querySection" minOccurs="1" maxOccurs="1">
 <xs:complexType>
-<xs:choice maxOccurs="unbounded" minOccurs="1">
+<xs:choice maxOccurs="unbounded">
 <xs:element type="xs:string" name="query" minOccurs="1"/>
 <xs:element name="result" minOccurs="1">
 <xs:simpleType>
@@ -1326,12 +1326,14 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 </xs:element>
 <xs:element type="xs:string" name="distance" minOccurs="0"/>
 <xs:element type="xs:string" name="message" minOccurs="0"/>
+<xs:any processContents="lax" namespace="##any"
+minOccurs="0" maxOccurs="unbounded"/>
 </xs:choice>
 </xs:complexType>
 </xs:element>
 <xs:element name="objectSection" minOccurs="0" maxOccurs="1">
 <xs:complexType>
-<xs:choice maxOccurs="unbounded" minOccurs="1">
+<xs:choice maxOccurs="unbounded">
 <xs:element type="xs:string" name="object" minOccurs="1"/>
 <xs:element name="status" minOccurs="1">
 <xs:simpleType>
@@ -1389,12 +1391,14 @@ maxOccurs="unbounded" minOccurs="0"/>
 </xs:restriction>
 </xs:simpleType>
 </xs:element>
+<xs:any processContents="lax" namespace="##any"
+minOccurs="0" maxOccurs="unbounded"/>
 </xs:choice>
 </xs:complexType>
 </xs:element>
 <xs:element name="raSection" minOccurs="0" maxOccurs="1">
 <xs:complexType>
-<xs:choice maxOccurs="unbounded" minOccurs="1">
+<xs:choice maxOccurs="unbounded">
 <xs:element type="xs:string" name="ra" minOccurs="1"/>
 <xs:element name="ra-status" minOccurs="1">
 <xs:simpleType>
@@ -1438,6 +1442,8 @@ maxOccurs="unbounded" minOccurs="0"/>
 </xs:restriction>
 </xs:simpleType>
 </xs:element>
+<xs:any processContents="lax" namespace="##any"
+minOccurs="0" maxOccurs="unbounded"/>
 </xs:choice>
 </xs:complexType>
 </xs:element>
@@ -1446,10 +1452,12 @@ maxOccurs="unbounded" minOccurs="0"/>
 </xs:element>
 <xs:element name="signatureSection">
 <xs:complexType>
-<xs:sequence>
+<xs:choice maxOccurs="unbounded">
 <xs:element type="xs:string" name="content"/>
 <xs:element type="xs:string" name="signature"/>
-</xs:sequence>
+<xs:any processContents="lax" namespace="##any"
+minOccurs="0" maxOccurs="unbounded"/>
+</xs:choice>
 </xs:complexType>
 </xs:element>
 </xs:sequence>
