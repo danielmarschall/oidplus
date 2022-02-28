@@ -481,11 +481,10 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
 
    Possible fields are:
 
-   (1) "query" MUST be present and contain the request of the client
-   (beginning with the namespace identifier and double colon, i.e.
-   "oid:").  Canonization or sanitation (like removing a leading dot)
-   SHOULD NOT be applied at this step.  Authentication tokens SHOULD be
-   omitted, though.
+   (1) "query" MUST be present and contains the request string the
+   client has sent.  Canonization or sanitation (like removing a leading
+   dot in front of the OID) SHOULD NOT be applied at this step. 
+   Authentication tokens SHOULD be omitted, though.
 
    (2) "result" MUST be present and SHALL be one of the following
    values:
@@ -498,6 +497,7 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
        cannot verify that the requested OID exists, or it denies that
        the OID exists (e.g. because it is confidential).  However, the
        OID-IP service knows a superior OID which does exist.  The
+       following sections will contain information about that superior
  
 
 
@@ -506,7 +506,6 @@ Marschall              Expires September 2, 2022                [Page 9]
 INTERNET DRAFT          OID Information Protocol           March 1, 2022
 
 
-       following sections will contain information about that superior
        OID instead.
 
        "Not found" means that the OID-IP service cannot verify that the
@@ -554,6 +553,7 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
        information about the OID is not available.  Possible reasons
        could be that part of the information is redacted due to
        confidentiality, or the OID-IP service only knows basic
+       information, while the full information can be found somewhere
  
 
 
@@ -562,7 +562,6 @@ Marschall              Expires September 2, 2022               [Page 10]
 INTERNET DRAFT          OID Information Protocol           March 1, 2022
 
 
-       information, while the full information can be found somewhere
        else (e.g. at a referred OID-IP service).  The field "attribute"
        MAY be used with the value "confidential".
 
@@ -610,6 +609,7 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
    alphanumeric identifier ("NameForm") as defined in Recommendation
    ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.3 [X680].
 
+   (10) "standardized-id" (OPTIONAL, multiple values allowed) contains
  
 
 
@@ -618,7 +618,6 @@ Marschall              Expires September 2, 2022               [Page 11]
 INTERNET DRAFT          OID Information Protocol           March 1, 2022
 
 
-   (10) "standardized-id" (OPTIONAL, multiple values allowed) contains
    an alphanumeric identifier that has a standardized "NameForm", i.e.
    in ASN.1 notation, it can be written without its associated number. 
    See more information in Recommendation ITU-T X.680 (2015) | ISO/IEC
@@ -666,6 +665,7 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
        "no-identifiers" means that the RA is not allocating alphanumeric
        identifiers.
 
+       "no-unicode-labels" means that the RA is not allocating Non-
  
 
 
@@ -674,7 +674,6 @@ Marschall              Expires September 2, 2022               [Page 12]
 INTERNET DRAFT          OID Information Protocol           March 1, 2022
 
 
-       "no-unicode-labels" means that the RA is not allocating Non-
        integer Unicode labels.
 
        "retired" means that the OID is withdrawn, revoked, retired,
@@ -706,6 +705,7 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
    ("-"), and numbers, and SHOULD be written in the English language. 
    The field name MUST NOT begin or end with a hyphen and a hyphen MUST
    NOT be followed by another hyphen.
+
 
 
 
@@ -1836,7 +1836,7 @@ A.2 Example of output
   ],
   "signature": {
     "content": "{\"oidip\":[{...(The contents of the "oidip"
-       field are repeated here; ideally minified)...}]}",
+       structure are repeated here; ideally minified)...}]}",
     "signature": "(Base36 signature here)"
   }
 }
@@ -2076,12 +2076,13 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
 
 B.2 Example of output
 
-[Please change "yyyy" to the RFC number allocated to this document
-before publication.]
+[To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-02" to
+"urn:ietf:rfc:yyyy" before publication.]
 
 <root xmlns="urn:ietf:rfc:yyyy"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="urn:ietf:rfc:yyyy .../oidip_schema.xsd">
+xsi:schemaLocation="urn:ietf:id:viathinksoft-oidip-02
+http://.../oidip_schema.xsd">
 <oidip>
 <querySection>
 <query>oid:2.999</query>
@@ -2120,8 +2121,7 @@ xsi:schemaLocation="urn:ietf:rfc:yyyy .../oidip_schema.xsd">
 </oidip>
 <signatureSection>
 <content><![CDATA[
-<oidip>(The contents of the "oidip" field are
-repeated here; ideally minified)</oidip>
+<oidip>(The contents of the "oidip" structure are
  
 
 
@@ -2130,6 +2130,7 @@ Marschall              Expires September 2, 2022               [Page 38]
 INTERNET DRAFT          OID Information Protocol           March 1, 2022
 
 
+repeated here; ideally minified)</oidip>
 ]]></content>
 <signature>(Base36 signature here)</signature>
 </signatureSection>
@@ -2150,7 +2151,6 @@ Authors' Addresses
    Germany
 
    EMail: daniel-marschall@viathinksoft.de
-
 
 
 
