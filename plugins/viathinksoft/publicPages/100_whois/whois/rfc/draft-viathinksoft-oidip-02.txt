@@ -1594,40 +1594,6 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
                         }
                      ]
                   },
-                  "attachment-name":{
-                     "oneOf":[
-                        {
-                           "type":"string"
-                        },
-                        {
-                           "type":"array",
-                           "items":{
-                              "type":"string"
-                           }
-                        }
-                     ]
-                  },
-                  "attachment-url":{
-                     "oneOf":[
-                        {
-                           "type":"string"
-                        },
-                        {
-                           "type":"array",
-                           "items":{
-                              "type":"string"
-                           }
-                        }
- 
-
-
-Marschall              Expires September 2, 2022               [Page 29]
-
-INTERNET DRAFT          OID Information Protocol           March 1, 2022
-
-
-                     ]
-                  },
                   "parent":{
                      "type":"string"
                   },
@@ -1646,15 +1612,23 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
                   },
                   "created":{
                      "type":"string",
-                     "pattern":"/^\d{4}(\-(0[1-9]|11|12)
+                     "pattern":"^\d{4}(\-(0[1-9]|11|12)
 (\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}
-( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$/"
+( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   },
                   "updated":{
                      "type":"string",
-                     "pattern":"/^\d{4}(\-(0[1-9]|11|12)
+ 
+
+
+Marschall              Expires September 2, 2022               [Page 29]
+
+INTERNET DRAFT          OID Information Protocol           March 1, 2022
+
+
+                     "pattern":"^\d{4}(\-(0[1-9]|11|12)
 (\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}
-( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$/"
+( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   }
                },
                "required":[
@@ -1674,14 +1648,6 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
                              "Information partially available",
                              "Information unavailable"]
                   },
- 
-
-
-Marschall              Expires September 2, 2022               [Page 30]
-
-INTERNET DRAFT          OID Information Protocol           March 1, 2022
-
-
                   "ra-contact-name":{
                      "type":"string"
                   },
@@ -1708,6 +1674,14 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
                         {
                            "type":"string",
                            "enum":["confidential",
+ 
+
+
+Marschall              Expires September 2, 2022               [Page 30]
+
+INTERNET DRAFT          OID Information Protocol           March 1, 2022
+
+
                                    "retired"]
                         },
                         {
@@ -1722,23 +1696,15 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
                   },
                   "ra-created":{
                      "type":"string",
-                     "pattern":"/^\d{4}(\-(0[1-9]|11|12)
+                     "pattern":"^\d{4}(\-(0[1-9]|11|12)
 (\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}
-( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$/"
+( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   },
                   "ra-updated":{
                      "type":"string",
-                     "pattern":"/^\d{4}(\-(0[1-9]|11|12)
+                     "pattern":"^\d{4}(\-(0[1-9]|11|12)
 (\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}
- 
-
-
-Marschall              Expires September 2, 2022               [Page 31]
-
-INTERNET DRAFT          OID Information Protocol           March 1, 2022
-
-
-( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$/"
+( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   }
                },
                "required":[
@@ -1764,10 +1730,44 @@ INTERNET DRAFT          OID Information Protocol           March 1, 2022
          ]
       }
    },
+ 
+
+
+Marschall              Expires September 2, 2022               [Page 31]
+
+INTERNET DRAFT          OID Information Protocol           March 1, 2022
+
+
    "required":[
       "oidip"
    ]
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
