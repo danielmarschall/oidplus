@@ -7,9 +7,9 @@
 .ds LF Marschall
 .ds RF FORMFEED[Page %]
 .ds LH INTERNET DRAFT
-.ds RH March 1, 2022
+.ds RH March 2, 2022
 .ds CH OID Information Protocol
-.ds CF Expires September 2, 2022
+.ds CF Expires September 3, 2022
 .hy 0
 .nh
 .ad l
@@ -18,7 +18,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: September 2, 2022''March 1, 2022'
+.tl 'Expires: September 3, 2022''March 2, 2022'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -65,7 +65,7 @@ and may be updated, replaced, or obsoleted by other documents at any
 time.  It is inappropriate to use Internet-Drafts as reference
 material or to cite them other than as "work in progress."
 
-This Internet-Draft will expire on September 2, 2022.
+This Internet-Draft will expire on September 3, 2022.
 
 .ti 0
 Copyright Notice
@@ -97,36 +97,36 @@ Table of Contents
      2.2  Server Commands . . . . . . . . . . . . . . . . . . . . . .  6
        2.2.1  "Format" command  . . . . . . . . . . . . . . . . . . .  6
      2.3  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  7
-   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
-     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  8
-       3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . .  8
-       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . .  8
-       3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . .  8
-       3.1.4 "html" Format  . . . . . . . . . . . . . . . . . . . . .  8
-     3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  9
-       3.2.1  Query-Section (Information about Query and Result)  . .  9
-       3.2.2  Object-Section (Information about the OID)  . . . . . . 10
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  9
+       3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . .  9
+       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . .  9
+       3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . .  9
+       3.1.4 "html" Format  . . . . . . . . . . . . . . . . . . . . .  9
+     3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . . 10
+       3.2.1  Query-Section (Information about Query and Result)  . . 10
+       3.2.2  Object-Section (Information about the OID)  . . . . . . 11
        3.2.3  RA-Section (Information about the Current RA) . . . . . 14
-       3.2.4  Sections for Previous Registration Authorities  . . . . 15
+       3.2.4  Sections for Previous Registration Authorities  . . . . 16
      3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 16
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 16
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 17
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 17
-   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
-   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 19
-     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 19
-     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 19
-   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 20
-     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 21
-   7  Internationalization Considerations . . . . . . . . . . . . . . 21
-   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 22
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 23
-     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 23
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 23
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 23
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 24
-   Appendix A: JSON Schema  . . . . . . . . . . . . . . . . . . . . . 26
-     A.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 17
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 18
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 18
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 20
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 20
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 21
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 22
+   7  Internationalization Considerations . . . . . . . . . . . . . . 22
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 23
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 24
+     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 24
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 24
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 26
+   Appendix A: JSON Schema  . . . . . . . . . . . . . . . . . . . . . 27
+     A.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
      A.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 33
    Appendix B: XML Schema . . . . . . . . . . . . . . . . . . . . . . 34
      B.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
@@ -201,8 +201,7 @@ The namespace identifier (i.e. "oid") MUST be written in lower-case.
 .ti 0
 2.1  Authentication Tokens
 
-Some organizations might not want to present their OID information (or part of it) to the public, e.g. for reasons like privacy or confidentiality.  Therefore, at the end of the query, the client can append case-sensitive, non-empty alphanumeric authentication tokens to control the display of confidential information.
-.\" REMOVED BECAUSE PAGE WOULD BE TOO LONG:  "... to control the display of confidential information [returned by the OID-IP service]."
+Some organizations might not want to present their OID information (or part of it) to the public, e.g. for reasons like privacy or confidentiality.  Therefore, at the end of the query, the client can append case-sensitive, non-empty alphanumeric authentication tokens to control the display of confidential information returned by the OID-IP service.
 
 Each authentication token MUST be prepended by a dollar sign ("$").
 
@@ -227,11 +226,11 @@ contain multiple server commands which are each prepended by a dollar sign ("$")
 server commands is individual for each server and implementation.
 
 The following request is an example of a valid query where the client sends a "format" command
-with the value "text" and an "antispam" command with the value "1":
+with the value "json":
 
 .in 7
 .nf
-oid:2.999$format=text$antispam=1
+oid:2.999$format=json
 .fi
 .in 3
 
@@ -251,6 +250,8 @@ Currently, there are four valid formats:
 (4) "html": Hypertext Markup Language (HTML) representation as defined in section 3.1.4. (OPTIONAL)
 
 The default format is "text", which is assumed if the "format" command is omitted.
+
+If the client requests a format that is not implemented, then the server MUST respond with the "text" format. The output must consist of the "query" field, "result: Service error", and a fitting "message" field (as described section in 3.2.1).
 
 .ti 0
 2.3  Request ABNF Notation
@@ -447,7 +448,7 @@ Note: A line-break, to break up lines which are too long, as defined in section\
 (18) "updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID information was last updated.
 
 Additional fields can be defined by the OID-IP service.  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-"), and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
-.bp
+
 .ti 0
 3.2.3  RA-Section (Information about the Current RA)
 
@@ -564,13 +565,13 @@ Examples of valid date/time references are:
 
 .in 7
 .nf
-2021-04-29 18:32:00 +0200
-2021-04-29 18:32:00
-2021-04-29 18:32 +0200
-2021-04-29 18:32
-2021-04-29
-2021-04
-2021
+2022-09-29 18:32:00 +0200
+2022-09-29 18:32:00
+2022-09-29 18:32 +0200
+2022-09-29 18:32
+2022-09-29
+2022-09
+2022
 .fi
 .in 3
 .bp
@@ -747,8 +748,7 @@ The OID-IP service can define additional field names, but they SHOULD be written
 
 (2) Registration Authorities might demand that their data is kept confidential, or at least be partially redacted to increase privacy or as a measurement against spam.  In this case, the OID-IP service can redact information in the RA-Section, as defined in section\03.2.3 "RA-Section".
 
-(3) The OID-IP service can decide if confidential material is omitted or shown, based on authentication mechanisms like white-listing client IP addresses or by using authentication tokens supplied by the client, as defined in section\02.1 "Authentication Tokens".
-.\" REMOVED BECAUSE PAGE WOULD BE TOO LONG:  "... supplied by the client [during the request], as defined in ..."
+(3) The OID-IP service can decide if confidential material is omitted or shown, based on authentication mechanisms like white-listing client IP addresses or by using authentication tokens supplied by the client during the request, as defined in section\02.1 "Authentication Tokens".
 
 (4) The usage of authentication tokens is not recommended if the traffic between client and server is transmitted through an untrusted network, because the OID-IP protocol is not encrypted.
 
@@ -835,6 +835,12 @@ Recommendation ITU-T\0E.164 (2010), November 2010.
 
 .ti 3
 .in 14
+[RFC8792]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu, "Handling Long Lines in Content of Internet-Drafts and RFCs", RFC\08792, DOI\010.17487/RFC8792, June 2020.
+.in 14
+<https://www.rfc-editor.org/info/rfc8792>.
+
+.ti 3
+.in 14
 [RFC8259]  Bray, T., "The JavaScript Object Notation (JSON) Data Interchange Format", RFC\08259, DOI\010.17487/RFC8259, December\02017.
 .in 14
 <http://www.rfc-editor.org/info/rfc8259>.
@@ -859,7 +865,23 @@ Recommendation ITU-T\0X.680 (2015) | ISO/IEC\08824-1:2015, August\02015.
 .in 14
 W3C Recommendation 16 August 2006, edited in place 29 September 2006
 .in 14
-<https://www.w3.org/TR/2006/REC-xml11-20060816/>
+<https://www.w3.org/TR/2006/REC-xml11-20060816/>.
+
+.ti 3
+.in 14
+[XSD]      W3C XML Schema Definition Language (XSD)
+.in 14
+W3C Recommendation 5 April 2012
+.in 14
+<https://www.w3.org/TR/xmlschema11-1/>.
+
+.ti 3
+.in 14
+[JSONSch]  JSON Schema Specification
+.in 14
+<https://json-schema.org/specification.html>.
+
+
 
 .ti 0
 10.2  Informative References
@@ -908,6 +930,7 @@ Recommendation ITU-T\0X.672 (2010) | ISO/IEC 29168-1:2011, August\02010.
 .in 14
 <http://handle.itu.int/11.1002/1000/10831>.
 
+.in 0
 
 
 
@@ -919,8 +942,11 @@ Appendix A: JSON Schema
 .ti 0
 A.1 Schema
 
-.in 0
+The following JSON Schema ([JSONSch]) defines the expected output the server sends if the server command "format" is set to "json".
+
+.in 3
 .nf
+# NOTE: '\\' line wrapping per RFC 8792
 {
    "$schema":"http://json-schema.org/draft-07/schema#",
    "type":"object",
@@ -1103,14 +1129,14 @@ A.1 Schema
                   },
                   "created":{
                      "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)
-(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}
+                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\\
+(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
 ( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   },
                   "updated":{
                      "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)
-(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}
+                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\\
+(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
 ( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   }
                },
@@ -1171,14 +1197,14 @@ A.1 Schema
                   },
                   "ra-created":{
                      "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)
-(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}
+                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\\
+(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
 ( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   },
                   "ra-updated":{
                      "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)
-(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}
+                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\\
+(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
 ( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   }
                },
@@ -1210,12 +1236,14 @@ A.1 Schema
    ]
 }
 .fi
+.in 0
 
-.bp
 .ti 0
 A.2 Example of output
 
+.in 3
 .nf
+# NOTE: '\\' line wrapping per RFC 8792
 {
   "$schema":"http://.../oidip_schema.json",
   "oidip": [
@@ -1227,23 +1255,33 @@ A.2 Example of output
       "object": "oid:2.999",
       "status": "Information available",
       "name": "Example",
-      "description": "This OID can be used by anyone, for the purposes
-      of documenting examples of Object Identifiers.",
+      "description": "This OID can be used by anyone, for the \\
+purposes of documenting examples of Object Identifiers.",
       "asn1-notation": "{joint-iso-itu-t(2) example(999)}",
       "iri-notation": "/Example",
-      "identifier": "example"
-      "unicode-label": ["Beispiel", "Ejemplo", "Example", "Exemple",
+      "identifier": "example",
+      "unicode-label": [
+            "Beispiel",
+            "Ejemplo",
+            "Example",
+            "Exemple",
             "(Korean characters are omitted in this example)",
             "(Arabian characters are omitted in this example)",
             "(Japanese characters are omitted in this example)",
             "(Chinese characters are omitted in this example)",
-            "(Russian characters are omitted in this example)" ]
-      "long-arc": ["Beispiel", "Ejemplo", "Example", "Exemple",
+            "(Russian characters are omitted in this example)"
+      ],
+      "long-arc": [
+            "Beispiel",
+            "Ejemplo",
+            "Example",
+            "Exemple",
             "(Korean characters are omitted in this example)",
             "(Arabian characters are omitted in this example)",
             "(Japanese characters are omitted in this example)",
             "(Chinese characters are omitted in this example)",
-            "(Russian characters are omitted in this example)" ]
+            "(Russian characters are omitted in this example)"
+      ],
       "parent": "oid:2 (joint-iso-ccitt, joint-iso-itu-t)",
       "subordinate": [],
       "created": "2011-06",
@@ -1255,14 +1293,14 @@ A.2 Example of output
     }
   ],
   "signature": {
-    "content": "{\\"oidip\\":[{...(The contents of the "oidip"
-       structure are repeated here; ideally minified)...}]}",
+    "content": "{\\"oidip\\":[{...(The contents of the 'oidip'\\
+structure are repeated here; ideally minified)...}]}",
     "signature": "(Base36 signature here)"
   }
 }
 .fi
+.in 0
 
-.bp
 .ti 0
 Appendix B: XML Schema
 
@@ -1271,12 +1309,15 @@ B.1 Schema
 
 [To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-02" to "urn:ietf:rfc:yyyy" before publication.]
 
-.in 0
+The following XML Schema Definition ([XSD]) defines the expected output the server sends if the server command "format" is set to "xml".
+
+.in 3
 .nf
+# NOTE: '\\' line wrapping per RFC 8792
 <?xml version="1.0"?>
-<xs:schema targetNamespace="urn:ietf:id:viathinksoft-oidip-02"
-attributeFormDefault="unqualified"
-elementFormDefault="qualified"
+<xs:schema targetNamespace="urn:ietf:id:viathinksoft-oidip-02" \\
+attributeFormDefault="unqualified" \\
+elementFormDefault="qualified" \\
 xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="root">
 <xs:complexType>
@@ -1300,7 +1341,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 </xs:element>
 <xs:element type="xs:string" name="distance" minOccurs="0"/>
 <xs:element type="xs:string" name="message" minOccurs="0"/>
-<xs:any processContents="lax" namespace="##any"
+<xs:any processContents="lax" namespace="##any" \\
 minOccurs="0" maxOccurs="unbounded"/>
 </xs:choice>
 </xs:complexType>
@@ -1343,14 +1384,14 @@ minOccurs="0" maxOccurs="unbounded"/>
 </xs:simpleType>
 </xs:element>
 <xs:element type="xs:string" name="parent" minOccurs="0"/>
-<xs:element type="xs:string" name="subordinate"
+<xs:element type="xs:string" name="subordinate" \\
 maxOccurs="unbounded" minOccurs="0"/>
 <xs:element name="created" minOccurs="0">
 <xs:simpleType>
 <xs:restriction base="xs:string">
-<xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)
-( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}
-( [\+\-][0-5][0-9][0-5][0-9]){0,1})
+<xs:pattern value="\\d{4}(\\-(0[1-9]|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)\\
+( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
+( [\\+\\-][0-5][0-9][0-5][0-9]){0,1})\\
 {0,1}){0,1}){0,1}"></xs:pattern>
 </xs:restriction>
 </xs:simpleType>
@@ -1358,14 +1399,14 @@ maxOccurs="unbounded" minOccurs="0"/>
 <xs:element name="updated" minOccurs="0">
 <xs:simpleType>
 <xs:restriction base="xs:string">
-<xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)
-( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}
-( [\+\-][0-5][0-9][0-5][0-9]){0,1})
+<xs:pattern value="\\d{4}(\\-(0[1-9]|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)\\
+( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
+( [\\+\\-][0-5][0-9][0-5][0-9]){0,1})\\
 {0,1}){0,1}){0,1}"></xs:pattern>
 </xs:restriction>
 </xs:simpleType>
 </xs:element>
-<xs:any processContents="lax" namespace="##any"
+<xs:any processContents="lax" namespace="##any" \\
 minOccurs="0" maxOccurs="unbounded"/>
 </xs:choice>
 </xs:complexType>
@@ -1401,22 +1442,22 @@ minOccurs="0" maxOccurs="unbounded"/>
 <xs:element name="ra-created" minOccurs="0">
 <xs:simpleType>
 <xs:restriction base="xs:string">
-<xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)
-( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}
-( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
+<xs:pattern value="\\d{4}(\\-(0[1-9]|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)\\
+( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
+( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
 </xs:restriction>
 </xs:simpleType>
 </xs:element>
 <xs:element name="ra-updated" minOccurs="0">
 <xs:simpleType>
 <xs:restriction base="xs:string">
-<xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)
-( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}
-( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
+<xs:pattern value="\\d{4}(\\-(0[1-9]|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)\\
+( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
+( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
 </xs:restriction>
 </xs:simpleType>
 </xs:element>
-<xs:any processContents="lax" namespace="##any"
+<xs:any processContents="lax" namespace="##any" \\
 minOccurs="0" maxOccurs="unbounded"/>
 </xs:choice>
 </xs:complexType>
@@ -1429,7 +1470,7 @@ minOccurs="0" maxOccurs="unbounded"/>
 <xs:choice maxOccurs="unbounded">
 <xs:element type="xs:string" name="content"/>
 <xs:element type="xs:string" name="signature"/>
-<xs:any processContents="lax" namespace="##any"
+<xs:any processContents="lax" namespace="##any" \\
 minOccurs="0" maxOccurs="unbounded"/>
 </xs:choice>
 </xs:complexType>
@@ -1439,15 +1480,16 @@ minOccurs="0" maxOccurs="unbounded"/>
 </xs:element>
 </xs:schema>
 .fi
+.in 0
 
-.bp
 .ti 0
 B.2 Example of output
 
 [To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-02" to "urn:ietf:rfc:yyyy" before publication.]
 
-.in 0
+.in 3
 .nf
+# NOTE: '\\' line wrapping per RFC 8792
 <root xmlns="urn:ietf:rfc:yyyy"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="urn:ietf:id:viathinksoft-oidip-02
@@ -1490,16 +1532,14 @@ http://.../oidip_schema.xsd">
 </oidip>
 <signatureSection>
 <content><![CDATA[
-<oidip>(The contents of the "oidip" structure are
+<oidip>(The contents of the "oidip" structure are \\
 repeated here; ideally minified)</oidip>
 ]]></content>
 <signature>(Base36 signature here)</signature>
 </signatureSection>
 </root>
 .fi
-
-
-
+.in 0
 
 .ti 0
 Acknowledgements
