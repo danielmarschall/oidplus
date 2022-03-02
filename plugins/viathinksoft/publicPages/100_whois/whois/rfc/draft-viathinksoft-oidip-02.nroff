@@ -95,8 +95,8 @@ Table of Contents
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
      2.1  Authentication Tokens . . . . . . . . . . . . . . . . . . .  6
      2.2  Server Commands . . . . . . . . . . . . . . . . . . . . . .  6
-       2.2.1  "Format" command  . . . . . . . . . . . . . . . . . . .  6
-     2.3  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  7
+       2.2.1  "format" command  . . . . . . . . . . . . . . . . . . .  7
+     2.3  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  8
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  9
        3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . .  9
@@ -124,7 +124,7 @@ Table of Contents
      9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 24
    10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 24
      10.1  Normative References . . . . . . . . . . . . . . . . . . . 24
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 26
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 25
    Appendix A: JSON Schema  . . . . . . . . . . . . . . . . . . . . . 27
      A.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
      A.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 33
@@ -233,13 +233,13 @@ with the value "json":
 oid:2.999$format=json
 .fi
 .in 3
-
+.bp
 .ti 0
-2.2.1  "Format" command
+2.2.1  "format" command
 
 The "format" command defines the desired output format of the server response.
 
-Currently, there are four valid formats:
+This document defines four formats:
 
 (1) "text": A text representation as defined in section 3.1.1. (MANDATORY)
 
@@ -251,8 +251,12 @@ Currently, there are four valid formats:
 
 The default format is "text", which is assumed if the "format" command is omitted.
 
-If the client requests a format that is not implemented, then the server MUST respond with the "text" format. The output must consist of the "query" field, "result: Service error", and a fitting "message" field (as described section in 3.2.1).
+Besides these four formats, the server can also accept other formats not defined in this document.  The name of the formats SHALL be lower-case.
 
+If the client requests a format that is not implemented, then the server MUST respond with the "text" format,
+and the output MUST consist of the "query" field, "result: Service error",
+and a fitting "message" field (as described section in 3.2.1).
+.bp
 .ti 0
 2.3  Request ABNF Notation
 
@@ -764,21 +768,19 @@ The OID-IP service can define additional field names, but they SHOULD be written
 
 This document requires the assignment of a TCP port number.
 
-.in7
+.in 11
 .nf
-
-           +--------------------+-----------------------------+
-           | Service Name       | oidip                       |
-           | Transport Protocol | TCP                         |
-           | Assignee           | ...                         |
-           | Contact            | ...                         |
-           | Description        | OID Information Protocol    |
-           | Reference          | [RFCyyyy]                   |
-           | Port Number        | XXX                         |
-           +--------------------+-----------------------------+
-
++--------------------+-----------------------------+
+| Service Name       | oidip                       |
+| Transport Protocol | TCP                         |
+| Assignee           | ...                         |
+| Contact            | ...                         |
+| Description        | OID Information Protocol    |
+| Reference          | [RFCyyyy]                   |
+| Port Number        | XXX                         |
++--------------------+-----------------------------+
 .fi
-.in3
+.in 3
 
 [To RFC Editor: Please change "yyyy" to the RFC number allocated to this document before publication.]
 
