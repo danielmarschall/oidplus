@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,8 +73,8 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
 			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__).'whois/webwhois.php" method="GET" target="_blank">';
 			$out['text'] .= '<br>'._L('Output format').':<br><fieldset id="whois_format">';
-			$out['text'] .= '    <input type="radio" id="txt" name="format" value="txt" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="txt"> '._L('Text format').'</label> ('._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-02</a>)<br>';
+			$out['text'] .= '    <input type="radio" id="text" name="format" value="text" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
+			$out['text'] .= '    <label for="text"> '._L('Text format').'</label> ('._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-02</a>)<br>';
 			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			$out['text'] .= '    <label for="json"> '._L('JSON').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/json_schema.json">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
