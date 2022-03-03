@@ -81,7 +81,7 @@ $plugins = OIDplus::getDesignPlugins();
 foreach ($plugins as $plugin) {
 	if ((basename($plugin->getPluginDirectory())) == OIDplus::config()->getValue('design','default')) {
 		$theme_color = $plugin->getThemeColor();
-		if (class_exists('OIDplusPageAdminColors')) {
+		if (($theme_color != '') && class_exists('OIDplusPageAdminColors')) {
 			$hs = OIDplus::config()->getValue('color_hue_shift',0)/360;
 			$ss = OIDplus::config()->getValue('color_sat_shift',0)/100;
 			$vs = OIDplus::config()->getValue('color_val_shift',0)/100;
