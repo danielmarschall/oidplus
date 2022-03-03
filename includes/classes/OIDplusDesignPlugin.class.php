@@ -21,4 +21,8 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 abstract class OIDplusDesignPlugin extends OIDplusPlugin {
 
+	function getThemeColor() {
+		return ''; // no theme color
+	}
+
 }

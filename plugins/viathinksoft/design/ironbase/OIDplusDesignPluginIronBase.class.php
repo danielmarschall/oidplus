@@ -21,4 +21,8 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusDesignPluginIronBase extends OIDplusDesignPlugin {
 
+	function getThemeColor() {
+		return '#F9F9F9';
+	}
+
 }
