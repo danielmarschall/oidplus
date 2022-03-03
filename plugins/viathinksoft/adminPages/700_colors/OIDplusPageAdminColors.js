@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 
+// TODO: We can't change $("meta[name='theme-color']").attr("content", ...) here,
+//       because this property (and the color manipulation) can only be accessed in PHP.
+
 var OIDplusPageAdminColors = {
 
 	oid: "1.3.6.1.4.1.37476.2.5.2.4.3.700",

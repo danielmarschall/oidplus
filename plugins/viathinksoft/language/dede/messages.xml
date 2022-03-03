@@ -6958,10 +6958,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		With the web based whois service, you can query object information in a machine-readable format.
+		With the OID Information Protocol (OID-IP), you can query object information in a machine-readable format.
 		]]></source>
 		<target><![CDATA[
-		Mit dem Web-Basierten WHOIS-Dienst können Sie Objekt-Informationen in einem maschinenlesbaren Format abfragen.
+		Mit dem OID Informations-Protokoll (OID-IP) können Sie Objekt-Informationen in einem maschinenlesbaren Format abfragen.
 		]]></target>
 	</message>
 	<message>

@@ -69,12 +69,12 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$out['text']  = '';
-			$out['text'] .= '<p>'._L('With the web based whois service, you can query object information in a machine-readable format.').'</p>';
-
+			$out['text'] .= '<p>'._L('With the OID Information Protocol (OID-IP), you can query object information in a machine-readable format.').'</p>';
+			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-02</a></p>';
 			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__).'whois/webwhois.php" method="GET" target="_blank">';
 			$out['text'] .= '<br>'._L('Output format').':<br><fieldset id="whois_format">';
 			$out['text'] .= '    <input type="radio" id="text" name="format" value="text" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="text"> '._L('Text format').'</label> ('._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-02</a>)<br>';
+			$out['text'] .= '    <label for="text"> '._L('Text format').'</label><br>';
 			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			$out['text'] .= '    <label for="json"> '._L('JSON').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__).'whois/json_schema.json">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';

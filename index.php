@@ -75,13 +75,30 @@ if (class_exists('OIDplusPageAdminColors')) {
 }
 $add_css_args = count($add_css_args) > 0 ? '?'.implode('&',$add_css_args) : '';
 
+// Get theme color (color of title bar)
+$theme_color = '';
+$plugins = OIDplus::getDesignPlugins();
+foreach ($plugins as $plugin) {
+	if ((basename($plugin->getPluginDirectory())) == OIDplus::config()->getValue('design','default')) {
+		$theme_color = $plugin->getThemeColor();
+		if (class_exists('OIDplusPageAdminColors')) {
+			$hs = OIDplus::config()->getValue('color_hue_shift',0)/360;
+			$ss = OIDplus::config()->getValue('color_sat_shift',0)/100;
+			$vs = OIDplus::config()->getValue('color_val_shift',0)/100;
+			$theme_color = changeHueOfCSS($theme_color, $hs, $ss, $vs); // "changeHueOfCSS" can also change a single color value if it has the form #xxyyzz or #xyz
+		}
+	}
+}
+
 ?><!DOCTYPE html>
 <html lang="<?php echo substr(OIDplus::getCurrentLang(),0,2); ?>">
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="OIDplus-SystemTitle" content="<?php echo htmlentities(OIDplus::config()->getValue('system_title')); /* Do not remove. This meta tag is acessed by oidplus_base.js */ ?>">
-	<meta name="theme-color" content="#A9DCF0">
+	<?php
+	if ($theme_color != '') echo '<meta name="theme-color" content="'.$theme_color.'">';
+	?>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<title><?php echo htmlentities(combine_systemtitle_and_pagetitle(OIDplus::config()->getValue('system_title'), $static_title)); ?></title>

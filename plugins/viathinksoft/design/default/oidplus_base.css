@@ -93,6 +93,8 @@
 		width:100% !important;
 		padding-right:10px !important;
 		top: 0 !important;
+	}
+	#oidtree {
 		padding-bottom:80px !important; /* because iPhone Safari bar at the bottom */
 		                                /* Attention: If you incrase .lng_flag.margin, then you need to increase this, too */
 	}
