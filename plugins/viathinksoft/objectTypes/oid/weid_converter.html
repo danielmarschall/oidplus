@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>OID/WEID Converter</title>
+	<script src="WeidOidConverter.js"></script>
+</head>
+
+<body>
+
+<script>
+function oidInputChanged() {
+	var tmp = WeidOidConverter.oid2weid(document.getElementById('oid').value);
+	if ((tmp == false) || (tmp.weid == false) || (tmp.oid == false)) {
+		document.getElementById('weid2a').innerHTML = '<font color="red">Invalid input</font>';
+		document.getElementById('oid2a').innerHTML = '';
+	} else {
+		document.getElementById('weid2a').innerHTML = '<b>WEID: </b>'+tmp.weid;
+		document.getElementById('oid2a').innerHTML = '<b>OID: </b>'+tmp.oid;
+	}
+}
+function weidInputChanged() {
+	var tmp = WeidOidConverter.weid2oid(document.getElementById('weid').value);
+	if ((tmp == false) || (tmp.weid == false) || (tmp.oid == false)) {
+		document.getElementById('weid2b').innerHTML = '<font color="red">Invalid input</font>';
+		document.getElementById('oid2b').innerHTML = '';
+	} else {
+		document.getElementById('oid2b').innerHTML = '<b>OID: </b>'+tmp.weid;
+		document.getElementById('weid2b').innerHTML = '<b>WEID: </b>'+tmp.oid;
+	}
+}
+</script>
+
+<h1>OID/WEID Converter</h1>
+
+<h2>Convert OID to WEID</h2>
+<p><b>Input:</b> <input type="text" value="2.999" name="oid" id="oid" oninput="oidInputChanged();" style="width:500px"></p>
+<div id="weid2a"></div>
+<div id="oid2a"></div>
+
+<h2>Convert WEID to OID</h2>
+<p><b>Input:</b> <input type="text" value="weid:EXAMPLE-?" name="weid" id="weid" oninput="weidInputChanged();" style="width:500px"></p>
+<div id="weid2b"></div>
+<div id="oid2b"></div>
+
+<script>
+oidInputChanged();
+weidInputChanged();
+</script>
+
+</body>
+
+</html>

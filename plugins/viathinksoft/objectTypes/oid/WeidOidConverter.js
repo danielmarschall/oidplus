@@ -1,9 +1,11 @@
+(function (globalObject) {
+  'use strict';
 
 /**
- * WEID<=>OID Converter
- * (c) Webfan.de, ViaThinkSoft
- * Revision 2022-02-22
- **/
+* WEID<=>OID Converter
+* (c) Webfan.de, ViaThinkSoft
+* Revision 2022-03-05
+**/
 
 // What is a WEID?
 //     A WEID (WEhowski IDentifier) is an alternative representation of an
@@ -29,7 +31,11 @@ var WeidOidConverter = {
 		// Padding zeros don't count to the check digit (December 2021)
 		var ary = str.split('-');
 		ary.forEach((o,i,a) => {
-			a[i] = a[i].replace(/^0+/, '');
+			if (a[i].match(/^0+$/)) {
+				a[i] = '0';
+			} else {
+				a[i] = a[i].replace(/^0+/, '');
+			}
 		} );
 		str = ary.join('-');
 
@@ -60,6 +66,37 @@ var WeidOidConverter = {
 		return (sum%10) == 0 ? 0 : 10-(sum%10);
 	},
 
+	oidSanitize: function(oid) {
+		var oid = oid.trim();
+
+		if (oid.substr(0,1) == '.') oid = oid.substr(1); // remove leading dot
+
+		if (oid != '') {
+			var elements = oid.split('.');
+
+			var fail = false;
+			elements.forEach((o,i,a) => {
+				if (a[i].trim() == '') fail = true;
+
+				if (!a[i].match(/^\d+$/)) fail = true;
+
+				if (a[i].match(/^0+$/)) {
+					a[i] = '0';
+				} else {
+					a[i] = a[i].replace(/^0+/, '');
+				}
+			});
+			if (fail) return false;
+
+			oid = elements.join(".");
+
+			if ((elements.length > 0) && (elements[0] != '0') && (elements[0] != '1') && (elements[0] != '2')) return false;
+			if ((elements.length > 1) && ((elements[0] == '0') || (elements[0] == '1')) && ((elements[1].length > 2) || (elements[1] > 39))) return false;
+		}
+
+		return oid;
+	},
+
 	// Translates a WEID to an OID
 	// "weid:EXAMPLE-3" becomes "1.3.6.1.4.1.37553.8.32488192274"
 	// If it failed (e.g. wrong namespace, wrong checksum, etc.) then false is returned.
@@ -69,20 +106,23 @@ var WeidOidConverter = {
 	//     weid2oid("weid:EXAMPLE-?").weid == "weid:EXAMPLE-3"
 	//     weid2oid("weid:EXAMPLE-?").oid  == "1.3.6.1.4.1.37553.8.32488192274"
 	weid2oid: function(weid) {
+		var weid = weid.trim();
+
 		var p = weid.lastIndexOf(':');
 		var namespace = weid.substr(0, p+1);
 		var rest = weid.substr(p+1);
 
+		var base = null;
 		namespace = namespace.toLowerCase(); // namespace is case insensitive
 		if (namespace == 'weid:') {
 			// Class C
-			var base = '1-3-6-1-4-1-SZ5-8';
+			base = '1-3-6-1-4-1-SZ5-8';
 		} else if (namespace == 'weid:pen:') {
 			// Class B
-			var base = '1-3-6-1-4-1';
+			base = '1-3-6-1-4-1';
 		} else if (namespace == 'weid:root:') {
 			// Class A
-			var base = '';
+			base = '';
 		} else {
 			// Wrong namespace
 			console.error("weid2oid: Wrong input");
@@ -107,26 +147,31 @@ var WeidOidConverter = {
 		elements.forEach((o,i,a) => {
 			a[i] = WeidOidConverter.base_convert_bigint(a[i], 36, 10);
 		});
-		var oidstr = elements.join('.');
+		var oid = elements.join('.');
 
 		weid = namespace.toLowerCase() + weid.toUpperCase(); // add namespace again
 
-		return { "weid": weid, "oid" : oidstr };
+		oid = WeidOidConverter.oidSanitize(oid);
+		if (oid == false) return false; // invalid OID
+
+		return { "weid": weid, "oid" : oid };
 	},
 
 	// Converts an OID to WEID
 	// "1.3.6.1.4.1.37553.8.32488192274" becomes "weid:EXAMPLE-3"
 	oid2weid: function(oid) {
-		if (oid.substr(0,1) == '.') oid = oid.substr(1); // remove leading dot
+		var oid = WeidOidConverter.oidSanitize(oid);
+		if (oid == false) return false;
 
+		var weidstr = null;
 		if (oid != '') {
 			var elements = oid.split('.');
 			elements.forEach((o,i,a) => {
 				a[i] = WeidOidConverter.base_convert_bigint(a[i], 10, 36);
 			});
-			var weidstr = elements.join("-");
+			weidstr = elements.join("-");
 		} else {
-			var weidstr = '';
+			weidstr = '';
 		}
 
 		var is_class_c = (weidstr.startsWith('1-3-6-1-4-1-SZ5-8-') || (weidstr == '1-3-6-1-4-1-SZ5-8'));
@@ -135,22 +180,25 @@ var WeidOidConverter = {
 
 		var checksum = WeidOidConverter.weLuhnCheckDigit(weidstr);
 
+		var namespace = null;
 		if (is_class_c) {
 			weidstr = weidstr.substr('1-3-6-1-4-1-SZ5-8-'.length);
-			var namespace = 'weid:';
+			namespace = 'weid:';
 		} else if (is_class_b) {
 			weidstr = weidstr.substr('1-3-6-1-4-1-'.length);
-			var namespace = 'weid:pen:';
+			namespace = 'weid:pen:';
 		} else if (is_class_a) {
 			// weidstr stays
-			var namespace = 'weid:root:';
+			namespace = 'weid:root:';
 		} else {
 			// should not happen
 			console.error("oid2weid: Cannot detect namespace");
 			return false;
 		}
 
-		return { "weid": namespace + (weidstr == '' ? checksum : weidstr + '-' + checksum), "oid": oid };
+		var weid = namespace + (weidstr == '' ? checksum : weidstr + '-' + checksum);
+
+		return { "weid": weid, "oid": oid };
 	},
 
 	base_convert_bigint: function(numstring, frombase, tobase) {
@@ -169,19 +217,20 @@ var WeidOidConverter = {
 			tobase_str += parseInt(i, 10).toString(36).toUpperCase();
 		}
 
-	        for (var i=0; i<numstring.length; i++) {
-	            if (frombase_str.toLowerCase().indexOf(numstring.substr(i,1).toLowerCase()) < 0) {
-	                console.error("base_convert_bigint: Invalid input");
-	                return false;
-	            }
-	        }
+		for (var i=0; i<numstring.length; i++) {
+			if (frombase_str.toLowerCase().indexOf(numstring.substr(i,1).toLowerCase()) < 0) {
+				console.error("base_convert_bigint: Invalid input");
+				return false;
+			}
+		}
 
-	        var length = numstring.length;
+		var length = numstring.length;
 		var result = '';
 		var number = [];
 		for (var i=0; i<length; i++) {
 			number[i] = frombase_str.toLowerCase().indexOf(numstring[i].toLowerCase());
 		}
+		var newlen = null;
 		do { // Loop until whole number is converted
 			var divide = 0;
 			var newlen = 0;
@@ -201,4 +250,20 @@ var WeidOidConverter = {
 
 		return result;
 	}
+};
+
+WeidOidConverter['default'] = WeidOidConverter.WeidOidConverter = WeidOidConverter;
+
+if (typeof define == 'function' && define.amd) {
+	define('WeidOidConverter', function () {
+		return WeidOidConverter;
+	});
+} else if (typeof module != 'undefined' && module.exports) {
+	module.exports = WeidOidConverter;
+} else {
+	if (!globalObject) {
+		globalObject = typeof self != 'undefined' && self ? self : window;
+	}
+	globalObject.WeidOidConverter = WeidOidConverter;
 }
+})(this);
