@@ -4,7 +4,7 @@
 /**
 * WEID<=>OID Converter
 * (c) Webfan.de, ViaThinkSoft
-* Revision 2022-03-05
+* Revision 2022-03-06
 **/
 
 // What is a WEID?
@@ -132,6 +132,13 @@ var WeidOidConverter = {
 		weid = rest;
 
 		var elements = ((base != '') ? base.split('-') : []).concat(weid.split('-'));
+
+		var fail = false;
+		elements.forEach((o,i,a) => {
+			if (a[i].trim() == '') fail = true;
+		});
+		if (fail) return false;
+
 		var actual_checksum = elements.pop();
 		var expected_checksum = WeidOidConverter.weLuhnCheckDigit(elements.join('-'));
 		if (actual_checksum != '?') {
