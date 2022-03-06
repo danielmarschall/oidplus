@@ -3,7 +3,7 @@
 /**
  * WEID<=>OID Converter
  * (c) Webfan.de, ViaThinkSoft
- * Revision 2021-12-08
+ * Revision 2022-03-06
  **/
 
 // What is a WEID?
@@ -61,12 +61,40 @@ class WeidOidConverter {
 		return ($sum%10) == 0 ? 0 : 10-($sum%10);
 	}
 
+	private static function oidSanitize($oid) {
+		$oid = trim($oid);
+
+		if (substr($oid,0,1) == '.') $oid = substr($oid,1); // remove leading dot
+
+		if ($oid != '') {
+			$elements = explode('.', $oid);
+			foreach ($elements as &$elem) {
+				if (trim($elem) == '') return false;
+
+				if (!preg_match('/^\d+$/', $elem, $m)) return false;
+
+				if (preg_match('/^0+$/', $elem, $m)) {
+					$elem = '0';
+				} else {
+					$elem = preg_replace('/^0+/', '', $elem);
+				}
+			};
+			$oid = implode('.', $elements);
+
+			if ((count($elements) > 0) && ($elements[0] != '0') && ($elements[0] != '1') && ($elements[0] != '2')) return false;
+			if ((count($elements) > 1) && (($elements[0] == '0') || ($elements[0] == '1')) && ((strlen($elements[1]) > 2) || ($elements[1] > 39))) return false;
+		}
+
+		return $oid;
+	}
+
 	// Translates a weid to an oid
 	// "weid:EXAMPLE-3" becomes "1.3.6.1.4.1.37553.8.32488192274"
 	// If it failed (e.g. wrong namespace, wrong checksum, etc.) then false is returned.
 	// If the weid ends with '?', then it will be replaced with the checksum,
 	// e.g. weid:EXAMPLE-? becomes weid:EXAMPLE-3
 	public static function weid2oid(&$weid) {
+		$weid = trim($weid);
 
 		$p = strrpos($weid,':');
 		$namespace = substr($weid, 0, $p+1);
@@ -90,10 +118,17 @@ class WeidOidConverter {
 		$weid = $rest;
 
 		$elements = array_merge(($base != '') ? explode('-', $base) : array(), explode('-', $weid));
+
+		foreach ($elements as $elem) {
+			if ($elem == '') return false;
+		}
+
 		$actual_checksum = array_pop($elements);
 		$expected_checksum = self::weLuhnGetCheckDigit(implode('-',$elements));
 		if ($actual_checksum != '?') {
-			if ($actual_checksum != $expected_checksum) return false; // wrong checksum
+			if ($actual_checksum != $expected_checksum) {
+				return false; // wrong checksum
+			}
 		} else {
 			// If checksum is '?', it will be replaced by the actual checksum,
 			// e.g. weid:EXAMPLE-? becomes weid:EXAMPLE-3
@@ -103,17 +138,21 @@ class WeidOidConverter {
 			//$arc = strtoupper(base_convert($arc, 36, 10));
 			$arc = strtoupper(self::base_convert_bigint($arc, 36, 10));
 		}
-		$oidstr = implode('.', $elements);
+		$oid = implode('.', $elements);
 
 		$weid = strtolower($namespace) . strtoupper($weid); // add namespace again
 
-		return $oidstr;
+		$oid = self::oidSanitize($oid);
+		if ($oid === false) return false;
+
+		return $oid;
 	}
 
 	// Converts an OID to WEID
 	// "1.3.6.1.4.1.37553.8.32488192274" becomes "weid:EXAMPLE-3"
 	public static function oid2weid($oid) {
-		if (substr($oid,0,1) === '.') $oid = substr($oid,1); // remove leading dot
+		$oid = self::oidSanitize($oid);
+		if ($oid === false) return false;
 
 		if ($oid !== '') {
 			$elements = explode('.', $oid);
@@ -149,7 +188,9 @@ class WeidOidConverter {
 			return false;
 		}
 
-		return $namespace . ($weidstr == '' ? $checksum : $weidstr . '-' . $checksum);
+		$weid = $namespace . ($weidstr == '' ? $checksum : $weidstr . '-' . $checksum);
+
+		return $weid;
 	}
 
 	protected static function base_convert_bigint($numstring, $frombase, $tobase) {
