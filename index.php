@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,9 @@ ob_start(); // allow cookie headers to be sent
 OIDplus::init(true);
 
 $static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
+
+$static_node_id = try_convert_weid_to_oid($static_node_id, false);
+
 $static = OIDplus::gui()->generateContentPage($static_node_id);
 $static_title = $static['title'];
 $static_icon = $static['icon'];

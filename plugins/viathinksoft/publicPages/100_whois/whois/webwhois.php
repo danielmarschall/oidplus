@@ -85,6 +85,8 @@ $out = array();
 
 $out[] = "query: $query";
 
+$query = try_convert_weid_to_oid($query, false);
+
 if ($unimplemented_format) {
 	$out[] = 'result: Service error';
 	$out[] = 'message: Format is not implemented';
