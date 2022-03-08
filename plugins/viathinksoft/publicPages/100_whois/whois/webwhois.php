@@ -85,7 +85,7 @@ $out = array();
 
 $out[] = "query: $query";
 
-$query = prefilter_query($query, false);
+$query = OIDplus::prefilterQuery($query, false);
 
 if ($unimplemented_format) {
 	$out[] = 'result: Service error';
