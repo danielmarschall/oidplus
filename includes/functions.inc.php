@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -327,4 +327,20 @@ function url_get_contents($url) {
 		if ($res === false) return false;
 	}
 	return $res;
+}
+
+function try_convert_weid_to_oid($static_node_id, $throw_exception) {
+	// Convert WEID to OID
+	if ((substr(strtolower($static_node_id),0,5) == 'weid:') && class_exists('WeidOidConverter')) {
+		$ary = explode('$', $static_node_id, 2);
+		$weid = $ary[0];
+		$oid = WeidOidConverter::weid2oid($weid);
+		if ($oid === false) {
+			if ($throw_exception) throw new OIDplusException('This is not a valid WEID');
+		} else {
+			$ary[0] = $oid;
+			$static_node_id = 'oid:'.implode('$', $ary);
+		}
+	}
+	return $static_node_id;
 }

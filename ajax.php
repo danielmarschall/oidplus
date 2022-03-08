@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,6 +82,7 @@ try {
 			// Parameters: id
 			// Outputs:    JSON
 			_CheckParamExists($_REQUEST, 'id');
+			$_REQUEST['id'] = try_convert_weid_to_oid($_REQUEST['id'], false);
 			try {
 				$json_out = OIDplus::gui()->generateContentPage($_REQUEST['id']);
 			} catch (Exception $e) {
@@ -116,6 +117,7 @@ try {
 			// Parameters: id; goto (optional)
 			// Outputs:    JSON
 			_CheckParamExists($_REQUEST, 'id');
+			$_REQUEST['id'] = try_convert_weid_to_oid($_REQUEST['id'], false);
 			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], isset($_REQUEST['goto']) ? $_REQUEST['goto'] : '');
 		} else {
 			throw new OIDplusException(_L('Invalid action ID'));
