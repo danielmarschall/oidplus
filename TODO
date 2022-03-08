@@ -9,6 +9,14 @@ RECENT STUFF
 	... or in the setup page make an extra control how complex the admin password should be? but be aware that nobody enters a too big number (it makes DoS possible!)
 - system log plugin: Only show 100 events and let the user switch pages. To avoid that you load a page with 10000+ log entries!
 
+Treeview / Navigation:
+- In the tree, let the operator create "shortcuts" to important OIDs?
+- Define "critical" OIDs which should always be visible; this means: the tree will always be extended so that these OIDs are shown?
+
+OID WHOIS:
+- Rename to "OID IP"
+- If the operator has a WHOIS server, then show the hostname and port, e.g. "whois.viathinksoft.de:43"
+
 SECURITY Improvements:
 - Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")
   and see which error message appears, or they could try to enter "plugin/adminPages/..." using the web browser and see if the result is HTTP 200 or HTTP 404.

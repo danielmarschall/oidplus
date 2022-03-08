@@ -329,9 +329,14 @@ function url_get_contents($url) {
 	return $res;
 }
 
-function try_convert_weid_to_oid($static_node_id, $throw_exception) {
+function prefilter_query($static_node_id, $throw_exception) {
+	// Let namespace be case-insensitive
+	$ary = explode(':', $static_node_id, 2);
+	$ary[0] = strtolower($ary[0]);
+	$static_node_id = implode(':', $ary);
+
 	// Convert WEID to OID
-	if ((substr(strtolower($static_node_id),0,5) == 'weid:') && class_exists('WeidOidConverter')) {
+	if ((substr($static_node_id,0,5) == 'weid:') && class_exists('WeidOidConverter')) {
 		$ary = explode('$', $static_node_id, 2);
 		$weid = $ary[0];
 		$oid = WeidOidConverter::weid2oid($weid);
@@ -342,5 +347,6 @@ function try_convert_weid_to_oid($static_node_id, $throw_exception) {
 			$static_node_id = 'oid:'.implode('$', $ary);
 		}
 	}
+
 	return $static_node_id;
 }

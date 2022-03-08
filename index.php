@@ -29,7 +29,7 @@ OIDplus::init(true);
 
 $static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
 
-$static_node_id = try_convert_weid_to_oid($static_node_id, false);
+$static_node_id = prefilter_query($static_node_id, false);
 
 $static = OIDplus::gui()->generateContentPage($static_node_id);
 $static_title = $static['title'];

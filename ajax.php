@@ -82,7 +82,7 @@ try {
 			// Parameters: id
 			// Outputs:    JSON
 			_CheckParamExists($_REQUEST, 'id');
-			$_REQUEST['id'] = try_convert_weid_to_oid($_REQUEST['id'], false);
+			$_REQUEST['id'] = prefilter_query($_REQUEST['id'], false);
 			try {
 				$json_out = OIDplus::gui()->generateContentPage($_REQUEST['id']);
 			} catch (Exception $e) {
@@ -117,7 +117,7 @@ try {
 			// Parameters: id; goto (optional)
 			// Outputs:    JSON
 			_CheckParamExists($_REQUEST, 'id');
-			$_REQUEST['id'] = try_convert_weid_to_oid($_REQUEST['id'], false);
+			$_REQUEST['id'] = prefilter_query($_REQUEST['id'], false);
 			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], isset($_REQUEST['goto']) ? $_REQUEST['goto'] : '');
 		} else {
 			throw new OIDplusException(_L('Invalid action ID'));

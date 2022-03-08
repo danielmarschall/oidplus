@@ -85,7 +85,7 @@ $out = array();
 
 $out[] = "query: $query";
 
-$query = try_convert_weid_to_oid($query, false);
+$query = prefilter_query($query, false);
 
 if ($unimplemented_format) {
 	$out[] = 'result: Service error';
