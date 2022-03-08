@@ -1400,4 +1400,25 @@ class OIDplus extends OIDplusBaseClass {
 		}
 	}
 
+	public static function prefilterQuery($static_node_id, $throw_exception) {
+		// Let namespace be case-insensitive
+		$ary = explode(':', $static_node_id, 2);
+		$ary[0] = strtolower($ary[0]);
+		$static_node_id = implode(':', $ary);
+
+		// Convert WEID to OID
+		if ((substr($static_node_id,0,5) == 'weid:') && class_exists('WeidOidConverter')) {
+			$ary = explode('$', $static_node_id, 2);
+			$weid = $ary[0];
+			$oid = WeidOidConverter::weid2oid($weid);
+			if ($oid === false) {
+				if ($throw_exception) throw new OIDplusException('This is not a valid WEID');
+			} else {
+				$ary[0] = $oid;
+				$static_node_id = 'oid:'.implode('$', $ary);
+			}
+		}
+
+		return $static_node_id;
+	}
 }
