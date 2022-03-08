@@ -121,8 +121,19 @@ class OIDplusOid extends OIDplusObject {
 		return $tech_info;
 	}
 
+	protected function isClassCWeid() {
+		$dist = oid_distance($this->oid, '1.3.6.1.4.1.37553.8');
+		if ($dist === false) return false;
+		return $dist >= 0;
+	}
+
 	public function getContentPage(&$title, &$content, &$icon) {
-		$icon = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webPath(__DIR__,true).'icon_big.png' : '';
+		if ($this->isClassCWeid()) {
+			// TODO: Also change treeview menu mini-icon?
+			$icon = file_exists(__DIR__.'/icon_big_weid.png') ? OIDplus::webPath(__DIR__,true).'icon_big_weid.png' : '';
+		} else {
+			$icon = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webPath(__DIR__,true).'icon_big.png' : '';
+		}
 
 		if ($this->isRoot()) {
 			$title = OIDplusOid::objectTypeTitle();

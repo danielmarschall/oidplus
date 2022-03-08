@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -314,7 +314,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$objParent = OIDplusObject::parse($params['parent']);
 			if ($objParent === null) throw new OIDplusException(_L('%1 action failed because parent object "%2" cannot be parsed!','INSERT',$params['parent']));
 
-			if (!$objParent::root() && (OIDplus::db()->query("select id from ###objects where id = ?", array($objParent->nodeId()))->num_rows() == 0)) {
+			if (!$objParent->isRoot() && (OIDplus::db()->query("select id from ###objects where id = ?", array($objParent->nodeId()))->num_rows() == 0)) {
 				throw new OIDplusException(_L('Parent object %1 does not exist','".($objParent->nodeId())."'));
 			}
 
@@ -323,6 +323,20 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Check if the ID is valid
 			_CheckParamExists($params, 'id');
 			if ($params['id'] == '') throw new OIDplusException(_L('ID may not be empty'));
+
+			// For the root objects, let the user also enter a WEID
+			if ($objParent::ns() == 'oid') {
+				if (strtolower(substr(trim($params['id']),0,5)) === 'weid:') {
+					if ($objParent->isRoot()) {
+						$params['id'] = WeidOidConverter::weid2oid($params['id']);
+						if ($params['id'] === false) {
+							throw new OIDplusException(_L('Invalid WEID'));
+						}
+					} else {
+						throw new OIDplusException(_L('You can use the WEID syntax only at your object tree root.'));
+					}
+				}
+			}
 
 			// Determine absolute OID name
 			// Note: At addString() and parse(), the syntax of the ID will be checked
