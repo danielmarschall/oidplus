@@ -3702,6 +3702,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OID Information Protocol (OID-IP) / WHOIS
+		]]></source>
+		<target><![CDATA[
+		OID Information Protocol (OID-IP) / WHOIS
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OID logger mask requires OID
 		]]></source>
 		<target><![CDATA[
@@ -4450,6 +4458,14 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte geben Sie entweder 0, 1 oder 2 ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter either an empty string or an input in the format "hostname:port".
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie entweder einen leeren Wert oder einen Wert in der Form "Hostname:Portnummer" ein.
 		]]></target>
 	</message>
 	<message>
@@ -6110,6 +6126,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The hostname and port number is:
+		]]></source>
+		<target><![CDATA[
+		Der Hostname und die Portnummer sind:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The identifier %1 is too long (max allowed length: %2)
 		]]></source>
 		<target><![CDATA[
@@ -6854,6 +6878,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		WHOIS / OID-IP
+		]]></source>
+		<target><![CDATA[
+		WHOIS / OID-IP
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		WHOIS/OID-IP access
+		]]></source>
+		<target><![CDATA[
+		WHOIS/OID-IP Zugriff
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Warning
 		]]></source>
 		<target><![CDATA[
@@ -6894,10 +6934,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Web WHOIS
+		Web query
 		]]></source>
 		<target><![CDATA[
-		Web-WHOIS
+		Web-Abfrage
 		]]></target>
 	</message>
 	<message>
@@ -7114,6 +7154,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die AJAX API bietet die Möglichkeit, Aufgaben automatisiert über Ihr OIDplus-Konto durchzuführen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You can use any WHOIS compatible client to query the information from the WHOIS/OID-IP port.
+		]]></source>
+		<target><![CDATA[
+		Sie können jedes WHOIS-Kompatible Programm verwenden, um die Informationen mit dem WHOIS/OID-IP Protokoll abzufragen.
 		]]></target>
 	</message>
 	<message>

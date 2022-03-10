@@ -15,7 +15,6 @@ Treeview / Navigation:
 
 OID WHOIS:
 - Rename to "OID IP"
-- If the operator has a WHOIS server, then show the hostname and port, e.g. "whois.viathinksoft.de:43"
 
 SECURITY Improvements:
 - Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")

@@ -38,6 +38,15 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
+		OIDplus::config()->prepareConfigKey('individual_whois_server', 'A WHOIS/OID-IP "hostname:port" that will be presented', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if ($value == '') return;
+			$ary = explode(':', $value);
+			if (count($ary) !== 2) {
+				throw new OIDplusException(_L('Please enter either an empty string or an input in the format "hostname:port".'));
+			}
+			// TODO: verify hostname $ary[0]
+			// TODO: verify port $ary[1]
+		});
 	}
 
 	private function getExampleId() {
@@ -65,14 +74,15 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
 			$example = $this->getExampleId();
 
-			$out['title'] = _L('Web WHOIS');
+			$out['title'] = _L('OID Information Protocol (OID-IP) / WHOIS');
 			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
 
 			$out['text']  = '';
 			$out['text'] .= '<p>'._L('With the OID Information Protocol (OID-IP), you can query object information in a machine-readable format.').'</p>';
 			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-02</a></p>';
+			$out['text'] .= '<h2>'._L('Web query').'</h2>';
 			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__).'whois/webwhois.php" method="GET" target="_blank">';
-			$out['text'] .= '<br>'._L('Output format').':<br><fieldset id="whois_format">';
+			$out['text'] .= ''._L('Output format').':<br><fieldset id="whois_format">';
 			$out['text'] .= '    <input type="radio" id="text" name="format" value="text" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			$out['text'] .= '    <label for="text"> '._L('Text format').'</label><br>';
 			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
@@ -89,6 +99,22 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$out['text'] .= '	<p><pre id="whois_url_bar"></pre></p>';
 			$out['text'] .= '	<input type="button" value="'._L('Copy to clipboard').'" onClick="OIDplusPagePublicWhois.copyToClipboard(whois_url_bar)">';
 			$out['text'] .= '</div>';
+
+			$whois_server = '';
+			if (OIDplus::config()->getValue('individual_whois_server', '') != '') {
+				$whois_server = OIDplus::config()->getValue('individual_whois_server', '');
+			}
+			else if (OIDplus::config()->getValue('vts_whois', '') != '') {
+				// This config setting is set by the "Registration" plugin
+				$whois_server = OIDplus::config()->getValue('vts_whois', '');
+			}
+
+			if ($whois_server != '') {
+				$out['text'] .= '<h2>'._L('WHOIS/OID-IP access').'</h2>';
+				$out['text'] .= '<p>'._L('You can use any WHOIS compatible client to query the information from the WHOIS/OID-IP port.').'</p>';
+				$out['text'] .= '<p>'._L('The hostname and port number is:').'</p>';
+				$out['text'] .= '<p><pre>'.htmlentities($whois_server).'</pre></p>';
+			}
 			$out['text'] .= '<script> OIDplusPagePublicWhois.refresh_whois_url_bar(); </script>';
 		}
 	}
@@ -107,7 +133,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 		$json[] = array(
 			'id' => 'oidplus:whois',
 			'icon' => $tree_icon,
-			'text' => _L('Web WHOIS')
+			'text' => _L('WHOIS / OID-IP')
 		);
 
 		return true;
