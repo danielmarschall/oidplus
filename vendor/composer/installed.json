@@ -192,18 +192,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "0f6f43b78e7ffef69e23710e9e006c33d3d732bc"
+                "reference": "d84d6b602f318eb3f005971c81504350a5415e0f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/0f6f43b78e7ffef69e23710e9e006c33d3d732bc",
-                "reference": "0f6f43b78e7ffef69e23710e9e006c33d3d732bc",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/d84d6b602f318eb3f005971c81504350a5415e0f",
+                "reference": "d84d6b602f318eb3f005971c81504350a5415e0f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2022-01-09T19:10:13+00:00",
+            "time": "2022-03-08T01:24:14+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -708,8 +708,8 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "5.10.3",
-            "version_normalized": "5.10.3.0",
+            "version": "5.x-dev",
+            "version_normalized": "5.9999999.9999999.9999999-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",

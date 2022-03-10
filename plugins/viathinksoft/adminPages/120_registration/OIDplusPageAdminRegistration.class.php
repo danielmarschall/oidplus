@@ -141,7 +141,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			$query = self::QUERY_LIVESTATUS_V1;
 
 			$payload = array(
-				"query" => $query, // we must repeat the query because we want to sign it
+				"query" => $query, // we must include $query to the playload, because we want to sign it
 				"lang" => OIDplus::getCurrentLang(),
 				"system_id" => OIDplus::getSystemId(false)
 			);
@@ -246,7 +246,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				$query = self::QUERY_UNREGISTER_V1;
 
 				$payload = array(
-					"query" => $query, // we must repeat the query because we want to sign it
+					"query" => $query, // we must include $query to the payload, because we want to sign it
 					"system_id" => OIDplus::getSystemId(false)
 				);
 
@@ -334,7 +334,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				}
 			}
 			$payload = array(
-				"query" => $query, // we must repeat the query because we want to sign it
+				"query" => $query, // we must include $query to the payload, because we want to sign it
 				"privacy_level" => $privacy_level,
 				"system_id" => OIDplus::getSystemId(false),
 				"public_key" => OIDplus::config()->getValue('oidplus_public_key'),
