@@ -82,7 +82,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '0f6f43b78e7ffef69e23710e9e006c33d3d732bc',
+      'reference' => 'd84d6b602f318eb3f005971c81504350a5415e0f',
     ),
     'danielmarschall/uuid_mac_utils' => 
     array (
@@ -188,8 +188,8 @@ private static $installed = array (
     ),
     'tinymce/tinymce' => 
     array (
-      'pretty_version' => '5.10.3',
-      'version' => '5.10.3.0',
+      'pretty_version' => '5.x-dev',
+      'version' => '5.9999999.9999999.9999999-dev',
       'aliases' => 
       array (
       ),
