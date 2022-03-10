@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -359,7 +359,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				"signature" => base64_encode($signature)
 			);
 
-
 			if (!function_exists('curl_init')) {
 				return false; // throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 			}
@@ -410,6 +409,14 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				// Enforce a new registration attempt at the next page visit
 				// We will not try again here, because that might lead to an endless loop if the VTS server would always return 'HASH_CONFLCIT'
 				OIDplus::config()->setValue('reg_last_ping', 0);
+			} else if ($json['status'] == 0/*OK*/) {
+				// Note: whois.viathinksoft.de:43 uses VGWhoIs, which uses these patterns: https://github.com/danielmarschall/vgwhois/blob/master/main/pattern/oid
+				// If your system gets acknowledged by ViaThinkSoft, then vts_whois will be filled with that server name whois.viathinksoft.de:43
+				if (isset($json['vts_whois'])) OIDplus::config()->setValue('vts_whois', $json['vts_whois']);
+
+				// ViaThinkSoft certifies the system public key and other system attributes and root objects (requires human verification)
+				if (isset($json['vts_cert'])) OIDplus::config()->setValue('vts_cert', $json['vts_cert']);
+				if (isset($json['vts_ca'])) OIDplus::config()->setValue('vts_ca', $json['vts_ca']);
 			}
 		}
 	}
@@ -434,6 +441,15 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 		});
 		OIDplus::config()->prepareConfigKey('reg_last_ping', 'Last ping to ViaThinkSoft directory services', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
+
+		});
+		OIDplus::config()->prepareConfigKey('vts_whois', 'ViaThinkSoft Whois Server (if this system is recognized)', '', OIDplusConfig::PROTECTION_READONLY, function($value) {
+
+		});
+		OIDplus::config()->prepareConfigKey('vts_cert', 'ViaThinkSoft certificate (requires registration)', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
+
+		});
+		OIDplus::config()->prepareConfigKey('vts_ca', 'ViaThinkSoft certificate root (requires registration)', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
 
 		});
 		OIDplus::config()->prepareConfigKey('oobe_registration_done', '"Out Of Box Experience" wizard for OIDplusPageAdminRegistration done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
