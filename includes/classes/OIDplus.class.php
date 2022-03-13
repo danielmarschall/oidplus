@@ -956,7 +956,7 @@ class OIDplus extends OIDplusBaseClass {
 				)
 			);
 
-			// Give plugins the possibility to manipulate/extend the headers
+			// Give plugins the opportunity to manipulate/extend the headers
 
 			foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 				$plugin->httpHeaderCheck($http_headers);
@@ -1004,7 +1004,10 @@ class OIDplus extends OIDplusBaseClass {
 						$val = implode(', ', $val);
 					} else if (strtolower($name) == 'content-security-policy') {
 						if (count($val) == 0) continue;
-						foreach ($val as $tmp1 => &$tmp2) $tmp2 = $tmp1.' '.implode(' ', $tmp2);
+						foreach ($val as $tmp1 => &$tmp2) {
+							$tmp2 = array_unique($tmp2);
+							$tmp2 = $tmp1.' '.implode(' ', $tmp2);
+						}
 						$val = implode('; ', $val);
 					} else {
 						throw new OIDplusException(_L('HTTP header "%1" cannot be written as array. A newly installed plugin is probably misusing the method "%2".',$name,'httpHeaderCheck'));
@@ -1398,7 +1401,7 @@ class OIDplus extends OIDplusBaseClass {
 		if ($target === false) return false;
 		$tmp = substr($target, strlen($basedir)+1);
 		$res = str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // remove OS specific path delimiters introduced by realpath()
-		if (is_dir($target)) $res .= '/';
+		if (is_dir($target) && ($res != '')) $res .= '/';
 
 		// Third part: File name
 		$tmp = explode('/',$_SERVER['SCRIPT_NAME']);

@@ -103,6 +103,7 @@ class OIDplusGui extends OIDplusBaseClass {
 				echo ' '._L('or run <a href="%1">setup</a> again',OIDplus::webpath().'setup/');
 			}
 			echo '</p>';
+			echo self::getExceptionTechInfo($exception);
 			echo '</body></html>';
 		} else {
 			echo '<!DOCTYPE HTML>';
@@ -110,17 +111,21 @@ class OIDplusGui extends OIDplusBaseClass {
 			echo '<h1>'._L('OIDplus error').'</h1>';
 			// ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
 			echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
-			echo '<p><b>'._L('Technical information about the problem').':</b></p>';
-			echo '<pre>';
-			echo get_class($exception)."\n";
-			var_dump($exception->getFile());
-			var_dump($exception->getLine());
-			echo _L('at file %1 (line %2)',$exception->getFile(),"".$exception->getLine())."\n";
-			echo _L('Stacktrace').":\n";
-			echo $exception->getTraceAsString();
-			echo '</pre>';
+			echo self::getExceptionTechInfo($exception);
 			echo '</body></html>';
 		}
+	}
+
+	private static function getExceptionTechInfo($exception) {
+		$out = '';
+		$out .= '<p><b>'._L('Technical information about the problem').':</b></p>';
+		$out .= '<pre>';
+		$out .= get_class($exception)."\n";
+		$out .= _L('at file %1 (line %2)',$exception->getFile(),"".$exception->getLine())."\n\n";
+		$out .= _L('Stacktrace').":\n";
+		$out .= $exception->getTraceAsString();
+		$out .= '</pre>';
+		return $out;
 	}
 
 	public function tabBarStart() {
