@@ -4,7 +4,7 @@
 /**
 * WEID<=>OID Converter
 * (c) Webfan.de, ViaThinkSoft
-* Revision 2022-03-06
+* Revision 2022-03-13
 **/
 
 // What is a WEID?
@@ -30,13 +30,13 @@ var WeidOidConverter = {
 	weLuhnCheckDigit: function(str) {
 		// Padding zeros don't count to the check digit (December 2021)
 		var ary = str.split('-');
-		ary.forEach((o,i,a) => {
+		ary.forEach(function (o,i,a) {
 			if (a[i].match(/^0+$/)) {
 				a[i] = '0';
 			} else {
 				a[i] = a[i].replace(/^0+/, '');
 			}
-		} );
+		});
 		str = ary.join('-');
 
 		// remove separators from the WEID string
@@ -75,7 +75,7 @@ var WeidOidConverter = {
 			var elements = oid.split('.');
 
 			var fail = false;
-			elements.forEach((o,i,a) => {
+			elements.forEach(function (o,i,a) {
 				if (a[i].trim() == '') fail = true;
 
 				if (!a[i].match(/^\d+$/)) fail = true;
@@ -134,7 +134,7 @@ var WeidOidConverter = {
 		var elements = ((base != '') ? base.split('-') : []).concat(weid.split('-'));
 
 		var fail = false;
-		elements.forEach((o,i,a) => {
+		elements.forEach(function (o,i,a) {
 			if (a[i].trim() == '') fail = true;
 		});
 		if (fail) return false;
@@ -151,7 +151,7 @@ var WeidOidConverter = {
 			// e.g. weid:EXAMPLE-? becomes weid:EXAMPLE-3
 			weid = weid.replace('?', expected_checksum);
 		}
-		elements.forEach((o,i,a) => {
+		elements.forEach(function (o,i,a) {
 			a[i] = WeidOidConverter.base_convert_bigint(a[i], 36, 10);
 		});
 		var oid = elements.join('.');
@@ -173,7 +173,7 @@ var WeidOidConverter = {
 		var weidstr = null;
 		if (oid != '') {
 			var elements = oid.split('.');
-			elements.forEach((o,i,a) => {
+			elements.forEach(function (o,i,a) {
 				a[i] = WeidOidConverter.base_convert_bigint(a[i], 10, 36);
 			});
 			weidstr = elements.join("-");

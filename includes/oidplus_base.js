@@ -1,6 +1,6 @@
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,33 @@ String.prototype.htmlentities = function () {
 String.prototype.html_entity_decode = function () {
 	return $('<textarea />').html(this).text();
 };
+
+if (!String.prototype.replaceAll) {
+	/**
+	 * String.prototype.replaceAll() polyfill
+	 * https://gomakethings.com/how-to-replace-a-section-of-a-string-with-another-one-with-vanilla-js/
+	 * @author Chris Ferdinandi
+	 * @license MIT
+	 */
+	String.prototype.replaceAll = function(str, newStr){
+		// If a regex pattern
+		if (Object.prototype.toString.call(str).toLowerCase() === '[object regexp]') {
+			return this.replace(str, newStr);
+		}
+		// If a string
+		return this.replace(new RegExp(str, 'g'), newStr);
+	};
+}
+
+if (!String.prototype.startsWith) {
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith#polyfill
+	Object.defineProperty(String.prototype, 'startsWith', {
+		value: function(search, rawPos) {
+			var pos = rawPos > 0 ? rawPos|0 : 0;
+			return this.substring(pos, pos + search.length) === search;
+		}
+	});
+}
 
 function getMeta(metaName) {
 	const metas = $('meta[name='+metaName+']');
