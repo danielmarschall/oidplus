@@ -2342,6 +2342,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		HTTP header "%1" cannot be written as array. A newly installed plugin is probably misusing the method "%2".
+		]]></source>
+		<target><![CDATA[
+		Die HTTP-Kopfzeile "%1" kann nicht als Array geschrieben werden. Ein frisch installiertes Plugin verwendet die Methode "%2" möglicherweise falsch.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Hide
 		]]></source>
 		<target><![CDATA[
@@ -3730,6 +3738,14 @@
 		]]></source>
 		<target><![CDATA[
 		OID-Wurzelknoten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OID-IP / WHOIS
+		]]></source>
+		<target><![CDATA[
+		OID-IP / WHOIS
 		]]></target>
 	</message>
 	<message>
@@ -6874,14 +6890,6 @@
 		]]></source>
 		<target><![CDATA[
 		WEID-Notation
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		WHOIS / OID-IP
-		]]></source>
-		<target><![CDATA[
-		WHOIS / OID-IP
 		]]></target>
 	</message>
 	<message>
