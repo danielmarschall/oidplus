@@ -195,6 +195,13 @@ OIDplus::baseConfig()->setValue('EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
                          If this setting is not set, the last known absolute URL
                          will be remembered and used when a CLI call is made.
 
+OIDplus::baseConfig()->setValue('CANONICAL_SYSTEM_URL', '')
+                         If you want to have a canonical URL that is not equal to your
+                         system URL (which is either set by EXPLICIT_ABSOLUTE_SYSTEM_URL or automatically detected),
+                         then you need to define the URL of the system here.
+                         This can be useful if OIDplus runs on a system (which detects itself as "X"),
+                         while the canonical URL "Y" is a proxy.
+
 OIDplus::baseConfig()->setValue('DEBUG', false);
                          Enables some special checks for plugins (e.g. a self-test for auth plugins).
                          It is highly recommended that you enable DEBUG if you are developing
