@@ -13,9 +13,6 @@ Treeview / Navigation:
 - In the tree, let the operator create "shortcuts" to important OIDs?
 - Define "critical" OIDs which should always be visible; this means: the tree will always be extended so that these OIDs are shown?
 
-OID WHOIS:
-- Rename to "OID IP"
-
 SECURITY Improvements:
 - Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")
   and see which error message appears, or they could try to enter "plugin/adminPages/..." using the web browser and see if the result is HTTP 200 or HTTP 404.
@@ -81,7 +78,6 @@ SMALL THINGS
         $("#gotoedit").val(id);
 - Add show_waiting_anim() and hide_waiting_anim() to all AJAX queries, like it is done in plugin "Software update"
 - #gotobutton should have the same top and height as #gotoedit
-- Should plugins be able to change the "Content-Security-Policy" header (i.e. to include external JavaScripts frameworks)
 - RA address data: Country selection box like in OIDInfo
 	Possible data source: https://datahub.io/core/country-list#resource-data
 - offer signature checker tool to verify WHOIS responses
@@ -240,7 +236,7 @@ IDEAS
 - IPv4/IPv6 plugin: Should we allow that private IPs are put into categories (e.g. different physical locations having the same subnet?)
 - Like in OOBE, plugins should give the possibility to add an individual UI in the "oidplus:edit_config" page
 - Login area: The "administrator" node in the treeview could be clicked, leading to a page that contains a link to all sub pages (big icons ordered in a grid?)
-- "Invisible/service" plugin type, like page plugins, but they have no gui() method
+- "Invisible/service" plugin type, like page plugins, but they have no gui() method. They can be used for a simple task like extending HTTP headers
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie

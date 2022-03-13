@@ -133,7 +133,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 		$json[] = array(
 			'id' => 'oidplus:whois',
 			'icon' => $tree_icon,
-			'text' => _L('WHOIS / OID-IP')
+			'text' => _L('OID-IP / WHOIS')
 		);
 
 		return true;

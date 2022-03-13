@@ -1007,7 +1007,7 @@ class OIDplus extends OIDplusBaseClass {
 						foreach ($val as $tmp1 => &$tmp2) $tmp2 = $tmp1.' '.implode(' ', $tmp2);
 						$val = implode('; ', $val);
 					} else {
-						throw new OIDplusException(_L('HTTP header "%1" cannot be written as array. A newly installed plugin might have misused the header manipulation feature.',$name));
+						throw new OIDplusException(_L('HTTP header "%1" cannot be written as array. A newly installed plugin is probably misusing the method "%2".',$name,'httpHeaderCheck'));
 					}
 				}
 
