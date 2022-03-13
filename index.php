@@ -114,6 +114,7 @@ foreach ($plugins as $plugin) {
 
 	<link rel="stylesheet" href="oidplus.min.css.php<?php echo htmlentities($add_css_args); ?>">
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico.php">
+	<link rel="canonical" href="<?php echo OIDplus::canonicalURL(); ?>">
 </head>
 
 <body>

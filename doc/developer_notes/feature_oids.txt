@@ -2,6 +2,12 @@
 FEATURE OIDS ("Weak interfaces")
 ============
 
+TL;DR:	The system communicates with its plugins using normal PHP interfaces
+	or function calls.
+	Plugins communicate with other plugins using the OIDplusPlugin::implementsFeature()
+	function, which provides a way of "optional" interfaces that do not raise
+	an Exception if they are missing.
+
 PHP classes belonging to the OIDplus system (such as the class handling the tree menu structure,
 the sitemap, the AJAX handling, etc) are communicating to plugins the "normal way", i.e.
 the plugin class defines a function which is called by the OIDplus system.
@@ -63,8 +69,3 @@ Interface <1.3.6.1.4.1.37476.2.5.2.3.6> {
 	// called by publicPages/000_objects
 	public function gridGeneratorLinks($objParent);
 }
-
-
-TL;DR:
-Plugins communicate with other plugins using the OIDplusPlugin::implementsFeature()
-function, which provide a way of "optional" interfaces.

@@ -97,7 +97,7 @@ foreach ($dos_ids as $oid => $dos_id) {
 	}
 
 	if ($oid == '') {
-		// TODO: Split in single parent OIDs
+		// TODO: Split our OIDplus root OIDs into the real OID tree (1, 1.3, 1.3.6, ...)
 		$cont .= "DESCHere, you can find the root OIDs.\r\n";
 	} else {
 		$res = OIDplus::db()->query("select * from ###objects where id = 'oid:$oid';");

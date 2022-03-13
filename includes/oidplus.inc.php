@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,24 +61,6 @@ if (count($missing_dependencies) >= 1) {
 unset($missing_dependencies);
 
 // Now we can continue!
-
-if (PHP_SAPI != 'cli') {
-	// TODO: Plugins should be able to extend CSP
-	header('X-Content-Type-Options: nosniff');
-	header('X-XSS-Protection: 1; mode=block');
-	header("Content-Security-Policy: default-src 'self' blob: https://fonts.gstatic.com https://www.google.com/ https://www.gstatic.com/ https://cdnjs.cloudflare.com/; ".
-	       "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com/; ".
-	       "img-src blob: data: http: https:; ".
-	       "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.google.com/ https://www.gstatic.com/ https://cdnjs.cloudflare.com/ https://polyfill.io/; ".
-	       "frame-ancestors 'none'; ".
-	       "object-src 'none'");
-	header('X-Frame-Options: SAMEORIGIN');
-	header('Referrer-Policy: no-referrer-when-downgrade');
-	header('Cache-control: no-cache');
-	header('Cache-control: no-store');
-	header('Pragma: no-cache');
-	header('Expires: 0');
-}
 
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/oid_utils.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/xml_utils.inc.php';

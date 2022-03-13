@@ -328,3 +328,11 @@ function url_get_contents($url) {
 	}
 	return $res;
 }
+
+function getSortedQuery() {
+	// https://stackoverflow.com/a/51777249/488539
+	$url = [];
+	parse_str($_SERVER['QUERY_STRING'], $url);
+	ksort($url);
+	return http_build_query($url);
+}

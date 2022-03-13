@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,16 @@ class OIDplus extends OIDplusBaseClass {
 	protected static $html = true;
 
 	/*public*/ const DEFAULT_LANGUAGE = 'enus'; // the language of the source code
+
+	// These plugin types can contain HTML code and therefore may
+	// emit (non-setup) CSS/JS code via their manifest.
+	/*public*/ const INTERACTIVE_PLUGIN_TYPES = array(
+		'publicPages',
+		'raPages',
+		'adminPages',
+		'objectTypes',
+		'captcha'
+	);
 
 	private function __construct() {
 	}
@@ -750,7 +760,7 @@ class OIDplus extends OIDplusBaseClass {
 					}
 				}
 
-				// TODO: Maybe as additional plugin-test, we should also check if plugins are allowed to define CSS/JS (since only page plugins may have them!)
+				// TODO: Maybe as additional plugin-test, we should also check if plugins are allowed to define CSS/JS, i.e. the plugin type is element of OIDplus::INTERACTIVE_PLUGIN_TYPES
 				$tmp = array_merge(
 					$manifest->getJSFiles(),
 					$manifest->getCSSFiles(),
@@ -788,6 +798,7 @@ class OIDplus extends OIDplusBaseClass {
 		// Reset internal state, so we can re-init verything if required
 
 		if (self::$old_config_format) {
+			// We need to do this, because define() cannot be undone
 			// Note: This can only happen in very special cases (e.g. test cases) where you call init() twice
 			throw new OIDplusConfigInitializationException(_L('A full re-initialization is not possible if a version 2.0 config file (containing "defines") is used. Please update to a config 2.1 file by running setup again.'));
 		}
@@ -837,13 +848,6 @@ class OIDplus extends OIDplusBaseClass {
 			$plugin->init($html);
 		}
 
-		// CAPTCHA plugins
-
-		self::registerAllPlugins('captcha', 'OIDplusCaptchaPlugin', array('OIDplus','registerCaptchaPlugin'));
-		foreach (OIDplus::getCaptchaPlugins() as $plugin) {
-			$plugin->init($html);
-		}
-
 		// Do redirect stuff etc.
 
 		self::isSslAvailable(); // This function does automatic redirects
@@ -864,6 +868,7 @@ class OIDplus extends OIDplusBaseClass {
 		self::registerAllPlugins('objectTypes', 'OIDplusObjectTypePlugin', array('OIDplus','registerObjectTypePlugin'));
 		self::registerAllPlugins('language', 'OIDplusLanguagePlugin', array('OIDplus','registerLanguagePlugin'));
 		self::registerAllPlugins('design', 'OIDplusDesignPlugin', array('OIDplus','registerDesignPlugin'));
+		self::registerAllPlugins('captcha', 'OIDplusCaptchaPlugin', array('OIDplus','registerCaptchaPlugin'));
 
 		// Initialize non-DB plugins
 
@@ -885,6 +890,133 @@ class OIDplus extends OIDplusBaseClass {
 		foreach (OIDplus::getDesignPlugins() as $plugin) {
 			$plugin->init($html);
 		}
+		foreach (OIDplus::getCaptchaPlugins() as $plugin) {
+			$plugin->init($html);
+		}
+
+		if (PHP_SAPI != 'cli') {
+
+			// Prepare some security related response headers (default values)
+
+			$content_language =
+				strtolower(substr(OIDplus::getCurrentLang(),0,2)) . '-' .
+				strtoupper(substr(OIDplus::getCurrentLang(),2,2)); // e.g. 'en-US'
+
+			$http_headers = array(
+				"X-Content-Type-Options" => "nosniff",
+				"X-XSS-Protection" => "1; mode=block",
+				"X-Frame-Options" => "SAMEORIGIN",
+				"Referrer-Policy" => array(
+					"no-referrer-when-downgrade"
+				),
+				"Cache-Control" => array(
+					"no-cache",
+					"no-store",
+					"must-revalidate"
+				),
+				"Pragma" => "no-cache",
+				"Content-Language" => $content_language,
+				"Expires" => "0",
+				"Content-Security-Policy" => array(
+					"default-src" => array(
+						"'self'",
+						"blob:",
+						"https://fonts.gstatic.com",
+						"https://www.google.com/",
+						"https://www.gstatic.com/",
+						"https://cdnjs.cloudflare.com/"
+					),
+					"style-src" => array(
+						"'self'",
+						"'unsafe-inline'",
+						"https://cdnjs.cloudflare.com/"
+					),
+					"img-src" => array(
+					       "blob:",
+						"data:",
+						"http:",
+						"https:"
+					),
+					"script-src" => array(
+						"'self'",
+						"'unsafe-inline'",
+						"'unsafe-eval'",
+						"blob:",
+						"https://www.google.com/",
+						"https://www.gstatic.com/",
+						"https://cdnjs.cloudflare.com/",
+						"https://polyfill.io/"
+					),
+					"frame-ancestors" => array(
+					       "'none'"
+					),
+					"object-src" => array(
+					       "'none'"
+					)
+				)
+			);
+
+			// Give plugins the possibility to manipulate/extend the headers
+
+			foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
+				$plugin->httpHeaderCheck($http_headers);
+			}
+			foreach (OIDplus::getDatabasePlugins() as $plugin) {
+				$plugin->httpHeaderCheck($http_headers);
+			}
+			foreach (OIDplus::getPagePlugins() as $plugin) {
+				$plugin->httpHeaderCheck($http_headers);
+			}
+			foreach (OIDplus::getAuthPlugins() as $plugin) {
+				$plugin->httpHeaderCheck($http_headers);
+			}
+			foreach (OIDplus::getLoggerPlugins() as $plugin) {
+				$plugin->httpHeaderCheck($http_headers);
+			}
+			foreach (OIDplus::getObjectTypePlugins() as $plugin) {
+				$plugin->httpHeaderCheck($http_headers);
+			}
+			foreach (OIDplus::getLanguagePlugins() as $plugin) {
+				$plugin->httpHeaderCheck($http_headers);
+			}
+			foreach (OIDplus::getDesignPlugins() as $plugin) {
+				$plugin->httpHeaderCheck($http_headers);
+			}
+			foreach (OIDplus::getCaptchaPlugins() as $plugin) {
+				$plugin->httpHeaderCheck($http_headers);
+			}
+
+			// Prepare to send the headers to the client
+			// The headers are sent automatically when the first output comes or the script ends
+
+			foreach ($http_headers as $name => $val) {
+
+				// Plugins can remove standard OIDplus headers by setting the value to null.
+				if (is_null($val)) continue; /** @phpstan-ignore-line */
+
+				// Some headers can be written as arrays to make it easier for plugin authors
+				// to manipulate/extend the contents.
+				if (is_array($val)) {
+					if ((strtolower($name) == 'cache-control') ||
+					    (strtolower($name) == 'referrer-policy'))
+					{
+						if (count($val) == 0) continue;
+						$val = implode(', ', $val);
+					} else if (strtolower($name) == 'content-security-policy') {
+						if (count($val) == 0) continue;
+						foreach ($val as $tmp1 => &$tmp2) $tmp2 = $tmp1.' '.implode(' ', $tmp2);
+						$val = implode('; ', $val);
+					} else {
+						throw new OIDplusException(_L('HTTP header "%1" cannot be written as array. A newly installed plugin might have misused the header manipulation feature.',$name));
+					}
+				}
+
+				if (is_string($val)) {
+					header("$name: $val");
+				}
+			}
+
+		} // endif (PHP_SAPI != 'cli')
 
 		// Initialize other stuff (i.e. things which require the logger!)
 
@@ -925,49 +1057,44 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	private static function getSystemUrl($relative=false) {
-		if (!$relative) {
+		if ($relative) {
+			$steps_up = self::getExecutingScriptPathDepth();
+			if ($steps_up === false) {
+				return false;
+			} else {
+				return str_repeat('../', $steps_up);
+			}
+		} else {
 			$res = OIDplus::baseConfig()->getValue('EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
 			if ($res !== '') {
 				return rtrim($res,'/').'/';
 			}
+
 			if (PHP_SAPI == 'cli') {
 				try {
 					return OIDplus::config()->getValue('last_known_system_url', false);
 				} catch (Exception $e) {
 					return false;
 				}
-			}
-		}
-
-		// First, try to find out how many levels we need to go up
-		$steps_up = self::getExecutingScriptPathDepth();
-		if ($steps_up === false) return false;
-
-		// Now go up these amount of levels, based on SCRIPT_NAME/argv[0]
-		if (PHP_SAPI == 'cli') {
-			if ($relative) {
-				return str_repeat('../',$steps_up);
 			} else {
-				return false;
-			}
-		} else {
-			$res = dirname($_SERVER['SCRIPT_NAME'].'index.php'); // This fake 'index.php' ensures that SCRIPT_NAME does not end with '/', which would make dirname() fail
-			for ($i=0; $i<$steps_up; $i++) {
-				$res = dirname($res);
-			}
-			$res = str_replace('\\', '/', $res);
-			if ($res == '/') $res = '';
-			$res .= '/';
+				// First, try to find out how many levels we need to go up
+				$steps_up = self::getExecutingScriptPathDepth();
 
-			// Do we want to have an absolute URI?
-			if (!$relative) {
+				// Then go up these amount of levels, based on SCRIPT_NAME/argv[0]
+				$res = dirname($_SERVER['SCRIPT_NAME'].'index.php'); // This fake 'index.php' ensures that SCRIPT_NAME does not end with '/', which would make dirname() fail
+				for ($i=0; $i<$steps_up; $i++) {
+					$res = dirname($res);
+				}
+				$res = str_replace('\\', '/', $res);
+				if ($res == '/') $res = '';
+
+				// Add protocol and hostname
 				$is_ssl = self::isSSL();
 				$protocol = $is_ssl ? 'https' : 'http'; // do not translate
 				$host = $_SERVER['HTTP_HOST']; // includes port if it is not 80/443
-				$res = $protocol.'://'.$host.$res;
-			}
 
-			return $res;
+				return $protocol.'://'.$host.$res.'/';
+			}
 		}
 	}
 
@@ -1242,7 +1369,7 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	public static function webpath($target=null, $relative=false) {
 		$res = self::getSystemUrl($relative); // Note: already contains a trailing path delimiter
-		if (!$res) return false;
+		if ($res === false) return false;
 
 		if (!is_null($target)) {
 			$basedir = realpath(__DIR__.'/../../');
@@ -1254,6 +1381,34 @@ class OIDplus extends OIDplusBaseClass {
 		}
 
 		return $res;
+	}
+
+	public static function canonicalURL() {
+		// First part: OIDplus system URL (or canonical system URL)
+		$sysurl = OIDplus::baseConfig()->getValue('CANONICAL_SYSTEM_URL', '');
+		if ($sysurl !== '') {
+			$sysurl = rtrim($sysurl,'/').'/';
+		} else {
+			$sysurl = OIDplus::getSystemUrl();
+		}
+
+		// Second part: Directory
+		$basedir = realpath(__DIR__.'/../../');
+		$target = realpath('.');
+		if ($target === false) return false;
+		$tmp = substr($target, strlen($basedir)+1);
+		$res = str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // remove OS specific path delimiters introduced by realpath()
+		if (is_dir($target)) $res .= '/';
+
+		// Third part: File name
+		$tmp = explode('/',$_SERVER['SCRIPT_NAME']);
+		$tmp = end($tmp);
+
+		// Fourth part: Query string (ordered)
+		$tmp2 = getSortedQuery();
+		if ($tmp2 != '') $tmp2 = '?'.$tmp2;
+
+		return $sysurl.$res.$tmp.$tmp2;
 	}
 
 	private static $shutdown_functions = array();

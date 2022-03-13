@@ -36,4 +36,6 @@ abstract class OIDplusPlugin extends OIDplusBaseClass {
 
 	public function init($html=true) {}
 
+	public function httpHeaderCheck(&$http_headers) {}
+
 }
