@@ -72,12 +72,30 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 			if ($ret === false) $ret = null;
 		}
 		if ($ret) $this->countAlreadyFetched++;
+
+		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
+		// We can't quote every single column throughout the whole program, so we use this workaround...
+		if ($ret) {
+			$keys = array_keys($ret);
+			foreach($keys as $key) {
+				$ret[strtolower($key)]=$ret[$key];
+				$ret[strtoupper($key)]=$ret[$key];
+			}
+		}
+
 		return $ret;
 	}
 
 	private static function array_to_stdobj($ary) {
 		$obj = new stdClass;
 		foreach ($ary as $name => $val) {
+			$obj->$name = $val;
+
+			// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
+			// We can't quote every single column throughout the whole program, so we use this workaround...
+			$name = strtolower($name);
+			$obj->$name = $val;
+			$name = strtoupper($name);
 			$obj->$name = $val;
 		}
 		return $obj;

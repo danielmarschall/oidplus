@@ -3,7 +3,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -131,7 +131,7 @@ function dotest($db) {
 		}
 
 		// --- "Num rows" handling
-		
+
 		$res = $db->query("select id from ###objects where parent = ? order by id", array('test:XXXXXXXXX'));
 		try {
 			$num_rows = $res->num_rows();
@@ -163,7 +163,7 @@ function dotest($db) {
 		echo "Fetch after EOF gives null: " . (is_null($next) ? greentext('PASSED') : redtext('FAILED'))."\n";
 
 		// --- Simultanous prepared statements
-		
+
 		$errmsg = '';
 		try {
 			$res = $db->query("select id from ###objects where parent = ? order by id", array('test:1'));
@@ -182,20 +182,20 @@ function dotest($db) {
 			$errmsg = ' ('.$e->getMessage().')';
 		}
 		echo "Simultanous prepared statements: ".($passed ? greentext('PASSED') : redtext('FAILED'))."$errmsg\n";
-		
+
 		if (!$passed) {
 			// We cannot continue because the connection is in a state that cannot be recovered easily
 			echo "Cancelled!\n\n";
 			return;
 		}
-		
+
 		// --- Exception handling
 
 		try {
 			$db->query("SELECT * from ABCDEF");
 			echo "Exception for DirectQuery: ".redtext('FAILED').", no Exception thrown\n";
 		} catch (Exception $e) {
-			if (strpos($e->getMessage(), 'ABCDEF') !== false) {
+			if ((strpos($e->getMessage(), 'ABCDEF') !== false) || is_known_errormsg($e->getMessage())) {
 				echo "Exception for DirectQuery: ".greentext('PASSED')."\n";
 			} else {
 				echo "Exception for DirectQuery: ".redtext('FAILED').", does probably not contain DBMS error string\n";
@@ -203,7 +203,7 @@ function dotest($db) {
 		}
 
 		$msg = $db->error();
-		if (strpos($msg, 'ABCDEF') !== false) {
+		if ((strpos($msg, 'ABCDEF') !== false) || is_known_errormsg($msg)) {
 			echo "Error-Function after failed direct query: ".greentext('PASSED')."\n";
 		} else {
 			echo "Error-Function after failed direct query: ".redtext('FAILED').", does probably not contain DBMS error string ($msg)\n";
@@ -213,7 +213,7 @@ function dotest($db) {
 			$db->query("SELECT * from FEDCBA", array(''));
 			echo "Exception for PreparedQuery: ".redtext('FAILED').", no Exception thrown\n";
 		} catch (Exception $e) {
-			if (strpos($e->getMessage(), 'FEDCBA') !== false) {
+			if ((strpos($e->getMessage(), 'FEDCBA') !== false) || is_known_errormsg($e->getMessage())) {
 				echo "Exception for PreparedQuery: ".greentext('PASSED')."\n";
 			} else {
 				echo "Exception for PreparedQuery: ".redtext('FAILED').", does probably not contain DBMS error string\n";
@@ -221,7 +221,7 @@ function dotest($db) {
 		}
 
 		$msg = $db->error();
-		if (strpos($msg, 'FEDCBA') !== false) {
+		if ((strpos($msg, 'FEDCBA') !== false) || is_known_errormsg($msg)) {
 			echo "Error-Function after failed prepared query: ".greentext('PASSED')."\n";
 		} else {
 			echo "Error-Function after failed prepared query: ".redtext('FAILED').", does probably not contain DBMS error string ($msg)\n";
@@ -268,9 +268,9 @@ function dotest($db) {
 		$res = $db->query("select * from ###objects where id = 'test:1.1' and confidential = 0"); // NOTE: DO NOT USE THIS IN THE SOURCE CODE! Always use prepared statements for constant booleans
 		$val = $res->fetch_object();
 		echo "Boolean handling FALSE with normal statement (where): " . ($val ? greentext('PASSED') : redtext('FAILED'))."\n";
-		
+
 		// --- Check if transactions work
-		
+
 		if ($db->transaction_supported()) {
 			echo "Transaction support: " . greentext('Supported') ."\n";
 
@@ -353,4 +353,15 @@ function greentext($str) {
 	global $num_succ;
 	$num_succ++;
 	return PHP_SAPI == 'cli' ? "\033[32m$str\033[0m" : '<font color="green">'.$str.'</font>';
+}
+
+function is_known_errormsg($msg) {
+	// Oracle:
+	//Error-Function after failed direct query:
+	//	==> OCIStmtExecute: ORA-00942: table or view does not exist  (ext\pdo_oci\oci_statement.c:155)
+	//Error-Function after failed prepared query:
+	//	==> OCIBindByPos: ORA-01036: illegal variable name/number (ext\pdo_oci\oci_statement.c:346)
+	if (strpos($msg,': ORA-') !== false) return true;
+
+	return false;
 }

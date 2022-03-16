@@ -86,6 +86,17 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 				if ($value === chr(1)) $value = 1;
 			}
 		}
+
+		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
+		// We can't quote every single column throughout the whole program, so we use this workaround...
+		if ($ret) {
+			$keys = array_keys($ret);
+			foreach($keys as $key) {
+				$ret[strtolower($key)]=$ret[$key];
+				$ret[strtoupper($key)]=$ret[$key];
+			}
+		}
+
 		return $ret;
 	}
 
@@ -101,6 +112,16 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 				if ($value === chr(1)) $value = 1;
 			}
 		}
+
+		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
+		// We can't quote every single column throughout the whole program, so we use this workaround...
+		if ($ret) {
+			foreach ($ret as $name => $val) {
+				$ret->{strtoupper($name)} = $val;
+				$ret->{strtolower($name)} = $val;
+			}
+		}
+
 		return $ret;
 	}
 }

@@ -588,7 +588,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// ---
 
-			if (!is_null($row) && isset($row['description'])) {
+			// DM 16.03.2022 commented out isset() because Oracle does not set 'description' if it is NULL?!
+			if (!is_null($row)/* && isset($row['description'])*/) {
 				if (empty($row['description'])) {
 					if (empty($row['title'])) {
 						$desc = '<p><i>'._L('No description for this object available').'</i></p>';

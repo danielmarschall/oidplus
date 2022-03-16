@@ -1,0 +1,48 @@
+
+Easy setup for Oracle DB testing
+================================
+
+Setup OracleDB Virtual Machine
+------------------------------
+
+Download "DeveloperDaysVM2019-05-31_20.ova" at https://www.oracle.com/database/technologies/databaseappdev-vm.html
+
+Import OVA in Oracle VirtualBox
+
+Boot Virtual Machine
+
+Set network mode to "Network bridge"
+
+...... (create / unlock user? hr user?)
+
+Inside the VM, run "ifconfig" to see the IP address of eth0
+
+Inside the VM, edit /u01/app/oracle/product/version/db_1/network/admin/listener.ora
+(this is required so that you can connect to the PDB)
+==> Added "USE_SID_AS_SERVICE_LISTENER=on"
+
+Open sqlplus (cli), login as "hr" with password "hr"
+	then paste the struct SQL files from OIDplus
+
+
+On the OIDplus machine (e.g. Windows)
+-------------------------------------
+
+On the OIDplus machine, download
+	https://www.oracle.com/de/database/technologies/instant-client/winx64-64-downloads.html
+	instantclient-basic-windows.x64-21.3.0.0.0
+and extract it anywhere.
+
+Extend the PATH environment variable by adding the directory where you extracted the instantclient
+
+In the php.ini , enable the extension php_pdo_oci
+
+At OIDplus, edit userdata/baseconfig/config.inc.php:
+	(IP-Address 192.168.69.221 is an example)
+	OIDplus::baseConfig()->setValue('DATABASE_PLUGIN',   'PDO');
+	OIDplus::baseConfig()->setValue('PDO_DSN',           "oci:dbname=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.69.221)(PORT = 1521)))(CONNECT_DATA = (SID = orcl)))");
+	OIDplus::baseConfig()->setValue('PDO_USERNAME',      "HR");
+	OIDplus::baseConfig()->setValue('PDO_PASSWORD',      "hr");
+	OIDplus::baseConfig()->setValue('TABLENAME_PREFIX',  '');
+
+Note: orcl is the PDB (pluggable database) and orclcdb is the CDB (container)
