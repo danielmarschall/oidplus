@@ -35,4 +35,4 @@ var OIDplusObjectTypePluginGuid = {
 	    $("#id").val(uuid);
 	}
 
-}
+};

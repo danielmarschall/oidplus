@@ -27,4 +27,4 @@ var OIDplusCaptchaPluginNone = {
 		// Nothing here
 	}
 
-}
+};

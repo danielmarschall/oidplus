@@ -97,4 +97,4 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 
 	}
 
-}
+};
