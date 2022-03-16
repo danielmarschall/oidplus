@@ -27,4 +27,4 @@ var OIDplusCaptchaPluginRecaptcha = {
 		if ($(".g-recaptcha").length > 0) grecaptcha.reset();
 	}
 
-}
+};

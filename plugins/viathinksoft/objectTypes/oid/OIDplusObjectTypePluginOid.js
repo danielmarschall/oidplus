@@ -56,5 +56,4 @@ var OIDplusObjectTypePluginOid = {
 		});
 	}
 
-}
-
+};
