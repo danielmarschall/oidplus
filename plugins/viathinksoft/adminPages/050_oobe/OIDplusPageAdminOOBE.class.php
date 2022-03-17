@@ -44,6 +44,11 @@ class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 		OIDplus::config()->delete('reg_wizard_done');
 		OIDplus::config()->prepareConfigKey('oobe_main_done', '"Out Of Box Experience" wizard for the system settings done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 
+		// In the OOBE, "get_challenge" of the ViaThinkSoft Captcha will raise the error:
+		// "A plugin has requested that the initialization wizard (OOBE) is shown. Please reload the page."
+		// So we must not continue if the referrer is OOBE.
+		if (isset($_SERVER['HTTP_REFERER']) && (strpos($_SERVER['HTTP_REFERER'],'050_oobe/oobe.php') !== false)) return;
+
 		if ($this->oobeRequired()) {
 			// Show registration/configuration wizard once
 			if ($html) {
