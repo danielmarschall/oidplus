@@ -7,7 +7,7 @@
 	<type>OIDplusSqlSlangPlugin</type>
 
 	<info>
-		<name>Oracle PL/SQL dialect</name>
+		<name>Oracle DB SQL dialect</name>
 		<author>ViaThinkSoft</author>
 		<version />
 		<descriptionHTML />
