@@ -94,7 +94,7 @@ class OIDplusGs1 extends OIDplusObject {
 			$title = OIDplusGs1::objectTypeTitle();
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				$content  = _L('Please select an item in the tree view at the left to show its contents.');
 			} else {
 				$content  = _L('Currently, no GS1 based numbers are registered in the system.');
@@ -142,11 +142,11 @@ class OIDplusGs1 extends OIDplusObject {
 		$curid = 'gs1:'.$this->number;
 
 		$res = OIDplus::db()->query("select id, title from ###objects where id = ?", array($curid));
-		if ($res->num_rows() == 0) return $this->number;
+		if (!$res->any()) return $this->number;
 
 		$hints = array();
 		$lengths = array(strlen($curid));
-		while (($res = OIDplus::db()->query("select parent, title from ###objects where id = ?", array($curid)))->num_rows() > 0) {
+		while (($res = OIDplus::db()->query("select parent, title from ###objects where id = ?", array($curid)))->any()) {
 			$row = $res->fetch_array();
 			$curid = $row['parent'];
 			$hints[] = $row['title'];

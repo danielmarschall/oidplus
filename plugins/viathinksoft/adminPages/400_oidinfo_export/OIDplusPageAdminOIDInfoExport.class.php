@@ -357,7 +357,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 								$url .= "&current_registrant_email=".urlencode($row->ra_email);
 
 								$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array($row->ra_email));
-								if ($res2->num_rows() > 0) {
+								if ($res2->any()) {
 									$row2 = $res2->fetch_object();
 
 									$tmp = array();
@@ -762,7 +762,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				$elements['current-registrant']['address'] = '';
 
 				$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array($row->ra_email));
-				if ($res2->num_rows() > 0) {
+				if ($res2->any()) {
 					$row2 = $res2->fetch_object();
 
 					$tmp = array();
@@ -951,7 +951,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 			if ($orphan_mode === self::ORPHAN_DISALLOW_ORPHANS) {
 				$res = OIDplus::db()->query("select * from ###objects where id = ?", array($parent));
-				if ($res->num_rows() === 0) {
+				if (!$res->any()) {
 					$errors[] = _L('Cannot import %1, because its parent is not in the database.',$dot_notation);
 					$count_errors++;
 					continue;
@@ -959,7 +959,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 
 			$res = OIDplus::db()->query("select * from ###objects where id = ?", array($id));
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				if ($replaceExistingOIDs) {
 					// TODO: better do this (and the following insert) as transaction
 					OIDplus::db()->query("delete from ###asn1id where oid = ?", array($id));
@@ -1034,7 +1034,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			// De-orphanize if neccessary
 			if ($orphan_mode === self::ORPHAN_AUTO_DEORPHAN) {
 				$res = OIDplus::db()->query("select * from ###objects where id = ? and parent not in (select id from ###objects)", array($id));
-				if ($res->num_rows() > 0) {
+				if ($res->any()) {
 					$errors[] = _L("%1 was de-orphaned (placed as root OID) because its parent is not existing.",$id);
 					$count_warnings++;
 					OIDplus::db()->query("update ###objects set parent = 'oid:' where id = ? and parent not in (select id from ###objects)", array($id));

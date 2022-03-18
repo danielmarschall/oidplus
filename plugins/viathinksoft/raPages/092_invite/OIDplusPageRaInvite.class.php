@@ -154,7 +154,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$out['icon'] = OIDplus::webpath(__DIR__).'activate_ra_big.png';
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				$out['text'] = _L('This RA is already registered and does not need to be invited.');
 			} else {
 				if (!OIDplus::authUtils()->validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
@@ -186,7 +186,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 	private function inviteSecurityCheck($email) {
 		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
-		if ($res->num_rows() > 0) {
+		if ($res->any()) {
 			throw new OIDplusException(_L('This RA is already registered and does not need to be invited.'));
 		}
 

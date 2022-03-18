@@ -58,7 +58,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','DELETE',$id));
 
-			if (OIDplus::db()->query("select id from ###objects where id = ?", array($id))->num_rows() == 0) {
+			if (!OIDplus::db()->query("select id from ###objects where id = ?", array($id))->any()) {
 				throw new OIDplusException(_L('Object %1 does not exist',$id));
 			}
 
@@ -88,7 +88,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					$res = OIDplus::db()->query("select tchild.id from ###objects tchild " .
 					                            "left join ###objects tparent on tparent.id = tchild.parent " .
 					                            "where tchild.parent <> ? and tchild.id like ? and tparent.id is null;", array($ot::root(), $ot::root().'%'));
-					if ($res->num_rows() == 0) break;
+					if (!$res->any()) break;
 
 					while ($row = $res->fetch_array()) {
 						$id_to_delete = $row['id'];
@@ -122,7 +122,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE',$id));
 
-			if (OIDplus::db()->query("select id from ###objects where id = ?", array($id))->num_rows() == 0) {
+			if (!OIDplus::db()->query("select id from ###objects where id = ?", array($id))->any()) {
 				throw new OIDplusException(_L('Object %1 does not exist',$id));
 			}
 
@@ -226,7 +226,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (!empty($new_ra)) {
 				$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($new_ra));
 				$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
-				if ($res->num_rows() == 0) $status = !is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
+				if (!$res->any()) $status = !is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 			}
 
 			if ($obj::ns() == 'oid') {
@@ -254,7 +254,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE2',$id));
 
-			if (OIDplus::db()->query("select id from ###objects where id = ?", array($id))->num_rows() == 0) {
+			if (!OIDplus::db()->query("select id from ###objects where id = ?", array($id))->any()) {
 				throw new OIDplusException(_L('Object %1 does not exist',$id));
 			}
 
@@ -314,7 +314,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$objParent = OIDplusObject::parse($params['parent']);
 			if ($objParent === null) throw new OIDplusException(_L('%1 action failed because parent object "%2" cannot be parsed!','INSERT',$params['parent']));
 
-			if (!$objParent->isRoot() && (OIDplus::db()->query("select id from ###objects where id = ?", array($objParent->nodeId()))->num_rows() == 0)) {
+			if (!$objParent->isRoot() && (!OIDplus::db()->query("select id from ###objects where id = ?", array($objParent->nodeId()))->any())) {
 				throw new OIDplusException(_L('Parent object %1 does not exist','".($objParent->nodeId())."'));
 			}
 
@@ -344,7 +344,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// Check, if the OID exists
 			$test = OIDplus::db()->query("select id from ###objects where id = ?", array($id));
-			if ($test->num_rows() >= 1) {
+			if ($test->any()) {
 				throw new OIDplusException(_L('Object %1 already exists!',$id));
 			}
 
@@ -426,7 +426,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				// Do we need to notify that the RA does not exist?
 				$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($ra_email));
 				$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
-				if ($res->num_rows() == 0) $status = !is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
+				if (!$res->any()) $status = !is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
 			}
 
 			if ($obj::ns() == 'oid') {
@@ -527,7 +527,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						break;
 					} else {
 						$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
-						if ($res->num_rows() == 0) {
+						if (!$res->any()) {
 							http_response_code(404);
 							$out['title'] = _L('Object not found');
 							$out['icon'] = 'img/error_big.png';
@@ -561,14 +561,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 				} else {
 					$res_ = OIDplus::db()->query("select * from ###objects where id = ?", array($parent->nodeId()));
-					if ($res_->num_rows() > 0) {
+					if ($res_->any()) {
 						$row_ = $res_->fetch_array();
 
 						$parent_title = $row_['title'];
 						if (empty($parent_title) && ($parent->ns() == 'oid')) {
 							// If not title is available, then use an ASN.1 identifier
 							$res_ = OIDplus::db()->query("select name from ###asn1id where oid = ?", array($parent->nodeId()));
-							if ($res_->num_rows() > 0) {
+							if ($res_->any()) {
 								$row_ = $res_->fetch_array();
 								$parent_title = $row_['name']; // TODO: multiple ASN1 ids?
 							}
@@ -741,7 +741,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				while (true) {
 					$path[] = $goto;
 					$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($goto));
-					if ($res->num_rows() == 0) break;
+					if (!$res->any()) break;
 					$row = $res->fetch_array();
 					$goto = $row['parent'];
 					if ($goto == '') continue;
@@ -931,7 +931,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		}
 
 		$result = OIDplus::db()->query("select * from ###objects where id = ?", array($parent));
-		$parent_ra_email = $result->num_rows() > 0 ? $result->fetch_object()->ra_email : '';
+		$parent_ra_email = $result->any() ? $result->fetch_object()->ra_email : '';
 
 		// "Create OID" row
 		if ($objParent->userHasWriteRights()) {

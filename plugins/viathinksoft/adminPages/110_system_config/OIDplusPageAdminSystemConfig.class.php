@@ -34,7 +34,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 			$value = $params['value'];
 
 			$res = OIDplus::db()->query("select protected, visible from ###config where name = ?", array($name));
-			if ($res->num_rows() == 0) {
+			if (!$res->any()) {
 				throw new OIDplusException(_L('Setting does not exist'));
 			}
 			$row = $res->fetch_array();

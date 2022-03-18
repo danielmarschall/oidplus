@@ -154,7 +154,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 	private function getForgotPasswordText($email) {
 		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
-		if ($res->num_rows() == 0) {
+		if (!$res->any()) {
 			throw new OIDplusException(_L('This RA does not exist.'));
 		}
 

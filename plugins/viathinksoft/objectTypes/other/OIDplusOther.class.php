@@ -99,7 +99,7 @@ class OIDplusOther extends OIDplusObject {
 			$title = OIDplusOther::objectTypeTitle();
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				$content  = _L('Please select an object in the tree view at the left to show its contents.');
 			} else {
 				$content  = _L('Currently, no misc. objects are registered in the system.');

@@ -38,7 +38,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 
 			$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event from ###log lo ".
 			                            "order by lo.unix_ts desc");
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				$out['text'] = '<pre>';
 				while ($row = $res->fetch_array()) {
 					$severity = 0;

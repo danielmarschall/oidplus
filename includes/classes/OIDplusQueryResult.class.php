@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,12 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	abstract public function num_rows(): int;
 	abstract public function fetch_array()/*: ?array*/;
 	abstract public function fetch_object()/*: ?object*/;
-}
 
+	public function any(): bool {
+		// The any() function returns true if there is at least one
+		// row in the section. By default, num_rows() will be used.
+		// Plugins can override this method if they have a possibility
+		// of making this functionality more efficient.
+		return $this->num_rows() > 0;
+	}
+}

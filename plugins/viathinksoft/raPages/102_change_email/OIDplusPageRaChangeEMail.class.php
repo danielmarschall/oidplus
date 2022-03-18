@@ -47,12 +47,12 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($old_email));
-			if ($res->num_rows() == 0) {
+			if (!$res->any()) {
 				throw new OIDplusException(_L('eMail address does not exist anymore. It was probably already changed.'));
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($new_email));
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				throw new OIDplusException(_L('eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.'));
 			}
 
@@ -132,12 +132,12 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($old_email));
-			if ($res->num_rows() == 0) {
+			if (!$res->any()) {
 				throw new OIDplusException(_L('eMail address does not exist anymore. It was probably already changed.'));
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($new_email));
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				throw new OIDplusException(_L('eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.'));
 			}
 
@@ -209,7 +209,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($ra_email));
-			if ($res->num_rows() == 0) {
+			if (!$res->any()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = _L('RA "%1" does not exist','<b>'.htmlentities($ra_email).'</b>');
 				return;
@@ -275,12 +275,12 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($old_email));
-			if ($res->num_rows() == 0) {
+			if (!$res->any()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = _L('eMail address does not exist anymore. It was probably already changed.');
 			} else {
 				$res = OIDplus::db()->query("select * from ###ra where email = ?", array($new_email));
-				if ($res->num_rows() > 0) {
+				if ($res->any()) {
 					$out['icon'] = 'img/error_big.png';
 					$out['text'] = _L('eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.');
 				} else {

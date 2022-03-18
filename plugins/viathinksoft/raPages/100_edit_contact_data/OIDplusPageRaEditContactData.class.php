@@ -32,7 +32,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
-			if ($res->num_rows() == 0) {
+			if (!$res->any()) {
 				throw new OIDplusException(_L('RA does not exist'));
 			}
 
@@ -91,7 +91,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			$out['text'] = '<p>'._L('Your email address: %1','<b>'.htmlentities($ra_email).'</b>').'</p>';
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($ra_email));
-			if ($res->num_rows() == 0) {
+			if (!$res->any()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = _L('RA "%1" does not exist','<b>'.htmlentities($ra_email).'</b>');
 				return;
