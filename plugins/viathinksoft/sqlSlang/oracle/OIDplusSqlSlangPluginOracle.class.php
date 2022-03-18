@@ -111,8 +111,10 @@ class OIDplusSqlSlangPluginOracle extends OIDplusSqlSlangPlugin {
 			$sql .= ' from dual';
 		}
 
-		// Must not end with a ";", otherwise error "SQL command not property ended"
-		$sql = rtrim(trim($sql), ";");
+		// SQL-Queries MUST NOT end with a ";", otherwise error "SQL command not property ended"
+		$sql = rtrim(trim($sql), "; \n\r\t\v\x00");
+		// SQL/PL-Programs MUST end with a ";"
+		if (strtolower(substr($sql,-3)) == 'end') $sql .= ';';
 
 		// Dirty hack!!! We need the name of the last inserted table so that insert_id()
 		// works. This is a dirty hack, because the invokation of filterQuery() does
