@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusQueryResultPDO extends OIDplusQueryResult {
+class OIDplusQueryResultOci extends OIDplusQueryResult {
 	protected $no_resultset;
 	protected $res;
 
@@ -29,13 +29,12 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 		if (!$this->no_resultset) {
 			$this->res = $res;
 		}
-
-		// This way we can simulate MARS (Multiple Active Result Sets) so that the test case "Simultanous prepared statements" works
-		$this->prefetchedArray = $this->res->fetchAll();
 	}
 
 	public function __destruct() {
-		if ($this->res) $this->res->closeCursor();
+		if ($this->res) {
+			oci_free_statement($this->res);
+		}
 	}
 
 	public function containsResultSet(): bool {
@@ -51,16 +50,13 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 		}
 
 		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-		$ret = $this->res->rowCount();
 
-		// -1 can happen when PDO is connected via ODBC that is running a driver that does not support num_rows (e.g. Microsoft Access)
-		// if ($ret === -1) throw new OIDplusException(_L('The database driver has problems with "%1"','num_rows'));
-		if ($ret === -1) {
-			$this->prefetchedArray = $this->res->fetchAll();
-			return count($this->prefetchedArray) + $this->countAlreadyFetched;
-		}
+		// This function does not return number of rows selected! For SELECT statements this function will return the number of rows, that were fetched to the buffer with oci_fetch*() functions.
+		//return oci_num_rows($this->res);
 
-		return $ret;
+		$this->prefetchedArray = array();
+		oci_fetch_all($this->res, $this->prefetchedArray, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
+		return count($this->prefetchedArray) + $this->countAlreadyFetched;
 	}
 
 	public function fetch_array()/*: ?array*/ {
@@ -68,7 +64,7 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 			$ret = array_shift($this->prefetchedArray);
 		} else {
 			if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-			$ret = $this->res->fetch(PDO::FETCH_ASSOC);
+			$ret = oci_fetch_array($this->res);
 			if ($ret === false) $ret = null;
 		}
 		if ($ret) $this->countAlreadyFetched++;
@@ -90,6 +86,13 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 		$obj = new stdClass;
 		foreach ($ary as $name => $val) {
 			$obj->$name = $val;
+
+			// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
+			// We can't quote every single column throughout the whole program, so we use this workaround...
+			$name = strtolower($name);
+			$obj->$name = $val;
+			$name = strtoupper($name);
+			$obj->$name = $val;
 		}
 		return $obj;
 	}
@@ -100,7 +103,7 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 			$ret = is_null($ary) ? null : self::array_to_stdobj($ary);
 		} else {
 			if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-			$ret = $this->res->fetch(PDO::FETCH_OBJ);
+			$ret = oci_fetch_object($this->res);
 			if ($ret === false) $ret = null;
 		}
 		if ($ret) $this->countAlreadyFetched++;

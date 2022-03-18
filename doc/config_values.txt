@@ -29,6 +29,14 @@ OIDplus::baseConfig()->setValue('ADMIN_PASSWORD',           '<BCrypt hash, or ba
                          also be an array containing hashes.
 
 OIDplus::baseConfig()->setValue('DATABASE_PLUGIN',          '');
+                         Valid values: see plugins (setup/)
+
+OIDplus::baseConfig()->setValue('OCI_CONN_STR',             'localhost/orcl');
+                         Can be a Oracle connection string/TNS or a hostname like
+
+OIDplus::baseConfig()->setValue('OCI_USERNAME',             'hr');
+
+OIDplus::baseConfig()->setValue('OCI_PASSWORD',             'oracle');
 
 OIDplus::baseConfig()->setValue('ODBC_DSN',                 'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
 

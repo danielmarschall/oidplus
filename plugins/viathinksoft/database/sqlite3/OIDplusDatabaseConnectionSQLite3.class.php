@@ -52,7 +52,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 				static $i = 0;
 				$i++;
 				return ':param'.$i;
-			}, $sql);
+			}, $sql, count($prepared_args));
 
 			if (isset($this->prepare_cache[$sql])) {
 				$stmt = $this->prepare_cache[$sql];

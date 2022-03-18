@@ -24,6 +24,8 @@
 
 # ---
 
+// TODO: UTF-8 tests
+
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 $num_errs = 0;
@@ -98,6 +100,17 @@ try {
 	echo redtext($e->getMessage())."\n\n";
 }
 
+# Test OCI8
+try {
+	OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'OCI8');
+	OIDplus::init(true, true);
+	$db = OIDplus::db();
+	dotest($db);
+} catch (Exception $e) {
+	echo "OCI8:\n";
+	echo redtext($e->getMessage())."\n\n";
+}
+
 # ---
 
 if (PHP_SAPI != 'cli') {
@@ -129,6 +142,16 @@ function dotest($db) {
 		} catch (Exception $e) {
 			echo "SQLDate (".$db->sqlDate().') '.redtext('FAILED')."\n";
 		}
+
+		// --- Delete+Insert using prepared statements
+
+		$db->query("delete from ###objects where parent = ?", array('test:11'));
+		echo "Delete using Prepared Statements: ".greentext('PASSED')."\n";
+		$db->query("insert into ###objects (id, parent, title, description, confidential) values (?, ?, ?, ?, ?)", array('oid:3.1.11', 'test:11', '', '', '0'));
+		$db->query("insert into ###objects (id, parent, title, description, confidential) values (?, ?, ?, ?, ?)", array('oid:3.1.12', 'test:11', '', '', '0'));
+		echo "Insert using Prepared Statements: ".greentext('PASSED')."\n";
+		$db->query("update ###objects set confidential = ? where parent = ?", array(true, 'test:11'));
+		echo "Update using Prepared Statements: ".greentext('PASSED')."\n";
 
 		// --- "Num rows" handling
 
@@ -361,7 +384,7 @@ function is_known_errormsg($msg) {
 	//	==> OCIStmtExecute: ORA-00942: table or view does not exist  (ext\pdo_oci\oci_statement.c:155)
 	//Error-Function after failed prepared query:
 	//	==> OCIBindByPos: ORA-01036: illegal variable name/number (ext\pdo_oci\oci_statement.c:346)
-	if (strpos($msg,': ORA-') !== false) return true;
+	if (strpos($msg,'ORA-') !== false) return true;
 
 	return false;
 }
