@@ -49,7 +49,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 				static $i = 0;
 				$i++;
 				return '$'.$i;
-			}, $sql);
+			}, $sql, count($prepared_args));
 
 			$prepare_name = 'OIDplus_ps_'.sha1($sql);
 			if (!in_array($prepare_name, $this->already_prepared)) {

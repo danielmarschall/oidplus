@@ -27,11 +27,12 @@ Download a TAR.GZ file here:
 ### System requirements
 - PHP compatible web server (tested with Apache 2, nginx and Microsoft IIS)
 - PHP 7.0 or higher (tested till PHP version 8.1)
-        with extension MySQLi, PostgreSQL, SQLite3, PDO, or ODBC, depending on your database
+        with extension MySQLi, PostgreSQL, SQLite3, PDO, OCI8, or ODBC, depending on your database
 - Supported databases:
         MySQL/MariaDB,
         PostgreSQL,
         SQLite3,
+	Oracle,
         Microsoft SQL Server
 - Independent of operating systems (tested with Windows, Linux and macOS X)
 
