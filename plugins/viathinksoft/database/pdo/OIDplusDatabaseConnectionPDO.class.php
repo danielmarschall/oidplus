@@ -134,9 +134,12 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			];
 
 			// Try connecting to the database
-			$dsn      = OIDplus::baseConfig()->getValue('PDO_DSN',      'mysql:host=localhost;dbname=oidplus;CHARSET=UTF8');
+			$dsn      = OIDplus::baseConfig()->getValue('PDO_DSN',      'mysql:host=localhost;dbname=oidplus;charset=UTF8');
 			$username = OIDplus::baseConfig()->getValue('PDO_USERNAME', 'root');
 			$password = OIDplus::baseConfig()->getValue('PDO_PASSWORD', '');
+
+			if (stripos($dsn,"charset=") === false) $dsn = "$dsn;charset=UTF8";
+
 			$this->conn = new PDO($dsn, $username, $password, $options);
 		} catch (PDOException $e) {
 			$message = $e->getMessage();

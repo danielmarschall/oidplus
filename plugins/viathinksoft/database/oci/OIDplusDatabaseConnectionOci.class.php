@@ -33,7 +33,7 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 		$mode = $this->intransaction ? OCI_NO_AUTO_COMMIT : OCI_COMMIT_ON_SUCCESS;
 
 		if (is_null($prepared_args)) {
-  			$res = @oci_parse($this->conn, $sql);
+			$res = @oci_parse($this->conn, $sql);
 			if ($res === false) {
 				$this->last_error = oci_error($this->conn);
 				throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
@@ -129,18 +129,10 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' ' . strip_tags($err));
 		}
 
-		$this->already_prepared = array();
 		$this->last_error = null;
-
-		try {
-			// TODO OK?
-			//$this->query("SET NAMES 'utf8'");
-		} catch (Exception $e) {
-		}
 	}
 
 	protected function doDisconnect()/*: void*/ {
-		$this->already_prepared = array();
 		if (!is_null($this->conn)) {
 			oci_close($this->conn);
 			$this->conn = null;
