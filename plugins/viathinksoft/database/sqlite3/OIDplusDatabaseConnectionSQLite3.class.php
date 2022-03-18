@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 				static $i = 0;
 				$i++;
 				return ':param'.$i;
-			}, $sql, count($prepared_args));
+			}, $sql, count($prepared_args), $count);
 
 			if (isset($this->prepare_cache[$sql])) {
 				$stmt = $this->prepare_cache[$sql];
@@ -69,14 +69,12 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 				$this->prepare_cache[$sql] = $stmt;
 			}
 
-			if ($stmt->paramCount() != count($prepared_args)) {
-				throw new OIDplusException(_L('Prepared argument list size not matching number of prepared statement arguments'));
-			}
-			$i = 1;
+			$i = 0;
 			foreach ($prepared_args as &$value) {
+				$i++;
+				if ($i > $count) break;
 				if (is_bool($value)) $value = $value ? '1' : '0';
 				$stmt->bindValue(':param'.$i, $value, SQLITE3_TEXT);
-				$i++;
 			}
 
 			try {

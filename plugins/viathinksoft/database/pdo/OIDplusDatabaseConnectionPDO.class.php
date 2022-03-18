@@ -44,40 +44,6 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
 			}
 
-			/*
-			// Not required because PDO can emulate prepared statements by itself
-			if ($this->forcePrepareEmulation()) {
-				$sql = str_replace('?', chr(1), $sql);
-				foreach ($prepared_args as $arg) {
-					$needle = chr(1);
-					if (is_bool($arg)) {
-						if ($this->slangDetectionDone) {
-							$replace = $this->getSlang()->getSQLBool($arg);
-						} else {
-							$replace = $arg ? '1' : '0';
-						}
-					} else {
-						if ($this->slangDetectionDone) {
-							$replace = "'".$this->getSlang()->escapeString($arg)."'"; // TODO: types
-						} else {
-							$replace = "'".str_replace("'", "''", $arg)."'"; // TODO: types
-						}
-					}
-					$pos = strpos($sql, $needle);
-					if ($pos !== false) {
-						$sql = substr_replace($sql, $replace, $pos, strlen($needle));
-					}
-				}
-				$sql = str_replace(chr(1), '?', $sql);
-				$ps = $this->conn->query($sql);
-				if (!$ps) {
-					$this->last_error = $this->error();
-					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
-				}
-				return new OIDplusQueryResultPDO($ps);
-			}
-			*/
-
 			foreach ($prepared_args as &$value) {
 				// We need to manually convert booleans into strings, because there is a
 				// 14 year old bug that hasn't been adressed by the PDO developers:
