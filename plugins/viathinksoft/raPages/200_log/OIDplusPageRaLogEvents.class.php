@@ -40,7 +40,7 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($ra_email));
-			if ($res->num_rows() == 0) {
+			if (!$res->any()) {
 				$out['icon'] = 'img/error_big.png';
 				$out['text'] = _L('RA "%1" does not exist','<b>'.htmlentities($ra_email).'</b>');
 				return;
@@ -50,7 +50,7 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 			                            "left join ###log_user lu on lu.log_id = lo.id ".
 			                            "where lu.username = ? " .
 			                            "order by lo.unix_ts desc", array($ra_email));
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				$out['text'] = '<pre>';
 				while ($row = $res->fetch_array()) {
 					$addr = empty($row['addr']) ? _L('no address') : $row['addr'];

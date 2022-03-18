@@ -32,12 +32,12 @@ class OIDplusRA extends OIDplusBaseClass {
 
 	public function existing() {
 		$res = OIDplus::db()->query("select email from ###ra where email = ?", array($this->email));
-		return ($res->num_rows() > 0);
+		return ($res->any());
 	}
 
 	public function raName() {
 		$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($this->email));
-		if ($res->num_rows() == 0) return _L('(RA not in database)');
+		if (!$res->any()) return _L('(RA not in database)');
 		$row = $res->fetch_array();
 		return $row['ra_name'];
 	}
@@ -78,7 +78,7 @@ class OIDplusRA extends OIDplusBaseClass {
 
 	public function getAuthInfo()/*: ?OIDplusRAAuthInfo*/ {
 		$ra_res = OIDplus::db()->query("select authkey, salt from ###ra where email = ?", array($this->email));
-		if ($ra_res->num_rows() == 0) return null; // User not found
+		if (!$ra_res->any()) return null; // User not found
 		$ra_row = $ra_res->fetch_array();
 
 		return new OIDplusRAAuthInfo($ra_row['salt'], $ra_row['authkey']);

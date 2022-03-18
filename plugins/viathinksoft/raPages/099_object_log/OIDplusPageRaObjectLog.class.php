@@ -53,7 +53,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 		                            "where lu.object = ? " .
 		                            "order by lo.unix_ts desc", array($id));
 		$text .= '<h2>'._L('Log messages for object %1',htmlentities($id)).'</h2>';
-		if ($res->num_rows() > 0) {
+		if ($res->any()) {
 			$text .= '<pre>';
 			while ($row = $res->fetch_array()) {
 				$users = array();

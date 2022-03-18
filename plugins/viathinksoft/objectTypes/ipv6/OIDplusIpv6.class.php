@@ -125,7 +125,7 @@ class OIDplusIpv6 extends OIDplusObject {
 			$title = OIDplusIpv6::objectTypeTitle();
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				$content  = _L('Please select a network block in the tree view at the left to show its contents.');
 			} else {
 				$content  = _L('Currently, no network blocks are registered in the system.');

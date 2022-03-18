@@ -114,7 +114,7 @@ class OIDplusGuid extends OIDplusObject {
 			$title = OIDplusGuid::objectTypeTitle();
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				$content  = _L('Please select a GUID in the tree view at the left to show its contents.');
 			} else {
 				$content  = _L('Currently, no GUID is registered in the system.');

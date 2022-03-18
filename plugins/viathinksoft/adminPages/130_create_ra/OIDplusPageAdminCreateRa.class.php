@@ -40,7 +40,7 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email)); // TODO: this should be a static function in the RA class
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				throw new OIDplusException(_L('RA does already exist'));
 			}
 

@@ -117,7 +117,7 @@ if ($unimplemented_format) {
 		$init_query = $query;
 		while (true) {
 			$res = OIDplus::db()->query("select * from ###objects where id = ?", array($query));
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				$obj = OIDplusObject::parse($query);
 				if ($distance > 0) {
 					$out[] = "result: Not found; superior object found"; // DO NOT TRANSLATE!
@@ -141,7 +141,7 @@ if ($unimplemented_format) {
 				if ($obj) {
 					$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
 					$distance = $obj->distance($query);
-					assert($res->num_rows() > 0);
+					assert($res->any());
 
 					$query = $obj->nodeId();
 				}
@@ -161,7 +161,7 @@ if ($unimplemented_format) {
 			$distance = 0;
 			while (true) {
 				$res = OIDplus::db()->query("select * from ###asn1id where oid = ? union select * from ###iri where oid = ?", array($query, $query));
-				if ($res->num_rows() > 0) {
+				if ($res->any()) {
 					$obj = OIDplusObject::parse($query);
 					$res = null;
 					if ($distance > 0) {
@@ -528,7 +528,7 @@ function allowObjectView($obj, $authTokens) {
 
 	// Per-OID auth tokens
 	$curid = $obj->nodeId();
-	while (($res = OIDplus::db()->query("select parent, confidential from ###objects where id = ?", array($curid)))->num_rows() > 0) {
+	while (($res = OIDplus::db()->query("select parent, confidential from ###objects where id = ?", array($curid)))->any()) {
 		$row = $res->fetch_array();
 		// Example: You have an auth Token for 2.999.1.2.3
 		// This allows you to view 2.999.1.2.3 and all of its children,

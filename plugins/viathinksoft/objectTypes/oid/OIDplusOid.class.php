@@ -139,7 +139,7 @@ class OIDplusOid extends OIDplusObject {
 			$title = OIDplusOid::objectTypeTitle();
 
 			$res = OIDplus::db()->query("select id from ###objects where parent = ?", array(self::root()));
-			if ($res->num_rows() > 0) {
+			if ($res->any()) {
 				$content = _L('Please select an OID in the tree view at the left to show its contents.');
 			} else {
 				$content = _L('Currently, no OID is registered in the system.');
@@ -371,10 +371,10 @@ class OIDplusOid extends OIDplusObject {
 
 	public function isWellKnown() {
 		$res = OIDplus::db()->query("select oid from ###asn1id where oid = ? and well_known = ?", array("oid:".$this->oid,true));
-		if ($res->num_rows() > 0) return true;
+		if ($res->any()) return true;
 
 		$res = OIDplus::db()->query("select oid from ###iri where oid = ? and well_known = ?", array("oid:".$this->oid,true));
-		if ($res->num_rows() > 0) return true;
+		if ($res->any()) return true;
 
 		return false;
 	}

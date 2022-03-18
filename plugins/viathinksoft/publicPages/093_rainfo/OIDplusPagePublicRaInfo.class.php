@@ -73,7 +73,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 
 			if (!empty($ra_email)) {
 				$res = OIDplus::db()->query("select * from ###ra where email = ?", array($ra_email));
-				if ($res->num_rows() > 0) {
+				if ($res->any()) {
 					if (OIDplus::authUtils()->isRALoggedIn($ra_email) || OIDplus::authUtils()->isAdminLoggedIn()) {
 						$editContactDataPlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.100'); // OIDplusPageRaEditContactData
 						if (!is_null($editContactDataPlugin)) {
@@ -101,7 +101,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 					                            "where lu.username = ? " .
 					                            "order by lo.unix_ts desc", array($ra_email));
 					$out['text'] .= '<h2>'._L('Log messages for RA %1',htmlentities($ra_email)).'</h2>';
-					if ($res->num_rows() > 0) {
+					if ($res->any()) {
 						$out['text'] .= '<pre>';
 						while ($row = $res->fetch_array()) {
 							$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
@@ -143,7 +143,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 		}
 
 		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
-		if ($res->num_rows() === 0) {
+		if (!$res->any()) {
 			$out = '<p>'._L('The RA %1 is not registered in the database.','<a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a>').'</p>';
 
 			if (OIDplus::authUtils()->isAdminLoggedIn()) {
