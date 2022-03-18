@@ -894,6 +894,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Cannot bind parameter %1 to value %2
+		]]></source>
+		<target><![CDATA[
+		Kann Parameter %1 nicht an Wert %2 binden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Cannot connect to LDAP server
 		]]></source>
 		<target><![CDATA[
@@ -4102,6 +4110,30 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Oracle connection string, e.g. %1
+		]]></source>
+		<target><![CDATA[
+		Oracle Connection-String, z.B. %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Oracle password
+		]]></source>
+		<target><![CDATA[
+		Oracle-Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Oracle username
+		]]></source>
+		<target><![CDATA[
+		Oracle-Benutzername
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Organization
 		]]></source>
 		<target><![CDATA[
@@ -4638,6 +4670,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Please specify a TNS / connection string!
+		]]></source>
+		<target><![CDATA[
+		Bitte ein TNS / Connection-String eingeben
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Please specify a database name!
 		]]></source>
 		<target><![CDATA[
@@ -4810,14 +4850,6 @@
 		]]></source>
 		<target><![CDATA[
 		Plugins
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Prepared argument list size not matching number of prepared statement arguments
-		]]></source>
-		<target><![CDATA[
-		Die Größe der vorbereiteten Argumente stimmt nicht überein mit den "Prepared Statement" Argumenten
 		]]></target>
 	</message>
 	<message>
