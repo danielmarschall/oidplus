@@ -4,6 +4,7 @@ Folder Name     Manifest Schema                   VTS Plugins root              
 ---------------------------------------------------------------------------------------------------------
 adminPages      1.3.6.1.4.1.37476.2.5.2.5.2.1     1.3.6.1.4.1.37476.2.5.2.4.3     OIDplusPagePluginAdmin
 auth            1.3.6.1.4.1.37476.2.5.2.5.8.1     1.3.6.1.4.1.37476.2.5.2.4.4     OIDplusAuthPlugin
+captcha         1.3.6.1.4.1.37476.2.5.2.5.12.1    1.3.6.1.4.1.37476.2.5.2.4.11    OIDplusCaptchaPlugin
 database        1.3.6.1.4.1.37476.2.5.2.5.6.1     1.3.6.1.4.1.37476.2.5.2.4.5     OIDplusDatabasePlugin
 design          1.3.6.1.4.1.37476.2.5.2.5.7.1     1.3.6.1.4.1.37476.2.5.2.4.10    OIDplusDesignPlugin
 language        1.3.6.1.4.1.37476.2.5.2.5.3.1     1.3.6.1.4.1.37476.2.5.2.4.9     OIDplusLanguagePlugin
