@@ -29,3 +29,4 @@ Additional steps for the small plus-sign used in the design plugins
 	Preserve Luminosity
 
 4. Photoshop "Stroke" effect, 1 pixel black border
+	and with a 1x1 black brush, trace the edges of the plus sign

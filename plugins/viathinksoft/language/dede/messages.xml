@@ -4206,6 +4206,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		PHP configuration file(s)
+		]]></source>
+		<target><![CDATA[
+		Geladene Konfigurationsdateien
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		PHP extension "%1" not installed
 		]]></source>
 		<target><![CDATA[
