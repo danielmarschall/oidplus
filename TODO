@@ -128,6 +128,8 @@ UPDATER
 - Internal problem with GIT distribution channel:
 	The GIT version might be behind the master SVN repository
 	So if you do "git pull", the update/index.php page might still show that an update is available!
+- if very large files are updated (e.g. update 793), then people might think that the process stalled. we need to include a "loading animation". 
+- also "update running..." and "update done" is displayed at the same time. we need to display "update running", then flush, then update the files and then print "update done"
 
 DATABASE
 - SQLite3: Implement Natural OID sorting (natSort)
@@ -177,6 +179,7 @@ LOGS
 - At "oidplus:system_log", user log section and object log section, the users and/or objects should be clickable
 
 IDEAS
+- Similar to Security Event Token, we could issue JWT tokens which log the allocation of an OID to an RA. This signed token can be stored somewhere and can be used to proove the ownership of an OID.
 - have an option to assign a custom icon to any object in the system (file attachment with name "icon.*"?). Especially useful for easy visual distinguishing between root objects inside 'Other objects', but may be useful for other object types too.
 - Give configuration settings a type (int, bool, enum, etc.) so that the configuration page can be more user friendly (use a checkbox rather than typing "1" and "0")
 	Even better: Give plugins the opportunity to display their own config GUI, exactly like OOBE does

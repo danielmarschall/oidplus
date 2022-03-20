@@ -103,6 +103,18 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'.PHP_VERSION.'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('PHP configuration file(s)').'</td>';
+
+			$inis = array();
+			$main_ini = php_ini_loaded_file();
+			if ($main_ini !== false) $inis[] = $main_ini;
+			$more_ini = php_ini_scanned_files();
+			if ($more_ini !== false) $inis = array_merge($inis, $more_ini);
+			$s_inis = (count($inis) == 0) ? _L('n/a') : implode("<br>",$inis);
+
+			$out['text'] .= '		<td>'.htmlentities($s_inis).'</td>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('Installed extensions').'</td>';
 			$out['text'] .= '		<td>'.htmlentities(implode(', ',get_loaded_extensions())).'</td>';
 			$out['text'] .= '	</tr>';
