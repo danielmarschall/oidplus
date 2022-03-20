@@ -1,0 +1,31 @@
+
+To create the plus-sign that is used in the large logo
+------------------------------------------------------
+
+1. Ctrl + U
+	180 / 59 / -8
+
+2. Filter "Colorize Gradient" by ViaThinkSoft
+	Filter Foundry formula
+		R = (ctl(4)*i/R + ctl(0)*(255-i)/R )
+		G = (ctl(5)*i/G + ctl(1)*(255-i)/G )
+		B = (ctl(6)*i/B + ctl(2)*(255-i)/B )
+		A = a
+	Parameters
+		ctl(0) = 255	(dark => red)
+		ctl(1) = 0
+		ctl(2) = 0
+
+		ctl(4) = 255	(bright => yellow)
+		ctl(5) = 255
+		ctl(6) = 0
+
+
+Additional steps for the small plus-sign used in the design plugins
+-------------------------------------------------------------------
+
+3. Color Balance
+	Midtones 40 / -32 / 67
+	Preserve Luminosity
+
+4. Photoshop "Stroke" effect, 1 pixel black border
