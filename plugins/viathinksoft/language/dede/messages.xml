@@ -2334,6 +2334,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Go back to the system information page
+		]]></source>
+		<target><![CDATA[
+		Zurück zur Systeminfo-Hauptseite
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Google OAuth authentication is disabled on this system.
 		]]></source>
 		<target><![CDATA[
@@ -4222,6 +4230,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		PHP information
+		]]></source>
+		<target><![CDATA[
+		PHP-Informationen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		PHP version
 		]]></source>
 		<target><![CDATA[
@@ -5494,6 +5510,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Server time
+		]]></source>
+		<target><![CDATA[
+		Server-Zeit
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Session could not be started
 		]]></source>
 		<target><![CDATA[
@@ -5562,6 +5586,14 @@
 		]]></source>
 		<target><![CDATA[
 		Teilen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Show PHP server configuration (phpinfo)
+		]]></source>
+		<target><![CDATA[
+		Zeige PHP-Serverkonfiguration (phpinfo)
 		]]></target>
 	</message>
 	<message>
@@ -7586,6 +7618,14 @@
 		]]></source>
 		<target><![CDATA[
 		oder per Kommando-Zeile:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		phpinfo() could not be called
+		]]></source>
+		<target><![CDATA[
+		phpinfo() konnte nicht aufgerufen werden
 		]]></target>
 	</message>
 	<message>

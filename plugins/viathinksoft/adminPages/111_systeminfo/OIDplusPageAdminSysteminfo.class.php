@@ -27,8 +27,53 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 	public function init($html=true) {
 	}
 
+	private function getLoadedInis() {
+		$s_inis = '';
+
+		$inis = array();
+		$main_ini = php_ini_loaded_file();
+		if ($main_ini !== false) $s_inis = '<b>'.htmlentities($main_ini).'</b>';
+
+		$more_ini = php_ini_scanned_files();
+		if ($more_ini !== false) {
+			$inis = explode(',', $more_ini);
+			foreach ($inis as $ini) {
+				$s_inis .= '<br>'.htmlentities($ini);
+			}
+		}
+
+		if ($s_inis == '') $s_inis = _L('n/a');
+
+		return $s_inis;
+	}
+
 	public function gui($id, &$out, &$handled) {
-		if ($id === 'oidplus:systeminfo') {
+		if ($id === 'oidplus:phpinfo') {
+			$handled = true;
+			$out['title'] = _L('PHP information');
+			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
+
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+				$out['icon'] = 'img/error_big.png';
+				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
+				return;
+			}
+
+			$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:systeminfo').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to the system information page').'</a></p>';
+
+			ob_start();
+			$res = phpinfo();
+			$cont = ob_get_contents();
+			ob_end_clean();
+
+			if (!$res) {
+				$out['text'] .= '<p><font color="red">'._L('phpinfo() could not be called').'</font></p>';
+			} else {
+				$out['text'] .= '<style>img { float: none !important; ]</style>';
+				$out['text'] .= $cont;
+			}
+		}
+		else if ($id === 'oidplus:systeminfo') {
 			$handled = true;
 			$out['title'] = _L('System information');
 			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
@@ -104,21 +149,14 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('PHP configuration file(s)').'</td>';
-
-			$inis = array();
-			$main_ini = php_ini_loaded_file();
-			if ($main_ini !== false) $inis[] = $main_ini;
-			$more_ini = php_ini_scanned_files();
-			if ($more_ini !== false) $inis = array_merge($inis, $more_ini);
-			$s_inis = (count($inis) == 0) ? _L('n/a') : implode("<br>",$inis);
-
-			$out['text'] .= '		<td>'.htmlentities($s_inis).'</td>';
+			$out['text'] .= '		<td>'.$this->getLoadedInis().'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('Installed extensions').'</td>';
 			$out['text'] .= '		<td>'.htmlentities(implode(', ',get_loaded_extensions())).'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</table>';
+			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:phpinfo').'>'._L('Show PHP server configuration (phpinfo)').'</a></p>';
 			$out['text'] .= '</div></div>';
 
 			# ---
@@ -170,6 +208,43 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 
 			# ---
 
+			$out['text'] .= '<h2>'._L('Database').'</h2>';
+			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
+			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
+			$out['text'] .= '	</tr>';
+
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Database provider').'</td>';
+			$out['text'] .= '		<td>'.OIDplus::db()->getPlugin()->getManifest()->getName().'</td>';
+			$out['text'] .= '	</tr>';
+
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('SQL slang').'</td>';
+			$out['text'] .= '		<td>'.OIDplus::db()->getSlang()->getManifest()->getName().'</td>';
+			$out['text'] .= '	</tr>';
+
+			$table_prefix = OIDplus::baseConfig()->getValue('TABLENAME_PREFIX');
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Table name prefix').'</td>';
+			$out['text'] .= '		<td>'.(!empty($table_prefix) ? htmlentities($table_prefix) : '<i>'._L('none').'</i>').'</td>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Server time').'</td>';
+			$tmp = OIDplus::db()->query('select '.OIDplus::db()->sqlDate().' as tmp');
+			if ($tmp) $tmp = $tmp->fetch_array();
+			$tmp = isset($tmp['tmp']) ? $tmp['tmp'] :  _L('n/a');
+			$out['text'] .= '		<td>'.$tmp.'</td>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '</table>';
+			$out['text'] .= '</div></div>';
+
+			// TODO: can we somehow get the DBMS version, connection string etc?
+
+			# ---
+
 			$out['text'] .= '<h2>'._L('Operating System').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
@@ -201,39 +276,13 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 				$out['text'] .= '		<td>'._L('Hostname').'</td>';
 				$out['text'] .= '		<td>'.htmlentities(php_uname("n")).'</td>';
 				$out['text'] .= '	</tr>';
+				$out['text'] .= '	<tr>';
+				$out['text'] .= '		<td>'._L('Server time').'</td>';
+				$out['text'] .= '		<td>'.htmlentities(date('Y-m-d H:i:s P')).'</td>';
+				$out['text'] .= '	</tr>';
 			}
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
-
-			# ---
-
-			$out['text'] .= '<h2>'._L('Database').'</h2>';
-			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
-			$out['text'] .= '<table class="table table-bordered table-striped">';
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
-			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
-			$out['text'] .= '	</tr>';
-
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('Database provider').'</td>';
-			$out['text'] .= '		<td>'.OIDplus::db()->getPlugin()->getManifest()->getName().'</td>';
-			$out['text'] .= '	</tr>';
-
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('SQL slang').'</td>';
-			$out['text'] .= '		<td>'.OIDplus::db()->getSlang()->getManifest()->getName().'</td>';
-			$out['text'] .= '	</tr>';
-
-			$table_prefix = OIDplus::baseConfig()->getValue('TABLENAME_PREFIX');
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('Table name prefix').'</td>';
-			$out['text'] .= '		<td>'.(!empty($table_prefix) ? htmlentities($table_prefix) : '<i>'._L('none').'</i>').'</td>';
-			$out['text'] .= '	</tr>';
-			$out['text'] .= '</table>';
-			$out['text'] .= '</div></div>';
-
-			// TODO: can we somehow get the DBMS version, connection string etc?
 
 			# ---
 
