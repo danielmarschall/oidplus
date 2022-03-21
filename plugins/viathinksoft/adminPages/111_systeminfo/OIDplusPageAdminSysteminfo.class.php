@@ -48,7 +48,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 	}
 
 	public function gui($id, &$out, &$handled) {
-		if ($id === 'oidplus:phpinfo') {
+		if ($id === 'oidplus:systeminfo$phpinfo') {
 			$handled = true;
 			$out['title'] = _L('PHP information');
 			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
@@ -165,7 +165,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'.htmlentities(implode(', ',get_loaded_extensions())).'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</table>';
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:phpinfo').'>'._L('Show PHP server configuration (phpinfo)').'</a></p>';
+			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:systeminfo$phpinfo').'>'._L('Show PHP server configuration (phpinfo)').'</a></p>';
 			$out['text'] .= '</div></div>';
 
 			# ---
@@ -317,6 +317,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 	}
 
 	public function tree_search($request) {
+		if ($request === 'oidplus:systeminfo$phpinfo') return array('oidplus:login', $request); // TODO: Problem: Inside we will find 'oidplus:systeminfo', but not 'oidplus:systeminfo$phpinfo'!
 		return false;
 	}
 
