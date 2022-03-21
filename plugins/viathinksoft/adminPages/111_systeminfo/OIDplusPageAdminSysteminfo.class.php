@@ -69,7 +69,16 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			if (!$res) {
 				$out['text'] .= '<p><font color="red">'._L('phpinfo() could not be called').'</font></p>';
 			} else {
-				$out['text'] .= '<style>img { float: none !important; ]</style>';
+				// phpinfo() sets "img {float: right; border: 0;}". We don't want that.
+				$cont = str_replace('img {', 'img.phpinfo {', $cont);
+				$cont = str_replace('<img', '<img class="phpinfo"', $cont);
+
+				// phpinfo() sets the link colors. We don't want that
+				$cont = preg_replace('@a:.+ {.+}@ismU', '', $cont);
+
+				// phpinfo() sets "h1 {font-size: 150%;}" and "h2 {font-size: 125%;}"
+				$cont = preg_replace('@(h1|h2|h3|h4|h5) {.+}@ismU', '', $cont);
+
 				$out['text'] .= $cont;
 			}
 		}
