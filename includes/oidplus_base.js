@@ -197,14 +197,17 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 					},
 					error:function(jqXHR, textStatus, errorThrown) {
 						if (errorThrown == "abort") return;
+						console.error("Tree search failed");
 						console.error(_L("Error: %1",errorThrown));
 					},
 					success:function(data) {
 						if ("error" in data) {
+							console.error("Tree search failed");
 							console.error(data);
 						} else if ((data instanceof Array) && (data.length > 0)) {
 							x_rec(data, 0);
 						} else {
+							console.error("Tree search failed");
 							console.error(data);
 						}
 					}

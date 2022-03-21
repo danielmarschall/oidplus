@@ -128,8 +128,7 @@ UPDATER
 - Internal problem with GIT distribution channel:
 	The GIT version might be behind the master SVN repository
 	So if you do "git pull", the update/index.php page might still show that an update is available!
-- if very large files are updated (e.g. update 793), then people might think that the process stalled. we need to include a "loading animation". 
-- also "update running..." and "update done" is displayed at the same time. we need to display "update running", then flush, then update the files and then print "update done"
+- add some kind of loading cricle animation or a progress bar during the update
 
 DATABASE
 - SQLite3: Implement Natural OID sorting (natSort)

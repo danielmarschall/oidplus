@@ -3,7 +3,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,8 +142,8 @@ for ($i=2; $i<=$max_svn; $i++) {
 		$outscript .= "}\n";
 	}
 	$outscript .= "\n";
-	$outscript .= "info('Update to OIDplus version svn-$i running...');\n";
-	$outscript .= "\n";
+	//$outscript .= "info('Update to OIDplus version svn-$i running...');\n";
+	//$outscript .= "\n";
 	getDirContents($outdir_old, $outdir_new);
 	$outscript .= "\n";
 	if ($i >= 661) {
@@ -445,11 +445,11 @@ function getDirContents_add($dir_old, $dir_new, $basepath_old=null, $basepath_ne
 			$outscript .= "\twarn('Could not change directory permissions of ".$xpath_new."');\n";
 			$outscript .= "}\n";
 			$outscript .= "\n";
-			
+
 			// we create it locally, so that the recursive code still works
 			mkdir($dir_old . DIRECTORY_SEPARATOR . $file_new);
 			$path_old = my_realpath($dir_old . DIRECTORY_SEPARATOR . $file_new);
-			
+
 		} else if (is_file($path_new) && !is_file($path_old)) {
 			$outscript .= "// File added: $xpath_new\n";
 
@@ -525,18 +525,16 @@ function special_save_file($out_file, $in_file, &$res, $line_prefix, $width=50) 
 	if (!$handle) {
 		throw new Exception("Cannot open file $in_file");
 	}
-	$first = true;
+	$res .= $line_prefix."\$fp = fopen('$out_file', 'w');\n";
+
 	while (!feof($handle)) {
 		// important: must be a multiple of 3, otherwise we have base64 paddings!
 		$buffer = fread($handle, $width*3);
 		$base64 = base64_encode($buffer);
-		$res .= $line_prefix."file_put_contents('$out_file', base64_decode('".$base64."')".($first ? '' : ', FILE_APPEND').");\n";
-		$first = false;
+		$res .= $line_prefix."fwrite(\$fp, base64_decode('".$base64."'));\n";
 	}
-	if ($first) {
-		// It is an empty file
-		$res .= $line_prefix."file_put_contents('$out_file', '');\n";
-	}
+
+	$res .= $line_prefix."fclose(\$fp);\n";
 	fclose($handle);
 }
 
