@@ -285,11 +285,11 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 				$out['text'] .= '		<td>'._L('Hostname').'</td>';
 				$out['text'] .= '		<td>'.htmlentities(php_uname("n")).'</td>';
 				$out['text'] .= '	</tr>';
-				$out['text'] .= '	<tr>';
-				$out['text'] .= '		<td>'._L('Server time').'</td>';
-				$out['text'] .= '		<td>'.htmlentities(date('Y-m-d H:i:s P')).'</td>';
-				$out['text'] .= '	</tr>';
 			}
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Server time').'</td>';
+			$out['text'] .= '		<td>'.htmlentities(date('Y-m-d H:i:s P')).'</td>';
+			$out['text'] .= '	</tr>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
 
