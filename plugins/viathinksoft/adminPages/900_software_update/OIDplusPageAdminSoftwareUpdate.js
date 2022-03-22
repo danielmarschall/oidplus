@@ -29,7 +29,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 		$("#update_header").text(_L("Updating to Revision %1 ...",rev)+"\n");
 
 		var msg = "Update to OIDplus version svn-"+rev+" is running..."; // TODO: If we would translate this to German, then we would also need to generate the serverside scripts to German. So we keep this in English.
-		$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_2"><strong>' + _L('INFO') + ":</strong></span> "+msg+"\n\n");
+		$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_2"><strong>' + _L('INFO') + ":</strong></span> "+msg+"\n");
 
 		//show_waiting_anim();
 		$.ajax({

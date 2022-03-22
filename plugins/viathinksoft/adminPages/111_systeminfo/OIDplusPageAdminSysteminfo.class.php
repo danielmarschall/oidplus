@@ -48,10 +48,10 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 	}
 
 	public function gui($id, &$out, &$handled) {
-		if ($id === 'oidplus:systeminfo$phpinfo') {
+		if ($id === 'oidplus:phpinfo') {
 			$handled = true;
 			$out['title'] = _L('PHP information');
-			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
+			$out['icon']  = OIDplus::webpath(__DIR__).'icon_php_big.png';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error_big.png';
@@ -165,7 +165,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'.htmlentities(implode(', ',get_loaded_extensions())).'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</table>';
-			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:systeminfo$phpinfo').'>'._L('Show PHP server configuration (phpinfo)').'</a></p>';
+			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:phpinfo').'>'._L('Show PHP server configuration (phpinfo)').'</a></p>';
 			$out['text'] .= '</div></div>';
 
 			# ---
@@ -307,17 +307,27 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$tree_icon = null; // default icon (folder)
 		}
 
+		if (file_exists(__DIR__.'/treeicon_php.png')) {
+			$tree_icon_php = OIDplus::webpath(__DIR__).'treeicon_php.png';
+		} else {
+			$tree_icon_php = null; // default icon (folder)
+		}
+
 		$json[] = array(
 			'id' => 'oidplus:systeminfo',
 			'icon' => $tree_icon,
-			'text' => _L('System information')
+			'text' => _L('System information'),
+			'children' => array(array(
+				'id' => 'oidplus:phpinfo',
+				'icon' => $tree_icon_php,
+				'text' => _L('PHP information')
+			))
 		);
 
 		return true;
 	}
 
 	public function tree_search($request) {
-		if ($request === 'oidplus:systeminfo$phpinfo') return array('oidplus:login', $request); // TODO: Problem: Inside we will find 'oidplus:systeminfo', but not 'oidplus:systeminfo$phpinfo'!
 		return false;
 	}
 
