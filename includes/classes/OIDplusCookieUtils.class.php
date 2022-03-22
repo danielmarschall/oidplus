@@ -27,8 +27,7 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 
 	public function setcookie($name, $value, $expires=0, $allowJS=false, $samesite=null) {
 		// $path = ini_get('session.cookie_path');
-		$path = OIDplus::webpath(null,true);
-		if (empty($path)) $path = '/';
+		$path = parse_url(OIDplus::webpath(null,false))['path'];
 
 		$domain = '';
 		$secure = OIDplus::isSSL();
