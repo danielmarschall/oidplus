@@ -197,17 +197,24 @@ OIDplus::baseConfig()->setValue('DISABLE_AJAX_TRANSACTIONS', false);
                          It might result in inconsistent data e.g. if you update an OID
                          and an error occurs in the middle of that process.
 
-OIDplus::baseConfig()->setValue('EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
-                         This setting can override the absolute system URL, which is used at CLI WHOIS
-                         and possibly other modules. It has no effect on relative URLs.
-                         If this setting is not set, the last known absolute URL
-                         will be remembered and used when a CLI call is made.
-
-OIDplus::baseConfig()->setValue('CANONICAL_SYSTEM_URL', '')
-                         If you want to have a canonical URL that is not equal to your
-                         system URL (which is either set by EXPLICIT_ABSOLUTE_SYSTEM_URL or automatically detected),
-                         then you need to define the URL of the system here.
-                         This can be useful if OIDplus runs on a system (which detects itself as "X"),
+OIDplus::baseConfig()->setValue('CANONICAL_SYSTEM_URL', '');
+                         Setting this value to a system URL will override the absolute system URL detection.
+                         It has the following effects:
+                         1. The "canonical" metatag will use this explicit system URL
+                            instead of the one the PHP script is detecting.
+                            (This is important to avoid duplicate content at search indexes)
+                         2. CLI WHOIS and other CLI (Command-line-interface) tools
+                            will use this address when they need to output an URL.
+                            Otherwise, the CLI tools would need to use the last known
+                            URL that was detected when a webpage visitor has last visited the
+                            page.
+                         3. While most resources (images, CSS files, scripts, etc.) are loaded
+                            via relative URLs, sometimes an absolute URL is required
+                            (e.g., if an email is sent with an activation link).
+                            The explicit absolute system URL will then be used rather
+                            than the automatically detected one.
+                         Note that setting an absolute system URL can be very useful if
+                         OIDplus runs on a system (which detects itself as "X"),
                          while the canonical URL "Y" is a proxy.
 
 OIDplus::baseConfig()->setValue('DEBUG', false);

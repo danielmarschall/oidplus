@@ -1063,21 +1063,16 @@ class OIDplus extends OIDplusBaseClass {
 		return isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
 	}
 
-	/* $mode == self::PATH_RELATIVE */
-	/* $mode == self::PATH_ABSOLUTE */
-	/* $mode == self::PATH_ABSOLUTE_CANONICAL */
+	/**
+	 * Returns the URL of the system.
+	 * @param int $mode If true or OIDplus::PATH_RELATIVE, the returning path is relative to the currently executed
+	 *                  PHP script (i.e. index.php , not the plugin PHP script!). False or OIDplus::PATH_ABSOLUTE is
+	 *                  results in an absolute URL. OIDplus::PATH_ABSOLUTE_CANONICAL is an absolute URL,
+	 *                  but a canonical path (set by base config setting CANONICAL_SYSTEM_URL) is preferred.
+	 * @return string|false The URL, with guaranteed trailing path delimiter for directories
+	 */
 	private static function getSystemUrl($mode) {
-		$relative = $mode == self::PATH_RELATIVE;
-		$canonical_sysurl = $mode == self::PATH_ABSOLUTE_CANONICAL;
-
-		if ($canonical_sysurl) {
-			$tmp = OIDplus::baseConfig()->getValue('CANONICAL_SYSTEM_URL', '');
-			if ($tmp !== '') {
-				return rtrim($tmp,'/').'/';
-			}
-		}
-
-		if ($relative) {
+		if ($mode === self::PATH_RELATIVE) {
 			$steps_up = self::getExecutingScriptPathDepth();
 			if ($steps_up === false) {
 				return false;
@@ -1085,9 +1080,11 @@ class OIDplus extends OIDplusBaseClass {
 				return str_repeat('../', $steps_up);
 			}
 		} else {
-			$res = OIDplus::baseConfig()->getValue('EXPLICIT_ABSOLUTE_SYSTEM_URL', '');
-			if ($res !== '') {
-				return rtrim($res,'/').'/';
+			if ($mode === self::PATH_ABSOLUTE_CANONICAL) {
+				$tmp = OIDplus::baseConfig()->getValue('CANONICAL_SYSTEM_URL', '');
+				if ($tmp) {
+					return rtrim($tmp,'/').'/';
+				}
 			}
 
 			if (PHP_SAPI == 'cli') {
@@ -1387,10 +1384,13 @@ class OIDplus extends OIDplusBaseClass {
 	/**
 	 * Gets a URL pointing to a resource
 	 * @param string $target Target resource (file or directory must exist), or null to get the OIDplus base directory
-	 * @param int|mixed $mode If true or 1, the returning path is relative to the currently executed PHP script (i.e. index.php , not the plugin PHP script!). False or 2 is an absolute URL. 3 is an absolute URL, but a canonical path is preferred.
+	 * @param int|boolean $mode If true or OIDplus::PATH_RELATIVE, the returning path is relative to the currently executed
+	 *                          PHP script (i.e. index.php , not the plugin PHP script!). False or OIDplus::PATH_ABSOLUTE is
+	 *                          results in an absolute URL. OIDplus::PATH_ABSOLUTE_CANONICAL is an absolute URL,
+	 *                          but a canonical path (set by base config setting CANONICAL_SYSTEM_URL) is preferred.
 	 * @return string|false The URL, with guaranteed trailing path delimiter for directories
 	 */
-	public static function webpath($target=null, $mode=self::PATH_ABSOLUTE) {
+	public static function webpath($target=null, $mode=self::PATH_ABSOLUTE_CANONICAL) {
 
 		// backwards compatibility
 		if ($mode === true) $mode = self::PATH_RELATIVE;
