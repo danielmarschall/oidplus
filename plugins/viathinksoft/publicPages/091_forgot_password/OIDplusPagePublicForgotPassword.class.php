@@ -99,7 +99,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$handled = true;
 
 			$out['title'] = _L('Forgot password');
-			$out['icon'] = OIDplus::webpath(__DIR__).'forgot_password_big.png';
+			$out['icon'] = OIDplus::webpath(__DIR__,true).'img/forgot_password_icon.png';
 
 			try {
 				$out['text'] .= '<p>'._L('Please enter the email address of your account, and information about the password reset will be sent to you.').'</p>
@@ -112,7 +112,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 			} catch (Exception $e) {
 
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('Error: %1',htmlentities($e->getMessage())).'</p>';
 
 			}
@@ -124,10 +124,10 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$auth = explode('$',$id)[3];
 
 			$out['title'] = _L('Reset password');
-			$out['icon'] = OIDplus::webpath(__DIR__).'reset_password_big.png';
+			$out['icon'] = OIDplus::webpath(__DIR__,true).'img/reset_password_icon.png';
 
 			if (!OIDplus::authUtils()->validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = _L('Invalid authorization. Is the URL OK?');
 			} else {
 				$out['text'] = '<p>'._L('E-Mail-Address: %1','<b>'.$email.'</b>').'</p>

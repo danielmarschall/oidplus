@@ -34,7 +34,7 @@ class OIDplusGui extends OIDplusBaseClass {
 				$plugin->gui($id, $out, $handled);
 			} catch (Exception $e) {
 				$out['title'] = _L('Error');
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = $e->getMessage();
 			}
 			if ($handled) break;
@@ -42,7 +42,7 @@ class OIDplusGui extends OIDplusBaseClass {
 
 		if (!$handled) {
 			$out['title'] = _L('Error');
-			$out['icon'] = 'img/error_big.png';
+			$out['icon'] = 'img/error.png';
 			$out['text'] = _L('The resource cannot be found.');
 		}
 

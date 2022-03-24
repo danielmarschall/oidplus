@@ -80,10 +80,10 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			$ra_email = explode('$',$id)[1];
 
 			$out['title'] = _L('Edit RA contact data');
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as the requested RA %2.',OIDplus::gui()->link('oidplus:login$ra$'.$ra_email),'<b>'.htmlentities($ra_email).'</b>').'</p>';
 				return;
 			}
@@ -92,7 +92,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($ra_email));
 			if (!$res->any()) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = _L('RA "%1" does not exist','<b>'.htmlentities($ra_email).'</b>');
 				return;
 			}
@@ -133,8 +133,8 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 		if (!$ra_email) return false;
 		if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
-		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
+		if (file_exists(__DIR__.'/img/main_icon16.png')) {
+			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

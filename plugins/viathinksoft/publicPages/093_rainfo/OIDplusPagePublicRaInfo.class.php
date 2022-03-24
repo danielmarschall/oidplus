@@ -31,7 +31,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 			$antispam_email = explode('$',$id.'$')[1];
 			$ra_email = str_replace('&', '@', $antispam_email);
 
-			$out['icon'] = OIDplus::webpath(__DIR__).'rainfo_big.png';
+			$out['icon'] = OIDplus::webpath(__DIR__,true).'img/rainfo_icon.png';
 
 			if (OIDplus::authUtils()->isAdminLoggedIn()) {
 				$listRaPlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.3.500'); // OIDplusPageAdminListRAs
@@ -66,7 +66,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 			} else {
 				foreach ($ra_roots as $loc_root) {
 					$ico = $loc_root->getIcon();
-					$icon = !is_null($ico) ? $ico : OIDplus::webpath(__DIR__).'treeicon_link.png';
+					$icon = !is_null($ico) ? $ico : OIDplus::webpath(__DIR__,true).'img/link_icon16.png';
 					$out['text'] .= '<p><a '.OIDplus::gui()->link($loc_root->nodeId()).'><img src="'.$icon.'"> '._L('Jump to RA root %1',$loc_root->objectTypeTitleShort().' '.$loc_root->crudShowId(OIDplusObject::parse($loc_root::root()))).'</a></p>';
 				}
 			}

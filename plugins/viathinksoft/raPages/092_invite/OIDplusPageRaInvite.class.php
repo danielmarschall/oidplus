@@ -110,12 +110,12 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$out['title'] = _L('Invite a Registration Authority');
 
 			if (!OIDplus::config()->getValue('ra_invitation_enabled')) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('Invitations are disabled by the administrator.').'</p>';
 				return;
 			}
 
-			$out['icon'] = OIDplus::webpath(__DIR__).'invite_ra_big.png';
+			$out['icon'] = OIDplus::webpath(__DIR__,true).'img/invite_icon.png';
 
 			try {
 				$this->inviteSecurityCheck($email);
@@ -132,7 +132,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 			} catch (Exception $e) {
 
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = _L('Error: %1',$e->getMessage());
 
 			}
@@ -146,19 +146,19 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$out['title'] = _L('Register as Registration Authority');
 
 			if (!OIDplus::config()->getValue('ra_invitation_enabled')) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('Invitations are disabled by the administrator.').'</p>';
 				return;
 			}
 
-			$out['icon'] = OIDplus::webpath(__DIR__).'activate_ra_big.png';
+			$out['icon'] = OIDplus::webpath(__DIR__,true).'img/activate_icon.png';
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 			if ($res->any()) {
 				$out['text'] = _L('This RA is already registered and does not need to be invited.');
 			} else {
 				if (!OIDplus::authUtils()->validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
-					$out['icon'] = 'img/error_big.png';
+					$out['icon'] = 'img/error.png';
 					$out['text'] = _L('Invalid authorization. Is the URL OK?');
 				} else {
 					// TODO: like in the FreeOID plugin, we could ask here at least for a name for the RA

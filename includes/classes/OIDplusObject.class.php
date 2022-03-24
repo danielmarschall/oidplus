@@ -309,9 +309,9 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		$dir = substr($dirs[0], strlen(OIDplus::localpath()));
 
 		if (OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
-			$icon = $dir.'/img/treeicon_own.png';
+			$icon = $dir.'/'.$this->rootIconname('own');
 		} else {
-			$icon = $dir.'/img/treeicon_general.png';
+			$icon = $dir.'/'.$this->rootIconname('general');
 		}
 
 		if (!file_exists($icon)) return null; // default icon (folder)
@@ -512,4 +512,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			return md5($this->nodeId(true)); // we don't use $id, because $this->nodeId(true) is possibly more canonical than $id
 		}
 	}
+
+	public function rootIconname($mode) {
+		// for backwards-compatibility with older plugins
+		return 'img/treeicon_'.$mode.'.png';
+	}
+
 }
