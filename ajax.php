@@ -88,7 +88,7 @@ try {
 			} catch (Exception $e) {
 				$json_out = array();
 				$json_out['title'] = _L('Error');
-				$json_out['icon'] = 'img/error_big.png';
+				$json_out['icon'] = 'img/error.png';
 				$json_out['text'] = $e->getMessage();
 			}
 			$json_out['status'] = 0;

@@ -60,25 +60,25 @@ if (file_exists($candidate1) || is_dir($candidate1)) {
 	$file = $candidate2;
 }
 
-if (($mode == 'treeicon_folder') || ($mode == 'treeicon_leaf_url') || ($mode == 'treeicon_leaf_doc')) {
+if (($mode == 'leaf_url_icon16') || ($mode == 'leaf_doc_icon16') || ($mode == 'folder_icon16')) {
 
 	if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'tree', $lang))) {
 		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
 	} else if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'tree', ''))) {
 		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
-	} else if (file_exists($icon_candidate = __DIR__.'/'.$mode.'.png')) { // default icon for mode
+	} else if (file_exists($icon_candidate = __DIR__.'/img/'.$mode.'.png')) { // default icon for mode
 		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
 	} else {
 		httpOutWithETag(SPACER_PNG, 'image/png'); // should not happen
 	}
 
-} else if (($mode == 'icon_leaf_url_big') || ($mode == 'icon_leaf_doc_big') || ($mode == 'icon_folder_big')) {
+} else if (($mode == 'leaf_url_icon') || ($mode == 'leaf_doc_icon') || ($mode == 'folder_icon')) {
 
 	if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'big', $lang))) {
 		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
 	} else if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'big', ''))) {
 		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
-	} else if (file_exists($icon_candidate = __DIR__.'/'.$mode.'.png')) { // default icon for mode
+	} else if (file_exists($icon_candidate = __DIR__.'/img/'.$mode.'.png')) { // default icon for mode
 		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
 	} else {
 		httpOutWithETag(SPACER_PNG, 'image/png', 'spacer.png'); // should not happen

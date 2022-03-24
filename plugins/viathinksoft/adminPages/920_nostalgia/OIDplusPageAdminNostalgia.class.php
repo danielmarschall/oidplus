@@ -28,10 +28,10 @@ class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin {
 		if ($id === 'oidplus:nostalgia') {
 			$handled = true;
 			$out['title'] = _L('Nostalgia');
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
 				return;
 			}
@@ -40,11 +40,11 @@ class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin {
 
 			if (class_exists('ZipArchive')) {
 				$out['text'] .= '<ul>';
-				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__).'export_dos.php">'._L('Download OIDplus for DOS').'</a>, '._L('including your database* (only OIDs)').'</li>';
+				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__,true).'export_dos.php">'._L('Download OIDplus for DOS').'</a>, '._L('including your database* (only OIDs)').'</li>';
 				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/252/oidplus_dos.zip">'._L('Download OIDplus for DOS').'</a>, '._L('without data').'</li>';
-				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__).'export_win.php">'._L('Download OIDplus for Windows 3.11').'</a>, '._L('including your database* (only OIDs)').'</li>';
+				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__,true).'export_win.php">'._L('Download OIDplus for Windows 3.11').'</a>, '._L('including your database* (only OIDs)').'</li>';
 				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/254/oidplus_win311.zip">'._L('Download OIDplus for Windows 3.11').'</a>, '._L('without data').'</li>';
-				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__).'export_win.php">'._L('Download OIDplus for Windows 95 or later').'</a>, '._L('including your database* (only OIDs)').'</li>';
+				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__,true).'export_win.php">'._L('Download OIDplus for Windows 95 or later').'</a>, '._L('including your database* (only OIDs)').'</li>';
 				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/253/oidplus_win95.zip">'._L('Download OIDplus for Windows 95 or later').'</a>, '._L('without data').'</li>';
 				$out['text'] .= '</ul>';
 				$out['text'] .= '<p>'._L('* Please note that the download might be delayed since your OID database is exported and added to the ZIP file.').'</p>';
@@ -62,8 +62,8 @@ class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin {
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
-		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
+		if (file_exists(__DIR__.'/img/main_icon16.png')) {
+			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

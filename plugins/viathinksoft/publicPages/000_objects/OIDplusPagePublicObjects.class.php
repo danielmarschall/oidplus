@@ -28,8 +28,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$icon = null;
 		} else {
 			$dir = $dirs[0];
-			$icon = $dir.'/img/treeicon_root.png';
-			if (!file_exists($icon)) $icon = null;
+			$icon_name = $ot::rootIconname('root');
+			if (!$icon_name) return null;
+			$icon = $dir.'/'.$icon_name;
+			if (!file_exists($icon)) return null;
 			$icon = substr($icon, strlen(OIDplus::localpath()));
 		}
 
@@ -464,7 +466,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$handled = true;
 
 			$out['title'] = OIDplus::config()->getValue('system_title');
-			$out['icon'] = OIDplus::webpath(__DIR__).'system_big.png';
+			$out['icon'] = OIDplus::webpath(__DIR__,true).'img/main_icon.png';
 
 			if (file_exists(OIDplus::localpath() . 'userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html')) {
 				$cont = file_get_contents(OIDplus::localpath() . 'userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html');
@@ -509,7 +511,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			if (!$obj->userHasReadRights()) {
 				$out['title'] = _L('Access denied');
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('Please <a %1>log in</a> to receive information about this object.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
 			}
@@ -530,7 +532,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						if (!$res->any()) {
 							http_response_code(404);
 							$out['title'] = _L('Object not found');
-							$out['icon'] = 'img/error_big.png';
+							$out['icon'] = 'img/error.png';
 							$out['text'] = _L('The object %1 was not found in this database.','<code>'.htmlentities($id).'</code>');
 							return;
 						} else {
@@ -546,7 +548,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (!$matches_any_registered_type) {
 				http_response_code(404);
 				$out['title'] = _L('Object not found');
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = _L('The object %1 was not found in this database.','<code>'.htmlentities($id).'</code>');
 				return;
 			}
@@ -663,7 +665,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		if ($nonjs) {
 			$json[] = array(
 				'id' => 'oidplus:system',
-				'icon' => OIDplus::webpath(__DIR__).'system.png',
+				'icon' => OIDplus::webpath(__DIR__,true).'img/main_icon16.png',
 				'text' => _L('System')
 			);
 
@@ -775,7 +777,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					// 1) The select-event will not be triggered upon loading
 					// 2) The nodes directly blow cannot be opened (loading infinite time)
 				),
-				'icon' => OIDplus::webpath(__DIR__).'system.png',
+				'icon' => OIDplus::webpath(__DIR__,true).'img/main_icon16.png',
 				'children' => $objTypesChildren
 			);
 

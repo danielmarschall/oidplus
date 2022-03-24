@@ -165,10 +165,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		if ($id === 'oidplus:oidinfo_compare_export') {
 			$handled = true;
 			$out['title'] = _L('List OIDs in your system which are missing at oid-info.com');
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
 				return;
 			}
@@ -230,13 +230,13 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$json = @json_decode($res, true);
 
 			if (!$json) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] .= _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
 				return;
 			}
 
 			if (isset($json['error']) || ($json['status'] < 0)) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				if (isset($json['error'])) {
 					$out['text'] .= _L('Received error: %1',$json['error']);
 				} else {
@@ -439,10 +439,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		if ($id === 'oidplus:oidinfo_compare_import') {
 			$handled = true;
 			$out['title'] = _L('List OIDs at oid-info.com which are missing in your system');
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
 				return;
 			}
@@ -504,13 +504,13 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$json = @json_decode($res, true);
 
 			if (!$json) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] .= _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
 				return;
 			}
 
 			if (isset($json['error']) || ($json['status'] < 0)) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				if (isset($json['error'])) {
 					$out['text'] .= _L('Received error: %1',$json['error']);
 				} else {
@@ -578,10 +578,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		if ($id === 'oidplus:datatransfer') {
 			$handled = true;
 			$out['title'] = _L('Data Transfer');
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
 				return;
 			}
@@ -597,8 +597,8 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			// ---------------- "Export" tab
 			$tabcont  = '<h2>'._L('Generate XML file containing all OIDs').'</h2>';
 			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>. They can be used for various purposes though.','href="http://www.oid-info.com/oid.xsd" target="_blank"').'</p>';
-			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__).'oidinfo_export.php\',\'_blank\')" value="'._L('Generate XML (all OIDs)').'"></p>';
-			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__).'oidinfo_export.php?online=1\',\'_blank\')" value="'._L('Generate XML (only OIDs which do not exist at oid-info.com)').'"></p>';
+			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__,true).'oidinfo_export.php\',\'_blank\')" value="'._L('Generate XML (all OIDs)').'"></p>';
+			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__,true).'oidinfo_export.php?online=1\',\'_blank\')" value="'._L('Generate XML (only OIDs which do not exist at oid-info.com)').'"></p>';
 			$tabcont .= '<p><a href="http://www.oid-info.com/submit.htm" target="_blank">'._L('Upload XML files manually to oid-info.com').'</a></p>';
 			$tabcont .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
 			$tabcont .= '<h2>'._L('Automatic export to oid-info.com').'</h2>';
@@ -633,8 +633,8 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
-		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
+		if (file_exists(__DIR__.'/img/main_icon16.png')) {
+			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

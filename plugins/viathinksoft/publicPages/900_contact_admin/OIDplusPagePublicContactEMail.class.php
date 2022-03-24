@@ -29,7 +29,7 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePluginPublic {
 		if ($id === 'oidplus:contact') {
 			$handled = true;
 			$out['title'] = _L('Contact administrator');
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
 
 			if (empty(OIDplus::config()->getValue('admin_email'))) {
 				$out['text'] = '<p>'._L('The administrator of this OIDplus system has not entered a contact email address.').'</p>';
@@ -45,8 +45,8 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePluginPublic {
 	}
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
-		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
+		if (file_exists(__DIR__.'/img/main_icon16.png')) {
+			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

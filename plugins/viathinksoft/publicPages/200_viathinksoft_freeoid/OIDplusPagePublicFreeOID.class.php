@@ -195,7 +195,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$handled = true;
 
 			$out['title'] = _L('Register a free OID');
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
 
 			// Note: We are using the highest OID instead of the rowcount, because there might be OIDs which could have been deleted in between
 			$highest_id = $this->freeoid_max_id();
@@ -243,13 +243,13 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$auth = explode('$',$id)[3];
 
 			$out['title'] = _L('Activate Free OID');
-			$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
 
 			if ($already_registered_oid = $this->alreadyHasFreeOid($email, true)) {
 				throw new OIDplusException(_L('This email address already has a FreeOID registered (%1)', $already_registered_oid));
 			} else {
 				if (!OIDplus::authUtils()->validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
-					$out['icon'] = 'img/error_big.png';
+					$out['icon'] = 'img/error.png';
 					$out['text'] = _L('Invalid authorization. Is the URL OK?');
 				} else {
 					$ra = new OIDplusRA($email);
@@ -289,8 +289,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (empty(self::getFreeRootOid(false))) return false;
 
-		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
+		if (file_exists(__DIR__.'/img/main_icon16.png')) {
+			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

@@ -33,10 +33,10 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 		if ($id === 'oidplus:login_facebook') {
 			$handled = true;
 			$out['title'] = _L('Login using Facebook');
-			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
+			$out['icon']  = OIDplus::webpath(__DIR__,true).'img/main_icon.png';
 
 			if (!OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = _L('Facebook OAuth authentication is disabled on this system.');
 				return;
 			}
@@ -74,7 +74,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 			$logins[] = array(
 				'oidplus:login_facebook',
 				_L('Login using Facebook'),
-				OIDplus::webpath(__DIR__).'treeicon.png'
+				OIDplus::webpath(__DIR__,true).'img/main_icon16.png'
 			);
 		}
 		return $logins;

@@ -88,7 +88,7 @@ class OIDplusGs1 extends OIDplusObject {
 	}
 
 	public function getContentPage(&$title, &$content, &$icon) {
-		$icon = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webPath(__DIR__,true).'icon_big.png' : '';
+		$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webPath(__DIR__,true).'img/main_icon.png' : '';
 
 		if ($this->isRoot()) {
 			$title = OIDplusGs1::objectTypeTitle();
@@ -230,5 +230,9 @@ class OIDplusGs1 extends OIDplusObject {
 	public function getDirectoryName() {
 		if ($this->isRoot()) return $this->ns();
 		return $this->ns().'_'.$this->nodeId(false); // safe, because there are only numbers
+	}
+
+	public function rootIconname($mode) {
+		return 'img/'.$mode.'_icon16.png';
 	}
 }

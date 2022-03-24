@@ -178,7 +178,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				// This will not be logged anymore, because people could spam the log files otherwise
 				//OIDplus::logger()->log("[WARN]A!", "LFI/RFI attack blocked (requested file '$file')");
 				$out['title'] = _L('Access denied');
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('This request is invalid').'</p>';
 				return;
 			}
@@ -190,7 +190,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			if ($file != '') {
 				if (!self::mayAccessResource($file)) {
 					$out['title'] = _L('Access denied');
-					$out['icon'] = 'img/error_big.png';
+					$out['icon'] = 'img/error.png';
 					$out['text'] = '<p>'._L('Authentication error. Please log in.').'</p>';
 					return;
 				}
@@ -213,8 +213,8 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				$dir = dirname($file);
 
 				if ($dir == '.') {
-					if (file_exists(__DIR__.'/treeicon.png')) {
-						$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
+					if (file_exists(__DIR__.'/img/main_icon16.png')) {
+						$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
 					} else {
 						$tree_icon = null; // default icon (folder)
 					}
@@ -226,13 +226,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				} else {
 					$realdir = self::realname($dir);
 
-					$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_folder&lang='.OIDplus::getCurrentLang().'&file='.urlencode($dir);
+					$tree_icon = OIDplus::webpath(__DIR__,true).'show_icon.php?mode=folder_icon16&lang='.OIDplus::getCurrentLang().'&file='.urlencode($dir);
 					/*
 					$icon_candidate = pathinfo($realdir)['dirname'].'/'.pathinfo($realdir)['filename'].'_tree.png';
 					if (file_exists($icon_candidate)) {
 						$tree_icon = $icon_candidate;
-					} else if (file_exists(__DIR__.'/treeicon_folder.png')) {
-						$tree_icon = OIDplus::webpath(__DIR__).'treeicon_folder.png';
+					} else if (file_exists(__DIR__.'/img/folder_icon16.png')) {
+						$tree_icon = OIDplus::webpath(__DIR__,true).'img/folder_icon16.png';
 					} else {
 						$tree_icon = null; // no icon
 					}
@@ -254,13 +254,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				if ((substr($file,-4,4) == '.url') || (substr($file,-5,5) == '.link')) {
 					$out['title'] = $this->getHyperlinkTitle($realfile);
 
-					$out['icon'] = OIDplus::webpath(__DIR__).'show_icon.php?mode=icon_leaf_url_big&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
+					$out['icon'] = OIDplus::webpath(__DIR__,true).'show_icon.php?mode=leaf_url_icon&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 					/*
 					$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_big.png';
 					if (file_exists($icon_candidate)) {
 						$out['icon'] = $icon_candidate;
-					} else if (file_exists(__DIR__.'/icon_leaf_url_big.png')) {
-						$out['icon'] = OIDplus::webpath(__DIR__).'icon_leaf_url_big.png';
+					} else if (file_exists(__DIR__.'/img/leaf_url_icon.png')) {
+						$out['icon'] = OIDplus::webpath(__DIR__,true).'img/leaf_url_icon.png';
 					} else {
 						$out['icon'] = '';
 					}
@@ -271,13 +271,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				} else if ((substr($file,-4,4) == '.htm') || (substr($file,-5,5) == '.html')) {
 					$out['title'] = $this->getDocumentTitle($file);
 
-					$out['icon'] = OIDplus::webpath(__DIR__).'show_icon.php?mode=icon_leaf_doc_big&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
+					$out['icon'] = OIDplus::webpath(__DIR__,true).'show_icon.php?mode=leaf_doc_icon&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 					/*
 					$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_big.png';
 					if (file_exists($icon_candidate)) {
 						$out['icon'] = $icon_candidate;
-					} else if (file_exists(__DIR__.'/icon_leaf_doc_big.png')) {
-						$out['icon'] = OIDplus::webpath(__DIR__).'icon_leaf_doc_big.png';
+					} else if (file_exists(__DIR__.'/img/leaf_doc_icon.png')) {
+						$out['icon'] = OIDplus::webpath(__DIR__,true).'img/leaf_doc_icon.png';
 					} else {
 						$out['icon'] = '';
 					}
@@ -286,7 +286,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					$out['text'] .= self::getDocumentContent($file);
 				} else {
 					$out['title'] = _L('Unknown file type');
-					$out['icon'] = 'img/error_big.png';
+					$out['icon'] = 'img/error.png';
 					$out['text'] = '<p>'._L('The system does not know how to handle this file type.').'</p>';
 					return;
 				}
@@ -294,23 +294,23 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				$out['title'] = ($file == '') ? $this->getMainTitle() : self::getFolderTitle($realfile);
 
 				if ($file == '') {
-					$out['icon'] = file_exists(__DIR__.'/icon_big.png') ? OIDplus::webpath(__DIR__).'icon_big.png' : '';
+					$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
 				} else {
-					$out['icon'] = OIDplus::webpath(__DIR__).'show_icon.php?mode=icon_folder_big&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
+					$out['icon'] = OIDplus::webpath(__DIR__,true).'show_icon.php?mode=folder_icon&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 					/*
 					$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_big.png';
 					if (file_exists($icon_candidate)) {
 						$out['icon'] = $icon_candidate;
-					} else if (file_exists(__DIR__.'/icon_folder_big.png')) {
-						$out['icon'] = OIDplus::webpath(__DIR__).'icon_folder_big.png';
+					} else if (file_exists(__DIR__.'/img/folder_icon.png')) {
+						$out['icon'] = OIDplus::webpath(__DIR__,true).'img/folder_icon.png';
 					} else {
 						$out['icon'] = null; // no icon
 					}
 					*/
 				}
 
-				if (file_exists(__DIR__.'/treeicon.png')) {
-					$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
+				if (file_exists(__DIR__.'/img/main_icon16.png')) {
+					$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
 				} else {
 					$tree_icon = null; // default icon (folder)
 				}
@@ -321,13 +321,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				natcasesort($dirs);
 				foreach ($dirs as $dir) {
 					$realdir = self::realname($dir);
-					$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_folder&lang='.OIDplus::getCurrentLang().'&file='.urlencode($dir);
+					$tree_icon = OIDplus::webpath(__DIR__,true).'show_icon.php?mode=folder_icon16&lang='.OIDplus::getCurrentLang().'&file='.urlencode($dir);
 					/*
 					$icon_candidate = pathinfo($realdir)['dirname'].'/'.pathinfo($realdir)['filename'].'_tree.png';
 					if (file_exists($icon_candidate)) {
 						$tree_icon = $icon_candidate;
-					} else if (file_exists(__DIR__.'/treeicon_folder.png')) {
-						$tree_icon = OIDplus::webpath(__DIR__).'treeicon_folder.png';
+					} else if (file_exists(__DIR__.'/img/folder_icon16.png')) {
+						$tree_icon = OIDplus::webpath(__DIR__,true).'img/folder_icon16.png';
 					} else {
 						$tree_icon = null; // no icon
 					}
@@ -349,13 +349,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				foreach ($files as $file) {
 					$realfile = self::realname($file);
 					if ((substr($file,-4,4) == '.url') || (substr($file,-5,5) == '.link')) {
-						$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_url&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
+						$tree_icon = OIDplus::webpath(__DIR__,true).'show_icon.php?mode=leaf_url_icon16&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 						/*
 						$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_tree.png';
 						if (file_exists($icon_candidate)) {
 							$tree_icon = $icon_candidate;
-						} else if (file_exists(__DIR__.'/treeicon_leaf_url.png')) {
-							$tree_icon = OIDplus::webpath(__DIR__).'treeicon_leaf_url.png';
+						} else if (file_exists(__DIR__.'/img/leaf_url_icon16.png')) {
+							$tree_icon = OIDplus::webpath(__DIR__,true).'img/leaf_url_icon16.png';
 						} else {
 							$tree_icon = null; // default icon (folder)
 						}
@@ -366,13 +366,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 						$out['text'] .= '<p><a href="'.htmlentities(self::getHyperlinkURL($realfile)).'" target="_blank">'.$ic.' '.htmlentities($this->getHyperlinkTitle($realfile)).'</a></p>';
 						$count++;
 					} else {
-						$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_doc&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
+						$tree_icon = OIDplus::webpath(__DIR__,true).'show_icon.php?mode=leaf_doc_icon16&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 						/*
 						$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_tree.png';
 						if (file_exists($icon_candidate)) {
 							$tree_icon = $icon_candidate;
-						} else if (file_exists(__DIR__.'/treeicon_leaf_doc.png')) {
-							$tree_icon = OIDplus::webpath(__DIR__).'treeicon_leaf_doc.png';
+						} else if (file_exists(__DIR__.'/img/leaf_doc_icon16.png')) {
+							$tree_icon = OIDplus::webpath(__DIR__,true).'img/leaf_doc_icon16.png';
 						} else {
 							$tree_icon = null; // default icon (folder)
 						}
@@ -390,7 +390,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				}
 			} else {
 				$out['title'] = _L('Not found');
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('This resource doesn\'t exist anymore.').'</p>';
 			}
 		}
@@ -409,13 +409,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 			$realdir = self::realname($dir);
 
-			$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_folder&lang='.OIDplus::getCurrentLang().'&file='.urlencode($dir);
+			$tree_icon = OIDplus::webpath(__DIR__,true).'show_icon.php?mode=folder_icon16&lang='.OIDplus::getCurrentLang().'&file='.urlencode($dir);
 			/*
 			$icon_candidate = pathinfo($realdir)['dirname'].'/'.pathinfo($realdir)['filename'].'_tree.png';
 			if (file_exists($icon_candidate)) {
 				$tree_icon = $icon_candidate;
-			} else if (file_exists(__DIR__.'/treeicon_folder.png')) {
-				$tree_icon = OIDplus::webpath(__DIR__).'treeicon_folder.png';
+			} else if (file_exists(__DIR__.'/img/folder_icon16.png')) {
+				$tree_icon = OIDplus::webpath(__DIR__,true).'img/folder_icon16.png';
 			} else {
 				$tree_icon = null; // default icon (folder)
 			}
@@ -440,13 +440,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		foreach ($files as $file) {
 			$realfile = self::realname($file);
 			if ((substr($file,-4,4) == '.url') || (substr($file,-5,5) == '.link')) {
-				$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_url&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
+				$tree_icon = OIDplus::webpath(__DIR__,true).'show_icon.php?mode=leaf_url_icon16&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 				/*
 				$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_tree.png';
 				if (file_exists($icon_candidate)) {
 					$tree_icon = $icon_candidate;
-				} else if (file_exists(__DIR__.'/treeicon_leaf_url.png')) {
-					$tree_icon = OIDplus::webpath(__DIR__).'treeicon_leaf_url.png';
+				} else if (file_exists(__DIR__.'/img/leaf_url_icon16.png')) {
+					$tree_icon = OIDplus::webpath(__DIR__,true).'img/leaf_url_icon16.png';
 				} else {
 					$tree_icon = null; // default icon (folder)
 				}
@@ -464,13 +464,13 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					)
 				);
 			} else {
-				$tree_icon = OIDplus::webpath(__DIR__).'show_icon.php?mode=treeicon_leaf_doc&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
+				$tree_icon = OIDplus::webpath(__DIR__,true).'show_icon.php?mode=leaf_doc_icon16&lang='.OIDplus::getCurrentLang().'&file='.urlencode($file);
 				/*
 				$icon_candidate = pathinfo($realfile)['dirname'].'/'.pathinfo($realfile)['filename'].'_tree.png';
 				if (file_exists($icon_candidate)) {
 					$tree_icon = $icon_candidate;
-				} else if (file_exists(__DIR__.'/treeicon_leaf_doc.png')) {
-					$tree_icon = OIDplus::webpath(__DIR__).'treeicon_leaf_doc.png';
+				} else if (file_exists(__DIR__.'/img/leaf_doc_icon16.png')) {
+					$tree_icon = OIDplus::webpath(__DIR__,true).'img/leaf_doc_icon16.png';
 				} else {
 					$tree_icon = null; // default icon (folder)
 				}
@@ -508,8 +508,8 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		$this->tree_rec($children, '/');
 
 		if (!OIDplus::config()->getValue('resource_plugin_hide_empty_path', true) || (count($children) > 0)) {
-			if (file_exists(__DIR__.'/treeicon.png')) {
-				$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
+			if (file_exists(__DIR__.'/img/main_icon16.png')) {
+				$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
 			} else {
 				$tree_icon = null; // default icon (folder)
 			}

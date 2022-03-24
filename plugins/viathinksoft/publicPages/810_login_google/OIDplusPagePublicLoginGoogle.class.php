@@ -33,10 +33,10 @@ class OIDplusPagePublicLoginGoogle extends OIDplusPagePluginPublic {
 		if ($id === 'oidplus:login_google') {
 			$handled = true;
 			$out['title'] = _L('Login using Google');
-			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
+			$out['icon']  = OIDplus::webpath(__DIR__,true).'img/main_icon.png';
 
 			if (!OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_ENABLED', false)) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = _L('Google OAuth authentication is disabled on this system.');
 				return;
 			}
@@ -75,7 +75,7 @@ class OIDplusPagePublicLoginGoogle extends OIDplusPagePluginPublic {
 			$logins[] = array(
 				'oidplus:login_google',
 				_L('Login using Google'),
-				OIDplus::webpath(__DIR__).'treeicon.png'
+				OIDplus::webpath(__DIR__,true).'img/main_icon16.png'
 			);
 		}
 		return $logins;

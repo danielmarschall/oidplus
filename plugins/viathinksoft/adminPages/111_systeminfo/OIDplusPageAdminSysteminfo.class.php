@@ -51,10 +51,10 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 		if ($id === 'oidplus:phpinfo') {
 			$handled = true;
 			$out['title'] = _L('PHP information');
-			$out['icon']  = OIDplus::webpath(__DIR__).'icon_php_big.png';
+			$out['icon']  = OIDplus::webpath(__DIR__,true).'img/php_icon.png';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
 				return;
 			}
@@ -85,10 +85,10 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 		else if ($id === 'oidplus:systeminfo') {
 			$handled = true;
 			$out['title'] = _L('System information');
-			$out['icon']  = OIDplus::webpath(__DIR__).'icon_big.png';
+			$out['icon']  = OIDplus::webpath(__DIR__,true).'img/main_icon.png';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error_big.png';
+				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
 				return;
 			}
@@ -301,14 +301,14 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
-		if (file_exists(__DIR__.'/treeicon.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__).'treeicon.png';
+		if (file_exists(__DIR__.'/img/main_icon16.png')) {
+			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}
 
-		if (file_exists(__DIR__.'/treeicon_php.png')) {
-			$tree_icon_php = OIDplus::webpath(__DIR__).'treeicon_php.png';
+		if (file_exists(__DIR__.'/img/php_icon16.png')) {
+			$tree_icon_php = OIDplus::webpath(__DIR__,true).'img/php_icon16.png';
 		} else {
 			$tree_icon_php = null; // default icon (folder)
 		}

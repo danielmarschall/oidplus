@@ -67,7 +67,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 
 		<script src="'.(OIDplus::webPath() . 'vendor/components/jquery/jquery.min.js').'"></script>
 		<script src="'.(OIDplus::webPath() . 'vendor/emn178/js-sha3/src/sha3.js').'"></script>
-		<script src="'.(OIDplus::webPath(__DIR__) . 'OIDplusCaptchaPluginVtsClientChallenge.js').'"></script>
+		<script src="'.(OIDplus::webpath(__DIR__,true) . 'OIDplusCaptchaPluginVtsClientChallenge.js').'"></script>
 		'; // we include OIDplusCaptchaPluginVtsClientChallenge.js not via manifest.xml, otherwise oobe.php would not work
 	}
 
