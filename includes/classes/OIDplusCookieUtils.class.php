@@ -27,6 +27,11 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 
 	public function setcookie($name, $value, $expires=0, $allowJS=false, $samesite=null) {
 		// $path = ini_get('session.cookie_path');
+
+		// Here, we will use the absolute system path the visitor is using (NOT the canonical one!)
+		// but remove the hostname and protocl, so that we only have the path relative to the root left.
+		// TODO: If CANONICAL_SYSTEM_URL is a proxy URL and the proxy and the actual system use different
+		//       directory levels, then this path might be wrong?!
 		$path = parse_url(OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE))['path'];
 
 		$domain = '';

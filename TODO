@@ -1,13 +1,7 @@
 
-RECENT STUFF
-- At a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
-- Default language selection: Either always en-US, or automatical selection depending on browser language, or depending on admin setting (e.g. german companies offer a german repository by default)?
-- BCrypt
-	Make #rounds and length of admin password configurable (pre-baseconfig?)
-	Include dev/bcrypt_cost_calculator somewhere in the configuration page?
-	... At least give a hint to the documentation, so they know how to run the tool and how to enter the cost in the configuration (for RA and Admin)
-	... or in the setup page make an extra control how complex the admin password should be? but be aware that nobody enters a too big number (it makes DoS possible!)
-- system log plugin: Only show 100 events and let the user switch pages. To avoid that you load a page with 10000+ log entries!
+IMPORTANT:
+- OIDplusCookieUtils will not work if OIDplus is used in a proxy, and the proxy has a different path level as the canonical (redirected) url.
+  We cannot use webpath()!
 
 Treeview / Navigation:
 - In the tree, let the operator create "shortcuts" to important OIDs?
@@ -16,6 +10,11 @@ Treeview / Navigation:
 SECURITY Improvements:
 - Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")
   and see which error message appears, or they could try to enter "plugin/adminPages/..." using the web browser and see if the result is HTTP 200 or HTTP 404.
+- BCrypt
+	Make #rounds and length of admin password configurable (pre-baseconfig?)
+	Include dev/bcrypt_cost_calculator somewhere in the configuration page?
+	... At least give a hint to the documentation, so they know how to run the tool and how to enter the cost in the configuration (for RA and Admin)
+	... or in the setup page make an extra control how complex the admin password should be? but be aware that nobody enters a too big number (it makes DoS possible!)
 
 IDEAS FOR NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:
@@ -68,6 +67,9 @@ DATA TRANSFER PLUGIN
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
 
 SMALL THINGS
+- At a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
+- Default language selection: Either always en-US, or automatical selection depending on browser language, or depending on admin setting (e.g. german companies offer a german repository by default)?
+- system log plugin: Only show 100 events and let the user switch pages. To avoid that you load a page with 10000+ log entries!
 - Alpine Linux SVN update: I get the error "svn: warning: W000013: Can't open file '/root/.subversion/servers': Permission denied", although "whoami" is "apache"! (Maybe because the initial checkout was done by root?!)
 - AutoUpdate via cron?
 - cron.sh: set a global flag that tells the plugins whether we are calling from crontab,
