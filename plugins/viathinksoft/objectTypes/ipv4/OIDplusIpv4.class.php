@@ -193,7 +193,7 @@ class OIDplusIpv4 extends OIDplusObject {
 		}
 	}
 
-	public static function rootIconname($mode) {
+	public static function treeIconFilename($mode) {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }

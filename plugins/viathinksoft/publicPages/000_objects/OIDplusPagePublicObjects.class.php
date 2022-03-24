@@ -28,7 +28,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$icon = null;
 		} else {
 			$dir = $dirs[0];
-			$icon_name = $ot::rootIconname('root');
+			$icon_name = $ot::treeIconFilename('root');
 			if (!$icon_name) return null;
 			$icon = $dir.'/'.$icon_name;
 			if (!file_exists($icon)) return null;

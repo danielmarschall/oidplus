@@ -483,7 +483,7 @@ class OIDplusOid extends OIDplusObject {
 		return $this->ns().'_'.str_replace('.', '_', $oid);
 	}
 
-	public static function rootIconname($mode) {
+	public static function treeIconFilename($mode) {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }
