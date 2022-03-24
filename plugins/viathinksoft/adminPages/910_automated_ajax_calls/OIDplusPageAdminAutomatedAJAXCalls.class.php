@@ -92,7 +92,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using JavaScript').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_js.html');
-			$cont = str_replace('<url>', webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php', $cont);
+			$cont = str_replace('<url>', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php', $cont);
 			$cont = str_replace('<token>', $token, $cont);
 			$out['text'] .= '<pre>'.htmlentities($cont).'</pre>';
 
@@ -110,7 +110,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using VBScript').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_vbs.vbs');
-			$cont = str_replace('<url>', webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php', $cont);
+			$cont = str_replace('<url>', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php', $cont);
 			$cont = str_replace('<token>', $token, $cont);
 			$out['text'] .= '<pre>'.htmlentities($cont).'</pre>';
 		}
