@@ -232,7 +232,7 @@ class OIDplusGs1 extends OIDplusObject {
 		return $this->ns().'_'.$this->nodeId(false); // safe, because there are only numbers
 	}
 
-	public static function rootIconname($mode) {
+	public static function treeIconFilename($mode) {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }

@@ -20,13 +20,15 @@ To create the plus-sign that is used in the large logo
 		ctl(5) = 255
 		ctl(6) = 0
 
+3. At the front of the "+" sign, apply the dodge tool, mode "highlight", brush size 300px
+
 
 Additional steps for the small plus-sign used in the design plugins
 -------------------------------------------------------------------
 
-3. Color Balance
+4. Color Balance
 	Midtones 40 / -32 / 67
 	Preserve Luminosity
 
-4. Photoshop "Stroke" effect, 1 pixel black border
+5. Photoshop "Stroke" effect, 1 pixel black border
 	and with a 1x1 black brush, trace the edges of the plus sign
