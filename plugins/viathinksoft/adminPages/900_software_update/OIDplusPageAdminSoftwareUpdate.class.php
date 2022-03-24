@@ -118,7 +118,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 				$tmp_filename = 'update_'.generateRandomString(10).'.tmp.php';
 				$local_file = OIDplus::localpath().$tmp_filename;
-				$web_file = OIDplus::webpath().$tmp_filename;
+				$web_file = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).$tmp_filename;
 
 				@file_put_contents($local_file, $cont);
 
@@ -150,7 +150,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 			$handled = true;
 			$out['title'] = _L('Software update');
-			$out['icon']  = OIDplus::webpath(__DIR__,true).'img/main_icon.png';
+			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error.png';
@@ -251,7 +251,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
+			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

@@ -55,7 +55,7 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 			$ra_email = explode('$',$id)[1];
 
 			$out['title'] = _L('Automated AJAX calls');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error.png';
@@ -78,7 +78,7 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 
 			$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling the AJAX API.').'</p>';
 			$out['text'] .= '<p>'._L('The URL for the AJAX script is:').'</p>';
-			$out['text'] .= '<p><b>'.OIDplus::webpath(null,false).'ajax.php</b></p>';
+			$out['text'] .= '<p><b>'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php</b></p>';
 			$out['text'] .= '<p>'._L('You must at least provide following fields:').'</p>';
 			$out['text'] .= '<p><pre>';
 			$out['text'] .= 'OIDPLUS_AUTH_JWT = "'.htmlentities($token).'"'."\n";
@@ -98,25 +98,25 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using JavaScript').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_js.html');
-			$cont = str_replace('<url>', OIDplus::webpath(null,false).'ajax.php', $cont);
+			$cont = str_replace('<url>', webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php', $cont);
 			$cont = str_replace('<token>', $token, $cont);
 			$out['text'] .= '<pre>'.htmlentities($cont).'</pre>';
 
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using PHP (located at a foreign server)').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_php.phps');
-			$cont = str_replace('<url>', OIDplus::webpath(null,false).'ajax.php', $cont);
+			$cont = str_replace('<url>', webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php', $cont);
 			$cont = str_replace('<token>', $token, $cont);
 			$out['text'] .= '<pre>'.preg_replace("@<br.*>@ismU","",highlight_string($cont,true)).'</pre>';
 
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using Python').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_python.py');
-			$cont = str_replace('<url>', OIDplus::webpath(null,false).'ajax.php', $cont);
+			$cont = str_replace('<url>', webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php', $cont);
 			$cont = str_replace('<token>', $token, $cont);
 			$out['text'] .= '<pre>'.htmlentities($cont).'</pre>';
 
 			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using VBScript').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_vbs.vbs');
-			$cont = str_replace('<url>', OIDplus::webpath(null,false).'ajax.php', $cont);
+			$cont = str_replace('<url>', webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php', $cont);
 			$cont = str_replace('<token>', $token, $cont);
 			$out['text'] .= '<pre>'.htmlentities($cont).'</pre>';
 		}
@@ -127,7 +127,7 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 		if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
+			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

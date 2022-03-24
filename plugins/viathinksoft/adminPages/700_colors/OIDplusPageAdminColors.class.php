@@ -88,7 +88,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 		if ($id === 'oidplus:colors') {
 			$handled = true;
 			$out['title'] = _L('Design');
-			$out['icon']  = OIDplus::webpath(__DIR__,true).'img/main_icon.png';
+			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error.png';
@@ -152,7 +152,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
                 if (file_exists(__DIR__.'/img/main_icon16.png')) {
-                        $tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
+                        $tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
                 } else {
                         $tree_icon = null; // default icon (folder)
                 }

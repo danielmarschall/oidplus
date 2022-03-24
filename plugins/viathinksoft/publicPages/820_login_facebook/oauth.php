@@ -52,7 +52,7 @@ $ch = curl_init();
 if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 curl_setopt($ch, CURLOPT_URL,"https://graph.facebook.com/v8.0/oauth/access_token?".
 	"client_id=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID'))."&".
-	"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,false).'oauth.php')."&".
+	"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'oauth.php')."&".
 	"client_secret=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_SECRET'))."&".
 	"code=".$_GET['code']
 );
@@ -107,4 +107,4 @@ OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()."
 
 // Go back to OIDplus
 
-header('Location:'.OIDplus::webpath(null,false));
+header('Location:'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL));

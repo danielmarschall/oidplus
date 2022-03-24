@@ -55,7 +55,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		if ($id === 'oidplus:srv_registration') {
 			$handled = true;
 			$out['title'] = _L('System registration settings');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error.png';
@@ -130,7 +130,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		if ($id === 'oidplus:srvreg_status') {
 			$handled = true;
 			$out['title'] = _L('Registration live status');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error.png';
@@ -232,7 +232,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			$privacy_level = OIDplus::config()->getValue('reg_privacy');
 		}
 
-		$system_url = OIDplus::webpath();
+		$system_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL);
 
 		// It is very important that we set the ping time NOW, because ViaThinkSoft might contact us during the ping,
 		// and this would cause an endless loop!
@@ -479,7 +479,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
+			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

@@ -54,10 +54,10 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			OIDplus::logger()->log("[INFO]OID(oid:$root_oid)+RA($email)!", "Requested a free OID for email '$email' to be placed into root '$root_oid'");
 
 			$timestamp = time();
-			$activate_url = OIDplus::webpath(null,false) . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp));
+			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp));
 
 			$message = file_get_contents(__DIR__ . '/request_msg.tpl');
-			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,false), $message);
+			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
@@ -158,14 +158,14 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$message .= "URL for more information: $url\n";
 			$message .= "OID Name: $title\n";
 			$message .= "\n";
-			$message .= "More details: ".OIDplus::webpath(null,false)."?goto=oid:$new_oid\n";
+			$message .= "More details: ".OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)."?goto=oid:$new_oid\n";
 
 			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title')." - OID $new_oid registered", $message, OIDplus::config()->getValue('global_cc'));
 
 			// Send delegation information to user
 
 			$message = file_get_contents(__DIR__ . '/allocated_msg.tpl');
-			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,false), $message);
+			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{NEW_OID}}', $new_oid, $message);
@@ -195,7 +195,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$handled = true;
 
 			$out['title'] = _L('Register a free OID');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			// Note: We are using the highest OID instead of the rowcount, because there might be OIDs which could have been deleted in between
 			$highest_id = $this->freeoid_max_id();
@@ -243,7 +243,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$auth = explode('$',$id)[3];
 
 			$out['title'] = _L('Activate Free OID');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if ($already_registered_oid = $this->alreadyHasFreeOid($email, true)) {
 				throw new OIDplusException(_L('This email address already has a FreeOID registered (%1)', $already_registered_oid));
@@ -290,7 +290,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 		if (empty(self::getFreeRootOid(false))) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
+			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

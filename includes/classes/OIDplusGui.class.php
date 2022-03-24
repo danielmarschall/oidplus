@@ -81,7 +81,7 @@ class OIDplusGui extends OIDplusBaseClass {
 
 			if (count($dirs) > 0) {
 				$dir = substr($dirs[0], strlen(OIDplus::localpath()));
-				$langbox_entries[$code] = '<span class="lang_flag_bg"><a '.($useJs ? 'onclick="setLanguage(\''.$code.'\'); return false" ' : '').'href="?lang='.$code.$add.'"><img src="'.OIDplus::webpath(null,true).$dir.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20"></a></span> ';
+				$langbox_entries[$code] = '<span class="lang_flag_bg"><a '.($useJs ? 'onclick="setLanguage(\''.$code.'\'); return false" ' : '').'href="?lang='.$code.$add.'"><img src="'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).$dir.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20"></a></span> ';
 			}
 		}
 		if ($non_default_languages > 0) {
@@ -100,7 +100,7 @@ class OIDplusGui extends OIDplusBaseClass {
 			echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
 			echo '<p>'._L('Please check the file %1','<b>userdata/baseconfig/config.inc.php</b>');
 			if (is_dir(__DIR__ . '/../../setup')) {
-				echo ' '._L('or run <a href="%1">setup</a> again',OIDplus::webpath().'setup/');
+				echo ' '._L('or run <a href="%1">setup</a> again',OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/');
 			}
 			echo '</p>';
 			echo self::getExceptionTechInfo($exception);

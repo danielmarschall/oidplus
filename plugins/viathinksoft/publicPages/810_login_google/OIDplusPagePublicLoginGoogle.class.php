@@ -33,7 +33,7 @@ class OIDplusPagePublicLoginGoogle extends OIDplusPagePluginPublic {
 		if ($id === 'oidplus:login_google') {
 			$handled = true;
 			$out['title'] = _L('Login using Google');
-			$out['icon']  = OIDplus::webpath(__DIR__,true).'img/main_icon.png';
+			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
 			if (!OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_ENABLED', false)) {
 				$out['icon'] = 'img/error.png';
@@ -46,7 +46,7 @@ class OIDplusPagePublicLoginGoogle extends OIDplusPagePluginPublic {
 				"response_type=code&".
 				"client_id=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'))."&".
 				"scope=".implode('%20', array(/*'openid',*/ 'email', 'profile'))."&".
-				"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,false).'oauth.php')."&".
+				"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'oauth.php')."&".
 				"state=".urlencode($_COOKIE['csrf_token_weak']);
 			$out['text'] = '<p>'._L('Please wait...').'</p><script>window.location.href = '.js_escape($target).';</script>';
 		}
@@ -75,7 +75,7 @@ class OIDplusPagePublicLoginGoogle extends OIDplusPagePluginPublic {
 			$logins[] = array(
 				'oidplus:login_google',
 				_L('Login using Google'),
-				OIDplus::webpath(__DIR__,true).'img/main_icon16.png'
+				OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png'
 			);
 		}
 		return $logins;

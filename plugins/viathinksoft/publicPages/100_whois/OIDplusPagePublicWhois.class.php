@@ -75,20 +75,20 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$example = $this->getExampleId();
 
 			$out['title'] = _L('OID Information Protocol (OID-IP) / WHOIS');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			$out['text']  = '';
 			$out['text'] .= '<p>'._L('With the OID Information Protocol (OID-IP), you can query object information in a machine-readable format.').'</p>';
 			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-02</a></p>';
 			$out['text'] .= '<h2>'._L('Web query').'</h2>';
-			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__,true).'whois/webwhois.php" method="GET" target="_blank">';
+			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/webwhois.php" method="GET" target="_blank">';
 			$out['text'] .= ''._L('Output format').':<br><fieldset id="whois_format">';
 			$out['text'] .= '    <input type="radio" id="text" name="format" value="text" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			$out['text'] .= '    <label for="text"> '._L('Text format').'</label><br>';
 			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="json"> '._L('JSON').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,true).'whois/json_schema.json">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '    <label for="json"> '._L('JSON').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/json_schema.json">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="xml"> '._L('XML').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,true).'whois/xml_schema.xsd">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '    <label for="xml"> '._L('XML').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/xml_schema.xsd">'._L('Schema').'</a>)<br>';
 			//$out['text'] .= '    <input type="radio" id="html" name="format" value="html" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			//$out['text'] .= '    <label for="html"> '._L('HTML').'</label><br>';
 			$out['text'] .= '</fieldset><br>';
@@ -125,7 +125,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
+			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}
@@ -147,7 +147,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 	public function modifyContent($id, &$title, &$icon, &$text) {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.2
 
-		$text .= '<br><img src="'.OIDplus::webpath(__DIR__,true).'img/page_pictogram.png" height="15" alt=""> <a href="'.OIDplus::webpath(__DIR__,true).'whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('Whois').'</a>';
+		$text .= '<br><img src="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/page_pictogram.png" height="15" alt=""> <a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('Whois').'</a>';
 
 		$obj = OIDplusObject::parse($id);
 		if ($obj->userHasParentalWriteRights()) {

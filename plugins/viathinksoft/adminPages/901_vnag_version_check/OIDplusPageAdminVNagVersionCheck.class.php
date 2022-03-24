@@ -41,7 +41,7 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 
 			$handled = true;
 			$out['title'] = _L('VNag version check');
-			$out['icon']  = OIDplus::webpath(__DIR__,true).'img/main_icon.png';
+			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error.png';
@@ -59,9 +59,9 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 
 			$cont = str_replace('%%SYSTEM_URL%%',OIDplus::localpath(),$cont);
 			$cont = str_replace('%%REL_LOC_PATH%%',OIDplus::localpath(__DIR__,true),$cont);
-			$cont = str_replace('%%REL_WEB_PATH%%',OIDplus::webpath(__DIR__,true),$cont);
+			$cont = str_replace('%%REL_WEB_PATH%%',OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE),$cont);
 			$cont = str_replace('%%ABS_LOC_PATH%%',OIDplus::localpath(__DIR__,false),$cont);
-			$cont = str_replace('%%ABS_WEB_PATH%%',OIDplus::webpath(__DIR__,false),$cont);
+			$cont = str_replace('%%ABS_WEB_PATH%%',OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL),$cont);
 			if (OIDplus::config()->getValue('vnag_version_check_password_protected','1') == '1') {
 				$cont = str_replace('%%WEBREADER_PASSWORD%%',self::vnag_password(),$cont);
 			} else {
@@ -87,7 +87,7 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
+			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

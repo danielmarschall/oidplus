@@ -130,9 +130,9 @@ class OIDplusOid extends OIDplusObject {
 	public function getContentPage(&$title, &$content, &$icon) {
 		if ($this->isClassCWeid()) {
 			// TODO: Also change treeview menu mini-icon?
-			$icon = file_exists(__DIR__.'/img/weid_icon.png') ? OIDplus::webPath(__DIR__,true).'img/weid_icon.png' : '';
+			$icon = file_exists(__DIR__.'/img/weid_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/weid_icon.png' : '';
 		} else {
-			$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webPath(__DIR__,true).'img/main_icon.png' : '';
+			$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 		}
 
 		if ($this->isRoot()) {
