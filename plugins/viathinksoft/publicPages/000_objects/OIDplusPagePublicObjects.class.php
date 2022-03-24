@@ -466,7 +466,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$handled = true;
 
 			$out['title'] = OIDplus::config()->getValue('system_title');
-			$out['icon'] = OIDplus::webpath(__DIR__,true).'img/main_icon.png';
+			$out['icon'] = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
 			if (file_exists(OIDplus::localpath() . 'userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html')) {
 				$cont = file_get_contents(OIDplus::localpath() . 'userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html');
@@ -665,7 +665,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		if ($nonjs) {
 			$json[] = array(
 				'id' => 'oidplus:system',
-				'icon' => OIDplus::webpath(__DIR__,true).'img/main_icon16.png',
+				'icon' => OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png',
 				'text' => _L('System')
 			);
 
@@ -777,7 +777,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					// 1) The select-event will not be triggered upon loading
 					// 2) The nodes directly blow cannot be opened (loading infinite time)
 				),
-				'icon' => OIDplus::webpath(__DIR__,true).'img/main_icon16.png',
+				'icon' => OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png',
 				'children' => $objTypesChildren
 			);
 
@@ -1045,7 +1045,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$out = '<script>
 				tinymce.EditorManager.baseURL = "vendor/tinymce/tinymce";
 				tinymce.init({
-					document_base_url: "'.OIDplus::webpath().'",
+					document_base_url: "'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'",
 					selector: "#'.$name.'",
 					height: 200,
 					statusbar: false,
@@ -1059,7 +1059,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						plugins: "'.implode(' ', $mce_plugins).'"
 					}
 					'.($tinyMCELang == '' ? '' : ', language : "'.$tinyMCELang.'"').'
-					'.($tinyMCELang == '' ? '' : ', language_url : "'.OIDplus::webpath().'vendor/tweeb/tinymce-i18n/langs/'.$tinyMCELang.'.js"').'
+					'.($tinyMCELang == '' ? '' : ', language_url : "'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'vendor/tweeb/tinymce-i18n/langs/'.$tinyMCELang.'.js"').'
 				});
 
 				pageChangeRequestCallbacks.push([OIDplusPagePublicObjects.cbQueryTinyMCE, "#'.$name.'"]);

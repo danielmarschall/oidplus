@@ -33,7 +33,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 		if ($id === 'oidplus:login_facebook') {
 			$handled = true;
 			$out['title'] = _L('Login using Facebook');
-			$out['icon']  = OIDplus::webpath(__DIR__,true).'img/main_icon.png';
+			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
 			if (!OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {
 				$out['icon'] = 'img/error.png';
@@ -44,7 +44,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 			$target =
 				"https://www.facebook.com/v8.0/dialog/oauth?".
 				"client_id=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID'))."&".
-				"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,false).'oauth.php')."&".
+				"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'oauth.php')."&".
 				"state=".urlencode($_COOKIE['csrf_token_weak'])."&".
 				"scope=email";
 			$out['text'] = '<p>'._L('Please wait...').'</p><script>window.location.href = '.js_escape($target).';</script>';
@@ -74,7 +74,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 			$logins[] = array(
 				'oidplus:login_facebook',
 				_L('Login using Facebook'),
-				OIDplus::webpath(__DIR__,true).'img/main_icon16.png'
+				OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png'
 			);
 		}
 		return $logins;

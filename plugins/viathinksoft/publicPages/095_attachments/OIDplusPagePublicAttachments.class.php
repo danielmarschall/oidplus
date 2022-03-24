@@ -374,7 +374,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				);
 				$output .= '<td>'.htmlentities(VtsFileTypeDetect::getDescription($file, $lookup_files)).'</td>';
 
-				$output .= '     <td><button type="button" name="download_'.md5($file).'" id="download_'.md5($file).'" class="btn btn-success btn-xs download" onclick="OIDplusPagePublicAttachments.downloadAttachment('.js_escape(OIDplus::webpath(__DIR__,true)).', current_node,'.js_escape(basename($file)).')">'._L('Download').'</button></td>';
+				$output .= '     <td><button type="button" name="download_'.md5($file).'" id="download_'.md5($file).'" class="btn btn-success btn-xs download" onclick="OIDplusPagePublicAttachments.downloadAttachment('.js_escape(OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE)).', current_node,'.js_escape(basename($file)).')">'._L('Download').'</button></td>';
 				if ($can_delete) {
 					$output .= '     <td><button type="button" name="delete_'.md5($file).'" id="delete_'.md5($file).'" class="btn btn-danger btn-xs delete" onclick="OIDplusPagePublicAttachments.deleteAttachment(current_node,'.js_escape(basename($file)).')">'._L('Delete').'</button></td>';
 				}
@@ -439,7 +439,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		$files = @glob(self::getUploadDir($id) . DIRECTORY_SEPARATOR . '*');
 		if ($files) foreach ($files as $file) {
 			$out[] = 'attachment-name: '.basename($file);
-			$out[] = 'attachment-url: '.OIDplus::webpath(__DIR__,true).'download.php?id='.urlencode($id).'&filename='.urlencode(basename($file));
+			$out[] = 'attachment-url: '.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'download.php?id='.urlencode($id).'&filename='.urlencode(basename($file));
 		}
 
 	}

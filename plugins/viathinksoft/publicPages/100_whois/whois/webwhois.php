@@ -23,7 +23,7 @@ require_once __DIR__ . '/../../../../../includes/oidplus.inc.php';
 define('XML_URN', 'urn:ietf:id:viathinksoft-oidip-02');
 
 // define('XML_URN_URL', 'https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/xml_schema.xsd');
-define('XML_URN_URL', OIDplus::webpath(__DIR__,true).'xml_schema.xsd');
+define('XML_URN_URL', OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'xml_schema.xsd');
 
 OIDplus::init(true);
 set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
@@ -434,7 +434,7 @@ if ($format == 'json') {
 		// https://code.visualstudio.com/docs/languages/json#_mapping-in-the-json
 		// Note that this syntax is VS Code-specific and not part of the JSON Schema specification.
 		//'$schema' => 'https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/json_schema.json',
-		'$schema' => OIDplus::webpath(__DIR__,true).'json_schema.json',
+		'$schema' => OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'json_schema.json',
 
 		// we need this NAMED root, otherwise PHP will name the sections "0", "1", "2" if the array is not sequencial (e.g. because "signature" is added)
 		'oidip' => $ary

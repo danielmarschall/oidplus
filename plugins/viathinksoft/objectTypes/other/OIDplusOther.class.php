@@ -93,7 +93,7 @@ class OIDplusOther extends OIDplusObject {
 	}
 
 	public function getContentPage(&$title, &$content, &$icon) {
-		$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webPath(__DIR__,true).'img/main_icon.png' : '';
+		$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 		if ($this->isRoot()) {
 			$title = OIDplusOther::objectTypeTitle();

@@ -53,7 +53,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS,
 	"grant_type=authorization_code&".
 	"code=".urlencode($_GET['code'])."&".
-	"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,false).'oauth.php')."&".
+	"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'oauth.php')."&".
 	"client_id=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'))."&".
 	"client_secret=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_SECRET'))
 );
@@ -122,7 +122,7 @@ try {
 
 		// Go back to OIDplus
 
-		header('Location:'.OIDplus::webpath(null,false));
+		header('Location:'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL));
 	}
 
 } finally {

@@ -36,7 +36,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			OIDplus::logger()->log("[INFO]RA($email)!", "RA '$email' has been invited");
 
 			$timestamp = time();
-			$activate_url = OIDplus::webpath() . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('activate_ra;'.$email.';'.$timestamp));
+			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('activate_ra;'.$email.';'.$timestamp));
 
 			$message = $this->getInvitationText($email);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
@@ -115,7 +115,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				return;
 			}
 
-			$out['icon'] = OIDplus::webpath(__DIR__,true).'img/invite_icon.png';
+			$out['icon'] = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/invite_icon.png';
 
 			try {
 				$this->inviteSecurityCheck($email);
@@ -151,7 +151,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				return;
 			}
 
-			$out['icon'] = OIDplus::webpath(__DIR__,true).'img/activate_icon.png';
+			$out['icon'] = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/activate_icon.png';
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 			if ($res->any()) {
@@ -217,7 +217,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 		$message = file_get_contents(__DIR__ . '/invite_msg.tpl');
 
 		// Resolve stuff
-		$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,false), $message);
+		$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
 		$message = str_replace('{{OID_LIST}}', implode("\n", $list_of_oids), $message);
 		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 		$message = str_replace('{{PARTY}}', OIDplus::authUtils()->isAdminLoggedIn() ? 'the system administrator' : 'a superior Registration Authority', $message);

@@ -53,7 +53,7 @@ class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 			// Show registration/configuration wizard once
 			if ($html) {
 				if (basename($_SERVER['SCRIPT_NAME']) != 'oobe.php') {
-					header('Location:'.OIDplus::webpath(__DIR__,true).'oobe.php');
+					header('Location:'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'oobe.php');
 					die(_L('Redirecting to Out-Of-Box-Experience wizard...'));
 				}
 			} else {

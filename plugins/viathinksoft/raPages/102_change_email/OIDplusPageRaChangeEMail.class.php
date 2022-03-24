@@ -83,10 +83,10 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				OIDplus::logger()->log("[INFO]RA($old_email)!+RA($new_email)!", "Requested email address change from '$old_email' to '$new_email'");
 
 				$timestamp = time();
-				$activate_url = OIDplus::webpath(null,false) . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp));
+				$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp));
 
 				$message = file_get_contents(__DIR__ . '/change_request_email.tpl');
-				$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,false), $message);
+				$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
 				$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
 				$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 				$message = str_replace('{{OLD_EMAIL}}', $old_email, $message);
@@ -167,7 +167,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
 			// Send email
 			$message = file_get_contents(__DIR__ . '/email_change_confirmation.tpl');
-			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,false), $message);
+			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{OLD_EMAIL}}', $old_email, $message);
@@ -200,7 +200,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			$ra_email = explode('$',$id)[1];
 
 			$out['title'] = _L('Change RA email');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error.png';
@@ -259,7 +259,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			$auth = explode('$',$id)[4];
 
 			$out['title'] = _L('Perform email address change');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error.png';
@@ -311,7 +311,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 		if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
+			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

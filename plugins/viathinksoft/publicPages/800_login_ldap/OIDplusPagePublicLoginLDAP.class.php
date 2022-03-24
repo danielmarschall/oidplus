@@ -205,7 +205,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		if ($id === 'oidplus:login_ldap') {
 			$handled = true;
 			$out['title'] = _L('Login using LDAP / ActiveDirectory');
-			$out['icon']  = OIDplus::webpath(__DIR__,true).'img/main_icon.png';
+			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
 			if (!OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {
 				$out['icon'] = 'img/error.png';
@@ -315,7 +315,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 			$logins[] = array(
 				'oidplus:login_ldap',
 				_L('Login using LDAP / ActiveDirectory'),
-				OIDplus::webpath(__DIR__,true).'img/main_icon16.png'
+				OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png'
 			);
 		}
 		return $logins;

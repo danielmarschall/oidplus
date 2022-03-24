@@ -59,7 +59,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 		if (explode('$',$id)[0] == 'oidplus:edit_config') {
 			$handled = true;
 			$out['title'] = _L('System configuration');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error.png';
@@ -101,10 +101,10 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
 			$output .= '<br><p>'._L('See also').':</p>';
 			$output .= '<ul>';
-			$output .= '<li><a href="'.OIDplus::webpath().'setup/">'._L('Setup part 1: Create %1 (contains database settings, CAPTCHA, admin password and SSL enforcement)','userdata/baseconfig/config.inc.php').'</a></li>';
+			$output .= '<li><a href="'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/">'._L('Setup part 1: Create %1 (contains database settings, CAPTCHA, admin password and SSL enforcement)','userdata/baseconfig/config.inc.php').'</a></li>';
 			$oobePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.3.50'); // OIDplusPageAdminOOBE
 			if (!is_null($oobePlugin)) {
-				$output .= '<li><a href="'.OIDplus::webpath($oobePlugin->getPluginDirectory()).'oobe.php">'._L('Setup part 2: Basic settings (they are all available above, too)').'</a></li>';
+				$output .= '<li><a href="'.OIDplus::webpath($oobePlugin->getPluginDirectory(),OIDplus::PATH_RELATIVE).'oobe.php">'._L('Setup part 2: Basic settings (they are all available above, too)').'</a></li>';
 			} else {
 				$output .= '<li>'._L('Setup part 2 requires plugin %1 (the basic settings are all available above, too)','OIDplusPageAdminOOBE').'</a></li>';
 			}
@@ -118,7 +118,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
+			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}

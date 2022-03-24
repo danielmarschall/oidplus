@@ -165,7 +165,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		if ($id === 'oidplus:oidinfo_compare_export') {
 			$handled = true;
 			$out['title'] = _L('List OIDs in your system which are missing at oid-info.com');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error.png';
@@ -345,7 +345,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 									$tmp_information .= '<br/><br/>';
 								}
 
-								$tmp_information .= 'See <a href="'.OIDplus::webpath(null,false).'?goto='.urlencode($id).'">more information</a>.'; // do not translate
+								$tmp_information .= 'See <a href="'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'?goto='.urlencode($id).'">more information</a>.'; // do not translate
 
 								if (explode(':',$id,2)[0] != 'oid') {
 									$tmp_information = "Object: $id\n\n" . $tmp_information; // do not translate
@@ -439,7 +439,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		if ($id === 'oidplus:oidinfo_compare_import') {
 			$handled = true;
 			$out['title'] = _L('List OIDs at oid-info.com which are missing in your system');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error.png';
@@ -578,7 +578,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		if ($id === 'oidplus:datatransfer') {
 			$handled = true;
 			$out['title'] = _L('Data Transfer');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,true).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				$out['icon'] = 'img/error.png';
@@ -597,8 +597,8 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			// ---------------- "Export" tab
 			$tabcont  = '<h2>'._L('Generate XML file containing all OIDs').'</h2>';
 			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>. They can be used for various purposes though.','href="http://www.oid-info.com/oid.xsd" target="_blank"').'</p>';
-			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__,true).'oidinfo_export.php\',\'_blank\')" value="'._L('Generate XML (all OIDs)').'"></p>';
-			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__,true).'oidinfo_export.php?online=1\',\'_blank\')" value="'._L('Generate XML (only OIDs which do not exist at oid-info.com)').'"></p>';
+			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'oidinfo_export.php\',\'_blank\')" value="'._L('Generate XML (all OIDs)').'"></p>';
+			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'oidinfo_export.php?online=1\',\'_blank\')" value="'._L('Generate XML (only OIDs which do not exist at oid-info.com)').'"></p>';
 			$tabcont .= '<p><a href="http://www.oid-info.com/submit.htm" target="_blank">'._L('Upload XML files manually to oid-info.com').'</a></p>';
 			$tabcont .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
 			$tabcont .= '<h2>'._L('Automatic export to oid-info.com').'</h2>';
@@ -634,7 +634,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
-			$tree_icon = OIDplus::webpath(__DIR__,true).'img/main_icon16.png';
+			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {
 			$tree_icon = null; // default icon (folder)
 		}
@@ -737,7 +737,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 					$elements['information'] .= '<br/><br/>';
 				}
 
-				$elements['information'] .= 'See <a href="'.OIDplus::webpath(null,false).'?goto='.urlencode($id).'">more information</a>.'; // do not translate
+				$elements['information'] .= 'See <a href="'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'?goto='.urlencode($id).'">more information</a>.'; // do not translate
 
 				if (explode(':',$id,2)[0] != 'oid') {
 					$elements['information'] = "Object: $id\n\n" . $elements['information']; // do not translate
@@ -859,7 +859,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				if (stripos($url,'www.') === 0) {
 					$url .= 'http://' . $url;
 				} else {
-					$url = OIDplus::webpath() . $url;
+					$url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . $url; // TODO: Canonical or not?
 				}
 			}
 			return $treffer[1].$url.$treffer[4];

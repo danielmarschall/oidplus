@@ -35,7 +35,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			OIDplus::logger()->log("[WARN]RA($email)!", "A new password for '$email' was requested (forgot password)");
 
 			$timestamp = time();
-			$activate_url = OIDplus::webpath(null,false) . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('reset_password;'.$email.';'.$timestamp));
+			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('reset_password;'.$email.';'.$timestamp));
 
 			$message = $this->getForgotPasswordText($params['email']);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
@@ -99,7 +99,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$handled = true;
 
 			$out['title'] = _L('Forgot password');
-			$out['icon'] = OIDplus::webpath(__DIR__,true).'img/forgot_password_icon.png';
+			$out['icon'] = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/forgot_password_icon.png';
 
 			try {
 				$out['text'] .= '<p>'._L('Please enter the email address of your account, and information about the password reset will be sent to you.').'</p>
@@ -124,7 +124,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$auth = explode('$',$id)[3];
 
 			$out['title'] = _L('Reset password');
-			$out['icon'] = OIDplus::webpath(__DIR__,true).'img/reset_password_icon.png';
+			$out['icon'] = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/reset_password_icon.png';
 
 			if (!OIDplus::authUtils()->validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
 				$out['icon'] = 'img/error.png';
@@ -161,7 +161,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 		$message = file_get_contents(__DIR__ . '/forgot_password.tpl');
 
 		// Resolve stuff
-		$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,false), $message);
+		$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
 		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 
 		// {{ACTIVATE_URL}} will be resolved in ajax.php

@@ -36,6 +36,10 @@ class OIDplus extends OIDplusBaseClass {
 
 	/*public*/ const DEFAULT_LANGUAGE = 'enus'; // the language of the source code
 
+	/*public*/ const PATH_RELATIVE = 1;
+	/*public*/ const PATH_ABSOLUTE = 2;
+	/*public*/ const PATH_ABSOLUTE_CANONICAL = 3;
+
 	// These plugin types can contain HTML code and therefore may
 	// emit (non-setup) CSS/JS code via their manifest.
 	/*public*/ const INTERACTIVE_PLUGIN_TYPES = array(
@@ -108,8 +112,8 @@ class OIDplus extends OIDplusBaseClass {
 					throw new OIDplusConfigInitializationException(_L('File %1 is missing, but setup can\'t be started because its directory missing.','userdata/baseconfig/config.inc.php'));
 				} else {
 					if (self::$html) {
-						if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,true).'setup/') !== 0) {
-							header('Location:'.OIDplus::webpath().'setup/');
+						if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/') !== 0) {
+							header('Location:'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/');
 							die(_L('Redirecting to setup...'));
 						} else {
 							return self::$baseConfig;
@@ -124,13 +128,13 @@ class OIDplus extends OIDplusBaseClass {
 			// Check important config settings
 
 			if (self::$baseConfig->getValue('CONFIG_VERSION') != 2.1) {
-				if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,true).'setup/') !== 0) {
+				if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/') !== 0) {
 					throw new OIDplusConfigInitializationException(_L("The information located in %1 is outdated.",realpath($config_file)));
 				}
 			}
 
 			if (self::$baseConfig->getValue('SERVER_SECRET', '') === '') {
-				if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,true).'setup/') !== 0) {
+				if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/') !== 0) {
 					throw new OIDplusConfigInitializationException(_L("You must set a value for SERVER_SECRET in %1 for the system to operate secure.",realpath($config_file)));
 				}
 			}
@@ -1031,7 +1035,7 @@ class OIDplus extends OIDplusBaseClass {
 
 	private static function recognizeSystemUrl() {
 		try {
-			$url = OIDplus::webpath();
+			$url = OIDplus::webpath(null,self::PATH_ABSOLUTE_CANONICAL); // TODO: canonical or not?
 			OIDplus::config()->setValue('last_known_system_url', $url);
 		} catch (Exception $e) {
 		}
@@ -1059,7 +1063,20 @@ class OIDplus extends OIDplusBaseClass {
 		return isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on');
 	}
 
-	private static function getSystemUrl($relative=false) {
+	/* $mode == self::PATH_RELATIVE */
+	/* $mode == self::PATH_ABSOLUTE */
+	/* $mode == self::PATH_ABSOLUTE_CANONICAL */
+	private static function getSystemUrl($mode) {
+		$relative = $mode == self::PATH_RELATIVE;
+		$canonical_sysurl = $mode == self::PATH_ABSOLUTE_CANONICAL;
+
+		if ($canonical_sysurl) {
+			$tmp = OIDplus::baseConfig()->getValue('CANONICAL_SYSTEM_URL', '');
+			if ($tmp !== '') {
+				return rtrim($tmp,'/').'/';
+			}
+		}
+
 		if ($relative) {
 			$steps_up = self::getExecutingScriptPathDepth();
 			if ($steps_up === false) {
@@ -1262,6 +1279,7 @@ class OIDplus extends OIDplusBaseClass {
 		$already_ssl = self::isSSL();
 		$ssl_port = 443;
 
+		// TODO: Instead of 0, 1, 2, maybe make OIDplus:: constants
 		$mode = OIDplus::baseConfig()->getValue('ENFORCE_SSL', 2/*auto*/);
 
 		if ($mode == 0) {
@@ -1359,7 +1377,9 @@ class OIDplus extends OIDplusBaseClass {
 			$res = realpath($target);
 		}
 
-		if (is_dir($target)) $res .= DIRECTORY_SEPARATOR;
+		if (is_dir($target)) $res .= '/';
+
+		$res = str_replace('/', DIRECTORY_SEPARATOR, $res);
 
 		return $res;
 	}
@@ -1367,11 +1387,16 @@ class OIDplus extends OIDplusBaseClass {
 	/**
 	 * Gets a URL pointing to a resource
 	 * @param string $target Target resource (file or directory must exist), or null to get the OIDplus base directory
-	 * @param boolean $relative If true, the returning path is relative to the currently executed PHP script (i.e. index.php , not the plugin PHP script!)
+	 * @param int|mixed $mode If true or 1, the returning path is relative to the currently executed PHP script (i.e. index.php , not the plugin PHP script!). False or 2 is an absolute URL. 3 is an absolute URL, but a canonical path is preferred.
 	 * @return string|false The URL, with guaranteed trailing path delimiter for directories
 	 */
-	public static function webpath($target=null, $relative=false) {
-		$res = self::getSystemUrl($relative); // Note: already contains a trailing path delimiter
+	public static function webpath($target=null, $mode=self::PATH_ABSOLUTE) {
+
+		// backwards compatibility
+		if ($mode === true) $mode = self::PATH_RELATIVE;
+		if ($mode === false) $mode = self::PATH_ABSOLUTE;
+
+		$res = self::getSystemUrl($mode); // Note: already contains a trailing path delimiter
 		if ($res === false) return false;
 
 		if (!is_null($target)) {
@@ -1388,12 +1413,7 @@ class OIDplus extends OIDplusBaseClass {
 
 	public static function canonicalURL() {
 		// First part: OIDplus system URL (or canonical system URL)
-		$sysurl = OIDplus::baseConfig()->getValue('CANONICAL_SYSTEM_URL', '');
-		if ($sysurl !== '') {
-			$sysurl = rtrim($sysurl,'/').'/';
-		} else {
-			$sysurl = OIDplus::getSystemUrl();
-		}
+		$sysurl = OIDplus::getSystemUrl(self::PATH_ABSOLUTE_CANONICAL);
 
 		// Second part: Directory
 		$basedir = realpath(__DIR__.'/../../');
