@@ -184,7 +184,7 @@ class OIDplusDoi extends OIDplusObject {
 		return $this->ns().'_'.md5($this->nodeId(false));
 	}
 
-	public function rootIconname($mode) {
+	public static function rootIconname($mode) {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }
