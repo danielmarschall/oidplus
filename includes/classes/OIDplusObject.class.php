@@ -490,7 +490,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	}
 
 	public final function getLegacyDirectoryName() {
-		if (self::ns() == 'oid') {
+		if ($this::ns() == 'oid') {
 			$oid = $this->nodeId(false);
 		} else {
 			$oid = null;
