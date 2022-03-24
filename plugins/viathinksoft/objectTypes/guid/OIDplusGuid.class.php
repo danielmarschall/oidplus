@@ -204,7 +204,7 @@ class OIDplusGuid extends OIDplusObject {
 		}
 	}
 
-	public function rootIconname($mode) {
+	public static function rootIconname($mode) {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }
