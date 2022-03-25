@@ -110,7 +110,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			}
 
 			if ($whois_server != '') {
-				$out['text'] .= '<h2>'._L('WHOIS/OID-IP access').'</h2>';
+				$out['text'] .= '<br><h2>'._L('WHOIS/OID-IP access').'</h2>';
 				$out['text'] .= '<p>'._L('You can use any WHOIS compatible client to query the information from the WHOIS/OID-IP port.').'</p>';
 				$out['text'] .= '<p>'._L('The hostname and port number is:').'</p>';
 				$out['text'] .= '<p><pre>'.htmlentities($whois_server).'</pre></p>';
