@@ -314,7 +314,8 @@ function url_get_contents($url) {
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 		if (!($res = @curl_exec($ch))) return false;
-		curl_close($ch);
+		if (@curl_getinfo($ch, CURLINFO_HTTP_CODE) >= 400) return false;
+		@curl_close($ch);
 	} else {
 		$opts = [
 			"http" => [
