@@ -1,8 +1,4 @@
 
-IMPORTANT:
-- OIDplusCookieUtils will not work if OIDplus is used in a proxy, and the proxy has a different path level as the canonical (redirected) url.
-  We cannot use webpath()!
-
 Treeview / Navigation:
 - In the tree, let the operator create "shortcuts" to important OIDs?
 - Define "critical" OIDs which should always be visible; this means: the tree will always be extended so that these OIDs are shown?
