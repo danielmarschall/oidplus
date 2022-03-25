@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,6 +74,11 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 				$rev = $params['rev'];
 
+				$update_version = isset($params['update_version']) ? $params['update_version'] : 1;
+				if (($update_version != 1) && ($update_version != 2)) {
+					throw new OIDplusException(_L('Unknown update version'));
+				}
+
 				// Download and unzip
 
 				$cont = false;
@@ -118,7 +123,6 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 				$tmp_filename = 'update_'.generateRandomString(10).'.tmp.php';
 				$local_file = OIDplus::localpath().$tmp_filename;
-				$web_file = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).$tmp_filename;
 
 				@file_put_contents($local_file, $cont);
 
@@ -126,15 +130,21 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 					throw new OIDplusException(_L('Update file could not written. Probably there are no write-permissions to the root folder.'));
 				}
 
-				// Now call the written file
-				// Note: we may not use eval($cont) because script uses die()
-
-				$res = url_get_contents($web_file);
-				if ($res === false) {
-					throw new OIDplusException(_L('Communication with ViaThinkSoft server failed'));
+				if ($update_version == 1) {
+					// Now call the written file
+					// Note: we may not use eval($cont) because the script uses die(),
+					// and things in the script might collide with currently (un)loaded source code files, shutdown procedues, etc.
+					$web_file = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).$tmp_filename; // NOT canonical URL! This might fail with reverse proxies which can only be executed from outside
+					$res = url_get_contents($web_file);
+					if ($res === false) {
+						throw new OIDplusException(_L('Update-script %1 could not be executed',$web_file));
+					}
+					return array("status" => 0, "content" => $res, "rev" => $rev);
+				} else if ($update_version == 2) {
+					// In this version, the client will call the web-update file.
+					// This has the advantage that it will also work if the system is htpasswd protected
+					return array("status" => 0, "update_file" => $tmp_filename, "rev" => $rev);
 				}
-
-				return array("status" => 0, "content" => $res, "rev" => $rev);
 			}
 			else {
 				throw new OIDplusException(_L('Multiple version files/directories (oidplus_version.txt, .version.php, .git, or .svn) are existing! Therefore, the version is ambiguous!'));

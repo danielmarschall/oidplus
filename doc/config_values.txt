@@ -215,7 +215,7 @@ OIDplus::baseConfig()->setValue('CANONICAL_SYSTEM_URL', '');
                             than the automatically detected one.
                          Note that setting an absolute system URL can be very useful if
                          OIDplus runs on a system (which detects itself as "X"),
-                         while the canonical URL "Y" is a proxy.
+                         while the canonical URL "Y" is a reverse-proxy.
 
 OIDplus::baseConfig()->setValue('DEBUG', false);
                          Enables some special checks for plugins (e.g. a self-test for auth plugins).

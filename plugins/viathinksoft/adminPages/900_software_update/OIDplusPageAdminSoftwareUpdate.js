@@ -1,6 +1,6 @@
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 				csrf_token:csrf_token,
 				plugin: OIDplusPageAdminSoftwareUpdate.oid,
 				rev: rev,
+				update_version: 2,
 				action: "update_now",
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
@@ -73,24 +74,85 @@ var OIDplusPageAdminSoftwareUpdate = {
 					}
 					$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 				} else if (data.status >= 0) {
-					output = data.content.trim();
-					output = output.replace(/INFO:/g, '<span class="severity_2"><strong>' + _L('INFO') + ':</strong></span>');
-					output = output.replace(/WARNING:/g, '<span class="severity_3"><strong>' + _L('WARNING') + ':</strong></span>');
-					output = output.replace(/FATAL ERROR:/g, '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span>');
-					$("#update_infobox").html($("#update_infobox").html() + output + "\n");
-					rev = data.rev=="HEAD" ? max : data.rev;
-					if (rev >= max) {
-						$("#update_header").text(_L("Update finished"));
-						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_1"><strong> ' + _L('UPDATE FINISHED') + ':</strong></span> ' + _L('You are now at SVN revision %1', rev));
-						$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
-					} else {
-						if (output.includes("FATAL ERROR:")) {
-							$("#update_header").text(_L("Update failed"));
+
+					if (!("update_file" in data)) {
+
+						output = data.content.trim();
+						output = output.replace(/INFO:/g, '<span class="severity_2"><strong>' + _L('INFO') + ':</strong></span>');
+						output = output.replace(/WARNING:/g, '<span class="severity_3"><strong>' + _L('WARNING') + ':</strong></span>');
+						output = output.replace(/FATAL ERROR:/g, '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span>');
+						$("#update_infobox").html($("#update_infobox").html() + output + "\n");
+						rev = data.rev=="HEAD" ? max : data.rev;
+						if (rev >= max) {
+							$("#update_header").text(_L("Update finished"));
+							$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_1"><strong> ' + _L('UPDATE FINISHED') + ':</strong></span> ' + _L('You are now at SVN revision %1', rev));
 							$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 						} else {
-							OIDplusPageAdminSoftwareUpdate._doUpdateOIDplus(parseInt(rev)+1, max);
+							if (output.includes("FATAL ERROR:")) {
+								$("#update_header").text(_L("Update failed"));
+								$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
+							} else {
+								OIDplusPageAdminSoftwareUpdate._doUpdateOIDplus(parseInt(rev)+1, max);
+							}
 						}
+						return;
+
+					} else {
+
+						console.log("Execute update file " + data.update_file);
+
+						$.ajax({
+							url: data.update_file,
+							type: "GET",
+							beforeSend: function(jqXHR, settings) {
+								$.xhrPool.abortAll();
+								$.xhrPool.add(jqXHR);
+							},
+							complete: function(jqXHR, text) {
+								$.xhrPool.remove(jqXHR);
+							},
+							data: {
+							},
+							error:function(jqXHR, textStatus, errorThrown) {
+								//hide_waiting_anim();
+								if (errorThrown == "abort") {
+									$("#update_header").text(_L("Update aborted"));
+									$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
+									return;
+								} else {
+									$("#update_header").text(_L("Update failed"));
+									//alert(_L("Error: %1",errorThrown));
+									$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + errorThrown + "\n\n");
+									$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
+								}
+							},
+							success: function(data2) {
+								//hide_waiting_anim();
+								output2 = data2.trim();
+								output2 = output2.replace(/INFO:/g, '<span class="severity_2"><strong>' + _L('INFO') + ':</strong></span>');
+								output2 = output2.replace(/WARNING:/g, '<span class="severity_3"><strong>' + _L('WARNING') + ':</strong></span>');
+								output2 = output2.replace(/FATAL ERROR:/g, '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span>');
+								$("#update_infobox").html($("#update_infobox").html() + output2 + "\n");
+								rev = data.rev=="HEAD" ? max : data.rev;
+								if (rev >= max) {
+									$("#update_header").text(_L("Update finished"));
+									$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_1"><strong> ' + _L('UPDATE FINISHED') + ':</strong></span> ' + _L('You are now at SVN revision %1', rev));
+									$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
+								} else {
+									if (output2.includes("FATAL ERROR:")) {
+										$("#update_header").text(_L("Update failed"));
+										$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
+									} else {
+										OIDplusPageAdminSoftwareUpdate._doUpdateOIDplus(parseInt(rev)+1, max);
+									}
+								}
+								return;
+							},
+							timeout:0 // infinite
+						});
+
 					}
+
 					return;
 				} else {
 					$("#update_header").text(_L("Update failed"));

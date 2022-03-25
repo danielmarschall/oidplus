@@ -1142,14 +1142,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Communication with ViaThinkSoft server failed
-		]]></source>
-		<target><![CDATA[
-		Kommunikation mit dem ViaThinkSoft-Server fehlgeschlagen
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Communication with ViaThinkSoft server failed: %1
 		]]></source>
 		<target><![CDATA[
@@ -6702,6 +6694,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Unknown update version
+		]]></source>
+		<target><![CDATA[
+		Unbekannte Update-Version
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Unknown!
 		]]></source>
 		<target><![CDATA[
@@ -6818,6 +6818,14 @@
 		]]></source>
 		<target><![CDATA[
 		Update-Paket revision %1 hat eine ungültige Signatur
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update-script %1 could not be executed
+		]]></source>
+		<target><![CDATA[
+		Update-Script %1 konnte nicht aufgerufen werden
 		]]></target>
 	</message>
 	<message>
