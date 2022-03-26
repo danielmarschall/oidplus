@@ -4,7 +4,7 @@
 /**
 * WEID<=>OID Converter
 * (c) Webfan.de, ViaThinkSoft
-* Revision 2022-03-13
+* Revision 2022-03-26
 **/
 
 // What is a WEID?
@@ -48,7 +48,7 @@ var WeidOidConverter = {
 		}
 
 		// At the end, wrkstr should only contain digits! Verify it!
-		if (!wrkstr.match(/^\d+$/)) {
+		if (!wrkstr.match(/^\d*$/)) {
 			console.error("weLuhnCheckDigit: Invalid input");
 			return false;
 		}
@@ -159,7 +159,7 @@ var WeidOidConverter = {
 		weid = namespace.toLowerCase() + weid.toUpperCase(); // add namespace again
 
 		oid = WeidOidConverter.oidSanitize(oid);
-		if (oid == false) return false; // invalid OID
+		if (oid === false) return false; // invalid OID
 
 		return { "weid": weid, "oid" : oid };
 	},
@@ -168,7 +168,7 @@ var WeidOidConverter = {
 	// "1.3.6.1.4.1.37553.8.32488192274" becomes "weid:EXAMPLE-3"
 	oid2weid: function(oid) {
 		var oid = WeidOidConverter.oidSanitize(oid);
-		if (oid == false) return false;
+		if (oid === false) return false;
 
 		var weidstr = null;
 		if (oid != '') {
