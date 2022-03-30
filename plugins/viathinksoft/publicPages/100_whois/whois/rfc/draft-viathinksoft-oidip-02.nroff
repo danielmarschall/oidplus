@@ -7,9 +7,9 @@
 .ds LF Marschall
 .ds RF FORMFEED[Page %]
 .ds LH INTERNET DRAFT
-.ds RH March 2, 2022
+.ds RH March 30, 2022
 .ds CH OID Information Protocol
-.ds CF Expires September 3, 2022
+.ds CF Expires October 1, 2022
 .hy 0
 .nh
 .ad l
@@ -18,7 +18,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: September 3, 2022''March 2, 2022'
+.tl 'Expires: October 1, 2022''March 30, 2022'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -65,7 +65,7 @@ and may be updated, replaced, or obsoleted by other documents at any
 time.  It is inappropriate to use Internet-Drafts as reference
 material or to cite them other than as "work in progress."
 
-This Internet-Draft will expire on September 3, 2022.
+This Internet-Draft will expire on October 1, 2022.
 
 .ti 0
 Copyright Notice
@@ -124,7 +124,7 @@ Table of Contents
      9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 24
    10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 24
      10.1  Normative References . . . . . . . . . . . . . . . . . . . 24
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 25
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 26
    Appendix A: JSON Schema  . . . . . . . . . . . . . . . . . . . . . 27
      A.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
      A.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 33
@@ -237,7 +237,7 @@ oid:2.999$format=json
 .ti 0
 2.2.1  "format" command
 
-The "format" command defines the desired output format of the server response.
+The "format" command defines the desired output format.
 
 This document defines four formats:
 
@@ -883,8 +883,7 @@ W3C Recommendation 5 April 2012
 .in 14
 <https://json-schema.org/specification.html>.
 
-
-
+.bp
 .ti 0
 10.2  Informative References
 
@@ -948,6 +947,7 @@ The following JSON Schema ([JSONSch]) defines the expected output the server sen
 
 .in 3
 .nf
+<CODE BEGINS>
 # NOTE: '\\' line wrapping per RFC 8792
 {
    "$schema":"http://json-schema.org/draft-07/schema#",
@@ -1237,6 +1237,7 @@ The following JSON Schema ([JSONSch]) defines the expected output the server sen
       "oidip"
    ]
 }
+<CODE ENDS>
 .fi
 .in 0
 
@@ -1245,6 +1246,7 @@ A.2 Example of output
 
 .in 3
 .nf
+<CODE BEGINS>
 # NOTE: '\\' line wrapping per RFC 8792
 {
   "$schema":"http://.../oidip_schema.json",
@@ -1300,6 +1302,7 @@ structure are repeated here; ideally minified)...}]}",
     "signature": "(Base36 signature here)"
   }
 }
+<CODE ENDS>
 .fi
 .in 0
 
@@ -1315,6 +1318,7 @@ The following XML Schema Definition ([XSD]) defines the expected output the serv
 
 .in 3
 .nf
+<CODE BEGINS>
 # NOTE: '\\' line wrapping per RFC 8792
 <?xml version="1.0"?>
 <xs:schema targetNamespace="urn:ietf:id:viathinksoft-oidip-02" \\
@@ -1481,6 +1485,7 @@ minOccurs="0" maxOccurs="unbounded"/>
 </xs:complexType>
 </xs:element>
 </xs:schema>
+<CODE ENDS>
 .fi
 .in 0
 
@@ -1491,7 +1496,9 @@ B.2 Example of output
 
 .in 3
 .nf
+<CODE BEGINS>
 # NOTE: '\\' line wrapping per RFC 8792
+<?xml version="1.0"?>
 <root xmlns="urn:ietf:rfc:yyyy"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="urn:ietf:id:viathinksoft-oidip-02
@@ -1540,6 +1547,7 @@ repeated here; ideally minified)</oidip>
 <signature>(Base36 signature here)</signature>
 </signatureSection>
 </root>
+<CODE ENDS>
 .fi
 .in 0
 
