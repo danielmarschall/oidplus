@@ -105,9 +105,10 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		$username = OIDplus::baseConfig()->getValue('MYSQL_USERNAME', 'root');
 		$password = OIDplus::baseConfig()->getValue('MYSQL_PASSWORD', '');
 		$database = OIDplus::baseConfig()->getValue('MYSQL_DATABASE', 'oidplus');
+		$socket   = OIDplus::baseConfig()->getValue('MYSQL_SOCKET',   '');
 		list($hostname,$port) = explode(':', $host.':'.ini_get("mysqli.default_port"));
 		$port = intval($port);
-		$this->conn = @new mysqli($hostname, $username, $password, $database, $port);
+		$this->conn = @new mysqli($hostname, $username, $password, $database, $port, $socket);
 		if (!empty($this->conn->connect_error) || ($this->conn->connect_errno != 0)) {
 			$message = $this->conn->connect_error;
 			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' '.$message);
