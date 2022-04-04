@@ -55,7 +55,11 @@ OIDplus::baseConfig()->setValue('PDO_PASSWORD',             base64_decode('<base
                          someone quickly looks at your display while you have the configuration file opened.
 
 OIDplus::baseConfig()->setValue('MYSQL_HOST',               'localhost:3306');
-                         Port is optional
+                         The hostname to connect to. Port (:3306) is optional
+
+OIDplus::baseConfig()->setValue('MYSQL_SOCKET',             '');
+                         In case you connect via MySQL through a socket, use this setting.
+                         (It is currently not included in setup/ and needs to be set manually).
 
 OIDplus::baseConfig()->setValue('MYSQL_USERNAME',           'root');
 
