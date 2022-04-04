@@ -36,10 +36,11 @@ class OIDplus extends OIDplusBaseClass {
 
 	/*public*/ const DEFAULT_LANGUAGE = 'enus'; // the language of the source code
 
-	/*public*/ const PATH_RELATIVE = 1;           // e.g. "../"
-	/*public*/ const PATH_ABSOLUTE = 2;           // e.g. "http://www.example.com/oidplus/"
-	/*public*/ const PATH_ABSOLUTE_CANONICAL = 3; // e.g. "http://www.example.org/oidplus/" (if baseconfig CANONICAL_SYSTEM_URL is set)
-	/*public*/ const PATH_RELATIVE_TO_ROOT = 4;   // e.g. "/oidplus/"
+	/*public*/ const PATH_RELATIVE = 1;                   // e.g. "../"
+	/*public*/ const PATH_ABSOLUTE = 2;                   // e.g. "http://www.example.com/oidplus/"
+	/*public*/ const PATH_ABSOLUTE_CANONICAL = 3;         // e.g. "http://www.example.org/oidplus/" (if baseconfig CANONICAL_SYSTEM_URL is set)
+	/*public*/ const PATH_RELATIVE_TO_ROOT = 4;           // e.g. "/oidplus/"
+	/*public*/ const PATH_RELATIVE_TO_ROOT_CANONICAL = 5; // e.g. "/oidplus/" (if baseconfig CANONICAL_SYSTEM_URL is set)
 
 	// These plugin types can contain HTML code and therefore may
 	// emit (non-setup) CSS/JS code via their manifest.
@@ -1397,7 +1398,21 @@ class OIDplus extends OIDplusBaseClass {
 		if ($mode === false) $mode = self::PATH_ABSOLUTE;
 
 		if ($mode == OIDplus::PATH_RELATIVE_TO_ROOT) {
-			return parse_url(OIDplus::webpath($target,OIDplus::PATH_ABSOLUTE))['path'];
+			$tmp = OIDplus::webpath($target,OIDplus::PATH_ABSOLUTE);
+			if ($tmp === false) return false;
+			$tmp = parse_url($tmp);
+			if ($tmp === false) return false;
+			if (!isset($tmp['path'])) return false;
+			return $tmp['path'];
+		}
+
+		if ($mode == OIDplus::PATH_RELATIVE_TO_ROOT_CANONICAL) {
+			$tmp = OIDplus::webpath($target,OIDplus::PATH_ABSOLUTE_CANONICAL);
+			if ($tmp === false) return false;
+			$tmp = parse_url($tmp);
+			if ($tmp === false) return false;
+			if (!isset($tmp['path'])) return false;
+			return $tmp['path'];
 		}
 
 		$res = self::getSystemUrl($mode); // Note: already contains a trailing path delimiter
