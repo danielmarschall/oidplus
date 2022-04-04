@@ -99,9 +99,23 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 			$username = OIDplus::baseConfig()->getValue('PGSQL_USERNAME', 'postgres');
 			$password = OIDplus::baseConfig()->getValue('PGSQL_PASSWORD', '');
 			$database = OIDplus::baseConfig()->getValue('PGSQL_DATABASE', 'oidplus');
-			list($hostname, $port) = explode(':', "$host:5432");
+			$socket   = OIDplus::baseConfig()->getValue('PGSQL_SOCKET',   '');
+			if ($socket != '') {
+				$hostname = $socket;
+				$port = '';
+			} else {
+				list($hostname, $port) = explode(':', "$host:5432");
+			}
+
+			$connection_string = array();
+			if ($hostname != '') $connection_string[] = "host=$hostname";
+			if ($username != '') $connection_string[] = "user=$username";
+			if ($password != '') $connection_string[] = "password=$password";
+			if ($port     != '') $connection_string[] = "port=$port";
+			if ($database != '') $connection_string[] = "dbname=$database";
+
 			// We need to use PGSQL_CONNECT_FORCE_NEW because we require two connectoins (for isolated log message queries)
-			$this->conn = pg_connect("host=$hostname user=$username password=$password port=$port dbname=$database", PGSQL_CONNECT_FORCE_NEW);
+			$this->conn = pg_connect(implode(' ', $connection_string), PGSQL_CONNECT_FORCE_NEW);
 		} finally {
 			# TODO: this does not seem to work?! (at least not for CLI)
 			$err = ob_get_contents();
