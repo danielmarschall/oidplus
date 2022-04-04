@@ -3,7 +3,7 @@
 /*
  * OID-Info.com API for PHP
  * Copyright 2019-2022 Daniel Marschall, ViaThinkSoft
- * Version 2022-01-10
+ * Version 2022-03-24
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -653,10 +653,12 @@ class OIDInfoAPI {
 		// TODO: if name is empty, but address has 1 line, take it as firstname (but remove hyperlink)
 
 		$ignore_current_registrant = false;
-		$test_keys = array_keys($elements['current-registrant']);
-		if ((count($test_keys) == 1) && ($test_keys[0] == 'modification-date')) {
-			// Modification dates without information about the current RA which are rejected by the OID repository
-			$ignore_current_registrant = true;
+		if (isset($elements['current-registrant'])) {
+			$test_keys = array_keys($elements['current-registrant']);
+			if ((count($test_keys) == 1) && ($test_keys[0] == 'modification-date')) {
+				// Modification dates without information about the current RA which are rejected by the OID repository
+				$ignore_current_registrant = true;
+			}
 		}
 
 		$out_loc = '';
