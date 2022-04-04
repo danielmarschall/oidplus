@@ -236,6 +236,18 @@ OIDplus::baseConfig()->setValue('COOKIE_SAMESITE_POLICY', 'Strict');
                          However, OIDplus itself provides an Anti-CSRF mechanism, so you should be
                          still safe.
 
+OIDplus::baseConfig()->setValue('COOKIE_DOMAIN', '');
+                         Can be used to increase security by setting an explicit domain-name in the cookies.
+                         Set to '' (empty string) to allow all (sub)domains.
+                         Set to '(auto)' to automatically detect the domain based on the absolute canonical path.
+
+OIDplus::baseConfig()->setValue('COOKIE_PATH', '/');
+                         Can be used to increase security by setting an explicit pathname in the cookies.
+                         Set to '/' to allow all paths.
+                         Set to '(auto)' to automatically detect the path based on the absolute canonical path.
+                         Note: If supported, you can use Apache's "ProxyPassReverseCookiePath" to translate
+                         the cookie path in a reverse-proxy setting.
+
 OIDplus::baseConfig()->getValue('RA_PASSWORD_PEPPER', '');
                          The pepper is stored inside the base configuration file
                          It prevents that an attacker with SQL write rights can

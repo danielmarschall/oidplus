@@ -25,19 +25,41 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 		$this->setcookie($name, '', time()-9999, true);
 	}
 
+	private function getCookieDomain() {
+		$default_domain = ''; // ini_get('session.cookie_domain');
+		$domain = OIDplus::baseConfig()->getValue('COOKIE_DOMAIN', $default_domain);
+		if ($domain === '(auto)') {
+			$tmp = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL);
+			if ($tmp === false) return $default_domain;
+			$tmp = parse_url($tmp);
+			if ($tmp === false) return $default_domain;
+			if (!isset($tmp['host'])) return $default_domain;
+			$domain = $tmp['host'];
+		}
+		return $domain;
+	}
+
+	private function getCookiePath() {
+		$default_path = '/'; // ini_get('session.cookie_path');
+		$path = OIDplus::baseConfig()->getValue('COOKIE_PATH', $default_path);
+		if ($path === '(auto)') {
+			$tmp = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL);
+			if ($tmp === false) return $default_path;
+			$tmp = parse_url($tmp);
+			if ($tmp === false) return $default_path;
+			if (!isset($tmp['path'])) return $default_path;
+			$path = $tmp['path'];
+
+			// Alternatively:
+			//$path = OIDplus::webpath(null,OIDplus::PATH_RELATIVE_TO_ROOT_CANONICAL);
+			//if ($path === false) return $default_path;
+		}
+		return $path;
+	}
+
 	public function setcookie($name, $value, $expires=0, $allowJS=false, $samesite=null) {
-		// $path = ini_get('session.cookie_path');
-
-		// Here, we will use the system path the visitor is using (NOT the canonical one!)
-		// without the hostname and protocol, so that we only have the path relative to the root left.
-		//$path = OIDplus::webpath(null,OIDplus::PATH_RELATIVE_TO_ROOT);
-
-		// TODO: If CANONICAL_SYSTEM_URL is a proxy URL and the proxy and the actual system use different
-		//       directory levels, then this path of PATH_ABSOLUTE will be wrong!
-		// We use set '/' for now, until we have a better solution!
-		$path = '/';
-
-		$domain = '';
+		$domain = $this->getCookieDomain();
+		$path = $this->getCookiePath();
 		$secure = OIDplus::isSSL();
 		$httponly = !$allowJS;
 		if (is_null($samesite)) {
