@@ -10,10 +10,16 @@ How to get relative/absolute paths, e.g. when you are in a plugin?
                           |
    Get relative path      |      OIDplus::localpath(null, true)           OIDplus::webpath(null, OIDplus::PATH_RELATIVE)
    to base directory      |      Example: ../                             Example: ../
+                          |                                               or
+                          |                                               OIDplus::webpath(null, OIDplus::PATH_RELATIVE_TO_ROOT)
+                          |                                               Example: /oidplus/
                           |
                           |
    Get relative path      |      OIDplus::localpath('file.jpg', true)     OIDplus::webpath('file.jpg', OIDplus::PATH_RELATIVE)
    to any file/dir        |      Example: xyz/file.jpg                    Example: xyz/file.jpg
+                          |                                               or
+                          |                                               OIDplus::webpath('file.jpg', OIDplus::PATH_RELATIVE_TO_ROOT)
+                          |                                               Example: /oidplus/xyz/file.jpg
                           |
                           |
    Get absolute path      |      OIDplus::localpath(null, false)          OIDplus::webpath(null, OIDplus::PATH_ABSOLUTE)
