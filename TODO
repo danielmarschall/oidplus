@@ -80,7 +80,7 @@ SMALL THINGS
 	Possible data source: https://datahub.io/core/country-list#resource-data
 - offer signature checker tool to verify WHOIS responses
 - minimum menu expansion level: make it configurable for all objects and plugins, e.g. so that when you open OIDplus, all OIDs till level 2 are expanded
-- Revive the idea of "information objects" = OIDs that contain content
+- Revive the idea of "information objects" = OIDs that contain content (key-value)
 - API : Make a function that checks if a RA exists, and use it everywhere where needed
 - Object type plugins : take care that "treeicon.png" and "icon_big.png" exist everywhere (become standard)
 - freeoid: gmail app does not hyperlink the activation URL. why?

@@ -36,9 +36,10 @@ class OIDplus extends OIDplusBaseClass {
 
 	/*public*/ const DEFAULT_LANGUAGE = 'enus'; // the language of the source code
 
-	/*public*/ const PATH_RELATIVE = 1;
-	/*public*/ const PATH_ABSOLUTE = 2;
-	/*public*/ const PATH_ABSOLUTE_CANONICAL = 3;
+	/*public*/ const PATH_RELATIVE = 1;           // e.g. "../"
+	/*public*/ const PATH_ABSOLUTE = 2;           // e.g. "http://www.example.com/oidplus/"
+	/*public*/ const PATH_ABSOLUTE_CANONICAL = 3; // e.g. "http://www.example.org/oidplus/" (if baseconfig CANONICAL_SYSTEM_URL is set)
+	/*public*/ const PATH_RELATIVE_TO_ROOT = 4;   // e.g. "/oidplus/"
 
 	// These plugin types can contain HTML code and therefore may
 	// emit (non-setup) CSS/JS code via their manifest.
@@ -112,7 +113,7 @@ class OIDplus extends OIDplusBaseClass {
 					throw new OIDplusConfigInitializationException(_L('File %1 is missing, but setup can\'t be started because its directory missing.','userdata/baseconfig/config.inc.php'));
 				} else {
 					if (self::$html) {
-						if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/') !== 0) {
+						if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE_TO_ROOT).'setup/') !== 0) {
 							header('Location:'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/');
 							die(_L('Redirecting to setup...'));
 						} else {
@@ -1391,10 +1392,13 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return string|false The URL, with guaranteed trailing path delimiter for directories
 	 */
 	public static function webpath($target=null, $mode=self::PATH_ABSOLUTE_CANONICAL) {
-
 		// backwards compatibility
 		if ($mode === true) $mode = self::PATH_RELATIVE;
 		if ($mode === false) $mode = self::PATH_ABSOLUTE;
+
+		if ($mode == OIDplus::PATH_RELATIVE_TO_ROOT) {
+			return parse_url(OIDplus::webpath($target,OIDplus::PATH_ABSOLUTE))['path'];
+		}
 
 		$res = self::getSystemUrl($mode); // Note: already contains a trailing path delimiter
 		if ($res === false) return false;
