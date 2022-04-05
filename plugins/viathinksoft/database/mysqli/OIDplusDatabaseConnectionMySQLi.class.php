@@ -24,10 +24,6 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	private $prepare_cache = array();
 	private $last_error = null; // we need that because MySQL divides prepared statement errors and normal query errors, but we have only one "error()" method
 
-	public static function getPlugin(): OIDplusDatabasePlugin {
-		return new OIDplusDatabasePluginMySQLi();
-	}
-
 	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
