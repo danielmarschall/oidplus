@@ -25,7 +25,6 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	protected /*?string*/ $last_query = null;
 	protected /*bool*/ $slangDetectionDone = false;
 
-	public abstract static function getPlugin(): OIDplusDatabasePlugin;
 	protected abstract function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult;
 	public abstract function error(): string;
 	public abstract function transaction_begin()/*: void*/;
@@ -35,6 +34,17 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	public abstract function transaction_level(): int;
 	protected abstract function doConnect()/*: void*/;
 	protected abstract function doDisconnect()/*: void*/;
+
+	public function getPlugin()/*: ?OIDplusDatabasePlugin*/ {
+		$res = null;
+		$plugins = OIDplus::getDatabasePlugins();
+		foreach ($plugins as $plugin) {
+			if (get_class($this) == get_class($plugin::newConnection($this))) {
+				return $plugin;
+			}
+		}
+		return $res;
+	}
 
 	public function insert_id(): int {
 		// This is the "fallback" variant. If your database provider (e.g. PDO) supports

@@ -24,10 +24,6 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	private $last_error = null; // we need that because PDO divides prepared statement errors and normal query errors, but we have only one "error()" method
 	private $transactions_supported = false;
 
-	public static function getPlugin(): OIDplusDatabasePlugin {
-		return new OIDplusDatabasePluginPDO();
-	}
-
 	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {

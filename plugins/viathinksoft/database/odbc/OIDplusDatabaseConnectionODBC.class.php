@@ -24,10 +24,6 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
 	private $transactions_supported = false;
 
-	public static function getPlugin(): OIDplusDatabasePlugin {
-		return new OIDplusDatabasePluginODBC();
-	}
-
 	protected function forcePrepareEmulation() {
 		$mode = OIDplus::baseConfig()->getValue('PREPARED_STATEMENTS_EMULATION', 'auto');
 		if ($mode === 'on') return true;

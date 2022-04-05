@@ -39,7 +39,19 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			// If the object type has a better way of defining an OID, please override this method!
 			$sid = OIDplus::getSystemId(true);
 			if (!empty($sid)) {
-				$oid = $sid . '.' . smallhash($this->nodeId());
+				$ns_oid = $this->getPlugin()->getManifest()->getOid();
+				if (strpos($ns_oid, '1.3.6.1.4.1.37476.') === 0) {
+					// Official ViaThinkSoft object type plugins
+					// For backwards compatibility with existing IDs,
+					// set the hash_payload as '<namespace>:<id>'
+					$hash_payload = $this->nodeId(true);
+				} else {
+					// Third-party object type plugins
+					// Set the hash_payload as '<plugin oid>:<id>'
+					$hash_payload = $ns_oid.':'.$this->nodeId(false);
+				}
+
+				$oid = $sid . '.' . smallhash($hash_payload);
 				$ids[] = new OIDplusAltId('oid', $oid, _L('OIDplus Information Object ID'));
 			}
 		}
@@ -53,6 +65,17 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	public abstract static function objectTypeTitle();
 
 	public abstract static function objectTypeTitleShort();
+
+	public function getPlugin()/*: ?OIDplusObjectTypePlugin */ {
+		$res = null;
+		$plugins = OIDplus::getObjectTypePlugins();
+		foreach ($plugins as $plugin) {
+			if (get_class($this) == $plugin::getObjectTypeClassName($this)) {
+				return $plugin;
+			}
+		}
+		return $res;
+	}
 
 	public abstract static function ns();
 
