@@ -29,7 +29,7 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 		$default_domain = ''; // ini_get('session.cookie_domain');
 		$domain = OIDplus::baseConfig()->getValue('COOKIE_DOMAIN', $default_domain);
 		if ($domain === '(auto)') {
-			$tmp = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL);
+			$tmp = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE/*_CANONICAL*/);
 			if ($tmp === false) return $default_domain;
 			$tmp = parse_url($tmp);
 			if ($tmp === false) return $default_domain;
@@ -43,7 +43,7 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 		$default_path = '/'; // ini_get('session.cookie_path');
 		$path = OIDplus::baseConfig()->getValue('COOKIE_PATH', $default_path);
 		if ($path === '(auto)') {
-			$tmp = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL);
+			$tmp = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE/*_CANONICAL*/);
 			if ($tmp === false) return $default_path;
 			$tmp = parse_url($tmp);
 			if ($tmp === false) return $default_path;
