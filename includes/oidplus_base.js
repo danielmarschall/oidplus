@@ -30,6 +30,8 @@ var popstate_running = false;
 var pageChangeCallbacks = [];
 var pageChangeRequestCallbacks = [];
 
+var oidplus_menu_width = 450; // In pixels. TODO: Make configurable
+
 function isInternetExplorer() {
 	// see also includes/functions.inc.php
 	var ua = window.navigator.userAgent;
@@ -431,7 +433,7 @@ $(document).ready(function () {
 		north__slidable:              false,
 		north__closable:              false,
 		north__resizable:             false,
-		west__size:                   450,
+		west__size:                   oidplus_menu_width,
 		west__spacing_closed:         20,
 		west__togglerLength_closed:   230,
 		west__togglerAlign_closed:    "center", // TODO: does not work! The text "OBJECT TREE" is still at the top and nearly cut off by the title bar!!!
@@ -469,7 +471,7 @@ function glayoutWorkaroundAC() {
 
 function glayoutWorkaroundB() {
 	// "Bug B": Sometimes, after reload, weird space between oidtree and content window, because oidtree has size of 438px
-	$("#oidtree")[0].style.width = "450px";
+	$("#oidtree")[0].style.width = oidplus_menu_width + "px";
 }
 
 function mobileNavClose() {
