@@ -86,13 +86,14 @@ foreach ($plugins as $plugin) {
 
 // ---
 
-echo '<!DOCTYPE html>'."\n";
-echo '<html lang="'.substr(OIDplus::getCurrentLang(),0,2).'">';
-echo '<head>';
-echo implode("\n",$head_elems);
-echo '</head>';
+echo "<!DOCTYPE html>\n";
 
-echo '<body>';
+echo "<html lang=\"".substr(OIDplus::getCurrentLang(),0,2)."\">\n";
+echo "<head>\n";
+echo "\t".implode("\n\t",$head_elems)."\n";
+echo "</head>\n";
+
+echo "<body>\n";
 
 echo '<div id="loading" style="display:none">Loading&#8230;</div>';
 
@@ -153,8 +154,8 @@ echo '</div>';
 
 echo '</div>';
 
-echo '</body>';
-echo '</html>';
+echo "\n</body>\n";
+echo "</html>\n";
 
 $cont = ob_get_contents();
 ob_end_clean();

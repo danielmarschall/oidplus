@@ -30,11 +30,13 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 				$add_css_args[] = 'h_shift='.urlencode(number_format(OIDplus::config()->getValue('color_hue_shift',0)/360,5,'.',''));
 				$add_css_args[] = 's_shift='.urlencode(number_format(OIDplus::config()->getValue('color_sat_shift',0)/100,5,'.',''));
 				$add_css_args[] = 'v_shift='.urlencode(number_format(OIDplus::config()->getValue('color_val_shift',0)/100,5,'.',''));
-				$add_css_args = count($add_css_args) > 0 ? '?'.implode('&',$add_css_args) : '';
-				$line = str_replace('oidplus.min.css.php', 'oidplus.min.css.php'.htmlentities($add_css_args), $line);
+				if (count($add_css_args) > 0) {
+					$line = str_replace('oidplus.min.css.php?', 'oidplus.min.css.php&', $line);
+					$line = str_replace('oidplus.min.css.php', 'oidplus.min.css.php?'.htmlentities(implode('&',$add_css_args)), $line);
+				}
 			}
 
-			if (strpos($line,'name="theme-color"') !== false) {
+			if ((stripos($line,'<meta') !== false) && (stripos($line,'name="theme-color"') !== false)) {
 				if (preg_match('@content="(.+)"@ismU', $line, $m)) {
 					$theme_color = $m[1];
 					$hs = OIDplus::config()->getValue('color_hue_shift',0)/360;
