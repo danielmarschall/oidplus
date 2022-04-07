@@ -362,6 +362,10 @@ $(document).ready(function () {
 		}
 	};
 	*/
+	
+	if (typeof oidplus_menu_width_uservalue !== 'undefined') {
+		oidplus_menu_width = oidplus_menu_width_uservalue;
+	}
 
 	// --- JsTree
 
