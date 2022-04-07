@@ -123,7 +123,7 @@ echo '</div>';
 echo '<div id="system_title_text">';
 echo '	<a '.OIDplus::gui()->link('oidplus:system').' id="system_title_a">';
 echo '		<span id="system_title_logo"></span>';
-echo '		<span id="system_title_1">'._L('ViaThinkSoft OIDplus 2.0').'</span><br>';
+echo '		<span id="system_title_1">'.htmlentities(OIDplus::getEditionInfo()['vendor'].' OIDplus 2.0').'</span><br>';
 echo '		<span id="system_title_2">'.htmlentities(OIDplus::config()->getValue('system_title')).'</span>';
 echo '	</a>';
 echo '</div>';
