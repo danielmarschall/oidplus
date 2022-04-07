@@ -19,18 +19,16 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-abstract class OIDplusPagePlugin extends OIDplusPlugin {
-	public function htmlHeaderUpdate(&$head_elems) {}
-	public function htmlPostprocess(&$html) {}
-	public function action($actionID, $params) {}
-	public function gui($id, &$out, &$handled) {}
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {}
-	public function tree_search($request) {}
+class OIDplusPagePublicAntiSpamFilter extends OIDplusPagePluginPublic {
 
-	public function csrfUnlock($actionID) {
-		// override this method if you want that your plugin
-		// can accept ajax.php requests from outside, without CSRF check
-		return false;
+	public function htmlPostprocess(&$html) {
+		$html = preg_replace_callback(
+			'|<a\s([^>]*)href="mailto:([^"]+)"([^>]*)>([^<]*)</a>|ismU',
+			function ($treffer) {
+				$email = $treffer[2];
+				$text = $treffer[4];
+				return OIDplus::mailUtils()->secureEmailAddress($email, $text, 1); // AntiSpam
+			}, $html);
 	}
 
 }

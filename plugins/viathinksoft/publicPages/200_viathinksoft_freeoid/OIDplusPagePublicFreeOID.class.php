@@ -223,7 +223,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				$tos = '';
 				if (!empty($js))  $tos .= "<script>\n$js\n</script>";
 				if (!empty($css)) $tos .= "<style>\n$css\n</style>";
-				$tos .= $html;
+				$tos .= stripHtmlComments($html);
 
 				$tos = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $tos);
 				if ($obj) {
