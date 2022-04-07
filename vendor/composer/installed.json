@@ -274,18 +274,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/vnag.git",
-                "reference": "117090c03ad95c35f699aacd8750bbaeef3d8268"
+                "reference": "c09f15bab42be64809d29d0409b4fa2098fefa44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/117090c03ad95c35f699aacd8750bbaeef3d8268",
-                "reference": "117090c03ad95c35f699aacd8750bbaeef3d8268",
+                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/c09f15bab42be64809d29d0409b4fa2098fefa44",
+                "reference": "c09f15bab42be64809d29d0409b4fa2098fefa44",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2022-02-03T01:26:49+00:00",
+            "time": "2022-04-05T11:22:29+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
