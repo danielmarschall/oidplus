@@ -211,6 +211,11 @@ function convert_to_utf8_no_bom($cont) {
 	return $cont;
 }
 
+function stripHtmlComments($html) {
+	$html = preg_replace('@<!--(?!<!)[^\[>].*?-->@ismU', '', $html);
+	return $html;
+}
+
 function extractHtmlContents($cont) {
 	// make sure the program works even if the user provided HTML is not UTF-8
 	$cont = convert_to_utf8_no_bom($cont);

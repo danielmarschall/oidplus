@@ -69,7 +69,7 @@ $theme_color = is_null($design_plugin) ? '' : $design_plugin->getThemeColor();
 $head_elems = array();
 $head_elems[] = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
 $head_elems[] = '<meta name="OIDplus-SystemTitle" content="'.htmlentities(OIDplus::config()->getValue('system_title')).'">'; // Do not remove. This meta tag is acessed by oidplus_base.js
-if ($theme_color != '') $head_elems[] = '<meta name="theme-color" content="'.$theme_color.'">';
+if ($theme_color != '') $head_elems[] = '<meta name="theme-color" content="'.htmlentities($theme_color).'">';
 $head_elems[] = '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
 $head_elems[] = '<title>'.htmlentities(combine_systemtitle_and_pagetitle(OIDplus::config()->getValue('system_title'), $static_title)).'</title>';
 $head_elems[] = '<script src="polyfill.min.js.php"></script>';
@@ -77,7 +77,7 @@ $head_elems[] = OIDplus::getActiveCaptchaPlugin()->captchaDomHead();
 $head_elems[] = '<script src="oidplus.min.js.php"></script>';
 $head_elems[] = '<link rel="stylesheet" href="oidplus.min.css.php">';
 $head_elems[] = '<link rel="shortcut icon" type="image/x-icon" href="favicon.ico.php">';
-$head_elems[] = '<link rel="canonical" href="'.OIDplus::canonicalURL().'">';
+$head_elems[] = '<link rel="canonical" href="'.htmlentities(OIDplus::canonicalURL()).'">';
 
 $plugins = OIDplus::getPagePlugins();
 foreach ($plugins as $plugin) {
@@ -99,14 +99,6 @@ echo '<div id="loading" style="display:none">Loading&#8230;</div>';
 
 echo '<div id="frames">';
 echo '<div id="content_window" class="borderbox">';
-
-$static_content = preg_replace_callback(
-	'|<a\s([^>]*)href="mailto:([^"]+)"([^>]*)>([^<]*)</a>|ismU',
-	function ($treffer) {
-		$email = $treffer[2];
-		$text = $treffer[4];
-		return OIDplus::mailUtils()->secureEmailAddress($email, $text, 1); // AntiSpam
-	}, $static_content);
 
 echo '<h1 id="real_title">';
 if ($static_icon != '') echo '<img src="'.htmlentities($static_icon).'" width="48" height="48" alt=""> ';
@@ -161,5 +153,10 @@ $cont = ob_get_contents();
 ob_end_clean();
 
 OIDplus::invoke_shutdown();
+
+$plugins = OIDplus::getPagePlugins();
+foreach ($plugins as $plugin) {
+	$plugin->htmlPostprocess($cont);
+}
 
 echo $cont;

@@ -73,7 +73,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			$info = '';
 			if (!empty($js))  $info .= "<script>\n$js\n</script>";
 			if (!empty($css)) $info .= "<style>\n$css\n</style>";
-			$info .= $html;
+			$info .= stripHtmlComments($html);
 
 			$out['text'] = $info;
 

@@ -51,7 +51,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		$cont = '';
 		if (!empty($js))  $cont .= "<script>\n$js\n</script>";
 		if (!empty($css)) $cont .= "<style>\n$css\n</style>";
-		$cont .= $html;
+		$cont .= stripHtmlComments($html);
 
 		return $cont;
 	}
