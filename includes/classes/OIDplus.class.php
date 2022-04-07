@@ -468,6 +468,16 @@ class OIDplus extends OIDplusBaseClass {
 		return self::$designPlugins;
 	}
 
+	public static function getActiveDesignPlugin() {
+		$plugins = OIDplus::getDesignPlugins();
+		foreach ($plugins as $plugin) {
+			if ((basename($plugin->getPluginDirectory())) == OIDplus::config()->getValue('design','default')) {
+				return $plugin;
+			}
+		}
+		return null;
+	}
+
 	# --- Logger plugin
 
 	private static function registerLoggerPlugin(OIDplusLoggerPlugin $plugin) {

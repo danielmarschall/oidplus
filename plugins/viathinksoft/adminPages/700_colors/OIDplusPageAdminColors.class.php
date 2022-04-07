@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,36 @@
 if (!defined('INSIDE_OIDPLUS')) die();
 
 class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
+
+	public function htmlHeaderUpdate(&$head_elems) {
+		foreach ($head_elems as &$line) {
+			if (strpos($line,'oidplus.min.css.php') !== false) {
+				$add_css_args = array();
+				$add_css_args[] = 'theme='.urlencode(OIDplus::config()->getValue('design','default'));
+				$add_css_args[] = 'invert='.urlencode(OIDplus::config()->getValue('color_invert',0));
+				$add_css_args[] = 'h_shift='.urlencode(number_format(OIDplus::config()->getValue('color_hue_shift',0)/360,5,'.',''));
+				$add_css_args[] = 's_shift='.urlencode(number_format(OIDplus::config()->getValue('color_sat_shift',0)/100,5,'.',''));
+				$add_css_args[] = 'v_shift='.urlencode(number_format(OIDplus::config()->getValue('color_val_shift',0)/100,5,'.',''));
+				$add_css_args = count($add_css_args) > 0 ? '?'.implode('&',$add_css_args) : '';
+				$line = str_replace('oidplus.min.css.php', 'oidplus.min.css.php'.htmlentities($add_css_args), $line);
+			}
+
+			if (strpos($line,'name="theme-color"') !== false) {
+				if (preg_match('@content="(.+)"@ismU', $line, $m)) {
+					$theme_color = $m[1];
+					$hs = OIDplus::config()->getValue('color_hue_shift',0)/360;
+					$ss = OIDplus::config()->getValue('color_sat_shift',0)/100;
+					$vs = OIDplus::config()->getValue('color_val_shift',0)/100;
+					$theme_color = changeHueOfCSS($theme_color, $hs, $ss, $vs); // "changeHueOfCSS" can also change a single color value if it has the form #xxyyzz or #xyz
+					if (OIDplus::config()->getValue('color_invert',0)) {
+						$theme_color = invertColorsOfCSS($theme_color);
+					}
+					$line = preg_replace('@content="(.+)"@ismU', 'content="'.$theme_color.'"', $line);
+
+				}
+			}
+		}
+	}
 
 	public function action($actionID, $params) {
 		if ($actionID == 'color_update') {

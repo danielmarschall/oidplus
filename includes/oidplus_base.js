@@ -30,7 +30,7 @@ var popstate_running = false;
 var pageChangeCallbacks = [];
 var pageChangeRequestCallbacks = [];
 
-var oidplus_menu_width = 450; // In pixels. TODO: Make configurable
+var oidplus_menu_width = 450; // In pixels. You can change this at runtime because of the glayoutWorkaroundB() workaround
 
 function isInternetExplorer() {
 	// see also includes/functions.inc.php
