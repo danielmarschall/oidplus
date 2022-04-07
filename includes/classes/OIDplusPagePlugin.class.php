@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 if (!defined('INSIDE_OIDPLUS')) die();
 
 abstract class OIDplusPagePlugin extends OIDplusPlugin {
+	public function htmlHeaderUpdate(&$head_elems) {}
 	public function action($actionID, $params) {}
 	public function gui($id, &$out, &$handled) {}
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {}
