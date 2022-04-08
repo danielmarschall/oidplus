@@ -212,7 +212,8 @@ function convert_to_utf8_no_bom($cont) {
 }
 
 function stripHtmlComments($html) {
-	$html = preg_replace('@<!--(?!<!)[^\[>].*?-->@ismU', '', $html);
+	// https://stackoverflow.com/questions/11337332/how-to-remove-html-comments-in-php
+	$html = preg_replace("~<!--(?!<!)[^\[>].*?-->~s", "", $html);
 	return $html;
 }
 
