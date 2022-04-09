@@ -101,7 +101,8 @@
 		"gedmarc/layout": "*@dev",
 		"emn178/js-sha3": "*@dev",
 		"n-other/php-sha3": "*@dev",
-		"tweeb/tinymce-i18n": "^2.0"
+		"tweeb/tinymce-i18n": "^2.0",
+		"phpseclib/phpseclib": "*"
 	},
 	"config": {
 		"secure-http": false,

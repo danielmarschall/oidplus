@@ -7,10 +7,15 @@ namespace Composer\Autoload;
 class ComposerStaticInitOidPlusComposer
 {
     public static $files = array (
+        'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'p' => 
+        array (
+            'phpseclib3\\' => 11,
+        ),
         'b' => 
         array (
             'bb\\Sha3\\' => 8,
@@ -18,6 +23,10 @@ class ComposerStaticInitOidPlusComposer
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+        ),
+        'P' => 
+        array (
+            'ParagonIE\\ConstantTime\\' => 23,
         ),
         'M' => 
         array (
@@ -31,6 +40,10 @@ class ComposerStaticInitOidPlusComposer
     );
 
     public static $prefixDirsPsr4 = array (
+        'phpseclib3\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
+        ),
         'bb\\Sha3\\' => 
         array (
             0 => __DIR__ . '/..' . '/n-other/php-sha3/src',
@@ -38,6 +51,10 @@ class ComposerStaticInitOidPlusComposer
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'ParagonIE\\ConstantTime\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
         'MatthiasMullie\\PathConverter\\' => 
         array (

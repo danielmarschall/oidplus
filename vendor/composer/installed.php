@@ -56,7 +56,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'd84d6b602f318eb3f005971c81504350a5415e0f',
+      'reference' => '1a9b6f27cd44012caa64803605c22e56747f1999',
     ),
     'danielmarschall/uuid_mac_utils' => 
     array (
@@ -76,7 +76,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'c09f15bab42be64809d29d0409b4fa2098fefa44',
+      'reference' => '2d0af05e72b902df45292b24157f6269fb75684b',
     ),
     'dcodeio/bcrypt.js' => 
     array (
@@ -141,6 +141,34 @@
         0 => '9999999-dev',
       ),
       'reference' => '54ee3b90986e88286d333319e6340b90bde4f71a',
+    ),
+    'paragonie/constant_time_encoding' => 
+    array (
+      'pretty_version' => 'v2.5.0',
+      'version' => '2.5.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '9229e15f2e6ba772f0c55dd6986c563b937170a8',
+    ),
+    'paragonie/random_compat' => 
+    array (
+      'pretty_version' => 'v9.99.100',
+      'version' => '9.99.100.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
+    ),
+    'phpseclib/phpseclib' => 
+    array (
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
+      'aliases' => 
+      array (
+        0 => '9999999-dev',
+      ),
+      'reference' => '6d2356b546b443c1fa7e793772e522113062b1ff',
     ),
     'spamspan/spamspan' => 
     array (
