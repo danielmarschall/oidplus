@@ -164,9 +164,31 @@ class OIDplusLogger extends OIDplusBaseClass {
 		return $out;
 	}
 
+	private static $missing_plugin_queue = array();
+
+	public static function reLogMissing() {
+		while (count(self::$missing_plugin_queue) > 0) {
+			$item = self::$missing_plugin_queue[0];
+			if (!self::log_internal($item[0], $item[1], false)) return false;
+			array_shift(self::$missing_plugin_queue);
+		}
+		return true;
+	}
+
 	public static function log($maskcodes, $event) {
+		self::reLogMissing(); // try to re-log failed requests
+		return self::log_internal($maskcodes, $event, true);
+	}
+
+	private static function log_internal($maskcodes, $event, $allow_delayed_log) {
 		$loggerPlugins = OIDplus::getLoggerPlugins();
-		if (count($loggerPlugins) == 0) return false;
+		if (count($loggerPlugins) == 0) {
+			// The plugin might not be initialized in OIDplus::init()
+			// yet. Remember the log entries for later submission during
+			// OIDplus::init();
+			if ($allow_delayed_log) self::$missing_plugin_queue[] = array($maskcodes, $event);
+			return false;
+		}
 
 		// What is a mask code?
 		// A mask code gives information about the log event:
@@ -380,6 +402,5 @@ class OIDplusLogger extends OIDplusBaseClass {
 		}
 
 		return $result;
-
 	}
 }

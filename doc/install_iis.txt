@@ -49,26 +49,7 @@ Install OIDplus to Microsoft IIS
 
 	%windir%\system32\inetsrv\appcmd.exe unlock config -section:system.webServer/security/authentication/anonymousAuthentication
 
-(5) Configure OpenSSL
-
-	Create the directory
-	C:\Program Files (x86)\Common Files\SSL
-	
-	Copy the file
-	C:\Program Files (x86)\PHP\v7.4\extras\ssl\openssl.cnf
-	into the directory
-	C:\Program Files (x86)\Common Files\SSL
-	
-	To see in which path PHP searches the openssl.cnf file, open
-	http://localhost/oidplus/dev/info.php
-	and look for the string "Openssl default config".
-	(You need to move the file out of the "dev" directory, because it is secured from being accessed)
-	
-	If you want to double-check that everything works, try running
-	http://localhost/oidplus/dev/check_openssl_keygen.php
-	(You need to move the file out of the "dev" directory, because it is secured from being accessed)
-
-(6) Edit "C:\Program Files (x86)\PHP\v7.4\php.ini" (you need to run Notepad as administrator)
+(5) Edit "C:\Program Files (x86)\PHP\v7.4\php.ini" (you need to run Notepad as administrator)
 
 	Make sure that following extensions are enabled by uncommenting the lines:
 
@@ -86,4 +67,4 @@ Install OIDplus to Microsoft IIS
 	extension=pdo_sqlite  (if you want to use SQLite via PDO)
 	extension=odbc        (if you want to use ODBC)
 
-(7) Open http://localhost/oidplus and follow the setup instructions
+(6) Open http://localhost/oidplus and follow the setup instructions
