@@ -1,32 +1,32 @@
 <?php /* <ViaThinkSoftSignature>
-trfGwmF3j+VtYsqXNFrLSDAmu8hPGkJ8Q6jpk9i+ZpM7rofOeRS5Pm8v0SSoGarjI
-XHBoAzxEnyIlEO6HeF3gEZ0UGCm2LeQpcKy/92b1/L/B0ll+yW1+qPbkj/0SKSwbK
-NmtDKM39a9XIZSzvBVus/znDRTVdNPeZsgs0fJr+iGkgjsUcefXXuGAUI+Lc89KrK
-Ef7NAI95yBXwRmlqD504kM/l/iYOB0nbDAbBaxKQz1cG3YOnyiT8ayE4yqHL4rmXq
-VI14mYnmiKBbV0ZXEGp6oDBEX5lEqUM6TgtKp2wxXE/M0RZzF0jWxKZH96Cds+qvT
-s6XBZFFDufRO4XdOgjWBzRLikyeuWEMgSeVzvfV6N6KWGzNbCAshuRb/ncxdvtFC3
-qmCIao9tNixbhuxGBgE+vPG3EwlWCP8V6HMvIEcF863sOVmZouMIKxki5RUd7aHcD
-+bjy1PoNWHlc+wAIfVIf/nPg43awQAjDCCVvh5HZZTqaAHeiwT441AhnePVcxv3Ds
-QFqiY20F2j/KuPk9Ek7+8TI9By+y+GVSJyMxm8rC0H2rwyNDuk5qiw77WRstsRG2S
-6sa352zH8SzoWJmtwFH5zu8yZMknL4K4ToGcoX+4NBC+wEgJk/5GTOTxcRlFRVrfF
-pIhUJPu0wYnFmsrvM3reHVyAueHuSO1TOCIJ+IFWYQzBQZpA3JpuNclK03ws0PEzH
-qfoD/UhYU/TvSxPxGGE6ddwfMIZcqK7zdMz6CrdjI/ZSXsSQqUZCDhhf4nt5JqapO
-FFL0OYk+EhXtGKqP/HClYwq4n1i03+5oE34nKFkZdPEGK/c/VgoJ1sZpKycCQplhw
-8sJNiZIEI/sdWZ4z1S/G7Stl182Def3TYkgDbQj7wEo3fqZXajHIF2fRlxqT3g6fV
-S/xxjS9Sauz1pZilSqGsF+d+s5yYfgWrfLgSQyuJoxFdhU/B6PLVnry7RKoFUH3Ju
-REKzVECnyM/UK/Viil4yZ+CIvpfyZcecAt4BrtyCq9SkjQNkIxzu61uautZF0f3v9
-BXTQGf2/oH0v37Bhm3Xofn+hQ6J15H4a1lVcp2FPB87/eQ3cpBkSjryG2Xa/Eft2U
-A+mv+HMpbhraGRJvGUzRy04XBg8yRHes8vfaEau3czfWQlsmEIyWpvKgXwhtpeOfK
-ciQexRuCrjTH9zQy1InaANAo95P2YeQxgzJcppMZ44eLlHEuku949UijxYzjTJxsv
-pdYT2j93XHikUsADBQJAkhRzQ6shNxK8dMEdLoBgg1mL9IYvY3z81YVe/wy2fBkWx
-44y5aSSMj2L7un0uwwOnrPC++JbKAos8y4Ez4FZL17Y0lZyRb5mx/jptGcBF/HIOy
-A==
+XdQ9Y3ujgj7pXb9l4iNXGDCzSSPfkX4MJWEcWF3KcYbnzlLwYooi73hdid4ffOGqT
+CR732fR/PWWQhWVXxtUPeEyf23Y5iROC6mLGr5bMyPwuOCMXyqjdYsUjGEYTRuWAi
+7deUSHC8pz2U4NJFf5ochQhcnoNS6CIR4WnwfhUwjp2s/5qC5gnIjpx08dkpwV/YF
+TcT9gNlDkkefu/HIiju9BpYbT2C6+VPue3qDXRyFdTxv1/7L9ohhpVRSkjzh1kNCi
+8lmtud+Anvc1+9jAxwwBDuTcJdvkYiWucEml1CYUMPF29ipb0Itqm6wfE9TYDgD1E
+rsYxXn5SE0rIjZwDhjtmM8j7iZdNP56zoyS6NdoZ7iYYhSaWwc8hbPBo8Uvhhh3CE
+1fsBeh6bn7Ob4fVMU3WzHwD6D7h0/EvQi/ZD9OxtG0DIGsT5ad/b0Zcl0pmpqRols
+fru/mcw0Qr5Tfx7M9GUK3lLmzkxFtHDKDQAYObtLPDutHdL8u3pA0u41+llGV77Fi
+ajxpjbl4DNiLzkQkIp4wET0DWHhftvMKDz2tme4uQcpqME7rLfh0xL2ETPBT8o44V
+lw18TTJ+m+1fCTdqMb391Ak3dChGfPGf/IT1IF02h6t2+1HINMjYk7bdTxPYoHOJc
+jOPMC18nJTpzOhd880+eng7sSiFZ/ShXP+cqywSrnNi9JYRlYb4hhOB/BbVL+/esw
+l8Z1TMaKbiOZUF+y+PfNlsy3J2GKL56kwsU1/sct0nsPz43F1Gf/XYOBxeF1Ci55H
+KJdGhcn8JJoI6gg9vKa6FO99KFMjRXXsAAitEKj5w4NjOPUZwwfMWSLINgOWqj/fu
+Pr/t9Ek/khGaYdn4h0GXMC9qQazzPwV/i1zJYJa/VTwtkgl1mqAvSiKZSEvO2XgeG
+ZpRQ/JmfI1UO85pFY8g31WLNM6mexOd6sCu7KW6MYkT1p34QW9inyrymKb8KV9Hji
+r2vVa/Tzg7qTnohDNUZ5fY8kZ1tRNIt7QTe0eCg1BIK2/Rgpnmo+ULyC6KMAu6TgU
+i6pXkNaN3JRAgKfJlUcyo0mnLaHUGZ+hqSL3M0gYwuqVnpVeVdyr1AyN1RDBB2aTq
+EOu7KMdKFcQo9aZPM91RmOQ1WsV7QFIyxbzs/Mjq6fIbLPp8qeSxKk7MoMzlmsREy
+Xcf4uMTiJOg7WRSsRMNy2vmDXjczYfXi2Ak+oG9M6n4gHy8UqQ4IjamqBOFPkqAFu
+kp300s3yEdmMowo02L5B69ct7AcSVZgKeiO1xVYUGywdX/wLzEVqzaeJqA2fVz8wy
+pjNw5bJ6SmecLG4fb1qMndOywS1XRUoNL7goRC8MVC/nRyo2GZrU707JKlX1S5eFD
+g==
 </ViaThinkSoftSignature> */ ?>
 <?php
 
 /*
 
-      VNag - Nagios Framework for PHP                  (C) 2014-2021
+      VNag - Nagios Framework for PHP                  (C) 2014-2022
       __     ___      _____ _     _       _     ____         __ _
       \ \   / (_) __ |_   _| |__ (_)_ __ | | __/ ___|  ___  / _| |_
        \ \ / /| |/ _` || | | '_ \| | '_ \| |/ /\___ \ / _ \| |_| __|
@@ -35,7 +35,7 @@ A==
 
       Developed by Daniel Marschall             www.viathinksoft.com
       Licensed under the terms of the Apache 2.0 license
-      Revision 2021-06-24
+      Revision 2022-04-09
 
 */
 
@@ -347,7 +347,7 @@ function _empty($x) {
 }
 
 abstract class VNag {
-	/*public*/ const VNAG_VERSION = '2021-06-24';
+	/*public*/ const VNAG_VERSION = '2022-04-09';
 
 	// Status 0..3 for STATUSMODEL_SERVICE (the default status model):
 	# The guideline states: "Higher-level errors (such as name resolution errors, socket timeouts, etc) are outside of the control of plugins and should generally NOT be reported as UNKNOWN states."
@@ -1158,7 +1158,9 @@ abstract class VNag {
 			$signature = '';
 			$sign_algo = is_null($this->sign_algo) ? OPENSSL_ALGO_SHA256 : $this->sign_algo;
 			if (@openssl_sign($payload, $signature, $pkeyid, $sign_algo)) {
-				openssl_free_key($pkeyid);
+				if (version_compare(PHP_VERSION, '8.0.0') < 0) {
+					openssl_free_key($pkeyid);
+				}
 
 				$dataset['signature'] = base64_encode($signature);
 			} else {

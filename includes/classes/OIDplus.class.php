@@ -1128,6 +1128,14 @@ class OIDplus extends OIDplusBaseClass {
 		}
 	}
 
+	private static function getSystemIdFromPubKey($pubKey) {
+		$m = array();
+		if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
+			return smallhash(base64_decode($m[1]));
+		}
+		return false;
+	}
+
 	private static $system_id_cache = null;
 	public static function getSystemId($oid=false) {
 		if (!is_null(self::$system_id_cache)) {
@@ -1137,10 +1145,7 @@ class OIDplus extends OIDplusBaseClass {
 
 			if (self::getPkiStatus(true)) {
 				$pubKey = OIDplus::config()->getValue('oidplus_public_key');
-				$m = array();
-				if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
-					$out = smallhash(base64_decode($m[1]));
-				}
+				$out = self::getSystemIdFromPubKey($pubKey);
 			}
 			self::$system_id_cache = $out;
 		}
@@ -1165,8 +1170,11 @@ class OIDplus extends OIDplusBaseClass {
 		return __DIR__.'/../../vendor/phpseclib/phpseclib/phpseclib/openssl.cnf';
 	}
 
-	public static function getPkiStatus($try_generate=true) {
+	public static function getPkiStatus($try_generate=false) {
 		if (!function_exists('openssl_pkey_new')) return false;
+
+		// For debug purposes: Invalidate current key
+		//OIDplus::config()->setValue('oidplus_private_key', '');
 
 		$privKey = OIDplus::config()->getValue('oidplus_private_key');
 		$pubKey = OIDplus::config()->getValue('oidplus_public_key');
@@ -1174,7 +1182,7 @@ class OIDplus extends OIDplusBaseClass {
 		if ($try_generate && !verify_private_public_key($privKey, $pubKey)) {
 			$pkey_config = array(
 			    "digest_alg" => "sha512",
-			    "private_key_bits" => 2048,
+			    "private_key_bits" => defined('OPENSSL_SUPPLEMENT') ? 1024 : 2048, // openssl_supplement.inc.php is based on phpseclib, which is very slow. So we use 1024 bits instead of 2048 bits
 			    "private_key_type" => OPENSSL_KEYTYPE_RSA,
 			    "config" => OIDplus::getOpenSslCnf()
 			);
@@ -1185,7 +1193,7 @@ class OIDplus extends OIDplusBaseClass {
 
 			// Extract the private key from $res to $privKey
 			// TODO: Should we password-protect it? e.g. with OIDplus-Server-Secret
-			if (openssl_pkey_export($res, $privKey, "", $pkey_config) === false) return false;
+			if (openssl_pkey_export($res, $privKey, null, $pkey_config) === false) return false;
 
 			// Extract the public key from $res to $pubKey
 			$tmp = openssl_pkey_get_details($res);
@@ -1200,9 +1208,8 @@ class OIDplus extends OIDplusBaseClass {
 			OIDplus::config()->setValue('oidplus_public_key', $pubKey);
 
 			// Log the new system ID
-			$m = array();
-			if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
-				$system_id = smallhash(base64_decode($m[1]));
+			$system_id = self::getSystemIdFromPubKey($pubKey);
+			if ($system_id !== false) {
 				OIDplus::logger()->log("[INFO]A!", "Your SystemID is now $system_id");
 			}
 		}

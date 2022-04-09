@@ -36,6 +36,7 @@ if (version_compare(PHP_VERSION, '7.0.0') < 0) {
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+include_once __DIR__ . '/../vendor/danielmarschall/php_utils/openssl_supplement.inc.php';
 include_once __DIR__ . '/../vendor/danielmarschall/php_utils/gmp_supplement.inc.php';
 include_once __DIR__ . '/../vendor/symfony/polyfill-mbstring/bootstrap.php';
 include_once __DIR__ . '/../vendor/danielmarschall/php_utils/simplexml_supplement.inc.php';
