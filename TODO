@@ -1,4 +1,8 @@
 
+TODO April 2022:
+- Encrypt the private key in the config table using an auto-generated keyfile in userdata/secret.php (or similar)
+	Make sure that all procedures that access the private key are able to use a passphrase
+
 New Object Type plugins:
 - FourCC aka OSType
 - LSID ?
@@ -185,6 +189,7 @@ LOGS
 - At "oidplus:system_log", user log section and object log section, the users and/or objects should be clickable
 
 IDEAS
+- adminPages/800_plugins: We could also list plugins that have been blacklisted in the config? But that is hard to achieve, because these plugins are ignored and not loaded at all
 - Similar to Security Event Token, we could issue JWT tokens which log the allocation of an OID to an RA. This signed token can be stored somewhere and can be used to proove the ownership of an OID.
 - have an option to assign a custom icon to any object in the system (file attachment with name "icon.*"?). Especially useful for easy visual distinguishing between root objects inside 'Other objects', but may be useful for other object types too.
 - Give configuration settings a type (int, bool, enum, etc.) so that the configuration page can be more user friendly (use a checkbox rather than typing "1" and "0")

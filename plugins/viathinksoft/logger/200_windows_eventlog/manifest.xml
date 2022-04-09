@@ -9,6 +9,7 @@
 	<info>
 		<name>Windows Event Log</name>
 		<author>ViaThinkSoft</author>
+		<license>Apache 2.0</license>
 		<version />
 		<descriptionHTML><![CDATA[
 			In order for using the Windows Event Log, you need to download and install <a target=_blank href='https://www.viathinksoft.de/projects/simple_log_event'>ViaThinkSoft SimpleLogEvent</a> and register the source name 'OIDplus' in its setup.

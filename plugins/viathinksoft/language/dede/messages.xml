@@ -118,14 +118,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		(disabled)
-		]]></source>
-		<target><![CDATA[
-		(deaktiviert)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		(has no objects)
 		]]></source>
 		<target><![CDATA[
@@ -722,6 +714,14 @@
 		]]></source>
 		<target><![CDATA[
 		Zugriffsfehler
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Author
+		]]></source>
+		<target><![CDATA[
+		Autor
 		]]></target>
 	</message>
 	<message>
@@ -3078,6 +3078,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		License
+		]]></source>
+		<target><![CDATA[
+		Lizenz
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		List OIDs at oid-info.com which are missing in your system
 		]]></source>
 		<target><![CDATA[
@@ -4798,14 +4806,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Plugin author
-		]]></source>
-		<target><![CDATA[
-		Plugin-Hersteller
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Plugin main class "%1" is expected to be a subclass of "%2"
 		]]></source>
 		<target><![CDATA[
@@ -4834,14 +4834,6 @@
 		]]></source>
 		<target><![CDATA[
 		Plugin-Typ
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Plugin version
-		]]></source>
-		<target><![CDATA[
-		Plugin-Version
 		]]></target>
 	</message>
 	<message>
@@ -6926,6 +6918,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Version
+		]]></source>
+		<target><![CDATA[
+		Version
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		ViaThinkSoft Client Challenge lets the client computer solve a cryptographic problem instead of letting the user solve a CAPTCHA. This slows down brute-force attacks.
 		]]></source>
 		<target><![CDATA[
@@ -7474,6 +7474,14 @@
 		]]></source>
 		<target><![CDATA[
 		Prüfsumme
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		disabled
+		]]></source>
+		<target><![CDATA[
+		deaktiviert
 		]]></target>
 	</message>
 	<message>

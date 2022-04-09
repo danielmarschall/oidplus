@@ -9,6 +9,7 @@
 	<info>
 		<name>BCrypt hash</name>
 		<author>ViaThinkSoft</author>
+		<license>Apache 2.0</license>
 		<version />
 		<descriptionHTML><![CDATA[
 			<p>The default BCrypt hash format is described at <a href="https://en.wikipedia.org/wiki/Bcrypt#Description">Wikipedia</a>. OIDplus adds "A3#" in front of it.</p>

@@ -9,6 +9,7 @@
 	<info>
 		<name>PHP generic salted hash (hex notation)</name>
 		<author>ViaThinkSoft</author>
+		<license>Apache 2.0</license>
 		<version />
 		<descriptionHTML><![CDATA[
 			<p>This auth method can be used by you if you migrate users from another software solution into OIDplus</p>
