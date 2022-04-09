@@ -9,6 +9,7 @@
 	<info>
 		<name>SHA3 salted hash (base64 notation)</name>
 		<author>ViaThinkSoft</author>
+		<license>Apache 2.0</license>
 		<version />
 		<descriptionHTML><![CDATA[
 			<p>The format is:</p>

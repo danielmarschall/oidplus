@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 	// All plugins
 	private $name = '';
 	private $author = '';
+	private $license = '';
 	private $version = '';
 	private $htmlDescription = '';
 	private $oid = '';
@@ -59,6 +60,10 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 
 	public function getAuthor(): string {
 		return $this->author;
+	}
+
+	public function getLicense(): string {
+		return $this->license;
 	}
 
 	public function getVersion(): string {
@@ -141,6 +146,7 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 
 		$this->name = (string)$xmldata->info->name;
 		$this->author = (string)$xmldata->info->author;
+		$this->license = (string)$xmldata->info->license;
 		$this->version = (string)$xmldata->info->version;
 		$this->htmlDescription = (string)$xmldata->info->descriptionHTML;
 		$this->oid = (string)$xmldata->info->oid;
