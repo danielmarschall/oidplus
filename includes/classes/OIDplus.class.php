@@ -468,6 +468,16 @@ class OIDplus extends OIDplusBaseClass {
 		return self::$designPlugins;
 	}
 
+	public static function getActiveDesignPlugin() {
+		$plugins = OIDplus::getDesignPlugins();
+		foreach ($plugins as $plugin) {
+			if ((basename($plugin->getPluginDirectory())) == OIDplus::config()->getValue('design','default')) {
+				return $plugin;
+			}
+		}
+		return null;
+	}
+
 	# --- Logger plugin
 
 	private static function registerLoggerPlugin(OIDplusLoggerPlugin $plugin) {
@@ -871,6 +881,7 @@ class OIDplus extends OIDplusBaseClass {
 		self::registerAllPlugins(array('publicPages', 'raPages', 'adminPages'), 'OIDplusPagePlugin', array('OIDplus','registerPagePlugin'));
 		self::registerAllPlugins('auth', 'OIDplusAuthPlugin', array('OIDplus','registerAuthPlugin'));
 		self::registerAllPlugins('logger', 'OIDplusLoggerPlugin', array('OIDplus','registerLoggerPlugin'));
+		OIDplusLogger::reLogMissing(); // Some previous plugins might have tried to log. Repeat that now.
 		self::registerAllPlugins('objectTypes', 'OIDplusObjectTypePlugin', array('OIDplus','registerObjectTypePlugin'));
 		self::registerAllPlugins('language', 'OIDplusLanguagePlugin', array('OIDplus','registerLanguagePlugin'));
 		self::registerAllPlugins('design', 'OIDplusDesignPlugin', array('OIDplus','registerDesignPlugin'));
@@ -1137,6 +1148,23 @@ class OIDplus extends OIDplusBaseClass {
 		return ($oid ? '1.3.6.1.4.1.37476.30.9.' : '').$out;
 	}
 
+	public static function getOpenSslCnf() {
+		// The following functions need a config file, otherway they don't work
+		// - openssl_csr_new
+		// - openssl_csr_sign
+		// - openssl_pkey_export
+		// - openssl_pkey_export_to_file
+		// - openssl_pkey_new
+		$tmp = @getenv('OPENSSL_CONF');
+		if ($tmp && file_exists($tmp)) return $tmp;
+
+		// OpenSSL in XAMPP does not work OOBE, since the OPENSSL_CONF is
+		// C:/xampp/apache/bin/openssl.cnf and not C:/xampp/apache/conf/openssl.cnf
+		// Bug reports are more than 10 years old and nobody cares...
+		// Use our own config file
+		return __DIR__.'/../../vendor/phpseclib/phpseclib/phpseclib/openssl.cnf';
+	}
+
 	public static function getPkiStatus($try_generate=true) {
 		if (!function_exists('openssl_pkey_new')) return false;
 
@@ -1148,18 +1176,21 @@ class OIDplus extends OIDplusBaseClass {
 			    "digest_alg" => "sha512",
 			    "private_key_bits" => 2048,
 			    "private_key_type" => OPENSSL_KEYTYPE_RSA,
+			    "config" => OIDplus::getOpenSslCnf()
 			);
 
 			// Create the private and public key
 			$res = openssl_pkey_new($pkey_config);
-
-			if (!$res) return false;
+			if ($res === false) return false;
 
 			// Extract the private key from $res to $privKey
-			openssl_pkey_export($res, $privKey);
+			// TODO: Should we password-protect it? e.g. with OIDplus-Server-Secret
+			if (openssl_pkey_export($res, $privKey, "", $pkey_config) === false) return false;
 
 			// Extract the public key from $res to $pubKey
-			$pubKey = openssl_pkey_get_details($res)["key"];
+			$tmp = openssl_pkey_get_details($res);
+			if ($tmp === false) return false;
+			$pubKey = $tmp["key"];
 
 			// Log
 			OIDplus::logger()->log("[INFO]A!", "Generating new SystemID using a new key pair");

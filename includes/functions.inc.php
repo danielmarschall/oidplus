@@ -211,6 +211,12 @@ function convert_to_utf8_no_bom($cont) {
 	return $cont;
 }
 
+function stripHtmlComments($html) {
+	// https://stackoverflow.com/questions/11337332/how-to-remove-html-comments-in-php
+	$html = preg_replace("~<!--(?!<!)[^\[>].*?-->~s", "", $html);
+	return $html;
+}
+
 function extractHtmlContents($cont) {
 	// make sure the program works even if the user provided HTML is not UTF-8
 	$cont = convert_to_utf8_no_bom($cont);
