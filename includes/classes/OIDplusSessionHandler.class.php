@@ -150,7 +150,7 @@ class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSet
 			$ciphertext = openssl_encrypt(
 				$data,
 				'AES-256-CBC',
-				hash_pbkdf2('sha512', $key, '', 10000, 64/*256bit*/, true),
+				hash_pbkdf2('sha512', $key, '', 10000, 32/*256bit*/, true),
 				OPENSSL_RAW_DATA,
 				$iv
 			);
@@ -178,7 +178,7 @@ class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSet
 			$cleartext = openssl_decrypt(
 				$ciphertext,
 				'AES-256-CBC',
-				hash_pbkdf2('sha512', $key, '', 10000, 64/*256bit*/, true),
+				hash_pbkdf2('sha512', $key, '', 10000, 32/*256bit*/, true),
 				OPENSSL_RAW_DATA,
 				$iv
 			);
