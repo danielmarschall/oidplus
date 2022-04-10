@@ -363,6 +363,10 @@ $(document).ready(function () {
 	};
 	*/
 
+	if (typeof oidplus_menu_width_uservalue !== 'undefined') {
+		oidplus_menu_width = oidplus_menu_width_uservalue;
+	}
+
 	// --- JsTree
 
 	$('#oidtree')
@@ -436,12 +440,13 @@ $(document).ready(function () {
 		west__size:                   oidplus_menu_width,
 		west__spacing_closed:         20,
 		west__togglerLength_closed:   230,
-		west__togglerAlign_closed:    "center", // TODO: does not work! The text "OBJECT TREE" is still at the top and nearly cut off by the title bar!!!
+		west__togglerAlign_closed:    "center",
 		west__togglerContent_closed:  tmpObjectTree,
 		west__togglerTip_closed:      _L("Open & Pin Menu"),
 		west__sliderTip:              _L("Slide Open Menu"),
 		west__slideTrigger_open:      "mouseover",
-		center__maskContents:         true // IMPORTANT - enable iframe masking
+		center__maskContents:         true, // IMPORTANT - enable iframe masking
+		onresize_start:				  function() { if (typeof handle_glayout_onresize_start == 'function') handle_glayout_onresize_start(); }
 	});
 
 	$("#gotobox").addClass("mobilehidden");
@@ -454,6 +459,9 @@ $(document).ready(function () {
 		}
 	});
 });
+
+// can be overridden if necessary
+var handle_glayout_onresize_start = undefined;
 
 function glayoutWorkaroundAC() {
 	// "Bug A": Sometimes, the design is completely destroyed after reloading the page. It does not help when glayout.resizeAll()
@@ -624,4 +632,16 @@ $.xhrPool.abortAll = function() {
 	$.each(calls, function(key, value) {
 		value.abort();
 	});
+}
+
+/* Misc functions */
+
+function isNull(val, def) {
+	// For compatibility with Internet Explorer, use isNull(a,b) instead of a??b
+	if (val == null) {
+		// since null==undefined, this also works with undefined
+		return def;
+	} else {
+		return val;
+	}
 }
