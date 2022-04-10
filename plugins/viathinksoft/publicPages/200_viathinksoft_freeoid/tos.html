@@ -11,34 +11,42 @@
 <h3>Terms of Service</h3>
 
 <ul>
+<li><b><u>Who can register a free OID?</u></b></li>
 	<li>This service is mainly intended to give <b>private persons, small workgroups, and software developers of freeware, shareware or open-source software</b> the possibility of obtaining a free Object Identifier (OID) with minimum bureaucratic overhead.</li>
-	<li>You simply need to enter a valid email address to which an activation link will be sent. To get the OID assigned, you need to click the link in the automatically generated email and then enter your name, which is the only mandatory field. No human intervention from our side is performed during the whole process and the OID will be immediately assigned.</li>
-	<li>Only OIDs which are registered and shown in this registry web site are legally assigned.</li>
-	<li><b>You may only register one OID per person</b>. You can assign an infinite amount of sub-OIDs to yourself using your root OID.</li>
-	<li>Instead of using your new generated OID directly for a specific purpose, we recommend you to delegate a sub-OID for each purpose. Following this strategy, you will only require one root OID assigned to you.</li>
+	<li><b>You may only register one OID per person</b>. You can assign an infinite amount of sub-OIDs to yourself using your root OID. Instead of using your new generated OID directly for a specific purpose, we recommend you to delegate a sub-OID for each purpose. Following this strategy, you will only require one root OID assigned to you.</li>
 	<li>Please only register an OID if you are sure that you need an OID namespace.</li>
 	<li>To ensure that you get an appropriate OID namespace for your needs, please read the following points carefully:<ul>
-		<li><b>If you are representing a company, you should register an OID in arc <code>1.3.6.1.4.1</code> instead (<a href="http://pen.iana.org" target="_blank">more information</a>).</b></li>
+		<li><b>If you are representing a company, you should consider registering an OID in arc <code>1.3.6.1.4.1</code> instead (<a href="http://pen.iana.org" target="_blank">more information</a>).</b></li>
 		<li>If you only need an OID for an example in a document, please use the OID <code>2.999</code> (no registration required).</li>
-		<li>If you are sure that your target application does allow OIDs with 128-bit arcs (which does
-		<strong>not</strong> apply to most ASN.1 implementations), you can register a globally unique OID (UUID OID) in arc <code>2.25</code> (see <a href="https://misc.daniel-marschall.de/tools/uuid_mac_decoder/interprete_uuid.php?uuid=CREATE" target="_blank">generate OID</a> and <a href="http://www.oid-info.com/faq.htm#size-limitations" target="_blank">more information about known limitations</a>). However, you can still request an OID from this service, because it is shorter and easier to remember.</li>
+		<!--<li>If you are sure that your target application does allow OIDs with 128-bit arcs (which does <strong>not</strong> apply to most ASN.1 implementations), you can register a globally unique OID (UUID OID) in arc <code>2.25</code> (see <a href="https://misc.daniel-marschall.de/tools/uuid_mac_decoder/interprete_uuid.php?uuid=CREATE" target="_blank">generate OID</a> and <a href="http://www.oid-info.com/faq.htm#size-limitations" target="_blank">more information about known limitations</a>). However, you can still request an OID from this service, because it is shorter and easier to remember.</li>-->
 		<li>If you want to extend the Active Directory schema, please consider obtaining an OID from Microsoft instead (<a href="http://msdn.microsoft.com/en-us/library/ms677620.aspx" target="_blank">more information</a>).</li>
 		<li>If you are representing a country, you should consider registering an OID under arc <code>1.2</code> (deprecated) or <code>2.16</code> (recommended) instead (<a href="http://www.oid-info.com/faq.htm#11" target="_blank">more information</a>).</li>
 		<li>If you are representing a telecom operator, you should consider registering an OID in arc <code>0.2</code> instead (<a href="http://www.oid-info.com/get/0.2" target="_blank">more information</a>).</li>
 		<li>If you are representing a network operator, you should consider registering an OID in arc <code>0.3</code> instead (<a href="http://www.oid-info.com/get/0.3" target="_blank">more information</a>).</li>
-	</ul></li>
-	<li>A registered OID can never be unregistered or reassigned. It will always stay visible to the public.</li>
+	</ul><br></li>
+
+<li><b><u>How does the registration work?</u></b></li>
+	<li>You simply need to enter a valid email address to which an activation link will be sent. To get the OID assigned, you need to click the link in the automatically generated email and then enter your name, which is the only mandatory field. No human intervention from our side is performed during the whole process and the OID will be immediately assigned.</li>
+	<li>You can either enter your personal name, the name of your workgroup, or a nickname. Names like "Anonymous" or "John Doe" are not permitted and will lead to the loss of the OID registration, especially if it turns out that the e-mail address was a "trash" address.<br><br></li>
+
+<li><b><u>Which data will be published after registration?</u></b></li>
 	<li><b>You agree that your OID including your email address will be published in this public registry as well as in <a href="http://oid-info.com/get/{{ROOT_OID}}" target="_blank">oid-info.com</a> and other public services.</b></li>
-	<!-- <li>We encourage you to submit all your delegations to <a href="http://oid-info.com/get/{{ROOT_OID}}" target="_blank">oid-info.com</a>.</li>-->
-		<li>The data you entered can be changed at any time with
-	the password you provide during registration at OIDplus.</li>
+	<li>A registered OID can never be unregistered or reassigned. It will always stay visible to the public.</li>
+	<li>Sub-OIDs that you create in this OIDplus system will automatically be transferred to oid-info.com, unless you mark the sub-OIDs as private during the creation - then it stays invisible for the public.<br><br></li>
+
+<li><b><u>Where can I manage my OID?</u></b></li>
+	<li>During registration you will be asked to choose a password, which can be used to login on OIDplus system.</li>
 	<li><strong>Please choose a strong password and keep it secretly!</strong></li>
-	<li>You cannot choose a favorite arc number for your OID. You will receive a
-	sequencial number.</li>
-	<li>This automated Registration Authority does not assign alphanumeric identifiers or Internationalized Resource Identifier (IRI) names since this system is fully automated and only the email address will be verified.</li>
+	<li>The data you entered can be changed at any time with the password you provide during registration at OIDplus.</li>
+	<li>We would be happy if you would use OIDplus to manage your newly created sub-OIDs. You can decide whether these newly created OIDs are publicly visible or not.<br><br></li>
+
+<li><b><u>Under which arc will your OID be registered?</u></b></li>
 	<li>Your new OID will be registered in arc <code>{{ROOT_OID}}</code> which has the ASN.1 notation <code>{ {{ROOT_OID_ASN1}} }</code> and the OID-IRI notation: <code>{{ROOT_OID_IRI}}</code></li>
-	<li>If you have any questions or if you encounter bugs or problems, please contact <a href="{{ADMIN_EMAIL}}">{{ADMIN_EMAIL}}</a> (in English or German).</li>
+	<li>You cannot choose a favorite arc number for your OID. You will receive a sequencial number.</li>
+	<li>This automated Registration Authority does not assign alphanumeric identifiers or Internationalized Resource Identifier (IRI) names since this system is fully automated and only the email address will be verified.</li>
 </ul>
+
+<p>If you have any questions or if you encounter bugs or problems, please contact <a href="{{ADMIN_EMAIL}}">{{ADMIN_EMAIL}}</a> (in English or German).</p>
 
 </body>
 
