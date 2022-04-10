@@ -501,13 +501,24 @@ function hotfix_dir($rev, $dir) {
 		// Fix syntax error that lead to a stalled update!
 		$file = $dir.'/plugins/viathinksoft/adminPages/900_software_update/OIDplusPageAdminSoftwareUpdate.class.php';
 		$cont = file_get_contents($file);
-		$cont = str_replace("urlencode('oidplus:system_file_check',OIDplus::getEditionInfo()['downloadpage']))", "urlencode('oidplus:system_file_check'),OIDplus::getEditionInfo()['downloadpage'])", $cont);
+		$cont = str_replace("urlencode('oidplus:system_file_check',OIDplus::getEditionInfo()['downloadpage']))",
+		                    "urlencode('oidplus:system_file_check'),OIDplus::getEditionInfo()['downloadpage'])",
+		                    $cont);
 		file_put_contents($file, $cont);
 
 		// Fix syntax error that lead to a stalled update!
 		$file = $dir.'/plugins/viathinksoft/adminPages/901_vnag_version_check/vnag.php';
 		$cont = file_get_contents($file);
 		$cont = str_replace("\t\tOIDplus::getEditionInfo()", "", $cont);
+		file_put_contents($file, $cont);
+	}
+	if ($rev == 830) {
+		// Fix bug that caused system ID to best lost
+		$file = $dir.'/includes/classes/OIDplus.class.php';
+		$cont = file_get_contents($file);
+		$cont = str_replace("if ((\$passphrase === false) || !is_privatekey_encrypted(\$privKey)) {",
+		                    "if ((\$passphrase === false) || !is_privatekey_encrypted(OIDplus::config()->getValue('oidplus_private_key'))) {",
+		                    $cont);
 		file_put_contents($file, $cont);
 	}
 }
