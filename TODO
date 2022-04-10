@@ -189,6 +189,8 @@ LOGS
 - At "oidplus:system_log", user log section and object log section, the users and/or objects should be clickable
 
 IDEAS
+- admin plugin that shows the recent oid edits / inserts?
+- in the search feature, search for object creation/update date?
 - adminPages/800_plugins: We could also list plugins that have been blacklisted in the config? But that is hard to achieve, because these plugins are ignored and not loaded at all
 - Similar to Security Event Token, we could issue JWT tokens which log the allocation of an OID to an RA. This signed token can be stored somewhere and can be used to proove the ownership of an OID.
 - have an option to assign a custom icon to any object in the system (file attachment with name "icon.*"?). Especially useful for easy visual distinguishing between root objects inside 'Other objects', but may be useful for other object types too.
