@@ -77,7 +77,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			);
 
 			$signature = '';
-			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::getSystemPrivateKey())) {
 				if (!OIDplus::getPkiStatus()) {
 					throw new OIDplusException(_L('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.'));
 				} else {
@@ -182,7 +182,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			);
 
 			$signature = '';
-			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::getSystemPrivateKey())) {
 				if (!OIDplus::getPkiStatus()) {
 					throw new OIDplusException(_L('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.'));
 				} else {
@@ -456,7 +456,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			);
 
 			$signature = '';
-			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::getSystemPrivateKey())) {
 				if (!OIDplus::getPkiStatus()) {
 					throw new OIDplusException(_L('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.'));
 				} else {

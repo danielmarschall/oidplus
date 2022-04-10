@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,15 @@
  * @return int new version set
  * @throws OIDplusException
  */
-function oidplus_dbupdate_200(OIDplusDatabaseConnection $db) {
-	if ($db->transaction_supported()) $db->transaction_begin();
-
-	$db->query("ALTER TABLE ###objects ADD comment varchar(255) NULL");
-
-	$version = 201;
+function oidplus_dbupdate_205(OIDplusDatabaseConnection $db) {
+	// Note: We update to version 1000, because we want to intentionally break older versions of OIDplus
+	// if they try to connect to a database that is newer than their own program files. Older versions
+	// of OIDplus checked for DB version 200..999 and failed if the version is outside this range.
+	// The main reason is that the new version of OIDplus added encrypted private keys,
+	// and if an older version of OIDplus would try to connect to such a database,
+	// then it would re-generate the keys (and therefore destroy the existing SystemID).
+	$version = 1000;
 	$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
-
-	if ($db->transaction_supported()) $db->transaction_commit();
 
 	return $version;
 }

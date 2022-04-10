@@ -38,7 +38,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			$payload = 'oidplus-verify-pubkey:'.sha3_512($params['challenge']);
 
 			$signature = '';
-			if (!OIDplus::getPkiStatus() || !@openssl_sign($payload, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+			if (!OIDplus::getPkiStatus() || !@openssl_sign($payload, $signature, OIDplus::getSystemPrivateKey())) {
 				throw new OIDplusException(_L('Signature failed'));
 			}
 
@@ -147,7 +147,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			);
 
 			$signature = '';
-			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::getSystemPrivateKey())) {
 				throw new OIDplusException(_L('Signature failed'));
 			}
 
@@ -251,7 +251,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				);
 
 				$signature = '';
-				if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+				if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::getSystemPrivateKey())) {
 					return false; // throw new OIDplusException(_L('Signature failed'));
 				}
 
@@ -337,7 +337,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				"query" => $query, // we must include $query to the payload, because we want to sign it
 				"privacy_level" => $privacy_level,
 				"system_id" => OIDplus::getSystemId(false),
-				"public_key" => OIDplus::config()->getValue('oidplus_public_key'),
+				"public_key" => OIDplus::getSystemPublicKey(),
 				"system_url" => $system_url,
 				"hide_system_url" => 0,
 				"hide_public_key" => 0,
@@ -350,7 +350,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			);
 
 			$signature = '';
-			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::getSystemPrivateKey())) {
 				return false; // throw new OIDplusException(_L('Signature failed'));
 			}
 

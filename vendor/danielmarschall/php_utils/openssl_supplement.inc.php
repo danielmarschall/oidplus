@@ -3,7 +3,7 @@
 /*
  * OpenSSL php functions implemented using phpseclib
  * Copyright 2022 Daniel Marschall, ViaThinkSoft
- * Version 2022-04-09
+ * Version 2022-04-10
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,8 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 			$algo = $pkey_config && isset($pkey_config["private_key_type"]) ? $pkey_config["private_key_type"] : OPENSSL_KEYTYPE_RSA;
 			$bits = $pkey_config && isset($pkey_config["private_key_bits"]) ? $pkey_config["private_key_bits"] : 2048;
 
+			// TODO: Also support $pkey_config['encrypt_key'] and $pkey_config['encrypt_key_cipher'] ?
+
 			if ($algo == OPENSSL_KEYTYPE_RSA) {
 				$private = \phpseclib3\Crypt\RSA::createKey($bits);
 			} else {
@@ -72,10 +74,32 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 
 	function openssl_pkey_export($res, &$privKey, $passphrase = null, $options = null) {
 		try {
-			if (!is_null($passphrase)) throw new Exception("passphrase not implemented");
-			//if (!is_null($options)) throw new Exception("options not implemented");
-			$privKey = $res[2]."";
-			return true;
+			if ($res instanceof \phpseclib3\Crypt\Common\PrivateKey /*\phpseclib3\Crypt\RSA\PrivateKey*/ ) {
+				$privKey = $res;
+				if (!is_null($passphrase)) {
+					$privKey = $res->withPassword($passphrase);
+				}
+				$privKey = $privKey."";
+				return true;
+			} else if (is_string($res)) {
+				$privKey = $res;
+				if (!is_null($passphrase)) {
+					$privKey = \phpseclib3\Crypt\RSA::load($privKey);
+					$privKey = $res->withPassword($passphrase);
+					$privKey = $privKey."";
+				}
+				return true;
+			} else if (is_array($res)) {
+				$privKey = $res[2]."";
+				if (!is_null($passphrase)) {
+					$privKey = \phpseclib3\Crypt\RSA::load($privKey);
+					$privKey = $res->withPassword($passphrase);
+					$privKey = $privKey."";
+				}
+				return true;
+			} else {
+				throw new Exception("Invalid input datatype");
+			}
 		} catch (Exception $e) {
 			global $openssl_supplement_last_error;
 			$openssl_supplement_last_error = $e->getMessage();
@@ -94,6 +118,8 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 	function openssl_public_encrypt($data, &$encrypted, $pubKey) {
 		try {
 			if (is_string($pubKey)) $pubKey = openssl_pkey_get_public($pubKey);
+			if (!is_object($pubKey) || !method_exists($pubKey,'encrypt'))
+				throw new Exception("Invalid input datatype");
 			$encrypted = $pubKey->encrypt($data);
 			return true;
 		} catch (Exception $e) {
@@ -106,6 +132,8 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 	function openssl_private_decrypt($encrypted, &$decrypted, $privKey) {
 		try {
 			if (is_string($privKey)) $privKey = openssl_pkey_get_private($privKey);
+			if (!is_object($privKey) || !method_exists($privKey,'decrypt'))
+				throw new Exception("Invalid input datatype");
 			$decrypted = $privKey->decrypt($encrypted);
 			return true;
 		} catch (Exception $e) {
@@ -126,6 +154,8 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 			if ($algorithm == OPENSSL_ALGO_MD5) $algorithm = 'MD5';
 			if ($algorithm == OPENSSL_ALGO_MD4) $algorithm = 'MD4';
 			if (is_string($public)) $public = openssl_pkey_get_public($public);
+			if (!is_object($public) || !method_exists($public,'verify'))
+				throw new Exception("Invalid input datatype");
 			return $public->withHash($algorithm)->verify($msg, $signature) ? 1 : 0;
 		} catch (Exception $e) {
 			global $openssl_supplement_last_error;
@@ -145,6 +175,8 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 			if ($algorithm == OPENSSL_ALGO_MD5) $algorithm = 'MD5';
 			if ($algorithm == OPENSSL_ALGO_MD4) $algorithm = 'MD4';
 			if (is_string($private)) $private = openssl_pkey_get_private($private);
+			if (!is_object($private) || !method_exists($private,'sign'))
+				throw new Exception("Invalid input datatype");
 			$signature = $private->withHash($algorithm)->sign($msg);
 			return true;
 		} catch (Exception $e) {
@@ -242,7 +274,7 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 			}
 			if (is_null($passphrase)) $passphrase = false;
 			$privKey = \phpseclib3\Crypt\RSA::load($key, $passphrase);
-			return $privKey->withPadding(\phpseclib3\Crypt\RSA::ENCRYPTION_PKCS1 | \phpseclib3\Crypt\RSA::SIGNATURE_PKCS1); /** @phpstan-ignore-line */ // Call to an undefined method phpseclib3\Crypt\Common\AsymmetricKey::withPadding().
+			return $privKey->withPassword(false)->withPadding(\phpseclib3\Crypt\RSA::ENCRYPTION_PKCS1 | \phpseclib3\Crypt\RSA::SIGNATURE_PKCS1); /** @phpstan-ignore-line */ // Call to an undefined method phpseclib3\Crypt\Common\AsymmetricKey::withPadding().
 		} catch (Exception $e) {
 			global $openssl_supplement_last_error;
 			$openssl_supplement_last_error = $e->getMessage();

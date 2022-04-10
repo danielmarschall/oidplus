@@ -31,7 +31,7 @@ $sysid_oid = OIDplus::getSystemId(true);
 if (!$sysid_oid) $sysid_oid = 'unknown'; // do not translate
 $out['SystemID'] = $sysid_oid;
 
-$pubKey = OIDplus::config()->getValue('oidplus_public_key');
+$pubKey = OIDplus::getSystemPublicKey();
 if (!$pubKey) $pubKey = 'unknown'; // do not translate
 $out['PublicKey'] = $pubKey;
 

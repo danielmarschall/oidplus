@@ -134,4 +134,4 @@ CREATE UNIQUE  INDEX "index_log_object_uq_log_id_object" ON "log_object"("log_id
 
 -------------------------------------------------------
 
-INSERT INTO "config" ("name", "description", "value", "protected", "visible") VALUES ('database_version', 'Version of the database tables', '205', true, false);
+INSERT INTO "config" ("name", "description", "value", "protected", "visible") VALUES ('database_version', 'Version of the database tables', '1000', true, false);
