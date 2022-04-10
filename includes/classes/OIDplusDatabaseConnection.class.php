@@ -129,31 +129,8 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		// Do the database tables need an update?
 		// It is important that we do it immediately after connecting,
 		// because the database structure might change and therefore various things might fail.
-		// Note: The config setting "database_version" is inserted in setup/sql/...sql, not in the OIDplus core init
-
-		$res = $this->query("SELECT value FROM ###config WHERE name = 'database_version'");
-		$row = $res->fetch_array();
-		if ($row == null) {
-			throw new OIDplusConfigInitializationException(_L('Cannot determine database version (the entry "database_version" inside the table "###config" is probably missing)'));
-		}
-		$version = $row['value'];
-		if (!is_numeric($version) || ($version < 200) || ($version > 999)) {
-			throw new OIDplusConfigInitializationException(_L('Entry "database_version" inside the table "###config" seems to be wrong (expect number between 200 and 999)'));
-		}
-
-		$update_files = glob(OIDplus::localpath().'includes/db_updates/update*.inc.php');
-		foreach ($update_files as $update_file) {
-			include_once $update_file;
-		}
-		while (function_exists($function_name = "oidplus_dbupdate_".$version."_".($version+1))) {
-			$prev_version = $version;
-			$function_name($this, $version);
-			if ($version != $prev_version+1) {
-				// This should usually not happen, since the update-file should increase the version
-				// or throw an Exception by itself
-				throw new OIDplusException(_L('Database update %1 -> %2 failed (script reports new version to be %3)',$prev_version,$prev_version+1,$version));
-			}
-		}
+		require_once __DIR__.'/../db_updates/run.inc.php';
+		oidplus_dbupdate($this);
 
 		// Now that our database is up-to-date, we check if database tables are existing
 		// without config table, because it was checked above

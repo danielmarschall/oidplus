@@ -47,6 +47,10 @@ function generateRandomString($length) {
 	return $randomString;
 }
 
+function is_privatekey_encrypted($privKey) {
+	return strpos($privKey,'BEGIN ENCRYPTED PRIVATE KEY') !== false;
+}
+
 function verify_private_public_key($privKey, $pubKey) {
 	if (!function_exists('openssl_public_encrypt')) return false;
 	try {
@@ -61,6 +65,28 @@ function verify_private_public_key($privKey, $pubKey) {
 	} catch (Exception $e) {
 		return false;
 	}
+}
+
+function change_private_key_passphrase($privKeyOld, $passphrase_old, $passphrase_new) {
+	$pkey_config = array(
+	    //"digest_alg" => "sha512",
+	    //"private_key_bits" => 2048,
+	    //"private_key_type" => OPENSSL_KEYTYPE_RSA,
+	    "config" => class_exists("OIDplus") ? OIDplus::getOpenSslCnf() : @getenv('OPENSSL_CONF')
+	);
+	$privKeyNew = @openssl_pkey_get_private($privKeyOld, $passphrase_old);
+	if ($privKeyNew === false) return false;
+	@openssl_pkey_export($privKeyNew, $privKeyNewExport, $passphrase_new, $pkey_config);
+	if ($privKeyNewExport === false) return false;
+	return $privKeyNewExport."";
+}
+
+function decrypt_private_key($privKey, $passphrase) {
+	return change_private_key_passphrase($privKey, $passphrase, null);
+}
+
+function encrypt_private_key($privKey, $passphrase) {
+	return change_private_key_passphrase($privKey, null, $passphrase);
 }
 
 function smallhash($data) { // get 31 bits from SHA1. Values 0..2147483647

@@ -263,7 +263,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	public function loadJWT($jwt) {
 		\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
 		if (OIDplus::getPkiStatus()) {
-			$pubKey = OIDplus::config()->getValue('oidplus_public_key');
+			$pubKey = OIDplus::getSystemPublicKey();
 			$k = new \Firebase\JWT\Key($pubKey, 'RS256'); // RSA+SHA256 ist hardcoded in getPkiStatus() generation
 			$this->content = (array) \Firebase\JWT\JWT::decode($jwt, $k);
 		} else {
@@ -282,7 +282,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		$payload["iat"] = time();
 
 		if (OIDplus::getPkiStatus()) {
-			$privKey = OIDplus::config()->getValue('oidplus_private_key');
+			$privKey = OIDplus::getSystemPrivateKey();
 			return \Firebase\JWT\JWT::encode($payload, $privKey, 'RS256'); // RSA+SHA256 ist hardcoded in getPkiStatus() generation
 		} else {
 			$key = OIDplus::baseConfig()->getValue('SERVER_SECRET', '').'/OIDplusAuthContentStoreJWT';

@@ -1,8 +1,4 @@
 
-TODO April 2022:
-- Encrypt the private key in the config table using an auto-generated keyfile in userdata/secret.php (or similar)
-	Make sure that all procedures that access the private key are able to use a passphrase
-
 New Object Type plugins:
 - FourCC aka OSType
 - LSID ?

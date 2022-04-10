@@ -394,7 +394,7 @@ if ($format == 'text') {
 
 	if (OIDplus::getPkiStatus()) {
 		$signature = '';
-		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+		if (@openssl_sign($cont, $signature, OIDplus::getSystemPrivateKey())) {
 			$signature = base64_encode($signature);
 			$signature = mb_wordwrap($signature, OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80) - strlen('% '), "\r\n", true);
 			$signature = "% -----BEGIN RSA SIGNATURE-----\r\n".
@@ -443,7 +443,7 @@ if ($format == 'json') {
 	if (OIDplus::getPkiStatus()) {
 		$cont = json_encode($ary);
 		$signature = '';
-		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+		if (@openssl_sign($cont, $signature, OIDplus::getSystemPrivateKey())) {
 			$signature = base64_encode($signature);
 			$ary['signature'] = array('content' => $cont, 'signature' => $signature);
 		}
@@ -474,7 +474,7 @@ if ($format == 'xml') {
 	if (OIDplus::getPkiStatus()) {
 		$cont = $xml;
 		$signature = '';
-		if (@openssl_sign($cont, $signature, OIDplus::config()->getValue('oidplus_private_key'))) {
+		if (@openssl_sign($cont, $signature, OIDplus::getSystemPrivateKey())) {
 			$signature = base64_encode($signature);
 			$cdata = '<![CDATA['.str_replace(']]>', ']]]]><![CDATA[>', $cont).']]>';
 			$xml .= "<signatureSection><content>".$cdata."</content><signature>".htmlspecialchars($signature)."</signature></signatureSection>";

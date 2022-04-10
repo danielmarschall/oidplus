@@ -179,7 +179,7 @@ if ($pki_status) {
 
 	echo '<p><u>'._L('Your public key is:').'</u></p>';
 
-	$val = OIDplus::config()->getValue('oidplus_public_key');
+	$val = OIDplus::getSystemPublicKey();
 	if ($val) {
 		echo '<pre>'.htmlentities($val).'</pre>';
 	} else {

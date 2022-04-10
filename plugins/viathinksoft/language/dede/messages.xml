@@ -1494,10 +1494,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Database update %1 -> %2 failed (script reports new version to be %3)
+		Database update from version %1 failed: %2
 		]]></source>
 		<target><![CDATA[
-		Datenbank-Update %1 -> %2 fehlgeschlagen (Skript meldet neue Version %3)
+		Datenbank-Update von Version %1 ist fehlgeschlagen: %2
 		]]></target>
 	</message>
 	<message>
