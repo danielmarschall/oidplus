@@ -513,7 +513,7 @@ function hotfix_dir($rev, $dir) {
 		file_put_contents($file, $cont);
 	}
 	if ($rev == 830) {
-		// Fix bug that caused system ID to best lost
+		// Fix bug that caused system ID to get lost
 		$file = $dir.'/includes/classes/OIDplus.class.php';
 		$cont = file_get_contents($file);
 		$cont = str_replace("if ((\$passphrase === false) || !is_privatekey_encrypted(\$privKey)) {",
