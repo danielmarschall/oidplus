@@ -19,6 +19,8 @@
 
 // $('#html').jstree();
 
+var bs5Utils = undefined;
+
 var current_node = "";
 var popstate_running = false;
 // DEFAULT_LANGUAGE will be set by oidplus.min.js.php
@@ -29,6 +31,8 @@ var popstate_running = false;
 
 var pageChangeCallbacks = [];
 var pageChangeRequestCallbacks = [];
+
+var ajaxPageLoadedCallbacks = [];
 
 var oidplus_menu_width = 450; // In pixels. You can change this at runtime because of the glayoutWorkaroundB() workaround
 
@@ -253,12 +257,12 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 		},
 		error:function(jqXHR, textStatus, errorThrown) {
 			if (errorThrown == "abort") return;
-			alert(_L("Failed to load content: %1",errorThrown));
+			alertError(_L("Failed to load content: %1",errorThrown));
 			console.error(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
 			if ("error" in data) {
-				alert(_L("Failed to load content: %1",data.error));
+				alertError(_L("Failed to load content: %1",data.error));
 				console.error(data.error);
 			} else if (data.status >= 0) {
 				data.id = id;
@@ -286,11 +290,17 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 				document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
 				current_node = id;
 
+				ajaxPageLoadedCallbacks.forEach(
+					function(listener) {
+						if (typeof listener == 'function') listener();
+					}
+				);
+
 				if (anchor != '') {
 					jumpToAnchor(anchor);
 				}
 			} else {
-				alert(_L("Failed to load content: %1",data.status));
+				alertError(_L("Failed to load content: %1",data.status));
 				console.error(data);
 			}
 		}
@@ -458,6 +468,12 @@ $(document).ready(function () {
 			gotoButtonClicked();
 		}
 	});
+
+	if (typeof Bs5Utils !== "undefined") {
+		Bs5Utils.defaults.toasts.position = 'top-center';
+		Bs5Utils.defaults.toasts.stacking = true;
+		bs5Utils = new Bs5Utils();
+	}
 });
 
 // can be overridden if necessary
@@ -644,4 +660,25 @@ function isNull(val, def) {
 	} else {
 		return val;
 	}
+}
+
+/* Individual alert types */
+/* TODO: alert() blocks program flow, but alertSuccess() not! Will the mass change have negative effects (e.g. a redirect without the user seeing the toast)? */
+
+function alertSuccess(txt) {
+	if (typeof bs5Utils !== "undefined") {
+		bs5Utils.Snack.show('success', _L(txt), delay = 5000, dismissible = true);
+	} else {
+		alert(txt);
+	}
+}
+
+function alertWarning(txt) {
+	// TODO: as toast?
+	alert(txt);
+}
+
+function alertError(txt) {
+	// TODO: as toast?
+	alert(txt);
 }

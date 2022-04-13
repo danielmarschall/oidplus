@@ -39,19 +39,19 @@ var OIDplusPagePublicFreeOID = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 				oidplus_captcha_reset();
 			},
 			success: function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 					oidplus_captcha_reset();
 				} else if (data.status >= 0) {
-					alert(_L("Instructions have been sent via email."));
+					alertSuccess(_L("Instructions have been sent via email."));
 					window.location.href = '?goto=oidplus:system';
 					//reloadContent();
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 					oidplus_captcha_reset();
 				}
 			}
@@ -85,17 +85,17 @@ var OIDplusPagePublicFreeOID = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success: function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
-					alert(_L("Registration successful! You received OID %1 and can now start using it.",data.new_oid));
+					alertSuccess(_L("Registration successful! You received OID %1 and can now start using it.",data.new_oid));
 					window.location.href = '?goto=oidplus:login';
 					//reloadContent();
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 				}
 			}
 		});

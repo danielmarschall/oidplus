@@ -39,19 +39,19 @@ var OIDplusPagePublicForgotPassword = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 				oidplus_captcha_reset();
 			},
 			success: function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 					oidplus_captcha_reset();
 				} else if (data.status >= 0) {
-					alert(_L("E-Mail sent."));
+					alertSuccess(_L("E-Mail sent."));
 					window.location.href = '?goto=oidplus:login';
 					//reloadContent();
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 					oidplus_captcha_reset();
 				}
 			}
@@ -82,17 +82,17 @@ var OIDplusPagePublicForgotPassword = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success: function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
-					alert(_L("Password successfully changed. You can now log in."));
+					alertSuccess(_L("Password successfully changed. You can now log in."));
 					window.location.href = '?goto=oidplus:login';
 					//reloadContent();
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 				}
 			}
 		});

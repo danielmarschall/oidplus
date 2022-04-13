@@ -37,16 +37,16 @@ var OIDplusPageAdminAutomatedAJAXCalls = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success:function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
-					alert(_L("OK"));
+					alertSuccess(_L("OK"));
 					reloadContent();
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 				}
 			}
 		});
