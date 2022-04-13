@@ -41,20 +41,20 @@ var OIDplusPagePublicRaBaseUtils = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success:function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
-					alert(_L("Done"));
+					alertSuccess(_L("Done"));
 					if (goto != null) {
 						$("#gotoedit").val(goto);
 						window.location.href = "?goto="+encodeURIComponent(goto);
 					}
 					// reloadContent();
 				} else {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				}
 			}
 		});

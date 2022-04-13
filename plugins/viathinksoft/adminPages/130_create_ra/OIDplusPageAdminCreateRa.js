@@ -40,18 +40,18 @@ var OIDplusPageAdminCreateRa = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success: function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
-					alert(_L("Account created"));
+					alertSuccess(_L("Account created"));
 					//openOidInPanel('oidplus:rainfo$'+$("#email").val(),true);
 					// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs
 					window.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#email").val());
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 				}
 			}
 		});

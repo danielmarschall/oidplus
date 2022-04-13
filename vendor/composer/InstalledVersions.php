@@ -82,7 +82,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '1a9b6f27cd44012caa64803605c22e56747f1999',
+      'reference' => '88f27fa61f916ebe0b412fab11d2211a7af98f15',
     ),
     'danielmarschall/uuid_mac_utils' => 
     array (
@@ -194,7 +194,16 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '6d2356b546b443c1fa7e793772e522113062b1ff',
+      'reference' => '369c98616d95ee70b33520217b7171802741ff8d',
+    ),
+    'script47/bs5-utils' => 
+    array (
+      'pretty_version' => 'master',
+      'version' => 'dev-master',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'master',
     ),
     'spamspan/spamspan' => 
     array (
@@ -234,12 +243,12 @@ private static $installed = array (
     ),
     'tweeb/tinymce-i18n' => 
     array (
-      'pretty_version' => '2.0.3',
-      'version' => '2.0.3.0',
+      'pretty_version' => '2.0.4',
+      'version' => '2.0.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '9be0b61d0d91bba1f9a5c34f4830752b5da987ef',
+      'reference' => '058da08d6e61dc4e0279de6509bb6969a62f68e5',
     ),
     'twitter/bootstrap' => 
     array (

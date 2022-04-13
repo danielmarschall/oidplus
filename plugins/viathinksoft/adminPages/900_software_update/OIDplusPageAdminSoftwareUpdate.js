@@ -57,7 +57,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 					return;
 				} else {
 					$("#update_header").text(_L("Update failed"));
-					//alert(_L("Error: %1",errorThrown));
+					//alertError(_L("Error: %1",errorThrown));
 					$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + errorThrown + "\n\n");
 					$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 				}
@@ -66,7 +66,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 				//hide_waiting_anim();
 				if ("error" in data) {
 					$("#update_header").text(_L("Update failed"));
-					//alert(_L("Error: %1",data.error));
+					//alertError(_L("Error: %1",data.error));
 					if ("content" in data) {
 						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + data.content + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data.error + "\n\n");
 					} else {
@@ -121,7 +121,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 									return;
 								} else {
 									$("#update_header").text(_L("Update failed"));
-									//alert(_L("Error: %1",errorThrown));
+									//alertError(_L("Error: %1",errorThrown));
 									$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + errorThrown + "\n\n");
 									$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
 								}
@@ -156,7 +156,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 					return;
 				} else {
 					$("#update_header").text(_L("Update failed"));
-					//alert(_L("Error: %1",data));
+					//alertError(_L("Error: %1",data));
 					if ("content" in data) {
 						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + data.content + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data + "\n\n");
 					} else {

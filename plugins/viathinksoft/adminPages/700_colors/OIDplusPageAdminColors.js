@@ -159,20 +159,20 @@ var OIDplusPageAdminColors = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success:function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					OIDplusPageAdminColors.hue_shift_saved = OIDplusPageAdminColors.hue_shift;
 					OIDplusPageAdminColors.sat_shift_saved = OIDplusPageAdminColors.sat_shift;
 					OIDplusPageAdminColors.val_shift_saved = OIDplusPageAdminColors.val_shift;
 					OIDplusPageAdminColors.invcolors_saved = OIDplusPageAdminColors.invcolors;
 					OIDplusPageAdminColors.test_color_theme(); // apply visually
-					alert(_L("Update OK"));
+					alertSuccess(_L("Update OK"));
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 				}
 			}
 		});

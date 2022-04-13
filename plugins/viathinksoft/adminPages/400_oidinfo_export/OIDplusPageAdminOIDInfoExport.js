@@ -42,16 +42,16 @@ var OIDplusPageAdminOIDInfoExport = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success:function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					console.log(_L("Imported OID %1",oid));
 					OIDplusPageAdminOIDInfoExport.removeMissingOid(oid);
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 				}
 			}
 		});
@@ -81,13 +81,14 @@ var OIDplusPageAdminOIDInfoExport = {
 			data: form_data,
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success:function(data) {
 				// TODO XXX: (Future feature) If the user decides that existing OIDs shall be overwritten, then we may not print "Ignored OIDs because they are already existing"
 				if ("error" in data) {
 					if ("count_imported_oids" in data) {
-						alert(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
+						// TODO: Device if alertSuccess, alertWarning oder alertError is shown
+						alertSuccess(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
 							  _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
 							  _L("Not imported because of errors: %1",data.count_errors)+"\n"+
 							  _L("Warnings: %1",data.count_warnings)+"\n"+
@@ -96,17 +97,19 @@ var OIDplusPageAdminOIDInfoExport = {
 							  "\n"+
 							  data.error);
 					} else {
-						alert(_L("Error: %1",data.error));
+						alertError(_L("Error: %1",data.error));
 					}
 				} else if (data.status >= 0) {
-					alert(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
+					// TODO: Device if alertSuccess, alertWarning oder alertError is shown
+					alertSuccess(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
 						  _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
 						  _L("Not imported because of errors: %1",data.count_errors)+"\n"+
 						  _L("Warnings: %1",data.count_warnings));
 					$('#userfile').val('');
 				} else {
 					if ("count_imported_oids" in data) {
-						alert(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
+						// TODO: Device if alertSuccess, alertWarning oder alertError is shown
+						alertSuccess(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
 							  _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
 							  _L("Not imported because of errors: %1",data.count_errors)+"\n"+
 							  _L("Warnings: %1",data.count_warnings)+"\n"+
@@ -115,7 +118,7 @@ var OIDplusPageAdminOIDInfoExport = {
 							  "\n"+
 							  data/*sic*/);
 					} else {
-						alert(_L("Error: %1",data));
+						alertError(_L("Error: %1",data));
 					}
 				}
 			}

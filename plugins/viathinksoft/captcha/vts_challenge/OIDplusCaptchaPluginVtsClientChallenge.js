@@ -77,11 +77,11 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert("Error: "+errorThrown); //alert(_L("Error: %1",errorThrown));
+				alertError("Error: "+errorThrown); //alertError(_L("Error: %1",errorThrown));
 			},
 			success:function(data) {
 				if ("error" in data) {
-					alert("Error: "+data.error); //alert(_L("Error: %1",data.error));
+					alertError("Error: "+data.error); //alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					OIDplusCaptchaPluginVtsClientChallenge.currentchallenge = data.challenge;
 					OIDplusCaptchaPluginVtsClientChallenge.currentresponse = null;
@@ -90,7 +90,7 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 						OIDplusCaptchaPluginVtsClientChallenge.currentresponse = OIDplusCaptchaPluginVtsClientChallenge.captchaResponse();
 					}
 				} else {
-					alert("Error: "+data); //alert(_L("Error: %1",data));
+					alertError("Error: "+data); //alertError(_L("Error: %1",data));
 				}
 			}
 		});

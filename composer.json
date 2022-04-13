@@ -67,6 +67,22 @@
 				}
 			}
 		},
+		"script47/bs5-utils": {
+			"type": "package",
+			"packagist.org": false,
+			"package": {
+				"name": "script47/bs5-utils",
+				"version": "master",
+				"license": [
+					"MIT"
+				],
+				"source": {
+					"url": "https://github.com/Script47/bs5-utils",
+					"type": "git",
+					"reference": "master"
+				}
+			}
+		},
 		"spamspan/spamspan": {
 			"type": "package",
 			"packagist.org": false,
@@ -102,7 +118,8 @@
 		"emn178/js-sha3": "*@dev",
 		"n-other/php-sha3": "*@dev",
 		"tweeb/tinymce-i18n": "^2.0",
-		"phpseclib/phpseclib": "*"
+		"phpseclib/phpseclib": "*",
+		"script47/bs5-utils": "*"
 	},
 	"config": {
 		"secure-http": false,

@@ -1,6 +1,6 @@
 # tinymce-i18n
 
-Languages for TinyMCE 5
+Languages for TinyMCE 6
 
 https://www.tiny.cloud/get-tiny/language-packages/
 

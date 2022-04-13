@@ -37,20 +37,20 @@ var OIDplusObjectTypePluginOid = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success:function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					if (data.status == 0/*OK*/) {
 						$("#id").val(absolute ? "2.25." + data.intval : data.intval);
-						alert(_L("OK! Generated UUID %1 which resolves to OID %2", data.uuid, "2.25."+data.intval));
+						alertSuccess(_L("OK! Generated UUID %1 which resolves to OID %2", data.uuid, "2.25."+data.intval));
 					} else {
-						alert(_L("Error: %1",data.status));
+						alertError(_L("Error: %1",data.status));
 					}
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 				}
 			}
 		});

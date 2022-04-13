@@ -39,24 +39,24 @@ var OIDplusPageRaChangeEMail = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success: function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					if (isadmin) {
-						alert(_L("eMail address of RA changed"));
+						alertSuccess(_L("eMail address of RA changed"));
 						//openOidInPanel('oidplus:rainfo$'+$("#new_email").val(),true);
 						// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs
 						window.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#new_email").val());
 					} else {
-						alert(_L("Verification eMail sent"));
+						alertSuccess(_L("Verification eMail sent"));
 						//window.location.href = '?goto=oidplus:system';
 						//reloadContent();
 					}
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 				}
 			}
 		});
@@ -86,17 +86,17 @@ var OIDplusPageRaChangeEMail = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success: function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
-					alert(_L("Done"));
+					alertSuccess(_L("Done"));
 					window.location.href = '?goto=oidplus:system';
 					//reloadContent();
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 				}
 			}
 		});

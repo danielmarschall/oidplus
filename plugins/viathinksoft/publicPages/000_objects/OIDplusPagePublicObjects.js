@@ -106,11 +106,11 @@ var OIDplusPagePublicObjects = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success:function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					if (data.status == 0/*OK*/) {
 						if (confirm(_L("Insert OK.")+"\n\n"+_L("Do you want to open the newly created object now?"))) {
@@ -148,7 +148,7 @@ var OIDplusPagePublicObjects = {
 					// TODO: Don't use reloadContent(); instead add a node at the tree at the left add at the right add a new row to the table
 					reloadContent();
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 				}
 			}
 		});
@@ -181,14 +181,14 @@ var OIDplusPagePublicObjects = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success:function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					if (data.status == 0/*OK*/) {
-						alert(_L("Update OK"));
+						alertSuccess(_L("Update OK"));
 					}
 
 					if ((data.status & 1) == 1/*RaNotExisting*/) {
@@ -199,17 +199,17 @@ var OIDplusPagePublicObjects = {
 					}
 
 					if ((data.status & 2) == 2/*RaNotExistingNoInvitation*/) {
-						alert(_L("Update OK"));
+						alertSuccess(_L("Update OK"));
 					}
 
 					if ((data.status & 4) == 4/*IsWellKnownOID*/) {
-						alert(_L("Update OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID."));
+						alertWarning(_L("Update OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID."));
 					}
 
 					// reloadContent();
 					$('#oidtree').jstree("refresh");
 				} else {
-					alert(_L("Error: %1",data));
+					alertError(_L("Error: %1",data));
 				}
 			}
 		});
@@ -237,16 +237,16 @@ var OIDplusPagePublicObjects = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success:function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					reloadContent();
 					// TODO: Don't use reloadContent(); instead delete node at the left tree and remove the row at the right table
 				} else {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				}
 			}
 		});
@@ -274,13 +274,13 @@ var OIDplusPagePublicObjects = {
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
 				if (errorThrown == "abort") return;
-				alert(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success:function(data) {
 				if ("error" in data) {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
-					alert(_L("Update OK"));
+					alertSuccess(_L("Update OK"));
 					//reloadContent();
 					$('#oidtree').jstree("refresh");
 					var h1s = $("h1");
@@ -293,7 +293,7 @@ var OIDplusPagePublicObjects = {
 					var mce = tinymce.get('description');
 					if (mce != null) mce.setDirty(false);
 				} else {
-					alert(_L("Error: %1",data.error));
+					alertError(_L("Error: %1",data.error));
 				}
 			}
 		});
