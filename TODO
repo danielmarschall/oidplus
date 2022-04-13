@@ -1,3 +1,6 @@
+Important Apr 2022:
+- System status plugin: Check if file owners are mixed
+- Add to the update docs: "After that, you can regularly run git pull to keep OIDplus up-to-date<br><small>(UNIX: make sure that you invoke  git pull command as the user who runs PHP or that you chown -R the files after invoking git pull)</small>"
 
 New Object Type plugins:
 - FourCC aka OSType

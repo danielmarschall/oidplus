@@ -225,12 +225,32 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			}
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+				// 1. If something is on the blacklist, we always block it, even if it is on the whitelist, too
 				$banned = explode(',', OIDplus::config()->getValue('attachments_block_extensions', ''));
 				foreach ($banned as $ext) {
 					$ext = trim($ext);
 					if ($ext == '') continue;
 					if (strtolower(substr(basename($_FILES['userfile']['name']), -strlen($ext)-1)) == strtolower('.'.$ext)) {
 						throw new OIDplusException(_L('The file extension "%1" is banned by the administrator (it can be uploaded by the administrator though)',$ext));
+					}
+				}
+
+				// 2. Something on the whitelist is always OK
+				$allowed = explode(',', OIDplus::config()->getValue('attachments_allow_extensions', ''));
+				$is_whitelisted = false;
+				foreach ($allowed as $ext) {
+					$ext = trim($ext);
+					if ($ext == '') continue;
+					if (strtolower(substr(basename($_FILES['userfile']['name']), -strlen($ext)-1)) == strtolower('.'.$ext)) {
+						$is_whitelisted = true;
+						break;
+					}
+				}
+
+				// 3. For everything that is neither whitelisted, nor blacklisted, the admin can decide if these grey zone is allowed or blocked
+				if (!$is_whitelisted) {
+					if (!OIDplus::config()->getValue('attachments_allow_grey_extensions', '1')) {
+						throw new OIDplusException(_L('The file extension "%1" is not on the whitelist (it can be uploaded by the administrator though)',$ext));
 					}
 				}
 			}
@@ -277,6 +297,15 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 	public function init($html=true) {
 		OIDplus::config()->prepareConfigKey('attachments_block_extensions', 'Block file name extensions being used in file attachments (comma separated)', 'exe,scr,pif,bat,com,vbs,cmd', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			// TODO: check if a blacklist entry is also on the whitelist (which is not allowed)
+		});
+		OIDplus::config()->prepareConfigKey('attachments_allow_extensions', 'Allow (whitelist) file name extensions being used in file attachments (comma separated)', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			// TODO: check if a whitelist entry is also on the blacklist (which is not allowed)
+		});
+		OIDplus::config()->prepareConfigKey('attachments_allow_grey_extensions', 'Should file-extensions which are neither be on the whitelist, nor be at the blacklist, be allowed? (1=Yes, 0=No)', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
+				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
+			}
 		});
 		OIDplus::config()->prepareConfigKey('attachments_allow_ra_delete', 'Allow that RAs delete file attachments? (0=no, 1=yes)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
