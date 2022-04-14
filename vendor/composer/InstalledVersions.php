@@ -142,12 +142,12 @@ private static $installed = array (
     ),
     'matthiasmullie/minify' => 
     array (
-      'pretty_version' => '1.3.66',
-      'version' => '1.3.66.0',
+      'pretty_version' => '1.3.67',
+      'version' => '1.3.67.0',
       'aliases' => 
       array (
       ),
-      'reference' => '45fd3b0f1dfa2c965857c6d4a470bea52adc31a6',
+      'reference' => 'acaee1b7ca3cd67a39d7f98673cacd7e4739a8d9',
     ),
     'matthiasmullie/path-converter' => 
     array (
@@ -194,7 +194,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '369c98616d95ee70b33520217b7171802741ff8d',
+      'reference' => 'f57f5debe04dec6708ec9ff55a79ceed9a18cb55',
     ),
     'script47/bs5-utils' => 
     array (
