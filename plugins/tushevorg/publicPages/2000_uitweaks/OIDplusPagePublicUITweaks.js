@@ -35,6 +35,14 @@ $(document).ready(function () {
 		if (o) tree.jstree('open_all',  data.instance.get_node('oidplus:system'));
 		if (l) tree.jstree('close_all', data.instance.get_node('oidplus:login'));
 		if (r) tree.jstree('close_all', data.instance.get_node('oidplus:resources'));
+		
+		var uitweakfn_prefer_admin_login_tab = function() {
+			if (uitweaks.prefer_admin_login_tab) {
+				$('#loginTab #myTab a[href="#admin"]').tab('show'); // Select tab by link
+			}
+		};
+		uitweakfn_prefer_admin_login_tab();
+		ajaxPageLoadedCallbacks.push(uitweakfn_prefer_admin_login_tab);
 	});
 
 	var menu_remember_width = isNull(uitweaks.menu_remember_width, false);

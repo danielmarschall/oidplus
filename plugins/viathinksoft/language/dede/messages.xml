@@ -6174,6 +6174,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The file extension "%1" is not on the whitelist (it can be uploaded by the administrator though)
+		]]></source>
+		<target><![CDATA[
+		Die Dateinamens-Erweiterung "%1" ist nicht auf der Liste erlaubter Erweiterungen (Diese Datei kann jedoch durch den Administrator selbst hochgeladen werden)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The folders "userdata" and "userdata_pub" as well as third-party-plugins (folder "plugins" excluding "viathinksoft") are not listed.
 		]]></source>
 		<target><![CDATA[
