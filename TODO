@@ -1,6 +1,5 @@
 Ideas by Simon Tushev:
 - System status plugin: Check if file owners are mixed
-- Add to the update docs: "After that, you can regularly run git pull to keep OIDplus up-to-date<br><small>(UNIX: make sure that you invoke  git pull command as the user who runs PHP or that you chown -R the files after invoking git pull)</small>"
 - a possibility to upload & assign custom icons to objects (both in the tree & in the page)
 - a possibility to move objects/nodes from one hierarchy level to another (for now, I have to reconstruct them)
 - 2FA TOTP support (+backup codes) - good for public instances, like FreeOID (Yes, I'm that one person who always asks for true totp 2FA everywhere xD )

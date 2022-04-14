@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -136,15 +136,22 @@ class OIDplusMailUtils extends OIDplusBaseClass {
 	public static function sendMail($to, $title, $msg, $cc='', $bcc='') {
 		$h = new SecureMailer();
 
+		// DM 14.04.2022: Added Reply-To, because some servers might change the 'From' attribute (Anti-Spoof?)
 		$h->addHeader('From', OIDplus::config()->getValue('admin_email'));
+		$h->addHeader('Reply-To', OIDplus::config()->getValue('admin_email'));
 
 		if (!empty($cc)) $h->addHeader('Cc',  $cc);
 		if (!empty($bcc)) $h->addHeader('Bcc',  $bcc);
 
 		$h->addHeader('X-Mailer', 'PHP/'.PHP_VERSION);
-		if (isset($_SERVER['REMOTE_ADDR'])) $h->addHeader('X-RemoteAddr', $_SERVER['REMOTE_ADDR']);
+
+		// DM 14.04.2022: Commented out because of privacy
+		//if (isset($_SERVER['REMOTE_ADDR'])) $h->addHeader('X-RemoteAddr', $_SERVER['REMOTE_ADDR']);
+
 		$h->addHeader('MIME-Version', '1.0');
-		$h->addHeader('Content-Type', 'text/plain; charset=ISO-8859-1');
+
+		// DM 14.04.2022: Changed from "ISO-8859-1" to "UTF-8"
+		$h->addHeader('Content-Type', 'text/plain; charset=UTF-8');
 
 		$sent = $h->sendMail($to, $title, $msg);
 		if (!$sent) {
