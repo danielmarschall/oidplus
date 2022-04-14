@@ -173,7 +173,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<p><u>'._L('There are three possibilities how to keep OIDplus up-to-date').':</u></p>';
 
 			if (isset(OIDplus::getEditionInfo()['gitrepo']) && (OIDplus::getEditionInfo()['gitrepo'] != '')) {
-				$out['text'] .= '<p><b>'._L('Method A').'</b>: '._L('Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co %1</code> and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!',htmlentities(OIDplus::getEditionInfo()['svnrepo'])).'</p>';
+				$out['text'] .= '<p><b>'._L('Method A').'</b>: '._L('Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co %1</code> and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!',htmlentities(OIDplus::getEditionInfo()['svnrepo']).'/trunk/').'</p>';
 			} else {
 				$out['text'] .= '<p><b>'._L('Method A').'</b>: '._L('Distribution via %1 is not possible with this edition of OIDplus','GIT').'</p>';
 			}
