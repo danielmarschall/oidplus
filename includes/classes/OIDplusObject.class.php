@@ -40,7 +40,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			$sid = OIDplus::getSystemId(true);
 			if (!empty($sid)) {
 				$ns_oid = $this->getPlugin()->getManifest()->getOid();
-				if (strpos($ns_oid, '1.3.6.1.4.1.37476.') === 0) {
+				if (str_starts_with($ns_oid, '1.3.6.1.4.1.37476.2.5.2.')) {
 					// Official ViaThinkSoft object type plugins
 					// For backwards compatibility with existing IDs,
 					// set the hash_payload as '<namespace>:<id>'
