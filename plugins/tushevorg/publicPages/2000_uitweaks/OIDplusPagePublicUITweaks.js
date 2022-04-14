@@ -24,7 +24,15 @@
 
 oidplus_menu_width_uservalue = isNull(localStorage.getItem('menu_width'), oidplus_menu_width);
 
-$(document).ready(function () {
+// This function will fire upon any page reload (both document.ready and AJAX page change)
+pageLoadedCallbacks.anyPageLoad.push(function() {
+	if (uitweaks.prefer_admin_login_tab) {
+		$('#loginTab #myTab a[href="#admin"]').tab('show'); // Select tab by link
+	}
+});
+
+// This function will fire upon document.ready event only, after the OIDplus base code
+pageLoadedCallbacks.documentReadyAfter.push(function () {
 
 	var tree = $('#oidtree');
 	tree.on('ready.jstree', function (e, data) {
@@ -34,15 +42,7 @@ $(document).ready(function () {
 
 		if (o) tree.jstree('open_all',  data.instance.get_node('oidplus:system'));
 		if (l) tree.jstree('close_all', data.instance.get_node('oidplus:login'));
-		if (r) tree.jstree('close_all', data.instance.get_node('oidplus:resources'));
-		
-		var uitweakfn_prefer_admin_login_tab = function() {
-			if (uitweaks.prefer_admin_login_tab) {
-				$('#loginTab #myTab a[href="#admin"]').tab('show'); // Select tab by link
-			}
-		};
-		uitweakfn_prefer_admin_login_tab();
-		ajaxPageLoadedCallbacks.push(uitweakfn_prefer_admin_login_tab);
+		if (r) tree.jstree('close_all', data.instance.get_node('oidplus:resources'));		
 	});
 
 	var menu_remember_width = isNull(uitweaks.menu_remember_width, false);
