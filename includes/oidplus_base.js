@@ -32,9 +32,22 @@ var popstate_running = false;
 var pageChangeCallbacks = [];
 var pageChangeRequestCallbacks = [];
 
-var ajaxPageLoadedCallbacks = [];
+var pageLoadedCallbacks= {
+	"anyPageLoad":         [], // this is processed inside both AJAX successful reload and document.ready (at the very end) 
+	"ajaxPageLoad":        [], // inside AJAX successful reload only
+	"documentReadyBefore": [], // inside document.ready, in the very beginning of the function
+	"documentReadyAfter":  []  // inside document.ready, in the very end of the function
+};
 
 var oidplus_menu_width = 450; // In pixels. You can change this at runtime because of the glayoutWorkaroundB() workaround
+
+function executeAllCallbacks(functionsArray) {
+	functionsArray.forEach(
+		function(fel) {
+			if (typeof fel == 'function') fel();
+		}
+	);
+}
 
 function isInternetExplorer() {
 	// see also includes/functions.inc.php
@@ -290,11 +303,8 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 				document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
 				current_node = id;
 
-				ajaxPageLoadedCallbacks.forEach(
-					function(listener) {
-						if (typeof listener == 'function') listener();
-					}
-				);
+				executeAllCallbacks(pageLoadedCallbacks.anyPageLoad);
+				executeAllCallbacks(pageLoadedCallbacks.ajaxPageLoad);
 
 				if (anchor != '') {
 					jumpToAnchor(anchor);
@@ -357,6 +367,9 @@ $(window).on("popstate", function(e) {
 });
 
 $(document).ready(function () {
+	
+	executeAllCallbacks(pageLoadedCallbacks.documentReadyBefore);
+	
 	/*
 	window.onbeforeunload = function(e) {
 		// TODO: This won't be called because TinyMCE overrides it??
@@ -474,6 +487,9 @@ $(document).ready(function () {
 		Bs5Utils.defaults.toasts.stacking = true;
 		bs5Utils = new Bs5Utils();
 	}
+	
+	executeAllCallbacks(pageLoadedCallbacks.anyPageLoad);
+	executeAllCallbacks(pageLoadedCallbacks.documentReadyAfter);
 });
 
 // can be overridden if necessary
