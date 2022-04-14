@@ -225,12 +225,14 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			}
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+				$fname = basename($_FILES['userfile']['name']);
+
 				// 1. If something is on the blacklist, we always block it, even if it is on the whitelist, too
 				$banned = explode(',', OIDplus::config()->getValue('attachments_block_extensions', ''));
 				foreach ($banned as $ext) {
 					$ext = trim($ext);
 					if ($ext == '') continue;
-					if (strtolower(substr(basename($_FILES['userfile']['name']), -strlen($ext)-1)) == strtolower('.'.$ext)) {
+					if (strtolower(substr($fname, -strlen($ext)-1)) == strtolower('.'.$ext)) {
 						throw new OIDplusException(_L('The file extension "%1" is banned by the administrator (it can be uploaded by the administrator though)',$ext));
 					}
 				}
@@ -241,7 +243,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				foreach ($allowed as $ext) {
 					$ext = trim($ext);
 					if ($ext == '') continue;
-					if (strtolower(substr(basename($_FILES['userfile']['name']), -strlen($ext)-1)) == strtolower('.'.$ext)) {
+					if (strtolower(substr($fname, -strlen($ext)-1)) == strtolower('.'.$ext)) {
 						$is_whitelisted = true;
 						break;
 					}
@@ -250,6 +252,8 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				// 3. For everything that is neither whitelisted, nor blacklisted, the admin can decide if these grey zone is allowed or blocked
 				if (!$is_whitelisted) {
 					if (!OIDplus::config()->getValue('attachments_allow_grey_extensions', '1')) {
+						$tmp = explode('.', $fname);
+						$ext = array_pop($tmp);
 						throw new OIDplusException(_L('The file extension "%1" is not on the whitelist (it can be uploaded by the administrator though)',$ext));
 					}
 				}
