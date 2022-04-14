@@ -44,6 +44,11 @@ class OIDplusPagePublicUITweaks extends OIDplusPagePluginPublic {
 				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
+		OIDplus::config()->prepareConfigKey('uitweaks_prefer_admin_login_tab', 'UITweaks plugin: 1=Prefer `Login as administrator` tab at login, 0=Default behavior', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
+				throw new OIDplusException(_L('Please enter a valid value.'));
+			}
+		});
 
 		OIDplus::config()->prepareConfigKey('uitweaks_menu_width', 'UITweaks plugin: default width of tree pane (in px)', '450', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
@@ -59,18 +64,20 @@ class OIDplusPagePublicUITweaks extends OIDplusPagePluginPublic {
 	
 	public function htmlHeaderUpdate(&$head_elems) {
 		$w  = js_escape(OIDplus::config()->getValue('uitweaks_menu_width'));
-		$rw = OIDplus::config()->getValue('uitweaks_menu_remember_width') == 1 ? 'true' : 'false';
-		$o  = OIDplus::config()->getValue('uitweaks_expand_objects_tree') == 1 ? 'true' : 'false';
-		$l  = OIDplus::config()->getValue('uitweaks_collapse_login_tree') == 1 ? 'true' : 'false';
-		$r  = OIDplus::config()->getValue('uitweaks_collapse_res_tree')   == 1 ? 'true' : 'false';
+		$rw = OIDplus::config()->getValue('uitweaks_menu_remember_width') 		== 1 ? 'true' : 'false';
+		$o  = OIDplus::config()->getValue('uitweaks_expand_objects_tree') 		== 1 ? 'true' : 'false';
+		$l  = OIDplus::config()->getValue('uitweaks_collapse_login_tree') 		== 1 ? 'true' : 'false';
+		$r  = OIDplus::config()->getValue('uitweaks_collapse_res_tree')   		== 1 ? 'true' : 'false';
+		$r  = OIDplus::config()->getValue('uitweaks_prefer_admin_login_tab')   	== 1 ? 'true' : 'false';
 		
 		$s  = "<script>\n";
 		$s .= "  oidplus_menu_width = $w;\n";
 		$s .= "  let uitweaks = {\n";
-		$s .= "    \"menu_remember_width\": $rw,\n";
-		$s .= "    \"expand_objects_tree\": $o,\n";
-		$s .= "    \"collapse_login_tree\": $l,\n";
-		$s .= "    \"collapse_res_tree\":   $r,\n";
+		$s .= "    \"menu_remember_width\": 	$rw,\n";
+		$s .= "    \"expand_objects_tree\": 	$o,\n";
+		$s .= "    \"collapse_login_tree\": 	$l,\n";
+		$s .= "    \"collapse_res_tree\":   	$r,\n";
+		$s .= "    \"prefer_admin_login_tab\":  $r,\n";
 		$s .= "  };\n";
 		$s .= "</script>";
 		
