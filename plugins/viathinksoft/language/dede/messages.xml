@@ -2726,18 +2726,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Install OIDplus using the Git client in your SSH/Linux shell using the command <code>git clone %1</code> and update it regularly with the command <code>git pull</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!
+		Install OIDplus using the Git client in your SSH/Linux shell using the command <code>git clone %1</code> and update it regularly with the command <code>git pull</code> . This will automatically download the latest version and check for conflicts.
 		]]></source>
 		<target><![CDATA[
-		OIDplus durch einen Git-Client aus dem GitHub-Repository herunterladen und aktualisieren. Bei Linux ist eine SSH/Linux-Shell erforderlich. Der Befehl zum erstmaligen Herunterladen ist <code>git clone %1</code>. Im Anschluss wird bei jedem Update <code>git pull</code> ausgeführt . Dies wird automatisch die neuste Version herunterladen, und im Falle eines Änderungskonflikts wird der Anwender gefragt, was getan werden soll. Diese Methode wird empfohlen.
+		OIDplus durch einen Git-Client aus dem GitHub-Repository herunterladen und aktualisieren. Bei Linux ist eine SSH/Linux-Shell erforderlich. Der Befehl zum erstmaligen Herunterladen ist <code>git clone %1</code>. Im Anschluss wird bei jedem Update <code>git pull</code> ausgeführt . Dies wird automatisch die neuste Version herunterladen, und im Falle eines Änderungskonflikts wird der Anwender gefragt, was getan werden soll.
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co %1</code> and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and check for conflicts. Highly recommended if you have a Shell/SSH access to your webspace!
+		Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co %1</code> and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and check for conflicts.
 		]]></source>
 		<target><![CDATA[
-		OIDplus durch einen Subversion-Client aus dem ViaThinkSoft SVN-Repository herunterladen und aktualisieren. Bei Linux ist eine SSH/Linux-Shell erforderlich. Der Befehl zum erstmaligen Herunterladen ist <code>svn co %1</code>. Im Anschluss wird bei jedem Update <code>svn update</code> ausgeführt . Dies wird automatisch die neuste Version herunterladen, und im Falle eines Änderungskonflikts wird der Anwender gefragt, was getan werden soll. Diese Methode wird empfohlen.
+		OIDplus durch einen Subversion-Client aus dem ViaThinkSoft SVN-Repository herunterladen und aktualisieren. Bei Linux ist eine SSH/Linux-Shell erforderlich. Der Befehl zum erstmaligen Herunterladen ist <code>svn co %1</code>. Im Anschluss wird bei jedem Update <code>svn update</code> ausgeführt . Dies wird automatisch die neuste Version herunterladen, und im Falle eines Änderungskonflikts wird der Anwender gefragt, was getan werden soll.
 		]]></target>
 	</message>
 	<message>
@@ -3258,6 +3258,14 @@
 		]]></source>
 		<target><![CDATA[
 		Maschinen-Typ
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Make sure that you invoke the <code>%1</code> command as the user who runs PHP or that you <code>chown -R</code> the files after invoking <code>%1</code>
+		]]></source>
+		<target><![CDATA[
+		Stellen Sie bitte sicher, dass der Befehl <code>%1</code> als der Benutzer ausgeführt wird, der die PHP-Scripte ausführt, oder führen Sie nach dem Update ein <code>chown -R</code> durch.
 		]]></target>
 	</message>
 	<message>
