@@ -510,6 +510,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$handled = true;
 
 			if (!$obj->userHasReadRights()) {
+				if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
+					http_response_code(403);
+				}
 				$out['title'] = _L('Access denied');
 				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('Please <a %1>log in</a> to receive information about this object.',OIDplus::gui()->link('oidplus:login')).'</p>';
@@ -530,7 +533,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					} else {
 						$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
 						if (!$res->any()) {
-							http_response_code(404);
+							if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
+								http_response_code(404);
+							}
 							$out['title'] = _L('Object not found');
 							$out['icon'] = 'img/error.png';
 							$out['text'] = _L('The object %1 was not found in this database.','<code>'.htmlentities($id).'</code>');
@@ -546,7 +551,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 			if (!$matches_any_registered_type) {
-				http_response_code(404);
+				if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
+					http_response_code(404);
+				}
 				$out['title'] = _L('Object not found');
 				$out['icon'] = 'img/error.png';
 				$out['text'] = _L('The object %1 was not found in this database.','<code>'.htmlentities($id).'</code>');
