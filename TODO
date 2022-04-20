@@ -1,4 +1,4 @@
-Ideas by Simon Tushev:
+Ideas by Simon T.:
 - System status plugin: Check if file owners are mixed
 - a possibility to upload & assign custom icons to objects (both in the tree & in the page)
 - a possibility to move objects/nodes from one hierarchy level to another (for now, I have to reconstruct them)
@@ -6,6 +6,8 @@ Ideas by Simon Tushev:
 - a setting for a permanent choice between 'Always switch to newly created object' / 'Never switch' / 'Ask user if they want to switch'
 - a possibility to export&transfer all data between OIDplus'es: Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!
 - a possibility to 'construct' my own object types in UI (1: specify list of their fields and 2: choose "oid-like/forward" com.example.api or "domain-like/reverse" api.example.com naming scheme), so they would appear as the whole new type
+
+Implement RDAP!
 
 New Object Type plugins:
 - FourCC aka OSType
