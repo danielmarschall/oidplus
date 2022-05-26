@@ -790,6 +790,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Big Endian
+		]]></source>
+		<target><![CDATA[
+		Big-Endian
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Binary-to-text encoding used for WEIDs
 		]]></source>
 		<target><![CDATA[
@@ -826,6 +834,14 @@
 		]]></source>
 		<target><![CDATA[
 		C++ Notation
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		C/C++ Literal
+		]]></source>
+		<target><![CDATA[
+		C/C++ Literal
 		]]></target>
 	</message>
 	<message>
@@ -1314,6 +1330,14 @@
 		]]></source>
 		<target><![CDATA[
 		Derzeit sind keine Domain-Namen in diesem System registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently, no FourCC is registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine FourCCs in diesem System registriert.
 		]]></target>
 	</message>
 	<message>
@@ -2150,6 +2174,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Four-Character-Code (FourCC)
+		]]></source>
+		<target><![CDATA[
+		Vier-Zeichen-Code (FourCC)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		FourCC
+		]]></source>
+		<target><![CDATA[
+		FourCC
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		FreeOID service not available. Please ask your administrator.
 		]]></source>
 		<target><![CDATA[
@@ -2354,6 +2394,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die HTTP-Kopfzeile "%1" kann nicht als Array geschrieben werden. Ein frisch installiertes Plugin verwendet die Methode "%2" möglicherweise falsch.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Hex Dump
+		]]></source>
+		<target><![CDATA[
+		Hexdump
 		]]></target>
 	</message>
 	<message>
@@ -3106,6 +3154,14 @@
 		]]></source>
 		<target><![CDATA[
 		RAs auflisten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Little Endian
+		]]></source>
+		<target><![CDATA[
+		Little-Endian
 		]]></target>
 	</message>
 	<message>
@@ -4634,6 +4690,14 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte selektieren Sie eine Domain in der Baumansicht, um dessen Inhalt anzuzeigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please select a FourCC in the tree view at the left to show its contents.
+		]]></source>
+		<target><![CDATA[
+		Bitte selektieren Sie einen FourCC in der Baumansicht, um dessen Inhalt anzuzeigen.
 		]]></target>
 	</message>
 	<message>
