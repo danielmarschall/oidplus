@@ -15,6 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+DIR=$( dirname "$0" )
+cd "$DIR"
+
 # Export tables "demo_*" into file setup/sql/example_mysql.sql
 # We don't print to console because of encoding issues
 mysqldump --default-character-set=utf8 --no-create-info --extended-insert=FALSE oidplus demo_iri demo_asn1id demo_ra demo_objects -r ../setup/sql/example_mysql.sql

@@ -15,19 +15,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+DIR=$( dirname "$0" )
+cd "$DIR"
+
 # Export tables "demo_*" into file setup/sql/example_access.sql
 # We don't print to console because of encoding issues
-mysqldump --default-character-set=utf8 --no-create-info --extended-insert=FALSE oidplus demo_iri demo_asn1id demo_ra demo_objects -r ../setup/sql/example_access.sql
+#mysqldump --default-character-set=utf8 --no-create-info --extended-insert=FALSE oidplus demo_iri demo_asn1id demo_ra demo_objects -r ../setup/sql/example_access.sql
 
 # Remove database prefix
-sed -i 's/`demo_/`/g' ../setup/sql/example_access.sql
+#sed -i 's/`demo_/`/g' ../setup/sql/example_access.sql
+
+# Since we have to do some manual work to the MySQL data, we do not create a new dump
+# but instead use the MySQL example script (that has been carefully checked)
+cat ../setup/sql/example_mysql.sql > ../setup/sql/example_access.sql
 
 # Avoid that there is a conflict with well known IDs (e.g. 2.999)
 #sed -i 's/INSERT INTO `iri`/INSERT IGNORE INTO `iri`/g' ../setup/sql/example_access.sql
 #sed -i 's/INSERT INTO `asn1id`/INSERT IGNORE INTO `asn1id`/g' ../setup/sql/example_access.sql
 
 # Change `backticks` to [brackets]
-sed -iE 's/`\([^`]\+\)`/\[\1\]/g' ../setup/sql/example_access.sql
+sed -i 's/`\([^`]\+\)`/\[\1\]/g' ../setup/sql/example_access.sql
 
 # Change "\n" to "' + CHR(13) + '"
 sed -i "s/\\\n/' \+ CHR(13) \+ '/g" ../setup/sql/example_access.sql
