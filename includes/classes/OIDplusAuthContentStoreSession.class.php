@@ -37,6 +37,7 @@ class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 			return self::getSessionHandler()->getValue($name, $default);
 		} catch (Exception $e) {
 			self::getSessionHandler()->destroySession();
+			// TODO: For some reason If destroySession() is called, we won't get this Exception?!
 			throw new OIDplusException(_L('Internal error with session. Please reload the page and log-in again. %1', $e->getMessage()));
 		}
 	}
