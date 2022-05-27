@@ -274,18 +274,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/vnag.git",
-                "reference": "2d0af05e72b902df45292b24157f6269fb75684b"
+                "reference": "1c3cb724fc878541fe735fc8c55b7debe0f32425"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/2d0af05e72b902df45292b24157f6269fb75684b",
-                "reference": "2d0af05e72b902df45292b24157f6269fb75684b",
+                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/1c3cb724fc878541fe735fc8c55b7debe0f32425",
+                "reference": "1c3cb724fc878541fe735fc8c55b7debe0f32425",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2022-04-09T10:14:56+00:00",
+            "time": "2022-05-19T18:39:52+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -420,17 +420,17 @@
         },
         {
             "name": "matthiasmullie/minify",
-            "version": "1.3.67",
-            "version_normalized": "1.3.67.0",
+            "version": "1.3.68",
+            "version_normalized": "1.3.68.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matthiasmullie/minify.git",
-                "reference": "acaee1b7ca3cd67a39d7f98673cacd7e4739a8d9"
+                "reference": "c00fb02f71b2ef0a5f53fe18c5a8b9aa30f48297"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/acaee1b7ca3cd67a39d7f98673cacd7e4739a8d9",
-                "reference": "acaee1b7ca3cd67a39d7f98673cacd7e4739a8d9",
+                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/c00fb02f71b2ef0a5f53fe18c5a8b9aa30f48297",
+                "reference": "c00fb02f71b2ef0a5f53fe18c5a8b9aa30f48297",
                 "shasum": ""
             },
             "require": {
@@ -446,7 +446,7 @@
             "suggest": {
                 "psr/cache-implementation": "Cache implementation to use with Minify::cache"
             },
-            "time": "2022-03-24T08:54:59+00:00",
+            "time": "2022-04-19T08:28:56+00:00",
             "bin": [
                 "bin/minifycss",
                 "bin/minifyjs"
@@ -481,7 +481,7 @@
             ],
             "support": {
                 "issues": "https://github.com/matthiasmullie/minify/issues",
-                "source": "https://github.com/matthiasmullie/minify/tree/1.3.67"
+                "source": "https://github.com/matthiasmullie/minify/tree/1.3.68"
             },
             "funding": [
                 {
@@ -729,12 +729,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "f57f5debe04dec6708ec9ff55a79ceed9a18cb55"
+                "reference": "62c36daa672eaf735ab49e11406bbf675a69680c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/f57f5debe04dec6708ec9ff55a79ceed9a18cb55",
-                "reference": "f57f5debe04dec6708ec9ff55a79ceed9a18cb55",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/62c36daa672eaf735ab49e11406bbf675a69680c",
+                "reference": "62c36daa672eaf735ab49e11406bbf675a69680c",
                 "shasum": ""
             },
             "require": {
@@ -751,7 +751,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2022-04-14T16:50:40+00:00",
+            "time": "2022-05-13T20:04:33+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -957,15 +957,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "dadd7f25e31680f1c6bf61d2fb0b15794f425cd1"
+                "reference": "c91227ab933d664c3ce2ea4ec68257f2282437ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/dadd7f25e31680f1c6bf61d2fb0b15794f425cd1",
-                "reference": "dadd7f25e31680f1c6bf61d2fb0b15794f425cd1",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/c91227ab933d664c3ce2ea4ec68257f2282437ed",
+                "reference": "c91227ab933d664c3ce2ea4ec68257f2282437ed",
                 "shasum": ""
             },
-            "time": "2022-02-09T03:24:06+00:00",
+            "time": "2022-05-25T04:08:16+00:00",
             "type": "component",
             "extra": {
                 "component": {
@@ -1006,29 +1006,29 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/5.10.3"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/5.10.5"
             },
             "install-path": "../tinymce/tinymce"
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v5.1.3",
-            "version_normalized": "5.1.3.0",
+            "version": "v5.2.0-beta1",
+            "version_normalized": "5.2.0.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "1a6fdfae6be09b09eaced8f0e442ca6f7680a61e"
+                "reference": "fca04c07131a81e625a516cf7b98a8c7df0df1c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/1a6fdfae6be09b09eaced8f0e442ca6f7680a61e",
-                "reference": "1a6fdfae6be09b09eaced8f0e442ca6f7680a61e",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/fca04c07131a81e625a516cf7b98a8c7df0df1c1",
+                "reference": "fca04c07131a81e625a516cf7b98a8c7df0df1c1",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2021-10-09T06:43:19+00:00",
+            "time": "2022-05-13T16:44:01+00:00",
             "type": "library",
             "installation-source": "dist",
             "notification-url": "https://packagist.org/downloads/",
@@ -1059,7 +1059,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twbs/bootstrap/issues",
-                "source": "https://github.com/twbs/bootstrap/tree/v5.1.3"
+                "source": "https://github.com/twbs/bootstrap/tree/v5.2.0-beta1"
             },
             "install-path": "../twbs/bootstrap"
         },

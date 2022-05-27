@@ -199,9 +199,9 @@ class JS extends Minify
         $minifier = $this;
         $callback = function ($match) use ($minifier) {
             if (
-                substr($match[1], 0, 1) === '!' ||
-                strpos($match[1], '@license') !== false ||
-                strpos($match[1], '@preserve') !== false
+                substr($match[2], 0, 1) === '!' ||
+                strpos($match[2], '@license') !== false ||
+                strpos($match[2], '@preserve') !== false
             ) {
                 // preserve multi-line comments that start with /*!
                 // or contain @license or @preserve annotations
@@ -209,14 +209,14 @@ class JS extends Minify
                 $placeholder = '/*'.$count.'*/';
                 $minifier->extracted[$placeholder] = $match[0];
 
-                return $placeholder;
+                return $match[1] . $placeholder . $match[3];
             }
 
-            return '';
+            return $match[1] . $match[3];
         };
 
         // multi-line comments
-        $this->registerPattern('/\n?\/\*(.*?)\*\/\n?/s', $callback);
+        $this->registerPattern('/(\n?)\/\*(.*?)\*\/(\n?)/s', $callback);
 
         // single-line comments
         $this->registerPattern('/\/\/.*$/m', '');
@@ -424,11 +424,17 @@ class JS extends Minify
          * of the three parts for a specific for() case.
          * REGEX throwing catastrophic backtracking: $content = preg_replace('/(for\([^;\{]*(\{([^\{\}]*(?-2))*[^\{\}]*\})?[^;\{]*;[^;\{]*(\{([^\{\}]*(?-2))*[^\{\}]*\})?[^;\{]*;[^;\{]*(\{([^\{\}]*(?-2))*[^\{\}]*\})?[^;\{]*\));(\}|$)/s', '\\1;;\\8', $content);
          */
-        $content = preg_replace('/(for\([^;\{]*(\{([^\{\}]*(?-2))*[^\{\}]*\})?[^;\{]*;[^;\{]*;[^;\{]*\));(\}|$)/s', '\\1;;\\4', $content);
-        $content = preg_replace('/(for\([^;\{]*;[^;\{]*(\{([^\{\}]*(?-2))*[^\{\}]*\})?[^;\{]*;[^;\{]*\));(\}|$)/s', '\\1;;\\4', $content);
-        $content = preg_replace('/(for\([^;\{]*;[^;\{]*;[^;\{]*(\{([^\{\}]*(?-2))*[^\{\}]*\})?[^;\{]*\));(\}|$)/s', '\\1;;\\4', $content);
+        $content = preg_replace('/(for\((?:[^;\{]*|[^;\{]*function[^;\{]*(\{([^\{\}]*(?-2))*[^\{\}]*\})?[^;\{]*);[^;\{]*;[^;\{]*\));(\}|$)/s', '\\1;;\\4', $content);
+        $content = preg_replace('/(for\([^;\{]*;(?:[^;\{]*|[^;\{]*function[^;\{]*(\{([^\{\}]*(?-2))*[^\{\}]*\})?[^;\{]*);[^;\{]*\));(\}|$)/s', '\\1;;\\4', $content);
+        $content = preg_replace('/(for\([^;\{]*;[^;\{]*;(?:[^;\{]*|[^;\{]*function[^;\{]*(\{([^\{\}]*(?-2))*[^\{\}]*\})?[^;\{]*)\));(\}|$)/s', '\\1;;\\4', $content);
 
         $content = preg_replace('/(for\([^;\{]+\s+in\s+[^;\{]+\));(\}|$)/s', '\\1;;\\2', $content);
+
+        /*
+         * Do the same for the if's that don't have a body but are followed by ;}
+         */
+        $content = preg_replace('/(\bif\s*\([^{;]*\));\}/s', '\\1;;}', $content);
+
         /*
          * Below will also keep `;` after a `do{}while();` along with `while();`
          * While these could be stripped after do-while, detecting this
