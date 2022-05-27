@@ -87,9 +87,18 @@ class OIDplusFourCC extends OIDplusObject {
 	}
 
 	public function addString($str) {
-		if (self::fourcc_transform($str) !== false) {
+
+		// Y3[10] [10] --> Y3[10][10]
+		$test_str = trim($str);
+		do {
+			$test_str2 = $test_str;
+			$test_str = str_replace(' [', '[', $test_str);
+			$test_str = str_replace('] ', ']', $test_str);
+		} while ($test_str2 != $test_str);
+
+		if (self::fourcc_transform($test_str) !== false) {
 			// real FourCC
-			return 'fourcc:'.$str;
+			return 'fourcc:'.$test_str;
 		} else {
 			// just a category
 			return 'fourcc:'.$this->fourcc.'/'.$str;
@@ -116,7 +125,8 @@ class OIDplusFourCC extends OIDplusObject {
 
 	private function getTechInfo() {
 		$tech_info = array();
-		$tech_info[_L('C/C++ Literal')] = $this->getCharLiteral();
+		$tech_info[_L('FourCC code')]   = $this->fourcc;
+		$tech_info[_L('C/C++ Literal')] = $this->getMultiCharLiteral();
 		$tech_info[_L('Hex Dump')]      = strtoupper(implode(' ', str_split($this->getHex(true),2)));
 		$tech_info[_L('Big Endian')]    = '0x'.$this->getHex(true);
 		$tech_info[_L('Little Endian')] = '0x'.$this->getHex(false);
@@ -213,13 +223,15 @@ class OIDplusFourCC extends OIDplusObject {
 		return $hex;
 	}
 
-	private function getCharLiteral() {
+	private function getMultiCharLiteral() {
 		$type = self::fourcc_transform($this->fourcc);
 		if ($type === false) return false;
 		$out = "'";
 		foreach ($type as $c) {
 			if ((($c >= 0x00) && ($c <= 0x1F)) || ($c == 0x7F)) {
-				$out .= "\\0".base_convert($c,10,8);
+				// For non-printable characters use octal notation:
+				// \000 ... \377
+				$out .= "\\".str_pad(base_convert($c,10,8), 3, '0', STR_PAD_LEFT);
 			} else {
 				$out .= chr($c);
 			}

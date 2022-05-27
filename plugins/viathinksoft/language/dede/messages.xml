@@ -2190,6 +2190,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		FourCC code
+		]]></source>
+		<target><![CDATA[
+		FourCC-Code
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		FreeOID service not available. Please ask your administrator.
 		]]></source>
 		<target><![CDATA[
