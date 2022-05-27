@@ -102,7 +102,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '2d0af05e72b902df45292b24157f6269fb75684b',
+      'reference' => '1c3cb724fc878541fe735fc8c55b7debe0f32425',
     ),
     'dcodeio/bcrypt.js' => 
     array (
@@ -142,12 +142,12 @@ private static $installed = array (
     ),
     'matthiasmullie/minify' => 
     array (
-      'pretty_version' => '1.3.67',
-      'version' => '1.3.67.0',
+      'pretty_version' => '1.3.68',
+      'version' => '1.3.68.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'acaee1b7ca3cd67a39d7f98673cacd7e4739a8d9',
+      'reference' => 'c00fb02f71b2ef0a5f53fe18c5a8b9aa30f48297',
     ),
     'matthiasmullie/path-converter' => 
     array (
@@ -194,7 +194,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'f57f5debe04dec6708ec9ff55a79ceed9a18cb55',
+      'reference' => '62c36daa672eaf735ab49e11406bbf675a69680c',
     ),
     'script47/bs5-utils' => 
     array (
@@ -230,16 +230,16 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'dadd7f25e31680f1c6bf61d2fb0b15794f425cd1',
+      'reference' => 'c91227ab933d664c3ce2ea4ec68257f2282437ed',
     ),
     'twbs/bootstrap' => 
     array (
-      'pretty_version' => 'v5.1.3',
-      'version' => '5.1.3.0',
+      'pretty_version' => 'v5.2.0-beta1',
+      'version' => '5.2.0.0-beta1',
       'aliases' => 
       array (
       ),
-      'reference' => '1a6fdfae6be09b09eaced8f0e442ca6f7680a61e',
+      'reference' => 'fca04c07131a81e625a516cf7b98a8c7df0df1c1',
     ),
     'tweeb/tinymce-i18n' => 
     array (
@@ -254,7 +254,7 @@ private static $installed = array (
     array (
       'replaced' => 
       array (
-        0 => 'v5.1.3',
+        0 => 'v5.2.0-beta1',
       ),
     ),
     'vakata/jstree' => 
