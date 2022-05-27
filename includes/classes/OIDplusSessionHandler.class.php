@@ -22,7 +22,7 @@ if (!defined('INSIDE_OIDPLUS')) die();
 class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSetterInterface {
 
 	private $secret = '';
-	protected $sessionLifetime = '';
+	protected $sessionLifetime = 0;
 
 	public function __construct() {
 		$this->sessionLifetime = OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60);

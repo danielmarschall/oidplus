@@ -282,9 +282,9 @@ function sha3_512($password, $raw_output=false) {
 
 function sha3_512_hmac($message, $key, $raw_output=false) {
 	// RFC 2104 HMAC
-		if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
-				return hash_hmac('sha3-512', $message, $key, $raw_output);
-		} else {
+	if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
+		return hash_hmac('sha3-512', $message, $key, $raw_output);
+	} else {
 		$blocksize = 576; // block size of sha-512!
 
 		if (strlen($key) > ($blocksize/8)) {
@@ -300,8 +300,8 @@ function sha3_512_hmac($message, $key, $raw_output=false) {
 			$k_ipad[$i] = $k_ipad[$i] ^ $k_[$i];
 		}
 
-		return sha3_512($k_opad . sha3_512($k_ipad . $message, true));
-		}
+		return sha3_512($k_opad . sha3_512($k_ipad . $message, true), $raw_output);
+	}
 }
 
 if (!function_exists('str_ends_with')) {

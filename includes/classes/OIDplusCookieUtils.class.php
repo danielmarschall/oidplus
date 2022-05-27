@@ -57,6 +57,7 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 		return $path;
 	}
 
+	// TODO: There are several PHPSESSID cookies set. That's not very nice. We should collect the cookies and then at script ending only send the last definition one time.
 	public function setcookie($name, $value, $expires=0, $allowJS=false, $samesite=null) {
 		$domain = $this->getCookieDomain();
 		$path = $this->getCookiePath();
