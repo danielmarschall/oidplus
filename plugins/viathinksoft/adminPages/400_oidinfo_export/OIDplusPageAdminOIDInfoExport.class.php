@@ -669,8 +669,6 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$oa->addSimplePingProvider('viathinksoft.de:49500');
 		}
 
-		@header('Content-Type:text/xml');
-
 		$email = OIDplus::config()->getValue('admin_email');
 		if (empty($email)) $email = 'unknown@example.com';
 
