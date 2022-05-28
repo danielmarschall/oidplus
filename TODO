@@ -76,6 +76,10 @@ DATA TRANSFER PLUGIN
 - XML import: Waiting animation
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
 
+REPRODUCTION REQUIRED
+- Firefox: Sometimes, if you have an error page (e.g. DB Connection failed), then you see the error page as XML (i.e. the web browser shows the HTML code as XML tree). Observed by Daniel many times.
+- Chrome: Sometimes, when you enter the page, Chrome thinks that it is a XHTML/XML file, and therefore shows you a malformed XML error "error on line 33 at column 8: Opening and ending tag mismatch: link line 22 and head". After reloading, the page loads correctly. Observed by Daniel.  (Also one time on phone of Victor?)
+
 SMALL THINGS
 - Let the user create shortcuts to any OIDplus-Goto-URLS (e.g. important OIDs) directly in the menu, without writing a plugin?
 - Auto open some nodes automatically, or open until a specific level (like done in the Resources plugin?)
@@ -136,6 +140,7 @@ SMALL THINGS
 - adminPages/902_systemfile_check/OIDplusPageAdminSystemFileCheck.class.php
 	Should thumbs.db (case insensitive) and Apple turds be excluded?
 	On the other hand, these files could then be used to hide malicious data
+- Actually, there should be two Update-Timestamps: An Update-Timestamp for the Superior RA (i.e. when was the ASN.1/IRI or the RA changed? And a RA Update-Timestamp (i.e. when did the RA change its description?)
 
 UPDATER
 - Internal problem with GIT distribution channel:
