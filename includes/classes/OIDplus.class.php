@@ -1734,9 +1734,6 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	public static function isCronjob() {
-		// TODO: use this function to tells the plugins whether we are calling from crontab,
-		//       so that oid-info.com auto publishing et al prefer cron calls and only execute their code
-		//       for random visitors if the crontab is not running.
 		return explode('.',basename($_SERVER['SCRIPT_NAME']))[0] === 'cron';
 	}
 }
