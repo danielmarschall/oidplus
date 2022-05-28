@@ -467,6 +467,10 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 					if (!is_numeric($last_ping)) $last_ping = 0;
 					$last_ping_interval = OIDplus::config()->getValue('reg_ping_interval');
 					if (!is_numeric($last_ping_interval)) $last_ping_interval = 3600;
+
+					// Cronjobs get half ping interval, to make sure that a web visitor won't get any delay
+					if (OIDplus::isCronjob()) $last_ping_interval /= 2;
+
 					if ((time()-$last_ping >= $last_ping_interval)) {
 						$this->sendRegistrationQuery();
 					}
