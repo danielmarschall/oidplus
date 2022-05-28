@@ -106,8 +106,16 @@ class OIDplusFourCC extends OIDplusObject {
 	}
 
 	public function crudShowId(OIDplusObject $parent) {
-		$tmp = explode('/',$this->fourcc);
-		return end($tmp);
+		if ($this->isLeafNode()) {
+			// We don't parse '/' in a valid FourCC code (i.e. Leaf node)
+			return $this->nodeId(false);
+		} else {
+			if ($parent->isRoot()) {
+				return substr($this->nodeId(), strlen($parent->nodeId()));
+			} else {
+				return substr($this->nodeId(), strlen($parent->nodeId())+1);
+			}
+		}
 	}
 
 	public function jsTreeNodeName(OIDplusObject $parent = null) {
