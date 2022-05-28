@@ -12,7 +12,7 @@ How you can contribute:
   or via email to Daniel Marschall
   https://www.viathinksoft.com/contact/daniel-marschall
   or as GitHub issue
-  https://github.com/danielmarschall/oidplus/issues
+  https://github.com/danielmarschall/oidplus/issues (recommended)
 
 - If you have written code snippets or patches,
   you can either send them via email, bug tracker,

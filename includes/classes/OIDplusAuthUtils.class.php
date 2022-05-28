@@ -30,7 +30,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		}
 
 		if (function_exists('mcrypt_create_iv')) {
-			$a = bin2hex(mcrypt_create_iv($len, MCRYPT_DEV_URANDOM));
+			$a = bin2hex(mcrypt_create_iv($len));
 			if ($a) return $a;
 		}
 

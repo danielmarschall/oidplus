@@ -113,7 +113,7 @@ class VtsBrowserDownload {
 			}
 
 			$new_length = $range_end-$range+1;
-			header("HTTP/1.1 206 Partial Content");
+			http_response_code(206); // 206 Partial Content
 			header("Content-Length: $new_length");
 			header("Content-Range: bytes $range-$range_end/$size");
 		} else {
@@ -121,7 +121,7 @@ class VtsBrowserDownload {
 			$etag = md5_file($file);
 			header("Etag: $etag");
 			if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag)) {
-				header("HTTP/1.1 304 Not Modified");
+				http_response_code(304); // 304 Not Modified
 				return true;
 			}
 
