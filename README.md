@@ -10,19 +10,18 @@ https://www.oidplus.com/
 
 ### Download and install OIDplus
 
-##### Method A - Download using SVN (recommended):
-        sudo apt-get update
-        sudo apt-get install svn
-        svn co https://svn.viathinksoft.com/svn/oidplus/trunk/
+##### Method A - Download using SVN:
+    sudo apt-get update
+    sudo apt-get install svn
+    svn co https://svn.viathinksoft.com/svn/oidplus/trunk/
 
 ##### Method B - Download using Git:
-        sudo apt-get update
-        sudo apt-get install git
-        git clone https://github.com/danielmarschall/oidplus.git
+    sudo apt-get update
+    sudo apt-get install git
+    git clone https://github.com/danielmarschall/oidplus.git
 
 ##### Method C - Download SVN snapshot:
-Download a TAR.GZ file here:
-        https://www.viathinksoft.com/projects/oidplus
+Download a TAR.GZ file here: https://www.viathinksoft.com/projects/oidplus
 
 ### System requirements
 - PHP compatible web server (tested with Apache 2, nginx and Microsoft IIS)
@@ -38,9 +37,9 @@ Download a TAR.GZ file here:
 
 ### Reporting a bug
 You can file a bug report here:
+- https://github.com/danielmarschall/oidplus/issues (recommended)
 - https://www.viathinksoft.com/thinkbug/thinkbug.php?id=97
 - https://www.viathinksoft.com/contact/daniel-marschall
-- https://github.com/danielmarschall/oidplus/issues
 
 ### Support
 If you have any questions or need help, please contact us:

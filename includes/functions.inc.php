@@ -174,7 +174,7 @@ function httpOutWithETag($out, $contentType, $filename='') {
 	header("Etag: $etag");
 	header("Content-MD5: $etag"); // RFC 2616 clause 14.15
 	if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag)) {
-		header("HTTP/1.1 304 Not Modified");
+		http_response_code(304); // 304 Not Modified
 	} else {
 		header("Content-Type: $contentType");
 		if (!empty($filename)) {

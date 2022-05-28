@@ -86,9 +86,6 @@ SMALL THINGS
 - system log plugin: Only show 100 events and let the user switch pages. To avoid that you load a page with 10000+ log entries!
 - Alpine Linux SVN update: I get the error "svn: warning: W000013: Can't open file '/root/.subversion/servers': Permission denied", although "whoami" is "apache"! (Maybe because the initial checkout was done by root?!)
 - AutoUpdate via cron?
-- cron.sh: set a global flag that tells the plugins whether we are calling from crontab,
-  so that auto publishing et al prefer cron calls and only execute their code
-  for random visitors, if the crontab is not running.
 - Login page etc.: If user clicks on a tab, then the gotoedit and static link should change to e.g. "oidplus:login$admin" or "oidplus:login$ra", respectively.
         $('#static_link').attr("href", "index.php?goto="+encodeURIComponent(id));
         $("#gotoedit").val(id);

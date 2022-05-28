@@ -1,9 +1,8 @@
-#!/usr/bin/env php
 <?php
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +21,9 @@
 // Example: The automatic publishing of OIDs will then be done by this script
 // and not by a random visitor.
 
+// If you cannot use cron.sh or cron.bat for cronjobs, then you can use
+// a WebCron service (e.g. https://www.easycron.com/ ) instead, using cron.php
+
 
 try {
 	require_once __DIR__ . '/includes/oidplus.inc.php';
@@ -30,9 +32,7 @@ try {
 	OIDplus::init(false);
 	OIDplus::invoke_shutdown();
 	ob_end_clean();
-
-	exit(0);
 } catch (Exception $e) {
-	fwrite(STDERR, $e->getMessage());
-	exit(1);
+	http_response_code(500); // Internal Server Error
+	echo $e->getMessage();
 }
