@@ -78,7 +78,6 @@ DATA TRANSFER PLUGIN
 
 REPRODUCTION REQUIRED
 - Firefox: Sometimes, if you have an error page (e.g. DB Connection failed), then you see the error page as XML (i.e. the web browser shows the HTML code as XML tree). Observed by Daniel many times.
-- Chrome: Sometimes, when you enter the page, Chrome thinks that it is a XHTML/XML file, and therefore shows you a malformed XML error "error on line 33 at column 8: Opening and ending tag mismatch: link line 22 and head". After reloading, the page loads correctly. Observed by Daniel.  (Also one time on phone of Victor?)
 
 SMALL THINGS
 - Let the user create shortcuts to any OIDplus-Goto-URLS (e.g. important OIDs) directly in the menu, without writing a plugin?
