@@ -543,7 +543,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						} else {
 							$row = $res->fetch_array(); // will be used further down the code
 							$obj->getContentPage($out['title'], $out['text'], $out['icon']);
-							if (empty($out['title'])) $out['title'] = explode(':',$id,2)[1];
+							if (empty($out['title'])) $out['title'] = explode(':',$obj->nodeId(),2)[1];
 							$parent = $obj->getParent();
 							break;
 						}
@@ -628,7 +628,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (strpos($out['text'], '%%DESC%%') !== false)
 				$out['text'] = str_replace('%%DESC%%',    $desc,                              $out['text']);
 			if (strpos($out['text'], '%%CRUD%%') !== false)
-				$out['text'] = str_replace('%%CRUD%%',    self::showCrud($id),                $out['text']);
+				$out['text'] = str_replace('%%CRUD%%',    self::showCrud($obj->nodeId()),     $out['text']);
 			if (strpos($out['text'], '%%RA_INFO%%') !== false)
 				$out['text'] = str_replace('%%RA_INFO%%', OIDplusPagePublicRaInfo::showRaInfo($row['ra_email']), $out['text']);
 
@@ -645,7 +645,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.2')) {
-					$plugin->modifyContent($id, $out['title'], $out['icon'], $out['text']);
+					$plugin->modifyContent($obj->nodeId(), $out['title'], $out['icon'], $out['text']);
 				}
 			}
 		}

@@ -1336,6 +1336,9 @@ class OIDplus extends OIDplusBaseClass {
 			if (($ver_now != '') && ($ver_prev != '') && ($ver_now != $ver_prev)) {
 				// TODO: Problem: When the system was updated using SVN, then the IP address of the next random visitor of the website is logged!
 				OIDplus::logger()->log("[INFO]A!", "System version changed from '$ver_prev' to '$ver_now'");
+
+				// Just to be sure, recanonize objects (we don't do it at every page visit due to performance reasons)
+				$this->recanonizeObjects();
 			}
 			OIDplus::config()->setValue("last_known_version", $ver_now);
 		} catch (Exception $e) {
@@ -1736,4 +1739,29 @@ class OIDplus extends OIDplusBaseClass {
 	public static function isCronjob() {
 		return explode('.',basename($_SERVER['SCRIPT_NAME']))[0] === 'cron';
 	}
+
+	private function recanonizeObjects() {
+		#
+		# Since OIDplus svn-184, entries in the database need to have a canonical ID
+		# If the ID is not canonical (e.g. GUIDs missing hyphens), the object cannot be opened in OIDplus
+		# This script re-canonizes the object IDs if required.
+		# In SVN Rev 856, the canonization for GUID, IPv4 and IPv6 have changed, requiring another
+		# re-canonization
+		#
+		$res = OIDplus::db()->query("select id from ###objects");
+		while ($row = $res->fetch_array()) {
+			$ida = $row['id'];
+			$idb = OIDplusObject::parse($ida)->nodeId();
+			if (($idb) && ($ida != $idb)) {
+				OIDplus::db()->transaction_begin();
+				OIDplus::db()->query("update ###objects set id = ? where id = ?", array($idb, $ida));
+				OIDplus::db()->query("update ###asn1id set oid = ? where oid = ?", array($idb, $ida));
+				OIDplus::db()->query("update ###iri set oid = ? where oid = ?", array($idb, $ida));
+				OIDplus::db()->query("update ###log_object set id = ? where id = ?", array($idb, $ida));
+				OIDplus::logger()->log("[INFO]A!", "Object name '$ida' has been changed to '$idb' during re-canonization");
+				OIDplus::db()->transaction_commit();
+			}
+		}
+	}
+
 }
