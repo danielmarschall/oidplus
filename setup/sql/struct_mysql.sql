@@ -15,7 +15,7 @@ ALTER TABLE `config`
 DROP TABLE IF EXISTS `asn1id`;
 CREATE TABLE `asn1id` (
   `lfd` int(11) NOT NULL,
-  `oid` varchar(255) NOT NULL,
+  `oid` varchar(255) NOT NULL COLLATE utf8_bin,
   `name` varchar(255) NOT NULL,
   `standardized` boolean NOT NULL DEFAULT '0',
   `well_known` boolean NOT NULL DEFAULT '0'
@@ -32,7 +32,7 @@ ALTER TABLE `asn1id`
 DROP TABLE IF EXISTS `iri`;
 CREATE TABLE `iri` (
   `lfd` int(11) NOT NULL,
-  `oid` varchar(255) NOT NULL,
+  `oid` varchar(255) NOT NULL COLLATE utf8_bin,
   `name` varchar(255) NOT NULL,
   `longarc` boolean NOT NULL DEFAULT '0',
   `well_known` boolean NOT NULL DEFAULT '0'
@@ -48,8 +48,8 @@ ALTER TABLE `iri`
 
 DROP TABLE IF EXISTS `objects`;
 CREATE TABLE `objects` (
-  `id` varchar(255) NOT NULL,
-  `parent` varchar(255) DEFAULT NULL,
+  `id` varchar(255) NOT NULL COLLATE utf8_bin,
+  `parent` varchar(255) DEFAULT NULL COLLATE utf8_bin,
   `title` varchar(255) NULL,
   `description` text NULL,
   `ra_email` varchar(100) NULL,
@@ -134,7 +134,7 @@ DROP TABLE IF EXISTS `log_object`;
 CREATE TABLE `log_object` (
   `id` int(11) NOT NULL,
   `log_id` int(11) NOT NULL,
-  `object` varchar(255) NOT NULL,
+  `object` varchar(255) NOT NULL COLLATE utf8_bin,
   `severity` int(11) NOT NULL
 ) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
 
@@ -148,4 +148,4 @@ ALTER TABLE `log_object`
 
 /* -------------------------------------------------- */
 
-INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '1000', '1', '0');
+INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '1001', '1', '0');

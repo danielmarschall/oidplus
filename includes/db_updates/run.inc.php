@@ -68,15 +68,16 @@ function oidplus_dbupdate(OIDplusDatabaseConnection $db) {
 			$version = oidplus_dbupdate_205($db);
 		}
 		if ($version == 1000) {
-			// ... in the future, add updates here! ...
+			// Update 1000 => 1001
+			require_once __DIR__.'/update1001.inc.php';
+			$version = oidplus_dbupdate_1001($db);
 		}
 	} catch (Exception $e) {
 		throw new OIDplusException(_L('Database update from version %1 failed: %2',$version,$e->getMessage()));
 	}
 
 	// Don't allow if the database version if newer than we expect
-	if ($version != 1000) {
-		require_once __DIR__.'/update205.inc.php';
-		$version = oidplus_dbupdate_205($db);
+	if ($version > 1001) {
+		throw new OIDplusException(_L('The version of the database is newer than the program version. Please upgrade your program version.'));
 	}
 }

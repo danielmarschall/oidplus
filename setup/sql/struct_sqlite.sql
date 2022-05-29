@@ -90,4 +90,4 @@ CREATE TABLE `log_object` (
   UNIQUE (`log_id`,`object`)
 );
 
-INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '1000', '1', '0');
+INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '1001', '1', '0');

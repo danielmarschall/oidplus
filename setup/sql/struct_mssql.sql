@@ -74,7 +74,7 @@ IF OBJECT_ID('dbo.asn1id', 'U') IS NOT NULL /*Backwards compatibility*/
 	DROP TABLE /*IF EXISTS*/ [dbo].[asn1id];
 CREATE TABLE [dbo].[asn1id](
 	[lfd] [int] IDENTITY(1,1) NOT NULL,
-	[oid] [varchar](255) NOT NULL,
+	[oid] [varchar](255) COLLATE German_PhoneBook_CS_AS NOT NULL,
 	[name] [varchar](255) NOT NULL,
 	[standardized] [bit] NOT NULL CONSTRAINT [DF__asn1id__standardized]  DEFAULT ('0'),
 	[well_known] [bit] NOT NULL CONSTRAINT [DF__asn1id__well_known]  DEFAULT ('0'),
@@ -96,7 +96,7 @@ IF OBJECT_ID('dbo.iri', 'U') IS NOT NULL /*Backwards compatibility*/
 	DROP TABLE /*IF EXISTS*/ [dbo].[iri];
 CREATE TABLE [dbo].[iri](
 	[lfd] [int] IDENTITY(1,1) NOT NULL,
-	[oid] [varchar](255) NOT NULL,
+	[oid] [varchar](255) COLLATE German_PhoneBook_CS_AS NOT NULL,
 	[name] [varchar](255) NOT NULL,
 	[longarc] [bit] NOT NULL CONSTRAINT [DF__iri__longarc]  DEFAULT ('0'),
 	[well_known] [bit] NOT NULL CONSTRAINT [DF__iri__well_known]  DEFAULT ('0'),
@@ -117,8 +117,8 @@ GO
 IF OBJECT_ID('dbo.objects', 'U') IS NOT NULL /*Backwards compatibility*/
 	DROP TABLE /*IF EXISTS*/ [dbo].[objects];
 CREATE TABLE [dbo].[objects](
-	[id] [varchar](255) NOT NULL,
-	[parent] [varchar](255) NULL,
+	[id] [varchar](255) COLLATE German_PhoneBook_CS_AS NOT NULL,
+	[parent] [varchar](255) COLLATE German_PhoneBook_CS_AS NULL,
 	[title] [varchar](255) NULL,
 	[description] [text] NULL,
 	[ra_email] [varchar](100) NULL,
@@ -226,7 +226,7 @@ IF OBJECT_ID('dbo.log_object', 'U') IS NOT NULL /*Backwards compatibility*/
 CREATE TABLE [dbo].[log_object](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[log_id] [int] NOT NULL,
-	[object] [varchar](255) NOT NULL,
+	[object] [varchar](255) COLLATE German_PhoneBook_CS_AS NOT NULL,
 	[severity] [int] NOT NULL,
 	CONSTRAINT [PK_log_object] PRIMARY KEY CLUSTERED 
 	(
@@ -251,7 +251,7 @@ GO
 
 /****** Set database version ******/
 
-INSERT INTO [config] (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '1000', '1', '0');
+INSERT INTO [config] (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '1001', '1', '0');
 
 SET ANSI_PADDING OFF
 GO
