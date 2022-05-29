@@ -6398,6 +6398,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The version of the database is newer than the program version. Please upgrade your program version.
+		]]></source>
+		<target><![CDATA[
+		Die Datenbankversion ist neuer als die Programmversion. Bitte aktualisieren Sie die Programmversion.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		There are three possibilities how to keep OIDplus up-to-date
 		]]></source>
 		<target><![CDATA[
