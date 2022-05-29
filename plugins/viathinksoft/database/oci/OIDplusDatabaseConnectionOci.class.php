@@ -60,12 +60,12 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 			}
 
 			$i = 0;
-			foreach ($prepared_args as $a) {
+			foreach ($prepared_args as $value) {
 				$i++;
 				if ($i > $count) break;
-				if (is_bool($a)) $value = $a ? 1 : 0;
+				if (is_bool($value)) $value = $value ? 1 : 0;
 				$paramname = ":param$i";
-				$$paramname = $a; // It is VERY important to clone the variable in this stupid way, because the binding will be done to the memory address of $a !
+				$$paramname = $value; // It is VERY important to clone the variable in this stupid way, because the binding will be done to the memory address of $value !
 				if (@oci_bind_by_name($res, $paramname, $$paramname) === false) {
 					$this->last_error = oci_error($res);
 					throw new OIDplusSQLException($sql, _L('Cannot bind parameter %1 to value %2',$paramname,$$paramname).': '.$this->error());
