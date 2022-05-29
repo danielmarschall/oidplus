@@ -1338,7 +1338,7 @@ class OIDplus extends OIDplusBaseClass {
 				OIDplus::logger()->log("[INFO]A!", "System version changed from '$ver_prev' to '$ver_now'");
 
 				// Just to be sure, recanonize objects (we don't do it at every page visit due to performance reasons)
-				$this->recanonizeObjects();
+				self::recanonizeObjects();
 			}
 			OIDplus::config()->setValue("last_known_version", $ver_now);
 		} catch (Exception $e) {
@@ -1740,7 +1740,7 @@ class OIDplus extends OIDplusBaseClass {
 		return explode('.',basename($_SERVER['SCRIPT_NAME']))[0] === 'cron';
 	}
 
-	private function recanonizeObjects() {
+	private static function recanonizeObjects() {
 		#
 		# Since OIDplus svn-184, entries in the database need to have a canonical ID
 		# If the ID is not canonical (e.g. GUIDs missing hyphens), the object cannot be opened in OIDplus
@@ -1751,7 +1751,9 @@ class OIDplus extends OIDplusBaseClass {
 		$res = OIDplus::db()->query("select id from ###objects");
 		while ($row = $res->fetch_array()) {
 			$ida = $row['id'];
-			$idb = OIDplusObject::parse($ida)->nodeId();
+			$obj = OIDplusObject::parse($ida);
+			if (!$obj) continue;
+			$idb = $obj->nodeId();
 			if (($idb) && ($ida != $idb)) {
 				OIDplus::db()->transaction_begin();
 				OIDplus::db()->query("update ###objects set id = ? where id = ?", array($idb, $ida));

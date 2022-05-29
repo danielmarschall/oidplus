@@ -521,6 +521,13 @@ function hotfix_dir($rev, $dir) {
 		                    $cont);
 		file_put_contents($file, $cont);
 	}
+	if ($rev == 856) {
+		// Fix runtime error that lead to a stalled update!
+		$file = $dir.'/includes/classes/OIDplus.class.php';
+		$cont = file_get_contents($file);
+		$cont = str_replace('$this->recanonizeObjects();', '', $cont);
+		file_put_contents($file, $cont);
+	}
 }
 
 function split_equal_length($data, $width=65) {
