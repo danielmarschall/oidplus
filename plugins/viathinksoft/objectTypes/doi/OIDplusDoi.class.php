@@ -29,7 +29,7 @@ class OIDplusDoi extends OIDplusObject {
 
 	public static function parse($node_id) {
 		@list($namespace, $doi) = explode(':', $node_id, 2);
-		if ($namespace !== 'doi') return false;
+		if ($namespace !== self::ns()) return false;
 		return new self($doi);
 	}
 
@@ -46,7 +46,7 @@ class OIDplusDoi extends OIDplusObject {
 	}
 
 	public static function root() {
-		return 'doi:';
+		return self::ns().':';
 	}
 
 	public function isRoot() {

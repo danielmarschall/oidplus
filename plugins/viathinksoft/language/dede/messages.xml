@@ -566,14 +566,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Attention: Empty NS at %1
-		]]></source>
-		<target><![CDATA[
-		Achtung: Leerer Namensraum bei %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Attention: If your DBMS is not listed, OIDplus will most likely not work. If you know that your DBMS is compatible with one of these listed SQL dialects, you can choose that dialect.
 		]]></source>
 		<target><![CDATA[
@@ -3329,7 +3321,7 @@
 		Make sure that you invoke the <code>%1</code> command as the user who runs PHP or that you <code>chown -R</code> the files after invoking <code>%1</code>
 		]]></source>
 		<target><![CDATA[
-		Stellen Sie bitte sicher, dass der Befehl <code>%1</code> als der Benutzer ausgeführt wird, der die PHP-Scripte ausführt, oder führen Sie nach dem Update ein <code>chown -R</code> durch.
+		Stellen Sie bitte sicher, dass der Befehl <code>%1</code> als der Benutzer ausgeführt wird, der die PHP-Scripte ausführt, oder führen Sie nach dem Update (<code>%1</code>) noch ein <code>chown -R</code> durch.
 		]]></target>
 	</message>
 	<message>
@@ -4066,6 +4058,30 @@
 		]]></source>
 		<target><![CDATA[
 		Objekt-Typen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ObjectType plugin %1 is erroneous: Namespace %2 must be lower-case
+		]]></source>
+		<target><![CDATA[
+		Objekt-Typ-Erweiterung %1 ist fehlerhaft: Namensraum %2 muss kleingeschrieben sein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ObjectType plugin %1 is erroneous: Namespace must not be empty
+		]]></source>
+		<target><![CDATA[
+		Objekt-Typ-Erweiterung %1 ist fehlerhaft: Namensraum darf nicht leer sein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ObjectType plugin %1 is erroneous: Root node (%2) is in wrong namespace (needs starts with %3)!
+		]]></source>
+		<target><![CDATA[
+		Objekt-Typ-Erweiterung %1 ist fehlerhaft: Wurzelknoten (%2) ist im falschen Namensraum (muss mit %3 beginnen)!
 		]]></target>
 	</message>
 	<message>

@@ -43,7 +43,7 @@ class OIDplusIpv4 extends OIDplusObject {
 
 	public static function parse($node_id) {
 		@list($namespace, $ipv4) = explode(':', $node_id, 2);
-		if ($namespace !== 'ipv4') return false;
+		if ($namespace !== self::ns()) return false;
 		return new self($ipv4);
 	}
 
@@ -60,7 +60,7 @@ class OIDplusIpv4 extends OIDplusObject {
 	}
 
 	public static function root() {
-		return 'ipv4:';
+		return self::ns().':';
 	}
 
 	public function isRoot() {

@@ -58,7 +58,7 @@ class OIDplusFourCC extends OIDplusObject {
 
 	public static function parse($node_id) {
 		@list($namespace, $fourcc) = explode(':', $node_id, 2);
-		if ($namespace !== 'fourcc') return false;
+		if ($namespace !== self::ns()) return false;
 		return new self($fourcc);
 	}
 
@@ -75,7 +75,7 @@ class OIDplusFourCC extends OIDplusObject {
 	}
 
 	public static function root() {
-		return 'fourcc:';
+		return self::ns().':';
 	}
 
 	public function isRoot() {

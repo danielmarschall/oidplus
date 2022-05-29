@@ -29,7 +29,7 @@ class OIDplusOther extends OIDplusObject {
 
 	public static function parse($node_id) {
 		@list($namespace, $other) = explode(':', $node_id, 2);
-		if ($namespace !== 'other') return false;
+		if ($namespace !== self::ns()) return false;
 		return new self($other);
 	}
 
@@ -46,7 +46,7 @@ class OIDplusOther extends OIDplusObject {
 	}
 
 	public static function root() {
-		return 'other:';
+		return self::ns().':';
 	}
 
 	public function isRoot() {
