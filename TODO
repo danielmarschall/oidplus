@@ -1,6 +1,3 @@
-MAY 2022:
-- We must enforce that namespaces in objectType plugins are lowercase, because prefilterQuery() makes all namespaces lowercase and the DBMS should be case-sensitive
-
 Ideas by Simon T.:
 - System status plugin: Check if file owners are mixed
 - a possibility to upload & assign custom icons to objects (both in the tree & in the page)

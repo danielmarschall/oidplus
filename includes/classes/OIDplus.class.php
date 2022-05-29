@@ -502,8 +502,13 @@ class OIDplus extends OIDplusBaseClass {
 
 	private static function registerObjectType($ot) {
 		$ns = $ot::ns();
+		if (empty($ns)) throw new OIDplusException(_L('ObjectType plugin %1 is erroneous: Namespace must not be empty',$ot));
 
-		if (empty($ns)) throw new OIDplusException(_L('Attention: Empty NS at %1',$ot));
+		// Currently, we must enforce that namespaces in objectType plugins are lowercase, because prefilterQuery() makes all namespaces lowercase and the DBMS should be case-sensitive
+		if ($ns != strtolower($ns)) throw new OIDplusException(_L('ObjectType plugin %1 is erroneous: Namespace %2 must be lower-case',$ot,$ns));
+
+		$root = $ot::root();
+		if (!str_starts_with($root,$ns.':')) throw new OIDplusException(_L('ObjectType plugin %1 is erroneous: Root node (%2) is in wrong namespace (needs starts with %3)!',$ot,$root,$ns.':'));
 
 		$ns_found = false;
 		foreach (array_merge(OIDplus::getEnabledObjectTypes(), OIDplus::getDisabledObjectTypes()) as $test_ot) {

@@ -29,7 +29,7 @@ class OIDplusJava extends OIDplusObject {
 
 	public static function parse($node_id) {
 		@list($namespace, $java) = explode(':', $node_id, 2);
-		if ($namespace !== 'java') return false;
+		if ($namespace !== self::ns()) return false;
 		return new self($java);
 	}
 
@@ -46,7 +46,7 @@ class OIDplusJava extends OIDplusObject {
 	}
 
 	public static function root() {
-		return 'java:';
+		return self::ns().':';
 	}
 
 	public function isRoot() {
