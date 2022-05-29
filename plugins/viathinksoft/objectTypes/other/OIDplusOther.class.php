@@ -54,7 +54,7 @@ class OIDplusOther extends OIDplusObject {
 	}
 
 	public function nodeId($with_ns=true) {
-		return $with_ns ? 'other:'.$this->other : $this->other;
+		return $with_ns ? self::root().$this->other : $this->other;
 	}
 
 	public function addString($str) {

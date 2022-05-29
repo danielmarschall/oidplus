@@ -65,7 +65,7 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	public function nodeId($with_ns=true) {
-		return $with_ns ? 'oid:'.$this->oid : $this->oid;
+		return $with_ns ? self::root().$this->oid : $this->oid;
 	}
 
 	public function addString($str) {
@@ -241,7 +241,7 @@ class OIDplusOid extends OIDplusObject {
 		$out->oid = sanitizeOID($out->oid);
 		if ($out->oid === false) throw new OIDplusException(_L('%1 is not a valid OID!',$bak_oid));
 
-		$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:');
+		$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen(self::root());
 		if (strlen($out->oid) > $maxlen) {
 			throw new OIDplusException(_L('The resulting OID "%1" is too long (max allowed length: %2).',$out->oid,$maxlen));
 		}
@@ -277,7 +277,7 @@ class OIDplusOid extends OIDplusObject {
 	public function viewGetArcAsn1s(OIDplusOid $parent=null, $separator = ' | ') {
 		$asn_ids = array();
 
-		if (is_null($parent)) $parent = OIDplusOid::parse('oid:');
+		if (is_null($parent)) $parent = OIDplusOid::parse(self::root());
 
 		$part = $this->deltaDotNotation($parent);
 
@@ -297,7 +297,7 @@ class OIDplusOid extends OIDplusObject {
 		$arcs = explode('.', $this->oid);
 
 		foreach ($arcs as $arc) {
-			$res = OIDplus::db()->query("select name, standardized from ###asn1id where oid = ? order by lfd", array('oid:'.implode('.',$arcs)));
+			$res = OIDplus::db()->query("select name, standardized from ###asn1id where oid = ? order by lfd", array(self::root().implode('.',$arcs)));
 
 			$names = array();
 			while ($row = $res->fetch_array()) {
@@ -331,7 +331,7 @@ class OIDplusOid extends OIDplusObject {
 		$arcs = explode('.', $this->oid);
 
 		foreach ($arcs as $arc) {
-			$res = OIDplus::db()->query("select name, longarc from ###iri where oid = ? order by lfd", array('oid:'.implode('.',$arcs)));
+			$res = OIDplus::db()->query("select name, longarc from ###iri where oid = ? order by lfd", array(self::root().implode('.',$arcs)));
 
 			$is_longarc = false;
 			$names = array();

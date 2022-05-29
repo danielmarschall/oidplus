@@ -68,7 +68,7 @@ class OIDplusIpv4 extends OIDplusObject {
 	}
 
 	public function nodeId($with_ns=true) {
-		return $with_ns ? 'ipv4:'.$this->ipv4 : $this->ipv4;
+		return $with_ns ? self::root().$this->ipv4 : $this->ipv4;
 	}
 
 	public function addString($str) {
@@ -85,7 +85,7 @@ class OIDplusIpv4 extends OIDplusObject {
 		if ($cidr > 32) throw new OIDplusException(_L('Invalid IPv4 address %1',$str));
 		$ipv4_normalized = ipv4_normalize($ipv4);
 		if (!$ipv4_normalized) throw new OIDplusException(_L('Invalid IPv4 address %1',$str));
-		return 'ipv4:'.$ipv4_normalized.'/'.$cidr; // overwrite; no hierarchical tree
+		return self::root().$ipv4_normalized.'/'.$cidr; // overwrite; no hierarchical tree
 	}
 
 	public function crudShowId(OIDplusObject $parent) {

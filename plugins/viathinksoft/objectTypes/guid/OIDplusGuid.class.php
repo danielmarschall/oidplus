@@ -57,7 +57,7 @@ class OIDplusGuid extends OIDplusObject {
 	}
 
 	public function nodeId($with_ns=true) {
-		return $with_ns ? 'guid:'.$this->guid : $this->guid;
+		return $with_ns ? self::root().$this->guid : $this->guid;
 	}
 
 	public function addString($str) {

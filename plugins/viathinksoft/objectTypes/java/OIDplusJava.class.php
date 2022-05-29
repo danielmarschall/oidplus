@@ -54,12 +54,12 @@ class OIDplusJava extends OIDplusObject {
 	}
 
 	public function nodeId($with_ns=true) {
-		return $with_ns ? 'java:'.$this->java : $this->java;
+		return $with_ns ? self::root().$this->java : $this->java;
 	}
 
 	public function addString($str) {
 		if ($this->isRoot()) {
-			return 'java:'.$str;
+			return self::root().$str;
 		} else {
 			if (strpos($str,'.') !== false) throw new OIDplusException(_L('Please only submit one arc.'));
 			return $this->nodeId() . '.' . $str;

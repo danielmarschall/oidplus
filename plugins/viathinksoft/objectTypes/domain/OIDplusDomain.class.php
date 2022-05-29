@@ -54,15 +54,15 @@ class OIDplusDomain extends OIDplusObject {
 	}
 
 	public function nodeId($with_ns=true) {
-		return $with_ns ? 'domain:'.$this->domain : $this->domain;
+		return $with_ns ? self::root().$this->domain : $this->domain;
 	}
 
 	public function addString($str) {
 		if ($this->isRoot()) {
-			return 'domain:'.$str;
+			return self::root().$str;
 		} else {
 			if (strpos($str,'.') !== false) throw new OIDplusException(_L('Please only submit one arc.'));
-			return 'domain:'.$str.'.'.$this->nodeId(false);
+			return self::root().$str.'.'.$this->nodeId(false);
 		}
 	}
 

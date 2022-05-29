@@ -54,7 +54,7 @@ class OIDplusGs1 extends OIDplusObject {
 	}
 
 	public function nodeId($with_ns=true) {
-		return $with_ns ? 'gs1:'.$this->number : $this->number;
+		return $with_ns ? self::root().$this->number : $this->number;
 	}
 
 	public function addString($str) {
@@ -139,7 +139,7 @@ class OIDplusGs1 extends OIDplusObject {
 	}
 
 	public function chunkedNotation($withAbbr=true) {
-		$curid = 'gs1:'.$this->number;
+		$curid = self::root().$this->number;
 
 		$res = OIDplus::db()->query("select id, title from ###objects where id = ?", array($curid));
 		if (!$res->any()) return $this->number;
@@ -156,7 +156,7 @@ class OIDplusGs1 extends OIDplusObject {
 		array_shift($lengths);
 		$chunks = array();
 
-		$full = 'gs1:'.$this->number;
+		$full = self::root().$this->number;
 		foreach ($lengths as $len) {
 			$chunks[] = substr($full, $len);
 			$full = substr($full, 0, $len);

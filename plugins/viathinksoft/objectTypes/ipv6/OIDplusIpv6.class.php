@@ -68,7 +68,7 @@ class OIDplusIpv6 extends OIDplusObject {
 	}
 
 	public function nodeId($with_ns=true) {
-		return $with_ns ? 'ipv6:'.$this->ipv6 : $this->ipv6;
+		return $with_ns ? self::root().$this->ipv6 : $this->ipv6;
 	}
 
 	public function addString($str) {
@@ -85,7 +85,7 @@ class OIDplusIpv6 extends OIDplusObject {
 		if ($cidr > 128) throw new OIDplusException(_L('Invalid IPv6 address %1',$str));
 		$ipv6_normalized = ipv6_normalize($ipv6);
 		if (!$ipv6_normalized) throw new OIDplusException(_L('Invalid IPv6 address %1',$str));
-		return 'ipv6:'.$ipv6_normalized.'/'.$cidr; // overwrite; no hierarchical tree
+		return self::root().$ipv6_normalized.'/'.$cidr; // overwrite; no hierarchical tree
 	}
 
 	public function crudShowId(OIDplusObject $parent) {
