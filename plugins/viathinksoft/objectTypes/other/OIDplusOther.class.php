@@ -59,7 +59,7 @@ class OIDplusOther extends OIDplusObject {
 
 	public function addString($str) {
 		if ($this->isRoot()) {
-			return 'other:'.$str;
+			return self::root() . $str;
 		} else {
 			return $this->nodeId() . '\\' . $str;
 		}
