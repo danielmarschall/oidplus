@@ -98,10 +98,14 @@ class OIDplusFourCC extends OIDplusObject {
 
 		if (self::fourcc_transform($test_str) !== false) {
 			// real FourCC
-			return 'fourcc:'.$test_str;
+			return self::root() . $test_str;
 		} else {
 			// just a category
-			return 'fourcc:'.$this->fourcc.'/'.$str;
+			if ($this->isRoot()) {
+				return self::root() . $str;
+			} else {
+				return $this->nodeId() . '/' . $str;
+			}
 		}
 	}
 

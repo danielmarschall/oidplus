@@ -63,10 +63,14 @@ class OIDplusGuid extends OIDplusObject {
 	public function addString($str) {
 		if (uuid_valid($str)) {
 			// real GUID
-			return 'guid:'.strtolower(uuid_canonize($str));
+			return self::root() . strtolower(uuid_canonize($str));
 		} else {
 			// just a category
-			return 'guid:'.$this->guid.'/'.$str;
+			if ($this->isRoot()) {
+				return self::root() . $str;
+			} else {
+				return $this->nodeId() . '/' . $str;
+			}
 		}
 	}
 
