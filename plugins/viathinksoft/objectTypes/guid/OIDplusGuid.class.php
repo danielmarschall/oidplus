@@ -24,7 +24,7 @@ class OIDplusGuid extends OIDplusObject {
 
 	public function __construct($guid) {
 		if (uuid_valid($guid)) {
-			$this->guid = uuid_canonize($guid); // It is a real GUID (leaf node)
+			$this->guid = strtolower(uuid_canonize($guid)); // It is a real GUID (leaf node)
 		} else {
 			$this->guid = $guid; // It is a category name
 		}
@@ -63,7 +63,7 @@ class OIDplusGuid extends OIDplusObject {
 	public function addString($str) {
 		if (uuid_valid($str)) {
 			// real GUID
-			return 'guid:'.uuid_canonize($str);
+			return 'guid:'.strtolower(uuid_canonize($str));
 		} else {
 			// just a category
 			return 'guid:'.$this->guid.'/'.$str;
@@ -98,7 +98,7 @@ class OIDplusGuid extends OIDplusObject {
 
 	private function getTechInfo() {
 		$tech_info = array();
-		$tech_info[_L('UUID')] = uuid_canonize($this->guid);
+		$tech_info[_L('UUID')] = strtolower(uuid_canonize($this->guid));
 		$tech_info[_L('C++ notation')] = uuid_c_syntax($this->guid);
 
 		ob_start();
