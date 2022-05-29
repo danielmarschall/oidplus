@@ -83,7 +83,7 @@ class OIDplusFourCC extends OIDplusObject {
 	}
 
 	public function nodeId($with_ns=true) {
-		return $with_ns ? 'fourcc:'.$this->fourcc : $this->fourcc;
+		return $with_ns ? self::root().$this->fourcc : $this->fourcc;
 	}
 
 	public function addString($str) {

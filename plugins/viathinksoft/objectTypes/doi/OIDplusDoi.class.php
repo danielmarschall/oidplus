@@ -54,7 +54,7 @@ class OIDplusDoi extends OIDplusObject {
 	}
 
 	public function nodeId($with_ns=true) {
-		return $with_ns ? 'doi:'.$this->doi : $this->doi;
+		return $with_ns ? self::root().$this->doi : $this->doi;
 	}
 
 	public function addString($str) {
@@ -64,13 +64,13 @@ class OIDplusDoi extends OIDplusObject {
 			if (!self::validBaseDoi($base)) {
 				throw new OIDplusException(_L('Invalid DOI %1 . It must have syntax 10.xxxx',$base));
 			}
-			return 'doi:' . $base;
+			return self::root() . $base;
 		} else if (self::validBaseDoi($this->doi)) {
 			// First level: We add a pubilcation to the base
-			return 'doi:' . $this->doi . '/' . $str;
+			return self::root() . $this->doi . '/' . $str;
 		} else {
 			// We just add an additional string to the already existing publication, e.g. a graphic reference or chapter
-			return 'doi:' . $this->doi . $str;
+			return self::root() . $this->doi . $str;
 		}
 	}
 
