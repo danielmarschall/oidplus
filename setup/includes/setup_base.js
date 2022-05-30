@@ -217,6 +217,8 @@ function checkAccess(dir) {
 		if (xhr.readyState === 4) {
 			if (xhr.status === 200) {
 				$("#systemCheckCaption")[0].style.display = 'block';
+				// TODO: At my Ubuntu VM, after fixing an issue with Apache2, the messages still appeared. I had to click the links and press F5 for each one
+				//       THERE MUST BE NO CACHE!!!
 				$("#dirAccessWarning")[0].innerHTML = $("#dirAccessWarning")[0].innerHTML + _L('Attention: The following directory is world-readable: %1 ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>).','<a target="_blank" href="'+url+'">'+visibleUrl+'</a>') + '<br>';
 			}
 		}

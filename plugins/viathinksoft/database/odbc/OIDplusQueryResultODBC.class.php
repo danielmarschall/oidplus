@@ -107,7 +107,7 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 		if (!is_null($ret)) {
 			// ODBC gives bit(1) as binary, MySQL as integer and PDO as string.
 			// We'll do it like MySQL does, even if ODBC is actually more correct.
-			foreach ($ret as &$value) {
+			foreach ((array)$ret as &$value) {
 				if ($value === chr(0)) $value = 0;
 				if ($value === chr(1)) $value = 1;
 			}
@@ -116,7 +116,7 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
 		// We can't quote every single column throughout the whole program, so we use this workaround...
 		if ($ret) {
-			foreach ($ret as $name => $val) {
+			foreach ((array)$ret as $name => $val) {
 				$ret->{strtoupper($name)} = $val;
 				$ret->{strtolower($name)} = $val;
 			}
