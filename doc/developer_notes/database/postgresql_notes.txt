@@ -1,8 +1,10 @@
 
-apt-get install php-pgsql
-
 PDO ConnectionString
 	pgsql:host=192.168.69.89;port=5432;dbname=oidplus
+
+==================================================
+Windows Notes
+==================================================
 
 Add or edit the following line in your C:\Program Files\PostgreSQL\12\data\postgresql.conf :
 listen_addresses = '*'
@@ -12,3 +14,27 @@ Add the following line as the first line of pg_hba.conf. It allows access to all
 host  all  all 0.0.0.0/0 md5
 Restart Postgresql after adding this with service postgresql restart or the equivalent command for your setup.
 
+==================================================
+Ubuntu Linux
+==================================================
+
+apt-get update && apt-get install postgresql
+
+Run script at https://www.pgadmin.org/download/pgadmin-4-apt/
+
+su - postgre
+	psql
+		ALTER USER postgres PASSWORD 'test'
+		exit
+	exit
+
+Go to http://127.0.0.1/pgadmin4/browser/ and log in
+Create new server:
+	Host localhost
+	User postgres
+	Passwort 'test'
+
+apt-get install curl php-pgsql
+
+During OIDplus setup, you need to switch to postgres Linux user (su – postgres) before you can execute the "curl" command to install the database.
+(The authentication is the Linux user calling the "psql" command)

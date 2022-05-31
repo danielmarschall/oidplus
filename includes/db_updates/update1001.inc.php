@@ -44,7 +44,7 @@ function oidplus_dbupdate_1001(OIDplusDatabaseConnection $db) {
 	} else if ($db->getSlang()->id() == 'pgsql') {
 		// It looks like PgSQL is case-sensitive by default
 		// see https://stackoverflow.com/questions/18807276/how-to-make-my-postgresql-database-use-a-case-insensitive-collation
-		// TODO: Reproduce that this is true
+		// DM 31.05.2022 : Reproduction on Ubuntu+PostgreSQL successful. The default is case-sensitive, like we want.
 	} else if ($db->getSlang()->id() == 'access') {
 		// TODO: Implement
 		// However, this is not important, because Access is not yet correctly implemented anyway

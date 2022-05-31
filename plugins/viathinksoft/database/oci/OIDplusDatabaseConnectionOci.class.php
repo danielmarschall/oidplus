@@ -114,13 +114,17 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 			$password = OIDplus::baseConfig()->getValue('OCI_PASSWORD', 'oracle');
 			$this->conn = oci_connect($username, $password, $conn_str, "AL32UTF8" /*, $session_mode*/);
 		} finally {
-			# TODO: this does not seem to work?! (at least not for CLI)
 			$err = ob_get_contents();
 			ob_end_clean();
-		}
 
+			$tmp = oci_error();
+			if ($tmp !== false) {
+				$err .= $tmp['message'];
+			}
+		}
+	
 		if (!$this->conn) {
-			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' ' . strip_tags($err));
+			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' ' . strip_tags($err)));
 		}
 
 		$this->last_error = null;
