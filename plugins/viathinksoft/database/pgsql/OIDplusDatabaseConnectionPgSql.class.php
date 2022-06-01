@@ -119,7 +119,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 		}
 
 		if (!$this->conn) {
-			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' ' . strip_tags($err));
+			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' ' . strip_tags($err)));
 		}
 
 		$this->already_prepared = array();

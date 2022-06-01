@@ -2,8 +2,8 @@
 Easy setup for Oracle DB testing
 ================================
 
-Setup OracleDB Virtual Machine
-------------------------------
+Setup OracleDB Virtual Machine (Developer Days VM 2019)
+-------------------------------------------------------
 
 Download "DeveloperDaysVM2019-05-31_20.ova" at https://www.oracle.com/database/technologies/databaseappdev-vm.html
 
@@ -35,8 +35,7 @@ Open sqlcl (SQLplus)
 	grant select any sequence to oidplus;
 	grant create any sequence to oidplus;
 	grant all privileges to oidplus;
-
-	Ctrl+D to escape
+	exit;
 
 Open sqlcl (SQLplus)
 
@@ -79,3 +78,255 @@ At OIDplus, edit userdata/baseconfig/config.inc.php:
 	OIDplus::baseConfig()->setValue('TABLENAME_PREFIX',  '');
 
 Note: orcl is the PDB (pluggable database) and orclcdb is the CDB (container)
+
+
+
+Install OracleDB XE 21c Client+Server on an Ubuntu machine
+----------------------------------------------------------
+
+In this example, the sys password is "oidplus",
+the SID is "XE", the PDB name is "XEPDB1" (these are the standards in my VM),
+the port is 1539 (for some reason the default port in my installation),
+and the PDB username is "oidplus" with password "oidplus".
+
+
+1. Download Oracle Database Express Edition
+
+	Download "oracle-database-xe-21c-1.0-1.ol8.x86_64.rpm"
+
+2. Create "DEB" file
+
+	Install required packages using the command:
+	sudo apt-get install alien libaio1 unixodbc
+
+	Convert RPM package format to DEB package format (that is used by Ubuntu) using the command:
+	sudo alien --scripts -d oracle-xe-11.2.0-1.0.x86_64.rpm
+
+	ATTENTION! THIS COMMAND TAKES VERY LONG (APPROX 2 HOURS) AND NEEDS 14 GB HARD DISK SPACE!
+
+3. Create the required chkconfig script using the command:
+
+	sudo nano /sbin/chkconfig
+
+				#!/bin/bash
+				# Oracle 11gR2 XE installer chkconfig hack for Ubuntu
+				file=/etc/init.d/oracle-xe
+				if [[ ! `tail -n1 $file | grep INIT` ]]; then
+				echo >> $file
+				echo '### BEGIN INIT INFO' >> $file
+				echo '# Provides: OracleXE' >> $file
+				echo '# Required-Start: $remote_fs $syslog' >> $file
+				echo '# Required-Stop: $remote_fs $syslog' >> $file
+				echo '# Default-Start: 2 3 4 5' >> $file
+				echo '# Default-Stop: 0 1 6' >> $file
+				echo '# Short-Description: Oracle 11g Express Edition' >> $file
+				echo '### END INIT INFO' >> $file
+				fi
+				update-rc.d oracle-xe defaults 80 01
+
+4. Change the permission of the chkconfig file using the command:
+
+	sudo chmod 755 /sbin/chkconfig  
+
+5. Set kernel parameters. Oracle XE requires additional kernel parameters which you need to set using the command:
+
+	sudo nano /etc/sysctl.d/60-oracle.conf
+	Copy the following into the file and save:
+
+				# Oracle 11g XE kernel parameters  
+				fs.file-max=6815744  
+				net.ipv4.ip_local_port_range=9000 65000  
+				kernel.sem=250 32000 100 128 
+				kernel.shmmax=536870912 
+
+5b. Verify the change using the command:
+
+	sudo cat /etc/sysctl.d/60-oracle.conf 
+
+5c. You should see what you entered earlier. Now load the kernel parameters:
+
+	sudo service procps start
+
+5d. Verify the new parameters are loaded using:
+
+	sudo sysctl -q fs.file-max
+
+5e. You should see the file-max value that you entered earlier.
+
+7. Set up /dev/shm mount point for Oracle. Create the following file using the command:
+
+	sudo nano /etc/rc2.d/S01shm_load
+
+	Copy the following into the file and save.
+
+				#!/bin/sh
+				case "$1" in
+				start) mkdir /var/lock/subsys 2>/dev/null
+					touch /var/lock/subsys/listener
+					rm /dev/shm 2>/dev/null
+					mkdir /dev/shm 2>/dev/null
+					mount -t tmpfs shmfs -o size=2048m /dev/shm ;;
+				*) echo error
+				exit 1 ;;
+				esac 
+
+8. Change the permissions of the file using the command:
+
+	sudo chmod 755 /etc/rc2.d/S01shm_load
+
+9. Execute the following commands:
+
+	sudo ln -s /usr/bin/awk /bin/awk 
+	sudo mkdir /var/lock/subsys 
+	sudo touch /var/lock/subsys/listener 
+
+9. REBOOT your Ubuntu VM.
+
+10. Install the oracle DBMS using the command:
+
+	sudo dpkg --install oracle-xe_11.2.0-2_amd64.deb
+
+11. Configure Oracle using the command:
+
+	sudo /etc/init.d/oracle-xe-21c configure 
+
+	Attention: If the drive has no enough space (approx 5 GB required),
+	then make sure that you put /opt on a separate virtual drive (add to fstab etc.)
+	In case you have a damaged installation because of an installer error,
+	you can try recovering using:
+		rm -rf /opt/oracle /var/lib/dpkg/info/oracle-database-xe-21c.*
+
+12. Enter the following information:
+
+	- A password for the SYS and SYSTEM administrative user accounts
+	===> ENTER "oidplus" in our example
+	- Confirm password for SYS and SYSTEM administrative user accounts
+	===> ENTER "oidplus" in our example
+
+13. You can now visithttps://localhost:5500/em/login
+
+	Username:	sys
+	Passwort:	oidplus
+	Cont.name:	[empty]
+
+14. Setup environment variables by editting your .bashrc file:
+
+	nano ~/.bashrc
+
+	Add the following lines to the end of the file:
+
+				export ORACLE_HOME=/opt/oracle/product/21c/dbhomeXE/
+				export ORACLE_SID=XE
+				#export NLS_LANG=`$ORACLE_HOME/bin/nls_lang.sh`
+				export ORACLE_BASE=/opt/oracle
+				export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
+				export PATH=$ORACLE_HOME/bin:$PATH
+
+15. Load the changes by executing your profile:
+
+	. ~/.profile
+
+16.	Start the Oracle 21c XE:
+
+	sudo service oracle-xe-21c start
+
+17.	Add user YOURUSERNAME to group dba using the command (not important)
+
+	sudo usermod -a -G dba YOURUSERNAME
+
+18. Install php-oci8 on Ubuntu (it is not in the package manager!)
+
+	18.1.	Download the basic (like instantclient-basic-linux.x64-12.2.0.1.0.zip)
+	    and the sdk (instantclient-sdk-linux.x64-12.2.0.1.0.zip) package
+		from the Oracle Website http://www.oracle.com/technetwork/database/database-technologies/instant-client/downloads/index.html
+	18.2.	Upload both files to your webserver, you can use WinSCP for it
+	18.3.	Unzip both files on server, in my case, you will get a new folder named "instantclient_12_2"
+	18.4a. Create destination folder
+			mkdir /opt/oracle
+	18.4b. Move and rename the instantclient folder
+			mv instantclient_12_2 /opt/oracle/instantclient
+	18.4c. Change rights on folder
+			chown -R root:www-data /opt/oracle
+
+	18.5. Check if you have the required packages for installing OCI8
+
+		apt install php7.2-dev php-pear build-essential libaio1
+
+	18.6a. Add instant client to ld config files
+
+		echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf
+
+	18.6b. Update Dynamic Linker Run-Time Bindings
+
+		ldconfig
+
+	18.7a. Now install OCI8 by pecl
+
+		pecl install oci8
+
+	18.7b. The OCI8 installation is asking you for the right folder
+
+		instantclient,/opt/oracle/instantclient
+
+	18.8a. Add oci lib to the cli php config (console php)
+
+		echo "extension = oci8.so" >> /etc/php/8.1/cli/php.ini
+
+	18.8b. Add oci lib to the apache php config
+
+		echo "extension = oci8.so" >> /etc/php/8.1/apache2/php.ini
+
+	18.9a. Set environement variables for the cli version (you will need to reboot the server after)
+
+		echo "LD_LIBRARY_PATH=\"/opt/oracle/instantclient\"" >> /etc/environment
+
+	18.9b. Set environement variables for the apache version
+
+		echo "export LD_LIBRARY_PATH=\"/opt/oracle/instantclient\"" >> /etc/apache2/envvars
+		echo "export ORACLE_HOME=\"/opt/oracle/instantclient\"" >> /etc/apache2/envvars
+
+	18.10.	Restart Apache
+
+		service apache2 restart
+
+19.	Start command line shell as the system admin using the command:
+
+	sudo sqlplus sys as sysdba
+
+	Enter the password that you gave while configuring Oracle earlier. You will now be placed in a SQL environment that only understands SQL commands.
+
+20.	Create a regular user account in Oracle using the SQL command:
+
+	alter session set container=XEPDB1;
+	create user oidplus identified by oidplus;
+	grant create session to oidplus;
+	grant create table to oidplus;
+	grant select any sequence to oidplus;
+	grant create any sequence to oidplus;
+	grant all privileges to oidplus;
+	exit;
+
+	(Note: How did I find the name "XEPDB1"? I looked in /opt/oracle/oradata/XE/ )
+
+21. Start the commandline shell as a regular user using the command:
+
+	sqlplus
+
+	You will be prompted for a username and password. Try oidplus and oidplus.
+
+22. In OIDplus, run setup. The parameters of the base config file are:
+
+		OIDplus::baseConfig()->setValue('OCI_CONN_STR',      'localhost:1539/XEPDB1');
+		OIDplus::baseConfig()->setValue('OCI_USERNAME',      'oidplus');
+		OIDplus::baseConfig()->setValue('OCI_PASSWORD',      'oidplus');
+		// (Very important is port 1539)
+
+23. Install the database (with examples):
+
+		curl -s "http://localhost/oidplus/setup/struct_with_examples.sql.php?plugin=oci&prefix=oidplus_&slang=oracle" | sqlplus oidplus/oidplus@localhost:1539/XEPDB1
+
+
+Troubleshooting in case the listener doesn't start:
+- chmod -R 0777 /opt/oracle/product/21c/dbhomeXE/network/
+- rm -rf /var/tmp/.oracle
+- Check the output of /etc/init.d/oracle-xe-21c start

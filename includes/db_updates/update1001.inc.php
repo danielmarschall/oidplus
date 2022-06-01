@@ -39,8 +39,9 @@ function oidplus_dbupdate_1001(OIDplusDatabaseConnection $db) {
 		$db->query("ALTER TABLE ###objects    ALTER COLUMN [parent] varchar(255) COLLATE German_PhoneBook_CS_AS NULL    ;");
 		$db->query("ALTER TABLE ###log_object ALTER COLUMN [object] varchar(255) COLLATE German_PhoneBook_CS_AS NOT NULL;");
 	} else if ($db->getSlang()->id() == 'oracle') {
-		// On the Oracle Developer VM, the default behavior is case-sensitive.
+		// On the Oracle DeveloperDays 2019 VM, the default behavior is case-sensitive.
 		// Let's hope that this is true for all OIDplus environments
+		// DM 31.05.2022 : Reproduction on Ubuntu+PostgreSQL also successful. The default is case-sensitive, like we want.
 	} else if ($db->getSlang()->id() == 'pgsql') {
 		// It looks like PgSQL is case-sensitive by default
 		// see https://stackoverflow.com/questions/18807276/how-to-make-my-postgresql-database-use-a-case-insensitive-collation
