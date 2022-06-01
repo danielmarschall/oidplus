@@ -107,7 +107,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		$this->conn = @new mysqli($hostname, $username, $password, $database, $port, $socket);
 		if (!empty($this->conn->connect_error) || ($this->conn->connect_errno != 0)) {
 			$message = $this->conn->connect_error;
-			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' '.$message);
+			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' '.$message));
 		}
 
 		$this->prepare_cache = array();

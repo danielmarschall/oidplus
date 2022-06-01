@@ -121,7 +121,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 
 			$this->conn = new SQLite3($filename, $flags, $encryption);
 		} catch (Exception $e) {
-			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' ' . $e->getMessage());
+			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' ' . $e->getMessage()));
 		}
 
 		$this->conn->createCollation('NATURAL_CMP', 'strnatcmp'); // we need that for natSort()

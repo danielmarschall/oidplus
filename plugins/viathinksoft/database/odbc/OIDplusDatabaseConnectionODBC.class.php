@@ -131,7 +131,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 
 		if (!$this->conn) {
 			$message = odbc_errormsg();
-			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' '.$message);
+			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' '.$message));
 		}
 
 		$this->last_error = null;

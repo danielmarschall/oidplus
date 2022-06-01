@@ -105,7 +105,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			$this->conn = new PDO($dsn, $username, $password, $options);
 		} catch (PDOException $e) {
 			$message = $e->getMessage();
-			throw new OIDplusConfigInitializationException(_L('Connection to the database failed!').' '.$message);
+			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' '.$message));
 		}
 
 		$this->last_error = null;
