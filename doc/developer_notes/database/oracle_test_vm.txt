@@ -236,58 +236,62 @@ and the PDB username is "oidplus" with password "oidplus".
 
 18. Install php-oci8 on Ubuntu (it is not in the package manager!)
 
-	18.1.	Download the basic (like instantclient-basic-linux.x64-12.2.0.1.0.zip)
-	    and the sdk (instantclient-sdk-linux.x64-12.2.0.1.0.zip) package
-		from the Oracle Website http://www.oracle.com/technetwork/database/database-technologies/instant-client/downloads/index.html
-	18.2.	Upload both files to your webserver, you can use WinSCP for it
-	18.3.	Unzip both files on server, in my case, you will get a new folder named "instantclient_12_2"
-	18.4a. Create destination folder
-			mkdir /opt/oracle
-	18.4b. Move and rename the instantclient folder
-			mv instantclient_12_2 /opt/oracle/instantclient
-	18.4c. Change rights on folder
-			chown -R root:www-data /opt/oracle
+	18.1. Download the basic Instant Client
+				instantclient-basic-linux.x64-21.6.0.0.0dbru.zip
+	    	from the Oracle Website http://www.oracle.com/technetwork/database/database-technologies/instant-client/downloads/index.html
+	18.2. Unzip both files on server, in my case, you will get a new folder named "instantclient_12_2"
+
+			unzip instantclient-basic-linux.x64-21.6.0.0.0dbru.zip
+
+	18.3. Move and rename the instantclient folder to the oracle folder (in Ubuntu it is /opt/oracle)
+
+			sudo mkdir /opt/oracle/instantclient
+			sudo mv instantclient_12_2 /opt/oracle/instantclient
+
+	18.4. Change rights on folder
+
+			chown -R root:www-data /opt/oracle/instantclient
 
 	18.5. Check if you have the required packages for installing OCI8
 
-		apt install php7.2-dev php-pear build-essential libaio1
+			apt install php7.2-dev php-pear build-essential libaio1
 
 	18.6a. Add instant client to ld config files
 
-		echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf
+			echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf
 
 	18.6b. Update Dynamic Linker Run-Time Bindings
 
-		ldconfig
+			ldconfig
 
 	18.7a. Now install OCI8 by pecl
 
-		pecl install oci8
+			pecl install oci8
 
 	18.7b. The OCI8 installation is asking you for the right folder
 
-		instantclient,/opt/oracle/instantclient
+			instantclient,/opt/oracle/instantclient
 
 	18.8a. Add oci lib to the cli php config (console php)
 
-		echo "extension = oci8.so" >> /etc/php/8.1/cli/php.ini
+			echo "extension = oci8.so" >> /etc/php/8.1/cli/php.ini
 
 	18.8b. Add oci lib to the apache php config
 
-		echo "extension = oci8.so" >> /etc/php/8.1/apache2/php.ini
+			echo "extension = oci8.so" >> /etc/php/8.1/apache2/php.ini
 
 	18.9a. Set environement variables for the cli version (you will need to reboot the server after)
 
-		echo "LD_LIBRARY_PATH=\"/opt/oracle/instantclient\"" >> /etc/environment
+			echo "LD_LIBRARY_PATH=\"/opt/oracle/instantclient\"" >> /etc/environment
 
 	18.9b. Set environement variables for the apache version
 
-		echo "export LD_LIBRARY_PATH=\"/opt/oracle/instantclient\"" >> /etc/apache2/envvars
-		echo "export ORACLE_HOME=\"/opt/oracle/instantclient\"" >> /etc/apache2/envvars
+			echo "export LD_LIBRARY_PATH=\"/opt/oracle/instantclient\"" >> /etc/apache2/envvars
+			echo "export ORACLE_HOME=\"/opt/oracle/instantclient\"" >> /etc/apache2/envvars
 
 	18.10.	Restart Apache
 
-		service apache2 restart
+			service apache2 restart
 
 19.	Start command line shell as the system admin using the command:
 
@@ -330,3 +334,16 @@ Troubleshooting in case the listener doesn't start:
 - chmod -R 0777 /opt/oracle/product/21c/dbhomeXE/network/
 - rm -rf /var/tmp/.oracle
 - Check the output of /etc/init.d/oracle-xe-21c start
+
+
+When the system has rebooted, and Oracle DB is not started, run
+
+	/etc/init.d/oracle-xe-21c start
+
+TODO: How to put this service in the auto-start???
+	This doesn't work:
+
+		# systemctl enable oracle-xe-21c
+		oracle-xe-21c.service is not a native service, redirecting to systemd-sysv-install.
+		Executing: /lib/systemd/systemd-sysv-install enable oracle-xe-21c
+		update-rc.d: error: oracle-xe-21c Default-Start contains no runlevels, aborting.
