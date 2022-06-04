@@ -31,7 +31,8 @@ class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 
 	public static function setupHTML(): string {
 		return '<div id="DBPLUGIN_PARAMS_SQLite3">'.
-		       '	<p>'._L('SQLite3 database file').':<br><input id="sqlite3_file" type="text" value="includes/oidplus.db" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="sqlite3_file_warn"></span></p>'.
+		       '	<p>'._L('SQLite3 database file').':<br><input id="sqlite3_file" type="text" value="userdata/database/oidplus.db" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="sqlite3_file_warn"></span><br>'.
+			   '	<i>Please note that the database file and the folder must have write-permissions (<a href="https://stackoverflow.com/questions/3319112/sqlite-error-attempt-to-write-a-readonly-database-during-insert" target="_blank">more information</a>)</i></p>'.
 		       '	<p>'._L('SQLite3 encryption passphrase (optional)').':<br><input id="sqlite3_encryption" type="password" autocomplete="new-password" onkeypress="rebuild()" onkeyup="rebuild()"></p>'.
 		       '</div>';
 	}
