@@ -42,6 +42,14 @@ function hexToBase64(str) {
 	            str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ")));
 }
 
+function _b64EncodeUnicode(str) {
+	if (str == "") {
+		return "''";
+	} else {
+		return "base64_decode('"+b64EncodeUnicode(str)+"')";
+	}
+}
+
 function b64EncodeUnicode(str) {
 	// first we use encodeURIComponent to get percent-encoded UTF-8,
 	// then we convert the percent encodings into raw bytes which

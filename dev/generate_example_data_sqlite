@@ -30,11 +30,12 @@ cd "$DIR"
 cat ../setup/sql/example_mysql.sql > ../setup/sql/example_sqlite.sql
 
 # Avoid that there is a conflict with well known IDs (e.g. 2.999)
-sed -i 's/INSERT INTO `iri`/INSERT IGNORE INTO `iri`/g' ../setup/sql/example_sqlite.sql
-sed -i 's/INSERT INTO `asn1id`/INSERT IGNORE INTO `asn1id`/g' ../setup/sql/example_sqlite.sql
+#INSERT IGNORE INTO does not work??? It is not important, since the SQL-Dump contains DROP statements anyway.
+#sed -i 's/INSERT INTO `iri`/INSERT IGNORE INTO `iri`/g' ../setup/sql/example_sqlite.sql
+#sed -i 's/INSERT INTO `asn1id`/INSERT IGNORE INTO `asn1id`/g' ../setup/sql/example_sqlite.sql
 
 # Change \" to "
 sed -i 's/\\"/"/g' ../setup/sql/example_sqlite.sql
 
-# Change "\n" to "' || chr(10) || '"
-sed -i "s/\\\n/' \|\| chr\(10\) \|\| '/g" ../setup/sql/example_sqlite.sql
+# Change "\n" to "' || char(10) || '"
+sed -i "s/\\\n/' \|\| char\(10\) \|\| '/g" ../setup/sql/example_sqlite.sql

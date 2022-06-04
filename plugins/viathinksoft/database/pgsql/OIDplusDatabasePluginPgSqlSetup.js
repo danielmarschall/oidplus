@@ -76,6 +76,6 @@ rebuild_config_callbacks.push(function() {
 
 	return 'OIDplus::baseConfig()->setValue(\'PGSQL_HOST\',        \''+$("#pgsql_host")[0].value+'\');<br>' +
 	       'OIDplus::baseConfig()->setValue(\'PGSQL_USERNAME\',    \''+$("#pgsql_username")[0].value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'PGSQL_PASSWORD\',    base64_decode(\''+b64EncodeUnicode($("#pgsql_password")[0].value)+'\'));<br>' +
+	       'OIDplus::baseConfig()->setValue(\'PGSQL_PASSWORD\',    '+_b64EncodeUnicode($("#pgsql_password")[0].value)+';<br>' +
 	       'OIDplus::baseConfig()->setValue(\'PGSQL_DATABASE\',    \''+$("#pgsql_database")[0].value+'\');<br>';
 });

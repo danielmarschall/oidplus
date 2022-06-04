@@ -52,7 +52,7 @@ function oidplus_dbupdate_1001(OIDplusDatabaseConnection $db) {
 	} else if ($db->getSlang()->id() == 'sqlite') {
 		// It looks like SQLite is case-sensitive by default
 		// https://stackoverflow.com/questions/973541/how-to-set-sqlite3-to-be-case-insensitive-when-string-comparing
-		// TODO: Reproduce that this is true
+		// DM 05.06.2022 : Reproduction on Ubuntu successful. The default is case-sensitive, like we want.
 	} else {
 		// This should not happen
 	}
