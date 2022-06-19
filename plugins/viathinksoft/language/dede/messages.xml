@@ -3422,6 +3422,30 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Missing or wrong "CSRF Token". To fix the issue, try clearing your browser cache and reload the page. If you visited the page via HTTPS before, try HTTPS in case you are currently connected via HTTP.
+		]]></source>
+		<target><![CDATA[
+		Fehlendes oder falsches "CSRF Token". Versuchen Sie, den Browser-Cache zu leeren und die Seite neu zu laden. Falls Sie die Seite vorher mit HTTPS besucht haben und nun per HTTP verbunden sind, versuchen Sie bitte die Seite erneut mit HTTPS zu öffnen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Missing or wrong CSRF Token
+		]]></source>
+		<target><![CDATA[
+		Fehlendes oder falsches CSRF Token
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Missing or wrong CSRF Token: Request %1 vs Cookie %2
+		]]></source>
+		<target><![CDATA[
+		Fehlendes oder falsches CSRF Token: Request %1 vs Cookie %2
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Mobile
 		]]></source>
 		<target><![CDATA[
@@ -7202,14 +7226,6 @@
 		]]></source>
 		<target><![CDATA[
 		Mit dem OID Informations-Protokoll (OID-IP) können Sie Objekt-Informationen in einem maschinenlesbaren Format abfragen.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Wrong CSRF Token
-		]]></source>
-		<target><![CDATA[
-		Falscher CSRF Token
 		]]></target>
 	</message>
 	<message>

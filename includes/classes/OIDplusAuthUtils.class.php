@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -352,8 +352,19 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 
 	public function checkCSRF() {
 		if (!$this->enable_csrf) return;
-		if (!isset($_REQUEST['csrf_token']) || !isset($_COOKIE['csrf_token']) || ($_REQUEST['csrf_token'] !== $_COOKIE['csrf_token'])) {
-			throw new OIDplusException(_L('Wrong CSRF Token'));
+
+		$request_token = isset($_REQUEST['csrf_token']) ? $_REQUEST['csrf_token'] : '';
+		$cookie_token = isset($_COOKIE['csrf_token']) ? $_COOKIE['csrf_token'] : '';
+
+		if (empty($request_token) || empty($cookie_token) || ($request_token !== $cookie_token)) {
+			if (OIDplus::baseConfig()->getValue('DEBUG')) {
+				throw new OIDplusException(_L('Missing or wrong CSRF Token: Request %1 vs Cookie %2',
+					isset($_REQUEST['csrf_token']) ? '"'.$_REQUEST['csrf_token'].'"' : 'NULL',
+					isset($_COOKIE['csrf_token']) ? $_COOKIE['csrf_token'] : 'NULL'
+				));
+			} else {
+				throw new OIDplusException(_L('Missing or wrong "CSRF Token". To fix the issue, try clearing your browser cache and reload the page. If you visited the page via HTTPS before, try HTTPS in case you are currently connected via HTTP.'));
+			}
 		}
 	}
 

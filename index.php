@@ -37,6 +37,10 @@ $static_icon = $static['icon'];
 $static_content = $static['text'];
 
 if (!isset($_COOKIE['csrf_token'])) {
+	// TODO: It is possible that you receive a "Missing or wrong CSRF Token" warning,
+	//       if you open a page that had a HTTPS cookie using HTTP.
+	//       Chrome will then block "Set-Cookie" since the HTTP cookie would
+	//       overwrite the HTTPS cookie.
 	// This is the main CSRF token used for AJAX.
 	$token = OIDplus::authUtils()->genCSRFToken();
 	OIDplus::cookieUtils()->setcookie('csrf_token', $token, 0, false);
