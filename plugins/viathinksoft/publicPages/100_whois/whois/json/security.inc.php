@@ -78,9 +78,10 @@ function oidplus_json_sign($json_content, $privkey, $pubkey) {
 	// 3. Sign the canonized JSON using a JSON Web Signature (JWS, RFC 7515)
 
 	// For JWS registered header parameter names see (RFC 7515, Section 4.1)
+	// Note that the required "alg" argument will be added automatically
 	$header = [
-		"typ" => "JSON",
-		"cty" => "text/json"
+		"typ" => "OID-IP", // optional (unused)
+		"cty" => "text/json" // optional
 	];
 	$payload = $canonical;
 	$jws->setPrivateKey($privkey, '');
