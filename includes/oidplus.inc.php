@@ -25,7 +25,7 @@ require_once __DIR__ . '/functions.inc.php'; // Required for _L()
 
 if (version_compare(PHP_VERSION, '7.0.0') < 0) {
 	// More information about the required PHP version:
-	// doc/developer_notes/php7_compat
+	// doc/developer_notes/php7_compat.txt
 	echo '<!DOCTYPE HTML>';
 	echo '<html><head><title>'._L('OIDplus error').'</title></head><body>';
 	echo '<h1>'._L('OIDplus error').'</h1>';

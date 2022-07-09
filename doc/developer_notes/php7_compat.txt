@@ -4,7 +4,7 @@ Notes about the required PHP Version
 
 OIDplus supports PHP 7.x and 8.x.
 
-Reasons why we currently require PHP 7.0:
+Reasons why we currently require at least PHP 7.0:
 - Return values (e.g. "function foo(): array") (added 2020-04-06 at the database classes)
   Note: By removing these return values (e.g. removing ": array"), you *might* be
   able to run OIDplus with PHP lower than version 7.0 (not tested)
