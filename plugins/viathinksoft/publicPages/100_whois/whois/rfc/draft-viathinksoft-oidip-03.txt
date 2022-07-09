@@ -88,24 +88,24 @@ Table of Contents
      3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 17
        3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 17
        3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
-       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 18
-       3.3.4  "html" Format . . . . . . . . . . . . . . . . . . . . . 18
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 18
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 19
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 19
-   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
-   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 21
-     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 21
-     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 21
-   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 22
-     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 23
-   7  Internationalization Considerations . . . . . . . . . . . . . . 23
-   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 24
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 25
-     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 25
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 25
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 25
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 27
+       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 19
+       3.3.4  "html" Format . . . . . . . . . . . . . . . . . . . . . 19
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 19
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 20
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 20
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 22
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 22
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 23
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 24
+   7  Internationalization Considerations . . . . . . . . . . . . . . 24
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 25
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 26
+     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 26
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 26
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 28
  
 
 
@@ -114,14 +114,14 @@ Marschall               Expires January 10, 2023                [Page 2]
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
 
-   Appendix A: JSON Schema  . . . . . . . . . . . . . . . . . . . . . 28
-     A.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
-     A.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 34
-   Appendix B: XML Schema . . . . . . . . . . . . . . . . . . . . . . 35
-     B.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
-     B.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 38
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 40
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 40
+   Appendix A: JSON Schema  . . . . . . . . . . . . . . . . . . . . . 29
+     A.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+     A.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 35
+   Appendix B: XML Schema . . . . . . . . . . . . . . . . . . . . . . 36
+     B.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+     B.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 39
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 41
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 41
 
 
 
@@ -920,27 +920,83 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
    1. Make sure that the JSON file has no signature (remove the
    "signature" key if one exists).
 
-   2. Canonize the JSON contents using RFC 8785 [RFC8785].
+   2. Make a copy of your JSON file and canonize the contents using the
+   procedures described in RFC 8785 [RFC8785].
 
-   3. Sign the canonized JSON using a JSON Web Signature (JWS, RFC 7515
-   [RFC7515]).
+   3. Create a JSON Web Signature (JWS, RFC 7515 [RFC7515]) using your
+   public key and the canonized form of the JSON contents.
 
-   4. Add the key "signature" into the final JSON.  Note that the final
-   JSON does not need to be canonized, since the canonization will be
-   repeated in the verification procedure.
+   4. Add the signature in the "signature" field into the JSON file. 
+   Note that the final JSON does not need to be canonized, since the
+   canonization will be repeated in the verification procedure.
 
    Steps for verifying a message:
 
-   1. Extract the contents of the "signature" key from the JSON.
+   1. Extract the contents of the "signature" key from the JSON file. 
+   This is the JSON Web Signature containing a header, the payload, and
+   the signature.
 
-   2. Remove the "signature" key from the JSON.
+   2. Make a copy of your JSON file and remove the "signature" key
+   there.
 
-   3. Canonize the JSON contents using RFC 8785.
+   3. Canonize the remaining JSON contents using the procedures
+   described in RFC 8785 [RFC8785].
 
-   4. Compare the canonized JSON to the base64-encoded payload of the
-   JSON Web Signature.
+   4. Compare the canonized JSON contents to the base64-encoded payload
+   of the JSON Web Signature.  The contents MUST be equal.
 
-   5. Verify the JSON Web Signature according to RFC 7515.
+   5. Verify the JSON Web Signature according to the procedures
+ 
+
+
+Marschall               Expires January 10, 2023               [Page 17]
+
+INTERNET DRAFT          OID Information Protocol            July 9, 2022
+
+
+   described in RFC 7515 [RFC7515].
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -949,7 +1005,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 17]
+Marschall               Expires January 10, 2023               [Page 18]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1005,7 +1061,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 18]
+Marschall               Expires January 10, 2023               [Page 19]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1061,7 +1117,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 19]
+Marschall               Expires January 10, 2023               [Page 20]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1117,7 +1173,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 20]
+Marschall               Expires January 10, 2023               [Page 21]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1173,7 +1229,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 21]
+Marschall               Expires January 10, 2023               [Page 22]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1229,7 +1285,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 22]
+Marschall               Expires January 10, 2023               [Page 23]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1285,7 +1341,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 23]
+Marschall               Expires January 10, 2023               [Page 24]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1341,7 +1397,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 24]
+Marschall               Expires January 10, 2023               [Page 25]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1397,7 +1453,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 25]
+Marschall               Expires January 10, 2023               [Page 26]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1453,7 +1509,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 26]
+Marschall               Expires January 10, 2023               [Page 27]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1509,7 +1565,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 27]
+Marschall               Expires January 10, 2023               [Page 28]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1565,7 +1621,7 @@ server sends if the server command "format" is set to "json".
  
 
 
-Marschall               Expires January 10, 2023               [Page 28]
+Marschall               Expires January 10, 2023               [Page 29]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1621,7 +1677,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 29]
+Marschall               Expires January 10, 2023               [Page 30]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1677,7 +1733,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 30]
+Marschall               Expires January 10, 2023               [Page 31]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1733,7 +1789,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 31]
+Marschall               Expires January 10, 2023               [Page 32]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1789,7 +1845,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 32]
+Marschall               Expires January 10, 2023               [Page 33]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1845,7 +1901,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 33]
+Marschall               Expires January 10, 2023               [Page 34]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1901,7 +1957,7 @@ A.2 Example of output
  
 
 
-Marschall               Expires January 10, 2023               [Page 34]
+Marschall               Expires January 10, 2023               [Page 35]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -1957,7 +2013,7 @@ the server sends if the server command "format" is set to "xml".
  
 
 
-Marschall               Expires January 10, 2023               [Page 35]
+Marschall               Expires January 10, 2023               [Page 36]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -2013,7 +2069,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 36]
+Marschall               Expires January 10, 2023               [Page 37]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -2069,7 +2125,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 37]
+Marschall               Expires January 10, 2023               [Page 38]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -2125,7 +2181,7 @@ B.2 Example of output
  
 
 
-Marschall               Expires January 10, 2023               [Page 38]
+Marschall               Expires January 10, 2023               [Page 39]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -2181,7 +2237,7 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
  
 
 
-Marschall               Expires January 10, 2023               [Page 39]
+Marschall               Expires January 10, 2023               [Page 40]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
@@ -2237,4 +2293,4 @@ Authors' Addresses
 
 
 
-Marschall               Expires January 10, 2023               [Page 40]
+Marschall               Expires January 10, 2023               [Page 41]
