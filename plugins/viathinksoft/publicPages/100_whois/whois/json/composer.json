@@ -1,0 +1,33 @@
+{
+	"prefer-dist": true,
+	"minimum-stability": "dev",
+	"repositories": {
+		"aywan/php-json-canonicalization": {
+			"type": "package",
+			"packagist.org": false,
+			"package": {
+				"name": "aywan/php-json-canonicalization",
+				"version": "master",
+				"license": [
+					"Apache-2.0"
+				],
+				"source": {
+					"url": "https://github.com/aywan/php-json-canonicalization",
+					"type": "git",
+					"reference": "main"
+				}
+			}
+		}
+	},
+	"require": {
+		"aywan/php-json-canonicalization": "*",
+		"sergeybrook/php-jws": "^1.0"
+	},
+	"config": {
+		"secure-http": false,
+		"preferred-install": {
+			"*": "dist"
+		},
+		"autoloader-suffix": "OidPlusWhoisJson"
+	}
+}

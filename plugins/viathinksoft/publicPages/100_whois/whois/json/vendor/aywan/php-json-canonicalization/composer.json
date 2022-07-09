@@ -1,0 +1,33 @@
+{
+    "name": "aywan/php-json-canonicalization",
+    "description": "Php implementation of https://tools.ietf.org/html/rfc8785",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Ivan Bragin",
+            "email": "aywan@aywan.ru"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "require": {
+        "php": ">=7.2",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "aywan\\JsonCanonicalization\\": "./src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\": "./tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5"
+    }
+}

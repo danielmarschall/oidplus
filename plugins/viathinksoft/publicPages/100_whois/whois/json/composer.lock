@@ -1,0 +1,84 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "a39c35566b349047cf320a484412c67a",
+    "packages": [
+        {
+            "name": "aywan/php-json-canonicalization",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aywan/php-json-canonicalization",
+                "reference": "main"
+            },
+            "type": "library",
+            "license": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "name": "sergeybrook/php-jws",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SergeyBrook/php-jws.git",
+                "reference": "7fee8b56e88fc429e0cdf71bbf6c2dcf6dd61eed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SergeyBrook/php-jws/zipball/7fee8b56e88fc429e0cdf71bbf6c2dcf6dd61eed",
+                "reference": "7fee8b56e88fc429e0cdf71bbf6c2dcf6dd61eed",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-openssl": "*",
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SBrook\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sergey Brook",
+                    "email": "brook.sergey@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "JSON Web Signature (JWS) library for PHP",
+            "keywords": [
+                "JWS",
+                "RSASSA-PKCS1-v1_5",
+                "SHA-384",
+                "SHA-512",
+                "hmac",
+                "sha-256"
+            ],
+            "support": {
+                "email": "brook.sergey@gmail.com",
+                "issues": "https://github.com/SergeyBrook/php-jws/issues",
+                "source": "https://github.com/SergeyBrook/php-jws/tree/master"
+            },
+            "time": "2019-04-08T09:38:53+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.0.0"
+}

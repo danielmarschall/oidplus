@@ -1,5 +1,12 @@
 <?xml version="1.0"?>
-<xs:schema targetNamespace="urn:ietf:id:viathinksoft-oidip-02" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema targetNamespace="urn:ietf:id:viathinksoft-oidip-03"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
+             schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
   <xs:element name="root">
     <xs:complexType>
       <xs:sequence>
@@ -7,8 +14,11 @@
           <xs:complexType>
             <xs:sequence>
               <xs:element name="querySection" minOccurs="1" maxOccurs="1">
-                <xs:complexType>
-                  <xs:choice maxOccurs="unbounded">
+                <xs:complexType vc:minVersion="1.1">
+                  <xs:openContent mode="interleave">
+                    <xs:any namespace="##any" processContents="lax" /> 
+                  </xs:openContent>
+                  <xs:choice maxOccurs="unbounded"> 
                     <xs:element type="xs:string" name="query" minOccurs="1"/>
                     <xs:element name="result" minOccurs="1">
                       <xs:simpleType>
@@ -22,12 +32,14 @@
                     </xs:element>
                     <xs:element type="xs:string" name="distance" minOccurs="0"/>
                     <xs:element type="xs:string" name="message" minOccurs="0"/>
-                    <xs:any processContents="lax" namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
                   </xs:choice>
                 </xs:complexType>
               </xs:element>
               <xs:element name="objectSection" minOccurs="0" maxOccurs="1">
-                <xs:complexType>
+                <xs:complexType vc:minVersion="1.1">
+                  <xs:openContent mode="interleave">
+                    <xs:any namespace="##any" processContents="lax" /> 
+                  </xs:openContent>
                   <xs:choice maxOccurs="unbounded">
                     <xs:element type="xs:string" name="object" minOccurs="1"/>
                     <xs:element name="status" minOccurs="1">
@@ -79,12 +91,14 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:element>
-                    <xs:any processContents="lax" namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
                   </xs:choice>
                 </xs:complexType>
               </xs:element>
               <xs:element name="raSection" minOccurs="0" maxOccurs="1">
-                <xs:complexType>
+                <xs:complexType vc:minVersion="1.1">
+                  <xs:openContent mode="interleave">
+                    <xs:any namespace="##any" processContents="lax" /> 
+                  </xs:openContent>
                   <xs:choice maxOccurs="unbounded">
                     <xs:element type="xs:string" name="ra" minOccurs="1"/>
                     <xs:element name="ra-status" minOccurs="1">
@@ -125,22 +139,13 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:element>
-                    <xs:any processContents="lax" namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
                   </xs:choice>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="signatureSection">
-          <xs:complexType>
-            <xs:choice maxOccurs="unbounded">
-              <xs:element type="xs:string" name="content"/>
-              <xs:element type="xs:string" name="signature"/>
-              <xs:any processContents="lax" namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:choice>
-          </xs:complexType>
-        </xs:element>
+        <xs:element ref="ds:Signature" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

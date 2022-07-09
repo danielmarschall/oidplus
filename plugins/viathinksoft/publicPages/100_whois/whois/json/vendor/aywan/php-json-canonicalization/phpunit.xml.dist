@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<phpunit bootstrap="tests/bootstrap.tests.php">
+    <testsuites>
+        <testsuite name="canonicalization">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

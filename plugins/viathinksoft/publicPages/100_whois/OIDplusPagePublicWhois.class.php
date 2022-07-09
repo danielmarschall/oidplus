@@ -79,7 +79,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
 			$out['text']  = '';
 			$out['text'] .= '<p>'._L('With the OID Information Protocol (OID-IP), you can query object information in a machine-readable format.').'</p>';
-			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-02</a></p>';
+			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-03</a></p>';
 			$out['text'] .= '<h2>'._L('Web query').'</h2>';
 			$out['text'] .= '<form action="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/webwhois.php" method="GET" target="_blank">';
 			$out['text'] .= ''._L('Output format').':<br><fieldset id="whois_format">';

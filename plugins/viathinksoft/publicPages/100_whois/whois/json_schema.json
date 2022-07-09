@@ -238,19 +238,8 @@
          ]
       },
       "signature":{
-         "type":"object",
-         "properties":{
-            "content":{
-               "type":"string"
-            },
-            "signature":{
-               "type":"string"
-            }
-         },
-         "required":[
-            "content",
-            "signature"
-         ]
+         "type":"string",
+         "pattern":"^[A-Za-z0-9+\/=]+\\.[A-Za-z0-9+\/=]+\\.[A-Za-z0-9+\/=]+$"
       }
    },
    "required":[

@@ -19,7 +19,7 @@
 
 require_once __DIR__ . '/../../../../../includes/oidplus.inc.php';
 
-define('XML_URN', 'urn:ietf:id:viathinksoft-oidip-02');
+define('XML_URN', 'urn:ietf:id:viathinksoft-oidip-03');
 define('XML_URN_URL', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'xml_schema.xsd');
 define('JSON_SCHEMA', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'json_schema.json');
 
@@ -438,18 +438,16 @@ if ($format == 'json') {
 		'oidip' => $ary
 	);
 
+	$json = json_encode($ary);
+
 	if (OIDplus::getPkiStatus()) {
-		$cont = json_encode($ary);
-		$signature = '';
-		if (@openssl_sign($cont, $signature, OIDplus::getSystemPrivateKey())) {
-			$signature = base64_encode($signature);
-			$ary['signature'] = array('content' => $cont, 'signature' => $signature);
-		}
+		require_once __DIR__.'/json/security.inc.php';
+		$json = oidplus_json_sign($json, OIDplus::getSystemPrivateKey(), OIDplus::getSystemPublicKey());
 	}
 
 	// Good JSON schema validator here: https://www.jsonschemavalidator.net
 	header('Content-Type:application/json; charset=UTF-8');
-	echo json_encode($ary);
+	echo $json;
 }
 
 if ($format == 'xml') {
@@ -469,24 +467,21 @@ if ($format == 'xml') {
 
 	$xml = preg_replace('@<section><(.+)>(.+)</section>@ismU', '<\\1Section><\\1>\\2</\\1Section>', $xml);
 
+	// Good XSD validator here: https://www.liquid-technologies.com/online-xsd-validator
+	$xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'.
+	       '<root xmlns="'.XML_URN.'"'.
+	       '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'.
+	       '      xsi:schemaLocation="'.XML_URN.' '.XML_URN_URL.'">'.
+	       $xml.
+	       '</root>';
+
 	if (OIDplus::getPkiStatus()) {
-		$cont = $xml;
-		$signature = '';
-		if (@openssl_sign($cont, $signature, OIDplus::getSystemPrivateKey())) {
-			$signature = base64_encode($signature);
-			$cdata = '<![CDATA['.str_replace(']]>', ']]]]><![CDATA[>', $cont).']]>';
-			$xml .= "<signatureSection><content>".$cdata."</content><signature>".htmlspecialchars($signature)."</signature></signatureSection>";
-		}
+		require_once __DIR__.'/xml/security.inc.php';
+		$xml = oidplus_xml_sign($xml, OIDplus::getSystemPrivateKey(), OIDplus::getSystemPublicKey());
 	}
 
-	// Good XSD validator here: https://www.liquid-technologies.com/online-xsd-validator
 	header('Content-Type:application/xml; charset=UTF-8');
-	echo '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>';
-	echo '<root xmlns="'.XML_URN.'"';
-	echo '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
-	echo '      xsi:schemaLocation="'.XML_URN.' '.XML_URN_URL.'">';
 	echo $xml;
-	echo '</root>';
 }
 
 # ---
