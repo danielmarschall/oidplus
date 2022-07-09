@@ -1,0 +1,8 @@
+[req]
+default_bits			= 2048
+default_md				= sha256
+distinguished_name		= req_dn
+
+[req_dn]
+commonName				= Common Name (e.g. server FQDN or YOUR name)
+commonName_max			= 64

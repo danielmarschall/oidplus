@@ -1,0 +1,12 @@
+{
+	"require": {
+		"robrichards/xmlseclibs": "^3.1"
+	},
+	"config": {
+		"secure-http": false,
+		"preferred-install": {
+			"*": "dist"
+		},
+		"autoloader-suffix": "OidPlusWhoisXml"
+	}
+}

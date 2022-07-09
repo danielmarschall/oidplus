@@ -8,6 +8,8 @@ parameters:
 	excludePaths:
 		analyse:
 			- vendor
+			- plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor
+			- plugins/viathinksoft/publicPages/100_whois/whois/json/vendor
 		analyseAndScan:
 			- userdata/cache/phpstan
 	tmpDir: userdata/cache/phpstan

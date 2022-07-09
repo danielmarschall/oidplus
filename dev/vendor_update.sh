@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # OIDplus 2.0
-# Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+# Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,34 +38,38 @@ composer update
 # Remove stuff we don't want to publish or PHP files which could be
 # executed (which would be a security risk, because the vendor/ directory
 # can be accessed via the web-browser)
-shopt -s globstar
-rm -rf vendor/**/.svn
-rm -rf vendor/**/.git
-rm -rf vendor/**/.gitignore
-rm -rf vendor/**/.gitattributes
-rm -rf vendor/**/.github
-rm -rf vendor/**/demo
-rm -rf vendor/**/demos
-rm -rf vendor/twbs/bootstrap/package*
-rm -rf vendor/twbs/bootstrap/*.js
-rm -rf vendor/twbs/bootstrap/*.yml
-rm -rf vendor/twbs/bootstrap/.* 2>/dev/null
-rm -rf vendor/twbs/bootstrap/nuget/
-rm -rf vendor/twbs/bootstrap/scss/
-rm -rf vendor/twbs/bootstrap/js/
-rm -rf vendor/twbs/bootstrap/build/
-rm -rf vendor/twbs/bootstrap/site/
-rm -rf vendor/google/recaptcha/examples/
-rm -rf vendor/**/tests
-rm -rf vendor/**/test
-rm vendor/danielmarschall/fileformats/example.php
-rm -rf vendor/danielmarschall/vnag/logos
-rm -rf vendor/danielmarschall/vnag/doc
-rm -rf vendor/danielmarschall/vnag/plugins
-rm -rf vendor/danielmarschall/uuid_mac_utils/*.php
-rm -rf vendor/danielmarschall/uuid_mac_utils/*.sh
-rm -rf vendor/danielmarschall/uuid_mac_utils/*.css
-rm -rf vendor/paragonie/random_compat/other
+remove_vendor_rubbish() {
+	shopt -s globstar
+	rm -rf $1vendor/**/.svn
+	rm -rf $1vendor/**/.git
+	rm -rf $1vendor/**/.gitignore
+	rm -rf $1vendor/**/.gitattributes
+	rm -rf $1vendor/**/.github
+	rm -rf $1vendor/**/demo
+	rm -rf $1vendor/**/demos
+	rm -rf $1vendor/twbs/bootstrap/package*
+	rm -rf $1vendor/twbs/bootstrap/*.js
+	rm -rf $1vendor/twbs/bootstrap/*.yml
+	rm -rf $1vendor/twbs/bootstrap/.* 2>/dev/null
+	rm -rf $1vendor/twbs/bootstrap/nuget/
+	rm -rf $1vendor/twbs/bootstrap/scss/
+	rm -rf $1vendor/twbs/bootstrap/js/
+	rm -rf $1vendor/twbs/bootstrap/build/
+	rm -rf $1vendor/twbs/bootstrap/site/
+	rm -rf $1vendor/google/recaptcha/examples/
+	rm -rf $1vendor/**/tests
+	rm -rf $1vendor/**/test
+	rm $1vendor/**/*.phpt
+	rm $1vendor/**/example.php
+	rm -rf $1vendor/danielmarschall/vnag/logos
+	rm -rf $1vendor/danielmarschall/vnag/doc
+	rm -rf $1vendor/danielmarschall/vnag/plugins
+	rm -rf $1vendor/danielmarschall/uuid_mac_utils/*.php
+	rm -rf $1vendor/danielmarschall/uuid_mac_utils/*.sh
+	rm -rf $1vendor/danielmarschall/uuid_mac_utils/*.css
+	rm -rf $1vendor/paragonie/random_compat/other
+}
+remove_vendor_rubbish ./
 
 # It is important that symlinks are not existing, otherwise the .tar.gz dir
 # cannot be correctly extracted in Windows
@@ -82,3 +86,15 @@ if [ -d "_svn" ]; then
 fi
 
 composer license > vendor/licenses
+
+# -------
+# Update composer dependencies of plugins
+# -------
+
+composer update -d plugins/viathinksoft/publicPages/100_whois/whois/xml/
+composer license -d plugins/viathinksoft/publicPages/100_whois/whois/xml/ > plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/licenses
+remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/xml/
+
+composer update -d plugins/viathinksoft/publicPages/100_whois/whois/json/
+composer license -d plugins/viathinksoft/publicPages/100_whois/whois/json/ > plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/licenses
+remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/json/

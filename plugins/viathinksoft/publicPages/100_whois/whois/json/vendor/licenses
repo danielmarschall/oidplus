@@ -1,0 +1,7 @@
+Name: __root__
+Version: 1.0.0+no-version-set
+Licenses: none
+Dependencies:
+
+Name                 Version  License  
+sergeybrook/php-jws  v1.0.1   MIT      
