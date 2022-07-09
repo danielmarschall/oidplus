@@ -441,8 +441,11 @@ if ($format == 'json') {
 	$json = json_encode($ary);
 
 	if (OIDplus::getPkiStatus()) {
-		require_once __DIR__.'/json/security.inc.php';
-		$json = oidplus_json_sign($json, OIDplus::getSystemPrivateKey(), OIDplus::getSystemPublicKey());
+		try {
+			require_once __DIR__.'/json/security.inc.php';
+			$json = oidplus_json_sign($json, OIDplus::getSystemPrivateKey(), OIDplus::getSystemPublicKey());
+		} catch (Exception $e) {
+		}
 	}
 
 	// Good JSON schema validator here: https://www.jsonschemavalidator.net
@@ -475,9 +478,17 @@ if ($format == 'xml') {
 	       $xml.
 	       '</root>';
 
-	if (OIDplus::getPkiStatus()) {
-		require_once __DIR__.'/xml/security.inc.php';
-		$xml = oidplus_xml_sign($xml, OIDplus::getSystemPrivateKey(), OIDplus::getSystemPublicKey());
+	if (!OIDplus::getPkiStatus()) {
+		$xml .= '<!-- Cannot add signature: OIDplus PKI is not initialized (OpenSSL missing?) -->';
+	} else if (!class_exists('DOMDocument')) {
+		$xml .= '<!-- Cannot add signature: "PHP-XML" extension not installed -->';
+	} else {
+		try {
+			require_once __DIR__.'/xml/security.inc.php';
+			$xml = oidplus_xml_sign($xml, OIDplus::getSystemPrivateKey(), OIDplus::getSystemPublicKey());
+		} catch (Exception $e) {
+			$xml .= '<!-- Cannot add signature: '.$e.' -->';
+		}
 	}
 
 	header('Content-Type:application/xml; charset=UTF-8');
