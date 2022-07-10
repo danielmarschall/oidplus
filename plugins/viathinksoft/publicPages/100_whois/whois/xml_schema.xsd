@@ -16,7 +16,7 @@
               <xs:element name="querySection" minOccurs="1" maxOccurs="1">
                 <xs:complexType vc:minVersion="1.1">
                   <xs:openContent mode="interleave">
-                    <xs:any namespace="##any" processContents="lax" /> 
+                    <xs:any namespace="##any" processContents="lax"/> 
                   </xs:openContent>
                   <xs:choice maxOccurs="unbounded"> 
                     <xs:element type="xs:string" name="query" minOccurs="1"/>
@@ -38,7 +38,7 @@
               <xs:element name="objectSection" minOccurs="0" maxOccurs="1">
                 <xs:complexType vc:minVersion="1.1">
                   <xs:openContent mode="interleave">
-                    <xs:any namespace="##any" processContents="lax" /> 
+                    <xs:any namespace="##any" processContents="lax"/> 
                   </xs:openContent>
                   <xs:choice maxOccurs="unbounded">
                     <xs:element type="xs:string" name="object" minOccurs="1"/>
@@ -80,14 +80,14 @@
                     <xs:element name="created" minOccurs="0">
                       <xs:simpleType>
                         <xs:restriction base="xs:string">
-                          <xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
+                          <xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:element>
                     <xs:element name="updated" minOccurs="0">
                       <xs:simpleType>
                         <xs:restriction base="xs:string">
-                          <xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
+                          <xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:element>
@@ -97,7 +97,7 @@
               <xs:element name="raSection" minOccurs="0" maxOccurs="1">
                 <xs:complexType vc:minVersion="1.1">
                   <xs:openContent mode="interleave">
-                    <xs:any namespace="##any" processContents="lax" /> 
+                    <xs:any namespace="##any" processContents="lax"/> 
                   </xs:openContent>
                   <xs:choice maxOccurs="unbounded">
                     <xs:element type="xs:string" name="ra" minOccurs="1"/>
@@ -128,14 +128,14 @@
                     <xs:element name="ra-created" minOccurs="0">
                       <xs:simpleType>
                         <xs:restriction base="xs:string">
-                          <xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
+                          <xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:element>
                     <xs:element name="ra-updated" minOccurs="0">
                       <xs:simpleType>
                         <xs:restriction base="xs:string">
-                          <xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [\+\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
+                          <xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:element>
