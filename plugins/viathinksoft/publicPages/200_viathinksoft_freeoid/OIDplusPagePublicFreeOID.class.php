@@ -62,7 +62,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID request', $message, OIDplus::config()->getValue('global_cc'));
+			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID request', $message);
 
 			return array("status" => 0);
 
@@ -160,7 +160,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$message .= "\n";
 			$message .= "More details: ".OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)."?goto=oid:$new_oid\n";
 
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title')." - OID $new_oid registered", $message, OIDplus::config()->getValue('global_cc'));
+			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title')." - OID $new_oid registered", $message);
 
 			// Send delegation information to user
 
@@ -169,7 +169,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{NEW_OID}}', $new_oid, $message);
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID allocated', $message, OIDplus::config()->getValue('global_cc'));
+			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID allocated', $message);
 
 			return array(
 				"new_oid" => $new_oid,

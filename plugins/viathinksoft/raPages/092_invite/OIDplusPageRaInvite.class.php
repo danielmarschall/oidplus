@@ -41,7 +41,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$message = $this->getInvitationText($email);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Invitation', $message, OIDplus::config()->getValue('global_cc'));
+			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Invitation', $message);
 
 			return array("status" => 0);
 

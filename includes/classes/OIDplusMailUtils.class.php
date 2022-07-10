@@ -140,8 +140,15 @@ class OIDplusMailUtils extends OIDplusBaseClass {
 		$h->addHeader('From', OIDplus::config()->getValue('admin_email'));
 		$h->addHeader('Reply-To', OIDplus::config()->getValue('admin_email'));
 
-		if (!empty($cc)) $h->addHeader('Cc',  $cc);
-		if (!empty($bcc)) $h->addHeader('Bcc',  $bcc);
+		$cc = explode(';', $cc);
+		$global_cc = trim(OIDplus::config()->getValue('global_cc'));
+		if ($global_cc != '') $cc[] = trim($global_cc);
+		foreach ($cc as $x) $h->addHeader('Cc', $x);
+
+		$bcc = explode(';', $bcc);
+		$global_bcc = trim(OIDplus::config()->getValue('global_bcc'));
+		if ($global_bcc != '') $bcc[] = trim($global_bcc);
+		foreach ($bcc as $x) $h->addHeader('Bcc', $x);
 
 		$h->addHeader('X-Mailer', 'PHP/'.PHP_VERSION);
 

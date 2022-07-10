@@ -163,9 +163,26 @@ class OIDplus extends OIDplusBaseClass {
 					throw new OIDplusException(_L('This is not a correct email address'));
 				}
 			});
-			self::$config->prepareConfigKey('global_cc', 'Global CC for all outgoing emails?', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
-				if (!empty($value) && !OIDplus::mailUtils()->validMailAddress($value)) {
-					throw new OIDplusException(_L('This is not a correct email address'));
+			self::$config->prepareConfigKey('global_cc', 'Global CC for all outgoing emails?', '', OIDplusConfig::PROTECTION_EDITABLE, function(&$value) {
+				$value = trim($value);
+				if ($value === '') return;
+				$addrs = explode(';', $value);
+				foreach ($addrs as $addr) {
+					$addr = trim($addr);
+					if (!empty($addr) && !OIDplus::mailUtils()->validMailAddress($addr)) {
+						throw new OIDplusException(_L('%1 is not a correct email address',$addr));
+					}
+				}
+			});
+			self::$config->prepareConfigKey('global_bcc', 'Global BCC for all outgoing emails?', '', OIDplusConfig::PROTECTION_EDITABLE, function(&$value) {
+				$value = trim($value);
+				if ($value === '') return;
+				$addrs = explode(';', $value);
+				foreach ($addrs as $addr) {
+					$addr = trim($addr);
+					if (!empty($addr) && !OIDplus::mailUtils()->validMailAddress($addr)) {
+						throw new OIDplusException(_L('%1 is not a correct email address',$addr));
+					}
 				}
 			});
 			self::$config->prepareConfigKey('objecttypes_initialized', 'List of object type plugins that were initialized once', '', OIDplusConfig::PROTECTION_READONLY, function($value) {
