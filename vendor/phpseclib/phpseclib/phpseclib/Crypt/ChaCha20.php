@@ -5,6 +5,8 @@
  *
  * PHP version 5
  *
+ * @category  Crypt
+ * @package   ChaCha20
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2019 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -19,7 +21,9 @@ use phpseclib3\Exception\InsufficientSetupException;
 /**
  * Pure-PHP implementation of ChaCha20.
  *
+ * @package ChaCha20
  * @author  Jim Wigginton <terrafrost@php.net>
+ * @access  public
  */
 class ChaCha20 extends Salsa20
 {
@@ -37,6 +41,7 @@ class ChaCha20 extends Salsa20
      *
      * @see \phpseclib3\Crypt\Common\SymmetricKey::__construct()
      * @param int $engine
+     * @access protected
      * @return bool
      */
     protected function isValidEngineHelper($engine)

@@ -21,6 +21,8 @@
  * ?>
  * </code>
  *
+ * @category  Crypt
+ * @package   DSA
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2016 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -39,7 +41,9 @@ use phpseclib3\Math\BigInteger;
 /**
  * Pure-PHP FIPS 186-4 compliant implementation of DSA.
  *
+ * @package DSA
  * @author  Jim Wigginton <terrafrost@php.net>
+ * @access  public
  */
 abstract class DSA extends AsymmetricKey
 {
@@ -47,6 +51,7 @@ abstract class DSA extends AsymmetricKey
      * Algorithm Name
      *
      * @var string
+     * @access private
      */
     const ALGORITHM = 'DSA';
 
@@ -54,6 +59,7 @@ abstract class DSA extends AsymmetricKey
      * DSA Prime P
      *
      * @var \phpseclib3\Math\BigInteger
+     * @access private
      */
     protected $p;
 
@@ -63,6 +69,7 @@ abstract class DSA extends AsymmetricKey
      * Prime divisor of p-1
      *
      * @var \phpseclib3\Math\BigInteger
+     * @access private
      */
     protected $q;
 
@@ -70,6 +77,7 @@ abstract class DSA extends AsymmetricKey
      * DSA Group Generator G
      *
      * @var \phpseclib3\Math\BigInteger
+     * @access private
      */
     protected $g;
 
@@ -77,6 +85,7 @@ abstract class DSA extends AsymmetricKey
      * DSA public key value y
      *
      * @var \phpseclib3\Math\BigInteger
+     * @access private
      */
     protected $y;
 
@@ -84,6 +93,7 @@ abstract class DSA extends AsymmetricKey
      * Signature Format
      *
      * @var string
+     * @access private
      */
     protected $sigFormat;
 
@@ -91,12 +101,14 @@ abstract class DSA extends AsymmetricKey
      * Signature Format (Short)
      *
      * @var string
+     * @access private
      */
     protected $shortFormat;
 
     /**
      * Create DSA parameters
      *
+     * @access public
      * @param int $L
      * @param int $N
      * @return \phpseclib3\Crypt\DSA|bool
@@ -174,6 +186,7 @@ abstract class DSA extends AsymmetricKey
      * Returns the private key, from which the publickey can be extracted
      *
      * @param int[] ...$args
+     * @access public
      * @return DSA\PrivateKey
      */
     public static function createKey(...$args)
@@ -214,6 +227,7 @@ abstract class DSA extends AsymmetricKey
      * OnLoad Handler
      *
      * @return bool
+     * @access protected
      * @param array $components
      */
     protected static function onLoad($components)
@@ -260,6 +274,7 @@ abstract class DSA extends AsymmetricKey
      *
      * More specifically, this L (the length of DSA Prime P) and N (the length of DSA Group Order q)
      *
+     * @access public
      * @return array
      */
     public function getLength()
@@ -272,6 +287,7 @@ abstract class DSA extends AsymmetricKey
      *
      * @see self::useInternalEngine()
      * @see self::useBestEngine()
+     * @access public
      * @return string
      */
     public function getEngine()
@@ -290,6 +306,7 @@ abstract class DSA extends AsymmetricKey
      * value.
      *
      * @see self::getPublicKey()
+     * @access public
      * @return mixed
      */
     public function getParameters()
@@ -307,6 +324,7 @@ abstract class DSA extends AsymmetricKey
      *
      * Valid values are: ASN1, SSH2, Raw
      *
+     * @access public
      * @param string $format
      */
     public function withSignatureFormat($format)
@@ -320,6 +338,7 @@ abstract class DSA extends AsymmetricKey
     /**
      * Returns the signature format currently being used
      *
+     * @access public
      */
     public function getSignatureFormat()
     {

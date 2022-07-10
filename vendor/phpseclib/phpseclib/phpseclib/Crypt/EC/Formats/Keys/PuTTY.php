@@ -5,6 +5,8 @@
  *
  * PHP version 5
  *
+ * @category  Crypt
+ * @package   EC
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2015 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -23,7 +25,9 @@ use phpseclib3\Math\BigInteger;
 /**
  * PuTTY Formatted EC Key Handler
  *
+ * @package EC
  * @author  Jim Wigginton <terrafrost@php.net>
+ * @access  public
  */
 abstract class PuTTY extends Progenitor
 {
@@ -33,6 +37,7 @@ abstract class PuTTY extends Progenitor
      * Public Handler
      *
      * @var string
+     * @access private
      */
     const PUBLIC_HANDLER = 'phpseclib3\Crypt\EC\Formats\Keys\OpenSSH';
 
@@ -40,6 +45,7 @@ abstract class PuTTY extends Progenitor
      * Supported Key Types
      *
      * @var array
+     * @access private
      */
     protected static $types = [
         'ecdsa-sha2-nistp256',
@@ -51,6 +57,7 @@ abstract class PuTTY extends Progenitor
     /**
      * Break a public or private key down into its constituent components
      *
+     * @access public
      * @param string $key
      * @param string $password optional
      * @return array
@@ -83,6 +90,7 @@ abstract class PuTTY extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
+     * @access public
      * @param \phpseclib3\Math\BigInteger $privateKey
      * @param \phpseclib3\Crypt\EC\BaseCurves\Base $curve
      * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
@@ -119,6 +127,7 @@ abstract class PuTTY extends Progenitor
     /**
      * Convert an EC public key to the appropriate format
      *
+     * @access public
      * @param \phpseclib3\Crypt\EC\BaseCurves\Base $curve
      * @param \phpseclib3\Math\Common\FiniteField[] $publicKey
      * @return string

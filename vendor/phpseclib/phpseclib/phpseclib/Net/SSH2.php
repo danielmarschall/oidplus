@@ -37,6 +37,8 @@
  * ?>
  * </code>
  *
+ * @category  Net
+ * @package   SSH2
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2007 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -60,7 +62,7 @@ use phpseclib3\Crypt\Random;
 use phpseclib3\Crypt\RC4;
 use phpseclib3\Crypt\Rijndael;
 use phpseclib3\Crypt\RSA;
-use phpseclib3\Crypt\TripleDES;
+use phpseclib3\Crypt\TripleDES; // Used to do Diffie-Hellman key exchange and DSA/RSA signature verification.
 use phpseclib3\Crypt\Twofish;
 use phpseclib3\Exception\ConnectionClosedException;
 use phpseclib3\Exception\InsufficientSetupException;
@@ -69,23 +71,21 @@ use phpseclib3\Exception\UnableToConnectException;
 use phpseclib3\Exception\UnsupportedAlgorithmException;
 use phpseclib3\Exception\UnsupportedCurveException;
 use phpseclib3\Math\BigInteger;
-use phpseclib3\Net\SSH2\ChannelConnectionFailureReason;
-use phpseclib3\Net\SSH2\DisconnectReason;
-use phpseclib3\Net\SSH2\MessageType;
-use phpseclib3\Net\SSH2\MessageTypeExtra;
-use phpseclib3\Net\SSH2\TerminalMode;
 use phpseclib3\System\SSH\Agent;
 
 /**
  * Pure-PHP implementation of SSHv2.
  *
+ * @package SSH2
  * @author  Jim Wigginton <terrafrost@php.net>
+ * @access  public
  */
 class SSH2
 {
     /**#@+
      * Compression Types
      *
+     * @access private
      */
     /**
      * No compression
@@ -123,6 +123,7 @@ class SSH2
      *
      * @see \phpseclib3\Net\SSH2::send_channel_packet()
      * @see \phpseclib3\Net\SSH2::get_channel_packet()
+     * @access private
      */
     const CHANNEL_EXEC          = 1; // PuTTy uses 0x100
     const CHANNEL_SHELL         = 2;
@@ -133,30 +134,35 @@ class SSH2
     /**
      * Returns the message numbers
      *
+     * @access public
      * @see \phpseclib3\Net\SSH2::getLog()
      */
     const LOG_SIMPLE = 1;
     /**
      * Returns the message content
      *
+     * @access public
      * @see \phpseclib3\Net\SSH2::getLog()
      */
     const LOG_COMPLEX = 2;
     /**
      * Outputs the content real-time
      *
+     * @access public
      * @see \phpseclib3\Net\SSH2::getLog()
      */
     const LOG_REALTIME = 3;
     /**
      * Dumps the content real-time to a file
      *
+     * @access public
      * @see \phpseclib3\Net\SSH2::getLog()
      */
     const LOG_REALTIME_FILE = 4;
     /**
      * Make sure that the log never gets larger than this
      *
+     * @access public
      * @see \phpseclib3\Net\SSH2::getLog()
      */
     const LOG_MAX_SIZE = 1048576; // 1024 * 1024
@@ -164,12 +170,14 @@ class SSH2
     /**
      * Returns when a string matching $expect exactly is found
      *
+     * @access public
      * @see \phpseclib3\Net\SSH2::read()
      */
     const READ_SIMPLE = 1;
     /**
      * Returns when a string matching the regular expression $expect is found
      *
+     * @access public
      * @see \phpseclib3\Net\SSH2::read()
      */
     const READ_REGEX = 2;
@@ -179,6 +187,7 @@ class SSH2
      * Some data packets may only contain a single character so it may be necessary
      * to call read() multiple times when using this option
      *
+     * @access public
      * @see \phpseclib3\Net\SSH2::read()
      */
     const READ_NEXT = 3;
@@ -187,6 +196,7 @@ class SSH2
      * The SSH identifier
      *
      * @var string
+     * @access private
      */
     private $identifier;
 
@@ -194,6 +204,7 @@ class SSH2
      * The Socket Object
      *
      * @var resource|closed-resource|null
+     * @access private
      */
     public $fsock;
 
@@ -204,6 +215,7 @@ class SSH2
      * if a requisite function has been successfully executed.  If not, an error should be thrown.
      *
      * @var int
+     * @access private
      */
     protected $bitmap = 0;
 
@@ -213,6 +225,7 @@ class SSH2
      * @see self::getErrors()
      * @see self::getLastError()
      * @var array
+     * @access private
      */
     private $errors = [];
 
@@ -221,6 +234,7 @@ class SSH2
      *
      * @see self::getServerIdentification()
      * @var string|false
+     * @access private
      */
     protected $server_identifier = false;
 
@@ -229,6 +243,7 @@ class SSH2
      *
      * @see self::getKexAlgorithims()
      * @var array|false
+     * @access private
      */
     private $kex_algorithms = false;
 
@@ -237,6 +252,7 @@ class SSH2
      *
      * @see self::getMethodsNegotiated()
      * @var string|false
+     * @access private
      */
     private $kex_algorithm = false;
 
@@ -245,6 +261,7 @@ class SSH2
      *
      * @see self::_key_exchange()
      * @var int
+     * @access private
      */
     private $kex_dh_group_size_min = 1536;
 
@@ -253,6 +270,7 @@ class SSH2
      *
      * @see self::_key_exchange()
      * @var int
+     * @access private
      */
     private $kex_dh_group_size_preferred = 2048;
 
@@ -261,6 +279,7 @@ class SSH2
      *
      * @see self::_key_exchange()
      * @var int
+     * @access private
      */
     private $kex_dh_group_size_max = 4096;
 
@@ -269,6 +288,7 @@ class SSH2
      *
      * @see self::getServerHostKeyAlgorithms()
      * @var array|false
+     * @access private
      */
     private $server_host_key_algorithms = false;
 
@@ -277,6 +297,7 @@ class SSH2
      *
      * @see self::getEncryptionAlgorithmsClient2Server()
      * @var array|false
+     * @access private
      */
     private $encryption_algorithms_client_to_server = false;
 
@@ -285,6 +306,7 @@ class SSH2
      *
      * @see self::getEncryptionAlgorithmsServer2Client()
      * @var array|false
+     * @access private
      */
     private $encryption_algorithms_server_to_client = false;
 
@@ -293,6 +315,7 @@ class SSH2
      *
      * @see self::getMACAlgorithmsClient2Server()
      * @var array|false
+     * @access private
      */
     private $mac_algorithms_client_to_server = false;
 
@@ -301,6 +324,7 @@ class SSH2
      *
      * @see self::getMACAlgorithmsServer2Client()
      * @var array|false
+     * @access private
      */
     private $mac_algorithms_server_to_client = false;
 
@@ -309,6 +333,7 @@ class SSH2
      *
      * @see self::getCompressionAlgorithmsClient2Server()
      * @var array|false
+     * @access private
      */
     private $compression_algorithms_client_to_server = false;
 
@@ -317,6 +342,7 @@ class SSH2
      *
      * @see self::getCompressionAlgorithmsServer2Client()
      * @var array|false
+     * @access private
      */
     private $compression_algorithms_server_to_client = false;
 
@@ -325,6 +351,7 @@ class SSH2
      *
      * @see self::getLanguagesServer2Client()
      * @var array|false
+     * @access private
      */
     private $languages_server_to_client = false;
 
@@ -333,6 +360,7 @@ class SSH2
      *
      * @see self::getLanguagesClient2Server()
      * @var array|false
+     * @access private
      */
     private $languages_client_to_server = false;
 
@@ -341,6 +369,7 @@ class SSH2
      *
      * @see self::setPreferredAlgorithms()
      * @var array
+     * @access private
      */
     private $preferred = [];
 
@@ -357,6 +386,7 @@ class SSH2
      * @see self::__construct()
      * @see self::_send_binary_packet()
      * @var int
+     * @access private
      */
     private $encrypt_block_size = 8;
 
@@ -366,6 +396,7 @@ class SSH2
      * @see self::__construct()
      * @see self::_get_binary_packet()
      * @var int
+     * @access private
      */
     private $decrypt_block_size = 8;
 
@@ -374,6 +405,7 @@ class SSH2
      *
      * @see self::_get_binary_packet()
      * @var SymmetricKey|false
+     * @access private
      */
     private $decrypt = false;
 
@@ -381,6 +413,7 @@ class SSH2
      * Decryption Algorithm Name
      *
      * @var string|null
+     * @access private
      */
     private $decryptName;
 
@@ -390,6 +423,7 @@ class SSH2
      * Used by GCM
      *
      * @var string|null
+     * @access private
      */
     private $decryptInvocationCounter;
 
@@ -399,6 +433,7 @@ class SSH2
      * Used by GCM
      *
      * @var string|null
+     * @access private
      */
     private $decryptFixedPart;
 
@@ -407,6 +442,7 @@ class SSH2
      *
      * @see self::_get_binary_packet()
      * @var object
+     * @access private
      */
     private $lengthDecrypt = false;
 
@@ -415,6 +451,7 @@ class SSH2
      *
      * @see self::_send_binary_packet()
      * @var SymmetricKey|false
+     * @access private
      */
     private $encrypt = false;
 
@@ -422,6 +459,7 @@ class SSH2
      * Encryption Algorithm Name
      *
      * @var string|null
+     * @access private
      */
     private $encryptName;
 
@@ -431,6 +469,7 @@ class SSH2
      * Used by GCM
      *
      * @var string|null
+     * @access private
      */
     private $encryptInvocationCounter;
 
@@ -440,6 +479,7 @@ class SSH2
      * Used by GCM
      *
      * @var string|null
+     * @access private
      */
     private $encryptFixedPart;
 
@@ -448,6 +488,7 @@ class SSH2
      *
      * @see self::_send_binary_packet()
      * @var object
+     * @access private
      */
     private $lengthEncrypt = false;
 
@@ -456,6 +497,7 @@ class SSH2
      *
      * @see self::_send_binary_packet()
      * @var object
+     * @access private
      */
     private $hmac_create = false;
 
@@ -463,6 +505,7 @@ class SSH2
      * Client to Server HMAC Name
      *
      * @var string|false
+     * @access private
      */
     private $hmac_create_name;
 
@@ -470,6 +513,7 @@ class SSH2
      * Client to Server ETM
      *
      * @var int|false
+     * @access private
      */
     private $hmac_create_etm;
 
@@ -478,6 +522,7 @@ class SSH2
      *
      * @see self::_get_binary_packet()
      * @var object
+     * @access private
      */
     private $hmac_check = false;
 
@@ -485,6 +530,7 @@ class SSH2
      * Server to Client HMAC Name
      *
      * @var string|false
+     * @access private
      */
     private $hmac_check_name;
 
@@ -492,6 +538,7 @@ class SSH2
      * Server to Client ETM
      *
      * @var int|false
+     * @access private
      */
     private $hmac_check_etm;
 
@@ -504,6 +551,7 @@ class SSH2
      *
      * @see self::_get_binary_packet()
      * @var int
+     * @access private
      */
     private $hmac_size = false;
 
@@ -512,6 +560,7 @@ class SSH2
      *
      * @see self::getServerPublicHostKey()
      * @var string
+     * @access private
      */
     private $server_public_host_key;
 
@@ -526,6 +575,7 @@ class SSH2
      *
      * @see self::_key_exchange()
      * @var string
+     * @access private
      */
     private $session_id = false;
 
@@ -536,8 +586,56 @@ class SSH2
      *
      * @see self::_key_exchange()
      * @var string
+     * @access private
      */
     private $exchange_hash = false;
+
+    /**
+     * Message Numbers
+     *
+     * @see self::__construct()
+     * @var array
+     * @access private
+     */
+    private $message_numbers = [];
+
+    /**
+     * Disconnection Message 'reason codes' defined in RFC4253
+     *
+     * @see self::__construct()
+     * @var array
+     * @access private
+     */
+    private $disconnect_reasons = [];
+
+    /**
+     * SSH_MSG_CHANNEL_OPEN_FAILURE 'reason codes', defined in RFC4254
+     *
+     * @see self::__construct()
+     * @var array
+     * @access private
+     */
+    private $channel_open_failure_reasons = [];
+
+    /**
+     * Terminal Modes
+     *
+     * @link http://tools.ietf.org/html/rfc4254#section-8
+     * @see self::__construct()
+     * @var array
+     * @access private
+     */
+    private $terminal_modes = [];
+
+    /**
+     * SSH_MSG_CHANNEL_EXTENDED_DATA's data_type_codes
+     *
+     * @link http://tools.ietf.org/html/rfc4254#section-5.2
+     * @see self::__construct()
+     * @var array
+     * @access private
+     */
+    private $channel_extended_data_type_codes = [];
 
     /**
      * Send Sequence Number
@@ -546,6 +644,7 @@ class SSH2
      *
      * @see self::_send_binary_packet()
      * @var int
+     * @access private
      */
     private $send_seq_no = 0;
 
@@ -556,6 +655,7 @@ class SSH2
      *
      * @see self::_get_binary_packet()
      * @var int
+     * @access private
      */
     private $get_seq_no = 0;
 
@@ -567,6 +667,7 @@ class SSH2
      * @see self::get_channel_packet()
      * @see self::exec()
      * @var array
+     * @access private
      */
     protected $server_channels = [];
 
@@ -579,6 +680,7 @@ class SSH2
      * @see self::get_channel_packet()
      * @see self::exec()
      * @var array
+     * @access private
      */
     private $channel_buffers = [];
 
@@ -589,6 +691,7 @@ class SSH2
      *
      * @see self::get_channel_packet()
      * @var array
+     * @access private
      */
     protected $channel_status = [];
 
@@ -599,6 +702,7 @@ class SSH2
      *
      * @see self::send_channel_packet()
      * @var array
+     * @access private
      */
     private $packet_size_client_to_server = [];
 
@@ -607,6 +711,7 @@ class SSH2
      *
      * @see self::getLog()
      * @var array
+     * @access private
      */
     private $message_number_log = [];
 
@@ -615,6 +720,7 @@ class SSH2
      *
      * @see self::getLog()
      * @var array
+     * @access private
      */
     private $message_log = [];
 
@@ -626,6 +732,7 @@ class SSH2
      * @var int
      * @see self::send_channel_packet()
      * @see self::exec()
+     * @access private
      */
     protected $window_size = 0x7FFFFFFF;
 
@@ -639,6 +746,7 @@ class SSH2
      * @var int
      * @see self::_send_channel_packet()
      * @see self::exec()
+     * @access private
      */
     private $window_resize = 0x40000000;
 
@@ -649,6 +757,7 @@ class SSH2
      *
      * @see self::send_channel_packet()
      * @var array
+     * @access private
      */
     protected $window_size_server_to_client = [];
 
@@ -659,6 +768,7 @@ class SSH2
      *
      * @see self::get_channel_packet()
      * @var array
+     * @access private
      */
     private $window_size_client_to_server = [];
 
@@ -669,6 +779,7 @@ class SSH2
      *
      * @see self::getServerPublicHostKey()
      * @var string
+     * @access private
      */
     private $signature = '';
 
@@ -679,6 +790,7 @@ class SSH2
      *
      * @see self::getServerPublicHostKey()
      * @var string
+     * @access private
      */
     private $signature_format = '';
 
@@ -687,6 +799,7 @@ class SSH2
      *
      * @see self::read()
      * @var string
+     * @access private
      */
     private $interactiveBuffer = '';
 
@@ -698,6 +811,7 @@ class SSH2
      * @see self::_send_binary_packet()
      * @see self::_get_binary_packet()
      * @var int
+     * @access private
      */
     private $log_size;
 
@@ -705,6 +819,7 @@ class SSH2
      * Timeout
      *
      * @see self::setTimeout()
+     * @access private
      */
     protected $timeout;
 
@@ -712,6 +827,7 @@ class SSH2
      * Current Timeout
      *
      * @see self::get_channel_packet()
+     * @access private
      */
     protected $curTimeout;
 
@@ -719,6 +835,7 @@ class SSH2
      * Keep Alive Interval
      *
      * @see self::setKeepAlive()
+     * @access private
      */
     private $keepAlive;
 
@@ -727,6 +844,7 @@ class SSH2
      *
      * @see self::_append_log()
      * @var resource|closed-resource
+     * @access private
      */
     private $realtime_log_file;
 
@@ -735,6 +853,7 @@ class SSH2
      *
      * @see self::_append_log()
      * @var int
+     * @access private
      */
     private $realtime_log_size;
 
@@ -743,6 +862,7 @@ class SSH2
      *
      * @see self::getServerPublicHostKey()
      * @var bool
+     * @access private
      */
     private $signature_validated = false;
 
@@ -750,6 +870,7 @@ class SSH2
      * Real-time log file wrap boolean
      *
      * @see self::_append_log()
+     * @access private
      */
     private $realtime_log_wrap;
 
@@ -757,6 +878,7 @@ class SSH2
      * Flag to suppress stderr from output
      *
      * @see self::enableQuietMode()
+     * @access private
      */
     private $quiet_mode = false;
 
@@ -764,6 +886,7 @@ class SSH2
      * Time of first network activity
      *
      * @var float
+     * @access private
      */
     private $last_packet;
 
@@ -771,6 +894,7 @@ class SSH2
      * Exit status returned from ssh if any
      *
      * @var int
+     * @access private
      */
     private $exit_status;
 
@@ -779,6 +903,7 @@ class SSH2
      *
      * @var bool
      * @see self::enablePTY()
+     * @access private
      */
     private $request_pty = false;
 
@@ -786,6 +911,7 @@ class SSH2
      * Flag set while exec() is running when using enablePTY()
      *
      * @var bool
+     * @access private
      */
     private $in_request_pty_exec = false;
 
@@ -793,6 +919,7 @@ class SSH2
      * Flag set after startSubsystem() is called
      *
      * @var bool
+     * @access private
      */
     private $in_subsystem;
 
@@ -800,6 +927,7 @@ class SSH2
      * Contents of stdError
      *
      * @var string
+     * @access private
      */
     private $stdErrorLog;
 
@@ -808,6 +936,7 @@ class SSH2
      *
      * @see self::_keyboard_interactive_process()
      * @var string
+     * @access private
      */
     private $last_interactive_response = '';
 
@@ -816,6 +945,7 @@ class SSH2
      *
      * @see self::_keyboard_interactive_process()
      * @var array
+     * @access private
      */
     private $keyboard_requests_responses = [];
 
@@ -828,6 +958,7 @@ class SSH2
      * @see self::_filter()
      * @see self::getBannerMessage()
      * @var string
+     * @access private
      */
     private $banner_message = '';
 
@@ -836,6 +967,7 @@ class SSH2
      *
      * @see self::isTimeout()
      * @var bool
+     * @access private
      */
     private $is_timeout = false;
 
@@ -844,6 +976,7 @@ class SSH2
      *
      * @see self::_format_log()
      * @var string
+     * @access private
      */
     private $log_boundary = ':';
 
@@ -852,6 +985,7 @@ class SSH2
      *
      * @see self::_format_log()
      * @var int
+     * @access private
      */
     private $log_long_width = 65;
 
@@ -860,6 +994,7 @@ class SSH2
      *
      * @see self::_format_log()
      * @var int
+     * @access private
      */
     private $log_short_width = 16;
 
@@ -869,6 +1004,7 @@ class SSH2
      * @see self::__construct()
      * @see self::_connect()
      * @var string
+     * @access private
      */
     private $host;
 
@@ -878,6 +1014,7 @@ class SSH2
      * @see self::__construct()
      * @see self::_connect()
      * @var int
+     * @access private
      */
     private $port;
 
@@ -888,6 +1025,7 @@ class SSH2
      * @see self::setWindowColumns()
      * @see self::setWindowSize()
      * @var int
+     * @access private
      */
     private $windowColumns = 80;
 
@@ -898,6 +1036,7 @@ class SSH2
      * @see self::setWindowRows()
      * @see self::setWindowSize()
      * @var int
+     * @access private
      */
     private $windowRows = 24;
 
@@ -907,6 +1046,7 @@ class SSH2
      * @see self::setCryptoEngine()
      * @see self::_key_exchange()
      * @var int
+     * @access private
      */
     private static $crypto_engine = false;
 
@@ -914,6 +1054,7 @@ class SSH2
      * A System_SSH_Agent for use in the SSH2 Agent Forwarding scenario
      *
      * @var Agent
+     * @access private
      */
     private $agent;
 
@@ -929,6 +1070,7 @@ class SSH2
      * Send the identification string first?
      *
      * @var bool
+     * @access private
      */
     private $send_id_string_first = true;
 
@@ -936,6 +1078,7 @@ class SSH2
      * Send the key exchange initiation packet first?
      *
      * @var bool
+     * @access private
      */
     private $send_kex_first = true;
 
@@ -943,6 +1086,7 @@ class SSH2
      * Some versions of OpenSSH incorrectly calculate the key size
      *
      * @var bool
+     * @access private
      */
     private $bad_key_size_fix = false;
 
@@ -950,6 +1094,7 @@ class SSH2
      * Should we try to re-connect to re-establish keys?
      *
      * @var bool
+     * @access private
      */
     private $retry_connect = false;
 
@@ -957,6 +1102,7 @@ class SSH2
      * Binary Packet Buffer
      *
      * @var string|false
+     * @access private
      */
     private $binary_packet_buffer = false;
 
@@ -964,6 +1110,7 @@ class SSH2
      * Preferred Signature Format
      *
      * @var string|false
+     * @access private
      */
     protected $preferred_signature_format = false;
 
@@ -971,6 +1118,7 @@ class SSH2
      * Authentication Credentials
      *
      * @var array
+     * @access private
      */
     protected $auth = [];
 
@@ -978,6 +1126,7 @@ class SSH2
      * Terminal
      *
      * @var string
+     * @access private
      */
     private $term = 'vt100';
 
@@ -986,6 +1135,7 @@ class SSH2
      *
      * @see https://tools.ietf.org/html/rfc4252#section-5.1
      * @var array|null
+     * @access private
      */
     private $auth_methods_to_continue = null;
 
@@ -993,6 +1143,7 @@ class SSH2
      * Compression method
      *
      * @var int
+     * @access private
      */
     private $compress = self::NET_SSH2_COMPRESSION_NONE;
 
@@ -1000,6 +1151,7 @@ class SSH2
      * Decompression method
      *
      * @var int
+     * @access private
      */
     private $decompress = self::NET_SSH2_COMPRESSION_NONE;
 
@@ -1007,6 +1159,7 @@ class SSH2
      * Compression context
      *
      * @var resource|false|null
+     * @access private
      */
     private $compress_context;
 
@@ -1014,6 +1167,7 @@ class SSH2
      * Decompression context
      *
      * @var resource|object
+     * @access private
      */
     private $decompress_context;
 
@@ -1021,6 +1175,7 @@ class SSH2
      * Regenerate Compression Context
      *
      * @var bool
+     * @access private
      */
     private $regenerate_compression_context = false;
 
@@ -1028,6 +1183,7 @@ class SSH2
      * Regenerate Decompression Context
      *
      * @var bool
+     * @access private
      */
     private $regenerate_decompression_context = false;
 
@@ -1035,6 +1191,7 @@ class SSH2
      * Smart multi-factor authentication flag
      *
      * @var bool
+     * @access private
      */
     private $smartMFA = true;
 
@@ -1047,9 +1204,89 @@ class SSH2
      * @param int $port
      * @param int $timeout
      * @see self::login()
+     * @access public
      */
     public function __construct($host, $port = 22, $timeout = 10)
     {
+        $this->message_numbers = [
+            1 => 'NET_SSH2_MSG_DISCONNECT',
+            2 => 'NET_SSH2_MSG_IGNORE',
+            3 => 'NET_SSH2_MSG_UNIMPLEMENTED',
+            4 => 'NET_SSH2_MSG_DEBUG',
+            5 => 'NET_SSH2_MSG_SERVICE_REQUEST',
+            6 => 'NET_SSH2_MSG_SERVICE_ACCEPT',
+            20 => 'NET_SSH2_MSG_KEXINIT',
+            21 => 'NET_SSH2_MSG_NEWKEYS',
+            30 => 'NET_SSH2_MSG_KEXDH_INIT',
+            31 => 'NET_SSH2_MSG_KEXDH_REPLY',
+            50 => 'NET_SSH2_MSG_USERAUTH_REQUEST',
+            51 => 'NET_SSH2_MSG_USERAUTH_FAILURE',
+            52 => 'NET_SSH2_MSG_USERAUTH_SUCCESS',
+            53 => 'NET_SSH2_MSG_USERAUTH_BANNER',
+
+            80 => 'NET_SSH2_MSG_GLOBAL_REQUEST',
+            81 => 'NET_SSH2_MSG_REQUEST_SUCCESS',
+            82 => 'NET_SSH2_MSG_REQUEST_FAILURE',
+            90 => 'NET_SSH2_MSG_CHANNEL_OPEN',
+            91 => 'NET_SSH2_MSG_CHANNEL_OPEN_CONFIRMATION',
+            92 => 'NET_SSH2_MSG_CHANNEL_OPEN_FAILURE',
+            93 => 'NET_SSH2_MSG_CHANNEL_WINDOW_ADJUST',
+            94 => 'NET_SSH2_MSG_CHANNEL_DATA',
+            95 => 'NET_SSH2_MSG_CHANNEL_EXTENDED_DATA',
+            96 => 'NET_SSH2_MSG_CHANNEL_EOF',
+            97 => 'NET_SSH2_MSG_CHANNEL_CLOSE',
+            98 => 'NET_SSH2_MSG_CHANNEL_REQUEST',
+            99 => 'NET_SSH2_MSG_CHANNEL_SUCCESS',
+            100 => 'NET_SSH2_MSG_CHANNEL_FAILURE'
+        ];
+        $this->disconnect_reasons = [
+            1 => 'NET_SSH2_DISCONNECT_HOST_NOT_ALLOWED_TO_CONNECT',
+            2 => 'NET_SSH2_DISCONNECT_PROTOCOL_ERROR',
+            3 => 'NET_SSH2_DISCONNECT_KEY_EXCHANGE_FAILED',
+            4 => 'NET_SSH2_DISCONNECT_RESERVED',
+            5 => 'NET_SSH2_DISCONNECT_MAC_ERROR',
+            6 => 'NET_SSH2_DISCONNECT_COMPRESSION_ERROR',
+            7 => 'NET_SSH2_DISCONNECT_SERVICE_NOT_AVAILABLE',
+            8 => 'NET_SSH2_DISCONNECT_PROTOCOL_VERSION_NOT_SUPPORTED',
+            9 => 'NET_SSH2_DISCONNECT_HOST_KEY_NOT_VERIFIABLE',
+            10 => 'NET_SSH2_DISCONNECT_CONNECTION_LOST',
+            11 => 'NET_SSH2_DISCONNECT_BY_APPLICATION',
+            12 => 'NET_SSH2_DISCONNECT_TOO_MANY_CONNECTIONS',
+            13 => 'NET_SSH2_DISCONNECT_AUTH_CANCELLED_BY_USER',
+            14 => 'NET_SSH2_DISCONNECT_NO_MORE_AUTH_METHODS_AVAILABLE',
+            15 => 'NET_SSH2_DISCONNECT_ILLEGAL_USER_NAME'
+        ];
+        $this->channel_open_failure_reasons = [
+            1 => 'NET_SSH2_OPEN_ADMINISTRATIVELY_PROHIBITED'
+        ];
+        $this->terminal_modes = [
+            0 => 'NET_SSH2_TTY_OP_END'
+        ];
+        $this->channel_extended_data_type_codes = [
+            1 => 'NET_SSH2_EXTENDED_DATA_STDERR'
+        ];
+
+        $this->define_array(
+            $this->message_numbers,
+            $this->disconnect_reasons,
+            $this->channel_open_failure_reasons,
+            $this->terminal_modes,
+            $this->channel_extended_data_type_codes,
+            [60 => 'NET_SSH2_MSG_USERAUTH_PASSWD_CHANGEREQ'],
+            [60 => 'NET_SSH2_MSG_USERAUTH_PK_OK'],
+            [60 => 'NET_SSH2_MSG_USERAUTH_INFO_REQUEST',
+                  61 => 'NET_SSH2_MSG_USERAUTH_INFO_RESPONSE'],
+            // RFC 4419 - diffie-hellman-group-exchange-sha{1,256}
+            [30 => 'NET_SSH2_MSG_KEXDH_GEX_REQUEST_OLD',
+                  31 => 'NET_SSH2_MSG_KEXDH_GEX_GROUP',
+                  32 => 'NET_SSH2_MSG_KEXDH_GEX_INIT',
+                  33 => 'NET_SSH2_MSG_KEXDH_GEX_REPLY',
+                  34 => 'NET_SSH2_MSG_KEXDH_GEX_REQUEST'],
+            // RFC 5656 - Elliptic Curves (for curve25519-sha256@libssh.org)
+            [30 => 'NET_SSH2_MSG_KEX_ECDH_INIT',
+                  31 => 'NET_SSH2_MSG_KEX_ECDH_REPLY']
+        );
+
         /**
          * Typehint is required due to a bug in Psalm: https://github.com/vimeo/psalm/issues/7508
          * @var \WeakReference<SSH2>|SSH2
@@ -1077,6 +1314,7 @@ class SSH2
      * OpenSSL, mcrypt, Eval, PHP
      *
      * @param int $engine
+     * @access public
      */
     public static function setCryptoEngine($engine)
     {
@@ -1090,6 +1328,7 @@ class SSH2
      * both sides MUST send an identification string". It does not say which side sends it first. In
      * theory it shouldn't matter but it is a fact of life that some SSH servers are simply buggy
      *
+     * @access public
      */
     public function sendIdentificationStringFirst()
     {
@@ -1103,6 +1342,7 @@ class SSH2
      * both sides MUST send an identification string". It does not say which side sends it first. In
      * theory it shouldn't matter but it is a fact of life that some SSH servers are simply buggy
      *
+     * @access public
      */
     public function sendIdentificationStringLast()
     {
@@ -1116,6 +1356,7 @@ class SSH2
      * sending the [SSH_MSG_KEXINIT] packet". It does not say which side sends it first. In theory
      * it shouldn't matter but it is a fact of life that some SSH servers are simply buggy
      *
+     * @access public
      */
     public function sendKEXINITFirst()
     {
@@ -1129,6 +1370,7 @@ class SSH2
      * sending the [SSH_MSG_KEXINIT] packet". It does not say which side sends it first. In theory
      * it shouldn't matter but it is a fact of life that some SSH servers are simply buggy
      *
+     * @access public
      */
     public function sendKEXINITLast()
     {
@@ -1140,6 +1382,7 @@ class SSH2
      *
      * @throws \UnexpectedValueException on receipt of unexpected packets
      * @throws \RuntimeException on other errors
+     * @access private
      */
     private function connect()
     {
@@ -1261,7 +1504,7 @@ class SSH2
         if (!$this->send_kex_first) {
             $response = $this->get_binary_packet();
 
-            if (is_bool($response) || !strlen($response) || ord($response[0]) != MessageType::KEXINIT) {
+            if (is_bool($response) || !strlen($response) || ord($response[0]) != NET_SSH2_MSG_KEXINIT) {
                 $this->bitmap = 0;
                 throw new \UnexpectedValueException('Expected SSH_MSG_KEXINIT');
             }
@@ -1283,6 +1526,7 @@ class SSH2
      *
      * You should overwrite this method in your own class if you want to use another identifier
      *
+     * @access protected
      * @return string
      */
     private function generate_identifier()
@@ -1321,6 +1565,7 @@ class SSH2
      * @throws \UnexpectedValueException on receipt of unexpected packets
      * @throws \RuntimeException on other errors
      * @throws \phpseclib3\Exception\NoSupportedAlgorithmsException when none of the algorithms phpseclib has loaded are compatible
+     * @access private
      */
     private function key_exchange($kexinit_payload_server = false)
     {
@@ -1372,7 +1617,7 @@ class SSH2
 
         $client_cookie = Random::string(16);
 
-        $kexinit_payload_client = pack('Ca*', MessageType::KEXINIT, $client_cookie);
+        $kexinit_payload_client = pack('Ca*', NET_SSH2_MSG_KEXINIT, $client_cookie);
         $kexinit_payload_client .= Strings::packSSH2(
             'L10bN',
             $kex_algorithms,
@@ -1397,9 +1642,9 @@ class SSH2
             if (
                 is_bool($kexinit_payload_server)
                 || !strlen($kexinit_payload_server)
-                || ord($kexinit_payload_server[0]) != MessageType::KEXINIT
+                || ord($kexinit_payload_server[0]) != NET_SSH2_MSG_KEXINIT
             ) {
-                $this->disconnect_helper(DisconnectReason::PROTOCOL_ERROR);
+                $this->disconnect_helper(NET_SSH2_DISCONNECT_PROTOCOL_ERROR);
                 throw new \UnexpectedValueException('Expected SSH_MSG_KEXINIT');
             }
 
@@ -1435,39 +1680,39 @@ class SSH2
         $decrypt = self::array_intersect_first($s2c_encryption_algorithms, $this->encryption_algorithms_server_to_client);
         $decryptKeyLength = $this->encryption_algorithm_to_key_size($decrypt);
         if ($decryptKeyLength === null) {
-            $this->disconnect_helper(DisconnectReason::KEY_EXCHANGE_FAILED);
+            $this->disconnect_helper(NET_SSH2_DISCONNECT_KEY_EXCHANGE_FAILED);
             throw new NoSupportedAlgorithmsException('No compatible server to client encryption algorithms found');
         }
 
         $encrypt = self::array_intersect_first($c2s_encryption_algorithms, $this->encryption_algorithms_client_to_server);
         $encryptKeyLength = $this->encryption_algorithm_to_key_size($encrypt);
         if ($encryptKeyLength === null) {
-            $this->disconnect_helper(DisconnectReason::KEY_EXCHANGE_FAILED);
+            $this->disconnect_helper(NET_SSH2_DISCONNECT_KEY_EXCHANGE_FAILED);
             throw new NoSupportedAlgorithmsException('No compatible client to server encryption algorithms found');
         }
 
         // through diffie-hellman key exchange a symmetric key is obtained
         $this->kex_algorithm = self::array_intersect_first($kex_algorithms, $this->kex_algorithms);
         if ($this->kex_algorithm === false) {
-            $this->disconnect_helper(DisconnectReason::KEY_EXCHANGE_FAILED);
+            $this->disconnect_helper(NET_SSH2_DISCONNECT_KEY_EXCHANGE_FAILED);
             throw new NoSupportedAlgorithmsException('No compatible key exchange algorithms found');
         }
 
         $server_host_key_algorithm = self::array_intersect_first($server_host_key_algorithms, $this->server_host_key_algorithms);
         if ($server_host_key_algorithm === false) {
-            $this->disconnect_helper(DisconnectReason::KEY_EXCHANGE_FAILED);
+            $this->disconnect_helper(NET_SSH2_DISCONNECT_KEY_EXCHANGE_FAILED);
             throw new NoSupportedAlgorithmsException('No compatible server host key algorithms found');
         }
 
         $mac_algorithm_out = self::array_intersect_first($c2s_mac_algorithms, $this->mac_algorithms_client_to_server);
         if ($mac_algorithm_out === false) {
-            $this->disconnect_helper(DisconnectReason::KEY_EXCHANGE_FAILED);
+            $this->disconnect_helper(NET_SSH2_DISCONNECT_KEY_EXCHANGE_FAILED);
             throw new NoSupportedAlgorithmsException('No compatible client to server message authentication algorithms found');
         }
 
         $mac_algorithm_in = self::array_intersect_first($s2c_mac_algorithms, $this->mac_algorithms_server_to_client);
         if ($mac_algorithm_in === false) {
-            $this->disconnect_helper(DisconnectReason::KEY_EXCHANGE_FAILED);
+            $this->disconnect_helper(NET_SSH2_DISCONNECT_KEY_EXCHANGE_FAILED);
             throw new NoSupportedAlgorithmsException('No compatible server to client message authentication algorithms found');
         }
 
@@ -1479,14 +1724,14 @@ class SSH2
 
         $compression_algorithm_in = self::array_intersect_first($s2c_compression_algorithms, $this->compression_algorithms_server_to_client);
         if ($compression_algorithm_in === false) {
-            $this->disconnect_helper(DisconnectReason::KEY_EXCHANGE_FAILED);
+            $this->disconnect_helper(NET_SSH2_DISCONNECT_KEY_EXCHANGE_FAILED);
             throw new NoSupportedAlgorithmsException('No compatible server to client compression algorithms found');
         }
         $this->decompress = $compression_map[$compression_algorithm_in];
 
         $compression_algorithm_out = self::array_intersect_first($c2s_compression_algorithms, $this->compression_algorithms_client_to_server);
         if ($compression_algorithm_out === false) {
-            $this->disconnect_helper(DisconnectReason::KEY_EXCHANGE_FAILED);
+            $this->disconnect_helper(NET_SSH2_DISCONNECT_KEY_EXCHANGE_FAILED);
             throw new NoSupportedAlgorithmsException('No compatible client to server compression algorithms found');
         }
         $this->compress = $compression_map[$compression_algorithm_out];
@@ -1523,8 +1768,8 @@ class SSH2
                 substr($this->kex_algorithm, 10);
             $ourPrivate = EC::createKey($curve);
             $ourPublicBytes = $ourPrivate->getPublicKey()->getEncodedCoordinates();
-            $clientKexInitMessage = MessageTypeExtra::KEX_ECDH_INIT;
-            $serverKexReplyMessage = MessageTypeExtra::KEX_ECDH_REPLY;
+            $clientKexInitMessage = 'NET_SSH2_MSG_KEX_ECDH_INIT';
+            $serverKexReplyMessage = 'NET_SSH2_MSG_KEX_ECDH_REPLY';
         } else {
             if (strpos($this->kex_algorithm, 'diffie-hellman-group-exchange') === 0) {
                 $dh_group_sizes_packed = pack(
@@ -1535,20 +1780,20 @@ class SSH2
                 );
                 $packet = pack(
                     'Ca*',
-                    MessageTypeExtra::KEXDH_GEX_REQUEST,
+                    NET_SSH2_MSG_KEXDH_GEX_REQUEST,
                     $dh_group_sizes_packed
                 );
                 $this->send_binary_packet($packet);
-                $this->updateLogHistory('UNKNOWN (34)', 'SSH_MSG_KEXDH_GEX_REQUEST');
+                $this->updateLogHistory('UNKNOWN (34)', 'NET_SSH2_MSG_KEXDH_GEX_REQUEST');
 
                 $response = $this->get_binary_packet();
 
                 list($type, $primeBytes, $gBytes) = Strings::unpackSSH2('Css', $response);
-                if ($type != MessageTypeExtra::KEXDH_GEX_GROUP) {
-                    $this->disconnect_helper(DisconnectReason::PROTOCOL_ERROR);
+                if ($type != NET_SSH2_MSG_KEXDH_GEX_GROUP) {
+                    $this->disconnect_helper(NET_SSH2_DISCONNECT_PROTOCOL_ERROR);
                     throw new \UnexpectedValueException('Expected SSH_MSG_KEX_DH_GEX_GROUP');
                 }
-                $this->updateLogHistory('UNKNOWN (31)', 'SSH_MSG_KEXDH_GEX_GROUP');
+                $this->updateLogHistory('NET_SSH2_MSG_KEXDH_REPLY', 'NET_SSH2_MSG_KEXDH_GEX_GROUP');
                 $prime = new BigInteger($primeBytes, -256);
                 $g = new BigInteger($gBytes, -256);
 
@@ -1559,12 +1804,12 @@ class SSH2
                 );
 
                 $params = DH::createParameters($prime, $g);
-                $clientKexInitMessage = MessageTypeExtra::KEXDH_GEX_INIT;
-                $serverKexReplyMessage = MessageTypeExtra::KEXDH_GEX_REPLY;
+                $clientKexInitMessage = 'NET_SSH2_MSG_KEXDH_GEX_INIT';
+                $serverKexReplyMessage = 'NET_SSH2_MSG_KEXDH_GEX_REPLY';
             } else {
                 $params = DH::createParameters($this->kex_algorithm);
-                $clientKexInitMessage = MessageType::KEXDH_INIT;
-                $serverKexReplyMessage = MessageType::KEXDH_REPLY;
+                $clientKexInitMessage = 'NET_SSH2_MSG_KEXDH_INIT';
+                $serverKexReplyMessage = 'NET_SSH2_MSG_KEXDH_REPLY';
             }
 
             $keyLength = min($kexHash->getLengthInBytes(), max($encryptKeyLength, $decryptKeyLength));
@@ -1574,16 +1819,16 @@ class SSH2
             $ourPublicBytes = $ourPublic->toBytes(true);
         }
 
-        $data = pack('CNa*', $clientKexInitMessage, strlen($ourPublicBytes), $ourPublicBytes);
+        $data = pack('CNa*', constant($clientKexInitMessage), strlen($ourPublicBytes), $ourPublicBytes);
 
         $this->send_binary_packet($data);
 
         switch ($clientKexInitMessage) {
-            case MessageTypeExtra::KEX_ECDH_INIT:
-                $this->updateLogHistory('SSH_MSG_KEXDH_INIT', 'SSH_MSG_KEX_ECDH_INIT');
+            case 'NET_SSH2_MSG_KEX_ECDH_INIT':
+                $this->updateLogHistory('NET_SSH2_MSG_KEXDH_INIT', 'NET_SSH2_MSG_KEX_ECDH_INIT');
                 break;
-            case MessageTypeExtra::KEXDH_GEX_INIT:
-                $this->updateLogHistory('UNKNOWN (32)', 'SSH_MSG_KEXDH_GEX_INIT');
+            case 'NET_SSH2_MSG_KEXDH_GEX_INIT':
+                $this->updateLogHistory('UNKNOWN (32)', 'NET_SSH2_MSG_KEXDH_GEX_INIT');
         }
 
         $response = $this->get_binary_packet();
@@ -1595,16 +1840,16 @@ class SSH2
             $this->signature
         ) = Strings::unpackSSH2('Csss', $response);
 
-        if ($type != $serverKexReplyMessage) {
-            $this->disconnect_helper(DisconnectReason::PROTOCOL_ERROR);
+        if ($type != constant($serverKexReplyMessage)) {
+            $this->disconnect_helper(NET_SSH2_DISCONNECT_PROTOCOL_ERROR);
             throw new \UnexpectedValueException("Expected $serverKexReplyMessage");
         }
         switch ($serverKexReplyMessage) {
-            case MessageTypeExtra::KEX_ECDH_REPLY:
-                $this->updateLogHistory('SSH_MSG_KEXDH_REPLY', 'SSH_MSG_KEX_ECDH_REPLY');
+            case 'NET_SSH2_MSG_KEX_ECDH_REPLY':
+                $this->updateLogHistory('NET_SSH2_MSG_KEXDH_REPLY', 'NET_SSH2_MSG_KEX_ECDH_REPLY');
                 break;
-            case MessageTypeExtra::KEXDH_GEX_REPLY:
-                $this->updateLogHistory('UNKNOWN (33)', 'SSH_MSG_KEXDH_GEX_REPLY');
+            case 'NET_SSH2_MSG_KEXDH_GEX_REPLY':
+                $this->updateLogHistory('UNKNOWN (33)', 'NET_SSH2_MSG_KEXDH_GEX_REPLY');
         }
 
         $this->server_public_host_key = $server_public_host_key;
@@ -1658,24 +1903,24 @@ class SSH2
                 case $this->signature_format == $server_host_key_algorithm:
                 case $server_host_key_algorithm != 'rsa-sha2-256' && $server_host_key_algorithm != 'rsa-sha2-512':
                 case $this->signature_format != 'ssh-rsa':
-                    $this->disconnect_helper(DisconnectReason::HOST_KEY_NOT_VERIFIABLE);
+                    $this->disconnect_helper(NET_SSH2_DISCONNECT_HOST_KEY_NOT_VERIFIABLE);
                     throw new \RuntimeException('Server Host Key Algorithm Mismatch (' . $this->signature_format . ' vs ' . $server_host_key_algorithm . ')');
             }
         }
 
-        $packet = pack('C', MessageType::NEWKEYS);
+        $packet = pack('C', NET_SSH2_MSG_NEWKEYS);
         $this->send_binary_packet($packet);
 
         $response = $this->get_binary_packet();
 
         if ($response === false) {
-            $this->disconnect_helper(DisconnectReason::CONNECTION_LOST);
+            $this->disconnect_helper(NET_SSH2_DISCONNECT_CONNECTION_LOST);
             throw new ConnectionClosedException('Connection closed by server');
         }
 
         list($type) = Strings::unpackSSH2('C', $response);
-        if ($type != MessageType::NEWKEYS) {
-            $this->disconnect_helper(DisconnectReason::PROTOCOL_ERROR);
+        if ($type != NET_SSH2_MSG_NEWKEYS) {
+            $this->disconnect_helper(NET_SSH2_DISCONNECT_PROTOCOL_ERROR);
             throw new \UnexpectedValueException('Expected SSH_MSG_NEWKEYS');
         }
 
@@ -1836,6 +2081,7 @@ class SSH2
      *
      * @param string $algorithm Name of the encryption algorithm
      * @return int|null Number of bytes as an integer or null for unknown
+     * @access private
      */
     private function encryption_algorithm_to_key_size($algorithm)
     {
@@ -1883,6 +2129,7 @@ class SSH2
      *
      * @param string $algorithm Name of the encryption algorithm
      * @return SymmetricKey|null
+     * @access private
      */
     private static function encryption_algorithm_to_crypt_instance($algorithm)
     {
@@ -1931,6 +2178,7 @@ class SSH2
      *
      * @param string $algorithm Name of the encryption algorithm
      * @return array{Hash, int}|null
+     * @access private
      */
     private static function mac_algorithm_to_hash_instance($algorithm)
     {
@@ -1966,6 +2214,7 @@ class SSH2
      * @link https://bugzilla.mindrot.org/show_bug.cgi?id=1291
      * @param string $algorithm Name of the encryption algorithm
      * @return bool
+     * @access private
      */
     private static function bad_algorithm_candidate($algorithm)
     {
@@ -1988,6 +2237,7 @@ class SSH2
      * @param string|AsymmetricKey|array[]|Agent|null ...$args
      * @return bool
      * @see self::_login()
+     * @access public
      */
     public function login($username, ...$args)
     {
@@ -2013,6 +2263,7 @@ class SSH2
      * @param string ...$args
      * @return bool
      * @see self::_login_helper()
+     * @access private
      */
     protected function sublogin($username, ...$args)
     {
@@ -2110,6 +2361,7 @@ class SSH2
      * @return bool
      * @throws \UnexpectedValueException on receipt of unexpected packets
      * @throws \RuntimeException on other errors
+     * @access private
      */
     private function login_helper($username, $password = null)
     {
@@ -2118,7 +2370,7 @@ class SSH2
         }
 
         if (!($this->bitmap & self::MASK_LOGIN_REQ)) {
-            $packet = Strings::packSSH2('Cs', MessageType::SERVICE_REQUEST, 'ssh-userauth');
+            $packet = Strings::packSSH2('Cs', NET_SSH2_MSG_SERVICE_REQUEST, 'ssh-userauth');
             $this->send_binary_packet($packet);
 
             try {
@@ -2129,13 +2381,13 @@ class SSH2
                     $this->connect();
                     return $this->login_helper($username, $password);
                 }
-                $this->disconnect_helper(DisconnectReason::CONNECTION_LOST);
+                $this->disconnect_helper(NET_SSH2_DISCONNECT_CONNECTION_LOST);
                 throw new ConnectionClosedException('Connection closed by server');
             }
 
             list($type, $service) = Strings::unpackSSH2('Cs', $response);
-            if ($type != MessageType::SERVICE_ACCEPT || $service != 'ssh-userauth') {
-                $this->disconnect_helper(DisconnectReason::PROTOCOL_ERROR);
+            if ($type != NET_SSH2_MSG_SERVICE_ACCEPT || $service != 'ssh-userauth') {
+                $this->disconnect_helper(NET_SSH2_DISCONNECT_PROTOCOL_ERROR);
                 throw new \UnexpectedValueException('Expected SSH_MSG_SERVICE_ACCEPT');
             }
             $this->bitmap |= self::MASK_LOGIN_REQ;
@@ -2164,7 +2416,7 @@ class SSH2
         if (!isset($password)) {
             $packet = Strings::packSSH2(
                 'Cs3',
-                MessageType::USERAUTH_REQUEST,
+                NET_SSH2_MSG_USERAUTH_REQUEST,
                 $username,
                 'ssh-connection',
                 'none'
@@ -2176,10 +2428,10 @@ class SSH2
 
             list($type) = Strings::unpackSSH2('C', $response);
             switch ($type) {
-                case MessageType::USERAUTH_SUCCESS:
+                case NET_SSH2_MSG_USERAUTH_SUCCESS:
                     $this->bitmap |= self::MASK_LOGIN;
                     return true;
-                case MessageType::USERAUTH_FAILURE:
+                case NET_SSH2_MSG_USERAUTH_FAILURE:
                     list($auth_methods) = Strings::unpackSSH2('L', $response);
                     $this->auth_methods_to_continue = $auth_methods;
                     // fall-through
@@ -2190,7 +2442,7 @@ class SSH2
 
         $packet = Strings::packSSH2(
             'Cs3bs',
-            MessageType::USERAUTH_REQUEST,
+            NET_SSH2_MSG_USERAUTH_REQUEST,
             $username,
             'ssh-connection',
             'password',
@@ -2204,7 +2456,7 @@ class SSH2
         } else {
             $logged = Strings::packSSH2(
                 'Cs3bs',
-                MessageType::USERAUTH_REQUEST,
+                NET_SSH2_MSG_USERAUTH_REQUEST,
                 $username,
                 'ssh-connection',
                 'password',
@@ -2216,19 +2468,17 @@ class SSH2
         $this->send_binary_packet($packet, $logged);
 
         $response = $this->get_binary_packet();
-        if ($response === false) {
-            return false;
-        }
+
         list($type) = Strings::unpackSSH2('C', $response);
         switch ($type) {
-            case MessageTypeExtra::USERAUTH_PASSWD_CHANGEREQ: // in theory, the password can be changed
-                $this->updateLogHistory('SSH_MSG_USERAUTH_INFO_REQUEST', 'SSH_MSG_USERAUTH_PASSWD_CHANGEREQ');
+            case NET_SSH2_MSG_USERAUTH_PASSWD_CHANGEREQ: // in theory, the password can be changed
+                $this->updateLogHistory('UNKNOWN (60)', 'NET_SSH2_MSG_USERAUTH_PASSWD_CHANGEREQ');
 
                 list($message) = Strings::unpackSSH2('s', $response);
                 $this->errors[] = 'SSH_MSG_USERAUTH_PASSWD_CHANGEREQ: ' . $message;
 
-                return $this->disconnect_helper(DisconnectReason::AUTH_CANCELLED_BY_USER);
-            case MessageType::USERAUTH_FAILURE:
+                return $this->disconnect_helper(NET_SSH2_DISCONNECT_AUTH_CANCELLED_BY_USER);
+            case NET_SSH2_MSG_USERAUTH_FAILURE:
                 // can we use keyboard-interactive authentication?  if not then either the login is bad or the server employees
                 // multi-factor authentication
                 list($auth_methods, $partial_success) = Strings::unpackSSH2('Lb', $response);
@@ -2241,7 +2491,7 @@ class SSH2
                     return false;
                 }
                 return false;
-            case MessageType::USERAUTH_SUCCESS:
+            case NET_SSH2_MSG_USERAUTH_SUCCESS:
                 $this->bitmap |= self::MASK_LOGIN;
                 return true;
         }
@@ -2257,12 +2507,13 @@ class SSH2
      * @param string $username
      * @param string|array $password
      * @return bool
+     * @access private
      */
     private function keyboard_interactive_login($username, $password)
     {
         $packet = Strings::packSSH2(
             'Cs5',
-            MessageType::USERAUTH_REQUEST,
+            NET_SSH2_MSG_USERAUTH_REQUEST,
             $username,
             'ssh-connection',
             'keyboard-interactive',
@@ -2280,6 +2531,7 @@ class SSH2
      * @param string|array ...$responses
      * @return bool
      * @throws \RuntimeException on connection error
+     * @access private
      */
     private function keyboard_interactive_process(...$responses)
     {
@@ -2291,7 +2543,7 @@ class SSH2
 
         list($type) = Strings::unpackSSH2('C', $response);
         switch ($type) {
-            case MessageType::USERAUTH_INFO_REQUEST:
+            case NET_SSH2_MSG_USERAUTH_INFO_REQUEST:
                 list(
                     , // name; may be empty
                     , // instruction; may be empty
@@ -2328,7 +2580,7 @@ class SSH2
                 if (strlen($this->last_interactive_response)) {
                     $this->last_interactive_response = '';
                 } else {
-                    $this->updateLogHistory('UNKNOWN (60)', 'SSH_MSG_USERAUTH_INFO_REQUEST');
+                    $this->updateLogHistory('UNKNOWN (60)', 'NET_SSH2_MSG_USERAUTH_INFO_REQUEST');
                 }
 
                 if (!count($responses) && $num_prompts) {
@@ -2341,7 +2593,7 @@ class SSH2
                    MUST respond with an SSH_MSG_USERAUTH_INFO_RESPONSE message.
                 */
                 // see http://tools.ietf.org/html/rfc4256#section-3.4
-                $packet = $logged = pack('CN', MessageType::USERAUTH_INFO_RESPONSE, count($responses));
+                $packet = $logged = pack('CN', NET_SSH2_MSG_USERAUTH_INFO_RESPONSE, count($responses));
                 for ($i = 0; $i < count($responses); $i++) {
                     $packet .= Strings::packSSH2('s', $responses[$i]);
                     $logged .= Strings::packSSH2('s', 'dummy-answer');
@@ -2349,7 +2601,7 @@ class SSH2
 
                 $this->send_binary_packet($packet, $logged);
 
-                $this->updateLogHistory('UNKNOWN (61)', 'SSH_MSG_USERAUTH_INFO_RESPONSE');
+                $this->updateLogHistory('UNKNOWN (61)', 'NET_SSH2_MSG_USERAUTH_INFO_RESPONSE');
 
                 /*
                    After receiving the response, the server MUST send either an
@@ -2359,9 +2611,9 @@ class SSH2
                 // maybe phpseclib should force close the connection after x request / responses?  unless something like that is done
                 // there could be an infinite loop of request / responses.
                 return $this->keyboard_interactive_process();
-            case MessageType::USERAUTH_SUCCESS:
+            case NET_SSH2_MSG_USERAUTH_SUCCESS:
                 return true;
-            case MessageType::USERAUTH_FAILURE:
+            case NET_SSH2_MSG_USERAUTH_FAILURE:
                 list($auth_methods) = Strings::unpackSSH2('L', $response);
                 $this->auth_methods_to_continue = $auth_methods;
                 return false;
@@ -2376,6 +2628,7 @@ class SSH2
      * @param string $username
      * @param \phpseclib3\System\SSH\Agent $agent
      * @return bool
+     * @access private
      */
     private function ssh_agent_login($username, Agent $agent)
     {
@@ -2400,6 +2653,7 @@ class SSH2
      * @param \phpseclib3\Crypt\Common\PrivateKey $privatekey
      * @return bool
      * @throws \RuntimeException on connection error
+     * @access private
      */
     private function privatekey_login($username, PrivateKey $privatekey)
     {
@@ -2464,7 +2718,7 @@ class SSH2
 
         $part1 = Strings::packSSH2(
             'Csss',
-            MessageType::USERAUTH_REQUEST,
+            NET_SSH2_MSG_USERAUTH_REQUEST,
             $username,
             'ssh-connection',
             'publickey'
@@ -2478,21 +2732,21 @@ class SSH2
 
         list($type) = Strings::unpackSSH2('C', $response);
         switch ($type) {
-            case MessageType::USERAUTH_FAILURE:
+            case NET_SSH2_MSG_USERAUTH_FAILURE:
                 list($auth_methods) = Strings::unpackSSH2('L', $response);
                 $this->auth_methods_to_continue = $auth_methods;
                 $this->errors[] = 'SSH_MSG_USERAUTH_FAILURE';
                 return false;
-            case MessageTypeExtra::USERAUTH_PK_OK:
+            case NET_SSH2_MSG_USERAUTH_PK_OK:
                 // we'll just take it on faith that the public key blob and the public key algorithm name are as
                 // they should be
-                $this->updateLogHistory('SSH_MSG_USERAUTH_INFO_REQUEST', 'SSH_MSG_USERAUTH_PK_OK');
+                $this->updateLogHistory('UNKNOWN (60)', 'NET_SSH2_MSG_USERAUTH_PK_OK');
                 break;
-            case MessageType::USERAUTH_SUCCESS:
+            case NET_SSH2_MSG_USERAUTH_SUCCESS:
                 $this->bitmap |= self::MASK_LOGIN;
                 return true;
             default:
-                $this->disconnect_helper(DisconnectReason::BY_APPLICATION);
+                $this->disconnect_helper(NET_SSH2_DISCONNECT_BY_APPLICATION);
                 throw new ConnectionClosedException('Unexpected response to publickey authentication pt 1');
         }
 
@@ -2510,17 +2764,17 @@ class SSH2
 
         list($type) = Strings::unpackSSH2('C', $response);
         switch ($type) {
-            case MessageType::USERAUTH_FAILURE:
+            case NET_SSH2_MSG_USERAUTH_FAILURE:
                 // either the login is bad or the server employs multi-factor authentication
                 list($auth_methods) = Strings::unpackSSH2('L', $response);
                 $this->auth_methods_to_continue = $auth_methods;
                 return false;
-            case MessageType::USERAUTH_SUCCESS:
+            case NET_SSH2_MSG_USERAUTH_SUCCESS:
                 $this->bitmap |= self::MASK_LOGIN;
                 return true;
         }
 
-        $this->disconnect_helper(DisconnectReason::BY_APPLICATION);
+        $this->disconnect_helper(NET_SSH2_DISCONNECT_BY_APPLICATION);
         throw new ConnectionClosedException('Unexpected response to publickey authentication pt 2');
     }
 
@@ -2531,6 +2785,7 @@ class SSH2
      * Setting $timeout to false or 0 will mean there is no timeout.
      *
      * @param mixed $timeout
+     * @access public
      */
     public function setTimeout($timeout)
     {
@@ -2543,6 +2798,7 @@ class SSH2
      * Sends an SSH2_MSG_IGNORE message every x seconds, if x is a positive non-zero number.
      *
      * @param int $interval
+     * @access public
      */
     public function setKeepAlive($interval)
     {
@@ -2552,6 +2808,7 @@ class SSH2
     /**
      * Get the output from stdError
      *
+     * @access public
      */
     public function getStdError()
     {
@@ -2568,6 +2825,7 @@ class SSH2
      * @return string|bool
      * @psalm-return ($callback is callable ? bool : string|bool)
      * @throws \RuntimeException on connection error
+     * @access public
      */
     public function exec($command, callable $callback = null)
     {
@@ -2594,7 +2852,7 @@ class SSH2
 
         $packet = Strings::packSSH2(
             'CsN3',
-            MessageType::CHANNEL_OPEN,
+            NET_SSH2_MSG_CHANNEL_OPEN,
             'session',
             self::CHANNEL_EXEC,
             $this->window_size_server_to_client[self::CHANNEL_EXEC],
@@ -2602,15 +2860,15 @@ class SSH2
         );
         $this->send_binary_packet($packet);
 
-        $this->channel_status[self::CHANNEL_EXEC] = MessageType::CHANNEL_OPEN;
+        $this->channel_status[self::CHANNEL_EXEC] = NET_SSH2_MSG_CHANNEL_OPEN;
 
         $this->get_channel_packet(self::CHANNEL_EXEC);
 
         if ($this->request_pty === true) {
-            $terminal_modes = pack('C', TerminalMode::TTY_OP_END);
+            $terminal_modes = pack('C', NET_SSH2_TTY_OP_END);
             $packet = Strings::packSSH2(
                 'CNsCsN4s',
-                MessageType::CHANNEL_REQUEST,
+                NET_SSH2_MSG_CHANNEL_REQUEST,
                 $this->server_channels[self::CHANNEL_EXEC],
                 'pty-req',
                 1,
@@ -2624,9 +2882,9 @@ class SSH2
 
             $this->send_binary_packet($packet);
 
-            $this->channel_status[self::CHANNEL_EXEC] = MessageType::CHANNEL_REQUEST;
+            $this->channel_status[self::CHANNEL_EXEC] = NET_SSH2_MSG_CHANNEL_REQUEST;
             if (!$this->get_channel_packet(self::CHANNEL_EXEC)) {
-                $this->disconnect_helper(DisconnectReason::BY_APPLICATION);
+                $this->disconnect_helper(NET_SSH2_DISCONNECT_BY_APPLICATION);
                 throw new \RuntimeException('Unable to request pseudo-terminal');
             }
 
@@ -2644,7 +2902,7 @@ class SSH2
         // "maximum size of an individual data packet". ie. SSH_MSG_CHANNEL_DATA.  RFC4254#section-5.2 corroborates.
         $packet = Strings::packSSH2(
             'CNsCs',
-            MessageType::CHANNEL_REQUEST,
+            NET_SSH2_MSG_CHANNEL_REQUEST,
             $this->server_channels[self::CHANNEL_EXEC],
             'exec',
             1,
@@ -2652,13 +2910,13 @@ class SSH2
         );
         $this->send_binary_packet($packet);
 
-        $this->channel_status[self::CHANNEL_EXEC] = MessageType::CHANNEL_REQUEST;
+        $this->channel_status[self::CHANNEL_EXEC] = NET_SSH2_MSG_CHANNEL_REQUEST;
 
         if (!$this->get_channel_packet(self::CHANNEL_EXEC)) {
             return false;
         }
 
-        $this->channel_status[self::CHANNEL_EXEC] = MessageType::CHANNEL_DATA;
+        $this->channel_status[self::CHANNEL_EXEC] = NET_SSH2_MSG_CHANNEL_DATA;
 
         if ($callback === false || $this->in_request_pty_exec) {
             return true;
@@ -2693,6 +2951,7 @@ class SSH2
      * @return bool
      * @throws \UnexpectedValueException on receipt of unexpected packets
      * @throws \RuntimeException on other errors
+     * @access private
      */
     private function initShell()
     {
@@ -2705,7 +2964,7 @@ class SSH2
 
         $packet = Strings::packSSH2(
             'CsN3',
-            MessageType::CHANNEL_OPEN,
+            NET_SSH2_MSG_CHANNEL_OPEN,
             'session',
             self::CHANNEL_SHELL,
             $this->window_size_server_to_client[self::CHANNEL_SHELL],
@@ -2714,14 +2973,14 @@ class SSH2
 
         $this->send_binary_packet($packet);
 
-        $this->channel_status[self::CHANNEL_SHELL] = MessageType::CHANNEL_OPEN;
+        $this->channel_status[self::CHANNEL_SHELL] = NET_SSH2_MSG_CHANNEL_OPEN;
 
         $this->get_channel_packet(self::CHANNEL_SHELL);
 
-        $terminal_modes = pack('C', TerminalMode::TTY_OP_END);
+        $terminal_modes = pack('C', NET_SSH2_TTY_OP_END);
         $packet = Strings::packSSH2(
             'CNsbsN4s',
-            MessageType::CHANNEL_REQUEST,
+            NET_SSH2_MSG_CHANNEL_REQUEST,
             $this->server_channels[self::CHANNEL_SHELL],
             'pty-req',
             true, // want reply
@@ -2735,7 +2994,7 @@ class SSH2
 
         $this->send_binary_packet($packet);
 
-        $this->channel_status[self::CHANNEL_SHELL] = MessageType::CHANNEL_REQUEST;
+        $this->channel_status[self::CHANNEL_SHELL] = NET_SSH2_MSG_CHANNEL_REQUEST;
 
         if (!$this->get_channel_packet(self::CHANNEL_SHELL)) {
             throw new \RuntimeException('Unable to request pty');
@@ -2743,7 +3002,7 @@ class SSH2
 
         $packet = Strings::packSSH2(
             'CNsb',
-            MessageType::CHANNEL_REQUEST,
+            NET_SSH2_MSG_CHANNEL_REQUEST,
             $this->server_channels[self::CHANNEL_SHELL],
             'shell',
             true // want reply
@@ -2755,7 +3014,7 @@ class SSH2
             throw new \RuntimeException('Unable to request shell');
         }
 
-        $this->channel_status[self::CHANNEL_SHELL] = MessageType::CHANNEL_DATA;
+        $this->channel_status[self::CHANNEL_SHELL] = NET_SSH2_MSG_CHANNEL_DATA;
 
         $this->bitmap |= self::MASK_SHELL;
 
@@ -2768,6 +3027,7 @@ class SSH2
      * @see self::read()
      * @see self::write()
      * @return int
+     * @access public
      */
     private function get_interactive_channel()
     {
@@ -2785,12 +3045,13 @@ class SSH2
      * Return an available open channel
      *
      * @return int
+     * @access public
      */
     private function get_open_channel()
     {
         $channel = self::CHANNEL_EXEC;
         do {
-            if (isset($this->channel_status[$channel]) && $this->channel_status[$channel] == MessageType::CHANNEL_OPEN) {
+            if (isset($this->channel_status[$channel]) && $this->channel_status[$channel] == NET_SSH2_MSG_CHANNEL_OPEN) {
                 return $channel;
             }
         } while ($channel++ < self::CHANNEL_SUBSYSTEM);
@@ -2802,6 +3063,7 @@ class SSH2
      * Request agent forwarding of remote server
      *
      * @return bool
+     * @access public
      */
     public function requestAgentForwarding()
     {
@@ -2812,13 +3074,13 @@ class SSH2
 
         $packet = Strings::packSSH2(
             'CNsC',
-            MessageType::CHANNEL_REQUEST,
+            NET_SSH2_MSG_CHANNEL_REQUEST,
             $this->server_channels[$request_channel],
             'auth-agent-req@openssh.com',
             1
         );
 
-        $this->channel_status[$request_channel] = MessageType::CHANNEL_REQUEST;
+        $this->channel_status[$request_channel] = NET_SSH2_MSG_CHANNEL_REQUEST;
 
         $this->send_binary_packet($packet);
 
@@ -2826,7 +3088,7 @@ class SSH2
             return false;
         }
 
-        $this->channel_status[$request_channel] = MessageType::CHANNEL_OPEN;
+        $this->channel_status[$request_channel] = NET_SSH2_MSG_CHANNEL_OPEN;
 
         return true;
     }
@@ -2842,6 +3104,7 @@ class SSH2
      * @param int $mode
      * @return string|bool|null
      * @throws \RuntimeException on connection error
+     * @access public
      */
     public function read($expect = '', $mode = self::READ_SIMPLE)
     {
@@ -2915,6 +3178,7 @@ class SSH2
      * @see self::stopSubsystem()
      * @param string $subsystem
      * @return bool
+     * @access public
      */
     public function startSubsystem($subsystem)
     {
@@ -2922,7 +3186,7 @@ class SSH2
 
         $packet = Strings::packSSH2(
             'CsN3',
-            MessageType::CHANNEL_OPEN,
+            NET_SSH2_MSG_CHANNEL_OPEN,
             'session',
             self::CHANNEL_SUBSYSTEM,
             $this->window_size,
@@ -2931,13 +3195,13 @@ class SSH2
 
         $this->send_binary_packet($packet);
 
-        $this->channel_status[self::CHANNEL_SUBSYSTEM] = MessageType::CHANNEL_OPEN;
+        $this->channel_status[self::CHANNEL_SUBSYSTEM] = NET_SSH2_MSG_CHANNEL_OPEN;
 
         $this->get_channel_packet(self::CHANNEL_SUBSYSTEM);
 
         $packet = Strings::packSSH2(
             'CNsCs',
-            MessageType::CHANNEL_REQUEST,
+            NET_SSH2_MSG_CHANNEL_REQUEST,
             $this->server_channels[self::CHANNEL_SUBSYSTEM],
             'subsystem',
             1,
@@ -2945,13 +3209,13 @@ class SSH2
         );
         $this->send_binary_packet($packet);
 
-        $this->channel_status[self::CHANNEL_SUBSYSTEM] = MessageType::CHANNEL_REQUEST;
+        $this->channel_status[self::CHANNEL_SUBSYSTEM] = NET_SSH2_MSG_CHANNEL_REQUEST;
 
         if (!$this->get_channel_packet(self::CHANNEL_SUBSYSTEM)) {
             return false;
         }
 
-        $this->channel_status[self::CHANNEL_SUBSYSTEM] = MessageType::CHANNEL_DATA;
+        $this->channel_status[self::CHANNEL_SUBSYSTEM] = NET_SSH2_MSG_CHANNEL_DATA;
 
         $this->bitmap |= self::MASK_SHELL;
         $this->in_subsystem = true;
@@ -2964,6 +3228,7 @@ class SSH2
      *
      * @see self::startSubsystem()
      * @return bool
+     * @access public
      */
     public function stopSubsystem()
     {
@@ -2977,6 +3242,7 @@ class SSH2
      *
      * If read() timed out you might want to just close the channel and have it auto-restart on the next read() call
      *
+     * @access public
      */
     public function reset()
     {
@@ -2988,6 +3254,7 @@ class SSH2
      *
      * Did exec() or read() return because they timed out or because they encountered the end?
      *
+     * @access public
      */
     public function isTimeout()
     {
@@ -2997,10 +3264,11 @@ class SSH2
     /**
      * Disconnect
      *
+     * @access public
      */
     public function disconnect()
     {
-        $this->disconnect_helper(DisconnectReason::BY_APPLICATION);
+        $this->disconnect_helper(NET_SSH2_DISCONNECT_BY_APPLICATION);
         if (isset($this->realtime_log_file) && is_resource($this->realtime_log_file)) {
             fclose($this->realtime_log_file);
         }
@@ -3013,6 +3281,7 @@ class SSH2
      * Will be called, automatically, if you're supporting just PHP5.  If you're supporting PHP4, you'll need to call
      * disconnect().
      *
+     * @access public
      */
     public function __destruct()
     {
@@ -3023,6 +3292,7 @@ class SSH2
      * Is the connection still active?
      *
      * @return bool
+     * @access public
      */
     public function isConnected()
     {
@@ -3033,6 +3303,7 @@ class SSH2
      * Have you successfully been logged in?
      *
      * @return bool
+     * @access public
      */
     public function isAuthenticated()
     {
@@ -3059,7 +3330,7 @@ class SSH2
         $packet_size = 0x4000;
         $packet = Strings::packSSH2(
             'CsN3',
-            MessageType::CHANNEL_OPEN,
+            NET_SSH2_MSG_CHANNEL_OPEN,
             'session',
             self::CHANNEL_KEEP_ALIVE,
             $this->window_size_server_to_client[self::CHANNEL_KEEP_ALIVE],
@@ -3069,7 +3340,7 @@ class SSH2
         try {
             $this->send_binary_packet($packet);
 
-            $this->channel_status[self::CHANNEL_KEEP_ALIVE] = MessageType::CHANNEL_OPEN;
+            $this->channel_status[self::CHANNEL_KEEP_ALIVE] = NET_SSH2_MSG_CHANNEL_OPEN;
 
             $response = $this->get_channel_packet(self::CHANNEL_KEEP_ALIVE);
         } catch (\RuntimeException $e) {
@@ -3087,7 +3358,7 @@ class SSH2
      */
     private function reconnect()
     {
-        $this->reset_connection(DisconnectReason::CONNECTION_LOST);
+        $this->reset_connection(NET_SSH2_DISCONNECT_CONNECTION_LOST);
         $this->retry_connect = true;
         $this->connect();
         foreach ($this->auth as $auth) {
@@ -3100,6 +3371,7 @@ class SSH2
      * Resets a connection for re-use
      *
      * @param int $reason
+     * @access private
      */
     protected function reset_connection($reason)
     {
@@ -3121,6 +3393,7 @@ class SSH2
      * @see self::_send_binary_packet()
      * @param bool $skip_channel_filter
      * @return bool|string
+     * @access private
      */
     private function get_binary_packet($skip_channel_filter = false)
     {
@@ -3136,7 +3409,7 @@ class SSH2
                     @stream_select($read, $write, $except, null);
                 } else {
                     if (!@stream_select($read, $write, $except, $this->keepAlive)) {
-                        $this->send_binary_packet(pack('CN', MessageType::IGNORE, 0));
+                        $this->send_binary_packet(pack('CN', NET_SSH2_MSG_IGNORE, 0));
                         return $this->get_binary_packet(true);
                     }
                 }
@@ -3150,7 +3423,7 @@ class SSH2
 
                 if ($this->keepAlive > 0 && $this->keepAlive < $this->curTimeout) {
                     if (!@stream_select($read, $write, $except, $this->keepAlive)) {
-                        $this->send_binary_packet(pack('CN', MessageType::IGNORE, 0));
+                        $this->send_binary_packet(pack('CN', NET_SSH2_MSG_IGNORE, 0));
                         $elapsed = microtime(true) - $start;
                         $this->curTimeout -= $elapsed;
                         return $this->get_binary_packet(true);
@@ -3288,7 +3561,7 @@ class SSH2
         if ($this->hmac_check instanceof Hash) {
             $hmac = stream_get_contents($this->fsock, $this->hmac_size);
             if ($hmac === false || strlen($hmac) != $this->hmac_size) {
-                $this->disconnect_helper(DisconnectReason::MAC_ERROR);
+                $this->disconnect_helper(NET_SSH2_DISCONNECT_MAC_ERROR);
                 throw new \RuntimeException('Error reading socket');
             }
 
@@ -3298,12 +3571,12 @@ class SSH2
             if (($this->hmac_check->getHash() & "\xFF\xFF\xFF\xFF") == 'umac') {
                 $this->hmac_check->setNonce("\0\0\0\0" . pack('N', $this->get_seq_no));
                 if ($hmac != $this->hmac_check->hash($reconstructed)) {
-                    $this->disconnect_helper(DisconnectReason::MAC_ERROR);
+                    $this->disconnect_helper(NET_SSH2_DISCONNECT_MAC_ERROR);
                     throw new \RuntimeException('Invalid UMAC');
                 }
             } else {
                 if ($hmac != $this->hmac_check->hash(pack('Na*', $this->get_seq_no, $reconstructed))) {
-                    $this->disconnect_helper(DisconnectReason::MAC_ERROR);
+                    $this->disconnect_helper(NET_SSH2_DISCONNECT_MAC_ERROR);
                     throw new \RuntimeException('Invalid HMAC');
                 }
             }
@@ -3350,14 +3623,9 @@ class SSH2
 
         if (defined('NET_SSH2_LOGGING')) {
             $current = microtime(true);
-            $message_number = sprintf(
-                '<- %s (since last: %s, network: %ss)',
-                ($constantName = MessageType::findConstantNameByValue($value = ord($payload[0])))
-                    ? "SSH_MSG_$constantName"
-                    : "UNKNOWN ($value)",
-                round($current - $this->last_packet, 4),
-                round($stop - $start, 4)
-            );
+            $message_number = isset($this->message_numbers[ord($payload[0])]) ? $this->message_numbers[ord($payload[0])] : 'UNKNOWN (' . ord($payload[0]) . ')';
+            $message_number = '<- ' . $message_number .
+                              ' (since last: ' . round($current - $this->last_packet, 4) . ', network: ' . round($stop - $start, 4) . 's)';
             $this->append_log($message_number, $payload);
             $this->last_packet = $current;
         }
@@ -3371,6 +3639,7 @@ class SSH2
      * @see self::get_binary_packet()
      * @param int $remaining_length
      * @return string
+     * @access private
      */
     private function read_remaining_bytes($remaining_length)
     {
@@ -3397,7 +3666,7 @@ class SSH2
         if ($remaining_length < -$this->decrypt_block_size || $remaining_length > 0x9000 || $remaining_length % $this->decrypt_block_size != 0) {
             if (!$this->bad_key_size_fix && self::bad_algorithm_candidate($this->decrypt ? $this->decryptName : '') && !($this->bitmap & SSH2::MASK_LOGIN)) {
                 $this->bad_key_size_fix = true;
-                $this->reset_connection(DisconnectReason::KEY_EXCHANGE_FAILED);
+                $this->reset_connection(NET_SSH2_DISCONNECT_KEY_EXCHANGE_FAILED);
                 return false;
             }
             throw new \RuntimeException('Invalid size');
@@ -3411,7 +3680,7 @@ class SSH2
         while ($remaining_length > 0) {
             $temp = stream_get_contents($this->fsock, $remaining_length);
             if ($temp === false || feof($this->fsock)) {
-                $this->disconnect_helper(DisconnectReason::CONNECTION_LOST);
+                $this->disconnect_helper(NET_SSH2_DISCONNECT_CONNECTION_LOST);
                 throw new \RuntimeException('Error reading from socket');
             }
             $buffer .= $temp;
@@ -3430,28 +3699,29 @@ class SSH2
      * @param string $payload
      * @param bool $skip_channel_filter
      * @return string|bool
+     * @access private
      */
     private function filter($payload, $skip_channel_filter)
     {
         switch (ord($payload[0])) {
-            case MessageType::DISCONNECT:
+            case NET_SSH2_MSG_DISCONNECT:
                 Strings::shift($payload, 1);
                 list($reason_code, $message) = Strings::unpackSSH2('Ns', $payload);
-                $this->errors[] = 'SSH_MSG_DISCONNECT: SSH_DISCONNECT_' . DisconnectReason::getConstantNameByValue($reason_code) . "\r\n$message";
+                $this->errors[] = 'SSH_MSG_DISCONNECT: ' . $this->disconnect_reasons[$reason_code] . "\r\n$message";
                 $this->bitmap = 0;
                 return false;
-            case MessageType::IGNORE:
+            case NET_SSH2_MSG_IGNORE:
                 $payload = $this->get_binary_packet($skip_channel_filter);
                 break;
-            case MessageType::DEBUG:
+            case NET_SSH2_MSG_DEBUG:
                 Strings::shift($payload, 2); // second byte is "always_display"
                 list($message) = Strings::unpackSSH2('s', $payload);
                 $this->errors[] = "SSH_MSG_DEBUG: $message";
                 $payload = $this->get_binary_packet($skip_channel_filter);
                 break;
-            case MessageType::UNIMPLEMENTED:
+            case NET_SSH2_MSG_UNIMPLEMENTED:
                 return false;
-            case MessageType::KEXINIT:
+            case NET_SSH2_MSG_KEXINIT:
                 if ($this->session_id !== false) {
                     if (!$this->key_exchange($payload)) {
                         $this->bitmap = 0;
@@ -3462,7 +3732,7 @@ class SSH2
         }
 
         // see http://tools.ietf.org/html/rfc4252#section-5.4; only called when the encryption has been activated and when we haven't already logged in
-        if (($this->bitmap & self::MASK_CONNECTED) && !$this->isAuthenticated() && !is_bool($payload) && ord($payload[0]) == MessageType::USERAUTH_BANNER) {
+        if (($this->bitmap & self::MASK_CONNECTED) && !$this->isAuthenticated() && !is_bool($payload) && ord($payload[0]) == NET_SSH2_MSG_USERAUTH_BANNER) {
             Strings::shift($payload, 1);
             list($this->banner_message) = Strings::unpackSSH2('s', $payload);
             $payload = $this->get_binary_packet();
@@ -3475,41 +3745,41 @@ class SSH2
             }
 
             switch (ord($payload[0])) {
-                case MessageType::CHANNEL_REQUEST:
+                case NET_SSH2_MSG_CHANNEL_REQUEST:
                     if (strlen($payload) == 31) {
                         extract(unpack('cpacket_type/Nchannel/Nlength', $payload));
                         if (substr($payload, 9, $length) == 'keepalive@openssh.com' && isset($this->server_channels[$channel])) {
                             if (ord(substr($payload, 9 + $length))) { // want reply
-                                $this->send_binary_packet(pack('CN', MessageType::CHANNEL_SUCCESS, $this->server_channels[$channel]));
+                                $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_SUCCESS, $this->server_channels[$channel]));
                             }
                             $payload = $this->get_binary_packet($skip_channel_filter);
                         }
                     }
                     break;
-                case MessageType::CHANNEL_DATA:
-                case MessageType::CHANNEL_EXTENDED_DATA:
-                case MessageType::CHANNEL_CLOSE:
-                case MessageType::CHANNEL_EOF:
+                case NET_SSH2_MSG_CHANNEL_DATA:
+                case NET_SSH2_MSG_CHANNEL_EXTENDED_DATA:
+                case NET_SSH2_MSG_CHANNEL_CLOSE:
+                case NET_SSH2_MSG_CHANNEL_EOF:
                     if (!$skip_channel_filter && !empty($this->server_channels)) {
                         $this->binary_packet_buffer = $payload;
                         $this->get_channel_packet(true);
                         $payload = $this->get_binary_packet();
                     }
                     break;
-                case MessageType::GLOBAL_REQUEST: // see http://tools.ietf.org/html/rfc4254#section-4
+                case NET_SSH2_MSG_GLOBAL_REQUEST: // see http://tools.ietf.org/html/rfc4254#section-4
                     Strings::shift($payload, 1);
                     list($request_name) = Strings::unpackSSH2('s', $payload);
                     $this->errors[] = "SSH_MSG_GLOBAL_REQUEST: $request_name";
 
                     try {
-                        $this->send_binary_packet(pack('C', MessageType::REQUEST_FAILURE));
+                        $this->send_binary_packet(pack('C', NET_SSH2_MSG_REQUEST_FAILURE));
                     } catch (\RuntimeException $e) {
-                        return $this->disconnect_helper(DisconnectReason::BY_APPLICATION);
+                        return $this->disconnect_helper(NET_SSH2_DISCONNECT_BY_APPLICATION);
                     }
 
                     $payload = $this->get_binary_packet($skip_channel_filter);
                     break;
-                case MessageType::CHANNEL_OPEN: // see http://tools.ietf.org/html/rfc4254#section-5.1
+                case NET_SSH2_MSG_CHANNEL_OPEN: // see http://tools.ietf.org/html/rfc4254#section-5.1
                     Strings::shift($payload, 1);
                     list($data, $server_channel) = Strings::unpackSSH2('sN', $payload);
                     switch ($data) {
@@ -3531,7 +3801,7 @@ class SSH2
 
                                 $packet = pack(
                                     'CN4',
-                                    MessageType::CHANNEL_OPEN_CONFIRMATION,
+                                    NET_SSH2_MSG_CHANNEL_OPEN_CONFIRMATION,
                                     $server_channel,
                                     $new_channel,
                                     $packet_size,
@@ -3539,16 +3809,16 @@ class SSH2
                                 );
 
                                 $this->server_channels[$new_channel] = $server_channel;
-                                $this->channel_status[$new_channel] = MessageType::CHANNEL_OPEN_CONFIRMATION;
+                                $this->channel_status[$new_channel] = NET_SSH2_MSG_CHANNEL_OPEN_CONFIRMATION;
                                 $this->send_binary_packet($packet);
                             }
                             break;
                         default:
                             $packet = Strings::packSSH2(
                                 'CN2ss',
-                                MessageType::CHANNEL_OPEN_FAILURE,
+                                NET_SSH2_MSG_CHANNEL_OPEN_FAILURE,
                                 $server_channel,
-                                ChannelConnectionFailureReason::ADMINISTRATIVELY_PROHIBITED,
+                                NET_SSH2_OPEN_ADMINISTRATIVELY_PROHIBITED,
                                 '', // description
                                 '' // language tag
                             );
@@ -3556,13 +3826,13 @@ class SSH2
                             try {
                                 $this->send_binary_packet($packet);
                             } catch (\RuntimeException $e) {
-                                return $this->disconnect_helper(DisconnectReason::BY_APPLICATION);
+                                return $this->disconnect_helper(NET_SSH2_DISCONNECT_BY_APPLICATION);
                             }
                     }
 
                     $payload = $this->get_binary_packet($skip_channel_filter);
                     break;
-                case MessageType::CHANNEL_WINDOW_ADJUST:
+                case NET_SSH2_MSG_CHANNEL_WINDOW_ADJUST:
                     Strings::shift($payload, 1);
                     list($channel, $window_size) = Strings::unpackSSH2('NN', $payload);
 
@@ -3580,6 +3850,7 @@ class SSH2
      *
      * Suppress stderr from output
      *
+     * @access public
      */
     public function enableQuietMode()
     {
@@ -3591,6 +3862,7 @@ class SSH2
      *
      * Show stderr in output
      *
+     * @access public
      */
     public function disableQuietMode()
     {
@@ -3602,6 +3874,7 @@ class SSH2
      *
      * @see self::enableQuietMode()
      * @see self::disableQuietMode()
+     * @access public
      * @return bool
      */
     public function isQuietModeEnabled()
@@ -3612,6 +3885,7 @@ class SSH2
     /**
      * Enable request-pty when using exec()
      *
+     * @access public
      */
     public function enablePTY()
     {
@@ -3621,6 +3895,7 @@ class SSH2
     /**
      * Disable request-pty when using exec()
      *
+     * @access public
      */
     public function disablePTY()
     {
@@ -3636,6 +3911,7 @@ class SSH2
      *
      * @see self::enablePTY()
      * @see self::disablePTY()
+     * @access public
      * @return bool
      */
     public function isPTYEnabled()
@@ -3661,16 +3937,17 @@ class SSH2
      * @param bool $skip_extended
      * @return mixed
      * @throws \RuntimeException on connection error
+     * @access private
      */
     protected function get_channel_packet($client_channel, $skip_extended = false)
     {
         if (!empty($this->channel_buffers[$client_channel])) {
             switch ($this->channel_status[$client_channel]) {
-                case MessageType::CHANNEL_REQUEST:
+                case NET_SSH2_MSG_CHANNEL_REQUEST:
                     foreach ($this->channel_buffers[$client_channel] as $i => $packet) {
                         switch (ord($packet[0])) {
-                            case MessageType::CHANNEL_SUCCESS:
-                            case MessageType::CHANNEL_FAILURE:
+                            case NET_SSH2_MSG_CHANNEL_SUCCESS:
+                            case NET_SSH2_MSG_CHANNEL_FAILURE:
                                 unset($this->channel_buffers[$client_channel][$i]);
                                 return substr($packet, 1);
                         }
@@ -3694,7 +3971,7 @@ class SSH2
                     return true;
                 }
                 if ($response === false) {
-                    $this->disconnect_helper(DisconnectReason::CONNECTION_LOST);
+                    $this->disconnect_helper(NET_SSH2_DISCONNECT_CONNECTION_LOST);
                     throw new ConnectionClosedException('Connection closed by server');
                 }
             }
@@ -3712,13 +3989,13 @@ class SSH2
                 if ($this->window_size_server_to_client[$channel] < 0) {
                 // PuTTY does something more analogous to the following:
                 //if ($this->window_size_server_to_client[$channel] < 0x3FFFFFFF) {
-                    $packet = pack('CNN', MessageType::CHANNEL_WINDOW_ADJUST, $this->server_channels[$channel], $this->window_resize);
+                    $packet = pack('CNN', NET_SSH2_MSG_CHANNEL_WINDOW_ADJUST, $this->server_channels[$channel], $this->window_resize);
                     $this->send_binary_packet($packet);
                     $this->window_size_server_to_client[$channel] += $this->window_resize;
                 }
 
                 switch ($type) {
-                    case MessageType::CHANNEL_EXTENDED_DATA:
+                    case NET_SSH2_MSG_CHANNEL_EXTENDED_DATA:
                         /*
                         if ($client_channel == self::CHANNEL_EXEC) {
                             $this->send_channel_packet($client_channel, chr(0));
@@ -3730,14 +4007,14 @@ class SSH2
                         if ($skip_extended || $this->quiet_mode) {
                             continue 2;
                         }
-                        if ($client_channel == $channel && $this->channel_status[$channel] == MessageType::CHANNEL_DATA) {
+                        if ($client_channel == $channel && $this->channel_status[$channel] == NET_SSH2_MSG_CHANNEL_DATA) {
                             return $data;
                         }
                         $this->channel_buffers[$channel][] = chr($type) . $data;
 
                         continue 2;
-                    case MessageType::CHANNEL_REQUEST:
-                        if ($this->channel_status[$channel] == MessageType::CHANNEL_CLOSE) {
+                    case NET_SSH2_MSG_CHANNEL_REQUEST:
+                        if ($this->channel_status[$channel] == NET_SSH2_MSG_CHANNEL_CLOSE) {
                             continue 2;
                         }
                         list($value) = Strings::unpackSSH2('s', $response);
@@ -3755,10 +4032,10 @@ class SSH2
                                     $this->errors[count($this->errors) - 1] .= "\r\n$error_message";
                                 }
 
-                                $this->send_binary_packet(pack('CN', MessageType::CHANNEL_EOF, $this->server_channels[$client_channel]));
-                                $this->send_binary_packet(pack('CN', MessageType::CHANNEL_CLOSE, $this->server_channels[$channel]));
+                                $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_EOF, $this->server_channels[$client_channel]));
+                                $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_CLOSE, $this->server_channels[$channel]));
 
-                                $this->channel_status[$channel] = MessageType::CHANNEL_EOF;
+                                $this->channel_status[$channel] = NET_SSH2_MSG_CHANNEL_EOF;
 
                                 continue 3;
                             case 'exit-status':
@@ -3776,9 +4053,9 @@ class SSH2
                 }
 
                 switch ($this->channel_status[$channel]) {
-                    case MessageType::CHANNEL_OPEN:
+                    case NET_SSH2_MSG_CHANNEL_OPEN:
                         switch ($type) {
-                            case MessageType::CHANNEL_OPEN_CONFIRMATION:
+                            case NET_SSH2_MSG_CHANNEL_OPEN_CONFIRMATION:
                                 list(
                                     $this->server_channels[$channel],
                                     $window_size,
@@ -3793,40 +4070,40 @@ class SSH2
                                 $result = $client_channel == $channel ? true : $this->get_channel_packet($client_channel, $skip_extended);
                                 $this->on_channel_open();
                                 return $result;
-                            case MessageType::CHANNEL_OPEN_FAILURE:
-                                $this->disconnect_helper(DisconnectReason::BY_APPLICATION);
+                            case NET_SSH2_MSG_CHANNEL_OPEN_FAILURE:
+                                $this->disconnect_helper(NET_SSH2_DISCONNECT_BY_APPLICATION);
                                 throw new \RuntimeException('Unable to open channel');
                             default:
                                 if ($client_channel == $channel) {
-                                    $this->disconnect_helper(DisconnectReason::BY_APPLICATION);
+                                    $this->disconnect_helper(NET_SSH2_DISCONNECT_BY_APPLICATION);
                                     throw new \RuntimeException('Unexpected response to open request');
                                 }
                                 return $this->get_channel_packet($client_channel, $skip_extended);
                         }
                         break;
-                    case MessageType::CHANNEL_REQUEST:
+                    case NET_SSH2_MSG_CHANNEL_REQUEST:
                         switch ($type) {
-                            case MessageType::CHANNEL_SUCCESS:
+                            case NET_SSH2_MSG_CHANNEL_SUCCESS:
                                 return true;
-                            case MessageType::CHANNEL_FAILURE:
+                            case NET_SSH2_MSG_CHANNEL_FAILURE:
                                 return false;
-                            case MessageType::CHANNEL_DATA:
+                            case NET_SSH2_MSG_CHANNEL_DATA:
                                 list($data) = Strings::unpackSSH2('s', $response);
                                 $this->channel_buffers[$channel][] = chr($type) . $data;
                                 return $this->get_channel_packet($client_channel, $skip_extended);
                             default:
-                                $this->disconnect_helper(DisconnectReason::BY_APPLICATION);
+                                $this->disconnect_helper(NET_SSH2_DISCONNECT_BY_APPLICATION);
                                 throw new \RuntimeException('Unable to fulfill channel request');
                         }
-                    case MessageType::CHANNEL_CLOSE:
-                        return $type == MessageType::CHANNEL_CLOSE ? true : $this->get_channel_packet($client_channel, $skip_extended);
+                    case NET_SSH2_MSG_CHANNEL_CLOSE:
+                        return $type == NET_SSH2_MSG_CHANNEL_CLOSE ? true : $this->get_channel_packet($client_channel, $skip_extended);
                 }
             }
 
-            // ie. $this->channel_status[$channel] == SSHMsg::CHANNEL_DATA
+            // ie. $this->channel_status[$channel] == NET_SSH2_MSG_CHANNEL_DATA
 
             switch ($type) {
-                case MessageType::CHANNEL_DATA:
+                case NET_SSH2_MSG_CHANNEL_DATA:
                     /*
                     if ($channel == self::CHANNEL_EXEC) {
                         // SCP requires null packets, such as this, be sent.  further, in the case of the ssh.com SSH server
@@ -3851,25 +4128,25 @@ class SSH2
                     }
                     $this->channel_buffers[$channel][] = chr($type) . $data;
                     break;
-                case MessageType::CHANNEL_CLOSE:
+                case NET_SSH2_MSG_CHANNEL_CLOSE:
                     $this->curTimeout = 5;
 
                     if ($this->bitmap & self::MASK_SHELL) {
                         $this->bitmap &= ~self::MASK_SHELL;
                     }
-                    if ($this->channel_status[$channel] != MessageType::CHANNEL_EOF) {
-                        $this->send_binary_packet(pack('CN', MessageType::CHANNEL_CLOSE, $this->server_channels[$channel]));
+                    if ($this->channel_status[$channel] != NET_SSH2_MSG_CHANNEL_EOF) {
+                        $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_CLOSE, $this->server_channels[$channel]));
                     }
 
-                    $this->channel_status[$channel] = MessageType::CHANNEL_CLOSE;
+                    $this->channel_status[$channel] = NET_SSH2_MSG_CHANNEL_CLOSE;
                     if ($client_channel == $channel) {
                         return true;
                     }
                     // fall-through
-                case MessageType::CHANNEL_EOF:
+                case NET_SSH2_MSG_CHANNEL_EOF:
                     break;
                 default:
-                    $this->disconnect_helper(DisconnectReason::BY_APPLICATION);
+                    $this->disconnect_helper(NET_SSH2_DISCONNECT_BY_APPLICATION);
                     throw new \RuntimeException("Error reading channel data ($type)");
             }
         }
@@ -3884,6 +4161,7 @@ class SSH2
      * @param string $logged
      * @see self::_get_binary_packet()
      * @return void
+     * @access private
      */
     protected function send_binary_packet($data, $logged = null)
     {
@@ -4008,14 +4286,9 @@ class SSH2
 
         if (defined('NET_SSH2_LOGGING')) {
             $current = microtime(true);
-            $message_number = sprintf(
-                '-> %s (since last: %s, network: %ss)',
-                ($constantName = MessageType::findConstantNameByValue($value = ord($logged[0]), false))
-                    ? "SSH_MSG_$constantName"
-                    : "UNKNOWN ($value)",
-                round($current - $this->last_packet, 4),
-                round($stop - $start, 4)
-            );
+            $message_number = isset($this->message_numbers[ord($logged[0])]) ? $this->message_numbers[ord($logged[0])] : 'UNKNOWN (' . ord($logged[0]) . ')';
+            $message_number = '-> ' . $message_number .
+                              ' (since last: ' . round($current - $this->last_packet, 4) . ', network: ' . round($stop - $start, 4) . 's)';
             $this->append_log($message_number, $logged);
             $this->last_packet = $current;
         }
@@ -4033,13 +4306,10 @@ class SSH2
      *
      * @param string $message_number
      * @param string $message
+     * @access private
      */
     private function append_log($message_number, $message)
     {
-        if (!defined('NET_SSH2_LOGGING')) {
-            return;
-        }
-
         // remove the byte identifying the message type from all but the first two messages (ie. the identification strings)
         if (strlen($message_number) > 2) {
             Strings::shift($message);
@@ -4137,7 +4407,7 @@ class SSH2
             $temp = Strings::shift($data, $max_size);
             $packet = Strings::packSSH2(
                 'CNs',
-                MessageType::CHANNEL_DATA,
+                NET_SSH2_MSG_CHANNEL_DATA,
                 $this->server_channels[$client_channel],
                 $temp
             );
@@ -4156,18 +4426,19 @@ class SSH2
      * @param int $client_channel
      * @param bool $want_reply
      * @return void
+     * @access private
      */
     private function close_channel($client_channel, $want_reply = false)
     {
         // see http://tools.ietf.org/html/rfc4254#section-5.3
 
-        $this->send_binary_packet(pack('CN', MessageType::CHANNEL_EOF, $this->server_channels[$client_channel]));
+        $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_EOF, $this->server_channels[$client_channel]));
 
         if (!$want_reply) {
-            $this->send_binary_packet(pack('CN', MessageType::CHANNEL_CLOSE, $this->server_channels[$client_channel]));
+            $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_CLOSE, $this->server_channels[$client_channel]));
         }
 
-        $this->channel_status[$client_channel] = MessageType::CHANNEL_CLOSE;
+        $this->channel_status[$client_channel] = NET_SSH2_MSG_CHANNEL_CLOSE;
 
         $this->curTimeout = 5;
 
@@ -4179,7 +4450,7 @@ class SSH2
         }
 
         if ($want_reply) {
-            $this->send_binary_packet(pack('CN', MessageType::CHANNEL_CLOSE, $this->server_channels[$client_channel]));
+            $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_CLOSE, $this->server_channels[$client_channel]));
         }
 
         if ($this->bitmap & self::MASK_SHELL) {
@@ -4192,11 +4463,12 @@ class SSH2
      *
      * @param int $reason
      * @return false
+     * @access protected
      */
     protected function disconnect_helper($reason)
     {
         if ($this->bitmap & self::MASK_CONNECTED) {
-            $data = Strings::packSSH2('CNss', MessageType::DISCONNECT, $reason, '', '');
+            $data = Strings::packSSH2('CNss', NET_SSH2_MSG_DISCONNECT, $reason, '', '');
             try {
                 $this->send_binary_packet($data);
             } catch (\Exception $e) {
@@ -4212,10 +4484,34 @@ class SSH2
     }
 
     /**
+     * Define Array
+     *
+     * Takes any number of arrays whose indices are integers and whose values are strings and defines a bunch of
+     * named constants from it, using the value as the name of the constant and the index as the value of the constant.
+     * If any of the constants that would be defined already exists, none of the constants will be defined.
+     *
+     * @param mixed[] ...$args
+     * @access protected
+     */
+    protected function define_array(...$args)
+    {
+        foreach ($args as $arg) {
+            foreach ($arg as $key => $value) {
+                if (!defined($value)) {
+                    define($value, $key);
+                } else {
+                    break 2;
+                }
+            }
+        }
+    }
+
+    /**
      * Returns a log of the packets that have been sent and received.
      *
      * Returns a string if NET_SSH2_LOGGING == self::LOG_COMPLEX, an array if NET_SSH2_LOGGING == self::LOG_SIMPLE and false if !defined('NET_SSH2_LOGGING')
      *
+     * @access public
      * @return array|false|string
      */
     public function getLog()
@@ -4240,6 +4536,7 @@ class SSH2
      *
      * @param array $message_log
      * @param array $message_number_log
+     * @access private
      * @return string
      */
     protected function format_log($message_log, $message_number_log)
@@ -4277,6 +4574,7 @@ class SSH2
      * of said channel opening. Must be called after
      * channel open confirmation received
      *
+     * @access private
      */
     private function on_channel_open()
     {
@@ -4292,6 +4590,7 @@ class SSH2
      * @param array $array1
      * @param array $array2
      * @return mixed False if intersection is empty, else intersected value.
+     * @access private
      */
     private static function array_intersect_first($array1, $array2)
     {
@@ -4307,6 +4606,7 @@ class SSH2
      * Returns all errors
      *
      * @return string[]
+     * @access public
      */
     public function getErrors()
     {
@@ -4317,6 +4617,7 @@ class SSH2
      * Returns the last error
      *
      * @return string
+     * @access public
      */
     public function getLastError()
     {
@@ -4331,6 +4632,7 @@ class SSH2
      * Return the server identification.
      *
      * @return string|false
+     * @access public
      */
     public function getServerIdentification()
     {
@@ -4343,6 +4645,7 @@ class SSH2
      * Returns a list of algorithms the server supports
      *
      * @return array
+     * @access public
      */
     public function getServerAlgorithms()
     {
@@ -4370,6 +4673,7 @@ class SSH2
      * Returns a list of KEX algorithms that phpseclib supports
      *
      * @return array
+     * @access public
      */
     public static function getSupportedKEXAlgorithms()
     {
@@ -4406,6 +4710,7 @@ class SSH2
      * Returns a list of host key algorithms that phpseclib supports
      *
      * @return array
+     * @access public
      */
     public static function getSupportedHostKeyAlgorithms()
     {
@@ -4425,6 +4730,7 @@ class SSH2
      * Returns a list of symmetric key algorithms that phpseclib supports
      *
      * @return array
+     * @access public
      */
     public static function getSupportedEncryptionAlgorithms()
     {
@@ -4444,7 +4750,7 @@ class SSH2
             'aes192-ctr',     // RECOMMENDED       AES with 192-bit key
             'aes256-ctr',     // RECOMMENDED       AES with 256-bit key
 
-            // from <https://github.com/openssh/openssh-portable/blob/001aa55/PROTOCOL.chacha20poly1305>:
+            // from <https://git.io/fhxOl>:
             // one of the big benefits of chacha20-poly1305 is speed. the problem is...
             // libsodium doesn't generate the poly1305 keys in the way ssh does and openssl's PHP bindings don't even
             // seem to support poly1305 currently. so even if libsodium or openssl are being used for the chacha20
@@ -4529,6 +4835,7 @@ class SSH2
      * Returns a list of MAC algorithms that phpseclib supports
      *
      * @return array
+     * @access public
      */
     public static function getSupportedMACAlgorithms()
     {
@@ -4559,6 +4866,7 @@ class SSH2
      * Returns a list of compression algorithms that phpseclib supports
      *
      * @return array
+     * @access public
      */
     public static function getSupportedCompressionAlgorithms()
     {
@@ -4576,6 +4884,7 @@ class SSH2
      * Uses the same format as https://www.php.net/ssh2-methods-negotiated
      *
      * @return array
+     * @access public
      */
     public function getAlgorithmsNegotiated()
     {
@@ -4607,6 +4916,7 @@ class SSH2
      * Allows you to set the terminal
      *
      * @param string $term
+     * @access public
      */
     public function setTerminal($term)
     {
@@ -4618,6 +4928,7 @@ class SSH2
      * <https://www.php.net/manual/en/function.ssh2-connect.php>
      *
      * @param array $methods
+     * @access public
      */
     public function setPreferredAlgorithms(array $methods)
     {
@@ -4704,6 +5015,7 @@ class SSH2
      * authentication may be relevant for getting legal protection."
      *
      * @return string
+     * @access public
      */
     public function getBannerMessage()
     {
@@ -4719,6 +5031,7 @@ class SSH2
      * @return string|false
      * @throws \RuntimeException on badly formatted keys
      * @throws \phpseclib3\Exception\NoSupportedAlgorithmsException when the key isn't in a supported format
+     * @access public
      */
     public function getServerPublicHostKey()
     {
@@ -4788,12 +5101,12 @@ class SSH2
                 $key = $key->withHash($hash);
                 break;
             default:
-                $this->disconnect_helper(DisconnectReason::HOST_KEY_NOT_VERIFIABLE);
+                $this->disconnect_helper(NET_SSH2_DISCONNECT_HOST_KEY_NOT_VERIFIABLE);
                 throw new NoSupportedAlgorithmsException('Unsupported signature format');
         }
 
         if (!$key->verify($this->exchange_hash, $signature)) {
-            return $this->disconnect_helper(DisconnectReason::HOST_KEY_NOT_VERIFIABLE);
+            return $this->disconnect_helper(NET_SSH2_DISCONNECT_HOST_KEY_NOT_VERIFIABLE);
         };
 
         return $this->signature_format . ' ' . $server_public_host_key;
@@ -4803,6 +5116,7 @@ class SSH2
      * Returns the exit status of an SSH command or false.
      *
      * @return false|int
+     * @access public
      */
     public function getExitStatus()
     {
@@ -4816,6 +5130,7 @@ class SSH2
      * Returns the number of columns for the terminal window size.
      *
      * @return int
+     * @access public
      */
     public function getWindowColumns()
     {
@@ -4826,6 +5141,7 @@ class SSH2
      * Returns the number of rows for the terminal window size.
      *
      * @return int
+     * @access public
      */
     public function getWindowRows()
     {
@@ -4836,6 +5152,7 @@ class SSH2
      * Sets the number of columns for the terminal window size.
      *
      * @param int $value
+     * @access public
      */
     public function setWindowColumns($value)
     {
@@ -4846,6 +5163,7 @@ class SSH2
      * Sets the number of rows for the terminal window size.
      *
      * @param int $value
+     * @access public
      */
     public function setWindowRows($value)
     {
@@ -4857,6 +5175,7 @@ class SSH2
      *
      * @param int $columns
      * @param int $rows
+     * @access public
      */
     public function setWindowSize($columns = 80, $rows = 24)
     {
@@ -4868,6 +5187,7 @@ class SSH2
      * To String Magic Method
      *
      * @return string
+     * @access public
      */
     #[\ReturnTypeWillChange]
     public function __toString()
@@ -4923,11 +5243,12 @@ class SSH2
         return $temp;
     }
 
-    /**
+    /*
      * Update packet types in log history
      *
      * @param string $old
      * @param string $new
+     * @access private
      */
     private function updateLogHistory($old, $new)
     {

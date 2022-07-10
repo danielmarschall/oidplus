@@ -3,6 +3,8 @@
 /**
  * DSA Private Key
  *
+ * @category  Crypt
+ * @package   DSA
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2015 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -19,7 +21,9 @@ use phpseclib3\Math\BigInteger;
 /**
  * DSA Private Key
  *
+ * @package DSA
  * @author  Jim Wigginton <terrafrost@php.net>
+ * @access  public
  */
 class PrivateKey extends DSA implements Common\PrivateKey
 {
@@ -29,6 +33,7 @@ class PrivateKey extends DSA implements Common\PrivateKey
      * DSA secret exponent x
      *
      * @var \phpseclib3\Math\BigInteger
+     * @access private
      */
     protected $x;
 
@@ -51,6 +56,7 @@ class PrivateKey extends DSA implements Common\PrivateKey
      * without the parameters and the PKCS1 DSA public key format does not include the parameters.
      *
      * @see self::getPrivateKey()
+     * @access public
      * @return mixed
      */
     public function getPublicKey()
@@ -72,6 +78,7 @@ class PrivateKey extends DSA implements Common\PrivateKey
      * Create a signature
      *
      * @see self::verify()
+     * @access public
      * @param string $message
      * @return mixed
      */

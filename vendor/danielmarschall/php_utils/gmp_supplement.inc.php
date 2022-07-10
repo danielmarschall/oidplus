@@ -2,8 +2,8 @@
 
 /*
  * PHP GMP-Supplement implemented using BCMath
- * Copyright 2020-2021 Daniel Marschall, ViaThinkSoft
- * Version 2021-05-21
+ * Copyright 2020-2022 Daniel Marschall, ViaThinkSoft
+ * Version 2021-06-29
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -685,6 +685,8 @@ if (function_exists('bcadd')) {
 	// ----------------- Helper functions -----------------
 
 	function base_convert_bigint($numstring, $frombase, $tobase) {
+		$numstring = "".$numstring;
+
 		$frombase_str = '';
 		for ($i=0; $i<$frombase; $i++) {
 			$frombase_str .= strtoupper(base_convert((string)$i, 10, 36));

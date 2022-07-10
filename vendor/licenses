@@ -7,9 +7,9 @@ Name                              Version             License
 components/jquery                 3.6.0               MIT                    
 components/jqueryui               1.12.1              MIT                    
 danielmarschall/fileformats       dev-master 880e97b  Apache-2.0             
-danielmarschall/php_utils         dev-master b42cf59  Apache-2.0             
+danielmarschall/php_utils         dev-master 4c69eb6  Apache-2.0             
 danielmarschall/uuid_mac_utils    dev-master 31174ea  Apache-2.0             
-danielmarschall/vnag              dev-master 1c3cb72  Apache-2.0             
+danielmarschall/vnag              dev-master 469bc0e  Apache-2.0             
 dcodeio/bcrypt.js                 master master       BSD-3-Clause, MIT      
 emn178/js-sha3                    master master       MIT                    
 firebase/php-jwt                  v5.5.1              BSD-3-Clause           
@@ -17,9 +17,9 @@ gedmarc/layout                    master master       GPL-3.0-or-later, MIT
 matthiasmullie/minify             1.3.68              MIT                    
 matthiasmullie/path-converter     1.1.3               MIT                    
 n-other/php-sha3                  dev-master 54ee3b9  MIT                    
-paragonie/constant_time_encoding  v2.5.0              MIT                    
+paragonie/constant_time_encoding  v2.6.3              MIT                    
 paragonie/random_compat           v9.99.100           MIT                    
-phpseclib/phpseclib               dev-master 62c36da  MIT                    
+phpseclib/phpseclib               3.0.14              MIT                    
 script47/bs5-utils                master master       MIT                    
 spamspan/spamspan                 master              GPL-2.0-only           
 symfony/polyfill-mbstring         v1.19.0             MIT                    

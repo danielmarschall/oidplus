@@ -1,26 +1,26 @@
 <?php /* <ViaThinkSoftSignature>
-XdQ9Y3ujgj7pXb9l4iNXGDCzSSPfkX4MJWEcWF3KcYbnzlLwYooi73hdid4ffOGqT
-CR732fR/PWWQhWVXxtUPeEyf23Y5iROC6mLGr5bMyPwuOCMXyqjdYsUjGEYTRuWAi
-7deUSHC8pz2U4NJFf5ochQhcnoNS6CIR4WnwfhUwjp2s/5qC5gnIjpx08dkpwV/YF
-TcT9gNlDkkefu/HIiju9BpYbT2C6+VPue3qDXRyFdTxv1/7L9ohhpVRSkjzh1kNCi
-8lmtud+Anvc1+9jAxwwBDuTcJdvkYiWucEml1CYUMPF29ipb0Itqm6wfE9TYDgD1E
-rsYxXn5SE0rIjZwDhjtmM8j7iZdNP56zoyS6NdoZ7iYYhSaWwc8hbPBo8Uvhhh3CE
-1fsBeh6bn7Ob4fVMU3WzHwD6D7h0/EvQi/ZD9OxtG0DIGsT5ad/b0Zcl0pmpqRols
-fru/mcw0Qr5Tfx7M9GUK3lLmzkxFtHDKDQAYObtLPDutHdL8u3pA0u41+llGV77Fi
-ajxpjbl4DNiLzkQkIp4wET0DWHhftvMKDz2tme4uQcpqME7rLfh0xL2ETPBT8o44V
-lw18TTJ+m+1fCTdqMb391Ak3dChGfPGf/IT1IF02h6t2+1HINMjYk7bdTxPYoHOJc
-jOPMC18nJTpzOhd880+eng7sSiFZ/ShXP+cqywSrnNi9JYRlYb4hhOB/BbVL+/esw
-l8Z1TMaKbiOZUF+y+PfNlsy3J2GKL56kwsU1/sct0nsPz43F1Gf/XYOBxeF1Ci55H
-KJdGhcn8JJoI6gg9vKa6FO99KFMjRXXsAAitEKj5w4NjOPUZwwfMWSLINgOWqj/fu
-Pr/t9Ek/khGaYdn4h0GXMC9qQazzPwV/i1zJYJa/VTwtkgl1mqAvSiKZSEvO2XgeG
-ZpRQ/JmfI1UO85pFY8g31WLNM6mexOd6sCu7KW6MYkT1p34QW9inyrymKb8KV9Hji
-r2vVa/Tzg7qTnohDNUZ5fY8kZ1tRNIt7QTe0eCg1BIK2/Rgpnmo+ULyC6KMAu6TgU
-i6pXkNaN3JRAgKfJlUcyo0mnLaHUGZ+hqSL3M0gYwuqVnpVeVdyr1AyN1RDBB2aTq
-EOu7KMdKFcQo9aZPM91RmOQ1WsV7QFIyxbzs/Mjq6fIbLPp8qeSxKk7MoMzlmsREy
-Xcf4uMTiJOg7WRSsRMNy2vmDXjczYfXi2Ak+oG9M6n4gHy8UqQ4IjamqBOFPkqAFu
-kp300s3yEdmMowo02L5B69ct7AcSVZgKeiO1xVYUGywdX/wLzEVqzaeJqA2fVz8wy
-pjNw5bJ6SmecLG4fb1qMndOywS1XRUoNL7goRC8MVC/nRyo2GZrU707JKlX1S5eFD
-g==
+Wg+EYgkO45tkUYzHp3wFsbyVVQadb07ttd04MjjH7C7i7UygR0ZiFQfpqQ5pc6i6M
+bd+RpyfWYxeMRU8KLRO/I2CymXtB/L11tisWnZRRVSBBsoVr73xZFIDrZiMC+Amxs
+/WqnIRJIVCCniLDPPzp+WlIq7/e8djQukSglqSsL4Dhvk37k7iWJuAkyoFodffOVQ
+FHLvcfvw/yjzSvLzE/3kAOToZ7OmNBfVhJKcUOYouYINCrxrqvY7FfOWz/GftnHkV
+5vjYJrTaoKpYW3N4Xoi0HBVfzTKQjND4ihulrkV4p6PhHdbdD5dXNaXUERgjAqeED
+tvpQzPHqA25Q74llkjFDeyNFHkEMKmiqdVbO/LcWHetROqMRu2on6Eghy7BCgqsfD
+lPXeHS2EN+AhcfPpFBZ59crM/qWw+LSrbQfvI/SScwlT3z0+vjKRuLOBvz2US3Mce
+UMwSkE+BGNW5LEup7RatyapYEa6ueanzzPMMv+DUvBxTfVV0l6JXteQCbWURMBSOg
+CxmMT5ewI4xaGn94yLmW95YIKdsF6upDLkG+Fqpjya0so0wKOyVc4RYgmAuo5zJvR
+7n89KCF4Z4Gl8AYyNnlKWDYHi2CYdxmfngr0eY5GyHor9qIN8wNdMerTkYQ6R1iG3
+ZGv0KPFfTdQyVOuiVnVDk5rcGwxMEgckIJSuBu7cy8oGq/wMPjdwGlEXWv2dGe7dY
+KxtB4m4lOeW3izrPyS9LppBFhjQ0CL9KZ4VJHpyZcZJ0LYGA8wX3bCRyaXRzjbDUS
+blT9mRURn6gLOmn1u0bjPqEV2GpZte1XaSB109vmgsdjCc07Wek3ItAw4KrKN29/j
+8ZKHvpamQoN6oGLr3aMzkuNhYmrNuJBJt1m7PsqTA4ZoB1JvJ3AzTBaBjYcAIt+tq
+QE9XHcjudqlECrbApzMmRzCBb2MVRnuIgaMZ6dizCPWJl/bkuqCjizMV2TbLLUnIx
+/fRb2YX98uPNsdWRTt8kZJit6QmwPi6YKJO3YKZUkaCtaM7mwjVZ0g/ZNkX2VBZ8k
+OW0JumHLXOcbQLCi6dVjsyp4fsEXmiQYLksGQtyhDtGVj/MVDz0MZMJosClcqjfCa
+M3DD8exxuvwFLIj9+y52IZKxOlsW/fB/fQiBmay/OOsyYHGMfVEpFZNnOMweB13xR
+SpB8NaUON7MUCKwG1PfdmQcMZpwA01QREkVW4/u75qPr3OoyyeJ3/zYJhJXSv3md6
+V6V53FLy2SG13eHajqVQDLrYDqu56V/GL/tI4JLIoFhKr2gzj2lFJFGyr4peCipRD
+ijdZWqbFUcDFJS8c0lJ1P68D1ATEB0m92CDen1ttVUCOUO5CK0+Qc5MbKCTXlr2OY
+A==
 </ViaThinkSoftSignature> */ ?>
 <?php
 
@@ -35,7 +35,7 @@ g==
 
       Developed by Daniel Marschall             www.viathinksoft.com
       Licensed under the terms of the Apache 2.0 license
-      Revision 2022-04-09
+      Revision 2022-06-06
 
 */
 
@@ -347,7 +347,7 @@ function _empty($x) {
 }
 
 abstract class VNag {
-	/*public*/ const VNAG_VERSION = '2022-04-09';
+	/*public*/ const VNAG_VERSION = '2022-06-06';
 
 	// Status 0..3 for STATUSMODEL_SERVICE (the default status model):
 	# The guideline states: "Higher-level errors (such as name resolution errors, socket timeouts, etc) are outside of the control of plugins and should generally NOT be reported as UNKNOWN states."
@@ -1727,7 +1727,7 @@ class VNagRange {
 	// see https://nagios-plugins.org/doc/guidelines.html#THRESHOLDFORMAT
 	// We allow UOMs inside the range definition, e.g. "-w @10M:50M"
 
-	public /*VNagValueUomPair|'inf'*/ $start;
+	public /*VNagValueUomPair|'-inf'*/ $start;
 	public /*VNagValueUomPair|'inf'*/ $end;
 	public /*boolean*/ $warnInsideRange;
 
@@ -1745,7 +1745,7 @@ class VNagRange {
 
 		if ($m[3] === ':') {
 			if ($m[2] === '~') {
-				$this->start = 'inf';
+				$this->start = '-inf';
 			} else {
 				$this->start = new VNagValueUomPair($m[2]);
 			}
@@ -1763,15 +1763,15 @@ class VNagRange {
 
 			if ($singleValueBehavior == VNag::SINGLEVALUE_RANGE_DEFAULT) {
 				// Default behavior according to the development guidelines:
-				//  x means  x:x, which means, everything except x% is bad.
-				// @x means @x:x, which means, x is bad and everything else is good.
-				$this->start = new VNagValueUomPair($x);
+				//  x means  0:x, which means, x>10 is bad
+				// @x means @0:x, which means, x<=10 is bad
+				$this->start = new VNagValueUomPair('0'.((new VNagValueUomPair($x))->getUom()));
 				$this->end   = new VNagValueUomPair($x);
 			} else if ($singleValueBehavior == VNag::SINGLEVALUE_RANGE_VAL_GT_X_BAD) {
 				// The single value x means, everything > x is bad. @x is not defined.
 				if ($this->warnInsideRange) throw new VNagInvalidRangeException(VNagLang::$singlevalue_unexpected_at_symbol);
 				$this->warnInsideRange = 0;
-				$this->start = 'inf';
+				$this->start = '-inf';
 				$this->end   = new VNagValueUomPair($x);
 			} else if ($singleValueBehavior == VNag::SINGLEVALUE_RANGE_VAL_GE_X_BAD) {
 				// The single value x means, everything >= x is bad. @x is not defined.
@@ -1789,7 +1789,7 @@ class VNagRange {
 				// The single value x means, everything <= x is bad. @x is not defined.
 				if ($this->warnInsideRange) throw new VNagInvalidRangeException(VNagLang::$singlevalue_unexpected_at_symbol);
 				$this->warnInsideRange = 1;
-				$this->start = 'inf';
+				$this->start = '-inf';
 				$this->end   = new VNagValueUomPair($x);
 			} else {
 				throw new VNagException(VNagLang::$illegalSingleValueBehavior);
@@ -1819,7 +1819,7 @@ class VNagRange {
 			$ret = '@';
 		}
 
-		if ($this->start === 'inf') {
+		if ($this->start === '-inf') {
 			$ret .= '~';
 		} else {
 			$ret .= $this->start;
@@ -1841,19 +1841,19 @@ class VNagRange {
 		foreach ($values as $value) {
 			if (!($value instanceof VNagValueUomPair)) $value = new VNagValueUomPair($value);
 
-			assert(($this->start === 'inf') || ($this->start instanceof VNagValueUomPair));
-			assert(($this->end   === 'inf') || ($this->end   instanceof VNagValueUomPair));
+			assert(($this->start === '-inf') || ($this->start instanceof VNagValueUomPair));
+			assert(($this->end   === 'inf' ) || ($this->end   instanceof VNagValueUomPair));
 
-			if (($this->start !== 'inf') && (!$this->start->compatibleWith($value))) continue;
-			if (($this->end   !== 'inf') && (!$this->end->compatibleWith($value)))   continue;
+			if (($this->start !== '-inf') && (!$this->start->compatibleWith($value))) continue;
+			if (($this->end   !== 'inf')  && (!$this->end->compatibleWith($value)))   continue;
 			$compatibleCount++;
 
 			if ($this->warnInsideRange) {
-				return (($this->start === 'inf') || (VNagValueUomPair::compare($value,$this->start) >= 0)) &&
-				       (($this->end   === 'inf') || (VNagValueUomPair::compare($value,$this->end)   <= 0));
+				return (($this->start === '-inf') || (VNagValueUomPair::compare($value,$this->start) >= 0)) &&
+				       (($this->end   === 'inf')  || (VNagValueUomPair::compare($value,$this->end)   <= 0));
 			} else {
-				return (($this->start !== 'inf') && (VNagValueUomPair::compare($value,$this->start) <  0)) ||
-				       (($this->end   !== 'inf') && (VNagValueUomPair::compare($value,$this->end)   >  0));
+				return (($this->start !== '-inf') && (VNagValueUomPair::compare($value,$this->start) <  0)) ||
+				       (($this->end   !== 'inf')  && (VNagValueUomPair::compare($value,$this->end)   >  0));
 			}
 		}
 
@@ -1963,6 +1963,9 @@ class VNagValueUomPair {
 				} else if ($target == 'KB') {
 					$res->uom = 'KB';
 					$res->value *= 1024;
+				} else if ($target == 'MB') {
+					$res->uom = 'MB';
+					$res->value *= 1;
 				} else if ($target == 'GB') {
 					$res->uom = 'GB';
 					$res->value /= 1024;
@@ -1973,7 +1976,10 @@ class VNagValueUomPair {
 					throw new VNagUomConvertException($res->uom, $target);
 				}
 			} else if ($res->uom == 's') {
-				if ($target == 'ms') {
+				if ($target == 's') {
+					$res->uom = 's';
+					$res->value /= 1;
+				} else if ($target == 'ms') {
 					$res->uom = 'ms';
 					$res->value /= 1000;
 				} else if ($target == 'us') {

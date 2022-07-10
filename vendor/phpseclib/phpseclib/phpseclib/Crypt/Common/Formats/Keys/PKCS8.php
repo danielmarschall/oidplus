@@ -17,6 +17,8 @@
  * is specific to private keys it's basically creating a DER-encoded wrapper
  * for keys. This just extends that same concept to public keys (much like ssh-keygen)
  *
+ * @category  Crypt
+ * @package   Common
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2015 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -41,7 +43,9 @@ use phpseclib3\File\ASN1\Maps;
 /**
  * PKCS#8 Formatted Key Handler
  *
+ * @package Common
  * @author  Jim Wigginton <terrafrost@php.net>
+ * @access  public
  */
 abstract class PKCS8 extends PKCS
 {
@@ -49,6 +53,7 @@ abstract class PKCS8 extends PKCS
      * Default encryption algorithm
      *
      * @var string
+     * @access private
      */
     private static $defaultEncryptionAlgorithm = 'id-PBES2';
 
@@ -58,6 +63,7 @@ abstract class PKCS8 extends PKCS
      * Only used when defaultEncryptionAlgorithm is id-PBES2
      *
      * @var string
+     * @access private
      */
     private static $defaultEncryptionScheme = 'aes128-CBC-PAD';
 
@@ -67,6 +73,7 @@ abstract class PKCS8 extends PKCS
      * Only used when defaultEncryptionAlgorithm is id-PBES2
      *
      * @var string
+     * @access private
      */
     private static $defaultPRF = 'id-hmacWithSHA256';
 
@@ -74,6 +81,7 @@ abstract class PKCS8 extends PKCS
      * Default Iteration Count
      *
      * @var int
+     * @access private
      */
     private static $defaultIterationCount = 2048;
 
@@ -81,12 +89,14 @@ abstract class PKCS8 extends PKCS
      * OIDs loaded
      *
      * @var bool
+     * @access private
      */
     private static $oidsLoaded = false;
 
     /**
      * Sets the default encryption algorithm
      *
+     * @access public
      * @param string $algo
      */
     public static function setEncryptionAlgorithm($algo)
@@ -97,6 +107,7 @@ abstract class PKCS8 extends PKCS
     /**
      * Sets the default encryption algorithm for PBES2
      *
+     * @access public
      * @param string $algo
      */
     public static function setEncryptionScheme($algo)
@@ -107,6 +118,7 @@ abstract class PKCS8 extends PKCS
     /**
      * Sets the iteration count
      *
+     * @access public
      * @param int $count
      */
     public static function setIterationCount($count)
@@ -117,6 +129,7 @@ abstract class PKCS8 extends PKCS
     /**
      * Sets the PRF for PBES2
      *
+     * @access public
      * @param string $algo
      */
     public static function setPRF($algo)
@@ -128,6 +141,7 @@ abstract class PKCS8 extends PKCS
      * Returns a SymmetricKey object based on a PBES1 $algo
      *
      * @return \phpseclib3\Crypt\Common\SymmetricKey
+     * @access public
      * @param string $algo
      */
     private static function getPBES1EncryptionObject($algo)
@@ -177,6 +191,7 @@ abstract class PKCS8 extends PKCS
      * Returns a hash based on a PBES1 $algo
      *
      * @return string
+     * @access public
      * @param string $algo
      */
     private static function getPBES1Hash($algo)
@@ -192,6 +207,7 @@ abstract class PKCS8 extends PKCS
      * Returns a KDF baesd on a PBES1 $algo
      *
      * @return string
+     * @access public
      * @param string $algo
      */
     private static function getPBES1KDF($algo)
@@ -213,6 +229,7 @@ abstract class PKCS8 extends PKCS
      * Returns a SymmetricKey object baesd on a PBES2 $algo
      *
      * @return SymmetricKey
+     * @access public
      * @param string $algo
      */
     private static function getPBES2EncryptionObject($algo)
@@ -247,6 +264,7 @@ abstract class PKCS8 extends PKCS
     /**
      * Initialize static variables
      *
+     * @access private
      */
     private static function initialize_static_variables()
     {
@@ -310,6 +328,7 @@ abstract class PKCS8 extends PKCS
     /**
      * Break a public or private key down into its constituent components
      *
+     * @access public
      * @param string $key
      * @param string $password optional
      * @return array
@@ -486,6 +505,7 @@ abstract class PKCS8 extends PKCS
     /**
      * Wrap a private key appropriately
      *
+     * @access public
      * @param string $key
      * @param string $attr
      * @param mixed $params
@@ -599,6 +619,7 @@ abstract class PKCS8 extends PKCS
     /**
      * Wrap a public key appropriately
      *
+     * @access public
      * @param string $key
      * @param mixed $params
      * @param string $oid

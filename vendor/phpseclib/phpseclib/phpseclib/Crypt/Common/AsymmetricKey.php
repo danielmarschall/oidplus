@@ -5,6 +5,8 @@
  *
  * PHP version 5
  *
+ * @category  Crypt
+ * @package   AsymmetricKey
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2016 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -23,6 +25,7 @@ use phpseclib3\Math\BigInteger;
 /**
  * Base Class for all asymmetric cipher classes
  *
+ * @package AsymmetricKey
  * @author  Jim Wigginton <terrafrost@php.net>
  */
 abstract class AsymmetricKey
@@ -31,6 +34,7 @@ abstract class AsymmetricKey
      * Precomputed Zero
      *
      * @var \phpseclib3\Math\BigInteger
+     * @access private
      */
     protected static $zero;
 
@@ -38,6 +42,7 @@ abstract class AsymmetricKey
      * Precomputed One
      *
      * @var \phpseclib3\Math\BigInteger
+     * @access private
      */
     protected static $one;
 
@@ -45,6 +50,7 @@ abstract class AsymmetricKey
      * Format of the loaded key
      *
      * @var string
+     * @access private
      */
     protected $format;
 
@@ -52,6 +58,7 @@ abstract class AsymmetricKey
      * Hash function
      *
      * @var \phpseclib3\Crypt\Hash
+     * @access private
      */
     protected $hash;
 
@@ -59,6 +66,7 @@ abstract class AsymmetricKey
      * HMAC function
      *
      * @var \phpseclib3\Crypt\Hash
+     * @access private
      */
     private $hmac;
 
@@ -67,6 +75,7 @@ abstract class AsymmetricKey
      *
      * @see self::initialize_static_variables()
      * @var array
+     * @access private
      */
     private static $plugins = [];
 
@@ -75,6 +84,7 @@ abstract class AsymmetricKey
      *
      * @see self::initialize_static_variables()
      * @var array
+     * @access private
      */
     private static $invisiblePlugins = [];
 
@@ -83,6 +93,7 @@ abstract class AsymmetricKey
      *
      * @see self::initialize_static_variables()
      * @var array
+     * @access private
      */
     private static $signatureFormats = [];
 
@@ -91,6 +102,7 @@ abstract class AsymmetricKey
      *
      * @see self::initialize_static_variables()
      * @var array
+     * @access private
      */
     private static $signatureFileFormats = [];
 
@@ -98,6 +110,7 @@ abstract class AsymmetricKey
      * Available Engines
      *
      * @var boolean[]
+     * @access private
      */
     protected static $engines = [];
 
@@ -105,6 +118,7 @@ abstract class AsymmetricKey
      * Key Comment
      *
      * @var null|string
+     * @access private
      */
     private $comment;
 
@@ -185,6 +199,7 @@ abstract class AsymmetricKey
      * Loads a private key
      *
      * @return PrivateKey
+     * @access public
      * @param string|array $key
      * @param string $password optional
      */
@@ -201,6 +216,7 @@ abstract class AsymmetricKey
      * Loads a public key
      *
      * @return PublicKey
+     * @access public
      * @param string|array $key
      */
     public static function loadPublicKey($key)
@@ -216,6 +232,7 @@ abstract class AsymmetricKey
      * Loads parameters
      *
      * @return AsymmetricKey
+     * @access public
      * @param string|array $key
      */
     public static function loadParameters($key)
@@ -263,6 +280,7 @@ abstract class AsymmetricKey
      * Loads a private key
      *
      * @return PrivateKey
+     * @access public
      * @param string $type
      * @param string $key
      * @param string $password optional
@@ -280,6 +298,7 @@ abstract class AsymmetricKey
      * Loads a public key
      *
      * @return PublicKey
+     * @access public
      * @param string $type
      * @param string $key
      */
@@ -296,6 +315,7 @@ abstract class AsymmetricKey
      * Loads parameters
      *
      * @return AsymmetricKey
+     * @access public
      * @param string $type
      * @param string|array $key
      */
@@ -311,6 +331,7 @@ abstract class AsymmetricKey
     /**
      * Validate Plugin
      *
+     * @access private
      * @param string $format
      * @param string $type
      * @param string $method optional
@@ -333,6 +354,7 @@ abstract class AsymmetricKey
     /**
      * Load Plugins
      *
+     * @access private
      * @param string $format
      */
     private static function loadPlugins($format)
@@ -363,6 +385,7 @@ abstract class AsymmetricKey
     /**
      * Returns a list of supported formats.
      *
+     * @access public
      * @return array
      */
     public static function getSupportedKeyFormats()
@@ -380,6 +403,7 @@ abstract class AsymmetricKey
      *
      * @see self::load()
      * @param string $fullname
+     * @access public
      * @return bool
      */
     public static function addFileFormat($fullname)
@@ -403,6 +427,7 @@ abstract class AsymmetricKey
      * with RSA::createKey() then this will throw an exception.
      *
      * @see self::load()
+     * @access public
      * @return mixed
      */
     public function getLoadedFormat()
@@ -420,6 +445,7 @@ abstract class AsymmetricKey
      *
      * Not all key formats support comments. If you want to set a comment use toString()
      *
+     * @access public
      * @return null|string
      */
     public function getComment()
@@ -430,6 +456,7 @@ abstract class AsymmetricKey
     /**
      * Tests engine validity
      *
+     * @access public
      */
     public static function useBestEngine()
     {
@@ -448,6 +475,7 @@ abstract class AsymmetricKey
     /**
      * Flag to use internal engine only (useful for unit testing)
      *
+     * @access public
      */
     public static function useInternalEngine()
     {
@@ -471,6 +499,7 @@ abstract class AsymmetricKey
     /**
      * Determines which hashing function should be used
      *
+     * @access public
      * @param string $hash
      */
     public function withHash($hash)
@@ -486,6 +515,7 @@ abstract class AsymmetricKey
     /**
      * Returns the hash algorithm currently being used
      *
+     * @access public
      */
     public function getHash()
     {
@@ -496,6 +526,7 @@ abstract class AsymmetricKey
      * Compute the pseudorandom k for signature generation,
      * using the process specified for deterministic DSA.
      *
+     * @access public
      * @param string $h1
      * @return string
      */
@@ -540,6 +571,7 @@ abstract class AsymmetricKey
     /**
      * Integer to Octet String
      *
+     * @access private
      * @param \phpseclib3\Math\BigInteger $v
      * @return string
      */
@@ -559,6 +591,7 @@ abstract class AsymmetricKey
     /**
      * Bit String to Integer
      *
+     * @access private
      * @param string $in
      * @return \phpseclib3\Math\BigInteger
      */
@@ -576,6 +609,7 @@ abstract class AsymmetricKey
     /**
      * Bit String to Octet String
      *
+     * @access private
      * @param string $in
      * @return string
      */
