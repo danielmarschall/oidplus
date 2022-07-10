@@ -11,7 +11,8 @@ Reasons why we currently require at least PHP 7.0:
 
 Currently we do NOT require 7.1, because some (old-)stable distros are still using PHP 7.0
 (e.g. Debian 9 which has LTS support till May 2022).
-Therefore we commented out following features which would require PHP 7.1:
+
+Therefore, we commented out following features which would require PHP >=7.1:
 - Nullable return values (e.g. "function foo(): ?array")
 - void return value (e.g. "function foo(): void")
 - private/protected/public consts
@@ -19,9 +20,12 @@ Therefore we commented out following features which would require PHP 7.1:
   because this would require PHP 7.1
   Therefore in composer.json we write:
 		"symfony/polyfill-mbstring": "<=1.19",
-  Once PHP 7.1 is OK, we can go with the latest version again.
+  the same thing with phpseclib which also now requires PHP 7.1:
+		"phpseclib/phpseclib": "<=3.0.14"
+  Once PHP 7.1 is OK, we can go with the latest versions again.
+- In dev/vendor_update.sh we patch composer packages pulled from GitHub
+  to achieve PHP 7.0 compat
 
-  Note: How to check the effective PHP version in composer?
-	sudo aptitude install php7.0
-	sudo update-alternatives --set php /usr/bin/php7.0
-	composer check-platform-reqs
+
+Note: How to check the effective PHP version in composer?
+	composer show --tree

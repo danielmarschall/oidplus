@@ -98,3 +98,8 @@ remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/xml/
 composer update -d plugins/viathinksoft/publicPages/100_whois/whois/json/
 composer license -d plugins/viathinksoft/publicPages/100_whois/whois/json/ > plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/licenses
 remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/json/
+
+# Change the PHP 7.2 requirement to PHP 7.0
+# Since this is no official packagist package, composer does not know the required php version,
+# so we do not need to patch platform_check.php
+sed -i 's@private function serialize($item): void@private function serialize($item)/*: void*/  // ViaThinkSoft: Removed ": void" for PHP 7.0 compatibility@g' plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization/src/Canonicalizator.php

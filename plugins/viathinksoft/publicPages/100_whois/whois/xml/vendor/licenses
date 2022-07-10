@@ -1,0 +1,7 @@
+Name: __root__
+Version: 1.0.0+no-version-set
+Licenses: none
+Dependencies:
+
+Name                    Version  License       
+robrichards/xmlseclibs  3.1.1    BSD-3-Clause  

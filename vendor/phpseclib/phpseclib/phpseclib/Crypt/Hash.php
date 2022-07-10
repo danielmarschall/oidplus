@@ -21,6 +21,8 @@
  * ?>
  * </code>
  *
+ * @category  Crypt
+ * @package   Hash
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2015 Jim Wigginton
  * @author    Andreas Fischer <bantu@phpbb.com>
@@ -38,26 +40,31 @@ use phpseclib3\Math\BigInteger;
 use phpseclib3\Math\PrimeField;
 
 /**
+ * @package Hash
  * @author  Jim Wigginton <terrafrost@php.net>
  * @author  Andreas Fischer <bantu@phpbb.com>
+ * @access  public
  */
 class Hash
 {
     /**
      * Padding Types
      *
+     * @access private
      */
     const PADDING_KECCAK = 1;
 
     /**
      * Padding Types
      *
+     * @access private
      */
     const PADDING_SHA3 = 2;
 
     /**
      * Padding Types
      *
+     * @access private
      */
     const PADDING_SHAKE = 3;
 
@@ -67,6 +74,7 @@ class Hash
      * Only used by SHA3
      *
      * @var int
+     * @access private
      */
     private $paddingType = 0;
 
@@ -75,6 +83,7 @@ class Hash
      *
      * @see self::setHash()
      * @var int
+     * @access private
      */
     private $hashParam;
 
@@ -83,6 +92,7 @@ class Hash
      *
      * @see self::setHash()
      * @var int
+     * @access private
      */
     private $length;
 
@@ -91,6 +101,7 @@ class Hash
      *
      * @see self::setHash()
      * @var string
+     * @access private
      */
     private $algo;
 
@@ -99,6 +110,7 @@ class Hash
      *
      * @see self::setKey()
      * @var string
+     * @access private
      */
     private $key = false;
 
@@ -107,6 +119,7 @@ class Hash
      *
      * @see self::setNonce()
      * @var string
+     * @access private
      */
     private $nonce = false;
 
@@ -114,6 +127,7 @@ class Hash
      * Hash Parameters
      *
      * @var array
+     * @access private
      */
     private $parameters = [];
 
@@ -122,6 +136,7 @@ class Hash
      *
      * @see self::_computeKey()
      * @var string
+     * @access private
      */
     private $computedKey = false;
 
@@ -132,6 +147,7 @@ class Hash
      *
      * @see self::hash()
      * @var string
+     * @access private
      */
     private $opad;
 
@@ -142,6 +158,7 @@ class Hash
      *
      * @see self::hash()
      * @var string
+     * @access private
      */
     private $ipad;
 
@@ -152,6 +169,7 @@ class Hash
      *
      * @see self::hash()
      * @var boolean
+     * @access private
      */
     private $recomputeAESKey;
 
@@ -160,6 +178,7 @@ class Hash
      *
      * @see self::hash()
      * @var \phpseclib3\Crypt\AES
+     * @access private
      */
     private $c;
 
@@ -168,6 +187,7 @@ class Hash
      *
      * @see self::hash()
      * @var string
+     * @access private
      */
     private $pad;
 
@@ -191,6 +211,7 @@ class Hash
      * Default Constructor.
      *
      * @param string $hash
+     * @access public
      */
     public function __construct($hash = 'sha256')
     {
@@ -202,6 +223,7 @@ class Hash
      *
      * Keys can be of any length.
      *
+     * @access public
      * @param string $key
      */
     public function setKey($key = false)
@@ -216,6 +238,7 @@ class Hash
      *
      * Keys can be of any length.
      *
+     * @access public
      * @param string $nonce
      */
     public function setNonce($nonce = false)
@@ -241,6 +264,7 @@ class Hash
      * when doing an HMAC multiple times it's faster to compute the hash once instead of computing it during
      * every call
      *
+     * @access private
      */
     private function computeKey()
     {
@@ -264,6 +288,7 @@ class Hash
      *
      * As set by the constructor or by the setHash() method.
      *
+     * @access public
      * @return string
      */
     public function getHash()
@@ -274,6 +299,7 @@ class Hash
     /**
      * Sets the hash function.
      *
+     * @access public
      * @param string $hash
      */
     public function setHash($hash)
@@ -767,6 +793,7 @@ class Hash
     /**
      * Compute the Hash / HMAC / UMAC.
      *
+     * @access public
      * @param string $text
      * @return string
      */
@@ -855,6 +882,7 @@ class Hash
     /**
      * Returns the hash length (in bits)
      *
+     * @access public
      * @return int
      */
     public function getLength()
@@ -865,6 +893,7 @@ class Hash
     /**
      * Returns the hash length (in bytes)
      *
+     * @access public
      * @return int
      */
     public function getLengthInBytes()
@@ -875,6 +904,7 @@ class Hash
     /**
      * Returns the block length (in bits)
      *
+     * @access public
      * @return int
      */
     public function getBlockLength()
@@ -885,6 +915,7 @@ class Hash
     /**
      * Returns the block length (in bytes)
      *
+     * @access public
      * @return int
      */
     public function getBlockLengthInBytes()
@@ -895,6 +926,7 @@ class Hash
     /**
      * Pads SHA3 based on the mode
      *
+     * @access private
      * @param int $padLength
      * @param int $padType
      * @return string
@@ -937,6 +969,7 @@ class Hash
      * capacity c". This is relevant because, altho the KECCAK standard defines a mode
      * (KECCAK-f[800]) designed for 32-bit machines that mode is incompatible with SHA3
      *
+     * @access private
      * @param string $p
      * @param int $c
      * @param int $r
@@ -997,6 +1030,7 @@ class Hash
     /**
      * 32-bit block processing method for SHA3
      *
+     * @access private
      * @param array $s
      */
     private static function processSHA3Block32(&$s)
@@ -1106,6 +1140,7 @@ class Hash
     /**
      * Rotate 32-bit int
      *
+     * @access private
      * @param array $x
      * @param int $shift
      */
@@ -1127,6 +1162,7 @@ class Hash
     /**
      * Pure-PHP 64-bit implementation of SHA3
      *
+     * @access private
      * @param string $p
      * @param int $c
      * @param int $r
@@ -1186,6 +1222,7 @@ class Hash
     /**
      * 64-bit block processing method for SHA3
      *
+     * @access private
      * @param array $s
      */
     private static function processSHA3Block64(&$s)
@@ -1272,6 +1309,7 @@ class Hash
     /**
      * Rotate 64-bit int
      *
+     * @access private
      * @param int $x
      * @param int $shift
      */
@@ -1283,6 +1321,7 @@ class Hash
     /**
      * Pure-PHP implementation of SHA512
      *
+     * @access private
      * @param string $m
      * @param array $hash
      * @return string

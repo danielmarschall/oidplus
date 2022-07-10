@@ -16,6 +16,8 @@
  * ?>
  * </code>
  *
+ * @category  Crypt
+ * @package   DH
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2016 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -35,7 +37,9 @@ use phpseclib3\Math\BigInteger;
 /**
  * Pure-PHP (EC)DH implementation
  *
+ * @package DH
  * @author  Jim Wigginton <terrafrost@php.net>
+ * @access  public
  */
 abstract class DH extends AsymmetricKey
 {
@@ -43,6 +47,7 @@ abstract class DH extends AsymmetricKey
      * Algorithm Name
      *
      * @var string
+     * @access private
      */
     const ALGORITHM = 'DH';
 
@@ -50,6 +55,7 @@ abstract class DH extends AsymmetricKey
      * DH prime
      *
      * @var \phpseclib3\Math\BigInteger
+     * @access private
      */
     protected $prime;
 
@@ -59,6 +65,7 @@ abstract class DH extends AsymmetricKey
      * Prime divisor of p-1
      *
      * @var \phpseclib3\Math\BigInteger
+     * @access private
      */
     protected $base;
 
@@ -70,6 +77,7 @@ abstract class DH extends AsymmetricKey
      *  - an integer representing the size of the prime in bits (the base is assumed to be 2)
      *  - a string (eg. diffie-hellman-group14-sha1)
      *
+     * @access public
      * @return Parameters
      */
     public static function createParameters(...$args)
@@ -231,6 +239,7 @@ abstract class DH extends AsymmetricKey
      *
      * @param Parameters $params
      * @param int $length optional
+     * @access public
      * @return DH\PrivateKey
      */
     public static function createKey(Parameters $params, $length = 0)
@@ -256,6 +265,7 @@ abstract class DH extends AsymmetricKey
      *
      * @param PrivateKey|EC $private
      * @param PublicKey|BigInteger|string $public
+     * @access public
      * @return mixed
      */
     public static function computeSecret($private, $public)
@@ -326,6 +336,7 @@ abstract class DH extends AsymmetricKey
      * OnLoad Handler
      *
      * @return bool
+     * @access protected
      * @param array $components
      */
     protected static function onLoad($components)
@@ -354,6 +365,7 @@ abstract class DH extends AsymmetricKey
     /**
      * Determines which hashing function should be used
      *
+     * @access public
      * @param string $hash
      */
     public function withHash($hash)
@@ -364,6 +376,7 @@ abstract class DH extends AsymmetricKey
     /**
      * Returns the hash algorithm currently being used
      *
+     * @access public
      */
     public function getHash()
     {
@@ -377,6 +390,7 @@ abstract class DH extends AsymmetricKey
      * value.
      *
      * @see self::getPublicKey()
+     * @access public
      * @return mixed
      */
     public function getParameters()

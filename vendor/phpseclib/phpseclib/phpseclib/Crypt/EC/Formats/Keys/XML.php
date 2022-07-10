@@ -10,6 +10,8 @@
  *
  * PHP version 5
  *
+ * @category  Crypt
+ * @package   EC
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2015 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -31,7 +33,9 @@ use phpseclib3\Math\BigInteger;
 /**
  * XML Formatted EC Key Handler
  *
+ * @package EC
  * @author  Jim Wigginton <terrafrost@php.net>
+ * @access  public
  */
 abstract class XML
 {
@@ -54,6 +58,7 @@ abstract class XML
     /**
      * Break a public or private key down into its constituent components
      *
+     * @access public
      * @param string $key
      * @param string $password optional
      * @return array

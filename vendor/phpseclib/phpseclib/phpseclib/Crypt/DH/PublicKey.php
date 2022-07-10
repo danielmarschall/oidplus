@@ -3,6 +3,8 @@
 /**
  * DH Public Key
  *
+ * @category  Crypt
+ * @package   DH
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2015 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -17,7 +19,9 @@ use phpseclib3\Crypt\DH;
 /**
  * DH Public Key
  *
+ * @package DH
  * @author  Jim Wigginton <terrafrost@php.net>
+ * @access  public
  */
 class PublicKey extends DH
 {

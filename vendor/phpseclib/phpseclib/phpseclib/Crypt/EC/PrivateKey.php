@@ -3,6 +3,8 @@
 /**
  * EC Private Key
  *
+ * @category  Crypt
+ * @package   EC
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2015 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -27,7 +29,9 @@ use phpseclib3\Math\BigInteger;
 /**
  * EC Private Key
  *
+ * @package EC
  * @author  Jim Wigginton <terrafrost@php.net>
+ * @access  public
  */
 class PrivateKey extends EC implements Common\PrivateKey
 {
@@ -81,6 +85,7 @@ class PrivateKey extends EC implements Common\PrivateKey
      * Create a signature
      *
      * @see self::verify()
+     * @access public
      * @param string $message
      * @return mixed
      */
@@ -224,6 +229,7 @@ class PrivateKey extends EC implements Common\PrivateKey
      * Returns the public key
      *
      * @see self::getPrivateKey()
+     * @access public
      * @return mixed
      */
     public function getPublicKey()
