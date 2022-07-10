@@ -40,7 +40,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$message = $this->getForgotPasswordText($params['email']);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
 
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Password reset request', $message, OIDplus::config()->getValue('global_cc'));
+			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Password reset request', $message);
 
 			return array("status" => 0);
 
