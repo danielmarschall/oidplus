@@ -181,7 +181,7 @@ An OID-IP server listens on TCP port XXX for requests from OID-IP clients.  The 
 
 Alternatively to TCP port XXX, an OID-IP server can listen to the WHOIS TCP port 43.  Existing WHOIS servers can add the functionalities described in this document in addition to their usual operation, i.e. they may accept queries beginning with "oid:" as well as other types of queries.
 
-During the request, the client sends a query beginning with "oid:", followed by an OID in dot-notation, as defined in RFC\03061, section 2 [RFC3061], but with the following differences:
+During the request, the client sends a query beginning with "oid:", followed by an OID in dot-notation, as defined in RFC\03061, section\02 [RFC3061], but with the following differences:
 
 (1) The OID MAY contain a leading dot.
 
@@ -218,7 +218,7 @@ oid:2.999$firstToken$secondToken
 .fi
 .in 3
 
-Please note that authentication tokens are only weak protection.  For more information, see section 8 "Security Considerations".
+Please note that authentication tokens are only weak protection.  For more information, see section\08 "Security Considerations".
 
 .ti 0
 2.2  Server Commands
@@ -245,13 +245,13 @@ The "format" command defines the desired output format.
 
 This document defines four formats:
 
-(1) "text": A text representation as defined in section 3.1.1. (MANDATORY)
+(1) "text": A text representation as defined in section\03.1.1. (MANDATORY)
 
-(2) "json": The JavaScript Object Notation (JSON, [RFC8259]) representation as defined in section 3.1.2. (OPTIONAL)
+(2) "json": The JavaScript Object Notation (JSON, [RFC8259]) representation as defined in section\03.1.2. (OPTIONAL)
 
-(3) "xml": Extensible Markup Language (XML, [XML]) representation as defined in section 3.1.3. (OPTIONAL)
+(3) "xml": Extensible Markup Language (XML, [XML]) representation as defined in section\03.1.3. (OPTIONAL)
 
-(4) "html": Hypertext Markup Language (HTML) representation as defined in section 3.1.4. (OPTIONAL)
+(4) "html": Hypertext Markup Language (HTML) representation as defined in section\03.1.4. (OPTIONAL)
 
 The default format is "text", which is assumed if the "format" command is omitted.
 
@@ -259,7 +259,7 @@ Besides these four formats, the server can also accept other formats not defined
 
 If the client requests a format that is not implemented, then the server MUST respond with the "text" format,
 and the output MUST consist of the "query" field, "result: Service error",
-and a fitting "message" field (as described section in 3.2.1).
+and a fitting "message" field (as described in section\03.2.1).
 .bp
 .ti 0
 2.3  Request ABNF Notation
@@ -324,12 +324,12 @@ unsigned-number = "0" / nonzero-digit *( digit )
 .ti 0
 3.1.2 "json" Format
 
-The JavaScript Object Notation (JSON, [RFC8259]) output MUST match the schema defined in Appendix A of this document.
+The JavaScript Object Notation (JSON, [RFC8259]) output MUST match the schema defined in Appendix\0A of this document.
 
 .ti 0
 3.1.3 "xml" Format
 
-The Extensible Markup Language (XML, [XML]) output MUST match the schema defined in Appendix B of this document.
+The Extensible Markup Language (XML, [XML]) output MUST match the schema defined in Appendix\0B of this document.
 
 .ti 0
 3.1.4 "html" Format
@@ -737,11 +737,11 @@ Following things need to be considered if alternative namespaces are implemented
 
 (3) The namespace identifier SHALL be written in lower-case (this is already defined in section\02 "Request").
 
-(4) If available, a formal URN namespace identifier (as defined in RFC\08141, section 5.1 [RFC8141]) SHOULD be used, e.g. "uuid" should be used instead of "guid".
+(4) If available, a formal URN namespace identifier (as defined in RFC\08141, section\05.1 [RFC8141]) SHOULD be used, e.g. "uuid" should be used instead of "guid".
 
 (5) If things like "Owner", "Creator", "Manager", "Administrator", etc., are relevant to the identifiers in the namespace, then the RA-section as described in section\03.2.3 SHALL be used, even though the word "Registration Authority" might not be appropriate in the terminology of the namespace.
 
-(6) The namespace-specific identifier MUST NOT contain dollar signs ("$"), because section 2.1 "Authentication Tokens" defines them as a separator for authentication tokens.
+(6) The namespace-specific identifier MUST NOT contain dollar signs ("$"), because section\02.1 "Authentication Tokens" defines them as a separator for authentication tokens.
 
 (7) The namespace-specific identifier MUST be treated case-sensitive if the namespace distinguishes between lower-case and upper-case.
 
@@ -802,7 +802,7 @@ The OID-IP service can define additional field names, but they SHOULD be written
 
 (5) Authentication tokens must have a sufficient length and complexity to avoid successful brute force attacks, or the OID-IP service must limit the number of requests per time.
 
-(6) The OID-IP protocol itself has no mechanism for verifying the integrity of data received.  Due to this fact, the information should not be trusted if it is transmitted through an untrusted network.  If integrity/authenticity is required, the OID-IP response can be signed, as described in section\03.3 "Digital Signature".  However, this document does not describe a mechanism for detecting which signature method was used.  Therefore, no interoperability of signature creation/validation is given at this time.
+(6) If integrity/authenticity is required, the OID-IP response can be signed, as described in section\03.3 "Digital Signature".
 .bp
 .ti 0
 9  IANA Considerations
@@ -968,7 +968,7 @@ W3C Recommendation 5 April 2012
 .in 14
 <http://www.rfc-editor.org/info/rfc4880>.
 
-.ti 3  	
+.ti 3
 .in 14
 [X509]     "Information technology - Open Systems Interconnection - The Directory: Public-key and attribute certificate frameworks",
 Recommendation ITU-T\0X.509 (2016) |
@@ -977,20 +977,20 @@ ISO/IEC 9594-8:2017, October\02016.
 .in 14
 <http://handle.itu.int/11.1002/1000/13031>.
 
-.ti 3  	
+.ti 3
 .in 14
 [X667]     "Information technology - Procedures for the operation of object identifier registration authorities: Generation of universally unique identifiers and their use in object identifiers",
 Recommendation ITU-T\0X.667 (2012) |
 .in 14
-ISO/IEC 9834-8:2014, October\02012.
+ISO/IEC\09834-8:2014, October\02012.
 .in 14
 <http://handle.itu.int/11.1002/1000/11746>.
 
-.ti 3  	
+.ti 3
 .in 14
 [X672]     "Information technology - Open systems interconnection - Object identifier resolution system",
 .in 14
-Recommendation ITU-T\0X.672 (2010) | ISO/IEC 29168-1:2011, August\02010.
+Recommendation ITU-T\0X.672 (2010) | ISO/IEC\029168-1:2011, August\02010.
 .in 14
 <http://handle.itu.int/11.1002/1000/10831>.
 
@@ -1004,10 +1004,12 @@ A.1 Schema
 
 The following JSON Schema ([JSONSch]) defines the expected output the server sends if the server command "format" is set to "json".
 
-.in 3
+.\" .in 3
 .nf
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is actually '\'!
 <CODE BEGINS>
 # NOTE: '\\' line wrapping per RFC 8792
+
 {
    "$schema":"http://json-schema.org/draft-07/schema#",
    "type":"object",
@@ -1190,15 +1192,15 @@ The following JSON Schema ([JSONSch]) defines the expected output the server sen
                   },
                   "created":{
                      "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\\
-(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
-( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
+                     "pattern":"^\\\\d{4}(\\\\-(0[1-9]|11|12)\\
+(\\\\-(0[1-9]|1\\\\d|2\\\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
+( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   },
                   "updated":{
                      "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\\
-(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
-( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
+                     "pattern":"^\\\\d{4}(\\\\-(0[1-9]|11|12)\\
+(\\\\-(0[1-9]|1\\\\d|2\\\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
+( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   }
                },
                "required":[
@@ -1258,15 +1260,15 @@ The following JSON Schema ([JSONSch]) defines the expected output the server sen
                   },
                   "ra-created":{
                      "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\\
-(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
-( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
+                     "pattern":"^\\\\d{4}(\\\\-(0[1-9]|11|12)\\
+(\\\\-(0[1-9]|1\\\\d|2\\\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
+( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   },
                   "ra-updated":{
                      "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\\
-(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
-( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
+                     "pattern":"^\\\\d{4}(\\\\-(0[1-9]|11|12)\\
+(\\\\-(0[1-9]|1\\\\d|2\\\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
+( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   }
                },
                "required":[
@@ -1278,8 +1280,8 @@ The following JSON Schema ([JSONSch]) defines the expected output the server sen
       },
       "signature":{
          "type":"string",
-         "pattern": \\
-           "^[A-Za-z0-9+\/=]+\\.[A-Za-z0-9+\/=]+\\.[A-Za-z0-9+\/=]+$"
+         "pattern":
+             "^[A-Za-z0-9+/=]+\\\\.[A-Za-z0-9+/=]+\\\\.[A-Za-z0-9+/=]+$"
       }
    },
    "required":[
@@ -1293,10 +1295,12 @@ The following JSON Schema ([JSONSch]) defines the expected output the server sen
 .ti 0
 A.2 Example of output
 
-.in 3
+.\" .in 3
 .nf
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is actually '\'!
 <CODE BEGINS>
 # NOTE: '\\' line wrapping per RFC 8792
+
 {
   "$schema":"http://.../oidip_schema.json",
   "oidip": [
@@ -1357,14 +1361,16 @@ Appendix B: XML Schema
 .ti 0
 B.1 Schema
 
-[To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-02" to "urn:ietf:rfc:yyyy" before publication.]
+[To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-03" to "urn:ietf:rfc:yyyy" before publication.]
 
 The following XML Schema Definition ([XSD]) defines the expected output the server sends if the server command "format" is set to "xml".
 
-.in 3
+.\" .in 3
 .nf
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is actually '\'!
 <CODE BEGINS>
 # NOTE: '\\' line wrapping per RFC 8792
+
 <?xml version="1.0"?>
 <xs:schema targetNamespace="urn:ietf:id:viathinksoft-oidip-03"
            attributeFormDefault="unqualified"
@@ -1374,7 +1380,7 @@ The following XML Schema Definition ([XSD]) defines the expected output the serv
            xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
 <xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
            schemaLocation="http://www.w3.org/TR/2002/\\
-           REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
+REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
 <xs:element name="root">
 <xs:complexType>
 <xs:sequence>
@@ -1384,7 +1390,7 @@ The following XML Schema Definition ([XSD]) defines the expected output the serv
 <xs:element name="querySection" minOccurs="1" maxOccurs="1">
 <xs:complexType vc:minVersion="1.1">
 <xs:openContent mode="interleave">
-<xs:any namespace="##any" processContents="lax" /> 
+<xs:any namespace="##any" processContents="lax"/> 
 </xs:openContent>
 <xs:choice maxOccurs="unbounded">
 <xs:element type="xs:string" name="query" minOccurs="1"/>
@@ -1406,7 +1412,7 @@ The following XML Schema Definition ([XSD]) defines the expected output the serv
 <xs:element name="objectSection" minOccurs="0" maxOccurs="1">
 <xs:complexType vc:minVersion="1.1">
 <xs:openContent mode="interleave">
-<xs:any namespace="##any" processContents="lax" /> 
+<xs:any namespace="##any" processContents="lax"/> 
 </xs:openContent>
 <xs:choice maxOccurs="unbounded">
 <xs:element type="xs:string" name="object" minOccurs="1"/>
@@ -1444,15 +1450,14 @@ The following XML Schema Definition ([XSD]) defines the expected output the serv
 </xs:simpleType>
 </xs:element>
 <xs:element type="xs:string" name="parent" minOccurs="0"/>
-<xs:element type="xs:string" name="subordinate" \\
-maxOccurs="unbounded" minOccurs="0"/>
+<xs:element type="xs:string" name="subordinate"
+            maxOccurs="unbounded" minOccurs="0"/>
 <xs:element name="created" minOccurs="0">
 <xs:simpleType>
 <xs:restriction base="xs:string">
 <xs:pattern value="\\d{4}(\\-(0[1-9]|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)\\
 ( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
-( [\\+\\-][0-5][0-9][0-5][0-9]){0,1})\\
-{0,1}){0,1}){0,1}"></xs:pattern>
+( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
 </xs:restriction>
 </xs:simpleType>
 </xs:element>
@@ -1461,8 +1466,7 @@ maxOccurs="unbounded" minOccurs="0"/>
 <xs:restriction base="xs:string">
 <xs:pattern value="\\d{4}(\\-(0[1-9]|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)\\
 ( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
-( [\\+\\-][0-5][0-9][0-5][0-9]){0,1})\\
-{0,1}){0,1}){0,1}"></xs:pattern>
+( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
 </xs:restriction>
 </xs:simpleType>
 </xs:element>
@@ -1472,7 +1476,7 @@ maxOccurs="unbounded" minOccurs="0"/>
 <xs:element name="raSection" minOccurs="0" maxOccurs="1">
 <xs:complexType vc:minVersion="1.1">
 <xs:openContent mode="interleave">
-<xs:any namespace="##any" processContents="lax" /> 
+<xs:any namespace="##any" processContents="lax"/> 
 </xs:openContent>
 <xs:choice maxOccurs="unbounded">
 <xs:element type="xs:string" name="ra" minOccurs="1"/>
@@ -1505,7 +1509,7 @@ maxOccurs="unbounded" minOccurs="0"/>
 <xs:restriction base="xs:string">
 <xs:pattern value="\\d{4}(\\-(0[1-9]|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)\\
 ( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
-( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
+( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
 </xs:restriction>
 </xs:simpleType>
 </xs:element>
@@ -1514,7 +1518,7 @@ maxOccurs="unbounded" minOccurs="0"/>
 <xs:restriction base="xs:string">
 <xs:pattern value="\\d{4}(\\-(0[1-9]|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)\\
 ( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\\
-( [\\+\\-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
+( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
 </xs:restriction>
 </xs:simpleType>
 </xs:element>
@@ -1536,70 +1540,72 @@ maxOccurs="unbounded" minOccurs="0"/>
 .ti 0
 B.2 Example of output
 
-[To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-02" to "urn:ietf:rfc:yyyy" before publication.]
+[To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-03" to "urn:ietf:rfc:yyyy" before publication.]
 
-.in 3
+.\" .in 3
 .nf
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is actually '\'!
 <CODE BEGINS>
 # NOTE: '\\' line wrapping per RFC 8792
+
 <?xml version="1.0"?>
 <root xmlns="urn:ietf:rfc:yyyy"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="urn:ietf:id:viathinksoft-oidip-02
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="urn:ietf:id:viathinksoft-oidip-03 \\
 http://.../oidip_schema.xsd">
 <oidip>
-<querySection>
-<query>oid:2.999</query>
-<result>Found</result>
-</querySection>
-<objectSection>
-<object>oid:2.999</object>
-<status>Information available</status>
-<asn1-notation>{ joint-iso-itu-t(2) example(999) }</asn1-notation>
-<iri-notation>/Example</iri-notation>
-<identifier>example</identifier>
-<unicode-label>Beispiel</unicode-label>
-<unicode-label>Ejemplo</unicode-label>
-<unicode-label>Example</unicode-label>
-<unicode-label>Exemple</unicode-label>
-<unicode-label>(Korean characters are omitted)</unicode-label>
-<unicode-label>(Arabian characters are omitted)</unicode-label>
-<unicode-label>(Japanese characters are omitted)</unicode-label>
-<unicode-label>(Chinese characters are omitted)</unicode-label>
-<unicode-label>(Russian characters are omitted)</unicode-label>
-<long-arc>Beispiel</long-arc>
-<long-arc>Ejemplo</long-arc>
-<long-arc>Example</long-arc>
-<long-arc>Exemple</long-arc>
-<long-arc>(Korean characters are omitted)</long-arc>
-<long-arc>(Arabian characters are omitted)</long-arc>
-<long-arc>(Japanese characters are omitted)</long-arc>
-<long-arc>(Chinese characters are omitted)</long-arc>
-<long-arc>(Russian characters are omitted)</long-arc>
-<parent>oid:2 (joint-iso-ccitt, joint-iso-itu-t)</parent>
-</objectSection>
-<raSection>
-<ra>ITU-T SG 17 & ISO/IEC JTC 1/SC 6</ra>
-<ra-status>Information unavailable</ra-status>
-</raSection>
+  <querySection>
+     <query>oid:2.999</query>
+     <result>Found</result>
+  </querySection>
+  <objectSection>
+     <object>oid:2.999</object>
+     <status>Information available</status>
+     <asn1-notation>{ joint-iso-itu-t(2) example(999) }</asn1-notation>
+     <iri-notation>/Example</iri-notation>
+     <identifier>example</identifier>
+     <unicode-label>Beispiel</unicode-label>
+     <unicode-label>Ejemplo</unicode-label>
+     <unicode-label>Example</unicode-label>
+     <unicode-label>Exemple</unicode-label>
+     <unicode-label>(Korean characters are omitted)</unicode-label>
+     <unicode-label>(Arabian characters are omitted)</unicode-label>
+     <unicode-label>(Japanese characters are omitted)</unicode-label>
+     <unicode-label>(Chinese characters are omitted)</unicode-label>
+     <unicode-label>(Russian characters are omitted)</unicode-label>
+     <long-arc>Beispiel</long-arc>
+     <long-arc>Ejemplo</long-arc>
+     <long-arc>Example</long-arc>
+     <long-arc>Exemple</long-arc>
+     <long-arc>(Korean characters are omitted)</long-arc>
+     <long-arc>(Arabian characters are omitted)</long-arc>
+     <long-arc>(Japanese characters are omitted)</long-arc>
+     <long-arc>(Chinese characters are omitted)</long-arc>
+     <long-arc>(Russian characters are omitted)</long-arc>
+     <parent>oid:2 (joint-iso-ccitt, joint-iso-itu-t)</parent>
+  </objectSection>
+  <raSection>
+     <ra>ITU-T SG 17 & ISO/IEC JTC 1/SC 6</ra>
+     <ra-status>Information unavailable</ra-status>
+  </raSection>
 </oidip>
 <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-<ds:SignedInfo>
-<ds:CanonicalizationMethod
-Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-<ds:SignatureMethod
-Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/>
-<ds:Reference>
-<ds:Transforms>
-<ds:Transform
-Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-</ds:Transforms>
-<ds:DigestMethod
-Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
-<ds:DigestValue>.....</ds:DigestValue>
-</ds:Reference>
-</ds:SignedInfo>
-<ds:SignatureValue>.....</ds:SignatureValue>
+  <ds:SignedInfo>
+  <ds:CanonicalizationMethod
+     Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+  <ds:SignatureMethod
+     Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/>
+  <ds:Reference>
+  <ds:Transforms>
+  <ds:Transform
+    Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+  </ds:Transforms>
+  <ds:DigestMethod
+    Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
+  <ds:DigestValue>.....</ds:DigestValue>
+  </ds:Reference>
+  </ds:SignedInfo>
+  <ds:SignatureValue>.....</ds:SignatureValue>
 </ds:Signature>
 </root>
 <CODE ENDS>
