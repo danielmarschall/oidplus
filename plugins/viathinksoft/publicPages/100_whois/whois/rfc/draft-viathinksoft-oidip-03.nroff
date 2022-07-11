@@ -102,8 +102,7 @@ Table of Contents
        3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . .  9
        3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . .  9
        3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . .  9
-       3.1.4 "html" Format  . . . . . . . . . . . . . . . . . . . . .  9
-     3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . . 10
+     3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . .  9
        3.2.1  Query-Section (Information about Query and Result)  . . 10
        3.2.2  Object-Section (Information about the OID)  . . . . . . 11
        3.2.3  RA-Section (Information about the Current RA) . . . . . 14
@@ -111,32 +110,31 @@ Table of Contents
      3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 17
        3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 17
        3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
-       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 19
-       3.3.4  "html" Format . . . . . . . . . . . . . . . . . . . . . 19
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 19
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 20
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 20
-   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
-   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 22
-     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 22
-     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 22
-   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 23
-     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 24
-   7  Internationalization Considerations . . . . . . . . . . . . . . 24
-   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 25
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 26
-     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 26
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 26
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 26
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 28
-   Appendix A: JSON Schema  . . . . . . . . . . . . . . . . . . . . . 29
-     A.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
-     A.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 35
-   Appendix B: XML Schema . . . . . . . . . . . . . . . . . . . . . . 36
-     B.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 36
-     B.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 39
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 41
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 41
+       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 18
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 18
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 19
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 19
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 21
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 21
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 22
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 23
+   7  Internationalization Considerations . . . . . . . . . . . . . . 23
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 24
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 25
+     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 25
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 25
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 27
+   Appendix A: JSON Schema  . . . . . . . . . . . . . . . . . . . . . 28
+     A.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+     A.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 34
+   Appendix B: XML Schema . . . . . . . . . . . . . . . . . . . . . . 35
+     B.1 Schema . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+     B.2 Example of output  . . . . . . . . . . . . . . . . . . . . . 38
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 40
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 40
 .fi
 .in 3
 
@@ -251,8 +249,6 @@ This document defines four formats:
 
 (3) "xml": Extensible Markup Language (XML, [XML]) representation as defined in section\03.1.3. (OPTIONAL)
 
-(4) "html": Hypertext Markup Language (HTML) representation as defined in section\03.1.4. (OPTIONAL)
-
 The default format is "text", which is assumed if the "format" command is omitted.
 
 Besides these four formats, the server can also accept other formats not defined in this document.  The name of the formats SHALL be lower-case.
@@ -330,11 +326,6 @@ The JavaScript Object Notation (JSON, [RFC8259]) output MUST match the schema de
 3.1.3 "xml" Format
 
 The Extensible Markup Language (XML, [XML]) output MUST match the schema defined in Appendix\0B of this document.
-
-.ti 0
-3.1.4 "html" Format
-
-There are no special requirements for the HTML output format, as it is only intended as human-readable output.
 
 .ti 0
 3.2  Structure
@@ -526,9 +517,7 @@ The history does not need to be complete, e.g. it is no problem to only serve in
 .ti 0
 3.3.1  "text" Format
 
-If integrity/authenticity is required, the whole response can be signed, e.g. by using S/MIME, RSA, ECDSA, PGP, etc.
-
-Depending on the signature method being used, various things need to be appended and/or prepended to the response (e.g. "-----BEGIN PGP MESSAGE-----" and "-----END PGP MESSAGE-----").  These additional lines MUST be prepended by a percent sign ("%") to avoid that an application confuses these additional lines (e.g. lines belonging to a PGP header, as defined in RFC\04880 [RFC4880]) with parts of the actual OID-IP response.
+If integrity/authenticity is required, the whole response can be signed, e.g. by using S/MIME, RSA, ECDSA, PGP, etc.  Depending on the signature method being used, various things need to be appended and/or prepended to the response (e.g. "-----BEGIN PGP MESSAGE-----" and "-----END PGP MESSAGE-----").  These additional lines MUST be prepended by a percent sign ("%") to avoid that an application confuses these additional lines (e.g. lines belonging to a PGP header, as defined in RFC\04880 [RFC4880]) with parts of the actual OID-IP response.
 
 .ti 0
 3.3.2  "json" Format
@@ -555,16 +544,10 @@ Steps for verifying a message:
 
 5. Verify the JSON Web Signature according to the procedures described in RFC\07515 [RFC7515].
 
-.bp
 .ti 0
 3.3.3  "xml" Format
 
 Signing and verifying signatures will be performed as described in the W3C Recommendation "XML Signature Syntax and Processing" ([XMLSig]).
-
-.ti 0
-3.3.4  "html" Format
-
-This document does not describe a mechanism for signing an HTML page.
 
 .ti 0
 3.4  Date/Time Format
@@ -798,7 +781,7 @@ The OID-IP service can define additional field names, but they SHOULD be written
 
 (3) The OID-IP service can decide if confidential material is omitted or shown, based on authentication mechanisms like white-listing client IP addresses or by using authentication tokens supplied by the client during the request, as defined in section\02.1 "Authentication Tokens".
 
-(4) The usage of authentication tokens is not recommended if the traffic between client and server is transmitted through an untrusted network, because the OID-IP protocol is not encrypted.
+(4) The usage of authentication tokens or transmitting confidential information is not recommended if the traffic between client and server is transmitted through an untrusted network, because the OID-IP protocol is not encrypted.
 
 (5) Authentication tokens must have a sufficient length and complexity to avoid successful brute force attacks, or the OID-IP service must limit the number of requests per time.
 
@@ -1618,6 +1601,8 @@ Acknowledgements
 .sp
 .nf
 Olivier Dubuisson
+
+Till Wehowski
 .sp
 .fi
 .ti 0
