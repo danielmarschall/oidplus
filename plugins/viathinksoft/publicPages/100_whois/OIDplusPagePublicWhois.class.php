@@ -97,7 +97,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$out['text'] .= '</form>';
 			$out['text'] .= '<div id="whois_url_bar_section" style="display:none">';
 			$out['text'] .= '	<p><pre id="whois_url_bar"></pre></p>';
-			$out['text'] .= '	<input type="button" value="'._L('Copy to clipboard').'" onClick="OIDplusPagePublicWhois.copyToClipboard(whois_url_bar)">';
+			$out['text'] .= '	<input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(whois_url_bar)">';
 			$out['text'] .= '</div>';
 
 			$whois_server = '';
