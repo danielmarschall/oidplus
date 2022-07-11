@@ -7,9 +7,9 @@
 .ds LF Marschall
 .ds RF FORMFEED[Page %]
 .ds LH INTERNET DRAFT
-.ds RH July 9, 2022
+.ds RH July 11, 2022
 .ds CH OID Information Protocol
-.ds CF Expires January 10, 2023
+.ds CF Expires January 12, 2023
 .hy 0
 .nh
 .ad l
@@ -18,7 +18,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: January 10, 2023''July 9, 2022'
+.tl 'Expires: January 12, 2023''July 11, 2022'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -65,7 +65,7 @@ and may be updated, replaced, or obsoleted by other documents at any
 time.  It is inappropriate to use Internet-Drafts as reference
 material or to cite them other than as "work in progress."
 
-This Internet-Draft will expire on January 10, 2023.
+This Internet-Draft will expire on January 12, 2023.
 
 .ti 0
 Copyright Notice
@@ -95,7 +95,7 @@ Table of Contents
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
      2.1  Authentication Tokens . . . . . . . . . . . . . . . . . . .  6
      2.2  Server Commands . . . . . . . . . . . . . . . . . . . . . .  6
-       2.2.1  "format" command  . . . . . . . . . . . . . . . . . . .  6
+       2.2.1  "format" command  . . . . . . . . . . . . . . . . . . .  7
      2.3  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  8
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  9
@@ -236,7 +236,7 @@ with the value "json":
 oid:2.999$format=json
 .fi
 .in 3
-
+.bp
 .ti 0
 2.2.1  "format" command
 
