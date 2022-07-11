@@ -296,7 +296,12 @@ if ($unimplemented_format) {
 			$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array(is_null($row) ? '' : $row->ra_email));
 			if ($row2 = $res2->fetch_object()) {
 				$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : (!empty($row2->email) ? $row2->email : /*_L*/('Unknown'))); // DO NOT TRANSLATE!
-				$out[] = 'ra-status: Information available'; // DO NOT TRANSLATE!
+
+				if (!allowRAView($row2, $authTokens)) {
+					$out[] = 'ra-status: Information partially available'; // DO NOT TRANSLATE!
+				} else {
+					$out[] = 'ra-status: Information available'; // DO NOT TRANSLATE!
+				}
 
 				$tmp = array();
 				if (!empty($row2->office)) $tmp[] = $row2->office;
@@ -332,7 +337,8 @@ if ($unimplemented_format) {
 					}
 				}
 
-				if ($row2->privacy) { // yes, we use row2->privacy() instead of allowRAView()!
+				// yes, we use row2->privacy() instead of allowRAView(), becuase allowRAView=true if auth token is given; and we want to inform the person that they content they are viewing is confidential!
+				if ($row2->privacy) {
 					$out[] = 'ra-attribute: confidential'; // DO NOT TRANSLATE!
 				}
 
