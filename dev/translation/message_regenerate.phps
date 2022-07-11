@@ -156,12 +156,12 @@ function get_js_L_strings($cont) {
 	$cont = str_replace("\\'", chr(2), $cont);
 	$cont = str_replace("\\\\", "\\", $cont);
 	$m = array();
-	preg_match_all('@[^_A-Za-z0-9]_L\\(.*(["\'])(.+)\\1@ismU', $cont, $m);
-	foreach ($m[2] as &$x) {
+	preg_match_all('@[^_A-Za-z0-9]_L\\(([^\\)]*)(["\'])(.+)\\2@ismU', $cont, $m);
+	foreach ($m[3] as &$x) {
 		$x = str_replace(chr(1), '"', $x);
 		$x = str_replace(chr(2), "'", $x);
 	}
-	return $m[2];
+	return $m[3];
 }
 
 function get_php_L_strings($cont) {
