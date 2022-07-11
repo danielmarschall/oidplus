@@ -33,7 +33,7 @@ var pageChangeCallbacks = [];
 var pageChangeRequestCallbacks = [];
 
 var pageLoadedCallbacks= {
-	"anyPageLoad":         [], // this is processed inside both AJAX successful reload and document.ready (at the very end) 
+	"anyPageLoad":         [], // this is processed inside both AJAX successful reload and document.ready (at the very end)
 	"ajaxPageLoad":        [], // inside AJAX successful reload only
 	"documentReadyBefore": [], // inside document.ready, in the very beginning of the function
 	"documentReadyAfter":  []  // inside document.ready, in the very end of the function
@@ -367,9 +367,9 @@ $(window).on("popstate", function(e) {
 });
 
 $(document).ready(function () {
-	
+
 	executeAllCallbacks(pageLoadedCallbacks.documentReadyBefore);
-	
+
 	/*
 	window.onbeforeunload = function(e) {
 		// TODO: This won't be called because TinyMCE overrides it??
@@ -487,7 +487,7 @@ $(document).ready(function () {
 		Bs5Utils.defaults.toasts.stacking = true;
 		bs5Utils = new Bs5Utils();
 	}
-	
+
 	executeAllCallbacks(pageLoadedCallbacks.anyPageLoad);
 	executeAllCallbacks(pageLoadedCallbacks.documentReadyAfter);
 });
@@ -697,4 +697,58 @@ function alertWarning(txt) {
 function alertError(txt) {
 	// TODO: as toast?
 	alert(txt);
+}
+
+/* Misc functions */
+
+function copyToClipboard(elem) {
+	// Source: https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
+
+	// create hidden text element, if it doesn't already exist
+	var targetId = "_hiddenCopyText_";
+	var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
+	var origSelectionStart, origSelectionEnd;
+	if (isInput) {
+		// can just use the original source element for the selection and copy
+		target = elem;
+		origSelectionStart = elem.selectionStart;
+		origSelectionEnd = elem.selectionEnd;
+	} else {
+		// must use a temporary form element for the selection and copy
+		target = document.getElementById(targetId);
+		if (!target) {
+			var target = document.createElement("textarea");
+			target.style.position = "absolute";
+			target.style.left = "-9999px";
+			target.style.top = "0";
+			target.id = targetId;
+			document.body.appendChild(target);
+		}
+		target.textContent = elem.textContent;
+	}
+	// select the content
+	var currentFocus = document.activeElement;
+	target.focus();
+	target.setSelectionRange(0, target.value.length);
+
+	// copy the selection
+	var succeed;
+	try {
+		succeed = document.execCommand("copy");
+	} catch(e) {
+		succeed = false;
+	}
+	// restore original focus
+	if (currentFocus && typeof currentFocus.focus === "function") {
+		currentFocus.focus();
+	}
+
+	if (isInput) {
+		// restore prior selection
+		elem.setSelectionRange(origSelectionStart, origSelectionEnd);
+	} else {
+		// clear temporary content
+		target.textContent = "";
+	}
+	return succeed;
 }
