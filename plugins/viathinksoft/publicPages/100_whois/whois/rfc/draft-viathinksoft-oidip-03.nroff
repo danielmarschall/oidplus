@@ -95,7 +95,7 @@ Table of Contents
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
      2.1  Authentication Tokens . . . . . . . . . . . . . . . . . . .  6
      2.2  Server Commands . . . . . . . . . . . . . . . . . . . . . .  6
-       2.2.1  "format" command  . . . . . . . . . . . . . . . . . . .  7
+       2.2.1  "format" command  . . . . . . . . . . . . . . . . . . .  6
      2.3  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  8
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  9
@@ -223,9 +223,10 @@ Please note that authentication tokens are only weak protection.  For more infor
 
 The client can send additional information to the server using "server commands".  These are similar to
 Authentication Tokens, with the difference that they contain an equal sign ("=") which divides the "name"
-from the "value".  Names and values are case-sensitive alphanumeric strings.  A request can
-contain multiple server commands which are each prepended by a dollar sign ("$").  The usage of
-server commands is individual for each server and implementation.
+from the "value".  Names and values are case-sensitive alphanumeric strings.  A request can contain multiple server commands which are each prepended by a dollar sign ("$").  Each name MUST only appear a single time in the list of commands.
+
+This document only describes the server command "format" which is described in section\02.2.1.
+The usage of other server commands is individual for each server and implementation.
 
 The following request is an example of a valid query where the client sends a "format" command
 with the value "json":
@@ -235,13 +236,13 @@ with the value "json":
 oid:2.999$format=json
 .fi
 .in 3
-.bp
+
 .ti 0
 2.2.1  "format" command
 
 The "format" command defines the desired output format.
 
-This document defines four formats:
+This document defines 3 formats:
 
 (1) "text": A text representation as defined in section\03.1.1. (MANDATORY)
 
@@ -251,7 +252,7 @@ This document defines four formats:
 
 The default format is "text", which is assumed if the "format" command is omitted.
 
-Besides these four formats, the server can also accept other formats not defined in this document.  The name of the formats SHALL be lower-case.
+Besides these 3 formats, the server can also accept other formats not defined in this document.  The name of the formats SHALL be lower-case.
 
 If the client requests a format that is not implemented, then the server MUST respond with the "text" format,
 and the output MUST consist of the "query" field, "result: Service error",

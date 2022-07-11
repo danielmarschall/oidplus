@@ -72,7 +72,7 @@ Table of Contents
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
      2.1  Authentication Tokens . . . . . . . . . . . . . . . . . . .  6
      2.2  Server Commands . . . . . . . . . . . . . . . . . . . . . .  6
-       2.2.1  "format" command  . . . . . . . . . . . . . . . . . . .  7
+       2.2.1  "format" command  . . . . . . . . . . . . . . . . . . .  6
      2.3  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  8
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  9
@@ -312,23 +312,23 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
    the difference that they contain an equal sign ("=") which divides
    the "name" from the "value".  Names and values are case-sensitive
    alphanumeric strings.  A request can contain multiple server commands
-   which are each prepended by a dollar sign ("$").  The usage of server
-   commands is individual for each server and implementation.
+   which are each prepended by a dollar sign ("$").  Each name MUST only
+   appear a single time in the list of commands.
+
+   This document only describes the server command "format" which is
+   described in section 2.2.1. The usage of other server commands is
+   individual for each server and implementation.
 
    The following request is an example of a valid query where the client
    sends a "format" command with the value "json":
 
        oid:2.999$format=json
 
+2.2.1  "format" command
 
+   The "format" command defines the desired output format.
 
-
-
-
-
-
-
-
+   This document defines 3 formats:
 
  
 
@@ -337,12 +337,6 @@ Marschall               Expires January 10, 2023                [Page 6]
 
 INTERNET DRAFT          OID Information Protocol            July 9, 2022
 
-
-2.2.1  "format" command
-
-   The "format" command defines the desired output format.
-
-   This document defines four formats:
 
    (1) "text": A text representation as defined in section 3.1.1.
    (MANDATORY)
@@ -356,14 +350,20 @@ INTERNET DRAFT          OID Information Protocol            July 9, 2022
    The default format is "text", which is assumed if the "format"
    command is omitted.
 
-   Besides these four formats, the server can also accept other formats
-   not defined in this document.  The name of the formats SHALL be
-   lower-case.
+   Besides these 3 formats, the server can also accept other formats not
+   defined in this document.  The name of the formats SHALL be lower-
+   case.
 
    If the client requests a format that is not implemented, then the
    server MUST respond with the "text" format, and the output MUST
    consist of the "query" field, "result: Service error", and a fitting
    "message" field (as described in section 3.2.1).
+
+
+
+
+
+
 
 
 
