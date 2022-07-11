@@ -253,6 +253,15 @@ if ($unimplemented_format) {
 				}
 			}
 
+			if ($only_wellknown_ids_found) {
+				if (substr($query,0,4) === 'oid:') {
+					// Since it is well-known, oid-info.com will most likely have it described
+					$out[] = 'url: http://www.oid-info.com/get/'.$obj->nodeId(false);
+				}
+			} else {
+				$out[] = 'url: '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).'?goto='.urlencode($obj->nodeId(true));
+			}
+
 			if (substr($query,0,4) === 'oid:') {
 				$sParent = 'oid:'.oid_up(explode(':',$query,2)[1]);
 
@@ -286,7 +295,7 @@ if ($unimplemented_format) {
 
 			$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array(is_null($row) ? '' : $row->ra_email));
 			if ($row2 = $res2->fetch_object()) {
-				$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : (!empty($row2->email) ? $row2->email : _L('Unknown'))); // DO NOT TRANSLATE!
+				$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : (!empty($row2->email) ? $row2->email : /*_L*/('Unknown'))); // DO NOT TRANSLATE!
 				$out[] = 'ra-status: Information available'; // DO NOT TRANSLATE!
 
 				$tmp = array();
@@ -297,11 +306,11 @@ if ($unimplemented_format) {
 				$out[] = 'ra-contact-name: ' . $row2->personal_name.(!empty($tmp) ? " ($tmp)" : ''); // DO NOT TRANSLATE!
 				if (!allowRAView($row2, $authTokens)) {
 					if (!empty($row2->street) || !empty($row2->zip_town) || !empty($row2->country)) {
-						$out[] = 'ra-address: '._L('(redacted)'); // DO NOT TRANSLATE!
+						$out[] = 'ra-address: './*_L*/('(redacted)'); // DO NOT TRANSLATE!
 					}
-					$out[] = 'ra-phone: ' . (!empty($row2->phone) ? _L('(redacted)') : ''); // DO NOT TRANSLATE!
-					$out[] = 'ra-mobile: ' . (!empty($row2->mobile) ? _L('(redacted)') : ''); // DO NOT TRANSLATE!
-					$out[] = 'ra-fax: ' . (!empty($row2->fax) ? _L('(redacted)') : ''); // DO NOT TRANSLATE!
+					$out[] = 'ra-phone: ' . (!empty($row2->phone) ? /*_L*/('(redacted)') : ''); // DO NOT TRANSLATE!
+					$out[] = 'ra-mobile: ' . (!empty($row2->mobile) ? /*_L*/('(redacted)') : ''); // DO NOT TRANSLATE!
+					$out[] = 'ra-fax: ' . (!empty($row2->fax) ? /*_L*/('(redacted)') : ''); // DO NOT TRANSLATE!
 				} else {
 					if (!empty($row2->street))   $out[] = 'ra-address: ' . $row2->street; // DO NOT TRANSLATE!
 					if (!empty($row2->zip_town)) $out[] = 'ra-address: ' . $row2->zip_town; // DO NOT TRANSLATE!
@@ -330,7 +339,7 @@ if ($unimplemented_format) {
 				if ($row2->registered) $out[] = 'ra-created: ' . date('Y-m-d H:i:s', strtotime($row2->registered)); // DO NOT TRANSLATE!
 				if ($row2->updated)    $out[] = 'ra-updated: ' . date('Y-m-d H:i:s', strtotime($row2->updated)); // DO NOT TRANSLATE!
 			} else {
-				$out[] = 'ra: '.(!is_null($row) && !empty($row->ra_email) ? $row->ra_email : _L('Unknown')); // DO NOT TRANSLATE!
+				$out[] = 'ra: '.(!is_null($row) && !empty($row->ra_email) ? $row->ra_email : /*_L*/('Unknown')); // DO NOT TRANSLATE!
 				if (!is_null($row)) {
 					foreach (OIDplus::getPagePlugins() as $plugin) {
 						if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {

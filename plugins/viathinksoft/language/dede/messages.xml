@@ -166,14 +166,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		(redacted)
-		]]></source>
-		<target><![CDATA[
-		(zensiert)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		(registered, <font color="red">has no objects</font>)
 		]]></source>
 		<target><![CDATA[
@@ -6794,14 +6786,6 @@
 		]]></source>
 		<target><![CDATA[
 		Unicode-Label "%1" ist zu lang (Maximale Länge: %2)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Unknown
-		]]></source>
-		<target><![CDATA[
-		Unbekannt
 		]]></target>
 	</message>
 	<message>
