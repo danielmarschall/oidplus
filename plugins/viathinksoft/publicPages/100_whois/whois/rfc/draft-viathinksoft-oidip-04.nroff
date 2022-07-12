@@ -285,15 +285,15 @@ To define the query string, the following Augmented BNF definitions will be used
 .nf
 query           = object optional-args
 
-object          = ( %s"oid" ":" optional-oid ) /
+object          = ( %s"oid:" optional-oid ) /
                   ( other-ns-name ":" other-ns-val )
 
 ; Additional constraint: Query MUST NOT contain more than one
 ;                        argument with the same name.
 optional-args   = *( "$" argument )
 
-argument        = ( %s"format" "=" format ) /
-                  ( %s"auth" "=" tokens ) /
+argument        = ( %s"format=" format ) /
+                  ( %s"auth=" tokens ) /
                   ( other-arg-name "=" other-arg-val )
 
 optional-oid    = [ "." ] [ oid ]
@@ -326,15 +326,11 @@ other-ns-name   = 1*( lowercase-char / digit )
 ; Printable characters (%x21-7E), excluding dollar sign (%x24 "$").
 other-ns-val    = 1*( %x21-23 / %x25-7E )
 
-char-or-digit   = uppercase-char / lowercase-char / digit
-
-unsigned-number = "0" / nonzero-digit *( digit )
+unsigned-number = "0" / ( nonzero-digit *digit )
 
 digit           = %x30-39  ; 0-9
 
 nonzero-digit   = %x31-39  ; 1-9
-
-uppercase-char  = %x41-5A  ; A-Z
 
 lowercase-char  = %x61-7A  ; a-z
 .fi
@@ -612,7 +608,7 @@ To define the format of a Date/Time reference, the following Augmented BNF defin
 .nf
 date-time = year [ "-" month [ "-" day [ " " time ] ] ]
 
-year      = 4*4DIGIT
+year      = 4DIGIT
 
 month     = ( "0" %x31-39 ) /
             ( "1" %x30-32 )      ; 01-12
@@ -620,7 +616,7 @@ month     = ( "0" %x31-39 ) /
 day       = ( "0" %x31-39 ) /
             ( "1" %x30-39 ) /
             ( "2" %x30-39 ) /
-            ( "3" %x30-31 ) /    ; 01-31
+            ( "3" %x30-31 )      ; 01-31
 
 time      = hour ":" minute [ ":" second ] [ " " timezone ]
 
