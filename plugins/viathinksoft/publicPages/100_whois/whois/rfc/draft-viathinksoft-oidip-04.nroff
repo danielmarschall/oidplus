@@ -79,9 +79,9 @@ Provisions Relating to IETF Documents
 publication of this document.  Please review these documents
 carefully, as they describe your rights and restrictions with respect
 to this document.  Code Components extracted from this document must
-include Simplified BSD License text as described in Section 4.e of
+include Revised BSD License text as described in Section 4.e of
 the Trust Legal Provisions and are provided without warranty as
-described in the Simplified BSD License.
+described in the Revised BSD License.
 
 
 .\" \# TD4  -- Set TOC depth by altering this value (TD5 = depth 5)
@@ -98,44 +98,44 @@ Table of Contents
        2.1.2  Authentication Tokens ("token" argument)  . . . . . . .  7
        2.1.3  Other arguments . . . . . . . . . . . . . . . . . . . .  7
      2.2  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  8
-   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
-     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 10
-       3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . . 10
-       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . . 10
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  9
+       3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . .  9
+       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . .  9
        3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . . 10
      3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . . 10
-       3.2.1  Query-Section (Information about Query and Result)  . . 11
-       3.2.2  Object-Section (Information about the OID)  . . . . . . 12
-       3.2.3  RA-Section (Information about the Current RA) . . . . . 15
-       3.2.4  Sections for Previous Registration Authorities  . . . . 17
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 18
-       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 18
-       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 18
-       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 19
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 19
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 20
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 20
-   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
-   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 22
-     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 22
-     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 22
-   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 23
-     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 24
-   7  Internationalization Considerations . . . . . . . . . . . . . . 24
-   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 25
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 26
-     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 26
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 26
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 26
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 28
-   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 29
-   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 29
-   Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 35
-   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 36
-   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 36
-   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 39
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 41
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 41
+       3.2.1  Query-Section (Information about Query and Result)  . . 10
+       3.2.2  Object-Section (Information about the OID)  . . . . . . 11
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 14
+       3.2.4  Sections for Previous Registration Authorities  . . . . 16
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 17
+       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 17
+       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
+       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 18
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 18
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 19
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 19
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 21
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 21
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 22
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 23
+   7  Internationalization Considerations . . . . . . . . . . . . . . 23
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 24
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 25
+     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 25
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 25
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 27
+   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 28
+   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 28
+   Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 34
+   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 35
+   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 35
+   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 38
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 40
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 40
 .fi
 .in 3
 
@@ -215,7 +215,7 @@ An equal sign ("=") divides the "name" from the "value".
 Each name MUST only appear a single time in the list of arguments.
 
 This document only describes the arguments "format" which is described in section\02.1.1,
-and "token" which is described in section\02.1.2.  Constrains for additional arguments are described in section\02.1.3.
+and "token" which is described in section\02.1.2.  Constraints for additional arguments are described in section\02.1.3.
 
 The following request is an example of a valid query where the client sends a "format" argument
 with the value "json":
@@ -253,7 +253,7 @@ and a fitting "message" field (as described in section\03.2.1).
 
 Some organizations might not want to present their OID information (or part of it) to the public, e.g. for reasons like privacy or confidentiality.  Therefore, one or more "authentication tokens" can be sent to control the display of confidential information returned by the OID-IP service.
 
-Authentication tokens MUST be case-sensitive and non-empty, and MUST NOT contain a dollar-sign ("$"), an equal sign ("="), or a comma sign (",").
+Authentication tokens MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign ("$"), an equal sign ("="), or a comma sign (",").
 
 If multiple authentication tokens need to be submitted, then the "token" argument MUST NOT be repeated.  Instead, the tokens are separated using a comma sign (",").  A token MUST NOT be used multiple times in the same query.
 
@@ -275,7 +275,7 @@ The usage of other arguments is individual for each implementation.
 
 Names MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "database") or common abbreviations (e.g. "db").
 
-Values MUST be case-sensitive and non-empty, and MUST NOT contain a dollar-sign ("$") or an equal sign ("=").
+Values MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign ("$") or an equal sign ("=").
 .bp
 .ti 0
 2.2  Request ABNF Notation
@@ -300,30 +300,30 @@ optional-oid    = [ "." ] [ oid ]
 
 oid             = unsigned-number *( "." unsigned-number )
 
-format          = %s"text" / %s"json" / %s"xml" / other-format
-
-; Additional constraint: MUST NOT be "text", "json", or "xml".
-other-format    = 1*( lowercase-char / digit )
+format          = %s"text" /
+                  %s"json" /
+                  %s"xml" /
+                  1*( lowercase-char / digit )
 
 ; Additional constraint: Tokens MUST NOT be used more than one time
 ;                        in the same query.
 tokens          = token *( "," token )
 
-; Printable characters (%x21-7E), excluding dollar-sign (%x24 "$"),
+; Printable characters (%x21-7E), excluding dollar sign (%x24 "$"),
 ; equal sign (%x3D "="), and comma sign (%x2C ",").
 token           = 1*( %x21-23 / %x25-2B / %x2D-3C / %x3E-7E )
 
 ; Additional constraint: MUST NOT be "format" or "token".
 other-arg-name  = 1*( lowercase-char / digit )
 
-; Printable characters (%x21-7E), excluding dollar-sign (%x24 "$")
-; or equal sign (%x3D "=").
+; Printable characters (%x21-7E), excluding dollar sign (%x24 "$")
+; and equal sign (%x3D "=").
 other-arg-val   = 1*( %x21-23 / %x25-3C / %x3E-7E )
 
 ; Additional constraint: MUST NOT be "oid".
 other-ns-name   = 1*( lowercase-char / digit )
 
-; Printable characters (%x21-7E), excluding dollar-sign (%x24 "$").
+; Printable characters (%x21-7E), excluding dollar sign (%x24 "$").
 other-ns-val    = 1*( %x21-23 / %x25-7E )
 
 char-or-digit   = uppercase-char / lowercase-char / digit
@@ -339,7 +339,6 @@ uppercase-char  = %x41-5A  ; A-Z
 lowercase-char  = %x61-7A  ; a-z
 .fi
 
-.bp
 .ti 0
 3  Response
 
@@ -558,7 +557,6 @@ The definition of these sections is identical to the definition of the RA-Sectio
 
 The history does not need to be complete, e.g. it is no problem to only serve information about the first and the current RA, or only serve information about the current RA.
 
-.bp
 .ti 0
 3.3  Digital Signature
 
