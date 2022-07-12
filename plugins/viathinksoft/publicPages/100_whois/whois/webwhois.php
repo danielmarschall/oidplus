@@ -19,9 +19,11 @@
 
 require_once __DIR__ . '/../../../../../includes/oidplus.inc.php';
 
+// NOTE: must be equal to the string in the .xsd file!
 define('XML_URN', 'urn:ietf:id:viathinksoft-oidip-03');
-define('XML_URN_URL', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'xml_schema.xsd');
-define('JSON_SCHEMA', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'json_schema.json');
+// NOTE: the file names and draft version are also written in OIDplusPagePublicWhois.class.php
+define('XML_URN_URL', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'viathinksoft-oidip-03.xsd');
+define('JSON_SCHEMA', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'viathinksoft-oidip-03.json');
 
 OIDplus::init(true);
 set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
@@ -48,28 +50,33 @@ if (PHP_SAPI == 'cli') {
 	$query = $_REQUEST['query'];
 }
 
-// Split input into query, authTokens and serverCommands
-$tokens = explode('$', $query);
-$query = array_shift($tokens);
-$authTokens[] = array();
-$serverCommands = array();
-foreach ($tokens as $token) {
-	if (strpos($token,'=') !== false) {
-		$tmp = explode('=',$token,2);
-		$serverCommands[strtolower($tmp[0])] = $tmp[1];
-	} else {
-		$authTokens[] = $token;
-	}
+// Split input into query and arguments
+$chunks = explode('$', $query);
+$query = array_shift($chunks);
+$arguments = array();
+foreach ($chunks as $chunk) {
+	if (strpos($chunk,'=') === false) continue;
+	$tmp = explode('=',$chunk,2);
+	if (!preg_match('@^[a-z0-9]+$@', $tmp[0], $m)) continue; // be strict with the names. They must be lowercase
+	$arguments[$tmp[0]] = $tmp[1];
 }
 
 $query = str_replace('oid:.', 'oid:', $query); // allow leading dot
 
 if (isset($_REQUEST['format'])) {
 	$format = $_REQUEST['format'];
-} else if (isset($serverCommands['format'])) {
-	$format = $serverCommands['format'];
+} else if (isset($arguments['format'])) {
+	$format = $arguments['format'];
 } else {
 	$format = 'text'; // default
+}
+
+if (isset($_REQUEST['auth'])) {
+	$authTokens = explode(',', $_REQUEST['auth']);
+} else if (isset($arguments['auth'])) {
+	$authTokens = explode(',', $arguments['auth']);
+} else {
+	$authTokens = array();
 }
 
 $unimplemented_format = ($format != 'text') && ($format != 'json') && ($format != 'xml');
