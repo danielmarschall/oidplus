@@ -133,7 +133,7 @@ Table of Contents
    Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 34
    Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 35
    Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 35
-   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 38
+   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 39
    Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 40
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 40
 .fi
@@ -242,7 +242,7 @@ This document defines 3 formats:
 The default format is "text", which is assumed if the "format" argument is omitted.
 
 Besides these 3 formats, the server can accept other formats not defined in this document.  The name of the formats MUST be
-alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "text") or common abbreviations (e.g. "json").
+alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "text") or be common abbreviations (e.g. "json").
 
 If the client requests a format that is not implemented, then the server MUST respond with the "text" format,
 and the output MUST consist of the "query" field, "result: Service error",
@@ -271,9 +271,9 @@ Please note that authentication tokens are only weak protection.  For more infor
 .ti 0
 2.1.3  Other arguments
 
-The usage of other arguments is individual for each implementation.
+The usage of arguments not described in this document is individual for each implementation.
 
-Names MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "database") or common abbreviations (e.g. "db").
+Names MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "database") or be common abbreviations (e.g. "db").
 
 Values MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign ("$") or an equal sign ("=").
 .bp
@@ -1051,12 +1051,14 @@ Appendix A.1.  JSON Format Schema
 
 The following JSON Schema ([JSONSch]) defines the expected output the server sends if the argument "format" is set to "json".
 
+[To RFC Editor: Please change "viathinksoft-oidip-04.json" before publication.]
+
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
+NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
+
 .\" .in 3
 .nf
-.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
-<CODE BEGINS>
-# NOTE: '\\' line wrapping per RFC\08792
-
+<CODE BEGINS> file "viathinksoft-oidip-04.json"
 {
    "$schema":"http://json-schema.org/draft-07/schema#",
    "type":"object",
@@ -1342,14 +1344,16 @@ The following JSON Schema ([JSONSch]) defines the expected output the server sen
 .ti 0
 Appendix A.2.  JSON Format Example of output
 
+[To RFC Editor: Please change "viathinksoft-oidip-04.json" before publication.]
+
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
+NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
+
 .\" .in 3
 .nf
-.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
-<CODE BEGINS>
-# NOTE: '\\' line wrapping per RFC\08792
-
+<CODE BEGINS> file "oidip_example.json"
 {
-  "$schema":"http://.../oidip_schema.json",
+  "$schema":"http://.../viathinksoft-oidip-04.json",
   "oidip": [
     {
       "query": "oid:2.999",
@@ -1410,14 +1414,16 @@ Appendix B.1.  XML Format Schema
 
 [To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-04" to "urn:ietf:rfc:yyyy" before publication.]
 
+[To RFC Editor: Please change "viathinksoft-oidip-04.xsd" before publication.]
+
 The following XML Schema Definition ([XSD]) defines the expected output the server sends if the argument "format" is set to "xml".
+
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
+NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 
 .\" .in 3
 .nf
-.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
-<CODE BEGINS>
-# NOTE: '\\' line wrapping per RFC\08792
-
+<CODE BEGINS> file "viathinksoft-oidip-04.xsd"
 <?xml version="1.0"?>
 <xs:schema targetNamespace="urn:ietf:id:viathinksoft-oidip-04"
            attributeFormDefault="unqualified"
@@ -1589,17 +1595,19 @@ Appendix B.2.  XML Format Example of output
 
 [To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-04" to "urn:ietf:rfc:yyyy" before publication.]
 
+[To RFC Editor: Please change "viathinksoft-oidip-04.xsd" before publication.]
+
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
+NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
+
 .\" .in 3
 .nf
-.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
-<CODE BEGINS>
-# NOTE: '\\' line wrapping per RFC\08792
-
+<CODE BEGINS> file "oidip_example.xml"
 <?xml version="1.0"?>
 <root xmlns="urn:ietf:rfc:yyyy"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="urn:ietf:id:viathinksoft-oidip-04 \\
-http://.../oidip_schema.xsd">
+http://.../viathinksoft-oidip-04.xsd">
 <oidip>
   <querySection>
      <query>oid:2.999</query>
@@ -1679,6 +1687,7 @@ Postfach 11 53
 69243 Bammental
 Germany
 
-EMail: daniel-marschall@viathinksoft.de
+Email: daniel-marschall@viathinksoft.de
+URI:   https://www.viathinksoft.com/
 .sp
 .fi

@@ -23,5 +23,9 @@ abstract class OIDplusObjectTypePlugin extends OIDplusPlugin {
 
 	public static abstract function getObjectTypeClassName();
 
+	public static function prefilterQuery($static_node_id, $throw_exception) {
+		return $static_node_id;
+	}
+
 }
 

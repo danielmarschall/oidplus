@@ -34,4 +34,15 @@ class OIDplusObjectTypePluginGuid extends OIDplusObjectTypePlugin {
 		return '<br><a href="javascript:OIDplusObjectTypePluginGuid.generateRandomGUID(false)">('._L('Generate random GUID').')</a>';
 	}
 
+	public static function prefilterQuery($static_node_id, $throw_exception) {
+		// Redirect UUID to GUID
+		// The OID-IP Internet Draft writes at section "Alternative Namespaces":
+		//     "If available, a formal URN namespace identifier (as defined in RFC\08141, section\05.1 [RFC8141]) SHOULD be used, e.g. 'uuid' should be used instead of 'guid'."
+		// However, our plugin OIDplusObjectTypePluginGuid serves the namespace "guid".
+		// Therefore redirect "uuid" to "guid", so that people can use OID-IP or the GoTo-box with an "uuid:" input
+		$static_node_id = preg_replace('@^uuid:@', 'guid:', $static_node_id);
+
+		return $static_node_id;
+	}
+
 }
