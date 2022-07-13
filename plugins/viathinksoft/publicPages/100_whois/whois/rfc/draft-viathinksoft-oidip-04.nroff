@@ -42,7 +42,7 @@ draft-viathinksoft-oidip-04 (Work in progress)
 .ti 0
 Abstract
 
-This document defines a method for retrieving information about Object Identifiers (OIDs) and their associated Registration Authorities (RAs) using a text-based protocol, in a way that is both human-readable and machine-readable.
+This document defines a method for retrieving information about Object Identifiers (OIDs) and their associated Registration Authorities (RAs) using a text-based protocol, in a way that is both human-readable and machine-readable.  Besides the text protocol, OID-IP can also send information using JSON or XML.
 
 
 
@@ -102,18 +102,18 @@ Table of Contents
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  9
        3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . .  9
        3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . .  9
-       3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . .  9
+       3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . . 10
      3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . . 10
        3.2.1  Query-Section (Information about Query and Result)  . . 10
        3.2.2  Object-Section (Information about the OID)  . . . . . . 11
        3.2.3  RA-Section (Information about the Current RA) . . . . . 14
        3.2.4  Sections for Previous Registration Authorities  . . . . 16
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 16
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 17
        3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 17
        3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
-       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 17
+       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 18
      3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 18
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 19
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 18
        3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 19
    4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
    5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 21
@@ -123,8 +123,8 @@ Table of Contents
      6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 23
    7  Internationalization Considerations . . . . . . . . . . . . . . 23
    8  Security Considerations . . . . . . . . . . . . . . . . . . . . 24
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 25
-     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 25
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 24
+     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 24
    10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 25
      10.1  Normative References . . . . . . . . . . . . . . . . . . . 25
      10.2  Informative References . . . . . . . . . . . . . . . . . . 27
@@ -280,30 +280,37 @@ Values MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign 
 .ti 0
 2.2  Request ABNF Notation
 
-To define the query string, the following Augmented BNF definitions will be used.  They are based on the ABNF styles of RFC 7405 [RFC7405].
+To define the query string, the following Augmented BNF definitions will be used.  They are based on the ABNF styles of RFC\05234 [RFC5234].
 
+.\" Tool for verification of ABNF: https://tools.ietf.org/tools/bap/abnf.cgi
 .nf
 query           = object optional-args
 
-object          = ( %s"oid:" optional-oid ) /
+object          = ( str-oid       ":" optional-oid ) /
                   ( other-ns-name ":" other-ns-val )
+str-oid         = %x6F.69.64           ; %s"oid"    in RFC\07405
 
 ; Additional constraint: Query MUST NOT contain more than one
 ;                        argument with the same name.
 optional-args   = *( "$" argument )
 
-argument        = ( %s"format=" format ) /
-                  ( %s"auth=" tokens ) /
+argument        = ( str-format     "=" format ) /
+                  ( str-auth       "=" tokens ) /
                   ( other-arg-name "=" other-arg-val )
+str-format      = %x66.6F.72.6D.61.74  ; %s"format" in RFC\07405
+str-auth        = %x61.75.74.68        ; %s"auth"   in RFC\07405
 
 optional-oid    = [ "." ] [ oid ]
 
 oid             = unsigned-number *( "." unsigned-number )
 
-format          = %s"text" /
-                  %s"json" /
-                  %s"xml" /
+format          = str-text /
+                  str-json /
+                  str-xml  /
                   1*( lowercase-char / digit )
+str-text        = %x74.65.78.74        ; %s"text"   in RFC\07405
+str-json        = %x6A.73.6F.6E        ; %s"json"   in RFC\07405
+str-xml         = %x78.6D.6C           ; %s"xml"    in RFC\07405
 
 ; Additional constraint: Tokens MUST NOT be used more than one time
 ;                        in the same query.
@@ -313,14 +320,14 @@ tokens          = token *( "," token )
 ; equal sign (%x3D "="), and comma sign (%x2C ",").
 token           = 1*( %x21-23 / %x25-2B / %x2D-3C / %x3E-7E )
 
-; Additional constraint: MUST NOT be "format" or "auth".
+; Additional constraint: MUST NOT be <str-format> or <str-auth>.
 other-arg-name  = 1*( lowercase-char / digit )
 
 ; Printable characters (%x21-7E), excluding dollar sign (%x24 "$")
 ; and equal sign (%x3D "=").
 other-arg-val   = 1*( %x21-23 / %x25-3C / %x3E-7E )
 
-; Additional constraint: MUST NOT be "oid".
+; Additional constraint: MUST NOT be <str-oid>.
 other-ns-name   = 1*( lowercase-char / digit )
 
 ; Printable characters (%x21-7E), excluding dollar sign (%x24 "$").
@@ -329,9 +336,7 @@ other-ns-val    = 1*( %x21-23 / %x25-7E )
 unsigned-number = "0" / ( nonzero-digit *digit )
 
 digit           = %x30-39  ; 0-9
-
 nonzero-digit   = %x31-39  ; 1-9
-
 lowercase-char  = %x61-7A  ; a-z
 .fi
 
@@ -363,12 +368,12 @@ lowercase-char  = %x61-7A  ; a-z
 .ti 0
 3.1.2 "json" Format
 
-The JavaScript Object Notation (JSON, [RFC8259]) output MUST match the schema defined in Appendix\0A of this document.
+The JavaScript Object Notation (JSON, [RFC8259]) output MUST match the schema defined in Appendix\0A.1 of this document.
 
 .ti 0
 3.1.3 "xml" Format
 
-The Extensible Markup Language (XML, [XML]) output MUST match the schema defined in Appendix\0B of this document.
+The Extensible Markup Language (XML, [XML]) output MUST match the schema defined in Appendix\0B.1 of this document.
 
 .ti 0
 3.2  Structure
@@ -522,7 +527,7 @@ Possible fields are:
 
 (8) "ra-email" (OPTIONAL, multiple values allowed) contains an email address of the Registration Authority.
 
-(9) "ra-url" (OPTIONAL, multiple values allowed) contains a URL (as defined in RFC 3986 [RFC3986]) leading to more information about the RA (usually the website of the RA).
+(9) "ra-url" (OPTIONAL, multiple values allowed) contains a URL (as defined in RFC\03986 [RFC3986]) leading to more information about the RA (usually the website of the RA).
 
 (10) "ra-attribute" (OPTIONAL, multiple values allowed) contains attributes of the RA.  An attribute MUST be one of the following values:
 
@@ -566,6 +571,7 @@ If integrity/authenticity is required, the whole response can be signed, e.g. by
 
 Steps for signing a message:
 
+.in 7
 1. Make sure that the JSON file has no signature (remove the "signature" key if one exists).
 
 2. Make a copy of your JSON file and canonize the contents using the procedures described in RFC\08785 [RFC8785].
@@ -573,9 +579,11 @@ Steps for signing a message:
 3. Create a JSON Web Signature (JWS, RFC\07515 [RFC7515]) using your public key and the canonized form of the JSON contents.
 
 4. Add the signature in the "signature" field to the JSON file.  Note that the final JSON does not need to be canonized, since the canonization will be repeated in the verification procedure.
+.in 3
 
 Steps for verifying a message:
 
+.in 7
 1. Extract the contents of the "signature" key from the JSON file.  This is the JSON Web Signature containing a header, the payload, and the signature.
 
 2. Make a copy of your JSON file and remove the "signature" key there.
@@ -585,6 +593,7 @@ Steps for verifying a message:
 4. Compare the canonized JSON contents to the base64-encoded payload of the JSON Web Signature.  The contents MUST be equal.
 
 5. Verify the JSON Web Signature according to the procedures described in RFC\07515 [RFC7515].
+.in 3
 
 .ti 0
 3.3.3  "xml" Format
@@ -599,12 +608,13 @@ Date/Time references SHALL be formatted as described in section\03.4.1.
 If parts of the date/time reference are uncertain, then they SHOULD be omitted until the date/time reference has the highest correctness.
 
 Examples of valid date/time references can be found in section\03.4.2.
-.bp
+
 .ti 0
 3.4.1  Date/Time Format ABNF Notation
 
-To define the format of a Date/Time reference, the following Augmented BNF definitions will be used.  They are based on the ABNF styles of RFC 5234 [RFC5234].
+To define the format of a Date/Time reference, the following Augmented BNF definitions will be used.  They are based on the ABNF styles of RFC\05234 [RFC5234].
 
+.\" Tool for verification of ABNF: https://tools.ietf.org/tools/bap/abnf.cgi
 .nf
 date-time = year [ "-" month [ "-" day [ " " time ] ] ]
 
@@ -828,7 +838,7 @@ The OID-IP service can define additional field names, but they SHOULD be written
 (5) Authentication tokens must have a sufficient length and complexity to avoid successful brute force attacks, or the OID-IP service must limit the number of requests per time.
 
 (6) If integrity/authenticity is required, the OID-IP response can be signed, as described in section\03.3 "Digital Signature".
-.bp
+
 .ti 0
 9  IANA Considerations
 
@@ -902,13 +912,6 @@ Recommendation ITU-T\0E.164 (2010), November 2010,
 [RFC5234]  Crocker, D., Ed., and P. Overell, "Augmented BNF for Syntax Specifications: ABNF", STD\068, RFC\05234, DOI\010.17487/RFC5234, January\02008,
 .in 14
 <https://www.rfc-editor.org/info/rfc5234>.
-
-.ti 3
-.in 14
-.\" https://www.rfc-editor.org/refs/ref7405.txt
-[RFC7405]  Kyzivat, P., "Case-Sensitive String Support in ABNF", RFC\07405, DOI\010.17487/RFC7405, December\02014,
-.in 14
-<https://www.rfc-editor.org/info/rfc7405>.
 
 .ti 3
 .in 14
@@ -988,7 +991,7 @@ W3C Recommendation 5\0April\02012,
 [JSONSch]  JSON Schema Specification
 .in 14
 <https://json-schema.org/specification.html>.
-
+.bp
 .ti 0
 10.2  Informative References
 
@@ -1050,9 +1053,9 @@ The following JSON Schema ([JSONSch]) defines the expected output the server sen
 
 .\" .in 3
 .nf
-.\" Attention: NROFF changes \\ to \ . Therefore '\\' is actually '\'!
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
 <CODE BEGINS>
-# NOTE: '\\' line wrapping per RFC 8792
+# NOTE: '\\' line wrapping per RFC\08792
 
 {
    "$schema":"http://json-schema.org/draft-07/schema#",
@@ -1341,9 +1344,9 @@ Appendix A.2.  JSON Format Example of output
 
 .\" .in 3
 .nf
-.\" Attention: NROFF changes \\ to \ . Therefore '\\' is actually '\'!
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
 <CODE BEGINS>
-# NOTE: '\\' line wrapping per RFC 8792
+# NOTE: '\\' line wrapping per RFC\08792
 
 {
   "$schema":"http://.../oidip_schema.json",
@@ -1411,9 +1414,9 @@ The following XML Schema Definition ([XSD]) defines the expected output the serv
 
 .\" .in 3
 .nf
-.\" Attention: NROFF changes \\ to \ . Therefore '\\' is actually '\'!
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
 <CODE BEGINS>
-# NOTE: '\\' line wrapping per RFC 8792
+# NOTE: '\\' line wrapping per RFC\08792
 
 <?xml version="1.0"?>
 <xs:schema targetNamespace="urn:ietf:id:viathinksoft-oidip-04"
@@ -1588,9 +1591,9 @@ Appendix B.2.  XML Format Example of output
 
 .\" .in 3
 .nf
-.\" Attention: NROFF changes \\ to \ . Therefore '\\' is actually '\'!
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
 <CODE BEGINS>
-# NOTE: '\\' line wrapping per RFC 8792
+# NOTE: '\\' line wrapping per RFC\08792
 
 <?xml version="1.0"?>
 <root xmlns="urn:ietf:rfc:yyyy"
