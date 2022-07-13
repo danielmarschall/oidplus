@@ -119,7 +119,7 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 34
    Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 35
    Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 35
-   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 38
+   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 39
    Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 40
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 40
 
@@ -339,7 +339,8 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 
    alphanumeric, lower-case, and non-empty, and SHOULD be written in the
-   English language (e.g. "text") or common abbreviations (e.g. "json").
+   English language (e.g. "text") or be common abbreviations (e.g.
+   "json").
 
    If the client requests a format that is not implemented, then the
    server MUST respond with the "text" format, and the output MUST
@@ -373,16 +374,15 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 2.1.3  Other arguments
 
-   The usage of other arguments is individual for each implementation.
+   The usage of arguments not described in this document is individual
+   for each implementation.
 
    Names MUST be alphanumeric, lower-case, and non-empty, and SHOULD be
-   written in the English language (e.g. "database") or common
+   written in the English language (e.g. "database") or be common
    abbreviations (e.g. "db").
 
    Values MUST be case-sensitive and non-empty, and MUST NOT contain a
    dollar sign ("$") or an equal sign ("=").
-
-
 
 
 
@@ -1521,9 +1521,12 @@ Appendix A.1.  JSON Format Schema
 The following JSON Schema ([JSONSch]) defines the expected output the
 server sends if the argument "format" is set to "json".
 
-<CODE BEGINS>
-# NOTE: '\' line wrapping per RFC 8792
+[To RFC Editor: Please change "viathinksoft-oidip-04.json" before
+publication.]
 
+NOTE: '\' line wrapping per RFC 8792  [RFC8792]
+
+<CODE BEGINS> file "viathinksoft-oidip-04.json"
 {
    "$schema":"http://json-schema.org/draft-07/schema#",
    "type":"object",
@@ -1559,9 +1562,6 @@ server sends if the argument "format" is set to "json".
             {
                "type":"object",
                "properties":{
-                  "object":{
-                     "type":"string"
-                  },
  
 
 
@@ -1570,6 +1570,9 @@ Marschall               Expires January 12, 2023               [Page 28]
 INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 
+                  "object":{
+                     "type":"string"
+                  },
                   "status":{
                      "type":"string",
                      "enum":["Information available",
@@ -1615,9 +1618,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                      ]
                   },
                   "identifier":{
-                     "oneOf":[
-                        {
-                           "type":"string"
  
 
 
@@ -1626,6 +1626,9 @@ Marschall               Expires January 12, 2023               [Page 29]
 INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 
+                     "oneOf":[
+                        {
+                           "type":"string"
                         },
                         {
                            "type":"array",
@@ -1671,9 +1674,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                            "items":{
                               "type":"string"
                            }
-                        }
-                     ]
-                  },
  
 
 
@@ -1682,6 +1682,9 @@ Marschall               Expires January 12, 2023               [Page 30]
 INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 
+                        }
+                     ]
+                  },
                   "oidip-service":{
                      "type":"string"
                   },
@@ -1727,9 +1730,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                            }
                         }
                      ]
-                  },
-                  "created":{
-                     "type":"string",
  
 
 
@@ -1738,6 +1738,9 @@ Marschall               Expires January 12, 2023               [Page 31]
 INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 
+                  },
+                  "created":{
+                     "type":"string",
                      "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\
 (\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
 ( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
@@ -1783,9 +1786,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                   },
                   "ra-email":{
                      "type":"string"
-                  },
-                  "ra-url":{
-                     "type":"string"
  
 
 
@@ -1794,6 +1794,9 @@ Marschall               Expires January 12, 2023               [Page 32]
 INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 
+                  },
+                  "ra-url":{
+                     "type":"string"
                   },
                   "ra-attribute":{
                      "oneOf":[
@@ -1839,9 +1842,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
       }
    },
    "required":[
-      "oidip"
-   ]
-}
  
 
 
@@ -1850,15 +1850,21 @@ Marschall               Expires January 12, 2023               [Page 33]
 INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 
+      "oidip"
+   ]
+}
 <CODE ENDS>
 
 Appendix A.2.  JSON Format Example of output
 
-<CODE BEGINS>
-# NOTE: '\' line wrapping per RFC 8792
+[To RFC Editor: Please change "viathinksoft-oidip-04.json" before
+publication.]
 
+NOTE: '\' line wrapping per RFC 8792  [RFC8792]
+
+<CODE BEGINS> file "oidip_example.json"
 {
-  "$schema":"http://.../oidip_schema.json",
+  "$schema":"http://.../viathinksoft-oidip-04.json",
   "oidip": [
     {
       "query": "oid:2.999",
@@ -1892,12 +1898,6 @@ purposes of documenting examples of Object Identifiers.",
             "(Korean characters are omitted in this example)",
             "(Arabian characters are omitted in this example)",
             "(Japanese characters are omitted in this example)",
-            "(Chinese characters are omitted in this example)",
-            "(Russian characters are omitted in this example)"
-      ],
-      "parent": "oid:2 (joint-iso-ccitt, joint-iso-itu-t)",
-      "subordinate": [],
-      "created": "2011-06",
  
 
 
@@ -1906,6 +1906,12 @@ Marschall               Expires January 12, 2023               [Page 34]
 INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 
+            "(Chinese characters are omitted in this example)",
+            "(Russian characters are omitted in this example)"
+      ],
+      "parent": "oid:2 (joint-iso-ccitt, joint-iso-itu-t)",
+      "subordinate": [],
+      "created": "2011-06",
       "updated": "2020-09"
     },
     {
@@ -1924,12 +1930,15 @@ Appendix B.1.  XML Format Schema
 [To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-04" to
 "urn:ietf:rfc:yyyy" before publication.]
 
+[To RFC Editor: Please change "viathinksoft-oidip-04.xsd" before
+publication.]
+
 The following XML Schema Definition ([XSD]) defines the expected output
 the server sends if the argument "format" is set to "xml".
 
-<CODE BEGINS>
-# NOTE: '\' line wrapping per RFC 8792
+NOTE: '\' line wrapping per RFC 8792  [RFC8792]
 
+<CODE BEGINS> file "viathinksoft-oidip-04.xsd"
 <?xml version="1.0"?>
 <xs:schema targetNamespace="urn:ietf:id:viathinksoft-oidip-04"
            attributeFormDefault="unqualified"
@@ -1945,6 +1954,14 @@ REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
 <xs:sequence>
 <xs:element name="oidip">
 <xs:complexType>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 35]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
 <xs:sequence>
 <xs:element name="querySection" minOccurs="1" maxOccurs="1">
 <xs:complexType vc:minVersion="1.1">
@@ -1954,14 +1971,6 @@ REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
 <xs:choice maxOccurs="unbounded">
 <xs:element type="xs:string" name="query" minOccurs="1"/>
 <xs:element name="result" minOccurs="1">
- 
-
-
-Marschall               Expires January 12, 2023               [Page 35]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
 <xs:simpleType>
 <xs:restriction base="xs:string">
 <xs:enumeration value="Found"/>
@@ -2001,6 +2010,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 <xs:element type="xs:string" name="identifier" minOccurs="0"/>
 <xs:element type="xs:string" name="standardized-id" minOccurs="0"/>
 <xs:element type="xs:string" name="unicode-label" minOccurs="0"/>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 36]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
 <xs:element type="xs:string" name="long-arc" minOccurs="0"/>
 <xs:element type="xs:string" name="oidip-service" minOccurs="0"/>
 <xs:element name="attribute" minOccurs="0">
@@ -2010,14 +2027,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 <xs:enumeration value="draft"/>
 <xs:enumeration value="frozen"/>
 <xs:enumeration value="leaf"/>
- 
-
-
-Marschall               Expires January 12, 2023               [Page 36]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
 <xs:enumeration value="no-identifiers"/>
 <xs:enumeration value="no-unicode-labels"/>
 <xs:enumeration value="retired"/>
@@ -2057,6 +2066,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 <xs:element type="xs:string" name="ra" minOccurs="1"/>
 <xs:element name="ra-status" minOccurs="1">
 <xs:simpleType>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 37]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
 <xs:restriction base="xs:string">
 <xs:enumeration value="Information available"/>
 <xs:enumeration value="Information partially available"/>
@@ -2066,14 +2083,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 </xs:element>
 <xs:element type="xs:string" name="ra-contact-name" minOccurs="0"/>
 <xs:element type="xs:string" name="ra-address" minOccurs="0"/>
- 
-
-
-Marschall               Expires January 12, 2023               [Page 37]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
 <xs:element type="xs:string" name="ra-phone" minOccurs="0"/>
 <xs:element type="xs:string" name="ra-mobile" minOccurs="0"/>
 <xs:element type="xs:string" name="ra-fax" minOccurs="0"/>
@@ -2113,6 +2122,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 </xs:element>
 <xs:element ref="ds:Signature" minOccurs="0" maxOccurs="1"/>
 </xs:sequence>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 38]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
 </xs:complexType>
 </xs:element>
 </xs:schema>
@@ -2122,22 +2139,18 @@ Appendix B.2.  XML Format Example of output
 
 [To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-04" to
 "urn:ietf:rfc:yyyy" before publication.]
- 
 
+[To RFC Editor: Please change "viathinksoft-oidip-04.xsd" before
+publication.]
 
-Marschall               Expires January 12, 2023               [Page 38]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
+NOTE: '\' line wrapping per RFC 8792  [RFC8792]
 
-
-<CODE BEGINS>
-# NOTE: '\' line wrapping per RFC 8792
-
+<CODE BEGINS> file "oidip_example.xml"
 <?xml version="1.0"?>
 <root xmlns="urn:ietf:rfc:yyyy"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="urn:ietf:id:viathinksoft-oidip-04 \
-http://.../oidip_schema.xsd">
+http://.../viathinksoft-oidip-04.xsd">
 <oidip>
   <querySection>
      <query>oid:2.999</query>
@@ -2165,6 +2178,14 @@ http://.../oidip_schema.xsd">
      <long-arc>(Korean characters are omitted)</long-arc>
      <long-arc>(Arabian characters are omitted)</long-arc>
      <long-arc>(Japanese characters are omitted)</long-arc>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 39]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
      <long-arc>(Chinese characters are omitted)</long-arc>
      <long-arc>(Russian characters are omitted)</long-arc>
      <parent>oid:2 (joint-iso-ccitt, joint-iso-itu-t)</parent>
@@ -2178,14 +2199,6 @@ http://.../oidip_schema.xsd">
   <ds:SignedInfo>
   <ds:CanonicalizationMethod
      Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
- 
-
-
-Marschall               Expires January 12, 2023               [Page 39]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
   <ds:SignatureMethod
      Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/>
   <ds:Reference>
@@ -2216,21 +2229,8 @@ Authors' Addresses
    69243 Bammental
    Germany
 
-   EMail: daniel-marschall@viathinksoft.de
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   Email: daniel-marschall@viathinksoft.de
+   URI:   https://www.viathinksoft.com/
 
 
 
