@@ -710,6 +710,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Authentication token(s), comma separated (optional)
+		]]></source>
+		<target><![CDATA[
+		Authentifizierungs-Token(s), mit Komma getrennt (optional)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Author
 		]]></source>
 		<target><![CDATA[
@@ -4222,6 +4230,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Open in web-browser
+		]]></source>
+		<target><![CDATA[
+		Im Web-Browser öffnen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Operating System
 		]]></source>
 		<target><![CDATA[
@@ -5030,10 +5046,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Query
+		Query according to OID Information Protocol
 		]]></source>
 		<target><![CDATA[
-		Abfrage
+		Anfrage gemäß OID Information Protocol
 		]]></target>
 	</message>
 	<message>
@@ -5290,6 +5306,14 @@
 		]]></source>
 		<target><![CDATA[
 		Kostenlose PEN/OID von IANA beantragen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Requested object including namespace
+		]]></source>
+		<target><![CDATA[
+		Angefragtes Objekt inkl. Namensraum
 		]]></target>
 	</message>
 	<message>
@@ -6742,6 +6766,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		URL for Web Service
+		]]></source>
+		<target><![CDATA[
+		URL für Web-Service
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		URL for more information about your project(s) (optional)
 		]]></source>
 		<target><![CDATA[
@@ -7214,10 +7246,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		With the OID Information Protocol (OID-IP), you can query object information in a machine-readable format.
+		With the OID Information Protocol (OID-IP), you can query object information in a format that is human-readable and machine-readable.
 		]]></source>
 		<target><![CDATA[
-		Mit dem OID Informations-Protokoll (OID-IP) können Sie Objekt-Informationen in einem maschinenlesbaren Format abfragen.
+		Mit dem OID Information Protokoll (OID-IP) können Sie Objekt-Informationen in einem Format abfragen, das sowohl menschenlesbar als auch maschinenlesbar ist.
 		]]></target>
 	</message>
 	<message>
