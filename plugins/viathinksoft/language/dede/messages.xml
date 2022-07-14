@@ -2846,6 +2846,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Invalid
+		]]></source>
+		<target><![CDATA[
+		Ungültig
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Invalid DOI %1 . It must have syntax 10.xxxx
 		]]></source>
 		<target><![CDATA[

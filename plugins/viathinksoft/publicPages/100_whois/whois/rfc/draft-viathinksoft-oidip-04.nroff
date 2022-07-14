@@ -331,7 +331,7 @@ other-arg-val   = 1*( %x21-23 / %x25-3C / %x3E-7E )
 other-ns-name   = 1*( lowercase-char / digit )
 
 ; Printable characters (%x21-7E), excluding dollar sign (%x24 "$").
-other-ns-val    = 1*( %x21-23 / %x25-7E )
+other-ns-val    = *( %x21-23 / %x25-7E )
 
 unsigned-number = "0" / ( nonzero-digit *digit )
 

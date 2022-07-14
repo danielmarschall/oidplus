@@ -24,23 +24,52 @@ var OIDplusPagePublicWhois = {
 	},
 
 	refresh_whois_url_bar: function() {
+		var query = "";
+		// -------------------------------------------------------------
+		var obj = $("#whois_query")[0].value.trim();
+		var tmp = obj.split(":");
+		var ns = tmp.shift();
+		var id = tmp.join(":");
+		if (!/^[a-z0-9]+$/.test(ns) || id.includes("$")) {
+			$("#whois_query_invalid")[0].style.display = "Inline";
+		} else {
+			$("#whois_query_invalid")[0].style.display = "None";
+		}
+		query = ns + ":" + id;
+		// -------------------------------------------------------------
 		var format = "text";
 		var radios = $("[name=format]");
-
 		for (var i = 0, length = radios.length; i < length; i++) {
 			if (radios[i].checked) {
 				format = radios[i].value;
 			}
 		}
-
-		var query = $("#whois_query")[0].value;
 		if (format != "text") query += "$format="+format;
-
+		// -------------------------------------------------------------
 		var auth = $("#whois_auth")[0].value;
+		var invalid_tokens = false;
+		if (auth != "") {
+			var tokens = auth.split(",");
+			for (var i=0; i<tokens.length; i++) {
+				var token = tokens[i];
+				if ((token == "") || token.includes("$") || token.includes("=")) {
+					invalid_tokens = true;
+					break;
+				}
+				tokens[i] = token.trim();
+			}
+			auth = tokens.join(",");
+		}
+		if (invalid_tokens) {
+			$("#whois_auth_invalid")[0].style.display = "Inline";
+			auth = "";
+		} else {
+			$("#whois_auth_invalid")[0].style.display = "None";
+		}
 		if (auth != "") query += "$auth="+auth;
-
-		$("#whois_url_bar")[0].innerHTML = getSystemUrl() + 'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?query=' + encodeURIComponent(query);
-		$("#whois_query_bar")[0].innerHTML = query;
+		// -------------------------------------------------------------
+		$("#whois_url_bar")[0].innerText = getSystemUrl() + 'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?query=' + encodeURIComponent(query);
+		$("#whois_query_bar")[0].innerText = query;
 	}
 
 };
