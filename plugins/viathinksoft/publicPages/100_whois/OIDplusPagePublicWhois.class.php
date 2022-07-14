@@ -88,7 +88,9 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$out['text'] .= '<div id="oidipArea" style="display:none">';
 
 			$out['text'] .= _L('Requested object including namespace').':<br>';
-			$out['text'] .= '<input type="text" id="whois_query" name="query" value="'.htmlentities($example).'" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()"><br><br>';
+			$out['text'] .= '<input type="text" id="whois_query" name="query" value="'.htmlentities($example).'" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
+			$out['text'] .= '&nbsp;<span id="whois_query_invalid" style="display:none"><font color="red"><b>('._L('Invalid').')</b></font></span>';
+			$out['text'] .= '<br><br>';
 
 			$out['text'] .= _L('Output format').':<br><fieldset id="whois_format">';
 			$out['text'] .= '    <input type="radio" id="text" name="format" value="text" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
@@ -100,7 +102,9 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$out['text'] .= '</fieldset><br>';
 
 			$out['text'] .= _L('Authentication token(s), comma separated (optional)').':<br>';
-			$out['text'] .= '<code>$auth = </code><input type="text" id="whois_auth" name="auth" value="" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()"><br><br>';
+			$out['text'] .= '<code>$auth = </code><input type="text" id="whois_auth" name="auth" value="" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
+			$out['text'] .= '&nbsp;<span id="whois_auth_invalid" style="display:none"><font color="red"><b>('._L('Invalid').')</b></font></span>';
+			$out['text'] .= '<br><br>';
 
 			$out['text'] .= '<p><b><u>'._L('Query according to OID Information Protocol').':</u></b></p>';
 			$out['text'] .= '	<p><pre id="whois_query_bar"></pre></p>';
