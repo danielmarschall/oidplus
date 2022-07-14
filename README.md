@@ -38,10 +38,8 @@ Download a TAR.GZ file here: https://www.viathinksoft.com/projects/oidplus
 ### Reporting a bug
 You can file a bug report here:
 - https://github.com/danielmarschall/oidplus/issues (recommended)
-- https://www.viathinksoft.com/thinkbug/thinkbug.php?id=97
-- https://www.viathinksoft.com/contact/daniel-marschall
+- https://www.viathinksoft.com/contact/daniel-marschall (for confidential reports)
 
 ### Support
 If you have any questions or need help, please contact us:
 https://www.viathinksoft.com/contact/daniel-marschall
-
