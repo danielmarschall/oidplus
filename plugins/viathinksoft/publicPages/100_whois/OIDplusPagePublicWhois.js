@@ -17,10 +17,14 @@
 
 var OIDplusPagePublicWhois = {
 
-	refresh_whois_url_bar: function() {
-		$("#whois_url_bar_section")[0].style.display = "Block"; // because of NoScript
+	openInBrowser: function() {
+		var url = $("#whois_url_bar")[0].innerText;
+		//document.location.href = url;
+		window.open(url);
+	},
 
-		var format = "";
+	refresh_whois_url_bar: function() {
+		var format = "text";
 		var radios = $("[name=format]");
 
 		for (var i = 0, length = radios.length; i < length; i++) {
@@ -29,7 +33,14 @@ var OIDplusPagePublicWhois = {
 			}
 		}
 
-		$("#whois_url_bar")[0].innerHTML = getSystemUrl() + 'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?format=' + format + '&query=' + encodeURIComponent($("#whois_query")[0].value);
+		var query = $("#whois_query")[0].value;
+		if (format != "text") query += "$format="+format;
+
+		var auth = $("#whois_auth")[0].value;
+		if (auth != "") query += "$auth="+auth;
+
+		$("#whois_url_bar")[0].innerHTML = getSystemUrl() + 'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?query=' + encodeURIComponent(query);
+		$("#whois_query_bar")[0].innerHTML = query;
 	}
 
 };

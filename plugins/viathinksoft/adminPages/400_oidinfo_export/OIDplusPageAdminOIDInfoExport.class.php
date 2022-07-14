@@ -586,7 +586,11 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$out['text'] = '<br><div id="dataTransferArea" style="visibility: hidden"><div id="dataTransferTab" class="container" style="width:100%;">';
+			$out['text'] = '<noscript>';
+			$out['text'] .= '<p>'._L('You need to enable JavaScript to use the login area.').'</p>';
+			$out['text'] .= '</noscript>';
+
+			$out['text'] .= '<br><div id="dataTransferArea" style="visibility: hidden"><div id="dataTransferTab" class="container" style="width:100%;">';
 
 			// ---------------- Tab control
 			$out['text'] .= OIDplus::gui()->tabBarStart();
