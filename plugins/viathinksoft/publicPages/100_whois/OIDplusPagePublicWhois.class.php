@@ -74,55 +74,6 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
 			$example = $this->getExampleId();
 
-			$out['title'] = _L('OID Information Protocol (OID-IP) / WHOIS');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
-
-			$out['text']  = '';
-			$out['text'] .= '<p>'._L('With the OID Information Protocol (OID-IP), you can query object information in a format that is human-readable and machine-readable.').'</p>';
-			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-03</a> (WIP: <a href="'.OIDplus::webpath(__DIR__.'/whois/rfc/draft-viathinksoft-oidip-04.txt', true).'" target="_blank">draft-viathinksoft-oidip-04</a>)</p>';
-
-			$out['text'] .= '<h2>'._L('Web query').'</h2>';
-			$out['text'] .= '<noscript>';
-			$out['text'] .= '<p>'._L('You need to enable JavaScript to use the login area.').'</p>';
-			$out['text'] .= '</noscript>';
-			$out['text'] .= '<div id="oidipArea" style="display:none">';
-
-			$out['text'] .= _L('Requested object including namespace').':<br>';
-			$out['text'] .= '<input type="text" id="whois_query" name="query" value="'.htmlentities($example).'" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '&nbsp;<span id="whois_query_invalid" style="display:none"><font color="red"><b>('._L('Invalid').')</b></font></span>';
-			$out['text'] .= '<br><br>';
-
-			$out['text'] .= _L('Output format').':<br><fieldset id="whois_format">';
-			$out['text'] .= '    <input type="radio" id="text" name="format" value="text" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="text"><code>$format=text</code> '._L('Text format').'</label><br>';
-			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="json"><code>$format=json</code>  '._L('JSON').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/viathinksoft-oidip-03.json">'._L('Schema').'</a>)<br>';
-			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="xml"><code>$format=xml</code>  '._L('XML').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/viathinksoft-oidip-03.xsd">'._L('Schema').'</a>)<br>';
-			$out['text'] .= '</fieldset><br>';
-
-			$out['text'] .= _L('Authentication token(s), comma separated (optional)').':<br>';
-			$out['text'] .= '<code>$auth = </code><input type="text" id="whois_auth" name="auth" value="" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '&nbsp;<span id="whois_auth_invalid" style="display:none"><font color="red"><b>('._L('Invalid').')</b></font></span>';
-			$out['text'] .= '<br><br>';
-
-			$out['text'] .= '<p><b><u>'._L('Query according to OID Information Protocol').':</u></b></p>';
-			$out['text'] .= '	<p><pre id="whois_query_bar"></pre></p>';
-			$out['text'] .= '	<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(whois_query_bar)"></p>';
-			$out['text'] .= '<p><b><u>'._L('URL for Web Service').'</u></b></p>';
-			$out['text'] .= '	<p><pre id="whois_url_bar"></pre></p>';
-			$out['text'] .= '	<p>';
-			$out['text'] .= '	<input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(whois_url_bar)">';
-			$out['text'] .= '	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-			$out['text'] .= '	<input type="button" value="'._L('Open in web-browser').'" onClick="OIDplusPagePublicWhois.openInBrowser()">';
-			$out['text'] .= '	</p>';
-			$out['text'] .= '</div>';
-
-			$out['text'] .= '<script>';
-			$out['text'] .= '   $("#oidipArea")[0].style.display = "Block";';  // because of NoScript
-			$out['text'] .= '   OIDplusPagePublicWhois.refresh_whois_url_bar();';
-			$out['text'] .= '</script>';
-
 			$whois_server = '';
 			if (OIDplus::config()->getValue('individual_whois_server', '') != '') {
 				$whois_server = OIDplus::config()->getValue('individual_whois_server', '');
@@ -132,12 +83,62 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 				$whois_server = OIDplus::config()->getValue('vts_whois', '');
 			}
 
+			$out['title'] = _L('OID Information Protocol (OID-IP) / WHOIS');
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
+
+			$out['text']  = '';
+			$out['text'] .= '<p>'._L('With the OID Information Protocol (OID-IP), you can query object information in a format that is human-readable and machine-readable.').'</p>';
+			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-03</a> (WIP: <a href="'.OIDplus::webpath(__DIR__.'/whois/rfc/draft-viathinksoft-oidip-04.txt', true).'" target="_blank">draft-viathinksoft-oidip-04</a>)</p>';
+			# ---
+			$out['text'] .= '<h2>'._L('Parameters for new request').'</h2>';
+			$out['text'] .= '<noscript>';
+			$out['text'] .= '<p>'._L('You need to enable JavaScript to use the login area.').'</p>';
+			$out['text'] .= '</noscript>';
+			$out['text'] .= '<div id="oidipArea" style="display:none">';
+			# ---
+			$out['text'] .= _L('Requested object including namespace').':<br>';
+			$out['text'] .= '<input type="text" id="whois_query" name="query" value="'.htmlentities($example).'" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
+			$out['text'] .= '&nbsp;<span id="whois_query_invalid" style="display:none"><font color="red"><b>('._L('Invalid').')</b></font></span>';
+			$out['text'] .= '<br><br>';
+			# ---
+			$out['text'] .= _L('Output format').':<br><fieldset id="whois_format">';
+			$out['text'] .= '    <input type="radio" id="text" name="format" value="text" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
+			$out['text'] .= '    <label for="text"><code>$format=text</code> '._L('Text format').'</label><br>';
+			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
+			$out['text'] .= '    <label for="json"><code>$format=json</code>  '._L('JSON').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/viathinksoft-oidip-03.json">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
+			$out['text'] .= '    <label for="xml"><code>$format=xml</code>  '._L('XML').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/viathinksoft-oidip-03.xsd">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '</fieldset><br>';
+			# ---
+			$out['text'] .= _L('Authentication token(s), comma separated (optional)').':<br>';
+			$out['text'] .= '<code>$auth = </code><input type="text" id="whois_auth" name="auth" value="" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
+			$out['text'] .= '&nbsp;<span id="whois_auth_invalid" style="display:none"><font color="red"><b>('._L('Invalid').')</b></font></span>';
+			$out['text'] .= '<br>';
+			# ---
+			$out['text'] .= '<h2>'._L('Access via OID Information Protocol').'</h2>';
+			$out['text'] .= '<p>'._L('The query according to OID Information Protocol is:').'</p>';
+			$out['text'] .= '	<p><pre id="whois_query_bar"></pre></p>';
+			$out['text'] .= '	<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(whois_query_bar)"></p>';
+			$out['text'] .= '<p>'._L('You can use any WHOIS compatible client to query the information from the WHOIS or OID-IP port.').'</p>';
 			if ($whois_server != '') {
-				$out['text'] .= '<br><h2>'._L('WHOIS/OID-IP access').'</h2>';
-				$out['text'] .= '<p>'._L('You can use any WHOIS compatible client to query the information from the WHOIS/OID-IP port.').'</p>';
 				$out['text'] .= '<p>'._L('The hostname and port number is:').'</p>';
 				$out['text'] .= '<p><pre>'.htmlentities($whois_server).'</pre></p>';
 			}
+			# ---
+			$out['text'] .= '<h2>'._L('Access via web-browser').'</h2>';
+			$out['text'] .= '<p>'._L('The URL for the Web Service is:').'</p>';
+			$out['text'] .= '	<p><pre id="whois_url_bar"></pre></p>';
+			$out['text'] .= '	<p>';
+			$out['text'] .= '	<input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(whois_url_bar)">';
+			$out['text'] .= '	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+			$out['text'] .= '	<input type="button" value="'._L('Open in web-browser').'" onClick="OIDplusPagePublicWhois.openInBrowser()">';
+			$out['text'] .= '	</p>';
+			$out['text'] .= '</div>';
+			# ---
+			$out['text'] .= '<script>';
+			$out['text'] .= '   $("#oidipArea")[0].style.display = "Block";';  // because of NoScript
+			$out['text'] .= '   OIDplusPagePublicWhois.refresh_whois_url_bar();';
+			$out['text'] .= '</script>';
 		}
 	}
 
