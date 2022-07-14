@@ -63,17 +63,13 @@ foreach ($chunks as $chunk) {
 
 $query = str_replace('oid:.', 'oid:', $query); // allow leading dot
 
-if (isset($_REQUEST['format'])) {
-	$format = $_REQUEST['format'];
-} else if (isset($arguments['format'])) {
+if (isset($arguments['format'])) {
 	$format = $arguments['format'];
 } else {
 	$format = 'text'; // default
 }
 
-if (isset($_REQUEST['auth'])) {
-	$authTokens = explode(',', $_REQUEST['auth']);
-} else if (isset($arguments['auth'])) {
+if (isset($arguments['auth'])) {
 	$authTokens = explode(',', $arguments['auth']);
 } else {
 	$authTokens = array();
@@ -547,7 +543,7 @@ function authTokenAccepted($content, $authTokens) {
 }
 
 function allowObjectView($obj, $authTokens) {
-	// Master auth token
+	// Master auth token (TODO: Have an object-master-token and a ra-master-token?)
 	$authToken = trim(OIDplus::config()->getValue('whois_auth_token'));
 	if (empty($authToken)) $authToken = false;
 	if ($authToken && in_array($authToken, $authTokens)) return true;
@@ -570,7 +566,7 @@ function allowObjectView($obj, $authTokens) {
 }
 
 function allowRAView($row, $authTokens) {
-	// Master auth token
+	// Master auth token (TODO: Have an object-master-token and a ra-master-token?)
 	$authToken = trim(OIDplus::config()->getValue('whois_auth_token'));
 	if (empty($authToken)) $authToken = false;
 	if ($authToken && in_array($authToken, $authTokens)) return true;
