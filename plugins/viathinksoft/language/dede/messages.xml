@@ -318,6 +318,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Access via OID Information Protocol
+		]]></source>
+		<target><![CDATA[
+		Zugang über OID Information Protocol
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Access via web-browser
+		]]></source>
+		<target><![CDATA[
+		Zugriff über Web-Browser
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Account created
 		]]></source>
 		<target><![CDATA[
@@ -4406,6 +4422,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Parameters for new request
+		]]></source>
+		<target><![CDATA[
+		Eingabeparameter für die Abfrage
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Parent node: %1
 		]]></source>
 		<target><![CDATA[
@@ -5050,14 +5074,6 @@
 		]]></source>
 		<target><![CDATA[
 		Öffentliche Seiten-Plugins
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Query according to OID Information Protocol
-		]]></source>
-		<target><![CDATA[
-		Anfrage gemäß OID Information Protocol
 		]]></target>
 	</message>
 	<message>
@@ -6222,6 +6238,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The URL for the Web Service is:
+		]]></source>
+		<target><![CDATA[
+		Die URL für den Webservice ist:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The administrator has disabled deleting attachments by RAs.
 		]]></source>
 		<target><![CDATA[
@@ -6402,6 +6426,14 @@
 		]]></source>
 		<target><![CDATA[
 		Das Plugin befindet sich im falschen Verzeichnis. Das Verzeichnis %1 darf nur noch für offizielle ViaThinkSoft-Plugins verwendet werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The query according to OID Information Protocol is:
+		]]></source>
+		<target><![CDATA[
+		Die Anfrage-Zeichenfolge gemäß OID Information Protocol ist:
 		]]></target>
 	</message>
 	<message>
@@ -6774,14 +6806,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		URL for Web Service
-		]]></source>
-		<target><![CDATA[
-		URL für Web-Service
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		URL for more information about your project(s) (optional)
 		]]></source>
 		<target><![CDATA[
@@ -7134,14 +7158,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		WHOIS/OID-IP access
-		]]></source>
-		<target><![CDATA[
-		WHOIS/OID-IP Zugriff
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Warning
 		]]></source>
 		<target><![CDATA[
@@ -7178,14 +7194,6 @@
 		]]></source>
 		<target><![CDATA[
 		Warnungen: %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Web query
-		]]></source>
-		<target><![CDATA[
-		Web-Abfrage
 		]]></target>
 	</message>
 	<message>
@@ -7398,10 +7406,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		You can use any WHOIS compatible client to query the information from the WHOIS/OID-IP port.
+		You can use any WHOIS compatible client to query the information from the WHOIS or OID-IP port.
 		]]></source>
 		<target><![CDATA[
-		Sie können jedes WHOIS-Kompatible Programm verwenden, um die Informationen mit dem WHOIS/OID-IP Protokoll abzufragen.
+		Sie können mit jeder WHOIS kompatiblen Client-Software die Informationen über den WHOIS oder OID-IP port abfragen.
 		]]></target>
 	</message>
 	<message>
