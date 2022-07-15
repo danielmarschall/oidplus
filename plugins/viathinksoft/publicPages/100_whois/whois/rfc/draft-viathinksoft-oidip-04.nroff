@@ -1051,14 +1051,14 @@ Appendix A.1.  JSON Format Schema
 
 The following JSON Schema ([JSONSch]) defines the expected output the server sends if the argument "format" is set to "json".
 
-[To RFC Editor: Please change "viathinksoft-oidip-04.json" before publication.]
+[To RFC Editor: Please change "draft-viathinksoft-oidip-04.json" before publication.]
 
 .\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
 NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 
 .\" .in 3
 .nf
-<CODE BEGINS> file "viathinksoft-oidip-04.json"
+<CODE BEGINS> file "draft-viathinksoft-oidip-04.json"
 {
    "$schema":"http://json-schema.org/draft-07/schema#",
    "type":"object",
@@ -1344,7 +1344,7 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 .ti 0
 Appendix A.2.  JSON Format Example of output
 
-[To RFC Editor: Please change "viathinksoft-oidip-04.json" before publication.]
+[To RFC Editor: Please change "draft-viathinksoft-oidip-04.json" before publication.]
 
 .\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
 NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
@@ -1353,7 +1353,7 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 .nf
 <CODE BEGINS> file "oidip_example.json"
 {
-  "$schema":"http://.../viathinksoft-oidip-04.json",
+  "$schema":"http://.../draft-viathinksoft-oidip-04.json",
   "oidip": [
     {
       "query": "oid:2.999",
@@ -1412,9 +1412,9 @@ Appendix B.  XML Format Schema and Example
 .ti 0
 Appendix B.1.  XML Format Schema
 
-[To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-04" to "urn:ietf:rfc:yyyy" before publication.]
+[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-04" to "urn:ietf:rfc:yyyy" before publication.]
 
-[To RFC Editor: Please change "viathinksoft-oidip-04.xsd" before publication.]
+[To RFC Editor: Please change "draft-viathinksoft-oidip-04.xsd" before publication.]
 
 The following XML Schema Definition ([XSD]) defines the expected output the server sends if the argument "format" is set to "xml".
 
@@ -1423,9 +1423,9 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 
 .\" .in 3
 .nf
-<CODE BEGINS> file "viathinksoft-oidip-04.xsd"
+<CODE BEGINS> file "draft-viathinksoft-oidip-04.xsd"
 <?xml version="1.0"?>
-<xs:schema targetNamespace="urn:ietf:id:viathinksoft-oidip-04"
+<xs:schema targetNamespace="urn:ietf:id:draft-viathinksoft-oidip-04"
            attributeFormDefault="unqualified"
            elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -1593,9 +1593,9 @@ REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
 .ti 0
 Appendix B.2.  XML Format Example of output
 
-[To RFC Editor: Please change "urn:ietf:id:viathinksoft-oidip-04" to "urn:ietf:rfc:yyyy" before publication.]
+[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-04" to "urn:ietf:rfc:yyyy" before publication.]
 
-[To RFC Editor: Please change "viathinksoft-oidip-04.xsd" before publication.]
+[To RFC Editor: Please change "draft-viathinksoft-oidip-04.xsd" before publication.]
 
 .\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
 NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
@@ -1606,8 +1606,8 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 <?xml version="1.0"?>
 <root xmlns="urn:ietf:rfc:yyyy"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="urn:ietf:id:viathinksoft-oidip-04 \\
-http://.../viathinksoft-oidip-04.xsd">
+      xsi:schemaLocation="urn:ietf:id:draft-viathinksoft-oidip-04 \\
+http://.../draft-viathinksoft-oidip-04.xsd">
 <oidip>
   <querySection>
      <query>oid:2.999</query>

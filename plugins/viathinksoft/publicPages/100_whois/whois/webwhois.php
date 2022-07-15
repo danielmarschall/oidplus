@@ -20,10 +20,10 @@
 require_once __DIR__ . '/../../../../../includes/oidplus.inc.php';
 
 // NOTE: must be equal to the string in the .xsd file!
-define('XML_URN', 'urn:ietf:id:viathinksoft-oidip-03');
-// NOTE: the file names and draft version are also written in OIDplusPagePublicWhois.class.php
-define('XML_URN_URL', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'viathinksoft-oidip-03.xsd');
-define('JSON_SCHEMA', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'viathinksoft-oidip-03.json');
+define('XML_URN', 'urn:ietf:id:draft-viathinksoft-oidip-03');
+// NOTE: the schema file names and draft version are also written in OIDplusPagePublicWhois.class.php
+define('XML_URN_URL', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'draft-viathinksoft-oidip-03.xsd');
+define('JSON_SCHEMA', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'draft-viathinksoft-oidip-03.json');
 
 OIDplus::init(true);
 set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
