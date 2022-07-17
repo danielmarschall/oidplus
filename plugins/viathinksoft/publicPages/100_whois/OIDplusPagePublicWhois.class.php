@@ -98,7 +98,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$out['text'] .= '</noscript>';
 			$out['text'] .= '<div id="oidipArea" style="display:none">';
 			# ---
-			$out['text'] .= _L('Requested object including namespace').':<br>';
+			$out['text'] .= _L('Requested object including namespace, e.g. %1','<code>oid:2.999</code>').'<br>';
 			$out['text'] .= '<input type="text" id="whois_query" name="query" value="'.htmlentities($example).'" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			$out['text'] .= '&nbsp;<span id="whois_query_invalid" style="display:none"><font color="red"><b>('._L('Invalid').')</b></font></span>';
 			$out['text'] .= '<br><br>';
@@ -107,9 +107,9 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$out['text'] .= '    <input type="radio" id="text" name="format" value="text" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			$out['text'] .= '    <label for="text"><code>$format=text</code> '._L('Text format').'</label><br>';
 			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="json"><code>$format=json</code>  '._L('JSON').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-04.json">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '    <label for="json"><code>$format=json</code>  '._L('JSON format').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-04.json">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="xml"><code>$format=xml</code>  '._L('XML').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-04.xsd">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '    <label for="xml"><code>$format=xml</code>  '._L('XML format').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-04.xsd">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '</fieldset><br>';
 			# ---
 			$out['text'] .= _L('Authentication token(s), comma separated (optional)').':<br>';

@@ -1,4 +1,9 @@
 {
+	"autoload": {
+		"psr-4": {
+			"aywan\\JsonCanonicalization\\": "vendor/aywan/php-json-canonicalization/src/"
+		}
+	},
 	"prefer-dist": true,
 	"minimum-stability": "dev",
 	"repositories": {

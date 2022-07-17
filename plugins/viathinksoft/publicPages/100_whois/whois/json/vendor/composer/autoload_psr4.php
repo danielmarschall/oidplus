@@ -6,5 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'aywan\\JsonCanonicalization\\' => array($vendorDir . '/aywan/php-json-canonicalization/src'),
     'SBrook\\' => array($vendorDir . '/sergeybrook/php-jws/src'),
 );
