@@ -9,7 +9,7 @@ Expires: January 12, 2023                                  July 11, 2022
 
             Retrieving information about Object Identifiers
                       using a text-based protocol
-             draft-viathinksoft-oidip-04 (Work in progress)
+             draft-viathinksoft-oidip-04 (Unpublished, WIP)
 
 
 Abstract
@@ -1741,13 +1741,13 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                   },
                   "created":{
                      "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\
+                     "pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)\
 (\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
 ( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   },
                   "updated":{
                      "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\
+                     "pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)\
 (\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
 ( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   }
@@ -1817,13 +1817,13 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                   },
                   "ra-created":{
                      "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\
+                     "pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)\
 (\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
 ( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   },
                   "ra-updated":{
                      "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|11|12)\
+                     "pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)\
 (\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
 ( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
                   }
@@ -2039,7 +2039,7 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 <xs:element name="created" minOccurs="0">
 <xs:simpleType>
 <xs:restriction base="xs:string">
-<xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)\
+<xs:pattern value="\d{4}(\-(0[1-9]|10|11|12)(\-(0[1-9]|1\d|2\d|30|31)\
 ( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
 ( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
 </xs:restriction>
@@ -2048,7 +2048,7 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 <xs:element name="updated" minOccurs="0">
 <xs:simpleType>
 <xs:restriction base="xs:string">
-<xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)\
+<xs:pattern value="\d{4}(\-(0[1-9]|10|11|12)(\-(0[1-9]|1\d|2\d|30|31)\
 ( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
 ( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
 </xs:restriction>
@@ -2099,7 +2099,7 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 <xs:element name="ra-created" minOccurs="0">
 <xs:simpleType>
 <xs:restriction base="xs:string">
-<xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)\
+<xs:pattern value="\d{4}(\-(0[1-9]|10|11|12)(\-(0[1-9]|1\d|2\d|30|31)\
 ( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
 ( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
 </xs:restriction>
@@ -2108,7 +2108,7 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 <xs:element name="ra-updated" minOccurs="0">
 <xs:simpleType>
 <xs:restriction base="xs:string">
-<xs:pattern value="\d{4}(\-(0[1-9]|11|12)(\-(0[1-9]|1\d|2\d|30|31)\
+<xs:pattern value="\d{4}(\-(0[1-9]|10|11|12)(\-(0[1-9]|1\d|2\d|30|31)\
 ( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
 ( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
 </xs:restriction>

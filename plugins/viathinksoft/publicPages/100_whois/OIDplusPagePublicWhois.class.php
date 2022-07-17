@@ -88,7 +88,9 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
 			$out['text']  = '';
 			$out['text'] .= '<p>'._L('With the OID Information Protocol (OID-IP), you can query object information in a format that is human-readable and machine-readable.').'</p>';
-			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-03</a> (WIP: <a href="'.OIDplus::webpath(__DIR__.'/whois/rfc/draft-viathinksoft-oidip-04.txt', true).'" target="_blank">draft-viathinksoft-oidip-04</a>)</p>';
+
+			//$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-03</a></p>';
+			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a href="'.OIDplus::webpath(__DIR__.'/whois/rfc/draft-viathinksoft-oidip-04.txt', true).'" target="_blank">draft-viathinksoft-oidip-04</a></p>';
 			# ---
 			$out['text'] .= '<h2>'._L('Parameters for new request').'</h2>';
 			$out['text'] .= '<noscript>';
@@ -105,9 +107,9 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$out['text'] .= '    <input type="radio" id="text" name="format" value="text" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			$out['text'] .= '    <label for="text"><code>$format=text</code> '._L('Text format').'</label><br>';
 			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="json"><code>$format=json</code>  '._L('JSON').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-03.json">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '    <label for="json"><code>$format=json</code>  '._L('JSON').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-04.json">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="xml"><code>$format=xml</code>  '._L('XML').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-03.xsd">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '    <label for="xml"><code>$format=xml</code>  '._L('XML').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-04.xsd">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '</fieldset><br>';
 			# ---
 			$out['text'] .= _L('Authentication token(s), comma separated (optional)').':<br>';
