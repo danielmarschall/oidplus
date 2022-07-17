@@ -321,7 +321,7 @@
 		Access via OID Information Protocol
 		]]></source>
 		<target><![CDATA[
-		Zugang über OID Information Protocol
+		Zugriff über OID Information Protocol
 		]]></target>
 	</message>
 	<message>
@@ -3078,10 +3078,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		JSON
+		JSON format
 		]]></source>
 		<target><![CDATA[
-		JSON
+		JSON-Format
 		]]></target>
 	</message>
 	<message>
@@ -5334,10 +5334,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Requested object including namespace
+		Requested object including namespace, e.g. %1
 		]]></source>
 		<target><![CDATA[
-		Angefragtes Objekt inkl. Namensraum
+		Angefragtes Objekt inkl. Namensraum, z.B. %1
 		]]></target>
 	</message>
 	<message>
@@ -7302,10 +7302,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		XML
+		XML format
 		]]></source>
 		<target><![CDATA[
-		XML
+		XML-Format
 		]]></target>
 	</message>
 	<message>

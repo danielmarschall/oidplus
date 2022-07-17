@@ -20,11 +20,6 @@
 // Works with composer.json
 // "sergeybrook/php-jws": "^1.0"
 
-require_once __DIR__.'/vendor/aywan/php-json-canonicalization/src/Utils.php';
-require_once __DIR__.'/vendor/aywan/php-json-canonicalization/src/JsonCanonicalizationInterface.php';
-require_once __DIR__.'/vendor/aywan/php-json-canonicalization/src/JsonCanonicalizationFactory.php';
-require_once __DIR__.'/vendor/aywan/php-json-canonicalization/src/Canonicalizator.php';
-
 function oidplus_json_verify($json_content, $pubkey) {
 	require_once __DIR__.'/vendor/autoload.php';
 

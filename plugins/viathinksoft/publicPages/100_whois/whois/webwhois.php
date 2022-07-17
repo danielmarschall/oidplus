@@ -489,6 +489,7 @@ if ($format == 'xml') {
 	$xml = preg_replace('@<section><(.+)>(.+)</section>@ismU', '<\\1Section><\\1>\\2</\\1Section>', $xml);
 
 	// Good XSD validator here: https://www.liquid-technologies.com/online-xsd-validator
+	// But you need to host http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd yourself, otherwise there will be a timeout in the validation!!!
 	$xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'.
 	       '<root xmlns="'.XML_URN.'"'.
 	       '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'.
