@@ -3,7 +3,7 @@
 /*
  * OpenSSL php functions implemented using phpseclib
  * Copyright 2022 Daniel Marschall, ViaThinkSoft
- * Version 2022-04-10
+ * Version 2022-07-17
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,13 +31,52 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 
 	define('OPENSSL_SUPPLEMENT', 1);
 
-	$openssl_supplement_last_error = '';
+	// ---------------------------------------------------------------------
 
+	// https://www.php.net/manual/en/openssl.purpose-check.php
+	if (!defined('X509_PURPOSE_SSL_CLIENT')) define('X509_PURPOSE_SSL_CLIENT', 1);
+	if (!defined('X509_PURPOSE_SSL_SERVER')) define('X509_PURPOSE_SSL_SERVER', 2);
+	if (!defined('X509_PURPOSE_NS_SSL_SERVER')) define('X509_PURPOSE_NS_SSL_SERVER', 3);
+	if (!defined('X509_PURPOSE_SMIME_SIGN')) define('X509_PURPOSE_SMIME_SIGN', 4);
+	if (!defined('X509_PURPOSE_SMIME_ENCRYPT')) define('X509_PURPOSE_SMIME_ENCRYPT', 5);
+	if (!defined('X509_PURPOSE_CRL_SIGN')) define('X509_PURPOSE_CRL_SIGN', 6);
+	if (!defined('X509_PURPOSE_ANY')) define('X509_PURPOSE_ANY', 7);
+
+	// https://www.php.net/manual/en/openssl.padding.php
+	if (!defined('OPENSSL_PKCS1_PADDING')) define('OPENSSL_PKCS1_PADDING', 1);
+	if (!defined('OPENSSL_SSLV23_PADDING')) define('OPENSSL_SSLV23_PADDING', 2);
+	if (!defined('OPENSSL_NO_PADDING')) define('OPENSSL_NO_PADDING', 3);
+	if (!defined('OPENSSL_PKCS1_OAEP_PADDING')) define('OPENSSL_PKCS1_OAEP_PADDING', 4);
+
+	// https://www.php.net/manual/en/openssl.key-types.php
 	if (!defined('OPENSSL_KEYTYPE_RSA')) define('OPENSSL_KEYTYPE_RSA', 0);
+	if (!defined('OPENSSL_KEYTYPE_DSA')) define('OPENSSL_KEYTYPE_DSA', 1);
+	if (!defined('OPENSSL_KEYTYPE_DH')) define('OPENSSL_KEYTYPE_DH', 2);
+	if (!defined('OPENSSL_KEYTYPE_EC')) define('OPENSSL_KEYTYPE_EC', 3);
 
-	if (!defined('OPENSSL_RAW_DATA')) define('OPENSSL_RAW_DATA', 1);
-	if (!defined('OPENSSL_ZERO_PADDING')) define('OPENSSL_ZERO_PADDING', 2);
+	// https://www.php.net/manual/en/openssl.pkcs7.flags.php
+	if (!defined('PKCS7_TEXT')) define('PKCS7_TEXT', 1);
+	if (!defined('PKCS7_BINARY')) define('PKCS7_BINARY', 128);
+	if (!defined('PKCS7_NOINTERN')) define('PKCS7_NOINTERN', 16);
+	if (!defined('PKCS7_NOVERIFY')) define('PKCS7_NOVERIFY', 32);
+	if (!defined('PKCS7_NOCHAIN')) define('PKCS7_NOCHAIN', 8);
+	if (!defined('PKCS7_NOCERTS')) define('PKCS7_NOCERTS', 2);
+	if (!defined('PKCS7_NOATTR')) define('PKCS7_NOATTR', 256);
+	if (!defined('PKCS7_DETACHED')) define('PKCS7_DETACHED', 64);
+	if (!defined('PKCS7_NOSIGS')) define('PKCS7_NOSIGS', 4);
 
+	// https://www.php.net/manual/en/openssl.cms.flags.php
+	if (!defined('OPENSSL_CMS_TEXT')) define('OPENSSL_CMS_TEXT', 1);
+	if (!defined('OPENSSL_CMS_BINARY')) define('OPENSSL_CMS_BINARY', 128);
+	if (!defined('OPENSSL_CMS_NOINTERN')) define('OPENSSL_CMS_NOINTERN', 16);
+	if (!defined('OPENSSL_CMS_NOVERIFY')) define('OPENSSL_CMS_NOVERIFY', 32);
+	if (!defined('OPENSSL_CMS_NOCERTS')) define('OPENSSL_CMS_NOCERTS', 2);
+	if (!defined('OPENSSL_CMS_NOATTR')) define('OPENSSL_CMS_NOATTR', 256);
+	if (!defined('OPENSSL_CMS_DETACHED')) define('OPENSSL_CMS_DETACHED', 64);
+	if (!defined('OPENSSL_CMS_NOSIGS')) define('OPENSSL_CMS_NOSIGS', 12);
+
+	// https://www.php.net/manual/en/openssl.signature-algos.php
+	if (!defined('OPENSSL_ALGO_DSS1')) define('OPENSSL_ALGO_DSS1', 5); // Only defined when php/openssl compiled with MD2 support
 	if (!defined('OPENSSL_ALGO_SHA1')) define('OPENSSL_ALGO_SHA1', 1);
 	if (!defined('OPENSSL_ALGO_SHA224')) define('OPENSSL_ALGO_SHA224', 6);
 	if (!defined('OPENSSL_ALGO_SHA256')) define('OPENSSL_ALGO_SHA256', 7);
@@ -46,6 +85,35 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 	if (!defined('OPENSSL_ALGO_RMD160')) define('OPENSSL_ALGO_RMD160', 10);
 	if (!defined('OPENSSL_ALGO_MD5')) define('OPENSSL_ALGO_MD5', 2);
 	if (!defined('OPENSSL_ALGO_MD4')) define('OPENSSL_ALGO_MD4', 3);
+	if (!defined('OPENSSL_ALGO_MD2')) define('OPENSSL_ALGO_MD2', 4); // Only defined when php/openssl compiled with MD2 support
+
+	// https://www.php.net/manual/en/openssl.ciphers.php
+	if (!defined('OPENSSL_CIPHER_RC2_40')) define('OPENSSL_CIPHER_RC2_40', 0);
+	if (!defined('OPENSSL_CIPHER_RC2_128')) define('OPENSSL_CIPHER_RC2_128', 1);
+	if (!defined('OPENSSL_CIPHER_RC2_64')) define('OPENSSL_CIPHER_RC2_64', 2);
+	if (!defined('OPENSSL_CIPHER_DES')) define('OPENSSL_CIPHER_DES', 3);
+	if (!defined('OPENSSL_CIPHER_3DES')) define('OPENSSL_CIPHER_3DES', 4);
+	if (!defined('OPENSSL_CIPHER_AES_128_CBC')) define('OPENSSL_CIPHER_AES_128_CBC', 5);
+	if (!defined('OPENSSL_CIPHER_AES_192_CBC')) define('OPENSSL_CIPHER_AES_192_CBC', 6);
+	if (!defined('OPENSSL_CIPHER_AES_256_CBC')) define('OPENSSL_CIPHER_AES_256_CBC', 7);
+
+	// https://www.php.net/manual/en/openssl.constversion.php
+	// OPENSSL_VERSION_TEXT (string)
+	// OPENSSL_VERSION_NUMBER (int)
+
+	// https://www.php.net/manual/en/openssl.constsni.php
+	// OPENSSL_TLSEXT_SERVER_NAME (string)
+
+	// https://www.php.net/manual/en/openssl.constants.other.php
+	if (!defined('OPENSSL_RAW_DATA')) define('OPENSSL_RAW_DATA', 1);
+	if (!defined('OPENSSL_ZERO_PADDING')) define('OPENSSL_ZERO_PADDING', 2);
+	if (!defined('OPENSSL_ENCODING_SMIME')) define('OPENSSL_ENCODING_SMIME', 1);
+	if (!defined('OPENSSL_ENCODING_DER')) define('OPENSSL_ENCODING_DER', 0);
+	if (!defined('OPENSSL_ENCODING_PEM')) define('OPENSSL_ENCODING_PEM', 2);
+
+	// ---------------------------------------------------------------------
+
+	$openssl_supplement_last_error = '';
 
 	function openssl_pkey_new($pkey_config=null) {
 		try {
@@ -147,7 +215,7 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 		try {
 			if ($algorithm == OPENSSL_ALGO_SHA1) $algorithm = 'SHA1';
 			if ($algorithm == OPENSSL_ALGO_SHA224) $algorithm = 'SHA224';
-			if ($algorithm == OPENSSL_ALGO_SHA256) $algorithm = 'SHA256)';
+			if ($algorithm == OPENSSL_ALGO_SHA256) $algorithm = 'SHA256';
 			if ($algorithm == OPENSSL_ALGO_SHA384) $algorithm = 'SHA384';
 			if ($algorithm == OPENSSL_ALGO_SHA512) $algorithm = 'SHA512';
 			if ($algorithm == OPENSSL_ALGO_RMD160) $algorithm = 'RMD160';
@@ -168,7 +236,7 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 		try {
 			if ($algorithm == OPENSSL_ALGO_SHA1) $algorithm = 'SHA1';
 			if ($algorithm == OPENSSL_ALGO_SHA224) $algorithm = 'SHA224';
-			if ($algorithm == OPENSSL_ALGO_SHA256) $algorithm = 'SHA256)';
+			if ($algorithm == OPENSSL_ALGO_SHA256) $algorithm = 'SHA256';
 			if ($algorithm == OPENSSL_ALGO_SHA384) $algorithm = 'SHA384';
 			if ($algorithm == OPENSSL_ALGO_SHA512) $algorithm = 'SHA512';
 			if ($algorithm == OPENSSL_ALGO_RMD160) $algorithm = 'RMD160';
@@ -188,7 +256,9 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 
 	function openssl_error_string() {
 		global $openssl_supplement_last_error;
-		return $openssl_supplement_last_error;
+		$res = $openssl_supplement_last_error;
+		$openssl_supplement_last_error = '';
+		return $res;
 	}
 
 	function openssl_random_pseudo_bytes($len) {
@@ -266,6 +336,10 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 		// does nothing
 	}
 
+	function openssl_get_privatekey($key, $passphrase=null) {
+		return openssl_pkey_get_private($key, $passphrase=null);
+	}
+
 	function openssl_pkey_get_private($key, $passphrase=null) {
 		try {
 			if (substr($key,0,7) === 'file://') {
@@ -282,6 +356,10 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 		}
 	}
 
+	function openssl_get_publickey($public_key) {
+		return openssl_pkey_get_public($public_key);
+	}
+
 	function openssl_pkey_get_public($public_key) {
 		try {
 			if (substr($public_key,0,7) === 'file://') {
@@ -295,6 +373,9 @@ if (!function_exists('openssl_pkey_new') && class_exists('\\phpseclib3\\Crypt\\R
 			$openssl_supplement_last_error = $e->getMessage();
 			return false;
 		}
+	}
+
+	function openssl_pkey_free($key) {
 	}
 
 }
