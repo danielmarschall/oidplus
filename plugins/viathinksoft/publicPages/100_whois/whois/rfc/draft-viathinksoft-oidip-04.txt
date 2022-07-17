@@ -116,12 +116,12 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
    Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 28
    Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 28
-   Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 34
-   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 35
-   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 35
-   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 39
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 40
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 40
+   Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 28
+   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 29
+   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 29
+   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 29
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 31
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 31
 
 
 
@@ -1527,332 +1527,7 @@ publication.]
 NOTE: '\' line wrapping per RFC 8792  [RFC8792]
 
 <CODE BEGINS> file "draft-viathinksoft-oidip-04.json"
-{
-   "$schema":"http://json-schema.org/draft-07/schema#",
-   "type":"object",
-   "properties":{
-      "oidip":{
-         "type":"array",
-         "items":[
-            {
-               "type":"object",
-               "properties":{
-                  "query":{
-                     "type":"string"
-                  },
-                  "result":{
-                     "type":"string",
-                     "enum":["Found",
-                             "Not found; superior object found",
-                             "Not found",
-                             "Service error"]
-                  },
-                  "distance":{
-                     "type":"string"
-                  },
-                  "message":{
-                     "type":"string"
-                  }
-               },
-               "required":[
-                  "query",
-                  "result"
-               ]
-            },
-            {
-               "type":"object",
-               "properties":{
- 
-
-
-Marschall               Expires January 12, 2023               [Page 28]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
-                  "object":{
-                     "type":"string"
-                  },
-                  "status":{
-                     "type":"string",
-                     "enum":["Information available",
-                             "Information partially available",
-                             "Information unavailable"]
-                  },
-                  "name":{
-                     "type":"string"
-                  },
-                  "description":{
-                     "type":"string"
-                  },
-                  "information":{
-                     "type":"string"
-                  },
-                  "url":{
-                     "type":"string"
-                  },
-                  "asn1-notation":{
-                     "oneOf":[
-                        {
-                           "type":"string"
-                        },
-                        {
-                           "type":"array",
-                           "items":{
-                              "type":"string"
-                           }
-                        }
-                     ]
-                  },
-                  "iri-notation":{
-                     "oneOf":[
-                        {
-                           "type":"string"
-                        },
-                        {
-                           "type":"array",
-                           "items":{
-                              "type":"string"
-                           }
-                        }
-                     ]
-                  },
-                  "identifier":{
- 
-
-
-Marschall               Expires January 12, 2023               [Page 29]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
-                     "oneOf":[
-                        {
-                           "type":"string"
-                        },
-                        {
-                           "type":"array",
-                           "items":{
-                              "type":"string"
-                           }
-                        }
-                     ]
-                  },
-                  "standardized-id":{
-                     "oneOf":[
-                        {
-                           "type":"string"
-                        },
-                        {
-                           "type":"array",
-                           "items":{
-                              "type":"string"
-                           }
-                        }
-                     ]
-                  },
-                  "unicode-label":{
-                     "oneOf":[
-                        {
-                           "type":"string"
-                        },
-                        {
-                           "type":"array",
-                           "items":{
-                              "type":"string"
-                           }
-                        }
-                     ]
-                  },
-                  "long-arc":{
-                     "oneOf":[
-                        {
-                           "type":"string"
-                        },
-                        {
-                           "type":"array",
-                           "items":{
-                              "type":"string"
-                           }
- 
-
-
-Marschall               Expires January 12, 2023               [Page 30]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
-                        }
-                     ]
-                  },
-                  "oidip-service":{
-                     "type":"string"
-                  },
-                  "attribute":{
-                     "oneOf":[
-                        {
-                           "type":"string",
-                           "enum":["confidential",
-                                   "draft",
-                                   "frozen",
-                                   "leaf",
-                                   "no-identifiers",
-                                   "no-unicode-labels",
-                                   "retired"]
-                        },
-                        {
-                           "type":"array",
-                           "items":{
-                              "type":"string",
-                              "enum":["confidential",
-                                      "draft",
-                                      "frozen",
-                                      "leaf",
-                                      "no-identifiers",
-                                      "no-unicode-labels",
-                                      "retired"]
-                           }
-                        }
-                     ]
-                  },
-                  "parent":{
-                     "type":"string"
-                  },
-                  "subordinate":{
-                     "oneOf":[
-                        {
-                           "type":"string"
-                        },
-                        {
-                           "type":"array",
-                           "items":{
-                              "type":"string"
-                           }
-                        }
-                     ]
- 
-
-
-Marschall               Expires January 12, 2023               [Page 31]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
-                  },
-                  "created":{
-                     "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)\
-(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
-( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
-                  },
-                  "updated":{
-                     "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)\
-(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
-( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
-                  }
-               },
-               "required":[
-                  "object",
-                  "status"
-               ]
-            },
-            {
-               "type":"object",
-               "properties":{
-                  "ra":{
-                     "type":"string"
-                  },
-                  "ra-status":{
-                     "type":"string",
-                     "enum":["Information available",
-                             "Information partially available",
-                             "Information unavailable"]
-                  },
-                  "ra-contact-name":{
-                     "type":"string"
-                  },
-                  "ra-address":{
-                     "type":"string"
-                  },
-                  "ra-phone":{
-                     "type":"string"
-                  },
-                  "ra-mobile":{
-                     "type":"string"
-                  },
-                  "ra-fax":{
-                     "type":"string"
-                  },
-                  "ra-email":{
-                     "type":"string"
- 
-
-
-Marschall               Expires January 12, 2023               [Page 32]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
-                  },
-                  "ra-url":{
-                     "type":"string"
-                  },
-                  "ra-attribute":{
-                     "oneOf":[
-                        {
-                           "type":"string",
-                           "enum":["confidential",
-                                   "retired"]
-                        },
-                        {
-                           "type":"array",
-                           "items":{
-                              "type":"string",
-                              "enum":["confidential",
-                                      "retired"]
-                           }
-                        }
-                     ]
-                  },
-                  "ra-created":{
-                     "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)\
-(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
-( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
-                  },
-                  "ra-updated":{
-                     "type":"string",
-                     "pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)\
-(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
-( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
-                  }
-               },
-               "required":[
-                  "ra",
-                  "ra-status"
-               ]
-            }
-         ]
-      },
-      "signature":{
-         "type":"string",
-         "pattern":
-             "^[A-Za-z0-9+/=]+\\.[A-Za-z0-9+/=]+\\.[A-Za-z0-9+/=]+$"
-      }
-   },
-   "required":[
- 
-
-
-Marschall               Expires January 12, 2023               [Page 33]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
-      "oidip"
-   ]
-}
+[WORK IN PROGRESS. See extra file]
 <CODE ENDS>
 
 Appendix A.2.  JSON Format Example of output
@@ -1865,12 +1540,12 @@ NOTE: '\' line wrapping per RFC 8792  [RFC8792]
 <CODE BEGINS> file "oidip_example.json"
 {
   "$schema":"http://.../draft-viathinksoft-oidip-04.json",
-  "oidip": [
-    {
+  "oidip": {
+    "querySection": {
       "query": "oid:2.999",
       "result": "Found"
     },
-    {
+    "objectSection": {
       "object": "oid:2.999",
       "status": "Information available",
       "name": "Example",
@@ -1887,6 +1562,14 @@ purposes of documenting examples of Object Identifiers.",
             "(Korean characters are omitted in this example)",
             "(Arabian characters are omitted in this example)",
             "(Japanese characters are omitted in this example)",
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 28]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
             "(Chinese characters are omitted in this example)",
             "(Russian characters are omitted in this example)"
       ],
@@ -1898,14 +1581,6 @@ purposes of documenting examples of Object Identifiers.",
             "(Korean characters are omitted in this example)",
             "(Arabian characters are omitted in this example)",
             "(Japanese characters are omitted in this example)",
- 
-
-
-Marschall               Expires January 12, 2023               [Page 34]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
             "(Chinese characters are omitted in this example)",
             "(Russian characters are omitted in this example)"
       ],
@@ -1914,11 +1589,11 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
       "created": "2011-06",
       "updated": "2020-09"
     },
-    {
+    "raSection": {
       "ra": "ITU-T SG 17 & ISO/IEC JTC 1/SC 6",
       "ra-status": "Information unavailable"
     }
-  ],
+  },
   "signature": "(JSON Web Signature here)"
 }
 <CODE ENDS>
@@ -1939,203 +1614,17 @@ the server sends if the argument "format" is set to "xml".
 NOTE: '\' line wrapping per RFC 8792  [RFC8792]
 
 <CODE BEGINS> file "draft-viathinksoft-oidip-04.xsd"
-<?xml version="1.0"?>
-<xs:schema targetNamespace="urn:ietf:id:draft-viathinksoft-oidip-04"
-           attributeFormDefault="unqualified"
-           elementFormDefault="qualified"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
-           xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-<xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
-           schemaLocation="http://www.w3.org/TR/2002/\
-REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
-<xs:element name="root">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="oidip">
-<xs:complexType>
- 
-
-
-Marschall               Expires January 12, 2023               [Page 35]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
-<xs:sequence>
-<xs:element name="querySection" minOccurs="1" maxOccurs="1">
-<xs:complexType vc:minVersion="1.1">
-<xs:openContent mode="interleave">
-<xs:any namespace="##any" processContents="lax"/> 
-</xs:openContent>
-<xs:choice maxOccurs="unbounded">
-<xs:element type="xs:string" name="query" minOccurs="1"/>
-<xs:element name="result" minOccurs="1">
-<xs:simpleType>
-<xs:restriction base="xs:string">
-<xs:enumeration value="Found"/>
-<xs:enumeration value="Not found; superior object found"/>
-<xs:enumeration value="Not found"/>
-<xs:enumeration value="Service error"/>
-</xs:restriction>
-</xs:simpleType>
-</xs:element>
-<xs:element type="xs:string" name="distance" minOccurs="0"/>
-<xs:element type="xs:string" name="message" minOccurs="0"/>
-</xs:choice>
-</xs:complexType>
-</xs:element>
-<xs:element name="objectSection" minOccurs="0" maxOccurs="1">
-<xs:complexType vc:minVersion="1.1">
-<xs:openContent mode="interleave">
-<xs:any namespace="##any" processContents="lax"/> 
-</xs:openContent>
-<xs:choice maxOccurs="unbounded">
-<xs:element type="xs:string" name="object" minOccurs="1"/>
-<xs:element name="status" minOccurs="1">
-<xs:simpleType>
-<xs:restriction base="xs:string">
-<xs:enumeration value="Information available"/>
-<xs:enumeration value="Information partially available"/>
-<xs:enumeration value="Information unavailable"/>
-</xs:restriction>
-</xs:simpleType>
-</xs:element>
-<xs:element type="xs:string" name="name" minOccurs="0"/>
-<xs:element type="xs:string" name="description" minOccurs="0"/>
-<xs:element type="xs:string" name="information" minOccurs="0"/>
-<xs:element type="xs:string" name="url" minOccurs="0"/>
-<xs:element type="xs:string" name="asn1-notation" minOccurs="0"/>
-<xs:element type="xs:string" name="iri-notation" minOccurs="0"/>
-<xs:element type="xs:string" name="identifier" minOccurs="0"/>
-<xs:element type="xs:string" name="standardized-id" minOccurs="0"/>
-<xs:element type="xs:string" name="unicode-label" minOccurs="0"/>
- 
-
-
-Marschall               Expires January 12, 2023               [Page 36]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
-<xs:element type="xs:string" name="long-arc" minOccurs="0"/>
-<xs:element type="xs:string" name="oidip-service" minOccurs="0"/>
-<xs:element name="attribute" minOccurs="0">
-<xs:simpleType>
-<xs:restriction base="xs:string">
-<xs:enumeration value="confidential"/>
-<xs:enumeration value="draft"/>
-<xs:enumeration value="frozen"/>
-<xs:enumeration value="leaf"/>
-<xs:enumeration value="no-identifiers"/>
-<xs:enumeration value="no-unicode-labels"/>
-<xs:enumeration value="retired"/>
-</xs:restriction>
-</xs:simpleType>
-</xs:element>
-<xs:element type="xs:string" name="parent" minOccurs="0"/>
-<xs:element type="xs:string" name="subordinate"
-            maxOccurs="unbounded" minOccurs="0"/>
-<xs:element name="created" minOccurs="0">
-<xs:simpleType>
-<xs:restriction base="xs:string">
-<xs:pattern value="\d{4}(\-(0[1-9]|10|11|12)(\-(0[1-9]|1\d|2\d|30|31)\
-( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
-( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
-</xs:restriction>
-</xs:simpleType>
-</xs:element>
-<xs:element name="updated" minOccurs="0">
-<xs:simpleType>
-<xs:restriction base="xs:string">
-<xs:pattern value="\d{4}(\-(0[1-9]|10|11|12)(\-(0[1-9]|1\d|2\d|30|31)\
-( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
-( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
-</xs:restriction>
-</xs:simpleType>
-</xs:element>
-</xs:choice>
-</xs:complexType>
-</xs:element>
-<xs:element name="raSection" minOccurs="0" maxOccurs="1">
-<xs:complexType vc:minVersion="1.1">
-<xs:openContent mode="interleave">
-<xs:any namespace="##any" processContents="lax"/> 
-</xs:openContent>
-<xs:choice maxOccurs="unbounded">
-<xs:element type="xs:string" name="ra" minOccurs="1"/>
-<xs:element name="ra-status" minOccurs="1">
-<xs:simpleType>
- 
-
-
-Marschall               Expires January 12, 2023               [Page 37]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
-<xs:restriction base="xs:string">
-<xs:enumeration value="Information available"/>
-<xs:enumeration value="Information partially available"/>
-<xs:enumeration value="Information unavailable"/>
-</xs:restriction>
-</xs:simpleType>
-</xs:element>
-<xs:element type="xs:string" name="ra-contact-name" minOccurs="0"/>
-<xs:element type="xs:string" name="ra-address" minOccurs="0"/>
-<xs:element type="xs:string" name="ra-phone" minOccurs="0"/>
-<xs:element type="xs:string" name="ra-mobile" minOccurs="0"/>
-<xs:element type="xs:string" name="ra-fax" minOccurs="0"/>
-<xs:element type="xs:string" name="ra-email" minOccurs="0"/>
-<xs:element type="xs:string" name="ra-url" minOccurs="0"/>
-<xs:element name="ra-attribute" minOccurs="0">
-<xs:simpleType>
-<xs:restriction base="xs:string">
-<xs:enumeration value="confidential"/>
-<xs:enumeration value="retired"/>
-</xs:restriction>
-</xs:simpleType>
-</xs:element>
-<xs:element name="ra-created" minOccurs="0">
-<xs:simpleType>
-<xs:restriction base="xs:string">
-<xs:pattern value="\d{4}(\-(0[1-9]|10|11|12)(\-(0[1-9]|1\d|2\d|30|31)\
-( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
-( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
-</xs:restriction>
-</xs:simpleType>
-</xs:element>
-<xs:element name="ra-updated" minOccurs="0">
-<xs:simpleType>
-<xs:restriction base="xs:string">
-<xs:pattern value="\d{4}(\-(0[1-9]|10|11|12)(\-(0[1-9]|1\d|2\d|30|31)\
-( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}\
-( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}"></xs:pattern>
-</xs:restriction>
-</xs:simpleType>
-</xs:element>
-</xs:choice>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-<xs:element ref="ds:Signature" minOccurs="0" maxOccurs="1"/>
-</xs:sequence>
- 
-
-
-Marschall               Expires January 12, 2023               [Page 38]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
-</xs:complexType>
-</xs:element>
-</xs:schema>
+[WORK IN PROGRESS. See extra file]
 <CODE ENDS>
 
 Appendix B.2.  XML Format Example of output
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 29]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
 
 [To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-04"
 to "urn:ietf:rfc:yyyy" before publication.]
@@ -2178,14 +1667,6 @@ http://.../draft-viathinksoft-oidip-04.xsd">
      <long-arc>(Korean characters are omitted)</long-arc>
      <long-arc>(Arabian characters are omitted)</long-arc>
      <long-arc>(Japanese characters are omitted)</long-arc>
- 
-
-
-Marschall               Expires January 12, 2023               [Page 39]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
      <long-arc>(Chinese characters are omitted)</long-arc>
      <long-arc>(Russian characters are omitted)</long-arc>
      <parent>oid:2 (joint-iso-ccitt, joint-iso-itu-t)</parent>
@@ -2193,6 +1674,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
   <raSection>
      <ra>ITU-T SG 17 & ISO/IEC JTC 1/SC 6</ra>
      <ra-status>Information unavailable</ra-status>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 30]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
   </raSection>
 </oidip>
 <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
@@ -2237,4 +1726,11 @@ Authors' Addresses
 
 
 
-Marschall               Expires January 12, 2023               [Page 40]
+
+
+
+
+
+
+
+Marschall               Expires January 12, 2023               [Page 31]

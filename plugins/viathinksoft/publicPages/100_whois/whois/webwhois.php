@@ -84,6 +84,8 @@ if ($unimplemented_format) {
 
 $out = array();
 
+// ATTENTION: THE ORDER IS IMPORTANT FOR THE XML VALIDATION!
+// The order of the RFC is the same as in the XSD
 $out[] = "query: $query";
 
 $query = OIDplus::prefilterQuery($query, false);
@@ -192,6 +194,9 @@ if ($unimplemented_format) {
 
 	if ($continue) {
 		$out[] = "";
+
+		// ATTENTION: THE ORDER IS IMPORTANT FOR THE XML VALIDATION!
+		// The order of the RFC is the same as in the XSD
 		$out[] = "object: $query"; // DO NOT TRANSLATE!
 		if (!allowObjectView($obj, $authTokens)) {
 			$out[] = "status: Information unavailable"; // DO NOT TRANSLATE!
@@ -213,6 +218,17 @@ if ($unimplemented_format) {
 				$cont = preg_replace('@<br.*>@', "\n", $cont);
 				$cont = preg_replace('@\\n+@', "\n", $cont);
 				$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont))); // DO NOT TRANSLATE!
+			}
+
+			// Not used: 'information', contains additional information, e.g. Management Information Base (MIB) definitions.
+
+			if ($only_wellknown_ids_found) {
+				if (substr($query,0,4) === 'oid:') {
+					// Since it is well-known, oid-info.com will most likely have it described
+					$out[] = 'url: http://www.oid-info.com/get/'.$obj->nodeId(false);
+				}
+			} else {
+				$out[] = 'url: '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).'?goto='.urlencode($obj->nodeId(true));
 			}
 
 			if (substr($query,0,4) === 'oid:') {
@@ -240,9 +256,7 @@ if ($unimplemented_format) {
 				}
 			}
 
-			if ($obj->isConfidential()) { // yes, we use isConfidential() instead of allowObjectView()!
-				$out[] = 'attribute: confidential'; // DO NOT TRANSLATE!
-			}
+			// 'oidip-service' not used
 
 			if ($obj->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
 				// Also ask $obj for extra attributes:
@@ -256,13 +270,8 @@ if ($unimplemented_format) {
 				}
 			}
 
-			if ($only_wellknown_ids_found) {
-				if (substr($query,0,4) === 'oid:') {
-					// Since it is well-known, oid-info.com will most likely have it described
-					$out[] = 'url: http://www.oid-info.com/get/'.$obj->nodeId(false);
-				}
-			} else {
-				$out[] = 'url: '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).'?goto='.urlencode($obj->nodeId(true));
+			if ($obj->isConfidential()) { // yes, we use isConfidential() instead of allowObjectView()!
+				$out[] = 'attribute: confidential'; // DO NOT TRANSLATE!
 			}
 
 			if (substr($query,0,4) === 'oid:') {
@@ -296,6 +305,8 @@ if ($unimplemented_format) {
 
 			$out[] = '';
 
+			// ATTENTION: THE ORDER IS IMPORTANT FOR THE XML VALIDATION!
+			// The order of the RFC is the same as in the XSD
 			$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array(is_null($row) ? '' : $row->ra_email));
 			if ($row2 = $res2->fetch_object()) {
 				$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : (!empty($row2->email) ? $row2->email : /*_L*/('Unknown'))); // DO NOT TRANSLATE!
@@ -328,6 +339,8 @@ if ($unimplemented_format) {
 					$out[] = 'ra-fax: ' . $row2->fax; // DO NOT TRANSLATE!
 				}
 				$out[] = 'ra-email: ' . $row->ra_email; // DO NOT TRANSLATE!
+
+				// 'ra-url' not used
 
 				$ra = new OIDplusRA($row->ra_email);
 				if ($ra->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
@@ -446,6 +459,16 @@ if ($format == 'json') {
 			}
 		}
 	}
+
+	$bry = array();
+	foreach ($ary as $cry) {
+		// Change $ary=[["query",...], ["object",...], ["ra",...]]
+		// to     $bry=["querySection"=>["query",...], "objectsection"=>["object",...], "raSection"=>["ra",...]]
+		$dry = array_keys($cry);
+		if (count($dry) == 0) continue;
+		$bry[$dry[0].'Section'] = $cry;
+	}
+
 	$ary = array(
 		// https://code.visualstudio.com/docs/languages/json#_mapping-in-the-json
 		// Note that this syntax is VS Code-specific and not part of the JSON Schema specification.
@@ -453,7 +476,7 @@ if ($format == 'json') {
 		'$schema' => JSON_SCHEMA,
 
 		// we need this NAMED root, otherwise PHP will name the sections "0", "1", "2" if the array is not sequencial (e.g. because "signature" is added)
-		'oidip' => $ary
+		'oidip' => $bry
 	);
 
 	$json = json_encode($ary);
@@ -463,6 +486,7 @@ if ($format == 'json') {
 			require_once __DIR__.'/json/security.inc.php';
 			$json = oidplus_json_sign($json, OIDplus::getSystemPrivateKey(), OIDplus::getSystemPublicKey());
 		} catch (Exception $e) {
+			// die($e->getMessage());
 		}
 	}
 
@@ -489,7 +513,10 @@ if ($format == 'xml') {
 	$xml = preg_replace('@<section><(.+)>(.+)</section>@ismU', '<\\1Section><\\1>\\2</\\1Section>', $xml);
 
 	// Good XSD validator here: https://www.liquid-technologies.com/online-xsd-validator
-	// But you need to host http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd yourself, otherwise there will be a timeout in the validation!!!
+	// ==> PROBLEM: Every XSD 1.1 element will result in "Document Valid", even if it shouldn't be valid!
+	// Also good: https://www.utilities-online.info/xsdvalidation
+	// ==> PROBLEM: Can only handle XSD 1.0
+	// For both, you need to host http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd yourself, otherwise there will be a timeout in the validation!!!
 	$xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'.
 	       '<root xmlns="'.XML_URN.'"'.
 	       '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'.
