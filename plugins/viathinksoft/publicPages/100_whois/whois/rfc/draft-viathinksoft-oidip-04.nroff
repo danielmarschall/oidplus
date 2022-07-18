@@ -101,13 +101,13 @@ Table of Contents
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  9
        3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . .  9
-       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . .  9
+       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . . 10
        3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . . 10
-     3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . . 10
-       3.2.1  Query-Section (Information about Query and Result)  . . 10
-       3.2.2  Object-Section (Information about the OID)  . . . . . . 11
-       3.2.3  RA-Section (Information about the Current RA) . . . . . 14
-       3.2.4  Sections for Previous Registration Authorities  . . . . 16
+     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 10
+       3.2.1  Query-Section (Information about Query and Result)  . . 11
+       3.2.2  Object-Section (Information about the OID)  . . . . . . 12
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 15
+       3.2.4  Sections for Previous Registration Authorities  . . . . 17
      3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 17
        3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 17
        3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
@@ -365,22 +365,36 @@ lowercase-char  = %x61-7A  ; a-z
 
 (8) Comment lines MUST start with a percent sign ("%") at the beginning of a line, without prepending whitespaces.  They MUST NOT be evaluated by machines (except for signature validation, as mentioned in section\03.3 "Digital Signature").
 
+(9) A response consists of sections, which MUST be separated by at least one empty line and/or comment line. 
+
+(10) Custom sections CAN be added after any section defined in this document.  The query section MUST be the first section in the response.
+
 .ti 0
 3.1.2 "json" Format
 
-The JavaScript Object Notation (JSON, [RFC8259]) output MUST match the schema defined in Appendix\0A.1 of this document.
+(1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+
+(2) A response consists of sections, which MUST be named "querySection", "objectSection", "raSection", "ra1Section", etc. which SHOULD stay in this order.
+
+(3) Custom sections CAN be added.  The name of these custom sections MUST be the name of the first field, appended by the string "Section".
+
+(4) The JavaScript Object Notation (JSON, [RFC8259]) output MUST match the schema defined in Appendix\0A.1 of this document.
 
 .ti 0
 3.1.3 "xml" Format
 
-The Extensible Markup Language (XML, [XML]) output MUST match the schema defined in Appendix\0B.1 of this document.
+(1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+
+(2) A response consists of sections, which MUST be named "querySection", "objectSection", "raSection", "ra1Section", etc. which MUST stay in this order.
+
+(3) Custom sections CAN be added.  The name of these custom sections MUST be the name of the first field, appended by the string "Section".  These custom sections MUST be specified in a different XML namespace at the end of the last RA section.
+
+(4) The Extensible Markup Language (XML, [XML]) output MUST match the schema defined in Appendix\0B.1 of this document.
 
 .ti 0
-3.2  Structure
+3.2  Sections
 
-A response consists of sections, which SHOULD be separated by at least one empty line and/or comment line.
-
-This document specifies the following sections (which SHALL stay in this order):
+This document specifies the following sections:
 
 (1) Query-Section which contains the request and the result.  This section MUST start with the field "query".
 
@@ -389,8 +403,6 @@ This document specifies the following sections (which SHALL stay in this order):
 (3) RA-Section which contains information about the current Registration Authority.  This section MUST start with the field "ra".
 
 (4) Optional RA-Sections containing information about RAs that were previously in charge of managing the OID.
-
-The OID-IP service MAY define additional sections after any of these sections, but the Query-Section MUST be the first section in the response.
 
 .ti 0
 3.2.1  Query-Section (Information about Query and Result)
@@ -845,6 +857,10 @@ The OID-IP service can define additional field names, but they SHOULD be written
 .ti 0
 9.1  Port Numbers
 
+[To RFC Editor: Please change "yyyy" to the RFC number allocated to this document before publication.]
+
+[To RFC Editor: Please change "XXX" placed at various locations in this document to the port number allocated by IANA.]
+
 This document requires the assignment of a TCP port number.
 
 .in 11
@@ -860,10 +876,6 @@ This document requires the assignment of a TCP port number.
 +--------------------+-----------------------------+
 .fi
 .in 3
-
-[To RFC Editor: Please change "yyyy" to the RFC number allocated to this document before publication.]
-
-[To RFC Editor: Please change "XXX" placed at various locations in this document to the port number allocated by IANA.]
 
 .ti 0
 10  References
@@ -1166,7 +1178,7 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 .nf
 <CODE BEGINS> file "oidip_example.xml"
 <?xml version="1.0"?>
-<root xmlns="urn:ietf:rfc:yyyy"
+<root xmlns="urn:ietf:id:draft-viathinksoft-oidip-04"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="urn:ietf:id:draft-viathinksoft-oidip-04 \\
 http://.../draft-viathinksoft-oidip-04.xsd">
@@ -1202,7 +1214,7 @@ http://.../draft-viathinksoft-oidip-04.xsd">
      <parent>oid:2 (joint-iso-ccitt, joint-iso-itu-t)</parent>
   </objectSection>
   <raSection>
-     <ra>ITU-T SG 17 & ISO/IEC JTC 1/SC 6</ra>
+     <ra>ITU-T SG 17 &amp; ISO/IEC JTC 1/SC 6</ra>
      <ra-status>Information unavailable</ra-status>
   </raSection>
 </oidip>

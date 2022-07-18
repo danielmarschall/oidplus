@@ -79,13 +79,13 @@ Table of Contents
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  9
        3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . .  9
-       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . .  9
+       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . . 10
        3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . . 10
-     3.2  Structure . . . . . . . . . . . . . . . . . . . . . . . . . 10
-       3.2.1  Query-Section (Information about Query and Result)  . . 10
-       3.2.2  Object-Section (Information about the OID)  . . . . . . 11
-       3.2.3  RA-Section (Information about the Current RA) . . . . . 14
-       3.2.4  Sections for Previous Registration Authorities  . . . . 16
+     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 10
+       3.2.1  Query-Section (Information about Query and Result)  . . 11
+       3.2.2  Object-Section (Information about the OID)  . . . . . . 12
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 15
+       3.2.4  Sections for Previous Registration Authorities  . . . . 17
      3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 17
        3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 17
        3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
@@ -495,9 +495,9 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    be evaluated by machines (except for signature validation, as
    mentioned in section 3.3 "Digital Signature").
 
-3.1.2 "json" Format
+   (9) A response consists of sections, which MUST be separated by at
+   least one empty line and/or comment line. 
 
-   The JavaScript Object Notation (JSON, [RFC8259]) output MUST match
  
 
 
@@ -506,20 +506,46 @@ Marschall               Expires January 12, 2023                [Page 9]
 INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 
-   the schema defined in Appendix A.1 of this document.
+   (10) Custom sections CAN be added after any section defined in this
+   document.  The query section MUST be the first section in the
+   response.
+
+3.1.2 "json" Format
+
+   (1) The response MUST be UTF-8 encoded (as defined in RFC 3629
+   [RFC3629]), without Byte-Order-Mark (BOM).
+
+   (2) A response consists of sections, which MUST be named
+   "querySection", "objectSection", "raSection", "ra1Section", etc.
+   which SHOULD stay in this order.
+
+   (3) Custom sections CAN be added.  The name of these custom sections
+   MUST be the name of the first field, appended by the string
+   "Section".
+
+   (4) The JavaScript Object Notation (JSON, [RFC8259]) output MUST
+   match the schema defined in Appendix A.1 of this document.
 
 3.1.3 "xml" Format
 
-   The Extensible Markup Language (XML, [XML]) output MUST match the
+   (1) The response MUST be UTF-8 encoded (as defined in RFC 3629
+   [RFC3629]), without Byte-Order-Mark (BOM).
+
+   (2) A response consists of sections, which MUST be named
+   "querySection", "objectSection", "raSection", "ra1Section", etc.
+   which MUST stay in this order.
+
+   (3) Custom sections CAN be added.  The name of these custom sections
+   MUST be the name of the first field, appended by the string
+   "Section".  These custom sections MUST be specified in a different
+   XML namespace at the end of the last RA section.
+
+   (4) The Extensible Markup Language (XML, [XML]) output MUST match the
    schema defined in Appendix B.1 of this document.
 
-3.2  Structure
+3.2  Sections
 
-   A response consists of sections, which SHOULD be separated by at
-   least one empty line and/or comment line.
-
-   This document specifies the following sections (which SHALL stay in
-   this order):
+   This document specifies the following sections:
 
    (1) Query-Section which contains the request and the result.  This
    section MUST start with the field "query".
@@ -528,14 +554,18 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    section MUST start with the field "object".
 
    (3) RA-Section which contains information about the current
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 10]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
    Registration Authority.  This section MUST start with the field "ra".
 
    (4) Optional RA-Sections containing information about RAs that were
    previously in charge of managing the OID.
-
-   The OID-IP service MAY define additional sections after any of these
-   sections, but the Query-Section MUST be the first section in the
-   response.
 
 3.2.1  Query-Section (Information about Query and Result)
 
@@ -554,14 +584,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
        "Found" means that the OID-IP service can verify that the
        requested OID exists.  The following sections will contain
- 
-
-
-Marschall               Expires January 12, 2023               [Page 10]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
        information about this OID.
 
        "Not found; superior object found" means that the OID-IP service
@@ -588,6 +610,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    was found, etc.
 
    (4) "message" SHOULD be present if the result is "Service error".  It
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 11]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
    contains a message explaining why the service is not available (e.g.
    displaying an error message).  It MUST NOT be present if the result
    has a different value.
@@ -610,14 +640,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    values:
 
        "Information available" means that information about the OID is
- 
-
-
-Marschall               Expires January 12, 2023               [Page 11]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
        fully available.
 
        "Information partially available" means that part of the
@@ -644,6 +666,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
    (6) "url" (OPTIONAL, multiple values allowed) contains a URL (as
    defined in RFC 3986 [RFC3986]) leading to more information about the
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 12]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
    OID.
 
    (7) "asn1-notation" (OPTIONAL, multiple values allowed) contains one
@@ -666,14 +696,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
        defined in section 3.1 ("Format and Encoding") SHALL NOT be used,
        otherwise, it would be ambiguous if the line break was used to
        shorten the line, or if the line break indicates a new value in
- 
-
-
-Marschall               Expires January 12, 2023               [Page 12]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
        case multiple OID-IRI notations are supplied.
 
    (9) "identifier" (OPTIONAL, multiple values allowed) contains an
@@ -700,6 +722,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    a system that offers an OID-IP service that can supply information
    about the OID and/or its subordinate OIDs, followed by a double-colon
    (:) and a port number.  If the result is "Found" (i.e. the OID is
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 13]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
    existing in the local database), then the information "oidip-service"
    is only informational; its existence is most likely a hint that
    subordinate OIDs will be found at that OID-IP server.  If the result
@@ -721,14 +751,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
        "frozen" means that no more child OIDs can be created under this
        OID, e.g. because the RA has stopped operating, but the existing
        child OIDs stay valid.
-
- 
-
-
-Marschall               Expires January 12, 2023               [Page 13]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
 
        "leaf" means that no child OIDs can be allocated under this OID. 
        The field "subordinate" SHALL therefore not be present.
@@ -756,6 +778,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    identifiers.  There SHALL be at least 1 whitespace in between.
 
    (17) "created" (OPTIONAL) contains the date and time (as specified in
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 14]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
    section 3.4 "Date/Time Format") when the OID was first allocated by
    the RA of the superior OID.
 
@@ -778,14 +808,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    Possible fields are:
 
    (1) "ra" contains a general name of the RA, like the name of a
- 
-
-
-Marschall               Expires January 12, 2023               [Page 14]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
    person, the name of a group, or the name of an organization.  This
    field MUST be present.
 
@@ -812,6 +834,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    (4) "ra-address" (OPTIONAL) contains the physical location of the RA.
     While a fully qualified postal address is recommended, the field can
    also just contain a rough location like city and country name, state
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 15]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
    and country name, or just the country name, etc.  The name of the
    country SHOULD always be present.
 
@@ -834,14 +864,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    address of the Registration Authority.
 
    (9) "ra-url" (OPTIONAL, multiple values allowed) contains a URL (as
- 
-
-
-Marschall               Expires January 12, 2023               [Page 15]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
    defined in RFC 3986 [RFC3986]) leading to more information about the
    RA (usually the website of the RA).
 
@@ -868,6 +890,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    Additional fields can be defined by the OID-IP service, but they MUST
    begin with "ra-".  The field names SHALL only consist of the lower-
    case letters "a..z", hyphens ("-"), and numbers, and SHOULD be
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 16]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
    written in the English language.  The field name MUST NOT begin or
    end with a hyphen and a hyphen MUST NOT be followed by another
    hyphen.
@@ -890,14 +920,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    different prefix.
 
    The history does not need to be complete, e.g. it is no problem to
- 
-
-
-Marschall               Expires January 12, 2023               [Page 16]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
    only serve information about the first and the current RA, or only
    serve information about the current RA.
 
@@ -924,6 +946,13 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
        2. Make a copy of your JSON file and canonize the contents using
        the procedures described in RFC 8785 [RFC8785].
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 17]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
 
        3. Create a JSON Web Signature (JWS, RFC 7515 [RFC7515]) using
        your public key and the canonized form of the JSON contents.
@@ -946,13 +975,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
        4. Compare the canonized JSON contents to the base64-encoded
        payload of the JSON Web Signature.  The contents MUST be equal.
- 
-
-
-Marschall               Expires January 12, 2023               [Page 17]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
 
        5. Verify the JSON Web Signature according to the procedures
        described in RFC 7515 [RFC7515].
@@ -980,6 +1002,13 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    styles of RFC 5234 [RFC5234].
 
    date-time = year [ "-" month [ "-" day [ " " time ] ] ]
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 18]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
 
    year      = 4DIGIT
 
@@ -1002,13 +1031,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    second    = %x30-35 DIGIT        ; 00-59
 
    timezone  = ( "+" / "-" ) hour minute
- 
-
-
-Marschall               Expires January 12, 2023               [Page 18]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
 
 3.4.2  Date/Time Format Examples
 
@@ -1021,28 +1043,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
        2022-09-29
        2022-09
        2022
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1326,18 +1326,18 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 9.1  Port Numbers
 
+   [To RFC Editor: Please change "yyyy" to the RFC number allocated to
+   this document before publication.]
+
+   [To RFC Editor: Please change "XXX" placed at various locations in
+   this document to the port number allocated by IANA.]
+
    This document requires the assignment of a TCP port number.
 
            +--------------------+-----------------------------+
            | Service Name       | oidip                       |
            | Transport Protocol | TCP                         |
            | Assignee           | ...                         |
-           | Contact            | ...                         |
-           | Description        | OID Information Protocol    |
-           | Reference          | [RFCyyyy]                   |
-           | Port Number        | XXX                         |
-           +--------------------+-----------------------------+
-
  
 
 
@@ -1346,11 +1346,11 @@ Marschall               Expires January 12, 2023               [Page 24]
 INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 
-   [To RFC Editor: Please change "yyyy" to the RFC number allocated to
-   this document before publication.]
-
-   [To RFC Editor: Please change "XXX" placed at various locations in
-   this document to the port number allocated by IANA.]
+           | Contact            | ...                         |
+           | Description        | OID Information Protocol    |
+           | Reference          | [RFCyyyy]                   |
+           | Port Number        | XXX                         |
+           +--------------------+-----------------------------+
 
 10  References
 
@@ -1636,7 +1636,7 @@ NOTE: '\' line wrapping per RFC 8792  [RFC8792]
 
 <CODE BEGINS> file "oidip_example.xml"
 <?xml version="1.0"?>
-<root xmlns="urn:ietf:rfc:yyyy"
+<root xmlns="urn:ietf:id:draft-viathinksoft-oidip-04"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="urn:ietf:id:draft-viathinksoft-oidip-04 \
 http://.../draft-viathinksoft-oidip-04.xsd">
@@ -1672,7 +1672,7 @@ http://.../draft-viathinksoft-oidip-04.xsd">
      <parent>oid:2 (joint-iso-ccitt, joint-iso-itu-t)</parent>
   </objectSection>
   <raSection>
-     <ra>ITU-T SG 17 & ISO/IEC JTC 1/SC 6</ra>
+     <ra>ITU-T SG 17 &amp; ISO/IEC JTC 1/SC 6</ra>
      <ra-status>Information unavailable</ra-status>
  
 
