@@ -375,31 +375,52 @@ if ($unimplemented_format) {
 	}
 }
 
+// Upgrade legacy $out to extended $out format
+
+foreach ($out as &$line) {
+	if (is_string($line)) {
+		$ary = explode(':', $line, 2);
+		$key = trim($ary[0]);
+		$value = isset($ary[1]) ? trim($ary[1]) : '';
+
+		$line = array(
+			'xmlns' => '',
+			'xmlschema' => '',
+			'xmlschemauri' => '',
+			'name' => $key,
+			'value' => $value
+		);
+	} else if (is_array($line)) {
+		if (!isset($line['xmlns'])) $line['xmlns'] = '';
+		if (!isset($line['xmlschema'])) $line['xmlschema'] = '';
+		if (!isset($line['xmlschemauri'])) $line['xmlschemauri'] = '';
+	} else {
+		assert(false);
+	}
+}
+
 // Step 2: Format output
 
 if ($format == 'text') {
 	header('Content-Type:text/plain; charset=UTF-8');
 
 	$longest_key = 0;
-	foreach ($out as $line) {
-		$longest_key = max($longest_key, strlen(trim(explode(':',$line,2)[0])));
+	foreach ($out as $data) {
+		$longest_key = max($longest_key, strlen(trim($data['name'])));
 	}
 
 	ob_start();
 
 	//echo '% ' . str_repeat('*', OIDplus::config()->getValue('webwhois_output_format_max_line_length', 80)-2)."\r\n";
 
-	foreach ($out as $line) {
-		if (trim($line) == '') {
+	foreach ($out as $data) {
+		if ($data['name'] == '') {
 			echo "\r\n";
 			continue;
 		}
 
-		$ary = explode(':', $line, 2);
-
-		$key = trim($ary[0]);
-
-		$value = isset($ary[1]) ? trim($ary[1]) : '';
+		$key = $data['name'];
+		$value = $data['value'];
 
 		// Normalize line-breaks to \r\n, otherwise mb_wordwrap won't work correctly
 		$value = str_replace("\r\n", "\n", $value);
@@ -440,13 +461,14 @@ if ($format == 'json') {
 	$current_section = array();
 	$ary[] = &$current_section;
 
-	foreach ($out as $line) {
-		if ($line == '') {
+	foreach ($out as $data) {
+		if ($data['name'] == '') {
 			unset($current_section);
 			$current_section = array();
 			$ary[] = &$current_section;
 		} else {
-			list($key,$val) = explode(':', $line, 2);
+			$key = $data['name'];
+			$val = $data['value'];
 			$val = trim($val);
 			if (!empty($val)) {
 				if (!isset($current_section[$key])) {
@@ -496,33 +518,53 @@ if ($format == 'json') {
 }
 
 if ($format == 'xml') {
-	$xml = '<oidip><section>';
-	foreach ($out as $line) {
-		if ($line == '') {
-			$xml .= '</section><section>';
+	$xml_oidip = '<oidip><section>';
+	foreach ($out as $data) {
+		if ($data['name'] == '') {
+			$xml_oidip .= '</section><section>';
 		} else {
-			list($key,$val) = explode(':', $line, 2);
+			if ($data['xmlns'] != '') {
+				$key = $data['xmlns'].':'.$data['name'];
+			} else {
+				$key = $data['name'];
+			}
+			$val = $data['value'];
 			$val = trim($val);
 			if (!empty($val)) {
-				$xml .= "<$key>".htmlspecialchars($val)."</$key>";
+				$xml_oidip .= "<$key>".htmlspecialchars($val)."</$key>";
 			}
 		}
 	}
-	$xml .= '</section></oidip>';
+	$xml_oidip .= '</section></oidip>';
 
-	$xml = preg_replace('@<section><(.+)>(.+)</section>@ismU', '<\\1Section><\\1>\\2</\\1Section>', $xml);
+	$xml_oidip = preg_replace('@<section><(.+)>(.+)</section>@ismU', '<\\1Section><\\1>\\2</\\1Section>', $xml_oidip);
 
 	// Good XSD validator here: https://www.liquid-technologies.com/online-xsd-validator
 	// ==> PROBLEM: Every XSD 1.1 element will result in "Document Valid", even if it shouldn't be valid!
 	// Also good: https://www.utilities-online.info/xsdvalidation
 	// ==> PROBLEM: Can only handle XSD 1.0
 	// For both, you need to host http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd yourself, otherwise there will be a timeout in the validation!!!
-	$xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'.
-	       '<root xmlns="'.XML_URN.'"'.
-	       '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'.
-	       '      xsi:schemaLocation="'.XML_URN.' '.XML_URN_URL.'">'.
-	       $xml.
-	       '</root>';
+
+	$extra_schemas = array();
+	foreach ($out as $data) {
+		if (isset($data['xmlns']) && ($data['xmlns'] != '') && !isset($extra_schemas[$data['xmlns']])) {
+			$extra_schemas[$data['xmlns']] = array($data['xmlschema'], $data['xmlschemauri']);
+		}
+	}
+
+	$xml  = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'."\n";
+	$xml .= '<root xmlns="'.XML_URN.'"'."\n";
+	$xml .= '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'."\n";
+	foreach ($extra_schemas as $xmlns => list($schema,$schemauri)) {
+		$xml .= '      xmlns:'.$xmlns.'="'.$schema.'"'."\n";
+	}
+	$xml .= '      xsi:schemaLocation="'.XML_URN.' '.XML_URN_URL;
+	foreach ($extra_schemas as $xmlns => list($schema,$schemauri)) {
+		$xml .= ' '.$schema.' '.$schemauri;
+	}
+	$xml .= '">'."\n";
+	$xml .= $xml_oidip."\n";
+	$xml .= '</root>';
 
 	if (!OIDplus::getPkiStatus()) {
 		$xml .= '<!-- Cannot add signature: OIDplus PKI is not initialized (OpenSSL missing?) -->';

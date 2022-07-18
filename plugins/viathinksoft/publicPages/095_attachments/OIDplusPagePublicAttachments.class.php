@@ -469,10 +469,29 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function whoisObjectAttributes($id, &$out) {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.4
 
+		$xmlns = 'oidplus-attachment-plugin';
+		$xmlschema = 'urn:oid:1.3.6.1.4.1.37476.2.5.2.4.1.95.1';
+		$xmlschemauri = OIDplus::webpath(__DIR__.'/attachments.xsd',OIDplus::PATH_ABSOLUTE);
+
 		$files = @glob(self::getUploadDir($id) . DIRECTORY_SEPARATOR . '*');
 		if ($files) foreach ($files as $file) {
-			$out[] = 'attachment-name: '.basename($file);
-			$out[] = 'attachment-url: '.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'download.php?id='.urlencode($id).'&filename='.urlencode(basename($file));
+			$url = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'download.php?id='.urlencode($id).'&filename='.urlencode(basename($file));
+
+			$out[] = array(
+				'xmlns' => $xmlns,
+				'xmlschema' => $xmlschema,
+				'xmlschemauri' => $xmlschemauri,
+				'name' => 'attachment-name',
+				'value' => basename($file)
+			);
+
+			$out[] = array(
+				'xmlns' => $xmlns,
+				'xmlschema' => $xmlschema,
+				'xmlschemauri' => $xmlschemauri,
+				'name' => 'attachment-url',
+				'value' => $url
+			);
 		}
 
 	}
