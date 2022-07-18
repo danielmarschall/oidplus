@@ -86,13 +86,13 @@ $out = array();
 
 // ATTENTION: THE ORDER IS IMPORTANT FOR THE XML VALIDATION!
 // The order of the RFC is the same as in the XSD
-$out[] = "query: $query";
+$out[] = _oidip_attr('query', $query);
 
 $query = OIDplus::prefilterQuery($query, false);
 
 if ($unimplemented_format) {
-	$out[] = 'result: Service error';
-	$out[] = 'message: Format is not implemented';
+	$out[] = _oidip_attr('result', 'Service error');
+	$out[] = _oidip_attr('message', 'Format is not implemented');
 } else {
 
 	$distance = null;
@@ -110,7 +110,7 @@ if ($unimplemented_format) {
 	$continue = false;
 
 	if (!$obj) {
-		$out[] = "result: Not found"; // DO NOT TRANSLATE!
+		$out[] = _oidip_attr('result', 'Not found'); // DO NOT TRANSLATE!
 		$continue = false;
 		$res = null;
 	} else {
@@ -123,10 +123,10 @@ if ($unimplemented_format) {
 			if ($res->any()) {
 				$obj = OIDplusObject::parse($query);
 				if ($distance > 0) {
-					$out[] = "result: Not found; superior object found"; // DO NOT TRANSLATE!
-					$out[] = "distance: $distance"; // DO NOT TRANSLATE
+					$out[] = _oidip_attr('result', 'Not found; superior object found'); // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('distance', $distance); // DO NOT TRANSLATE
 				} else {
-					$out[] = "result: Found"; // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('result', 'Found'); // DO NOT TRANSLATE!
 				}
 				$continue = true;
 				break;
@@ -150,8 +150,8 @@ if ($unimplemented_format) {
 				}
 
 				if ($distance > 0) {
-					$out[] = "result: Not found; superior object found"; // DO NOT TRANSLATE!
-					$out[] = "distance: $distance"; // DO NOT TRANSLATE
+					$out[] = _oidip_attr('result', 'Not found; superior object found'); // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('distance', $distance); // DO NOT TRANSLATE
 				}
 				$continue = true;
 
@@ -168,10 +168,10 @@ if ($unimplemented_format) {
 					$obj = OIDplusObject::parse($query);
 					$res = null;
 					if ($distance > 0) {
-						$out[] = "result: Not found; superior object found"; // DO NOT TRANSLATE!
-						$out[] = "distance: $distance"; // DO NOT TRANSLATE
+						$out[] = _oidip_attr('result', 'Not found; superior object found'); // DO NOT TRANSLATE!
+						$out[] = _oidip_attr('distance', $distance); // DO NOT TRANSLATE
 					} else {
-						$out[] = "result: Found"; // DO NOT TRANSLATE!
+						$out[] = _oidip_attr('result', 'Found'); // DO NOT TRANSLATE!
 					}
 					$only_wellknown_ids_found = true; // Information partially available
 					$continue = true;
@@ -185,7 +185,7 @@ if ($unimplemented_format) {
 		}
 
 		if (!$obj) {
-			$out[] = "result: Not found"; // DO NOT TRANSLATE!
+			$out[] = _oidip_attr('result', 'Not found'); // DO NOT TRANSLATE!
 			$continue = false;
 		}
 
@@ -193,31 +193,31 @@ if ($unimplemented_format) {
 	}
 
 	if ($continue) {
-		$out[] = "";
+		$out[] = '';
 
 		// ATTENTION: THE ORDER IS IMPORTANT FOR THE XML VALIDATION!
 		// The order of the RFC is the same as in the XSD
-		$out[] = "object: $query"; // DO NOT TRANSLATE!
+		$out[] = _oidip_attr('object', $query); // DO NOT TRANSLATE!
 		if (!allowObjectView($obj, $authTokens)) {
-			$out[] = "status: Information unavailable"; // DO NOT TRANSLATE!
-			$out[] = "attribute: confidential"; // DO NOT TRANSLATE!
+			$out[] = _oidip_attr('status', 'Information unavailable'); // DO NOT TRANSLATE!
+			$out[] = _oidip_attr('attribute', 'confidential'); // DO NOT TRANSLATE!
 		} else {
 			if ($only_wellknown_ids_found) {
-				$out[] = "status: Information partially available"; // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('status', 'Information partially available'); // DO NOT TRANSLATE!
 			} else {
-				$out[] = "status: Information available"; // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('status', 'Information available'); // DO NOT TRANSLATE!
 			}
 
 			$row = $res ? $res->fetch_object() : null;
 
 			if (!is_null($row)) {
-				$out[] = 'name: ' . $row->title; // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('name', $row->title); // DO NOT TRANSLATE!
 
 				$cont = $row->description;
 				$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
 				$cont = preg_replace('@<br.*>@', "\n", $cont);
 				$cont = preg_replace('@\\n+@', "\n", $cont);
-				$out[] = 'description: ' . trim(html_entity_decode(strip_tags($cont))); // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('description', trim(html_entity_decode(strip_tags($cont)))); // DO NOT TRANSLATE!
 			}
 
 			// Not used: 'information', contains additional information, e.g. Management Information Base (MIB) definitions.
@@ -225,34 +225,34 @@ if ($unimplemented_format) {
 			if ($only_wellknown_ids_found) {
 				if (substr($query,0,4) === 'oid:') {
 					// Since it is well-known, oid-info.com will most likely have it described
-					$out[] = 'url: http://www.oid-info.com/get/'.$obj->nodeId(false);
+					$out[] = _oidip_attr('url', 'http://www.oid-info.com/get/'.$obj->nodeId(false));
 				}
 			} else {
-				$out[] = 'url: '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).'?goto='.urlencode($obj->nodeId(true));
+				$out[] = _oidip_attr('url', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).'?goto='.urlencode($obj->nodeId(true)));
 			}
 
 			if (substr($query,0,4) === 'oid:') {
-				$out[] = 'asn1-notation: ' . $obj->getAsn1Notation(false); // DO NOT TRANSLATE!
-				$out[] = 'iri-notation: ' . $obj->getIriNotation(false); // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('asn1-notation', $obj->getAsn1Notation(false)); // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('iri-notation', $obj->getIriNotation(false)); // DO NOT TRANSLATE!
 
 				$res2 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($obj->nodeId()));
 				while ($row2 = $res2->fetch_object()) {
-					$out[] = 'identifier: ' . $row2->name; // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('identifier', $row2->name); // DO NOT TRANSLATE!
 				}
 
 				$res2 = OIDplus::db()->query("select * from ###asn1id where standardized = ? and oid = ?", array(true, $obj->nodeId()));
 				while ($row2 = $res2->fetch_object()) {
-					$out[] = 'standardized-id: ' . $row2->name; // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('standardized-id', $row2->name); // DO NOT TRANSLATE!
 				}
 
 				$res2 = OIDplus::db()->query("select * from ###iri where oid = ?", array($obj->nodeId()));
 				while ($row2 = $res2->fetch_object()) {
-					$out[] = 'unicode-label: ' . $row2->name; // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('unicode-label', $row2->name); // DO NOT TRANSLATE!
 				}
 
 				$res2 = OIDplus::db()->query("select * from ###iri where longarc = ? and oid = ?", array(true, $obj->nodeId()));
 				while ($row2 = $res2->fetch_object()) {
-					$out[] = 'long-arc: ' . $row2->name; // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('long-arc', $row2->name); // DO NOT TRANSLATE!
 				}
 			}
 
@@ -260,7 +260,7 @@ if ($unimplemented_format) {
 
 			if ($obj->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
 				// Also ask $obj for extra attributes:
-				// This way we could add various additional information, e.g. IPv4/6 range analysis, interpretation of GUID, etc. (TODO)
+				// This way we could add various additional information, e.g. IPv4/6 range analysis, interpretation of GUID, etc.
 				$obj->whoisObjectAttributes($obj->nodeId(), $out);
 			}
 
@@ -271,7 +271,7 @@ if ($unimplemented_format) {
 			}
 
 			if ($obj->isConfidential()) { // yes, we use isConfidential() instead of allowObjectView()!
-				$out[] = 'attribute: confidential'; // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('attribute', 'confidential'); // DO NOT TRANSLATE!
 			}
 
 			if (substr($query,0,4) === 'oid:') {
@@ -279,28 +279,28 @@ if ($unimplemented_format) {
 
 				$objTest = OIDplusObject::parse($sParent);
 				if (allowObjectView($objTest, $authTokens)) {
-					$out[] = 'parent: ' . $sParent . show_asn1_appendix($sParent); // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('parent', $sParent.show_asn1_appendix($sParent)); // DO NOT TRANSLATE!
 				} else {
-					$out[] = 'parent: ' . $sParent; // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('parent', $sParent); // DO NOT TRANSLATE!
 				}
 			} else if (!is_null($row) && !empty($row->parent) && (!is_root($row->parent))) {
 				$sParent = $row->parent;
-				$out[] = 'parent: ' . $row->parent; // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('parent', $row->parent); // DO NOT TRANSLATE!
 			}
 
 			$res2 = OIDplus::db()->query("select * from ###objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($obj->nodeId()));
 			while ($row2 = $res2->fetch_object()) {
 				$objTest = OIDplusObject::parse($row2->id);
 				if (allowObjectView($objTest, $authTokens)) {
-					$out[] = 'subordinate: ' . $row2->id . show_asn1_appendix($row2->id); // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('subordinate', $row2->id.show_asn1_appendix($row2->id)); // DO NOT TRANSLATE!
 				} else {
-					$out[] = 'subordinate: ' . $row2->id; // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('subordinate', $row2->id); // DO NOT TRANSLATE!
 				}
 			}
 
 			if (!is_null($row)) {
-				if ($row->created) $out[] = 'created: ' . date('Y-m-d H:i:s', strtotime($row->created)); // DO NOT TRANSLATE!
-				if ($row->updated) $out[] = 'updated: ' . date('Y-m-d H:i:s', strtotime($row->updated)); // DO NOT TRANSLATE!
+				if ($row->created) $out[] = _oidip_attr('created', date('Y-m-d H:i:s', strtotime($row->created))); // DO NOT TRANSLATE!
+				if ($row->updated) $out[] = _oidip_attr('updated', date('Y-m-d H:i:s', strtotime($row->updated))); // DO NOT TRANSLATE!
 			}
 
 			$out[] = '';
@@ -309,12 +309,12 @@ if ($unimplemented_format) {
 			// The order of the RFC is the same as in the XSD
 			$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array(is_null($row) ? '' : $row->ra_email));
 			if ($row2 = $res2->fetch_object()) {
-				$out[] = 'ra: '.(!empty($row2->ra_name) ? $row2->ra_name : (!empty($row2->email) ? $row2->email : /*_L*/('Unknown'))); // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('ra', (!empty($row2->ra_name) ? $row2->ra_name : (!empty($row2->email) ? $row2->email : /*_L*/('Unknown')))); // DO NOT TRANSLATE!
 
 				if (!allowRAView($row2, $authTokens)) {
-					$out[] = 'ra-status: Information partially available'; // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('ra-status', 'Information partially available'); // DO NOT TRANSLATE!
 				} else {
-					$out[] = 'ra-status: Information available'; // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('ra-status', 'Information available'); // DO NOT TRANSLATE!
 				}
 
 				$tmp = array();
@@ -322,23 +322,25 @@ if ($unimplemented_format) {
 				if (!empty($row2->organization)) $tmp[] = $row2->organization;
 				$tmp = implode(', ', $tmp);
 
-				$out[] = 'ra-contact-name: ' . $row2->personal_name.(!empty($tmp) ? " ($tmp)" : ''); // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('ra-contact-name', $row2->personal_name.(!empty($tmp) ? " ($tmp)" : '')); // DO NOT TRANSLATE!
 				if (!allowRAView($row2, $authTokens)) {
 					if (!empty($row2->street) || !empty($row2->zip_town) || !empty($row2->country)) {
-						$out[] = 'ra-address: './*_L*/('(redacted)'); // DO NOT TRANSLATE!
+						$out[] = _oidip_attr('ra-address', /*_L*/('(redacted)')); // DO NOT TRANSLATE!
 					}
-					$out[] = 'ra-phone: ' . (!empty($row2->phone) ? /*_L*/('(redacted)') : ''); // DO NOT TRANSLATE!
-					$out[] = 'ra-mobile: ' . (!empty($row2->mobile) ? /*_L*/('(redacted)') : ''); // DO NOT TRANSLATE!
-					$out[] = 'ra-fax: ' . (!empty($row2->fax) ? /*_L*/('(redacted)') : ''); // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('ra-phone', (!empty($row2->phone) ? /*_L*/('(redacted)') : '')); // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('ra-mobile', (!empty($row2->mobile) ? /*_L*/('(redacted)') : '')); // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('ra-fax', (!empty($row2->fax) ? /*_L*/('(redacted)') : '')); // DO NOT TRANSLATE!
 				} else {
-					if (!empty($row2->street))   $out[] = 'ra-address: ' . $row2->street; // DO NOT TRANSLATE!
-					if (!empty($row2->zip_town)) $out[] = 'ra-address: ' . $row2->zip_town; // DO NOT TRANSLATE!
-					if (!empty($row2->country))  $out[] = 'ra-address: ' . $row2->country; // DO NOT TRANSLATE!
-					$out[] = 'ra-phone: ' . $row2->phone; // DO NOT TRANSLATE!
-					$out[] = 'ra-mobile: ' . $row2->mobile; // DO NOT TRANSLATE!
-					$out[] = 'ra-fax: ' . $row2->fax; // DO NOT TRANSLATE!
+					$address = array();
+					if (!empty($row2->street))   $address[] = $row2->street; // DO NOT TRANSLATE!
+					if (!empty($row2->zip_town)) $address[] = $row2->zip_town; // DO NOT TRANSLATE!
+					if (!empty($row2->country))  $address[] = $row2->country; // DO NOT TRANSLATE!
+					if (count($address) > 0) $out[] = _oidip_attr('ra-address', implode("\n",$address));
+					$out[] = _oidip_attr('ra-phone', $row2->phone); // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('ra-mobile', $row2->mobile); // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('ra-fax', $row2->fax); // DO NOT TRANSLATE!
 				}
-				$out[] = 'ra-email: ' . $row->ra_email; // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('ra-email', $row->ra_email); // DO NOT TRANSLATE!
 
 				// 'ra-url' not used
 
@@ -355,13 +357,13 @@ if ($unimplemented_format) {
 
 				// yes, we use row2->privacy() instead of allowRAView(), becuase allowRAView=true if auth token is given; and we want to inform the person that they content they are viewing is confidential!
 				if ($row2->privacy) {
-					$out[] = 'ra-attribute: confidential'; // DO NOT TRANSLATE!
+					$out[] = _oidip_attr('ra-attribute', 'confidential'); // DO NOT TRANSLATE!
 				}
 
-				if ($row2->registered) $out[] = 'ra-created: ' . date('Y-m-d H:i:s', strtotime($row2->registered)); // DO NOT TRANSLATE!
-				if ($row2->updated)    $out[] = 'ra-updated: ' . date('Y-m-d H:i:s', strtotime($row2->updated)); // DO NOT TRANSLATE!
+				if ($row2->registered) $out[] = _oidip_attr('ra-created', date('Y-m-d H:i:s', strtotime($row2->registered))); // DO NOT TRANSLATE!
+				if ($row2->updated)    $out[] = _oidip_attr('ra-updated', date('Y-m-d H:i:s', strtotime($row2->updated))); // DO NOT TRANSLATE!
 			} else {
-				$out[] = 'ra: '.(!is_null($row) && !empty($row->ra_email) ? $row->ra_email : /*_L*/('Unknown')); // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('ra', (!is_null($row) && !empty($row->ra_email) ? $row->ra_email : /*_L*/('Unknown'))); // DO NOT TRANSLATE!
 				if (!is_null($row)) {
 					foreach (OIDplus::getPagePlugins() as $plugin) {
 						if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
@@ -369,7 +371,7 @@ if ($unimplemented_format) {
 						}
 					}
 				}
-				$out[] = "ra-status: Information unavailable"; // DO NOT TRANSLATE!
+				$out[] = _oidip_attr('ra-status', 'Information unavailable'); // DO NOT TRANSLATE!
 			}
 		}
 	}
@@ -377,27 +379,7 @@ if ($unimplemented_format) {
 
 // Upgrade legacy $out to extended $out format
 
-foreach ($out as &$line) {
-	if (is_string($line)) {
-		$ary = explode(':', $line, 2);
-		$key = trim($ary[0]);
-		$value = isset($ary[1]) ? trim($ary[1]) : '';
-
-		$line = array(
-			'xmlns' => '',
-			'xmlschema' => '',
-			'xmlschemauri' => '',
-			'name' => $key,
-			'value' => $value
-		);
-	} else if (is_array($line)) {
-		if (!isset($line['xmlns'])) $line['xmlns'] = '';
-		if (!isset($line['xmlschema'])) $line['xmlschema'] = '';
-		if (!isset($line['xmlschemauri'])) $line['xmlschemauri'] = '';
-	} else {
-		assert(false);
-	}
-}
+_oidip_newout_format($out);
 
 // Step 2: Format output
 
@@ -468,8 +450,7 @@ if ($format == 'json') {
 			$ary[] = &$current_section;
 		} else {
 			$key = $data['name'];
-			$val = $data['value'];
-			$val = trim($val);
+			$val = trim($data['value']);
 			if (!empty($val)) {
 				if (!isset($current_section[$key])) {
 					$current_section[$key] = $val;
@@ -528,8 +509,7 @@ if ($format == 'xml') {
 			} else {
 				$key = $data['name'];
 			}
-			$val = $data['value'];
-			$val = trim($val);
+			$val = trim($data['value']);
 			if (!empty($val)) {
 				if (strpos($val,"\n") !== false) {
 					$val = str_replace(']]>', ']]]]><![CDATA[>', $val); // Escape ']]>'
@@ -557,7 +537,7 @@ if ($format == 'xml') {
 		}
 	}
 
-	$xml  = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'."\n";
+	$xml  = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?'.'>'."\n";
 	$xml .= '<root xmlns="'.XML_URN.'"'."\n";
 	$xml .= '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'."\n";
 	foreach ($extra_schemas as $xmlns => list($schema,$schemauri)) {
@@ -651,4 +631,40 @@ function allowRAView($row, $authTokens) {
 
 	// Allow
 	return true;
+}
+
+function _oidip_attr($name, $value) {
+	return array(
+		'xmlns' => '',
+		'xmlschema' => '',
+		'xmlschemauri' => '',
+		'name' => $name,
+		'value' => $value
+	);
+}
+
+function _oidip_newout_format(&$out) {
+	foreach ($out as &$line) {
+		if (is_string($line)) {
+			$ary = explode(':', $line, 2);
+			$key = trim($ary[0]);
+			$value = isset($ary[1]) ? trim($ary[1]) : '';
+
+			$line = array(
+				'xmlns' => '',
+				'xmlschema' => '',
+				'xmlschemauri' => '',
+				'name' => $key,
+				'value' => $value
+			);
+		} else if (is_array($line)) {
+			if (!isset($line['xmlns']))        $line['xmlns'] = '';
+			if (!isset($line['xmlschema']))    $line['xmlschema'] = '';
+			if (!isset($line['xmlschemauri'])) $line['xmlschemauri'] = '';
+			if (!isset($line['name']))         $line['name'] = '';
+			if (!isset($line['value']))        $line['value'] = '';
+		} else {
+			assert(false);
+		}
+	}
 }
