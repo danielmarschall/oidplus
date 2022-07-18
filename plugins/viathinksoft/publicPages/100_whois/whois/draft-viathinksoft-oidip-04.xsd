@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
            xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
            xmlns:ns1="urn:ietf:id:draft-viathinksoft-oidip-04"
            targetNamespace="urn:ietf:id:draft-viathinksoft-oidip-04"
            elementFormDefault="qualified"
-           attributeFormDefault="unqualified"
-           vc:minVersion="1.1">
+           attributeFormDefault="unqualified">
 
 	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
 
