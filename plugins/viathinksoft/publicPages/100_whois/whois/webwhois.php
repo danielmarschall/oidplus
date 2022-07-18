@@ -488,7 +488,7 @@ if ($format == 'json') {
 		// to     $bry=["querySection"=>["query",...], "objectsection"=>["object",...], "raSection"=>["ra",...]]
 		$dry = array_keys($cry);
 		if (count($dry) == 0) continue;
-		$bry[$dry[0].'Section'] = $cry;
+		$bry[$dry[0].'Section'] = $cry; /** @phpstan-ignore-line */ // PHPStan thinks that count($dry) is always 0
 	}
 
 	$ary = array(
@@ -531,7 +531,12 @@ if ($format == 'xml') {
 			$val = $data['value'];
 			$val = trim($val);
 			if (!empty($val)) {
-				$xml_oidip .= "<$key>".htmlspecialchars($val)."</$key>";
+				if (strpos($val,"\n") !== false) {
+					$val = str_replace(']]>', ']]]]><![CDATA[>', $val); // Escape ']]>'
+					$xml_oidip .= "<$key><![CDATA[$val]]></$key>";
+				} else {
+					$xml_oidip .= "<$key>".htmlspecialchars($val, ENT_XML1)."</$key>";
+				}
 			}
 		}
 	}
@@ -539,11 +544,11 @@ if ($format == 'xml') {
 
 	$xml_oidip = preg_replace('@<section><(.+)>(.+)</section>@ismU', '<\\1Section><\\1>\\2</\\1Section>', $xml_oidip);
 
-	// Good XSD validator here: https://www.liquid-technologies.com/online-xsd-validator
-	// ==> PROBLEM: Every XSD 1.1 element will result in "Document Valid", even if it shouldn't be valid!
-	// Also good: https://www.utilities-online.info/xsdvalidation
-	// ==> PROBLEM: Can only handle XSD 1.0
-	// For both, you need to host http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd yourself, otherwise there will be a timeout in the validation!!!
+	// Very good XSD validator here: https://www.liquid-technologies.com/online-xsd-validator
+	// Also good: https://www.utilities-online.info/xsdvalidation (but does not accept &amp; or &quot; results in "Premature end of data in tag description line ...")
+	// Note:
+	// - These do not support XSD 1.1
+	// - You need to host http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd yourself, otherwise there will be a timeout in the validation!!!
 
 	$extra_schemas = array();
 	foreach ($out as $data) {
