@@ -1,4 +1,5 @@
 {
+	"$id":"urn:ietf:id:draft-viathinksoft-oidip-04",
 	"$schema":"http://json-schema.org/draft-07/schema#",
 	"type":"object",
 	"properties":{
@@ -9,8 +10,7 @@
 					"type":"object",
 					"properties":{
 						"query":{
-							"type":"string",
-							"pattern":"^[a-z0-9]+:(.*)$"
+							"$ref": "#/$defs/inputQueryType"
 						},
 						"result":{
 							"type":"string",
@@ -32,8 +32,7 @@
 					"type":"object",
 					"properties":{
 						"object":{
-							"type":"string",
-							"pattern":"^[a-z0-9]+:(.*)$"
+							"$ref": "#/$defs/inputQueryType"
 						},
 						"status":{
 							"type":"string",
@@ -164,12 +163,10 @@
 							]
 						},
 						"created":{
-							"type":"string",
-							"pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
+							"$ref": "#/$defs/dateTimeRef"
 						},
 						"updated":{
-							"type":"string",
-							"pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
+							"$ref": "#/$defs/dateTimeRef"
 						}
 					},
 					"required":[
@@ -224,12 +221,10 @@
 							]
 						},
 						"ra-created":{
-							"type":"string",
-							"pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
+							"$ref": "#/$defs/dateTimeRef"
 						},
 						"ra-updated":{
-							"type":"string",
-							"pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5][0-9]:[0-5][0-9](:[0-5][0-9]){0,1}( [+-][0-5][0-9][0-5][0-9]){0,1}){0,1}){0,1}){0,1}$"
+							"$ref": "#/$defs/dateTimeRef"
 						}
 					},
 					"required":[
@@ -348,5 +343,15 @@
 	},
 	"required":[
 		"oidip"
-	]
+	],
+	"$defs":{
+		"dateTimeRef":{
+			"type":"string",
+			"pattern":"^\\d{4}(\\-(0[1-9]|10|11|12)(\\-(0[1-9]|1\\d|2\\d|30|31)( [0-5]\\d:[0-5]\\d(:[0-5]\\d){0,1}( [+-][0-5]\\d[0-5]\\d){0,1}){0,1}){0,1}){0,1}$"
+		},
+		"inputQueryType":{
+			"type":"string",
+			"pattern":"^[a-z0-9]+:(.*)$"
+		}
+	}
 }
