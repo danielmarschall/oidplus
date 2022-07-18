@@ -130,12 +130,12 @@ Table of Contents
      10.2  Informative References . . . . . . . . . . . . . . . . . . 27
    Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 28
    Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 28
-   Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 28
-   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 29
-   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 29
-   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 29
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 31
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 31
+   Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 36
+   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 37
+   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 37
+   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 45
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 47
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 47
 .fi
 .in 3
 
@@ -1071,7 +1071,386 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 .\" .in 3
 .nf
 <CODE BEGINS> file "draft-viathinksoft-oidip-04.json"
-[WORK IN PROGRESS. See extra file]
+{
+  "$id":"urn:ietf:id:draft-viathinksoft-oidip-04",
+  "$schema":"http://json-schema.org/draft-07/schema#",
+  "type":"object",
+  "properties":{
+    "oidip":{
+      "type":"object",
+      "properties":{
+        "querySection":{
+          "type":"object",
+          "properties":{
+            "query":{
+              "$ref": "#/$defs/inputQueryType"
+            },
+            "result":{
+              "type":"string",
+              "enum":["Found",
+                      "Not found; superior object found",
+                      "Not found",
+                      "Service error"]
+            },
+            "distance":{
+              "type":"integer"
+            },
+            "message":{
+              "type":"string"
+            }
+          },
+          "required":[
+            "query",
+            "result"
+          ]
+        },
+        "objectSection":{
+          "type":"object",
+          "properties":{
+            "object":{
+              "$ref": "#/$defs/inputQueryType"
+            },
+            "status":{
+              "type":"string",
+              "enum":["Information available",
+                      "Information partially available",
+                      "Information unavailable"]
+            },
+            "name":{
+              "type":"string"
+            },
+            "description":{
+              "type":"string"
+            },
+            "information":{
+              "type":"string"
+            },
+            "url":{
+              "type":"string"
+            },
+            "asn1-notation":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "iri-notation":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "identifier":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "standardized-id":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "unicode-label":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "long-arc":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "oidip-service":{
+              "type":"string"
+            },
+            "attribute":{
+              "oneOf":[
+                {
+                  "type":"string",
+                  "enum":["confidential",
+                          "draft",
+                          "frozen",
+                          "leaf",
+                          "no-identifiers",
+                          "no-unicode-labels",
+                          "retired"]
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string",
+                    "enum":["confidential",
+                            "draft",
+                            "frozen",
+                            "leaf",
+                            "no-identifiers",
+                            "no-unicode-labels",
+                            "retired"]
+                  }
+                }
+              ]
+            },
+            "parent":{
+              "type":"string"
+            },
+            "subordinate":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "created":{
+              "$ref": "#/$defs/dateTimeRef"
+            },
+            "updated":{
+              "$ref": "#/$defs/dateTimeRef"
+            }
+          },
+          "required":[
+            "object",
+            "status"
+          ]
+        },
+        "raSection":{
+          "type":"object",
+          "properties":{
+            "ra":{
+              "type":"string"
+            },
+            "ra-status":{
+              "type":"string",
+              "enum":["Information available",
+                      "Information partially available",
+                      "Information unavailable"]
+            },
+            "ra-contact-name":{
+              "type":"string"
+            },
+            "ra-address":{
+              "type":"string"
+            },
+            "ra-phone":{
+              "type":"string"
+            },
+            "ra-mobile":{
+              "type":"string"
+            },
+            "ra-fax":{
+              "type":"string"
+            },
+            "ra-email":{
+              "type":"string"
+            },
+            "ra-url":{
+              "type":"string"
+            },
+            "ra-attribute":{
+              "oneOf":[
+                {
+                  "type":"string",
+                  "enum":["confidential",
+                          "retired"]
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string",
+                    "enum":["confidential",
+                            "retired"]
+                  }
+                }
+              ]
+            },
+            "ra-created":{
+              "$ref": "#/$defs/dateTimeRef"
+            },
+            "ra-updated":{
+              "$ref": "#/$defs/dateTimeRef"
+            }
+          },
+          "required":[
+            "ra",
+            "ra-status"
+          ]
+        },
+        "ra1Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra2Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra3Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra4Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra5Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra6Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra7Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra8Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra9Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra10Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra11Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra12Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra13Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra14Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra15Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra16Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra17Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra18Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra19Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra20Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra21Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra22Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra23Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra24Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra25Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra26Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra27Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra28Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra29Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra30Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra31Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra32Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra33Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra34Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra35Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra36Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra37Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra38Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra39Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra40Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra41Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra42Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra43Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra44Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra45Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra46Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra47Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra48Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra49Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra50Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra51Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra52Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra53Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra54Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra55Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra56Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra57Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra58Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra59Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra60Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra61Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra62Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra63Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra64Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra65Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra66Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra67Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra68Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra69Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra70Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra71Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra72Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra73Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra74Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra75Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra76Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra77Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra78Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra79Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra80Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra81Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra82Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra83Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra84Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra85Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra86Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra87Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra88Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra89Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra90Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra91Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra92Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra93Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra94Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra95Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra96Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra97Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra98Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra99Section":{"$ref":"#/properties/oidip/properties/raSection"}
+      },
+      "required":[
+        "querySection"
+      ]
+    },
+    "signature":{
+      "type":"string",
+      "pattern":"^[A-Za-z0-9+/=]+\\\\.[A-Za-z0-9+/=]+\\\\.[A-Za-z0-9+/=]+$"
+    }
+  },
+  "required":[
+    "oidip"
+  ],
+  "$defs":{
+    "dateTimeRef":{
+      "type":"string",
+      "pattern":"^\\\\d{4}(\\\\-(0[1-9]|1[0-2])(\\\\-(0[1-9]|1\\\\d|2\\\\d|\\
+3[0-1])( [0-5]\\\\d:[0-5]\\\\d(:[0-5]\\\\d){0,1}( [+-][0-5]\\\\d[0-5]\\\\d)\\
+{0,1}){0,1}){0,1}){0,1}$"
+    },
+    "inputQueryType":{
+      "type":"string",
+      "pattern":"^[a-z0-9]+:(.*)$"
+    }
+  }
+}
 <CODE ENDS>
 .fi
 .in 0
@@ -1079,7 +1458,8 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 .ti 0
 Appendix A.2.  JSON Format Example of output
 
-[To RFC Editor: Please change "draft-viathinksoft-oidip-04.json" before publication.]
+[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-04" to "urn:ietf:rfc:yyyy" before publication.]
+[To RFC Editor: Please change "draft-viathinksoft-oidip-04.xsd" before publication.]
 
 .\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
 NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
@@ -1148,7 +1528,6 @@ Appendix B.  XML Format Schema and Example
 Appendix B.1.  XML Format Schema
 
 [To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-04" to "urn:ietf:rfc:yyyy" before publication.]
-
 [To RFC Editor: Please change "draft-viathinksoft-oidip-04.xsd" before publication.]
 
 The following XML Schema Definition ([XSD]) defines the expected output the server sends if the argument "format" is set to "xml".
@@ -1159,7 +1538,395 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 .\" .in 3
 .nf
 <CODE BEGINS> file "draft-viathinksoft-oidip-04.xsd"
-[WORK IN PROGRESS. See extra file]
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+           xmlns:ns1="urn:ietf:id:draft-viathinksoft-oidip-04"
+           targetNamespace="urn:ietf:id:draft-viathinksoft-oidip-04"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+<xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
+           schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig\\
+-core-20020212/xmldsig-core-schema.xsd"/>
+
+  <xs:element name="root">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="oidip" minOccurs="1" maxOccurs="1"
+                    type="ns1:OidIpType"/>
+        <xs:element minOccurs="0" maxOccurs="1"
+                    ref="ds:Signature"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="OidIpType">
+    <xs:sequence>
+      <xs:element name="querySection" minOccurs="1" maxOccurs="1"
+                  type="ns1:QuerySectionType"/>
+      <xs:element name="objectSection" minOccurs="0" maxOccurs="1"
+                  type="ns1:ObjectSectionType"/>
+      <xs:element name="raSection" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra1Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra2Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra3Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra4Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra5Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra6Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra7Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra8Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra9Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra10Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra11Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra12Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra13Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra14Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra15Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra16Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra17Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra18Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra19Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra20Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra21Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra22Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra23Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra24Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra25Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra26Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra27Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra28Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra29Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra30Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra31Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra32Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra33Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra34Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra35Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra36Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra37Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra38Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra39Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra40Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra41Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra42Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra43Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra44Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra45Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra46Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra47Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra48Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra49Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra50Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra51Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra52Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra53Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra54Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra55Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra56Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra57Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra58Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra59Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra60Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra61Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra62Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra63Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra64Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra65Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra66Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra67Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra68Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra69Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra70Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra71Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra72Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra73Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra74Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra75Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra76Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra77Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra78Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra79Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra80Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra81Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra82Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra83Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra84Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra85Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra86Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra87Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra88Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra89Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra90Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra91Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra92Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra93Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra94Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra95Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra96Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra97Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra98Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra99Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:any     namespace="##other" minOccurs="0"
+                  maxOccurs="unbounded" processContents="lax"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="DateTimeRef">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\\d{4}(\\-(0[1-9]|1[0-2])(\\-(0[1-9]|1\\d|2\\d|\\
+3[0-1])( [0-5]\\d:[0-5]\\d(:[0-5]\\d){0,1}( [+-][0-5]\\d[0-5]\\d){0,1})\\
+{0,1}){0,1}){0,1}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:complexType name="QuerySectionType">
+    <xs:sequence>
+      <xs:element name="query" minOccurs="1" maxOccurs="1"
+                  type="ns1:InputQueryType"/>
+      <xs:element name="result" minOccurs="1" maxOccurs="1"
+                  type="ns1:QueryResultEnumType"/>
+      <xs:element name="distance" minOccurs="0" maxOccurs="1"
+                  type="xs:integer"/>
+      <xs:element name="message" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:any     namespace="##other" minOccurs="0"
+                  maxOccurs="unbounded" processContents="lax"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:simpleType name="InputQueryType">
+    <xs:restriction base="xs:string">
+      <!-- Note: The ABNF definition is more accurate -->
+      <xs:pattern value="[a-z0-9]+:(.*)"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="QueryResultEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Found"/>
+      <xs:enumeration value="Not found; superior object found"/>
+      <xs:enumeration value="Not found"/>
+      <xs:enumeration value="Service error"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="ObjectSectionType">
+    <xs:sequence>
+      <xs:element name="object" minOccurs="1" maxOccurs="1"
+                  type="ns1:ObjectIdType"/>
+      <xs:element name="status" minOccurs="1" maxOccurs="1"
+                  type="ns1:ObjectStatusEnumType"/>
+      <xs:element name="name" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="description" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="information" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="url" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="asn1-notation" minOccurs="0"
+                  maxOccurs="unbounded" type="xs:string"/>
+      <xs:element name="iri-notation" minOccurs="0"
+                  maxOccurs="unbounded" type="xs:string"/>
+      <xs:element name="identifier" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="standardized-id" minOccurs="0"
+                  maxOccurs="unbounded" type="xs:string"/>
+      <xs:element name="unicode-label" minOccurs="0"
+                  maxOccurs="unbounded" type="xs:string"/>
+      <xs:element name="long-arc" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="oidip-service" minOccurs="0"
+                  maxOccurs="unbounded" type="xs:string"/>
+      <xs:any     namespace="##other" minOccurs="0"
+                  maxOccurs="unbounded" processContents="lax"/>
+      <xs:element name="attribute" minOccurs="0" maxOccurs="unbounded"
+                  type="ns1:ObjectAttributeEnumType"/>
+      <xs:element name="parent" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="subordinate" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="created" minOccurs="0" maxOccurs="1"
+                  type="ns1:DateTimeRef"/>
+      <xs:element name="updated" minOccurs="0" maxOccurs="1"
+                  type="ns1:DateTimeRef"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:simpleType name="ObjectIdType">
+    <xs:restriction base="xs:string">
+      <!-- Note: The ABNF definition is more accurate -->
+      <xs:pattern value="[a-z0-9]+:(.*)"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ObjectStatusEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Information available"/>
+      <xs:enumeration value="Information partially available"/>
+      <xs:enumeration value="Information unavailable"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="ObjectAttributeEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="confidential"/>
+      <xs:enumeration value="draft"/>
+      <xs:enumeration value="frozen"/>
+      <xs:enumeration value="leaf"/>
+      <xs:enumeration value="no-identifiers"/>
+      <xs:enumeration value="no-unicode-labels"/>
+      <xs:enumeration value="retired"/>
+    </xs:restriction>
+  </xs:simpleType>  
+
+  <xs:complexType name="RaSectionType">
+    <xs:sequence>
+      <xs:element name="ra" minOccurs="1" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="ra-status" minOccurs="1" maxOccurs="1"
+                  type="ns1:RaStatusEnumType"/>
+      <xs:element name="ra-contact-name" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="ra-address" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="ra-phone" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="ra-mobile" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="ra-fax" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="ra-email" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="ra-url" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:any     namespace="##other" minOccurs="0"
+                  maxOccurs="unbounded" processContents="lax"/>
+      <xs:element name="ra-attribute" minOccurs="0"
+                  maxOccurs="unbounded" type="ns1:RaAttributeEnumType"/>
+      <xs:element name="ra-created" minOccurs="0" maxOccurs="1"
+                  type="ns1:DateTimeRef"/>
+      <xs:element name="ra-updated" minOccurs="0" maxOccurs="1"
+                  type="ns1:DateTimeRef"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="RaStatusEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Information available"/>
+      <xs:enumeration value="Information partially available"/>
+      <xs:enumeration value="Information unavailable"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="RaAttributeEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="confidential"/>
+      <xs:enumeration value="retired"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+</xs:schema>
 <CODE ENDS>
 .fi
 .in 0
