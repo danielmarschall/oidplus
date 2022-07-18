@@ -133,7 +133,7 @@ Table of Contents
    Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 36
    Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 37
    Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 37
-   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 45
+   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 46
    Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 47
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 47
 .fi
@@ -1930,7 +1930,7 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 <CODE ENDS>
 .fi
 .in 0
-
+.bp
 .ti 0
 Appendix B.2.  XML Format Example of output
 
