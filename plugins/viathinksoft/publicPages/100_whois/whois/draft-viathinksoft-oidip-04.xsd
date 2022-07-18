@@ -11,8 +11,8 @@
 	<xs:element name="root">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="oidip"   minOccurs="1" maxOccurs="1"         type="ns1:OidIpType"/>
-				<xs:element                minOccurs="0" maxOccurs="1"         ref="ds:Signature"/>
+				<xs:element name="oidip"         minOccurs="1" maxOccurs="1"         type="ns1:OidIpType"/>
+				<xs:element                      minOccurs="0" maxOccurs="1"         ref="ds:Signature"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -121,7 +121,7 @@
 			<xs:element name="ra97Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
 			<xs:element name="ra98Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
 			<xs:element name="ra99Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:any namespace="##other"        minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+			<xs:any     namespace="##other"    minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -137,7 +137,7 @@
 			<xs:element name="result"          minOccurs="1" maxOccurs="1"         type="ns1:QueryResultEnumType"/>
 			<xs:element name="distance"        minOccurs="0" maxOccurs="1"         type="xs:integer"/>
 			<xs:element name="message"         minOccurs="0" maxOccurs="1"         type="xs:string"/>
-			<xs:any namespace="##other"        minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+			<xs:any     namespace="##other"    minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -172,7 +172,7 @@
 			<xs:element name="unicode-label"   minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
 			<xs:element name="long-arc"        minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
 			<xs:element name="oidip-service"   minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
-			<xs:any namespace="##other"        minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+			<xs:any     namespace="##other"    minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
 			<xs:element name="attribute"       minOccurs="0" maxOccurs="unbounded" type="ns1:ObjectAttributeEnumType"/>
 			<xs:element name="parent"          minOccurs="0" maxOccurs="1"         type="xs:string"/>
 			<xs:element name="subordinate"     minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
@@ -219,7 +219,7 @@
 			<xs:element name="ra-fax"          minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
 			<xs:element name="ra-email"        minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
 			<xs:element name="ra-url"          minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
-			<xs:any namespace="##other"        minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+			<xs:any     namespace="##other"    minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
 			<xs:element name="ra-attribute"    minOccurs="0" maxOccurs="unbounded" type="ns1:RaAttributeEnumType"/>
 			<xs:element name="ra-created"      minOccurs="0" maxOccurs="1"         type="ns1:DateTimeRef"/>
 			<xs:element name="ra-updated"      minOccurs="0" maxOccurs="1"         type="ns1:DateTimeRef"/>
