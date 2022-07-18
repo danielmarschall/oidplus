@@ -5,132 +5,132 @@
            targetNamespace="urn:ietf:id:draft-viathinksoft-oidip-04"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
-
-	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
+<xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
+           schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
 
 	<xs:element name="root">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="oidip"               minOccurs="1" maxOccurs="1"         type="ns1:OidIpType"/>
-				<xs:element                            minOccurs="0" maxOccurs="1"         ref="ds:Signature"/>
+				<xs:element name="oidip"   minOccurs="1" maxOccurs="1"         type="ns1:OidIpType"/>
+				<xs:element                minOccurs="0" maxOccurs="1"         ref="ds:Signature"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
 	<xs:complexType name="OidIpType">
 		<xs:sequence>
-			<xs:element name="querySection"          minOccurs="1" maxOccurs="1"         type="ns1:QuerySectionType"/>
-			<xs:element name="objectSection"         minOccurs="0" maxOccurs="1"         type="ns1:ObjectSectionType"/>
-			<xs:element name="raSection"             minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra1Section"            minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra2Section"            minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra3Section"            minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra4Section"            minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra5Section"            minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra6Section"            minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra7Section"            minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra8Section"            minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra9Section"            minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra10Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra11Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra12Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra13Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra14Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra15Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra16Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra17Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra18Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra19Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra20Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra21Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra22Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra23Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra24Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra25Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra26Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra27Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra28Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra29Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra30Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra31Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra32Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra33Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra34Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra35Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra36Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra37Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra38Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra39Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra40Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra41Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra42Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra43Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra44Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra45Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra46Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra47Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra48Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra49Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra50Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra51Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra52Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra53Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra54Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra55Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra56Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra57Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra58Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra59Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra60Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra61Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra62Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra63Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra64Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra65Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra66Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra67Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra68Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra69Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra70Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra71Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra72Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra73Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra74Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra75Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra76Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra77Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra78Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra79Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra80Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra81Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra82Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra83Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra84Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra85Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra86Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra87Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra88Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra89Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra90Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra91Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra92Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra93Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra94Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra95Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra96Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra97Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra98Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:element name="ra99Section"           minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
-			<xs:any namespace="##other"              minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+			<xs:element name="querySection"    minOccurs="1" maxOccurs="1"         type="ns1:QuerySectionType"/>
+			<xs:element name="objectSection"   minOccurs="0" maxOccurs="1"         type="ns1:ObjectSectionType"/>
+			<xs:element name="raSection"       minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra1Section"      minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra2Section"      minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra3Section"      minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra4Section"      minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra5Section"      minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra6Section"      minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra7Section"      minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra8Section"      minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra9Section"      minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra10Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra11Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra12Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra13Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra14Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra15Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra16Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra17Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra18Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra19Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra20Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra21Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra22Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra23Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra24Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra25Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra26Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra27Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra28Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra29Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra30Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra31Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra32Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra33Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra34Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra35Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra36Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra37Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra38Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra39Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra40Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra41Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra42Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra43Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra44Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra45Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra46Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra47Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra48Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra49Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra50Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra51Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra52Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra53Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra54Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra55Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra56Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra57Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra58Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra59Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra60Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra61Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra62Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra63Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra64Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra65Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra66Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra67Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra68Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra69Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra70Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra71Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra72Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra73Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra74Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra75Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra76Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra77Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra78Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra79Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra80Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra81Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra82Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra83Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra84Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra85Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra86Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra87Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra88Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra89Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra90Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra91Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra92Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra93Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra94Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra95Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra96Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra97Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra98Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:element name="ra99Section"     minOccurs="0" maxOccurs="1"         type="ns1:RaSectionType"/>
+			<xs:any namespace="##other"        minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
 		</xs:sequence>
 	</xs:complexType>
 
 	<xs:simpleType name="DateTimeRef">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="\d{4}(\-(0[1-9]|10|11|12)(\-(0[1-9]|1\d|2\d|30|31)( [0-5]\d:[0-5]\d(:[0-5]\d){0,1}( [+-][0-5]\d[0-5]\d){0,1}){0,1}){0,1}){0,1}"/>
+			<xs:pattern value="\d{4}(\-(0[1-9]|1[0-2])(\-(0[1-9]|1\d|2\d|3[0-1])( [0-5]\d:[0-5]\d(:[0-5]\d){0,1}( [+-][0-5]\d[0-5]\d){0,1}){0,1}){0,1}){0,1}"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
+
 	<xs:complexType name="QuerySectionType">
 		<xs:sequence>
 			<xs:element name="query"           minOccurs="1" maxOccurs="1"         type="ns1:InputQueryType"/>
@@ -140,10 +140,10 @@
 			<xs:any namespace="##other"        minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<xs:simpleType name="InputQueryType">
 		<xs:restriction base="xs:string">
-			<!-- Note: The ABNF definition in the Internet Draft is more accurate -->
+			<!-- Note: The ABNF definition is more accurate -->
 			<xs:pattern value="[a-z0-9]+:(.*)"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -180,10 +180,10 @@
 			<xs:element name="updated"         minOccurs="0" maxOccurs="1"         type="ns1:DateTimeRef"/>
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<xs:simpleType name="ObjectIdType">
 		<xs:restriction base="xs:string">
-			<!-- Note: The ABNF definition in the Internet Draft is more accurate -->
+			<!-- Note: The ABNF definition is more accurate -->
 			<xs:pattern value="[a-z0-9]+:(.*)"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -195,7 +195,7 @@
 			<xs:enumeration value="Information unavailable"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
+
 	<xs:simpleType name="ObjectAttributeEnumType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="confidential"/>
@@ -206,7 +206,7 @@
 			<xs:enumeration value="no-unicode-labels"/>
 			<xs:enumeration value="retired"/>
 		</xs:restriction>
-	</xs:simpleType>	
+	</xs:simpleType>
 
 	<xs:complexType name="RaSectionType">
 		<xs:sequence>
@@ -240,5 +240,5 @@
 			<xs:enumeration value="retired"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
+
 </xs:schema>
