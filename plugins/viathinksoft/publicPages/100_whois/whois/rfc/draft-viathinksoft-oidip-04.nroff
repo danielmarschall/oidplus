@@ -113,7 +113,7 @@ Table of Contents
        3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
        3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 18
      3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 18
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 18
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 19
        3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 19
    4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
    5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 21
@@ -131,11 +131,11 @@ Table of Contents
    Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 28
    Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 28
    Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 36
-   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 37
-   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 37
+   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 38
+   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 38
    Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 46
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 47
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 47
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 48
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 48
 .fi
 .in 3
 
@@ -620,7 +620,7 @@ Date/Time references SHALL be formatted as described in section\03.4.1.
 If parts of the date/time reference are uncertain, then they SHOULD be omitted until the date/time reference has the highest correctness.
 
 Examples of valid date/time references can be found in section\03.4.2.
-
+.bp
 .ti 0
 3.4.1  Date/Time Format ABNF Notation
 
@@ -1459,6 +1459,7 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 Appendix A.2.  JSON Format Example of output
 
 [To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-04" to "urn:ietf:rfc:yyyy" before publication.]
+
 [To RFC Editor: Please change "draft-viathinksoft-oidip-04.xsd" before publication.]
 
 .\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
@@ -1520,7 +1521,7 @@ purposes of documenting examples of Object Identifiers.",
 <CODE ENDS>
 .fi
 .in 0
-
+.bp
 .ti 0
 Appendix B.  XML Format Schema and Example
 
@@ -1528,6 +1529,7 @@ Appendix B.  XML Format Schema and Example
 Appendix B.1.  XML Format Schema
 
 [To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-04" to "urn:ietf:rfc:yyyy" before publication.]
+
 [To RFC Editor: Please change "draft-viathinksoft-oidip-04.xsd" before publication.]
 
 The following XML Schema Definition ([XSD]) defines the expected output the server sends if the argument "format" is set to "xml".
@@ -1930,7 +1932,7 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 <CODE ENDS>
 .fi
 .in 0
-.bp
+
 .ti 0
 Appendix B.2.  XML Format Example of output
 
@@ -2007,7 +2009,7 @@ http://.../draft-viathinksoft-oidip-04.xsd">
 <CODE ENDS>
 .fi
 .in 0
-
+.bp
 .ti 0
 Acknowledgements
 .in 3

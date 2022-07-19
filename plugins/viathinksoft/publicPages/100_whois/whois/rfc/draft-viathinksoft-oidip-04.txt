@@ -91,7 +91,7 @@ Table of Contents
        3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
        3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 18
      3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 18
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 18
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 19
        3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 19
    4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
    5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 21
@@ -117,11 +117,11 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
    Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 28
    Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 28
    Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 36
-   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 37
-   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 37
+   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 38
+   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 38
    Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 46
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 47
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 47
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 48
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 48
 
 
 
@@ -995,13 +995,13 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
    Examples of valid date/time references can be found in section 3.4.2.
 
-3.4.1  Date/Time Format ABNF Notation
 
-   To define the format of a Date/Time reference, the following
-   Augmented BNF definitions will be used.  They are based on the ABNF
-   styles of RFC 5234 [RFC5234].
 
-   date-time = year [ "-" month [ "-" day [ " " time ] ] ]
+
+
+
+
+
  
 
 
@@ -1009,6 +1009,14 @@ Marschall               Expires January 12, 2023               [Page 18]
 
 INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
+
+3.4.1  Date/Time Format ABNF Notation
+
+   To define the format of a Date/Time reference, the following
+   Augmented BNF definitions will be used.  They are based on the ABNF
+   styles of RFC 5234 [RFC5234].
+
+   date-time = year [ "-" month [ "-" day [ " " time ] ] ]
 
    year      = 4DIGIT
 
@@ -1043,14 +1051,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
        2022-09-29
        2022-09
        2022
-
-
-
-
-
-
-
-
 
 
 
@@ -1976,8 +1976,10 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 Appendix A.2.  JSON Format Example of output
 
 [To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-04"
-to "urn:ietf:rfc:yyyy" before publication.] [To RFC Editor: Please
-change "draft-viathinksoft-oidip-04.xsd" before publication.]
+to "urn:ietf:rfc:yyyy" before publication.]
+
+[To RFC Editor: Please change "draft-viathinksoft-oidip-04.xsd" before
+publication.]
 
 NOTE: '\' line wrapping per RFC 8792  [RFC8792]
 
@@ -2008,8 +2010,6 @@ purposes of documenting examples of Object Identifiers.",
             "(Japanese characters are omitted in this example)",
             "(Chinese characters are omitted in this example)",
             "(Russian characters are omitted in this example)"
-      ],
-      "long-arc": [
  
 
 
@@ -2018,6 +2018,8 @@ Marschall               Expires January 12, 2023               [Page 36]
 INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 
+      ],
+      "long-arc": [
             "Beispiel",
             "Ejemplo",
             "Example",
@@ -2042,13 +2044,45 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 }
 <CODE ENDS>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 37]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
 Appendix B.  XML Format Schema and Example
 
 Appendix B.1.  XML Format Schema
 
 [To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-04"
-to "urn:ietf:rfc:yyyy" before publication.] [To RFC Editor: Please
-change "draft-viathinksoft-oidip-04.xsd" before publication.]
+to "urn:ietf:rfc:yyyy" before publication.]
+
+[To RFC Editor: Please change "draft-viathinksoft-oidip-04.xsd" before
+publication.]
 
 The following XML Schema Definition ([XSD]) defines the expected output
 the server sends if the argument "format" is set to "xml".
@@ -2066,13 +2100,6 @@ NOTE: '\' line wrapping per RFC 8792  [RFC8792]
 <xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
            schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig\
 -core-20020212/xmldsig-core-schema.xsd"/>
- 
-
-
-Marschall               Expires January 12, 2023               [Page 37]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
 
   <xs:element name="root">
     <xs:complexType>
@@ -2095,6 +2122,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                   type="ns1:RaSectionType"/>
       <xs:element name="ra1Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 38]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
       <xs:element name="ra2Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
       <xs:element name="ra3Section" minOccurs="0" maxOccurs="1"
@@ -2122,14 +2157,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
       <xs:element name="ra14Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
       <xs:element name="ra15Section" minOccurs="0" maxOccurs="1"
- 
-
-
-Marschall               Expires January 12, 2023               [Page 38]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
                   type="ns1:RaSectionType"/>
       <xs:element name="ra16Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
@@ -2151,6 +2178,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                   type="ns1:RaSectionType"/>
       <xs:element name="ra25Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 39]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
       <xs:element name="ra26Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
       <xs:element name="ra27Section" minOccurs="0" maxOccurs="1"
@@ -2178,14 +2213,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
       <xs:element name="ra38Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
       <xs:element name="ra39Section" minOccurs="0" maxOccurs="1"
- 
-
-
-Marschall               Expires January 12, 2023               [Page 39]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
                   type="ns1:RaSectionType"/>
       <xs:element name="ra40Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
@@ -2207,6 +2234,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                   type="ns1:RaSectionType"/>
       <xs:element name="ra49Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 40]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
       <xs:element name="ra50Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
       <xs:element name="ra51Section" minOccurs="0" maxOccurs="1"
@@ -2234,14 +2269,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
       <xs:element name="ra62Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
       <xs:element name="ra63Section" minOccurs="0" maxOccurs="1"
- 
-
-
-Marschall               Expires January 12, 2023               [Page 40]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
                   type="ns1:RaSectionType"/>
       <xs:element name="ra64Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
@@ -2263,6 +2290,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                   type="ns1:RaSectionType"/>
       <xs:element name="ra73Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 41]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
       <xs:element name="ra74Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
       <xs:element name="ra75Section" minOccurs="0" maxOccurs="1"
@@ -2290,14 +2325,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
       <xs:element name="ra86Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
       <xs:element name="ra87Section" minOccurs="0" maxOccurs="1"
- 
-
-
-Marschall               Expires January 12, 2023               [Page 41]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
                   type="ns1:RaSectionType"/>
       <xs:element name="ra88Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
@@ -2319,6 +2346,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                   type="ns1:RaSectionType"/>
       <xs:element name="ra97Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 42]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
       <xs:element name="ra98Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
       <xs:element name="ra99Section" minOccurs="0" maxOccurs="1"
@@ -2346,14 +2381,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                   type="xs:integer"/>
       <xs:element name="message" minOccurs="0" maxOccurs="1"
                   type="xs:string"/>
- 
-
-
-Marschall               Expires January 12, 2023               [Page 42]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
       <xs:any     namespace="##other" minOccurs="0"
                   maxOccurs="unbounded" processContents="lax"/>
     </xs:sequence>
@@ -2374,6 +2401,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
       <xs:enumeration value="Service error"/>
     </xs:restriction>
   </xs:simpleType>
+
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 43]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
 
   <xs:complexType name="ObjectSectionType">
     <xs:sequence>
@@ -2402,14 +2437,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
       <xs:element name="long-arc" minOccurs="0" maxOccurs="unbounded"
                   type="xs:string"/>
       <xs:element name="oidip-service" minOccurs="0"
- 
-
-
-Marschall               Expires January 12, 2023               [Page 43]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
                   maxOccurs="unbounded" type="xs:string"/>
       <xs:any     namespace="##other" minOccurs="0"
                   maxOccurs="unbounded" processContents="lax"/>
@@ -2431,6 +2458,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
       <!-- Note: The ABNF definition is more accurate -->
       <xs:pattern value="[a-z0-9]+:(.*)"/>
     </xs:restriction>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 44]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
   </xs:simpleType>
 
   <xs:simpleType name="ObjectStatusEnumType">
@@ -2458,14 +2493,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
       <xs:element name="ra" minOccurs="1" maxOccurs="1"
                   type="xs:string"/>
       <xs:element name="ra-status" minOccurs="1" maxOccurs="1"
- 
-
-
-Marschall               Expires January 12, 2023               [Page 44]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
                   type="ns1:RaStatusEnumType"/>
       <xs:element name="ra-contact-name" minOccurs="0" maxOccurs="1"
                   type="xs:string"/>
@@ -2487,6 +2514,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
                   maxOccurs="unbounded" type="ns1:RaAttributeEnumType"/>
       <xs:element name="ra-created" minOccurs="0" maxOccurs="1"
                   type="ns1:DateTimeRef"/>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 45]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
       <xs:element name="ra-updated" minOccurs="0" maxOccurs="1"
                   type="ns1:DateTimeRef"/>
     </xs:sequence>
@@ -2509,18 +2544,6 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 
 </xs:schema>
 <CODE ENDS>
-
-
-
-
-
- 
-
-
-Marschall               Expires January 12, 2023               [Page 45]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
 
 Appendix B.2.  XML Format Example of output
 
@@ -2547,6 +2570,14 @@ http://.../draft-viathinksoft-oidip-04.xsd">
      <object>oid:2.999</object>
      <status>Information available</status>
      <asn1-notation>{ joint-iso-itu-t(2) example(999) }</asn1-notation>
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 46]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
+
      <iri-notation>/Example</iri-notation>
      <identifier>example</identifier>
      <unicode-label>Beispiel</unicode-label>
@@ -2570,14 +2601,6 @@ http://.../draft-viathinksoft-oidip-04.xsd">
      <parent>oid:2 (joint-iso-ccitt, joint-iso-itu-t)</parent>
   </objectSection>
   <raSection>
- 
-
-
-Marschall               Expires January 12, 2023               [Page 46]
-
-INTERNET DRAFT          OID Information Protocol           July 11, 2022
-
-
      <ra>ITU-T SG 17 &amp; ISO/IEC JTC 1/SC 6</ra>
      <ra-status>Information unavailable</ra-status>
   </raSection>
@@ -2602,6 +2625,14 @@ INTERNET DRAFT          OID Information Protocol           July 11, 2022
 </ds:Signature>
 </root>
 <CODE ENDS>
+
+ 
+
+
+Marschall               Expires January 12, 2023               [Page 47]
+
+INTERNET DRAFT          OID Information Protocol           July 11, 2022
+
 
 Acknowledgements
 
@@ -2629,4 +2660,29 @@ Authors' Addresses
 
 
 
-Marschall               Expires January 12, 2023               [Page 47]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Marschall               Expires January 12, 2023               [Page 48]
