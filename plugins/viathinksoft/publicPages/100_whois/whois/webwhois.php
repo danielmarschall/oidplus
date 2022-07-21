@@ -483,13 +483,25 @@ if ($format == 'json') {
 		}
 	}
 
+	// Change $ary=[["query",...], ["object",...], ["ra",...]]
+	// to     $bry=["querySection"=>["query",...], "objectsection"=>["object",...], "raSection"=>["ra",...]]
 	$bry = array();
 	foreach ($ary as $cry) {
-		// Change $ary=[["query",...], ["object",...], ["ra",...]]
-		// to     $bry=["querySection"=>["query",...], "objectsection"=>["object",...], "raSection"=>["ra",...]]
 		$dry = array_keys($cry);
 		if (count($dry) == 0) continue;
 		$bry[$dry[0].'Section'] = $cry; /** @phpstan-ignore-line */ // PHPStan thinks that count($dry) is always 0
+	}
+
+	// Remove 'ra-', 'ra1-', ... field prefixes from JSON (the prefix is only for the text view)
+	foreach ($bry as $section_name => &$cry) {
+		if (preg_match('@^(ra\d*)\\Section@', $section_name, $m)) {
+			$dry = array();
+			foreach ($cry as $name => $val) {
+				$name = preg_replace('@^(ra\d*)\\-@', '', $name);
+				$dry[$name] = $val;
+			}
+			$cry = $dry;
+		}
 	}
 
 	$ary = array(
@@ -543,6 +555,15 @@ if ($format == 'xml') {
 	$xml_oidip .= '</section></oidip>';
 
 	$xml_oidip = preg_replace('@<section><(.+)>(.+)</section>@ismU', '<\\1Section><\\1>\\2</\\1Section>', $xml_oidip);
+
+	// Remove 'ra-', 'ra1-', ... field prefixes from XML (the prefix is only for the text view)
+	$xml_oidip = preg_replace('@<(/{0,1})ra\d*-@', '<\\1', $xml_oidip);
+
+	/* Debug:
+	header('Content-Type:application/xml; charset=UTF-8');
+	echo $xml_oidip;
+	die();
+	*/
 
 	// Very good XSD validator here: https://www.liquid-technologies.com/online-xsd-validator
 	// Also good: https://www.utilities-online.info/xsdvalidation (but does not accept &amp; or &quot; results in "Premature end of data in tag description line ...")

@@ -135,8 +135,8 @@ Table of Contents
    Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 41
    Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 41
    Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 50
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 51
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 51
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 52
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 52
 .fi
 .in 3
 
@@ -1362,39 +1362,41 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
           "type":"object",
           "properties":{
             "ra":{
+              "$comment":"Note: \\"ra\\" keeps its name, even in \\
+Ra1SectionType et al.",
               "type":"string"
             },
-            "ra-status":{
+            "status":{
               "type":"string",
               "enum":["Information available",
                       "Information partially available",
                       "Information unavailable"]
             },
-            "ra-lang":{
+            "lang":{
               "type":"string"
             },
-            "ra-contact-name":{
+            "contact-name":{
               "type":"string"
             },
-            "ra-address":{
+            "address":{
               "type":"string"
             },
-            "ra-phone":{
+            "phone":{
               "type":"string"
             },
-            "ra-mobile":{
+            "mobile":{
               "type":"string"
             },
-            "ra-fax":{
+            "fax":{
               "type":"string"
             },
-            "ra-email":{
+            "email":{
               "type":"string"
             },
-            "ra-url":{
+            "url":{
               "type":"string"
             },
-            "ra-attribute":{
+            "attribute":{
               "oneOf":[
                 {
                   "type":"string",
@@ -1411,16 +1413,16 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
                 }
               ]
             },
-            "ra-created":{
+            "created":{
               "$ref": "#/$defs/dateTimeRef"
             },
-            "ra-updated":{
+            "updated":{
               "$ref": "#/$defs/dateTimeRef"
             }
           },
           "required":[
             "ra",
-            "ra-status"
+            "status"
           ]
         },
         "ra1Section":{"$ref":"#/properties/oidip/properties/raSection"},
@@ -1543,6 +1545,7 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 {0,1}){0,1}){0,1}){0,1}$"
     },
     "inputQueryType":{
+      "$comment":"Note: The ABNF definition is more accurate",
       "type":"string",
       "pattern":"^[a-z0-9]+:(.*)$"
     }
@@ -1611,7 +1614,7 @@ purposes of documenting examples of Object Identifiers.",
     },
     "raSection": {
       "ra": "ITU-T SG 17 & ISO/IEC JTC 1/SC 6",
-      "ra-status": "Information unavailable"
+      "status": "Information unavailable"
     }
   },
   "signature": "(JSON Web Signature here)"
@@ -1986,33 +1989,34 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 
   <xs:complexType name="RaSectionType">
     <xs:sequence>
+      <!-- Note: "ra" keeps its name, even in Ra1SectionType et al. -->
       <xs:element name="ra" minOccurs="1" maxOccurs="1"
                   type="xs:string"/>
-      <xs:element name="ra-status" minOccurs="1" maxOccurs="1"
+      <xs:element name="status" minOccurs="1" maxOccurs="1"
                   type="ns1:RaStatusEnumType"/>
-      <xs:element name="ra-lang" minOccurs="0" maxOccurs="1"
+      <xs:element name="lang" minOccurs="0" maxOccurs="1"
                   type="xs:string"/>
-      <xs:element name="ra-contact-name" minOccurs="0" maxOccurs="1"
+      <xs:element name="contact-name" minOccurs="0" maxOccurs="1"
                   type="xs:string"/>
-      <xs:element name="ra-address" minOccurs="0" maxOccurs="unbounded"
+      <xs:element name="address" minOccurs="0" maxOccurs="unbounded"
                   type="xs:string"/>
-      <xs:element name="ra-phone" minOccurs="0" maxOccurs="unbounded"
+      <xs:element name="phone" minOccurs="0" maxOccurs="unbounded"
                   type="xs:string"/>
-      <xs:element name="ra-mobile" minOccurs="0" maxOccurs="unbounded"
+      <xs:element name="mobile" minOccurs="0" maxOccurs="unbounded"
                   type="xs:string"/>
-      <xs:element name="ra-fax" minOccurs="0" maxOccurs="unbounded"
+      <xs:element name="fax" minOccurs="0" maxOccurs="unbounded"
                   type="xs:string"/>
-      <xs:element name="ra-email" minOccurs="0" maxOccurs="unbounded"
+      <xs:element name="email" minOccurs="0" maxOccurs="unbounded"
                   type="xs:string"/>
-      <xs:element name="ra-url" minOccurs="0" maxOccurs="unbounded"
+      <xs:element name="url" minOccurs="0" maxOccurs="unbounded"
                   type="xs:string"/>
       <xs:any     namespace="##other" minOccurs="0"
                   maxOccurs="unbounded" processContents="lax"/>
-      <xs:element name="ra-attribute" minOccurs="0"
+      <xs:element name="attribute" minOccurs="0"
                   maxOccurs="unbounded" type="ns1:RaAttributeEnumType"/>
-      <xs:element name="ra-created" minOccurs="0" maxOccurs="1"
+      <xs:element name="created" minOccurs="0" maxOccurs="1"
                   type="ns1:DateTimeRef"/>
-      <xs:element name="ra-updated" minOccurs="0" maxOccurs="1"
+      <xs:element name="updated" minOccurs="0" maxOccurs="1"
                   type="ns1:DateTimeRef"/>
     </xs:sequence>
   </xs:complexType>
@@ -2094,7 +2098,7 @@ purposes of documenting examples of Object Identifiers."</description>
   </objectSection>
   <raSection>
      <ra>ITU-T SG 17 &amp; ISO/IEC JTC 1/SC 6</ra>
-     <ra-status>Information unavailable</ra-status>
+     <status>Information unavailable</status>
   </raSection>
 </oidip>
 <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
@@ -2119,22 +2123,46 @@ purposes of documenting examples of Object Identifiers."</description>
 <CODE ENDS>
 .fi
 .in 0
-
-
+.bp
 .ti 0
 Acknowledgements
 .in 3
-.sp
-.nf
-Olivier Dubuisson
 
-Till Wehowski
-.sp
-.fi
+I would like to thank Olivier Dubuisson for his expertise and help regarding all topics of Object Identifiers, and Till Wehowski for his feedback and input on the OID Information Protocol.
+
+Thanks to the authors of these free tools which did a very good job in validating various contents of this document:
+
+.in 3
+- "JSON Schema Validator" by Newtonsoft
+.in 5
+https://www.jsonschemavalidator.net/
+
+.in 3
+- "Free Online XML Validator" by Liquid Technologies
+.in 5
+https://www.liquid-technologies.com/online-xsd-validator
+
+.in 3
+- Bill's ABNF Parser
+.in 5
+https://tools.ietf.org/tools/bap/abnf.cgi
+
+.in 3
+- "Grammarly" spell and grammar checker
+.in 5
+https://app.grammarly.com/
+.in 3
+
+.in 3
+- "regex101" regular expression debugger
+.in 5
+https://regex101.com/
+.in 3
+
 .ti 0
 Authors' Addresses
 .in 3
-.sp
+
 .nf
 Daniel Marschall
 Postfach 11 53
@@ -2143,5 +2171,4 @@ Germany
 
 Email: daniel-marschall@viathinksoft.de
 URI:   https://www.viathinksoft.com/
-.sp
 .fi

@@ -184,37 +184,38 @@
 					"type":"object",
 					"properties":{
 						"ra":{
+							"$comment":"Note: \"ra\" keeps its name, even in Ra1SectionType et al.",
 							"type":"string"
 						},
-						"ra-status":{
+						"status":{
 							"type":"string",
 							"enum":["Information available", "Information partially available", "Information unavailable"]
 						},
-						"ra-lang":{
+						"lang":{
 							"type":"string"
 						},
-						"ra-contact-name":{
+						"contact-name":{
 							"type":"string"
 						},
-						"ra-address":{
+						"address":{
 							"type":"string"
 						},
-						"ra-phone":{
+						"phone":{
 							"type":"string"
 						},
-						"ra-mobile":{
+						"mobile":{
 							"type":"string"
 						},
-						"ra-fax":{
+						"fax":{
 							"type":"string"
 						},
-						"ra-email":{
+						"email":{
 							"type":"string"
 						},
-						"ra-url":{
+						"url":{
 							"type":"string"
 						},
-						"ra-attribute":{
+						"attribute":{
 							"oneOf":[
 								{
 									"type":"string",
@@ -229,10 +230,10 @@
 								}
 							]
 						},
-						"ra-created":{
+						"created":{
 							"$ref": "#/$defs/dateTimeRef"
 						},
-						"ra-updated":{
+						"updated":{
 							"$ref": "#/$defs/dateTimeRef"
 						}
 					},
@@ -359,6 +360,7 @@
 			"pattern":"^\\d{4}(\\-(0[1-9]|1[0-2])(\\-(0[1-9]|1\\d|2\\d|3[0-1])( [0-5]\\d:[0-5]\\d(:[0-5]\\d){0,1}( [+-][0-5]\\d[0-5]\\d){0,1}){0,1}){0,1}){0,1}$"
 		},
 		"inputQueryType":{
+			"$comment":"Note: The ABNF definition is more accurate",
 			"type":"string",
 			"pattern":"^[a-z0-9]+:(.*)$"
 		}
