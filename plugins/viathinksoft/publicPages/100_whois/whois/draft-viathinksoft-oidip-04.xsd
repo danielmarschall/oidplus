@@ -212,20 +212,21 @@
 
 	<xs:complexType name="RaSectionType">
 		<xs:sequence>
+			<!-- Note: "ra" keeps its name, even in Ra1SectionType et al. -->
 			<xs:element name="ra"              minOccurs="1" maxOccurs="1"         type="xs:string"/>
-			<xs:element name="ra-status"       minOccurs="1" maxOccurs="1"         type="ns1:RaStatusEnumType"/>
-			<xs:element name="ra-lang"         minOccurs="0" maxOccurs="1"         type="xs:string"/>
-			<xs:element name="ra-contact-name" minOccurs="0" maxOccurs="1"         type="xs:string"/>
-			<xs:element name="ra-address"      minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
-			<xs:element name="ra-phone"        minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
-			<xs:element name="ra-mobile"       minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
-			<xs:element name="ra-fax"          minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
-			<xs:element name="ra-email"        minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
-			<xs:element name="ra-url"          minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+			<xs:element name="status"          minOccurs="1" maxOccurs="1"         type="ns1:RaStatusEnumType"/>
+			<xs:element name="lang"            minOccurs="0" maxOccurs="1"         type="xs:string"/>
+			<xs:element name="contact-name"    minOccurs="0" maxOccurs="1"         type="xs:string"/>
+			<xs:element name="address"         minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+			<xs:element name="phone"           minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+			<xs:element name="mobile"          minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+			<xs:element name="fax"             minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+			<xs:element name="email"           minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+			<xs:element name="url"             minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
 			<xs:any     namespace="##other"    minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
-			<xs:element name="ra-attribute"    minOccurs="0" maxOccurs="unbounded" type="ns1:RaAttributeEnumType"/>
-			<xs:element name="ra-created"      minOccurs="0" maxOccurs="1"         type="ns1:DateTimeRef"/>
-			<xs:element name="ra-updated"      minOccurs="0" maxOccurs="1"         type="ns1:DateTimeRef"/>
+			<xs:element name="attribute"       minOccurs="0" maxOccurs="unbounded" type="ns1:RaAttributeEnumType"/>
+			<xs:element name="created"         minOccurs="0" maxOccurs="1"         type="ns1:DateTimeRef"/>
+			<xs:element name="updated"         minOccurs="0" maxOccurs="1"         type="ns1:DateTimeRef"/>
 		</xs:sequence>
 	</xs:complexType>
 
