@@ -495,9 +495,11 @@ if ($format == 'json') {
 	// Remove 'ra-', 'ra1-', ... field prefixes from JSON (the prefix is only for the text view)
 	foreach ($bry as $section_name => &$cry) { /** @phpstan-ignore-line */ // PHPStan thinks that $bry is empty
 		if (preg_match('@^(ra\d*)\\Section@', $section_name, $m)) {
+			$ra_id = str_replace('Section', '', $section_name);
 			$dry = array();
 			foreach ($cry as $name => $val) {
-				$name = preg_replace('@^(ra\d*)\\-@', '', $name);
+				if ($name == $ra_id) $name = 'ra'; // First field is always 'ra' even in 'ra1Section' etc.
+				$name = preg_replace('@^('.preg_quote($ra_id,'@').')\\-@', '', $name);
 				$dry[$name] = $val;
 			}
 			$cry = $dry;
@@ -557,7 +559,10 @@ if ($format == 'xml') {
 	$xml_oidip = preg_replace('@<section><(.+)>(.+)</section>@ismU', '<\\1Section><\\1>\\2</\\1Section>', $xml_oidip);
 
 	// Remove 'ra-', 'ra1-', ... field prefixes from XML (the prefix is only for the text view)
-	$xml_oidip = preg_replace('@<(/{0,1})ra\d*-@', '<\\1', $xml_oidip);
+	$xml_oidip = preg_replace('@<(/{0,1})ra\\d*-@', '<\\1', $xml_oidip);
+
+	// <ra1Section><ra1>...</ra1> => <ra1Section><ra>...</ra>
+	$xml_oidip = preg_replace('@<ra(\\d+)Section><ra\\1>(.+)</ra\\1>@U', '<ra\\1Section><ra>\\2</ra>', $xml_oidip);
 
 	/* Debug:
 	header('Content-Type:application/xml; charset=UTF-8');
