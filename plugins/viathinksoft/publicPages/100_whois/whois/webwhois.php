@@ -53,11 +53,17 @@ if (PHP_SAPI == 'cli') {
 // Split input into query and arguments
 $chunks = explode('$', $query);
 $query = array_shift($chunks);
+$original_query = $query;
 $arguments = array();
 foreach ($chunks as $chunk) {
+	if (strtolower(substr($chunk,0,5)) !== 'auth=') $original_query .= '$'.$chunk;
+
 	if (strpos($chunk,'=') === false) continue;
 	$tmp = explode('=',$chunk,2);
-	if (!preg_match('@^[a-z0-9]+$@', $tmp[0], $m)) continue; // be strict with the names. They must be lowercase
+
+	//if (!preg_match('@^[a-z0-9]+$@', $tmp[0], $m)) continue; // be strict with the names. They must be lowercase (TODO: show "Service error" message?)
+	$tmp[0] = strtolower($tmp[0]); // be tolerant instead
+
 	$arguments[$tmp[0]] = $tmp[1];
 }
 
@@ -75,6 +81,15 @@ if (isset($arguments['auth'])) {
 	$authTokens = array();
 }
 
+// $lang= is not implemented, since we don't know in which language the OID descriptions are written by the site operator
+/*
+if (isset($arguments['lang'])) {
+	$languages = explode(',', $arguments['lang']);
+} else {
+	$languages = array();
+}
+*/
+
 $unimplemented_format = ($format != 'text') && ($format != 'json') && ($format != 'xml');
 if ($unimplemented_format) {
 	$format = 'text';
@@ -86,13 +101,14 @@ $out = array();
 
 // ATTENTION: THE ORDER IS IMPORTANT FOR THE XML VALIDATION!
 // The order of the RFC is the same as in the XSD
-$out[] = _oidip_attr('query', $query);
+$out[] = _oidip_attr('query', $original_query);
 
 $query = OIDplus::prefilterQuery($query, false);
 
 if ($unimplemented_format) {
 	$out[] = _oidip_attr('result', 'Service error');
 	$out[] = _oidip_attr('message', 'Format is not implemented');
+	$out[] = _oidip_attr('lang', 'en-US');
 } else {
 
 	$distance = null;
@@ -208,6 +224,8 @@ if ($unimplemented_format) {
 				$out[] = _oidip_attr('status', 'Information available'); // DO NOT TRANSLATE!
 			}
 
+			// _oidip_attr('lang', ...); // not implemented (since we don't know the language of the texts written by the page operator)
+
 			$row = $res ? $res->fetch_object() : null;
 
 			if (!is_null($row)) {
@@ -220,7 +238,7 @@ if ($unimplemented_format) {
 				$out[] = _oidip_attr('description', trim(html_entity_decode(strip_tags($cont)))); // DO NOT TRANSLATE!
 			}
 
-			// Not used: 'information', contains additional information, e.g. Management Information Base (MIB) definitions.
+			// _oidip_attr('information', ...); Not used. Contains additional information, e.g. Management Information Base (MIB) definitions.
 
 			if ($only_wellknown_ids_found) {
 				if (substr($query,0,4) === 'oid:') {
@@ -256,7 +274,7 @@ if ($unimplemented_format) {
 				}
 			}
 
-			// 'oidip-service' not used
+			// _oidip_attr('oidip-service', ...); Not used.
 
 			if ($obj->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
 				// Also ask $obj for extra attributes:
@@ -317,6 +335,8 @@ if ($unimplemented_format) {
 					$out[] = _oidip_attr('ra-status', 'Information available'); // DO NOT TRANSLATE!
 				}
 
+				// _oidip_attr('ra-lang', ...); // not implemented (since we don't know the language of the texts written by the page operator)
+
 				$tmp = array();
 				if (!empty($row2->office)) $tmp[] = $row2->office;
 				if (!empty($row2->organization)) $tmp[] = $row2->organization;
@@ -342,7 +362,7 @@ if ($unimplemented_format) {
 				}
 				$out[] = _oidip_attr('ra-email', $row->ra_email); // DO NOT TRANSLATE!
 
-				// 'ra-url' not used
+				// _oidip_attr('ra-url', ...); Not used.
 
 				$ra = new OIDplusRA($row->ra_email);
 				if ($ra->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {

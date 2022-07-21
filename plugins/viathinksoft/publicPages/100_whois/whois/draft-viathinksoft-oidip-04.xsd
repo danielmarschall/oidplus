@@ -11,8 +11,8 @@
 	<xs:element name="root">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="oidip"         minOccurs="1" maxOccurs="1"         type="ns1:OidIpType"/>
-				<xs:element                      minOccurs="0" maxOccurs="1"         ref="ds:Signature"/>
+				<xs:element name="oidip"   minOccurs="1" maxOccurs="1"         type="ns1:OidIpType"/>
+				<xs:element                minOccurs="0" maxOccurs="1"         ref="ds:Signature"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -137,6 +137,7 @@
 			<xs:element name="result"          minOccurs="1" maxOccurs="1"         type="ns1:QueryResultEnumType"/>
 			<xs:element name="distance"        minOccurs="0" maxOccurs="1"         type="xs:integer"/>
 			<xs:element name="message"         minOccurs="0" maxOccurs="1"         type="xs:string"/>
+			<xs:element name="lang"            minOccurs="0" maxOccurs="1"         type="xs:string"/>
 			<xs:any     namespace="##other"    minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -161,6 +162,7 @@
 		<xs:sequence>
 			<xs:element name="object"          minOccurs="1" maxOccurs="1"         type="ns1:ObjectIdType"/>
 			<xs:element name="status"          minOccurs="1" maxOccurs="1"         type="ns1:ObjectStatusEnumType"/>
+			<xs:element name="lang"            minOccurs="0" maxOccurs="1"         type="xs:string"/>
 			<xs:element name="name"            minOccurs="0" maxOccurs="1"         type="xs:string"/>
 			<xs:element name="description"     minOccurs="0" maxOccurs="1"         type="xs:string"/>
 			<xs:element name="information"     minOccurs="0" maxOccurs="1"         type="xs:string"/>
@@ -212,6 +214,7 @@
 		<xs:sequence>
 			<xs:element name="ra"              minOccurs="1" maxOccurs="1"         type="xs:string"/>
 			<xs:element name="ra-status"       minOccurs="1" maxOccurs="1"         type="ns1:RaStatusEnumType"/>
+			<xs:element name="ra-lang"         minOccurs="0" maxOccurs="1"         type="xs:string"/>
 			<xs:element name="ra-contact-name" minOccurs="0" maxOccurs="1"         type="xs:string"/>
 			<xs:element name="ra-address"      minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
 			<xs:element name="ra-phone"        minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
