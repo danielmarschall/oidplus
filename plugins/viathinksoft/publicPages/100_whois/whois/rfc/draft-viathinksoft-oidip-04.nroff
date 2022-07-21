@@ -7,9 +7,9 @@
 .ds LF Marschall
 .ds RF FORMFEED[Page %]
 .ds LH INTERNET DRAFT
-.ds RH July 11, 2022
+.ds RH July 24, 2022
 .ds CH OID Information Protocol
-.ds CF Expires January 12, 2023
+.ds CF Expires January 25, 2023
 .hy 0
 .nh
 .ad l
@@ -18,7 +18,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: January 12, 2023''July 11, 2022'
+.tl 'Expires: January 25, 2023''July 24, 2022'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -34,7 +34,7 @@
 .ce 3
 Retrieving information about Object Identifiers
 using a text-based protocol
-draft-viathinksoft-oidip-04 (Unpublished, WIP)
+draft-viathinksoft-oidip-04
 .fi
 .in 3
 
@@ -65,7 +65,7 @@ and may be updated, replaced, or obsoleted by other documents at any
 time.  It is inappropriate to use Internet-Drafts as reference
 material or to cite them other than as "work in progress."
 
-This Internet-Draft will expire on January 12, 2023.
+This Internet-Draft will expire on January 25, 2023.
 
 .ti 0
 Copyright Notice
@@ -92,50 +92,50 @@ Table of Contents
 .nf
    1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  4
      1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  5
-   2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  5
-     2.1  Arguments . . . . . . . . . . . . . . . . . . . . . . . . .  6
-       2.1.1  Format ("format" argument)  . . . . . . . . . . . . . .  6
-       2.1.2  Authentication Tokens ("auth" argument) . . . . . . . .  7
-       2.1.3  Other arguments . . . . . . . . . . . . . . . . . . . .  7
-     2.2  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  8
-   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . .  9
-     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . .  9
-       3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . .  9
-       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . . 10
-       3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . . 10
-     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 10
-       3.2.1  Query-Section (Information about Query and Result)  . . 11
-       3.2.2  Object-Section (Information about the OID)  . . . . . . 12
-       3.2.3  RA-Section (Information about the Current RA) . . . . . 15
-       3.2.4  Sections for Previous Registration Authorities  . . . . 17
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 17
-       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 17
-       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
-       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 18
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 18
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 19
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 19
-   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
-   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 21
-     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 21
-     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 21
-   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 22
-     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 23
-   7  Internationalization Considerations . . . . . . . . . . . . . . 23
-   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 24
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 24
-     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 24
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 25
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 25
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 27
-   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 28
-   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 28
-   Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 36
-   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 38
-   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 38
-   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 46
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 48
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 48
+   2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+     2.1  Arguments . . . . . . . . . . . . . . . . . . . . . . . . .  7
+       2.1.1  Format ("format" argument)  . . . . . . . . . . . . . .  7
+       2.1.2  Authentication Tokens ("auth" argument) . . . . . . . .  8
+       2.1.3  Other arguments . . . . . . . . . . . . . . . . . . . .  8
+     2.2  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  9
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 10
+       3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . . 10
+       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . . 11
+       3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . . 11
+     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 11
+       3.2.1  Query-Section (Information about Query and Result)  . . 12
+       3.2.2  Object-Section (Information about the OID)  . . . . . . 13
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 16
+       3.2.4  Sections for Previous Registration Authorities  . . . . 18
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 18
+       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 18
+       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 18
+       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 19
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 19
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 20
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 20
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 22
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 22
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 23
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 24
+   7  Internationalization Considerations . . . . . . . . . . . . . . 24
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 25
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 25
+     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 25
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 26
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 28
+   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 29
+   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 29
+   Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 37
+   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 39
+   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 39
+   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 47
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 49
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 49
 .fi
 .in 3
 
@@ -169,11 +169,51 @@ Three of many possible use-case scenarios are:
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC\02119 [RFC2119].
 
-In this document, "RA" is an abbreviation for "Registration Authority", "OID" is an abbreviation for "Object Identifier" and "OID-IP" is an abbreviation for "Object Identifier Information Protocol".
+The following list describes terminology and definitions used throughout this document:
 
+.ti 6
+.in 18
+ABNF        Augmented Backus-Naur Form, a format used to represent permissible strings in a protocol or language, as defined in [RFC5234].
+
+.ti 6
+.in 18
+arc         Synonymous for "node" in the terminology of Object Identifiers.
+
+.ti 6
+.in 18
+ASCII       American Standard Code for Information Interchange
+
+.ti 6
+.in 18
+JSON        JavaScript Object Notation, an open standard file format and data interchange format, as defined in [RFC8259].
+
+.ti 6
+.in 18
+OID         Object Identifier, an identifier mechanism standardized by the International Telecommunication Union (ITU) and ISO/IEC.
+
+.ti 6
+.in 18
+OID-IP      Object Identifier Information Protocol, as defined in this document.
+
+.ti 6
+.in 18
+RA          Registration Authority, an entity responsible for allocating arcs to sub-nodes and recording that allocation (together with the organization the subordinate node has been allocated to).
+
+.ti 6
+.in 18
+TCP         Transmission Control Protocol
+
+.ti 6
+.in 18
+UTF-8       8-bit Unicode Transformation Format, as defined in [RFC3629].
+
+.ti 6
+.in 18
+XML         Extensible Markup Language, a markup language and file format for storing, transmitting, and reconstructing arbitrary data ([XML]).
+.bp
+.in 3
 .ti 0
 2  Request
-
 OID-IP is a text-based protocol.
 
 An OID-IP server listens on TCP port XXX for requests from OID-IP clients.  The OID-IP client makes a text request to the OID-IP server, then the OID-IP server replies with text content.  All requests are terminated with ASCII CR followed by ASCII LF.  The response contains multiple lines of text, separated by ASCII CR followed by ASCII LF.  The OID-IP server closes its connection as soon as the output is finished.  The closed TCP connection indicates to the client that the response has been received.
@@ -200,7 +240,7 @@ oid:.2.999
 All OIDs MUST be interpreted as absolute OIDs.  Relative OIDs (e.g. relative to the OID of the Registration Authority operating the OID-IP service) are not allowed.
 
 The namespace identifier (i.e. "oid") MUST be written in lower-case.
-
+.bp
 .ti 0
 2.1  Arguments
 
