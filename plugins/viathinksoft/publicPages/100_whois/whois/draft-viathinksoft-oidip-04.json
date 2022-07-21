@@ -21,6 +21,9 @@
 						},
 						"message":{
 							"type":"string"
+						},
+						"lang":{
+							"type":"string"
 						}
 					},
 					"required":[
@@ -37,6 +40,9 @@
 						"status":{
 							"type":"string",
 							"enum":["Information available", "Information partially available", "Information unavailable"]
+						},
+						"lang":{
+							"type":"string"
 						},
 						"name":{
 							"type":"string"
@@ -183,6 +189,9 @@
 						"ra-status":{
 							"type":"string",
 							"enum":["Information available", "Information partially available", "Information unavailable"]
+						},
+						"ra-lang":{
+							"type":"string"
 						},
 						"ra-contact-name":{
 							"type":"string"
