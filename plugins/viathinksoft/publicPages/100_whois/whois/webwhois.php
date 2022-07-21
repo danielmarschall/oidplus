@@ -493,7 +493,7 @@ if ($format == 'json') {
 	}
 
 	// Remove 'ra-', 'ra1-', ... field prefixes from JSON (the prefix is only for the text view)
-	foreach ($bry as $section_name => &$cry) {
+	foreach ($bry as $section_name => &$cry) { /** @phpstan-ignore-line */ // PHPStan thinks that $bry is empty
 		if (preg_match('@^(ra\d*)\\Section@', $section_name, $m)) {
 			$dry = array();
 			foreach ($cry as $name => $val) {

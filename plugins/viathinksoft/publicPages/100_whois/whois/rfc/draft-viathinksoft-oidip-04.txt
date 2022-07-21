@@ -2882,6 +2882,9 @@ Acknowledgements
    - "regex101" regular expression debugger
      https://regex101.com/
 
+   - IDNITS
+     https://www6.ietf.org/tools/idnits
+
 Authors' Addresses
 
    Daniel Marschall
@@ -2891,9 +2894,6 @@ Authors' Addresses
 
    Email: daniel-marschall@viathinksoft.de
    URI:   https://www.viathinksoft.com/
-
-
-
 
 
 
