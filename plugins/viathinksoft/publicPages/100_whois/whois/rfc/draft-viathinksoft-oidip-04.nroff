@@ -1,22 +1,22 @@
-.\" On Linux, use following command to output the file:
-.\"        nroff -T ascii -ms draft-viathinksoft-oidip-04.nroff | ./fix.pl
-.\" Note that "-ms" only works if the package "groff" is installed
-.\" fix.pl needs to be executed to replace FORMFEED
-.\" Note that the Linux command has different page lengths and the TOC is not generated (TODO)
-.\"
 .\" This document was created using "Nroff Internet Draft Editor"
 .\" Note that a hotfix is required to use this program after 1st January 2020:
 .\" https://misc.daniel-marschall.de/patches/nroffedit/
 .\"
-.\" Note about section titles. According to RFC7322, the section capitalization should be Chicago Manual of Style
+.\" Alternative, you can compile this document on Linux, using the following command:
+.\"        nroff -T ascii -ms draft-viathinksoft-oidip-04.nroff | ./fix_formfeed.pl > draft-viathinksoft-oidip-04.txt
+.\" Note that "-ms" only works if the package "groff" is installed.
+.\" fix.pl needs to be executed to replace FORMFEED.
+.\" Note that the Linux command does not auto-generate the Table of Contents, since this is a NroffEdit feature!
+.\"
+.\" Note about section titles: According to RFC7322, the section capitalization should be Chicago Manual of Style
 .\" Use this tool: https://titlecaseconverter.com/ 
 .\"
-.\" Page length
-.\".pl 10.0i
 .\" These values are required for my Debian Linux system (nroff) so that it outputs the same lines like NroffEdit
 .pl 95n
 .nr HM 6n
 .nr FM 8n
+.\" Page length
+.\".pl 10.0i
 .\" Page offset
 .po 0
 .\" Length of line
@@ -29,7 +29,7 @@
 .nr LT 7.2i
 .\" Left footer text
 .ds LF Marschall
-.\" Right footer text
+.\" Right footer text. "FORMFEED" will be replaced by a post-processing script.
 .ds RF FORMFEED[Page %]
 .\" Left header text
 .ds LH INTERNET DRAFT
@@ -281,16 +281,15 @@ Each name MUST only appear a single time in the list of arguments.
 
 This document describes the following arguments:
 
-(1) "format" which is described in section\02.1.1.
+(1) Format ("format" argument), which is described in section\02.1.1.
 
-(2) "auth" which is described in section\02.1.2.
+(2) Authentication tokens ("auth" argument), which is described in section\02.1.2.
 
-(3) "lang" which is described in section\02.1.3.
+(3) Preferred language ("lang" argument), which is described in section\02.1.3.
 
-Constraints for additional arguments are described in section\02.1.4.
+Constraints for custom arguments are described in section\02.1.4.
 
-The following request is an example of a valid query where the client sends a "format" argument
-with the value "json":
+The following request is an example of a valid query where the client sends a "format" argument with the value "json":
 
 .in 7
 .nf
@@ -313,12 +312,9 @@ This document defines 3 formats:
 
 The default format is "text", which is assumed if the "format" argument is omitted.
 
-Besides these 3 formats, the server can accept other formats not defined in this document.  The name of the formats MUST be
-alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "text") or be common abbreviations (e.g. "json").
+Besides these 3 formats, the server can accept other formats not defined in this document.  The name of the formats MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "text") or be common abbreviations (e.g. "json").
 
-If the client requests a format that is not implemented, then the server MUST respond with the "text" format,
-and the output MUST consist of the "query" field, "result: Service error",
-and a fitting "message" field (as described in section\03.2.1).
+If the client requests a format that is not implemented, then the server MUST respond with the "text" format, and the output MUST consist of the "query" field, "result: Service error", and a fitting "message" field (as described in section\03.2.1).
 
 The usage of the argument "format" is OPTIONAL.
 
@@ -353,7 +349,7 @@ If the server has data in different languages, it should try to find the best-fi
 
 The value of the "lang" argument MUST be a list of language tags as defined by [RFC5646], separated by a comma sign, sorted by preference, and containing at least one element.
 
-The translation SHALL only affect the "message", "name", "description", and "information" fields, as well as custom fields and comments if their translation makes sense.  Field names or any other parts of the output format MUST NOT be translated.  For example, the field name "description:" will always be in the English language, even if the client requests a response in the German language.
+The translation SHALL only affect the "message", "name", "description", and "information" fields, as well as additional fields and comments if their translation makes sense.  Field names MUST NOT be translated.  For example, the field name "description" will always be in the English language, even if the client requests a response in the German language.
 
 The following request is an example of a valid query where the client asks for information written in the English language, preferring US American English:
 
@@ -556,7 +552,7 @@ Possible fields are:
 "Information unavailable" means that the information about the OID is missing, redacted due to confidentiality, or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
 .in 3
 
-(3) "lang" (OPTIONAL) contains the language of the fields "name", "description", "information", and custom fields if their translation makes sense.  The language should be a language tag as defined in [RFC5646].
+(3) "lang" (OPTIONAL) contains the language of the fields "name", "description", "information", and additional fields if their translation makes sense.  The language should be a language tag as defined in [RFC5646].
 
 (4) "name" (OPTIONAL) contains the name of the OID.  It SHOULD be as short as possible.
 
@@ -887,7 +883,7 @@ ra-status:      Information unavailable
 .ti 0
 6  Alternative Namespaces
 
-This document describes the retrieval of information about OIDs using the OID-IP protocol.  In addition to the OID namespace, the methods described in this document can also be applied to other namespaces like "uuid", "isbn", "gtin" etc.
+This document describes the retrieval of information about OIDs using the OID-IP protocol.  In addition to the OID namespace, the methods described in this document can also be applied to other namespaces like "uuid", "isbn", "gtin", etc.
 
 The following things need to be considered if alternative namespaces are implemented:
 

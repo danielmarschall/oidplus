@@ -5,4 +5,4 @@
 DIR=$( dirname "$0" )
 
 # "-ms" requires package "groff" to be installed
-nroff -Tascii -ms "$DIR"/../draft-viathinksoft-oidip-04.nroff | "$DIR"/fix.pl > "$DIR"/../draft-viathinksoft-oidip-04.txt
+nroff -Tascii -ms "$DIR"/../draft-viathinksoft-oidip-04.nroff | "$DIR"/fix_formfeed.pl > "$DIR"/../draft-viathinksoft-oidip-04.txt
