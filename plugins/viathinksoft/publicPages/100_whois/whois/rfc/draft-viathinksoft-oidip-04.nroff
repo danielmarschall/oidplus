@@ -695,25 +695,25 @@ Steps for signing a message:
 .in 7
 1. Make sure that the JSON file has no signature (remove the "signature" key if one exists).
 
-2. Make a copy of your JSON file and canonize the contents using the procedures described in RFC\08785 [RFC8785].
+2. Create a working-copy of the JSON file and canonize the contents using the procedures described in RFC\08785 [RFC8785].
 
 3. Create a JSON Web Signature (JWS, RFC\07515 [RFC7515]) using your public key and the canonized form of the JSON contents.
 
-4. Add the signature in the "signature" field to the JSON file.  Note that the final JSON does not need to be canonized, since the canonization will be repeated in the verification procedure.
+4. Add the signature in the "signature" field to the original JSON file.  Note that the original JSON does not need to be canonized, since the canonization will be repeated in the verification procedure.
 .in 3
 
 Steps for verifying a message:
 
 .in 7
-1. Extract the contents of the "signature" key from the JSON file.  This is the JSON Web Signature containing a header, the payload, and the signature.
+1. Extract the contents of the "signature" key from the JSON file.  This is the JSON Web Signature containing a header, a payload, and a signature.
 
-2. Make a copy of your JSON file and remove the "signature" key there.
+2. Create a working-copy of the JSON file and remove the "signature" key there.
 
-3. Canonize the remaining JSON contents using the procedures described in RFC\08785 [RFC8785].
+3. Canonize the remaining contents using the procedures described in RFC\08785 [RFC8785].
 
-4. Compare the canonized JSON contents to the base64-encoded payload of the JSON Web Signature.  The contents MUST be equal.
+4. Compare the canonized contents to the base64-encoded payload of the JSON Web Signature which was extracted before.  The contents MUST be equal.
 
-5. Verify the JSON Web Signature according to the procedures described in RFC\07515 [RFC7515].
+5. Verify the JSON Web Signature of the original JSON file according to the procedures described in RFC\07515 [RFC7515].
 .in 3
 
 .ti 0

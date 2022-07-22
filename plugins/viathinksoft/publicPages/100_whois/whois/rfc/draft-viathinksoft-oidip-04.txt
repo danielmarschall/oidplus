@@ -1057,7 +1057,7 @@ INTERNET DRAFT          OID Information Protocol            24 July 2022
        1. Make sure that the JSON file has no signature (remove the
        "signature" key if one exists).
 
-       2. Make a copy of your JSON file and canonize the contents using
+       2. Create a working-copy of the JSON file and canonize the
  
 
 
@@ -1066,32 +1066,34 @@ Marschall               Expires 25 January 2023                [Page 19]
 INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
-       the procedures described in RFC 8785 [RFC8785].
+       contents using the procedures described in RFC 8785 [RFC8785].
 
        3. Create a JSON Web Signature (JWS, RFC 7515 [RFC7515]) using
        your public key and the canonized form of the JSON contents.
 
-       4. Add the signature in the "signature" field to the JSON file. 
-       Note that the final JSON does not need to be canonized, since the
-       canonization will be repeated in the verification procedure.
+       4. Add the signature in the "signature" field to the original
+       JSON file.  Note that the original JSON does not need to be
+       canonized, since the canonization will be repeated in the
+       verification procedure.
 
    Steps for verifying a message:
 
        1. Extract the contents of the "signature" key from the JSON
-       file.  This is the JSON Web Signature containing a header, the
-       payload, and the signature.
+       file.  This is the JSON Web Signature containing a header, a
+       payload, and a signature.
 
-       2. Make a copy of your JSON file and remove the "signature" key
-       there.
+       2. Create a working-copy of the JSON file and remove the
+       "signature" key there.
 
-       3. Canonize the remaining JSON contents using the procedures
-       described in RFC 8785 [RFC8785].
+       3. Canonize the remaining contents using the procedures described
+       in RFC 8785 [RFC8785].
 
-       4. Compare the canonized JSON contents to the base64-encoded
-       payload of the JSON Web Signature.  The contents MUST be equal.
+       4. Compare the canonized contents to the base64-encoded payload
+       of the JSON Web Signature which was extracted before.  The
+       contents MUST be equal.
 
-       5. Verify the JSON Web Signature according to the procedures
-       described in RFC 7515 [RFC7515].
+       5. Verify the JSON Web Signature of the original JSON file
+       according to the procedures described in RFC 7515 [RFC7515].
 
 3.3.3  "xml" Format
 
@@ -1108,8 +1110,6 @@ INTERNET DRAFT          OID Information Protocol            24 July 2022
    be omitted until the date/time reference has the highest correctness.
 
    Examples of valid date/time references can be found in section 3.4.2.
-
-
 
 
 
