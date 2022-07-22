@@ -8,6 +8,9 @@
 .\" Note that a hotfix is required to use this program after 1st January 2020:
 .\" https://misc.daniel-marschall.de/patches/nroffedit/
 .\"
+.\" Note about section titles. According to RFC7322, the section capitalization should be Chicago Manual of Style
+.\" Use this tool: https://titlecaseconverter.com/ 
+.\"
 .\" Page length
 .\".pl 10.0i
 .\" These values are required for my Debian Linux system (nroff) so that it outputs the same lines like NroffEdit
@@ -124,10 +127,10 @@ Table of Contents
      1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  5
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
      2.1  Arguments . . . . . . . . . . . . . . . . . . . . . . . . .  6
-       2.1.1  Format ("format" argument)  . . . . . . . . . . . . . .  7
-       2.1.2  Authentication Tokens ("auth" argument) . . . . . . . .  8
-       2.1.3  Preferred language ("lang" argument)  . . . . . . . . .  8
-       2.1.4  Custom arguments  . . . . . . . . . . . . . . . . . . .  9
+       2.1.1  Format ("format" Argument)  . . . . . . . . . . . . . .  7
+       2.1.2  Authentication Tokens ("auth" Argument) . . . . . . . .  8
+       2.1.3  Preferred Language ("lang" Argument)  . . . . . . . . .  8
+       2.1.4  Custom Arguments  . . . . . . . . . . . . . . . . . . .  9
      2.2  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  9
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 11
@@ -161,10 +164,10 @@ Table of Contents
      10.2  Informative References . . . . . . . . . . . . . . . . . . 29
    Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 31
    Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 31
-   Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 40
+   Appendix A.2.  JSON Format Example of Output . . . . . . . . . . . 40
    Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 42
    Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 42
-   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 51
+   Appendix B.2.  XML Format Example of Output  . . . . . . . . . . . 51
    Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 53
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 53
 .fi
@@ -296,7 +299,7 @@ oid:2.999$format=json
 .in 3
 
 .ti 0
-2.1.1  Format ("format" argument)
+2.1.1  Format ("format" Argument)
 
 The "format" argument defines the desired output format.
 
@@ -320,7 +323,7 @@ and a fitting "message" field (as described in section\03.2.1).
 The usage of the argument "format" is OPTIONAL.
 
 .ti 0
-2.1.2  Authentication Tokens ("auth" argument)
+2.1.2  Authentication Tokens ("auth" Argument)
 
 Some organizations might not want to present their OID information (or part of it) to the public, e.g. for reasons like privacy or confidentiality.  Therefore, one or more "authentication tokens" can be sent to control the display of confidential information returned by the OID-IP service.
 
@@ -342,7 +345,7 @@ Please note that authentication tokens are only weak protection.  For more infor
 The usage of the argument "auth" is OPTIONAL.
 
 .ti 0
-2.1.3  Preferred language ("lang" argument)
+2.1.3  Preferred Language ("lang" Argument)
 
 The client can request the preferred language of human-readable descriptions, names, comments, and error messages using the "lang" argument.
 
@@ -363,7 +366,7 @@ oid:2.999$lang=en-US,en
 The usage of the argument "lang" is OPTIONAL.
 
 .ti 0
-2.1.4  Custom arguments
+2.1.4  Custom Arguments
 
 The usage of arguments not described in this document is individual for each implementation.
 
@@ -1564,7 +1567,7 @@ Ra1SectionType et al.",
 .in 0
 .bp
 .ti 0
-Appendix A.2.  JSON Format Example of output
+Appendix A.2.  JSON Format Example of Output
 
 [To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-04" to "urn:ietf:rfc:yyyy" before publication.]
 
@@ -2050,7 +2053,7 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 .in 0
 .bp
 .ti 0
-Appendix B.2.  XML Format Example of output
+Appendix B.2.  XML Format Example of Output
 
 [To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-04" to "urn:ietf:rfc:yyyy" before publication.]
 
@@ -2172,6 +2175,18 @@ https://regex101.com/
 .in 5
 https://www6.ietf.org/tools/idnits
 .in 3
+
+.in 3
+- Title Case Converter
+.in 5
+https://titlecaseconverter.com/
+.in 3
+
+This document was written in Nroff Internet Draft Editor by 3xA Security.
+.br
+https://aaa-sec.com/nroffedit/
+.br
+https://misc.daniel-marschall.de/patches/nroffedit/ (year 2020 fix)
 
 .ti 0
 Authors' Addresses
