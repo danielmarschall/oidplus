@@ -4,7 +4,7 @@
 
 INTERNET-DRAFT                                              D. Marschall
 Intended Status: Informational                              ViaThinkSoft
-Expires: January 25, 2023                                  July 24, 2022
+Expires: 25 January 2023                                    24 July 2022
 
 
             Retrieving information about Object Identifiers
@@ -19,11 +19,6 @@ Abstract
    Authorities (RAs) through a text-based protocol, in a way that is
    both human-readable and machine-readable.  Besides a text output
    format, OID-IP also supports sending information in JSON and XML.
-
-
-
-
-
 
 Status of This Memo
 
@@ -40,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 25, 2023.
+   This Internet-Draft will expire on 25 January 2023.
 
 Copyright Notice
 
@@ -48,22 +43,19 @@ Copyright Notice
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
-   Provisions Relating to IETF Documents
-   (https://trustee.ietf.org/license-info) in effect on the date of
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
  
 
 
-Marschall               Expires January 25, 2023                [Page 1]
+Marschall               Expires 25 January 2023                 [Page 1]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
-
-
-   publication of this document.  Please review these documents
-   carefully, as they describe your rights and restrictions with respect
-   to this document.  Code Components extracted from this document must
-   include Revised BSD License text as described in Section 4.e of the
-   Trust Legal Provisions and are provided without warranty as described
-   in the Revised BSD License.
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 Table of Contents
@@ -71,7 +63,7 @@ Table of Contents
    1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  4
      1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  5
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
-     2.1  Arguments . . . . . . . . . . . . . . . . . . . . . . . . .  7
+     2.1  Arguments . . . . . . . . . . . . . . . . . . . . . . . . .  6
        2.1.1  Format ("format" argument)  . . . . . . . . . . . . . .  7
        2.1.2  Authentication Tokens ("auth" argument) . . . . . . . .  8
        2.1.3  Preferred language ("lang" argument)  . . . . . . . . .  8
@@ -102,27 +94,35 @@ Table of Contents
      6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 25
    7  Internationalization Considerations . . . . . . . . . . . . . . 25
    8  Security Considerations . . . . . . . . . . . . . . . . . . . . 26
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 26
-     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 26
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 27
+     9.1  Port Numbers  . . . . . . . . . . . . . . . . . . . . . . . 27
    10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 27
      10.1  Normative References . . . . . . . . . . . . . . . . . . . 27
- 
-
-
-Marschall               Expires January 25, 2023                [Page 2]
-
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
-
-
      10.2  Informative References . . . . . . . . . . . . . . . . . . 29
-   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 30
-   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 30
-   Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 39
-   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 41
-   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 41
-   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 50
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 52
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 52
+   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 31
+   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 31
+   Appendix A.2.  JSON Format Example of output . . . . . . . . . . . 40
+   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 42
+   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 42
+   Appendix B.2.  XML Format Example of output  . . . . . . . . . . . 51
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 53
+ 
+
+
+Marschall               Expires 25 January 2023                 [Page 2]
+
+INTERNET DRAFT          OID Information Protocol            24 July 2022
+
+
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 53
+
+
+
+
+
+
+
+
 
 
 
@@ -165,9 +165,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023                [Page 3]
+Marschall               Expires 25 January 2023                 [Page 3]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 1  Introduction
@@ -221,16 +221,18 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023                [Page 4]
+Marschall               Expires 25 January 2023                 [Page 4]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 1.1  Terminology
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-   document are to be interpreted as described in RFC 2119 [RFC2119].
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
 
    The following list describes terminology and definitions used
    throughout this document:
@@ -272,14 +274,12 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
 
 
 
-
-
  
 
 
-Marschall               Expires January 25, 2023                [Page 5]
+Marschall               Expires 25 January 2023                 [Page 5]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 2  Request OID-IP is a text-based protocol.
@@ -321,23 +321,6 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
 
    The namespace identifier (i.e. "oid") MUST be written in lower-case.
 
-
-
-
-
-
-
-
-
-
- 
-
-
-Marschall               Expires January 25, 2023                [Page 6]
-
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
-
-
 2.1  Arguments
 
    The client can send additional information to the server using
@@ -347,14 +330,26 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
 
    A request can contain multiple arguments which are each prepended by
    a dollar sign ("$").
+ 
+
+
+Marschall               Expires 25 January 2023                 [Page 6]
+
+INTERNET DRAFT          OID Information Protocol            24 July 2022
+
 
    An equal sign ("=") divides the "name" from the "value".
 
    Each name MUST only appear a single time in the list of arguments.
 
-   This document only describes the arguments "format" which is
-   described in section 2.1.1, "auth" which is described in
-   section 2.1.2, and "lang" which is described in section 2.1.3. 
+   This document describes the following arguments:
+
+   (1) "format" which is described in section 2.1.1.
+
+   (2) "auth" which is described in section 2.1.2.
+
+   (3) "lang" which is described in section 2.1.3.
+
    Constraints for additional arguments are described in section 2.1.4.
 
    The following request is an example of a valid query where the client
@@ -386,18 +381,18 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
    English language (e.g. "text") or be common abbreviations (e.g.
    "json").
 
- 
-
-
-Marschall               Expires January 25, 2023                [Page 7]
-
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
-
-
    If the client requests a format that is not implemented, then the
    server MUST respond with the "text" format, and the output MUST
    consist of the "query" field, "result: Service error", and a fitting
    "message" field (as described in section 3.2.1).
+
+ 
+
+
+Marschall               Expires 25 January 2023                 [Page 7]
+
+INTERNET DRAFT          OID Information Protocol            24 July 2022
+
 
    The usage of the argument "format" is OPTIONAL.
 
@@ -442,19 +437,18 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
    preference, and containing at least one element.
 
    The translation SHALL only affect the "message", "name",
- 
-
-
-Marschall               Expires January 25, 2023                [Page 8]
-
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
-
-
    "description", and "information" fields, as well as custom fields and
    comments if their translation makes sense.  Field names or any other
    parts of the output format MUST NOT be translated.  For example, the
    field name "description:" will always be in the English language,
    even if the client requests a response in the German language.
+ 
+
+
+Marschall               Expires 25 January 2023                 [Page 8]
+
+INTERNET DRAFT          OID Information Protocol            24 July 2022
+
 
    The following request is an example of a valid query where the client
    asks for information written in the English language, preferring US
@@ -498,19 +492,19 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
                      ( str-auth       "=" tokens ) /
                      ( str-lang       "=" languages ) /
                      ( other-arg-name "=" other-arg-val )
- 
-
-
-Marschall               Expires January 25, 2023                [Page 9]
-
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
-
-
    str-format      = %x66.6F.72.6D.61.74  ; %s"format" in RFC 7405
    str-auth        = %x61.75.74.68        ; %s"auth"   in RFC 7405
    str-lang        = %x6C.61.6E.67        ; %s"lang"   in RFC 7405
 
    optional-oid    = [ "." ] [ oid ]
+
+ 
+
+
+Marschall               Expires 25 January 2023                 [Page 9]
+
+INTERNET DRAFT          OID Information Protocol            24 July 2022
+
 
    oid             = unsigned-number *( "." unsigned-number )
 
@@ -554,12 +548,18 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
 
 
 
+
+
+
+
+
+
  
 
 
-Marschall               Expires January 25, 2023               [Page 10]
+Marschall               Expires 25 January 2023                [Page 10]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 3  Response
@@ -613,9 +613,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 11]
+Marschall               Expires 25 January 2023                [Page 11]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
    (3) Custom sections CAN be added.  The name of these custom sections
@@ -669,9 +669,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 12]
+Marschall               Expires 25 January 2023                [Page 12]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
    (1) "query" MUST be present and contains the request string the
@@ -725,9 +725,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 13]
+Marschall               Expires 25 January 2023                [Page 13]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
    superior object found".  It MUST start with the field "object".  It
@@ -781,9 +781,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 14]
+Marschall               Expires 25 January 2023                [Page 14]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
    Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.3
@@ -837,9 +837,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 15]
+Marschall               Expires 25 January 2023                [Page 15]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
    the referred OID-IP server to receive more information about the OID.
@@ -893,9 +893,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 16]
+Marschall               Expires 25 January 2023                [Page 16]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
    section 3.4 "Date/Time Format") when the OID information was last
@@ -949,9 +949,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 17]
+Marschall               Expires 25 January 2023                [Page 17]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
    and country name, or just the country name, etc.  The name of the
@@ -1005,9 +1005,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 18]
+Marschall               Expires 25 January 2023                [Page 18]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
    written in the English language.  The field name MUST NOT begin or
@@ -1020,12 +1020,11 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
    charge of managing the OID, a new section per RA can be added with
    the following field name prefixes:
 
-   "ra-" is the prefix of the current Registration Authority.
-
+   "ra-" is the prefix of the current Registration Authority,
    "ra1-" is the prefix of the first RA.  It is the very first person or
-   company to whom the OID was allocated by the RA of the superior OID.
+   company to whom the OID was allocated by the RA of the superior OID,
    "ra2-" is the prefix of the second RA, after the responsibility has
-   been transferred. etc.
+   been transferred, etc.
 
    Each section MUST start with the field "ra1", "ra2", etc.
 
@@ -1058,15 +1057,15 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
        1. Make sure that the JSON file has no signature (remove the
        "signature" key if one exists).
 
+       2. Make a copy of your JSON file and canonize the contents using
  
 
 
-Marschall               Expires January 25, 2023               [Page 19]
+Marschall               Expires 25 January 2023                [Page 19]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
-       2. Make a copy of your JSON file and canonize the contents using
        the procedures described in RFC 8785 [RFC8785].
 
        3. Create a JSON Web Signature (JWS, RFC 7515 [RFC7515]) using
@@ -1114,12 +1113,13 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
 
 
 
+
  
 
 
-Marschall               Expires January 25, 2023               [Page 20]
+Marschall               Expires 25 January 2023                [Page 20]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 3.4.1  Date/Time Format ABNF Notation
@@ -1173,9 +1173,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 21]
+Marschall               Expires 25 January 2023                [Page 21]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 4  Referral
@@ -1229,9 +1229,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 22]
+Marschall               Expires 25 January 2023                [Page 22]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 5  Full Example ("text" Format)
@@ -1285,9 +1285,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 23]
+Marschall               Expires 25 January 2023                [Page 23]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 6  Alternative Namespaces
@@ -1341,9 +1341,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 24]
+Marschall               Expires 25 January 2023                [Page 24]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 6.1  Example: UUID Namespace
@@ -1397,9 +1397,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 25]
+Marschall               Expires 25 January 2023                [Page 25]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 8  Security Considerations
@@ -1434,6 +1434,30 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
    (6) If integrity/authenticity is required, the OID-IP response can be
    signed, as described in section 3.3 "Digital Signature".
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+Marschall               Expires 25 January 2023                [Page 26]
+
+INTERNET DRAFT          OID Information Protocol            24 July 2022
+
+
 9  IANA Considerations
 
 9.1  Port Numbers
@@ -1446,23 +1470,15 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
 
    This document requires the assignment of a TCP port number.
 
-           +--------------------+-----------------------------+
-           | Service Name       | oidip                       |
-           | Transport Protocol | TCP                         |
-           | Assignee           | ...                         |
- 
-
-
-Marschall               Expires January 25, 2023               [Page 26]
-
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
-
-
-           | Contact            | ...                         |
-           | Description        | OID Information Protocol    |
-           | Reference          | [RFCyyyy]                   |
-           | Port Number        | XXX                         |
-           +--------------------+-----------------------------+
+          +--------------------+-----------------------------+
+          | Service Name       | oidip                       |
+          | Transport Protocol | TCP                         |
+          | Assignee           | ...                         |
+          | Contact            | ...                         |
+          | Description        | OID Information Protocol    |
+          | Reference          | [RFCyyyy]                   |
+          | Port Number        | XXX                         |
+          +--------------------+-----------------------------+
 
 10  References
 
@@ -1490,6 +1506,13 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
               Resource Identifier (URI): Generic Syntax", STD 66,
               RFC 3986, DOI 10.17487/RFC3986, January 2005,
               <https://www.rfc-editor.org/info/rfc3986>.
+ 
+
+
+Marschall               Expires 25 January 2023                [Page 27]
+
+INTERNET DRAFT          OID Information Protocol            24 July 2022
+
 
    [RFC5234]  Crocker, D., Ed., and P. Overell, "Augmented BNF for
               Syntax Specifications: ABNF", STD 68, RFC 5234,
@@ -1506,17 +1529,14 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
               DOI 10.17487/RFC5646, September 2009,
               <https://www.rfc-editor.org/info/rfc5646>.
 
- 
-
-
-Marschall               Expires January 25, 2023               [Page 27]
-
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
-
-
    [RFC8141]  Saint-Andre, P. and J. Klensin, "Uniform Resource Names
               (URNs)", RFC 8141, DOI 10.17487/RFC8141, April 2017,
               <https://www.rfc-editor.org/info/rfc8141>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017,
+              <https://www.rfc-editor.org/info/rfc8174>.
 
    [RFC8785]  Rundgren, A., Jordan, B., and S. Erdtman, "JSON
               Canonicalization Scheme (JCS)", RFC 8785,
@@ -1542,6 +1562,14 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
 
    [X680]     "Information technology - Abstract Syntax Notation One
               (ASN.1): Specification of basic notation", Recommendation
+ 
+
+
+Marschall               Expires 25 January 2023                [Page 28]
+
+INTERNET DRAFT          OID Information Protocol            24 July 2022
+
+
               ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, August 2015,
               <http://handle.itu.int/11.1002/1000/12479>.
 
@@ -1560,15 +1588,6 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
 
    [JSONSch]  JSON Schema Specification
               <https://json-schema.org/specification.html>.
-
-
- 
-
-
-Marschall               Expires January 25, 2023               [Page 28]
-
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
-
 
 10.2  Informative References
 
@@ -1599,6 +1618,13 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
               identifiers", Recommendation ITU-T X.667 (2012) |
               ISO/IEC 9834-8:2014, October 2012,
               <http://handle.itu.int/11.1002/1000/11746>.
+ 
+
+
+Marschall               Expires 25 January 2023                [Page 29]
+
+INTERNET DRAFT          OID Information Protocol            24 July 2022
+
 
    [X672]     "Information technology - Open systems interconnection -
               Object identifier resolution system",
@@ -1618,12 +1644,42 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 
 
-Marschall               Expires January 25, 2023               [Page 29]
+Marschall               Expires 25 January 2023                [Page 30]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 Appendix A.  JSON Format Schema and Example
@@ -1677,9 +1733,9 @@ NOTE: '\' line wrapping per RFC 8792  [RFC8792]
  
 
 
-Marschall               Expires January 25, 2023               [Page 30]
+Marschall               Expires 25 January 2023                [Page 31]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
         },
@@ -1733,9 +1789,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 31]
+Marschall               Expires 25 January 2023                [Page 32]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
                   "items":{
@@ -1789,9 +1845,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 32]
+Marschall               Expires 25 January 2023                [Page 33]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
                   "type":"string"
@@ -1845,9 +1901,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 33]
+Marschall               Expires 25 January 2023                [Page 34]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
                 {
@@ -1901,9 +1957,9 @@ Ra1SectionType et al.",
  
 
 
-Marschall               Expires January 25, 2023               [Page 34]
+Marschall               Expires 25 January 2023                [Page 35]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
             },
@@ -1957,9 +2013,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 35]
+Marschall               Expires 25 January 2023                [Page 36]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
        "ra10Section":{"$ref":"#/properties/oidip/properties/raSection"},
@@ -2013,9 +2069,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 36]
+Marschall               Expires 25 January 2023                [Page 37]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
        "ra58Section":{"$ref":"#/properties/oidip/properties/raSection"},
@@ -2069,9 +2125,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 37]
+Marschall               Expires 25 January 2023                [Page 38]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
       "type":"string",
@@ -2125,9 +2181,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 38]
+Marschall               Expires 25 January 2023                [Page 39]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 Appendix A.2.  JSON Format Example of output
@@ -2181,9 +2237,9 @@ purposes of documenting examples of Object Identifiers.",
  
 
 
-Marschall               Expires January 25, 2023               [Page 39]
+Marschall               Expires 25 January 2023                [Page 40]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
             "(Russian characters are omitted in this example)"
@@ -2237,9 +2293,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 40]
+Marschall               Expires 25 January 2023                [Page 41]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 Appendix B.  XML Format Schema and Example
@@ -2293,9 +2349,9 @@ NOTE: '\' line wrapping per RFC 8792  [RFC8792]
  
 
 
-Marschall               Expires January 25, 2023               [Page 41]
+Marschall               Expires 25 January 2023                [Page 42]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
       <xs:element name="ra2Section" minOccurs="0" maxOccurs="1"
@@ -2349,9 +2405,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 42]
+Marschall               Expires 25 January 2023                [Page 43]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
       <xs:element name="ra26Section" minOccurs="0" maxOccurs="1"
@@ -2405,9 +2461,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 43]
+Marschall               Expires 25 January 2023                [Page 44]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
       <xs:element name="ra50Section" minOccurs="0" maxOccurs="1"
@@ -2461,9 +2517,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 44]
+Marschall               Expires 25 January 2023                [Page 45]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
       <xs:element name="ra74Section" minOccurs="0" maxOccurs="1"
@@ -2517,9 +2573,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 45]
+Marschall               Expires 25 January 2023                [Page 46]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
       <xs:element name="ra98Section" minOccurs="0" maxOccurs="1"
@@ -2573,9 +2629,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 46]
+Marschall               Expires 25 January 2023                [Page 47]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
   </xs:simpleType>
@@ -2629,9 +2685,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 47]
+Marschall               Expires 25 January 2023                [Page 48]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
     <xs:restriction base="xs:string">
@@ -2685,9 +2741,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 48]
+Marschall               Expires 25 January 2023                [Page 49]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
                   type="xs:string"/>
@@ -2741,9 +2797,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 49]
+Marschall               Expires 25 January 2023                [Page 50]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 Appendix B.2.  XML Format Example of output
@@ -2797,9 +2853,9 @@ purposes of documenting examples of Object Identifiers."</description>
  
 
 
-Marschall               Expires January 25, 2023               [Page 50]
+Marschall               Expires 25 January 2023                [Page 51]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
      <long-arc>(Russian characters are omitted)</long-arc>
@@ -2853,9 +2909,9 @@ INTERNET DRAFT          OID Information Protocol           July 24, 2022
  
 
 
-Marschall               Expires January 25, 2023               [Page 51]
+Marschall               Expires 25 January 2023                [Page 52]
 
-INTERNET DRAFT          OID Information Protocol           July 24, 2022
+INTERNET DRAFT          OID Information Protocol            24 July 2022
 
 
 Acknowledgements
@@ -2909,4 +2965,4 @@ Authors' Addresses
 
 
 
-Marschall               Expires January 25, 2023               [Page 52]
+Marschall               Expires 25 January 2023                [Page 53]
