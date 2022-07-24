@@ -239,7 +239,7 @@
 					},
 					"required":[
 						"ra",
-						"ra-status"
+						"status"
 					]
 				},
 				"ra1Section":{ "$ref": "#/properties/oidip/properties/raSection" },
