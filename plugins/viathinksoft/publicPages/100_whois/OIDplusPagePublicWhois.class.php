@@ -92,7 +92,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			// Use this if webwhois.php matches the currently uploaded Internet Draft:
 			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-04</a></p>';
 			// Use this if webwhois.php implements something which is not yet uploaded to IETF:
-			//$out['text'] .= '<p>'._L('RFC Internet Draft').': <a href="'.OIDplus::webpath(__DIR__.'/whois/rfc/draft-viathinksoft-oidip-04.txt', true).'" target="_blank">draft-viathinksoft-oidip-04</a></p>';
+			//$out['text'] .= '<p>'._L('RFC Internet Draft').': <a href="'.OIDplus::webpath(__DIR__.'/whois/rfc/draft-viathinksoft-oidip-05.txt', true).'" target="_blank">draft-viathinksoft-oidip-05</a></p>';
 			# ---
 			$out['text'] .= '<h2>'._L('Parameters for new request').'</h2>';
 			$out['text'] .= '<noscript>';
