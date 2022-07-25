@@ -19,11 +19,13 @@
 
 require_once __DIR__ . '/../../../../../includes/oidplus.inc.php';
 
-// NOTE: must be equal to the string in the .xsd file!
-define('XML_URN', 'urn:ietf:id:draft-viathinksoft-oidip-04');
-// NOTE: the schema file names and draft version are also written in OIDplusPagePublicWhois.class.php
-define('XML_URN_URL', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'draft-viathinksoft-oidip-04.xsd');
-define('JSON_SCHEMA', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'draft-viathinksoft-oidip-04.json');
+// NOTES:
+// - XML_SCHEMA_URN must be equal to the string in the .xsd file!
+// - the schema file names and draft version are also written in OIDplusPagePublicWhois.class.php
+define('XML_SCHEMA_URN',  'urn:ietf:id:draft-viathinksoft-oidip-04');
+define('XML_SCHEMA_URL',  OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'draft-viathinksoft-oidip-04.xsd');
+define('JSON_SCHEMA_URN', 'urn:ietf:id:draft-viathinksoft-oidip-04');
+define('JSON_SCHEMA_URL', OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'draft-viathinksoft-oidip-04.json');
 
 OIDplus::init(true);
 set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
@@ -507,10 +509,8 @@ if ($format == 'json') {
 	}
 
 	$ary = array(
-		// https://code.visualstudio.com/docs/languages/json#_mapping-in-the-json
-		// Note that this syntax is VS Code-specific and not part of the JSON Schema specification.
-		//'$schema' => 'https://oidplus.viathinksoft.com/oidplus/plugins/publicPages/100_whois/whois/json_schema.json',
-		'$schema' => JSON_SCHEMA,
+		// We use the URN here, because $id of the schema also uses the URN
+		'$schema' => JSON_SCHEMA_URN,
 
 		// we need this NAMED root, otherwise PHP will name the sections "0", "1", "2" if the array is not sequencial (e.g. because "signature" is added)
 		'oidip' => $bry
@@ -584,12 +584,12 @@ if ($format == 'xml') {
 	}
 
 	$xml  = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?'.'>'."\n";
-	$xml .= '<root xmlns="'.XML_URN.'"'."\n";
+	$xml .= '<root xmlns="'.XML_SCHEMA_URN.'"'."\n";
 	$xml .= '      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'."\n";
 	foreach ($extra_schemas as $xmlns => list($schema,$schemauri)) {
 		$xml .= '      xmlns:'.$xmlns.'="'.$schema.'"'."\n";
 	}
-	$xml .= '      xsi:schemaLocation="'.XML_URN.' '.XML_URN_URL;
+	$xml .= '      xsi:schemaLocation="'.XML_SCHEMA_URN.' '.XML_SCHEMA_URL;
 	foreach ($extra_schemas as $xmlns => list($schema,$schemauri)) {
 		$xml .= ' '.$schema.' '.$schemauri;
 	}
