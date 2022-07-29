@@ -67,7 +67,7 @@ class OIDplusAid extends OIDplusObject {
 			throw new OIDplusException(_L('An AID has a maximum length of 16 bytes (5 bytes RID, 0-11 bytes PIX)'));
 		}
 
-		return $this->nodeId() . $str;
+		return $this->nodeId().strtoupper($str);
 	}
 
 	public function crudShowId(OIDplusObject $parent) {
