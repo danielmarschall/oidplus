@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusObjectTypePluginDomain extends OIDplusObjectTypePlugin {
+class OIDplusObjectTypePluginAid extends OIDplusObjectTypePlugin {
 
 	public static function getObjectTypeClassName() {
-		return OIDplusDomain::class;
+		return OIDplusAid::class;
 	}
 
 	public static function prefilterQuery($static_node_id, $throw_exception) {
-		if (str_starts_with($static_node_id,'domain:')) {
+		if (str_starts_with($static_node_id,'aid:')) {
 			$static_node_id = str_replace(' ', '', $static_node_id);
 		}
 		return $static_node_id;

@@ -270,6 +270,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		AID
+		]]></source>
+		<target><![CDATA[
+		AID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		AID part needs to be hexadecimal
+		]]></source>
+		<target><![CDATA[
+		AID-Teil muss Hexadezimal sein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		ASN.1 IDs (comma sep.)
 		]]></source>
 		<target><![CDATA[
@@ -498,6 +514,22 @@
 		]]></source>
 		<target><![CDATA[
 		Alternativ klicken Sie hier, um den Befehl über die Web-Schnittstelle durchzuführen (Hierfür benötigt das Webserver-Benutzerkonto Rechte zum Ausführen des Befehls sowie Schreib-Rechte).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		An AID has a maximum length of 16 bytes (5 bytes RID, 0-11 bytes PIX)
+		]]></source>
+		<target><![CDATA[
+		Eine AID darf nur maximal 16 Bytes lang sein (5 Bytes RID und 0-11 Bytes PIX)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Application Identifier (ISO/IEC 7816-5)
+		]]></source>
+		<target><![CDATA[
+		Application Identifier (ISO/IEC 7816-5)
 		]]></target>
 	</message>
 	<message>
@@ -1330,6 +1362,14 @@
 		]]></source>
 		<target><![CDATA[
 		Derzeit sind keine Logbucheinträge vorhanden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently, no Application Identifiers are registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine AID in diesem System registriert.
 		]]></target>
 	</message>
 	<message>

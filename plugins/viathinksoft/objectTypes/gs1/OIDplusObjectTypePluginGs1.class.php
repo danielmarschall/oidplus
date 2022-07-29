@@ -25,4 +25,11 @@ class OIDplusObjectTypePluginGs1 extends OIDplusObjectTypePlugin {
 		return OIDplusGs1::class;
 	}
 
+	public static function prefilterQuery($static_node_id, $throw_exception) {
+		if (str_starts_with($static_node_id,'gs1:')) {
+			$static_node_id = str_replace(' ', '', $static_node_id);
+		}
+		return $static_node_id;
+	}
+
 }
