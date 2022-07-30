@@ -59,6 +59,9 @@ class OIDplusAid extends OIDplusObject {
 
 	public function addString($str) {
 		$m = array();
+
+		$str = str_replace(' ','',$str);
+
 		if (!preg_match('@^[0-9a-fA-F]+$@', $str, $m)) {
 			throw new OIDplusException(_L('AID part needs to be hexadecimal'));
 		}
@@ -117,6 +120,12 @@ class OIDplusAid extends OIDplusObject {
 
 			$chunked = $this->chunkedNotation(true);
 			$content = '<h2>'.$chunked.'</h2>';
+
+			$content .= '<h2>'._L('Decoding').'</h2>';
+			$content .= '<table border="0">';
+			$content .= '<code>'.nl2br(str_replace(' ','&nbsp;',decode_aid($this->aid,true))).'</code>';
+			$content .= '</table>';
+
 			$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 			if ($this->userHasWriteRights()) {
 				$content .= '<h2>'._L('Create or change subsequent objects').'</h2>';

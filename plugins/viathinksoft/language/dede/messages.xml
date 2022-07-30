@@ -1582,6 +1582,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Decoding
+		]]></source>
+		<target><![CDATA[
+		Dekodierung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Decryption failed
 		]]></source>
 		<target><![CDATA[

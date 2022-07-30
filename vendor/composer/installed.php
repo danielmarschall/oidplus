@@ -56,7 +56,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '4c69eb6d92b84db5853ffd3ca3c72200094d3372',
+      'reference' => 'c537ad58ed30f6b70e1c16a1bc65dfe234e58d36',
     ),
     'danielmarschall/uuid_mac_utils' => 
     array (
@@ -76,7 +76,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '469bc0e8c7a9082c24bbdb59462d94da0ba2527c',
+      'reference' => '5812ba279143d250fe0556fae80862fd5e2afa45',
     ),
     'dcodeio/bcrypt.js' => 
     array (
@@ -207,12 +207,12 @@
     ),
     'twbs/bootstrap' => 
     array (
-      'pretty_version' => 'v5.2.0-beta1',
-      'version' => '5.2.0.0-beta1',
+      'pretty_version' => '5.2.0',
+      'version' => '5.2.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'fca04c07131a81e625a516cf7b98a8c7df0df1c1',
+      'reference' => 'edf9c40956d19e6ab3f9151bfe0dfac6be06fa21',
     ),
     'tweeb/tinymce-i18n' => 
     array (
@@ -227,7 +227,7 @@
     array (
       'replaced' => 
       array (
-        0 => 'v5.2.0-beta1',
+        0 => '5.2.0',
       ),
     ),
     'vakata/jstree' => 
