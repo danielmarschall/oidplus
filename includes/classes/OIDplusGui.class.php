@@ -123,7 +123,7 @@ class OIDplusGui extends OIDplusBaseClass {
 		$out .= get_class($exception)."\n";
 		$out .= _L('at file %1 (line %2)',$exception->getFile(),"".$exception->getLine())."\n\n";
 		$out .= _L('Stacktrace').":\n";
-		$out .= $exception->getTraceAsString();
+		$out .= htmlentities($exception->getTraceAsString());
 		$out .= '</pre>';
 		return $out;
 	}
