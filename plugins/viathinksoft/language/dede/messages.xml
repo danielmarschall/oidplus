@@ -518,10 +518,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		An AID has a maximum length of 16 bytes (5 bytes RID, 0-11 bytes PIX)
+		An AID has a maximum length of 16 bytes
 		]]></source>
 		<target><![CDATA[
-		Eine AID darf nur maximal 16 Bytes lang sein (5 Bytes RID und 0-11 Bytes PIX)
+		Eine AID darf nur maximal 16 Bytes lang sein
 		]]></target>
 	</message>
 	<message>

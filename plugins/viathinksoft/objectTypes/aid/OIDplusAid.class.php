@@ -67,7 +67,7 @@ class OIDplusAid extends OIDplusObject {
 		}
 
 		if (strlen($this->nodeId().$str) > 32) {
-			throw new OIDplusException(_L('An AID has a maximum length of 16 bytes (5 bytes RID, 0-11 bytes PIX)'));
+			throw new OIDplusException(_L('An AID has a maximum length of 16 bytes'));
 		}
 
 		return $this->nodeId().strtoupper($str);
@@ -121,12 +121,18 @@ class OIDplusAid extends OIDplusObject {
 			$chunked = $this->chunkedNotation(true);
 			$content = '<h2>'.$chunked.'</h2>';
 
+			$tmp = decode_aid($this->aid,true);
+			$tmp = htmlentities($tmp);
+			$tmp = str_replace(' ','&nbsp;',$tmp);
+			$tmp = nl2br($tmp);
+			$tmp = preg_replace('@(warning|invalid|error)@i', '<font color="red">\\1</font>', $tmp);
+
 			$content .= '<h2>'._L('Decoding').'</h2>';
 			$content .= '<table border="0">';
-			$content .= '<code>'.nl2br(str_replace(' ','&nbsp;',decode_aid($this->aid,true))).'</code>';
+			$content .= '<code>'.$tmp.'</code>';
 			$content .= '</table>';
 
-			$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
+			$content .= '<h2>'._L('Description').'</h2>%%DESC%%';
 			if ($this->userHasWriteRights()) {
 				$content .= '<h2>'._L('Create or change subsequent objects').'</h2>';
 			} else {
