@@ -355,27 +355,12 @@ function _decode_aid($aid) {
 	$aid = str_replace(' ','',$aid);
 
 	if ($aid == '') {
-		$out[] = "Invalid : The AID is empty";
+		$out[] = "INVALID: The AID is empty";
 		return $out;
 	}
 
 	if (!preg_match('@^[0-9A-F]+$@', $aid, $m)) {
-		$out[] = "Invalid : AID has invalid characters. Only A..F and 0..9 are allowed";
-		return $out;
-	}
-
-	if ((strlen($aid) == 32) && (substr($aid,-2) == 'FF')) {
-		// https://www.kartenbezogene-identifier.de/content/dam/kartenbezogene_identifier/de/PDFs/RID_Antrag_2006.pdf
-		// https://docplayer.org/18719866-Rid-registered-application-provider-id-pix-proprietary-application-identifier-extension.html
-		// writes:
-		// "Wenn die PIX aus 11 Bytes besteht, muss das letzte Byte einen Hexadezimal-Wert ungleich ´FF´ aufweisen (´FF´ ist von ISO reserviert)."
-		// ... I want to verify this ... !
-		$out[] = "Invalid : A 16-byte AID must not end with FF. (Reserved for ISO)";
-		return $out;
-	}
-
-	if (strlen($aid) > 32) {
-		$out[] = "Invalid : An AID must not be longer than 16 bytes";
+		$out[] = "INVALID: AID has invalid characters. Only A..F and 0..9 are allowed";
 		return $out;
 	}
 
@@ -388,6 +373,18 @@ function _decode_aid($aid) {
 	$aid_hf = rtrim($aid_hf);
 	$out[] = array("$aid", "ISO/IEC 7816-5 Application Identifier (AID)");
 	$out[] = array('', "> $aid_hf <");
+
+	if ((strlen($aid) == 32) && (substr($aid,-2) == 'FF')) {
+		// https://www.kartenbezogene-identifier.de/content/dam/kartenbezogene_identifier/de/PDFs/RID_Antrag_2006.pdf
+		// writes: "Wenn die PIX aus 11 Bytes besteht, muss das letzte Byte einen Hexadezimal-Wert ungleich ´FF´ aufweisen (´FF´ ist von ISO reserviert)."
+		// https://www.etsi.org/deliver/etsi_ts/101200_101299/101220/07.03.00_60/ts_101220v070300p.pdf
+		// writes: According to ISO/IEC 7816-4, if the AID is 16 bytes long, then the value 'FF' for the least significant byte [...] is reserved for future use.
+		$out[] = array('',"INVALID: A 16-byte AID must not end with FF. (Reserved by ISO/IEC 7816-4)");
+	}
+
+	if (strlen($aid) > 32) {
+		$out[] = array('',"INVALID: An AID must not be longer than 16 bytes");
+	}
 
 	$category = substr($aid,0,1);
 
@@ -418,7 +415,7 @@ function _decode_aid($aid) {
 			if ($pos !== false) $iin = substr($iin, 0, $pos);
 
 			if (!_is_bcd($iin)) {
-				$out[] = "Invalid : IIN is invalid , must be a BCD encoded number";
+				$out[] = array($iin, "INVALID: Expected BCD encoded IIN, optionally followed by FF and PIX");
 				return $out;
 			}
 
@@ -430,34 +427,39 @@ function _decode_aid($aid) {
 			if ((strlen($iin) != 6) && (strlen($iin) != 8)) {
 				$out[] = array('',"Warning: IIN has an unusual length. 6 or 8 digits are expected!");
 			}
-			$pad .= str_repeat(' ',strlen($iin));
 
-			$out[] = array($check_cat, "IIN Category $check_cat = $check_cat_name");
+			$out[] = array($category, "IIN Category $category = $check_cat_name");
+			$pad .= str_repeat(' ', strlen("$category"));
 
-			if ("$check_cat" === "9") {
+			if ("$category" === "9") {
 				$country = substr($iin,1,3);
 				if ($country == '') {
-					$out[] = array(' ___', 'ISO/IEC 3166-1 Numeric Country code (missing)');
+					$out[] = array($pad.'___', 'ISO/IEC 3166-1 Numeric Country code (missing)');
 				} else {
 					$country_name = isset($iso3166[$country]) ? $iso3166[$country] : 'Unknown country';
-					$out[] = array(' '.str_pad($country,3,'_',STR_PAD_RIGHT), "ISO/IEC 3166-1 Numeric Country code : $country ($country_name)");
+					$out[] = array($pad.str_pad($country,3,'_',STR_PAD_RIGHT), "ISO/IEC 3166-1 Numeric Country code : $country ($country_name)");
 				}
-				$out[] = array('    '.substr($iin,4), 'Assigned number');
+				$pad .= '   ';
+				$asi = substr($iin,4);
+				$asn = $asi;
 			} else {
-				$out[] = array(' '.substr($iin,1), 'Assigned number');
+				$asi = substr($iin,1);
+				$asn = $asi;
 			}
+			$out[] = array("$pad$asn", 'Assigned number'.($asi=='' ? ' (missing)' : ''));
+			$pad .= str_repeat(' ',strlen($asn));
 
 			$padded_iin = $iin;
 			if (strlen($iin)%2 != 0) {
 				$odd_padding = substr($aid,strlen($iin),1);
 				if ($odd_padding != 'F') {
-					$out[] = "Invalid : An IIN with odd length must be padded with F, e.g. 123 => 123F";
 					foreach ($out as $n => &$tmp) {
 						if ($tmp == 'RID-HERE') {
 							unset($out[$n]);
 							break;
 						}
 					}
+					$out[] = array("$pad!","INVALID: An IIN with odd length must be padded with F, e.g. 123 => 123F");
 					return $out;
 				}
 				$out[] = array($pad.$odd_padding, 'Padding of IIN with odd length');
@@ -479,7 +481,7 @@ function _decode_aid($aid) {
 			} else {
 				$delimiter = substr($aid,strlen($padded_iin),2);
 				if ($delimiter != 'FF') {
-					$out[] = "Invalid: RID/IIN and PIX must be delimited by FF";
+					$out[] = array($pad.substr($aid,strlen($padded_iin)), "INVALID: RID/IIN and PIX must be delimited by FF");
 					return $out;
 				}
 				$out[] = array($pad.$delimiter, 'Delimiter which separates RID/IIN from PIX');
@@ -488,8 +490,7 @@ function _decode_aid($aid) {
 				$pix = substr($aid,strlen($padded_iin)+strlen('FF'));
 				if ($pix == '') {
 					$out[] = "Proprietary application identifier extension (PIX) missing";
-					$out[] = "Warning: If PIX is available, FF delimites RID/IIN from PIX. Since PIX is empty, consider removing FF.";
-					return $out; // not sure if this is an error or not. I need the ISO document...
+					$out[] = "Warning: If PIX is available, FF delimites RID/IIN from PIX. Since PIX is empty, consider removing FF."; // not sure if this is an error or not
 				} else {
 					$out[] = array($pad.$pix, "Proprietary application identifier extension (PIX)");
 				}
@@ -508,12 +509,12 @@ function _decode_aid($aid) {
 
 		$pix = substr($aid,10);
 
-		$asn = substr($aid,1,9);
-		$asn = str_pad($asn,9,'_',STR_PAD_RIGHT);
+		$asi = substr($aid,1,9);
+		$asn = str_pad($asi,9,'_',STR_PAD_RIGHT);
 
 		$out[] = array("$rid", "Registered Application Provider Identifier (RID)");
 		$out[] = array("$category", "Category $category: International registration");
-		$out[] = array(" $asn", 'Assigned number, BCD recommended');
+		$out[] = array(" $asn", 'Assigned number, BCD recommended'.($asi=='' ? ' (missing)' : ''));
 		if ($pix == '') {
 			$out[] = "Proprietary application identifier extension (PIX) missing";
 		} else {
@@ -534,8 +535,8 @@ function _decode_aid($aid) {
 
 		$country = substr($aid,1,3);
 
-		$asn = substr($aid,4,6);
-		$asn = str_pad($asn,6,'_',STR_PAD_RIGHT);
+		$asi = substr($aid,4,6);
+		$asn = str_pad($asi,6,'_',STR_PAD_RIGHT);
 
 		$out[] = array("$rid", "Registered Application Provider Identifier (RID)");
 		$out[] = array("$category", "Category $category: Local/National registration");
@@ -545,7 +546,7 @@ function _decode_aid($aid) {
 			$country_name = isset($iso3166[$country]) ? $iso3166[$country] : 'Unknown country';
 			$out[] = array(" ".str_pad($country,3,'_',STR_PAD_RIGHT), "ISO/IEC 3166-1 Numeric Country code : $country ($country_name)");
 		}
-		$out[] = array("    $asn", 'Assigned number, BCD recommended');
+		$out[] = array("    $asn", 'Assigned number, BCD recommended'.($asi=='' ? ' (missing)' : ''));
 		if ($pix == '') {
 			$out[] = "Proprietary application identifier extension (PIX) missing";
 		} else {
