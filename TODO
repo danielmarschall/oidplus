@@ -8,11 +8,7 @@ Ideas by Simon T.:
 - a possibility to 'construct' my own object types in UI (1: specify list of their fields and 2: choose "oid-like/forward" com.example.api or "domain-like/reverse" api.example.com naming scheme), so they would appear as the whole new type
 
 Application Identifier (aid) Object Type Plugin:
-OIDplus AID:
-- OIDplus should enforce that an object does not contain RID and PIX at the same node. RID and PIX need to be separated by at least one object node.
-	=> So, our aid_decoder.inc.php needs to determine RID/PIX for us
 - When aid_decoder.inc.php finds a mistake, should we forbid to create the AID? But some companies might already use invalid identifiers.
-- Decoding (aid_decoder.inc.php) should also show a hex dump?
 - Category "F": Offer a "random ID" button (+ enter desired length), like we did for GUID
 
 Implement RDAP!

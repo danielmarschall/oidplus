@@ -82,7 +82,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'fa17aa17c954be3c819cb460f66ccd9e38611c14',
+      'reference' => 'fce1b56d589d54480326e0798166e2a8557201c8',
     ),
     'danielmarschall/uuid_mac_utils' => 
     array (
@@ -142,12 +142,12 @@ private static $installed = array (
     ),
     'matthiasmullie/minify' => 
     array (
-      'pretty_version' => '1.3.68',
-      'version' => '1.3.68.0',
+      'pretty_version' => '1.3.69',
+      'version' => '1.3.69.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c00fb02f71b2ef0a5f53fe18c5a8b9aa30f48297',
+      'reference' => 'a61c949cccd086808063611ef9698eabe42ef22f',
     ),
     'matthiasmullie/path-converter' => 
     array (

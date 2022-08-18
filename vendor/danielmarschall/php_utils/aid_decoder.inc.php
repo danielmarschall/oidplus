@@ -3,7 +3,7 @@
 /*
  * ISO/IEC 7816-5 Application Identifier decoder for PHP
  * Copyright 2022 Daniel Marschall, ViaThinkSoft
- * Version 2022-07-31
+ * Version 2022-08-17
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -576,4 +576,28 @@ function _decode_aid($aid) {
 		$out[] = array(" ".substr($aid,1), "Unknown composition");
 	}
 	return $out;
+}
+
+/* --- Small extra function: not part of the decoder --- */
+
+function aid_split_rid_pix($a, &$rid=null, &$pix=null) {
+	// "Quick'n'Dirty" function which does not do any consistency checks!
+	// It expects that the string is a valid AID!
+
+	$cat = substr($a,0,1);
+	if (is_numeric($cat)) {
+		$p = strpos($a,'F');
+		if ($p%2 != 0) $p++;
+	} else if (($cat == 'A') || ($cat == 'D')) {
+		$p = 10;
+	} else if ($cat == 'F') {
+		$p = 1;
+	} else {
+		$p = 0;
+	}
+
+	if ($rid !== null) $rid = substr($a, 0, $p);
+	if ($pix !== null) $pix = substr($a, $p);
+
+	return $p;
 }
