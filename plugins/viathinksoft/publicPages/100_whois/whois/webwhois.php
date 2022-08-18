@@ -403,6 +403,12 @@ if ($unimplemented_format) {
 
 _oidip_newout_format($out);
 
+// Trim all values
+
+foreach ($out as &$tmp) {
+	$tmp['value'] = trim($tmp['value']);
+}
+
 // Step 2: Format output
 
 if ($format == 'text') {

@@ -66,11 +66,24 @@ class OIDplusAid extends OIDplusObject {
 			throw new OIDplusException(_L('AID part needs to be hexadecimal'));
 		}
 
-		if (strlen($this->nodeId().$str) > 32) {
+		if (strlen($this->nodeId(false).$str) > 32) {
 			throw new OIDplusException(_L('An AID has a maximum length of 16 bytes'));
 		}
 
-		return $this->nodeId().strtoupper($str);
+		$pre   = $this->nodeId(false);
+		$add   = strtoupper($str);
+		$after = $pre.$add;
+		$rid = '?';
+		$pix = '?';
+		$p = aid_split_rid_pix($after, $rid, $pix);
+		if ($p > 1) { // Why $p>1? For "F", there is no RID. We allow that somebody include "F" in the first node
+			if ((strlen($pre)<$p) && (strlen($after)>$p)) {
+				$rid = substr($rid,strlen($pre));
+				throw new OIDplusException(_L('This node would mix RID (registry ID) and PIX (application specific). Please split it into two nodes "%1" and "%2".',$rid,$pix));
+			}
+		}
+
+		return $this->nodeId(true).strtoupper($str);
 	}
 
 	public function crudShowId(OIDplusObject $parent) {
