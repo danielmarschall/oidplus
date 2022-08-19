@@ -238,7 +238,7 @@ class OIDplus extends OIDplusBaseClass {
 					throw new OIDplusException(_L('Invalid auth plugin folder name. Do only enter a folder name, not an absolute or relative path'));
 				}
 
-				if (!rec_is_dir(OIDplus::localpath().'plugins/'.'*'.'/auth/'.$value)) {
+				if (!wildcard_is_dir(OIDplus::localpath().'plugins/'.'*'.'/auth/'.$value)) {
 					throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$value,'plugins/[vendorname]/auth/'));
 				}
 			});

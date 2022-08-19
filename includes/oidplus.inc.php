@@ -73,6 +73,7 @@ require_once __DIR__ . '/../vendor/danielmarschall/php_utils/anti_xss.inc.php';
 include_once __DIR__ . '/../vendor/danielmarschall/php_utils/git_utils.inc.php';
 include_once __DIR__ . '/../vendor/danielmarschall/php_utils/svn_utils.inc.php';
 include_once __DIR__ . '/../vendor/danielmarschall/php_utils/aid_decoder.inc.php';
+include_once __DIR__ . '/../vendor/danielmarschall/php_utils/misc_functions.inc.php';
 
 // ---
 

@@ -39,7 +39,7 @@ class OIDplusFourCC extends OIDplusObject {
 					$fourcc = substr($fourcc,1);
 				} else {
 					$p = strpos($fourcc,']');
-					$out[] = substr($fourcc,1,$p-1);
+					$out[] = (int)substr($fourcc,1,$p-1);
 					$fourcc = substr($fourcc,$p+1);
 				}
 			}
@@ -238,18 +238,7 @@ class OIDplusFourCC extends OIDplusObject {
 	private function getMultiCharLiteral() {
 		$type = self::fourcc_transform($this->fourcc);
 		if ($type === false) return false;
-		$out = "'";
-		foreach ($type as $c) {
-			if ((($c >= 0x00) && ($c <= 0x1F)) || ($c == 0x7F)) {
-				// For non-printable characters use octal notation:
-				// \000 ... \377
-				$out .= "\\".str_pad(base_convert($c,10,8), 3, '0', STR_PAD_LEFT);
-			} else {
-				$out .= chr($c);
-			}
-		}
-		$out .= "'";
-		return $out;
+		return c_literal($type);
 	}
 
 	public function getDirectoryName() {

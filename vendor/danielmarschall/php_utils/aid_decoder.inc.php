@@ -3,7 +3,7 @@
 /*
  * ISO/IEC 7816-5 Application Identifier decoder for PHP
  * Copyright 2022 Daniel Marschall, ViaThinkSoft
- * Version 2022-08-17
+ * Version 2022-08-19
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -373,6 +373,7 @@ function _decode_aid($aid) {
 	$aid_hf = rtrim($aid_hf);
 	$out[] = array("$aid", "ISO/IEC 7816-5 Application Identifier (AID)");
 	$out[] = array('', "> $aid_hf <");
+	$out[] = array('', c_literal_hexstr($aid));
 
 	if ((strlen($aid) == 32) && (substr($aid,-2) == 'FF')) {
 		// https://www.kartenbezogene-identifier.de/content/dam/kartenbezogene_identifier/de/PDFs/RID_Antrag_2006.pdf
@@ -447,6 +448,7 @@ function _decode_aid($aid) {
 				$asn = $asi;
 			}
 			$out[] = array("$pad$asn", 'Assigned number'.($asi=='' ? ' (missing)' : ''));
+			if ($asi!='') $out[] = array('', c_literal_hexstr($asi));
 			$pad .= str_repeat(' ',strlen($asn));
 
 			$padded_iin = $iin;
@@ -493,6 +495,7 @@ function _decode_aid($aid) {
 					$out[] = "Warning: If PIX is available, FF delimites RID/IIN from PIX. Since PIX is empty, consider removing FF."; // not sure if this is an error or not
 				} else {
 					$out[] = array($pad.$pix, "Proprietary application identifier extension (PIX)");
+					$out[] = array('', c_literal_hexstr($pix));
 				}
 			}
 
@@ -515,10 +518,12 @@ function _decode_aid($aid) {
 		$out[] = array("$rid", "Registered Application Provider Identifier (RID)");
 		$out[] = array("$category", "Category $category: International registration");
 		$out[] = array(" $asn", 'Assigned number, BCD recommended'.($asi=='' ? ' (missing)' : ''));
+		if ($asi!='') $out[] = array('', c_literal_hexstr($asi));
 		if ($pix == '') {
 			$out[] = "Proprietary application identifier extension (PIX) missing";
 		} else {
 			$out[] = array(str_pad($pix,strlen($aid),' ',STR_PAD_LEFT), "Proprietary application identifier extension (PIX)");
+			$out[] = array('', c_literal_hexstr($pix));
 		}
 
 		return $out;
@@ -547,10 +552,12 @@ function _decode_aid($aid) {
 			$out[] = array(" ".str_pad($country,3,'_',STR_PAD_RIGHT), "ISO/IEC 3166-1 Numeric Country code : $country ($country_name)");
 		}
 		$out[] = array("    $asn", 'Assigned number, BCD recommended'.($asi=='' ? ' (missing)' : ''));
+		if ($asi!='') $out[] = array('', c_literal_hexstr($asi));
 		if ($pix == '') {
 			$out[] = "Proprietary application identifier extension (PIX) missing";
 		} else {
 			$out[] = array(str_pad($pix,strlen($aid),' ',STR_PAD_LEFT), "Proprietary application identifier extension (PIX)");
+			$out[] = array('', c_literal_hexstr($pix));
 		}
 
 		return $out;
@@ -566,6 +573,7 @@ function _decode_aid($aid) {
 			$out[] = "Proprietary application identifier extension (PIX) missing";
 		} else {
 			$out[] = array(' '.$pix, "Proprietary application identifier extension (PIX)");
+			$out[] = array('', c_literal_hexstr($pix));
 		}
 		return $out;
 	}
@@ -573,7 +581,9 @@ function _decode_aid($aid) {
 	// Category 'B', 'C', and 'E' are reserved
 	$out[] = array("$category", "Category $category: ILLEGAL USAGE / RESERVED");
 	if (strlen($aid) > 1) {
-		$out[] = array(" ".substr($aid,1), "Unknown composition");
+		$aid_ = substr($aid,1);
+		$out[] = array(" ".$aid_, "Unknown composition");
+		$out[] = array('', c_literal_hexstr($aid_));
 	}
 	return $out;
 }
