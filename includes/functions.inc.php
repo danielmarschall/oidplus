@@ -17,36 +17,6 @@
  * limitations under the License.
  */
 
-function insertWhitespace($str, $index) {
-	return substr($str, 0, $index) . ' ' . substr($str, $index);
-}
-
-function js_escape($data) {
-	// TODO.... json_encode??
-	$data = str_replace('\\', '\\\\', $data);
-	$data = str_replace('\'', '\\\'', $data);
-	return "'" . $data . "'";
-}
-
-function trim_br($html) {
-	$count = 0;
-	do { $html = preg_replace('@^\s*<\s*br\s*/{0,1}\s*>@isU', '', $html, -1, $count); } while ($count > 0); // left trim
-	do { $html = preg_replace('@<\s*br\s*/{0,1}\s*>\s*$@isU', '', $html, -1, $count); } while ($count > 0); // right trim
-	return $html;
-}
-
-function generateRandomString($length) {
-	// Note: This function can be used in temporary file names, so you
-	// may not generate illegal file name characters.
-	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	$charactersLength = strlen($characters);
-	$randomString = '';
-	for ($i = 0; $i < $length; $i++) {
-		$randomString .= $characters[rand(0, $charactersLength - 1)];
-	}
-	return $randomString;
-}
-
 function is_privatekey_encrypted($privKey) {
 	return strpos($privKey,'BEGIN ENCRYPTED PRIVATE KEY') !== false;
 }
@@ -124,14 +94,6 @@ function originHeaders() {
 	header("Access-Control-Expose-Headers: ".implode(',',$expose));
 
 	header("Vary: Origin");
-}
-
-function get_calling_function() {
-	$ex = new Exception();
-	$trace = $ex->getTrace();
-	if (!isset($trace[2])) return _L('(main)');
-	$final_call = $trace[2];
-	return $final_call['file'].':'.$final_call['line'].'/'.$final_call['function'].'()';
 }
 
 if (!function_exists('mb_wordwrap')) {
@@ -224,25 +186,6 @@ function _CheckParamExists($params, $key) {
 	}
 }
 
-function convert_to_utf8_no_bom($cont) {
-	if (mb_detect_encoding($cont, "auto", true) != 'UTF-8') {
-		# $cont = mb_convert_encoding($cont, 'UTF-8', 'Windows-1252');
-		# $cont = mb_convert_encoding($cont, 'UTF-8', 'auto');
-		$cont = mb_convert_encoding($cont, 'UTF-8');
-	}
-
-	// Remove BOM
-	$bom = pack('H*','EFBBBF');
-	$cont = preg_replace("/^$bom/", '', $cont);
-	return $cont;
-}
-
-function stripHtmlComments($html) {
-	// https://stackoverflow.com/questions/11337332/how-to-remove-html-comments-in-php
-	$html = preg_replace("~<!--(?!<!)[^\[>].*?-->~s", "", $html);
-	return $html;
-}
-
 function extractHtmlContents($cont) {
 	// make sure the program works even if the user provided HTML is not UTF-8
 	$cont = convert_to_utf8_no_bom($cont);
@@ -317,20 +260,6 @@ if (!function_exists('str_starts_with')) {
 	function str_starts_with($haystack, $needle) {
 		return strpos($haystack, $needle) === 0;
 	}
-}
-
-function rec_is_dir($dir) {
-	$dirs = @glob($dir);
-	if ($dirs) foreach ($dirs as $dir) {
-		if (is_dir($dir)) return true;
-	}
-	return false;
-}
-
-function isInternetExplorer() {
-	// see also includes/oidplus_base.js
-	$ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-	return ((strpos($ua,'MSIE ') !== false) || (strpos($ua,'Trident/') !== false));
 }
 
 function url_get_contents($url) {
