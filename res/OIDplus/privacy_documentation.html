@@ -23,7 +23,7 @@
 
 <body>
 	<h1>Procedural documentation related to privacy</h1>
-	<p><em>Revision: 17 May 2021</em></p>
+	<p><em>Revision: 25 August 2022</em></p>
 	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software &ldquo;OIDplus&rdquo;) and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web-software that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
 	<a id="terminology"></a><h2>Parties / Terminology</h2>
 	<p><strong>ViaThinkSoft</strong> is the developer of the software solution &ldquo;OIDplus&rdquo;.</p>
@@ -46,7 +46,7 @@
 	<p>The main purpose of OIDplus is to show and manage information on OID information.</p>
 	<p>Some attributes of Object Identifiers (like ASN.1 identifiers) can only be changed by the Superior RA and not by the RA of that OID. On the other hand, some other information (like the title and description) can only be changed by the RA owning the OID and not by the Superior RA. The system administrator can edit all information.</p>
 	<h3>Hidden OID information</h3>
-	<p>A superior RA can set the &ldquo;hidden&rdquo; flag to an OID they delegate. This means the OID and all its subsequent OIDs are invisible to the public. However, the public can see the existence of hidden OIDs by a notice &ldquo;<em>XX OIDs are hidden. Log in to see them</em>&rdquo;.</p>
+	<p>A superior RA can set the &ldquo;hidden&rdquo; flag to an OID they delegate. This means the OID and all its subordinate OIDs are invisible to the public. However, the public can see the existence of hidden OIDs by a notice &ldquo;<em>XX OIDs are hidden. Log in to see them</em>&rdquo;.</p>
 	<p>The system administrator can see all OIDs, even if they are hidden.</p>
 	<p>An owner of an OID can see all OIDs which are directing to his root OID, even if some of them are hidden.</p>
 	<p>If you are an <strong>owner of an OID</strong> and want to make your OID hidden from the public, please contact your <strong>superior RA</strong> (preferential) or the <strong>system administrator</strong> and ask them to mark your OID as hidden. Please note that this will also hide all OIDs that you delegate to yourself or other RAs.</p>

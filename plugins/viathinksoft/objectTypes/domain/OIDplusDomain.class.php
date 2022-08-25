@@ -117,9 +117,9 @@ class OIDplusDomain extends OIDplusObject {
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
-					$content .= '<h2>'._L('Create or change subsequent objects').'</h2>';
+					$content .= '<h2>'._L('Create or change subordinate objects').'</h2>';
 				} else {
-					$content .= '<h2>'._L('Subsequent objects').'</h2>';
+					$content .= '<h2>'._L('Subordinate objects').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}
