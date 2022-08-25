@@ -1302,7 +1302,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Create or change subsequent objects
+		Create or change subordinate objects
 		]]></source>
 		<target><![CDATA[
 		Untergeordnete Objekte hinzufügen oder ändern
@@ -1310,7 +1310,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Create or change subsequent objects / categories
+		Create or change subordinate objects / categories
 		]]></source>
 		<target><![CDATA[
 		Untergeordnete Objekte/Kategorien hinzufügen oder ändern
@@ -5974,7 +5974,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Subsequent objects
+		Subordinate objects
 		]]></source>
 		<target><![CDATA[
 		Untergeordnete Objekte
@@ -5982,7 +5982,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Subsequent objects / categories
+		Subordinate objects / categories
 		]]></source>
 		<target><![CDATA[
 		Untergeordnete Objekte / Kategorien

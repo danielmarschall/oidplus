@@ -166,9 +166,9 @@ class OIDplusGuid extends OIDplusObject {
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
-					$content .= '<h2>'._L('Create or change subsequent objects / categories').'</h2>';
+					$content .= '<h2>'._L('Create or change subordinate objects / categories').'</h2>';
 				} else {
-					$content .= '<h2>'._L('Subsequent objects / categories').'</h2>';
+					$content .= '<h2>'._L('Subordinate objects / categories').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}

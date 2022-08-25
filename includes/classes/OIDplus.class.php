@@ -1086,7 +1086,7 @@ class OIDplus extends OIDplusBaseClass {
 		}
 		$test_dir = str_replace('\\', '/', $test_dir);
 		$steps_up = 0;
-		while (!file_exists($test_dir.'/oidplus.min.css.php')) { // We just assume that only the OIDplus base directory contains "oidplus.min.css.php" and not any subsequent directory!
+		while (!file_exists($test_dir.'/oidplus.min.css.php')) { // We just assume that only the OIDplus base directory contains "oidplus.min.css.php" and not any subordinate directory!
 			$test_dir = dirname($test_dir);
 			$steps_up++;
 			if ($steps_up == 1000) return false; // to make sure there will never be an infinite loop

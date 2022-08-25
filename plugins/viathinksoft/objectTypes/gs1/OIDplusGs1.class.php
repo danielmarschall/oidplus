@@ -123,9 +123,9 @@ class OIDplusGs1 extends OIDplusObject {
 				$content = '<h2>'.$chunked.'</h2>';
 				$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 				if ($this->userHasWriteRights()) {
-					$content .= '<h2>'._L('Create or change subsequent objects').'</h2>';
+					$content .= '<h2>'._L('Create or change subordinate objects').'</h2>';
 				} else {
-					$content .= '<h2>'._L('Subsequent objects').'</h2>';
+					$content .= '<h2>'._L('Subordinate objects').'</h2>';
 				}
 				$content .= '%%CRUD%%';
 			}
