@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		$ids = array();
 		if ($this->ns() != 'oid') {
 			// Creates an OIDplus-Hash-OID
-			// If the object type has a better way of defining an OID, please override this method!
 			$sid = OIDplus::getSystemId(true);
 			if (!empty($sid)) {
 				$ns_oid = $this->getPlugin()->getManifest()->getOid();
@@ -50,14 +49,17 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 					// Set the hash_payload as '<plugin oid>:<id>'
 					$hash_payload = $ns_oid.':'.$this->nodeId(false);
 				}
-
 				$oid = $sid . '.' . smallhash($hash_payload);
 				$ids[] = new OIDplusAltId('oid', $oid, _L('OIDplus Information Object ID'));
 			}
-		}
-		if ($this->ns() != 'guid') {
-			$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
-			$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
+
+			// Make a namebased UUID, but...
+			// ... exclude GUID, because a GUID is already a GUID
+			// ... exclude OID, because an OID already has a record UUID_NAMEBASED_NS_OID set  by class OIDplusOid
+			if ($this->ns() != 'guid') {
+				$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
+				$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
+			}
 		}
 		return $ids;
 	}

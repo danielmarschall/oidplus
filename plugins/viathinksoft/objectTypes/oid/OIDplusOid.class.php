@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -470,10 +470,14 @@ class OIDplusOid extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 		if ($uuid = oid_to_uuid($this->oid)) {
+			// UUID-OIDs are representation of an UUID
 			$ids[] = new OIDplusAltId('guid', $uuid, _L('GUID representation of this OID'));
+		} else {
+			// All other OIDs can be formed into an UUID by making them a namebased OID
+			// You could theoretically also do this to an UUID-OID, but we exclude this case to avoid that users are confused
+			$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_OID, $this->oid), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OID'));
+			$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OID, $this->oid), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OID'));
 		}
-		$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_OID, $this->oid), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OID'));
-		$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OID, $this->oid), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OID'));
 		return $ids;
 	}
 
