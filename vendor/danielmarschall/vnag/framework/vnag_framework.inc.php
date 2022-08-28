@@ -1,26 +1,26 @@
 <?php /* <ViaThinkSoftSignature>
-Wg+EYgkO45tkUYzHp3wFsbyVVQadb07ttd04MjjH7C7i7UygR0ZiFQfpqQ5pc6i6M
-bd+RpyfWYxeMRU8KLRO/I2CymXtB/L11tisWnZRRVSBBsoVr73xZFIDrZiMC+Amxs
-/WqnIRJIVCCniLDPPzp+WlIq7/e8djQukSglqSsL4Dhvk37k7iWJuAkyoFodffOVQ
-FHLvcfvw/yjzSvLzE/3kAOToZ7OmNBfVhJKcUOYouYINCrxrqvY7FfOWz/GftnHkV
-5vjYJrTaoKpYW3N4Xoi0HBVfzTKQjND4ihulrkV4p6PhHdbdD5dXNaXUERgjAqeED
-tvpQzPHqA25Q74llkjFDeyNFHkEMKmiqdVbO/LcWHetROqMRu2on6Eghy7BCgqsfD
-lPXeHS2EN+AhcfPpFBZ59crM/qWw+LSrbQfvI/SScwlT3z0+vjKRuLOBvz2US3Mce
-UMwSkE+BGNW5LEup7RatyapYEa6ueanzzPMMv+DUvBxTfVV0l6JXteQCbWURMBSOg
-CxmMT5ewI4xaGn94yLmW95YIKdsF6upDLkG+Fqpjya0so0wKOyVc4RYgmAuo5zJvR
-7n89KCF4Z4Gl8AYyNnlKWDYHi2CYdxmfngr0eY5GyHor9qIN8wNdMerTkYQ6R1iG3
-ZGv0KPFfTdQyVOuiVnVDk5rcGwxMEgckIJSuBu7cy8oGq/wMPjdwGlEXWv2dGe7dY
-KxtB4m4lOeW3izrPyS9LppBFhjQ0CL9KZ4VJHpyZcZJ0LYGA8wX3bCRyaXRzjbDUS
-blT9mRURn6gLOmn1u0bjPqEV2GpZte1XaSB109vmgsdjCc07Wek3ItAw4KrKN29/j
-8ZKHvpamQoN6oGLr3aMzkuNhYmrNuJBJt1m7PsqTA4ZoB1JvJ3AzTBaBjYcAIt+tq
-QE9XHcjudqlECrbApzMmRzCBb2MVRnuIgaMZ6dizCPWJl/bkuqCjizMV2TbLLUnIx
-/fRb2YX98uPNsdWRTt8kZJit6QmwPi6YKJO3YKZUkaCtaM7mwjVZ0g/ZNkX2VBZ8k
-OW0JumHLXOcbQLCi6dVjsyp4fsEXmiQYLksGQtyhDtGVj/MVDz0MZMJosClcqjfCa
-M3DD8exxuvwFLIj9+y52IZKxOlsW/fB/fQiBmay/OOsyYHGMfVEpFZNnOMweB13xR
-SpB8NaUON7MUCKwG1PfdmQcMZpwA01QREkVW4/u75qPr3OoyyeJ3/zYJhJXSv3md6
-V6V53FLy2SG13eHajqVQDLrYDqu56V/GL/tI4JLIoFhKr2gzj2lFJFGyr4peCipRD
-ijdZWqbFUcDFJS8c0lJ1P68D1ATEB0m92CDen1ttVUCOUO5CK0+Qc5MbKCTXlr2OY
-A==
+ogeU7sU9og0Wo32ZGa8L9wIY+V280zVqPOo8/wFGNLcjhWISQDQiY/6hyvIb0IODQ
+7GQ2eU7C0QiTPiaMy7C1H9EXqhoCyKtDqTtkXso2KCYTNqkUtcna/UjX12mZwvQ89
+ltvtnRJeC1OXO1XcwE0/L1XZlo68dYSvgmufJQheVYAj9uU7PW9sb2YH+WTK8BM2M
+JUHn+JdLnY9QUlOLp6bVYXJqDxqzj81uHGH5oXnhrqvsKvd8CrhUwy2X6fCpWgyId
+S46OaEpBykHYdPIwFo04G3HfIyeWCQxnOIcxBbeuz1jee48I5BHFJczmkpYerE/Ao
+V0zlIF7cXWvSNn2XVC9+AyfDIA/BmtafqkOnDKHNrVmsQHx0QBL++C6ZoooE78ArT
+rkmjPLr8uK896O1qEppZ67rWDRdsZNMQIpk9QDS4PM6SQn6dfawxYxWA12h6+iFOB
+vuYVdNL17sZABPbpGqhnJCNS6e/nHgeym6b5XVuN+d8u+R6Fm7SPj6VttIDgF9Ux6
+vBgpF+v9hSdgbup9ClFX1XJGsTmwS4PWB667oJdBCyHpzyvkpvw8VY/wAIKlkEdD+
+O2lRasjrVrvNGp8LlBWlheMwEexhS2tmCZ6W+oP21puOsKhtCZD5a0PWjd/Oyo5bD
+DKlbuNs4pXokF5C0nVyHH8H/6BGGdRmTwUc64dE5RrSZlRi+2PvCJsAGzJeIagsVc
+BrDl7uNe84b9sBJlJtIiWulE7pxg6wwk9dcSznUEzEsq/LnpKANxv4l8kCckP1BoI
+yA4FahIjnsByB4vpV+zwX59DxVtmZH4nNigtZIL9j5cEjgb5XHwYDyh/nlStEj8FL
+wHJ0YMnYuItDuiW2j1ZBCj/ZemKJNHDjLtlo9QOsIWrcKgm/CRO/08WMt62CL4GvJ
+gqvRGbkZKuJMQTBkSxR9Ex6MyzhknWokHVV3xAWAb62B6wILFtWAYVgAgzcERr+Qd
+suffXc41q5xjx1jpBkgCN26wj96fPu+jeKHS3/m/ck4PLNsWwicNGOS/uppJTb8d+
+FvNy7yTk4E91H9ui4Us6RzoqbRT+Z8EQQqBl5nLkzqNzNN4gMgBNvICfsWBNJbHpY
+enq7LIYYfqBISDJ5WcWw/Z51e3z8Uk9TOOBNkcpRyjUe/F1Q3bhRLrz/eeXnBzkG0
+7Cji5xIasOO6qkgZSbcNqqvQ0chkrfOgB2FnsT8WUFIYtLaJOXHV/r0VGbTFhOTSv
+2968Q3wsFxstk8DlKtWgl3LeYb2ECvNPFM5iZrisvx8EGcZNp2xJDniE9xorfKJTl
+Gh43qnLC0djTq+mIp8V2fP8QqK8MoSxPiowJIyzXUCD2YOppdiYeaFdqXyZioy9wJ
+Q==
 </ViaThinkSoftSignature> */ ?>
 <?php
 
@@ -395,7 +395,7 @@ abstract class VNag {
 	/*public*/ const OUTPUT_ALWAYS    = 7; // = OUTPUT_SPECIAL+OUTPUT_NORMAL+OUTPUT_EXCEPTION
 
 	public $http_visual_output    = self::OUTPUT_ALWAYS; // show a human-readable panel? ...
-	public $http_invisible_output = self::OUTPUT_ALWAYS; // ... and/or show an invisible machine-readable tag?
+	public $http_invisible_output = self::OUTPUT_ALWAYS; // ... and/or output an invisible machine-readable tag?
 
 	// $html_before and $html_after contain the output HTML which were sent by the user
 
@@ -1707,7 +1707,7 @@ class VNagArgumentHandler {
 
 	public function illegalUsage() {
 		// In this function, we should check if $argv (resp. getopts) contains stuff which is not expected or illegal,
-		// so the script can show an usage information and quit the program.
+		// so the script can show a usage information and quit the program.
 
 		// WONTFIX: PHP's horrible implementation of GNU's getopt does not allow following intended tasks:
 		// - check for illegal values/arguments (e.g. the argument -? which is always illegal)

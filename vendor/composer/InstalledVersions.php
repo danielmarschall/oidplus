@@ -102,7 +102,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '5812ba279143d250fe0556fae80862fd5e2afa45',
+      'reference' => '7cf969d7dd3b128cc63713165fee87c81becd8d3',
     ),
     'dcodeio/bcrypt.js' => 
     array (
