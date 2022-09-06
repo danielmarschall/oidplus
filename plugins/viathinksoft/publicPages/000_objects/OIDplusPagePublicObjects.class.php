@@ -639,7 +639,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					$ns = $alt_id->getNamespace();
 					$aid = $alt_id->getId();
 					$aiddesc = $alt_id->getDescription();
-					$out['text'] .= "$aiddesc <code>$ns:$aid</code><br>";
+					$out['text'] .= "$aiddesc: <code>$ns:$aid</code><br>";
 				}
 			}
 

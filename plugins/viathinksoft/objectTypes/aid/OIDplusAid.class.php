@@ -70,6 +70,8 @@ class OIDplusAid extends OIDplusObject {
 			throw new OIDplusException(_L('An AID has a maximum length of 16 bytes'));
 		}
 
+		// removed, because for D2 76 00 01 86 F... it makes sense to have your root (which is inside a foreign RID) being your OIDplus root
+		/*
 		$pre   = $this->nodeId(false);
 		$add   = strtoupper($str);
 		$after = $pre.$add;
@@ -82,6 +84,7 @@ class OIDplusAid extends OIDplusObject {
 				throw new OIDplusException(_L('This node would mix RID (registry ID) and PIX (application specific). Please split it into two nodes "%1" and "%2".',$rid,$pix));
 			}
 		}
+		*/
 
 		return $this->nodeId(true).strtoupper($str);
 	}
@@ -212,6 +215,44 @@ class OIDplusAid extends OIDplusObject {
 		}
 
 		return strlen($ary) - strlen($bry);
+	}
+
+	public function getAltIds() {
+		if ($this->isRoot()) return array();
+		$ids = parent::getAltIds();
+
+		// ViaThinkSoft "Foreign" AIDs
+		// F0 = IANA PEN + PIX
+		// F1 = ViaThinkSoft FreeOID + PIX
+		// F2 = MAC address + PIX
+		// F3 = USB-IF VendorID + PIX
+		// F4 = D-U-N-S number + PIX
+		// F5 = GS1 number + PIX
+		// F6 = DER OID (no PIX)
+
+		// OID<->AID (ViaThinkSoft Foreign-6)
+		$aid = $this->nodeId(false);
+		$aid = strtoupper($aid);
+		if (str_starts_with($aid,'D276000186F6')) {
+			$der = substr($aid,strlen('D276000186F6'));
+			$len = strlen($der);
+			if ($len%2 == 0) {
+				$len /= 2;
+				$len = str_pad("$len", 2, '0', STR_PAD_LEFT);
+
+				$type = '06'; // absolute OID
+
+				$der = "$type $len $der";
+
+				$oid = OidDerConverter::derToOID(OidDerConverter::hexStrToArray($der));
+				if ($oid) {
+					$oid = ltrim($oid,'.');
+					$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));
+				}
+			}
+		}
+
+		return $ids;
 	}
 
 	public function getDirectoryName() {

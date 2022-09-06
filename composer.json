@@ -110,6 +110,7 @@
 		"danielmarschall/uuid_mac_utils": "*@dev",
 		"danielmarschall/php_utils": "*@dev",
 		"danielmarschall/fileformats": "*@dev",
+		"danielmarschall/oidconverter": "*@dev",
 		"spamspan/spamspan": "*@dev",
 		"vakata/jstree": "^3.3",
 		"twbs/bootstrap": "^5.0",

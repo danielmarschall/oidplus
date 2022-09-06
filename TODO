@@ -10,6 +10,7 @@ Ideas by Simon T.:
 Application Identifier (aid) Object Type Plugin:
 - When aid_decoder.inc.php finds a mistake, should we forbid to create the AID? But some companies might already use invalid identifiers.
 - Category "F": Offer a "random ID" button (+ enter desired length), like we did for GUID
+- Link to ViaThinkSoft-Foreign-AID
 
 Implement RDAP!
 

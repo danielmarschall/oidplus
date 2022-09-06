@@ -67,6 +67,7 @@ remove_vendor_rubbish() {
 	rm -rf $1vendor/danielmarschall/uuid_mac_utils/*.php
 	rm -rf $1vendor/danielmarschall/uuid_mac_utils/*.sh
 	rm -rf $1vendor/danielmarschall/uuid_mac_utils/*.css
+	rm -rf $1vendor/danielmarschall/uuid_mac_utils/includes/OidDerConverter.class.php
 	rm -rf $1vendor/paragonie/random_compat/other
 }
 remove_vendor_rubbish ./
