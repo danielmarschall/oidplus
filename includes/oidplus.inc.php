@@ -98,7 +98,7 @@ spl_autoload_register(function ($class_name) {
 		$func = function(&$class_refs, $class_files, $namespace='') {
 			foreach ($class_files as $filename) {
 				$cn = strtolower(basename($filename));
-				$cn = preg_replace('@(\\.class){0,1}\\.php$@', '', $cn);
+				$cn = preg_replace('@(\\.class){0,1}\\.phps{0,1}$@', '', $cn);
 				if (!empty($namespace)) {
 					if (substr($namespace,-1,1) !== '\\') $namespace .= '\\';
 					$cn = strtolower($namespace) . $cn;
@@ -119,6 +119,7 @@ spl_autoload_register(function ($class_name) {
 		$class_files = array_merge($class_files, glob(__DIR__ . '/classes/'.'*'.'.class.php'));
 		$class_files = array_merge($class_files, glob(__DIR__ . '/../vendor/danielmarschall/fileformats/'.'*'.'.class.php'));
 		$class_files = array_merge($class_files, glob(__DIR__ . '/../vendor/danielmarschall/php_utils/'.'*'.'.class.php'));
+		$class_files = array_merge($class_files, glob(__DIR__ . '/../vendor/danielmarschall/oidconverter/php/'.'*'.'.class.phps'));
 		$func($class_refs, $class_files);
 	}
 

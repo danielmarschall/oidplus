@@ -39,6 +39,16 @@
       ),
       'reference' => '880e97b497710dc14ee8f38b4e48250ce49202ee',
     ),
+    'danielmarschall/oidconverter' => 
+    array (
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
+      'aliases' => 
+      array (
+        0 => '9999999-dev',
+      ),
+      'reference' => '2c101e3fb5eb9238db83160ce5bbe04948edf5cc',
+    ),
     'danielmarschall/oidplus' => 
     array (
       'pretty_version' => '2.0',
@@ -66,7 +76,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '31174ea5dc3398645f70bc40f5162aa5b73f5b52',
+      'reference' => 'aaef4f33f76a140153b5f28c8694b96c593e22fa',
     ),
     'danielmarschall/vnag' => 
     array (
@@ -76,7 +86,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '7cf969d7dd3b128cc63713165fee87c81becd8d3',
+      'reference' => '8a09c2af002f03a2a8cc2d0bfc301277fbe395fd',
     ),
     'dcodeio/bcrypt.js' => 
     array (

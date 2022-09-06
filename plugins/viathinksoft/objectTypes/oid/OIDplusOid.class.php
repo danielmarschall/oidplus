@@ -118,6 +118,10 @@ class OIDplusOid extends OIDplusObject {
 		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="https://weid.info/" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
 		$tech_info[$tmp] = $this->getWeidNotation();
 
+		$tmp = _L('DER encoding');
+		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="https://misc.daniel-marschall.de/asn.1/oid-converter/online.php" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
+		$tech_info[$tmp] = OidDerConverter::hexarrayToStr(OidDerConverter::oidToDER($this->nodeId(false)));
+
 		return $tech_info;
 	}
 
@@ -478,6 +482,23 @@ class OIDplusOid extends OIDplusObject {
 			$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_OID, $this->oid), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OID'));
 			$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OID, $this->oid), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OID'));
 		}
+
+		// Mapping OID-to-AID using HickelSOFT/ViaThinkSoft Sub-AID
+		$test_der = OidDerConverter::hexarrayToStr(OidDerConverter::oidToDER($this->nodeId(false)));
+		if (substr($test_der,0,3) == '06 ') {
+			$aid_candidate = 'D2 76 00 01 86 F6 '.substr($test_der, strlen('06 xx '));
+			$aid_candidate = str_replace(' ', '', $aid_candidate);
+			$aid_candidate = strtoupper($aid_candidate);
+			if (strlen($aid_candidate) > 16*2) {
+				$aid_is_ok = false; // OID DER encoding is too long to fit into the AID
+			} else if ((strlen($aid_candidate) == 16*2) && (substr($aid_candidate,-2) == 'FF')) {
+				$aid_is_ok = false; // 16 byte AID must not end with 0xFF (reserved by ISO)
+			} else {
+				$aid_is_ok = true;
+			}
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816-5)'));
+		}
+
 		return $ids;
 	}
 

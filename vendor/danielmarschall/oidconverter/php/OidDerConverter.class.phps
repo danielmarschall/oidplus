@@ -31,16 +31,14 @@ class OidDerConverter {
 	// Doesn't need to be public, but it is a nice handy function, especially in the testcases
 	public static function hexStrToArray($str) {
 		$out = array();
-
-		$str = str_replace('\x', ' ', $str);
+		$str = str_replace('\x', '', $str);
 		$str = trim($str);
-		$ary = explode(' ', $str);
-
+		$str = str_replace(' ', '', $str);
+		$ary = str_split($str, 2);
 		foreach ($ary as &$a) {
-			$out[] = hexdec($a);
+			$a = hexdec($a);
 		}
-
-		return $out;
+		return $ary;
 	}
 
 	/**

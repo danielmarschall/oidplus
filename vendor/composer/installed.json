@@ -186,6 +186,47 @@
             "install-path": "../danielmarschall/fileformats"
         },
         {
+            "name": "danielmarschall/oidconverter",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danielmarschall/oidconverter.git",
+                "reference": "2c101e3fb5eb9238db83160ce5bbe04948edf5cc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielmarschall/oidconverter/zipball/2c101e3fb5eb9238db83160ce5bbe04948edf5cc",
+                "reference": "2c101e3fb5eb9238db83160ce5bbe04948edf5cc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "time": "2022-09-06T22:09:59+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Marschall",
+                    "email": "info@daniel-marschall.de",
+                    "homepage": "https://www.daniel-marschall.de/"
+                }
+            ],
+            "description": "OID/DER converter",
+            "homepage": "https://www.viathinksoft.com/projects/oidconverter",
+            "support": {
+                "issues": "https://github.com/danielmarschall/oidconverter/issues",
+                "source": "https://github.com/danielmarschall/oidconverter/tree/master"
+            },
+            "install-path": "../danielmarschall/oidconverter"
+        },
+        {
             "name": "danielmarschall/php_utils",
             "version": "dev-master",
             "version_normalized": "dev-master",
@@ -233,18 +274,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/uuid_mac_utils.git",
-                "reference": "31174ea5dc3398645f70bc40f5162aa5b73f5b52"
+                "reference": "aaef4f33f76a140153b5f28c8694b96c593e22fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/31174ea5dc3398645f70bc40f5162aa5b73f5b52",
-                "reference": "31174ea5dc3398645f70bc40f5162aa5b73f5b52",
+                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/aaef4f33f76a140153b5f28c8694b96c593e22fa",
+                "reference": "aaef4f33f76a140153b5f28c8694b96c593e22fa",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2022-02-13T00:44:25+00:00",
+            "time": "2022-09-06T22:14:43+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -274,18 +315,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/vnag.git",
-                "reference": "7cf969d7dd3b128cc63713165fee87c81becd8d3"
+                "reference": "8a09c2af002f03a2a8cc2d0bfc301277fbe395fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/7cf969d7dd3b128cc63713165fee87c81becd8d3",
-                "reference": "7cf969d7dd3b128cc63713165fee87c81becd8d3",
+                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/8a09c2af002f03a2a8cc2d0bfc301277fbe395fd",
+                "reference": "8a09c2af002f03a2a8cc2d0bfc301277fbe395fd",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2022-08-25T21:57:41+00:00",
+            "time": "2022-09-06T15:33:15+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

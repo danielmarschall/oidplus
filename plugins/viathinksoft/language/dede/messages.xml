@@ -1454,6 +1454,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		DER encoding
+		]]></source>
+		<target><![CDATA[
+		DER-Kodierung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		DOI
 		]]></source>
 		<target><![CDATA[
@@ -6698,14 +6706,6 @@
 		]]></source>
 		<target><![CDATA[
 		Diese Art von JWT-Token kann nicht geändert werden. Daher können Sie diese Aktion nicht durchführen.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		This node would mix RID (registry ID) and PIX (application specific). Please split it into two nodes "%1" and "%2".
-		]]></source>
-		<target><![CDATA[
-		Dieser Knoten würde RID (Registrierungsstelle) und PIX (Anwendungs-ID) mischen. Bitte splitten Sie diese AID in die Teile "%1" und "%2".
 		]]></target>
 	</message>
 	<message>
