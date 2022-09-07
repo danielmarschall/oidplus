@@ -3,7 +3,7 @@
 /*
  * ISO/IEC 7816-5 Application Identifier decoder for PHP
  * Copyright 2022 Daniel Marschall, ViaThinkSoft
- * Version 2022-08-19
+ * Version 2022-09-07
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,18 @@
  * limitations under the License.
  */
 
+include_once __DIR__ . '/misc_functions.inc.php';
+
+# ---
+
 /*
 #test2('A000000051AABBCC');
 #test2('B01234567890');
 #test2('D276000098AABBCCDDEEFFAABBCCDDEE');
 #test2('F01234567890');
-test('91234FFF999');
-test('51234FFF999');
+#test('91234FFF999');
+#test('51234FFF999');
+#test2('E828BD080F014E585031');
 
 function test2($aid) {
 	while ($aid != '') {
@@ -53,6 +58,123 @@ function test($aid) {
 */
 
 # ---
+
+function _aid_e8_interpretations($aid) {
+	$ret = array();
+
+	$output_oid = array();
+
+	$aid = strtoupper(str_replace(' ','',$aid));
+	$aid = strtoupper(str_replace(':','',$aid));
+	$by = str_split($aid,2);
+	if ((array_shift($by) == 'E8') ) {
+		// The following part is partially taken from the DER decoder/encoder by Daniel Marschall:
+		// https://github.com/danielmarschall/oidconverter/blob/master/php/OidDerConverter.class.phps
+		// (Only the DER "value" part, without "type" and "length")
+
+		$part = 2; // DER part 0 (type) and part 1 (length) not present
+		$fSub = 0; // Subtract value from next number output. Used when encoding {2 48} and up
+		$ll = gmp_init(0);
+		$arcBeginning = true;
+
+		foreach ($by as $ii => $pb) {
+
+			$pb = hexdec($pb);
+
+			if ($part == 2) { // First two arcs
+				$first = $pb / 40;
+				$second = $pb % 40;
+				if ($first > 2) {
+					$first = 2;
+					$output_oid[] = $first;
+					$arcBeginning = true;
+
+					if (($pb & 0x80) != 0) {
+						// 2.48 and up => 2+ octets
+						// Output in "part 3"
+
+						if ($pb == 0x80) {
+							throw new Exception("Encoding error. Illegal 0x80 paddings. (See Rec. ITU-T X.690, clause 8.19.2)\n");
+						} else {
+							$arcBeginning = false;
+						}
+
+						$ll = gmp_add($ll, ($pb & 0x7F));
+						$fSub = 80;
+						$fOK = false;
+					} else {
+						// 2.0 till 2.47 => 1 octet
+						$second = $pb - 80;
+						$output_oid[] = $second;
+						$arcBeginning = true;
+						$fOK = true;
+						$ll = gmp_init(0);
+					}
+				} else {
+					// 0.0 till 0.37 => 1 octet
+					// 1.0 till 1.37 => 1 octet
+					$output_oid[] = $first;
+					$output_oid[] = $second;
+					$arcBeginning = true;
+					$fOK = true;
+					$ll = gmp_init(0);
+				}
+				$part++;
+			} else { //else if ($part == 3) { // Arc three and higher
+				if (($pb & 0x80) != 0) {
+					if ($arcBeginning && ($pb == 0x80)) {
+						throw new Exception("Encoding error. Illegal 0x80 paddings. (See Rec. ITU-T X.690, clause 8.19.2)");
+					} else {
+						$arcBeginning = false;
+					}
+
+					$ll = gmp_mul($ll, 0x80);
+					$ll = gmp_add($ll, ($pb & 0x7F));
+					$fOK = false;
+				} else {
+					$fOK = true;
+					$ll = gmp_mul($ll, 0x80);
+					$ll = gmp_add($ll, $pb);
+					$ll = gmp_sub($ll, $fSub);
+					$output_oid[] = gmp_strval($ll, 10);
+
+					$is_iso_standard = ($output_oid[0] == '1') && ($output_oid[1] == '0');
+
+					$byy = $by;
+					for ($i=0;$i<=$ii;$i++) array_shift($byy);
+
+					$s_oid = implode('.',$output_oid);
+
+					if ($is_iso_standard) {
+						$std_hf = 'Standard ISO/IEC '.$output_oid[2];
+						if (isset($output_oid[3])) $std_hf .= "-".$output_oid[3];
+					} else {
+						$std_hf = "Unknown Standard"; // should not happen
+					}
+
+					$pix = implode(':',$byy);
+
+					if ($pix !== '') {
+						$ret[] = array($ii+1,"$std_hf (OID $s_oid)",$pix);
+					} else {
+						$ret[] = array($ii+1,"$std_hf (OID $s_oid)","");
+					}
+
+					// ISO Standards (OID 1.0) will only have 1 or 2 numbers. (Number 1 is the standard, and number 2
+					// is the part in case of a multi-part standard).
+					if ($is_iso_standard && (count($output_oid) == 4)) break;
+
+					// Happens only if 0x80 paddings are allowed
+					// $fOK = gmp_cmp($ll, 0) >= 0;
+					$ll = gmp_init(0);
+					$fSub = 0;
+					$arcBeginning = true;
+				}
+			}
+		}
+	}
+	return $ret;
+}
 
 function decode_aid($aid,$compact=true) {
 	$sout = '';
@@ -353,6 +475,7 @@ function _decode_aid($aid) {
 	$aid = strtoupper($aid);
 	$aid = trim($aid);
 	$aid = str_replace(' ','',$aid);
+	$aid = str_replace(':','',$aid);
 
 	if ($aid == '') {
 		$out[] = "INVALID: The AID is empty";
@@ -364,13 +487,9 @@ function _decode_aid($aid) {
 		return $out;
 	}
 
-	$aid_hf = '';
-	for ($i=0; $i<strlen($aid); $i++) {
-		$aid_hf .= $aid[$i];
-		if ($i%2 == 1) $aid_hf .= ' ';
-	}
+	$aid_hf = implode(':',str_split($aid,2));
 	if (strlen($aid)%2 == 1) $aid_hf .= '_';
-	$aid_hf = rtrim($aid_hf);
+
 	$out[] = array("$aid", "ISO/IEC 7816-5 Application Identifier (AID)");
 	$out[] = array('', "> $aid_hf <");
 	$out[] = array('', c_literal_hexstr($aid));
@@ -563,6 +682,48 @@ function _decode_aid($aid) {
 		return $out;
 	}
 
+	// Category 'E'
+	// AID = 'E8' + OID + PIX   (OID is DER encoding without type and length)
+	if ("$category" === "E") {
+		$out[] = array("$category", "Category $category: Standard");
+
+		$std_scheme = substr($aid,1,1);
+		if ($std_scheme == '8') {
+			$out[] = array(" $std_scheme", "Standard identified by OID");
+
+			$data = substr($aid,2);
+			try {
+				$interpretations = _aid_e8_interpretations($aid);
+				foreach ($interpretations as $ii => $interpretation) {
+					$pos = $interpretation[0];
+					$txt1 = $interpretation[1]; // Standard
+					$txt2 = $interpretation[2]; // PIX (optional)
+
+					$aid1 = '  '.substr($aid,2,$pos*2);
+					$aid2 = substr($aid,2+$pos*2);
+
+					$out[] = array("$aid1", "$txt1");
+					if ($txt2 !== '') {
+						$pix = "'$txt2' (".c_literal_hexstr(str_replace(':','',$txt2)).")";
+						$out[] = array(str_repeat(' ',strlen($aid1))."$aid2", "with PIX $pix");
+					}
+					if ($ii < count($interpretations)-1) {
+						$out[] = array('', 'or:');
+					}
+				}
+			} catch (Exception $e) {
+				$out[] = array("  $data", "ERROR: ".$e->getMessage());
+
+			}
+		} else {
+			// E0..E7, E9..EF are RFU
+			$unknown = substr($aid,1);
+			$out[] = array(" $unknown", "ILLEGAL USAGE / RESERVED");
+		}
+
+		return $out;
+	}
+
 	// Category 'F'
 	// AID = 'F' + PIX
 	if ("$category" === "F") {
@@ -578,7 +739,7 @@ function _decode_aid($aid) {
 		return $out;
 	}
 
-	// Category 'B', 'C', and 'E' are reserved
+	// Category 'B' and 'C' are reserved
 	$out[] = array("$category", "Category $category: ILLEGAL USAGE / RESERVED");
 	if (strlen($aid) > 1) {
 		$aid_ = substr($aid,1);

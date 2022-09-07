@@ -61,6 +61,7 @@ class OIDplusAid extends OIDplusObject {
 		$m = array();
 
 		$str = str_replace(' ','',$str);
+		$str = str_replace(':','',$str);
 
 		if (!preg_match('@^[0-9a-fA-F]+$@', $str, $m)) {
 			throw new OIDplusException(_L('AID part needs to be hexadecimal'));

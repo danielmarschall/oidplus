@@ -7,8 +7,8 @@ Name                              Version             License
 components/jquery                 3.6.0               MIT                    
 components/jqueryui               1.12.1              MIT                    
 danielmarschall/fileformats       dev-master 880e97b  Apache-2.0             
-danielmarschall/oidconverter      dev-master 2c101e3  Apache-2.0             
-danielmarschall/php_utils         dev-master a13f0e0  Apache-2.0             
+danielmarschall/oidconverter      dev-master 0a7d511  Apache-2.0             
+danielmarschall/php_utils         dev-master f0ffaaf  Apache-2.0             
 danielmarschall/uuid_mac_utils    dev-master aaef4f3  Apache-2.0             
 danielmarschall/vnag              dev-master 8a09c2a  Apache-2.0             
 dcodeio/bcrypt.js                 master master       BSD-3-Clause, MIT      
@@ -25,6 +25,6 @@ script47/bs5-utils                master master       MIT
 spamspan/spamspan                 master              GPL-2.0-only           
 symfony/polyfill-mbstring         v1.19.0             MIT                    
 tinymce/tinymce                   5.x-dev c91227a     LGPL-2.1-only          
-twbs/bootstrap                    5.2.0               MIT                    
+twbs/bootstrap                    v5.2.1              MIT                    
 tweeb/tinymce-i18n                2.0.4               MIT                    
 vakata/jstree                     3.3.12              MIT                    

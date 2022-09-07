@@ -1,31 +1,35 @@
-/*###################################################################
-###                                                               ###
-### Object ID converter. Matthias Gaertner, 06/1999               ###
-### Converted to plain 'C' 07/2001                                ###
-###                                                               ###
-### Enhanced version by Daniel Marschall, ViaThinkSoft 06-07/2011 ###
-### -- NEW 1.2: 2.48 can also be encoded!                         ###
-### -- NEW 1.2: UUIDs (128-bit) are now supported!                ###
-###             (requires GMPLib)                                 ###
-### -- NEW 1.3: Length can now have more than 1 byte              ###
-### -- NEW 1.4: No command line limitation anymore.               ###
-### -- NEW 1.5: Now also relative OIDs supported                  ###
-### -- NEW 1.6: 0x80 paddings are now disallowed                  ###
-### -- NEW 1.8: Removed Application/Context/Private "OID"s        ###
-### -- NEW 1.9: Also allow decoding C-notation with "-x"          ###
-### -- AS WELL AS SEVERAL BUG FIXES                               ###
-###                                                               ###
-### To compile with gcc simply use:                               ###
-###   gcc -O2 -o oid oid.c -lgmp -lm                              ###
-###                                                               ###
-### To compile using cl, use:                                     ###
-###   cl -DWIN32 -O1 oid.c (+ include gmp library)                ###
-###                                                               ###
-### Freeware - do with it whatever you want.                      ###
-### Use at your own risk. No warranty of any kind.                ###
-###                                                               ###
-###################################################################*/
-/* $Version: 1.11$ */
+/*#################################################################################
+###                                                                             ###
+### Object ID converter. Matthias Gaertner, 06/1999                             ###
+### Converted to plain 'C' 07/2001                                              ###
+###                                                                             ###
+### Enhanced version by Daniel Marschall, ViaThinkSoft 06-07/2011, 2022         ###
+### based on (or rather synchronized to) upstream version 1.3                   ###
+### -- NEW in +viathinksoft2: 2.48 can also be encoded!                         ###
+### -- NEW in +viathinksoft2: UUIDs (128-bit) are now supported!                ###
+###                           (requires GMPLib)                                 ###
+### -- NEW in +viathinksoft3: Length can now have more than 1 byte              ###
+### -- NEW in +viathinksoft4: No command line limitation anymore.               ###
+### -- NEW in +viathinksoft5: Now also relative OIDs supported                  ###
+### -- NEW in +viathinksoft6: 0x80 paddings are now disallowed                  ###
+### -- NEW in +viathinksoft8: Removed Application/Context/Private "OID"s        ###
+### -- NEW in +viathinksoft9: Also allow decoding C-notation with "-x"          ###
+### -- AS WELL AS SEVERAL BUG FIXES                                             ###
+###                                                                             ###
+### To compile with gcc simply use:                                             ###
+###   gcc -O2 -o oid oid.c -lgmp -lm                                            ###
+###                                                                             ###
+### To compile using lcc-win32, use:                                            ###
+###   lcc oid.c & lcclnk oid.obj                                                ###
+###                                                                             ###
+### To compile using cl, use:                                                   ###
+###   cl -DWIN32 -O1 oid.c (+ include gmp library)                              ###
+###                                                                             ###
+### Freeware - do with it whatever you want.                                    ###
+### Use at your own risk. No warranty of any kind.                              ###
+###                                                                             ###
+#################################################################################*/
+/* $Version: 1.3+viathinksoft12$ */
 
 // FUTURE
 // - Alles in Funktionen kapseln. Als Parameter: Array of integer (= dot notation) oder Array of byte (= hex notation)
@@ -44,7 +48,6 @@
 // - "./oid .2.999" will be interpreted as "0.2.999"
 
 // NICE TO HAVE:
-// - also allow -x to interpret "\x06\x02\x88\x37"
 // - makefile, manpage, linuxpackage
 // - better make functions instead of putting everything in main() with fprintf...
 
@@ -164,22 +167,23 @@ int main(int argc, char **argv) {
 
 	int n = 1;
 	int nMode = MODE_DOT_TO_HEX;
-	bool nCHex = false;
+	int nCHex = 0;
 	int nAfterOption = 0;
 	bool isRelative = false;
 
 	if (argc == 1) {
 		fprintf(stderr,
-		"OID encoder/decoder 1.11 - Matthias Gaertner 1999/2001, Daniel Marschall 2011/2012 - Freeware\n"
+		"OID encoder/decoder 1.3+viathinksoft12 - Matthias Gaertner 1999/2001, Daniel Marschall 2011/2012 - Freeware\n"
 		#ifdef is_gmp
 		"GMP Edition (unlimited arc sizes)\n"
 		#else
 		"%d-bit Edition (arc sizes are limited!)\n"
 		#endif
 		"\nUsage:\n"
-		" OID [-C] [-r] [-o<outfile>] {-i<infile>|2.999.1}\n"
+		" OID [-c|-C] [-r] [-o<outfile>] {-i<infile>|2.999.1}\n"
 		"   converts dotted form to ASCII HEX DER output.\n"
-		"   -C: Output as C-syntax.\n"
+		"   -c: Output as C-syntax (array).\n"
+		"   -C: Output as C-syntax (string).\n"
 		"   -r: Handle the OID as relative and not absolute.\n"
 		" OID -x [-o<outfile>] {-i<infile>|hex-digits}\n"
 		"   decodes ASCII HEX DER and gives dotted form.\n" , sizeof(unsigned long) * 8);
@@ -194,9 +198,17 @@ int main(int argc, char **argv) {
 					argv[n--] += 2;
 					nAfterOption = 1;
 				}
+			} else if (argv[n][1] == 'c') {
+				nMode = MODE_DOT_TO_HEX;
+				nCHex = 1;
+
+				if (argv[n][2] != '\0') {
+					argv[n--] += 2;
+					nAfterOption = 1;
+				}
 			} else if (argv[n][1] == 'C') {
 				nMode = MODE_DOT_TO_HEX;
-				nCHex = true;
+				nCHex = 2;
 
 				if (argv[n][2] != '\0') {
 					argv[n--] += 2;
@@ -293,7 +305,7 @@ int main(int argc, char **argv) {
 		int fSub = 0; // Subtract value from next number output. Used when encoding {2 48} and up
 
 		while (*p) {
-			if (*p != '.' && *p != '\r' && *p != '\n' && *p != '\x20' && *p != '\t') {
+			if (*p != '.' && *p != ':' && *p != '\r' && *p != '\n' && *p != '\x20' && *p != '\t') {
 				*q++ = *p;
 			}
 			p++;
@@ -316,9 +328,19 @@ int main(int argc, char **argv) {
 		while (*p) {
 			unsigned char b;
 
-			// This allows also C-notation
+			// This allows also C-hexstring-notation
 			if ((p[0] == '\\') && (p[1] == 'x')) {
 				p += 2;
+				continue;
+			}
+
+			// This allows also C-array-notation
+			if ((p[0] == '0') && (p[1] == 'x')) {
+				p += 2;
+				continue;
+			}
+			if ((p[0] == ',') || (p[0] == '{') || (p[0] == '}') || (p[0] == ' ')) {
+				p++;
 				continue;
 			}
 
@@ -839,7 +861,9 @@ int main(int argc, char **argv) {
 		}
 
 		// Write class-tag
-		if (nCHex) {
+		if (nCHex == 1) {
+			fprintf(fOut, "{ 0x%02X, ", cl);
+		} else if (nCHex == 2) {
 			fprintf(fOut, "\"\\x%02X", cl);
 		} else {
 			fprintf(fOut, "%02X ", cl);
@@ -847,7 +871,9 @@ int main(int argc, char **argv) {
 
 		// Write length
 		if (nBinary <= 0x7F) {
-			if (nCHex) {
+			if (nCHex == 1) {
+				fprintf(fOut, "0x%02X, ", nBinary);
+			} else if (nCHex == 2) {
 				fprintf(fOut, "\\x%02X", nBinary);
 			} else {
 				fprintf(fOut, "%02X ", nBinary);
@@ -867,7 +893,9 @@ int main(int argc, char **argv) {
 				return 8;
 			}
 
-			if (nCHex) {
+			if (nCHex == 1) {
+				fprintf(fOut, "0x%02X, ", 0x80 + lengthCount);
+			} else if (nCHex == 2) {
 				fprintf(fOut, "\\x%02X", 0x80 + lengthCount);
 			} else {
 				fprintf(fOut, "%02X ", 0x80 + lengthCount);
@@ -875,7 +903,9 @@ int main(int argc, char **argv) {
 
 			nBinaryWork = nBinary;
 			do {
-				if (nCHex) {
+				if (nCHex == 1) {
+					fprintf(fOut, "0x%02X, ", nBinaryWork & 0xFF);
+				} else if (nCHex == 2) {
 					fprintf(fOut, "\\x%02X", nBinaryWork & 0xFF);
 				} else {
 					fprintf(fOut, "%02X ", nBinaryWork & 0xFF);
@@ -888,13 +918,17 @@ int main(int argc, char **argv) {
 		while (nn < nBinary) {
 			unsigned char b = abBinary[nn++];
 			if (nn == nBinary) {
-				if (nCHex) {
+				if (nCHex == 1) {
+					fprintf(fOut, "0x%02X }\n", b);
+				} else if (nCHex == 2) {
 					fprintf(fOut, "\\x%02X\"\n", b);
 				} else {
 					fprintf(fOut, "%02X\n", b);
 				}
 			} else {
-				if (nCHex) {
+				if (nCHex == 1) {
+					fprintf(fOut, "0x%02X, ", b);
+				} else if (nCHex == 2) {
 					fprintf(fOut, "\\x%02X", b);
 				} else {
 					fprintf(fOut, "%02X ", b);
