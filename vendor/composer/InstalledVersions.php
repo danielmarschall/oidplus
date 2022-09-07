@@ -73,7 +73,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '2c101e3fb5eb9238db83160ce5bbe04948edf5cc',
+      'reference' => '0a7d5113a1643b518c178c71a7e7adce0d83140f',
     ),
     'danielmarschall/oidplus' => 
     array (
@@ -92,7 +92,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'a13f0e04b3a8a1f4d45f111286190ac8ce723500',
+      'reference' => 'f0ffaafc7cf34a4efe8b048f44cbc475b81d2342',
     ),
     'danielmarschall/uuid_mac_utils' => 
     array (
@@ -243,12 +243,12 @@ private static $installed = array (
     ),
     'twbs/bootstrap' => 
     array (
-      'pretty_version' => '5.2.0',
-      'version' => '5.2.0.0',
+      'pretty_version' => 'v5.2.1',
+      'version' => '5.2.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'edf9c40956d19e6ab3f9151bfe0dfac6be06fa21',
+      'reference' => '23e50829f958ea1d741d63e2781716be037e4644',
     ),
     'tweeb/tinymce-i18n' => 
     array (
@@ -263,7 +263,7 @@ private static $installed = array (
     array (
       'replaced' => 
       array (
-        0 => '5.2.0',
+        0 => 'v5.2.1',
       ),
     ),
     'vakata/jstree' => 

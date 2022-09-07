@@ -1,7 +1,7 @@
 <?php
 
 /*
- * OidDerConverter.class.php, Version 1.1; Based on version 1.11 of oid.c
+ * OidDerConverter.class.php, Version 1.1; Based on version 1.3+viathinksoft11 of oid.c
  * Copyright 2014-2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
