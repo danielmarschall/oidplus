@@ -687,9 +687,9 @@ function _decode_aid($aid) {
 	if ("$category" === "E") {
 		$out[] = array("$category", "Category $category: Standard");
 
-		$std_scheme = substr($aid,1,1);
-		if ($std_scheme == '8') {
-			$out[] = array(" $std_scheme", "Standard identified by OID");
+		$std_schema = substr($aid,1,1);
+		if ($std_schema == '8') {
+			$out[] = array(" $std_schema", "Standard identified by OID");
 
 			$data = substr($aid,2);
 			try {
@@ -715,7 +715,7 @@ function _decode_aid($aid) {
 				$out[] = array("  $data", "ERROR: ".$e->getMessage());
 
 			}
-		} else {
+		} else if ($std_schema != '') {
 			// E0..E7, E9..EF are RFU
 			$unknown = substr($aid,1);
 			$out[] = array(" $unknown", "ILLEGAL USAGE / RESERVED");
