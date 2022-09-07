@@ -8,7 +8,7 @@ components/jquery                 3.6.0               MIT
 components/jqueryui               1.12.1              MIT                    
 danielmarschall/fileformats       dev-master 880e97b  Apache-2.0             
 danielmarschall/oidconverter      dev-master 0a7d511  Apache-2.0             
-danielmarschall/php_utils         dev-master f0ffaaf  Apache-2.0             
+danielmarschall/php_utils         dev-master 1697dac  Apache-2.0             
 danielmarschall/uuid_mac_utils    dev-master aaef4f3  Apache-2.0             
 danielmarschall/vnag              dev-master 8a09c2a  Apache-2.0             
 dcodeio/bcrypt.js                 master master       BSD-3-Clause, MIT      
