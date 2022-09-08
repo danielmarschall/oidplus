@@ -120,7 +120,7 @@ class OIDplusOid extends OIDplusObject {
 
 		$tmp = _L('DER encoding');
 		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="https://misc.daniel-marschall.de/asn.1/oid-converter/online.php" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
-		$tech_info[$tmp] = OidDerConverter::hexarrayToStr(OidDerConverter::oidToDER($this->nodeId(false)));
+		$tech_info[$tmp] = str_replace(' ', ':', OidDerConverter::hexarrayToStr(OidDerConverter::oidToDER($this->nodeId(false))));
 
 		return $tech_info;
 	}
@@ -470,6 +470,20 @@ class OIDplusOid extends OIDplusObject {
 		return oid_distance($to->oid, $this->oid);
 	}
 
+	protected function aidIsOkay(&$aid_candidate) {
+		$aid_candidate = str_replace(' ', '', $aid_candidate);
+		$aid_candidate = str_replace(':', '', $aid_candidate);
+		$aid_candidate = strtoupper($aid_candidate);
+		if (strlen($aid_candidate) > 16*2) {
+			$aid_is_ok = false; // OID DER encoding is too long to fit into the AID
+		} else if ((strlen($aid_candidate) == 16*2) && (substr($aid_candidate,-2) == 'FF')) {
+			$aid_is_ok = false; // 16 byte AID must not end with 0xFF (reserved by ISO)
+		} else {
+			$aid_is_ok = true;
+		}
+		return $aid_is_ok;
+	}
+
 	public function getAltIds() {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
@@ -483,18 +497,35 @@ class OIDplusOid extends OIDplusObject {
 			$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OID, $this->oid), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OID'));
 		}
 
-		// Mapping OID-to-AID using HickelSOFT/ViaThinkSoft Sub-AID
-		$test_der = OidDerConverter::hexarrayToStr(OidDerConverter::oidToDER($this->nodeId(false)));
-		if (substr($test_der,0,3) == '06 ') {
-			$aid_candidate = 'D2 76 00 01 86 F6 '.substr($test_der, strlen('06 xx '));
-			$aid_candidate = str_replace(' ', '', $aid_candidate);
-			$aid_candidate = strtoupper($aid_candidate);
-			if (strlen($aid_candidate) > 16*2) {
-				$aid_is_ok = false; // OID DER encoding is too long to fit into the AID
-			} else if ((strlen($aid_candidate) == 16*2) && (substr($aid_candidate,-2) == 'FF')) {
-				$aid_is_ok = false; // 16 byte AID must not end with 0xFF (reserved by ISO)
+		// Mapping OID-to-AID if possible
+		try {
+			$test_der = OidDerConverter::hexarrayToStr(OidDerConverter::oidToDER($this->nodeId(false)));
+		} catch (Exception $e) {
+			$test_der = '00'; // error, should not happen
+		}
+		if (substr($test_der,0,3) == '06 ') { // 06 = ASN.1 type of Absolute ID
+			$oid_parts = explode('.',$this->nodeId(false));
+			if (($oid_parts[0] = '2') && ($oid_parts[1] == '999')) {
+				// Note that "ViaThinkSoft E0" AID are not unique!
+				// OIDplus will use the relative DER of the 2.999.xx OID as PIX
+				$aid_candidate = 'D2 76 00 01 86 E0 ' . substr($test_der, strlen('06 xx 88 37 ')); // Remove ASN.1 06=Type, xx=Length and the 2.999 arcs "88 37"
+				$aid_is_ok = self::aidIsOkay($aid_candidate);
+				if (!$aid_is_ok) {
+					// If DER encoding is not possible (too long), then we will use a 32 bit small hash.
+					$small_hash = str_pad(dechex(smallhash($this->nodeId(false))),8,'0',STR_PAD_LEFT);
+					$aid_candidate = 'D2 76 00 01 86 E0 ' . strtoupper(implode(' ',str_split($small_hash,2)));
+					$aid_is_ok = self::aidIsOkay($aid_candidate);
+				}
+			} else if (($oid_parts[0] = '1') && ($oid_parts[1] == '0')) {
+				// ISO Standard AID (OID 1.0.xx)
+				// Optional PIX allowed
+				$aid_candidate = 'E8 '.substr($test_der, strlen('06 xx ')); // Remove ASN.1 06=Type and xx=Length
+				$aid_is_ok = self::aidIsOkay($aid_candidate);
 			} else {
-				$aid_is_ok = true;
+				// All other OIDs can be mapped using the "ViaThinkSoft F6" scheme, but only if the DER encoding is not too long
+				// No PIX allowed
+				$aid_candidate = 'D2 76 00 01 86 F6 '.substr($test_der, strlen('06 xx ')); // Remove ASN.1 06=Type and xx=Length
+				$aid_is_ok = self::aidIsOkay($aid_candidate);
 			}
 			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816-5)'));
 		}

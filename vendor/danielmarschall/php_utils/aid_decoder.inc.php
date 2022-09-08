@@ -704,7 +704,7 @@ function _decode_aid($aid) {
 
 					$out[] = array("$aid1", "$txt1");
 					if ($txt2 !== '') {
-						$pix = "'$txt2' (".c_literal_hexstr(str_replace(':','',$txt2)).")";
+						$pix = "$txt2 (".c_literal_hexstr(str_replace(':','',$txt2)).")";
 						$out[] = array(str_repeat(' ',strlen($aid1))."$aid2", "with PIX $pix");
 					}
 					if ($ii < count($interpretations)-1) {

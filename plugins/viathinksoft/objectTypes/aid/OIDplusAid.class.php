@@ -254,6 +254,8 @@ class OIDplusAid extends OIDplusObject {
 			}
 		}
 
+		// The case E8... (Standard OID 1.0) doesn't need to be addressed here, because it is already shown in the AID decoder (and it is ambiguous since DER and PIX are mixed)
+
 		return $ids;
 	}
 
