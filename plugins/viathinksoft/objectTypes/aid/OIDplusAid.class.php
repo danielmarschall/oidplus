@@ -191,7 +191,8 @@ class OIDplusAid extends OIDplusObject {
 
 		$full = array();
 		foreach ($chunks as $c) {
-			$full[] = $withAbbr ? '<abbr title="'.htmlentities(array_shift($hints)).'">'.$c.'</abbr>' : $c;
+			$hint = array_shift($hints);
+			$full[] = $withAbbr && ($hint !== '') ? '<abbr title="'.htmlentities($hint).'">'.$c.'</abbr>' : $c;
 		}
 		return implode(' ', $full);
 	}
