@@ -20,7 +20,7 @@
  */
 
 require_once __DIR__ . '/../../../../../includes/oidplus.inc.php';
- 
+
 
 
 OIDplus::init(true);
@@ -31,7 +31,7 @@ if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPagePublicRdap', fals
 }
 
 $rdapBaseUri = OIDplus::baseConfig()->getValue('RDAP_BASE_URI', OIDplus::webpath() );
-$useCache = OIDplus::baseConfig()->getValue('RDAP_CACHE_ENABLED', true );
+$useCache = OIDplus::baseConfig()->getValue('RDAP_CACHE_ENABLED', false );
 $rdapCacheDir = OIDplus::baseConfig()->getValue('CACHE_DIRECTORY_OIDplusPagePublicRdap', \sys_get_temp_dir().\DIRECTORY_SEPARATOR );
 $rdapCacheExpires = OIDplus::baseConfig()->getValue('CACHE_EXPIRES_OIDplusPagePublicRdap', 60  * 3 );
 
@@ -52,11 +52,11 @@ if (\PHP_SAPI == 'cli') {
 $tokens = explode('$', $query);
 $query = array_shift($tokens);
 
-$query = str_replace('oid:.', 'oid:', $query); 
+$query = str_replace('oid:.', 'oid:', $query);
 $n = explode(':', $query);
 if(2>count($n)){
- array_unshift($n, 'oid');	
- $query = 'oid:'.$query;	
+ array_unshift($n, 'oid');
+ $query = 'oid:'.$query;
 }
 $ns = $n[0];
 
@@ -65,7 +65,7 @@ if(true === $useCache){
  $cacheFile = $rdapCacheDir. 'oidplus-rdap-'
 	.sha1(\get_current_user()
 		  . $rdapBaseUri.__FILE__.$query
-		  .OIDplus::baseConfig()->getValue('SERVER_SECRET', sha1(__FILE__.\get_current_user()) ) 
+		  .OIDplus::baseConfig()->getValue('SERVER_SECRET', sha1(__FILE__.\get_current_user()) )
 		 )
 	.'.'
 	.strlen( $rdapBaseUri.$query )
@@ -74,7 +74,7 @@ if(true === $useCache){
 
  ___rdap_read_cache($cacheFile, $rdapCacheExpires);
 }else{
-  $cacheFile = false;	
+  $cacheFile = false;
 }
 
 if (!is_null(OIDplus::getPluginByOid("1.3.6.1.4.1.37553.8.1.8.8.53354196964.641310544"))) { // OIDplusPagePublicAltIds
@@ -84,8 +84,8 @@ if (!is_null(OIDplus::getPluginByOid("1.3.6.1.4.1.37553.8.1.8.8.53354196964.6413
 	$query = $alt->id;
 	$n = explode(':', $query);
    if(2>count($n)){
-       array_unshift($n, 'oid');	
-       $query = 'oid:'.$query;	
+       array_unshift($n, 'oid');
+       $query = 'oid:'.$query;
    }
    $ns = $n[0];
  }
@@ -97,7 +97,7 @@ $out = [];
 
 	try {
 		$obj = OIDplusObject::findFitting($query);
-		if (!$obj) $obj = OIDplusObject::parse($query);  
+		if (!$obj) $obj = OIDplusObject::parse($query);
 		$query = $obj->nodeId();
 	} catch (Exception $e) {
 		$obj = null;
@@ -116,7 +116,7 @@ $data = $res ? $res->fetch_object() : null;
 if(null === $data){
 	$out['error'] = 'Not found';
 	if(true === $useCache){
-	    ___rdap_write_cache($out, $cacheFile); 
+	    ___rdap_write_cache($out, $cacheFile);
 	}
 	___rdap_out($out);
 }
@@ -132,14 +132,14 @@ else if (OIDplus::config()->getValue('vts_whois', '') != '') {
 	$whois_server = OIDplus::config()->getValue('vts_whois', '');
 }
 if (!empty($whois_server)) {
-	list($whois_host, $whois_port) = explode(':',"$whois_server:43");  
+	list($whois_host, $whois_port) = explode(':',"$whois_server:43");
 	if ($whois_port === '43') $out['port43'] = $whois_host;
 }
 
 
     $parentHandle=$obj->one_up();
 
- 
+
 $out['name'] = $obj->nodeId(true);
 $out['objectClassName'] = $ns;
 $out['handle'] = $ns.':'.$n[1];
@@ -154,8 +154,8 @@ $out['links'] = [
           [
             "href"=> 'https://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'],
             "type"=> "application/rdap+json",
-            "title"=> sprintf("Information about the %s %s", $ns, $n[1]), 
-			"value"=>  $rdapBaseUri.$ns.'/'.$n[1],  
+            "title"=> sprintf("Information about the %s %s", $ns, $n[1]),
+			"value"=>  $rdapBaseUri.$ns.'/'.$n[1],
             "rel"=> "self"
          ],
 	     [
@@ -165,7 +165,7 @@ $out['links'] = [
             "value"=> OIDplus::webpath()."?goto=".urlencode($query),
             "rel"=> "alternate"
          ]
-	
+
     ];
 $out['remarks'] = [
                  [
@@ -176,62 +176,60 @@ $out['remarks'] = [
             "links"=> []
         ],
   [
-            "title"=>"Description", 
+            "title"=>"Description",
             "description"=> [
                ($obj->isConfidential()) ? 'REDACTED FOR PRIVACY' : $data->description,
             ],
-            "links"=> [	    
-				[          
-					"href"=> OIDplus::webpath()."?goto=".urlencode($query),           
-					"type"=> "text/html",           
-					"title"=> sprintf("Information about the %s %s in the online repository", $ns, $n[1]),          
+            "links"=> [
+				[
+					"href"=> OIDplus::webpath()."?goto=".urlencode($query),
+					"type"=> "text/html",
+					"title"=> sprintf("Information about the %s %s in the online repository", $ns, $n[1]),
 					"value"=> OIDplus::webpath()."?goto=".urlencode($query),
-					"rel"=> "alternate"      
-				]			
-			]     
+					"rel"=> "alternate"
+				]
+			]
   ],
- 
+
     ];
 
 if (!is_null(OIDplus::getPluginByOid("1.3.6.1.4.1.37476.2.5.2.4.1.100"))) { // OIDplusPagePublicWhois
 	$oidIPUrl =  OIDplus::webpath().'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?query='.urlencode($query);
-	$oidIP = @file_get_contents($oidIPUrl);
-	$tmp = array();
-	$tmp["title"] = "OID-IP Result";
-	if($oidIP !== false)            
-            $tmp["description"] = [
-                $oidIP,
-            ];
-	$tmp["links"] = [	    
-				[          
-					"href"=> $oidIPUrl,           
-					"type"=> "text/plain",           
-					"title"=> sprintf("OIDIP Result for the %s %s (Plaintext)", $ns, $n[1]),          
-					"value"=> $oidIPUrl,
-					"rel"=> "alternate"      
-				],			
-				[          
-					"href"=> "$oidIPUrl\$format=json",         
-					"type"=> "application/json",           
-					"title"=> sprintf("OIDIP Result for the %s %s (JSON)", $ns, $n[1]),          
-					"value"=> "$oidIPUrl\$format=json",
-					"rel"=> "alternate"      
-				],			
-				[          
-					"href"=> "$oidIPUrl\$format=xml",       
-					"type"=> "application/xml",           
-					"title"=> sprintf("OIDIP Result for the %s %s (XML)", $ns, $n[1]),          
-					"value"=> "$oidIPUrl\$format=xml",
-					"rel"=> "alternate"      
-				]			
-			];
-	$out['remarks'][]= $tmp;
 
-	$oidIPUrlJSON =  OIDplus::webpath().'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?query='.urlencode($query).'$format=json';
-	$oidIPJSON = @file_get_contents($oidIPUrlJSON);
-	if($oidIPJSON !== false){
-		$out['oidplus_oidip'] = json_decode($oidIPJSON);
-	}
+	$oidip_generator = new OIDplusOIDIP();
+
+	list($oidIP, $dummy_content_type) = $oidip_generator->oidipQuery($query);
+
+	$out['remarks'][] = [
+		"title" => "OID-IP Result",
+		"description" => $oidIP,
+		"links" => [
+				[
+					"href"=> $oidIPUrl,
+					"type"=> "text/plain",
+					"title"=> sprintf("OIDIP Result for the %s %s (Plaintext)", $ns, $n[1]),
+					"value"=> $oidIPUrl,
+					"rel"=> "alternate"
+				],
+				[
+					"href"=> "$oidIPUrl\$format=json",
+					"type"=> "application/json",
+					"title"=> sprintf("OIDIP Result for the %s %s (JSON)", $ns, $n[1]),
+					"value"=> "$oidIPUrl\$format=json",
+					"rel"=> "alternate"
+				],
+				[
+					"href"=> "$oidIPUrl\$format=xml",
+					"type"=> "application/xml",
+					"title"=> sprintf("OIDIP Result for the %s %s (XML)", $ns, $n[1]),
+					"value"=> "$oidIPUrl\$format=xml",
+					"rel"=> "alternate"
+				]
+			]
+		];
+
+	list($oidIPJSON, $dummy_content_type) = $oidip_generator->oidipQuery("$query\$format=json");
+	$out['oidplus_oidip'] = json_decode($oidIPJSON);
 }
 
 $out['notices']=[
@@ -244,42 +242,42 @@ $out['notices']=[
          "links" =>
          [
            [
-			 "value" => $rdapBaseUri."help",  
+			 "value" => $rdapBaseUri."help",
              "rel" => "alternate",
              "type" => "text/html",
              "href" => OIDplus::webpath()."?goto=oidplus%3Aresources%24OIDplus%2Fprivacy_documentation.html"
            ]
          ]
        ]
-	
+
 ];
 
 if($obj->isConfidential()){
- $out['remarks'][1]['type'] = "result set truncated due to authorization"; 	
+ $out['remarks'][1]['type'] = "result set truncated due to authorization";
 }
 
 $out['statuses']=[
-	'active', 
+	'active',
 ];
 
- 
+
 if(true === $useCache){
   ___rdap_write_cache($out, $cacheFile);
 }
 ___rdap_out($out);
 
- 
+
 function ___rdap_write_cache($out, $cacheFile){
  if(!is_string($cacheFile)){
-   return;	 
+   return;
  }
  $exp = var_export($out, true);
  $code = <<<PHPCODE
 <?php
- return $exp; 
+ return $exp;
 PHPCODE;
 
-	file_put_contents($cacheFile, $code);	
+	file_put_contents($cacheFile, $code);
 	touch($cacheFile);
 }
 
