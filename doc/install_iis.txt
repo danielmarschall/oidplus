@@ -68,3 +68,17 @@ Install OIDplus to Microsoft IIS
 	extension=odbc        (if you want to use ODBC)
 
 (6) Open http://localhost/oidplus and follow the setup instructions
+
+
+How to install PHP 8.1 (not supported by Microsoft)?
+----------------------------------------------------
+
+- Download PHP for Windows: https://windows.php.net/download#php-8.1
+
+- Unpack it to C:\Program Files (x86)\PHP\v8.1\
+
+- Run  %windir%\system32\inetsrv\InetMgr.exe
+	- Open Handler Mappings. Change PHP_via_FastCGI to C:\Program Files (x86)\PHP\v8.1\php-cgi.exe
+	- Open FastCGI settings and add PHP 8.1 , make sure to copy the settings like they are done in 7.4
+
+	

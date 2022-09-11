@@ -82,7 +82,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 					}
 
 					if (OIDplus::authUtils()->isAdminLoggedIn()) {
-						if (class_exists("OIDplusPageAdminListRAs")) {
+						if (!is_null(OIDplus::getPluginByOid("1.3.6.1.4.1.37476.2.5.2.4.3.500"))) { // OIDplusPageAdminListRAs
 							$out['text'] .= '<p><a href="#" onclick="return OIDplusPagePublicRaBaseUtils.deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">'._L('Delete this RA').'</a></p>';
 						} else {
 							$out['text'] .= '<p><a href="#" onclick="return OIDplusPagePublicRaBaseUtils.deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">'._L('Delete this RA').'</a></p>';
