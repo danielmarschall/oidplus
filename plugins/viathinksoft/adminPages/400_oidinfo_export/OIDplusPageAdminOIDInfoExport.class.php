@@ -657,6 +657,9 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	}
 
 	public static function outputXML($only_non_existing) {
+		$out_type = null;
+		$out_content = '';
+
 		// This file contains class OIDInfoAPI.
 		// We cannot include this in init(), because the init
 		// of the registration plugin (OIDplusPageAdminRegistration) uses
@@ -679,7 +682,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		$sys_title = OIDplus::config()->getValue('system_title');
 		$name1 = !empty($sys_title) ? $sys_title : 'OIDplus 2.0';
 		$name2 = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Export interface';
-		echo $oa->xmlAddHeader($name1, $name2, $email); // do not translate
+		$out_content .= $oa->xmlAddHeader($name1, $name2, $email); // do not translate
 
 		$params['allow_html'] = true;
 		$params['allow_illegal_email'] = true; // It should be enabled, because the creator could have used some kind of human-readable anti-spam technique
@@ -829,7 +832,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 				list($ns,$id) = explode(':',$obj->nodeId());
 				if ($ns == 'oid') {
-					echo $oa->createXMLEntry($id, $elements, $params, $comment=$obj->nodeId());
+					$out_content .= $oa->createXMLEntry($id, $elements, $params, $comment=$obj->nodeId());
 				} else {
 					$alt_ids = $obj->getAltIds(); // TODO: slow!
 					foreach ($alt_ids as $alt_id) {
@@ -838,14 +841,17 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 						$desc = $alt_id->getDescription();
 						if ($ns == 'oid') {
 							if (strpos($id, '2.25.') === 0) continue; // don't spam the uuid arc with GUID objects
-							echo $oa->createXMLEntry($id, $elements, $params, $comment=$obj->nodeId());
+							$out_content .= $oa->createXMLEntry($id, $elements, $params, $comment=$obj->nodeId());
 						}
 					}
 				}
 			}
 		}
 
-		echo $oa->xmlAddFooter();
+		$out_content .= $oa->xmlAddFooter();
+
+		$out_type = 'text/xml';
+		return array($out_content, $out_type);
 	}
 
 	private static function _formatdate($str) {
