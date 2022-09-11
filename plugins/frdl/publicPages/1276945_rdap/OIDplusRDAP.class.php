@@ -55,7 +55,8 @@ class OIDplusRDAP {
 			.'.php'
 			;
 
-			$this->rdap_read_cache($cacheFile, $this->rdapCacheExpires);
+			$tmp = $this->rdap_read_cache($cacheFile, $this->rdapCacheExpires);
+			if ($tmp) return $tmp;
 		}else{
 			$cacheFile = false;
 		}
@@ -89,7 +90,7 @@ class OIDplusRDAP {
 			if(true === $this->useCache){
 			$this->rdap_write_cache($out, $cacheFile);
 			}
-			$this->rdap_out($out);
+			return $this->rdap_out($out);
 		}
 
 		$res = OIDplus::db()->query("select * from ###objects where id = ?", [$query]);
@@ -99,7 +100,7 @@ class OIDplusRDAP {
 			if(true === $this->useCache){
 				$this->rdap_write_cache($out, $cacheFile);
 			}
-			$this->rdap_out($out);
+			return $this->rdap_out($out);
 		}
 
 		$obj = OIDplusObject::parse($data->id);
@@ -229,7 +230,7 @@ class OIDplusRDAP {
 		];
 
 		if($obj->isConfidential()){
-		 $out['remarks'][1]['type'] = "result set truncated due to authorization";
+			$out['remarks'][1]['type'] = "result set truncated due to authorization";
 		}
 
 		$out['statuses']=[
@@ -240,7 +241,7 @@ class OIDplusRDAP {
 		if(true === $this->useCache){
 			$this->rdap_write_cache($out, $cacheFile);
 		}
-		$this->rdap_out($out);
+		return $this->rdap_out($out);
 	}
 
 	protected function rdap_write_cache($out, $cacheFile){
@@ -261,16 +262,16 @@ PHPCODE;
 		if(is_string($cacheFile) && file_exists($cacheFile) && filemtime($cacheFile) >= time() - $rdapCacheExpires ){
 			$out = include $cacheFile;
 			if(is_array($out) || is_object($out)){
-				$this->rdap_out($out);
+				return $this->rdap_out($out);
 			}
 		}
+		return null;
 	}
 
 	protected function rdap_out($out){
-		originHeaders();
-		header('Content-Type: application/rdap+json');
-		echo json_encode($out);
-		exit;
+		$out_content = json_encode($out);
+		$out_type = 'application/rdap+json';
+		return array($out_content, $out_type);
 	}
 
 }
