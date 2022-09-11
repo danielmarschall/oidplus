@@ -41,6 +41,9 @@ class OIDplusGui extends OIDplusBaseClass {
 		}
 
 		if (!$handled) {
+			if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
+				http_response_code(404);
+			}
 			$out['title'] = _L('Error');
 			$out['icon'] = 'img/error.png';
 			$out['text'] = _L('The resource cannot be found.');
