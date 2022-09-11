@@ -5214,6 +5214,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		RDAP
+		]]></source>
+		<target><![CDATA[
+		RDAP
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		RFC Internet Draft
 		]]></source>
 		<target><![CDATA[
