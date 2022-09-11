@@ -30,6 +30,8 @@ if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPagePublicRdap', fals
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 
+originHeaders();
+
 if (\PHP_SAPI == 'cli') {
 	if ($_SERVER['argc'] != 2) {
 		echo _L('Syntax').': '.$_SERVER['argv'][0].' <query>'."\n";
@@ -43,9 +45,6 @@ if (\PHP_SAPI == 'cli') {
 	}
 	$query = $_REQUEST['query'];
 }
-
-
-
 
 $x = new OIDplusRDAP();
 list($out_content, $out_type) = $x->rdapQuery($query);
