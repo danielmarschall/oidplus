@@ -29,9 +29,14 @@
 
 $dir = __DIR__ . '/../../';
 
+// TODO: Support the case messages*.xml (for than 1 message file per language)
+//       Not sure how to solve it, because if there is a string we do not have,
+//       to which file do we add it?
+
 // ---
 
 $langs = array();
+// TODO: Instead of hard-coding messages.xml, read it from manifest.xml
 $tmp = glob($dir.'/plugins/'.'*'.'/language/'.'*'.'/messages.xml');
 foreach ($tmp as $tmp2) {
 	$tmp3 = explode('/', $tmp2);
@@ -80,6 +85,7 @@ sort($all_strings);
 // ---
 
 foreach ($langs as $lang) {
+	// TODO: Instead of hard-coding messages.xml, read it from manifest.xml
 	$translation_files = glob($dir.'/plugins/'.'*'.'/language/'.$lang.'/messages.xml');
 	$translation_file = count($translation_files) > 0 ? $translation_files[0] : null;
 	if (file_exists($translation_file)) {
@@ -138,7 +144,7 @@ foreach ($langs as $lang) {
 	file_put_contents($translation_file, $cont);
 
 	echo "\t$stats_total total messages, $stats_translated already translated (".round($stats_translated/$stats_total*100,2)."%), $stats_not_translated not translated (".round($stats_not_translated/$stats_total*100,2)."%)\n";
-	echo "\tDone...";
+	echo "\tDone...\n";
 }
 
 if (count($langs) > 0) {
