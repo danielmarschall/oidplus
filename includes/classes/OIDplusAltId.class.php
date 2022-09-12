@@ -24,11 +24,13 @@ class OIDplusAltId extends OIDplusBaseClass {
 	private $ns;
 	private $id;
 	private $desc;
+	private $suffix;
 
-	function __construct($ns, $id, $desc) {
+	function __construct($ns, $id, $desc, $suffix='') {
 		$this->ns = $ns;
 		$this->id = $id;
 		$this->desc = $desc;
+		$this->suffix = $suffix;
 	}
 
 	function getNamespace() {
@@ -41,6 +43,10 @@ class OIDplusAltId extends OIDplusBaseClass {
 
 	function getDescription() {
 		return $this->desc;
+	}
+
+	function getSuffix() {
+		return $this->suffix;
 	}
 
 }

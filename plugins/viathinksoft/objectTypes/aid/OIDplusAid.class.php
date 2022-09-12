@@ -224,29 +224,110 @@ class OIDplusAid extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 
-		// ViaThinkSoft "Foreign" AIDs
-		// F0 = IANA PEN + PIX
-		// F1 = ViaThinkSoft FreeOID + PIX
-		// F2 = MAC address + PIX
-		// F3 = USB-IF VendorID + PIX
-		// F4 = D-U-N-S number + PIX
-		// F5 = GS1 number + PIX
-		// F6 = DER OID (no PIX)
-
-		// OID<->AID (ViaThinkSoft Foreign-6)
 		$aid = $this->nodeId(false);
 		$aid = strtoupper($aid);
+
+		// ViaThinkSoft "Foreign" AIDs
+
+		// (VTS F0) IANA PEN + PIX
+		// Resolve only if there is no PIX
+		if (str_starts_with($aid,'D276000186F0')) {
+			$rest = substr($aid,strlen('D276000186F0'));
+			$p = strpos($rest,'F');
+			if ($p !== false) {
+				$pen = substr($rest,0,$p);
+				$pix = substr($rest,$p+1);
+			} else {
+				$pen = $rest;
+				$pix = '';
+			}
+			if (($pix === '') && preg_match('/^[0-9]+$/',$pen,$m)) {
+				$oid = '1.3.6.1.4.1.'.$pen;
+				$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));
+			}
+		}
+
+		// (VTS F1) ViaThinkSoft FreeOID + PIX
+		// Resolve only if there is no PIX
+		if (str_starts_with($aid,'D276000186F1')) {
+			$rest = substr($aid,strlen('D276000186F1'));
+			$p = strpos($rest,'F');
+			if ($p !== false) {
+				$number = substr($rest,0,$p);
+				$pix = substr($rest,$p+1);
+			} else {
+				$number = $rest;
+				$pix = '';
+			}
+			if (($pix === '') && preg_match('/^[0-9]+$/',$number,$m)) {
+				$oid = '1.3.6.1.4.1.37476.9000.'.$number;
+				$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));
+			}
+		}
+
+		// (VTS F2) MAC address + PIX
+		// Resolve only if there is no PIX
+		if (str_starts_with($aid,'D276000186F2')) {
+			$rest = substr($aid,strlen('D276000186F2'));
+			if (strlen($rest) == 12) {
+				$mac = $rest;
+				$ids[] = new OIDplusAltId('mac', $mac, _L('MAC address'));
+			}
+		}
+
+		// (VTS F3) USB-IF VendorID + PIX
+		// Resolve only if there is no PIX
+		if (str_starts_with($aid,'D276000186F3')) {
+			$rest = substr($aid,strlen('D276000186F3'));
+			if (strlen($rest) == 4) {
+				$vid = $rest;
+				$ids[] = new OIDplusAltId('usb-vendor-id', $vid, _L('USB-IF (usb.org) VendorID'));
+			}
+		}
+
+		// (VTS F4) D-U-N-S number + PIX
+		// Resolve only if there is no PIX
+		if (str_starts_with($aid,'D276000186F4')) {
+			$rest = substr($aid,strlen('D276000186F4'));
+			$p = strpos($rest,'F');
+			if ($p !== false) {
+				$duns = substr($rest,0,$p);
+				$pix = substr($rest,$p+1);
+			} else {
+				$duns = $rest;
+				$pix = '';
+			}
+			if (($pix === '') && preg_match('/^[0-9]+$/',$duns,$m)) {
+				$ids[] = new OIDplusAltId('duns', $duns, _L('Data Universal Numbering System (D-U-N-S)'));
+			}
+		}
+
+		// (VTS F5) GS1 number + PIX
+		// Resolve only if there is no PIX
+		if (str_starts_with($aid,'D276000186F5')) {
+			$rest = substr($aid,strlen('D276000186F5'));
+			$p = strpos($rest,'F');
+			if ($p !== false) {
+				$gs1 = substr($rest,0,$p);
+				$pix = substr($rest,$p+1);
+			} else {
+				$gs1 = $rest;
+				$pix = '';
+			}
+			if (($pix === '') && preg_match('/^[0-9]+$/',$gs1,$m)) {
+				$ids[] = new OIDplusAltId('gs1', $gs1, _L('GS1 Based IDs (GLN/GTIN/SSCC/...)'), ' ('._L('without check-digit').')');
+			}
+		}
+
+		// (VTS F6) OID<->AID, no PIX
 		if (str_starts_with($aid,'D276000186F6')) {
 			$der = substr($aid,strlen('D276000186F6'));
 			$len = strlen($der);
 			if ($len%2 == 0) {
 				$len /= 2;
 				$len = str_pad("$len", 2, '0', STR_PAD_LEFT);
-
 				$type = '06'; // absolute OID
-
 				$der = "$type $len $der";
-
 				$oid = OidDerConverter::derToOID(OidDerConverter::hexStrToArray($der));
 				if ($oid) {
 					$oid = ltrim($oid,'.');
@@ -256,6 +337,7 @@ class OIDplusAid extends OIDplusObject {
 		}
 
 		// The case E8... (Standard OID 1.0) doesn't need to be addressed here, because it is already shown in the AID decoder (and it is ambiguous since DER and PIX are mixed)
+		// TODO: If it has no pix, then resolve it !!! but how do we know if there is a PIX or a part ID ?
 
 		return $ids;
 	}
