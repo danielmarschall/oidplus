@@ -29,6 +29,18 @@ OIDplus::init(true);
 
 $static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
 
+if (isset($_REQUEST['h404'])) {
+	$handled = false;
+	$plugins = OIDplus::getPagePlugins();
+	foreach ($plugins as $plugin) {
+		if ($plugin->handle404($_REQUEST['h404'])) $handled = true;
+	}
+	if (!$handled) {
+		header('Location:'.OIDplus::webpath().'?goto='.urlencode('oidplus:err:'.$_REQUEST['h404']));
+		die();
+	}
+}
+
 $static_node_id = OIDplus::prefilterQuery($static_node_id, false);
 
 $static = OIDplus::gui()->generateContentPage($static_node_id);

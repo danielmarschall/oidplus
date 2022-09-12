@@ -7,12 +7,19 @@ Ideas by Simon T.:
 - a possibility to export&transfer all data between OIDplus'es: Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!
 - a possibility to 'construct' my own object types in UI (1: specify list of their fields and 2: choose "oid-like/forward" com.example.api or "domain-like/reverse" api.example.com naming scheme), so they would appear as the whole new type
 
+RDAP:
+- Extend handle404() to handle more things required by the RFC, as well as more object types
+- "HTTP 404" rewrite: Also implement for NGINX and IIS, see .htaccess
+- More TODO see GitHub repository https://github.com/frdl/oidplus-frdlweb-rdap/issues
+
+GS1 plugin:
+- prefilterQuery: If we query a gs1 which has a check digit, we should be redirected to the number without checkdigit.
+                  But... how do we know if the last digit is a checkdigit or if it is a longer number with a missing check-digit?
+
 Application Identifier (aid) Object Type Plugin:
 - When aid_decoder.inc.php finds a mistake, should we forbid to create the AID? But some companies might already use invalid identifiers.
 - Category "F": Offer a "random ID" button (+ enter desired length), like we did for GUID
 - Link to ViaThinkSoft-Foreign-AID
-
-Implement RDAP!
 
 New Object Type plugins:
 - LSID ?
