@@ -3,7 +3,7 @@
 /*
  * ISO/IEC 7816-5 Application Identifier decoder for PHP
  * Copyright 2022 Daniel Marschall, ViaThinkSoft
- * Version 2022-09-07
+ * Version 2022-09-12
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -771,4 +771,18 @@ function aid_split_rid_pix($a, &$rid=null, &$pix=null) {
 	if ($pix !== null) $pix = substr($a, $p);
 
 	return $p;
+}
+
+function aid_canonize(&$aid_candidate) {
+	$aid_candidate = str_replace(' ', '', $aid_candidate);
+	$aid_candidate = str_replace(':', '', $aid_candidate);
+	$aid_candidate = strtoupper($aid_candidate);
+	if (strlen($aid_candidate) > 16*2) {
+		$aid_is_ok = false; // OID DER encoding is too long to fit into the AID
+	} else if ((strlen($aid_candidate) == 16*2) && (substr($aid_candidate,-2) == 'FF')) {
+		$aid_is_ok = false; // 16 byte AID must not end with 0xFF (reserved by ISO)
+	} else {
+		$aid_is_ok = true;
+	}
+	return $aid_is_ok;
 }

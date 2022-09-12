@@ -1494,6 +1494,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Data Universal Numbering System (D-U-N-S)
+		]]></source>
+		<target><![CDATA[
+		Data Universal Numbering System (D-U-N-S)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Database
 		]]></source>
 		<target><![CDATA[
@@ -3390,6 +3398,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		MAC address
+		]]></source>
+		<target><![CDATA[
+		MAC-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Machine type
 		]]></source>
 		<target><![CDATA[
@@ -3674,6 +3690,14 @@
 		]]></source>
 		<target><![CDATA[
 		Kein CAPTCHA wird verwendet werden. Bitte beachten Sie, dass Ihr System dann angreifbar für "Brute force" Angriffe ist.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No PIX allowed
+		]]></source>
+		<target><![CDATA[
+		Keine PIX erlaubt
 		]]></target>
 	</message>
 	<message>
@@ -4314,6 +4338,14 @@
 		]]></source>
 		<target><![CDATA[
 		Betriebssystem
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Optional PIX allowed, with "FF" prefix
+		]]></source>
+		<target><![CDATA[
+		Optionale PIX erlaubt, mit Präfix "FF"
 		]]></target>
 	</message>
 	<message>
@@ -6870,6 +6902,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		USB-IF (usb.org) VendorID
+		]]></source>
+		<target><![CDATA[
+		USB-IF (usb.org) VendorID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		UUID
 		]]></source>
 		<target><![CDATA[
@@ -7914,6 +7954,14 @@
 		]]></source>
 		<target><![CDATA[
 		weLuhn-Prüfsumme
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		without check-digit
+		]]></source>
+		<target><![CDATA[
+		ohne Prüfsumme
 		]]></target>
 	</message>
 	<message>

@@ -639,7 +639,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					$ns = $alt_id->getNamespace();
 					$aid = $alt_id->getId();
 					$aiddesc = $alt_id->getDescription();
-					$out['text'] .= "$aiddesc: <code>$ns:$aid</code><br>";
+					$suffix = $alt_id->getSuffix();
+					$out['text'] .= "$aiddesc: <code>$ns:$aid</code>$suffix<br>";
 				}
 			}
 

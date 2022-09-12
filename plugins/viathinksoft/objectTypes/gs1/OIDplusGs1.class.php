@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -226,6 +226,20 @@ class OIDplusGs1 extends OIDplusObject {
 		if ($tmp != false) return $tmp;
 
 		return null;
+	}
+
+	public function getAltIds() {
+		if ($this->isRoot()) return array();
+		$ids = parent::getAltIds();
+
+		// (VTS F5) GS1 to AID (PIX allowed)
+		$gs1 = $this->nodeId(false);
+		$aid = 'D276000186F5'.$gs1;
+		if (strlen($aid)%2 == 1) $aid .= 'F';
+		$aid_is_ok = aid_canonize($aid);
+		if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816-5)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')');
+
+		return $ids;
 	}
 
 	public function getDirectoryName() {
