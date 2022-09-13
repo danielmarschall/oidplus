@@ -9,7 +9,7 @@ Ideas by Simon T.:
 
 RDAP:
 - Extend handle404() to handle more things required by the RFC, as well as more object types
-- "HTTP 404" rewrite: Also implement for NGINX and IIS, see .htaccess
+- "HTTP 404" rewrite: Also implement for NGINX, like done in web.config (IIS) and .htaccess (Apache2)
 - More TODO see GitHub repository https://github.com/frdl/oidplus-frdlweb-rdap/issues
 
 GS1 plugin:
