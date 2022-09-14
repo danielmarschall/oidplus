@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,23 +39,41 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		return $res;
 	}
 
-	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
-		$this->last_error = null;
-		if (is_null($prepared_args)) {
-			$res = @odbc_exec($this->conn, $sql);
+	protected function doQueryInternalPrepare(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+				foreach ($prepared_args as &$value) {
+					// ODBC/SQLServer has problems converting "true" to the data type "bit"
+					// Error "Invalid character value for cast specification"
+					if (is_bool($value)) {
+						if ($this->slangDetectionDone) {
+							$value = $this->getSlang()->getSQLBool($value);
+						} else {
+							$value = $value ? '1' : '0';
+						}
+					}
+				}
 
-			if ($res === false) {
-				$this->last_error = odbc_errormsg($this->conn);
-				throw new OIDplusSQLException($sql, $this->error());
-			} else {
-				return new OIDplusQueryResultODBC($res);
-			}
-		} else {
-			if (!is_array($prepared_args)) {
-				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
-			}
+				$ps = @odbc_prepare($this->conn, $sql);
+				if (!$ps) {
+					// If preparation fails, try the emulation
+					// For example, SQL Server ODBC Driver cannot have "?" in a subquery,
+					// otherwise you receive the error message
+					// "Syntax error or access violation" on odbc_prepare()
+					return $this->doQueryPrepareEmulation($sql, $prepared_args);
+					/*
+					$this->last_error = odbc_errormsg($this->conn);
+					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
+					*/
+				}
 
-			if ($this->forcePrepareEmulation()) {
+				if (!@odbc_execute($ps, $prepared_args)) {
+					$this->last_error = odbc_errormsg($this->conn);
+					throw new OIDplusSQLException($sql, $this->error());
+				}
+				return new OIDplusQueryResultODBC($ps);
+
+	}
+
+	protected function doQueryPrepareEmulation(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 				// For some drivers (e.g. Microsoft Access), we need to do this kind of emulation, because odbc_prepare() does not work
 				$sql = str_replace('?', chr(1), $sql);
 				foreach ($prepared_args as $arg) {
@@ -85,30 +103,28 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
 				}
 				return new OIDplusQueryResultODBC($ps);
+	}
+
+	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+		$this->last_error = null;
+		if (is_null($prepared_args)) {
+			$res = @odbc_exec($this->conn, $sql);
+
+			if ($res === false) {
+				$this->last_error = odbc_errormsg($this->conn);
+				throw new OIDplusSQLException($sql, $this->error());
 			} else {
-				foreach ($prepared_args as &$value) {
-					// ODBC/SQLServer has problems converting "true" to the data type "bit"
-					// Error "Invalid character value for cast specification"
-					if (is_bool($value)) {
-						if ($this->slangDetectionDone) {
-							$value = $this->getSlang()->getSQLBool($value);
-						} else {
-							$value = $value ? '1' : '0';
-						}
-					}
-				}
+				return new OIDplusQueryResultODBC($res);
+			}
+		} else {
+			if (!is_array($prepared_args)) {
+				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
+			}
 
-				$ps = @odbc_prepare($this->conn, $sql);
-				if (!$ps) {
-					$this->last_error = odbc_errormsg($this->conn);
-					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
-				}
-
-				if (!@odbc_execute($ps, $prepared_args)) {
-					$this->last_error = odbc_errormsg($this->conn);
-					throw new OIDplusSQLException($sql, $this->error());
-				}
-				return new OIDplusQueryResultODBC($ps);
+			if ($this->forcePrepareEmulation()) {
+				return $this->doQueryPrepareEmulation($sql, $prepared_args);
+			} else {
+				return $this->doQueryInternalPrepare($sql, $prepared_args);
 			}
 		}
 	}
