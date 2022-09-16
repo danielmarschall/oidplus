@@ -30,5 +30,23 @@ class OIDplusPagePublicRdap extends OIDplusPagePluginPublic {
 	    $text .= '<br /> <a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE)
 			.'rdap/rdap.php?query='.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('RDAP').'</a>';	
 	}
-	
+
+	public function handle404($request) {
+		$namespaces = array();
+		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
+			$namespaces[] = $ot::ns();
+		}
+		foreach ($namespaces as $ns) {
+			// Note: This only works if OIDplus is located at the domain root (because $request is relative to the domain)
+			if (!preg_match('@^/'.preg_quote($ns,'@').'/(.+)$@', $request, $m)) return false;
+			$oid = $m[1];
+			$query = "$ns:$oid";
+			$x = new OIDplusRDAP();
+			list($out_content, $out_type) = $x->rdapQuery($query);
+			if ($out_type) header('Content-Type:'.$out_type);
+			echo $out_content;
+			die(); // return true;
+		}
+	}
+
 }
