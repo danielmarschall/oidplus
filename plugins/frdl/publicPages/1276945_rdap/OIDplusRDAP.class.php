@@ -31,8 +31,8 @@ class OIDplusRDAP {
 	public function __construct() {
 		$this->rdapBaseUri = OIDplus::baseConfig()->getValue('RDAP_BASE_URI', OIDplus::webpath() );
 		$this->useCache = OIDplus::baseConfig()->getValue('RDAP_CACHE_ENABLED', false );
-		$this->rdapCacheDir = OIDplus::baseConfig()->getValue('CACHE_DIRECTORY_OIDplusPagePublicRdap', \sys_get_temp_dir().\DIRECTORY_SEPARATOR );
-		$this->rdapCacheExpires = OIDplus::baseConfig()->getValue('CACHE_EXPIRES_OIDplusPagePublicRdap', 60 * 3 );
+		$this->rdapCacheDir = OIDplus::baseConfig()->getValue('RDAP_CACHE_DIRECTORY', OIDplus::localpath().'userdata/cache/' );
+		$this->rdapCacheExpires = OIDplus::baseConfig()->getValue('RDAP_CACHE_EXPIRES', 60 * 3 );
 	}
 
 	public function rdapQuery($query) {
@@ -45,14 +45,14 @@ class OIDplusRDAP {
 		$ns = $n[0];
 
 		if(true === $this->useCache){
-			$cacheFile = $this->rdapCacheDir. 'oidplus-rdap-'
+			$cacheFile = $this->rdapCacheDir. 'rdap_'
 			.sha1(\get_current_user()
 				  . $this->rdapBaseUri.__FILE__.$query
 				  .OIDplus::baseConfig()->getValue('SERVER_SECRET', sha1(__FILE__.\get_current_user()) )
 				 )
 			.'.'
 			.strlen( $this->rdapBaseUri.$query )
-			.'.php'
+			.'.ser'
 			;
 
 			$tmp = $this->rdap_read_cache($cacheFile, $this->rdapCacheExpires);
@@ -245,22 +245,13 @@ class OIDplusRDAP {
 	}
 
 	protected function rdap_write_cache($out, $cacheFile){
-		if(!is_string($cacheFile)){
-			return;
-		}
-		$exp = var_export($out, true);
-		$code = <<<PHPCODE
-<?php
- return $exp;
-PHPCODE;
-
-		file_put_contents($cacheFile, $code);
-		touch($cacheFile);
+		if (!is_string($cacheFile)) return;
+		@file_put_contents($cacheFile, serialize($out));
 	}
 
 	protected function rdap_read_cache($cacheFile, $rdapCacheExpires){
-		if(is_string($cacheFile) && file_exists($cacheFile) && filemtime($cacheFile) >= time() - $rdapCacheExpires ){
-			$out = include $cacheFile;
+		if (is_string($cacheFile) && file_exists($cacheFile) && filemtime($cacheFile) >= time() - $rdapCacheExpires) {
+			$out = unserialize(file_get_contents($cacheFile));
 			if(is_array($out) || is_object($out)){
 				return $this->rdap_out($out);
 			}
