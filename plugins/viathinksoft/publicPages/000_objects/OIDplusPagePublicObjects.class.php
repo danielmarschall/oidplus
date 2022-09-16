@@ -491,7 +491,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		return array($parent, $res, $row);
 	}
 
-	private function alternatives($id) {
+	private static function getAlternativesForQuery($id) {
 		// e.g. used for "Reverse Alt Id"
 		$alternatives = array();
 		foreach (array_merge(OIDplus::getPagePlugins(),OIDplus::getObjectTypePlugins()) as $plugin) {
@@ -568,7 +568,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			$test = $this->tryObject($id, $out);
 			if ($test === false) {
-				$alternatives = $this->alternatives($id);
+				$alternatives = $this->getAlternativesForQuery($id);
 				foreach ($alternatives as $alternative) {
 					$test = $this->tryObject($alternative, $out);
 					if ($test !== false) break;
@@ -834,7 +834,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$ary = array_reverse($ary);
 		}
 		if (!$found_leaf) {
-			$alternatives = $this->alternatives($request);
+			$alternatives = $this->getAlternativesForQuery($request);
 			foreach ($alternatives as $alternative) {
 				$ary_ = array();
 				if ($obj = OIDplusObject::parse($alternative)) {
@@ -1131,6 +1131,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 	public function implementsFeature($id) {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested()
+		// Important: Do NOT 1.3.6.1.4.1.37476.2.5.2.3.7 because our getAlternativesForQuery() is the one that calls others!
 		return false;
 	}
 
