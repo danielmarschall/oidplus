@@ -28,6 +28,10 @@ class OIDplusObjectTypePluginAid extends OIDplusObjectTypePlugin {
 	public static function prefilterQuery($static_node_id, $throw_exception) {
 		if (str_starts_with($static_node_id,'aid:')) {
 			$static_node_id = str_replace(' ', '', $static_node_id);
+
+			$tmp = explode(':',$static_node_id,2);
+			if (isset($tmp[1])) $tmp[1] = strtoupper($tmp[1]);
+			$static_node_id = implode(':',$tmp);
 		}
 		return $static_node_id;
 	}

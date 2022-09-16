@@ -461,6 +461,51 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		});
 	}
 
+	private function tryObject($id, &$out) {
+		$parent = null;
+		$res = null;
+		$row = null;
+		$matches_any_registered_type = false;
+		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
+			if ($obj = $ot::parse($id)) {
+				$matches_any_registered_type = true;
+				if ($obj->isRoot()) {
+					$obj->getContentPage($out['title'], $out['text'], $out['icon']);
+					$parent = null; // $obj->getParent();
+					break;
+				} else {
+					$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
+					if (!$res->any()) {
+						return false;
+					} else {
+						$row = $res->fetch_array(); // will be used further down the code
+						$obj->getContentPage($out['title'], $out['text'], $out['icon']);
+						if (empty($out['title'])) $out['title'] = explode(':',$obj->nodeId(),2)[1];
+						$parent = $obj->getParent();
+						break;
+					}
+				}
+			}
+		}
+		if (!$matches_any_registered_type) return false;
+		return array($parent, $res, $row);
+	}
+
+	private function alternatives($id) {
+		// e.g. used for "Reverse Alt Id"
+		$alternatives = array();
+		foreach (array_merge(OIDplus::getPagePlugins(),OIDplus::getObjectTypePlugins()) as $plugin) {
+			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.7')) {
+				$tmp = $plugin->getAlternativesForQuery($id);
+				if (is_array($tmp)) {
+					$alternatives = array_merge($tmp, $alternatives);
+				}
+			}
+		}
+		$alternatives = array_unique($alternatives);
+		return $alternatives;
+	}
+
 	public function gui($id, &$out, &$handled) {
 		if ($id === 'oidplus:system') {
 			$handled = true;
@@ -519,38 +564,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				return;
 			}
 
-			$parent = null;
-			$res = null;
-			$row = null;
-			$matches_any_registered_type = false;
-			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-				if ($obj = $ot::parse($id)) {
-					$matches_any_registered_type = true;
-					if ($obj->isRoot()) {
-						$obj->getContentPage($out['title'], $out['text'], $out['icon']);
-						$parent = null; // $obj->getParent();
-						break;
-					} else {
-						$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
-						if (!$res->any()) {
-							if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
-								http_response_code(404);
-							}
-							$out['title'] = _L('Object not found');
-							$out['icon'] = 'img/error.png';
-							$out['text'] = _L('The object %1 was not found in this database.','<code>'.htmlentities($id).'</code>');
-							return;
-						} else {
-							$row = $res->fetch_array(); // will be used further down the code
-							$obj->getContentPage($out['title'], $out['text'], $out['icon']);
-							if (empty($out['title'])) $out['title'] = explode(':',$obj->nodeId(),2)[1];
-							$parent = $obj->getParent();
-							break;
-						}
-					}
+			// ---
+
+			$test = $this->tryObject($id, $out);
+			if ($test === false) {
+				$alternatives = $this->alternatives($id);
+				foreach ($alternatives as $alternative) {
+					$test = $this->tryObject($alternative, $out);
+					if ($test !== false) break;
 				}
 			}
-			if (!$matches_any_registered_type) {
+			if ($test === false) {
 				if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
 					http_response_code(404);
 				}
@@ -558,7 +582,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$out['icon'] = 'img/error.png';
 				$out['text'] = _L('The object %1 was not found in this database.','<code>'.htmlentities($id).'</code>');
 				return;
+			} else {
+				list($parent, $res, $row) = $test;
 			}
+
+			unset($test);
 
 			// ---
 
@@ -795,12 +823,32 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 	public function tree_search($request) {
 		$ary = array();
+		$found_leaf = false;
 		if ($obj = OIDplusObject::parse($request)) {
-			if ($obj->userHasReadRights()) {
-				do {
+			$found_leaf = OIDplusObject::exists($request);
+			do {
+				if ($obj->userHasReadRights()) {
 					$ary[] = $obj->nodeId();
-				} while ($obj = $obj->getParent());
-				$ary = array_reverse($ary);
+				}
+			} while ($obj = $obj->getParent());
+			$ary = array_reverse($ary);
+		}
+		if (!$found_leaf) {
+			$alternatives = $this->alternatives($request);
+			foreach ($alternatives as $alternative) {
+				$ary_ = array();
+				if ($obj = OIDplusObject::parse($alternative)) {
+					if ($obj->userHasReadRights() && OIDplusObject::exists($alternative)) {
+						do {
+							$ary_[] = $obj->nodeId();
+						} while ($obj = $obj->getParent());
+						$ary_ = array_reverse($ary_);
+					}
+				}
+				if (!empty($ary_)) {
+					$ary = $ary_;
+					break;
+				}
 			}
 		}
 		return $ary;
