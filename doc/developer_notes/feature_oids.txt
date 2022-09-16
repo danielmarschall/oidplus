@@ -69,3 +69,8 @@ Interface <1.3.6.1.4.1.37476.2.5.2.3.6> {
 	// called by publicPages/000_objects
 	public function gridGeneratorLinks($objParent);
 }
+
+Interface <1.3.6.1.4.1.37476.2.5.2.3.7> {
+	// called by publicPages/000_objects
+	public function getAlternativesForQuery($id);
+}
