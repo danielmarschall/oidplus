@@ -7,6 +7,18 @@ Ideas by Simon T.:
 - a possibility to export&transfer all data between OIDplus'es: Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!
 - a possibility to 'construct' my own object types in UI (1: specify list of their fields and 2: choose "oid-like/forward" com.example.api or "domain-like/reverse" api.example.com naming scheme), so they would appear as the whole new type
 
+Databases:
+- Let plugins create tables for all DBMS by including a "create table" function with abstract types in the SQL slang plugins (similar to Medoo)
+
+Ideas
+- if a third-party plugin throws an exception in the init() method, maybe OIDplus should avoid loading the plugin?
+- VTS built in plugins should get Plugin-Version defined as the System SVN Version (to avoid that the manifest.xml needs to be adjusted at each SVN release, which is not yet done)
+- "hidden" alt ids which are not shown in the GUI, but can be used for reverse-Alt-ID ? (I believe we have excluded some AltIDs which are "not neccessary", e.g. an GUID already is a GUID and therefore does not need a Namespace GUID, or something like that)
+
+"Reverse Alt IDs"
+- Third party plugin waiting for certification https://github.com/frdl/oidplus-plugin-alternate-id-tracking
+- Instead of using a cache table, maybe rather create the full Reverse-AltID list on-the-fly and cache it in a serialize data file?
+
 RDAP:
 - Extend handle404() to handle more things required by the RFC, as well as more object types
 - More TODO see GitHub repository https://github.com/frdl/oidplus-frdlweb-rdap/issues
@@ -74,6 +86,9 @@ TINYMCE
 OID-IP
 - query 'oid:' should show all root entries (subordinate entries), but there is only the message "not found"
 - offer signature checker tool to verify responses
+- should the OID-IP plugin call `OIDplusPagePublicObjects::getAlternativesForQuery` if the Object Could not be found?
+	Pro: RDAP does this, as well as the Objects plugin (?goto=, tree_search, etc.)
+	Contra: The OID-IP Internet Draft does not specify this
 
 SETUP
 - There should be a "test database connection" button
