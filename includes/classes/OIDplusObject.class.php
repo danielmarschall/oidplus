@@ -25,7 +25,9 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	public static function parse($node_id) { // please overwrite this function!
 		// TODO: in case we are not calling this class directly, check if function is overwritten and throw exception otherwise
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-			if ($obj = $ot::parse($node_id)) return $obj;
+			try {
+				if ($obj = $ot::parse($node_id)) return $obj;
+			} catch (Exception $e) {}
 		}
 		return null;
 	}

@@ -465,34 +465,22 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$parent = null;
 		$res = null;
 		$row = null;
-		$matches_any_registered_type = false;
-		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-			try {
-				$obj = OIDplusObject::parse($id);
-			} catch (Exception $e) {
-				$obj = null;
-			}
-			if (!is_null($obj)) {
-				$matches_any_registered_type = true;
-				if ($obj->isRoot()) {
-					$obj->getContentPage($out['title'], $out['text'], $out['icon']);
-					$parent = null; // $obj->getParent();
-					break;
-				} else {
-					$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
-					if (!$res->any()) {
-						return false;
-					} else {
-						$row = $res->fetch_array(); // will be used further down the code
-						$obj->getContentPage($out['title'], $out['text'], $out['icon']);
-						if (empty($out['title'])) $out['title'] = explode(':',$obj->nodeId(),2)[1];
-						$parent = $obj->getParent();
-						break;
-					}
-				}
+		$obj = OIDplusObject::parse($id);
+		if (is_null($obj)) return false;
+		if ($obj->isRoot()) {
+			$obj->getContentPage($out['title'], $out['text'], $out['icon']);
+			$parent = null; // $obj->getParent();
+		} else {
+			$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
+			if (!$res->any()) {
+				return false;
+			} else {
+				$row = $res->fetch_array(); // will be used further down the code
+				$obj->getContentPage($out['title'], $out['text'], $out['icon']);
+				if (empty($out['title'])) $out['title'] = explode(':',$obj->nodeId(),2)[1];
+				$parent = $obj->getParent();
 			}
 		}
-		if (!$matches_any_registered_type) return false;
 		return array($parent, $res, $row);
 	}
 
@@ -726,11 +714,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					'text' => $ot::objectTypeTitle()
 				);
 
-				try {
-					$tmp = OIDplusObject::parse($req_goto);
-				} catch (Exception $e) {
-					$tmp = null;
-				}
+				$tmp = OIDplusObject::parse($req_goto);
 				if (!is_null($tmp) && ($ot == get_class($tmp))) {
 					// TODO: Instead of just having 3 levels (parent, this and children), it would be better if we'd had a full tree of all parents
 					//       on the other hand, for giving search engines content, this is good enough
