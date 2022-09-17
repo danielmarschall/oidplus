@@ -351,7 +351,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			$obj = OIDplusObject::parse($id);
-				if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','INSERT',$id));
+			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','INSERT',$id));
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
@@ -467,7 +467,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$row = null;
 		$matches_any_registered_type = false;
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-			if ($obj = $ot::parse($id)) {
+			try {
+				$obj = OIDplusObject::parse($id);
+			} catch (Exception $e) {
+				$obj = null;
+			}
+			if (!is_null($obj)) {
 				$matches_any_registered_type = true;
 				if ($obj->isRoot()) {
 					$obj->getContentPage($out['title'], $out['text'], $out['icon']);
