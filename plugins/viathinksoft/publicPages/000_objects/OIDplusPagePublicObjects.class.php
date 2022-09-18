@@ -481,7 +481,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$parent = $obj->getParent();
 			}
 		}
-		return array($parent, $res, $row);
+		return array($id, $parent, $res, $row);
 	}
 
 	private static function getAlternativesForQuery($id) {
@@ -538,14 +538,55 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			return;
 		}
 
-		try {
-			$obj = OIDplusObject::parse($id);
-		} catch (Exception $e) {
-			$obj = null;
-		}
+		if (strpos($id,':') !== false) {
 
-		if (!is_null($obj)) {
-			$handled = true;
+			// --- Try to find the object or an alternative
+
+			$test = $this->tryObject($id, $out);
+			if ($test === false) {
+				// try to find an alternative
+				$alternatives = $this->getAlternativesForQuery($id);
+				foreach ($alternatives as $alternative) {
+					$test = $this->tryObject($alternative, $out);
+					if ($test !== false) break; // found something
+				}
+			}
+			if ($test !== false) {
+				list($id, $parent, $res, $row) = $test;
+			}
+
+			// --- If the object type is disabled or not an object at all (e.g. "oidplus:"), then $handled=false
+			//     If the object type is enabled but object not found, $handled=true
+
+			try {
+				$obj = OIDplusObject::parse($id);
+			} catch (Exception $e) {
+				$obj = null;
+			}
+
+			if ($test === false) {
+				if (is_null($obj)) {
+					// Object type disabled or not known (e.g. ObjectType "oidplus:").
+					$handled = false;
+					return;
+				} else {
+					// Object type enabled but identifier not in database
+					$handled = true;
+					if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
+						http_response_code(404);
+					}
+					$out['title'] = _L('Object not found');
+					$out['icon'] = 'img/error.png';
+					$out['text'] = _L('The object %1 was not found in this database.','<code>'.htmlentities($id).'</code>');
+					return;
+				}
+			} else {
+				$handled = true;
+			}
+
+			unset($test);
+
+			// --- If found, do we have read rights?
 
 			if (!$obj->userHasReadRights()) {
 				if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
@@ -556,30 +597,6 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$out['text'] = '<p>'._L('Please <a %1>log in</a> to receive information about this object.',OIDplus::gui()->link('oidplus:login')).'</p>';
 				return;
 			}
-
-			// ---
-
-			$test = $this->tryObject($id, $out);
-			if ($test === false) {
-				$alternatives = $this->getAlternativesForQuery($id);
-				foreach ($alternatives as $alternative) {
-					$test = $this->tryObject($alternative, $out);
-					if ($test !== false) break;
-				}
-			}
-			if ($test === false) {
-				if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
-					http_response_code(404);
-				}
-				$out['title'] = _L('Object not found');
-				$out['icon'] = 'img/error.png';
-				$out['text'] = _L('The object %1 was not found in this database.','<code>'.htmlentities($id).'</code>');
-				return;
-			} else {
-				list($parent, $res, $row) = $test;
-			}
-
-			unset($test);
 
 			// ---
 
