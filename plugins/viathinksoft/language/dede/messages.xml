@@ -4350,6 +4350,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Optional PIX allowed, without prefix
+		]]></source>
+		<target><![CDATA[
+		Optionale PIX erlaubt, ohne Präfix
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Oracle connection string, e.g. %1
 		]]></source>
 		<target><![CDATA[
