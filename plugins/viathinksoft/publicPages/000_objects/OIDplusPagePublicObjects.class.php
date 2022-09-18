@@ -538,7 +538,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			return;
 		}
 
-		if (strpos($id,':') !== false) {
+		// Never answer to an object type that is called 'oidplus:',
+		// otherwise, an object type plugin could break the whole system!
+		else if ((strpos($id,':') !== false) && (!str_starts_with($id,'oidplus:'))) {
 
 			// --- Try to find the object or an alternative
 

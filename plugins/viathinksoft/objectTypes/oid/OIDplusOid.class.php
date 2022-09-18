@@ -512,7 +512,7 @@ class OIDplusOid extends OIDplusObject {
 		}
 		if (substr($test_der,0,3) == '06 ') { // 06 = ASN.1 type of Absolute ID
 			$oid_parts = explode('.',$this->nodeId(false));
-			if (($oid_parts[0] = '2') && ($oid_parts[1] == '999')) {
+			if (($oid_parts[0] == '2') && ($oid_parts[1] == '999')) {
 				// Note that "ViaThinkSoft E0" AID are not unique!
 				// OIDplus will use the relative DER of the 2.999.xx OID as PIX
 				$aid_candidate = 'D2 76 00 01 86 E0 ' . substr($test_der, strlen('06 xx 88 37 ')); // Remove ASN.1 06=Type, xx=Length and the 2.999 arcs "88 37"
@@ -523,18 +523,26 @@ class OIDplusOid extends OIDplusObject {
 					$aid_candidate = 'D2 76 00 01 86 E0 ' . strtoupper(implode(' ',str_split($small_hash,2)));
 					$aid_is_ok = aid_canonize($aid_candidate);
 				}
-			} else if (($oid_parts[0] = '1') && ($oid_parts[1] == '0')) {
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816-5)'));
+			} else if (($oid_parts[0] == '0') && ($oid_parts[1] == '4') && ($oid_parts[2] == '0') && ($oid_parts[3] == '127') && ($oid_parts[4] == '0') && ($oid_parts[5] == '7')) {
+				// Illegal usage of E8 by German BSI, plus using E8+Len+OID instead of E8+OID like ISO does
+				// PIX probably not used
+				$aid_candidate = 'E8 '.substr($test_der, strlen('06 ')); // Remove ASN.1 06=Type
+				$aid_is_ok = aid_canonize($aid_candidate);
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816-5)'));
+			} else if (($oid_parts[0] == '1') && ($oid_parts[1] == '0')) {
 				// ISO Standard AID (OID 1.0.xx)
 				// Optional PIX allowed
 				$aid_candidate = 'E8 '.substr($test_der, strlen('06 xx ')); // Remove ASN.1 06=Type and xx=Length
 				$aid_is_ok = aid_canonize($aid_candidate);
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816-5)'), ' ('._L('Optional PIX allowed, without prefix').')');
 			} else {
 				// All other OIDs can be mapped using the "ViaThinkSoft F6" scheme, but only if the DER encoding is not too long
 				// No PIX allowed
 				$aid_candidate = 'D2 76 00 01 86 F6 '.substr($test_der, strlen('06 xx ')); // Remove ASN.1 06=Type and xx=Length
 				$aid_is_ok = aid_canonize($aid_candidate);
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816-5)'), ' ('._L('No PIX allowed').')');
 			}
-			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816-5)'), ' ('._L('No PIX allowed').')');
 		}
 
 		return $ids;
