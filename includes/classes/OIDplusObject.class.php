@@ -23,10 +23,19 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	const UUID_NAMEBASED_NS_OidPlusMisc = 'ad1654e6-7e15-11e4-9ef6-78e3b5fc7f22';
 
 	public static function parse($node_id) { // please overwrite this function!
-		// TODO: in case we are not calling this class directly, check if function is overwritten and throw exception otherwise
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 			try {
-				if ($obj = $ot::parse($node_id)) return $obj;
+				$good = false;
+				if (get_parent_class($ot) == 'OIDplusObject') {
+					$reflector = new \ReflectionMethod($ot, 'parse');
+					$isImplemented = ($reflector->getDeclaringClass()->getName() === $ot);
+					if ($isImplemented) { // avoid endless loop if parse is not overriden
+						$good = true;
+					}
+				}
+				// We need to do the workaround with "$good", otherwise PHPstan shows
+				// "Call to an undefined static method object::parse()"
+				if ($good && $obj = $ot::parse($node_id)) return $obj;
 			} catch (Exception $e) {}
 		}
 		return null;
