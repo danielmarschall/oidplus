@@ -1,42 +1,41 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'name' => '__root__',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'reference' => NULL,
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
     ),
-    'reference' => NULL,
-    'name' => '__root__',
-  ),
-  'versions' => 
-  array (
-    '__root__' => 
-    array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => NULL,
+    'versions' => array(
+        '__root__' => array(
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'reference' => NULL,
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'aywan/php-json-canonicalization' => array(
+            'pretty_version' => 'master',
+            'version' => 'dev-master',
+            'reference' => 'main',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../aywan/php-json-canonicalization',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'sergeybrook/php-jws' => array(
+            'pretty_version' => 'v1.0.1',
+            'version' => '1.0.1.0',
+            'reference' => '7fee8b56e88fc429e0cdf71bbf6c2dcf6dd61eed',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../sergeybrook/php-jws',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
     ),
-    'aywan/php-json-canonicalization' => 
-    array (
-      'pretty_version' => 'master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'main',
-    ),
-    'sergeybrook/php-jws' => 
-    array (
-      'pretty_version' => 'v1.0.1',
-      'version' => '1.0.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '7fee8b56e88fc429e0cdf71bbf6c2dcf6dd61eed',
-    ),
-  ),
 );

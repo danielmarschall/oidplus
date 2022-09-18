@@ -3,6 +3,6 @@ Version: 1.0.0+no-version-set
 Licenses: none
 Dependencies:
 
-Name                             Version      License     
-aywan/php-json-canonicalization  master main  Apache-2.0  
-sergeybrook/php-jws              v1.0.1       MIT         
+Name                            Version     Licenses   
+aywan/php-json-canonicalization master main Apache-2.0 
+sergeybrook/php-jws             v1.0.1      MIT        

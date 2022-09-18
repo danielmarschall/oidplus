@@ -1,253 +1,257 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => '2.0',
-    'version' => '2.0.0.0',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'name' => 'danielmarschall/oidplus',
+        'pretty_version' => '2.0',
+        'version' => '2.0.0.0',
+        'reference' => NULL,
+        'type' => 'project',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
     ),
-    'reference' => NULL,
-    'name' => 'danielmarschall/oidplus',
-  ),
-  'versions' => 
-  array (
-    'components/jquery' => 
-    array (
-      'pretty_version' => '3.6.0',
-      'version' => '3.6.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '6cf38ee1fd04b6adf8e7dda161283aa35be818c3',
+    'versions' => array(
+        'components/jquery' => array(
+            'pretty_version' => '3.6.0',
+            'version' => '3.6.0.0',
+            'reference' => '6cf38ee1fd04b6adf8e7dda161283aa35be818c3',
+            'type' => 'component',
+            'install_path' => __DIR__ . '/../components/jquery',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'components/jqueryui' => array(
+            'pretty_version' => '1.12.1',
+            'version' => '1.12.1.0',
+            'reference' => '44ecf3794cc56b65954cc19737234a3119d036cc',
+            'type' => 'component',
+            'install_path' => __DIR__ . '/../components/jqueryui',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'danielmarschall/fileformats' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '880e97b497710dc14ee8f38b4e48250ce49202ee',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../danielmarschall/fileformats',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
+        'danielmarschall/oidconverter' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '75088ebe78675e6a6ecb3842c7ce6177f8476fbb',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../danielmarschall/oidconverter',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
+        'danielmarschall/oidplus' => array(
+            'pretty_version' => '2.0',
+            'version' => '2.0.0.0',
+            'reference' => NULL,
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'danielmarschall/php_utils' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'd112cd8e2f7ab5a5a98927d4bdd0a62eb898ee3f',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../danielmarschall/php_utils',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
+        'danielmarschall/uuid_mac_utils' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'aaef4f33f76a140153b5f28c8694b96c593e22fa',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../danielmarschall/uuid_mac_utils',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
+        'danielmarschall/vnag' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '85fb29d887bcfd6e251029d73cb12caaa28e4ec2',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../danielmarschall/vnag',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
+        'dcodeio/bcrypt.js' => array(
+            'pretty_version' => 'master',
+            'version' => 'dev-master',
+            'reference' => 'master',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../dcodeio/bcrypt.js',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'emn178/js-sha3' => array(
+            'pretty_version' => 'master',
+            'version' => 'dev-master',
+            'reference' => 'master',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../emn178/js-sha3',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'firebase/php-jwt' => array(
+            'pretty_version' => 'v5.5.1',
+            'version' => '5.5.1.0',
+            'reference' => '83b609028194aa042ea33b5af2d41a7427de80e6',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../firebase/php-jwt',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'gedmarc/layout' => array(
+            'pretty_version' => 'master',
+            'version' => 'dev-master',
+            'reference' => 'master',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../gedmarc/layout',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'matthiasmullie/minify' => array(
+            'pretty_version' => '1.3.69',
+            'version' => '1.3.69.0',
+            'reference' => 'a61c949cccd086808063611ef9698eabe42ef22f',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../matthiasmullie/minify',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'matthiasmullie/path-converter' => array(
+            'pretty_version' => '1.1.3',
+            'version' => '1.1.3.0',
+            'reference' => 'e7d13b2c7e2f2268e1424aaed02085518afa02d9',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../matthiasmullie/path-converter',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'n-other/php-sha3' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '54ee3b90986e88286d333319e6340b90bde4f71a',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../n-other/php-sha3',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
+        'paragonie/constant_time_encoding' => array(
+            'pretty_version' => 'v2.6.3',
+            'version' => '2.6.3.0',
+            'reference' => '58c3f47f650c94ec05a151692652a868995d2938',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../paragonie/constant_time_encoding',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'paragonie/random_compat' => array(
+            'pretty_version' => 'v9.99.100',
+            'version' => '9.99.100.0',
+            'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../paragonie/random_compat',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'phpseclib/phpseclib' => array(
+            'pretty_version' => '3.0.14',
+            'version' => '3.0.14.0',
+            'reference' => '2f0b7af658cbea265cbb4a791d6c29a6613f98ef',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpseclib/phpseclib',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'script47/bs5-utils' => array(
+            'pretty_version' => 'master',
+            'version' => 'dev-master',
+            'reference' => 'master',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../script47/bs5-utils',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'spamspan/spamspan' => array(
+            'pretty_version' => 'master',
+            'version' => 'dev-master',
+            'reference' => 'master',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spamspan/spamspan',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/polyfill-mbstring' => array(
+            'pretty_version' => 'v1.19.0',
+            'version' => '1.19.0.0',
+            'reference' => 'b5f7b932ee6fa802fc792eabd77c4c88084517ce',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'tinymce/tinymce' => array(
+            'pretty_version' => '5.x-dev',
+            'version' => '5.9999999.9999999.9999999-dev',
+            'reference' => 'c91227ab933d664c3ce2ea4ec68257f2282437ed',
+            'type' => 'component',
+            'install_path' => __DIR__ . '/../tinymce/tinymce',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'twbs/bootstrap' => array(
+            'pretty_version' => 'v5.2.1',
+            'version' => '5.2.1.0',
+            'reference' => '23e50829f958ea1d741d63e2781716be037e4644',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../twbs/bootstrap',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'tweeb/tinymce-i18n' => array(
+            'pretty_version' => '2.0.4',
+            'version' => '2.0.4.0',
+            'reference' => '058da08d6e61dc4e0279de6509bb6969a62f68e5',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../tweeb/tinymce-i18n',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'twitter/bootstrap' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => 'v5.2.1',
+            ),
+        ),
+        'vakata/jstree' => array(
+            'pretty_version' => '3.3.12',
+            'version' => '3.3.12.0',
+            'reference' => '7a03954015eaea2467956dc05e6be78f4d1a1ff0',
+            'type' => 'component',
+            'install_path' => __DIR__ . '/../vakata/jstree',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
     ),
-    'components/jqueryui' => 
-    array (
-      'pretty_version' => '1.12.1',
-      'version' => '1.12.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '44ecf3794cc56b65954cc19737234a3119d036cc',
-    ),
-    'danielmarschall/fileformats' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-        0 => '9999999-dev',
-      ),
-      'reference' => '880e97b497710dc14ee8f38b4e48250ce49202ee',
-    ),
-    'danielmarschall/oidconverter' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-        0 => '9999999-dev',
-      ),
-      'reference' => '0a7d5113a1643b518c178c71a7e7adce0d83140f',
-    ),
-    'danielmarschall/oidplus' => 
-    array (
-      'pretty_version' => '2.0',
-      'version' => '2.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => NULL,
-    ),
-    'danielmarschall/php_utils' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-        0 => '9999999-dev',
-      ),
-      'reference' => '47a1c4e1681ec9ebfe6378713190ae5e734b1b5b',
-    ),
-    'danielmarschall/uuid_mac_utils' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-        0 => '9999999-dev',
-      ),
-      'reference' => 'aaef4f33f76a140153b5f28c8694b96c593e22fa',
-    ),
-    'danielmarschall/vnag' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-        0 => '9999999-dev',
-      ),
-      'reference' => '8a09c2af002f03a2a8cc2d0bfc301277fbe395fd',
-    ),
-    'dcodeio/bcrypt.js' => 
-    array (
-      'pretty_version' => 'master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'master',
-    ),
-    'emn178/js-sha3' => 
-    array (
-      'pretty_version' => 'master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'master',
-    ),
-    'firebase/php-jwt' => 
-    array (
-      'pretty_version' => 'v5.5.1',
-      'version' => '5.5.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '83b609028194aa042ea33b5af2d41a7427de80e6',
-    ),
-    'gedmarc/layout' => 
-    array (
-      'pretty_version' => 'master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'master',
-    ),
-    'matthiasmullie/minify' => 
-    array (
-      'pretty_version' => '1.3.69',
-      'version' => '1.3.69.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'a61c949cccd086808063611ef9698eabe42ef22f',
-    ),
-    'matthiasmullie/path-converter' => 
-    array (
-      'pretty_version' => '1.1.3',
-      'version' => '1.1.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'e7d13b2c7e2f2268e1424aaed02085518afa02d9',
-    ),
-    'n-other/php-sha3' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-        0 => '9999999-dev',
-      ),
-      'reference' => '54ee3b90986e88286d333319e6340b90bde4f71a',
-    ),
-    'paragonie/constant_time_encoding' => 
-    array (
-      'pretty_version' => 'v2.6.3',
-      'version' => '2.6.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '58c3f47f650c94ec05a151692652a868995d2938',
-    ),
-    'paragonie/random_compat' => 
-    array (
-      'pretty_version' => 'v9.99.100',
-      'version' => '9.99.100.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
-    ),
-    'phpseclib/phpseclib' => 
-    array (
-      'pretty_version' => '3.0.14',
-      'version' => '3.0.14.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '2f0b7af658cbea265cbb4a791d6c29a6613f98ef',
-    ),
-    'script47/bs5-utils' => 
-    array (
-      'pretty_version' => 'master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'master',
-    ),
-    'spamspan/spamspan' => 
-    array (
-      'pretty_version' => 'master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'master',
-    ),
-    'symfony/polyfill-mbstring' => 
-    array (
-      'pretty_version' => 'v1.19.0',
-      'version' => '1.19.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'b5f7b932ee6fa802fc792eabd77c4c88084517ce',
-    ),
-    'tinymce/tinymce' => 
-    array (
-      'pretty_version' => '5.x-dev',
-      'version' => '5.9999999.9999999.9999999-dev',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'c91227ab933d664c3ce2ea4ec68257f2282437ed',
-    ),
-    'twbs/bootstrap' => 
-    array (
-      'pretty_version' => 'v5.2.1',
-      'version' => '5.2.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '23e50829f958ea1d741d63e2781716be037e4644',
-    ),
-    'tweeb/tinymce-i18n' => 
-    array (
-      'pretty_version' => '2.0.4',
-      'version' => '2.0.4.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '058da08d6e61dc4e0279de6509bb6969a62f68e5',
-    ),
-    'twitter/bootstrap' => 
-    array (
-      'replaced' => 
-      array (
-        0 => 'v5.2.1',
-      ),
-    ),
-    'vakata/jstree' => 
-    array (
-      'pretty_version' => '3.3.12',
-      'version' => '3.3.12.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '7a03954015eaea2467956dc05e6be78f4d1a1ff0',
-    ),
-  ),
 );
