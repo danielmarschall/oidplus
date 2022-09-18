@@ -1,7 +1,7 @@
 <?php
 
 /*
- * OidDerConverter.class.php, Version 1.1; Based on version 1.3+viathinksoft11 of oid.c
+ * OidDerConverter.class.php, Version 1.1.1; Based on version 1.3+viathinksoft11 of oid.c
  * Copyright 2014-2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -178,7 +178,7 @@ class OidDerConverter {
 					if ($isRelative) $part++; // Goto step 3!
 				}
 			} else if ($part == 2) { // First two arcs
-				$first = $pb / 40;
+				$first = floor($pb / 40);
 				$second = $pb % 40;
 				if ($first > 2) {
 					$first = 2;
