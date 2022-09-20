@@ -518,10 +518,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Application Identifier (ISO/IEC 7816-5)
+		Application Identifier (ISO/IEC 7816)
 		]]></source>
 		<target><![CDATA[
-		Application Identifier (ISO/IEC 7816-5)
+		Application Identifier (ISO/IEC 7816)
 		]]></target>
 	</message>
 	<message>

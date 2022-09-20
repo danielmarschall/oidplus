@@ -491,7 +491,7 @@ class OIDplusOid extends OIDplusObject {
 			$aid = 'D276000186F0'.$pen;
 			if (strlen($aid)%2 == 1) $aid .= 'F';
 			$aid_is_ok = aid_canonize($aid);
-			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816-5)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')');
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')');
 		}
 
 		// (VTS F1) FreeOID to AID Mapping (PIX allowed)
@@ -501,7 +501,7 @@ class OIDplusOid extends OIDplusObject {
 			$aid = 'D276000186F1'.$number;
 			if (strlen($aid)%2 == 1) $aid .= 'F';
 			$aid_is_ok = aid_canonize($aid);
-			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816-5)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')');
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')');
 		}
 
 		// (VTS F6) Mapping OID-to-AID if possible
@@ -523,25 +523,25 @@ class OIDplusOid extends OIDplusObject {
 					$aid_candidate = 'D2 76 00 01 86 E0 ' . strtoupper(implode(' ',str_split($small_hash,2)));
 					$aid_is_ok = aid_canonize($aid_candidate);
 				}
-				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816-5)'));
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816)'));
 			} else if (($oid_parts[0] == '0') && ($oid_parts[1] == '4') && ($oid_parts[2] == '0') && ($oid_parts[3] == '127') && ($oid_parts[4] == '0') && ($oid_parts[5] == '7')) {
 				// Illegal usage of E8 by German BSI, plus using E8+Len+OID instead of E8+OID like ISO does
 				// PIX probably not used
 				$aid_candidate = 'E8 '.substr($test_der, strlen('06 ')); // Remove ASN.1 06=Type
 				$aid_is_ok = aid_canonize($aid_candidate);
-				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816-5)'));
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816)'));
 			} else if (($oid_parts[0] == '1') && ($oid_parts[1] == '0')) {
 				// ISO Standard AID (OID 1.0.xx)
 				// Optional PIX allowed
 				$aid_candidate = 'E8 '.substr($test_der, strlen('06 xx ')); // Remove ASN.1 06=Type and xx=Length
 				$aid_is_ok = aid_canonize($aid_candidate);
-				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816-5)'), ' ('._L('Optional PIX allowed, without prefix').')');
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')');
 			} else {
 				// All other OIDs can be mapped using the "ViaThinkSoft F6" scheme, but only if the DER encoding is not too long
 				// No PIX allowed
 				$aid_candidate = 'D2 76 00 01 86 F6 '.substr($test_der, strlen('06 xx ')); // Remove ASN.1 06=Type and xx=Length
 				$aid_is_ok = aid_canonize($aid_candidate);
-				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816-5)'), ' ('._L('No PIX allowed').')');
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')');
 			}
 		}
 
