@@ -34,7 +34,7 @@ class OIDplusAid extends OIDplusObject {
 	}
 
 	public static function objectTypeTitle() {
-		return _L('Application Identifier (ISO/IEC 7816-5)');
+		return _L('Application Identifier (ISO/IEC 7816)');
 	}
 
 	public static function objectTypeTitleShort() {

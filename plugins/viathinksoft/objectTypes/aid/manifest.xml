@@ -7,7 +7,7 @@
 	<type>OIDplusObjectTypePlugin</type>
 
 	<info>
-		<name>Application Identifier (ISO/IEC 7816-5)</name>
+		<name>Application Identifier (ISO/IEC 7816)</name>
 		<author>ViaThinkSoft</author>
 		<license>Apache 2.0</license>
 		<version />
