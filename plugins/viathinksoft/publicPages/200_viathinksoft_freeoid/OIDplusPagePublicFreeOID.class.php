@@ -232,6 +232,11 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 					$tos = str_replace('{{ROOT_OID_IRI}}', $obj->getIriNotation(), $tos);
 				}
 				$out['text'] .= $tos;
+
+				if (OIDplus::config()->getValue('freeoid_root_oid') == '1.3.6.1.4.1.37476.9000') {
+					$out['text'] .= '<p>'._L('<b>Note:</b> Since September 2022, owners of FreeOID automatically receive a free ISO-7816 compliant <b>Application Identifier</b> (AID) with the format <code>D2:76:00:01:86:F0:(FreeOID):FF:(PIX)</code> (up to 64 bits application specific PIX, depending on the length of the FreeOID number).');
+$out['text'] .= ' - <a '.OIDplus::gui()->link('aid:D276000186F1').'>'._L('More information').'</a></p>';
+				}
 			} catch (Exception $e) {
 				$out['text'] = _L('Error: %1',$e->getMessage());
 			}
