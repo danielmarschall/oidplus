@@ -214,6 +214,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		<b>Note:</b> Since September 2022, owners of FreeOID automatically receive a free ISO-7816 compliant <b>Application Identifier</b> (AID) with the format <code>D2:76:00:01:86:F0:(FreeOID):FF:(PIX)</code> (up to 64 bits application specific PIX, depending on the length of the FreeOID number).
+		]]></source>
+		<target><![CDATA[
+		<b>Hinweis:</b> Ab September 2022 erhalten alle Eigentümer von FreeOID-Nummern automatisch einen kostenlosen ISO-7816 konformen <b>Application Identifier</b> (AID) im Format <code>D2:76:00:01:86:F0:(FreeOID):FF:(PIX)</code> (bis zu 64 Bit Anwendungs-Spezifische PIX, abhängig von der Länge der FreeOID-Nummer)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		<code>REGISTRATION_HIDE_SYSTEM</code> is set in the local configuration file! Therefore, this system will not register itself, despite of the settings below.
 		]]></source>
 		<target><![CDATA[
@@ -3554,6 +3562,14 @@
 		]]></source>
 		<target><![CDATA[
 		Mobil: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		More information
+		]]></source>
+		<target><![CDATA[
+		Mehr Informationen
 		]]></target>
 	</message>
 	<message>
