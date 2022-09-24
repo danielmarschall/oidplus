@@ -2550,6 +2550,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		IANA Private Enterprise Number (PEN)
+		]]></source>
+		<target><![CDATA[
+		IANA Private Enterprise Number (PEN)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		ID
 		]]></source>
 		<target><![CDATA[
