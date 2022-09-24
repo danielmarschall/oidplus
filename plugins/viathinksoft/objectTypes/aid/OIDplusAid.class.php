@@ -244,6 +244,7 @@ class OIDplusAid extends OIDplusObject {
 			if (($pix === '') && preg_match('/^[0-9]+$/',$pen,$m)) {
 				$oid = '1.3.6.1.4.1.'.$pen;
 				$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));
+				$ids[] = new OIDplusAltId('iana-pen', $pen, _L('IANA Private Enterprise Number (PEN)'));
 			}
 		}
 

@@ -492,6 +492,7 @@ class OIDplusOid extends OIDplusObject {
 			if (strlen($aid)%2 == 1) $aid .= 'F';
 			$aid_is_ok = aid_canonize($aid);
 			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')');
+			$ids[] = new OIDplusAltId('iana-pen', $pen, _L('IANA Private Enterprise Number (PEN)'));
 		}
 
 		// (VTS F1) FreeOID to AID Mapping (PIX allowed)
