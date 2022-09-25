@@ -123,8 +123,8 @@ foreach ($dos_ids as $oid => $dos_id) {
 }
 
 $exe_url = 'https://github.com/danielmarschall/oidplus_dos/raw/master/OIDPLUS.EXE';
-$exe = @file_get_contents($exe_url);
-if ($exe == '') {
+$exe = url_get_contents($exe_url);
+if (!$exe) {
 	throw new OIDplusException(_L("Cannot download the binary file from GitHub (%1)", $exe_url));
 }
 $zip->addFromString('OIDPLUS.EXE', $exe);

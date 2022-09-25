@@ -33,7 +33,7 @@ class OIDplusObjectTypePluginAid extends OIDplusObjectTypePlugin {
 	public function gridGeneratorLinks($objParent) { // Interface 1.3.6.1.4.1.37476.2.5.2.3.6
 
 		if ($objParent->isRoot()) {
-			return '<br><a href="javascript:OIDplusObjectTypePluginAid.generateRandomAID(true)">('._L('Generate a random AID - not unique!').')</a>'.
+			return '<br><a href="javascript:OIDplusObjectTypePluginAid.generateRandomAID()">('._L('Generate a random AID - not unique!').')</a>'.
 			       '<br><a href="https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186F" target="_blank">('._L('Request a free AID from ViaThinkSoft').')</a>';
 		} else {
 			return '';
