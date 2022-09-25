@@ -27,11 +27,6 @@ GS1 plugin:
 - prefilterQuery: If we query a gs1 which has a check digit, we should be redirected to the number without checkdigit.
                   But... how do we know if the last digit is a checkdigit or if it is a longer number with a missing check-digit?
 
-Application Identifier (aid) Object Type Plugin:
-- When aid_decoder.inc.php finds a mistake, should we forbid to create the AID? But some companies might already use invalid identifiers.
-- Category "F": Offer a "random ID" button (+ enter desired length), like we did for GUID
-- Link to ViaThinkSoft-Foreign-AID
-
 New Object Type plugins:
 - LSID ?
 - International Geo Sample Number ?
@@ -218,6 +213,8 @@ REJECTED IDEAS
 	   Having a ViaThinkSoft OID there might get the user confused because they could think that the
 	   page is a OID page request for that OID instead of a plugin page.
 	b) Vendors should use something like "?goto=oidplus:com.example...."
+- AID Plugin: When aid_decoder.inc.php finds a mistake, should we forbid to create the AID?
+	=> Rejected. Some companies might already use invalid identifiers.
 
 LOGS
 - prune logs entries? automatically prune things like "logged in" but not prune OID changes, etc?

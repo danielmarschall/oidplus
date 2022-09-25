@@ -163,7 +163,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 
 				$this->prepareSearchParams($params, isset($params['search']));
 
-				$out['text'] .= '<form id="searchForm" action="?goto=oidplus:search" method="POST">
+				$out['text'] .= '<form id="searchForm" action="?goto=oidplus%3Asearch" method="POST">
 				                 <input type="hidden" name="search" value="1">
 				                 '._L('Search for').': <input type="text" id="term" name="term" value="'.htmlentities($params['term']).'"><br><br>
 				                 <script>

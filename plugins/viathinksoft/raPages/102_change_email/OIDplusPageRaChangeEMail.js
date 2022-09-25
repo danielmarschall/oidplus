@@ -52,7 +52,7 @@ var OIDplusPageRaChangeEMail = {
 						window.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#new_email").val());
 					} else {
 						alertSuccess(_L("Verification eMail sent"));
-						//window.location.href = '?goto=oidplus:system';
+						//window.location.href = '?goto=oidplus%3Asystem';
 						//reloadContent();
 					}
 				} else {
@@ -93,7 +93,7 @@ var OIDplusPageRaChangeEMail = {
 					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					alertSuccess(_L("Done"));
-					window.location.href = '?goto=oidplus:system';
+					window.location.href = '?goto=oidplus%3Asystem';
 					//reloadContent();
 				} else {
 					alertError(_L("Error: %1",data));

@@ -34,7 +34,7 @@ if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 		#echo "You need to log in as administrator.\n";
 		#die();
 	} else {
-		echo '<p>'._L('You need to <a %1>log in</a> as administrator.','href="'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'?goto=oidplus:login$admin"').'</p>';
+		echo '<p>'._L('You need to <a %1>log in</a> as administrator.','href="'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'?goto=oidplus%3Alogin%24admin"').'</p>';
 		die();
 	}
 }

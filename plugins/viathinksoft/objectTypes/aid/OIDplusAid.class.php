@@ -108,7 +108,9 @@ class OIDplusAid extends OIDplusObject {
 	}
 
 	public function isLeafNode() {
-		return false; // We don't know when it is a leaf node!
+		// We don't know when an AID is "leaf", because an AID can have an arbitary length <= 16 Bytes.
+		// But if it is 16 bytes long (32 nibbles), then we are 100% certain that it is a leaf node.
+		return (strlen($this->nodeId(false)) == 32);
 	}
 
 	public function getContentPage(&$title, &$content, &$icon) {
@@ -119,9 +121,9 @@ class OIDplusAid extends OIDplusObject {
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
 			if ($res->any()) {
-				$content  = _L('Please select an item in the tree view at the left to show its contents.');
+				$content  = '<p>'._L('Please select an item in the tree view at the left to show its contents.').'</p>';
 			} else {
-				$content  = _L('Currently, no Application Identifiers are registered in the system.');
+				$content  = '<p>'._L('Currently, no Application Identifiers are registered in the system.').'</p>';
 			}
 
 			if (!$this->isLeafNode()) {

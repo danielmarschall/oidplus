@@ -2366,7 +2366,15 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Generate random GUID
+		Generate a random AID - not unique!
+		]]></source>
+		<target><![CDATA[
+		Zufällige AID erzeugen - nicht einzigartig!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Generate a random GUID
 		]]></source>
 		<target><![CDATA[
 		Neue GUID erzeugen
@@ -2374,7 +2382,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Generate random UUID OID
+		Generate a random UUID OID
 		]]></source>
 		<target><![CDATA[
 		Neue zufällige UUID OID erzeugen
@@ -5430,26 +5438,34 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Request free OID
+		Request a free AID from ViaThinkSoft
 		]]></source>
 		<target><![CDATA[
-		Eine kostenlose OID registrieren
+		Eine kostenlose AID von ViaThinkSoft beziehen
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		Request free OID from ViaThinkSoft
+		Request a free OID
 		]]></source>
 		<target><![CDATA[
-		Kostenlose OID von ViaThinkSoft beantragen
+		Eine kostenlose OID beziehen
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		Request free PEN/OID from IANA
+		Request a free OID from ViaThinkSoft
 		]]></source>
 		<target><![CDATA[
-		Kostenlose PEN/OID von IANA beantragen
+		Eine kostenlose OID von ViaThinkSoft beziehen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Request a free PEN/OID from IANA
+		]]></source>
+		<target><![CDATA[
+		Eine kostenlose PEN/OID von IANA beziehen
 		]]></target>
 	</message>
 	<message>

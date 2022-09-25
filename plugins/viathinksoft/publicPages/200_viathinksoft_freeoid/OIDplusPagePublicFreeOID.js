@@ -48,7 +48,7 @@ var OIDplusPagePublicFreeOID = {
 					oidplus_captcha_reset();
 				} else if (data.status >= 0) {
 					alertSuccess(_L("Instructions have been sent via email."));
-					window.location.href = '?goto=oidplus:system';
+					window.location.href = '?goto=oidplus%3Asystem';
 					//reloadContent();
 				} else {
 					alertError(_L("Error: %1",data));
@@ -92,7 +92,7 @@ var OIDplusPagePublicFreeOID = {
 					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					alertSuccess(_L("Registration successful! You received OID %1 and can now start using it.",data.new_oid));
-					window.location.href = '?goto=oidplus:login';
+					window.location.href = '?goto=oidplus%3Alogin';
 					//reloadContent();
 				} else {
 					alertError(_L("Error: %1",data));

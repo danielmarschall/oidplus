@@ -48,7 +48,7 @@ var OIDplusPagePublicForgotPassword = {
 					oidplus_captcha_reset();
 				} else if (data.status >= 0) {
 					alertSuccess(_L("E-Mail sent."));
-					window.location.href = '?goto=oidplus:login';
+					window.location.href = '?goto=oidplus%3Alogin';
 					//reloadContent();
 				} else {
 					alertError(_L("Error: %1",data));
@@ -89,7 +89,7 @@ var OIDplusPagePublicForgotPassword = {
 					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					alertSuccess(_L("Password successfully changed. You can now log in."));
-					window.location.href = '?goto=oidplus:login';
+					window.location.href = '?goto=oidplus%3Alogin';
 					//reloadContent();
 				} else {
 					alertError(_L("Error: %1",data));

@@ -48,7 +48,7 @@ var OIDplusPagePublicLogin = {
 				if ("error" in data) {
 					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
-					window.location.href = '?goto=oidplus:system';
+					window.location.href = '?goto=oidplus%3Asystem';
 					// reloadContent();
 				} else {
 					alertError(_L("Error: %1",data));
@@ -87,7 +87,7 @@ var OIDplusPagePublicLogin = {
 					alertError(_L("Error: %1",data.error));
 					oidplus_captcha_reset();
 				} else if (data.status >= 0) {
-					window.location.href = '?goto=oidplus:system';
+					window.location.href = '?goto=oidplus%3Asystem';
 					// reloadContent();
 				} else {
 					alertError(_L("Error: %1",data));
@@ -134,7 +134,7 @@ var OIDplusPagePublicLogin = {
 					alertError(_L("Error: %1",data.error));
 					oidplus_captcha_reset();
 				} else if (data.status >= 0) {
-					window.location.href = '?goto=oidplus:system';
+					window.location.href = '?goto=oidplus%3Asystem';
 					// reloadContent();
 				} else {
 					alertError(_L("Error: %1",data));
@@ -170,7 +170,7 @@ var OIDplusPagePublicLogin = {
 				if ("error" in data) {
 					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
-					window.location.href = '?goto=oidplus:system';
+					window.location.href = '?goto=oidplus%3Asystem';
 					// reloadContent();
 				} else {
 					alertError(_L("Error: %1",data));

@@ -300,7 +300,7 @@ var OIDplusPagePublicObjects = {
 	},
 
 	crudActionSendInvitation: function(origin, email) {
-		// window.location.href = "?goto=oidplus:invite_ra$"+encodeURIComponent(email)+"$"+encodeURIComponent(origin);
+		// window.location.href = "?goto=oidplus%3Ainvite_ra%24"+encodeURIComponent(email)+"%24"+encodeURIComponent(origin);
 		openOidInPanel('oidplus:invite_ra$'+email+'$'+origin, false);
 	},
 
