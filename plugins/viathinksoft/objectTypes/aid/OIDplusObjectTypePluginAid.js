@@ -19,7 +19,7 @@ var OIDplusObjectTypePluginAid = {
 
 	OID: "1.3.6.1.4.1.37476.2.5.2.4.8.11",
 
-	generateRandomAID: function(absolute) {
+	generateRandomAID: function() {
 		var length=15;
 		var result           = '';
 		var characters       = '0123456789ABCDEF';

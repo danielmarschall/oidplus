@@ -262,26 +262,29 @@ if (!function_exists('str_starts_with')) {
 	}
 }
 
-function url_get_contents($url) {
+function url_get_contents($url, $userAgent='ViaThinkSoft-OIDplus/2.0') {
 	if (function_exists('curl_init')) {
 		$ch = curl_init();
 		if (class_exists('OIDplus')) {
 			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 		}
 		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
+		curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
 		curl_setopt($ch, CURLOPT_POST, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 		if (!($res = @curl_exec($ch))) return false;
-		if (@curl_getinfo($ch, CURLINFO_HTTP_CODE) >= 400) return false;
+		$error_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		if ($error_code >= 400) return false;
 		@curl_close($ch);
 	} else {
+		// Attention: HTTPS only works if OpenSSL extension is enabled.
+		// Our supplement does not help...
 		$opts = [
 			"http" => [
 				"method" => "GET",
-				"header" => "User-Agent: ViaThinkSoft-OIDplus/2.0\r\n"
+				"header" => "User-Agent: $userAgent\r\n"
 			]
 		];
 		$context = stream_context_create($opts);
