@@ -20,15 +20,14 @@ var OIDplusObjectTypePluginAid = {
 	OID: "1.3.6.1.4.1.37476.2.5.2.4.8.11",
 
 	generateRandomAID: function() {
-		var length=15;
-		var result           = '';
+		var length           = 32-1;
+		var result           = 'F'; // category "F" = Unregistered Proprietary AID
 		var characters       = '0123456789ABCDEF';
 		var charactersLength = characters.length;
 		for ( var i = 0; i < length; i++ ) {
 			result += characters.charAt(Math.floor(Math.random() * charactersLength));
 		}
-
-		$("#id").val("F"+result);
+		$("#id").val(result);
 	}
 
 };
