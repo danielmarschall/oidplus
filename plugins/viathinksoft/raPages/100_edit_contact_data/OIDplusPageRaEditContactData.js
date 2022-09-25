@@ -56,7 +56,7 @@ var OIDplusPageRaEditContactData = {
 					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					alertSuccess(_L("Done"));
-					//window.location.href = '?goto=oidplus:system';
+					//window.location.href = '?goto=oidplus%3Asystem';
 					//reloadContent();
 				} else {
 					alertError(_L("Error: %1",data));

@@ -158,7 +158,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$message .= "URL for more information: $url\n";
 			$message .= "OID Name: $title\n";
 			$message .= "\n";
-			$message .= "More details: ".OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)."?goto=oid:$new_oid\n";
+			$message .= "More details: ".OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)."?goto=oid%3A$new_oid\n";
 
 			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title')." - OID $new_oid registered", $message);
 
@@ -208,7 +208,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				    '._L('E-Mail').': <input type="text" id="email" value=""/><br><br>
 				    '.OIDplus::getActiveCaptchaPlugin()->captchaGenerate().'
 				    <br>
-				    <input type="submit" value="'._L('Request free OID').'">
+				    <input type="submit" value="'._L('Request a free OID').'">
 				  </form>';
 
 				$obj = OIDplusOid::parse(self::getFreeRootOid(true));

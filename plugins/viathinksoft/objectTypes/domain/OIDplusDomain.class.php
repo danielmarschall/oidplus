@@ -95,9 +95,9 @@ class OIDplusDomain extends OIDplusObject {
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
 			if ($res->any()) {
-				$content  = _L('Please select a Domain Name in the tree view at the left to show its contents.');
+				$content  = '<p>'._L('Please select a Domain Name in the tree view at the left to show its contents.').'</p>';
 			} else {
-				$content  = _L('Currently, no Domain Name is registered in the system.');
+				$content  = '<p>'._L('Currently, no Domain Name is registered in the system.').'</p>';
 			}
 
 			if (!$this->isLeafNode()) {

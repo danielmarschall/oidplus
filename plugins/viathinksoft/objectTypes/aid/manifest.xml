@@ -19,6 +19,10 @@
 		<mainclass>OIDplusObjectTypePluginAid</mainclass>
 	</php>
 
+	<js>
+		<file>OIDplusObjectTypePluginAid.js</file>
+	</js>
+	
 	<css>
 		<file>OIDplusAid.css</file>
 	</css>

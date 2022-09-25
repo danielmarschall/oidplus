@@ -89,7 +89,7 @@ var OIDplusPageRaInvite = {
 					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					alertSuccess(_L("Registration successful! You can now log in."));
-					window.location.href = '?goto=oidplus:login';
+					window.location.href = '?goto=oidplus%3Alogin';
 					//reloadContent();
 				} else {
 					alertError(_L("Error: %1",data));

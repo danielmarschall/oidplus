@@ -31,7 +31,7 @@ class OIDplusObjectTypePluginGuid extends OIDplusObjectTypePlugin {
 	}
 
 	public function gridGeneratorLinks($objParent) { // Interface 1.3.6.1.4.1.37476.2.5.2.3.6
-		return '<br><a href="javascript:OIDplusObjectTypePluginGuid.generateRandomGUID(false)">('._L('Generate random GUID').')</a>';
+		return '<br><a href="javascript:OIDplusObjectTypePluginGuid.generateRandomGUID(false)">('._L('Generate a random GUID').')</a>';
 	}
 
 	public static function prefilterQuery($static_node_id, $throw_exception) {
