@@ -7846,14 +7846,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		findFitting: Parse failed
-		]]></source>
-		<target><![CDATA[
-		findFitting: Parsing fehlgeschlagen
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		implementsFeature() always returns true
 		]]></source>
 		<target><![CDATA[

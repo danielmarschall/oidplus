@@ -470,7 +470,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 
 	public static function findFitting($id) {
 		$obj = OIDplusObject::parse($id);
-		if (!$obj) throw new OIDplusException(_L('findFitting: Parse failed'));
+		if (!$obj) return false; // e.g. if ObjectType plugin is disabled
 
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select id from ###objects where id like ?", array($obj->ns().':%'));
