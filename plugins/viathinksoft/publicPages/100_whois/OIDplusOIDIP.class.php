@@ -137,6 +137,24 @@ class OIDplusOIDIP {
 						}
 						$continue = true;
 						break;
+					} else {
+						$alts = OIDplusPagePublicObjects::getAlternativesForQuery($query);
+						foreach ($alts as $alt) {
+							if ($alt === $query) continue; // TODO: das soll getAlternativesForQuery machen!
+							$res = OIDplus::db()->query("select * from ###objects where id = ?", array($alt));
+							if ($res->any()) {
+								$query = $alt;
+								$obj = OIDplusObject::parse($alt);
+								if ($distance > 0) {
+									$out[] = $this->_oidip_attr('result', 'Not found; superior object found'); // DO NOT TRANSLATE!
+									$out[] = $this->_oidip_attr('distance', $distance); // DO NOT TRANSLATE
+								} else {
+									$out[] = $this->_oidip_attr('result', 'Found'); // DO NOT TRANSLATE!
+								}
+								$continue = true;
+								break 2;
+							}
+						}
 					}
 
 					if (substr($query,0,4) === 'oid:') {

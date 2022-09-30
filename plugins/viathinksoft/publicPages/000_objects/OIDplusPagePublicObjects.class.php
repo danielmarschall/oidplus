@@ -484,7 +484,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		return array($id, $parent, $res, $row);
 	}
 
-	private static function getAlternativesForQuery($id) {
+	public static function getAlternativesForQuery($id) {
 		// e.g. used for "Reverse Alt Id"
 		$alternatives = array();
 		foreach (array_merge(OIDplus::getPagePlugins(),OIDplus::getObjectTypePlugins()) as $plugin) {
