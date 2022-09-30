@@ -485,6 +485,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	}
 
 	public static function getAlternativesForQuery($id) {
+		// Attention: This is NOT an implementation of 1.3.6.1.4.1.37476.2.5.2.3.7 !
+		//            This is the function that calls getAlternativesForQuery() of every plugin that implements 1.3.6.1.4.1.37476.2.5.2.3.7
+
 		// e.g. used for "Reverse Alt Id"
 		$alternatives = array();
 		foreach (array_merge(OIDplus::getPagePlugins(),OIDplus::getObjectTypePlugins()) as $plugin) {
@@ -495,7 +498,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 		}
+
+		// If something is more than one time, remove it
 		$alternatives = array_unique($alternatives);
+
+		// If a plugin accidentally added the own ID, remove it. This function lists only alternatives, not the own ID
+		$alternatives_tmp = array();
+		foreach ($alternatives as $alt) {
+			if ($alt !== $id) $alternatives_tmp[] = $alt;
+		}
+		$alternatives = $alternatives_tmp;
+
 		return $alternatives;
 	}
 
