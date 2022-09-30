@@ -105,13 +105,9 @@ class OIDplusOIDIP {
 			$distance = null;
 			$found = null;
 
-			try {
-				$obj = OIDplusObject::findFitting($query);
-				if (!$obj) $obj = OIDplusObject::parse($query); // in case we didn't find anything fitting, we take it as it is and later use getParent() to find something else
-				$query = $obj->nodeId();
-			} catch (Exception $e) {
-				$obj = null;
-			}
+			$obj = OIDplusObject::findFitting($query);
+			if (!$obj) $obj = OIDplusObject::parse($query); // in case we didn't find anything fitting, we take it as it is and later use getParent() to find something else
+			if ($obj) $query = $obj->nodeId();
 
 			$only_wellknown_ids_found = false;
 			$continue = false;

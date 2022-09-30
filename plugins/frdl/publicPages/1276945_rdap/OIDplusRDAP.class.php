@@ -61,34 +61,28 @@ class OIDplusRDAP {
 			$cacheFile = false;
 		}
 
-		if (!is_null(OIDplus::getPluginByOid("1.3.6.1.4.1.37553.8.1.8.8.53354196964.641310544"))) { // OIDplusPagePublicAltIds
-			$res = OIDplus::db()->query("select * from ###alt_ids where alt = ? AND ns = ?", [$n[1], $ns]);
-			$alt = $res ? $res->fetch_object() : null;
-			if(null !== $alt){
-				$query = $alt->id;
-				$n = explode(':', $query);
-				if(2>count($n)){
-					array_unshift($n, 'oid');
-					$query = 'oid:'.$query;
+		$out = [];
+
+		$obj = OIDplusObject::findFitting($query);
+		if (!$obj) $obj = OIDplusObject::parse($query);
+		if ($obj) $query = $obj->nodeId();
+
+		// If object was not found, try if it is an alternative identifier of another object
+		if(!$obj){
+			$alts = OIDplusPagePublicObjects::getAlternativesForQuery($query);
+			foreach ($alts as $alt) {
+				if ($obj = OIDplusObject::findFitting($alt)) {
+					$query = $obj->nodeId();
+					break;
 				}
-				$ns = $n[0];
 			}
 		}
 
-		$out = [];
-
-		try {
-			$obj = OIDplusObject::findFitting($query);
-			if (!$obj) $obj = OIDplusObject::parse($query);
-			$query = $obj->nodeId();
-		} catch (Exception $e) {
-			$obj = null;
-		}
-
-		if(null === $obj){
+		// Still nothing found?
+		if(!$obj){
 			$out['error'] = 'Not found';
 			if(true === $this->useCache){
-			$this->rdap_write_cache($out, $cacheFile);
+				$this->rdap_write_cache($out, $cacheFile);
 			}
 			return $this->rdap_out($out);
 		}
