@@ -87,9 +87,6 @@ TINYMCE
 OID-IP
 - query 'oid:' should show all root entries (subordinate entries), but there is only the message "not found"
 - offer signature checker tool to verify responses
-- should the OID-IP plugin call `OIDplusPagePublicObjects::getAlternativesForQuery` if the Object Could not be found?
-	Pro: RDAP does this, as well as the Objects plugin (?goto=, tree_search, etc.)
-	Contra: The OID-IP Internet Draft does not specify this
 
 SETUP
 - There should be a "test database connection" button
