@@ -67,7 +67,18 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 	}
 
 	public function getVersion(): string {
-		return $this->version;
+		if (str_starts_with($this->oid,'1.3.6.1.4.1.37476.2.5.2.4.') && ($this->version == '')) {
+			$sysver = OIDplus::getVersion();
+			if ($sysver == '') {
+				//return _L('Part of OIDplus');
+				return 'built-in';
+			} else {
+				//return _L('Part of OIDplus, version %1', $sysver);
+				return $sysver;
+			}
+		} else {
+			return $this->version;
+		}
 	}
 
 	public function getHtmlDescription(): string {
