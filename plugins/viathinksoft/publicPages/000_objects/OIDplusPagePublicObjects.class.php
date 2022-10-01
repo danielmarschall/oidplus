@@ -573,11 +573,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// --- If the object type is disabled or not an object at all (e.g. "oidplus:"), then $handled=false
 			//     If the object type is enabled but object not found, $handled=true
 
-			try {
-				$obj = OIDplusObject::parse($id);
-			} catch (Exception $e) {
-				$obj = null;
-			}
+			$obj = OIDplusObject::parse($id);
 
 			if ($test === false) {
 				if (is_null($obj)) {
