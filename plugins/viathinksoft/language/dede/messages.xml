@@ -5750,6 +5750,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Secure connection (HTTPS)
+		]]></source>
+		<target><![CDATA[
+		Sichere Verbindung (HTTPS)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		See also
 		]]></source>
 		<target><![CDATA[
@@ -6202,14 +6210,6 @@
 		]]></source>
 		<target><![CDATA[
 		System-Version
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		TLS
-		]]></source>
-		<target><![CDATA[
-		TLS
 		]]></target>
 	</message>
 	<message>

@@ -58,10 +58,10 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 	}
 
 	// TODO: There are several PHPSESSID cookies set. That's not very nice. We should collect the cookies and then at script ending only send the last definition one time.
-	public function setcookie($name, $value, $expires=0, $allowJS=false, $samesite=null) {
+	public function setcookie($name, $value, $expires=0, $allowJS=false, $samesite=null, $forceInsecure=false) {
 		$domain = $this->getCookieDomain();
 		$path = $this->getCookiePath();
-		$secure = OIDplus::isSSL();
+		$secure = $forceInsecure ? false : OIDplus::isSSL();
 		$httponly = !$allowJS;
 		if (is_null($samesite)) {
 			$samesite = OIDplus::baseConfig()->getValue('COOKIE_SAMESITE_POLICY', 'Strict');

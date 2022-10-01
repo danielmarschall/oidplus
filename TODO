@@ -17,7 +17,6 @@ Ideas
 
 "Reverse Alt IDs"
 - Third party plugin waiting for certification https://github.com/frdl/oidplus-plugin-alternate-id-tracking
-- Instead of using a cache table, maybe rather create the full Reverse-AltID list on-the-fly and cache it in a serialize data file?
 
 RDAP:
 - Extend handle404() to handle more things required by the RFC, as well as more object types
