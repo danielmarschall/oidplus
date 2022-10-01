@@ -114,7 +114,6 @@ class OIDplusOIDIP {
 				// Object type not known or invalid syntax of $query
 				$out[] = $this->_oidip_attr('result', 'Not found'); // DO NOT TRANSLATE!
 				$continue = false;
-				$res = null;
 			} else {
 
 				$query = $obj->nodeId(); // normalize
@@ -159,9 +158,8 @@ class OIDplusOIDIP {
 						// It does not need to be the direct parent (like ->one_up() does)
 						$obj = OIDplusObject::parse($query)->getParent(); // For objects, we assume that they are parents of each other
 						if ($obj) {
-							$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
 							$distance = $obj->distance($query);
-							assert($res->any());
+							assert(OIDplusObject::findFitting($query));
 
 							$query = $obj->nodeId();
 						}
@@ -175,16 +173,15 @@ class OIDplusOIDIP {
 						break;
 					}
 				}
-				$res = OIDplus::db()->query("select * from ###objects where id = ?", array($query));
 
 				if ((substr($query,0,4) === 'oid:') && (!$obj)) {
 					$query = $init_query;
 					$distance = 0;
 					while (true) {
-						$res = OIDplus::db()->query("select * from ###asn1id where oid = ? union select * from ###iri where oid = ?", array($query, $query));
-						if ($res->any()) {
+						// Checks if there is any identifier (so it is a well-known OID)
+						$res_test = OIDplus::db()->query("select * from ###asn1id where oid = ? union select * from ###iri where oid = ?", array($query, $query));
+						if ($res_test->any()) {
 							$obj = OIDplusObject::parse($query);
-							$res = null;
 							if ($distance > 0) {
 								$out[] = $this->_oidip_attr('result', 'Not found; superior object found'); // DO NOT TRANSLATE!
 								$out[] = $this->_oidip_attr('distance', $distance); // DO NOT TRANSLATE
@@ -228,12 +225,10 @@ class OIDplusOIDIP {
 
 					// $this->_oidip_attr('lang', ...); // not implemented (since we don't know the language of the texts written by the page operator)
 
-					$row = $res ? $res->fetch_object() : null;
+					if ($obj) {
+						$out[] = $this->_oidip_attr('name', $obj->getTitle()); // DO NOT TRANSLATE!
 
-					if (!is_null($row)) {
-						$out[] = $this->_oidip_attr('name', $row->title); // DO NOT TRANSLATE!
-
-						$cont = $row->description;
+						$cont = $obj->getDescription();
 						$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
 						$cont = preg_replace('@<br.*>@', "\n", $cont);
 						$cont = preg_replace('@\\n+@', "\n", $cont);
@@ -255,24 +250,24 @@ class OIDplusOIDIP {
 						$out[] = $this->_oidip_attr('asn1-notation', $obj->getAsn1Notation(false)); // DO NOT TRANSLATE!
 						$out[] = $this->_oidip_attr('iri-notation', $obj->getIriNotation(false)); // DO NOT TRANSLATE!
 
-						$res2 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($obj->nodeId()));
-						while ($row2 = $res2->fetch_object()) {
-							$out[] = $this->_oidip_attr('identifier', $row2->name); // DO NOT TRANSLATE!
+						$res_asn = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($obj->nodeId()));
+						while ($row_asn = $res_asn->fetch_object()) {
+							$out[] = $this->_oidip_attr('identifier', $row_asn->name); // DO NOT TRANSLATE!
 						}
 
-						$res2 = OIDplus::db()->query("select * from ###asn1id where standardized = ? and oid = ?", array(true, $obj->nodeId()));
-						while ($row2 = $res2->fetch_object()) {
-							$out[] = $this->_oidip_attr('standardized-id', $row2->name); // DO NOT TRANSLATE!
+						$res_asn = OIDplus::db()->query("select * from ###asn1id where standardized = ? and oid = ?", array(true, $obj->nodeId()));
+						while ($row_asn = $res_asn->fetch_object()) {
+							$out[] = $this->_oidip_attr('standardized-id', $row_asn->name); // DO NOT TRANSLATE!
 						}
 
-						$res2 = OIDplus::db()->query("select * from ###iri where oid = ?", array($obj->nodeId()));
-						while ($row2 = $res2->fetch_object()) {
-							$out[] = $this->_oidip_attr('unicode-label', $row2->name); // DO NOT TRANSLATE!
+						$res_iri = OIDplus::db()->query("select * from ###iri where oid = ?", array($obj->nodeId()));
+						while ($row_iri = $res_iri->fetch_object()) {
+							$out[] = $this->_oidip_attr('unicode-label', $row_iri->name); // DO NOT TRANSLATE!
 						}
 
-						$res2 = OIDplus::db()->query("select * from ###iri where longarc = ? and oid = ?", array(true, $obj->nodeId()));
-						while ($row2 = $res2->fetch_object()) {
-							$out[] = $this->_oidip_attr('long-arc', $row2->name); // DO NOT TRANSLATE!
+						$res_iri = OIDplus::db()->query("select * from ###iri where longarc = ? and oid = ?", array(true, $obj->nodeId()));
+						while ($row_iri = $res_iri->fetch_object()) {
+							$out[] = $this->_oidip_attr('long-arc', $row_iri->name); // DO NOT TRANSLATE!
 						}
 					}
 
@@ -303,35 +298,37 @@ class OIDplusOIDIP {
 						} else {
 							$out[] = $this->_oidip_attr('parent', $sParent); // DO NOT TRANSLATE!
 						}
-					} else if (!is_null($row) && !empty($row->parent) && (!$this->is_root($row->parent))) {
-						$sParent = $row->parent;
-						$out[] = $this->_oidip_attr('parent', $row->parent); // DO NOT TRANSLATE!
-					}
-
-					$res2 = OIDplus::db()->query("select * from ###objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($obj->nodeId()));
-					while ($row2 = $res2->fetch_object()) {
-						$objTest = OIDplusObject::parse($row2->id);
-						if ($this->allowObjectView($objTest, $authTokens)) {
-							$out[] = $this->_oidip_attr('subordinate', $row2->id.$this->show_asn1_appendix($row2->id)); // DO NOT TRANSLATE!
-						} else {
-							$out[] = $this->_oidip_attr('subordinate', $row2->id); // DO NOT TRANSLATE!
+					} else {
+						$sParent = $obj->getParent();
+						if ($obj && !empty($sParent) && (!$this->is_root($sParent))) {
+							$out[] = $this->_oidip_attr('parent', $sParent); // DO NOT TRANSLATE!
 						}
 					}
 
-					if (!is_null($row)) {
-						if ($row->created) $out[] = $this->_oidip_attr('created', date('Y-m-d H:i:s', strtotime($row->created))); // DO NOT TRANSLATE!
-						if ($row->updated) $out[] = $this->_oidip_attr('updated', date('Y-m-d H:i:s', strtotime($row->updated))); // DO NOT TRANSLATE!
+					$res_children = OIDplus::db()->query("select * from ###objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($obj->nodeId()));
+					while ($row_children = $res_children->fetch_object()) {
+						$objTest = OIDplusObject::parse($row_children->id);
+						if ($this->allowObjectView($objTest, $authTokens)) {
+							$out[] = $this->_oidip_attr('subordinate', $row_children->id.$this->show_asn1_appendix($row_children->id)); // DO NOT TRANSLATE!
+						} else {
+							$out[] = $this->_oidip_attr('subordinate', $row_children->id); // DO NOT TRANSLATE!
+						}
+					}
+
+					if ($obj) {
+						if ($tim = $obj->getCreatedTime()) $out[] = $this->_oidip_attr('created', date('Y-m-d H:i:s', strtotime($tim))); // DO NOT TRANSLATE!
+						if ($tim = $obj->getUpdatedTime()) $out[] = $this->_oidip_attr('updated', date('Y-m-d H:i:s', strtotime($tim))); // DO NOT TRANSLATE!
 					}
 
 					$out[] = '';
 
 					// ATTENTION: THE ORDER IS IMPORTANT FOR THE XML VALIDATION!
 					// The order of the RFC is the same as in the XSD
-					$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array(is_null($row) ? '' : $row->ra_email));
-					if ($row2 = $res2->fetch_object()) {
-						$out[] = $this->_oidip_attr('ra', (!empty($row2->ra_name) ? $row2->ra_name : (!empty($row2->email) ? $row2->email : /*_L*/('Unknown')))); // DO NOT TRANSLATE!
+					$res_ra = OIDplus::db()->query("select * from ###ra where email = ?", array($obj ? $obj->getRaMail() : ''));
+					if ($row_ra = $res_ra->fetch_object()) {
+						$out[] = $this->_oidip_attr('ra', (!empty($row_ra->ra_name) ? $row_ra->ra_name : (!empty($row_ra->email) ? $row_ra->email : /*_L*/('Unknown')))); // DO NOT TRANSLATE!
 
-						if (!$this->allowRAView($row2, $authTokens)) {
+						if (!$this->allowRAView($row_ra, $authTokens)) {
 							$out[] = $this->_oidip_attr('ra-status', 'Information partially available'); // DO NOT TRANSLATE!
 						} else {
 							$out[] = $this->_oidip_attr('ra-status', 'Information available'); // DO NOT TRANSLATE!
@@ -340,56 +337,56 @@ class OIDplusOIDIP {
 						// $this->_oidip_attr('ra-lang', ...); // not implemented (since we don't know the language of the texts written by the page operator)
 
 						$tmp = array();
-						if (!empty($row2->office)) $tmp[] = $row2->office;
-						if (!empty($row2->organization)) $tmp[] = $row2->organization;
+						if (!empty($row_ra->office)) $tmp[] = $row_ra->office;
+						if (!empty($row_ra->organization)) $tmp[] = $row_ra->organization;
 						$tmp = implode(', ', $tmp);
 
-						$out[] = $this->_oidip_attr('ra-contact-name', $row2->personal_name.(!empty($tmp) ? " ($tmp)" : '')); // DO NOT TRANSLATE!
-						if (!$this->allowRAView($row2, $authTokens)) {
-							if (!empty($row2->street) || !empty($row2->zip_town) || !empty($row2->country)) {
+						$out[] = $this->_oidip_attr('ra-contact-name', $row_ra->personal_name.(!empty($tmp) ? " ($tmp)" : '')); // DO NOT TRANSLATE!
+						if (!$this->allowRAView($row_ra, $authTokens)) {
+							if (!empty($row_ra->street) || !empty($row_ra->zip_town) || !empty($row_ra->country)) {
 								$out[] = $this->_oidip_attr('ra-address', /*_L*/('(redacted)')); // DO NOT TRANSLATE!
 							}
-							$out[] = $this->_oidip_attr('ra-phone', (!empty($row2->phone) ? /*_L*/('(redacted)') : '')); // DO NOT TRANSLATE!
-							$out[] = $this->_oidip_attr('ra-mobile', (!empty($row2->mobile) ? /*_L*/('(redacted)') : '')); // DO NOT TRANSLATE!
-							$out[] = $this->_oidip_attr('ra-fax', (!empty($row2->fax) ? /*_L*/('(redacted)') : '')); // DO NOT TRANSLATE!
+							$out[] = $this->_oidip_attr('ra-phone', (!empty($row_ra->phone) ? /*_L*/('(redacted)') : '')); // DO NOT TRANSLATE!
+							$out[] = $this->_oidip_attr('ra-mobile', (!empty($row_ra->mobile) ? /*_L*/('(redacted)') : '')); // DO NOT TRANSLATE!
+							$out[] = $this->_oidip_attr('ra-fax', (!empty($row_ra->fax) ? /*_L*/('(redacted)') : '')); // DO NOT TRANSLATE!
 						} else {
 							$address = array();
-							if (!empty($row2->street))   $address[] = $row2->street; // DO NOT TRANSLATE!
-							if (!empty($row2->zip_town)) $address[] = $row2->zip_town; // DO NOT TRANSLATE!
-							if (!empty($row2->country))  $address[] = $row2->country; // DO NOT TRANSLATE!
+							if (!empty($row_ra->street))   $address[] = $row_ra->street; // DO NOT TRANSLATE!
+							if (!empty($row_ra->zip_town)) $address[] = $row_ra->zip_town; // DO NOT TRANSLATE!
+							if (!empty($row_ra->country))  $address[] = $row_ra->country; // DO NOT TRANSLATE!
 							if (count($address) > 0) $out[] = $this->_oidip_attr('ra-address', implode("\n",$address));
-							$out[] = $this->_oidip_attr('ra-phone', $row2->phone); // DO NOT TRANSLATE!
-							$out[] = $this->_oidip_attr('ra-mobile', $row2->mobile); // DO NOT TRANSLATE!
-							$out[] = $this->_oidip_attr('ra-fax', $row2->fax); // DO NOT TRANSLATE!
+							$out[] = $this->_oidip_attr('ra-phone', $row_ra->phone); // DO NOT TRANSLATE!
+							$out[] = $this->_oidip_attr('ra-mobile', $row_ra->mobile); // DO NOT TRANSLATE!
+							$out[] = $this->_oidip_attr('ra-fax', $row_ra->fax); // DO NOT TRANSLATE!
 						}
-						$out[] = $this->_oidip_attr('ra-email', $row->ra_email); // DO NOT TRANSLATE!
+						$out[] = $this->_oidip_attr('ra-email', $obj->getRaMail()); // DO NOT TRANSLATE!
 
 						// $this->_oidip_attr('ra-url', ...); Not used.
 
-						$ra = new OIDplusRA($row->ra_email);
+						$ra = new OIDplusRA($obj->getRaMail());
 						if ($ra->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-							$ra->whoisRaAttributes($row->ra_email, $out); /** @phpstan-ignore-line */
+							$ra->whoisRaAttributes($obj->getRaMail(), $out); /** @phpstan-ignore-line */
 						}
 
 						foreach (OIDplus::getPagePlugins() as $plugin) {
 							if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-								$plugin->whoisRaAttributes($row->ra_email, $out);
+								$plugin->whoisRaAttributes($obj->getRaMail(), $out);
 							}
 						}
 
-						// yes, we use row2->privacy() instead of $this->allowRAView(), becuase $this->allowRAView=true if auth token is given; and we want to inform the person that they content they are viewing is confidential!
-						if ($row2->privacy) {
+						// yes, we use row_ra->privacy() instead of $this->allowRAView(), becuase $this->allowRAView=true if auth token is given; and we want to inform the person that they content they are viewing is confidential!
+						if ($row_ra->privacy) {
 							$out[] = $this->_oidip_attr('ra-attribute', 'confidential'); // DO NOT TRANSLATE!
 						}
 
-						if ($row2->registered) $out[] = $this->_oidip_attr('ra-created', date('Y-m-d H:i:s', strtotime($row2->registered))); // DO NOT TRANSLATE!
-						if ($row2->updated)    $out[] = $this->_oidip_attr('ra-updated', date('Y-m-d H:i:s', strtotime($row2->updated))); // DO NOT TRANSLATE!
+						if ($row_ra->registered) $out[] = $this->_oidip_attr('ra-created', date('Y-m-d H:i:s', strtotime($row_ra->registered))); // DO NOT TRANSLATE!
+						if ($row_ra->updated)    $out[] = $this->_oidip_attr('ra-updated', date('Y-m-d H:i:s', strtotime($row_ra->updated))); // DO NOT TRANSLATE!
 					} else {
-						$out[] = $this->_oidip_attr('ra', (!is_null($row) && !empty($row->ra_email) ? $row->ra_email : /*_L*/('Unknown'))); // DO NOT TRANSLATE!
-						if (!is_null($row)) {
+						$out[] = $this->_oidip_attr('ra', ($obj && !empty($obj->getRaMail()) ? $obj->getRaMail() : /*_L*/('Unknown'))); // DO NOT TRANSLATE!
+						if ($obj) {
 							foreach (OIDplus::getPagePlugins() as $plugin) {
 								if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-									$plugin->whoisRaAttributes($row->ra_email, $out);
+									$plugin->whoisRaAttributes($obj->getRaMail(), $out);
 								}
 							}
 						}
@@ -626,9 +623,9 @@ class OIDplusOIDIP {
 	protected function show_asn1_appendix($id) {
 		if (substr($id,0,4) === 'oid:') {
 			$appendix_asn1ids = array();
-			$res3 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($id));
-			while ($row3 = $res3->fetch_object()) {
-				$appendix_asn1ids[] = $row3->name;
+			$res_asn = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($id));
+			while ($row_asn = $res_asn->fetch_object()) {
+				$appendix_asn1ids[] = $row_asn->name;
 			}
 
 			$appendix = implode(', ', $appendix_asn1ids);
@@ -657,30 +654,30 @@ class OIDplusOIDIP {
 		if ($authToken && in_array($authToken, $authTokens)) return true;
 
 		// Per-OID auth tokens
+
 		$curid = $obj->nodeId();
-		while (($res = OIDplus::db()->query("select parent, confidential from ###objects where id = ?", array($curid)))->any()) {
-			$row = $res->fetch_array();
+		while ($test_obj = OIDplusObject::findFitting($curid)) {
 			// Example: You have an auth Token for 2.999.1.2.3
 			// This allows you to view 2.999.1.2.3 and all of its children,
 			// as long as they are not confidential (then you need their auth token).
 			// 2, 2.999, 2.999.1 and 2.999.1.2 are visible,
 			// (because their existence is now obvious).
-			if ($row['confidential'] && !$this->authTokenAccepted($curid, $authTokens)) return false;
-			$curid = $row['parent'];
+			if ($test_obj->isConfidential() && !$this->authTokenAccepted($curid, $authTokens)) return false;
+			$curid = $test_obj->getParent();
 		}
 
 		// Allow
 		return true;
 	}
 
-	protected function allowRAView($row, $authTokens) {
+	protected function allowRAView($row_ra, $authTokens) {
 		// Master auth token (TODO: Have an object-master-token and a ra-master-token?)
 		$authToken = trim(OIDplus::config()->getValue('whois_auth_token'));
 		if (empty($authToken)) $authToken = false;
 		if ($authToken && in_array($authToken, $authTokens)) return true;
 
 		// Per-RA auth tokens
-		if ($row->privacy && !$this->authTokenAccepted('ra:'.$row->ra_name, $authTokens)) return false;
+		if ($row_ra->privacy && !$this->authTokenAccepted('ra:'.$row_ra->ra_name, $authTokens)) return false;
 
 		// Allow
 		return true;

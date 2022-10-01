@@ -159,12 +159,14 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			foreach ($ra_mails_to_check as $check_ra_mail) {
 				$out_part = array();
 
-				foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email, $title)) {
+				foreach (self::$object_info_cache as $id => $cacheitem) {
 					// If the OID RA is the RA we are searching, then add the object to the choice list
+					$ra_email = $cacheitem[self::CACHE_RA_EMAIL];
 					if ($ra_email == $check_ra_mail) $out_part[] = $id;
 				}
 
-				foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email, $title)) {
+				foreach (self::$object_info_cache as $id => $cacheitem) {
+					$parent = $cacheitem[self::CACHE_PARENT];
 					if (isset(self::$object_info_cache[$parent])) {
 						if (self::$object_info_cache[$parent][self::CACHE_RA_EMAIL] == $ra_email) {
 							// if the parent has the same RA, then this OID cannot be a root => remove the element from the choice list
@@ -200,7 +202,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		} else {
 			self::buildObjectInformationCache();
 
-			foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email, $title)) {
+			foreach (self::$object_info_cache as $id => $cacheitem) {
+				$confidential = $cacheitem[self::CACHE_CONFIDENTIAL];
 				if (!$confidential) {
 					$obj = self::parse($id); // will be NULL if the object type is not registered
 					if ($obj && (!$obj->isConfidential())) {
@@ -284,7 +287,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		} else {
 			self::buildObjectInformationCache();
 
-			foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email, $title)) {
+			foreach (self::$object_info_cache as $id => $cacheitem) {
+				$parent = $cacheitem[self::CACHE_PARENT];
 				if ($parent == $this->nodeId()) {
 					$obj = self::parse($id);
 					if (!$obj) continue;
@@ -431,6 +435,66 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
+	public function getDescription() {
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
+			$res = OIDplus::db()->query("select description from ###objects where id = ?", array($this->nodeId()));
+			if (!$res->any()) return null;
+			$row = $res->fetch_array();
+			return $row['description'];
+		} else {
+			self::buildObjectInformationCache();
+			if (isset(self::$object_info_cache[$this->nodeId()])) {
+				return self::$object_info_cache[$this->nodeId()][self::CACHE_DESCRIPTION];
+			}
+			return false;
+		}
+	}
+
+	public function getComment() {
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
+			$res = OIDplus::db()->query("select comment from ###objects where id = ?", array($this->nodeId()));
+			if (!$res->any()) return null;
+			$row = $res->fetch_array();
+			return $row['comment'];
+		} else {
+			self::buildObjectInformationCache();
+			if (isset(self::$object_info_cache[$this->nodeId()])) {
+				return self::$object_info_cache[$this->nodeId()][self::CACHE_COMMENT];
+			}
+			return false;
+		}
+	}
+
+	public function getCreatedTime() {
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
+			$res = OIDplus::db()->query("select created from ###objects where id = ?", array($this->nodeId()));
+			if (!$res->any()) return null;
+			$row = $res->fetch_array();
+			return $row['created'];
+		} else {
+			self::buildObjectInformationCache();
+			if (isset(self::$object_info_cache[$this->nodeId()])) {
+				return self::$object_info_cache[$this->nodeId()][self::CACHE_CREATED];
+			}
+			return false;
+		}
+	}
+
+	public function getUpdatedTime() {
+		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
+			$res = OIDplus::db()->query("select updated from ###objects where id = ?", array($this->nodeId()));
+			if (!$res->any()) return null;
+			$row = $res->fetch_array();
+			return $row['updated'];
+		} else {
+			self::buildObjectInformationCache();
+			if (isset(self::$object_info_cache[$this->nodeId()])) {
+				return self::$object_info_cache[$this->nodeId()][self::CACHE_UPDATED];
+			}
+			return false;
+		}
+	}
+
 	public function userHasParentalWriteRights($ra_email=null) {
 		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
 
@@ -481,7 +545,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			return false;
 		} else {
 			self::buildObjectInformationCache();
-			foreach (self::$object_info_cache as $id => list($confidential, $parent, $ra_email, $title)) {
+			foreach (self::$object_info_cache as $id => $cacheitem) {
 				if (strpos($id, $obj->ns().':') === 0) {
 					$test = OIDplusObject::parse($id);
 					if ($obj->equals($test)) return $test;
@@ -503,17 +567,22 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		self::$object_info_cache = null;
 	}
 
-	const CACHE_CONFIDENTIAL = 0; // TODO: An object would be better so you can use $cacheitem->isConfidential() etc.
-	const CACHE_PARENT = 1;
-	const CACHE_RA_EMAIL = 2;
-	const CACHE_TITLE = 3;
+	const CACHE_ID = 'id';
+	const CACHE_PARENT = 'parent';
+	const CACHE_TITLE = 'title';
+	const CACHE_DESCRIPTION = 'description';
+	const CACHE_RA_EMAIL = 'ra_email';
+	const CACHE_CONFIDENTIAL = 'confidential';
+	const CACHE_CREATED = 'created';
+	const CACHE_UPDATED = 'updated';
+	const CACHE_COMMENT = 'comment';
 
 	private static function buildObjectInformationCache() {
 		if (is_null(self::$object_info_cache)) {
 			self::$object_info_cache = array();
-			$res = OIDplus::db()->query("select id, parent, confidential, ra_email, title from ###objects");
+			$res = OIDplus::db()->query("select * from ###objects");
 			while ($row = $res->fetch_array()) {
-				self::$object_info_cache[$row['id']] = array($row['confidential'], $row['parent'], $row['ra_email'], $row['title']);
+				self::$object_info_cache[$row['id']] = $row;
 			}
 		}
 	}

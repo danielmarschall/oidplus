@@ -7,6 +7,14 @@ Ideas by Simon T.:
 - a possibility to export&transfer all data between OIDplus'es: Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!
 - a possibility to 'construct' my own object types in UI (1: specify list of their fields and 2: choose "oid-like/forward" com.example.api or "domain-like/reverse" api.example.com naming scheme), so they would appear as the whole new type
 
+Optimization:
+- Performance tests with new object cache (which contains more fields e.g. description and comment field)
+- Instead of querying the database too often with the pattern "select description from ###objects where id = ?",
+  rather use $obj=OIDplusObject::findFitting($id), and then $obj->getDescription(), etc.
+  Look at these queries and try to replace them!
+	grep -r "###objects where id = " | grep -v "\\.svn" | grep -v "phpstan"
+- After an "delete from ###objects", "update ###objects", or "insert into ###objects", call OIDplusObject::resetObjectInformationCache()
+
 Databases:
 - Let plugins create tables for all DBMS by including a "create table" function with abstract types in the SQL slang plugins (similar to Medoo)
 
@@ -17,6 +25,7 @@ Ideas
 
 "Reverse Alt IDs"
 - Third party plugin waiting for certification https://github.com/frdl/oidplus-plugin-alternate-id-tracking
+- Alt ID plugin: Add some kind of peristent cache
 
 RDAP:
 - Extend handle404() to handle more things required by the RFC, as well as more object types
