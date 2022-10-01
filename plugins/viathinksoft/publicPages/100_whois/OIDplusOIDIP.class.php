@@ -105,26 +105,40 @@ class OIDplusOIDIP {
 			$distance = null;
 			$found = null;
 
-			$obj = OIDplusObject::findFitting($query);
-			if (!$obj) $obj = OIDplusObject::parse($query); // in case we didn't find anything fitting, we take it as it is and later use getParent() to find something else
-			if ($obj) $query = $obj->nodeId();
+			$obj = OIDplusObject::parse($query);
 
 			$only_wellknown_ids_found = false;
 			$continue = false;
 
 			if (!$obj) {
+				// Object type not known or invalid syntax of $query
 				$out[] = $this->_oidip_attr('result', 'Not found'); // DO NOT TRANSLATE!
 				$continue = false;
 				$res = null;
 			} else {
+
+				$query = $obj->nodeId(); // normalize
+
 				$obj = null;
 				$distance = 0;
 
 				$init_query = $query;
 				while (true) {
-					$res = OIDplus::db()->query("select * from ###objects where id = ?", array($query));
-					if ($res->any()) {
-						$obj = OIDplusObject::parse($query);
+
+					$obj_test = OIDplusObject::findFitting($query);
+					if ($obj_test) {
+						$obj = $obj_test;
+					} else {
+						$alts = OIDplusPagePublicObjects::getAlternativesForQuery($query);
+						foreach ($alts as $alt) {
+							$obj_test = OIDplusObject::findFitting($alt);
+							if ($obj_test) {
+								$query = $alt;
+								$obj = $obj_test;
+							}
+						}
+					}
+					if ($obj) {
 						if ($distance > 0) {
 							$out[] = $this->_oidip_attr('result', 'Not found; superior object found'); // DO NOT TRANSLATE!
 							$out[] = $this->_oidip_attr('distance', $distance); // DO NOT TRANSLATE
@@ -133,23 +147,6 @@ class OIDplusOIDIP {
 						}
 						$continue = true;
 						break;
-					} else {
-						$alts = OIDplusPagePublicObjects::getAlternativesForQuery($query);
-						foreach ($alts as $alt) {
-							$res = OIDplus::db()->query("select * from ###objects where id = ?", array($alt));
-							if ($res->any()) {
-								$query = $alt;
-								$obj = OIDplusObject::parse($alt);
-								if ($distance > 0) {
-									$out[] = $this->_oidip_attr('result', 'Not found; superior object found'); // DO NOT TRANSLATE!
-									$out[] = $this->_oidip_attr('distance', $distance); // DO NOT TRANSLATE
-								} else {
-									$out[] = $this->_oidip_attr('result', 'Found'); // DO NOT TRANSLATE!
-								}
-								$continue = true;
-								break 2;
-							}
-						}
 					}
 
 					if (substr($query,0,4) === 'oid:') {
@@ -178,6 +175,7 @@ class OIDplusOIDIP {
 						break;
 					}
 				}
+				$res = OIDplus::db()->query("select * from ###objects where id = ?", array($query));
 
 				if ((substr($query,0,4) === 'oid:') && (!$obj)) {
 					$query = $init_query;
