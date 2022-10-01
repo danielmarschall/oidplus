@@ -1404,6 +1404,9 @@ class OIDplus extends OIDplusBaseClass {
 		return ($cachedVersion = false); // version ambigous or unknown
 	}
 
+	const ENFORCE_SSL_NO   = 0;
+	const ENFORCE_SSL_YES  = 1;
+	const ENFORCE_SSL_AUTO = 2;
 	private static $sslAvailableCache = null;
 	public static function isSslAvailable() {
 		if (!is_null(self::$sslAvailableCache)) return self::$sslAvailableCache;
@@ -1417,47 +1420,44 @@ class OIDplus extends OIDplusBaseClass {
 		$already_ssl = self::isSSL();
 		$ssl_port = 443;
 
-		// TODO: Instead of 0, 1, 2, maybe make OIDplus:: constants
-		$mode = OIDplus::baseConfig()->getValue('ENFORCE_SSL', 2/*auto*/);
-
-		if ($mode == 0) {
-			// No SSL available
-			self::$sslAvailableCache = $already_ssl;
-			return $already_ssl;
-		}
-
-		if ($mode == 1) {
-			// Force SSL
-			if ($already_ssl) {
-				self::$sslAvailableCache = true;
-				return true;
+		if ($already_ssl) {
+			OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, false, null, true/*forceInsecure*/);
+			self::$sslAvailableCache = true;
+			return true;
+		} else {
+			if (isset($_COOKIE['SSL_CHECK']) && ($_COOKIE['SSL_CHECK'] == '1')) {
+				// The cookie "SSL_CHECK" is set once a website was loaded with HTTPS.
+				// It forces subsequent HTTP calls to redirect to HTTPS (like HSTS).
+				// The reason is the following problem:
+				// If you open the page with HTTPS first, then the CSRF token cookies will get the "secure" flag
+				// If you open the page then with HTTP, the HTTP cannot access the secure CSRF cookies,
+				// Chrome will then block "Set-Cookie" since the HTTP cookie would overwrite the HTTPS cookie.
+				// Note: SSL_CHECK is NOT a replacement for HSTS! You should use HSTS,
+				// because on there your browser ensures that HTTPS is called, before the server
+				// is even contacted (and therefore, no HTTP connection can be hacked).
+				$mode = OIDplus::ENFORCE_SSL_YES;
 			} else {
+				$mode = OIDplus::baseConfig()->getValue('ENFORCE_SSL', OIDplus::ENFORCE_SSL_AUTO);
+			}
+
+			if ($mode == OIDplus::ENFORCE_SSL_NO) {
+				// No SSL available
+				self::$sslAvailableCache = false;
+				return false;
+			} else if ($mode == OIDplus::ENFORCE_SSL_YES) {
+				// Force SSL
 				$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 				header('Location:'.$location);
 				die(_L('Redirecting to HTTPS...'));
-				#self::$sslAvailableCache = true;
-				#return true;
-			}
-		}
-
-		if ($mode == 2) {
-			// Automatic SSL detection
-
-			if ($already_ssl) {
-				// we are already on HTTPS
-				OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, false);
-				self::$sslAvailableCache = true;
-				return true;
-			} else {
+			} else if ($mode == OIDplus::ENFORCE_SSL_AUTO) {
+				// Automatic SSL detection
 				if (isset($_COOKIE['SSL_CHECK'])) {
 					// We already had the HTTPS detection done before.
-					if ($_COOKIE['SSL_CHECK']) {
+					if ($_COOKIE['SSL_CHECK'] == '1') {
 						// HTTPS was detected before, but we are HTTP. Redirect now
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
 						die(_L('Redirecting to HTTPS...'));
-						#self::$sslAvailableCache = true;
-						#return true;
 					} else {
 						// No HTTPS available. Do nothing.
 						self::$sslAvailableCache = false;
@@ -1469,15 +1469,13 @@ class OIDplus extends OIDplusBaseClass {
 					$errstr = '';
 					if (@fsockopen($_SERVER['HTTP_HOST'], $ssl_port, $errno, $errstr, $timeout)) {
 						// HTTPS detected. Redirect now, and remember that we had detected HTTPS
-						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, false);
+						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, false, null, true/*forceInsecure*/);
 						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
 						die(_L('Redirecting to HTTPS...'));
-						#self::$sslAvailableCache = true;
-						#return true;
 					} else {
 						// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.
-						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '0', 0, false);
+						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '0', 0, false, null, true/*forceInsecure*/);
 						self::$sslAvailableCache = false;
 						return false;
 					}

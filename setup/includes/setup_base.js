@@ -268,22 +268,22 @@ function performAccessCheck() {
 	checkAccess("includes/index.html");
 	checkAccess("setup/includes/index.html");
 	//checkAccess("plugins/viathinksoft/publicPages/100_whois/whois/cli/index.html");
-	
+
 	if (window.location.href.toLowerCase().startsWith('https://')) {
-		$("#enforce_ssl").val(1); // enforce SSL (because we are already SSL)
+		$("#enforce_ssl").val('OIDplus::ENFORCE_SSL_YES'); // enforce SSL (because we are already SSL)
 	} else {
 		// Do a SSL detection now.
 		// This is important because on XAMPP the SSL cert is invalid (self signed) and the user might
-		// be very confused if the PHP detection noticed the open 443 port and redirects the user to a
+		// be very confused if the PHP detection (OIDplus::ENFORCE_SSL_AUTO) notices the open 443 port and redirects the user to a
 		// big warning page of the browser!
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState === 4) {
 				if (xhr.status === 200) {
-					$("#enforce_ssl").val(1); // enforce SSL (we checked that it loads correctly)
+					$("#enforce_ssl").val('OIDplus::ENFORCE_SSL_YES'); // enforce SSL (we checked that it loads correctly)
 				} else {
 					console.log("JS SSL detection result: "+xhr.status);
-					$("#enforce_ssl").val(0); // disable SSL (because it failed, e.g. because of invalid cert or closed port)
+					$("#enforce_ssl").val('OIDplus::ENFORCE_SSL_NO'); // disable SSL (because it failed, e.g. because of invalid cert or closed port)
 				}
 			}
 		};

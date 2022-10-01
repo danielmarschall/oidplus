@@ -144,11 +144,12 @@ echo '</div>';
 
 // ----------------------------------------
 
-echo '<h3>'._L('TLS').'</h3>';
-echo '<p>'._L('SSL enforcement').'<br><select name="enforce_ssl" id="enforce_ssl" onclick="rebuild()">';
-echo '<option value="0">'._L('No SSL available (don\'t redirect)').'</option>';
-echo '<option value="1">'._L('Enforce SSL (always redirect)').'</option>';
-echo '<option value="2" selected>'._L('Intelligent SSL detection (redirect if port 443 is open)').'</option>';
+$is_ssl = OIDplus::isSSL();
+echo '<h3>'._L('Secure connection (HTTPS)').'</h3>';
+echo '<p>'._L('SSL enforcement').'<br><select name="enforce_ssl" id="enforce_ssl" onchange="rebuild()">';
+echo '<option value="OIDplus::ENFORCE_SSL_NO">'._L('No SSL available (don\'t redirect)').'</option>';
+echo '<option value="OIDplus::ENFORCE_SSL_YES"'.($is_ssl ? ' selected' : '').'>'._L('Enforce SSL (always redirect)').'</option>';
+echo '<option value="OIDplus::ENFORCE_SSL_AUTO"'.(!$is_ssl ? ' selected' : '').'>'._L('Intelligent SSL detection (redirect if port 443 is open)').'</option>';
 echo '</select></p>';
 echo '</form>';
 echo '</div>';
