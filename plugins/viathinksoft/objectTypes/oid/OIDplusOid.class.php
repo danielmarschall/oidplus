@@ -278,6 +278,30 @@ class OIDplusOid extends OIDplusObject {
 		}
 	}
 
+	public function getAsn1Ids() {
+		$asn_ids = array();
+		$res_asn = OIDplus::db()->query("select * from ###asn1id where oid = ? order by lfd", array("oid:".$this->oid));
+		while ($row_asn = $res_asn->fetch_array()) {
+			$name = $row_asn['name'];
+			$standardized = $row_asn['standardized'];
+			$well_known = $row_asn['well_known'];
+			$asn_ids[] = new OIDplusOidAsn1Id($name, $standardized, $well_known);
+		}
+		return $asn_ids;
+	}
+
+	public function getIris() {
+		$iri_ids = array();
+		$res_iri = OIDplus::db()->query("select * from ###iri where oid = ? order by lfd", array("oid:".$this->oid));
+		while ($row_iri = $res_iri->fetch_array()) {
+			$name = $row_iri['name'];
+			$longarc = $row_iri['longarc'];
+			$well_known = $row_iri['well_known'];
+			$iri_ids[] = new OIDplusOidIri($name, $longarc, $well_known);
+		}
+		return $iri_ids;
+	}
+
 	public function viewGetArcAsn1s(OIDplusOid $parent=null, $separator = ' | ') {
 		$asn_ids = array();
 
@@ -286,9 +310,9 @@ class OIDplusOid extends OIDplusObject {
 		$part = $this->deltaDotNotation($parent);
 
 		if (strpos($part, '.') === false) {
-			$res2 = OIDplus::db()->query("select name from ###asn1id where oid = ? order by lfd", array("oid:".$this->oid));
-			while ($row2 = $res2->fetch_array()) {
-				$asn_ids[] = $row2['name'].'('.$part.')';
+			$asn_id_objs = $this->getAsn1Ids();
+			foreach ($asn_id_objs as $asn_id_obj) {
+				$asn_ids[] = $asn_id_obj->getName().'('.$part.')';
 			}
 		}
 
