@@ -372,7 +372,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 
 	// Get parent gives the next possible parent which is EXISTING in OIDplus
 	// It does not give the immediate parent
-	public function getParent() {
+	public function getParent()/*: ?OIDplusObject*/ {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($this->nodeId()));
 			if (!$res->any()) return null;
@@ -400,9 +400,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				$cur = $cur->one_up();
 				if (!$cur) return null;
 			} while ($prev != $cur);
-
-			return null;
 		}
+		return null;
 	}
 
 	public function getRaMail() {
