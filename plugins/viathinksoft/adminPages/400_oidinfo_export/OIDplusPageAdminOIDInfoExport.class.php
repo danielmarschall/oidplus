@@ -966,13 +966,14 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				}
 			}
 
+			OIDplus::db()->transaction_begin();
+
 			$obj_test = OIDplusObject::findFitting($id);
 			if ($obj_test) {
 				if ($replaceExistingOIDs) {
-					// TODO: better do this (and the following insert) as transaction
+					OIDplus::db()->query("delete from ###objects where id = ?", array($id));
 					OIDplus::db()->query("delete from ###asn1id where oid = ?", array($id));
 					OIDplus::db()->query("delete from ###iri where oid = ?", array($id));
-					OIDplus::db()->query("delete from ###objects where id = ?", array($id));
 				} else {
 					//$errors[] = "Ignore OID '$dot_notation' because it already exists";
 					//$count_errors++;
@@ -982,6 +983,9 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 
 			OIDplus::db()->query("insert into ###objects (id, parent, title, description, confidential, ra_email) values (?, ?, ?, ?, ?, ?)", array($id, $parent, $title, $info, 0, $ra));
+
+			OIDplus::db()->transaction_commit();
+			OIDplusObject::resetObjectInformationCache();
 
 			$this_oid_has_warnings = false;
 
@@ -1037,7 +1041,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		}
 
 		// De-orphanize
-		//if ($orphan_mode === self::ORPHAN_AUTO_DEORPHAN) OIDplus::db()->query("update ###objects set parent = 'oid:' where parent like 'oid:%' and parent not in (select id from ###objects)");
+		//if ($orphan_mode === self::ORPHAN_AUTO_DEORPHAN) {
+		//	OIDplus::db()->query("update ###objects set parent = 'oid:' where parent like 'oid:%' and parent not in (select id from ###objects)");
+		//	OIDplusObject::resetObjectInformationCache();
+		//}
 		foreach ($ok_oids as $id) {
 			// De-orphanize if neccessary
 			if ($orphan_mode === self::ORPHAN_AUTO_DEORPHAN) {
@@ -1046,6 +1053,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 					$errors[] = _L("%1 was de-orphaned (placed as root OID) because its parent is not existing.",$id);
 					$count_warnings++;
 					OIDplus::db()->query("update ###objects set parent = 'oid:' where id = ? and parent not in (select id from ###objects)", array($id));
+					OIDplusObject::resetObjectInformationCache();
 				}
 			}
 

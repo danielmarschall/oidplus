@@ -142,6 +142,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				}
 
 				OIDplus::db()->query("insert into ###objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, ".OIDplus::db()->sqlDate().")", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
+				OIDplusObject::resetObjectInformationCache();
 			} catch (Exception $e) {
 				$ra->delete();
 				throw $e;

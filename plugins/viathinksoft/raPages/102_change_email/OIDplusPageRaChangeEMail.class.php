@@ -71,6 +71,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 					OIDplus::logger()->log("[INFO]OID(".$row['id'].")+SUPOID(".$row['id'].")", "Admin changed email address of RA '$old_email' (owner of ".$row['id'].") to '$new_email'");
 				}
 				OIDplus::db()->query("update ###objects set ra_email = ? where ra_email = ?", array($new_email, $old_email));
+				OIDplusObject::resetObjectInformationCache();
 
 				// Re-login
 				if ($ra_was_logged_in) {
@@ -158,6 +159,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				OIDplus::logger()->log("[INFO]OID(".$row['id'].")+SUPOID(".$row['id'].")", "RA '$old_email' (owner of ".$row['id'].") has changed their email address to '$new_email'");
 			}
 			OIDplus::db()->query("update ###objects set ra_email = ? where ra_email = ?", array($new_email, $old_email));
+			OIDplusObject::resetObjectInformationCache();
 
 			// Re-login
 			if ($ra_was_logged_in) {
