@@ -1774,6 +1774,7 @@ class OIDplus extends OIDplusBaseClass {
 				OIDplus::db()->query("update ###log_object set id = ? where id = ?", array($idb, $ida));
 				OIDplus::logger()->log("[INFO]A!", "Object name '$ida' has been changed to '$idb' during re-canonization");
 				OIDplus::db()->transaction_commit();
+				OIDplusObject::resetObjectInformationCache();
 			}
 		}
 	}

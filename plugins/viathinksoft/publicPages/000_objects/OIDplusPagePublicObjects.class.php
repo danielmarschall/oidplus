@@ -41,6 +41,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	private function ra_change_rec($id, $old_ra, $new_ra) {
 		if (is_null($old_ra)) $old_ra = '';
 		OIDplus::db()->query("update ###objects set ra_email = ?, updated = ".OIDplus::db()->sqlDate()." where id = ? and ".OIDplus::db()->getSlang()->isNullFunction('ra_email',"''")." = ?", array($new_ra, $id, $old_ra));
+		OIDplusObject::resetObjectInformationCache();
 
 		$res = OIDplus::db()->query("select id from ###objects where parent = ? and ".OIDplus::db()->getSlang()->isNullFunction('ra_email',"''")." = ?", array($id, $old_ra));
 		while ($row = $res->fetch_array()) {
@@ -83,6 +84,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// Delete object
 			OIDplus::db()->query("delete from ###objects where id = ?", array($id));
+			OIDplusObject::resetObjectInformationCache();
 
 			// Delete orphan stuff
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
@@ -96,6 +98,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 						$id_to_delete = $row['id'];
 						OIDplus::logger()->log("[CRIT]OIDRA($id_to_delete)!", "Lost ownership of object '$id_to_delete' because one of the superior objects ('$id') was recursively deleted");
 						OIDplus::db()->query("delete from ###objects where id = ?", array($id_to_delete));
+						OIDplusObject::resetObjectInformationCache();
 					}
 				} while (true);
 			}
@@ -211,14 +214,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (isset($params['confidential'])) {
 				$confidential = $params['confidential'] == 'true';
 				OIDplus::db()->query("UPDATE ###objects SET confidential = ? WHERE id = ?", array($confidential, $id));
+				OIDplusObject::resetObjectInformationCache();
 			}
 
 			if (isset($params['comment'])) {
 				$comment = $params['comment'];
 				OIDplus::db()->query("UPDATE ###objects SET comment = ? WHERE id = ?", array($comment, $id));
+				OIDplusObject::resetObjectInformationCache();
 			}
 
 			OIDplus::db()->query("UPDATE ###objects SET updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($id));
+			OIDplusObject::resetObjectInformationCache();
 
 			$status = 0;
 
@@ -271,14 +277,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (isset($params['title'])) {
 				$title = $params['title'];
 				OIDplus::db()->query("UPDATE ###objects SET title = ? WHERE id = ?", array($title, $id));
+				OIDplusObject::resetObjectInformationCache();
 			}
 
 			if (isset($params['description'])) {
 				$description = $params['description'];
 				OIDplus::db()->query("UPDATE ###objects SET description = ? WHERE id = ?", array($description, $id));
+				OIDplusObject::resetObjectInformationCache();
 			}
 
 			OIDplus::db()->query("UPDATE ###objects SET updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($id));
+			OIDplusObject::resetObjectInformationCache();
 
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
@@ -403,6 +412,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			OIDplus::db()->query("INSERT INTO ###objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, ".OIDplus::db()->sqlDate().", ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
+			OIDplusObject::resetObjectInformationCache();
 
 			// Set ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
