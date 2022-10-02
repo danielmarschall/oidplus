@@ -12,7 +12,6 @@ Databases:
 
 Ideas
 - if a third-party plugin throws an exception in the init() method, maybe OIDplus should avoid loading the plugin?
-- VTS built in plugins should get Plugin-Version defined as the System SVN Version (to avoid that the manifest.xml needs to be adjusted at each SVN release, which is not yet done)
 - "hidden" alt ids which are not shown in the GUI, but can be used for reverse-Alt-ID ? (I believe we have excluded some AltIDs which are "not neccessary", e.g. an GUID already is a GUID and therefore does not need a Namespace GUID, or something like that)
 
 "Reverse Alt IDs"
