@@ -167,15 +167,16 @@ class OIDplusAid extends OIDplusObject {
 	public function chunkedNotation($withAbbr=true) {
 		$curid = self::root().$this->aid;
 
-		$res = OIDplus::db()->query("select id, title from ###objects where id = ?", array($curid));
-		if (!$res->any()) return $this->aid;
+		$obj = OIDplusObject::findFitting($curid);
+		if (!$obj) return $this->aid;
 
 		$hints = array();
 		$lengths = array(strlen($curid));
-		while (($res = OIDplus::db()->query("select parent, title from ###objects where id = ?", array($curid)))->any()) {
-			$row = $res->fetch_array();
-			$curid = $row['parent'];
-			$hints[] = $row['title'];
+		while ($obj = OIDplusObject::findFitting($curid)) {
+			$objParent = $obj->getParent();
+			if (!$objParent) break;
+			$curid = $objParent->nodeId();
+			$hints[] = $obj->getTitle();
 			$lengths[] = strlen($curid);
 		}
 

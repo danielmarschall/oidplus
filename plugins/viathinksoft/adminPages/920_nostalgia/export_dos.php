@@ -65,40 +65,53 @@ if ($zip->open($tmp_file, ZipArchive::CREATE)!== true) {
 	throw new OIDplusException("cannot open <$tmp_file>");
 }
 
+function make_line($command, $data) {
+	return $command.$data."\r\n";
+}
+
+// https://github.com/danielmarschall/oidplus_dos/blob/master/OIDFILE.PAS
+define('CMD_VERSION',         'VERS');
+define('CMD_OWN_ID',          'SELF');
+define('CMD_PARENT',          'SUPR');
+define('CMD_CHILD',           'CHLD');
+define('CMD_ASN1_IDENTIFIER', 'ASN1');
+define('CMD_UNICODE_LABEL',   'UNIL');
+define('CMD_DESCRIPTION',     'DESC');
+
 foreach ($dos_ids as $oid => $dos_id) {
 	$cont = '';
 
-	$cont .= "VERS2022\r\n";
+	$cont .= make_line(CMD_VERSION, 2022);
 
-	$cont .= "SELF$dos_id$oid\r\n";
+	$cont .= make_line(CMD_OWN_ID, $dos_id.$oid);
 
 	$parent_oid = $parent_oids[$oid];
 	$parent_id = $dos_ids[$parent_oid];
-	$cont .= "SUPR$parent_id$parent_oid\r\n";
+	$cont .= make_line(CMD_PARENT, $parent_id.$parent_oid);
 
 	foreach ($parent_oids as $child_oid => $parent_oid) {
 		if ($child_oid == '') continue;
 		if ($parent_oid == $oid) {
 			$child_id = $dos_ids[$child_oid];
-			$cont .= "CHLD$child_id$child_oid\r\n";
+			$cont .= make_line(CMD_CHILD, $child_id.$child_oid);
 		}
 	}
 
 	$res = OIDplus::db()->query("select * from ###asn1id where oid = 'oid:$oid'");
 	while ($row = $res->fetch_object()) {
 		$asn1 = $row->name;
-		$cont .= "ASN1$asn1\r\n";
+		$cont .= make_line(CMD_ASN1_IDENTIFIER, $asn1);
 	}
 
 	$res = OIDplus::db()->query("select * from ###iri where oid = 'oid:$oid'");
 	while ($row = $res->fetch_object()) {
 		$iri = $row->name;
-		$cont .= "UNIL$iri\r\n";
+		$cont .= make_line(CMD_UNICODE_LABEL, $iri);
 	}
 
 	if ($oid == '') {
 		// TODO: Split our OIDplus root OIDs into the real OID tree (1, 1.3, 1.3.6, ...)
-		$cont .= "DESCHere, you can find the root OIDs.\r\n";
+		$cont .= make_line(CMD_DESCRIPTION, 'Here, you can find the root OIDs');
 	} else {
 		$res = OIDplus::db()->query("select * from ###objects where id = 'oid:$oid';");
 		$row = $res->fetch_object();
@@ -112,7 +125,7 @@ foreach ($dos_ids as $oid => $dos_id) {
 		$desc_ary = array_merge($desc_ary1, $desc_ary2);
 		foreach ($desc_ary as $line_idx => $line) {
 			if ($line_idx >= 10/*DESCEDIT_LINES*/) break;
-			$cont .= "DESC$line\r\n";
+			$cont .= make_line(CMD_DESCRIPTION, $line);
 		}
 	}
 

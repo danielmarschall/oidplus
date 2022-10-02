@@ -87,18 +87,6 @@ class OIDplusRDAP {
 			$query = $obj->nodeId();
 		}
 
-		$res = OIDplus::db()->query("select * from ###objects where id = ?", [$query]);
-		$data = $res ? $res->fetch_object() : null;
-		if(null === $data){
-			$out['error'] = 'Not found';
-			if(true === $this->useCache){
-				$this->rdap_write_cache($out, $cacheFile);
-			}
-			return $this->rdap_out($out);
-		}
-
-		$obj = OIDplusObject::parse($data->id);
-
 		$whois_server = '';
 		if (OIDplus::config()->getValue('individual_whois_server', '') != '') {
 			$whois_server = OIDplus::config()->getValue('individual_whois_server', '');
@@ -150,7 +138,7 @@ class OIDplusRDAP {
 			[
 				"title"=>"Description",
 				"description"=> [
-					($obj->isConfidential()) ? 'REDACTED FOR PRIVACY' : $data->description,
+					($obj->isConfidential()) ? 'REDACTED FOR PRIVACY' : $obj->getDescription(),
 				],
 				"links"=> [
 					[
