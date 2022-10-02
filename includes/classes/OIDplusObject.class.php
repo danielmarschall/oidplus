@@ -360,7 +360,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		return $icon;
 	}
 
-	public static function exists($id) {
+	public static function exists(string $id) {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select id from ###objects where id = ?", array($id));
 			return $res->any();
@@ -532,7 +532,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		return $this->nodeId() == $obj->nodeId(); // otherwise compare the node id case-sensitive
 	}
 
-	public static function findFitting($id) {
+	public static function findFitting(string $id) {
 		$obj = OIDplusObject::parse($id);
 		if (!$obj) return false; // e.g. if ObjectType plugin is disabled
 

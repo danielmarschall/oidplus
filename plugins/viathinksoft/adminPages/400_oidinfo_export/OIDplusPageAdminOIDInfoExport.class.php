@@ -115,17 +115,17 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-			if (!($res = @curl_exec($ch))) {
+			if (!($res_curl = @curl_exec($ch))) {
 				throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
 			}
 			curl_close($ch);
 
-			$json = @json_decode($res, true);
+			$json = @json_decode($res_curl, true);
 
 			if (!$json) {
 				return array(
 					"status" => -1,
-					"error" => _L('JSON reply from ViaThinkSoft decoding error: %1',$res)
+					"error" => _L('JSON reply from ViaThinkSoft decoding error: %1',$res_curl)
 				);
 			}
 
@@ -220,18 +220,18 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-			if (!($res = @curl_exec($ch))) {
+			if (!($res_curl = @curl_exec($ch))) {
 				throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
 			}
 			curl_close($ch);
 
 			$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:datatransfer$export').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to data transfer main page').'</a></p>';
 
-			$json = @json_decode($res, true);
+			$json = @json_decode($res_curl, true);
 
 			if (!$json) {
 				$out['icon'] = 'img/error.png';
-				$out['text'] .= _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
+				$out['text'] .= _L('JSON reply from ViaThinkSoft decoding error: %1',$res_curl);
 				return;
 			}
 
@@ -304,17 +304,17 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 								$url .= "&nb=".urlencode(array_pop($tmp));
 
 								$asn1_ids = array();
-								$res2 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($row->id));
-								while ($row2 = $res2->fetch_object()) {
-									$asn1_ids[] = $row2->name; // 'unicode-label' is currently not in the standard format (oid.xsd)
+								$res_asn = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($row->id));
+								while ($row_asn = $res_asn->fetch_object()) {
+									$asn1_ids[] = $row_asn->name; // 'unicode-label' is currently not in the standard format (oid.xsd)
 								}
 								$url .= "&id=".array_shift($asn1_ids); // urlencode() is already done (see above)
 								$url .= "&syn_id=".implode('%0A', $asn1_ids); // urlencode() is already done (see above)
 
 								$iri_ids = array();
-								$res2 = OIDplus::db()->query("select * from ###iri where oid = ?", array($row->id));
-								while ($row2 = $res2->fetch_object()) {
-									$iri_ids[] = $row2->name;
+								$res_iri = OIDplus::db()->query("select * from ###iri where oid = ?", array($row->id));
+								while ($row_iri = $res_iri->fetch_object()) {
+									$iri_ids[] = $row_iri->name;
 								}
 								$url .= "&unicode_label_list=".implode('%0A', $iri_ids); // urlencode() is already done (see above)
 
@@ -356,24 +356,24 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 								$url .= "&current_registrant_email=".urlencode($row->ra_email);
 
-								$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array($row->ra_email));
-								if ($res2->any()) {
-									$row2 = $res2->fetch_object();
+								$res_ra = OIDplus::db()->query("select * from ###ra where email = ?", array($row->ra_email));
+								if ($res_ra->any()) {
+									$row_ra = $res_ra->fetch_object();
 
 									$tmp = array();
-									if (!empty($row2->personal_name)) {
-										$name_ary = split_firstname_lastname($row2->personal_name);
+									if (!empty($row_ra->personal_name)) {
+										$name_ary = split_firstname_lastname($row_ra->personal_name);
 										$tmp_first_name = $name_ary[0];
 										$tmp_last_name  = $name_ary[1];
-										if (!empty($row2->ra_name)       ) $tmp[] = $row2->ra_name;
-										if (!empty($row2->office)        ) $tmp[] = $row2->office;
-										if (!empty($row2->organization)  ) $tmp[] = $row2->organization;
+										if (!empty($row_ra->ra_name)       ) $tmp[] = $row_ra->ra_name;
+										if (!empty($row_ra->office)        ) $tmp[] = $row_ra->office;
+										if (!empty($row_ra->organization)  ) $tmp[] = $row_ra->organization;
 									} else {
-										$tmp_first_name = $row2->ra_name;
+										$tmp_first_name = $row_ra->ra_name;
 										$tmp_last_name  = '';
-										if (!empty($row2->personal_name) ) $tmp[] = $row2->personal_name;
-										if (!empty($row2->office)        ) $tmp[] = $row2->office;
-										if (!empty($row2->organization)  ) $tmp[] = $row2->organization;
+										if (!empty($row_ra->personal_name) ) $tmp[] = $row_ra->personal_name;
+										if (!empty($row_ra->office)        ) $tmp[] = $row_ra->office;
+										if (!empty($row_ra->organization)  ) $tmp[] = $row_ra->organization;
 									}
 
 									if (empty($tmp_first_name) || empty($tmp_last_name)) {
@@ -384,17 +384,17 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 									$url .= "&current_registrant_first_name=".urlencode($tmp_first_name);
 									$url .= "&current_registrant_last_name=".urlencode($tmp_last_name);
 
-									if ((count($tmp) > 0) && ($tmp[0] == $row2->ra_name)) array_shift($tmp);
+									if ((count($tmp) > 0) && ($tmp[0] == $row_ra->ra_name)) array_shift($tmp);
 									$tmp = array_unique($tmp);
 
-									if (!$row2->privacy) {
-										if (!empty($row2->street))   $tmp[] = $row2->street;
-										if (!empty($row2->zip_town)) $tmp[] = $row2->zip_town;
-										if (!empty($row2->country))  $tmp[] = $row2->country;
-										$url .= "&current_registrant_tel=".urlencode(!empty($row2->phone) ? $row2->phone : $row2->mobile);
-										$url .= "&current_registrant_fax=".urlencode($row2->fax);
+									if (!$row_ra->privacy) {
+										if (!empty($row_ra->street))   $tmp[] = $row_ra->street;
+										if (!empty($row_ra->zip_town)) $tmp[] = $row_ra->zip_town;
+										if (!empty($row_ra->country))  $tmp[] = $row_ra->country;
+										$url .= "&current_registrant_tel=".urlencode(!empty($row_ra->phone) ? $row_ra->phone : $row_ra->mobile);
+										$url .= "&current_registrant_fax=".urlencode($row_ra->fax);
 									}
-									if (empty($row2->zip_town) && empty($row2->country)) {
+									if (empty($row_ra->zip_town) && empty($row_ra->country)) {
 										// The address is useless if we do neither know city nor country
 										// Ignore it
 									} else {
@@ -701,37 +701,40 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		natsort($nonConfidential);
 
 		foreach ($nonConfidential as $id) {
-			$res = OIDplus::db()->query("select * from ###objects where id = ?", array($id));
-			if ($row = $res->fetch_object()) {
+			$obj = OIDplusObject::parse($id);
+			if ($obj) {
 				$elements['identifier'] = array();
-				$res2 = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($row->id));
-				while ($row2 = $res2->fetch_object()) {
-					$elements['identifier'][] = $row2->name; // 'unicode-label' is currently not in the standard format (oid.xsd)
+				$res_asn = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($id));
+				while ($row_asn = $res_asn->fetch_object()) {
+					$elements['identifier'][] = $row_asn->name; // 'unicode-label' is currently not in the standard format (oid.xsd)
 				}
 
 				$elements['unicode-label'] = array();
-				$res2 = OIDplus::db()->query("select * from ###iri where oid = ?", array($row->id));
-				while ($row2 = $res2->fetch_object()) {
-					$elements['unicode-label'][] = $row2->name;
+				$res_iri = OIDplus::db()->query("select * from ###iri where oid = ?", array($id));
+				while ($row_iri = $res_iri->fetch_object()) {
+					$elements['unicode-label'][] = $row_iri->name;
 				}
 
-				if (!empty($row->title)) {
-					$elements['description'] = $row->title;
-					$elements['information'] = $row->description;/** @phpstan-ignore-line */
-					if (trim($row->title) == trim(strip_tags($row->description))) {/** @phpstan-ignore-line */
+				$title = $obj->getTitle();
+				$description = $obj->getDescription();
+				$comment = $obj->getComment();
+				if (!empty($title)) {
+					$elements['description'] = $title;
+					$elements['information'] = $description;
+					if (trim($title) == trim(strip_tags($description))) {
 						$elements['information'] = '';
 					}
 				} else if (isset($elements['identifier'][0])) {
 					$elements['description'] = '"'.$elements['identifier'][0].'"';
-					$elements['information'] = $row->description;
+					$elements['information'] = $description;
 				} else if (isset($elements['unicode-label'][0])) {
 					$elements['description'] = '"'.$elements['unicode-label'][0].'"';
-					$elements['information'] = $row->description;
-				} else if (!empty($row->description)) {
-					$elements['description'] = $row->description;
+					$elements['information'] = $description;
+				} else if (!empty($description)) {
+					$elements['description'] = $description;
 					$elements['information'] = '';
-				} else if (!empty($row->comment)) {
-					$elements['description'] = $row->comment;
+				} else if (!empty($comment)) {
+					$elements['description'] = $comment;
 					$elements['information'] = '';
 				} else {
 					$elements['description'] = '<i>No description available</i>'; // do not translate
@@ -757,46 +760,46 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				$elements['first-registrant']['email'] = '';
 				$elements['first-registrant']['phone'] = '';
 				$elements['first-registrant']['fax'] = '';
-				$elements['first-registrant']['creation-date'] = self::_formatdate($row->created);
+				$elements['first-registrant']['creation-date'] = self::_formatdate($obj->getCreatedTime());
 
 				$elements['current-registrant']['first-name'] = '';
 				$elements['current-registrant']['last-name'] = '';
-				$elements['current-registrant']['email'] = $row->ra_email;
+				$elements['current-registrant']['email'] = $obj->getRaMail();
 				$elements['current-registrant']['phone'] = '';
 				$elements['current-registrant']['fax'] = '';
 				$elements['current-registrant']['address'] = '';
 
-				$res2 = OIDplus::db()->query("select * from ###ra where email = ?", array($row->ra_email));
-				if ($res2->any()) {
-					$row2 = $res2->fetch_object();
+				$res_ra = OIDplus::db()->query("select * from ###ra where email = ?", array($obj->getRaMail()));
+				if ($res_ra->any()) {
+					$row_ra = $res_ra->fetch_object();
 
 					$tmp = array();
-					if (!empty($row2->personal_name)) {
-						$name_ary = split_firstname_lastname($row2->personal_name);
+					if (!empty($row_ra->personal_name)) {
+						$name_ary = split_firstname_lastname($row_ra->personal_name);
 						$elements['current-registrant']['first-name'] = $name_ary[0];
 						$elements['current-registrant']['last-name']  = $name_ary[1];
-						if (!empty($row2->ra_name)       ) $tmp[] = $row2->ra_name;
-						if (!empty($row2->office)        ) $tmp[] = $row2->office;
-						if (!empty($row2->organization)  ) $tmp[] = $row2->organization;
+						if (!empty($row_ra->ra_name)       ) $tmp[] = $row_ra->ra_name;
+						if (!empty($row_ra->office)        ) $tmp[] = $row_ra->office;
+						if (!empty($row_ra->organization)  ) $tmp[] = $row_ra->organization;
 					} else {
-						$elements['current-registrant']['first-name'] = $row2->ra_name;
+						$elements['current-registrant']['first-name'] = $row_ra->ra_name;
 						$elements['current-registrant']['last-name']  = '';
-						if (!empty($row2->personal_name) ) $tmp[] = $row2->personal_name;
-						if (!empty($row2->office)        ) $tmp[] = $row2->office;
-						if (!empty($row2->organization)  ) $tmp[] = $row2->organization;
+						if (!empty($row_ra->personal_name) ) $tmp[] = $row_ra->personal_name;
+						if (!empty($row_ra->office)        ) $tmp[] = $row_ra->office;
+						if (!empty($row_ra->organization)  ) $tmp[] = $row_ra->organization;
 					}
 
-					if ((count($tmp) > 0) && ($tmp[0] == $row2->ra_name)) array_shift($tmp);
+					if ((count($tmp) > 0) && ($tmp[0] == $row_ra->ra_name)) array_shift($tmp);
 					$tmp = array_unique($tmp);
 
-					if (!$row2->privacy) {
-						if (!empty($row2->street))   $tmp[] = $row2->street;
-						if (!empty($row2->zip_town)) $tmp[] = $row2->zip_town;
-						if (!empty($row2->country))  $tmp[] = $row2->country;
-						$elements['current-registrant']['phone'] = !empty($row2->phone) ? $row2->phone : $row2->mobile;
-						$elements['current-registrant']['fax'] = $row2->fax;
+					if (!$row_ra->privacy) {
+						if (!empty($row_ra->street))   $tmp[] = $row_ra->street;
+						if (!empty($row_ra->zip_town)) $tmp[] = $row_ra->zip_town;
+						if (!empty($row_ra->country))  $tmp[] = $row_ra->country;
+						$elements['current-registrant']['phone'] = !empty($row_ra->phone) ? $row_ra->phone : $row_ra->mobile;
+						$elements['current-registrant']['fax'] = $row_ra->fax;
 					}
-					if (empty($row2->zip_town) && empty($row2->country)) {
+					if (empty($row_ra->zip_town) && empty($row_ra->country)) {
 						// The address is useless if we do neither know city nor country
 						// Ignore it
 						$elements['current-registrant']['address'] = '';
@@ -804,7 +807,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 						$elements['current-registrant']['address'] = implode("<br/>", $tmp);
 					}
 				}
-				$elements['current-registrant']['modification-date'] = self::_formatdate($row->updated);
+				$elements['current-registrant']['modification-date'] = self::_formatdate($obj->getUpdatedTime());
 
 				// Request from O.D. 20 May 2019: First registrant should not be empty (especially for cases where Creation and Modify Dates are the same)
 				// Actually, this is a problem because we don't know the first registrant.
@@ -827,8 +830,6 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				$elements['current-registrant']['modification-date'] = '';
 
 				// End request O.D. 20 May 2019
-
-				$obj = OIDplusObject::parse($row->id);
 
 				list($ns,$id) = explode(':',$obj->nodeId());
 				if ($ns == 'oid') {
@@ -958,16 +959,15 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$parent = 'oid:'.oid_up($dot_notation);
 
 			if ($orphan_mode === self::ORPHAN_DISALLOW_ORPHANS) {
-				$res = OIDplus::db()->query("select * from ###objects where id = ?", array($parent));
-				if (!$res->any()) {
+				if (!OIDplusObject::exists($parent)) {
 					$errors[] = _L('Cannot import %1, because its parent is not in the database.',$dot_notation);
 					$count_errors++;
 					continue;
 				}
 			}
 
-			$res = OIDplus::db()->query("select * from ###objects where id = ?", array($id));
-			if ($res->any()) {
+			$obj_test = OIDplusObject::findFitting($id);
+			if ($obj_test) {
 				if ($replaceExistingOIDs) {
 					// TODO: better do this (and the following insert) as transaction
 					OIDplus::db()->query("delete from ###asn1id where oid = ?", array($id));

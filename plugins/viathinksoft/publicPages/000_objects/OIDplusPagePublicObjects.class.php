@@ -60,7 +60,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','DELETE',$id));
 
-			if (!OIDplus::db()->query("select id from ###objects where id = ?", array($id))->any()) {
+			if (!OIDplusObject::exists($id)) {
 				throw new OIDplusException(_L('Object %1 does not exist',$id));
 			}
 
@@ -124,7 +124,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE',$id));
 
-			if (!OIDplus::db()->query("select id from ###objects where id = ?", array($id))->any()) {
+			if (!OIDplusObject::exists($id)) {
 				throw new OIDplusException(_L('Object %1 does not exist',$id));
 			}
 
@@ -168,19 +168,16 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 
 				// Change RA recursively
-				$res = OIDplus::db()->query("select ra_email from ###objects where id = ?", array($id));
-				if ($row = $res->fetch_array()) {
-					$current_ra = $row['ra_email'];
-					if ($new_ra != $current_ra) {
-						OIDplus::logger()->log("[INFO]OID($id)+[?INFO/!OK]SUPOIDRA($id)?/[?INFO/!OK]A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
-						OIDplus::logger()->log("[WARN]RA($current_ra)!",           "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
-						OIDplus::logger()->log("[INFO]RA($new_ra)!",               "Gained ownership of object '$id' due to RA transfer of superior RA / admin.");
-						if ($parentObj = $obj->getParent()) {
-							$parent_oid = $parentObj->nodeId();
-							OIDplus::logger()->log("[INFO]OID($parent_oid)", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
-						}
-						$this->ra_change_rec($id, $current_ra, $new_ra); // Recursively change inherited RAs
+				$current_ra = $obj->getRaMail();
+				if ($new_ra != $current_ra) {
+					OIDplus::logger()->log("[INFO]OID($id)+[?INFO/!OK]SUPOIDRA($id)?/[?INFO/!OK]A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
+					OIDplus::logger()->log("[WARN]RA($current_ra)!",           "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
+					OIDplus::logger()->log("[INFO]RA($new_ra)!",               "Gained ownership of object '$id' due to RA transfer of superior RA / admin.");
+					if ($parentObj = $obj->getParent()) {
+						$parent_oid = $parentObj->nodeId();
+						OIDplus::logger()->log("[INFO]OID($parent_oid)", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
 					}
+					$this->ra_change_rec($id, $current_ra, $new_ra); // Recursively change inherited RAs
 				}
 			}
 
@@ -256,7 +253,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE2',$id));
 
-			if (!OIDplus::db()->query("select id from ###objects where id = ?", array($id))->any()) {
+			if (!OIDplusObject::exists($id)) {
 				throw new OIDplusException(_L('Object %1 does not exist',$id));
 			}
 
@@ -316,8 +313,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$objParent = OIDplusObject::parse($params['parent']);
 			if ($objParent === null) throw new OIDplusException(_L('%1 action failed because parent object "%2" cannot be parsed!','INSERT',$params['parent']));
 
-			if (!$objParent->isRoot() && (!OIDplus::db()->query("select id from ###objects where id = ?", array($objParent->nodeId()))->any())) {
-				throw new OIDplusException(_L('Parent object %1 does not exist','".($objParent->nodeId())."'));
+			if (!$objParent->isRoot()) {
+				$idParent = $objParent->nodeId();
+				if (!OIDplusObject::exists($idParent)) {
+					throw new OIDplusException(_L('Parent object %1 does not exist',$idParent));
+				}
 			}
 
 			if (!$objParent->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the correct RA to insert an OID at this arc.'));
@@ -345,8 +345,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$id = $objParent->addString($params['id']);
 
 			// Check, if the OID exists
-			$test = OIDplus::db()->query("select id from ###objects where id = ?", array($id));
-			if ($test->any()) {
+			if (OIDplusObject::exists($id)) {
 				throw new OIDplusException(_L('Object %1 already exists!',$id));
 			}
 
@@ -469,19 +468,18 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		if (is_null($obj)) return false;
 		if ($obj->isRoot()) {
 			$obj->getContentPage($out['title'], $out['text'], $out['icon']);
-			$parent = null; // $obj->getParent();
+			$objParent = null; // $obj->getParent();
 		} else {
-			$res = OIDplus::db()->query("select * from ###objects where id = ?", array($obj->nodeId()));
-			if (!$res->any()) {
+			$obj = OIDplusObject::findFitting($id); // this time, the object will be found, not just the object type
+			if (!$obj) {
 				return false;
 			} else {
-				$row = $res->fetch_array(); // will be used further down the code
 				$obj->getContentPage($out['title'], $out['text'], $out['icon']);
 				if (empty($out['title'])) $out['title'] = explode(':',$obj->nodeId(),2)[1];
-				$parent = $obj->getParent();
+				$objParent = $obj->getParent();
 			}
 		}
-		return array($id, $parent, $res, $row);
+		return array($id, $obj, $objParent);
 	}
 
 	public static function getAlternativesForQuery($id) {
@@ -567,7 +565,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 			if ($test !== false) {
-				list($id, $parent, $res, $row) = $test;
+				list($id, $obj, $objParent) = $test;
 			}
 
 			// --- If the object type is disabled or not an object at all (e.g. "oidplus:"), then $handled=false
@@ -611,33 +609,24 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// ---
 
-			if ($parent) {
-				if ($parent->isRoot()) {
-
-					$parent_link_text = $parent->objectTypeTitle();
-					$out['text'] = '<p><a '.OIDplus::gui()->link($parent->root()).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Parent node: %1',htmlentities($parent_link_text)).'</a></p>' . $out['text'];
-
+			if ($objParent) {
+				if ($objParent->isRoot()) {
+					$parent_link_text = $objParent->objectTypeTitle();
+					$out['text'] = '<p><a '.OIDplus::gui()->link($objParent->root()).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Parent node: %1',htmlentities($parent_link_text)).'</a></p>' . $out['text'];
 				} else {
-					$res_ = OIDplus::db()->query("select * from ###objects where id = ?", array($parent->nodeId()));
-					if ($res_->any()) {
-						$row_ = $res_->fetch_array();
-
-						$parent_title = $row_['title'];
-						if (empty($parent_title) && ($parent->ns() == 'oid')) {
-							// If not title is available, then use an ASN.1 identifier
-							$res_ = OIDplus::db()->query("select name from ###asn1id where oid = ?", array($parent->nodeId()));
-							if ($res_->any()) {
-								$row_ = $res_->fetch_array();
-								$parent_title = $row_['name']; // TODO: multiple ASN1 ids?
-							}
+					$parent_title = $objParent->getTitle();
+					if (empty($parent_title) && ($objParent->ns() == 'oid')) {
+						// If not title is available, then use an ASN.1 identifier
+						$res_asn = OIDplus::db()->query("select name from ###asn1id where oid = ?", array($objParent->nodeId()));
+						if ($res_asn->any()) {
+							$row_asn = $res_asn->fetch_array();
+							$parent_title = $row_asn['name']; // TODO: multiple ASN1 ids?
 						}
-
-						$parent_link_text = empty($parent_title) ? explode(':',$parent->nodeId())[1] : $parent_title.' ('.explode(':',$parent->nodeId())[1].')';
-
-						$out['text'] = '<p><a '.OIDplus::gui()->link($parent->nodeId()).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Parent node: %1',htmlentities($parent_link_text)).'</a></p>' . $out['text'];
-					} else {
-						$out['text'] = '';
 					}
+
+					$parent_link_text = empty($parent_title) ? explode(':',$objParent->nodeId())[1] : $parent_title.' ('.explode(':',$objParent->nodeId())[1].')';
+
+					$out['text'] = '<p><a '.OIDplus::gui()->link($objParent->nodeId()).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Parent node: %1',htmlentities($parent_link_text)).'</a></p>' . $out['text'];
 				}
 			} else {
 				$parent_link_text = _L('Go back to front page');
@@ -646,24 +635,25 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// ---
 
-			// DM 16.03.2022 commented out isset() because Oracle does not set 'description' if it is NULL?!
-			if (!is_null($row)/* && isset($row['description'])*/) {
-				if (empty($row['description'])) {
-					if (empty($row['title'])) {
+			if ($obj) {
+				$title = $obj->getTitle();
+				$description = $obj->getDescription();
+				if (empty($description)) {
+					if (empty($title)) {
 						$desc = '<p><i>'._L('No description for this object available').'</i></p>';
 					} else {
-						$desc = $row['title'];
+						$desc = $title;
 					}
 				} else {
-					$desc = self::objDescription($row['description']);
+					$desc = self::objDescription($description);
 				}
 
 				if ($obj->userHasWriteRights()) {
 					$rand = ++self::$crudCounter;
 					$desc = '<noscript><p><b>'._L('You need to enable JavaScript to edit title or description of this object.').'</b></p>'.$desc.'</noscript>';
 					$desc .= '<div class="container box" style="display:none" id="descbox_'.$rand.'">';
-					$desc .= _L('Title').': <input type="text" name="title" id="titleedit" value="'.htmlentities($row['title']).'"><br><br>'._L('Description').':<br>';
-					$desc .= self::showMCE('description', $row['description']);
+					$desc .= _L('Title').': <input type="text" name="title" id="titleedit" value="'.htmlentities($title).'"><br><br>'._L('Description').':<br>';
+					$desc .= self::showMCE('description', $description);
 					$desc .= '<button type="button" name="update_desc" id="update_desc" class="btn btn-success btn-xs update" onclick="OIDplusPagePublicObjects.updateDesc()">'._L('Update description').'</button>';
 					$desc .= '</div>';
 					$desc .= '<script>$("#descbox_'.$rand.'")[0].style.display = "block";</script>';
@@ -679,7 +669,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (strpos($out['text'], '%%CRUD%%') !== false)
 				$out['text'] = str_replace('%%CRUD%%',    self::showCrud($obj->nodeId()),     $out['text']);
 			if (strpos($out['text'], '%%RA_INFO%%') !== false)
-				$out['text'] = str_replace('%%RA_INFO%%', OIDplusPagePublicRaInfo::showRaInfo($row['ra_email']), $out['text']);
+				$out['text'] = str_replace('%%RA_INFO%%', OIDplusPagePublicRaInfo::showRaInfo($obj->getRaMail()), $out['text']);
 
 			$alt_ids = $obj->getAltIds();
 			if (count($alt_ids) > 0) {
@@ -726,11 +716,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				'text' => _L('System')
 			);
 
-			$parent = '';
-			$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($req_goto));
-			while ($row = $res->fetch_object()) {
-				$parent = $row->parent;
-			}
+			$objGoto = OIDplusObject::findFitting($req_goto);
+			$objGotoParent = $objGoto->getParent();
+			$parent = $objGotoParent ? $objGotoParent->nodeId() : '';
 
 			$objTypesChildren = array();
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
@@ -795,10 +783,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$path = array();
 				while (true) {
 					$path[] = $goto;
-					$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($goto));
-					if (!$res->any()) break;
-					$row = $res->fetch_array();
-					$goto = $row['parent'];
+					$objGoto = OIDplusObject::findFitting($goto);
+					if (!$objGoto) break;
+					$objGotoParent = $objGoto->getParent();
+					$goto = $objGotoParent ? $objGotoParent->nodeId() : '';
 					if ($goto == '') continue;
 				}
 
@@ -1005,8 +993,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$output .= '</tr>';
 		}
 
-		$result = OIDplus::db()->query("select * from ###objects where id = ?", array($parent));
-		$parent_ra_email = $result->any() ? $result->fetch_object()->ra_email : '';
+		$parent_ra_email = $objParent ? $objParent->getRaMail() : '';
 
 		// "Create OID" row
 		if ($objParent->userHasWriteRights()) {
