@@ -3,7 +3,7 @@
 /*
  * IPv6 functions for PHP
  * Copyright 2012-2022 Daniel Marschall, ViaThinkSoft
- * Version 2022-09-18
+ * Version 2022-09-22
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -378,11 +378,8 @@ function ipv6_line2range($line) {
 		$rng = ipv6_cidr2range($line);
 	} else {
 		$rng = explode('-', $line);
-		$rng[0] = trim($rng[0]);
-		if (isset($rng[1])) $rng[1] = trim($rng[1]);
-		$rng[0] = ipv6_normalize($rng[0]);
-		if (!isset($rng[1])) $rng[1] = $rng[0];
-		$rng[1] = ipv6_normalize($rng[1]);
+		$rng[0] = ipv6_normalize(trim($rng[0]));
+		$rng[1] = isset($rng[1]) ? ipv6_normalize(trim($rng[1])) : $rng[0];
 	}
 
 	return $rng;
