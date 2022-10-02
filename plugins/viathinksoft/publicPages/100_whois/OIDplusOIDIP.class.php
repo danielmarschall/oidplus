@@ -299,8 +299,9 @@ class OIDplusOIDIP {
 							$out[] = $this->_oidip_attr('parent', $sParent); // DO NOT TRANSLATE!
 						}
 					} else {
-						$sParent = $obj->getParent();
-						if ($obj && !empty($sParent) && (!$this->is_root($sParent))) {
+						$objParent = $obj->getParent();
+						$sParent = $objParent ? $objParent->nodeId() : '';
+						if (!empty($sParent) && (!$this->is_root($sParent))) {
 							$out[] = $this->_oidip_attr('parent', $sParent); // DO NOT TRANSLATE!
 						}
 					}
@@ -663,7 +664,9 @@ class OIDplusOIDIP {
 			// 2, 2.999, 2.999.1 and 2.999.1.2 are visible,
 			// (because their existence is now obvious).
 			if ($test_obj->isConfidential() && !$this->authTokenAccepted($curid, $authTokens)) return false;
-			$curid = $test_obj->getParent();
+			$objParentTest = $test_obj->getParent();
+			if (!$objParentTest) break;
+			$curid = $objParentTest->nodeId();
 		}
 
 		// Allow
