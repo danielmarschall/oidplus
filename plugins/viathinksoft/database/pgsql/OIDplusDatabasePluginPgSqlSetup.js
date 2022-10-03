@@ -63,8 +63,8 @@ rebuild_callbacks.push(function() {
 
 	$("#struct_1")[0].href = setupdir+'struct_empty.sql.php?plugin=pgsql&prefix='+encodeURI($("#tablename_prefix")[0].value)+'&database='+encodeURI($("#pgsql_database")[0].value)+'&slang=pgsql';
 	$("#struct_2")[0].href = setupdir+'struct_with_examples.sql.php?plugin=pgsql&prefix='+encodeURI($("#tablename_prefix")[0].value)+'&database='+encodeURI($("#pgsql_database")[0].value)+'&slang=pgsql';
-	$("#struct_cli_1")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+$("#struct_1")[0].href+'" | psql <!-- TODO: split host/port  -h '+$("#pgsql_host")[0].value+' --> -U '+$("#pgsql_username")[0].value+' -d '+$("#pgsql_database")[0].value+' -a</code>';
-	$("#struct_cli_2")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code>curl -s "'+$("#struct_2")[0].href+'" | psql <!-- TODO: split host/port  -h '+$("#pgsql_host")[0].value+' --> -U '+$("#pgsql_username")[0].value+' -d '+$("#pgsql_database")[0].value+' -a</code>';
+	$("#struct_cli_1")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code id="struct_cli_1_code">curl -s "'+$("#struct_1")[0].href+'" | psql <!-- TODO: split host/port  -h '+$("#pgsql_host")[0].value+' --> -U '+$("#pgsql_username")[0].value+' -d '+$("#pgsql_database")[0].value+' -a</code><br><input type="button" value="'+_L('Copy to clipboard')+'" onClick="copyToClipboard(struct_cli_1_code)">';
+	$("#struct_cli_2")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code id="struct_cli_2_code">curl -s "'+$("#struct_2")[0].href+'" | psql <!-- TODO: split host/port  -h '+$("#pgsql_host")[0].value+' --> -U '+$("#pgsql_username")[0].value+' -d '+$("#pgsql_database")[0].value+' -a</code><br><input type="button" value="'+_L('Copy to clipboard')+'" onClick="copyToClipboard(struct_cli_2_code)">';
 
 	return !error;
 });

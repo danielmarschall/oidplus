@@ -30,6 +30,8 @@ function copyToClipboard(elem) {
 	// Source: https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
 	// Modified (see below)
 
+	// TODO: this function causes the page to scroll!
+
 	// create hidden text element, if it doesn't already exist
 	var targetId = "_hiddenCopyText_";
 	var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
