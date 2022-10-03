@@ -21,7 +21,7 @@
 	<code>ln -s /var/www/vnag/plugins/webreader/icinga2.conf /etc/icinga2/conf.d/vnag_webreader.conf</code><br>
 	In this file, adjust the path /daten/vnag<br><br></li>
 
-	<li>Create a new file <b>/etc/icinga2/conf.d/oidplus_version.conf</b> with the following contents:<pre>
+	<li>Create a new file <b>/etc/icinga2/conf.d/oidplus_version.conf</b> with the following contents:<pre id="snippet1">
 apply Service "example_oidplus_version_check" {
 	import "generic-service"
 	check_command = "vnag_webreader"
@@ -32,7 +32,9 @@ apply Service "example_oidplus_version_check" {
 		vnag_webreader_signPubKey = "%%WEBREADER_PUBKEY%%"
 	}
 	assign where host.name == NodeName
-}</pre></li>
+}</pre>
+<p><input type="button" value="Copy to clipboard" onClick="copyToClipboard(snippet1)"></p>
+</li>
 
 	<li>Restart Icinga2<br><br></li>
 
@@ -51,7 +53,7 @@ apply Service "example_oidplus_version_check" {
 	<li>Install Icinga2, in case it isn't installed yet. Follow the documentation of Icinga2 in order to setup everything correctly.<br>
 	You don't need to install VNag.<br><br></li>
 
-	<li>Create a new file <b>/etc/icinga2/conf.d/oidplus_version.conf</b> with the following contents:<pre>
+	<li>Create a new file <b>/etc/icinga2/conf.d/oidplus_version.conf</b> with the following contents:<pre id="snippet2">
 object CheckCommand "cmd_oidplus" {
 	command = [ "$cmd_oidplus_dir$/%%REL_LOC_PATH%%vnag.sh" ]
 	arguments = {
@@ -64,7 +66,9 @@ apply Service "example_oidplus_version_check" {
 		cmd_oidplus_dir = "%%SYSTEM_URL%%"
 	}
 	assign where host.name == NodeName
-}</pre></li>
+}</pre>
+<p><input type="button" value="Copy to clipboard" onClick="copyToClipboard(snippet2)"></p>
+</li>
 
 	<li>Restart Icinga2<br><br></li>
 
