@@ -9,7 +9,7 @@ Ideas by Simon T.:
 
 Recently added TODO entries:
 - should all country codes (even unused) in 1.2 and 2.16 be added to the wellknown list?
-- forgot_password, forgot_password_admin, vnag code examples, ajax code examples, ... => "copy to clipboard" button
+- vnag code examples, ajax code examples, ... => "copy to clipboard" button
 - ajax blacklist button => show a confirmation dialog
 - "Decoding" section (tech info) at OID nodes, e.g. the AID decoder, should this be a scrolling <pre> block instead of a <code> block? (For mobile devices)
 
