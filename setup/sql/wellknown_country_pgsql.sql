@@ -47,8 +47,6 @@ INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.643'
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:1.2.643', 'RU', false, true);
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.702', 'sg', false, true);
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:1.2.702', 'SG', false, true);
-INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.704', 'vn', false, true);
-INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:1.2.704', 'VN', false, true);
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.752', 'se', false, true);
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:1.2.752', 'SE', false, true);
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.804', 'ua', false, true);
@@ -57,10 +55,6 @@ INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.826'
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:1.2.826', 'GB', false, true);
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.840', 'us', false, true);
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:1.2.840', 'US', false, true);
-INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.860', 'uz', false, true);
-INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:1.2.860', 'UZ', false, true);
-INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.862', 've', false, true);
-INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:1.2.862', 'VE', false, true);
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:2.16.4', 'af', false, true);
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.16.4', 'AF', false, true);
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:2.16.8', 'al', false, true);
@@ -862,4 +856,4 @@ INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:2.49.0.1
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:2.49.0.0.894', 'zm', false, true);
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:2.49.0.1.894', 'zm', false, true);
 
--- Generator "generate_wellknown_country_pgsql" checksum 89446616
+-- Generator "generate_wellknown_country_pgsql" checksum 38e2d80a
