@@ -1910,6 +1910,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Enforcement of a secure connection:
+		]]></source>
+		<target><![CDATA[
+		Erzwingung einer sicheren Verbindung:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Enter your domain username and your password to log in as Registration Authority.
 		]]></source>
 		<target><![CDATA[
@@ -5602,14 +5610,6 @@
 		]]></source>
 		<target><![CDATA[
 		SQLite3 Verschlüsselungs-Passwort (optional)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		SSL enforcement
-		]]></source>
-		<target><![CDATA[
-		SSL-Erzwingung
 		]]></target>
 	</message>
 	<message>
