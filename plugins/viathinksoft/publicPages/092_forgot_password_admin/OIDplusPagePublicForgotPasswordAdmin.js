@@ -19,12 +19,6 @@
 min_password_length = 10;
 
 // see also setup/includes/setup_base.js
-function hexToBase64(str) {
-	return btoa(String.fromCharCode.apply(null,
-	            str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ")));
-}
-
-// see also setup/includes/setup_base.js
 var bCryptWorker = null;
 var g_prevBcryptPw = null;
 var g_last_admPwdHash = null;
@@ -37,6 +31,7 @@ var OIDplusPagePublicForgotPasswordAdmin = {
 
 		if ($("#admin_password")[0].value.length == 0) {
 			$("#config")[0].innerHTML = "";
+			$("#copy_clipboard_button").hide();
 			return;
 		}
 
@@ -50,8 +45,10 @@ var OIDplusPagePublicForgotPasswordAdmin = {
 
 		if (error != "") {
 			$("#config")[0].innerHTML = error;
+			$("#copy_clipboard_button").hide();
 		} else {
 			var pw = $("#admin_password")[0].value;
+			$("#copy_clipboard_button").show();
 
 			if (pw != g_prevBcryptPw) {
 				// sync call to calculate SHA3

@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,8 @@ class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePluginPublic {
 			$out['text'] .= '<div><label class="padding_label">'._L('New password').':</label><input type="password" id="admin_password" onkeypress="OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd()" onkeyup="OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd()"></div>';
 			$out['text'] .= '<div><label class="padding_label">'._L('Repeat').':</label><input type="password" id="admin_password2" onkeypress="OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd()" onkeyup="OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd()"></div>';
 			$out['text'] .= '<p><pre id="config"></pre></p>';
-			$out['text'] .= '<script> OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd(); </script>';
+			$out['text'] .= '<p><input type="button" id="copy_clipboard_button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(config)"></p>';
+			$out['text'] .= '<script> $("#copy_clipboard_button").hide(); OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd(); </script>';
 		}
 	}
 
