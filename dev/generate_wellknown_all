@@ -1,0 +1,36 @@
+#/bin/bash
+
+# OIDplus 2.0
+# Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+DIR=$( dirname "$0" )
+
+cd "$DIR"
+
+./generate_wellknown_country_mysql > ../setup/sql/wellknown_country_mysql.sql 
+./generate_wellknown_country_mssql > ../setup/sql/wellknown_country_mssql.sql 
+./generate_wellknown_country_oracle > ../setup/sql/wellknown_country_oracle.sql 
+./generate_wellknown_country_access > ../setup/sql/wellknown_country_access.sql 
+./generate_wellknown_country_pgsql > ../setup/sql/wellknown_country_pgsql.sql 
+./generate_wellknown_country_sqlite > ../setup/sql/wellknown_country_sqlite.sql 
+
+./generate_wellknown_other_mysql > ../setup/sql/wellknown_other_mysql.sql 
+./generate_wellknown_other_mssql > ../setup/sql/wellknown_other_mssql.sql 
+./generate_wellknown_other_oracle > ../setup/sql/wellknown_other_oracle.sql 
+./generate_wellknown_other_access > ../setup/sql/wellknown_other_access.sql 
+./generate_wellknown_other_pgsql > ../setup/sql/wellknown_other_pgsql.sql 
+./generate_wellknown_other_sqlite > ../setup/sql/wellknown_other_sqlite.sql 
+
+

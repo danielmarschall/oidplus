@@ -338,10 +338,10 @@ INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', 'Example
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', 'Exemple', true, true);
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', 'Ejemplo', true, true);
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', convert_from(decode('2KfZhNmF2KvYp9mE', 'base64'), 'utf-8'), true, true);
-INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', convert_from(decode('6IyD5L6L',         'base64'), 'utf-8'), true, true);
+INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', convert_from(decode('6IyD5L6L', 'base64'), 'utf-8'), true, true);
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', convert_from(decode('0J/RgNC40LzQtdGA', 'base64'), 'utf-8'), true, true);
-INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', convert_from(decode('7JiI7KCc',         'base64'), 'utf-8'), true, true);
-INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', convert_from(decode('5L6L',             'base64'), 'utf-8'), true, true);
+INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', convert_from(decode('7JiI7KCc', 'base64'), 'utf-8'), true, true);
+INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', convert_from(decode('5L6L', 'base64'), 'utf-8'), true, true);
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', 'Beispiel', true, true);
 
 -- Generator "generate_wellknown_other_pgsql" checksum e57e46d5

@@ -7,6 +7,12 @@ Ideas by Simon T.:
 - a possibility to export&transfer all data between OIDplus'es: Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!
 - a possibility to 'construct' my own object types in UI (1: specify list of their fields and 2: choose "oid-like/forward" com.example.api or "domain-like/reverse" api.example.com naming scheme), so they would appear as the whole new type
 
+Recently added TODO entries:
+- should all country codes (even unused) in 1.2 and 2.16 be added to the wellknown list?
+- setup, forgot_password, forgot_password_admin, vnag code examples, ajax code examples, ... => "copy to clipboard" button
+- ajax blacklist button => show a confirmation dialog
+- "Decoding" section (tech info) at OID nodes, e.g. the AID decoder, should this be a scrolling <pre> block instead of a <code> block? (For mobile devices)
+
 Databases:
 - Let plugins create tables for all DBMS by including a "create table" function with abstract types in the SQL slang plugins (similar to Medoo)
 
@@ -135,7 +141,7 @@ SMALL THINGS
 - disable autocomplete on some forms
 - graphical improvements of forms (input edits aligned)
 - "Documents" section: Make documentation for usage of OIDplus (for members only)
-- admin config more user friendly, e.g. having the enable/disable object type stuff (like in registration wizard) also in the admin control panel
+- admin config more user friendly, e.g. having the enable/disable object type stuff (like in registration wizard) also in the admin control panel. Also, have types like bool, so we show a checkbox instead of an edit control
 - it would be good if after the login, the opened nodes in the tree would stay open
 - html checkbox: make use of "label for"
 - when javascript fails, the form will be submitted to './' , that is not good! failed javascript must return false, so that the form does not get submitted
