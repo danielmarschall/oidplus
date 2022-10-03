@@ -24,56 +24,6 @@ min_password_length = 10; // see also plugins/viathinksoft/publicPages/092_forgo
 password_salt_length = 10;
 bcrypt_rounds = 10;
 
-function btoa(bin) {
-	var tableStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-	var table = tableStr.split("");
-	for (var i = 0, j = 0, len = bin.length / 3, base64 = []; i < len; ++i) {
-		var a = bin.charCodeAt(j++), b = bin.charCodeAt(j++), c = bin.charCodeAt(j++);
-		if ((a | b | c) > 255) throw new Error(_L('String contains an invalid character'));
-		base64[base64.length] = table[a >> 2] + table[((a << 4) & 63) | (b >> 4)] +
-		                       (isNaN(b) ? "=" : table[((b << 2) & 63) | (c >> 6)]) +
-		                       (isNaN(b + c) ? "=" : table[c & 63]);
-	}
-	return base64.join("");
-};
-
-function hexToBase64(str) {
-	return btoa(String.fromCharCode.apply(null,
-	            str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ")));
-}
-
-function _b64EncodeUnicode(str) {
-	if (str == "") {
-		return "''";
-	} else {
-		return "base64_decode('"+b64EncodeUnicode(str)+"')";
-	}
-}
-
-function b64EncodeUnicode(str) {
-	// first we use encodeURIComponent to get percent-encoded UTF-8,
-	// then we convert the percent encodings into raw bytes which
-	// can be fed into btoa.
-	return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-	function toSolidBytes(match, p1) {
-		return String.fromCharCode('0x' + p1);
-	}));
-}
-
-function generateRandomString(length) {
-	var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-	retVal = "";
-	for (var i = 0, n = charset.length; i < length; ++i) {
-		retVal += charset.charAt(Math.floor(Math.random() * n));
-	}
-	return retVal;
-}
-
-String.prototype.replaceAll = function(search, replacement) {
-	var target = this;
-	return target.replace(new RegExp(search, 'g'), replacement);
-};
-
 function adminGeneratePassword(password) {
 	var salt = generateRandomString(password_salt_length);
 	return salt+'$'+hexToBase64(sha3_512(salt+password));
@@ -205,12 +155,6 @@ function doRebuild(admPwdHash, pwComment) {
 	}
 }
 
-function RemoveLastDirectoryPartOf(the_url) {
-	var the_arr = the_url.split('/');
-	if (the_arr.pop() == '') the_arr.pop();
-	return( the_arr.join('/') );
-}
-
 function checkAccess(dir) {
 	if (!dir.toLowerCase().startsWith('https:') && !dir.toLowerCase().startsWith('http:')) {
 		var url = '../' + dir;
@@ -298,59 +242,6 @@ function setupOnLoad() {
 	dbplugin_changed();
 	captchaplugin_changed();
 	performAccessCheck();
-}
-
-function getCookie(cname) {
-	// Source: https://www.w3schools.com/js/js_cookies.asp
-	var name = cname + "=";
-	var decodedCookie = decodeURIComponent(document.cookie);
-	var ca = decodedCookie.split(';');
-	for(var i = 0; i <ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0) == ' ') {
-			c = c.substring(1);
-		}
-		if (c.indexOf(name) == 0) {
-			return c.substring(name.length, c.length);
-		}
-	}
-	return undefined;
-}
-
-function getCurrentLang() {
-	// Note: If the argument "?lang=" is used, PHP will automatically set a Cookie, so it is OK when we only check for the cookie
-	var lang = getCookie('LANGUAGE');
-	return (typeof lang != "undefined") ? lang : DEFAULT_LANGUAGE;
-}
-
-function _L() {
-	var args = Array.prototype.slice.call(arguments);
-	var str = args.shift().trim();
-
-	var tmp = "";
-	if (typeof language_messages[getCurrentLang()] == "undefined") {
-		tmp = str;
-	} else {
-		var msg = language_messages[getCurrentLang()][str];
-		if (typeof msg != "undefined") {
-			tmp = msg;
-		} else {
-			tmp = str;
-		}
-	}
-
-	tmp = tmp.replace('###', language_tblprefix);
-
-	var n = 1;
-	while (args.length > 0) {
-		var val = args.shift();
-		tmp = tmp.replace("%"+n, val);
-		n++;
-	}
-
-	tmp = tmp.replace("%%", "%");
-
-	return tmp;
 }
 
 window.onload = setupOnLoad;
