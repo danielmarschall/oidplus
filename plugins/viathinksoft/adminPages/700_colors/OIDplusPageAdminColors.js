@@ -1,6 +1,6 @@
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,14 +38,11 @@ var OIDplusPageAdminColors = {
 		$("#hshift").val(OIDplusPageAdminColors.hue_shift = 0);
 		$("#sshift").val(OIDplusPageAdminColors.sat_shift = 0);
 		$("#vshift").val(OIDplusPageAdminColors.val_shift = 0);
-		$("#icolor").val(OIDplusPageAdminColors.invcolors = 0);
+		$("#icolor").attr('checked',OIDplusPageAdminColors.invcolors = 0 ? true : false);
 		$("#theme").val(OIDplusPageAdminColors.activetheme = "default");
 		$("#slider-hshift").slider("option", "value", OIDplusPageAdminColors.hue_shift);
 		$("#slider-sshift").slider("option", "value", OIDplusPageAdminColors.sat_shift);
 		$("#slider-vshift").slider("option", "value", OIDplusPageAdminColors.val_shift);
-		$("#slider-icolor").slider("option", "value", OIDplusPageAdminColors.invcolors);
-		$("#slider-icolor").slider("option", "value", OIDplusPageAdminColors.invcolors);
-		$("#slider-icolor").slider("option", "value", OIDplusPageAdminColors.invcolors);
 		OIDplusPageAdminColors.test_color_theme();
 	},
 
@@ -53,12 +50,11 @@ var OIDplusPageAdminColors = {
 		$("#hshift").val(OIDplusPageAdminColors.hue_shift = OIDplusPageAdminColors.hue_shift_saved);
 		$("#sshift").val(OIDplusPageAdminColors.sat_shift = OIDplusPageAdminColors.sat_shift_saved);
 		$("#vshift").val(OIDplusPageAdminColors.val_shift = OIDplusPageAdminColors.val_shift_saved);
-		$("#icolor").val(OIDplusPageAdminColors.invcolors = OIDplusPageAdminColors.invcolors_saved);
+		$("#icolor").attr('checked',OIDplusPageAdminColors.invcolors_saved ? true : false);
 		$("#theme").val(OIDplusPageAdminColors.activetheme = OIDplusPageAdminColors.activetheme_saved);
 		$("#slider-hshift").slider("option", "value", OIDplusPageAdminColors.hue_shift);
 		$("#slider-sshift").slider("option", "value", OIDplusPageAdminColors.sat_shift);
 		$("#slider-vshift").slider("option", "value", OIDplusPageAdminColors.val_shift);
-		$("#slider-icolor").slider("option", "value", OIDplusPageAdminColors.invcolors);
 		OIDplusPageAdminColors.test_color_theme();
 	},
 
@@ -93,27 +89,18 @@ var OIDplusPageAdminColors = {
 		});
 		$("#vshift").val($("#slider-vshift").slider("value"));
 
-		/* ToDo: Checkbox instead */
-		$("#slider-icolor").slider({
-			value: OIDplusPageAdminColors.invcolors,
-			min:   0,
-			max:   1,
-			slide: function(event, ui) {
-				$("#icolor").val(ui.value);
-			}
-		});
-		$("#icolor").val($("#slider-icolor").slider("value"));
+		$("#icolor").attr('checked',OIDplusPageAdminColors.invcolors ? true : false);
 	},
 
 	test_color_theme: function() {
 		OIDplusPageAdminColors.hue_shift = $("#hshift").val();
 		OIDplusPageAdminColors.sat_shift = $("#sshift").val();
 		OIDplusPageAdminColors.val_shift = $("#vshift").val();
-		OIDplusPageAdminColors.invcolors = $("#icolor").val();
+		OIDplusPageAdminColors.invcolors = $("#icolor").is(':checked') ? 1 : 0;
 		OIDplusPageAdminColors.activetheme = $("#theme").val();
 		OIDplusPageAdminColors.changeCSS('oidplus.min.css.php'+
 		                                 '?theme='+encodeURIComponent($("#theme").val())+
-		                                 '&invert='+encodeURIComponent($("#icolor").val())+
+		                                 '&invert='+encodeURIComponent($("#icolor").is(':checked') ? 1 : 0)+
 		                                 '&h_shift='+encodeURIComponent($("#hshift").val()/360)+
 		                                 '&s_shift='+encodeURIComponent($("#sshift" ).val()/100)+
 		                                 '&v_shift='+encodeURIComponent($("#vshift" ).val()/100),
@@ -154,7 +141,7 @@ var OIDplusPageAdminColors = {
 				hue_shift: $("#hshift")[0].value,
 				sat_shift: $("#sshift")[0].value,
 				val_shift: $("#vshift")[0].value,
-				invcolors: $("#icolor")[0].value,
+				invcolors: $("#icolor").is(':checked') ? 1 : 0,
 				theme: $("#theme")[0].value,
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
