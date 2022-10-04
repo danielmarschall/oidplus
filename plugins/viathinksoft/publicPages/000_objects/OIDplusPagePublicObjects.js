@@ -1,6 +1,6 @@
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,7 +121,7 @@ var OIDplusPagePublicObjects = {
 
 					if ((data.status & 1) == 1/*RaNotExisting*/) {
 						if (confirm(_L("Insert OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",$("#ra_email")[0].value))) {
-							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email_"+$.escapeSelector(id))[0].value);
+							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email")[0].value);
 							return;
 						} else {
 							if (confirm(_L("Do you want to open the newly created object now?"))) {
