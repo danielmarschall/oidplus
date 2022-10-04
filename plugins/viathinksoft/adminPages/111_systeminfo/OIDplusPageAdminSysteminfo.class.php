@@ -79,6 +79,18 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 				// phpinfo() sets "h1 {font-size: 150%;}" and "h2 {font-size: 125%;}"
 				$cont = preg_replace('@(h1|h2|h3|h4|h5) {.+}@ismU', '', $cont);
 
+				// Make compatible for dark themes by removing all foreground and background colors
+				$cont = preg_replace('@(body) {.+}@ismU', '', $cont);
+				$cont = preg_replace('@background-color:(.+);@ismU', '', $cont);
+				$cont = '<span style="font-family: sans-serif;">'.$cont.'</span>';
+
+				// Font sizes
+				$cont = preg_replace('@font-size:\\s*75%;@', '', $cont);
+				for ($i=5; $i>=1; $i--) {
+					$cont = str_replace('<h'.$i, '<h'.($i+1), $cont);
+					$cont = str_replace('</h'.$i, '</h'.($i+1), $cont);
+				}
+
 				$out['text'] .= $cont;
 			}
 		}

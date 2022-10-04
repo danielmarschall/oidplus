@@ -157,11 +157,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			$out['text'] .= '</p>';
 			$out['text'] .= '<div id="slider-vshift"></div>';
 
-			$out['text'] .= '<br><p>';
-			$out['text'] .= '  <label for="amount">'._L('Invert colors').':</label>';
-			$out['text'] .= '  <input type="text" id="icolor" readonly style="border:0; background:transparent; font-weight:bold;">'; // TODO: It would be good if that was a checkbox
-			$out['text'] .= '</p>';
-			$out['text'] .= '<div id="slider-icolor"></div>';
+			$out['text'] .= '<p><div><input type="checkbox" id="icolor"> <label for="icolor">'._L('Invert colors').'</label></div></p>';
 
 			$out['text'] .= '<script>';
 			$out['text'] .= 'if (OIDplusPageAdminColors.hue_shift == null) OIDplusPageAdminColors.hue_shift = OIDplusPageAdminColors.hue_shift_saved = '.OIDplus::config()->getValue('color_hue_shift').";\n";
