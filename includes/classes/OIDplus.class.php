@@ -782,8 +782,10 @@ class OIDplus extends OIDplusBaseClass {
 
 				$full_plugin_dir = dirname($manifest->getManifestFile());
 				$full_plugin_dir = substr($full_plugin_dir, strlen(OIDplus::localpath()));
-				// { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) oidplus(5) v2(2) plugins(4) }
-				if (str_starts_with($full_plugin_dir, 'plugins/viathinksoft/') != str_starts_with($plugin_oid, '1.3.6.1.4.1.37476.2.5.2.4.')) {
+
+				$dir_is_viathinksoft = str_starts_with($full_plugin_dir, 'plugins/viathinksoft/') || str_starts_with($full_plugin_dir, 'plugins\\viathinksoft\\');
+				$oid_is_viathinksoft = str_starts_with($plugin_oid, '1.3.6.1.4.1.37476.2.5.2.4.'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) oidplus(5) v2(2) plugins(4) }
+				if ($dir_is_viathinksoft != $oid_is_viathinksoft) {
 					throw new OIDplusException(_L('Plugin "%1/%2" is misplaced',$plugintype_folder,$pluginname_folder).': '._L('The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins','plugins/viathinksoft/'));
 				}
 
@@ -799,12 +801,7 @@ class OIDplus extends OIDplusBaseClass {
 				}
 
 				// TODO: Maybe as additional plugin-test, we should also check if plugins are allowed to define CSS/JS, i.e. the plugin type is element of OIDplus::INTERACTIVE_PLUGIN_TYPES
-				$tmp = array_merge(
-					$manifest->getJSFiles(),
-					$manifest->getCSSFiles(),
-					$manifest->getJSFilesSetup(),
-					$manifest->getCSSFilesSetup()
-				);
+				$tmp = $manifest->getManifestLinkedFiles();
 				foreach ($tmp as $file) {
 					if (!file_exists($file)) {
 						throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('File %1 was defined in manifest, but it is not existing',$file));

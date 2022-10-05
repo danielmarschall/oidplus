@@ -141,6 +141,24 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 		return $this->languageMessages;
 	}
 
+	/**
+	 * Lists all files referenced by the manifest files
+	 * Not included are other files like menu images or other PHP classes
+	 * @return array<string>
+	 */
+	public function getManifestLinkedFiles(): array {
+		$files = array_merge(
+			$this->getJSFiles(),
+			$this->getCSSFiles(),
+			$this->getJSFilesSetup(),
+			$this->getCSSFilesSetup()
+		);
+		$files[] = $this->getManifestFile();
+		$files[] = (new \ReflectionClass($this->getPhpMainClass()))->getFileName();
+		sort($files);
+		return $files;
+	}
+
 	public function loadManifest($filename) {
 		if (!file_exists($filename)) return false;
 		$xmldata = @simplexml_load_file($filename);
@@ -168,7 +186,7 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1
 		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.7.1
 		foreach ((array)$xmldata->css->file as $css_file) {
-			$file = dirname($filename).'/'.$css_file;
+			$file = dirname($filename).DIRECTORY_SEPARATOR.$css_file;
 			//if (!file_exists($file)) continue;
 			$this->cssFiles[] = $file;
 		}
@@ -176,7 +194,7 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 		// The following functionalities are only available for page plugins
 		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1
 		foreach ((array)$xmldata->js->file as $js_file) {
-			$file = dirname($filename).'/'.$js_file;
+			$file = dirname($filename).DIRECTORY_SEPARATOR.$js_file;
 			//if (!file_exists($file)) continue;
 			$this->jsFiles[] = $file;
 		}
@@ -184,12 +202,12 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 		// The following functionalities are only available for database plugins
 		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.6
 		foreach ((array)$xmldata->cssSetup->file as $css_file) {
-			$file = dirname($filename).'/'.$css_file;
+			$file = dirname($filename).DIRECTORY_SEPARATOR.$css_file;
 			//if (!file_exists($file)) continue;
 			$this->cssFilesSetup[] = $file;
 		}
 		foreach ((array)$xmldata->jsSetup->file as $js_file) {
-			$file = dirname($filename).'/'.$js_file;
+			$file = dirname($filename).DIRECTORY_SEPARATOR.$js_file;
 			//if (!file_exists($file)) continue;
 			$this->jsFilesSetup[] = $file;
 		}

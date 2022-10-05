@@ -29,7 +29,7 @@ abstract class OIDplusPlugin extends OIDplusBaseClass {
 
 	public function getManifest() {
 		$dir = $this->getPluginDirectory();
-		$ini = $dir.'/manifest.xml';
+		$ini = $dir.DIRECTORY_SEPARATOR.'manifest.xml';
 		$manifest = new OIDplusPluginManifest();
 		return $manifest->loadManifest($ini) ? $manifest : null;
 	}
