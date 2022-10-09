@@ -942,6 +942,12 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			$title = isset($xoid->{'description'}) ? $xoid->{'description'}->__toString() : '';
 			$info = isset($xoid->{'description'}) ? $xoid->{'information'}->__toString() : '';
 
+			// For ASN.1 definitions, "Description" is filled with the definition and "Information" is usually empty
+			if (strpos($title,'<br') !== false) {
+				$info = $title . $info;
+				$title = explode(' ',$title)[0];
+			}
+
 			if (isset($xoid->{'current-registrant'}->email)) {
 				$ra = $xoid->{'current-registrant'}->email->__toString();
 			} else if (isset($xoid->{'first-registrant'}->email)) {
@@ -982,6 +988,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				}
 			}
 
+			// TODO: we can probably get the created and modified timestamp from oid-info.com XML
 			OIDplus::db()->query("insert into ###objects (id, parent, title, description, confidential, ra_email) values (?, ?, ?, ?, ?, ?)", array($id, $parent, $title, $info, 0, $ra));
 
 			OIDplus::db()->transaction_commit();
