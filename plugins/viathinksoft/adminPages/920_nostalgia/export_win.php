@@ -109,9 +109,7 @@ foreach ($dos_ids as $oid => $dos_id) {
 		if ($row->updated != '') $cont .= "updatedate=".explode(' ',$row->updated)[0]."\r\n";
 		if ($row->created != '') $cont .= "createdate=".explode(' ',$row->created)[0]."\r\n";
 
-		$desc = $row->description;
-		$desc = strip_tags($desc);
-		$desc = trim($desc);
+		$desc = handleDesc($row->description);
 		if ($desc != '') {
 			$cont .= "information=$dos_id.TXT\r\n";
 			$zip->addFromString("DB//$dos_id.TXT", $desc);
@@ -155,3 +153,16 @@ if (!headers_sent()) {
 unlink($tmp_file);
 
 OIDplus::invoke_shutdown();
+
+# ---
+
+function handleDesc($desc) {
+	$desc = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $desc); // br2nl
+	$desc = strip_tags($desc);
+	$desc = str_replace('&nbsp;', ' ', $desc);
+	$desc = html_entity_decode($desc);
+	$desc = str_replace("\r", "", $desc);
+	$desc = str_replace("\n", "\r\n", $desc);
+	$desc = trim($desc)."\r\n";
+	return $desc;
+}

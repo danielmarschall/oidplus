@@ -115,17 +115,15 @@ foreach ($dos_ids as $oid => $dos_id) {
 	} else {
 		$res = OIDplus::db()->query("select * from ###objects where id = 'oid:$oid';");
 		$row = $res->fetch_object();
-		$desc = trim(trim(strip_tags($row->description)));
-		$desc = str_replace("\r", "", $desc);
-		$desc = str_replace("\n", "  ", $desc);
-		$desc_ary1 = explode("\r\n", wordwrap($desc, 80/*TREEVIEW_WIDTH*/, "\r\n", true));
-		$desc_ary2 = explode("\r\n", wordwrap($row->title, 80/*TREEVIEW_WIDTH*/, "\r\n", true));
-		if (implode('',$desc_ary1) == '') $desc_ary1 = array();
-		if (implode('',$desc_ary2) == '') $desc_ary2 = array();
+		$desc_ary1 = handleDesc($row->title);
+		$desc_ary2 = handleDesc($row->description);
 		$desc_ary = array_merge($desc_ary1, $desc_ary2);
+		$prev_line = '';
 		foreach ($desc_ary as $line_idx => $line) {
+			if ($line == $prev_line) continue;
 			if ($line_idx >= 10/*DESCEDIT_LINES*/) break;
 			$cont .= make_line(CMD_DESCRIPTION, $line);
+			$prev_line = $line;
 		}
 	}
 
@@ -153,3 +151,19 @@ if (!headers_sent()) {
 unlink($tmp_file);
 
 OIDplus::invoke_shutdown();
+
+# ---
+
+function handleDesc($desc) {
+	$desc = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $desc); // br2nl
+	$desc = strip_tags($desc);
+	$desc = str_replace('&nbsp;', ' ', $desc);
+	$desc = html_entity_decode($desc);
+	$desc = str_replace("\r", "", $desc);
+	$desc = str_replace("\n", "  ", $desc);
+	$desc = str_replace("\t", "  ", $desc);
+	$desc = trim($desc);
+	$desc_ary = explode("\r\n", wordwrap($desc, 75, "\r\n", true));
+	if (implode('',$desc_ary) == '') $desc_ary = array();
+	return $desc_ary;
+}
