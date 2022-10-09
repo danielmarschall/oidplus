@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<xs:schema targetNamespace="urn:oid:1.3.6.1.4.1.37553.8.1.8.8.53354196964.641310544.1714020422"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element type="xs:string" name="handle-identifier" />
+<xs:element type="xs:string" name="canonical-identifier" />
+<xs:element type="xs:string" name="alternate-identifier" />
+</xs:schema>
