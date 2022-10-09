@@ -54,6 +54,15 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		return $this->getSlang()->insert_id($this);
 	}
 
+	public final function getScalar($sql) {
+		$res = $this->query($sql);
+		$row = $res->fetch_array();
+		if (count($row) == 0) return null;
+		$keys = array_keys($row);
+		if (count($keys) == 0) return null;
+		return $row[$keys[0]];
+	}
+
 	public final function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 
 		$query_logfile = OIDplus::baseConfig()->getValue('QUERY_LOGFILE', '');
