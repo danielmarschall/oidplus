@@ -648,7 +648,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if ($obj) {
 				$title = $obj->getTitle();
 				$description = $obj->getDescription();
-				if (empty($description)) {
+				if (empty(strip_tags($description)) && (stripos($description,'<img') === false)) {
 					if (empty($title)) {
 						$desc = '<p><i>'._L('No description for this object available').'</i></p>';
 					} else {
