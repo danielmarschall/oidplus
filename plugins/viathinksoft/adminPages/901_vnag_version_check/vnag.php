@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= OIDPLUS_VNAG
 		} else if (!$local_installation) {
 			$out_stat = VNag::STATUS_UNKNOWN;
 			$out_msg  = 'OIDplus could not determine its version (Required: ' . $requireInfo . '). Please update your system manually via the "' . $updateCommand . '" command regularly.'; // do not translate
-		} else if ($local_installation == $newest_version) {
+		} else if (version_compare($local_installation, $newest_version) >= 0) {
 			$out_stat = VNag::STATUS_OK;
 			$out_msg  = 'You are using the latest version of OIDplus (' . $local_installation . ' local / ' . $newest_version . ' remote)'; // do not translate
 		} else {
@@ -93,7 +93,7 @@ if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= OIDPLUS_VNAG
 		if (!$newest_version) {
 			$out_stat = VNag::STATUS_UNKNOWN;
 			$out_msg  = 'OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.'; // do not translate
-		} else if ($local_installation == $newest_version) {
+		} else if (version_compare($local_installation, $newest_version) >= 0) {
 			$out_stat = VNag::STATUS_OK;
 			$out_msg  = 'You are using the latest version of OIDplus (' . $local_installation . ' local / ' . $newest_version . ' remote)'; // do not translate
 		} else {

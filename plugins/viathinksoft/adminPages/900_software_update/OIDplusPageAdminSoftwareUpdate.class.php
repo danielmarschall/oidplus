@@ -240,7 +240,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 						$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine its version. (Required: %1). Please update your system manually via the "%2" command regularly.',$requireInfo,$updateCommand).'</font></p>';
 					}
 					$out['text'] .= '</div>';
-				} else if (substr($local_installation,4) >= substr($newest_version,4)) {
+				} else if (version_compare($local_installation, $newest_version) >= 0) {
 					$out['text'] .= '<p><font color="green">'._L('You are already using the latest version of OIDplus.').'</font></p>';
 					$out['text'] .= '</div>';
 				} else {
@@ -311,7 +311,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 			if ($ary === false) return false;
 			krsort($ary);
 			foreach ($ary as $rev => $data) {
-				if ($rev <= substr($local_ver,4)) continue;
+				if (version_compare("svn-$rev", $local_ver) <= 0) continue;
 				$comment = empty($data['msg']) ? _L('No comment') : $data['msg'];
 				$tex = _L("New revision %1 by %2",$rev,$data['author'])." (".$data['date'].") ";
 				$content .= trim($tex . str_replace("\n", "\n".str_repeat(' ', strlen($tex)), $comment));
