@@ -274,18 +274,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/uuid_mac_utils.git",
-                "reference": "aaef4f33f76a140153b5f28c8694b96c593e22fa"
+                "reference": "d0edce10196d6cef8f8e1c23c346d408abde1704"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/aaef4f33f76a140153b5f28c8694b96c593e22fa",
-                "reference": "aaef4f33f76a140153b5f28c8694b96c593e22fa",
+                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/d0edce10196d6cef8f8e1c23c346d408abde1704",
+                "reference": "d0edce10196d6cef8f8e1c23c346d408abde1704",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2022-09-06T22:14:43+00:00",
+            "time": "2022-10-06T11:48:47+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

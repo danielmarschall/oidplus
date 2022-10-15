@@ -727,7 +727,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			);
 
 			$objGoto = OIDplusObject::findFitting($req_goto);
-			$objGotoParent = $objGoto->getParent();
+			$objGotoParent = $objGoto ? $objGoto->getParent() : null;
 			$parent = $objGotoParent ? $objGotoParent->nodeId() : '';
 
 			$objTypesChildren = array();

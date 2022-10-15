@@ -12,8 +12,8 @@ danielmarschall/oidconverter     9999999-dev 75088eb Apache-2.0
 danielmarschall/oidconverter     dev-master 75088eb  Apache-2.0            
 danielmarschall/php_utils        9999999-dev ecd0bc3 Apache-2.0            
 danielmarschall/php_utils        dev-master ecd0bc3  Apache-2.0            
-danielmarschall/uuid_mac_utils   9999999-dev aaef4f3 Apache-2.0            
-danielmarschall/uuid_mac_utils   dev-master aaef4f3  Apache-2.0            
+danielmarschall/uuid_mac_utils   9999999-dev d0edce1 Apache-2.0            
+danielmarschall/uuid_mac_utils   dev-master d0edce1  Apache-2.0            
 danielmarschall/vnag             9999999-dev 85fb29d Apache-2.0            
 danielmarschall/vnag             dev-master 85fb29d  Apache-2.0            
 dcodeio/bcrypt.js                master master       BSD-3-Clause, MIT     
