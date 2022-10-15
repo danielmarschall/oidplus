@@ -32,7 +32,7 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 
 	public static function available(&$reason)/*: bool*/ {
 		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-			$reason = _L('Functionality only available on Windows servers');
+			$reason = _L('Functionality only available on Windows systems');
 			return false;
 		}
 

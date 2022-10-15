@@ -74,3 +74,9 @@ Interface <1.3.6.1.4.1.37476.2.5.2.3.7> {
 	// called by publicPages/000_objects
 	public function getAlternativesForQuery($id);
 }
+
+Interface <1.3.6.1.4.1.37476.2.5.2.3.8> {
+	// called by raPages/010_notifications
+	// called by adminPages/010_notifications
+	public function getNotifications($user=null); // return array of array($severity, $htmlMessage)
+}

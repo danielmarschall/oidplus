@@ -1342,6 +1342,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Critical issues
+		]]></source>
+		<target><![CDATA[
+		Kritische Probleme
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Currently <a %1>%2 free OIDs have been</a> registered. Please enter your email below to receive a free OID.
 		]]></source>
 		<target><![CDATA[
@@ -2006,6 +2014,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Errors
+		]]></source>
+		<target><![CDATA[
+		Fehler
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Everything OK!
 		]]></source>
 		<target><![CDATA[
@@ -2098,6 +2114,14 @@
 		]]></source>
 		<target><![CDATA[
 		FEHLER
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Facebook OAuth Login
+		]]></source>
+		<target><![CDATA[
+		Facebook OAuth-Anmeldung
 		]]></target>
 	</message>
 	<message>
@@ -2302,10 +2326,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Functionality only available on Windows servers
+		Functionality only available on Windows systems
 		]]></source>
 		<target><![CDATA[
-		Funktion ist nun auf Windows-Servern verfügbar
+		Funktion nur mit Windows Systemen möglich
 		]]></target>
 	</message>
 	<message>
@@ -2474,6 +2498,14 @@
 		]]></source>
 		<target><![CDATA[
 		Zurück zur Systeminfo-Hauptseite
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Google OAuth Login
+		]]></source>
+		<target><![CDATA[
+		Google OAuth-Anmeldung
 		]]></target>
 	</message>
 	<message>
@@ -2846,6 +2878,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Informational
+		]]></source>
+		<target><![CDATA[
+		Informativ
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Insert
 		]]></source>
 		<target><![CDATA[
@@ -3210,6 +3250,14 @@
 		]]></source>
 		<target><![CDATA[
 		KiB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		LDAP Login
+		]]></source>
+		<target><![CDATA[
+		LDAP-Anmeldung
 		]]></target>
 	</message>
 	<message>
@@ -3830,6 +3878,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		No notifications
+		]]></source>
+		<target><![CDATA[
+		Keine Benachrichtungen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		None
 		]]></source>
 		<target><![CDATA[
@@ -3882,6 +3938,14 @@
 		]]></source>
 		<target><![CDATA[
 		Nichts gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Notifications
+		]]></source>
+		<target><![CDATA[
+		Benachrichtigungen
 		]]></target>
 	</message>
 	<message>
@@ -4006,6 +4070,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OID-Info.com import/export
+		]]></source>
+		<target><![CDATA[
+		OID-Info.com Import/Export
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OID-WHOIS Auth Token for displaying full RA information: %1 (only applies if the RA has set the privacy-flag)
 		]]></source>
 		<target><![CDATA[
@@ -4078,6 +4150,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OIDplus could not determine its version (Required: %1). Please update your system manually via the "%2" command regularly.
+		]]></source>
+		<target><![CDATA[
+		OIDplus konnte seine Version nicht erkennen (Erforderlich: %1). Bitte updaten Sie das System mittels "%2" regelmäßig manuell.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OIDplus could not determine its version.
 		]]></source>
 		<target><![CDATA[
@@ -4126,6 +4206,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OIDplus is outdated. (%1 local / %2 remote)
+		]]></source>
+		<target><![CDATA[
+		OIDplus-Installation ist veraltet (%1 installiert / %2 verfügbar)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus plugin "%1" is enabled, but required PHP extension "%2" is not installed.
+		]]></source>
+		<target><![CDATA[
+		OIDplus-Plugin "%1" ist aktiviert, aber die erforderliche PHP-Erweiterung "%2" ist nicht installiert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OIDplus requires at least PHP version %1! You are currently using version %2
 		]]></source>
 		<target><![CDATA[
@@ -4170,6 +4266,14 @@
 		]]></source>
 		<target><![CDATA[
 		Objekt %1 existiert nicht
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Object %1 has no title.
+		]]></source>
+		<target><![CDATA[
+		Objekt %1 hat keinen Titel.
 		]]></target>
 	</message>
 	<message>
@@ -5878,6 +5982,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Severity %1
+		]]></source>
+		<target><![CDATA[
+		Dringlichkeit %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Share
 		]]></source>
 		<target><![CDATA[
@@ -6286,14 +6398,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.
-		]]></source>
-		<target><![CDATA[
-		Die "CURL" PHP-Erweiterung kann nicht auf HTTPS-Webseiten zugreifen. Aus diesem Grund können Sie diese Funktion nicht benutzen. Bitte downloaden Sie <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, und speichern Sie es irgendwo ab; danach ändern Sie die Einstellung <code>curl.cainfo</code> in PHP.ini.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		The JWT token was blacklisted on %1. Please generate a new one
 		]]></source>
 		<target><![CDATA[
@@ -6321,7 +6425,7 @@
 		The LDAP login was successful, but the own user %1 cannot be found. Please check the base configuration setting %2 and %3
 		]]></source>
 		<target><![CDATA[
-		Der LDAP-Login war erfolgreich, aber der eigene Benutzer %1 konnte nicht gefunden werden. Bitte prüfen Sie die Basiskonfigurations-Einstellung %2 und %3
+		Die LDAP-Anmeldung war erfolgreich, aber der eigene Benutzer %1 konnte nicht gefunden werden. Bitte prüfen Sie die Basiskonfigurations-Einstellung %2 und %3
 		]]></target>
 	</message>
 	<message>
@@ -7326,6 +7430,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Warnings
+		]]></source>
+		<target><![CDATA[
+		Warnungen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Warnings / Error messages:
 		]]></source>
 		<target><![CDATA[
@@ -7526,6 +7638,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		You are using the latest version of OIDplus (%1 local / %2 remote)
+		]]></source>
+		<target><![CDATA[
+		Sie verwenden die aktuellste Version von OIDplus (%1 installiert / %2 verfügbar)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		You can adjust your privacy level here
 		]]></source>
 		<target><![CDATA[
@@ -7642,6 +7762,14 @@
 		]]></source>
 		<target><![CDATA[
 		Sie müssen sich als RA %2 <a %1>anmelden</a>.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You need to <a %1>log in</a>.
+		]]></source>
+		<target><![CDATA[
+		Sie müssen sich <a %1>anmelden</a>.
 		]]></target>
 	</message>
 	<message>

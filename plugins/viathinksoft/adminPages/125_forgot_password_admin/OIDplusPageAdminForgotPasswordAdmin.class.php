@@ -19,7 +19,7 @@
 
 if (!defined('INSIDE_OIDPLUS')) die();
 
-class OIDplusPagePublicForgotPasswordAdmin2 extends OIDplusPagePluginAdmin {
+class OIDplusPageAdminForgotPasswordAdmin extends OIDplusPagePluginAdmin {
 
 	public function init($html=true) {
 	}
@@ -29,6 +29,7 @@ class OIDplusPagePublicForgotPasswordAdmin2 extends OIDplusPagePluginAdmin {
 
 	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
+		if (is_null(OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.1.92'))) return false; // OIDplusPagePublicForgotPasswordAdmin
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
@@ -37,7 +38,7 @@ class OIDplusPagePublicForgotPasswordAdmin2 extends OIDplusPagePluginAdmin {
 		}
 
 		$json[] = array(
-			'id' => 'oidplus:forgot_password_admin', // link to the public plugin!
+			'id' => 'oidplus:forgot_password_admin', // link to the public page plugin!
 			'icon' => $tree_icon,
 			'text' => _L('Change password')
 		);

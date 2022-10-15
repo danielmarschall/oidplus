@@ -1146,6 +1146,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	public function implementsFeature($id) {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested()
 		// Important: Do NOT 1.3.6.1.4.1.37476.2.5.2.3.7 because our getAlternativesForQuery() is the one that calls others!
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
 		return false;
 	}
 
@@ -1201,6 +1202,34 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		}
 
 		echo ' <font color="red"><b>'.$msg.'</b></font>';
+	}
+
+	public function getNotifications($user=null): array {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
+		$notifications = array();
+		$res = OIDplus::db()->query("select id, title from ###objects order by id");
+		if ($res->any()) {
+			$is_admin_logged_in = OIDplus::authUtils()->isAdminLoggedIn(); // run just once, for performance
+			while ($row = $res->fetch_array()) {
+				if (empty($row['title'])) {
+					if ($user === 'admin') {
+						$accept = $is_admin_logged_in;
+					} else {
+						$accept = false;
+						if ($obj = OIDplusObject::parse($row['id'])) {
+							if ($obj->userHasWriteRights($user)) {
+								$accept = true;
+							}
+						}
+					}
+
+					if ($accept) {
+						$notifications[] = array('WARN', _L('Object %1 has no title.', '<a '.OIDplus::gui()->link($row['id']).'>'.$row['id'].'</a>'));
+					}
+				}
+			}
+		}
+		return $notifications;
 	}
 
 }

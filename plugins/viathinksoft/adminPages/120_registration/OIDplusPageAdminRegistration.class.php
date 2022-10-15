@@ -500,6 +500,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 	public function implementsFeature($id) {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
 		return false;
 	}
 
@@ -528,28 +529,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		if (!function_exists('curl_init')) {
 			echo '<p><font color="red">';
 			echo _L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl').' ';
-			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
-			echo '</font></p>';
-			if ($do_edits) {
-				OIDplus::config()->setValue('oobe_registration_done', '1');
-			}
-			return;
-		}
-
-		$testurl = 'https://www.google.com/';
-		$ch = curl_init();
-		if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
-		curl_setopt($ch, CURLOPT_URL, $testurl);
-		curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
-		curl_setopt($ch, CURLOPT_HEADER, TRUE);
-		curl_setopt($ch, CURLOPT_NOBODY, TRUE);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_exec($ch);
-		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
-		if (!$httpCode) {
-			echo '<p><font color="red">';
-			echo _L('The "CURL" PHP extension cannot access HTTPS webpages. Therefore, you cannot use this feature. Please download <a href="https://curl.haxx.se/ca/cacert.pem">cacert.pem</a>, place it somewhere and then adjust the setting <code>curl.cainfo</code> in PHP.ini.').' ';
 			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
 			echo '</font></p>';
 			if ($do_edits) {
@@ -634,6 +613,18 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		echo '<p>'._L('<i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.').'<br>';
 		echo _L('<a %1>Click here</a> for more information about privacy related topics.','href="../../../../res/OIDplus/privacy_documentation.html" target="_blank"');
 		echo '</p>';
+	}
+
+	public function getNotifications($user=null): array {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
+		$notifications = array();
+		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
+			if (!function_exists('curl_init')) {
+				$title = _L('System registration');
+				$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but required PHP extension "%2" is not installed.', $title, 'php_curl'));
+			}
+		}
+		return $notifications;
 	}
 
 }
