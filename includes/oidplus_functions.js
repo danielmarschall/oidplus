@@ -23,7 +23,7 @@ function htmlDecodeWithLineBreaks(html) {
 	// https://stackoverflow.com/questions/4502673/jquery-text-function-loses-line-breaks-in-ie
 	// Added ".replace(/&nbsp;/g,'')" because of GitHub bug #3
 	var breakToken = '_______break_______';
-	var lineBreakedHtml = html.replace(/&nbsp;/g,' ').replace(/<br\s?\/?>/gi, breakToken).replace(/<p\.*?>(.*?)<\/p>/gi, breakToken + '$1' + breakToken);
+	var lineBreakedHtml = html.replace(/&nbsp;/g,' ').replace(/&#160;/g,' ').replace(/<br\s?\/?>/gi, breakToken).replace(/<p\.*?>(.*?)<\/p>/gi, breakToken + '$1' + breakToken);
 	return $('<div>').html(lineBreakedHtml).text().replace(new RegExp(breakToken, 'g'), '\n');
 }
 

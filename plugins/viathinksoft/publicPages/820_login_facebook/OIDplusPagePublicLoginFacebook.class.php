@@ -64,11 +64,13 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 	}
 
 	public function implementsFeature($id) {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.5') return true; // alternativeLoginMethods
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.5') return true; // alternativeLoginMethods()
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
 		return false;
 	}
 
 	public function alternativeLoginMethods() {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.5
 		$logins = array();
 		if (OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {
 			$logins[] = array(
@@ -79,4 +81,19 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 		}
 		return $logins;
 	}
+
+	public function getNotifications($user=null): array {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
+		$notifications = array();
+		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
+			if (OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {
+				if (!function_exists('curl_init')) {
+					$title = _L('Facebook OAuth Login');
+					$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but required PHP extension "%2" is not installed.', $title, 'php_curl'));
+				}
+			}
+		}
+		return $notifications;
+	}
+
 }

@@ -1074,4 +1074,21 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 	}
 
+	public function implementsFeature($id) {
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
+		return false;
+	}
+
+	public function getNotifications($user=null): array {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
+		$notifications = array();
+		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
+			if (!function_exists('curl_init')) {
+				$title = _L('OID-Info.com import/export');
+				$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but required PHP extension "%2" is not installed.', $title, 'php_curl'));
+			}
+		}
+		return $notifications;
+	}
+
 }

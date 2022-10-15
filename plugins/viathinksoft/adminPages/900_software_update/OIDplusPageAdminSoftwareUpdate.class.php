@@ -368,4 +368,74 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 		return $out;
 	}
+
+	public function implementsFeature($id) {
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
+		return false;
+	}
+
+	public function getNotifications($user=null): array {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
+		$notifications = array();
+		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
+
+			// Following code is based on the VNag plugin (admin 901) code
+
+			$installType = OIDplus::getInstallType();
+
+			if ($installType === 'ambigous') {
+				$out_stat = 'WARN';
+				$out_msg  = _L('Multiple version files/directories (oidplus_version.txt, .version.php, .git, or .svn) are existing! Therefore, the version is ambiguous!');
+			} else if ($installType === 'unknown') {
+				$out_stat = 'WARN';
+				$out_msg  = _L('The version cannot be determined, and the update needs to be applied manually!');
+			} else if (($installType === 'svn-wc') || ($installType === 'git-wc')) {
+				$local_installation = OIDplus::getVersion();
+				$newest_version = $this->getLatestRevision();
+
+				$requireInfo = ($installType === 'svn-wc') ? _L('shell access with svn/svnversion tool, or PDO/SQLite3 PHP extension') : _L('shell access with Git client');
+				$updateCommand = ($installType === 'svn-wc') ? 'svn update' : 'git pull';
+
+				if (!$newest_version) {
+					$out_stat = 'WARN';
+					$out_msg  = _L('OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.');
+				} else if (!$local_installation) {
+					$out_stat = 'WARN';
+					$out_msg  = _L('OIDplus could not determine its version (Required: %1). Please update your system manually via the "%2" command regularly.', $requireInfo, $updateCommand);
+				} else if (version_compare($local_installation, $newest_version) >= 0) {
+					$out_stat = 'INFO';
+					$out_msg  = _L('You are using the latest version of OIDplus (%1 local / %2 remote)', $local_installation, $newest_version);
+				} else {
+					$out_stat = 'WARN';
+					$out_msg  = _L('OIDplus is outdated. (%1 local / %2 remote)', $local_installation, $newest_version);
+				}
+			} else if ($installType === 'svn-snapshot') {
+				$local_installation = OIDplus::getVersion();
+				$newest_version = $this->getLatestRevision();
+
+				if (!$newest_version) {
+					$out_stat = 'WARN';
+					$out_msg  = _L('OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.');
+				} else if (version_compare($local_installation, $newest_version) >= 0) {
+					$out_stat = 'INFO';
+					$out_msg  = _L('You are using the latest version of OIDplus (%1 local / %2 remote)', $local_installation, $newest_version);
+				} else {
+					$out_stat = 'WARN';
+					$out_msg  = _L('OIDplus is outdated. (%1 local / %2 remote)', $local_installation, $newest_version);
+				}
+			} else {
+				assert(false);
+				return $notifications;
+			}
+
+			if ($out_stat != 'INFO') {
+				$out_msg = '<a '.OIDplus::gui()->link('oidplus:software_update').'>'._L('Software update').'</a>: ' . $out_msg;
+
+				$notifications[] = array($out_stat, $out_msg);
+			}
+
+		}
+		return $notifications;
+	}
+
 }

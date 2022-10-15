@@ -124,7 +124,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		$out = array();
 
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
-			if (is_null($ra_email)) {
+			if (!$ra_email) {
 				$res = OIDplus::db()->query("select oChild.id as id, oChild.ra_email as child_mail, oParent.ra_email as parent_mail from ###objects as oChild ".
 				                            "left join ###objects as oParent on oChild.parent = oParent.id ".
 				                            "order by ".OIDplus::db()->natOrder('oChild.id'));
@@ -147,7 +147,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				}
 			}
 		} else {
-			if (is_null($ra_email)) {
+			if (!$ra_email) {
 				$ra_mails_to_check = OIDplus::authUtils()->loggedInRaList();
 				if (count($ra_mails_to_check) == 0) return $out;
 			} else {
@@ -310,7 +310,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		// Note: This also checks if superior OIDs are confidential.
 		if (!$this->isConfidential()) return true;
 
-		if (is_null($ra_email)) {
+		if (!$ra_email) {
 			// Admin may do everything
 			if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 
@@ -497,7 +497,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	public function userHasParentalWriteRights($ra_email=null) {
 		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
 
-		if (is_null($ra_email)) {
+		if (!$ra_email) {
 			if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 		}
 
@@ -509,7 +509,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	public function userHasWriteRights($ra_email=null) {
 		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
 
-		if (is_null($ra_email)) {
+		if (!$ra_email) {
 			if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 			return OIDplus::authUtils()->isRaLoggedIn($this->getRaMail());
 		} else {

@@ -54,10 +54,10 @@ IDEAS FOR NEW FUNCTIONALITIES
 	  (Alternatively they can just look in the userdata directory using FTP)
 	* Give the ability to enable/disable RA uploading/deleting
 	  (Alternatively they need to do it in the configuration module and enter '0' and '1' by hand)
-- Make a plugin that shows warnings from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
-	But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
-	And what can we do with checks that need a long time to compute?
-	Also offer VNag?
+- "Notifications plugin"
+	OK:      Make a plugin that shows warnings from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
+	Not yet: But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
+	Not yet: Also offer VNag?
 - Excel/CSV import tool for bulk data import (as alternative to XML import. Maybe previous Excel->XML import tool?)
 - External Syslog server
 
