@@ -56,8 +56,8 @@ IDEAS FOR NEW FUNCTIONALITIES
 	  (Alternatively they need to do it in the configuration module and enter '0' and '1' by hand)
 - "Notifications plugin"
 	OK:      Make a plugin that shows warnings from plugins (via "feature-interface"), e.g. the registration plugin could warn that CURL is not working correctly etc.
-	Not yet: But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
-	Not yet: Also offer VNag?
+	No:	 But it should also have JavaScript components, e.g. check if dev/ and other confidential folders can be accessed (see code in setup/)
+	Not yet: Also offer VNag that informs the user via Nagios if new Notifications are there?
 - Excel/CSV import tool for bulk data import (as alternative to XML import. Maybe previous Excel->XML import tool?)
 - External Syslog server
 
