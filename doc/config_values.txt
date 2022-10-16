@@ -116,6 +116,12 @@ OIDplus::baseConfig()->setValue('RECAPTCHA_PUBLIC',         '');
 OIDplus::baseConfig()->setValue('RECAPTCHA_PRIVATE',        '');
                          Only used if CAPTCHA_PLUGIN=ReCAPTCHA
 
+OIDplus::baseConfig()->setValue('HCAPTCHA_SITEKEY',         '');
+                         Only used if CAPTCHA_PLUGIN=hCaptcha
+
+OIDplus::baseConfig()->setValue('HCAPTCHA_SECRET',          '');
+                         Only used if CAPTCHA_PLUGIN=hCaptcha
+
 OIDplus::baseConfig()->setValue('ENFORCE_SSL',              OIDplus::ENFORCE_SSL_AUTO);
                          Values OIDplus::ENFORCE_SSL_NO (0) = (off)
                                 OIDplus::ENFORCE_SSL_YES (1) = (on)

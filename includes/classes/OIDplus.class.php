@@ -954,41 +954,77 @@ class OIDplus extends OIDplusBaseClass {
 				"Content-Language" => $content_language,
 				"Expires" => "0",
 				"Content-Security-Policy" => array(
+					// see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+
+					// --- Fetch directives ---
+					"child-src" => array(
+						"'self'",
+						"blob:"
+					),
+					"connect-src" => array(
+						"'self'",
+						"blob:"
+					),
 					"default-src" => array(
 						"'self'",
 						"blob:",
-						"https://fonts.gstatic.com",
-						"https://www.google.com/",
-						"https://www.gstatic.com/",
 						"https://cdnjs.cloudflare.com/"
 					),
-					"style-src" => array(
+					"font-src" => array(
 						"'self'",
-						"'unsafe-inline'",
-						"https://cdnjs.cloudflare.com/"
+						"blob:"
+					),
+					"frame-src" => array(
+						"'self'",
+						"blob:"
 					),
 					"img-src" => array(
-					       "blob:",
+						"blob:",
 						"data:",
 						"http:",
 						"https:"
+					),
+					"manifest-src" => array(
+						"'self'",
+						"blob:"
+					),
+					"media-src" => array(
+						"'self'",
+						"blob:"
+					),
+					"object-src" => array(
+						"'none'"
+					),
+					"prefetch-src" => array(
+						"'self'",
+						"blob:"
 					),
 					"script-src" => array(
 						"'self'",
 						"'unsafe-inline'",
 						"'unsafe-eval'",
 						"blob:",
-						"https://www.google.com/",
-						"https://www.gstatic.com/",
 						"https://cdnjs.cloudflare.com/",
 						"https://polyfill.io/"
 					),
+					// script-src-elem not used
+					// script-src-attr not used
+					"style-src" => array(
+						"'self'",
+						"'unsafe-inline'",
+						"https://cdnjs.cloudflare.com/"
+					),
+					// style-src-elem not used
+					// style-src-attr not used
+					"worker-src" => array(
+						"'self'",
+						"blob:"
+					),
+
+					// --- Navigation directives ---
 					"frame-ancestors" => array(
 					       "'none'"
 					),
-					"object-src" => array(
-					       "'none'"
-					)
 				)
 			);
 
