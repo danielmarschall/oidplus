@@ -57,7 +57,7 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 
 			$notifications_by_sev = array();
 
-			foreach (OIDplus::getPagePlugins() as $plugin) {
+			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.8')) {
 					$notifications = $plugin->getNotifications($ra_email);
 					if ($notifications) {

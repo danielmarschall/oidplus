@@ -40,5 +40,8 @@ if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 }
 
 list($out_content, $out_type) = OIDplusPageAdminOIDInfoExport::outputXML(isset($_REQUEST['online']) && $_REQUEST['online']);
+
+OIDplus::invoke_shutdown();
+
 if ($out_type) header('Content-Type:'.$out_type);
 echo $out_content;

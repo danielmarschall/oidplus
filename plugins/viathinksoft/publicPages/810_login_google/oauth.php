@@ -120,6 +120,8 @@ try {
 
 		OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 
+		OIDplus::invoke_shutdown();
+
 		// Go back to OIDplus
 
 		header('Location:'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL));

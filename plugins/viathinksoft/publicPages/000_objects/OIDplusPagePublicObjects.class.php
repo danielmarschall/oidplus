@@ -68,7 +68,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Check if permitted
 			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to delete this OID.'));
 
-			foreach (OIDplus::getPagePlugins() as $plugin) {
+			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
 					$plugin->beforeObjectDelete($id);
 				}
@@ -105,7 +105,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			OIDplus::db()->query("delete from ###asn1id where well_known = ? and oid not in (select id from ###objects where id like 'oid:%')", array(false));
 			OIDplus::db()->query("delete from ###iri    where well_known = ? and oid not in (select id from ###objects where id like 'oid:%')", array(false));
 
-			foreach (OIDplus::getPagePlugins() as $plugin) {
+			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
 					$plugin->afterObjectDelete($id);
 				}
@@ -134,7 +134,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Check if permitted
 			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to update this OID.'));
 
-			foreach (OIDplus::getPagePlugins() as $plugin) {
+			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
 					$plugin->beforeObjectUpdateSuperior($id, $params);
 				}
@@ -240,7 +240,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 
-			foreach (OIDplus::getPagePlugins() as $plugin) {
+			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
 					$plugin->afterObjectUpdateSuperior($id, $params);
 				}
@@ -266,7 +266,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Check if allowed
 			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the RA to update this OID.'));
 
-			foreach (OIDplus::getPagePlugins() as $plugin) {
+			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
 					$plugin->beforeObjectUpdateSelf($id, $params);
 				}
@@ -289,7 +289,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			OIDplus::db()->query("UPDATE ###objects SET updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($id));
 			OIDplusObject::resetObjectInformationCache();
 
-			foreach (OIDplus::getPagePlugins() as $plugin) {
+			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
 					$plugin->afterObjectUpdateSelf($id, $params);
 				}
@@ -361,7 +361,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$obj = OIDplusObject::parse($id);
 			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','INSERT',$id));
 
-			foreach (OIDplus::getPagePlugins() as $plugin) {
+			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
 					$plugin->beforeObjectInsert($id, $params);
 				}
@@ -446,7 +446,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 
-			foreach (OIDplus::getPagePlugins() as $plugin) {
+			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
 					$plugin->afterObjectInsert($id, $params);
 				}
@@ -498,7 +498,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 		// e.g. used for "Reverse Alt Id"
 		$alternatives = array();
-		foreach (array_merge(OIDplus::getPagePlugins(),OIDplus::getObjectTypePlugins()) as $plugin) {
+		foreach (OIDplus::getAllPlugins() as $plugin) {
 			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.7')) {
 				$tmp = $plugin->getAlternativesForQuery($id);
 				if (is_array($tmp)) {
@@ -693,7 +693,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 			}
 
-			foreach (OIDplus::getPagePlugins() as $plugin) {
+			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.2')) {
 					$plugin->modifyContent($obj->nodeId(), $out['title'], $out['icon'], $out['text']);
 				}

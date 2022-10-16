@@ -279,7 +279,7 @@ class OIDplusOIDIP {
 						$obj->whoisObjectAttributes($obj->nodeId(), $out);
 					}
 
-					foreach (OIDplus::getPagePlugins() as $plugin) {
+					foreach (OIDplus::getAllPlugins() as $plugin) {
 						if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
 							$plugin->whoisObjectAttributes($obj->nodeId(), $out);
 						}
@@ -369,7 +369,7 @@ class OIDplusOIDIP {
 							$ra->whoisRaAttributes($obj->getRaMail(), $out); /** @phpstan-ignore-line */
 						}
 
-						foreach (OIDplus::getPagePlugins() as $plugin) {
+						foreach (OIDplus::getAllPlugins() as $plugin) {
 							if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
 								$plugin->whoisRaAttributes($obj->getRaMail(), $out);
 							}
@@ -385,7 +385,7 @@ class OIDplusOIDIP {
 					} else {
 						$out[] = $this->_oidip_attr('ra', ($obj && !empty($obj->getRaMail()) ? $obj->getRaMail() : /*_L*/('Unknown'))); // DO NOT TRANSLATE!
 						if ($obj) {
-							foreach (OIDplus::getPagePlugins() as $plugin) {
+							foreach (OIDplus::getAllPlugins() as $plugin) {
 								if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
 									$plugin->whoisRaAttributes($obj->getRaMail(), $out);
 								}
