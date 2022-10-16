@@ -49,6 +49,10 @@ rebuild_callbacks.push(function() {
 		$("#hcaptcha_secret_warn")[0].innerHTML = '';
 	}
 
+	if ($("#hcaptcha_curl_status")[0].value != '1') {
+		error = true;
+	}
+
 	return !error;
 });
 
