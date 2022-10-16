@@ -8014,6 +8014,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		hCaptcha plugin needs the PHP extension php_curl
+		]]></source>
+		<target><![CDATA[
+		Das Plugin hCaptcha benötigt die PHP-Erweiterung php_curl
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		implementsFeature() always returns true
 		]]></source>
 		<target><![CDATA[
