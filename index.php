@@ -164,11 +164,11 @@ echo "</html>\n";
 $cont = ob_get_contents();
 ob_end_clean();
 
-OIDplus::invoke_shutdown();
-
 $plugins = OIDplus::getPagePlugins();
 foreach ($plugins as $plugin) {
 	$plugin->htmlPostprocess($cont);
 }
+
+OIDplus::invoke_shutdown();
 
 echo $cont;

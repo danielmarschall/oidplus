@@ -47,5 +47,8 @@ if (PHP_SAPI == 'cli') {
 
 $x = new OIDplusOIDIP();
 list($out_content, $out_type) = $x->oidipQuery($query);
+
+OIDplus::invoke_shutdown();
+
 if ($out_type) header('Content-Type:'.$out_type);
 echo $out_content;

@@ -52,6 +52,8 @@ try {
 		throw new OIDplusException(_L('The file does not exist'));
 	}
 
+	OIDplus::invoke_shutdown();
+
 	VtsBrowserDownload::output_file($local_file);
 } catch (Exception $e) {
 	echo '<h1>'._L('Error').'</h1><p>'.htmlentities($e->getMessage()).'<p>';

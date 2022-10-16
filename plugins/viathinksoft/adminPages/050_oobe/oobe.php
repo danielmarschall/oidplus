@@ -153,7 +153,7 @@ step_system_title($step++, $do_edits, $errors_happened);
 
 # ---
 
-foreach (OIDplus::getPagePlugins() as $plugin) {
+foreach (OIDplus::getAllPlugins() as $plugin) {
 	if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.1')) {
 		$plugin->oobeEntry($step++, $do_edits, $errors_happened);
 	}
@@ -199,7 +199,9 @@ ob_end_clean();
 
 if ($do_edits && !$errors_happened)  {
 	OIDplus::config()->setValue('oobe_main_done', '1');
+	OIDplus::invoke_shutdown();
 	header('Location:../../../../');
 } else {
+	OIDplus::invoke_shutdown();
 	echo $cont;
 }

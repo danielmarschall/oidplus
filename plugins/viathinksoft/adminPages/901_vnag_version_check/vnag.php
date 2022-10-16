@@ -122,6 +122,8 @@ if (OIDplus::getPkiStatus()) {
 $job->run();
 unset($job);
 
+OIDplus::invoke_shutdown();
+
 # ---
 
 function getLatestRevision() {

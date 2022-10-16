@@ -184,7 +184,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 			if ($tab === 'ra') {
 				$alt_logins_html = array();
-				foreach (OIDplus::getPagePlugins() as $plugin) {
+				foreach (OIDplus::getAllPlugins() as $plugin) {
 					if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.5')) {
 						$logins = $plugin->alternativeLoginMethods();
 						foreach ($logins as $data) {

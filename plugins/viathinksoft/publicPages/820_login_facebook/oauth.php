@@ -107,4 +107,6 @@ OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()."
 
 // Go back to OIDplus
 
+OIDplus::invoke_shutdown();
+
 header('Location:'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL));
