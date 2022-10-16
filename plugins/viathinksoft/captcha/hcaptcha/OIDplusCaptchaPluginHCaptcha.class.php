@@ -92,7 +92,7 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 	}
 
 	public static function setupHTML(): string {
-		$curl_status = !function_exists('curl_init') ? 1 : 0;
+		$curl_status = function_exists('curl_init') ? 1 : 0;
 		return '<div id="CAPTCHAPLUGIN_PARAMS_HCAPTCHA">'.
 		       '<p>(<a href="https://www.hcaptcha.com/" target="_blank">'._L('more information and obtain key').'</a>)</p>'.
 		       '<p>'._L('hCaptcha Site key').'<br><input id="hcaptcha_sitekey" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="hcaptcha_sitekey_warn"></span></p>'.
