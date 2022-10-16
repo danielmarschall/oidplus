@@ -274,10 +274,11 @@ function url_get_contents($url, $userAgent='ViaThinkSoft-OIDplus/2.0') {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-		if (!($res = @curl_exec($ch))) return false;
+		$res = @curl_exec($ch);
 		$error_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		if ($error_code >= 400) return false;
 		@curl_close($ch);
+		if ($error_code >= 400) return false;
+		if ($res === false) return false;
 	} else {
 		// Attention: HTTPS only works if OpenSSL extension is enabled.
 		// Our supplement does not help...

@@ -124,4 +124,59 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 	public function tree_search($request) {
 		return false;
 	}
+
+	public function implementsFeature($id) {
+		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
+		return false;
+	}
+
+	private function getNotificationsCheckDirAccess($dir) {
+		$notifications = array();
+		// Attention! This check does not work if OIDplus is password protected!
+		//            The only real solution is to check via JavaScript, which is done by setup/
+		$url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).$dir;
+		$access_worked = url_get_contents($url) !== false;
+
+		if (!$access_worked) {
+			$url_alt = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).$dir;
+			if ($url != $url_alt) {
+				$access_worked = url_get_contents($url_alt) !== false;
+			}
+		}
+
+		if ($access_worked) {
+			// Re-use message taken from setup/includes/setup_base.js
+			$msg = _L('Attention: The following directory is world-readable: %1 ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>).','<a target="_blank" href="'.$url.'">'.$dir.'</a>');
+			$notifications[] = array('CRIT', $msg);
+		}
+		return $notifications;
+	}
+
+	public function getNotifications($user=null): array {
+		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
+		// These are some basic "system" checks, no checks from other plugin. So we add them to our plugin instead.
+		$notifications = array();
+		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
+			// Check if critical directories are world-readable
+			// see setup/includes/setup_base.js
+			$forbidden_dirs = array(
+				"userdata/index.html",
+				"res/ATTENTION.TXT",
+				"dev/index.html",
+				"includes/index.html",
+				"setup/includes/index.html"
+				//"plugins/viathinksoft/publicPages/100_whois/whois/cli/index.html"
+			);
+			foreach ($forbidden_dirs as $dir) {
+				$notifications = array_merge($notifications, $this->getNotificationsCheckDirAccess($dir));
+			}
+
+			// Check if cache directory is writeable
+			if (!is_writeable(OIDplus::localpath(null).'userdata/cache/')) {
+				$notifications[] = array('ERR', _L('Directory %1 is not writeable.', 'userdata/cache/'));
+			}
+		}
+		return $notifications;
+	}
+
 }
