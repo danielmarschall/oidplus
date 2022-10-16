@@ -1214,6 +1214,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Communication with hCaptcha server failed: %1
+		]]></source>
+		<target><![CDATA[
+		Kommunikation mit dem hCaptcha-Server fehlgeschlagen: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Comparison with oid-info.com
 		]]></source>
 		<target><![CDATA[
@@ -5142,6 +5150,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Please specify a secret!
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie ein Secret ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please specify a site key!
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie den Site-Key ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Please specify a username!
 		]]></source>
 		<target><![CDATA[
@@ -7970,6 +7994,22 @@
 		]]></source>
 		<target><![CDATA[
 		Beispiele
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		hCaptcha Secret
+		]]></source>
+		<target><![CDATA[
+		hCaptcha Secret
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		hCaptcha Site key
+		]]></source>
+		<target><![CDATA[
+		hCaptcha Site-Key
 		]]></target>
 	</message>
 	<message>
