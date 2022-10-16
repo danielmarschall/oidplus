@@ -1718,6 +1718,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Directory %1 is not writeable. Please check the permissions!
+		]]></source>
+		<target><![CDATA[
+		Verzeichnis %1 ist schreibgeschützt. Bitte die Berechtigungen korrigieren!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Directory userdata/logs/ not existing
 		]]></source>
 		<target><![CDATA[
