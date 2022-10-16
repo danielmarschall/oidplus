@@ -57,16 +57,16 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 	}
 
 	public function captchaVerify($params, $fieldname=null) {
-		if (is_null($fieldname)) $fieldname = 'g-recaptcha-response'; // no individual field name (created by oidplus_captcha_response()) means that it is a plain POST event (e.g. by oobe.php)
-
 		$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
+
+		if (is_null($fieldname)) $fieldname = 'g-recaptcha-response'; // no individual field name (created by oidplus_captcha_response()) means that it is a plain POST event (e.g. by oobe.php)
 		_CheckParamExists($params, $fieldname);
 		$response=$params[$fieldname];
 		$verify=url_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($secret).'&response='.urlencode($response));
 		if (!$verify) {
 			throw new OIDplusException(_L('CAPTCHA not successfully verified'));
 		}
-		$captcha_success=json_decode($verify);
+		$captcha_success=@json_decode($verify);
 		if (!$captcha_success || ($captcha_success->success==false)) {
 			throw new OIDplusException(_L('CAPTCHA not successfully verified'));
 		}
@@ -78,6 +78,17 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 		       '<p>'._L('reCAPTCHA Public key').'<br><input id="recaptcha_public" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="recaptcha_public_warn"></span></p>'.
 		       '<p>'._L('reCAPTCHA Private key').'<br><input id="recaptcha_private" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="recaptcha_private_warn"></span></p>'.
 		       '</div>';
+	}
+
+	function httpHeaderCheck(&$http_headers) {
+
+		$http_headers["Content-Security-Policy"]["default-src"][] = "https://fonts.gstatic.com";
+		$http_headers["Content-Security-Policy"]["default-src"][] = "https://www.google.com/";
+		$http_headers["Content-Security-Policy"]["default-src"][] = "https://www.gstatic.com/";
+
+		$http_headers["Content-Security-Policy"]["script-src"][] = "https://www.google.com/";
+		$http_headers["Content-Security-Policy"]["script-src"][] = "https://www.gstatic.com/";
+
 	}
 
 }
