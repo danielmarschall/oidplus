@@ -173,7 +173,7 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 
 			// Check if cache directory is writeable
 			if (!is_writeable(OIDplus::localpath(null).'userdata/cache/')) {
-				$notifications[] = array('ERR', _L('Directory %1 is not writeable.', 'userdata/cache/'));
+				$notifications[] = array('ERR', _L('Directory %1 is not writeable. Please check the permissions!', 'userdata/cache/'));
 			}
 		}
 		return $notifications;
