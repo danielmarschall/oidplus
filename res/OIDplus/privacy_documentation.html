@@ -23,7 +23,7 @@
 
 <body>
 	<h1>Procedural documentation related to privacy</h1>
-	<p><em>Revision: 1 October 2022</em></p>
+	<p><em>Revision: 17 October 2022</em></p>
 	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software &ldquo;OIDplus&rdquo;) and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web-software that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
 	<a id="terminology"></a><h2>Parties / Terminology</h2>
 	<p><strong>ViaThinkSoft</strong> is the developer of the software solution &ldquo;OIDplus&rdquo;.</p>
@@ -39,7 +39,7 @@
 	<p>The PHP scripts of OIDplus are processed through a PHP script interpreter running on top of a web server software (&ldquo;HTTP web server&rdquo;), for example, &ldquo;Apache&rdquo; or &ldquo;Nginx&rdquo;. The actual data of OIDplus (OIDs, RAs, &hellip;) is stored in a DBMS (Database Management
 	System) e.g. &ldquo;MySQL&rdquo;, &ldquo;MariaDB&rdquo; or &ldquo;PostgreSQL&rdquo;. The DBMS is usually installed on the same server machine where PHP/Apache is installed, but it can be installed on any machine by the server administrator.</p>
 	<h3>Client-side</h3>
-	<p>While the user browses OIDplus, the server-side serves HTML and JavaScript contents to the client computer. Using a web browser software (like &ldquo;Chrome&rdquo; or &ldquo;Firefox&rdquo;), these contents are processed and displayed on the screen. Various JavaScript scripts are either required to run OIDplus or are improving the user experience, e.g. by reloading OID descriptions without reloading the whole page while the user browses OIDplus. There might be a few external JavaScripts included (currently only ReCaptcha), which are described at the end of the document.</p>
+	<p>While the user browses OIDplus, the server-side serves HTML and JavaScript contents to the client computer. Using a web browser software (like &ldquo;Chrome&rdquo; or &ldquo;Firefox&rdquo;), these contents are processed and displayed on the screen. Various JavaScript scripts are either required to run OIDplus or are improving the user experience, e.g. by reloading OID descriptions without reloading the whole page while the user browses OIDplus. There might be a few external JavaScripts included (e.g. reCaptcha), which are described at the end of the document.</p>
 	<a id="scope"></a><h2>Scope of this document</h2>
 	<p>This document contains information about the OIDplus software only. It is independent of the behavior of the client-side software (web browser, Operating system, firewalls, &hellip;), independent from the behavior of hardware (network routers or firewalls, &hellip;), independent from the behavior of the server-side software (Apache, PHP, MySQL/MariaDB/PostgreSQL/..., Operating system, etc.) and the practices how the system administrator is operating the server software, stores log files, manages firewalls, etc.</p>
 	<a id="oid_information"></a><h2>OID information</h2>
@@ -313,11 +313,19 @@
 	<a id="external_javascripts"></a><h2>External JavaScripts</h2>
 	<p>During the loading of the web page, various JavaScripts are included to improve the user experience and add essential functionalities. The basic scripts are the JavaScript files of OIDplus itself, which are stored on the server of the particular OIDplus installation.</p>
 	<p>Following JavaScripts are loaded from an external source/server:</p>
-	<h3>ReCAPTCHA (only if &ldquo;ReCAPTCHA&rdquo; is enabled)</h3>
-	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable &ldquo;ReCAPTCHA&rdquo; which is a service of Google. Before enabling ReCAPTCHA in the OIDplus setup/settings, the system administrator has to request an API key from Google. The usage of ReCAPTCHA will probably introduce additional cookies that are out of the control of OIDplus.</p>
+
+	<h3>reCAPTCHA (only if &ldquo;reCAPTCHA&rdquo; is enabled)</h3>
+	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable &ldquo;reCAPTCHA&rdquo; which is a service of Google. Before enabling reCAPTCHA in the OIDplus setup/settings, the system administrator has to request an API key from Google. The usage of reCAPTCHA will probably introduce additional cookies that are out of the control of OIDplus.</p>
 	<p>Please see <a href="https://policies.google.com/privacy">Google&rsquo;s Privacy Policy</a> and <a href="https://policies.google.com/terms">Terms of service</a> for more information.</p>
-	<p>If the system administrator has not enabled the ReCAPTCHA feature, no external script will be included at all.</p>
-	<p>If the feature is enabled, blocking the ReCAPTCHA JavaScript on the client-side will result in various functionalities (like the login form) not working.</p>
+	<p>If the system administrator has not enabled the reCAPTCHA feature, no external script will be included at all.</p>
+	<p>If the feature is enabled, blocking the reCAPTCHA JavaScript on the client-side will result in various functionalities (like the login form) not working.</p>
+
+	<h3>hCaptcha (only if &ldquo;hCaptcha&rdquo; is enabled)</h3>
+	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable &ldquo;hCaptcha&rdquo; which is a service of Intuition Machines, Inc. Before enabling hCaptcha in the OIDplus setup/settings, the system administrator has to request an API key from Intuition Machines, Inc. The usage of hCaptcha will probably introduce additional cookies that are out of the control of OIDplus.</p>
+	<p>Please see <a href="https://www.hcaptcha.com/privacy">Intuition Machines, Inc.&rsquo;s Privacy Policy</a> and <a href="https://www.hcaptcha.com/terms">Terms of service</a> for more information.</p>
+	<p>If the system administrator has not enabled the hCaptcha feature, no external script will be included at all.</p>
+	<p>If the feature is enabled, blocking the hCaptcha JavaScript on the client-side will result in various functionalities (like the login form) not working.</p>
+
 	<a id="additional_security"></a><h2>Additional security / access controls</h2>
 	<p>System administrators can choose other methods to disable access from the public, e.g. by using firewalls (so that clients cannot access the server at all) or by setting up password protection at the level of the HTTP web server software (e.g. &ldquo;Basic Auth&rdquo; on Apache, so that the clients cannot access the directory where OIDplus is installed in).</p>
 	<a id="encrypted_connections"></a><h2>Encrypted network connections</h2>

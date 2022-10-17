@@ -29,31 +29,33 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 		return true;
 	}
 
-	public function captchaDomHead() {
-		// Here you can add styles and scripts to be included into the HTML <head> part
-		return '<script>
-		function oidplus_captcha_response() {
-			return OIDplusCaptchaPluginHCaptcha.captchaResponse();
-		}
-		function oidplus_captcha_reset() {
-			return OIDplusCaptchaPluginHCaptcha.captchaReset();
-		}
-		</script>
-		<script src="https://js.hcaptcha.com/1/api.js" async defer></script>';
-	}
-
 	public function captchaGenerate($header_text=null, $footer_text=null) {
 		return ($header_text ? '<p>'.$header_text.'</p>' : '') .
 		       '<noscript>'.
 		       '<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.
 		       '</noscript>'.
-		       // This does not work with AJAX page loading:
-		       // '<div id="h-captcha" class="h-captcha" data-sitekey="'.OIDplus::baseConfig()->getValue('HCAPTCHA_SITEKEY', '').'"></div>'.
 		       '<div id="h-captcha"></div>'.
 		       "<script>\n".
-		       "hcaptcha.render('h-captcha', {\n".
-		       "  sitekey: '".OIDplus::baseConfig()->getValue('HCAPTCHA_SITEKEY', '')."'\n".
-		       "});\n".
+		       "function oidplus_captcha_response() {\n".
+		       "    return OIDplusCaptchaPluginHCaptcha.captchaResponse();\n".
+		       "}\n".
+		       "function oidplus_captcha_reset() {\n".
+		       "    return OIDplusCaptchaPluginHCaptcha.captchaReset();\n".
+		       "}\n".
+		       "\n".
+		       "if (typeof hcaptcha === 'undefined') {\n".
+		       "    var script = document.createElement('script');\n".
+		       "    script.src = 'https://js.hcaptcha.com/1/api.js';\n".
+		       "    document.head.appendChild(script);\n".
+		       "}\n".
+		       "\n".
+		       "setTimeout('oidplus_captcha_render()', 500);\n".
+		       "\n".
+		       "function oidplus_captcha_render() {\n".
+		       "    hcaptcha.render('h-captcha', {\n".
+		       "        sitekey: '".OIDplus::baseConfig()->getValue('HCAPTCHA_SITEKEY', '')."'\n".
+		       "    });\n".
+		       "}\n".
 		       "</script>\n".
 		       ($footer_text ? '<p>'.$footer_text.'</p>' : '');
 	}
