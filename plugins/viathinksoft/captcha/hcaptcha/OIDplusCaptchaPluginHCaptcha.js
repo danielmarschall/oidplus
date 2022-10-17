@@ -20,11 +20,11 @@ var OIDplusCaptchaPluginHCaptcha = {
 	oid: "1.3.6.1.4.1.37476.2.5.2.4.11.4",
 
 	captchaResponse: function() {
-		return $(".h-captcha").length > 0 ? hcaptcha.getResponse() : null;
+		return $("#h-captcha").length > 0 ? hcaptcha.getResponse() : null;
 	},
 
 	captchaReset: function() {
-		if ($(".h-captcha").length > 0) hcaptcha.reset();
+		if ($("#h-captcha").length > 0) hcaptcha.reset();
 	}
 
 };
