@@ -24,200 +24,216 @@
 <body>
 	<h1>Procedural documentation related to privacy</h1>
 	<p><em>Revision: 17 October 2022</em></p>
-	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software &ldquo;OIDplus&rdquo;) and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web-software that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
+	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software "OIDplus") and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web application that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
+
 	<a id="terminology"></a><h2>Parties / Terminology</h2>
-	<p><strong>ViaThinkSoft</strong> is the developer of the software solution &ldquo;OIDplus&rdquo;.</p>
-	<p><strong>OIDplus</strong> is a software solution to organize, manage and publish information about <strong>Object Identifiers</strong> (hereinafter referred to as OIDs) and their owners
-	(hereinafter referred to as <strong>Registration Authority</strong> or <strong>RA</strong>).
-	It can be downloaded and installed on any server. A particular installation of OIDplus is called <strong>OIDplus instance</strong> or <strong>OIDplus system</strong>.
-	Operators of OIDplus instances are usually software developers, workgroups, companies, or other organizations, hereinafter referred to as <strong>system owner</strong>.
-	A <strong>system administrator</strong> is a person who manages and maintains the OIDplus software and is usually also the same person who manages the server&rsquo;s hardware and software.</p>
-	<p><strong>Object Identifiers</strong> are organized in a hierarchical structure where RAs are delegating OIDs underneath the OIDs they are managing, to other RAs. In the context of a specific RA and OID, the &ldquo;<strong>Superior RA</strong>&rdquo; is the RA that has delegated the root OID of a specific RA. However, the statements about &ldquo;Superior RAs&rdquo; in this document do only apply if the Superior RA is using OIDplus to delegate the OID.</p>
+	<p><strong>ViaThinkSoft</strong> is the developer of the software solution "OIDplus".</p>
+	<p><strong>OIDplus</strong> is a software solution to organize, manage and publish information about <strong>Object Identifiers</strong> (hereinafter referred to as OIDs) and their owners (hereinafter referred to as <strong>Registration Authority</strong> or <strong>RA</strong>). It can be downloaded and installed on any server. A particular installation of OIDplus is called <strong>OIDplus instance</strong> or <strong>OIDplus system</strong>. Operators of OIDplus instances are usually software developers, workgroups, companies, or other organizations, hereinafter referred to as <strong>system owner</strong>. A <strong>system administrator</strong> is a person who manages and maintains the OIDplus software and is usually also the same person who manages the server's hardware and software.</p>
+	<p><strong>Object Identifiers</strong> are organized in a hierarchical structure where Registration Authorities are delegating OIDs underneath the OIDs they are managing, to other Registration Authorities. In the context of a specific Registration Authority and OID, the "<strong>Superior RA</strong>" is the Registration Authority that has delegated the root OID of a specific Registration Authority. However, the statements about "Superior Registration Authorities" in this document do only apply if the Superior Registration Authority is using OIDplus to delegate the OID.</p>
+
 	<a id="server_client_side"></a><h2>Definition of server-side and client-side</h2>
-	<p>OIDplus is a web application written in the programming languages PHP (running on server-side) and HTML/JavaScript (running on the client-side).</p>
-	<h3>Server-side</h3>
-	<p>The PHP scripts of OIDplus are processed through a PHP script interpreter running on top of a web server software (&ldquo;HTTP web server&rdquo;), for example, &ldquo;Apache&rdquo; or &ldquo;Nginx&rdquo;. The actual data of OIDplus (OIDs, RAs, &hellip;) is stored in a DBMS (Database Management
-	System) e.g. &ldquo;MySQL&rdquo;, &ldquo;MariaDB&rdquo; or &ldquo;PostgreSQL&rdquo;. The DBMS is usually installed on the same server machine where PHP/Apache is installed, but it can be installed on any machine by the server administrator.</p>
-	<h3>Client-side</h3>
-	<p>While the user browses OIDplus, the server-side serves HTML and JavaScript contents to the client computer. Using a web browser software (like &ldquo;Chrome&rdquo; or &ldquo;Firefox&rdquo;), these contents are processed and displayed on the screen. Various JavaScript scripts are either required to run OIDplus or are improving the user experience, e.g. by reloading OID descriptions without reloading the whole page while the user browses OIDplus. There might be a few external JavaScripts included (e.g. reCaptcha), which are described at the end of the document.</p>
+	<p>OIDplus is a web application written in the programming languages PHP (running on the server side) and HTML/JavaScript (running on the client side).</p>
+
+	<h3>server-side</h3>
+	<p>The PHP scripts of OIDplus are processed through a PHP script interpreter running on top of a web server software ("HTTP web server"), for example, "Apache" or "Nginx". The actual data of OIDplus (OIDs, RAs, &hellip;) is stored in a DBMS (Database Management System) e.g. "MySQL", "MariaDB" or "PostgreSQL". The DBMS is usually installed on the same server machine where PHP/Apache is installed, but it can be installed on any machine by the server administrator.</p>
+
+	<h3>client-side</h3>
+	<p>While the user browses OIDplus, the server side serves HTML and JavaScript content to the client computer. Using web browser software (like "Chrome" or "Firefox"), these contents are processed and displayed on the screen. Various JavaScript scripts are either required to run OIDplus or are improving the user experience, e.g. by reloading OID descriptions without reloading the whole page while the user browses OIDplus. There might be a few external JavaScripts included (e.g. reCaptcha), which are described at the end of the document.</p>
+
 	<a id="scope"></a><h2>Scope of this document</h2>
-	<p>This document contains information about the OIDplus software only. It is independent of the behavior of the client-side software (web browser, Operating system, firewalls, &hellip;), independent from the behavior of hardware (network routers or firewalls, &hellip;), independent from the behavior of the server-side software (Apache, PHP, MySQL/MariaDB/PostgreSQL/..., Operating system, etc.) and the practices how the system administrator is operating the server software, stores log files, manages firewalls, etc.</p>
+	<p>This document contains information about the OIDplus software only. It is independent of the behavior of the client-side software (web browser, Operating system, firewalls, &hellip;), independent from the behavior of hardware (network routers or firewalls, &hellip;), independent from the behavior of the server-side software (Apache, PHP, MySQL/MariaDB/PostgreSQL/&hellip;, Operating system, etc.) and the practices how the system administrator is operating the server software, stores log files, manages firewalls, etc.</p>
+
 	<a id="oid_information"></a><h2>OID information</h2>
 	<p>The main purpose of OIDplus is to show and manage information on OID information.</p>
-	<p>Some attributes of Object Identifiers (like ASN.1 identifiers) can only be changed by the Superior RA and not by the RA of that OID. On the other hand, some other information (like the title and description) can only be changed by the RA owning the OID and not by the Superior RA. The system administrator can edit all information.</p>
+	<p>Some attributes of Object Identifiers (like ASN.1 identifiers) can only be changed by the Superior Registration Authority and not by the Registration Authority of that OID. On the other hand, some other information (like the title and description) can only be changed by the Registration Authority owning the OID and not by the Superior Registration Authority. The system administrator can edit all information.</p>
+
 	<h3>Hidden OID information</h3>
-	<p>A superior RA can set the &ldquo;hidden&rdquo; flag to an OID they delegate. This means the OID and all its subordinate OIDs are invisible to the public. However, the public can see the existence of hidden OIDs by a notice &ldquo;<em>XX OIDs are hidden. Log in to see them</em>&rdquo;.</p>
+	<p>A superior Registration Authority can set the "hidden" flag to an OID they delegate. This means the OID and all its subordinate OIDs are invisible to the public. However, the public can see the existence of hidden OIDs by a notice "<em>XX OIDs are hidden. Log in to see them</em>".</p>
 	<p>The system administrator can see all OIDs, even if they are hidden.</p>
-	<p>An owner of an OID can see all OIDs which are directing to his root OID, even if some of them are hidden.</p>
-	<p>If you are an <strong>owner of an OID</strong> and want to make your OID hidden from the public, please contact your <strong>superior RA</strong> (preferential) or the <strong>system administrator</strong> and ask them to mark your OID as hidden. Please note that this will also hide all OIDs that you delegate to yourself or other RAs.</p>
+	<p>An owner of an OID can see all OIDs which are directed to his root OID, even if some of them are hidden.</p>
+	<p>If you are an <strong>owner of an OID</strong> and want to make your OID hidden from the public, please contact your <strong>superior Registration Authority</strong> (preferential) or the <strong>system administrator</strong> and ask them to mark your OID as hidden. Please note that this will also hide all OIDs that you delegate to yourself or other Registration Authorities.</p>
+
 	<h3>Overview: Managed information about OIDs:</h3>
-	<table border="1">
-	<tr>
-		<td width="111"><strong>Attribute:</strong></td>
-		<td width="196"><strong>Can only be changed by:</strong></td>
-		<td width="154"><strong>If not marked &ldquo;hidden&ldquo;, visible to:</strong></td>
-		<td width="154"><strong>If marked &ldquo;hidden&ldquo;, visible to:</strong></td>
-	</tr>
-	<tr>
-		<td width="111">Numeric Identifier</td>
-		<td width="196">Superior RA<br> System administrator<br> (can only be defined during creation and never be updated!)</td>
-		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
-		<td width="154">Superior RA<br> System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Alphanumeric identifier (for ASN.1 notation)</td>
-		<td width="196">Superior RA<br> System administrator</td>
-		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
-		<td width="154">Superior RA<br> System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Unicode label<br>(for IRI notation)</td>
-		<td width="196">Superior RA<br> System administrator</td>
-		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
-		<td width="154">Superior RA<br> System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">RA</td>
-		<td width="196">Superior RA<br> System administrator</td>
-		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
-		<td width="154">Superior RA<br> System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Comment</td>
-		<td width="196">Superior RA<br> System administrator</td>
-		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
-		<td width="154">Superior RA<br> System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">&ldquo;Hidden&rdquo; flag</td>
-		<td width="196">Superior RA<br> System administrator</td>
-		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
-		<td width="154">Superior RA<br> System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Title</td>
-		<td width="196">RA<br> System administrator</td>
-		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
-		<td width="154">Superior RA<br> System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Description</td>
-		<td width="196">RA<br> System administrator</td>
-		<td width="154">Public<br> RA<br> Superior RA<br> System administrator</td>
-		<td width="154">Superior RA<br> System administrator</td>
-	</tr>
+	<table class="table">
+		<thead>
+			<tr>
+				<td valign="top"><strong>Attribute:</strong></td>
+				<td valign="top"><strong>Can only be changed by:</strong></td>
+				<td valign="top"><strong>If not marked "hidden", visible to:</strong></td>
+				<td valign="top"><strong>If marked "hidden", visible to:</strong></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td valign="top">Numeric Identifier<br>(can only be defined during creation and never be changed again)</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Registration Authority<br>Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Alphanumeric identifier<br>(for ASN.1 notation)</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Registration Authority<br>Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Unicode label<br>(for IRI notation)</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Registration Authority<br>Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Registration Authority<br>Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Comment</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Registration Authority<br>Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">"Hidden" flag</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Registration Authority<br>Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Title</td>
+				<td valign="top">Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Registration Authority<br>Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Description</td>
+				<td valign="top">Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Registration Authority<br>Superior Registration Authority<br>System administrator</td>
+				<td valign="top">Superior Registration Authority<br>System administrator</td>
+			</tr>
+		</tbody>
 	</table>
-	<a id="ra_information"></a><h2>RA information</h2>
-	<p>The information about RAs owning OIDs can be seen publicly. A RA can manage their contact data in the OIDplus system (login-area) and mark their information as &ldquo;private&rdquo; to limit the information visible to the public.</p>
-	<p>Following RA information is always displayed (even if marked &ldquo;private&rdquo;):</p>
-	<h3>Overview: Managed information about RAs:</h3>
-	<table border="1">
-	<tr>
-		<td width="111"><strong>Attribute:</strong></td>
-		<td width="196"><strong>Can only be changed by:</strong></td>
-		<td width="154"><strong>If not marked &ldquo;private&ldquo;, visible to:</strong></td>
-		<td width="154"><strong>If marked &ldquo;private&ldquo;, visible to:</strong></td>
-	</tr>
-	<tr>
-		<td width="111">Email-Address</td>
-		<td width="196">RA</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Name</td>
-		<td width="196">RA</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Organization</td>
-		<td width="196">RA</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Office</td>
-		<td width="196">RA</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Personal name</td>
-		<td width="196">RA</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Privacy flag</td>
-		<td width="196">RA</td>
-		<td width="154">RA<br>System administrator</td>
-		<td width="154">RA<br>System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Street</td>
-		<td width="196">RA</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-		<td width="154">RA<br>System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">ZIP/Town</td>
-		<td width="196">RA</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-		<td width="154">RA<br>System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Country</td>
-		<td width="196">RA</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-		<td width="154">RA<br>System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Phone</td>
-		<td width="196">RA</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-		<td width="154">RA<br>System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Mobile</td>
-		<td width="196">RA</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-		<td width="154">RA<br>System administrator</td>
-	</tr>
-	<tr>
-		<td width="111">Fax</td>
-		<td width="196">RA</td>
-		<td width="154">Public<br> Superior RA<br> RA<br> System administrator</td>
-		<td width="154">RA<br>System administrator</td>
-	</tr>
+
+	<a id="ra_information"></a><h2>Registration Authority information</h2>
+	<p>The information about Registration Authorities owning OIDs can be seen publicly. A Registration Authority can manage their contact data in the OIDplus system (login area) and mark their information as "private" to limit the information visible to the public.</p>
+	<p>The Following Registration Authority information is always displayed (even if marked "private"):</p>
+
+	<h3>Overview: Managed information about Registration Authorities:</h3>
+	<table class="table">
+		<thead>
+			<tr>
+				<td valign="top"><strong>Attribute:</strong></td>
+				<td valign="top"><strong>Can only be changed by:</strong></td>
+				<td valign="top"><strong>If not marked "private", visible to:</strong></td>
+				<td valign="top"><strong>If marked "private", visible to:</strong></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td valign="top">Email-Address</td>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Name</td>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Organization</td>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Office</td>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Personal name</td>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Privacy flag</td>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Registration Authority<br>System administrator</td>
+				<td valign="top">Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Street</td>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+				<td valign="top">Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">ZIP/Town</td>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+				<td valign="top">Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Country</td>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+				<td valign="top">Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Phone</td>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+				<td valign="top">Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Mobile</td>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+				<td valign="top">Registration Authority<br>System administrator</td>
+			</tr>
+			<tr>
+				<td valign="top">Fax</td>
+				<td valign="top">Registration Authority</td>
+				<td valign="top">Public<br>Superior Registration Authority<br>Registration Authority<br>System administrator</td>
+				<td valign="top">Registration Authority<br>System administrator</td>
+			</tr>
+		</tbody>
 	</table>
-	<a id="ra_invitation"></a><h2>Invitation of RAs</h2>
-	<p>When an OID is created by a RA or by the system administrator, the owner of the OID will be defined by an email address (which will be shown publicly). Therefore, it is possible to own an OID, even if you are not registered in the OIDplus system.</p>
-	<p>When the OID is created and the RA with such an email address does not exist	in the OIDplus system, the creator will be asked if they want to send an invitation. If they agree, an email will be sent to this email address, allowing them to click a link to register to the OIDplus system, so that they can add more contact data as well as be able to delegate and edit OID information.</p>
-	<p>Currently, a RA cannot register themselves using the regular login method. (They can register themselves if they are using some alternative login methods as described below). Using the regular login method, they need an invitation by the system administrator or their superior RA to be able to register to the OIDplus system. (Note: To resend an invitation, the system administrator or superior RA needs to click &ldquo;Update&rdquo; at the OID delegation table, so that they are asked again to send the invitation).</p>
-	<p>In addition to the invitation system, the system administrator can create RA accounts without email address verification.</p>
+
+	<a id="ra_invitation"></a><h2>Invitation of Registration Authorities</h2>
+	<p>When an OID is created by a Registration Authority or by the system administrator, the owner of the OID will be defined by an email address (which will be shown publicly). Therefore, it is possible to own an OID, even if you are not registered in the OIDplus system.</p>
+	<p>When the OID is created and the Registration Authority with such an email address does not exist	in the OIDplus system, the creator will be asked if they want to send an invitation. If they agree, an email will be sent to this email address, allowing them to click a link to register to the OIDplus system, so that they can add more contact data as well as be able to delegate and edit OID information.</p>
+	<p>Currently, a Registration Authority cannot register themselves using the regular login method. (They can register themselves if they are using some alternative login methods as described below). Using the regular login method, they need an invitation from the system administrator or their superior Registration Authority to be able to register to the OIDplus system. (Note: To resend an invitation, the system administrator or superior Registration Authority needs to click "Update" at the OID delegation table, so that they are asked again to send the invitation).</p>
+	<p>In addition to the invitation system, the system administrator can create Registration Authority accounts without email address verification.</p>
+
 	<a id="oidinfo_publishing"></a><h2>Publishing RAs/OIDs to oid-info.com</h2>
-	<p>oid-info.com is a web page that collects and displays information about OIDs, like a Wiki. OIDplus contains features to submit data of its database to oid-info.com</p>
+	<p>oid-info.com is a web page that collects and displays information about OIDs, like a Wiki. OIDplus contains features to submit data from its database to oid-info.com</p>
 	<p>There are two possibilities:</p>
 	<ol>
-		<li>Manual transfer: The system administrator can create an XML file that contains OID and RA information (only the parts which can be seen by the public anyway) and can upload this XML file to oid-info.com</li>
-		<li>If the OIDplus system is registered to ViaThinkSoft and the OID-info.com transfer is enabled (see below),
-		the OIDplus system will transmit XML data containing RA/OID information through an encrypted interface to ViaThinkSoft,
-		and ViaThinkSoft after regular manual check submits the data to the oid-info.com administrator.</li>
+		<li>Manual transfer: The system administrator can create an XML file that contains OID and Registration Authority information (only the parts which can be seen by the public anyway) and can upload this XML file to oid-info.com</li>
+		<li>If the OIDplus system is registered to ViaThinkSoft and the OID-info.com transfer is enabled (see below), the OIDplus system will transmit XML data containing RA/OID information through an encrypted interface to ViaThinkSoft, and ViaThinkSoft after regular manual check submits the data to the oid-info.com administrator.</li>
 	</ol>
+
 	<a id="systemid"></a><h2>Unique system ID</h2>
-	<p>During the initial setup, a public/private-key-pair will be created which can be used for various purposes, e.g. to encrypt data between OIDplus and ViaThinkSoft if the &ldquo;system registration&rdquo; service is used (see below) or to sign OID-WHOIS responses.</p>
-	<p>From this public key, a unique system ID will be derivated. The unique system ID and the public key can be seen in the setup screen.</p>
+	<p>During the initial setup, a public/private-key-pair will be created which can be used for various purposes, e.g. to encrypt data between OIDplus and ViaThinkSoft if the "system registration" service is used (see below) or to sign OID-WHOIS responses.</p>
+	<p>From this public key, a unique system ID will be derivated. The unique system ID and the public key can be seen on the setup screen.</p>
+
 	<a id="system_registration"></a><h2>System registration and automatic publishing to oid-info.com</h2>
 	<p>During initial setup, the system administrator can choose between the following options:</p>
-	<p>0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Register to directory service and automatically publish RA/OID data at oid-info.com<br> 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Only register to directory service<br> 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hide system</p>
+	<p>0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Register to directory service and automatically publish RA/OID data at oid-info.com<br>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Only register to directory service<br>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hide system</p>
 	<p>This setting can always be changed in the administrator login/control panel.</p>
-	<h3>Registering the system to the directory service (option 0 and 1)</h3>
+
+	<h3>Registering the system to the directory service (options 0 and 1)</h3>
 	<p>The registration of the OIDplus system has various advantages:</p><!-- please keep in sync with plugins/viathinksoft/adminPages/120_registration/info.html document -->
 	<ul>
-		<li>The public key of the OIDplus instance will be published to the ViaThinkSoft web directory, so that users can check the integrity of the data (e.g. signed OID-WHOIS requests).</li>
+		<li>The public key of the OIDplus instance will be published to the ViaThinkSoft web directory so that users can check the integrity of the data (e.g. signed OID-WHOIS requests).</li>
 		<li>Since the 31-bit System ID can have hash conflicts, ViaThinkSoft will make sure that the System ID is only used by this OIDplus instance (it will force other OIDplus systems with the same system ID to change their IDs).</li>
-		<li>ViaThinkSoft can acknowledge the system name, administrator email address, and OID root arcs. Therefore, the OIDplus instance can be found using referral WHOIS.</li>
+		<li>ViaThinkSoft can acknowledge the system name, administrator email address, and OID root arcs. Therefore, the OIDplus instance can be found using Referral WHOIS.</li>
 		<li>The administrator can optionally enable the automatic publishing of the public OID information to the repository oid-info.com.</li>
 		<li>If the root OID(s) are approved by ViaThinkSoft (it will be manually verified that the root OIDs belong to the system owner), a feature will be unlocked which can be used to compare and import OIDs from oid-info.com into this OIDplus instance.</li>
 		<li>The OIDplus version will be reported to ViaThinkSoft. If a severe bug or security vulnerability is affecting this OIDplus instance, ViaThinkSoft can warn the administrator via email.</li>
@@ -225,7 +241,7 @@
 	</ul>
 	<p>If privacy level option 0 or 1 was chosen, the OIDplus system will regularly contact the ViaThinkSoft server through a secure connection and send the following information:</p>
 	<ul>
-		<li>Privacy level (0, 1 or 2)</li>
+		<li>Privacy level (0, 1, or 2)</li>
 		<li>System ID</li>
 		<li>Public Key</li>
 		<li>Current URL</li>
@@ -235,7 +251,7 @@
 		<li>The version of the system (SVN revision)</li>
 		<li>Installation type (ZIPed SVN snapshot or SVN working copy)</li>
 	</ul>
-	<p>ViaThinkSoft will store this data internally and publish parts into the public directory service located at <a href="https://oidplus.viathinksoft.com/directory/">https://oidplus.viathinksoft.com/directory/</a> :</p>
+	<p>ViaThinkSoft will store this data internally and publish parts into the public directory service located at <a href="https://oidplus.viathinksoft.com/directory/">https://oidplus.viathinksoft.com/directory/</a>:</p>
 	<p>The public record contains:</p>
 	<ul>
 		<li>System ID</li>
@@ -243,113 +259,124 @@
 		<li>Current URL</li>
 	</ul>
 	<p>The other information will stay on the ViaThinkSoft internal database and will not be shared with other parties.</p>
-	<p>If the system administrator enabled this option and want to revoke the permission, the system administrator has to change the privacy level in the administrator login/control panel. The system will automatically contact the ViaThinkSoft server again and performs the deletion of all data.</p>
-	<p>Please note that the deletion of the record in the directory service does not delete OID/RA information which is already submitted at oid-info.com (if option 0 was chosen). To delete this data, the system administrator needs to contact the OID Repository Webmaster at <a href="mailto:admin@oid-info.com">admin@oid-info.com</a></p>
+	<p>If the system administrator enabled this option and wants to revoke the permission, the system administrator has to change the privacy level in the administrator login/control panel. The system will automatically contact the ViaThinkSoft server again and performs the deletion of all data.</p>
+	<p>Please note that the deletion of the record in the directory service does not delete RA/OID information that is already submitted at oid-info.com (if option 0 was chosen). To delete this data, the system administrator needs to contact the OID Repository Webmaster at <a href="mailto:admin@oid-info.com">admin@oid-info.com</a></p>
+
 	<h3>Publish RA/OID data at oid-info.com (option 0)</h3>
 	<p>If privacy level option 0 is chosen, the system regularly contacts the ViaThinkSoft server through a secure connection and sends the public RA/OID data. ViaThinkSoft will store this data and redirect it to the OID Repository Webmaster who will review the data and eventually submit it to the public repository www.oid-info.com</p>
-	<p>If the system administrator enabled this option and want to revoke the permission, the system administrator has to change the privacy level in the administrator login/control panel to option 1 or 2 (to avoid that data is sent again). To remove already submitted OIDs, the system administrator needs to contact the OID Repository Webmaster at <a href="mailto:admin@oid-info.com">admin@oid-info.com</a></p>
+	<p>If the system administrator enabled this option and wants to revoke the permission, the system administrator has to change the privacy level in the administrator login/control panel to option 1 or 2 (to avoid that data being sent again). To remove already submitted OIDs, the system administrator needs to contact the OID Repository Webmaster at <a href="mailto:admin@oid-info.com">admin@oid-info.com</a></p>
+
 	<h3>Hide system (option 2)</h3>
 	<p>If privacy level option 2 was chosen, the system will neither contact ViaThinkSoft, nor oid-info.com.</p>
+
 	<a id="logfiles"></a><h2>Log files</h2>
+
 	<h3>Logs by OIDplus</h3>
-	<p>OIDplus manages log entries for specific events like logins, OID/RA modifications, creating and deletion of OIDs, etc.</p>
+	<p>OIDplus manages log entries for specific events like logins, RA/OID modifications, creating and deletion of OIDs, etc.</p>
 	<p>These log messages are stored in the DBMS only.</p>
 	<p>All log events are visible to the system administrator.</p>
-	<p>Some events are visible to the RA and/or the Superior RA.</p>
-	<p>Log events may show the IP addresses of the computer that was connected to the OIDplus system and the email address if the RA was logged in using their credentials.</p>
+	<p>Some events are visible to the Registration Authority and/or the Superior Registration Authority.</p>
+	<p>Log events may show the IP addresses of the computer that was connected to the OIDplus system and the email address if the Registration Authority was logged in using their credentials.</p>
 	<p>OIDplus does not provide a function to delete log events. A deletion must be done in the database directly, e.g. using a database client like phpMyAdmin.</p>
+
 	<h3>Logs by host software, firewalls, etc.</h3>
 	<p>Besides logs created by OIDplus, other client-side or server-side software involved in processing the web requests (like the HTTP web server, the PHP script interpreter, the database server, the Operating System, the web browser, or various firewalls) might log traffic and queries in various ways. These logs are independent of OIDplus and need to be managed by the system administrator and/or network administrators.</p>
 	<p>If you are concerned about the contents of the log files, please contact the system administrator.</p>
+
 	<a id="cookies"></a><h2>Cookies</h2>
-	<p>A cookie is a small text file that is sent to this
-	website every time you visit it, e.g. to identify you
-	as a logged in user.</p>
+	<p>A cookie is a small text file that is sent to this website every time you visit it, e.g. to identify you as a logged-in user.</p>
 	<p>OIDplus does only use cookies for the following purposes:</p>
-	<table border="1">
-	<tr>
-		<td width="122"><strong>Cookie</strong></td>
-		<td width="114"><strong>Category</strong></td>
-		<td width="139"><strong>Usage</strong></td>
-		<td width="118"><strong>Will be created:</strong></td>
-		<td width="126"><strong>Will be deleted:</strong></td>
-	</tr>
-	<tr>
-		<td width="122">Login-Cookie<br>(Regular login)</td>
-		<td width="114">Essential</td>
-		<td width="139">Contains a session key that is used to determine the user&rsquo;s log-in-state and the permissions.</td>
-		<td width="118">During the login of a user or administrator using their password, if the "remember me" option is NOT selected.</td>
-		<td width="126">When the user is logged out, or the browser session closed.</td>
-	</tr>
-	<tr>
-		<td width="122">Login-Cookie<br>("Remember me" option)</td>
-		<td width="114">Essential</td>
-		<td width="139">Contains a server-signed "JSON Web Token" that contains the username.</td>
-		<td width="118">During the login of a user or administrator using their password, if the "remember me" option is selected.</td>
-		<td width="126">When the user logs out.</td>
-	</tr>
-	<tr>
-		<td width="122">SSL-Detect-Cookie</td>
-		<td width="114">Essential</td>
-		<td width="139">If the option &ldquo;automatic SSL detection&rdquo; is enabled by the system administrator, this cookie will check if the SSL port is open, to allow automatic redirection of HTTP to HTTPS.</td>
-		<td width="118">During the first page visit over HTTPS, or after the first SSL detection.</td>
-		<td width="126">When the browser session is closed.</td>
-	</tr>
-	<tr>
-		<td width="122">Language Cookie</td>
-		<td width="114">Essential</td>
-		<td width="139">The language cookie contains the desired language.</td>
-		<td width="118">As soon as a flag is clicked, or if an URL was opened that has a <code>lang=...</code> argument</td>
-		<td width="126">When the browser session is closed.</td>
-	</tr>
-	<tr>
-		<td width="122">CSRF token (2x)</td>
-		<td width="114">Essential</td>
-		<td width="139">Contains a random string that will be embedded into the page, as counter-measure against "Cross-site request forgery" attacks.</td>
-		<td width="118">As soon as the page is opened using a JavaScript compatible web browser.</td>
-		<td width="126">When the browser session is closed.</td>
-	</tr>
+	<table class="table">
+		<thead>
+			<tr>
+				<td valign="top"><strong>Cookie</strong></td>
+				<td valign="top"><strong>Category</strong></td>
+				<td valign="top"><strong>Usage</strong></td>
+				<td valign="top"><strong>Will be created:</strong></td>
+				<td valign="top"><strong>Will be deleted:</strong></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td valign="top">Login-Cookie<br>(Regular login)</td>
+				<td valign="top">Essential</td>
+				<td valign="top">Contains a session key that is used to determine the user's log-in state and permissions.</td>
+				<td valign="top">During the login of a user or administrator using their password, if the "remember me" option is NOT selected.</td>
+				<td valign="top">When the user is logged out, or the browser session is closed.</td>
+			</tr>
+			<tr>
+				<td valign="top">Login-Cookie<br>("Remember me" option)</td>
+				<td valign="top">Essential</td>
+				<td valign="top">Contains a server-signed "JSON Web Token" that contains the username.</td>
+				<td valign="top">During the login of a user or administrator using their password, if the "remember me" option is selected.</td>
+				<td valign="top">When the user logs out.</td>
+			</tr>
+			<tr>
+				<td valign="top">SSL-Detect-Cookie</td>
+				<td valign="top">Essential</td>
+				<td valign="top">If the option "automatic SSL detection" is enabled by the system administrator, this cookie will check if the SSL port is open, to allow automatic redirection of HTTP to HTTPS.</td>
+				<td valign="top">During the first page visit over HTTPS, or after the first SSL detection.</td>
+				<td valign="top">When the browser session is closed.</td>
+			</tr>
+			<tr>
+				<td valign="top">Language Cookie</td>
+				<td valign="top">Essential</td>
+				<td valign="top">The language cookie contains the desired language.</td>
+				<td valign="top">As soon as a flag is clicked, or if an URL was opened that has a <code>lang=&hellip;</code> argument</td>
+				<td valign="top">When the browser session is closed.</td>
+			</tr>
+			<tr>
+				<td valign="top">CSRF token (2x)</td>
+				<td valign="top">Essential</td>
+				<td valign="top">Contains a random string that will be embedded into the page, as a counter-measure against "Cross-Site Request Forgery" (CSRF) attacks.</td>
+				<td valign="top">As soon as the page is opened using a JavaScript-compatible web browser.</td>
+				<td valign="top">When the browser session is closed.</td>
+			</tr>
+		</tbody>
 	</table>
+	<p>This list of cookies only applies to the main system. Third-party OIDplus plugins might use more cookies.</p>
+
 	<a id="external_javascripts"></a><h2>External JavaScripts</h2>
 	<p>During the loading of the web page, various JavaScripts are included to improve the user experience and add essential functionalities. The basic scripts are the JavaScript files of OIDplus itself, which are stored on the server of the particular OIDplus installation.</p>
-	<p>Following JavaScripts are loaded from an external source/server:</p>
+	<p>The following JavaScripts are loaded from an external source/server:</p>
 
-	<h3>reCAPTCHA (only if &ldquo;reCAPTCHA&rdquo; is enabled)</h3>
-	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable &ldquo;reCAPTCHA&rdquo; which is a service of Google. Before enabling reCAPTCHA in the OIDplus setup/settings, the system administrator has to request an API key from Google. The usage of reCAPTCHA will probably introduce additional cookies that are out of the control of OIDplus.</p>
-	<p>Please see <a href="https://policies.google.com/privacy">Google&rsquo;s Privacy Policy</a> and <a href="https://policies.google.com/terms">Terms of service</a> for more information.</p>
+	<h3>reCAPTCHA (only if plugin "reCAPTCHA" is enabled)</h3>
+	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable "reCAPTCHA" which is a service of Google. Before enabling reCAPTCHA in the OIDplus setup/settings, the system administrator has to request an API key from Google. The usage of reCAPTCHA will probably introduce additional cookies that are out of the control of OIDplus.</p>
+	<p>Please see <a href="https://policies.google.com/privacy">Google's Privacy Policy</a> and <a href="https://policies.google.com/terms">Terms of service</a> for more information.</p>
 	<p>If the system administrator has not enabled the reCAPTCHA feature, no external script will be included at all.</p>
-	<p>If the feature is enabled, blocking the reCAPTCHA JavaScript on the client-side will result in various functionalities (like the login form) not working.</p>
+	<p>If the feature is enabled, blocking the reCAPTCHA JavaScript on the client side will result in various functionalities (like the login form) not working.</p>
 
-	<h3>hCaptcha (only if &ldquo;hCaptcha&rdquo; is enabled)</h3>
-	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable &ldquo;hCaptcha&rdquo; which is a service of Intuition Machines, Inc. Before enabling hCaptcha in the OIDplus setup/settings, the system administrator has to request an API key from Intuition Machines, Inc. The usage of hCaptcha will probably introduce additional cookies that are out of the control of OIDplus.</p>
-	<p>Please see <a href="https://www.hcaptcha.com/privacy">Intuition Machines, Inc.&rsquo;s Privacy Policy</a> and <a href="https://www.hcaptcha.com/terms">Terms of service</a> for more information.</p>
+	<h3>hCaptcha (only if plugin "hCaptcha" is enabled)</h3>
+	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable "hCaptcha" which is a service of Intuition Machines, Inc. Before enabling hCaptcha in the OIDplus setup/settings, the system administrator has to request an API key from Intuition Machines, Inc. The usage of hCaptcha will probably introduce additional cookies that are out of the control of OIDplus.</p>
+	<p>Please see <a href="https://www.hcaptcha.com/privacy">Intuition Machines, Inc.'s Privacy Policy</a> and <a href="https://www.hcaptcha.com/terms">Terms of service</a> for more information.</p>
 	<p>If the system administrator has not enabled the hCaptcha feature, no external script will be included at all.</p>
-	<p>If the feature is enabled, blocking the hCaptcha JavaScript on the client-side will result in various functionalities (like the login form) not working.</p>
+	<p>If the feature is enabled, blocking the hCaptcha JavaScript on the client side will result in various functionalities (like the login form) not working.</p>
 
 	<a id="additional_security"></a><h2>Additional security / access controls</h2>
-	<p>System administrators can choose other methods to disable access from the public, e.g. by using firewalls (so that clients cannot access the server at all) or by setting up password protection at the level of the HTTP web server software (e.g. &ldquo;Basic Auth&rdquo; on Apache, so that the clients cannot access the directory where OIDplus is installed in).</p>
+	<p>System administrators can choose other methods to disable access from the public, e.g. by using firewalls (so that clients cannot access the server at all) or by setting up password protection at the level of the HTTP web server software (e.g. "Basic Auth" on Apache, so that the clients cannot access the directory where OIDplus is installed in).</p>
+
 	<a id="encrypted_connections"></a><h2>Encrypted network connections</h2>
-	<p>The server administrator is responsible for securing the network connections using &ldquo;HTTPS&rdquo;. This is done at the HTTP web server level (i.e. an Apache module/setting) and independent from OIDplus.</p>
+	<p>The server administrator is responsible for securing the network connections using "HTTPS". This is done at the HTTP web server level (i.e. an Apache module/setting) and independent from OIDplus.</p>
 
 	<a id="login_admin"></a><h2>Administrator login procedure</h2>
 	<p>The administrator login requires a password that is stored in a local configuration file. It is stored using a "salted hash" which is like a "one-way encryption" and therefore, the plain password cannot be seen by anyone who is reading the configuration file.</p>
 	<p>The configuration file is generated by a "setup" utility and can be manually edited by the system administrator.</p>
 
-	<a id="login_ra"></a><h2>RA Login procedures</h2>
+	<a id="login_ra"></a><h2>Registration Authority Login procedures</h2>
 	<p>There are several ways to log in as a Registration Authority:</p>
 	<ul>
-		<li>Regular log in method</li>
+		<li>Regular log-in method</li>
 		<li>Log in using Google (optional plugin for OIDplus)</li>
 		<li>Log in using Facebook (optional plugin for OIDplus)</li>
 		<li>Log in using LDAP/ActiveDirectory (optional plugin for OIDplus)</li>
 	</ul>
 
-	<a id="login_ra_regular"></a><h3>Regular log in method</h3>
-	<p>With the login method, the RA logs in using a password they defined. The password is stored in the database using a "salted hash" which is like "one-way encryption". Therefore, the system administrator cannot see the password in the database table.</p>
+	<a id="login_ra_regular"></a><h3>Regular log-in method</h3>
+	<p>With the login method, the Registration Authority logs in using a password they defined. The password is stored in the database using a "salted hash" which is like "one-way encryption". Therefore, the system administrator cannot see the password in the database table.</p>
 
 	<a id="login_ra_google"></a><h3>Login using Google</h3>
 	<p>This alternative login method is an optional plugin that can be enabled by the administrator.</p>
-	<p>When the user clicks the "login using Google" link, they will be redirected to a Google "consent" screen where they can log in using their Google account credentials. (This procedure is called OAuth2) Note that this consent screen contains a Google-specific privacy policy and terms of service. Once you have logged in, Google will redirect the user back to OIDplus and sends a signed message which contains following information about the person who has logged in:</p>
+	<p>When the user clicks the "login using Google" link, they will be redirected to a Google "consent" screen where they can log in using their Google account credentials. (This procedure is called OAuth2) Note that this consent screen contains a Google-specific privacy policy and terms of service. Once you have logged in, Google will redirect the user back to OIDplus and sends a signed message which contains the following information about the person who has logged in:</p>
 	<ul>
 		<li>Email address</li>
 		<li>Verification status of the E-Mail address (must be verified)</li>
@@ -359,13 +386,13 @@
 		<li>OpenID (this information will not be evaluated by OIDplus and will be discarded)</li>
 	</ul>
 	<p>The Google password is not transmitted to OIDplus.</p>
-	<p>If it is the first time the user has logged in, then OIDplus will then create a new RA account in the local database that contains this information. The account is yet password-less, therefore it can only be used for the OAuth authentication.</p>
+	<p>If it is the first time the user has logged in, then OIDplus will then create a new Registration Authority account in the local database that contains this information. The account is yet password-less, therefore it can only be used for OAuth authentication.</p>
 	<p>The user can optionally define a password in case they want to additionally use the regular login method.</p>
-	<p>If the RA has a password-less account, then they cannot change their email address, because the OIDplus implementation of OAuth2 uses the email address as identification instead of the "OpenID" as usual. If they want to change their email address, then they must create a password first and then use the regular login method using the new email address.</p>
+	<p>If the Registration Authority has a password-less account, then they cannot change their email address, because the OIDplus implementation of OAuth2 uses the email address as identification instead of the "OpenID" as usual. If they want to change their email address, then they must create a password first and then use the regular login method using the new email address.</p>
 
 	<a id="login_ra_facebook"></a><h3>Login using Facebook</h3>
 	<p>This alternative login method is an optional plugin that can be enabled by the administrator.</p>
-	<p>When the user clicks the "login using Facebook" link, they will be redirected to a Facebook "consent" screen where they can log in using their Facebook account credentials. (This procedure is called OAuth2) Note that this consent screen contains a Facebook-specific privacy policy and terms of service. Once you have logged in, Facebook will redirect the user back to OIDplus and sends a signed message which contains following information about the person who has logged in:</p>
+	<p>When the user clicks the "login using Facebook" link, they will be redirected to a Facebook "consent" screen where they can log in using their Facebook account credentials. (This procedure is called OAuth2) Note that this consent screen contains a Facebook-specific privacy policy and terms of service. Once you have logged in, Facebook will redirect the user back to OIDplus and sends a signed message which contains the following information about the person who has logged in:</p>
 	<ul>
 		<li>Email address</li>
 		<li>Personal name</li>
@@ -373,14 +400,14 @@
 	</ul>
 	<p>The Facebook password is not transmitted to OIDplus.</p>
 	<p>Facebook preserves permission to hand over the e-mail address so that the consent screen is not displayed in later login attempts. These consents are managed in the "App" permissions in the Facebook account and can also be revoked there.</p>
-	<p>If it is the first time the user has logged in, then OIDplus will then create a new RA account in the local database that contains this information. The account is yet password-less, therefore it can only be used for the OAuth authentication.</p>
+	<p>If it is the first time the user has logged in, then OIDplus will then create a new Registration Authority account in the local database that contains this information. The account is yet password-less, therefore it can only be used for OAuth authentication.</p>
 	<p>The user can optionally define a password in case they want to additionally use the regular login method.</p>
-	<p>If the RA has a password-less account, then they cannot change their email address, because the OIDplus implementation of OAuth2 uses the email address as identification instead of the "user id" as usual. If they want to change their email address, then they must create a password first and then use the regular login method using the new email address.</p>
+	<p>If the Registration Authority has a password-less account, then they cannot change their email address, because the OIDplus implementation of OAuth2 uses the email address as identification instead of the "user id" as usual. If they want to change their email address, then they must create a password first and then use the regular login method using the new email address.</p>
 	<p><b>Attention:</b> Deleting the "App" in your Facebook settings will not remove the account in OIDplus. You need to remove your OIDplus account first, and then remove the "App" permission in your Facebook account.</p>
 
 	<a id="login_ra_ldap"></a><h3>Login using LDAP / ActiveDirectory</h3>
 	<p>This alternative login method is an optional plugin that can be enabled by the administrator.</p>
-	<p>LDAP / ActiveDirectory is a technology where a server managed authentication for several services (like Windows computers, intranet, network shares, mail accounts) and is usually used in large company networks.</p>
+	<p>LDAP / ActiveDirectory is a technology where a server managed authentication for several services (like Windows computers, intranet, network shares, and mail accounts) and is usually used in large company networks.</p>
 	<p>In comparison to the usual login where the user enters the username and password, OIDplus will ask for an email address and password.</p>
 	<p>The email address is an optional field in the LDAP / ActiveDirectory database, therefore the network administrator must set the email addresses of each user in the network, so they can log in to OIDplus.</p>
 	<p>Once the user has entered the username and password, OIDplus will connect to the LDAP server and search for a user that fits the entered email address. When a user is found, OIDplus will check if the password fits the LDAP user.</p>
@@ -401,10 +428,9 @@
 		<li>Mobile phone number</li>
 		<li>Fax number</li>
 	</ul>
-	<p>If it is the first time the user has logged in, then OIDplus will then create a new RA account in the local database that contains this information. The account is yet password-less, therefore it can only be used for the LDAP authentication.</p>
+	<p>If it is the first time the user has logged in, then OIDplus will then create a new Registration Authority account in the local database that contains this information. The account is yet password-less, therefore it can only be used for LDAP authentication.</p>
 	<p>The user can optionally define a password in case they want to additionally use the regular login method.</p>
-	<p>If the RA has a password-less account, then they cannot change their email address, because the OIDplus implementation of LDAP / ActiveDirectory uses the email address as identification instead of the username as usual. If they want to change their email address, then they must create a password first and then use the regular login method using the new email address.</p>
-
+	<p>If the Registration Authority has a password-less account, then they cannot change their email address, because the OIDplus implementation of LDAP / ActiveDirectory uses the email address as identification instead of the username as usual. If they want to change their email address, then they must create a password first and then use the regular login method using the new email address.</p>
 </body>
 
 </html>
