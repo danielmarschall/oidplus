@@ -1207,7 +1207,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	public function getNotifications($user=null): array {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
 		$notifications = array();
-		$res = OIDplus::db()->query("select id, title from ###objects order by id");
+		$res = OIDplus::db()->query("select id, title from ###objects order by ".OIDplus::db()->natOrder('id'));
 		if ($res->any()) {
 			$is_admin_logged_in = OIDplus::authUtils()->isAdminLoggedIn(); // run just once, for performance
 			while ($row = $res->fetch_array()) {

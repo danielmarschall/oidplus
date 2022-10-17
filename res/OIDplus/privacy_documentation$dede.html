@@ -220,7 +220,7 @@
 	</ol>
 
 	<a id="systemid"></a><h2>Eindeutige System-ID</h2>
-	<p>Während der Ersteinrichtung wird ein "Schlüsselpaar", bestehend aus einem öffentlichen und einem privaten Schlüssel erstellt. Dieses Schlüsselpaar kann für verschiedene Zwecke verwendet werden, z.B. um Daten zwischen OIDplus und ViaThinkSoft zu verschlüsseln, wenn der Dienst "Systemregistrierung" verwendet wird (siehe unten) oder um OID-WHOIS-Abfrage-Ergebnisse zu signieren.</p>
+	<p>Während der Ersteinrichtung wird ein "Schlüsselpaar", bestehend aus einem öffentlichen und einem privaten Schlüssel erstellt. Dieses Schlüsselpaar kann für verschiedene Zwecke verwendet werden, z.B. um Daten zwischen OIDplus und ViaThinkSoft zu verschlüsseln, wenn der Dienst "Systemregistrierung" verwendet wird (siehe unten) oder um Ausgaben von OID-IP (ehem. OID-WHOIS) zu signieren.</p>
 	<p>Aus diesem öffentlichen Schlüssel wird eine eindeutige System-ID abgeleitet. Die eindeutige System-ID und der öffentliche Schlüssel werden im Setup-Bildschirm angezeigt.</p>
 
 	<a id="system_registration"></a><h2>Systemregistrierung und automatische Veröffentlichung auf oid-info.com</h2>
@@ -231,7 +231,7 @@
 	<h3>Registrieren des Systems beim Verzeichnisdienst (Option 0 und 1)</h3>
 	<p>Die Registrierung des OIDplus-Systems hat viele Vorteile:</p><!-- please keep in sync with plugins/viathinksoft/adminPages/120_registration/info$dede.html document -->
 	<ul>
-		<li>Der öffentliche Schlüssel der OIDplus-Installation wird im ViaThinkSoft OIDplus-Verzeichnis veröffentlicht, sodass Benutzer die Integrität der Daten (z.B. Daten aus einer OID-WHOIS-Abfrage) bestätigen können.</li>
+		<li>Der öffentliche Schlüssel der OIDplus-Installation wird im ViaThinkSoft OIDplus-Verzeichnis veröffentlicht, sodass Benutzer die Integrität der Daten (z.B. Daten aus einer OID-IP/OID-WHOIS-Abfrage) bestätigen können.</li>
 		<li>Da die 31-bit System-ID theoretisch mit anderen Systemen theoretisch kollidieren könnte, kann ViaThinkSoft durch die Registrierung sicherstellen, dass die System-ID nur von diesem System verwendet wird. (Andere Systeme, die dieselbe System-ID melden, werden aufgefordert, ihre ID zu verwerfen und eine neue zu generieren).</li>
 		<li>ViaThinkSoft kann den System-Namen, die Administrator E-Mail-Adresse und die Wurzel-Objekte anerkennen, und somit kann das System per "Referral WHOIS" gefunden werden.</li>
 		<li>Der Administrator kann optional erlauben, dass öffentlich freigegebene Objekte im System automatisch an oid-info.com übermittelt werden.</li>
