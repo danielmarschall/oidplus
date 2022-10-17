@@ -23,7 +23,7 @@
 
 <body>
 	<h1>Datenschutz Verfahrensbeschreibung</h1>
-	<p><em>Revision: 1. Oktober 2022</em></p>
+	<p><em>Revision: 17. Oktober 2022</em></p>
 	<p><strong><em>Wichtig</em></strong><em> : Dieses Dokument wurde von ViaThinkSoft (dem Entwickler der Software OIDplus) verfasst und enthält allgemeine Informationen zur Funktionsweise von OIDplus in Bezug auf datenschutzbezogene Themen. Da OIDplus eine Web-Software ist, die
 	heruntergeladen und auf einem eigenen Server betrieben werden kann, beschreibt dieses Dokument NICHT, wie die Eigentümer / Administratoren dieser Installation von OIDplus mit Ihren Daten umgehen. Daher sollte der Eigentümer dieses Systems eine zusätzliche / individuelle Datenschutzerklärung vorlegen.</em></p>
 	<a id="terminology"></a><h2>Parteien / Terminologie</h2>
@@ -48,7 +48,7 @@
 	System) gespeichert, z.B. MySQL, MariaDB oder PostgreSQL. Das DBMS wird normalerweise auf demselben Server installiert, auf dem
 	auch PHP / Apache installiert ist. Der Serveradministrator kann es jedoch auf jedem Computer installieren.</p>
 	<h3>Client-Seite</h3>
-	<p>Während der Benutzer OIDplus durchsucht, stellt die Serverseite dem Client-Computer HTML- und JavaScript-Inhalte bereit. Mit einer Webbrowsersoftware (wie Chrome oder Firefox) werden diese Inhalte verarbeitet und auf dem Bildschirm angezeigt. Verschiedene JavaScript-Skripte sind entweder erforderlich, um OIDplus auszuführen, oder sie verbessern die Benutzererfahrung, z. B. indem OID-Beschreibungen neu geladen werden, ohne die gesamte Seite neu zu laden, während der Benutzer OIDplus durchsucht. Möglicherweise sind einige externe JavaScripts enthalten (derzeit nur ReCaptcha), die am Ende
+	<p>Während der Benutzer OIDplus durchsucht, stellt die Serverseite dem Client-Computer HTML- und JavaScript-Inhalte bereit. Mit einer Webbrowsersoftware (wie Chrome oder Firefox) werden diese Inhalte verarbeitet und auf dem Bildschirm angezeigt. Verschiedene JavaScript-Skripte sind entweder erforderlich, um OIDplus auszuführen, oder sie verbessern die Benutzererfahrung, z. B. indem OID-Beschreibungen neu geladen werden, ohne die gesamte Seite neu zu laden, während der Benutzer OIDplus durchsucht. Möglicherweise sind einige externe JavaScripts enthalten (z.B. reCaptcha), die am Ende
 	dieses Dokuments beschrieben werden.</p>
 	<a id="scope"></a><h2>Umfang dieses Dokuments</h2>
 	<p>Dieses Dokument enthält nur Informationen zur OIDplus-Software. Es ist unabhängig vom Verhalten der clientseitigen Software (Webbrowser, Betriebssystem, Firewalls), unabhängig vom Verhalten der Hardware (Netzwerkrouter oder Firewalls,), unabhängig vom Verhalten der serverseitigen Software (Apache, PHP, MySQL / MariaDB / PostgreSQL / ..., Betriebssystem usw.) und die Vorgehensweise, wie der Systemadministrator die Serversoftware betreibt, Protokolldateien speichert, Firewalls verwaltet usw.</p>
@@ -373,12 +373,19 @@
 	<p>Während des Ladens der Webseite werden verschiedene JavaScripts hinzugefügt, um die Benutzererfahrung zu verbessern und wichtige Funktionen
 	zu ermöglichen. Die grundlegenden Skripte sind die JavaScript-Dateien von OIDplus selbst, die auf dem Server der jeweiligen OIDplus-Installation gespeichert sind.</p>
 	<p>Es gibt folgende JavaScripts, die von einer externen Quelle / einem externen Server geladen werden:</p>
-	<h3>ReCAPTCHA (nur wenn "ReCAPTCHA" aktiviert ist)</h3>
-	<p>Um vertrauliche Funktionen von OIDplus (z. B. das Anmeldeformular) vor Hackern zu schützen, kann der Systemadministrator "ReCAPTCHA" aktivieren, einen Dienst von Google. Vor dem Aktivieren von ReCAPTCHA in den OIDplus-Einstellungen muss der Systemadministrator einen API-Schlüssel von Google anfordern. Die Verwendung von ReCAPTCHA wird wahrscheinlich zusätzliche Cookies einführen, die außerhalb der Kontrolle von OIDplus liegen.</p>
+
+	<h3>reCAPTCHA (nur wenn "reCAPTCHA" aktiviert ist)</h3>
+	<p>Um vertrauliche Funktionen von OIDplus (z. B. das Anmeldeformular) vor Hackern zu schützen, kann der Systemadministrator "reCAPTCHA" aktivieren, einen Dienst von Google. Vor dem Aktivieren von reCAPTCHA in den OIDplus-Einstellungen muss der Systemadministrator einen API-Schlüssel von Google anfordern. Die Verwendung von reCAPTCHA wird wahrscheinlich zusätzliche Cookies einführen, die außerhalb der Kontrolle von OIDplus liegen.</p>
 	<p>Weitere Informationen finden Sie in den <a href="https://policies.google.com/privacy">Datenschutzbestimmungen</a> und <a href="https://policies.google.com/terms">Nutzungsbedingungen</a> von Google.</p>
-	<p>Wenn der Systemadministrator die ReCAPTCHA-Funktion nicht aktiviert hat, wird überhaupt kein externes Skript eingefügt.</p>
-	<p>Wenn die Funktion aktiviert ist, führt das Blockieren des ReCAPTCHA-JavaScript auf der Clientseite dazu, dass verschiedene Funktionen (wie
-	z.B. der Anmeldebereich) nicht funktionieren.</p>
+	<p>Wenn der Systemadministrator die reCAPTCHA-Funktion nicht aktiviert hat, wird überhaupt kein externes Skript eingefügt.</p>
+	<p>Wenn die Funktion aktiviert ist, führt das Blockieren des reCAPTCHA-JavaScript auf der Clientseite dazu, dass verschiedene Funktionen (wie z.B. der Anmeldebereich) nicht funktionieren.</p>
+
+	<h3>hCaptcha (nur wenn "hCaptcha" aktiviert ist)</h3>
+	<p>Um vertrauliche Funktionen von OIDplus (z. B. das Anmeldeformular) vor Hackern zu schützen, kann der Systemadministrator "hCaptcha" aktivieren, einen Dienst von Intuition Machines, Inc. Vor dem Aktivieren von hCaptcha in den OIDplus-Einstellungen muss der Systemadministrator einen API-Schlüssel von Intuition Machines, Inc. anfordern. Die Verwendung von hCaptcha wird wahrscheinlich zusätzliche Cookies einführen, die außerhalb der Kontrolle von OIDplus liegen.</p>
+	<p>Weitere Informationen finden Sie in den <a href="https://www.hcaptcha.com/privacy">Datenschutzbestimmungen</a> und <a href="https://www.hcaptcha.com/terms">Nutzungsbedingungen</a> von Intuition Machines, Inc.</p>
+	<p>Wenn der Systemadministrator die hCaptcha-Funktion nicht aktiviert hat, wird überhaupt kein externes Skript eingefügt.</p>
+	<p>Wenn die Funktion aktiviert ist, führt das Blockieren des hCaptcha-JavaScript auf der Clientseite dazu, dass verschiedene Funktionen (wie z.B. der Anmeldebereich) nicht funktionieren.</p>
+
 	<a id="additional_security"></a><h2>Zusätzliche Sicherheits- / Zugriffskontrollen</h2>
 	<p>Systemadministratoren können andere Methoden auswählen, um den öffentlichen Zugriff zu deaktivieren, z. B. mithilfe von Firewalls (sodass Clients überhaupt nicht auf den Server zugreifen können) oder indem Sie einen Passwortschutz auf der Ebene der HTTP-Webserversoftware einrichten,
 	z. B. "Basic Auth" bei Apache
