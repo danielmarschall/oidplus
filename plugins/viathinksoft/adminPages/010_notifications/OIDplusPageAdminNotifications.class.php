@@ -130,21 +130,27 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 		return false;
 	}
 
-	private function getNotificationsCheckDirAccess($dir) {
-		$notifications = array();
+	private function webAccessWorks($dir) {
 		// Attention! This check does not work if OIDplus is password protected!
 		//            The only real solution is to check via JavaScript, which is done by setup/
 		$url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).$dir;
 		$access_worked = url_get_contents($url) !== false;
+		if ($access_worked) return $url;
 
 		if (!$access_worked) {
 			$url_alt = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).$dir;
 			if ($url != $url_alt) {
 				$access_worked = url_get_contents($url_alt) !== false;
+				if ($access_worked) return $url;
 			}
 		}
 
-		if ($access_worked) {
+		return false;
+	}
+
+	private function getNotificationsCheckDirAccess($dir) {
+		$notifications = array();
+		if (($url = $this->webAccessWorks($dir)) !== false) {
 			// Re-use message taken from setup/includes/setup_base.js
 			$msg = _L('Attention: The following directory is world-readable: %1 ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>).','<a target="_blank" href="'.$url.'">'.$dir.'</a>');
 			$notifications[] = array('CRIT', $msg);
@@ -158,17 +164,21 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			// Check if critical directories are world-readable
-			// see setup/includes/setup_base.js
-			$forbidden_dirs = array(
-				"userdata/index.html",
-				"res/ATTENTION.TXT",
-				"dev/index.html",
-				"includes/index.html",
-				"setup/includes/index.html"
-				//"plugins/viathinksoft/publicPages/100_whois/whois/cli/index.html"
-			);
-			foreach ($forbidden_dirs as $dir) {
-				$notifications = array_merge($notifications, $this->getNotificationsCheckDirAccess($dir));
+			if ($this->webAccessWorks('index.php') === false) {
+				$notifications[] = array('INFO', _L("The system can't check if critical directories (%1) are readable via web-browser. Please verify it manually.", 'userdata, res, dev, includes, setup/includes'));
+			} else {
+				// see setup/includes/setup_base.js
+				$forbidden_dirs = array(
+					"userdata/index.html",
+					"res/ATTENTION.TXT",
+					"dev/index.html",
+					"includes/index.html",
+					"setup/includes/index.html"
+					//"plugins/viathinksoft/publicPages/100_whois/whois/cli/index.html"
+				);
+				foreach ($forbidden_dirs as $dir) {
+					$notifications = array_merge($notifications, $this->getNotificationsCheckDirAccess($dir));
+				}
 			}
 
 			// Check if cache directory is writeable

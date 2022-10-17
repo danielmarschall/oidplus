@@ -4230,7 +4230,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		OIDplus plugin "%1" is enabled, but required PHP extension "%2" is not installed.
+		OIDplus plugin "%1" is enabled, but the required PHP extension "%2" is not installed.
 		]]></source>
 		<target><![CDATA[
 		OIDplus-Plugin "%1" ist aktiviert, aber die erforderliche PHP-Erweiterung "%2" ist nicht installiert.
@@ -6754,6 +6754,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die übergeordnete Registrierungsstelle hat keine Registrierungsstelle für diese OID ernannt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The system can't check if critical directories (%1) are readable via web-browser. Please verify it manually.
+		]]></source>
+		<target><![CDATA[
+		Das System kann nicht prüfen, ob die vertraulichen Verzeichnisse (%1) über den web-Browser lesbar sind (das darf nicht der Fall sein). Bitte prüfen Sie dies bei Gelegenheit manuell.
 		]]></target>
 	</message>
 	<message>

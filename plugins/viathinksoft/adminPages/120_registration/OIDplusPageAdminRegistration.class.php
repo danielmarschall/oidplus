@@ -621,7 +621,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (!function_exists('curl_init')) {
 				$title = _L('System registration');
-				$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but required PHP extension "%2" is not installed.', $title, 'php_curl'));
+				$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but the required PHP extension "%2" is not installed.', '<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'.htmlentities($title).'</a>', 'php_curl'));
 			}
 		}
 		return $notifications;

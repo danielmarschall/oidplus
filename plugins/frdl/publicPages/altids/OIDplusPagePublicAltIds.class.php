@@ -100,9 +100,11 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 			return $caches[$id];
 		}
 
-		list($ns, $altIdRaw) = explode(':', $id, 2);
-		if($ns === 'weid'){
-			$id='oid:'.\WeidOidConverter::weid2oid($id);
+		if (strpos($id,':') !== false) {
+			list($ns, $altIdRaw) = explode(':', $id, 2);
+			if($ns === 'weid'){
+				$id='oid:'.\WeidOidConverter::weid2oid($id);
+			}
 		}
 
 		list($alt_ids, $rev_lookup) = $this->readAll(false);
@@ -122,10 +124,12 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 
 		$weid = false;
 		foreach($res as $alt){
-			list($ns, $altIdRaw) = explode(':', $alt, 2);
-			if($ns === 'oid'){
-				$weid=\WeidOidConverter::oid2weid($altIdRaw);
-				break;
+			if (strpos($alt,':') !== false) {
+				list($ns, $altIdRaw) = explode(':', $alt, 2);
+				if($ns === 'oid'){
+					$weid=\WeidOidConverter::oid2weid($altIdRaw);
+					break;
+				}
 			}
 		}
 
@@ -151,9 +155,11 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 
 	public function getCanonical($id){
 		foreach($this->getAlternativesForQuery($id) as $alt){
-			list($ns, $altIdRaw) = explode(':', $alt, 2);
-			if($ns === 'oid'){
-				return $alt;
+			if (strpos($alt,':') !== false) {
+				list($ns, $altIdRaw) = explode(':', $alt, 2);
+				if($ns === 'oid'){
+					return $alt;
+				}
 			}
 		}
 
@@ -171,6 +177,8 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 		$canonicalShown = false;
 
 		foreach($this->getAlternativesForQuery($id) as $alt) {
+
+			if (strpos($alt,':') !== false) continue;
 
 			list($ns, $altIdRaw) = explode(':', $alt, 2);
 
