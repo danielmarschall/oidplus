@@ -80,12 +80,13 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 
 			if (count($notifications_by_sev) == 0) {
 
-				$out['text'] .= '<p><i>'._L('No notifications').'</i></p>';
+				$out['text'] .= '<br><p><i>'._L('No notifications').'</i></p>';
 
 			} else {
 				krsort($notifications_by_sev);
 
 				foreach ($notifications_by_sev as $severity => $htmlMessages) {
+					if (count($htmlMessages) == 0) continue;
 
 					if ($severity == 1) $sev_hf = _L('OK');
 					else if ($severity == 2) $sev_hf = _L('Informational');
@@ -94,10 +95,12 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 					else if ($severity == 5) $sev_hf = _L('Critical issues');
 					else $sev_hf = _L('Severity %1', $severity-1);
 
-					$out['text'] .= '<h2><span class="severity_'.$severity.'">'.$sev_hf.'</span></h2>';
+					$out['text'] .= '<h2><span class="severity_'.$severity.'">'.$sev_hf.' ('.count($htmlMessages).')</span></h2>';
+					$out['text'] .= '<span class="severity_'.$severity.'"><ol>';
 					foreach ($htmlMessages as $htmlMessage) {
-						$out['text'] .= '<p><span class="severity_'.$severity.'">'.$htmlMessage.'</span></p>';
+						$out['text'] .= '<li>'.$htmlMessage.'</li>';
 					}
+					$out['text'] .= '</ol></span>';
 				}
 			}
 		}
