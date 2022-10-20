@@ -1,3 +1,18 @@
+OIDplus (OP org)
+- in setup : let the user enter a canonical url for the base config ( preset it with the current canonical url )
+- recaptcha v3 does not work ... implement it
+- recaptcha v2 invisible is not invisible
+
+TODO Reproduce:
+- microsoft Edge freezing Login with vts challenge captcha, other browsers work fast
+- hcaptcha is sometimes not loaded (defined)
+	SOMETIMES: load page completely new, go to login, captcha not loaded
+	then go to another page (AJAX), go back, captcha is there.
+	Is the timeout for the hCaptcha script-load too low?
+
+Small things:
+- when you copy something into the clipboard, please show a toast message
+
 Ideas by Simon T.:
 - System status plugin: Check if file owners are mixed
 - a possibility to upload & assign custom icons to objects (both in the tree & in the page)
