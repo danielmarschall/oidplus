@@ -82,12 +82,12 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 
 	function httpHeaderCheck(&$http_headers) {
 
-		$http_headers["Content-Security-Policy"]["default-src"][] = "https://fonts.gstatic.com";
-		$http_headers["Content-Security-Policy"]["default-src"][] = "https://www.google.com/";
-		$http_headers["Content-Security-Policy"]["default-src"][] = "https://www.gstatic.com/";
-
 		$http_headers["Content-Security-Policy"]["script-src"][] = "https://www.google.com/";
 		$http_headers["Content-Security-Policy"]["script-src"][] = "https://www.gstatic.com/";
+		$http_headers["Content-Security-Policy"]["img-src"][]    = "https://www.google.com/";
+		$http_headers["Content-Security-Policy"]["img-src"][]    = "https://www.gstatic.com/";
+		$http_headers["Content-Security-Policy"]["frame-src"][]  = "https://www.google.com/";
+		$http_headers["Content-Security-Policy"]["frame-src"][]  = "https://www.gstatic.com/";
 
 	}
 

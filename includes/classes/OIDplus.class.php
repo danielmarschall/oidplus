@@ -1033,7 +1033,8 @@ class OIDplus extends OIDplusBaseClass {
 			foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
-			foreach (OIDplus::getDatabasePlugins() as $plugin) {
+			//foreach (OIDplus::getDatabasePlugins() as $plugin) {
+			if ($plugin = OIDplus::getActiveDatabasePlugin()) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
 			foreach (OIDplus::getPagePlugins() as $plugin) {
@@ -1054,7 +1055,8 @@ class OIDplus extends OIDplusBaseClass {
 			foreach (OIDplus::getDesignPlugins() as $plugin) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
-			foreach (OIDplus::getCaptchaPlugins() as $plugin) {
+			//foreach (OIDplus::getCaptchaPlugins() as $plugin) {
+			if ($plugin = OIDplus::getActiveCaptchaPlugin()) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
 
