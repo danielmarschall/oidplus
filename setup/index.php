@@ -118,7 +118,7 @@ echo _L('CAPTCHA plugin').': <select name="captcha_plugin" onChange="captchaplug
 
 OIDplus::registerAllPlugins('captcha', 'OIDplusCaptchaPlugin', array('OIDplus','registerCaptchaPlugin'));
 foreach (OIDplus::getCaptchaPlugins() as $plugin) {
-	$selected = $plugin::id() === 'None' ? ' selected="true"' : '';
+	$selected = strtolower($plugin::id()) === strtolower('None') ? ' selected="true"' : ''; // select "None" by default
 	echo '<option value="'.htmlentities($plugin::id()).'"'.$selected.'>'.htmlentities($plugin::id()).'</option>';
 }
 
@@ -139,9 +139,6 @@ if ($found_captcha_plugins == 0) {
 
 echo '</div>';
 
-// Commented out, because it might confuse people during the OOBE
-//echo '<p>'._L('Note: In case you are already operating a system, the users need to reload the webpage in order to receive the new CAPTCHA settings.').'</p>';
-
 // ----------------------------------------
 
 $is_ssl = OIDplus::isSSL();
@@ -151,10 +148,17 @@ echo '<option value="OIDplus::ENFORCE_SSL_NO">'._L('No SSL available (don\'t red
 echo '<option value="OIDplus::ENFORCE_SSL_YES"'.($is_ssl ? ' selected' : '').'>'._L('Enforce SSL (always redirect)').'</option>';
 echo '<option value="OIDplus::ENFORCE_SSL_AUTO"'.(!$is_ssl ? ' selected' : '').'>'._L('Intelligent SSL detection (redirect if port 443 is open)').'</option>';
 echo '</select></p>';
-echo '</form>';
-echo '</div>';
 
 // ----------------------------------------
+
+echo '<h3>'._L('Public URL of this system (Canonical URL)').'</h3>';
+
+echo '<p><input id="canonical_url" type="text" value="'.htmlentities(OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)).'" onkeypress="rebuild()" onkeyup="rebuild()" style="width:550px"></p>';
+
+// ----------------------------------------
+
+echo '</form>';
+echo '</div>';
 
 echo '<div id="step2">';
 echo '<h2>'._L('Step %1: Initialize database',2).'</h2>';

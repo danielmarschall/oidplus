@@ -88,7 +88,9 @@ $head_elems[] = '<script src="polyfill.min.js.php"></script>';
 $head_elems[] = '<script src="oidplus.min.js.php"></script>';
 $head_elems[] = '<link rel="stylesheet" href="oidplus.min.css.php">';
 $head_elems[] = '<link rel="shortcut icon" type="image/x-icon" href="favicon.ico.php">';
-$head_elems[] = '<link rel="canonical" href="'.htmlentities(OIDplus::canonicalURL()).'">';
+if (OIDplus::baseConfig()->exists('CANONICAL_SYSTEM_URL')) {
+	$head_elems[] = '<link rel="canonical" href="'.htmlentities(OIDplus::canonicalURL()).'">';
+}
 
 $plugins = OIDplus::getPagePlugins();
 foreach ($plugins as $plugin) {
