@@ -31,15 +31,8 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 		var max = data[4];
 		var challenge_integrity = data[5];
 
-		//$("#loading").show();
-		// Without setTimeout, the load/hide of the spinner won't be visible?!
-		setTimeout(function() {
-			// Note: #loading not defined in oobe.php
-			$("#loading").show();
-		},1);
-
 		var vts_validation_result = null;
-		console.log("start VTS challenge");
+		console.log("Start VTS challenge");
 		for (i=min; i<=max; i++) {
 			if (challenge == sha3_512(starttime+"/"+ip_target+"/"+i)) {
 				var answer = i;
@@ -47,21 +40,14 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 				break;
 			}
 		}
-		console.log("end VTS challenge");
-
-		//$("#loading").hide();
-		// Without setTimeout, the load/hide of the spinner won't be visible?!
-		setTimeout(function() {
-			// Note: #loading not defined in oobe.php
-			$("#loading").hide();
-		},100);
+		console.log("End VTS challenge");
 
 		return vts_validation_result;
 	},
 
 	captchaReset: function(autosolve) {
 		$.ajax({
-			url:"../../../../ajax.php",
+			url:"ajax.php",
 			method:"POST",
 			//beforeSend: function(jqXHR, settings) {
 			//	$.xhrPool.abortAll();

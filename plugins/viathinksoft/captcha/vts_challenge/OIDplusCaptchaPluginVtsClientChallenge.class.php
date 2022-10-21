@@ -38,7 +38,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 
 	public function action($actionID, $params) {
 		if ($actionID == 'get_challenge') {
-			$complexity=500000; // TODO: make configurable
+			$complexity=50000; // TODO: make configurable
 			$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
 
 			$min = 0;
@@ -61,7 +61,8 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 			return OIDplusCaptchaPluginVtsClientChallenge.captchaResponse();
 		}
 		function oidplus_captcha_reset() {
-			return OIDplusCaptchaPluginVtsClientChallenge.captchaReset(true);
+			var autosolve = false;
+			return OIDplusCaptchaPluginVtsClientChallenge.captchaReset(autosolve);
 		}
 		</script>
 
@@ -75,9 +76,10 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 		return '<noscript>'.
 			'<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.
 			'</noscript>'.
-			'<input type="text" id="vts_validation_result" name="vts_validation_result" value="" style="display:none">'.
+			'<input type="hidden" id="vts_validation_result" name="vts_validation_result" value="">'.
 			'<script>
-			OIDplusCaptchaPluginVtsClientChallenge.captchaReset(true); // try to solve it while the user enters the form
+			var autosolve = false; // autosolving blocks the UI.
+			OIDplusCaptchaPluginVtsClientChallenge.captchaReset(autosolve);
 			$("form").submit(function(e){
 				if (!OIDplusCaptchaPluginVtsClientChallenge.currentresponse) {
 					// if the user is too fast, then we will calculate it now
