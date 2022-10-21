@@ -35,6 +35,7 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 		       '<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.
 		       '</noscript>'.
 		       '<div id="h-captcha"></div>'.
+		       '<script src="https://js.hcaptcha.com/1/api.js"></script>'.
 		       "<script>\n".
 		       "var oidplus_captcha_response = function() {\n".
 		       "    return OIDplusCaptchaPluginHCaptcha.captchaResponse();\n".
@@ -43,19 +44,17 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 		       "    return OIDplusCaptchaPluginHCaptcha.captchaReset();\n".
 		       "};\n".
 		       "\n".
-		       "if (typeof hcaptcha === 'undefined') {\n".
-		       "    var script = document.createElement('script');\n".
-		       "    script.src = 'https://js.hcaptcha.com/1/api.js';\n".
-		       "    document.head.appendChild(script);\n".
-		       "}\n".
-		       "\n".
-		       "setTimeout('oidplus_captcha_render()', 500);\n".
-		       "\n".
 		       "function oidplus_captcha_render() {\n".
-		       "    hcaptcha.render('h-captcha', {\n".
-		       "        sitekey: '".OIDplus::baseConfig()->getValue('HCAPTCHA_SITEKEY', '')."'\n".
-		       "    });\n".
+		       "    if (typeof hcaptcha === 'undefined') {\n".
+		       "        setTimeout('oidplus_captcha_render()', 250);\n".
+		       "    } else {\n".
+		       "        hcaptcha.render('h-captcha', {\n".
+		       "            sitekey: '".OIDplus::baseConfig()->getValue('HCAPTCHA_SITEKEY', '')."'\n".
+		       "        });\n".
+		       "    }\n".
 		       "}\n".
+		       "\n".
+		       "oidplus_captcha_render();\n".
 		       "</script>\n".
 		       ($footer_text ? '<p>'.$footer_text.'</p>' : '');
 	}
