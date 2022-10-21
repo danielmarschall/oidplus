@@ -54,38 +54,26 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 		}
 	}
 
-	public function captchaDomHead() {
-		// Here you can add styles and scripts to be included into the HTML <head> part
-		return '<script>
-		function oidplus_captcha_response() {
-			return OIDplusCaptchaPluginVtsClientChallenge.captchaResponse();
-		}
-		function oidplus_captcha_reset() {
-			var autosolve = false;
-			return OIDplusCaptchaPluginVtsClientChallenge.captchaReset(autosolve);
-		}
-		</script>
-
-		<script src="'.(OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . 'vendor/components/jquery/jquery.min.js').'"></script>
-		<script src="'.(OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . 'vendor/emn178/js-sha3/src/sha3.js').'"></script>
-		<script src="'.(OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE) . 'OIDplusCaptchaPluginVtsClientChallenge.js').'"></script>
-		'; // we include OIDplusCaptchaPluginVtsClientChallenge.js not via manifest.xml, otherwise oobe.php would not work
-	}
-
 	public function captchaGenerate($header_text=null, $footer_text=null) {
 		return '<noscript>'.
 			'<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.
 			'</noscript>'.
 			'<input type="hidden" id="vts_validation_result" name="vts_validation_result" value="">'.
 			'<script>
-			var autosolve = false; // autosolving blocks the UI.
-			OIDplusCaptchaPluginVtsClientChallenge.captchaReset(autosolve);
-			$("form").submit(function(e){
+			var oidplus_captcha_response = function() {
 				if (!OIDplusCaptchaPluginVtsClientChallenge.currentresponse) {
 					// if the user is too fast, then we will calculate it now
 					OIDplusCaptchaPluginVtsClientChallenge.currentresponse = OIDplusCaptchaPluginVtsClientChallenge.captchaResponse();
 				}
-				$("#vts_validation_result").val(OIDplusCaptchaPluginVtsClientChallenge.currentresponse);
+				return OIDplusCaptchaPluginVtsClientChallenge.currentresponse;
+			};
+			var oidplus_captcha_reset = function() {
+				var autosolve = false; // autosolve blocks the UI. not good
+				return OIDplusCaptchaPluginVtsClientChallenge.captchaReset("'.(OIDplus::webpath(null,OIDplus::PATH_RELATIVE)).'", autosolve);
+			};
+			oidplus_captcha_reset();
+			$("form").submit(function(e){
+				$("#vts_validation_result").val(oidplus_captcha_response());
 			});
 			</script>';
 	}
