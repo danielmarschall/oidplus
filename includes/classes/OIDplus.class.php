@@ -348,10 +348,12 @@ class OIDplus extends OIDplusBaseClass {
 		if ($db_plugin_name === '') {
 			throw new OIDplusConfigInitializationException(_L('No database plugin selected in config file'));
 		}
-		if (!isset(self::$dbPlugins[$db_plugin_name])) {
-			throw new OIDplusConfigInitializationException(_L('Database plugin "%1" not found',$db_plugin_name));
+		foreach (self::$dbPlugins as $name => $plugin) {
+			if (strtolower($name) == strtolower($db_plugin_name)) {
+				return $plugin;
+			}
 		}
-		return self::$dbPlugins[$db_plugin_name];
+		throw new OIDplusConfigInitializationException(_L('Database plugin "%1" not found',$db_plugin_name));
 	}
 
 	private static $dbMainSession = null;
@@ -397,7 +399,7 @@ class OIDplus extends OIDplusBaseClass {
 
 		if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_plugin_name === '')) {
 			// Legacy config file support!
-			$captcha_plugin_name = 'ReCAPTCHA';
+			$captcha_plugin_name = 'reCAPTCHA';
 		}
 
 		if ($captcha_plugin_name === '') $captcha_plugin_name = 'None'; // the "None" plugin is a must-have!
@@ -407,11 +409,12 @@ class OIDplus extends OIDplusBaseClass {
 
 	public static function getActiveCaptchaPlugin() {
 		$captcha_plugin_name = OIDplus::getActiveCaptchaPluginId();
-
-		if (!isset(self::$captchaPlugins[$captcha_plugin_name])) {
-			throw new OIDplusConfigInitializationException(_L('CAPTCHA plugin "%1" not found',$captcha_plugin_name));
+		foreach (self::$captchaPlugins as $name => $plugin) {
+			if (strtolower($name) == strtolower($captcha_plugin_name)) {
+				return $plugin;
+			}
 		}
-		return self::$captchaPlugins[$captcha_plugin_name];
+		throw new OIDplusConfigInitializationException(_L('CAPTCHA plugin "%1" not found',$captcha_plugin_name));
 	}
 
 	# --- Page plugin

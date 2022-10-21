@@ -105,6 +105,12 @@ OIDplus::baseConfig()->setValue('SERVER_SECRET',            'xxxxxxxxxxxxxxxxxxx
 
 OIDplus::baseConfig()->setValue('CAPTCHA_PLUGIN',           'None');
 
+OIDplus::baseConfig()->setValue('RECAPTCHA_VERSION',        OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_CHECKBOX);
+                         Possible values:
+                         OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_CHECKBOX
+                         OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_INVISIBLE
+                         OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V3
+
 OIDplus::baseConfig()->setValue('RECAPTCHA_ENABLED',        true);
                          Deprecated!
                          RECAPTCHA_ENABLED=true  becomes CAPTCHA_PLUGIN=ReCAPTCHA

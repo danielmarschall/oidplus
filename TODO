@@ -1,7 +1,5 @@
 OIDplus (OP org)
 - in setup : let the user enter a canonical url for the base config ( preset it with the current canonical url )
-- recaptcha v3 does not work ... implement it
-- recaptcha v2 invisible is not invisible
 
 TODO Reproduce:
 - microsoft Edge freezing Login with vts challenge captcha, other browsers work fast
@@ -12,6 +10,8 @@ TODO Reproduce:
 
 Small things:
 - when you copy something into the clipboard, please show a toast message
+- Show metatag "canonical" only if "canonical url" was set in base config. Don't let this meta tag be filled with automatically detected URLs.
+- Setup: "None" CAPTCHA plugin should be the first option
 
 Ideas by Simon T.:
 - System status plugin: Check if file owners are mixed
@@ -211,6 +211,7 @@ FUTURE
 - How can we make sure that example objects are not exported using oid-info.com export?
 - Administrator-Interface: enable and disable object types
 - detailled change-history of each oid
+- Add a "nonce" to all inline JavaScripts and add this nonce to CSP. Then disallow inline-JavaScripts in CSP completely.
 
 BUGS?
 - BUG! RA is logged in, then it is deleted => the RA can still edit their OIDs, since their session is not destroyed

@@ -25,7 +25,7 @@ class OIDplusCaptchaPluginNone extends OIDplusCaptchaPlugin {
 		return 'None';
 	}
 
-	public static function isVisible(): bool {
+	public function isVisible(): bool {
 		return false;
 	}
 
