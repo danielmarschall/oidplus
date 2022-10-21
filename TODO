@@ -2,7 +2,6 @@ OIDplus (OP org)
 - in setup : let the user enter a canonical url for the base config ( preset it with the current canonical url )
 
 TODO Reproduce:
-- microsoft Edge freezing Login with vts challenge captcha, other browsers work fast
 - hcaptcha is sometimes not loaded (defined)
 	SOMETIMES: load page completely new, go to login, captcha not loaded
 	then go to another page (AJAX), go back, captcha is there.
