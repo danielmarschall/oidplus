@@ -1,12 +1,6 @@
 OIDplus (OP org)
 - in setup : let the user enter a canonical url for the base config ( preset it with the current canonical url )
 
-TODO Reproduce:
-- hcaptcha is sometimes not loaded (defined)
-	SOMETIMES: load page completely new, go to login, captcha not loaded
-	then go to another page (AJAX), go back, captcha is there.
-	Is the timeout for the hCaptcha script-load too low?
-
 Small things:
 - when you copy something into the clipboard, please show a toast message
 - Show metatag "canonical" only if "canonical url" was set in base config. Don't let this meta tag be filled with automatically detected URLs.
