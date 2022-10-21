@@ -62,7 +62,7 @@ echo '<p>'._L('The following settings need to be configured once.<br>After setup
 echo '<form method="POST" action="oobe.php">';
 echo '<input type="hidden" name="sent" value="1">';
 
-if (OIDplus::getActiveCaptchaPlugin()::isVisible()) echo '<p><u>'._L('Step %1: Solve CAPTCHA',$step++).'</u></p>';
+if (OIDplus::getActiveCaptchaPlugin()->isVisible()) echo '<p><u>'._L('Step %1: Solve CAPTCHA',$step++).'</u></p>';
 if (isset($_REQUEST['sent'])) {
 	try {
 		OIDplus::getActiveCaptchaPlugin()->captchaVerify($_POST);

@@ -23,7 +23,7 @@ abstract class OIDplusCaptchaPlugin extends OIDplusPlugin {
 
 	public abstract static function id(): string; // this is the name that is set to the configuration value OIDplus::baseConfig()->getValue('CAPTCHA_PLUGIN') to identify the CAPTCHA plugin
 
-	public abstract static function isVisible(): bool;
+	public abstract function isVisible(): bool;
 
 	public function captchaDomHead() { return ''; }
 

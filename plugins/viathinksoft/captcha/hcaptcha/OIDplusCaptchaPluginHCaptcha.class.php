@@ -25,7 +25,7 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 		return 'hCaptcha';
 	}
 
-	public static function isVisible(): bool {
+	public function isVisible(): bool {
 		return true;
 	}
 

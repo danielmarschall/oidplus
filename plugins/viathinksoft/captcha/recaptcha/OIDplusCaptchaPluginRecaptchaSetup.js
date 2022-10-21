@@ -16,13 +16,13 @@
  */
 
 captcha_plugin_combobox_change_callbacks.push(function(strPlugin) {
-	$("#CAPTCHAPLUGIN_PARAMS_RECAPTCHA")[0].style.display = (strPlugin == 'ReCAPTCHA') ? "Block" : "None";
+	$("#CAPTCHAPLUGIN_PARAMS_RECAPTCHA")[0].style.display = (strPlugin.toLowerCase() == 'reCAPTCHA'.toLowerCase()) ? "Block" : "None";
 });
 
 rebuild_callbacks.push(function() {
 	var e = $("#captcha_plugin")[0];
 	var strPlugin = e.options[e.selectedIndex].value;
-	if (strPlugin != 'ReCAPTCHA') return true;
+	if (strPlugin.toLowerCase() != 'reCAPTCHA'.toLowerCase()) return true;
 
 	$("#recaptcha_public")[0].innerHTML = '';
 	$("#recaptcha_private")[0].innerHTML = '';
@@ -33,7 +33,7 @@ rebuild_callbacks.push(function() {
 	if ($("#recaptcha_public")[0].value.length == 0)
 	{
 		$("#recaptcha_public_warn")[0].innerHTML = '<font color="red">'+_L('Please specify a public key!')+'</font>';
-		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a ReCAPTCHA public key!</i>'; // do not translate
+		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a reCAPTCHA public key!</i>'; // do not translate
 		error = true;
 	} else {
 		$("#recaptcha_public_warn")[0].innerHTML = '';
@@ -43,7 +43,7 @@ rebuild_callbacks.push(function() {
 	if ($("#recaptcha_private")[0].value.length == 0)
 	{
 		$("#recaptcha_private_warn")[0].innerHTML = '<font color="red">'+_L('Please specify a private key!')+'</font>';
-		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a ReCAPTCHA private key!</i>'; // do not translate
+		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a reCAPTCHA private key!</i>'; // do not translate
 		error = true;
 	} else {
 		$("#recaptcha_private_warn")[0].innerHTML = '';
@@ -55,7 +55,8 @@ rebuild_callbacks.push(function() {
 captcha_rebuild_config_callbacks.push(function() {
 	var e = $("#captcha_plugin")[0];
 	var strPlugin = e.options[e.selectedIndex].value;
-	if (strPlugin != 'ReCAPTCHA') return '';
-	return 'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PUBLIC\',  \''+$("#recaptcha_public")[0].value+'\');<br>' +
+	if (strPlugin.toLowerCase() != 'reCAPTCHA'.toLowerCase()) return '';
+	return 'OIDplus::baseConfig()->setValue(\'RECAPTCHA_VERSION\', '+$("#recaptcha_version").find('option:selected').attr("name")+');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PUBLIC\',  \''+$("#recaptcha_public")[0].value+'\');<br>' +
 	       'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PRIVATE\', \''+$("#recaptcha_private")[0].value+'\');<br>';
 });

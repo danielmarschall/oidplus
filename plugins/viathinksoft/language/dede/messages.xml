@@ -8150,6 +8150,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		reCAPTCHA Version
+		]]></source>
+		<target><![CDATA[
+		reCAPTCHA Version
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		shell access with Git client
 		]]></source>
 		<target><![CDATA[
