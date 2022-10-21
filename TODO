@@ -1,11 +1,3 @@
-OIDplus (OP org)
-- in setup : let the user enter a canonical url for the base config ( preset it with the current canonical url )
-
-Small things:
-- when you copy something into the clipboard, please show a toast message
-- Show metatag "canonical" only if "canonical url" was set in base config. Don't let this meta tag be filled with automatically detected URLs.
-- Setup: "None" CAPTCHA plugin should be the first option
-
 Ideas by Simon T.:
 - System status plugin: Check if file owners are mixed
 - a possibility to upload & assign custom icons to objects (both in the tree & in the page)
@@ -116,6 +108,9 @@ REPRODUCTION REQUIRED
 - Firefox: Sometimes, if you have an error page (e.g. DB Connection failed), then you see the error page as XML (i.e. the web browser shows the HTML code as XML tree). Observed by Daniel many times.
 
 SMALL THINGS
+- when you copy something into the clipboard, please show a toast message
+- Setup: "None" CAPTCHA plugin should be the first option
+- oobe.php leaks email address of administrator to spam bots
 - Use DIRECTORY_SEPARATOR everywhere where local paths are used
 - when you enter "guid:{0139d44e-6afe-49f2-8690-3dafcae6ffb8}" (which will be corrected in PHP prefilterQuery), JavaScript will not highlight "guid:0139d44e-6afe-49f2-8690-3dafcae6ffb8", because it searches for the brackets
 - Let the user create shortcuts to any OIDplus-Goto-URLS (e.g. important OIDs) directly in the menu, without writing a plugin?
@@ -299,6 +294,8 @@ IDEAS
 - Like in OOBE, plugins should give the possibility to add an individual UI in the "oidplus:edit_config" page
 - Login area: The "administrator" node in the treeview could be clicked, leading to a page that contains a link to all sub pages (big icons ordered in a grid?)
 - "Invisible/service" plugin type, like page plugins, but they have no gui() method. They can be used for a simple task like extending HTTP headers
+- OAuth for admin login? (email of administrator)
+- SAML 2.0 SSO auth plugin?
 
 QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie

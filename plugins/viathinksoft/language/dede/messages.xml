@@ -5334,6 +5334,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Public URL of this system (Canonical URL)
+		]]></source>
+		<target><![CDATA[
+		Öffentliche URL des Systems (Kanonische URL)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Public page plugins
 		]]></source>
 		<target><![CDATA[

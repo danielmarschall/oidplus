@@ -106,6 +106,7 @@ function doRebuild(admPwdHash, pwComment) {
 		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br>' +
 			'<i>// To renew this file, please run setup/ in your browser.</i><br>' + // do not translate
 			'<i>// If you don\'t want to run setup again, you can also change most of the settings directly in this file.</i><br>' + // do not translate
+			'<i>// List of possible values: doc/config_values.txt</i><br>' + // do not translate
 			'<br>' +
 			'OIDplus::baseConfig()->setValue(\'CONFIG_VERSION\',    2.1);<br>' +
 			'<br>' +
@@ -139,6 +140,12 @@ function doRebuild(admPwdHash, pwComment) {
 		$("#config")[0].innerHTML = $("#config")[0].innerHTML +
 			'<br>' +
 			'OIDplus::baseConfig()->setValue(\'ENFORCE_SSL\',       '+$("#enforce_ssl")[0].value+');<br>';
+
+		if ($("#canonical_url")[0].value.trim() != '') {
+			$("#config")[0].innerHTML = $("#config")[0].innerHTML +
+				'<br>' +
+				'OIDplus::baseConfig()->setValue(\'CANONICAL_SYSTEM_URL\', \''+$("#canonical_url")[0].value.trim()+'\');<br>';
+		}
 
 		$("#config")[0].innerHTML = $("#config")[0].innerHTML.replaceAll(' ', '&nbsp;');
 	}
