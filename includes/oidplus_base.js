@@ -313,6 +313,8 @@ $(window).on("popstate", function(e) {
 
 $(document).ready(function () {
 
+	if ($('#oidtree').length == 0) return; // we are not in the main view (index.php). We might be in oobe.php etc.
+
 	executeAllCallbacks(pageLoadedCallbacks.documentReadyBefore);
 
 	/*

@@ -43,9 +43,10 @@ echo '<head>';
 echo '	<title>'._L('OIDplus Setup').'</title>';
 echo '	<meta name="robots" content="noindex">';
 echo '	<meta name="viewport" content="width=device-width, initial-scale=1.0">';
+echo '  <script src="../../../../oidplus.min.js.php"></script>';
+echo '  <script src="../../../../polyfill.min.js.php"></script>';
 echo '	<link rel="stylesheet" href="../../../../setup/setup.min.css.php">';
 echo '	<link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico.php">';
-echo OIDplus::getActiveCaptchaPlugin()->captchaDomHead();
 echo '</head>';
 
 echo '<body>';

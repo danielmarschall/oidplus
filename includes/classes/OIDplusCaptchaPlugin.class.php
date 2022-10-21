@@ -25,8 +25,6 @@ abstract class OIDplusCaptchaPlugin extends OIDplusPlugin {
 
 	public abstract function isVisible(): bool;
 
-	public function captchaDomHead() { return ''; }
-
 	public abstract function captchaGenerate($header_text=null, $footer_text=null);
 
 	public abstract function captchaVerify($params, $fieldname=null);

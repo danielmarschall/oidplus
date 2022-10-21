@@ -36,12 +36,12 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 		       '</noscript>'.
 		       '<div id="h-captcha"></div>'.
 		       "<script>\n".
-		       "function oidplus_captcha_response() {\n".
+		       "var oidplus_captcha_response = function() {\n".
 		       "    return OIDplusCaptchaPluginHCaptcha.captchaResponse();\n".
-		       "}\n".
-		       "function oidplus_captcha_reset() {\n".
+		       "};\n".
+		       "var oidplus_captcha_reset = function() {\n".
 		       "    return OIDplusCaptchaPluginHCaptcha.captchaReset();\n".
-		       "}\n".
+		       "};\n".
 		       "\n".
 		       "if (typeof hcaptcha === 'undefined') {\n".
 		       "    var script = document.createElement('script');\n".

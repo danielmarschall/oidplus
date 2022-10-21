@@ -33,10 +33,6 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 		return OIDplus::baseConfig()->getValue('RECAPTCHA_VERSION', self::RECAPTCHA_V2_CHECKBOX) == self::RECAPTCHA_V2_CHECKBOX;
 	}
 
-	public function captchaDomHead() {
-		// Here you can add styles and scripts to be included into the HTML <head> part
-	}
-
 	public function captchaGenerate($header_text=null, $footer_text=null) {
 		return '<noscript>'.
 		       '<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.

@@ -45,9 +45,9 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 		return vts_validation_result;
 	},
 
-	captchaReset: function(autosolve) {
+	captchaReset: function(dir, autosolve) {
 		$.ajax({
-			url:"ajax.php",
+			url:dir+"ajax.php",
 			method:"POST",
 			//beforeSend: function(jqXHR, settings) {
 			//	$.xhrPool.abortAll();

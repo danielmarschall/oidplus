@@ -85,7 +85,6 @@ if ($theme_color != '') $head_elems[] = '<meta name="theme-color" content="'.htm
 $head_elems[] = '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
 $head_elems[] = '<title>'.htmlentities(combine_systemtitle_and_pagetitle(OIDplus::config()->getValue('system_title'), $static_title)).'</title>';
 $head_elems[] = '<script src="polyfill.min.js.php"></script>';
-$head_elems[] = OIDplus::getActiveCaptchaPlugin()->captchaDomHead();
 $head_elems[] = '<script src="oidplus.min.js.php"></script>';
 $head_elems[] = '<link rel="stylesheet" href="oidplus.min.css.php">';
 $head_elems[] = '<link rel="shortcut icon" type="image/x-icon" href="favicon.ico.php">';

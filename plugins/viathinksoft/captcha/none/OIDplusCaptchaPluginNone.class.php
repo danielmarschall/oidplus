@@ -29,20 +29,15 @@ class OIDplusCaptchaPluginNone extends OIDplusCaptchaPlugin {
 		return false;
 	}
 
-	public function captchaDomHead() {
-		// Here you can add styles and scripts to be included into the HTML <head> part
-		return '<script>
-		function oidplus_captcha_response() {
-			return OIDplusCaptchaPluginNone.captchaResponse();
-		}
-		function oidplus_captcha_reset() {
-			return OIDplusCaptchaPluginNone.captchaReset();
-		}
-		</script>';
-	}
-
 	public function captchaGenerate($header_text=null, $footer_text=null) {
-		return '';
+		return '<script>
+		var oidplus_captcha_response = function() {
+			return OIDplusCaptchaPluginNone.captchaResponse();
+		};
+		var oidplus_captcha_reset = function() {
+			return OIDplusCaptchaPluginNone.captchaReset();
+		};
+		</script>';
 	}
 
 	public function captchaVerify($params, $fieldname=null) {

@@ -23,8 +23,7 @@
 	</css>
 
 	<js>
-		<!-- will be added in captchaDomHead() to support oobe.php -->
-		<!--<file>OIDplusCaptchaPluginVtsChallenge.js</file>-->
+		<file>OIDplusCaptchaPluginVtsClientChallenge.js</file>
 	</js>
 
 	<cssSetup>
