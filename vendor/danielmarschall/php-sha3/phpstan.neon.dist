@@ -5,13 +5,8 @@ parameters:
 	paths:
 		- .
 	excludePaths:
+		analyse:
+			- vendor
 		analyseAndScan:
 			- .phpstan.tmp
 	tmpDir: .phpstan.tmp
-	#bootstrapFiles:
-		#- src/Sha3.php
-		#- test/Sha3Test.php
-	#ignoreErrors:
-		#- '#is always (true|false)\.#'
-		#- '#Call to function assert\(\) with false will always evaluate to false\.#'
-		#- '#with no typehint specified\.#'

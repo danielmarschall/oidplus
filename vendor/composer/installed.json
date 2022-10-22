@@ -233,22 +233,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php-sha3.git",
-                "reference": "ade0dc2774c22de8c8567e85706e3108f2be32db"
+                "reference": "0bf1264b5ecb8750f28174c51a9c3e1c0eeb0df1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php-sha3/zipball/ade0dc2774c22de8c8567e85706e3108f2be32db",
-                "reference": "ade0dc2774c22de8c8567e85706e3108f2be32db",
+                "url": "https://api.github.com/repos/danielmarschall/php-sha3/zipball/0bf1264b5ecb8750f28174c51a9c3e1c0eeb0df1",
+                "reference": "0bf1264b5ecb8750f28174c51a9c3e1c0eeb0df1",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8",
-                "satooshi/php-coveralls": "dev-master"
+                "php-coveralls/php-coveralls": "dev-master",
+                "phpstan/phpstan": "^1.8",
+                "phpunit/phpunit": "^4.8"
             },
-            "time": "2022-10-22T13:03:00+00:00",
+            "time": "2022-10-22T18:57:00+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -275,6 +276,7 @@
                 "shake"
             ],
             "support": {
+                "issues": "https://github.com/danielmarschall/php-sha3/issues",
                 "source": "https://github.com/danielmarschall/php-sha3/tree/master"
             },
             "install-path": "../danielmarschall/php-sha3"

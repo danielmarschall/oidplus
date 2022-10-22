@@ -71,7 +71,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 			@unlink($file);
 		}
 
-		return $dir.'/vts_client_challenge_'.sha3_512($ip_target.'/'.$random).'.tmp';
+		return $dir.'/vts_client_challenge_'.sha3_512_hmac($ip_target.'/'.$random, OIDplus::baseConfig()->getValue('SERVER_SECRET')).'.tmp';
 	}
 
 	public function captchaGenerate($header_text=null, $footer_text=null) {
