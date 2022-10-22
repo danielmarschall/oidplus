@@ -227,6 +227,59 @@
             "install-path": "../danielmarschall/oidconverter"
         },
         {
+            "name": "danielmarschall/php-sha3",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danielmarschall/php-sha3.git",
+                "reference": "ade0dc2774c22de8c8567e85706e3108f2be32db"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielmarschall/php-sha3/zipball/ade0dc2774c22de8c8567e85706e3108f2be32db",
+                "reference": "ade0dc2774c22de8c8567e85706e3108f2be32db",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8",
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "time": "2022-10-22T13:03:00+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "bb\\Sha3\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bruno Bierbaumer",
+                    "homepage": "https://github.com/0xbb/php-sha3"
+                }
+            ],
+            "description": "Pure PHP implementation of SHA-3",
+            "keywords": [
+                "keccak",
+                "sha-3",
+                "sha3",
+                "shake"
+            ],
+            "support": {
+                "source": "https://github.com/danielmarschall/php-sha3/tree/master"
+            },
+            "install-path": "../danielmarschall/php-sha3"
+        },
+        {
             "name": "danielmarschall/php_utils",
             "version": "dev-master",
             "version_normalized": "dev-master",
@@ -589,58 +642,6 @@
             "install-path": "../matthiasmullie/path-converter"
         },
         {
-            "name": "n-other/php-sha3",
-            "version": "dev-master",
-            "version_normalized": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/n-other/php-sha3.git",
-                "reference": "54ee3b90986e88286d333319e6340b90bde4f71a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/n-other/php-sha3/zipball/54ee3b90986e88286d333319e6340b90bde4f71a",
-                "reference": "54ee3b90986e88286d333319e6340b90bde4f71a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8",
-                "satooshi/php-coveralls": "dev-master"
-            },
-            "time": "2018-07-13T13:11:34+00:00",
-            "default-branch": true,
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "bb\\Sha3\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bruno Bierbaumer",
-                    "homepage": "https://github.com/0xbb/php-sha3"
-                }
-            ],
-            "description": "Pure PHP implementation of SHA-3",
-            "keywords": [
-                "sha-3",
-                "sha3",
-                "shake"
-            ],
-            "support": {
-                "source": "https://github.com/n-other/php-sha3/tree/master"
-            },
-            "install-path": "../n-other/php-sha3"
-        },
-        {
             "name": "paragonie/constant_time_encoding",
             "version": "v2.6.3",
             "version_normalized": "2.6.3.0",
@@ -997,15 +998,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "c91227ab933d664c3ce2ea4ec68257f2282437ed"
+                "reference": "8ba44292a57da4c06463e50ae54a4e82a071c6d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/c91227ab933d664c3ce2ea4ec68257f2282437ed",
-                "reference": "c91227ab933d664c3ce2ea4ec68257f2282437ed",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/8ba44292a57da4c06463e50ae54a4e82a071c6d1",
+                "reference": "8ba44292a57da4c06463e50ae54a4e82a071c6d1",
                 "shasum": ""
             },
-            "time": "2022-05-25T04:08:16+00:00",
+            "time": "2022-10-19T02:16:29+00:00",
             "type": "component",
             "extra": {
                 "component": {
@@ -1046,7 +1047,7 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/5.10.5"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/5.10.6"
             },
             "install-path": "../tinymce/tinymce"
         },

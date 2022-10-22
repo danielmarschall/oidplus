@@ -117,7 +117,7 @@
 		"symfony/polyfill-mbstring": "<=1.19",
 		"gedmarc/layout": "*@dev",
 		"emn178/js-sha3": "*@dev",
-		"n-other/php-sha3": "*@dev",
+		"danielmarschall/php-sha3": "*@dev",
 		"tweeb/tinymce-i18n": "^2.0",
 		"phpseclib/phpseclib": "<=3.0.14",
 		"script47/bs5-utils": "*"
