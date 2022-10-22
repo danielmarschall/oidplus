@@ -1062,6 +1062,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Cannot write file %1
+		]]></source>
+		<target><![CDATA[
+		Kann Datei %1 nicht schreiben
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Challenge expired
 		]]></source>
 		<target><![CDATA[
@@ -1074,6 +1082,14 @@
 		]]></source>
 		<target><![CDATA[
 		Challenge ist möglicherweise manipuliert worden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Challenge submitted twice or transaction missing
+		]]></source>
+		<target><![CDATA[
+		Challenge doppelt gesendet oder Transaktion nicht gefunden
 		]]></target>
 	</message>
 	<message>
@@ -2150,6 +2166,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Failed
+		]]></source>
+		<target><![CDATA[
+		Fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Failed to load content: %1
 		]]></source>
 		<target><![CDATA[
@@ -3222,6 +3246,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		JSON Decode failed
+		]]></source>
+		<target><![CDATA[
+		JSON-Dekodieren fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		JSON format
 		]]></source>
 		<target><![CDATA[
@@ -3834,6 +3866,14 @@
 		]]></source>
 		<target><![CDATA[
 		Keine Dateianhänge
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No challenge response found
+		]]></source>
+		<target><![CDATA[
+		Keine Challenge-Antwort erhalten
 		]]></target>
 	</message>
 	<message>
@@ -5818,6 +5858,14 @@
 		]]></source>
 		<target><![CDATA[
 		Schema
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Score %1 too low
+		]]></source>
+		<target><![CDATA[
+		Bewertung %1 ist zu gering
 		]]></target>
 	</message>
 	<message>

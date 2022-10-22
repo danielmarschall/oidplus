@@ -86,13 +86,13 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 		$captcha_success=@json_decode($verify);
 		$SCORE_THRESHOLD = 0.5; // TODO: Make Score configurable (only V3)
 		if (!$captcha_success) {
-			throw new OIDplusException(_L('CAPTCHA not successfully verified').' (JSON Decode failed)');
+			throw new OIDplusException(_L('CAPTCHA not successfully verified').' ('._L('JSON Decode failed').')');
 		}
 		if ($captcha_success->success==false) {
-			throw new OIDplusException(_L('CAPTCHA not successfully verified').' (Failed)');
+			throw new OIDplusException(_L('CAPTCHA not successfully verified').' ('._L('Failed').')');
 		}
 		if (isset($captcha_success->score) && ($captcha_success->score < $SCORE_THRESHOLD)) {
-			throw new OIDplusException(_L('CAPTCHA not successfully verified').' (Score '.($captcha_success->score).' too low)');
+			throw new OIDplusException(_L('CAPTCHA not successfully verified').' ('._L('Score %1 too low', $captcha_success->score).')');
 		}
 	}
 
