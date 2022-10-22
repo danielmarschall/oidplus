@@ -5,6 +5,7 @@ namespace bb\Sha3;
 final class Sha3
 {
     const KECCAK_ROUNDS = 24;
+    const STATE_SIZE = 1600;
     private static $keccakf_rotc = [1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 2, 14, 27, 41, 56, 8, 25, 43, 62, 18, 39, 61, 20, 44];
     private static $keccakf_piln = [10, 7, 11, 17, 18, 3, 5, 16, 8, 21, 24, 4, 15, 23, 19, 13, 12,2, 20, 14, 22, 9, 6, 1];
 
@@ -286,43 +287,16 @@ final class Sha3
         return $raw_output ? $r: bin2hex($r);
     }
 
-    // 0 = not run, 1 = 64 bit passed, 2 = 32 bit passed, 3 = failed
-    private static $test_state = 0;
-    private static function selfTest()
-    {
-        if(self::$test_state === 1 || self::$test_state === 2){
-            return;
-        }
-
-        if(self::$test_state === 3){
-            throw new \Exception('Sha3 previous self test failed!');
-        }
-
-        $in = '';
-        $md = '6b4e03423667dbb73b6e15454f0eb1abd4597f9a1b078e3f5b5a6bc7';
-        if(self::keccak64($in, 224, 224, 0x06, false) === $md){
-            self::$test_state = 1;
-            return;
-        }
-
-        if(self::keccak32($in, 224, 224, 0x06, false) === $md){
-            self::$test_state = 2;
-            return;
-        }
-
-        self::$test_state = 3;
-        throw new \Exception('Sha3 self test failed!');
-    }
-
+    private static $force_bits = 0; // for testing purposes
     private static function keccak($in_raw, $capacity, $outputlength, $suffix, $raw_output)
     {
-        self::selfTest();
-
-        if(self::$test_state === 1) {
+        $bits = self::$force_bits;
+        if ($bits == 0) $bits = PHP_INT_SIZE == 4 ? 32 : 64;
+        if ($bits == 32) {
+            return self::keccak32($in_raw, $capacity, $outputlength, $suffix, $raw_output);
+        } else {
             return self::keccak64($in_raw, $capacity, $outputlength, $suffix, $raw_output);
         }
-
-        return self::keccak32($in_raw, $capacity, $outputlength, $suffix, $raw_output);
     }
 
     public static function hash($in, $mdlen, $raw_output = false)
@@ -333,10 +307,10 @@ final class Sha3
 
         return self::keccak($in, $mdlen, $mdlen, 0x06, $raw_output);
     }
-    
+
     public static function hash_hmac($message, $key, $mdlen, $raw_output=false) {
         // RFC 2104 HMAC
-        $blocksize = 1600 - (2 * $mdlen); // https://crypto.stackexchange.com/questions/47831/sha-3-block-sizes-bitrate-calculation
+        $blocksize = self::STATE_SIZE - (2 * $mdlen);
 
         if (strlen($key) > ($blocksize/8)) {
             $k_ = self::hash($key,true);

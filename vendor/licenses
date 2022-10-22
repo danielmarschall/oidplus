@@ -10,8 +10,8 @@ danielmarschall/fileformats      9999999-dev 880e97b Apache-2.0
 danielmarschall/fileformats      dev-master 880e97b  Apache-2.0            
 danielmarschall/oidconverter     9999999-dev 75088eb Apache-2.0            
 danielmarschall/oidconverter     dev-master 75088eb  Apache-2.0            
-danielmarschall/php-sha3         9999999-dev ade0dc2 MIT                   
-danielmarschall/php-sha3         dev-master ade0dc2  MIT                   
+danielmarschall/php-sha3         9999999-dev 0bf1264 MIT                   
+danielmarschall/php-sha3         dev-master 0bf1264  MIT                   
 danielmarschall/php_utils        9999999-dev ecd0bc3 Apache-2.0            
 danielmarschall/php_utils        dev-master ecd0bc3  Apache-2.0            
 danielmarschall/uuid_mac_utils   9999999-dev d0edce1 Apache-2.0            

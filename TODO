@@ -19,10 +19,6 @@ Ideas
 - if a third-party plugin throws an exception in the init() method, maybe OIDplus should avoid loading the plugin?
 - "hidden" alt ids which are not shown in the GUI, but can be used for reverse-Alt-ID ? (I believe we have excluded some AltIDs which are "not neccessary", e.g. an GUID already is a GUID and therefore does not need a Namespace GUID, or something like that)
 
-"Reverse Alt IDs"
-- Third party plugin waiting for certification https://github.com/frdl/oidplus-plugin-alternate-id-tracking
-- Alt ID plugin: Add some kind of peristent cache
-
 RDAP:
 - Extend handle404() to handle more things required by the RFC, as well as more object types
 - More TODO see GitHub repository https://github.com/frdl/oidplus-frdlweb-rdap/issues
