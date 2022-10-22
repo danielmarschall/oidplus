@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,8 +50,28 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 			$challenge_integrity = sha3_512_hmac($challenge,$server_secret);
 			$send_to_client = array($starttime, $ip_target, $challenge, $min, $max, $challenge_integrity);
 
+			$open_trans_file = self::getOpenTransFileName($ip_target, $random);
+			if (@file_put_contents($open_trans_file, '') === false) {
+				throw new OIDplusException(_L('Cannot write file %1', $open_trans_file));
+			}
+
 			return array("status" => 0, "challenge" => $send_to_client);
 		}
+	}
+
+	private static function getOpenTransFileName($ip_target, $random) {
+		$dir = OIDplus::localpath().'/userdata/cache';
+
+		// First, delete challenges which were never completed
+		$files = glob($dir.'/vts_client_challenge_*.tmp');
+		$expire = strtotime('-3 DAYS');
+		foreach ($files as $file) {
+			if (!is_file($file)) continue;
+			if (filemtime($file) > $expire) continue;
+			@unlink($file);
+		}
+
+		return $dir.'/vts_client_challenge_'.sha3_512($ip_target.'/'.$random).'.tmp';
 	}
 
 	public function captchaGenerate($header_text=null, $footer_text=null) {
@@ -85,9 +105,11 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 		$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
 		$max_time = 10*60; // 10min. TODO: make configurable!
 
-		if (!isset($params[$fieldname])) throw new OIDplusException('No challenge response found');
+		if (!isset($params[$fieldname])) throw new OIDplusException(_L('No challenge response found'));
 
-		list($starttime, $ip_target, $challenge, $answer, $challenge_integrity) = @json_decode($params[$fieldname], true);
+		$client_response = @json_decode($params[$fieldname], true);
+		list($starttime, $ip_target, $challenge, $answer, $challenge_integrity) = $client_response;
+		$open_trans_file = self::getOpenTransFileName($ip_target, $answer);
 
 		if ($ip_target != (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown')) {
 			throw new OIDplusException(_L('Wrong IP address'));
@@ -97,6 +119,10 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 			throw new OIDplusException(_L('Challenge integrity failed'));
 		} else if ($challenge !== sha3_512($starttime.'/'.$ip_target.'/'.$answer)) {
 			throw new OIDplusException(_L('Wrong answer'));
+		} else if (!file_exists($open_trans_file)) {
+			throw new OIDplusException(_L('Challenge submitted twice or transaction missing'));
+		} else {
+			@unlink($open_trans_file);
 		}
 	}
 
