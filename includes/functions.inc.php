@@ -219,7 +219,7 @@ function sha3_512($password, $raw_output=false) {
 	if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
 		return hash('sha3-512', $password, $raw_output);
 	} else {
-		return bb\Sha3\Sha3::hash($password, 512, $raw_output);
+		return \bb\Sha3\Sha3::hash($password, 512, $raw_output);
 	}
 }
 
@@ -228,22 +228,7 @@ function sha3_512_hmac($message, $key, $raw_output=false) {
 	if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
 		return hash_hmac('sha3-512', $message, $key, $raw_output);
 	} else {
-		$blocksize = 576; // block size of sha-512!
-
-		if (strlen($key) > ($blocksize/8)) {
-			$k_ = sha3_512($key,true);
-		} else {
-			$k_ = $key;
-		}
-
-		$k_opad = str_repeat(chr(0x5C),($blocksize/8));
-		$k_ipad = str_repeat(chr(0x36),($blocksize/8));
-		for ($i=0; $i<strlen($k_); $i++) {
-			$k_opad[$i] = $k_opad[$i] ^ $k_[$i];
-			$k_ipad[$i] = $k_ipad[$i] ^ $k_[$i];
-		}
-
-		return sha3_512($k_opad . sha3_512($k_ipad . $message, true), $raw_output);
+		return \bb\Sha3\Sha3::hash_hmac($message, $key, 512, $raw_output);
 	}
 }
 

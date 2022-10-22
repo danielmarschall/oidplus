@@ -46,7 +46,7 @@ class ComposerStaticInitOidPlusComposer
         ),
         'bb\\Sha3\\' => 
         array (
-            0 => __DIR__ . '/..' . '/n-other/php-sha3/src',
+            0 => __DIR__ . '/..' . '/danielmarschall/php-sha3/src',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (

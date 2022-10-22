@@ -59,6 +59,17 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'danielmarschall/php-sha3' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'ade0dc2774c22de8c8567e85706e3108f2be32db',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../danielmarschall/php-sha3',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
@@ -146,17 +157,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'n-other/php-sha3' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '54ee3b90986e88286d333319e6340b90bde4f71a',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../n-other/php-sha3',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
-            'dev_requirement' => false,
-        ),
         'paragonie/constant_time_encoding' => array(
             'pretty_version' => 'v2.6.3',
             'version' => '2.6.3.0',
@@ -214,7 +214,7 @@
         'tinymce/tinymce' => array(
             'pretty_version' => '5.x-dev',
             'version' => '5.9999999.9999999.9999999-dev',
-            'reference' => 'c91227ab933d664c3ce2ea4ec68257f2282437ed',
+            'reference' => '8ba44292a57da4c06463e50ae54a4e82a071c6d1',
             'type' => 'component',
             'install_path' => __DIR__ . '/../tinymce/tinymce',
             'aliases' => array(),

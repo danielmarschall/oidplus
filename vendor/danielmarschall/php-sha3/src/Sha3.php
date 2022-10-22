@@ -262,7 +262,7 @@ final class Sha3
         $temp = str_pad($temp, $rsiz, "\x0", STR_PAD_RIGHT);
 
         $temp[$inlen] = chr($suffix);
-        $temp[$rsiz - 1] = chr($temp[$rsiz - 1] | 0x80);
+        $temp[$rsiz - 1] = chr(ord($temp[$rsiz - 1]) | 0x80);
 
         for ($i = 0; $i < $rsizw; $i++) {
             $t = unpack('v*', self::ourSubstr($temp, $i * 8, 8));
@@ -332,6 +332,26 @@ final class Sha3
         }
 
         return self::keccak($in, $mdlen, $mdlen, 0x06, $raw_output);
+    }
+    
+    public static function hash_hmac($message, $key, $mdlen, $raw_output=false) {
+        // RFC 2104 HMAC
+        $blocksize = 1600 - (2 * $mdlen); // https://crypto.stackexchange.com/questions/47831/sha-3-block-sizes-bitrate-calculation
+
+        if (strlen($key) > ($blocksize/8)) {
+            $k_ = self::hash($key,true);
+        } else {
+            $k_ = $key;
+        }
+
+        $k_opad = str_repeat(chr(0x5C),($blocksize/8));
+        $k_ipad = str_repeat(chr(0x36),($blocksize/8));
+        for ($i=0; $i<strlen($k_); $i++) {
+            $k_opad[$i] = $k_opad[$i] ^ $k_[$i];
+            $k_ipad[$i] = $k_ipad[$i] ^ $k_[$i];
+        }
+
+        return self::hash($k_opad . self::hash($k_ipad . $message, $mdlen, true), $mdlen, $raw_output);
     }
 
     public static function shake($in, $security_level, $outlen, $raw_output = false)
