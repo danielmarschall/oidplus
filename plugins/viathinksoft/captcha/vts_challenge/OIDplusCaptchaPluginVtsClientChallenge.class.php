@@ -61,6 +61,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 
 	private static function getOpenTransFileName($ip_target, $random) {
 		$dir = OIDplus::localpath().'/userdata/cache';
+		$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
 
 		// First, delete challenges which were never completed
 		$files = glob($dir.'/vts_client_challenge_*.tmp');
@@ -71,31 +72,17 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 			@unlink($file);
 		}
 
-		return $dir.'/vts_client_challenge_'.sha3_512_hmac($ip_target.'/'.$random, OIDplus::baseConfig()->getValue('SERVER_SECRET')).'.tmp';
+		return $dir.'/vts_client_challenge_'.sha3_512_hmac($ip_target.'/'.$random, $server_secret).'.tmp';
 	}
 
 	public function captchaGenerate($header_text=null, $footer_text=null) {
 		return '<noscript>'.
-			'<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.
-			'</noscript>'.
-			'<input type="hidden" id="vts_validation_result" name="vts_validation_result" value="">'.
-			'<script>
-			var oidplus_captcha_response = function() {
-				if (!OIDplusCaptchaPluginVtsClientChallenge.currentresponse) {
-					// if the user is too fast, then we will calculate it now
-					OIDplusCaptchaPluginVtsClientChallenge.currentresponse = OIDplusCaptchaPluginVtsClientChallenge.captchaResponse();
-				}
-				return OIDplusCaptchaPluginVtsClientChallenge.currentresponse;
-			};
-			var oidplus_captcha_reset = function() {
-				var autosolve = false; // autosolve blocks the UI. not good
-				return OIDplusCaptchaPluginVtsClientChallenge.captchaReset("'.(OIDplus::webpath(null,OIDplus::PATH_RELATIVE)).'", autosolve);
-			};
-			oidplus_captcha_reset();
-			$("form").submit(function(e){
-				$("#vts_validation_result").val(oidplus_captcha_response());
-			});
-			</script>';
+		       '<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.
+		       '</noscript>'.
+		       '<input type="hidden" id="vts_validation_result" name="vts_validation_result" value="">'.
+		       '<script>'.
+		       'OIDplusCaptchaPluginVtsClientChallenge.captchaShow('.js_escape(OIDplus::webpath(null,OIDplus::PATH_RELATIVE)).');'.
+		       '</script>';
 	}
 
 	public function captchaVerify($params, $fieldname=null) {
@@ -105,16 +92,26 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 		$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
 		$max_time = 10*60; // 10min. TODO: make configurable!
 
-		if (!isset($params[$fieldname])) throw new OIDplusException(_L('No challenge response found'));
+		if (!isset($params[$fieldname])) throw new OIDplusException(_L('No challenge response found').' (A)');
 
 		$client_response = @json_decode($params[$fieldname], true);
+
+		if (!is_array($client_response)) throw new OIDplusException(_L('Challenge response is invalid').' (B)');
+		if (count($client_response) != 5) throw new OIDplusException(_L('Challenge response is invalid').' (C)');
 		list($starttime, $ip_target, $challenge, $answer, $challenge_integrity) = $client_response;
+		if (!is_numeric($starttime)) throw new OIDplusException(_L('Challenge response is invalid').' (D)');
+		if (!is_string($ip_target)) throw new OIDplusException(_L('Challenge response is invalid').' (E)');
+		if (!is_string($challenge)) throw new OIDplusException(_L('Challenge response is invalid').' (F)');
+		if (!is_numeric($answer)) throw new OIDplusException(_L('Challenge response is invalid').' (G)');
+		if (!is_string($challenge_integrity)) throw new OIDplusException(_L('Challenge response is invalid').' (H)');
+
 		$open_trans_file = self::getOpenTransFileName($ip_target, $answer);
 
-		if ($ip_target != (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown')) {
-			throw new OIDplusException(_L('Wrong IP address'));
+		$current_ip = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown');
+		if ($ip_target != $current_ip) {
+			throw new OIDplusException(_L('IP address has changed. Please try again. (current IP %1, expected %2)', $current_ip, $ip_target));
 		} else if (time()-$starttime > $max_time) {
-			throw new OIDplusException(_L('Challenge expired'));
+			throw new OIDplusException(_L('Challenge expired. Please try again.'));
 		} else if ($challenge_integrity != sha3_512_hmac($challenge,$server_secret)) {
 			throw new OIDplusException(_L('Challenge integrity failed'));
 		} else if ($challenge !== sha3_512($starttime.'/'.$ip_target.'/'.$answer)) {

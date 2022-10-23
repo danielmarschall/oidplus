@@ -1,6 +1,6 @@
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,10 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 		var max = data[4];
 		var challenge_integrity = data[5];
 
+		show_waiting_anim(); // Note: This does NOT work on the browsers I have tested, because the method needs to exit for the change to become visible... we still do it; maybe some browsers handle it differently...
+
 		var vts_validation_result = null;
-		console.log("Start VTS challenge");
+		console.log("VTS Challenge: Calculating solution...");
 		for (i=min; i<=max; i++) {
 			if (challenge == sha3_512(starttime+"/"+ip_target+"/"+i)) {
 				var answer = i;
@@ -40,12 +42,27 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 				break;
 			}
 		}
-		console.log("End VTS challenge");
+
+		hide_waiting_anim();
+
+		if (vts_validation_result == null) {
+			// If this happens, something is VERY wrong
+			console.log("VTS Challenge: Done (FAILED)");
+			console.log(data);
+			var answer = max+1; // "something invalid"
+			vts_validation_result = JSON.stringify([starttime, ip_target, challenge, answer, challenge_integrity]);
+		} else {
+			console.log("VTS Challenge: Done (SOLVED)");
+		}
 
 		return vts_validation_result;
 	},
 
-	captchaReset: function(dir, autosolve) {
+	captchaReset: function(dir) {
+		show_waiting_anim(); // we need to block the UI, otherwise we cannot solve challenge later
+		OIDplusCaptchaPluginVtsClientChallenge.currentchallenge = [null,null,null,null,null,null];
+		OIDplusCaptchaPluginVtsClientChallenge.currentresponse = null;
+		console.log("VTS Challenge: Loading Challenge...");
 		$.ajax({
 			url:dir+"ajax.php",
 			method:"POST",
@@ -62,25 +79,47 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 				action:"get_challenge"
 			},
 			error:function(jqXHR, textStatus, errorThrown) {
+				hide_waiting_anim();
 				if (errorThrown == "abort") return;
-				alertError("Error: "+errorThrown); //alertError(_L("Error: %1",errorThrown));
+				alertError(_L("Error: %1",errorThrown));
 			},
 			success:function(data) {
 				if ("error" in data) {
-					alertError("Error: "+data.error); //alertError(_L("Error: %1",data.error));
+					hide_waiting_anim();
+					alertError(_L("Error: %1",data.error));
 				} else if (data.status >= 0) {
 					OIDplusCaptchaPluginVtsClientChallenge.currentchallenge = data.challenge;
 					OIDplusCaptchaPluginVtsClientChallenge.currentresponse = null;
-					if (autosolve) {
-						// TODO: Solve using a JS Worker, so that the User UI is not slowed down... Then we also don't need the #loading spinner
-						OIDplusCaptchaPluginVtsClientChallenge.currentresponse = OIDplusCaptchaPluginVtsClientChallenge.captchaResponse();
-					}
+					console.log("VTS Challenge: Loading of challenge complete");
+					hide_waiting_anim();
 				} else {
-					alertError("Error: "+data); //alertError(_L("Error: %1",data));
+					hide_waiting_anim();
+					alertError(_L("Error: %1",data));
 				}
 			}
 		});
 
+	},
+
+	captchaShow: function(dir) {
+		/*var*/ oidplus_captcha_response = function() {
+			if (OIDplusCaptchaPluginVtsClientChallenge.currentchallenge[0] == null) {
+				// Should not happen, because we are using a loading animation durnig the AJAX "get_challenge" request
+				console.error("VTS Challenge: Loading of the challenge is not yet completed! Cannot get the CAPTCHA response!");
+			}
+			if (!OIDplusCaptchaPluginVtsClientChallenge.currentresponse) {
+				// if the user is too fast (or there was no auto-solve), then we will calculate it now
+				OIDplusCaptchaPluginVtsClientChallenge.currentresponse = OIDplusCaptchaPluginVtsClientChallenge.captchaResponse();
+			}
+			return OIDplusCaptchaPluginVtsClientChallenge.currentresponse;
+		};
+		/*var*/ oidplus_captcha_reset = function() {
+			return OIDplusCaptchaPluginVtsClientChallenge.captchaReset(dir);
+		};
+		oidplus_captcha_reset();
+		$("form").submit(function(e){
+			$("#vts_validation_result").val(oidplus_captcha_response());
+		});
 	}
 
 };

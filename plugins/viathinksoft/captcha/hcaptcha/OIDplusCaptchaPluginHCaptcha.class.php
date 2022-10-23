@@ -36,26 +36,9 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 		       '</noscript>'.
 		       '<div id="h-captcha"></div>'.
 		       '<script src="https://js.hcaptcha.com/1/api.js"></script>'.
-		       "<script>\n".
-		       "var oidplus_captcha_response = function() {\n".
-		       "    return OIDplusCaptchaPluginHCaptcha.captchaResponse();\n".
-		       "};\n".
-		       "var oidplus_captcha_reset = function() {\n".
-		       "    return OIDplusCaptchaPluginHCaptcha.captchaReset();\n".
-		       "};\n".
-		       "\n".
-		       "function oidplus_captcha_render() {\n".
-		       "    if (typeof hcaptcha === 'undefined') {\n".
-		       "        setTimeout('oidplus_captcha_render()', 250);\n".
-		       "    } else {\n".
-		       "        hcaptcha.render('h-captcha', {\n".
-		       "            sitekey: '".OIDplus::baseConfig()->getValue('HCAPTCHA_SITEKEY', '')."'\n".
-		       "        });\n".
-		       "    }\n".
-		       "}\n".
-		       "\n".
-		       "oidplus_captcha_render();\n".
-		       "</script>\n".
+		       '<script>'.
+		       'OIDplusCaptchaPluginHCaptcha.captchaShow('.js_escape(OIDplus::baseConfig()->getValue('HCAPTCHA_SITEKEY', '')).')'.
+		       '</script>'.
 		       ($footer_text ? '<p>'.$footer_text.'</p>' : '');
 	}
 

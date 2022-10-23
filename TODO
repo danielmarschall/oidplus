@@ -100,9 +100,6 @@ DATA TRANSFER PLUGIN
 - XML import: Waiting animation
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
 
-REPRODUCTION REQUIRED
-- Firefox: Sometimes, if you have an error page (e.g. DB Connection failed), then you see the error page as XML (i.e. the web browser shows the HTML code as XML tree). Observed by Daniel many times.
-
 SMALL THINGS
 - when you copy something into the clipboard, please show a toast message
 - Setup: "None" CAPTCHA plugin should be the first option

@@ -1070,10 +1070,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Challenge expired
+		Challenge expired. Please try again.
 		]]></source>
 		<target><![CDATA[
-		Challenge abgelaufen
+		Challenge abgelaufen. Bitte noch einmal versuchen.
 		]]></target>
 	</message>
 	<message>
@@ -1082,6 +1082,14 @@
 		]]></source>
 		<target><![CDATA[
 		Challenge ist möglicherweise manipuliert worden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Challenge response is invalid
+		]]></source>
+		<target><![CDATA[
+		Challenge-Antwort ist ungültig
 		]]></target>
 	</message>
 	<message>
@@ -2666,6 +2674,14 @@
 		]]></source>
 		<target><![CDATA[
 		INFO
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		IP address has changed. Please try again. (current IP %1, expected %2)
+		]]></source>
+		<target><![CDATA[
+		IP-Adresse hat sich geändert. Bitte erneut versuchen (aktuell %1, erwartet %2)
 		]]></target>
 	</message>
 	<message>
@@ -7618,14 +7634,6 @@
 		]]></source>
 		<target><![CDATA[
 		Mit dem OID Information Protokoll (OID-IP) können Sie Objekt-Informationen in einem Format abfragen, das sowohl menschenlesbar als auch maschinenlesbar ist.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Wrong IP address
-		]]></source>
-		<target><![CDATA[
-		Falsche IP-Adresse
 		]]></target>
 	</message>
 	<message>
