@@ -38,13 +38,15 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 
 	public function action($actionID, $params) {
 		if ($actionID == 'get_challenge') {
-			$complexity=50000; // TODO: make configurable
 			$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
 
-			$min = 0;
-			$max = $complexity;
+			$offset = 0; // doesn't matter
+			$min = $offset;
+			$max = $offset + OIDplus::baseConfig()->getValue('VTS_CAPTCHA_COMPLEXITY', 50000);
+			if ($max > mt_getrandmax()) $max = mt_getrandmax();
+
 			$starttime = time();
-			$random = rand($min,$max); // TODO: cryptographic rand
+			$random = mt_rand($min,$max);
 			$ip_target = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
 			$challenge = sha3_512($starttime.'/'.$ip_target.'/'.$random);
 			$challenge_integrity = sha3_512_hmac($challenge,$server_secret);
@@ -55,7 +57,12 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 				throw new OIDplusException(_L('Cannot write file %1', $open_trans_file));
 			}
 
-			return array("status" => 0, "challenge" => $send_to_client);
+			return array(
+				"status" => 0,
+				"challenge" => $send_to_client,
+				// Autosolve on=calculate result on page load; off=calculate result on form submit
+				"autosolve" => OIDplus::baseConfig()->getValue('VTS_CAPTCHA_AUTOSOLVE', true)
+			);
 		}
 	}
 
@@ -90,7 +97,6 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 		if (is_null($fieldname)) $fieldname = 'vts_validation_result';
 
 		$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
-		$max_time = 10*60; // 10min. TODO: make configurable!
 
 		if (!isset($params[$fieldname])) throw new OIDplusException(_L('No challenge response found').' (A)');
 
@@ -110,7 +116,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 		$current_ip = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown');
 		if ($ip_target != $current_ip) {
 			throw new OIDplusException(_L('IP address has changed. Please try again. (current IP %1, expected %2)', $current_ip, $ip_target));
-		} else if (time()-$starttime > $max_time) {
+		} else if (time()-$starttime > OIDplus::baseConfig()->getValue('VTS_CAPTCHA_MAXTIME', 10*60/*10 minutes*/)) {
 			throw new OIDplusException(_L('Challenge expired. Please try again.'));
 		} else if ($challenge_integrity != sha3_512_hmac($challenge,$server_secret)) {
 			throw new OIDplusException(_L('Challenge integrity failed'));
