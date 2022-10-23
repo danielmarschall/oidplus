@@ -31,8 +31,6 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 		var max = data[4];
 		var challenge_integrity = data[5];
 
-		show_waiting_anim(); // Note: This does NOT work on the browsers I have tested, because the method needs to exit for the change to become visible... we still do it; maybe some browsers handle it differently...
-
 		var vts_validation_result = null;
 		console.log("VTS Challenge: Calculating solution...");
 		for (i=min; i<=max; i++) {
@@ -42,8 +40,6 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 				break;
 			}
 		}
-
-		hide_waiting_anim();
 
 		if (vts_validation_result == null) {
 			// If this happens, something is VERY wrong
@@ -91,6 +87,10 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 					OIDplusCaptchaPluginVtsClientChallenge.currentchallenge = data.challenge;
 					OIDplusCaptchaPluginVtsClientChallenge.currentresponse = null;
 					console.log("VTS Challenge: Loading of challenge complete");
+					if (data.autosolve) {
+						// That's ok, because the GUI is locked anyway
+						OIDplusCaptchaPluginVtsClientChallenge.currentresponse = OIDplusCaptchaPluginVtsClientChallenge.captchaResponse();
+					}
 					hide_waiting_anim();
 				} else {
 					hide_waiting_anim();
