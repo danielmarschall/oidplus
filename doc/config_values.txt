@@ -104,6 +104,10 @@ OIDplus::baseConfig()->setValue('SERVER_SECRET',            'xxxxxxxxxxxxxxxxxxx
                          please change the sequence.
 
 OIDplus::baseConfig()->setValue('CAPTCHA_PLUGIN',           'None');
+			Alternative Values (installed plugins)
+			- reCAPTCHA
+			- hCaptcha
+			- ViaThinkSoft Client Challenge
 
 OIDplus::baseConfig()->setValue('RECAPTCHA_VERSION',        OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_CHECKBOX);
                          Possible values:
@@ -113,7 +117,7 @@ OIDplus::baseConfig()->setValue('RECAPTCHA_VERSION',        OIDplusCaptchaPlugin
 
 OIDplus::baseConfig()->setValue('RECAPTCHA_ENABLED',        true);
                          Deprecated!
-                         RECAPTCHA_ENABLED=true  becomes CAPTCHA_PLUGIN=ReCAPTCHA
+                         RECAPTCHA_ENABLED=true  becomes CAPTCHA_PLUGIN=reCAPTCHA
                          RECAPTCHA_ENABLED=false becomes CAPTCHA_PLUGIN=None
 
 OIDplus::baseConfig()->setValue('RECAPTCHA_PUBLIC',         '');
