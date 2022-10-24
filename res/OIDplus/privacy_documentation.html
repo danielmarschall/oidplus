@@ -15,15 +15,12 @@
 		text-decoration: underline !important;
 		font-style: italic !important;
 	}
-	.underline {
-		text-decoration: underline;
-	}
 	</style>
 </head>
 
 <body>
 	<h1>Procedural documentation related to privacy</h1>
-	<p><em>Revision: 17 October 2022</em></p>
+	<p><em>Revision: 18 October 2022</em></p>
 	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software "OIDplus") and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web application that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
 
 	<a id="terminology"></a><h2>Parties / Terminology</h2>
@@ -270,9 +267,9 @@
 		<li>System title</li>
 		<li>List of OID roots that this system is sending</li>
 		<li>The version of the system (SVN revision)</li>
-		<li>Installation type (ZIPed SVN snapshot or SVN working copy)</li>
+		<li>Installation type (SVN snapshot, SVN working copy, or GIT working copy)</li>
 	</ul>
-	<p>ViaThinkSoft will store this data internally and publish parts into the public directory service located at <a href="https://oidplus.viathinksoft.com/directory/">https://oidplus.viathinksoft.com/directory/</a>:</p>
+	<p>ViaThinkSoft will store this data internally and publish parts into the public directory service located at <a href="https://oidplus.viathinksoft.com/directory/" target="_blank">https://oidplus.viathinksoft.com/directory/</a>:</p>
 	<p>The public record contains:</p>
 	<ul>
 		<li>System ID</li>
@@ -281,11 +278,11 @@
 	</ul>
 	<p>The other information will stay on the ViaThinkSoft internal database and will not be shared with other parties.</p>
 	<p>If the system administrator enabled this option and wants to revoke the permission, the system administrator has to change the privacy level in the administrator login/control panel. The system will automatically contact the ViaThinkSoft server again and performs the deletion of all data.</p>
-	<p>Please note that the deletion of the record in the directory service does not delete RA/OID information that is already submitted at oid-info.com (if option 0 was chosen). To delete this data, the system administrator needs to contact the OID Repository Webmaster at <a href="mailto:admin@oid-info.com">admin@oid-info.com</a></p>
+	<p>Please note that the deletion of the record in the directory service does not delete RA/OID information that is already submitted at oid-info.com (if option 0 was chosen). To delete this data, the system administrator needs to contact the OID Repository Webmaster at <a class="spamspan" href="mailto:admin@oid-info.com">admin@oid-info.com</a></p>
 
 	<h3>Publish RA/OID data at oid-info.com (option 0)</h3>
 	<p>If privacy level option 0 is chosen, the system regularly contacts the ViaThinkSoft server through a secure connection and sends the public RA/OID data. ViaThinkSoft will store this data and redirect it to the OID Repository Webmaster who will review the data and eventually submit it to the public repository www.oid-info.com</p>
-	<p>If the system administrator enabled this option and wants to revoke the permission, the system administrator has to change the privacy level in the administrator login/control panel to option 1 or 2 (to avoid that data being sent again). To remove already submitted OIDs, the system administrator needs to contact the OID Repository Webmaster at <a href="mailto:admin@oid-info.com">admin@oid-info.com</a></p>
+	<p>If the system administrator enabled this option and wants to revoke the permission, the system administrator has to change the privacy level in the administrator login/control panel to option 1 or 2 (to avoid that data being sent again). To remove already submitted OIDs, the system administrator needs to contact the OID Repository Webmaster at <a class="spamspan" href="mailto:admin@oid-info.com">admin@oid-info.com</a></p>
 
 	<h3>Hide system (option 2)</h3>
 	<p>If privacy level option 2 was chosen, the system will neither contact ViaThinkSoft, nor oid-info.com.</p>
@@ -363,13 +360,13 @@
 
 	<h3>reCAPTCHA (only if plugin "reCAPTCHA" is enabled)</h3>
 	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable "reCAPTCHA" which is a service of Google. Before enabling reCAPTCHA in the OIDplus setup/settings, the system administrator has to request an API key from Google. The usage of reCAPTCHA will probably introduce additional cookies that are out of the control of OIDplus.</p>
-	<p>Please see <a href="https://policies.google.com/privacy">Google's Privacy Policy</a> and <a href="https://policies.google.com/terms">Terms of service</a> for more information.</p>
+	<p>Please see <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank">Terms of service</a> for more information.</p>
 	<p>If the system administrator has not enabled the reCAPTCHA feature, no external script will be included at all.</p>
 	<p>If the feature is enabled, blocking the reCAPTCHA JavaScript on the client side will result in various functionalities (like the login form) not working.</p>
 
 	<h3>hCaptcha (only if plugin "hCaptcha" is enabled)</h3>
 	<p>To protect sensitive functions of OIDplus (e.g. the login form) from hackers, the system administrator can enable "hCaptcha" which is a service of Intuition Machines, Inc. Before enabling hCaptcha in the OIDplus setup/settings, the system administrator has to request an API key from Intuition Machines, Inc. The usage of hCaptcha will probably introduce additional cookies that are out of the control of OIDplus.</p>
-	<p>Please see <a href="https://www.hcaptcha.com/privacy">Intuition Machines, Inc.'s Privacy Policy</a> and <a href="https://www.hcaptcha.com/terms">Terms of service</a> for more information.</p>
+	<p>Please see <a href="https://www.hcaptcha.com/privacy" target="_blank">Intuition Machines, Inc.'s Privacy Policy</a> and <a href="https://www.hcaptcha.com/terms" target="_blank">Terms of service</a> for more information.</p>
 	<p>If the system administrator has not enabled the hCaptcha feature, no external script will be included at all.</p>
 	<p>If the feature is enabled, blocking the hCaptcha JavaScript on the client side will result in various functionalities (like the login form) not working.</p>
 
