@@ -143,7 +143,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				                            "order by ".OIDplus::db()->natOrder('oChild.id'), array($ra_email, $ra_email, $ra_email));
 				while ($row = $res->fetch_array()) {
 					$x = self::parse($row['id']); // can be FALSE if namespace was disabled
-					if ($x) $out[] = self::parse($row['id']);
+					if ($x) $out[] = $x;
 				}
 			}
 		} else {
@@ -160,17 +160,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				$out_part = array();
 
 				foreach (self::$object_info_cache as $id => $cacheitem) {
-					// If the OID RA is the RA we are searching, then add the object to the choice list
-					$ra_email = $cacheitem[self::CACHE_RA_EMAIL];
-					if ($ra_email == $check_ra_mail) $out_part[] = $id;
-				}
-
-				foreach (self::$object_info_cache as $id => $cacheitem) {
-					$parent = $cacheitem[self::CACHE_PARENT];
-					if (isset(self::$object_info_cache[$parent])) {
-						if (self::$object_info_cache[$parent][self::CACHE_RA_EMAIL] == $ra_email) {
-							// if the parent has the same RA, then this OID cannot be a root => remove the element from the choice list
-							foreach (array_keys($out_part, $id) as $key) unset($out_part[$key]);
+					if ($cacheitem[self::CACHE_RA_EMAIL] == $check_ra_mail) {
+						$parent = $cacheitem[self::CACHE_PARENT];
+						if (!isset(self::$object_info_cache[$parent]) || (self::$object_info_cache[$parent][self::CACHE_RA_EMAIL] != $check_ra_mail)) {
+							$out_part[] = $id;
 						}
 					}
 				}
