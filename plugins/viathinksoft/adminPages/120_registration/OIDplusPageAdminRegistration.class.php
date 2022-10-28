@@ -228,6 +228,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	public function sendRegistrationQuery($privacy_level=null) {
+
 		if (is_null($privacy_level)) {
 			$privacy_level = OIDplus::config()->getValue('reg_privacy');
 		}
@@ -608,7 +609,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				$errors_happened = true;
 			}
 		}
-		echo ' <font color="red"><b>'.$msg.'</b></font>';
+		if (!empty($msg)) echo ' <font color="red"><b>'.$msg.'</b></font>';
 
 		echo '<p>'._L('<i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.').'<br>';
 		echo _L('<a %1>Click here</a> for more information about privacy related topics.','href="../../../../res/OIDplus/privacy_documentation.html" target="_blank"');
