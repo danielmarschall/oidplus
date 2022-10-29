@@ -2766,14 +2766,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		If you already have an OIDplus database and just want to rebuild the config file, please skip this step.
-		]]></source>
-		<target><![CDATA[
-		Wenn Sie bereits eine OIDplus-Datenbank installiert haben und nur diese Konfigurations-Datei editieren möchten, überspringen Sie bitte diesen Schritt.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		If you can read this, then your database login credentials are correct.
 		]]></source>
 		<target><![CDATA[
@@ -4622,14 +4614,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Otherwise, import one of the following SQL dumps in your database:
-		]]></source>
-		<target><![CDATA[
-		Andernfalls importieren Sie eine der folgenden SQL-Dumps in Ihre Datenbank:
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Output format
 		]]></source>
 		<target><![CDATA[
@@ -5026,6 +5010,14 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte geben Sie Ihren Personen-Namen oder Namen einer Gruppierung ein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please import one of the following SQL dumps in your database:
+		]]></source>
+		<target><![CDATA[
+		Bitte importieren Sie eine der folgenden SQL-Dumps in Ihre Datenbank:
 		]]></target>
 	</message>
 	<message>
@@ -5506,6 +5498,14 @@
 		]]></source>
 		<target><![CDATA[
 		RFC Internet Draft
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Re-Install database (all data will be deleted)
+		]]></source>
+		<target><![CDATA[
+		Neu-Installation der Datenbank (alle Daten werden gelöscht)
 		]]></target>
 	</message>
 	<message>
@@ -6262,6 +6262,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Step %1: Start OIDplus
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: OIDplus starten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Step %1: System registration and automatic publishing (optional)
 		]]></source>
 		<target><![CDATA[
@@ -6486,10 +6494,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Thank you very much for choosing OIDplus! This setup assistant will help you creating or updating the file <b>%1</b>. Setup does not automatically write to this file. Instead, you need to copy-paste the contents into the file. Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.
+		Thank you very much for choosing OIDplus!
 		]]></source>
 		<target><![CDATA[
-		Vielen Dank, dass Sie sich für OIDplus entschieden haben! Dieser Installations-Assistent wird Ihnen helfen, die Konfigurationsdatei <b>%1</b> zu erstellen. Der Assistent erstellt diese Datei nicht automatisch. Sie müssen diese Datei später in die Zwischenablage kopieren und die Inhalte in die Datei einfügen. Nachdem Die dies getan haben, können Sie die Datei zu einem späteren Zeitpunkt per Hand bearbeiten, oder diesen Assistenten erneut durchlaufen, in dem Sie <b>setup/</b> aufrufen.
+		Vielen Dank, dass Sie sich für OIDplus entschieden haben!
 		]]></target>
 	</message>
 	<message>
@@ -6934,6 +6942,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		This assistant does not automatically write to this file. Instead, you need to copy-paste the contents into the file. Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.
+		]]></source>
+		<target><![CDATA[
+		Dieser Assistent schreibt die Datei nicht selbstständig. Sie müssen die Datei am Ende manuell schreiben ("Kopieren und Einfügen")
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This assistant will help you updating the file <b>%1</b>.
+		]]></source>
+		<target><![CDATA[
+		Dieser Assistent wird Ihnen dabei helfen, die Datei <b>%1</b> zu aktualisieren.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		This email address already has a FreeOID registered (%1)
 		]]></source>
 		<target><![CDATA[
@@ -7058,6 +7082,14 @@
 		]]></source>
 		<target><![CDATA[
 		Der Besitz der Wurzel-OID wurde noch nicht durch ViaThinkSoft verifiziert. Bitte senden Sie eine E-Mail an %1, um den Besitz dieser OID zu bestätigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This setup assistant will help you creating the file <b>%1</b>.
+		]]></source>
+		<target><![CDATA[
+		Dieser Einrichtungs-Assistent wird Ihnen dabei helfen, die Datei <b>%1</b> zu erstellen.
 		]]></target>
 	</message>
 	<message>
@@ -7534,10 +7566,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Warning: All data from the previous OIDplus instance will be deleted during the import.<br>If you already have an OIDplus database, skip to Step 3.
+		Warning: Existing OIDplus data will be deleted during the initialization of the database.
 		]]></source>
 		<target><![CDATA[
-		Warnung: Alle Daten von Ihrer vorherigen OIDplus-Installation werden durch den Import gelöscht!<br>Wenn Sie bereits eine OIDplus-Datenbank haben, fahren Sie bitte mit Schritt 3 fort.
+		Achtung: Bestehende OIDplus-Daten werden bei der Initialisierung gelöscht.
 		]]></target>
 	</message>
 	<message>

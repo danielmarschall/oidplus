@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@
  */
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
+
+define('BASECONFIG_FILE', 'userdata/baseconfig/config.inc.php');
+$already_setup = file_exists(__DIR__.'/../'.BASECONFIG_FILE);
 
 OIDplus::handleLangArgument();
 
@@ -45,7 +48,17 @@ echo '<span id="setupPageContent" style="display:None">';
 
 echo OIDplus::gui()->getLanguageBox(null, false);
 
-echo '<p>'._L('Thank you very much for choosing OIDplus! This setup assistant will help you creating or updating the file <b>%1</b>. Setup does not automatically write to this file. Instead, you need to copy-paste the contents into the file. Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.','userdata/baseconfig/config.inc.php').'</p>';
+echo '<p>';
+if ($already_setup) {
+	echo _L('This assistant will help you updating the file <b>%1</b>.',BASECONFIG_FILE);
+} else {
+	echo _L('Thank you very much for choosing OIDplus!');
+	echo ' ';
+	echo _L('This setup assistant will help you creating the file <b>%1</b>.',BASECONFIG_FILE);
+}
+echo ' ';
+echo _L('This assistant does not automatically write to this file. Instead, you need to copy-paste the contents into the file. Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.').'</p>';
+echo '</p>';
 
 echo '<h2 id="systemCheckCaption" style="display:none">'._L('System check').'</h2>';
 echo '<div id="dirAccessWarning"></div>';
@@ -162,20 +175,36 @@ echo '</div>';
 
 echo '<div id="step2">';
 echo '<h2>'._L('Step %1: Initialize database',2).'</h2>';
-echo '<p><font color="red"><b>'._L('If you already have an OIDplus database and just want to rebuild the config file, please skip this step.').'</b></font></p>';
-echo '<p>'._L('Otherwise, import one of the following SQL dumps in your database:').'</p>';
+if ($already_setup) {
+	echo '<p><input type="checkbox" id="step2_enable"> <label for="step2_enable"><font color="red">'._L('Re-Install database (all data will be deleted)').'</font></label></p>';
+}
+echo '<div id="step2_inner">';
+echo '<p>'._L('Please import one of the following SQL dumps in your database:').'</p>';
 echo '<p><ul>';
 echo '	<li><a href="struct_empty.sql.php" id="struct_1" target="_blank">'._L('Empty OIDplus database without example data').'</a><span id="struct_cli_1"></span><br><br></li>';
 echo '	<li><a href="struct_with_examples.sql.php" id="struct_2" target="_blank">'._L('OIDplus database with example data').'</a><span id="struct_cli_2"></span><br><br></li>';
 echo '</ul></p>';
-echo '<p><font color="red">'._L('Warning: All data from the previous OIDplus instance will be deleted during the import.<br>If you already have an OIDplus database, skip to Step 3.').'</font></p>';
+echo '<p><font color="red">'._L('Warning: Existing OIDplus data will be deleted during the initialization of the database.').'</font></p>';
+echo '</div>';
+if ($already_setup) {
+	echo '<script>';
+	echo '$("#step2_enable").click(function() {';
+	echo '    if ($(this).is(":checked")) {';
+	echo '        $("#step2_inner").show();';
+	echo '    } else {';
+	echo '        $("#step2_inner").hide();';
+	echo '    }';
+	echo '});';
+	echo '$("#step2_inner").hide();';
+	echo '</script>';
+}
 echo '</div>';
 
 // ----------------------------------------
 
 echo '<div id="step3">';
-echo '<h2>'._L('Step %1: Save %2 file',3,'userdata/baseconfig/config.inc.php').'</h2>';
-echo '<p>'._L('Save following contents into the file <b>%1</b>','userdata/baseconfig/config.inc.php').'</p>';
+echo '<h2>'._L('Step %1: Save %2 file',3,BASECONFIG_FILE).'</h2>';
+echo '<p>'._L('Save following contents into the file <b>%1</b>',BASECONFIG_FILE).'</p>';
 echo '<code><font color="darkblue"><div id="config"></div></font></code>';
 echo '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(config)"></p>';
 echo '</div>';
@@ -183,9 +212,12 @@ echo '</div>';
 // ----------------------------------------
 
 echo '<div id="step4">';
-echo '<h2>'._L('Step %1: Continue to next step',4).'</h2>';
+if ($already_setup) {
+	echo '<h2>'._L('Step %1: Start OIDplus',4).'</h2>';
+} else {
+	echo '<h2>'._L('Step %1: Continue to next step',4).'</h2>';
+}
 echo '<p><input type="button" onclick="window.location.href=\'../\'" value="'._L('Continue').'"></p>';
-// echo '<p><a href="../">Run the OIDplus system</a></p>';
 echo '</div>';
 
 echo '<br><br><br>'; // because of iPhone Safari
