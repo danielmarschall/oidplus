@@ -3342,6 +3342,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Later, you can change the config file by hand, or run this assistant again.
+		]]></source>
+		<target><![CDATA[
+		Später können Sie die Datei per Hand ändern, oder diesen Assistenten erneut durchlaufen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Latest published version: %1
 		]]></source>
 		<target><![CDATA[
@@ -4498,6 +4506,14 @@
 		]]></source>
 		<target><![CDATA[
 		Auf Windows-Systemen sollte diese Erweiterung eigentlich standardmäßig aktiviert sein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.
+		]]></source>
+		<target><![CDATA[
+		Nachdem das Setup beendet ist, können Sie die Datei per Hand ändern, oder diesen Setup-Assistenten erneut durchlaufen.
 		]]></target>
 	</message>
 	<message>
@@ -6942,7 +6958,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		This assistant does not automatically write to this file. Instead, you need to copy-paste the contents into the file. Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.
+		This assistant does not automatically write to this file. Instead, you need to copy-paste the contents into the file.
 		]]></source>
 		<target><![CDATA[
 		Dieser Assistent schreibt die Datei nicht selbstständig. Sie müssen die Datei am Ende manuell schreiben ("Kopieren und Einfügen")
