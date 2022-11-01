@@ -57,7 +57,13 @@ if ($already_setup) {
 	echo _L('This setup assistant will help you creating the file <b>%1</b>.',BASECONFIG_FILE);
 }
 echo ' ';
-echo _L('This assistant does not automatically write to this file. Instead, you need to copy-paste the contents into the file. Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.').'</p>';
+echo _L('This assistant does not automatically write to this file. Instead, you need to copy-paste the contents into the file.');
+echo ' ';
+if ($already_setup) {
+	echo _L('Later, you can change the config file by hand, or run this assistant again.');
+} else {
+	echo _L('Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.');
+}
 echo '</p>';
 
 echo '<h2 id="systemCheckCaption" style="display:none">'._L('System check').'</h2>';
