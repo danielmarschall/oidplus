@@ -233,12 +233,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php-sha3.git",
-                "reference": "0bf1264b5ecb8750f28174c51a9c3e1c0eeb0df1"
+                "reference": "130de4c248b0d7b054da980ddc5fc9bcf05b0715"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php-sha3/zipball/0bf1264b5ecb8750f28174c51a9c3e1c0eeb0df1",
-                "reference": "0bf1264b5ecb8750f28174c51a9c3e1c0eeb0df1",
+                "url": "https://api.github.com/repos/danielmarschall/php-sha3/zipball/130de4c248b0d7b054da980ddc5fc9bcf05b0715",
+                "reference": "130de4c248b0d7b054da980ddc5fc9bcf05b0715",
                 "shasum": ""
             },
             "require": {
@@ -249,7 +249,7 @@
                 "phpstan/phpstan": "^1.8",
                 "phpunit/phpunit": "^4.8"
             },
-            "time": "2022-10-22T18:57:00+00:00",
+            "time": "2022-11-05T00:21:36+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

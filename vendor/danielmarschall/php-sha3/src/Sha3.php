@@ -313,7 +313,7 @@ final class Sha3
         $blocksize = self::STATE_SIZE - (2 * $mdlen);
 
         if (strlen($key) > ($blocksize/8)) {
-            $k_ = self::hash($key,true);
+            $k_ = self::hash($key,$mdlen,true);
         } else {
             $k_ = $key;
         }

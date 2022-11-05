@@ -1,4 +1,4 @@
-# php-sha3
+# php-sha3   [![Build Status](https://app.travis-ci.com/danielmarschall/php-sha3.svg?branch=master)](https://app.travis-ci.com/github/danielmarschall/php-sha3/) [![Coverage Status](https://coveralls.io/repos/github/danielmarschall/php-sha3/badge.svg)](https://coveralls.io/github/danielmarschall/php-sha3)
 
 Pure PHP implementation of SHA-3.
 
