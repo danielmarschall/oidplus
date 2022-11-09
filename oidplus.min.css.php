@@ -87,8 +87,8 @@ $out .= process_file(__DIR__ . '/vendor/gedmarc/layout/dist/layout-default.css')
 $out .= process_file(__DIR__ . '/includes/loading.css');
 
 // Find out base CSS
-if (isset($_REQUEST['theme'])) {
-	$theme = $_REQUEST['theme'];
+if (isset($_GET['theme'])) {
+	$theme = $_GET['theme'];
 	if (strpos($theme,'/') !== false) $theme = 'default';
 	if (strpos($theme,'\\') !== false) $theme = 'default';
 	if (strpos($theme,'..') !== false) $theme = 'default';
@@ -128,14 +128,14 @@ if (file_exists(__DIR__ . '/userdata/styles/oidplus_add.css')) {
 
 # ---
 
-$inv = isset($_REQUEST['invert']) ? $_REQUEST['invert'] : 0;
+$inv = isset($_GET['invert']) ? $_GET['invert'] : 0;
 if ($inv != 0) {
 	$out = invertColorsOfCSS($out);
 }
 
-$hs = isset($_REQUEST['h_shift']) ? $_REQUEST['h_shift'] : 0;
-$ss = isset($_REQUEST['s_shift']) ? $_REQUEST['s_shift'] : 0;
-$vs = isset($_REQUEST['v_shift']) ? $_REQUEST['v_shift'] : 0;
+$hs = isset($_GET['h_shift']) ? $_GET['h_shift'] : 0;
+$ss = isset($_GET['s_shift']) ? $_GET['s_shift'] : 0;
+$vs = isset($_GET['v_shift']) ? $_GET['v_shift'] : 0;
 if (($hs != 0) ||($ss != 0) || ($vs != 0)) {
 	$out = changeHueOfCSS($out, $hs, $ss, $vs);
 }

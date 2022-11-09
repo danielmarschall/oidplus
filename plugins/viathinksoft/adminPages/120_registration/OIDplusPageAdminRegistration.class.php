@@ -556,8 +556,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		# ---
 
 		echo '<option value="0"';
-		if (isset($_REQUEST['sent'])) {
-			if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 0)) echo ' selected';
+		if (isset($_POST['sent'])) {
+			if (isset($_POST['reg_privacy']) && ($_POST['reg_privacy'] == 0)) echo ' selected';
 		} else {
 			if ((OIDplus::config()->getValue('reg_privacy') == 0) || !OIDplus::config()->getValue('oobe_registration_done')) {
 				echo ' selected';
@@ -570,8 +570,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		# ---
 
 		echo '<option value="1"';
-		if (isset($_REQUEST['sent'])) {
-			if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 1)) echo ' selected';
+		if (isset($_POST['sent'])) {
+			if (isset($_POST['reg_privacy']) && ($_POST['reg_privacy'] == 1)) echo ' selected';
 		} else {
 			if ((OIDplus::config()->getValue('reg_privacy') == 1)) {
 				echo ' selected';
@@ -584,8 +584,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		# ---
 
 		echo '<option value="2"';
-		if (isset($_REQUEST['sent'])) {
-			if (isset($_REQUEST['reg_privacy']) && ($_REQUEST['reg_privacy'] == 2)) echo ' selected';
+		if (isset($_POST['sent'])) {
+			if (isset($_POST['reg_privacy']) && ($_POST['reg_privacy'] == 2)) echo ' selected';
 		} else {
 			if ((OIDplus::config()->getValue('reg_privacy') == 2)) {
 				echo ' selected';
@@ -602,7 +602,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		$msg = '';
 		if ($do_edits) {
 			try {
-				OIDplus::config()->setValue('reg_privacy', isset($_REQUEST['reg_privacy']) ? $_REQUEST['reg_privacy'] : 1);
+				OIDplus::config()->setValue('reg_privacy', isset($_POST['reg_privacy']) ? $_POST['reg_privacy'] : 1);
 				OIDplus::config()->setValue('oobe_registration_done', '1');
 			} catch (Exception $e) {
 				$msg = $e->getMessage();

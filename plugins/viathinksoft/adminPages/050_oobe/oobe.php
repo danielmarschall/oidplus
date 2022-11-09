@@ -64,7 +64,7 @@ echo '<form method="POST" action="oobe.php">';
 echo '<input type="hidden" name="sent" value="1">';
 
 if (OIDplus::getActiveCaptchaPlugin()->isVisible()) echo '<p><u>'._L('Step %1: Solve CAPTCHA',$step++).'</u></p>';
-if (isset($_REQUEST['sent'])) {
+if (isset($_POST['sent'])) {
 	try {
 		OIDplus::getActiveCaptchaPlugin()->captchaVerify($_POST);
 	} catch (Exception $e) {
@@ -87,8 +87,8 @@ if (OIDplus::authUtils()->isAdminLoggedIn()) {
 
 	echo '<p><input type="password" name="admin_password" value=""> (<a href="'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/">'._L('Forgot password?').'</a>) ';
 
-	if (isset($_REQUEST['sent'])) {
-		if (!OIDplus::authUtils()->adminCheckPassword(isset($_REQUEST['admin_password']) ? $_REQUEST['admin_password'] : '')) {
+	if (isset($_POST['sent'])) {
+		if (!OIDplus::authUtils()->adminCheckPassword(isset($_POST['admin_password']) ? $_POST['admin_password'] : '')) {
 			$errors_happened = true;
 			$edits_possible = false;
 			echo '<font color="red"><b>'._L('Wrong password').'</b></font>';
@@ -99,7 +99,7 @@ if (OIDplus::authUtils()->isAdminLoggedIn()) {
 }
 
 #------------------------
-$do_edits = isset($_REQUEST['sent']) && $edits_possible;;
+$do_edits = isset($_POST['sent']) && $edits_possible;;
 #------------------------
 
 # ---
@@ -109,11 +109,11 @@ function step_admin_email($step, $do_edits, &$errors_happened) {
 	echo '<input type="text" name="admin_email" value="';
 
 	$msg = '';
-	if (isset($_REQUEST['sent'])) {
-		echo htmlentities(isset($_REQUEST['admin_email']) ? $_REQUEST['admin_email'] : '');
+	if (isset($_POST['sent'])) {
+		echo htmlentities(isset($_POST['admin_email']) ? $_POST['admin_email'] : '');
 		if ($do_edits) {
 			try {
-				OIDplus::config()->setValue('admin_email', isset($_REQUEST['admin_email']) ? $_REQUEST['admin_email'] : '');
+				OIDplus::config()->setValue('admin_email', isset($_POST['admin_email']) ? $_POST['admin_email'] : '');
 			} catch (Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;
@@ -134,11 +134,11 @@ function step_system_title($step, $do_edits, &$errors_happened) {
 	echo '<input type="text" name="system_title" value="';
 
 	$msg = '';
-	if (isset($_REQUEST['sent'])) {
-		echo htmlentities(isset($_REQUEST['system_title']) ? $_REQUEST['system_title'] : '');
+	if (isset($_POST['sent'])) {
+		echo htmlentities(isset($_POST['system_title']) ? $_POST['system_title'] : '');
 		if ($do_edits) {
 			try {
-				OIDplus::config()->setValue('system_title', isset($_REQUEST['system_title']) ? $_REQUEST['system_title'] : '');
+				OIDplus::config()->setValue('system_title', isset($_POST['system_title']) ? $_POST['system_title'] : '');
 			} catch (Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;

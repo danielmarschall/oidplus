@@ -1166,8 +1166,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 			echo '<input type="checkbox" name="enable_ot_'.$ot::ns().'" id="enable_ot_'.$ot::ns().'"';
-			if (isset($_REQUEST['sent'])) {
-			        if (isset($_REQUEST['enable_ot_'.$ot::ns()])) {
+			if (isset($_POST['sent'])) {
+			        if (isset($_POST['enable_ot_'.$ot::ns()])) {
 					echo ' checked';
 					$enabled_ary[] = $ot::ns();
 				}
@@ -1179,8 +1179,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 		foreach (OIDplus::getDisabledObjectTypes() as $ot) {
 			echo '<input type="checkbox" name="enable_ot_'.$ot::ns().'" id="enable_ot_'.$ot::ns().'"';
-			if (isset($_REQUEST['sent'])) {
-			        if (isset($_REQUEST['enable_ot_'.$ot::ns()])) {
+			if (isset($_POST['sent'])) {
+			        if (isset($_POST['enable_ot_'.$ot::ns()])) {
 					echo ' checked';
 					$enabled_ary[] = $ot::ns();
 				}
