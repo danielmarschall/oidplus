@@ -72,6 +72,6 @@
             "install-path": "../sergeybrook/php-jws"
         }
     ],
-    "dev": true,
+    "dev": false,
     "dev-package-names": []
 }
