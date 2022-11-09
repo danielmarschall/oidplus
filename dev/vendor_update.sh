@@ -33,7 +33,7 @@ rm -rf vendor
 rm composer.lock
 
 # Download everything again
-composer update
+composer update --no-dev
 
 # Remove stuff we don't want to publish or PHP files which could be
 # executed (which would be a security risk, because the vendor/ directory
@@ -92,11 +92,11 @@ composer license > vendor/licenses
 # Update composer dependencies of plugins
 # -------
 
-composer update -d plugins/viathinksoft/publicPages/100_whois/whois/xml/
+composer update --no-dev -d plugins/viathinksoft/publicPages/100_whois/whois/xml/
 composer license -d plugins/viathinksoft/publicPages/100_whois/whois/xml/ > plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/licenses
 remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/xml/
 
-composer update -d plugins/viathinksoft/publicPages/100_whois/whois/json/
+composer update --no-dev -d plugins/viathinksoft/publicPages/100_whois/whois/json/
 composer license -d plugins/viathinksoft/publicPages/100_whois/whois/json/ > plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/licenses
 remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/json/
 

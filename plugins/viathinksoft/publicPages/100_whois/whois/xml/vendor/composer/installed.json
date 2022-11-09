@@ -46,6 +46,6 @@
             "install-path": "../robrichards/xmlseclibs"
         }
     ],
-    "dev": true,
+    "dev": false,
     "dev-package-names": []
 }

@@ -1221,6 +1221,6 @@
             "install-path": "../vakata/jstree"
         }
     ],
-    "dev": true,
+    "dev": false,
     "dev-package-names": []
 }
