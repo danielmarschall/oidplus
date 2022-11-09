@@ -215,8 +215,8 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 		echo '<p><u>'._L('Step %1: Color Theme',$step).'</u></p>';
 
 		echo '<input type="checkbox" name="color_invert" id="color_invert"';
-		if (isset($_REQUEST['sent'])) {
-		        if ($set_value = isset($_REQUEST['color_invert'])) {
+		if (isset($_POST['sent'])) {
+		        if ($set_value = isset($_POST['color_invert'])) {
 				echo ' checked';
 			}
 		} else {
