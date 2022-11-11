@@ -199,14 +199,18 @@ class OIDplusFourCC extends OIDplusObject {
 		}
 	}
 
-	// TODO: It would be nice if category and leaf items could have different pictures.
-	//       But the problem is, that the RA link should have a orange "FourCC" icon, not a folder icon
-	/*
-	public function getIcon($row) {
-		if (!$this->isLeafNode()) return null; // foldericon
+	public function getIcon($row=null) {
+		$in_login_treenode = false;
+		foreach (debug_backtrace() as $trace) {
+			// If we are inside the "Login" area (i.e. "Root object links"), we want the
+			// correct icon, not a folder icon!
+			if ($trace['class'] === 'OIDplusPagePublicLogin') $in_login_treenode = true;
+		}
+
+		if (!$in_login_treenode && !$this->isLeafNode()) return null; // foldericon
+
 		return parent::getIcon($row);
 	}
-	*/
 
 	public function one_up() {
 		// A FourCC is a FourCC, there is no hierarchy
