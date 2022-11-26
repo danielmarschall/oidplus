@@ -569,3 +569,21 @@ function alertError(txt) {
 	// TODO: as toast?
 	alert(txt);
 }
+
+/* AJAX success/error-handling */
+
+function oidplus_ajax_error(jqXHR, textStatus, errorThrown) {
+	if (errorThrown == "abort") return;
+	console.error(errorThrown, jqXHR);
+	alertError(_L("Error: %1", errorThrown));
+}
+
+function oidplus_ajax_success(data, cb) {
+	if (typeof data === "object" && "error" in data) {
+		alertError(_L("Error: %1", data.error));
+	} else if (typeof data === "object" && data.status >= 0) {
+		cb(data);
+	} else {
+		alertError(_L("Error: %1", data));
+	}
+}

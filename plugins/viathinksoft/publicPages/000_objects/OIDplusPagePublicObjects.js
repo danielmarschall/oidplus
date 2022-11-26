@@ -104,23 +104,18 @@ var OIDplusPagePublicObjects = {
 				weid:($("#weid")[0] ? $("#weid")[0].checked : null),
 				parent:parent
 			},
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
-			},
-			success:function(data) {
-				if ("error" in data) {
-					alertError(_L("Error: %1",data.error));
-				} else if (data.status >= 0) {
+			error: oidplus_ajax_error,
+			success: function (data) {
+				oidplus_ajax_success(data, function (data) {
 					if (data.status == 0/*OK*/) {
-						if (confirm(_L("Insert OK.")+"\n\n"+_L("Do you want to open the newly created object now?"))) {
+						if (confirm(_L("Insert OK.") + "\n\n" + _L("Do you want to open the newly created object now?"))) {
 							openAndSelectNode(data.inserted_id, parent);
 							return;
 						}
 					}
 
 					if ((data.status & 1) == 1/*RaNotExisting*/) {
-						if (confirm(_L("Insert OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",$("#ra_email")[0].value))) {
+						if (confirm(_L("Insert OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?", $("#ra_email")[0].value))) {
 							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email")[0].value);
 							return;
 						} else {
@@ -132,14 +127,14 @@ var OIDplusPagePublicObjects = {
 					}
 
 					if ((data.status & 2) == 2/*RaNotExistingNoInvitation*/) {
-						if (confirm(_L("Insert OK.")+"\n\n"+_L("Do you want to open the newly created object now?"))) {
+						if (confirm(_L("Insert OK.") + "\n\n" + _L("Do you want to open the newly created object now?"))) {
 							openAndSelectNode(data.inserted_id, parent);
 							return;
 						}
 					}
 
 					if ((data.status & 4) == 4/*IsWellKnownOID*/) {
-						if (confirm(_L("Insert OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.")+"\n\n"+_L("Do you want to open the newly created object now?"))) {
+						if (confirm(_L("Insert OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.") + "\n\n" + _L("Do you want to open the newly created object now?"))) {
 							openAndSelectNode(data.inserted_id, parent);
 							return;
 						}
@@ -147,9 +142,7 @@ var OIDplusPagePublicObjects = {
 
 					// TODO: Don't use reloadContent(); instead add a node at the tree at the left add at the right add a new row to the table
 					reloadContent();
-				} else {
-					alertError(_L("Error: %1",data));
-				}
+				});
 			}
 		});
 	},
@@ -179,21 +172,16 @@ var OIDplusPagePublicObjects = {
 				confidential:($("#hide_"+$.escapeSelector(id))[0] ? $("#hide_"+$.escapeSelector(id))[0].checked : null),
 				parent:parent
 			},
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
-			},
-			success:function(data) {
-				if ("error" in data) {
-					alertError(_L("Error: %1",data.error));
-				} else if (data.status >= 0) {
+			error: oidplus_ajax_error,
+			success: function (data) {
+				oidplus_ajax_success(data, function (data) {
 					if (data.status == 0/*OK*/) {
 						alertSuccess(_L("Update OK"));
 					}
 
 					if ((data.status & 1) == 1/*RaNotExisting*/) {
-						if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?",$("#ra_email_"+$.escapeSelector(id))[0].value))) {
-							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email_"+$.escapeSelector(id))[0].value);
+						if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?", $("#ra_email_" + $.escapeSelector(id))[0].value))) {
+							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email_" + $.escapeSelector(id))[0].value);
 							return;
 						}
 					}
@@ -208,9 +196,7 @@ var OIDplusPagePublicObjects = {
 
 					// reloadContent();
 					$('#oidtree').jstree("refresh");
-				} else {
-					alertError(_L("Error: %1",data));
-				}
+				});
 			}
 		});
 	},
@@ -235,19 +221,12 @@ var OIDplusPagePublicObjects = {
 				id:id,
 				parent:parent
 			},
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
-			},
-			success:function(data) {
-				if ("error" in data) {
-					alertError(_L("Error: %1",data.error));
-				} else if (data.status >= 0) {
+			error: oidplus_ajax_error,
+			success: function (data) {
+				oidplus_ajax_success(data, function (data) {
 					reloadContent();
 					// TODO: Don't use reloadContent(); instead delete node at the left tree and remove the row at the right table
-				} else {
-					alertError(_L("Error: %1",data.error));
-				}
+				});
 			}
 		});
 	},
@@ -272,14 +251,9 @@ var OIDplusPagePublicObjects = {
 				//description:($("#description")[0] ? $("#description")[0].value : null)
 				description:tinyMCE.get('description').getContent()
 			},
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
-			},
-			success:function(data) {
-				if ("error" in data) {
-					alertError(_L("Error: %1",data.error));
-				} else if (data.status >= 0) {
+			error: oidplus_ajax_error,
+			success: function (data) {
+				oidplus_ajax_success(data, function (data) {
 					alertSuccess(_L("Update OK"));
 					//reloadContent();
 					$('#oidtree').jstree("refresh");
@@ -292,9 +266,7 @@ var OIDplusPagePublicObjects = {
 
 					var mce = tinymce.get('description');
 					if (mce != null) mce.setDirty(false);
-				} else {
-					alertError(_L("Error: %1",data.error));
-				}
+				});
 			}
 		});
 	},

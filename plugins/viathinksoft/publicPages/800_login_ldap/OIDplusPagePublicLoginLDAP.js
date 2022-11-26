@@ -41,22 +41,18 @@ var OIDplusPagePublicLoginLDAP = {
 				remember_me:remember_me?1:0,
 				captcha: oidplus_captcha_response()
 			},
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
+			error: function (jqXHR, textStatus, errorThrown) {
+				oidplus_ajax_error(jqXHR, textStatus, errorThrown);
 				oidplus_captcha_reset();
 			},
-			success:function(data) {
-				if ("error" in data) {
-					alertError(_L("Error: %1",data.error));
-					oidplus_captcha_reset();
-				} else if (data.status >= 0) {
+			success: function (data) {
+				var ok = false;
+				oidplus_ajax_success(data, function (data) {
 					window.location.href = '?goto=oidplus%3Asystem';
 					// reloadContent();
-				} else {
-					alertError(_L("Error: %1",data));
-					oidplus_captcha_reset();
-				}
+					ok = true;
+				});
+				if (!ok) oidplus_captcha_reset();
 			}
 		});
 	},

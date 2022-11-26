@@ -64,18 +64,18 @@ var OIDplusPageAdminSoftwareUpdate = {
 			},
 			success: function(data) {
 				//hide_waiting_anim();
-				if ("error" in data) {
+				if (typeof data === "object" && "error" in data) {
 					$("#update_header").text(_L("Update failed"));
 					//alertError(_L("Error: %1",data.error));
-					if ("content" in data) {
+					if (typeof data === "object" && "content" in data) {
 						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + data.content + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data.error + "\n\n");
 					} else {
 						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data.error + "\n\n");
 					}
 					$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
-				} else if (data.status >= 0) {
+				} else if (typeof data === "object" && data.status >= 0) {
 
-					if (!("update_file" in data)) {
+					if (!(typeof data === "object" && "update_file" in data)) {
 
 						output = data.content.trim();
 						output = output.replace(/INFO:/g, '<span class="severity_2"><strong>' + _L('INFO') + ':</strong></span>');

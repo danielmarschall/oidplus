@@ -40,19 +40,12 @@ var OIDplusPageAdminOIDInfoExport = {
 				action: "import_oidinfo_oid",
 				oid: oid
 			},
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
-			},
-			success:function(data) {
-				if ("error" in data) {
-					alertError(_L("Error: %1",data.error));
-				} else if (data.status >= 0) {
-					console.log(_L("Imported OID %1",oid));
+			error: oidplus_ajax_error,
+			success: function (data) {
+				oidplus_ajax_success(data, function (data) {
+					console.log(_L("Imported OID %1", oid));
 					OIDplusPageAdminOIDInfoExport.removeMissingOid(oid);
-				} else {
-					alertError(_L("Error: %1",data));
-				}
+				});
 			}
 		});
 	},
@@ -79,14 +72,11 @@ var OIDplusPageAdminOIDInfoExport = {
 				$.xhrPool.remove(jqXHR);
 			},
 			data: form_data,
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
-			},
+			error: oidplus_ajax_error,
 			success:function(data) {
 				// TODO XXX: (Future feature) If the user decides that existing OIDs shall be overwritten, then we may not print "Ignored OIDs because they are already existing"
-				if ("error" in data) {
-					if ("count_imported_oids" in data) {
+				if (typeof data === "object" && "error" in data) {
+					if (typeof data === "object" && "count_imported_oids" in data) {
 						// TODO: Device if alertSuccess, alertWarning oder alertError is shown
 						alertSuccess(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
 							  _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
@@ -99,7 +89,7 @@ var OIDplusPageAdminOIDInfoExport = {
 					} else {
 						alertError(_L("Error: %1",data.error));
 					}
-				} else if (data.status >= 0) {
+				} else if (typeof data === "object" && data.status >= 0) {
 					// TODO: Device if alertSuccess, alertWarning oder alertError is shown
 					alertSuccess(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
 						  _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
@@ -107,7 +97,7 @@ var OIDplusPageAdminOIDInfoExport = {
 						  _L("Warnings: %1",data.count_warnings));
 					$('#userfile').val('');
 				} else {
-					if ("count_imported_oids" in data) {
+					if (typeof data === "object" && "count_imported_oids" in data) {
 						// TODO: Device if alertSuccess, alertWarning oder alertError is shown
 						alertSuccess(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
 							  _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
