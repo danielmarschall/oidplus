@@ -38,21 +38,14 @@ var OIDplusPageAdminCreateRa = {
 				password1: $("#password1").val(),
 				password2: $("#password2").val()
 			},
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
-			},
-			success: function(data) {
-				if ("error" in data) {
-					alertError(_L("Error: %1",data.error));
-				} else if (data.status >= 0) {
+			error: oidplus_ajax_error,
+			success: function (data) {
+				oidplus_ajax_success(data, function (data) {
 					alertSuccess(_L("Account created"));
 					//openOidInPanel('oidplus:rainfo$'+$("#email").val(),true);
 					// We need to reload the whole page, because the tree at the left contains a "List RA" list with the RAs
-					window.location.href = '?goto='+encodeURIComponent('oidplus:rainfo$'+$("#email").val());
-				} else {
-					alertError(_L("Error: %1",data));
-				}
+					window.location.href = '?goto=' + encodeURIComponent('oidplus:rainfo$' + $("#email").val());
+				});
 			}
 		});
 		return false;

@@ -47,19 +47,12 @@ var OIDplusPagePublicAttachments = {
 				id:id,
 				filename:file,
 			},
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
-			},
-			success:function(data) {
-				if ("error" in data) {
-					alertError(_L("Error: %1",data.error));
-				} else if (data.status >= 0) {
+			error: oidplus_ajax_error,
+			success: function (data) {
+				oidplus_ajax_success(data, function (data) {
 					alertSuccess(_L("OK"));
 					reloadContent();
-				} else {
-					alertError(_L("Error: %1",data));
-				}
+				});
 			}
 		});
 	},
@@ -87,20 +80,13 @@ var OIDplusPagePublicAttachments = {
 				$.xhrPool.remove(jqXHR);
 			},
 			data: form_data,
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
-			},
-			success:function(data) {
-				if ("error" in data) {
-					alertError(_L("Error: %1",data.error));
-				} else if (data.status >= 0) {
+			error: oidplus_ajax_error,
+			success: function (data) {
+				oidplus_ajax_success(data, function (data) {
 					alertSuccess(_L("OK"));
 					$('#fileAttachment').val('');
 					reloadContent();
-				} else {
-					alertError(_L("Error: %1",data));
-				}
+				});
 			}
 		});
 	},

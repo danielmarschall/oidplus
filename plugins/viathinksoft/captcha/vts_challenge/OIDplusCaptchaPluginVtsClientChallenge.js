@@ -74,28 +74,23 @@ var OIDplusCaptchaPluginVtsClientChallenge = {
 				plugin:OIDplusCaptchaPluginVtsClientChallenge.oid,
 				action:"get_challenge"
 			},
-			error:function(jqXHR, textStatus, errorThrown) {
+			error: function (jqXHR, textStatus, errorThrown) {
 				hide_waiting_anim();
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
+				oidplus_ajax_error(jqXHR, textStatus, errorThrown);
 			},
-			success:function(data) {
-				if ("error" in data) {
-					hide_waiting_anim();
-					alertError(_L("Error: %1",data.error));
-				} else if (data.status >= 0) {
+			success: function (data) {
+				hide_waiting_anim();
+				oidplus_ajax_success(data, function (data) {
 					OIDplusCaptchaPluginVtsClientChallenge.currentchallenge = data.challenge;
 					OIDplusCaptchaPluginVtsClientChallenge.currentresponse = null;
 					console.log("VTS Challenge: Loading of challenge complete");
 					if (data.autosolve) {
 						// That's ok, because the GUI is locked anyway
+						show_waiting_anim();
 						OIDplusCaptchaPluginVtsClientChallenge.currentresponse = OIDplusCaptchaPluginVtsClientChallenge.captchaResponse();
+						hide_waiting_anim();
 					}
-					hide_waiting_anim();
-				} else {
-					hide_waiting_anim();
-					alertError(_L("Error: %1",data));
-				}
+				});
 			}
 		});
 

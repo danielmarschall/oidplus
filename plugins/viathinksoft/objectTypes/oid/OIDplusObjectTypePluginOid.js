@@ -35,23 +35,12 @@ var OIDplusObjectTypePluginOid = {
 				plugin:OIDplusPagePublicObjects.oid,
 				action:"generate_uuid"
 			},
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
-			},
-			success:function(data) {
-				if ("error" in data) {
-					alertError(_L("Error: %1",data.error));
-				} else if (data.status >= 0) {
-					if (data.status == 0/*OK*/) {
-						$("#id").val(absolute ? "2.25." + data.intval : data.intval);
-						alertSuccess(_L("OK! Generated UUID %1 which resolves to OID %2", data.uuid, "2.25."+data.intval));
-					} else {
-						alertError(_L("Error: %1",data.status));
-					}
-				} else {
-					alertError(_L("Error: %1",data));
-				}
+			error: oidplus_ajax_error,
+			success: function (data) {
+				oidplus_ajax_success(data, function (data) {
+					$("#id").val(absolute ? "2.25." + data.intval : data.intval);
+					alertSuccess(_L("OK! Generated UUID %1 which resolves to OID %2", data.uuid, "2.25." + data.intval));
+				});
 			}
 		});
 	}

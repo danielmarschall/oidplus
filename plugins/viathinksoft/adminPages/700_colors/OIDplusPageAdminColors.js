@@ -144,23 +144,16 @@ var OIDplusPageAdminColors = {
 				invcolors: $("#icolor").is(':checked') ? 1 : 0,
 				theme: $("#theme")[0].value,
 			},
-			error:function(jqXHR, textStatus, errorThrown) {
-				if (errorThrown == "abort") return;
-				alertError(_L("Error: %1",errorThrown));
-			},
-			success:function(data) {
-				if ("error" in data) {
-					alertError(_L("Error: %1",data.error));
-				} else if (data.status >= 0) {
+			error: oidplus_ajax_error,
+			success: function (data) {
+				oidplus_ajax_success(data, function (data) {
 					OIDplusPageAdminColors.hue_shift_saved = OIDplusPageAdminColors.hue_shift;
 					OIDplusPageAdminColors.sat_shift_saved = OIDplusPageAdminColors.sat_shift;
 					OIDplusPageAdminColors.val_shift_saved = OIDplusPageAdminColors.val_shift;
 					OIDplusPageAdminColors.invcolors_saved = OIDplusPageAdminColors.invcolors;
 					OIDplusPageAdminColors.test_color_theme(); // apply visually
 					alertSuccess(_L("Update OK"));
-				} else {
-					alertError(_L("Error: %1",data));
-				}
+				});
 			}
 		});
 	}

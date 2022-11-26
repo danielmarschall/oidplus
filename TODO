@@ -128,7 +128,6 @@ SMALL THINGS
 - Object type plugins : take care that "treeicon.png" and "icon_big.png" exist everywhere (become standard)
 - freeoid: gmail app does not hyperlink the activation URL. why?
 - how to avoid invite spamming?
-- when a PHP error happens (i.e. the AJAX script did not manage to output a JSON), the AJAX script outputs "Error: SyntaxError: Unexpected token < in JSON at position 0" ... better show the user the actual message, or something more user-friendly at least
 - when login expired, remove entries in the treeview
 - disable specific functions (e.g. invite, login, rainfo, forgot password) if the plugins are not installed (check if class type is registered using class_exists())
 - <abbr> in <code> is double underlined; that's not good
