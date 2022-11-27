@@ -20,6 +20,8 @@ var OIDplusPageRaAutomatedAJAXCalls = {
 	oid: "1.3.6.1.4.1.37476.2.5.2.4.2.910",
 
 	blacklistJWT: function(user) {
+		if(!window.confirm(_L("Are you sure that you want to blacklist all access tokens?"))) return false;
+
 		$.ajax({
 			url:"ajax.php",
 			method:"POST",
