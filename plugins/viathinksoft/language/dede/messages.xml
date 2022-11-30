@@ -542,6 +542,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Are you sure that you want to blacklist all access tokens?
+		]]></source>
+		<target><![CDATA[
+		Sind Sie sicher, dass Sie alle Zugriffs-Token widerrufen wollen?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Are you sure that you want to delete %1?
 		]]></source>
 		<target><![CDATA[
