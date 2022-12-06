@@ -178,7 +178,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 
 		foreach($this->getAlternativesForQuery($id) as $alt) {
 
-			if (strpos($alt,':') !== false) continue;
+			if (strpos($alt,':') === false) continue;
 
 			list($ns, $altIdRaw) = explode(':', $alt, 2);
 
