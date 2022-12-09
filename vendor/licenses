@@ -22,15 +22,15 @@ dcodeio/bcrypt.js                master master       BSD-3-Clause, MIT
 emn178/js-sha3                   master master       MIT                   
 firebase/php-jwt                 v5.5.1              BSD-3-Clause          
 gedmarc/layout                   master master       GPL-3.0-or-later, MIT 
-matthiasmullie/minify            1.3.69              MIT                   
+matthiasmullie/minify            1.3.70              MIT                   
 matthiasmullie/path-converter    1.1.3               MIT                   
 paragonie/constant_time_encoding v2.6.3              MIT                   
 paragonie/random_compat          v9.99.100           MIT                   
-phpseclib/phpseclib              3.0.14              MIT                   
+phpseclib/phpseclib              3.0.x-dev 8568af7   MIT                   
 script47/bs5-utils               master master       MIT                   
 spamspan/spamspan                master              GPL-2.0-only          
 symfony/polyfill-mbstring        v1.19.0             MIT                   
-tinymce/tinymce                  5.x-dev 8ba4429     LGPL-2.1-only         
+tinymce/tinymce                  5.x-dev f078d8e     LGPL-2.1-only         
 twbs/bootstrap                   v5.2.3              MIT                   
 tweeb/tinymce-i18n               2.0.4               MIT                   
 vakata/jstree                    3.3.12              MIT                   
