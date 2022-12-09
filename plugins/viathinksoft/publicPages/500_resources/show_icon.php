@@ -44,7 +44,7 @@ if (!isset($_REQUEST['mode'])) {
 }
 
 if (!isset($_REQUEST['lang'])) {
-	$lang = 'enus';
+	$lang = '';
 } else {
 	$lang = $_REQUEST['lang'];
 }
@@ -62,7 +62,7 @@ if (file_exists($candidate1) || is_dir($candidate1)) {
 
 if (($mode == 'leaf_url_icon16') || ($mode == 'leaf_doc_icon16') || ($mode == 'folder_icon16')) {
 
-	if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'tree', $lang))) {
+	if (!empty($lang) && file_exists($icon_candidate = getIconCandidate($file, 'png', 'tree', $lang))) {
 		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
 	} else if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'tree', ''))) {
 		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
@@ -74,7 +74,7 @@ if (($mode == 'leaf_url_icon16') || ($mode == 'leaf_doc_icon16') || ($mode == 'f
 
 } else if (($mode == 'leaf_url_icon') || ($mode == 'leaf_doc_icon') || ($mode == 'folder_icon')) {
 
-	if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'big', $lang))) {
+	if (!empty($lang) && file_exists($icon_candidate = getIconCandidate($file, 'png', 'big', $lang))) {
 		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
 	} else if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'big', ''))) {
 		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));

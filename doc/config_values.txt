@@ -302,6 +302,14 @@ OIDplus::baseConfig()->getValue('RA_PASSWORD_PEPPER_ALGO', 'sha512');
                          hashes are bound to that pepper. If you change the pepper,
                          then ALL passwords of RAs become INVALID!
 
+OIDplus::baseConfig()->setValue('DEFAULT_LANGUAGE', 'enus');
+                         Default language of the system. This is the language
+                         a new visitor will see if no "lang=" parameter is used
+                         and no cookie is set.
+                         Must be a valid language in the plugins directory.
+                         Currently available:
+                         enus = English USA (default)
+                         dede = German Germany
 
 ----------------------------------------------------
 (4) LDAP FIELDS (see document ldap_installation.txt)

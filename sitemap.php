@@ -27,7 +27,7 @@ OIDplus::init(false);
 
 $non_default_languages = array();
 foreach (OIDplus::getAvailableLangs() as $code) {
-	if ($code == OIDplus::DEFAULT_LANGUAGE) continue;
+	if ($code == OIDplus::getDefaultLang()) continue;
 	$non_default_languages[] = $code;
 }
 
