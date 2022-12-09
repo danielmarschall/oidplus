@@ -39,7 +39,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			if ($static_node_id == $x['id']) echo '<b>';
 			if (isset($x['indent'])) echo str_repeat('&nbsp;', $x['indent']*5);
 			$cur_lang = OIDplus::getCurrentLang();
-			if ($cur_lang != OIDplus::DEFAULT_LANGUAGE) {
+			if ($cur_lang != OIDplus::getDefaultLang()) {
 				echo '<a href="?lang='.$cur_lang.'&amp;goto='.urlencode($x['id']).'">';
 			} else {
 				echo '<a href="?goto='.urlencode($x['id']).'">';

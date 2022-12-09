@@ -34,8 +34,6 @@ class OIDplus extends OIDplusBaseClass {
 
 	protected static $html = true;
 
-	/*public*/ const DEFAULT_LANGUAGE = 'enus'; // the language of the source code
-
 	/*public*/ const PATH_RELATIVE = 1;                   // e.g. "../"
 	/*public*/ const PATH_ABSOLUTE = 2;                   // e.g. "http://www.example.com/oidplus/"
 	/*public*/ const PATH_ABSOLUTE_CANONICAL = 3;         // e.g. "http://www.example.org/oidplus/" (if baseconfig CANONICAL_SYSTEM_URL is set)
@@ -1648,6 +1646,23 @@ class OIDplus extends OIDplusBaseClass {
 		return $langs;
 	}
 
+	public static function getDefaultLang() {
+		static $thrownOnce = false; // avoid endless loop inside OIDplusConfigInitializationException
+
+		$lang = self::$baseConfig->getValue('DEFAULT_LANGUAGE', 'enus');
+
+		if (!in_array($lang,self::getAvailableLangs())) {
+			if (!$thrownOnce) {
+				$thrownOnce = true;
+				throw new OIDplusConfigInitializationException(_L('DEFAULT_LANGUAGE points to an invalid language plugin (Consider setting to "enus" = "English USA").'));
+			} else {
+				return 'enus';
+			}
+		}
+
+		return $lang;
+	}
+
 	public static function getCurrentLang() {
 		if (isset($_GET['lang'])) {
 			$lang = $_GET['lang'];
@@ -1656,7 +1671,7 @@ class OIDplus extends OIDplusBaseClass {
 		} else if (isset($_COOKIE['LANGUAGE'])) {
 			$lang = $_COOKIE['LANGUAGE'];
 		} else {
-			$lang = self::DEFAULT_LANGUAGE;
+			$lang = self::getDefaultLang();
 		}
 		$lang = substr(preg_replace('@[^a-z]@ismU', '', $lang),0,4); // sanitize
 		return $lang;

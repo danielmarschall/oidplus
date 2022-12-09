@@ -72,7 +72,7 @@ class OIDplusGui extends OIDplusBaseClass {
 		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
 			$flag = $pluginManifest->getLanguageFlag();
 			$code = $pluginManifest->getLanguageCode();
-			if ($code != OIDplus::DEFAULT_LANGUAGE) $non_default_languages++;
+			if ($code != OIDplus::getDefaultLang()) $non_default_languages++;
 			if ($code == OIDplus::getCurrentLang()) {
 				$class = 'lng_flag';
 			} else {
