@@ -3,16 +3,15 @@
 Currently, the main repository of OIDplus is
 https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/oidplus/
 
-The GitHub repository located at https://github.com/danielmarschall/oidplus is currently only a mirror. (This might change in the future, but for now, SVN is the main source)
+The GitHub repository located at https://github.com/danielmarschall/oidplus is only a mirror at the moment. (This might change in the future, but for now, SVN is the main source)
 
 How you can contribute:
 
-- Report bugs either at
-  https://www.viathinksoft.com/thinkbug/thinkbug.php?id=97
+- Report bugs either as GitHub issue
+  https://github.com/danielmarschall/oidplus/issues
   or via email to Daniel Marschall
   https://www.viathinksoft.com/contact/daniel-marschall
-  or as GitHub issue
-  https://github.com/danielmarschall/oidplus/issues (recommended)
+  if the report is confidential.
 
 - If you have written code snippets or patches,
   you can either send them via email, bug tracker,
