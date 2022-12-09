@@ -20,8 +20,9 @@ Therefore, we commented out following features which would require PHP >=7.1:
   because this would require PHP 7.1
   Therefore in composer.json we write:
 		"symfony/polyfill-mbstring": "<=1.19",
-  the same thing with phpseclib which also now requires PHP 7.1:
-		"phpseclib/phpseclib": "<=3.0.14"
+  the same thing with phpseclib which also now requires PHP 7.1,
+  therefore we stay with 3.0 LTS:
+		"phpseclib/phpseclib": "~3.0"
   Once PHP 7.1 is OK, we can go with the latest versions again.
 - In dev/vendor_update.sh we patch composer packages pulled from GitHub
   to achieve PHP 7.0 compat

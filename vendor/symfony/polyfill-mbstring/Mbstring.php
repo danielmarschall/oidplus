@@ -79,7 +79,9 @@ final class Mbstring
 
     public static function mb_convert_encoding($s, $toEncoding, $fromEncoding = null)
     {
-        if (\is_array($fromEncoding) || false !== strpos($fromEncoding, ',')) {
+        // Daniel Marschall Hotfix 09 Dec 2022 to support PHP 8.2
+        //if (\is_array($fromEncoding) || false !== strpos($fromEncoding, ',')) {
+        if (!is_null($fromEncoding) && ((\is_array($fromEncoding) || false !== strpos($fromEncoding, ',')))) {
             $fromEncoding = self::mb_detect_encoding($s, $fromEncoding);
         } else {
             $fromEncoding = self::getEncoding($fromEncoding);
