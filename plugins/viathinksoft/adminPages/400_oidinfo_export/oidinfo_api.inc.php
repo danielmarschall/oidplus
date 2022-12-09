@@ -3,7 +3,7 @@
 /*
  * OID-Info.com API for PHP
  * Copyright 2019-2022 Daniel Marschall, ViaThinkSoft
- * Version 2022-03-24
+ * Version 2022-12-09
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -574,13 +574,13 @@ class OIDInfoAPI {
 		}
 		// End request by O.D. 26. August 2019
 
-		if ($params['auto_extract_name'] || $params['auto_extract_url']) {
+		if (($params['auto_extract_name'] != '') || ($params['auto_extract_url'] != '')) {
 			if (!empty($elements['information'])) $elements['information'] .= '<br /><br />';
-			if ($params['auto_extract_name'] || $params['auto_extract_url']) {
+			if (($params['auto_extract_name'] != '') || ($params['auto_extract_url'] != '')) {
 				$elements['information'] .= 'Automatically extracted from <a href="'.$params['auto_extract_url'].'">'.$params['auto_extract_name'].'</a>.';
-			} else if ($params['auto_extract_name']) {
+			} else if ($params['auto_extract_name'] != '') {
 				$elements['information'] .= 'Automatically extracted from '.$params['auto_extract_name'];
-			} else if ($params['auto_extract_url']) {
+			} else if ($params['auto_extract_url'] != '') {
 				$hr_url = $params['auto_extract_url'];
 				// $hr_url = preg_replace('@^https{0,1}://@ismU', '', $hr_url);
 				$hr_url = preg_replace('@^http://@ismU', '', $hr_url);
