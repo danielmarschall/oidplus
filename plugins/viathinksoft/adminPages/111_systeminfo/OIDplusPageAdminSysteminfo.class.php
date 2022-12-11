@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,8 +80,8 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 				$cont = preg_replace('@(h1|h2|h3|h4|h5) {.+}@ismU', '', $cont);
 
 				// Make compatible for dark themes by removing all foreground and background colors
-				$cont = preg_replace('@(body) {.+}@ismU', '', $cont);
-				$cont = preg_replace('@background-color:(.+);@ismU', '', $cont);
+				$cont = preg_replace('@(body) {.+}@ismU', '', $cont, 1);
+				$cont = preg_replace('@background-color:(.+)[\\};]@ismU', '', $cont);
 				$cont = '<span style="font-family: sans-serif;">'.$cont.'</span>';
 
 				// Font sizes
