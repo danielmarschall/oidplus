@@ -1654,7 +1654,7 @@ class OIDplus extends OIDplusBaseClass {
 		if (!in_array($lang,self::getAvailableLangs())) {
 			if (!$thrownOnce) {
 				$thrownOnce = true;
-				throw new OIDplusConfigInitializationException(_L('DEFAULT_LANGUAGE points to an invalid language plugin (Consider setting to "enus" = "English USA").'));
+				throw new OIDplusConfigInitializationException(_L('DEFAULT_LANGUAGE points to an invalid language plugin. (Consider setting to "enus" = "English USA".)'));
 			} else {
 				return 'enus';
 			}

@@ -110,14 +110,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		(active)
-		]]></source>
-		<target><![CDATA[
-		(aktiv)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		(admin does not require email verification)
 		]]></source>
 		<target><![CDATA[
@@ -1506,6 +1498,14 @@
 		]]></source>
 		<target><![CDATA[
 		Datenbank-Dialekt-Erkennung fehlgeschlagen: Mehrere Dialekte erkannt. Bitte Basiskonfiguration FORCE_DBMS_SLANG nutzen, um einen Dialekt festzulegen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		DEFAULT_LANGUAGE points to an invalid language plugin. (Consider setting to "enus" = "English USA".)
+		]]></source>
+		<target><![CDATA[
+		DEFAULT_LANGUAGE zeigt auf ein nicht existierendes Sprach-Plugin. (Verwenden Sie "dede" = "Deutsch/Deutschland".)
 		]]></target>
 	</message>
 	<message>
@@ -8046,6 +8046,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		active
+		]]></source>
+		<target><![CDATA[
+		aktiv
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		affected objects: %1
 		]]></source>
 		<target><![CDATA[
@@ -8074,6 +8082,14 @@
 		]]></source>
 		<target><![CDATA[
 		Prüfsumme
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		default
+		]]></source>
+		<target><![CDATA[
+		standard
 		]]></target>
 	</message>
 	<message>
