@@ -41,7 +41,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
 		} else if ($modifier == 1) {
 			// active
-			$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b> '._L('(active)').'</a></td>';
+			$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b> ('.htmlentities($na_reason).')</a></td>';
 		} else if ($modifier == 2) {
 			// not available with reason
 			$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><font color="gray">'.htmlentities(get_class($plugin)).'</font></a> <font color="gray">('.$na_reason.')</font></td>';
@@ -345,7 +345,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						$active = $plugin::id() == OIDplus::baseConfig()->getValue('DATABASE_PLUGIN');
 						if ($active && !$show_db_active) continue;
 						if (!$active && !$show_db_inactive) continue;
-						$this->pluginTableLine($out, $plugin, $active?1:0);
+						$this->pluginTableLine($out, $plugin, $active?1:0, _L('active'));
 					}
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
@@ -362,7 +362,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						$active = $plugin::id() == OIDplus::db()->getSlang()->id();
 						if ($active && !$show_sql_active) continue;
 						if (!$active && !$show_sql_inactive) continue;
-						$this->pluginTableLine($out, $plugin, $active?1:0);
+						$this->pluginTableLine($out, $plugin, $active?1:0, _L('active'));
 					}
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
@@ -409,7 +409,8 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<table class="table table-bordered table-striped">';
 					$this->pluginTableHead($out);
 					foreach ($plugins as $plugin) {
-						$this->pluginTableLine($out, $plugin);
+						$default = OIDplus::getDefaultLang() === $plugin->getLanguageCode();
+						$this->pluginTableLine($out, $plugin, $default?1:0, _L('default'));
 					}
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
@@ -426,7 +427,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						$active = OIDplus::config()->getValue('design') === basename($plugin->getPluginDirectory());
 						if ($active && !$show_design_active) continue;
 						if (!$active && !$show_design_inactive) continue;
-						$this->pluginTableLine($out, $plugin, $active?1:0);
+						$this->pluginTableLine($out, $plugin, $active?1:0, _L('active'));
 					}
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
@@ -444,7 +445,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						$active = $plugin::id() == $captcha_plugin_name;
 						if ($active && !$show_captcha_active) continue;
 						if (!$active && !$show_captcha_inactive) continue;
-						$this->pluginTableLine($out, $plugin, $active?1:0);
+						$this->pluginTableLine($out, $plugin, $active?1:0, _L('active'));
 					}
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';

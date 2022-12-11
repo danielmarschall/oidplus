@@ -21,4 +21,8 @@ if (!defined('INSIDE_OIDPLUS')) die();
 
 abstract class OIDplusLanguagePlugin extends OIDplusPlugin {
 
+	public function getLanguageCode() {
+		return $this->getManifest()->getLanguageCode();
+	}
+
 }
