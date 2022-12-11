@@ -79,7 +79,8 @@ class SecureMailer {
 	}
 
 	public static function utf8Subject($subject) {
-		return '=?UTF-8?B?'.base64_encode(utf8_encode($subject)).'?=';
+		$subject = mb_convert_encoding($subject, 'UTF-8');
+		return '=?UTF-8?B?'.base64_encode($subject).'?=';
 	}
 
 	private function _sendMail($recipient, $subject, $message, $add_headers='') {
