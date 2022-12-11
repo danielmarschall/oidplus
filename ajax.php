@@ -149,7 +149,7 @@ try {
 
 	if ($out === false) {
 		// Some modules (like ODBC) might output non-UTF8 data
-		$json_out['error'] = utf8_encode($errmsg);
+		$json_out['error'] = vts_utf8_encode($errmsg);
 		$out = json_encode($json_out);
 	}
 

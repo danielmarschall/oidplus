@@ -91,7 +91,8 @@ class VtsBrowserDownload {
 			header('Content-Disposition: '.$disposition.';filename="'.$name_msie.'"');
 		} else if (strstr($ua, 'FIREFOX')) {
 			// TODO: Implement "encodeRFC5987ValueChars" described at https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent ?
-			header('Content-Disposition: '.$disposition.';filename*="UTF-8\'\''.utf8_encode($name).'"');
+			$name_utf8 = mb_convert_encoding($name, 'UTF-8');
+			header('Content-Disposition: '.$disposition.';filename*="UTF-8\'\''.$name_utf8.'"');
 		} else {
 			// Note: There is possibly a bug in Google Chrome: https://stackoverflow.com/questions/61866508/chrome-ignores-content-disposition-filename
 			header('Content-Disposition: '.$disposition.';filename="'.$name.'"');

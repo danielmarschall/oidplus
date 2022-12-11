@@ -141,7 +141,7 @@ function utf16_to_utf8($str) {
 }
 
 function html_named_to_numeric_entities($str) {
-	if (!mb_detect_encoding($str, 'UTF-8', true)) $str = utf8_encode($str);
+	$str = mb_convert_encoding($str, 'UTF-8');
 	return mb_htmlentities(decodeNamedEntities($str));
 }
 

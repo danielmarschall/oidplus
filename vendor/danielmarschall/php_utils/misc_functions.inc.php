@@ -86,16 +86,25 @@ function get_calling_function() {
 }
 
 function convert_to_utf8_no_bom($cont) {
-	if (mb_detect_encoding($cont, "auto", true) != 'UTF-8') {
-		# $cont = mb_convert_encoding($cont, 'UTF-8', 'Windows-1252');
-		# $cont = mb_convert_encoding($cont, 'UTF-8', 'auto');
-		$cont = mb_convert_encoding($cont, 'UTF-8');
-	}
+	$cont = vts_utf8_encode($cont);
 
 	// Remove BOM
 	$bom = pack('H*','EFBBBF');
 	$cont = preg_replace("/^$bom/", '', $cont);
 	return $cont;
+}
+
+function vts_utf8_encode($text) {
+	$enc = mb_detect_encoding($text, null, true);
+	if ($enc === false) $enc = mb_detect_encoding($text, ['ASCII', 'UTF-8', 'Windows-1252', 'ISO-8859-1'], true);
+	if ($enc === false) $enc = null;
+
+	if ($enc === 'UTF-8') return $text;
+
+	$res = mb_convert_encoding($text, 'UTF-8', $enc);
+	if ($res === false) $res = iconv('UTF-8', 'UTF-8//IGNORE', $text);
+
+	return $res;
 }
 
 function stripHtmlComments($html) {
