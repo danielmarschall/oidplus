@@ -1649,7 +1649,7 @@ class OIDplus extends OIDplusBaseClass {
 	public static function getDefaultLang() {
 		static $thrownOnce = false; // avoid endless loop inside OIDplusConfigInitializationException
 
-		$lang = self::$baseConfig->getValue('DEFAULT_LANGUAGE', 'enus');
+		$lang = self::baseConfig()->getValue('DEFAULT_LANGUAGE', 'enus');
 
 		if (!in_array($lang,self::getAvailableLangs())) {
 			if (!$thrownOnce) {
