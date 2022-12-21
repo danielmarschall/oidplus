@@ -95,7 +95,7 @@
         'danielmarschall/vnag' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '85fb29d887bcfd6e251029d73cb12caaa28e4ec2',
+            'reference' => '839d7ddfe183bf59ab1a2a37e0c24e7653340ccb',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/vnag',
             'aliases' => array(
@@ -178,7 +178,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '8568af7f9bd6487c3283a24d7b546f9b30597cb9',
+            'reference' => 'f28693d38ba21bb0d9f0c411ee5dae2b178201da',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
