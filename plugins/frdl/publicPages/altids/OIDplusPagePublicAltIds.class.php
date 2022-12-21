@@ -7,7 +7,11 @@
  * Licensed under the MIT License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace Frdlweb\OIDplus;
+
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusObject;
+use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
 
 class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 
@@ -103,7 +107,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 		if (strpos($id,':') !== false) {
 			list($ns, $altIdRaw) = explode(':', $id, 2);
 			if($ns === 'weid'){
-				$id='oid:'.\WeidOidConverter::weid2oid($id);
+				$id='oid:'.\Frdl\Weid\WeidOidConverter::weid2oid($id);
 			}
 		}
 
@@ -127,7 +131,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 			if (strpos($alt,':') !== false) {
 				list($ns, $altIdRaw) = explode(':', $alt, 2);
 				if($ns === 'oid'){
-					$weid=\WeidOidConverter::oid2weid($altIdRaw);
+					$weid=\Frdl\Weid\WeidOidConverter::oid2weid($altIdRaw);
 					break;
 				}
 			}

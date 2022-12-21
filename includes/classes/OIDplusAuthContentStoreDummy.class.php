@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 # TODO: Rename class?
 abstract class OIDplusAuthContentStoreDummy extends OIDplusAuthContentStore {

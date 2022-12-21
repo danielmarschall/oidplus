@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusAid extends OIDplusObject {
 	private $aid;
@@ -332,7 +332,7 @@ class OIDplusAid extends OIDplusObject {
 				$len = str_pad("$len", 2, '0', STR_PAD_LEFT);
 				$type = '06'; // absolute OID
 				$der = "$type $len $der";
-				$oid = OidDerConverter::derToOID(OidDerConverter::hexStrToArray($der));
+				$oid = \OidDerConverter::derToOID(\OidDerConverter::hexStrToArray($der));
 				if ($oid) {
 					$oid = ltrim($oid,'.');
 					$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));

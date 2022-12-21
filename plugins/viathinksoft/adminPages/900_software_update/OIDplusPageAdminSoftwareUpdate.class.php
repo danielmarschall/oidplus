@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
@@ -318,7 +318,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				$content .= "\n";
 			}
 			return $content;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return false;
 		}
 
@@ -346,7 +346,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 			$max_rev = array_keys($ary)[0];
 			$newest_version = 'svn-' . $max_rev;
 			return $newest_version;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return false;
 		}
 	}
@@ -357,7 +357,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 		ob_start();
 		try {
 			$cont = $this->showChangelog($local_installation);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$cont = _L('Error: %1',$e->getMessage());
 		}
 		ob_end_clean();

@@ -22,6 +22,7 @@
 // Example: The automatic publishing of OIDs will then be done by this script
 // and not by a random visitor.
 
+use ViaThinkSoft\OIDplus\OIDplus;
 
 try {
 	require_once __DIR__ . '/includes/oidplus.inc.php';

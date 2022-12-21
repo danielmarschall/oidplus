@@ -19,8 +19,6 @@
 
 // Before we do ANYTHING, check for dependencies! Do not include anything (except the GMP supplement) yet.
 
-define('INSIDE_OIDPLUS', true);
-
 require_once __DIR__ . '/functions.inc.php'; // Required for _L()
 
 if (version_compare(PHP_VERSION, '7.0.0') < 0) {
@@ -80,6 +78,11 @@ include_once __DIR__ . '/../vendor/danielmarschall/php_utils/misc_functions.inc.
 spl_autoload_register(function ($class_name) {
 	static $class_refs = null;
 
+	// We only load based on the last element of the class name (ignore namespace)
+	// If there are multiple classes matching that name we just include all class files
+	$path = explode('\\',$class_name);
+	$class_name = end($path);
+
 	if (is_null($class_refs)) {
 		$valid_plugin_folders = array(
 			'adminPages',
@@ -104,7 +107,9 @@ spl_autoload_register(function ($class_name) {
 					$cn = strtolower($namespace) . $cn;
 				}
 				if (!isset($class_refs[$cn])) {
-					$class_refs[$cn] = $filename;
+					$class_refs[$cn] = array($filename);
+				} else {
+					$class_refs[$cn][] = $filename;;
 				}
 			}
 		};
@@ -125,7 +130,9 @@ spl_autoload_register(function ($class_name) {
 
 	$class_name = strtolower($class_name);
 	if (isset($class_refs[$class_name])) {
-		require $class_refs[$class_name];
+		foreach ($class_refs[$class_name] as $inc) {
+			require $inc;
+		}
 		unset($class_refs[$class_name]); // this emulates a "require_once" and is faster
 	}
 });

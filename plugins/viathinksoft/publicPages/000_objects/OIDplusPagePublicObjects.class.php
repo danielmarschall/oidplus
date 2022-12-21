@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
@@ -339,7 +339,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if ($objParent::ns() == 'oid') {
 				if (strtolower(substr(trim($params['id']),0,5)) === 'weid:') {
 					if ($objParent->isRoot()) {
-						$params['id'] = WeidOidConverter::weid2oid($params['id']);
+						$params['id'] = \Frdl\Weid\WeidOidConverter::weid2oid($params['id']);
 						if ($params['id'] === false) {
 							throw new OIDplusException(_L('Invalid WEID'));
 						}
@@ -1195,7 +1195,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			try {
 				OIDplus::config()->setValue('objecttypes_enabled', implode(';', $enabled_ary));
 				OIDplus::config()->setValue('oobe_objects_done', '1');
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;
 			}

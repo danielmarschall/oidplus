@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusOid extends OIDplusObject {
 	private $oid;
@@ -120,7 +120,7 @@ class OIDplusOid extends OIDplusObject {
 
 		$tmp = _L('DER encoding');
 		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="https://misc.daniel-marschall.de/asn.1/oid-converter/online.php" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
-		$tech_info[$tmp] = str_replace(' ', ':', OidDerConverter::hexarrayToStr(OidDerConverter::oidToDER($this->nodeId(false))));
+		$tech_info[$tmp] = str_replace(' ', ':', \OidDerConverter::hexarrayToStr(\OidDerConverter::oidToDER($this->nodeId(false))));
 
 		return $tech_info;
 	}
@@ -194,7 +194,7 @@ class OIDplusOid extends OIDplusObject {
 		// Dirty hack: We prepend '0.' in front of the OID to enforce the
 		//             creation of a Class A weid (weid:root:) . Otherwise we could not
 		//             get the hidden arc value "8" from "weid:4" (which is actually "weid:pen:SZ5-8-?"
-		$weid = WeidOidConverter::oid2weid('0.'.$this->getDotNotation());
+		$weid = \Frdl\Weid\WeidOidConverter::oid2weid('0.'.$this->getDotNotation());
 		if ($weid === false) return false;
 		$ary = explode(':', $weid);
 		$weid = array_pop($ary); // remove namespace and sub-namespace if existing
@@ -204,7 +204,7 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	public function getWeidNotation($withAbbr=true) {
-		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
+		$weid = \Frdl\Weid\WeidOidConverter::oid2weid($this->getDotNotation());
 		if ($withAbbr) {
 			$ary = explode(':', $weid);
 			$weid = array_pop($ary); // remove namespace and sub-namespace if existing
@@ -531,8 +531,8 @@ class OIDplusOid extends OIDplusObject {
 
 		// (VTS F6) Mapping OID-to-AID if possible
 		try {
-			$test_der = OidDerConverter::hexarrayToStr(OidDerConverter::oidToDER($this->nodeId(false)));
-		} catch (Exception $e) {
+			$test_der = \OidDerConverter::hexarrayToStr(\OidDerConverter::oidToDER($this->nodeId(false)));
+		} catch (\Exception $e) {
 			$test_der = '00'; // error, should not happen
 		}
 		if (substr($test_der,0,3) == '06 ') { // 06 = ASN.1 type of Absolute ID

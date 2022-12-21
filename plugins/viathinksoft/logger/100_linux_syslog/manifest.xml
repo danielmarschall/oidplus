@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.9.1 https://oidplus.viathinksoft.com/oidplus/plugins/manifest_plugin_logger.xsd">
 
-	<type>OIDplusLoggerPlugin</type>
+	<type>ViaThinkSoft\OIDplus\OIDplusLoggerPlugin</type>
 
 	<info>
 		<name>Syslog (Linux)</name>
@@ -16,7 +16,7 @@
 	</info>
 
 	<php>
-		<mainclass>OIDplusLoggerPluginLinuxSyslog</mainclass>
+		<mainclass>ViaThinkSoft\OIDplus\OIDplusLoggerPluginLinuxSyslog</mainclass>
 	</php>
 	
 </manifest>

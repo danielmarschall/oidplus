@@ -17,6 +17,11 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusDatabasePlugin;
+use ViaThinkSoft\OIDplus\OIDplusSqlSlangPlugin;
+use ViaThinkSoft\OIDplus\OIDplusCaptchaPlugin;
+
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 define('BASECONFIG_FILE', 'userdata/baseconfig/config.inc.php');
@@ -90,7 +95,7 @@ if (file_exists(__DIR__ . '/../doc/database_connectivity_diagram.png')) {
 
 echo _L('Database plugin').': <select name="db_plugin" onChange="dbplugin_changed()" id="db_plugin">';
 
-OIDplus::registerAllPlugins('database', 'OIDplusDatabasePlugin', array('OIDplus','registerDatabasePlugin'));
+OIDplus::registerAllPlugins('database', OIDplusDatabasePlugin::class, array(OIDplus::class,'registerDatabasePlugin'));
 foreach (OIDplus::getDatabasePlugins() as $plugin) {
 	$selected = $plugin::id() == 'MySQL' ? ' selected="true"' : '';
 	echo '<option value="'.htmlentities($plugin::id()).'"'.$selected.'>'.htmlentities($plugin::id()).'</option>';
@@ -100,7 +105,7 @@ echo '</select>';
 
 echo '<div style="margin-left:50px">';
 
-OIDplus::registerAllPlugins('sqlSlang', 'OIDplusSqlSlangPlugin', array('OIDplus','registerSqlSlangPlugin'));
+OIDplus::registerAllPlugins('sqlSlang', OIDplusSqlSlangPlugin::class, array(OIDplus::class,'registerSqlSlangPlugin'));
 $sql_slang_selection = array();
 foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 	$slang_id = $plugin::id();
@@ -111,7 +116,7 @@ foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 $sql_slang_selection = implode("\n", $sql_slang_selection);
 
 $found_db_plugins = 0;
-//OIDplus::registerAllPlugins('database', 'OIDplusDatabasePlugin', array('OIDplus','registerDatabasePlugin'));
+//OIDplus::registerAllPlugins('database', OIDplusDatabasePlugin::class, array(OIDplus::class,'registerDatabasePlugin'));
 foreach (OIDplus::getDatabasePlugins() as $plugin) {
 	$found_db_plugins++;
 	$cont = $plugin->setupHTML();
@@ -135,7 +140,7 @@ echo '<h3>'._L('CAPTCHA').'</h3>';
 
 echo _L('CAPTCHA plugin').': <select name="captcha_plugin" onChange="captchaplugin_changed()" id="captcha_plugin">';
 
-OIDplus::registerAllPlugins('captcha', 'OIDplusCaptchaPlugin', array('OIDplus','registerCaptchaPlugin'));
+OIDplus::registerAllPlugins('captcha', OIDplusCaptchaPlugin::class, array(OIDplus::class,'registerCaptchaPlugin'));
 foreach (OIDplus::getCaptchaPlugins() as $plugin) {
 	$selected = strtolower($plugin::id()) === strtolower('None') ? ' selected="true"' : ''; // select "None" by default
 	echo '<option value="'.htmlentities($plugin::id()).'"'.$selected.'>'.htmlentities($plugin::id()).'</option>';

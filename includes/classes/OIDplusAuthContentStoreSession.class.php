@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 
@@ -35,7 +35,7 @@ class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 	public function getValue($name, $default = NULL) {
 		try {
 			return self::getSessionHandler()->getValue($name, $default);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			self::getSessionHandler()->destroySession();
 			// TODO: For some reason If destroySession() is called, we won't get this Exception?!
 			throw new OIDplusException(_L('Internal error with session. Please reload the page and log-in again. %1', $e->getMessage()));

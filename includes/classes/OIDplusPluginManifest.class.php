@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPluginManifest extends OIDplusBaseClass {
 
@@ -125,7 +125,7 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 		return $this->manifestFile;
 	}
 
-	public function getRawXml(): SimpleXMLElement {
+	public function getRawXml(): \SimpleXMLElement {
 		return $this->rawXML;
 	}
 

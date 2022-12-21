@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
@@ -110,7 +110,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 				    <input type="submit" value="'._L('Send recovery information').'">
 				  </form>';
 
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 
 				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'._L('Error: %1',htmlentities($e->getMessage())).'</p>';

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
@@ -131,7 +131,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 		try {
 			self::checkUploadDir($basepath);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$error = _L('This functionality is not available due to a misconfiguration');
 			if (OIDplus::authUtils()->isAdminLoggedIn()) {
 				$error .= ': '.$e->getMessage();
@@ -405,7 +405,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 					OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes$'.OIDplus::getCurrentLang().'.conf',
 					OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes.conf'
 				);
-				$output .= '<td>'.htmlentities(VtsFileTypeDetect::getDescription($file, $lookup_files)).'</td>';
+				$output .= '<td>'.htmlentities(\VtsFileTypeDetect::getDescription($file, $lookup_files)).'</td>';
 
 				$output .= '     <td><button type="button" name="download_'.md5($file).'" id="download_'.md5($file).'" class="btn btn-success btn-xs download" onclick="OIDplusPagePublicAttachments.downloadAttachment('.js_escape(OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE)).', current_node,'.js_escape(basename($file)).')">'._L('Download').'</button></td>';
 				if ($can_delete) {
@@ -429,7 +429,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 				$output .= '</form>';
 				$doshow = true;
 			}
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$doshow = true;
 			$output = '<p>'.$e->getMessage().'</p>';
 		}

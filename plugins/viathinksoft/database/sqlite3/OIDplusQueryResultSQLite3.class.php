@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusQueryResultSQLite3 extends OIDplusQueryResult {
 	protected $no_resultset;
@@ -82,7 +82,7 @@ class OIDplusQueryResultSQLite3 extends OIDplusQueryResult {
 		$ary = $this->fetch_array();
 		if (!$ary) return null;
 
-		$obj = new stdClass;
+		$obj = new \stdClass;
 		foreach ($ary as $name => $val) {
 			$obj->$name = $val;
 		}

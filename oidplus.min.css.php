@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusDesignPlugin;
 use MatthiasMullie\Minify;
 
 require_once __DIR__ . '/includes/oidplus.inc.php';
@@ -101,7 +103,7 @@ if (file_exists(__DIR__ . '/userdata/styles/oidplus_base.css')) {
 	$out .= process_file(__DIR__ . '/userdata/styles/oidplus_base.css');
 } else {
 	// Use CSS of the design plugin
-	OIDplus::registerAllPlugins('design', 'OIDplusDesignPlugin', array('OIDplus','registerDesignPlugin'));
+	OIDplus::registerAllPlugins('design', OIDplusDesignPlugin::class, array(OIDplus::class,'registerDesignPlugin'));
 	$plugins = OIDplus::getDesignPlugins();
 	foreach ($plugins as $plugin) {
 		if ((basename($plugin->getPluginDirectory())) == $theme) {

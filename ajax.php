@@ -17,6 +17,9 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusException;
+
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
 try {
@@ -85,7 +88,7 @@ try {
 			$_REQUEST['id'] = OIDplus::prefilterQuery($_REQUEST['id'], false);
 			try {
 				$json_out = OIDplus::gui()->generateContentPage($_REQUEST['id']);
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$json_out = array();
 				$json_out['title'] = _L('Error');
 				$json_out['icon'] = 'img/error.png';
@@ -129,13 +132,13 @@ try {
 	@header('Content-Type:application/json; charset=utf-8');
 	echo json_encode($json_out);
 
-} catch (Exception $e) {
+} catch (\Exception $e) {
 
 	try {
 		if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported() && (OIDplus::db()->transaction_level() > 0)) {
 			OIDplus::db()->transaction_rollback();
 		}
-	} catch (Exception $e1) {
+	} catch (\Exception $e1) {
 	}
 
 	$errmsg = $e->getMessage();

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusOIDIP {
 
@@ -526,7 +526,7 @@ class OIDplusOIDIP {
 				try {
 					require_once __DIR__.'/whois/json/security.inc.php';
 					$json = oidplus_json_sign($json, OIDplus::getSystemPrivateKey(), OIDplus::getSystemPublicKey());
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					// die($e->getMessage());
 				}
 			}
@@ -609,7 +609,7 @@ class OIDplusOIDIP {
 				try {
 					require_once __DIR__.'/whois/xml/security.inc.php';
 					$xml = oidplus_xml_sign($xml, OIDplus::getSystemPrivateKey(), OIDplus::getSystemPublicKey());
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					$xml .= '<!-- Cannot add signature: '.$e.' -->';
 				}
 			}

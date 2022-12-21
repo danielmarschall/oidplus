@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusPagePlugin extends OIDplusPlugin {
 	public function htmlHeaderUpdate(&$head_elems) {}

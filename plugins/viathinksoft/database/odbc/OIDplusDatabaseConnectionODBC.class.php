@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	private $conn;
@@ -154,7 +154,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 
 		try {
 			@odbc_exec($this->conn, "SET NAMES 'utf8'"); // Does most likely NOT work with ODBC. Try adding ";CHARSET=UTF8" (or similar) to the DSN
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 		}
 
 		// We check if the DBMS supports autocommit.

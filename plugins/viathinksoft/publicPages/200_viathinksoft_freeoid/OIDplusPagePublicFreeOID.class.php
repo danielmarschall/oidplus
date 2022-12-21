@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
@@ -143,7 +143,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 				OIDplus::db()->query("insert into ###objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, ".OIDplus::db()->sqlDate().")", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
 				OIDplusObject::resetObjectInformationCache();
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$ra->delete();
 				throw $e;
 			}
@@ -238,7 +238,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 					$out['text'] .= '<p>'._L('<b>Note:</b> Since September 2022, owners of FreeOID automatically receive a free ISO-7816 compliant <b>Application Identifier</b> (AID) with the format <code>D2:76:00:01:86:F0:(FreeOID):FF:(PIX)</code> (up to 64 bits application specific PIX, depending on the length of the FreeOID number).');
 $out['text'] .= ' - <a '.OIDplus::gui()->link('aid:D276000186F1').'>'._L('More information').'</a></p>';
 				}
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$out['text'] = _L('Error: %1',$e->getMessage());
 			}
 		} else if (explode('$',$id)[0] == 'oidplus:com.viathinksoft.freeoid.activate_freeoid') {

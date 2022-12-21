@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 
@@ -42,11 +42,11 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 		}
 
 		try {
-			$x = new COM(self::CLASS_ViaThinkSoftSimpleEventLog);
+			$x = new \COM(self::CLASS_ViaThinkSoftSimpleEventLog);
 			$reason = '?'; // LogSimulate() must actively clear it if everything is OK
 			$x->LogSimulate(self::LOGPROVIDER, self::LOGEVENT_MSG_SUCCESS, 'TEST', $reason);/** @phpstan-ignore-line */
 			return $reason != '';
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$reason = $e->getMessage();
 			return false;
 		}
@@ -81,7 +81,7 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 		}
 
 		try {
-			$x = new COM(self::CLASS_ViaThinkSoftSimpleEventLog);
+			$x = new \COM(self::CLASS_ViaThinkSoftSimpleEventLog);
 
 			$admin_severity = 0;
 			foreach ($users as list($severity, $username)) {
@@ -92,7 +92,7 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 			$x->LogEvent(self::LOGPROVIDER, self::convertOIDplusToWindowsSeverity($admin_severity), $event);/** @phpstan-ignore-line */
 
 			return true;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return false;
 		}
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 
@@ -231,7 +231,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 			try {
 				OIDplus::config()->setValue('color_invert', $set_value ? 1 : 0);
 				OIDplus::config()->setValue('oobe_colors_done', '1');
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;
 			}

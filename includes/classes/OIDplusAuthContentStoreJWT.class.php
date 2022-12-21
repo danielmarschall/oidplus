@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 
@@ -190,7 +190,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 
 					// Do various checks if the token is allowed and not blacklisted
 					self::jwtSecurityCheck($tmp);
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					if (isset($_GET[self::COOKIE_NAME]) || isset($_POST[self::COOKIE_NAME])) {
 						// Most likely an AJAX request. We can throw an Exception
 						throw new OIDplusException(_L('The JWT token was rejected: %1',$e->getMessage()));

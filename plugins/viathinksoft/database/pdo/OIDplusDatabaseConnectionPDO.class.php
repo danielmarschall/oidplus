@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	private $conn = null;
@@ -74,7 +74,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			$out = @($this->conn->lastInsertId());
 			if ($out === false) return parent::insert_id(); // fallback method that uses the SQL slang
 			return $out;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return parent::insert_id(); // fallback method that uses the SQL slang
 		}
 	}
@@ -90,9 +90,9 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 
 		try {
 			$options = [
-			    PDO::ATTR_ERRMODE            => PDO::ERRMODE_SILENT,
-			    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-			    PDO::ATTR_EMULATE_PREPARES   => true,
+			    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_SILENT,
+			    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+			    \PDO::ATTR_EMULATE_PREPARES   => true,
 			];
 
 			// Try connecting to the database
@@ -102,8 +102,8 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 
 			if (stripos($dsn,"charset=") === false) $dsn = "$dsn;charset=UTF8";
 
-			$this->conn = new PDO($dsn, $username, $password, $options);
-		} catch (PDOException $e) {
+			$this->conn = new \PDO($dsn, $username, $password, $options);
+		} catch (\PDOException $e) {
 			$message = $e->getMessage();
 			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' '.$message));
 		}
@@ -112,7 +112,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 
 		try {
 			@$this->conn->exec("SET NAMES 'utf8'");
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 		}
 
 		// We check if the DBMS supports autocommit.
@@ -126,7 +126,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			$this->conn->beginTransaction();
 			$this->conn->rollBack();
 			$this->transactions_supported = true;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->transactions_supported = false;
 		}
 	}

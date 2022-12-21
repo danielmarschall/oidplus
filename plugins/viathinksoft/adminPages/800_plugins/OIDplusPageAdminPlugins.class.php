@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 
@@ -82,17 +82,17 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			$back_link = 'oidplus:system_plugins';
-			if (get_parent_class($classname) == 'OIDplusPagePluginPublic') $back_link = 'oidplus:system_plugins.pages.public';
-			if (get_parent_class($classname) == 'OIDplusPagePluginRa') $back_link = 'oidplus:system_plugins.pages.ra';
-			if (get_parent_class($classname) == 'OIDplusPagePluginAdmin') $back_link = 'oidplus:system_plugins.pages.admin';
-			if (get_parent_class($classname) == 'OIDplusObjectTypePlugin') $back_link = 'oidplus:system_plugins.objects';
-			if (get_parent_class($classname) == 'OIDplusDatabasePlugin') $back_link = 'oidplus:system_plugins.database';
-			if (get_parent_class($classname) == 'OIDplusSqlSlangPlugin') $back_link = 'oidplus:system_plugins.sql';
-			if (get_parent_class($classname) == 'OIDplusAuthPlugin') $back_link = 'oidplus:system_plugins.auth';
-			if (get_parent_class($classname) == 'OIDplusLoggerPlugin') $back_link = 'oidplus:system_plugins.logger';
-			if (get_parent_class($classname) == 'OIDplusLanguagePlugin') $back_link = 'oidplus:system_plugins.language';
-			if (get_parent_class($classname) == 'OIDplusDesignPlugin') $back_link = 'oidplus:system_plugins.design';
-			if (get_parent_class($classname) == 'OIDplusCaptchaPlugin') $back_link = 'oidplus:system_plugins.captcha';
+			if (get_parent_class($classname) == OIDplusPagePluginPublic::class) $back_link = 'oidplus:system_plugins.pages.public';
+			if (get_parent_class($classname) == OIDplusPagePluginRa::class) $back_link = 'oidplus:system_plugins.pages.ra';
+			if (get_parent_class($classname) == OIDplusPagePluginAdmin::class) $back_link = 'oidplus:system_plugins.pages.admin';
+			if (get_parent_class($classname) == OIDplusObjectTypePlugin::class) $back_link = 'oidplus:system_plugins.objects';
+			if (get_parent_class($classname) == OIDplusDatabasePlugin::class) $back_link = 'oidplus:system_plugins.database';
+			if (get_parent_class($classname) == OIDplusSqlSlangPlugin::class) $back_link = 'oidplus:system_plugins.sql';
+			if (get_parent_class($classname) == OIDplusAuthPlugin::class) $back_link = 'oidplus:system_plugins.auth';
+			if (get_parent_class($classname) == OIDplusLoggerPlugin::class) $back_link = 'oidplus:system_plugins.logger';
+			if (get_parent_class($classname) == OIDplusLanguagePlugin::class) $back_link = 'oidplus:system_plugins.language';
+			if (get_parent_class($classname) == OIDplusDesignPlugin::class) $back_link = 'oidplus:system_plugins.design';
+			if (get_parent_class($classname) == OIDplusCaptchaPlugin::class) $back_link = 'oidplus:system_plugins.captcha';
 			$out['text'] = '<p><a '.OIDplus::gui()->link($back_link).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 
 			$out['text'] .= '<div><label class="padding_label">'._L('Class name').'</label><b>'.htmlentities($classname).'</b></div>'.

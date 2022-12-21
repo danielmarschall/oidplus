@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
@@ -604,7 +604,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 			try {
 				OIDplus::config()->setValue('reg_privacy', isset($_POST['reg_privacy']) ? $_POST['reg_privacy'] : 1);
 				OIDplus::config()->setValue('oobe_registration_done', '1');
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;
 			}

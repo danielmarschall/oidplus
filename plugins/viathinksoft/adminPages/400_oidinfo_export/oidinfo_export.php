@@ -17,13 +17,17 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\OIDplusPageAdminOIDInfoExport;
+
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 header('Content-Type:text/html; charset=UTF-8');
 
 OIDplus::init(true);
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPageAdminOIDInfoExport', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPageAdminOIDInfoExport', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	private $conn = null; // only with MySQLnd
@@ -104,7 +104,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		$socket   = OIDplus::baseConfig()->getValue('MYSQL_SOCKET',   '');
 		list($hostname,$port) = explode(':', $host.':'.ini_get("mysqli.default_port"));
 		$port = intval($port);
-		$this->conn = @new mysqli($hostname, $username, $password, $database, $port, $socket);
+		$this->conn = @new \mysqli($hostname, $username, $password, $database, $port, $socket);
 		if (!empty($this->conn->connect_error) || ($this->conn->connect_errno != 0)) {
 			$message = $this->conn->connect_error;
 			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' '.$message));

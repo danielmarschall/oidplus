@@ -24,6 +24,7 @@
 // If you cannot use cron.sh or cron.bat for cronjobs, then you can use
 // a WebCron service (e.g. https://www.easycron.com/ ) instead, using cron.php
 
+use ViaThinkSoft\OIDplus\OIDplus;
 
 try {
 	require_once __DIR__ . '/includes/oidplus.inc.php';
@@ -32,7 +33,7 @@ try {
 	OIDplus::init(false);
 	OIDplus::invoke_shutdown();
 	ob_end_clean();
-} catch (Exception $e) {
+} catch (\Exception $e) {
 	http_response_code(500); // Internal Server Error
 	echo $e->getMessage();
 }

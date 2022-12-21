@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+
 include __DIR__.'/../includes/oidplus.inc.php';
 
 header('Content-Type:text/plain');

@@ -19,7 +19,12 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace Frdlweb\OIDplus;
+
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusObject;
+use ViaThinkSoft\OIDplus\OIDplusOIDIP;
+use ViaThinkSoft\OIDplus\OIDplusPagePublicObjects;
 
 class OIDplusRDAP {
 

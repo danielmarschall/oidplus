@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	private $conn = null;
@@ -29,7 +29,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 		if (is_null($prepared_args)) {
 			try {
 				$res = $this->conn->query($sql);
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$res = false;
 			}
 			if ($res === false) {
@@ -55,7 +55,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 			} else {
 				try {
 					$stmt = $this->conn->prepare($sql);
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					$stmt = false;
 				}
 				if ($stmt === false) {
@@ -75,7 +75,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 
 			try {
 				$ps = $stmt->execute();
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$ps = false;
 			}
 			if ($ps === false) {
@@ -93,7 +93,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 			// e.g. the config table. Therefore, our testcase will fail.
 			return (int)$this->conn->lastInsertRowID();
 			//return (int)$this->query('select last_insert_rowid() as id')->fetch_object()->id;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return 0;
 		}
 	}
@@ -119,8 +119,8 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 				$filename = OIDplus::localpath().$filename;
 			}
 
-			$this->conn = new SQLite3($filename, $flags, $encryption);
-		} catch (Exception $e) {
+			$this->conn = new \SQLite3($filename, $flags, $encryption);
+		} catch (\Exception $e) {
 			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' ' . $e->getMessage()));
 		}
 

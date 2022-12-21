@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusSqlSlangPluginSQLite extends OIDplusSqlSlangPlugin {
 
@@ -77,7 +77,7 @@ class OIDplusSqlSlangPluginSQLite extends OIDplusSqlSlangPlugin {
 		try {
 			$db->query("select sqlite_version as dbms_version");
 			return true;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return false;
 		}
 	}

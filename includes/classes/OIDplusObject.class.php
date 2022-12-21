@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusObject extends OIDplusBaseClass {
 	const UUID_NAMEBASED_NS_OidPlusMisc = 'ad1654e6-7e15-11e4-9ef6-78e3b5fc7f22';
@@ -26,7 +26,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 			try {
 				$good = false;
-				if (get_parent_class($ot) == 'OIDplusObject') {
+				if (get_parent_class($ot) == OIDplusObject::class) {
 					$reflector = new \ReflectionMethod($ot, 'parse');
 					$isImplemented = ($reflector->getDeclaringClass()->getName() === $ot);
 					if ($isImplemented) { // avoid endless loop if parse is not overriden
@@ -36,7 +36,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				// We need to do the workaround with "$good", otherwise PHPstan shows
 				// "Call to an undefined static method object::parse()"
 				if ($good && $obj = $ot::parse($node_id)) return $obj;
-			} catch (Exception $e) {}
+			} catch (\Exception $e) {}
 		}
 		return null;
 	}

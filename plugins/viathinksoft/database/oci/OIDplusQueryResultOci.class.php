@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusQueryResultOci extends OIDplusQueryResult {
 	protected $no_resultset;
@@ -83,7 +83,7 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 	}
 
 	private static function array_to_stdobj($ary) {
-		$obj = new stdClass;
+		$obj = new \stdClass;
 		foreach ($ary as $name => $val) {
 			$obj->$name = $val;
 

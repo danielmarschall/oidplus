@@ -17,6 +17,10 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\OIDplusPageAdminVNagVersionCheck;
+
 include __DIR__ . '/../../../../vendor/danielmarschall/vnag/framework/vnag_framework.inc.php';
 include __DIR__ . '/../../../../includes/oidplus.inc.php';
 
@@ -24,7 +28,7 @@ define('OIDPLUS_VNAG_MAX_CACHE_AGE', 60); // seconds (TODO: in base config?)
 
 OIDplus::init(false);
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPageAdminVNagVersionCheck', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPageAdminVNagVersionCheck', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 
@@ -142,7 +146,7 @@ function getLatestRevision() {
 		krsort($ary);
 		$max_rev = array_keys($ary)[0];
 		return 'svn-' . $max_rev;
-	} catch (Exception $e) {
+	} catch (\Exception $e) {
 		return false;
 	}
 }

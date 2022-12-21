@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 	private $conn = null;
@@ -73,7 +73,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 	public function insert_id(): int {
 		try {
 			return (int)$this->query('select lastval() as id')->fetch_object()->id;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return 0;
 		}
 	}
@@ -127,7 +127,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 
 		try {
 			$this->query("SET NAMES 'utf8'");
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 		}
 	}
 
