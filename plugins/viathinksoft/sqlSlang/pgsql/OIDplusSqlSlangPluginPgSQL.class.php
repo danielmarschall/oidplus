@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusSqlSlangPluginPgSQL extends OIDplusSqlSlangPlugin {
 
@@ -58,7 +58,7 @@ class OIDplusSqlSlangPluginPgSQL extends OIDplusSqlSlangPlugin {
 			$vers = $db->query("select version() as dbms_version")->fetch_object()->dbms_version;
 			$vers = strtolower($vers);
 			return strpos($vers, 'postgresql') !== false;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return false;
 		}
 	}

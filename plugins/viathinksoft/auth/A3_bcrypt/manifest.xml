@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.8.1 https://oidplus.viathinksoft.com/oidplus/plugins/manifest_plugin_auth.xsd">
 
-	<type>OIDplusAuthPlugin</type>
+	<type>ViaThinkSoft\OIDplus\OIDplusAuthPlugin</type>
 
 	<info>
 		<name>BCrypt hash</name>
@@ -18,7 +18,7 @@
 	</info>
 
 	<php>
-		<mainclass>OIDplusAuthPluginBCrypt</mainclass>
+		<mainclass>ViaThinkSoft\OIDplus\OIDplusAuthPluginBCrypt</mainclass>
 	</php>
 	
 </manifest>

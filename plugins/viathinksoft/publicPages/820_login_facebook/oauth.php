@@ -17,6 +17,11 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusGui;
+use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\OIDplusRA;
+
 # More information about the OAuth2 implementation:
 # - https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
 # - https://developers.facebook.com/tools/explorer/
@@ -24,9 +29,9 @@
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 OIDplus::init(true);
-set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
+set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPagePublicLoginFacebook', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPagePublicLoginFacebook', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 

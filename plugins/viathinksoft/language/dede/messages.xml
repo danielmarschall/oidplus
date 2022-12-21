@@ -5270,18 +5270,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Plugin "%1/%2" is erroneous
+		Plugin "%1" is erroneous
 		]]></source>
 		<target><![CDATA[
-		Plugin "%1/%2" ist fehlerhaft
+		Plugin "%1" ist fehlerhaft
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		Plugin "%1/%2" is misplaced
+		Plugin "%1" is misplaced
 		]]></source>
 		<target><![CDATA[
-		Plugin "%1/%2" ist am falschen Ort
+		Plugin "%1" ist am falschen Ort
 		]]></target>
 	</message>
 	<message>
@@ -6806,6 +6806,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The plugin uses no namespaces. The new version of OIDplus requires plugin class files to be in a namespace. Please notify your plugin author and ask for an update.
+		]]></source>
+		<target><![CDATA[
+		Das Plugin verwendet keinen PHP-Namensraum. Die neue Version von OIDplus erfordert dass alle Plugins Klassen-Namensräume verwenden. Bitte kontaktieren Sie den Author des Plugins, um ein Update zu erhalten.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The query according to OID Information Protocol is:
 		]]></source>
 		<target><![CDATA[
@@ -6938,6 +6946,14 @@
 		]]></source>
 		<target><![CDATA[
 		Diese XML-Dateien folgende dem <a %1>XML-Schema</a> von <b>oid-info.com</b>. Sie können jedoch auch für andere Zwecke verwendet werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Third-party plugins must not use the ViaThinkSoft PHP namespace. Please use your own vendor namespace.
+		]]></source>
+		<target><![CDATA[
+		Drittanbieter-Plugins dürfen nicht den ViaThinkSoft PHP-Namensraum verwenden. Bitte verwenden Sie einen eigenen Namespace.
 		]]></target>
 	</message>
 	<message>
@@ -7978,6 +7994,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ihre OIDplus-System-ID (abgeleitet vom öffentlichen Schlüssel) ist:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Your base configuration file is outdated. Please change "%1" to "%2".
+		]]></source>
+		<target><![CDATA[
+		Die Basiskonfigurations-Datei ist veraltet. Bitte ändern Sie "%1" zu "%2".
 		]]></target>
 	</message>
 	<message>

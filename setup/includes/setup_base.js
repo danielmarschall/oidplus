@@ -108,6 +108,8 @@ function doRebuild(admPwdHash, pwComment) {
 			'<i>// If you don\'t want to run setup again, you can also change most of the settings directly in this file.</i><br>' + // do not translate
 			'<i>// List of possible values: doc/config_values.txt</i><br>' + // do not translate
 			'<br>' +
+			'use ViaThinkSoft\\OIDplus\\OIDplus;<br>' +
+			'<br>' +
 			'OIDplus::baseConfig()->setValue(\'CONFIG_VERSION\',    2.1);<br>' +
 			'<br>' +
 			// Passwords are Base64 encoded to avoid that passwords can be read upon first sight,
@@ -123,7 +125,7 @@ function doRebuild(admPwdHash, pwComment) {
 			}
 		}
 		$("#config")[0].innerHTML = $("#config")[0].innerHTML +
-			'<br>' +
+			//'<br>' +
 			'OIDplus::baseConfig()->setValue(\'TABLENAME_PREFIX\',  \''+$("#tablename_prefix")[0].value+'\');<br>' +
 			'<br>' +
 			'OIDplus::baseConfig()->setValue(\'SERVER_SECRET\',     \''+generateRandomString(32)+'\');<br>' +

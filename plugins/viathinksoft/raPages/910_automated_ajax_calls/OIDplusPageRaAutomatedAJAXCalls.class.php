@@ -20,7 +20,7 @@
 // ATTENTION: If you change something, please make sure that the changes
 //            are synchronous with OIDplusPageAdminAutomatedAJAXCalls
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 

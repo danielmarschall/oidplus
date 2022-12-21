@@ -4,13 +4,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1 https://oidplus.viathinksoft.com/oidplus/plugins/manifest_plugin_page.xsd">
 
-	<type>OIDplusPagePluginPublic</type>
+	<type>ViaThinkSoft\OIDplus\OIDplusPagePluginPublic</type>
 
 	<info>
 		<name>AltIds Tracking and Reverse Lookup</name>
 		<author>Frdlweb</author>
 		<license>MIT</license>
-		<version>1.0.2</version>
+		<version>1.0.3</version>
 		<descriptionHTML>
 		<![CDATA[
 		<a href="https://github.com/frdl/oidplus-plugin-alternate-id-tracking" target="_blank">AltIds Tracking and Reverse Lookup</a><br/>
@@ -21,7 +21,7 @@
 	</info>
 
 	<php>
-		<mainclass>OIDplusPagePublicAltIds</mainclass>
+		<mainclass>Frdlweb\OIDplus\OIDplusPagePublicAltIds</mainclass>
 	</php>
 
 	<css>

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 // TODO: should this be a different plugin type? A page without gui is weird!
 class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {

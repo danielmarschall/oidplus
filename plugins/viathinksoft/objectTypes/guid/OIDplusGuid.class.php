@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusGuid extends OIDplusObject {
 	private $guid;
@@ -180,7 +180,7 @@ class OIDplusGuid extends OIDplusObject {
 		foreach (debug_backtrace() as $trace) {
 			// If we are inside the "Login" area (i.e. "Root object links"), we want the
 			// correct icon, not a folder icon!
-			if ($trace['class'] === 'OIDplusPagePublicLogin') $in_login_treenode = true;
+			if ($trace['class'] === OIDplusPagePublicLogin::class) $in_login_treenode = true;
 		}
 
 		if (!$in_login_treenode && !$this->isLeafNode()) return null; // foldericon

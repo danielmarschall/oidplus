@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 
@@ -120,7 +120,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 				if ($num == 0) {
 					$out['text'] .= _L('Everything OK!');
 				}
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$out['text'] .= mb_strtoupper(_L('Error')).': '.htmlentities($e->getMessage());
 			}
 

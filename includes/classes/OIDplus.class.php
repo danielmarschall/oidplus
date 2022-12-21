@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplus extends OIDplusBaseClass {
 	private static /*OIDplusPagePlugin[]*/ $pagePlugins = array();
@@ -53,10 +53,10 @@ class OIDplus extends OIDplusBaseClass {
 	private function __construct() {
 	}
 
-	# --- Static classes
+	// --- Static classes
 
 	private static $baseConfig = null;
-	private static $old_config_format = false;
+	private static $oldConfigFormatLoaded = false;
 	public static function baseConfig() {
 		$first_init = false;
 
@@ -81,24 +81,64 @@ class OIDplus extends OIDplusBaseClass {
 			}
 
 			if (file_exists($config_file)) {
-				if (self::$old_config_format) {
+				if (self::$oldConfigFormatLoaded) {
 					// Note: We may only include it once due to backwards compatibility,
 					//       since in version 2.0, the configuration was defined using define() statements
 					// Attention: This does mean that a full re-init (e.g. for test cases) is not possible
 					//            if a version 2.0 config is used!
-					include_once $config_file;
+
+					// We need to do this, because define() cannot be undone
+					// Note: This can only happen in very special cases (e.g. test cases) where you call init() twice
+					throw new OIDplusConfigInitializationException(_L('A full re-initialization is not possible if a version 2.0 config file (containing "defines") is used. Please update to a config 2.1 file by running setup again.'));
 				} else {
-					include $config_file;
+					$tmp = file_get_contents($config_file);
+					$ns = "ViaThinkSoft\OIDplus\OIDplus";
+					$uses = "use $ns;";
+					if ((strpos($tmp,'OIDplus::') !== false) && (strpos($tmp,$uses) === false)) {
+						// Migrate config file to namespace class names
+						// Note: Only config files version 2.1 are affected. Not 2.0 ones
+
+						$tmp = "<?php\r\n\r\n$uses /* Automatically added by migration procedure */\r\n?>$tmp";
+						$tmp = str_replace('?><?php', '', $tmp);
+
+						$tmp = str_replace("\$ns\OIDplusCaptchaPluginRecaptcha::", "OIDplusCaptchaPluginRecaptcha::", $tmp);
+						$tmp = str_replace("OIDplusCaptchaPluginRecaptcha::", "\$ns\OIDplusCaptchaPluginRecaptcha::", $tmp);
+
+						$tmp = str_replace('DISABLE_PLUGIN_OIDplusPagePublicRdap',
+						                   'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicRdap', $tmp);
+						$tmp = str_replace('DISABLE_PLUGIN_OIDplusPagePublicAltIds',
+						                   'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicAltIds', $tmp);
+						$tmp = str_replace('DISABLE_PLUGIN_OIDplus',
+						                   'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $tmp);
+						$tmp = str_replace('DISABLE_PLUGIN_OIDplusPagePublicUITweaks',
+						                   'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $tmp);
+
+						if (@file_put_contents($config_file, $tmp) === false) {
+							eval('?>'.$tmp);
+						} else {
+							include $config_file;
+						}
+					} else {
+						include $config_file;
+					}
 				}
 
 				if (defined('OIDPLUS_CONFIG_VERSION') && (OIDPLUS_CONFIG_VERSION == 2.0)) {
-					self::$old_config_format = true;
+					self::$oldConfigFormatLoaded = true;
 
 					// Backwards compatibility 2.0 => 2.1
 					foreach (get_defined_constants(true)['user'] as $name => $value) {
 						$name = str_replace('OIDPLUS_', '', $name);
 						if ($name == 'SESSION_SECRET') $name = 'SERVER_SECRET';
 						if ($name == 'MYSQL_QUERYLOG') $name = 'QUERY_LOGFILE';
+						$name = str_replace('DISABLE_PLUGIN_OIDplusPagePublicRdap',
+						                    'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicRdap', $name);
+						$name = str_replace('DISABLE_PLUGIN_OIDplusPagePublicAltIds',
+						                    'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicAltIds', $name);
+						$name = str_replace('DISABLE_PLUGIN_OIDplus',
+						                    'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $name);
+						$name = str_replace('DISABLE_PLUGIN_OIDplusPagePublicUITweaks',
+						                    'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $name);
 						if (($name == 'MYSQL_PASSWORD') || ($name == 'ODBC_PASSWORD') || ($name == 'PDO_PASSWORD') || ($name == 'PGSQL_PASSWORD')) {
 							self::$baseConfig->setValue($name, base64_decode($value));
 						} else {
@@ -109,7 +149,7 @@ class OIDplus extends OIDplusBaseClass {
 				}
 			} else {
 				if (!is_dir(OIDplus::localpath().'setup')) {
-					throw new OIDplusConfigInitializationException(_L('File %1 is missing, but setup can\'t be started because its directory missing.','userdata/baseconfig/config.inc.php'));
+					throw new OIDplusConfigInitializationException(_L('File %1 is missing, but setup can\'t be started because its directory missing.',$config_file));
 				} else {
 					if (self::$html) {
 						if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE_TO_ROOT).'setup/') !== 0) {
@@ -120,7 +160,7 @@ class OIDplus extends OIDplusBaseClass {
 						}
 					} else {
 						// This can be displayed in e.g. ajax.php
-						throw new OIDplusConfigInitializationException(_L('File %1 is missing. Please run setup again.','userdata/baseconfig/config.inc.php'));
+						throw new OIDplusConfigInitializationException(_L('File %1 is missing. Please run setup again.',$config_file));
 					}
 				}
 			}
@@ -187,7 +227,7 @@ class OIDplus extends OIDplusBaseClass {
 				// Nothing here yet
 			});
 			self::$config->prepareConfigKey('objecttypes_enabled', 'Enabled object types and their order, separated with a semicolon (please reload the page so that the change is applied)', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
-				# TODO: when objecttypes_enabled is changed at the admin control panel, we need to do a reload of the page, so that jsTree will be updated. Is there anything we can do?
+				// TODO: when objecttypes_enabled is changed at the admin control panel, we need to do a reload of the page, so that jsTree will be updated. Is there anything we can do?
 
 				$ary = explode(';',$value);
 				$uniq_ary = array_unique($ary);
@@ -293,7 +333,7 @@ class OIDplus extends OIDplusBaseClass {
 		return self::$logger;
 	}
 
-	# --- SQL slang plugin
+	// --- SQL slang plugin
 
 	private static function registerSqlSlangPlugin(OIDplusSqlSlangPlugin $plugin) {
 		$name = $plugin::id();
@@ -321,7 +361,7 @@ class OIDplus extends OIDplusBaseClass {
 		}
 	}
 
-	# --- Database plugin
+	// --- Database plugin
 
 	private static function registerDatabasePlugin(OIDplusDatabasePlugin $plugin) {
 		$name = $plugin::id();
@@ -372,7 +412,7 @@ class OIDplus extends OIDplusBaseClass {
 		return self::$dbIsolatedSession;
 	}
 
-	# --- CAPTCHA plugin
+	// --- CAPTCHA plugin
 
 	private static function registerCaptchaPlugin(OIDplusCaptchaPlugin $plugin) {
 		$name = $plugin::id();
@@ -415,7 +455,7 @@ class OIDplus extends OIDplusBaseClass {
 		throw new OIDplusConfigInitializationException(_L('CAPTCHA plugin "%1" not found',$captcha_plugin_name));
 	}
 
-	# --- Page plugin
+	// --- Page plugin
 
 	private static function registerPagePlugin(OIDplusPagePlugin $plugin) {
 		self::$pagePlugins[] = $plugin;
@@ -427,7 +467,7 @@ class OIDplus extends OIDplusBaseClass {
 		return self::$pagePlugins;
 	}
 
-	# --- Auth plugin
+	// --- Auth plugin
 
 	private static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
 		if (OIDplus::baseConfig()->getValue('DEBUG')) {
@@ -464,7 +504,7 @@ class OIDplus extends OIDplusBaseClass {
 		return self::$authPlugins;
 	}
 
-	# --- Language plugin
+	// --- Language plugin
 
 	private static function registerLanguagePlugin(OIDplusLanguagePlugin $plugin) {
 		self::$languagePlugins[] = $plugin;
@@ -475,7 +515,7 @@ class OIDplus extends OIDplusBaseClass {
 		return self::$languagePlugins;
 	}
 
-	# --- Design plugin
+	// --- Design plugin
 
 	private static function registerDesignPlugin(OIDplusDesignPlugin $plugin) {
 		self::$designPlugins[] = $plugin;
@@ -496,7 +536,7 @@ class OIDplus extends OIDplusBaseClass {
 		return null;
 	}
 
-	# --- Logger plugin
+	// --- Logger plugin
 
 	private static function registerLoggerPlugin(OIDplusLoggerPlugin $plugin) {
 		self::$loggerPlugins[] = $plugin;
@@ -507,7 +547,7 @@ class OIDplus extends OIDplusBaseClass {
 		return self::$loggerPlugins;
 	}
 
-	# --- Object type plugin
+	// --- Object type plugin
 
 	private static function registerObjectTypePlugin(OIDplusObjectTypePlugin $plugin) {
 		self::$objectTypePlugins[] = $plugin;
@@ -625,7 +665,7 @@ class OIDplus extends OIDplusBaseClass {
 		return self::$disabledObjectTypes;
 	}
 
-	# --- Plugin handling functions
+	// --- Plugin handling functions
 
 	public static function getAllPlugins()/*: array*/ {
 		$res = array();
@@ -659,6 +699,30 @@ class OIDplus extends OIDplusBaseClass {
 			}
 		}
 		return null;
+	}
+
+	/**
+	* Checks if the plugin is disabled
+	* @return boolean true if plugin is enabled, false if plugin is disabled
+	* @throws OIDplusException if the class name or config file (disabled setting) does not contain a namespace
+	*/
+	private static function pluginCheckDisabled($class_name): bool {
+		$path = explode('\\', $class_name);
+
+		if (count($path) == 1) {
+			throw new OIDplusException(_L('Plugin "%1" is erroneous',$class_name).': '._L('The plugin uses no namespaces. The new version of OIDplus requires plugin class files to be in a namespace. Please notify your plugin author and ask for an update.'));
+		}
+
+		$class_end = end($path);
+		if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_'.$class_end, false)) {
+			throw new OIDplusConfigInitializationException(_L('Your base configuration file is outdated. Please change "%1" to "%2".','DISABLE_PLUGIN_'.$class_end,'DISABLE_PLUGIN_'.$class_name));
+		}
+
+		if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_'.$class_name, false)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -707,9 +771,7 @@ class OIDplus extends OIDplusBaseClass {
 			$manifest->loadManifest($ini);
 
 			$class_name = $manifest->getPhpMainClass();
-			if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_'.$class_name, false)) {
-				continue;
-			}
+			if ($class_name) if (!self::pluginCheckDisabled($class_name)) continue;
 
 			if ($flat) {
 				$out[] = $manifest;
@@ -752,33 +814,33 @@ class OIDplus extends OIDplusBaseClass {
 				// that the plugin is working correctly.
 
 				if (!$class_name) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Manifest does not declare a PHP main class'));
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Manifest does not declare a PHP main class'));
 				}
-				if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_'.$class_name, false)) {
-					continue;
+				if (!self::pluginCheckDisabled($class_name)) {
+					continue; // Plugin is disabled
 				}
 				if (!class_exists($class_name)) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Manifest declares PHP main class as "%1", but it could not be found',$class_name));
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Manifest declares PHP main class as "%1", but it could not be found',$class_name));
 				}
 				if (!is_subclass_of($class_name, $expectedPluginClass)) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Plugin main class "%1" is expected to be a subclass of "%2"',$class_name,$expectedPluginClass));
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Plugin main class "%1" is expected to be a subclass of "%2"',$class_name,$expectedPluginClass));
 				}
 				if (($class_name!=$manifest->getTypeClass()) && (!is_subclass_of($class_name,$manifest->getTypeClass()))) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Plugin main class "%1" is expected to be a subclass of "%2", according to type declared in manifest',$class_name,$manifest->getTypeClass()));
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Plugin main class "%1" is expected to be a subclass of "%2", according to type declared in manifest',$class_name,$manifest->getTypeClass()));
 				}
 				if (($manifest->getTypeClass()!=$expectedPluginClass) && (!is_subclass_of($manifest->getTypeClass(),$expectedPluginClass))) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Class declared in manifest is "%1" does not fit expected class for this plugin type "%2"',$manifest->getTypeClass(),$expectedPluginClass));
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Class declared in manifest is "%1" does not fit expected class for this plugin type "%2"',$manifest->getTypeClass(),$expectedPluginClass));
 				}
 
 				$plugin_oid = $manifest->getOid();
 				if (!$plugin_oid) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Does not have an OID'));
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Does not have an OID'));
 				}
 				if (!oid_valid_dotnotation($plugin_oid, false, false, 2)) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('Plugin OID "%1" is invalid (needs to be valid dot-notation)',$plugin_oid));
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Plugin OID "%1" is invalid (needs to be valid dot-notation)',$plugin_oid));
 				}
 				if (isset($known_plugin_oids[$plugin_oid])) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('The OID "%1" is already used by the plugin "%2"',$plugin_oid,$known_plugin_oids[$plugin_oid]));
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('The OID "%1" is already used by the plugin "%2"',$plugin_oid,$known_plugin_oids[$plugin_oid]));
 				}
 
 				$full_plugin_dir = dirname($manifest->getManifestFile());
@@ -786,8 +848,12 @@ class OIDplus extends OIDplusBaseClass {
 
 				$dir_is_viathinksoft = str_starts_with($full_plugin_dir, 'plugins/viathinksoft/') || str_starts_with($full_plugin_dir, 'plugins\\viathinksoft\\');
 				$oid_is_viathinksoft = str_starts_with($plugin_oid, '1.3.6.1.4.1.37476.2.5.2.4.'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) oidplus(5) v2(2) plugins(4) }
+				$class_is_viathinksoft = str_starts_with($class_name, 'ViaThinkSoft\\');
 				if ($dir_is_viathinksoft != $oid_is_viathinksoft) {
-					throw new OIDplusException(_L('Plugin "%1/%2" is misplaced',$plugintype_folder,$pluginname_folder).': '._L('The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins','plugins/viathinksoft/'));
+					throw new OIDplusException(_L('Plugin "%1" is misplaced',$plugintype_folder.'/'.$pluginname_folder).': '._L('The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins','plugins/viathinksoft/'));
+				}
+				if ($dir_is_viathinksoft != $class_is_viathinksoft) {
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Third-party plugins must not use the ViaThinkSoft PHP namespace. Please use your own vendor namespace.'));
 				}
 
 				$known_plugin_oids[$plugin_oid] = $plugintype_folder.'/'.$pluginname_folder;
@@ -797,7 +863,7 @@ class OIDplus extends OIDplusBaseClass {
 				if (OIDplus::baseConfig()->getValue('DEBUG')) {
 					if ($obj->implementsFeature($fake_feature)) {
 						// see https://devblogs.microsoft.com/oldnewthing/20040211-00/?p=40663
-						throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('implementsFeature() always returns true'));
+						throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('implementsFeature() always returns true'));
 					}
 				}
 
@@ -805,7 +871,7 @@ class OIDplus extends OIDplusBaseClass {
 				$tmp = $manifest->getManifestLinkedFiles();
 				foreach ($tmp as $file) {
 					if (!file_exists($file)) {
-						throw new OIDplusException(_L('Plugin "%1/%2" is erroneous',$plugintype_folder,$pluginname_folder).': '._L('File %1 was defined in manifest, but it is not existing',$file));
+						throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('File %1 was defined in manifest, but it is not existing',$file));
 					}
 				}
 
@@ -826,18 +892,12 @@ class OIDplus extends OIDplusBaseClass {
 		return $out;
 	}
 
-	# --- Initialization of OIDplus
+	// --- Initialization of OIDplus
 
 	public static function init($html=true, $keepBaseConfig=true) {
 		self::$html = $html;
 
 		// Reset internal state, so we can re-init verything if required
-
-		if (self::$old_config_format) {
-			// We need to do this, because define() cannot be undone
-			// Note: This can only happen in very special cases (e.g. test cases) where you call init() twice
-			throw new OIDplusConfigInitializationException(_L('A full re-initialization is not possible if a version 2.0 config file (containing "defines") is used. Please update to a config 2.1 file by running setup again.'));
-		}
 
 		self::$config = null;
 		if (!$keepBaseConfig) self::$baseConfig = null;  // for test cases we need to be able to control base config and setting values manually, so $keepBaseConfig needs to be true
@@ -872,14 +932,14 @@ class OIDplus extends OIDplusBaseClass {
 
 		// SQL slangs
 
-		self::registerAllPlugins('sqlSlang', 'OIDplusSqlSlangPlugin', array('OIDplus','registerSqlSlangPlugin'));
+		self::registerAllPlugins('sqlSlang', OIDplusSqlSlangPlugin::class, array(OIDplus::class,'registerSqlSlangPlugin'));
 		foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 			$plugin->init($html);
 		}
 
 		// Database providers
 
-		self::registerAllPlugins('database', 'OIDplusDatabasePlugin', array('OIDplus','registerDatabasePlugin'));
+		self::registerAllPlugins('database', OIDplusDatabasePlugin::class, array(OIDplus::class,'registerDatabasePlugin'));
 		foreach (OIDplus::getDatabasePlugins() as $plugin) {
 			$plugin->init($html);
 		}
@@ -898,14 +958,14 @@ class OIDplus extends OIDplusBaseClass {
 
 		// Register non-DB plugins
 
-		self::registerAllPlugins(array('publicPages', 'raPages', 'adminPages'), 'OIDplusPagePlugin', array('OIDplus','registerPagePlugin'));
-		self::registerAllPlugins('auth', 'OIDplusAuthPlugin', array('OIDplus','registerAuthPlugin'));
-		self::registerAllPlugins('logger', 'OIDplusLoggerPlugin', array('OIDplus','registerLoggerPlugin'));
+		self::registerAllPlugins(array('publicPages', 'raPages', 'adminPages'), OIDplusPagePlugin::class, array(OIDplus::class,'registerPagePlugin'));
+		self::registerAllPlugins('auth', OIDplusAuthPlugin::class, array(OIDplus::class,'registerAuthPlugin'));
+		self::registerAllPlugins('logger', OIDplusLoggerPlugin::class, array(OIDplus::class,'registerLoggerPlugin'));
 		OIDplusLogger::reLogMissing(); // Some previous plugins might have tried to log. Repeat that now.
-		self::registerAllPlugins('objectTypes', 'OIDplusObjectTypePlugin', array('OIDplus','registerObjectTypePlugin'));
-		self::registerAllPlugins('language', 'OIDplusLanguagePlugin', array('OIDplus','registerLanguagePlugin'));
-		self::registerAllPlugins('design', 'OIDplusDesignPlugin', array('OIDplus','registerDesignPlugin'));
-		self::registerAllPlugins('captcha', 'OIDplusCaptchaPlugin', array('OIDplus','registerCaptchaPlugin'));
+		self::registerAllPlugins('objectTypes', OIDplusObjectTypePlugin::class, array(OIDplus::class,'registerObjectTypePlugin'));
+		self::registerAllPlugins('language', OIDplusLanguagePlugin::class, array(OIDplus::class,'registerLanguagePlugin'));
+		self::registerAllPlugins('design', OIDplusDesignPlugin::class, array(OIDplus::class,'registerDesignPlugin'));
+		self::registerAllPlugins('captcha', OIDplusCaptchaPlugin::class, array(OIDplus::class,'registerCaptchaPlugin'));
 
 		// Initialize non-DB plugins
 
@@ -1102,13 +1162,13 @@ class OIDplus extends OIDplusBaseClass {
 		OIDplus::recognizeVersion(); // Make sure "last_known_version" is set and a log entry is created
 	}
 
-	# --- System URL, System ID, PKI, and other functions
+	// --- System URL, System ID, PKI, and other functions
 
 	private static function recognizeSystemUrl() {
 		try {
 			$url = OIDplus::webpath(null,self::PATH_ABSOLUTE_CANONICAL); // TODO: canonical or not?
 			OIDplus::config()->setValue('last_known_system_url', $url);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 		}
 	}
 
@@ -1161,7 +1221,7 @@ class OIDplus extends OIDplusBaseClass {
 			if (PHP_SAPI == 'cli') {
 				try {
 					return OIDplus::config()->getValue('last_known_system_url', false);
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					return false;
 				}
 			} else {
@@ -1399,7 +1459,7 @@ class OIDplus extends OIDplusBaseClass {
 				self::recanonizeObjects();
 			}
 			OIDplus::config()->setValue("last_known_version", $ver_now);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 		}
 	}
 
@@ -1775,7 +1835,7 @@ class OIDplus extends OIDplusBaseClass {
 			$git_dir = OIDplus::findGitFolder();
 			if ($git_dir === false) return false;
 			$commit_msg = git_get_latest_commit_message($git_dir);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return false;
 		}
 
@@ -1806,13 +1866,13 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	private static function recanonizeObjects() {
-		#
-		# Since OIDplus svn-184, entries in the database need to have a canonical ID
-		# If the ID is not canonical (e.g. GUIDs missing hyphens), the object cannot be opened in OIDplus
-		# This script re-canonizes the object IDs if required.
-		# In SVN Rev 856, the canonization for GUID, IPv4 and IPv6 have changed, requiring another
-		# re-canonization
-		#
+		//
+		// Since OIDplus svn-184, entries in the database need to have a canonical ID
+		// If the ID is not canonical (e.g. GUIDs missing hyphens), the object cannot be opened in OIDplus
+		// This script re-canonizes the object IDs if required.
+		// In SVN Rev 856, the canonization for GUID, IPv4 and IPv6 have changed, requiring another
+		// re-canonization
+		//
 		$res = OIDplus::db()->query("select id from ###objects");
 		while ($row = $res->fetch_array()) {
 			$ida = $row['id'];

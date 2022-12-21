@@ -17,6 +17,10 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusGui;
+use ViaThinkSoft\OIDplus\OIDplusException;
+
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 ob_start(); // allow cookie headers to be sent
@@ -24,9 +28,9 @@ ob_start(); // allow cookie headers to be sent
 header('Content-Type:text/html; charset=UTF-8');
 
 OIDplus::init(true);
-set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
+set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPageAdminOOBE', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPageAdminOOBE', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 
@@ -67,7 +71,7 @@ if (OIDplus::getActiveCaptchaPlugin()->isVisible()) echo '<p><u>'._L('Step %1: S
 if (isset($_POST['sent'])) {
 	try {
 		OIDplus::getActiveCaptchaPlugin()->captchaVerify($_POST);
-	} catch (Exception $e) {
+	} catch (\Exception $e) {
 		echo '<p><font color="red"><b>'.htmlentities($e->getMessage()).'</b></font></p>';
 		$errors_happened = true;
 		$edits_possible = false;
@@ -114,7 +118,7 @@ function step_admin_email($step, $do_edits, &$errors_happened) {
 		if ($do_edits) {
 			try {
 				OIDplus::config()->setValue('admin_email', isset($_POST['admin_email']) ? $_POST['admin_email'] : '');
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;
 			}
@@ -139,7 +143,7 @@ function step_system_title($step, $do_edits, &$errors_happened) {
 		if ($do_edits) {
 			try {
 				OIDplus::config()->setValue('system_title', isset($_POST['system_title']) ? $_POST['system_title'] : '');
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;
 			}

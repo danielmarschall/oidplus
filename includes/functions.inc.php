@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+
 function is_privatekey_encrypted($privKey) {
 	return strpos($privKey,'BEGIN ENCRYPTED PRIVATE KEY') !== false;
 }
@@ -32,7 +34,7 @@ function verify_private_public_key($privKey, $pubKey) {
 		if (!@openssl_public_encrypt($data, $encrypted, $pubKey)) return false;
 		if (!@openssl_private_decrypt($encrypted, $decrypted, $privKey)) return false;
 		return $decrypted == $data;
-	} catch (Exception $e) {
+	} catch (\Exception $e) {
 		return false;
 	}
 }
@@ -42,7 +44,7 @@ function change_private_key_passphrase($privKeyOld, $passphrase_old, $passphrase
 	    //"digest_alg" => "sha512",
 	    //"private_key_bits" => 2048,
 	    //"private_key_type" => OPENSSL_KEYTYPE_RSA,
-	    "config" => class_exists("OIDplus") ? OIDplus::getOpenSslCnf() : @getenv('OPENSSL_CONF')
+	    "config" => class_exists("\\ViaThinkSoft\\OIDplus\\OIDplus") ? OIDplus::getOpenSslCnf() : @getenv('OPENSSL_CONF')
 	);
 	$privKeyNew = @openssl_pkey_get_private($privKeyOld, $passphrase_old);
 	if ($privKeyNew === false) return false;
@@ -163,7 +165,7 @@ function _L($str, ...$sprintfArgs) {
 
 	$str = trim($str);
 
-	if (!class_exists('OIDplus')) {
+	if (!class_exists(OIDplus::class)) {
 		return my_vsprintf($str, $sprintfArgs);
 	}
 
@@ -179,7 +181,7 @@ function _L($str, ...$sprintfArgs) {
 }
 
 function _CheckParamExists($params, $key) {
-	if (class_exists('OIDplusException')) {
+	if (class_exists(OIDplusException::class)) {
 		if (!isset($params[$key])) throw new OIDplusException(_L('Parameter %1 is missing', $key));
 	} else {
 		if (!isset($params[$key])) throw new Exception(_L('Parameter %1 is missing', $key));
@@ -250,7 +252,7 @@ if (!function_exists('str_starts_with')) {
 function url_get_contents($url, $userAgent='ViaThinkSoft-OIDplus/2.0') {
 	if (function_exists('curl_init')) {
 		$ch = curl_init();
-		if (class_exists('OIDplus')) {
+		if (class_exists(OIDplus::class)) {
 			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
 		}
 		curl_setopt($ch, CURLOPT_URL, $url);

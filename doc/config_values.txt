@@ -109,11 +109,11 @@ OIDplus::baseConfig()->setValue('CAPTCHA_PLUGIN',           'None');
 			- hCaptcha
 			- ViaThinkSoft Client Challenge
 
-OIDplus::baseConfig()->setValue('RECAPTCHA_VERSION',        OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_CHECKBOX);
+OIDplus::baseConfig()->setValue('RECAPTCHA_VERSION',        \ViaThinkSoft\OIDplus\OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_CHECKBOX);
                          Possible values:
-                         OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_CHECKBOX
-                         OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_INVISIBLE
-                         OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V3
+                         \ViaThinkSoft\OIDplus\OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_CHECKBOX
+                         \ViaThinkSoft\OIDplus\OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_INVISIBLE
+                         \ViaThinkSoft\OIDplus\OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V3
 
 OIDplus::baseConfig()->setValue('RECAPTCHA_ENABLED',        true);
                          Deprecated!
@@ -224,9 +224,10 @@ OIDplus::baseConfig()->setValue('DISABLE_PLUGIN_...', true);
                          requiring it to be removed from the file system.
                          (Removing a plugin from the file system can result in various
                          problems, e.g. they can be re-added during a SVN/software update.)
-                         Replace "..." with the main PHP class of the plugin you want to disable
+                         Replace "..." with the main PHP class of the plugin you want to disable.
+                         The namespace must be included.
                          Example:
-                         "DISABLE_PLUGIN_OIDplusLoggerPluginUserdataLogfile"
+                         "DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusLoggerPluginUserdataLogfile"
                          disables the plugin "logger/300_userdata_logfile".
 
 OIDplus::baseConfig()->setValue('DISABLE_AJAX_TRANSACTIONS', false);

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 
@@ -100,9 +100,10 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 		return '<div id="CAPTCHAPLUGIN_PARAMS_RECAPTCHA">'.
 		       '<p>(<a href="https://developers.google.com/recaptcha/intro" target="_blank">'._L('more information and obtain key').'</a>)</p>'.
 		       '<p>'._L('reCAPTCHA Version').'<br><select id="recaptcha_version">'.
-		       '    <option name="OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_CHECKBOX">reCAPTCHA V2 Checkbox</option>'.
-		       '    <option name="OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_INVISIBLE">reCAPTCHA V2 Invisible</option>'.
-		       '    <option name="OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V3">reCAPTCHA V3</option>'.
+		       // Note: JavaScript will add "\ViaThinkSoft\OIDplus\OIDplusCaptchaPluginRecaptcha::" in front of the name
+		       '    <option name="RECAPTCHA_V2_CHECKBOX">reCAPTCHA V2 Checkbox</option>'.
+		       '    <option name="RECAPTCHA_V2_INVISIBLE">reCAPTCHA V2 Invisible</option>'.
+		       '    <option name="RECAPTCHA_V3">reCAPTCHA V3</option>'.
 		       '</select></p>'.
 		       '<p>'._L('reCAPTCHA Public key').'<br><input id="recaptcha_public" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="recaptcha_public_warn"></span></p>'.
 		       '<p>'._L('reCAPTCHA Private key').'<br><input id="recaptcha_private" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="recaptcha_private_warn"></span></p>'.

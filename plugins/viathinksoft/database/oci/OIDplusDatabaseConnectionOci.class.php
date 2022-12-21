@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 	private $conn = null;
@@ -122,7 +122,7 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 				$err .= $tmp['message'];
 			}
 		}
-	
+
 		if (!$this->conn) {
 			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' ' . strip_tags($err)));
 		}

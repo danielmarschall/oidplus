@@ -17,11 +17,14 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusGui;
+
 header('Content-Type:text/html; charset=UTF-8');
 
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
-set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
+set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
 
 ob_start(); // allow cookie headers to be sent
 

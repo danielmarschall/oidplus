@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusSqlSlangPluginOracle extends OIDplusSqlSlangPlugin {
 
@@ -65,7 +65,7 @@ class OIDplusSqlSlangPluginOracle extends OIDplusSqlSlangPlugin {
 			$vers = $db->query("SELECT banner FROM v\$version WHERE banner LIKE 'Oracle%'")->fetch_object()->banner;
 			$vers = strtolower($vers);
 			return (strpos($vers, 'oracle') !== false);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return false;
 		}
 	}

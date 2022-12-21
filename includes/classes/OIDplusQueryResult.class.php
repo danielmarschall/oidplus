@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	abstract public function containsResultSet(): bool;

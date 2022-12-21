@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	protected $no_resultset;
@@ -68,7 +68,7 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 			$ret = array_shift($this->prefetchedArray);
 		} else {
 			if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-			$ret = $this->res->fetch(PDO::FETCH_ASSOC);
+			$ret = $this->res->fetch(\PDO::FETCH_ASSOC);
 			if ($ret === false) $ret = null;
 		}
 		if ($ret) $this->countAlreadyFetched++;
@@ -87,7 +87,7 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	}
 
 	private static function array_to_stdobj($ary) {
-		$obj = new stdClass;
+		$obj = new \stdClass;
 		foreach ($ary as $name => $val) {
 			$obj->$name = $val;
 		}
@@ -100,7 +100,7 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 			$ret = is_null($ary) ? null : self::array_to_stdobj($ary);
 		} else {
 			if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-			$ret = $this->res->fetch(PDO::FETCH_OBJ);
+			$ret = $this->res->fetch(\PDO::FETCH_OBJ);
 			if ($ret === false) $ret = null;
 		}
 		if ($ret) $this->countAlreadyFetched++;

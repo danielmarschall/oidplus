@@ -17,17 +17,21 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusGui;
+use ViaThinkSoft\OIDplus\OIDplusException;
+
 header('Content-Type:text/html; charset=UTF-8');
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
-set_exception_handler(array('OIDplusGui', 'html_exception_handler'));
+set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
 
 @set_time_limit(0);
 
 OIDplus::init(true);
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_OIDplusPageAdminNostalgia', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPageAdminNostalgia', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 

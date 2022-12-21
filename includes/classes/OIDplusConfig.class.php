@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 // OIDplusConfig contains settings that are stored in the database.
 // Not to be confused with OIDplusBaseConfig which is the basic ("static")
@@ -72,7 +72,7 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 			// Case A: The config setting does not exist in the database. So we create it now.
 			try {
 				OIDplus::db()->query("insert into ###config (name, description, value, protected, visible) values (?, ?, ?, ?, ?)", array($name, $description, $init_value, $protected, $visible));
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				// After a software update that introduced a new config setting,
 				// there will be a race-condition at this place, because
 				// jsTree and content are loading simultaneously!

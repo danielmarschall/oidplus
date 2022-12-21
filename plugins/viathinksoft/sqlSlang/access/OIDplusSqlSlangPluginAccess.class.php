@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 
@@ -56,7 +56,7 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 		try {
 			// On this table, there are often no read permissions, so we need to find out if the error message is different
 			$db->query("select * from MSysObjects");
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$err_a = $db->error();
 		}
 		$err_a = str_replace('MSysObjects', '', $err_a);
@@ -64,7 +64,7 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 		$err_b = '';
 		try {
 			$db->query("select * from XYZObjects");
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$err_b = $db->error();
 		}
 		$err_b = str_replace('XYZObjects', '', $err_b);

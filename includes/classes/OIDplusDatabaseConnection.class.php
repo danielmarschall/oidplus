@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	protected /*bool*/ $connected = false;
@@ -177,7 +177,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 			// Attention: This query could interrupt transactions if Rollback-On-Error is enabled
 			$this->query("select 0 from ".$tableName." where 1=0");
 			return true;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return false;
 		}
 	}

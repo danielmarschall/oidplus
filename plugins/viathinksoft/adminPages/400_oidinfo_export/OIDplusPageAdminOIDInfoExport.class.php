@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
@@ -660,7 +660,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		$out_type = null;
 		$out_content = '';
 
-		// This file contains class OIDInfoAPI.
+		// This file contains class \OIDInfoAPI.
 		// We cannot include this in init(), because the init
 		// of the registration plugin (OIDplusPageAdminRegistration) uses
 		// OIDplusPageAdminOIDInfoExport::outputXML() before
@@ -668,7 +668,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		// because OIDplusPageAdminRegistration::init() comes first sometimes.
 		require_once __DIR__ . '/oidinfo_api.inc.php';
 
-		$oa = new OIDInfoAPI();
+		$oa = new \OIDInfoAPI();
 		if ($only_non_existing) {
 			if (!function_exists('socket_create')) {
 				throw new OIDplusException(_L('You must install the PHP "sockets" in order to check for non-existing OIDs.'));
@@ -686,7 +686,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 		$params['allow_html'] = true;
 		$params['allow_illegal_email'] = true; // It should be enabled, because the creator could have used some kind of human-readable anti-spam technique
-		$params['soft_correct_behavior'] = OIDInfoAPI::SOFT_CORRECT_BEHAVIOR_NONE;
+		$params['soft_correct_behavior'] = \OIDInfoAPI::SOFT_CORRECT_BEHAVIOR_NONE;
 		$params['do_online_check'] = false; // Flag to disable this online check, because it generates a lot of traffic and runtime.
 		$params['do_illegality_check'] = true;
 		$params['do_simpleping_check'] = $only_non_existing;

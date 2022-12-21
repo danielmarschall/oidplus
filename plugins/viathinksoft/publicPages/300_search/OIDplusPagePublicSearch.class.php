@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 
@@ -205,7 +205,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 					$out['text'] .= $this->doSearch($params);
 				}
 				$out['text'] .= '</div>';
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$out['text'] = _L('Error: %1',$e->getMessage());
 			}
 		}

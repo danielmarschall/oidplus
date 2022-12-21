@@ -17,6 +17,9 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
+
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
 header('Content-Type:text/text; charset=UTF-8');

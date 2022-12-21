@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
@@ -43,24 +43,24 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		*/
 
 		$opuserdata = array();
-		$opuserdata['ra_name'] = VtsLDAPUtils::getString($ldap_userinfo,'cn');
-		if (!empty(VtsLDAPUtils::getString($ldap_userinfo,'displayname'))) {
-			$opuserdata['personal_name'] = VtsLDAPUtils::getString($ldap_userinfo,'displayname');
+		$opuserdata['ra_name'] = \VtsLDAPUtils::getString($ldap_userinfo,'cn');
+		if (!empty(\VtsLDAPUtils::getString($ldap_userinfo,'displayname'))) {
+			$opuserdata['personal_name'] = \VtsLDAPUtils::getString($ldap_userinfo,'displayname');
 		} else {
-			$opuserdata['personal_name'] = trim(VtsLDAPUtils::getString($ldap_userinfo,'givenname').' '.VtsLDAPUtils::getString($ldap_userinfo,'sn'));
+			$opuserdata['personal_name'] = trim(\VtsLDAPUtils::getString($ldap_userinfo,'givenname').' '.\VtsLDAPUtils::getString($ldap_userinfo,'sn'));
 		}
-		$opuserdata['organization'] = VtsLDAPUtils::getString($ldap_userinfo,'company');
-		if (!empty(VtsLDAPUtils::getString($ldap_userinfo,'physicaldeliveryofficename'))) {
-			$opuserdata['office'] = VtsLDAPUtils::getString($ldap_userinfo,'physicaldeliveryofficename');
+		$opuserdata['organization'] = \VtsLDAPUtils::getString($ldap_userinfo,'company');
+		if (!empty(\VtsLDAPUtils::getString($ldap_userinfo,'physicaldeliveryofficename'))) {
+			$opuserdata['office'] = \VtsLDAPUtils::getString($ldap_userinfo,'physicaldeliveryofficename');
 		} else {
-			$opuserdata['office'] = VtsLDAPUtils::getString($ldap_userinfo,'department');
+			$opuserdata['office'] = \VtsLDAPUtils::getString($ldap_userinfo,'department');
 		}
-		$opuserdata['street'] = VtsLDAPUtils::getString($ldap_userinfo,'streetaddress');
-		$opuserdata['zip_town'] = trim(VtsLDAPUtils::getString($ldap_userinfo,'postalcode').' '.VtsLDAPUtils::getString($ldap_userinfo,'l'));
-		$opuserdata['country'] = VtsLDAPUtils::getString($ldap_userinfo,'co'); // ISO country code: VtsLDAPUtils::getString($ldap_userinfo,'c')
-		$opuserdata['phone'] = VtsLDAPUtils::getString($ldap_userinfo,'telephonenumber'); // homephone for private phone number
-		$opuserdata['mobile'] = VtsLDAPUtils::getString($ldap_userinfo,'mobile');
-		$opuserdata['fax'] = VtsLDAPUtils::getString($ldap_userinfo,'facsimiletelephonenumber');
+		$opuserdata['street'] = \VtsLDAPUtils::getString($ldap_userinfo,'streetaddress');
+		$opuserdata['zip_town'] = trim(\VtsLDAPUtils::getString($ldap_userinfo,'postalcode').' '.\VtsLDAPUtils::getString($ldap_userinfo,'l'));
+		$opuserdata['country'] = \VtsLDAPUtils::getString($ldap_userinfo,'co'); // ISO country code: \VtsLDAPUtils::getString($ldap_userinfo,'c')
+		$opuserdata['phone'] = \VtsLDAPUtils::getString($ldap_userinfo,'telephonenumber'); // homephone for private phone number
+		$opuserdata['mobile'] = \VtsLDAPUtils::getString($ldap_userinfo,'mobile');
+		$opuserdata['fax'] = \VtsLDAPUtils::getString($ldap_userinfo,'facsimiletelephonenumber');
 
 		foreach ($opuserdata as $dbfield => $val) {
 			if (!empty($val)) {
@@ -117,7 +117,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 				throw new OIDplusException(_L('Please enter a valid username'));
 			}
 
-			$ldap = new VtsLDAPUtils();
+			$ldap = new \VtsLDAPUtils();
 
 			try {
 
@@ -167,13 +167,13 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 				}
 				if ($isRA) {
 					if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN'.$cfgSuffix,true)) {
-						$mail = VtsLDAPUtils::getString($ldap_userinfo, 'userprincipalname');
+						$mail = \VtsLDAPUtils::getString($ldap_userinfo, 'userprincipalname');
 						$foundSomething = true;
 						$remember_me = isset($params['remember_me']) && ($params['remember_me']);
 						$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
 					}
 					if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL'.$cfgSuffix,false)) {
-						$mails = VtsLDAPUtils::getArray($ldap_userinfo, 'mail');
+						$mails = \VtsLDAPUtils::getArray($ldap_userinfo, 'mail');
 						foreach ($mails as $mail) {
 							$foundSomething = true;
 							$remember_me = isset($params['remember_me']) && ($params['remember_me']);

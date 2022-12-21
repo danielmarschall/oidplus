@@ -784,7 +784,7 @@ class XMLSecurityDSig
             if ($algorithm) {
                 try {
                     $objKey = new XMLSecurityKey($algorithm, array('type' => 'public'));
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     return null;
                 }
                 return $objKey;

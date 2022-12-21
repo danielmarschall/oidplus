@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 	// Based on https://www.php.net/manual/de/mysqli-stmt.get-result.php#113398
@@ -98,7 +98,7 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 		$ary = $this->fetch_array();
 		if (!$ary) return null;
 
-		$obj = new stdClass;
+		$obj = new \stdClass;
 		foreach ($ary as $name => $val) {
 			$obj->$name = $val;
 		}

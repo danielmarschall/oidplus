@@ -17,10 +17,14 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
+use ViaThinkSoft\OIDplus\OIDplusConfigInitializationException;
+use ViaThinkSoft\OIDplus\OIDplusException;
+
 /**
  * This function will be called by OIDplusDatabaseConnection.class.php at method afterConnect().
  * @param OIDplusDatabaseConnection $db is the OIDplusDatabaseConnection class
- * @throws OIDplusException
+ * @throws \ViaThinkSoft\OIDplus\OIDplusException
  */
 function oidplus_dbupdate(OIDplusDatabaseConnection $db) {
 	// Detect database version
@@ -72,7 +76,7 @@ function oidplus_dbupdate(OIDplusDatabaseConnection $db) {
 			require_once __DIR__.'/update1001.inc.php';
 			$version = oidplus_dbupdate_1001($db);
 		}
-	} catch (Exception $e) {
+	} catch (\Exception $e) {
 		throw new OIDplusException(_L('Database update from version %1 failed: %2',$version,$e->getMessage()));
 	}
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
@@ -130,7 +130,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				    <input type="submit" value="'._L('Send invitation').'">
 				  </form>';
 
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 
 				$out['icon'] = 'img/error.png';
 				$out['text'] = _L('Error: %1',$e->getMessage());

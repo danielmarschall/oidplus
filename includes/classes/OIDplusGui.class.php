@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusGui extends OIDplusBaseClass {
 
@@ -32,7 +32,7 @@ class OIDplusGui extends OIDplusBaseClass {
 		foreach (OIDplus::getPagePlugins() as $plugin) {
 			try {
 				$plugin->gui($id, $out, $handled);
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$out['title'] = _L('Error');
 				$out['icon'] = 'img/error.png';
 				$out['text'] = $e->getMessage();

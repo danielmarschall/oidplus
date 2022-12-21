@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 // OIDplusBaseConfig is the basic ("static") configuration stored in userdata/baseconfig/config.inc.php,
 // e.g. database access credentials.

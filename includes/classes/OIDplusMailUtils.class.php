@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-if (!defined('INSIDE_OIDPLUS')) die();
+namespace ViaThinkSoft\OIDplus;
 
 class OIDplusMailUtils extends OIDplusBaseClass {
 
@@ -134,7 +134,7 @@ class OIDplusMailUtils extends OIDplusBaseClass {
 	}
 
 	public static function sendMail($to, $title, $msg, $cc='', $bcc='') {
-		$h = new SecureMailer();
+		$h = new \SecureMailer();
 
 		// DM 14.04.2022: Added Reply-To, because some servers might change the 'From' attribute (Anti-Spoof?)
 		$h->addHeader('From', OIDplus::config()->getValue('admin_email'));
