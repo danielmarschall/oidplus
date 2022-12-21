@@ -108,10 +108,10 @@ class OIDplus extends OIDplusBaseClass {
 						                   'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicRdap', $tmp);
 						$tmp = str_replace('DISABLE_PLUGIN_OIDplusPagePublicAltIds',
 						                   'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicAltIds', $tmp);
-						$tmp = str_replace('DISABLE_PLUGIN_OIDplus',
-						                   'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $tmp);
 						$tmp = str_replace('DISABLE_PLUGIN_OIDplusPagePublicUITweaks',
 						                   'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $tmp);
+						$tmp = str_replace('DISABLE_PLUGIN_OIDplus',
+						                   'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $tmp);
 
 						if (@file_put_contents($config_file, $tmp) === false) {
 							eval('?>'.$tmp);
@@ -135,10 +135,10 @@ class OIDplus extends OIDplusBaseClass {
 						                    'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicRdap', $name);
 						$name = str_replace('DISABLE_PLUGIN_OIDplusPagePublicAltIds',
 						                    'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicAltIds', $name);
-						$name = str_replace('DISABLE_PLUGIN_OIDplus',
-						                    'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $name);
 						$name = str_replace('DISABLE_PLUGIN_OIDplusPagePublicUITweaks',
 						                    'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $name);
+						$name = str_replace('DISABLE_PLUGIN_OIDplus',
+						                    'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $name);
 						if (($name == 'MYSQL_PASSWORD') || ($name == 'ODBC_PASSWORD') || ($name == 'PDO_PASSWORD') || ($name == 'PGSQL_PASSWORD')) {
 							self::$baseConfig->setValue($name, base64_decode($value));
 						} else {

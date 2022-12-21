@@ -19,6 +19,7 @@ Pre-Installed plugins
 VNag comes with following plugins pre-installed:
 
 - **4images_version**: Checks 4images installations for updates.
+- **aastra_430_voicemail**: Checks Aastra 430 phone system for new voicemails.
 - **disk_running**: Checks if harddisks which do not have SMART capability are online
 - **file_timestamp**: Warns when files are not modified withhin a specific interval/age.
 - **gitlab_version**: Checks GitLab install~ations for updates.
@@ -28,10 +29,12 @@ VNag comes with following plugins pre-installed:
 - **last**: Checks the output of the tool "last" and warns when logins from suspicious IP adresses are detected.
 - **mdstat**: Parses the output of "/proc/mdstat" and warns when drives inside a RAID array have failed.
 - **mediawiki_version**: Checks MediaWiki installations for updates.
-- **net2ftp_version**: Checks net2ftp installations for updates.
+- **minecraft_java_version**: Checks the version of a local Minecraft Java server for updates.
+- **net2ftp_version**: Checks [net2ftp](https://www.net2ftp.com/) installations for updates.
 - **nextcloud_version**: Checks Nextcloud installations for updates.
 - **nocc_version**: Checks NOCC webmail installations for updates.
 - **openbugbounty**: Checks if your domains are listed at OpenBugBounty.org.
+- **open_deleted_files**: Checks if there are deleted files which have open file handles (leaked disk space).
 - **owncloud_version**: Checks ownCloud installations for updates.
 - **phpbb_version**: Checks phpBB installations for updates.
 - **phpmyadmin_version**: Checks phpMyAdmin installations for updates.
@@ -39,8 +42,10 @@ VNag comes with following plugins pre-installed:
 - **pmwiki_version**: Checks PmWiki installations for updates.
 - **roundcube_version**: Checks RoundCube installations for updates.
 - **smart**: Checks the SMART attributes of harddrives and warns when bad attributes are detected.
+- **viewvc_version**: Checks [ViewVC](https://github.com/viewvc/viewvc/) installations for updates.
 - **virtual_mem**: Checks the amount of virtual memory (physical memory + swap).
 - **webreader**: Reads the output of another VNag plugin transferred over HTTP.
+- **websvn_version**: Checks [WebSVN](https://github.com/websvnphp/websvn/) installations for updates.
 - **wordpress_version**: Checks WordPress installations for updates.
 - **x509_expire**: Warns when X.509 (PEM) certificate files reach a specific age.
 

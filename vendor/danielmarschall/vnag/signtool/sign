@@ -24,6 +24,7 @@ if (!file_exists(__DIR__.'/private.pem')) {
 for ($i=1; $i<$argc; $i++) {
 	$file = $argv[$i];
 
+	if (is_dir($file)) continue;
 	$cont = file_get_contents($file);
 	$original = $cont;
 

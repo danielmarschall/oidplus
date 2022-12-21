@@ -370,18 +370,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/vnag.git",
-                "reference": "85fb29d887bcfd6e251029d73cb12caaa28e4ec2"
+                "reference": "839d7ddfe183bf59ab1a2a37e0c24e7653340ccb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/85fb29d887bcfd6e251029d73cb12caaa28e4ec2",
-                "reference": "85fb29d887bcfd6e251029d73cb12caaa28e4ec2",
+                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/839d7ddfe183bf59ab1a2a37e0c24e7653340ccb",
+                "reference": "839d7ddfe183bf59ab1a2a37e0c24e7653340ccb",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2022-09-12T12:33:50+00:00",
+            "time": "2022-12-18T19:54:16+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -774,12 +774,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "8568af7f9bd6487c3283a24d7b546f9b30597cb9"
+                "reference": "f28693d38ba21bb0d9f0c411ee5dae2b178201da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/8568af7f9bd6487c3283a24d7b546f9b30597cb9",
-                "reference": "8568af7f9bd6487c3283a24d7b546f9b30597cb9",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/f28693d38ba21bb0d9f0c411ee5dae2b178201da",
+                "reference": "f28693d38ba21bb0d9f0c411ee5dae2b178201da",
                 "shasum": ""
             },
             "require": {
@@ -797,7 +797,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2022-12-07T14:38:06+00:00",
+            "time": "2022-12-17T18:26:50+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {

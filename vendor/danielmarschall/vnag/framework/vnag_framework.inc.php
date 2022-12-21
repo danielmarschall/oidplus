@@ -1,25 +1,25 @@
 <?php /* <ViaThinkSoftSignature>
-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
+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
 Q==
 </ViaThinkSoftSignature> */ ?>
 <?php
@@ -35,7 +35,7 @@ Q==
 
       Developed by Daniel Marschall             www.viathinksoft.com
       Licensed under the terms of the Apache 2.0 license
-      Revision 2022-06-06
+      Revision 2022-12-18
 
 */
 
@@ -347,7 +347,7 @@ function _empty($x) {
 }
 
 abstract class VNag {
-	/*public*/ const VNAG_VERSION = '2022-06-06';
+	/*public*/ const VNAG_VERSION = '2022-12-18';
 
 	// Status 0..3 for STATUSMODEL_SERVICE (the default status model):
 	# The guideline states: "Higher-level errors (such as name resolution errors, socket timeouts, etc) are outside of the control of plugins and should generally NOT be reported as UNKNOWN states."
@@ -1307,6 +1307,34 @@ abstract class VNag {
 				// $this->addVerboseMessage($exception->getTraceAsString(), VNag::VERBOSITY_SUMMARY);
 			}
 		}
+	}
+
+	// This is not used by the framework itself, but can be useful for plugins
+	// Note: For icinga2, the path is /var/lib/nagios/.vnag/cache/
+	protected function get_cache_dir() {
+		$homedir = @getenv('HOME');
+		if ($homedir && is_dir($homedir)) {
+			$try = "${homedir}/.vnag/cache";
+			if (is_dir($try)) return $try;
+			if (@mkdir($try,0777,true)) return $try;
+		}
+
+		$user = posix_getpwuid(posix_geteuid());
+		if (isset($user['dir']) && is_dir($user['dir'])) {
+			$homedir = $user['dir'];
+			$try = "${homedir}/.vnag/cache";
+			if (is_dir($try)) return $try;
+			if (@mkdir($try,0777,true)) return $try;
+		}
+
+		if (isset($user['name']) && is_dir($user['name'])) {
+			$username = $user['name'];
+			$try = "/tmp/vnag/cache";
+			if (is_dir($try)) return $try;
+			if (@mkdir($try,0777,true)) return $try;
+		}
+
+		throw new VNagException("Cannot get cache dir"); // TODO: translate and own exception type
 	}
 }
 
