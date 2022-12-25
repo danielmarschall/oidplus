@@ -46,17 +46,57 @@ if (!class_exists('ZipArchive')) {
 $dos_ids = array();
 $parent_oids = array();
 $i = 0;
-$dos_ids[''] = '00000000';
-$parent_oids[''] = '';
 
+// Root node
 $dos_ids[''] = str_pad(strval($i++), 8, '0', STR_PAD_LEFT);
+$parent_oids[''] = '';
+$iri[''] = array();
+$asn1[''] = array();
+$title[''] = 'OID Root';
+$description[''] = 'Exported by OIDplus 2.0';
+$created[''] = '';
+$updated[''] = '';
+
+// Now check all OIDs
 $res = OIDplus::db()->query("select * from ###objects where id like 'oid:%' order by ".OIDplus::db()->natOrder('id'));
 while ($row = $res->fetch_object()) {
 	$oid = substr($row->id, strlen('oid:'));
 	$parent_oid = substr($row->parent, strlen('oid:'));
+
 	$dos_ids[$oid] = str_pad(strval($i++), 8, '0', STR_PAD_LEFT);
-	if ($parent_oid == '') {
-		$parent_oids[$oid] = '';
+	fill_asn1($oid, $asn1);
+	//fill_iri($oid, $iri);
+	$title[$oid] = $row->title;
+	$description[$oid] = $row->description;
+	$created[$oid] = $row->created;
+	$updated[$oid] = $row->updated;
+
+	if ((oid_len($oid) > 1) && ($parent_oid == '')) {
+		do {
+			$real_parent = oid_len($oid) > 1 ? oid_up($oid) : '';
+			$parent_oids[$oid] = $real_parent;
+
+			if (isset($dos_ids[$real_parent])) break; // did we already handle this parent node?
+
+			$dos_ids[$real_parent] = str_pad(strval($i++), 8, '0', STR_PAD_LEFT);
+			fill_asn1($real_parent, $asn1); // well-known OIDs?
+			//fill_iri($real_parent, $iri); // well-known OIDs?
+			$title[$real_parent] = '';
+			$description[$real_parent] = '';
+			$created[$real_parent] = '';
+			$updated[$real_parent] = '';
+			$res2 = OIDplus::db()->query("select * from ###objects where id = 'oid:$real_parent'");
+			while ($row2 = $res2->fetch_object()) {
+				$title[$real_parent] = $row2->title;
+				$description[$real_parent] = $row2->description;
+				$created[$real_parent] = $row2->created;
+				$updated[$real_parent] = $row2->updated;
+			}
+
+			// next
+			if ($real_parent == '') break;
+			$oid = $real_parent;
+		} while (true);
 	} else {
 		$parent_oids[$oid] = $parent_oid;
 	}
@@ -85,36 +125,29 @@ foreach ($dos_ids as $oid => $dos_id) {
 	$cont .= "delegates=".($i-1)."\n";
 
 	if ($oid != '') {
-		$res = OIDplus::db()->query("select * from ###asn1id where oid = 'oid:$oid'");
 		$asnids = array();
-		while ($row = $res->fetch_object()) {
-			$asn1 = $row->name;
-			$asnids[] = $asn1;
+		foreach ($asn1[$oid] as $name) {
+			$asnids[] = $name;
 		}
 		$asnids = implode(',', $asnids);
 		if ($asnids != '') $cont .= "asn1id=$asnids\r\n";
 
 		/*
-		$res = OIDplus::db()->query("select * from ###iri where oid = 'oid:$oid'");
 		$iris = array();
-		while ($row = $res->fetch_object()) {
-			$iri = $row->name;
-			$iris[] = $iri;
+		foreach ($iri[$oid] as $name) {
+			$iris[] = $name;
 		}
 		$iris = implode(',', $iris);
 		if ($iris != '') $cont .= "iri=$iris\r\n";
 		*/
 
-		$res = OIDplus::db()->query("select * from ###objects where id = 'oid:$oid';");
-		$row = $res->fetch_object();
+		if ($title[$oid] != '') $cont .= "description=".$title[$oid]."\r\n";
 
-		if ($row->title != '') $cont .= "description=".$row->title."\r\n";
+		if ($updated[$oid] != '') $cont .= "updatedate=".explode(' ',$updated[$oid])[0]."\r\n";
+		if ($created[$oid] != '') $cont .= "createdate=".explode(' ',$created[$oid])[0]."\r\n";
 
-		if ($row->updated != '') $cont .= "updatedate=".explode(' ',$row->updated)[0]."\r\n";
-		if ($row->created != '') $cont .= "createdate=".explode(' ',$row->created)[0]."\r\n";
-
-		$desc = handleDesc($row->description);
-		if ($desc != '') {
+		$desc = handleDesc($description[$oid]);
+		if (trim($desc) != '') {
 			$cont .= "information=$dos_id.TXT\r\n";
 			$zip->addFromString("DB//$dos_id.TXT", $desc);
 		}
@@ -128,7 +161,6 @@ $settings = array();
 $settings[] = '[SETTINGS]';
 $settings[] = 'DATA=DB\\';
 $zip->addFromString("OIDPLUS.INI", implode("\r\n",$settings)."\r\n");
-
 
 $zip->addFromString('DB//OID.INI', $cont);
 
@@ -159,6 +191,24 @@ unlink($tmp_file);
 OIDplus::invoke_shutdown();
 
 # ---
+
+function fill_asn1($oid, &$asn1) {
+	if (!isset($asn1[$oid])) $asn1[$oid] = array();
+	$res = OIDplus::db()->query("select * from ###asn1id where oid = 'oid:$oid'");
+	while ($row = $res->fetch_object()) {
+		$asn1[$oid][] = $row->name;
+	}
+}
+
+/*
+function fill_iri($oid, &$iri) {
+	if (!isset($iri[$oid])) $iri[$oid] = array();
+	$res = OIDplus::db()->query("select * from ###iri where oid = 'oid:$oid'");
+	while ($row = $res->fetch_object()) {
+		$iri[$oid][] = $row->name;
+	}
+}
+*/
 
 function handleDesc($desc) {
 	$desc = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $desc); // br2nl

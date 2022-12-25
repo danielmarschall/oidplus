@@ -46,17 +46,49 @@ if (!class_exists('ZipArchive')) {
 $dos_ids = array();
 $parent_oids = array();
 $i = 0;
-$dos_ids[''] = '00000000';
-$parent_oids[''] = '';
 
+// Root node
 $dos_ids[''] = str_pad(strval($i++), 8, '0', STR_PAD_LEFT);
+$parent_oids[''] = '';
+$iri[''] = array();
+$asn1[''] = array();
+$title[''] = 'OID Root';
+$description[''] = 'Exported by OIDplus 2.0';
+
+// Now check all OIDs
 $res = OIDplus::db()->query("select * from ###objects where id like 'oid:%' order by ".OIDplus::db()->natOrder('id'));
 while ($row = $res->fetch_object()) {
 	$oid = substr($row->id, strlen('oid:'));
 	$parent_oid = substr($row->parent, strlen('oid:'));
+
 	$dos_ids[$oid] = str_pad(strval($i++), 8, '0', STR_PAD_LEFT);
-	if ($parent_oid == '') {
-		$parent_oids[$oid] = '';
+	fill_asn1($oid, $asn1);
+	fill_iri($oid, $iri);
+	$title[$oid] = $row->title;
+	$description[$oid] = $row->description;
+
+	if ((oid_len($oid) > 1) && ($parent_oid == '')) {
+		do {
+			$real_parent = oid_len($oid) > 1 ? oid_up($oid) : '';
+			$parent_oids[$oid] = $real_parent;
+
+			if (isset($dos_ids[$real_parent])) break; // did we already handle this parent node?
+
+			$dos_ids[$real_parent] = str_pad(strval($i++), 8, '0', STR_PAD_LEFT);
+			fill_asn1($real_parent, $asn1); // well-known OIDs?
+			fill_iri($real_parent, $iri); // well-known OIDs?
+			$title[$real_parent] = '';
+			$description[$real_parent] = '';
+			$res2 = OIDplus::db()->query("select * from ###objects where id = 'oid:$real_parent'");
+			while ($row2 = $res2->fetch_object()) {
+				$title[$real_parent] = $row2->title;
+				$description[$real_parent] = $row2->description;
+			}
+
+			// next
+			if ($real_parent == '') break;
+			$oid = $real_parent;
+		} while (true);
 	} else {
 		$parent_oids[$oid] = $parent_oid;
 	}
@@ -101,34 +133,23 @@ foreach ($dos_ids as $oid => $dos_id) {
 		}
 	}
 
-	$res = OIDplus::db()->query("select * from ###asn1id where oid = 'oid:$oid'");
-	while ($row = $res->fetch_object()) {
-		$asn1 = $row->name;
-		$cont .= make_line(CMD_ASN1_IDENTIFIER, $asn1);
+	foreach ($asn1[$oid] as $name) {
+		$cont .= make_line(CMD_ASN1_IDENTIFIER, $name);
 	}
 
-	$res = OIDplus::db()->query("select * from ###iri where oid = 'oid:$oid'");
-	while ($row = $res->fetch_object()) {
-		$iri = $row->name;
-		$cont .= make_line(CMD_UNICODE_LABEL, $iri);
+	foreach ($iri[$oid] as $name) {
+		$cont .= make_line(CMD_UNICODE_LABEL, $name);
 	}
 
-	if ($oid == '') {
-		// TODO: Split our OIDplus root OIDs into the real OID tree (1, 1.3, 1.3.6, ...)
-		$cont .= make_line(CMD_DESCRIPTION, 'Here, you can find the root OIDs');
-	} else {
-		$res = OIDplus::db()->query("select * from ###objects where id = 'oid:$oid';");
-		$row = $res->fetch_object();
-		$desc_ary1 = handleDesc($row->title);
-		$desc_ary2 = handleDesc($row->description);
-		$desc_ary = array_merge($desc_ary1, $desc_ary2);
-		$prev_line = '';
-		foreach ($desc_ary as $line_idx => $line) {
-			if ($line == $prev_line) continue;
-			if ($line_idx >= 10/*DESCEDIT_LINES*/) break;
-			$cont .= make_line(CMD_DESCRIPTION, $line);
-			$prev_line = $line;
-		}
+	$desc_ary1 = handleDesc($title[$oid]);
+	$desc_ary2 = handleDesc($description[$oid]);
+	$desc_ary = array_merge($desc_ary1, $desc_ary2);
+	$prev_line = '';
+	foreach ($desc_ary as $line_idx => $line) {
+		if ($line == $prev_line) continue;
+		if ($line_idx >= 10/*DESCEDIT_LINES*/) break;
+		$cont .= make_line(CMD_DESCRIPTION, $line);
+		$prev_line = $line;
 	}
 
 	//echo "****$dos_id.OID\r\n";
@@ -157,6 +178,22 @@ unlink($tmp_file);
 OIDplus::invoke_shutdown();
 
 # ---
+
+function fill_asn1($oid, &$asn1) {
+	if (!isset($asn1[$oid])) $asn1[$oid] = array();
+	$res = OIDplus::db()->query("select * from ###asn1id where oid = 'oid:$oid'");
+	while ($row = $res->fetch_object()) {
+		$asn1[$oid][] = $row->name;
+	}
+}
+
+function fill_iri($oid, &$iri) {
+	if (!isset($iri[$oid])) $iri[$oid] = array();
+	$res = OIDplus::db()->query("select * from ###iri where oid = 'oid:$oid'");
+	while ($row = $res->fetch_object()) {
+		$iri[$oid][] = $row->name;
+	}
+}
 
 function handleDesc($desc) {
 	$desc = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $desc); // br2nl
