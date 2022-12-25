@@ -240,7 +240,7 @@ class OIDplusOIDIP {
 					if ($only_wellknown_ids_found) {
 						if (substr($query,0,4) === 'oid:') {
 							// Since it is well-known, oid-info.com will most likely have it described
-							$out[] = $this->_oidip_attr('url', 'http://www.oid-info.com/get/'.$obj->nodeId(false));
+							$out[] = $this->_oidip_attr('url', 'https://oid-rep.orange-labs.fr/get/'.$obj->nodeId(false));
 						}
 					} else {
 						$out[] = $this->_oidip_attr('url', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).'?goto='.urlencode($obj->nodeId(true)));
