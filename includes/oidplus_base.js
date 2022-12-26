@@ -505,7 +505,9 @@ function gotoButtonClicked() {
 }
 
 function setLanguage(lngid) {
-	setCookie('LANGUAGE', lngid, 0/*Until browser closes*/, location.pathname);
+	setCookie('LANGUAGE', lngid, 0/*Until browser closes*/, oidplus_webpath);
+
+	if (current_node == "") return false; // Happens for Setup. Open URL instead.
 
 	$(".lng_flag").each(function(){
 		$(this).addClass("picture_ghost");
@@ -520,6 +522,7 @@ function setLanguage(lngid) {
 		reloadContent();
 		mobileNavClose();
 	}
+	return true; // we have handled it. Do not follow href=""
 }
 
 function show_waiting_anim() {
