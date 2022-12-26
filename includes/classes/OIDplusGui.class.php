@@ -85,7 +85,7 @@ class OIDplusGui extends OIDplusBaseClass {
 
 			if (count($dirs) > 0) {
 				$dir = substr($dirs[0], strlen(OIDplus::localpath()));
-				$langbox_entries[$code] = '<span class="lang_flag_bg"><a '.($useJs ? 'onclick="setLanguage(\''.$code.'\'); return false" ' : '').'href="?lang='.$code.$add.'"><img src="'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).$dir.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20"></a></span> ';
+				$langbox_entries[$code] = '<span class="lang_flag_bg"><a '.($useJs ? 'onclick="return !setLanguage(\''.$code.'\')" ' : '').'href="?lang='.$code.$add.'"><img src="'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).$dir.$flag.'" alt="'.$pluginManifest->getName().'" title="'.$pluginManifest->getName().'" class="'.$class.'" id="lng_flag_'.$code.'" height="20"></a></span> ';
 			}
 		}
 		if ($non_default_languages > 0) {
@@ -169,9 +169,9 @@ class OIDplusGui extends OIDplusBaseClass {
 		$out .= '<head>';
 		$out .= '	<title>'.htmlentities($page_title_1).'</title>';
 		$out .= '	<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-		$out .= '	<link rel="stylesheet" href="'.OIDplus::webpath(null, true).'oidplus.min.css.php?noBaseConfig=1">';
-		$out .= '	<script src="'.OIDplus::webpath(null, true).'oidplus.min.js.php?noBaseConfig=1" type="text/javascript"></script>';
-		$out .= '	<link rel="shortcut icon" type="image/x-icon" href="'.OIDplus::webpath(null, true).'favicon.ico.php">';
+		$out .= '	<link rel="stylesheet" href="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'oidplus.min.css.php?noBaseConfig=1">';
+		$out .= '	<script src="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'oidplus.min.js.php?noBaseConfig=1" type="text/javascript"></script>';
+		$out .= '	<link rel="shortcut icon" type="image/x-icon" href="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'favicon.ico.php">';
 		$out .= '	'.implode("\n\t",$extra_head_tags)."\n";
 		$out .= '</head>';
 
