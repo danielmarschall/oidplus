@@ -157,10 +157,12 @@ function doRebuild(admPwdHash, pwComment) {
 		$("#step2")[0].style.display = "None";
 		$("#step3")[0].style.display = "None";
 		$("#step4")[0].style.display = "None";
+		$("#footer_warn")[0].innerHTML = '<font color="red">'+_L('Please correct the errors above (in red) before continuing.')+'</font>';
 	} else {
 		$("#step2")[0].style.display = "Block";
 		$("#step3")[0].style.display = "Block";
 		$("#step4")[0].style.display = "Block";
+		$("#footer_warn")[0].innerHTML = '';
 	}
 }
 

@@ -4934,6 +4934,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Please correct the errors above (in red) before continuing.
+		]]></source>
+		<target><![CDATA[
+		Bitte korrigieren Sie die oben genannten Fehler (in rot), um fortzufahren.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Please enable JavaScript in order to use setup!
 		]]></source>
 		<target><![CDATA[
