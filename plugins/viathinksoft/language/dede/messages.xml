@@ -7758,6 +7758,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		You are already logged in as administrator.
+		]]></source>
+		<target><![CDATA[
+		Sie sind bereits als Administrator eingeloggt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		You are already using the latest version of OIDplus.
 		]]></source>
 		<target><![CDATA[

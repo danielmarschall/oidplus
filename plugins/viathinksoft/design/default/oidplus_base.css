@@ -57,6 +57,20 @@
 	}
 }
 
+/* Link colors */
+
+a:link {
+	color:#0d6efd;
+}
+
+a:visited {
+	color:#0d6efd;
+}
+
+a:hover {
+	color:#0a58ca;
+}
+
 /* Basic stuff */
 
 @media print {

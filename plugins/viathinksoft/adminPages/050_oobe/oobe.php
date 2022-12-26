@@ -67,7 +67,7 @@ echo '<h2>'._L('Step %1: Authenticate',$step++).'</h2>';
 
 if (OIDplus::authUtils()->isAdminLoggedIn()) {
 
-	echo '<p><font color="green">You are already logged in as administrator.</font></p>';
+	echo '<p><font color="green">'._L('You are already logged in as administrator.').'</font></p>';
 
 } else {
 
@@ -191,16 +191,16 @@ if ($do_edits && !$errors_happened)  {
 	OIDplus::invoke_shutdown();
 	header('Location:../../../../');
 } else {
-	OIDplus::invoke_shutdown();
-
 	$page_title_1 = _L('OIDplus Setup');
 	$page_title_2 = _L('Initial settings');
 	$static_icon = 'img/main_icon.png';
 	$static_content = $cont;
 	$extra_head_tags = array();
 	$extra_head_tags[] = '<meta name="robots" content="noindex">';
-	//$extra_head_tags[] = '<link rel="stylesheet" href="../../../../setup/setup.min.css.php">';
-	//$extra_head_tags[] = '<script src="../../../../setup/setup.min.js.php" type="text/javascript"></script>';
 
-	OIDplus::gui()->showSimplePage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags);
+	$cont = OIDplus::gui()->showSimplePage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags);
+
+	OIDplus::invoke_shutdown();
+
+	echo $cont;
 }

@@ -73,7 +73,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'e430ac9bcdb86116724bd55b737999e97935b660',
+            'reference' => '4532821d43a9dd32a53807a67f102048a66740af',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(
@@ -178,7 +178,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => 'f28693d38ba21bb0d9f0c411ee5dae2b178201da',
+            'reference' => 'f81d9ea09a07a06bf5e2130eed9b6616606bb3c4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -221,9 +221,9 @@
             'dev_requirement' => false,
         ),
         'twbs/bootstrap' => array(
-            'pretty_version' => 'v5.2.3',
-            'version' => '5.2.3.0',
-            'reference' => 'cb021439c683d9805e2864c58095b92d405e9b11',
+            'pretty_version' => 'v5.3.0-alpha1',
+            'version' => '5.3.0.0-alpha1',
+            'reference' => 'cf9454caa00872899215603e5e036d9a824b1b11',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(),
@@ -241,7 +241,7 @@
         'twitter/bootstrap' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => 'v5.2.3',
+                0 => 'v5.3.0-alpha1',
             ),
         ),
         'vakata/jstree' => array(

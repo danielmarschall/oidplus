@@ -66,7 +66,8 @@ class OIDplusGui extends OIDplusBaseClass {
 	}
 
 	public static function getLanguageBox($goto, $useJs) {
-		echo '<div id="languageBox">';
+		$out = '';
+		$out .= '<div id="languageBox">';
 		$langbox_entries = array();
 		$non_default_languages = 0;
 		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
@@ -89,29 +90,30 @@ class OIDplusGui extends OIDplusBaseClass {
 		}
 		if ($non_default_languages > 0) {
 			foreach ($langbox_entries as $ent) {
-				echo "$ent\n\t\t";
+				$out .= "$ent\n\t\t";
 			}
 		}
-		echo '</div>';
+		$out .= '</div>';
+		return $out;
 	}
 
 	public static function html_exception_handler($exception) {
 		if ($exception instanceof OIDplusConfigInitializationException) {
 			echo '<!DOCTYPE HTML>';
-			echo '<html><head><title>'._L('OIDplus initialization error').'</title></head><body>';
-			echo '<h1>'._L('OIDplus initialization error').'</h1>';
+			echo '<html><head><title>'.htmlentities(_L('OIDplus initialization error')).'</title></head><body>';
+			echo '<h1>'.htmlentities(_L('OIDplus initialization error')).'</h1>';
 			echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
-			echo '<p>'._L('Please check the file %1','<b>userdata/baseconfig/config.inc.php</b>');
+			$msg = _L('Please check the file %1','<b>userdata/baseconfig/config.inc.php</b>');
 			if (is_dir(__DIR__ . '/../../setup')) {
-				echo ' '._L('or run <a href="%1">setup</a> again',OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/');
+				$msg .= ' '._L('or run <a href="%1">setup</a> again',OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/');
 			}
-			echo '</p>';
+			echo '<p>'.htmlentities($msg).'</p>';
 			echo self::getExceptionTechInfo($exception);
 			echo '</body></html>';
 		} else {
 			echo '<!DOCTYPE HTML>';
-			echo '<html><head><title>'._L('OIDplus error').'</title></head><body>';
-			echo '<h1>'._L('OIDplus error').'</h1>';
+			echo '<html><head><title>'.htmlentities(_L('OIDplus error')).'</title></head><body>';
+			echo '<h1>'.htmlentities(_L('OIDplus error')).'</h1>';
 			// ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
 			echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
 			echo self::getExceptionTechInfo($exception);
@@ -121,7 +123,7 @@ class OIDplusGui extends OIDplusBaseClass {
 
 	private static function getExceptionTechInfo($exception) {
 		$out = '';
-		$out .= '<p><b>'._L('Technical information about the problem').':</b></p>';
+		$out .= '<p><b>'.htmlentities(_L('Technical information about the problem')).':</b></p>';
 		$out .= '<pre>';
 		$out .= get_class($exception)."\n";
 		$out .= _L('at file %1 (line %2)',$exception->getFile(),"".$exception->getLine())."\n\n";
@@ -159,49 +161,53 @@ class OIDplusGui extends OIDplusBaseClass {
 
 	// TODO: Modify this method so that also the real index.php (With menu) can be called here
 	public function showSimplePage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags='') {
-		echo '<!DOCTYPE html>';
-		echo '<html lang="'.substr(OIDplus::getCurrentLang(),0,2).'">';
+		$out = '';
 
-		echo '<head>';
-		echo '	<title>'.htmlentities($page_title_1).'</title>';
-		echo '	<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-		echo '	<link rel="stylesheet" href="'.OIDplus::webpath(null, true).'oidplus.min.css.php?noBaseConfig=1">';
-		echo '	<script src="'.OIDplus::webpath(null, true).'oidplus.min.js.php?noBaseConfig=1" type="text/javascript"></script>';
-		echo '	<link rel="shortcut icon" type="image/x-icon" href="'.OIDplus::webpath(null, true).'favicon.ico.php">';
-		echo "\t".implode("\n\t",$extra_head_tags)."\n";
-		echo '</head>';
+		$out .= '<!DOCTYPE html>';
+		$out .= '<html lang="'.substr(OIDplus::getCurrentLang(),0,2).'">';
 
-		echo '<body>';
+		$out .= '<head>';
+		$out .= '	<title>'.htmlentities($page_title_1).'</title>';
+		$out .= '	<meta name="viewport" content="width=device-width, initial-scale=1.0">';
+		$out .= '	<link rel="stylesheet" href="'.OIDplus::webpath(null, true).'oidplus.min.css.php?noBaseConfig=1">';
+		$out .= '	<script src="'.OIDplus::webpath(null, true).'oidplus.min.js.php?noBaseConfig=1" type="text/javascript"></script>';
+		$out .= '	<link rel="shortcut icon" type="image/x-icon" href="'.OIDplus::webpath(null, true).'favicon.ico.php">';
+		$out .= '	'.implode("\n\t",$extra_head_tags)."\n";
+		$out .= '</head>';
 
-		echo '<div id="loading" style="display:none">Loading&#8230;</div>';
+		$out .= '<body>';
 
-		echo '<div id="frames">';
-		echo '<div id="content_window" class="borderbox">';
+		$out .= '<div id="loading" style="display:none">Loading&#8230;</div>';
 
-		echo '<h1 id="real_title">';
-		if ($static_icon != '') echo '<img src="'.htmlentities($static_icon).'" width="48" height="48" alt=""> ';
-		echo htmlentities($page_title_2).'</h1>';
-		echo '<div id="real_content">'.$static_content.'</div>';
-		echo '<br>';
+		$out .= '<div id="frames">';
+		$out .= '<div id="content_window" class="borderbox">';
 
-		echo '</div>';
+		$out .= '<h1 id="real_title">';
+		if ($static_icon != '') $out .= '<img src="'.htmlentities($static_icon).'" width="48" height="48" alt=""> ';
+		$out .= htmlentities($page_title_2).'</h1>';
+		$out .= '<div id="real_content">'.$static_content.'</div>';
+		$out .= '<br>';
 
-		echo '<div id="system_title_bar">';
+		$out .= '</div>';
 
-		echo '<div id="system_title_text">';
-		echo '	<span id="system_title_logo"></span>';
-		echo '	<span id="system_title_1">'.htmlentities(OIDplus::getEditionInfo()['vendor'].' OIDplus 2.0').'</span><br>';
-		echo '	<span id="system_title_2">'.htmlentities($page_title_1).'</span>';
-		echo '</div>';
+		$out .= '<div id="system_title_bar">';
 
-		echo '</div>';
+		$out .= '<div id="system_title_text">';
+		$out .= '	<span id="system_title_logo"></span>';
+		$out .= '	<span id="system_title_1">'.htmlentities(OIDplus::getEditionInfo()['vendor'].' OIDplus 2.0').'</span><br>';
+		$out .= '	<span id="system_title_2">'.htmlentities($page_title_1).'</span>';
+		$out .= '</div>';
 
-		echo OIDplus::gui()->getLanguageBox(null, true);
+		$out .= '</div>';
 
-		echo '</div>';
+		$out .= OIDplus::gui()->getLanguageBox(null, true);
 
-		echo '</body>';
-		echo '</html>';
+		$out .= '</div>';
+
+		$out .= '</body>';
+		$out .= '</html>';
+
+		return $out;
 	}
 
 }
