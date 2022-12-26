@@ -26,6 +26,7 @@ oidplus_menu_width_uservalue = isNull(localStorage.getItem('menu_width'), oidplu
 
 // This function will fire upon any page reload (both document.ready and AJAX page change)
 pageLoadedCallbacks.anyPageLoad.push(function() {
+	if (typeof uitweaks == "undefined") return; // is undefined for Setup
 	if (uitweaks.prefer_admin_login_tab) {
 		$('#loginTab #myTab a[href="#admin"]').tab('show'); // Select tab by link
 	}
@@ -33,6 +34,7 @@ pageLoadedCallbacks.anyPageLoad.push(function() {
 
 // This function will fire upon document.ready event only, after the OIDplus base code
 pageLoadedCallbacks.documentReadyAfter.push(function () {
+	if (typeof uitweaks == "undefined") return; // is undefined for Setup
 
 	var tree = $('#oidtree');
 	tree.on('ready.jstree', function (e, data) {

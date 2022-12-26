@@ -253,4 +253,4 @@ function setupOnLoad() {
 	performAccessCheck();
 }
 
-window.onload = setupOnLoad;
+$(document).ready(setupOnLoad);
