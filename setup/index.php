@@ -224,9 +224,12 @@ if (is_dir(__DIR__.'/../plugins/viathinksoft/adminPages/050_oobe/')) {
 }
 echo '</div>';
 
+echo '<span id="footer_warn"></span>';
+
 echo '<br><br>'; // because of iPhone Safari
 
 echo '</span>';
+
 echo '<script> $("#setupPageContent")[0].style.display = "Block"; </script>';
 
 # ---
