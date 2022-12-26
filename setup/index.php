@@ -241,6 +241,8 @@ $extra_head_tags[] = '<link rel="stylesheet" href="setup.min.css.php">';
 $extra_head_tags[] = '<script src="setup.min.js.php" type="text/javascript"></script>';
 ob_end_clean();
 
+$cont = OIDplus::gui()->showSimplePage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags);
+
 OIDplus::invoke_shutdown();
 
-OIDplus::gui()->showSimplePage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags);
+echo $cont;

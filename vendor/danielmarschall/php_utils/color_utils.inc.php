@@ -1,8 +1,9 @@
 <?php
 
 /*
- * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Color Utils for PHP
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
+ * Revision 2022-12-27
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,16 +105,17 @@ function rgb2html($r, $g=-1, $b=-1) {
 
 function changeHueOfCSS($css_content, $h_shift=0, $s_shift=0, $v_shift=0) {
 	// TODO: also support rgb() and rgba() color references (and maybe also hsl/hsla and color names?)
-	$css_content = preg_replace_callback('@#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})@ismU',
+	// TODO: Bootstrap uses "--bs-link-color-rgb: 13,110,253;" which we must also accept
+	$css_content = preg_replace_callback('@(:|,)\\s*#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})@ismU',
 		function ($x) use ($h_shift, $s_shift, $v_shift) {
-			if (strlen($x[1]) == 3) {
-				$r = hexdec($x[1][0].$x[1][0]);
-				$g = hexdec($x[1][1].$x[1][1]);
-				$b = hexdec($x[1][2].$x[1][2]);
+			if (strlen($x[2]) == 3) {
+				$r = hexdec($x[2][0].$x[2][0]);
+				$g = hexdec($x[2][1].$x[2][1]);
+				$b = hexdec($x[2][2].$x[2][2]);
 			} else {
-				$r = hexdec($x[1][0].$x[1][1]);
-				$g = hexdec($x[1][2].$x[1][3]);
-				$b = hexdec($x[1][4].$x[1][5]);
+				$r = hexdec($x[2][0].$x[2][1]);
+				$g = hexdec($x[2][2].$x[2][3]);
+				$b = hexdec($x[2][4].$x[2][5]);
 			}
 			list ($h,$s,$v) = RGB_TO_HSV($r, $g, $b);
 			$h = (float)$h;
@@ -123,27 +125,29 @@ function changeHueOfCSS($css_content, $h_shift=0, $s_shift=0, $v_shift=0) {
 			$s = ($s + $s_shift); while ($s > 1) $s  = 1; while ($s < 0) $s  = 0;
 			$v = ($v + $v_shift); while ($v > 1) $v  = 1; while ($v < 0) $v  = 0;
 			list ($r,$g,$b) = HSV_TO_RGB($h, $s, $v);
-			return rgb2html($r,$g,$b);
+			return ':'.rgb2html($r,$g,$b);
 		}, $css_content);
         return $css_content;
 }
 
 function invertColorsOfCSS($css_content) {
-	$css_content = preg_replace_callback('@#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})@ismU',
+	// TODO: also support rgb() and rgba() color references (and maybe also hsl/hsla and color names?)
+	// TODO: Bootstrap uses "--bs-link-color-rgb: 13,110,253;" which we must also accept
+	$css_content = preg_replace_callback('@(:|,)\\s*#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})@ismU',
 		function ($x) {
-			if (strlen($x[1]) == 3) {
-				$r = hexdec($x[1][0].$x[1][0]);
-				$g = hexdec($x[1][1].$x[1][1]);
-				$b = hexdec($x[1][2].$x[1][2]);
+			if (strlen($x[2]) == 3) {
+				$r = hexdec($x[2][0].$x[2][0]);
+				$g = hexdec($x[2][1].$x[2][1]);
+				$b = hexdec($x[2][2].$x[2][2]);
 			} else {
-				$r = hexdec($x[1][0].$x[1][1]);
-				$g = hexdec($x[1][2].$x[1][3]);
-				$b = hexdec($x[1][4].$x[1][5]);
+				$r = hexdec($x[2][0].$x[2][1]);
+				$g = hexdec($x[2][2].$x[2][3]);
+				$b = hexdec($x[2][4].$x[2][5]);
 			}
 			$r = 255 - $r;
 			$g = 255 - $g;
 			$b = 255 - $b;
-			return rgb2html($r,$g,$b);
+			return ':'.rgb2html($r,$g,$b);
 		}, $css_content);
         return $css_content;
 }
