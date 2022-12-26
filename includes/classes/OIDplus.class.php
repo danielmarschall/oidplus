@@ -1522,9 +1522,12 @@ class OIDplus extends OIDplusBaseClass {
 		$timeout = 2;
 		$already_ssl = self::isSSL();
 		$ssl_port = 443;
+		$host_with_port = $_SERVER['HTTP_HOST'];
+		$host_no_port = explode(':',$host_with_port)[0];
+		$host_ssl =  $host_no_port . ($ssl_port != 443 ? ':'.$ssl_port : '');
 
 		if ($already_ssl) {
-			OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, false, null, true/*forceInsecure*/);
+			OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
 			self::$sslAvailableCache = true;
 			return true;
 		} else {
@@ -1535,9 +1538,10 @@ class OIDplus extends OIDplusBaseClass {
 				// If you open the page with HTTPS first, then the CSRF token cookies will get the "secure" flag
 				// If you open the page then with HTTP, the HTTP cannot access the secure CSRF cookies,
 				// Chrome will then block "Set-Cookie" since the HTTP cookie would overwrite the HTTPS cookie.
+				// So we MUST redirect, even if the Mode is ENFORCE_SSL_NO.
 				// Note: SSL_CHECK is NOT a replacement for HSTS! You should use HSTS,
-				// because on there your browser ensures that HTTPS is called, before the server
-				// is even contacted (and therefore, no HTTP connection can be hacked).
+				//       because on there your browser ensures that HTTPS is called, before the server
+				//       is even contacted (and therefore, no HTTP connection can be hacked).
 				$mode = OIDplus::ENFORCE_SSL_YES;
 			} else {
 				$mode = OIDplus::baseConfig()->getValue('ENFORCE_SSL', OIDplus::ENFORCE_SSL_AUTO);
@@ -1549,7 +1553,7 @@ class OIDplus extends OIDplusBaseClass {
 				return false;
 			} else if ($mode == OIDplus::ENFORCE_SSL_YES) {
 				// Force SSL
-				$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+				$location = 'https://' . $host_ssl . $_SERVER['REQUEST_URI'];
 				header('Location:'.$location);
 				die(_L('Redirecting to HTTPS...'));
 			} else if ($mode == OIDplus::ENFORCE_SSL_AUTO) {
@@ -1558,7 +1562,7 @@ class OIDplus extends OIDplusBaseClass {
 					// We already had the HTTPS detection done before.
 					if ($_COOKIE['SSL_CHECK'] == '1') {
 						// HTTPS was detected before, but we are HTTP. Redirect now
-						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+						$location = 'https://' . $host_ssl . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
 						die(_L('Redirecting to HTTPS...'));
 					} else {
@@ -1570,15 +1574,15 @@ class OIDplus extends OIDplusBaseClass {
 					// This is our first check (or the browser didn't accept the SSL_CHECK cookie)
 					$errno = -1;
 					$errstr = '';
-					if (@fsockopen($_SERVER['HTTP_HOST'], $ssl_port, $errno, $errstr, $timeout)) {
+					if (@fsockopen($host_no_port, $ssl_port, $errno, $errstr, $timeout)) {
 						// HTTPS detected. Redirect now, and remember that we had detected HTTPS
-						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, false, null, true/*forceInsecure*/);
-						$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
+						$location = 'https://' . $host_ssl . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
 						die(_L('Redirecting to HTTPS...'));
 					} else {
 						// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.
-						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '0', 0, false, null, true/*forceInsecure*/);
+						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '0', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
 						self::$sslAvailableCache = false;
 						return false;
 					}
