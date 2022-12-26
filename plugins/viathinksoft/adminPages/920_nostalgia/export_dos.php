@@ -64,8 +64,8 @@ while ($row = $res->fetch_object()) {
 	$dos_ids[$oid] = str_pad(strval($i++), 8, '0', STR_PAD_LEFT);
 	fill_asn1($oid, $asn1);
 	fill_iri($oid, $iri);
-	$title[$oid] = $row->title;
-	$description[$oid] = $row->description;
+	$title[$oid] = vts_utf8_decode($row->title);
+	$description[$oid] = vts_utf8_decode($row->description);
 
 	if ((oid_len($oid) > 1) && ($parent_oid == '')) {
 		do {
@@ -81,8 +81,8 @@ while ($row = $res->fetch_object()) {
 			$description[$real_parent] = '';
 			$res2 = OIDplus::db()->query("select * from ###objects where id = 'oid:$real_parent'");
 			while ($row2 = $res2->fetch_object()) {
-				$title[$real_parent] = $row2->title;
-				$description[$real_parent] = $row2->description;
+				$title[$real_parent] = vts_utf8_decode($row2->title);
+				$description[$real_parent] = vts_utf8_decode($row2->description);
 			}
 
 			// next
