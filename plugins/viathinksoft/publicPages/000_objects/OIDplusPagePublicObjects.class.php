@@ -959,8 +959,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$iris[] = $row2['name'];
 			}
 
-			$date_created = explode(' ', $row->created)[0] == '0000-00-00' ? '' : explode(' ', $row->created)[0];
-			$date_updated = explode(' ', $row->updated)[0] == '0000-00-00' ? '' : explode(' ', $row->updated)[0];
+			$date_created = is_null($row->created) || (explode(' ', $row->created)[0] == '0000-00-00') ? '' : explode(' ', $row->created)[0];
+			$date_updated = is_null($row->updated) || (explode(' ', $row->updated)[0] == '0000-00-00') ? '' : explode(' ', $row->updated)[0];
 
 			$output .= '<tr>';
 			$output .= '     <td><a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.htmlentities($show_id).'</a>';
