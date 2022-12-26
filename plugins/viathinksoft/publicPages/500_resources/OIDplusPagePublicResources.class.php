@@ -161,7 +161,9 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		if (explode('$',$id,2)[0] === 'oidplus:resources') {
 			$handled = true;
 
-			$file = @explode('$',$id)[1];
+			$tmp = explode('$',$id);
+			$file = isset($tmp[1]) ? $tmp[1] : '';
+			unset($tmp);
 
 			// Security checks
 
