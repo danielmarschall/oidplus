@@ -24,26 +24,16 @@ use ViaThinkSoft\OIDplus\OIDplusCaptchaPlugin;
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
-define('BASECONFIG_FILE', 'userdata/baseconfig/config.inc.php');
-$already_setup = file_exists(__DIR__.'/../'.BASECONFIG_FILE);
+define('BASECONFIG_FILE_OLD', 'includes/config.inc.php');
+define('BASECONFIG_FILE_NEW', 'userdata/baseconfig/config.inc.php');
+$existing_config = '';
+if (file_exists(__DIR__.'/../'.BASECONFIG_FILE_OLD)) $existing_config = BASECONFIG_FILE_OLD;
+if (file_exists(__DIR__.'/../'.BASECONFIG_FILE_NEW)) $existing_config = BASECONFIG_FILE_NEW;
+$already_setup = $existing_config != '';
 
 OIDplus::handleLangArgument();
 
-echo '<!DOCTYPE html>';
-echo '<html lang="'.substr(OIDplus::getCurrentLang(),0,2).'">';
-
-echo '<head>';
-echo '	<title>'._L('OIDplus Setup').'</title>';
-echo '	<meta name="robots" content="noindex">';
-echo '	<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-echo '	<link rel="stylesheet" href="setup.min.css.php">';
-echo '	<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico.php">';
-echo '	<script src="setup.min.js.php" type="text/javascript"></script>';
-echo '</head>';
-
-echo '<body>';
-
-echo '<h1>'._L('OIDplus Setup - Configuration File Generator').'</h1>';
+ob_start();
 
 echo '<noscript>';
 echo '<h2>'._L('Please enable JavaScript in order to use setup!').'</h2>';
@@ -51,15 +41,13 @@ echo '</noscript>';
 
 echo '<span id="setupPageContent" style="display:None">';
 
-echo OIDplus::gui()->getLanguageBox(null, false);
-
 echo '<p>';
 if ($already_setup) {
-	echo _L('This assistant will help you updating the file <b>%1</b>.',BASECONFIG_FILE);
+	echo _L('This assistant will help you updating the file <b>%1</b>.',$existing_config);
 } else {
 	echo _L('Thank you very much for choosing OIDplus!');
 	echo ' ';
-	echo _L('This setup assistant will help you creating the file <b>%1</b>.',BASECONFIG_FILE);
+	echo _L('This setup assistant will help you creating the file <b>%1</b>.',$existing_config);
 }
 echo ' ';
 echo _L('This assistant does not automatically write to this file. Instead, you need to copy-paste the contents into the file.');
@@ -214,8 +202,8 @@ echo '</div>';
 // ----------------------------------------
 
 echo '<div id="step3">';
-echo '<h2>'._L('Step %1: Save %2 file',3,BASECONFIG_FILE).'</h2>';
-echo '<p>'._L('Save following contents into the file <b>%1</b>',BASECONFIG_FILE).'</p>';
+echo '<h2>'._L('Step %1: Save %2 file',3,$existing_config).'</h2>';
+echo '<p>'._L('Save following contents into the file <b>%1</b>',$existing_config).'</p>';
 echo '<code><font color="darkblue"><div id="config"></div></font></code>';
 echo '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(config)"></p>';
 echo '</div>';
@@ -223,18 +211,36 @@ echo '</div>';
 // ----------------------------------------
 
 echo '<div id="step4">';
-if ($already_setup) {
-	echo '<h2>'._L('Step %1: Start OIDplus',4).'</h2>';
+echo '<h2>'._L('Step %1: After you have updated the file...',4).'</h2>';
+if (is_dir(__DIR__.'/../plugins/viathinksoft/adminPages/050_oobe/')) {
+	if ($already_setup) {
+		echo '<p><input type="button" onclick="window.location.href=\'../plugins/viathinksoft/adminPages/050_oobe/oobe.php\'" value="'._L('Check connection and modify initial settings').'"></p>';
+		echo '<p><input type="button" onclick="window.location.href=\'../\'" value="'._L('Check connection and start OIDplus').'"></p>';
+	} else {
+		echo '<p><input type="button" onclick="window.location.href=\'../plugins/viathinksoft/adminPages/050_oobe/oobe.php\'" value="'._L('Check connection and go to initial settings').'"></p>';
+	}
 } else {
-	echo '<h2>'._L('Step %1: Continue to next step',4).'</h2>';
+	echo '<p><input type="button" onclick="window.location.href=\'../\'" value="'._L('Check connection and start OIDplus').'"></p>';
 }
-echo '<p><input type="button" onclick="window.location.href=\'../\'" value="'._L('Continue').'"></p>';
 echo '</div>';
 
-echo '<br><br><br>'; // because of iPhone Safari
+echo '<br><br>'; // because of iPhone Safari
 
 echo '</span>';
 echo '<script> $("#setupPageContent")[0].style.display = "Block"; </script>';
 
-echo '</body>';
-echo '</html>';
+# ---
+
+$page_title_1 = _L('OIDplus Setup');
+$page_title_2 = _L('Configuration File Generator');
+$static_icon = 'img/main_icon.png';
+$static_content = ob_get_contents();
+$extra_head_tags = array();
+$extra_head_tags[] = '<meta name="robots" content="noindex">';
+$extra_head_tags[] = '<link rel="stylesheet" href="setup.min.css.php">';
+$extra_head_tags[] = '<script src="setup.min.js.php" type="text/javascript"></script>';
+ob_end_clean();
+
+OIDplus::invoke_shutdown();
+
+OIDplus::gui()->showSimplePage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags);

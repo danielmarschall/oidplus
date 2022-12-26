@@ -313,8 +313,6 @@ $(window).on("popstate", function(e) {
 
 $(document).ready(function () {
 
-	if ($('#oidtree').length == 0) return; // we are not in the main view (index.php). We might be in oobe.php etc.
-
 	executeAllCallbacks(pageLoadedCallbacks.documentReadyBefore);
 
 	/*
@@ -339,7 +337,7 @@ $(document).ready(function () {
 
 	// --- JsTree
 
-	$('#oidtree')
+	if ($('#oidtree').length > 0) $('#oidtree')
 	.jstree({
 		plugins: ['massload','search','conditionalselect'],
 		'core' : {
@@ -363,7 +361,7 @@ $(document).ready(function () {
 		var url = new URL(window.location.href);
 		var goto = url.searchParams.get("goto");
 		if (goto == null) goto = "oidplus:system"; // the page was not called with ?goto=...
-		$("#gotoedit").val(goto);
+		if ($('#gotoedit').length > 0) $("#gotoedit").val(goto);
 
 		// By setting current_node, select_node() will not cause ajax.php?action=get_description to load (since we already loaded the first static content via PHP, for search engines mainly)
 		// But then we need to set the history state manually
@@ -394,15 +392,15 @@ $(document).ready(function () {
 
 	// --- Layout
 
-	$("#system_title_menu")[0].style.display = "block";
+	if ($('#system_title_menu').length > 0) $("#system_title_menu")[0].style.display = "block";
 
 	var tmpObjectTree = _L("OBJECT TREE").replace(/(.{1})/g,"$1<br>");
 	tmpObjectTree = tmpObjectTree.substring(0, tmpObjectTree.length-"<br>".length);
 
-	$('#oidtree').addClass('ui-layout-west');
-	$('#content_window').addClass('ui-layout-center');
-	$('#system_title_bar').addClass('ui-layout-north');
-	glayout = $('#frames').layout({
+	if ($('#oidtree').length > 0) $('#oidtree').addClass('ui-layout-west');
+	if ($('#content_window').length > 0) $('#content_window').addClass('ui-layout-center');
+	if ($('#system_title_bar').length > 0) $('#system_title_bar').addClass('ui-layout-north');
+	if ($('#frames').length > 0) glayout = $('#frames').layout({
 		north__size:                  40,
 		north__slidable:              false,
 		north__closable:              false,
@@ -416,13 +414,15 @@ $(document).ready(function () {
 		west__sliderTip:              _L("Slide Open Menu"),
 		west__slideTrigger_open:      "mouseover",
 		center__maskContents:         true, // IMPORTANT - enable iframe masking
-		onresize_start:				  function() { if (typeof handle_glayout_onresize_start == 'function') handle_glayout_onresize_start(); }
+		onresize_start:               function() { if (typeof handle_glayout_onresize_start == 'function') handle_glayout_onresize_start(); }
 	});
 
-	$("#gotobox").addClass("mobilehidden");
-	$("#languageBox").addClass("mobilehidden");
-	$("#gotobox")[0].style.display = "block";
-	$('#gotoedit').keypress(function(event) {
+	if ($('#gotobox').length == 0) $("#languageBox").css('right', '20px'); // Language Box to the right if there is no goto-box
+
+	if ($('#gotobox').length > 0) $("#gotobox").addClass("mobilehidden");
+	if ($('#languageBox').length > 0) $("#languageBox").addClass("mobilehidden");
+	if ($('#gotobox').length > 0) $("#gotobox")[0].style.display = "block";
+	if ($('#gotoedit').length > 0) $('#gotoedit').keypress(function(event) {
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if (keycode == '13') {
 			gotoButtonClicked();

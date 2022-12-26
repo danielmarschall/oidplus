@@ -514,7 +514,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
 		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
 
-		echo '<p><u>'._L('Step %1: System registration and automatic publishing (optional)',$step).'</u></p>';
+		echo '<h2>'._L('Step %1: System registration and automatic publishing (optional)',$step).'</h2>';
 
 		if (file_exists(__DIR__ . '/info$'.OIDplus::getCurrentLang().'.html')) {
 			$info = file_get_contents(__DIR__ . '/info$'.OIDplus::getCurrentLang().'.html');

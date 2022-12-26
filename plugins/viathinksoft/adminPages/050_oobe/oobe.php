@@ -23,6 +23,8 @@ use ViaThinkSoft\OIDplus\OIDplusException;
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
+set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
+
 ob_start(); // allow cookie headers to be sent
 
 header('Content-Type:text/html; charset=UTF-8');
@@ -34,31 +36,13 @@ if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 
+OIDplus::handleLangArgument();
+
 ob_start();
 
 $step = 1;
 $errors_happened = false;
 $edits_possible = true;
-
-echo '<!DOCTYPE html>';
-echo '<html lang="'.substr(OIDplus::getCurrentLang(),0,2).'">';
-
-echo '<head>';
-echo '	<title>'._L('OIDplus Setup').'</title>';
-echo '	<meta name="robots" content="noindex">';
-echo '	<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-echo '  <script src="../../../../oidplus.min.js.php"></script>';
-echo '  <script src="../../../../polyfill.min.js.php"></script>';
-echo '	<link rel="stylesheet" href="../../../../setup/setup.min.css.php">';
-echo '	<link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico.php">';
-echo '</head>';
-
-echo '<body>';
-
-echo '<h1>'._L('OIDplus Setup - Initial Settings').'</h1>';
-
-OIDplus::handleLangArgument();
-echo OIDplus::gui()->getLanguageBox(null, false);
 
 echo '<p>'._L('If you can read this, then your database login credentials are correct.').'</p>';
 
@@ -67,7 +51,7 @@ echo '<p>'._L('The following settings need to be configured once.<br>After setup
 echo '<form method="POST" action="oobe.php">';
 echo '<input type="hidden" name="sent" value="1">';
 
-if (OIDplus::getActiveCaptchaPlugin()->isVisible()) echo '<p><u>'._L('Step %1: Solve CAPTCHA',$step++).'</u></p>';
+if (OIDplus::getActiveCaptchaPlugin()->isVisible()) echo '<h2>'._L('Step %1: Solve CAPTCHA',$step++).'</h2>';
 if (isset($_POST['sent'])) {
 	try {
 		OIDplus::getActiveCaptchaPlugin()->captchaVerify($_POST);
@@ -79,7 +63,7 @@ if (isset($_POST['sent'])) {
 }
 echo OIDplus::getActiveCaptchaPlugin()->captchaGenerate(_L('Before logging in, please solve the following CAPTCHA'), _L('If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="%1">setup part 1</a> again or edit %2 manually).',OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/','userdata/baseconfig/config.inc.php'));
 
-echo '<p><u>'._L('Step %1: Authenticate',$step++).'</u></p>';
+echo '<h2>'._L('Step %1: Authenticate',$step++).'</h2>';
 
 if (OIDplus::authUtils()->isAdminLoggedIn()) {
 
@@ -109,7 +93,7 @@ $do_edits = isset($_POST['sent']) && $edits_possible;;
 # ---
 
 function step_admin_email($step, $do_edits, &$errors_happened) {
-	echo '<p><u>'._L('Step %1: Please enter the email address of the system administrator',$step).'</u></p>';
+	echo '<h2>'._L('Step %1: Please enter the email address of the system administrator',$step).'</h2>';
 	echo '<input type="text" name="admin_email" value="';
 
 	$msg = '';
@@ -134,7 +118,7 @@ step_admin_email($step++, $do_edits, $errors_happened);
 # ---
 
 function step_system_title($step, $do_edits, &$errors_happened) {
-	echo '<p><u>'._L('Step %1: What title should your Registration Authority / OIDplus instance have?',$step).'</u></p>';
+	echo '<h2>'._L('Step %1: What title should your Registration Authority / OIDplus instance have?',$step).'</h2>';
 	echo '<input type="text" name="system_title" value="';
 
 	$msg = '';
@@ -166,7 +150,7 @@ foreach (OIDplus::getAllPlugins() as $plugin) {
 
 # ---
 
-echo '<p><u>'._L('Step %1: Save settings and start OIDplus',$step).'</u></p>';
+echo '<h2>'._L('Step %1: Save settings and start OIDplus',$step).'</h2>';
 echo '<input type="submit" value="'._L('Save and start OIDplus!').'">';
 echo '</form>';
 
@@ -174,7 +158,7 @@ $pki_status = OIDplus::getPkiStatus();
 
 if ($pki_status) {
 
-	echo '<p><u>'._L('Your OIDplus system ID (derived from the public key) is:').'</u></p>';
+	echo '<h2>'._L('Your OIDplus system ID (derived from the public key) is:').'</h2>';
 
 	echo '<b>';
 	$sysid_oid = OIDplus::getSystemId(true);
@@ -182,7 +166,7 @@ if ($pki_status) {
 	echo htmlentities($sysid_oid);
 	echo '</b>';
 
-	echo '<p><u>'._L('Your public key is:').'</u></p>';
+	echo '<h2>'._L('Your public key is:').'</h2>';
 
 	$val = OIDplus::getSystemPublicKey();
 	if ($val) {
@@ -208,5 +192,15 @@ if ($do_edits && !$errors_happened)  {
 	header('Location:../../../../');
 } else {
 	OIDplus::invoke_shutdown();
-	echo $cont;
+
+	$page_title_1 = _L('OIDplus Setup');
+	$page_title_2 = _L('Initial settings');
+	$static_icon = 'img/main_icon.png';
+	$static_content = $cont;
+	$extra_head_tags = array();
+	$extra_head_tags[] = '<meta name="robots" content="noindex">';
+	//$extra_head_tags[] = '<link rel="stylesheet" href="../../../../setup/setup.min.css.php">';
+	//$extra_head_tags[] = '<script src="../../../../setup/setup.min.js.php" type="text/javascript"></script>';
+
+	OIDplus::gui()->showSimplePage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags);
 }

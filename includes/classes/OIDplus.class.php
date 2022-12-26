@@ -53,6 +53,10 @@ class OIDplus extends OIDplusBaseClass {
 	private function __construct() {
 	}
 
+	private static function insideSetup() {
+		return (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE_TO_ROOT).'setup/') === 0);
+	}
+
 	// --- Static classes
 
 	private static $baseConfig = null;
@@ -63,6 +67,10 @@ class OIDplus extends OIDplusBaseClass {
 		if ($first_init = is_null(self::$baseConfig)) {
 			self::$baseConfig = new OIDplusBaseConfig();
 		}
+
+		if (self::insideSetup()) return self::$baseConfig;
+		if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.js.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
+		if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.css.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
 
 		if ($first_init) {
 			// Include a file containing various size/depth limitations of OIDs
@@ -123,10 +131,9 @@ class OIDplus extends OIDplusBaseClass {
 					}
 				}
 
+				// Backwards compatibility 2.0 => 2.1
 				if (defined('OIDPLUS_CONFIG_VERSION') && (OIDPLUS_CONFIG_VERSION == 2.0)) {
 					self::$oldConfigFormatLoaded = true;
-
-					// Backwards compatibility 2.0 => 2.1
 					foreach (get_defined_constants(true)['user'] as $name => $value) {
 						$name = str_replace('OIDPLUS_', '', $name);
 						if ($name == 'SESSION_SECRET') $name = 'SERVER_SECRET';
@@ -139,12 +146,12 @@ class OIDplus extends OIDplusBaseClass {
 						                    'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $name);
 						$name = str_replace('DISABLE_PLUGIN_OIDplus',
 						                    'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $name);
-						if (($name == 'MYSQL_PASSWORD') || ($name == 'ODBC_PASSWORD') || ($name == 'PDO_PASSWORD') || ($name == 'PGSQL_PASSWORD')) {
-							self::$baseConfig->setValue($name, base64_decode($value));
-						} else {
-							if ($name == 'CONFIG_VERSION') $value = 2.1;
-							self::$baseConfig->setValue($name, $value);
+						if ($name == 'CONFIG_VERSION') {
+							$value = 2.1;
+						} else if (($name == 'MYSQL_PASSWORD') || ($name == 'ODBC_PASSWORD') || ($name == 'PDO_PASSWORD') || ($name == 'PGSQL_PASSWORD')) {
+							$value = base64_decode($value);
 						}
+						self::$baseConfig->setValue($name, $value);
 					}
 				}
 			} else {
@@ -152,7 +159,7 @@ class OIDplus extends OIDplusBaseClass {
 					throw new OIDplusConfigInitializationException(_L('File %1 is missing, but setup can\'t be started because its directory missing.',$config_file));
 				} else {
 					if (self::$html) {
-						if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE_TO_ROOT).'setup/') !== 0) {
+						if (!self::insideSetup()) {
 							header('Location:'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/');
 							die(_L('Redirecting to setup...'));
 						} else {

@@ -1182,6 +1182,30 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Check connection and go to initial settings
+		]]></source>
+		<target><![CDATA[
+		Verbindung prüfen und mit Grundeinstellungen fortfahren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Check connection and modify initial settings
+		]]></source>
+		<target><![CDATA[
+		Verbindung prüfen und Grundeinstellungen bearbeiten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Check connection and start OIDplus
+		]]></source>
+		<target><![CDATA[
+		Verbindung prüfen und OIDplus starten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Check status of the registration and collected data
 		]]></source>
 		<target><![CDATA[
@@ -1270,6 +1294,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Configuration File Generator
+		]]></source>
+		<target><![CDATA[
+		Konfigurationsdatei generieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Connection to the database failed!
 		]]></source>
 		<target><![CDATA[
@@ -1282,14 +1314,6 @@
 		]]></source>
 		<target><![CDATA[
 		Administrator kontaktieren
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Continue
-		]]></source>
-		<target><![CDATA[
-		Fortfahren
 		]]></target>
 	</message>
 	<message>
@@ -2942,6 +2966,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Initial settings
+		]]></source>
+		<target><![CDATA[
+		Grundeinstellungen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Insert
 		]]></source>
 		<target><![CDATA[
@@ -4210,22 +4242,6 @@
 		]]></source>
 		<target><![CDATA[
 		OIDplus Setup
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		OIDplus Setup - Configuration File Generator
-		]]></source>
-		<target><![CDATA[
-		OIDplus Setup - Konfigurationsdatei generieren
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		OIDplus Setup - Initial Settings
-		]]></source>
-		<target><![CDATA[
-		OIDplus Setup - Grundlegende Einstellungen
 		]]></target>
 	</message>
 	<message>
@@ -6206,6 +6222,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Step %1: After you have updated the file...
+		]]></source>
+		<target><![CDATA[
+		Schritt %1: Nachdem Sie die Datei geschrieben haben...
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Step %1: Authenticate
 		]]></source>
 		<target><![CDATA[
@@ -6218,14 +6242,6 @@
 		]]></source>
 		<target><![CDATA[
 		Schritt %1: Farbschema
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Step %1: Continue to next step
-		]]></source>
-		<target><![CDATA[
-		Schritt %1: Datenbankverbindung testen und fortfahren
 		]]></target>
 	</message>
 	<message>
@@ -6282,14 +6298,6 @@
 		]]></source>
 		<target><![CDATA[
 		Schritt %1: CAPTCHA beantworten
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Step %1: Start OIDplus
-		]]></source>
-		<target><![CDATA[
-		Schritt %1: OIDplus starten
 		]]></target>
 	</message>
 	<message>

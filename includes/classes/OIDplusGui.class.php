@@ -157,4 +157,51 @@ class OIDplusGui extends OIDplusBaseClass {
 		return '<div class="tab-pane fade'.($active ? ' show active' : '').'" id="'.$id.'" role="tabpanel" aria-labelledby="'.$id.'-tab">'.$content.'</div>';
 	}
 
+	// TODO: Modify this method so that also the real index.php (With menu) can be called here
+	public function showSimplePage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags='') {
+		echo '<!DOCTYPE html>';
+		echo '<html lang="'.substr(OIDplus::getCurrentLang(),0,2).'">';
+
+		echo '<head>';
+		echo '	<title>'.htmlentities($page_title_1).'</title>';
+		echo '	<meta name="viewport" content="width=device-width, initial-scale=1.0">';
+		echo '	<link rel="stylesheet" href="'.OIDplus::webpath(null, true).'oidplus.min.css.php?noBaseConfig=1">';
+		echo '	<script src="'.OIDplus::webpath(null, true).'oidplus.min.js.php?noBaseConfig=1" type="text/javascript"></script>';
+		echo '	<link rel="shortcut icon" type="image/x-icon" href="'.OIDplus::webpath(null, true).'favicon.ico.php">';
+		echo "\t".implode("\n\t",$extra_head_tags)."\n";
+		echo '</head>';
+
+		echo '<body>';
+
+		echo '<div id="loading" style="display:none">Loading&#8230;</div>';
+
+		echo '<div id="frames">';
+		echo '<div id="content_window" class="borderbox">';
+
+		echo '<h1 id="real_title">';
+		if ($static_icon != '') echo '<img src="'.htmlentities($static_icon).'" width="48" height="48" alt=""> ';
+		echo htmlentities($page_title_2).'</h1>';
+		echo '<div id="real_content">'.$static_content.'</div>';
+		echo '<br>';
+
+		echo '</div>';
+
+		echo '<div id="system_title_bar">';
+
+		echo '<div id="system_title_text">';
+		echo '	<span id="system_title_logo"></span>';
+		echo '	<span id="system_title_1">'.htmlentities(OIDplus::getEditionInfo()['vendor'].' OIDplus 2.0').'</span><br>';
+		echo '	<span id="system_title_2">'.htmlentities($page_title_1).'</span>';
+		echo '</div>';
+
+		echo '</div>';
+
+		echo OIDplus::gui()->getLanguageBox(null, true);
+
+		echo '</div>';
+
+		echo '</body>';
+		echo '</html>';
+	}
+
 }
