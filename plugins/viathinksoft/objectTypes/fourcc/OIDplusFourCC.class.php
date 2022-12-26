@@ -140,8 +140,8 @@ class OIDplusFourCC extends OIDplusObject {
 		$tech_info[_L('FourCC code')]   = $this->fourcc;
 		$tech_info[_L('C/C++ Literal')] = $this->getMultiCharLiteral();
 		$tech_info[_L('Hex Dump')]      = strtoupper(implode(' ', str_split($this->getHex(true),2)));
-		$tech_info[_L('Big Endian')]    = '0x'.$this->getHex(true);
-		$tech_info[_L('Little Endian')] = '0x'.$this->getHex(false);
+		$tech_info[_L('Big Endian')]    = '0x'.$this->getHex(true).' ('.$this->getInt(true).')';
+		$tech_info[_L('Little Endian')] = '0x'.$this->getHex(false).' ('.$this->getInt(false).')';
 		return $tech_info;
 	}
 
@@ -229,12 +229,17 @@ class OIDplusFourCC extends OIDplusObject {
 		return $ids;
 	}
 
-	private function getHex($big_endian) {
+	private function getInt($big_endian) {
 		$type = self::fourcc_transform($this->fourcc);
 		if ($type === false) return false;
 		$dec = 0;
 		if (!$big_endian) $type = array_reverse($type);
 		for ($i=0;$i<4;$i++) $dec = ($dec<<8) + $type[$i];
+		return $dec;
+	}
+
+	private function getHex($big_endian) {
+		$dec = $this->getInt($big_endian);
 		$hex = str_pad(dechex($dec), 8, "0", STR_PAD_LEFT);
 		return $hex;
 	}
