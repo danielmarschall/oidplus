@@ -42,9 +42,8 @@ class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin {
 				$out['text'] .= '<ul>';
 				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'export_dos.php">'._L('Download OIDplus for DOS').'</a>, '._L('including your database* (only OIDs)').'</li>';
 				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/252/oidplus_dos.zip">'._L('Download OIDplus for DOS').'</a>, '._L('without data').'</li>';
-				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'export_win.php">'._L('Download OIDplus for Windows 3.11').'</a>, '._L('including your database* (only OIDs)').'</li>';
+				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'export_win.php">'._L('Download OIDplus for Windows 3.11, 95, or later').'</a>, '._L('including your database* (only OIDs)').'</li>';
 				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/254/oidplus_win311.zip">'._L('Download OIDplus for Windows 3.11').'</a>, '._L('without data').'</li>';
-				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'export_win.php">'._L('Download OIDplus for Windows 95 or later').'</a>, '._L('including your database* (only OIDs)').'</li>';
 				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/253/oidplus_win95.zip">'._L('Download OIDplus for Windows 95 or later').'</a>, '._L('without data').'</li>';
 				$out['text'] .= '</ul>';
 				$out['text'] .= '<p>'._L('* Please note that the download might be delayed since your OID database is exported and added to the ZIP file.').'</p>';

@@ -1878,6 +1878,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Download OIDplus for Windows 3.11, 95, or later
+		]]></source>
+		<target><![CDATA[
+		OIDplus für Windows 3.11, 95 oder neuer herunterladen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Download OIDplus for Windows 95 or later
 		]]></source>
 		<target><![CDATA[

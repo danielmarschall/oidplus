@@ -107,6 +107,19 @@ function vts_utf8_encode($text) {
 	return $res;
 }
 
+function vts_utf8_decode($text) {
+	$enc = mb_detect_encoding($text, null, true);
+	if ($enc === false) $enc = mb_detect_encoding($text, ['ASCII', 'UTF-8', 'Windows-1252', 'ISO-8859-1'], true);
+	if ($enc === false) $enc = null;
+
+	if ($enc !== 'UTF-8') return $text;
+
+	$res = mb_convert_encoding($text, 'Windows-1252', $enc);
+	if ($res === false) $res = iconv('Windows-1252', 'Windows-1252//IGNORE', $text);
+
+	return $res;
+}
+
 function stripHtmlComments($html) {
 	// https://stackoverflow.com/questions/11337332/how-to-remove-html-comments-in-php
 	$html = preg_replace("~<!--(?!<!)[^\[>].*?-->~s", "", $html);

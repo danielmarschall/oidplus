@@ -66,8 +66,8 @@ while ($row = $res->fetch_object()) {
 	$dos_ids[$oid] = str_pad(strval($i++), 8, '0', STR_PAD_LEFT);
 	fill_asn1($oid, $asn1);
 	//fill_iri($oid, $iri);
-	$title[$oid] = $row->title;
-	$description[$oid] = $row->description;
+	$title[$oid] = vts_utf8_decode($row->title);
+	$description[$oid] = vts_utf8_decode($row->description);
 	$created[$oid] = $row->created;
 	$updated[$oid] = $row->updated;
 
@@ -87,8 +87,8 @@ while ($row = $res->fetch_object()) {
 			$updated[$real_parent] = '';
 			$res2 = OIDplus::db()->query("select * from ###objects where id = 'oid:$real_parent'");
 			while ($row2 = $res2->fetch_object()) {
-				$title[$real_parent] = $row2->title;
-				$description[$real_parent] = $row2->description;
+				$title[$real_parent] = vts_utf8_decode($row2->title);
+				$description[$real_parent] = vts_utf8_decode($row2->description);
 				$created[$real_parent] = $row2->created;
 				$updated[$real_parent] = $row2->updated;
 			}
@@ -122,7 +122,7 @@ foreach ($dos_ids as $oid => $dos_id) {
 			$i++;
 		}
 	}
-	$cont .= "delegates=".($i-1)."\n";
+	$cont .= "delegates=".($i-1)."\r\n";
 
 	if ($oid != '') {
 		$asnids = array();
