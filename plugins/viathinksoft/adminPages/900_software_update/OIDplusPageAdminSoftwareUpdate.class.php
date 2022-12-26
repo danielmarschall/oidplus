@@ -231,7 +231,11 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				$out['text'] .= _L('Latest published version: %1',($newest_version ? $newest_version : _L('unknown'))).'<br><br>';
 
 				if (!$newest_version) {
-					$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.').'</font></p>';
+					if (!function_exists('curl_init')) {
+						$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine the latest version.').'<br>'._L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl').'</font></p>';
+					} else {
+						$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine the latest version.').'<br>'._L('Probably the ViaThinkSoft server could not be reached.').'</font></p>';
+					}
 					$out['text'] .= '</div>';
 				} else if (!$local_installation) {
 					if ($installType === 'svn-snapshot') {
@@ -398,7 +402,11 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 				if (!$newest_version) {
 					$out_stat = 'WARN';
-					$out_msg  = _L('OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.');
+					if (!function_exists('curl_init')) {
+						$out_msg  = _L('OIDplus could not determine the latest version.').' '._L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl');
+					} else {
+						$out_msg  = _L('OIDplus could not determine the latest version.').' '._L('Probably the ViaThinkSoft server could not be reached.');
+					}
 				} else if (!$local_installation) {
 					$out_stat = 'WARN';
 					$out_msg  = _L('OIDplus could not determine its version (Required: %1). Please update your system manually via the "%2" command regularly.', $requireInfo, $updateCommand);
@@ -415,7 +423,11 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 				if (!$newest_version) {
 					$out_stat = 'WARN';
-					$out_msg  = _L('OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.');
+					if (!function_exists('curl_init')) {
+						$out_msg  = _L('OIDplus could not determine the latest version.').' '._L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl');
+					} else {
+						$out_msg  = _L('OIDplus could not determine the latest version.').' '._L('Probably the ViaThinkSoft server could not be reached.');
+					}
 				} else if (version_compare($local_installation, $newest_version) >= 0) {
 					$out_stat = 'INFO';
 					$out_msg  = _L('You are using the latest version of OIDplus (%1 local / %2 remote)', $local_installation, $newest_version);

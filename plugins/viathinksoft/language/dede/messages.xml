@@ -4270,10 +4270,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.
+		OIDplus could not determine the latest version.
 		]]></source>
 		<target><![CDATA[
-		OIDplus konnte nicht die neuste Version ermitteln. Möglicherweise ist der ViaThinkSoft-Server nicht erreichbar.
+		OIDplus konnte nicht die neuste Version ermitteln.
 		]]></target>
 	</message>
 	<message>
@@ -5418,6 +5418,14 @@
 		]]></source>
 		<target><![CDATA[
 		Schlüsselpaar-Generierung fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Probably the ViaThinkSoft server could not be reached.
+		]]></source>
+		<target><![CDATA[
+		Möglicherweise ist der ViaThinkSoft-Server nicht erreichbar.
 		]]></target>
 	</message>
 	<message>
