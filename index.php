@@ -47,7 +47,7 @@ if (isset($_REQUEST['h404'])) {
 $static_node_id = OIDplus::prefilterQuery($static_node_id, false);
 
 $static = OIDplus::gui()->generateContentPage($static_node_id);
-$static_title = $static['title'];
+$page_title_2 = $static['title'];
 $static_icon = $static['icon'];
 $static_content = $static['text'];
 
@@ -68,110 +68,9 @@ if (!isset($_COOKIE['csrf_token_weak'])) {
 
 OIDplus::handleLangArgument();
 
-function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
-	// Please also change the function in oidplus_base.js
-	if ($systemtitle == $pagetitle) {
-		return $systemtitle;
-	} else {
-		return $pagetitle . ' - ' . $systemtitle;
-	}
-}
+$page_title_1 = OIDplus::gui()->combine_systemtitle_and_pagetitle(OIDplus::config()->getValue('system_title'), $page_title_2);
 
-// Get theme color (color of title bar)
-$design_plugin = OIDplus::getActiveDesignPlugin();
-$theme_color = is_null($design_plugin) ? '' : $design_plugin->getThemeColor();
-
-$head_elems = array();
-$head_elems[] = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
-$head_elems[] = '<meta name="OIDplus-SystemTitle" content="'.htmlentities(OIDplus::config()->getValue('system_title')).'">'; // Do not remove. This meta tag is acessed by oidplus_base.js
-if ($theme_color != '') $head_elems[] = '<meta name="theme-color" content="'.htmlentities($theme_color).'">';
-$head_elems[] = '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-$head_elems[] = '<title>'.htmlentities(combine_systemtitle_and_pagetitle(OIDplus::config()->getValue('system_title'), $static_title)).'</title>';
-$head_elems[] = '<script src="polyfill.min.js.php"></script>';
-$head_elems[] = '<script src="oidplus.min.js.php"></script>';
-$head_elems[] = '<link rel="stylesheet" href="oidplus.min.css.php">';
-$head_elems[] = '<link rel="shortcut icon" type="image/x-icon" href="favicon.ico.php">';
-if (OIDplus::baseConfig()->exists('CANONICAL_SYSTEM_URL')) {
-	$head_elems[] = '<link rel="canonical" href="'.htmlentities(OIDplus::canonicalURL()).'">';
-}
-
-$plugins = OIDplus::getPagePlugins();
-foreach ($plugins as $plugin) {
-	$plugin->htmlHeaderUpdate($head_elems);
-}
-
-// ---
-
-echo "<!DOCTYPE html>\n";
-
-echo "<html lang=\"".substr(OIDplus::getCurrentLang(),0,2)."\">\n";
-echo "<head>\n";
-echo "\t".implode("\n\t",$head_elems)."\n";
-echo "</head>\n";
-
-echo "<body>\n";
-
-echo '<div id="loading" style="display:none">Loading&#8230;</div>';
-
-echo '<div id="frames">';
-echo '<div id="content_window" class="borderbox">';
-
-echo '<h1 id="real_title">';
-if ($static_icon != '') echo '<img src="'.htmlentities($static_icon).'" width="48" height="48" alt=""> ';
-echo htmlentities($static_title).'</h1>';
-echo '<div id="real_content">'.$static_content.'</div>';
-if ((!isset($_SERVER['REQUEST_METHOD'])) || ($_SERVER['REQUEST_METHOD'] == 'GET')) {
-	echo '<br><p><img src="img/share.png" width="15" height="15" alt="'._L('Share').'"> <a href="?goto='.htmlentities($static_node_id).'" id="static_link" class="gray_footer_font">'._L('Static link to this page').'</a>';
-	echo '</p>';
-}
-echo '<br>';
-
-echo '</div>';
-
-echo '<div id="system_title_bar">';
-
-echo '<div id="system_title_menu" onclick="mobileNavButtonClick(this)" onmouseenter="mobileNavButtonHover(this)" onmouseleave="mobileNavButtonHover(this)">';
-echo '	<div id="bar1"></div>';
-echo '	<div id="bar2"></div>';
-echo '	<div id="bar3"></div>';
-echo '</div>';
-
-echo '<div id="system_title_text">';
-echo '	<a '.OIDplus::gui()->link('oidplus:system').' id="system_title_a">';
-echo '		<span id="system_title_logo"></span>';
-echo '		<span id="system_title_1">'.htmlentities(OIDplus::getEditionInfo()['vendor'].' OIDplus 2.0').'</span><br>';
-echo '		<span id="system_title_2">'.htmlentities(OIDplus::config()->getValue('system_title')).'</span>';
-echo '	</a>';
-echo '</div>';
-
-echo '</div>';
-
-echo OIDplus::gui()->getLanguageBox($static_node_id, true);
-
-echo '<div id="gotobox">';
-echo '<input type="text" name="goto" id="gotoedit" value="'.htmlentities($static_node_id).'">';
-echo '<input type="button" value="'._L('Go').'" onclick="gotoButtonClicked()" id="gotobutton">';
-echo '</div>';
-
-echo '<div id="oidtree" class="borderbox">';
-//echo '<noscript>';
-//echo '<p><b>'._L('Please enable JavaScript to use all features').'</b></p>';
-//echo '</noscript>';
-OIDplus::menuUtils()->nonjs_menu();
-echo '</div>';
-
-echo '</div>';
-
-echo "\n</body>\n";
-echo "</html>\n";
-
-$cont = ob_get_contents();
-ob_end_clean();
-
-$plugins = OIDplus::getPagePlugins();
-foreach ($plugins as $plugin) {
-	$plugin->htmlPostprocess($cont);
-}
+$cont = OIDplus::gui()->showMainPage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags=array(), $static_node_id='');
 
 OIDplus::invoke_shutdown();
 
