@@ -161,21 +161,40 @@ class OIDplusGui extends OIDplusBaseClass {
 
 	// TODO: Modify this method so that also the real index.php (With menu) can be called here
 	public function showSimplePage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags='') {
-		$out = '';
+		// Get theme color (color of title bar)
+		$design_plugin = OIDplus::getActiveDesignPlugin();
+		$theme_color = is_null($design_plugin) ? '' : $design_plugin->getThemeColor();
 
-		$out .= '<!DOCTYPE html>';
-		$out .= '<html lang="'.substr(OIDplus::getCurrentLang(),0,2).'">';
+		$head_elems = array();
+		$head_elems[] = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
+		if (OIDplus::baseConfig()->getValue('DATABASE_PLUGIN','') !== '') {
+			$head_elems[] = '<meta name="OIDplus-SystemTitle" content="'.htmlentities(OIDplus::config()->getValue('system_title')).'">'; // Do not remove. This meta tag is acessed by oidplus_base.js
+		}
+		if ($theme_color != '') {
+			$head_elems[] = '<meta name="theme-color" content="'.htmlentities($theme_color).'">';
+		}
+		$head_elems[] = '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
+		$head_elems[] = '<title>'.htmlentities($page_title_1).'</title>';
 
-		$out .= '<head>';
-		$out .= '	<title>'.htmlentities($page_title_1).'</title>';
-		$out .= '	<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-		$out .= '	<link rel="stylesheet" href="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'oidplus.min.css.php?noBaseConfig=1">';
-		$out .= '	<script src="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'oidplus.min.js.php?noBaseConfig=1" type="text/javascript"></script>';
-		$out .= '	<link rel="shortcut icon" type="image/x-icon" href="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'favicon.ico.php">';
-		$out .= '	'.implode("\n\t",$extra_head_tags)."\n";
-		$out .= '</head>';
+		$head_elems[] = '<script src="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'polyfill.min.js.php"></script>';
+		$head_elems[] = '<script src="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'oidplus.min.js.php?noBaseConfig=1" type="text/javascript"></script>';
+		$head_elems[] = '<link rel="stylesheet" href="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'oidplus.min.css.php?noBaseConfig=1">';
+		$head_elems[] = '<link rel="shortcut icon" type="image/x-icon" href="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'favicon.ico.php">';
+		if (OIDplus::baseConfig()->exists('CANONICAL_SYSTEM_URL')) {
+			//TODO $head_elems[] = '<link rel="canonical" href="'.htmlentities(OIDplus::canonicalURL()).'setup/">';
+		}
+		$head_elems = array_merge($head_elems, $extra_head_tags);
 
-		$out .= '<body>';
+		# ---
+
+		$out  = "<!DOCTYPE html>\n";
+
+		$out .= "<html lang=\"".substr(OIDplus::getCurrentLang(),0,2)."\">\n";
+		$out .= "<head>\n";
+		$out .= "\t".implode("\n\t",$head_elems)."\n";
+		$out .= "</head>\n";
+
+		$out .= "<body>\n";
 
 		$out .= '<div id="loading" style="display:none">Loading&#8230;</div>';
 
@@ -204,8 +223,10 @@ class OIDplusGui extends OIDplusBaseClass {
 
 		$out .= '</div>';
 
-		$out .= '</body>';
-		$out .= '</html>';
+		$out .= "\n</body>\n";
+		$out .= "</html>\n";
+
+		# ---
 
 		return $out;
 	}
