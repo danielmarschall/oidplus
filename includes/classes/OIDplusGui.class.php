@@ -159,8 +159,16 @@ class OIDplusGui extends OIDplusBaseClass {
 		return '<div class="tab-pane fade'.($active ? ' show active' : '').'" id="'.$id.'" role="tabpanel" aria-labelledby="'.$id.'-tab">'.$content.'</div>';
 	}
 
-	// TODO: Modify this method so that also the real index.php (With menu) can be called here
-	public function showSimplePage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags='') {
+	public function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
+		// Please also change the function in oidplus_base.js
+		if ($systemtitle == $pagetitle) {
+			return $systemtitle;
+		} else {
+			return $pagetitle . ' - ' . $systemtitle;
+		}
+	}
+
+	private function getCommonHeadElems($title) {
 		// Get theme color (color of title bar)
 		$design_plugin = OIDplus::getActiveDesignPlugin();
 		$theme_color = is_null($design_plugin) ? '' : $design_plugin->getThemeColor();
@@ -174,15 +182,104 @@ class OIDplusGui extends OIDplusBaseClass {
 			$head_elems[] = '<meta name="theme-color" content="'.htmlentities($theme_color).'">';
 		}
 		$head_elems[] = '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-		$head_elems[] = '<title>'.htmlentities($page_title_1).'</title>';
-
+		$head_elems[] = '<title>'.htmlentities($title).'</title>';
 		$head_elems[] = '<script src="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'polyfill.min.js.php"></script>';
 		$head_elems[] = '<script src="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'oidplus.min.js.php?noBaseConfig=1" type="text/javascript"></script>';
 		$head_elems[] = '<link rel="stylesheet" href="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'oidplus.min.css.php?noBaseConfig=1">';
 		$head_elems[] = '<link rel="shortcut icon" type="image/x-icon" href="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'favicon.ico.php">';
 		if (OIDplus::baseConfig()->exists('CANONICAL_SYSTEM_URL')) {
-			//TODO $head_elems[] = '<link rel="canonical" href="'.htmlentities(OIDplus::canonicalURL()).'setup/">';
+			$head_elems[] = '<link rel="canonical" href="'.htmlentities(OIDplus::canonicalURL()).OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'">';
 		}
+
+		return $head_elems;
+	}
+
+	public function showMainPage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags=array(), $static_node_id='') {
+		$head_elems = $this->getCommonHeadElems($page_title_1);
+		$head_elems = array_merge($head_elems, $extra_head_tags);
+
+		$plugins = OIDplus::getPagePlugins();
+		foreach ($plugins as $plugin) {
+			$plugin->htmlHeaderUpdate($head_elems);
+		}
+
+		# ---
+
+		$out  = "<!DOCTYPE html>\n";
+
+		$out .= "<html lang=\"".substr(OIDplus::getCurrentLang(),0,2)."\">\n";
+		$out .= "<head>\n";
+		$out .= "\t".implode("\n\t",$head_elems)."\n";
+		$out .= "</head>\n";
+
+		$out .= "<body>\n";
+
+		$out .= '<div id="loading" style="display:none">Loading&#8230;</div>';
+
+		$out .= '<div id="frames">';
+		$out .= '<div id="content_window" class="borderbox">';
+
+		$out .= '<h1 id="real_title">';
+		if ($static_icon != '') $out .= '<img src="'.htmlentities($static_icon).'" width="48" height="48" alt=""> ';
+		$out .= htmlentities($page_title_2).'</h1>';
+		$out .= '<div id="real_content">'.$static_content.'</div>';
+		if ((!isset($_SERVER['REQUEST_METHOD'])) || ($_SERVER['REQUEST_METHOD'] == 'GET')) {
+			$out .= '<br><p><img src="img/share.png" width="15" height="15" alt="'._L('Share').'"> <a href="?goto='.htmlentities($static_node_id).'" id="static_link" class="gray_footer_font">'._L('Static link to this page').'</a>';
+			$out .= '</p>';
+		}
+		$out .= '<br>';
+
+		$out .= '</div>';
+
+		$out .= '<div id="system_title_bar">';
+
+		$out .= '<div id="system_title_menu" onclick="mobileNavButtonClick(this)" onmouseenter="mobileNavButtonHover(this)" onmouseleave="mobileNavButtonHover(this)">';
+		$out .= '	<div id="bar1"></div>';
+		$out .= '	<div id="bar2"></div>';
+		$out .= '	<div id="bar3"></div>';
+		$out .= '</div>';
+
+		$out .= '<div id="system_title_text">';
+		$out .= '	<a '.OIDplus::gui()->link('oidplus:system').' id="system_title_a">';
+		$out .= '		<span id="system_title_logo"></span>';
+		$out .= '		<span id="system_title_1">'.htmlentities(OIDplus::getEditionInfo()['vendor'].' OIDplus 2.0').'</span><br>';
+		$out .= '		<span id="system_title_2">'.htmlentities(OIDplus::config()->getValue('system_title')).'</span>';
+		$out .= '	</a>';
+		$out .= '</div>';
+
+		$out .= '</div>';
+
+		$out .= OIDplus::gui()->getLanguageBox($static_node_id, true);
+
+		$out .= '<div id="gotobox">';
+		$out .= '<input type="text" name="goto" id="gotoedit" value="'.htmlentities($static_node_id).'">';
+		$out .= '<input type="button" value="'._L('Go').'" onclick="gotoButtonClicked()" id="gotobutton">';
+		$out .= '</div>';
+
+		$out .= '<div id="oidtree" class="borderbox">';
+		//$out .= '<noscript>';
+		//$out .= '<p><b>'._L('Please enable JavaScript to use all features').'</b></p>';
+		//$out .= '</noscript>';
+		$out .= OIDplus::menuUtils()->nonjs_menu();
+		$out .= '</div>';
+
+		$out .= '</div>';
+
+		$out .= "\n</body>\n";
+		$out .= "</html>\n";
+
+		# ---
+
+		$plugins = OIDplus::getPagePlugins();
+		foreach ($plugins as $plugin) {
+			$plugin->htmlPostprocess($out);
+		}
+
+		return $out;
+	}
+
+	public function showSimplePage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags=array()) {
+		$head_elems = $this->getCommonHeadElems($page_title_1);
 		$head_elems = array_merge($head_elems, $extra_head_tags);
 
 		# ---

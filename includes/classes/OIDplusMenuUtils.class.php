@@ -35,20 +35,21 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			}
 		}
 
+		$out = '';
 		foreach ($json as $x) {
-			if ($static_node_id == $x['id']) echo '<b>';
-			if (isset($x['indent'])) echo str_repeat('&nbsp;', $x['indent']*5);
+			if ($static_node_id == $x['id']) $out .= '<b>';
+			if (isset($x['indent'])) $out .= str_repeat('&nbsp;', $x['indent']*5);
 			$cur_lang = OIDplus::getCurrentLang();
 			if ($cur_lang != OIDplus::getDefaultLang()) {
-				echo '<a href="?lang='.$cur_lang.'&amp;goto='.urlencode($x['id']).'">';
+				$out .= '<a href="?lang='.$cur_lang.'&amp;goto='.urlencode($x['id']).'">';
 			} else {
-				echo '<a href="?goto='.urlencode($x['id']).'">';
+				$out .= '<a href="?goto='.urlencode($x['id']).'">';
 			}
-			if (!empty($x['icon'])) echo '<img src="'.$x['icon'].'" alt=""> ';
-			echo htmlentities($x['id']).' | '.htmlentities($x['text']).'</a><br>';
-			if ($static_node_id == $x['id']) echo '</b>';
+			if (!empty($x['icon'])) $out .= '<img src="'.$x['icon'].'" alt=""> ';
+			$out .= htmlentities($x['id']).' | '.htmlentities($x['text']).'</a><br>';
+			if ($static_node_id == $x['id']) $out .= '</b>';
 		}
-
+		return $out;
 	}
 
 	// req_id comes from jsTree via AJAX
