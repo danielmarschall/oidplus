@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// Note that there are no translations _L() because if we get an error at this
+// stage, then we have no language plugins anyways.
 
 function oidplus_get_missing_dependencies() {
 	$missing_dependencies = array();
@@ -64,19 +67,19 @@ function oidplus_get_missing_dependencies() {
 		// Note that vendor/danielmarschall/php_utils/gmp_supplement.inc.php will implement the GMP functions if BCMath is present.
 		// This is the reason why we use function_exists('gmp_init') instead of extension_loaded('gmp')
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			$install_hint1 = _L('On Windows, install it by enabling the line %1 in your PHP.ini',
+			$install_hint1 = sprintf('On Windows, install it by enabling the line %s in your PHP.ini',
 				'extension=php_gmp.dll');
-			$install_hint2 = _L('On Windows, it should be installed by default');
+			$install_hint2 = sprintf('On Windows, it should be installed by default');
 		} else {
-			$install_hint1 = _L('On Linux, install it by running e.g. %1, and then restart your webserver service, e.g. by running %2',
+			$install_hint1 = sprintf('On Linux, install it by running e.g. %s, and then restart your webserver service, e.g. by running %s',
 				'<code>sudo apt-get update && sudo apt-get install php-gmp</code>',
 				'<code>sudo service apache2 restart</code>');
-			$install_hint2 = _L('On Linux, install it by running e.g. %1, and then restart your webserver service, e.g. by running %2',
+			$install_hint2 = sprintf('On Linux, install it by running e.g. %s, and then restart your webserver service, e.g. by running %s',
 				'<code>sudo apt-get update && sudo apt-get install php-bcmath</code>',
 				'<code>sudo service apache2 restart</code>');
 		}
 		$missing_dependencies[] = 'GMP ('.$install_hint1.')'.
-		                          '<br>'._L('or alternatively').'<br>' .
+		                          '<br>'.sprintf('or alternatively').'<br>' .
 		                          'BCMath ('.$install_hint2.')';
 	}
 
@@ -89,17 +92,17 @@ function oidplus_get_missing_dependencies() {
 		// Note that vendor/symfony/polyfill-mbstring/ will always implement the MBString functions, but they only work if iconv is present.
 		// This is the reason why we use extension_loaded('mbstring') instead of function_exists('mb_substr')
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			$install_hint1 = _L('On Windows, install it by enabling the line %1 in your PHP.ini',
+			$install_hint1 = sprintf('On Windows, install it by enabling the line %s in your PHP.ini',
 				'extension=php_mbstring.dll');
-			$install_hint2 = _L('On Windows, it should be installed by default');
+			$install_hint2 = sprintf('On Windows, it should be installed by default');
 		} else {
-			$install_hint1 = _L('On Linux, install it by running e.g. %1, and then restart your webserver service, e.g. by running %2',
+			$install_hint1 = sprintf('On Linux, install it by running e.g. %s, and then restart your webserver service, e.g. by running %s',
 				'<code>sudo apt-get update && sudo apt-get install php-mbstring</code>',
 				'<code>sudo service apache2 restart</code>');
-			$install_hint2 = _L('On Linux, it should be installed by default'); // Alpine Linux: apk add php-iconv
+			$install_hint2 = sprintf('On Linux, it should be installed by default'); // Alpine Linux: apk add php-iconv
 		}
 		$missing_dependencies[] = 'MBString ('.$install_hint1.')'.
-		                          '<br>'._L('or alternatively').'<br>' .
+		                          '<br>'.sprintf('or alternatively').'<br>' .
 		                          'iconv ('.$install_hint2.')';
 	}
 
@@ -110,9 +113,9 @@ function oidplus_get_missing_dependencies() {
 		//              dev/translation/*.phps (only for developers)
 		// Note: This should not happen because of vendor/danielmarschall/php_utils/simplexml_supplement.inc.php
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			$install_hint = _L('On Windows, it should be installed by default');
+			$install_hint = sprintf('On Windows, it should be installed by default');
 		} else {
-			$install_hint = _L('On Linux, install it by running e.g. %1, and then restart your webserver service, e.g. by running %2',
+			$install_hint = sprintf('On Linux, install it by running e.g. %s, and then restart your webserver service, e.g. by running %s',
 				'<code>sudo apt-get update && sudo apt-get install php-xml</code>',
 				'<code>sudo service apache2 restart</code>');
 		}
