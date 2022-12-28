@@ -53,7 +53,9 @@ class OIDplus extends OIDplusBaseClass {
 	private function __construct() {
 	}
 
-	private static function insideSetup() {
+	private static function insideSetup(): bool {
+		if (PHP_SAPI == 'cli') return false;
+		if (!isset($_SERVER['REQUEST_URI'])) return false;
 		return (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE_TO_ROOT).'setup/') === 0);
 	}
 
