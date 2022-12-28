@@ -4502,38 +4502,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		On Linux, install it by running e.g. %1, and then restart your webserver service, e.g. by running %2
-		]]></source>
-		<target><![CDATA[
-		Unter Linux, die Installation kann beispielsweise mit %1 durchgeführt werden. Anschließend muss der Webserver-Dienst neu gestartet werden, z.B. mit %1.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		On Linux, it should be installed by default
-		]]></source>
-		<target><![CDATA[
-		Unter Linux ist diese Erweiterung im Normalfall aktiviert
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		On Windows, install it by enabling the line %1 in your PHP.ini
-		]]></source>
-		<target><![CDATA[
-		Auf einem Windows-Server müssen Sie in der PHP.ini die Zeile %1 aktivieren.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		On Windows, it should be installed by default
-		]]></source>
-		<target><![CDATA[
-		Auf Windows-Systemen sollte diese Erweiterung eigentlich standardmäßig aktiviert sein
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Once OIDplus setup is finished, you can change the config file by hand, or run this setup assistant again.
 		]]></source>
 		<target><![CDATA[
@@ -6766,14 +6734,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The following PHP extensions need to be installed in order to run OIDplus:
-		]]></source>
-		<target><![CDATA[
-		Die folgenden PHP-Erweiterungen müssen installiert werden, um OIDplus zu betreiben:
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		The following settings need to be configured once.<br>After setup is complete, you can change all these settings through the admin login area, if necessary.
 		]]></source>
 		<target><![CDATA[
@@ -8290,14 +8250,6 @@
 		]]></source>
 		<target><![CDATA[
 		nicht verfügbar: %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		or alternatively
-		]]></source>
-		<target><![CDATA[
-		oder alternativ
 		]]></target>
 	</message>
 	<message>
