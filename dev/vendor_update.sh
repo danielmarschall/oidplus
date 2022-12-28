@@ -104,3 +104,9 @@ remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/json/
 # Since this is no official packagist package, composer does not know the required php version,
 # so we do not need to patch platform_check.php
 sed -i 's@private function serialize($item): void@private function serialize($item)/*: void*/  // ViaThinkSoft: Removed ": void" for PHP 7.0 compatibility@g' plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization/src/Canonicalizator.php
+
+# Fix symfony/polyfill-mbstring to make it compatible with PHP 8.2
+# The author does know about the problem (I have opened a GitHub issue), but they did not sync it from the symfony main repo (as polyfill-mbstring is just a fraction of it, for composer)
+# see https://github.com/symfony/polyfill-mbstring/pull/11
+# Great tool for escaping: https://dwaves.de/tools/escape/
+sed -i 's@if (\\is_array(\$fromEncoding) || false !== strpos(\$fromEncoding, \x27,\x27)) {@if (\\is_array(\$fromEncoding) || (null !== \$fromEncoding \&\& false !== strpos(\$fromEncoding, \x27,\x27))) {@g' vendor/symfony/polyfill-mbstring/Mbstring.php

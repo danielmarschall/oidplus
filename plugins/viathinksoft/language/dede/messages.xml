@@ -4326,14 +4326,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		OIDplus requires at least PHP version %1! You are currently using version %2
-		]]></source>
-		<target><![CDATA[
-		OIDplus benötigt mindestens PHP-Version %1! Sie besitzen derzeit Version %2
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		OK
 		]]></source>
 		<target><![CDATA[

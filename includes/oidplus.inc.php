@@ -17,17 +17,19 @@
  * limitations under the License.
  */
 
-// Before we do ANYTHING, check for dependencies! Do not include anything (except the GMP supplement) yet.
+// Before we do ANYTHING, check for PHP version and dependencies!
+// Do not include anything (except the supplements) yet.
 
-require_once __DIR__ . '/functions.inc.php'; // Required for _L()
-
-if (version_compare(PHP_VERSION, '7.0.0') < 0) {
+if (version_compare(PHP_VERSION, $oidplus_min_version='7.0.0') < 0) {
 	// More information about the required PHP version:
 	// doc/developer_notes/php7_compat.txt
+	// Note: These strings are not translated, because in case of an incompatible
+	// PHP version, we are not able to load language plugins at all.
+	if (PHP_SAPI != 'cli') @http_response_code(500);
 	echo '<!DOCTYPE HTML>';
-	echo '<html><head><title>'._L('OIDplus error').'</title></head><body>';
-	echo '<h1>'._L('OIDplus error').'</h1>';
-	echo '<p>'._L('OIDplus requires at least PHP version %1! You are currently using version %2','7.0',PHP_VERSION).'</p>'."\n";
+	echo '<html><head><title>'.sprintf('OIDplus error').'</title></head><body>';
+	echo '<h1>'.sprintf('OIDplus error').'</h1>';
+	echo '<p>'.sprintf('OIDplus requires at least PHP version %s! You are currently using version %s',$oidplus_min_version,PHP_VERSION).'</p>'."\n";
 	echo '</body></html>';
 	die();
 }
@@ -39,11 +41,12 @@ include_once __DIR__ . '/../vendor/danielmarschall/php_utils/gmp_supplement.inc.
 include_once __DIR__ . '/../vendor/symfony/polyfill-mbstring/bootstrap.php';
 include_once __DIR__ . '/../vendor/danielmarschall/php_utils/simplexml_supplement.inc.php';
 
+require_once __DIR__ . '/functions.inc.php';
+
 require_once __DIR__ . '/oidplus_dependency.inc.php';
-
 $missing_dependencies = oidplus_get_missing_dependencies();
-
 if (count($missing_dependencies) >= 1) {
+	if (PHP_SAPI != 'cli') @http_response_code(500);
 	echo '<!DOCTYPE HTML>';
 	echo '<html><head><title>'._L('OIDplus error').'</title></head><body>';
 	echo '<h1>'._L('OIDplus error').'</h1>';
@@ -56,7 +59,6 @@ if (count($missing_dependencies) >= 1) {
 	echo '</body></html>';
 	die();
 }
-
 unset($missing_dependencies);
 
 // Now we can continue!
