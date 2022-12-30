@@ -26,7 +26,7 @@
 if (version_compare(PHP_VERSION, $oidplus_min_version='7.0.0') < 0) {
 	// Note: These strings are not translated, because in case of an incompatible
 	// PHP version, we are not able to load language plugins at all.
-	$message = sprintf('OIDplus requires at least PHP version %s!<br>You are currently using version %s',$oidplus_min_version,PHP_VERSION);
+	$message = '<p>'.sprintf('OIDplus requires at least PHP version %s!<br>You are currently using version %s',$oidplus_min_version,PHP_VERSION).'</p>';
 	oidplus_dependency_panic($message);
 }
 unset($oidplus_min_version);
@@ -46,11 +46,11 @@ if (count($missing_dependencies) >= 1) {
 	// Note that there are no translations _L() because if we get an error at this
 	// stage, then we have no language plugins anyways.
 	$message  = '<p>'.sprintf('The following PHP extensions need to be installed in order to run OIDplus:').'</p>';
-	$message .= '<ul>';
+	$message .= '<p><ul>';
 	foreach ($missing_dependencies as $dependency) {
 		$message .= '<li>'.$dependency.'<br><br></li>';
 	}
-	$message .= '</ul>';
+	$message .= '</ul></p>';
 	oidplus_dependency_panic($message);
 }
 unset($missing_dependencies);
@@ -91,7 +91,7 @@ function oidplus_dependency_panic($message)/*: never*/ {
 		echo '<!DOCTYPE HTML>';
 		echo '<html><head><title>'.$title.'</title></head><body>';
 		echo '<h1>'.$title.'</h1>';
-		echo '<p>'.$message.'</p>';
+		echo $message;
 		echo '</body></html>';
 		die();
 	}

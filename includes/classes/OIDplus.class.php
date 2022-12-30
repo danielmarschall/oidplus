@@ -42,6 +42,7 @@ class OIDplus extends OIDplusBaseClass {
 
 	// These plugin types can contain HTML code and therefore may
 	// emit (non-setup) CSS/JS code via their manifest.
+	// Note that design plugins may only output CSS, not JS.
 	/*public*/ const INTERACTIVE_PLUGIN_TYPES = array(
 		'publicPages',
 		'raPages',
@@ -828,6 +829,8 @@ class OIDplus extends OIDplusBaseClass {
 				if (!self::pluginCheckDisabled($class_name)) {
 					continue; // Plugin is disabled
 				}
+
+				// Do some basic checks on the plugin PHP main class
 				if (!class_exists($class_name)) {
 					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Manifest declares PHP main class as "%1", but it could not be found',$class_name));
 				}
@@ -841,6 +844,7 @@ class OIDplus extends OIDplusBaseClass {
 					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Class declared in manifest is "%1" does not fit expected class for this plugin type "%2"',$manifest->getTypeClass(),$expectedPluginClass));
 				}
 
+				// Do some basic checks on the plugin OID
 				$plugin_oid = $manifest->getOid();
 				if (!$plugin_oid) {
 					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Does not have an OID'));
@@ -852,31 +856,45 @@ class OIDplus extends OIDplusBaseClass {
 					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('The OID "%1" is already used by the plugin "%2"',$plugin_oid,$known_plugin_oids[$plugin_oid]));
 				}
 
+				// Additional check: Are third-party plugins using ViaThinkSoft plugin folders, OIDs or class namespaces?
 				$full_plugin_dir = dirname($manifest->getManifestFile());
 				$full_plugin_dir = substr($full_plugin_dir, strlen(OIDplus::localpath()));
-
 				$dir_is_viathinksoft = str_starts_with($full_plugin_dir, 'plugins/viathinksoft/') || str_starts_with($full_plugin_dir, 'plugins\\viathinksoft\\');
 				$oid_is_viathinksoft = str_starts_with($plugin_oid, '1.3.6.1.4.1.37476.2.5.2.4.'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) oidplus(5) v2(2) plugins(4) }
 				$class_is_viathinksoft = str_starts_with($class_name, 'ViaThinkSoft\\');
-				if ($dir_is_viathinksoft != $oid_is_viathinksoft) {
-					throw new OIDplusException(_L('Plugin "%1" is misplaced',$plugintype_folder.'/'.$pluginname_folder).': '._L('The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins','plugins/viathinksoft/'));
-				}
-				if ($dir_is_viathinksoft != $class_is_viathinksoft) {
+				if ($oid_is_viathinksoft != $class_is_viathinksoft) {
 					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Third-party plugins must not use the ViaThinkSoft PHP namespace. Please use your own vendor namespace.'));
 				}
-
-				$known_plugin_oids[$plugin_oid] = $plugintype_folder.'/'.$pluginname_folder;
-
-				$obj = new $class_name();
-
-				if (OIDplus::baseConfig()->getValue('DEBUG')) {
-					if ($obj->implementsFeature($fake_feature)) {
-						// see https://devblogs.microsoft.com/oldnewthing/20040211-00/?p=40663
-						throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('implementsFeature() always returns true'));
-					}
+				$plugin_is_viathinksoft = $oid_is_viathinksoft && $class_is_viathinksoft;
+				if ($dir_is_viathinksoft != $plugin_is_viathinksoft) {
+					throw new OIDplusException(_L('Plugin "%1" is misplaced',$plugintype_folder.'/'.$pluginname_folder).': '._L('The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins','plugins/viathinksoft/'));
 				}
 
-				// TODO: Maybe as additional plugin-test, we should also check if plugins are allowed to define CSS/JS, i.e. the plugin type is element of OIDplus::INTERACTIVE_PLUGIN_TYPES
+				// Additional check: does the plugin define JS/CSS although it is not an interactive plugin type?
+				$has_js = $manifest->getJSFiles();
+				$has_css = $manifest->getCSSFiles();
+				$is_interactive = in_array(basename($plugintype_folder), OIDplus::INTERACTIVE_PLUGIN_TYPES);
+				$is_design = basename($plugintype_folder) === 'design';
+				if (!$is_interactive && $has_js) {
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('%1 files are included in the manifest XML, but this plugin type does not allow such files.','JavaScript'));
+				}
+				if (!$is_interactive && !$is_design && $has_css) {
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('%1 files are included in the manifest XML, but this plugin type does not allow such files.','CSS'));
+				}
+
+				// Additional check: Check "Setup CSS" and "Setup JS" (Allowed for plugin types: database, captcha)
+				$has_js_setup = $manifest->getJSFilesSetup();
+				$has_css_setup = $manifest->getCSSFilesSetup();
+				$is_database = basename($plugintype_folder) === 'database';
+				$is_captcha = basename($plugintype_folder) === 'captcha';
+				if (!$is_database && !$is_captcha && $has_js_setup) {
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('%1 files are included in the manifest XML, but this plugin type does not allow such files.','Setup JavaScript'));
+				}
+				if (!$is_database && !$is_captcha && $has_css_setup) {
+					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('%1 files are included in the manifest XML, but this plugin type does not allow such files.','Setup CSS'));
+				}
+
+				// Additional check: Are all CSS/JS files there?
 				$tmp = $manifest->getManifestLinkedFiles();
 				foreach ($tmp as $file) {
 					if (!file_exists($file)) {
@@ -884,8 +902,21 @@ class OIDplus extends OIDplusBaseClass {
 					}
 				}
 
-				// Now we can continue
+				// For the next check, we need an instance of the object
+				$obj = new $class_name();
 
+				// Additional check: Does the plugin misuse implementsFeature()?
+				// This is not enabled b default, because the GUID generation is slow on some machines.
+				// Also, it is very unlikely that someone misuses implementsFeature().
+				if (OIDplus::baseConfig()->getValue('DEBUG')) {
+					if ($obj->implementsFeature($fake_feature)) {
+						// see https://devblogs.microsoft.com/oldnewthing/20040211-00/?p=40663
+						throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('implementsFeature() always returns true'));
+					}
+				}
+
+				// Now we can continue
+				$known_plugin_oids[$plugin_oid] = $plugintype_folder.'/'.$pluginname_folder;
 				$out[] = $class_name;
 				if (!is_null($registerCallback)) {
 					call_user_func($registerCallback, $obj);
@@ -1175,7 +1206,7 @@ class OIDplus extends OIDplusBaseClass {
 
 	private static function recognizeSystemUrl() {
 		try {
-			$url = OIDplus::webpath(null,self::PATH_ABSOLUTE_CANONICAL); // TODO: canonical or not?
+			$url = OIDplus::webpath(null,self::PATH_ABSOLUTE_CANONICAL);
 			OIDplus::config()->setValue('last_known_system_url', $url);
 		} catch (\Exception $e) {
 		}
@@ -1462,7 +1493,7 @@ class OIDplus extends OIDplusBaseClass {
 			$ver_now = OIDplus::getVersion();
 			if (($ver_now != '') && ($ver_prev != '') && ($ver_now != $ver_prev)) {
 				// TODO: Problem: When the system was updated using SVN, then the IP address of the next random visitor of the website is logged!
-				OIDplus::logger()->log("[INFO]A!", "System version changed from '$ver_prev' to '$ver_now'");
+				OIDplus::logger()->log("[INFO]A!", "Detected system version change from '$ver_prev' to '$ver_now'");
 
 				// Just to be sure, recanonize objects (we don't do it at every page visit due to performance reasons)
 				self::recanonizeObjects();
