@@ -3,7 +3,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
 
 define('TARGET_ID', '6175446'); // ViaThinkSoft RA
 
-$config = array("digest_alg" => "sha1", // sha512
-                "private_key_bits" => 384,
+$config = array("digest_alg" => "sha512",
+                "private_key_bits" => 2048,
                 "private_key_type" => OPENSSL_KEYTYPE_RSA,
                );
 
@@ -35,6 +35,7 @@ while (true) {
 	$cnt++;
 
 	$res = openssl_pkey_new($config);
+	if (!$res) die("openssl_pkey_new failed\n"); // can happen if private_key_bits is too small
 
 	$details = openssl_pkey_get_details($res);
 	$pubKey = str_replace(array('BEGIN PUBLIC KEY','END PUBLIC KEY','-',"\n"), '', $details["key"]);
