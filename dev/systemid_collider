@@ -23,6 +23,7 @@ define('TARGET_ID', '6175446'); // ViaThinkSoft RA
 $config = array("digest_alg" => "sha512",
                 "private_key_bits" => 2048,
                 "private_key_type" => OPENSSL_KEYTYPE_RSA,
+                "config" => __DIR__."/../vendor/phpseclib/phpseclib/phpseclib/openssl.cnf",
                );
 
 # ---
@@ -44,7 +45,7 @@ while (true) {
 	$system_id = smallhash(base64_decode($pubKey));
 
 	if ($system_id == TARGET_ID) {
-		openssl_pkey_export($res, $privKey);
+		openssl_pkey_export($res, $privKey, null, $config);
 		echo date('Y-m-d H:i:s')." COLLISSION WITH $system_id AFTER $cnt TRIES: ".$pubKey." / ".$privKey."\n";
 		unset($privKey);
 	}
@@ -55,6 +56,6 @@ while (true) {
 }
 
 function smallhash($data) { // get 31 bits from SHA1. Values 0..2147483647
-	return (hexdec(substr(sha1($data),-4*2)) & 2147483647);
+	return (hexdec(substr(sha1($data),-4*2)) & 0x7FFFFFFF);
 }
 

@@ -4158,6 +4158,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OID based on the public key of your OIDplus system. The last arc is also called OIDplus System ID.
+		]]></source>
+		<target><![CDATA[
+		OID basierend auf dem öffentlichen Schlüssel Ihres OIDplus-Systems. Die letzte Zahl wird auch OIDplus System-ID genannt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OID logger mask requires OID
 		]]></source>
 		<target><![CDATA[
@@ -5782,6 +5790,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		SHA1-Namebased UUID based on the public key of your OIDplus system.
+		]]></source>
+		<target><![CDATA[
+		SHA1-Namensbasierte UUID basierend auf dem öffentlichen Schlüssel Ihres OIDplus-Systems.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		SQL slang
 		]]></source>
 		<target><![CDATA[
@@ -6362,6 +6378,14 @@
 		]]></source>
 		<target><![CDATA[
 		System
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		System GUID
+		]]></source>
+		<target><![CDATA[
+		System-GUID
 		]]></target>
 	</message>
 	<message>

@@ -130,8 +130,14 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 
 			$sysid_oid = OIDplus::getSystemId(true);
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('System OID').'</td>';
+			$out['text'] .= '		<td>'._L('System OID').' <abbr title="'._L('OID based on the public key of your OIDplus system. The last arc is also called OIDplus System ID.').'">(?)</abbr></td>';
 			$out['text'] .= '		<td>'.(!$sysid_oid ? '<i>'._L('unknown').'</i>' : htmlentities($sysid_oid)).'</td>';
+			$out['text'] .= '	</tr>';
+
+			$sysid_guid = OIDplus::getSystemGuid();
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('System GUID').' <abbr title="'._L('SHA1-Namebased UUID based on the public key of your OIDplus system.').'">(?)</abbr></td>';
+			$out['text'] .= '		<td>'.(!$sysid_guid ? '<i>'._L('unknown').'</i>' : htmlentities($sysid_guid)).'</td>';
 			$out['text'] .= '	</tr>';
 
 			$sys_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL);

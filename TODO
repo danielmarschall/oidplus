@@ -43,6 +43,13 @@ SECURITY Improvements:
 	... At least give a hint to the documentation, so they know how to run the tool and how to enter the cost in the configuration (for RA and Admin)
 	... or in the setup page make an extra control how complex the admin password should be? but be aware that nobody enters a too big number (it makes DoS possible!)
 
+Setup:
+- Make following things configurable in some kind of base-config INI/XML file:
+	Min length of admin password
+	Bcrypt Round
+	Default language (like the "DEFAULT_LANGUAGE" base config setting)
+	Design (like the "design" config setting)
+
 IDEAS FOR NEW FUNCTIONALITIES
 - Admin plugin "Attachments" with following functionalities:
 	* Show every object and its attachments, so that the admin knows what's going on
@@ -240,7 +247,6 @@ IDEAS
      ... then we could establish an API which can give object type plugins the possibility to add additional children
 - Hide/Proxy RA E-Mails from public requests
 - let users choose their own creation arc
-- system guid (name based pubkey)?
 - In regards multilinguality: Allow "oidplus_base$dede.css", so that languages can have their own CSS (e.g. wider "Go" button)
 	But this means that a language change also need to reload the style sheet (like the color-plugin does when you click "Test")
 - when an object was not found, the error message could show the next possible known object (like WebWHOIS does)

@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,11 @@ if (version_compare(PHP_VERSION, $oidplus_min_version='7.0.0') < 0) {
 	oidplus_dependency_panic($message);
 }
 unset($oidplus_min_version);
+
+// We need the autoloader now, otherwise openssl_supplement won't work (it needs to check if phpseclib is existing)
+// Autoloader of "vendor/" (PSR-4 *.php)
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 // Polyfills/Supplements to implement some missing dependencies if possible
 
@@ -70,10 +75,9 @@ require_once __DIR__ . '/../vendor/danielmarschall/php_utils/svn_utils.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/aid_decoder.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/misc_functions.inc.php';
 
-// Register the autoloaders
+// Autoloader for all OIDplus base classes and plugins (*.class.php)
 
-require_once __DIR__ . '/../vendor/autoload.php';      // Autoloader of "vendor/" (PSR-4 *.php)
-require_once __DIR__ . '/oidplus_autoloader.inc.php';  // Autoloader for all OIDplus base classes and plugins (*.class.php)
+require_once __DIR__ . '/oidplus_autoloader.inc.php';
 
 // Functions
 
