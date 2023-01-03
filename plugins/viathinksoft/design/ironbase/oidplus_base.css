@@ -1,6 +1,6 @@
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,15 +59,15 @@
 
 /* Link colors */
 
-a:link {
+#content a:not(.btn):link {
 	color:#FF5500;
 }
 
-a:visited {
+#content a:not(.btn):visited {
 	color:#CC5500;
 }
 
-a:hover {
+#content a:not(.btn):hover {
 	color:#FFAA00;
 }
 
@@ -387,8 +387,6 @@ a[target='_blank']::after {
 }
 
 textarea,input[type="text"],input[type="password"],select {
-	/* for dark themes, this looks better */
-	/*background:transparent;*/
 	background: #F0F0F0;
 	border: #AAAAAA 1px solid;
 	color:#000;
