@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,8 @@ class OIDplus extends OIDplusBaseClass {
 		'objectTypes',
 		'captcha'
 	);
+
+	const UUID_NAMEBASED_NS_Base64PubKey = 'fd16965c-8bab-11ed-8744-3c4a92df8582';
 
 	private function __construct() {
 	}
@@ -1286,12 +1288,25 @@ class OIDplus extends OIDplusBaseClass {
 		}
 	}
 
-	private static function getSystemIdFromPubKey($pubKey) {
+	private static function pubKeyToRaw($pubKey) {
 		$m = array();
-		if (preg_match('@BEGIN PUBLIC KEY\-+(.+)\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
-			return smallhash(base64_decode($m[1]));
+		if (preg_match('@BEGIN PUBLIC KEY\\-+([^\\-]+)\\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
+			return base64_decode($m[1], false);
 		}
 		return false;
+	}
+
+	private static function getSystemIdFromPubKey($pubKey) {
+		$rawData = self::pubKeyToRaw($pubKey);
+		if ($rawData === false) return false;
+		return smallhash($rawData);
+	}
+
+	private static function getSystemGuidFromPubKey($pubKey) {
+		$rawData = self::pubKeyToRaw($pubKey);
+		if ($rawData === false) return false;
+		$normalizedBase64 = base64_encode($rawData);
+		return gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_Base64PubKey, $normalizedBase64);
 	}
 
 	private static $system_id_cache = null;
@@ -1309,6 +1324,23 @@ class OIDplus extends OIDplusBaseClass {
 		}
 		if (!$out) return false;
 		return ($oid ? '1.3.6.1.4.1.37476.30.9.' : '').$out;
+	}
+
+	private static $system_guid_cache = null;
+	public static function getSystemGuid() {
+		if (!is_null(self::$system_guid_cache)) {
+			$out = self::$system_guid_cache;
+		} else {
+			$out = false;
+
+			if (self::getPkiStatus(true)) {
+				$pubKey = OIDplus::getSystemPublicKey();
+				$out = self::getSystemGuidFromPubKey($pubKey);
+			}
+			self::$system_guid_cache = $out;
+		}
+		if (!$out) return false;
+		return $out;
 	}
 
 	public static function getOpenSslCnf() {
