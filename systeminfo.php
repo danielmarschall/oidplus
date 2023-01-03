@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,29 +29,43 @@ OIDplus::init(false);
 
 $out = array();
 
+$sysid_id = OIDplus::getSystemId(false);
+if (!$sysid_id) $sysid_id = 'unknown'; // do not translate
+$out['SystemID'] = $sysid_id;
+
 $sysid_oid = OIDplus::getSystemId(true);
 if (!$sysid_oid) $sysid_oid = 'unknown'; // do not translate
-$out['SystemID'] = $sysid_oid;
+$out['SystemOID'] = $sysid_oid;
+
+$sysid_guid = OIDplus::getSystemGuid();
+if (!$sysid_guid) $sysid_guid = 'unknown'; // do not translate
+$out['SystemGUID'] = $sysid_guid;
 
 $pubKey = OIDplus::getSystemPublicKey();
 if (!$pubKey) $pubKey = 'unknown'; // do not translate
 $out['PublicKey'] = $pubKey;
 
-// Commented out due to security/privacy reasons
-/*
-$sys_url = OIDplus::webpath(null,self::PATH_ABSOLUTE_CANONICAL);
+$sys_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL);
 $out['SystemURL'] = $sys_url;
-
-$sys_ver = OIDplus::getVersion();
-if (!$sys_ver) $sys_ver = 'unknown'; // do not translate
-$out['SystemVersion'] = $sys_ver;
-
-$sys_install_type = OIDplus::getInstallType();
-$out['SystemInstallType'] = $sys_install_type;
 
 $sys_title = OIDplus::config()->getValue('system_title');
 $out['SystemTitle'] = $sys_title;
 
+// commented out because of privacy
+/*
+$sys_ver = OIDplus::getVersion();
+if (!$sys_ver) $sys_ver = 'unknown'; // do not translate
+$out['SystemVersion'] = $sys_ver;
+*/
+
+// commented out because of privacy
+/*
+$sys_install_type = OIDplus::getInstallType();
+$out['SystemInstallType'] = $sys_install_type;
+*/
+
+// commented out because of privacy
+/*
 $admin_email = OIDplus::config()->getValue('admin_email');
 $out['AdminEMail'] = $admin_email;
 */
