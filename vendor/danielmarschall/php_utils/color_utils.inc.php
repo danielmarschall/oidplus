@@ -2,8 +2,8 @@
 
 /*
  * Color Utils for PHP
- * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
- * Revision 2022-12-27
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Revision 2023-01-03
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,13 +103,12 @@ function rgb2html($r, $g=-1, $b=-1) {
 	return '#'.$color;
 }
 
-function changeHueOfCSS($css_content, $h_shift=0, $s_shift=0, $v_shift=0) {
-	// TODO: also support rgb() and rgba() color references (and maybe also hsl/hsla and color names?)
-	// TODO: Bootstrap uses "--bs-link-color-rgb: 13,110,253;" which we must also accept
+// TODO: Also support hsl() and hsla() color schemes
+function changeCSSWithRgbFunction($css_content, $rgb_function) {
 	$css_content = preg_replace('@(\\}\\s*)#@ismU', '\\1'.chr(1), $css_content);
 	$css_content = preg_replace('@(^\\s*)#@isU', '\\1'.chr(1), $css_content);
 	$css_content = preg_replace_callback('@#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})@ismU',
-		function ($x) use ($h_shift, $s_shift, $v_shift) {
+		function ($x) use ($rgb_function) {
 			if (strlen($x[1]) == 3) {
 				$r = hexdec($x[1][0].$x[1][0]);
 				$g = hexdec($x[1][1].$x[1][1]);
@@ -119,41 +118,58 @@ function changeHueOfCSS($css_content, $h_shift=0, $s_shift=0, $v_shift=0) {
 				$g = hexdec($x[1][2].$x[1][3]);
 				$b = hexdec($x[1][4].$x[1][5]);
 			}
-			list ($h,$s,$v) = RGB_TO_HSV($r, $g, $b);
-			$h = (float)$h;
-			$s = (float)$s;
-			$v = (float)$v;
-			$h = ($h + $h_shift); while ($h > 1) $h -= 1; while ($h < 0) $h += 1;
-			$s = ($s + $s_shift); while ($s > 1) $s  = 1; while ($s < 0) $s  = 0;
-			$v = ($v + $v_shift); while ($v > 1) $v  = 1; while ($v < 0) $v  = 0;
-			list ($r,$g,$b) = HSV_TO_RGB($h, $s, $v);
+			$rgb_function($r,$g,$b);
 			return rgb2html($r,$g,$b);
+		}, $css_content);
+	$css_content = preg_replace_callback('@rgb\\s*\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*\\)@ismU',
+		function ($x) use ($rgb_function) {
+			$r = $x[1];
+			$g = $x[2];
+			$b = $x[3];
+			$rgb_function($r,$g,$b);
+			return "rgb($r,$g,$b)";
+		}, $css_content);
+	$css_content = preg_replace_callback('@rgba\\s*\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*([\\d\\.]+)\\s*\\)@ismU',
+		function ($x) use ($rgb_function) {
+			$r = $x[1];
+			$g = $x[2];
+			$b = $x[3];
+			$a = $x[4];
+			$rgb_function($r,$g,$b);
+			return "rgba($r,$g,$b,$a)";
+		}, $css_content);
+	$css_content = preg_replace_callback('@\\-rgb:\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*;@ismU',
+		// Bootstrap uses "--bs-link-color-rgb: 13,110,253;" which we must also accept
+		function ($x) use ($rgb_function) {
+			$r = $x[1];
+			$g = $x[2];
+			$b = $x[3];
+			$rgb_function($r,$g,$b);
+			return "-rgb:$r,$g,$b;";
 		}, $css_content);
 	$css_content = str_replace(chr(1), '#', $css_content);
         return $css_content;
 }
 
+function changeHueOfCSS($css_content, $h_shift=0, $s_shift=0, $v_shift=0) {
+	$rgb_function = function(&$r,&$g,&$b) use ($h_shift, $s_shift, $v_shift) {
+		list ($h,$s,$v) = RGB_TO_HSV($r, $g, $b);
+		$h = (float)$h;
+		$s = (float)$s;
+		$v = (float)$v;
+		$h = ($h + $h_shift); while ($h > 1) $h -= 1; while ($h < 0) $h += 1;
+		$s = ($s + $s_shift); while ($s > 1) $s  = 1; while ($s < 0) $s  = 0;
+		$v = ($v + $v_shift); while ($v > 1) $v  = 1; while ($v < 0) $v  = 0;
+		list ($r,$g,$b) = HSV_TO_RGB($h, $s, $v);
+	};
+	return changeCSSWithRgbFunction($css_content, $rgb_function);
+}
+
 function invertColorsOfCSS($css_content) {
-	// TODO: also support rgb() and rgba() color references (and maybe also hsl/hsla and color names?)
-	// TODO: Bootstrap uses "--bs-link-color-rgb: 13,110,253;" which we must also accept
-	$css_content = preg_replace('@(\\}\\s*)#@ismU', '\\1'.chr(1), $css_content);
-	$css_content = preg_replace('@(^\\s*)#@isU', '\\1'.chr(1), $css_content);
-	$css_content = preg_replace_callback('@#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})@ismU',
-		function ($x) {
-			if (strlen($x[1]) == 3) {
-				$r = hexdec($x[1][0].$x[1][0]);
-				$g = hexdec($x[1][1].$x[1][1]);
-				$b = hexdec($x[1][2].$x[1][2]);
-			} else {
-				$r = hexdec($x[1][0].$x[1][1]);
-				$g = hexdec($x[1][2].$x[1][3]);
-				$b = hexdec($x[1][4].$x[1][5]);
-			}
-			$r = 255 - $r;
-			$g = 255 - $g;
-			$b = 255 - $b;
-			return rgb2html($r,$g,$b);
-		}, $css_content);
-	$css_content = str_replace(chr(1), '#', $css_content);
-        return $css_content;
+	$rgb_function = function(&$r,&$g,&$b) {
+		$r = 255 - $r;
+		$g = 255 - $g;
+		$b = 255 - $b;
+	};
+	return changeCSSWithRgbFunction($css_content, $rgb_function);
 }
