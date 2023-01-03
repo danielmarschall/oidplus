@@ -59,16 +59,16 @@
 
 /* Link colors */
 
-#content a:not(.btn):link {
-	color:#0d6efd;
+#content_window a:not(.btn):link {
+	color:#0d6efd !important;
 }
 
-#content a:not(.btn):visited {
-	color:#0d6efd;
+#content_window a:not(.btn):visited {
+	color:#0d6efd !important;
 }
 
-#content a:not(.btn):hover {
-	color:#0a58ca;
+#content_window a:not(.btn):hover {
+	color:#0a58ca !important;
 }
 
 /* Basic stuff */
