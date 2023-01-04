@@ -230,6 +230,30 @@ class OIDplusAid extends OIDplusObject {
 		$aid = $this->nodeId(false);
 		$aid = strtoupper($aid);
 
+		// ViaThinkSoft proprietary AIDs
+
+		// (VTS B1) Members
+		if ($aid == 'D276000186B1') {
+			$oid = '1.3.6.1.4.1.37476.1';
+			$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));
+		}
+
+		if (preg_match('@^D276000186B1(....)$@', $aid, $m)) {
+			$oid = '1.3.6.1.4.1.37476.1.'.ltrim($m[1],'0');
+			$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));
+		}
+
+		// (VTS B2) Products
+		if ($aid == 'D276000186B2') {
+			$oid = '1.3.6.1.4.1.37476.2';
+			$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));
+		}
+
+		if (preg_match('@^D276000186B2(....)$@', $aid, $m)) {
+			$oid = '1.3.6.1.4.1.37476.2.'.ltrim($m[1],'0');
+			$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));
+		}
+
 		// ViaThinkSoft "Foreign" AIDs
 
 		// (VTS F0) IANA PEN + PIX
