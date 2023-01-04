@@ -508,6 +508,36 @@ class OIDplusOid extends OIDplusObject {
 			$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_OID, $this->oid), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OID'));
 		}
 
+		// (VTS B1) Members
+		if ($this->nodeId(false) == '1.3.6.1.4.1.37476.1') {
+			$aid = 'D276000186B1';
+			$aid_is_ok = aid_canonize($aid);
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')');
+		} else {
+			$oid_parts = explode('.',$this->nodeId(false));
+			if ((count($oid_parts) == 9) && ($oid_parts[0] == '1') && ($oid_parts[1] == '3') && ($oid_parts[2] == '6') && ($oid_parts[3] == '1') && ($oid_parts[4] == '4') && ($oid_parts[5] == '1') && ($oid_parts[6] == '37476') && ($oid_parts[7] == '1')) {
+				$number = str_pad($oid_parts[8],4,'0',STR_PAD_LEFT);
+				$aid = 'D276000186B1'.$number;
+				$aid_is_ok = aid_canonize($aid);
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed').')');
+			}
+		}
+
+		// (VTS B2) Products
+		if ($this->nodeId(false) == '1.3.6.1.4.1.37476.2') {
+			$aid = 'D276000186B2';
+			$aid_is_ok = aid_canonize($aid);
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')');
+		} else {
+			$oid_parts = explode('.',$this->nodeId(false));
+			if ((count($oid_parts) == 9) && ($oid_parts[0] == '1') && ($oid_parts[1] == '3') && ($oid_parts[2] == '6') && ($oid_parts[3] == '1') && ($oid_parts[4] == '4') && ($oid_parts[5] == '1') && ($oid_parts[6] == '37476') && ($oid_parts[7] == '2')) {
+				$number = str_pad($oid_parts[8],4,'0',STR_PAD_LEFT);
+				$aid = 'D276000186B2'.$number;
+				$aid_is_ok = aid_canonize($aid);
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed').')');
+			}
+		}
+
 		// (VTS F0) IANA PEN to AID Mapping (PIX allowed)
 		$oid_parts = explode('.',$this->nodeId(false));
 		if ((count($oid_parts) == 7) && ($oid_parts[0] == '1') && ($oid_parts[1] == '3') && ($oid_parts[2] == '6') && ($oid_parts[3] == '1') && ($oid_parts[4] == '4') && ($oid_parts[5] == '1')) {
