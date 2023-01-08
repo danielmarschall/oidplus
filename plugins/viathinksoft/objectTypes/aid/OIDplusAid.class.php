@@ -268,6 +268,15 @@ class OIDplusAid extends OIDplusObject {
 			$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));
 		}
 
+		// ViaThinkSoft "Example" AID
+
+		if ($aid == 'D276000186E0') {
+			// Note that the OID object type plugin also maps children of 2.999 to AID,
+			// using a hash. But since this is not unique and cannot be reverted,
+			// we cannot have an reverse lookup/map.
+			$ids[] = new OIDplusAltId('oid', '2.999', _L('Object Identifier (OID)'), ' ('._L('Optional PIX allowed, without prefix').')');
+		}
+
 		// ViaThinkSoft "Foreign" AIDs
 
 		// (VTS F0) IANA PEN + PIX

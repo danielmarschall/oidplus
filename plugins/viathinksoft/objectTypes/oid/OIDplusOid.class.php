@@ -520,7 +520,7 @@ class OIDplusOid extends OIDplusObject {
 				$number = str_pad($oid_parts[8],4,'0',STR_PAD_LEFT);
 				$aid = 'D276000186B1'.$number;
 				$aid_is_ok = aid_canonize($aid);
-				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed').')');
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')');
 			}
 		}
 
@@ -534,7 +534,7 @@ class OIDplusOid extends OIDplusObject {
 				$number = str_pad($oid_parts[8],4,'0',STR_PAD_LEFT);
 				$aid = 'D276000186B2'.$number;
 				$aid_is_ok = aid_canonize($aid);
-				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed').')');
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')');
 			}
 		}
 
