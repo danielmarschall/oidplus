@@ -140,6 +140,13 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'.(!$sysid_guid ? '<i>'._L('unknown').'</i>' : htmlentities($sysid_guid)).'</td>';
 			$out['text'] .= '	</tr>';
 
+			$sysid = OIDplus::getSystemId(false);
+			$sysid_aid = $sysid ? 'D276000186B20005'.strtoupper(str_pad(dechex($sysid),8,'0',STR_PAD_LEFT)) : '';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('System AID').' <abbr title="'._L('Application Identifier (ISO/IEC 7816) based on the system ID (which is based on the hash of the public key of your OIDplus system).').'">(?)</abbr></td>';
+			$out['text'] .= '		<td>'.(!$sysid_aid ? '<i>'._L('unknown').'</i>' : htmlentities($sysid_aid)).' ('._L('No PIX allowed').')</td>';
+			$out['text'] .= '	</tr>';
+
 			$sys_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL);
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('System URL').'</td>';

@@ -45,8 +45,9 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		if ($this->isRoot()) return array();
 
 		$ids = array();
+
+		// Creates an OIDplus-Hash-OID
 		if ($this->ns() != 'oid') {
-			// Creates an OIDplus-Hash-OID
 			$sid = OIDplus::getSystemId(true);
 			if (!empty($sid)) {
 				$ns_oid = $this->getPlugin()->getManifest()->getOid();
@@ -61,17 +62,42 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 					$hash_payload = $ns_oid.':'.$this->nodeId(false);
 				}
 				$oid = $sid . '.' . smallhash($hash_payload);
-				$ids[] = new OIDplusAltId('oid', $oid, _L('OIDplus Information Object ID'));
-			}
-
-			// Make a namebased UUID, but...
-			// ... exclude GUID, because a GUID is already a GUID
-			// ... exclude OID, because an OID already has a record UUID_NAMEBASED_NS_OID set  by class OIDplusOid
-			if ($this->ns() != 'guid') {
-				$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
-				$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
+				$ids[] = new OIDplusAltId('oid', $oid, _L('OIDplus Information Object OID'));
 			}
 		}
+
+		// Make a namebased UUID, but...
+		// ... exclude GUID, because a GUID is already a GUID
+		// ... exclude OID, because an OID already has a record UUID_NAMEBASED_NS_OID (defined by IETF) set by class OIDplusOid
+		if (($this->ns() != 'guid') && ($this->ns() != 'oid')) {
+			$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
+			$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
+		}
+
+		// Make a AID based on ViaThinkSoft schema
+		// ... but not for OIDs below oid:1.3.6.1.4.1.37476.30.9, because these are the definition of these Information Object AIDs (which will be decoded in the OID object type plugin)
+		if (($this->ns() != 'aid') && !str_starts_with($this->nodeId(true), 'oid:1.3.6.1.4.1.37476.30.9.')) {
+			$sid = OIDplus::getSystemId(false);
+			if (!empty($sid)) {
+				$ns_oid = $this->getPlugin()->getManifest()->getOid();
+				if (str_starts_with($ns_oid, '1.3.6.1.4.1.37476.2.5.2.')) {
+					// Official ViaThinkSoft object type plugins
+					// For backwards compatibility with existing IDs,
+					// set the hash_payload as '<namespace>:<id>'
+					$hash_payload = $this->nodeId(true);
+				} else {
+					// Third-party object type plugins
+					// Set the hash_payload as '<plugin oid>:<id>'
+					$hash_payload = $ns_oid.':'.$this->nodeId(false);
+				}
+
+				$sid_hex = strtoupper(str_pad(dechex($sid),8,'0',STR_PAD_LEFT));
+				$obj_hex = strtoupper(str_pad(dechex(smallhash($hash_payload)),8,'0',STR_PAD_LEFT));
+				$aid = 'D276000186B20005'.$sid_hex.$obj_hex;
+				$ids[] = new OIDplusAltId('aid', $aid, _L('OIDplus Information Object Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')');
+			}
+		}
+
 		return $ids;
 	}
 
