@@ -4598,14 +4598,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Optional PIX allowed
-		]]></source>
-		<target><![CDATA[
-		Optionale PIX erlaubt
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Optional PIX allowed, with "FF" prefix
 		]]></source>
 		<target><![CDATA[
