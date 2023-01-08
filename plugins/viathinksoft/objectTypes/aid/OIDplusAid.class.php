@@ -254,6 +254,20 @@ class OIDplusAid extends OIDplusObject {
 			$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));
 		}
 
+		// (VTS B2 00 05) OIDplus Information Objects AID
+		// Attention: D276000186B20005 does NOT represent 1.3.6.1.4.1.37476.30.9
+		//            because the mapping to OIDplus systems only applies for 00......-7F...... (31 bit hash)
+
+		if (preg_match('@^D276000186B20005([0-7].......)$@', $aid, $m)) {
+			$oid = '1.3.6.1.4.1.37476.30.9.'.hexdec($m[1]);
+			$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));
+		}
+
+		if (preg_match('@^D276000186B20005([0-7].......)([0-7].......)$@', $aid, $m)) {
+			$oid = '1.3.6.1.4.1.37476.30.9.'.hexdec($m[1]).'.'.hexdec($m[2]);
+			$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier (OID)'));
+		}
+
 		// ViaThinkSoft "Foreign" AIDs
 
 		// (VTS F0) IANA PEN + PIX

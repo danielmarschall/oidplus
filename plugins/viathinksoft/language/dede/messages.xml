@@ -529,7 +529,15 @@
 		Application Identifier (ISO/IEC 7816)
 		]]></source>
 		<target><![CDATA[
-		Application Identifier (ISO/IEC 7816)
+		Anwendungsbezeichner (ISO/IEC 7816)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Application Identifier (ISO/IEC 7816) based on the system ID (which is based on the hash of the public key of your OIDplus system).
+		]]></source>
+		<target><![CDATA[
+		Anwendungsbezeichner (ISO/IEC 7816) basierend auf der System-ID (die auf dem Hash des öffentlichen Schlüssels des OIDplus Systems basiert).
 		]]></target>
 	</message>
 	<message>
@@ -4254,10 +4262,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		OIDplus Information Object ID
+		OIDplus Information Object Application Identifier (ISO/IEC 7816)
 		]]></source>
 		<target><![CDATA[
-		OIDplus Informations-Objekt Kennung
+		OIDplus Information Object Anwendungsbezeichner (ISO/IEC 7816)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus Information Object OID
+		]]></source>
+		<target><![CDATA[
+		OIDplus Information Object OID
 		]]></target>
 	</message>
 	<message>
@@ -4266,6 +4282,14 @@
 		]]></source>
 		<target><![CDATA[
 		OIDplus Setup
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus System Application Identifier (ISO/IEC 7816)
+		]]></source>
+		<target><![CDATA[
+		OIDplus System Anwendungsbezeichner (ISO/IEC 7816)
 		]]></target>
 	</message>
 	<message>
@@ -6386,6 +6410,14 @@
 		]]></source>
 		<target><![CDATA[
 		System
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		System AID
+		]]></source>
+		<target><![CDATA[
+		System AID
 		]]></target>
 	</message>
 	<message>
