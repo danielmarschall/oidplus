@@ -36,7 +36,7 @@ function oidplus_dbupdate(OIDplusDatabaseConnection $db) {
 	}
 	$version = $row['value'];
 	if (!is_numeric($version)) {
-		throw new OIDplusConfigInitializationException(_L('Entry "database_version" inside the table "###config" seems to be wrong (expect number between 200 and 999)'));
+		throw new OIDplusConfigInitializationException(_L('Entry "database_version" inside the table "###config" seems to be wrong (needs to be a number)'));
 	}
 
 	// Upgrade from old versions
