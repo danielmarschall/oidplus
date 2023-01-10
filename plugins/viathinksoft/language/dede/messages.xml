@@ -2038,10 +2038,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Entry "database_version" inside the table "###config" seems to be wrong (expect number between 200 and 999)
+		Entry "database_version" inside the table "###config" seems to be wrong (needs to be a number)
 		]]></source>
 		<target><![CDATA[
-		Eintrag "database_version" in der Tabelle "###config" scheint falsch zu sein (Es wird eine Nummer zwischen 200 und 999 erwartet)
+		Eintrag "database_version" in der Tabelle "###config" scheint falsch zu sein (muss eine Zahl sein)
 		]]></target>
 	</message>
 	<message>
