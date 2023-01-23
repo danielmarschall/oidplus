@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ class OIDplusOIDIP {
 		// NOTES:
 		// - XML_SCHEMA_URN must be equal to the string in the .xsd file!
 		// - the schema file names and draft version are also written in OIDplusPagePublicWhois.class.php
-		$this->XML_SCHEMA_URN  = 'urn:ietf:id:draft-viathinksoft-oidip-04';
-		$this->XML_SCHEMA_URL  = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'whois/draft-viathinksoft-oidip-04.xsd';
-		$this->JSON_SCHEMA_URN = 'urn:ietf:id:draft-viathinksoft-oidip-04';
-		$this->JSON_SCHEMA_URL = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'whois/draft-viathinksoft-oidip-04.json';
+		$this->XML_SCHEMA_URN  = 'urn:ietf:id:draft-viathinksoft-oidip-05';
+		$this->XML_SCHEMA_URL  = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'whois/draft-viathinksoft-oidip-05.xsd';
+		$this->JSON_SCHEMA_URN = 'urn:ietf:id:draft-viathinksoft-oidip-05';
+		$this->JSON_SCHEMA_URL = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'whois/draft-viathinksoft-oidip-05.json';
 	}
 
 	public function oidipQuery($query) {
@@ -272,6 +272,8 @@ class OIDplusOIDIP {
 					}
 
 					// $this->_oidip_attr('oidip-service', ...); Not used.
+
+					// $this->_oidip_attr('oidip-pubkey', ...); Not used.
 
 					if ($obj->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
 						// Also ask $obj for extra attributes:
