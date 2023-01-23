@@ -34,11 +34,11 @@
 .\" Left header text
 .ds LH INTERNET DRAFT
 .\" Right header text
-.ds RH 24 July 2022
+.ds RH 23 January 2023
 .\" Center header text
 .ds CH OID Information Protocol
 .\" Center footer text
-.ds CF Expires 25 January 2023
+.ds CF Expires 27 July 2023
 .\" Hyphenation mode set to 0
 .hy 0
 .\" Disable hyphenation
@@ -51,7 +51,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: 25 January 2023''24 July 2022'
+.tl 'Expires: 27 July 2023''23 January 2023'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -94,12 +94,12 @@ and may be updated, replaced, or obsoleted by other documents at any
 time.  It is inappropriate to use Internet-Drafts as reference
 material or to cite them other than as "work in progress."
 
-This Internet-Draft will expire on 25 January 2023.
+This Internet-Draft will expire on 27 July 2023.
 
 .ti 0
 Copyright Notice
 
-Copyright (c) 2022 IETF Trust and the persons identified as the
+Copyright (c) 2023 IETF Trust and the persons identified as the
 document authors.  All rights reserved.
 
 This document is subject to BCP\078 and the IETF Trust's Legal
@@ -584,7 +584,9 @@ Note: A line break, to break up lines that are too long, as defined in section\0
 
 (14) "oidip-service" (OPTIONAL) contains an IP address or hostname of a system that offers an OID-IP service that can supply information about the OID and/or its subordinate OIDs, followed by a double-colon (:) and a port number.  If the result is "Found" (i.e. the OID is existing in the local database), then the information "oidip-service" is only informational; its existence is most likely a hint that subordinate OIDs will be found at that OID-IP server.  If the result is "Not found; superior object found", then the client SHOULD query the referred OID-IP server to receive more information about the OID.  See more information in section\04 "Referral".
 
-(15) "attribute" (OPTIONAL, multiple values allowed) contains attributes of the OID.  An attribute MUST be one of the following values:
+(15) "oidip-pubkey" (OPTIONAL) contains the public key of the service that is identified with "oidip-service", in case it uses signatures (see section\03.3 "Digital Signature") and the referring service knows about it.
+
+(16) "attribute" (OPTIONAL, multiple values allowed) contains attributes of the OID.  An attribute MUST be one of the following values:
 
 .in 7
 "confidential" means that information about the OID or part of it is confidential.
@@ -602,13 +604,13 @@ Note: A line break, to break up lines that are too long, as defined in section\0
 "retired" means that the OID is withdrawn, revoked, retired, expired, etc.  Please consult Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660] for more information about such cases.
 .in 3
 
-(16) "parent" (OPTIONAL) contains the OID of the nearest known parent OID, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALL be at least 1 whitespace in between.
+(17) "parent" (OPTIONAL) contains the OID of the nearest known parent OID, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALL be at least 1 whitespace in between.
 
-(17) "subordinate" (OPTIONAL, multiple values allowed) contains a list of subordinate OIDs, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALL be at least 1 whitespace in between.
+(18) "subordinate" (OPTIONAL, multiple values allowed) contains a list of subordinate OIDs, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALL be at least 1 whitespace in between.
 
-(18) "created" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID was first allocated by the RA of the superior OID.
+(19) "created" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID was first allocated by the RA of the superior OID.
 
-(19) "updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID information was last updated.
+(20) "updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID information was last updated.
 
 Additional fields can be defined by the OID-IP service.  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-"), and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
 
@@ -769,20 +771,20 @@ Examples of valid date/time references are:
 
 .in 7
 .nf
-2022-09-29 18:32:00 +0200
-2022-09-29 18:32:00
-2022-09-29 18:32 +0200
-2022-09-29 18:32
-2022-09-29
-2022-09
-2022
+2023-09-29 18:32:00 +0200
+2023-09-29 18:32:00
+2023-09-29 18:32 +0200
+2023-09-29 18:32
+2023-09-29
+2023-09
+2023
 .fi
 .in 3
 .bp
 .ti 0
 4  Referral
 
-By using the field "oidip-service", the OID-IP service can instruct the client to query another OID-IP service that might have more information about the requested OID.
+By using the fields "oidip-service" and "oidip-pubkey", the OID-IP service can instruct the client to query another OID-IP service that might have more information about the requested OID.
 
 If Registration Authorities maintain up-to-date OID-IP service references of their OID delegations, it is possible to automatically retrieve information about any OID.
 
@@ -1311,6 +1313,9 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
               ]
             },
             "oidip-service":{
+              "type":"string"
+            },
+            "oidip-pubkey":{
               "type":"string"
             },
             "attribute":{
@@ -1952,6 +1957,8 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
       <xs:element name="long-arc" minOccurs="0" maxOccurs="unbounded"
                   type="xs:string"/>
       <xs:element name="oidip-service" minOccurs="0"
+                  maxOccurs="unbounded" type="xs:string"/>
+      <xs:element name="oidip-pubkey" minOccurs="0"
                   maxOccurs="unbounded" type="xs:string"/>
       <xs:any     namespace="##other" minOccurs="0"
                   maxOccurs="unbounded" processContents="lax"/>
