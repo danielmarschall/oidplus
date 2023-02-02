@@ -125,7 +125,10 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			    <br><input type="submit" value="'._L('Change data').'">
 			  </form><br><br>';
 
-			$out['text'] .= '<p><a href="#" onclick="return OIDplusPagePublicRaBaseUtils.deleteRa('.js_escape($ra_email).',\'oidplus:system\')">'._L('Delete profile').'</a> '._L('(objects stay active)').'</p>';
+			$raBasePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.1.1'); // OIDplusPagePublicRaBaseUtils
+			if (!is_null($raBasePlugin)) {
+				$out['text'] .= '<p><a href="#" onclick="return OIDplusPagePublicRaBaseUtils.deleteRa('.js_escape($ra_email).',\'oidplus:system\')">'._L('Delete profile').'</a> '._L('(objects stay active)').'</p>';
+			}
 		}
 	}
 

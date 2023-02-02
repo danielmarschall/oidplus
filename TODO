@@ -10,6 +10,8 @@ Ideas by Simon T.:
 Recently added TODO entries:
 - should all country codes (even unused) in 1.2 and 2.16 be added to the wellknown list?
 - "Decoding" section (tech info) at OID nodes, e.g. the AID decoder, should this be a scrolling <pre> block instead of a <code> block? (For mobile devices)
+- problem: if an identical class file (with same namespace) is placed in two plugin folders, then the oidplus autoloader will include both, which will cause a fatal error
+- oidplus dependency system (dependency plugin oid in manifest)
 
 Databases:
 - Let plugins create tables for all DBMS by including a "create table" function with abstract types in the SQL slang plugins (similar to Medoo)

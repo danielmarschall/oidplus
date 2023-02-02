@@ -112,7 +112,9 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 						$hash_new = $theirs[$filename_old];
 						if ($hash_old != $hash_new) {
 							$num++;
-							$out['text'] .= "<b>"._L('Checksum mismatch').":</b> $filename_old (<a target=\"_blank\" href=\"https://svn.viathinksoft.com/cgi-bin/viewvc.cgi/oidplus/trunk/$filename_old?revision=$ver&view=co\">"._L('Expected file contents')."</a>)\n";
+							// Server runs https://websvnphp.github.io/ Web UI
+							$svn_url = "https://svn.viathinksoft.com/websvn/filedetails.php?repname=oidplus&path=%2Ftrunk%2F".urlencode($filename_old)."&rev=".urlencode($ver);
+							$out['text'] .= "<b>"._L('Checksum mismatch').":</b> $filename_old (<a target=\"_blank\" href=\"$svn_url\">"._L('Expected file contents')."</a>)\n";
 						}
 					}
 				}
@@ -159,10 +161,11 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 		$files = scandir($dir);
 		foreach ($files as $file) {
 			$path = realpath($dir . DIRECTORY_SEPARATOR . $file);
+			if (empty($path)) $path = $dir . DIRECTORY_SEPARATOR . $file;
 			if (!is_dir($path)) {
 				$xpath = substr($path, strlen($basepath));
 				$xpath = str_replace('\\', '/', $xpath);
-				$results[$xpath] = hash_file('sha256', $path);
+				$results[$xpath] = @hash_file('sha256', $path);
 			} else if ($file != "." && $file != ".." && $file != ".svn" && $file != ".git") {
 				self::getDirContents($path, $basepath, $results);
 				$xpath = substr($path, strlen($basepath));

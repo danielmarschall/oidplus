@@ -82,10 +82,15 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 					}
 
 					if (OIDplus::authUtils()->isAdminLoggedIn()) {
-						if (!is_null(OIDplus::getPluginByOid("1.3.6.1.4.1.37476.2.5.2.4.3.500"))) { // OIDplusPageAdminListRAs
-							$out['text'] .= '<p><a href="#" onclick="return OIDplusPagePublicRaBaseUtils.deleteRa('.js_escape($ra_email).','.js_escape('oidplus:list_ra').')">'._L('Delete this RA').'</a></p>';
-						} else {
-							$out['text'] .= '<p><a href="#" onclick="return OIDplusPagePublicRaBaseUtils.deleteRa('.js_escape($ra_email).','.js_escape('oidplus:system').')">'._L('Delete this RA').'</a></p>';
+						$raBasePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.1.1'); // OIDplusPagePublicRaBaseUtils
+						if (!is_null($raBasePlugin)) {
+							$listRaPlugin = OIDplus::getPluginByOid("1.3.6.1.4.1.37476.2.5.2.4.3.500"); // OIDplusPageAdminListRAs
+							if (!is_null($listRaPlugin)) {
+								$delete_goback = 'oidplus:list_ra';
+							} else {
+								$delete_goback = 'oidplus:system';
+							}
+							$out['text'] .= '<p><a href="#" onclick="return OIDplusPagePublicRaBaseUtils.deleteRa('.js_escape($ra_email).','.js_escape($delete_goback).')">'._L('Delete this RA').'</a></p>';
 						}
 
 						$changePasswordPlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.101'); // OIDplusPageRaChangePassword
