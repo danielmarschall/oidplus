@@ -112,8 +112,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 						$hash_new = $theirs[$filename_old];
 						if ($hash_old != $hash_new) {
 							$num++;
-							// Server runs https://websvnphp.github.io/ Web UI
-							$svn_url = "https://svn.viathinksoft.com/websvn/filedetails.php?repname=oidplus&path=%2Ftrunk%2F".urlencode($filename_old)."&rev=".urlencode($ver);
+							$svn_url = sprintf(OIDplus::getEditionInfo()['svn_original'],urlencode($filename_old),urlencode($ver));
 							$out['text'] .= "<b>"._L('Checksum mismatch').":</b> $filename_old (<a target=\"_blank\" href=\"$svn_url\">"._L('Expected file contents')."</a>)\n";
 						}
 					}
