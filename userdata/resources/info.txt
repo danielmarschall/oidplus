@@ -75,7 +75,7 @@ Internationalization of *.link files:
 	The file format is like this:
 		[Link]
 		Title="Report a bug"
-		URL="https://www.viathinksoft.com/thinkbug/thinkbug.php?id=97"
+		URL="https://github.com/danielmarschall/oidplus/issues"
 	To create an URL with multiple languages, create them like this:
 		example.link      <-- this is the file in the default language ("enus" = English USA)
 		example$dede.link <-- this is the file for German ("dede")

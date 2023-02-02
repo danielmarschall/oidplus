@@ -542,7 +542,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			/*
 			[Link]
 			Title=Report a bug
-			URL=https://www.viathinksoft.com/thinkbug/thinkbug.php?id=97
+			URL=https://github.com/danielmarschall/oidplus/issues
 			*/
 
 			$data = @parse_ini_file($file, true);
@@ -589,7 +589,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			/*
 			[Link]
 			Title=Report a bug
-			URL=https://www.viathinksoft.com/thinkbug/thinkbug.php?id=97
+			URL=https://github.com/danielmarschall/oidplus/issues
 			*/
 
 			$data = @parse_ini_file($file, true);
