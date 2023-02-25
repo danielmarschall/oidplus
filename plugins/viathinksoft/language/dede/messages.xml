@@ -3246,6 +3246,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Invalid hash auth method
+		]]></source>
+		<target><![CDATA[
+		Ungültige Auth-Methode
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Invalid maskcode "%1" (Unknown severity "%2")
 		]]></source>
 		<target><![CDATA[
