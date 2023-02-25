@@ -50,7 +50,7 @@ if ($already_setup) {
 	echo _L('This setup assistant will help you creating the file <b>%1</b>.',$existing_config);
 }
 echo ' ';
-echo _L('This assistant does not automatically write to this file. Instead, you need to copy-paste the contents into the file.');
+echo _L('However, it does not automatically write to this file. Instead, you need to copy-paste the contents into the file.');
 echo ' ';
 if ($already_setup) {
 	echo _L('Later, you can change the config file by hand, or run this assistant again.');

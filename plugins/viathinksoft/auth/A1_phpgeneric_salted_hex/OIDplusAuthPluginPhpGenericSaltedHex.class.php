@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,41 +31,43 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 			// A1a#hashalgo:X with X being H(salt+password) in hex-notation
 			// Attention: With some hash algorithms, prepending the salt makes it vulnerable against length-extension-attacks
 			$hashalgo = explode(':', $s_authkey, 2)[0];
-			$calc_authkey = $hashalgo.':'.hash($hashalgo, $salt.$check_password);
+			$bindata = hash($hashalgo, $salt.$check_password, true);
 		} else if ($s_authmethod == 'A1b') {
 			// This auth method can be used by you if you migrate users from another software solution into OIDplus
 			// A1b#hashalgo:X with X being H(password+salt) in hex-notation
 			$hashalgo = explode(':', $s_authkey, 2)[0];
-			$calc_authkey = $hashalgo.':'.hash($hashalgo, $check_password.$salt);
+			$bindata = hash($hashalgo, $check_password.$salt, true);
 		} else if ($s_authmethod == 'A1c') {
 			// This auth method can be used by you if you migrate users from another software solution into OIDplus
 			// A1c#hashalgo:X with X being H(salt+password+salt) in hex-notation
 			$hashalgo = explode(':', $s_authkey, 2)[0];
-			$calc_authkey = $hashalgo.':'.hash($hashalgo, $salt.$check_password.$salt);
+			$bindata = hash($hashalgo, $salt.$check_password.$salt, true);
 		} else if ($s_authmethod == 'A1d') {
 			// This auth method can be used by you if you migrate users from another software solution into OIDplus
 			// A1d#hashalgo:X with X being H_HMAC(password,salt) in hex-notation
 			$hashalgo = explode(':', $s_authkey, 2)[0];
-			$calc_authkey = $hashalgo.':'.hash_hmac($hashalgo, $check_password, $salt);
+			$bindata = hash_hmac($hashalgo, $check_password, $salt, true);
 		} else {
 			// Invalid auth code
 			return false;
 		}
 
-		return hash_equals($calc_authkey, $s_authkey);
+		return hash_equals($s_authkey, $hashalgo.':'.strtolower(bin2hex($bindata)))
+		    || hash_equals($s_authkey, $hashalgo.':'.base64_encode($bindata))
+		    || hash_equals($s_authkey, $hashalgo.':'.rtrim(base64_encode($bindata),'='));
 	}
 
 	public function generate($password): OIDplusRAAuthInfo {
 		$preferred_hash_algos = array(
 		    // sorted by priority
-		    //'sha3-512', // this would exceed the 100 byte auth key length
-		    //'sha3-384', // this would exceed the 100 byte auth key length
+		    'sha3-512',
+		    'sha3-384',
 		    'sha3-256',
 		    'sha3-224',
-		    //'sha512', // this would exceed the 100 byte auth key length
+		    'sha512',
 		    'sha512/256',
 		    'sha512/224',
-		    //'sha384', // this would exceed the 100 byte auth key length
+		    'sha384',
 		    'sha256',
 		    'sha224',
 		    'sha1',
@@ -84,6 +86,26 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 		}
 		$s_salt = bin2hex(OIDplus::authUtils()->getRandomBytes(50)); // DB field ra.salt is limited to 100 chars (= 50 bytes)
 		$calc_authkey = 'A1c#'.$hashalgo.':'.hash($hashalgo, $s_salt.$password.$s_salt);
+
+		if (strlen($calc_authkey) > 100) {
+			// Since our database field is limited to 100 bytes, use base64 instead of hex
+			$calc_authkey = 'A1c#'.$hashalgo.':'.base64_encode(hash($hashalgo, $s_salt.$password.$s_salt,true));
+			$calc_authkey = rtrim($calc_authkey,'=');
+			/*
+			[Base64] sha3-512   length in hex is 141 and length in base64 is 99
+			[Base64] sha3-384   length in hex is 109 and length in base64 is 77
+			[Hex]    sha3-256   length in hex is  77 and length in base64 is 56
+			[Hex]    sha3-224   length in hex is  69 and length in base64 is 51
+			[Base64] sha512     length in hex is 139 and length in base64 is 97
+			[Hex]    sha512/256 length in hex is  79 and length in base64 is 58
+			[Hex]    sha512/224 length in hex is  71 and length in base64 is 53
+			[Base64] sha384     length in hex is 107 and length in base64 is 75
+			[Hex]    sha256     length in hex is  75 and length in base64 is 54
+			[Hex]    sha224     length in hex is  67 and length in base64 is 49
+			[Hex]    sha1       length in hex is  49 and length in base64 is 36
+			[Hex]    md5        length in hex is  40 and length in base64 is 30
+			*/
+		}
 
 		return new OIDplusRAAuthInfo($s_salt, $calc_authkey);
 	}

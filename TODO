@@ -1,3 +1,12 @@
+
+Feb 2023 entries:
+- Create oid => immediately after creating an OID, show the title/description edit dialog in a popup?? we must be sure that people don't add OIDs without title
+- OID Description textarea: add link to oid-info.com faq to show how descriptions should be done
+- Oidinfo blacklist object types (set by the user in the system config)
+- Db Config: datatypes/enums for the settings
+- Db Config: default setting button
+- improved PHP class loader, see frdlweb github discussion https://github.com/frdl/frdl-oidplus-plugin-type-pen/issues/1
+
 Ideas by Simon T.:
 - System status plugin: Check if file owners are mixed
 - a possibility to upload & assign custom icons to objects (both in the tree & in the page)
@@ -30,7 +39,6 @@ GS1 plugin:
 
 New Object Type plugins:
 - LSID ?
-- International Geo Sample Number ?
 
 Treeview / Navigation:
 - In the tree, let the operator create "shortcuts" to important OIDs?
@@ -130,7 +138,9 @@ SMALL THINGS
 - RA address data: Country selection box like in OIDInfo
 	Possible data source: https://datahub.io/core/country-list#resource-data
 - minimum menu expansion level: make it configurable for all objects and plugins, e.g. so that when you open OIDplus, all OIDs till level 2 are expanded
-- Revive the idea of "information objects" = OIDs that contain content (key-value)
+- There can be an extra table which contains "key - value" fields for each object
+	Maybe even let the user define fields (with data type) which is then displayed at every OID,
+	e.g. HL7 could define a lot of fields which are then all displayed at the OIDs and can be edited
 - API : Make a function that checks if a RA exists, and use it everywhere where needed
 - Object type plugins : take care that "treeicon.png" and "icon_big.png" exist everywhere (become standard)
 - freeoid: gmail app does not hyperlink the activation URL. why?

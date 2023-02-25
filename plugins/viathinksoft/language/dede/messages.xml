@@ -2694,6 +2694,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		However, it does not automatically write to this file. Instead, you need to copy-paste the contents into the file.
+		]]></source>
+		<target><![CDATA[
+		Er schreibt die Datei jedoch nicht selbstständig. Sie müssen die Datei am Ende manuell schreiben ("Kopieren und Einfügen")
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Hue shift
 		]]></source>
 		<target><![CDATA[
@@ -7026,14 +7034,6 @@
 		]]></source>
 		<target><![CDATA[
 		Diese Registrierungsstelle ist bereits registriert und muss daher nicht eingeladen werden.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		This assistant does not automatically write to this file. Instead, you need to copy-paste the contents into the file.
-		]]></source>
-		<target><![CDATA[
-		Dieser Assistent schreibt die Datei nicht selbstständig. Sie müssen die Datei am Ende manuell schreiben ("Kopieren und Einfügen")
 		]]></target>
 	</message>
 	<message>
