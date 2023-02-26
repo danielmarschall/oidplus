@@ -694,7 +694,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Auth plugin "%1" is erroneous: Generate/Verify self test failed
+		Auth plugin "%1" is erroneous: Generate/Verify self-test failed
 		]]></source>
 		<target><![CDATA[
 		Authentifizierungs-Plugin "%1" ist fehlerhaft: Selbst-Test fehlgeschlagen
@@ -1350,6 +1350,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Could not find a fitting auth plugin!
+		]]></source>
+		<target><![CDATA[
+		Kann kein passendes Authentizifierungs-Plugin finden!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Could not log event
 		]]></source>
 		<target><![CDATA[
@@ -1702,14 +1710,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Default RA auth method/plugin "%1" not found
-		]]></source>
-		<target><![CDATA[
-		Standard RA-Authentifizierungsmethoden-Plugin "%1" nicht gefunden
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Delete
 		]]></source>
 		<target><![CDATA[
@@ -2054,6 +2054,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Error creating password hash
+		]]></source>
+		<target><![CDATA[
+		Fehler beim Erstellen des Passwort-Hashs
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Error in search query: %1
 		]]></source>
 		<target><![CDATA[
@@ -2258,6 +2266,14 @@
 		]]></source>
 		<target><![CDATA[
 		Fax: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Field %1 is too invalid
+		]]></source>
+		<target><![CDATA[
+		Feld %1 ist ungültig
 		]]></target>
 	</message>
 	<message>
@@ -4806,6 +4822,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Password is too long (max %1 bytes)
+		]]></source>
+		<target><![CDATA[
+		Passwort ist zu lang (max. %1 Bytes)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Password is too short. Need at least %1 characters
 		]]></source>
 		<target><![CDATA[
@@ -6758,6 +6782,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The auth plugin "%1" is not available on this system.
+		]]></source>
+		<target><![CDATA[
+		Das Authentizifierungs-Plugin "%1" ist auf diesem System nicht verfügbar.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The database driver has problems with "%1"
 		]]></source>
 		<target><![CDATA[
@@ -7078,10 +7110,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		This function does not accept a salt
+		This function does not accept an explicit salt
 		]]></source>
 		<target><![CDATA[
-		Diese Funktion akzeptiert kein Salt
+		Diese Funktion erlaubt keinen expliziten Salt
 		]]></target>
 	</message>
 	<message>
@@ -8314,6 +8346,14 @@
 		]]></source>
 		<target><![CDATA[
 		keine
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		not available
+		]]></source>
+		<target><![CDATA[
+		nicht verfügbar
 		]]></target>
 	</message>
 	<message>

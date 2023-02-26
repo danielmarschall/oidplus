@@ -380,7 +380,15 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<table class="table table-bordered table-striped">';
 					$this->pluginTableHead($out);
 					foreach ($plugins as $plugin) {
-						$this->pluginTableLine($out, $plugin);
+						$reason = '';
+						if ($plugin->available($reason)) {
+							$default = OIDplus::getDefaultRaAuthPlugin()->getManifest()->getOid() === $plugin->getManifest()->getOid();
+							$this->pluginTableLine($out, $plugin, $default?1:0, _L('default'));
+						} else if ($reason) {
+							$this->pluginTableLine($out, $plugin, 2, _L('not available: %1',htmlentities($reason)));
+						} else {
+							$this->pluginTableLine($out, $plugin, 2, _L('not available'));
+						}
 					}
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
@@ -397,8 +405,10 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						$reason = '';
 						if ($plugin->available($reason)) {
 							$this->pluginTableLine($out, $plugin, 0);
-						} else {
+						} else if ($reason) {
 							$this->pluginTableLine($out, $plugin, 2, _L('not available: %1',htmlentities($reason)));
+						} else {
+							$this->pluginTableLine($out, $plugin, 2, _L('not available'));
 						}
 					}
 					$out['text'] .= '</table>';
@@ -590,6 +600,9 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		$auth_plugins = array();
 		foreach (OIDplus::getAuthPlugins() as $plugin) {
 			$txt = (empty($plugin->getManifest()->getName())) ? get_class($plugin) : $plugin->getManifest()->getName();
+
+			$reason = '';
+			if (!$plugin->available($reason)) $txt = '<font color="gray">'.$txt.'</font>';
 
 			$auth_plugins[] = array(
 				'id' => 'oidplus:system_plugins$'.get_class($plugin),
