@@ -375,15 +375,8 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	// Generate RA passwords
 
 	public static function raGeneratePassword($password): OIDplusRAAuthInfo {
-		$def_method = OIDplus::config()->getValue('default_ra_auth_method');
-
-		$plugins = OIDplus::getAuthPlugins();
-		foreach ($plugins as $plugin) {
-			if (basename($plugin->getPluginDirectory()) === $def_method) {
-				return $plugin->generate(self::raPepperProcessing($password));
-			}
-		}
-		throw new OIDplusException(_L('Default RA auth method/plugin "%1" not found',$def_method));
+		$plugin = OIDplus::getDefaultRaAuthPlugin();
+		return $plugin->generate(self::raPepperProcessing($password));
 	}
 
 	// Generate admin password

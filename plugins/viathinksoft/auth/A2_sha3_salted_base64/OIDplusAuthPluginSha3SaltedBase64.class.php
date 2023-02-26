@@ -47,4 +47,13 @@ class OIDplusAuthPluginSha3SaltedBase64 extends OIDplusAuthPlugin {
 		return new OIDplusRAAuthInfo($s_salt, $calc_authkey);
 	}
 
+	public function available(&$reason): bool {
+		if (!function_exists('sha3_512')) {
+			$reason = _L('No fitting hash algorithm found');
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 }

@@ -30,11 +30,13 @@ class OIDplusRAAuthInfo extends OIDplusBaseClass {
 
 	public function setSalt($salt) {
 		if (strlen($salt) > 100) throw new OIDplusException(_L('Field %1 is too long. Max allowed %2','Salt',100));
+		if (is_null($salt) || ($salt === false)) $salt = '';
 		$this->salt = $salt;
 	}
 
 	public function setAuthKey($authKey) {
 		if (strlen($authKey) > 100) throw new OIDplusException(_L('Field %1 is too long. Max allowed %2','Auth key',100));
+		if (is_null($authKey) || ($authKey === false)) throw new OIDplusException(_L('Field %1 is too invalid','Auth key'));
 		$this->authKey = $authKey;
 	}
 

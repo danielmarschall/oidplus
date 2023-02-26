@@ -64,7 +64,7 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 		    || hash_equals($s_authkey, $hashalgo.':'.rtrim(base64_encode($bindata),'='));
 	}
 
-	public function generate($password): OIDplusRAAuthInfo {
+	private function getBestHashAlgo() {
 		$preferred_hash_algos = array(
 		    // sorted by priority
 		    'sha3-512',
@@ -91,9 +91,18 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 				break;
 			}
 		}
+
+		return $hashalgo;
+	}
+
+	public function generate($password): OIDplusRAAuthInfo {
+		$s_authmethod = 'A1c';
+
+		$hashalgo = $this->getBestHashAlgo();
 		if (is_null($hashalgo)) {
 			throw new OIDplusException(_L('No fitting hash algorithm found'));
 		}
+
 		$salt = bin2hex(OIDplus::authUtils()->getRandomBytes(50)); // DB field ra.salt is limited to 100 chars (= 50 bytes)
 
 		$bindata = $this->getBinaryHash($s_authmethod, $hashalgo, $salt, $password);
@@ -122,6 +131,16 @@ class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 		}
 
 		return new OIDplusRAAuthInfo($salt, $calc_authkey);
+	}
+
+	public function available(&$reason): bool {
+		$hashalgo = $this->getBestHashAlgo();
+		if (is_null($hashalgo)) {
+			$reason = _L('No fitting hash algorithm found');
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }

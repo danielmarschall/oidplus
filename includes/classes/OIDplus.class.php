@@ -283,7 +283,9 @@ class OIDplus extends OIDplusBaseClass {
 			self::$config->prepareConfigKey('last_known_version', 'Last known OIDplus Version', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
 				// Nothing here yet
 			});
-			self::$config->prepareConfigKey('default_ra_auth_method', 'Default auth method used for generating password of RAs (must exist in plugins/[vendorname]/auth/)?', 'A3_bcrypt', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			self::$config->prepareConfigKey('default_ra_auth_method', 'Default auth method used for generating password of RAs (must exist in plugins/[vendorname]/auth/)? Empty = OIDplus decides.', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+				if (trim($value) === '') return; // OIDplus decides
+
 				$good = true;
 				if (strpos($value,'/') !== false) $good = false;
 				if (strpos($value,'\\') !== false) $good = false;
@@ -292,9 +294,7 @@ class OIDplus extends OIDplusBaseClass {
 					throw new OIDplusException(_L('Invalid auth plugin folder name. Do only enter a folder name, not an absolute or relative path'));
 				}
 
-				if (!wildcard_is_dir(OIDplus::localpath().'plugins/'.'*'.'/auth/'.$value)) {
-					throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$value,'plugins/[vendorname]/auth/'));
-				}
+				OIDplus::checkRaAuthPluginAvailable($value);
 			});
 		}
 
@@ -485,6 +485,65 @@ class OIDplus extends OIDplusBaseClass {
 
 	// --- Auth plugin
 
+	public static function getAuthPluginByFoldername($foldername)/*: ?OIDplusAuthPlugin*/ {
+		$plugins = OIDplus::getAuthPlugins();
+		foreach ($plugins as $plugin) {
+			if (basename($plugin->getPluginDirectory()) === $foldername) {
+				return $plugin;
+			}
+		}
+		return null;
+	}
+
+	private static function checkRaAuthPluginAvailable($plugin_foldername) {
+			// if (!wildcard_is_dir(OIDplus::localpath().'plugins/'.'*'.'/auth/'.$plugin_foldername)) {
+			$plugin = OIDplus::getAuthPluginByFoldername($plugin_foldername);
+			if (is_null($plugin)) {
+				throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$plugin_foldername,'plugins/[vendorname]/auth/'));
+			}
+
+			$reason = '';
+			if (!$plugin->available($reason)) {
+				throw new OIDplusException(trim(_L('The auth plugin "%1" is not available on this system.',$plugin_foldername).' '.$reason));
+			}
+	}
+
+	public static function getDefaultRaAuthPlugin()/*: OIDplusAuthPlugin*/ {
+		// 1. Priority: Use the auth plugin the user prefers
+		$def_plugin_foldername = OIDplus::config()->getValue('default_ra_auth_method');
+		if (trim($def_plugin_foldername) !== '') {
+			OIDplus::checkRaAuthPluginAvailable($def_plugin_foldername);
+			$plugin = OIDplus::getAuthPluginByFoldername($def_plugin_foldername);
+			return $plugin;
+		}
+
+		// 2. Priority: If empty (i.e. OIDplus may decide), choose the best ViaThinkSoft plugin that is supported on this system
+		$preferred_auth_plugins = array(
+			'A4_argon2',
+			'A3_bcrypt',
+			'A2_sha3_salted_base64',
+			'A1_phpgeneric_salted_hex'
+		);
+		foreach ($preferred_auth_plugins as $plugin_foldername) {
+			$plugin = OIDplus::getAuthPluginByFoldername($plugin_foldername);
+			if (is_null($plugin)) continue;
+
+			$reason = '';
+			if (!$plugin->available($reason)) continue;
+
+			return $plugin;
+		}
+
+		// 3. Priority: If nothing found, take the first found plugin
+		$plugins = OIDplus::getAuthPlugins();
+		if (count($plugins) > 0) {
+			return $plugins[0];
+		}
+
+		// 4. Priority: We must deny the creation of the password because we have no auth plugin!
+		throw new OIDplusException(_L('Could not find a fitting auth plugin!'));
+	}
+
 	private static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
 		if (OIDplus::baseConfig()->getValue('DEBUG')) {
 			$password = generateRandomString(25);
@@ -493,8 +552,10 @@ class OIDplus extends OIDplusBaseClass {
 				$authInfo = $plugin->generate($password);
 			} catch (OIDplusException $e) {
 				// This can happen when the AuthKey or Salt is too long
+				// Note: The constructor and setters of OIDplusRAAuthInfo() already check for length and null/false values.
 				throw new OIDplusException(_L('Auth plugin "%1" is erroneous: %2',basename($plugin->getPluginDirectory()),$e->getMessage()));
 			}
+
 			$salt = $authInfo->getSalt();
 			$authKey = $authInfo->getAuthKey();
 
@@ -508,7 +569,7 @@ class OIDplus extends OIDplusBaseClass {
 			   (!empty($salt) && $plugin->verify($authInfo_SaltDiff,$password)) ||
 			   ($plugin->verify($authInfo_AuthKeyDiff,$password)) ||
 			   ($plugin->verify($authInfo,$password.'x'))) {
-				throw new OIDplusException(_L('Auth plugin "%1" is erroneous: Generate/Verify self test failed',basename($plugin->getPluginDirectory())));
+				throw new OIDplusException(_L('Auth plugin "%1" is erroneous: Generate/Verify self-test failed',basename($plugin->getPluginDirectory())));
 			}
 		}
 

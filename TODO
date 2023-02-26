@@ -1,4 +1,25 @@
 
+RA Auth plugins:
+- Let A1 und A2 create "crypt" compatible strings (see Wikipedia https://en.wikipedia.org/wiki/Crypt_(C))
+  Something like $vts$algo=md5,mode=3$<salt>$<hash>
+  Attention: Radix64 is different, not Base64!
+- Instead of having 2 database fields "salt" and "authkey", do the following:
+  (1) remove salt field and integrate the salt in the auth key field
+  (2) Make the authkey database field much bigger!
+	(3) Change plugins A1 and A2, so that they save their salt in the authkey
+	(4) Adjust OIDplusRAAuthInfo (remove salts)
+	(5) verify that getSalt() is not used anywhere
+
+Admin Auth:
+- implement argon2 as alternative to bcrypt?
+- idea: could RA-auth-plugins also be used to create the admin-hash? problem: setup/ generates hash with javascript, not via PHP!!!
+- BCrypt
+	Make #rounds and length of admin password configurable (pre-baseconfig?)
+	Include dev/bcrypt_cost_calculator somewhere in the configuration page?
+	... At least give a hint to the documentation, so they know how to run the tool and how to enter the cost in the configuration (for RA and Admin)
+	... or in the setup page make an extra control how complex the admin password should be? but be aware that nobody enters a too big number (it makes DoS possible!)
+	See "Example #3" here https://www.php.net/manual/de/function.password-hash.php which helps you finding a good cost value for your system
+
 Feb 2023 entries:
 - Create oid => immediately after creating an OID, show the title/description edit dialog in a popup?? we must be sure that people don't add OIDs without title
 - OID Description textarea: add link to oid-info.com faq to show how descriptions should be done
@@ -47,11 +68,6 @@ Treeview / Navigation:
 SECURITY Improvements:
 - Small security issue: A visitor can check which plugins are installed by either entering a "goto" command (e.g. "oidplus:vnag_version_check")
   and see which error message appears, or they could try to enter "plugin/adminPages/..." using the web browser and see if the result is HTTP 200 or HTTP 404.
-- BCrypt
-	Make #rounds and length of admin password configurable (pre-baseconfig?)
-	Include dev/bcrypt_cost_calculator somewhere in the configuration page?
-	... At least give a hint to the documentation, so they know how to run the tool and how to enter the cost in the configuration (for RA and Admin)
-	... or in the setup page make an extra control how complex the admin password should be? but be aware that nobody enters a too big number (it makes DoS possible!)
 
 Setup:
 - Make following things configurable in some kind of base-config INI/XML file:
