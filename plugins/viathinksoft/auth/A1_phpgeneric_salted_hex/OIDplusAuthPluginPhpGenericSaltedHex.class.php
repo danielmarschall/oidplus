@@ -19,6 +19,10 @@
 
 namespace ViaThinkSoft\OIDplus;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('INSIDE_OIDPLUS') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 class OIDplusAuthPluginPhpGenericSaltedHex extends OIDplusAuthPlugin {
 
 	private function getBinaryHash($s_authmethod, $hashalgo, $salt, $check_password) {
