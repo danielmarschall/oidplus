@@ -36,7 +36,6 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 
 	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
 		$authKey = $authInfo->getAuthKey();
-		$salt = $authInfo->getSalt();
 
 		if (!$this->supportedCryptAlgo($authKey)) {
 			// Unsupported algorithm
@@ -46,10 +45,6 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 		// $argon2i$v=19$m=1024,t=2,p=2$MEhSZkJLQXUxRzljNE5hMw$33pvelMsxqOn/1VV2pnjmKJUECBhilzOZ2+Gq/FxCP4
 		//  \_____/ \__/ \____________/ \____________________/ \_________________________________________/
 		//   Algo   Vers  Cost options   Salt                   Hash
-
-		if ($salt != '') {
-			throw new OIDplusException(_L('This function does not accept an explicit salt'));
-		}
 
 		return password_verify($check_password, $authKey);
 	}
@@ -66,13 +61,12 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 	}
 
 	public function generate($password): OIDplusRAAuthInfo {
-		$s_salt = ''; // Argon2 automatically generates a salt
 		$hashalgo = $this->getBestHashAlgo();
 		assert($hashalgo !== false); // Should not happen if we called available() before!
 		$calc_authkey = password_hash($password, $hashalgo);
 		if (!$calc_authkey) throw new OIDplusException(_L('Error creating password hash'));
 		assert($this->supportedCryptAlgo($calc_authkey));
-		return new OIDplusRAAuthInfo($s_salt, $calc_authkey);
+		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
 	private function supportsArgon2i(): bool {

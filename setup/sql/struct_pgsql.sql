@@ -75,8 +75,7 @@ CREATE TABLE "ra" (
   "mobile" varchar(100) NULL,
   "fax" varchar(100) NULL,
   "privacy" boolean NOT NULL DEFAULT false,
-  "salt" varchar(100) NULL,
-  "authkey" varchar(100) NULL,
+  "authkey" varchar(250) NULL,
   "registered" timestamp,
   "updated" timestamp,
   "last_login" timestamp
@@ -134,4 +133,4 @@ CREATE UNIQUE  INDEX "index_log_object_uq_log_id_object" ON "log_object"("log_id
 
 -------------------------------------------------------
 
-INSERT INTO "config" ("name", "description", "value", "protected", "visible") VALUES ('database_version', 'Version of the database tables', '1001', true, false);
+INSERT INTO "config" ("name", "description", "value", "protected", "visible") VALUES ('database_version', 'Version of the database tables', '1002', true, false);

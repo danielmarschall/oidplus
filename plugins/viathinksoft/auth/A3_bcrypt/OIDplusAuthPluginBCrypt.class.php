@@ -44,11 +44,6 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 
 	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
 		$authKey = $authInfo->getAuthKey();
-		$salt = $authInfo->getSalt();
-
-		if (str_starts_with($authKey, 'A3#')) {
-			$authKey = substr($authKey, strlen('A3#')); // Backwards compatibility: Remove "A3#" prefix.
-		}
 
 		if (!$this->supportedCryptAlgo($authKey)) {
 			// Unsupported algorithm
@@ -59,21 +54,16 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 		//  \/ \/ \____________________/\_____________________________/
 		// Alg Cost   Salt (128 bit)             Hash
 
-		if ($salt != '') {
-			throw new OIDplusException(_L('This function does not accept an explicit salt'));
-		}
-
 		return password_verify($check_password, $authKey);
 	}
 
 	public function generate($password): OIDplusRAAuthInfo {
 		if (strlen($password) > 72) throw new OIDplusException(_L('Password is too long (max %1 bytes)',72));
-		$s_salt = ''; // BCrypt automatically generates a salt
 		$cost = OIDplus::config()->getValue('ra_bcrypt_cost', 10);
 		$calc_authkey = password_hash($password, PASSWORD_BCRYPT, array("cost" => $cost));
 		if (!$calc_authkey) throw new OIDplusException(_L('Error creating password hash'));
 		assert($this->supportedCryptAlgo($calc_authkey));
-		return new OIDplusRAAuthInfo($s_salt, $calc_authkey);
+		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
 	public function available(&$reason): bool {

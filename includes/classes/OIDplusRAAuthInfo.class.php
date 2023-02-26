@@ -25,31 +25,20 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusRAAuthInfo extends OIDplusBaseClass {
 
-	private $salt;
 	private $authKey;
 
-	public function setSalt($salt) {
-		if (strlen($salt) > 100) throw new OIDplusException(_L('Field %1 is too long. Max allowed %2','Salt',100));
-		if (is_null($salt) || ($salt === false)) $salt = '';
-		$this->salt = $salt;
-	}
-
 	public function setAuthKey($authKey) {
-		if (strlen($authKey) > 100) throw new OIDplusException(_L('Field %1 is too long. Max allowed %2','Auth key',100));
+		// 250 is the length of the database field
+		if (strlen($authKey) > 250) throw new OIDplusException(_L('Field %1 is too long. Max allowed %2','Auth key',250));
 		if (is_null($authKey) || ($authKey === false)) throw new OIDplusException(_L('Field %1 is too invalid','Auth key'));
 		$this->authKey = $authKey;
-	}
-
-	public function getSalt() {
-		return $this->salt;
 	}
 
 	public function getAuthKey() {
 		return $this->authKey;
 	}
 
-	public function __construct($salt, $authKey) {
-		$this->setSalt($salt);
+	public function __construct($authKey) {
 		$this->setAuthKey($authKey);
 	}
 

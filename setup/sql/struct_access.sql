@@ -65,8 +65,7 @@ CREATE TABLE [ra](
 	[mobile] varchar(100) NULL,
 	[fax] varchar(100) NULL,
 	[privacy] bit NOT NULL,
-	[salt] varchar(100) NULL,
-	[authkey] varchar(100) NULL,
+	[authkey] varchar(250) NULL,
 	[registered] datetime NULL,
 	[updated] datetime NULL,
 	[last_login] datetime NULL,
@@ -122,4 +121,4 @@ CREATE TABLE [log_object](
 	)
 );
 
-INSERT INTO [config] ([name], [description], [value], [protected], [visible]) VALUES ('database_version', 'Version of the database tables', '1001', '1', '0');
+INSERT INTO [config] ([name], [description], [value], [protected], [visible]) VALUES ('database_version', 'Version of the database tables', '1002', '1', '0');

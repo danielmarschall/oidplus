@@ -57,9 +57,8 @@ class OIDplusRA extends OIDplusBaseClass {
 
 	public function change_password($new_password) {
 		$authInfo = OIDplus::authUtils()->raGeneratePassword($new_password);
-		$s_salt = $authInfo->getSalt();
 		$calc_authkey = $authInfo->getAuthKey();
-		OIDplus::db()->query("update ###ra set salt=?, authkey=? where email = ?", array($s_salt, $calc_authkey, $this->email));
+		OIDplus::db()->query("update ###ra set authkey=? where email = ?", array($calc_authkey, $this->email));
 	}
 
 	public function change_email($new_email) {
@@ -69,23 +68,21 @@ class OIDplusRA extends OIDplusBaseClass {
 	public function register_ra($new_password) {
 		if (is_null($new_password)) {
 			// Invalid password (used for LDAP/OAuth)
-			$s_salt = '';
 			$calc_authkey = '';
 		} else {
 			$authInfo = OIDplus::authUtils()->raGeneratePassword($new_password);
-			$s_salt = $authInfo->getSalt();
 			$calc_authkey = $authInfo->getAuthKey();
 		}
 
-		OIDplus::db()->query("insert into ###ra (salt, authkey, email, registered, ra_name, personal_name, organization, office, street, zip_town, country, phone, mobile, fax) values (?, ?, ?, ".OIDplus::db()->sqlDate().", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($s_salt, $calc_authkey, $this->email, "", "", "", "", "", "", "", "", "", ""));
+		OIDplus::db()->query("insert into ###ra (authkey, email, registered, ra_name, personal_name, organization, office, street, zip_town, country, phone, mobile, fax) values (?, ?, ".OIDplus::db()->sqlDate().", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($calc_authkey, $this->email, "", "", "", "", "", "", "", "", "", ""));
 	}
 
 	public function getAuthInfo()/*: ?OIDplusRAAuthInfo*/ {
-		$ra_res = OIDplus::db()->query("select authkey, salt from ###ra where email = ?", array($this->email));
+		$ra_res = OIDplus::db()->query("select authkey from ###ra where email = ?", array($this->email));
 		if (!$ra_res->any()) return null; // User not found
 		$ra_row = $ra_res->fetch_array();
 
-		return new OIDplusRAAuthInfo($ra_row['salt'], $ra_row['authkey']);
+		return new OIDplusRAAuthInfo($ra_row['authkey']);
 	}
 
 	public function checkPassword($password) {

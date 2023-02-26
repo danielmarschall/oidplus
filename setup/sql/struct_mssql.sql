@@ -159,8 +159,7 @@ CREATE TABLE [dbo].[ra](
 	[mobile] [varchar](100) NULL,
 	[fax] [varchar](100) NULL,
 	[privacy] [bit] NOT NULL CONSTRAINT [DF__ra__privacy]  DEFAULT ('0'),
-	[salt] [varchar](100) NULL,
-	[authkey] [varchar](100) NULL,
+	[authkey] [varchar](250) NULL,
 	[registered] [datetime] NULL,
 	[updated] [datetime] NULL,
 	[last_login] [datetime] NULL,
@@ -251,7 +250,7 @@ GO
 
 /****** Set database version ******/
 
-INSERT INTO [config] (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '1001', '1', '0');
+INSERT INTO [config] (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '1002', '1', '0');
 
 SET ANSI_PADDING OFF
 GO

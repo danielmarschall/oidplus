@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,37 +23,37 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusAuthPluginSha3SaltedBase64 extends OIDplusAuthPlugin {
+class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 
 	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
 		$authKey = $authInfo->getAuthKey();
-		$salt = $authInfo->getSalt();
-		@list($s_authmethod, $s_authkey) = explode('#', $authKey, 2);
 
-		if ($s_authmethod == 'A2') {
-			// A2#X with X being sha3(salt+password) in base64-notation
-			$calc_authkey = base64_encode(sha3_512($salt.$check_password, true));
+		if (str_starts_with($authKey, '$'.OID_MCF_VTS_V1.'$')) {
+			$data = crypt_modular_format_decode($authKey);
+			$algo = $data['params']['a'];
+			$bin_salt = $data['salt'];
+			$ver = '1';
+			$mode = $data['params']['m'];
+			$calc_authkey = vts_crypt($algo, $check_password, $bin_salt, $ver, $mode);
 		} else {
-			// Invalid auth code
 			return false;
 		}
 
-		return hash_equals($calc_authkey, $s_authkey);
+		return hash_equals($authKey, $calc_authkey);
 	}
 
 	public function generate($password): OIDplusRAAuthInfo {
-		$s_salt = bin2hex(OIDplus::authUtils()->getRandomBytes(50)); // DB field ra.salt is limited to 100 chars (= 50 bytes)
-		$calc_authkey = 'A2#'.base64_encode(sha3_512($s_salt.$password, true));
-		return new OIDplusRAAuthInfo($s_salt, $calc_authkey);
+		$hashalgo = 'sha3-512'; // we can safely use it, because we have a pure-PHP implementation shipped with OIDplus
+
+		$salt = OIDplus::authUtils()->getRandomBytes(50);
+
+		$calc_authkey = vts_crypt($hashalgo, $password, $salt, '1', 'ps');
+
+		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
 	public function available(&$reason): bool {
-		if (!function_exists('sha3_512')) {
-			$reason = _L('No fitting hash algorithm found');
-			return false;
-		} else {
-			return true;
-		}
+		return true;
 	}
 
 }

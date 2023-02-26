@@ -3262,14 +3262,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Invalid hash auth method
-		]]></source>
-		<target><![CDATA[
-		Ungültige Auth-Methode
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Invalid maskcode "%1" (Unknown severity "%2")
 		]]></source>
 		<target><![CDATA[
@@ -7106,14 +7098,6 @@
 		]]></source>
 		<target><![CDATA[
 		Dieser Ordner beinhaltete keine Elemente
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		This function does not accept an explicit salt
-		]]></source>
-		<target><![CDATA[
-		Diese Funktion erlaubt keinen expliziten Salt
 		]]></target>
 	</message>
 	<message>
