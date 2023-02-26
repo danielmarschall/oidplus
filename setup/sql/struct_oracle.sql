@@ -84,8 +84,7 @@ CREATE TABLE "RA" (
   "MOBILE" VARCHAR2(100) NULL,
   "FAX" VARCHAR2(100) NULL,
   "PRIVACY" NUMBER(1) DEFAULT '0' NOT NULL,
-  "SALT" VARCHAR2(100) NULL,
-  "AUTHKEY" VARCHAR2(100) NULL,
+  "AUTHKEY" VARCHAR2(250) NULL,
   "REGISTERED" TIMESTAMP,
   "UPDATED" TIMESTAMP,
   "LAST_LOGIN" TIMESTAMP,
@@ -136,4 +135,4 @@ CREATE INDEX "LOG_OBJECT_OBJECT" ON "LOG_OBJECT"("OBJECT");
 
 /* -------------------------------------------------- */
 
-INSERT INTO "CONFIG" ("NAME", "DESCRIPTION", "VALUE", "PROTECTED", "VISIBLE") VALUES ('database_version', 'Version of the database tables', '1001', '1', '0');
+INSERT INTO "CONFIG" ("NAME", "DESCRIPTION", "VALUE", "PROTECTED", "VISIBLE") VALUES ('database_version', 'Version of the database tables', '1002', '1', '0');

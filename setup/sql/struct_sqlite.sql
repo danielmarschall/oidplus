@@ -57,7 +57,6 @@ CREATE TABLE `ra` (
   `mobile` TEXT NULL,
   `fax` TEXT NULL,
   `privacy` INTEGER NOT NULL DEFAULT 0,
-  `salt` TEXT NULL,
   `authkey` TEXT NULL,
   `registered` TEXT, -- DateTime
   `updated` TEXT, -- DateTime
@@ -90,4 +89,4 @@ CREATE TABLE `log_object` (
   UNIQUE (`log_id`,`object`)
 );
 
-INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '1001', '1', '0');
+INSERT INTO `config` (name, description, value, protected, visible) VALUES ('database_version', 'Version of the database tables', '1002', '1', '0');

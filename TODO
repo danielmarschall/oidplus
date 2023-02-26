@@ -1,15 +1,4 @@
 
-RA Auth plugins:
-- Let A1 und A2 create "crypt" compatible strings (see Wikipedia https://en.wikipedia.org/wiki/Crypt_(C))
-  Something like $vts$algo=md5,mode=3$<salt>$<hash>
-  Attention: Radix64 is different, not Base64!
-- Instead of having 2 database fields "salt" and "authkey", do the following:
-  (1) remove salt field and integrate the salt in the auth key field
-  (2) Make the authkey database field much bigger!
-	(3) Change plugins A1 and A2, so that they save their salt in the authkey
-	(4) Adjust OIDplusRAAuthInfo (remove salts)
-	(5) verify that getSalt() is not used anywhere
-
 Admin Auth:
 - implement argon2 as alternative to bcrypt?
 - idea: could RA-auth-plugins also be used to create the admin-hash? problem: setup/ generates hash with javascript, not via PHP!!!

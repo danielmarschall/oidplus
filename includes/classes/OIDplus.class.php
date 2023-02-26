@@ -521,8 +521,7 @@ class OIDplus extends OIDplusBaseClass {
 		$preferred_auth_plugins = array(
 			'A4_argon2',
 			'A3_bcrypt',
-			'A2_sha3_salted_base64',
-			'A1_phpgeneric_salted_hex'
+			'A5_vts_mcf'
 		);
 		foreach ($preferred_auth_plugins as $plugin_foldername) {
 			$plugin = OIDplus::getAuthPluginByFoldername($plugin_foldername);
@@ -552,22 +551,17 @@ class OIDplus extends OIDplusBaseClass {
 			try {
 				$authInfo = $plugin->generate($password);
 			} catch (OIDplusException $e) {
-				// This can happen when the AuthKey or Salt is too long
+				// This can happen when the AuthKey is too long for the database field
 				// Note: The constructor and setters of OIDplusRAAuthInfo() already check for length and null/false values.
 				throw new OIDplusException(_L('Auth plugin "%1" is erroneous: %2',basename($plugin->getPluginDirectory()),$e->getMessage()));
 			}
 
-			$salt = $authInfo->getSalt();
 			$authKey = $authInfo->getAuthKey();
-
-			$authInfo_SaltDiff = clone $authInfo;
-			$authInfo_SaltDiff->setSalt(strrev($authInfo_SaltDiff->getSalt()));
 
 			$authInfo_AuthKeyDiff = clone $authInfo;
 			$authInfo_AuthKeyDiff->setAuthKey(strrev($authInfo_AuthKeyDiff->getAuthKey()));
 
 			if ((!$plugin->verify($authInfo,$password)) ||
-			   (!empty($salt) && $plugin->verify($authInfo_SaltDiff,$password)) ||
 			   ($plugin->verify($authInfo_AuthKeyDiff,$password)) ||
 			   ($plugin->verify($authInfo,$password.'x'))) {
 				throw new OIDplusException(_L('Auth plugin "%1" is erroneous: Generate/Verify self-test failed',basename($plugin->getPluginDirectory())));
