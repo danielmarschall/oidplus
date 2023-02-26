@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,10 @@ namespace Frdlweb\OIDplus;
 
 use ViaThinkSoft\OIDplus\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('INSIDE_OIDPLUS') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusPagePublicRdap extends OIDplusPagePluginPublic {
 

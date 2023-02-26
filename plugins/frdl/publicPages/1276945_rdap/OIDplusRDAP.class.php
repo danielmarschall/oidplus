@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0 RDAP
- * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  * Authors               Daniel Marschall, ViaThinkSoft
  *                       Till Wehowski, Frdlweb
  *
@@ -25,6 +25,10 @@ use ViaThinkSoft\OIDplus\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplusObject;
 use ViaThinkSoft\OIDplus\OIDplusOIDIP;
 use ViaThinkSoft\OIDplus\OIDplusPagePublicObjects;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('INSIDE_OIDPLUS') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusRDAP {
 

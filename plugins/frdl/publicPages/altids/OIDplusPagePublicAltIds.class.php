@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2022 Daniel Marschall, ViaThinkSoft / Till Wehowski, Frdlweb
+ * Copyright 2022 - 2023 Daniel Marschall, ViaThinkSoft / Till Wehowski, Frdlweb
  *
  * Licensed under the MIT License.
  */
@@ -12,6 +12,10 @@ namespace Frdlweb\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplusObject;
 use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('INSIDE_OIDPLUS') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 

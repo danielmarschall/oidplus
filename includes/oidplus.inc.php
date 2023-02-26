@@ -23,6 +23,8 @@
 // will get a compilation error and then they won't see our friendly error message.
 // More information about the required PHP version:  doc/developer_notes/php7_compat.txt
 
+define('INSIDE_OIDPLUS', true);
+
 if (version_compare(PHP_VERSION, $oidplus_min_version='7.0.0') < 0) {
 	// Note: These strings are not translated, because in case of an incompatible
 	// PHP version, we are not able to load language plugins at all.

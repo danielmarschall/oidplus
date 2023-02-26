@@ -19,6 +19,10 @@
 
 namespace ViaThinkSoft\OIDplus;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('INSIDE_OIDPLUS') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
 	public function init($html=true) {

@@ -31,6 +31,10 @@ use ViaThinkSoft\OIDplus\OIDplusConfig;
 use ViaThinkSoft\OIDplus\OIDplusException;
 use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('INSIDE_OIDPLUS') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 class OIDplusPagePublicUITweaks extends OIDplusPagePluginPublic {
 
 	public function init($html=true) {
