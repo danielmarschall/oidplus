@@ -48,13 +48,20 @@ class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 
 		$salt = OIDplus::authUtils()->getRandomBytes(50);
 
-		$calc_authkey = vts_crypt($hashalgo, $password, $salt, '1', 'ps');
+		if (function_exists('sha3_512_hmac')) {
+			$calc_authkey = vts_crypt($hashalgo, $password, $salt, '1', 'hmac');
+		} else if (function_exists('sha3_512')) {
+			$calc_authkey = vts_crypt($hashalgo, $password, $salt, '1', 'ps'); // 'ps' means "password + salt" concatenated
+		} else {
+			$calc_authkey = ''; // avoid PHPstan warning
+			assert(false);
+		}
 
 		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
 	public function available(&$reason): bool {
-		return true;
+		return function_exists('sha3_512_hmac') || function_exists('sha3_512');
 	}
 
 }
