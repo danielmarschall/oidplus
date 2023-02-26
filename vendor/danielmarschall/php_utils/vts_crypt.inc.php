@@ -46,6 +46,9 @@ Valid <mode> :
 	sps = salt + password + salt
 	hmac = HMAC (salt is the key)
 
+Like most Crypt-hashes, <salt> and <hash> are Radix64 coded
+with alphabet './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' and no padding.
+
 Link to the online specification:
 	https://oidplus.viathinksoft.com/oidplus/?goto=oid%3A1.3.6.1.4.1.37476.3.0.1.1
 
@@ -56,24 +59,25 @@ Reference implementation in PHP:
 
 define('OID_MCF_VTS_V1', '1.3.6.1.4.1.37476.3.0.1.1'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 specifications(3) misc(0) modular-crypt-format(1) vts-crypt-v1(1) }
 
-define('BASE64_RFC4648_ALPHABET', '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/=');
-define('BASE64_CRYPT_ALPHABET',   './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ');
+define('BASE64_RFC4648_ALPHABET', '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/');
+define('BASE64_CRYPT_ALPHABET',   './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
 
 function crypt_radix64_encode($str) {
 	$x = $str;
 	$x = base64_encode($x);
-	$x = trim(strtr($x, BASE64_RFC4648_ALPHABET, BASE64_CRYPT_ALPHABET));
+	$x = rtrim($x, '=');
+	$x = strtr($x, BASE64_RFC4648_ALPHABET, BASE64_CRYPT_ALPHABET);
 	return $x;
 }
 
 function crypt_radix64_decode($str) {
 	$x = $str;
-	$x = trim(strtr($x, BASE64_CRYPT_ALPHABET, BASE64_RFC4648_ALPHABET));
+	$x = strtr($x, BASE64_CRYPT_ALPHABET, BASE64_RFC4648_ALPHABET);
 	$x = base64_decode($x);
 	return $x;
 }
 
-assert(crypt_radix64_decode(crypt_radix64_encode('hallo')));
+// assert(crypt_radix64_decode(crypt_radix64_encode('TEST123')) === 'TEST123');
 
 function crypt_modular_format($id, $bin_salt, $bin_hash, $params=null) {
 	// $<id>[$<param>=<value>(,<param>=<value>)*][$<salt>[$<hash>]]
@@ -164,41 +168,5 @@ function vts_crypt($algo, $str_password, $str_salt, $ver='1', $mode='ps') {
 		return crypt_modular_format(OID_MCF_VTS_V1, $bin_salt, $bin_hash, array('a'=>$algo,'m'=>$mode));
 	} else {
 		throw new Exception("Invalid VTS crypt version, expect 1.");
-	}
-}
-
-function vts_crypt_convert_from_old_oidplus($authkey, $salt) {
-	if (preg_match('@^A1([abcd])#(.+):(.+)$@', $authkey, $m)) {
-		// A1a#hashalgo:X with X being H(salt+password) in hex- or rfc4648-base64-notation
-		// A1b#hashalgo:X with X being H(password+salt) in hex- or rfc4648-base64-notation
-		// A1c#hashalgo:X with X being H(salt+password+salt) in hex- or rfc4648-base64-notation
-		// A1d#hashalgo:X with X being H_HMAC(password,salt) in hex- or rfc4648-base64-notation
-		$mode = ''; // avoid PHPstan warning
-		if ($m[1] == 'a') $mode = 'sp';
-		else if ($m[1] == 'b') $mode = 'ps';
-		else if ($m[1] == 'c') $mode = 'sps';
-		else if ($m[1] == 'd') $mode = 'hmac';
-		else assert(false);
-		$algo = $m[2];
-		$bin_salt = $salt;
-		if (($algo == 'sha3-512') || ($algo == 'sha3-384') || ($algo == 'sha512') || ($algo == 'sha384')) {
-			$bin_hash = base64_decode($m[3]);
-		} else {
-			$bin_hash = hex2bin($m[3]);
-		}
-		return crypt_modular_format(OID_MCF_VTS_V1, $bin_salt, $bin_hash, array('a'=>$algo,'m'=>$mode));
-	} else if (preg_match('@^A2#(.+)$@', $authkey, $m)) {
-		// A2#X with X being sha3(salt+password) in rfc4648-base64-notation
-		$mode = 'sp';
-		$algo = 'sha3-512';
-		$bin_salt = $salt;
-		$bin_hash = base64_decode($m[1]);
-		return crypt_modular_format(OID_MCF_VTS_V1, $bin_salt, $bin_hash, array('a'=>$algo,'m'=>$mode));
-	} else if (preg_match('@^A3#(.+)$@', $authkey, $m)) {
-		// A3#X with X being bcrypt  [not VTS hash!]
-		return $m[1];
-	} else {
-		// Nothing to convert
-		return $authkey;
 	}
 }
