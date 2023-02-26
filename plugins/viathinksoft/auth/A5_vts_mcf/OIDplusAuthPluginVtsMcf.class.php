@@ -30,6 +30,7 @@ class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 
 		if (str_starts_with($authKey, '$'.OID_MCF_VTS_V1.'$')) {
 			$data = crypt_modular_format_decode($authKey);
+			if ($data === false) throw new OIDplusException(_L('Invalid auth key'));
 			$algo = $data['params']['a'];
 			$bin_salt = $data['salt'];
 			$ver = '1';
