@@ -545,7 +545,8 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	private static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
-		if (OIDplus::baseConfig()->getValue('DEBUG')) {
+		$reason = '';
+		if (OIDplus::baseConfig()->getValue('DEBUG') && $plugin->available($reason)) {
 			$password = generateRandomString(25);
 
 			try {
