@@ -26,6 +26,7 @@ use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
  * @throws \ViaThinkSoft\OIDplus\OIDplusException
  */
 function oidplus_dbupdate_1001(OIDplusDatabaseConnection $db) {
+	if ($db->transaction_supported()) $db->transaction_begin();
 
 	// Change collation so that objects like FourCC can be case-sensitive
 	if ($db->getSlang()->id() == 'mysql') {
@@ -61,6 +62,8 @@ function oidplus_dbupdate_1001(OIDplusDatabaseConnection $db) {
 
 	$version = 1001;
 	$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
+
+	if ($db->transaction_supported()) $db->transaction_commit();
 
 	return $version;
 }

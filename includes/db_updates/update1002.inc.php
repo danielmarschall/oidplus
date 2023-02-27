@@ -27,7 +27,8 @@ use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
 function oidplus_dbupdate_1002_migrate_ra_passwords(OIDplusDatabaseConnection $db) {
 	$res = $db->query("select * from ###ra ");
 	while ($row = $res->fetch_array()) {
-		$new_auth_key = vts_crypt_convert_from_old_oidplus($row['authkey'], $row['salt']);
+		$salt = isset($row['salt']) ? $row['salt'] : '';
+		$new_auth_key = vts_crypt_convert_from_old_oidplus($row['authkey'], $salt);
 		$email = $row['email'];
 		if ($new_auth_key !== $row['authkey']) {
 			//echo 'Migrate authkey '.$row['authkey'].' to '.$new_auth_key.' for '.$email.'<br><br>';
@@ -85,43 +86,63 @@ function vts_crypt_convert_from_old_oidplus($authkey, $salt) {
  * @throws \ViaThinkSoft\OIDplus\OIDplusException
  */
 function oidplus_dbupdate_1002(OIDplusDatabaseConnection $db) {
+	if ($db->transaction_supported()) $db->transaction_begin();
 
 	if ($db->getSlang()->id() == 'mssql') {
 		$db->query("alter table ###ra alter column [authkey] [varchar](250) NULL;");
 		oidplus_dbupdate_1002_migrate_ra_passwords($db);
-		$db->query("alter table ###ra drop column [salt];");
+		try {
+			$db->query("alter table ###ra drop column [salt];");
+		} catch(Exception $e) {}
 	}
 	else if ($db->getSlang()->id() == 'mysql') {
 		$db->query("alter table ###ra modify authkey varchar(250) NULL;");
 		oidplus_dbupdate_1002_migrate_ra_passwords($db);
-		$db->query("alter table ###ra drop column salt;");
+		try {
+			$db->query("alter table ###ra drop column salt;");
+		} catch(Exception $e) {}
 	}
 	else if ($db->getSlang()->id() == 'pgsql') {
 		$db->query("alter table ###ra alter column authkey type varchar(250)");
 		oidplus_dbupdate_1002_migrate_ra_passwords($db);
-		$db->query("alter table ###ra drop column salt");
+		try {
+			$db->query("alter table ###ra drop column salt");
+		} catch(Exception $e) {}
 	}
 	else if ($db->getSlang()->id() == 'oracle') {
 		$db->query("alter table ###ra modify authkey varchar2(250)");
 		oidplus_dbupdate_1002_migrate_ra_passwords($db);
-		$db->query("alter table ###ra set unused column salt");
-		$db->query("alter table ###ra set drop unused columns");
+		try {
+			$db->query("alter table ###ra set unused column salt");
+			$db->query("alter table ###ra set drop unused columns");
+		} catch(Exception $e) {}
 	}
 	else if ($db->getSlang()->id() == 'sqlite') {
 		oidplus_dbupdate_1002_migrate_ra_passwords($db);
-		$db->query("alter table ###ra drop column salt");
+		try {
+			$db->query("alter table ###ra drop column salt");
+		} catch(Exception $e) {}
 	}
 	else if ($db->getSlang()->id() == 'access') {
 		oidplus_dbupdate_1002_migrate_ra_passwords($db);
-		$db->query("alter table ###ra drop column salt");
+		try {
+			$db->query("alter table ###ra drop column salt");
+		} catch(Exception $e) {}
 	}
 
 	// Auth plugins A1 and A2 have been replaced with A5
-	$db->query("UPDATE ###config SET value = ? WHERE name = 'default_ra_auth_method' and value = ?", array('A5_vts_mcf', 'A1_phpgeneric_salted_hex'));
-	$db->query("UPDATE ###config SET value = ? WHERE name = 'default_ra_auth_method' and value = ?", array('A5_vts_mcf', 'A2_sha3_salted_base64'));
+	// Note that you cannot use `value` in the where clause on MSSQL, because "text and varchar" are incompatible...
+	$res = $db->query("SELECT value from ###config where name = 'default_ra_auth_method'");
+	if ($row = $res->fetch_array()) {
+		if (($row['value'] == 'A1_phpgeneric_salted_hex') || ($row['value'] == 'A2_sha3_salted_base64')) {
+			$db->query("UPDATE ###config SET value = 'A5_vts_mcf' WHERE name = 'default_ra_auth_method'");
+		}
+	}
 
 	$version = 1002;
 	$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
+
+	if ($db->transaction_supported()) $db->transaction_commit();
 
 	return $version;
 }
