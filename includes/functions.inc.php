@@ -234,21 +234,6 @@ function sha3_512_hmac($message, $key, $raw_output=false) {
 	}
 }
 
-if (!function_exists('str_ends_with')) {
-	// PHP 7.x compatibility
-	function str_ends_with($haystack, $needle) {
-		$length = strlen($needle);
-		return $length > 0 ? substr($haystack, -$length) === $needle : true;
-	}
-}
-
-if (!function_exists('str_starts_with')) {
-	// PHP 7.x compatibility
-	function str_starts_with($haystack, $needle) {
-		return strpos($haystack, $needle) === 0;
-	}
-}
-
 function url_get_contents($url, $userAgent='ViaThinkSoft-OIDplus/2.0') {
 	if (function_exists('curl_init')) {
 		$ch = curl_init();

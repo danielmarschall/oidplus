@@ -2,8 +2,8 @@
 
 /*
  * PHP Utilities - Misc functions
- * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
- * Revision: 2022-12-27
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Revision: 2023-02-27
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,4 +140,69 @@ function isInternetExplorer() {
 	// see also includes/oidplus_base.js
 	$ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 	return ((strpos($ua,'MSIE ') !== false) || (strpos($ua,'Trident/') !== false));
+}
+
+if (!function_exists('str_ends_with')) {
+	// PHP 7.x compatibility
+	function str_ends_with($haystack, $needle) {
+		$length = strlen($needle);
+		return $length > 0 ? substr($haystack, -$length) === $needle : true;
+	}
+}
+
+if (!function_exists('str_starts_with')) {
+	// PHP 7.x compatibility
+	function str_starts_with($haystack, $needle) {
+		return strpos($haystack, $needle) === 0;
+	}
+}
+
+function random_bytes_ex($len) {
+	if ($len === 0) return '';
+	assert($len > 0);
+
+	if (function_exists('random_bytes')) {
+		try {
+			$a = random_bytes($len);
+		} catch (Exception $e) { $a = null; }
+		if ($a) return $a;
+	}
+
+	if (function_exists('openssl_random_pseudo_bytes')) {
+		try {
+			$a = openssl_random_pseudo_bytes($len);
+		} catch (Exception $e) { $a = null; }
+		if ($a) return $a;
+	}
+
+	if (function_exists('mcrypt_create_iv')) {
+		if (defined('MCRYPT_DEV_URANDOM')) {
+			try {
+				$a = bin2hex(mcrypt_create_iv($len, MCRYPT_DEV_URANDOM));
+			} catch (Exception $e) { $a = null; }
+			if ($a) return $a;
+		}
+
+		if (defined('MCRYPT_DEV_RANDOM')) {
+			try {
+				$a = bin2hex(mcrypt_create_iv($len, MCRYPT_DEV_RANDOM));
+			} catch (Exception $e) { $a = null; }
+			if ($a) return $a;
+		}
+
+		if (defined('MCRYPT_RAND')) {
+			try {
+				$a = bin2hex(mcrypt_create_iv($len, MCRYPT_RAND));
+			} catch (Exception $e) { $a = null; }
+			if ($a) return $a;
+		}
+	}
+
+	// Fallback to non-secure RNG
+	$a = '';
+	while (strlen($a) < $len*2) {
+		$a .= sha1(uniqid((string)mt_rand(), true));
+	}
+	$a = substr($a, 0, $len*2);
+	return hex2bin($a);
 }

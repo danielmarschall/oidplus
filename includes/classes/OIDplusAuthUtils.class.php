@@ -27,31 +27,6 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 
 	// Useful functions
 
-	public static function getRandomBytes($len) {
-		if (function_exists('openssl_random_pseudo_bytes')) {
-			$a = openssl_random_pseudo_bytes($len);
-			if ($a) return $a;
-		}
-
-		if (function_exists('mcrypt_create_iv')) {
-			$a = bin2hex(mcrypt_create_iv($len));
-			if ($a) return $a;
-		}
-
-		if (function_exists('random_bytes')) {
-			$a = random_bytes($len);
-			if ($a) return $a;
-		}
-
-		// Fallback to non-secure RNG
-		$a = '';
-		while (strlen($a) < $len*2) {
-			$a .= sha1(uniqid((string)mt_rand(), true));
-		}
-		$a = substr($a, 0, $len*2);
-		return hex2bin($a);
-	}
-
 	private static function raPepperProcessing(string $password): string {
 		// Additional feature: Pepper
 		// The pepper is stored inside the base configuration file
@@ -351,7 +326,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	}
 
 	public function genCSRFToken() {
-		return bin2hex(self::getRandomBytes(64));
+		return bin2hex(random_bytes_ex(64));
 	}
 
 	public function checkCSRF() {
@@ -384,3 +359,4 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	/* Nothing here; the admin password will be generated in setup_base.js , purely in the web-browser */
 
 }
+

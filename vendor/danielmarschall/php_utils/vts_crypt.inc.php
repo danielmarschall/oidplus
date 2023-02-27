@@ -2,8 +2,8 @@
 
 /*
  * ViaThinkSoft Modular Crypt Format 1.0
- * Revision 2023-02-26
  * Copyright 2023 Daniel Marschall, ViaThinkSoft
+ * Revision 2023-02-26
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
