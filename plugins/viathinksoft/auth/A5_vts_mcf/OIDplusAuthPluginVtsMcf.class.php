@@ -28,7 +28,7 @@ class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
 		$authKey = $authInfo->getAuthKey();
 
-		if (str_starts_with($authKey, '$'.OID_MCF_VTS_V1.'$')) {
+		if (vts_crypt_version($authKey) != '0') {
 			return vts_password_verify($check_password, $authKey);
 		} else {
 			return false;

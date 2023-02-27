@@ -62,14 +62,14 @@ function vts_crypt_convert_from_old_oidplus($authkey, $salt) {
 		} else {
 			$bin_hash = hex2bin($m[3]);
 		}
-		return crypt_modular_format(OID_MCF_VTS_V1, $bin_salt, $bin_hash, array('a'=>$algo,'m'=>$mode));
+		return crypt_modular_format_encode(OID_MCF_VTS_V1, $bin_salt, $bin_hash, array('a'=>$algo,'m'=>$mode));
 	} else if (preg_match('@^A2#(.+)$@', $authkey, $m)) {
 		// A2#X with X being sha3(salt+password) in rfc4648-base64-notation
 		$mode = 'sp';
 		$algo = 'sha3-512';
 		$bin_salt = $salt;
 		$bin_hash = base64_decode($m[1]);
-		return crypt_modular_format(OID_MCF_VTS_V1, $bin_salt, $bin_hash, array('a'=>$algo,'m'=>$mode));
+		return crypt_modular_format_encode(OID_MCF_VTS_V1, $bin_salt, $bin_hash, array('a'=>$algo,'m'=>$mode));
 	} else if (preg_match('@^A3#(.+)$@', $authkey, $m)) {
 		// A3#X with X being bcrypt  [not VTS hash!]
 		return $m[1];
