@@ -692,7 +692,7 @@
 			if (e.ctrlKey) { parts.push('ctrl'); }
 			if (e.altKey) { parts.push('alt'); }
             if (e.shiftKey) { parts.push('shift'); }
-			parts.push(keys[e.which] || e.which);
+			parts.push(keys[e.which] ? keys[e.which].toLowerCase() : e.which);
             parts = parts.sort().join('-').toLowerCase();
             if (parts === 'shift-shift' || parts === 'ctrl-ctrl' || parts === 'alt-alt') {
                 return null;
@@ -910,15 +910,17 @@
 						this._data.core.focused = null;
 						$(e.currentTarget).filter('.jstree-hovered').trigger('mouseleave');
 						this.element.attr('tabindex', '0');
+						$(e.currentTarget).attr('tabindex', '-1');
 					}.bind(this))
 				.on('focus.jstree', '.jstree-anchor', function (e) {
 						var tmp = this.get_node(e.currentTarget);
-						if(tmp && tmp.id) {
+						if(tmp && (tmp.id || tmp.id === 0)) {
 							this._data.core.focused = tmp.id;
 						}
 						this.element.find('.jstree-hovered').not(e.currentTarget).trigger('mouseleave');
 						$(e.currentTarget).trigger('mouseenter');
 						this.element.attr('tabindex', '-1');
+						$(e.currentTarget).attr('tabindex', '0');
 					}.bind(this))
 				.on('focus.jstree', function () {
 						if(+(new Date()) - was_click > 500 && !this._data.core.focused && this.settings.core.restore_focus) {
@@ -1039,7 +1041,7 @@
 		 * @return {Object|jQuery}
 		 */
 		get_node : function (obj, as_dom) {
-			if(obj && obj.id) {
+			if(obj && (obj.id || obj.id === 0)) {
 				obj = obj.id;
 			}
 			if (obj instanceof $ && obj.length && obj[0].id) {
@@ -1276,7 +1278,7 @@
 		 * @trigger load_node.jstree
 		 */
 		load_node : function (obj, callback) {
-			var k, l, i, j, c;
+			var dom = this.get_node(obj, true), k, l, i, j, c;
 			if($.vakata.is_array(obj)) {
 				this._load_nodes(obj.slice(), callback);
 				return true;
@@ -1313,7 +1315,12 @@
 			}
 			obj.state.failed = false;
 			obj.state.loading = true;
-			this.get_node(obj, true).addClass("jstree-loading").attr('aria-busy',true);
+			if (obj.id !== $.jstree.root) {
+				dom.children(".jstree-anchor").attr('aria-busy', true);
+			} else {
+				dom.attr('aria-busy', true);
+			}
+			dom.addClass("jstree-loading");
 			this._load_node(obj, function (status) {
 				obj = this._model.data[obj.id];
 				obj.state.loading = false;
@@ -1337,7 +1344,12 @@
 						}
 					}
 				}
-				dom.removeClass("jstree-loading").attr('aria-busy',false);
+				if (obj.id !== $.jstree.root) {
+					dom.children(".jstree-anchor").attr('aria-busy', false);
+				} else {
+					dom.attr('aria-busy', false);
+				}
+				dom.removeClass("jstree-loading");
 				/**
 				 * triggered after a node is loaded
 				 * @event
@@ -1754,7 +1766,7 @@
 									tmp.state[i] = df[i];
 								}
 							}
-							if(d && d.id) { tmp.id = d.id.toString(); }
+							if(d && (d.id || d.id === 0)) { tmp.id = d.id.toString(); }
 							if(d && d.text) { tmp.text = d.text; }
 							if(d && d.data && d.data.jstree && d.data.jstree.icon) {
 								tmp.icon = d.data.jstree.icon;
@@ -1786,10 +1798,10 @@
 									}
 								}
 							}
-							if(tmp.li_attr.id && !tmp.id) {
+							if(tmp.li_attr.id && !(tmp.id || tmp.id === 0)) {
 								tmp.id = tmp.li_attr.id.toString();
 							}
-							if(!tmp.id) {
+							if(!(tmp.id || tmp.id === 0)) {
 								tmp.id = tid;
 							}
 							if(!tmp.li_attr.id) {
@@ -1981,6 +1993,15 @@
 						w.onmessage = function (e) {
 							rslt.call(this, e.data, true);
 							try { w.terminate(); w = null; } catch(ignore) { }
+							if(this._data.core.worker_queue.length) {
+								this._append_json_data.apply(this, this._data.core.worker_queue.shift());
+							}
+							else {
+								this._data.core.working = false;
+							}
+						}.bind(this);
+						w.onerror = function (e) {
+							rslt.call(this, func(args), false);
 							if(this._data.core.worker_queue.length) {
 								this._append_json_data.apply(this, this._data.core.worker_queue.shift());
 							}
@@ -2265,7 +2286,7 @@
 					tmp.state[i] = df[i];
 				}
 			}
-			if(d && d.id) { tmp.id = d.id.toString(); }
+			if(d && (d.id || d.id === 0)) { tmp.id = d.id.toString(); }
 			if(d && d.text) { tmp.text = d.text; }
 			if(d && d.data && d.data.jstree && d.data.jstree.icon) {
 				tmp.icon = d.data.jstree.icon;
@@ -2297,10 +2318,10 @@
 					}
 				}
 			}
-			if(tmp.li_attr.id && !tmp.id) {
+			if(tmp.li_attr.id && !(tmp.id || tmp.id === 0)) {
 				tmp.id = tmp.li_attr.id.toString();
 			}
-			if(!tmp.id) {
+			if(!(tmp.id || tmp.id === 0)) {
 				tmp.id = tid;
 			}
 			if(!tmp.li_attr.id) {
@@ -2355,7 +2376,7 @@
 			}
 			if(this._model.force_full_redraw) {
 				f.className = this.get_container_ul()[0].className;
-				f.setAttribute('role','group');
+				f.setAttribute('role','presentation');
 				this.element.empty().append(f);
 				//this.get_container_ul()[0].appendChild(f);
 			}
@@ -3151,8 +3172,10 @@
 					this.deselect_node(obj, false, e);
 				}
 				else {
-					this.deselect_all(true);
-					this.select_node(obj, false, false, e);
+					if (!this.is_selected(obj) || this._data.core.selected.length !== 1) {
+						this.deselect_all(true);
+						this.select_node(obj, false, false, e);
+					}
 					this._data.core.last_clicked = this.get_node(obj);
 				}
 			}
@@ -3177,13 +3200,18 @@
 							}
 						}
 						else {
-							this.deselect_node(p[i], true, e);
+							if (!e.ctrlKey) {
+								this.deselect_node(p[i], true, e);
+							}
 						}
 					}
 					this.trigger('changed', { 'action' : 'select_node', 'node' : this.get_node(obj), 'selected' : this._data.core.selected, 'event' : e });
 				}
 				else {
 					if(!this.is_selected(obj)) {
+						if (e.ctrlKey) {
+							this._data.core.last_clicked = this.get_node(obj);
+						}
 						this.select_node(obj, false, false, e);
 					}
 					else {
@@ -3889,7 +3917,7 @@
 					break;
 			}
 			if(pos > par.children.length) { pos = par.children.length; }
-			if(!node.id) { node.id = true; }
+			if(node.id === undefined) { node.id = true; }
 			if(!this.check("create_node", node, par, pos)) {
 				this.settings.core.error.call(this, this._data.core.last_error);
 				return false;
@@ -4030,7 +4058,7 @@
 				lft = this.element[0].scrollLeft;
 				if(par.id === $.jstree.root) {
 					if (this._model.data[$.jstree.root].children[0]) {
-						this.get_node(this._model.data[$.jstree.root].children[0], true).children('.jstree-anchor').triger('focus');
+						this.get_node(this._model.data[$.jstree.root].children[0], true).children('.jstree-anchor').trigger('focus');
 					}
 				}
 				else {
@@ -4056,7 +4084,7 @@
 		check : function (chk, obj, par, pos, more) {
 			obj = obj && obj.id ? obj : this.get_node(obj);
 			par = par && par.id ? par : this.get_node(par);
-			var tmp = chk.match(/^move_node|copy_node|create_node$/i) ? par : obj,
+			var tmp = chk.match(/^(move_node|copy_node|create_node)$/i) ? par : obj,
 				chc = this.settings.core.check_callback;
 			if(chk === "move_node" || chk === "copy_node") {
 				if((!more || !more.is_multi) && (chk === "move_node" && $.inArray(obj.id, par.children) === pos)) {
@@ -4127,7 +4155,7 @@
 					return true;
 				}
 			}
-			obj = obj && obj.id ? obj : this.get_node(obj);
+			obj = obj && (obj.id !== undefined) ? obj : this.get_node(obj);
 
 			if(!obj || obj.id === $.jstree.root) { return false; }
 
@@ -4300,7 +4328,7 @@
 					return true;
 				}
 			}
-			obj = obj && obj.id ? obj : this.get_node(obj);
+			obj = obj && (obj.id !== undefined) ? obj : this.get_node(obj);
 			if(!obj || obj.id === $.jstree.root) { return false; }
 
 			old_par = (obj.parent || $.jstree.root).toString();
@@ -4404,7 +4432,7 @@
 			var tmp = [], o, t1, t2;
 			for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 				o = this.get_node(obj[t1]);
-				if(o && o.id && o.id !== $.jstree.root) { tmp.push(o); }
+				if(o && (o.id || o.id === 0) && o.id !== $.jstree.root) { tmp.push(o); }
 			}
 			if(!tmp.length) { return false; }
 			ccp_node = tmp;
@@ -4431,7 +4459,7 @@
 			var tmp = [], o, t1, t2;
 			for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 				o = this.get_node(obj[t1]);
-				if(o && o.id && o.id !== $.jstree.root) { tmp.push(o); }
+				if(o && (o.id !== undefined) && o.id !== $.jstree.root) { tmp.push(o); }
 			}
 			if(!tmp.length) { return false; }
 			ccp_node = tmp;
