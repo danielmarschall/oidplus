@@ -32,12 +32,12 @@ class OIDplusAuthPluginCrypt extends OIDplusAuthPlugin {
 
 	public function generate($password): OIDplusRAAuthInfo {
 		$hashalgo = PASSWORD_SHA512; // choose the best out of crypt()
-		$calc_authkey = password_hash_ex($password, $hashalgo);
+		$calc_authkey = vts_password_hash($password, $hashalgo);
 		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
 	public function available(&$reason): bool {
-		return function_exists('password_hash_ex');
+		return function_exists('vts_password_hash');
 	}
 
 }
