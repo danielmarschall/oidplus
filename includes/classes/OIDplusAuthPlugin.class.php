@@ -26,5 +26,6 @@ namespace ViaThinkSoft\OIDplus;
 abstract class OIDplusAuthPlugin extends OIDplusPlugin {
 	public abstract function verify(OIDplusRAAuthInfo $authKey, $check_password);
 	public abstract function generate($password): OIDplusRAAuthInfo;
-	public abstract function available(&$reason): bool;
+	public abstract function availableForHash(&$reason): bool;
+	public abstract function availableForVerify(&$reason): bool;
 }

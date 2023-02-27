@@ -85,13 +85,17 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 		}
 	}
 
-	public function available(&$reason): bool {
+	public function availableForHash(&$reason): bool {
 		if (!$this->supportsArgon2i() && !$this->supportsArgon2id()) {
 			$reason = _L('No fitting hash algorithm found');
 			return false;
 		} else {
 			return true;
 		}
+	}
+
+	public function availableForVerify(&$reason): bool {
+		return $this->availableForHash($reason);
 	}
 
 }

@@ -36,8 +36,12 @@ class OIDplusAuthPluginCrypt extends OIDplusAuthPlugin {
 		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
-	public function available(&$reason): bool {
+	public function availableForHash(&$reason): bool {
 		return function_exists('vts_password_hash');
+	}
+
+	public function availableForVerify(&$reason): bool {
+		return function_exists('vts_password_verify');
 	}
 
 }
