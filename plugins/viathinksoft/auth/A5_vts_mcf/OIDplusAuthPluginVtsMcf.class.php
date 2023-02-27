@@ -29,18 +29,10 @@ class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 		$authKey = $authInfo->getAuthKey();
 
 		if (str_starts_with($authKey, '$'.OID_MCF_VTS_V1.'$')) {
-			$data = crypt_modular_format_decode($authKey);
-			if ($data === false) throw new OIDplusException(_L('Invalid auth key'));
-			$algo = $data['params']['a'];
-			$bin_salt = $data['salt'];
-			$ver = '1';
-			$mode = $data['params']['m'];
-			$calc_authkey = vts_crypt($algo, $check_password, $bin_salt, $ver, $mode);
+			return vts_password_verify($check_password, $authKey);
 		} else {
 			return false;
 		}
-
-		return hash_equals($authKey, $calc_authkey);
 	}
 
 	public function generate($password): OIDplusRAAuthInfo {
@@ -49,9 +41,15 @@ class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 		$salt = random_bytes_ex(50);
 
 		if (function_exists('sha3_512_hmac')) {
-			$calc_authkey = vts_crypt($hashalgo, $password, $salt, '1', 'hmac');
+			$calc_authkey = vts_password_hash($password, PASSWORD_VTS_MCF1, array(
+				'algo' => $hashalgo,
+				'mode' => 'hmac'
+			));
 		} else if (function_exists('sha3_512')) {
-			$calc_authkey = vts_crypt($hashalgo, $password, $salt, '1', 'ps'); // 'ps' means "password + salt" concatenated
+			$calc_authkey = vts_password_hash($password, PASSWORD_VTS_MCF1, array(
+				'algo' => $hashalgo,
+				'mode' => 'ps' // 'ps' means Password+Salt concatenated
+			));
 		} else {
 			$calc_authkey = ''; // avoid PHPstan warning
 			assert(false);

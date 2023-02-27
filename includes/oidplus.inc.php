@@ -77,7 +77,6 @@ require_once __DIR__ . '/../vendor/danielmarschall/php_utils/svn_utils.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/aid_decoder.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/misc_functions.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/vts_crypt.inc.php';
-require_once __DIR__ . '/../vendor/danielmarschall/php_utils/password_hash_ex.inc.php';
 
 // Autoloader for all OIDplus base classes and plugins (*.class.php)
 
