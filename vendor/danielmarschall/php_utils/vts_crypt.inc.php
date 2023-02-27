@@ -59,27 +59,29 @@ Reference implementation in PHP:
 
 require_once __DIR__ . '/misc_functions.inc.php';
 
-define('OID_MCF_VTS_V1',    '1.3.6.1.4.1.37476.3.0.1.1'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 specifications(3) misc(0) modular-crypt-format(1) vts-crypt-v1(1) }
+define('OID_MCF_VTS_V1',     '1.3.6.1.4.1.37476.3.0.1.1'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 specifications(3) misc(0) modular-crypt-format(1) vts-crypt-v1(1) }
 
-define('PASSWORD_STD_DES',   'std_des');
-define('PASSWORD_EXT_DES',   'ext_des');
-define('PASSWORD_MD5',       'md5');
-define('PASSWORD_BLOWFISH',  'blowfish');
-define('PASSWORD_SHA256',    'sha256');
-define('PASSWORD_SHA512',    'sha512');
-define('PASSWORD_VTS_MCF1',  OID_MCF_VTS_V1);
-
-define('BASE64_RFC4648_ALPHABET', '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/');
-define('BASE64_CRYPT_ALPHABET',   './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
+// Valid algorithms for vts_password_hash():
+define('PASSWORD_STD_DES',   'std_des');       // Algorithm from crypt()
+define('PASSWORD_EXT_DES',   'ext_des');       // Algorithm from crypt()
+define('PASSWORD_MD5',       'md5');           // Algorithm from crypt()
+define('PASSWORD_BLOWFISH',  'blowfish');      // Algorithm from crypt()
+define('PASSWORD_SHA256',    'sha256');        // Algorithm from crypt()
+define('PASSWORD_SHA512',    'sha512');        // Algorithm from crypt()
+define('PASSWORD_VTS_MCF1',  OID_MCF_VTS_V1);  // Algorithm from ViaThinkSoft
+// Other valid values (already defined in PHP):
+// - PASSWORD_DEFAULT
+// - PASSWORD_BCRYPT
+// - PASSWORD_ARGON2I
+// - PASSWORD_ARGON2ID
 
 // --- Part 1: Modular Crypt Format encode/decode
 
-function crypt_modular_format($id, $bin_salt, $bin_hash, $params=null) {
+function crypt_modular_format_encode($id, $bin_salt, $bin_hash, $params=null) {
 	// $<id>[$<param>=<value>(,<param>=<value>)*][$<salt>[$<hash>]]
 	$out = '$'.$id;
 	if (!is_null($params)) {
 		$ary_params = array();
-		//ksort($params);
 		foreach ($params as $name => $value) {
 			$ary_params[] = "$name=$value";
 		}
@@ -128,7 +130,15 @@ function crypt_modular_format_decode($mcf) {
 
 // --- Part 2: ViaThinkSoft Modular Crypt Format 1.0
 
-function vts_crypt($algo, $str_password, $str_salt, $ver='1', $mode='ps') {
+function vts_crypt_version($hash) {
+	if (str_starts_with($hash, '$'.OID_MCF_VTS_V1.'$')) {
+		return '1';
+	} else {
+		return '0';
+	}
+}
+
+function vts_crypt_hash($algo, $str_password, $str_salt, $ver='1', $mode='ps') {
 	if ($ver == '1') {
 		if ($mode == 'sp') {
 			$payload = $str_salt.$str_password;
@@ -162,7 +172,32 @@ function vts_crypt($algo, $str_password, $str_salt, $ver='1', $mode='ps') {
 			throw new Exception("Invalid VTS crypt version 1 mode. Expect sp, ps, sps, or hmac.");
 		}
 		$bin_salt = $str_salt;
-		return crypt_modular_format(OID_MCF_VTS_V1, $bin_salt, $bin_hash, array('a'=>$algo,'m'=>$mode));
+		return crypt_modular_format_encode(OID_MCF_VTS_V1, $bin_salt, $bin_hash, array('a'=>$algo,'m'=>$mode));
+	} else {
+		throw new Exception("Invalid VTS crypt version, expect 1.");
+	}
+}
+
+function vts_crypt_verify($password, $hash): bool {
+	$ver = vts_crypt_version($hash);
+	if ($ver == '1') {
+		// Decode the MCF hash parameters
+		$data = crypt_modular_format_decode($hash);
+		if ($data === false) throw new Exception('Invalid auth key');
+		$id = $data['id'];
+		$bin_salt = $data['salt'];
+		$bin_hash = $data['hash'];
+		$params = $data['params'];
+		$algo = $params['a'];
+		$mode = $params['m'];
+
+		// Create a VTS MCF 1.0 hash based on the parameters of $hash and the password $password
+		$calc_authkey_1 = vts_crypt_hash($algo, $password, $bin_salt, $ver, $mode);
+
+		// We rewrite the MCF to make sure that they match (if params have the wrong order)
+		$calc_authkey_2 = crypt_modular_format_encode($id, $bin_salt, $bin_hash, $params);
+
+		return hash_equals($calc_authkey_1, $calc_authkey_2);
 	} else {
 		throw new Exception("Invalid VTS crypt version, expect 1.");
 	}
@@ -176,40 +211,22 @@ function vts_crypt($algo, $str_password, $str_salt, $ver='1', $mode='ps') {
  * @return bool true if password is valid
  */
 function vts_password_verify($password, $hash): bool {
-	if (str_starts_with($hash, '$'.PASSWORD_VTS_MCF1.'$')) {
-
-		// Decode the MCF hash parameters
-		$data = crypt_modular_format_decode($hash);
-		if ($data === false) throw new Exception('Invalid auth key');
-		$id = $data['id'];
-		$bin_salt = $data['salt'];
-		$bin_hash = $data['hash'];
-		$params = $data['params'];
-		$algo = $params['a'];
-		$mode = $params['m'];
-		$ver = '1';
-
-		// Create a VTS MCF 1.0 hash based on the parameters of $hash and the password $password
-		$calc_authkey_1 = vts_crypt($algo, $password, $bin_salt, $ver, $mode);
-
-		// We rewrite the MCF to make sure that they match (if params) have the wrong order
-		$calc_authkey_2 = crypt_modular_format($id, $bin_salt, $bin_hash, $params);
-
-		return hash_equals($calc_authkey_1, $calc_authkey_2);
-
+	if (vts_crypt_version($hash) != '0') {
+		// Hash created by vts_password_hash(), or vts_crypt_hash()
+		return vts_crypt_verify($password, $hash);
 	} else {
-		// password_hash() and crypt() hashes
+		// Hash created by vts_password_hash(), password_hash(), or crypt()
 		return password_verify($password, $hash);
 	}
 }
 
 /** This function extends password_hash() with the algorithms supported by crypt().
- * It also adds ViaThinkSoft Modular Crypt Format 1.0.
+ * It also adds vts_crypt_hash() which implements the ViaThinkSoft Modular Crypt Format 1.0.
  * The result can be verified using vts_password_verify().
  * @param string $password to be hashed
  * @param mixed $algo algorithm
  * @param array $options options for the hashing algorithm
- * @return string Crypt compatible password hash
+ * @return string Crypt style password hash
  */
 function vts_password_hash($password, $algo, $options=array()): string {
 	$crypt_salt = null;
@@ -241,30 +258,40 @@ function vts_password_hash($password, $algo, $options=array()): string {
 	}
 
 	if (!is_null($crypt_salt)) {
+		// Algorithms: PASSWORD_STD_DES
+		//             PASSWORD_EXT_DES
+		//             PASSWORD_MD5
+		//             PASSWORD_BLOWFISH
+		//             PASSWORD_SHA256
+		//             PASSWORD_SHA512
 		$out = crypt($password, $crypt_salt);
 		if (strlen($out) < 13) throw new Exception("crypt() failed");
 		return $out;
 	} else if ($algo === PASSWORD_VTS_MCF1) {
+		// Algorithms: PASSWORD_VTS_MCF1
 		$ver  = '1';
 		$algo = isset($options['algo']) ? $options['algo'] : 'sha3-512';
 		$mode = isset($options['mode']) ? $options['mode'] : 'ps';
 		$salt_len = isset($options['salt_length']) ? $options['salt_length'] : 50;
 		$salt = random_bytes_ex($salt_len, true, true);
-		return vts_crypt($algo, $password, $salt, $ver, $mode);
+		return vts_crypt_hash($algo, $password, $salt, $ver, $mode);
 	} else {
-		// $algo === PASSWORD_DEFAULT
-		// $algo === PASSWORD_BCRYPT
-		// $algo === PASSWORD_ARGON2I
-		// $algo === PASSWORD_ARGON2ID
+		// Algorithms: PASSWORD_DEFAULT
+		//             PASSWORD_BCRYPT
+		//             PASSWORD_ARGON2I
+		//             PASSWORD_ARGON2ID
 		return password_hash($password, $algo, $options);
 	}
 }
 
-// --- Part 4: Useful functions required by the above functions
+// --- Part 4: Useful functions required by the crypt-functions
+
+define('BASE64_RFC4648_ALPHABET', '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/');
+define('BASE64_CRYPT_ALPHABET',   './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
 
 function des_compat_salt($salt_len) {
 	if ($salt_len <= 0) return '';
-	$characters = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+	$characters = BASE64_CRYPT_ALPHABET;
 	$salt = '';
 	$bytes = random_bytes_ex($salt_len, true, true);
 	for ($i=0; $i<$salt_len; $i++) {
@@ -275,23 +302,23 @@ function des_compat_salt($salt_len) {
 
 function base64_int_encode($num) {
 	// https://stackoverflow.com/questions/15534982/which-iteration-rules-apply-on-crypt-using-crypt-ext-des
-	$alphabet_raw='./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-	$alphabet=str_split($alphabet_raw);
-	$arr=array();
-	$base=sizeof($alphabet);
-	while($num) {
-		$rem=$num % $base;
-		$num=(int)($num / $base);
-		$arr[]=$alphabet[$rem];
+	$alphabet_raw = BASE64_CRYPT_ALPHABET;
+	$alphabet = str_split($alphabet_raw);
+	$arr = array();
+	$base = sizeof($alphabet);
+	while ($num) {
+		$rem = $num % $base;
+		$num = (int)($num / $base);
+		$arr[] = $alphabet[$rem];
 	}
-	$string=implode($arr);
+	$string = implode($arr);
 	return str_pad($string, 4, '.', STR_PAD_RIGHT);
 }
 
 function crypt_radix64_encode($str) {
 	$x = $str;
 	$x = base64_encode($x);
-	$x = rtrim($x, '=');
+	$x = rtrim($x, '='); // remove padding
 	$x = strtr($x, BASE64_RFC4648_ALPHABET, BASE64_CRYPT_ALPHABET);
 	return $x;
 }
@@ -306,18 +333,22 @@ function crypt_radix64_decode($str) {
 // --- Part 5: Selftest
 
 /*
-assert(crypt_radix64_decode(crypt_radix64_encode('test123')) === 'test123');
+$rnd = random_bytes_ex(50, true, true);
+assert(crypt_radix64_decode(crypt_radix64_encode($rnd)) === $rnd);
 
-assert(vts_password_Verify('test123',vts_password_hash('test123', PASSWORD_STD_DES)));
-assert(vts_password_Verify('test123',vts_password_hash('test123', PASSWORD_EXT_DES)));
-assert(vts_password_Verify('test123',vts_password_hash('test123', PASSWORD_MD5)));
-assert(vts_password_Verify('test123',vts_password_hash('test123', PASSWORD_BLOWFISH)));
-assert(vts_password_Verify('test123',vts_password_hash('test123', PASSWORD_SHA256)));
-assert(vts_password_Verify('test123',vts_password_hash('test123', PASSWORD_SHA512)));
-assert(vts_password_Verify('test123',vts_password_hash('test123', PASSWORD_VTS_MCF1)));
-assert(vts_password_Verify('test123',vts_password_hash('test123', PASSWORD_DEFAULT)));
-assert(vts_password_Verify('test123',vts_password_hash('test123', PASSWORD_BCRYPT)));
-assert(vts_password_Verify('test123',vts_password_hash('test123', PASSWORD_ARGON2I)));
-assert(vts_password_Verify('test123',vts_password_hash('test123', PASSWORD_ARGON2ID)));
+$password = random_bytes_ex(20, false, true);
+assert(vts_password_verify($password,vts_password_hash($password, PASSWORD_STD_DES)));
+assert(vts_password_verify($password,vts_password_hash($password, PASSWORD_EXT_DES)));
+assert(vts_password_verify($password,vts_password_hash($password, PASSWORD_MD5)));
+assert(vts_password_verify($password,vts_password_hash($password, PASSWORD_BLOWFISH)));
+assert(vts_password_verify($password,vts_password_hash($password, PASSWORD_SHA256)));
+assert(vts_password_verify($password,vts_password_hash($password, PASSWORD_SHA512)));
+assert(vts_password_verify($password,vts_password_hash($password, PASSWORD_VTS_MCF1)));
+assert(vts_password_verify($password,vts_password_hash($password, PASSWORD_DEFAULT)));
+assert(vts_password_verify($password,vts_password_hash($password, PASSWORD_BCRYPT)));
+if (defined('PASSWORD_ARGON2I'))
+	assert(vts_password_verify($password,vts_password_hash($password, PASSWORD_ARGON2I)));
+if (defined('PASSWORD_ARGON2ID'))
+	assert(vts_password_verify($password,vts_password_hash($password, PASSWORD_ARGON2ID)));
+echo "OK, Password $password\n";
 */
-
