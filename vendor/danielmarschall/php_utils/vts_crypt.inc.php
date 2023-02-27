@@ -249,7 +249,7 @@ function vts_password_hash($password, $algo, $options=array()): string {
 		$algo = isset($options['algo']) ? $options['algo'] : 'sha3-512';
 		$mode = isset($options['mode']) ? $options['mode'] : 'ps';
 		$salt_len = isset($options['salt_length']) ? $options['salt_length'] : 50;
-		$salt = random_bytes_ex($salt_len);
+		$salt = random_bytes_ex($salt_len, true, true);
 		return vts_crypt($algo, $password, $salt, $ver, $mode);
 	} else {
 		// $algo === PASSWORD_DEFAULT
@@ -266,7 +266,7 @@ function des_compat_salt($salt_len) {
 	if ($salt_len <= 0) return '';
 	$characters = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 	$salt = '';
-	$bytes = random_bytes_ex($salt_len);
+	$bytes = random_bytes_ex($salt_len, true, true);
 	for ($i=0; $i<$salt_len; $i++) {
 		$salt .= $characters[ord($bytes[$i]) % strlen($characters)];
 	}

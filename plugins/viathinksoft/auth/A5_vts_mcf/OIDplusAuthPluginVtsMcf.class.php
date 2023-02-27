@@ -38,7 +38,7 @@ class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 	public function generate($password): OIDplusRAAuthInfo {
 		$hashalgo = 'sha3-512'; // we can safely use it, because we have a pure-PHP implementation shipped with OIDplus
 
-		$salt = random_bytes_ex(50);
+		$salt = random_bytes_ex(50, true, true);
 
 		if (function_exists('sha3_512_hmac')) {
 			$calc_authkey = vts_password_hash($password, PASSWORD_VTS_MCF1, array(
