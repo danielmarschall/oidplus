@@ -4070,6 +4070,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Not available on this system
+		]]></source>
+		<target><![CDATA[
+		Auf diesem System nicht verfügbar
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Not found
 		]]></source>
 		<target><![CDATA[
@@ -4586,6 +4594,22 @@
 		]]></source>
 		<target><![CDATA[
 		Nur Buchstaben und Nummern sind als Authentification-Token zugelassen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Only hashing, no verification
+		]]></source>
+		<target><![CDATA[
+		Nur Hashing; keine Prüfung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Only verification, no hashing
+		]]></source>
+		<target><![CDATA[
+		Nur Prüfung; kein Hashing
 		]]></target>
 	</message>
 	<message>
@@ -6774,10 +6798,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The auth plugin "%1" is not available on this system.
+		The auth plugin "%1" is not available for hashing on this system.
 		]]></source>
 		<target><![CDATA[
-		Das Authentizifierungs-Plugin "%1" ist auf diesem System nicht verfügbar.
+		Das Authentizifierungs-Plugin "%1" ist auf diesem System nicht für Hashing verfügbar.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The auth plugin "%1" is not available for password verification on this system.
+		]]></source>
+		<target><![CDATA[
+		Das Authentizifierungs-Plugin "%1" ist auf diesem System nicht für Verifikation verfügbar.
 		]]></target>
 	</message>
 	<message>
