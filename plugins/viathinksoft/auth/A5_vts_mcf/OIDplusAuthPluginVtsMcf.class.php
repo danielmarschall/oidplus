@@ -58,8 +58,12 @@ class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
-	public function available(&$reason): bool {
-		return function_exists('sha3_512_hmac') || function_exists('sha3_512');
+	public function availableForHash(&$reason): bool {
+		return function_exists('vts_password_hash') && (function_exists('sha3_512_hmac') || function_exists('sha3_512'));
+	}
+
+	public function availableForVerify(&$reason): bool {
+		return function_exists('vts_password_verify');
 	}
 
 }

@@ -350,7 +350,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	// Generate RA passwords
 
 	public static function raGeneratePassword($password): OIDplusRAAuthInfo {
-		$plugin = OIDplus::getDefaultRaAuthPlugin();
+		$plugin = OIDplus::getDefaultRaAuthPlugin(true);
 		return $plugin->generate(self::raPepperProcessing($password));
 	}
 

@@ -39,16 +39,17 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 	}
 
 	private function pluginTableLine(&$out, $plugin, $modifier=0, $na_reason='') {
+		$html_reason = empty($na_reason) ? '' : ' ('.htmlentities($na_reason).')';
 		$out['text'] .= '	<tr>';
 		if ($modifier == 0) {
 			// normal line
-			$out['text'] .= '		<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a></td>';
+			$out['text'] .= '		<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'>'.htmlentities(get_class($plugin)).'</a>'.$html_reason.'</td>';
 		} else if ($modifier == 1) {
 			// active
-			$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b> ('.htmlentities($na_reason).')</a></td>';
+			$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><b>'.htmlentities(get_class($plugin)).'</b>'.$html_reason.'</a></td>';
 		} else if ($modifier == 2) {
 			// not available with reason
-			$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><font color="gray">'.htmlentities(get_class($plugin)).'</font></a> <font color="gray">('.$na_reason.')</font></td>';
+			$out['text'] .= '<td><a '.OIDplus::gui()->link('oidplus:system_plugins$'.get_class($plugin)).'><font color="gray">'.htmlentities(get_class($plugin)).'</font></a><font color="gray">'.$html_reason.'</font></td>';
 		}
 		$out['text'] .= '		<td>' . htmlentities(empty($plugin->getManifest()->getName()) ? _L('n/a') : $plugin->getManifest()->getName()) . '</td>';
 		$out['text'] .= '		<td>' . htmlentities(empty($plugin->getManifest()->getVersion()) ? _L('n/a') : $plugin->getManifest()->getVersion()) . '</td>';
@@ -380,15 +381,43 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<table class="table table-bordered table-striped">';
 					$this->pluginTableHead($out);
 					foreach ($plugins as $plugin) {
-						$reason = '';
-						if ($plugin->available($reason)) {
-							$default = OIDplus::getDefaultRaAuthPlugin()->getManifest()->getOid() === $plugin->getManifest()->getOid();
-							$this->pluginTableLine($out, $plugin, $default?1:0, _L('default'));
-						} else if ($reason) {
-							$this->pluginTableLine($out, $plugin, 2, _L('not available: %1',htmlentities($reason)));
-						} else {
-							$this->pluginTableLine($out, $plugin, 2, _L('not available'));
+						$default = OIDplus::getDefaultRaAuthPlugin(true)->getManifest()->getOid() === $plugin->getManifest()->getOid();
+
+						$reason_hash = '';
+						$can_hash = $plugin->availableForHash($reason_hash);
+
+						$reason_verify = '';
+						$can_verify = $plugin->availableForHash($reason_verify);
+
+						if ($can_hash && !$can_verify) {
+							$note = _L('Only hashing, no verification');
+							if (!empty($reason_verify)) $note .= '. '.$reason_verify; /* @phpstan-ignore-line */
+							$modifier = $default ? 1 : 0;
 						}
+						else if (!$can_hash && $can_verify) {
+							$note = _L('Only verification, no hashing');
+							if (!empty($reason_hash)) $note .= '. '.$reason_hash; /* @phpstan-ignore-line */
+							$modifier = $default ? 1 : 0;
+						}
+						else if (!$can_hash && !$can_verify) {
+							$note = _L('Not available on this system');
+							$app1 = '';
+							$app2 = '';
+							if (!empty($reason_verify)) $app1 = $reason_verify; /* @phpstan-ignore-line */
+							if (!empty($reason_hash)) $app2 = $reason_hash; /* @phpstan-ignore-line */
+							if ($app1 != $app2) {
+								$note .= '. '.$app1.'. '.$app2;
+							} else {
+								$note .= '. '.$app1;
+							}
+							$modifier = 2;
+						}
+						else /*if ($can_hash && $can_verify)*/ {
+							$modifier = $default ? 1 : 0;
+							$note = '';
+						}
+
+						$this->pluginTableLine($out, $plugin, $modifier, htmlentities($note));
 					}
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
@@ -602,7 +631,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 			$txt = (empty($plugin->getManifest()->getName())) ? get_class($plugin) : $plugin->getManifest()->getName();
 
 			$reason = '';
-			if (!$plugin->available($reason)) $txt = '<font color="gray">'.$txt.'</font>';
+			if (!$plugin->availableForHash($reason) && !$plugin->availableForVerify($reason)) $txt = '<font color="gray">'.$txt.'</font>';
 
 			$auth_plugins[] = array(
 				'id' => 'oidplus:system_plugins$'.get_class($plugin),

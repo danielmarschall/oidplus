@@ -66,7 +66,7 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
-	public function available(&$reason): bool {
+	public function availableForHash(&$reason): bool {
 		if (version_compare(PHP_VERSION, '7.4.0') >= 0) {
 			$ok = in_array('2',  password_algos()) ||
 			      in_array('2a', password_algos()) ||
@@ -82,6 +82,10 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 
 		$reason = _L('No fitting hash algorithm found');
 		return false;
+	}
+
+	public function availableForVerify(&$reason): bool {
+		return $this->availableForHash($reason);
 	}
 
 }

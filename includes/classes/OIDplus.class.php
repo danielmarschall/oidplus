@@ -294,7 +294,7 @@ class OIDplus extends OIDplusBaseClass {
 					throw new OIDplusException(_L('Invalid auth plugin folder name. Do only enter a folder name, not an absolute or relative path'));
 				}
 
-				OIDplus::checkRaAuthPluginAvailable($value);
+				OIDplus::checkRaAuthPluginAvailable($value, true);
 			});
 		}
 
@@ -495,7 +495,7 @@ class OIDplus extends OIDplusBaseClass {
 		return null;
 	}
 
-	private static function checkRaAuthPluginAvailable($plugin_foldername) {
+	private static function checkRaAuthPluginAvailable($plugin_foldername, $must_hash) {
 			// if (!wildcard_is_dir(OIDplus::localpath().'plugins/'.'*'.'/auth/'.$plugin_foldername)) {
 			$plugin = OIDplus::getAuthPluginByFoldername($plugin_foldername);
 			if (is_null($plugin)) {
@@ -503,40 +503,48 @@ class OIDplus extends OIDplusBaseClass {
 			}
 
 			$reason = '';
-			if (!$plugin->available($reason)) {
-				throw new OIDplusException(trim(_L('The auth plugin "%1" is not available on this system.',$plugin_foldername).' '.$reason));
+			if (!$plugin->availableForVerify($reason)) {
+				throw new OIDplusException(trim(_L('The auth plugin "%1" is not available for password verification on this system.',$plugin_foldername).' '.$reason));
+			}
+			if ($must_hash && !$plugin->availableForHash($reason)) {
+				throw new OIDplusException(trim(_L('The auth plugin "%1" is not available for hashing on this system.',$plugin_foldername).' '.$reason));
 			}
 	}
 
-	public static function getDefaultRaAuthPlugin()/*: OIDplusAuthPlugin*/ {
+	public static function getDefaultRaAuthPlugin($must_hash)/*: OIDplusAuthPlugin*/ {
 		// 1. Priority: Use the auth plugin the user prefers
 		$def_plugin_foldername = OIDplus::config()->getValue('default_ra_auth_method');
 		if (trim($def_plugin_foldername) !== '') {
-			OIDplus::checkRaAuthPluginAvailable($def_plugin_foldername);
+			OIDplus::checkRaAuthPluginAvailable($def_plugin_foldername, $must_hash);
 			$plugin = OIDplus::getAuthPluginByFoldername($def_plugin_foldername);
 			return $plugin;
 		}
 
 		// 2. Priority: If empty (i.e. OIDplus may decide), choose the best ViaThinkSoft plugin that is supported on this system
 		$preferred_auth_plugins = array(
-			'A4_argon2',
-			'A3_bcrypt',
-			'A5_vts_mcf'
+			// Sorted by preference
+			'A4_argon2',  // usually Salted Argon2id
+			'A3_bcrypt',  // usually Salted BCrypt
+			'A5_vts_mcf', // usually SHA3-512-HMAC
+			'A6_crypt'    // usually Salted SHA512 with 5000 rounds
 		);
 		foreach ($preferred_auth_plugins as $plugin_foldername) {
 			$plugin = OIDplus::getAuthPluginByFoldername($plugin_foldername);
 			if (is_null($plugin)) continue;
 
 			$reason = '';
-			if (!$plugin->available($reason)) continue;
-
+			if (!$plugin->availableForHash($reason)) continue;
+			if ($must_hash && !$plugin->availableForVerify($reason)) continue;
 			return $plugin;
 		}
 
 		// 3. Priority: If nothing found, take the first found plugin
 		$plugins = OIDplus::getAuthPlugins();
-		if (count($plugins) > 0) {
-			return $plugins[0];
+		foreach ($plugins as $plugin) {
+			$reason = '';
+			if (!$plugin->availableForHash($reason)) continue;
+			if ($must_hash && !$plugin->availableForVerify($reason)) continue;
+			return $plugin;
 		}
 
 		// 4. Priority: We must deny the creation of the password because we have no auth plugin!
@@ -545,7 +553,7 @@ class OIDplus extends OIDplusBaseClass {
 
 	private static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
 		$reason = '';
-		if (OIDplus::baseConfig()->getValue('DEBUG') && $plugin->available($reason)) {
+		if (OIDplus::baseConfig()->getValue('DEBUG') && $plugin->availableForHash($reason) && $plugin->availableForVerify($reason)) {
 			$password = generateRandomString(25);
 
 			try {
