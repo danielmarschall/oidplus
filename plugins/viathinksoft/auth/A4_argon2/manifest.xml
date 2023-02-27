@@ -13,6 +13,7 @@
 		<version />
 		<descriptionHTML><![CDATA[
 			<p>Implements Argon2i and Argon2id.</p>
+			<p>New passwords are generated using Argon2id if PHP supports it, otherwise with Argon2i.</p>
 		]]></descriptionHTML>
 		<oid>1.3.6.1.4.1.37476.2.5.2.4.4.4</oid>
 	</info>
