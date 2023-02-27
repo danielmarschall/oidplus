@@ -13,6 +13,7 @@
 		<version />
 		<descriptionHTML><![CDATA[
 			<p>This plugin implements the <a href="https://github.com/danielmarschall/php_utils/blob/master/vts_crypt.inc.php" target="_blank">ViaThinkSoft Modular Crypt Format 1.0</a>.</p>
+			<p>New passwords are created using a SHA3-512 HMAC where the salt acts as the HMAC key.</p>
 		]]></descriptionHTML>
 		<oid>1.3.6.1.4.1.37476.2.5.2.4.4.5</oid>
 	</info>

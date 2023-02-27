@@ -1,5 +1,23 @@
 <?php
 
+/*
+ * password_hash_ex() function which integrates crypt() algorithms in password_hash().
+ * Revision 2023-02-26
+ * Copyright 2023 Daniel Marschall, ViaThinkSoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 define('PASSWORD_STD_DES',  'std_des');
 define('PASSWORD_EXT_DES',  'ext_des');
 define('PASSWORD_MD5',      'md5');
@@ -78,3 +96,16 @@ function password_hash_ex($password, $algo, $options=array()) {
 		return password_hash($password, $algo, $options);
 	}
 }
+
+/*
+assert(password_verify('test123',password_hash_ex('test123', PASSWORD_STD_DES)));
+assert(password_verify('test123',password_hash_ex('test123', PASSWORD_EXT_DES)));
+assert(password_verify('test123',password_hash_ex('test123', PASSWORD_MD5)));
+assert(password_verify('test123',password_hash_ex('test123', PASSWORD_BLOWFISH)));
+assert(password_verify('test123',password_hash_ex('test123', PASSWORD_SHA256)));
+assert(password_verify('test123',password_hash_ex('test123', PASSWORD_SHA512)));
+assert(password_verify('test123',password_hash_ex('test123', PASSWORD_DEFAULT)));
+assert(password_verify('test123',password_hash_ex('test123', PASSWORD_BCRYPT)));
+assert(password_verify('test123',password_hash_ex('test123', PASSWORD_ARGON2I)));
+assert(password_verify('test123',password_hash_ex('test123', PASSWORD_ARGON2ID)));
+*/
