@@ -326,7 +326,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	}
 
 	public function genCSRFToken() {
-		return bin2hex(random_bytes_ex(64));
+		return random_bytes_ex(64, false, false);
 	}
 
 	public function checkCSRF() {

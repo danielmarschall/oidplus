@@ -157,7 +157,7 @@ if (!function_exists('str_starts_with')) {
 	}
 }
 
-function random_bytes_ex($len) {
+function random_bytes_ex($len, $raw=true, $force_cryptographically_secure=true) {
 	if ($len === 0) return '';
 	assert($len > 0);
 
@@ -165,37 +165,46 @@ function random_bytes_ex($len) {
 		try {
 			$a = random_bytes($len);
 		} catch (Exception $e) { $a = null; }
-		if ($a) return $a;
+		if ($a) return $raw ? $a : bin2hex($a);
 	}
 
 	if (function_exists('openssl_random_pseudo_bytes')) {
 		try {
 			$a = openssl_random_pseudo_bytes($len);
 		} catch (Exception $e) { $a = null; }
-		if ($a) return $a;
+		if ($a) return $raw ? $a : bin2hex($a);
 	}
 
-	if (function_exists('mcrypt_create_iv')) {
-		if (defined('MCRYPT_DEV_URANDOM')) {
-			try {
-				$a = bin2hex(mcrypt_create_iv($len, MCRYPT_DEV_URANDOM));
-			} catch (Exception $e) { $a = null; }
-			if ($a) return $a;
-		}
+	if (function_exists('mcrypt_create_iv') && defined('MCRYPT_DEV_RANDOM')) {
+		try {
+			$a = bin2hex(mcrypt_create_iv($len, MCRYPT_DEV_RANDOM));
+		} catch (Exception $e) { $a = null; }
+		if ($a) return $raw ? $a : bin2hex($a);
+	}
 
-		if (defined('MCRYPT_DEV_RANDOM')) {
-			try {
-				$a = bin2hex(mcrypt_create_iv($len, MCRYPT_DEV_RANDOM));
-			} catch (Exception $e) { $a = null; }
-			if ($a) return $a;
+	if ($force_cryptographically_secure) {
+		$msg = 'Cannot find a fitting Cryptographically Secure Random Number Generator (CSRNG).';
+		if (version_compare(PHP_VERSION, '8.2.0') >= 0) {
+			throw new \Random\RandomException($msg);
+		} else {
+			throw new \Exception($msg);
 		}
+	}
 
-		if (defined('MCRYPT_RAND')) {
-			try {
-				$a = bin2hex(mcrypt_create_iv($len, MCRYPT_RAND));
-			} catch (Exception $e) { $a = null; }
-			if ($a) return $a;
-		}
+	if (function_exists('mcrypt_create_iv') && defined('MCRYPT_DEV_URANDOM')) {
+		// /dev/urandom uses the same entropy pool than /dev/random, but if there is not enough data
+		// then the security is lowered.
+		try {
+			$a = bin2hex(mcrypt_create_iv($len, MCRYPT_DEV_URANDOM));
+		} catch (Exception $e) { $a = null; }
+		if ($a) return $raw ? $a : bin2hex($a);
+	}
+
+	if (function_exists('mcrypt_create_iv') && defined('MCRYPT_RAND')) {
+		try {
+			$a = bin2hex(mcrypt_create_iv($len, MCRYPT_RAND));
+		} catch (Exception $e) { $a = null; }
+		if ($a) return $raw ? $a : bin2hex($a);
 	}
 
 	// Fallback to non-secure RNG
@@ -204,5 +213,5 @@ function random_bytes_ex($len) {
 		$a .= sha1(uniqid((string)mt_rand(), true));
 	}
 	$a = substr($a, 0, $len*2);
-	return hex2bin($a);
+	return $raw ? hex2bin($a) : $a;
 }
