@@ -1,5 +1,32 @@
 <?php
 
+/*
+ * Pure PHP implementation of SHA-3.
+ * Revision 2023-02-28
+ *
+ * The MIT License (MIT)
+ * Copyright (c) 2015 Bruno Bierbaumer
+ * Copyright (c) 2022-2023 Daniel Marschall
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 namespace bb\Sha3;
 
 final class Sha3
@@ -329,7 +356,8 @@ final class Sha3
     }
 
     public static function hash_pbkdf2($password, $salt, $iterations, $mdlen, $length=0, $binary=false) {
-    	// https://www.php.net/manual/en/function.hash-pbkdf2.php#118301
+        // https://www.php.net/manual/en/function.hash-pbkdf2.php#118301
+        // TODO: This is extremely slow! Can we improve it somehow?
 
         if (!is_numeric($iterations)) trigger_error(__FUNCTION__ . '(): expects parameter 3 to be long, ' . gettype($iterations) . ' given', E_USER_WARNING);
         if (!is_numeric($length)) trigger_error(__FUNCTION__ . '(): expects parameter 4 to be long, ' . gettype($length) . ' given', E_USER_WARNING);
@@ -350,7 +378,7 @@ final class Sha3
 
         if (!$binary) $output = bin2hex($output);
         return $length ? substr($output, 0, $length) : $output;
-	}
+    }
 
     public static function shake($in, $security_level, $outlen, $raw_output = false)
     {
