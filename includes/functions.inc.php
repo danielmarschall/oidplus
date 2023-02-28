@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -217,20 +217,50 @@ function extractHtmlContents($cont) {
 	return array($out_html, $out_js, $out_css);
 }
 
+function hash_supported_natively($algo) {
+	if (version_compare(PHP_VERSION, '5.1.2') >= 0) {
+		return in_array($algo, hash_algos());
+	} else {
+		return false;
+	}
+}
+
 function sha3_512($password, $raw_output=false) {
-	if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
+	if (hash_supported_natively('sha3-512')) {
 		return hash('sha3-512', $password, $raw_output);
 	} else {
 		return \bb\Sha3\Sha3::hash($password, 512, $raw_output);
 	}
 }
 
+function hash_hmac_supported_natively($algo): bool {
+	if (version_compare(PHP_VERSION, '7.2.0') >= 0) {
+		return in_array($algo, hash_hmac_algos());
+	} else if (version_compare(PHP_VERSION, '5.1.2') >= 0) {
+		return in_array($algo, hash_algos());
+	} else {
+		return false;
+	}
+}
+
 function sha3_512_hmac($message, $key, $raw_output=false) {
 	// RFC 2104 HMAC
-	if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
+	if (hash_hmac_supported_natively('sha3-512')) {
 		return hash_hmac('sha3-512', $message, $key, $raw_output);
 	} else {
 		return \bb\Sha3\Sha3::hash_hmac($message, $key, 512, $raw_output);
+	}
+}
+
+function hash_pbkdf2_supported_natively($algo) {
+	return hash_supported_natively($algo);
+}
+
+function sha3_512_pbkdf2($password, $salt, $iterations, $length=0, $binary=false) {
+	if (hash_pbkdf2_supported_natively('sha3-512')) {
+		return hash_pbkdf2('sha3-512', $password, $salt, $iterations, $length, $binary);
+	} else {
+		return \bb\Sha3\Sha3::hash_pbkdf2($password, $salt, $iterations, 512, $length, $binary);
 	}
 }
 
