@@ -328,6 +328,30 @@ final class Sha3
         return self::hash($k_opad . self::hash($k_ipad . $message, $mdlen, true), $mdlen, $raw_output);
     }
 
+    public static function hash_pbkdf2($password, $salt, $iterations, $mdlen, $length=0, $binary=false) {
+    	// https://www.php.net/manual/en/function.hash-pbkdf2.php#118301
+
+        if (!is_numeric($iterations)) trigger_error(__FUNCTION__ . '(): expects parameter 3 to be long, ' . gettype($iterations) . ' given', E_USER_WARNING);
+        if (!is_numeric($length)) trigger_error(__FUNCTION__ . '(): expects parameter 4 to be long, ' . gettype($length) . ' given', E_USER_WARNING);
+        if ($iterations <= 0) trigger_error(__FUNCTION__ . '(): Iterations must be a positive integer: ' . $iterations, E_USER_WARNING);
+        if ($length < 0) trigger_error(__FUNCTION__ . '(): Length must be greater than or equal to 0: ' . $length, E_USER_WARNING);
+
+        $output = '';
+        $block_count = $length ? ceil($length / strlen(self::hash('', $mdlen, $binary))) : 1;
+        for ($i = 1; $i <= $block_count; $i++)
+        {
+            $last = $xorsum = self::hash_hmac($salt . pack('N', $i), $password, $mdlen, true);
+            for ($j = 1; $j < $iterations; $j++)
+            {
+                $xorsum ^= ($last = self::hash_hmac($last, $password, $mdlen, true));
+            }
+            $output .= $xorsum;
+        }
+
+        if (!$binary) $output = bin2hex($output);
+        return $length ? substr($output, 0, $length) : $output;
+	}
+
     public static function shake($in, $security_level, $outlen, $raw_output = false)
     {
         if( ! in_array($security_level, [128, 256], true)) {
