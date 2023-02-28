@@ -233,12 +233,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php-sha3.git",
-                "reference": "130de4c248b0d7b054da980ddc5fc9bcf05b0715"
+                "reference": "5605bd539677494558470234266cb5885343e72b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php-sha3/zipball/130de4c248b0d7b054da980ddc5fc9bcf05b0715",
-                "reference": "130de4c248b0d7b054da980ddc5fc9bcf05b0715",
+                "url": "https://api.github.com/repos/danielmarschall/php-sha3/zipball/5605bd539677494558470234266cb5885343e72b",
+                "reference": "5605bd539677494558470234266cb5885343e72b",
                 "shasum": ""
             },
             "require": {
@@ -249,7 +249,7 @@
                 "phpstan/phpstan": "^1.8",
                 "phpunit/phpunit": "^4.8"
             },
-            "time": "2022-11-05T00:21:36+00:00",
+            "time": "2023-02-28T22:45:45+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -288,18 +288,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "3bb2754808a886be321f639ffed0283abb8b42fa"
+                "reference": "11ea6163db866fcda8bc0a4275626739a1a0d50d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/3bb2754808a886be321f639ffed0283abb8b42fa",
-                "reference": "3bb2754808a886be321f639ffed0283abb8b42fa",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/11ea6163db866fcda8bc0a4275626739a1a0d50d",
+                "reference": "11ea6163db866fcda8bc0a4275626739a1a0d50d",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2023-02-27T11:58:05+00:00",
+            "time": "2023-02-28T22:48:27+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

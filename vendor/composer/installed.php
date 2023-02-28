@@ -62,7 +62,7 @@
         'danielmarschall/php-sha3' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '130de4c248b0d7b054da980ddc5fc9bcf05b0715',
+            'reference' => '5605bd539677494558470234266cb5885343e72b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php-sha3',
             'aliases' => array(
@@ -73,7 +73,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3bb2754808a886be321f639ffed0283abb8b42fa',
+            'reference' => '11ea6163db866fcda8bc0a4275626739a1a0d50d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(
