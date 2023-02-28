@@ -217,29 +217,11 @@ function extractHtmlContents($cont) {
 	return array($out_html, $out_js, $out_css);
 }
 
-function hash_supported_natively($algo) {
-	if (version_compare(PHP_VERSION, '5.1.2') >= 0) {
-		return in_array($algo, hash_algos());
-	} else {
-		return false;
-	}
-}
-
 function sha3_512($password, $raw_output=false) {
 	if (hash_supported_natively('sha3-512')) {
 		return hash('sha3-512', $password, $raw_output);
 	} else {
 		return \bb\Sha3\Sha3::hash($password, 512, $raw_output);
-	}
-}
-
-function hash_hmac_supported_natively($algo): bool {
-	if (version_compare(PHP_VERSION, '7.2.0') >= 0) {
-		return in_array($algo, hash_hmac_algos());
-	} else if (version_compare(PHP_VERSION, '5.1.2') >= 0) {
-		return in_array($algo, hash_algos());
-	} else {
-		return false;
 	}
 }
 
@@ -250,10 +232,6 @@ function sha3_512_hmac($message, $key, $raw_output=false) {
 	} else {
 		return \bb\Sha3\Sha3::hash_hmac($message, $key, 512, $raw_output);
 	}
-}
-
-function hash_pbkdf2_supported_natively($algo) {
-	return hash_supported_natively($algo);
 }
 
 function sha3_512_pbkdf2($password, $salt, $iterations, $length=0, $binary=false) {

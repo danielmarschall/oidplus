@@ -143,8 +143,7 @@ function vts_crypt_hash($algo, $str_password, $str_salt, $ver='1', $mode='ps', $
 	if ($ver == '1') {
 		if ($mode == 'sp') {
 			$payload = $str_salt.$str_password;
-			$algo_supported_natively = in_array($algo, hash_algos());
-			if (!$algo_supported_natively && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash')) {
+			if (!hash_supported_natively($algo) && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash')) {
 				$bits = explode('-',$algo)[1];
 				$bin_hash = \bb\Sha3\Sha3::hash($payload, $bits, true);
 			} else {
@@ -152,8 +151,7 @@ function vts_crypt_hash($algo, $str_password, $str_salt, $ver='1', $mode='ps', $
 			}
 		} else if ($mode == 'ps') {
 			$payload = $str_password.$str_salt;
-			$algo_supported_natively = in_array($algo, hash_algos());
-			if (!$algo_supported_natively && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash')) {
+			if (!hash_supported_natively($algo) && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash')) {
 				$bits = explode('-',$algo)[1];
 				$bin_hash = \bb\Sha3\Sha3::hash($payload, $bits, true);
 			} else {
@@ -161,28 +159,21 @@ function vts_crypt_hash($algo, $str_password, $str_salt, $ver='1', $mode='ps', $
 			}
 		} else if ($mode == 'sps') {
 			$payload = $str_salt.$str_password.$str_salt;
-			$algo_supported_natively = in_array($algo, hash_algos());
-			if (!$algo_supported_natively && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash')) {
+			if (!hash_supported_natively($algo) && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash')) {
 				$bits = explode('-',$algo)[1];
 				$bin_hash = \bb\Sha3\Sha3::hash($payload, $bits, true);
 			} else {
 				$bin_hash = hash($algo, $payload, true);
 			}
 		} else if ($mode == 'hmac') {
-			if (version_compare(PHP_VERSION, '7.2.0') >= 0) {
-				$algo_supported_natively = in_array($algo, hash_hmac_algos());
-			} else {
-				$algo_supported_natively = in_array($algo, hash_algos());
-			}
-			if (!$algo_supported_natively && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash_hmac')) {
+			if (!hash_hmac_supported_natively($algo) && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash_hmac')) {
 				$bits = explode('-',$algo)[1];
 				$bin_hash = \bb\Sha3\Sha3::hash_hmac($str_password, $str_salt, $bits, true);
 			} else {
 				$bin_hash = hash_hmac($algo, $str_password, $str_salt, true);
 			}
 		} else if ($mode == 'pbkdf2') {
-			$algo_supported_natively = in_array($algo, hash_algos());
-			if (!$algo_supported_natively && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash_pbkdf2')) {
+			if (!hash_pbkdf2_supported_natively($algo) && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash_pbkdf2')) {
 				if ($iterations == 0) {
 					$iterations = 2000; // because userland implementations are much slower, we must choose a small value...
 				}
@@ -385,6 +376,28 @@ function crypt_radix64_decode($str) {
 	$x = strtr($x, BASE64_CRYPT_ALPHABET, BASE64_RFC4648_ALPHABET);
 	$x = base64_decode($x);
 	return $x;
+}
+
+function hash_supported_natively($algo) {
+	if (version_compare(PHP_VERSION, '5.1.2') >= 0) {
+		return in_array($algo, hash_algos());
+	} else {
+		return false;
+	}
+}
+
+function hash_hmac_supported_natively($algo): bool {
+	if (version_compare(PHP_VERSION, '7.2.0') >= 0) {
+		return in_array($algo, hash_hmac_algos());
+	} else if (version_compare(PHP_VERSION, '5.1.2') >= 0) {
+		return in_array($algo, hash_algos());
+	} else {
+		return false;
+	}
+}
+
+function hash_pbkdf2_supported_natively($algo) {
+	return hash_supported_natively($algo);
 }
 
 // --- Part 5: Selftest
