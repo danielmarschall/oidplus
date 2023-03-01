@@ -210,21 +210,18 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		}
 
 		foreach ($passwordDataArray as $passwordData) {
-			if (strpos($passwordData, '$') !== false) {
-				if ($passwordData[0] == '$') {
-					// Version 3: BCrypt
-					if (password_verify($password, $passwordData)) return true;
-				} else {
-					// Version 2: SHA3-512 with salt
-					list($s_salt, $hash) = explode('$', $passwordData, 2);
-				}
+			if (str_starts_with($passwordData, '$')) {
+				// Version 3: BCrypt (or any other crypt)
+				$ok = password_verify($password, $passwordData);
+			} else if (strpos($passwordData, '$') !== false) {
+				// Version 2: SHA3-512 with salt
+				list($salt, $hash) = explode('$', $passwordData, 2);
+				$ok = hash_equals(sha3_512($salt.$password, true), base64_decode($hash));
 			} else {
 				// Version 1: SHA3-512 without salt
-				$s_salt = '';
-				$hash = $passwordData;
+				$ok = hash_equals(sha3_512($password, true), base64_decode($passwordData));
 			}
-
-			if (hash_equals(sha3_512($s_salt.$password, true), base64_decode($hash))) return true;
+			if ($ok) return true;
 		}
 
 		return false;
@@ -359,4 +356,3 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	/* Nothing here; the admin password will be generated in setup_base.js , purely in the web-browser */
 
 }
-

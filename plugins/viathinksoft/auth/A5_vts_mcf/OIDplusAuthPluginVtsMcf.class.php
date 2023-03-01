@@ -36,30 +36,15 @@ class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 	}
 
 	public function generate($password): OIDplusRAAuthInfo {
-		$hashalgo = 'sha3-512'; // we can safely use it, because we have a pure-PHP implementation shipped with OIDplus
-
-		$salt = random_bytes_ex(50, true, true);
-
-		if (function_exists('sha3_512_hmac')) {
-			$calc_authkey = vts_password_hash($password, PASSWORD_VTS_MCF1, array(
-				'algo' => $hashalgo,
-				'mode' => 'hmac'
-			));
-		} else if (function_exists('sha3_512')) {
-			$calc_authkey = vts_password_hash($password, PASSWORD_VTS_MCF1, array(
-				'algo' => $hashalgo,
-				'mode' => 'ps' // 'ps' means Password+Salt concatenated
-			));
-		} else {
-			$calc_authkey = ''; // avoid PHPstan warning
-			assert(false);
-		}
-
+		$calc_authkey = vts_password_hash($password, PASSWORD_VTS_MCF1, array(
+			'algo' => 'sha3-512', // we can safely use it, because we have a pure-PHP implementation shipped with OIDplus
+			'mode' => 'hmac'
+		));
 		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
 	public function availableForHash(&$reason): bool {
-		return function_exists('vts_password_hash') && (function_exists('sha3_512_hmac') || function_exists('sha3_512'));
+		return function_exists('vts_password_hash');
 	}
 
 	public function availableForVerify(&$reason): bool {
