@@ -206,14 +206,14 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		if (!is_array($cfgData)) {
 			$passwordDataArray = array($cfgData);
 		} else {
-			$passwordDataArray = $cfgData;
+			$passwordDataArray = $cfgData; // Multiple Administrator passwords
 		}
 
 		foreach ($passwordDataArray as $passwordData) {
 			if (strpos($passwordData, '$') !== false) {
 				if ($passwordData[0] == '$') {
 					// Version 3: BCrypt
-					return password_verify($password, $passwordData);
+					if (password_verify($password, $passwordData)) return true;
 				} else {
 					// Version 2: SHA3-512 with salt
 					list($s_salt, $hash) = explode('$', $passwordData, 2);
