@@ -45,7 +45,15 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				$remember_me = isset($params['remember_me']) && ($params['remember_me']);
 				OIDplus::authUtils()->raLoginEx($email, $remember_me, 'Regular login');
 
-				OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
+				$authInfo = OIDplus::authUtils()->raGeneratePassword($params['password']);
+
+				// Rehash, so that we always have the latest default auth plugin and params
+				// Note that we do it every time (unlike PHPs recommended password_needs_rehash),
+				// because we are not sure which auth plugin created the hash (there might be multiple
+				// auth plugins that can verify this hash). So we just rehash on every login!
+				$new_authkey = $authInfo->getAuthKey();
+
+				OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate().", authkey = ? where email = ?", array($new_authkey, $email));
 
 				return array("status" => 0);
 			} else {
