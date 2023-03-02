@@ -528,6 +528,13 @@ function hotfix_dir($rev, $dir) {
 		$cont = str_replace('$this->recanonizeObjects();', '', $cont);
 		file_put_contents($file, $cont);
 	}
+	if ($rev == 1108) {
+		// Fix runtime error that lead to a stalled update!
+		$file = $dir.'/vendor/danielmarschall/php_utils/vts_crypt.inc.php';
+		$cont = file_get_contents($file);
+		$cont = str_replace('echo "OK, password $password\n";', '', $cont);
+		file_put_contents($file, $cont);
+	}
 }
 
 function split_equal_length($data, $width=65) {

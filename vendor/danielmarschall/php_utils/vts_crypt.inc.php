@@ -315,7 +315,7 @@ function vts_password_get_info($hash) {
 
 		if ($options['mode'] == PASSWORD_VTS_MCF1_MODE_PBKDF2) {
 			if (!isset($mcf['params']['i'])) throw new Exception('Param "i" (iterations) missing');
-			$options['iterations'] = $mcf['params']['i'];
+			$options['iterations'] = (int)$mcf['params']['i'];
 		}
 
 		return array(
@@ -338,7 +338,7 @@ function vts_password_get_info($hash) {
 			"algo" => PASSWORD_EXT_DES,
 			"algoName" => "ext-des",
 			"options" => array(
-				"iterations" => base64_int_decode(substr($hash,1,4))
+				"iterations" => (int)base64_int_decode(substr($hash,1,4))
 			)
 		);
 	} else if (str_starts_with($hash, '$1$')) {
@@ -357,7 +357,7 @@ function vts_password_get_info($hash) {
 			"algo" => PASSWORD_BLOWFISH,
 			"algoName" => "blowfish",
 			"options" => array(
-				"cost" => explode('$',$hash)[2]
+				"cost" => (int)ltrim(explode('$',$hash)[2],'0')
 			)
 		);
 	} else if (str_starts_with($hash, '$5$')) {
@@ -366,7 +366,7 @@ function vts_password_get_info($hash) {
 			"algo" => PASSWORD_SHA256,
 			"algoName" => "sha256",
 			"options" => array(
-				'rounds' => str_replace('rounds=','',explode('$',$hash)[2])
+				'rounds' => (int)str_replace('rounds=','',explode('$',$hash)[2])
 			)
 		);
 	} else if (str_starts_with($hash, '$6$')) {
@@ -375,7 +375,7 @@ function vts_password_get_info($hash) {
 			"algo" => PASSWORD_SHA512,
 			"algoName" => "sha512",
 			"options" => array(
-				'rounds' => str_replace('rounds=','',explode('$',$hash)[2])
+				'rounds' => (int)str_replace('rounds=','',explode('$',$hash)[2])
 			)
 		);
 	} else {
@@ -627,6 +627,7 @@ function vts_password_fill_default_options($algo, $options) {
 
 // --- Part 5: Selftest
 
+/*
 for ($i=0; $i<9999; $i++) {
 	assert($i===base64_int_decode(base64_int_encode($i,4)));
 }
@@ -681,3 +682,4 @@ assert(true===vts_password_needs_rehash($dummy,PASSWORD_VTS_MCF1,array(
 )));
 
 echo "OK, password $password\n";
+*/
