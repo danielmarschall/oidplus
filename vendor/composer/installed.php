@@ -73,7 +73,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '11ea6163db866fcda8bc0a4275626739a1a0d50d',
+            'reference' => '8dd83ee571da1002bc606b27d9e4ba0e3a1e54c5',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(
@@ -178,7 +178,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '3b6030d8875a93b9e7d1592e270436fc4ea91295',
+            'reference' => '6298d1cd55c3ffa44533bd41906caec246b60440',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),

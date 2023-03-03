@@ -478,7 +478,7 @@ function vts_password_verify($password, $hash): bool {
 
 function hash_ex($algo, $data, $binary=false, $options=array()) {
 	if (!hash_supported_natively($algo) && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash')) {
-		$bits = explode('-',$algo)[1];
+		$bits = (int)explode('-',$algo)[1];
 		$hash = \bb\Sha3\Sha3::hash($data, $bits, $binary);
 	} else {
 		$hash = hash($algo, $data, $binary);
@@ -488,7 +488,7 @@ function hash_ex($algo, $data, $binary=false, $options=array()) {
 
 function hash_hmac_ex($algo, $data, $key, $binary=false) {
 	if (!hash_hmac_supported_natively($algo) && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash_hmac')) {
-		$bits = explode('-',$algo)[1];
+		$bits = (int)explode('-',$algo)[1];
 		$hash = \bb\Sha3\Sha3::hash_hmac($data, $key, $bits, $binary);
 	} else {
 		$hash = hash_hmac($algo, $data, $key, $binary);
@@ -501,7 +501,7 @@ function hash_pbkdf2_ex($algo, $password, $salt, &$iterations=0, $length=0, $bin
 		if ($iterations == 0/*default*/) {
 			$iterations = _vts_password_default_iterations($algo, true);
 		}
-		$bits = explode('-',$algo)[1];
+		$bits = (int)explode('-',$algo)[1];
 		$hash = \bb\Sha3\Sha3::hash_pbkdf2($password, $salt, $iterations, $bits, $length, $binary);
 	} else {
 		if ($iterations == 0/*default*/) {
