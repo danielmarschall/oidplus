@@ -351,9 +351,15 @@ class OIDplus extends OIDplusBaseClass {
 
 	// --- SQL slang plugin
 
+	/**
+	* @return void
+	*/
 	private static function registerSqlSlangPlugin(OIDplusSqlSlangPlugin $plugin) {
 		$name = $plugin::id();
-		if ($name === '') return false;
+
+		if ($name === '') {
+			throw new OIDplusException(_L('Plugin %1 cannot be registered because it does not return a valid ID', $plugin->getPluginDirectory()));
+		}
 
 		if (isset(self::$sqlSlangPlugins[$name])) {
 			$plugintype_hf = _L('SQL slang');
@@ -361,8 +367,6 @@ class OIDplus extends OIDplusBaseClass {
 		}
 
 		self::$sqlSlangPlugins[$name] = $plugin;
-
-		return true;
 	}
 
 	public static function getSqlSlangPlugins() {
@@ -379,9 +383,15 @@ class OIDplus extends OIDplusBaseClass {
 
 	// --- Database plugin
 
+	/**
+	* @return void
+	*/
 	private static function registerDatabasePlugin(OIDplusDatabasePlugin $plugin) {
 		$name = $plugin::id();
-		if ($name === '') return false;
+
+		if ($name === '') {
+			throw new OIDplusException(_L('Plugin %1 cannot be registered because it does not return a valid ID', $plugin->getPluginDirectory()));
+		}
 
 		if (isset(self::$dbPlugins[$name])) {
 			$plugintype_hf = _L('Database');
@@ -389,8 +399,6 @@ class OIDplus extends OIDplusBaseClass {
 		}
 
 		self::$dbPlugins[$name] = $plugin;
-
-		return true;
 	}
 
 	public static function getDatabasePlugins() {
@@ -430,9 +438,15 @@ class OIDplus extends OIDplusBaseClass {
 
 	// --- CAPTCHA plugin
 
+	/**
+	* @return void
+	*/
 	private static function registerCaptchaPlugin(OIDplusCaptchaPlugin $plugin) {
 		$name = $plugin::id();
-		if ($name === '') return false;
+
+		if ($name === '') {
+			throw new OIDplusException(_L('Plugin %1 cannot be registered because it does not return a valid ID', $plugin->getPluginDirectory()));
+		}
 
 		if (isset(self::$captchaPlugins[$name])) {
 			$plugintype_hf = _L('CAPTCHA');
@@ -440,8 +454,6 @@ class OIDplus extends OIDplusBaseClass {
 		}
 
 		self::$captchaPlugins[$name] = $plugin;
-
-		return true;
 	}
 
 	public static function getCaptchaPlugins() {
@@ -473,10 +485,11 @@ class OIDplus extends OIDplusBaseClass {
 
 	// --- Page plugin
 
+	/**
+	* @return void
+	*/
 	private static function registerPagePlugin(OIDplusPagePlugin $plugin) {
 		self::$pagePlugins[] = $plugin;
-
-		return true;
 	}
 
 	public static function getPagePlugins() {
@@ -551,6 +564,9 @@ class OIDplus extends OIDplusBaseClass {
 		throw new OIDplusException(_L('Could not find a fitting auth plugin!'));
 	}
 
+	/**
+	* @return void
+	*/
 	private static function registerAuthPlugin(OIDplusAuthPlugin $plugin) {
 		$reason = '';
 		if (OIDplus::baseConfig()->getValue('DEBUG') && $plugin->availableForHash($reason) && $plugin->availableForVerify($reason)) {
@@ -577,7 +593,6 @@ class OIDplus extends OIDplusBaseClass {
 		}
 
 		self::$authPlugins[] = $plugin;
-		return true;
 	}
 
 	public static function getAuthPlugins() {
@@ -586,9 +601,11 @@ class OIDplus extends OIDplusBaseClass {
 
 	// --- Language plugin
 
+	/**
+	* @return void
+	*/
 	private static function registerLanguagePlugin(OIDplusLanguagePlugin $plugin) {
 		self::$languagePlugins[] = $plugin;
-		return true;
 	}
 
 	public static function getLanguagePlugins() {
@@ -597,9 +614,11 @@ class OIDplus extends OIDplusBaseClass {
 
 	// --- Design plugin
 
+	/**
+	* @return void
+	*/
 	private static function registerDesignPlugin(OIDplusDesignPlugin $plugin) {
 		self::$designPlugins[] = $plugin;
-		return true;
 	}
 
 	public static function getDesignPlugins() {
@@ -618,9 +637,11 @@ class OIDplus extends OIDplusBaseClass {
 
 	// --- Logger plugin
 
+	/**
+	* @return void
+	*/
 	private static function registerLoggerPlugin(OIDplusLoggerPlugin $plugin) {
 		self::$loggerPlugins[] = $plugin;
-		return true;
 	}
 
 	public static function getLoggerPlugins() {
@@ -629,15 +650,19 @@ class OIDplus extends OIDplusBaseClass {
 
 	// --- Object type plugin
 
+	/**
+	* @return void
+	*/
 	private static function registerObjectTypePlugin(OIDplusObjectTypePlugin $plugin) {
 		self::$objectTypePlugins[] = $plugin;
 
 		$ot = $plugin::getObjectTypeClassName();
 		self::registerObjectType($ot);
-
-		return true;
 	}
 
+	/**
+	* @return void
+	*/
 	private static function registerObjectType($ot) {
 		$ns = $ot::ns();
 		if (empty($ns)) throw new OIDplusException(_L('ObjectType plugin %1 is erroneous: Namespace must not be empty',$ot));
@@ -692,10 +717,8 @@ class OIDplus extends OIDplusBaseClass {
 				$idx_a = array_search($a::ns(), $enabled_ary);
 				$idx_b = array_search($b::ns(), $enabled_ary);
 
-			        if ($idx_a == $idx_b) {
-			            return 0;
-			        }
-			        return ($idx_a > $idx_b) ? +1 : -1;
+				if ($idx_a == $idx_b) return 0;
+				return ($idx_a > $idx_b) ? +1 : -1;
 			});
 		} else {
 			self::$disabledObjectTypes[] = $ot;
@@ -1194,7 +1217,7 @@ class OIDplus extends OIDplusBaseClass {
 
 					// --- Navigation directives ---
 					"frame-ancestors" => array(
-					       "'none'"
+						"'none'"
 					),
 				)
 			);

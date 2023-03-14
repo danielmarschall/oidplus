@@ -5374,6 +5374,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Plugin %1 cannot be registered because it does not return a valid ID
+		]]></source>
+		<target><![CDATA[
+		Plugin %1 kann nicht registriert werden, da es keine gültige ID ausgibt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Plugin %1 not found.
 		]]></source>
 		<target><![CDATA[
