@@ -132,7 +132,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				throw new OIDplusException(_L('Invalid auth key'));
 			}
 
-			if ((OIDplus::config()->getValue('max_ra_email_change_time') > 0) && (time()-$timestamp > OIDplus::config()->maxEmailChangeTime())) {
+			if ((OIDplus::config()->getValue('max_ra_email_change_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_email_change_time'))) {
 				throw new OIDplusException(_L('Activation link expired!'));
 			}
 

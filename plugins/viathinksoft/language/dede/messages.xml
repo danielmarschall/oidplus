@@ -2270,7 +2270,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Field %1 is too invalid
+		Field %1 is invalid
 		]]></source>
 		<target><![CDATA[
 		Feld %1 ist ungültig
