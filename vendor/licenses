@@ -26,7 +26,7 @@ matthiasmullie/minify            1.3.70              MIT
 matthiasmullie/path-converter    1.1.3               MIT                   
 paragonie/constant_time_encoding v2.6.3              MIT                   
 paragonie/random_compat          v9.99.100           MIT                   
-phpseclib/phpseclib              3.0.x-dev 6298d1c   MIT                   
+phpseclib/phpseclib              3.0.x-dev abbc1ab   MIT                   
 script47/bs5-utils               master master       MIT                   
 spamspan/spamspan                master              GPL-2.0-only          
 symfony/polyfill-mbstring        v1.19.0             MIT                   

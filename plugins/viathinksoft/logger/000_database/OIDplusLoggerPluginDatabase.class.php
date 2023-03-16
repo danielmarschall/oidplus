@@ -34,7 +34,7 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
 		OIDplus::dbIsolated()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event));
 		$log_id = OIDplus::dbIsolated()->insert_id();
-		if ($log_id === false) {
+		if ($log_id == 0) {
 			$res = OIDplus::dbIsolated()->query("select max(id) as last_id from ###log");
 			if (!$res->any()) throw new OIDplusException(_L('Could not log event'));
 			$row = $res->fetch_array();
