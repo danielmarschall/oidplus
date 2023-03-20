@@ -111,7 +111,7 @@ class OIDplusGui extends OIDplusBaseClass {
 			if (is_dir(__DIR__ . '/../../setup')) {
 				$msg .= ' '._L('or run <a href="%1">setup</a> again',OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/');
 			}
-			echo '<p>'.htmlentities($msg).'</p>';
+			echo '<p>'.$msg.'</p>'; // No htmlentities, because we already did it above
 			echo self::getExceptionTechInfo($exception);
 			echo '</body></html>';
 		} else {

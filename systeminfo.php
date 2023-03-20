@@ -23,7 +23,17 @@ require_once __DIR__ . '/includes/oidplus.inc.php';
 
 header('Content-Type:application/json; charset=UTF-8');
 
-OIDplus::init(false);
+try {
+	OIDplus::init(false);
+} catch (Exception $e) {
+	OIDplus::invoke_shutdown();
+	$out = array(
+		"error" => $e->getMessage()
+	);
+	echo json_encode($out);
+	die();
+}
+
 
 # ---
 
