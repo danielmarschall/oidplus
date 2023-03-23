@@ -27,6 +27,11 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 	const DIR_UNLOCK_FILE = 'oidplus_upload.dir';
 
+	/**
+	 * @param $dir
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	private static function checkUploadDir($dir) {
 		if (!is_dir($dir)) {
 			throw new OIDplusException(_L('The attachment directory "%1" is not existing.', $dir));
@@ -84,14 +89,22 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		}
 	}
 
-	private static function isCriticalWindowsDirectory($dir) {
+	/**
+	 * @param $dir
+	 * @return bool
+	 */
+	private static function isCriticalWindowsDirectory($dir): bool {
 		$dir .= '\\';
 		$windir = isset($_SERVER['SystemRoot']) ? $_SERVER['SystemRoot'].'\\' : 'C:\\Windows\\';
 		if (stripos($dir,$windir) === 0) return true;
 		return false;
 	}
 
-	private static function isCriticalLinuxDirectory($dir) {
+	/**
+	 * @param $dir
+	 * @return bool
+	 */
+	private static function isCriticalLinuxDirectory($dir): bool {
 		if ($dir == '/') return true;
 		$dir .= '/';
 		if (strpos($dir,'/bin/') === 0) return true;
@@ -123,7 +136,12 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		return false;
 	}
 
-	public static function getUploadDir($id=null) {
+	/**
+	 * @param $id
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public static function getUploadDir($id=null): string {
 		// Get base path
 		$cfg = OIDplus::config()->getValue('attachment_upload_dir', '');
 		$cfg = trim($cfg);
@@ -148,7 +166,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		// Get object-specific path
 		if (!is_null($id)) {
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
+			if (!$obj) throw new OIDplusException(_L('Invalid object "%1"',$id));
 
 			$path_v1 = $basepath . DIRECTORY_SEPARATOR . $obj->getLegacyDirectoryName();
 			$path_v1_bug = $basepath . $obj->getLegacyDirectoryName();
@@ -162,21 +180,35 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		}
 	}
 
+	/**
+	 * @return mixed|null
+	 * @throws OIDplusException
+	 */
 	private function raMayDelete() {
 		return OIDplus::config()->getValue('attachments_allow_ra_delete', 0);
 	}
 
+	/**
+	 * @return mixed|null
+	 * @throws OIDplusException
+	 */
 	private function raMayUpload() {
 		return OIDplus::config()->getValue('attachments_allow_ra_upload', 0);
 	}
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return int[]
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 
 		if ($actionID == 'deleteAttachment') {
 			_CheckParamExists($params, 'id');
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
+			if (!$obj) throw new OIDplusException(_L('Invalid object "%1"',$id));
 			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.',$id));
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn() && !$this->raMayDelete()) {
@@ -217,7 +249,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			_CheckParamExists($params, 'id');
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
+			if (!$obj) throw new OIDplusException(_L('Invalid object "%1"',$id));
 			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.',$id));
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn() && !$this->raMayUpload()) {
@@ -299,11 +331,16 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('attachments_block_extensions', 'Block file name extensions being used in file attachments (comma separated)', 'exe,scr,pif,bat,com,vbs,cmd', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			// TODO: check if a blacklist entry is also on the whitelist (which is not allowed)
 		});
@@ -340,34 +377,67 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		});
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		// Nothing
 	}
 
-	public function publicSitemap(&$out) {
+	/**
+	 * @param array $out
+	 * @return void
+	 */
+	public function publicSitemap(array &$out) {
 		// Nothing
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return false;
 	}
 
-	private static function convert_filesize($bytes, $decimals = 2){
+	/**
+	 * Convert amount of bytes to human-friendly name
+	 * @param int $bytes
+	 * @param int $decimals
+	 * @return string
+	 */
+	private static function convert_filesize(int $bytes, int $decimals = 2): string {
 		$size = array(_L('Bytes'),_L('KiB'),_L('MiB'),_L('GiB'),_L('TiB'),_L('PiB'),_L('EiB'),_L('ZiB'),_L('YiB'));
-		$factor = floor((strlen($bytes) - 1) / 3);
+		$factor = floor((strlen("$bytes") - 1) / 3);
 		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . ' ' . @$size[$factor];
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.2') return true; // modifyContent
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.3') return true; // beforeObject*, afterObject*
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.4') return true; // whois*Attributes
 		return false;
 	}
 
-	public function modifyContent($id, &$title, &$icon, &$text) {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.2
-
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.2
+	 * @param string $id
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $text
+	 * @return void
+	 */
+	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
 		$output = '';
 		$doshow = false;
 
@@ -377,7 +447,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			$found_files = false;
 
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException(_L('Invalid object "%1"',$id));
+			if (!$obj) throw new OIDplusException(_L('Invalid object "%1"',$id));
 			$can_upload = OIDplus::authUtils()->isAdminLoggedIn() || ($this->raMayUpload() && $obj->userHasWriteRights());
 			$can_delete = OIDplus::authUtils()->isAdminLoggedIn() || ($this->raMayDelete() && $obj->userHasWriteRights());
 
@@ -445,10 +515,21 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		if ($doshow) $text .= $output;
 	}
 
-	public function beforeObjectDelete($id) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * @param $id
+	 * @return void
+	 */
+	public function beforeObjectDelete($id) {}
+
+	/**
+	 * Delete the attachment folder including all files in it (note: Subfolders are not possible)
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * @param $id
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function afterObjectDelete($id) {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.3
-		// Delete the attachment folder including all files in it (note: Subfolders are not possible)
 		$uploaddir = self::getUploadDir($id);
 		if ($uploaddir != '') {
 			$ary = @glob($uploaddir . DIRECTORY_SEPARATOR . '*');
@@ -459,20 +540,71 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 			}
 		}
 	}
-	public function beforeObjectUpdateSuperior($id, &$params) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
-	public function afterObjectUpdateSuperior($id, &$params) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
-	public function beforeObjectUpdateSelf($id, &$params) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
-	public function afterObjectUpdateSelf($id, &$params) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
-	public function beforeObjectInsert($id, &$params) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
-	public function afterObjectInsert($id, &$params) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.3
 
-	public function tree_search($request) {
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * @param $id
+	 * @param $params
+	 * @return void
+	 */
+	public function beforeObjectUpdateSuperior($id, &$params) {}
+
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * @param $id
+	 * @param $params
+	 * @return void
+	 */
+	public function afterObjectUpdateSuperior($id, &$params) {}
+
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * @param $id
+	 * @param $params
+	 * @return void
+	 */
+	public function beforeObjectUpdateSelf($id, &$params) {}
+
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * @param $id
+	 * @param $params
+	 * @return void
+	 */
+	public function afterObjectUpdateSelf($id, &$params) {}
+
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * @param $id
+	 * @param $params
+	 * @return void
+	 */
+	public function beforeObjectInsert($id, &$params) {}
+
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * @param $id
+	 * @param $params
+	 * @return void
+	 */
+	public function afterObjectInsert($id, &$params) {}
+
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.4
+	 * @param $id
+	 * @param $out
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function whoisObjectAttributes($id, &$out) {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.4
-
 		$xmlns = 'oidplus-attachment-plugin';
 		$xmlschema = 'urn:oid:1.3.6.1.4.1.37476.2.5.2.4.1.95.1';
 		$xmlschemauri = OIDplus::webpath(__DIR__.'/attachments.xsd',OIDplus::PATH_ABSOLUTE);
@@ -499,5 +631,12 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 		}
 
 	}
-	public function whoisRaAttributes($email, &$out) {} // Interface 1.3.6.1.4.1.37476.2.5.2.3.4
+
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.4
+	 * @param $email
+	 * @param $out
+	 * @return void
+	 */
+	public function whoisRaAttributes($email, &$out) {}
 }

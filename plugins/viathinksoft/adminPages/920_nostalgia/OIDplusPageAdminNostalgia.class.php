@@ -28,7 +28,14 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin {
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if ($id === 'oidplus:nostalgia') {
 			$handled = true;
 			$out['title'] = _L('Nostalgia');
@@ -62,7 +69,15 @@ class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -80,17 +95,30 @@ class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
 		return false;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
+	 * @param $user
+	 * @return array
+	 * @throws OIDplusException
+	 */
 	public function getNotifications($user=null): array {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (!class_exists('ZipArchive')) {

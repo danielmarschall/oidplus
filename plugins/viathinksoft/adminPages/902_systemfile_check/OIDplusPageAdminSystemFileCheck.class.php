@@ -25,13 +25,31 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 	}
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
+		return parent::action($actionID, $params);
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		$parts = explode('.',$id,2);
 		if (!isset($parts[1])) $parts[1] = '';
 		if ($parts[0] == 'oidplus:system_file_check') {
@@ -135,7 +153,15 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -153,10 +179,20 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
+	/**
+	 * @param $dir
+	 * @param $basepath
+	 * @param $results
+	 * @return array|mixed
+	 */
 	private static function getDirContents($dir, $basepath = null, &$results = array()) {
 		if (is_null($basepath)) $basepath = $dir;
 		$basepath = realpath($basepath) . DIRECTORY_SEPARATOR;
@@ -179,6 +215,10 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 		return $results;
 	}
 
+	/**
+	 * @param $checksumfile
+	 * @return array|false
+	 */
 	private static function checksumFileToArray($checksumfile) {
 		$out = array();
 

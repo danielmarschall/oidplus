@@ -25,17 +25,28 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusObjectTypePluginOid extends OIDplusObjectTypePlugin {
 
-	public static function getObjectTypeClassName() {
+	/**
+	 * @return string
+	 */
+	public static function getObjectTypeClassName(): string {
 		return OIDplusOid::class;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.6') return true; // gridGeneratorLinks
 		return false;
 	}
 
-	public function gridGeneratorLinks($objParent) { // Interface 1.3.6.1.4.1.37476.2.5.2.3.6
-
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.6
+	 * @param OIDplusObject $objParent
+	 * @return string
+	 */
+	public function gridGeneratorLinks(OIDplusObject $objParent): string {
 		if ($objParent->nodeId() === 'oid:2.25') {
 			return '<br><a href="javascript:OIDplusObjectTypePluginOid.generateRandomUUID(false)">('._L('Generate a random UUID OID').')</a>';
 		} else if ($objParent->isRoot()) {
@@ -43,12 +54,18 @@ class OIDplusObjectTypePluginOid extends OIDplusObjectTypePlugin {
 			       '<br><a href="https://oidplus.viathinksoft.com/oidplus/?goto=oidplus%3Acom.viathinksoft.freeoid" target="_blank">('._L('Request a free OID from ViaThinkSoft').')</a>'.
 			       '<br><a href="https://pen.iana.org/pen/PenApplication.page" target="_blank">('._L('Request a free PEN/OID from IANA').')</a>';
 		} else {
-			// No generation for normal OIDs atm. TODO: MAYBE in future a feature "next free"
+			// No generation for normal OIDs atm. TODO: MAYBE in the future a feature like "next free / sequencial OID"
 			return '';
 		}
 	}
 
-	public static function prefilterQuery($static_node_id, $throw_exception) {
+	/**
+	 * @param string $static_node_id
+	 * @param bool $throw_exception
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public static function prefilterQuery(string $static_node_id, bool $throw_exception): string {
 		// Convert WEID to OID
 		// A WEID is just a different notation of an OID.
 		// To allow that people use OID-IP or the GoTo-box with a "weid:" identifier, rewrite it to "oid:", so that the plugin OIDplusObjectTypePluginOid can handle it.

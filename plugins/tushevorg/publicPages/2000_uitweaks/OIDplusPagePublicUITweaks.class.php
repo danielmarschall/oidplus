@@ -37,7 +37,12 @@ use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
 
 class OIDplusPagePublicUITweaks extends OIDplusPagePluginPublic {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('uitweaks_expand_objects_tree', 'UITweaks plugin: 1=Fully expand objects tree on page reload, 0=Default behavior', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -71,7 +76,12 @@ class OIDplusPagePublicUITweaks extends OIDplusPagePluginPublic {
 		});
 	}
 
-	public function htmlHeaderUpdate(&$head_elems) {
+	/**
+	 * @param array $head_elems
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function htmlHeaderUpdate(array &$head_elems) {
 		$w  = js_escape(OIDplus::config()->getValue('uitweaks_menu_width'));
 		$rw = OIDplus::config()->getValue('uitweaks_menu_remember_width') 		== 1 ? 'true' : 'false';
 		$o  = OIDplus::config()->getValue('uitweaks_expand_objects_tree') 		== 1 ? 'true' : 'false';
@@ -92,7 +102,5 @@ class OIDplusPagePublicUITweaks extends OIDplusPagePluginPublic {
 
 		$head_elems[] = $s;
 	}
-
-
 
 }

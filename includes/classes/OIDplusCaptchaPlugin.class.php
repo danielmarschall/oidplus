@@ -25,14 +25,33 @@ namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusCaptchaPlugin extends OIDplusPlugin {
 
+	/**
+	 * @return string
+	 */
 	public abstract static function id(): string; // this is the name that is set to the configuration value OIDplus::baseConfig()->getValue('CAPTCHA_PLUGIN') to identify the CAPTCHA plugin
 
+	/**
+	 * @return bool
+	 */
 	public abstract function isVisible(): bool;
 
-	public abstract function captchaGenerate($header_text=null, $footer_text=null);
+	/**
+	 * @param string|null $header_text
+	 * @param string|null $footer_text
+	 * @return string
+	 */
+	public abstract function captchaGenerate(string $header_text=null, string $footer_text=null): string;
 
-	public abstract function captchaVerify($params, $fieldname=null);
+	/**
+	 * @param string[] $params
+	 * @param string|null $fieldname
+	 * @return void
+	 */
+	public abstract function captchaVerify(array $params, string $fieldname=null);
 
+	/**
+	 * @return string
+	 */
 	public abstract static function setupHTML(): string;
 
 }

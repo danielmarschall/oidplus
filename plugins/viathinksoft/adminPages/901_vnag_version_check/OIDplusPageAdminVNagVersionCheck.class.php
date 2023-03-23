@@ -25,7 +25,12 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('vnag_version_check_password_protected', 'If set to 1 ("on"), the VNag version check is password protected', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != '0') && ($value != '1')) {
 				throw new OIDplusException(_L('Please enter either 0 ("off") or 1 ("on").'));
@@ -33,10 +38,25 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 		});
 	}
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
+		return parent::action($actionID, $params);
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		$parts = explode('.',$id,2);
 		if (!isset($parts[1])) $parts[1] = '';
 		if ($parts[0] == 'oidplus:vnag_version_check') {
@@ -87,7 +107,15 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -105,10 +133,18 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
+	/**
+	 * @return string
+	 * @throws OIDplusException
+	 */
 	public static function vnag_password() {
 		return sha3_512(OIDplus::baseConfig()->getValue('SERVER_SECRET').'/VNAG');
 	}

@@ -29,6 +29,9 @@ class OIDplusQueryResultSQLite3 extends OIDplusQueryResult {
 	protected $all_results = array();
 	protected $cursor = 0;
 
+	/**
+	 * @param $res
+	 */
 	public function __construct($res) {
 		if (is_bool($res) || ($res->numColumns() == 0)) {
 			// Why do qe need to check numColumns() ?
@@ -49,6 +52,9 @@ class OIDplusQueryResultSQLite3 extends OIDplusQueryResult {
 		}
 	}
 
+	/**
+	 *
+	 */
 	public function __destruct() {
 		$this->all_results = array();
 		if (!is_null($this->res)) {
@@ -57,15 +63,26 @@ class OIDplusQueryResultSQLite3 extends OIDplusQueryResult {
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function containsResultSet(): bool {
 		return !$this->no_resultset;
 	}
 
+	/**
+	 * @return int
+	 * @throws OIDplusException
+	 */
 	public function num_rows(): int {
 		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		return count($this->all_results);
 	}
 
+	/**
+	 * @return array|mixed|null
+	 * @throws OIDplusException
+	 */
 	public function fetch_array()/*: ?array*/ {
 		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 
@@ -80,6 +97,10 @@ class OIDplusQueryResultSQLite3 extends OIDplusQueryResult {
 		return $ret;
 	}
 
+	/**
+	 * @return \stdClass|null
+	 * @throws OIDplusException
+	 */
 	public function fetch_object()/*: ?object*/ {
 		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 

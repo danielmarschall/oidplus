@@ -27,6 +27,9 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 	protected $no_resultset;
 	protected $res;
 
+	/**
+	 * @param $res
+	 */
 	public function __construct($res) {
 		$this->no_resultset = is_bool($res);
 
@@ -35,19 +38,36 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 		}
 	}
 
+	/**
+	 *
+	 */
 	public function __destruct() {
 		if ($this->res) {
 			oci_free_statement($this->res);
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function containsResultSet(): bool {
 		return !$this->no_resultset;
 	}
 
+	/**
+	 * @var ?array
+	 */
 	private $prefetchedArray = null;
+
+	/**
+	 * @var int
+	 */
 	private $countAlreadyFetched = 0;
 
+	/**
+	 * @return int
+	 * @throws OIDplusException
+	 */
 	public function num_rows(): int {
 		if (!is_null($this->prefetchedArray)) {
 			return count($this->prefetchedArray) + $this->countAlreadyFetched;
@@ -63,6 +83,10 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 		return count($this->prefetchedArray) + $this->countAlreadyFetched;
 	}
 
+	/**
+	 * @return array|mixed|null
+	 * @throws OIDplusException
+	 */
 	public function fetch_array()/*: ?array*/ {
 		if (!is_null($this->prefetchedArray)) {
 			$ret = array_shift($this->prefetchedArray);
@@ -86,6 +110,10 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 		return $ret;
 	}
 
+	/**
+	 * @param $ary
+	 * @return \stdClass
+	 */
 	private static function array_to_stdobj($ary) {
 		$obj = new \stdClass;
 		foreach ($ary as $name => $val) {
@@ -101,6 +129,10 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 		return $obj;
 	}
 
+	/**
+	 * @return false|object|\stdClass|null
+	 * @throws OIDplusException
+	 */
 	public function fetch_object()/*: ?object*/ {
 		if (!is_null($this->prefetchedArray)) {
 			$ary = array_shift($this->prefetchedArray);
@@ -115,7 +147,7 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
 		// We can't quote every single column throughout the whole program, so we use this workaround...
 		if ($ret) {
-			foreach ($ret as $name => $val) {
+			foreach ($ret as $name => $val) { /* @phpstan-ignore-line */
 				$ret->{strtoupper($name)} = $val;
 				$ret->{strtolower($name)} = $val;
 			}

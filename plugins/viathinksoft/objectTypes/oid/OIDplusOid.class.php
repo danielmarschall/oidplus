@@ -26,6 +26,10 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusOid extends OIDplusObject {
 	private $oid;
 
+	/**
+	 * @param $oid
+	 * @throws OIDplusException
+	 */
 	public function __construct($oid) {
 		$bak_oid = $oid;
 
@@ -42,37 +46,65 @@ class OIDplusOid extends OIDplusObject {
 		$this->oid = $oid;
 	}
 
-	public static function parse($node_id) {
+	/**
+	 * @param string $node_id
+	 * @return OIDplusOid|null
+	 */
+	public static function parse(string $node_id)/*: ?OIDplusOid*/ {
 		@list($namespace, $oid) = explode(':', $node_id, 2);
-		if ($namespace !== self::ns()) return false;
+		if ($namespace !== self::ns()) return null;
 		return new self($oid);
 	}
 
-	public static function objectTypeTitle() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitle(): string {
 		return _L('Object Identifier (OID)');
 	}
 
-	public static function objectTypeTitleShort() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitleShort(): string {
 		return _L('OID');
 	}
 
-	public static function ns() {
+	/**
+	 * @return string
+	 */
+	public static function ns(): string {
 		return 'oid';
 	}
 
-	public static function root() {
+	/**
+	 * @return string
+	 */
+	public static function root(): string {
 		return self::ns().':';
 	}
 
-	public function isRoot() {
+	/**
+	 * @return bool
+	 */
+	public function isRoot(): bool {
 		return $this->oid == '';
 	}
 
-	public function nodeId($with_ns=true) {
+	/**
+	 * @param bool $with_ns
+	 * @return string
+	 */
+	public function nodeId(bool $with_ns=true): string {
 		return $with_ns ? self::root().$this->oid : $this->oid;
 	}
 
-	public function addString($str) {
+	/**
+	 * @param string $str
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function addString(string $str): string {
 		if (!$this->isRoot()) {
 			if (strpos($str,'.') !== false) throw new OIDplusException(_L('Please only submit one arc (not an absolute OID or multiple arcs).'));
 		}
@@ -80,13 +112,23 @@ class OIDplusOid extends OIDplusObject {
 		return $this->appendArcs($str)->nodeId();
 	}
 
-	public function crudShowId(OIDplusObject $parent) {
+	/**
+	 * @param OIDplusObject $parent
+	 * @return string
+	 */
+	public function crudShowId(OIDplusObject $parent): string {
 		if ($parent instanceof OIDplusOid) {
 			return $this->deltaDotNotation($parent);
+		} else {
+			return '';
 		}
 	}
 
-	public function jsTreeNodeName(OIDplusObject $parent = null) {
+	/**
+	 * @param OIDplusObject|null $parent
+	 * @return string
+	 */
+	public function jsTreeNodeName(OIDplusObject $parent = null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		if ($parent instanceof OIDplusOid) {
 			return $this->viewGetArcAsn1s($parent);
@@ -95,15 +137,24 @@ class OIDplusOid extends OIDplusObject {
 		}
 	}
 
-	public function defaultTitle() {
+	/**
+	 * @return string
+	 */
+	public function defaultTitle(): string {
 		return _L('OID %1',$this->oid);
 	}
 
-	public function isLeafNode() {
+	/**
+	 * @return bool
+	 */
+	public function isLeafNode(): bool {
 		return false;
 	}
 
-	private function getTechInfo() {
+	/**
+	 * @return array
+	 */
+	private function getTechInfo(): array {
 		$tech_info = array();
 
 		$tmp = _L('Dot notation');
@@ -129,13 +180,23 @@ class OIDplusOid extends OIDplusObject {
 		return $tech_info;
 	}
 
-	protected function isClassCWeid() {
+	/**
+	 * @return bool
+	 */
+	protected function isClassCWeid(): bool {
 		$dist = oid_distance($this->oid, '1.3.6.1.4.1.37553.8');
 		if ($dist === false) return false;
 		return $dist >= 0;
 	}
 
-	public function getContentPage(&$title, &$content, &$icon) {
+	/**
+	 * @param string $title
+	 * @param string $content
+	 * @param string $icon
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function getContentPage(string &$title, string &$content, string &$icon) {
 		if ($this->isClassCWeid()) {
 			// TODO: Also change treeview menu mini-icon?
 			$icon = file_exists(__DIR__.'/img/weid_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/weid_icon.png' : '';
@@ -193,7 +254,10 @@ class OIDplusOid extends OIDplusObject {
 
 	# ---
 
-	// Gets the last arc of an WEID
+	/**
+	 * Gets the last arc of an WEID
+	 * @return false|string
+	 */
 	public function weidArc() {
 		// Dirty hack: We prepend '0.' in front of the OID to enforce the
 		//             creation of a Class A weid (weid:root:) . Otherwise we could not
@@ -207,7 +271,11 @@ class OIDplusOid extends OIDplusObject {
 		return $x[count($x)-2];
 	}
 
-	public function getWeidNotation($withAbbr=true) {
+	/**
+	 * @param bool $withAbbr
+	 * @return string
+	 */
+	public function getWeidNotation(bool $withAbbr=true): string {
 		$weid = \Frdl\Weid\WeidOidConverter::oid2weid($this->getDotNotation());
 		if ($withAbbr) {
 			$ary = explode(':', $weid);
@@ -236,7 +304,12 @@ class OIDplusOid extends OIDplusObject {
 		return $weid;
 	}
 
-	public function appendArcs(String $arcs) {
+	/**
+	 * @param string|int $arcs
+	 * @return OIDplusOid
+	 * @throws OIDplusException
+	 */
+	public function appendArcs($arcs): OIDplusOid {
 		$out = new self($this->oid);
 
 		if ($out->isRoot()) {
@@ -270,6 +343,10 @@ class OIDplusOid extends OIDplusObject {
 		return $out;
 	}
 
+	/**
+	 * @param OIDplusOid $parent
+	 * @return false|string
+	 */
 	public function deltaDotNotation(OIDplusOid $parent) {
 		if (!$parent->isRoot()) {
 			if (substr($this->oid, 0, strlen($parent->oid)+1) == $parent->oid.'.') {
@@ -282,7 +359,11 @@ class OIDplusOid extends OIDplusObject {
 		}
 	}
 
-	public function getAsn1Ids() {
+	/**
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function getAsn1Ids(): array {
 		$asn_ids = array();
 		$res_asn = OIDplus::db()->query("select * from ###asn1id where oid = ? order by lfd", array("oid:".$this->oid));
 		while ($row_asn = $res_asn->fetch_array()) {
@@ -294,7 +375,11 @@ class OIDplusOid extends OIDplusObject {
 		return $asn_ids;
 	}
 
-	public function getIris() {
+	/**
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function getIris(): array {
 		$iri_ids = array();
 		$res_iri = OIDplus::db()->query("select * from ###iri where oid = ? order by lfd", array("oid:".$this->oid));
 		while ($row_iri = $res_iri->fetch_array()) {
@@ -306,7 +391,13 @@ class OIDplusOid extends OIDplusObject {
 		return $iri_ids;
 	}
 
-	public function viewGetArcAsn1s(OIDplusOid $parent=null, $separator = ' | ') {
+	/**
+	 * @param OIDplusOid|null $parent
+	 * @param $separator
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function viewGetArcAsn1s(OIDplusOid $parent=null, $separator = ' | '): string {
 		$asn_ids = array();
 
 		if (is_null($parent)) $parent = OIDplusOid::parse(self::root());
@@ -324,7 +415,12 @@ class OIDplusOid extends OIDplusObject {
 		return implode($separator, $asn_ids);
 	}
 
-	public function getAsn1Notation($withAbbr=true) {
+	/**
+	 * @param bool $withAbbr
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function getAsn1Notation(bool $withAbbr=true): string {
 		$asn1_notation = '';
 		$arcs = explode('.', $this->oid);
 
@@ -358,7 +454,12 @@ class OIDplusOid extends OIDplusObject {
 		return "{ ".trim($asn1_notation)." }";
 	}
 
-	public function getIriNotation($withAbbr=true) {
+	/**
+	 * @param bool $withAbbr
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function getIriNotation(bool $withAbbr=true): string {
 		$iri_notation = '';
 		$arcs = explode('.', $this->oid);
 
@@ -397,11 +498,18 @@ class OIDplusOid extends OIDplusObject {
 		return $iri_notation;
 	}
 
-	public function getDotNotation() {
+	/**
+	 * @return string
+	 */
+	public function getDotNotation(): string {
 		return $this->oid;
 	}
 
-	public function isWellKnown() {
+	/**
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function isWellKnown(): bool {
 		$res = OIDplus::db()->query("select oid from ###asn1id where oid = ? and well_known = ?", array("oid:".$this->oid,true));
 		if ($res->any()) return true;
 
@@ -411,7 +519,13 @@ class OIDplusOid extends OIDplusObject {
 		return false;
 	}
 
-	public function replaceAsn1Ids($demandedASN1s=array(), $simulate=false) {
+	/**
+	 * @param array $demandedASN1s
+	 * @param bool $simulate
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function replaceAsn1Ids(array $demandedASN1s=array(), bool $simulate=false) {
 		if ($this->isWellKnown()) {
 			throw new OIDplusException(_L('OID "%1" is a "well-known" OID. Its identifiers cannot be changed.',$this->oid));
 		}
@@ -450,7 +564,13 @@ class OIDplusOid extends OIDplusObject {
 		}
 	}
 
-	public function replaceIris($demandedIris=array(), $simulate=false) {
+	/**
+	 * @param array $demandedIris
+	 * @param bool $simulate
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function replaceIris(array $demandedIris=array(), bool $simulate=false) {
 		if ($this->isWellKnown()) {
 			throw new OIDplusException(_L('OID "%1" is a "well-known" OID. Its identifiers cannot be changed.',$this->oid));
 		}
@@ -488,17 +608,29 @@ class OIDplusOid extends OIDplusObject {
 		}
 	}
 
-	public function one_up() {
+	/**
+	 * @return OIDplusOid|null
+	 */
+	public function one_up()/*: ?OIDplusOid*/ {
 		return self::parse(self::ns().':'.oid_up($this->oid));
 	}
 
+	/**
+	 * @param $to
+	 * @return int|null
+	 */
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
-		if (!($to instanceof $this)) return false;
-		return oid_distance($to->oid, $this->oid);
+		if (!($to instanceof $this)) return null;
+		$res = oid_distance($to->oid, $this->oid);
+		return $res !== false ? $res : null;
 	}
 
-	public function getAltIds() {
+	/**
+	 * @return array|OIDplusAltId[]
+	 * @throws OIDplusException
+	 */
+	public function getAltIds(): array {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 
@@ -622,13 +754,20 @@ class OIDplusOid extends OIDplusObject {
 		return $ids;
 	}
 
-	public function getDirectoryName() {
+	/**
+	 * @return string
+	 */
+	public function getDirectoryName(): string {
 		if ($this->isRoot()) return $this->ns();
 		$oid = $this->nodeId(false);
 		return $this->ns().'_'.str_replace('.', '_', $oid);
 	}
 
-	public static function treeIconFilename($mode) {
+	/**
+	 * @param string $mode
+	 * @return string
+	 */
+	public static function treeIconFilename(string $mode): string {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }

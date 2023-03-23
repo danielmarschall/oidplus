@@ -25,7 +25,13 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return int[]
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 		if ($actionID == 'create_ra') {
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
@@ -64,15 +70,26 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 		// Nothing
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		$parts = explode('$',$id);
 		$id = $parts[0];
 
@@ -96,7 +113,15 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -114,7 +139,11 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

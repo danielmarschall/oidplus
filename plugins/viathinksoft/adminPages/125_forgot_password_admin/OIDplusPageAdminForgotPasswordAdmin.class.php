@@ -25,13 +25,31 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminForgotPasswordAdmin extends OIDplusPagePluginAdmin {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 		if (is_null(OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.1.92'))) return false; // OIDplusPagePublicForgotPasswordAdmin
 
@@ -50,7 +68,11 @@ class OIDplusPageAdminForgotPasswordAdmin extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

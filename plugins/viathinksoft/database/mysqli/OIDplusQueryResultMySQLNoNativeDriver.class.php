@@ -30,6 +30,9 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 	protected $nCols = null;
 	protected $no_resultset = null;
 
+	/**
+	 * @param $stmt
+	 */
 	public function __construct($stmt) {
 		$metadata = mysqli_stmt_result_metadata($stmt);
 
@@ -45,10 +48,17 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function containsResultSet(): bool {
 		return !$this->no_resultset;
 	}
 
+	/**
+	 * @return int
+	 * @throws OIDplusException
+	 */
 	public function num_rows(): int {
 		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 
@@ -56,6 +66,10 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 		return $this->stmt->num_rows;
 	}
 
+	/**
+	 * @return array|null
+	 * @throws OIDplusException
+	 */
 	public function fetch_array()/*: ?array*/ {
 		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 
@@ -96,6 +110,11 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 		return $ret;
 	}
 
+	/**
+	 * @return \stdClass|null
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	public function fetch_object()/*: ?object*/ {
 		if ($this->no_resultset) throw new OIDplusConfigInitializationException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 

@@ -25,7 +25,13 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return int[]
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 		if ($actionID == 'config_update') {
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
@@ -51,15 +57,26 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 		// Nothing
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:edit_config') {
 			$handled = true;
 			$out['title'] = _L('System configuration');
@@ -71,8 +88,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$output = '';
-			$output .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+			$output  = '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$output .= '<table class="table table-bordered table-striped">';
 			$output .= '	<tr>';
 			$output .= '	     <th>'._L('Setting').'</th>';
@@ -118,7 +134,15 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -136,7 +160,11 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

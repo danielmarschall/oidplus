@@ -25,7 +25,11 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicAntiSpamFilter extends OIDplusPagePluginPublic {
 
-	public function htmlPostprocess(&$html) {
+	/**
+	 * @param string $html
+	 * @return void
+	 */
+	public function htmlPostprocess(string &$html) {
 		$html = preg_replace_callback(
 			'|<a\s([^>]*)href="mailto:([^"]+)"([^>]*)>([^<]*)</a>|ismU',
 			function ($treffer) {

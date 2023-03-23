@@ -25,10 +25,19 @@ namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 
+	/**
+	 * @return string
+	 */
 	public abstract static function id(): string; // this is the name that is set to the configuration value OIDplus::baseConfig()->getValue('DATABASE_PLUGIN') to identify the database plugin
 
+	/**
+	 * @return OIDplusDatabaseConnection
+	 */
 	public abstract static function newConnection(): OIDplusDatabaseConnection;
 
+	/**
+	 * @return string
+	 */
 	public abstract static function setupHTML(): string;
 
 }

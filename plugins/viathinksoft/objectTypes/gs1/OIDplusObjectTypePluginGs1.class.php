@@ -25,11 +25,19 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusObjectTypePluginGs1 extends OIDplusObjectTypePlugin {
 
-	public static function getObjectTypeClassName() {
+	/**
+	 * @return string
+	 */
+	public static function getObjectTypeClassName(): string {
 		return OIDplusGs1::class;
 	}
 
-	public static function prefilterQuery($static_node_id, $throw_exception) {
+	/**
+	 * @param string $static_node_id
+	 * @param bool $throw_exception
+	 * @return string
+	 */
+	public static function prefilterQuery(string $static_node_id, bool $throw_exception): string {
 		if (str_starts_with($static_node_id,'gs1:')) {
 			$static_node_id = str_replace(' ', '', $static_node_id);
 		}

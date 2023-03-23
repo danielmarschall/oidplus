@@ -27,6 +27,9 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	protected $no_resultset;
 	protected $res;
 
+	/**
+	 * @param $res
+	 */
 	public function __construct($res) {
 		$this->no_resultset = is_bool($res);
 
@@ -38,17 +41,34 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 		$this->prefetchedArray = $this->res->fetchAll();
 	}
 
+	/**
+	 *
+	 */
 	public function __destruct() {
 		if ($this->res) $this->res->closeCursor();
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function containsResultSet(): bool {
 		return !$this->no_resultset;
 	}
 
+	/**
+	 * @var ?array
+	 */
 	private $prefetchedArray = null;
+
+	/**
+	 * @var int
+	 */
 	private $countAlreadyFetched = 0;
 
+	/**
+	 * @return int
+	 * @throws OIDplusException
+	 */
 	public function num_rows(): int {
 		if (!is_null($this->prefetchedArray)) {
 			return count($this->prefetchedArray) + $this->countAlreadyFetched;
@@ -67,6 +87,10 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 		return $ret;
 	}
 
+	/**
+	 * @return array|mixed|null
+	 * @throws OIDplusException
+	 */
 	public function fetch_array()/*: ?array*/ {
 		if (!is_null($this->prefetchedArray)) {
 			$ret = array_shift($this->prefetchedArray);
@@ -90,6 +114,10 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 		return $ret;
 	}
 
+	/**
+	 * @param $ary
+	 * @return \stdClass
+	 */
 	private static function array_to_stdobj($ary) {
 		$obj = new \stdClass;
 		foreach ($ary as $name => $val) {
@@ -98,6 +126,10 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 		return $obj;
 	}
 
+	/**
+	 * @return object|\stdClass|null
+	 * @throws OIDplusException
+	 */
 	public function fetch_object()/*: ?object*/ {
 		if (!is_null($this->prefetchedArray)) {
 			$ary = array_shift($this->prefetchedArray);

@@ -25,11 +25,22 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 		// Nothing
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if ($id === 'oidplus:well_known_oids') {
 			$handled = true;
 			$out['title'] = _L('Well known OIDs');
@@ -41,9 +52,7 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 				return;
 			}
 
-			$out['text'] = '';
-
-			$out['text'] .= '<p>'._L('Well-known OIDs are OIDs of Registration Authorities which are assigning OIDs to customers, i.e. they are most likely to be used by OIDplus users as their root OID. Well-known OIDs have the following purposes:').'<ol>';
+			$out['text']  = '<p>'._L('Well-known OIDs are OIDs of Registration Authorities which are assigning OIDs to customers, i.e. they are most likely to be used by OIDplus users as their root OID. Well-known OIDs have the following purposes:').'<ol>';
 			$out['text'] .= '<li>'._L('When a new OIDplus user creates his root OID into OIDplus, then the ASN.1 identifiers and Unicode labels of the superior OIDs are automatically added.').'</li>';
 			$out['text'] .= '<li>'._L('In the automatic oid-info.com publishing, well-known OIDs will not be transmitted (because it is unlikely that RAs of well-known OIDs will be using OIDplus in combination with automatic publishing to oid-info.com). Instead, all children inside these well-known OIDs are most likely to be yours, so these will be reported to oid-info.com instead.').'</li>';
 			// $out['text'] .= '<li>'._L('In OID-WHOIS, if a user requests information about an unknown OID which is inside a well-known OID, then OID-WHOIS will output information at which place more information can be retrieved from.').'</li>';
@@ -95,7 +104,15 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -113,7 +130,11 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

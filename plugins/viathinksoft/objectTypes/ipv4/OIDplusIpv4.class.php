@@ -28,6 +28,10 @@ class OIDplusIpv4 extends OIDplusObject {
 	private $bare;
 	private $cidr;
 
+	/**
+	 * @param $ipv4
+	 * @throws OIDplusException
+	 */
 	public function __construct($ipv4) {
 		$this->ipv4 = $ipv4;
 
@@ -45,37 +49,65 @@ class OIDplusIpv4 extends OIDplusObject {
 		}
 	}
 
-	public static function parse($node_id) {
+	/**
+	 * @param string $node_id
+	 * @return OIDplusIpv4|null
+	 */
+	public static function parse(string $node_id)/*: ?OIDplusIpv4*/ {
 		@list($namespace, $ipv4) = explode(':', $node_id, 2);
-		if ($namespace !== self::ns()) return false;
+		if ($namespace !== self::ns()) return null;
 		return new self($ipv4);
 	}
 
-	public static function objectTypeTitle() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitle(): string {
 		return _L('IPv4 Network Blocks');
 	}
 
-	public static function objectTypeTitleShort() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitleShort(): string {
 		return _L('IPv4');
 	}
 
-	public static function ns() {
+	/**
+	 * @return string
+	 */
+	public static function ns(): string {
 		return 'ipv4';
 	}
 
-	public static function root() {
+	/**
+	 * @return string
+	 */
+	public static function root(): string {
 		return self::ns().':';
 	}
 
-	public function isRoot() {
+	/**
+	 * @return bool
+	 */
+	public function isRoot(): bool {
 		return $this->ipv4 == '';
 	}
 
-	public function nodeId($with_ns=true) {
+	/**
+	 * @param bool $with_ns
+	 * @return string
+	 */
+	public function nodeId(bool $with_ns=true): string {
 		return $with_ns ? self::root().$this->ipv4 : $this->ipv4;
 	}
 
-	public function addString($str) {
+	/**
+	 * @param string $str
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function addString(string $str): string {
 		if (strpos($str, '/') === false) $str .= "/32";
 
 		if (!$this->isRoot()) {
@@ -92,24 +124,41 @@ class OIDplusIpv4 extends OIDplusObject {
 		return self::root().$ipv4_normalized.'/'.$cidr; // overwrite; no hierarchical tree
 	}
 
-	public function crudShowId(OIDplusObject $parent) {
+	/**
+	 * @param OIDplusObject $parent
+	 * @return string
+	 */
+	public function crudShowId(OIDplusObject $parent): string {
 		return $this->ipv4;
 	}
 
-	public function jsTreeNodeName(OIDplusObject $parent = null) {
+	/**
+	 * @param OIDplusObject|null $parent
+	 * @return string
+	 */
+	public function jsTreeNodeName(OIDplusObject $parent = null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		return $this->ipv4;
 	}
 
-	public function defaultTitle() {
+	/**
+	 * @return string
+	 */
+	public function defaultTitle(): string {
 		return $this->ipv4;
 	}
 
-	public function isLeafNode() {
+	/**
+	 * @return bool
+	 */
+	public function isLeafNode(): bool {
 		return $this->cidr >= 32;
 	}
 
-	private function getTechInfo() {
+	/**
+	 * @return array
+	 */
+	private function getTechInfo(): array {
 		if ($this->isRoot()) return array();
 
 		$tech_info = array();
@@ -123,7 +172,14 @@ class OIDplusIpv4 extends OIDplusObject {
 		return $tech_info;
 	}
 
-	public function getContentPage(&$title, &$content, &$icon) {
+	/**
+	 * @param string $title
+	 * @param string $content
+	 * @param string $icon
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function getContentPage(string &$title, string &$content, string &$icon) {
 		$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 		if ($this->isRoot()) {
@@ -174,21 +230,32 @@ class OIDplusIpv4 extends OIDplusObject {
 		}
 	}
 
-	public function one_up() {
+	/**
+	 * @return OIDplusIpv4|null
+	 */
+	public function one_up()/*: ?OIDplusIpv4*/ {
 		$cidr = $this->cidr - 1;
-		if ($cidr < 0) return false; // cannot go further up
+		if ($cidr < 0) return null; // cannot go further up
 
 		$tmp = ipv4_normalize_range($this->bare . '/' . $cidr);
 		return self::parse($this->ns() . ':' . $tmp);
 	}
 
+	/**
+	 * @param $to
+	 * @return float|int|mixed|string|null
+	 */
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
-		if (!($to instanceof $this)) return false;
-		return ipv4_distance($to->ipv4, $this->ipv4);
+		if (!($to instanceof $this)) return null;
+		$res = ipv4_distance($to->ipv4, $this->ipv4);
+		return $res !== false ? $res : null;
 	}
 
-	public function getDirectoryName() {
+	/**
+	 * @return string
+	 */
+	public function getDirectoryName(): string {
 		if ($this->isRoot()) return $this->ns();
 		$bare = str_replace('.','_',ipv4_normalize($this->bare));
 		if ($this->isLeafNode()) {
@@ -198,7 +265,11 @@ class OIDplusIpv4 extends OIDplusObject {
 		}
 	}
 
-	public static function treeIconFilename($mode) {
+	/**
+	 * @param string $mode
+	 * @return string
+	 */
+	public static function treeIconFilename(string $mode): string {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }

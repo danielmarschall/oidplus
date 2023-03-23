@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MessDetectorOptionsConfiguration">
+    <option name="transferred" value="true" />
+  </component>
+  <component name="PHPCSFixerOptionsConfiguration">
+    <option name="transferred" value="true" />
+  </component>
+  <component name="PHPCodeSnifferOptionsConfiguration">
+    <option name="highlightLevel" value="WARNING" />
+    <option name="transferred" value="true" />
+  </component>
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/tinymce/tinymce" />
+      <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/vendor/gedmarc/layout" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/phpseclib/phpseclib" />
+      <path value="$PROJECT_DIR$/vendor/components/jqueryui" />
+      <path value="$PROJECT_DIR$/vendor/script47/bs5-utils" />
+      <path value="$PROJECT_DIR$/vendor/components/jquery" />
+      <path value="$PROJECT_DIR$/vendor/matthiasmullie/path-converter" />
+      <path value="$PROJECT_DIR$/vendor/matthiasmullie/minify" />
+      <path value="$PROJECT_DIR$/vendor/emn178/js-sha3" />
+      <path value="$PROJECT_DIR$/vendor/tweeb/tinymce-i18n" />
+      <path value="$PROJECT_DIR$/vendor/dcodeio/bcrypt.js" />
+      <path value="$PROJECT_DIR$/vendor/twbs/bootstrap" />
+      <path value="$PROJECT_DIR$/vendor/vakata/jstree" />
+      <path value="$PROJECT_DIR$/vendor/spamspan/spamspan" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/oidconverter" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/php-sha3" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/vnag" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/php_utils" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/uuid_mac_utils" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/fileformats" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.0" />
+  <component name="PhpStanOptionsConfiguration">
+    <option name="transferred" value="true" />
+  </component>
+  <component name="PsalmOptionsConfiguration">
+    <option name="transferred" value="true" />
+  </component>
+</project>

@@ -26,27 +26,45 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusRA extends OIDplusBaseClass {
 	private $email = null;
 
-	public function __construct($email) {
+	/**
+	 * @param string $email
+	 */
+	public function __construct(string $email) {
 		$this->email = $email;
 	}
 
-	public function raEmail() {
+	/**
+	 * @return string
+	 */
+	public function raEmail(): string {
 		return $this->email;
 	}
 
-	public function existing() {
+	/**
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function existing(): bool {
 		$res = OIDplus::db()->query("select email from ###ra where email = ?", array($this->email));
 		return ($res->any());
 	}
 
-	public function raName() {
+	/**
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function raName(): string {
 		$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($this->email));
 		if (!$res->any()) return _L('(RA not in database)');
 		$row = $res->fetch_array();
 		return $row['ra_name'];
 	}
 
-	public static function getAllRAs() {
+	/**
+	 * @return OIDplusRA[]
+	 * @throws OIDplusException
+	 */
+	public static function getAllRAs(): array {
 		$out = array();
 		$res = OIDplus::db()->query("select email from ###ra");
 		while ($row = $res->fetch_array()) {
@@ -55,17 +73,32 @@ class OIDplusRA extends OIDplusBaseClass {
 		return $out;
 	}
 
-	public function change_password($new_password) {
+	/**
+	 * @param string $new_password
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function change_password(string $new_password) {
 		$authInfo = OIDplus::authUtils()->raGeneratePassword($new_password);
 		$calc_authkey = $authInfo->getAuthKey();
 		OIDplus::db()->query("update ###ra set authkey=? where email = ?", array($calc_authkey, $this->email));
 	}
 
-	public function change_email($new_email) {
+	/**
+	 * @param string $new_email
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function change_email(string $new_email) {
 		OIDplus::db()->query("update ###ra set email = ? where email = ?", array($new_email, $this->email));
 	}
 
-	public function register_ra($new_password) {
+	/**
+	 * @param string|null $new_password
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function register_ra(/*?string*/ $new_password) {
 		if (is_null($new_password)) {
 			// Invalid password (used for LDAP/OAuth)
 			$calc_authkey = '';
@@ -77,6 +110,10 @@ class OIDplusRA extends OIDplusBaseClass {
 		OIDplus::db()->query("insert into ###ra (authkey, email, registered, ra_name, personal_name, organization, office, street, zip_town, country, phone, mobile, fax) values (?, ?, ".OIDplus::db()->sqlDate().", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($calc_authkey, $this->email, "", "", "", "", "", "", "", "", "", ""));
 	}
 
+	/**
+	 * @return OIDplusRAAuthInfo|null
+	 * @throws OIDplusException
+	 */
 	public function getAuthInfo()/*: ?OIDplusRAAuthInfo*/ {
 		$ra_res = OIDplus::db()->query("select authkey from ###ra where email = ?", array($this->email));
 		if (!$ra_res->any()) return null; // User not found
@@ -85,19 +122,37 @@ class OIDplusRA extends OIDplusBaseClass {
 		return new OIDplusRAAuthInfo($ra_row['authkey']);
 	}
 
-	public function checkPassword($password) {
+	/**
+	 * @param string $password
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function checkPassword(string $password): bool {
 		return OIDplus::authUtils()->raCheckPassword($this->email, $password);
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function delete() {
 		OIDplus::db()->query("delete from ###ra where email = ?", array($this->email));
 	}
 
-	public function setRaName($ra_name) {
+	/**
+	 * @param string $ra_name
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function setRaName(string $ra_name) {
 		OIDplus::db()->query("update ###ra set ra_name = ? where email = ?", array($ra_name, $this->email));
 	}
 
-	public function isPasswordLess() {
+	/**
+	 * @return bool|null
+	 * @throws OIDplusException
+	 */
+	public function isPasswordLess()/*: ?bool*/ {
 		$authInfo = $this->getAuthInfo();
 		if (!$authInfo) return null; // user not found
 		return $authInfo->isPasswordLess();

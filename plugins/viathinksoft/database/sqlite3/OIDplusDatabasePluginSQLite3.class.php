@@ -25,14 +25,23 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDatabasePluginSQLite3 extends OIDplusDatabasePlugin {
 
+	/**
+	 * @return string
+	 */
 	public static function id(): string {
 		return "SQLite3";
 	}
 
+	/**
+	 * @return OIDplusDatabaseConnection
+	 */
 	public static function newConnection(): OIDplusDatabaseConnection {
 		return new OIDplusDatabaseConnectionSQLite3();
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function setupHTML(): string {
 		return '<div id="DBPLUGIN_PARAMS_SQLite3">'.
 		       '	<p>'._L('SQLite3 database file').':<br><input id="sqlite3_file" type="text" value="userdata/database/oidplus.db" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="sqlite3_file_warn"></span><br>'.

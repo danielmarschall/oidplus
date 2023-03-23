@@ -25,7 +25,12 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 
-	public function htmlHeaderUpdate(&$head_elems) {
+	/**
+	 * @param array $head_elems
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function htmlHeaderUpdate(array &$head_elems) {
 		foreach ($head_elems as &$line) {
 			if (strpos($line,'oidplus.min.css.php') !== false) {
 				$add_css_args = array();
@@ -57,7 +62,13 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return int[]
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 		if ($actionID == 'color_update') {
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
@@ -79,11 +90,16 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('color_hue_shift', 'HSV Hue shift of CSS colors (-360..360)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < -360) || ($value > 360)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -120,7 +136,14 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 		OIDplus::config()->prepareConfigKey('oobe_colors_done', '"Out Of Box Experience" wizard for OIDplusPageAdminColors done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if ($id === 'oidplus:colors') {
 			$handled = true;
 			$out['title'] = _L('Design');
@@ -180,7 +203,15 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
                 if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -198,24 +229,41 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
                 return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested
 		return false;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
+	 * @return bool
+	 * @throws OIDplusException
+	 */
 	public function oobeRequested(): bool {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
-
 		return OIDplus::config()->getValue('oobe_colors_done') == '0';
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
+	 * @param $step
+	 * @param $do_edits
+	 * @param $errors_happened
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
-
 		echo '<h2>'._L('Step %1: Color Theme',$step).'</h2>';
 
 		echo '<input type="checkbox" name="color_invert" id="color_invert"';

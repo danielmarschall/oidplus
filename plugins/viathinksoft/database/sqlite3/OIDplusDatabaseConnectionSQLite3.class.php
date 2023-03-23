@@ -28,7 +28,13 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	private $prepare_cache = array();
 	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
 
-	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+	/**
+	 * @param string $sql
+	 * @param array|null $prepared_args
+	 * @return OIDplusQueryResultSQLite3
+	 * @throws OIDplusException
+	 */
+	public function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			try {
@@ -90,6 +96,9 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @return int
+	 */
 	public function insert_id(): int {
 		try {
 			// Note: This will always give results even for tables that do not
@@ -102,12 +111,19 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function error(): string {
 		$err = $this->last_error;
 		if ($err == null) $err = '';
 		return $err;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 */
 	protected function doConnect()/*: void*/ {
 		if (!class_exists('SQLite3')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','SQLite3'));
 
@@ -135,48 +151,85 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 		$this->last_error = null;
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function doDisconnect()/*: void*/ {
 		$this->prepare_cache = array();
 		$this->conn = null;
 	}
 
+	/**
+	 * @var bool
+	 */
 	private $intransaction = false;
 
+	/**
+	 * @return bool
+	 */
 	public function transaction_supported(): bool {
 		return true;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function transaction_level(): int {
 		return $this->intransaction ? 1 : 0;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function transaction_begin()/*: void*/ {
 		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		$this->query('begin transaction');
 		$this->intransaction = true;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function transaction_commit()/*: void*/ {
 		$this->query('commit');
 		$this->intransaction = false;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function transaction_rollback()/*: void*/ {
 		$this->query('rollback');
 		$this->intransaction = false;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function sqlDate(): string {
 		return 'datetime()';
 	}
 
-	public function natOrder($fieldname, $order='asc'): string {
+	/**
+	 * @param string $fieldname
+	 * @param string $order
+	 * @return string
+	 */
+	public function natOrder(string $fieldname, string $order='asc'): string {
 
 		// This collation is defined in the database plugin using SQLite3::createCollation()
 		return "$fieldname COLLATE NATURAL_CMP $order";
 
 	}
 
+	/**
+	 * @param bool $mustExist
+	 * @return OIDplusSqlSlangPlugin|null
+	 * @throws OIDplusConfigInitializationException
+	 */
 	protected function doGetSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
 		$slang = OIDplus::getSqlSlangPlugin('sqlite');
 		if (is_null($slang)) {

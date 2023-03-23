@@ -24,7 +24,7 @@ use ViaThinkSoft\OIDplus\OIDplusPageAdminVNagVersionCheck;
 include __DIR__ . '/../../../../vendor/danielmarschall/vnag/framework/vnag_framework.inc.php';
 include __DIR__ . '/../../../../includes/oidplus.inc.php';
 
-define('OIDPLUS_VNAG_MAX_CACHE_AGE', 60); // seconds (TODO: in base config?)
+const OIDPLUS_VNAG_MAX_CACHE_AGE = 60; // seconds (TODO: in base config?)
 
 OIDplus::init(false);
 

@@ -25,15 +25,32 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 
-	public function action($actionID, $params) {
-		throw new OIDplusException(_L('Unknown action ID'));
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
+		return parent::action($actionID, $params);
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 		// Nothing
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if ($id === 'oidplus:login_facebook') {
 			$handled = true;
 			$out['title'] = _L('Login using Facebook');
@@ -55,26 +72,49 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function publicSitemap(&$out) {
+	/**
+	 * @param array $out
+	 * @return void
+	 */
+	public function publicSitemap(array &$out) {
 		$out[] = 'oidplus:login_facebook';
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.5') return true; // alternativeLoginMethods()
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
 		return false;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.5
+	 * @return array
+	 * @throws OIDplusException
+	 */
 	public function alternativeLoginMethods() {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.5
 		$logins = array();
 		if (OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {
 			$logins[] = array(
@@ -86,8 +126,13 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 		return $logins;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
+	 * @param $user
+	 * @return array
+	 * @throws OIDplusException
+	 */
 	public function getNotifications($user=null): array {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {

@@ -25,33 +25,85 @@ namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 
+	/**
+	 * @return string
+	 */
 	public abstract static function id(): string;
 
-	public abstract function natOrder($fieldname, $order='asc'): string;
+	/**
+	 * @param string $fieldname
+	 * @param string $order
+	 * @return string
+	 */
+	public abstract function natOrder(string $fieldname, string $order='asc'): string;
 
+	/**
+	 * @return string
+	 */
 	public abstract function sqlDate(): string;
 
+	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @return bool
+	 */
 	public abstract function detect(OIDplusDatabaseConnection $db): bool;
 
-	// Please note: This insert_id() function should use SQL to receive
-	// the last inserted ID. If the database connection provider (e.g. PDO)
-	// offers a way to fetch the last inserted ID, please use this instead!
-	// So, please do NOT use  OIDplus::db()->getSlang()->insert_id()
-	// but instead use        OIDplus::db()->insert_id()
-	// This way, the database connection provider can override that function
-	// with their own method of fetching the last inserted ID.
+	/**
+	 * Please note: This insert_id() function should use SQL to receive
+	 * the last inserted ID. If the database connection provider (e.g. PDO)
+	 * offers a way to fetch the last inserted ID, please use this instead!
+	 * So, please do NOT use  OIDplus::db()->getSlang()->insert_id()
+	 * but instead use        OIDplus::db()->insert_id()
+	 * This way, the database connection provider can override that function
+	 * with their own method of fetching the last inserted ID.
+	 * @param OIDplusDatabaseConnection $db
+	 * @return int 0 on failure.
+	 */
 	public abstract function insert_id(OIDplusDatabaseConnection $db): int;
 
-	public abstract function setupSetTablePrefix($cont, $table, $prefix): string;
+	/**
+	 * @param string $cont
+	 * @param string $table
+	 * @param string $prefix
+	 * @return string
+	 */
+	public abstract function setupSetTablePrefix(string $cont, string $table, string $prefix): string;
 
-	public abstract function setupCreateDbIfNotExists($database): string;
+	/**
+	 * @param string $database
+	 * @return string
+	 */
+	public abstract function setupCreateDbIfNotExists(string $database): string;
 
-	public abstract function setupUseDatabase($database): string;
+	/**
+	 * @param string $database
+	 * @return string
+	 */
+	public abstract function setupUseDatabase(string $database): string;
 
-	public abstract function filterQuery($sql): string;
+	/**
+	 * @param string $sql
+	 * @return string
+	 */
+	public abstract function filterQuery(string $sql): string;
 
-	public abstract function getSQLBool($bool): string;
+	/**
+	 * @param bool $bool
+	 * @return string
+	 */
+	public abstract function getSQLBool(bool $bool): string;
 
-	public abstract function escapeString($str): string;
+	/**
+	 * @param string $str
+	 * @return string
+	 */
+	public abstract function escapeString(string $str): string;
+
+	/**
+	 * @param string $expr1
+	 * @param string $expr2
+	 * @return string
+	 */
+	public abstract function isNullFunction(string $expr1, string $expr2): string;
 
 }

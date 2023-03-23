@@ -24,24 +24,57 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusOidAsn1Id {
+	/**
+	 * @var string
+	 */
 	private $name = '';
+
+	/**
+	 * @var bool
+	 */
 	private $standardized = false;
+
+	/**
+	 * @var bool
+	 */
 	private $well_known = false;
-	function __construct($name, $standardized, $well_known) {
+
+	/**
+	 * @param string $name
+	 * @param bool $standardized
+	 * @param bool $well_known
+	 */
+	function __construct(string $name, bool $standardized, bool $well_known) {
 		$this->name = $name;
 		$this->standardized = $standardized;
 		$this->well_known = $well_known;
 	}
-	function getName() {
+
+	/**
+	 * @return string
+	 */
+	function getName(): string {
 		return $this->name;
 	}
-	function isStandardized() {
+
+	/**
+	 * @return bool
+	 */
+	function isStandardized(): bool {
 		return $this->standardized;
 	}
-	function isWellKnown() {
+
+	/**
+	 * @return bool
+	 */
+	function isWellKnown(): bool {
 		return $this->well_known;
 	}
-	function __toString() {
+
+	/**
+	 * @return string
+	 */
+	function __toString(): string {
 		return $this->name;
 	}
 }

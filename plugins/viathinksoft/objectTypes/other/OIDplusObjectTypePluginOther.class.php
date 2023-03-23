@@ -25,7 +25,10 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusObjectTypePluginOther extends OIDplusObjectTypePlugin {
 
-	public static function getObjectTypeClassName() {
+	/**
+	 * @return string
+	 */
+	public static function getObjectTypeClassName(): string {
 		return OIDplusOther::class;
 	}
 

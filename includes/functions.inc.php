@@ -48,9 +48,9 @@ function change_private_key_passphrase($privKeyOld, $passphrase_old, $passphrase
 	);
 	$privKeyNew = @openssl_pkey_get_private($privKeyOld, $passphrase_old);
 	if ($privKeyNew === false) return false;
-	@openssl_pkey_export($privKeyNew, $privKeyNewExport, $passphrase_new, $pkey_config);
-	if ($privKeyNewExport === false) return false;
-	return $privKeyNewExport."";
+	if (!@openssl_pkey_export($privKeyNew, $privKeyNewExport, $passphrase_new, $pkey_config)) return false;
+	if ($privKeyNewExport === "") return false;
+	return "$privKeyNewExport";
 }
 
 function decrypt_private_key($privKey, $passphrase) {

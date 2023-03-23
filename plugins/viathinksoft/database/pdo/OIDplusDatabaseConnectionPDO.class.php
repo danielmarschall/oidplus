@@ -28,7 +28,13 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	private $last_error = null; // we need that because PDO divides prepared statement errors and normal query errors, but we have only one "error()" method
 	private $transactions_supported = false;
 
-	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+	/**
+	 * @param string $sql
+	 * @param array|null $prepared_args
+	 * @return OIDplusQueryResultPDO
+	 * @throws OIDplusException
+	 */
+	public function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			$res = $this->conn->query($sql);
@@ -73,6 +79,10 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @return int
+	 * @throws OIDplusException
+	 */
 	public function insert_id(): int {
 		try {
 			$out = @($this->conn->lastInsertId());
@@ -83,12 +93,20 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function error(): string {
 		$err = $this->last_error;
 		if ($err == null) $err = '';
 		return $err;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	protected function doConnect()/*: void*/ {
 		if (!class_exists('PDO')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','PDO'));
 
@@ -135,16 +153,28 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function doDisconnect()/*: void*/ {
 		$this->conn = null; // the connection will be closed by removing the reference
 	}
 
+	/**
+	 * @var bool
+	 */
 	private $intransaction = false;
 
+	/**
+	 * @return bool
+	 */
 	public function transaction_supported(): bool {
 		return $this->transactions_supported;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function transaction_level(): int {
 		if (!$this->transaction_supported()) {
 			// TODO?
@@ -153,6 +183,10 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		return $this->intransaction ? 1 : 0;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function transaction_begin()/*: void*/ {
 		if (!$this->transaction_supported()) {
 			// TODO?
@@ -163,6 +197,9 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		$this->intransaction = true;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function transaction_commit()/*: void*/ {
 		if (!$this->transaction_supported()) {
 			// TODO?
@@ -172,6 +209,9 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		$this->intransaction = false;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function transaction_rollback()/*: void*/ {
 		if (!$this->transaction_supported()) {
 			// TODO?

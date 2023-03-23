@@ -25,7 +25,10 @@ namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusLanguagePlugin extends OIDplusPlugin {
 
-	public function getLanguageCode() {
+	/**
+	 * @return string
+	 */
+	public function getLanguageCode(): string {
 		return $this->getManifest()->getLanguageCode();
 	}
 

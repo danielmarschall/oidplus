@@ -25,20 +25,28 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 
+	/**
+	 * @return string
+	 */
 	public static function id(): string {
 		return "PDO";
 	}
 
+	/**
+	 * @return OIDplusDatabaseConnection
+	 */
 	public static function newConnection(): OIDplusDatabaseConnection {
 		return new OIDplusDatabaseConnectionPDO();
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function setupHTML(): string {
 		return '<div id="DBPLUGIN_PARAMS_PDO">'.
 		       '	<p>PDO DSN (<a href="https://www.php.net/manual/de/pdo.drivers.php" target="_blank">more information</a>):<br><input id="pdo_dsn" type="text" value="mysql:dbname=oidplus;host=localhost" onkeypress="rebuild()" onkeyup="rebuild()" style="width:600px">  <span id="pdo_dsn_warn"></span>'.
 		       '	<br><font size="-1">'._L('Example for MySQL/MariaDB').': <i>mysql:dbname=oidplus;host=localhost;port=3306</i>'.
 		       '	<br>'._L('Example for PostgreSQL').':    <i>pgsql:dbname=oidplus;host=localhost;port=5432</i></font></p>'.
-		       ''.
 		       '	<p>'._L('PDO Username').':<br><input id="pdo_username" type="text" value="root" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="pdo_username_warn"></span></p>'.
 		       '	<p>'._L('PDO Password').':<br><input id="pdo_password" type="password" value="" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="pdo_password_warn"></span></p>'.
 		       '	<p>'._L('Which DBMS (SQL dialect) is used?').'<br>'.

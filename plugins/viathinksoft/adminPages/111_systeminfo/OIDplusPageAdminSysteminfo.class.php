@@ -25,12 +25,26 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
+		return parent::action($actionID, $params);
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 	}
 
+	/**
+	 * @return array|mixed|string|string[]
+	 */
 	private function getLoadedInis() {
 		$s_inis = '';
 
@@ -51,7 +65,15 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 		return $s_inis;
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if ($id === 'oidplus:phpinfo') {
 			$handled = true;
 			$out['title'] = _L('PHP information');
@@ -145,7 +167,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	</tr>';
 
 			$sysid = OIDplus::getSystemId(false);
-			$sysid_aid = $sysid ? 'D276000186B20005'.strtoupper(str_pad(dechex($sysid),8,'0',STR_PAD_LEFT)) : '';
+			$sysid_aid = $sysid ? 'D276000186B20005'.strtoupper(str_pad(dechex((int)$sysid),8,'0',STR_PAD_LEFT)) : '';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('System AID').' <abbr title="'._L('Application Identifier (ISO/IEC 7816) based on the system ID (which is based on the hash of the public key of your OIDplus system).').'">(?)</abbr></td>';
 			$out['text'] .= '		<td>'.(!$sysid_aid ? '<i>'._L('unknown').'</i>' : htmlentities($sysid_aid)).' ('._L('No PIX allowed').')</td>';
@@ -327,7 +349,15 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -356,11 +386,19 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		return false;
 	}
 }

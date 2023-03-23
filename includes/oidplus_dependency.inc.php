@@ -69,7 +69,7 @@ function oidplus_get_missing_dependencies() {
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			$install_hint1 = sprintf('On Windows, install it by enabling the line %s in your PHP.ini',
 				'extension=php_gmp.dll');
-			$install_hint2 = sprintf('On Windows, it should be installed by default');
+			$install_hint2 = 'On Windows, it should be installed by default';
 		} else {
 			$install_hint1 = sprintf('On Linux, install it by running e.g. %s, and then restart your webserver service, e.g. by running %s',
 				'<code>sudo apt-get update && sudo apt-get install php-gmp</code>',
@@ -79,7 +79,7 @@ function oidplus_get_missing_dependencies() {
 				'<code>sudo service apache2 restart</code>');
 		}
 		$missing_dependencies[] = 'GMP ('.$install_hint1.')'.
-		                          '<br>'.sprintf('or alternatively').'<br>' .
+		                          '<br>or alternatively<br>' .
 		                          'BCMath ('.$install_hint2.')';
 	}
 
@@ -94,15 +94,15 @@ function oidplus_get_missing_dependencies() {
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			$install_hint1 = sprintf('On Windows, install it by enabling the line %s in your PHP.ini',
 				'extension=php_mbstring.dll');
-			$install_hint2 = sprintf('On Windows, it should be installed by default');
+			$install_hint2 = 'On Windows, it should be installed by default';
 		} else {
 			$install_hint1 = sprintf('On Linux, install it by running e.g. %s, and then restart your webserver service, e.g. by running %s',
 				'<code>sudo apt-get update && sudo apt-get install php-mbstring</code>',
 				'<code>sudo service apache2 restart</code>');
-			$install_hint2 = sprintf('On Linux, it should be installed by default'); // Alpine Linux: apk add php-iconv
+			$install_hint2 = 'On Linux, it should be installed by default'; // Alpine Linux: apk add php-iconv
 		}
 		$missing_dependencies[] = 'MBString ('.$install_hint1.')'.
-		                          '<br>'.sprintf('or alternatively').'<br>' .
+		                          '<br>or alternatively<br>' .
 		                          'iconv ('.$install_hint2.')';
 	}
 
@@ -113,7 +113,7 @@ function oidplus_get_missing_dependencies() {
 		//              dev/translation/*.phps (only for developers)
 		// Note: This should not happen because of vendor/danielmarschall/php_utils/simplexml_supplement.inc.php
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			$install_hint = sprintf('On Windows, it should be installed by default');
+			$install_hint = 'On Windows, it should be installed by default';
 		} else {
 			$install_hint = sprintf('On Linux, install it by running e.g. %s, and then restart your webserver service, e.g. by running %s',
 				'<code>sudo apt-get update && sudo apt-get install php-xml</code>',

@@ -30,6 +30,9 @@ class OIDplusOIDIP {
 	protected $JSON_SCHEMA_URN;
 	protected $JSON_SCHEMA_URL;
 
+	/**
+	 * @throws OIDplusException
+	 */
 	public function __construct() {
 		// NOTES:
 		// - XML_SCHEMA_URN must be equal to the string in the .xsd file!
@@ -40,6 +43,11 @@ class OIDplusOIDIP {
 		$this->JSON_SCHEMA_URL = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'whois/draft-viathinksoft-oidip-05.json';
 	}
 
+	/**
+	 * @param $query
+	 * @return array|void
+	 * @throws OIDplusException
+	 */
 	public function oidipQuery($query) {
 
 		$out_type = null;
@@ -251,6 +259,8 @@ class OIDplusOIDIP {
 					}
 
 					if (substr($query,0,4) === 'oid:') {
+						assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
+
 						$out[] = $this->_oidip_attr('asn1-notation', $obj->getAsn1Notation(false)); // DO NOT TRANSLATE!
 						$out[] = $this->_oidip_attr('iri-notation', $obj->getIriNotation(false)); // DO NOT TRANSLATE!
 
@@ -282,12 +292,12 @@ class OIDplusOIDIP {
 					if ($obj->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
 						// Also ask $obj for extra attributes:
 						// This way we could add various additional information, e.g. IPv4/6 range analysis, interpretation of GUID, etc.
-						$obj->whoisObjectAttributes($obj->nodeId(), $out);
+						$obj->whoisObjectAttributes($obj->nodeId(), $out); /** @phpstan-ignore-line */
 					}
 
 					foreach (OIDplus::getAllPlugins() as $plugin) {
 						if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-							$plugin->whoisObjectAttributes($obj->nodeId(), $out);
+							$plugin->whoisObjectAttributes($obj->nodeId(), $out); /** @phpstan-ignore-line */
 						}
 					}
 
@@ -377,7 +387,7 @@ class OIDplusOIDIP {
 
 						foreach (OIDplus::getAllPlugins() as $plugin) {
 							if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-								$plugin->whoisRaAttributes($obj->getRaMail(), $out);
+								$plugin->whoisRaAttributes($obj->getRaMail(), $out); /** @phpstan-ignore-line */
 							}
 						}
 
@@ -393,7 +403,7 @@ class OIDplusOIDIP {
 						if ($obj) {
 							foreach (OIDplus::getAllPlugins() as $plugin) {
 								if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-									$plugin->whoisRaAttributes($obj->getRaMail(), $out);
+									$plugin->whoisRaAttributes($obj->getRaMail(), $out); /** @phpstan-ignore-line */
 								}
 							}
 						}
@@ -627,6 +637,11 @@ class OIDplusOIDIP {
 		return array($out_content, $out_type);
 	}
 
+	/**
+	 * @param $id
+	 * @return string
+	 * @throws OIDplusException
+	 */
 	protected function show_asn1_appendix($id) {
 		if (substr($id,0,4) === 'oid:') {
 			$appendix_asn1ids = array();
@@ -643,10 +658,19 @@ class OIDplusOIDIP {
 		return $appendix;
 	}
 
+	/**
+	 * @param $id
+	 * @return bool
+	 */
 	protected function is_root($id) {
 		return empty(explode(':',$id,2)[1]);
 	}
 
+	/**
+	 * @param $content
+	 * @param $authTokens
+	 * @return bool
+	 */
 	protected function authTokenAccepted($content, $authTokens) {
 		foreach ($authTokens as $token) {
 			if (OIDplusPagePublicWhois::genWhoisAuthToken($content) == $token) return true;
@@ -654,6 +678,12 @@ class OIDplusOIDIP {
 		return false;
 	}
 
+	/**
+	 * @param $obj
+	 * @param $authTokens
+	 * @return bool
+	 * @throws OIDplusException
+	 */
 	protected function allowObjectView($obj, $authTokens) {
 		// Master auth token (TODO: Have an object-master-token and a ra-master-token?)
 		$authToken = trim(OIDplus::config()->getValue('whois_auth_token'));
@@ -679,6 +709,12 @@ class OIDplusOIDIP {
 		return true;
 	}
 
+	/**
+	 * @param $row_ra
+	 * @param $authTokens
+	 * @return bool
+	 * @throws OIDplusException
+	 */
 	protected function allowRAView($row_ra, $authTokens) {
 		// Master auth token (TODO: Have an object-master-token and a ra-master-token?)
 		$authToken = trim(OIDplus::config()->getValue('whois_auth_token'));
@@ -692,6 +728,11 @@ class OIDplusOIDIP {
 		return true;
 	}
 
+	/**
+	 * @param $name
+	 * @param $value
+	 * @return array
+	 */
 	protected function _oidip_attr($name, $value) {
 		return array(
 			'xmlns' => '',
@@ -702,6 +743,10 @@ class OIDplusOIDIP {
 		);
 	}
 
+	/**
+	 * @param $out
+	 * @return void
+	 */
 	protected function _oidip_newout_format(&$out) {
 		foreach ($out as &$line) {
 			if (is_string($line)) {

@@ -25,16 +25,26 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		// Nothing
 	}
 
-	public function oobeRequired() {
+	/**
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function oobeRequired(): bool {
 		$oobe_done = OIDplus::config()->getValue('oobe_main_done') == '1';
 
 		foreach (OIDplus::getAllPlugins() as $plugin) {
 			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.1')) {
-				if ($plugin->oobeRequested()) {
+				if ($plugin->oobeRequested()) { /** @phpstan-ignore-line */
 					$oobe_done = false;
 					break;
 				}
@@ -44,7 +54,12 @@ class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 		return !$oobe_done;
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->delete('reg_wizard_done'); // deprecated name
 		OIDplus::config()->prepareConfigKey('oobe_main_done', '"Out Of Box Experience" wizard for the system settings done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 
@@ -79,11 +94,22 @@ class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

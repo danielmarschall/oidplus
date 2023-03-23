@@ -31,12 +31,23 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	const JWT_GENERATOR_LOGIN  = 1; // "Remember me" login method
 	const JWT_GENERATOR_MANUAL = 2; // "Manually crafted" JWT tokens
 
-	private static function jwtGetBlacklistConfigKey($gen, $sub) {
+	/**
+	 * @param int $gen OIDplusAuthContentStoreJWT::JWT_GENERATOR_...
+	 * @param string $sub
+	 * @return string
+	 */
+	private static function jwtGetBlacklistConfigKey(int $gen, string $sub): string {
 		// Note: Needs to be <= 50 characters!
 		return 'jwt_blacklist_gen('.$gen.')_sub('.trim(base64_encode(md5($sub,true)),'=').')';
 	}
 
-	public static function jwtBlacklist($gen, $sub) {
+	/**
+	 * @param int $gen OIDplusAuthContentStoreJWT::JWT_GENERATOR_...
+	 * @param string $sub
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public static function jwtBlacklist(int $gen, string $sub) {
 		$cfg = self::jwtGetBlacklistConfigKey($gen, $sub);
 		$bl_time = time()-1;
 
@@ -45,16 +56,27 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		if ($gen === self::JWT_GENERATOR_LOGIN)  $gen_desc = 'Login ("Remember me")';
 		if ($gen === self::JWT_GENERATOR_MANUAL) $gen_desc = 'Manually created';
 
-		OIDplus::config()->prepareConfigKey($cfg, 'Revoke timestamp of all JWT tokens for $sub with generator $gen ($gen_desc)', $bl_time, OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
+		OIDplus::config()->prepareConfigKey($cfg, 'Revoke timestamp of all JWT tokens for $sub with generator $gen ($gen_desc)', "$bl_time", OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 		OIDplus::config()->setValue($cfg, $bl_time);
 	}
 
-	public static function jwtGetBlacklistTime($gen, $sub) {
+	/**
+	 * @param int $gen OIDplusAuthContentStoreJWT::JWT_GENERATOR_...
+	 * @param string $sub
+	 * @return int
+	 * @throws OIDplusException
+	 */
+	public static function jwtGetBlacklistTime(int $gen, string $sub): int {
 		$cfg = self::jwtGetBlacklistConfigKey($gen, $sub);
-		return OIDplus::config()->getValue($cfg,0);
+		return (int)OIDplus::config()->getValue($cfg,0);
 	}
 
-	private static function jwtSecurityCheck($contentProvider) {
+	/**
+	 * @param OIDplusAuthContentStore $contentProvider
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	private static function jwtSecurityCheck(OIDplusAuthContentStore $contentProvider) {
 		// Check if the token is intended for us
 		if ($contentProvider->getValue('aud','') !== OIDplus::getEditionInfo()['jwtaud']) {
 			throw new OIDplusException(_L('Token has wrong audience'));
@@ -140,45 +162,81 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 
 	// Override abstract functions
 
+	/**
+	 * @return void
+	 */
 	public function activate() {
 		// Send cookie at the end of the HTTP request, in case there are multiple activate() calls
 		OIDplus::register_shutdown_function(array($this,'activateNow'));
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function activateNow() {
 		$token = $this->getJWTToken();
 		$exp = $this->getValue('exp',0);
 		OIDplus::cookieUtils()->setcookie(self::COOKIE_NAME, $token, $exp, false);
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function destroySession() {
 		OIDplus::cookieUtils()->unsetcookie(self::COOKIE_NAME);
 	}
 
-	public function raLogout($email) {
+	/**
+	 * @param string $email
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function raLogout(string $email) {
 		$gen = $this->getValue('oidplus_generator', -1);
 		if ($gen >= 0) self::jwtBlacklist($gen, $email);
 		parent::raLogout($email);
 	}
 
-	public function raLogoutEx($email, &$loginfo) {
+	/**
+	 * @param string $email
+	 * @param string $loginfo
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function raLogoutEx(string $email, string &$loginfo) {
 		$this->raLogout($email);
 		$loginfo = 'from JWT session';
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function adminLogout() {
 		$gen = $this->getValue('oidplus_generator', -1);
 		if ($gen >= 0) self::jwtBlacklist($gen, 'admin');
 		parent::adminLogout();
 	}
 
-	public function adminLogoutEx(&$loginfo) {
+	/**
+	 * @param string $loginfo
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function adminLogoutEx(string &$loginfo) {
 		$this->adminLogout();
 		$loginfo = 'from JWT session';
 	}
 
 	private static $contentProvider = null;
-	public static function getActiveProvider() {
+
+	/**
+	 * @return OIDplusAuthContentStore|null
+	 * @throws OIDplusException
+	 */
+	public static function getActiveProvider()/*: ?OIDplusAuthContentStore*/ {
 		if (!self::$contentProvider) {
 			$jwt = '';
 			if (isset($_COOKIE[self::COOKIE_NAME])) $jwt = $_COOKIE[self::COOKIE_NAME];
@@ -212,7 +270,13 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		return self::$contentProvider;
 	}
 
-	public function raLoginEx($email, &$loginfo) {
+	/**
+	 * @param string $email
+	 * @param string $loginfo
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function raLoginEx(string $email, string &$loginfo) {
 		if (is_null(self::getActiveProvider())) {
 			$this->raLogin($email);
 			$loginfo = 'into new JWT session';
@@ -237,7 +301,12 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		}
 	}
 
-	public function adminLoginEx(&$loginfo) {
+	/**
+	 * @param string $loginfo
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function adminLoginEx(string &$loginfo) {
 		if (is_null(self::getActiveProvider())) {
 			$this->adminLogin();
 			$loginfo = 'into new JWT session';
@@ -264,7 +333,12 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 
 	// Individual functions
 
-	public function loadJWT($jwt) {
+	/**
+	 * @param string $jwt
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function loadJWT(string $jwt) {
 		\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
 		if (OIDplus::getPkiStatus()) {
 			$pubKey = OIDplus::getSystemPublicKey();
@@ -278,7 +352,11 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		}
 	}
 
-	public function getJWTToken() {
+	/**
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function getJWTToken(): string {
 		$payload = $this->content;
 		$payload["iss"] = OIDplus::getEditionInfo()['jwtaud'];
 		$payload["aud"] = OIDplus::getEditionInfo()['jwtaud'];

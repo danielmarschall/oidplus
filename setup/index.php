@@ -24,8 +24,8 @@ use ViaThinkSoft\OIDplus\OIDplusCaptchaPlugin;
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
-define('BASECONFIG_FILE_OLD', 'includes/config.inc.php');
-define('BASECONFIG_FILE_NEW', 'userdata/baseconfig/config.inc.php');
+const BASECONFIG_FILE_OLD = 'includes/config.inc.php';
+const BASECONFIG_FILE_NEW = 'userdata/baseconfig/config.inc.php';
 $existing_config = '';
 if (file_exists(__DIR__.'/../'.BASECONFIG_FILE_OLD)) $existing_config = BASECONFIG_FILE_OLD;
 if (file_exists(__DIR__.'/../'.BASECONFIG_FILE_NEW)) $existing_config = BASECONFIG_FILE_NEW;

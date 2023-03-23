@@ -25,16 +25,27 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 
-	public static function available(&$reason)/*: bool*/ {
+	/**
+	 * @param string $reason
+	 * @return bool
+	 */
+	public static function available(string &$reason): bool {
 		$reason = '';
 		return true;
 	}
 
-	public static function log($event, $users, $objects)/*: bool*/ {
+	/**
+	 * @param string $event
+	 * @param array $users
+	 * @param array $objects
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public static function log(string $event, array $users, array $objects): bool {
 		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
 		OIDplus::dbIsolated()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event));
 		$log_id = OIDplus::dbIsolated()->insert_id();
-		if ($log_id == 0) {
+		if ($log_id === 0) {
 			$res = OIDplus::dbIsolated()->query("select max(id) as last_id from ###log");
 			if (!$res->any()) throw new OIDplusException(_L('Could not log event'));
 			$row = $res->fetch_array();

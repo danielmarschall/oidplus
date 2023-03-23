@@ -25,7 +25,11 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
-	private function get_treeicon_root($ot) {
+	/**
+	 * @param $ot
+	 * @return string|null
+	 */
+	private function get_treeicon_root($ot)/*: ?string*/ {
 		$dirs = glob(OIDplus::localpath().'plugins/'.'*'.'/objectTypes/'.$ot::ns());
 
 		if (count($dirs) == 0) {
@@ -42,6 +46,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		return $icon;
 	}
 
+	/**
+	 * @param $id
+	 * @param $old_ra
+	 * @param $new_ra
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	private function ra_change_rec($id, $old_ra, $new_ra) {
 		if (is_null($old_ra)) $old_ra = '';
 		OIDplus::db()->query("update ###objects set ra_email = ?, updated = ".OIDplus::db()->sqlDate()." where id = ? and ".OIDplus::db()->getSlang()->isNullFunction('ra_email',"''")." = ?", array($new_ra, $id, $old_ra));
@@ -53,7 +65,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array|int[]
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 
 		// Action:     Delete
 		// Method:     POST
@@ -63,7 +82,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			_CheckParamExists($params, 'id');
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','DELETE',$id));
+			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','DELETE',$id));
 
 			if (!OIDplusObject::exists($id)) {
 				throw new OIDplusException(_L('Object %1 does not exist',$id));
@@ -74,7 +93,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->beforeObjectDelete($id);
+					$plugin->beforeObjectDelete($id); /** @phpstan-ignore-line */
 				}
 			}
 
@@ -111,7 +130,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->afterObjectDelete($id);
+					$plugin->afterObjectDelete($id); /** @phpstan-ignore-line */
 				}
 			}
 
@@ -129,7 +148,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			_CheckParamExists($params, 'id');
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE',$id));
+			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE',$id));
 
 			if (!OIDplusObject::exists($id)) {
 				throw new OIDplusException(_L('Object %1 does not exist',$id));
@@ -140,12 +159,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->beforeObjectUpdateSuperior($id, $params);
+					$plugin->beforeObjectUpdateSuperior($id, $params); /** @phpstan-ignore-line */
 				}
 			}
 
 			// First, do a simulation for ASN.1 IDs and IRIs to check if there are any problems (then an Exception will be thrown)
 			if ($obj::ns() == 'oid') {
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if (!$obj->isWellKnown()) {
 					if (isset($params['iris'])) {
 						$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
@@ -166,6 +186,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				// Validate RA email address
 				$new_ra = $params['ra_email'];
 				if ($obj::ns() == 'oid') {
+					assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 					if ($obj->isWellKnown()) {
 						$new_ra = '';
 					}
@@ -197,6 +218,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// Replace ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if (!$obj->isWellKnown()) {
 					if (isset($params['iris'])) {
 						$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
@@ -239,6 +261,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			if ($obj::ns() == 'oid') {
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if ($obj->isWellKnown()) {
 					$status += 4;
 				}
@@ -246,7 +269,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->afterObjectUpdateSuperior($id, $params);
+					$plugin->afterObjectUpdateSuperior($id, $params); /** @phpstan-ignore-line */
 				}
 			}
 
@@ -261,7 +284,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			_CheckParamExists($params, 'id');
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE2',$id));
+			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE2',$id));
 
 			if (!OIDplusObject::exists($id)) {
 				throw new OIDplusException(_L('Object %1 does not exist',$id));
@@ -272,7 +295,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->beforeObjectUpdateSelf($id, $params);
+					$plugin->beforeObjectUpdateSelf($id, $params); /** @phpstan-ignore-line */
 				}
 			}
 
@@ -295,7 +318,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->afterObjectUpdateSelf($id, $params);
+					$plugin->afterObjectUpdateSelf($id, $params); /** @phpstan-ignore-line */
 				}
 			}
 
@@ -324,7 +347,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			// Check if you have write rights on the parent (to create a new object)
 			_CheckParamExists($params, 'parent');
 			$objParent = OIDplusObject::parse($params['parent']);
-			if ($objParent === null) throw new OIDplusException(_L('%1 action failed because parent object "%2" cannot be parsed!','INSERT',$params['parent']));
+			if (!$objParent) throw new OIDplusException(_L('%1 action failed because parent object "%2" cannot be parsed!','INSERT',$params['parent']));
 
 			if (!$objParent->isRoot()) {
 				$idParent = $objParent->nodeId();
@@ -341,6 +364,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// For the root objects, let the user also enter a WEID
 			if ($objParent::ns() == 'oid') {
+				assert($objParent instanceof OIDplusOid); //assert(get_class($objParent) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if (strtolower(substr(trim($params['id']),0,5)) === 'weid:') {
 					if ($objParent->isRoot()) {
 						$params['id'] = \Frdl\Weid\WeidOidConverter::weid2oid($params['id']);
@@ -363,16 +387,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			$obj = OIDplusObject::parse($id);
-			if ($obj === null) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','INSERT',$id));
+			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','INSERT',$id));
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->beforeObjectInsert($id, $params);
+					$plugin->beforeObjectInsert($id, $params); /** @phpstan-ignore-line */
 				}
 			}
 
 			// First simulate if there are any problems of ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if (!$obj->isWellKnown()) {
 					if (isset($params['iris'])) {
 						$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
@@ -392,6 +417,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$parent = $params['parent'];
 			$ra_email = isset($params['ra_email']) ? $params['ra_email'] : '';
 			if ($obj::ns() == 'oid') {
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if ($obj->isWellKnown()) {
 					$ra_email = '';
 				}
@@ -420,6 +446,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// Set ASN.1 IDs und IRIs
 			if ($obj::ns() == 'oid') {
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if (!$obj->isWellKnown()) {
 					if (isset($params['iris'])) {
 						$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
@@ -445,6 +472,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			if ($obj::ns() == 'oid') {
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if ($obj->isWellKnown()) {
 					$status += 4;
 				}
@@ -452,7 +480,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->afterObjectInsert($id, $params);
+					$plugin->afterObjectInsert($id, $params); /** @phpstan-ignore-line */
 				}
 			}
 
@@ -461,11 +489,16 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				"inserted_id" => $id
 			);
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('oobe_objects_done', '"Out Of Box Experience" wizard for OIDplusPagePublicObjects done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 		OIDplus::config()->prepareConfigKey('oid_grid_show_weid', 'Show WEID/Base36 column in CRUD grid of OIDs?', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
@@ -474,12 +507,18 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		});
 	}
 
+	/**
+	 * @param $id
+	 * @param $out
+	 * @return array|false
+	 * @throws OIDplusException
+	 */
 	private function tryObject($id, &$out) {
 		$parent = null;
 		$res = null;
 		$row = null;
 		$obj = OIDplusObject::parse($id);
-		if (is_null($obj)) return false;
+		if (!$obj) return false;
 		if ($obj->isRoot()) {
 			$obj->getContentPage($out['title'], $out['text'], $out['icon']);
 			$objParent = null; // $obj->getParent();
@@ -496,6 +535,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		return array($id, $obj, $objParent);
 	}
 
+	/**
+	 * @param $id
+	 * @return array
+	 */
 	public static function getAlternativesForQuery($id) {
 		// Attention: This is NOT an implementation of 1.3.6.1.4.1.37476.2.5.2.3.7 !
 		//            This is the function that calls getAlternativesForQuery() of every plugin that implements 1.3.6.1.4.1.37476.2.5.2.3.7
@@ -504,7 +547,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$alternatives = array();
 		foreach (OIDplus::getAllPlugins() as $plugin) {
 			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.7')) {
-				$tmp = $plugin->getAlternativesForQuery($id);
+				$tmp = $plugin->getAlternativesForQuery($id); /** @phpstan-ignore-line */
 				if (is_array($tmp)) {
 					$alternatives = array_merge($tmp, $alternatives);
 				}
@@ -524,7 +567,15 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		return $alternatives;
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if ($id === 'oidplus:system') {
 			$handled = true;
 
@@ -559,8 +610,6 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				$tmp .= '</ul>';
 				$out['text'] = str_replace('%%OBJECT_TYPE_LIST%%', $tmp, $out['text']);
 			}
-
-			return;
 		}
 
 		// Never answer to an object type that is called 'oidplus:',
@@ -588,7 +637,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$obj = OIDplusObject::parse($id);
 
 			if ($test === false) {
-				if (is_null($obj)) {
+				if (!$obj) {
 					// Object type disabled or not known (e.g. ObjectType "oidplus:").
 					$handled = false;
 					return;
@@ -630,6 +679,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				} else {
 					$parent_title = $objParent->getTitle();
 					if (empty($parent_title) && ($objParent->ns() == 'oid')) {
+						assert($objParent instanceof OIDplusOid); //assert(get_class($objParent) === "ViaThinkSoft\OIDplus\OIDplusOid");
 						// If not title is available, then use an ASN.1 identifier
 						$res_asn = OIDplus::db()->query("select name from ###asn1id where oid = ?", array($objParent->nodeId()));
 						if ($res_asn->any()) {
@@ -699,12 +749,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.2')) {
-					$plugin->modifyContent($obj->nodeId(), $out['title'], $out['icon'], $out['text']);
+					$plugin->modifyContent($obj->nodeId(), $out['title'], $out['icon'], $out['text']); /** @phpstan-ignore-line */
 				}
 			}
 		}
 	}
 
+	/**
+	 * @param $json
+	 * @param $out
+	 * @return void
+	 */
 	private function publicSitemap_rec($json, &$out) {
 		foreach ($json as $x) {
 			if (isset($x['id']) && $x['id']) {
@@ -716,13 +771,26 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function publicSitemap(&$out) {
+	/**
+	 * @param array $out
+	 * @return void
+	 */
+	public function publicSitemap(array &$out) {
 		$json = array();
-		$this->tree($json, null/*RA EMail*/, false/*HTML tree algorithm*/, true/*display all*/);
+		$this->tree($json, null/*RA EMail*/, false/*HTML tree algorithm*/, "*"/*display all*/);
 		$this->publicSitemap_rec($json, $out);
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if ($nonjs) {
 			$json[] = array(
 				'id' => 'oidplus:system',
@@ -745,7 +813,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				);
 
 				$tmp = OIDplusObject::parse($req_goto);
-				if (!is_null($tmp) && ($ot == get_class($tmp))) {
+				if ($tmp && ($ot == get_class($tmp))) {
 					// TODO: Instead of just having 3 levels (parent, this and children), it would be better if we'd had a full tree of all parents
 					//       on the other hand, for giving search engines content, this is good enough
 					if (empty($parent)) {
@@ -769,7 +837,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 					$stufen = array();
 					while ($row = $res->fetch_object()) {
 						$obj = OIDplusObject::parse($row->id);
-						if (is_null($obj)) continue; // might happen if the objectType is not available/loaded
+						if (!$obj) continue; // might happen if the objectType is not available/loaded
 						if (!$obj->userHasReadRights()) continue;
 						$txt = $row->title == '' ? '' : ' -- '.htmlentities($row->title);
 
@@ -790,9 +858,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			return true;
 		} else {
-			if ($req_goto === true) {
+			if ($req_goto === "*") {
 				$goto_path = true; // display everything recursively
-			} else if (isset($req_goto)) {
+			} else if ($req_goto !== "") {
 				$goto = $req_goto;
 				$path = array();
 				while (true) {
@@ -840,7 +908,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		$ary = array();
 		$found_leaf = false;
 		if ($obj = OIDplusObject::parse($request)) {
@@ -873,8 +945,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		return $ary;
 	}
 
+	/**
+	 * @var int
+	 */
 	private static $crudCounter = 0;
 
+	/**
+	 * @param $parent
+	 * @return string|void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	protected static function showCrud($parent='oid:') {
 		$items_total = 0;
 		$items_hidden = 0;
@@ -919,8 +1000,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 		$enable_weid_presentation = OIDplus::config()->getValue('oid_grid_show_weid');
 
-		$output = '';
-		$output .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+		$output  = '<div class="container box"><div id="suboid_table" class="table-responsive">';
 		$output .= '<table class="table table-bordered table-striped">';
 		$output .= '	<tr>';
 		$output .= '	     <th>'._L('ID').(($parentNS == 'gs1') ? ' '._L('(without check digit)') : '').'</th>';
@@ -970,10 +1050,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$output .= '     <td><a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.htmlentities($show_id).'</a>';
 			if ($enable_weid_presentation && ($parentNS == 'oid') && $objParent->isRoot()) {
 				// To save space horizontal space, the WEIDs were written below the OIDs
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				$output .= '<br>'.$obj->getWeidNotation(true);
 			}
 			$output .= '</td>';
 			if ($enable_weid_presentation && ($parentNS == 'oid') && !$objParent->isRoot()) {
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				$output .= '	<td>'.htmlentities($obj->weidArc()).'</td>';
 			}
 			if ($objParent->userHasWriteRights()) {
@@ -1017,7 +1099,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$suffix = is_null($objParent) ? '' : $objParent->crudInsertSuffix();
 			foreach (OIDplus::getObjectTypePlugins() as $plugin) {
 				if (($plugin::getObjectTypeClassName()::ns() == $parentNS) && $plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.6')) {
-					$suffix .= $plugin->gridGeneratorLinks($objParent);
+					$suffix .= $plugin->gridGeneratorLinks($objParent); /** @phpstan-ignore-line */
 				}
 			}
 
@@ -1074,6 +1156,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		return $output;
 	}
 
+	/**
+	 * @param $html
+	 * @return array|string|string[]|null
+	 */
 	protected static function objDescription($html) {
 		// We allow HTML, but no hacking
 		$html = anti_xss($html);
@@ -1081,16 +1167,26 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		return trim_br($html);
 	}
 
-	// 'quickbars' added 11 July 2019: Disabled because of two problems:
-	//                                 1. When you load TinyMCE via AJAX using the left menu, the quickbar is immediately shown, even if TinyMCE does not have the focus
-	//                                 2. When you load a page without TinyMCE using the left menu, the quickbar is still visible, although there is no edit
-	// 'colorpicker', 'textcolor' and 'contextmenu' added in 07 April 2020, because it is built in in the core.
-	// 'importcss' added 17 September 2020, because it breaks the "Format/Style" dropdown box ("styleselect" toolbar)
-	// 'legacyoutput' added 24 September 2021, because it is declared as deprecated
-	// 'spellchecker' added 6 October 2021, because it is declared as deprecated and marked for removal in TinyMCE 6.0
-	// 'imagetools' and 'toc' added 23 February 2022, because they are declared as deprecated and marked for removal in TinyMCE 6.0 ("moving to premium")
+	/**
+	 * 'quickbars' added 11 July 2019: Disabled because of two problems:
+	 *                                 1. When you load TinyMCE via AJAX using the left menu, the quickbar is immediately shown, even if TinyMCE does not have the focus
+	 *                                 2. When you load a page without TinyMCE using the left menu, the quickbar is still visible, although there is no edit
+	 * 'colorpicker', 'textcolor' and 'contextmenu' added in 07 April 2020, because it is built in in the core.
+	 * 'importcss' added 17 September 2020, because it breaks the "Format/Style" dropdown box ("styleselect" toolbar)
+	 * 'legacyoutput' added 24 September 2021, because it is declared as deprecated
+	 * 'spellchecker' added 6 October 2021, because it is declared as deprecated and marked for removal in TinyMCE 6.0
+	 * 'imagetools' and 'toc' added 23 February 2022, because they are declared as deprecated and marked for removal in TinyMCE 6.0 ("moving to premium")
+	 * @var string[]
+	 */
 	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode', 'quickbars', 'colorpicker', 'textcolor', 'contextmenu', 'importcss', 'legacyoutput', 'spellchecker', 'imagetools', 'toc');
 
+	/**
+	 * @param $name
+	 * @param $content
+	 * @return string
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	protected static function showMCE($name, $content) {
 		$mce_plugins = array();
 		foreach (glob(OIDplus::localpath().'vendor/tinymce/tinymce/plugins/*') as $m) { // */
@@ -1147,22 +1243,34 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		return $out;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested()
 		// Important: Do NOT 1.3.6.1.4.1.37476.2.5.2.3.7 because our getAlternativesForQuery() is the one that calls others!
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
 		return false;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
+	 * @return bool
+	 * @throws OIDplusException
+	 */
 	public function oobeRequested(): bool {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
-
 		return OIDplus::config()->getValue('oobe_objects_done') == '0';
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
+	 * @param $step
+	 * @param $do_edits
+	 * @param $errors_happened
+	 * @return void
+	 */
 	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
-
 		echo '<h2>'._L('Step %1: Enable/Disable object type plugins',$step).'</h2>';
 		echo '<p>'._L('Which object types do you want to manage using OIDplus?').'</p>';
 
@@ -1208,8 +1316,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		echo ' <font color="red"><b>'.$msg.'</b></font>';
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
+	 * @param $user
+	 * @return array
+	 * @throws OIDplusException
+	 */
 	public function getNotifications($user=null): array {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
 		$notifications = array();
 		$res = OIDplus::db()->query("select id, title from ###objects order by ".OIDplus::db()->natOrder('id'));
 		if ($res->any()) {

@@ -25,7 +25,11 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusSQLException extends OIDplusException {
 
-	public function __construct($sql, $message) {
+	/**
+	 * @param string $sql
+	 * @param string $message
+	 */
+	public function __construct(string $sql, string $message) {
 		parent::__construct(_L('%1 at query "%2"',$message,$sql));
 	}
 

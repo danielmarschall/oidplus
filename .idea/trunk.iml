@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/tinymce/tinymce" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/firebase/php-jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/gedmarc/layout" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpseclib/phpseclib" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/components/jqueryui" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/script47/bs5-utils" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/components/jquery" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/matthiasmullie/path-converter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/matthiasmullie/minify" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/emn178/js-sha3" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/tweeb/tinymce-i18n" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dcodeio/bcrypt.js" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/twbs/bootstrap" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/vakata/jstree" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/spamspan/spamspan" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/danielmarschall/oidconverter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/danielmarschall/php-sha3" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/danielmarschall/vnag" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-mbstring" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/danielmarschall/php_utils" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/constant_time_encoding" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/danielmarschall/uuid_mac_utils" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/danielmarschall/fileformats" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

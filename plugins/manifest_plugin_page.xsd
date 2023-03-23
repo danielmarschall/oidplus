@@ -15,6 +15,8 @@
 								maxOccurs="1" />
 							<xs:element type="xs:string" name="author"
 								minOccurs="1" maxOccurs="1" />
+							<xs:element type="xs:string" name="license"
+								minOccurs="1" maxOccurs="1" />
 							<xs:element type="xs:string" name="version"
 								minOccurs="1" maxOccurs="1" />
 							<xs:element type="xs:string" name="descriptionHTML"
@@ -38,7 +40,16 @@
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element type="xs:string" name="file" minOccurs="0"
-								maxOccurs="unbounded" />
+										maxOccurs="unbounded" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+
+				<xs:element name="js" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element type="xs:string" name="file" minOccurs="0"
+										maxOccurs="unbounded" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>

@@ -18,11 +18,13 @@
  */
 
 use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
+use ViaThinkSoft\OIDplus\OIDplusException;
 
 /**
  * This function is internally called by oidplus_dbupdate_1002().
  * It changes the auth keys A1*# and A2# to VTS-MCF and A3# to BCrypt-MCF.
  * @param OIDplusDatabaseConnection $db is the OIDplusDatabaseConnection class
+ * @throws OIDplusException
  */
 function oidplus_dbupdate_1002_migrate_ra_passwords(OIDplusDatabaseConnection $db) {
 	$res = $db->query("select * from ###ra ");

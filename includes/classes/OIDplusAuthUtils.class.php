@@ -27,6 +27,11 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 
 	// Useful functions
 
+	/**
+	 * @param string $password
+	 * @return string
+	 * @throws OIDplusException
+	 */
 	private static function raPepperProcessing(string $password): string {
 		// Additional feature: Pepper
 		// The pepper is stored inside the base configuration file
@@ -43,7 +48,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 			} else {
 				$hmac = hash_hmac($algo, $password, $pepper);
 			}
-			if ($hmac === false) throw new OIDplusException(_L('HMAC failed'));
+			if ($hmac === "") throw new OIDplusException(_L('HMAC failed'));
 			return $hmac;
 		} else {
 			return $password;
@@ -52,13 +57,21 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 
 	// Content provider
 
+	/**
+	 * @return string
+	 * @throws OIDplusException
+	 */
 	public function getAuthMethod() {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return 'null';
 		return get_class($acs);
 	}
 
-	protected function getAuthContentStore() {
+	/**
+	 * @return OIDplusAuthContentStore|null
+	 * @throws OIDplusException
+	 */
+	protected function getAuthContentStore()/*: ?OIDplusAuthContentStore*/ {
 		// Logged in via JWT
 		$tmp = OIDplusAuthContentStoreJWT::getActiveProvider();
 		if ($tmp) return $tmp;
@@ -72,7 +85,13 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		return null;
 	}
 
-	public function getExtendedAttribute($name, $default=NULL) {
+	/**
+	 * @param string $name
+	 * @param mixed|null $default
+	 * @return mixed
+	 * @throws OIDplusException
+	 */
+	public function getExtendedAttribute(string $name, $default=NULL) {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return $default;
 		return $acs->getValue($name, $default);
@@ -80,19 +99,35 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 
 	// RA authentication functions
 
-	public function raLogin($email) {
+	/**
+	 * @param string $email
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function raLogin(string $email) {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return;
-		return $acs->raLogin($email);
+		$acs->raLogin($email);
 	}
 
-	public function raLogout($email) {
+	/**
+	 * @param string $email
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function raLogout(string $email) {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return;
-		return $acs->raLogout($email);
+		$acs->raLogout($email);
 	}
 
-	public function raCheckPassword($ra_email, $password) {
+	/**
+	 * @param string $ra_email
+	 * @param string $password
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function raCheckPassword(string $ra_email, string $password): bool {
 		$ra = new OIDplusRA($ra_email);
 
 		// Get RA info from RA
@@ -111,13 +146,21 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		return false;
 	}
 
-	public function raNumLoggedIn() {
+	/**
+	 * @return int
+	 * @throws OIDplusException
+	 */
+	public function raNumLoggedIn(): int {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return 0;
 		return $acs->raNumLoggedIn();
 	}
 
-	public function loggedInRaList() {
+	/**
+	 * @return OIDplusRA[]
+	 * @throws OIDplusException
+	 */
+	public function loggedInRaList(): array {
 		if ($this->forceAllLoggedOut()) {
 			return array();
 		} else {
@@ -127,14 +170,27 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		}
 	}
 
-	public function isRaLoggedIn($email) {
+	/**
+	 * @param string $email
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function isRaLoggedIn(string $email): bool {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return false;
 		return $acs->isRaLoggedIn($email);
 	}
 
 	// "High level" function including logging and checking for valid JWT alternations
-	public function raLoginEx($email, $remember_me, $origin='') {
+
+	/**
+	 * @param string $email
+	 * @param bool $remember_me
+	 * @param string $origin
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function raLoginEx(string $email, bool $remember_me, string $origin='') {
 		$loginfo = '';
 		$acs = $this->getAuthContentStore();
 		if (!is_null($acs)) {
@@ -163,12 +219,17 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		OIDplus::logger()->log("[OK]RA($email)!", $logmsg);
 	}
 
-	public function raLogoutEx($email) {
+	/**
+	 * @param string $email
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function raLogoutEx(string $email) {
 		$loginfo = '';
 
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return;
-		$res = $acs->raLogoutEx($email, $loginfo);
+		$acs->raLogoutEx($email, $loginfo);
 
 		OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged out ($loginfo)");
 
@@ -179,25 +240,36 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 			// Get a new token for the remaining users
 			$acs->activate();
 		}
-
-		return $res;
 	}
 
 	// Admin authentication functions
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function adminLogin() {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return;
-		return $acs->adminLogin();
+		$acs->adminLogin();
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function adminLogout() {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return;
-		return $acs->adminLogout();
+		$acs->adminLogout();
 	}
 
-	public function adminCheckPassword($password) {
+	/**
+	 * @param string $password
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function adminCheckPassword(string $password): bool {
 		$cfgData = OIDplus::baseConfig()->getValue('ADMIN_PASSWORD', '');
 		if (empty($cfgData)) {
 			throw new OIDplusException(_L('No admin password set in %1','userdata/baseconfig/config.inc.php'));
@@ -227,7 +299,11 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		return false;
 	}
 
-	public function isAdminLoggedIn() {
+	/**
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function isAdminLoggedIn(): bool {
 		if ($this->forceAllLoggedOut()) {
 			return false;
 		} else {
@@ -237,8 +313,14 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		}
 	}
 
-	// "High level" function including logging and checking for valid JWT alternations
-	public function adminLoginEx($remember_me, $origin='') {
+	/**
+	 * "High level" function including logging and checking for valid JWT alternations
+	 * @param bool $remember_me
+	 * @param string $origin
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function adminLoginEx(bool $remember_me, string $origin='') {
 		$loginfo = '';
 		$acs = $this->getAuthContentStore();
 		if (!is_null($acs)) {
@@ -267,12 +349,16 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		OIDplus::logger()->log("[OK]A!", $logmsg);
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function adminLogoutEx() {
 		$loginfo = '';
 
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return;
-		$res = $acs->adminLogoutEx($loginfo);
+		$acs->adminLogoutEx($loginfo);
 
 		if ($this->raNumLoggedIn() == 0) {
 			// Nobody here anymore. Destroy the cookie to make GDPR people happy
@@ -283,22 +369,35 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		}
 
 		OIDplus::logger()->log("[OK]A!", "Admin logged out ($loginfo)");
-		return $res;
 	}
 
 	// Authentication keys for validating arguments (e.g. sent by mail)
 
-	public static function makeAuthKey($data) {
+	/**
+	 * @param string $data
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public static function makeAuthKey(string $data): string {
 		return sha3_512_hmac($data, 'authkey:'.OIDplus::baseConfig()->getValue('SERVER_SECRET'), false);
 	}
 
-	public static function validateAuthKey($data, $auth_key) {
+	/**
+	 * @param string $data
+	 * @param string $auth_key
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public static function validateAuthKey(string $data, string $auth_key): bool {
 		return hash_equals(self::makeAuthKey($data), $auth_key);
 	}
 
 	// "Veto" functions to force logout state
 
-	protected function forceAllLoggedOut() {
+	/**
+	 * @return bool
+	 */
+	protected function forceAllLoggedOut(): bool {
 		if (isset($_SERVER['SCRIPT_FILENAME']) && (basename($_SERVER['SCRIPT_FILENAME']) == 'sitemap.php')) {
 			// The sitemap may not contain any confidential information,
 			// even if the user is logged in, because the admin could
@@ -314,18 +413,32 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 
 	private $enable_csrf = true;
 
+	/**
+	 * @return void
+	 */
 	public function enableCSRF() {
 		$this->enable_csrf = true;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function disableCSRF() {
 		$this->enable_csrf = false;
 	}
 
-	public function genCSRFToken() {
+	/**
+	 * @return string
+	 * @throws \Random\RandomException
+	 */
+	public function genCSRFToken(): string {
 		return random_bytes_ex(64, false, false);
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function checkCSRF() {
 		if (!$this->enable_csrf) return;
 
@@ -346,7 +459,12 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 
 	// Generate RA passwords
 
-	public static function raGeneratePassword($password): OIDplusRAAuthInfo {
+	/**
+	 * @param string $password
+	 * @return OIDplusRAAuthInfo
+	 * @throws OIDplusException
+	 */
+	public static function raGeneratePassword(string $password): OIDplusRAAuthInfo {
 		$plugin = OIDplus::getDefaultRaAuthPlugin(true);
 		return $plugin->generate(self::raPepperProcessing($password));
 	}

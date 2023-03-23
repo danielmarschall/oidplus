@@ -25,22 +25,36 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 
+	/**
+	 * @return string
+	 */
 	public static function id(): string {
 		return 'ViaThinkSoft Client Challenge';
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isVisible(): bool {
 		return false;
 	}
 
-	public function csrfUnlock($actionID) {
-		if ($actionID == 'get_challenge') {
-			return true;
-		}
-		return false;
+	/**
+	 * @param string $actionID
+	 * @return bool
+	 */
+	public function csrfUnlock(string $actionID): bool {
+		if ($actionID == 'get_challenge') return true;
+		return parent::csrfUnlock($actionID);
 	}
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 		if ($actionID == 'get_challenge') {
 			$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
 
@@ -67,9 +81,17 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 				// Autosolve on=calculate result on page load; off=calculate result on form submit
 				"autosolve" => OIDplus::baseConfig()->getValue('VTS_CAPTCHA_AUTOSOLVE', true)
 			);
+		} else {
+			return parent::action($actionID, $params);
 		}
 	}
 
+	/**
+	 * @param $ip_target
+	 * @param $random
+	 * @return string
+	 * @throws OIDplusException
+	 */
 	private static function getOpenTransFileName($ip_target, $random) {
 		$dir = OIDplus::localpath().'/userdata/cache';
 		$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
@@ -86,7 +108,13 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 		return $dir.'/vts_client_challenge_'.sha3_512_hmac($ip_target.'/'.$random, $server_secret).'.tmp';
 	}
 
-	public function captchaGenerate($header_text=null, $footer_text=null) {
+	/**
+	 * @param string|null $header_text
+	 * @param string|null $footer_text
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function captchaGenerate(string $header_text=null, string $footer_text=null): string {
 		return '<noscript>'.
 		       '<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.
 		       '</noscript>'.
@@ -96,7 +124,13 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 		       '</script>';
 	}
 
-	public function captchaVerify($params, $fieldname=null) {
+	/**
+	 * @param array $params
+	 * @param string|null $fieldname
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function captchaVerify(array $params, string $fieldname=null) {
 
 		if (is_null($fieldname)) $fieldname = 'vts_validation_result';
 
@@ -133,6 +167,9 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function setupHTML(): string {
 		return '<div id="CAPTCHAPLUGIN_PARAMS_VtsClientChallenge">'.
 		       '<p>'._L('ViaThinkSoft Client Challenge lets the client computer solve a cryptographic problem instead of letting the user solve a CAPTCHA. This slows down brute-force attacks.').'</p>'.

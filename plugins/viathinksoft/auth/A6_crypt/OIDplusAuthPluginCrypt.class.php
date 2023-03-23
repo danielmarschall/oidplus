@@ -25,22 +25,40 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusAuthPluginCrypt extends OIDplusAuthPlugin {
 
-	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
+	/**
+	 * @param OIDplusRAAuthInfo $authInfo
+	 * @param string $check_password
+	 * @return bool
+	 */
+	public function verify(OIDplusRAAuthInfo $authInfo, string $check_password): bool {
 		$authKey = $authInfo->getAuthKey();
 		return password_verify($check_password, $authKey);
 	}
 
-	public function generate($password): OIDplusRAAuthInfo {
+	/**
+	 * @param string $password
+	 * @return OIDplusRAAuthInfo
+	 * @throws OIDplusException
+	 */
+	public function generate(string $password): OIDplusRAAuthInfo {
 		$hashalgo = PASSWORD_SHA512; // choose the best out of crypt()
 		$calc_authkey = vts_password_hash($password, $hashalgo);
 		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
-	public function availableForHash(&$reason): bool {
+	/**
+	 * @param string $reason
+	 * @return bool
+	 */
+	public function availableForHash(string &$reason): bool {
 		return function_exists('vts_password_hash');
 	}
 
-	public function availableForVerify(&$reason): bool {
+	/**
+	 * @param string $reason
+	 * @return bool
+	 */
+	public function availableForVerify(string &$reason): bool {
 		return function_exists('vts_password_verify');
 	}
 

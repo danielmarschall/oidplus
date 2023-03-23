@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="df2a484b-bed2-4376-a9d2-11f38408a62e" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+    <execution />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/tinymce/tinymce" />
+      <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/vendor/gedmarc/layout" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/phpseclib/phpseclib" />
+      <path value="$PROJECT_DIR$/vendor/components/jqueryui" />
+      <path value="$PROJECT_DIR$/vendor/script47/bs5-utils" />
+      <path value="$PROJECT_DIR$/vendor/components/jquery" />
+      <path value="$PROJECT_DIR$/vendor/matthiasmullie/path-converter" />
+      <path value="$PROJECT_DIR$/vendor/matthiasmullie/minify" />
+      <path value="$PROJECT_DIR$/vendor/emn178/js-sha3" />
+      <path value="$PROJECT_DIR$/vendor/tweeb/tinymce-i18n" />
+      <path value="$PROJECT_DIR$/vendor/dcodeio/bcrypt.js" />
+      <path value="$PROJECT_DIR$/vendor/twbs/bootstrap" />
+      <path value="$PROJECT_DIR$/vendor/vakata/jstree" />
+      <path value="$PROJECT_DIR$/vendor/spamspan/spamspan" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/oidconverter" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/php-sha3" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/vnag" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/php_utils" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/uuid_mac_utils" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/fileformats" />
+    </include_path>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="2N1iLsvnSxtAjQSwVh6njExUvVK" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/SVN/OIDplus/trunk&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\danie\AppData\Roaming\Subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="df2a484b-bed2-4376-a9d2-11f38408a62e" name="Changes" comment="" />
+      <created>1678837935819</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1678837935819</updated>
+      <workItem from="1678837937240" duration="5602000" />
+      <workItem from="1678844463270" duration="60000" />
+      <workItem from="1678909665345" duration="14715000" />
+      <workItem from="1678925977020" duration="53000" />
+      <workItem from="1678997532226" duration="9394000" />
+      <workItem from="1679080899605" duration="1262000" />
+      <workItem from="1679253191500" duration="2860000" />
+      <workItem from="1679522068670" duration="9367000" />
+      <workItem from="1679603456581" duration="1368000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

@@ -26,42 +26,73 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusDomain extends OIDplusObject {
 	private $domain;
 
-	public function __construct($domain) {
+	/**
+	 * @param string $domain
+	 */
+	public function __construct(string $domain) {
 		// TODO: syntax checks
 		$this->domain = $domain;
 	}
 
-	public static function parse($node_id) {
+	/**
+	 * @param string $node_id
+	 * @return OIDplusDomain|null
+	 */
+	public static function parse(string $node_id)/*: ?OIDplusDomain*/ {
 		@list($namespace, $domain) = explode(':', $node_id, 2);
-		if ($namespace !== self::ns()) return false;
+		if ($namespace !== self::ns()) return null;
 		return new self($domain);
 	}
 
-	public static function objectTypeTitle() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitle(): string {
 		return _L('Domain Names');
 	}
 
-	public static function objectTypeTitleShort() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitleShort(): string {
 		return _L('Domain');
 	}
 
-	public static function ns() {
+	/**
+	 * @return string
+	 */
+	public static function ns(): string {
 		return 'domain';
 	}
 
-	public static function root() {
+	/**
+	 * @return string
+	 */
+	public static function root(): string {
 		return self::ns().':';
 	}
 
-	public function isRoot() {
+	/**
+	 * @return bool
+	 */
+	public function isRoot(): bool {
 		return $this->domain == '';
 	}
 
-	public function nodeId($with_ns=true) {
+	/**
+	 * @param bool $with_ns
+	 * @return string
+	 */
+	public function nodeId(bool $with_ns=true): string {
 		return $with_ns ? self::root().$this->domain : $this->domain;
 	}
 
-	public function addString($str) {
+	/**
+	 * @param string $str
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function addString(string $str): string {
 		if ($this->isRoot()) {
 			return self::root().$str;
 		} else {
@@ -70,28 +101,53 @@ class OIDplusDomain extends OIDplusObject {
 		}
 	}
 
-	public function crudShowId(OIDplusObject $parent) {
+	/**
+	 * @param OIDplusObject $parent
+	 * @return string
+	 */
+	public function crudShowId(OIDplusObject $parent): string {
 		return $this->domain;
 	}
 
-	public function crudInsertSuffix() {
+	/**
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function crudInsertSuffix(): string {
 		return $this->isRoot() ? '' : substr($this->addString(''), strlen(self::ns())+1);
 	}
 
-	public function jsTreeNodeName(OIDplusObject $parent = null) {
+	/**
+	 * @param OIDplusObject|null $parent
+	 * @return string
+	 */
+	public function jsTreeNodeName(OIDplusObject $parent = null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		return $this->domain;
 	}
 
-	public function defaultTitle() {
+	/**
+	 * @return string
+	 */
+	public function defaultTitle(): string {
 		return $this->domain;
 	}
 
-	public function isLeafNode() {
+	/**
+	 * @return bool
+	 */
+	public function isLeafNode(): bool {
 		return false;
 	}
 
-	public function getContentPage(&$title, &$content, &$icon) {
+	/**
+	 * @param string $title
+	 * @param string $content
+	 * @param string $icon
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function getContentPage(string &$title, string &$content, string &$icon) {
 		$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 		if ($this->isRoot()) {
@@ -130,7 +186,10 @@ class OIDplusDomain extends OIDplusObject {
 		}
 	}
 
-	public function one_up() {
+	/**
+	 * @return OIDplusDomain|null
+	 */
+	public function one_up()/*: ?OIDplusDomain*/ {
 		$oid = $this->domain;
 
 		$p = strpos($oid, '.');
@@ -141,9 +200,13 @@ class OIDplusDomain extends OIDplusObject {
 		return self::parse(self::ns().':'.$oid_up);
 	}
 
+	/**
+	 * @param $to
+	 * @return int|null
+	 */
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
-		if (!($to instanceof $this)) return false;
+		if (!($to instanceof $this)) return null;
 
 		$a = $to->domain;
 		$b = $this->domain;
@@ -160,18 +223,25 @@ class OIDplusDomain extends OIDplusObject {
 		$min_len = min(count($ary), count($bry));
 
 		for ($i=0; $i<$min_len; $i++) {
-			if ($ary[$i] != $bry[$i]) return false;
+			if ($ary[$i] != $bry[$i]) return null;
 		}
 
 		return count($ary) - count($bry);
 	}
 
-	public function getDirectoryName() {
+	/**
+	 * @return string
+	 */
+	public function getDirectoryName(): string {
 		if ($this->isRoot()) return $this->ns();
 		return $this->ns().'_'.md5($this->nodeId(false));
 	}
 
-	public static function treeIconFilename($mode) {
+	/**
+	 * @param string $mode
+	 * @return string
+	 */
+	public static function treeIconFilename(string $mode): string {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }

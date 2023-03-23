@@ -24,24 +24,57 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusOidIri {
+	/**
+	 * @var string
+	 */
 	private $name = '';
+
+	/**
+	 * @var bool
+	 */
 	private $longarc = false;
+
+	/**
+	 * @var bool
+	 */
 	private $well_known = false;
-	function __construct($name, $longarc, $well_known) {
+
+	/**
+	 * @param string $name
+	 * @param bool $longarc
+	 * @param bool $well_known
+	 */
+	function __construct(string $name, bool $longarc, bool $well_known) {
 		$this->name = $name;
 		$this->longarc = $longarc;
 		$this->well_known = $well_known;
 	}
-	function getName() {
+
+	/**
+	 * @return string
+	 */
+	function getName(): string {
 		return $this->name;
 	}
-	function isLongarc() {
+
+	/**
+	 * @return bool
+	 */
+	function isLongarc(): bool {
 		return $this->longarc;
 	}
-	function isWellKnown() {
+
+	/**
+	 * @return bool
+	 */
+	function isWellKnown(): bool {
 		return $this->well_known;
 	}
-	function __toString() {
+
+	/**
+	 * @return string
+	 */
+	function __toString(): string {
 		return $this->name;
 	}
 }

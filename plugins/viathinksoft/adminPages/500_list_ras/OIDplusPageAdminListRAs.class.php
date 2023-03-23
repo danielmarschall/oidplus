@@ -25,11 +25,20 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 		// Nothing
 	}
 
-	private function get_ralist() {
+	/**
+	 * @return array
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	private function get_ralist(): array {
 		$tmp = array();
 		if (OIDplus::db()->getSlang()->id() == 'mysql') {
 			$res = OIDplus::db()->query("select distinct BINARY(email) as email from ###ra"); // "binary" because we want to ensure that 'distinct' is case sensitive
@@ -56,7 +65,15 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 		return $tmp;
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if ($id === 'oidplus:list_ra') {
 			$handled = true;
 			$out['title'] = _L('RA Listing');
@@ -99,7 +116,16 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -152,7 +178,11 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		// We don't need this, because the list of RAs is loaded without lazy-loading,
 		// so the node does not need to be searched
 		/*

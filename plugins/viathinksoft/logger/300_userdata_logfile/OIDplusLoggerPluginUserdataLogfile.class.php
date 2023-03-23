@@ -25,7 +25,11 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 
-	public static function available(&$reason)/*: bool*/ {
+	/**
+	 * @param string $reason
+	 * @return bool
+	 */
+	public static function available(string &$reason): bool {
 		if (!is_dir(OIDplus::localpath().'userdata/logs/')) {
 			$reason = _L('Directory userdata/logs/ not existing');
 			return false;
@@ -40,7 +44,13 @@ class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 		return true;
 	}
 
-	public static function log($event, $users, $objects)/*: bool*/ {
+	/**
+	 * @param string $event
+	 * @param array $users
+	 * @param array $objects
+	 * @return bool
+	 */
+	public static function log(string $event, array $users, array $objects): bool {
 		if (!is_dir(OIDplus::localpath().'userdata/logs/')) return false;
 
 		$users_names = array();

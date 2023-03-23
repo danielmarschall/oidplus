@@ -109,8 +109,7 @@ foreach ($langs as $lang) {
 	$stats_translated = 0;
 	$stats_not_translated = 0;
 
-	$cont = '';
-	$cont .= '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'."\n";
+	$cont  = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'."\n";
 	$cont .= '<translation'."\n";
 	$cont .= '	xmlns="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.4.1"'."\n";
 	$cont .= '	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'."\n";

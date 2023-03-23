@@ -30,19 +30,37 @@ abstract class OIDplusAuthContentStoreDummy extends OIDplusAuthContentStore {
 
 	// Override some abstract functions
 
-	public function getValue($name, $default = NULL) {
+	/**
+	 * @param string $name
+	 * @param mixed|null $default
+	 * @return mixed|null
+	 */
+	public function getValue(string $name, $default = NULL) {
 		return isset($this->content[$name]) ? $this->content[$name] : $default;
 	}
 
-	public function setValue($name, $value) {
+	/**
+	 * @param string $name
+	 * @param mixed $value
+	 * @return void
+	 */
+	public function setValue(string $name, $value) {
 		$this->content[$name] = $value;
 	}
 
-	public function exists($name) {
+	/**
+	 * @param string $name
+	 * @return bool
+	 */
+	public function exists(string $name): bool {
 		return isset($this->content[$name]);
 	}
 
-	public function delete($name) {
+	/**
+	 * @param string $name
+	 * @return void
+	 */
+	public function delete(string $name) {
 		unset($this->content[$name]);
 	}
 

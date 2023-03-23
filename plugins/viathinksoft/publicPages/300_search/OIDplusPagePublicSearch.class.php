@@ -25,7 +25,12 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('search_min_term_length', 'Minimum length of a search term', '3', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -33,6 +38,11 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		});
 	}
 
+	/**
+	 * @param $params
+	 * @param $is_searching
+	 * @return void
+	 */
 	private function prepareSearchParams(&$params, $is_searching) {
 		$params['term'] = isset($params['term']) ? trim($params['term']) : '';
 		$params['namespace'] = isset($params['namespace']) ? trim($params['namespace']) : '';
@@ -51,10 +61,20 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		}
 	}
 
+	/**
+	 * @param $html
+	 * @param $term
+	 * @return array|string|string[]
+	 */
 	private function highlight_match($html, $term) {
 		return str_replace(htmlentities($term), '<font color="red">'.htmlentities($term).'</font>', $html);
 	}
 
+	/**
+	 * @param $params
+	 * @return string
+	 * @throws OIDplusException
+	 */
 	private function doSearch($params) {
 		$output = '';
 
@@ -143,17 +163,32 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		return $output;
 	}
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 
 		if ($actionID == 'search') {
 			// Search with JavaScript/AJAX
 			$ret = $this->doSearch($params);
 			return array("status" => 0, "output" => $ret);
+		} else {
+			return parent::action($actionID, $params);
 		}
 
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:search') {
 			$handled = true;
 
@@ -215,11 +250,23 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function publicSitemap(&$out) {
+	/**
+	 * @param array $out
+	 * @return void
+	 */
+	public function publicSitemap(array &$out) {
 		$out[] = 'oidplus:search';
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {
@@ -235,7 +282,11 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

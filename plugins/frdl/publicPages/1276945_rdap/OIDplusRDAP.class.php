@@ -37,6 +37,9 @@ class OIDplusRDAP {
 	protected $rdapCacheDir;
 	protected $rdapCacheExpires;
 
+	/**
+	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 */
 	public function __construct() {
 		$this->rdapBaseUri = OIDplus::baseConfig()->getValue('RDAP_BASE_URI', OIDplus::webpath() );
 		$this->useCache = OIDplus::baseConfig()->getValue('RDAP_CACHE_ENABLED', false );
@@ -44,6 +47,11 @@ class OIDplusRDAP {
 		$this->rdapCacheExpires = OIDplus::baseConfig()->getValue('RDAP_CACHE_EXPIRES', 60 * 3 );
 	}
 
+	/**
+	 * @param $query
+	 * @return array
+	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 */
 	public function rdapQuery($query) {
 		$query = str_replace('oid:.', 'oid:', $query);
 		$n = explode(':', $query);
@@ -114,7 +122,7 @@ class OIDplusRDAP {
 		$out['objectClassName'] = $ns;
 		$out['handle'] = $ns.':'.$n[1];
 		$out['parentHandle'] =   (null !== $parentHandle && is_callable([$parentHandle, 'nodeId']) )
-		                         ? $obj->one_up()->nodeId(true)
+		                         ? $parentHandle->nodeId(true)
 		                         : null;
 
 		$out['rdapConformance'] = [
@@ -235,11 +243,21 @@ class OIDplusRDAP {
 		return $this->rdap_out($out);
 	}
 
+	/**
+	 * @param $out
+	 * @param $cacheFile
+	 * @return void
+	 */
 	protected function rdap_write_cache($out, $cacheFile){
 		if (!is_string($cacheFile)) return;
 		@file_put_contents($cacheFile, serialize($out));
 	}
 
+	/**
+	 * @param $cacheFile
+	 * @param $rdapCacheExpires
+	 * @return array|null
+	 */
 	protected function rdap_read_cache($cacheFile, $rdapCacheExpires){
 		if (is_string($cacheFile) && file_exists($cacheFile) && filemtime($cacheFile) >= time() - $rdapCacheExpires) {
 			$out = unserialize(file_get_contents($cacheFile));
@@ -250,6 +268,10 @@ class OIDplusRDAP {
 		return null;
 	}
 
+	/**
+	 * @param $out
+	 * @return array
+	 */
 	protected function rdap_out($out){
 		$out_content = json_encode($out);
 		$out_type = 'application/rdap+json';

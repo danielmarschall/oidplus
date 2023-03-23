@@ -25,9 +25,17 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 	}
 
+	/**
+	 * @param $out
+	 * @return void
+	 */
 	private function pluginTableHead(&$out) {
 		$out['text'] .= '	<tr>';
 		$out['text'] .= '		<th width="30%">'._L('Class name').'</th>';
@@ -38,6 +46,13 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		$out['text'] .= '	</tr>';
 	}
 
+	/**
+	 * @param $out
+	 * @param $plugin
+	 * @param $modifier
+	 * @param $na_reason
+	 * @return void
+	 */
 	private function pluginTableLine(&$out, $plugin, $modifier=0, $na_reason='') {
 		$html_reason = empty($na_reason) ? '' : ' ('.htmlentities($na_reason).')';
 		$out['text'] .= '	<tr>';
@@ -58,7 +73,15 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		$out['text'] .= '	</tr>';
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		$tmp = explode('$',$id);
 		$classname = isset($tmp[1]) ? $tmp[1] : null;
 
@@ -391,20 +414,20 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 
 						if ($can_hash && !$can_verify) {
 							$note = _L('Only hashing, no verification');
-							if (!empty($reason_verify)) $note .= '. '.$reason_verify; /* @phpstan-ignore-line */
+							if (!empty($reason_verify)) $note .= '. '.$reason_verify;
 							$modifier = $default ? 1 : 0;
 						}
 						else if (!$can_hash && $can_verify) {
 							$note = _L('Only verification, no hashing');
-							if (!empty($reason_hash)) $note .= '. '.$reason_hash; /* @phpstan-ignore-line */
+							if (!empty($reason_hash)) $note .= '. '.$reason_hash;
 							$modifier = $default ? 1 : 0;
 						}
 						else if (!$can_hash && !$can_verify) {
 							$note = _L('Not available on this system');
 							$app1 = '';
 							$app2 = '';
-							if (!empty($reason_verify)) $app1 = $reason_verify; /* @phpstan-ignore-line */
-							if (!empty($reason_hash)) $app2 = $reason_hash; /* @phpstan-ignore-line */
+							if (!empty($reason_verify)) $app1 = $reason_verify;
+							if (!empty($reason_hash)) $app2 = $reason_hash;
 							if ($app1 != $app2) {
 								$note .= '. '.$app1.'. '.$app2;
 							} else {
@@ -497,7 +520,16 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -784,7 +816,11 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		// Not required, because all sub-nodes are loaded at the same time; no lazy-loading
 		return false;
 	}

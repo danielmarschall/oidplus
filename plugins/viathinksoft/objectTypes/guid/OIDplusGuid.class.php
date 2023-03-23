@@ -26,6 +26,9 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusGuid extends OIDplusObject {
 	private $guid;
 
+	/**
+	 * @param $guid
+	 */
 	public function __construct($guid) {
 		if (uuid_valid($guid)) {
 			$this->guid = strtolower(uuid_canonize($guid)); // It is a real GUID (leaf node)
@@ -34,37 +37,64 @@ class OIDplusGuid extends OIDplusObject {
 		}
 	}
 
-	public static function parse($node_id) {
+	/**
+	 * @param string $node_id
+	 * @return OIDplusGuid|null
+	 */
+	public static function parse(string $node_id)/*: ?OIDplusGuid*/ {
 		@list($namespace, $guid) = explode(':', $node_id, 2);
-		if ($namespace !== self::ns()) return false;
+		if ($namespace !== self::ns()) return null;
 		return new self($guid);
 	}
 
-	public static function objectTypeTitle() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitle(): string {
 		return _L('Globally Unique Identifier (GUID)');
 	}
 
-	public static function objectTypeTitleShort() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitleShort(): string {
 		return _L('GUID');
 	}
 
-	public static function ns() {
+	/**
+	 * @return string
+	 */
+	public static function ns(): string {
 		return 'guid';
 	}
 
-	public static function root() {
+	/**
+	 * @return string
+	 */
+	public static function root(): string {
 		return self::ns().':';
 	}
 
-	public function isRoot() {
+	/**
+	 * @return bool
+	 */
+	public function isRoot(): bool {
 		return $this->guid == '';
 	}
 
-	public function nodeId($with_ns=true) {
+	/**
+	 * @param bool $with_ns
+	 * @return string
+	 */
+	public function nodeId(bool $with_ns=true): string {
 		return $with_ns ? self::root().$this->guid : $this->guid;
 	}
 
-	public function addString($str) {
+	/**
+	 * @param string $str
+	 * @return string
+	 */
+	public function addString(string $str): string {
 		if (uuid_valid($str)) {
 			// real GUID
 			return self::root() . strtolower(uuid_canonize($str));
@@ -78,7 +108,11 @@ class OIDplusGuid extends OIDplusObject {
 		}
 	}
 
-	public function crudShowId(OIDplusObject $parent) {
+	/**
+	 * @param OIDplusObject $parent
+	 * @return string
+	 */
+	public function crudShowId(OIDplusObject $parent): string {
 		if ($this->isLeafNode()) {
 			// We don't parse '/' in a valid FourCC code (i.e. Leaf node)
 			return $this->nodeId(false);
@@ -91,20 +125,33 @@ class OIDplusGuid extends OIDplusObject {
 		}
 	}
 
-	public function jsTreeNodeName(OIDplusObject $parent = null) {
+	/**
+	 * @param OIDplusObject|null $parent
+	 * @return string
+	 */
+	public function jsTreeNodeName(OIDplusObject $parent = null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		return $this->crudShowId($parent);
 	}
 
-	public function defaultTitle() {
+	/**
+	 * @return string
+	 */
+	public function defaultTitle(): string {
 		return $this->guid;
 	}
 
-	public function isLeafNode() {
+	/**
+	 * @return bool
+	 */
+	public function isLeafNode(): bool {
 		return uuid_valid($this->guid);
 	}
 
-	private function getTechInfo() {
+	/**
+	 * @return array
+	 */
+	private function getTechInfo(): array {
 		$tech_info = array();
 		$tech_info[_L('UUID')] = strtolower(uuid_canonize($this->guid));
 		$tech_info[_L('C++ notation')] = uuid_c_syntax($this->guid);
@@ -123,7 +170,14 @@ class OIDplusGuid extends OIDplusObject {
 		return $tech_info;
 	}
 
-	public function getContentPage(&$title, &$content, &$icon) {
+	/**
+	 * @param string $title
+	 * @param string $content
+	 * @param string $icon
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function getContentPage(string &$title, string &$content, string &$icon) {
 		$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 		if ($this->isRoot()) {
@@ -179,7 +233,12 @@ class OIDplusGuid extends OIDplusObject {
 		}
 	}
 
-	public function getIcon($row=null) {
+	/**
+	 * @param array|null $row
+	 * @return string|null
+	 * @throws OIDplusException
+	 */
+	public function getIcon(array $row=null) {
 		$in_login_treenode = false;
 		foreach (debug_backtrace() as $trace) {
 			// If we are inside the "Login" area (i.e. "Root object links"), we want the
@@ -192,17 +251,28 @@ class OIDplusGuid extends OIDplusObject {
 		return parent::getIcon($row);
 	}
 
-	public function one_up() {
+	/**
+	 * @return OIDplusGuid|null
+	 */
+	public function one_up()/*: ?OIDplusGuid*/ {
 		// A GUID is a GUID, there is no hierarchy
-		return false;
+		return null;
 	}
 
+	/**
+	 * @param $to
+	 * @return null
+	 */
 	public function distance($to) {
 		// Distance between GUIDs is not possible
 		return null;
 	}
 
-	public function getAltIds() {
+	/**
+	 * @return array|OIDplusAltId[]
+	 * @throws OIDplusException
+	 */
+	public function getAltIds(): array {
 		if ($this->isRoot()) return array();
 		if (!$this->isLeafNode()) return array();
 		$ids = parent::getAltIds();
@@ -210,7 +280,11 @@ class OIDplusGuid extends OIDplusObject {
 		return $ids;
 	}
 
-	public function getDirectoryName() {
+	/**
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function getDirectoryName(): string {
 		if ($this->isLeafNode()) {
 			// Leaf (UUID)
 			// Example output: "guid_adb0b042_5b57_11eb_b0d9_3c4a92df8582"
@@ -224,7 +298,11 @@ class OIDplusGuid extends OIDplusObject {
 		}
 	}
 
-	public static function treeIconFilename($mode) {
+	/**
+	 * @param string $mode
+	 * @return string
+	 */
+	public static function treeIconFilename(string $mode): string {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }

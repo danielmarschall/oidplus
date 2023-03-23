@@ -25,7 +25,10 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusObjectTypePluginIpv6 extends OIDplusObjectTypePlugin {
 
-	public static function getObjectTypeClassName() {
+	/**
+	 * @return string
+	 */
+	public static function getObjectTypeClassName(): string {
 		return OIDplusIpv6::class;
 	}
 

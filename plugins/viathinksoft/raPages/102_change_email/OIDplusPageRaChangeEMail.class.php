@@ -25,7 +25,14 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return int[]
+	 * @throws OIDplusException
+	 * @throws OIDplusMailException
+	 */
+	public function action(string $actionID, array $params): array {
 		if ($actionID == 'change_ra_email') {
 			if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusException(_L('This functionality has been disabled by the administrator.'));
@@ -182,11 +189,16 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('max_ra_email_change_time', 'Max RA email change time in seconds (0 = infinite)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -199,7 +211,14 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 		});
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:change_ra_email') {
 			$handled = true;
 
@@ -312,7 +331,15 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!$ra_email) return false;
 		if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
@@ -331,7 +358,11 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

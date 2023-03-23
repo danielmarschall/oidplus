@@ -49,7 +49,7 @@ function process_file($filename) {
 			$minifier = new Minify\CSS($filename);
 			$cont = $minifier->minify();
 		} else {
-			return;
+			return '';
 		}
 	} else {
 		if (file_exists($filename_full)) {
@@ -59,7 +59,7 @@ function process_file($filename) {
 			$filename = $filename_min;
 			$cont = file_get_contents($filename);
 		} else {
-			return;
+			return '';
 		}
 	}
 

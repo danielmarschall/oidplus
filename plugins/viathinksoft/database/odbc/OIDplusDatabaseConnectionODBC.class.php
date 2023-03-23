@@ -28,6 +28,10 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
 	private $transactions_supported = false;
 
+	/**
+	 * @return bool|null
+	 * @throws OIDplusException
+	 */
 	protected function forcePrepareEmulation() {
 		$mode = OIDplus::baseConfig()->getValue('PREPARED_STATEMENTS_EMULATION', 'auto');
 		if ($mode === 'on') return true;
@@ -43,7 +47,15 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		return $res;
 	}
 
-	protected function doQueryInternalPrepare(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+	/**
+	 * @param string $sql
+	 * @param array|null $prepared_args
+	 * @return OIDplusQueryResultODBC
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws OIDplusSQLException
+	 */
+	protected function doQueryInternalPrepare(string $sql, array $prepared_args=null): OIDplusQueryResultODBC {
 				foreach ($prepared_args as &$value) {
 					// ODBC/SQLServer has problems converting "true" to the data type "bit"
 					// Error "Invalid character value for cast specification"
@@ -77,7 +89,15 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 
 	}
 
-	protected function doQueryPrepareEmulation(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+	/**
+	 * @param string $sql
+	 * @param array|null $prepared_args
+	 * @return OIDplusQueryResultODBC
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws OIDplusSQLException
+	 */
+	protected function doQueryPrepareEmulation(string $sql, array $prepared_args=null): OIDplusQueryResultODBC {
 				// For some drivers (e.g. Microsoft Access), we need to do this kind of emulation, because odbc_prepare() does not work
 				$sql = str_replace('?', chr(1), $sql);
 				foreach ($prepared_args as $arg) {
@@ -109,7 +129,13 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 				return new OIDplusQueryResultODBC($ps);
 	}
 
-	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+	/**
+	 * @param string $sql
+	 * @param array|null $prepared_args
+	 * @return OIDplusQueryResultODBC
+	 * @throws OIDplusException
+	 */
+	public function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			$res = @odbc_exec($this->conn, $sql);
@@ -133,13 +159,20 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function error(): string {
 		$err = $this->last_error;
 		if ($err == null) $err = '';
-		$err = vts_utf8_encode($err); // because ODBC might output weird stuff ...
-		return $err;
+		return vts_utf8_encode($err); // UTF-8 encode, because ODBC might output weird stuff ...
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	protected function doConnect()/*: void*/ {
 		if (!function_exists('odbc_connect')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','ODBC'));
 
@@ -172,6 +205,9 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		@odbc_autocommit($this->conn, true);
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function doDisconnect()/*: void*/ {
 		if (!is_null($this->conn)) {
 			@odbc_close($this->conn);
@@ -179,12 +215,21 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @var bool
+	 */
 	private $intransaction = false;
 
+	/**
+	 * @return bool
+	 */
 	public function transaction_supported(): bool {
 		return $this->transactions_supported;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function transaction_level(): int {
 		if (!$this->transaction_supported()) {
 			// TODO?
@@ -193,6 +238,10 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		return $this->intransaction ? 1 : 0;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function transaction_begin()/*: void*/ {
 		if (!$this->transaction_supported()) {
 			// TODO?
@@ -203,6 +252,9 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		$this->intransaction = true;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function transaction_commit()/*: void*/ {
 		if (!$this->transaction_supported()) {
 			// TODO?
@@ -213,6 +265,9 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		$this->intransaction = false;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function transaction_rollback()/*: void*/ {
 		if (!$this->transaction_supported()) {
 			// TODO?

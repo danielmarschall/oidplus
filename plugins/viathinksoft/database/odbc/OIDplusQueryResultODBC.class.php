@@ -27,6 +27,9 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 	protected $no_resultset;
 	protected $res;
 
+	/**
+	 * @param $res
+	 */
 	public function __construct($res) {
 		$this->no_resultset = is_bool($res);
 
@@ -35,14 +38,23 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 		}
 	}
 
+	/**
+	 *
+	 */
 	public function __destruct() {
 		// odbc_close_cursor($this->res);
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function containsResultSet(): bool {
 		return !$this->no_resultset;
 	}
 
+	/**
+	 * @return int
+	 */
 	private function num_rows_workaround(): int {
 		$dummy = 0;
 
@@ -66,6 +78,10 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 		return $ret;
 	}
 
+	/**
+	 * @return int
+	 * @throws OIDplusException
+	 */
 	public function num_rows(): int {
 		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		$ret = odbc_num_rows($this->res);
@@ -78,6 +94,10 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 		return $ret;
 	}
 
+	/**
+	 * @return array|null
+	 * @throws OIDplusException
+	 */
 	public function fetch_array()/*: ?array*/ {
 		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		$ret = odbc_fetch_array($this->res);
@@ -104,6 +124,10 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 		return $ret;
 	}
 
+	/**
+	 * @return false|object|null
+	 * @throws OIDplusException
+	 */
 	public function fetch_object()/*: ?object*/ {
 		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		$ret = odbc_fetch_object($this->res);

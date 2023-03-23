@@ -25,7 +25,14 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return int[]
+	 * @throws OIDplusException
+	 * @throws OIDplusMailException
+	 */
+	public function action(string $actionID, array $params): array {
 		if ($actionID == 'invite_ra') {
 			$email = $params['email'];
 
@@ -87,11 +94,16 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -104,7 +116,14 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 		});
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:invite_ra') {
 			$handled = true;
 
@@ -181,13 +200,25 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		//if (!$ra_email) return false;
 		//if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		return false;
 	}
 
+	/**
+	 * @param $email
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	private function inviteSecurityCheck($email) {
 		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 		if ($res->any()) {
@@ -200,7 +231,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$res = OIDplus::db()->query("select parent from ###objects where ra_email = ?", array($email));
 			while ($row = $res->fetch_array()) {
 				$objParent = OIDplusObject::parse($row['parent']);
-				if (is_null($objParent)) throw new OIDplusException(_L('Type of %1 unknown',$row['parent']));
+				if (!$objParent) throw new OIDplusException(_L('Type of %1 unknown',$row['parent']));
 				if ($objParent->userHasWriteRights()) {
 					$ok = true;
 				}
@@ -211,7 +242,12 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 		}
 	}
 
-	private function getInvitationText($email) {
+	/**
+	 * @param $email
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	private function getInvitationText($email): string {
 		$list_of_oids = array();
 		$res = OIDplus::db()->query("select id from ###objects where ra_email = ?", array($email));
 		while ($row = $res->fetch_array()) {
@@ -231,7 +267,11 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 		return $message;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

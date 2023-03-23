@@ -25,13 +25,15 @@ namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusBaseClass {
 
-	public function implementsFeature($id) {
-
-		// Use this function to query the plugin if it supports some specific interface
-		// Usually, you would use PHP Interfaces. However, the problem with PHP interfaces
-		// is, that there will be a fatal error if the interface can't be found (e.g. because
-		// the OIDplus plugin is not installed). So we need an "optional" interface.
-
+	/**
+	 * Use this function to query the plugin if it supports some specific interface
+	 * Usually, you would use PHP Interfaces. However, the problem with PHP interfaces
+	 * is, that there will be a fatal error if the interface can't be found (e.g. because
+	 * the OIDplus plugin is not installed). So we need an "optional" interface.
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		return false;
 	}
 

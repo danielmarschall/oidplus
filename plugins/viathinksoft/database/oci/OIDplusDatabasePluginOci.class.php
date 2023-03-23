@@ -25,14 +25,23 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDatabasePluginOci extends OIDplusDatabasePlugin {
 
+	/**
+	 * @return string
+	 */
 	public static function id(): string {
 		return "Oracle (OCI8)";
 	}
 
+	/**
+	 * @return OIDplusDatabaseConnection
+	 */
 	public static function newConnection(): OIDplusDatabaseConnection {
 		return new OIDplusDatabaseConnectionOci();
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function setupHTML(): string {
 		return '<div id="DBPLUGIN_PARAMS_OCI">'.
 		       '	<p>'._L('Oracle connection string, e.g. %1', 'localhost/orcl').':<br><input id="oci_conn_str" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="oci_conn_str_warn"></span></p>'.

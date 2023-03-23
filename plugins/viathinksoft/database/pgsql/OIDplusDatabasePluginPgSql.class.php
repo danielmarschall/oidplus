@@ -25,14 +25,23 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDatabasePluginPgSql extends OIDplusDatabasePlugin {
 
+	/**
+	 * @return string
+	 */
 	public static function id(): string {
 		return "PgSQL";
 	}
 
+	/**
+	 * @return OIDplusDatabaseConnection
+	 */
 	public static function newConnection(): OIDplusDatabaseConnection {
 		return new OIDplusDatabaseConnectionPgSql();
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function setupHTML(): string {
 		return '<div id="DBPLUGIN_PARAMS_PgSQL">'.
 		       '	<p>'._L('PgSQL hostname and port').':<br><input id="pgsql_host" type="text" value="localhost:5432" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="pgsql_host_warn"></span></p>'.

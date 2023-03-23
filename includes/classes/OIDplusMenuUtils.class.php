@@ -25,7 +25,12 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusMenuUtils extends OIDplusBaseClass {
 
-	public static function nonjs_menu() {
+	/**
+	 * @return string
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public static function nonjs_menu(): string {
 		$json = array();
 
 		$static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
@@ -56,12 +61,15 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 		return $out;
 	}
 
-	// req_id comes from jsTree via AJAX
-	// req_goto comes from the user (GET argument)
-	public static function json_tree($req_id, $req_goto) {
+	/**
+	 * @param string $req_id comes from jsTree via AJAX
+	 * @param string $req_goto comes from the user (GET argument)
+	 * @return string[]
+	 */
+	public static function json_tree(string $req_id, string $req_goto): array {
 		$json = array();
 
-		if (!isset($req_id) || ($req_id == '#')) {
+		if ($req_id === '#') {
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				// Note: The system (OIDplusMenuUtils) does only show the menu of
 				//       publicPage plugins. Menu entries for RAs and Admins are
@@ -74,13 +82,16 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			$json = self::tree_populate($req_id);
 		}
 
-		self::addHrefIfRequired($json);
+		if (is_array($json)) self::addHrefIfRequired($json);
 
 		return $json;
 	}
 
-	protected static function addHrefIfRequired(&$json) {
-		if (!is_array($json)) return;
+	/**
+	 * @param array $json
+	 * @return void
+	 */
+	protected static function addHrefIfRequired(array &$json) {
 		foreach ($json as &$item) {
 			if (isset($item['id'])) {
 				if (!isset($item['conditionalselect']) || ($item['conditionalselect'] != 'false')) {
@@ -93,7 +104,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			}
 
 			if (isset($item['children'])) {
-				self::addHrefIfRequired($item['children']);
+				if (is_array($item['children'])) self::addHrefIfRequired($item['children']);
 			}
 		}
 	}

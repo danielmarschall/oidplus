@@ -25,10 +25,21 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
+	/**
+	 * @param $with_ns
+	 * @return string
+	 * @throws OIDplusException
+	 */
 	private static function getFreeRootOid($with_ns) {
 		return ($with_ns ? 'oid:' : '').OIDplus::config()->getValue('freeoid_root_oid');
 	}
 
+	/**
+	 * @param $email
+	 * @param $getId
+	 * @return bool|mixed|null
+	 * @throws OIDplusException
+	 */
 	public static function alreadyHasFreeOid($email, $getId = false){
 		$res = OIDplus::db()->query("select id from ###objects where ra_email = ? and id like ? order by ".OIDplus::db()->natOrder('id'), array($email, self::getFreeRootOid(true).'.%'));
 		while ($row = $res->fetch_array()) {
@@ -37,7 +48,14 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 		return $getId ? null : false;
 	}
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array|int[]
+	 * @throws OIDplusException
+	 * @throws OIDplusMailException
+	 */
+	public function action(string $actionID, array $params): array {
 		if (empty(self::getFreeRootOid(false))) throw new OIDplusException(_L('FreeOID service not available. Please ask your administrator.'));
 
 		if ($actionID == 'request_freeoid') {
@@ -156,7 +174,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 			$message  = "OID delegation report\n";
 			$message .= "\n";
-			$message .= "OID: ".$new_oid."\n";;
+			$message .= "OID: ".$new_oid."\n";
 			$message .= "\n";
 			$message .= "RA Name: $ra_name\n";
 			$message .= "RA eMail: $email\n";
@@ -181,11 +199,16 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				"status" => 0
 			);
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('freeoid_root_oid', 'Root-OID of free OID service (a service where visitors can create their own OID using email verification)', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != '') && !oid_valid_dotnotation($value,false,false,1)) {
 				throw new OIDplusException(_L('Please enter a valid OID in dot notation or nothing'));
@@ -193,7 +216,14 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 		});
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if (empty(self::getFreeRootOid(false))) return;
 
 		if (explode('$',$id)[0] == 'oidplus:com.viathinksoft.freeoid') {
@@ -291,12 +321,25 @@ $out['text'] .= ' - <a '.OIDplus::gui()->link('aid:D276000186F1').'>'._L('More i
 		}
 	}
 
-	public function publicSitemap(&$out) {
+	/**
+	 * @param array $out
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function publicSitemap(array &$out) {
 		if (empty(self::getFreeRootOid(false))) return;
 		$out[] = 'oidplus:com.viathinksoft.freeoid';
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (empty(self::getFreeRootOid(false))) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -316,7 +359,11 @@ $out['text'] .= ' - <a '.OIDplus::gui()->link('aid:D276000186F1').'>'._L('More i
 
 	# ---
 
-	protected static function freeoid_max_id() {
+	/**
+	 * @return int
+	 * @throws OIDplusException
+	 */
+	protected static function freeoid_max_id(): int {
 		$res = OIDplus::db()->query("select id from ###objects where id like ? order by ".OIDplus::db()->natOrder('id'), array(self::getFreeRootOid(true).'.%'));
 		$highest_id = 0;
 		while ($row = $res->fetch_array()) {
@@ -326,7 +373,11 @@ $out['text'] .= ' - <a '.OIDplus::gui()->link('aid:D276000186F1').'>'._L('More i
 		return $highest_id;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

@@ -30,26 +30,44 @@ class OIDplusAltId extends OIDplusBaseClass {
 	private $desc;
 	private $suffix;
 
-	function __construct($ns, $id, $desc, $suffix='') {
+	/**
+	 * @param string $ns
+	 * @param string $id
+	 * @param string $desc
+	 * @param string $suffix
+	 */
+	function __construct(string $ns, string $id, string $desc, string $suffix='') {
 		$this->ns = $ns;
 		$this->id = $id;
 		$this->desc = $desc;
 		$this->suffix = $suffix;
 	}
 
-	function getNamespace() {
+	/**
+	 * @return string
+	 */
+	function getNamespace(): string {
 		return $this->ns;
 	}
 
-	function getId() {
+	/**
+	 * @return string
+	 */
+	function getId(): string {
 		return $this->id;
 	}
 
-	function getDescription() {
+	/**
+	 * @return string
+	 */
+	function getDescription(): string {
 		return $this->desc;
 	}
 
-	function getSuffix() {
+	/**
+	 * @return string
+	 */
+	function getSuffix(): string {
 		return $this->suffix;
 	}
 
