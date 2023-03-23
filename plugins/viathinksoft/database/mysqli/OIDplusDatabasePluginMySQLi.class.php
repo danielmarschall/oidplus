@@ -25,14 +25,23 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDatabasePluginMySQLi extends OIDplusDatabasePlugin {
 
+	/**
+	 * @return string
+	 */
 	public static function id(): string {
 		return "MySQL";
 	}
 
+	/**
+	 * @return OIDplusDatabaseConnection
+	 */
 	public static function newConnection(): OIDplusDatabaseConnection {
 		return new OIDplusDatabaseConnectionMySQLi();
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function setupHTML(): string {
 		return '<div id="DBPLUGIN_PARAMS_MySQL">'.
 		       '	<p>'._L('MySQL hostname and port').':<br><input id="mysql_host" type="text" value="localhost:3306" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="mysql_host_warn"></span></p>'.

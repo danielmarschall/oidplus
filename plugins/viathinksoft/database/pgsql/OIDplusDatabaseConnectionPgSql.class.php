@@ -28,7 +28,13 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 	private $already_prepared = array();
 	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
 
-	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+	/**
+	 * @param string $sql
+	 * @param array|null $prepared_args
+	 * @return OIDplusQueryResultPgSql
+	 * @throws OIDplusException
+	 */
+	public function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			$res = @pg_query($this->conn, $sql);
@@ -74,6 +80,9 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @return int
+	 */
 	public function insert_id(): int {
 		try {
 			return (int)$this->query('select lastval() as id')->fetch_object()->id;
@@ -82,12 +91,20 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function error(): string {
 		$err = $this->last_error;
 		if ($err == null) $err = '';
 		return $err;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	protected function doConnect()/*: void*/ {
 		if (!function_exists('pg_connect')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','PostgreSQL'));
 
@@ -135,6 +152,9 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function doDisconnect()/*: void*/ {
 		$this->already_prepared = array();
 		if (!is_null($this->conn)) {
@@ -143,36 +163,65 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @var bool
+	 */
 	private $intransaction = false;
 
+	/**
+	 * @return bool
+	 */
 	public function transaction_supported(): bool {
 		return true;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function transaction_level(): int {
 		return $this->intransaction ? 1 : 0;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function transaction_begin()/*: void*/ {
 		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		$this->query('begin transaction');
 		$this->intransaction = true;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function transaction_commit()/*: void*/ {
 		$this->query('commit');
 		$this->intransaction = false;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function transaction_rollback()/*: void*/ {
 		$this->query('rollback');
 		$this->intransaction = false;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function sqlDate(): string {
 		return 'now()';
 	}
 
+	/**
+	 * @param bool $mustExist
+	 * @return OIDplusSqlSlangPlugin|null
+	 * @throws OIDplusConfigInitializationException
+	 */
 	protected function doGetSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
 		$slang = OIDplus::getSqlSlangPlugin('pgsql');
 		if (is_null($slang)) {

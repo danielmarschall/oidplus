@@ -22,9 +22,7 @@ $dir = __DIR__ . '/../../';
 
 // ---
 
-$all_cont = '';
-
-$all_cont .= "<?php\n";
+$all_cont  = "<?php\n";
 $all_cont .= "__halt_compiler();\n"; // avoid that the FastPHP code explorer runs crazy
 $all_cont .= "?>\n";
 

@@ -25,7 +25,10 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusObjectTypePluginJava extends OIDplusObjectTypePlugin {
 
-	public static function getObjectTypeClassName() {
+	/**
+	 * @return string
+	 */
+	public static function getObjectTypeClassName(): string {
 		return OIDplusJava::class;
 	}
 

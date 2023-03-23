@@ -26,42 +26,73 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusDoi extends OIDplusObject {
 	private $doi;
 
+	/**
+	 * @param $doi
+	 */
 	public function __construct($doi) {
 		// TODO: syntax checks
 		$this->doi = $doi;
 	}
 
-	public static function parse($node_id) {
+	/**
+	 * @param string $node_id
+	 * @return OIDplusDoi|null
+	 */
+	public static function parse(string $node_id)/*: ?OIDplusDoi*/ {
 		@list($namespace, $doi) = explode(':', $node_id, 2);
-		if ($namespace !== self::ns()) return false;
+		if ($namespace !== self::ns()) return null;
 		return new self($doi);
 	}
 
-	public static function objectTypeTitle() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitle(): string {
 		return _L('Digital Object Identifier (DOI)');
 	}
 
-	public static function objectTypeTitleShort() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitleShort(): string {
 		return _L('DOI');
 	}
 
-	public static function ns() {
+	/**
+	 * @return string
+	 */
+	public static function ns(): string {
 		return 'doi';
 	}
 
-	public static function root() {
+	/**
+	 * @return string
+	 */
+	public static function root(): string {
 		return self::ns().':';
 	}
 
-	public function isRoot() {
+	/**
+	 * @return bool
+	 */
+	public function isRoot(): bool {
 		return $this->doi == '';
 	}
 
-	public function nodeId($with_ns=true) {
+	/**
+	 * @param bool $with_ns
+	 * @return string
+	 */
+	public function nodeId(bool $with_ns=true): string {
 		return $with_ns ? self::root().$this->doi : $this->doi;
 	}
 
-	public function addString($str) {
+	/**
+	 * @param string $str
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function addString(string $str): string {
 		if ($this->isRoot()) {
 			// Parent is root, so $str is the base DOI (10.xxxx)
 			$base = $str;
@@ -78,15 +109,27 @@ class OIDplusDoi extends OIDplusObject {
 		}
 	}
 
-	public function crudShowId(OIDplusObject $parent) {
+	/**
+	 * @param OIDplusObject $parent
+	 * @return string
+	 */
+	public function crudShowId(OIDplusObject $parent): string {
 		return $this->doi;
 	}
 
-	public function crudInsertPrefix() {
+	/**
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function crudInsertPrefix(): string {
 		return $this->isRoot() ? '' : substr($this->addString(''), strlen(self::ns())+1);
 	}
 
-	public function jsTreeNodeName(OIDplusObject $parent = null) {
+	/**
+	 * @param OIDplusObject|null $parent
+	 * @return string
+	 */
+	public function jsTreeNodeName(OIDplusObject $parent = null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		$out = $this->doi;
 		$ary = explode('/', $out, 2);
@@ -94,15 +137,28 @@ class OIDplusDoi extends OIDplusObject {
 		return $out;
 	}
 
-	public function defaultTitle() {
+	/**
+	 * @return string
+	 */
+	public function defaultTitle(): string {
 		return _L('DOI %1',$this->doi);
 	}
 
-	public function isLeafNode() {
+	/**
+	 * @return bool
+	 */
+	public function isLeafNode(): bool {
 		return false;
 	}
 
-	public function getContentPage(&$title, &$content, &$icon) {
+	/**
+	 * @param string $title
+	 * @param string $content
+	 * @param string $icon
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function getContentPage(string &$title, string &$content, string &$icon) {
 		$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 		if ($this->isRoot()) {
@@ -144,12 +200,19 @@ class OIDplusDoi extends OIDplusObject {
 
 	# ---
 
-	public static function validBaseDoi($doi) {
+	/**
+	 * @param string $doi
+	 * @return bool
+	 */
+	public static function validBaseDoi(string $doi): bool {
 		$m = array();
 		return preg_match('@^10\.\d{4}$@', $doi, $m);
 	}
 
-	public function one_up() {
+	/**
+	 * @return OIDplusDoi|null
+	 */
+	public function one_up()/*: ?OIDplusDoi*/ {
 		$oid = $this->doi;
 
 		$p = strrpos($oid, '/');
@@ -161,9 +224,13 @@ class OIDplusDoi extends OIDplusObject {
 		return self::parse(self::ns().':'.$oid_up);
 	}
 
+	/**
+	 * @param $to
+	 * @return int|null
+	 */
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
-		if (!($to instanceof $this)) return false;
+		if (!($to instanceof $this)) return null;
 
 		$a = $to->doi;
 		$b = $this->doi;
@@ -177,18 +244,25 @@ class OIDplusDoi extends OIDplusObject {
 		$min_len = min(count($ary), count($bry));
 
 		for ($i=0; $i<$min_len; $i++) {
-			if ($ary[$i] != $bry[$i]) return false;
+			if ($ary[$i] != $bry[$i]) return null;
 		}
 
 		return count($ary) - count($bry);
 	}
 
-	public function getDirectoryName() {
+	/**
+	 * @return string
+	 */
+	public function getDirectoryName(): string {
 		if ($this->isRoot()) return $this->ns();
 		return $this->ns().'_'.md5($this->nodeId(false));
 	}
 
-	public static function treeIconFilename($mode) {
+	/**
+	 * @param string $mode
+	 * @return string
+	 */
+	public static function treeIconFilename(string $mode): string {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }

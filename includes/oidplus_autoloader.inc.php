@@ -51,7 +51,7 @@ spl_autoload_register(function ($class_name) {
 				if (!isset($class_refs[$cn])) {
 					$class_refs[$cn] = array($filename);
 				} else {
-					$class_refs[$cn][] = $filename;;
+					$class_refs[$cn][] = $filename;
 				}
 			}
 		};

@@ -25,14 +25,23 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 
+	/**
+	 * @return string
+	 */
 	public static function id(): string {
 		return "ODBC";
 	}
 
+	/**
+	 * @return OIDplusDatabaseConnection
+	 */
 	public static function newConnection(): OIDplusDatabaseConnection {
 		return new OIDplusDatabaseConnectionODBC();
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function setupHTML(): string {
 		return '<div id="DBPLUGIN_PARAMS_ODBC">'.
 		       '	<p>'._L('ODBC DSN').' (<a href="https://www.connectionstrings.com/" target="_blank">'._L('examples').'</a>):<br><input id="odbc_dsn" type="text" value="DRIVER={SQL Server};SERVER=localhost\instancename;DATABASE=oidplus;CHARSET=UTF8" onkeypress="rebuild()" onkeyup="rebuild()" style="width:600px">  <span id="odbc_dsn_warn"></span>'.

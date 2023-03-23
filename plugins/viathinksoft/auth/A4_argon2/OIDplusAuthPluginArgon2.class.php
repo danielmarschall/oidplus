@@ -25,16 +25,29 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 		// TODO: Let the admin decide about the memory, iterations, and parallelism options
 	}
 
-	private function supportedCryptAlgo($authKey) {
+	/**
+	 * @param string $authKey
+	 * @return bool
+	 */
+	private function supportedCryptAlgo(string $authKey): bool {
 		return str_starts_with($authKey, '$argon2i$') ||
 		       str_starts_with($authKey, '$argon2id$');
 	}
 
-	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
+	/**
+	 * @param OIDplusRAAuthInfo $authInfo
+	 * @param string $check_password
+	 * @return bool
+	 */
+	public function verify(OIDplusRAAuthInfo $authInfo, string $check_password): bool {
 		$authKey = $authInfo->getAuthKey();
 
 		if (!$this->supportedCryptAlgo($authKey)) {
@@ -49,7 +62,10 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 		return password_verify($check_password, $authKey);
 	}
 
-	private function getBestHashAlgo() {
+	/**
+	 * @return string|int|false
+	 */
+	private function getBestHashAlgo() { /* @phpstan-ignore-line */
 		if ($this->supportsArgon2id()) {
 			$hashalgo = PASSWORD_ARGON2ID;
 		} else if ($this->supportsArgon2i()) {
@@ -60,7 +76,12 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 		return $hashalgo;
 	}
 
-	public function generate($password): OIDplusRAAuthInfo {
+	/**
+	 * @param string $password
+	 * @return OIDplusRAAuthInfo
+	 * @throws OIDplusException
+	 */
+	public function generate(string $password): OIDplusRAAuthInfo {
 		$hashalgo = $this->getBestHashAlgo();
 		assert($hashalgo !== false); // Should not happen if we called available() before!
 		$calc_authkey = password_hash($password, $hashalgo);
@@ -69,6 +90,9 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
+	/**
+	 * @return bool
+	 */
 	private function supportsArgon2i(): bool {
 		if (version_compare(PHP_VERSION, '7.4.0') >= 0) {
 			return in_array('argon2i', password_algos());
@@ -77,6 +101,9 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
 	private function supportsArgon2id(): bool {
 		if (version_compare(PHP_VERSION, '7.4.0') >= 0) {
 			return in_array('argon2id', password_algos());
@@ -85,7 +112,11 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 		}
 	}
 
-	public function availableForHash(&$reason): bool {
+	/**
+	 * @param string $reason
+	 * @return bool
+	 */
+	public function availableForHash(string &$reason): bool {
 		if (!$this->supportsArgon2i() && !$this->supportsArgon2id()) {
 			$reason = _L('No fitting hash algorithm found');
 			return false;
@@ -94,7 +125,11 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 		}
 	}
 
-	public function availableForVerify(&$reason): bool {
+	/**
+	 * @param string $reason
+	 * @return bool
+	 */
+	public function availableForVerify(string &$reason): bool {
 		return $this->availableForHash($reason);
 	}
 

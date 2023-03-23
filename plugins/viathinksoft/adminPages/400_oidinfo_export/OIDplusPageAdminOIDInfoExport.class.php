@@ -28,7 +28,13 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	/*private*/ const QUERY_LIST_OIDINFO_OIDS_V1 = '1.3.6.1.4.1.37476.2.5.2.1.5.1';
 	/*private*/ const QUERY_GET_OIDINFO_DATA_V1  = '1.3.6.1.4.1.37476.2.5.2.1.6.1';
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array|int[]
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 
 		if ($actionID == 'import_xml_file') {
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
@@ -150,15 +156,26 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 				return array("status" => 0);
 			}
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 		// Nothing
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		$ary = explode('$', $id);
 		if (isset($ary[1])) {
 			$id = $ary[0];
@@ -640,7 +657,15 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -658,10 +683,20 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
+	/**
+	 * @param $only_non_existing
+	 * @return string[]
+	 * @throws OIDplusException
+	 * @throws \OIDInfoException
+	 */
 	public static function outputXML($only_non_existing) {
 		$out_type = null;
 		$out_content = '';
@@ -862,12 +897,21 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		return array($out_content, $out_type);
 	}
 
+	/**
+	 * @param $str
+	 * @return mixed|string
+	 */
 	private static function _formatdate($str) {
 		$str = explode(' ',$str)[0];
 		if ($str == '0000-00-00') $str = '';
 		return $str;
 	}
 
+	/**
+	 * @param $str
+	 * @return array|string|string[]|null
+	 * @throws OIDplusException
+	 */
 	private static function repair_relative_links($str) {
 		$str = preg_replace_callback('@(href\s*=\s*([\'"]))(.+)(\\2)@ismU', function($treffer) {
 			$url = $treffer[3];
@@ -883,6 +927,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		return $str;
 	}
 
+	/**
+	 * @param $address
+	 * @return array|string[]
+	 */
 	private static function split_address_country($address) {
 		global $oidinfo_countries;
 		$ary = explode("\n", $address);
@@ -895,6 +943,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 		}
 	}
 
+	/**
+	 * @param $name
+	 * @return array
+	 */
 	private static function split_name($name) {
 		// uses regex that accepts any word character or hyphen in last name
 		// https://stackoverflow.com/questions/13637145/split-text-string-into-first-and-last-name-in-php
@@ -908,6 +960,14 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	/*protected*/ const ORPHAN_AUTO_DEORPHAN = 1;
 	/*protected*/ const ORPHAN_DISALLOW_ORPHANS = 2;
 
+	/**
+	 * @param $xml_contents
+	 * @param $errors
+	 * @param $replaceExistingOIDs
+	 * @param $orphan_mode
+	 * @return array|int[]
+	 * @throws OIDplusException
+	 */
 	protected function oidinfoImportXML($xml_contents, &$errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_AUTO_DEORPHAN) {
 		// TODO: Implement RA import (let the user decide)
 		// TODO: Let the user decide about $replaceExistingOIDs
@@ -1081,13 +1141,22 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
 		return false;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
+	 * @param $user
+	 * @return array
+	 * @throws OIDplusException
+	 */
 	public function getNotifications($user=null): array {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (!function_exists('curl_init')) {

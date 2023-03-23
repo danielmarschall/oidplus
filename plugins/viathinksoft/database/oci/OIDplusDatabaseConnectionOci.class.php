@@ -27,7 +27,13 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 	private $conn = null;
 	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
 
-	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+	/**
+	 * @param string $sql
+	 * @param array|null $prepared_args
+	 * @return OIDplusQueryResultOci
+	 * @throws OIDplusException
+	 */
+	public function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 
 		$mode = $this->intransaction ? OCI_NO_AUTO_COMMIT : OCI_COMMIT_ON_SUCCESS;
@@ -87,6 +93,9 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function error(): string {
 		$err = $this->last_error;
 		if ($err == null) $err = '';
@@ -106,6 +115,11 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 		return $err;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	protected function doConnect()/*: void*/ {
 		if (!function_exists('oci_connect')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','OCI8'));
 
@@ -134,6 +148,9 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 		$this->last_error = null;
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function doDisconnect()/*: void*/ {
 		if (!is_null($this->conn)) {
 			oci_close($this->conn);
@@ -141,32 +158,56 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @var bool
+	 */
 	private $intransaction = false;
 
+	/**
+	 * @return bool
+	 */
 	public function transaction_supported(): bool {
 		return true;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function transaction_level(): int {
 		return $this->intransaction ? 1 : 0;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function transaction_begin()/*: void*/ {
 		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		// Later, in oci_execute() we will include OCI_NO_AUTO_COMMIT
 		$this->intransaction = true;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function transaction_commit()/*: void*/ {
 		oci_commit($this->conn);
 		$this->intransaction = false;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function transaction_rollback()/*: void*/ {
 		oci_rollback($this->conn);
 		$this->intransaction = false;
 	}
 
+	/**
+	 * @param bool $mustExist
+	 * @return OIDplusSqlSlangPlugin|null
+	 * @throws OIDplusConfigInitializationException
+	 */
 	protected function doGetSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
 		$slang = OIDplus::getSqlSlangPlugin('oracle');
 		if (is_null($slang)) {

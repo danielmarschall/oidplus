@@ -25,9 +25,17 @@ namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusObjectTypePlugin extends OIDplusPlugin {
 
-	public static abstract function getObjectTypeClassName();
+	/**
+	 * @return string
+	 */
+	public static abstract function getObjectTypeClassName(): string;
 
-	public static function prefilterQuery($static_node_id, $throw_exception) {
+	/**
+	 * @param string $static_node_id
+	 * @param bool $throw_exception
+	 * @return string
+	 */
+	public static function prefilterQuery(string $static_node_id, bool $throw_exception): string {
 		return $static_node_id;
 	}
 

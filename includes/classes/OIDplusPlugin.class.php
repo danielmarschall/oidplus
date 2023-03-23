@@ -25,21 +25,75 @@ namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusPlugin extends OIDplusBaseClass {
 
-	public final function getPluginDirectory() {
+	/**
+	 * @return string
+	 */
+	public final function getPluginDirectory(): string {
 		$reflector = new \ReflectionClass(get_called_class());
 		$path = dirname($reflector->getFilename());
 		return $path;
 	}
 
-	public function getManifest() {
+	/**
+	 * @return OIDplusPluginManifest|null
+	 */
+	public function getManifest()/*: ?OIDplusPluginManifest*/ {
 		$dir = $this->getPluginDirectory();
 		$ini = $dir.DIRECTORY_SEPARATOR.'manifest.xml';
 		$manifest = new OIDplusPluginManifest();
 		return $manifest->loadManifest($ini) ? $manifest : null;
 	}
 
-	public function init($html=true) {}
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {}
 
-	public function httpHeaderCheck(&$http_headers) {}
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
+		throw new OIDplusException(_L('Invalid action ID'));
+	}
+
+	/**
+	 * override this method if you want that your plugin
+	 * can accept ajax.php requests from outside, without CSRF check
+	 * @param string $actionID
+	 * @return bool
+	 */
+	public function csrfUnlock(string $actionID): bool {
+		return false;
+	}
+
+	/**
+	 * @param string $request
+	 * @return bool Handled?
+	 */
+	public function handle404(string $request): bool {
+		return false;
+	}
+
+	/**
+	 * @param string $html
+	 * @return void
+	 */
+	public function htmlPostprocess(string &$html) {}
+
+	/**
+	 * @param array $head_elems
+	 * @return void
+	 */
+	public function htmlHeaderUpdate(array &$head_elems) {}
+
+	/**
+	 * @param string[] $http_headers
+	 * @return void
+	 */
+	public function httpHeaderCheck(array &$http_headers) {}
 
 }

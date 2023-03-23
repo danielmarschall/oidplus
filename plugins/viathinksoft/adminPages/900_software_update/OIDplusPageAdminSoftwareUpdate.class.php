@@ -25,18 +25,34 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 	}
 
-	private function getGitCommand() {
+	/**
+	 * @return string
+	 */
+	private function getGitCommand(): string {
 		return 'git --git-dir='.escapeshellarg(OIDplus::findGitFolder().'/').' --work-tree='.escapeshellarg(OIDplus::localpath()).' -C "" pull origin master -s recursive -X theirs';
 	}
 
-	private function getSvnCommand() {
+	/**
+	 * @return string
+	 */
+	private function getSvnCommand(): string {
 		return 'svn update --accept theirs-full';
 	}
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 		if ($actionID == 'update_now') {
 			@set_time_limit(0);
 
@@ -148,15 +164,26 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 					// In this version, the client will call the web-update file.
 					// This has the advantage that it will also work if the system is htpasswd protected
 					return array("status" => 0, "update_file" => $tmp_filename, "rev" => $rev);
+				} else {
+					throw new OIDplusException(_L("Unexpected update version"));
 				}
 			}
 			else {
 				throw new OIDplusException(_L('Multiple version files/directories (oidplus_version.txt, .version.php, .git, or .svn) are existing! Therefore, the version is ambiguous!'));
 			}
+		} else {
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		$parts = explode('.',$id,2);
 		if (!isset($parts[1])) $parts[1] = '';
 		if ($parts[0] == 'oidplus:software_update') {
@@ -273,7 +300,15 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -291,12 +326,23 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
+	/**
+	 * @var null
+	 */
 	private $releases_ser = null;
 
+	/**
+	 * @param $local_ver
+	 * @return false|string
+	 */
 	private function showChangelog($local_ver) {
 
 		try {
@@ -332,6 +378,9 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 	}
 
+	/**
+	 * @return false|string
+	 */
 	private function getLatestRevision() {
 		try {
 			if (is_null($this->releases_ser)) {
@@ -359,6 +408,11 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 		}
 	}
 
+	/**
+	 * @param $local_installation
+	 * @param $newest_version
+	 * @return string
+	 */
 	private function showPreview($local_installation, $newest_version) {
 		$out = '<h2 id="update_header">'._L('Preview of update %1 &rarr; %2',$local_installation,$newest_version).'</h2>';
 
@@ -377,13 +431,22 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 		return $out;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
 		return false;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
+	 * @param $user
+	 * @return array
+	 * @throws OIDplusException
+	 */
 	public function getNotifications($user=null): array {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 

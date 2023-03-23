@@ -25,6 +25,12 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
+	/**
+	 * @param $ra
+	 * @param $ldap_userinfo
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	private function registerRA($ra, $ldap_userinfo) {
 		$email = $ra->raEmail();
 
@@ -73,6 +79,13 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		}
 	}
 
+	/**
+	 * @param $remember_me
+	 * @param $email
+	 * @param $ldap_userinfo
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	private function doLoginRA($remember_me, $email, $ldap_userinfo) {
 		$ra = new OIDplusRA($email);
 		if (!$ra->existing()) {
@@ -85,6 +98,11 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 	}
 
+	/**
+	 * @param $upn
+	 * @return int
+	 * @throws OIDplusException
+	 */
 	private function getDomainNumber($upn) {
 		$numDomains = OIDplus::baseConfig()->getValue('LDAP_NUM_DOMAINS', 1);
 		for ($i=1; $i<=$numDomains; $i++) {
@@ -95,7 +113,14 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		return -1;
 	}
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return int[]
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 		if ($actionID == 'ra_login_ldap') {
 			if (!OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {
 				throw new OIDplusException(_L('LDAP authentication is disabled on this system.'));
@@ -197,15 +222,26 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 		// Nothing
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if ($id === 'oidplus:login_ldap') {
 			$handled = true;
 			$out['title'] = _L('Login using LDAP / ActiveDirectory');
@@ -223,9 +259,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 				return;
 			}
 
-			$out['text'] = '';
-
-			$out['text'] .= '<noscript>';
+			$out['text']  = '<noscript>';
 			$out['text'] .= '<p>'._L('You need to enable JavaScript to use the login area.').'</p>';
 			$out['text'] .= '</noscript>';
 
@@ -296,26 +330,49 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function publicSitemap(&$out) {
+	/**
+	 * @param array $out
+	 * @return void
+	 */
+	public function publicSitemap(array &$out) {
 		$out[] = 'oidplus:login_ldap';
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.5') return true; // alternativeLoginMethods()
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
 		return false;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.5
+	 * @return array
+	 * @throws OIDplusException
+	 */
 	public function alternativeLoginMethods() {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.5
 		$logins = array();
 		if (OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {
 			$logins[] = array(
@@ -327,8 +384,13 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 		return $logins;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
+	 * @param $user
+	 * @return array
+	 * @throws OIDplusException
+	 */
 	public function getNotifications($user=null): array {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {

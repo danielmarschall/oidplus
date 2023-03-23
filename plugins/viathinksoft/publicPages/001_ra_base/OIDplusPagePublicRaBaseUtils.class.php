@@ -26,7 +26,13 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return int[]
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 
 		// Action:     delete_ra
 		// Method:     POST
@@ -56,12 +62,17 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		// Will be used by: plugins admin-130, public-091, public-200, ra-092, ra-101
 		OIDplus::config()->prepareConfigKey('ra_min_password_length', 'Minimum length for RA passwords', '6', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 1)) {
@@ -70,16 +81,38 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 		});
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 	}
 
-	public function publicSitemap(&$out) {
+	/**
+	 * @param array $out
+	 * @return void
+	 */
+	public function publicSitemap(array &$out) {
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+		return false;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

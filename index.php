@@ -34,7 +34,7 @@ $static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system
 
 if (isset($_REQUEST['h404'])) {
 	$handled = false;
-	$plugins = OIDplus::getPagePlugins();
+	$plugins = OIDplus::getAllPlugins();
 	foreach ($plugins as $plugin) {
 		if ($plugin->handle404($_REQUEST['h404'])) $handled = true;
 	}

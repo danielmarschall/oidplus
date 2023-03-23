@@ -25,10 +25,10 @@ if (!OIDplus::baseConfig()->exists('OIDINFO_API_URL')) {
 	die("OIDINFO_API_URL not available (API is currently not public)\n");
 }
 
-define('VERBOSE', false);
-define('DEFAULT_EMAIL', 'oidra@viathinksoft.de');
-define('ALL_OID_LIST', '/home/oidplus/all_oids.txt'); // contains all OIDs (non-public file)
-define('DESIRED_ROOT', '1.3.6.1.4.1.37476');
+const VERBOSE = false;
+const DEFAULT_EMAIL = 'oidra@viathinksoft.de';
+const ALL_OID_LIST = '/home/oidplus/all_oids.txt'; // contains all OIDs (non-public file)
+const DESIRED_ROOT = '1.3.6.1.4.1.37476';
 
 # ---
 

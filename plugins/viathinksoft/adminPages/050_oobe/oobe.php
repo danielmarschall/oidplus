@@ -87,7 +87,7 @@ if (OIDplus::authUtils()->isAdminLoggedIn()) {
 }
 
 #------------------------
-$do_edits = isset($_POST['sent']) && $edits_possible;;
+$do_edits = isset($_POST['sent']) && $edits_possible;
 #------------------------
 
 # ---
@@ -144,7 +144,7 @@ step_system_title($step++, $do_edits, $errors_happened);
 
 foreach (OIDplus::getAllPlugins() as $plugin) {
 	if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.1')) {
-		$plugin->oobeEntry($step++, $do_edits, $errors_happened);
+		$plugin->oobeEntry($step++, $do_edits, $errors_happened); /** @phpstan-ignore-line */
 	}
 }
 

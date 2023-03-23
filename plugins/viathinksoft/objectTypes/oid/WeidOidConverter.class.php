@@ -3,7 +3,7 @@
 /**
  * WEID<=>OID Converter
  * (c) Webfan.de, ViaThinkSoft
- * Revision 2022-03-06
+ * Revision 2023-03-22
  **/
 
 // What is a WEID?
@@ -24,11 +24,15 @@
 //     - Padding with '0' characters is valid (e.g. weid:000EXAMPLE-3)
 //       The paddings do not count into the WeLuhn check-digit.
 
-namespace Frdl\Weid; // TODO: Namespace mit Till abklären
+namespace Frdl\Weid;
 
 class WeidOidConverter {
 
-	protected static function weLuhnGetCheckDigit($str) {
+	/**
+	 * @param string $str
+	 * @return false|int
+	 */
+	protected static function weLuhnGetCheckDigit(string $str) {
 		// Padding zeros don't count to the check digit (December 2021)
 		$ary = explode('-', $str);
 		foreach ($ary as &$a) {
@@ -63,7 +67,11 @@ class WeidOidConverter {
 		return ($sum%10) == 0 ? 0 : 10-($sum%10);
 	}
 
-	private static function oidSanitize($oid) {
+	/**
+	 * @param string $oid
+	 * @return false|string
+	 */
+	private static function oidSanitize(string $oid) {
 		$oid = trim($oid);
 
 		if (substr($oid,0,1) == '.') $oid = substr($oid,1); // remove leading dot
@@ -78,9 +86,9 @@ class WeidOidConverter {
 				if (preg_match('/^0+$/', $elem, $m)) {
 					$elem = '0';
 				} else {
-					$elem = preg_replace('/^0+/', '', $elem);
+					$elem = ltrim($elem, "0");
 				}
-			};
+			}
 			$oid = implode('.', $elements);
 
 			if ((count($elements) > 0) && ($elements[0] != '0') && ($elements[0] != '1') && ($elements[0] != '2')) return false;
@@ -90,12 +98,16 @@ class WeidOidConverter {
 		return $oid;
 	}
 
-	// Translates a weid to an oid
-	// "weid:EXAMPLE-3" becomes "1.3.6.1.4.1.37553.8.32488192274"
-	// If it failed (e.g. wrong namespace, wrong checksum, etc.) then false is returned.
-	// If the weid ends with '?', then it will be replaced with the checksum,
-	// e.g. weid:EXAMPLE-? becomes weid:EXAMPLE-3
-	public static function weid2oid(&$weid) {
+	/**
+	 * Translates a weid to an oid
+	 * "weid:EXAMPLE-3" becomes "1.3.6.1.4.1.37553.8.32488192274"
+	 * If it failed (e.g. wrong namespace, wrong checksum, etc.) then false is returned.
+	 * If the weid ends with '?', then it will be replaced with the checksum,
+	 * e.g. weid:EXAMPLE-? becomes weid:EXAMPLE-3
+	 * @param string $weid
+	 * @return false|string
+	 */
+	public static function weid2oid(string &$weid) {
 		$weid = trim($weid);
 
 		$p = strrpos($weid,':');
@@ -134,7 +146,7 @@ class WeidOidConverter {
 		} else {
 			// If checksum is '?', it will be replaced by the actual checksum,
 			// e.g. weid:EXAMPLE-? becomes weid:EXAMPLE-3
-			$weid = str_replace('?', $expected_checksum, $weid);
+			$weid = str_replace('?', "$expected_checksum", $weid);
 		}
 		foreach ($elements as &$arc) {
 			//$arc = strtoupper(base_convert($arc, 36, 10));
@@ -150,9 +162,13 @@ class WeidOidConverter {
 		return $oid;
 	}
 
-	// Converts an OID to WEID
-	// "1.3.6.1.4.1.37553.8.32488192274" becomes "weid:EXAMPLE-3"
-	public static function oid2weid($oid) {
+	/**
+	 * Converts an OID to WEID
+	 * "1.3.6.1.4.1.37553.8.32488192274" becomes "weid:EXAMPLE-3"
+	 * @param string $oid
+	 * @return false|string
+	 */
+	public static function oid2weid(string $oid) {
 		$oid = self::oidSanitize($oid);
 		if ($oid === false) return false;
 
@@ -190,12 +206,16 @@ class WeidOidConverter {
 			return false;
 		}
 
-		$weid = $namespace . ($weidstr == '' ? $checksum : $weidstr . '-' . $checksum);
-
-		return $weid;
+		return $namespace . ($weidstr == '' ? $checksum : $weidstr . '-' . $checksum);
 	}
 
-	protected static function base_convert_bigint($numstring, $frombase, $tobase) {
+	/**
+	 * @param string $numstring
+	 * @param int $frombase
+	 * @param int $tobase
+	 * @return string
+	 */
+	protected static function base_convert_bigint(string $numstring, int $frombase, int $tobase): string {
 		$frombase_str = '';
 		for ($i=0; $i<$frombase; $i++) {
 			$frombase_str .= strtoupper(base_convert((string)$i, 10, 36));

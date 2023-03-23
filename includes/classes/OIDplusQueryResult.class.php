@@ -24,16 +24,35 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 abstract class OIDplusQueryResult extends OIDplusBaseClass {
+
+	/**
+	 * @return bool
+	 */
 	abstract public function containsResultSet(): bool;
+
+	/**
+	 * @return int
+	 */
 	abstract public function num_rows(): int;
+
+	/**
+	 * @return array|null
+	 */
 	abstract public function fetch_array()/*: ?array*/;
+
+	/**
+	 * @return object|null
+	 */
 	abstract public function fetch_object()/*: ?object*/;
 
+	/**
+	 * The any() function returns true if there is at least one
+	 * row in the section. By default, num_rows() will be used.
+	 * Plugins can override this method if they have a possibility
+	 * of making this functionality more efficient.
+	 * @return bool
+	 */
 	public function any(): bool {
-		// The any() function returns true if there is at least one
-		// row in the section. By default, num_rows() will be used.
-		// Plugins can override this method if they have a possibility
-		// of making this functionality more efficient.
 		return $this->num_rows() > 0;
 	}
 }

@@ -23,7 +23,7 @@
 // will get a compilation error and then they won't see our friendly error message.
 // More information about the required PHP version:  doc/developer_notes/php7_compat.txt
 
-define('INSIDE_OIDPLUS', true);
+const INSIDE_OIDPLUS = true;
 
 if (version_compare(PHP_VERSION, $oidplus_min_version='7.0.0') < 0) {
 	// Note: These strings are not translated, because in case of an incompatible
@@ -52,7 +52,7 @@ $missing_dependencies = oidplus_get_missing_dependencies();
 if (count($missing_dependencies) >= 1) {
 	// Note that there are no translations _L() because if we get an error at this
 	// stage, then we have no language plugins anyways.
-	$message  = '<p>'.sprintf('The following PHP extensions need to be installed in order to run OIDplus:').'</p>';
+	$message  = '<p>The following PHP extensions need to be installed in order to run OIDplus:</p>';
 	$message .= '<p><ul>';
 	foreach ($missing_dependencies as $dependency) {
 		$message .= '<li>'.$dependency.'<br><br></li>';
@@ -85,7 +85,7 @@ require_once __DIR__ . '/oidplus_autoloader.inc.php';
 // Functions
 
 function oidplus_dependency_panic($message)/*: never*/ {
-	$title = sprintf('OIDplus startup error');
+	$title = 'OIDplus startup error';
 	if (PHP_SAPI === 'cli') {
 		$message = str_replace('<li>', "- ", $message);
 		$message = str_replace('<br>', "\n", $message);

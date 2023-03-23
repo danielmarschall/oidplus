@@ -29,27 +29,72 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	protected /*?string*/ $last_query = null;
 	protected /*bool*/ $slangDetectionDone = false;
 
-	protected abstract function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult;
+	/**
+	 * @param string $sql
+	 * @param array|null $prepared_args
+	 * @return OIDplusQueryResult
+	 * @throws OIDplusException
+	 */
+	protected abstract function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult;
+
+	/**
+	 * @return string
+	 */
 	public abstract function error(): string;
+
+	/**
+	 * @return void
+	 */
 	public abstract function transaction_begin()/*: void*/;
+
+	/**
+	 * @return void
+	 */
 	public abstract function transaction_commit()/*: void*/;
+
+	/**
+	 * @return void
+	 */
 	public abstract function transaction_rollback()/*: void*/;
+
+	/**
+	 * @return bool
+	 */
 	public abstract function transaction_supported(): bool;
+
+	/**
+	 * @return int
+	 */
 	public abstract function transaction_level(): int;
+
+	/**
+	 * @return void
+	 */
 	protected abstract function doConnect()/*: void*/;
+
+	/**
+	 * @return void
+	 */
 	protected abstract function doDisconnect()/*: void*/;
 
+	/**
+	 * @return OIDplusDatabasePlugin|null
+	 */
 	public function getPlugin()/*: ?OIDplusDatabasePlugin*/ {
 		$res = null;
 		$plugins = OIDplus::getDatabasePlugins();
 		foreach ($plugins as $plugin) {
-			if (get_class($this) == get_class($plugin::newConnection($this))) {
+			if (get_class($this) == get_class($plugin::newConnection())) {
 				return $plugin;
 			}
 		}
 		return $res;
 	}
 
+	/**
+	 * @return int
+	 * @throws OIDplusException
+	 */
 	public function insert_id(): int {
 		// This is the "fallback" variant. If your database provider (e.g. PDO) supports
 		// a function to detect the last inserted id, please override this
@@ -58,7 +103,12 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		return $this->getSlang()->insert_id($this);
 	}
 
-	public final function getTable(string $sql) {
+	/**
+	 * @param string $sql
+	 * @return array[]
+	 * @throws OIDplusException
+	 */
+	public final function getTable(string $sql): array {
 		$out = array();
 		$res = $this->query($sql);
 		while ($row = $res->fetch_array()) {
@@ -67,12 +117,23 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		return $out;
 	}
 
+	/**
+	 * @param string $sql
+	 * @return mixed|null
+	 * @throws OIDplusException
+	 */
 	public final function getScalar(string $sql) {
 		$res = $this->query($sql);
 		$row = $res->fetch_array();
 		return $row ? reset($row) : null;
 	}
 
+	/**
+	 * @param string $sql
+	 * @param array|null $prepared_args
+	 * @return OIDplusQueryResult
+	 * @throws OIDplusException
+	 */
 	public final function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
 
 		$query_logfile = OIDplus::baseConfig()->getValue('QUERY_LOGFILE', '');
@@ -100,6 +161,10 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		return $this->doQuery($sql, $prepared_args);
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public final function connect()/*: void*/ {
 		if ($this->connected) return;
 		$this->beforeConnect();
@@ -110,6 +175,9 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		$this->afterConnect();
 	}
 
+	/**
+	 * @return void
+	 */
 	public final function disconnect()/*: void*/ {
 		if (!$this->connected) return;
 		$this->beforeDisconnect();
@@ -118,7 +186,13 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		$this->afterDisconnect();
 	}
 
-	public function natOrder($fieldname, $order='asc'): string {
+	/**
+	 * @param string $fieldname
+	 * @param string $order
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function natOrder(string $fieldname, string $order='asc'): string {
 		$slang = $this->getSlang();
 		if (!is_null($slang)) {
 			return $slang->natOrder($fieldname, $order);
@@ -133,14 +207,31 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		}
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function beforeDisconnect()/*: void*/ {}
 
+	/**
+	 * @return void
+	 */
 	protected function afterDisconnect()/*: void*/ {}
 
+	/**
+	 * @return void
+	 */
 	protected function beforeConnect()/*: void*/ {}
 
+	/**
+	 * @return void
+	 */
 	protected function afterConnect()/*: void*/ {}
 
+	/**
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	private function afterConnectMandatory()/*: void*/ {
 		// Check if the config table exists. This is important because the database version is stored in it
 		$this->initRequireTables(array('config'));
@@ -163,7 +254,13 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		$this->getSlang();
 	}
 
-	private function initRequireTables($tableNames)/*: void*/ {
+	/**
+	 * @param string[] $tableNames
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	private function initRequireTables(array $tableNames)/*: void*/ {
 		$msgs = array();
 		foreach ($tableNames as $tableName) {
 			$prefix = OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', '');
@@ -176,7 +273,11 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		}
 	}
 
-	public function tableExists($tableName): bool {
+	/**
+	 * @param string $tableName
+	 * @return bool
+	 */
+	public function tableExists(string $tableName): bool {
 		try {
 			// Attention: This query could interrupt transactions if Rollback-On-Error is enabled
 			$this->query("select 0 from ".$tableName." where 1=0");
@@ -186,14 +287,25 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isConnected(): bool {
 		return $this->connected;
 	}
 
-	public function init($html = true)/*: void*/ {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html = true)/*: void*/ {
 		$this->html = $html;
 	}
 
+	/**
+	 * @return string
+	 * @throws OIDplusException
+	 */
 	public function sqlDate(): string {
 		$slang = $this->getSlang();
 		if (!is_null($slang)) {
@@ -203,6 +315,12 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		}
 	}
 
+	/**
+	 * @param bool $mustExist
+	 * @return OIDplusSqlSlangPlugin|null
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	protected function doGetSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
 		$res = null;
 
@@ -234,6 +352,12 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		return $res;
 	}
 
+	/**
+	 * @param bool $mustExist
+	 * @return OIDplusSqlSlangPlugin|null
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	public final function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
 		static /*?OIDplusSqlSlangPlugin*/ $slangCache = null;
 

@@ -25,27 +25,55 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		//if (!$ra_email) return false;
 		//if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		return false;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.2') return true; // modifyContent
 		return false;
 	}
 
-	public function modifyContent($id, &$title, &$icon, &$text) {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.2
-
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.2
+	 * @param string $id
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $text
+	 * @return void
+	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 */
+	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
 		$obj = OIDplusObject::parse($id);
 		if (!$obj) return;
 		if (!$obj->userHasWriteRights()) return;
@@ -82,7 +110,11 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa {
 
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

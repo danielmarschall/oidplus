@@ -26,42 +26,73 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusGs1 extends OIDplusObject {
 	private $number;
 
+	/**
+	 * @param $number
+	 */
 	public function __construct($number) {
 		// TODO: syntax checks
 		$this->number = $number;
 	}
 
-	public static function parse($node_id) {
+	/**
+	 * @param string $node_id
+	 * @return OIDplusGs1|null
+	 */
+	public static function parse(string $node_id)/*: ?OIDplusGs1*/ {
 		@list($namespace, $number) = explode(':', $node_id, 2);
-		if ($namespace !== self::ns()) return false;
+		if ($namespace !== self::ns()) return null;
 		return new self($number);
 	}
 
-	public static function objectTypeTitle() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitle(): string {
 		return _L('GS1 Based IDs (GLN/GTIN/SSCC/...)');
 	}
 
-	public static function objectTypeTitleShort() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitleShort(): string {
 		return _L('GS1');
 	}
 
-	public static function ns() {
+	/**
+	 * @return string
+	 */
+	public static function ns(): string {
 		return 'gs1';
 	}
 
-	public static function root() {
+	/**
+	 * @return string
+	 */
+	public static function root(): string {
 		return self::ns().':';
 	}
 
-	public function isRoot() {
+	/**
+	 * @return bool
+	 */
+	public function isRoot(): bool {
 		return $this->number == '';
 	}
 
-	public function nodeId($with_ns=true) {
+	/**
+	 * @param bool $with_ns
+	 * @return string
+	 */
+	public function nodeId(bool $with_ns=true): string {
 		return $with_ns ? self::root().$this->number : $this->number;
 	}
 
-	public function addString($str) {
+	/**
+	 * @param string $str
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function addString(string $str): string {
 		$m = array();
 		if (!preg_match('@^\\d+$@', $str, $m)) {
 			throw new OIDplusException(_L('GS1 value needs to be numeric'));
@@ -70,28 +101,52 @@ class OIDplusGs1 extends OIDplusObject {
 		return $this->nodeId() . $str;
 	}
 
-	public function crudShowId(OIDplusObject $parent) {
+	/**
+	 * @param OIDplusObject $parent
+	 * @return string
+	 */
+	public function crudShowId(OIDplusObject $parent): string {
 		return $this->chunkedNotation(false);
 	}
 
-	public function crudInsertPrefix() {
+	/**
+	 * @return string
+	 */
+	public function crudInsertPrefix(): string {
 		return $this->isRoot() ? '' : $this->chunkedNotation(false);
 	}
 
-	public function jsTreeNodeName(OIDplusObject $parent = null) {
+	/**
+	 * @param OIDplusObject|null $parent
+	 * @return string
+	 */
+	public function jsTreeNodeName(OIDplusObject $parent = null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		return substr($this->nodeId(), strlen($parent->nodeId()));
 	}
 
-	public function defaultTitle() {
+	/**
+	 * @return string
+	 */
+	public function defaultTitle(): string {
 		return $this->number;
 	}
 
-	public function isLeafNode() {
+	/**
+	 * @return bool
+	 */
+	public function isLeafNode(): bool {
 		return !$this->isBaseOnly();
 	}
 
-	public function getContentPage(&$title, &$content, &$icon) {
+	/**
+	 * @param string $title
+	 * @param string $content
+	 * @param string $icon
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function getContentPage(string &$title, string &$content, string &$icon) {
 		$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 		if ($this->isRoot()) {
@@ -138,11 +193,19 @@ class OIDplusGs1 extends OIDplusObject {
 
 	# ---
 
-	public function isBaseOnly() {
+	/**
+	 * @return bool
+	 */
+	public function isBaseOnly(): bool {
 		return strlen($this->number) <= 7;
 	}
 
-	public function chunkedNotation($withAbbr=true) {
+	/**
+	 * @param bool $withAbbr
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function chunkedNotation(bool $withAbbr=true): string {
 		$curid = self::root().$this->number;
 
 		$obj = OIDplusObject::findFitting($curid);
@@ -178,11 +241,17 @@ class OIDplusGs1 extends OIDplusObject {
 		return implode(' ', $full);
 	}
 
-	public function fullNumber() {
+	/**
+	 * @return string
+	 */
+	public function fullNumber(): string {
 		return $this->number . $this->checkDigit();
 	}
 
-	public function checkDigit() {
+	/**
+	 * @return int
+	 */
+	public function checkDigit(): int {
 		$mul = 3;
 		$sum = 0;
 		for ($i=strlen($this->number)-1; $i>=0; $i--) {
@@ -192,11 +261,19 @@ class OIDplusGs1 extends OIDplusObject {
 		return 10 - ($sum % 10);
 	}
 
-	public function one_up() {
-		return OIDplusObject::parse($this->ns().':'.substr($this->number,0,strlen($this->number)-1));
+	/**
+	 * @return OIDplusGs1|null
+	 */
+	public function one_up()/*: ?OIDplusGs1*/ {
+		return self::parse($this->ns().':'.substr($this->number,0,strlen($this->number)-1));
 	}
 
-	private static function distance_($a, $b) {
+	/**
+	 * @param string $a
+	 * @param string $b
+	 * @return false|int
+	 */
+	private static function distance_(string $a, string $b) {
 		$min_len = min(strlen($a), strlen($b));
 
 		for ($i=0; $i<$min_len; $i++) {
@@ -206,9 +283,13 @@ class OIDplusGs1 extends OIDplusObject {
 		return strlen($a) - strlen($b);
 	}
 
+	/**
+	 * @param $to
+	 * @return int|null
+	 */
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
-		if (!($to instanceof $this)) return false;
+		if (!($to instanceof $this)) return null;
 
 		// This is pretty tricky, because the whois service should accept GS1 numbers with and without checksum
 		if ($this->number == $to->number) return 0;
@@ -218,22 +299,26 @@ class OIDplusGs1 extends OIDplusObject {
 		$b = $this->number;
 		$a = $to->number;
 		$tmp = self::distance_($a, $b);
-		if ($tmp != false) return $tmp;
+		if ($tmp !== false) return $tmp;
 
 		$b = $this->number.$this->checkDigit();
 		$a = $to->number;
 		$tmp = self::distance_($a, $b);
-		if ($tmp != false) return $tmp;
+		if ($tmp !== false) return $tmp;
 
 		$b = $this->number;
 		$a = $to->number.$to->checkDigit();
 		$tmp = self::distance_($a, $b);
-		if ($tmp != false) return $tmp;
+		if ($tmp !== false) return $tmp;
 
 		return null;
 	}
 
-	public function getAltIds() {
+	/**
+	 * @return array|OIDplusAltId[]
+	 * @throws OIDplusException
+	 */
+	public function getAltIds(): array {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 
@@ -247,12 +332,19 @@ class OIDplusGs1 extends OIDplusObject {
 		return $ids;
 	}
 
-	public function getDirectoryName() {
+	/**
+	 * @return string
+	 */
+	public function getDirectoryName(): string {
 		if ($this->isRoot()) return $this->ns();
 		return $this->ns().'_'.$this->nodeId(false); // safe, because there are only numbers
 	}
 
-	public static function treeIconFilename($mode) {
+	/**
+	 * @param string $mode
+	 * @return string
+	 */
+	public static function treeIconFilename(string $mode): string {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }

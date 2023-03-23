@@ -25,20 +25,37 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusObjectTypePluginGuid extends OIDplusObjectTypePlugin {
 
-	public static function getObjectTypeClassName() {
+	/**
+	 * @return string
+	 */
+	public static function getObjectTypeClassName(): string {
 		return OIDplusGuid::class;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.6') return true; // gridGeneratorLinks
 		return false;
 	}
 
-	public function gridGeneratorLinks($objParent) { // Interface 1.3.6.1.4.1.37476.2.5.2.3.6
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.6
+	 * @param $objParent
+	 * @return string
+	 */
+	public function gridGeneratorLinks($objParent) {
 		return '<br><a href="javascript:OIDplusObjectTypePluginGuid.generateRandomGUID(false)">('._L('Generate a random GUID').')</a>';
 	}
 
-	public static function prefilterQuery($static_node_id, $throw_exception) {
+	/**
+	 * @param string $static_node_id
+	 * @param bool $throw_exception
+	 * @return string
+	 */
+	public static function prefilterQuery(string $static_node_id, bool $throw_exception): string {
 		// Redirect UUID to GUID
 		// The OID-IP Internet Draft writes at section "Alternative Namespaces":
 		//     "If available, a formal URN namespace identifier (as defined in RFC\08141, section\05.1 [RFC8141]) SHOULD be used, e.g. 'uuid' should be used instead of 'guid'."

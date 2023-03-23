@@ -25,7 +25,11 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusLoggerPluginLinuxSyslog extends OIDplusLoggerPlugin {
 
-	public static function available(&$reason)/*: bool*/ {
+	/**
+	 * @param string $reason
+	 * @return bool
+	 */
+	public static function available(string &$reason): bool {
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			$reason = _L('Functionality not available on Windows');
 			return false;
@@ -45,7 +49,13 @@ class OIDplusLoggerPluginLinuxSyslog extends OIDplusLoggerPlugin {
 		return true;
 	}
 
-	public static function log($event, $users, $objects)/*: bool*/ {
+	/**
+	 * @param string $event
+	 * @param array $users
+	 * @param array $objects
+	 * @return bool
+	 */
+	public static function log(string $event, array $users, array $objects): bool {
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') return false;
 
 		if (!@file_exists('/var/log/syslog')) return false;

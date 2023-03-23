@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-define('TARGET_ID', '6175446'); // ViaThinkSoft RA
+const TARGET_ID = '6175446'; // ViaThinkSoft RA
 
 $config = array("digest_alg" => "sha512",
                 "private_key_bits" => 2048,

@@ -25,10 +25,21 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		$parts = explode('$',$id);
 		$id = $parts[0];
 
@@ -63,7 +74,7 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.8')) {
-					$notifications = $plugin->getNotifications($ra_email);
+					$notifications = $plugin->getNotifications($ra_email); /** @phpstan-ignore-line */
 					if ($notifications) {
 						foreach ($notifications as $notification) {
 							list($severity, $htmlMessage) = $notification;
@@ -110,7 +121,15 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -128,18 +147,33 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
 		return false;
 	}
 
-	private function webAccessWorks($dir) {
-		// Attention! This check does not work if OIDplus is password protected!
-		//            The only real solution is to check via JavaScript, which is done by setup/
+	/**
+	 * Checks if the system can be accessed publicly
+	 * Attention! This check does not work if OIDplus is password protected (solution would be to check via JavaScript,
+	 * which is done in setup/), or the URL is in the IntraNet rather than the Internet (only solution would be a
+	 * remote URL check service)
+	 * @param string $dir
+	 * @return false|string
+	 * @throws OIDplusException
+	 */
+	private function webAccessWorks(string $dir) {
 		$url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).$dir;
 		$access_worked = url_get_contents($url) !== false;
 		if ($access_worked) return $url;
@@ -155,7 +189,12 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 		return false;
 	}
 
-	private function getNotificationsCheckDirAccess($dir) {
+	/**
+	 * @param string $dir
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function getNotificationsCheckDirAccess(string $dir) {
 		$notifications = array();
 		if (($url = $this->webAccessWorks($dir)) !== false) {
 			// Re-use message taken from setup/includes/setup_base.js
@@ -165,9 +204,14 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 		return $notifications;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
+	 * These are some basic "system" checks, no checks from other plugin. So we add them to our plugin instead.
+	 * @param $user
+	 * @return array
+	 * @throws OIDplusException
+	 */
 	public function getNotifications($user=null): array {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
-		// These are some basic "system" checks, no checks from other plugin. So we add them to our plugin instead.
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			// Check if critical directories are world-readable

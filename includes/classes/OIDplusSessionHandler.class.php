@@ -28,6 +28,9 @@ class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSet
 	private $secret = '';
 	protected $sessionLifetime = 0;
 
+	/**
+	 * @throws OIDplusException
+	 */
 	public function __construct() {
 		$this->sessionLifetime = OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60);
 		$this->secret = OIDplus::baseConfig()->getValue('SERVER_SECRET');
@@ -56,6 +59,10 @@ class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSet
 		@ini_set('session.gc_maxlifetime', $this->sessionLifetime);
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	protected function sessionSafeStart() {
 		if (!isset($_SESSION)) {
 			// TODO: session_name() makes some problems. Leave it away for now.
@@ -83,13 +90,22 @@ class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSet
 		}
 	}
 
+	/**
+	 * @return void
+	 */
 	function __destruct() {
 		session_write_close();
 	}
 
 	private $cacheSetValues = array(); // Important if you do a setValue() followed by an getValue()
 
-	public function setValue($name, $value) {
+	/**
+	 * @param string $name
+	 * @param mixed $value
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function setValue(string $name, $value) {
 		$enc_data = self::encrypt($value, $this->secret);
 
 		$this->cacheSetValues[$name] = $enc_data;
@@ -100,7 +116,13 @@ class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSet
 		$_SESSION[$name] = $enc_data;
 	}
 
-	public function getValue($name, $default = NULL) {
+	/**
+	 * @param string $name
+	 * @param mixed|null $default
+	 * @return mixed|null
+	 * @throws OIDplusException
+	 */
+	public function getValue(string $name, $default = NULL) {
 		if (isset($this->cacheSetValues[$name])) return self::decrypt($this->cacheSetValues[$name], $this->secret);
 
 		if (!$this->isActive()) return $default; // GDPR: Only start a session when we really need one
@@ -111,17 +133,27 @@ class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSet
 		return self::decrypt($_SESSION[$name], $this->secret);
 	}
 
-	public function exists($name) {
+	/**
+	 * @param string $name
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function exists(string $name): bool {
 		if (isset($this->cacheSetValues[$name])) return true;
 
 		if (!$this->isActive()) return false; // GDPR: Only start a session when we really need one
 		$this->sessionSafeStart();
 		OIDplus::cookieUtils()->setcookie(session_name(),session_id(),time()+$this->sessionLifetime);
 
-		if (!isset($_SESSION[$name])) return false;
+		return isset($_SESSION[$name]);
 	}
 
-	public function delete($name) {
+	/**
+	 * @param string $name
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function delete(string $name) {
 		if (isset($this->cacheSetValues[$name])) unset($this->cacheSetValues[$name]);
 
 		if (!$this->isActive()) return; // GDPR: Only start a session when we really need one
@@ -131,6 +163,10 @@ class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSet
 		unset($_SESSION[$name]);
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function destroySession() {
 		if (!$this->isActive()) return;
 
@@ -143,11 +179,20 @@ class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSet
 		OIDplus::cookieUtils()->unsetcookie(session_name()); // remove cookie, so GDPR people are happy
 	}
 
-	public function isActive() {
+	/**
+	 * @return bool
+	 */
+	public function isActive(): bool {
 		return isset($_COOKIE[session_name()]);
 	}
 
-	protected static function encrypt($data, $key) {
+	/**
+	 * @param string $data
+	 * @param string $key
+	 * @return string
+	 * @throws \Exception
+	 */
+	protected static function encrypt(string $data, string $key): string {
 		if (function_exists('openssl_encrypt')) {
 			$iv = random_bytes(16); // AES block size in CBC mode
 			// Encryption
@@ -168,7 +213,13 @@ class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSet
 		}
 	}
 
-	protected static function decrypt($data, $key) {
+	/**
+	 * @param string $data
+	 * @param string $key
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	protected static function decrypt(string $data, string $key): string {
 		if (function_exists('openssl_decrypt')) {
 			$hmac       = mb_substr($data, 0, 64, '8bit');
 			$iv         = mb_substr($data, 64, 16, '8bit');

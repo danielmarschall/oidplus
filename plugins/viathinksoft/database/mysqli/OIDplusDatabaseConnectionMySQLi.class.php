@@ -28,7 +28,13 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	private $prepare_cache = array();
 	private $last_error = null; // we need that because MySQL divides prepared statement errors and normal query errors, but we have only one "error()" method
 
-	public function doQuery(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+	/**
+	 * @param string $sql
+	 * @param array|null $prepared_args
+	 * @return OIDplusQueryResultMySQL|OIDplusQueryResultMySQLNoNativeDriver
+	 * @throws OIDplusException
+	 */
+	public function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			$res = $this->conn->query($sql, MYSQLI_STORE_RESULT);
@@ -46,7 +52,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 
 			foreach ($prepared_args as &$value) {
 				// MySQLi has problems converting "true/false" to the data type "tinyint(1)"
-				// It seems to be the same issue like in PDO reported 14 years ago at https://bugs.php.net/bug.php?id=57157
+				// It seems to be the same issue as in PDO reported 14 years ago at https://bugs.php.net/bug.php?id=57157
 				if (is_bool($value)) $value = $value ? '1' : '0';
 			}
 
@@ -87,16 +93,27 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @return int
+	 */
 	public function insert_id(): int {
 		return $this->conn->insert_id;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function error(): string {
 		$err = $this->last_error;
 		if ($err == null) $err = '';
 		return $err;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	protected function doConnect()/*: void*/ {
 		if (!function_exists('mysqli_connect')) throw new OIDplusException(_L('PHP extension "%1" not installed','MySQLi'));
 
@@ -120,6 +137,9 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		$this->query("SET NAMES 'utf8'");
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function doDisconnect()/*: void*/ {
 		$this->prepare_cache = array();
 		if (!is_null($this->conn)) {
@@ -128,16 +148,29 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @var bool
+	 */
 	private $intransaction = false;
 
+	/**
+	 * @return bool
+	 */
 	public function transaction_supported(): bool {
 		return true;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function transaction_level(): int {
 		return $this->intransaction ? 1 : 0;
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function transaction_begin()/*: void*/ {
 		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		$this->conn->autocommit(false);
@@ -145,27 +178,45 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		$this->intransaction = true;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function transaction_commit()/*: void*/ {
 		$this->conn->commit();
 		$this->conn->autocommit(true);
 		$this->intransaction = false;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function transaction_rollback()/*: void*/ {
 		$this->conn->rollback();
 		$this->conn->autocommit(true);
 		$this->intransaction = false;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function sqlDate(): string {
 		return 'now()';
 	}
 
+	/**
+	 * @return bool
+	 * @throws OIDplusException
+	 */
 	public static function nativeDriverAvailable(): bool {
 		return function_exists('mysqli_fetch_all') && (OIDplus::baseConfig()->getValue('MYSQL_FORCE_MYSQLND_SUPPLEMENT', false) === false);
 	}
 
-	private static function bind_placeholder_vars(&$stmt,$params): bool {
+	/**
+	 * @param object $stmt
+	 * @param array $params
+	 * @return bool
+	 */
+	private static function bind_placeholder_vars(object &$stmt, array $params): bool {
 		// Credit to: Dave Morgan
 		// Code taken from: http://www.devmorgan.com/blog/2009/03/27/dydl-part-3-dynamic-binding-with-mysqli-php/
 		//                  https://stackoverflow.com/questions/17219214/how-to-bind-in-mysqli-dynamically
@@ -201,6 +252,11 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		}
 	}
 
+	/**
+	 * @param bool $mustExist
+	 * @return OIDplusSqlSlangPlugin|null
+	 * @throws OIDplusConfigInitializationException
+	 */
 	protected function doGetSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
 		$slang = OIDplus::getSqlSlangPlugin('mysql');
 		if (is_null($slang)) {

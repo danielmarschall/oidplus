@@ -25,11 +25,20 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusSqlSlangPluginMySQL extends OIDplusSqlSlangPlugin {
 
+	/**
+	 * @return string
+	 */
 	public static function id(): string {
 		return 'mysql';
 	}
 
-	public function natOrder($fieldname, $order='asc'): string {
+	/**
+	 * @param string $fieldname
+	 * @param string $order
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function natOrder(string $fieldname, string $order='asc'): string {
 
 		$order = strtolower($order);
 		if (($order != 'asc') && ($order != 'desc')) {
@@ -58,10 +67,17 @@ class OIDplusSqlSlangPluginMySQL extends OIDplusSqlSlangPlugin {
 
 	}
 
+	/**
+	 * @return string
+	 */
 	public function sqlDate(): string {
 		return 'now()';
 	}
 
+	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @return bool
+	 */
 	public function detect(OIDplusDatabaseConnection $db): bool {
 		try {
 			$vers = $db->query("select version() as dbms_version")->fetch_object()->dbms_version;
@@ -72,39 +88,74 @@ class OIDplusSqlSlangPluginMySQL extends OIDplusSqlSlangPlugin {
 		}
 	}
 
+	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @return int
+	 * @throws OIDplusException
+	 */
 	public function insert_id(OIDplusDatabaseConnection $db): int {
 		$res = $db->query("SELECT LAST_INSERT_ID() AS ID");
 		$row = $res->fetch_array();
 		return (int)$row['ID'];
 	}
 
-
-	public function setupSetTablePrefix($cont, $table, $prefix): string {
+	/**
+	 * @param string $cont
+	 * @param string $table
+	 * @param string $prefix
+	 * @return string
+	 */
+	public function setupSetTablePrefix(string $cont, string $table, string $prefix): string {
 		$cont = str_replace('`'.$table.'`', '`'.$prefix.$table.'`', $cont);
 		return $cont;
 	}
 
-	public function setupCreateDbIfNotExists($database): string {
+	/**
+	 * @param string $database
+	 * @return string
+	 */
+	public function setupCreateDbIfNotExists(string $database): string {
 		return "CREATE DATABASE IF NOT EXISTS `$database`;\n\n";
 	}
 
-	public function setupUseDatabase($database): string {
+	/**
+	 * @param string $database
+	 * @return string
+	 */
+	public function setupUseDatabase(string $database): string {
 		return "USE `$database`;\n\n";
 	}
 
-	public function isNullFunction($expr1, $expr2): string {
+	/**
+	 * @param string $expr1
+	 * @param string $expr2
+	 * @return string
+	 */
+	public function isNullFunction(string $expr1, string $expr2): string {
 		return "ifnull($expr1, $expr2)";
 	}
 
-	public function filterQuery($sql): string {
+	/**
+	 * @param string $sql
+	 * @return string
+	 */
+	public function filterQuery(string $sql): string {
 		return $sql;
 	}
 
-	public function getSQLBool($bool): string {
+	/**
+	 * @param bool $bool
+	 * @return string
+	 */
+	public function getSQLBool(bool $bool): string {
 		return $bool ? '1' : '0';
 	}
 
-	public function escapeString($str): string {
+	/**
+	 * @param string $str
+	 * @return string
+	 */
+	public function escapeString(string $str): string {
 		return str_replace("'", "''", $str);
 	}
 }

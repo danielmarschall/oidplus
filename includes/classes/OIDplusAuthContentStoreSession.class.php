@@ -25,7 +25,10 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 
-	protected static function getSessionHandler() {
+	/**
+	 * @return OIDplusSessionHandler
+	 */
+	protected static function getSessionHandler(): OIDplusSessionHandler {
 		static $sesHandler = null;
 		if (is_null($sesHandler)) {
 			$sesHandler = new OIDplusSessionHandler();
@@ -36,7 +39,13 @@ class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 	// Override abstract functions
 	# TODO: shouldn't we just include OIDplusSessionHandler in this class?
 
-	public function getValue($name, $default = NULL) {
+	/**
+	 * @param string $name
+	 * @param mixed|null $default
+	 * @return mixed|null
+	 * @throws OIDplusException
+	 */
+	public function getValue(string $name, $default = NULL) {
 		try {
 			return self::getSessionHandler()->getValue($name, $default);
 		} catch (\Exception $e) {
@@ -46,23 +55,46 @@ class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 		}
 	}
 
-	public function setValue($name, $value) {
-		return self::getSessionHandler()->setValue($name, $value);
+	/**
+	 * @param string $name
+	 * @param mixed $value
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function setValue(string $name, $value) {
+		self::getSessionHandler()->setValue($name, $value);
 	}
 
-	public function exists($name) {
+	/**
+	 * @param string $name
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function exists(string $name): bool {
 		return self::getSessionHandler()->exists($name);
 	}
 
-	public function delete($name) {
-		return self::getSessionHandler()->delete($name);
+	/**
+	 * @param string $name
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function delete(string $name) {
+		self::getSessionHandler()->delete($name);
 	}
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	public function destroySession() {
-		return self::getSessionHandler()->destroySession();
+		self::getSessionHandler()->destroySession();
 	}
 
-	public static function getActiveProvider() {
+	/**
+	 * @return OIDplusAuthContentStoreSession|null
+	 */
+	public static function getActiveProvider()/*: ?OIDplusAuthContentStore*/ {
 		static $contentProvider = null;
 
 		if (!$contentProvider) {
@@ -74,7 +106,12 @@ class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 		return $contentProvider;
 	}
 
-	public function raLoginEx($email, &$loginfo) {
+	/**
+	 * @param string $email
+	 * @param string $loginfo
+	 * @return void
+	 */
+	public function raLoginEx(string $email, string &$loginfo) {
 		$this->raLogin($email);
 		if (is_null(self::getActiveProvider())) {
 			$loginfo = 'into new PHP session';
@@ -83,7 +120,11 @@ class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 		}
 	}
 
-	public function adminLoginEx(&$loginfo) {
+	/**
+	 * @param string $loginfo
+	 * @return void
+	 */
+	public function adminLoginEx(string &$loginfo) {
 		$this->adminLogin();
 		if (is_null(self::getActiveProvider())) {
 			$loginfo = 'into new PHP session';
@@ -92,19 +133,30 @@ class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 		}
 	}
 
-	public function raLogoutEx($email, &$loginfo) {
+	/**
+	 * @param string $email
+	 * @param string $loginfo
+	 * @return void
+	 */
+	public function raLogoutEx(string $email, string &$loginfo) {
 		$this->raLogout($email);
 		$loginfo = 'from PHP session';
 	}
 
-	public function adminLogoutEx(&$loginfo) {
+	/**
+	 * @param string $loginfo
+	 * @return void
+	 */
+	public function adminLogoutEx(string &$loginfo) {
 		$this->adminLogout();
 		$loginfo = 'from PHP session';
 	}
 
+	/**
+	 * @return void
+	 */
 	public function activate() {
 		# Sessions automatically activate during setValue()
-		return;
 	}
 
 }

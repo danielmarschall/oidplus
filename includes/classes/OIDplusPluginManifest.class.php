@@ -54,22 +54,37 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 	private $languageFlag = '';
 	private $languageMessages = '';
 
+	/**
+	 * @return string
+	 */
 	public function getTypeClass(): string {
 		return $this->type;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getName(): string {
 		return $this->name;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getAuthor(): string {
 		return $this->author;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getLicense(): string {
 		return $this->license;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getVersion(): string {
 		if (str_starts_with($this->oid,'1.3.6.1.4.1.37476.2.5.2.4.') && ($this->version == '')) {
 			$sysver = OIDplus::getVersion();
@@ -85,62 +100,86 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getHtmlDescription(): string {
 		return $this->htmlDescription;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getOid(): string {
 		return $this->oid;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getPhpMainClass(): string {
 		return $this->phpMainClass;
 	}
 
 	/**
-	* @return array<string>
+	* @return string[]
 	*/
 	public function getCSSFiles(): array {
 		return $this->cssFiles;
 	}
 
 	/**
-	* @return array<string>
+	 * @return string[]
 	*/
 	public function getJSFiles(): array {
 		return $this->jsFiles;
 	}
 
 	/**
-	* @return array<string>
+	 * @return string[]
 	*/
 	public function getCSSFilesSetup(): array {
 		return $this->cssFilesSetup;
 	}
 
 	/**
-	* @return array<string>
+	 * @return string[]
 	*/
 	public function getJSFilesSetup(): array {
 		return $this->jsFilesSetup;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getManifestFile(): string {
 		return $this->manifestFile;
 	}
 
+	/**
+	 * @return \SimpleXMLElement
+	 */
 	public function getRawXml(): \SimpleXMLElement {
 		return $this->rawXML;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getLanguageCode(): string {
 		return $this->languageCode;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getLanguageFlag(): string {
 		return $this->languageFlag;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getLanguageMessages(): string {
 		return $this->languageMessages;
 	}
@@ -148,7 +187,8 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 	/**
 	 * Lists all files referenced by the manifest files
 	 * Not included are other files like menu images or other PHP classes
-	 * @return array<string>
+	 * @return string[]
+	 * @throws \ReflectionException
 	 */
 	public function getManifestLinkedFiles(): array {
 		$files = array_merge(
@@ -163,10 +203,14 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 		return $files;
 	}
 
-	public function loadManifest($filename) {
+	/**
+	 * @param string $filename
+	 * @return bool
+	 */
+	public function loadManifest(string $filename) {
 		if (!file_exists($filename)) return false;
 		$xmldata = @simplexml_load_file($filename);
-		if ($xmldata === false) return false;
+		if ($xmldata === false) return false; // TODO: rather throw an Exception and let the method return void only
 
 		$this->manifestFile = $filename;
 		$this->rawXML = $xmldata;
@@ -195,8 +239,10 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 			$this->cssFiles[] = $file;
 		}
 
-		// The following functionalities are only available for page plugins
+		// The following functionalities are only available for page plugins, captcha plugins, and object type plugins
 		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1
+		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.10.1
+		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.12.1
 		foreach ((array)$xmldata->js->file as $js_file) {
 			$file = dirname($filename).DIRECTORY_SEPARATOR.$js_file;
 			//if (!file_exists($file)) continue;

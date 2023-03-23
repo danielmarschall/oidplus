@@ -27,31 +27,81 @@ abstract class OIDplusAuthContentStore extends OIDplusBaseClass implements OIDpl
 
 	// Getter / Setter
 
-	public abstract function getValue($name, $default = NULL);
+	/**
+	 * @param string $name
+	 * @param mixed|null $default
+	 * @return mixed|null
+	 */
+	public abstract function getValue(string $name, $default = NULL);
 
-	public abstract function setValue($name, $value);
+	/**
+	 * @param string $name
+	 * @param mixed $value
+	 * @return void
+	 */
+	public abstract function setValue(string $name, $value);
 
-	public abstract function exists($name);
+	/**
+	 * @param string $name
+	 * @return bool
+	 */
+	public abstract function exists(string $name): bool;
 
-	public abstract function delete($name);
+	/**
+	 * @param string $name
+	 * @return void
+	 */
+	public abstract function delete(string $name);
 
-	public abstract static function getActiveProvider();
+	/**
+	 * @return OIDplusAuthContentStore|null
+	 * @throws OIDplusException
+	 */
+	public abstract static function getActiveProvider()/*: ?OIDplusAuthContentStore*/;
 
+	/**
+	 * @return mixed
+	 */
 	public abstract function destroySession();
 
+	/**
+	 * @return mixed
+	 */
 	public abstract function activate();
 
-	public abstract function raLoginEx($email, &$loginfo);
+	/**
+	 * @param string $email
+	 * @param string $loginfo
+	 * @return void
+	 */
+	public abstract function raLoginEx(string $email, string &$loginfo);
 
-	public abstract function raLogoutEx($email, &$loginfo);
+	/**
+	 * @param string $email
+	 * @param string $loginfo
+	 * @return void
+	 */
+	public abstract function raLogoutEx(string $email, string &$loginfo);
 
-	public abstract function adminLoginEx(&$loginfo);
+	/**
+	 * @param string $loginfo
+	 * @return void
+	 */
+	public abstract function adminLoginEx(string &$loginfo);
 
-	public abstract function adminLogoutEx(&$loginfo);
+	/**
+	 * @param string $loginfo
+	 * @return void
+	 */
+	public abstract function adminLogoutEx(string &$loginfo);
 
 	// RA authentication functions (low-level)
 
-	public function raLogin($email) {
+	/**
+	 * @param string $email
+	 * @return void
+	 */
+	public function raLogin(string $email) {
 		if (strpos($email, '|') !== false) return;
 
 		$list = $this->getValue('oidplus_ra_logged_in');
@@ -64,7 +114,11 @@ abstract class OIDplusAuthContentStore extends OIDplusBaseClass implements OIDpl
 		$this->setValue('oidplus_ra_logged_in', $list);
 	}
 
-	public function raLogout($email) {
+	/**
+	 * @param string $email
+	 * @return void
+	 */
+	public function raLogout(string $email) {
 		$list = $this->getValue('oidplus_ra_logged_in');
 		if (is_null($list)) $list = '';
 
@@ -76,11 +130,17 @@ abstract class OIDplusAuthContentStore extends OIDplusBaseClass implements OIDpl
 		$this->setValue('oidplus_ra_logged_in', $list);
 	}
 
-	public function raNumLoggedIn() {
+	/**
+	 * @return int
+	 */
+	public function raNumLoggedIn(): int {
 		return count($this->loggedInRaList());
 	}
 
-	public function loggedInRaList() {
+	/**
+	 * @return OIDplusRA[]
+	 */
+	public function loggedInRaList(): array {
 		$list = $this->getValue('oidplus_ra_logged_in');
 		if (is_null($list)) $list = '';
 
@@ -92,7 +152,11 @@ abstract class OIDplusAuthContentStore extends OIDplusBaseClass implements OIDpl
 		return $res;
 	}
 
-	public function isRaLoggedIn($email) {
+	/**
+	 * @param string $email
+	 * @return bool
+	 */
+	public function isRaLoggedIn(string $email) {
 		foreach ($this->loggedInRaList() as $ra) {
 			if ($email == $ra->raEmail()) return true;
 		}
@@ -101,15 +165,24 @@ abstract class OIDplusAuthContentStore extends OIDplusBaseClass implements OIDpl
 
 	// Admin authentication functions (low-level)
 
+	/**
+	 * @return void
+	 */
 	public function adminLogin() {
 		$this->setValue('oidplus_admin_logged_in', 1);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function adminLogout() {
 		$this->setValue('oidplus_admin_logged_in', 0);
 	}
 
-	public function isAdminLoggedIn() {
+	/**
+	 * @return bool
+	 */
+	public function isAdminLoggedIn(): bool {
 		return $this->getValue('oidplus_admin_logged_in') == 1;
 	}
 

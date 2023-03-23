@@ -25,9 +25,30 @@ namespace ViaThinkSoft\OIDplus;
 
 interface OIDplusGetterSetterInterface {
 
-	public function getValue($name, $default=null);
-	public function setValue($name, $value);
-	public function exists($name);
-	public function delete($name);
+	/**
+	 * @param string $name
+	 * @param mixed|null $default
+	 * @return mixed|null
+	 */
+	public function getValue(string $name, $default=null);
+
+	/**
+	 * @param string $name
+	 * @param mixed $value
+	 * @return void
+	 */
+	public function setValue(string $name, $value);
+
+	/**
+	 * @param string $name
+	 * @return bool
+	 */
+	public function exists(string $name): bool;
+
+	/**
+	 * @param string $name
+	 * @return void
+	 */
+	public function delete(string $name);
 
 }

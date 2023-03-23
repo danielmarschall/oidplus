@@ -25,11 +25,19 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
+	/**
+	 * @return array|mixed|string|string[]
+	 */
 	private function getMainTitle() {
 		return _L('Documents and Resources');
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('resource_plugin_autoopen_level', 'Resource plugin: How many levels should be open in the treeview when OIDplus is loaded?', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -44,6 +52,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		});
 	}
 
+	/**
+	 * @param $file
+	 * @return string
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	private static function getDocumentContent($file) {
 		$file = self::realname($file);
 		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
@@ -60,6 +74,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		return $cont;
 	}
 
+	/**
+	 * @param $file
+	 * @return array|mixed|string
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	private static function getDocumentTitle($file) {
 		$file = self::realname($file);
 		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
@@ -81,6 +101,11 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		return pathinfo($file, PATHINFO_FILENAME); // filename without extension
 	}
 
+	/**
+	 * @param $source
+	 * @return bool
+	 * @throws OIDplusException
+	 */
 	protected static function mayAccessResource($source) {
 		if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 
@@ -110,6 +135,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		return true;
 	}
 
+	/**
+	 * @param $reldir
+	 * @param $onlydir
+	 * @return array
+	 * @throws OIDplusException
+	 */
 	private static function myglob($reldir, $onlydir=false) {
 		$out = array();
 
@@ -136,6 +167,10 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		}, ARRAY_FILTER_USE_BOTH);
 	}
 
+	/**
+	 * @param $rel
+	 * @return string|null
+	 */
 	private static function realname($rel) {
 		$candidate1 = OIDplus::localpath().'userdata/resources/'.$rel;
 		$candidate2 = OIDplus::localpath().'res/'.$rel;
@@ -144,6 +179,11 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		return null;
 	}
 
+	/**
+	 * @param $source
+	 * @param $target
+	 * @return bool
+	 */
 	protected static function checkRedirect($source, &$target): bool {
 		$candidates = array(
 			OIDplus::localpath().'userdata/resources/redirect.ini',
@@ -161,7 +201,15 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		return false;
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if (explode('$',$id,2)[0] === 'oidplus:resources') {
 			$handled = true;
 
@@ -294,7 +342,6 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					$out['title'] = _L('Unknown file type');
 					$out['icon'] = 'img/error.png';
 					$out['text'] = '<p>'._L('The system does not know how to handle this file type.').'</p>';
-					return;
 				}
 			} else if (is_dir($realfile)) {
 				$out['title'] = ($file == '') ? $this->getMainTitle() : self::getFolderTitle($realfile);
@@ -402,9 +449,17 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		}
 	}
 
-	private function tree_rec(&$children, $rootdir=null, $depth=0) {
+	/**
+	 * @param $children
+	 * @param ?string $rootdir
+	 * @param int $depth
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	private function tree_rec(&$children, string $rootdir=null, int $depth=0)/*: void*/ {
 		if (is_null($rootdir)) $rootdir = '';
-		if ($depth > 100) return false; // something is wrong!
+		if ($depth > 100) return; // something is wrong!
 
 		$dirs = self::myglob($rootdir.'*'.'/', true);
 		natcasesort($dirs);
@@ -491,6 +546,11 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		}
 	}
 
+	/**
+	 * @param $json
+	 * @param $out
+	 * @return void
+	 */
 	private function publicSitemap_rec($json, &$out) {
 		foreach ($json as $x) {
 			if (isset($x['id']) && $x['id']) {
@@ -502,13 +562,26 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function publicSitemap(&$out) {
+	/**
+	 * @param array $out
+	 * @return void
+	 */
+	public function publicSitemap(array &$out) {
 		$json = array();
-		$this->tree($json, null/*RA EMail*/, false/*HTML tree algorithm*/, true/*display all*/);
+		$this->tree($json, null/*RA EMail*/, false/*HTML tree algorithm*/, "*"/*display all*/);
 		$this->publicSitemap_rec($json, $out);
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		$children = array();
 
 		$this->tree_rec($children, '/');
@@ -532,10 +605,20 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
+	/**
+	 * @param $file
+	 * @return array|mixed|string|string[]|null
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	private static function getHyperlinkTitle($file) {
 		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
 		if (file_exists($file2)) $file = $file2;
@@ -565,6 +648,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		}
 	}
 
+	/**
+	 * @param $file
+	 * @return mixed
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	private static function getHyperlinkURL($file) {
 		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
 		if (file_exists($file2)) $file = $file2;
@@ -610,6 +699,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 	}
 
+	/**
+	 * @param $dir
+	 * @return mixed|string
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	private static function getFolderTitle($dir) {
 		$data = @parse_ini_file("$dir/folder\$".OIDplus::getCurrentLang().".ini", true);
 		if ($data && isset($data['Folder']) && isset($data['Folder']['Title'])) {

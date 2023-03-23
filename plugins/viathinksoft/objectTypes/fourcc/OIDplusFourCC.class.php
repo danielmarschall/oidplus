@@ -26,12 +26,16 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusFourCC extends OIDplusObject {
 	private $fourcc;
 
-	// FourCC Syntax examples:
-	// fourcc_transform('8BIM')       === array(56,66,73,77);   // Adobe Photoshop
-	// fourcc_transform('AVI')        === array(65,86,73,32);   // AVI File (padded with whitespace)
-	// fourcc_transform('Y3[10][10]') === array(89,51,10,10);   // 10bit Y'CbCr 4:2:2 video
-	// Non-FourCC:  fourcc_transform returns false.
-	private function fourcc_transform($fourcc) {
+	/**
+	 * FourCC Syntax examples:
+	 * fourcc_transform('8BIM')       === array(56,66,73,77);   // Adobe Photoshop
+	 * fourcc_transform('AVI')        === array(65,86,73,32);   // AVI File (padded with whitespace)
+	 * fourcc_transform('Y3[10][10]') === array(89,51,10,10);   // 10bit Y'CbCr 4:2:2 video
+	 * Non-FourCC:  fourcc_transform returns false.
+	 * @param string $fourcc
+	 * @return array|false
+	 */
+	private function fourcc_transform(string $fourcc) {
 		$out = array();
 		if ($fourcc === '') return false;
 		for ($i=0; $i<4; $i++) {
@@ -52,6 +56,9 @@ class OIDplusFourCC extends OIDplusObject {
 		return $out;
 	}
 
+	/**
+	 * @param $fourcc
+	 */
 	public function __construct($fourcc) {
 		if (self::fourcc_transform($fourcc) !== false) {
 			$this->fourcc = $fourcc; // leaf node
@@ -60,37 +67,64 @@ class OIDplusFourCC extends OIDplusObject {
 		}
 	}
 
-	public static function parse($node_id) {
+	/**
+	 * @param string $node_id
+	 * @return OIDplusFourCC|null
+	 */
+	public static function parse(string $node_id)/*: ?OIDplusFourCC*/ {
 		@list($namespace, $fourcc) = explode(':', $node_id, 2);
-		if ($namespace !== self::ns()) return false;
+		if ($namespace !== self::ns()) return null;
 		return new self($fourcc);
 	}
 
-	public static function objectTypeTitle() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitle(): string {
 		return _L('Four-Character-Code (FourCC)');
 	}
 
-	public static function objectTypeTitleShort() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitleShort(): string {
 		return _L('FourCC');
 	}
 
-	public static function ns() {
+	/**
+	 * @return string
+	 */
+	public static function ns(): string {
 		return 'fourcc';
 	}
 
-	public static function root() {
+	/**
+	 * @return string
+	 */
+	public static function root(): string {
 		return self::ns().':';
 	}
 
-	public function isRoot() {
+	/**
+	 * @return bool
+	 */
+	public function isRoot(): bool {
 		return $this->fourcc == '';
 	}
 
-	public function nodeId($with_ns=true) {
+	/**
+	 * @param bool $with_ns
+	 * @return string
+	 */
+	public function nodeId(bool $with_ns=true): string {
 		return $with_ns ? self::root().$this->fourcc : $this->fourcc;
 	}
 
-	public function addString($str) {
+	/**
+	 * @param string $str
+	 * @return string
+	 */
+	public function addString(string $str): string {
 
 		// Y3[10] [10] --> Y3[10][10]
 		$test_str = trim($str);
@@ -113,7 +147,11 @@ class OIDplusFourCC extends OIDplusObject {
 		}
 	}
 
-	public function crudShowId(OIDplusObject $parent) {
+	/**
+	 * @param OIDplusObject $parent
+	 * @return string
+	 */
+	public function crudShowId(OIDplusObject $parent): string {
 		if ($this->isLeafNode()) {
 			// We don't parse '/' in a valid FourCC code (i.e. Leaf node)
 			return $this->nodeId(false);
@@ -126,20 +164,33 @@ class OIDplusFourCC extends OIDplusObject {
 		}
 	}
 
-	public function jsTreeNodeName(OIDplusObject $parent = null) {
+	/**
+	 * @param OIDplusObject|null $parent
+	 * @return string
+	 */
+	public function jsTreeNodeName(OIDplusObject $parent = null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		return $this->crudShowId($parent);
 	}
 
-	public function defaultTitle() {
+	/**
+	 * @return string
+	 */
+	public function defaultTitle(): string {
 		return $this->fourcc;
 	}
 
-	public function isLeafNode() {
+	/**
+	 * @return bool
+	 */
+	public function isLeafNode(): bool {
 		return self::fourcc_transform($this->fourcc) !== false;
 	}
 
-	private function getTechInfo() {
+	/**
+	 * @return array
+	 */
+	private function getTechInfo(): array {
 		$tech_info = array();
 		$tech_info[_L('FourCC code')]   = $this->fourcc;
 		$tech_info[_L('C/C++ Literal')] = $this->getMultiCharLiteral();
@@ -149,7 +200,14 @@ class OIDplusFourCC extends OIDplusObject {
 		return $tech_info;
 	}
 
-	public function getContentPage(&$title, &$content, &$icon) {
+	/**
+	 * @param string $title
+	 * @param string $content
+	 * @param string $icon
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function getContentPage(string &$title, string &$content, string &$icon) {
 		$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 		if ($this->isRoot()) {
@@ -203,7 +261,12 @@ class OIDplusFourCC extends OIDplusObject {
 		}
 	}
 
-	public function getIcon($row=null) {
+	/**
+	 * @param array|null $row
+	 * @return string|null
+	 * @throws OIDplusException
+	 */
+	public function getIcon(array $row=null) {
 		$in_login_treenode = false;
 		foreach (debug_backtrace() as $trace) {
 			// If we are inside the "Login" area (i.e. "Root object links"), we want the
@@ -216,23 +279,38 @@ class OIDplusFourCC extends OIDplusObject {
 		return parent::getIcon($row);
 	}
 
-	public function one_up() {
+	/**
+	 * @return OIDplusFourCC|null
+	 */
+	public function one_up()/*: ?OIDplusFourCC*/ {
 		// A FourCC is a FourCC, there is no hierarchy
-		return false;
+		return null;
 	}
 
+	/**
+	 * @param $to
+	 * @return null
+	 */
 	public function distance($to) {
 		// Distance between FourCCs is not possible
 		return null;
 	}
 
-	public function getAltIds() {
+	/**
+	 * @return array|OIDplusAltId[]
+	 * @throws OIDplusException
+	 */
+	public function getAltIds(): array {
 		if ($this->isRoot()) return array();
 		if (!$this->isLeafNode()) return array();
 		$ids = parent::getAltIds();
 		return $ids;
 	}
 
+	/**
+	 * @param $big_endian
+	 * @return false|int|mixed
+	 */
 	private function getInt($big_endian) {
 		$type = self::fourcc_transform($this->fourcc);
 		if ($type === false) return false;
@@ -242,19 +320,30 @@ class OIDplusFourCC extends OIDplusObject {
 		return $dec;
 	}
 
+	/**
+	 * @param $big_endian
+	 * @return string
+	 */
 	private function getHex($big_endian) {
 		$dec = $this->getInt($big_endian);
 		$hex = str_pad(dechex($dec), 8, "0", STR_PAD_LEFT);
 		return $hex;
 	}
 
+	/**
+	 * @return false|string
+	 */
 	private function getMultiCharLiteral() {
 		$type = self::fourcc_transform($this->fourcc);
 		if ($type === false) return false;
 		return c_literal($type);
 	}
 
-	public function getDirectoryName() {
+	/**
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function getDirectoryName(): string {
 		if ($this->isLeafNode()) {
 			// Leaf (FourCC)
 			// Example output: "fourcc_23496d52" for 'fourcc:#ImR'
@@ -265,7 +354,11 @@ class OIDplusFourCC extends OIDplusObject {
 		}
 	}
 
-	public static function treeIconFilename($mode) {
+	/**
+	 * @param string $mode
+	 * @return string
+	 */
+	public static function treeIconFilename(string $mode): string {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }

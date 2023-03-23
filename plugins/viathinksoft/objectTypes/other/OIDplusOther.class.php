@@ -26,42 +26,72 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusOther extends OIDplusObject {
 	private $other;
 
+	/**
+	 * @param $other
+	 */
 	public function __construct($other) {
 		// No syntax checks
 		$this->other = $other;
 	}
 
-	public static function parse($node_id) {
+	/**
+	 * @param string $node_id
+	 * @return OIDplusOther|null
+	 */
+	public static function parse(string $node_id)/*: ?OIDplusOther*/ {
 		@list($namespace, $other) = explode(':', $node_id, 2);
-		if ($namespace !== self::ns()) return false;
+		if ($namespace !== self::ns()) return null;
 		return new self($other);
 	}
 
-	public static function objectTypeTitle() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitle(): string {
 		return _L('Other objects');
 	}
 
-	public static function objectTypeTitleShort() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitleShort(): string {
 		return _L('Object');
 	}
 
-	public static function ns() {
+	/**
+	 * @return string
+	 */
+	public static function ns(): string {
 		return 'other';
 	}
 
-	public static function root() {
+	/**
+	 * @return string
+	 */
+	public static function root(): string {
 		return self::ns().':';
 	}
 
-	public function isRoot() {
+	/**
+	 * @return bool
+	 */
+	public function isRoot(): bool {
 		return $this->other == '';
 	}
 
-	public function nodeId($with_ns=true) {
+	/**
+	 * @param bool $with_ns
+	 * @return string
+	 */
+	public function nodeId(bool $with_ns=true): string {
 		return $with_ns ? self::root().$this->other : $this->other;
 	}
 
-	public function addString($str) {
+	/**
+	 * @param string $str
+	 * @return string
+	 */
+	public function addString(string $str): string {
 		if ($this->isRoot()) {
 			return self::root() . $str;
 		} else {
@@ -69,7 +99,11 @@ class OIDplusOther extends OIDplusObject {
 		}
 	}
 
-	public function crudShowId(OIDplusObject $parent) {
+	/**
+	 * @param OIDplusObject $parent
+	 * @return string
+	 */
+	public function crudShowId(OIDplusObject $parent): string {
 		if ($parent->isRoot()) {
 			return substr($this->nodeId(), strlen($parent->nodeId()));
 		} else {
@@ -77,7 +111,11 @@ class OIDplusOther extends OIDplusObject {
 		}
 	}
 
-	public function jsTreeNodeName(OIDplusObject $parent = null) {
+	/**
+	 * @param OIDplusObject|null $parent
+	 * @return string
+	 */
+	public function jsTreeNodeName(OIDplusObject $parent = null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		if ($parent->isRoot()) {
 			return substr($this->nodeId(), strlen($parent->nodeId()));
@@ -86,17 +124,30 @@ class OIDplusOther extends OIDplusObject {
 		}
 	}
 
-	public function defaultTitle() {
+	/**
+	 * @return string
+	 */
+	public function defaultTitle(): string {
 		$ary = explode('\\', $this->other); // TODO: but if an arc contains "\", this does not work. better read from db?
 		$ary = array_reverse($ary);
 		return $ary[0];
 	}
 
-	public function isLeafNode() {
+	/**
+	 * @return bool
+	 */
+	public function isLeafNode(): bool {
 		return false;
 	}
 
-	public function getContentPage(&$title, &$content, &$icon) {
+	/**
+	 * @param string $title
+	 * @param string $content
+	 * @param string $icon
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function getContentPage(string &$title, string &$content, string &$icon) {
 		$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 		if ($this->isRoot()) {
@@ -133,7 +184,10 @@ class OIDplusOther extends OIDplusObject {
 		}
 	}
 
-	public function one_up() {
+	/**
+	 * @return OIDplusOther|null
+	 */
+	public function one_up()/*: ?OIDplusOther*/ {
 		$oid = $this->other;
 
 		$p = strrpos($oid, '\\');
@@ -145,9 +199,13 @@ class OIDplusOther extends OIDplusObject {
 		return self::parse(self::ns().':'.$oid_up);
 	}
 
+	/**
+	 * @param $to
+	 * @return int|null
+	 */
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
-		if (!($to instanceof $this)) return false;
+		if (!($to instanceof $this)) return null;
 
 		$a = $to->other;
 		$b = $this->other;
@@ -161,18 +219,25 @@ class OIDplusOther extends OIDplusObject {
 		$min_len = min(count($ary), count($bry));
 
 		for ($i=0; $i<$min_len; $i++) {
-			if ($ary[$i] != $bry[$i]) return false;
+			if ($ary[$i] != $bry[$i]) return null;
 		}
 
 		return count($ary) - count($bry);
 	}
 
-	public function getDirectoryName() {
+	/**
+	 * @return string
+	 */
+	public function getDirectoryName(): string {
 		if ($this->isRoot()) return $this->ns();
 		return $this->ns().'_'.md5($this->nodeId(false));
 	}
 
-	public static function treeIconFilename($mode) {
+	/**
+	 * @param string $mode
+	 * @return string
+	 */
+	public static function treeIconFilename(string $mode): string {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }

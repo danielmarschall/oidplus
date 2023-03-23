@@ -25,7 +25,10 @@ namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusDesignPlugin extends OIDplusPlugin {
 
-	function getThemeColor() {
+	/**
+	 * @return string
+	 */
+	function getThemeColor(): string {
 		return ''; // no theme color
 	}
 

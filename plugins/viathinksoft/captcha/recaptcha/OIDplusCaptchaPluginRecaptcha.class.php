@@ -29,15 +29,28 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 	/*public*/ const RECAPTCHA_V2_INVISIBLE = 2;
 	/*public*/ const RECAPTCHA_V3           = 3;
 
+	/**
+	 * @return string
+	 */
 	public static function id(): string {
 		return 'reCAPTCHA'; // TODO: Now it is called "reCAPTCHA"
 	}
 
+	/**
+	 * @return bool
+	 * @throws OIDplusException
+	 */
 	public function isVisible(): bool {
 		return OIDplus::baseConfig()->getValue('RECAPTCHA_VERSION', self::RECAPTCHA_V2_CHECKBOX) == self::RECAPTCHA_V2_CHECKBOX;
 	}
 
-	public function captchaGenerate($header_text=null, $footer_text=null) {
+	/**
+	 * @param string|null $header_text
+	 * @param string|null $footer_text
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function captchaGenerate(string $header_text=null, string $footer_text=null): string {
 		return '<noscript>'.
 		       '<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.
 		       '</noscript>'.
@@ -76,7 +89,13 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 		       (!$this->isVisible() || !$footer_text ? '' : '<p>'.$footer_text.'</p>');
 	}
 
-	public function captchaVerify($params, $fieldname=null) {
+	/**
+	 * @param array $params
+	 * @param string|null $fieldname
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function captchaVerify(array $params, string $fieldname=null) {
 		$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 
 		if (is_null($fieldname)) $fieldname = 'oidplus-recaptcha-response'; // no individual AJAX field name (created by oidplus_captcha_response()) means that it is a plain POST event (e.g. by oobe.php)
@@ -100,6 +119,9 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function setupHTML(): string {
 		return '<div id="CAPTCHAPLUGIN_PARAMS_RECAPTCHA">'.
 		       '<p>(<a href="https://developers.google.com/recaptcha/intro" target="_blank">'._L('more information and obtain key').'</a>)</p>'.
@@ -114,7 +136,11 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 		       '</div>';
 	}
 
-	function httpHeaderCheck(&$http_headers) {
+	/**
+	 * @param array $http_headers
+	 * @return void
+	 */
+	function httpHeaderCheck(array &$http_headers) {
 		$http_headers["Content-Security-Policy"]["script-src"][] = "https://www.google.com/";
 		$http_headers["Content-Security-Policy"]["script-src"][] = "https://www.gstatic.com/";
 		$http_headers["Content-Security-Policy"]["img-src"][]    = "https://www.google.com/";

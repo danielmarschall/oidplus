@@ -25,7 +25,12 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 
-	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
+	/**
+	 * @param OIDplusRAAuthInfo $authInfo
+	 * @param string $check_password
+	 * @return bool
+	 */
+	public function verify(OIDplusRAAuthInfo $authInfo, string $check_password): bool {
 		$authKey = $authInfo->getAuthKey();
 
 		if (vts_crypt_version($authKey) != '0') {
@@ -35,7 +40,12 @@ class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 		}
 	}
 
-	public function generate($password): OIDplusRAAuthInfo {
+	/**
+	 * @param string $password
+	 * @return OIDplusRAAuthInfo
+	 * @throws OIDplusException
+	 */
+	public function generate(string $password): OIDplusRAAuthInfo {
 		$calc_authkey = vts_password_hash($password, PASSWORD_VTS_MCF1, array(
 			'algo' => 'sha3-512', // we can safely use it, because we have a pure-PHP implementation shipped with OIDplus
 			'mode' => 'hmac'
@@ -43,11 +53,19 @@ class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
-	public function availableForHash(&$reason): bool {
+	/**
+	 * @param string $reason
+	 * @return bool
+	 */
+	public function availableForHash(string &$reason): bool {
 		return function_exists('vts_password_hash');
 	}
 
-	public function availableForVerify(&$reason): bool {
+	/**
+	 * @param string $reason
+	 * @return bool
+	 */
+	public function availableForVerify(string &$reason): bool {
 		return function_exists('vts_password_verify');
 	}
 

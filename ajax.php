@@ -61,9 +61,6 @@ try {
 			}
 
 			$json_out = $plugin->action($_REQUEST['action'], $params);
-			if (!is_array($json_out)) {
-				throw new OIDplusException(_L('Plugin with OID %1 did not output array of result data',$_REQUEST['plugin']));
-			}
 			if (!isset($json_out['status'])) $json_out['status'] = -1;
 
 			if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {

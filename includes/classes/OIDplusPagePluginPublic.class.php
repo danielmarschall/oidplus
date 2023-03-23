@@ -25,6 +25,10 @@ namespace ViaThinkSoft\OIDplus;
 
 abstract class OIDplusPagePluginPublic extends OIDplusPagePlugin {
 
-	public function publicSitemap(&$out) {}
+	/**
+	 * @param string[] $out
+	 * @return void
+	 */
+	public function publicSitemap(array &$out) {}
 
 }

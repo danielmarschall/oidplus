@@ -25,15 +25,26 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusCaptchaPluginNone extends OIDplusCaptchaPlugin {
 
+	/**
+	 * @return string
+	 */
 	public static function id(): string {
 		return 'None';
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isVisible(): bool {
 		return false;
 	}
 
-	public function captchaGenerate($header_text=null, $footer_text=null) {
+	/**
+	 * @param string|null $header_text
+	 * @param string|null $footer_text
+	 * @return string
+	 */
+	public function captchaGenerate(string $header_text=null, string $footer_text=null): string {
 		return '<script>
 		var oidplus_captcha_response = function() {
 			return OIDplusCaptchaPluginNone.captchaResponse();
@@ -44,10 +55,18 @@ class OIDplusCaptchaPluginNone extends OIDplusCaptchaPlugin {
 		</script>';
 	}
 
-	public function captchaVerify($params, $fieldname=null) {
+	/**
+	 * @param array $params
+	 * @param string|null $fieldname
+	 * @return bool
+	 */
+	public function captchaVerify(array $params, string $fieldname=null): bool {
 		return true;
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function setupHTML(): string {
 		return '<div id="CAPTCHAPLUGIN_PARAMS_NONE">'.
 		       '<p>'._L('No CAPTCHA will be used. Please note that your system will be prone to "Brute force" attacks.').'</p>'.

@@ -25,16 +25,25 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		// Note: Example #3 here https://www.php.net/manual/en/function.password-hash.php can help you with finding a good cost value
-		OIDplus::config()->prepareConfigKey('ra_bcrypt_cost', 'How complex should the BCrypt hash of RA passwords be? (Only for plugin A3_bcrypt; values 4-31, default 10)', 10, OIDplusConfig::PROTECTION_EDITABLE, function($value) {
-			if (empty($value) || !is_int($value) || ($value<4) || ($value>31)) {
+		OIDplus::config()->prepareConfigKey('ra_bcrypt_cost', 'How complex should the BCrypt hash of RA passwords be? (Only for plugin A3_bcrypt; values 4-31, default 10)', '10', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (empty($value) || !is_numeric($value) || ($value<4) || ($value>31)) {
 				throw new OIDplusException(_L('Invalid value for "cost" (must be 4-31, default 10).'));
 			}
 		});
 	}
 
-	private function supportedCryptAlgo($authKey) {
+	/**
+	 * @param string $authKey
+	 * @return bool
+	 */
+	private function supportedCryptAlgo(string $authKey): bool {
 		return str_starts_with($authKey, '$2$')  ||
 		       str_starts_with($authKey, '$2a$') ||
 		       str_starts_with($authKey, '$2b$') ||
@@ -42,7 +51,12 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 		       str_starts_with($authKey, '$2y$');
 	}
 
-	public function verify(OIDplusRAAuthInfo $authInfo, $check_password) {
+	/**
+	 * @param OIDplusRAAuthInfo $authInfo
+	 * @param string $check_password
+	 * @return bool
+	 */
+	public function verify(OIDplusRAAuthInfo $authInfo, string $check_password): bool {
 		$authKey = $authInfo->getAuthKey();
 
 		if (!$this->supportedCryptAlgo($authKey)) {
@@ -57,7 +71,12 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 		return password_verify($check_password, $authKey);
 	}
 
-	public function generate($password): OIDplusRAAuthInfo {
+	/**
+	 * @param string $password
+	 * @return OIDplusRAAuthInfo
+	 * @throws OIDplusException
+	 */
+	public function generate(string $password): OIDplusRAAuthInfo {
 		if (strlen($password) > 72) throw new OIDplusException(_L('Password is too long (max %1 bytes)',72));
 		$cost = OIDplus::config()->getValue('ra_bcrypt_cost', 10);
 		$calc_authkey = password_hash($password, PASSWORD_BCRYPT, array("cost" => $cost));
@@ -66,7 +85,11 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 		return new OIDplusRAAuthInfo($calc_authkey);
 	}
 
-	public function availableForHash(&$reason): bool {
+	/**
+	 * @param string $reason
+	 * @return bool
+	 */
+	public function availableForHash(string &$reason): bool {
 		if (version_compare(PHP_VERSION, '7.4.0') >= 0) {
 			$ok = in_array('2',  password_algos()) ||
 			      in_array('2a', password_algos()) ||
@@ -84,7 +107,11 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 		return false;
 	}
 
-	public function availableForVerify(&$reason): bool {
+	/**
+	 * @param string $reason
+	 * @return bool
+	 */
+	public function availableForVerify(string &$reason): bool {
 		return $this->availableForHash($reason);
 	}
 

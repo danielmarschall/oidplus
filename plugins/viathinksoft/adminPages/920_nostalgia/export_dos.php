@@ -106,18 +106,16 @@ function make_line($command, $data) {
 }
 
 // https://github.com/danielmarschall/oidplus_dos/blob/master/OIDFILE.PAS
-define('CMD_VERSION',         'VERS');
-define('CMD_OWN_ID',          'SELF');
-define('CMD_PARENT',          'SUPR');
-define('CMD_CHILD',           'CHLD');
-define('CMD_ASN1_IDENTIFIER', 'ASN1');
-define('CMD_UNICODE_LABEL',   'UNIL');
-define('CMD_DESCRIPTION',     'DESC');
+const CMD_VERSION         = 'VERS';
+const CMD_OWN_ID          = 'SELF';
+const CMD_PARENT          = 'SUPR';
+const CMD_CHILD           = 'CHLD';
+const CMD_ASN1_IDENTIFIER = 'ASN1';
+const CMD_UNICODE_LABEL   = 'UNIL';
+const CMD_DESCRIPTION     = 'DESC';
 
 foreach ($dos_ids as $oid => $dos_id) {
-	$cont = '';
-
-	$cont .= make_line(CMD_VERSION, 2022);
+	$cont = make_line(CMD_VERSION, 2022);
 
 	$cont .= make_line(CMD_OWN_ID, $dos_id.$oid);
 

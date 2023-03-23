@@ -25,7 +25,11 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusGui extends OIDplusBaseClass {
 
-	public static function generateContentPage($id) {
+	/**
+	 * @param string $id
+	 * @return array
+	 */
+	public static function generateContentPage(string $id): array {
 		$out = array();
 
 		$handled = false;
@@ -56,7 +60,12 @@ class OIDplusGui extends OIDplusBaseClass {
 		return $out;
 	}
 
-	public static function link($goto, $new_window=false): string {
+	/**
+	 * @param string $goto
+	 * @param bool $new_window
+	 * @return string
+	 */
+	public static function link(string $goto, bool $new_window=false): string {
 		if ($new_window) {
 			return 'href="?goto='.urlencode($goto).'" target="_blank"';
 		} else {
@@ -69,9 +78,15 @@ class OIDplusGui extends OIDplusBaseClass {
 		}
 	}
 
-	public static function getLanguageBox($goto, $useJs) {
-		$out = '';
-		$out .= '<div id="languageBox">';
+	/**
+	 * @param string $goto
+	 * @param bool $useJs
+	 * @return string
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public static function getLanguageBox(string $goto, bool $useJs) {
+		$out = '<div id="languageBox">';
 		$langbox_entries = array();
 		$non_default_languages = 0;
 		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
@@ -83,7 +98,7 @@ class OIDplusGui extends OIDplusBaseClass {
 			} else {
 				$class = 'lng_flag picture_ghost';
 			}
-			$add = (!is_null($goto)) ? '&amp;goto='.urlencode($goto) : '';
+			$add = ($goto != '') ? '&amp;goto='.urlencode($goto) : '';
 
 			$dirs = glob(OIDplus::localpath().'plugins/'.'*'.'/language/'.$code.'/');
 
@@ -101,7 +116,12 @@ class OIDplusGui extends OIDplusBaseClass {
 		return $out;
 	}
 
-	public static function html_exception_handler($exception) {
+	/**
+	 * @param \Throwable $exception
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public static function html_exception_handler(\Throwable $exception) {
 		if ($exception instanceof OIDplusConfigInitializationException) {
 			echo '<!DOCTYPE HTML>';
 			echo '<html><head><title>'.htmlentities(_L('OIDplus initialization error')).'</title></head><body>';
@@ -125,9 +145,12 @@ class OIDplusGui extends OIDplusBaseClass {
 		}
 	}
 
-	private static function getExceptionTechInfo($exception) {
-		$out = '';
-		$out .= '<p><b>'.htmlentities(_L('Technical information about the problem')).':</b></p>';
+	/**
+	 * @param \Throwable $exception
+	 * @return string
+	 */
+	private static function getExceptionTechInfo(\Throwable $exception) {
+		$out  = '<p><b>'.htmlentities(_L('Technical information about the problem')).':</b></p>';
 		$out .= '<pre>';
 		$out .= get_class($exception)."\n";
 		$out .= _L('at file %1 (line %2)',$exception->getFile(),"".$exception->getLine())."\n\n";
@@ -137,33 +160,62 @@ class OIDplusGui extends OIDplusBaseClass {
 		return $out;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function tabBarStart() {
 		return '<ul class="nav nav-tabs" id="myTab" role="tablist">';
 	}
 
+	/**
+	 * @return string
+	 */
 	public function tabBarEnd() {
 		return '</ul>';
 	}
 
-	public function tabBarElement($id, $title, $active) {
+	/**
+	 * @param string $id
+	 * @param string $title
+	 * @param bool $active
+	 * @return string
+	 */
+	public function tabBarElement(string $id, string $title, bool $active) {
 		// data-bs-toggle is for Bootstrap 5
 		// data-toggle is for Bootstrap 4 (InternetExplorer compatibility)
 		return '<li class="nav-item"><a class="nav-link'.($active ? ' active' : '').'" id="'.$id.'-tab" data-bs-toggle="tab" data-toggle="tab" href="#'.$id.'" role="tab" aria-controls="'.$id.'" aria-selected="'.($active ? 'true' : 'false').'">'.$title.'</a></li>';
 	}
 
+	/**
+	 * @return string
+	 */
 	public function tabContentStart() {
 		return '<div class="tab-content" id="myTabContent">';
 	}
 
+	/**
+	 * @return string
+	 */
 	public function tabContentEnd() {
 		return '</div>';
 	}
 
-	public function tabContentPage($id, $content, $active) {
+	/**
+	 * @param string $id
+	 * @param string $content
+	 * @param bool $active
+	 * @return string
+	 */
+	public function tabContentPage(string $id, string $content, bool $active) {
 		return '<div class="tab-pane fade'.($active ? ' show active' : '').'" id="'.$id.'" role="tabpanel" aria-labelledby="'.$id.'-tab">'.$content.'</div>';
 	}
 
-	public function combine_systemtitle_and_pagetitle($systemtitle, $pagetitle) {
+	/**
+	 * @param string $systemtitle
+	 * @param string $pagetitle
+	 * @return string
+	 */
+	public function combine_systemtitle_and_pagetitle(string $systemtitle, string $pagetitle) {
 		// Please also change the function in oidplus_base.js
 		if ($systemtitle == $pagetitle) {
 			return $systemtitle;
@@ -172,7 +224,12 @@ class OIDplusGui extends OIDplusBaseClass {
 		}
 	}
 
-	private function getCommonHeadElems($title) {
+	/**
+	 * @param string $title
+	 * @return string[]
+	 * @throws OIDplusException
+	 */
+	private function getCommonHeadElems(string $title): array {
 		// Get theme color (color of title bar)
 		$design_plugin = OIDplus::getActiveDesignPlugin();
 		$theme_color = is_null($design_plugin) ? '' : $design_plugin->getThemeColor();
@@ -198,11 +255,22 @@ class OIDplusGui extends OIDplusBaseClass {
 		return $head_elems;
 	}
 
-	public function showMainPage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags=array(), $static_node_id='') {
+	/**
+	 * @param string $page_title_1
+	 * @param string $page_title_2
+	 * @param string $static_icon
+	 * @param string $static_content
+	 * @param array $extra_head_tags
+	 * @param string $static_node_id
+	 * @return string
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function showMainPage(string $page_title_1, string $page_title_2, string $static_icon, string $static_content, array $extra_head_tags=array(), string $static_node_id='') {
 		$head_elems = $this->getCommonHeadElems($page_title_1);
 		$head_elems = array_merge($head_elems, $extra_head_tags);
 
-		$plugins = OIDplus::getPagePlugins();
+		$plugins = OIDplus::getAllPlugins();
 		foreach ($plugins as $plugin) {
 			$plugin->htmlHeaderUpdate($head_elems);
 		}
@@ -274,7 +342,7 @@ class OIDplusGui extends OIDplusBaseClass {
 
 		# ---
 
-		$plugins = OIDplus::getPagePlugins();
+		$plugins = OIDplus::getAllPlugins();
 		foreach ($plugins as $plugin) {
 			$plugin->htmlPostprocess($out);
 		}
@@ -282,7 +350,17 @@ class OIDplusGui extends OIDplusBaseClass {
 		return $out;
 	}
 
-	public function showSimplePage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags=array()) {
+	/**
+	 * @param string $page_title_1
+	 * @param string $page_title_2
+	 * @param string $static_icon
+	 * @param string $static_content
+	 * @param string[] $extra_head_tags
+	 * @return string
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function showSimplePage(string $page_title_1, string $page_title_2, string $static_icon, string $static_content, array $extra_head_tags=array()) {
 		$head_elems = $this->getCommonHeadElems($page_title_1);
 		$head_elems = array_merge($head_elems, $extra_head_tags);
 
@@ -320,7 +398,7 @@ class OIDplusGui extends OIDplusBaseClass {
 
 		$out .= '</div>';
 
-		$out .= OIDplus::gui()->getLanguageBox(null, true);
+		$out .= OIDplus::gui()->getLanguageBox('', true);
 
 		$out .= '</div>';
 

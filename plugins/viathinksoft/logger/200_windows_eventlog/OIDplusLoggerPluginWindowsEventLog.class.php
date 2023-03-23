@@ -34,7 +34,11 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 
 	const LOGPROVIDER = 'OIDplus'; // "Source name" (should be registered in the registry = mapped to a message file DLL)
 
-	public static function available(&$reason)/*: bool*/ {
+	/**
+	 * @param string $reason
+	 * @return bool
+	 */
+	public static function available(string &$reason): bool {
 		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 			$reason = _L('Functionality only available on Windows systems');
 			return false;
@@ -56,7 +60,11 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 		}
 	}
 
-	private static function convertOIDplusToWindowsSeverity($sev) {
+	/**
+	 * @param int $sev
+	 * @return int
+	 */
+	private static function convertOIDplusToWindowsSeverity(int $sev): int {
 		switch ($sev) {
 			case 0:
 				return self::LOGEVENT_MSG_INFORMATIONAL; // undefined
@@ -75,7 +83,13 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 		}
 	}
 
-	public static function log($event, $users, $objects)/*: bool*/ {
+	/**
+	 * @param string $event
+	 * @param array $users
+	 * @param array $objects
+	 * @return bool
+	 */
+	public static function log(string $event, array $users, array $objects): bool {
 		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 			return false;
 		}

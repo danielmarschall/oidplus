@@ -2270,14 +2270,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Field %1 is invalid
-		]]></source>
-		<target><![CDATA[
-		Feld %1 ist ungültig
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Field %1 is too long. Max allowed %2
 		]]></source>
 		<target><![CDATA[
@@ -5446,14 +5438,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Plugin with OID %1 did not output array of result data
-		]]></source>
-		<target><![CDATA[
-		Plugin mit OID %1 hat kein Array bestehend aus Ergebnis-Daten geliefert
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Plugins
 		]]></source>
 		<target><![CDATA[
@@ -7390,18 +7374,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Unicode label "%1" is too long (max allowed length %2)
+		Unexpected update version
 		]]></source>
 		<target><![CDATA[
-		Unicode-Label "%1" ist zu lang (Maximale Länge: %2)
+		Unerwartete Update-Version
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		Unknown action ID
+		Unicode label "%1" is too long (max allowed length %2)
 		]]></source>
 		<target><![CDATA[
-		Unbekannte Action-ID
+		Unicode-Label "%1" ist zu lang (Maximale Länge: %2)
 		]]></target>
 	</message>
 	<message>

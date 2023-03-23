@@ -26,7 +26,12 @@ namespace ViaThinkSoft\OIDplus;
 abstract class OIDplusObject extends OIDplusBaseClass {
 	const UUID_NAMEBASED_NS_OidPlusMisc = 'ad1654e6-7e15-11e4-9ef6-78e3b5fc7f22';
 
-	public static function parse($node_id) { // please overwrite this function!
+	/**
+	 * Please overwrite this function!
+	 * @param string $node_id
+	 * @return OIDplusObject|null
+	 */
+	public static function parse(string $node_id)/*: ?OIDplusObject*/ {
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 			try {
 				$good = false;
@@ -45,7 +50,11 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		return null;
 	}
 
-	public function /*OIDplusAltId[]*/ getAltIds() {
+	/**
+	 * @return OIDplusAltId[]
+	 * @throws OIDplusException
+	 */
+	public function getAltIds(): array {
 		if ($this->isRoot()) return array();
 
 		$ids = array();
@@ -82,7 +91,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		// ... but not for OIDs below oid:1.3.6.1.4.1.37476.30.9, because these are the definition of these Information Object AIDs (which will be decoded in the OID object type plugin)
 		if (($this->ns() != 'aid') && !str_starts_with($this->nodeId(true), 'oid:1.3.6.1.4.1.37476.30.9.')) {
 			$sid = OIDplus::getSystemId(false);
-			if (!empty($sid)) {
+			if ($sid !== false) {
 				$ns_oid = $this->getPlugin()->getManifest()->getOid();
 				if (str_starts_with($ns_oid, '1.3.6.1.4.1.37476.2.5.2.')) {
 					// Official ViaThinkSoft object type plugins
@@ -95,7 +104,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 					$hash_payload = $ns_oid.':'.$this->nodeId(false);
 				}
 
-				$sid_hex = strtoupper(str_pad(dechex($sid),8,'0',STR_PAD_LEFT));
+				$sid_hex = strtoupper(str_pad(dechex((int)$sid),8,'0',STR_PAD_LEFT));
 				$obj_hex = strtoupper(str_pad(dechex(smallhash($hash_payload)),8,'0',STR_PAD_LEFT));
 				$aid = 'D276000186B20005'.$sid_hex.$obj_hex;
 				$ids[] = new OIDplusAltId('aid', $aid, _L('OIDplus Information Object Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')');
@@ -105,56 +114,114 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		return $ids;
 	}
 
-	public abstract static function objectTypeTitle();
+	/**
+	 * @return string
+	 */
+	public abstract static function objectTypeTitle(): string;
 
-	public abstract static function objectTypeTitleShort();
+	/**
+	 * @return string
+	 */
+	public abstract static function objectTypeTitleShort(): string;
 
+	/**
+	 * @return OIDplusObjectTypePlugin|null
+	 */
 	public function getPlugin()/*: ?OIDplusObjectTypePlugin */ {
-		$res = null;
 		$plugins = OIDplus::getObjectTypePlugins();
 		foreach ($plugins as $plugin) {
-			if (get_class($this) == $plugin::getObjectTypeClassName($this)) {
+			if (get_class($this) == $plugin::getObjectTypeClassName()) {
 				return $plugin;
 			}
 		}
-		return $res;
+		return null;
 	}
 
-	public abstract static function ns();
+	/**
+	 * @return string
+	 */
+	public abstract static function ns(): string;
 
-	public abstract static function root();
+	/**
+	 * @return string
+	 */
+	public abstract static function root(): string;
 
-	public abstract function isRoot();
+	/**
+	 * @return bool
+	 */
+	public abstract function isRoot(): bool;
 
-	public abstract function nodeId($with_ns=true);
+	/**
+	 * @param bool $with_ns
+	 * @return string
+	 */
+	public abstract function nodeId(bool $with_ns=true): string;
 
-	public abstract function addString($str);
+	/**
+	 * @param string $str
+	 * @return string mixed
+	 * @throws OIDplusException
+	 */
+	public abstract function addString(string $str): string;
 
-	public abstract function crudShowId(OIDplusObject $parent);
+	/**
+	 * @param OIDplusObject $parent
+	 * @return string
+	 */
+	public abstract function crudShowId(OIDplusObject $parent): string;
 
-	public function crudInsertPrefix() {
+	/**
+	 * @return string
+	 */
+	public function crudInsertPrefix(): string {
 		return '';
 	}
 
-	public function crudInsertSuffix() {
+	/**
+	 * @return string
+	 */
+	public function crudInsertSuffix(): string {
 		return '';
 	}
 
-	public abstract function jsTreeNodeName(OIDplusObject $parent = null);
+	/**
+	 * @param OIDplusObject|null $parent
+	 * @return string
+	 */
+	public abstract function jsTreeNodeName(OIDplusObject $parent = null): string;
 
-	public abstract function defaultTitle();
+	/**
+	 * @return string
+	 */
+	public abstract function defaultTitle(): string;
 
-	public abstract function isLeafNode();
+	/**
+	 * @return bool
+	 */
+	public abstract function isLeafNode(): bool;
 
-	public abstract function getContentPage(&$title, &$content, &$icon);
+	/**
+	 * @param string $title
+	 * @param string $content
+	 * @param string $icon
+	 * @return void
+	 */
+	public abstract function getContentPage(string &$title, string &$content, string &$icon);
 
-	public static function getRaRoots($ra_email=null) {
-		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
+	/**
+	 * @param OIDplusRA|string|null $ra
+	 * @return array
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public static function getRaRoots($ra=null) : array{
+		if ($ra instanceof OIDplusRA) $ra = $ra->raEmail();
 
 		$out = array();
 
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
-			if (!$ra_email) {
+			if (!$ra) {
 				$res = OIDplus::db()->query("select oChild.id as id, oChild.ra_email as child_mail, oParent.ra_email as parent_mail from ###objects as oChild ".
 				                            "left join ###objects as oParent on oChild.parent = oParent.id ".
 				                            "order by ".OIDplus::db()->natOrder('oChild.id'));
@@ -170,18 +237,18 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				                            "where (".OIDplus::db()->getSlang()->isNullFunction('oParent.ra_email',"''")." <> ? and ".
 				                            OIDplus::db()->getSlang()->isNullFunction('oChild.ra_email',"''")." = ?) or ".
 				                            "      (oParent.ra_email is null and ".OIDplus::db()->getSlang()->isNullFunction('oChild.ra_email',"''")." = ?) ".
-				                            "order by ".OIDplus::db()->natOrder('oChild.id'), array($ra_email, $ra_email, $ra_email));
+				                            "order by ".OIDplus::db()->natOrder('oChild.id'), array($ra, $ra, $ra));
 				while ($row = $res->fetch_array()) {
 					$x = self::parse($row['id']); // can be FALSE if namespace was disabled
 					if ($x) $out[] = $x;
 				}
 			}
 		} else {
-			if (!$ra_email) {
+			if (!$ra) {
 				$ra_mails_to_check = OIDplus::authUtils()->loggedInRaList();
 				if (count($ra_mails_to_check) == 0) return $out;
 			} else {
-				$ra_mails_to_check = array($ra_email);
+				$ra_mails_to_check = array($ra);
 			}
 
 			self::buildObjectInformationCache();
@@ -210,7 +277,11 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		return $out;
 	}
 
-	public static function getAllNonConfidential() {
+	/**
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public static function getAllNonConfidential(): array {
 		$out = array();
 
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
@@ -239,7 +310,11 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		return $out;
 	}
 
-	public function isConfidential() {
+	/**
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function isConfidential(): bool {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			//static $confidential_cache = array();
 			$curid = $this->nodeId();
@@ -277,7 +352,12 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
-	public function isChildOf(OIDplusObject $obj) {
+	/**
+	 * @param OIDplusObject $obj
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function isChildOf(OIDplusObject $obj): bool {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$curid = $this->nodeId();
 			while (($res = OIDplus::db()->query("select parent from ###objects where id = ?", array($curid)))->any()) {
@@ -298,7 +378,11 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
-	public function getChildren() {
+	/**
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function getChildren(): array {
 		$out = array();
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select id from ###objects where parent = ?", array($this->nodeId()));
@@ -322,18 +406,28 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		return $out;
 	}
 
-	public function getRa() {
+	/**
+	 * @return OIDplusRA
+	 * @throws OIDplusException
+	 */
+	public function getRa(): OIDplusRA {
 		return new OIDplusRA($this->getRaMail());
 	}
 
-	public function userHasReadRights($ra_email=null) {
-		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
+	/**
+	 * @param OIDplusRA|string|null $ra
+	 * @return bool
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function userHasReadRights($ra=null): bool {
+		if ($ra instanceof OIDplusRA) $ra = $ra->raEmail();
 
 		// If it is not confidential, everybody can read/see it.
 		// Note: This also checks if superior OIDs are confidential.
 		if (!$this->isConfidential()) return true;
 
-		if (!$ra_email) {
+		if (!$ra) {
 			// Admin may do everything
 			if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 
@@ -341,13 +435,13 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			if (OIDplus::authUtils()->isRaLoggedIn($this->getRaMail())) return true;
 		} else {
 			// If this OID belongs to the requested RA, then they may see it.
-			if ($this->getRaMail() == $ra_email) return true;
+			if ($this->getRaMail() == $ra) return true;
 		}
 
 		// If someone has rights to an object below our confidential node,
 		// we let him see the confidential node,
 		// Otherwise he could not browse through to his own node.
-		$roots = $this->getRaRoots($ra_email);
+		$roots = $this->getRaRoots($ra);
 		foreach ($roots as $root) {
 			if ($root->isChildOf($this)) return true;
 		}
@@ -355,7 +449,12 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		return false;
 	}
 
-	public function getIcon($row=null) {
+	/**
+	 * @param array|null $row
+	 * @return string|null
+	 * @throws OIDplusException
+	 */
+	public function getIcon(array $row=null) {
 		$namespace = $this->ns(); // must use $this, not self::, otherwise the virtual method will not be called
 
 		if (is_null($row)) {
@@ -383,7 +482,12 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		return $icon;
 	}
 
-	public static function exists(string $id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public static function exists(string $id): bool {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select id from ###objects where id = ?", array($id));
 			return $res->any();
@@ -393,8 +497,12 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
-	// Get parent gives the next possible parent which is EXISTING in OIDplus
-	// It does not give the immediate parent
+	/**
+	 * Get parent gives the next possible parent which is EXISTING in OIDplus
+	 * It does not give the immediate parent
+	 * @return OIDplusObject|null
+	 * @throws OIDplusException
+	 */
 	public function getParent()/*: ?OIDplusObject*/ {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($this->nodeId()));
@@ -422,11 +530,15 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				$prev = $cur;
 				$cur = $cur->one_up();
 				if (!$cur) return null;
-			} while ($prev != $cur);
+			} while ($prev !== $cur);
 		}
 		return null;
 	}
 
+	/**
+	 * @return false|string|null
+	 * @throws OIDplusException
+	 */
 	public function getRaMail() {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select ra_email from ###objects where id = ?", array($this->nodeId()));
@@ -442,6 +554,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
+	/**
+	 * @return false|string|null
+	 * @throws OIDplusException
+	 */
 	public function getTitle() {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select title from ###objects where id = ?", array($this->nodeId()));
@@ -457,6 +573,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
+	/**
+	 * @return false|string|null
+	 * @throws OIDplusException
+	 */
 	public function getDescription() {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select description from ###objects where id = ?", array($this->nodeId()));
@@ -472,6 +592,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
+	/**
+	 * @return false|string|null
+	 * @throws OIDplusException
+	 */
 	public function getComment() {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select comment from ###objects where id = ?", array($this->nodeId()));
@@ -487,6 +611,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
+	/**
+	 * @return false|string|null
+	 * @throws OIDplusException
+	 */
 	public function getCreatedTime() {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select created from ###objects where id = ?", array($this->nodeId()));
@@ -502,6 +630,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
+	/**
+	 * @return false|string|null
+	 * @throws OIDplusException
+	 */
 	public function getUpdatedTime() {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select updated from ###objects where id = ?", array($this->nodeId()));
@@ -517,34 +649,52 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
-	public function userHasParentalWriteRights($ra_email=null) {
-		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
+	/**
+	 * @param OIDplusRA|string|null $ra
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function userHasParentalWriteRights($ra=null) {
+		if ($ra instanceof OIDplusRA) $ra = $ra->raEmail();
 
-		if (!$ra_email) {
+		if (!$ra) {
 			if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 		}
 
 		$objParent = $this->getParent();
 		if (!$objParent) return false;
-		return $objParent->userHasWriteRights($ra_email);
+		return $objParent->userHasWriteRights($ra);
 	}
 
-	public function userHasWriteRights($ra_email=null) {
-		if ($ra_email instanceof OIDplusRA) $ra_email = $ra_email->raEmail();
+	/**
+	 * @param OIDplusRA|string|null $ra
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function userHasWriteRights($ra=null): bool {
+		if ($ra instanceof OIDplusRA) $ra = $ra->raEmail();
 
-		if (!$ra_email) {
+		if (!$ra) {
 			if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 			return OIDplus::authUtils()->isRaLoggedIn($this->getRaMail());
 		} else {
-			return $this->getRaMail() == $ra_email;
+			return $this->getRaMail() == $ra;
 		}
 	}
 
-	public function distance($to) {
+	/**
+	 * @param string|OIDplusObject $to
+	 * @return int|null
+	 */
+	public function distance($to)/*: ?int*/ {
 		return null; // not implemented
 	}
 
-	public function equals($obj) {
+	/**
+	 * @param OIDplusObject $obj
+	 * @return bool
+	 */
+	public function equals(OIDplusObject $obj): bool {
 		if (!is_object($obj)) $obj = OIDplusObject::parse($obj);
 		if (!($obj instanceof $this)) return false;
 
@@ -554,6 +704,11 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		return $this->nodeId() == $obj->nodeId(); // otherwise compare the node id case-sensitive
 	}
 
+	/**
+	 * @param string $id
+	 * @return OIDplusObject|false
+	 * @throws OIDplusException
+	 */
 	public static function findFitting(string $id) {
 		$obj = OIDplusObject::parse($id);
 		if (!$obj) return false; // e.g. if ObjectType plugin is disabled
@@ -577,7 +732,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
-	public function one_up() {
+	/**
+	 * @return OIDplusObject|null
+	 */
+	public function one_up()/*: ?OIDplusObject*/ {
 		return null; // not implemented
 	}
 
@@ -585,6 +743,9 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 
 	protected static $object_info_cache = null;
 
+	/**
+	 * @return void
+	 */
 	public static function resetObjectInformationCache() {
 		self::$object_info_cache = null;
 	}
@@ -599,6 +760,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	const CACHE_UPDATED = 'updated';
 	const CACHE_COMMENT = 'comment';
 
+	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
 	private static function buildObjectInformationCache() {
 		if (is_null(self::$object_info_cache)) {
 			self::$object_info_cache = array();
@@ -609,15 +774,23 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
-	// override this function if you want your object type to save
-	// attachments in directories with easy names.
-	// Take care that your custom directory name will not allow jailbreaks (../) !
-	public function getDirectoryName() {
+	/**
+	 * override this function if you want your object type to save
+	 * attachments in directories with easy names.
+	 * Take care that your custom directory name will not allow jailbreaks (../) !
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function getDirectoryName(): string {
 		if ($this->isRoot()) return $this->ns();
 		return $this->getLegacyDirectoryName();
 	}
 
-	public final function getLegacyDirectoryName() {
+	/**
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public final function getLegacyDirectoryName(): string {
 		if ($this::ns() == 'oid') {
 			$oid = $this->nodeId(false);
 		} else {
@@ -641,7 +814,11 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		}
 	}
 
-	public static function treeIconFilename($mode) {
+	/**
+	 * @param string $mode
+	 * @return string
+	 */
+	public static function treeIconFilename(string $mode): string {
 		// for backwards-compatibility with older plugins
 		return 'img/treeicon_'.$mode.'.png';
 	}

@@ -19,22 +19,49 @@ use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
 
 class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array
+	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
+		return parent::action($actionID, $params);
+	}
+
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param array $out
+	 * @return void
+	 */
+	public function publicSitemap(array &$out) {
 
 	}
 
-	public function publicSitemap(&$out) {
-
-	}
-
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return false;
 	}
 
+	/**
+	 * @return string|null
+	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 */
 	private function cache_id() {
 		static $cache_id = null;
 		if (!is_null($cache_id)) return $cache_id;
@@ -50,6 +77,11 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 		return $cache_id;
 	}
 
+	/**
+	 * @param $noCache
+	 * @return array[]|mixed|null
+	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 */
 	public function readAll($noCache = false) {
 		static $local_cache = null;
 
@@ -100,6 +132,11 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 		return $data;
 	}
 
+	/**
+	 * @param $id
+	 * @return array|mixed|string[]
+	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 */
 	public function getAlternativesForQuery($id/* 1.3.6.1.4.1.37476.2.5.2.3.7 signature takes just 1 param!? , $noCache = false*/) {
 
 		static $caches = array();
@@ -151,16 +188,29 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 		return $res;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.4') return true; // whois*Attributes
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.7') return true; // getAlternativesForQuery
 		return false;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
+	/**
+	 * @param $id
+	 * @return false|mixed|string
+	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 */
 	public function getCanonical($id){
 		foreach($this->getAlternativesForQuery($id) as $alt){
 			if (strpos($alt,':') !== false) {
@@ -174,9 +224,14 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 		return false;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.4
+	 * @param $id
+	 * @param $out
+	 * @return void
+	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 */
 	public function whoisObjectAttributes($id, &$out) {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.4
-
 		$xmlns = 'oidplus-frdlweb-altids-plugin';
 		$xmlschema = 'urn:oid:1.3.6.1.4.1.37553.8.1.8.8.53354196964.641310544.1714020422';
 		$xmlschemauri = OIDplus::webpath(__DIR__.'/altids.xsd',OIDplus::PATH_ABSOLUTE);
@@ -227,8 +282,14 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 		}
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.4
+	 * @param $email
+	 * @param $out
+	 * @return void
+	 */
 	public function whoisRaAttributes($email, &$out) {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.4
+
 	}
 
  }

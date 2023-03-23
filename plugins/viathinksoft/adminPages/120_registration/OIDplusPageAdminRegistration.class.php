@@ -30,12 +30,22 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	/*private*/ const QUERY_LISTALLSYSTEMIDS_V1 = '1.3.6.1.4.1.37476.2.5.2.1.3.1';
 	/*private*/ const QUERY_LIVESTATUS_V1 =       '1.3.6.1.4.1.37476.2.5.2.1.4.1';
 
-	public function csrfUnlock($actionID) {
+	/**
+	 * @param string $actionID
+	 * @return bool
+	 */
+	public function csrfUnlock(string $actionID): bool {
 		if ($actionID == 'verify_pubkey') return true;
 		return parent::csrfUnlock($actionID);
 	}
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 		if ($actionID == 'verify_pubkey') {
 			_CheckParamExists($params, 'challenge');
 
@@ -51,11 +61,19 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				"response" => base64_encode($signature)
 			);
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if ($id === 'oidplus:srv_registration') {
 			$handled = true;
 			$out['title'] = _L('System registration settings');
@@ -208,7 +226,11 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	protected function areWeRegistered() {
+	/**
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	protected function areWeRegistered(): bool {
 		// To check if we are registered. Check it "anonymously" (i.e. without revealing our system ID)
 		$res = url_get_contents('https://oidplus.viathinksoft.com/reg2/query.php?query='.self::QUERY_LISTALLSYSTEMIDS_V1);
 
@@ -231,6 +253,11 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		return in_array(OIDplus::getSystemId(false), $list);
 	}
 
+	/**
+	 * @param $privacy_level
+	 * @return false|void
+	 * @throws OIDplusException
+	 */
 	public function sendRegistrationQuery($privacy_level=null) {
 
 		if (is_null($privacy_level)) {
@@ -297,11 +324,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 				}
 
 				if (isset($json['error']) || ($json['status'] < 0)) {
-					if (isset($json['error'])) {
-						return false; // throw new OIDplusException(_L('Received error status code: %1',$json['error']));
-					} else {
-						return false; // throw new OIDplusException(_L('Received error status code: %1',$json['status']));
-					}
+					return false; // throw new OIDplusException(_L('Received error status code: %1',isset($json['error']) ? $json['error'] : $json['status']));
 				}
 			}
 		} else {
@@ -423,7 +446,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		if (OIDplus::getEditionInfo()['vendor'] != 'ViaThinkSoft') {
 			throw new OIDplusException(_L('This plugin is only available in the ViaThinkSoft edition of OIDplus'));
 		}
@@ -481,7 +509,15 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -499,25 +535,43 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
 		return false;
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
+	 * @return bool
+	 * @throws OIDplusException
+	 */
 	public function oobeRequested(): bool {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
-
 		return OIDplus::config()->getValue('oobe_registration_done') == '0';
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
+	 * @param $step
+	 * @param $do_edits
+	 * @param $errors_happened
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
 	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.1
-
 		echo '<h2>'._L('Step %1: System registration and automatic publishing (optional)',$step).'</h2>';
 
 		if (file_exists(__DIR__ . '/info$'.OIDplus::getCurrentLang().'.html')) {
@@ -620,8 +674,13 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		echo '</p>';
 	}
 
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
+	 * @param $user
+	 * @return array
+	 * @throws OIDplusException
+	 */
 	public function getNotifications($user=null): array {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.8
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (!function_exists('curl_init')) {

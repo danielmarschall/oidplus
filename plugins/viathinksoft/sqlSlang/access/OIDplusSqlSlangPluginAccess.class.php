@@ -25,21 +25,36 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 
+	/**
+	 * @return string
+	 */
 	public static function id(): string {
 		return 'access';
 	}
 
-	public function natOrder($fieldname, $order='asc'): string {
+	/**
+	 * @param string $fieldname
+	 * @param string $order
+	 * @return string
+	 */
+	public function natOrder(string $fieldname, string $order='asc'): string {
 
 		// TODO: Implement
 		return "$fieldname $order";
 
 	}
 
+	/**
+	 * @return string
+	 */
 	public function sqlDate(): string {
 		return 'date()';
 	}
 
+	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @return bool
+	 */
 	public function detect(OIDplusDatabaseConnection $db): bool {
 		/*
 		if ($tables = @odbc_tables($db->conn)) {
@@ -76,32 +91,60 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 		return (!empty($err_a) && !empty($err_b) && ($err_a != $err_b));
 	}
 
+	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @return int
+	 * @throws OIDplusException
+	 */
 	public function insert_id(OIDplusDatabaseConnection $db): int {
 		$res = $db->query("SELECT @@IDENTITY AS ID");
 		$row = $res->fetch_array();
 		return (int)$row['ID'];
 	}
 
-	public function setupSetTablePrefix($cont, $table, $prefix): string {
+	/**
+	 * @param string $cont
+	 * @param string $table
+	 * @param string $prefix
+	 * @return string
+	 */
+	public function setupSetTablePrefix(string $cont, string $table, string $prefix): string {
 		$cont = str_replace('['.$table.']', '['.$prefix.$table.']', $cont);
 		$cont = str_replace('PK_'.$table, 'PK_'.$prefix.$table, $cont);
 		$cont = str_replace('IX_'.$table, 'PK_'.$prefix.$table, $cont);
 		return $cont;
 	}
 
-	public function setupCreateDbIfNotExists($database): string {
+	/**
+	 * @param string $database
+	 * @return string
+	 */
+	public function setupCreateDbIfNotExists(string $database): string {
 		return "";
 	}
 
-	public function setupUseDatabase($database): string {
+	/**
+	 * @param string $database
+	 * @return string
+	 */
+	public function setupUseDatabase(string $database): string {
 		return "";
 	}
 
-	public function isNullFunction($expr1, $expr2): string {
+	/**
+	 * @param string $expr1
+	 * @param string $expr2
+	 * @return string
+	 */
+	public function isNullFunction(string $expr1, string $expr2): string {
 		return "iif($expr1 is null, $expr2, $expr1)";
 	}
 
-	public function filterQuery($sql): string {
+	/**
+	 * @param string $sql
+	 * @return string
+	 */
+	public function filterQuery(string $sql): string {
 		// value => [value]
 		$sql = preg_replace('@\\b(value)\\b@i', '[\\1]', $sql);
 
@@ -123,11 +166,19 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 		return $sql;
 	}
 
-	public function getSQLBool($bool): string {
+	/**
+	 * @param bool $bool
+	 * @return string
+	 */
+	public function getSQLBool(bool $bool): string {
 		return $bool ? '-1' : '0';
 	}
 
-	public function escapeString($str): string {
+	/**
+	 * @param string $str
+	 * @return string
+	 */
+	public function escapeString(string $str): string {
 		return str_replace("'", "''", $str);
 	}
 }

@@ -25,7 +25,14 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return int[]
+	 * @throws OIDplusException
+	 * @throws OIDplusMailException
+	 */
+	public function action(string $actionID, array $params): array {
 		if ($actionID == 'forgot_password') {
 			_CheckParamExists($params, 'email');
 			$email = $params['email'];
@@ -86,11 +93,16 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 			return array("status" => 0);
 		} else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('max_ra_pwd_reset_time', 'Max RA password reset time in seconds (0 = infinite)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -98,7 +110,14 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 		});
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:forgot_password') {
 			$handled = true;
 
@@ -148,15 +167,31 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function publicSitemap(&$out) {
+	/**
+	 * @param array $out
+	 * @return void
+	 */
+	public function publicSitemap(array &$out) {
 		$out[] = 'oidplus:forgot_password';
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return false;
 	}
 
-	private function getForgotPasswordText($email) {
+	/**
+	 * @param string $email
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	private function getForgotPasswordText(string $email): string {
 		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 		if (!$res->any()) {
 			throw new OIDplusException(_L('This RA does not exist.'));
@@ -173,7 +208,11 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 		return $message;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

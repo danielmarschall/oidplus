@@ -25,11 +25,20 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusCookieUtils extends OIDplusBaseClass {
 
-	public function unsetcookie($name) {
+	/**
+	 * @param string $name
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function unsetcookie(string $name) {
 		$this->setcookie($name, '', time()-9999, true);
 	}
 
-	private function getCookieDomain() {
+	/**
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	private function getCookieDomain(): string {
 		$default_domain = ''; // ini_get('session.cookie_domain');
 		$domain = OIDplus::baseConfig()->getValue('COOKIE_DOMAIN', $default_domain);
 		if ($domain === '(auto)') {
@@ -43,7 +52,11 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 		return $domain;
 	}
 
-	private function getCookiePath() {
+	/**
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	private function getCookiePath(): string {
 		$default_path = '/'; // ini_get('session.cookie_path');
 		$path = OIDplus::baseConfig()->getValue('COOKIE_PATH', $default_path);
 		if ($path === '(auto)') {
@@ -62,7 +75,17 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 	}
 
 	// TODO: There are several PHPSESSID cookies set. That's not very nice. We should collect the cookies and then at script ending only send the last definition one time.
-	public function setcookie($name, $value, $expires=0, $allowJS=false, $samesite=null, $forceInsecure=false) {
+	/**
+	 * @param string $name
+	 * @param string $value
+	 * @param int $expires
+	 * @param bool $allowJS
+	 * @param string|null $samesite
+	 * @param bool $forceInsecure
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function setcookie(string $name, string $value, int $expires=0, bool $allowJS=false, /*?string*/ $samesite=null, bool $forceInsecure=false) {
 		$domain = $this->getCookieDomain();
 		$path = $this->getCookiePath();
 		$secure = $forceInsecure ? false : OIDplus::isSSL();

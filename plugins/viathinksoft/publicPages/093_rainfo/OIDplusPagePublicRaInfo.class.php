@@ -25,10 +25,22 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 */
+	public function init(bool $html=true) {
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:rainfo') {
 			$handled = true;
 
@@ -129,7 +141,13 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function publicSitemap(&$out) {
+	/**
+	 * @param array $out
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function publicSitemap(array &$out) {
 		if (OIDplus::db()->getSlang()->id() == 'mysql') {
 			$res = OIDplus::db()->query("select distinct BINARY(email) as email from ###ra"); // "binary" because we want to ensure that 'distinct' is case sensitive
 		} else {
@@ -140,10 +158,22 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return false;
 	}
 
+	/**
+	 * @param $email
+	 * @return array|string|string[]|null
+	 * @throws OIDplusException
+	 */
 	public static function showRAInfo($email) {
 		$out = '';
 
@@ -188,7 +218,11 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 		return trim_br($out);
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }

@@ -120,8 +120,9 @@
 		"danielmarschall/php-sha3": "*@dev",
 		"tweeb/tinymce-i18n": "^2.0",
 		"phpseclib/phpseclib": "~3.0",
-		"script47/bs5-utils": "*"
-	},
+		"script47/bs5-utils": "*",
+		"ext-json": "*"
+    },
 	"config": {
 		"secure-http": false,
 		"preferred-install": {

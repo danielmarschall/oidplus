@@ -25,29 +25,32 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusLogger extends OIDplusBaseClass {
 
-	private static function split_maskcodes($maskcodes) {
-		// This function splits a mask code containing multiple components
-		// (delimited by '+' or '/') in single components
-		// It takes care that '+' and '/' inside brackets won't be used to split the codes
-		// Also, brackets can be escaped.
-		// The severity block (optional, must be standing in front of a component)
-		// is handled too. Inside the severity block, you may only use '/' to split components.
-		// The severity block will be implicitly repeated from the previous components if a component
-		// does not feature one.
-		//
-		// "[S]AAA(BBB)+CCC(DDD)"   ==> array(
-		//                                 array(array("S"),"AAA(BBB)"),
-		//                                 array(array("S"),"CCC(DDD)")
-		//                              )
-		// "[S]AAA(B+BB)+CCC(DDD)"  ==> array(
-		//                                 array(array("S"),"AAA(B+BB)"),
-		//                                 array(array("S"),"CCC(DDD)")
-		//                              )
-		// "[S]AAA(B\)BB)+CCC(DDD)" ==> array(
-		//                                 array(array("S"),"AAA(B\)BB)"),
-		//                                 array(array("S"),"CCC(DDD)")
-		//                              )
-
+	/**
+	 * This function splits a mask code containing multiple components
+	 * (delimited by '+' or '/') in single components
+	 * It takes care that '+' and '/' inside brackets won't be used to split the codes
+	 * Also, brackets can be escaped.
+	 * The severity block (optional, must be standing in front of a component)
+	 * is handled too. Inside the severity block, you may only use '/' to split components.
+	 * The severity block will be implicitly repeated from the previous components if a component
+	 * does not feature one.
+	 *
+	 * "[S]AAA(BBB)+CCC(DDD)"   ==> array(
+	 *                                 array(array("S"),"AAA(BBB)"),
+	 *                                 array(array("S"),"CCC(DDD)")
+	 *                              )
+	 * "[S]AAA(B+BB)+CCC(DDD)"  ==> array(
+	 *                                 array(array("S"),"AAA(B+BB)"),
+	 *                                 array(array("S"),"CCC(DDD)")
+	 *                              )
+	 * "[S]AAA(B\)BB)+CCC(DDD)" ==> array(
+	 *                                 array(array("S"),"AAA(B\)BB)"),
+	 *                                 array(array("S"),"CCC(DDD)")
+	 *                              )
+	 * @param string $maskcodes
+	 * @return array|false
+	 */
+	private static function split_maskcodes(string $maskcodes) {
 		$out = array();
 		$sevs = array(); // Note: The severity block will repeat for the next components if not changed explicitly
 
@@ -170,7 +173,11 @@ class OIDplusLogger extends OIDplusBaseClass {
 
 	private static $missing_plugin_queue = array();
 
-	public static function reLogMissing() {
+	/**
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public static function reLogMissing(): bool {
 		while (count(self::$missing_plugin_queue) > 0) {
 			$item = self::$missing_plugin_queue[0];
 			if (!self::log_internal($item[0], $item[1], false)) return false;
@@ -179,12 +186,25 @@ class OIDplusLogger extends OIDplusBaseClass {
 		return true;
 	}
 
-	public static function log($maskcodes, $event) {
+	/**
+	 * @param string $maskcodes
+	 * @param string $event
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public static function log(string $maskcodes, string $event): bool {
 		self::reLogMissing(); // try to re-log failed requests
 		return self::log_internal($maskcodes, $event, true);
 	}
 
-	private static function log_internal($maskcodes, $event, $allow_delayed_log) {
+	/**
+	 * @param string $maskcodes
+	 * @param string $event
+	 * @param bool $allow_delayed_log
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	private static function log_internal(string $maskcodes, string $event, bool $allow_delayed_log): bool {
 		$loggerPlugins = OIDplus::getLoggerPlugins();
 		if (count($loggerPlugins) == 0) {
 			// The plugin might not be initialized in OIDplus::init()
@@ -205,7 +225,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 		// so, instead of logging into 3 logbooks separately,
 		// you would create a mask code that tells the system
 		// to put the message into the logbooks of person X,
-		// house A and house B.
+		// house A, and house B.
 
 		$users = array();
 		$objects = array();

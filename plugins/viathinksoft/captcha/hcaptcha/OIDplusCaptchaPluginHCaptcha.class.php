@@ -25,15 +25,27 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 
+	/**
+	 * @return string
+	 */
 	public static function id(): string {
 		return 'hCaptcha';
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isVisible(): bool {
 		return true;
 	}
 
-	public function captchaGenerate($header_text=null, $footer_text=null) {
+	/**
+	 * @param string|null $header_text
+	 * @param string|null $footer_text
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function captchaGenerate(string $header_text=null, string $footer_text=null): string {
 		return ($header_text ? '<p>'.$header_text.'</p>' : '') .
 		       '<noscript>'.
 		       '<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.
@@ -46,7 +58,13 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 		       ($footer_text ? '<p>'.$footer_text.'</p>' : '');
 	}
 
-	public function captchaVerify($params, $fieldname=null) {
+	/**
+	 * @param string[] $params
+	 * @param string|null $fieldname
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function captchaVerify(array $params, string $fieldname=null) {
 		$sitekey=OIDplus::baseConfig()->getValue('HCAPTCHA_SITEKEY', '');
 		$secret=OIDplus::baseConfig()->getValue('HCAPTCHA_SECRET', '');
 
@@ -79,6 +97,9 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function setupHTML(): string {
 		$curl_status = function_exists('curl_init') ? 1 : 0;
 		return '<div id="CAPTCHAPLUGIN_PARAMS_HCAPTCHA">'.
@@ -90,7 +111,11 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 		       '</div>';
 	}
 
-	function httpHeaderCheck(&$http_headers) {
+	/**
+	 * @param array $http_headers
+	 * @return void
+	 */
+	function httpHeaderCheck(array &$http_headers) {
 
 		// If you use CSP headers, please add the following to your configuration:
 		// script-src should include https://hcaptcha.com, https://*.hcaptcha.com

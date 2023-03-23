@@ -30,23 +30,41 @@ class OIDplusBaseConfig extends OIDplusBaseClass implements OIDplusGetterSetterI
 
 	protected $data = array();
 
-	public function getValue($name, $default=null) {
+	/**
+	 * @param string $name
+	 * @param mixed|null $default
+	 * @return mixed|null
+	 */
+	public function getValue(string $name, $default=null) {
 		return $this->exists($name) ? $this->data[$name] : $default;
 	}
 
-	public function setValue($name, $value) {
+	/**
+	 * @param string $name
+	 * @param mixed $value
+	 * @return void
+	 */
+	public function setValue(string $name, $value) {
 		// Note: The value is only set at run time level!
 		// This function will NOT change the userdata/baseconfig/config.inc.php file!
 		$this->data[$name] = $value;
 	}
 
-	public function delete($name) {
+	/**
+	 * @param string $name
+	 * @return void
+	 */
+	public function delete(string $name) {
 		// Note: The value is only deleted at run time level!
 		// This function will NOT change the userdata/baseconfig/config.inc.php file!
 		unset($this->data[$name]);
 	}
 
-	public function exists($name) {
+	/**
+	 * @param string $name
+	 * @return bool
+	 */
+	public function exists(string $name): bool {
 		return isset($this->data[$name]);
 	}
 

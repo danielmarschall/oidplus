@@ -25,7 +25,12 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('whois_auth_token',                       'OID-over-WHOIS authentication token to display confidential data', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			$test_value = preg_replace('@[0-9a-zA-Z]*@', '', $value);
 			if ($test_value != '') {
@@ -53,6 +58,10 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 		});
 	}
 
+	/**
+	 * @return mixed|string
+	 * @throws OIDplusException
+	 */
 	private function getExampleId() {
 		$firsts = array();
 		$first_ns = null;
@@ -72,7 +81,14 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		if (explode('$',$id)[0] == 'oidplus:whois') {
 			$handled = true;
 
@@ -90,8 +106,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 			$out['title'] = _L('OID Information Protocol (OID-IP) / WHOIS');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
-			$out['text']  = '';
-			$out['text'] .= '<p>'._L('With the OID Information Protocol (OID-IP), you can query object information in a format that is human-readable and machine-readable.').'</p>';
+			$out['text']  = '<p>'._L('With the OID Information Protocol (OID-IP), you can query object information in a format that is human-readable and machine-readable.').'</p>';
 
 			// Use this if webwhois.php matches the currently uploaded Internet Draft:
 			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-05</a></p>';
@@ -150,11 +165,23 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function publicSitemap(&$out) {
+	/**
+	 * @param array $out
+	 * @return void
+	 */
+	public function publicSitemap(array &$out) {
 		$out[] = 'oidplus:whois';
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {
@@ -170,14 +197,25 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 		return true;
 	}
 
-	public function implementsFeature($id) {
+	/**
+	 * @param string $id
+	 * @return bool
+	 */
+	public function implementsFeature(string $id): bool {
 		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.2') return true; // modifyContent
 		return false;
 	}
 
-	public function modifyContent($id, &$title, &$icon, &$text) {
-		// Interface 1.3.6.1.4.1.37476.2.5.2.3.2
-
+	/**
+	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.2
+	 * @param string $id
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $text
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
 		$text .= '<br><img src="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/page_pictogram.png" height="15" alt=""> <a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('Whois').'</a>';
 
 		$obj = OIDplusObject::parse($id);
@@ -188,10 +226,19 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 
+	/**
+	 * @param $id
+	 * @return int
+	 * @throws OIDplusException
+	 */
 	public static function genWhoisAuthToken($id) {
 		return smallhash(OIDplus::baseConfig()->getValue('SERVER_SECRET').'/WHOIS/'.$id);
 	}

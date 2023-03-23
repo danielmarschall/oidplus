@@ -24,17 +24,31 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 abstract class OIDplusPagePlugin extends OIDplusPlugin {
-	public function htmlHeaderUpdate(&$head_elems) {}
-	public function htmlPostprocess(&$html) {}
-	public function action($actionID, $params) {}
-	public function gui($id, &$out, &$handled) {}
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {}
-	public function tree_search($request) {}
-	public function handle404($request) { return false; }
 
-	public function csrfUnlock($actionID) {
-		// override this method if you want that your plugin
-		// can accept ajax.php requests from outside, without CSRF check
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {}
+
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto To which node should be auto-expanded to? (Special values: ""=no auto expand. "*"=expand all.)
+	 * @return bool
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+		return false;
+	}
+
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 

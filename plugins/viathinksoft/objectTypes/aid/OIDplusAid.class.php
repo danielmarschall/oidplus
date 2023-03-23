@@ -26,42 +26,73 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusAid extends OIDplusObject {
 	private $aid;
 
+	/**
+	 * @param $aid
+	 */
 	public function __construct($aid) {
 		// TODO: syntax checks
 		$this->aid = $aid;
 	}
 
-	public static function parse($node_id) {
+	/**
+	 * @param string $node_id
+	 * @return OIDplusAid|null
+	 */
+	public static function parse(string $node_id)/*: ?OIDplusAid*/ {
 		@list($namespace, $aid) = explode(':', $node_id, 2);
-		if ($namespace !== self::ns()) return false;
+		if ($namespace !== self::ns()) return null;
 		return new self($aid);
 	}
 
-	public static function objectTypeTitle() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitle(): string {
 		return _L('Application Identifier (ISO/IEC 7816)');
 	}
 
-	public static function objectTypeTitleShort() {
+	/**
+	 * @return string
+	 */
+	public static function objectTypeTitleShort(): string {
 		return _L('AID');
 	}
 
-	public static function ns() {
+	/**
+	 * @return string
+	 */
+	public static function ns(): string {
 		return 'aid';
 	}
 
-	public static function root() {
+	/**
+	 * @return string
+	 */
+	public static function root(): string {
 		return self::ns().':';
 	}
 
-	public function isRoot() {
+	/**
+	 * @return bool
+	 */
+	public function isRoot(): bool {
 		return $this->aid == '';
 	}
 
-	public function nodeId($with_ns=true) {
+	/**
+	 * @param bool $with_ns
+	 * @return string
+	 */
+	public function nodeId(bool $with_ns=true): string {
 		return $with_ns ? self::root().$this->aid : $this->aid;
 	}
 
-	public function addString($str) {
+	/**
+	 * @param string $str
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function addString(string $str): string {
 		$m = array();
 
 		$str = str_replace(' ','',$str);
@@ -94,30 +125,54 @@ class OIDplusAid extends OIDplusObject {
 		return $this->nodeId(true).strtoupper($str);
 	}
 
-	public function crudShowId(OIDplusObject $parent) {
+	/**
+	 * @param OIDplusObject $parent
+	 * @return string
+	 */
+	public function crudShowId(OIDplusObject $parent): string {
 		return $this->chunkedNotation(false);
 	}
 
-	public function crudInsertPrefix() {
+	/**
+	 * @return string
+	 */
+	public function crudInsertPrefix(): string {
 		return $this->isRoot() ? '' : $this->chunkedNotation(false);
 	}
 
-	public function jsTreeNodeName(OIDplusObject $parent = null) {
+	/**
+	 * @param OIDplusObject|null $parent
+	 * @return string
+	 */
+	public function jsTreeNodeName(OIDplusObject $parent = null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		return substr($this->nodeId(), strlen($parent->nodeId()));
 	}
 
-	public function defaultTitle() {
+	/**
+	 * @return string
+	 */
+	public function defaultTitle(): string {
 		return $this->aid;
 	}
 
-	public function isLeafNode() {
+	/**
+	 * @return bool
+	 */
+	public function isLeafNode(): bool {
 		// We don't know when an AID is "leaf", because an AID can have an arbitary length <= 16 Bytes.
 		// But if it is 16 bytes long (32 nibbles), then we are 100% certain that it is a leaf node.
 		return (strlen($this->nodeId(false)) == 32);
 	}
 
-	public function getContentPage(&$title, &$content, &$icon) {
+	/**
+	 * @param string $title
+	 * @param string $content
+	 * @param string $icon
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function getContentPage(string &$title, string &$content, string &$icon) {
 		$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 		if ($this->isRoot()) {
@@ -168,6 +223,11 @@ class OIDplusAid extends OIDplusObject {
 
 	# ---
 
+	/**
+	 * @param $withAbbr
+	 * @return string
+	 * @throws OIDplusException
+	 */
 	public function chunkedNotation($withAbbr=true) {
 		$curid = self::root().$this->aid;
 
@@ -204,13 +264,20 @@ class OIDplusAid extends OIDplusObject {
 		return implode(' ', $full);
 	}
 
-	public function one_up() {
-		return OIDplusObject::parse($this->ns().':'.substr($this->aid,0,strlen($this->aid)-1));
+	/**
+	 * @return OIDplusAid|null
+	 */
+	public function one_up()/*: ?OIDplusAid*/ {
+		return self::parse($this->ns().':'.substr($this->aid,0,strlen($this->aid)-1));
 	}
 
+	/**
+	 * @param $to
+	 * @return int|null
+	 */
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
-		if (!($to instanceof $this)) return false;
+		if (!($to instanceof $this)) return null;
 
 		$a = $to->aid;
 		$b = $this->aid;
@@ -221,13 +288,17 @@ class OIDplusAid extends OIDplusObject {
 		$min_len = min(strlen($ary), strlen($bry));
 
 		for ($i=0; $i<$min_len; $i++) {
-			if ($ary[$i] != $bry[$i]) return false;
+			if ($ary[$i] != $bry[$i]) return null;
 		}
 
 		return strlen($ary) - strlen($bry);
 	}
 
-	public function getAltIds() {
+	/**
+	 * @return array|OIDplusAltId[]
+	 * @throws OIDplusException
+	 */
+	public function getAltIds(): array {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 
@@ -397,12 +468,19 @@ class OIDplusAid extends OIDplusObject {
 		return $ids;
 	}
 
-	public function getDirectoryName() {
+	/**
+	 * @return string
+	 */
+	public function getDirectoryName(): string {
 		if ($this->isRoot()) return $this->ns();
 		return $this->ns().'_'.$this->nodeId(false); // safe, because there are only AIDs
 	}
 
-	public static function treeIconFilename($mode) {
+	/**
+	 * @param string $mode
+	 * @return string
+	 */
+	public static function treeIconFilename(string $mode): string {
 		return 'img/'.$mode.'_icon16.png';
 	}
 }

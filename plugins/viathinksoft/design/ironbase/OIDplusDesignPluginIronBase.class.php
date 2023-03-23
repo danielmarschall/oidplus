@@ -25,7 +25,10 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusDesignPluginIronBase extends OIDplusDesignPlugin {
 
-	function getThemeColor() {
+	/**
+	 * @return string
+	 */
+	function getThemeColor(): string {
 		return '#F9F9F9';
 	}
 

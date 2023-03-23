@@ -25,7 +25,13 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
-	public function action($actionID, $params) {
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return int[]
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
 		// === RA LOGIN/LOGOUT ===
 
 		if ($actionID == 'ra_login') {
@@ -104,11 +110,16 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			return array("status" => 0);
 		}
 		else {
-			throw new OIDplusException(_L('Unknown action ID'));
+			return parent::action($actionID, $params);
 		}
 	}
 
-	public function init($html=true) {
+	/**
+	 * @param bool $html
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function init(bool $html=true) {
 		OIDplus::config()->prepareConfigKey('log_failed_ra_logins', 'Log failed RA logins', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || (($value != 0) && (($value != 1)))) {
 				throw new OIDplusException(_L('Valid values: 0 (off) or 1 (on).'));
@@ -121,7 +132,14 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		});
 	}
 
-	public function gui($id, &$out, &$handled) {
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled) {
 		$ary = explode('$', $id);
 		$desired_ra = '';
 		if (isset($ary[1])) {
@@ -138,9 +156,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$out['title'] = _L('Login');
 			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/login_icon.png';
 
-			$out['text'] = '';
-
-			$out['text'] .= '<noscript>';
+			$out['text']  = '<noscript>';
 			$out['text'] .= '<p>'._L('You need to enable JavaScript to use the login area.').'</p>';
 			$out['text'] .= '</noscript>';
 
@@ -198,7 +214,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				$alt_logins_html = array();
 				foreach (OIDplus::getAllPlugins() as $plugin) {
 					if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.5')) {
-						$logins = $plugin->alternativeLoginMethods();
+						$logins = $plugin->alternativeLoginMethods(); /* @phpstan-ignore-line */
 						foreach ($logins as $data) {
 							if (isset($data[2]) && !empty($data[2])) {
 								$img = '<img src="'.$data[2].'" alt="'.htmlentities($data[1]).'"> ';
@@ -264,11 +280,24 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		}
 	}
 
-	public function publicSitemap(&$out) {
+	/**
+	 * @param array $out
+	 * @return void
+	 */
+	public function publicSitemap(array &$out) {
 		$out[] = 'oidplus:login';
 	}
 
-	public function tree(&$json, $ra_email=null, $nonjs=false, $req_goto='') {
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		$loginChildren = array();
 
 		if (OIDplus::authUtils()->isAdminLoggedIn()) {
@@ -351,7 +380,11 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		return true;
 	}
 
-	public function tree_search($request) {
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 }
