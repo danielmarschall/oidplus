@@ -887,7 +887,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				               'icon' => $icon,
 				               'children' => OIDplus::menuUtils()->tree_populate($ot::root(), $goto_path)
 				               );
-				if (!file_exists($child['icon'])) $child['icon'] = null; // default icon (folder)
+				if ($child['icon'] && !file_exists($child['icon'])) $child['icon'] = null; // default icon (folder)
 				$objTypesChildren[] = $child;
 			}
 
