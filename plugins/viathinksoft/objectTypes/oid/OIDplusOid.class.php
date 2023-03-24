@@ -368,7 +368,7 @@ class OIDplusOid extends OIDplusObject {
 		$res_asn = OIDplus::db()->query("select * from ###asn1id where oid = ? order by lfd", array("oid:".$this->oid));
 		while ($row_asn = $res_asn->fetch_array()) {
 			$name = $row_asn['name'];
-			$standardized = $row_asn['standardized'];
+			$standardized = $row_asn['standardized'] ?? false;
 			$well_known = $row_asn['well_known'];
 			$asn_ids[] = new OIDplusOidAsn1Id($name, $standardized, $well_known);
 		}
@@ -384,7 +384,7 @@ class OIDplusOid extends OIDplusObject {
 		$res_iri = OIDplus::db()->query("select * from ###iri where oid = ? order by lfd", array("oid:".$this->oid));
 		while ($row_iri = $res_iri->fetch_array()) {
 			$name = $row_iri['name'];
-			$longarc = $row_iri['longarc'];
+			$longarc = $row_iri['longarc'] ?? false;
 			$well_known = $row_iri['well_known'];
 			$iri_ids[] = new OIDplusOidIri($name, $longarc, $well_known);
 		}

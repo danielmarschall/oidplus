@@ -29,7 +29,7 @@ use ViaThinkSoft\OIDplus\OIDplusException;
 function oidplus_dbupdate_1002_migrate_ra_passwords(OIDplusDatabaseConnection $db) {
 	$res = $db->query("select * from ###ra ");
 	while ($row = $res->fetch_array()) {
-		$salt = isset($row['salt']) ? $row['salt'] : '';
+		$salt = $row['salt'] ?? '';
 		$new_auth_key = vts_crypt_convert_from_old_oidplus($row['authkey'], $salt);
 		$email = $row['email'];
 		if ($new_auth_key !== $row['authkey']) {
