@@ -57,7 +57,7 @@ class OIDplusRA extends OIDplusBaseClass {
 		$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($this->email));
 		if (!$res->any()) return _L('(RA not in database)');
 		$row = $res->fetch_array();
-		return $row['ra_name'];
+		return $row['ra_name'] ?? '';
 	}
 
 	/**
@@ -68,7 +68,7 @@ class OIDplusRA extends OIDplusBaseClass {
 		$out = array();
 		$res = OIDplus::db()->query("select email from ###ra");
 		while ($row = $res->fetch_array()) {
-			$out[] = new OIDplusRA($row['email']);
+			$out[] = new OIDplusRA($row['email'] ?? '');
 		}
 		return $out;
 	}
