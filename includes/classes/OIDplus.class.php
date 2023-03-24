@@ -1958,13 +1958,17 @@ class OIDplus extends OIDplusBaseClass {
 	const ENFORCE_SSL_NO   = 0;
 	const ENFORCE_SSL_YES  = 1;
 	const ENFORCE_SSL_AUTO = 2;
+
+	/**
+	 * @var bool|null
+	 */
 	private static $sslAvailableCache = null;
 
 	/**
-	 * @return bool|void|null
+	 * @return bool
 	 * @throws OIDplusException, OIDplusConfigInitializationException
 	 */
-	public static function isSslAvailable() {
+	public static function isSslAvailable(): bool {
 		if (!is_null(self::$sslAvailableCache)) return self::$sslAvailableCache;
 
 		if (PHP_SAPI == 'cli') {
@@ -1977,7 +1981,7 @@ class OIDplus extends OIDplusBaseClass {
 		$ssl_port = 443;
 		$host_with_port = $_SERVER['HTTP_HOST'];
 		$host_no_port = explode(':',$host_with_port)[0];
-		$host_ssl =  $host_no_port . ($ssl_port != 443 ? ':'.$ssl_port : '');
+		$host_ssl = $host_no_port . ($ssl_port != 443 ? ':'.$ssl_port : '');
 
 		if ($already_ssl) {
 			OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
@@ -2040,6 +2044,9 @@ class OIDplus extends OIDplusBaseClass {
 						return false;
 					}
 				}
+			} else {
+				assert(false);
+				return false;
 			}
 		}
 	}

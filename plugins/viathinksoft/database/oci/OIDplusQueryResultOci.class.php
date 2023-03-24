@@ -147,7 +147,7 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
 		// We can't quote every single column throughout the whole program, so we use this workaround...
 		if ($ret) {
-			foreach ($ret as $name => $val) { /* @phpstan-ignore-line */
+			foreach ($ret as $name => $val) {
 				$ret->{strtoupper($name)} = $val;
 				$ret->{strtolower($name)} = $val;
 			}
