@@ -262,24 +262,6 @@ class OIDplusFourCC extends OIDplusObject {
 	}
 
 	/**
-	 * @param array|null $row
-	 * @return string|null
-	 * @throws OIDplusException
-	 */
-	public function getIcon(array $row=null) {
-		$in_login_treenode = false;
-		foreach (debug_backtrace() as $trace) {
-			// If we are inside the "Login" area (i.e. "Root object links"), we want the
-			// correct icon, not a folder icon!
-			if ($trace['class'] === OIDplusPagePublicLogin::class) $in_login_treenode = true;
-		}
-
-		if (!$in_login_treenode && !$this->isLeafNode()) return null; // foldericon
-
-		return parent::getIcon($row);
-	}
-
-	/**
 	 * @return OIDplusFourCC|null
 	 */
 	public function one_up()/*: ?OIDplusFourCC*/ {

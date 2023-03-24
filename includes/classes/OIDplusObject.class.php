@@ -462,7 +462,6 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		} else {
 			$ra_email = $row['ra_email'];
 		}
-		// TODO: have different icons for Leaf-Nodes
 
 		$dirs = glob(OIDplus::localpath().'plugins/'.'*'.'/objectTypes/'.$namespace.'/');
 
@@ -470,11 +469,25 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 
 		$dir = substr($dirs[0], strlen(OIDplus::localpath()));
 
-		// We use $this:: instead of self:: , because we want to call the overridden methods
-		if (OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
-			$icon = $dir.'/'.$this::treeIconFilename('own');
+		if ($this->isRoot()) {
+			$icon = $dir . '/' . $this::treeIconFilename('root'); // see also OIDplusPagePublicObjects::get_treeicon_root()
 		} else {
-			$icon = $dir.'/'.$this::treeIconFilename('general');
+			// We use $this:: instead of self:: , because we want to call the overridden methods
+			if (OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
+				if ($this->isLeafNode()) {
+					$icon = $dir . '/' . $this::treeIconFilename('own_leaf');
+					if (!file_exists($icon)) $icon = $dir . '/' . $this::treeIconFilename('own');
+				} else {
+					$icon = $dir . '/' . $this::treeIconFilename('own');
+				}
+			} else {
+				if ($this->isLeafNode()) {
+					$icon = $dir . '/' . $this::treeIconFilename('general_leaf');
+					if (!file_exists($icon)) $icon = $dir . '/' . $this::treeIconFilename('general');
+				} else {
+					$icon = $dir . '/' . $this::treeIconFilename('general');
+				}
+			}
 		}
 
 		if (!file_exists($icon)) return null; // default icon (folder)
