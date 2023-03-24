@@ -230,6 +230,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$ok = false;
 			$res = OIDplus::db()->query("select parent from ###objects where ra_email = ?", array($email));
 			while ($row = $res->fetch_array()) {
+				if (!$row['parent']) continue;
 				$objParent = OIDplusObject::parse($row['parent']);
 				if (!$objParent) throw new OIDplusException(_L('Type of %1 unknown',$row['parent']));
 				if ($objParent->userHasWriteRights()) {
