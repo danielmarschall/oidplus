@@ -23,46 +23,46 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusJava extends OIDplusObject {
-	private $java;
+class OIDplusPhp extends OIDplusObject {
+	private $php;
 
 	/**
-	 * @param $java
+	 * @param $php
 	 */
-	public function __construct($java) {
+	public function __construct($php) {
 		// TODO: syntax checks
-		$this->java = $java;
+		$this->php = $php;
 	}
 
 	/**
 	 * @param string $node_id
-	 * @return OIDplusJava|null
+	 * @return OIDplusPhp|null
 	 */
-	public static function parse(string $node_id)/*: ?OIDplusJava*/ {
-		@list($namespace, $java) = explode(':', $node_id, 2);
+	public static function parse(string $node_id)/*: ?OIDplusPhp*/ {
+		@list($namespace, $php) = explode(':', $node_id, 2);
 		if ($namespace !== self::ns()) return null;
-		return new self($java);
+		return new self($php);
 	}
 
 	/**
 	 * @return string
 	 */
 	public static function objectTypeTitle(): string {
-		return _L('Java Package Names');
+		return _L('PHP Namespaces');
 	}
 
 	/**
 	 * @return string
 	 */
 	public static function objectTypeTitleShort(): string {
-		return _L('Package');
+		return _L('Namespace');
 	}
 
 	/**
 	 * @return string
 	 */
 	public static function ns(): string {
-		return 'java';
+		return 'php';
 	}
 
 	/**
@@ -76,7 +76,7 @@ class OIDplusJava extends OIDplusObject {
 	 * @return bool
 	 */
 	public function isRoot(): bool {
-		return $this->java == '';
+		return $this->php == '';
 	}
 
 	/**
@@ -84,7 +84,7 @@ class OIDplusJava extends OIDplusObject {
 	 * @return string
 	 */
 	public function nodeId(bool $with_ns=true): string {
-		return $with_ns ? self::root().$this->java : $this->java;
+		return $with_ns ? self::root().$this->php : $this->php;
 	}
 
 	/**
@@ -94,10 +94,11 @@ class OIDplusJava extends OIDplusObject {
 	 */
 	public function addString(string $str): string {
 		if ($this->isRoot()) {
+			$str = ltrim($str,'\\');
 			return self::root().$str;
 		} else {
-			if (strpos($str,'.') !== false) throw new OIDplusException(_L('Please only submit one arc.'));
-			return $this->nodeId() . '.' . $str;
+			if (strpos($str,'\\') !== false) throw new OIDplusException(_L('Please only submit one arc.'));
+			return $this->nodeId() . '\\' . $str;
 		}
 	}
 
@@ -106,7 +107,7 @@ class OIDplusJava extends OIDplusObject {
 	 * @return string
 	 */
 	public function crudShowId(OIDplusObject $parent): string {
-		return $this->java;
+		return $this->php;
 	}
 
 	/**
@@ -134,14 +135,14 @@ class OIDplusJava extends OIDplusObject {
 	 * @return string
 	 */
 	public function defaultTitle(): string {
-		return $this->java;
+		return $this->php;
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function isLeafNode(): bool {
-		return false;
+		return substr($this->php, -4) === '.php';
 	}
 
 	/**
@@ -155,13 +156,13 @@ class OIDplusJava extends OIDplusObject {
 		$icon = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 		if ($this->isRoot()) {
-			$title = OIDplusJava::objectTypeTitle();
+			$title = OIDplusPhp::objectTypeTitle();
 
 			$res = OIDplus::db()->query("select * from ###objects where parent = ?", array(self::root()));
 			if ($res->any()) {
-				$content  = '<p>'._L('Please select a Java Package Name in the tree view at the left to show its contents.').'</p>';
+				$content  = '<p>'._L('Please select a PHP Namespace in the tree view at the left to show its contents.').'</p>';
 			} else {
-				$content  = '<p>'._L('Currently, no Java Package Name is registered in the system.').'</p>';
+				$content  = '<p>'._L('Currently, no PHP Namespace is registered in the system.').'</p>';
 			}
 
 			if (!$this->isLeafNode()) {
@@ -179,9 +180,14 @@ class OIDplusJava extends OIDplusObject {
 
 			$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
+			if (OIDplus::baseConfig()->getValue('PLUGIN_PHP_TYPE_LINK_TO_WEBFAN', false)) {
+				$content .= '<p><strong><a webfan-php-class-link="'.$this->nodeId(false).'" href="https://webfan.de/install/?source='.urlencode($this->nodeId(false)).'" target="_blank">Soure Code</a></strong></p>';
+			}
+
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
 					$content .= '<h2>'._L('Create or change subordinate objects').'</h2>';
+					$content .= '<p>'._L('Append ".php" at the end to mark a node as leaf node (i.e. Interface/Class rather than Namespace)').'</p>';
 				} else {
 					$content .= '<h2>'._L('Subordinate objects').'</h2>';
 				}
@@ -191,14 +197,32 @@ class OIDplusJava extends OIDplusObject {
 	}
 
 	/**
-	 * @return OIDplusJava|null
+	 * @param array|null $row
+	 * @return string|null
+	 * @throws OIDplusException
 	 */
-	public function one_up()/*: ?OIDplusJava*/ {
-		$oid = $this->java;
+	public function getIcon(array $row=null) {
+		$in_login_treenode = false;
+		foreach (debug_backtrace() as $trace) {
+			// If we are inside the "Login" area (i.e. "Root object links"), we want the
+			// correct icon, not a folder icon!
+			if ($trace['class'] === OIDplusPagePublicLogin::class) $in_login_treenode = true;
+		}
 
-		$p = strrpos($oid, '.');
+		if (!$in_login_treenode && !$this->isLeafNode()) return null; // foldericon
+
+		return parent::getIcon($row);
+	}
+
+	/**
+	 * @return OIDplusPhp|null
+	 */
+	public function one_up()/*: ?OIDplusPhp*/ {
+		$oid = $this->php;
+
+		$p = strrpos($oid, '\\');
 		if ($p === false) return self::parse($oid);
-		if ($p == 0) return self::parse('.');
+		if ($p == 0) return self::parse('\\');
 
 		$oid_up = substr($oid, 0, $p);
 
@@ -213,14 +237,14 @@ class OIDplusJava extends OIDplusObject {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
 		if (!($to instanceof $this)) return null;
 
-		$a = $to->java;
-		$b = $this->java;
+		$a = $to->php;
+		$b = $this->php;
 
-		if (substr($a,0,1) == '.') $a = substr($a,1);
-		if (substr($b,0,1) == '.') $b = substr($b,1);
+		if (substr($a,0,1) == '\\') $a = substr($a,1);
+		if (substr($b,0,1) == '\\') $b = substr($b,1);
 
-		$ary = explode('.', $a);
-		$bry = explode('.', $b);
+		$ary = explode('\\', $a);
+		$bry = explode('\\', $b);
 
 		$min_len = min(count($ary), count($bry));
 
@@ -236,7 +260,11 @@ class OIDplusJava extends OIDplusObject {
 	 */
 	public function getDirectoryName(): string {
 		if ($this->isRoot()) return $this->ns();
-		return $this->ns().'_'.md5($this->nodeId(false));
+		if (OIDplus::baseConfig()->getValue('PLUGIN_PHP_TYPE_LINK_TO_WEBFAN', false)) {
+			return $this->ns().str_replace(['\\', "/"], [\DIRECTORY_SEPARATOR, \DIRECTORY_SEPARATOR], $this->nodeId(false));
+		} else {
+			return $this->ns().'_'.md5($this->nodeId(false));
+		}
 	}
 
 	/**
