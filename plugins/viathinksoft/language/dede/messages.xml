@@ -526,6 +526,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Append ".php" at the end to mark a node as leaf node (i.e. Interface/Class rather than Namespace)
+		]]></source>
+		<target><![CDATA[
+		Fügen Sie ".php" am Ende hinzu, damit das Objekt als PHP-Klasse oder -Interface gekennzeichnet wird.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Application Identifier (ISO/IEC 7816)
 		]]></source>
 		<target><![CDATA[
@@ -1514,6 +1522,14 @@
 		]]></source>
 		<target><![CDATA[
 		Derzeit sind keine OIDs in diesem System registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Currently, no PHP Namespace is registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine PHP-Namensräume in diesem System registriert.
 		]]></target>
 	</message>
 	<message>
@@ -3870,6 +3886,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Namespace
+		]]></source>
+		<target><![CDATA[
+		Namensraum
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Nested transactions are not supported by this database plugin.
 		]]></source>
 		<target><![CDATA[
@@ -4742,6 +4766,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		PHP Namespaces
+		]]></source>
+		<target><![CDATA[
+		PHP-Namensräume
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		PHP configuration file(s)
 		]]></source>
 		<target><![CDATA[
@@ -5210,6 +5242,14 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte selektieren Sie einen Java-Paketnamen in der Baumansicht, um dessen Inhalt anzuzeigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please select a PHP Namespace in the tree view at the left to show its contents.
+		]]></source>
+		<target><![CDATA[
+		Bitte selektieren Sie einen PHP-Namensraum in der Baumansicht, um dessen Inhalt anzuzeigen.
 		]]></target>
 	</message>
 	<message>
