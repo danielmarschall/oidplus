@@ -951,16 +951,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	private static $crudCounter = 0;
 
 	/**
-	 * @param $parent
-	 * @return string|void
+	 * @param string $parent
+	 * @return string
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	protected static function showCrud($parent='oid:') {
+	protected static function showCrud(string $parent='oid:'): string {
 		$items_total = 0;
 		$items_hidden = 0;
 
 		$objParent = OIDplusObject::parse($parent);
+		if (!$objParent) return '';
 		$parentNS = $objParent::ns();
 
 		// http://www.oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20identifiers
@@ -995,7 +996,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		$rows = array();
 		while ($row = $result->fetch_object()) {
 			$obj = OIDplusObject::parse($row->id);
-			$rows[] = array($obj,$row);
+			if ($obj) $rows[] = array($obj,$row);
 		}
 
 		$enable_weid_presentation = OIDplus::config()->getValue('oid_grid_show_weid');
@@ -1089,14 +1090,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			$output .= '</tr>';
 		}
 
-		$parent_ra_email = $objParent ? $objParent->getRaMail() : '';
+		$parent_ra_email = $objParent->getRaMail() ;
 
 		// "Create OID" row
 		if ($objParent->userHasWriteRights()) {
 			$output .= '<tr>';
-			$prefix = is_null($objParent) ? '' : $objParent->crudInsertPrefix();
+			$prefix = $objParent->crudInsertPrefix();
 
-			$suffix = is_null($objParent) ? '' : $objParent->crudInsertSuffix();
+			$suffix = $objParent->crudInsertSuffix();
 			foreach (OIDplus::getObjectTypePlugins() as $plugin) {
 				if (($plugin::getObjectTypeClassName()::ns() == $parentNS) && $plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.6')) {
 					$suffix .= $plugin->gridGeneratorLinks($objParent); /** @phpstan-ignore-line */

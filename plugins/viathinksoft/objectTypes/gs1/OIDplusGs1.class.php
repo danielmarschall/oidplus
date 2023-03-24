@@ -289,6 +289,7 @@ class OIDplusGs1 extends OIDplusObject {
 	 */
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
+		if (!$to) return null;
 		if (!($to instanceof $this)) return null;
 
 		// This is pretty tricky, because the whois service should accept GS1 numbers with and without checksum

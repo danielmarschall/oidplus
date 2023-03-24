@@ -227,7 +227,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				                            "order by ".OIDplus::db()->natOrder('oChild.id'));
 				while ($row = $res->fetch_array()) {
 					if (!OIDplus::authUtils()->isRaLoggedIn($row['parent_mail']) && OIDplus::authUtils()->isRaLoggedIn($row['child_mail'])) {
-						$x = self::parse($row['id']); // can be FALSE if namespace was disabled
+						$x = self::parse($row['id']); // can be NULL if namespace was disabled
 						if ($x) $out[] = $x;
 					}
 				}
@@ -239,7 +239,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				                            "      (oParent.ra_email is null and ".OIDplus::db()->getSlang()->isNullFunction('oChild.ra_email',"''")." = ?) ".
 				                            "order by ".OIDplus::db()->natOrder('oChild.id'), array($ra, $ra, $ra));
 				while ($row = $res->fetch_array()) {
-					$x = self::parse($row['id']); // can be FALSE if namespace was disabled
+					$x = self::parse($row['id']); // can be NULL if namespace was disabled
 					if ($x) $out[] = $x;
 				}
 			}
@@ -695,7 +695,9 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return bool
 	 */
 	public function equals(OIDplusObject $obj): bool {
+		if (!$obj) return false;
 		if (!is_object($obj)) $obj = OIDplusObject::parse($obj);
+		if (!$obj) return false;
 		if (!($obj instanceof $this)) return false;
 
 		$distance = $this->distance($obj);
