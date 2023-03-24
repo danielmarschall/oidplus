@@ -369,7 +369,7 @@ class OIDplusOid extends OIDplusObject {
 		while ($row_asn = $res_asn->fetch_array()) {
 			$name = $row_asn['name'];
 			$standardized = $row_asn['standardized'] ?? false;
-			$well_known = $row_asn['well_known'];
+			$well_known = $row_asn['well_known'] ?? false;
 			$asn_ids[] = new OIDplusOidAsn1Id($name, $standardized, $well_known);
 		}
 		return $asn_ids;
@@ -385,7 +385,7 @@ class OIDplusOid extends OIDplusObject {
 		while ($row_iri = $res_iri->fetch_array()) {
 			$name = $row_iri['name'];
 			$longarc = $row_iri['longarc'] ?? false;
-			$well_known = $row_iri['well_known'];
+			$well_known = $row_iri['well_known'] ?? false;
 			$iri_ids[] = new OIDplusOidIri($name, $longarc, $well_known);
 		}
 		return $iri_ids;
@@ -393,11 +393,11 @@ class OIDplusOid extends OIDplusObject {
 
 	/**
 	 * @param OIDplusOid|null $parent
-	 * @param $separator
+	 * @param string $separator
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public function viewGetArcAsn1s(OIDplusOid $parent=null, $separator = ' | '): string {
+	public function viewGetArcAsn1s(OIDplusOid $parent=null, string $separator = ' | '): string {
 		$asn_ids = array();
 
 		if (is_null($parent)) $parent = OIDplusOid::parse(self::root());
@@ -621,6 +621,7 @@ class OIDplusOid extends OIDplusObject {
 	 */
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
+		if (!$to) return null;
 		if (!($to instanceof $this)) return null;
 		$res = oid_distance($to->oid, $this->oid);
 		return $res !== false ? $res : null;

@@ -109,7 +109,14 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 		}
 	}
 
-	public static function tree_populate($parent, $goto_path=null) {
+	/**
+	 * @param $parent
+	 * @param $goto_path
+	 * @return array
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public static function tree_populate($parent, $goto_path=null): array {
 		$children = array();
 
 		$parentObj = OIDplusObject::parse($parent);
@@ -129,6 +136,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 		$res = OIDplus::db()->query("select * from ###objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($parent));
 		while ($row = $res->fetch_array()) {
 			$obj = OIDplusObject::parse($row['id']);
+			if (!$obj) continue; // e.g. object-type plugin disabled
 
 			if (!$obj->userHasReadRights()) continue;
 
@@ -136,7 +144,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			$child['id'] = $row['id'];
 
 			// Determine display name (relative OID)
-			$child['text'] = $obj->jsTreeNodeName($parentObj);
+			$child['text'] = $parentObj ? $obj->jsTreeNodeName($parentObj) : '';
 			$child['text'] .= empty($row['title']) ? /*' -- <i>'.htmlentities('Title missing').'</i>'*/ '' : ' -- <b>' . htmlentities($row['title']) . '</b>';
 
 			$is_confidential = false;

@@ -26,21 +26,26 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 	/**
-	 * @param $with_ns
-	 * @return string
+	 * @param bool $with_ns
+	 * @return string|null
 	 * @throws OIDplusException
 	 */
-	private static function getFreeRootOid($with_ns) {
-		return ($with_ns ? 'oid:' : '').OIDplus::config()->getValue('freeoid_root_oid');
+	private static function getFreeRootOid(bool $with_ns)/*: ?string*/ {
+		if (!in_array('ViaThinkSoft\OIDplus\OIDplusOid',OIDplus::getEnabledObjectTypes())) {
+			return null;
+		} else {
+			$res = ($with_ns ? 'oid:' : '').OIDplus::config()->getValue('freeoid_root_oid');
+			return !empty($res) ? $res : null;
+		}
 	}
 
 	/**
 	 * @param $email
-	 * @param $getId
-	 * @return bool|mixed|null
+	 * @param bool $getId
+	 * @return bool|null
 	 * @throws OIDplusException
 	 */
-	public static function alreadyHasFreeOid($email, $getId = false){
+	public static function alreadyHasFreeOid($email, bool $getId = false)/*: ?bool*/ {
 		$res = OIDplus::db()->query("select id from ###objects where ra_email = ? and id like ? order by ".OIDplus::db()->natOrder('id'), array($email, self::getFreeRootOid(true).'.%'));
 		while ($row = $res->fetch_array()) {
 			return $getId ? $row['id'] : true;

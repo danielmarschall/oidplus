@@ -247,6 +247,7 @@ class OIDplusIpv6 extends OIDplusObject {
 	 */
 	public function distance($to) {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
+		if (!$to) return null;
 		if (!($to instanceof $this)) return null;
 		$res = ipv6_distance($to->ipv6, $this->ipv6);
 		return $res !== false ? $res : null;
