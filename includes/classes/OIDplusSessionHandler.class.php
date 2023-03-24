@@ -46,7 +46,7 @@ class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSet
 		@ini_set('session.use_trans_sid', '0');
 
 		// Uses a secure connection (HTTPS) if possible
-		@ini_set('session.cookie_secure', OIDplus::isSslAvailable());
+		@ini_set('session.cookie_secure', OIDplus::isSslAvailable() ? '1' : '0');
 
 		$path = OIDplus::webpath(null,OIDplus::PATH_RELATIVE);
 		if (empty($path)) $path = '/';
