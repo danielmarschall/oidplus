@@ -105,12 +105,12 @@ class OIDplus extends OIDplusBaseClass {
 	 * Note that design plugins may only output CSS, not JS.
 	 */
 	/*public*/ const INTERACTIVE_PLUGIN_TYPES = array(
-		'publicPages',
-		'raPages',
-		'adminPages',
-		'objectTypes',
-		'captcha'
-	);
+	'publicPages',
+	'raPages',
+	'adminPages',
+	'objectTypes',
+	'captcha'
+);
 
 	const UUID_NAMEBASED_NS_Base64PubKey = 'fd16965c-8bab-11ed-8744-3c4a92df8582';
 
@@ -189,13 +189,13 @@ class OIDplus extends OIDplusBaseClass {
 						$tmp = str_replace("OIDplusCaptchaPluginRecaptcha::", "\$ns\OIDplusCaptchaPluginRecaptcha::", $tmp);
 
 						$tmp = str_replace('DISABLE_PLUGIN_OIDplusPagePublicRdap',
-						                   'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicRdap', $tmp);
+							'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicRdap', $tmp);
 						$tmp = str_replace('DISABLE_PLUGIN_OIDplusPagePublicAltIds',
-						                   'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicAltIds', $tmp);
+							'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicAltIds', $tmp);
 						$tmp = str_replace('DISABLE_PLUGIN_OIDplusPagePublicUITweaks',
-						                   'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $tmp);
+							'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $tmp);
 						$tmp = str_replace('DISABLE_PLUGIN_OIDplus',
-						                   'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $tmp);
+							'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $tmp);
 
 						if (@file_put_contents($config_file, $tmp) === false) {
 							eval('?>'.$tmp);
@@ -215,13 +215,13 @@ class OIDplus extends OIDplusBaseClass {
 						if ($name == 'SESSION_SECRET') $name = 'SERVER_SECRET';
 						if ($name == 'MYSQL_QUERYLOG') $name = 'QUERY_LOGFILE';
 						$name = str_replace('DISABLE_PLUGIN_OIDplusPagePublicRdap',
-						                    'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicRdap', $name);
+							'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicRdap', $name);
 						$name = str_replace('DISABLE_PLUGIN_OIDplusPagePublicAltIds',
-						                    'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicAltIds', $name);
+							'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicAltIds', $name);
 						$name = str_replace('DISABLE_PLUGIN_OIDplusPagePublicUITweaks',
-						                    'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $name);
+							'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $name);
 						$name = str_replace('DISABLE_PLUGIN_OIDplus',
-						                    'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $name);
+							'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $name);
 						if ($name == 'CONFIG_VERSION') {
 							$value = 2.1;
 						} else if (($name == 'MYSQL_PASSWORD') || ($name == 'ODBC_PASSWORD') || ($name == 'PDO_PASSWORD') || ($name == 'PGSQL_PASSWORD')) {
@@ -666,19 +666,19 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private static function checkRaAuthPluginAvailable(string $plugin_foldername, bool $must_hash) {
-			// if (!wildcard_is_dir(OIDplus::localpath().'plugins/'.'*'.'/auth/'.$plugin_foldername)) {
-			$plugin = OIDplus::getAuthPluginByFoldername($plugin_foldername);
-			if (is_null($plugin)) {
-				throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$plugin_foldername,'plugins/[vendorname]/auth/'));
-			}
+		// if (!wildcard_is_dir(OIDplus::localpath().'plugins/'.'*'.'/auth/'.$plugin_foldername)) {
+		$plugin = OIDplus::getAuthPluginByFoldername($plugin_foldername);
+		if (is_null($plugin)) {
+			throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$plugin_foldername,'plugins/[vendorname]/auth/'));
+		}
 
-			$reason = '';
-			if (!$plugin->availableForVerify($reason)) {
-				throw new OIDplusException(trim(_L('The auth plugin "%1" is not available for password verification on this system.',$plugin_foldername).' '.$reason));
-			}
-			if ($must_hash && !$plugin->availableForHash($reason)) {
-				throw new OIDplusException(trim(_L('The auth plugin "%1" is not available for hashing on this system.',$plugin_foldername).' '.$reason));
-			}
+		$reason = '';
+		if (!$plugin->availableForVerify($reason)) {
+			throw new OIDplusException(trim(_L('The auth plugin "%1" is not available for password verification on this system.',$plugin_foldername).' '.$reason));
+		}
+		if ($must_hash && !$plugin->availableForHash($reason)) {
+			throw new OIDplusException(trim(_L('The auth plugin "%1" is not available for hashing on this system.',$plugin_foldername).' '.$reason));
+		}
 	}
 
 	/**
@@ -748,8 +748,8 @@ class OIDplus extends OIDplusBaseClass {
 			$authInfo_AuthKeyDiff->setAuthKey(strrev($authInfo_AuthKeyDiff->getAuthKey()));
 
 			if ((!$plugin->verify($authInfo,$password)) ||
-			   ($plugin->verify($authInfo_AuthKeyDiff,$password)) ||
-			   ($plugin->verify($authInfo,$password.'x'))) {
+				($plugin->verify($authInfo_AuthKeyDiff,$password)) ||
+				($plugin->verify($authInfo,$password.'x'))) {
 				throw new OIDplusException(_L('Auth plugin "%1" is erroneous: Generate/Verify self-test failed',basename($plugin->getPluginDirectory())));
 			}
 		}
@@ -1014,10 +1014,10 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	* Checks if the plugin is disabled
-	* @return bool true if plugin is enabled, false if plugin is disabled
-	* @throws OIDplusException if the class name or config file (disabled setting) does not contain a namespace
-	*/
+	 * Checks if the plugin is disabled
+	 * @return bool true if plugin is enabled, false if plugin is disabled
+	 * @throws OIDplusException if the class name or config file (disabled setting) does not contain a namespace
+	 */
 	private static function pluginCheckDisabled($class_name): bool {
 		$path = explode('\\', $class_name);
 
@@ -1056,6 +1056,7 @@ class OIDplus extends OIDplusBaseClass {
 		uasort($ary, function($a,$b) {
 			if ($a == $b) return 0;
 
+			$a = str_replace('\\', '/', $a);
 			$ary = explode('/',$a);
 			$bry = explode('/',$b);
 
@@ -1091,12 +1092,13 @@ class OIDplus extends OIDplusBaseClass {
 			if ($flat) {
 				$out[] = $manifest;
 			} else {
+				$vendor_folder = basename(dirname($ini, 3));
 				$plugintype_folder = basename(dirname($ini, 2));
 				$pluginname_folder = basename(dirname($ini));
 
 				if (!isset($out[$plugintype_folder])) $out[$plugintype_folder] = array();
-				if (!isset($out[$plugintype_folder][$pluginname_folder])) $out[$plugintype_folder][$pluginname_folder] = array();
-				$out[$plugintype_folder][$pluginname_folder] = $manifest;
+				if (!isset($out[$plugintype_folder][$vendor_folder])) $out[$plugintype_folder][$vendor_folder] = array();
+				$out[$plugintype_folder][$vendor_folder][$pluginname_folder] = $manifest;
 			}
 		}
 		return $out;
@@ -1128,117 +1130,118 @@ class OIDplus extends OIDplusBaseClass {
 			$fake_feature = null;
 		}
 		foreach ($ary as $plugintype_folder => $bry) {
-			foreach ($bry as $pluginname_folder => $manifest) {
-				$class_name = $manifest->getPhpMainClass();
+			foreach ($bry as $vendor_folder => $cry) {
+				foreach ($cry as $pluginname_folder => $manifest) {
+					$class_name = $manifest->getPhpMainClass();
 
-				// Before we load the plugin, we want to make some checks to confirm
-				// that the plugin is working correctly.
+					// Before we load the plugin, we want to make some checks to confirm
+					// that the plugin is working correctly.
 
-				if (!$class_name) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Manifest does not declare a PHP main class'));
-				}
-				if (!self::pluginCheckDisabled($class_name)) {
-					continue; // Plugin is disabled
-				}
-
-				// Do some basic checks on the plugin PHP main class
-				if (!class_exists($class_name)) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Manifest declares PHP main class as "%1", but it could not be found',$class_name));
-				}
-				if (!is_subclass_of($class_name, $expectedPluginClass)) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Plugin main class "%1" is expected to be a subclass of "%2"',$class_name,$expectedPluginClass));
-				}
-				if (($class_name!=$manifest->getTypeClass()) && (!is_subclass_of($class_name,$manifest->getTypeClass()))) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Plugin main class "%1" is expected to be a subclass of "%2", according to type declared in manifest',$class_name,$manifest->getTypeClass()));
-				}
-				if (($manifest->getTypeClass()!=$expectedPluginClass) && (!is_subclass_of($manifest->getTypeClass(),$expectedPluginClass))) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Class declared in manifest is "%1" does not fit expected class for this plugin type "%2"',$manifest->getTypeClass(),$expectedPluginClass));
-				}
-
-				// Do some basic checks on the plugin OID
-				$plugin_oid = $manifest->getOid();
-				if (!$plugin_oid) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Does not have an OID'));
-				}
-				if (!oid_valid_dotnotation($plugin_oid, false, false, 2)) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Plugin OID "%1" is invalid (needs to be valid dot-notation)',$plugin_oid));
-				}
-				if (isset($known_plugin_oids[$plugin_oid])) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('The OID "%1" is already used by the plugin "%2"',$plugin_oid,$known_plugin_oids[$plugin_oid]));
-				}
-
-				// Additional check: Are third-party plugins using ViaThinkSoft plugin folders, OIDs or class namespaces?
-				$full_plugin_dir = dirname($manifest->getManifestFile());
-				$full_plugin_dir = substr($full_plugin_dir, strlen(OIDplus::localpath()));
-				$dir_is_viathinksoft = str_starts_with($full_plugin_dir, 'plugins/viathinksoft/') || str_starts_with($full_plugin_dir, 'plugins\\viathinksoft\\');
-				$oid_is_viathinksoft = str_starts_with($plugin_oid, '1.3.6.1.4.1.37476.2.5.2.4.'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) oidplus(5) v2(2) plugins(4) }
-				$class_is_viathinksoft = str_starts_with($class_name, 'ViaThinkSoft\\');
-				if ($oid_is_viathinksoft != $class_is_viathinksoft) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('Third-party plugins must not use the ViaThinkSoft PHP namespace. Please use your own vendor namespace.'));
-				}
-				$plugin_is_viathinksoft = $oid_is_viathinksoft && $class_is_viathinksoft;
-				if ($dir_is_viathinksoft != $plugin_is_viathinksoft) {
-					throw new OIDplusException(_L('Plugin "%1" is misplaced',$plugintype_folder.'/'.$pluginname_folder).': '._L('The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins','plugins/viathinksoft/'));
-				}
-
-				// Additional check: does the plugin define JS/CSS although it is not an interactive plugin type?
-				$has_js = $manifest->getJSFiles();
-				$has_css = $manifest->getCSSFiles();
-				$is_interactive = in_array(basename($plugintype_folder), OIDplus::INTERACTIVE_PLUGIN_TYPES);
-				$is_design = basename($plugintype_folder) === 'design';
-				if (!$is_interactive && $has_js) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('%1 files are included in the manifest XML, but this plugin type does not allow such files.','JavaScript'));
-				}
-				if (!$is_interactive && !$is_design && $has_css) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('%1 files are included in the manifest XML, but this plugin type does not allow such files.','CSS'));
-				}
-
-				// Additional check: Check "Setup CSS" and "Setup JS" (Allowed for plugin types: database, captcha)
-				$has_js_setup = $manifest->getJSFilesSetup();
-				$has_css_setup = $manifest->getCSSFilesSetup();
-				$is_database = basename($plugintype_folder) === 'database';
-				$is_captcha = basename($plugintype_folder) === 'captcha';
-				if (!$is_database && !$is_captcha && $has_js_setup) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('%1 files are included in the manifest XML, but this plugin type does not allow such files.','Setup JavaScript'));
-				}
-				if (!$is_database && !$is_captcha && $has_css_setup) {
-					throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('%1 files are included in the manifest XML, but this plugin type does not allow such files.','Setup CSS'));
-				}
-
-				// Additional check: Are all CSS/JS files there?
-				$tmp = $manifest->getManifestLinkedFiles();
-				foreach ($tmp as $file) {
-					if (!file_exists($file)) {
-						throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('File %1 was defined in manifest, but it is not existing',$file));
+					if (!$class_name) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Manifest does not declare a PHP main class'));
 					}
-				}
-
-				// For the next check, we need an instance of the object
-				$obj = new $class_name();
-
-				// Additional check: Does the plugin misuse implementsFeature()?
-				// This is not enabled b default, because the GUID generation is slow on some machines.
-				// Also, it is very unlikely that someone misuses implementsFeature().
-				if (OIDplus::baseConfig()->getValue('DEBUG')) {
-					if ($obj->implementsFeature($fake_feature)) {
-						// see https://devblogs.microsoft.com/oldnewthing/20040211-00/?p=40663
-						throw new OIDplusException(_L('Plugin "%1" is erroneous',$plugintype_folder.'/'.$pluginname_folder).': '._L('implementsFeature() always returns true'));
+					if (!self::pluginCheckDisabled($class_name)) {
+						continue; // Plugin is disabled
 					}
-				}
 
-				// Now we can continue
-				$known_plugin_oids[$plugin_oid] = $plugintype_folder.'/'.$pluginname_folder;
-				$out[] = $class_name;
-				if (!is_null($registerCallback)) {
-					call_user_func($registerCallback, $obj);
+					// Do some basic checks on the plugin PHP main class
+					if (!class_exists($class_name)) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Manifest declares PHP main class as "%1", but it could not be found', $class_name));
+					}
+					if (!is_subclass_of($class_name, $expectedPluginClass)) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Plugin main class "%1" is expected to be a subclass of "%2"', $class_name, $expectedPluginClass));
+					}
+					if (($class_name != $manifest->getTypeClass()) && (!is_subclass_of($class_name, $manifest->getTypeClass()))) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Plugin main class "%1" is expected to be a subclass of "%2", according to type declared in manifest', $class_name, $manifest->getTypeClass()));
+					}
+					if (($manifest->getTypeClass() != $expectedPluginClass) && (!is_subclass_of($manifest->getTypeClass(), $expectedPluginClass))) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Class declared in manifest is "%1" does not fit expected class for this plugin type "%2"', $manifest->getTypeClass(), $expectedPluginClass));
+					}
 
-					// Alternative approaches:
-					//$registerCallback[0]::{$registerCallback[1]}($obj);
-					// or:
-					//forward_static_call($registerCallback, $obj);
+					// Do some basic checks on the plugin OID
+					$plugin_oid = $manifest->getOid();
+					if (!$plugin_oid) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Does not have an OID'));
+					}
+					if (!oid_valid_dotnotation($plugin_oid, false, false, 2)) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Plugin OID "%1" is invalid (needs to be valid dot-notation)', $plugin_oid));
+					}
+					if (isset($known_plugin_oids[$plugin_oid])) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('The OID "%1" is already used by the plugin "%2"', $plugin_oid, $known_plugin_oids[$plugin_oid]));
+					}
+
+					// Additional check: Are third-party plugins using ViaThinkSoft plugin folders, OIDs or class namespaces?
+					$full_plugin_dir = dirname($manifest->getManifestFile());
+					$full_plugin_dir = substr($full_plugin_dir, strlen(OIDplus::localpath()));
+					$dir_is_viathinksoft = str_starts_with($full_plugin_dir, 'plugins/viathinksoft/') || str_starts_with($full_plugin_dir, 'plugins\\viathinksoft\\');
+					$oid_is_viathinksoft = str_starts_with($plugin_oid, '1.3.6.1.4.1.37476.2.5.2.4.'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) oidplus(5) v2(2) plugins(4) }
+					$class_is_viathinksoft = str_starts_with($class_name, 'ViaThinkSoft\\');
+					if ($oid_is_viathinksoft != $class_is_viathinksoft) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Third-party plugins must not use the ViaThinkSoft PHP namespace. Please use your own vendor namespace.'));
+					}
+					$plugin_is_viathinksoft = $oid_is_viathinksoft && $class_is_viathinksoft;
+					if ($dir_is_viathinksoft != $plugin_is_viathinksoft) {
+						throw new OIDplusException(_L('Plugin "%1" is misplaced', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins', 'plugins/viathinksoft/'));
+					}
+
+					// Additional check: does the plugin define JS/CSS although it is not an interactive plugin type?
+					$has_js = $manifest->getJSFiles();
+					$has_css = $manifest->getCSSFiles();
+					$is_interactive = in_array(basename($plugintype_folder), OIDplus::INTERACTIVE_PLUGIN_TYPES);
+					$is_design = basename($plugintype_folder) === 'design';
+					if (!$is_interactive && $has_js) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('%1 files are included in the manifest XML, but this plugin type does not allow such files.', 'JavaScript'));
+					}
+					if (!$is_interactive && !$is_design && $has_css) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('%1 files are included in the manifest XML, but this plugin type does not allow such files.', 'CSS'));
+					}
+
+					// Additional check: Check "Setup CSS" and "Setup JS" (Allowed for plugin types: database, captcha)
+					$has_js_setup = $manifest->getJSFilesSetup();
+					$has_css_setup = $manifest->getCSSFilesSetup();
+					$is_database = basename($plugintype_folder) === 'database';
+					$is_captcha = basename($plugintype_folder) === 'captcha';
+					if (!$is_database && !$is_captcha && $has_js_setup) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('%1 files are included in the manifest XML, but this plugin type does not allow such files.', 'Setup JavaScript'));
+					}
+					if (!$is_database && !$is_captcha && $has_css_setup) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('%1 files are included in the manifest XML, but this plugin type does not allow such files.', 'Setup CSS'));
+					}
+
+					// Additional check: Are all CSS/JS files there?
+					$tmp = $manifest->getManifestLinkedFiles();
+					foreach ($tmp as $file) {
+						if (!file_exists($file)) {
+							throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('File %1 was defined in manifest, but it is not existing', $file));
+						}
+					}
+
+					// For the next check, we need an instance of the object
+					$obj = new $class_name();
+
+					// Additional check: Does the plugin misuse implementsFeature()?
+					// This is not enabled b default, because the GUID generation is slow on some machines.
+					// Also, it is very unlikely that someone misuses implementsFeature().
+					if (OIDplus::baseConfig()->getValue('DEBUG')) {
+						if ($obj->implementsFeature($fake_feature)) {
+							// see https://devblogs.microsoft.com/oldnewthing/20040211-00/?p=40663
+							throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('implementsFeature() always returns true'));
+						}
+					}
+
+					// Now we can continue
+					$known_plugin_oids[$plugin_oid] = $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder;
+					$out[] = $class_name;
+					if (!is_null($registerCallback)) {
+						call_user_func($registerCallback, $obj);
+
+						// Alternative approaches:
+						//$registerCallback[0]::{$registerCallback[1]}($obj);
+						// or:
+						//forward_static_call($registerCallback, $obj);
+					}
 				}
 			}
-
 		}
 		return $out;
 	}
@@ -1284,7 +1287,7 @@ class OIDplus extends OIDplusBaseClass {
 		// Continue...
 
 		OIDplus::baseConfig(); // this loads the base configuration located in userdata/baseconfig/config.inc.php (once!)
-		                       // You can do changes to the configuration afterwards using OIDplus::baseConfig()->...
+		// You can do changes to the configuration afterwards using OIDplus::baseConfig()->...
 
 		// Register database types (highest priority)
 
@@ -1491,7 +1494,7 @@ class OIDplus extends OIDplusBaseClass {
 				// to manipulate/extend the contents.
 				if (is_array($val)) {
 					if ((strtolower($name) == 'cache-control') ||
-					    (strtolower($name) == 'referrer-policy'))
+						(strtolower($name) == 'referrer-policy'))
 					{
 						if (count($val) == 0) continue;
 						$val = implode(', ', $val);
@@ -1871,7 +1874,7 @@ class OIDplus extends OIDplusBaseClass {
 		}
 		$version_file_exists = $old_version_file_exists | $new_version_file_exists;
 		if ($svn_dir_exists = (is_dir(OIDplus::localpath().'.svn') ||
-		                       is_dir(OIDplus::localpath().'../.svn'))) { // in case we checked out the root instead of the "trunk"
+			is_dir(OIDplus::localpath().'../.svn'))) { // in case we checked out the root instead of the "trunk"
 			$counter++;
 		}
 		// if ($git_dir_exists = is_dir(OIDplus::localpath().'.git')) {
