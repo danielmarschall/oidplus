@@ -473,7 +473,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			$icon = $dir . '/' . $this::treeIconFilename('root'); // see also OIDplusPagePublicObjects::get_treeicon_root()
 		} else {
 			// We use $this:: instead of self:: , because we want to call the overridden methods
-			if (OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
+			if ($ra_email && OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
 				if ($this->isLeafNode()) {
 					$icon = $dir . '/' . $this::treeIconFilename('own_leaf');
 					if (!file_exists($icon)) $icon = $dir . '/' . $this::treeIconFilename('own');
