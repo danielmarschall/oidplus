@@ -57,11 +57,11 @@ class JwsRsa extends Jws implements Asymmetric
 	public function __destruct()
 	{
 		if ($this->privateKey) {
-			openssl_pkey_free($this->privateKey);
+			if (version_compare(PHP_VERSION, '8.0.0') < 0) openssl_pkey_free($this->privateKey);
 		}
 
 		if ($this->publicKey) {
-			openssl_pkey_free($this->publicKey);
+			if (version_compare(PHP_VERSION, '8.0.0') < 0) openssl_pkey_free($this->publicKey);
 		}
 
 		unset(
@@ -78,7 +78,7 @@ class JwsRsa extends Jws implements Asymmetric
 	 */
 	public function setPrivateKey($key, $pass = "") {
 		if ($this->privateKey) {
-			openssl_pkey_free($this->privateKey);
+			if (version_compare(PHP_VERSION, '8.0.0') < 0) openssl_pkey_free($this->privateKey);
 		}
 
 		$this->privateKey = openssl_pkey_get_private($key, $pass);
@@ -94,7 +94,7 @@ class JwsRsa extends Jws implements Asymmetric
 	 */
 	public function setPublicKey($key) {
 		if ($this->publicKey) {
-			openssl_pkey_free($this->publicKey);
+			if (version_compare(PHP_VERSION, '8.0.0') < 0) openssl_pkey_free($this->publicKey);
 		}
 
 		$this->publicKey = openssl_pkey_get_public($key);
