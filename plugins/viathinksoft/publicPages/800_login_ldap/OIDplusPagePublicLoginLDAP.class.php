@@ -26,12 +26,12 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
 	/**
-	 * @param $ra
-	 * @param $ldap_userinfo
+	 * @param OIDplusRA $ra
+	 * @param array $ldap_userinfo
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	private function registerRA($ra, $ldap_userinfo) {
+	private function registerRA(OIDplusRA $ra, array $ldap_userinfo) {
 		$email = $ra->raEmail();
 
 		$ra->register_ra(null); // create a user account without password
@@ -80,13 +80,13 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $remember_me
-	 * @param $email
-	 * @param $ldap_userinfo
+	 * @param bool $remember_me
+	 * @param string $email
+	 * @param array $ldap_userinfo
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	private function doLoginRA($remember_me, $email, $ldap_userinfo) {
+	private function doLoginRA(bool $remember_me, string $email, array $ldap_userinfo) {
 		$ra = new OIDplusRA($email);
 		if (!$ra->existing()) {
 			$this->registerRA($ra, $ldap_userinfo);
@@ -99,11 +99,11 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $upn
+	 * @param string $upn
 	 * @return int
 	 * @throws OIDplusException
 	 */
-	private function getDomainNumber($upn) {
+	private function getDomainNumber(string $upn): int {
 		$numDomains = OIDplus::baseConfig()->getValue('LDAP_NUM_DOMAINS', 1);
 		for ($i=1; $i<=$numDomains; $i++) {
 			$cfgSuffix = $i == 1 ? '' : "__$i";
@@ -372,7 +372,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function alternativeLoginMethods() {
+	public function alternativeLoginMethods(): array {
 		$logins = array();
 		if (OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {
 			$logins[] = array(
@@ -386,11 +386,11 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic {
 
 	/**
 	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
-	 * @param $user
+	 * @param string|null $user
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications($user=null): array {
+	public function getNotifications(string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {

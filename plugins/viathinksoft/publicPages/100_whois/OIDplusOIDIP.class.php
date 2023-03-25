@@ -25,9 +25,24 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusOIDIP {
 
+	/**
+	 * @var string
+	 */
 	protected $XML_SCHEMA_URN;
+
+	/**
+	 * @var string
+	 */
 	protected $XML_SCHEMA_URL;
+
+	/**
+	 * @var string
+	 */
 	protected $JSON_SCHEMA_URN;
+
+	/**
+	 * @var string
+	 */
 	protected $JSON_SCHEMA_URL;
 
 	/**
@@ -44,11 +59,11 @@ class OIDplusOIDIP {
 	}
 
 	/**
-	 * @param $query
-	 * @return array|void
+	 * @param string $query
+	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function oidipQuery($query) {
+	public function oidipQuery(string $query): array {
 
 		$out_type = null;
 		$out_content = '';
@@ -72,11 +87,7 @@ class OIDplusOIDIP {
 
 		$query = str_replace('oid:.', 'oid:', $query); // allow leading dot
 
-		if (isset($arguments['format'])) {
-			$format = $arguments['format'];
-		} else {
-			$format = 'text'; // default
-		}
+		$format = $arguments['format'] ?? 'text';
 
 		if (isset($arguments['auth'])) {
 			$authTokens = explode(',', $arguments['auth']);
@@ -638,11 +649,11 @@ class OIDplusOIDIP {
 	}
 
 	/**
-	 * @param $id
+	 * @param string $id
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	protected function show_asn1_appendix($id) {
+	protected function show_asn1_appendix(string $id): string {
 		if (substr($id,0,4) === 'oid:') {
 			$appendix_asn1ids = array();
 			$res_asn = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($id));
@@ -659,32 +670,30 @@ class OIDplusOIDIP {
 	}
 
 	/**
-	 * @param $id
+	 * @param string $id
 	 * @return bool
 	 */
-	protected function is_root($id) {
+	protected function is_root(string $id): bool {
 		return empty(explode(':',$id,2)[1]);
 	}
 
 	/**
-	 * @param $content
-	 * @param $authTokens
-	 * @return bool
-	 */
-	protected function authTokenAccepted($content, $authTokens) {
-		foreach ($authTokens as $token) {
-			if (OIDplusPagePublicWhois::genWhoisAuthToken($content) == $token) return true;
-		}
-		return false;
-	}
-
-	/**
-	 * @param $obj
-	 * @param $authTokens
+	 * @param string $id
+	 * @param array $authTokens
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	protected function allowObjectView($obj, $authTokens) {
+	protected function authTokenAccepted(string $id, array $authTokens): bool {
+		return in_array(OIDplusPagePublicWhois::genWhoisAuthToken($id), $authTokens);
+	}
+
+	/**
+	 * @param OIDplusObject $obj
+	 * @param array $authTokens
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	protected function allowObjectView(OIDplusObject $obj, array $authTokens): bool {
 		// Master auth token (TODO: Have an object-master-token and a ra-master-token?)
 		$authToken = trim(OIDplus::config()->getValue('whois_auth_token'));
 		if (empty($authToken)) $authToken = false;
@@ -710,12 +719,12 @@ class OIDplusOIDIP {
 	}
 
 	/**
-	 * @param $row_ra
-	 * @param $authTokens
+	 * @param \stdClass $row_ra
+	 * @param array $authTokens
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	protected function allowRAView($row_ra, $authTokens) {
+	protected function allowRAView(\stdClass $row_ra, array $authTokens): bool {
 		// Master auth token (TODO: Have an object-master-token and a ra-master-token?)
 		$authToken = trim(OIDplus::config()->getValue('whois_auth_token'));
 		if (empty($authToken)) $authToken = false;
@@ -729,11 +738,11 @@ class OIDplusOIDIP {
 	}
 
 	/**
-	 * @param $name
-	 * @param $value
+	 * @param string $name
+	 * @param mixed $value
 	 * @return array
 	 */
-	protected function _oidip_attr($name, $value) {
+	protected function _oidip_attr(string $name, $value): array {
 		return array(
 			'xmlns' => '',
 			'xmlschema' => '',
@@ -744,10 +753,10 @@ class OIDplusOIDIP {
 	}
 
 	/**
-	 * @param $out
+	 * @param array $out
 	 * @return void
 	 */
-	protected function _oidip_newout_format(&$out) {
+	protected function _oidip_newout_format(array &$out) {
 		foreach ($out as &$line) {
 			if (is_string($line)) {
 				$ary = explode(':', $line, 2);

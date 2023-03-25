@@ -25,7 +25,7 @@ use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
  * @return int new version set
  * @throws \ViaThinkSoft\OIDplus\OIDplusException
  */
-function oidplus_dbupdate_203(OIDplusDatabaseConnection $db) {
+function oidplus_dbupdate_203(OIDplusDatabaseConnection $db): int {
 	if ($db->transaction_supported()) $db->transaction_begin();
 
 	if ($db->getSlang()->id() == 'mssql') {

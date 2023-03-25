@@ -158,7 +158,11 @@ if (count($langs) > 0) {
 
 # ---
 
-function get_js_L_strings($cont) {
+/**
+ * @param string $cont
+ * @return string[]
+ */
+function get_js_L_strings(string $cont): array {
 	// Works with JavaScript and PHP
 	$cont = preg_replace('@/\\*.+\\*/@ismU', '', $cont);
 	$cont = str_replace('\\"', chr(1), $cont);
@@ -173,7 +177,11 @@ function get_js_L_strings($cont) {
 	return $m[3];
 }
 
-function get_php_L_strings($cont) {
+/**
+ * @param string $cont
+ * @return string[]
+ */
+function get_php_L_strings(string $cont): array {
 	// Works only with PHP
 	$out = array();
 	$tokens = token_get_all($cont);
@@ -192,7 +200,11 @@ function get_php_L_strings($cont) {
 	return $out;
 }
 
-function test_missing_placeholder($test) {
+/**
+ * @param string $test
+ * @return void
+ */
+function test_missing_placeholder(string $test) {
 	$max = -1;
 	for ($i=99; $i>=1; $i--) {
 		if (strpos($test, '%'.$i) !== false) {
@@ -217,7 +229,11 @@ function test_missing_placeholder($test) {
 
 # ---
 
-function phpRemoveComments($fileStr) {
+/**
+ * @param string $fileStr
+ * @return string
+ */
+function phpRemoveComments(string $fileStr): string {
 
 	// https://stackoverflow.com/questions/503871/best-way-to-automatically-remove-comments-from-php-code
 

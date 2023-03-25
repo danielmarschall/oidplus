@@ -95,7 +95,7 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 
 		if ($id == 'oidplus:create_ra') {
 			$handled = true;
-			$email = isset($parts[1]) ? $parts[1] : '';
+			$email = $parts[1] ?? '';
 			$out['title'] = _L('Manual creation of a RA');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 

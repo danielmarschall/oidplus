@@ -24,10 +24,13 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusGs1 extends OIDplusObject {
+	/**
+	 * @var int|string
+	 */
 	private $number;
 
 	/**
-	 * @param $number
+	 * @param string|int $number
 	 */
 	public function __construct($number) {
 		// TODO: syntax checks
@@ -104,6 +107,7 @@ class OIDplusGs1 extends OIDplusObject {
 	/**
 	 * @param OIDplusObject $parent
 	 * @return string
+	 * @throws OIDplusException
 	 */
 	public function crudShowId(OIDplusObject $parent): string {
 		return $this->chunkedNotation(false);
@@ -111,6 +115,7 @@ class OIDplusGs1 extends OIDplusObject {
 
 	/**
 	 * @return string
+	 * @throws OIDplusException
 	 */
 	public function crudInsertPrefix(): string {
 		return $this->isRoot() ? '' : $this->chunkedNotation(false);
@@ -255,7 +260,8 @@ class OIDplusGs1 extends OIDplusObject {
 		$mul = 3;
 		$sum = 0;
 		for ($i=strlen($this->number)-1; $i>=0; $i--) {
-			$sum += $this->number[$i] * $mul;
+			$str = "".$this->number;
+			$sum += (int)$str[$i] * $mul;
 			$mul = $mul == 3 ? 1 : 3;
 		}
 		return 10 - ($sum % 10);
@@ -284,7 +290,7 @@ class OIDplusGs1 extends OIDplusObject {
 	}
 
 	/**
-	 * @param $to
+	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
 	public function distance($to) {

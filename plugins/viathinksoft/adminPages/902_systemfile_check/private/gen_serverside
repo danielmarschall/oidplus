@@ -39,7 +39,14 @@ if (!is_dir($output_dir)) {
 	exit(1);
 }
 
-function getDirContents($dir, $basepath = null, &$results = array()) {
+/**
+ * @param string $dir
+ * @param string|null $basepath
+ * @param array $results
+ * @return array
+ * @throws Exception
+ */
+function getDirContents(string $dir, string $basepath = null, array &$results = array()): array {
 	if (is_null($basepath)) $basepath = $dir;
 	$basepath = realpath($basepath) . DIRECTORY_SEPARATOR;
 	$dir = realpath($dir) . DIRECTORY_SEPARATOR;

@@ -24,6 +24,10 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 abstract class OIDplusObject extends OIDplusBaseClass {
+
+	/**
+	 *
+	 */
 	const UUID_NAMEBASED_NS_OidPlusMisc = 'ad1654e6-7e15-11e4-9ef6-78e3b5fc7f22';
 
 	/**
@@ -469,6 +473,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		$reflection = new \ReflectionClass($this);
 		$dir = dirname($reflection->getFilename());
 		$dir = substr($dir, strlen(OIDplus::localpath()));
+		$dir = str_replace('\\', '/', $dir);
 
 		if ($this->isRoot()) {
 			$icon = $dir . '/' . $this::treeIconFilename('root');
@@ -668,7 +673,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function userHasParentalWriteRights($ra=null) {
+	public function userHasParentalWriteRights($ra=null): bool {
 		if ($ra instanceof OIDplusRA) $ra = $ra->raEmail();
 
 		if (!$ra) {
@@ -705,10 +710,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param OIDplusObject $obj
+	 * @param OIDplusObject|string $obj
 	 * @return bool
 	 */
-	public function equals(OIDplusObject $obj): bool {
+	public function equals($obj): bool {
 		if (!$obj) return false;
 		if (!is_object($obj)) $obj = OIDplusObject::parse($obj);
 		if (!$obj) return false;

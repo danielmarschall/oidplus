@@ -61,7 +61,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public function getAuthMethod() {
+	public function getAuthMethod(): string {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return 'null';
 		return get_class($acs);
@@ -442,14 +442,14 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	public function checkCSRF() {
 		if (!$this->enable_csrf) return;
 
-		$request_token = isset($_REQUEST['csrf_token']) ? $_REQUEST['csrf_token'] : '';
-		$cookie_token = isset($_COOKIE['csrf_token']) ? $_COOKIE['csrf_token'] : '';
+		$request_token = $_REQUEST['csrf_token'] ?? '';
+		$cookie_token = $_COOKIE['csrf_token'] ?? '';
 
 		if (empty($request_token) || empty($cookie_token) || ($request_token !== $cookie_token)) {
 			if (OIDplus::baseConfig()->getValue('DEBUG')) {
 				throw new OIDplusException(_L('Missing or wrong CSRF Token: Request %1 vs Cookie %2',
 					isset($_REQUEST['csrf_token']) ? '"'.$_REQUEST['csrf_token'].'"' : 'NULL',
-					isset($_COOKIE['csrf_token']) ? $_COOKIE['csrf_token'] : 'NULL'
+					$_COOKIE['csrf_token'] ?? 'NULL'
 				));
 			} else {
 				throw new OIDplusException(_L('Missing or wrong "CSRF Token". To fix the issue, try clearing your browser cache and reload the page. If you visited the page via HTTPS before, try HTTPS in case you are currently connected via HTTP.'));

@@ -32,9 +32,24 @@ use ViaThinkSoft\OIDplus\OIDplusPagePublicObjects;
 
 class OIDplusRDAP {
 
+	/**
+	 * @var string
+	 */
 	protected $rdapBaseUri;
+
+	/**
+	 * @var bool
+	 */
 	protected $useCache;
+
+	/**
+	 * @var string
+	 */
 	protected $rdapCacheDir;
+
+	/**
+	 * @var int
+	 */
 	protected $rdapCacheExpires;
 
 	/**
@@ -52,7 +67,7 @@ class OIDplusRDAP {
 	 * @return array
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
 	 */
-	public function rdapQuery(string $query) {
+	public function rdapQuery(string $query): array {
 		$query = str_replace('oid:.', 'oid:', $query);
 		$n = explode(':', $query);
 		if(2>count($n)){
@@ -244,22 +259,21 @@ class OIDplusRDAP {
 	}
 
 	/**
-	 * @param $out
-	 * @param $cacheFile
+	 * @param array $out
+	 * @param string $cacheFile
 	 * @return void
 	 */
-	protected function rdap_write_cache($out, $cacheFile){
-		if (!is_string($cacheFile)) return;
+	protected function rdap_write_cache(array $out, string $cacheFile){
 		@file_put_contents($cacheFile, serialize($out));
 	}
 
 	/**
-	 * @param $cacheFile
-	 * @param $rdapCacheExpires
+	 * @param string $cacheFile
+	 * @param int $rdapCacheExpires
 	 * @return array|null
 	 */
-	protected function rdap_read_cache($cacheFile, $rdapCacheExpires){
-		if (is_string($cacheFile) && file_exists($cacheFile) && filemtime($cacheFile) >= time() - $rdapCacheExpires) {
+	protected function rdap_read_cache(string $cacheFile, int $rdapCacheExpires){
+		if (file_exists($cacheFile) && filemtime($cacheFile) >= time() - $rdapCacheExpires) {
 			$out = unserialize(file_get_contents($cacheFile));
 			if(is_array($out) || is_object($out)){
 				return $this->rdap_out($out);
@@ -269,10 +283,10 @@ class OIDplusRDAP {
 	}
 
 	/**
-	 * @param $out
+	 * @param array $out
 	 * @return array
 	 */
-	protected function rdap_out($out){
+	protected function rdap_out(array $out): array {
 		$out_content = json_encode($out);
 		$out_type = 'application/rdap+json';
 		return array($out_content, $out_type);

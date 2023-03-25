@@ -24,12 +24,15 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusPhp extends OIDplusObject {
+	/**
+	 * @var string
+	 */
 	private $php;
 
 	/**
-	 * @param $php
+	 * @param string $php
 	 */
-	public function __construct($php) {
+	public function __construct(string $php) {
 		// TODO: syntax checks
 		$this->php = $php;
 	}
@@ -212,7 +215,7 @@ class OIDplusPhp extends OIDplusObject {
 	}
 
 	/**
-	 * @param $to
+	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
 	public function distance($to) {
@@ -240,6 +243,7 @@ class OIDplusPhp extends OIDplusObject {
 
 	/**
 	 * @return string
+	 * @throws OIDplusException
 	 */
 	public function getDirectoryName(): string {
 		if ($this->isRoot()) return $this->ns();

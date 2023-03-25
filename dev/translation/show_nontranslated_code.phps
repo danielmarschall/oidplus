@@ -125,13 +125,8 @@ foreach(new RecursiveIteratorIterator($it) as $file) {
 			}
 
 			$x = str_replace('(', chr(4), $x);
-			$x = str_replace(')', chr(5), $x);
 
-			/*
-			if (strpos($x,"\n") !== false) echo 'DEBUG: <pre>'.htmlentities($x)."</pre>\n\n\n\n\n";
-			*/
-
-			return $x;
+			return str_replace(')', chr(5), $x);
 		}, $cont);
 
 		$cont = preg_replace('@_L\\((\'|")(.*)\\1@smU', '_L(...', $cont);
@@ -208,7 +203,11 @@ if (file_exists($fastphp)) {
 
 # ---
 
-function phpRemoveComments($fileStr) {
+/**
+ * @param string $fileStr
+ * @return string
+ */
+function phpRemoveComments(string $fileStr): string {
 
 	// https://stackoverflow.com/questions/503871/best-way-to-automatically-remove-comments-from-php-code
 

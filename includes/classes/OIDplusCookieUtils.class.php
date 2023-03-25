@@ -85,10 +85,10 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function setcookie(string $name, string $value, int $expires=0, bool $allowJS=false, /*?string*/ $samesite=null, bool $forceInsecure=false) {
+	public function setcookie(string $name, string $value, int $expires=0, bool $allowJS=false, string $samesite=null, bool $forceInsecure=false) {
 		$domain = $this->getCookieDomain();
 		$path = $this->getCookiePath();
-		$secure = $forceInsecure ? false : OIDplus::isSSL();
+		$secure = !$forceInsecure && OIDplus::isSSL();
 		$httponly = !$allowJS;
 		if (is_null($samesite)) {
 			$samesite = OIDplus::baseConfig()->getValue('COOKIE_SAMESITE_POLICY', 'Strict');

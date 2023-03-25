@@ -41,7 +41,12 @@ foreach ($out as $oid) {
 	check_oid($oid);
 }
 
-function check_oid($oid, $root=DESIRED_ROOT) {
+/**
+ * @param string $oid
+ * @param string $root
+ * @return void
+ */
+function check_oid(string $oid, string $root=DESIRED_ROOT) {
 	$data = ft_get_oid_data($oid);
 
 	// ASN.1 IDs
@@ -91,7 +96,11 @@ echo "OK\n";
 
 # ---
 
-function ft_get_oid_data($oid) {
+/**
+ * @param string $oid
+ * @return false|array
+ */
+function ft_get_oid_data(string $oid) {
 	$url = OIDplus::baseConfig()->getValue('OIDINFO_API_URL') . '&oid='.urlencode($oid);
 	$cont_json = @file_get_contents($url);
 	if (!$cont_json) {
@@ -99,7 +108,5 @@ function ft_get_oid_data($oid) {
                 $cont_json = @file_get_contents($url);
                 if (!$cont_json) return false;
 	}
-	$data = json_decode($cont_json,true);
-
-	return $data;
+	return json_decode($cont_json,true);
 }

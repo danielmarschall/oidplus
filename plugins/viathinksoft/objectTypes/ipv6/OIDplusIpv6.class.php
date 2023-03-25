@@ -24,22 +24,34 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusIpv6 extends OIDplusObject {
+	/**
+	 * @var string
+	 */
 	private $ipv6;
+
+	/**
+	 * @var string
+	 */
 	private $bare;
+
+	/**
+	 * @var int
+	 */
 	private $cidr;
 
 	/**
-	 * @param $ipv6
+	 * @param string $ipv6
 	 * @throws OIDplusException
 	 */
-	public function __construct($ipv6) {
+	public function __construct(string $ipv6) {
 		$this->ipv6 = $ipv6;
 
 		if (!empty($ipv6)) {
 			if (strpos($ipv6, '/') === false) $ipv6 .= '/128';
 			list($bare, $cidr) = explode('/', $ipv6);
 			$this->bare = $bare;
-			$this->cidr = $cidr;
+			if (is_numeric($cidr)) throw new OIDplusException(_L('Invalid IPv4'));
+			$this->cidr = (int)$cidr;
 			if (!ipv6_valid($bare)) throw new OIDplusException(_L('Invalid IPv6'));
 			if (!is_numeric($cidr)) throw new OIDplusException(_L('Invalid IPv6'));
 			if ($cidr < 0) throw new OIDplusException(_L('Invalid IPv6'));
@@ -52,6 +64,7 @@ class OIDplusIpv6 extends OIDplusObject {
 	/**
 	 * @param string $node_id
 	 * @return OIDplusIpv6|null
+	 * @throws OIDplusException
 	 */
 	public static function parse(string $node_id)/*: ?OIDplusIpv6*/ {
 		@list($namespace, $ipv6) = explode(':', $node_id, 2);
@@ -242,7 +255,7 @@ class OIDplusIpv6 extends OIDplusObject {
 	}
 
 	/**
-	 * @param $to
+	 * @param OIDplusObject|string $to
 	 * @return float|int|mixed|string|null
 	 */
 	public function distance($to) {

@@ -24,9 +24,24 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
+	/**
+	 * @var bool
+	 */
 	protected /*bool*/ $connected = false;
+
+	/**
+	 * @var bool|null
+	 */
 	protected /*?bool*/ $html = null;
+
+	/**
+	 * @var string|null
+	 */
 	protected /*?string*/ $last_query = null;
+
+	/**
+	 * @var bool
+	 */
 	protected /*bool*/ $slangDetectionDone = false;
 
 	/**
@@ -81,14 +96,13 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @return OIDplusDatabasePlugin|null
 	 */
 	public function getPlugin()/*: ?OIDplusDatabasePlugin*/ {
-		$res = null;
 		$plugins = OIDplus::getDatabasePlugins();
 		foreach ($plugins as $plugin) {
 			if (get_class($this) == get_class($plugin::newConnection())) {
 				return $plugin;
 			}
 		}
-		return $res;
+		return null;
 	}
 
 	/**
@@ -134,7 +148,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @return OIDplusQueryResult
 	 * @throws OIDplusException
 	 */
-	public final function query(string $sql, /*?array*/ $prepared_args=null): OIDplusQueryResult {
+	public final function query(string $sql, array $prepared_args=null): OIDplusQueryResult {
 
 		$query_logfile = OIDplus::baseConfig()->getValue('QUERY_LOGFILE', '');
 		if (!empty($query_logfile)) {

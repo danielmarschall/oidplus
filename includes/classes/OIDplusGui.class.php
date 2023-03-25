@@ -85,7 +85,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public static function getLanguageBox(string $goto, bool $useJs) {
+	public static function getLanguageBox(string $goto, bool $useJs): string {
 		$out = '<div id="languageBox">';
 		$langbox_entries = array();
 		$non_default_languages = 0;
@@ -149,7 +149,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @param \Throwable $exception
 	 * @return string
 	 */
-	private static function getExceptionTechInfo(\Throwable $exception) {
+	private static function getExceptionTechInfo(\Throwable $exception): string {
 		$out  = '<p><b>'.htmlentities(_L('Technical information about the problem')).':</b></p>';
 		$out .= '<pre>';
 		$out .= get_class($exception)."\n";
@@ -163,14 +163,14 @@ class OIDplusGui extends OIDplusBaseClass {
 	/**
 	 * @return string
 	 */
-	public function tabBarStart() {
+	public function tabBarStart(): string {
 		return '<ul class="nav nav-tabs" id="myTab" role="tablist">';
 	}
 
 	/**
 	 * @return string
 	 */
-	public function tabBarEnd() {
+	public function tabBarEnd(): string {
 		return '</ul>';
 	}
 
@@ -180,7 +180,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @param bool $active
 	 * @return string
 	 */
-	public function tabBarElement(string $id, string $title, bool $active) {
+	public function tabBarElement(string $id, string $title, bool $active): string {
 		// data-bs-toggle is for Bootstrap 5
 		// data-toggle is for Bootstrap 4 (InternetExplorer compatibility)
 		return '<li class="nav-item"><a class="nav-link'.($active ? ' active' : '').'" id="'.$id.'-tab" data-bs-toggle="tab" data-toggle="tab" href="#'.$id.'" role="tab" aria-controls="'.$id.'" aria-selected="'.($active ? 'true' : 'false').'">'.$title.'</a></li>';
@@ -189,14 +189,14 @@ class OIDplusGui extends OIDplusBaseClass {
 	/**
 	 * @return string
 	 */
-	public function tabContentStart() {
+	public function tabContentStart(): string {
 		return '<div class="tab-content" id="myTabContent">';
 	}
 
 	/**
 	 * @return string
 	 */
-	public function tabContentEnd() {
+	public function tabContentEnd(): string {
 		return '</div>';
 	}
 
@@ -206,7 +206,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @param bool $active
 	 * @return string
 	 */
-	public function tabContentPage(string $id, string $content, bool $active) {
+	public function tabContentPage(string $id, string $content, bool $active): string {
 		return '<div class="tab-pane fade'.($active ? ' show active' : '').'" id="'.$id.'" role="tabpanel" aria-labelledby="'.$id.'-tab">'.$content.'</div>';
 	}
 
@@ -215,7 +215,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @param string $pagetitle
 	 * @return string
 	 */
-	public function combine_systemtitle_and_pagetitle(string $systemtitle, string $pagetitle) {
+	public function combine_systemtitle_and_pagetitle(string $systemtitle, string $pagetitle): string {
 		// Please also change the function in oidplus_base.js
 		if ($systemtitle == $pagetitle) {
 			return $systemtitle;
@@ -266,7 +266,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function showMainPage(string $page_title_1, string $page_title_2, string $static_icon, string $static_content, array $extra_head_tags=array(), string $static_node_id='') {
+	public function showMainPage(string $page_title_1, string $page_title_2, string $static_icon, string $static_content, array $extra_head_tags=array(), string $static_node_id=''): string {
 		$head_elems = $this->getCommonHeadElems($page_title_1);
 		$head_elems = array_merge($head_elems, $extra_head_tags);
 
@@ -360,7 +360,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function showSimplePage(string $page_title_1, string $page_title_2, string $static_icon, string $static_content, array $extra_head_tags=array()) {
+	public function showSimplePage(string $page_title_1, string $page_title_2, string $static_icon, string $static_content, array $extra_head_tags=array()): string {
 		$head_elems = $this->getCommonHeadElems($page_title_1);
 		$head_elems = array_merge($head_elems, $extra_head_tags);
 

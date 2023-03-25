@@ -24,6 +24,10 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusRA extends OIDplusBaseClass {
+
+	/**
+	 * @var string
+	 */
 	private $email = null;
 
 	/**
@@ -98,7 +102,7 @@ class OIDplusRA extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function register_ra(/*?string*/ $new_password) {
+	public function register_ra(string $new_password=null) {
 		if (is_null($new_password)) {
 			// Invalid password (used for LDAP/OAuth)
 			$calc_authkey = '';

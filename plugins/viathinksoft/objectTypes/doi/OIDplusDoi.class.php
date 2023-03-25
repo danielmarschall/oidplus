@@ -24,12 +24,15 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusDoi extends OIDplusObject {
+	/**
+	 * @var string
+	 */
 	private $doi;
 
 	/**
-	 * @param $doi
+	 * @param string $doi
 	 */
-	public function __construct($doi) {
+	public function __construct(string $doi) {
 		// TODO: syntax checks
 		$this->doi = $doi;
 	}
@@ -225,7 +228,7 @@ class OIDplusDoi extends OIDplusObject {
 	}
 
 	/**
-	 * @param $to
+	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
 	public function distance($to) {

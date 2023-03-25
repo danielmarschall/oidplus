@@ -120,8 +120,7 @@ class OIDplusSqlSlangPluginOracle extends OIDplusSqlSlangPlugin {
 	public function setupSetTablePrefix(string $cont, string $table, string $prefix): string {
 		$table = strtoupper($table);
 		$prefix = strtoupper($prefix);
-		$cont = str_replace('"'.$table.'"', '"'.$prefix.$table.'"', $cont);
-		return $cont;
+		return str_replace('"'.$table.'"', '"'.$prefix.$table.'"', $cont);
 	}
 
 	/**

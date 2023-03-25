@@ -25,9 +25,21 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusAltId extends OIDplusBaseClass {
 
+	/**
+	 * @var string
+	 */
 	private $ns;
+	/**
+	 * @var string
+	 */
 	private $id;
+	/**
+	 * @var string
+	 */
 	private $desc;
+	/**
+	 * @var string
+	 */
 	private $suffix;
 
 	/**

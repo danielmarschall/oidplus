@@ -41,7 +41,11 @@ foreach ($out as $oid) {
 	check_oid($oid);
 }
 
-function check_oid($oid) {
+/**
+ * @param string $oid
+ * @return void
+ */
+function check_oid(string $oid) {
 
 	$res = OIDplus::db()->query("select * from ###objects where id = ?", array("oid:$oid"));
 	$ok = $res->num_rows() > 0;
@@ -56,7 +60,12 @@ echo "OK\n";
 
 # ---
 
-function add_oid($oid, $root=DESIRED_ROOT) {
+/**
+ * @param string $oid
+ * @param string $root
+ * @return void
+ */
+function add_oid(string $oid, string $root=DESIRED_ROOT) {
 	if (VERBOSE) echo "Adding $oid ...\n";
 	$data = ft_get_oid_data($oid);
 
@@ -108,7 +117,11 @@ function add_oid($oid, $root=DESIRED_ROOT) {
 		array("oid:$oid", "oid:$parent", $title, $description, $ra_email, $created, $updated));
 }
 
-function ft_get_oid_data($oid) {
+/**
+ * @param string $oid
+ * @return false|array
+ */
+function ft_get_oid_data(string $oid) {
 	$url = OIDplus::baseConfig()->getValue('OIDINFO_API_URL') . '&oid='.urlencode($oid);
 	$cont_json = @file_get_contents($url);
 	if (!$cont_json) {
@@ -116,12 +129,15 @@ function ft_get_oid_data($oid) {
                 $cont_json = @file_get_contents($url);
                 if (!$cont_json) return false;
 	}
-	$data = json_decode($cont_json,true);
-
-	return $data;
+	return json_decode($cont_json,true);
 }
 
-function sql_execute($sql, $prep=null) {
+/**
+ * @param string $sql
+ * @param array|null $prep
+ * @return void
+ */
+function sql_execute(string $sql, array $prep=null) {
 #	echo "$sql\n";
 	try {
 		OIDplus::db()->query($sql, $prep);

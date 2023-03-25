@@ -230,7 +230,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('Server software').'</td>';
-			$out['text'] .= '		<td>'.(isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '<i>'._L('unknown').'</i>').'</td>';
+			$out['text'] .= '		<td>'.($_SERVER['SERVER_SOFTWARE'] ?? '<i>' . _L('unknown') . '</i>').'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('User account').'</td>';
@@ -295,7 +295,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'._L('Server time').'</td>';
 			$tmp = OIDplus::db()->query('select '.OIDplus::db()->sqlDate().' as tmp');
 			if ($tmp) $tmp = $tmp->fetch_array();
-			$tmp = isset($tmp['tmp']) ? $tmp['tmp'] :  _L('n/a');
+			$tmp = $tmp['tmp'] ?? _L('n/a');
 			$out['text'] .= '		<td>'.$tmp.'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</table>';

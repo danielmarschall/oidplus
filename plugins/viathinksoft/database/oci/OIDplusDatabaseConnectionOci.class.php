@@ -24,7 +24,14 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
+	/**
+	 * @var mixed|null
+	 */
 	private $conn = null;
+
+	/**
+	 * @var array|null
+	 */
 	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
 
 	/**
@@ -98,7 +105,7 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 	 */
 	public function error(): string {
 		$err = $this->last_error;
-		if ($err == null) $err = '';
+		if (!$err) $err = '';
 		/*
 		array(4) {
 		  ["code"]=>

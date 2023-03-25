@@ -20,7 +20,10 @@
 // Note that there are no translations _L() because if we get an error at this
 // stage, then we have no language plugins anyways.
 
-function oidplus_get_missing_dependencies() {
+/**
+ * @return array
+ */
+function oidplus_get_missing_dependencies(): array {
 	$missing_dependencies = array();
 
 	if (!extension_loaded('standard')) {

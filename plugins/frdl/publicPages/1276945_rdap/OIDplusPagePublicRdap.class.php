@@ -20,6 +20,7 @@
 namespace Frdlweb\OIDplus;
 
 use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusException;
 use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -54,6 +55,7 @@ class OIDplusPagePublicRdap extends OIDplusPagePluginPublic {
 	/**
 	 * @param string $request
 	 * @return bool
+	 * @throws OIDplusException
 	 */
 	public function handle404(string $request): bool {
 		$namespaces = array();

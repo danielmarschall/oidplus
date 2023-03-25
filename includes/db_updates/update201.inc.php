@@ -25,7 +25,7 @@ use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
  * @return int new version set
  * @throws \ViaThinkSoft\OIDplus\OIDplusException
  */
-function oidplus_dbupdate_201(OIDplusDatabaseConnection $db) {
+function oidplus_dbupdate_201(OIDplusDatabaseConnection $db): int {
 	if ($db->transaction_supported()) $db->transaction_begin();
 
 	// Change bit(1) types to boolean/tinyint(1)

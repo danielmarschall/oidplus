@@ -43,10 +43,10 @@ class OIDplusObjectTypePluginGuid extends OIDplusObjectTypePlugin {
 
 	/**
 	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.6
-	 * @param $objParent
+	 * @param OIDplusObject $objParent
 	 * @return string
 	 */
-	public function gridGeneratorLinks($objParent) {
+	public function gridGeneratorLinks(OIDplusObject $objParent): string {
 		return '<br><a href="javascript:OIDplusObjectTypePluginGuid.generateRandomGUID(false)">('._L('Generate a random GUID').')</a>';
 	}
 
@@ -61,9 +61,7 @@ class OIDplusObjectTypePluginGuid extends OIDplusObjectTypePlugin {
 		//     "If available, a formal URN namespace identifier (as defined in RFC\08141, section\05.1 [RFC8141]) SHOULD be used, e.g. 'uuid' should be used instead of 'guid'."
 		// However, our plugin OIDplusObjectTypePluginGuid serves the namespace "guid".
 		// Therefore redirect "uuid" to "guid", so that people can use OID-IP or the GoTo-box with an "uuid:" input
-		$static_node_id = preg_replace('@^uuid:@', 'guid:', $static_node_id);
-
-		return $static_node_id;
+		return preg_replace('@^uuid:@', 'guid:', $static_node_id);
 	}
 
 }

@@ -94,7 +94,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 				$rev = $params['rev'];
 
-				$update_version = isset($params['update_version']) ? $params['update_version'] : 1;
+				$update_version = $params['update_version'] ?? 1;
 				if (($update_version != 1) && ($update_version != 2)) {
 					throw new OIDplusException(_L('Unknown update version'));
 				}
@@ -258,8 +258,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 				$local_installation = OIDplus::getVersion();
 				$newest_version = $this->getLatestRevision();
 
-				$out['text'] .= _L('Local installation: %1',($local_installation ? $local_installation : _L('unknown'))).'<br>';
-				$out['text'] .= _L('Latest published version: %1',($newest_version ? $newest_version : _L('unknown'))).'<br><br>';
+				$out['text'] .= _L('Local installation: %1',($local_installation ?: _L('unknown'))).'<br>';
+				$out['text'] .= _L('Latest published version: %1',($newest_version ?: _L('unknown'))).'<br><br>';
 
 				if (!$newest_version) {
 					if (!function_exists('curl_init')) {
@@ -335,15 +335,15 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @var null
+	 * @var string|null
 	 */
 	private $releases_ser = null;
 
 	/**
-	 * @param $local_ver
+	 * @param string $local_ver
 	 * @return false|string
 	 */
-	private function showChangelog($local_ver) {
+	private function showChangelog(string $local_ver) {
 
 		try {
 			if (is_null($this->releases_ser)) {
@@ -401,19 +401,18 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 			if ($ary === false) return false;
 			krsort($ary);
 			$max_rev = array_keys($ary)[0];
-			$newest_version = 'svn-' . $max_rev;
-			return $newest_version;
+			return 'svn-' . $max_rev;
 		} catch (\Exception $e) {
 			return false;
 		}
 	}
 
 	/**
-	 * @param $local_installation
-	 * @param $newest_version
+	 * @param string $local_installation
+	 * @param string $newest_version
 	 * @return string
 	 */
-	private function showPreview($local_installation, $newest_version) {
+	private function showPreview(string $local_installation, string $newest_version): string {
 		$out = '<h2 id="update_header">'._L('Preview of update %1 &rarr; %2',$local_installation,$newest_version).'</h2>';
 
 		ob_start();
@@ -442,11 +441,11 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin {
 
 	/**
 	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
-	 * @param $user
+	 * @param string|null $user
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications($user=null): array {
+	public function getNotifications(string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 

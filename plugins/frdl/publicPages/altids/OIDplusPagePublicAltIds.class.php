@@ -78,11 +78,11 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $noCache
+	 * @param bool $noCache
 	 * @return array[]|mixed|null
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
 	 */
-	public function readAll($noCache = false) {
+	public function readAll(bool $noCache = false) {
 		static $local_cache = null;
 
 		$cache_file = OIDplus::localpath().'/userdata/cache/frdl_alt_id.ser';
@@ -133,11 +133,11 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $id
+	 * @param string $id
 	 * @return array|mixed|string[]
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
 	 */
-	public function getAlternativesForQuery($id/* 1.3.6.1.4.1.37476.2.5.2.3.7 signature takes just 1 param!? , $noCache = false*/) {
+	public function getAlternativesForQuery(string $id/* 1.3.6.1.4.1.37476.2.5.2.3.7 signature takes just 1 param!? , $noCache = false*/) {
 
 		static $caches = array();
 
@@ -207,11 +207,11 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $id
+	 * @param string $id
 	 * @return false|mixed|string
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
 	 */
-	public function getCanonical($id){
+	public function getCanonical(string $id){
 		foreach($this->getAlternativesForQuery($id) as $alt){
 			if (strpos($alt,':') !== false) {
 				list($ns, $altIdRaw) = explode(':', $alt, 2);
@@ -226,12 +226,12 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 
 	/**
 	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.4
-	 * @param $id
-	 * @param $out
+	 * @param string $id
+	 * @param array $out
 	 * @return void
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
 	 */
-	public function whoisObjectAttributes($id, &$out) {
+	public function whoisObjectAttributes(string $id, array &$out) {
 		$xmlns = 'oidplus-frdlweb-altids-plugin';
 		$xmlschema = 'urn:oid:1.3.6.1.4.1.37553.8.1.8.8.53354196964.641310544.1714020422';
 		$xmlschemauri = OIDplus::webpath(__DIR__.'/altids.xsd',OIDplus::PATH_ABSOLUTE);
@@ -284,11 +284,11 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 
 	/**
 	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.4
-	 * @param $email
-	 * @param $out
+	 * @param string $email
+	 * @param array $out
 	 * @return void
 	 */
-	public function whoisRaAttributes($email, &$out) {
+	public function whoisRaAttributes(string $email, array &$out) {
 
 	}
 

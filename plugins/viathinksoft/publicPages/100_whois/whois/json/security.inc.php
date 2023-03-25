@@ -20,7 +20,13 @@
 // Works with composer.json
 // "sergeybrook/php-jws": "^1.0"
 
-function oidplus_json_verify($json_content, $pubkey) {
+/**
+ * @param string $json_content
+ * @param string $pubkey
+ * @return void
+ * @throws Exception
+ */
+function oidplus_json_verify(string $json_content, string $pubkey) {
 	require_once __DIR__.'/vendor/autoload.php';
 
 	$jws = new \SBrook\JWS\JwsRsa();
@@ -55,7 +61,14 @@ function oidplus_json_verify($json_content, $pubkey) {
 	}
 }
 
-function oidplus_json_sign($json_content, $privkey, $pubkey) {
+/**
+ * @param string $json_content
+ * @param string $privkey
+ * @param string $pubkey
+ * @return false|string
+ * @throws Exception
+ */
+function oidplus_json_sign(string $json_content, string $privkey, string $pubkey) {
 	require_once __DIR__.'/vendor/autoload.php';
 
 	$jws = new \SBrook\JWS\JwsRsa();

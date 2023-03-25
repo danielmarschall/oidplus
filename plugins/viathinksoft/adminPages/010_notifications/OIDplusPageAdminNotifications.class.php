@@ -45,7 +45,7 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 
 		if ($id == 'oidplus:notifications') {
 			$handled = true;
-			$ra_email = isset($parts[1]) ? $parts[1] : null/*no filter*/;
+			$ra_email = $parts[1] ?? null/*no filter*/;
 
 			$out['title'] = _L('Notifications');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
@@ -194,7 +194,7 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	private function getNotificationsCheckDirAccess(string $dir) {
+	private function getNotificationsCheckDirAccess(string $dir): array {
 		$notifications = array();
 		if (($url = $this->webAccessWorks($dir)) !== false) {
 			// Re-use message taken from setup/includes/setup_base.js
@@ -207,11 +207,11 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 	/**
 	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
 	 * These are some basic "system" checks, no checks from other plugin. So we add them to our plugin instead.
-	 * @param $user
+	 * @param string|null $user
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications($user=null): array {
+	public function getNotifications(string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			// Check if critical directories are world-readable

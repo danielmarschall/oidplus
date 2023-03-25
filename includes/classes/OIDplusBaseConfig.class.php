@@ -28,6 +28,9 @@ namespace ViaThinkSoft\OIDplus;
 // Not to be confused with OIDplusConfig which are settings that are stored in the database.
 class OIDplusBaseConfig extends OIDplusBaseClass implements OIDplusGetterSetterInterface {
 
+	/**
+	 * @var array
+	 */
 	protected $data = array();
 
 	/**

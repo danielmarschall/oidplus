@@ -146,7 +146,7 @@ foreach ($dos_ids as $oid => $dos_id) {
 		if ($updated[$oid] != '') $cont .= "updatedate=".explode(' ',$updated[$oid])[0]."\r\n";
 		if ($created[$oid] != '') $cont .= "createdate=".explode(' ',$created[$oid])[0]."\r\n";
 
-		$desc = handleDesc($description[$oid]);
+		$desc = handleDesc_win($description[$oid]);
 		if (trim($desc) != '') {
 			$cont .= "information=$dos_id.TXT\r\n";
 			$zip->addFromString("DB//$dos_id.TXT", $desc);
@@ -192,7 +192,13 @@ OIDplus::invoke_shutdown();
 
 # ---
 
-function fill_asn1($oid, &$asn1) {
+/**
+ * @param string $oid
+ * @param array $asn1
+ * @return void
+ * @throws OIDplusException
+ */
+function fill_asn1(string $oid, array &$asn1) {
 	if (!isset($asn1[$oid])) $asn1[$oid] = array();
 	$res = OIDplus::db()->query("select * from ###asn1id where oid = 'oid:$oid'");
 	while ($row = $res->fetch_object()) {
@@ -210,13 +216,16 @@ function fill_iri($oid, &$iri) {
 }
 */
 
-function handleDesc($desc) {
+/**
+ * @param string $desc
+ * @return string
+ */
+function handleDesc_win(string $desc): string {
 	$desc = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $desc); // br2nl
 	$desc = strip_tags($desc);
 	$desc = str_replace('&nbsp;', ' ', $desc);
 	$desc = html_entity_decode($desc);
 	$desc = str_replace("\r", "", $desc);
 	$desc = str_replace("\n", "\r\n", $desc);
-	$desc = trim($desc)."\r\n";
-	return $desc;
+	return trim($desc)."\r\n";
 }

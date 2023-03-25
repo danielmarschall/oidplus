@@ -22,9 +22,9 @@ use ViaThinkSoft\OIDplus\OIDplusSqlSlangPlugin;
 
 include_once __DIR__ . '/../includes/oidplus.inc.php';
 
-$prefix = isset($_REQUEST['prefix']) ? $_REQUEST['prefix'] : '';
-$database = isset($_REQUEST['database']) ? $_REQUEST['database'] : '';
-$slang = isset($_REQUEST['slang']) ? $_REQUEST['slang'] : 'mysql';
+$prefix = $_REQUEST['prefix'] ?? '';
+$database = $_REQUEST['database'] ?? '';
+$slang = $_REQUEST['slang'] ?? 'mysql';
 
 OIDplus::registerAllPlugins('sqlSlang', OIDplusSqlSlangPlugin::class, array(OIDplus::class,'registerSqlSlangPlugin'));
 $slang_plugin = null;

@@ -26,7 +26,7 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 	/**
-	 * @param $ot
+	 * @param string|OIDplusObject $ot
 	 * @return string|null
 	 */
 	private function get_treeicon_root($ot)/*: ?string*/ {
@@ -36,15 +36,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $id
-	 * @param $old_ra
-	 * @param $new_ra
+	 * @param string $id
+	 * @param string $old_ra
+	 * @param string $new_ra
 	 * @return void
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	private function ra_change_rec($id, $old_ra, $new_ra) {
-		if (is_null($old_ra)) $old_ra = '';
+	private function ra_change_rec(string $id, string $old_ra, string $new_ra) {
 		OIDplus::db()->query("update ###objects set ra_email = ?, updated = ".OIDplus::db()->sqlDate()." where id = ? and ".OIDplus::db()->getSlang()->isNullFunction('ra_email',"''")." = ?", array($new_ra, $id, $old_ra));
 		OIDplusObject::resetObjectInformationCache();
 
@@ -185,7 +184,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				}
 
 				// Change RA recursively
-				$current_ra = $obj->getRaMail();
+				$current_ra = $obj->getRaMail() ?? '';
 				if ($new_ra != $current_ra) {
 					OIDplus::logger()->log("[INFO]OID($id)+[?INFO/!OK]SUPOIDRA($id)?/[?INFO/!OK]A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
 					OIDplus::logger()->log("[WARN]RA($current_ra)!",           "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
@@ -404,7 +403,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			// Apply superior RA change
 			$parent = $params['parent'];
-			$ra_email = isset($params['ra_email']) ? $params['ra_email'] : '';
+			$ra_email = $params['ra_email'] ?? '';
 			if ($obj::ns() == 'oid') {
 				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if ($obj->isWellKnown()) {
@@ -420,8 +419,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 				OIDplus::logger()->log("[INFO]RA($ra_email)!", "Gained ownership of newly created object '$id'");
 			}
 
-			$confidential = isset($params['confidential']) ? ($params['confidential'] == 'true') : false;
-			$comment = isset($params['comment']) ? $params['comment'] : '';
+			$confidential = isset($params['confidential']) && $params['confidential'] == 'true';
+			$comment = $params['comment'] ?? '';
 			$title = '';
 			$description = '';
 
@@ -497,12 +496,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $id
-	 * @param $out
+	 * @param string $id
+	 * @param array $out
 	 * @return array|false
 	 * @throws OIDplusException
 	 */
-	private function tryObject($id, &$out) {
+	private function tryObject(string $id, array &$out) {
 		$parent = null;
 		$res = null;
 		$row = null;
@@ -525,10 +524,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $id
+	 * @param string $id
 	 * @return array
 	 */
-	public static function getAlternativesForQuery($id) {
+	public static function getAlternativesForQuery(string $id): array {
 		// Attention: This is NOT an implementation of 1.3.6.1.4.1.37476.2.5.2.3.7 !
 		//            This is the function that calls getAlternativesForQuery() of every plugin that implements 1.3.6.1.4.1.37476.2.5.2.3.7
 
@@ -551,9 +550,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 		foreach ($alternatives as $alt) {
 			if ($alt !== $id) $alternatives_tmp[] = $alt;
 		}
-		$alternatives = $alternatives_tmp;
-
-		return $alternatives;
+		return $alternatives_tmp;
 	}
 
 	/**
@@ -745,11 +742,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $json
-	 * @param $out
+	 * @param array $json
+	 * @param array $out
 	 * @return void
 	 */
-	private function publicSitemap_rec($json, &$out) {
+	private function publicSitemap_rec(array $json, array &$out) {
 		foreach ($json as $x) {
 			if (isset($x['id']) && $x['id']) {
 				$out[] = $x['id'];
@@ -1147,10 +1144,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $html
-	 * @return array|string|string[]|null
+	 * @param string $html
+	 * @return string
 	 */
-	protected static function objDescription($html) {
+	protected static function objDescription(string $html): string {
 		// We allow HTML, but no hacking
 		$html = anti_xss($html);
 
@@ -1171,13 +1168,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode', 'quickbars', 'colorpicker', 'textcolor', 'contextmenu', 'importcss', 'legacyoutput', 'spellchecker', 'imagetools', 'toc');
 
 	/**
-	 * @param $name
-	 * @param $content
+	 * @param string $name
+	 * @param string $content
 	 * @return string
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	protected static function showMCE($name, $content) {
+	protected static function showMCE(string $name, string $content): string {
 		$mce_plugins = array();
 		foreach (glob(OIDplus::localpath().'vendor/tinymce/tinymce/plugins/*') as $m) { // */
 			$mce_plugins[] = basename($m);
@@ -1308,11 +1305,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 	/**
 	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
-	 * @param $user
+	 * @param string|null $user
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications($user=null): array {
+	public function getNotifications(string $user=null): array {
 		$notifications = array();
 		$res = OIDplus::db()->query("select id, title from ###objects order by ".OIDplus::db()->natOrder('id'));
 		if ($res->any()) {

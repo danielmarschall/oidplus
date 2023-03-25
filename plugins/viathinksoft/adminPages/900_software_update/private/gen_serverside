@@ -256,7 +256,14 @@ if ($ec != 0) {
 
 # ------------------------------------------------------------------------------------------
 
-function getDirContents_del($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
+/**
+ * @param string $dir_old
+ * @param string $dir_new
+ * @param string|null $basepath_old
+ * @param string|null $basepath_new
+ * @return void
+ */
+function getDirContents_del(string $dir_old, string $dir_new, string $basepath_old=null, string $basepath_new=null) {
 	global $outscript;
 
 	if (is_null($basepath_old)) $basepath_old = $dir_old;
@@ -305,7 +312,15 @@ function getDirContents_del($dir_old, $dir_new, $basepath_old=null, $basepath_ne
 	}
 }
 
-function getDirContents_diff($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
+/**
+ * @param string $dir_old
+ * @param string $dir_new
+ * @param string|null $basepath_old
+ * @param string|null $basepath_new
+ * @return void
+ * @throws Exception
+ */
+function getDirContents_diff(string $dir_old, string $dir_new, string $basepath_old=null, string $basepath_new=null) {
 	global $outscript;
 
 	if (is_null($basepath_old)) $basepath_old = $dir_old;
@@ -409,7 +424,15 @@ function getDirContents_diff($dir_old, $dir_new, $basepath_old=null, $basepath_n
 	}
 }
 
-function getDirContents_add($dir_old, $dir_new, $basepath_old=null, $basepath_new=null) {
+/**
+ * @param string $dir_old
+ * @param string $dir_new
+ * @param string|null $basepath_old
+ * @param string|null $basepath_new
+ * @return void
+ * @throws Exception
+ */
+function getDirContents_add(string $dir_old, string $dir_new, string $basepath_old=null, string $basepath_new=null) {
 	global $outscript;
 
 	if (is_null($basepath_new)) $basepath_new = $dir_new;
@@ -488,7 +511,13 @@ function getDirContents_add($dir_old, $dir_new, $basepath_old=null, $basepath_ne
 	}
 }
 
-function getDirContents($dir_old, $dir_new) {
+/**
+ * @param string $dir_old
+ * @param string $dir_new
+ * @return void
+ * @throws Exception
+ */
+function getDirContents(string $dir_old, string $dir_new) {
 	global $func_idx;
 	$func_idx = 0;
 	getDirContents_add($dir_old, $dir_new);
@@ -496,7 +525,12 @@ function getDirContents($dir_old, $dir_new) {
 	getDirContents_del($dir_old, $dir_new);
 }
 
-function hotfix_dir($rev, $dir) {
+/**
+ * @param int $rev
+ * @param string $dir
+ * @return void
+ */
+function hotfix_dir(int $rev, string $dir) {
 	if ($rev == 699) {
 		// Fix syntax error that lead to a stalled update!
 		$file = $dir.'/plugins/viathinksoft/adminPages/900_software_update/OIDplusPageAdminSoftwareUpdate.class.php';
@@ -537,7 +571,12 @@ function hotfix_dir($rev, $dir) {
 	}
 }
 
-function split_equal_length($data, $width=65) {
+/**
+ * @param string $data
+ * @param int $width
+ * @return string
+ */
+function split_equal_length(string $data, int $width=65): string {
 	$res = '';
 	for ($i=0; $i<strlen($data); $i+=$width) {
 		$res .= substr($data, $i, $width)."\n";
@@ -545,7 +584,16 @@ function split_equal_length($data, $width=65) {
 	return $res;
 }
 
-function special_save_file($out_file, $in_file, &$res, $line_prefix, $width=50) {
+/**
+ * @param string $out_file
+ * @param string $in_file
+ * @param string $res
+ * @param string $line_prefix
+ * @param int $width
+ * @return void
+ * @throws Exception
+ */
+function special_save_file(string $out_file, string $in_file, string &$res, string $line_prefix, int $width=50) {
 	$handle = @fopen($in_file, "rb");
 	if (!$handle) {
 		throw new Exception("Cannot open file $in_file");
@@ -563,12 +611,20 @@ function special_save_file($out_file, $in_file, &$res, $line_prefix, $width=50) 
 	fclose($handle);
 }
 
-function my_realpath($name) {
+/**
+ * @param string $name
+ * @return mixed|string
+ */
+function my_realpath(string $name) {
 	$ret = realpath($name);
 	return ($ret === false) ? $name : $ret;
 }
 
-function my_scandir($dir) {
+/**
+ * @param string $dir
+ * @return array
+ */
+function my_scandir(string $dir): array {
 	$ret = @scandir($dir);
 	if ($ret === false) return array();
 	return $ret;

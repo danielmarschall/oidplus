@@ -40,12 +40,12 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $email
+	 * @param string $email
 	 * @param bool $getId
 	 * @return bool|null
 	 * @throws OIDplusException
 	 */
-	public static function alreadyHasFreeOid($email, bool $getId = false)/*: ?bool*/ {
+	public static function alreadyHasFreeOid(string $email, bool $getId = false)/*: ?bool*/ {
 		$res = OIDplus::db()->query("select id from ###objects where ra_email = ? and id like ? order by ".OIDplus::db()->natOrder('id'), array($email, self::getFreeRootOid(true).'.%'));
 		while ($row = $res->fetch_array()) {
 			return $getId ? $row['id'] : true;
@@ -144,8 +144,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 			// 2. step: Add the new OID to the database
 
-			$url = isset($params['url']) ? $params['url'] : '';
-			$title = isset($params['title']) ? $params['title'] : '';
+			$url = $params['url'] ?? '';
+			$title = $params['title'] ?? '';
 
 			$root_oid = self::getFreeRootOid(false);
 			$new_oid = OIDplusOid::parse('oid:'.$root_oid)->appendArcs($this->freeoid_max_id()+1)->nodeId(false);

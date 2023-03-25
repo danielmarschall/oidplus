@@ -24,12 +24,15 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusJava extends OIDplusObject {
+	/**
+	 * @var string
+	 */
 	private $java;
 
 	/**
-	 * @param $java
+	 * @param string $java
 	 */
-	public function __construct($java) {
+	public function __construct(string $java) {
 		// TODO: syntax checks
 		$this->java = $java;
 	}
@@ -206,7 +209,7 @@ class OIDplusJava extends OIDplusObject {
 	}
 
 	/**
-	 * @param $to
+	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
 	public function distance($to) {

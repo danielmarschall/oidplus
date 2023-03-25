@@ -24,8 +24,19 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
+	/**
+	 * @var mixed|null
+	 */
 	private $conn = null;
+
+	/**
+	 * @var array
+	 */
 	private $already_prepared = array();
+
+	/**
+	 * @var string|null
+	 */
 	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
 
 	/**

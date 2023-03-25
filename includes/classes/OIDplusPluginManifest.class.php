@@ -25,34 +25,102 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPluginManifest extends OIDplusBaseClass {
 
+	/**
+	 * @var string
+	 */
 	private $manifestFile = null;
+
+	/**
+	 * @var \SimpleXMLElement|null
+	 */
 	private $rawXML = null;
 
-	// All plugins
+	// --- All plugins ---
+
+	/**
+	 * @var string
+	 */
 	private $name = '';
+
+	/**
+	 * @var string
+	 */
 	private $author = '';
+
+	/**
+	 * @var string
+	 */
 	private $license = '';
+
+	/**
+	 * @var string
+	 */
 	private $version = '';
+
+	/**
+	 * @var string
+	 */
 	private $htmlDescription = '';
+
+	/**
+	 * @var string
+	 */
 	private $oid = '';
 
+	/**
+	 * @var string
+	 */
 	private $type = '';
+
+	/**
+	 * @var string
+	 */
 	private $phpMainClass = '';
 
-	// Only page or design plugins
+	// --- Only page or design plugins ---
+
+	/**
+	 * @var array
+	 */
 	private $cssFiles = array();
 
-	// only page plugins
+	// --- Only page plugins ---
+
+	/**
+	 * @var array
+	 */
 	private $jsFiles = array();
 
-	// Only database plugins
+	// --- Only database plugins ---
+
+	/**
+	 * @var array
+	 */
 	private $cssFilesSetup = array();
+
+	/**
+	 * @var array
+	 */
 	private $jsFilesSetup = array();
 
-	// Only language plugins
+	// --- Only language plugins ---
+
+	/**
+	 * @var string
+	 */
 	private $languageCode = '';
+
+	/**
+	 * @var string
+	 */
 	private $languageFlag = '';
+
+	/**
+	 * @var string
+	 */
 	private $languageMessages = '';
+
+	# -------------
 
 	/**
 	 * @return string
@@ -207,7 +275,7 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 	 * @param string $filename
 	 * @return bool
 	 */
-	public function loadManifest(string $filename) {
+	public function loadManifest(string $filename): bool {
 		if (!file_exists($filename)) return false;
 		$xmldata = @simplexml_load_file($filename);
 		if ($xmldata === false) return false; // TODO: rather throw an Exception and let the method return void only

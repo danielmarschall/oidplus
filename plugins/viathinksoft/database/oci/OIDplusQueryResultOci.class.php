@@ -24,11 +24,19 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusQueryResultOci extends OIDplusQueryResult {
+
+	/**
+	 * @var bool
+	 */
 	protected $no_resultset;
+
+	/**
+	 * @var mixed
+	 */
 	protected $res;
 
 	/**
-	 * @param $res
+	 * @param mixed $res
 	 */
 	public function __construct($res) {
 		$this->no_resultset = is_bool($res);
@@ -111,10 +119,10 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 	}
 
 	/**
-	 * @param $ary
+	 * @param array $ary
 	 * @return \stdClass
 	 */
-	private static function array_to_stdobj($ary) {
+	private static function array_to_stdobj(array $ary): \stdClass {
 		$obj = new \stdClass;
 		foreach ($ary as $name => $val) {
 			$obj->$name = $val;

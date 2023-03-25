@@ -258,14 +258,13 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 		$message = file_get_contents(__DIR__ . '/invite_msg.tpl');
 
 		// Resolve stuff
+		// Note: {{ACTIVATE_URL}} will be resolved in ajax.php
+
 		$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
 		$message = str_replace('{{OID_LIST}}', implode("\n", $list_of_oids), $message);
 		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
-		$message = str_replace('{{PARTY}}', OIDplus::authUtils()->isAdminLoggedIn() ? 'the system administrator' : 'a superior Registration Authority', $message);
 
-		// {{ACTIVATE_URL}} will be resolved in ajax.php
-
-		return $message;
+		return str_replace('{{PARTY}}', OIDplus::authUtils()->isAdminLoggedIn() ? 'the system administrator' : 'a superior Registration Authority', $message);
 	}
 
 	/**

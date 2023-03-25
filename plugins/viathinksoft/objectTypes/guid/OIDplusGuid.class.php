@@ -24,12 +24,15 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusGuid extends OIDplusObject {
+	/**
+	 * @var string
+	 */
 	private $guid;
 
 	/**
-	 * @param $guid
+	 * @param string $guid
 	 */
-	public function __construct($guid) {
+	public function __construct(string $guid) {
 		if (uuid_valid($guid)) {
 			$this->guid = strtolower(uuid_canonize($guid)); // It is a real GUID (leaf node)
 		} else {
@@ -242,8 +245,8 @@ class OIDplusGuid extends OIDplusObject {
 	}
 
 	/**
-	 * @param $to
-	 * @return null
+	 * @param OIDplusObject|string $to
+	 * @return int|null
 	 */
 	public function distance($to) {
 		// Distance between GUIDs is not possible

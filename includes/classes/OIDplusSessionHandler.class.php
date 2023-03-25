@@ -25,7 +25,14 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSetterInterface {
 
+	/**
+	 * @var string|null
+	 */
 	private $secret = '';
+
+	/**
+	 * @var int|null
+	 */
 	protected $sessionLifetime = 0;
 
 	/**

@@ -25,11 +25,23 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 
+	/**
+	 * Cookie name for the JWT auth token
+	 */
 	const COOKIE_NAME = 'OIDPLUS_AUTH_JWT';
 
-	const JWT_GENERATOR_AJAX   = 0; // "Automated AJAX" plugin
-	const JWT_GENERATOR_LOGIN  = 1; // "Remember me" login method
-	const JWT_GENERATOR_MANUAL = 2; // "Manually crafted" JWT tokens
+	/**
+	 * "Automated AJAX" plugin
+	 */
+	const JWT_GENERATOR_AJAX   = 0;
+	/**
+	 * "Remember me" login method
+	 */
+	const JWT_GENERATOR_LOGIN  = 1;
+	/**
+	 * "Manually crafted" JWT tokens
+	 */
+	const JWT_GENERATOR_MANUAL = 2;
 
 	/**
 	 * @param int $gen OIDplusAuthContentStoreJWT::JWT_GENERATOR_...

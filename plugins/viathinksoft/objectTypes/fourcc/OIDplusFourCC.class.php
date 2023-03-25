@@ -24,6 +24,9 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusFourCC extends OIDplusObject {
+	/**
+	 * @var string
+	 */
 	private $fourcc;
 
 	/**
@@ -57,9 +60,9 @@ class OIDplusFourCC extends OIDplusObject {
 	}
 
 	/**
-	 * @param $fourcc
+	 * @param string $fourcc
 	 */
-	public function __construct($fourcc) {
+	public function __construct(string $fourcc) {
 		if (self::fourcc_transform($fourcc) !== false) {
 			$this->fourcc = $fourcc; // leaf node
 		} else {
@@ -270,8 +273,8 @@ class OIDplusFourCC extends OIDplusObject {
 	}
 
 	/**
-	 * @param $to
-	 * @return null
+	 * @param OIDplusObject|string $to
+	 * @return int|null
 	 */
 	public function distance($to) {
 		// Distance between FourCCs is not possible
@@ -285,15 +288,14 @@ class OIDplusFourCC extends OIDplusObject {
 	public function getAltIds(): array {
 		if ($this->isRoot()) return array();
 		if (!$this->isLeafNode()) return array();
-		$ids = parent::getAltIds();
-		return $ids;
+		return parent::getAltIds();
 	}
 
 	/**
-	 * @param $big_endian
-	 * @return false|int|mixed
+	 * @param bool $big_endian
+	 * @return false|int
 	 */
-	private function getInt($big_endian) {
+	private function getInt(bool $big_endian) {
 		$type = self::fourcc_transform($this->fourcc);
 		if ($type === false) return false;
 		$dec = 0;
@@ -303,13 +305,12 @@ class OIDplusFourCC extends OIDplusObject {
 	}
 
 	/**
-	 * @param $big_endian
+	 * @param bool $big_endian
 	 * @return string
 	 */
-	private function getHex($big_endian) {
+	private function getHex(bool $big_endian): string {
 		$dec = $this->getInt($big_endian);
-		$hex = str_pad(dechex($dec), 8, "0", STR_PAD_LEFT);
-		return $hex;
+		return str_pad(dechex($dec), 8, "0", STR_PAD_LEFT);
 	}
 
 	/**

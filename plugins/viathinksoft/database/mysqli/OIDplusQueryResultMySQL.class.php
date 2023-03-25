@@ -24,11 +24,18 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusQueryResultMySQL extends OIDplusQueryResult {
+	/**
+	 * @var bool
+	 */
 	protected $no_resultset;
+
+	/**
+	 * @var mixed
+	 */
 	protected $res;
 
 	/**
-	 * @param $res
+	 * @param mixed $res
 	 */
 	public function __construct($res) {
 		$this->no_resultset = is_bool($res);

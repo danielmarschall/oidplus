@@ -26,12 +26,23 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 	// Based on https://www.php.net/manual/de/mysqli-stmt.get-result.php#113398
 
+	/**
+	 * @var mixed|null
+	 */
 	protected $stmt = null;
+
+	/**
+	 * @var int|null
+	 */
 	protected $nCols = null;
+
+	/**
+	 * @var bool|null
+	 */
 	protected $no_resultset = null;
 
 	/**
-	 * @param $stmt
+	 * @param mixed $stmt
 	 */
 	public function __construct($stmt) {
 		$metadata = mysqli_stmt_result_metadata($stmt);

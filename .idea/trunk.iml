@@ -29,6 +29,13 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/danielmarschall/uuid_mac_utils" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/random_compat" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/danielmarschall/fileformats" />
+      <excludeFolder url="file://$MODULE_DIR$/userdata" />
+      <excludeFolder url="file://$MODULE_DIR$/userdata_pub" />
+      <excludeFolder url="file://$MODULE_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization" />
+      <excludeFolder url="file://$MODULE_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/sergeybrook/php-jws" />
+      <excludeFolder url="file://$MODULE_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/robrichards/xmlseclibs" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

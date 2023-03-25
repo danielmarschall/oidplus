@@ -111,8 +111,7 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 	public function setupSetTablePrefix(string $cont, string $table, string $prefix): string {
 		$cont = str_replace('['.$table.']', '['.$prefix.$table.']', $cont);
 		$cont = str_replace('PK_'.$table, 'PK_'.$prefix.$table, $cont);
-		$cont = str_replace('IX_'.$table, 'PK_'.$prefix.$table, $cont);
-		return $cont;
+		return str_replace('IX_'.$table, 'PK_'.$prefix.$table, $cont);
 	}
 
 	/**
@@ -162,8 +161,7 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 			} while ($count > 0);
 			$x = str_replace($INVALIDATE_SEQUENCE,'',$x);
 		}
-		$sql = implode(' union ', $ary);
-		return $sql;
+		return implode(' union ', $ary);
 	}
 
 	/**

@@ -24,12 +24,15 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusOther extends OIDplusObject {
+	/**
+	 * @var string
+	 */
 	private $other;
 
 	/**
-	 * @param $other
+	 * @param string $other
 	 */
-	public function __construct($other) {
+	public function __construct(string $other) {
 		// No syntax checks
 		$this->other = $other;
 	}
@@ -200,7 +203,7 @@ class OIDplusOther extends OIDplusObject {
 	}
 
 	/**
-	 * @param $to
+	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
 	public function distance($to) {

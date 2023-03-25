@@ -114,7 +114,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function alternativeLoginMethods() {
+	public function alternativeLoginMethods(): array {
 		$logins = array();
 		if (OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {
 			$logins[] = array(
@@ -128,11 +128,11 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic {
 
 	/**
 	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
-	 * @param $user
+	 * @param string|null $user
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications($user=null): array {
+	public function getNotifications(string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {

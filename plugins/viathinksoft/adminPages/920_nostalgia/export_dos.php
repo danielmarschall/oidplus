@@ -101,7 +101,12 @@ if ($zip->open($tmp_file, ZipArchive::CREATE)!== true) {
 	throw new OIDplusException("cannot open <$tmp_file>");
 }
 
-function make_line($command, $data) {
+/**
+ * @param string $command
+ * @param string $data
+ * @return string
+ */
+function make_line(string $command, string $data): string {
 	return $command.$data."\r\n";
 }
 
@@ -115,7 +120,7 @@ const CMD_UNICODE_LABEL   = 'UNIL';
 const CMD_DESCRIPTION     = 'DESC';
 
 foreach ($dos_ids as $oid => $dos_id) {
-	$cont = make_line(CMD_VERSION, 2022);
+	$cont = make_line(CMD_VERSION, '2022');
 
 	$cont .= make_line(CMD_OWN_ID, $dos_id.$oid);
 
@@ -139,8 +144,8 @@ foreach ($dos_ids as $oid => $dos_id) {
 		$cont .= make_line(CMD_UNICODE_LABEL, $name);
 	}
 
-	$desc_ary1 = handleDesc($title[$oid]);
-	$desc_ary2 = handleDesc($description[$oid]);
+	$desc_ary1 = handleDesc_dos($title[$oid]);
+	$desc_ary2 = handleDesc_dos($description[$oid]);
 	$desc_ary = array_merge($desc_ary1, $desc_ary2);
 	$prev_line = '';
 	foreach ($desc_ary as $line_idx => $line) {
@@ -177,7 +182,13 @@ OIDplus::invoke_shutdown();
 
 # ---
 
-function fill_asn1($oid, &$asn1) {
+/**
+ * @param string $oid
+ * @param array $asn1
+ * @return void
+ * @throws OIDplusException
+ */
+function fill_asn1(string $oid, array &$asn1) {
 	if (!isset($asn1[$oid])) $asn1[$oid] = array();
 	$res = OIDplus::db()->query("select * from ###asn1id where oid = 'oid:$oid'");
 	while ($row = $res->fetch_object()) {
@@ -185,7 +196,13 @@ function fill_asn1($oid, &$asn1) {
 	}
 }
 
-function fill_iri($oid, &$iri) {
+/**
+ * @param string $oid
+ * @param array $iri
+ * @return void
+ * @throws OIDplusException
+ */
+function fill_iri(string $oid, array &$iri) {
 	if (!isset($iri[$oid])) $iri[$oid] = array();
 	$res = OIDplus::db()->query("select * from ###iri where oid = 'oid:$oid'");
 	while ($row = $res->fetch_object()) {
@@ -193,7 +210,11 @@ function fill_iri($oid, &$iri) {
 	}
 }
 
-function handleDesc($desc) {
+/**
+ * @param string $desc
+ * @return array
+ */
+function handleDesc_dos(string $desc): array {
 	$desc = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $desc); // br2nl
 	$desc = strip_tags($desc);
 	$desc = str_replace('&nbsp;', ' ', $desc);

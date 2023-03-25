@@ -32,7 +32,11 @@ $out = '';
 
 $do_minify = OIDplus::baseConfig()->getValue('MINIFY_CSS', true);
 
-function process_file($filename) {
+/**
+* @param string $filename
+* @return string
+ */
+function process_file(string $filename): string {
 	global $do_minify;
 
 	$filename_min = preg_replace('/\.[^.]+$/', '.min.css', $filename);
@@ -130,14 +134,14 @@ if (file_exists(__DIR__ . '/userdata/styles/oidplus_add.css')) {
 
 # ---
 
-$inv = isset($_GET['invert']) ? $_GET['invert'] : 0;
+$inv = $_GET['invert'] ?? 0;
 if ($inv != 0) {
 	$out = invertColorsOfCSS($out);
 }
 
-$hs = isset($_GET['h_shift']) ? $_GET['h_shift'] : 0;
-$ss = isset($_GET['s_shift']) ? $_GET['s_shift'] : 0;
-$vs = isset($_GET['v_shift']) ? $_GET['v_shift'] : 0;
+$hs = $_GET['h_shift'] ?? 0;
+$ss = $_GET['s_shift'] ?? 0;
+$vs = $_GET['v_shift'] ?? 0;
 if (($hs != 0) ||($ss != 0) || ($vs != 0)) {
 	$out = changeHueOfCSS($out, $hs, $ss, $vs);
 }

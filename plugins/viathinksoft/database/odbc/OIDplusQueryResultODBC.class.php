@@ -24,11 +24,18 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusQueryResultODBC extends OIDplusQueryResult {
+	/**
+	 * @var bool
+	 */
 	protected $no_resultset;
+
+	/**
+	 * @var mixed
+	 */
 	protected $res;
 
 	/**
-	 * @param $res
+	 * @param mixed $res
 	 */
 	public function __construct($res) {
 		$this->no_resultset = is_bool($res);
@@ -56,7 +63,7 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 	 * @return int
 	 */
 	private function num_rows_workaround(): int {
-		$dummy = 0;
+		$dummy = array();
 
 		// go to the end of the result set
 		$till_eof = 0;
