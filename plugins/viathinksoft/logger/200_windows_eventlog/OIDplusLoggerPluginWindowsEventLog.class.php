@@ -25,14 +25,35 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 
+	/**
+	 *
+	 */
 	const CLASS_ViaThinkSoftSimpleEventLog = '{E4270053-A217-498C-B395-9EF33187E8C2}';
 
+	/**
+	 *
+	 */
 	const LOGEVENT_MSG_SUCCESS       = 0;
+
+	/**
+	 *
+	 */
 	const LOGEVENT_MSG_INFORMATIONAL = 1;
+
+	/**
+	 *
+	 */
 	const LOGEVENT_MSG_WARNING       = 2;
+
+	/**
+	 *
+	 */
 	const LOGEVENT_MSG_ERROR         = 3;
 
-	const LOGPROVIDER = 'OIDplus'; // "Source name" (should be registered in the registry = mapped to a message file DLL)
+	/**
+	 * "Source name" (should be registered in the registry = mapped to a message file DLL)
+	 */
+	const LOGPROVIDER = 'OIDplus';
 
 	/**
 	 * @param string $reason

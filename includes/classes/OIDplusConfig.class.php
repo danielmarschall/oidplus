@@ -29,16 +29,49 @@ namespace ViaThinkSoft\OIDplus;
 // e.g. database access credentials.
 class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInterface {
 
+	/**
+	 *
+	 */
 	/*public*/ const PROTECTION_EDITABLE = 0;
+
+	/**
+	 *
+	 */
 	/*public*/ const PROTECTION_READONLY = 1;
+
+	/**
+	 *
+	 */
 	/*public*/ const PROTECTION_HIDDEN   = 2;
 
+	/**
+	 * @var bool
+	 */
 	protected $configTableReadOnce = false; // this ensures that all $values and $descriptions were read
 
+	/**
+	 * @var array
+	 */
 	protected $values = array();
+
+	/**
+	 * @var array
+	 */
 	protected $descriptions = array();
+
+	/**
+	 * @var array
+	 */
 	protected $protectSettings = array();
+
+	/**
+	 * @var array
+	 */
 	protected $visibleSettings = array();
+
+	/**
+	 * @var array
+	 */
 	protected $validateCallbacks = array();
 
 	/**
@@ -46,11 +79,11 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 	 * @param string $description
 	 * @param string $init_value
 	 * @param int $protection
-	 * @param $validateCallback
+	 * @param callable|null $validateCallback
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function prepareConfigKey(string $name, string $description, string $init_value, int $protection, $validateCallback) {
+	public function prepareConfigKey(string $name, string $description, string $init_value, int $protection, callable $validateCallback=null) {
 		// Check if the protection flag is valid
 		switch ($protection) {
 			case OIDplusConfig::PROTECTION_EDITABLE:
@@ -162,11 +195,7 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 		$this->buildConfigArray();
 
 		// Now we can see if our desired attribute is available
-		if (isset($this->values[$name])) {
-			return $this->values[$name];
-		} else {
-			return $default;
-		}
+		return $this->values[$name] ?? $default;
 	}
 
 	/**

@@ -69,7 +69,7 @@ class OIDplusLoggerPluginLinuxSyslog extends OIDplusLoggerPlugin {
 		$objects_info = count($objects_names) == 0 ? '' : ' ('._L('affected objects: %1',implode(', ',$objects_names)).')';
 
 		$ts = date('Y-m-d H:i:s');
-		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : _L('unknown');
+		$addr = $_SERVER['REMOTE_ADDR'] ?? _L('unknown');
 		$line = "[$ts] [$addr] $event$users_info$objects_info";
 
 		return @file_put_contents('/var/log/syslog', "$line\n", FILE_APPEND) !== false;

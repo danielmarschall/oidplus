@@ -76,7 +76,7 @@ if (OIDplus::authUtils()->isAdminLoggedIn()) {
 	echo '<p><input type="password" name="admin_password" value=""> (<a href="'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/">'._L('Forgot password?').'</a>) ';
 
 	if (isset($_POST['sent'])) {
-		if (!OIDplus::authUtils()->adminCheckPassword(isset($_POST['admin_password']) ? $_POST['admin_password'] : '')) {
+		if (!OIDplus::authUtils()->adminCheckPassword($_POST['admin_password'] ?? '')) {
 			$errors_happened = true;
 			$edits_possible = false;
 			echo '<font color="red"><b>'._L('Wrong password').'</b></font>';
@@ -92,16 +92,24 @@ $do_edits = isset($_POST['sent']) && $edits_possible;
 
 # ---
 
-function step_admin_email($step, $do_edits, &$errors_happened) {
+/**
+ * @param int $step
+ * @param bool $do_edits
+ * @param bool $errors_happened
+ * @return void
+ * @throws OIDplusException
+ * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+ */
+function step_admin_email(int $step, bool $do_edits, bool &$errors_happened) {
 	echo '<h2>'._L('Step %1: Please enter the email address of the system administrator',$step).'</h2>';
 	echo '<input type="text" name="admin_email" value="';
 
 	$msg = '';
 	if (isset($_POST['sent'])) {
-		echo htmlentities(isset($_POST['admin_email']) ? $_POST['admin_email'] : '');
+		echo htmlentities($_POST['admin_email'] ?? '');
 		if ($do_edits) {
 			try {
-				OIDplus::config()->setValue('admin_email', isset($_POST['admin_email']) ? $_POST['admin_email'] : '');
+				OIDplus::config()->setValue('admin_email', $_POST['admin_email'] ?? '');
 			} catch (\Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;
@@ -117,16 +125,24 @@ step_admin_email($step++, $do_edits, $errors_happened);
 
 # ---
 
-function step_system_title($step, $do_edits, &$errors_happened) {
+/**
+ * @param int $step
+ * @param bool $do_edits
+ * @param bool $errors_happened
+ * @return void
+ * @throws OIDplusException
+ * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+ */
+function step_system_title(int $step, bool $do_edits, bool &$errors_happened) {
 	echo '<h2>'._L('Step %1: What title should your Registration Authority / OIDplus instance have?',$step).'</h2>';
 	echo '<input type="text" name="system_title" value="';
 
 	$msg = '';
 	if (isset($_POST['sent'])) {
-		echo htmlentities(isset($_POST['system_title']) ? $_POST['system_title'] : '');
+		echo htmlentities($_POST['system_title'] ?? '');
 		if ($do_edits) {
 			try {
-				OIDplus::config()->setValue('system_title', isset($_POST['system_title']) ? $_POST['system_title'] : '');
+				OIDplus::config()->setValue('system_title', $_POST['system_title'] ?? '');
 			} catch (\Exception $e) {
 				$msg = $e->getMessage();
 				$errors_happened = true;

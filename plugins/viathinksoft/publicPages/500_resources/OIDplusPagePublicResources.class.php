@@ -53,12 +53,11 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $file
+	 * @param string $file
 	 * @return string
-	 * @throws OIDplusConfigInitializationException
-	 * @throws OIDplusException
+	 * @throws OIDplusConfigInitializationException|OIDplusException
 	 */
-	private static function getDocumentContent($file) {
+	private static function getDocumentContent(string $file): string {
 		$file = self::realname($file);
 		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
 		if (file_exists($file2)) $file = $file2;
@@ -75,12 +74,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $file
+	 * @param string $file
 	 * @return array|mixed|string
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	private static function getDocumentTitle($file) {
+	private static function getDocumentTitle(string $file) {
 		$file = self::realname($file);
 		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
 		if (file_exists($file2)) $file = $file2;
@@ -102,11 +101,11 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $source
+	 * @param string $source
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	protected static function mayAccessResource($source) {
+	protected static function mayAccessResource(string $source): bool {
 		if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 
 		$candidates = array(
@@ -136,12 +135,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $reldir
-	 * @param $onlydir
+	 * @param string $reldir
+	 * @param bool $onlydir
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	private static function myglob($reldir, $onlydir=false) {
+	private static function myglob(string $reldir, bool $onlydir=false): array {
 		$out = array();
 
 		$root = OIDplus::localpath().'userdata/resources/';
@@ -168,10 +167,10 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $rel
+	 * @param string $rel
 	 * @return string|null
 	 */
-	private static function realname($rel) {
+	private static function realname(string $rel) {
 		$candidate1 = OIDplus::localpath().'userdata/resources/'.$rel;
 		$candidate2 = OIDplus::localpath().'res/'.$rel;
 		if (file_exists($candidate1) || is_dir($candidate1)) return $candidate1;
@@ -180,11 +179,11 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $source
-	 * @param $target
+	 * @param string $source
+	 * @param string $target
 	 * @return bool
 	 */
-	protected static function checkRedirect($source, &$target): bool {
+	protected static function checkRedirect(string $source, string &$target): bool {
 		$candidates = array(
 			OIDplus::localpath().'userdata/resources/redirect.ini',
 			OIDplus::localpath().'res/redirect.ini'
@@ -214,7 +213,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			$handled = true;
 
 			$tmp = explode('$',$id);
-			$file = isset($tmp[1]) ? $tmp[1] : '';
+			$file = $tmp[1] ?? '';
 			unset($tmp);
 
 			// Security checks
@@ -253,7 +252,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 			// Redirections
 
 			if ($file != '') {
-				$target = null;
+				$target = '';
 				if (self::checkRedirect($file, $target)) {
 					$out['title'] = _L('Please wait...');
 					$out['text'] = '<p>'._L('You are being redirected...').'</p><script>window.location.href = '.js_escape($target).';</script>';
@@ -450,14 +449,14 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $children
-	 * @param ?string $rootdir
+	 * @param array $children
+	 * @param string|null $rootdir
 	 * @param int $depth
 	 * @return void
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	private function tree_rec(&$children, string $rootdir=null, int $depth=0)/*: void*/ {
+	private function tree_rec(array &$children, string $rootdir=null, int $depth=0)/*: void*/ {
 		if (is_null($rootdir)) $rootdir = '';
 		if ($depth > 100) return; // something is wrong!
 
@@ -547,11 +546,11 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $json
-	 * @param $out
+	 * @param array $json
+	 * @param array $out
 	 * @return void
 	 */
-	private function publicSitemap_rec($json, &$out) {
+	private function publicSitemap_rec(array $json, array &$out) {
 		foreach ($json as $x) {
 			if (isset($x['id']) && $x['id']) {
 				$out[] = $x['id'];
@@ -614,12 +613,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $file
+	 * @param string $file
 	 * @return array|mixed|string|string[]|null
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	private static function getHyperlinkTitle($file) {
+	private static function getHyperlinkTitle(string $file) {
 		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
 		if (file_exists($file2)) $file = $file2;
 
@@ -649,12 +648,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $file
+	 * @param string $file
 	 * @return mixed
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	private static function getHyperlinkURL($file) {
+	private static function getHyperlinkURL(string $file) {
 		$file2 = preg_replace('/\.([^.]+)$/', '$'.OIDplus::getCurrentLang().'.\1', $file);
 		if (file_exists($file2)) $file = $file2;
 
@@ -700,12 +699,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $dir
+	 * @param string $dir
 	 * @return mixed|string
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	private static function getFolderTitle($dir) {
+	private static function getFolderTitle(string $dir) {
 		$data = @parse_ini_file("$dir/folder\$".OIDplus::getCurrentLang().".ini", true);
 		if ($data && isset($data['Folder']) && isset($data['Folder']['Title'])) {
 			return $data['Folder']['Title'];

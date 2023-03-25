@@ -19,11 +19,20 @@
 
 use ViaThinkSoft\OIDplus\OIDplus;
 
-function is_privatekey_encrypted($privKey) {
+/**
+ * @param string $privKey
+ * @return bool
+ */
+function is_privatekey_encrypted(string $privKey): bool {
 	return strpos($privKey,'BEGIN ENCRYPTED PRIVATE KEY') !== false;
 }
 
-function verify_private_public_key($privKey, $pubKey) {
+/**
+ * @param string $privKey
+ * @param string $pubKey
+ * @return bool
+ */
+function verify_private_public_key(string $privKey, string $pubKey): bool {
 	if (!function_exists('openssl_public_encrypt')) return false;
 	try {
 		if (empty($privKey)) return false;
@@ -39,7 +48,13 @@ function verify_private_public_key($privKey, $pubKey) {
 	}
 }
 
-function change_private_key_passphrase($privKeyOld, $passphrase_old, $passphrase_new) {
+/**
+ * @param string $privKeyOld
+ * @param string|null $passphrase_old
+ * @param string|null $passphrase_new
+ * @return false|string
+ */
+function change_private_key_passphrase(string $privKeyOld, string $passphrase_old=null, string $passphrase_new=null) {
 	$pkey_config = array(
 	    //"digest_alg" => "sha512",
 	    //"private_key_bits" => 2048,
@@ -53,25 +68,46 @@ function change_private_key_passphrase($privKeyOld, $passphrase_old, $passphrase
 	return "$privKeyNewExport";
 }
 
-function decrypt_private_key($privKey, $passphrase) {
+/**
+ * @param string $privKey
+ * @param string $passphrase
+ * @return false|string
+ */
+function decrypt_private_key(string $privKey, string $passphrase) {
 	return change_private_key_passphrase($privKey, $passphrase, null);
 }
 
-function encrypt_private_key($privKey, $passphrase) {
+/**
+ * @param string $privKey
+ * @param string $passphrase
+ * @return false|string
+ */
+function encrypt_private_key(string $privKey, string $passphrase) {
 	return change_private_key_passphrase($privKey, null, $passphrase);
 }
 
-function smallhash($data) { // get 31 bits from SHA1. Values 0..2147483647
+/**
+ * @param string $data
+ * @return int
+ */
+function smallhash(string $data): int { // get 31 bits from SHA1. Values 0..2147483647
 	return (hexdec(substr(sha1($data),-4*2)) & 0x7FFFFFFF);
 }
 
-function split_firstname_lastname($name) {
+/**
+ * @param string $name
+ * @return array
+ */
+function split_firstname_lastname(string $name): array {
 	$ary = explode(' ', $name);
 	$last_name = array_pop($ary);
 	$first_name = implode(' ', $ary);
 	return array($first_name, $last_name);
 }
 
+/**
+ * @return void
+ */
 function originHeaders() {
 	// CORS
 	// Author: Till Wehowski
@@ -99,7 +135,14 @@ function originHeaders() {
 }
 
 if (!function_exists('mb_wordwrap')) {
-	function mb_wordwrap($str, $width = 75, $break = "\n", $cut = false) {
+	/**
+	 * @param string $str
+	 * @param int $width
+	 * @param string $break
+	 * @param bool $cut
+	 * @return string
+	 */
+	function mb_wordwrap(string $str, int $width = 75, string $break = "\n", bool $cut = false): string {
 		// https://stackoverflow.com/a/4988494/488539
 		$lines = explode($break, $str);
 		foreach ($lines as &$line) {
@@ -133,7 +176,13 @@ if (!function_exists('mb_wordwrap')) {
 	}
 }
 
-function httpOutWithETag($out, $contentType, $filename='') {
+/**
+ * @param string $out
+ * @param string $contentType
+ * @param string $filename
+ * @return void
+ */
+function httpOutWithETag(string $out, string $contentType, string $filename='') {
 	$etag = md5($out);
 	header("Etag: $etag");
 	header("Content-MD5: $etag"); // RFC 2616 clause 14.15
@@ -149,17 +198,28 @@ function httpOutWithETag($out, $contentType, $filename='') {
 	die();
 }
 
-function my_vsprintf($str, $args) {
-        $n = 1;
-        foreach ($args as $val) {
-                $str = str_replace("%$n", $val, $str);
-                $n++;
-        }
-        $str = str_replace("%%", "%", $str);
-        return $str;
+/**
+ * @param string $str
+ * @param array $args
+ * @return string
+ */
+function my_vsprintf(string $str, array $args): string {
+	$n = 1;
+	foreach ($args as $val) {
+		$str = str_replace("%$n", $val, $str);
+		$n++;
+	}
+	return str_replace("%%", "%", $str);
 }
 
-function _L($str, ...$sprintfArgs) {
+/**
+ * @param string $str
+ * @param mixed ...$sprintfArgs
+ * @return string
+ * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+ * @throws \ViaThinkSoft\OIDplus\OIDplusException
+ */
+function _L(string $str, ...$sprintfArgs): string {
 	static $translation_array = array();
 	static $translation_loaded = null;
 
@@ -175,12 +235,17 @@ function _L($str, ...$sprintfArgs) {
 
 	$res = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $res);
 
-	$res = my_vsprintf($res, $sprintfArgs);
-
-	return $res;
+	return my_vsprintf($res, $sprintfArgs);
 }
 
-function _CheckParamExists($params, $key) {
+/**
+ * @param array $params
+ * @param string $key
+ * @return void
+ * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+ * @throws \ViaThinkSoft\OIDplus\OIDplusException
+ */
+function _CheckParamExists(array $params, string $key) {
 	if (class_exists(OIDplusException::class)) {
 		if (!isset($params[$key])) throw new OIDplusException(_L('Parameter %1 is missing', $key));
 	} else {
@@ -188,7 +253,11 @@ function _CheckParamExists($params, $key) {
 	}
 }
 
-function extractHtmlContents($cont) {
+/**
+ * @param string $cont
+ * @return array
+ */
+function extractHtmlContents(string $cont): array {
 	// make sure the program works even if the user provided HTML is not UTF-8
 	$cont = convert_to_utf8_no_bom($cont);
 
@@ -217,7 +286,13 @@ function extractHtmlContents($cont) {
 	return array($out_html, $out_js, $out_css);
 }
 
-function sha3_512($password, $raw_output=false) {
+/**
+ * @param string $password
+ * @param bool $raw_output
+ * @return string
+ * @throws Exception
+ */
+function sha3_512(string $password, bool $raw_output=false): string {
 	if (hash_supported_natively('sha3-512')) {
 		return hash('sha3-512', $password, $raw_output);
 	} else {
@@ -225,7 +300,13 @@ function sha3_512($password, $raw_output=false) {
 	}
 }
 
-function sha3_512_hmac($message, $key, $raw_output=false) {
+/**
+ * @param string $message
+ * @param string $key
+ * @param bool $raw_output
+ * @return string
+ */
+function sha3_512_hmac(string $message, string $key, bool $raw_output=false): string {
 	// RFC 2104 HMAC
 	if (hash_hmac_supported_natively('sha3-512')) {
 		return hash_hmac('sha3-512', $message, $key, $raw_output);
@@ -234,7 +315,15 @@ function sha3_512_hmac($message, $key, $raw_output=false) {
 	}
 }
 
-function sha3_512_pbkdf2($password, $salt, $iterations, $length=0, $binary=false) {
+/**
+ * @param string $password
+ * @param string $salt
+ * @param int $iterations
+ * @param int $length
+ * @param bool $binary
+ * @return string
+ */
+function sha3_512_pbkdf2(string $password, string $salt, int $iterations, int $length=0, bool $binary=false): string {
 	if (hash_pbkdf2_supported_natively('sha3-512')) {
 		return hash_pbkdf2('sha3-512', $password, $salt, $iterations, $length, $binary);
 	} else {
@@ -242,7 +331,12 @@ function sha3_512_pbkdf2($password, $salt, $iterations, $length=0, $binary=false
 	}
 }
 
-function url_get_contents($url, $userAgent='ViaThinkSoft-OIDplus/2.0') {
+/**
+ * @param string $url
+ * @param string $userAgent
+ * @return string|false
+ */
+function url_get_contents(string $url, string $userAgent='ViaThinkSoft-OIDplus/2.0') {
 	if (function_exists('curl_init')) {
 		$ch = curl_init();
 		if (class_exists(OIDplus::class)) {
@@ -275,7 +369,10 @@ function url_get_contents($url, $userAgent='ViaThinkSoft-OIDplus/2.0') {
 	return $res;
 }
 
-function getSortedQuery() {
+/**
+ * @return string
+ */
+function getSortedQuery(): string {
 	// https://stackoverflow.com/a/51777249/488539
 	$url = [];
 	parse_str($_SERVER['QUERY_STRING'], $url);

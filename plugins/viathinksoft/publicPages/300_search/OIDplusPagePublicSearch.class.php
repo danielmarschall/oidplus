@@ -39,11 +39,11 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $params
-	 * @param $is_searching
+	 * @param array $params
+	 * @param bool $is_searching
 	 * @return void
 	 */
-	private function prepareSearchParams(&$params, $is_searching) {
+	private function prepareSearchParams(array &$params, bool $is_searching) {
 		$params['term'] = isset($params['term']) ? trim($params['term']) : '';
 		$params['namespace'] = isset($params['namespace']) ? trim($params['namespace']) : '';
 
@@ -62,20 +62,20 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $html
-	 * @param $term
-	 * @return array|string|string[]
+	 * @param string $html
+	 * @param string $term
+	 * @return string
 	 */
-	private function highlight_match($html, $term) {
+	private function highlight_match(string $html, string $term): string {
 		return str_replace(htmlentities($term), '<font color="red">'.htmlentities($term).'</font>', $html);
 	}
 
 	/**
-	 * @param $params
+	 * @param array $params
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	private function doSearch($params) {
+	private function doSearch(array $params): string {
 		$output = '';
 
 		// Note: The SQL collation defines if search is case sensitive or case insensitive

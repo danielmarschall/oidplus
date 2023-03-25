@@ -24,12 +24,15 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusAid extends OIDplusObject {
+	/**
+	 * @var string
+	 */
 	private $aid;
 
 	/**
-	 * @param $aid
+	 * @param string $aid
 	 */
-	public function __construct($aid) {
+	public function __construct(string $aid) {
 		// TODO: syntax checks
 		$this->aid = $aid;
 	}
@@ -128,6 +131,7 @@ class OIDplusAid extends OIDplusObject {
 	/**
 	 * @param OIDplusObject $parent
 	 * @return string
+	 * @throws OIDplusException
 	 */
 	public function crudShowId(OIDplusObject $parent): string {
 		return $this->chunkedNotation(false);
@@ -135,6 +139,7 @@ class OIDplusAid extends OIDplusObject {
 
 	/**
 	 * @return string
+	 * @throws OIDplusException
 	 */
 	public function crudInsertPrefix(): string {
 		return $this->isRoot() ? '' : $this->chunkedNotation(false);
@@ -224,11 +229,11 @@ class OIDplusAid extends OIDplusObject {
 	# ---
 
 	/**
-	 * @param $withAbbr
+	 * @param bool $withAbbr
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public function chunkedNotation($withAbbr=true) {
+	public function chunkedNotation(bool $withAbbr=true): string {
 		$curid = self::root().$this->aid;
 
 		$obj = OIDplusObject::findFitting($curid);
@@ -272,7 +277,7 @@ class OIDplusAid extends OIDplusObject {
 	}
 
 	/**
-	 * @param $to
+	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
 	public function distance($to) {

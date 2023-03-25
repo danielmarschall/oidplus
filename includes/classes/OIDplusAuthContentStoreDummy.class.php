@@ -26,6 +26,9 @@ namespace ViaThinkSoft\OIDplus;
 # TODO: Rename class?
 abstract class OIDplusAuthContentStoreDummy extends OIDplusAuthContentStore {
 
+	/**
+	 * @var array
+	 */
 	protected $content = array();
 
 	// Override some abstract functions
@@ -36,7 +39,7 @@ abstract class OIDplusAuthContentStoreDummy extends OIDplusAuthContentStore {
 	 * @return mixed|null
 	 */
 	public function getValue(string $name, $default = NULL) {
-		return isset($this->content[$name]) ? $this->content[$name] : $default;
+		return $this->content[$name] ?? $default;
 	}
 
 	/**

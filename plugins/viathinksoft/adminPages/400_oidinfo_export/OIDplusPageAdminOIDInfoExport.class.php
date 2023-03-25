@@ -25,7 +25,14 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
+	/**
+	 *
+	 */
 	/*private*/ const QUERY_LIST_OIDINFO_OIDS_V1 = '1.3.6.1.4.1.37476.2.5.2.1.5.1';
+
+	/**
+	 *
+	 */
 	/*private*/ const QUERY_GET_OIDINFO_DATA_V1  = '1.3.6.1.4.1.37476.2.5.2.1.6.1';
 
 	/**
@@ -142,7 +149,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			if (isset($json['error']) || ($json['status'] < 0)) {
 				return array(
 					"status" => -1,
-					"error" => isset($json['error']) ? $json['error'] : _L('Received error status code: %1',$json['status'])
+					"error" => $json['error'] ?? _L('Received error status code: %1', $json['status'])
 				);
 			}
 
@@ -440,7 +447,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 								// Note: "Actions" is at the left, because it has a fixed width, so the user can continue clicking without the links moving if the OID length changes between lines
 								$out['text'] .= '<tr id="missing_oid_'.str_replace('.','_',$local_oid).'">'.
-								'<td><a '.OIDplus::gui()->link(isset($lookup_nonoid[$local_oid]) ? $lookup_nonoid[$local_oid] : 'oid:'.$local_oid, true).'>'._L('View local OID').'</a></td>'.
+								'<td><a '.OIDplus::gui()->link($lookup_nonoid[$local_oid] ?? 'oid:' . $local_oid, true).'>'._L('View local OID').'</a></td>'.
 								'<td><a href="javascript:OIDplusPageAdminOIDInfoExport.removeMissingOid(\''.$local_oid.'\');">'._L('Ignore for now').'</a></td>'.
 								'<td><a target="_blank" href="'.$url.'">'._L('Add to oid-info.com manually').'</a></td>'.
 								'<td>'.$local_oid.'</td>'.
@@ -692,12 +699,12 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param $only_non_existing
+	 * @param bool $only_non_existing
 	 * @return string[]
 	 * @throws OIDplusException
 	 * @throws \OIDInfoException
 	 */
-	public static function outputXML($only_non_existing) {
+	public static function outputXML(bool $only_non_existing): array {
 		$out_type = null;
 		$out_content = '';
 
@@ -722,7 +729,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 		$sys_title = OIDplus::config()->getValue('system_title');
 		$name1 = !empty($sys_title) ? $sys_title : 'OIDplus 2.0';
-		$name2 = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Export interface';
+		$name2 = $_SERVER['SERVER_NAME'] ?? 'Export interface';
 		$out_content .= $oa->xmlAddHeader($name1, $name2, $email); // do not translate
 
 		$params['allow_html'] = true;
@@ -908,12 +915,12 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param $str
-	 * @return array|string|string[]|null
+	 * @param string $str
+	 * @return string
 	 * @throws OIDplusException
 	 */
-	private static function repair_relative_links($str) {
-		$str = preg_replace_callback('@(href\s*=\s*([\'"]))(.+)(\\2)@ismU', function($treffer) {
+	private static function repair_relative_links(string $str): string {
+		return preg_replace_callback('@(href\s*=\s*([\'"]))(.+)(\\2)@ismU', function($treffer) {
 			$url = $treffer[3];
 			if ((stripos($url,'http:') !== 0) && (stripos($url,'https:') !== 0) && (stripos($url,'ftp:') !== 0)) {
 				if (stripos($url,'www.') === 0) {
@@ -924,7 +931,6 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 			}
 			return $treffer[1].$url.$treffer[4];
 		}, $str);
-		return $str;
 	}
 
 	/**
@@ -944,10 +950,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return array
 	 */
-	private static function split_name($name) {
+	private static function split_name(string $name): array {
 		// uses regex that accepts any word character or hyphen in last name
 		// https://stackoverflow.com/questions/13637145/split-text-string-into-first-and-last-name-in-php
 		$name = trim($name);
@@ -961,14 +967,14 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	/*protected*/ const ORPHAN_DISALLOW_ORPHANS = 2;
 
 	/**
-	 * @param $xml_contents
-	 * @param $errors
-	 * @param $replaceExistingOIDs
-	 * @param $orphan_mode
+	 * @param string $xml_contents
+	 * @param array $errors
+	 * @param bool $replaceExistingOIDs
+	 * @param int $orphan_mode
 	 * @return int[]
 	 * @throws OIDplusException
 	 */
-	protected function oidinfoImportXML($xml_contents, &$errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_AUTO_DEORPHAN): array {
+	protected function oidinfoImportXML(string $xml_contents, array &$errors, bool $replaceExistingOIDs=false, int $orphan_mode=self::ORPHAN_AUTO_DEORPHAN): array {
 		// TODO: Implement RA import (let the user decide)
 		// TODO: Let the user decide about $replaceExistingOIDs
 		// TODO: Let the user decide if "created=now" should be set (this is good when the XML files is created by the user itself to do bulk-inserts)
@@ -1152,11 +1158,11 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 
 	/**
 	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
-	 * @param $user
+	 * @param string|null $user
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications($user=null): array {
+	public function getNotifications(string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (!function_exists('curl_init')) {

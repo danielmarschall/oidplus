@@ -25,6 +25,9 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusRAAuthInfo extends OIDplusBaseClass {
 
+	/**
+	 * @var string
+	 */
 	private $authKey;
 
 	/**

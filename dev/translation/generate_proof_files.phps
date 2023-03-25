@@ -94,7 +94,11 @@ if (count($langs) > 0) {
 
 # ---
 
-function get_js_L_strings($cont) {
+/**
+ * @param string $cont
+ * @return array
+ */
+function get_js_L_strings(string $cont): array {
 	// Works with JavaScript and PHP
 	$cont = preg_replace('@/\\*.+\\*/@ismU', '', $cont);
 	$cont = str_replace('\\"', chr(1), $cont);
@@ -109,7 +113,11 @@ function get_js_L_strings($cont) {
 	return $m[2];
 }
 
-function get_php_L_strings($cont) {
+/**
+ * @param string $cont
+ * @return array
+ */
+function get_php_L_strings(string $cont): array {
 	// Works only with PHP
 	$out = array();
 	$tokens = token_get_all($cont);

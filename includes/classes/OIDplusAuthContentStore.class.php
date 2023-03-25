@@ -156,7 +156,7 @@ abstract class OIDplusAuthContentStore extends OIDplusBaseClass implements OIDpl
 	 * @param string $email
 	 * @return bool
 	 */
-	public function isRaLoggedIn(string $email) {
+	public function isRaLoggedIn(string $email): bool {
 		foreach ($this->loggedInRaList() as $ra) {
 			if ($email == $ra->raEmail()) return true;
 		}

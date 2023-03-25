@@ -24,6 +24,9 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusDomain extends OIDplusObject {
+	/**
+	 * @var string
+	 */
 	private $domain;
 
 	/**
@@ -201,7 +204,7 @@ class OIDplusDomain extends OIDplusObject {
 	}
 
 	/**
-	 * @param $to
+	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
 	public function distance($to) {

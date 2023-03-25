@@ -25,9 +25,24 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
+	/**
+	 *
+	 */
 	/*private*/ const QUERY_REGISTER_V1 =         '1.3.6.1.4.1.37476.2.5.2.1.1.1';
+
+	/**
+	 *
+	 */
 	/*private*/ const QUERY_UNREGISTER_V1 =       '1.3.6.1.4.1.37476.2.5.2.1.2.1';
+
+	/**
+	 *
+	 */
 	/*private*/ const QUERY_LISTALLSYSTEMIDS_V1 = '1.3.6.1.4.1.37476.2.5.2.1.3.1';
+
+	/**
+	 *
+	 */
 	/*private*/ const QUERY_LIVESTATUS_V1 =       '1.3.6.1.4.1.37476.2.5.2.1.4.1';
 
 	/**
@@ -254,11 +269,11 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param $privacy_level
+	 * @param int|null $privacy_level
 	 * @return false|void
-	 * @throws OIDplusException
+	 * @throws OIDplusException|\OIDInfoException
 	 */
-	public function sendRegistrationQuery($privacy_level=null) {
+	public function sendRegistrationQuery(int $privacy_level=null) {
 
 		if (is_null($privacy_level)) {
 			$privacy_level = OIDplus::config()->getValue('reg_privacy');
@@ -660,7 +675,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 		$msg = '';
 		if ($do_edits) {
 			try {
-				OIDplus::config()->setValue('reg_privacy', isset($_POST['reg_privacy']) ? $_POST['reg_privacy'] : 1);
+				OIDplus::config()->setValue('reg_privacy', $_POST['reg_privacy'] ?? 1);
 				OIDplus::config()->setValue('oobe_registration_done', '1');
 			} catch (\Exception $e) {
 				$msg = $e->getMessage();

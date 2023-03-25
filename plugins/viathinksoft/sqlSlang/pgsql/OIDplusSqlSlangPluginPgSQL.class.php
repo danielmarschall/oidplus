@@ -102,8 +102,7 @@ class OIDplusSqlSlangPluginPgSQL extends OIDplusSqlSlangPlugin {
 	 */
 	public function setupSetTablePrefix(string $cont, string $table, string $prefix): string {
 		$cont = str_replace('"'.$table.'"', '"'.$prefix.$table.'"', $cont);
-		$cont = str_replace('"index_'.$table, '"index_'.$prefix.$table, $cont);
-		return $cont;
+		return str_replace('"index_'.$table, '"index_'.$prefix.$table, $cont);
 	}
 
 	/**

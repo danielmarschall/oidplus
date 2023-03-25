@@ -18,7 +18,12 @@
  * limitations under the License.
  */
 
-function bcrypt_rounds($treshold_secs, $verbose=true) {
+/**
+ * @param int $treshold_secs
+ * @param bool $verbose
+ * @return int
+ */
+function bcrypt_rounds(int $treshold_secs, bool $verbose=true): int {
 	if ($verbose) echo "Searching BCrypt cost (rounds) for <$treshold_secs secs...\n";
 	$found = 31;
 	for ($rounds=4; $rounds<=31; $rounds++) { // 4..31 is the valid range of PHP Bcrypt

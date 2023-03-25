@@ -22,7 +22,13 @@
 // or
 // "selective/xmldsig": "^2.4"
 
-function oidplus_xml_verify($xml_content, $pubkey) {
+/**
+ * @param string $xml_content
+ * @param string $pubkey
+ * @return void
+ * @throws Exception
+ */
+function oidplus_xml_verify(string $xml_content, string $pubkey) {
 	require_once __DIR__.'/vendor/autoload.php';
 
 	$sig_ok = false;
@@ -75,7 +81,14 @@ function oidplus_xml_verify($xml_content, $pubkey) {
 	}
 }
 
-function oidplus_xml_sign($xml_content, $privkey, $pubkey) {
+/**
+ * @param string $xml_content
+ * @param string $privkey
+ * @param string $pubkey
+ * @return false|string|void
+ * @throws Exception
+ */
+function oidplus_xml_sign(string $xml_content, string $privkey, string $pubkey) {
 	require_once __DIR__.'/vendor/autoload.php';
 
 	if (class_exists('\RobRichards\XMLSecLibs\XMLSecurityDSig')) {

@@ -33,7 +33,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 	public static function nonjs_menu(): string {
 		$json = array();
 
-		$static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
+		$static_node_id = $_REQUEST['goto'] ?? 'oidplus:system';
 
 		foreach (OIDplus::getPagePlugins() as $plugin) {
 			// Note: The system (OIDplusMenuUtils) does only show the menu of
@@ -110,13 +110,13 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param $parent
-	 * @param $goto_path
+	 * @param string $parent
+	 * @param array|true|null $goto_path
 	 * @return array
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public static function tree_populate($parent, $goto_path=null): array {
+	public static function tree_populate(string $parent, $goto_path=null): array {
 		$children = array();
 
 		$parentObj = OIDplusObject::parse($parent);

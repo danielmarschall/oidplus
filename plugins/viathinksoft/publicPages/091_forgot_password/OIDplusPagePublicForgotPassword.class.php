@@ -200,12 +200,11 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 		$message = file_get_contents(__DIR__ . '/forgot_password.tpl');
 
 		// Resolve stuff
+		// Note: {{ACTIVATE_URL}} will be resolved in ajax.php
+
 		$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
-		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 
-		// {{ACTIVATE_URL}} will be resolved in ajax.php
-
-		return $message;
+		return str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 	}
 
 	/**

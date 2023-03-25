@@ -30,7 +30,7 @@ ob_start(); // allow cookie headers to be sent
 
 OIDplus::init(true);
 
-$static_node_id = isset($_REQUEST['goto']) ? $_REQUEST['goto'] : 'oidplus:system';
+$static_node_id = $_REQUEST['goto'] ?? 'oidplus:system';
 
 if (isset($_REQUEST['h404'])) {
 	$handled = false;

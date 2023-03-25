@@ -55,7 +55,11 @@ while (true) {
 	if ($cnt%25 == 0) echo "PROCESSING: $cnt       \r";
 }
 
-function smallhash($data) { // get 31 bits from SHA1. Values 0..2147483647
+/**
+ * @param string $data
+ * @return int
+ */
+function smallhash(string $data): int { // get 31 bits from SHA1. Values 0..2147483647
 	return (hexdec(substr(sha1($data),-4*2)) & 0x7FFFFFFF);
 }
 

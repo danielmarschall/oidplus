@@ -24,22 +24,34 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusIpv4 extends OIDplusObject {
+	/**
+	 * @var string
+	 */
 	private $ipv4;
+
+	/**
+	 * @var string
+	 */
 	private $bare;
+
+	/**
+	 * @var int
+	 */
 	private $cidr;
 
 	/**
-	 * @param $ipv4
+	 * @param string $ipv4
 	 * @throws OIDplusException
 	 */
-	public function __construct($ipv4) {
+	public function __construct(string $ipv4) {
 		$this->ipv4 = $ipv4;
 
 		if (!empty($ipv4)) {
 			if (strpos($ipv4, '/') === false) $ipv4 .= '/32';
 			list($bare, $cidr) = explode('/', $ipv4);
 			$this->bare = $bare;
-			$this->cidr = $cidr;
+			if (is_numeric($cidr)) throw new OIDplusException(_L('Invalid IPv4'));
+			$this->cidr = (int)$cidr;
 			if (!ipv4_valid($bare)) throw new OIDplusException(_L('Invalid IPv4'));
 			if (!is_numeric($cidr)) throw new OIDplusException(_L('Invalid IPv4'));
 			if ($cidr < 0) throw new OIDplusException(_L('Invalid IPv4'));
@@ -52,6 +64,7 @@ class OIDplusIpv4 extends OIDplusObject {
 	/**
 	 * @param string $node_id
 	 * @return OIDplusIpv4|null
+	 * @throws OIDplusException
 	 */
 	public static function parse(string $node_id)/*: ?OIDplusIpv4*/ {
 		@list($namespace, $ipv4) = explode(':', $node_id, 2);
@@ -242,7 +255,7 @@ class OIDplusIpv4 extends OIDplusObject {
 	}
 
 	/**
-	 * @param $to
+	 * @param OIDplusObject|string $to
 	 * @return float|int|mixed|string|null
 	 */
 	public function distance($to) {

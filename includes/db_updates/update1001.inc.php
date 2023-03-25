@@ -25,7 +25,7 @@ use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
  * @return int new version set
  * @throws \ViaThinkSoft\OIDplus\OIDplusException
  */
-function oidplus_dbupdate_1001(OIDplusDatabaseConnection $db) {
+function oidplus_dbupdate_1001(OIDplusDatabaseConnection $db): int {
 	if ($db->transaction_supported()) $db->transaction_begin();
 
 	// Change collation so that objects like FourCC can be case-sensitive

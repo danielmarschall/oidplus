@@ -62,7 +62,7 @@ class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 		$objects_info = count($objects_names) == 0 ? '' : ' ('._L('affected objects: %1',implode(', ',$objects_names)).')';
 
 		$ts = date('Y-m-d H:i:s');
-		$addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : _L('unknown');
+		$addr = $_SERVER['REMOTE_ADDR'] ?? _L('unknown');
 
 		// Note: $ts was put into brackets, because there is probably a bug in fail2ban that does not allow the date/time being at offset 0
 		// "WARNING Found a match for '020-05-11 22:50:58 [192.168.69.89] Failed login ..."

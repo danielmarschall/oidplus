@@ -145,7 +145,7 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public static function vnag_password() {
+	public static function vnag_password(): string {
 		return sha3_512(OIDplus::baseConfig()->getValue('SERVER_SECRET').'/VNAG');
 	}
 

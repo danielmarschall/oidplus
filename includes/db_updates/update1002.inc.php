@@ -43,9 +43,9 @@ function oidplus_dbupdate_1002_migrate_ra_passwords(OIDplusDatabaseConnection $d
  * This function converts A1*#, A2#, A3# hashes to Crypt compatible hashes.
  * @param string $authkey is old database field value "authkey"
  * @param string $salt is old database field value "salt"
- * @returns New authkey field (Crypt compatible hash)
+ * @returns string New authkey field (Crypt compatible hash)
  */
-function vts_crypt_convert_from_old_oidplus($authkey, $salt) {
+function vts_crypt_convert_from_old_oidplus(string $authkey, string $salt): string {
 	if (preg_match('@^A1([abcd])#(.+):(.+)$@', $authkey, $m)) {
 		// A1a#hashalgo:X with X being H(salt+password) in hex- or rfc4648-base64-notation
 		// A1b#hashalgo:X with X being H(password+salt) in hex- or rfc4648-base64-notation
@@ -87,7 +87,7 @@ function vts_crypt_convert_from_old_oidplus($authkey, $salt) {
  * @return int new version set
  * @throws \ViaThinkSoft\OIDplus\OIDplusException
  */
-function oidplus_dbupdate_1002(OIDplusDatabaseConnection $db) {
+function oidplus_dbupdate_1002(OIDplusDatabaseConnection $db): int {
 	if ($db->transaction_supported()) $db->transaction_begin();
 
 	if ($db->getSlang()->id() == 'mssql') {

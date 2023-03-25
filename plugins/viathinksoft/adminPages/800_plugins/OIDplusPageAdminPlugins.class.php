@@ -33,10 +33,10 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param $out
+	 * @param array $out
 	 * @return void
 	 */
-	private function pluginTableHead(&$out) {
+	private function pluginTableHead(array &$out) {
 		$out['text'] .= '	<tr>';
 		$out['text'] .= '		<th width="30%">'._L('Class name').'</th>';
 		$out['text'] .= '		<th width="30%">'._L('Plugin name').'</th>';
@@ -47,13 +47,13 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param $out
-	 * @param $plugin
-	 * @param $modifier
-	 * @param $na_reason
+	 * @param array $out
+	 * @param OIDplusPlugin $plugin
+	 * @param int $modifier
+	 * @param string $na_reason
 	 * @return void
 	 */
-	private function pluginTableLine(&$out, $plugin, $modifier=0, $na_reason='') {
+	private function pluginTableLine(array &$out, OIDplusPlugin $plugin, int $modifier=0, string $na_reason='') {
 		$html_reason = empty($na_reason) ? '' : ' ('.htmlentities($na_reason).')';
 		$out['text'] .= '	<tr>';
 		if ($modifier == 0) {
@@ -83,7 +83,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 	 */
 	public function gui(string $id, array &$out, bool &$handled) {
 		$tmp = explode('$',$id);
-		$classname = isset($tmp[1]) ? $tmp[1] : null;
+		$classname = $tmp[1] ?? null;
 
 		$parts = explode('.',$tmp[0],2);
 		if (!isset($parts[1])) $parts[1] = '';

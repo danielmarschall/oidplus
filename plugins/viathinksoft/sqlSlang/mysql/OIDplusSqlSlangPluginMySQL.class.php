@@ -106,8 +106,7 @@ class OIDplusSqlSlangPluginMySQL extends OIDplusSqlSlangPlugin {
 	 * @return string
 	 */
 	public function setupSetTablePrefix(string $cont, string $table, string $prefix): string {
-		$cont = str_replace('`'.$table.'`', '`'.$prefix.$table.'`', $cont);
-		return $cont;
+		return str_replace('`'.$table.'`', '`'.$prefix.$table.'`', $cont);
 	}
 
 	/**

@@ -479,11 +479,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return OIDplusSqlSlangPlugin|null
 	 */
 	public static function getSqlSlangPlugin(string $id)/*: ?OIDplusSqlSlangPlugin*/ {
-		if (isset(self::$sqlSlangPlugins[$id])) {
-			return self::$sqlSlangPlugins[$id];
-		} else {
-			return null;
-		}
+		return self::$sqlSlangPlugins[$id] ?? null;
 	}
 
 	// --- Database plugin
@@ -1105,15 +1101,15 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param $pluginDirName
-	 * @param $expectedPluginClass
-	 * @param $registerCallback
+	 * @param string|array $pluginDirName
+	 * @param string $expectedPluginClass
+	 * @param callable|null $registerCallback
 	 * @return string[]
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 * @throws \ReflectionException
 	 */
-	public static function registerAllPlugins($pluginDirName, $expectedPluginClass, $registerCallback): array {
+	public static function registerAllPlugins($pluginDirName, string $expectedPluginClass, callable $registerCallback=null): array {
 		$out = array();
 		if (is_array($pluginDirName)) {
 			$ary = array();
@@ -1266,8 +1262,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @param bool $html
 	 * @param bool $keepBaseConfig
 	 * @return void
-	 * @throws OIDplusConfigInitializationException
-	 * @throws OIDplusException
+	 * @throws OIDplusConfigInitializationException|OIDplusException|\ReflectionException
 	 */
 	public static function init(bool $html=true, bool $keepBaseConfig=true) {
 		self::$html = $html;
@@ -1632,10 +1627,10 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param $pubKey
+	 * @param string $pubKey
 	 * @return false|string
 	 */
-	private static function pubKeyToRaw($pubKey) {
+	private static function pubKeyToRaw(string $pubKey) {
 		$m = array();
 		if (preg_match('@BEGIN PUBLIC KEY\\-+([^\\-]+)\\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
 			return base64_decode($m[1], false);
@@ -1644,20 +1639,20 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param $pubKey
+	 * @param string $pubKey
 	 * @return false|int
 	 */
-	private static function getSystemIdFromPubKey($pubKey) {
+	private static function getSystemIdFromPubKey(string $pubKey) {
 		$rawData = self::pubKeyToRaw($pubKey);
 		if ($rawData === false) return false;
 		return smallhash($rawData);
 	}
 
 	/**
-	 * @param $pubKey
+	 * @param string $pubKey
 	 * @return false|string
 	 */
-	private static function getSystemGuidFromPubKey($pubKey) {
+	private static function getSystemGuidFromPubKey(string $pubKey) {
 		$rawData = self::pubKeyToRaw($pubKey);
 		if ($rawData === false) return false;
 		$normalizedBase64 = base64_encode($rawData);
@@ -2180,10 +2175,10 @@ class OIDplus extends OIDplusBaseClass {
 	private static $shutdown_functions = array();
 
 	/**
-	 * @param $func
+	 * @param callable $func
 	 * @return void
 	 */
-	public static function register_shutdown_function($func) {
+	public static function register_shutdown_function(callable $func) {
 		self::$shutdown_functions[] = $func;
 	}
 
@@ -2269,10 +2264,10 @@ class OIDplus extends OIDplusBaseClass {
 	private static $translationArray = array();
 
 	/**
-	 * @param $translation_file
-	 * @return array|mixed
+	 * @param string $translation_file
+	 * @return array
 	 */
-	protected static function getTranslationFileContents($translation_file) {
+	protected static function getTranslationFileContents(string $translation_file): array {
 		// First, try the cache
 		$cache_file = __DIR__ . '/../../userdata/cache/translation_'.md5($translation_file).'.ser';
 		if (file_exists($cache_file) && (filemtime($cache_file) == filemtime($translation_file))) {

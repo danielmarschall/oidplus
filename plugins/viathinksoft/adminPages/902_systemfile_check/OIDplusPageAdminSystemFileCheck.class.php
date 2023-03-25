@@ -188,12 +188,12 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param $dir
-	 * @param $basepath
-	 * @param $results
-	 * @return array|mixed
+	 * @param string $dir
+	 * @param string|null $basepath
+	 * @param array $results
+	 * @return array
 	 */
-	private static function getDirContents($dir, $basepath = null, &$results = array()) {
+	private static function getDirContents(string $dir, string $basepath = null, array &$results = array()): array {
 		if (is_null($basepath)) $basepath = $dir;
 		$basepath = realpath($basepath) . DIRECTORY_SEPARATOR;
 		$dir = realpath($dir) . DIRECTORY_SEPARATOR;
@@ -216,10 +216,10 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param $checksumfile
+	 * @param string $checksumfile
 	 * @return array|false
 	 */
-	private static function checksumFileToArray($checksumfile) {
+	private static function checksumFileToArray(string $checksumfile) {
 		$out = array();
 
 		$cont = url_get_contents($checksumfile);

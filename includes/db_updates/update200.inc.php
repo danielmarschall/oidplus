@@ -25,7 +25,7 @@ use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
  * @return int new version set
  * @throws \ViaThinkSoft\OIDplus\OIDplusException
  */
-function oidplus_dbupdate_200(OIDplusDatabaseConnection $db) {
+function oidplus_dbupdate_200(OIDplusDatabaseConnection $db): int {
 	if ($db->transaction_supported()) $db->transaction_begin();
 
 	$db->query("ALTER TABLE ###objects ADD comment varchar(255) NULL");

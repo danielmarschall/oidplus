@@ -93,7 +93,14 @@ if (($mode == 'leaf_url_icon16') || ($mode == 'leaf_doc_icon16') || ($mode == 'f
 
 # ---
 
-function getIconCandidate($file, $picFormat, $treeOrBig, $lang) {
+/**
+ * @param string $file
+ * @param string $picFormat
+ * @param string $treeOrBig
+ * @param string $lang
+ * @return string
+ */
+function getIconCandidate(string $file, string $picFormat, string $treeOrBig, string $lang): string {
 	$cnt = 0;
 	if (!empty($lang)) {
 		$appendix = '_'.$treeOrBig.'$'.$lang.'.'.$picFormat;

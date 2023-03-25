@@ -84,7 +84,11 @@ require_once __DIR__ . '/oidplus_autoloader.inc.php';
 
 // Functions
 
-function oidplus_dependency_panic($message)/*: never*/ {
+/**
+ * @param string $message
+ * @return void
+ */
+function oidplus_dependency_panic(/*string*/ $message)/*: never*/ {
 	$title = 'OIDplus startup error';
 	if (PHP_SAPI === 'cli') {
 		$message = str_replace('<li>', "- ", $message);

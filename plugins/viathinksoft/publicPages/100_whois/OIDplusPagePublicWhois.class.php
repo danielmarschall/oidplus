@@ -235,11 +235,11 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param $id
+	 * @param string $id
 	 * @return int
 	 * @throws OIDplusException
 	 */
-	public static function genWhoisAuthToken($id) {
+	public static function genWhoisAuthToken(string $id): int {
 		return smallhash(OIDplus::baseConfig()->getValue('SERVER_SECRET').'/WHOIS/'.$id);
 	}
 }

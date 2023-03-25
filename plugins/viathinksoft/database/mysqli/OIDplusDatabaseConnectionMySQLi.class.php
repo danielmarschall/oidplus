@@ -24,8 +24,20 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
+
+	/**
+	 * @var mixed|null
+	 */
 	private $conn = null; // only with MySQLnd
+
+	/**
+	 * @var array
+	 */
 	private $prepare_cache = array();
+
+	/**
+	 * @var string|null
+	 */
 	private $last_error = null; // we need that because MySQL divides prepared statement errors and normal query errors, but we have only one "error()" method
 
 	/**

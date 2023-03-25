@@ -24,13 +24,28 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusQueryResultSQLite3 extends OIDplusQueryResult {
+	/**
+	 * @var bool
+	 */
 	protected $no_resultset;
+
+	/**
+	 * @var mixed
+	 */
 	protected $res;
+
+	/**
+	 * @var array
+	 */
 	protected $all_results = array();
+
+	/**
+	 * @var int
+	 */
 	protected $cursor = 0;
 
 	/**
-	 * @param $res
+	 * @param mixed $res
 	 */
 	public function __construct($res) {
 		if (is_bool($res) || ($res->numColumns() == 0)) {

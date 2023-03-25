@@ -121,7 +121,11 @@ if (PHP_SAPI != 'cli') {
 
 # ---
 
-function dotest($db) {
+/**
+ * @param \ViaThinkSoft\OIDplus\OIDplusDatabaseConnection $db
+ * @return void
+ */
+function dotest(\ViaThinkSoft\OIDplus\OIDplusDatabaseConnection $db): string {
 	echo "Database: " . get_class($db) . "\n";
 	try {
 		$db->connect();
@@ -366,25 +370,35 @@ function dotest($db) {
 	echo "\n";
 }
 
-function redtext($str) {
+/**
+ * @param string $str
+ * @return string
+ */
+function redtext(string $str): string {
 	global $num_errs;
 	$num_errs++;
 	return PHP_SAPI == 'cli' ? "\033[31m$str\033[0m" : '<font color="red">'.$str.'</font>';
 }
 
-function greentext($str) {
+/**
+ * @param string $str
+ * @return string
+ */
+function greentext(string $str): string {
 	global $num_succ;
 	$num_succ++;
 	return PHP_SAPI == 'cli' ? "\033[32m$str\033[0m" : '<font color="green">'.$str.'</font>';
 }
 
-function is_known_errormsg($msg) {
+/**
+ * @param string $msg
+ * @return bool
+ */
+function is_known_errormsg(string $msg): bool {
 	// Oracle:
 	//Error-Function after failed direct query:
 	//	==> OCIStmtExecute: ORA-00942: table or view does not exist  (ext\pdo_oci\oci_statement.c:155)
 	//Error-Function after failed prepared query:
 	//	==> OCIBindByPos: ORA-01036: illegal variable name/number (ext\pdo_oci\oci_statement.c:346)
-	if (strpos($msg,'ORA-') !== false) return true;
-
-	return false;
+	return strpos($msg,'ORA-') !== false;
 }

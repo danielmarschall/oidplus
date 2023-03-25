@@ -31,7 +31,11 @@ $out = '';
 
 $do_minify = OIDplus::baseConfig()->getValue('MINIFY_CSS', true);
 
-function process_file($filename) {
+/**
+* @param string $filename
+* @return string
+ */
+function process_file(string $filename): string {
 	global $do_minify;
 
 	if (!file_exists($filename)) return "";

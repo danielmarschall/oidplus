@@ -65,7 +65,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 
 			$starttime = time();
 			$random = mt_rand($min,$max);
-			$ip_target = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
+			$ip_target = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 			$challenge = sha3_512($starttime.'/'.$ip_target.'/'.$random);
 			$challenge_integrity = sha3_512_hmac($challenge,$server_secret);
 			$send_to_client = array($starttime, $ip_target, $challenge, $min, $max, $challenge_integrity);
@@ -87,12 +87,12 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 	}
 
 	/**
-	 * @param $ip_target
-	 * @param $random
+	 * @param string $ip_target
+	 * @param string|int $random
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	private static function getOpenTransFileName($ip_target, $random) {
+	private static function getOpenTransFileName(string $ip_target, $random): string {
 		$dir = OIDplus::localpath().'/userdata/cache';
 		$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
 
@@ -151,7 +151,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 
 		$open_trans_file = self::getOpenTransFileName($ip_target, $answer);
 
-		$current_ip = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown');
+		$current_ip = ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
 		if ($ip_target != $current_ip) {
 			throw new OIDplusException(_L('IP address has changed. Please try again. (current IP %1, expected %2)', $current_ip, $ip_target));
 		} else if (time()-$starttime > OIDplus::baseConfig()->getValue('VTS_CAPTCHA_MAXTIME', 10*60/*10 minutes*/)) {

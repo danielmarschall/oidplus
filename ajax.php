@@ -118,7 +118,7 @@ try {
 			// Outputs:    JSON
 			_CheckParamExists($_REQUEST, 'id');
 			$_REQUEST['id'] = OIDplus::prefilterQuery($_REQUEST['id'], false);
-			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], isset($_REQUEST['goto']) ? $_REQUEST['goto'] : '');
+			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], $_REQUEST['goto'] ?? '');
 		} else {
 			throw new OIDplusException(_L('Invalid action ID'));
 		}

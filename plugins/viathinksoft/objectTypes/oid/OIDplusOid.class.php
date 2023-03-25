@@ -24,13 +24,16 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusOid extends OIDplusObject {
+	/**
+	 * @var string
+	 */
 	private $oid;
 
 	/**
-	 * @param $oid
+	 * @param string $oid
 	 * @throws OIDplusException
 	 */
-	public function __construct($oid) {
+	public function __construct(string $oid) {
 		$bak_oid = $oid;
 
 		$oid = sanitizeOID($oid, 'auto');
@@ -49,6 +52,7 @@ class OIDplusOid extends OIDplusObject {
 	/**
 	 * @param string $node_id
 	 * @return OIDplusOid|null
+	 * @throws OIDplusException
 	 */
 	public static function parse(string $node_id)/*: ?OIDplusOid*/ {
 		@list($namespace, $oid) = explode(':', $node_id, 2);
@@ -127,6 +131,7 @@ class OIDplusOid extends OIDplusObject {
 	/**
 	 * @param OIDplusObject|null $parent
 	 * @return string
+	 * @throws OIDplusException
 	 */
 	public function jsTreeNodeName(OIDplusObject $parent = null): string {
 		if ($parent == null) return $this->objectTypeTitle();
@@ -153,6 +158,7 @@ class OIDplusOid extends OIDplusObject {
 
 	/**
 	 * @return array
+	 * @throws OIDplusException
 	 */
 	private function getTechInfo(): array {
 		$tech_info = array();
@@ -493,9 +499,7 @@ class OIDplusOid extends OIDplusObject {
 
 			if ($is_longarc) break; // we don't write /ITU-T/ at the beginning, when /ITU-T/xyz is a long arc
 		}
-		$iri_notation = '/' . substr($iri_notation, 0, strlen($iri_notation)-1);
-
-		return $iri_notation;
+		return '/' . substr($iri_notation, 0, strlen($iri_notation)-1);
 	}
 
 	/**
@@ -616,7 +620,7 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	/**
-	 * @param $to
+	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
 	public function distance($to) {

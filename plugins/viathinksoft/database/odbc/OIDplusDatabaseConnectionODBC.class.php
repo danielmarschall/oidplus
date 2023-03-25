@@ -24,8 +24,19 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
-	private $conn;
+	/**
+	 * @var mixed|null
+	 */
+	private $conn = null;
+
+	/**
+	 * @var string|null
+	 */
 	private $last_error = null; // do the same like MySQL+PDO, just to be equal in the behavior
+
+	/**
+	 * @var bool
+	 */
 	private $transactions_supported = false;
 
 	/**

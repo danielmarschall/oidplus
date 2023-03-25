@@ -25,7 +25,7 @@ use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
  * @return int new version set
  * @throws \ViaThinkSoft\OIDplus\OIDplusException
  */
-function oidplus_dbupdate_205(OIDplusDatabaseConnection $db) {
+function oidplus_dbupdate_205(OIDplusDatabaseConnection $db): int {
 	// Note: We update to version 1000, because we want to intentionally break older versions of OIDplus
 	// if they try to connect to a database that is newer than their own program files. Older versions
 	// of OIDplus checked for DB version 200..999 and failed if the version is outside this range.

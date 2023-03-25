@@ -30,8 +30,7 @@ abstract class OIDplusPlugin extends OIDplusBaseClass {
 	 */
 	public final function getPluginDirectory(): string {
 		$reflector = new \ReflectionClass(get_called_class());
-		$path = dirname($reflector->getFilename());
-		return $path;
+		return dirname($reflector->getFilename());
 	}
 
 	/**

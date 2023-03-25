@@ -24,8 +24,19 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
+	/**
+	 * @var mixed|null
+	 */
 	private $conn = null;
+
+	/**
+	 * @var string|null
+	 */
 	private $last_error = null; // we need that because PDO divides prepared statement errors and normal query errors, but we have only one "error()" method
+
+	/**
+	 * @var bool
+	 */
 	private $transactions_supported = false;
 
 	/**
