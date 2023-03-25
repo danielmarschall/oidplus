@@ -3,7 +3,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,9 +50,13 @@ foreach ($tmp as $tmp2) {
 $all_strings = array();
 
 $it = new RecursiveDirectoryIterator($dir);
+$it->setFlags(RecursiveDirectoryIterator::SKIP_DOTS); // DOES NOT WORK! Folders with . prefix still get evaluated!
 foreach(new RecursiveIteratorIterator($it) as $file) {
 	if ((strpos(str_replace('\\','/',realpath($file)),'/vendor/') !== false) && (strpos(str_replace('\\','/',realpath($file)),'/vendor/danielmarschall/') === false)) continue; // ignore third-party-code
 	if (strpos(str_replace('\\','/',realpath($file)),'/dev/') !== false) continue; // ignore development utilities
+
+	if (preg_match('@[/\\\\]\\.[^\\.]@',$file,$m)) continue; // Alternative to SKIP_DOTS
+
 	if ($file->getExtension() == 'php') {
 		$cont = file_get_contents($file);
 		$cont = phpRemoveComments($cont);
