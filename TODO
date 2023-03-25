@@ -1,4 +1,7 @@
 
+Type safety:
+- Search for "@param $" and add types
+
 Admin Auth:
 - implement argon2 as alternative to bcrypt?
 - idea: could RA-auth-plugins also be used to create the admin-hash? problem: setup/ generates hash with javascript, not via PHP!!!

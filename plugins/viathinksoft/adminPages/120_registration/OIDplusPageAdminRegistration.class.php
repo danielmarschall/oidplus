@@ -564,14 +564,14 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 	/**
 	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
-	 * @param $step
-	 * @param $do_edits
-	 * @param $errors_happened
+	 * @param int $step
+	 * @param bool $do_edits
+	 * @param bool $errors_happened
 	 * @return void
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function oobeEntry($step, $do_edits, &$errors_happened)/*: void*/ {
+	public function oobeEntry(int $step, bool $do_edits, bool &$errors_happened)/*: void*/ {
 		echo '<h2>'._L('Step %1: System registration and automatic publishing (optional)',$step).'</h2>';
 
 		if (file_exists(__DIR__ . '/info$'.OIDplus::getCurrentLang().'.html')) {
@@ -676,11 +676,11 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 
 	/**
 	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
-	 * @param $user
+	 * @param string|null $user
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications($user=null): array {
+	public function getNotifications(string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (!function_exists('curl_init')) {
