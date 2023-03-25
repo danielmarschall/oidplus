@@ -898,10 +898,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param $str
-	 * @return mixed|string
+	 * @param string $str
+	 * @return string
 	 */
-	private static function _formatdate($str) {
+	private static function _formatdate(string $str): string {
 		$str = explode(' ',$str)[0];
 		if ($str == '0000-00-00') $str = '';
 		return $str;
@@ -928,10 +928,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param $address
-	 * @return array|string[]
+	 * @param string $address
+	 * @return string[]
 	 */
-	private static function split_address_country($address) {
+	private static function split_address_country(string $address): array {
 		global $oidinfo_countries;
 		$ary = explode("\n", $address);
 		$last_line = array_pop($ary);
@@ -965,10 +965,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin {
 	 * @param $errors
 	 * @param $replaceExistingOIDs
 	 * @param $orphan_mode
-	 * @return array|int[]
+	 * @return int[]
 	 * @throws OIDplusException
 	 */
-	protected function oidinfoImportXML($xml_contents, &$errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_AUTO_DEORPHAN) {
+	protected function oidinfoImportXML($xml_contents, &$errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_AUTO_DEORPHAN): array {
 		// TODO: Implement RA import (let the user decide)
 		// TODO: Let the user decide about $replaceExistingOIDs
 		// TODO: Let the user decide if "created=now" should be set (this is good when the XML files is created by the user itself to do bulk-inserts)

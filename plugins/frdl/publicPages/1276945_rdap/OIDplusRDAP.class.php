@@ -48,11 +48,11 @@ class OIDplusRDAP {
 	}
 
 	/**
-	 * @param $query
+	 * @param string $query
 	 * @return array
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
 	 */
-	public function rdapQuery($query) {
+	public function rdapQuery(string $query) {
 		$query = str_replace('oid:.', 'oid:', $query);
 		$n = explode(':', $query);
 		if(2>count($n)){

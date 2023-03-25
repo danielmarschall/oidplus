@@ -215,11 +215,11 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 	}
 
 	/**
-	 * @param $email
+	 * @param string $email
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	private function inviteSecurityCheck($email) {
+	private function inviteSecurityCheck(string $email) {
 		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 		if ($res->any()) {
 			throw new OIDplusException(_L('This RA is already registered and does not need to be invited.'));
@@ -244,11 +244,11 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 	}
 
 	/**
-	 * @param $email
+	 * @param string $email
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	private function getInvitationText($email): string {
+	private function getInvitationText(string $email): string {
 		$list_of_oids = array();
 		$res = OIDplus::db()->query("select id from ###objects where ra_email = ?", array($email));
 		while ($row = $res->fetch_array()) {
