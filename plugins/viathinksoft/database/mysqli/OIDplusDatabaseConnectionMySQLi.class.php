@@ -216,7 +216,8 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	 * @param array $params
 	 * @return bool
 	 */
-	private static function bind_placeholder_vars(object &$stmt, array $params): bool {
+	private static function bind_placeholder_vars(&$stmt, array $params): bool {
+		// Note: "object" is not a type-hint!
 		// Credit to: Dave Morgan
 		// Code taken from: http://www.devmorgan.com/blog/2009/03/27/dydl-part-3-dynamic-binding-with-mysqli-php/
 		//                  https://stackoverflow.com/questions/17219214/how-to-bind-in-mysqli-dynamically
