@@ -1149,14 +1149,12 @@ class OIDplus extends OIDplusBaseClass {
 					// Reason: The autoloader detects the classes inside plugins/*/*/*/*.class.php, but it cannot know
 					//         which namespace these files have, because their folder names do not reveal the namespace.
 					//         So it just ignores the namespace and loads all classes with the same name.
-					// There can be problems if two plugins have the same classname (but are in different namespaces, e.g.
-					// because they are made by different vendors). For example, two object types with the same PHP class name
-					// get mixed up getIcon()'s.
 					// TODO: Think about a solution; There was a discussion here https://github.com/frdl/frdl-oidplus-plugin-type-pen/issues/1
 					$tmp = explode('\\',$class_name);
 					$class_name_no_namespace = end($tmp);
 					if (in_array($class_name_no_namespace, $known_main_classes_no_namespace)) {
-						throw new OIDplusException(_L('More than one plugin has the PHP class name "%1". This is currently no supported, not even if they are in different namespaces.', $class_name_no_namespace));
+						// Removed check for now, since everything should work correctly
+						// throw new OIDplusException(_L('More than one plugin has the PHP class name "%1". This is currently no supported, not even if they are in different namespaces.', $class_name_no_namespace));
 					}
 					$known_main_classes_no_namespace[] = $class_name_no_namespace;
 

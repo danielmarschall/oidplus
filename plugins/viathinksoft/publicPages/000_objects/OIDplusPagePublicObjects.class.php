@@ -30,20 +30,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	 * @return string|null
 	 */
 	private function get_treeicon_root($ot)/*: ?string*/ {
-		$dirs = glob(OIDplus::localpath().'plugins/'.'*'.'/objectTypes/'.$ot::ns());
-
-		if (count($dirs) == 0) {
-			$icon = null;
-		} else {
-			$dir = $dirs[0];
-			$icon_name = $ot::treeIconFilename('root'); // see also OIDplusObject::getIcon()
-			if (!$icon_name) return null;
-			$icon = $dir.'/'.$icon_name;
-			if (!file_exists($icon)) return null;
-			$icon = substr($icon, strlen(OIDplus::localpath()));
-		}
-
-		return $icon;
+		$root = $ot::parse($ot::root());
+		if (!$root) return null;
+		return $root->getIcon();
 	}
 
 	/**

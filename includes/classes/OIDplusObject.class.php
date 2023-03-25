@@ -463,14 +463,15 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			$ra_email = $row['ra_email'];
 		}
 
-		$dirs = glob(OIDplus::localpath().'plugins/'.'*'.'/objectTypes/'.$namespace.'/');
-
-		if (count($dirs) == 0) return null; // default icon (folder)
-
-		$dir = substr($dirs[0], strlen(OIDplus::localpath()));
+		// $dirs = glob(OIDplus::localpath().'plugins/'.'*'.'/objectTypes/'.$namespace.'/');
+		// if (count($dirs) == 0) return null; // default icon (folder)
+		// $dir = substr($dirs[0], strlen(OIDplus::localpath()));
+		$reflection = new \ReflectionClass($this);
+		$dir = dirname($reflection->getFilename());
+		$dir = substr($dir, strlen(OIDplus::localpath()));
 
 		if ($this->isRoot()) {
-			$icon = $dir . '/' . $this::treeIconFilename('root'); // see also OIDplusPagePublicObjects::get_treeicon_root()
+			$icon = $dir . '/' . $this::treeIconFilename('root');
 		} else {
 			// We use $this:: instead of self:: , because we want to call the overridden methods
 			if ($ra_email && OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
