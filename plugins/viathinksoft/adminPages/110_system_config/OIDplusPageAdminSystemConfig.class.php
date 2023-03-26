@@ -90,12 +90,15 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
 			$output  = '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$output .= '<table class="table table-bordered table-striped">';
+			$output .= '<thead>';
 			$output .= '	<tr>';
 			$output .= '	     <th>'._L('Setting').'</th>';
 			$output .= '	     <th>'._L('Description').'</th>';
 			$output .= '	     <th>'._L('Value').'</th>';
 			$output .= '	     <th>'._L('Update').'</th>';
 			$output .= '	</tr>';
+			$output .= '</thead>';
+			$output .= '<tbody>';
 
 			OIDplus::config(); // <-- make sure that the config table is loaded/filled correctly before we do a select
 
@@ -116,6 +119,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 				$output .= '</tr>';
 			}
 
+			$output .= '</tbody>';
 			$output .= '</table>';
 			$output .= '</div></div>';
 

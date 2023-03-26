@@ -287,7 +287,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 						$count = 0;
 						$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 						$out['text'] .= '<table class="table table-bordered table-striped">';
+						$out['text'] .= '<thead>';
 						$out['text'] .= '<tr><th colspan="3">'._L('Actions').'</th><th>'._L('OID').'</th></tr>';
+						$out['text'] .= '</thead>';
+						$out['text'] .= '<tbody>';
 
 						$lookup_nonoid = array();
 						$row_lookup = array();
@@ -456,8 +459,11 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 								'</tr>';
 							}
 						}
+						$out['text'] .= '</tbody>';
 						if ($count == 0) {
+							$out['text'] .= '<tfoot>';
 							$out['text'] .= '<tr><td colspan="4">'._L('No missing OIDs found').'</td></tr>';
+							$out['text'] .= '</tfoot>';
 						}
 						$out['text'] .= '</table></div></div>';
 					} else {
@@ -581,7 +587,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 						$count = 0;
 						$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 						$out['text'] .= '<table class="table table-bordered table-striped">';
+						$out['text'] .= '<thead>';
 						$out['text'] .= '<tr><th colspan="4">'._L('Actions').'</th><th>'._L('OID').'</th></tr>';
+						$out['text'] .= '</thead>';
+						$out['text'] .= '<tbody>';
 						natsort($root['children']);
 						foreach ($root['children'] as $child_oid) {
 							if (!in_array($child_oid, $all_local_oids)) {
@@ -596,8 +605,11 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 								'</tr>';
 							}
 						}
+						$out['text'] .= '</tbody>';
 						if ($count == 0) {
+							$out['text'] .= '<tfoot>';
 							$out['text'] .= '<tr><td colspan="5">'._L('No extra OIDs found').'</td></tr>';
+							$out['text'] .= '</tfoot>';
 						}
 						$out['text'] .= '</table></div></div>';
 					} else {

@@ -138,10 +138,13 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<h2>'._L('OIDplus').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '<thead>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
 			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
 			$out['text'] .= '	</tr>';
+			$out['text'] .= '</thead>';
+			$out['text'] .= '<tbody>';
 
 			$sys_title = OIDplus::config()->getValue('system_title');
 			$out['text'] .= '	<tr>';
@@ -191,6 +194,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'.htmlentities($sys_install_type).'</td>';
 			$out['text'] .= '	</tr>';
 
+			$out['text'] .= '</tbody>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
 
@@ -199,10 +203,13 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<h2>'._L('PHP').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '<thead>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
 			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
 			$out['text'] .= '	</tr>';
+			$out['text'] .= '</thead>';
+			$out['text'] .= '<tbody>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('PHP version').'</td>';
 			$out['text'] .= '		<td>'.PHP_VERSION.'</td>';
@@ -215,6 +222,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'._L('Installed extensions').'</td>';
 			$out['text'] .= '		<td>'.htmlentities(implode(', ',get_loaded_extensions())).'</td>';
 			$out['text'] .= '	</tr>';
+			$out['text'] .= '</tbody>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:phpinfo').'>'._L('Show PHP server configuration (phpinfo)').'</a></p>';
 			$out['text'] .= '</div></div>';
@@ -224,10 +232,13 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<h2>'._L('Webserver').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '<thead>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
 			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
 			$out['text'] .= '	</tr>';
+			$out['text'] .= '</thead>';
+			$out['text'] .= '<tbody>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('Server software').'</td>';
 			$out['text'] .= '		<td>'.($_SERVER['SERVER_SOFTWARE'] ?? '<i>' . _L('unknown') . '</i>').'</td>';
@@ -263,6 +274,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			}
 			$out['text'] .= '		<td>'.($current_user == '' ? '<i>'._L('unknown').'</i>' : htmlentities($current_user)).'</td>';
 			$out['text'] .= '	</tr>';
+			$out['text'] .= '</tbody>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
 
@@ -271,10 +283,13 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<h2>'._L('Database').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '<thead>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
 			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
 			$out['text'] .= '	</tr>';
+			$out['text'] .= '</thead>';
+			$out['text'] .= '<tbody>';
 
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('Database provider').'</td>';
@@ -298,6 +313,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$tmp = $tmp['tmp'] ?? _L('n/a');
 			$out['text'] .= '		<td>'.$tmp.'</td>';
 			$out['text'] .= '	</tr>';
+			$out['text'] .= '</tbody>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
 
@@ -308,10 +324,13 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<h2>'._L('Operating System').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '<thead>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
 			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
 			$out['text'] .= '	</tr>';
+			$out['text'] .= '</thead>';
+			$out['text'] .= '<tbody>';
 			if (php_uname("m") == php_uname("n")) {
 				// At some hosts like Strato, php_uname() always returns the same string
 				// "Linux localhost 3.10.0-1127.10.1.el7.x86_64 #1 SMP"
@@ -341,6 +360,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'._L('Server time').'</td>';
 			$out['text'] .= '		<td>'.htmlentities(date('Y-m-d H:i:s P')).'</td>';
 			$out['text'] .= '	</tr>';
+			$out['text'] .= '</tbody>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
 
