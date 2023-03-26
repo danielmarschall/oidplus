@@ -399,7 +399,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 
 			// A?	Save log entry into the logbook of: A logged in admin
 			// Remove or replace "?" by "!" if the entity does not need to be logged in
-			else if (preg_match('@^A([\?\!])$@ismU', $maskcode, $m)) {
+			else if (preg_match('@^A([\?\!])$@imU', $maskcode, $m)) {
 				$admin_need_login = $m[1] == '?';
 				if ($admin_need_login && OIDplus::authUtils()->isAdminLoggedIn()) {
 					$users[] = array($severity_online, 'admin');

@@ -1617,7 +1617,7 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	private static function pubKeyToRaw(string $pubKey) {
 		$m = array();
-		if (preg_match('@BEGIN PUBLIC KEY\\-+([^\\-]+)\\-+END PUBLIC KEY@ismU', $pubKey, $m)) {
+		if (preg_match('@BEGIN PUBLIC KEY\\-+([^\\-]+)\\-+END PUBLIC KEY@imU', $pubKey, $m)) {
 			return base64_decode($m[1], false);
 		}
 		return false;
@@ -2226,7 +2226,7 @@ class OIDplus extends OIDplusBaseClass {
 		} else {
 			$lang = self::getDefaultLang();
 		}
-		return substr(preg_replace('@[^a-z]@ismU', '', $lang),0,4); // sanitize
+		return substr(preg_replace('@[^a-z]@imU', '', $lang),0,4); // sanitize
 	}
 
 	/**

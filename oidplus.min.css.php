@@ -72,7 +72,7 @@ function process_file(string $filename): string {
 	$filename = str_replace('\\', '/', $filename); // change Windows Backslashes into Web-Slashes
 	$dir = dirname((strpos($filename, $thisdir.'/') === 0) ? substr($filename, strlen($thisdir.'/')) : $filename);
 
-	$cont = preg_replace('@url\\(\s+@ism', 'url(', $cont);
+	$cont = preg_replace('@url\\(\s+@im', 'url(', $cont);
 	$cont = str_ireplace('url("data:', 'url###("data:', $cont);
 	$cont = str_ireplace('url("', 'url###("'.$dir.'/', $cont);
 	$cont = str_ireplace("url('data:", "url###('data:", $cont);

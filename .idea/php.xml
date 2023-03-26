@@ -41,6 +41,9 @@
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.0" />
   <component name="PhpStanOptionsConfiguration">
+    <option name="autoload" value="D:\SVN\OIDplus\trunk\includes\oidplus.inc.php" />
+    <option name="config" value="D:\SVN\OIDplus\trunk\phpstan.neon.dist" />
+    <option name="level" value="6" />
     <option name="transferred" value="true" />
   </component>
   <component name="PsalmOptionsConfiguration">
