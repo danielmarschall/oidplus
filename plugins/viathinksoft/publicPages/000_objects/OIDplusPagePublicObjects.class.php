@@ -619,6 +619,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 			if ($test !== false) {
 				list($id, $obj, $objParent) = $test;
+			} else {
+				$objParent = null; // to avoid warnings
 			}
 
 			// --- If the object type is disabled or not an object at all (e.g. "oidplus:"), then $handled=false
