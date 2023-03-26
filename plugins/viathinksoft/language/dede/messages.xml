@@ -7102,6 +7102,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Third-party plugin tries to access a ViaThinkSoft-INTF_OID interface "%1", but is not in the ViaThinkSoft\OIDplus namespace
+		]]></source>
+		<target><![CDATA[
+		Ein Drittanbieter-Plugin versucht auf ein ViaThinkSoft-INTF_OID Interface "%1" außerhalb des ViaThinkSoft-Namensraum zuzugreifen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Third-party plugins must not use the ViaThinkSoft PHP namespace. Please use your own vendor namespace.
 		]]></source>
 		<target><![CDATA[
@@ -7690,6 +7698,14 @@
 		]]></source>
 		<target><![CDATA[
 		ViaThinkSoft Client Challenge lässt den Computer des Anwenders eine kryptografisches Problem lösen. Somit muss der Benutzer keine CAPTCHA beantworten und trotzdem werden Brute-Force-Angriffe verlangsamt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ViaThinkSoft plugin tries to access a Third-Party-INTF_OID interface "%1", but is not in the third-party namespace
+		]]></source>
+		<target><![CDATA[
+		Ein ViaThinkSoft-Plugin versucht auf ein Drittanbieter-INTF_OID Interface "%1" innerhalb des ViaThinkSoft-Namensraum zuzugreifen.
 		]]></target>
 	</message>
 	<message>
@@ -8338,14 +8354,6 @@
 		]]></source>
 		<target><![CDATA[
 		Das Plugin hCaptcha benötigt die PHP-Erweiterung php_curl
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		implementsFeature() always returns true
-		]]></source>
-		<target><![CDATA[
-		implementsFeature() gibt immer TRUE zurück
 		]]></target>
 	</message>
 	<message>

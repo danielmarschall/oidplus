@@ -22,7 +22,7 @@ class VtsLDAPUtils {
 
 	protected $conn = null;
 
-	private static function _L($str, ...$sprintfArgs) {
+	private static function _L(string $str, ...$sprintfArgs): string {
 		if (function_exists('_L')) {
 			return _L($str, $sprintfArgs);
 		} else if (function_exists('my_vsprintf')) {

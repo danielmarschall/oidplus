@@ -60,10 +60,11 @@ foreach(new RecursiveIteratorIterator($it) as $file) {
 	if ($file->getExtension() == 'php') {
 		$cont = file_get_contents($file);
 		$cont = phpRemoveComments($cont);
-#		$cont = str_replace('function _L($str, ...$sprintfArgs) {', '', $cont);
+		// $cont = str_replace('function _L(string $str, ...$sprintfArgs): string {', '', $cont);
+		$cont = str_replace('_L(string $', '', $cont);
 		$cont = str_replace('_L($', '', $cont);
 		$strings = get_php_L_strings($cont);
-		$strings_test = get_js_L_strings($cont);
+		$strings_test = get_js_L_strings($cont); // get_js_L_strings works with JS and PHP
 
 		if (serialize($strings) != serialize($strings_test)) {
 			echo "Attention: File ".realpath($file)." ambiguous _L() functions\n";
