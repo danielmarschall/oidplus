@@ -62,11 +62,14 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '<thead>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '	     <th>'._L('OID').'</th>';
 			$out['text'] .= '	     <th>'._L('ASN.1 identifiers (comma sep.)').'</th>';
 			$out['text'] .= '	     <th>'._L('IRI identifiers (comma sep.)').'</th>';
 			$out['text'] .= '	</tr>';
+			$out['text'] .= '</thead>';
+			$out['text'] .= '<tbody>';
 
 			/*
 			$res = OIDplus::db()->query("select a.oid from (".
@@ -99,6 +102,7 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 				$out['text'] .= '</tr>';
 			}
 
+			$out['text'] .= '</tbody>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
 		}

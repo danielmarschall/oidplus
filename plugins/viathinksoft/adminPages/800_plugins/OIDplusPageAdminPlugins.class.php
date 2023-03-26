@@ -306,10 +306,14 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<h2>'._L('Public page plugins').'</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '<thead>';
 					$this->pluginTableHead($out);
+					$out['text'] .= '</thead>';
+					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
 						$this->pluginTableLine($out, $plugin);
 					}
+					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
 				}
@@ -320,10 +324,14 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<h2>'._L('RA page plugins').'</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '<thead>';
 					$this->pluginTableHead($out);
+					$out['text'] .= '</thead>';
+					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
 						$this->pluginTableLine($out, $plugin);
 					}
+					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
 				}
@@ -334,10 +342,14 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<h2>'._L('Admin page plugins').'</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '<thead>';
 					$this->pluginTableHead($out);
+					$out['text'] .= '</thead>';
+					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
 						$this->pluginTableLine($out, $plugin);
 					}
+					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
 				}
@@ -350,7 +362,10 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<h2>'._L('Object types').'</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '<thead>';
 					$this->pluginTableHead($out);
+					$out['text'] .= '</thead>';
+					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
 						if (in_array($plugin, $enabled)) {
 							$this->pluginTableLine($out, $plugin, 0);
@@ -358,6 +373,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 							$this->pluginTableLine($out, $plugin, 2, _L('disabled'));
 						}
 					}
+					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
 				}
@@ -368,13 +384,17 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<h2>'._L('Database providers').'</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '<thead>';
 					$this->pluginTableHead($out);
+					$out['text'] .= '</thead>';
+					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
 						$active = $plugin::id() == OIDplus::baseConfig()->getValue('DATABASE_PLUGIN');
 						if ($active && !$show_db_active) continue;
 						if (!$active && !$show_db_inactive) continue;
 						$this->pluginTableLine($out, $plugin, $active?1:0, _L('active'));
 					}
+					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
 				}
@@ -385,13 +405,17 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<h2>'._L('SQL slang plugins').'</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '<thead>';
 					$this->pluginTableHead($out);
+					$out['text'] .= '</thead>';
+					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
 						$active = $plugin::id() == OIDplus::db()->getSlang()->id();
 						if ($active && !$show_sql_active) continue;
 						if (!$active && !$show_sql_inactive) continue;
 						$this->pluginTableLine($out, $plugin, $active?1:0, _L('active'));
 					}
+					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
 				}
@@ -402,7 +426,10 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<h2>'._L('RA authentication providers').'</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '<thead>';
 					$this->pluginTableHead($out);
+					$out['text'] .= '</thead>';
+					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
 						$default = OIDplus::getDefaultRaAuthPlugin(true)->getManifest()->getOid() === $plugin->getManifest()->getOid();
 
@@ -442,6 +469,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 
 						$this->pluginTableLine($out, $plugin, $modifier, htmlentities($note));
 					}
+					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
 				}
@@ -452,7 +480,10 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<h2>'._L('Logger plugins').'</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '<thead>';
 					$this->pluginTableHead($out);
+					$out['text'] .= '</thead>';
+					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
 						$reason = '';
 						if ($plugin->available($reason)) {
@@ -463,6 +494,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 							$this->pluginTableLine($out, $plugin, 2, _L('not available'));
 						}
 					}
+					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
 				}
@@ -473,11 +505,15 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<h2>'._L('Languages').'</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '<thead>';
 					$this->pluginTableHead($out);
+					$out['text'] .= '</thead>';
+					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
 						$default = OIDplus::getDefaultLang() === $plugin->getLanguageCode();
 						$this->pluginTableLine($out, $plugin, $default?1:0, _L('default'));
 					}
+					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
 				}
@@ -488,13 +524,17 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<h2>'._L('Designs').'</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '<thead>';
 					$this->pluginTableHead($out);
+					$out['text'] .= '</thead>';
+					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
 						$active = OIDplus::config()->getValue('design') === basename($plugin->getPluginDirectory());
 						if ($active && !$show_design_active) continue;
 						if (!$active && !$show_design_inactive) continue;
 						$this->pluginTableLine($out, $plugin, $active?1:0, _L('active'));
 					}
+					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
 				}
@@ -505,7 +545,10 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<h2>'._L('CAPTCHA plugins').'</h2>';
 					$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 					$out['text'] .= '<table class="table table-bordered table-striped">';
+					$out['text'] .= '<thead>';
 					$this->pluginTableHead($out);
+					$out['text'] .= '</thead>';
+					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
 						$captcha_plugin_name = OIDplus::getActiveCaptchaPluginId();
 						$active = $plugin::id() == $captcha_plugin_name;
@@ -513,6 +556,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						if (!$active && !$show_captcha_inactive) continue;
 						$this->pluginTableLine($out, $plugin, $active?1:0, _L('active'));
 					}
+					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
 					$out['text'] .= '</div></div>';
 				}

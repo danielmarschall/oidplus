@@ -730,13 +730,36 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			$alt_ids = $obj->getAltIds();
 			if (count($alt_ids) > 0) {
 				$out['text'] .= '<h2>'._L('Alternative Identifiers').'</h2>';
+
+				// Sorty by namespace
+				usort($alt_ids, function(OIDplusAltId $a, OIDplusAltId $b) {
+					if($a->getNamespace() > $b->getNamespace()) {
+						return 1;
+					}
+					elseif($a->getNamespace() < $b->getNamespace()) {
+						return -1;
+					}
+					else {
+						return 0;
+					}
+				});
+
+				$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+				$out['text'] .= '<table class="table table-bordered table-striped">';
+				$out['text'] .= '<thead>';
+				$out['text'] .= '<tr><th>'._L('Identifier').'</th><th>'._L('Description').'</th></tr>';
+				$out['text'] .= '</thead>';
+				$out['text'] .= '<tbody>';
 				foreach ($alt_ids as $alt_id) {
 					$ns = $alt_id->getNamespace();
 					$aid = $alt_id->getId();
 					$aiddesc = $alt_id->getDescription();
 					$suffix = $alt_id->getSuffix();
-					$out['text'] .= "$aiddesc: <code>$ns:$aid</code>$suffix<br>";
+					$out['text'] .= '<tr><td>'.htmlentities($ns.':'.$aid).($suffix ? '<br/><font size="-1">'.htmlentities($suffix).'</font>' : '').'</td><td>'.htmlentities($aiddesc).'</td></tr>';
 				}
+				$out['text'] .= '</tbody>';
+				$out['text'] .= '</table>';
+				$out['text'] .= '</div></div>';
 			}
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
@@ -995,6 +1018,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 		$output  = '<div class="container box"><div id="suboid_table" class="table-responsive">';
 		$output .= '<table class="table table-bordered table-striped">';
+		$output .= '<thead>';
 		$output .= '	<tr>';
 		$output .= '	     <th>'._L('ID').(($parentNS == 'gs1') ? ' '._L('(without check digit)') : '').'</th>';
 		if ($enable_weid_presentation && ($parentNS == 'oid') && !$objParent->isRoot()) {
@@ -1014,6 +1038,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$output .= '	     <th>'._L('Created').'</th>';
 		$output .= '	     <th>'._L('Updated').'</th>';
 		$output .= '	</tr>';
+		$output .= '</thead>';
+		$output .= '<tbody>';
 
 		foreach ($rows as list($obj,$row)) {
 			$items_total++;
@@ -1127,13 +1153,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			$output .= '     <td></td>';
 			$output .= '     <td></td>';
 			$output .= '</tr>';
+			$output .= '</tbody>';
 		} else {
+			$output .= '</tbody>';
 			if ($items_total-$items_hidden == 0) {
 				$cols = ($parentNS == 'oid') ? 7 : 5;
 				if ($enable_weid_presentation && ($parentNS == 'oid') && !$objParent->isRoot()) {
 					$cols++;
 				}
+				$output .= '<tfoot>';
 				$output .= '<tr><td colspan="'.$cols.'">'._L('No items available').'</td></tr>';
+				$output .= '</tfoot>';
 			}
 		}
 

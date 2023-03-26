@@ -17,7 +17,7 @@
 		"%1" is not a valid ASN.1 identifier!
 		]]></source>
 		<target><![CDATA[
-		"%1" ist kein gültiger ASN.1 Identifier!
+		"%1" ist kein gültiger ASN.1-Bezeichner!
 		]]></target>
 	</message>
 	<message>
@@ -297,7 +297,7 @@
 		ASN.1 alphanumeric identifier "%1" is too long (max allowed length %2)
 		]]></source>
 		<target><![CDATA[
-		ASN.1 Alphanumerischer Identifier "%1" ist zu lang (max. Länge %2)
+		ASN.1 Alphanumerischer Bezeichner "%1" ist zu lang (max. Länge %2)
 		]]></target>
 	</message>
 	<message>
@@ -305,7 +305,7 @@
 		ASN.1 identifier "%1" is a standardized identifier belonging to OID %2
 		]]></source>
 		<target><![CDATA[
-		ASN.1 identifier "%1" ist ein standardisierter Identifier, der der OID %2 gehört
+		ASN.1-Bezeichner "%1" ist ein standardisierter Bezeichner, der der OID %2 gehört
 		]]></target>
 	</message>
 	<message>
@@ -313,7 +313,7 @@
 		ASN.1 identifiers (comma sep.)
 		]]></source>
 		<target><![CDATA[
-		ASN.1 identifiers (kommagetrennt)
+		ASN.1-Bezeichner (kommagetrennt)
 		]]></target>
 	</message>
 	<message>
@@ -2841,7 +2841,15 @@
 		IRI identifiers (comma sep.)
 		]]></source>
 		<target><![CDATA[
-		IRI Bezeichner (Kommagetrennt)
+		IRI-Bezeichner (Kommagetrennt)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Identifier
+		]]></source>
+		<target><![CDATA[
+		Bezeichner
 		]]></target>
 	</message>
 	<message>
@@ -6073,7 +6081,7 @@
 		Search in field "ASN.1 identifier" (only OIDs)
 		]]></source>
 		<target><![CDATA[
-		Suche im Feld "ASN.1 Identifier" (nur OIDs)
+		Suche im Feld "ASN.1-Bezeichner" (nur OIDs)
 		]]></target>
 	</message>
 	<message>

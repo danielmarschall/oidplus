@@ -1,5 +1,5 @@
 parameters:
-	level: 5
+	level: 6
 	fileExtensions:
 		- php
 		- phps
@@ -19,3 +19,14 @@ parameters:
 		- '#is always (true|false)\.#'
 		- '#Call to function assert\(\) with false will always evaluate to false\.#'
 		#- '#with no typehint specified\.#'
+		# Level 6:
+		- '#Method (.+) has parameter (.+) with no value type specified in iterable type array.#'
+		- '#Method (.+) return type has no value type specified in iterable type array.#'
+		- '#Property (.+) type has no value type specified in iterable type array.#'
+		- '#Method (.+) has no return type specified.#'
+		- '#Method (.+) has parameter (.+) with no type specified.#'
+		- '#Function (.+) has parameter (.+) with no value type specified in iterable type array.#'
+		- '#Function (.+) has no return type specified.#'
+		- '#Property (.+) has no type specified.#'
+		- '#Function (.+) return type has no value type specified in iterable type array.#'
+	

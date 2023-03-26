@@ -454,6 +454,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 
 			$output .= '<div id="fileattachments_table" class="table-responsive">';
 			$output .= '<table class="table table-bordered table-striped">';
+			$output .= '<thead>';
 			$output .= '<tr>';
 			$output .= '<th>'._L('Filename').'</th>';
 			$output .= '<th>'._L('Size').'</th>';
@@ -461,6 +462,8 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 			$output .= '<th>'._L('Download').'</th>';
 			if ($can_delete) $output .= '<th>'._L('Delete').'</th>';
 			$output .= '</tr>';
+			$output .= '</thead>';
+			$output .= '<tbody>';
 			if ($files) foreach ($files as $file) {
 				if (is_dir($file)) continue;
 
@@ -486,8 +489,13 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 				$doshow = true;
 				$found_files = true;
 			}
+			$output .= '</tbody>';
 
-			if (!$found_files) $output .= '<tr><td colspan="'.($can_delete ? 5 : 4).'"><i>'._L('No attachments').'</i></td></tr>';
+			if (!$found_files) {
+				$output .= '<tfoor>';
+				$output .= '<tr><td colspan="' . ($can_delete ? 5 : 4) . '"><i>' . _L('No attachments') . '</i></td></tr>';
+				$output .= '</tfoot>';
+			}
 
 			$output .= '</table></div>';
 
