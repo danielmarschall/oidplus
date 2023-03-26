@@ -1039,8 +1039,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$output .= '	     <th>'._L('Updated').'</th>';
 		$output .= '	</tr>';
 		$output .= '</thead>';
-		$output .= '<tbody>';
 
+		$output .= '<tbody>';
 		foreach ($rows as list($obj,$row)) {
 			$items_total++;
 			if (!$obj->userHasReadRights()) {
@@ -1107,11 +1107,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 			$output .= '</tr>';
 		}
+		$output .= '</tbody>';
 
 		$parent_ra_email = $objParent->getRaMail() ;
 
 		// "Create OID" row
 		if ($objParent->userHasWriteRights()) {
+			$output .= '<tfoot>';
 			$output .= '<tr>';
 			$prefix = $objParent->crudInsertPrefix();
 
@@ -1153,9 +1155,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			$output .= '     <td></td>';
 			$output .= '     <td></td>';
 			$output .= '</tr>';
-			$output .= '</tbody>';
+			$output .= '</tfoot>';
 		} else {
-			$output .= '</tbody>';
 			if ($items_total-$items_hidden == 0) {
 				$cols = ($parentNS == 'oid') ? 7 : 5;
 				if ($enable_weid_presentation && ($parentNS == 'oid') && !$objParent->isRoot()) {
