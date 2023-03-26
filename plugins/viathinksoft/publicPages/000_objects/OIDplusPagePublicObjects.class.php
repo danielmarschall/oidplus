@@ -176,7 +176,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			// RA E-Mail change
 			if (isset($params['ra_email'])) {
 				// Validate RA email address
-				$new_ra = $params['ra_email'];
+				$new_ra = $params['ra_email'] ?? '';
 				if ($obj::ns() == 'oid') {
 					assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 					if ($obj->isWellKnown()) {
@@ -1091,7 +1091,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 			$suffix = $objParent->crudInsertSuffix();
 			foreach (OIDplus::getObjectTypePlugins() as $plugin) {
-				if (($plugin::getObjectTypeClassName()::ns() == $parentNS) && ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_6)) {
+				if (($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_6) && ($plugin::getObjectTypeClassName()::ns() == $parentNS)) {
 					$suffix .= $plugin->gridGeneratorLinks($objParent);
 				}
 			}
@@ -1119,7 +1119,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 			if ($accepts_asn1) $output .= '     <td><input type="text" id="asn1ids" value=""></td>';
 			if ($accepts_iri)  $output .= '     <td><input type="text" id="iris" value=""></td>';
-			$output .= '     <td><input type="text" id="ra_email" value="'.htmlentities($parent_ra_email).'"></td>';
+			$output .= '     <td><input type="text" id="ra_email" value="'.htmlentities($parent_ra_email ?? '').'"></td>';
 			$output .= '     <td><input type="text" id="comment" value=""></td>';
 			$output .= '     <td><input type="checkbox" id="hide"></td>';
 			$output .= '     <td><button type="button" name="insert" id="insert" class="btn btn-success btn-xs update" onclick="OIDplusPagePublicObjects.crudActionInsert('.js_escape($parent).')">'._L('Insert').'</button></td>';
