@@ -170,11 +170,11 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param string $email
+	 * @param string|null $email
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public static function showRAInfo(string $email): string {
+	public static function showRAInfo(/*?string*/ $email): string {
 		$out = '';
 
 		if (empty($email)) {
