@@ -2,7 +2,6 @@
 Type safety:
 - PhpStorm warnings
 - Re-Check "mixed"
-- Instead of Feature OID Interfaces, we need real interfaces (at least during development), but how do we do prevent an error if the plugin is not installed?
 
 Admin Auth:
 - implement argon2 as alternative to bcrypt?

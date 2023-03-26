@@ -23,7 +23,10 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
+class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1, /* oobeRequested, oobeEntry */
+	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8  /* getNotifications */
+{
 
 	/**
 	 *
@@ -559,17 +562,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param string $id
-	 * @return bool
-	 */
-	public function implementsFeature(string $id): bool {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
-		return false;
-	}
-
-	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1
 	 * @return bool
 	 * @throws OIDplusException
 	 */
@@ -578,7 +571,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1
 	 * @param int $step
 	 * @param bool $do_edits
 	 * @param bool $errors_happened
@@ -690,7 +683,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8
 	 * @param string|null $user
 	 * @return array
 	 * @throws OIDplusException

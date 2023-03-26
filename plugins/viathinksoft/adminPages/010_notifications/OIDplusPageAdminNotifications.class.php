@@ -23,7 +23,9 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
+class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8 /* getNotifications */
+{
 
 	/**
 	 * @param bool $html
@@ -73,8 +75,8 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 			$notifications_by_sev = array();
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.8')) {
-					$notifications = $plugin->getNotifications($ra_email); /** @phpstan-ignore-line */
+				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8) {
+					$notifications = $plugin->getNotifications($ra_email);
 					if ($notifications) {
 						foreach ($notifications as $notification) {
 							list($severity, $htmlMessage) = $notification;
@@ -156,15 +158,6 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param string $id
-	 * @return bool
-	 */
-	public function implementsFeature(string $id): bool {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
-		return false;
-	}
-
-	/**
 	 * Checks if the system can be accessed publicly
 	 * Attention! This check does not work if OIDplus is password protected (solution would be to check via JavaScript,
 	 * which is done in setup/), or the URL is in the IntraNet rather than the Internet (only solution would be a
@@ -205,7 +198,7 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8
 	 * These are some basic "system" checks, no checks from other plugin. So we add them to our plugin instead.
 	 * @param string|null $user
 	 * @return array

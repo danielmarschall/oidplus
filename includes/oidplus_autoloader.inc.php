@@ -17,13 +17,14 @@
  * limitations under the License.
  */
 
-spl_autoload_register(function ($class_name) {
+spl_autoload_register(function ($fq_class_name) {
 	static $class_refs = null;
 
 	// We only load based on the last element of the class name (ignore namespace)
 	// If there are multiple classes matching that name we just include all class files
-	$path = explode('\\',$class_name);
-	$class_name = end($path);
+	$path = explode('\\',$fq_class_name);
+	$class_name = array_pop($path);
+	$namespace = implode('\\',$path);
 
 	if (is_null($class_refs)) {
 		$valid_plugin_folders = array(
@@ -76,5 +77,35 @@ spl_autoload_register(function ($class_name) {
 			require $inc;
 		}
 		unset($class_refs[$class_name]); // this emulates a "require_once" and is faster
+	}
+});
+
+/*
+ * Interfaces starting with INTF_OID are "optional interfaces". If they are not found by previous autoloaders,
+ * then they will be defined by a "fake interface" that contains nothing.
+ * For OIDplus, INTF_OID interfaces are used if plugins communicate with other plugins, i.e.
+ * a plugin offers a service which another plugin can use. However, if one of the plugins does not exist,
+ * PHP shall not crash! So, this idea of "optional interfaces" was born.
+ * Previously, we used "implementsFeature()" which acted like Microsoft COM's GUID interfaces,
+ * but this had the downside that types could not be checked.
+ */
+spl_autoload_register(function ($fq_class_name) {
+	$path = explode('\\',$fq_class_name);
+	$class_name = array_pop($path);
+	$namespace = implode('\\',$path);
+
+	if (($namespace != "ViaThinkSoft\\OIDplus") && str_starts_with($class_name, "INTF_OID_1_3_6_1_4_1_37476_")) {
+		throw new Exception(_L('Third-party plugin tries to access a ViaThinkSoft-INTF_OID interface "%1", but is not in the ViaThinkSoft\\OIDplus namespace', $fq_class_name));
+	}
+
+	if (($namespace == "ViaThinkSoft\\OIDplus") && !str_starts_with($class_name, "INTF_OID_1_3_6_1_4_1_37476_")) {
+		throw new Exception(_L('ViaThinkSoft plugin tries to access a Third-Party-INTF_OID interface "%1", but is not in the third-party namespace', $fq_class_name));
+	}
+
+	if (str_starts_with($class_name, "INTF_OID_")) {
+		$fake_content = "";
+		if ($namespace) $fake_content .= "namespace $namespace;\n\n";
+		$fake_content .= "interface $class_name { }\n\n";
+		eval($fake_content);
 	}
 });

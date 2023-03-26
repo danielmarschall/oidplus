@@ -23,7 +23,11 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
+class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2, /* modifyContent */
+	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3, /* beforeObject*, afterObject* */
+	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4  /* whois*Attributes */
+{
 
 	/**
 	 *
@@ -422,18 +426,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param string $id
-	 * @return bool
-	 */
-	public function implementsFeature(string $id): bool {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.2') return true; // modifyContent
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.3') return true; // beforeObject*, afterObject*
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.4') return true; // whois*Attributes
-		return false;
-	}
-
-	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.2
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2
 	 * @param string $id
 	 * @param string $title
 	 * @param string $icon
@@ -519,20 +512,20 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
 	 * @param string $id
 	 * @return void
 	 */
 	public function beforeObjectDelete(string $id) {}
 
 	/**
-	 * Delete the attachment folder including all files in it (note: Subfolders are not possible)
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
 	 * @param string $id
 	 * @return void
 	 * @throws OIDplusException
 	 */
 	public function afterObjectDelete(string $id) {
+		// Delete the attachment folder including all files in it (note: Subfolders are not possible)
 		$uploaddir = self::getUploadDir($id);
 		if ($uploaddir != '') {
 			$ary = @glob($uploaddir . DIRECTORY_SEPARATOR . '*');
@@ -545,7 +538,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
 	 * @param string $id
 	 * @param array $params
 	 * @return void
@@ -553,7 +546,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function beforeObjectUpdateSuperior(string $id, array &$params) {}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
 	 * @param string $id
 	 * @param array $params
 	 * @return void
@@ -561,7 +554,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function afterObjectUpdateSuperior(string $id, array &$params) {}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
 	 * @param string $id
 	 * @param array $params
 	 * @return void
@@ -569,7 +562,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function beforeObjectUpdateSelf(string $id, array &$params) {}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
 	 * @param string $id
 	 * @param array $params
 	 * @return void
@@ -577,7 +570,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function afterObjectUpdateSelf(string $id, array &$params) {}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
 	 * @param string $id
 	 * @param array $params
 	 * @return void
@@ -585,7 +578,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	public function beforeObjectInsert(string $id, array &$params) {}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.3
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
 	 * @param string $id
 	 * @param array $params
 	 * @return void
@@ -601,7 +594,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.4
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4
 	 * @param string $id
 	 * @param array $out
 	 * @return void
@@ -636,7 +629,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.4
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4
 	 * @param string $email
 	 * @param array $out
 	 * @return void

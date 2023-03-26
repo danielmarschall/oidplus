@@ -23,8 +23,9 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
-
+class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2 /* modifyContent */
+{
 	/**
 	 * @param bool $html
 	 * @return void
@@ -198,16 +199,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param string $id
-	 * @return bool
-	 */
-	public function implementsFeature(string $id): bool {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.2') return true; // modifyContent
-		return false;
-	}
-
-	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.2
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2
 	 * @param string $id
 	 * @param string $title
 	 * @param string $icon

@@ -2,6 +2,22 @@
 FEATURE OIDS ("Weak interfaces")
 ============
 
+***
+*** Attention
+*** 
+*** This method of weak interfaces has been discontinued, because types could not be easily checked.
+*** The new way is to use "real" interfaces with the prefix "INTF_OID", e.g. "INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1"
+*** The OIDplus autoloader will make sure that these interfaces are replaced with a "fake" interface,
+*** in case the plugin defining the interface is not installed.
+***
+*** So: Please remove OIDplusBaseClass::implementsFeature and instead use real interfaces with the prefix "INTF_OID".
+***
+
+
+
+--- Old description follows ---
+
+
 TL;DR:	The system communicates with its plugins using normal PHP interfaces
 	or function calls.
 	Plugins communicate with other plugins using the OIDplusPlugin::implementsFeature()
@@ -31,19 +47,19 @@ real plugin classes (OIDplusPlugin).
 
 Currently, there are following features defined in the standard plugins of OIDplus:
 
+*** NOW IN:  plugins/viathinksoft/adminPages/050_oobe/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1.class.php
 Interface <1.3.6.1.4.1.37476.2.5.2.3.1> {
-	// called by plugin adminPages/050_oobe
-	public function oobeEntry($step, $do_edits, &$errors_happened): void;
-	public function oobeRequested(): bool;
+	public function oobeEntry($step, $do_edits, &$errors_happened);
+	public function oobeRequested();
 }
 
+*** NOW IN:  plugins/viathinksoft/publicPages/000_objects/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2.class.php
 Interface <1.3.6.1.4.1.37476.2.5.2.3.2> {
-	// called by plugin publicPages/000_objects (gui)
 	public function modifyContent($id, &$title, &$icon, &$text);
 }
 
+*** NOW IN:  plugins/viathinksoft/publicPages/000_objects/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3.class.php
 Interface <1.3.6.1.4.1.37476.2.5.2.3.3> {
-	// called by plugin publicPages/000_objects (ajax)
 	public function beforeObjectDelete($id);
 	public function afterObjectDelete($id);
 	public function beforeObjectUpdateSuperior($id, &$params);
@@ -54,29 +70,29 @@ Interface <1.3.6.1.4.1.37476.2.5.2.3.3> {
 	public function afterObjectInsert($id, &$params);
 }
 
+*** NOW IN:  plugins/viathinksoft/publicPages/100_whois/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4.class.php
 Interface <1.3.6.1.4.1.37476.2.5.2.3.4> {
-	// called by plugin publicPages/100_whois
 	public function whoisObjectAttributes(string $id, array &$out);
 	public function whoisRaAttributes(string $email, array &$out);
 }
 
+*** NOW IN:  plugins/viathinksoft/publicPages/090_login/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_5.class.php
 Interface <1.3.6.1.4.1.37476.2.5.2.3.5> {
-	// called by plugin publicPages/090_login
 	public function alternativeLoginMethods();
 }
 
+*** NOW IN:  plugins/viathinksoft/publicPages/000_objects/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_6.class.php
 Interface <1.3.6.1.4.1.37476.2.5.2.3.6> {
-	// called by publicPages/000_objects
 	public function gridGeneratorLinks($objParent);
 }
 
+*** NOW IN:  plugins/viathinksoft/publicPages/000_objects/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7.class.php
 Interface <1.3.6.1.4.1.37476.2.5.2.3.7> {
-	// called by publicPages/000_objects
 	public function getAlternativesForQuery($id);
 }
 
+*** NOW IN:  plugins/viathinksoft/raPages/010_notifications/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8.class.php
+*** NOW IN:  plugins/viathinksoft/adminPages/010_notifications/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8.class.php
 Interface <1.3.6.1.4.1.37476.2.5.2.3.8> {
-	// called by raPages/010_notifications
-	// called by adminPages/010_notifications
 	public function getNotifications($user=null); // return array of array($severity, $htmlMessage)
 }

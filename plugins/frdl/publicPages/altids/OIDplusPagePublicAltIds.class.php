@@ -9,6 +9,8 @@
 
 namespace Frdlweb\OIDplus;
 
+use ViaThinkSoft\OIDplus\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4;
+use ViaThinkSoft\OIDplus\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7;
 use ViaThinkSoft\OIDplus\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplusObject;
 use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
@@ -17,7 +19,10 @@ use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
+class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4, /* whois*Attributes */
+	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7  /* getAlternativesForQuery */
+{
 
 	/**
 	 * @param string $actionID
@@ -134,10 +139,10 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 
 	/**
 	 * @param string $id
-	 * @return array|mixed|string[]
+	 * @return string[]
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
 	 */
-	public function getAlternativesForQuery(string $id/* 1.3.6.1.4.1.37476.2.5.2.3.7 signature takes just 1 param!? , $noCache = false*/) {
+	public function getAlternativesForQuery(string $id/* INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7 signature takes just 1 param!? , $noCache = false*/): array {
 
 		static $caches = array();
 
@@ -189,16 +194,6 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param string $id
-	 * @return bool
-	 */
-	public function implementsFeature(string $id): bool {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.4') return true; // whois*Attributes
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.7') return true; // getAlternativesForQuery
-		return false;
-	}
-
-	/**
 	 * @param string $request
 	 * @return array|false
 	 */
@@ -225,7 +220,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.4
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4
 	 * @param string $id
 	 * @param array $out
 	 * @return void
@@ -283,7 +278,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.4
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4
 	 * @param string $email
 	 * @param array $out
 	 * @return void

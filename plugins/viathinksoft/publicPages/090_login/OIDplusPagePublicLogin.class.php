@@ -213,8 +213,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			if ($tab === 'ra') {
 				$alt_logins_html = array();
 				foreach (OIDplus::getAllPlugins() as $plugin) {
-					if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.5')) {
-						$logins = $plugin->alternativeLoginMethods(); /* @phpstan-ignore-line */
+					if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_5) {
+						$logins = $plugin->alternativeLoginMethods();
 						foreach ($logins as $data) {
 							if (isset($data[2]) && !empty($data[2])) {
 								$img = '<img src="'.$data[2].'" alt="'.htmlentities($data[1]).'"> ';

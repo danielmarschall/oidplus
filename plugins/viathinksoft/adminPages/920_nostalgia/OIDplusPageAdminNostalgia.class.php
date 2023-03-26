@@ -26,7 +26,9 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin {
+class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8 /* getNotifications */
+{
 
 	/**
 	 * @param string $id
@@ -104,16 +106,7 @@ class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param string $id
-	 * @return bool
-	 */
-	public function implementsFeature(string $id): bool {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
-		return false;
-	}
-
-	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8
 	 * @param string|null $user
 	 * @return array
 	 * @throws OIDplusException
