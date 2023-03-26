@@ -234,8 +234,12 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 		$handleShown = false;
 		$canonicalShown = false;
 
-		foreach($this->getAlternativesForQuery($id) as $alt) {
+		$out1 = array();
+		$out2 = array();
 
+		$tmp = $this->getAlternativesForQuery($id);
+		sort($tmp); // DM 26.03.2023 : Added sorting (intended to sort "alternate-identifier")
+		foreach($tmp as $alt) {
 			if (strpos($alt,':') === false) continue;
 
 			list($ns, $altIdRaw) = explode(':', $alt, 2);
@@ -243,7 +247,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
  			if (($canonicalShown === false) && ($ns === 'oid')) {
 				$canonicalShown=true;
 
-				$out[] = [
+				$out1[] = [
 					'xmlns' => $xmlns,
 					'xmlschema' => $xmlschema,
 					'xmlschemauri' => $xmlschemauri,
@@ -256,7 +260,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 			if (($handleShown === false) && ($alt === $id)) {
 				$handleShown=true;
 
-				$out[] = [
+				$out1[] = [
 					'xmlns' => $xmlns,
 					'xmlschema' => $xmlschema,
 					'xmlschemauri' => $xmlschemauri,
@@ -266,15 +270,22 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 
 			}
 
-			$out[] = [
-				'xmlns' => $xmlns,
-				'xmlschema' => $xmlschema,
-				'xmlschemauri' => $xmlschemauri,
-				'name' => 'alternate-identifier',
-				'value' => $ns.':'.$altIdRaw,
-			];
+			if ($alt !== $id) { // DM 26.03.2023 : Added condition that alternate must not be the id itself
+				$out2[] = [
+					'xmlns' => $xmlns,
+					'xmlschema' => $xmlschema,
+					'xmlschemauri' => $xmlschemauri,
+					'name' => 'alternate-identifier',
+					'value' => $ns.':'.$altIdRaw,
+				];
+			}
 
 		}
+
+		// DM 26.03.2023 : Added this
+		$out = array_merge($out, $out1); // handle-identifier and canonical-identifier
+		$out = array_merge($out, $out2); // alternate-identifier
+
 	}
 
 	/**
