@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1;
 use ViaThinkSoft\OIDplus\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplusGui;
 use ViaThinkSoft\OIDplus\OIDplusException;
@@ -159,8 +160,8 @@ step_system_title($step++, $do_edits, $errors_happened);
 # ---
 
 foreach (OIDplus::getAllPlugins() as $plugin) {
-	if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.1')) {
-		$plugin->oobeEntry($step++, $do_edits, $errors_happened); /** @phpstan-ignore-line */
+	if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1) {
+		$plugin->oobeEntry($step++, $do_edits, $errors_happened);
 	}
 }
 

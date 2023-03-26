@@ -43,8 +43,8 @@ class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 		$oobe_done = OIDplus::config()->getValue('oobe_main_done') == '1';
 
 		foreach (OIDplus::getAllPlugins() as $plugin) {
-			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.1')) {
-				if ($plugin->oobeRequested()) { /** @phpstan-ignore-line */
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1) {
+				if ($plugin->oobeRequested()) {
 					$oobe_done = false;
 					break;
 				}

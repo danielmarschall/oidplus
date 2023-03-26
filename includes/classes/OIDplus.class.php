@@ -1120,11 +1120,6 @@ class OIDplus extends OIDplusBaseClass {
 			$ary = self::getAllPluginManifests($pluginDirName, false);
 		}
 		$known_plugin_oids = array();
-		if (OIDplus::baseConfig()->getValue('DEBUG')) {
-			$fake_feature = uuid_to_oid(gen_uuid());
-		} else {
-			$fake_feature = null;
-		}
 		$known_main_classes_no_namespace = array();
 		foreach ($ary as $plugintype_folder => $bry) {
 			foreach ($bry as $vendor_folder => $cry) {
@@ -1228,16 +1223,6 @@ class OIDplus extends OIDplusBaseClass {
 
 					// For the next check, we need an instance of the object
 					$obj = new $class_name();
-
-					// Additional check: Does the plugin misuse implementsFeature()?
-					// This is not enabled b default, because the GUID generation is slow on some machines.
-					// Also, it is very unlikely that someone misuses implementsFeature().
-					if (OIDplus::baseConfig()->getValue('DEBUG')) {
-						if ($obj->implementsFeature($fake_feature)) {
-							// see https://devblogs.microsoft.com/oldnewthing/20040211-00/?p=40663
-							throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('implementsFeature() always returns true'));
-						}
-					}
 
 					// Now we can continue
 					$known_plugin_oids[$plugin_oid] = $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder;

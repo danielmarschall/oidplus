@@ -23,7 +23,9 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusObjectTypePluginAid extends OIDplusObjectTypePlugin {
+class OIDplusObjectTypePluginAid extends OIDplusObjectTypePlugin
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_6 /* gridGeneratorLinks */
+{
 
 	/**
 	 * @return string
@@ -33,16 +35,7 @@ class OIDplusObjectTypePluginAid extends OIDplusObjectTypePlugin {
 	}
 
 	/**
-	 * @param string $id
-	 * @return bool
-	 */
-	public function implementsFeature(string $id): bool {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.6') return true; // gridGeneratorLinks
-		return false;
-	}
-
-	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.6
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_6
 	 * @param OIDplusObject $objParent
 	 * @return string
 	 */

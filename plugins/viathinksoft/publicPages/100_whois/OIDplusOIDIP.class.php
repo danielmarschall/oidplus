@@ -300,15 +300,15 @@ class OIDplusOIDIP {
 
 					// $this->_oidip_attr('oidip-pubkey', ...); Not used.
 
-					if ($obj->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
+					if ($obj instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4) {
 						// Also ask $obj for extra attributes:
 						// This way we could add various additional information, e.g. IPv4/6 range analysis, interpretation of GUID, etc.
-						$obj->whoisObjectAttributes($obj->nodeId(), $out); /** @phpstan-ignore-line */
+						$obj->whoisObjectAttributes($obj->nodeId(), $out);
 					}
 
 					foreach (OIDplus::getAllPlugins() as $plugin) {
-						if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-							$plugin->whoisObjectAttributes($obj->nodeId(), $out); /** @phpstan-ignore-line */
+						if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4) {
+							$plugin->whoisObjectAttributes($obj->nodeId(), $out);
 						}
 					}
 
@@ -392,13 +392,13 @@ class OIDplusOIDIP {
 						// $this->_oidip_attr('ra-url', ...); Not used.
 
 						$ra = new OIDplusRA($obj->getRaMail());
-						if ($ra->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-							$ra->whoisRaAttributes($obj->getRaMail(), $out); /** @phpstan-ignore-line */
+						if ($ra instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4) {
+							$ra->whoisRaAttributes($obj->getRaMail(), $out);
 						}
 
 						foreach (OIDplus::getAllPlugins() as $plugin) {
-							if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-								$plugin->whoisRaAttributes($obj->getRaMail(), $out); /** @phpstan-ignore-line */
+							if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4) {
+								$plugin->whoisRaAttributes($obj->getRaMail(), $out);
 							}
 						}
 
@@ -413,8 +413,8 @@ class OIDplusOIDIP {
 						$out[] = $this->_oidip_attr('ra', ($obj && !empty($obj->getRaMail()) ? $obj->getRaMail() : /*_L*/('Unknown'))); // DO NOT TRANSLATE!
 						if ($obj) {
 							foreach (OIDplus::getAllPlugins() as $plugin) {
-								if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.4')) {
-									$plugin->whoisRaAttributes($obj->getRaMail(), $out); /** @phpstan-ignore-line */
+								if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4) {
+									$plugin->whoisRaAttributes($obj->getRaMail(), $out);
 								}
 							}
 						}

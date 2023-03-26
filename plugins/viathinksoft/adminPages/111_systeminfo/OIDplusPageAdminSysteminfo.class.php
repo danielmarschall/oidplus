@@ -394,11 +394,4 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 		return false;
 	}
 
-	/**
-	 * @param string $id
-	 * @return bool
-	 */
-	public function implementsFeature(string $id): bool {
-		return false;
-	}
 }

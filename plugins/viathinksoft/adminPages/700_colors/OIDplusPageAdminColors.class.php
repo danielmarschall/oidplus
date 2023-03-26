@@ -23,7 +23,9 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
+class OIDplusPageAdminColors extends OIDplusPagePluginAdmin
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1 /* oobeEntry, oobeRequested */
+{
 
 	/**
 	 * @param array $head_elems
@@ -238,16 +240,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * @param string $id
-	 * @return bool
-	 */
-	public function implementsFeature(string $id): bool {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested
-		return false;
-	}
-
-	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1
 	 * @return bool
 	 * @throws OIDplusException
 	 */
@@ -256,7 +249,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin {
 	}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1
 	 * @param int $step
 	 * @param bool $do_edits
 	 * @param bool $errors_happened

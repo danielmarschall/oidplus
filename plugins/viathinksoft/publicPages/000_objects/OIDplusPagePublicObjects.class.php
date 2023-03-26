@@ -23,7 +23,11 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
+class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1, /* oobeEntry, oobeRequested */
+	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8  /* getNotifications */
+	           // Important: Do NOT implement INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7, because our getAlternativesForQuery() is the one that calls others!
+{
 
 	/**
 	 * @param string|OIDplusObject $ot
@@ -80,8 +84,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to delete this OID.'));
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->beforeObjectDelete($id); /** @phpstan-ignore-line */
+				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+					$plugin->beforeObjectDelete($id);
 				}
 			}
 
@@ -117,8 +121,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			OIDplus::db()->query("delete from ###iri    where well_known = ? and oid not in (select id from ###objects where id like 'oid:%')", array(false));
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->afterObjectDelete($id); /** @phpstan-ignore-line */
+				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+					$plugin->afterObjectDelete($id);
 				}
 			}
 
@@ -146,8 +150,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to update this OID.'));
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->beforeObjectUpdateSuperior($id, $params); /** @phpstan-ignore-line */
+				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+					$plugin->beforeObjectUpdateSuperior($id, $params);
 				}
 			}
 
@@ -256,8 +260,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->afterObjectUpdateSuperior($id, $params); /** @phpstan-ignore-line */
+				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+					$plugin->afterObjectUpdateSuperior($id, $params);
 				}
 			}
 
@@ -282,8 +286,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the RA to update this OID.'));
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->beforeObjectUpdateSelf($id, $params); /** @phpstan-ignore-line */
+				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+					$plugin->beforeObjectUpdateSelf($id, $params);
 				}
 			}
 
@@ -305,8 +309,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			OIDplusObject::resetObjectInformationCache();
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->afterObjectUpdateSelf($id, $params); /** @phpstan-ignore-line */
+				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+					$plugin->afterObjectUpdateSelf($id, $params);
 				}
 			}
 
@@ -378,8 +382,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','INSERT',$id));
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->beforeObjectInsert($id, $params); /** @phpstan-ignore-line */
+				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+					$plugin->beforeObjectInsert($id, $params);
 				}
 			}
 
@@ -467,8 +471,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.3')) {
-					$plugin->afterObjectInsert($id, $params); /** @phpstan-ignore-line */
+				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+					$plugin->afterObjectInsert($id, $params);
 				}
 			}
 
@@ -528,14 +532,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	 * @return array
 	 */
 	public static function getAlternativesForQuery(string $id): array {
-		// Attention: This is NOT an implementation of 1.3.6.1.4.1.37476.2.5.2.3.7 !
-		//            This is the function that calls getAlternativesForQuery() of every plugin that implements 1.3.6.1.4.1.37476.2.5.2.3.7
+		// Attention: This is NOT an implementation of INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7!
+		//            This is the function that calls getAlternativesForQuery() of every plugin that implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7
 
 		// e.g. used for "Reverse Alt Id"
 		$alternatives = array();
 		foreach (OIDplus::getAllPlugins() as $plugin) {
-			if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.7')) {
-				$tmp = $plugin->getAlternativesForQuery($id); /** @phpstan-ignore-line */
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7) {
+				$tmp = $plugin->getAlternativesForQuery($id);
 				if (is_array($tmp)) {
 					$alternatives = array_merge($tmp, $alternatives);
 				}
@@ -734,8 +738,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 			}
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.2')) {
-					$plugin->modifyContent($obj->nodeId(), $out['title'], $out['icon'], $out['text']); /** @phpstan-ignore-line */
+				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2) {
+					$plugin->modifyContent($obj->nodeId(), $out['title'], $out['icon'], $out['text']);
 				}
 			}
 		}
@@ -1085,8 +1089,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 
 			$suffix = $objParent->crudInsertSuffix();
 			foreach (OIDplus::getObjectTypePlugins() as $plugin) {
-				if (($plugin::getObjectTypeClassName()::ns() == $parentNS) && $plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.6')) {
-					$suffix .= $plugin->gridGeneratorLinks($objParent); /** @phpstan-ignore-line */
+				if (($plugin::getObjectTypeClassName()::ns() == $parentNS) && ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_6)) {
+					$suffix .= $plugin->gridGeneratorLinks($objParent);
 				}
 			}
 
@@ -1231,18 +1235,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * @param string $id
-	 * @return bool
-	 */
-	public function implementsFeature(string $id): bool {
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.1') return true; // oobeEntry, oobeRequested()
-		// Important: Do NOT 1.3.6.1.4.1.37476.2.5.2.3.7 because our getAlternativesForQuery() is the one that calls others!
-		if (strtolower($id) == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; // getNotifications()
-		return false;
-	}
-
-	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1
 	 * @return bool
 	 * @throws OIDplusException
 	 */
@@ -1251,7 +1244,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.1
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1
 	 * @param int $step
 	 * @param bool $do_edits
 	 * @param bool $errors_happened
@@ -1304,7 +1297,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic {
 	}
 
 	/**
-	 * Implements interface 1.3.6.1.4.1.37476.2.5.2.3.8
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8
 	 * @param string|null $user
 	 * @return array
 	 * @throws OIDplusException
