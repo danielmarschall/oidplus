@@ -838,6 +838,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Barcode
+		]]></source>
+		<target><![CDATA[
+		Barcode
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Base OID
 		]]></source>
 		<target><![CDATA[
@@ -2466,6 +2474,14 @@
 		]]></source>
 		<target><![CDATA[
 		GS1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		GS1 Application Identifier
+		]]></source>
+		<target><![CDATA[
+		GS1-Anwendungsbezeichner
 		]]></target>
 	</message>
 	<message>

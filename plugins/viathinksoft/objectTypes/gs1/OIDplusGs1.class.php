@@ -145,6 +145,18 @@ class OIDplusGs1 extends OIDplusObject {
 	}
 
 	/**
+	 * @return array
+	 */
+	private function getTechInfo(): array {
+		require_once __DIR__ . '/gs1_utils.inc.php'; // TODO: Move to ViaThinkSoft PHP-Utils
+		$tech_info = array();
+		// TODO: Also show Format and Regular Expression?
+		// TODO: Maybe even check if the Regular Expression matches, i.e. the barcode is valid?
+		$tech_info['<a href="https://www.gs1.org/standards/barcodes/application-identifiers?lang=en" target="_blank">'._L('GS1 Application Identifier').'</a>']   = gs1_barcode_show_appidentifier($this->number);
+		return $tech_info;
+	}
+
+	/**
 	 * @param string $title
 	 * @param string $content
 	 * @param string $icon
@@ -175,16 +187,28 @@ class OIDplusGs1 extends OIDplusObject {
 		} else {
 			$title = $this->getTitle();
 
+			$tech_info = $this->getTechInfo();
+			$tech_info_html = '';
+			if (count($tech_info) > 0) {
+				$tech_info_html .= '<h2>'._L('Technical information').'</h2>';
+				$tech_info_html .= '<table border="0">';
+				foreach ($tech_info as $key => $value) {
+					$tech_info_html .= '<tr><td>'.$key.': </td><td><code>'.str_replace(' ','&nbsp;',$value).'</code></td></tr>';
+				}
+				$tech_info_html .= '</table>';
+			}
 			if ($this->isLeafNode()) {
 				$chunked = $this->chunkedNotation(true);
 				$checkDigit = $this->checkDigit();
-				$content = '<h2>'.$chunked.' - <abbr title="'._L('check digit').'">'.$checkDigit.'</abbr></h2>';
+				$content  = '<h2>'._L('Barcode').' '.$chunked.' - <abbr title="'._L('check digit').'">'.$checkDigit.'</abbr></h2>';
 				$content .= '<p><a target="_blank" href="https://www.ean-search.org/?q='.htmlentities($this->fullNumber()).'">'._L('Lookup at ean-search.org').'</a></p>';
 				$content .= '<img src="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'barcode.php?number='.urlencode($this->fullNumber()).'">';
+				$content .= $tech_info_html;
 				$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 			} else {
 				$chunked = $this->chunkedNotation(true);
-				$content = '<h2>'.$chunked.'</h2>';
+				$content  = '<h2>'._L('Barcode').' '.$chunked.'</h2>';
+				$content .= $tech_info_html;
 				$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 				if ($this->userHasWriteRights()) {
 					$content .= '<h2>'._L('Create or change subordinate objects').'</h2>';
@@ -202,6 +226,7 @@ class OIDplusGs1 extends OIDplusObject {
 	 * @return bool
 	 */
 	public function isBaseOnly(): bool {
+		// TODO: This is actually not correct, since there are many GS1 Application Identifiers which can have less than 7 digits
 		return strlen($this->number) <= 7;
 	}
 
