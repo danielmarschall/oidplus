@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/setup/sql/example_access.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/example_mssql.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/example_mysql.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/example_oracle.sql" dialect="OracleSqlPlus" />
+    <file url="file://$PROJECT_DIR$/setup/sql/example_pgsql.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/example_sqlite.sql" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/setup/sql/struct_access.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/struct_mssql.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/struct_mysql.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/struct_oracle.sql" dialect="OracleSqlPlus" />
+    <file url="file://$PROJECT_DIR$/setup/sql/struct_pgsql.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/struct_sqlite.sql" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/setup/sql/wellknown_country_access.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/wellknown_country_mssql.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/wellknown_country_mysql.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/wellknown_country_oracle.sql" dialect="OracleSqlPlus" />
+    <file url="file://$PROJECT_DIR$/setup/sql/wellknown_country_pgsql.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/wellknown_country_sqlite.sql" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/setup/sql/wellknown_other_access.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/wellknown_other_mssql.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/wellknown_other_mysql.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/wellknown_other_oracle.sql" dialect="OracleSqlPlus" />
+    <file url="file://$PROJECT_DIR$/setup/sql/wellknown_other_pgsql.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/setup/sql/wellknown_other_sqlite.sql" dialect="SQLite" />
+    <file url="PROJECT" dialect="GenericSQL" />
+  </component>
+</project>

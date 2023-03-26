@@ -222,7 +222,7 @@ function test_missing_placeholder(string $test) {
 		}
 	}
 
-	$test = preg_replace('@%([1-9][0-9]|%)*@ism', '', $test);
+	$test = preg_replace('@%([1-9][0-9]|%)*@im', '', $test);
 	if (strpos($test,'%') !== false) {
 		echo "Attention: Wrong percentage sign in '$test'!\n";
 	}

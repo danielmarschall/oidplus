@@ -47,7 +47,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	 */
 	public static function alreadyHasFreeOid(string $email, bool $getId = false)/*: ?bool*/ {
 		$res = OIDplus::db()->query("select id from ###objects where ra_email = ? and id like ? order by ".OIDplus::db()->natOrder('id'), array($email, self::getFreeRootOid(true).'.%'));
-		while ($row = $res->fetch_array()) {
+		if ($row = $res->fetch_array()) {
 			return $getId ? $row['id'] : true;
 		}
 		return $getId ? null : false;
