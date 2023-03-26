@@ -20,7 +20,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/tinymce/tinymce" />
       <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
@@ -57,33 +57,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/SVN/OIDplus/trunk/plugins/viathinksoft/raPages/010_notifications&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/php-8.0.3-nts-Win32-vs16-x64/php.exe",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "Errors",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\SVN\OIDplus\trunk\plugins\viathinksoft\raPages\010_notifications" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\SVN\OIDplus\trunk\plugins\viathinksoft\objectTypes\gs1" />
       <recent name="D:\SVN\OIDplus\trunk\plugins\viathinksoft\adminPages\010_notifications" />
       <recent name="D:\SVN\OIDplus\trunk\plugins\viathinksoft\publicPages\000_objects" />
       <recent name="D:\SVN\OIDplus\trunk\plugins\viathinksoft\publicPages\090_login" />
       <recent name="D:\SVN\OIDplus\trunk\plugins\viathinksoft\publicPages\100_whois" />
-      <recent name="D:\SVN\OIDplus\trunk\plugins\viathinksoft" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="gs1_utils.inc.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/gs1/gs1_utils.inc.php">
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
@@ -109,6 +114,7 @@
       <workItem from="1679771558606" duration="15619000" />
       <workItem from="1679787764288" duration="7333000" />
       <workItem from="1679795644214" duration="1886000" />
+      <workItem from="1679851870087" duration="10548000" />
     </task>
     <servers />
   </component>
