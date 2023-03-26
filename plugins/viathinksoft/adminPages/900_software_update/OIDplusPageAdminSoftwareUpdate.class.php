@@ -255,6 +255,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 					$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot TAR.GZ file with .version.php file).').'</p>';
 					$requireInfo = ''; // unused
 					$updateCommand = ''; // unused
+				} else {
+					assert(false);
 				}
 
 				$local_installation = OIDplus::getVersion();

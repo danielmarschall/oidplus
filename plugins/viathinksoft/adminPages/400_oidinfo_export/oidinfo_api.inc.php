@@ -1101,11 +1101,11 @@ class OIDSimplePingProvider implements IOIDSimplePingProvider {
 	}
 
 	public function disconnect() {
-		return $this->spp_reader_uninit();
+		$this->spp_reader_uninit();
 	}
 
 	public function connect() {
-		return $this->spp_reader_init();
+		$this->spp_reader_init();
 	}
 
 	function __construct($addr='localhost:49500') {

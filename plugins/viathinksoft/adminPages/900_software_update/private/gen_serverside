@@ -613,9 +613,9 @@ function special_save_file(string $out_file, string $in_file, string &$res, stri
 
 /**
  * @param string $name
- * @return mixed|string
+ * @return string
  */
-function my_realpath(string $name) {
+function my_realpath(string $name): string {
 	$ret = realpath($name);
 	return ($ret === false) ? $name : $ret;
 }
