@@ -411,11 +411,12 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @return OIDplusRA
+	 * @return OIDplusRA|null
 	 * @throws OIDplusException
 	 */
-	public function getRa(): OIDplusRA {
-		return new OIDplusRA($this->getRaMail());
+	public function getRa()/*: ?OIDplusRA*/ {
+		$ra = $this->getRaMail();
+		return $ra ? new OIDplusRA($ra) : null;
 	}
 
 	/**
@@ -436,7 +437,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 
 			// If the RA is logged in, then they can see the OID.
-			if (OIDplus::authUtils()->isRaLoggedIn($this->getRaMail())) return true;
+			$ownRa = $this->getRaMail();
+			if ($ownRa && OIDplus::authUtils()->isRaLoggedIn($ownRa)) return true;
 		} else {
 			// If this OID belongs to the requested RA, then they may see it.
 			if ($this->getRaMail() == $ra) return true;
@@ -555,7 +557,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @return false|string|null
+	 * @return string|null
 	 * @throws OIDplusException
 	 */
 	public function getRaMail() {
@@ -569,7 +571,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			if (isset(self::$object_info_cache[$this->nodeId()])) {
 				return self::$object_info_cache[$this->nodeId()][self::CACHE_RA_EMAIL];
 			}
-			return false;
+			return null;
 		}
 	}
 
@@ -695,7 +697,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 
 		if (!$ra) {
 			if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
-			return OIDplus::authUtils()->isRaLoggedIn($this->getRaMail());
+			$ownRa = $this->getRaMail();
+			return $ownRa && OIDplus::authUtils()->isRaLoggedIn($ownRa);
 		} else {
 			return $this->getRaMail() == $ra;
 		}

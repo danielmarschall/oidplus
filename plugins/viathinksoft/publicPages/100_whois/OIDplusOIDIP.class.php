@@ -387,18 +387,20 @@ class OIDplusOIDIP {
 							$out[] = $this->_oidip_attr('ra-mobile', $row_ra->mobile); // DO NOT TRANSLATE!
 							$out[] = $this->_oidip_attr('ra-fax', $row_ra->fax); // DO NOT TRANSLATE!
 						}
-						$out[] = $this->_oidip_attr('ra-email', $obj->getRaMail()); // DO NOT TRANSLATE!
+						$out[] = $this->_oidip_attr('ra-email', $obj->getRaMail() ?? ''); // DO NOT TRANSLATE!
 
 						// $this->_oidip_attr('ra-url', ...); Not used.
 
-						$ra = new OIDplusRA($obj->getRaMail());
-						if ($ra instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4) {
-							$ra->whoisRaAttributes($obj->getRaMail(), $out);
-						}
+						if ($raEMail = $obj->getRaMail()) {
+							$raObj = new OIDplusRA($raEMail);
+							if ($raObj instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4) {
+								$raObj->whoisRaAttributes($raEMail, $out);
+							}
 
-						foreach (OIDplus::getAllPlugins() as $plugin) {
-							if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4) {
-								$plugin->whoisRaAttributes($obj->getRaMail(), $out);
+							foreach (OIDplus::getAllPlugins() as $plugin) {
+								if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4) {
+									$plugin->whoisRaAttributes($raEMail, $out);
+								}
 							}
 						}
 
@@ -410,8 +412,9 @@ class OIDplusOIDIP {
 						if ($row_ra->registered) $out[] = $this->_oidip_attr('ra-created', date('Y-m-d H:i:s', strtotime($row_ra->registered))); // DO NOT TRANSLATE!
 						if ($row_ra->updated)    $out[] = $this->_oidip_attr('ra-updated', date('Y-m-d H:i:s', strtotime($row_ra->updated))); // DO NOT TRANSLATE!
 					} else {
-						$out[] = $this->_oidip_attr('ra', ($obj && !empty($obj->getRaMail()) ? $obj->getRaMail() : /*_L*/('Unknown'))); // DO NOT TRANSLATE!
-						if ($obj) {
+						$ra_avail = $obj && !empty($obj->getRaMail());
+						$out[] = $this->_oidip_attr('ra', $ra_avail ? $obj->getRaMail() : /*_L*/('Unknown')); // DO NOT TRANSLATE!
+						if ($ra_avail) {
 							foreach (OIDplus::getAllPlugins() as $plugin) {
 								if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4) {
 									$plugin->whoisRaAttributes($obj->getRaMail(), $out);
