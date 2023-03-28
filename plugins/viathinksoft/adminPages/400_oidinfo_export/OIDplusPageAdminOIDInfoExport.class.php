@@ -822,7 +822,8 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 				$elements['first-registrant']['email'] = '';
 				$elements['first-registrant']['phone'] = '';
 				$elements['first-registrant']['fax'] = '';
-				$elements['first-registrant']['creation-date'] = self::_formatdate($obj->getCreatedTime());
+				$create_ts = $obj->getCreatedTime();
+				$elements['first-registrant']['creation-date'] = $create_ts ? self::_formatdate($create_ts) : '';
 
 				$elements['current-registrant']['first-name'] = '';
 				$elements['current-registrant']['last-name'] = '';
@@ -869,7 +870,8 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 						$elements['current-registrant']['address'] = implode("<br/>", $tmp);
 					}
 				}
-				$elements['current-registrant']['modification-date'] = self::_formatdate($obj->getUpdatedTime());
+				$update_ts = $obj->getUpdatedTime();
+				$elements['current-registrant']['modification-date'] = $update_ts ? self::_formatdate($update_ts) : '';
 
 				// Request from O.D. 20 May 2019: First registrant should not be empty (especially for cases where Creation and Modify Dates are the same)
 				// Actually, this is a problem because we don't know the first registrant.

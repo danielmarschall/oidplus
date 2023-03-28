@@ -576,7 +576,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @return false|string|null
+	 * @return string|null
 	 * @throws OIDplusException
 	 */
 	public function getTitle() {
@@ -590,12 +590,12 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			if (isset(self::$object_info_cache[$this->nodeId()])) {
 				return self::$object_info_cache[$this->nodeId()][self::CACHE_TITLE];
 			}
-			return false;
+			return null;
 		}
 	}
 
 	/**
-	 * @return false|string|null
+	 * @return string|null
 	 * @throws OIDplusException
 	 */
 	public function getDescription() {
@@ -609,12 +609,12 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			if (isset(self::$object_info_cache[$this->nodeId()])) {
 				return self::$object_info_cache[$this->nodeId()][self::CACHE_DESCRIPTION];
 			}
-			return false;
+			return null;
 		}
 	}
 
 	/**
-	 * @return false|string|null
+	 * @return string|null
 	 * @throws OIDplusException
 	 */
 	public function getComment() {
@@ -628,12 +628,12 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			if (isset(self::$object_info_cache[$this->nodeId()])) {
 				return self::$object_info_cache[$this->nodeId()][self::CACHE_COMMENT];
 			}
-			return false;
+			return null;
 		}
 	}
 
 	/**
-	 * @return false|string|null
+	 * @return string|null
 	 * @throws OIDplusException
 	 */
 	public function getCreatedTime() {
@@ -647,12 +647,12 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			if (isset(self::$object_info_cache[$this->nodeId()])) {
 				return self::$object_info_cache[$this->nodeId()][self::CACHE_CREATED];
 			}
-			return false;
+			return null;
 		}
 	}
 
 	/**
-	 * @return false|string|null
+	 * @return string|null
 	 * @throws OIDplusException
 	 */
 	public function getUpdatedTime() {
@@ -666,7 +666,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			if (isset(self::$object_info_cache[$this->nodeId()])) {
 				return self::$object_info_cache[$this->nodeId()][self::CACHE_UPDATED];
 			}
-			return false;
+			return null;
 		}
 	}
 
