@@ -206,7 +206,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	/**
 	 * @param string $actionID
 	 * @param array $params
-	 * @return int[]
+	 * @return array
 	 * @throws OIDplusException
 	 */
 	public function action(string $actionID, array $params): array {

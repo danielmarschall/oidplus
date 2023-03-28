@@ -63,6 +63,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		if (file_exists($file2)) $file = $file2;
 
 		$cont = file_get_contents($file);
+		if (!$cont) return '';
 
 		list($html, $js, $css) = extractHtmlContents($cont);
 		$cont = '';

@@ -40,7 +40,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 	/**
 	 * @param string $actionID
 	 * @param array $params
-	 * @return array|int[]
+	 * @return array
 	 * @throws OIDplusException
 	 */
 	public function action(string $actionID, array $params): array {

@@ -65,7 +65,7 @@ function oidplus_json_verify(string $json_content, string $pubkey) {
  * @param string $json_content
  * @param string $privkey
  * @param string $pubkey
- * @return false|string
+ * @return string
  * @throws Exception
  */
 function oidplus_json_sign(string $json_content, string $privkey, string $pubkey) {
@@ -101,6 +101,7 @@ function oidplus_json_sign(string $json_content, string $privkey, string $pubkey
 
 	// Self-test and output
 	$json_signed = json_encode($output);
+	if (!$json_signed) throw new Exception("JSON Encoding failed");
 	oidplus_json_verify($json_signed, $pubkey);
 	return $json_signed;
 }

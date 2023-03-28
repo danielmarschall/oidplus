@@ -4390,6 +4390,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OIDplus could not determine its version. Please update your system manually by downloading the latest archive file from oidplus.com.
+		]]></source>
+		<target><![CDATA[
+		Die OIDplus-Version konnte nicht ermittelt werden. Bitte aktualisieren Sie OIDplus durch das erneute Herunterladen des Archivs von oidplus.com.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OIDplus could not determine the latest version.
 		]]></source>
 		<target><![CDATA[

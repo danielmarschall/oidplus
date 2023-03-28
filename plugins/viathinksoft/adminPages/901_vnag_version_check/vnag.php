@@ -97,6 +97,9 @@ if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= OIDPLUS_VNAG
 		if (!$newest_version) {
 			$out_stat = VNag::STATUS_UNKNOWN;
 			$out_msg  = 'OIDplus could not determine the latest version. Probably the ViaThinkSoft server could not be reached.'; // do not translate
+		} else if (!$local_installation) {
+			$out_stat = 'WARN';
+			$out_msg  = 'OIDplus could not determine its version. Please update your system manually by downloading the latest archive file from oidplus.com.'; // do not translate
 		} else if (version_compare($local_installation, $newest_version) >= 0) {
 			$out_stat = VNag::STATUS_OK;
 			$out_msg  = 'You are using the latest version of OIDplus (' . $local_installation . ' local / ' . $newest_version . ' remote)'; // do not translate
