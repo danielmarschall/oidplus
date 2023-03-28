@@ -28,7 +28,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 	/**
 	 * @param string $actionID
 	 * @param array $params
-	 * @return int[]
+	 * @return array
 	 * @throws OIDplusException
 	 * @throws OIDplusMailException
 	 */

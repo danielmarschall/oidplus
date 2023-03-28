@@ -56,7 +56,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	/**
 	 * @param string $actionID
 	 * @param array $params
-	 * @return array|int[]
+	 * @return array
 	 * @throws OIDplusException
 	 * @throws OIDplusMailException
 	 */
@@ -375,7 +375,7 @@ $out['text'] .= ' - <a '.OIDplus::gui()->link('aid:D276000186F1').'>'._L('More i
 			$arc = substr_count(self::getFreeRootOid(false), '.')+1;
 			$highest_id = explode('.',$row['id'])[$arc];
 		}
-		return $highest_id;
+		return (int)$highest_id;
 	}
 
 	/**

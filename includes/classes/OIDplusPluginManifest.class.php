@@ -161,7 +161,7 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 				return 'built-in';
 			} else {
 				//return _L('Part of OIDplus, version %1', $sysver);
-				return $sysver;
+				return $sysver ? $sysver : 'unknown';
 			}
 		} else {
 			return $this->version;

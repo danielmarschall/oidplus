@@ -489,6 +489,9 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 					} else {
 						$out_msg  = _L('OIDplus could not determine the latest version.').' '._L('Probably the ViaThinkSoft server could not be reached.');
 					}
+				} else if (!$local_installation) {
+					$out_stat = 'WARN';
+					$out_msg  = _L('OIDplus could not determine its version. Please update your system manually by downloading the latest archive file from oidplus.com.');
 				} else if (version_compare($local_installation, $newest_version) >= 0) {
 					$out_stat = 'INFO';
 					$out_msg  = _L('You are using the latest version of OIDplus (%1 local / %2 remote)', $local_installation, $newest_version);

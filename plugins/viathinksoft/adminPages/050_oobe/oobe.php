@@ -201,6 +201,7 @@ echo '</body>';
 echo '</html>';
 
 $cont = ob_get_contents();
+if (!$cont) $cont = '';
 ob_end_clean();
 
 if ($do_edits && !$errors_happened)  {

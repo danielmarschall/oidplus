@@ -119,7 +119,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 	/**
 	 * @param string $actionID
 	 * @param array $params
-	 * @return int[]
+	 * @return array
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */

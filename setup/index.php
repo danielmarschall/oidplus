@@ -238,6 +238,7 @@ $page_title_1 = _L('OIDplus Setup');
 $page_title_2 = _L('Configuration File Generator');
 $static_icon = 'img/main_icon.png';
 $static_content = ob_get_contents();
+if (!$static_content) $static_content = '';
 $extra_head_tags = array();
 $extra_head_tags[] = '<meta name="robots" content="noindex">';
 $extra_head_tags[] = '<link rel="stylesheet" href="setup.min.css.php">';

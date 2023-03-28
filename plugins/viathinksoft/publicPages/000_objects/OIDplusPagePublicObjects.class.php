@@ -60,7 +60,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	/**
 	 * @param string $actionID
 	 * @param array $params
-	 * @return array|int[]
+	 * @return array
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
@@ -584,11 +584,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$cont = '';
 			}
 
-			list($html, $js, $css) = extractHtmlContents($cont);
-			$cont = '';
-			if (!empty($js))  $cont .= "<script>\n$js\n</script>";
-			if (!empty($css)) $cont .= "<style>\n$css\n</style>";
-			$cont .= stripHtmlComments($html);
+			if ($cont) {
+				list($html, $js, $css) = extractHtmlContents($cont);
+				$cont = '';
+				if (!empty($js)) $cont .= "<script>\n$js\n</script>";
+				if (!empty($css)) $cont .= "<style>\n$css\n</style>";
+				$cont .= stripHtmlComments($html);
+			}
 
 			$out['text'] = $cont;
 
