@@ -694,8 +694,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			// ---
 
 			if ($obj) {
-				$title = $obj->getTitle();
-				$description = $obj->getDescription();
+				$title = $obj->getTitle() ?? '';
+				$description = $obj->getDescription() ?? '';
 				if (empty(strip_tags($description)) && (stripos($description,'<img') === false)) {
 					if (empty($title)) {
 						$desc = '<p><i>'._L('No description for this object available').'</i></p>';
@@ -705,6 +705,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				} else {
 					$desc = self::objDescription($description);
 				}
+
+				// $description is the description in the OID table (which the user edits)
+				// $desc is the thing that is shown (it can be a title if no description is there, or an MCE editor if the user has write rights)
 
 				if ($obj->userHasWriteRights()) {
 					$rand = ++self::$crudCounter;
