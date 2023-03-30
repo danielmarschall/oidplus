@@ -184,7 +184,7 @@ class OIDplusPhp extends OIDplusObject {
 			$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 
 			if (OIDplus::baseConfig()->getValue('PLUGIN_PHP_TYPE_LINK_TO_WEBFAN', false)) {
-				$content .= '<p><strong><a webfan-php-class-link="'.$this->nodeId(false).'" href="https://webfan.de/install/?source='.urlencode($this->nodeId(false)).'" target="_blank">Soure Code</a></strong></p>';
+				$content .= '<p><strong><a webfan-php-class-link="'.$this->nodeId(false).'" href="https://webfan.de/install/?source='.urlencode($this->nodeId(false)).'" target="_blank">Source code</a></strong></p>';
 			}
 
 			if (!$this->isLeafNode()) {
