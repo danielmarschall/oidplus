@@ -68,7 +68,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 		$first_ns = null;
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 			$res = OIDplus::db()->query("select id FROM ###objects where parent = ?", array($ot::ns().':'));
-			$res = new OIDplusNaturalSortedQueryResult($res, 'id');
+			$res->naturalSortByField('id');
 			if ($row = $res->fetch_array()) {
 				if (is_null($first_ns)) $first_ns = $ot::ns();
 				$firsts[$ot::ns()] = $row['id'];

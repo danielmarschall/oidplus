@@ -95,8 +95,6 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 		// Workaround for drivers that do not support odbc_num_rows (e.g. Microsoft Access)
 		if ($ret === -1) $ret = $this->num_rows_workaround();
 
-		if ($ret === -1) throw new OIDplusException(_L('The database driver has problems with "%1"','num_rows'));
-
 		return $ret;
 	}
 
@@ -106,52 +104,15 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 	protected function do_fetch_array()/*: ?array*/ {
 		$ret = odbc_fetch_array($this->res);
 		if ($ret === false) $ret = null;
-		if (!is_null($ret)) {
-			// ODBC gives bit(1) as binary, MySQL as integer and PDO as string.
-			// We'll do it like MySQL does, even if ODBC is actually more correct.
-			foreach ($ret as &$value) {
-				if ($value === chr(0)) $value = 0;
-				if ($value === chr(1)) $value = 1;
-			}
-		}
-
-		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
-		// We can't quote every single column throughout the whole program, so we use this workaround...
-		if ($ret) {
-			$keys = array_keys($ret);
-			foreach($keys as $key) {
-				$ret[strtolower($key)]=$ret[$key];
-				$ret[strtoupper($key)]=$ret[$key];
-			}
-		}
-
 		return $ret;
 	}
 
 	/**
-	 * @return false|object|null
+	 * @return object|null
 	 */
 	protected function do_fetch_object()/*: ?object*/ {
 		$ret = odbc_fetch_object($this->res);
 		if ($ret === false) $ret = null;
-		if (!is_null($ret)) {
-			// ODBC gives bit(1) as binary, MySQL as integer and PDO as string.
-			// We'll do it like MySQL does, even if ODBC is actually more correct.
-			foreach ((array)$ret as &$value) {
-				if ($value === chr(0)) $value = 0;
-				if ($value === chr(1)) $value = 1;
-			}
-		}
-
-		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
-		// We can't quote every single column throughout the whole program, so we use this workaround...
-		if ($ret) {
-			foreach ((array)$ret as $name => $val) {
-				$ret->{strtoupper($name)} = $val;
-				$ret->{strtolower($name)} = $val;
-			}
-		}
-
 		return $ret;
 	}
 }

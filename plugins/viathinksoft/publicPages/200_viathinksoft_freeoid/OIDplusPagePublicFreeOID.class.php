@@ -47,7 +47,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	 */
 	public static function alreadyHasFreeOid(string $email, bool $getId = false)/*: ?bool*/ {
 		$res = OIDplus::db()->query("select id from ###objects where ra_email = ? and id like ?", array($email, self::getFreeRootOid(true).'.%'));
-		$res = new OIDplusNaturalSortedQueryResult($res, 'id');
+		$res->naturalSortByField('id');
 		if ($row = $res->fetch_array()) {
 			return $getId ? $row['id'] : true;
 		}
@@ -371,7 +371,7 @@ $out['text'] .= ' - <a '.OIDplus::gui()->link('aid:D276000186F1').'>'._L('More i
 	 */
 	protected static function freeoid_max_id(): int {
 		$res = OIDplus::db()->query("select id from ###objects where id like ?", array(self::getFreeRootOid(true).'.%'));
-		$res = new OIDplusNaturalSortedQueryResult($res, 'id');
+		$res->naturalSortByField('id');
 		$highest_id = 0;
 		while ($row = $res->fetch_array()) {
 			$arc = substr_count(self::getFreeRootOid(false), '.')+1;
