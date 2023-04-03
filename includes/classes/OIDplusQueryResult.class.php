@@ -46,7 +46,7 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	protected $countAlreadyFetched = 0;
 
 	/**
-	 * Please override this method if the database drive can perform a "fetch all" in its own way
+	 * Please override this method if the database driver can perform a "fetch all" in its own way
 	 *
 	 * @return void
 	 * @throws OIDplusConfigInitializationException
@@ -91,7 +91,7 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	 */
 	protected function fixFields(&$ret) {
 		// ODBC gives bit(1) as binary, MySQL as integer and PDO as string.
-		// We'll do it like MySQL does, even if ODBC is actually more correct.
+		// We'll do it like MySQL does, although ODBC semms to be more correct.
 		foreach ($ret as &$value) {
 			if ($value === chr(0)) $value = 0;
 			if ($value === chr(1)) $value = 1;
