@@ -91,14 +91,4 @@ class OIDplusNaturalSortedQueryResult extends OIDplusQueryResult {
 		return $obj;
 	}
 
-	/**
-	 * The any() function returns true if there is at least one
-	 * row in the section. By default, num_rows() will be used.
-	 * Plugins can override this method if they have a possibility
-	 * of making this functionality more efficient.
-	 * @return bool
-	 */
-	public function any(): bool {
-		return $this->num_rows() > 0;
-	}
 }
