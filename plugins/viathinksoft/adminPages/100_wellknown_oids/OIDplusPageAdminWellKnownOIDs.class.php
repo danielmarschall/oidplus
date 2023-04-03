@@ -71,34 +71,33 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 			$out['text'] .= '</thead>';
 			$out['text'] .= '<tbody>';
 
-			/*
-			$res = OIDplus::db()->query("select a.oid from (".
-			                            "select oid from ###asn1id where well_known = ? union ".
-			                            "select oid from ###iri where well_known = ?) a ".
-			                            "order by ".OIDplus::db()->natOrder('oid'), array(true, true)); // <-- This prepared statement does not work in SQL-Server!
-			*/
-			$res = OIDplus::db()->query("select a.oid from (".
-			                            "select oid, well_known from ###asn1id union ".
-			                            "select oid, well_known from ###iri) a ".
-			                            "where a.well_known = ? ".
-			                            "order by ".OIDplus::db()->natOrder('oid'), array(true)); // <-- This works
+			$asn1ids = array();
+			$res = OIDplus::db()->query("select oid, name, standardized from ###asn1id where well_known = ?", array(true));
 			while ($row = $res->fetch_array()) {
-				$asn1ids = array();
-				$res2 = OIDplus::db()->query("select name, standardized from ###asn1id where oid = ?", array($row['oid']));
-				while ($row2 = $res2->fetch_array()) {
-					$asn1ids[] = $row2['name'].($row2['standardized'] ? ' ('._L('standardized').')' : '');
-				}
+				$oid = $row['oid'];
+				if (!isset($asn1ids[$oid])) $asn1ids[$oid] = array();
+				$asn1ids[$oid][] = $row['name'].($row['standardized'] ? ' ('._L('standardized').')' : '');
+			}
 
-				$iris = array();
-				$res2 = OIDplus::db()->query("select name, longarc from ###iri where oid = ?", array($row['oid']));
-				while ($row2 = $res2->fetch_array()) {
-					$iris[] = $row2['name'].($row2['longarc'] ? ' ('._L('long arc').')' : '');
-				}
+			$iris = array();
+			$res = OIDplus::db()->query("select oid, name, longarc from ###iri where well_known = ?", array(true));
+			while ($row = $res->fetch_array()) {
+				$oid = $row['oid'];
+				if (!isset($iris[$oid])) $iris[$oid] = array();
+				$iris[$oid][] = $row['name'].($row['longarc'] ? ' ('._L('longarc').')' : '');
+			}
 
+			$oids = array_merge(array_keys($asn1ids), array_keys($iris));
+			$oids = array_unique($oids);
+			natsort($oids);
+
+			foreach ($oids as $oid) {
+				$local_asn1ids = $asn1ids[$oid] ?? array();
+				$local_iris = $iris[$oid] ?? array();
 				$out['text'] .= '<tr>';
-				$out['text'] .= '     <td>'.htmlentities(explode(':',$row['oid'])[1]).'</td>';
-				$out['text'] .= '     <td>'.htmlentities(implode(', ', $asn1ids)).'</td>';
-				$out['text'] .= '     <td>'.htmlentities(implode(', ', $iris)).'</td>';
+				$out['text'] .= '     <td>'.htmlentities(explode(':', $oid)[1]).'</td>';
+				$out['text'] .= '     <td>'.htmlentities(implode(', ', $local_asn1ids)).'</td>';
+				$out['text'] .= '     <td>'.htmlentities(implode(', ', $local_iris)).'</td>';
 				$out['text'] .= '</tr>';
 			}
 
