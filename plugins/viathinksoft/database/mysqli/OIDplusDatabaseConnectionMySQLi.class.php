@@ -49,7 +49,12 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	public function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
-			$res = $this->conn->query($sql, MYSQLI_STORE_RESULT);
+			try {
+				$res = $this->conn->query($sql, MYSQLI_STORE_RESULT);
+			} catch (\Exception $e) {
+				$this->last_error = $e->getMessage();
+				throw new OIDplusSQLException($sql, $e->getMessage());
+			}
 
 			if ($res === false) {
 				$this->last_error = $this->conn->error;
@@ -71,7 +76,12 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 			if (isset($this->prepare_cache[$sql])) {
 				$ps = $this->prepare_cache[$sql];
 			} else {
-				$ps = $this->conn->prepare($sql);
+				try {
+					$ps = $this->conn->prepare($sql);
+				} catch (\Exception $e) {
+					$this->last_error = $e->getMessage();
+					throw new OIDplusSQLException($sql, $e->getMessage());
+				}
 				if (!$ps) {
 					$this->last_error = $this->conn->error;
 					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
@@ -117,7 +127,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	 */
 	public function error(): string {
 		$err = $this->last_error;
-		if ($err == null) $err = '';
+		if ($err === null) $err = '';
 		return $err;
 	}
 

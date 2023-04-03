@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-// This script is used to detect problems with your database plugin
+// This script is used to detect problems with your database plugins
 // ATTENTION: PLEASE DO NOT USE THIS SCRIPT ON A PRODUCTIVE DATABASE,
 // BECAUSE IT ADDS AND CHANGES DATA DURING THE TESTING.
 
@@ -27,6 +27,9 @@
 // TODO: UTF-8 tests
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
+
+use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
 
 $num_errs = 0;
 $num_succ = 0;
@@ -122,10 +125,10 @@ if (PHP_SAPI != 'cli') {
 # ---
 
 /**
- * @param \ViaThinkSoft\OIDplus\OIDplusDatabaseConnection $db
+ * @param OIDplusDatabaseConnection $db
  * @return void
  */
-function dotest(\ViaThinkSoft\OIDplus\OIDplusDatabaseConnection $db): string {
+function dotest(OIDplusDatabaseConnection $db) {
 	echo "Database: " . get_class($db) . "\n";
 	try {
 		$db->connect();
@@ -222,15 +225,15 @@ function dotest(\ViaThinkSoft\OIDplus\OIDplusDatabaseConnection $db): string {
 			$db->query("SELECT * from ABCDEF");
 			echo "Exception for DirectQuery: ".redtext('FAILED').", no Exception thrown\n";
 		} catch (Exception $e) {
-			if ((strpos($e->getMessage(), 'ABCDEF') !== false) || is_known_errormsg($e->getMessage())) {
+			if ((stripos($e->getMessage(), 'ABCDEF') !== false) || is_known_errormsg($e->getMessage())) {
 				echo "Exception for DirectQuery: ".greentext('PASSED')."\n";
 			} else {
-				echo "Exception for DirectQuery: ".redtext('FAILED').", does probably not contain DBMS error string\n";
+				echo "Exception for DirectQuery: ".redtext('FAILED').", does probably not contain DBMS error string (".$e->getMessage().")\n";
 			}
 		}
 
 		$msg = $db->error();
-		if ((strpos($msg, 'ABCDEF') !== false) || is_known_errormsg($msg)) {
+		if ((stripos($msg, 'ABCDEF') !== false) || is_known_errormsg($msg)) {
 			echo "Error-Function after failed direct query: ".greentext('PASSED')."\n";
 		} else {
 			echo "Error-Function after failed direct query: ".redtext('FAILED').", does probably not contain DBMS error string ($msg)\n";
@@ -240,15 +243,15 @@ function dotest(\ViaThinkSoft\OIDplus\OIDplusDatabaseConnection $db): string {
 			$db->query("SELECT * from FEDCBA", array(''));
 			echo "Exception for PreparedQuery: ".redtext('FAILED').", no Exception thrown\n";
 		} catch (Exception $e) {
-			if ((strpos($e->getMessage(), 'FEDCBA') !== false) || is_known_errormsg($e->getMessage())) {
+			if ((stripos($e->getMessage(), 'FEDCBA') !== false) || is_known_errormsg($e->getMessage())) {
 				echo "Exception for PreparedQuery: ".greentext('PASSED')."\n";
 			} else {
-				echo "Exception for PreparedQuery: ".redtext('FAILED').", does probably not contain DBMS error string\n";
+				echo "Exception for PreparedQuery: ".redtext('FAILED').", does probably not contain DBMS error string (".$e->getMessage().")\n";
 			}
 		}
 
 		$msg = $db->error();
-		if ((strpos($msg, 'FEDCBA') !== false) || is_known_errormsg($msg)) {
+		if ((stripos($msg, 'FEDCBA') !== false) || is_known_errormsg($msg)) {
 			echo "Error-Function after failed prepared query: ".greentext('PASSED')."\n";
 		} else {
 			echo "Error-Function after failed prepared query: ".redtext('FAILED').", does probably not contain DBMS error string ($msg)\n";
