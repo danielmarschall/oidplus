@@ -392,7 +392,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						$active = $plugin::id() == OIDplus::baseConfig()->getValue('DATABASE_PLUGIN');
 						if ($active && !$show_db_active) continue;
 						if (!$active && !$show_db_inactive) continue;
-						$this->pluginTableLine($out, $plugin, $active?1:0, _L('active'));
+						$this->pluginTableLine($out, $plugin, $active?1:0, $active?_L('active'):'');
 					}
 					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
@@ -413,7 +413,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						$active = $plugin::id() == OIDplus::db()->getSlang()->id();
 						if ($active && !$show_sql_active) continue;
 						if (!$active && !$show_sql_inactive) continue;
-						$this->pluginTableLine($out, $plugin, $active?1:0, _L('active'));
+						$this->pluginTableLine($out, $plugin, $active?1:0, $active?_L('active'):'');
 					}
 					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
@@ -511,7 +511,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
 						$default = OIDplus::getDefaultLang() === $plugin->getLanguageCode();
-						$this->pluginTableLine($out, $plugin, $default?1:0, _L('default'));
+						$this->pluginTableLine($out, $plugin, $default?1:0, $default?_L('default'):'');
 					}
 					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
@@ -532,7 +532,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						$active = OIDplus::config()->getValue('design') === basename($plugin->getPluginDirectory());
 						if ($active && !$show_design_active) continue;
 						if (!$active && !$show_design_inactive) continue;
-						$this->pluginTableLine($out, $plugin, $active?1:0, _L('active'));
+						$this->pluginTableLine($out, $plugin, $active?1:0, $active?_L('active'):'');
 					}
 					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
@@ -554,7 +554,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						$active = $plugin::id() == $captcha_plugin_name;
 						if ($active && !$show_captcha_active) continue;
 						if (!$active && !$show_captcha_inactive) continue;
-						$this->pluginTableLine($out, $plugin, $active?1:0, _L('active'));
+						$this->pluginTableLine($out, $plugin, $active?1:0, $active?_L('active'):'');
 					}
 					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
