@@ -33,18 +33,6 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 	}
 
 	/**
-	 * @param string $fieldname
-	 * @param string $order
-	 * @return string
-	 */
-	public function natOrder(string $fieldname, string $order='asc'): string {
-
-		// TODO: Implement
-		return "$fieldname $order";
-
-	}
-
-	/**
 	 * @return string
 	 */
 	public function sqlDate(): string {

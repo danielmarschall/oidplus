@@ -33,36 +33,6 @@ class OIDplusSqlSlangPluginPgSQL extends OIDplusSqlSlangPlugin {
 	}
 
 	/**
-	 * @param string $fieldname
-	 * @param string $order
-	 * @return string
-	 * @throws OIDplusException
-	 */
-	public function natOrder(string $fieldname, string $order='asc'): string {
-
-		$order = strtolower($order);
-		if (($order != 'asc') && ($order != 'desc')) {
-			throw new OIDplusException(_L('Invalid order "%1" (needs to be "asc" or "desc")',$order));
-		}
-
-		$out = array();
-
-		$max_arc_len = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE') > 131072 ? 131072 : OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE'); // Limit of the "numeric()" type
-
-		// 1. Sort by namespace (oid, guid, ...)
-		$out[] = "SPLIT_PART($fieldname, ':', 1) $order";
-
-		// 2. Only if namespace is 'oid:': Sort OID as integer array
-		$out[] = "STRING_TO_ARRAY(SPLIT_PART($fieldname, 'oid:', 2), '.')::numeric($max_arc_len)[] $order";
-
-		// 3. Otherwise order by ID
-		$out[] = "$fieldname $order";
-
-		return implode(', ', $out);
-
-	}
-
-	/**
 	 * @return string
 	 */
 	public function sqlDate(): string {

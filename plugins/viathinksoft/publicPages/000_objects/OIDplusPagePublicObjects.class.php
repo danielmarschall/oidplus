@@ -839,15 +839,14 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					if (empty($parent)) {
 						$res = OIDplus::db()->query("select * from ###objects where " .
 						                            "parent = ? or " .
-						                            "id = ? " .
-						                            "order by ".OIDplus::db()->natOrder('id'), array($req_goto, $req_goto));
+						                            "id = ? ", array($req_goto, $req_goto));
 					} else {
 						$res = OIDplus::db()->query("select * from ###objects where " .
 						                            "parent = ? or " .
 						                            "id = ? or " .
-						                            "id = ? ".
-						                            "order by ".OIDplus::db()->natOrder('id'), array($req_goto, $req_goto, $parent));
+						                            "id = ? ", array($req_goto, $req_goto, $parent));
 					}
+					$res = new OIDplusNaturalSortedQueryResult($res, 'id');
 
 					$z_used = 0;
 					$y_used = 0;
@@ -1010,8 +1009,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$result = OIDplus::db()->query("select o.*, r.ra_name " .
 		                               "from ###objects o " .
 		                               "left join ###ra r on r.email = o.ra_email " .
-		                               "where parent = ? " .
-		                               "order by ".OIDplus::db()->natOrder('id'), array($parent));
+		                               "where parent = ? ", array($parent));
+		$result = new OIDplusNaturalSortedQueryResult($result, 'id');
 
 		$rows = array();
 		while ($row = $result->fetch_object()) {
@@ -1342,7 +1341,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	public function getNotifications(string $user=null): array {
 		$notifications = array();
-		$res = OIDplus::db()->query("select id, title from ###objects order by ".OIDplus::db()->natOrder('id'));
+		$res = OIDplus::db()->query("select id, title from ###objects");
+		$res = new OIDplusNaturalSortedQueryResult($res, 'id');
 		if ($res->any()) {
 			$is_admin_logged_in = OIDplus::authUtils()->isAdminLoggedIn(); // run just once, for performance
 			while ($row = $res->fetch_array()) {

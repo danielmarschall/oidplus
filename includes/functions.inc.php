@@ -379,3 +379,21 @@ function getSortedQuery(): string {
 	ksort($url);
 	return http_build_query($url);
 }
+
+/**
+* @param array &$rows
+* @param string $fieldName
+* @return void
+*/
+function natsort_field(&$rows, string $fieldName) {
+	usort($rows, function($a,$b) use($fieldName) {
+		if ($a[$fieldName] == $b[$fieldName]) return 0; // equal
+		$ary = array(
+			-1 => $a[$fieldName],
+			1 => $b[$fieldName]
+		);
+		natSort($ary);
+		$keys = array_keys($ary);
+		return $keys[0];
+	});
+}

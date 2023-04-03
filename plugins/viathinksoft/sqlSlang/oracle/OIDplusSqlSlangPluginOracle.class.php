@@ -33,43 +33,6 @@ class OIDplusSqlSlangPluginOracle extends OIDplusSqlSlangPlugin {
 	}
 
 	/**
-	 * @param string $fieldname
-	 * @param string $order
-	 * @return string
-	 * @throws OIDplusException
-	 */
-	public function natOrder(string $fieldname, string $order='asc'): string {
-
-		$order = strtolower($order);
-		if (($order != 'asc') && ($order != 'desc')) {
-			throw new OIDplusException(_L('Invalid order "%1" (needs to be "asc" or "desc")',$order));
-		}
-
-		$out = array();
-
-		$max_arc_len = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE') > 65 ? 65 : OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE'); // Limit of "decimal()" type
-
-		// 1. sort by namespace (oid, guid, ...)
-		$out[] = "regexp_substr($fieldname, '(.*?)(:|\$)', 1, 1, NULL, 1) $order";
-
-		// 2. sort by first arc (0,1,2)
-		$tmp = "regexp_substr($fieldname, '(.*?)(:|\$)', 1, 2, NULL, 1)";
-		$i = 1;
-		$out[] = "lpad(regexp_substr($tmp, '(.*?)(\\.|\$)', 1, $i, NULL, 1),$max_arc_len,'0') $order";
-
-		for ($i=2; $i<=OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH'); $i++) {
-			// 3. Sort by the rest arcs one by one, not that MySQL can only handle decimal(65), not decimal($max_arc_len)
-			$out[] = "lpad(regexp_substr($fieldname, '(.*?)(\\.|\$)', 1, $i, NULL, 1),$max_arc_len,'0') $order";
-		}
-
-		// 4. as last resort, sort by the identifier itself, e.g. if the casts above did fail (happens if it is not an OID)
-		$out[] = "$fieldname $order";
-
-		return implode(', ', $out);
-
-	}
-
-	/**
 	 * @return string
 	 */
 	public function sqlDate(): string {

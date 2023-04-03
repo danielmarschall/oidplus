@@ -133,7 +133,8 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			$confidential_oids[] = $row['id'];
 		}
 
-		$res = OIDplus::db()->query("select * from ###objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($parent));
+		$res = OIDplus::db()->query("select * from ###objects where parent = ?", array($parent));
+		$res = new OIDplusNaturalSortedQueryResult($res, 'id');
 		while ($row = $res->fetch_array()) {
 			$obj = OIDplusObject::parse($row['id']);
 			if (!$obj) continue; // e.g. object-type plugin disabled

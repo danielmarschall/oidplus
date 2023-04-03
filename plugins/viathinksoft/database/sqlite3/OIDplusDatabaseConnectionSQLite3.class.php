@@ -225,18 +225,6 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	}
 
 	/**
-	 * @param string $fieldname
-	 * @param string $order
-	 * @return string
-	 */
-	public function natOrder(string $fieldname, string $order='asc'): string {
-
-		// This collation is defined in the database plugin using SQLite3::createCollation()
-		return "$fieldname COLLATE NATURAL_CMP $order";
-
-	}
-
-	/**
 	 * @param bool $mustExist
 	 * @return OIDplusSqlSlangPlugin|null
 	 * @throws OIDplusConfigInitializationException

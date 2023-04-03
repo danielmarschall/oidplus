@@ -333,7 +333,8 @@ class OIDplusOIDIP {
 						}
 					}
 
-					$res_children = OIDplus::db()->query("select * from ###objects where parent = ? order by ".OIDplus::db()->natOrder('id'), array($obj->nodeId()));
+					$res_children = OIDplus::db()->query("select * from ###objects where parent = ?", array($obj->nodeId()));
+					$res_children = new OIDplusNaturalSortedQueryResult($res_children, 'id');
 					while ($row_children = $res_children->fetch_object()) {
 						$objTest = OIDplusObject::parse($row_children->id);
 						if ($this->allowObjectView($objTest, $authTokens)) {

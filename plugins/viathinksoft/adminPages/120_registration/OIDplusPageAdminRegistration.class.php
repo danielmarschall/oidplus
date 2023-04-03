@@ -369,8 +369,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 					                            "parent in (select oid from ###iri where well_known = ?)) and " .
 					                            // We assume hereby that RAs of well-known OIDs (e.g. IANA) will not use OIDplus for allocating OIDs:
 					                            "id not in (select oid from ###asn1id where well_known = ?) and " .
-					                            "id not in (select oid from ###iri where well_known = ?) " .
-					                            "order by ".OIDplus::db()->natOrder('id'), array(true, true, true, true));
+					                            "id not in (select oid from ###iri where well_known = ?)", array(true, true, true, true));
+					$res = new OIDplusNaturalSortedQueryResult($res, 'id');
 					while ($row = $res->fetch_array()) {
 						$root_oids[] = substr($row['id'],strlen('oid:'));
 					}

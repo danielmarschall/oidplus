@@ -46,7 +46,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	 * @throws OIDplusException
 	 */
 	public static function alreadyHasFreeOid(string $email, bool $getId = false)/*: ?bool*/ {
-		$res = OIDplus::db()->query("select id from ###objects where ra_email = ? and id like ? order by ".OIDplus::db()->natOrder('id'), array($email, self::getFreeRootOid(true).'.%'));
+		$res = OIDplus::db()->query("select id from ###objects where ra_email = ? and id like ?", array($email, self::getFreeRootOid(true).'.%'));
+		$res = new OIDplusNaturalSortedQueryResult($res, 'id');
 		if ($row = $res->fetch_array()) {
 			return $getId ? $row['id'] : true;
 		}
@@ -369,7 +370,8 @@ $out['text'] .= ' - <a '.OIDplus::gui()->link('aid:D276000186F1').'>'._L('More i
 	 * @throws OIDplusException
 	 */
 	protected static function freeoid_max_id(): int {
-		$res = OIDplus::db()->query("select id from ###objects where id like ? order by ".OIDplus::db()->natOrder('id'), array(self::getFreeRootOid(true).'.%'));
+		$res = OIDplus::db()->query("select id from ###objects where id like ?", array(self::getFreeRootOid(true).'.%'));
+		$res = new OIDplusNaturalSortedQueryResult($res, 'id');
 		$highest_id = 0;
 		while ($row = $res->fetch_array()) {
 			$arc = substr_count(self::getFreeRootOid(false), '.')+1;

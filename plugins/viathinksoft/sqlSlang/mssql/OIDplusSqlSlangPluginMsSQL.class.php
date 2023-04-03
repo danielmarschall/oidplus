@@ -33,38 +33,6 @@ class OIDplusSqlSlangPluginMsSQL extends OIDplusSqlSlangPlugin {
 	}
 
 	/**
-	 * @param string $fieldname
-	 * @param string $order
-	 * @return string
-	 * @throws OIDplusException
-	 */
-	public function natOrder(string $fieldname, string $order='asc'): string {
-
-		$order = strtolower($order);
-		if (($order != 'asc') && ($order != 'desc')) {
-			throw new OIDplusException(_L('Invalid order "%1" (needs to be "asc" or "desc")',$order));
-		}
-
-		$out = array();
-
-		$max_arc_len = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE');
-
-		// 1. sort by namespace (oid, guid, ...)
-		$out[] = "SUBSTRING($fieldname,1,CHARINDEX(':',$fieldname)-1) $order";
-
-		for ($i=1; $i<=OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH'); $i++) {
-			// 2. Sort by the rest arcs one by one; note that MySQL can only handle decimal(65), not decimal($max_arc_len)
-			$out[] = "dbo.getOidArc($fieldname, $max_arc_len, $i) $order";
-		}
-
-		// 3. as last resort, sort by the identifier itself, e.g. if the function getOidArc always return 0 (happens if it is not an OID)
-		$out[] = "$fieldname $order";
-
-		return implode(', ', $out);
-
-	}
-
-	/**
 	 * @return string
 	 */
 	public function sqlDate(): string {
