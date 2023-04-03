@@ -196,15 +196,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 				"signature" => base64_encode($signature)
 			);
 
-			if (!function_exists('curl_init')) {
-				throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
-			}
-
-			$ch = curl_init();
-			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
-			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
-			curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
-			curl_setopt($ch, CURLOPT_POST, 1);
 			if (function_exists('gzdeflate')) {
 				$compressed = "1";
 				$data2 = gzdeflate(json_encode($data));
@@ -212,14 +203,19 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 				$compressed = "0";
 				$data2 = json_encode($data);
 			}
-			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=".urlencode($query)."&compressed=$compressed&data=".urlencode(base64_encode($data2)));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-			if (!($res = @curl_exec($ch))) {
-				throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
+
+			$res = url_post_contents(
+				'https://oidplus.viathinksoft.com/reg2/query.php',
+				array(
+					"query"      => $query,
+					"compressed" => $compressed,
+					"data"       => base64_encode($data2)
+				)
+			);
+
+			if ($res === false) {
+				throw new OIDplusException(_L('Communication with %1 server failed', 'ViaThinkSoft'));
 			}
-			curl_close($ch);
 
 			$json = @json_decode($res, true);
 
@@ -251,6 +247,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 	protected function areWeRegistered(): bool {
 		// To check if we are registered. Check it "anonymously" (i.e. without revealing our system ID)
 		$res = url_get_contents('https://oidplus.viathinksoft.com/reg2/query.php?query='.self::QUERY_LISTALLSYSTEMIDS_V1);
+		if ($res === false) return false;
 
 		$json = @json_decode($res, true);
 
@@ -310,15 +307,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 					"signature" => base64_encode($signature)
 				);
 
-				if (!function_exists('curl_init')) {
-					return false; // throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
-				}
-
-				$ch = curl_init();
-				if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
-				curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
-				curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
-				curl_setopt($ch, CURLOPT_POST, 1);
 				if (function_exists('gzdeflate')) {
 					$compressed = "1";
 					$data2 = gzdeflate(json_encode($data));
@@ -326,14 +314,17 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 					$compressed = "0";
 					$data2 = json_encode($data);
 				}
-				curl_setopt($ch, CURLOPT_POSTFIELDS, "query=".urlencode($query)."&compressed=$compressed&data=".urlencode(base64_encode($data2)));
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-				curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-				if (!($res = @curl_exec($ch))) {
-					return false; // throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
-				}
-				curl_close($ch);
+
+				$res = url_post_contents(
+					'https://oidplus.viathinksoft.com/reg2/query.php',
+					array(
+						"query"      => $query,
+						"compressed" => $compressed,
+						"data"       => base64_encode($data2)
+					)
+				);
+
+				if ($res === false) return false; // throw new OIDplusException(_L('Communication with %1 server failed', 'ViaThinkSoft'));
 
 				$json = @json_decode($res, true);
 
@@ -402,15 +393,6 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 				"signature" => base64_encode($signature)
 			);
 
-			if (!function_exists('curl_init')) {
-				return false; // throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
-			}
-
-			$ch = curl_init();
-			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
-			curl_setopt($ch, CURLOPT_URL, 'https://oidplus.viathinksoft.com/reg2/query.php');
-			curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
-			curl_setopt($ch, CURLOPT_POST, 1);
 			if (function_exists('gzdeflate')) {
 				$compressed = "1";
 				$data2 = gzdeflate(json_encode($data));
@@ -418,14 +400,17 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 				$compressed = "0";
 				$data2 = json_encode($data);
 			}
-			curl_setopt($ch, CURLOPT_POSTFIELDS, "query=".urlencode($query)."&compressed=$compressed&data=".urlencode(base64_encode($data2)));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-			if (!($res = @curl_exec($ch))) {
-				return false; // throw new OIDplusException(_L('Communication with ViaThinkSoft server failed: %1',curl_error($ch)));
-			}
-			curl_close($ch);
+
+			$res = url_post_contents(
+				'https://oidplus.viathinksoft.com/reg2/query.php',
+				array(
+					"query"      => $query,
+					"compressed" => $compressed,
+					"data"       => base64_encode($data2)
+				)
+			);
+
+			if ($res === false) return false; // throw new OIDplusException(_L('Communication with %1 server failed', 'ViaThinkSoft'));
 
 			$json = @json_decode($res, true);
 
@@ -593,7 +578,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 
 		echo $info;
 
-		if (!function_exists('curl_init')) {
+		if (!url_post_contents_available()) {
 			echo '<p><font color="red">';
 			echo _L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl').' ';
 			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
@@ -691,7 +676,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 	public function getNotifications(string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
-			if (!function_exists('curl_init')) {
+			if (!url_post_contents_available()) {
 				$title = _L('System registration');
 				$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but the required PHP extension "%2" is not installed.', '<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'.htmlentities($title).'</a>', 'php_curl'));
 			}

@@ -7,7 +7,6 @@ Type safety:
 April 2023 planned:
 - Don't send information object OIDs to oid-info.com anymore
 - https://github.com/danielmarschall/oidplus/issues/5 => "Offline mode" (do not contact internet, e.g. gs1-barcodes, polyfill, oidinfo, ...)
-	make function url_post_contents() which abstracts cURL
 
 Admin Auth:
 - implement argon2 as alternative to bcrypt?

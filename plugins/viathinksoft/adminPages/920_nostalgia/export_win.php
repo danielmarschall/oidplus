@@ -168,14 +168,14 @@ $zip->addFromString('DB//OID.INI', $cont);
 
 $exe_url = 'https://github.com/danielmarschall/oidplus_win95/raw/master/OIDPLUS.exe';
 $exe = url_get_contents($exe_url);
-if (!$exe) {
+if ($exe === false) {
 	throw new OIDplusException(_L("Cannot download the binary file from GitHub (%1)", $exe_url));
 }
 $zip->addFromString('OIDPLS32.EXE', $exe);
 
 $exe_url = 'https://github.com/danielmarschall/oidplus_win311/raw/master/OIDPLUS.exe';
 $exe = url_get_contents($exe_url);
-if (!$exe) {
+if ($exe === false) {
 	throw new OIDplusException(_L("Cannot download the binary file from GitHub (%1)", $exe_url));
 }
 $zip->addFromString('OIDPLS16.EXE', $exe);

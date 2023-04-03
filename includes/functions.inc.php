@@ -18,6 +18,7 @@
  */
 
 use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusException;
 
 /**
  * @param string $privKey
@@ -332,11 +333,32 @@ function sha3_512_pbkdf2(string $password, string $salt, int $iterations, int $l
 }
 
 /**
+ * @return bool
+ */
+function url_post_contents_available(): bool {
+	return function_exists('curl_init');
+}
+
+/**
  * @param string $url
+ * @param array $params
+ * @param array $extraHeaders
  * @param string $userAgent
  * @return string|false
+ * @throws \ViaThinkSoft\OIDplus\OIDplusException
  */
-function url_get_contents(string $url, string $userAgent='ViaThinkSoft-OIDplus/2.0') {
+function url_post_contents(string $url, array $params=array(), array $extraHeaders=array(), string $userAgent='ViaThinkSoft-OIDplus/2.0') {
+	$postFields = http_build_query($params);
+
+	$headers = array(
+		"User-Agent: $userAgent",
+		"Content-Length: ".strlen($postFields)
+	);
+
+	foreach ($extraHeaders as $name => $val) {
+		$headers[] = "$name: $val";
+	}
+
 	if (function_exists('curl_init')) {
 		$ch = curl_init();
 		if (class_exists(OIDplus::class)) {
@@ -344,7 +366,43 @@ function url_get_contents(string $url, string $userAgent='ViaThinkSoft-OIDplus/2
 		}
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
-		curl_setopt($ch, CURLOPT_POST, 0);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+		$res = @curl_exec($ch);
+		$error_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		@curl_close($ch);
+		if ($error_code >= 400) return false;
+		if ($res === false) return false;
+	} else {
+		throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
+	}
+	return $res;
+}
+
+/**
+ * @param string $url
+ * @param array $extraHeaders
+ * @param string $userAgent
+ * @return string|false
+ */
+function url_get_contents(string $url, array $extraHeaders=array(), string $userAgent='ViaThinkSoft-OIDplus/2.0') {
+	$headers = array("User-Agent: $userAgent");
+	foreach ($extraHeaders as $name => $val) {
+		$headers[] = "$name: $val";
+	}
+	if (function_exists('curl_init')) {
+		$ch = curl_init();
+		if (class_exists(OIDplus::class)) {
+			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
+		}
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_POST, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_AUTOREFERER, true);
@@ -359,7 +417,7 @@ function url_get_contents(string $url, string $userAgent='ViaThinkSoft-OIDplus/2
 		$opts = [
 			"http" => [
 				"method" => "GET",
-				"header" => "User-Agent: $userAgent\r\n"
+				"header" => implode("\r\n",$headers)."\r\n"
 			]
 		];
 		$context = stream_context_create($opts);

@@ -68,28 +68,24 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 		$sitekey=OIDplus::baseConfig()->getValue('HCAPTCHA_SITEKEY', '');
 		$secret=OIDplus::baseConfig()->getValue('HCAPTCHA_SECRET', '');
 
-		if (!function_exists('curl_init')) {
-			throw new OIDplusException(_L('hCaptcha plugin needs the PHP extension php_curl'));
-		}
-
 		// Yes, it is really "g-recaptcha-response"!
 		if (is_null($fieldname)) $fieldname = 'g-recaptcha-response'; // no individual field name (created by oidplus_captcha_response()) means that it is a plain POST event (e.g. by oobe.php)
 		_CheckParamExists($params, $fieldname);
 		$response=$params[$fieldname];
 
-		$ch = curl_init();
-		if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
-		curl_setopt($ch, CURLOPT_URL, 'https://hcaptcha.com/siteverify');
-		curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, "secret=".urlencode($secret)."&response=".urlencode($response)."&remoteip=".urlencode($_SERVER['REMOTE_ADDR'])."&sitekey=".urlencode($sitekey));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-		if (!($res = @curl_exec($ch))) {
-			throw new OIDplusException(_L('Communication with hCaptcha server failed: %1',curl_error($ch)));
+		$res = url_post_contents(
+			'https://hcaptcha.com/siteverify',
+			array(
+				"secret"   => $secret,
+				"response" => $response,
+				"remoteip" => $_SERVER['REMOTE_ADDR'],
+				"sitekey"  => $sitekey
+			)
+		);
+
+		if ($res === false) {
+			throw new OIDplusException(_L('Communication with %1 server failed', 'hCaptcha'));
 		}
-		curl_close($ch);
 
 		$captcha_success=@json_decode($res);
 		if (!$captcha_success || ($captcha_success->success==false)) {
@@ -101,7 +97,7 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 	 * @return string
 	 */
 	public static function setupHTML(): string {
-		$curl_status = function_exists('curl_init') ? 1 : 0;
+		$curl_status = url_post_contents_available() ? 1 : 0;
 		return '<div id="CAPTCHAPLUGIN_PARAMS_HCAPTCHA">'.
 		       '<p>(<a href="https://www.hcaptcha.com/" target="_blank">'._L('more information and obtain key').'</a>)</p>'.
 		       '<p>'._L('hCaptcha Site key').'<br><input id="hcaptcha_sitekey" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="hcaptcha_sitekey_warn"></span></p>'.
