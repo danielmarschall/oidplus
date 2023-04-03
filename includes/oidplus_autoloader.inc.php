@@ -94,15 +94,15 @@ spl_autoload_register(function ($fq_class_name) {
 	$class_name = array_pop($path);
 	$namespace = implode('\\',$path);
 
-	if (($namespace != "ViaThinkSoft\\OIDplus") && str_starts_with($class_name, "INTF_OID_1_3_6_1_4_1_37476_")) {
-		throw new Exception(_L('Third-party plugin tries to access a ViaThinkSoft-INTF_OID interface "%1", but is not in the ViaThinkSoft\\OIDplus namespace', $fq_class_name));
-	}
-
-	if (($namespace == "ViaThinkSoft\\OIDplus") && !str_starts_with($class_name, "INTF_OID_1_3_6_1_4_1_37476_")) {
-		throw new Exception(_L('ViaThinkSoft plugin tries to access a Third-Party-INTF_OID interface "%1", but is not in the third-party namespace', $fq_class_name));
-	}
-
 	if (str_starts_with($class_name, "INTF_OID_")) {
+		if (($namespace != "ViaThinkSoft\\OIDplus") && str_starts_with($class_name, "INTF_OID_1_3_6_1_4_1_37476_")) {
+			throw new Exception(_L('Third-party plugin tries to access a ViaThinkSoft-INTF_OID interface "%1", but is not in the ViaThinkSoft\\OIDplus namespace', $fq_class_name));
+		}
+
+		if (($namespace == "ViaThinkSoft\\OIDplus") && !str_starts_with($class_name, "INTF_OID_1_3_6_1_4_1_37476_")) {
+			throw new Exception(_L('ViaThinkSoft plugin tries to access a Third-Party-INTF_OID interface "%1", but is not in the third-party namespace', $fq_class_name));
+		}
+
 		$fake_content = "";
 		if ($namespace) $fake_content .= "namespace $namespace;\n\n";
 		$fake_content .= "interface $class_name { }\n\n";
