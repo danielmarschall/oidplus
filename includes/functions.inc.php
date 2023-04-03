@@ -450,7 +450,7 @@ function natsort_field(&$rows, string $fieldName) {
 			-1 => $a[$fieldName],
 			1 => $b[$fieldName]
 		);
-		natSort($ary);
+		natsort($ary);
 		$keys = array_keys($ary);
 		return $keys[0];
 	});
