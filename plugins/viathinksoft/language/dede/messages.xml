@@ -1262,6 +1262,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Class %1 is erroneous: At least one fetch-method needs to be overridden
+		]]></source>
+		<target><![CDATA[
+		Klasse %1 ist Fehlerhaft: Mindestens eine Fetch-Methode muss überschrieben werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Class declared in manifest is "%1" does not fit expected class for this plugin type "%2"
 		]]></source>
 		<target><![CDATA[

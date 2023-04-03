@@ -36,6 +36,16 @@ class OIDplusNaturalSortedQueryResult extends OIDplusQueryResult {
 	private $no_resultset = false;
 
 	/**
+	 * @return int
+	 */
+	private $cursor = 0;
+
+	/**
+	 * @return int
+	 */
+	private $record_count = 0;
+
+	/**
 	* @param OIDplusQueryResult $res
 	* @param string $dbField
 	*/
@@ -43,12 +53,19 @@ class OIDplusNaturalSortedQueryResult extends OIDplusQueryResult {
 		$this->no_resultset = !$res->containsResultSet();
 
 		if (!$this->no_resultset) {
+			$this->rows = array();
 			while ($row = $res->fetch_array()) {
 				$this->rows[] = $row;
 			}
+			$this->cursor = 0;
+			$this->record_count = count($this->rows);
 
 			// Sort $this->rows by field $dbField
 			natsort_field($this->rows, $dbField);
+		} else {
+			$this->rows = array();
+			$this->cursor = 0;
+			$this->record_count = 0;
 		}
 	}
 
@@ -62,33 +79,18 @@ class OIDplusNaturalSortedQueryResult extends OIDplusQueryResult {
 	/**
 	 * @return int
 	 */
-	public function num_rows(): int {
-		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
+	protected function do_num_rows(): int {
 		return count($this->rows);
 	}
 
 	/**
 	 * @return array|null
 	 */
-	public function fetch_array()/*: ?array*/ {
-		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-		return array_shift($this->rows);
-	}
-
-	/**
-	 * @return object|null
-	 */
-	public function fetch_object()/*: ?object*/ {
-		if ($this->no_resultset) throw new OIDplusConfigInitializationException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-
-		$ary = $this->fetch_array();
-		if (!$ary) return null;
-
-		$obj = new \stdClass;
-		foreach ($ary as $name => $val) {
-			$obj->$name = $val;
-		}
-		return $obj;
+	protected function do_fetch_array()/*: ?array*/ {
+		//return array_shift($this->rows);
+		// This is probably faster for large arrays:
+		if ($this->cursor >= $this->record_count) return null;
+		return $this->rows[$this->cursor++];
 	}
 
 }
