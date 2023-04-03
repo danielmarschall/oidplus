@@ -46,25 +46,20 @@ if ($_GET['state'] != $_COOKIE['csrf_token_weak']) {
 	die(_L('Missing or wrong CSRF Token'));
 }
 
-if (!function_exists('curl_init')) {
-	die(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
-}
-
-$ch = curl_init();
-if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
-curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/token");
-curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS,
-	"grant_type=authorization_code&".
-	"code=".urlencode($_GET['code'])."&".
-	"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'oauth.php')."&".
-	"client_id=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'))."&".
-	"client_secret=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_SECRET'))
+$cont = url_post_contents(
+	"https://oauth2.googleapis.com/token",
+	array(
+		"grant_type"    => "authorization_code",
+		"code"          => $_GET['code'],
+		"redirect_uri"  => OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'oauth.php',
+		"client_id"     => OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'),
+		"client_secret" => OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_SECRET')
+	)
 );
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$cont = curl_exec($ch);
-curl_close($ch);
+
+if ($cont === false) {
+	throw new OIDplusException(_L('Communication with %1 server failed', 'Google'));
+}
 
 // Get ID token and Access token
 $data = json_decode($cont,true);
@@ -80,7 +75,11 @@ try {
 	// see https://medium.com/@darutk/understanding-id-token-5f83f50fa02e
 	// Note: We do not need to verify the signature because the token comes directly from Google,
 	//       but we do it anyway. Just to be sure!
-	$verification_certs = json_decode(url_get_contents('https://www.googleapis.com/oauth2/v1/certs'), true);
+	$certs = url_get_contents('https://www.googleapis.com/oauth2/v1/certs');
+	if ($certs === false) {
+		throw new OIDplusException(_L('Communication with %1 server failed', 'Google'));
+	}
+	$verification_certs = json_decode($certs, true);
 	\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
 	$data = (array) \Firebase\JWT\JWT::decode($id_token, $verification_certs, array('ES256', 'ES384', 'RS256', 'RS384', 'RS512'));
 	if (!isset($data['iss']) || ($data['iss'] !== 'https://accounts.google.com')) {
@@ -100,19 +99,23 @@ try {
 			$ra->register_ra(null); // create a user account without password
 
 			// Query user infos
-			$ch = curl_init('https://www.googleapis.com/oauth2/v3/userinfo'); // Initialise cURL
-			if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
-			$data_string = '';
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'Content-Length: ' . strlen($data_string),
-				"Authorization: Bearer ".$access_token
-			));
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-			$result = curl_exec($ch);
-			curl_close($ch);
+			$result = url_post_contents(
+				'https://www.googleapis.com/oauth2/v3/userinfo',
+				array(
+					"client_id"       => OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'),
+					"client_secret"   => OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_SECRET'),
+					"token_type_hint" => "access_token",
+					"token"           => $access_token
+				),
+				array(
+					"Authorization"	  => "Bearer $access_token"
+				)
+			);
+
+			if ($result === false) {
+				throw new OIDplusException(_L('Communication with %1 server failed', 'Google'));
+			}
+
 			$data = json_decode($result,true);
 			$personal_name = $data['name']; // = given_name + " " + family_name
 
@@ -136,19 +139,18 @@ try {
 
 	// We now have the data of the person that wanted to log in
 	// So we can log off again
-	$ch = curl_init();
-	if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
-	curl_setopt($ch, CURLOPT_URL,"https://oauth2.googleapis.com/revoke");
-	curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
-	curl_setopt($ch, CURLOPT_POST, 1);
-	curl_setopt($ch, CURLOPT_POSTFIELDS,
-		"client_id=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'))."&".
-		"client_secret=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_SECRET'))."&".
-		"token_type_hint=access_token&".
-		"token=".urlencode($access_token)
+	$cont = url_post_contents(
+		"https://oauth2.googleapis.com/revoke",
+		array(
+			"client_id"       => OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'),
+			"client_secret"   => OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_SECRET'),
+			"token_type_hint" => "access_token",
+			"token"           => urlencode($access_token)
+		)
 	);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_exec($ch);
-	curl_close($ch);
+
+	if ($cont === false) {
+		// throw new OIDplusException(_L('Communication with %1 server failed', 'Google'));
+	}
 
 }

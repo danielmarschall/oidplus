@@ -84,7 +84,7 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 			while ($row = $res->fetch_array()) {
 				$oid = $row['oid'];
 				if (!isset($iris[$oid])) $iris[$oid] = array();
-				$iris[$oid][] = $row['name'].($row['longarc'] ? ' ('._L('longarc').')' : '');
+				$iris[$oid][] = $row['name'].($row['longarc'] ? ' ('._L('long arc').')' : '');
 			}
 
 			$oids = array_merge(array_keys($asn1ids), array_keys($iris));

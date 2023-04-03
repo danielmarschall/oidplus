@@ -130,7 +130,7 @@ class OIDplusPagePublicLoginGoogle extends OIDplusPagePluginPublic
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_ENABLED', false)) {
-				if (!function_exists('curl_init')) {
+				if (!url_post_contents_available()) {
 					$title = _L('Google OAuth Login');
 					$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but the required PHP extension "%2" is not installed.', htmlentities($title), 'php_curl'));
 				}

@@ -1286,18 +1286,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Communication with ViaThinkSoft server failed: %1
+		Communication with %1 server failed
 		]]></source>
 		<target><![CDATA[
-		Kommunikation mit dem ViaThinkSoft-Server fehlgeschlagen: %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Communication with hCaptcha server failed: %1
-		]]></source>
-		<target><![CDATA[
-		Kommunikation mit dem hCaptcha-Server fehlgeschlagen: %1
+		Kommunikation mit dem %1-Server ist fehlgeschlagen
 		]]></target>
 	</message>
 	<message>
@@ -3314,14 +3306,6 @@
 		]]></source>
 		<target><![CDATA[
 		Ungültiges Objekt "%1"
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Invalid order "%1" (needs to be "asc" or "desc")
-		]]></source>
-		<target><![CDATA[
-		Ungültige Reihenfolge "%1" (muss "asc" oder "desc" sein)
 		]]></target>
 	</message>
 	<message>

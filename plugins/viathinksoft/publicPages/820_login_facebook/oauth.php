@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,24 +47,20 @@ if ($_GET['state'] != $_COOKIE['csrf_token_weak']) {
 	die(_L('Missing or wrong CSRF Token'));
 }
 
-if (!function_exists('curl_init')) {
-	die(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
-}
-
 // Get access token
 
-$ch = curl_init();
-if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
-curl_setopt($ch, CURLOPT_URL,"https://graph.facebook.com/v8.0/oauth/access_token?".
-	"client_id=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID'))."&".
-	"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'oauth.php')."&".
-	"client_secret=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_SECRET'))."&".
-	"code=".$_GET['code']
+$cont = url_post_contents(
+	"https://graph.facebook.com/v8.0/oauth/access_token?".
+		"client_id=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID'))."&".
+		"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'oauth.php')."&".
+		"client_secret=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_SECRET'))."&".
+		"code=".$_GET['code']
 );
-curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$cont = curl_exec($ch);
-curl_close($ch);
+
+if ($cont === false) {
+	throw new OIDplusException(_L('Communication with %1 server failed', 'Facebook'));
+}
+
 $data = json_decode($cont,true);
 if (isset($data['error'])) {
 	echo '<h2>Error at step 2</h2>';
@@ -75,16 +71,16 @@ $access_token = $data['access_token'];
 
 // Get user infos
 
-$ch = curl_init();
-if (ini_get('curl.cainfo') == '') curl_setopt($ch, CURLOPT_CAINFO, OIDplus::localpath() . 'vendor/cacert.pem');
-curl_setopt($ch, CURLOPT_URL,"https://graph.facebook.com/v8.0/me?".
-	"fields=id,email,name&".
-	"access_token=".urlencode($access_token)
+$cont = url_post_contents(
+	"https://graph.facebook.com/v8.0/me?".
+		"fields=id,email,name&".
+		"access_token=".urlencode($access_token)
 );
-curl_setopt($ch, CURLOPT_USERAGENT, 'ViaThinkSoft-OIDplus/2.0');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$cont = curl_exec($ch);
-curl_close($ch);
+
+if ($cont === false) {
+	throw new OIDplusException(_L('Communication with %1 server failed', 'Facebook'));
+}
+
 $data = json_decode($cont,true);
 if (isset($data['error'])) {
 	throw new OIDplusException(_L('Error receiving the authentication token from %1: %2','Facebook',$data['error']['message']));
