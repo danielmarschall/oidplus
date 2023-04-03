@@ -201,27 +201,6 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param string $fieldname
-	 * @param string $order
-	 * @return string
-	 * @throws OIDplusException
-	 */
-	public function natOrder(string $fieldname, string $order='asc'): string {
-		$slang = $this->getSlang();
-		if (!is_null($slang)) {
-			return $slang->natOrder($fieldname, $order);
-		} else {
-			$order = strtolower($order);
-			if (($order != 'asc') && ($order != 'desc')) {
-				throw new OIDplusException(_L('Invalid order "%1" (needs to be "asc" or "desc")',$order));
-			}
-
-			// For (yet) unsupported DBMS, we do not offer natural sort
-			return "$fieldname $order";
-		}
-	}
-
-	/**
 	 * @return void
 	 */
 	protected function beforeDisconnect()/*: void*/ {}

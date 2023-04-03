@@ -31,13 +31,6 @@ abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 	public abstract static function id(): string;
 
 	/**
-	 * @param string $fieldname
-	 * @param string $order
-	 * @return string
-	 */
-	public abstract function natOrder(string $fieldname, string $order='asc'): string;
-
-	/**
 	 * @return string
 	 */
 	public abstract function sqlDate(): string;

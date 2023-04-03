@@ -33,56 +33,6 @@ class OIDplusSqlSlangPluginSQLite extends OIDplusSqlSlangPlugin {
 	}
 
 	/**
-	 * @param string $fieldname
-	 * @param string $order
-	 * @return string
-	 * @throws OIDplusException
-	 */
-	public function natOrder(string $fieldname, string $order='asc'): string {
-
-		$order = strtolower($order);
-		if (($order != 'asc') && ($order != 'desc')) {
-			throw new OIDplusException(_L('Invalid order "%1" (needs to be "asc" or "desc")',$order));
-		}
-
-		$out = array();
-
-		// If the SQLite database is accessed through the SQLite3 plugin,
-		// we use an individual collation, therefore OIDplusDatabasePluginSQLite3 overrides
-		// natOrder().
-		// If we connected to SQLite using ODBC or PDO, we need to do something else,
-		// but that solution is complex, slow and wrong (since it does not support
-		// UUIDs etc.)
-
-		$max_depth = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH');
-		if ($max_depth > 11) $max_depth = 11; // SQLite3 will crash if max depth > 11 (parser stack overflow); (TODO: can we do something else?!?!)
-
-		// 1. sort by namespace (oid, guid, ...)
-		$out[] = "substr($fieldname,0,instr($fieldname,':')) $order";
-
-		// 2. Sort by the rest arcs one by one
-		for ($i=1; $i<=$max_depth; $i++) {
-			if ($i==1) {
-				$arc = "substr($fieldname,5)||'.'";
-				$fieldname = $arc;
-				$arc = "substr($arc,0,instr($arc,'.'))";
-				$out[] = "cast($arc as integer) $order";
-			} else {
-				$arc = "ltrim(ltrim($fieldname,'0123456789'),'.')";
-				$fieldname = $arc;
-				$arc = "substr($arc,0,instr($arc,'.'))";
-				$out[] = "cast($arc as integer)  $order";
-			}
-		}
-
-		// 3. as last resort, sort by the identifier itself, e.g. if the function getOidArc always return 0 (happens if it is not an OID)
-		$out[] = "$fieldname $order";
-
-		return implode(', ', $out);
-
-	}
-
-	/**
 	 * @return string
 	 */
 	public function sqlDate(): string {

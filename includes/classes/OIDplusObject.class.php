@@ -227,8 +227,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			if (!$ra) {
 				$res = OIDplus::db()->query("select oChild.id as id, oChild.ra_email as child_mail, oParent.ra_email as parent_mail from ###objects as oChild ".
-				                            "left join ###objects as oParent on oChild.parent = oParent.id ".
-				                            "order by ".OIDplus::db()->natOrder('oChild.id'));
+				                            "left join ###objects as oParent on oChild.parent = oParent.id");
+				$res = new OIDplusNaturalSortedQueryResult($res, 'oChild.id');
 				while ($row = $res->fetch_array()) {
 					if (!OIDplus::authUtils()->isRaLoggedIn($row['parent_mail']) && OIDplus::authUtils()->isRaLoggedIn($row['child_mail'])) {
 						$x = self::parse($row['id']); // can be NULL if namespace was disabled
@@ -240,8 +240,9 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				                            "left join ###objects as oParent on oChild.parent = oParent.id ".
 				                            "where (".OIDplus::db()->getSlang()->isNullFunction('oParent.ra_email',"''")." <> ? and ".
 				                            OIDplus::db()->getSlang()->isNullFunction('oChild.ra_email',"''")." = ?) or ".
-				                            "      (oParent.ra_email is null and ".OIDplus::db()->getSlang()->isNullFunction('oChild.ra_email',"''")." = ?) ".
-				                            "order by ".OIDplus::db()->natOrder('oChild.id'), array($ra, $ra, $ra));
+				                            "      (oParent.ra_email is null and ".OIDplus::db()->getSlang()->isNullFunction('oChild.ra_email',"''")." = ?) ",
+				                            array($ra, $ra, $ra));
+				$res = new OIDplusNaturalSortedQueryResult($res, 'oChild.id');
 				while ($row = $res->fetch_array()) {
 					$x = self::parse($row['id']); // can be NULL if namespace was disabled
 					if ($x) $out[] = $x;
@@ -289,8 +290,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		$out = array();
 
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
-			$res = OIDplus::db()->query("select id from ###objects where confidential = ? order by ".OIDplus::db()->natOrder('id'), array(false));
-
+			$res = OIDplus::db()->query("select id from ###objects where confidential = ?", array(false));
+			$res = new OIDplusNaturalSortedQueryResult($res, 'id');
 			while ($row = $res->fetch_array()) {
 				$obj = self::parse($row['id']); // will be NULL if the object type is not registered
 				if ($obj && (!$obj->isConfidential())) {

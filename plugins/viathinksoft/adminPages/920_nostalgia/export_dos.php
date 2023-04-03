@@ -20,6 +20,7 @@
 use ViaThinkSoft\OIDplus\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplusGui;
 use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\OIDplusNaturalSortedQueryResult;
 
 header('Content-Type:text/html; charset=UTF-8');
 
@@ -56,7 +57,8 @@ $title[''] = 'OID Root';
 $description[''] = 'Exported by OIDplus 2.0';
 
 // Now check all OIDs
-$res = OIDplus::db()->query("select * from ###objects where id like 'oid:%' order by ".OIDplus::db()->natOrder('id'));
+$res = OIDplus::db()->query("select * from ###objects where id like 'oid:%'");
+$res = new OIDplusNaturalSortedQueryResult($res, 'id');
 while ($row = $res->fetch_object()) {
 	$oid = substr($row->id, strlen('oid:'));
 	$parent_oid = substr($row->parent, strlen('oid:'));

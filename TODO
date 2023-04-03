@@ -7,6 +7,7 @@ Type safety:
 April 2023 planned:
 - Don't send information object OIDs to oid-info.com anymore
 - https://github.com/danielmarschall/oidplus/issues/5 => "Offline mode" (do not contact internet, e.g. gs1-barcodes, polyfill, oidinfo, ...)
+	make function url_post_contents() which abstracts cURL
 
 Admin Auth:
 - implement argon2 as alternative to bcrypt?
@@ -178,7 +179,6 @@ SMALL THINGS
 - Privacy flag of RAs: Should there be more privacy levels, e.g. that you don't show your personal name etc.?
 - You should be able to change the "created" date for an object! Or maybe hide it completely if you don't know the original creation date?
 - In the CRUD table, you should be able to see the name of the OID? But on the other hand, the title is not in the control of the Superior RA, and the CRUD table is actually the allocation table of the Superior RA.
-- natOrder() does only work for OID namespace!!! other sort mechanisms are necessary for other object types
 - jstree select: automatically scroll down
 - jstree: right click "open in new tab" is not possible
 - things like RA: show more things, address, email etc.
@@ -203,7 +203,6 @@ UPDATER
 - add some kind of loading cricle animation or a progress bar during the update
 
 DATABASE
-- SQLite3: Implement Natural OID sorting (natSort)
 - make usage of Foreign Keys
 	PROBLEM: we need foreign keys with no check, because
 	a) we want to keep log entries even if an object/user is deleted
