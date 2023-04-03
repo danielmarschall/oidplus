@@ -221,9 +221,9 @@
             'dev_requirement' => false,
         ),
         'twbs/bootstrap' => array(
-            'pretty_version' => 'v5.3.0-alpha2',
-            'version' => '5.3.0.0-alpha2',
-            'reference' => 'c877cefcef18d6a60c5eaec8df469933e64e212a',
+            'pretty_version' => 'v5.3.0-alpha3',
+            'version' => '5.3.0.0-alpha3',
+            'reference' => 'ac576614a5515e429f27e756fad81d5aa05e95a6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(),
@@ -241,7 +241,7 @@
         'twitter/bootstrap' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => 'v5.3.0-alpha2',
+                0 => 'v5.3.0-alpha3',
             ),
         ),
         'vakata/jstree' => array(

@@ -1057,23 +1057,23 @@
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v5.3.0-alpha2",
-            "version_normalized": "5.3.0.0-alpha2",
+            "version": "v5.3.0-alpha3",
+            "version_normalized": "5.3.0.0-alpha3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "c877cefcef18d6a60c5eaec8df469933e64e212a"
+                "reference": "ac576614a5515e429f27e756fad81d5aa05e95a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/c877cefcef18d6a60c5eaec8df469933e64e212a",
-                "reference": "c877cefcef18d6a60c5eaec8df469933e64e212a",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/ac576614a5515e429f27e756fad81d5aa05e95a6",
+                "reference": "ac576614a5515e429f27e756fad81d5aa05e95a6",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2023-03-24T14:30:16+00:00",
+            "time": "2023-04-03T07:26:50+00:00",
             "type": "library",
             "installation-source": "dist",
             "notification-url": "https://packagist.org/downloads/",
@@ -1104,7 +1104,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twbs/bootstrap/issues",
-                "source": "https://github.com/twbs/bootstrap/tree/v5.3.0-alpha2"
+                "source": "https://github.com/twbs/bootstrap/tree/v5.3.0-alpha3"
             },
             "install-path": "../twbs/bootstrap"
         },
