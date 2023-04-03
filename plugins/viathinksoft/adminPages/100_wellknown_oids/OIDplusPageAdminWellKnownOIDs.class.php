@@ -58,8 +58,7 @@ class OIDplusPageAdminWellKnownOIDs extends OIDplusPagePluginAdmin {
 			// $out['text'] .= '<li>'._L('In OID-WHOIS, if a user requests information about an unknown OID which is inside a well-known OID, then OID-WHOIS will output information at which place more information can be retrieved from.').'</li>';
 			$out['text'] .= '</ol></p>';
 
-			$out['text'] .= '<p><abbr title="'._L('These ID names can only be edited in the database directly (Tables ###asn1id and ###iri). Usually, there is no need to do this, though.').'">'._L('How to edit these IDs?').'</abbr></p>';
-
+			$out['text'] .= '<p><b>'._L('How to edit these IDs?').'</b> '._L('These ID names can only be edited in the database directly (Tables ###asn1id and ###iri). Usually, there is no need to do this, though.').'</p>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
 			$out['text'] .= '<thead>';
