@@ -36,16 +36,6 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 	protected $res;
 
 	/**
-	 * @var array|null
-	 */
-	private $prefetchedArray = null;
-
-	/**
-	 * @var int
-	 */
-	private $countAlreadyFetched = 0;
-
-	/**
 	 * @param mixed $res
 	 */
 	public function __construct($res) {
@@ -73,87 +63,43 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 	}
 
 	/**
+	 * @return void
+	 */
+	public function prefetchAll() {
+		if (!is_null($this->prefetchedArray)) return;
+		$this->prefetchedArray = array();
+		oci_fetch_all($this->res, $this->prefetchedArray, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
+	}
+
+	/**
 	 * @return int
 	 */
 	protected function do_num_rows(): int {
-		if (!is_null($this->prefetchedArray)) {
-			return count($this->prefetchedArray) + $this->countAlreadyFetched;
-		}
-
 		// This function does not return number of rows selected! For SELECT statements this function will return the number of rows, that were fetched to the buffer with oci_fetch*() functions.
 		//return oci_num_rows($this->res);
 
-		$this->prefetchedArray = array();
-		oci_fetch_all($this->res, $this->prefetchedArray, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
+		if (is_null($this->prefetchedArray)) {
+			$this->prefetchAll();
+		}
+
 		return count($this->prefetchedArray) + $this->countAlreadyFetched;
 	}
 
 	/**
-	 * @return array|mixed|null
+	 * @return array|null
 	 */
 	protected function do_fetch_array()/*: ?array*/ {
-		if (!is_null($this->prefetchedArray)) {
-			$ret = array_shift($this->prefetchedArray);
-		} else {
-			$ret = oci_fetch_array($this->res);
-			if ($ret === false) $ret = null;
-		}
-		if ($ret) $this->countAlreadyFetched++;
-
-		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
-		// We can't quote every single column throughout the whole program, so we use this workaround...
-		if ($ret) {
-			$keys = array_keys($ret);
-			foreach($keys as $key) {
-				$ret[strtolower($key)]=$ret[$key];
-				$ret[strtoupper($key)]=$ret[$key];
-			}
-		}
-
+		$ret = oci_fetch_array($this->res);
+		if ($ret === false) $ret = null;
 		return $ret;
 	}
 
 	/**
-	 * @param array $ary
-	 * @return \stdClass
-	 */
-	private static function array_to_stdobj(array $ary): \stdClass {
-		$obj = new \stdClass;
-		foreach ($ary as $name => $val) {
-			$obj->$name = $val;
-
-			// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
-			// We can't quote every single column throughout the whole program, so we use this workaround...
-			$name = strtolower($name);
-			$obj->$name = $val;
-			$name = strtoupper($name);
-			$obj->$name = $val;
-		}
-		return $obj;
-	}
-
-	/**
-	 * @return false|object|\stdClass|null
+	 * @return object|null
 	 */
 	protected function do_fetch_object()/*: ?object*/ {
-		if (!is_null($this->prefetchedArray)) {
-			$ary = array_shift($this->prefetchedArray);
-			$ret = is_null($ary) ? null : self::array_to_stdobj($ary);
-		} else {
-			$ret = oci_fetch_object($this->res);
-			if ($ret === false) $ret = null;
-		}
-		if ($ret) $this->countAlreadyFetched++;
-
-		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
-		// We can't quote every single column throughout the whole program, so we use this workaround...
-		if ($ret) {
-			foreach ($ret as $name => $val) {
-				$ret->{strtoupper($name)} = $val;
-				$ret->{strtolower($name)} = $val;
-			}
-		}
-
+		$ret = oci_fetch_object($this->res);
+		if ($ret === false) $ret = null;
 		return $ret;
 	}
 }

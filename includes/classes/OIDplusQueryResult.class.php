@@ -36,14 +36,85 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	abstract protected function do_num_rows(): int;
 
 	/**
-	 * @return int
+	 * @var array|null
 	 */
-	public final function num_rows(): int {
-		if (!$this->containsResultSet()) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-		return $this->do_num_rows();
+	protected $prefetchedArray = null;
+
+	/**
+	 * @var int
+	 */
+	protected $countAlreadyFetched = 0;
+
+	/**
+	 * Please override this method if the database drive can perform a "fetch all" in its own way
+	 *
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws \ReflectionException
+	 */
+	public function prefetchAll() {
+		if (!is_null($this->prefetchedArray)) return;
+		$pfa = array();
+		while ($row = $this->fetch_array()) {
+			$pfa[] = $row; // you may not edit $this->prefetchedArray at this step, because $this->>fetch_array() checks it
+			$this->countAlreadyFetched--; // because fetch_array() increases $this->countAlreadyFetched, we need to revert it
+		}
+		$this->prefetchedArray = $pfa;
 	}
 
 	/**
+	 * @return int
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public final function num_rows(): int {
+		if (!$this->containsResultSet()) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
+
+		if (!is_null($this->prefetchedArray)) {
+			return count($this->prefetchedArray) + $this->countAlreadyFetched;
+		}
+
+		$ret = $this->do_num_rows();
+
+		if ($ret === -1) throw new OIDplusException(_L('The database driver has problems with "%1"','num_rows'));
+
+		return $ret;
+	}
+
+	/**
+	 * Plugins can override and extend this method. It post-processes contents of fetch_array() and fetch_object()
+	 * to fix various issues with database drivers.
+	 *
+	 * @param array|object &$ret
+	 * @return void
+	 */
+	protected function fixFields(&$ret) {
+		// ODBC gives bit(1) as binary, MySQL as integer and PDO as string.
+		// We'll do it like MySQL does, even if ODBC is actually more correct.
+		foreach ($ret as &$value) {
+			if ($value === chr(0)) $value = 0;
+			if ($value === chr(1)) $value = 1;
+		}
+
+		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
+		// We can't quote every single column throughout the whole program, so we use this workaround...
+		if (is_array($ret)) {
+			$keys = array_keys($ret);
+			foreach ($keys as $key) {
+				$ret[strtolower($key)] = $ret[$key];
+				$ret[strtoupper($key)] = $ret[$key];
+			}
+		} else if (is_object($ret)) {
+			foreach ($ret as $name => $val) {
+				$ret->{strtoupper($name)} = $val;
+				$ret->{strtolower($name)} = $val;
+			}
+		}
+	}
+
+	/**
+	 * Please override do_fetch_object(), do_fetch_array(), or both.
 	 * @return array|null
 	 */
 	protected function do_fetch_array()/*: ?array*/ {
@@ -53,60 +124,80 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 
 	/**
 	 * @return array|null
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws \ReflectionException
 	 */
 	public final function fetch_array()/*: ?array*/ {
 		if (!$this->containsResultSet()) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-
-		$reflector = new \ReflectionMethod($this, 'do_fetch_array');
-		$isImplemented = ($reflector->getDeclaringClass()->getName() !== self::class);
-		if ($isImplemented) return $this->do_fetch_array();
-
-		$reflector = new \ReflectionMethod($this, 'do_fetch_object');
-		$isImplemented = ($reflector->getDeclaringClass()->getName() !== self::class);
-		if (!$isImplemented) {
-			throw new OIDplusException(_L("Class %1 is erroneous: At least one fetch-method needs to be overridden", get_class($this)));
+		if (!is_null($this->prefetchedArray)) {
+			// Prefetched value exists. Use it.
+			$ary = array_shift($this->prefetchedArray);
+		} else {
+			$reflector = new \ReflectionMethod($this, 'do_fetch_array');
+			$isImplemented = ($reflector->getDeclaringClass()->getName() !== self::class);
+			if ($isImplemented) {
+				// do_fetch_array() is implemented. Use it.
+				$ary = $this->do_fetch_array();
+			} else {
+				// Use the implementation of do_fetch_object()
+				$reflector = new \ReflectionMethod($this, 'do_fetch_object');
+				$isImplemented = ($reflector->getDeclaringClass()->getName() !== self::class);
+				if (!$isImplemented) {
+					throw new OIDplusException(_L("Class %1 is erroneous: At least one fetch-method needs to be overridden", get_class($this)));
+				}
+				$obj = $this->do_fetch_object();
+				$ary = is_null($obj) ? null : stdobj_to_array($obj);
+			}
 		}
-
-		// Convert object to array
-		$obj = $this->do_fetch_object();
-		if (!$obj) return null;
-		$ary = array();
-		foreach ($obj as $name => $val) {
-			$ary[$name] = $val;
+		if (!is_null($ary)) {
+			$this->countAlreadyFetched++;
+			$this->fixFields($ary);
 		}
 		return $ary;
 	}
 
 	/**
+	 * Please override do_fetch_object(), do_fetch_array(), or both.
 	 * @return object|null
 	 */
-	protected function do_fetch_object()/*: ?object*/ {
+	protected function do_fetch_object()/*: ?\stdClass*/ {
 		assert(false);
 		return null;
 	}
 
 	/**
 	 * @return object|null
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws \ReflectionException
 	 */
-	public final function fetch_object()/*: ?object*/ {
+	public final function fetch_object()/*: ?\stdClass*/ {
 		if (!$this->containsResultSet()) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-
-		$reflector = new \ReflectionMethod($this, 'do_fetch_object');
-		$isImplemented = ($reflector->getDeclaringClass()->getName() !== self::class);
-		if ($isImplemented) return $this->do_fetch_object();
-
-		$reflector = new \ReflectionMethod($this, 'do_fetch_array');
-		$isImplemented = ($reflector->getDeclaringClass()->getName() !== self::class);
-		if (!$isImplemented) {
-			throw new OIDplusException(_L("Class %1 is erroneous: At least one fetch-method needs to be overridden", get_class($this)));
+		if (!is_null($this->prefetchedArray)) {
+			// Prefetched value exists. Use it.
+			$ary = array_shift($this->prefetchedArray);
+			$obj = is_null($ary) ? null : array_to_stdobj($ary);
+		} else {
+			$reflector = new \ReflectionMethod($this, 'do_fetch_object');
+			$isImplemented = ($reflector->getDeclaringClass()->getName() !== self::class);
+			if ($isImplemented) {
+				// do_fetch_object() is implemented. Use it.
+				$obj = $this->do_fetch_object();
+			} else {
+				// Use the implementation of do_fetch_array()
+				$reflector = new \ReflectionMethod($this, 'do_fetch_array');
+				$isImplemented = ($reflector->getDeclaringClass()->getName() !== self::class);
+				if (!$isImplemented) {
+					throw new OIDplusException(_L("Class %1 is erroneous: At least one fetch-method needs to be overridden", get_class($this)));
+				}
+				$ary = $this->do_fetch_array();
+				$obj = is_null($ary) ? null : array_to_stdobj($ary);
+			}
 		}
-
-		// Convert array of object
-		$ary = $this->do_fetch_array();
-		if (!$ary) return null;
-		$obj = new \stdClass;
-		foreach ($ary as $name => $val) {
-			$obj->$name = $val;
+		if (!is_null($obj)) {
+			$this->countAlreadyFetched++;
+			$this->fixFields($obj);
 		}
 		return $obj;
 	}
@@ -116,9 +207,27 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	 * row in the section. By default, num_rows() will be used.
 	 * Plugins can override this method if they have a possibility
 	 * of making this functionality more efficient.
+	 *
 	 * @return bool
+	 * @throws OIDplusException
 	 */
 	public function any(): bool {
 		return $this->num_rows() > 0;
+	}
+
+	/**
+	 * @param string $dbField
+	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws \ReflectionException
+	 */
+	public final function naturalSortByField(string $dbField) {
+		if (is_null($this->prefetchedArray)) {
+			$this->prefetchAll();
+		}
+
+		// Sort $this->prefetchedArray by field $dbField
+		natsort_field($this->prefetchedArray, $dbField);
 	}
 }

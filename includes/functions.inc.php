@@ -455,3 +455,27 @@ function natsort_field(&$rows, string $fieldName) {
 		return $keys[0];
 	});
 }
+
+/**
+ * @param array $ary
+ * @return \stdClass
+ */
+function array_to_stdobj(array $ary): \stdClass {
+	$obj = new \stdClass;
+	foreach ($ary as $name => $val) {
+		$obj->$name = $val;
+	}
+	return $obj;
+}
+
+/**
+ * @param \stdClass $obj
+ * @return array
+ */
+function stdobj_to_array(\stdClass $obj): array {
+	$ary = array();
+	foreach ($obj as $name => $val) {
+		$ary[$name] = $val;
+	}
+	return $ary;
+}

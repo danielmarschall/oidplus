@@ -1,10 +1,10 @@
 
 Please DO NOT add, change or remove anything in these directories !
 
-There are following reasons:
+There are the following reasons:
 
 (1) This directory contains files that may change over time.
-    Your changes will get lost if a file gets updated in a software update.
+    Your changes will get lost if a file gets updated by a software update.
 
 (2) We would like that you keep the hyperlink to our website (ViaThinkSoft)
     and the page "About OIDplus 2.0" which contains the acknowledgements

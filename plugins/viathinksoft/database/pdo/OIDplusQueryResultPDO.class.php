@@ -35,16 +35,6 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	protected $res;
 
 	/**
-	 * @var array|null
-	 */
-	private $prefetchedArray = null;
-
-	/**
-	 * @var int
-	 */
-	private $countAlreadyFetched = 0;
-
-	/**
 	 * @param mixed $res
 	 */
 	public function __construct($res) {
@@ -73,19 +63,22 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	}
 
 	/**
+	 * @return void
+	 */
+	public function prefetchAll() {
+		if (!is_null($this->prefetchedArray)) return;
+		$this->prefetchedArray = $this->res->fetchAll();
+	}
+
+	/**
 	 * @return int
 	 */
 	protected function do_num_rows(): int {
-		if (!is_null($this->prefetchedArray)) {
-			return count($this->prefetchedArray) + $this->countAlreadyFetched;
-		}
-
 		$ret = $this->res->rowCount();
 
 		// -1 can happen when PDO is connected via ODBC that is running a driver that does not support num_rows (e.g. Microsoft Access)
-		// if ($ret === -1) throw new OIDplusException(_L('The database driver has problems with "%1"','num_rows'));
 		if ($ret === -1) {
-			$this->prefetchedArray = $this->res->fetchAll();
+			$this->prefetchAll();
 			return count($this->prefetchedArray) + $this->countAlreadyFetched;
 		}
 
@@ -93,64 +86,20 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	}
 
 	/**
-	 * @return array|mixed|null
+	 * @return array|null
 	 */
 	protected function do_fetch_array()/*: ?array*/ {
-		if (!is_null($this->prefetchedArray)) {
-			$ret = array_shift($this->prefetchedArray);
-		} else {
-			$ret = $this->res->fetch(\PDO::FETCH_ASSOC);
-			if ($ret === false) $ret = null;
-		}
-		if ($ret) $this->countAlreadyFetched++;
-
-		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
-		// We can't quote every single column throughout the whole program, so we use this workaround...
-		if ($ret) {
-			$keys = array_keys($ret);
-			foreach($keys as $key) {
-				$ret[strtolower($key)]=$ret[$key];
-				$ret[strtoupper($key)]=$ret[$key];
-			}
-		}
-
+		$ret = $this->res->fetch(\PDO::FETCH_ASSOC);
+		if ($ret === false) $ret = null;
 		return $ret;
 	}
 
 	/**
-	 * @param array $ary
-	 * @return \stdClass
-	 */
-	private static function array_to_stdobj(array $ary): \stdClass {
-		$obj = new \stdClass;
-		foreach ($ary as $name => $val) {
-			$obj->$name = $val;
-		}
-		return $obj;
-	}
-
-	/**
-	 * @return object|\stdClass|null
+	 * @return object|null
 	 */
 	protected function do_fetch_object()/*: ?object*/ {
-		if (!is_null($this->prefetchedArray)) {
-			$ary = array_shift($this->prefetchedArray);
-			$ret = is_null($ary) ? null : self::array_to_stdobj($ary);
-		} else {
-			$ret = $this->res->fetch(\PDO::FETCH_OBJ);
-			if ($ret === false) $ret = null;
-		}
-		if ($ret) $this->countAlreadyFetched++;
-
-		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
-		// We can't quote every single column throughout the whole program, so we use this workaround...
-		if ($ret) {
-			foreach ($ret as $name => $val) {
-				$ret->{strtoupper($name)} = $val;
-				$ret->{strtolower($name)} = $val;
-			}
-		}
-
+		$ret = $this->res->fetch(\PDO::FETCH_OBJ);
+		if ($ret === false) $ret = null;
 		return $ret;
 	}
 }

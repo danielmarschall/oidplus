@@ -134,7 +134,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 		}
 
 		$res = OIDplus::db()->query("select * from ###objects where parent = ?", array($parent));
-		$res = new OIDplusNaturalSortedQueryResult($res, 'id');
+		$res->naturalSortByField('id');
 		while ($row = $res->fetch_array()) {
 			$obj = OIDplusObject::parse($row['id']);
 			if (!$obj) continue; // e.g. object-type plugin disabled

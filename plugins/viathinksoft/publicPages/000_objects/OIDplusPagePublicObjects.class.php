@@ -846,7 +846,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						                            "id = ? or " .
 						                            "id = ? ", array($req_goto, $req_goto, $parent));
 					}
-					$res = new OIDplusNaturalSortedQueryResult($res, 'id');
+					$res->naturalSortByField('id');
 
 					$z_used = 0;
 					$y_used = 0;
@@ -1010,7 +1010,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		                               "from ###objects o " .
 		                               "left join ###ra r on r.email = o.ra_email " .
 		                               "where parent = ? ", array($parent));
-		$result = new OIDplusNaturalSortedQueryResult($result, 'id');
+		$result->naturalSortByField('id');
 
 		$rows = array();
 		while ($row = $result->fetch_object()) {
@@ -1342,7 +1342,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	public function getNotifications(string $user=null): array {
 		$notifications = array();
 		$res = OIDplus::db()->query("select id, title from ###objects");
-		$res = new OIDplusNaturalSortedQueryResult($res, 'id');
+		$res->naturalSortByField('id');
 		if ($res->any()) {
 			$is_admin_logged_in = OIDplus::authUtils()->isAdminLoggedIn(); // run just once, for performance
 			while ($row = $res->fetch_array()) {
