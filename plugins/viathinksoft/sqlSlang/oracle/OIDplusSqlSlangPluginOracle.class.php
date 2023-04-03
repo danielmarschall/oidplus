@@ -54,7 +54,7 @@ class OIDplusSqlSlangPluginOracle extends OIDplusSqlSlangPlugin {
 	}
 
 	/**
-	 * @var ?string
+	 * @var string|null
 	 */
 	private $last_insert_table = null;
 

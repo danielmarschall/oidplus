@@ -87,20 +87,15 @@ class OIDplusQueryResultSQLite3 extends OIDplusQueryResult {
 
 	/**
 	 * @return int
-	 * @throws OIDplusException
 	 */
-	public function num_rows(): int {
-		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
+	protected function do_num_rows(): int {
 		return count($this->all_results);
 	}
 
 	/**
 	 * @return array|mixed|null
-	 * @throws OIDplusException
 	 */
-	public function fetch_array()/*: ?array*/ {
-		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-
+	protected function do_fetch_array()/*: ?array*/ {
 		//$ret = $this->res->fetchArray(SQLITE3_ASSOC);
 		$cursor = $this->cursor;
 		if (!isset($this->all_results[$cursor])) return null;
@@ -112,20 +107,4 @@ class OIDplusQueryResultSQLite3 extends OIDplusQueryResult {
 		return $ret;
 	}
 
-	/**
-	 * @return \stdClass|null
-	 * @throws OIDplusException
-	 */
-	public function fetch_object()/*: ?object*/ {
-		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
-
-		$ary = $this->fetch_array();
-		if (!$ary) return null;
-
-		$obj = new \stdClass;
-		foreach ($ary as $name => $val) {
-			$obj->$name = $val;
-		}
-		return $obj;
-	}
 }

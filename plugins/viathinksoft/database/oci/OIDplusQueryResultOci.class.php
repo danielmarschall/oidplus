@@ -36,6 +36,16 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 	protected $res;
 
 	/**
+	 * @var array|null
+	 */
+	private $prefetchedArray = null;
+
+	/**
+	 * @var int
+	 */
+	private $countAlreadyFetched = 0;
+
+	/**
 	 * @param mixed $res
 	 */
 	public function __construct($res) {
@@ -63,25 +73,12 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 	}
 
 	/**
-	 * @var ?array
-	 */
-	private $prefetchedArray = null;
-
-	/**
-	 * @var int
-	 */
-	private $countAlreadyFetched = 0;
-
-	/**
 	 * @return int
-	 * @throws OIDplusException
 	 */
-	public function num_rows(): int {
+	protected function do_num_rows(): int {
 		if (!is_null($this->prefetchedArray)) {
 			return count($this->prefetchedArray) + $this->countAlreadyFetched;
 		}
-
-		if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 
 		// This function does not return number of rows selected! For SELECT statements this function will return the number of rows, that were fetched to the buffer with oci_fetch*() functions.
 		//return oci_num_rows($this->res);
@@ -93,13 +90,11 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 
 	/**
 	 * @return array|mixed|null
-	 * @throws OIDplusException
 	 */
-	public function fetch_array()/*: ?array*/ {
+	protected function do_fetch_array()/*: ?array*/ {
 		if (!is_null($this->prefetchedArray)) {
 			$ret = array_shift($this->prefetchedArray);
 		} else {
-			if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 			$ret = oci_fetch_array($this->res);
 			if ($ret === false) $ret = null;
 		}
@@ -139,14 +134,12 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 
 	/**
 	 * @return false|object|\stdClass|null
-	 * @throws OIDplusException
 	 */
-	public function fetch_object()/*: ?object*/ {
+	protected function do_fetch_object()/*: ?object*/ {
 		if (!is_null($this->prefetchedArray)) {
 			$ary = array_shift($this->prefetchedArray);
 			$ret = is_null($ary) ? null : self::array_to_stdobj($ary);
 		} else {
-			if ($this->no_resultset) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 			$ret = oci_fetch_object($this->res);
 			if ($ret === false) $ret = null;
 		}
