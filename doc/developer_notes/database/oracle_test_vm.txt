@@ -195,7 +195,7 @@ Processing triggers for libc-bin (2.35-0ubuntu3) ...
 Errors were encountered while processing:
  oracle-database-xe-21c
 	
-Probably the installation scripts in the generated DEB file are broken??? In the postinstall script we see:
+Probably the installation scripts in the generated DEB file are broken??? In the postinstall script /var/lib/dpkg/info/oracle-database-xe-21c.postinst we see:
 su -c "/opt/oracle/product/21c/dbhomeXE/bin/diagsetup clustercheck=false basedir=/opt/oracle oraclehome=/opt/oracle/product/21c/dbhomeXE " >> /dev/null -m 
 this is wrong ">> /dev/null" will make "-m oracle" invalid?!
 But why did it work on my first try?

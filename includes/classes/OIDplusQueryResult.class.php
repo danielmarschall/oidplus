@@ -92,6 +92,8 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	protected function fixFields(&$ret) {
 		// ODBC gives bit(1) as binary, MySQL as integer and PDO as string.
 		// We'll do it like MySQL does, although ODBC semms to be more correct.
+		// We don't put this code into OIDplusQueryResultODBC.class.php, because other
+		// DBMS might do the same - and then we would be prepared.
 		foreach ($ret as &$value) {
 			if ($value === chr(0)) $value = 0;
 			if ($value === chr(1)) $value = 1;

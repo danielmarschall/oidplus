@@ -78,7 +78,7 @@ class OIDplusQueryResultPgSql extends OIDplusQueryResult {
 			foreach ($ret as $key => &$value){
 				$type = pg_field_type($this->res,pg_field_num($this->res, $key));
 				if ($type == 'bool'){
-					$value = ($value == 't');
+					$value = ($value === 't'); // value is either "t" or "f" (not "true" or "false")
 				}
 			}
 		}
@@ -95,7 +95,7 @@ class OIDplusQueryResultPgSql extends OIDplusQueryResult {
 			foreach ($ret as $key => &$value){
 				$type = pg_field_type($this->res,pg_field_num($this->res, $key));
 				if ($type == 'bool'){
-					$value = ($value == 't');
+					$value = ($value === 't'); // value is either "t" or "f" (not "true" or "false")
 				}
 			}
 		}

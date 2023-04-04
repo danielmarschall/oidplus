@@ -112,6 +112,10 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	 */
 	public function insert_id(): int {
 		try {
+			// DM 04 Apr 2023: Added, because the insert ID does not reset after
+			// a Non-Insert query (this is a test case in dev/test_database_plugins).
+			if (!str_starts_with(trim(strtolower($this->last_query)),'insert')) return 0;
+		
 			// Note: This will always give results even for tables that do not
 			// have autoincrements, because SQLite3 assigns an "autoindex" for every table,
 			// e.g. the config table. Therefore, our testcase will fail.
