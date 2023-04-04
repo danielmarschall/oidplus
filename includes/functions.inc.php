@@ -60,7 +60,7 @@ function change_private_key_passphrase(string $privKeyOld, string $passphrase_ol
 	    //"digest_alg" => "sha512",
 	    //"private_key_bits" => 2048,
 	    //"private_key_type" => OPENSSL_KEYTYPE_RSA,
-	    "config" => class_exists("\\ViaThinkSoft\\OIDplus\\OIDplus") ? OIDplus::getOpenSslCnf() : @getenv('OPENSSL_CONF')
+	    "config" => class_exists(OIDplus::class) ? OIDplus::getOpenSslCnf() : @getenv('OPENSSL_CONF')
 	);
 	$privKeyNew = @openssl_pkey_get_private($privKeyOld, $passphrase_old);
 	if ($privKeyNew === false) return false;
@@ -443,7 +443,7 @@ function getSortedQuery(): string {
 * @param string $fieldName
 * @return void
 */
-function natsort_field(&$rows, string $fieldName) {
+function natsort_field(array &$rows, string $fieldName) {
 	usort($rows, function($a,$b) use($fieldName) {
 		if ($a[$fieldName] == $b[$fieldName]) return 0; // equal
 		$ary = array(
