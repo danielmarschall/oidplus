@@ -113,7 +113,7 @@ class OIDplusSqlSlangPluginPgSQL extends OIDplusSqlSlangPlugin {
 	 * @return string
 	 */
 	public function getSQLBool(bool $bool): string {
-		return $bool ? '1' : '0';
+		return $bool ? 'true' : 'false';
 	}
 
 	/**
