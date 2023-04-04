@@ -110,6 +110,11 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public function insert_id(): int {
+		// DM 04 Apr 2023: Added, because MSSQL's @@IDENTITY does not reset after
+		// a Non-Insert query (this is a test case in dev/test_database_plugins).
+		// Note that the INSERT could be hidden inside an EXEC; we don't support (or need) that yet.
+		if (!str_starts_with(trim(strtolower($this->last_query)),'insert')) return 0;
+
 		// This is the "fallback" variant. If your database provider (e.g. PDO) supports
 		// a function to detect the last inserted id, please override this
 		// function in order to use that specialized function (since it is usually
