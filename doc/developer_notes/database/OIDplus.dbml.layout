@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="DataClasses1">
+  <DataContextMoniker Name="/DataClasses1DataContext" />
+  <nestedChildShapes>
+    <classShape Id="99fe2e9f-62f0-431e-b409-2d2353608bc6" absoluteBounds="6, 0.5, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/DataClasses1DataContext/oidplus_asn1id" />
+      <nestedChildShapes>
+        <elementListCompartment Id="6f7a6ecf-9f5e-4e78-ae06-d714127503d7" absoluteBounds="6.0150000000000006, 0.96, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="404c3a29-8eef-473e-870f-2911397aadb0" absoluteBounds="0.5, 2.75, 2, 4.2708154296875">
+      <DataClassMoniker Name="/DataClasses1DataContext/oidplus_ra" />
+      <nestedChildShapes>
+        <elementListCompartment Id="4a718e6b-ae50-47db-a06c-c67f8f0741e1" absoluteBounds="0.51500000000000012, 3.21, 1.9700000000000002, 3.7108154296875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="aca93cbe-ff8b-4345-965d-9e5f9f55fbe4" absoluteBounds="0.5, 0.5, 2, 1.7708968098958329">
+      <DataClassMoniker Name="/DataClasses1DataContext/oidplus_config" />
+      <nestedChildShapes>
+        <elementListCompartment Id="e32db8ff-fd36-4f8b-acc3-d2fbda39ba30" absoluteBounds="0.51499999999999968, 0.96, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="2214e100-ec3b-4515-a849-54d3ee2f5207" absoluteBounds="6, 2.5, 2, 1.7708968098958326">
+      <DataClassMoniker Name="/DataClasses1DataContext/oidplus_iri" />
+      <nestedChildShapes>
+        <elementListCompartment Id="e5d14a8f-87e9-45f5-a7ac-2004e2b63c66" absoluteBounds="6.0150000000000006, 2.96, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="5c5df982-ecb9-4914-ab0b-2959ae76e940" absoluteBounds="8.75, 5.375, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/DataClasses1DataContext/oidplus_log" />
+      <nestedChildShapes>
+        <elementListCompartment Id="6cc6d19f-f89b-4fce-a83d-29d54df4d86b" absoluteBounds="8.765, 5.835, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="9b67496f-4afe-4b90-8283-26e0cc581a18" absoluteBounds="6, 4.5, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/DataClasses1DataContext/oidplus_log_object" />
+      <nestedChildShapes>
+        <elementListCompartment Id="af046637-6bc4-4feb-ba66-e196e6176e28" absoluteBounds="6.0150000000000006, 4.96, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="b8951da0-732d-4888-b21b-42c74b56856c" absoluteBounds="6, 6.25, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/DataClasses1DataContext/oidplus_log_user" />
+      <nestedChildShapes>
+        <elementListCompartment Id="52146b54-050a-4334-85ce-4b27d543fea5" absoluteBounds="6.015, 6.71, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="746b3cbd-2fb2-4f3b-94fd-a8ac393dd3ab" absoluteBounds="3.25, 2.125, 2, 2.5401025390625005">
+      <DataClassMoniker Name="/DataClasses1DataContext/oidplus_objects" />
+      <nestedChildShapes>
+        <elementListCompartment Id="b21b976d-a823-4316-8ae6-368185dfbd8d" absoluteBounds="3.2650000000000006, 2.585, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(2.5 : 3.70755126953125); (3.25 : 3.70755126953125)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClasses1DataContext/oidplus_ra/oidplus_ra_oidplus_objects" />
+      <nodes>
+        <classShapeMoniker Id="404c3a29-8eef-473e-870f-2911397aadb0" />
+        <classShapeMoniker Id="746b3cbd-2fb2-4f3b-94fd-a8ac393dd3ab" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.5 : 6.63540771484375); (6 : 6.63540771484375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClasses1DataContext/oidplus_ra/oidplus_ra_oidplus_log_user" />
+      <nodes>
+        <classShapeMoniker Id="404c3a29-8eef-473e-870f-2911397aadb0" />
+        <classShapeMoniker Id="b8951da0-732d-4888-b21b-42c74b56856c" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(8 : 6.60179768880208); (8.75 : 6.60179768880208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClasses1DataContext/oidplus_log_user/oidplus_log_user_oidplus_log" />
+      <nodes>
+        <classShapeMoniker Id="b8951da0-732d-4888-b21b-42c74b56856c" />
+        <classShapeMoniker Id="5c5df982-ecb9-4914-ab0b-2959ae76e940" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(8 : 5.72679768880208); (8.75 : 5.72679768880208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClasses1DataContext/oidplus_log_object/oidplus_log_object_oidplus_log" />
+      <nodes>
+        <classShapeMoniker Id="9b67496f-4afe-4b90-8283-26e0cc581a18" />
+        <classShapeMoniker Id="5c5df982-ecb9-4914-ab0b-2959ae76e940" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(3.95923076923077 : 4.6651025390625); (3.95923076923077 : 4.9151025390625); (4.55461538461538 : 4.9151025390625); (4.55461538461538 : 4.6651025390625)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/DataClasses1DataContext/oidplus_objects/oidplus_objects_oidplus_objects" />
+      <nodes>
+        <classShapeMoniker Id="746b3cbd-2fb2-4f3b-94fd-a8ac393dd3ab" />
+        <classShapeMoniker Id="746b3cbd-2fb2-4f3b-94fd-a8ac393dd3ab" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4.25 : 2.125); (4.25 : 1.3124995); (6 : 1.3124995)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClasses1DataContext/oidplus_objects/oidplus_objects_oidplus_asn1id" />
+      <nodes>
+        <classShapeMoniker Id="746b3cbd-2fb2-4f3b-94fd-a8ac393dd3ab" />
+        <classShapeMoniker Id="99fe2e9f-62f0-431e-b409-2d2353608bc6" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.25 : 3.38544840494792); (6 : 3.38544840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClasses1DataContext/oidplus_objects/oidplus_objects_oidplus_iri" />
+      <nodes>
+        <classShapeMoniker Id="746b3cbd-2fb2-4f3b-94fd-a8ac393dd3ab" />
+        <classShapeMoniker Id="2214e100-ec3b-4515-a849-54d3ee2f5207" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(3.57336288461538 : 4.6651025390625); (3.57336288461538 : 5.49684895833333); (6 : 5.49684895833333)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClasses1DataContext/oidplus_objects/oidplus_objects_oidplus_log_object" />
+      <nodes>
+        <classShapeMoniker Id="746b3cbd-2fb2-4f3b-94fd-a8ac393dd3ab" />
+        <classShapeMoniker Id="9b67496f-4afe-4b90-8283-26e0cc581a18" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
