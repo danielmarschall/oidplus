@@ -110,6 +110,9 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 				$cont = preg_replace('@background-color:(.+)[\\};]@ismU', '', $cont);
 				$cont = '<span style="font-family: sans-serif;">'.$cont.'</span>';
 
+				// Prevent that dark-color scheme makes the font white in a non-dark-color OIDplus
+				$cont = str_replace('prefers-color-scheme', 'xxx', $cont);
+
 				// Font sizes
 				$cont = preg_replace('@font-size:\\s*75%;@', '', $cont);
 				for ($i=5; $i>=1; $i--) {
