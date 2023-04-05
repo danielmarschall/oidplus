@@ -118,7 +118,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	/**
 	 * @return int
 	 */
-	public function insert_id(): int {
+	public function doInsertId(): int {
 		return $this->conn->insert_id;
 	}
 

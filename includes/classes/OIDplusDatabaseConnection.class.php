@@ -107,19 +107,28 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 
 	/**
 	 * @return int
+	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function insert_id(): int {
-		// DM 04 Apr 2023: Added, because MSSQL's @@IDENTITY does not reset after
-		// a Non-Insert query (this is a test case in dev/test_database_plugins).
-		// Note that the INSERT could be hidden inside an EXEC; we don't support (or need) that yet.
-		if (!str_starts_with(trim(strtolower($this->last_query)),'insert')) return 0;
-
+	protected function doInsertId(): int {
 		// This is the "fallback" variant. If your database provider (e.g. PDO) supports
 		// a function to detect the last inserted id, please override this
 		// function in order to use that specialized function (since it is usually
 		// more reliable).
 		return $this->getSlang()->insert_id($this);
+	}
+
+	/**
+	 * @return int
+	 * @throws OIDplusException
+	 */
+	public final function insert_id(): int {
+		// DM 04 Apr 2023: Added, because MSSQL's @@IDENTITY, PgSQL, and SQLite3 does not reset after
+		// a Non-Insert query (this is a test case in dev/test_database_plugins).
+		// Note that the INSERT could be hidden inside a Stored Procedure; we don't support (or need) that yet.
+		if (!str_starts_with(trim(strtolower($this->last_query)),'insert')) return 0;
+
+		return $this->doInsertId();
 	}
 
 	/**
@@ -332,7 +341,15 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 			foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 				if ($plugin->detect($this)) {
 					if (OIDplus::baseConfig()->getValue('DEBUG') && !is_null($res)) {
-						throw new OIDplusException(_L('DB-Slang detection failed: Multiple slangs were detected. Use base config setting FORCE_DBMS_SLANG to define one.'));
+
+						$detected = array();
+						foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
+							if ($plugin->detect($this)) {
+								$detected[] = get_class($plugin);
+							}
+						}
+
+						throw new OIDplusException(_L('DB-Slang detection failed: Multiple slangs were detected (%1). Use base config setting FORCE_DBMS_SLANG to define one.', implode(', ',$detected)));
 					}
 
 					$res = $plugin;

@@ -1505,7 +1505,7 @@ class OIDplus extends OIDplusBaseClass {
 				}
 
 				if (is_string($val)) {
-					header("$name: $val");
+					@header("$name: $val");
 				}
 			}
 

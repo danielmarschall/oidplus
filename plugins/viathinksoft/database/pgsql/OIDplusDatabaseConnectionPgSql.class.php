@@ -94,12 +94,8 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 	/**
 	 * @return int
 	 */
-	public function insert_id(): int {
+	public function doInsertId(): int {
 		try {
-			// DM 04 Apr 2023: Added, because the insert ID does not reset after
-			// a Non-Insert query (this is a test case in dev/test_database_plugins).
-			if (!str_starts_with(trim(strtolower($this->last_query)),'insert')) return 0;
-
 			return (int)$this->query('select lastval() as id')->fetch_object()->id;
 		} catch (\Exception $e) {
 			return 0;
