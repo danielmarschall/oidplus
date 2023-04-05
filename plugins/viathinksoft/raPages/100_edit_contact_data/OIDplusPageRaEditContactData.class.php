@@ -123,7 +123,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			if (!is_null($changeEMailPlugin) && OIDplus::config()->getValue('allow_ra_email_change')) {
 				$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:change_ra_email$'.$ra_email).'>'._L('Change email address').'</a></p>';
 			} else {
-				$out['text'] .= '<p><abbr title="'._L('To change the email address, you need to contact the admin or superior RA. They will need to change the email address and invite you (with your new email address) again.').'">'._L('How to change the email address?').'</abbr></p>';
+				$out['text'] .= '<p><b>'._L('How to change the email address?').'</b> '._L('To change the email address, you need to contact the admin or superior RA. They will need to change the email address and invite you (with your new email address) again.').'</p>';
 			}
 
 			// ---

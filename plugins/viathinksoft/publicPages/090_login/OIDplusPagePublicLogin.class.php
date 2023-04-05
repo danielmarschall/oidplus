@@ -205,9 +205,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 			$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
 			if (!is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled')) {
-				$tabcont .= '<abbr title="'._L('To receive login data, the superior RA needs to send you an invitation. After creating or updating your OID, the system will ask them if they want to send you an invitation. If they accept, you will receive an email with an activation link. Alternatively, the system admin can create your account manually in the administrator control panel.').'">'._L('How to register?').'</abbr></p>';
+				$tabcont .= '<p><b>'._L('How to register?').'</b> '._L('To receive login data, the superior RA needs to send you an invitation. After creating or updating your OID, the system will ask them if they want to send you an invitation. If they accept, you will receive an email with an activation link. Alternatively, the system admin can create your account manually in the administrator control panel.').'</p>';
 			} else {
-				$tabcont .= '<abbr title="'._L('Since invitations are disabled at this OIDplus system, the system administrator needs to create your account manually in the administrator control panel.').'">'._L('How to register?').'</abbr></p>';
+				$tabcont .= '<p><b>'._L('How to register?').'</b> '._L('Since invitations are disabled at this OIDplus system, the system administrator needs to create your account manually in the administrator control panel.').'</p>';
 			}
 
 			if ($tab === 'ra') {
