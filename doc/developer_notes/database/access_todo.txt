@@ -34,8 +34,6 @@ Following things need to be addressed in order to make OIDplus compatible with M
 	* datetime? #24.12.1987#
 		=> but in ADO it works with '24.12.1987' ???
 
-- Implement some kind of OID natural sort		
-
 - Make sure all database testcases work with PDO+ODBC and ODBC
 	http://localhost/oidplus/dev/test_database_plugins.php
 	The last result was:
@@ -45,9 +43,6 @@ Following things need to be addressed in order to make OIDplus compatible with M
 		Boolean handling FALSE with normal statement: PASSED
 	=>	Transaction rollback: FAILED
 		Transaction commit: PASSED
-	=>	Natural OID Sorting (< 16 Bit): FAILED
-	=>	Natural OID Sorting (128 Bit): FAILED
-		Non-Natural Sorting for Non-OIDs: PASSED
 		Insert ID on non-insert: PASSED (0)
 		Insert ID on actual inserts: PASSED (124 => 125)
 	=>	Non-Insert query will reset insert ID: FAILED (125)	

@@ -119,10 +119,10 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	public function doInsertId(): int {
 		try {
 			$out = @($this->conn->lastInsertId());
-			if ($out === false) return parent::insert_id(); // fallback method that uses the SQL slang
+			if ($out === false) return parent::doInsertId(); // fallback method that uses the SQL slang
 			return $out;
 		} catch (\Exception $e) {
-			return parent::insert_id(); // fallback method that uses the SQL slang
+			return parent::doInsertId(); // fallback method that uses the SQL slang
 		}
 	}
 
