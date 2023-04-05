@@ -8,28 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df2a484b-bed2-4376-a9d2-11f38408a62e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/trunk.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/trunk.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/generate_wellknown_country_access" beforeDir="false" afterPath="$PROJECT_DIR$/dev/generate_wellknown_country_access" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/generate_wellknown_country_mssql" beforeDir="false" afterPath="$PROJECT_DIR$/dev/generate_wellknown_country_mssql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/generate_wellknown_country_mysql" beforeDir="false" afterPath="$PROJECT_DIR$/dev/generate_wellknown_country_mysql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/generate_wellknown_country_oracle" beforeDir="false" afterPath="$PROJECT_DIR$/dev/generate_wellknown_country_oracle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/generate_wellknown_country_pgsql" beforeDir="false" afterPath="$PROJECT_DIR$/dev/generate_wellknown_country_pgsql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/generate_wellknown_country_sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/dev/generate_wellknown_country_sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/oidinfo_add_missing" beforeDir="false" afterPath="$PROJECT_DIR$/dev/oidinfo_add_missing" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/oidinfo_compare" beforeDir="false" afterPath="$PROJECT_DIR$/dev/oidinfo_compare" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/oidinfo_compare_asn1_iri_identifiers" beforeDir="false" afterPath="$PROJECT_DIR$/dev/oidinfo_compare_asn1_iri_identifiers" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/oidplus_v1_compare" beforeDir="false" afterPath="$PROJECT_DIR$/dev/oidplus_v1_compare" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/test_logmasks" beforeDir="false" afterPath="$PROJECT_DIR$/dev/test_logmasks" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/translation/message_regenerate.phps" beforeDir="false" afterPath="$PROJECT_DIR$/dev/translation/message_regenerate.phps" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusPluginManifest.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusPluginManifest.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/functions.inc.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/functions.inc.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/captcha/hcaptcha/OIDplusCaptchaPluginHCaptcha.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/captcha/hcaptcha/OIDplusCaptchaPluginHCaptcha.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/captcha/recaptcha/OIDplusCaptchaPluginRecaptcha.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/captcha/recaptcha/OIDplusCaptchaPluginRecaptcha.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/oid/OIDplusOid.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/oid/OIDplusOid.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/security.inc.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/security.inc.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/500_resources/OIDplusPagePublicResources.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/500_resources/OIDplusPagePublicResources.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/090_login/OIDplusPagePublicLogin.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/090_login/OIDplusPagePublicLogin.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/800_login_ldap/OIDplusPagePublicLoginLDAP.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/800_login_ldap/OIDplusPagePublicLoginLDAP.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/raPages/100_edit_contact_data/OIDplusPageRaEditContactData.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/raPages/100_edit_contact_data/OIDplusPageRaEditContactData.class.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,6 +185,7 @@
       <workItem from="1680646367690" duration="6284000" />
       <workItem from="1680653999090" duration="296000" />
       <workItem from="1680654342415" duration="602000" />
+      <workItem from="1680719315306" duration="532000" />
     </task>
     <servers />
   </component>
