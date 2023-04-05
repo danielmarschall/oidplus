@@ -160,6 +160,12 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'.(isset($_SERVER['SCRIPT_FILENAME']) ? htmlentities(dirname($_SERVER['SCRIPT_FILENAME'])) : '<i>'._L('unknown').'</i>').'</td>';
 			$out['text'] .= '	</tr>';
 
+			$sys_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL);
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('System URL').'</td>';
+			$out['text'] .= '		<td>'.htmlentities($sys_url).'</td>';
+			$out['text'] .= '	</tr>';
+
 			$sysid_oid = OIDplus::getSystemId(true);
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('System OID').' <abbr title="'._L('OID based on the public key of your OIDplus system. The last arc is also called OIDplus System ID.').'">(?)</abbr></td>';
@@ -177,12 +183,6 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('System AID').' <abbr title="'._L('Application Identifier (ISO/IEC 7816) based on the system ID (which is based on the hash of the public key of your OIDplus system).').'">(?)</abbr></td>';
 			$out['text'] .= '		<td>'.(!$sysid_aid ? '<i>'._L('unknown').'</i>' : htmlentities($sysid_aid)).' ('._L('No PIX allowed').')</td>';
-			$out['text'] .= '	</tr>';
-
-			$sys_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL);
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('System URL').'</td>';
-			$out['text'] .= '		<td>'.htmlentities($sys_url).'</td>';
 			$out['text'] .= '	</tr>';
 
 			$sys_ver = OIDplus::getVersion();
@@ -249,6 +249,18 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('User account').'</td>';
 			$current_user = exec('whoami');
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+				try {
+					if (function_exists('mb_convert_encoding')) {
+						$current_user = @mb_convert_encoding($current_user, "UTF-8", "cp850");
+					} else if (function_exists('iconv')) {
+						$current_user = @iconv("cp850", "UTF-8", $current_user);
+					}
+				} catch (\Exception $e) {}
+				if (function_exists('mb_strtoupper')) {
+					$current_user = mb_strtoupper($current_user); // just cosmetics
+				}
+			}
 			if ($current_user == '') {
 				if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 					// Windows on an IIS server:
@@ -314,6 +326,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$tmp = OIDplus::db()->query('select '.OIDplus::db()->sqlDate().' as tmp');
 			if ($tmp) $tmp = $tmp->fetch_array();
 			$tmp = $tmp['tmp'] ?? _L('n/a');
+			$tmp = preg_replace('@\\.\\d{3}$@', '', $tmp); // remove milliseconds of Microsoft SQL Server
 			$out['text'] .= '		<td>'.$tmp.'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</tbody>';

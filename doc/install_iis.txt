@@ -66,6 +66,8 @@ Install OIDplus to Microsoft IIS
 	extension=pdo_pgsql   (if you want to use PostgreSQL via PDO)
 	extension=pdo_sqlite  (if you want to use SQLite via PDO)
 	extension=odbc        (if you want to use ODBC)
+	
+	Verify that the "date.timezone" setting has the correct value.
 
 (6) Open http://localhost/oidplus and follow the setup instructions
 
