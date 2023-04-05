@@ -44,6 +44,7 @@ use ViaThinkSoft\OIDplus\OIDplus;
   * Note: This setting affects the performance of OIDplus, since it is used
   *       for sorting in MySQL and MSSQL (not in PostgreSQL).
   **/
+// TODO: remove this limitation, since we don't have natOrder anymore
 OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_DEPTH', 30);
 
 // -----------------------------------------------------------------------------
@@ -109,6 +110,7 @@ OIDplus::baseConfig()->setValue('LIMITS_MAX_ID_LENGTH', 255);
   *			The sorting will not work, because SQL Server handles the cast like this:
   *			select cast('1234' as varchar(3)) = '123'
   **/
+// TODO: remove this limitation, since we don't have natOrder anymore
 OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ARC_SIZE', 50);
 
 // -----------------------------------------------------------------------------
