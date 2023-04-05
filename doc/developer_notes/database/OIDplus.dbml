@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="OIDDB" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=SHS,49010;Initial Catalog=OIDDB;Integrated Security=True" SettingsObjectName="hit.Core.Properties.Settings" SettingsPropertyName="OIDDBConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.oidplus_asn1id" Member="oidplus_asn1id">
+    <Type Name="oidplus_asn1id">
+      <Column Name="lfd" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="oid" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="standardized" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="well_known" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="oidplus_objects_oidplus_asn1id" Member="oidplus_objects" ThisKey="oid" OtherKey="id" Type="oidplus_objects" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.oidplus_ra" Member="oidplus_ra">
+    <Type Name="oidplus_ra">
+      <Column Name="ra_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="email" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ra_name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="personal_name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="organization" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="office" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="street" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="zip_town" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="country" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="phone" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="mobile" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="fax" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="privacy" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="salt" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="authkey" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="registered" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="updated" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="last_login" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="oidplus_ra_oidplus_objects" Member="oidplus_objects" ThisKey="email" OtherKey="ra_email" Type="oidplus_objects" />
+      <Association Name="oidplus_ra_oidplus_log_user" Member="oidplus_log_user" ThisKey="email" OtherKey="username" Type="oidplus_log_user" />
+    </Type>
+  </Table>
+  <Table Name="dbo.oidplus_config" Member="oidplus_config">
+    <Type Name="oidplus_config">
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="value" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="description" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="protected" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="visible" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.oidplus_iri" Member="oidplus_iri">
+    <Type Name="oidplus_iri">
+      <Column Name="lfd" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="oid" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="longarc" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="well_known" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="oidplus_objects_oidplus_iri" Member="oidplus_objects" ThisKey="oid" OtherKey="id" Type="oidplus_objects" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.oidplus_log" Member="oidplus_log">
+    <Type Name="oidplus_log">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="unix_ts" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="addr" Type="System.String" DbType="VarChar(45) NOT NULL" CanBeNull="false" />
+      <Column Name="event" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Association Name="oidplus_log_user_oidplus_log" Member="oidplus_log_user1" ThisKey="id" OtherKey="log_id" Type="oidplus_log_user" IsForeignKey="true" />
+      <Association Name="oidplus_log_object_oidplus_log" Member="oidplus_log_object" ThisKey="id" OtherKey="log_id" Type="oidplus_log_object" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.oidplus_log_object" Member="oidplus_log_object">
+    <Type Name="oidplus_log_object">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="log_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="object" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="severity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="oidplus_log_object_oidplus_log" Member="oidplus_log" ThisKey="log_id" OtherKey="id" Type="oidplus_log" />
+      <Association Name="oidplus_objects_oidplus_log_object" Member="oidplus_objects" ThisKey="object" OtherKey="id" Type="oidplus_objects" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.oidplus_log_user" Member="oidplus_log_user">
+    <Type Name="oidplus_log_user">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="log_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="username" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="severity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="oidplus_log_user_oidplus_log" Member="oidplus_log1" ThisKey="log_id" OtherKey="id" Type="oidplus_log" />
+      <Association Name="oidplus_ra_oidplus_log_user" Member="oidplus_ra" ThisKey="username" OtherKey="email" Type="oidplus_ra" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.oidplus_objects" Member="oidplus_objects">
+    <Type Name="oidplus_objects">
+      <Column Name="id" Type="System.String" DbType="VarChar(255) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="parent" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="title" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="description" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="ra_email" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="confidential" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="created" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="updated" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="comment" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Association Name="oidplus_objects_oidplus_objects" Member="oidplus_objects2" ThisKey="id" OtherKey="parent" Type="oidplus_objects" />
+      <Association Name="oidplus_objects_oidplus_asn1id" Member="oidplus_asn1id" ThisKey="id" OtherKey="oid" Type="oidplus_asn1id" />
+      <Association Name="oidplus_objects_oidplus_iri" Member="oidplus_iri" ThisKey="id" OtherKey="oid" Type="oidplus_iri" />
+      <Association Name="oidplus_objects_oidplus_log_object" Member="oidplus_log_object" ThisKey="id" OtherKey="object" Type="oidplus_log_object" />
+      <Association Name="oidplus_ra_oidplus_objects" Member="oidplus_ra" ThisKey="ra_email" OtherKey="email" Type="oidplus_ra" IsForeignKey="true" />
+      <Association Name="oidplus_objects_oidplus_objects" Member="oidplus_objects1" ThisKey="parent" OtherKey="id" Type="oidplus_objects" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

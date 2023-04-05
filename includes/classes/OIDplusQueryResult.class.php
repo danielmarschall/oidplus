@@ -177,7 +177,7 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	public final function fetch_object()/*: ?\stdClass*/ {
 		if (!$this->containsResultSet()) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		if (!is_null($this->prefetchedArray)) {
-			// Prefetched value exists. Use it.
+			// Prefetched value exists (as array). Convert and use it.
 			$ary = array_shift($this->prefetchedArray);
 			$obj = is_null($ary) ? null : array_to_stdobj($ary);
 		} else {
