@@ -66,7 +66,7 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 		} catch (\Exception $e) {
 			$err_a = $db->error();
 		}
-		$err_a = str_replace('MSysObjects', '', $err_a);
+		$err_a = str_ireplace('MSysObjects', '', $err_a);
 
 		$err_b = '';
 		try {
@@ -74,7 +74,7 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 		} catch (\Exception $e) {
 			$err_b = $db->error();
 		}
-		$err_b = str_replace('XYZObjects', '', $err_b);
+		$err_b = str_ireplace('XYZObjects', '', $err_b);
 
 		return (!empty($err_a) && !empty($err_b) && ($err_a != $err_b));
 	}

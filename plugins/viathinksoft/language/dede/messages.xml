@@ -1566,10 +1566,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		DB-Slang detection failed: Multiple slangs were detected. Use base config setting FORCE_DBMS_SLANG to define one.
+		DB-Slang detection failed: Multiple slangs were detected (%1). Use base config setting FORCE_DBMS_SLANG to define one.
 		]]></source>
 		<target><![CDATA[
-		Datenbank-Dialekt-Erkennung fehlgeschlagen: Mehrere Dialekte erkannt. Bitte Basiskonfiguration FORCE_DBMS_SLANG nutzen, um einen Dialekt festzulegen.
+		Datenbank-Dialekt-Erkennung fehlgeschlagen: Mehrere Dialekte erkannt (%1). Bitte Basiskonfiguration FORCE_DBMS_SLANG nutzen, um einen Dialekt festzulegen.
 		]]></target>
 	</message>
 	<message>

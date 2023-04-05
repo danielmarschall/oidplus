@@ -94,7 +94,7 @@ try {
 
 # Test SQLite3
 try {
-	OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'SQLite');
+	OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'SQLite3');
 	OIDplus::init(true, true);
 	$db = OIDplus::db();
 	dotest($db);
@@ -105,7 +105,7 @@ try {
 
 # Test OCI8
 try {
-	OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'OCI8');
+	OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'Oracle (OCI8)');
 	OIDplus::init(true, true);
 	$db = OIDplus::db();
 	dotest($db);
@@ -240,7 +240,7 @@ function dotest(OIDplusDatabaseConnection $db) {
 		}
 
 		try {
-			$db->query("SELECT * from FEDCBA", array(''));
+			$db->query("SELECT * from FEDCBA", array());
 			echo "Exception for PreparedQuery: ".redtext('FAILED').", no Exception thrown\n";
 		} catch (Exception $e) {
 			if ((stripos($e->getMessage(), 'FEDCBA') !== false) || is_known_errormsg($e->getMessage())) {
@@ -287,7 +287,8 @@ function dotest(OIDplusDatabaseConnection $db) {
 		$res = $db->query("select confidential from ###objects where id = 'test:1.1'");
 		$val = $res->fetch_object()->confidential;
 		echo "Boolean handling TRUE with normal statement (fetch): " . ($val ? greentext('PASSED') : redtext('FAILED'))."\n";
-		$res = $db->query("select * from ###objects where id = 'test:1.1' and confidential = 1"); // NOTE: DO NOT USE THIS IN THE SOURCE CODE! Always use prepared statements for constant booleans
+		// Note: For PgSQL, it must be '1', true, 'true', 't', but not 1
+		$res = $db->query("select * from ###objects where id = 'test:1.1' and confidential = '1'"); // NOTE: DO NOT USE THIS IN THE SOURCE CODE! Always use prepared statements for constant booleans
 		$val = $res->fetch_object();
 		echo "Boolean handling TRUE with normal statement (where): " . ($val ? greentext('PASSED') : redtext('FAILED'))."\n";
 
@@ -295,7 +296,8 @@ function dotest(OIDplusDatabaseConnection $db) {
 		$res = $db->query("select confidential from ###objects where id = 'test:1.1'");
 		$val = $res->fetch_object()->confidential;
 		echo "Boolean handling FALSE with normal statement (fetch): " . (!$val ? greentext('PASSED') : redtext('FAILED'))."\n";
-		$res = $db->query("select * from ###objects where id = 'test:1.1' and confidential = 0"); // NOTE: DO NOT USE THIS IN THE SOURCE CODE! Always use prepared statements for constant booleans
+		// Note: For PgSQL, it must be '0', false, 'false', 'f', but not 0
+		$res = $db->query("select * from ###objects where id = 'test:1.1' and confidential = '0'"); // NOTE: DO NOT USE THIS IN THE SOURCE CODE! Always use prepared statements for constant booleans
 		$val = $res->fetch_object();
 		echo "Boolean handling FALSE with normal statement (where): " . ($val ? greentext('PASSED') : redtext('FAILED'))."\n";
 

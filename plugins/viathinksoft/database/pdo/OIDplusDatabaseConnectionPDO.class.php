@@ -79,11 +79,33 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			$ps = $this->conn->prepare($sql);
 			if (!$ps) {
 				$this->last_error = $this->conn->errorInfo()[2];
+				if (!$this->last_error) $this->last_error = _L("Error")." ".$this->conn->errorInfo()[0]; // if no message is available, only show the error-code
 				throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
 			}
 
-			if (!$ps->execute($prepared_args)) {
+			if (!@$ps->execute($prepared_args)) {
 				$this->last_error = $ps->errorInfo()[2];
+				if (!$this->last_error) $this->last_error = _L("Error")." ".$ps->errorInfo()[0]; // if no message is available, only show the error-code
+				// TODO:
+				// On my test machine with PDO + mysql on XAMPP with PHP 8.2.0, there are two problems with the following code:
+				//        $db->query("SELECT * from NONEXISTING", array(''));  // note that there is an additional argument, which is wrong!
+				//        $db->error()
+				// 1. $ps->errorInfo() is ['HY093', null, null].
+				//    The actual error message "Invalid parameter number: number of bound variables does not match number of tokens" is not shown via errorInfo()
+				//    => For now, as workaround, we just show the error message "HY093", if there is no driver specific error text available.
+				//       However, this means that the test-case will fail, because the table name cannot be found in the error message?!
+				// 2. The error "Invalid parameter number: number of bound variables does not match number of tokens" is SHOWN as PHP-warning
+				//    It seems like PDO::ERRMODE_SILENT is ignored?! The bug is 11 years old: https://bugs.php.net/bug.php?id=63812
+				//    => For now, as workaround, we added "@" in front of $ps->execute ...
+				//
+				// The following code works fine:
+				//        $db->query("SELECT * from NONEXISTING", array());  // note that there the number of arguments is now correct
+				//        $db->error()
+				// 1. $ps->errorInfo() is ['42S02', '1146', "Table 'oidplus.NONEXISTING' doesn't exist"].
+				//    => That's correct!
+				// 2. $ps->execute() does not show a warning (if "@" is removed)
+				//    => That's correct!
+
 				throw new OIDplusSQLException($sql, $this->error());
 			}
 			return new OIDplusQueryResultPDO($ps);
@@ -94,7 +116,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	 * @return int
 	 * @throws OIDplusException
 	 */
-	public function insert_id(): int {
+	public function doInsertId(): int {
 		try {
 			$out = @($this->conn->lastInsertId());
 			if ($out === false) return parent::insert_id(); // fallback method that uses the SQL slang
