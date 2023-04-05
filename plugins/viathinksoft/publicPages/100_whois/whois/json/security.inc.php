@@ -68,7 +68,7 @@ function oidplus_json_verify(string $json_content, string $pubkey) {
  * @return string
  * @throws Exception
  */
-function oidplus_json_sign(string $json_content, string $privkey, string $pubkey) {
+function oidplus_json_sign(string $json_content, string $privkey, string $pubkey): string {
 	require_once __DIR__.'/vendor/autoload.php';
 
 	$jws = new \SBrook\JWS\JwsRsa();

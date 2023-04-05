@@ -88,7 +88,7 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 		}
 
 		$captcha_success=@json_decode($res);
-		if (!$captcha_success || ($captcha_success->success==false)) {
+		if (!$captcha_success || !$captcha_success->success) {
 			throw new OIDplusException(_L('CAPTCHA not successfully verified').' ('.implode(", ",$captcha_success->{'error-codes'}).')');
 		}
 	}

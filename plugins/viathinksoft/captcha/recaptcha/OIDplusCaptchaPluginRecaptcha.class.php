@@ -122,7 +122,7 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 		if (!$captcha_success) {
 			throw new OIDplusException(_L('CAPTCHA not successfully verified').' ('._L('JSON Decode failed').')');
 		}
-		if ($captcha_success->success==false) {
+		if (!$captcha_success->success) {
 			throw new OIDplusException(_L('CAPTCHA not successfully verified').' ('._L('Failed').')');
 		}
 		if (isset($captcha_success->score) && ($captcha_success->score < $SCORE_THRESHOLD)) {

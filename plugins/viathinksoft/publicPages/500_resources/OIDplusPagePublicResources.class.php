@@ -116,7 +116,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		foreach ($candidates as $ini_file) {
 			if (file_exists($ini_file)) {
 				$data = @parse_ini_file($ini_file, true);
-				if (isset($data['Security']) && isset($data['Security'][$source])) {
+				if (isset($data['Security'][$source])) {
 					$level = $data['Security'][$source];
 					if ($level == 'PUBLIC') {
 						return true;
@@ -192,7 +192,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		foreach ($candidates as $ini_file) {
 			if (file_exists($ini_file)) {
 				$data = @parse_ini_file($ini_file, true);
-				if (isset($data['Redirects']) && isset($data['Redirects'][$source])) {
+				if (isset($data['Redirects'][$source])) {
 					$target = $data['Redirects'][$source];
 					return true;
 				}
@@ -707,12 +707,12 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	 */
 	private static function getFolderTitle(string $dir) {
 		$data = @parse_ini_file("$dir/folder\$".OIDplus::getCurrentLang().".ini", true);
-		if ($data && isset($data['Folder']) && isset($data['Folder']['Title'])) {
+		if ($data && isset($data['Folder']['Title'])) {
 			return $data['Folder']['Title'];
 		}
 
 		$data = @parse_ini_file("$dir/folder.ini", true);
-		if ($data && isset($data['Folder']) && isset($data['Folder']['Title'])) {
+		if ($data && isset($data['Folder']['Title'])) {
 			return $data['Folder']['Title'];
 		}
 

@@ -8,13 +8,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df2a484b-bed2-4376-a9d2-11f38408a62e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/trunk.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/trunk.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusQueryResult.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusQueryResult.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/generate_wellknown_country_access" beforeDir="false" afterPath="$PROJECT_DIR$/dev/generate_wellknown_country_access" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/generate_wellknown_country_mssql" beforeDir="false" afterPath="$PROJECT_DIR$/dev/generate_wellknown_country_mssql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/generate_wellknown_country_mysql" beforeDir="false" afterPath="$PROJECT_DIR$/dev/generate_wellknown_country_mysql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/generate_wellknown_country_oracle" beforeDir="false" afterPath="$PROJECT_DIR$/dev/generate_wellknown_country_oracle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/generate_wellknown_country_pgsql" beforeDir="false" afterPath="$PROJECT_DIR$/dev/generate_wellknown_country_pgsql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/generate_wellknown_country_sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/dev/generate_wellknown_country_sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/oidinfo_add_missing" beforeDir="false" afterPath="$PROJECT_DIR$/dev/oidinfo_add_missing" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/oidinfo_compare" beforeDir="false" afterPath="$PROJECT_DIR$/dev/oidinfo_compare" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/oidinfo_compare_asn1_iri_identifiers" beforeDir="false" afterPath="$PROJECT_DIR$/dev/oidinfo_compare_asn1_iri_identifiers" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/oidplus_v1_compare" beforeDir="false" afterPath="$PROJECT_DIR$/dev/oidplus_v1_compare" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/test_logmasks" beforeDir="false" afterPath="$PROJECT_DIR$/dev/test_logmasks" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/translation/message_regenerate.phps" beforeDir="false" afterPath="$PROJECT_DIR$/dev/translation/message_regenerate.phps" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusPluginManifest.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusPluginManifest.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/functions.inc.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/functions.inc.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/captcha/hcaptcha/OIDplusCaptchaPluginHCaptcha.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/captcha/hcaptcha/OIDplusCaptchaPluginHCaptcha.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/captcha/recaptcha/OIDplusCaptchaPluginRecaptcha.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/captcha/recaptcha/OIDplusCaptchaPluginRecaptcha.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/oid/OIDplusOid.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/oid/OIDplusOid.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/security.inc.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/security.inc.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/500_resources/OIDplusPagePublicResources.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/500_resources/OIDplusPagePublicResources.class.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerConfigs">
+    <option name="configs">
+      <option value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/xml/composer.json" />
+      <option value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/composer.json" />
+    </option>
   </component>
   <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
@@ -55,6 +81,11 @@
       <path value="$PROJECT_DIR$/vendor/danielmarschall/uuid_mac_utils" />
       <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
       <path value="$PROJECT_DIR$/vendor/danielmarschall/fileformats" />
+      <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/robrichards/xmlseclibs" />
+      <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/composer" />
+      <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/sergeybrook/php-jws" />
+      <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/composer" />
+      <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -169,6 +200,9 @@
       <workItem from="1680557916651" duration="30000" />
       <workItem from="1680557956371" duration="7100000" />
       <workItem from="1680565821440" duration="262000" />
+      <workItem from="1680646367690" duration="6284000" />
+      <workItem from="1680653999090" duration="296000" />
+      <workItem from="1680654342415" duration="602000" />
     </task>
     <servers />
   </component>
