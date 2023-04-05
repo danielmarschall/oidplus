@@ -37,6 +37,11 @@
       <path value="$PROJECT_DIR$/vendor/danielmarschall/uuid_mac_utils" />
       <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
       <path value="$PROJECT_DIR$/vendor/danielmarschall/fileformats" />
+      <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/robrichards/xmlseclibs" />
+      <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/composer" />
+      <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/sergeybrook/php-jws" />
+      <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/composer" />
+      <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.0" />

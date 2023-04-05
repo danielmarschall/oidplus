@@ -232,7 +232,7 @@ function _L(string $str, ...$sprintfArgs): string {
 
 	$lang = OIDplus::getCurrentLang();
 	$ta = OIDplus::getTranslationArray($lang);
-	$res = (isset($ta[$lang]) && isset($ta[$lang][$str])) ? $ta[$lang][$str] : $str;
+	$res = $ta[$lang][$str] ?? $str;
 
 	$res = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $res);
 

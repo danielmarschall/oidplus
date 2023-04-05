@@ -50,7 +50,7 @@ foreach ($tmp as $tmp2) {
 $all_strings = array();
 
 $it = new RecursiveDirectoryIterator($dir);
-$it->setFlags(RecursiveDirectoryIterator::SKIP_DOTS); // DOES NOT WORK! Folders with . prefix still get evaluated!
+$it->setFlags(FilesystemIterator::SKIP_DOTS); // DOES NOT WORK! Folders with . prefix still get evaluated!
 foreach(new RecursiveIteratorIterator($it) as $file) {
 	if ((strpos(str_replace('\\','/',realpath($file)),'/vendor/') !== false) && (strpos(str_replace('\\','/',realpath($file)),'/vendor/danielmarschall/') === false)) continue; // ignore third-party-code
 	if (strpos(str_replace('\\','/',realpath($file)),'/dev/') !== false) continue; // ignore development utilities

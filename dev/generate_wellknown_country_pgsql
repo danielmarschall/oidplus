@@ -21,6 +21,8 @@
 // This script generates a part of ../setup/sql/wellknown_country_pgsql.sql , based on Country OIDs at oid-info.com
 // If new countries are added to the ISO / ITU arcs, please re-run this script and update ../setup/sql/wellknown_country_pgsql.sql accordingly
 
+use ViaThinkSoft\OIDplus\OIDplus;
+
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 OIDplus::init(true);

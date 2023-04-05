@@ -562,7 +562,7 @@ class OIDplusOid extends OIDplusObject {
 		// Now do the real replacement
 		if (!$simulate) {
 			OIDplus::db()->query("delete from ###asn1id where oid = ?", array("oid:".$this->oid));
-			foreach ($demandedASN1s as &$asn1) {
+			foreach ($demandedASN1s as $asn1) {
 				OIDplus::db()->query("insert into ###asn1id (oid, name) values (?, ?)", array("oid:".$this->oid, $asn1));
 			}
 		}
@@ -606,7 +606,7 @@ class OIDplusOid extends OIDplusObject {
 		// Now do the real replacement
 		if (!$simulate) {
 			OIDplus::db()->query("delete from ###iri where oid = ?", array("oid:".$this->oid));
-			foreach ($demandedIris as &$iri) {
+			foreach ($demandedIris as $iri) {
 				OIDplus::db()->query("insert into ###iri (oid, name) values (?, ?)", array("oid:".$this->oid, $iri));
 			}
 		}
