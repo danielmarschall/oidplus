@@ -87,16 +87,16 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 		// Check if the protection flag is valid
 		switch ($protection) {
 			case OIDplusConfig::PROTECTION_EDITABLE:
-				$protected = 0;
-				$visible   = 1;
+				$protected = false;
+				$visible   = true;
 				break;
 			case OIDplusConfig::PROTECTION_READONLY:
-				$protected = 1;
-				$visible   = 1;
+				$protected = true;
+				$visible   = true;
 				break;
 			case OIDplusConfig::PROTECTION_HIDDEN:
-				$protected = 1;
-				$visible   = 0;
+				$protected = true;
+				$visible   = false;
 				break;
 			default:
 				throw new OIDplusException(_L('Invalid protection flag, use OIDplusConfig::PROTECTION_* constants'));

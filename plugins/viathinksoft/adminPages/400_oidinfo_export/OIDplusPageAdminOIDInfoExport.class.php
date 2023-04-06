@@ -1066,7 +1066,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			}
 
 			// TODO: we can probably get the created and modified timestamp from oid-info.com XML
-			OIDplus::db()->query("insert into ###objects (id, parent, title, description, confidential, ra_email) values (?, ?, ?, ?, ?, ?)", array($id, $parent, $title, $info, 0, $ra));
+			OIDplus::db()->query("insert into ###objects (id, parent, title, description, confidential, ra_email) values (?, ?, ?, ?, ?, ?)", array($id, $parent, $title, $info, false, $ra));
 
 			OIDplus::db()->transaction_commit();
 			OIDplusObject::resetObjectInformationCache();

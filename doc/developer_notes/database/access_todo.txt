@@ -9,18 +9,6 @@ The following things need to be addressed in order to make OIDplus compatible wi
 - When *.accdb file is opened in Microsoft Access, and the page is loaded, then you get the message "Table oidplus_config" is missing
 	(Because the system thinks that the "select" error comes from a missing table rather than a locking issue)
 
-- ODBC wrong datatype for prepared statements
-	$res2 = OIDplus::db()->query("select username, severity from ###log_user ".
-				     "where log_id = ?", array($row['id']));
-	log_id = '50'	==> it should be 50, not '50'
-	The prepared statements of PDO work correctly
-	==> TODO: Fixed, but now we need to make sure that the data types in the query-array are correct:
-		wrong:
-		$res2 = OIDplus::db()->query("...", array($row['id']));
-		correct:
-		$res2 = OIDplus::db()->query("...", array((int)$row['id']));
-	Also for booleans!
-
 - Add DSN example strings as example how to connect to Access
 	C:\inetpub\wwwroot\oidplus\plugins\database\odbc\OIDplusDatabasePluginODBC.class.php
 	C:\inetpub\wwwroot\oidplus\plugins\database\pdo\OIDplusDatabasePluginPDO.class.php
@@ -56,6 +44,14 @@ The following things need to be addressed in order to make OIDplus compatible wi
 =======================
 
 The following things should be OK:
+
+For ODBC with MS Access, the following is important:
+	correct:
+	    $res2 = OIDplus::db()->query("...", array((int)$row['id']));
+	wrong:
+		$res2 = OIDplus::db()->query("...", array($row['id']));
+	Same for booleans
+	=> Everything was checked now
 
 Make sure all database testcases work with PDO+ODBC and ODBC
 	http://localhost/oidplus/dev/test_database_plugins.php

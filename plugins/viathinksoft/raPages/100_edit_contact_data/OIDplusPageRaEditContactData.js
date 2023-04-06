@@ -39,7 +39,7 @@ var OIDplusPageRaEditContactData = {
 				organization: $("#organization").val(),
 				office: $("#office").val(),
 				personal_name: $("#personal_name").val(),
-				privacy: $("#privacy").is(":checked") ? 1 : 0,
+				privacy: $("#privacy").is(":checked"),
 				street: $("#street").val(),
 				zip_town: $("#zip_town").val(),
 				country: $("#country").val(),
