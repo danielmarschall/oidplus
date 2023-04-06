@@ -552,7 +552,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				$prev = $cur;
 				$cur = $cur->one_up();
 				if (!$cur) return null;
-			} while ($prev !== $cur);
+			} while ($prev->nodeId() !== $cur->nodeId());
 		}
 		return null;
 	}
