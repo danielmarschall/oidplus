@@ -29,43 +29,7 @@ function oidplus_dbupdate_202(OIDplusDatabaseConnection $db): int {
 	if ($db->transaction_supported()) $db->transaction_begin();
 
 	if ($db->getSlang()->id() == 'mssql') {
-		$db->query("CREATE FUNCTION [dbo].[getOidArc] (@strList varchar(512), @maxArcLen int, @occurence int)
-		RETURNS varchar(512) AS
-		BEGIN
-			DECLARE @intPos int
-
-			DECLARE @cnt int
-			SET @cnt = 0
-
-			if SUBSTRING(@strList, 1, 4) <> 'oid:'
-			begin
-				RETURN ''
-			end
-
-			SET @strList = RIGHT(@strList, LEN(@strList)-4)
-
-			WHILE CHARINDEX('.',@strList) > 0
-			BEGIN
-				SET @intPos=CHARINDEX('.',@strList)
-				SET @cnt = @cnt + 1
-				IF @cnt = @occurence
-				BEGIN
-					SET @strList = LEFT(@strList,@intPos-1)
-					RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
-				END
-				SET @strList = RIGHT(@strList, LEN(@strList)-@intPos)
-			END
-			IF LEN(@strList) > 0
-			BEGIN
-				SET @cnt = @cnt + 1
-				IF @cnt = @occurence
-				BEGIN
-					RETURN REPLICATE('0', @maxArcLen-len(@strList)) + @strList
-				END
-			END
-
-			RETURN REPLICATE('0', @maxArcLen)
-		END");
+		// (Function "getOidArc" has been removed 6 April 2023)
 	}
 
 	$version = 203;

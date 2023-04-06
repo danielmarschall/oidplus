@@ -150,13 +150,7 @@ OIDplus::baseConfig()->setValue('VTS_CAPTCHA_MAXTIME',      10*60/*10 minutes*/)
 (2) SYSTEM LIMITATIONS (defined and documented in includes/oidplus_limits.inc.php , can be overwritten by config.inc.php)
 ----------------------
 
-OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_DEPTH',  30);
-                         Please read the documentation in the file includes/oidplus_limits.inc.php
-
 OIDplus::baseConfig()->setValue('LIMITS_MAX_ID_LENGTH',     255);
-                         Please read the documentation in the file includes/oidplus_limits.inc.php
-
-OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ARC_SIZE',  50);
                          Please read the documentation in the file includes/oidplus_limits.inc.php
 
 OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ASN1_ID_LEN',  255);
