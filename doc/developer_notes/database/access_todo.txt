@@ -1,10 +1,10 @@
 
-Support for Microsoft Access Databases (mdb, accdb)	3 January 2021
+Support for Microsoft Access Databases (mdb, accdb)
 ---------------------------------------------------
 
 Tested with Microsoft Access Database Engine 2010 (14.0)
 
-Following things need to be addressed in order to make OIDplus compatible with Microsoft Access:
+The following things need to be addressed in order to make OIDplus compatible with Microsoft Access:
 
 - Add DSN example strings as example how to connect to Access
 	C:\inetpub\wwwroot\oidplus\plugins\database\odbc\OIDplusDatabasePluginODBC.class.php
@@ -20,6 +20,9 @@ Following things need to be addressed in order to make OIDplus compatible with M
 
 	* C:\inetpub\wwwroot\oidplus\setup\sql\struct_access.sql
 		"Drop table if exists"
+		Problem: Inside access, we need to execute each single CREATE TABLE command by hand! We cannot just copy-paste the whole code!
+
+	* Should we give the user an empty *.accdb file?
 
 - Test if everything works, including Unicode and boolean flags (checkboxes etc.)
 
@@ -34,23 +37,18 @@ Following things need to be addressed in order to make OIDplus compatible with M
 	* datetime? #24.12.1987#
 		=> but in ADO it works with '24.12.1987' ???
 
-- Make sure all database testcases work with PDO+ODBC and ODBC
+=======================
+
+The following things should be OK:
+
+Make sure all database testcases work with PDO+ODBC and ODBC
 	http://localhost/oidplus/dev/test_database_plugins.php
 	The last result was:
 		Database: OIDplusDatabaseConnectionPDO
 		Detected slang: access
 		...
-		Boolean handling FALSE with normal statement: PASSED
-	=>	Transaction rollback: FAILED
-		Transaction commit: PASSED
-		Insert ID on non-insert: PASSED (0)
-		Insert ID on actual inserts: PASSED (124 => 125)
-	=>	Non-Insert query will reset insert ID: FAILED (125)	
-
-
-=======================
-
-Following things should be OK:
+		Transaction support: Not supported
+	Everything else was OK
 
 Weirdness in regards boolean fields (-1 vs 1)
 	=> There is some weirdness. Sometimes '1' works and sometimes we need -1 ??
