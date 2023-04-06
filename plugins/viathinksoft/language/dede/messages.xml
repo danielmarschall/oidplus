@@ -1398,6 +1398,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Create a new RA manually
+		]]></source>
+		<target><![CDATA[
+		Eine neue RA manuell erstellen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Create or change subordinate objects
 		]]></source>
 		<target><![CDATA[

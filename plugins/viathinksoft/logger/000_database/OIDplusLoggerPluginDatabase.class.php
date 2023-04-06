@@ -57,14 +57,14 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 		foreach ($objects as list($severity, $object)) {
 			if (in_array($object, $object_dupe_check)) continue;
 			$object_dupe_check[] = $object;
-			OIDplus::dbIsolated()->query("insert into ###log_object (log_id, severity, object) values (?, ?, ?)", array($log_id, $severity, $object));
+			OIDplus::dbIsolated()->query("insert into ###log_object (log_id, severity, object) values (?, ?, ?)", array((int)$log_id, (int)$severity, $object));
 		}
 
 		$user_dupe_check = array();
 		foreach ($users as list($severity, $username)) {
 			if (in_array($username, $user_dupe_check)) continue;
 			$user_dupe_check[] = $username;
-			OIDplus::dbIsolated()->query("insert into ###log_user (log_id, severity, username) values (?, ?, ?)", array($log_id, $severity, $username));
+			OIDplus::dbIsolated()->query("insert into ###log_user (log_id, severity, username) values (?, ?, ?)", array((int)$log_id, (int)$severity, $username));
 		}
 
 		return true;

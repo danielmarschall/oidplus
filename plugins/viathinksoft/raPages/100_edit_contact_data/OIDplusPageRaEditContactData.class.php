@@ -57,7 +57,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			if (isset($params['personal_name']))
 				OIDplus::db()->query("UPDATE ###ra SET personal_name = ? WHERE email = ?", array($params['personal_name'], $email));
 			if (isset($params['privacy']))
-				OIDplus::db()->query("UPDATE ###ra SET privacy = ? WHERE email = ?", array($params['privacy'], $email));
+				OIDplus::db()->query("UPDATE ###ra SET privacy = ? WHERE email = ?", array($params['privacy'] == 'true', $email));
 			if (isset($params['street']))
 				OIDplus::db()->query("UPDATE ###ra SET street = ? WHERE email = ?", array($params['street'], $email));
 			if (isset($params['zip_town']))
@@ -136,7 +136,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			    <div><label class="padding_label">'._L('Office').':</label><input type="text" id="office" value="'.htmlentities($row['office']).'"/></div>
 			    <div><label class="padding_label">'._L('Person name').':</label><input type="text" id="personal_name" value="'.htmlentities($row['personal_name']).'"/></div>
 			    <br>
-			    <div><label class="padding_label">'._L('Privacy').'</label><input type="checkbox" id="privacy" value="" '.($row['privacy'] == 1 ? ' checked' : '').'/> <label for="privacy">'._L('Hide postal address and Phone/Fax/Mobile Numbers').'</label></div>
+			    <div><label class="padding_label">'._L('Privacy').'</label><input type="checkbox" id="privacy" value="" '.($row['privacy'] == 'true' ? ' checked' : '').'/> <label for="privacy">'._L('Hide postal address and Phone/Fax/Mobile Numbers').'</label></div>
 			    <div><label class="padding_label">'._L('Street').':</label><input type="text" id="street" value="'.htmlentities($row['street']).'"/></div>
 			    <div><label class="padding_label">'._L('ZIP/Town').':</label><input type="text" id="zip_town" value="'.htmlentities($row['zip_town']).'"/></div>
 			    <div><label class="padding_label">'._L('Country').':</label><input type="text" id="country" value="'.htmlentities($row['country']).'"/></div>
