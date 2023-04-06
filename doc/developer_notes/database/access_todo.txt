@@ -6,13 +6,28 @@ Tested with Microsoft Access Database Engine 2010 (14.0)
 
 The following things need to be addressed in order to make OIDplus compatible with Microsoft Access:
 
+- When *.accdb file is opened in Microsoft Access, and the page is loaded, then you get the message "Table oidplus_config" is missing
+	(Because the system thinks that the "select" error comes from a missing table rather than a locking issue)
+
+- ODBC wrong datatype for prepared statements
+	$res2 = OIDplus::db()->query("select username, severity from ###log_user ".
+				     "where log_id = ?", array($row['id']));
+	log_id = '50'	==> it should be 50, not '50'
+	The prepared statements of PDO work correctly
+	==> TODO: Fixed, but now we need to make sure that the data types in the query-array are correct:
+		wrong:
+		$res2 = OIDplus::db()->query("...", array($row['id']));
+		correct:
+		$res2 = OIDplus::db()->query("...", array((int)$row['id']));
+	Also for booleans!
+
 - Add DSN example strings as example how to connect to Access
 	C:\inetpub\wwwroot\oidplus\plugins\database\odbc\OIDplusDatabasePluginODBC.class.php
 	C:\inetpub\wwwroot\oidplus\plugins\database\pdo\OIDplusDatabasePluginPDO.class.php
-	OIDplus::baseConfig()->setValue('ODBC_DSN',         'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\inetpub\wwwroot\oidplus\userdata\database\oidplus.accdb;');
+	OIDplus::baseConfig()->setValue('ODBC_DSN',         'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\\inetpub\\wwwroot\\oidplus\\trunk\\userdata\\database\\oidplus.accdb;');
 	OIDplus::baseConfig()->setValue('ODBC_USERNAME',    '');
 	OIDplus::baseConfig()->setValue('ODBC_PASSWORD',    '');
-	OIDplus::baseConfig()->setValue('PDO_DSN',          'odbc:DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\inetpub\wwwroot\oidplus\userdata\database\oidplus.accdb;');
+	OIDplus::baseConfig()->setValue('PDO_DSN',          'odbc:DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\\inetpub\\wwwroot\\oidplus\\trunk\\userdata\\database\\oidplus.accdb;');
 	OIDplus::baseConfig()->setValue('PDO_USERNAME',     '');
 	OIDplus::baseConfig()->setValue('PDO_PASSWORD',     '');
 
@@ -20,9 +35,10 @@ The following things need to be addressed in order to make OIDplus compatible wi
 
 	* C:\inetpub\wwwroot\oidplus\setup\sql\struct_access.sql
 		"Drop table if exists"
-		Problem: Inside access, we need to execute each single CREATE TABLE command by hand! We cannot just copy-paste the whole code!
+		Problem: Inside Access, we need to execute each single CREATE TABLE command by hand! We cannot just copy-paste the whole code!
+		=> However, other tools like HickelSOFT DBTool can correctly send SQL queries to the ACCDB file via ADO
 
-	* Should we give the user an empty *.accdb file?
+	* Should we give the user an empty *.accdb file (as well as an empty SQLite3 file)?
 
 - Test if everything works, including Unicode and boolean flags (checkboxes etc.)
 

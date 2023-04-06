@@ -151,10 +151,10 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 		if (OIDplus::db()->getSlang()->id() == 'mysql') {
 			$res = OIDplus::db()->query("select distinct BINARY(email) as email from ###ra"); // "binary" because we want to ensure that 'distinct' is case sensitive
 		} else {
-			$res = OIDplus::db()->query("select distinct email as email from ###ra"); // distinct in PGSQL is always case sensitive
+			$res = OIDplus::db()->query("select distinct email as distinct_email from ###ra"); // distinct in PGSQL is always case sensitive
 		}
 		while ($row = $res->fetch_array()) {
-			$out[] = 'oidplus:rainfo$'.$row['email'];
+			$out[] = 'oidplus:rainfo$'.$row['distinct_email'];
 		}
 	}
 

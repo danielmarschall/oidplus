@@ -1,7 +1,7 @@
 
 CREATE TABLE [config](
 	[name] varchar(50) NOT NULL,
-	[value] text NOT NULL,
+	[value] memo NOT NULL,
 	[description] varchar(255) null,
 	[protected] bit NOT NULL,
 	[visible] bit NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE [objects](
 	[id] varchar(255) NOT NULL,
 	[parent] varchar(255) NULL,
 	[title] varchar(255) NULL,
-	[description] text NULL,
+	[description] memo NULL,
 	[ra_email] varchar(100) NULL,
 	[confidential] bit NOT NULL,
 	[created] datetime null,
@@ -82,7 +82,7 @@ CREATE TABLE [log](
 	[id] AUTOINCREMENT,
 	[unix_ts] long NOT NULL,
 	[addr] varchar(45) NOT NULL,
-	[event] text NOT NULL,
+	[event] memo NOT NULL,
 	primary key
 	(
 		[id]

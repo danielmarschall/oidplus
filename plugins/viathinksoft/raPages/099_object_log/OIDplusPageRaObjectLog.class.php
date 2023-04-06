@@ -83,7 +83,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa
 			while ($row = $res->fetch_array()) {
 				$users = array();
 				$res2 = OIDplus::db()->query("select username, severity from ###log_user ".
-				                             "where log_id = ?", array($row['id']));
+				                             "where log_id = ?", array((int)$row['id']));
 				while ($row2 = $res2->fetch_array()) {
 					$users[] = $row2['username'];
 				}
