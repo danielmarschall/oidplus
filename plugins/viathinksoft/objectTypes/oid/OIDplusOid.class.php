@@ -333,19 +333,6 @@ class OIDplusOid extends OIDplusObject {
 			throw new OIDplusException(_L('The resulting OID "%1" is too long (max allowed length: %2).',$out->oid,$maxlen));
 		}
 
-		$depth = 0;
-		foreach (explode('.',$out->oid) as $arc) {
-			if (strlen($arc) > OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE')) {
-				$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_ARC_SIZE');
-				throw new OIDplusException(_L('Arc "%1" is too long and therefore cannot be appended to the OID "%2" (max allowed arc size is "%3")',$arc,$this->oid,$maxlen));
-			}
-			$depth++;
-		}
-		if ($depth > OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH')) {
-			$maxdepth = OIDplus::baseConfig()->getValue('LIMITS_MAX_OID_DEPTH');
-			throw new OIDplusException(_L('OID %1 has too many arcs (current depth %2, max depth %3)',$out->oid,$depth,$maxdepth));
-		}
-
 		return $out;
 	}
 

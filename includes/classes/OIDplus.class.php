@@ -144,11 +144,11 @@ class OIDplus extends OIDplusBaseClass {
 			self::$baseConfig = new OIDplusBaseConfig();
 		}
 
-		if (self::insideSetup()) return self::$baseConfig;
-		if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.js.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
-		if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.css.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
-
 		if ($first_init) {
+			if (self::insideSetup()) return self::$baseConfig;
+			if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.js.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
+			if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.css.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
+
 			// Include a file containing various size/depth limitations of OIDs
 			// It is important to include it before userdata/baseconfig/config.inc.php was included,
 			// so we can give userdata/baseconfig/config.inc.php the chance to override the values.

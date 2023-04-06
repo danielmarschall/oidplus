@@ -26,36 +26,12 @@ use ViaThinkSoft\OIDplus\OIDplus;
 // -----------------------------------------------------------------------------
 
 /**
-  * LIMITS_MAX_OID_DEPTH
-  *
-  * Example:
-  *	OID 2.999.123.456 has a depth of 4.
-  *
-  * Default value:
-  *	30
-  *
-  * Which value is realistic?
-  *	In the oid-info.com database (April 2020), the greatest depth is 22.
-  *
-  * What would happen if you had OIDs with a higher arc size in your database?
-  *	MySQL and MSSQL: The arcs after that maximum depth would not be sorted.
-  *	PostgreSQL: No effects
-  *
-  * Note: This setting affects the performance of OIDplus, since it is used
-  *       for sorting in MySQL and MSSQL (not in PostgreSQL).
-  **/
-// TODO: remove this limitation, since we don't have natOrder anymore
-OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_DEPTH', 30);
-
-// -----------------------------------------------------------------------------
-
-/**
   * LIMITS_MAX_ID_LENGTH
   *
   * Example:
   * 	OID 2.999.123.456 has a length of 13 characters in dot notation.
-  *	OIDplus adds the prefix "oid:" in front of every OID,
-  *	so the overal length of the ID would be 17.
+  *		OIDplus adds the prefix "oid:" in front of every OID,
+  *		so the overal length of the ID would be 17.
   *
   * Default value:
   * 	255 digits (OIDs 251 digits)
@@ -70,48 +46,6 @@ OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_DEPTH', 30);
   * 	You can increase the limit by changing the field definition in the database.
   **/
 OIDplus::baseConfig()->setValue('LIMITS_MAX_ID_LENGTH', 255);
-
-// -----------------------------------------------------------------------------
-
-/**
-  * LIMITS_MAX_OID_ARC_SIZE
-  *
-  * Example:
-  *	OID 2.999.123.456 has a max arc size of 3 digits.
-  *
-  * Default value:
-  *	50 digits
-  *
-  * Minimal recommended value:
-  *	The arc size should not be smaller than 39, because UUIDs (inside OID 2.25)
-  *	have arcs up to 39 digits!
-  *	In the oid-info.com database (April 2020), indeed, the greatest value 39.
-  *
-  * Maximal value:
-  *	MySQL:
-  *		Max value: 65 (limit by the DBMS)
-  *		Reason: This is the limit of the "decimal" data type
-  *		What would happen if you had OIDs with a higher arc size in your database?
-  *			The sorting will not work, because MySQL handles the cast like this:
-  *			cast('1234' as decimal(3)) = 999
-  *	PostgreSQL:
-  *		Max value: 131072 (limit by the DBMS)
-  *		Reason: This is the limit for the "numeric" data type.
-  *		What would happen if you had OIDs with a higher arc size in your database?
-  *			OIDplus will STOP WORKING, because the SQL queries will fail due to the failed cast.
-  *	SQL Server:
-  *		Max value: 512 (limit in function getOidArc)
-  *		Reason: Since SQL Server does not support 128 bit integers (the limit of decimal is 38 digits),
-  *		        the function getOidArc() needs to pad each arc with zeros,
-  *		        returning a string that has to be sorted.
-  *		        The data type varchar(512) is the return value type of getOidArc().
-  *		        If you need more (which is unlikely), you can edit the definition of that function.
-  *		What would happen if you had OIDs with a higher arc size in your database?
-  *			The sorting will not work, because SQL Server handles the cast like this:
-  *			select cast('1234' as varchar(3)) = '123'
-  **/
-// TODO: remove this limitation, since we don't have natOrder anymore
-OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ARC_SIZE', 50);
 
 // -----------------------------------------------------------------------------
 

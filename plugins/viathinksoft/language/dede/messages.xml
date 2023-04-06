@@ -550,14 +550,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Arc "%1" is too long and therefore cannot be appended to the OID "%2" (max allowed arc size is "%3")
-		]]></source>
-		<target><![CDATA[
-		Die Nummer "%1" ist zu lang und kann deshalb an die OID "%2" nicht angefügt werden (Maximale Länge: %3 Ziffern)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Are you sure that you want to blacklist all access tokens?
 		]]></source>
 		<target><![CDATA[
@@ -4210,14 +4202,6 @@
 		]]></source>
 		<target><![CDATA[
 		OID %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		OID %1 has too many arcs (current depth %2, max depth %3)
-		]]></source>
-		<target><![CDATA[
-		OID %1 ist zu tief verzweigt (aktuelle Tiefe %2, maximale Tiefe %3)
 		]]></target>
 	</message>
 	<message>
