@@ -41,23 +41,23 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 	private function get_ralist(): array {
 		$tmp = array();
 		if (OIDplus::db()->getSlang()->id() == 'mysql') {
-			$res = OIDplus::db()->query("select distinct BINARY(email) as email from ###ra"); // "binary" because we want to ensure that 'distinct' is case sensitive
+			$res = OIDplus::db()->query("select distinct BINARY(email) as distinct_email from ###ra"); // "binary" because we want to ensure that 'distinct' is case sensitive
 		} else {
-			$res = OIDplus::db()->query("select distinct email as email from ###ra"); // distinct in PGSQL is always case sensitive
+			$res = OIDplus::db()->query("select distinct email as distinct_email from ###ra"); // distinct in PGSQL is always case sensitive
 		}
 		while ($row = $res->fetch_array()) {
-			$tmp[$row['email']] = 1;
+			$tmp[$row['distinct_email']] = 1;
 		}
 		if (OIDplus::db()->getSlang()->id() == 'mysql') {
-			$res = OIDplus::db()->query("select distinct BINARY(ra_email) as ra_email from ###objects");
+			$res = OIDplus::db()->query("select distinct BINARY(ra_email) as distinct_ra_email from ###objects");
 		} else {
-			$res = OIDplus::db()->query("select distinct ra_email as ra_email from ###objects");
+			$res = OIDplus::db()->query("select distinct ra_email as distinct_ra_email from ###objects");
 		}
 		while ($row = $res->fetch_array()) {
-			if (!isset($tmp[$row['ra_email']])) {
-				$tmp[$row['ra_email']] = 0;
+			if (!isset($tmp[$row['distinct_ra_email']])) {
+				$tmp[$row['distinct_ra_email']] = 0;
 			} else {
-				$tmp[$row['ra_email']] = 2;
+				$tmp[$row['distinct_ra_email']] = 2;
 			}
 		}
 		ksort($tmp);

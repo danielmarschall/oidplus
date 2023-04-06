@@ -119,11 +119,16 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 						} else {
 							$replace = $arg ? '1' : '0';
 						}
+					} else if (is_int($arg)) {
+						$replace = $arg;
+					} else if (is_float($arg)) {
+						$replace = number_format($arg, 10, '.', '');
 					} else {
+						// TODO: More types?
 						if ($this->slangDetectionDone) {
-							$replace = "'".$this->getSlang()->escapeString($arg)."'"; // TODO: types
+							$replace = "'".$this->getSlang()->escapeString($arg ?? '')."'";
 						} else {
-							$replace = "'".str_replace("'", "''", $arg)."'"; // TODO: types
+							$replace = "'".str_replace("'", "''", $arg)."'";
 						}
 					}
 					$pos = strpos($sql, $needle);
@@ -195,6 +200,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 
 		if (!$this->conn) {
 			$message = odbc_errormsg();
+			$message = vts_utf8_encode($message); // Make UTF-8 if it is NOT already UTF-8. Important for German Microsoft Access.
 			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' '.$message));
 		}
 

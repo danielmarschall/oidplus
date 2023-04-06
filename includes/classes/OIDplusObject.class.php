@@ -226,17 +226,17 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			if (!$ra) {
-				$res = OIDplus::db()->query("select oChild.id as id, oChild.ra_email as child_mail, oParent.ra_email as parent_mail from ###objects as oChild ".
+				$res = OIDplus::db()->query("select oChild.id as child_id, oChild.ra_email as child_mail, oParent.ra_email as parent_mail from ###objects as oChild ".
 				                            "left join ###objects as oParent on oChild.parent = oParent.id");
 				$res->naturalSortByField('oChild.id');
 				while ($row = $res->fetch_array()) {
 					if (!OIDplus::authUtils()->isRaLoggedIn($row['parent_mail']) && OIDplus::authUtils()->isRaLoggedIn($row['child_mail'])) {
-						$x = self::parse($row['id']); // can be NULL if namespace was disabled
+						$x = self::parse($row['child_id']); // can be NULL if namespace was disabled
 						if ($x) $out[] = $x;
 					}
 				}
 			} else {
-				$res = OIDplus::db()->query("select oChild.id as id from ###objects as oChild ".
+				$res = OIDplus::db()->query("select oChild.id as child_id from ###objects as oChild ".
 				                            "left join ###objects as oParent on oChild.parent = oParent.id ".
 				                            "where (".OIDplus::db()->getSlang()->isNullFunction('oParent.ra_email',"''")." <> ? and ".
 				                            OIDplus::db()->getSlang()->isNullFunction('oChild.ra_email',"''")." = ?) or ".
@@ -244,7 +244,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				                            array($ra, $ra, $ra));
 				$res->naturalSortByField('oChild.id');
 				while ($row = $res->fetch_array()) {
-					$x = self::parse($row['id']); // can be NULL if namespace was disabled
+					$x = self::parse($row['child_id']); // can be NULL if namespace was disabled
 					if ($x) $out[] = $x;
 				}
 			}

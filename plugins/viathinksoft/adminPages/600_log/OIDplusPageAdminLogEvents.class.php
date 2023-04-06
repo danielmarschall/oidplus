@@ -60,7 +60,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 					// ---
 					$users = array();
 					$res2 = OIDplus::db()->query("select username, severity from ###log_user ".
-					                             "where log_id = ?", array($row['id']));
+					                             "where log_id = ?", array((int)$row['id']));
 					while ($row2 = $res2->fetch_array()) {
 						$users[] = $row2['username'];
 						if ($row2['username'] == 'admin') $severity = $row2['severity'];
@@ -69,7 +69,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 					// ---
 					$objects = array();
 					$res2 = OIDplus::db()->query("select object, severity from ###log_object ".
-					                             "where log_id = ?", array($row['id']));
+					                             "where log_id = ?", array((int)$row['id']));
 					while ($row2 = $res2->fetch_array()) {
 						$objects[] = $row2['object'];
 					}

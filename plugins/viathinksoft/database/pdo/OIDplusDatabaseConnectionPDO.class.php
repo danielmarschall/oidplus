@@ -132,7 +132,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	public function error(): string {
 		$err = $this->last_error;
 		if ($err == null) $err = '';
-		return $err;
+		return vts_utf8_encode($err);
 	}
 
 	/**
@@ -160,6 +160,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			$this->conn = new \PDO($dsn, $username, $password, $options);
 		} catch (\PDOException $e) {
 			$message = $e->getMessage();
+			$message = vts_utf8_encode($message); // Make UTF-8 if it is NOT already UTF-8. Important for German Microsoft Access.
 			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' '.$message));
 		}
 
