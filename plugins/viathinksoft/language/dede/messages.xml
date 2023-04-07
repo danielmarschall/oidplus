@@ -3374,6 +3374,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		It looks like you are trying to use the template database file %1 in your base configuration. Since this file gets overridden by software updates, you must copy the template file and use this copy instead.
+		]]></source>
+		<target><![CDATA[
+		Es scheint, als ob Sie die Vorlagen-Datenbank %1 in der Basiskonfiguration verwenden möchten. Da diese Datenbanken bei Software-Updates überschrieben werden, würden Sie Ihre Daten verlieren. Bitte kopieren Sie die Dateien und verwenden Sie die Kopie stattdessen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		JSON Decode failed
 		]]></source>
 		<target><![CDATA[
@@ -7482,14 +7490,6 @@
 		]]></source>
 		<target><![CDATA[
 		Unbekannt
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Unlock file "%1" is not existing in attachment directory "%2".
-		]]></source>
-		<target><![CDATA[
-		Entsperr-Datei "%1" existiert nicht im Anhangs-Verzeichnis "%2".
 		]]></target>
 	</message>
 	<message>
