@@ -4758,14 +4758,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Owner of unlock file "%1" is wrong. It is "%2", but it should be "%3".
-		]]></source>
-		<target><![CDATA[
-		Eigentümer der Entsperr-Datei "%1" ist falsch. Er ist derzeit "%2" aber sollte "%3" sein.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		PDO Password
 		]]></source>
 		<target><![CDATA[

@@ -30,11 +30,6 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 {
 
 	/**
-	 *
-	 */
-	const DIR_UNLOCK_FILE = 'oidplus_upload.dir';
-
-	/**
 	 * @param string $dir
 	 * @return void
 	 * @throws OIDplusException
@@ -49,50 +44,15 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 			throw new OIDplusException(_L('The attachment directory "%1" cannot be resolved (realpath).', $dir));
 		}
 
-		$unlock_file = $realdir . DIRECTORY_SEPARATOR . self::DIR_UNLOCK_FILE;
-		if (!file_exists($unlock_file)) {
-			throw new OIDplusException(_L('Unlock file "%1" is not existing in attachment directory "%2".', self::DIR_UNLOCK_FILE, $dir));
-		}
-
+		// Check for critical directories
 		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-			// Linux check 1: Check for critical directories
 			if (self::isCriticalLinuxDirectory($realdir)) {
 				throw new OIDplusException(_L('The attachment directory must not be inside a critical system directory!'));
 			}
-
-			// Linux check 2: Check file owner
-			$file_owner_a = fileowner(OIDplus::localpath().'index.php');
-			if ($file_owner_a === false) {
-				$file_owner_a = -1;
-				$file_owner_a_name = '???';
-			} else {
-				$tmp = function_exists('posix_getpwuid') ? posix_getpwuid($file_owner_a) : false;
-				$file_owner_a_name = $tmp !== false ? $tmp['name'] : 'UID '.$file_owner_a;
-			}
-
-			$file_owner_b = fileowner($unlock_file);
-			if ($file_owner_b === false) {
-				$file_owner_b = -1;
-				$file_owner_b_name = '???';
-			} else {
-				$tmp = function_exists('posix_getpwuid') ? posix_getpwuid($file_owner_b) : false;
-				$file_owner_b_name = $tmp !== false ? $tmp['name'] : 'UID '.$file_owner_b;
-			}
-
-			if ($file_owner_a != $file_owner_b) {
-				throw new OIDplusException(_L('Owner of unlock file "%1" is wrong. It is "%2", but it should be "%3".', $unlock_file, $file_owner_b_name, $file_owner_a_name));
-			}
 		} else {
-			// Windows check 1: Check for critical directories
 			if (self::isCriticalWindowsDirectory($realdir)) {
 				throw new OIDplusException(_L('The attachment directory must not be inside a critical system directory!'));
 			}
-
-			// Note: We will not query the file owner in Windows systems.
-			// It would be possible, however, on Windows systems, the file
-			// ownership is rather hidden to the user and the user needs
-			// to go into several menus and windows in order to see/change
-			// the owner. We don't want to over-complicate it to the Windows admin.
 		}
 	}
 
@@ -101,8 +61,8 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @return bool
 	 */
 	private static function isCriticalWindowsDirectory(string $dir): bool {
-		$dir .= '\\';
-		$windir = isset($_SERVER['SystemRoot']) ? $_SERVER['SystemRoot'].'\\' : 'C:\\Windows\\';
+		$dir = rtrim(str_replace('/', '\\', $dir),'\\').'\\';
+		$windir = isset($_SERVER['SystemRoot']) ? rtrim($_SERVER['SystemRoot'],'\\').'\\' : 'C:\\Windows\\';
 		if (stripos($dir,$windir) === 0) return true;
 		return false;
 	}
@@ -113,7 +73,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 */
 	private static function isCriticalLinuxDirectory(string $dir): bool {
 		if ($dir == '/') return true;
-		$dir .= '/';
+		$dir = rtrim($dir,'/').'/';
 		if (strpos($dir,'/bin/') === 0) return true;
 		if (strpos($dir,'/boot/') === 0) return true;
 		if (strpos($dir,'/dev/') === 0) return true;
@@ -369,15 +329,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
 			}
 		});
-
-		$info_txt  = 'Alternative directory for attachments. It must contain a file named "';
-		$info_txt .= self::DIR_UNLOCK_FILE;
-		$info_txt .= '"';
-		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-			$info_txt .= ' with the same owner as index.php';
-		}
-		$info_txt .= '. If this setting is empty, then the userdata directory is used.';
-		OIDplus::config()->prepareConfigKey('attachment_upload_dir', $info_txt, '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		OIDplus::config()->prepareConfigKey('attachment_upload_dir', 'Alternative directory for attachments. If this setting is empty, then the userdata directory is used.', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (trim($value) !== '') {
 				self::checkUploadDir($value);
 			}
@@ -415,9 +367,12 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 
 	/**
 	 * Convert amount of bytes to human-friendly name
+	 *
 	 * @param int $bytes
 	 * @param int $decimals
 	 * @return string
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
 	 */
 	private static function convert_filesize(int $bytes, int $decimals = 2): string {
 		$size = array(_L('Bytes'),_L('KiB'),_L('MiB'),_L('GiB'),_L('TiB'),_L('PiB'),_L('EiB'),_L('ZiB'),_L('YiB'));
@@ -427,11 +382,14 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 
 	/**
 	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2
+	 *
 	 * @param string $id
 	 * @param string $title
 	 * @param string $icon
 	 * @param string $text
 	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
 	 */
 	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
 		$output = '';
