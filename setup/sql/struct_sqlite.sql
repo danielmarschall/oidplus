@@ -11,7 +11,7 @@ CREATE TABLE `config` (
 DROP TABLE IF EXISTS `asn1id`;
 CREATE TABLE `asn1id` (
   `lfd` INTEGER PRIMARY KEY AUTOINCREMENT,
-  `oid` TEXT NOT NULL REFERENCES `objects`(`id`),
+  `oid` TEXT NOT NULL, -- REFERENCES `objects`(`id`)
   `name` TEXT NOT NULL,
   `standardized` INTEGER NOT NULL DEFAULT 0,
   `well_known` INTEGER NOT NULL DEFAULT 0,
@@ -21,7 +21,7 @@ CREATE TABLE `asn1id` (
 DROP TABLE IF EXISTS `iri`;
 CREATE TABLE `iri` (
   `lfd` INTEGER PRIMARY KEY AUTOINCREMENT,
-  `oid` TEXT NOT NULL REFERENCES `objects`(`id`),
+  `oid` TEXT NOT NULL, -- REFERENCES `objects`(`id`)
   `name` TEXT NOT NULL,
   `longarc` INTEGER NOT NULL DEFAULT 0,
   `well_known` INTEGER NOT NULL DEFAULT 0,
@@ -31,10 +31,10 @@ CREATE TABLE `iri` (
 DROP TABLE IF EXISTS `objects`;
 CREATE TABLE `objects` (
   `id` TEXT NOT NULL,
-  `parent` TEXT DEFAULT NULL REFERENCES `objects`(`id`),
+  `parent` TEXT DEFAULT NULL, -- REFERENCES `objects`(`id`)
   `title` TEXT NULL,
   `description` TEXT NULL,
-  `ra_email` TEXT NULL REFERENCES `ra`(`email`),
+  `ra_email` TEXT NULL, -- REFERENCES `ra`(`email`)
   `confidential` boolean NOT NULL,
   `created` TEXT, -- DateTime
   `updated` TEXT, -- DateTime
@@ -74,7 +74,7 @@ CREATE TABLE `log` (
 DROP TABLE IF EXISTS `log_user`;
 CREATE TABLE `log_user` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-  `log_id` INTEGER NOT NULL REFERENCES `log`(`id`),
+  `log_id` INTEGER NOT NULL, -- REFERENCES `log`(`id`)
   `username` TEXT NOT NULL,
   `severity` INTEGER NOT NULL,
   UNIQUE (`log_id`,`username`)
@@ -83,7 +83,7 @@ CREATE TABLE `log_user` (
 DROP TABLE IF EXISTS `log_object`;
 CREATE TABLE `log_object` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-  `log_id` INTEGER NOT NULL REFERENCES `log`(`id`),
+  `log_id` INTEGER NOT NULL, -- REFERENCES `log`(`id`)
   `object` TEXT NOT NULL,
   `severity` INTEGER NOT NULL,
   UNIQUE (`log_id`,`object`)
