@@ -50,10 +50,9 @@ class OIDplusIpv4 extends OIDplusObject {
 			if (strpos($ipv4, '/') === false) $ipv4 .= '/32';
 			list($bare, $cidr) = explode('/', $ipv4);
 			$this->bare = $bare;
-			if (is_numeric($cidr)) throw new OIDplusException(_L('Invalid IPv4'));
+			if (!is_numeric($cidr)) throw new OIDplusException(_L('Invalid IPv4'));
 			$this->cidr = (int)$cidr;
 			if (!ipv4_valid($bare)) throw new OIDplusException(_L('Invalid IPv4'));
-			if (!is_numeric($cidr)) throw new OIDplusException(_L('Invalid IPv4'));
 			if ($cidr < 0) throw new OIDplusException(_L('Invalid IPv4'));
 			if ($cidr > 32) throw new OIDplusException(_L('Invalid IPv4'));
 			$this->bare = ipv4_normalize($this->bare);
