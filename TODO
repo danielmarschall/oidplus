@@ -2,6 +2,8 @@
 April 2023 planned:
 - Don't send information object OIDs to oid-info.com anymore
 - https://github.com/danielmarschall/oidplus/issues/5 => "Offline mode" (do not contact internet, e.g. gs1-barcodes, polyfill, oidinfo, ...)
+- Everywhere where url_post_contents() is used, we need to check url_post_contents_available() too
+- Attachments plugin: Via "notifications", let the admin know if the upload directory is writeable
 
 Type safety:
 - PhpStorm warnings
@@ -282,8 +284,8 @@ IDEAS
   the fact that a RA exists in the Object Table should permit the RA to invite theirself.
 - make a list of OIDs that do not assign ASN1/IRI identifiers (e.g. IANA PEN or ViaThinkSoft FreeOID), then reject any identifier the user provides
 - sanitize IPv4, IPv6, GUID during creation
-	bei IPv4 und IPv6: - if it is a single host address, don't put /32 or /128 suffix
-	                   - strike unnecessary bits that are not defined in the netmask (also at the whois output)
+	at IPv4 and IPv6: - if it is a single host address, don't put /32 or /128 suffix
+	                  - strike unnecessary bits that are not defined in the netmask (also at the whois output)
 - let the sysadmin decide if they want the title be "systemtitle - object title" or "object title - systemtitle"
 - should a RA be able to mark their own oid as confidential, instead of asking the superior RA?
 - should there be an OIDplus project page at oidplus.viathinksoft.com instead of a "naked" system?
