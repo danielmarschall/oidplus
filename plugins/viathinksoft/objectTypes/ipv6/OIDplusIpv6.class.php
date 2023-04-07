@@ -50,10 +50,9 @@ class OIDplusIpv6 extends OIDplusObject {
 			if (strpos($ipv6, '/') === false) $ipv6 .= '/128';
 			list($bare, $cidr) = explode('/', $ipv6);
 			$this->bare = $bare;
-			if (is_numeric($cidr)) throw new OIDplusException(_L('Invalid IPv4'));
+			if (!is_numeric($cidr)) throw new OIDplusException(_L('Invalid IPv6'));
 			$this->cidr = (int)$cidr;
 			if (!ipv6_valid($bare)) throw new OIDplusException(_L('Invalid IPv6'));
-			if (!is_numeric($cidr)) throw new OIDplusException(_L('Invalid IPv6'));
 			if ($cidr < 0) throw new OIDplusException(_L('Invalid IPv6'));
 			if ($cidr > 128) throw new OIDplusException(_L('Invalid IPv6'));
 			$this->bare = ipv6_normalize($this->bare);
