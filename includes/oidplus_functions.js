@@ -237,3 +237,6 @@ function RemoveLastDirectoryPartOf(the_url) {
 	return( the_arr.join('/') );
 }
 
+function jsString(str) {
+	return "'" + str.replace("'", "\\'") + "'";
+}

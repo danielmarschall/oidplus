@@ -72,8 +72,8 @@ rebuild_config_callbacks.push(function() {
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'ODBC') return '';
 
-	return 'OIDplus::baseConfig()->setValue(\'ODBC_DSN\',          \''+$("#odbc_dsn")[0].value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'ODBC_USERNAME\',     \''+$("#odbc_username")[0].value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'ODBC_PASSWORD\',     '+_b64EncodeUnicode($("#odbc_password")[0].value)+');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'FORCE_DBMS_SLANG\',  \''+$("#odbc_slang")[0].value+'\');<br>'; // optional
+	return 'OIDplus::baseConfig()->setValue(\'ODBC_DSN\',          ' + jsString($("#odbc_dsn")[0].value) + ');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'ODBC_USERNAME\',     ' + jsString($("#odbc_username")[0].value) + ');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'ODBC_PASSWORD\',     ' + _b64EncodeUnicode($("#odbc_password")[0].value) + ');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'FORCE_DBMS_SLANG\',  ' + jsString($("#odbc_slang")[0].value) + ');<br>'; // optional
 });

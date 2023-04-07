@@ -64,7 +64,7 @@ rebuild_config_callbacks.push(function() {
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'Oracle (OCI8)') return '';
 
-	return 'OIDplus::baseConfig()->setValue(\'OCI_CONN_STR\',      \''+$("#oci_conn_str")[0].value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'OCI_USERNAME\',      \''+$("#oci_username")[0].value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'OCI_PASSWORD\',      '+_b64EncodeUnicode($("#oci_password")[0].value)+');<br>';
+	return 'OIDplus::baseConfig()->setValue(\'OCI_CONN_STR\',      ' + jsString($("#oci_conn_str")[0].value) + ');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'OCI_USERNAME\',      ' + jsString($("#oci_username")[0].value) + ');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'OCI_PASSWORD\',      ' + _b64EncodeUnicode($("#oci_password")[0].value) + ');<br>';
 });

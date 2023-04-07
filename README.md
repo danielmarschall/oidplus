@@ -32,7 +32,8 @@ Download a TAR.GZ file here: https://www.viathinksoft.com/projects/oidplus
         PostgreSQL,
         SQLite3,
         Oracle,
-        Microsoft SQL Server
+        Microsoft SQL Server,
+        Microsoft Access
 - Independent of operating systems (tested with Windows, Linux and macOS X)
 
 ### Reporting a bug

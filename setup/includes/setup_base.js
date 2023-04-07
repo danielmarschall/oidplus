@@ -114,9 +114,9 @@ function doRebuild(admPwdHash, pwComment) {
 			'<br>' +
 			// Passwords are Base64 encoded to avoid that passwords can be read upon first sight,
 			// e.g. if collegues are looking over your shoulder while you accidently open (and quickly close) userdata/baseconfig/config.inc.php
-			'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + admPwdHash + '\'); // '+pwComment+'<br>' +
+			'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    ' + jsString(admPwdHash) + '); // '+pwComment+'<br>' +
 			'<br>' +
-			'OIDplus::baseConfig()->setValue(\'DATABASE_PLUGIN\',   \''+strDatabasePlugin+'\');<br>';
+			'OIDplus::baseConfig()->setValue(\'DATABASE_PLUGIN\',   ' + jsString(strDatabasePlugin) + ');<br>';
 		for (var i = 0; i < rebuild_config_callbacks.length; i++) {
 			var f = rebuild_config_callbacks[i];
 			var cont = f();
@@ -126,11 +126,11 @@ function doRebuild(admPwdHash, pwComment) {
 		}
 		$("#config")[0].innerHTML = $("#config")[0].innerHTML +
 			//'<br>' +
-			'OIDplus::baseConfig()->setValue(\'TABLENAME_PREFIX\',  \''+$("#tablename_prefix")[0].value+'\');<br>' +
+			'OIDplus::baseConfig()->setValue(\'TABLENAME_PREFIX\',  ' + jsString($("#tablename_prefix")[0].value) + ');<br>' +
 			'<br>' +
-			'OIDplus::baseConfig()->setValue(\'SERVER_SECRET\',     \''+generateRandomString(32)+'\');<br>' +
+			'OIDplus::baseConfig()->setValue(\'SERVER_SECRET\',     ' + jsString(generateRandomString(32)) + ');<br>' +
 			'<br>' +
-			'OIDplus::baseConfig()->setValue(\'CAPTCHA_PLUGIN\',    \''+strCaptchaPlugin+'\');<br>';
+			'OIDplus::baseConfig()->setValue(\'CAPTCHA_PLUGIN\',    ' + jsString(strCaptchaPlugin) + ');<br>';
 		for (var i = 0; i < captcha_rebuild_config_callbacks.length; i++) {
 			var f = captcha_rebuild_config_callbacks[i];
 			var cont = f();
@@ -141,12 +141,12 @@ function doRebuild(admPwdHash, pwComment) {
 
 		$("#config")[0].innerHTML = $("#config")[0].innerHTML +
 			'<br>' +
-			'OIDplus::baseConfig()->setValue(\'ENFORCE_SSL\',       '+$("#enforce_ssl")[0].value+');<br>';
+			'OIDplus::baseConfig()->setValue(\'ENFORCE_SSL\',       ' + $("#enforce_ssl")[0].value + ');<br>';
 
 		if ($("#canonical_url")[0].value.trim() != '') {
 			$("#config")[0].innerHTML = $("#config")[0].innerHTML +
 				'<br>' +
-				'OIDplus::baseConfig()->setValue(\'CANONICAL_SYSTEM_URL\', \''+$("#canonical_url")[0].value.trim()+'\');<br>';
+				'OIDplus::baseConfig()->setValue(\'CANONICAL_SYSTEM_URL\', ' + jsString($("#canonical_url")[0].value.trim()) + ');<br>';
 		}
 
 		$("#config")[0].innerHTML = $("#config")[0].innerHTML.replaceAll(' ', '&nbsp;');

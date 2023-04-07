@@ -60,6 +60,6 @@ captcha_rebuild_config_callbacks.push(function() {
 	var e = $("#captcha_plugin")[0];
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'hCaptcha') return '';
-	return 'OIDplus::baseConfig()->setValue(\'HCAPTCHA_SITEKEY\',  \''+$("#hcaptcha_sitekey")[0].value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'HCAPTCHA_SECRET\',   \''+$("#hcaptcha_secret")[0].value+'\');<br>';
+	return 'OIDplus::baseConfig()->setValue(\'HCAPTCHA_SITEKEY\',  ' + jsString($("#hcaptcha_sitekey")[0].value) + ');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'HCAPTCHA_SECRET\',   ' + jsString($("#hcaptcha_secret")[0].value) + ');<br>';
 });
