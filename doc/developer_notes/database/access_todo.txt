@@ -7,20 +7,10 @@ Tested with Microsoft Access Database Engine 2010 (14.0)
 The following things need to be addressed in order to make OIDplus compatible with Microsoft Access:
 
 - When *.accdb file is opened in Microsoft Access, and the page is loaded, then you get the message "Table oidplus_config" is missing
-	(Because the system thinks that the "select" error comes from a missing table rather than a locking issue)
+	(Because the system thinks that the "select" Exception comes from a missing table rather than a locking issue)
+	==> cannot reproduce on ELY2 system
 
-- Setup SQL scripts
-
-	* C:\inetpub\wwwroot\oidplus\setup\sql\struct_access.sql
-		"Drop table if exists"
-		Problem: Inside Access, we need to execute each single CREATE TABLE command by hand! We cannot just copy-paste the whole code!
-		=> However, other tools like HickelSOFT DBTool can correctly send SQL queries to the ACCDB file via ADO
-
-	* Should we give the user an empty *.accdb file (as well as an empty SQLite3 file)?
-
-- Test if everything works, including Unicode and boolean flags (checkboxes etc.)
-
-- Especially look if there are some differences in the SQL language which affect us
+- Look if there are some differences in the SQL language which affect us
   https://support.microsoft.com/en-us/office/comparing-access-sql-with-sql-server-tsql-f09f180f-c005-4ff3-812f-14a5eb7902c8
 
 	* like 'X%' comes 'X*' ?
@@ -34,6 +24,9 @@ The following things need to be addressed in order to make OIDplus compatible wi
 =======================
 
 The following things should be OK:
+
+Test if everything works, including Unicode and boolean flags (checkboxes etc.)
+    => Both tested, OK
 
 For ODBC with MS Access, the following is important:
 	correct:

@@ -2,5 +2,35 @@
 About the folder "userdata/database"
 ------------------------------------
 
-This folder can be used to store a SQLite database.
-The default database name is" oidplus.db"
+This folder can be used to store file databases.
+
+Two database files have been put here for you to use as template.
+
+oidplus_empty.db
+	SQLite3 database
+	Empty (no example data)
+	Table name prefix "oidplus_"
+
+oidplus_example.db
+	SQLite3 database
+	With example data
+	Table name prefix "oidplus_"
+
+oidplus_empty.accdb
+	Microsoft Access database
+	Empty (no example data)
+	Table name prefix "oidplus_"
+
+oidplus_example.accdb
+	Microsoft Access database
+	With example data
+	Table name prefix "oidplus_"
+
+!!!ATTENTION!!!
+These empty database files WILL get overridden during software
+updates and you WILL lose all data in them!
+So, if you want to use the templates, please rename them!
+For example, rename oidplus_empty.db to oidplus.db, and
+then use oidplus.db as your database.
+And don't forget to always make a backup of your database
+before doing software updates.

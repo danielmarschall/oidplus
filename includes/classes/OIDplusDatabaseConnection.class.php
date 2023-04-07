@@ -195,6 +195,15 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 */
 	public final function connect()/*: void*/ {
 		if ($this->connected) return;
+
+		$bcKeys = OIDplus::baseConfig()->getAllKeys();
+		foreach ($bcKeys as $bkKey) {
+			$val = OIDplus::baseConfig()->getValue($bkKey, '');
+			if (is_string($val) && preg_match('@(userdata[/\\\\]database[/\\\\]oidplus_(empty|example)\\.(db|db3|sqlite|sqlite3|mdb|accdb))@i', $val, $m)) {
+				throw new OIDplusConfigInitializationException(_L('It looks like you are trying to use the template database file %1 in your base configuration. Since this file gets overridden by software updates, you must copy the template file and use this copy instead.', $m[1]));
+			}
+		}
+
 		$this->beforeConnect();
 		$this->doConnect();
 		$this->connected = true;

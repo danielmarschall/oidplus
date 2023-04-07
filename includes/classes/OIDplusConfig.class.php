@@ -185,6 +185,20 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 	}
 
 	/**
+	 * @return string[]
+	 * @throws OIDplusException
+	 */
+	public function getAllKeys(): array {
+		// TODO: put this method into the interface OIDplusGetterSetterInterface
+
+		// Read all config settings once and write them in array $this->values
+		$this->buildConfigArray();
+
+		// Now we can see if our desired attribute is available
+		return array_keys($this->values);
+	}
+
+	/**
 	 * @param string $name
 	 * @param mixed|null $default
 	 * @return mixed|null

@@ -34,6 +34,14 @@ class OIDplusBaseConfig extends OIDplusBaseClass implements OIDplusGetterSetterI
 	protected $data = array();
 
 	/**
+	 * @return string[]
+	 */
+	public function getAllKeys(): array {
+		// TODO: put this method into the interface OIDplusGetterSetterInterface
+		return array_keys($this->data);
+	}
+
+	/**
 	 * @param string $name
 	 * @param mixed|null $default
 	 * @return mixed|null
