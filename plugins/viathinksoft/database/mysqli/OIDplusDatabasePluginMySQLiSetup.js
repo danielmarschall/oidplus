@@ -74,8 +74,8 @@ rebuild_config_callbacks.push(function() {
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin != 'MySQL') return '';
 
-	return 'OIDplus::baseConfig()->setValue(\'MYSQL_HOST\',        \''+$("#mysql_host")[0].value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'MYSQL_USERNAME\',    \''+$("#mysql_username")[0].value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'MYSQL_PASSWORD\',    '+_b64EncodeUnicode($("#mysql_password")[0].value)+');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'MYSQL_DATABASE\',    \''+$("#mysql_database")[0].value+'\');<br>';
+	return 'OIDplus::baseConfig()->setValue(\'MYSQL_HOST\',        ' + jsString($("#mysql_host")[0].value) + ');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'MYSQL_USERNAME\',    ' + jsString($("#mysql_username")[0].value) + ');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'MYSQL_PASSWORD\',    ' + _b64EncodeUnicode($("#mysql_password")[0].value) + ');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'MYSQL_DATABASE\',    ' + jsString($("#mysql_database")[0].value) + ');<br>';
 });

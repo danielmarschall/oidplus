@@ -57,6 +57,6 @@ captcha_rebuild_config_callbacks.push(function() {
 	var strPlugin = e.options[e.selectedIndex].value;
 	if (strPlugin.toLowerCase() != 'reCAPTCHA'.toLowerCase()) return '';
 	return 'OIDplus::baseConfig()->setValue(\'RECAPTCHA_VERSION\', \\ViaThinkSoft\\OIDplus\\OIDplusCaptchaPluginRecaptcha::'+$("#recaptcha_version").find('option:selected').attr("name")+');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PUBLIC\',  \''+$("#recaptcha_public")[0].value+'\');<br>' +
-	       'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PRIVATE\', \''+$("#recaptcha_private")[0].value+'\');<br>';
+	       'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PUBLIC\',  ' + jsString($("#recaptcha_public")[0].value) + ');<br>' +
+	       'OIDplus::baseConfig()->setValue(\'RECAPTCHA_PRIVATE\', ' + jsString($("#recaptcha_private")[0].value) + ');<br>';
 });

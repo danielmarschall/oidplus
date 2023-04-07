@@ -2158,6 +2158,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Example for Microsoft Access
+		]]></source>
+		<target><![CDATA[
+		Beispiel für Microsoft Access
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Example for MySQL/MariaDB
 		]]></source>
 		<target><![CDATA[
@@ -8386,6 +8394,14 @@
 		]]></source>
 		<target><![CDATA[
 		Long-Arc
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		more information
+		]]></source>
+		<target><![CDATA[
+		Mehr Informationen
 		]]></target>
 	</message>
 	<message>

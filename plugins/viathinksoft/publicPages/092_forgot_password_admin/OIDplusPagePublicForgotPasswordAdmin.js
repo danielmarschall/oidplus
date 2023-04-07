@@ -54,7 +54,7 @@ var OIDplusPagePublicForgotPasswordAdmin = {
 				// sync call to calculate SHA3
 				var admPwdHash = hexToBase64(sha3_512(pw))
 				var pwComment = 'salted, base64 encoded SHA3-512 hash';
-				$("#config")[0].innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + admPwdHash + '\'); // '+pwComment+'<br>';
+				$("#config")[0].innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    ' + jsString(admPwdHash) + '); // '+pwComment+'<br>';
 				g_last_admPwdHash = admPwdHash;
 				g_last_pwComment = pwComment;
 
@@ -69,13 +69,13 @@ var OIDplusPagePublicForgotPasswordAdmin = {
 				bCryptWorker.onmessage = function (event) {
 					var admPwdHash = event.data;
 					var pwComment = 'bcrypt encoded hash';
-					$("#config")[0].innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + admPwdHash + '\'); // '+pwComment+'<br>';
+					$("#config")[0].innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    ' + jsString(admPwdHash) + '); // '+pwComment+'<br>';
 					g_last_admPwdHash = admPwdHash;
 					g_last_pwComment = pwComment;
 					g_prevBcryptPw = pw;
 				};
 			} else {
-				$("#config")[0].innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    \'' + g_last_admPwdHash + '\'); // '+g_last_pwComment+'<br>';
+				$("#config")[0].innerHTML = 'OIDplus::baseConfig()->setValue(\'ADMIN_PASSWORD\',    ' + jsString(g_last_admPwdHash) + '); // '+g_last_pwComment+'<br>';
 			}
 		}
 	}
