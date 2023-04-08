@@ -569,6 +569,13 @@ function hotfix_dir(int $rev, string $dir) {
 		$cont = str_replace('echo "OK, password $password\n";', '', $cont);
 		file_put_contents($file, $cont);
 	}
+	if ($rev == 1186) {
+		// Fix runtime error that lead to a stalled update!
+		$file = $dir.'/includes/classes/OIDplusGui.class.php';
+		$cont = file_get_contents($file);
+		$cont = str_replace('public function html_exception_handler', 'public static function html_exception_handler', $cont);
+		file_put_contents($file, $cont);
+	}
 }
 
 /**

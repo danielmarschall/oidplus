@@ -45,7 +45,7 @@ class OIDplusGui extends OIDplusBaseClass {
 				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'.$e->getMessage().'</p>';
 				if (OIDplus::baseConfig()->getValue('DEBUG')) {
-					$out['text'] .= $this->getExceptionTechInfo($e);
+					$out['text'] .= self::getExceptionTechInfo($e);
 				}
 			}
 			if ($handled) break;
@@ -124,7 +124,8 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function html_exception_handler(\Throwable $exception) {
+	public static function html_exception_handler(\Throwable $exception) {
+		// Note: This method must be static
 		if ($exception instanceof OIDplusConfigInitializationException) {
 			echo '<!DOCTYPE HTML>';
 			echo '<html><head><title>'.htmlentities(_L('OIDplus initialization error')).'</title></head><body>';
@@ -135,7 +136,7 @@ class OIDplusGui extends OIDplusBaseClass {
 				$msg .= ' '._L('or run <a href="%1">setup</a> again',OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/');
 			}
 			echo '<p>'.$msg.'</p>'; // No htmlentities, because we already did it above
-			echo $this->getExceptionTechInfo($exception);
+			echo self::getExceptionTechInfo($exception);
 			echo '</body></html>';
 		} else {
 			echo '<!DOCTYPE HTML>';
@@ -143,7 +144,7 @@ class OIDplusGui extends OIDplusBaseClass {
 			echo '<h1>'.htmlentities(_L('OIDplus error')).'</h1>';
 			// ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
 			echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
-			echo $this->getExceptionTechInfo($exception);
+			echo self::getExceptionTechInfo($exception);
 			echo '</body></html>';
 		}
 	}
@@ -152,7 +153,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @param \Throwable $exception
 	 * @return string
 	 */
-	private function getExceptionTechInfo(\Throwable $exception): string {
+	private static function getExceptionTechInfo(\Throwable $exception): string {
 		$out  = '<p><b>'.htmlentities(_L('Technical information about the problem')).':</b></p>';
 		$out .= '<pre>';
 		$out .= get_class($exception)."\n";
