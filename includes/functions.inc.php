@@ -535,7 +535,7 @@ function array_to_stdobj(array $ary): \stdClass {
  */
 function stdobj_to_array(\stdClass $obj): array {
 	$ary = array();
-	foreach ($obj as $name => $val) {
+	foreach ($obj as $name => $val) { /* @phpstan-ignore-line */
 		$ary[$name] = $val;
 	}
 	return $ary;
