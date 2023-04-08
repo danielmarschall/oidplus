@@ -638,6 +638,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Attention: Takes a long time!
+		]]></source>
+		<target><![CDATA[
+		Achtung: Dauert lange!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Attention: The following directory is world-readable: %1 ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>).
 		]]></source>
 		<target><![CDATA[
@@ -6394,6 +6402,14 @@
 		]]></source>
 		<target><![CDATA[
 		Aufrufstapel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Start scan
+		]]></source>
+		<target><![CDATA[
+		Scan beginnen
 		]]></target>
 	</message>
 	<message>

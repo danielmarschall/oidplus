@@ -50,11 +50,9 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 	 * @throws OIDplusException
 	 */
 	public function gui(string $id, array &$out, bool &$handled) {
-		$parts = explode('.',$id,2);
+		$parts = explode('$',$id,2);
 		if (!isset($parts[1])) $parts[1] = '';
 		if ($parts[0] == 'oidplus:system_file_check') {
-			@set_time_limit(0);
-
 			$handled = true;
 			$out['title'] = _L('System file check');
 			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
@@ -70,84 +68,91 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 			$out['text'] .= _L('The folders "userdata" and "userdata_pub" as well as third-party-plugins (folder "plugins" excluding "viathinksoft") are not listed.').'</p>';
 			$out['text'] .= '<p>'._L('Please note: If you believe that you were hacked, you should not trust the output of this tool, because it might be compromised, too.').'</p>';
 
-			$ver = OIDplus::getVersion();
-			if (substr($ver,0,4) !== 'svn-') {
-				$out['text'] = '<p><font color="red">'.mb_strtoupper(_L('Error')).': '._L('Cannot determine version of the system').'</font></p>';
-				return;
-			}
-			$ver = substr($ver,strlen('svn-'));
+			if ($parts[1] !== 'go') {
+				$out['text'] .= '<p><input type="button" '.OIDplus::gui()->link('oidplus:system_file_check$go').' value="'._L('Start scan').'"> ('._L('Attention: Takes a long time!').')</p>';
+			} else {
+				@set_time_limit(0);
 
-
-			$out['text'] .= '<h2>'._L('Result (comparison with SVN revision %1)', $ver).'</h2>';
-
-			$out['text'] .= '<pre>';
-
-			try {
-				$mine = self::getDirContents(OIDplus::localpath());
-				$theirs = self::checksumFileToArray(sprintf(OIDplus::getEditionInfo()['checksum_file'],$ver));
-				if ($theirs === false) {
-					throw new OIDplusException(_L("Cannot download checksum file. Please try again later."));
+				$ver = OIDplus::getVersion();
+				if (substr($ver,0,4) !== 'svn-') {
+					$out['text'] = '<p><font color="red">'.mb_strtoupper(_L('Error')).': '._L('Cannot determine version of the system').'</font></p>';
+					return;
 				}
+				$ver = substr($ver,strlen('svn-'));
 
-				$num = 0;
 
-				foreach ($mine as $filename_old => $hash_old) {
-					$filename_old = str_replace('\\', '/', $filename_old);
-					if (!isset($theirs[$filename_old])) {
-						if (
-						  (substr($filename_old, 0, strlen('userdata/')) !== 'userdata/') &&
-						  (substr($filename_old, 0, strlen('userdata_pub/')) !== 'userdata_pub/') &&
+				$out['text'] .= '<h2>'._L('Result (comparison with SVN revision %1)', $ver).'</h2>';
 
-						  // Don't list third-party plugins
-						  ((
-						    (substr($filename_old, 0, strlen('plugins/')) === 'plugins/') &&
-						    (
-						      (explode('/',$filename_old)[1] === 'viathinksoft') ||
-						      (explode('/',$filename_old)[1] === 'index.html') ||
-						      (substr(explode('/',$filename_old)[1],-4) === '.xsd')
-						    )
-						  ) || (substr($filename_old, 0, strlen('plugins/')) !== 'plugins/')) &&
+				$out['text'] .= '<pre>';
 
-						  ($filename_old !== 'oidplus_version.txt') &&
-						  ($filename_old !== '.version.php') &&
-						  ($filename_old !== 'composer.lock')
-						){
-							$num++;
-							if (is_dir(OIDplus::localpath().$filename_old)) {
-								$out['text'] .= "<b>"._L('Additional directory').":</b> $filename_old\n";
-							} else {
-								$out['text'] .= "<b>"._L('Additional file').":</b> $filename_old\n";
+				try {
+					$theirs = self::checksumFileToArray(sprintf(OIDplus::getEditionInfo()['checksum_file'],$ver));
+					if ($theirs === false) {
+						throw new OIDplusException(_L("Cannot download checksum file. Please try again later."));
+					}
+
+					$mine = self::getDirContents(OIDplus::localpath());
+
+					$num = 0;
+
+					foreach ($mine as $filename_old => $hash_old) {
+						$filename_old = str_replace('\\', '/', $filename_old);
+						if (!isset($theirs[$filename_old])) {
+							if (
+								(substr($filename_old, 0, strlen('userdata/')) !== 'userdata/') &&
+								(substr($filename_old, 0, strlen('userdata_pub/')) !== 'userdata_pub/') &&
+
+								// Don't list third-party plugins
+								((
+										(substr($filename_old, 0, strlen('plugins/')) === 'plugins/') &&
+										(
+											(explode('/',$filename_old)[1] === 'viathinksoft') ||
+											(explode('/',$filename_old)[1] === 'index.html') ||
+											(substr(explode('/',$filename_old)[1],-4) === '.xsd')
+										)
+									) || (substr($filename_old, 0, strlen('plugins/')) !== 'plugins/')) &&
+
+								($filename_old !== 'oidplus_version.txt') &&
+								($filename_old !== '.version.php') &&
+								($filename_old !== 'composer.lock')
+							){
+								$num++;
+								if (is_dir(OIDplus::localpath().$filename_old)) {
+									$out['text'] .= "<b>"._L('Additional directory').":</b> $filename_old\n";
+								} else {
+									$out['text'] .= "<b>"._L('Additional file').":</b> $filename_old\n";
+								}
 							}
 						}
 					}
-				}
 
-				foreach ($theirs as $filename_new => $hash_new) {
-					if (!isset($mine[$filename_new])) {
-						$num++;
-						$out['text'] .= "<b>"._L('Missing file').":</b> $filename_new\n";
-					}
-				}
-
-				foreach ($mine as $filename_old => $hash_old) {
-					if (isset($theirs[$filename_old])) {
-						$hash_new = $theirs[$filename_old];
-						if ($hash_old != $hash_new) {
+					foreach ($theirs as $filename_new => $hash_new) {
+						if (!isset($mine[$filename_new])) {
 							$num++;
-							$svn_url = sprintf(OIDplus::getEditionInfo()['svn_original'],urlencode($filename_old),urlencode($ver));
-							$out['text'] .= "<b>"._L('Checksum mismatch').":</b> $filename_old (<a target=\"_blank\" href=\"$svn_url\">"._L('Expected file contents')."</a>)\n";
+							$out['text'] .= "<b>"._L('Missing file').":</b> $filename_new\n";
 						}
 					}
+
+					foreach ($mine as $filename_old => $hash_old) {
+						if (isset($theirs[$filename_old])) {
+							$hash_new = $theirs[$filename_old];
+							if ($hash_old != $hash_new) {
+								$num++;
+								$svn_url = sprintf(OIDplus::getEditionInfo()['svn_original'],urlencode($filename_old),urlencode($ver));
+								$out['text'] .= "<b>"._L('Checksum mismatch').":</b> $filename_old (<a target=\"_blank\" href=\"$svn_url\">"._L('Expected file contents')."</a>)\n";
+							}
+						}
+					}
+
+					if ($num == 0) {
+						$out['text'] .= _L('Everything OK!');
+					}
+				} catch (\Exception $e) {
+					$out['text'] .= mb_strtoupper(_L('Error')).': '.htmlentities($e->getMessage());
 				}
 
-				if ($num == 0) {
-					$out['text'] .= _L('Everything OK!');
-				}
-			} catch (\Exception $e) {
-				$out['text'] .= mb_strtoupper(_L('Error')).': '.htmlentities($e->getMessage());
+				$out['text'] .= '</pre>';
 			}
-
-			$out['text'] .= '</pre>';
 		} else {
 			$handled = false;
 		}

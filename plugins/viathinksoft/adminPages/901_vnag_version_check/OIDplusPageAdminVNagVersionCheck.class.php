@@ -57,7 +57,7 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 	 * @throws OIDplusException
 	 */
 	public function gui(string $id, array &$out, bool &$handled) {
-		$parts = explode('.',$id,2);
+		$parts = explode('$',$id,2);
 		if (!isset($parts[1])) $parts[1] = '';
 		if ($parts[0] == 'oidplus:vnag_version_check') {
 			@set_time_limit(0);
