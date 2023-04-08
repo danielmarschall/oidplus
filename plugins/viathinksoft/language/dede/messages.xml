@@ -1814,6 +1814,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Directory %1 does not exist
+		]]></source>
+		<target><![CDATA[
+		Verzeichnis %1 existiert nicht
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Directory %1 is not writeable. Please check the permissions!
 		]]></source>
 		<target><![CDATA[
@@ -6890,6 +6898,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die E-Mail-Adresse %1 wurde nicht bestätigt. Bitte bestätigen Sie sie zuerst!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The file attachments feature is not available due to a misconfiguration
+		]]></source>
+		<target><![CDATA[
+		Datei-Anhänge sind aufgrund einer Fehlkonfiguration nicht möglich
 		]]></target>
 	</message>
 	<message>

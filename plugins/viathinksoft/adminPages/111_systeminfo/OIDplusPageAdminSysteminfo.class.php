@@ -248,50 +248,8 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('User account').'</td>';
-			$current_user = exec('whoami');
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-				try {
-					if (function_exists('mb_convert_encoding')) {
-						$current_user = @mb_convert_encoding($current_user, "UTF-8", "cp850");
-					} else if (function_exists('iconv')) {
-						$current_user = @iconv("cp850", "UTF-8", $current_user);
-					}
-				} catch (\Exception $e) {}
-				if (function_exists('mb_strtoupper')) {
-					$current_user = mb_strtoupper($current_user); // just cosmetics
-				}
-			}
-			if ($current_user == '') {
-				if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-					// Windows on an IIS server:
-					//     getenv('USERNAME')     MARSCHALL$                (That is the "machine account", see https://docs.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities#accessing-the-network )
-					//     get_current_user()     DefaultAppPool
-					//     exec('whoami')         iis apppool\defaultapppool
-					// Windows with XAMPP:
-					//     getenv('USERNAME')     dmarschall
-					//     get_current_user()     dmarschall               (even if script has a different NTFS owner!)
-					//     exec('whoami')         hickelsoft\dmarschall
-					$current_user = get_current_user();
-					if ($current_user == '') $current_user = getenv('USERNAME');
-				} else {
-					// On Linux:
-					$current_user = exec('id -un');
-					if ($current_user == '') {
-						// get_current_user() will get the owner of the PHP script, not the process owner!
-						// We want the process owner, so we use posix_geteuid().
-						if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
-							$uid = posix_geteuid();
-							$current_user = posix_getpwuid($uid); // receive username (required read access to /etc/passwd )
-							if ($current_user !== false) $current_user = $current_user['name'];
-						} else {
-							$uid = -1;
-						}
-						if ($current_user == '') $current_user = get_current_user();
-						if (($current_user == '') && ($uid >= 0)) $current_user = '#' . $uid;
-					}
-				}
-			}
-			$out['text'] .= '		<td>'.($current_user == '' ? '<i>'._L('unknown').'</i>' : htmlentities($current_user)).'</td>';
+			$current_user = get_own_username();
+			$out['text'] .= '		<td>'.($current_user === false ? '<i>'._L('unknown').'</i>' : htmlentities($current_user)).'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</tbody>';
 			$out['text'] .= '</table>';

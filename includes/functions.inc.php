@@ -479,3 +479,78 @@ function stdobj_to_array(\stdClass $obj): array {
 	}
 	return $ary;
 }
+
+/**
+ * @return string|false
+ */
+function get_own_username() {
+	$current_user = exec('whoami');
+	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		try {
+			if (function_exists('mb_convert_encoding')) {
+				$current_user = @mb_convert_encoding($current_user, "UTF-8", "cp850");
+			} else if (function_exists('iconv')) {
+				$current_user = @iconv("cp850", "UTF-8", $current_user);
+			}
+		} catch (\Exception $e) {}
+		if (function_exists('mb_strtoupper')) {
+			$current_user = mb_strtoupper($current_user); // just cosmetics
+		}
+	}
+	if (!$current_user) {
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			// Windows on an IIS server:
+			//     getenv('USERNAME')     MARSCHALL$                (That is the "machine account", see https://docs.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities#accessing-the-network )
+			//     get_current_user()     DefaultAppPool
+			//     exec('whoami')         iis apppool\defaultapppool
+			// Windows with XAMPP:
+			//     getenv('USERNAME')     dmarschall
+			//     get_current_user()     dmarschall               (even if script has a different NTFS owner!)
+			//     exec('whoami')         hickelsoft\dmarschall
+			$current_user = get_current_user();
+			if (!$current_user) {
+				$current_user = getenv('USERNAME');
+				$current_user = mb_strtoupper($current_user); // just cosmetics
+			}
+		} else {
+			// On Linux:
+			$current_user = exec('id -un');
+			if (!$current_user) {
+				// PHP'S get_current_user() will get the owner of the PHP script, not the process owner!
+				// We want the process owner, so we use posix_geteuid() preferably.
+				if (function_exists('posix_geteuid')) {
+					$uid = posix_geteuid();
+				} else {
+					$temp_file = tempnam(sys_get_temp_dir(), 'TMP');
+					if ($temp_file !== false) {
+						$uid = fileowner($temp_file);
+						if ($uid === false) $uid = -1;
+						@unlink($temp_file);
+					} else {
+						$uid = -1;
+					}
+				}
+				if ($uid >= 0) {
+					$current_user = '#' . $uid;
+					if (function_exists('posix_getpwuid')) {
+						$userinfo = posix_getpwuid($uid); // receive username from the UID (requires read access to /etc/passwd)
+						if ($userinfo !== false) $current_user = $userinfo['name'];
+					}
+				} else {
+					$current_user = get_current_user();
+				}
+			}
+		}
+	}
+	return $current_user ?: false;
+}
+
+/**
+ * @param string $path
+ * @return bool
+ */
+function isFileOrPathWritable(string $path): bool {
+	if ($writable_file = (file_exists($path) && is_writable($path))) return true;
+	if ($writable_directory = (!file_exists($path) && is_writable(dirname($path)))) return true;
+	return false;
+}
