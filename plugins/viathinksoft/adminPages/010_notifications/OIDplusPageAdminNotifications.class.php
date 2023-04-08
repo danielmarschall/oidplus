@@ -76,17 +76,27 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8) {
-					$notifications = $plugin->getNotifications($ra_email);
+					try {
+						$notifications = $plugin->getNotifications($ra_email);
+					} catch (\Exception $e) {
+						$notifications = array(
+							['CRIT', _L('The plugin %1 crashed during the notification-check. Message: %2', get_class($plugin), $e->getMessage())]
+						);
+					}
 					if ($notifications) {
 						foreach ($notifications as $notification) {
 							list($severity, $htmlMessage) = $notification;
 
 							// Same severities as the log plugin (also same CSS classes)
 							if ($severity == 'OK')   $severity = 1; // (this makes no sense)
-							if ($severity == 'INFO') $severity = 2;
-							if ($severity == 'WARN') $severity = 3;
-							if ($severity == 'ERR')  $severity = 4;
-							if ($severity == 'CRIT') $severity = 5;
+							else if ($severity == 'INFO') $severity = 2;
+							else if ($severity == 'WARN') $severity = 3;
+							else if ($severity == 'ERR')  $severity = 4;
+							else if ($severity == 'CRIT') $severity = 5;
+							else {
+								$htmlMessage = _L('The plugin %1 returned an invalid severity (%2). Message: %3', get_class($plugin), $severity, $htmlMessage);
+								$severity = 5; // CRIT
+							}
 
 							if (!isset($notifications_by_sev[$severity])) $notifications_by_sev[$severity] = array();
 							$notifications_by_sev[$severity][] = $htmlMessage;
@@ -110,7 +120,7 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 					else if ($severity == 3) $sev_hf = _L('Warnings');
 					else if ($severity == 4) $sev_hf = _L('Errors');
 					else if ($severity == 5) $sev_hf = _L('Critical issues');
-					else $sev_hf = _L('Severity %1', $severity-1); // TODO: actually, this should raise an Exception?
+					else assert(false);
 
 					$out['text'] .= '<h2><span class="severity_'.$severity.'">'.$sev_hf.' ('.count($htmlMessages).')</span></h2>';
 					$out['text'] .= '<span class="severity_'.$severity.'"><ol>';
@@ -168,6 +178,8 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 	 */
 	private function webAccessWorks(string $dir) {
 		$url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).$dir;
+		$require_ssl = str_starts_with(strtolower($url),'https:');
+		if (!url_get_contents_available($require_ssl)) return false;
 		$access_worked = url_get_contents($url) !== false;
 		if ($access_worked) return $url;
 

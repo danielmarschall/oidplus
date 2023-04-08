@@ -340,6 +340,13 @@ function sha3_512_pbkdf2(string $password, string $salt, int $iterations, int $l
  * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
  */
 function url_post_contents_available(bool $require_ssl=true, string &$reason=null): bool {
+	if (class_exists(OIDplus::class)) {
+		if (OIDplus::baseConfig()->getValue('OFFLINE_MODE', false)) {
+			$reason = _L('OIDplus is running in offline mode due to the base configuration setting %1.', 'OFFLINE_MODE');
+			return false;
+		}
+	}
+
 	if (function_exists('curl_init')) {
 		return true;
 	} else {
@@ -357,6 +364,11 @@ function url_post_contents_available(bool $require_ssl=true, string &$reason=nul
  * @throws \ViaThinkSoft\OIDplus\OIDplusException
  */
 function url_post_contents(string $url, array $params=array(), array $extraHeaders=array(), string $userAgent='ViaThinkSoft-OIDplus/2.0') {
+	$require_ssl = str_starts_with(strtolower($url),'https:');
+	if (!url_post_contents_available($require_ssl, $reason)) {
+		throw new OIDplusException(_L('This feature is not available, because OIDplus cannot connect to the Internet.').' '.$reason);
+	}
+
 	$postFields = http_build_query($params);
 
 	$headers = array(
@@ -387,8 +399,10 @@ function url_post_contents(string $url, array $params=array(), array $extraHeade
 		if ($error_code >= 400) return false;
 		if ($res === false) return false;
 	} else {
-		throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
+		$res = false;
+		assert(false);
 	}
+
 	return $res;
 }
 
@@ -400,6 +414,13 @@ function url_post_contents(string $url, array $params=array(), array $extraHeade
  * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
  */
 function url_get_contents_available(bool $require_ssl=true, string &$reason=null): bool {
+	if (class_exists(OIDplus::class)) {
+		if (OIDplus::baseConfig()->getValue('OFFLINE_MODE', false)) {
+			$reason = _L('OIDplus is running in offline mode due to the base configuration setting %1.', 'OFFLINE_MODE');
+			return false;
+		}
+	}
+
 	if (function_exists('curl_init')) {
 		// Via cURL
 		return true;
@@ -425,6 +446,11 @@ function url_get_contents_available(bool $require_ssl=true, string &$reason=null
  * @return string|false
  */
 function url_get_contents(string $url, array $extraHeaders=array(), string $userAgent='ViaThinkSoft-OIDplus/2.0') {
+	$require_ssl = str_starts_with(strtolower($url),'https:');
+	if (!url_get_contents_available($require_ssl, $reason)) {
+		throw new OIDplusException(_L('This feature is not available, because OIDplus cannot connect to the Internet.').' '.$reason);
+	}
+
 	$headers = array("User-Agent: $userAgent");
 	foreach ($extraHeaders as $name => $val) {
 		$headers[] = "$name: $val";

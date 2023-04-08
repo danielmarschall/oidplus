@@ -43,7 +43,10 @@ class OIDplusGui extends OIDplusBaseClass {
 			} catch (\Exception $e) {
 				$out['title'] = _L('Error');
 				$out['icon'] = 'img/error.png';
-				$out['text'] = $e->getMessage();
+				$out['text'] = '<p>'.$e->getMessage().'</p>';
+				if (OIDplus::baseConfig()->getValue('DEBUG')) {
+					$out['text'] .= self::getExceptionTechInfo($e);
+				}
 			}
 			if ($handled) break;
 		}
