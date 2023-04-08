@@ -4454,6 +4454,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OIDplus is running in offline mode due to the base configuration setting %1.
+		]]></source>
+		<target><![CDATA[
+		OIDplus arbeitet im Offline-Mode aufgrund der Basiskonfigurations-Einstellung %1.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OIDplus plugin "%1" is enabled, but OIDplus cannot connect to the Internet.
 		]]></source>
 		<target><![CDATA[
@@ -6318,14 +6326,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Severity %1
-		]]></source>
-		<target><![CDATA[
-		Dringlichkeit %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Share
 		]]></source>
 		<target><![CDATA[
@@ -6742,14 +6742,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.
-		]]></source>
-		<target><![CDATA[
-		Die "%1" PHP-Erweiterung ist nicht auf Ihrem System installiert. Bitte aktivieren Sie die PHP-Erweiterung <code>%2</code>.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		The %1 plugin cannot connect to the Internet.
 		]]></source>
 		<target><![CDATA[
@@ -7038,6 +7030,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The plugin %1 crashed during the notification-check. Message: %2
+		]]></source>
+		<target><![CDATA[
+		Das Plugin %1 ist beim Prüfen der Benachrichtigungen abgestürzt. Meldung: %2
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The plugin %1 returned an invalid severity (%2). Message: %3
+		]]></source>
+		<target><![CDATA[
+		Das Plugin %1 hat einen ungültigen Schweregrad (%2) gemeldet. Nachricht: %3
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins
 		]]></source>
 		<target><![CDATA[
@@ -7250,6 +7258,14 @@
 		]]></source>
 		<target><![CDATA[
 		Diese E-Mail-Adresse hat bereits eine kostenlose OID (%1)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This feature is not available, because OIDplus cannot connect to the Internet.
+		]]></source>
+		<target><![CDATA[
+		Dieses Feature ist nicht verfügbar, da OIDplus sich nicht mit dem Internet verbinden kann.
 		]]></target>
 	</message>
 	<message>

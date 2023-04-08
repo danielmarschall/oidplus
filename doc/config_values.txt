@@ -164,6 +164,10 @@ OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_UNICODE_LABEL_LEN',  255);
 (3) "HIDDEN"/UNDOCUMENTED CONFIG SETTINGS
 -----------------------------------------
 
+OIDplus::baseConfig()->setValue('OFFLINE_MODE', false);
+                         If set to true, OIDplus will not contact other servers. No system registration,
+                         no hCaptcha, no reCAPTCHA, no system updates, etc.
+
 OIDplus::baseConfig()->setValue('OIDINFO_API_URL', '<url>');
                          Currently only internal use for development utilities (dev/).
                          The API to oid-info.com is currently not public.

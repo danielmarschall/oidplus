@@ -1,9 +1,10 @@
 
 April 2023 planned:
 - Don't send information object OIDs to oid-info.com anymore
-- https://github.com/danielmarschall/oidplus/issues/5 => "Offline mode" (do not contact internet, e.g. gs1-barcodes, polyfill, oidinfo, ...)
-- Everywhere where url_post_contents() is used, we need to check url_post_contents_available() too.
-- Everywhere where url_get_contents() is used, we need to check url_get_contents_available() too.
+- In re Internet access:
+    * Check if all instances of https://github.com/danielmarschall/oidplus/issues/5 ("Offline mode") have been addressed
+    * Everywhere where url_post_contents() is used, we need to check url_post_contents_available() too.
+    * Everywhere where url_get_contents() is used, we need to check url_get_contents_available() too.
 - Bug?! At http://localhost:8081/index.php?goto=oidplus%3Anotifications%24admin (maybe if it is called via the "goto box"?)
     <a href="?goto=" id="static_link" class="gray_footer_font">Static link to this page</a><
     there is only goto= !
