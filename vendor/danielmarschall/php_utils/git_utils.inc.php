@@ -2,8 +2,8 @@
 
 /*
  * PHP git functions
- * Copyright 2021 Daniel Marschall, ViaThinkSoft
- * Revision 2021-12-29
+ * Copyright 2021 - 2023 Daniel Marschall, ViaThinkSoft
+ * Revision 2023-04-09
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,8 +76,7 @@ function git_get_latest_commit_message($git_dir) {
 			try {
 				return git_read_object($commit_object,
 					$objects_dir.'/pack/'.$basename.'.idx',
-					$objects_dir.'/pack/'.$basename.'.pack',
-					false
+					$objects_dir.'/pack/'.$basename.'.pack'
 				);
 			} catch (Exception $e) {
 				$last_exception = $e;
@@ -101,9 +100,9 @@ function git_read_object($object_wanted, $idx_file, $pack_file, $debug=false) {
 
 	// Read version
 	fseek($fp, 0);
-	$unpacked = unpack('N', fread($fp, 4)); // vorzeichenloser Long-Typ (immer 32 Bit, Byte-Folge Big-Endian)
-	if ($unpacked[1] === 0xFF744F63) {
-		$version = unpack('N', fread($fp, 4))[1]; // vorzeichenloser Long-Typ (immer 32 Bit, Byte-Folge Big-Endian)
+	$unpacked = unpack('H8', fread($fp, 4)); // H8 = 8x "Hex string, high nibble first"
+	if ($unpacked[1] === bin2hex("\377tOc")) {
+		$version = unpack('N', fread($fp, 4))[1]; // N = "unsigned long (always 32 bit, big endian byte order)"
 		$fanout_offset = 8;
 		if ($version != 2) throw new Exception("Version $version unknown");
 	} else {
@@ -214,15 +213,16 @@ function git_read_object($object_wanted, $idx_file, $pack_file, $debug=false) {
 
 	// Read delta base type
 	if ($type == 6/*OBJ_OFS_DELTA*/) {
-		// "a negative relative offset from the delta object's position in the pack
-		// if this is an OBJ_OFS_DELTA object"
-		$delta_info = unpack('C*', fread($fp,4))[1]; // TODO?!
+		// "a negative relative offset from the delta object's position in the pack if this is an OBJ_OFS_DELTA object"
+		$delta_info = unpack('C*', fread($fp,4))[1];
 		if ($debug) echo "Delta negative offset: $delta_info\n";
+		throw new Exception("OBJ_OFS_DELTA is currently not implemented"); // TODO! Implement OBJ_OFS_DELTA!
 	}
 	if ($type == 7/*OBJ_REF_DELTA*/) {
 		// "base object name if OBJ_REF_DELTA"
-		$delta_info = bin2hex(fread($fp,20))[1]; // TODO?!
+		$delta_info = bin2hex(fread($fp,20));
 		if ($debug) echo "Delta base object name: $delta_info\n";
+		throw new Exception("OBJ_REF_DELTA is currently not implemented"); // TODO! Implement OBJ_REF_DELTA!
 	}
 
 	// Read compressed data

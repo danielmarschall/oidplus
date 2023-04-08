@@ -288,18 +288,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "8dd83ee571da1002bc606b27d9e4ba0e3a1e54c5"
+                "reference": "5e4a86a3993c68c02ab43301e4f29ffd4f285ecd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/8dd83ee571da1002bc606b27d9e4ba0e3a1e54c5",
-                "reference": "8dd83ee571da1002bc606b27d9e4ba0e3a1e54c5",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/5e4a86a3993c68c02ab43301e4f29ffd4f285ecd",
+                "reference": "5e4a86a3993c68c02ab43301e4f29ffd4f285ecd",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2023-03-03T11:19:41+00:00",
+            "time": "2023-04-08T23:20:06+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

@@ -2,8 +2,8 @@
 
 /*
  * VtsLDAPUtils - Simple LDAP helper functions
- * Copyright 2021 Daniel Marschall, ViaThinkSoft
- * Revision: 2021-06-11
+ * Copyright 2021 - 2023 Daniel Marschall, ViaThinkSoft
+ * Revision: 2023-04-09
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ class VtsLDAPUtils {
 		$data = ldap_get_entries($this->conn, $result);
 		$ldap_userinfo = array();
 
-		if ($data['count'] == 0) return false;
+		if ($data['count'] == 0) return false; /* @phpstan-ignore-line */
 		$ldap_userinfo = $data[0];
 
 		// empty($ldap_userinfo) can happen if the user did not log-in using their correct userPrincipalName (e.g. "username@domainname" instead of "username@domainname.local")

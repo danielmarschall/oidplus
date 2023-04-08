@@ -12,8 +12,8 @@ danielmarschall/oidconverter     9999999-dev 75088eb Apache-2.0
 danielmarschall/oidconverter     dev-master 75088eb  Apache-2.0            
 danielmarschall/php-sha3         9999999-dev 5605bd5 MIT                   
 danielmarschall/php-sha3         dev-master 5605bd5  MIT                   
-danielmarschall/php_utils        9999999-dev 8dd83ee Apache-2.0            
-danielmarschall/php_utils        dev-master 8dd83ee  Apache-2.0            
+danielmarschall/php_utils        9999999-dev 5e4a86a Apache-2.0            
+danielmarschall/php_utils        dev-master 5e4a86a  Apache-2.0            
 danielmarschall/uuid_mac_utils   9999999-dev d0edce1 Apache-2.0            
 danielmarschall/uuid_mac_utils   dev-master d0edce1  Apache-2.0            
 danielmarschall/vnag             9999999-dev 839d7dd Apache-2.0            
