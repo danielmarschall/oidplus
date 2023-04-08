@@ -50,7 +50,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 	 * @param string $maskcodes
 	 * @return array|false
 	 */
-	private static function split_maskcodes(string $maskcodes) {
+	private function split_maskcodes(string $maskcodes) {
 		$out = array();
 		$sevs = array(); // Note: The severity block will repeat for the next components if not changed explicitly
 
@@ -234,7 +234,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 		// using '+' or '/', e.g. "OID(x)+RA(x)" would be split to "OID(x)" and "RA(x)"
 		// which would result in the message being placed in the logbook of OID x,
 		// and the logbook of the RA owning OID x.
-		$maskcodes_ary = self::split_maskcodes($maskcodes);
+		$maskcodes_ary = $this->split_maskcodes($maskcodes);
 		if ($maskcodes_ary === false) {
 			throw new OIDplusException(_L('Invalid maskcode "%1" (failed to split)',$maskcodes));
 		}

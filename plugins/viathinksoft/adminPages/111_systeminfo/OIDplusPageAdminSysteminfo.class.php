@@ -138,7 +138,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 
 			# ---
 
-			$out['text'] .= '<h2>'._L('OIDplus').'</h2>';
+			$out['text'] .= '<h2>'._L('OIDplus 2.0').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
 			$out['text'] .= '<thead>';
@@ -203,7 +203,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 
 			# ---
 
-			$out['text'] .= '<h2>'._L('PHP').'</h2>';
+			$out['text'] .= '<h2>'._L('Webserver system').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
 			$out['text'] .= '<thead>';
@@ -213,6 +213,53 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</thead>';
 			$out['text'] .= '<tbody>';
+
+			// Operating system (of the webserver)
+
+			if (php_uname("m") == php_uname("n")) {
+				// At some hosts like Strato, php_uname() always returns the same string
+				// "Linux localhost 3.10.0-1127.10.1.el7.x86_64 #1 SMP"
+				$out['text'] .= '	<tr>';
+				$out['text'] .= '		<td>'._L('Operating System').'</td>';
+				$out['text'] .= '		<td>'.htmlentities(PHP_OS).'</td>';
+				$out['text'] .= '	</tr>';
+				$out['text'] .= '	<tr>';
+				$out['text'] .= '		<td>'._L('Hostname').'</td>';
+				$out['text'] .= '		<td>'.htmlentities(gethostname()).'</td>';
+				$out['text'] .= '	</tr>';
+			} else {
+				$out['text'] .= '	<tr>';
+				$out['text'] .= '		<td>'._L('Operating System').'</td>';
+				$out['text'] .= '		<td>'.htmlentities(php_uname("s").' '.php_uname("r").' '.php_uname("v")).'</td>';
+				$out['text'] .= '	</tr>';
+				$out['text'] .= '	<tr>';
+				$out['text'] .= '		<td>'._L('Machine type').'</td>';
+				$out['text'] .= '		<td>'.htmlentities(php_uname("m")).'</td>';
+				$out['text'] .= '	</tr>';
+				$out['text'] .= '	<tr>';
+				$out['text'] .= '		<td>'._L('Hostname').'</td>';
+				$out['text'] .= '		<td>'.htmlentities(php_uname("n")).'</td>';
+				$out['text'] .= '	</tr>';
+			}
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Server time').'</td>';
+			$out['text'] .= '		<td>'.htmlentities(date('Y-m-d H:i:s P')).'</td>';
+			$out['text'] .= '	</tr>';
+
+			// The actual web server stuff
+
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Web server software').'</td>';
+			$out['text'] .= '		<td>'.($_SERVER['SERVER_SOFTWARE'] ?? '<i>' . _L('unknown') . '</i>').'</td>';
+			$out['text'] .= '	</tr>';
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Web server user account').'</td>';
+			$current_user = get_own_username();
+			$out['text'] .= '		<td>'.($current_user === false ? '<i>'._L('unknown').'</i>' : htmlentities($current_user)).'</td>';
+			$out['text'] .= '	</tr>';
+
+			// PHP (at webserver)
+
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('PHP version').'</td>';
 			$out['text'] .= '		<td>'.PHP_VERSION.'</td>';
@@ -222,42 +269,19 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'.$this->getLoadedInis().'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('Installed extensions').'</td>';
+			$out['text'] .= '		<td>'._L('PHP installed extensions').'</td>';
 			$out['text'] .= '		<td>'.htmlentities(implode(', ',get_loaded_extensions())).'</td>';
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '</tbody>';
 			$out['text'] .= '</table>';
+
 			$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:phpinfo').'>'._L('Show PHP server configuration (phpinfo)').'</a></p>';
+
 			$out['text'] .= '</div></div>';
 
 			# ---
 
-			$out['text'] .= '<h2>'._L('Webserver').'</h2>';
-			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
-			$out['text'] .= '<table class="table table-bordered table-striped">';
-			$out['text'] .= '<thead>';
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
-			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
-			$out['text'] .= '	</tr>';
-			$out['text'] .= '</thead>';
-			$out['text'] .= '<tbody>';
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('Server software').'</td>';
-			$out['text'] .= '		<td>'.($_SERVER['SERVER_SOFTWARE'] ?? '<i>' . _L('unknown') . '</i>').'</td>';
-			$out['text'] .= '	</tr>';
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('User account').'</td>';
-			$current_user = get_own_username();
-			$out['text'] .= '		<td>'.($current_user === false ? '<i>'._L('unknown').'</i>' : htmlentities($current_user)).'</td>';
-			$out['text'] .= '	</tr>';
-			$out['text'] .= '</tbody>';
-			$out['text'] .= '</table>';
-			$out['text'] .= '</div></div>';
-
-			# ---
-
-			$out['text'] .= '<h2>'._L('Database').'</h2>';
+			$out['text'] .= '<h2>'._L('Database system').'</h2>';
 			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
 			$out['text'] .= '<table class="table table-bordered table-striped">';
 			$out['text'] .= '<thead>';
@@ -296,51 +320,6 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '</div></div>';
 
 			// TODO: can we somehow get the DBMS version, connection string etc?
-
-			# ---
-
-			$out['text'] .= '<h2>'._L('Operating System').'</h2>';
-			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
-			$out['text'] .= '<table class="table table-bordered table-striped">';
-			$out['text'] .= '<thead>';
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<th width="50%">'._L('Attribute').'</th>';
-			$out['text'] .= '		<th width="50%">'._L('Value').'</th>';
-			$out['text'] .= '	</tr>';
-			$out['text'] .= '</thead>';
-			$out['text'] .= '<tbody>';
-			if (php_uname("m") == php_uname("n")) {
-				// At some hosts like Strato, php_uname() always returns the same string
-				// "Linux localhost 3.10.0-1127.10.1.el7.x86_64 #1 SMP"
-				$out['text'] .= '	<tr>';
-				$out['text'] .= '		<td>'._L('Operating System').'</td>';
-				$out['text'] .= '		<td>'.htmlentities(PHP_OS).'</td>';
-				$out['text'] .= '	</tr>';
-				$out['text'] .= '	<tr>';
-				$out['text'] .= '		<td>'._L('Hostname').'</td>';
-				$out['text'] .= '		<td>'.htmlentities(gethostname()).'</td>';
-				$out['text'] .= '	</tr>';
-			} else {
-				$out['text'] .= '	<tr>';
-				$out['text'] .= '		<td>'._L('Operating System').'</td>';
-				$out['text'] .= '		<td>'.htmlentities(php_uname("s").' '.php_uname("r").' '.php_uname("v")).'</td>';
-				$out['text'] .= '	</tr>';
-				$out['text'] .= '	<tr>';
-				$out['text'] .= '		<td>'._L('Machine type').'</td>';
-				$out['text'] .= '		<td>'.htmlentities(php_uname("m")).'</td>';
-				$out['text'] .= '	</tr>';
-				$out['text'] .= '	<tr>';
-				$out['text'] .= '		<td>'._L('Hostname').'</td>';
-				$out['text'] .= '		<td>'.htmlentities(php_uname("n")).'</td>';
-				$out['text'] .= '	</tr>';
-			}
-			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('Server time').'</td>';
-			$out['text'] .= '		<td>'.htmlentities(date('Y-m-d H:i:s P')).'</td>';
-			$out['text'] .= '	</tr>';
-			$out['text'] .= '</tbody>';
-			$out['text'] .= '</table>';
-			$out['text'] .= '</div></div>';
 
 			# ---
 

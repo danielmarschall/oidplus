@@ -32,7 +32,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	private static function raPepperProcessing(string $password): string {
+	private function raPepperProcessing(string $password): string {
 		// Additional feature: Pepper
 		// The pepper is stored inside the base configuration file
 		// It prevents that an attacker with SQL write rights can
@@ -140,7 +140,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 			throw new OIDplusException(_L('No RA authentication plugins found'));
 		}
 		foreach ($plugins as $plugin) {
-			if ($plugin->verify($authInfo, self::raPepperProcessing($password))) return true;
+			if ($plugin->verify($authInfo, $this->raPepperProcessing($password))) return true;
 		}
 
 		return false;
@@ -378,7 +378,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public static function makeAuthKey(string $data): string {
+	public function makeAuthKey(string $data): string {
 		return sha3_512_hmac($data, 'authkey:'.OIDplus::baseConfig()->getValue('SERVER_SECRET'), false);
 	}
 
@@ -388,8 +388,8 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public static function validateAuthKey(string $data, string $auth_key): bool {
-		return hash_equals(self::makeAuthKey($data), $auth_key);
+	public function validateAuthKey(string $data, string $auth_key): bool {
+		return hash_equals($this->makeAuthKey($data), $auth_key);
 	}
 
 	// "Veto" functions to force logout state
@@ -464,9 +464,9 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return OIDplusRAAuthInfo
 	 * @throws OIDplusException
 	 */
-	public static function raGeneratePassword(string $password): OIDplusRAAuthInfo {
+	public function raGeneratePassword(string $password): OIDplusRAAuthInfo {
 		$plugin = OIDplus::getDefaultRaAuthPlugin(true);
-		return $plugin->generate(self::raPepperProcessing($password));
+		return $plugin->generate($this->raPepperProcessing($password));
 	}
 
 	// Generate admin password

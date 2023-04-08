@@ -29,7 +29,7 @@ class OIDplusMailUtils extends OIDplusBaseClass {
 	 * @param string $email
 	 * @return bool
 	 */
-	public static function validMailAddress(string $email): bool {
+	public function validMailAddress(string $email): bool {
 		return !empty(filter_var($email, FILTER_VALIDATE_EMAIL));
 	}
 
@@ -39,7 +39,7 @@ class OIDplusMailUtils extends OIDplusBaseClass {
 	 * @param int $level
 	 * @return string|null
 	 */
-	public static function secureEmailAddress(string $email, string $linktext, int $level=1)/*: ?string*/ {
+	public function secureEmailAddress(string $email, string $linktext, int $level=1)/*: ?string*/ {
 
 		// see http://www.spamspan.de/
 
@@ -157,7 +157,7 @@ class OIDplusMailUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 * @throws OIDplusMailException
 	 */
-	public static function sendMail(string $to, string $title, string $msg, string $cc='', string $bcc='') {
+	public function sendMail(string $to, string $title, string $msg, string $cc='', string $bcc='') {
 		$h = new \SecureMailer();
 
 		// DM 14.04.2022: Added Reply-To, because some servers might change the 'From' attribute (Anti-Spoof?)

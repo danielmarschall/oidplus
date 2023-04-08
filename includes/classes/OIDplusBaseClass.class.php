@@ -32,7 +32,7 @@ abstract class OIDplusBaseClass {
 	 * then they are replaced with an empty interface by the OIDplus autoloader.
 	 * @param string $oid
 	 * @return bool
-	 * @deprecated use "$x instanceof INTF_OID_..." instead, to allow type checking
+	 * @deprecated use "$x instanceof INTF_OID_..." instead (this allows type checking)
 	 */
 	public final function implementsFeature(string $oid): bool {
 		$interface_name = "INTF_OID_".str_replace('.', '_', $oid);
