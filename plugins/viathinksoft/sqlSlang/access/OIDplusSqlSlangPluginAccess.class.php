@@ -36,7 +36,7 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 	 * @return string
 	 */
 	public function sqlDate(): string {
-		return 'date()';
+		return 'now()';
 	}
 
 	/**

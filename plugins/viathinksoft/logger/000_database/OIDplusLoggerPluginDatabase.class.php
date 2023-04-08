@@ -43,7 +43,7 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 	 */
 	public function log(string $event, array $users, array $objects): bool {
 		$addr = $_SERVER['REMOTE_ADDR'] ?? '';
-		OIDplus::dbIsolated()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event));
+		OIDplus::dbIsolated()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event)); // TODO: why unix_ts? Why not a database DATETIME field?!
 		$log_id = OIDplus::dbIsolated()->insert_id();
 		if ($log_id === 0) {
 			$res = OIDplus::dbIsolated()->query("select max(id) as last_id from ###log");
