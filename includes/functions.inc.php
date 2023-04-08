@@ -333,10 +333,19 @@ function sha3_512_pbkdf2(string $password, string $salt, int $iterations, int $l
 }
 
 /**
+ * @param bool $require_ssl
+ * @param string|null $reason
  * @return bool
+ * @throws OIDplusException
+ * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
  */
-function url_post_contents_available(): bool {
-	return function_exists('curl_init');
+function url_post_contents_available(bool $require_ssl=true, string &$reason=null): bool {
+	if (function_exists('curl_init')) {
+		return true;
+	} else {
+		$reason = _L('Please install the PHP extension %1, so that OIDplus can connect to the Internet.', '<code>php_curl</code>');
+		return false;
+	}
 }
 
 /**
@@ -381,6 +390,32 @@ function url_post_contents(string $url, array $params=array(), array $extraHeade
 		throw new OIDplusException(_L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl'));
 	}
 	return $res;
+}
+
+/**
+ * @param bool $require_ssl
+ * @param string|null $reason
+ * @return bool
+ * @throws OIDplusException
+ * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+ */
+function url_get_contents_available(bool $require_ssl=true, string &$reason=null): bool {
+	if (function_exists('curl_init')) {
+		// Via cURL
+		return true;
+	} else {
+		// Via file_get_contents()
+		if (!ini_get('allow_url_fopen')) {
+			$reason = _L('Please install the PHP extension %1 and/or enable %2 in your PHP configuration, so that OIDplus can connect to the Internet.', '<code>php_curl</code>', '<code>allow_url_fopen</code>');
+			return false;
+		}
+		// Use extension_loaded() instead of function_exists(), because our supplement does not help...
+		if ($require_ssl && !extension_loaded('openssl')) {
+			$reason = _L('Please install the PHP extension %1 and/or %2, so that OIDplus can connect to the Internet.', '<code>php_curl</code>', '<code>php_openssl</code>');
+			return false;
+		}
+		return true;
+	}
 }
 
 /**

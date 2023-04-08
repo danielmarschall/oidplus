@@ -97,13 +97,13 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 	 * @return string
 	 */
 	public static function setupHTML(): string {
-		$curl_status = url_post_contents_available() ? 1 : 0;
+		$curl_status = url_post_contents_available(true, $reason) ? 1 : 0;
 		return '<div id="CAPTCHAPLUGIN_PARAMS_HCAPTCHA">'.
 		       '<p>(<a href="https://www.hcaptcha.com/" target="_blank">'._L('more information and obtain key').'</a>)</p>'.
 		       '<p>'._L('hCaptcha Site key').'<br><input id="hcaptcha_sitekey" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="hcaptcha_sitekey_warn"></span></p>'.
 		       '<p>'._L('hCaptcha Secret').'<br><input id="hcaptcha_secret" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="hcaptcha_secret_warn"></span></p>'.
 		       '<input id="hcaptcha_curl_status" value="'.$curl_status.'" type="hidden">'.
-		       (!$curl_status ? '<p><font color="red">'._L('hCaptcha plugin needs the PHP extension php_curl').'</font></p>' : '').
+		       (!$curl_status ? '<p><font color="red">'._L('The %1 plugin cannot connect to the Internet.', self::id()).' '.$reason.'</font></p>' : '').
 		       '</div>';
 	}
 

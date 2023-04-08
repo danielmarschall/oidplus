@@ -4374,6 +4374,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OIDplus cannot connect to the Internet (%1). Therefore, you <b>cannot</b> register your OIDplus instance now.
+		]]></source>
+		<target><![CDATA[
+		OIDplus kann sich nicht mit dem Internet verbinden (%1). Deswegen können Sie das System derzeit <b>nicht</b> registrieren.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OIDplus could not determine its version (Required: %1). Please update your system manually via the "%2" command regularly.
 		]]></source>
 		<target><![CDATA[
@@ -4442,6 +4450,14 @@
 		]]></source>
 		<target><![CDATA[
 		OIDplus-Installation ist veraltet (%1 installiert / %2 verfügbar)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus plugin "%1" is enabled, but OIDplus cannot connect to the Internet.
+		]]></source>
+		<target><![CDATA[
+		OIDplus-Plugin %1 ist aktiviert, aber OIDplus kann sich nicht mit dem Internet verbinden.
 		]]></target>
 	</message>
 	<message>
@@ -5186,6 +5202,30 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte importieren Sie eine der folgenden SQL-Dumps in Ihre Datenbank:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please install the PHP extension %1 and/or %2, so that OIDplus can connect to the Internet.
+		]]></source>
+		<target><![CDATA[
+		Bitte installieren Sie die PHP-Erweiterungen %1 und/oder %2, sodass OIDplus sich mit dem Internet verbinden kann.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please install the PHP extension %1 and/or enable %2 in your PHP configuration, so that OIDplus can connect to the Internet.
+		]]></source>
+		<target><![CDATA[
+		Bitte installieren Sie die PHP-Erweiterung %1, oder aktivieren Sie %2 in Ihrer PHP-Konfigurationsdatei, sodass OIDplus sich mit dem Internet verbinden kann.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please install the PHP extension %1, so that OIDplus can connect to the Internet.
+		]]></source>
+		<target><![CDATA[
+		Bitte installieren Sie die PHP-Erweiterung %1, sodass OIDplus sich mit dem Internet verbinden kann.
 		]]></target>
 	</message>
 	<message>
@@ -6710,6 +6750,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The %1 plugin cannot connect to the Internet.
+		]]></source>
+		<target><![CDATA[
+		Das %1-Plugin kann sich nicht mit dem Internet verbinden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The JWT token was blacklisted on %1. Please generate a new one
 		]]></source>
 		<target><![CDATA[
@@ -7066,6 +7114,14 @@
 		]]></source>
 		<target><![CDATA[
 		Das System kann nicht prüfen, ob die vertraulichen Verzeichnisse (%1) über den web-Browser lesbar sind (das darf nicht der Fall sein). Bitte prüfen Sie dies bei Gelegenheit manuell.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The system cannot contact the ViaThinkSoft server to change the registration settings.
+		]]></source>
+		<target><![CDATA[
+		Das System konnte den ViaThinkSoft-Server nicht erreichen um die Registrierungs-Einstellung zu ändern.
 		]]></target>
 	</message>
 	<message>
@@ -8378,14 +8434,6 @@
 		]]></source>
 		<target><![CDATA[
 		hCaptcha Site-Key
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		hCaptcha plugin needs the PHP extension php_curl
-		]]></source>
-		<target><![CDATA[
-		Das Plugin hCaptcha benötigt die PHP-Erweiterung php_curl
 		]]></target>
 	</message>
 	<message>
