@@ -31,12 +31,12 @@ abstract class OIDplusLoggerPlugin extends OIDplusPlugin {
 	 * @param array<int,string>[] $objects Array of "Severity => objectname"
 	 * @return bool
 	 */
-	public abstract static function log(string $event, array $users, array $objects): bool;
+	public abstract function log(string $event, array $users, array $objects): bool;
 
 	/**
 	 * @param string $reason
 	 * @return bool
 	 */
-	public abstract static function available(string &$reason): bool;
+	public abstract function available(string &$reason): bool;
 
 }
