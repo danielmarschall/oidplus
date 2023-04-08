@@ -131,22 +131,22 @@ foreach(new RecursiveIteratorIterator($it) as $file) {
 
 		$cont = preg_replace('@_L\\((\'|")(.*)\\1@smU', '_L(...', $cont);
 
-		$cont = preg_replace('@logger\\(\\)\\->log\\([^\n]*\\)@smU', 'logger()->log(...)', $cont);
-		$cont = preg_replace('@config\\(\\)\\->getValue\\([^\n]*\\)@smU', 'config()->getValue(...)', $cont);
-		$cont = preg_replace('@config\\(\\)\\->setValue\\([^\n]*\\)@smU', 'config()->setValue(...)', $cont);
-		$cont = preg_replace('@prepareConfigKey\\([^\n]*\\)@smU', 'prepareConfigKey(...)', $cont);
-		$cont = preg_replace('@baseConfig\\(\\)\\->getValue\\([^\n]*\\)@smU', 'baseConfig()->getValue(...)', $cont);
-		$cont = preg_replace('@query\\([^\n]*\\)@smU', 'query(...)', $cont);
-		$cont = preg_replace('@query\\([^\n]*\\)@smU', 'query(...)', $cont);
-		$cont = preg_replace('@registerAllPlugins\\([^\n]*\\);@smU', 'registerAllPlugins(...)', $cont);
+		$cont = preg_replace('@logger\\(\\)\\->log\\([^\n]*\\)@mU', 'logger()->log(...)', $cont);
+		$cont = preg_replace('@config\\(\\)\\->getValue\\([^\n]*\\)@mU', 'config()->getValue(...)', $cont);
+		$cont = preg_replace('@config\\(\\)\\->setValue\\([^\n]*\\)@mU', 'config()->setValue(...)', $cont);
+		$cont = preg_replace('@prepareConfigKey\\([^\n]*\\)@mU', 'prepareConfigKey(...)', $cont);
+		$cont = preg_replace('@baseConfig\\(\\)\\->getValue\\([^\n]*\\)@mU', 'baseConfig()->getValue(...)', $cont);
+		$cont = preg_replace('@query\\([^\n]*\\)@mU', 'query(...)', $cont);
+		$cont = preg_replace('@query\\([^\n]*\\)@mU', 'query(...)', $cont);
+		$cont = preg_replace('@registerAllPlugins\\([^\n]*\\);@mU', 'registerAllPlugins(...)', $cont);
 
-		$cont = preg_replace('@\\[(\'|")([^\n]*)\\1\\]@smU', '[...]', $cont);
-		$cont = preg_replace('@header\\([^\n]*\\);@smU', 'header(...)', $cont);
-		$cont = preg_replace('@setcookie\\([^\n]*\\);@smU', 'header(...)', $cont);
-		$cont = preg_replace('@file_exists\\((\'|")([^\n]*)\\1\\)@smU', 'file_exists(...)', $cont);
-		$cont = preg_replace('@is_dir\\((\'|")([^\n]*)\\1\\)@smU', 'is_dir(...)', $cont);
-		$cont = preg_replace('@ini_get\\((\'|")([^\n]*)\\1\\)@smU', 'ini_get(...)', $cont);
-		$cont = preg_replace('@realpath\\((\'|")([^\n]*)\\1\\)@smU', 'realpath(...)', $cont);
+		$cont = preg_replace('@\\[(\'|")([^\n]*)\\1\\]@mU', '[...]', $cont);
+		$cont = preg_replace('@header\\([^\n]*\\);@mU', 'header(...)', $cont);
+		$cont = preg_replace('@setcookie\\([^\n]*\\);@mU', 'header(...)', $cont);
+		$cont = preg_replace('@file_exists\\((\'|")([^\n]*)\\1\\)@mU', 'file_exists(...)', $cont);
+		$cont = preg_replace('@is_dir\\((\'|")([^\n]*)\\1\\)@mU', 'is_dir(...)', $cont);
+		$cont = preg_replace('@ini_get\\((\'|")([^\n]*)\\1\\)@mU', 'ini_get(...)', $cont);
+		$cont = preg_replace('@realpath\\((\'|")([^\n]*)\\1\\)@mU', 'realpath(...)', $cont);
 
 		$cont = preg_replace('@include_once(.+);@ismU', '', $cont);
 		$cont = preg_replace('@require_once(.+);@ismU', '', $cont);

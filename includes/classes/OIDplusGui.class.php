@@ -29,7 +29,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @param string $id
 	 * @return array
 	 */
-	public static function generateContentPage(string $id): array {
+	public function generateContentPage(string $id): array {
 		$out = array();
 
 		$handled = false;
@@ -45,7 +45,7 @@ class OIDplusGui extends OIDplusBaseClass {
 				$out['icon'] = 'img/error.png';
 				$out['text'] = '<p>'.$e->getMessage().'</p>';
 				if (OIDplus::baseConfig()->getValue('DEBUG')) {
-					$out['text'] .= self::getExceptionTechInfo($e);
+					$out['text'] .= $this->getExceptionTechInfo($e);
 				}
 			}
 			if ($handled) break;
@@ -68,7 +68,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @param bool $new_window
 	 * @return string
 	 */
-	public static function link(string $goto, bool $new_window=false): string {
+	public function link(string $goto, bool $new_window=false): string {
 		if ($new_window) {
 			return 'href="?goto='.urlencode($goto).'" target="_blank"';
 		} else {
@@ -88,7 +88,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public static function getLanguageBox(string $goto, bool $useJs): string {
+	public function getLanguageBox(string $goto, bool $useJs): string {
 		$out = '<div id="languageBox">';
 		$langbox_entries = array();
 		$non_default_languages = 0;
@@ -124,7 +124,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public static function html_exception_handler(\Throwable $exception) {
+	public function html_exception_handler(\Throwable $exception) {
 		if ($exception instanceof OIDplusConfigInitializationException) {
 			echo '<!DOCTYPE HTML>';
 			echo '<html><head><title>'.htmlentities(_L('OIDplus initialization error')).'</title></head><body>';
@@ -135,7 +135,7 @@ class OIDplusGui extends OIDplusBaseClass {
 				$msg .= ' '._L('or run <a href="%1">setup</a> again',OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/');
 			}
 			echo '<p>'.$msg.'</p>'; // No htmlentities, because we already did it above
-			echo self::getExceptionTechInfo($exception);
+			echo $this->getExceptionTechInfo($exception);
 			echo '</body></html>';
 		} else {
 			echo '<!DOCTYPE HTML>';
@@ -143,7 +143,7 @@ class OIDplusGui extends OIDplusBaseClass {
 			echo '<h1>'.htmlentities(_L('OIDplus error')).'</h1>';
 			// ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
 			echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
-			echo self::getExceptionTechInfo($exception);
+			echo $this->getExceptionTechInfo($exception);
 			echo '</body></html>';
 		}
 	}
@@ -152,7 +152,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @param \Throwable $exception
 	 * @return string
 	 */
-	private static function getExceptionTechInfo(\Throwable $exception): string {
+	private function getExceptionTechInfo(\Throwable $exception): string {
 		$out  = '<p><b>'.htmlentities(_L('Technical information about the problem')).':</b></p>';
 		$out .= '<pre>';
 		$out .= get_class($exception)."\n";

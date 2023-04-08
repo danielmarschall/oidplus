@@ -1718,6 +1718,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Database system
+		]]></source>
+		<target><![CDATA[
+		Datenbank-System
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Database update from version %1 failed: %2
 		]]></source>
 		<target><![CDATA[
@@ -3142,14 +3150,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Installed extensions
-		]]></source>
-		<target><![CDATA[
-		Installierte Erweiterungen
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Installed plugins
 		]]></source>
 		<target><![CDATA[
@@ -4342,10 +4342,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		OIDplus
+		OIDplus 2.0
 		]]></source>
 		<target><![CDATA[
-		OIDplus
+		OIDplus 2.0
 		]]></target>
 	</message>
 	<message>
@@ -4822,14 +4822,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		PHP
-		]]></source>
-		<target><![CDATA[
-		PHP
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		PHP Namespaces
 		]]></source>
 		<target><![CDATA[
@@ -4841,7 +4833,7 @@
 		PHP configuration file(s)
 		]]></source>
 		<target><![CDATA[
-		Geladene Konfigurationsdateien
+		Geladene PHP-Konfigurationsdateien
 		]]></target>
 	</message>
 	<message>
@@ -4858,6 +4850,14 @@
 		]]></source>
 		<target><![CDATA[
 		PHP-Informationen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PHP installed extensions
+		]]></source>
+		<target><![CDATA[
+		Installierte PHP-Erweiterungen
 		]]></target>
 	</message>
 	<message>
@@ -6250,14 +6250,6 @@
 		]]></source>
 		<target><![CDATA[
 		Senden der E-Mail fehlgeschlagen
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Server software
-		]]></source>
-		<target><![CDATA[
-		Server-Software
 		]]></target>
 	</message>
 	<message>
@@ -7750,14 +7742,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		User account
-		]]></source>
-		<target><![CDATA[
-		Benutzerkonto
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Username
 		]]></source>
 		<target><![CDATA[
@@ -7910,10 +7894,26 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Webserver
+		Web server software
 		]]></source>
 		<target><![CDATA[
-		Webserver
+		Webserver-Software
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Web server user account
+		]]></source>
+		<target><![CDATA[
+		Webserver-Benutzerkonto
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Webserver system
+		]]></source>
+		<target><![CDATA[
+		Webserver-System
 		]]></target>
 	</message>
 	<message>

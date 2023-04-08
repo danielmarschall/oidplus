@@ -30,7 +30,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public static function nonjs_menu(): string {
+	public function nonjs_menu(): string {
 		$json = array();
 
 		$static_node_id = $_REQUEST['goto'] ?? 'oidplus:system';
@@ -66,7 +66,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 	 * @param string $req_goto comes from the user (GET argument)
 	 * @return string[]
 	 */
-	public static function json_tree(string $req_id, string $req_goto): array {
+	public function json_tree(string $req_id, string $req_goto): array {
 		$json = array();
 
 		if ($req_id === '#') {
@@ -79,10 +79,10 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 				}
 			}
 		} else {
-			$json = self::tree_populate($req_id);
+			$json = $this->tree_populate($req_id);
 		}
 
-		if (is_array($json)) self::addHrefIfRequired($json);
+		if (is_array($json)) $this->addHrefIfRequired($json);
 
 		return $json;
 	}
@@ -91,7 +91,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 	 * @param array $json
 	 * @return void
 	 */
-	protected static function addHrefIfRequired(array &$json) {
+	protected function addHrefIfRequired(array &$json) {
 		foreach ($json as &$item) {
 			if (isset($item['id'])) {
 				if (!isset($item['conditionalselect']) || ($item['conditionalselect'] != 'false')) {
@@ -104,7 +104,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			}
 
 			if (isset($item['children'])) {
-				if (is_array($item['children'])) self::addHrefIfRequired($item['children']);
+				if (is_array($item['children'])) $this->addHrefIfRequired($item['children']);
 			}
 		}
 	}
@@ -116,7 +116,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public static function tree_populate(string $parent, $goto_path=null): array {
+	public function tree_populate(string $parent, $goto_path=null): array {
 		$children = array();
 
 		$parentObj = OIDplusObject::parse($parent);
@@ -161,10 +161,10 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 
 			// Check if there are more sub OIDs
 			if ($goto_path === true) {
-				$child['children'] = self::tree_populate($row['id'], $goto_path);
+				$child['children'] = $this->tree_populate($row['id'], $goto_path);
 				$child['state'] = array("opened" => true);
 			} else if (!is_null($goto_path) && (count($goto_path) > 0) && ($goto_path[0] === $row['id'])) {
-				$child['children'] = self::tree_populate($row['id'], $goto_path);
+				$child['children'] = $this->tree_populate($row['id'], $goto_path);
 				$child['state'] = array("opened" => true);
 			} else {
 				$obj_children = $obj->getChildren();
