@@ -171,17 +171,17 @@ class OIDplusLogger extends OIDplusBaseClass {
 		return $out;
 	}
 
-	private static $missing_plugin_queue = array();
+	private $missing_plugin_queue = array();
 
 	/**
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public static function reLogMissing(): bool {
-		while (count(self::$missing_plugin_queue) > 0) {
-			$item = self::$missing_plugin_queue[0];
-			if (!self::log_internal($item[0], $item[1], false)) return false;
-			array_shift(self::$missing_plugin_queue);
+	public function reLogMissing(): bool {
+		while (count($this->missing_plugin_queue) > 0) {
+			$item = $this->missing_plugin_queue[0];
+			if (!$this->log_internal($item[0], $item[1], false)) return false;
+			array_shift($this->missing_plugin_queue);
 		}
 		return true;
 	}
@@ -192,9 +192,9 @@ class OIDplusLogger extends OIDplusBaseClass {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public static function log(string $maskcodes, string $event): bool {
-		self::reLogMissing(); // try to re-log failed requests
-		return self::log_internal($maskcodes, $event, true);
+	public function log(string $maskcodes, string $event): bool {
+		$this->reLogMissing(); // try to re-log failed requests
+		return $this->log_internal($maskcodes, $event, true);
 	}
 
 	/**
@@ -204,13 +204,13 @@ class OIDplusLogger extends OIDplusBaseClass {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	private static function log_internal(string $maskcodes, string $event, bool $allow_delayed_log): bool {
+	private function log_internal(string $maskcodes, string $event, bool $allow_delayed_log): bool {
 		$loggerPlugins = OIDplus::getLoggerPlugins();
 		if (count($loggerPlugins) == 0) {
 			// The plugin might not be initialized in OIDplus::init()
 			// yet. Remember the log entries for later submission during
 			// OIDplus::init();
-			if ($allow_delayed_log) self::$missing_plugin_queue[] = array($maskcodes, $event);
+			if ($allow_delayed_log) $this->missing_plugin_queue[] = array($maskcodes, $event);
 			return false;
 		}
 

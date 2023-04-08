@@ -29,7 +29,7 @@ class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 	 * @param string $reason
 	 * @return bool
 	 */
-	public static function available(string &$reason): bool {
+	public function available(string &$reason): bool {
 		if (!is_dir(OIDplus::localpath().'userdata/logs/')) {
 			$reason = _L('Directory userdata/logs/ not existing');
 			return false;
@@ -50,7 +50,7 @@ class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 	 * @param array $objects
 	 * @return bool
 	 */
-	public static function log(string $event, array $users, array $objects): bool {
+	public function log(string $event, array $users, array $objects): bool {
 		if (!is_dir(OIDplus::localpath().'userdata/logs/')) return false;
 
 		$users_names = array();

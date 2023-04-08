@@ -1316,7 +1316,7 @@ class OIDplus extends OIDplusBaseClass {
 		self::registerAllPlugins(array('publicPages', 'raPages', 'adminPages'), OIDplusPagePlugin::class, array(OIDplus::class,'registerPagePlugin'));
 		self::registerAllPlugins('auth', OIDplusAuthPlugin::class, array(OIDplus::class,'registerAuthPlugin'));
 		self::registerAllPlugins('logger', OIDplusLoggerPlugin::class, array(OIDplus::class,'registerLoggerPlugin'));
-		OIDplusLogger::reLogMissing(); // Some previous plugins might have tried to log. Repeat that now.
+		self::logger()->reLogMissing(); // Some previous plugins might have tried to log. Repeat that now.
 		self::registerAllPlugins('objectTypes', OIDplusObjectTypePlugin::class, array(OIDplus::class,'registerObjectTypePlugin'));
 		self::registerAllPlugins('language', OIDplusLanguagePlugin::class, array(OIDplus::class,'registerLanguagePlugin'));
 		self::registerAllPlugins('design', OIDplusDesignPlugin::class, array(OIDplus::class,'registerDesignPlugin'));

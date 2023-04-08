@@ -514,7 +514,12 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 					if (OIDplus::isCronjob()) $last_ping_interval /= 2;
 
 					if ((time()-$last_ping >= $last_ping_interval)) {
-						$this->sendRegistrationQuery();
+						try {
+							$this->sendRegistrationQuery();
+						} catch (\Exception $e) {
+							// Don't do anything, because we don't want that a failed registration query blocks the system
+							OIDplus::logger()->log('[WARN]A!', 'System registration query crashed: '.$e->getMessage());
+						}
 					}
 				}
 			}

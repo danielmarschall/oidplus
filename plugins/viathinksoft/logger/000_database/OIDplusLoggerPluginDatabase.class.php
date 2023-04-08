@@ -29,7 +29,7 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 	 * @param string $reason
 	 * @return bool
 	 */
-	public static function available(string &$reason): bool {
+	public function available(string &$reason): bool {
 		$reason = '';
 		return true;
 	}
@@ -41,7 +41,7 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public static function log(string $event, array $users, array $objects): bool {
+	public function log(string $event, array $users, array $objects): bool {
 		$addr = $_SERVER['REMOTE_ADDR'] ?? '';
 		OIDplus::dbIsolated()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event));
 		$log_id = OIDplus::dbIsolated()->insert_id();
