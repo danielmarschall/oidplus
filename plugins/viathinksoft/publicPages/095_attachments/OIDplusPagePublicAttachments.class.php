@@ -636,7 +636,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 				$error .= ': ' . $e->getMessage();
 			}
 			if ($error) {
-				$notifications[] = array('WARN', $error);
+				$notifications[] = new OIDplusNotification('WARN', $error);
 			}
 		}
 		return $notifications;

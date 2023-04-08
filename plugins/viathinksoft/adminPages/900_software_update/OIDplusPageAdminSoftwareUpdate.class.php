@@ -509,7 +509,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 			if ($out_stat != 'INFO') {
 				$out_msg = '<a '.OIDplus::gui()->link('oidplus:software_update').'>'._L('Software update').'</a>: ' . $out_msg;
 
-				$notifications[] = array($out_stat, $out_msg);
+				$notifications[] = new OIDplusNotification($out_stat, $out_msg);
 			}
 
 		}

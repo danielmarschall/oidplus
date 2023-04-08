@@ -23,7 +23,7 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusOIDIP {
+class OIDplusOIDIP extends OIDplusBaseClass {
 
 	/**
 	 * @var string

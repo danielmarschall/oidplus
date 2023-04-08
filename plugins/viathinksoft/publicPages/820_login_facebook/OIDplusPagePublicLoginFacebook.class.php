@@ -131,7 +131,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic
 			if (OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {
 				if (!url_post_contents_available(true, $reason)) {
 					$title = _L('Facebook OAuth Login');
-					$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but OIDplus cannot connect to the Internet.', htmlentities($title)).' '.$reason);
+					$notifications[] = new OIDplusNotification('ERR', _L('OIDplus plugin "%1" is enabled, but OIDplus cannot connect to the Internet.', htmlentities($title)).' '.$reason);
 				}
 			}
 		}

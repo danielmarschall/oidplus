@@ -85,21 +85,9 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 					}
 					if ($notifications) {
 						foreach ($notifications as $notification) {
-							list($severity, $htmlMessage) = $notification;
-
-							// Same severities as the log plugin (also same CSS classes)
-							if ($severity == 'OK')   $severity = 1; // (this makes no sense)
-							else if ($severity == 'INFO') $severity = 2;
-							else if ($severity == 'WARN') $severity = 3;
-							else if ($severity == 'ERR')  $severity = 4;
-							else if ($severity == 'CRIT') $severity = 5;
-							else {
-								$htmlMessage = _L('The plugin %1 returned an invalid severity (%2). Message: %3', get_class($plugin), $severity, $htmlMessage);
-								$severity = 5; // CRIT
-							}
-
+							$severity = $notification->getSeverityAsInt();
 							if (!isset($notifications_by_sev[$severity])) $notifications_by_sev[$severity] = array();
-							$notifications_by_sev[$severity][] = $htmlMessage;
+							$notifications_by_sev[$severity][] = $notification;
 						}
 					}
 				}
@@ -112,20 +100,15 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 			} else {
 				krsort($notifications_by_sev);
 
-				foreach ($notifications_by_sev as $severity => $htmlMessages) {
-					if (count($htmlMessages) == 0) continue;
+				foreach ($notifications_by_sev as $severity => $notifications) {
+					if (count($notifications) == 0) continue;
 
-					if ($severity == 1) $sev_hf = _L('OK');
-					else if ($severity == 2) $sev_hf = _L('Informational');
-					else if ($severity == 3) $sev_hf = _L('Warnings');
-					else if ($severity == 4) $sev_hf = _L('Errors');
-					else if ($severity == 5) $sev_hf = _L('Critical issues');
-					else assert(false);
+					$sev_hf = $notifications[0]->getSeverityAsHumanFriendlyString(true);
 
-					$out['text'] .= '<h2><span class="severity_'.$severity.'">'.$sev_hf.' ('.count($htmlMessages).')</span></h2>';
+					$out['text'] .= '<h2><span class="severity_'.$severity.'">'.$sev_hf.' ('.count($notifications).')</span></h2>';
 					$out['text'] .= '<span class="severity_'.$severity.'"><ol>';
-					foreach ($htmlMessages as $htmlMessage) {
-						$out['text'] .= '<li>'.$htmlMessage.'</li>';
+					foreach ($notifications as $notification) {
+						$out['text'] .= '<li>'.$notification->getMessage().'</li>';
 					}
 					$out['text'] .= '</ol></span>';
 				}
@@ -203,8 +186,7 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 		$notifications = array();
 		if (($url = $this->webAccessWorks($dir)) !== false) {
 			// Re-use message taken from setup/includes/setup_base.js
-			$msg = _L('Attention: The following directory is world-readable: %1 ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>).','<a target="_blank" href="'.$url.'">'.$dir.'</a>');
-			$notifications[] = array('CRIT', $msg);
+			$notifications[] = new OIDplusNotification('CRIT', _L('Attention: The following directory is world-readable: %1 ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>).','<a target="_blank" href="'.$url.'">'.$dir.'</a>'));
 		}
 		return $notifications;
 	}
@@ -221,7 +203,7 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			// Check if critical directories are world-readable
 			if ($this->webAccessWorks('index.php') === false) {
-				$notifications[] = array('INFO', _L("The system can't check if critical directories (%1) are readable via web-browser. Please verify it manually.", 'userdata, res, dev, includes, setup/includes'));
+				$notifications[] = new OIDplusNotification('INFO', _L("The system can't check if critical directories (%1) are readable via web-browser. Please verify it manually.", 'userdata, res, dev, includes, setup/includes'));
 			} else {
 				// see setup/includes/setup_base.js
 				$forbidden_dirs = array(
@@ -240,9 +222,9 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 			// Check if cache directory is writeable
 			$cache_dir = OIDplus::localpath(null).'userdata/cache/';
 			if (!is_dir($cache_dir)) {
-				$notifications[] = array('ERR', _L('Directory %1 does not exist', $cache_dir));
+				$notifications[] = new OIDplusNotification('ERR', _L('Directory %1 does not exist', $cache_dir));
 			} else if (!isFileOrPathWritable($cache_dir)) {
-				$notifications[] = array('ERR', _L('Directory %1 is not writeable. Please check the permissions!', $cache_dir));
+				$notifications[] = new OIDplusNotification('ERR', _L('Directory %1 is not writeable. Please check the permissions!', $cache_dir));
 			}
 		}
 		return $notifications;

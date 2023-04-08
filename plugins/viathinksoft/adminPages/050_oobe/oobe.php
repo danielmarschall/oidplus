@@ -39,8 +39,6 @@ if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus
 
 OIDplus::handleLangArgument();
 
-ob_start();
-
 $step = 1;
 $errors_happened = false;
 $edits_possible = true;

@@ -22,6 +22,7 @@
 namespace Frdlweb\OIDplus;
 
 use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\OIDplusBaseClass;
 use ViaThinkSoft\OIDplus\OIDplusObject;
 use ViaThinkSoft\OIDplus\OIDplusOIDIP;
 use ViaThinkSoft\OIDplus\OIDplusPagePublicObjects;
@@ -30,7 +31,7 @@ use ViaThinkSoft\OIDplus\OIDplusPagePublicObjects;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusRDAP {
+class OIDplusRDAP extends OIDplusBaseClass {
 
 	/**
 	 * @var string

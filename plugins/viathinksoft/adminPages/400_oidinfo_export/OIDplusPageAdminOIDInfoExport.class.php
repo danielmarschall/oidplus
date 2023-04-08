@@ -1162,7 +1162,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (!url_post_contents_available(true, $reason)) {
 				$title = _L('OID-Info.com import/export');
-				$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but OIDplus cannot connect to the Internet.', '<a '.OIDplus::gui()->link('oidplus:datatransfer').'>'.htmlentities($title).'</a>').' '.$reason);
+				$notifications[] = new OIDplusNotification('ERR', _L('OIDplus plugin "%1" is enabled, but OIDplus cannot connect to the Internet.', '<a '.OIDplus::gui()->link('oidplus:datatransfer').'>'.htmlentities($title).'</a>').' '.$reason);
 			}
 		}
 		return $notifications;

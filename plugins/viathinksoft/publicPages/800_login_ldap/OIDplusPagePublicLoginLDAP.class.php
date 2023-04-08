@@ -389,7 +389,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 			if (OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {
 				if (!function_exists('ldap_connect')) {
 					$title = _L('LDAP Login');
-					$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but the required PHP extension "%2" is not installed.', htmlentities($title), 'php_ldap'));
+					$notifications[] = new OIDplusNotification('ERR', _L('OIDplus plugin "%1" is enabled, but the required PHP extension "%2" is not installed.', htmlentities($title), 'php_ldap'));
 				}
 			}
 		}
