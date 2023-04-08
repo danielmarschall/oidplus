@@ -70,7 +70,7 @@ OIDplus::handleLangArgument();
 
 $page_title_1 = OIDplus::gui()->combine_systemtitle_and_pagetitle(OIDplus::config()->getValue('system_title'), $page_title_2);
 
-$cont = OIDplus::gui()->showMainPage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags=array(), $static_node_id='');
+$cont = OIDplus::gui()->showMainPage($page_title_1, $page_title_2, $static_icon, $static_content, $extra_head_tags=array(), $static_node_id);
 
 OIDplus::invoke_shutdown();
 
