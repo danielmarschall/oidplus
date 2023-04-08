@@ -1160,9 +1160,9 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 	public function getNotifications(string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
-			if (!url_post_contents_available()) {
+			if (!url_post_contents_available(true, $reason)) {
 				$title = _L('OID-Info.com import/export');
-				$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but the required PHP extension "%2" is not installed.', '<a '.OIDplus::gui()->link('oidplus:datatransfer').'>'.htmlentities($title).'</a>', 'php_curl'));
+				$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but OIDplus cannot connect to the Internet.', '<a '.OIDplus::gui()->link('oidplus:datatransfer').'>'.htmlentities($title).'</a>').' '.$reason);
 			}
 		}
 		return $notifications;

@@ -65,6 +65,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'verify_pubkey') {
+			// This action is called by the ViaThinkSoft server in order to verify that the system is in the ownership of the correct private key
+
 			_CheckParamExists($params, 'challenge');
 
 			$payload = 'oidplus-verify-pubkey:'.sha3_512($params['challenge']);
@@ -119,6 +121,10 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 
 			if (!OIDplus::getPkiStatus()) {
 				$out['text'] .= '<p><font color="red">'._L('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.').'</font></p>';
+			} else if (!url_post_contents_available(true, $reason)) {
+				$out['text'] .= '<p><font color="red">';
+				$out['text'] .= _L('OIDplus cannot connect to the Internet (%1). Therefore, you <b>cannot</b> register your OIDplus instance now.', $reason);
+				$out['text'] .= '</font></p>';
 			} else {
 				$out['text'] .= '<p><input type="button" onclick="openOidInPanel(\'oidplus:srvreg_status\');" value="'._L('Check status of the registration and collected data').'"></p>';
 
@@ -287,6 +293,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 
 		if (!OIDplus::getPkiStatus()) return false;
 
+		if (!url_post_contents_available(true)) return false;
+
 		if ($privacy_level == 2) {
 			// The user wants to unregister,  but we only unregister if we are registered
 			if ($this->areWeRegistered()) {
@@ -318,9 +326,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 				$res = url_post_contents(
 					'https://oidplus.viathinksoft.com/reg2/query.php',
 					array(
-						"query"      => $query,
+						"query" => $query,
 						"compressed" => $compressed,
-						"data"       => base64_encode($data2)
+						"data" => base64_encode($data2)
 					)
 				);
 
@@ -467,6 +475,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 			// Now do a recheck and notify the ViaThinkSoft server
 			if (($value == 2) || !OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
 				OIDplus::config()->setValue('reg_last_ping', 0);
+				if (!url_post_contents_available(true, $reason)) throw new OIDplusException(_L('The system cannot contact the ViaThinkSoft server to change the registration settings.').' '.$reason);
 				$this->sendRegistrationQuery($value);
 			}
 		});
@@ -578,10 +587,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 
 		echo $info;
 
-		if (!url_post_contents_available()) {
+		if (!url_post_contents_available(true, $reason)) {
 			echo '<p><font color="red">';
-			echo _L('The "%1" PHP extension is not installed at your system. Please enable the PHP extension <code>%2</code>.','CURL','php_curl').' ';
-			echo _L('Therefore, you <b>cannot</b> register your OIDplus instance now.');
+			echo _L('OIDplus cannot connect to the Internet (%1). Therefore, you <b>cannot</b> register your OIDplus instance now.', $reason);
 			echo '</font></p>';
 			if ($do_edits) {
 				OIDplus::config()->setValue('oobe_registration_done', '1');
@@ -676,9 +684,9 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 	public function getNotifications(string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
-			if (!url_post_contents_available()) {
+			if (!url_post_contents_available(true, $reason)) {
 				$title = _L('System registration');
-				$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but the required PHP extension "%2" is not installed.', '<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'.htmlentities($title).'</a>', 'php_curl'));
+				$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but OIDplus cannot connect to the Internet.', '<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'.htmlentities($title).'</a>').' '.$reason);
 			}
 		}
 		return $notifications;

@@ -44,7 +44,7 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 	 * @return string
 	 */
 	public static function id(): string {
-		return 'reCAPTCHA'; // TODO: Now it is called "reCAPTCHA"
+		return 'reCAPTCHA';
 	}
 
 	/**
@@ -134,6 +134,7 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 	 * @return string
 	 */
 	public static function setupHTML(): string {
+		$curl_status = url_get_contents_available(true, $reason) ? 1 : 0;
 		return '<div id="CAPTCHAPLUGIN_PARAMS_RECAPTCHA">'.
 		       '<p>(<a href="https://developers.google.com/recaptcha/intro" target="_blank">'._L('more information and obtain key').'</a>)</p>'.
 		       '<p>'._L('reCAPTCHA Version').'<br><select id="recaptcha_version">'.
@@ -144,6 +145,7 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 		       '</select></p>'.
 		       '<p>'._L('reCAPTCHA Public key').'<br><input id="recaptcha_public" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="recaptcha_public_warn"></span></p>'.
 		       '<p>'._L('reCAPTCHA Private key').'<br><input id="recaptcha_private" type="text" onkeypress="rebuild()" onkeyup="rebuild()"> <span id="recaptcha_private_warn"></span></p>'.
+		       (!$curl_status ? '<p><font color="red">'._L('The %1 plugin cannot connect to the Internet.', self::id()).' '.$reason.'</font></p>' : '').
 		       '</div>';
 	}
 
