@@ -2346,10 +2346,11 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	public static function getGitsvnRevision() {
 		try {
-			// tries command line and binary parsing
-			// requires vendor/danielmarschall/git_utils.inc.php
 			$git_dir = OIDplus::findGitFolder();
 			if ($git_dir === false) return false;
+
+			// git_get_latest_commit_message() tries command line and binary parsing
+			// requires vendor/danielmarschall/php_utils/git_utils.inc.php
 			$commit_msg = git_get_latest_commit_message($git_dir);
 		} catch (\Exception $e) {
 			return false;
