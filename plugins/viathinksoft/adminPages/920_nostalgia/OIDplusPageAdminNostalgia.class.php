@@ -116,7 +116,7 @@ class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (!class_exists('ZipArchive')) {
 				$title = _L('Nostalgia');
-				$notifications[] = array('ERR', _L('OIDplus plugin "%1" is enabled, but the required PHP extension "%2" is not installed.', '<a '.OIDplus::gui()->link('oidplus:nostalgia').'>'.htmlentities($title).'</a>', 'Zip'));
+				$notifications[] = new OIDplusNotification('ERR', _L('OIDplus plugin "%1" is enabled, but the required PHP extension "%2" is not installed.', '<a '.OIDplus::gui()->link('oidplus:nostalgia').'>'.htmlentities($title).'</a>', 'Zip'));
 			}
 		}
 		return $notifications;

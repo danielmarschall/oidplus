@@ -1446,6 +1446,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Critical issue
+		]]></source>
+		<target><![CDATA[
+		Kritisches Problem
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Critical issues
 		]]></source>
 		<target><![CDATA[
@@ -3346,6 +3354,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ungültiger Protection-Flag. Bitte nutzen Sie die OIDplusConfig::PROTECTION_* Kontanten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid severity "%1"
+		]]></source>
+		<target><![CDATA[
+		Ungültiger Schweregrad "%1"
 		]]></target>
 	</message>
 	<message>
@@ -7042,14 +7058,6 @@
 		]]></source>
 		<target><![CDATA[
 		Das Plugin %1 ist beim Prüfen der Benachrichtigungen abgestürzt. Meldung: %2
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		The plugin %1 returned an invalid severity (%2). Message: %3
-		]]></source>
-		<target><![CDATA[
-		Das Plugin %1 hat einen ungültigen Schweregrad (%2) gemeldet. Nachricht: %3
 		]]></target>
 	</message>
 	<message>
