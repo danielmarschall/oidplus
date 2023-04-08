@@ -26,7 +26,8 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2, /* modifyContent */
 	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3, /* beforeObject*, afterObject* */
-	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4  /* whois*Attributes */
+	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4, /* whois*Attributes */
+	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8  /* getNotifications */
 {
 
 	/**
@@ -104,11 +105,10 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	}
 
 	/**
-	 * @param string|null $id
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public static function getUploadDir(string $id=null): string {
+	protected static function getUploadBaseDir(): string {
 		// Get base path
 		$cfg = OIDplus::config()->getValue('attachment_upload_dir', '');
 		$cfg = trim($cfg);
@@ -117,6 +117,16 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 		} else {
 			$basepath = $cfg;
 		}
+		return $basepath;
+	}
+
+	/**
+	 * @param string|null $id
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public static function getUploadDir(string $id=null): string {
+		$basepath = self::getUploadBaseDir();
 
 		try {
 			self::checkUploadDir($basepath);
@@ -601,4 +611,34 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @return void
 	 */
 	public function whoisRaAttributes(string $email, array &$out) {}
+
+	/**
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8
+	 * @param string|null $user
+	 * @return array  returns array of array($severity, $htmlMessage)
+	 */
+	public function getNotifications(string $user=null): array {
+		$notifications = array();
+		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
+			$error = '';
+			try {
+				$basepath = self::getUploadBaseDir();
+				if (!is_dir($basepath)) {
+					throw new OIDplusException(_L('Directory %1 does not exist', $basepath));
+				} else {
+					self::checkUploadDir($basepath);
+					if (!isFileOrPathWritable($basepath)) {
+						throw new OIDplusException(_L('Directory %1 is not writeable. Please check the permissions!', $basepath));
+					}
+				}
+			} catch (\Exception $e) {
+				$error = _L('The file attachments feature is not available due to a misconfiguration');
+				$error .= ': ' . $e->getMessage();
+			}
+			if ($error) {
+				$notifications[] = array('WARN', $error);
+			}
+		}
+		return $notifications;
+	}
 }

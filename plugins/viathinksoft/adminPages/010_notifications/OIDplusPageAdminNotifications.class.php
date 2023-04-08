@@ -110,7 +110,7 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 					else if ($severity == 3) $sev_hf = _L('Warnings');
 					else if ($severity == 4) $sev_hf = _L('Errors');
 					else if ($severity == 5) $sev_hf = _L('Critical issues');
-					else $sev_hf = _L('Severity %1', $severity-1);
+					else $sev_hf = _L('Severity %1', $severity-1); // TODO: actually, this should raise an Exception?
 
 					$out['text'] .= '<h2><span class="severity_'.$severity.'">'.$sev_hf.' ('.count($htmlMessages).')</span></h2>';
 					$out['text'] .= '<span class="severity_'.$severity.'"><ol>';
@@ -226,8 +226,11 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 			}
 
 			// Check if cache directory is writeable
-			if (!is_writeable(OIDplus::localpath(null).'userdata/cache/')) {
-				$notifications[] = array('ERR', _L('Directory %1 is not writeable. Please check the permissions!', 'userdata/cache/'));
+			$cache_dir = OIDplus::localpath(null).'userdata/cache/';
+			if (!is_dir($cache_dir)) {
+				$notifications[] = array('ERR', _L('Directory %1 does not exist', $cache_dir));
+			} else if (!isFileOrPathWritable($cache_dir)) {
+				$notifications[] = array('ERR', _L('Directory %1 is not writeable. Please check the permissions!', $cache_dir));
 			}
 		}
 		return $notifications;

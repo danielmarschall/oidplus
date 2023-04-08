@@ -27,7 +27,7 @@ interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8 {
 
 	/**
 	 * @param string|null $user
-	 * @return array  returns array of array($severity, $htmlMessage)
+	 * @return array  returns array of array($severity, $htmlMessage) where severity can be OK|INFO|WARN|ERR|CRIT.
 	 */
 	public function getNotifications(string $user=null): array;
 

@@ -141,7 +141,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 
 				}
 
-				// All OK! Now write file
+				// All OK! Now write the file
 
 				$tmp_filename = 'update_'.generateRandomString(10).'.tmp.php';
 				$local_file = OIDplus::localpath().$tmp_filename;
