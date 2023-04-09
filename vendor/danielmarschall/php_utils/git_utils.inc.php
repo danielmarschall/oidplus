@@ -74,10 +74,19 @@ function git_get_latest_commit_message($git_dir) {
 		if ($pack_files) foreach ($pack_files as $basename) {
 			$basename = substr(basename($basename),0,strlen(basename($basename))-5);
 			try {
-				return git_read_object($commit_object,
-					$objects_dir.'/pack/'.$basename.'.idx',
-					$objects_dir.'/pack/'.$basename.'.pack'
-				);
+				if (class_exists('ViaThinkSoft\Glip\Git')) {
+					// https://github.com/danielmarschall/glip
+					// composer require danielmarschall/glip
+					$git = new Git($git_dir);
+					$obj = $git->getObject(hex2bin($commit_object));
+					return $obj->detail;
+				} else {
+					// Own implementation (cannot read delta objects yet)
+					return git_read_object($commit_object,
+						$objects_dir.'/pack/'.$basename.'.idx',
+						$objects_dir.'/pack/'.$basename.'.pack'
+					);
+				}
 			} catch (Exception $e) {
 				$last_exception = $e;
 			}
@@ -142,8 +151,8 @@ function git_read_object($object_wanted, $idx_file, $pack_file, $debug=false) {
 	if ($version == 2) {
 		// Get CRC32
 		fseek($fp, $fanout_offset + 4*256 + 20*$num_objects + 4*$object_no);
-		$crc32 = unpack('N', fread($fp,4))[1];
-		if ($debug) echo "CRC32 = ".sprintf('0x%08x',$crc32)."\n";
+		$crc32 = unpack('H8', fread($fp,4))[1];
+		if ($debug) echo "CRC32 = ".$crc32."\n";
 
 		// Get offset (32 bit)
 		fseek($fp, $fanout_offset + 4*256 + 20*$num_objects + 4*$num_objects + 4*$object_no);
@@ -171,11 +180,12 @@ function git_read_object($object_wanted, $idx_file, $pack_file, $debug=false) {
 	$fp = fopen($pack_file, 'rb');
 	if (!$fp) throw new Exception("Cannot open pack file $pack_file");
 
-	// Find out type
+	// Read type and first part of the size
 	fseek($fp, $pack_offset);
 	$size_info = unpack('C', fread($fp,1))[1];
 
-	$type = ($size_info & 0xE0) >> 5; /*0b11100000*/
+	// Detect type
+	$type = ($size_info & 0x70) >> 4; /*0b01110000*/
 	switch ($type) {
 		case 1:
 			if ($debug) echo "Type = OBJ_COMMIT ($type)\n";
@@ -200,22 +210,31 @@ function git_read_object($object_wanted, $idx_file, $pack_file, $debug=false) {
 			break;
 	}
 
-	// Find out size
-	$size = $size_info & 0x1F /*0x00011111*/;
-	$shift_info = 5;
-	do {
+	// Find out the expected unpacked size
+	$size = $size_info & 0xF /*0x00001111*/;
+	$shift_info = 4;
+	while ($size_info >= 0x80) {
 		$size_info = unpack('C', fread($fp,1))[1];
 		$size = (($size_info & 0x7F) << $shift_info) + $size;
-		$shift_info += 8;
-	} while ($size_info >= 0x80);
-
-	if ($debug) echo "Packed size = ".sprintf('0x%x',$size)."\n";
+		$shift_info += 7;
+	}
+	if ($debug) echo "Expected unpacked size = $size\n";
 
 	// Read delta base type
+	// Example implementation: https://github.com/AlexFBP/glip/blob/master/lib/git.class.php#L240
 	if ($type == 6/*OBJ_OFS_DELTA*/) {
 		// "a negative relative offset from the delta object's position in the pack if this is an OBJ_OFS_DELTA object"
-		$delta_info = unpack('C*', fread($fp,4))[1];
-		if ($debug) echo "Delta negative offset: $delta_info\n";
+
+		// Offset encoding
+		$offset = 0;
+		$shift_info = 0;
+		do {
+			$offset_info = unpack('C', fread($fp,1))[1];
+			$offset = (($offset_info & 0x7F) << $shift_info) + $offset;
+			$shift_info += 7;
+		} while ($offset_info >= 0x80);
+
+		if ($debug) echo "Delta negative offset: $offset\n";
 		throw new Exception("OBJ_OFS_DELTA is currently not implemented"); // TODO! Implement OBJ_OFS_DELTA!
 	}
 	if ($type == 7/*OBJ_REF_DELTA*/) {
@@ -225,20 +244,31 @@ function git_read_object($object_wanted, $idx_file, $pack_file, $debug=false) {
 		throw new Exception("OBJ_REF_DELTA is currently not implemented"); // TODO! Implement OBJ_REF_DELTA!
 	}
 
-	// Read compressed data
-	$compressed = fread($fp,$size);
-
-	// Uncompress
-	$uncompressed = @gzuncompress($compressed);
+	// Read and uncompress the compressed data
+	$compressed = '';
+	$uncompressed = false;
+	for ($compressed_size=1; $compressed_size<=32768*$size; $compressed_size++) {
+		// Since we don't know the compressed size, we need to do trial and error
+		// TODO: this is a super stupid algorithm! Is there a better way???
+		$compressed .= fread($fp,1);
+		$uncompressed = @gzuncompress($compressed);
+		if (strlen($uncompressed) === $size) {
+			if ($debug) echo "Detected compressed size = $compressed_size\n";
+			break;
+		}
+	}
 	if ($uncompressed === false) throw new Exception("Decompression failed");
 	if ($debug) echo "$uncompressed\n";
 
 	// Close pack file
 	fclose($fp);
 
-	// Check CRC32
-	// TODO: Does not fit; neither crc32, nor crc32b...
-	// if ($debug) echo "CRC32 found = 0x".hash('crc32',$compressed)."\n";
+	if ($version == 2) {
+		// Check CRC32
+		// TODO: Hash does not match. What are we doing wrong?!
+		// if ($debug) echo "CRC32 found = ".hash('crc32',$compressed)." vs $crc32\n";
+		// if ($debug) echo "CRC32 found = ".hash('crc32b',$compressed)." vs $crc32\n";
+	}
 
 	return $uncompressed;
 }
