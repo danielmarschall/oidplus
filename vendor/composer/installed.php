@@ -39,6 +39,17 @@
             ),
             'dev_requirement' => false,
         ),
+        'danielmarschall/glip' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '83fcfd37360424dc973191d7338161bed92f7da3',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../danielmarschall/glip',
+            'aliases' => array(
+                0 => '0.1.3.x-dev',
+            ),
+            'dev_requirement' => false,
+        ),
         'danielmarschall/oidconverter' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
@@ -73,7 +84,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '5e4a86a3993c68c02ab43301e4f29ffd4f285ecd',
+            'reference' => '8edebfb477d599a78a4e67f5ad2458c24e30c718',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(
@@ -178,7 +189,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => 'b799abd1a0c387590c2f58ee3e12a640412b6031',
+            'reference' => '2d1216ba29068e2ad917d320992d38c5077bdaae',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),

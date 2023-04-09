@@ -20,6 +20,10 @@ class ComposerStaticInitOidPlusComposer
         array (
             'bb\\Sha3\\' => 8,
         ),
+        'V' => 
+        array (
+            'ViaThinkSoft\\Glip\\' => 18,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
@@ -47,6 +51,10 @@ class ComposerStaticInitOidPlusComposer
         'bb\\Sha3\\' => 
         array (
             0 => __DIR__ . '/..' . '/danielmarschall/php-sha3/src',
+        ),
+        'ViaThinkSoft\\Glip\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/danielmarschall/glip/src',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (

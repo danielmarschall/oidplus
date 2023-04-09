@@ -1,0 +1,34 @@
+
+As of April 2023, the following forks have commits ahead of the original patrikf/glip:
+
+   AlexFBP / glip
+   alexgorbatchev / glip
+   antmicro / glip
+    laurentj / glip
+     mitgedanken-lab / php-glip
+   Ap0ught-Old / glip
+   aredridel / Glip
+   captn3m0 / glip
+   Ennosuke / glip
+   guiwoda / glip
+   halstead / glip
+   jkufner / glip
+   kokareff / glip
+   locked / glip
+   markopavlovic / glip
+   mgirouard / glip
+   MiltoxBeyond / glip
+   rafaelgieschke / glip
+   redotheoffice / glip
+    h0tw1r3 / glip
+    xaav / glip
+   sarkian / glip
+    yamek / glip
+   shetland / glip
+   signalizatoredu / glip
+   Upliner / glip
+   xero / glip
+   yendor / glip
+
+We need to check if there are things which we could use, too.
+
