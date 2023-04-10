@@ -1867,11 +1867,10 @@ class OIDplus extends OIDplusBaseClass {
 			$counter++;
 		}
 		$version_file_exists = $old_version_file_exists | $new_version_file_exists;
-		if ($svn_dir_exists = (is_dir(OIDplus::localpath().'.svn') ||
-			is_dir(OIDplus::localpath().'../.svn'))) { // in case we checked out the root instead of the "trunk"
+
+		if ($svn_dir_exists = (OIDplus::findSvnFolder() !== false)) {
 			$counter++;
 		}
-		// if ($git_dir_exists = is_dir(OIDplus::localpath().'.git')) {
 		if ($git_dir_exists = (OIDplus::findGitFolder() !== false)) {
 			$counter++;
 		}
@@ -2320,13 +2319,17 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @return false|string
+	 * @return false|string The git path, with guaranteed trailing path delimiter for directories
 	 */
 	public static function findGitFolder() {
+		$dir = rtrim(OIDplus::localpath(), DIRECTORY_SEPARATOR);
+
 		// Git command line saves git information in folder ".git"
+		if (is_dir($res = $dir.'/.git')) {
+			return str_replace('/', DIRECTORY_SEPARATOR, $res.'/');
+		}
+
 		// Plesk git saves git information in folder "../../../git/oidplus/" (or similar)
-		$dir = OIDplus::localpath();
-		if (is_dir($dir.'/.git')) return $dir.'/.git';
 		$i = 0;
 		do {
 			if (is_dir($dir.'/git')) {
@@ -2334,12 +2337,32 @@ class OIDplus extends OIDplusBaseClass {
 				if ($confs) foreach ($confs as $conf) {
 					$cont = file_get_contents($conf);
 					if (isset(OIDplus::getEditionInfo()['gitrepo']) && (OIDplus::getEditionInfo()['gitrepo'] != '') && (strpos($cont, OIDplus::getEditionInfo()['gitrepo']) !== false)) {
-						return dirname($conf);
+						$res = dirname($conf);
+						return str_replace('/', DIRECTORY_SEPARATOR, $res.'/');
 					}
 				}
 			}
 			$i++;
 		} while (($i<100) && ($dir != ($new_dir = @realpath($dir.'/../'))) && ($dir = $new_dir));
+
+		return false;
+	}
+
+	/**
+	 * @return false|string The SVN path, with guaranteed trailing path delimiter for directories
+	 */
+	public static function findSvnFolder() {
+		$dir = rtrim(OIDplus::localpath(), DIRECTORY_SEPARATOR);
+
+		if (is_dir($res = $dir.'.svn')) {
+			return str_replace('/', DIRECTORY_SEPARATOR, $res.'/');
+		}
+
+		// in case we checked out the root instead of the "trunk"
+		if (is_dir($res = $dir.'../.svn')) {
+			return str_replace('/', DIRECTORY_SEPARATOR, $res.'/');
+		}
+
 		return false;
 	}
 
