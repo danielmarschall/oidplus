@@ -1898,22 +1898,24 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	private static function recognizeVersion() {
 		try {
-			$ver_prev = OIDplus::config()->getValue("last_known_version");
-			$ver_now = OIDplus::getVersion();
-			if (($ver_now != '') && ($ver_prev != '') && ($ver_now != $ver_prev)) {
-				// TODO: Problem: When the system was updated using SVN, then the IP address of the next random visitor of the website is logged!
-				OIDplus::logger()->log("[INFO]A!", "Detected system version change from '$ver_prev' to '$ver_now'");
+			if ($ver_now = OIDplus::getVersion()) {
+				$ver_prev = OIDplus::config()->getValue("last_known_version");
+				if (($ver_prev) && ($ver_now != $ver_prev)) {
+					// TODO: Problem: When the system was updated using SVN or GIT in the console, then the IP address of the next random visitor of the website is logged!
+					//       Idea: Maybe we should extend the mask code with some kind of magic constant "[NO_IP]", so that no IP is logged for that event?
+					OIDplus::logger()->log("[INFO]A!", "Detected system version change from '$ver_prev' to '$ver_now'");
 
-				// Just to be sure, recanonize objects (we don't do it at every page visit due to performance reasons)
-				self::recanonizeObjects();
+					// Just to be sure, recanonize objects (we don't do it at every page visit due to performance reasons)
+					self::recanonizeObjects();
+				}
+				OIDplus::config()->setValue("last_known_version", $ver_now);
 			}
-			OIDplus::config()->setValue("last_known_version", $ver_now);
 		} catch (\Exception $e) {
 		}
 	}
 
 	/**
-	 * @return false|string|null
+	 * @return false|string
 	 */
 	public static function getVersion() {
 		static $cachedVersion = null;

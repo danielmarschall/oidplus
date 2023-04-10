@@ -187,7 +187,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param string $maskcodes
+	 * @param string $maskcodes A description of the mask-codes can be found in OIDplusLogger.class.php
 	 * @param string $event
 	 * @return bool
 	 * @throws OIDplusException
