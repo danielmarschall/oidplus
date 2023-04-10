@@ -42,7 +42,7 @@
         'danielmarschall/glip' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '83fcfd37360424dc973191d7338161bed92f7da3',
+            'reference' => '7d3e6d619cffac3d2415e6043a31d387edef75f3',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/glip',
             'aliases' => array(
@@ -84,7 +84,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '8edebfb477d599a78a4e67f5ad2458c24e30c718',
+            'reference' => '9b2232753a8a48640e5ecfc6b1151e271669b947',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(

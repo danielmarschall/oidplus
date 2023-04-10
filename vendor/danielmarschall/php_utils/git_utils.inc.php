@@ -3,7 +3,7 @@
 /*
  * PHP git functions
  * Copyright 2021 - 2023 Daniel Marschall, ViaThinkSoft
- * Revision 2023-04-09
+ * Revision 2023-04-10
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ function git_get_latest_commit_message($git_dir) {
 				if (class_exists('ViaThinkSoft\Glip\Git')) {
 					// https://github.com/danielmarschall/glip
 					// composer require danielmarschall/glip
-					$git = new Git($git_dir);
+					$git = new ViaThinkSoft\Glip\Git($git_dir);
 					$obj = $git->getObject(hex2bin($commit_object));
 					return $obj->detail;
 				} else {
