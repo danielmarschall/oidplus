@@ -42,6 +42,7 @@
       <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/sergeybrook/php-jws" />
       <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/composer" />
       <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization" />
+      <path value="$PROJECT_DIR$/vendor/danielmarschall/glip" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.0" />

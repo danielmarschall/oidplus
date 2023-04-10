@@ -26,12 +26,10 @@ namespace ViaThinkSoft\OIDplus;
 abstract class OIDplusLoggerPlugin extends OIDplusPlugin {
 
 	/**
-	 * @param string $event
-	 * @param array<int,string>[] $users Array of "Severity => username"
-	 * @param array<int,string>[] $objects Array of "Severity => objectname"
+	 * @param OIDplusLogEvent $event
 	 * @return bool
 	 */
-	public abstract function log(string $event, array $users, array $objects): bool;
+	public abstract function log(OIDplusLogEvent $event): bool;
 
 	/**
 	 * @param string $reason

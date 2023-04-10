@@ -45,20 +45,24 @@ class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 	}
 
 	/**
-	 * @param string $event
-	 * @param array $users
-	 * @param array $objects
+	 * @param OIDplusLogEvent $event
 	 * @return bool
 	 */
-	public function log(string $event, array $users, array $objects): bool {
+	public function log(OIDplusLogEvent $event): bool {
 		if (!is_dir(OIDplus::localpath().'userdata/logs/')) return false;
 
 		$users_names = array();
-		foreach ($users as list($severity, $username)) $users_names[] = $username;
-		$users_info = count($users_names) == 0 ? '' : ' ('._L('affected users: %1',implode(', ',$users_names)).')';
-
 		$objects_names = array();
-		foreach ($objects as list($severity, $objectname)) $objects_names[] = $objectname;
+		foreach ($event->getTargets() as $target) {
+			if ($target instanceof OIDplusLogTargetUser) {
+				$users_names[] = $target->getUsername();
+			} else if ($target instanceof OIDplusLogTargetObject) {
+				$objects_names[] = $target->getObject();
+			} else {
+				assert(false);
+			}
+		}
+		$users_info = count($users_names) == 0 ? '' : ' ('._L('affected users: %1',implode(', ',$users_names)).')';
 		$objects_info = count($objects_names) == 0 ? '' : ' ('._L('affected objects: %1',implode(', ',$objects_names)).')';
 
 		$ts = date('Y-m-d H:i:s');
@@ -66,7 +70,7 @@ class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 
 		// Note: $ts was put into brackets, because there is probably a bug in fail2ban that does not allow the date/time being at offset 0
 		// "WARNING Found a match for '020-05-11 22:50:58 [192.168.69.89] Failed login ..."
-		$line = "[$ts] [$addr] $event$users_info$objects_info";
+		$line = "[$ts] [$addr] ".$event->getMessage().$users_info.$objects_info;
 
 		return @file_put_contents(OIDplus::localpath().'userdata/logs/oidplus.log', "$line\n", FILE_APPEND) !== false;
 	}

@@ -105,12 +105,10 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 	}
 
 	/**
-	 * @param string $event
-	 * @param array $users
-	 * @param array $objects
+	 * @param OIDplusLogEvent $event
 	 * @return bool
 	 */
-	public function log(string $event, array $users, array $objects): bool {
+	public function log(OIDplusLogEvent $event): bool {
 		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 			return false;
 		}
@@ -123,12 +121,17 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 			$x = new \COM(self::CLASS_ViaThinkSoftSimpleEventLog);
 
 			$admin_severity = 0;
-			foreach ($users as list($severity, $username)) {
-				// Since the Windows Event Log is mostly for admins, we use the severity an admin would expect
-				if ($username == 'admin') $admin_severity = $severity;
+			foreach ($event->getTargets() as $target) {
+				if ($target instanceof OIDplusLogTargetUser) {
+					// Since the Windows Event Log is mostly for admins, we use the severity an admin would expect
+					if ($target->getUsername() === 'admin') $admin_severity = $target->getSeverity();
+				} else if ($target instanceof OIDplusLogTargetObject) {
+					// Nothing here
+				} else {
+					assert(false);
+				}
 			}
-
-			$x->LogEvent(self::LOGPROVIDER, self::convertOIDplusToWindowsSeverity($admin_severity), $event);/** @phpstan-ignore-line */
+			$x->LogEvent(self::LOGPROVIDER, self::convertOIDplusToWindowsSeverity($admin_severity), $event->getMessage()); /** @phpstan-ignore-line */
 
 			return true;
 		} catch (\Exception $e) {

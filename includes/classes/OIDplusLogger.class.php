@@ -35,17 +35,17 @@ class OIDplusLogger extends OIDplusBaseClass {
 	 * The severity block will be implicitly repeated from the previous components if a component
 	 * does not feature one.
 	 *
-	 * "[S]AAA(BBB)+CCC(DDD)"   ==> array(
-	 *                                 array(array("S"),"AAA(BBB)"),
-	 *                                 array(array("S"),"CCC(DDD)")
+	 * "[ERR]AAA(BBB)+CCC(DDD)"   ==> array(
+	 *                                 array(array("ERR"),"AAA(BBB)"),
+	 *                                 array(array("ERR"),"CCC(DDD)")
 	 *                              )
-	 * "[S]AAA(B+BB)+CCC(DDD)"  ==> array(
-	 *                                 array(array("S"),"AAA(B+BB)"),
-	 *                                 array(array("S"),"CCC(DDD)")
+	 * "[INFO]AAA(B+BB)+[WARN]CCC(DDD)"  ==> array(
+	 *                                 array(array("INFO"),"AAA(B+BB)"),
+	 *                                 array(array("WARN"),"CCC(DDD)")
 	 *                              )
-	 * "[S]AAA(B\)BB)+CCC(DDD)" ==> array(
-	 *                                 array(array("S"),"AAA(B\)BB)"),
-	 *                                 array(array("S"),"CCC(DDD)")
+	 * "[?WARN/!OK] AAA(B\)BB)+CCC(DDD)" ==> array(
+	 *                                 array(array("?WARN", "!OK"),"AAA(B\)BB)"),
+	 *                                 array(array("?WARN", "!OK"),"CCC(DDD)")
 	 *                              )
 	 * @param string $maskcodes
 	 * @return array|false
@@ -199,18 +199,18 @@ class OIDplusLogger extends OIDplusBaseClass {
 
 	/**
 	 * @param string $maskcodes
-	 * @param string $event
+	 * @param string $message
 	 * @param bool $allow_delayed_log
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	private function log_internal(string $maskcodes, string $event, bool $allow_delayed_log): bool {
+	private function log_internal(string $maskcodes, string $message, bool $allow_delayed_log): bool {
 		$loggerPlugins = OIDplus::getLoggerPlugins();
 		if (count($loggerPlugins) == 0) {
 			// The plugin might not be initialized in OIDplus::init()
 			// yet. Remember the log entries for later submission during
 			// OIDplus::init();
-			if ($allow_delayed_log) $this->missing_plugin_queue[] = array($maskcodes, $event);
+			if ($allow_delayed_log) $this->missing_plugin_queue[] = array($maskcodes, $message);
 			return false;
 		}
 
@@ -227,8 +227,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 		// to put the message into the logbooks of person X,
 		// house A, and house B.
 
-		$users = array();
-		$objects = array();
+		$logEvent = new OIDplusLogEvent($message);
 
 		// A mask code with multiple components is split into single codes
 		// using '+' or '/', e.g. "OID(x)+RA(x)" would be split to "OID(x)" and "RA(x)"
@@ -312,7 +311,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 			$m = array();
 			if (preg_match('@^OID\((.+)\)$@ismU', $maskcode, $m)) {
 				$object_id = $m[1];
-				$objects[] = array($severity, $object_id);
+				$logEvent->addTarget(new OIDplusLogTargetObject($severity, $object_id));
 				if ($object_id == '') throw new OIDplusException(_L('OID logger mask requires OID'));
 			}
 
@@ -324,7 +323,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 				if ($obj) {
 					if ($objParent = $obj->getParent()) {
 						$parent = $objParent->nodeId();
-						$objects[] = array($severity, $parent);
+						$logEvent->addTarget(new OIDplusLogTargetObject($severity, $parent));
 					} else {
 						//throw new OIDplusException(_L('%1 has no parent',$object_id));
 					}
@@ -343,12 +342,12 @@ class OIDplusLogger extends OIDplusBaseClass {
 				if ($obj) {
 					if ($ra_need_login) {
 						foreach (OIDplus::authUtils()->loggedInRaList() as $ra) {
-							if ($obj->userHasWriteRights($ra)) $users[] = array($severity_online, $ra->raEmail());
+							if ($obj->userHasWriteRights($ra)) $logEvent->addTarget(new OIDplusLogTargetUser($severity_online, $ra->raEmail()));
 						}
 					} else {
-						// $users[] = array($severity, $obj->getRa()->raEmail());
+						// $logEvent->addTarget(new OIDplusLogTargetUser($severity, $obj->getRa()->raEmail()));
 						foreach (OIDplusRA::getAllRAs() as $ra) {
-							if ($obj->userHasWriteRights($ra)) $users[] = array($severity, $ra->raEmail());
+							if ($obj->userHasWriteRights($ra)) $logEvent->addTarget(new OIDplusLogTargetUser($severity, $ra->raEmail()));
 						}
 					}
 				} else {
@@ -366,13 +365,13 @@ class OIDplusLogger extends OIDplusBaseClass {
 				if ($obj) {
 					if ($ra_need_login) {
 						foreach (OIDplus::authUtils()->loggedInRaList() as $ra) {
-							if ($obj->userHasParentalWriteRights($ra)) $users[] = array($severity_online, $ra->raEmail());
+							if ($obj->userHasParentalWriteRights($ra)) $logEvent->addTarget(new OIDplusLogTargetUser($severity_online, $ra->raEmail()));
 						}
 					} else {
 						if ($objParent = $obj->getParent()) {
-							// $users[] = array($severity, $objParent->getRa()->raEmail());
+							// $logEvent->addTarget(new OIDplusLogTargetUser($severity, $objParent->getRa()->raEmail()));
 							foreach (OIDplusRA::getAllRAs() as $ra) {
-								if ($obj->userHasParentalWriteRights($ra)) $users[] = array($severity, $ra->raEmail());
+								if ($obj->userHasParentalWriteRights($ra)) $logEvent->addTarget(new OIDplusLogTargetUser($severity, $ra->raEmail()));
 							}
 						} else {
 							//throw new OIDplusException(_L('%1 has no parent, therefore also no parent RA',$object_id));
@@ -390,9 +389,9 @@ class OIDplusLogger extends OIDplusBaseClass {
 				$ra_need_login     = $m[2] == '?';
 				if (!empty($ra_email)) {
 					if ($ra_need_login && OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
-						$users[] = array($severity_online, $ra_email);
+						$logEvent->addTarget(new OIDplusLogTargetUser($severity_online, $ra_email));
 					} else if (!$ra_need_login) {
-						$users[] = array($severity, $ra_email);
+						$logEvent->addTarget(new OIDplusLogTargetUser($severity, $ra_email));
 					}
 				}
 			}
@@ -402,9 +401,9 @@ class OIDplusLogger extends OIDplusBaseClass {
 			else if (preg_match('@^A([\?\!])$@imU', $maskcode, $m)) {
 				$admin_need_login = $m[1] == '?';
 				if ($admin_need_login && OIDplus::authUtils()->isAdminLoggedIn()) {
-					$users[] = array($severity_online, 'admin');
+					$logEvent->addTarget(new OIDplusLogTargetUser($severity_online, 'admin'));
 				} else if (!$admin_need_login) {
-					$users[] = array($severity, 'admin');
+					$logEvent->addTarget(new OIDplusLogTargetUser($severity, 'admin'));
 				}
 			}
 
@@ -421,7 +420,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 		foreach ($loggerPlugins as $plugin) {
 			$reason = '';
 			if ($plugin->available($reason)) {
-				$result |= $plugin->log($event, $users, $objects);
+				$result |= $plugin->log($logEvent);
 			}
 		}
 
