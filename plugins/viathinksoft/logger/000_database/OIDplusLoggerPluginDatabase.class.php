@@ -35,15 +35,13 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 	}
 
 	/**
-	 * @param string $event
-	 * @param array $users
-	 * @param array $objects
+	 * @param OIDplusLogEvent $event
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function log(string $event, array $users, array $objects): bool {
+	public function log(OIDplusLogEvent $event): bool {
 		$addr = $_SERVER['REMOTE_ADDR'] ?? '';
-		OIDplus::dbIsolated()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event)); // TODO: why unix_ts? Why not a database DATETIME field?!
+		OIDplus::dbIsolated()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event->getMessage())); // TODO: why unix_ts? Why not a database DATETIME field?!
 		$log_id = OIDplus::dbIsolated()->insert_id();
 		if ($log_id === 0) {
 			$res = OIDplus::dbIsolated()->query("select max(id) as last_id from ###log");
@@ -54,17 +52,22 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 		}
 
 		$object_dupe_check = array();
-		foreach ($objects as list($severity, $object)) {
-			if (in_array($object, $object_dupe_check)) continue;
-			$object_dupe_check[] = $object;
-			OIDplus::dbIsolated()->query("insert into ###log_object (log_id, severity, object) values (?, ?, ?)", array((int)$log_id, (int)$severity, $object));
-		}
-
 		$user_dupe_check = array();
-		foreach ($users as list($severity, $username)) {
-			if (in_array($username, $user_dupe_check)) continue;
-			$user_dupe_check[] = $username;
-			OIDplus::dbIsolated()->query("insert into ###log_user (log_id, severity, username) values (?, ?, ?)", array((int)$log_id, (int)$severity, $username));
+		foreach ($event->getTargets() as $target) {
+			$severity = $target->getSeverity();
+			if ($target instanceof OIDplusLogTargetObject) {
+				$object = $target->getObject();
+				if (in_array($object, $object_dupe_check)) continue;
+				$object_dupe_check[] = $object;
+				OIDplus::dbIsolated()->query("insert into ###log_object (log_id, severity, object) values (?, ?, ?)", array((int)$log_id, (int)$severity, $object));
+			} else if ($target instanceof OIDplusLogTargetUser) {
+				$username = $target->getUsername();
+				if (in_array($username, $user_dupe_check)) continue;
+				$user_dupe_check[] = $username;
+				OIDplus::dbIsolated()->query("insert into ###log_user (log_id, severity, username) values (?, ?, ?)", array((int)$log_id, (int)$severity, $username));
+			} else {
+				assert(false);
+			}
 		}
 
 		return true;
