@@ -164,7 +164,8 @@ class Git
 					$off = Binary::fuint32($index);
 					if ($off & 0x80000000) {
 						// 64 bit offset
-						// TODO: verify that we are running 64 bit PHP, not 32 bit PHP
+						if (PHP_INT_SIZE != 8)
+							throw new \Exception('64 bit offsets are only possible in 64 bit PHP');
 						$index_64table = $off & 0x7FFFFFFF;
 						fseek($index, 8 + 4 * 256 + 28 * $total_objects + 8 * $index_64table);
 						$off = Binary::fuint64($index);
@@ -367,7 +368,7 @@ class Git
 					continue;
 				$parts = explode(' ', trim($line));
 				if (count($parts) == 2 && $parts[1] == $subpath)
-					$head = pack('H40', $parts[0]);;
+					$head = pack('H40', $parts[0]);
 			}
 			fclose($f);
 			if ($head !== null)
