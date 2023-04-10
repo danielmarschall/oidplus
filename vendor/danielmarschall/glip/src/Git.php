@@ -143,7 +143,7 @@ class Git
 					fseek($index, 8 + 4 * 255);
 					$total_objects = Binary::fuint32($index);
 
-					/* look up sha1 */
+					/* look up sha1 object id */
 					fseek($index, 8 + 4 * 256 + 20 * $cur);
 					for ($i = $cur; $i < $after; $i++) {
 						$name = fread($index, 20);
@@ -153,13 +153,21 @@ class Git
 					if ($i == $after)
 						continue;
 
+					/* next is a table of crc32 (currently not checked) */
+					/*
+					fseek($index, 8 + 4 * 256 + 20 * $total_objects + 4 * $i);
+					$crc32 = bin2hex(fread($index, 4));
+					*/
+
+					/* next comes a table of 32 bit offsets */
 					fseek($index, 8 + 4 * 256 + 24 * $total_objects + 4 * $i);
 					$off = Binary::fuint32($index);
 					if ($off & 0x80000000) {
-						/* packfile > 2 GB. Gee, you really want to handle this
-						 * much data with PHP?
-						 */
-						throw new \Exception('64-bit packfiles offsets not implemented');
+						// 64 bit offset
+						// TODO: verify that we are running 64 bit PHP, not 32 bit PHP
+						$index_64table = $off & 0x7FFFFFFF;
+						fseek($index, 8 + 4 * 256 + 28 * $total_objects + 8 * $index_64table);
+						$off = Binary::fuint64($index);
 					}
 
 					fclose($index);

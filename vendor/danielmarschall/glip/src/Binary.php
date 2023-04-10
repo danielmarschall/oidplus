@@ -28,9 +28,13 @@ namespace ViaThinkSoft\Glip;
 
 final class Binary
 {
+	// 16 bit
+
 	static public function uint16($str, $pos = 0) {
 		return ord($str[$pos + 0]) << 8 | ord($str[$pos + 1]);
 	}
+
+	// 32 bit
 
 	static public function uint32($str, $pos = 0) {
 		$a = unpack('Nx', substr($str, $pos, 4));
@@ -51,6 +55,30 @@ final class Binary
 	static public function nfuint32($n, $f) {
 		return Binary::nuint32($n, fread($f, 4 * $n));
 	}
+
+	// 64 bit
+
+	static public function uint64($str, $pos = 0) {
+		$a = unpack('Jx', substr($str, $pos, 8));
+		return $a['x'];
+	}
+
+	static public function nuint64($n, $str, $pos = 0) {
+		$r = array();
+		for ($i = 0; $i < $n; $i++, $pos += 8)
+			$r[] = Binary::uint64($str, $pos);
+		return $r;
+	}
+
+	static public function fuint64($f) {
+		return Binary::uint64(fread($f, 8));
+	}
+
+	static public function nfuint64($n, $f) {
+		return Binary::nuint64($n, fread($f, 8 * $n));
+	}
+
+	// other
 
 	static public function git_varint($str, &$pos = 0) {
 		$r = 0;
