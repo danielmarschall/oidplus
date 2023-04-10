@@ -38,7 +38,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 	 * @return string
 	 */
 	private function getGitCommand(): string {
-		return 'git --git-dir='.escapeshellarg(OIDplus::findGitFolder().'/').' --work-tree='.escapeshellarg(OIDplus::localpath()).' -C "" pull origin master -s recursive -X theirs';
+		return 'git --git-dir='.escapeshellarg(OIDplus::findGitFolder()).' --work-tree='.escapeshellarg(OIDplus::localpath()).' -C "" pull origin master -s recursive -X theirs';
 	}
 
 	/**
