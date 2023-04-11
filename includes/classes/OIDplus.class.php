@@ -105,12 +105,12 @@ class OIDplus extends OIDplusBaseClass {
 	 * Note that design plugins may only output CSS, not JS.
 	 */
 	/*public*/ const INTERACTIVE_PLUGIN_TYPES = array(
-	'publicPages',
-	'raPages',
-	'adminPages',
-	'objectTypes',
-	'captcha'
-);
+		'publicPages',
+		'raPages',
+		'adminPages',
+		'objectTypes',
+		'captcha'
+	);
 
 	const UUID_NAMEBASED_NS_Base64PubKey = 'fd16965c-8bab-11ed-8744-3c4a92df8582';
 
@@ -1831,7 +1831,7 @@ class OIDplus extends OIDplusBaseClass {
 					OIDplus::config()->setValue('oidplus_public_key', $pubKey);
 
 					// Log the new system ID
-					OIDplus::logger()->log("[INFO]A!", "A new private/public key-pair for your system had been generated. Your SystemID is now $system_id");
+					OIDplus::logger()->log("[INFO]A!", "A new private/public key-pair for your system had been generated. Your SystemID is now %1", $system_id);
 				}
 			} else {
 				$passphrase = self::getPrivKeyPassphrase();
@@ -1842,7 +1842,7 @@ class OIDplus extends OIDplusBaseClass {
 					$passphrase = self::getPrivKeyPassphrase();
 					if ($passphrase !== false) {
 						$privKey = encrypt_private_key($privKey, $passphrase);
-						OIDplus::logger()->log("[INFO]A!", "The private/public key-pair has been upgraded to an encrypted key-pair. The key is saved in ".self::getPrivKeyPassphraseFilename());
+						OIDplus::logger()->log("[INFO]A!", "The private/public key-pair has been upgraded to an encrypted key-pair. The key is saved in %1", self::getPrivKeyPassphraseFilename());
 						OIDplus::config()->setValue('oidplus_private_key', $privKey);
 					}
 				}
@@ -1902,7 +1902,7 @@ class OIDplus extends OIDplusBaseClass {
 				if (($ver_prev) && ($ver_now != $ver_prev)) {
 					// TODO: Problem: When the system was updated using SVN or GIT in the console, then the IP address of the next random visitor of the website is logged!
 					//       Idea: Maybe we should extend the mask code with some kind of magic constant "[NO_IP]", so that no IP is logged for that event?
-					OIDplus::logger()->log("[INFO]A!", "Detected system version change from '$ver_prev' to '$ver_now'");
+					OIDplus::logger()->log("[INFO]A!", "Detected system version change from '%1' to '%2'", $ver_prev, $ver_now);
 
 					// Just to be sure, recanonize objects (we don't do it at every page visit due to performance reasons)
 					self::recanonizeObjects();
@@ -2436,7 +2436,7 @@ class OIDplus extends OIDplusBaseClass {
 				OIDplus::db()->query("update ###asn1id set oid = ? where oid = ?", array($idb, $ida));
 				OIDplus::db()->query("update ###iri set oid = ? where oid = ?", array($idb, $ida));
 				OIDplus::db()->query("update ###log_object set id = ? where id = ?", array($idb, $ida));
-				OIDplus::logger()->log("[INFO]A!", "Object name '$ida' has been changed to '$idb' during re-canonization");
+				OIDplus::logger()->log("[INFO]A!", "Object name '%1' has been changed to '%2' during re-canonization", $ida, $idb);
 				OIDplus::db()->transaction_commit();
 				OIDplusObject::resetObjectInformationCache();
 			}

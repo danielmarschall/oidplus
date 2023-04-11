@@ -75,9 +75,9 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 						throw new OIDplusException(_L('Old password incorrect'));
 					}
 				}
-				OIDplus::logger()->log("[?WARN/!OK]RA($email)?/[?INFO/!OK]A?", "Password of RA '$email' changed");
+				OIDplus::logger()->log("[?WARN/!OK]RA(%1)?/[?INFO/!OK]A?", "Password of RA '%1' changed", $email);
 			} else {
-				OIDplus::logger()->log("[?WARN/!OK]RA($email)?/[?INFO/!OK]A?", "Password of RA '$email' created");
+				OIDplus::logger()->log("[?WARN/!OK]RA(%1)?/[?INFO/!OK]A?", "Password of RA '%1' created", $email);
 			}
 			$ra->change_password($password1);
 

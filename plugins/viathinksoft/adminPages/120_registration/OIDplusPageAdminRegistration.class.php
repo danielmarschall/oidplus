@@ -518,7 +518,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 							$this->sendRegistrationQuery();
 						} catch (\Exception $e) {
 							// Don't do anything, because we don't want that a failed registration query blocks the system
-							OIDplus::logger()->log('[WARN]A!', 'System registration query crashed: '.$e->getMessage());
+							OIDplus::logger()->log('[WARN]A!', 'System registration query crashed: %1', $e->getMessage());
 						}
 					}
 				}
