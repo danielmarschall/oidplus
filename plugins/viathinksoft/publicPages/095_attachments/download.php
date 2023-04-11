@@ -19,11 +19,14 @@
 
 use ViaThinkSoft\OIDplus\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\OIDplusGui;
 use ViaThinkSoft\OIDplus\OIDplusPagePublicAttachments;
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 try {
+	set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
+
 	OIDplus::init(true);
 
 	if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPagePublicAttachments', false)) {

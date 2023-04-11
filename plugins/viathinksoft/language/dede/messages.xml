@@ -4481,7 +4481,7 @@
 		OIDplus is running in offline mode due to the base configuration setting %1.
 		]]></source>
 		<target><![CDATA[
-		OIDplus arbeitet im Offline-Mode aufgrund der Basiskonfigurations-Einstellung %1.
+		OIDplus arbeitet im Offline-Modus aufgrund der Basiskonfigurations-Einstellung %1.
 		]]></target>
 	</message>
 	<message>
@@ -7594,6 +7594,14 @@
 		]]></source>
 		<target><![CDATA[
 		Unbekannt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unresolved wildcards in logging maskcode
+		]]></source>
+		<target><![CDATA[
+		Nicht aufgelöste Wildcards im Logging Maskcode
 		]]></target>
 	</message>
 	<message>

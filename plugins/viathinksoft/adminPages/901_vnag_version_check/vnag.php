@@ -19,6 +19,7 @@
 
 use ViaThinkSoft\OIDplus\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\OIDplusGui;
 use ViaThinkSoft\OIDplus\OIDplusPageAdminVNagVersionCheck;
 
 include __DIR__ . '/../../../../vendor/danielmarschall/vnag/framework/vnag_framework.inc.php';
@@ -26,7 +27,9 @@ include __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 const OIDPLUS_VNAG_MAX_CACHE_AGE = 60; // seconds (TODO: in base config?)
 
-OIDplus::init(false);
+set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
+
+OIDplus::init(true);
 
 if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPageAdminVNagVersionCheck', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
