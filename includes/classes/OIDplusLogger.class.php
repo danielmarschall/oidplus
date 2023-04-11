@@ -188,13 +188,22 @@ class OIDplusLogger extends OIDplusBaseClass {
 
 	/**
 	 * @param string $maskcodes A description of the mask-codes can be found in OIDplusLogger.class.php
-	 * @param string $event
+	 * @param string $message The message of the event
+	 * @param mixed ...$sprintfArgs If used, %1..%n in $maskcodes and $message will be replaced, like _L() does.
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function log(string $maskcodes, string $event): bool {
+	public function log(string $maskcodes, string $message, ...$sprintfArgs): bool {
 		$this->reLogMissing(); // try to re-log failed requests
-		return $this->log_internal($maskcodes, $event, true);
+
+		$maskcodes = my_vsprintf($maskcodes, $sprintfArgs);
+		$message = my_vsprintf($message, $sprintfArgs);
+
+		if (strpos($maskcodes,'%') !== false) {
+			throw new OIDplusException(_L('Unresolved wildcards in logging maskcode'));
+		}
+
+		return $this->log_internal($maskcodes, $message, true);
 	}
 
 	/**

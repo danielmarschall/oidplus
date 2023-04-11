@@ -205,7 +205,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 			if (!file_exists($uploadfile)) throw new OIDplusException(_L('File does not exist'));
 			@unlink($uploadfile);
 			if (file_exists($uploadfile)) {
-				OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", "Attachment file '".basename($uploadfile)."' could not be deleted from object '$id' (problem with permissions?)");
+				OIDplus::logger()->log("[ERR]OID(%1)+[ERR]A!", "Attachment file '%2' could not be deleted from object '%1' (problem with permissions?)", $id, basename($uploadfile));
 				$msg = _L('Attachment file "%1" could not be deleted from object "%2" (problem with permissions?)',basename($uploadfile),$id);
 				if (OIDplus::authUtils()->isAdminLoggedIn()) {
 					throw new OIDplusException($msg);
@@ -218,7 +218,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 				if (is_array($ary) && (count($ary) == 0)) @rmdir($uploaddir);
 			}
 
-			OIDplus::logger()->log("[OK]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Deleted attachment '".basename($uploadfile)."' from object '$id'");
+			OIDplus::logger()->log("[OK]OID(%1)+[?INFO/!OK]OIDRA(%1)?/[?INFO/!OK]A?", "Deleted attachment '%2' from object '%1'", $id, basename($uploadfile));
 
 			return array("status" => 0);
 
@@ -284,7 +284,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 			if (!is_dir($uploaddir)) {
 				@mkdir($uploaddir, 0777, true);
 				if (!is_dir($uploaddir)) {
-					OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", "Upload attachment '".basename($uploadfile)."' to object '$id' failed: Cannot create directory '".basename($uploaddir)."' (problem with permissions?)");
+					OIDplus::logger()->log("[ERR]OID(%1)+[ERR]A!", "Upload attachment '%2' to object '%1' failed: Cannot create directory '%3' (problem with permissions?)", $id, basename($uploadfile), basename($uploaddir));
 					$msg = _L('Upload attachment "%1" to object "%2" failed',basename($uploadfile),$id).': '._L('Cannot create directory "%1" (problem with permissions?)',basename($uploaddir));
 					if (OIDplus::authUtils()->isAdminLoggedIn()) {
 						throw new OIDplusException($msg);
@@ -295,7 +295,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 			}
 
 			if (!@move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-				OIDplus::logger()->log("[ERR]OID($id)+[ERR]A!", "Upload attachment '".basename($uploadfile)."' to object '$id' failed: Cannot move uploaded file into directory (problem with permissions?)");
+				OIDplus::logger()->log("[ERR]OID(%1)+[ERR]A!", "Upload attachment '%2' to object '%1' failed: Cannot move uploaded file into directory (problem with permissions?)", $id, basename($uploadfile));
 				$msg = _L('Upload attachment "%1" to object "%2" failed',basename($uploadfile),$id).': '._L('Cannot move uploaded file into directory (problem with permissions?)');
 				if (OIDplus::authUtils()->isAdminLoggedIn()) {
 					throw new OIDplusException($msg);
@@ -304,7 +304,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 				}
 			}
 
-			OIDplus::logger()->log("[OK]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Uploaded attachment '".basename($uploadfile)."' to object '$id'");
+			OIDplus::logger()->log("[OK]OID(%1)+[?INFO/!OK]OIDRA(%1)?/[?INFO/!OK]A?", "Uploaded attachment '%2' to object '%1'", $id, basename($uploadfile));
 
 			return array("status" => 0);
 		} else {
@@ -508,7 +508,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 			if ($ary) foreach ($ary as $a) @unlink($a);
 			@rmdir($uploaddir);
 			if (is_dir($uploaddir)) {
-				OIDplus::logger()->log("[WARN]OID($id)+[WARN]A!", "Attachment directory '$uploaddir' could not be deleted during the deletion of the OID");
+				OIDplus::logger()->log("[WARN]OID(%1)+[WARN]A!", "Attachment directory '%2' could not be deleted during the deletion of the OID", $id, $uploaddir);
 			}
 		}
 	}

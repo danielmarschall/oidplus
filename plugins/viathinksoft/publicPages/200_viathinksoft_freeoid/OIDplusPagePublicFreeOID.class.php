@@ -79,7 +79,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
 
 			$root_oid = self::getFreeRootOid(false);
-			OIDplus::logger()->log("[INFO]OID(oid:$root_oid)+RA($email)!", "Requested a free OID for email '$email' to be placed into root '$root_oid'");
+			OIDplus::logger()->log("[INFO]OID(oid:%1)+RA(%2)!", "Requested a free OID for email '%2' to be placed into root '%1'", $root_oid, $email);
 
 			$timestamp = time();
 			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp));
@@ -151,8 +151,8 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$root_oid = self::getFreeRootOid(false);
 			$new_oid = OIDplusOid::parse('oid:'.$root_oid)->appendArcs($this->freeoid_max_id()+1)->nodeId(false);
 
-			OIDplus::logger()->log("[INFO]OID(oid:$root_oid)+OIDRA(oid:$root_oid)!", "Child OID '$new_oid' added automatically by '$email' (RA Name: '$ra_name')");
-			OIDplus::logger()->log("[INFO]OID(oid:$new_oid)+[OK]RA($email)!",            "Free OID '$new_oid' activated (RA Name: '$ra_name')");
+			OIDplus::logger()->log("[INFO]OID(oid:%2)+OIDRA(oid:%2)!", "Child OID '%1' added automatically by '%3' (RA Name: '%4')", $new_oid, $root_oid, $email, $ra_name);
+			OIDplus::logger()->log("[INFO]OID(oid:%1)+[OK]RA(%3)!",    "Free OID '%1' activated (RA Name: '%4')",                    $new_oid, $root_oid, $email, $ra_name);
 
 			if ((!empty($url)) && (substr($url, 0, 4) != 'http')) $url = 'http://'.$url;
 

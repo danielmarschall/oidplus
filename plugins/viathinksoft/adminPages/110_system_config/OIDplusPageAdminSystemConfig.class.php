@@ -52,8 +52,9 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L("Setting %1 is read-only",$name));
 			}
 
+			$old_value = OIDplus::config()->getValue($name, '');
 			OIDplus::config()->setValue($name, $value);
-			OIDplus::logger()->log("[OK]A?", "Changed system config setting '$name' to '$value'");
+			OIDplus::logger()->log("[OK]A?", "Changed system config setting '%1' from '%2' to '%3'", $name, $old_value, $value);
 
 			return array("status" => 0);
 		} else {

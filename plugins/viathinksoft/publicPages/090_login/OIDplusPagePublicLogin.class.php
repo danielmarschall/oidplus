@@ -65,9 +65,9 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			} else {
 				if (OIDplus::config()->getValue('log_failed_ra_logins', false)) {
 					if ($ra->existing()) {
-						OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '$email' (wrong password)");
+						OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '%1' (wrong password)", $email);
 					} else {
-						OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '$email' (RA not existing)");
+						OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '%1' (RA not existing)", $email);
 					}
 				}
 				throw new OIDplusException(_L('Wrong password or user not registered'));

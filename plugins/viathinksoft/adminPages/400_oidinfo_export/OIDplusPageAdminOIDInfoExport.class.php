@@ -1142,7 +1142,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			}
 
 			// We do the logging at the end, otherwise SUPOIDRA() might not work correctly if the OIDs were not imported in order or if there were orphans
-			OIDplus::logger()->log("[INFO]OID($id)+[INFO]SUPOID($id)+[INFO]SUPOIDRA($id)!/[INFO]A!", "Object '$id' was automatically created by the XML import tool");
+			OIDplus::logger()->log("[INFO]OID(%1)+[INFO]SUPOID(%1)+[INFO]SUPOIDRA(%1)!/[INFO]A!", "Object '%1' was automatically created by the XML import tool", $id);
 		}
 
 		$count_imported_oids = count($ok_oids);

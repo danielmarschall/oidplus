@@ -89,12 +89,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				}
 			}
 
-			OIDplus::logger()->log("[WARN]OID($id)+[?WARN/!OK]SUPOIDRA($id)?/[?INFO/!OK]A?", "Object '$id' (recursively) deleted");
-			OIDplus::logger()->log("[CRIT]OIDRA($id)!", "Lost ownership of object '$id' because it was deleted");
+			OIDplus::logger()->log("[WARN]OID(%1)+[?WARN/!OK]SUPOIDRA(%1)?/[?INFO/!OK]A?", "Object '%1' (recursively) deleted", $id);
+			OIDplus::logger()->log("[CRIT]OIDRA(%1)!", "Lost ownership of object '%1' because it was deleted", $id);
 
 			if ($parentObj = $obj->getParent()) {
 				$parent_oid = $parentObj->nodeId();
-				OIDplus::logger()->log("[WARN]OID($parent_oid)", "Object '$id' (recursively) deleted");
+				OIDplus::logger()->log("[WARN]OID(%2)", "Object '%1' (recursively) deleted", $id, $parent_oid);
 			}
 
 			// Delete object
@@ -111,7 +111,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 					while ($row = $res->fetch_array()) {
 						$id_to_delete = $row['id'];
-						OIDplus::logger()->log("[CRIT]OIDRA($id_to_delete)!", "Lost ownership of object '$id_to_delete' because one of the superior objects ('$id') was recursively deleted");
+						OIDplus::logger()->log("[CRIT]OIDRA(%2)!", "Lost ownership of object '%2' because one of the superior objects ('%1') was recursively deleted", $id, $id_to_delete);
 						OIDplus::db()->query("delete from ###objects where id = ?", array($id_to_delete));
 						OIDplusObject::resetObjectInformationCache();
 					}
@@ -190,22 +190,22 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				// Change RA recursively
 				$current_ra = $obj->getRaMail() ?? '';
 				if ($new_ra != $current_ra) {
-					OIDplus::logger()->log("[INFO]OID($id)+[?INFO/!OK]SUPOIDRA($id)?/[?INFO/!OK]A?", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
-					OIDplus::logger()->log("[WARN]RA($current_ra)!",           "Lost ownership of object '$id' due to RA transfer of superior RA / admin.");
-					OIDplus::logger()->log("[INFO]RA($new_ra)!",               "Gained ownership of object '$id' due to RA transfer of superior RA / admin.");
+					OIDplus::logger()->log("[INFO]OID(%1)+[?INFO/!OK]SUPOIDRA(%1)?/[?INFO/!OK]A?", "RA of object '%1' changed from '%2' to '%3'", $id, $current_ra, $new_ra);
+					OIDplus::logger()->log("[WARN]RA(%2)!", "Lost ownership of object '%1' due to RA transfer of superior RA / admin.", $id, $current_ra, $new_ra);
+					OIDplus::logger()->log("[INFO]RA(%3)!", "Gained ownership of object '%1' due to RA transfer of superior RA / admin.", $id, $current_ra, $new_ra);
 					if ($parentObj = $obj->getParent()) {
 						$parent_oid = $parentObj->nodeId();
-						OIDplus::logger()->log("[INFO]OID($parent_oid)", "RA of object '$id' changed from '$current_ra' to '$new_ra'");
+						OIDplus::logger()->log("[INFO]OID(%4)", "RA of object '%1' changed from '%2' to '%3'", $id, $current_ra, $new_ra, $parent_oid);
 					}
 					$this->ra_change_rec($id, $current_ra, $new_ra); // Recursively change inherited RAs
 				}
 			}
 
 			// Log if confidentially flag was changed
-			OIDplus::logger()->log("[INFO]OID($id)+[?INFO/!OK]SUPOIDRA($id)?/[?INFO/!OK]A?", "Identifiers/Confidential flag of object '$id' updated"); // TODO: Check if they were ACTUALLY updated!
+			OIDplus::logger()->log("[INFO]OID(%1)+[?INFO/!OK]SUPOIDRA(%1)?/[?INFO/!OK]A?", "Identifiers/Confidential flag of object '%1' updated", $id); // TODO: Check if they were ACTUALLY updated!
 			if ($parentObj = $obj->getParent()) {
 				$parent_oid = $parentObj->nodeId();
-				OIDplus::logger()->log("[INFO]OID($parent_oid)", "Identifiers/Confidential flag of object '$id' updated"); // TODO: Check if they were ACTUALLY updated!
+				OIDplus::logger()->log("[INFO]OID(%2)", "Identifiers/Confidential flag of object '%1' updated", $id, $parent_oid); // TODO: Check if they were ACTUALLY updated!
 			}
 
 			// Replace ASN.1 IDs und IRIs
@@ -291,7 +291,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				}
 			}
 
-			OIDplus::logger()->log("[INFO]OID($id)+[?INFO/!OK]OIDRA($id)?/[?INFO/!OK]A?", "Title/Description of object '$id' updated");
+			OIDplus::logger()->log("[INFO]OID(%1)+[?INFO/!OK]OIDRA(%1)?/[?INFO/!OK]A?", "Title/Description of object '%1' updated", $id);
 
 			if (isset($params['title'])) {
 				$title = $params['title'];
@@ -418,9 +418,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				throw new OIDplusException(_L('Invalid RA email address'));
 			}
 
-			OIDplus::logger()->log("[INFO]OID($parent)+[INFO]OID($id)+[?INFO/!OK]OIDRA($parent)?/[?INFO/!OK]A?", "Object '$id' created, ".(empty($ra_email) ? "without defined RA" : "given to RA '$ra_email'")).", superior object is '$parent'";
+			if (empty($ra_email)) {
+					OIDplus::logger()->log("[INFO]OID(%2)+[INFO]OID(%1)+[?INFO/!OK]OIDRA(%2)?/[?INFO/!OK]A?", "Object '%1' created, without defined RA, superior object is '%2'", $id, $parent);
+			} else {
+					OIDplus::logger()->log("[INFO]OID(%2)+[INFO]OID(%1)+[?INFO/!OK]OIDRA(%2)?/[?INFO/!OK]A?", "Object '%1' created, given to RA '%3', superior object is '%2'", $id, $parent, $ra_email);
+			}
 			if (!empty($ra_email)) {
-				OIDplus::logger()->log("[INFO]RA($ra_email)!", "Gained ownership of newly created object '$id'");
+				OIDplus::logger()->log("[INFO]RA(%2)!", "Gained ownership of newly created object '%1'", $id, $ra_email);
 			}
 
 			$confidential = isset($params['confidential']) && $params['confidential'] == 'true';

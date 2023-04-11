@@ -216,7 +216,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		$logmsg = "RA '$email' logged in";
 		if ($origin != '') $logmsg .= " via $origin";
 		if ($loginfo != '') $logmsg .= " ($loginfo)";
-		OIDplus::logger()->log("[OK]RA($email)!", $logmsg);
+		OIDplus::logger()->log("[OK]RA(%1)!", "%2", $email, $logmsg);
 	}
 
 	/**
@@ -231,7 +231,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		if (is_null($acs)) return;
 		$acs->raLogoutEx($email, $loginfo);
 
-		OIDplus::logger()->log("[OK]RA($email)!", "RA '$email' logged out ($loginfo)");
+		OIDplus::logger()->log("[OK]RA(%1)!", "RA '%1' logged out (%2)", $email, $loginfo);
 
 		if (($this->raNumLoggedIn() == 0) && (!$this->isAdminLoggedIn())) {
 			// Nobody logged in anymore. Destroy session cookie to make GDPR people happy
@@ -346,7 +346,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		$logmsg = "Admin logged in";
 		if ($origin != '') $logmsg .= " via $origin";
 		if ($loginfo != '') $logmsg .= " ($loginfo)";
-		OIDplus::logger()->log("[OK]A!", $logmsg);
+		OIDplus::logger()->log("[OK]A!", "%1", $logmsg);
 	}
 
 	/**
@@ -368,7 +368,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 			$acs->activate();
 		}
 
-		OIDplus::logger()->log("[OK]A!", "Admin logged out ($loginfo)");
+		OIDplus::logger()->log("[OK]A!", "Admin logged out (%1)", $loginfo);
 	}
 
 	// Authentication keys for validating arguments (e.g. sent by mail)
