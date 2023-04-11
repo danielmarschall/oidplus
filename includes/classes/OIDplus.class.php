@@ -1925,12 +1925,11 @@ class OIDplus extends OIDplusBaseClass {
 		$installType = OIDplus::getInstallType();
 
 		if ($installType === 'svn-wc') {
-			$ver = get_svn_revision(OIDplus::localpath());
-			if ($ver)
-				return ($cachedVersion = 'svn-'.$ver);
-			$ver = get_svn_revision(OIDplus::localpath().'../'); // in case we checked out the root instead of the "trunk"
-			if ($ver)
-				return ($cachedVersion = 'svn-'.$ver);
+			if (is_dir($svn_dir = OIDplus::findSvnFolder())) {
+				$ver = get_svn_revision($svn_dir);
+				if ($ver)
+					return ($cachedVersion = 'svn-'.$ver);
+			}
 		}
 
 		if ($installType === 'git-wc') {
@@ -2354,12 +2353,12 @@ class OIDplus extends OIDplusBaseClass {
 	public static function findSvnFolder() {
 		$dir = rtrim(OIDplus::localpath(), DIRECTORY_SEPARATOR);
 
-		if (is_dir($res = $dir.'.svn')) {
+		if (is_dir($res = $dir.'/.svn')) {
 			return str_replace('/', DIRECTORY_SEPARATOR, $res.'/');
 		}
 
 		// in case we checked out the root instead of the "trunk"
-		if (is_dir($res = $dir.'../.svn')) {
+		if (is_dir($res = $dir.'/../.svn')) {
 			return str_replace('/', DIRECTORY_SEPARATOR, $res.'/');
 		}
 
