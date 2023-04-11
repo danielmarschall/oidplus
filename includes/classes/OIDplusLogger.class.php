@@ -199,7 +199,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 		$maskcodes = my_vsprintf($maskcodes, $sprintfArgs);
 		$message = my_vsprintf($message, $sprintfArgs);
 
-		if (strpos($maskcodes,'%') !== false) {
+		if (strpos(str_replace('%%','',$maskcodes),'%') !== false) {
 			throw new OIDplusException(_L('Unresolved wildcards in logging maskcode'));
 		}
 

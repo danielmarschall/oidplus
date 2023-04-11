@@ -24,8 +24,9 @@ use ViaThinkSoft\OIDplus\OIDplusOIDIP;
 
 require_once __DIR__ . '/../../../../../includes/oidplus.inc.php';
 
-OIDplus::init(true);
 set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
+
+OIDplus::init(true);
 
 if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPagePublicWhois', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));

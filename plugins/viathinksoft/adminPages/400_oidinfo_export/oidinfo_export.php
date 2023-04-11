@@ -19,9 +19,12 @@
 
 use ViaThinkSoft\OIDplus\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\OIDplusGui;
 use ViaThinkSoft\OIDplus\OIDplusPageAdminOIDInfoExport;
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
+
+set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
 
 header('Content-Type:text/html; charset=UTF-8');
 
