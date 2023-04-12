@@ -148,7 +148,8 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 						$out['text'] .= _L('Everything OK!');
 					}
 				} catch (\Exception $e) {
-					$out['text'] .= mb_strtoupper(_L('Error')).': '.htmlentities($e->getMessage());
+					$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+					$out['text'] .= mb_strtoupper(_L('Error')).': '.$htmlmsg;
 				}
 
 				$out['text'] .= '</pre>';

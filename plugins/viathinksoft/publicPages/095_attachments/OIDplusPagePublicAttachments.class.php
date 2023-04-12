@@ -133,11 +133,12 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 		} catch (\Exception $e) {
 			$error = _L('This functionality is not available due to a misconfiguration');
 			if (OIDplus::authUtils()->isAdminLoggedIn()) {
-				$error .= ': '.$e->getMessage();
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+				$error .= ': '.$htmlmsg;
 			} else {
 				$error .= '. '._L('Please notify the system administrator. After they log-in, they can see the reason at this place.');
 			}
-			throw new OIDplusException($error);
+			throw new OIDplusHtmlException($error);
 		}
 
 		// Get object-specific path
@@ -477,7 +478,8 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 			}
 		} catch (\Exception $e) {
 			$doshow = true;
-			$output = '<p>'.$e->getMessage().'</p>';
+			$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+			$output = '<p>'.$htmlmsg.'</p>';
 		}
 
 		$output = '<h2>'._L('File attachments').'</h2>' .
@@ -633,7 +635,8 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 				}
 			} catch (\Exception $e) {
 				$error = _L('The file attachments feature is not available due to a misconfiguration');
-				$error .= ': ' . $e->getMessage();
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+				$error .= ': ' . $htmlmsg;
 			}
 			if ($error) {
 				$notifications[] = new OIDplusNotification('WARN', $error);

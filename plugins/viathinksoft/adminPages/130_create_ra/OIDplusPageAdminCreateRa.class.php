@@ -34,7 +34,7 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'create_ra') {
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
+				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
 			}
 
 			_CheckParamExists($params, 'email');

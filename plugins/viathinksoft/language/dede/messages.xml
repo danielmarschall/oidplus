@@ -1078,6 +1078,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Cannot open file %1
+		]]></source>
+		<target><![CDATA[
+		Kann Datei %1 nicht öffnen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Cannot prepare statement
 		]]></source>
 		<target><![CDATA[
@@ -7273,7 +7281,7 @@
 		This email address already has a FreeOID registered (%1)
 		]]></source>
 		<target><![CDATA[
-		Diese E-Mail-Adresse hat bereits eine kostenlose OID (%1)
+		Diese E-Mail-Adresse hat bereits eine kostenlose OID erhalten (%1)
 		]]></target>
 	</message>
 	<message>

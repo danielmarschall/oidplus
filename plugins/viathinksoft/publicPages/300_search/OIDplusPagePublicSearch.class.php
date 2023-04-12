@@ -245,7 +245,8 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				}
 				$out['text'] .= '</div>';
 			} catch (\Exception $e) {
-				$out['text'] = _L('Error: %1',$e->getMessage());
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+				$out['text'] = _L('Error: %1',$htmlmsg);
 			}
 		}
 	}

@@ -1,10 +1,24 @@
 
 April 2023 planned:
-- Don't send information object OIDs to oid-info.com anymore
+- Don't send "information object (i.e. Non-OIDs)" OIDs to oid-info.com anymore
 - In re Internet access:
     * Check if all instances of https://github.com/danielmarschall/oidplus/issues/5 ("Offline mode") have been addressed
     * Everywhere where url_post_contents() is used, we need to check url_post_contents_available() too.
     * Everywhere where url_get_contents() is used, we need to check url_get_contents_available() too.
+
+Exception Refactoring:
+- [DONE]  Instead of catching OIDplusException, catch Exception
+- [DONE]  Check every "new OIDplusException" and "new \OIDplusException" if it contains HTML and needs to be "new OIDplusHtmlException"
+- [DONE]  Check every instance of "->getMessage()" it it needs to be HTML or Text
+                HTML would be   $htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+-         Check every instance of "catch (\Exception"
+                Question: In the whole code we write "catch (\Exception" . Is that correct or should we write "catch (\Throwable" ?
+-         Why are there 66 matches of  "$out['icon'] = 'img/error.png';"  ?  Shouldn't gui() just throw OIDplusException or OIDplusHtmlException and let the caller do the rest?
+                Problem is this: If gui() uses $out[...], then the title can be chosen
+                But we still should prefer throwing Exceptions!
+-               Idea: Implement "friendly Exceptions"
+                    * A "friendly" Exception is an Exception where the user has done something wrong (i.e. they are not logged in).
+                    * The error is therefore clearly known and therefore a technical stacktrace is NOT shown.
 
 Type safety:
 - PhpStorm warnings

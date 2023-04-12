@@ -55,7 +55,8 @@ if (isset($_POST['sent'])) {
 	try {
 		OIDplus::getActiveCaptchaPlugin()->captchaVerify($_POST);
 	} catch (\Exception $e) {
-		echo '<p><font color="red"><b>'.htmlentities($e->getMessage()).'</b></font></p>';
+		$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+		echo '<p><font color="red"><b>'.$htmlmsg.'</b></font></p>';
 		$errors_happened = true;
 		$edits_possible = false;
 	}
@@ -103,14 +104,14 @@ function step_admin_email(int $step, bool $do_edits, bool &$errors_happened) {
 	echo '<h2>'._L('Step %1: Please enter the email address of the system administrator',$step).'</h2>';
 	echo '<input type="text" name="admin_email" value="';
 
-	$msg = '';
+	$htmlmsg = '';
 	if (isset($_POST['sent'])) {
 		echo htmlentities($_POST['admin_email'] ?? '');
 		if ($do_edits) {
 			try {
 				OIDplus::config()->setValue('admin_email', $_POST['admin_email'] ?? '');
 			} catch (\Exception $e) {
-				$msg = $e->getMessage();
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
 				$errors_happened = true;
 			}
 		}
@@ -118,7 +119,7 @@ function step_admin_email(int $step, bool $do_edits, bool &$errors_happened) {
 		echo htmlentities(OIDplus::config()->getValue('admin_email'));
 	}
 
-	echo '" size="25"> <font color="red"><b>'.$msg.'</b></font>';
+	echo '" size="25"> <font color="red"><b>'.$htmlmsg.'</b></font>';
 }
 step_admin_email($step++, $do_edits, $errors_happened);
 
@@ -136,14 +137,14 @@ function step_system_title(int $step, bool $do_edits, bool &$errors_happened) {
 	echo '<h2>'._L('Step %1: What title should your Registration Authority / OIDplus instance have?',$step).'</h2>';
 	echo '<input type="text" name="system_title" value="';
 
-	$msg = '';
+	$htmlmsg = '';
 	if (isset($_POST['sent'])) {
 		echo htmlentities($_POST['system_title'] ?? '');
 		if ($do_edits) {
 			try {
 				OIDplus::config()->setValue('system_title', $_POST['system_title'] ?? '');
 			} catch (\Exception $e) {
-				$msg = $e->getMessage();
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
 				$errors_happened = true;
 			}
 		}
@@ -151,7 +152,7 @@ function step_system_title(int $step, bool $do_edits, bool &$errors_happened) {
 		echo htmlentities(OIDplus::config()->getValue('system_title'));
 	}
 
-	echo '" size="50"> <font color="red"><b>'.$msg.'</b></font>';
+	echo '" size="50"> <font color="red"><b>'.$htmlmsg.'</b></font>';
 }
 step_system_title($step++, $do_edits, $errors_happened);
 

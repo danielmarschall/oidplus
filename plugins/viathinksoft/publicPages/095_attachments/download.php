@@ -63,5 +63,6 @@ try {
 
 	VtsBrowserDownload::output_file($local_file);
 } catch (\Exception $e) {
-	echo '<h1>'._L('Error').'</h1><p>'.htmlentities($e->getMessage()).'<p>';
+	$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+	echo '<h1>'._L('Error').'</h1><p>'.$htmlmsg.'<p>';
 }

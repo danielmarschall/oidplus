@@ -663,17 +663,17 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 
 		echo '</select>';
 
-		$msg = '';
+		$htmlmsg = '';
 		if ($do_edits) {
 			try {
 				OIDplus::config()->setValue('reg_privacy', $_POST['reg_privacy'] ?? 1);
 				OIDplus::config()->setValue('oobe_registration_done', '1');
 			} catch (\Exception $e) {
-				$msg = $e->getMessage();
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
 				$errors_happened = true;
 			}
 		}
-		if (!empty($msg)) echo ' <font color="red"><b>'.$msg.'</b></font>';
+		if (!empty($htmlmsg)) echo ' <font color="red"><b>'.$htmlmsg.'</b></font>';
 
 		echo '<p>'._L('<i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.').'<br>';
 		echo _L('<a %1>Click here</a> for more information about privacy related topics.','href="../../../../res/OIDplus/privacy_documentation.html" target="_blank"');

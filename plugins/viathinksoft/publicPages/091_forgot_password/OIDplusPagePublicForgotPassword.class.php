@@ -136,7 +136,8 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			} catch (\Exception $e) {
 
 				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('Error: %1',htmlentities($e->getMessage())).'</p>';
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+				$out['text'] = '<p>'._L('Error: %1',$htmlmsg).'</p>';
 
 			}
 		} else if (explode('$',$id)[0] == 'oidplus:reset_password') {

@@ -89,7 +89,8 @@ try {
 				$json_out = array();
 				$json_out['title'] = _L('Error');
 				$json_out['icon'] = 'img/error.png';
-				$json_out['text'] = $e->getMessage();
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+				$json_out['text'] = '<p>'.$htmlmsg.'</p>';
 			}
 			$json_out['status'] = 0;
 		} else if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'tree_search')) {
@@ -139,8 +140,6 @@ try {
 	}
 
 	$errmsg = $e->getMessage();
-	$errmsg = strip_tags($errmsg);
-	$errmsg = html_entity_decode($errmsg, ENT_QUOTES, 'UTF-8');
 
 	$json_out = array();
 	$json_out['status'] = -2;

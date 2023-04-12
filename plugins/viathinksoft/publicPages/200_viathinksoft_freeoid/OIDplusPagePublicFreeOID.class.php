@@ -42,10 +42,10 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	/**
 	 * @param string $email
 	 * @param bool $getId
-	 * @return bool|null
+	 * @return string|null|bool If $getId=true, then returns ID or NULL.  If $getId=False, then returns TRUE or FALSE.
 	 * @throws OIDplusException
 	 */
-	public static function alreadyHasFreeOid(string $email, bool $getId = false)/*: ?bool*/ {
+	public static function alreadyHasFreeOid(string $email, bool $getId = false) {
 		$res = OIDplus::db()->query("select id from ###objects where ra_email = ? and id like ?", array($email, self::getFreeRootOid(true).'.%'));
 		$res->naturalSortByField('id');
 		if ($row = $res->fetch_array()) {
@@ -69,7 +69,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$email = $params['email'];
 
 			if ($already_registered_oid = $this->alreadyHasFreeOid($email, true)) {
-				throw new OIDplusException(_L('This email address already has a FreeOID registered (%1)', $already_registered_oid));
+				throw new OIDplusHtmlException(_L('This email address already has a FreeOID registered (%1)', '<a '.OIDplus::gui()->link($already_registered_oid).'>'.htmlentities($already_registered_oid).'</a>'));
 			}
 
 			if (!OIDplus::mailUtils()->validMailAddress($email)) {
@@ -276,10 +276,11 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 				if (OIDplus::config()->getValue('freeoid_root_oid') == '1.3.6.1.4.1.37476.9000') {
 					$out['text'] .= '<p>'._L('<b>Note:</b> Since September 2022, owners of FreeOID automatically receive a free ISO-7816 compliant <b>Application Identifier</b> (AID) with the format <code>D2:76:00:01:86:F0:(FreeOID):FF:(PIX)</code> (up to 64 bits application specific PIX, depending on the length of the FreeOID number).');
-$out['text'] .= ' - <a '.OIDplus::gui()->link('aid:D276000186F1').'>'._L('More information').'</a></p>';
+					$out['text'] .= ' - <a '.OIDplus::gui()->link('aid:D276000186F1').'>'._L('More information').'</a></p>';
 				}
 			} catch (\Exception $e) {
-				$out['text'] = _L('Error: %1',$e->getMessage());
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+				$out['text'] = _L('Error: %1',$htmlmsg);
 			}
 		} else if (explode('$',$id)[0] == 'oidplus:com.viathinksoft.freeoid.activate_freeoid') {
 			$handled = true;
@@ -292,7 +293,7 @@ $out['text'] .= ' - <a '.OIDplus::gui()->link('aid:D276000186F1').'>'._L('More i
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if ($already_registered_oid = $this->alreadyHasFreeOid($email, true)) {
-				throw new OIDplusException(_L('This email address already has a FreeOID registered (%1)', $already_registered_oid));
+				throw new OIDplusHtmlException(_L('This email address already has a FreeOID registered (%1)', '<a '.OIDplus::gui()->link($already_registered_oid).'>'.htmlentities($already_registered_oid).'</a>'));
 			} else {
 				if (!OIDplus::authUtils()->validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
 					$out['icon'] = 'img/error.png';

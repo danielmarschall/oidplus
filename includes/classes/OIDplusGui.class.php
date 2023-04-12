@@ -43,7 +43,8 @@ class OIDplusGui extends OIDplusBaseClass {
 			} catch (\Exception $e) {
 				$out['title'] = _L('Error');
 				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'.$e->getMessage().'</p>';
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+				$out['text'] = '<p>'.$htmlmsg.'</p>';
 				if (OIDplus::baseConfig()->getValue('DEBUG')) {
 					$out['text'] .= self::getExceptionTechInfo($e);
 				}
@@ -126,6 +127,9 @@ class OIDplusGui extends OIDplusBaseClass {
 	 */
 	public static function html_exception_handler(\Throwable $exception) {
 		// Note: This method must be static
+
+		// OXOXO: Implement HTMLEXCEPTIONS
+
 		if ($exception instanceof OIDplusConfigInitializationException) {
 			echo '<!DOCTYPE HTML>';
 			echo '<html><head><title>'.htmlentities(_L('OIDplus initialization error')).'</title></head><body>';
@@ -159,7 +163,14 @@ class OIDplusGui extends OIDplusBaseClass {
 		$out .= get_class($exception)."\n";
 		$out .= _L('at file %1 (line %2)',$exception->getFile(),"".$exception->getLine())."\n\n";
 		$out .= _L('Stacktrace').":\n";
-		$out .= htmlentities($exception->getTraceAsString());
+		$stacktrace = $exception->getTraceAsString();
+		try {
+			$syspath = OIDplus::localpath(NULL);
+			$stacktrace = str_replace($syspath, '...'.DIRECTORY_SEPARATOR, $stacktrace); // for security
+		} catch (\Throwable $e) {
+			// Catch Exception and Error, because this step (censoring) is purely optional and shoult not prevent the stacktrace of being shown
+		}
+		$out .= htmlentities($stacktrace);
 		$out .= '</pre>';
 		return $out;
 	}

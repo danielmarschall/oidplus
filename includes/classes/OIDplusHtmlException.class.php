@@ -24,15 +24,33 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Every Exception that is thrown in OIDplus should be an OIDplusException.
+ * This kind of Exception can contain HTML code
  */
-class OIDplusException extends \Exception {
+class OIDplusHtmlException extends OIDplusException {
+
+	/**
+	 * @var string
+	 */
+	private $htmlMessage;
+
+	/**
+	 * @param string $message In HTML format
+	 * @param int $code
+	 * @param \Throwable|null $previous
+	 */
+	public function __construct(string $message = "", int $code = 0, \Throwable $previous = null) {
+		$this->htmlMessage = $message;
+		$message = strip_tags($message);
+		$message = html_entity_decode($message, ENT_QUOTES, 'UTF-8');
+
+		parent::__construct($message, $code, $previous);
+	}
 
 	/**
 	 * @return string
 	 */
 	public function getHtmlMessage(): string {
-		return htmlentities($this->getMessage());
+		return $this->htmlMessage;
 	}
 
 }

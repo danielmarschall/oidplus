@@ -20,6 +20,7 @@
 use ViaThinkSoft\OIDplus\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplusGui;
 use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\OIDplusHtmlException;
 
 header('Content-Type:text/html; charset=UTF-8');
 
@@ -36,7 +37,7 @@ if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus
 }
 
 if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-	throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
+	throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
 }
 
 if (!class_exists('ZipArchive')) {
@@ -107,7 +108,7 @@ $tmp_file = OIDplus::localpath().'userdata/windows_export.zip';
 
 $zip = new ZipArchive();
 if ($zip->open($tmp_file, ZipArchive::CREATE)!== true) {
-	throw new OIDplusException("cannot open <$tmp_file>");
+	throw new OIDplusException(_L("Cannot open file %1", $tmp_file));
 }
 
 $cont = '';
