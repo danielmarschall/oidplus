@@ -29,10 +29,37 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusException extends \Exception {
 
 	/**
+	 * @var string|null
+	 */
+	protected $title = null;
+
+	/**
+	 * @param string $message
+	 * @param string|null $title
+	 */
+	public function __construct(string $message, string $title=null) {
+		$this->title = $title;
+		parent::__construct($message);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTitle(): string {
+		return htmlentities($this->title ?? '');
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getHtmlTitle(): string {
+		return htmlentities($this->getTitle(), ENT_SUBSTITUTE); // ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
+	}
+	/**
 	 * @return string
 	 */
 	public function getHtmlMessage(): string {
-		return htmlentities($this->getMessage());
+		return htmlentities($this->getMessage(), ENT_SUBSTITUTE); // ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
 	}
 
 }

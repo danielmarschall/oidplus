@@ -23,6 +23,30 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusConfigInitializationException extends OIDplusException {
+class OIDplusConfigInitializationException extends OIDplusHtmlException {
+
+	/**
+	 * @param string $message
+	 */
+	public function __construct(string $message) {
+
+		try {
+			$title = _L('OIDplus initialization error');
+
+			$message = '<p>' . $message . '</p>';
+			$message .= '<p>' . _L('Please check the file %1', '<b>userdata/baseconfig/config.inc.php</b>');
+			if (is_dir(__DIR__ . '/../../setup')) {
+				$message .= ' ' . _L('or run <a href="%1">setup</a> again', OIDplus::webpath(null, OIDplus::PATH_RELATIVE) . 'setup/');
+			}
+			$message .= '</p>';
+		} catch (\Throwable $e) {
+			// In case something fails very hard (i.e. the translation), then we still must show the Exception somehow!
+			// We intentionally catch Exception and Error
+			$title = 'OIDplus initialization error';
+			$message = '<p>'.$message.'</p><p>Please check the file <b>userdata/baseconfig/config.inc.php</b> or run <b>setup/</b> again</p>';
+		}
+
+		parent::__construct($message, $title);
+	}
 
 }
