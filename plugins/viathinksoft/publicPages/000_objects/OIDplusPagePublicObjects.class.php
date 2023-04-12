@@ -1363,7 +1363,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					}
 
 					if ($accept) {
-						$notifications[] = new OIDplusNotification('WARN', _L('Object %1 has no title.', '<a '.OIDplus::gui()->link($row['id']).'>'.$row['id'].'</a>'));
+						$notifications[] = new OIDplusNotification('WARN', _L('Object %1 has no title.', '<a '.OIDplus::gui()->link($row['id']).'>'.htmlentities($row['id']).'</a>'));
 					}
 				}
 			}
