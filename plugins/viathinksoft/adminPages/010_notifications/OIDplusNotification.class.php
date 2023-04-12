@@ -33,21 +33,21 @@ class OIDplusNotification extends OIDplusBaseClass {
 	/**
 	 * @var string
 	 */
-	private $message; // TODO: Rename this to $htmlMessage everywhere
+	private $htmlMessage;
 
 	/**
 	 * @param string $severity One of OK, INFO, WARN, ERR, or CRIT
-	 * @param string $message
+	 * @param string $htmlMessage
 	 * @throws OIDplusException
 	 */
-	public function __construct(string $severity, string $message) {
+	public function __construct(string $severity, string $htmlMessage) {
 		// Same severities as the log plugin (also same CSS classes)
 		if (($severity != 'OK') && ($severity != 'INFO') && ($severity != 'WARN') && ($severity != 'ERR') && ($severity != 'CRIT')) {
 			throw new OIDplusException(_L('Invalid severity "%1"', $severity));
 		}
 
 		$this->severity = $severity;
-		$this->message = $message;
+		$this->htmlMessage = $htmlMessage;
 	}
 
 	/**
@@ -98,9 +98,8 @@ class OIDplusNotification extends OIDplusBaseClass {
 	/**
 	 * @return string
 	 */
-	public function getMessage(): string {
-		// TODO: Rename this method to getHtmlMessage() everywhere
-		return $this->message;
+	public function getHtmlMessage(): string {
+		return $this->htmlMessage;
 	}
 
 }

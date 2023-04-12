@@ -108,7 +108,8 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 					$out['text'] .= '<h2><span class="severity_'.$severity.'">'.$sev_hf.' ('.count($notifications).')</span></h2>';
 					$out['text'] .= '<span class="severity_'.$severity.'"><ol>';
 					foreach ($notifications as $notification) {
-						$out['text'] .= '<li>'.$notification->getMessage().'</li>';
+						assert($notification instanceof OIDplusNotification);
+						$out['text'] .= '<li>'.$notification->getHtmlMessage().'</li>';
 					}
 					$out['text'] .= '</ol></span>';
 				}
