@@ -1323,18 +1323,18 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			echo '> <label for="enable_ot_'.$ot::ns().'">'.htmlentities($ot::objectTypeTitle()).'</label><br>';
 		}
 
-		$msg = '';
+		$htmlmsg = '';
 		if ($do_edits) {
 			try {
 				OIDplus::config()->setValue('objecttypes_enabled', implode(';', $enabled_ary));
 				OIDplus::config()->setValue('oobe_objects_done', '1');
 			} catch (\Exception $e) {
-				$msg = $e->getMessage();
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
 				$errors_happened = true;
 			}
 		}
 
-		echo ' <font color="red"><b>'.$msg.'</b></font>';
+		echo ' <font color="red"><b>'.$htmlmsg.'</b></font>';
 	}
 
 	/**

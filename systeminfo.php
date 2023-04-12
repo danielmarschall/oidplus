@@ -61,14 +61,14 @@ $out['SystemURL'] = $sys_url;
 $sys_title = OIDplus::config()->getValue('system_title');
 $out['SystemTitle'] = $sys_title;
 
-// commented out because of privacy
+// commented out because of security
 /*
 $sys_ver = OIDplus::getVersion();
 if (!$sys_ver) $sys_ver = 'unknown'; // do not translate
 $out['SystemVersion'] = $sys_ver;
 */
 
-// commented out because of privacy
+// commented out because of security
 /*
 $sys_install_type = OIDplus::getInstallType();
 $out['SystemInstallType'] = $sys_install_type;

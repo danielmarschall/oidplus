@@ -734,7 +734,7 @@ class OIDplus extends OIDplusBaseClass {
 
 			try {
 				$authInfo = $plugin->generate($password);
-			} catch (OIDplusException $e) {
+			} catch (\Exception $e) {
 				// This can happen when the AuthKey is too long for the database field
 				// Note: The constructor and setters of OIDplusRAAuthInfo() already check for length and null/false values.
 				throw new OIDplusException(_L('Auth plugin "%1" is erroneous: %2',basename($plugin->getPluginDirectory()),$e->getMessage()));

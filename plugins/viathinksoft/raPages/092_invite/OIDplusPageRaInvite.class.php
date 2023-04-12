@@ -156,7 +156,8 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			} catch (\Exception $e) {
 
 				$out['icon'] = 'img/error.png';
-				$out['text'] = _L('Error: %1',$e->getMessage());
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+				$out['text'] = _L('Error: %1',$htmlmsg);
 
 			}
 		} else if (explode('$',$id)[0] == 'oidplus:activate_ra') {
@@ -238,7 +239,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				}
 			}
 			if (!$ok) {
-				throw new OIDplusException(_L('You may not invite this RA. Maybe you need to <a %1>log in</a> again.',OIDplus::gui()->link('oidplus:login')));
+				throw new OIDplusHtmlException(_L('You may not invite this RA. Maybe you need to <a %1>log in</a> again.',OIDplus::gui()->link('oidplus:login')));
 			}
 		}
 	}

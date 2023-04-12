@@ -59,7 +59,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 			@set_time_limit(0);
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
+				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
 			}
 
 			if (OIDplus::getInstallType() === 'git-wc') {
@@ -423,7 +423,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 		try {
 			$cont = $this->showChangelog($local_installation);
 		} catch (\Exception $e) {
-			$cont = _L('Error: %1',$e->getMessage());
+			$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
+			$cont = _L('Error: %1',$htmlmsg);
 		}
 		ob_end_clean();
 

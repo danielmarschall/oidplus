@@ -73,7 +73,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'color_update') {
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
+				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
 			}
 
 			_CheckParamExists($params, 'hue_shift');
@@ -271,18 +271,18 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin
 		}
 		echo '> <label for="color_invert">'._L('Dark Theme (inverted colors)').'</label><br>';
 
-		$msg = '';
+		$htmlmsg = '';
 		if ($do_edits) {
 			try {
 				OIDplus::config()->setValue('color_invert', $set_value ? 1 : 0);
 				OIDplus::config()->setValue('oobe_colors_done', '1');
 			} catch (\Exception $e) {
-				$msg = $e->getMessage();
+				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
 				$errors_happened = true;
 			}
 		}
 
-		echo ' <font color="red"><b>'.$msg.'</b></font>';
+		echo ' <font color="red"><b>'.$htmlmsg.'</b></font>';
 	}
 
 }

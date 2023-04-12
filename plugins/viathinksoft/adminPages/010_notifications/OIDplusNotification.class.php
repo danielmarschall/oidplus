@@ -33,7 +33,7 @@ class OIDplusNotification extends OIDplusBaseClass {
 	/**
 	 * @var string
 	 */
-	private $message;
+	private $message; // TODO: Rename this to $htmlMessage everywhere
 
 	/**
 	 * @param string $severity One of OK, INFO, WARN, ERR, or CRIT
@@ -99,6 +99,7 @@ class OIDplusNotification extends OIDplusBaseClass {
 	 * @return string
 	 */
 	public function getMessage(): string {
+		// TODO: Rename this method to getHtmlMessage() everywhere
 		return $this->message;
 	}
 
