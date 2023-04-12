@@ -126,31 +126,25 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public static function html_exception_handler(\Throwable $exception) {
-		// Note: This method must be static
+		// Note: This method must be static, because of its registration as Exception handler
 
-		// OXOXO: Implement HTMLEXCEPTIONS
-
-		if ($exception instanceof OIDplusConfigInitializationException) {
-			echo '<!DOCTYPE HTML>';
-			echo '<html><head><title>'.htmlentities(_L('OIDplus initialization error')).'</title></head><body>';
-			echo '<h1>'.htmlentities(_L('OIDplus initialization error')).'</h1>';
-			echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
-			$msg = _L('Please check the file %1','<b>userdata/baseconfig/config.inc.php</b>');
-			if (is_dir(__DIR__ . '/../../setup')) {
-				$msg .= ' '._L('or run <a href="%1">setup</a> again',OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/');
-			}
-			echo '<p>'.$msg.'</p>'; // No htmlentities, because we already did it above
-			echo self::getExceptionTechInfo($exception);
-			echo '</body></html>';
+		if ($exception instanceof OIDplusException) {
+			$htmlTitle = $exception->gethtmlTitle();
+			$htmlMessage = $exception->getHtmlMessage();
 		} else {
-			echo '<!DOCTYPE HTML>';
-			echo '<html><head><title>'.htmlentities(_L('OIDplus error')).'</title></head><body>';
-			echo '<h1>'.htmlentities(_L('OIDplus error')).'</h1>';
-			// ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
-			echo '<p>'.htmlentities($exception->getMessage(), ENT_SUBSTITUTE).'</p>';
-			echo self::getExceptionTechInfo($exception);
-			echo '</body></html>';
+			$htmlTitle = '';
+			$htmlMessage = htmlentities($exception->getMessage());
 		}
+		if (!$htmlTitle) {
+			$htmlTitle = _L('OIDplus Error');
+		}
+
+		echo '<!DOCTYPE HTML>';
+		echo '<html><head><title>'.$htmlTitle.'</title></head><body>';
+		echo '<h1>'.$htmlTitle.'</h1>';
+		echo $htmlMessage;
+		echo self::getExceptionTechInfo($exception);
+		echo '</body></html>';
 	}
 
 	/**

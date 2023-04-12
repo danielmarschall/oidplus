@@ -29,21 +29,31 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusHtmlException extends OIDplusException {
 
 	/**
+	 * @var string|null
+	 */
+	private $htmlTitle;
+
+	/**
 	 * @var string
 	 */
 	private $htmlMessage;
 
 	/**
-	 * @param string $message In HTML format
-	 * @param int $code
-	 * @param \Throwable|null $previous
+	 * @param string $message
+	 * @param string|null $title
 	 */
-	public function __construct(string $message = "", int $code = 0, \Throwable $previous = null) {
+	public function __construct(string $message, string $title=null) {
+		$this->htmlTitle = $title;
+		if ($title) {
+			$title = strip_tags($title);
+			$title = html_entity_decode($title, ENT_QUOTES, 'UTF-8');
+		}
+
 		$this->htmlMessage = $message;
 		$message = strip_tags($message);
 		$message = html_entity_decode($message, ENT_QUOTES, 'UTF-8');
 
-		parent::__construct($message, $code, $previous);
+		parent::__construct($message, $title);
 	}
 
 	/**
@@ -51,6 +61,13 @@ class OIDplusHtmlException extends OIDplusException {
 	 */
 	public function getHtmlMessage(): string {
 		return $this->htmlMessage;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getHtmlTitle(): string {
+		return $this->htmlTitle ?? '';
 	}
 
 }
