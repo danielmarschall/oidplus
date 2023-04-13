@@ -44,7 +44,11 @@ class OIDplusGui extends OIDplusBaseClass {
 				$out['title'] = _L('Error');
 				$out['icon'] = 'img/error.png';
 				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
-				$out['text'] = '<p>'.$htmlmsg.'</p>';
+				if (strtolower(substr($htmlmsg, 0, 3)) === '<p ') {
+					$out['text'] = $htmlmsg;
+				} else {
+					$out['text'] = '<p>'.$htmlmsg.'</p>';
+				}
 				if (OIDplus::baseConfig()->getValue('DEBUG')) {
 					$out['text'] .= self::getExceptionTechInfo($e);
 				}

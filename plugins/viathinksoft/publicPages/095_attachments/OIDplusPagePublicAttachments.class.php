@@ -479,7 +479,11 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 		} catch (\Exception $e) {
 			$doshow = true;
 			$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
-			$output = '<p>'.$htmlmsg.'</p>';
+			if (strtolower(substr($htmlmsg, 0, 3)) === '<p ') {
+				$output = $htmlmsg;
+			} else {
+				$output = '<p>'.$htmlmsg.'</p>';
+			}
 		}
 
 		$output = '<h2>'._L('File attachments').'</h2>' .
