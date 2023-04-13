@@ -135,9 +135,8 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 			} catch (\Exception $e) {
 
-				$out['icon'] = 'img/error.png';
 				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
-				$out['text'] = '<p>'._L('Error: %1',$htmlmsg).'</p>';
+				throw new OIDplusHtmlException(_L('Error: %1',$htmlmsg), $out['title']);
 
 			}
 		} else if (explode('$',$id)[0] == 'oidplus:reset_password') {
@@ -151,8 +150,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$out['icon'] = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/reset_password_icon.png';
 
 			if (!OIDplus::authUtils()->validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = _L('Invalid authorization. Is the URL OK?');
+				throw new OIDplusException(_L('Invalid authorization. Is the URL OK?'), $out['title']);
 			} else {
 				$out['text'] = '<p>'._L('E-Mail-Address: %1','<b>'.$email.'</b>').'</p>
 

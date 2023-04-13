@@ -80,9 +80,7 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
-				return;
+				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), $out['title']);
 			}
 
 			$out['text'] = '';

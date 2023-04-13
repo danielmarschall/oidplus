@@ -231,10 +231,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 				}
 				// This will not be logged anymore, because people could spam the log files otherwise
 				//OIDplus::logger()->log("[WARN]A!", "LFI/RFI attack blocked (requested file '%1')", $file);
-				$out['title'] = _L('Access denied');
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('This request is invalid').'</p>';
-				return;
+				throw new OIDplusException(_L('This request is invalid'), _L('Access denied'));
 			}
 
 			$out['text'] = '';
@@ -243,10 +240,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 			if ($file != '') {
 				if (!self::mayAccessResource($file)) {
-					$out['title'] = _L('Access denied');
-					$out['icon'] = 'img/error.png';
-					$out['text'] = '<p>'._L('Authentication error. Please log in.').'</p>';
-					return;
+					throw new OIDplusException(_L('Authentication error. Please log in.'), _L('Access denied'));
 				}
 			}
 
@@ -339,9 +333,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 					$out['text'] .= self::getDocumentContent($file);
 				} else {
-					$out['title'] = _L('Unknown file type');
-					$out['icon'] = 'img/error.png';
-					$out['text'] = '<p>'._L('The system does not know how to handle this file type.').'</p>';
+					throw new OIDplusException(_L('The system does not know how to handle this file type.'), _L('Unknown file type'));
 				}
 			} else if (is_dir($realfile)) {
 				$out['title'] = ($file == '') ? $this->getMainTitle() : self::getFolderTitle($realfile);
@@ -442,9 +434,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					$out['text'] .= '<p>'._L('This folder does not contain any elements').'</p>';
 				}
 			} else {
-				$out['title'] = _L('Not found');
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('This resource doesn\'t exist anymore.').'</p>';
+				throw new OIDplusException(_L('This resource doesn\'t exist anymore.'), _L('Not found'));
 			}
 		}
 	}

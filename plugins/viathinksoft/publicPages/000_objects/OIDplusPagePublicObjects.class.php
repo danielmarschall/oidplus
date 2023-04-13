@@ -645,10 +645,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
 						http_response_code(404);
 					}
-					$out['title'] = _L('Object not found');
-					$out['icon'] = 'img/error.png';
-					$out['text'] = _L('The object %1 was not found in this database.','<code>'.htmlentities($id).'</code>');
-					return;
+					throw new OIDplusHtmlException(_L('The object %1 was not found in this database.','<code>'.htmlentities($id).'</code>'), _L('Object not found'));
 				}
 			} else {
 				$handled = true;
@@ -662,10 +659,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
 					http_response_code(403);
 				}
-				$out['title'] = _L('Access denied');
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('Please <a %1>log in</a> to receive information about this object.',OIDplus::gui()->link('oidplus:login')).'</p>';
-				return;
+				throw new OIDplusHtmlException(_L('Please <a %1>log in</a> to receive information about this object.',OIDplus::gui()->link('oidplus:login')), _L('Access denied'));
 			}
 
 			// ---

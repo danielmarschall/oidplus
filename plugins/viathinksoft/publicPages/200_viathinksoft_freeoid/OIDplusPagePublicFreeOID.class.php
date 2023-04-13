@@ -296,8 +296,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 				throw new OIDplusHtmlException(_L('This email address already has a FreeOID registered (%1)', '<a '.OIDplus::gui()->link($already_registered_oid).'>'.htmlentities($already_registered_oid).'</a>'));
 			} else {
 				if (!OIDplus::authUtils()->validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
-					$out['icon'] = 'img/error.png';
-					$out['text'] = _L('Invalid authorization. Is the URL OK?');
+					throw new OIDplusException(_L('Invalid authorization. Is the URL OK?'), $out['title']);
 				} else {
 					$ra = new OIDplusRA($email);
 					$ra_existing = $ra->existing();

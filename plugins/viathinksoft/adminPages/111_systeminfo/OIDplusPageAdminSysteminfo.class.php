@@ -80,9 +80,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/php_icon.png';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
-				return;
+				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), $out['title']);
 			}
 
 			$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:systeminfo').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to the system information page').'</a></p>';
@@ -129,9 +127,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
-				return;
+				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), $out['title']);
 			}
 
 			$out['text']  = '';
