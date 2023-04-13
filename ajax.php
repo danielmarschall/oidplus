@@ -90,7 +90,11 @@ try {
 				$json_out['title'] = _L('Error');
 				$json_out['icon'] = 'img/error.png';
 				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
-				$json_out['text'] = '<p>'.$htmlmsg.'</p>';
+				if (strtolower(substr($htmlmsg, 0, 3)) === '<p ') {
+					$json_out['text'] = $htmlmsg;
+				} else {
+					$json_out['text'] = '<p>'.$htmlmsg.'</p>';
+				}
 			}
 			$json_out['status'] = 0;
 		} else if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'tree_search')) {
