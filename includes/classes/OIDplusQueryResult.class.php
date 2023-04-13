@@ -224,7 +224,7 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 * @throws \ReflectionException
 	 */
-	public final function naturalSortByField(string $dbField) {
+	public final function naturalSortByField(string $dbField) { // TODO: Argument asc or desc order
 		if (is_null($this->prefetchedArray)) {
 			$this->prefetchAll();
 		}

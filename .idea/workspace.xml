@@ -8,14 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df2a484b-bed2-4376-a9d2-11f38408a62e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusLogger.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusLogger.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusLoggerPlugin.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusLoggerPlugin.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/logger/000_database/OIDplusLoggerPluginDatabase.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/logger/000_database/OIDplusLoggerPluginDatabase.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/logger/100_linux_syslog/OIDplusLoggerPluginLinuxSyslog.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/logger/100_linux_syslog/OIDplusLoggerPluginLinuxSyslog.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/logger/200_windows_eventlog/OIDplusLoggerPluginWindowsEventLog.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/logger/200_windows_eventlog/OIDplusLoggerPluginWindowsEventLog.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/logger/300_userdata_logfile/OIDplusLoggerPluginUserdataLogfile.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/logger/300_userdata_logfile/OIDplusLoggerPluginUserdataLogfile.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/developer_notes/class_diagram.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/doc/developer_notes/class_diagram.drawio" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusQueryResult.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusQueryResult.class.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,6 +114,9 @@
     </key>
   </component>
   <component name="RunManager" selected="PHP Script.message_regenerate.phps">
+    <configuration name="check_log_masks.phps" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/dev/check_log_masks.phps">
+      <method v="2" />
+    </configuration>
     <configuration name="gs1_utils.inc.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/gs1/gs1_utils.inc.php">
       <method v="2" />
     </configuration>
@@ -134,6 +132,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="PHP Script.message_regenerate.phps" />
+        <item itemvalue="PHP Script.check_log_masks.phps" />
         <item itemvalue="PHP Script.test.php" />
         <item itemvalue="PHP Script.index.php" />
       </list>
@@ -219,6 +218,13 @@
       <workItem from="1681155431054" duration="18000" />
       <workItem from="1681155455690" duration="233000" />
       <workItem from="1681160028987" duration="6502000" />
+      <workItem from="1681167640061" duration="1529000" />
+      <workItem from="1681236674196" duration="691000" />
+      <workItem from="1681253771237" duration="407000" />
+      <workItem from="1681254387543" duration="92000" />
+      <workItem from="1681255680815" duration="7000" />
+      <workItem from="1681333740483" duration="10709000" />
+      <workItem from="1681344793050" duration="469000" />
     </task>
     <servers />
   </component>
