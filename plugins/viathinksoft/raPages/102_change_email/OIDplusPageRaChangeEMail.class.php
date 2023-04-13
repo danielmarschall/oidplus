@@ -228,22 +228,16 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as the requested RA %2 or as admin.',OIDplus::gui()->link('oidplus:login$ra$'.$ra_email),'<b>'.htmlentities($ra_email).'</b>').'</p>';
-				return;
+				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as the requested RA %2 or as admin.',OIDplus::gui()->link('oidplus:login$ra$'.$ra_email),'<b>'.htmlentities($ra_email).'</b>'), $out['title']);
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($ra_email));
 			if (!$res->any()) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = _L('RA "%1" does not exist','<b>'.htmlentities($ra_email).'</b>');
-				return;
+				throw new OIDplusHtmlException(_L('RA "%1" does not exist','<b>'.htmlentities($ra_email).'</b>'), $out['title']);
 			}
 
 			if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('This functionality has been disabled by the administrator.').'</p>';
-				return;
+				throw new OIDplusException(_L('This functionality has been disabled by the administrator.'), $out['title']);
 			}
 
 			if (OIDplus::authUtils()->isAdminLoggedIn()) {
@@ -264,9 +258,9 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				if ($ra->isPasswordLess()) {
 					$out['icon'] = 'img/error.png';
 					$out['text'] .= '<p>'._L('Attention: You are logged in without password (via LDAP or Google OAuth etc.).').'</p>';
-					$out['text'] .= '<p>'._L('Therefore, you cannot change your email address, otherwise you would love access to your account!').'</p>';
+					$out['text'] .= '<p>'._L('Therefore, you cannot change your email address, otherwise you would lose access to your account!').'</p>';
 					$out['text'] .= '<p>'._L('If you want to change your email address, then please <a %1>setup a password</a> first, and then use the regular login method to log in using your new email address.', OIDplus::gui()->link('oidplus:change_ra_password$'.$ra_email)).'</p>';
-					return;
+					return; // throw new OIDplusHtmlException($out['text'], $out['title']);
 				}
 
 				$out['text'] .= '<form id="changeRaEmailForm" action="javascript:void(0);" action="javascript:void(0);" onsubmit="return OIDplusPageRaChangeEMail.changeRaEmailFormOnSubmit(false);">';
@@ -287,31 +281,24 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('This functionality has been disabled by the administrator.').'</p>';
-				return;
+				throw new OIDplusException(_L('This functionality has been disabled by the administrator.'), $out['title']);
 			}
 
 			$ra = new OIDplusRA($old_email);
 			if ($ra->isPasswordLess() && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('E-Mail-Address cannot be changed because this user does not have a password').'</p>';
-				return;
+				throw new OIDplusException(_L('E-Mail-Address cannot be changed because this user does not have a password'), $out['title']);
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($old_email));
 			if (!$res->any()) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = _L('eMail address does not exist anymore. It was probably already changed.');
+				throw new OIDplusException(_L('eMail address does not exist anymore. It was probably already changed.'), $out['title']);
 			} else {
 				$res = OIDplus::db()->query("select * from ###ra where email = ?", array($new_email));
 				if ($res->any()) {
-					$out['icon'] = 'img/error.png';
-					$out['text'] = _L('eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.');
+					throw new OIDplusException(_L('eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.'), $out['title']);
 				} else {
 					if (!OIDplus::authUtils()->validateAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp, $auth)) {
-						$out['icon'] = 'img/error.png';
-						$out['text'] = _L('Invalid authorization. Is the URL OK?');
+						throw new OIDplusException(_L('Invalid authorization. Is the URL OK?'), $out['title']);
 					} else {
 						$out['text'] = '<p>'._L('Old eMail-Address').': <b>'.$old_email.'</b></p>
 						<p>'._L('New eMail-Address').': <b>'.$new_email.'</b></p>

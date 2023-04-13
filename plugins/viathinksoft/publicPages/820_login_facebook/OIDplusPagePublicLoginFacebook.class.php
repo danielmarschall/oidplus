@@ -60,9 +60,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic
 			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
 			if (!OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = _L('Facebook OAuth authentication is disabled on this system.');
-				return;
+				throw new OIDplusException(_L('Facebook OAuth authentication is disabled on this system.'), $out['title']);
 			}
 
 			$target =

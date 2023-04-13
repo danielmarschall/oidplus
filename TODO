@@ -13,9 +13,7 @@ Exception Refactoring:
                 HTML would be   $htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
 -         Check every instance of "catch (\Exception"
                 Question: In the whole code we write "catch (\Exception" . Is that correct or should we write "catch (\Throwable" ?
--         Why are there 66 matches of  "$out['icon'] = 'img/error.png';"  ?  Shouldn't gui() just throw OIDplusException or OIDplusHtmlException and let the caller do the rest?
-                Problem is this: If gui() uses $out[...], then the title can be chosen
-                But we still should prefer throwing Exceptions!
+- [DONE]  Why are there 66 matches of  "$out['icon'] = 'img/error.png';"  ?  Shouldn't gui() just throw OIDplusException or OIDplusHtmlException and let the caller do the rest?
 -               Idea: Implement "friendly Exceptions"
                     * A "friendly" Exception is an Exception where the user has done something wrong (i.e. they are not logged in).
                     * The error is therefore clearly known and therefore a technical stacktrace is NOT shown.

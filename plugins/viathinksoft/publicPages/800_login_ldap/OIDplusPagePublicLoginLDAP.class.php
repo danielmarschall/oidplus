@@ -251,15 +251,11 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
 			if (!OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = _L('LDAP authentication is disabled on this system.');
-				return;
+				throw new OIDplusException(_L('LDAP authentication is disabled on this system.'), $out['title']);
 			}
 
 			if (!function_exists('ldap_connect')) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = _L('PHP extension "%1" not installed','LDAP');
-				return;
+				throw new OIDplusException(_L('PHP extension "%1" not installed','LDAP'), $out['title']);
 			}
 
 			$out['text']  = '<noscript>';

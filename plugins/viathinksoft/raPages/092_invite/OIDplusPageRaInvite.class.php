@@ -133,9 +133,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$out['title'] = _L('Invite a Registration Authority');
 
 			if (!OIDplus::config()->getValue('ra_invitation_enabled')) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('Invitations are disabled by the administrator.').'</p>';
-				return;
+				throw new OIDplusException(_L('Invitations are disabled by the administrator.'), $out['title']);
 			}
 
 			$out['icon'] = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/invite_icon.png';
@@ -155,9 +153,8 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 			} catch (\Exception $e) {
 
-				$out['icon'] = 'img/error.png';
 				$htmlmsg = $e instanceof OIDplusException ? $e->getHtmlMessage() : htmlentities($e->getMessage());
-				$out['text'] = _L('Error: %1',$htmlmsg);
+				throw new OIDplusHtmlException(_L('Error: %1',$htmlmsg), $out['title']);
 
 			}
 		} else if (explode('$',$id)[0] == 'oidplus:activate_ra') {
@@ -170,9 +167,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$out['title'] = _L('Register as Registration Authority');
 
 			if (!OIDplus::config()->getValue('ra_invitation_enabled')) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('Invitations are disabled by the administrator.').'</p>';
-				return;
+				throw new OIDplusException(_L('Invitations are disabled by the administrator.'), $out['title']);
 			}
 
 			$out['icon'] = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/activate_icon.png';
@@ -182,8 +177,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				$out['text'] = _L('This RA is already registered and does not need to be invited.');
 			} else {
 				if (!OIDplus::authUtils()->validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
-					$out['icon'] = 'img/error.png';
-					$out['text'] = _L('Invalid authorization. Is the URL OK?');
+					throw new OIDplusException(_L('Invalid authorization. Is the URL OK?'), $out['title']);
 				} else {
 					// TODO: like in the FreeOID plugin, we could ask here at least for a name for the RA
 					$out['text'] = '<p>'._L('E-Mail-Address').': <b>'.$email.'</b></p>

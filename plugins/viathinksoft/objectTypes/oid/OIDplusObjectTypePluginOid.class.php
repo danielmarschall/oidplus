@@ -67,7 +67,7 @@ class OIDplusObjectTypePluginOid extends OIDplusObjectTypePlugin
 			$weid = $ary[0];
 			$oid = \Frdl\Weid\WeidOidConverter::weid2oid($weid);
 			if ($oid === false) {
-				if ($throw_exception) throw new OIDplusException('This is not a valid WEID');
+				if ($throw_exception) throw new OIDplusException(_L('This is not a valid WEID'));
 			} else {
 				$ary[0] = $oid;
 				$static_node_id = 'oid:'.implode('$', $ary);

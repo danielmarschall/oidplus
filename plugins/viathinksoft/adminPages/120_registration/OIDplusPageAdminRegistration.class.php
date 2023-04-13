@@ -100,9 +100,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
-				return;
+				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), $out['title']);
 			}
 
 			if (file_exists(__DIR__ . '/info$'.OIDplus::getCurrentLang().'.html')) {
@@ -179,9 +177,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
-				return;
+				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), $out['title']);
 			}
 
 			$query = self::QUERY_LIVESTATUS_V1;
@@ -226,19 +222,15 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 			$json = @json_decode($res, true);
 
 			if (!$json) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = _L('JSON reply from ViaThinkSoft decoding error: %1',$res);
-				return;
+				throw new OIDplusException(_L('JSON reply from ViaThinkSoft decoding error: %1',$res), $out['title']);
 			}
 
 			if (isset($json['error']) || ($json['status'] < 0)) {
-				$out['icon'] = 'img/error.png';
 				if (isset($json['error'])) {
-					$out['text'] = _L('Received error status code: %1',$json['error']);
+					throw new OIDplusException(_L('Received error status code: %1',$json['error']), $out['title']);
 				} else {
-					$out['text'] = _L('Received error status code: %1',$json['status']);
+					throw new OIDplusException(_L('Received error status code: %1',$json['status']), $out['title']);
 				}
-				return;
 			}
 
 			$out['text']  = '<p><a '.OIDplus::gui()->link('oidplus:srv_registration').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back to registration settings').'</a></p>' .

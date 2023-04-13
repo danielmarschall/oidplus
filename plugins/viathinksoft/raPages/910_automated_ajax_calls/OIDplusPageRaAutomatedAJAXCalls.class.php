@@ -75,14 +75,11 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('You need to <a %1>log in</a> as the requested RA %2 or as admin.',OIDplus::gui()->link('oidplus:login$ra$'.$ra_email),'<b>'.htmlentities($ra_email).'</b>').'</p>';
-				return;
+				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as the requested RA %2 or as admin.',OIDplus::gui()->link('oidplus:login$ra$'.$ra_email),'<b>'.htmlentities($ra_email).'</b>'), $out['title']);
 			}
 
 			if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_USER', true)) {
-				$out['text'] = '<p>'._L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_USER').'</p>';
-				return;
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_USER'), $out['title']);
 			}
 
 			$gen = OIDplusAuthContentStoreJWT::JWT_GENERATOR_AJAX;

@@ -93,17 +93,13 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-			$out['icon'] = 'img/error.png';
-			$out['text'] = '<p>'._L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')).'</p>';
-			return;
+			throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), $out['title']);
 		}
 
 		if (!is_null($classname)) {
 			$plugin = OIDplus::getPluginByClassName($classname);
 			if (is_null($plugin)) {
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('Plugin %1 not found.',$classname).'</p>';
-				return;
+				throw new OIDplusException(_L('Plugin %1 not found.',$classname), $out['title']);
 			}
 
 			$out['title'] = empty($plugin->getManifest()->getName()) ? htmlentities($classname) : htmlentities($plugin->getManifest()->getName());
@@ -278,11 +274,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				$show_captcha_inactive = true;
 			} else {
-				$out['title'] = _L('Error');
-				$out['icon'] = 'img/error.png';
-				$out['text'] = '<p>'._L('Invalid arguments').'</p>';
-				$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
-				return;
+				throw new OIDplusHtmlException('<p>'._L('Invalid arguments').'</p><p><a '.OIDplus::gui()->link('oidplus:system_plugins').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>', $out['title']);
 			}
 
 			$pp_public = array();

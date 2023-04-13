@@ -4374,6 +4374,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OIDplus Error
+		]]></source>
+		<target><![CDATA[
+		OIDplus-Fehler
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OIDplus Information Object Application Identifier (ISO/IEC 7816)
 		]]></source>
 		<target><![CDATA[
@@ -4458,14 +4466,6 @@
 		]]></source>
 		<target><![CDATA[
 		OIDplus Datenbank mit Beispieldateien
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		OIDplus error
-		]]></source>
-		<target><![CDATA[
-		OIDplus Fehler
 		]]></target>
 	</message>
 	<message>
@@ -7198,7 +7198,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Therefore, you cannot change your email address, otherwise you would love access to your account!
+		Therefore, you cannot change your email address, otherwise you would lose access to your account!
 		]]></source>
 		<target><![CDATA[
 		Deswegen können Sie nicht Ihre E-Mail-Adresse ändern, da Sie ansonsten den Zugang zu Ihrem Konto verlieren würden!
@@ -7330,6 +7330,14 @@
 		]]></source>
 		<target><![CDATA[
 		Dies ist keine gültige E-Mail-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This is not a valid WEID
+		]]></source>
+		<target><![CDATA[
+		Dies ist keine gültige WEID
 		]]></target>
 	</message>
 	<message>
