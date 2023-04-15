@@ -106,7 +106,7 @@ function doRebuild(admPwdHash, pwComment) {
 		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br>' +
 			'<i>// To renew this file, please run setup/ in your browser.</i><br>' + // do not translate
 			'<i>// If you don\'t want to run setup again, you can also change most of the settings directly in this file.</i><br>' + // do not translate
-			'<i>// List of possible values: doc/config_values.txt</i><br>' + // do not translate
+			'<i>// List of possible values: doc/config_values.md</i><br>' + // do not translate
 			'<br>' +
 			'use ViaThinkSoft\\OIDplus\\OIDplus;<br>' +
 			'<br>' +

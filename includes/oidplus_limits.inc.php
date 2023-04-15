@@ -39,7 +39,7 @@ use ViaThinkSoft\OIDplus\OIDplus;
   * Which value is realistic?
   * 	In the oid-info.com database (April 2020), the OID with the greatest size is 65 characters (dot notation)
   *
-  * Maximal value:
+  * Maximum value:
   * 	OIDs may only have a size of max 251 characters in dot notation.
   * 	Reason: The field defintion of *_objects.oid is defined as varchar(255),
   * 	        and the OID will have the prefix 'oid:' (4 bytes).
@@ -55,7 +55,7 @@ OIDplus::baseConfig()->setValue('LIMITS_MAX_ID_LENGTH', 255);
   * Default value:
   *	255 characters
   *
-  * Maximal value:
+  * Maximum value:
   *	255, as defined in the database fields *_asn1id.name
   *	You can change the database field definition if you really need more.
   **/
@@ -69,7 +69,7 @@ OIDplus::baseConfig()->setValue('LIMITS_MAX_OID_ASN1_ID_LEN', 255);
   * Default value:
   *	255 bytes (UTF-8 encoded!)
   *
-  * Maximal value:
+  * Maximum value:
   *	255, as defined in the database fields *_iri.name
   *	You can change the database field definition if you really need more.
   **/
