@@ -82,4 +82,4 @@ but receives an OK-Event if they did the change.
 Implementation
 ==============
 
-You can find the implementation in `includes/classes/OIDplusLogger.class.php`.
+You can find the implementation in **includes/classes/OIDplusLogger.class.php**.
