@@ -8,9 +8,48 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df2a484b-bed2-4376-a9d2-11f38408a62e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/doc/config_values.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/developer_notes/auth_methods.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/developer_notes/compatibility_notes.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/developer_notes/feature_oids.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/developer_notes/file_naming_convention.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/developer_notes/logger_maskcodes.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/developer_notes/path_functions.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/developer_notes/plugin_oids.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/developer_notes/server_secret.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/install_alpine_linux.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/install_facebook_oauth2.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/install_fail2ban.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/install_google_oauth2.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/install_iis.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/install_ldap.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/developer_notes/class_diagram.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/doc/developer_notes/class_diagram.drawio" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusQueryResult.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusQueryResult.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/config_values.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/developer_notes/SERVER_SECRET.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/developer_notes/auth_methods.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/developer_notes/compatibility.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/developer_notes/dependencies.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/developer_notes/feature_oids.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/developer_notes/file_naming_convention.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/developer_notes/path_functions.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/developer_notes/php7_compat.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/developer_notes/plugin_oids.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/install_alpine_linux.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/install_facebook_oauth2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/install_fail2ban.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/install_google_oauth2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/install_iis.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/install_ldap.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusLogger.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusLogger.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/oidplus_limits.inc.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/oidplus_limits.inc.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/nginx.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/frdl/publicPages/1276945_rdap/manifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/frdl/publicPages/1276945_rdap/manifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/frdl/publicPages/altids/manifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/frdl/publicPages/altids/manifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/tushevorg/publicPages/2000_uitweaks/manifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/tushevorg/publicPages/2000_uitweaks/manifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/800_plugins/OIDplusPageAdminPlugins.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/800_plugins/OIDplusPageAdminPlugins.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/language/dede/messages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/language/dede/messages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/000_objects/welcome$dede.html" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/000_objects/welcome$dede.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup/includes/setup_base.js" beforeDir="false" afterPath="$PROJECT_DIR$/setup/includes/setup_base.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +113,10 @@
     <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2N1iLsvnSxtAjQSwVh6njExUvVK" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+    <ConfirmationsSetting value="2" id="Remove" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -225,6 +267,9 @@
       <workItem from="1681255680815" duration="7000" />
       <workItem from="1681333740483" duration="10709000" />
       <workItem from="1681344793050" duration="469000" />
+      <workItem from="1681409561121" duration="8758000" />
+      <workItem from="1681506089262" duration="754000" />
+      <workItem from="1681513303059" duration="5146000" />
     </task>
     <servers />
   </component>

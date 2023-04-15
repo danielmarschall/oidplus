@@ -8,7 +8,7 @@ How to use LDAP / ActiveDirectory login
 	extension=ldap
 
 (2) In userdata/baseconfig/config.inc.php, please add following lines,
-    and adjust them to your configuration:
+and adjust them to your configuration:
 
 	OIDplus::baseConfig()->setValue('LDAP_ENABLED',                true);
 	OIDplus::baseConfig()->setValue('LDAP_SERVER',                 'ldap://server1.contoso.local');
@@ -19,4 +19,4 @@ How to use LDAP / ActiveDirectory login
 	OIDplus::baseConfig()->setValue('LDAP_ADMIN_GROUP',            '');
 	OIDplus::baseConfig()->setValue('LDAP_RA_GROUP',               '');
 
-    An explanation of these settings can be found in doc/config_values.txt
+An explanation of these settings can be found in **doc/config_values.md**.

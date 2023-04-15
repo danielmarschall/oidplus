@@ -10,7 +10,7 @@
 		<name>RDAP</name>
 		<author>Frdlweb</author>
 		<license>MIT</license>
-		<version>0.3.2</version>
+		<version>0.3.2+viathinksoft20230412</version>
 		<descriptionHTML>
 		<![CDATA[
                 <a href="https://github.com/frdl/oidplus-frdlweb-rdap" target="_blank">RDAP plugin for OIDplus 2.0</a>

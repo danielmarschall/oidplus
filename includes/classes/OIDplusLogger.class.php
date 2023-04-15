@@ -187,7 +187,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param string $maskcodes A description of the mask-codes can be found in OIDplusLogger.class.php
+	 * @param string $maskcodes A description of the mask-codes can be found in doc/developer_notes/logger_maskcodes.md
 	 * @param string $message The message of the event
 	 * @param mixed ...$sprintfArgs If used, %1..%n in $maskcodes and $message will be replaced, like _L() does.
 	 * @return bool
@@ -247,7 +247,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 			throw new OIDplusException(_L('Invalid maskcode "%1" (failed to split)',$maskcodes));
 		}
 		foreach ($maskcodes_ary as list($sevs,$maskcode)) {
-			// At the beginning of each mask code, you can define a severity.
+			// At the beginning of each mask code, you must define a severity.
 			// If you have a mask code with multiple components, you don't have to place the
 			// severity for each component. You can just leave it at the beginning.
 			// e.g. "[WARN]OID(x)+RA(x)" is equal to "[WARN]OID(x)+[WARN]RA(x)"

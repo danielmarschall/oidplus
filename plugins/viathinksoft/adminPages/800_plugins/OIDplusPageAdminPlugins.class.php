@@ -459,7 +459,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 							$note = '';
 						}
 
-						$this->pluginTableLine($out, $plugin, $modifier, htmlentities($note));
+						$this->pluginTableLine($out, $plugin, $modifier, $note);
 					}
 					$out['text'] .= '</tbody>';
 					$out['text'] .= '</table>';
@@ -481,7 +481,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 						if ($plugin->available($reason)) {
 							$this->pluginTableLine($out, $plugin, 0);
 						} else if ($reason) {
-							$this->pluginTableLine($out, $plugin, 2, _L('not available: %1',htmlentities($reason)));
+							$this->pluginTableLine($out, $plugin, 2, _L('not available: %1',$reason));
 						} else {
 							$this->pluginTableLine($out, $plugin, 2, _L('not available'));
 						}
