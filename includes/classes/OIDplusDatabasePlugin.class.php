@@ -31,6 +31,14 @@ abstract class OIDplusDatabasePlugin extends OIDplusPlugin {
 	public abstract static function id(): string; // this is the name that is set to the configuration value OIDplus::baseConfig()->getValue('DATABASE_PLUGIN') to identify the database plugin
 
 	/**
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public final function isActive(): bool {
+		return (strtolower($this->id()) == strtolower(OIDplus::baseConfig()->getValue('DATABASE_PLUGIN','')));
+	}
+
+	/**
 	 * @return OIDplusDatabaseConnection
 	 */
 	public abstract static function newConnection(): OIDplusDatabaseConnection;

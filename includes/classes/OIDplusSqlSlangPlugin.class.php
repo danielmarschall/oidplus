@@ -31,6 +31,15 @@ abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 	public abstract static function id(): string;
 
 	/**
+	 * @return bool
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public final function isActive(): bool {
+		return $this->id() == OIDplus::db()->getSlang()->id();
+	}
+
+	/**
 	 * @return string
 	 */
 	public abstract function sqlDate(): string;

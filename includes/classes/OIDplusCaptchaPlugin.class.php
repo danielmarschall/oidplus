@@ -36,6 +36,14 @@ abstract class OIDplusCaptchaPlugin extends OIDplusPlugin {
 	public abstract function isVisible(): bool;
 
 	/**
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public final function isActive(): bool {
+		return OIDplus::getActiveCaptchaPluginId() == $this->id();
+	}
+
+	/**
 	 * @param string|null $header_text
 	 * @param string|null $footer_text
 	 * @return string

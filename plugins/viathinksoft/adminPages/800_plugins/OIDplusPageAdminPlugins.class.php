@@ -381,7 +381,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '</thead>';
 					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
-						$active = $plugin::id() == OIDplus::baseConfig()->getValue('DATABASE_PLUGIN');
+						$active = $plugin->isActive();
 						if ($active && !$show_db_active) continue;
 						if (!$active && !$show_db_inactive) continue;
 						$this->pluginTableLine($out, $plugin, $active?1:0, $active?_L('active'):'');
@@ -402,7 +402,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '</thead>';
 					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
-						$active = $plugin::id() == OIDplus::db()->getSlang()->id();
+						$active = $plugin->isActive();
 						if ($active && !$show_sql_active) continue;
 						if (!$active && !$show_sql_inactive) continue;
 						$this->pluginTableLine($out, $plugin, $active?1:0, $active?_L('active'):'');
@@ -521,7 +521,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '</thead>';
 					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
-						$active = OIDplus::config()->getValue('design') === basename($plugin->getPluginDirectory());
+						$active = $plugin->isActive();
 						if ($active && !$show_design_active) continue;
 						if (!$active && !$show_design_inactive) continue;
 						$this->pluginTableLine($out, $plugin, $active?1:0, $active?_L('active'):'');
@@ -542,8 +542,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 					$out['text'] .= '</thead>';
 					$out['text'] .= '<tbody>';
 					foreach ($plugins as $plugin) {
-						$captcha_plugin_name = OIDplus::getActiveCaptchaPluginId();
-						$active = $plugin::id() == $captcha_plugin_name;
+						$active = $plugin->isActive();
 						if ($active && !$show_captcha_active) continue;
 						if (!$active && !$show_captcha_inactive) continue;
 						$this->pluginTableLine($out, $plugin, $active?1:0, $active?_L('active'):'');
@@ -643,7 +642,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		foreach (OIDplus::getDatabasePlugins() as $plugin) {
 			$txt = (empty($plugin->getManifest()->getName())) ? get_class($plugin) : $plugin->getManifest()->getName();
 
-			if ($plugin::id() == OIDplus::baseConfig()->getValue('DATABASE_PLUGIN')) {
+			if ($plugin->isActive()) {
 				$db_plugins[] = array(
 					'id' => 'oidplus:system_plugins$'.get_class($plugin),
 					'icon' => $tree_icon_db_active,
@@ -734,8 +733,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		foreach (OIDplus::getDesignPlugins() as $plugin) {
 			$txt = (empty($plugin->getManifest()->getName())) ? get_class($plugin) : $plugin->getManifest()->getName();
 
-			$active = OIDplus::config()->getValue('design') === basename($plugin->getPluginDirectory());
-			if ($active) {
+			if ($plugin->isActive()) {
 				$design_plugins[] = array(
 					'id' => 'oidplus:system_plugins$'.get_class($plugin),
 					'icon' => $tree_icon_design_active,
@@ -753,8 +751,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 		foreach (OIDplus::getCaptchaPlugins() as $plugin) {
 			$txt = (empty($plugin->getManifest()->getName())) ? get_class($plugin) : $plugin->getManifest()->getName();
 
-			$captcha_plugin_name = OIDplus::getActiveCaptchaPluginId();
-			if ($plugin::id() == $captcha_plugin_name) {
+			if ($plugin->isActive()) {
 				$captcha_plugins[] = array(
 					'id' => 'oidplus:system_plugins$'.get_class($plugin),
 					'icon' => $tree_icon_captcha_active,
