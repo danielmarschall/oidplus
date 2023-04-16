@@ -24,6 +24,12 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 abstract class OIDplusAuthPlugin extends OIDplusPlugin {
+
+	/**
+	 * @return string
+	 */
+	public abstract function id(): string;
+
 	/**
 	 * @param OIDplusRAAuthInfo $authInfo
 	 * @param string $check_password

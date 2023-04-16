@@ -28,7 +28,14 @@ class OIDplusDesignPluginDefault extends OIDplusDesignPlugin {
 	/**
 	 * @return string
 	 */
-	function getThemeColor(): string {
+	public function id(): string {
+		return 'default';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getThemeColor(): string {
 		return '#A9DCF0';
 	}
 

@@ -159,9 +159,9 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin
 			$out['text'] .= '  <label for="theme">'._L('Design').':</label>';
 			$out['text'] .= '  <select name="theme" id="theme">';
 			foreach (OIDplus::getDesignPlugins() as $plugin) {
-				$folder = basename($plugin->getPluginDirectory());
-				$selected = $folder == OIDplus::config()->getValue('design') ? ' selected="true"' : '';
-				$out['text'] .= '<option value="'.htmlentities($folder).'"'.$selected.'>'.htmlentities($plugin->getManifest()->getName()).'</option>';
+				$plugin_id = $plugin->id();
+				$selected = $plugin_id == OIDplus::config()->getValue('design') ? ' selected="true"' : '';
+				$out['text'] .= '<option value="'.htmlentities($plugin_id).'"'.$selected.'>'.htmlentities($plugin->getManifest()->getName()).'</option>';
 			}
 			$out['text'] .= '  </select>';
 			$out['text'] .= '</p>';

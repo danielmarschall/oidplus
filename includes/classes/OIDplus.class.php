@@ -363,7 +363,7 @@ class OIDplus extends OIDplusBaseClass {
 				if (strpos($value,'\\') !== false) $good = false;
 				if (strpos($value,'..') !== false) $good = false;
 				if (!$good) {
-					throw new OIDplusException(_L('Invalid auth plugin folder name. Do only enter a folder name, not an absolute or relative path'));
+					throw new OIDplusException(_L('Invalid auth plugin name. It is usually the folder name, without path, e.g. "%1"', 'A4_argon2'));
 				}
 
 				OIDplus::checkRaAuthPluginAvailable($value, true);
@@ -642,13 +642,13 @@ class OIDplus extends OIDplusBaseClass {
 	// --- Auth plugin
 
 	/**
-	 * @param string $foldername
+	 * @param string $id
 	 * @return OIDplusAuthPlugin|null
 	 */
-	public static function getAuthPluginByFoldername(string $foldername)/*: ?OIDplusAuthPlugin*/ {
+	public static function getAuthPluginById(string $id)/*: ?OIDplusAuthPlugin*/ {
 		$plugins = OIDplus::getAuthPlugins();
 		foreach ($plugins as $plugin) {
-			if (basename($plugin->getPluginDirectory()) === $foldername) {
+			if ($plugin->id() == $id) {
 				return $plugin;
 			}
 		}
@@ -656,24 +656,24 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param string $plugin_foldername
+	 * @param string $plugin_id
 	 * @param bool $must_hash
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	private static function checkRaAuthPluginAvailable(string $plugin_foldername, bool $must_hash) {
+	private static function checkRaAuthPluginAvailable(string $plugin_id, bool $must_hash) {
 		// if (!wildcard_is_dir(OIDplus::localpath().'plugins/'.'*'.'/auth/'.$plugin_foldername)) {
-		$plugin = OIDplus::getAuthPluginByFoldername($plugin_foldername);
+		$plugin = OIDplus::getAuthPluginById($plugin_id);
 		if (is_null($plugin)) {
-			throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$plugin_foldername,'plugins/[vendorname]/auth/'));
+			throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$plugin_id,'plugins/[vendorname]/auth/'));
 		}
 
 		$reason = '';
 		if (!$plugin->availableForVerify($reason)) {
-			throw new OIDplusException(trim(_L('The auth plugin "%1" is not available for password verification on this system.',$plugin_foldername).' '.$reason));
+			throw new OIDplusException(trim(_L('The auth plugin "%1" is not available for password verification on this system.',$plugin_id).' '.$reason));
 		}
 		if ($must_hash && !$plugin->availableForHash($reason)) {
-			throw new OIDplusException(trim(_L('The auth plugin "%1" is not available for hashing on this system.',$plugin_foldername).' '.$reason));
+			throw new OIDplusException(trim(_L('The auth plugin "%1" is not available for hashing on this system.',$plugin_id).' '.$reason));
 		}
 	}
 
@@ -684,10 +684,10 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	public static function getDefaultRaAuthPlugin(bool $must_hash)/*: OIDplusAuthPlugin*/ {
 		// 1. Priority: Use the auth plugin the user prefers
-		$def_plugin_foldername = OIDplus::config()->getValue('default_ra_auth_method');
-		if (trim($def_plugin_foldername) !== '') {
-			OIDplus::checkRaAuthPluginAvailable($def_plugin_foldername, $must_hash);
-			return OIDplus::getAuthPluginByFoldername($def_plugin_foldername);
+		$def_plugin_id = OIDplus::config()->getValue('default_ra_auth_method');
+		if (trim($def_plugin_id) !== '') {
+			OIDplus::checkRaAuthPluginAvailable($def_plugin_id, $must_hash);
+			return OIDplus::getAuthPluginById($def_plugin_id);
 		}
 
 		// 2. Priority: If empty (i.e. OIDplus may decide), choose the best ViaThinkSoft plugin that is supported on this system
@@ -698,8 +698,8 @@ class OIDplus extends OIDplusBaseClass {
 			'A5_vts_mcf', // usually SHA3-512-HMAC
 			'A6_crypt'    // usually Salted SHA512 with 5000 rounds
 		);
-		foreach ($preferred_auth_plugins as $plugin_foldername) {
-			$plugin = OIDplus::getAuthPluginByFoldername($plugin_foldername);
+		foreach ($preferred_auth_plugins as $plugin_id) {
+			$plugin = OIDplus::getAuthPluginById($plugin_id);
 			if (is_null($plugin)) continue;
 
 			$reason = '';
@@ -801,7 +801,7 @@ class OIDplus extends OIDplusBaseClass {
 	public static function getActiveDesignPlugin()/*: ?OIDplusDesignPlugin*/ {
 		$plugins = OIDplus::getDesignPlugins();
 		foreach ($plugins as $plugin) {
-			if ((basename($plugin->getPluginDirectory())) == OIDplus::config()->getValue('design','default')) {
+			if ($plugin->id() == OIDplus::config()->getValue('design','default')) {
 				return $plugin;
 			}
 		}
