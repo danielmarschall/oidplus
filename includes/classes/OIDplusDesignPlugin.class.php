@@ -28,8 +28,16 @@ abstract class OIDplusDesignPlugin extends OIDplusPlugin {
 	/**
 	 * @return string
 	 */
-	function getThemeColor(): string {
+	public function getThemeColor(): string {
 		return ''; // no theme color
+	}
+
+	/**
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public final function isActive(): bool {
+		return basename($this->getPluginDirectory()) === OIDplus::config()->getValue('design');
 	}
 
 }
