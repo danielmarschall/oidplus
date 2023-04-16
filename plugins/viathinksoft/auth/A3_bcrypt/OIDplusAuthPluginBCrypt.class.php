@@ -26,6 +26,13 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 
 	/**
+	 * @return string
+	 */
+	public function id(): string {
+		return 'A3_bcrypt';
+	}
+
+	/**
 	 * @param bool $html
 	 * @return void
 	 * @throws OIDplusException

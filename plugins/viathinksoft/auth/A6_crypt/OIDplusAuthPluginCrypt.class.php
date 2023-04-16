@@ -26,6 +26,13 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusAuthPluginCrypt extends OIDplusAuthPlugin {
 
 	/**
+	 * @return string
+	 */
+	public function id(): string {
+		return 'A6_crypt';
+	}
+
+	/**
 	 * @param OIDplusRAAuthInfo $authInfo
 	 * @param string $check_password
 	 * @return bool

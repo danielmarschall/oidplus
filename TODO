@@ -2,9 +2,10 @@
 April 2023 planned:
 - Don't send "information object (i.e. Non-OIDs)" OIDs to oid-info.com anymore
 - In re Internet access:
-    * Check if all instances of https://github.com/danielmarschall/oidplus/issues/5 ("Offline mode") have been addressed
-    * Everywhere where url_post_contents() is used, we need to check url_post_contents_available() too.
-    * Everywhere where url_get_contents() is used, we need to check url_get_contents_available() too.
+          * Check if all instances of https://github.com/danielmarschall/oidplus/issues/5 ("Offline mode") have been addressed
+    [OK!] * Everywhere where url_post_contents() is used, we need to check url_post_contents_available() too.
+          * Everywhere where url_get_contents() is used, we need to check url_get_contents_available() too.
+- Not good: url_*_contents() throws an Exception if not available, but returns false if URL is not available?!
 
 Exception Refactoring:
 - [DONE]  Instead of catching OIDplusException, catch Exception

@@ -110,7 +110,7 @@ if (file_exists(__DIR__ . '/userdata/styles/oidplus_base.css')) {
 	OIDplus::registerAllPlugins('design', OIDplusDesignPlugin::class, array(OIDplus::class,'registerDesignPlugin'));
 	$plugins = OIDplus::getDesignPlugins();
 	foreach ($plugins as $plugin) {
-		if ((basename($plugin->getPluginDirectory())) == $theme) {
+		if ($plugin->id() == $theme) {
 			$manifest = $plugin->getManifest();
 			foreach ($manifest->getCSSFiles() as $css_file) {
 				$out .= process_file($css_file);

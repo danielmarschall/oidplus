@@ -26,6 +26,13 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 
 	/**
+	 * @return string
+	 */
+	public function id(): string {
+		return 'A5_vts_mcf';
+	}
+
+	/**
 	 * @param OIDplusRAAuthInfo $authInfo
 	 * @param string $check_password
 	 * @return bool

@@ -28,7 +28,14 @@ class OIDplusDesignPluginIronBase extends OIDplusDesignPlugin {
 	/**
 	 * @return string
 	 */
-	function getThemeColor(): string {
+	public function id(): string {
+		return 'ironbase';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getThemeColor(): string {
 		return '#F9F9F9';
 	}
 

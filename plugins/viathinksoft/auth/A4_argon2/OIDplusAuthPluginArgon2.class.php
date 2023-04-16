@@ -26,6 +26,13 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 
 	/**
+	 * @return string
+	 */
+	public function id(): string {
+		return 'A4_argon2';
+	}
+
+	/**
 	 * @param bool $html
 	 * @return void
 	 */
