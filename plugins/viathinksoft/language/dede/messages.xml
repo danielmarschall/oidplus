@@ -950,6 +950,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		CAPTCHA plugin "%1" is active, but OIDplus cannot connect to the Internet. Users will not be able to log in!
+		]]></source>
+		<target><![CDATA[
+		CAPTCHA-Plugin "%1" ist aktiv, aber OIDplus kann sich nicht mit dem Internet verbinden. Benutzer werden sich nicht einloggen können!
+		]]></target><!-- TODO: TRANSLATE -->
+	</message>
+	<message>
+		<source><![CDATA[
 		CAPTCHA plugin "%1" not found
 		]]></source>
 		<target><![CDATA[

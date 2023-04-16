@@ -23,7 +23,9 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
+class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8  /* getNotifications */
+{
 
 	/**
 	 *
@@ -160,6 +162,24 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin {
 		$http_headers["Content-Security-Policy"]["img-src"][]    = "https://www.gstatic.com/";
 		$http_headers["Content-Security-Policy"]["frame-src"][]  = "https://www.google.com/";
 		$http_headers["Content-Security-Policy"]["frame-src"][]  = "https://www.gstatic.com/";
+	}
+
+	/**
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8
+	 * @param string|null $user
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function getNotifications(string $user=null): array {
+		$notifications = array();
+		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
+			if ($this->isActive()) {
+				if (!url_get_contents_available(true, $reason)) {
+					$notifications[] = new OIDplusNotification('CRIT', _L('CAPTCHA plugin "%1" is active, but OIDplus cannot connect to the Internet. Users will not be able to log in!', htmlentities(self::id())) . ' ' . $reason);
+				}
+			}
+		}
+		return $notifications;
 	}
 
 }

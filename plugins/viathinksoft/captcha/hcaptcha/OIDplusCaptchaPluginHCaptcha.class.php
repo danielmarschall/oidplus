@@ -23,7 +23,9 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
+class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8  /* getNotifications */
+{
 
 	/**
 	 * @return string
@@ -134,6 +136,24 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin {
 		//$http_headers["Content-Security-Policy"]["unsafe-inline"][] = "https://hcaptcha.com";
 		//$http_headers["Content-Security-Policy"]["unsafe-inline"][] = "https://*.hcaptcha.com";
 
+	}
+
+	/**
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8
+	 * @param string|null $user
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function getNotifications(string $user=null): array {
+		$notifications = array();
+		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
+			if ($this->isActive()) {
+				if (!url_post_contents_available(true, $reason)) {
+					$notifications[] = new OIDplusNotification('CRIT', _L('OIDplus plugin "%1" is enabled, but OIDplus cannot connect to the Internet.', htmlentities(self::id())) . ' ' . $reason);
+				}
+			}
+		}
+		return $notifications;
 	}
 
 }
