@@ -954,7 +954,7 @@
 		]]></source>
 		<target><![CDATA[
 		CAPTCHA-Plugin "%1" ist aktiv, aber OIDplus kann sich nicht mit dem Internet verbinden. Benutzer werden sich nicht einloggen können!
-		]]></target><!-- TODO: TRANSLATE -->
+		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
@@ -3302,10 +3302,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Invalid auth plugin folder name. Do only enter a folder name, not an absolute or relative path
+		Invalid auth plugin name. It is usually the folder name, without path, e.g. "%1"
 		]]></source>
 		<target><![CDATA[
-		Ungültiger Authentifizierungs-Plugin Ordnername. Bitte nur einen Ordnernamen (keinen Pfad) eingeben
+		Ungültiger Authentifizierungs-Plugin-Name. Der Plugin-Name ist in der Regel der Ordnernamen (ohne Pfad), z.B. "%1"
 		]]></target>
 	</message>
 	<message>

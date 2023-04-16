@@ -202,7 +202,9 @@ class OIDplusGs1 extends OIDplusObject {
 				$checkDigit = $this->checkDigit();
 				$content  = '<h2>'._L('Barcode').' '.$chunked.' - <abbr title="'._L('check digit').'">'.$checkDigit.'</abbr></h2>';
 				$content .= '<p><a target="_blank" href="https://www.ean-search.org/?q='.htmlentities($this->fullNumber()).'">'._L('Lookup at ean-search.org').'</a></p>';
-				$content .= '<img src="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'barcode.php?number='.urlencode($this->fullNumber()).'">';
+				if (url_get_contents_available(true, $reason)) {
+					$content .= '<p><img alt="'._L('Barcode').'" src="' . OIDplus::webpath(__DIR__, OIDplus::PATH_RELATIVE) . 'barcode.php?number=' . urlencode($this->fullNumber()) . '"></p>';
+				}
 				$content .= $tech_info_html;
 				$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
 			} else {

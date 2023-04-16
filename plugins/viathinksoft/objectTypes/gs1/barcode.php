@@ -35,7 +35,13 @@ error_reporting(0);
 $number = $_GET['number'];
 $number = preg_replace("/[^0-9]/", "", $number);
 $number = substr($number, 0, 20);
-$out = url_get_contents('https://bwipjs-api.metafloor.com/?bcid=code128&text='.urlencode($number).'&scale=1&includetext');
+
+try {
+	$out = url_get_contents('https://bwipjs-api.metafloor.com/?bcid=code128&text='.urlencode($number).'&scale=1&includetext');
+} catch (\Exception $e) {
+	http_response_code(500);
+	die();
+}
 
 if ($out === false) {
 	http_response_code(500);
