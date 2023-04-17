@@ -5,7 +5,7 @@ CREATE TABLE `config` (
   `description` varchar(255),
   `protected` boolean NOT NULL DEFAULT '0',
   `visible` boolean NOT NULL DEFAULT '0'
-) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `config`
   ADD PRIMARY KEY (`name`);
@@ -15,11 +15,11 @@ ALTER TABLE `config`
 DROP TABLE IF EXISTS `asn1id`;
 CREATE TABLE `asn1id` (
   `lfd` int(11) NOT NULL,
-  `oid` varchar(255) NOT NULL COLLATE utf8_bin,
+  `oid` varchar(255) NOT NULL COLLATE utf8mb4_bin,
   `name` varchar(255) NOT NULL,
   `standardized` boolean NOT NULL DEFAULT '0',
   `well_known` boolean NOT NULL DEFAULT '0'
-) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `asn1id`
   ADD PRIMARY KEY (`lfd`),
@@ -32,11 +32,11 @@ ALTER TABLE `asn1id`
 DROP TABLE IF EXISTS `iri`;
 CREATE TABLE `iri` (
   `lfd` int(11) NOT NULL,
-  `oid` varchar(255) NOT NULL COLLATE utf8_bin,
+  `oid` varchar(255) NOT NULL COLLATE utf8mb4_bin,
   `name` varchar(255) NOT NULL,
   `longarc` boolean NOT NULL DEFAULT '0',
   `well_known` boolean NOT NULL DEFAULT '0'
-) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `iri`
   ADD PRIMARY KEY (`lfd`),
@@ -48,8 +48,8 @@ ALTER TABLE `iri`
 
 DROP TABLE IF EXISTS `objects`;
 CREATE TABLE `objects` (
-  `id` varchar(255) NOT NULL COLLATE utf8_bin,
-  `parent` varchar(255) DEFAULT NULL COLLATE utf8_bin,
+  `id` varchar(255) NOT NULL COLLATE utf8mb4_bin,
+  `parent` varchar(255) DEFAULT NULL COLLATE utf8mb4_bin,
   `title` varchar(255) NULL,
   `description` text NULL,
   `ra_email` varchar(100) NULL,
@@ -57,7 +57,7 @@ CREATE TABLE `objects` (
   `created` datetime,
   `updated` datetime,
   `comment` varchar(255) NULL
-) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `objects`
   ADD PRIMARY KEY (`id`) USING BTREE,
@@ -85,7 +85,7 @@ CREATE TABLE `ra` (
   `registered` datetime,
   `updated` datetime,
   `last_login` datetime
-) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `ra`
   ADD PRIMARY KEY (`ra_id`),
@@ -101,7 +101,7 @@ CREATE TABLE `log` (
   `unix_ts` bigint NOT NULL,
   `addr` varchar(45) NOT NULL,
   `event` text NOT NULL
-) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `log`
   ADD PRIMARY KEY (`id`);
@@ -116,7 +116,7 @@ CREATE TABLE `log_user` (
   `log_id` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
   `severity` int(11) NOT NULL
-) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `log_user`
   ADD PRIMARY KEY (`id`),
@@ -133,9 +133,9 @@ DROP TABLE IF EXISTS `log_object`;
 CREATE TABLE `log_object` (
   `id` int(11) NOT NULL,
   `log_id` int(11) NOT NULL,
-  `object` varchar(255) NOT NULL COLLATE utf8_bin,
+  `object` varchar(255) NOT NULL COLLATE utf8mb4_bin,
   `severity` int(11) NOT NULL
-) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8;
+) /*ENGINE=InnoDB*/ DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `log_object`
   ADD PRIMARY KEY (`id`),
