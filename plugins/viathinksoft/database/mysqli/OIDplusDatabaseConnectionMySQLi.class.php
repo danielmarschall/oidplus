@@ -156,7 +156,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		$this->prepare_cache = array();
 		$this->last_error = null;
 
-		$this->query("SET NAMES 'utf8'");
+		$this->query("SET NAMES 'utf8mb4'");
 	}
 
 	/**
