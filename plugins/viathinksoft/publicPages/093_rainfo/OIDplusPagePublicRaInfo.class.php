@@ -194,23 +194,23 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 
 		} else {
 			$row = $res->fetch_array();
-			$out = '<b>'.htmlentities($row['ra_name']).'</b><br>'; // TODO: if you are not already at the page "oidplus:rainfo", then link to it now
+			$out = '<b>'.htmlentities($row['ra_name']??'').'</b><br>'; // TODO: if you are not already at the page "oidplus:rainfo", then link to it now
 			$out .= _L('E-Mail').': <a href="mailto:'.htmlentities($email).'">'.htmlentities($email).'</a><br>';
-			if (trim($row['personal_name']) !== '') $out .= htmlentities($row['personal_name']).'<br>';
-			if (trim($row['organization']) !== '') $out .= htmlentities($row['organization']).'<br>';
-			if (trim($row['office']) !== '') $out .= htmlentities($row['office']).'<br>';
+			if (trim($row['personal_name']??'') !== '') $out .= htmlentities($row['personal_name']).'<br>';
+			if (trim($row['organization']??'') !== '') $out .= htmlentities($row['organization']).'<br>';
+			if (trim($row['office']??'') !== '') $out .= htmlentities($row['office']).'<br>';
 			if ($row['privacy']) {
 				// TODO: Only show the message if the user has a street, address, etc.
 				// TODO: But the admin and the own user should see it (with a note that the data is not visible to the public)
 				$out .= '<p>'._L('The RA does not want to publish their personal information.').'</p>';
 			} else {
-				if (trim($row['street']) !== '') $out .= htmlentities($row['street']).'<br>';
-				if (trim($row['zip_town']) !== '') $out .= htmlentities($row['zip_town']).'<br>';
-				if (trim($row['country']) !== '') $out .= htmlentities($row['country']).'<br>';
+				if (trim($row['street']??'') !== '') $out .= htmlentities($row['street']).'<br>';
+				if (trim($row['zip_town']??'') !== '') $out .= htmlentities($row['zip_town']).'<br>';
+				if (trim($row['country']??'') !== '') $out .= htmlentities($row['country']).'<br>';
 				$out .= '<br>';
-				if (trim($row['phone']) !== '') $out .= _L('Phone: %1',htmlentities($row['phone'])).'<br>';
-				if (trim($row['fax']) !== '') $out .= _L('Fax: %1',htmlentities($row['fax'])).'<br>';
-				if (trim($row['mobile']) !== '') $out .= _L('Mobile: %1',htmlentities($row['mobile'])).'<br>';
+				if (trim($row['phone']??'') !== '') $out .= _L('Phone: %1',htmlentities($row['phone'])).'<br>';
+				if (trim($row['fax']??'') !== '') $out .= _L('Fax: %1',htmlentities($row['fax'])).'<br>';
+				if (trim($row['mobile']??'') !== '') $out .= _L('Mobile: %1',htmlentities($row['mobile'])).'<br>';
 				$out .= '<br>';
 			}
 		}

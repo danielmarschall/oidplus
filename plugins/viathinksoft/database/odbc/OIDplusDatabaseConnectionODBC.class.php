@@ -67,37 +67,36 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	 * @throws OIDplusSQLException
 	 */
 	protected function doQueryInternalPrepare(string $sql, array $prepared_args=null): OIDplusQueryResultODBC {
-				foreach ($prepared_args as &$value) {
-					// ODBC/SQLServer has problems converting "true" to the data type "bit"
-					// Error "Invalid character value for cast specification"
-					if (is_bool($value)) {
-						if ($this->slangDetectionDone) {
-							$value = $this->getSlang()->getSQLBool($value);
-						} else {
-							$value = $value ? '1' : '0';
-						}
-					}
+		foreach ($prepared_args as &$value) {
+			// ODBC/SQLServer has problems converting "true" to the data type "bit"
+			// Error "Invalid character value for cast specification"
+			if (is_bool($value)) {
+				if ($this->slangDetectionDone) {
+					$value = $this->getSlang()->getSQLBool($value);
+				} else {
+					$value = $value ? '1' : '0';
 				}
+			}
+		}
 
-				$ps = @odbc_prepare($this->conn, $sql);
-				if (!$ps) {
-					// If preparation fails, try the emulation
-					// For example, SQL Server ODBC Driver cannot have "?" in a subquery,
-					// otherwise you receive the error message
-					// "Syntax error or access violation" on odbc_prepare()
-					return $this->doQueryPrepareEmulation($sql, $prepared_args);
-					/*
-					$this->last_error = odbc_errormsg($this->conn);
-					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
-					*/
-				}
+		$ps = @odbc_prepare($this->conn, $sql);
+		if (!$ps) {
+			// If preparation fails, try the emulation
+			// For example, SQL Server ODBC Driver cannot have "?" in a subquery,
+			// otherwise you receive the error message
+			// "Syntax error or access violation" on odbc_prepare()
+			return $this->doQueryPrepareEmulation($sql, $prepared_args);
+			/*
+			$this->last_error = odbc_errormsg($this->conn);
+			throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
+			*/
+		}
 
-				if (!@odbc_execute($ps, $prepared_args)) {
-					$this->last_error = odbc_errormsg($this->conn);
-					throw new OIDplusSQLException($sql, $this->error());
-				}
-				return new OIDplusQueryResultODBC($ps);
-
+		if (!@odbc_execute($ps, $prepared_args)) {
+			$this->last_error = odbc_errormsg($this->conn);
+			throw new OIDplusSQLException($sql, $this->error());
+		}
+		return new OIDplusQueryResultODBC($ps);
 	}
 
 	/**
@@ -109,40 +108,40 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	 * @throws OIDplusSQLException
 	 */
 	protected function doQueryPrepareEmulation(string $sql, array $prepared_args=null): OIDplusQueryResultODBC {
-				// For some drivers (e.g. Microsoft Access), we need to do this kind of emulation, because odbc_prepare() does not work
-				$sql = str_replace('?', chr(1), $sql);
-				foreach ($prepared_args as $arg) {
-					$needle = chr(1);
-					if (is_bool($arg)) {
-						if ($this->slangDetectionDone) {
-							$replace = $this->getSlang()->getSQLBool($arg);
-						} else {
-							$replace = $arg ? '1' : '0';
-						}
-					} else if (is_int($arg)) {
-						$replace = $arg;
-					} else if (is_float($arg)) {
-						$replace = number_format($arg, 10, '.', '');
-					} else {
-						// TODO: More types?
-						if ($this->slangDetectionDone) {
-							$replace = "'".$this->getSlang()->escapeString($arg ?? '')."'";
-						} else {
-							$replace = "'".str_replace("'", "''", $arg)."'";
-						}
-					}
-					$pos = strpos($sql, $needle);
-					if ($pos !== false) {
-						$sql = substr_replace($sql, $replace, $pos, strlen($needle));
-					}
+		// For some drivers (e.g. Microsoft Access), we need to do this kind of emulation, because odbc_prepare() does not work
+		$sql = str_replace('?', chr(1), $sql);
+		foreach ($prepared_args as $arg) {
+			$needle = chr(1);
+			if (is_bool($arg)) {
+				if ($this->slangDetectionDone) {
+					$replace = $this->getSlang()->getSQLBool($arg);
+				} else {
+					$replace = $arg ? '1' : '0';
 				}
-				$sql = str_replace(chr(1), '?', $sql);
-				$ps = @odbc_exec($this->conn, $sql);
-				if (!$ps) {
-					$this->last_error = odbc_errormsg($this->conn);
-					throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
+			} else if (is_int($arg)) {
+				$replace = $arg;
+			} else if (is_float($arg)) {
+				$replace = number_format($arg, 10, '.', '');
+			} else {
+				// TODO: More types?
+				if ($this->slangDetectionDone) {
+					$replace = "'".$this->getSlang()->escapeString($arg ?? '')."'";
+				} else {
+					$replace = "'".str_replace("'", "''", $arg)."'";
 				}
-				return new OIDplusQueryResultODBC($ps);
+			}
+			$pos = strpos($sql, $needle);
+			if ($pos !== false) {
+				$sql = substr_replace($sql, $replace, $pos, strlen($needle));
+			}
+		}
+		$sql = str_replace(chr(1), '?', $sql);
+		$ps = @odbc_exec($this->conn, $sql);
+		if (!$ps) {
+			$this->last_error = odbc_errormsg($this->conn);
+			throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
+		}
+		return new OIDplusQueryResultODBC($ps);
 	}
 
 	/**
@@ -163,10 +162,6 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 				return new OIDplusQueryResultODBC($res);
 			}
 		} else {
-			if (!is_array($prepared_args)) {
-				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
-			}
-
 			if ($this->forcePrepareEmulation()) {
 				return $this->doQueryPrepareEmulation($sql, $prepared_args);
 			} else {

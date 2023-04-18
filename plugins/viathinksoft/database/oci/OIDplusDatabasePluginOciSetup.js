@@ -51,8 +51,8 @@ rebuild_callbacks.push(function() {
 		$("#oci_username_warn")[0].innerHTML = '';
 	}
 
-	$("#struct_1")[0].href = setupdir+'struct_empty.sql.php?plugin=oci&prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang=oracle';
-	$("#struct_2")[0].href = setupdir+'struct_with_examples.sql.php?plugin=oci&prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang=oracle';
+	$("#struct_1")[0].href = setupdir+'struct_empty.sql.php?prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang=oracle';
+	$("#struct_2")[0].href = setupdir+'struct_with_examples.sql.php?prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang=oracle';
 	$("#struct_cli_1")[0].innerHTML = '';//TODO
 	$("#struct_cli_2")[0].innerHTML = '';//TODO
 

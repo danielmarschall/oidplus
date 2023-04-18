@@ -57,10 +57,6 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 				return new OIDplusQueryResultPDO($res);
 			}
 		} else {
-			if (!is_array($prepared_args)) {
-				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
-			}
-
 			foreach ($prepared_args as &$value) {
 				// We need to manually convert booleans into strings, because there is a
 				// 14 year old bug that hasn't been adressed by the PDO developers:
@@ -155,9 +151,9 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			$username = OIDplus::baseConfig()->getValue('PDO_USERNAME', 'root');
 			$password = OIDplus::baseConfig()->getValue('PDO_PASSWORD', '');
 
-			// Try to extend DSN with charset
-			// Note: For MySQL, must be utf8 or utf8, and not UTF-8
 			if (stripos($dsn,"charset=") === false) {
+				// Try to extend DSN with charset
+				// Note: For MySQL, must be utf8 or utf8, and not UTF-8
 				try {
 					$this->conn = new \PDO("$dsn;charset=utf8mb4", $username, $password, $options);
 				} catch (\Exception $e1) {

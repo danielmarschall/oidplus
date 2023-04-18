@@ -856,7 +856,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						$obj = OIDplusObject::parse($row->id);
 						if (!$obj) continue; // might happen if the objectType is not available/loaded
 						if (!$obj->userHasReadRights()) continue;
-						$txt = $row->title == '' ? '' : ' -- '.htmlentities($row->title);
+						$txt = ($row->title ?? '') == '' ? '' : ' -- '.htmlentities($row->title);
 
 						if ($row->id == $parent) { $stufe=0; $z_used++; }
 						if ($row->id == $req_goto) { $stufe=1; $y_used++; }
@@ -1084,8 +1084,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					if ($accepts_asn1) $output .= '     <td><input type="text" id="asn1ids_'.$row->id.'" value="'.implode(', ', $asn1ids).'"></td>';
 					if ($accepts_iri)  $output .= '     <td><input type="text" id="iris_'.$row->id.'" value="'.implode(', ', $iris).'"></td>';
 				}
-				$output .= '     <td><input type="text" id="ra_email_'.$row->id.'" value="'.htmlentities($row->ra_email).'"></td>';
-				$output .= '     <td><input type="text" id="comment_'.$row->id.'" value="'.htmlentities($row->comment).'"></td>';
+				$output .= '     <td><input type="text" id="ra_email_'.$row->id.'" value="'.htmlentities($row->ra_email ?? '').'"></td>';
+				$output .= '     <td><input type="text" id="comment_'.$row->id.'" value="'.htmlentities($row->comment ?? '').'"></td>';
 				$output .= '     <td><input type="checkbox" id="hide_'.$row->id.'" '.($row->confidential ? 'checked' : '').'></td>';
 				$output .= '     <td><button type="button" name="update_'.$row->id.'" id="update_'.$row->id.'" class="btn btn-success btn-xs update" onclick="OIDplusPagePublicObjects.crudActionUpdate('.js_escape($row->id).', '.js_escape($parent).')">'._L('Update').'</button></td>';
 				$output .= '     <td><button type="button" name="delete_'.$row->id.'" id="delete_'.$row->id.'" class="btn btn-danger btn-xs delete" onclick="OIDplusPagePublicObjects.crudActionDelete('.js_escape($row->id).', '.js_escape($parent).')">'._L('Delete').'</button></td>';
@@ -1102,8 +1102,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					if ($accepts_asn1) $output .= '     <td>'.implode(', ', $asn1ids_ext).'</td>';
 					if ($accepts_iri)  $output .= '     <td>'.implode(', ', $iris).'</td>';
 				}
-				$output .= '     <td><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$row->ra_email)).'>'.htmlentities(empty($row->ra_name) ? str_replace('@','&',$row->ra_email) : $row->ra_name).'</a></td>';
-				$output .= '     <td>'.htmlentities($row->comment).'</td>';
+				$output .= '     <td><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$row->ra_email??'')).'>'.htmlentities(empty($row->ra_name??'') ? str_replace('@','&',$row->ra_email??'') : $row->ra_name).'</a></td>';
+				$output .= '     <td>'.htmlentities($row->comment ?? '').'</td>';
 				$output .= '     <td>'.$date_created.'</td>';
 				$output .= '     <td>'.$date_updated.'</td>';
 			}

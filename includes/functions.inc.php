@@ -615,3 +615,16 @@ function isFileOrPathWritable(string $path): bool {
 	if ($writable_directory = (!file_exists($path) && is_writable(dirname($path)))) return true;
 	return false;
 }
+
+/**
+ * @param string $html
+ * @return string
+ */
+function html_to_text(string $html): string {
+	$html = str_replace("\n", "", $html);
+	$html = str_ireplace('<br', "\n<br", $html);
+	$html = str_ireplace('<p', "\n\n<p", $html);
+	$html = strip_tags($html);
+	$html = html_entity_decode($html, ENT_QUOTES, 'UTF-8');
+	return $html;
+}

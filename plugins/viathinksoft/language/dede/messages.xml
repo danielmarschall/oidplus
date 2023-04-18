@@ -30,14 +30,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		"prepared_args" must be either NULL or an ARRAY.
-		]]></source>
-		<target><![CDATA[
-		"prepared_args" muss entweder NULL oder ein ARRAY sein.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		%1 action failed because object "%2" cannot be parsed!
 		]]></source>
 		<target><![CDATA[
@@ -266,6 +258,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ein Plugin hat die Anzeige des Einrichtungs-Assistenten angefordert. Bitte laden Sie die Seite erneut.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		ADO ConnectionString
+		]]></source>
+		<target><![CDATA[
+		ADO Verbindungszeichenfolge
 		]]></target>
 	</message>
 	<message>
@@ -2234,6 +2234,22 @@
 		]]></source>
 		<target><![CDATA[
 		Beispiel für SQL Server
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Example for SQL Server via ODBC
+		]]></source>
+		<target><![CDATA[
+		Beispiel für SQL Server über ODBC
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Example for SQL Server via OLE DB
+		]]></source>
+		<target><![CDATA[
+		Beispiel für SQL Server über OLE DB
 		]]></target>
 	</message>
 	<message>
@@ -5410,6 +5426,14 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte selektieren Sie ein Objekt in der Baumansicht, um dessen Inhalt anzuzeigen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please specify a Connection String!
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie eine Verbindungszeichenfolge ein!
 		]]></target>
 	</message>
 	<message>

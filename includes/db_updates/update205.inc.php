@@ -33,7 +33,7 @@ function oidplus_dbupdate_205(OIDplusDatabaseConnection $db): int {
 	// and if an older version of OIDplus would try to connect to such a database,
 	// then it would re-generate the keys (and therefore destroy the existing SystemID).
 	$version = 1000;
-	$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
+	$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array("$version"));
 
 	return $version;
 }

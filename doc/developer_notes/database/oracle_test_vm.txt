@@ -362,7 +362,7 @@ OIDplus::baseConfig()->setValue('OCI_PASSWORD',      'oidplus');
 
 23. Install the database (with examples):
 
-curl -s "http://localhost/oidplus/setup/struct_with_examples.sql.php?plugin=oci&prefix=oidplus_&slang=oracle" | sqlplus oidplus/oidplus@localhost:1539/XEPDB1
+curl -s "http://localhost/oidplus/setup/struct_with_examples.sql.php?prefix=oidplus_&slang=oracle" | sqlplus oidplus/oidplus@localhost:1539/XEPDB1
 
 -------------------------------------------------
 

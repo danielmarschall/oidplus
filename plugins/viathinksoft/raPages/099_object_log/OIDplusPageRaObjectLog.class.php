@@ -91,7 +91,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa
 
 				$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
 
-				$text .= '<span class="severity_'.$row['severity'].'">' . date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr.$users) . ")</span>\n";
+				$text .= '<span class="severity_'.$row['severity'].'">' . date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"]??'')." (" . htmlentities($addr.$users) . ")</span>\n";
 			}
 			$text .= '</pre>';
 

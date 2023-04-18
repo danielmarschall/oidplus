@@ -31,7 +31,7 @@ function oidplus_dbupdate_200(OIDplusDatabaseConnection $db): int {
 	$db->query("ALTER TABLE ###objects ADD comment varchar(255) NULL");
 
 	$version = 201;
-	$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
+	$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array("$version"));
 
 	if ($db->transaction_supported()) $db->transaction_commit();
 

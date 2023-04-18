@@ -63,10 +63,6 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 				return new OIDplusQueryResultMySQL($res);
 			}
 		} else {
-			if (!is_array($prepared_args)) {
-				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
-			}
-
 			foreach ($prepared_args as &$value) {
 				// MySQLi has problems converting "true/false" to the data type "tinyint(1)"
 				// It seems to be the same issue as in PDO reported 14 years ago at https://bugs.php.net/bug.php?id=57157

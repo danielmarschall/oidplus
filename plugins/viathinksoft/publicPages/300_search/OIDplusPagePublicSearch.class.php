@@ -104,7 +104,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				$count = 0;
 				while ($row = $res->fetch_object()) {
 					$email = str_replace('@', '&', $row->email);
-					$output .= '<p><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.$this->highlight_match(htmlentities($email),$params['term']).'</a>: <b>'.$this->highlight_match(htmlentities($row->ra_name),$params['term']).'</b></p>';
+					$output .= '<p><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.$this->highlight_match(htmlentities($email),$params['term']).'</a>: <b>'.$this->highlight_match(htmlentities($row->ra_name??''),$params['term']).'</b></p>';
 					$count++;
 				}
 				if ($count == 0) {
@@ -151,7 +151,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 						$output .= ' ('.$this->highlight_match(htmlentities($asn1ids),$params['term']).')';
 					}
 
-					if (htmlentities($row->title) != '') $output .= ': <b>'.$this->highlight_match(htmlentities($row->title),$params['term']).'</b></p>';
+					if (htmlentities($row->title) != '') $output .= ': <b>'.$this->highlight_match(htmlentities($row->title??''),$params['term']).'</b></p>';
 					$count++;
 				}
 				if ($count == 0) {
