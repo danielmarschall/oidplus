@@ -196,6 +196,9 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		$dsn      = OIDplus::baseConfig()->getValue('ODBC_DSN',      'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
 		$username = OIDplus::baseConfig()->getValue('ODBC_USERNAME', '');
 		$password = OIDplus::baseConfig()->getValue('ODBC_PASSWORD', '');
+
+		if (stripos($dsn,"charset=") === false) $dsn = "$dsn;charset=UTF-8";
+
 		$this->conn = @odbc_connect($dsn, $username, $password);
 
 		if (!$this->conn) {
@@ -207,7 +210,17 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		$this->last_error = null;
 
 		try {
-			@odbc_exec($this->conn, "SET NAMES 'utf8'"); // Does most likely NOT work with ODBC. Try adding ";CHARSET=UTF8" (or similar) to the DSN
+			@odbc_exec($this->conn, "SET NAMES 'UTF-8'"); // Does most likely NOT work with ODBC. Try adding ";CHARSET=UTF8" (or similar) to the DSN
+		} catch (\Exception $e) {
+		}
+
+		try {
+			@odbc_exec($this->conn, "SET CHARACTER SET 'UTF-8'"); // Does most likely NOT work with ODBC. Try adding ";CHARSET=UTF8" (or similar) to the DSN
+		} catch (\Exception $e) {
+		}
+
+		try {
+			@odbc_exec($this->conn, "SET NAMES 'utf8mb4'"); // Does most likely NOT work with ODBC. Try adding ";CHARSET=UTF8" (or similar) to the DSN
 		} catch (\Exception $e) {
 		}
 
