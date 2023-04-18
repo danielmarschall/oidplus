@@ -151,11 +151,11 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			];
 
 			// Try connecting to the database
-			$dsn      = OIDplus::baseConfig()->getValue('PDO_DSN',      'mysql:host=localhost;dbname=oidplus;charset=UTF8');
+			$dsn      = OIDplus::baseConfig()->getValue('PDO_DSN',      'mysql:host=localhost;dbname=oidplus;charset=utf8mb4');
 			$username = OIDplus::baseConfig()->getValue('PDO_USERNAME', 'root');
 			$password = OIDplus::baseConfig()->getValue('PDO_PASSWORD', '');
 
-			if (stripos($dsn,"charset=") === false) $dsn = "$dsn;charset=UTF8";
+			if (stripos($dsn,"charset=") === false) $dsn = "$dsn;charset=UTF-8";
 
 			$this->conn = new \PDO($dsn, $username, $password, $options);
 		} catch (\PDOException $e) {
@@ -167,7 +167,17 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		$this->last_error = null;
 
 		try {
-			@$this->conn->exec("SET NAMES 'utf8'");
+			@$this->conn->exec("SET NAMES 'utf-8'");
+		} catch (\Exception $e) {
+		}
+
+		try {
+			@$this->conn->exec("SET CHARACTER SET 'utf-8'");
+		} catch (\Exception $e) {
+		}
+
+		try {
+			@$this->conn->exec("SET NAMES 'utf8mb4'");
 		} catch (\Exception $e) {
 		}
 
