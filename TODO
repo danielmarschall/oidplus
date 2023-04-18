@@ -6,7 +6,14 @@ April 2023 planned:
     [OK!] * Everywhere where url_post_contents() is used, we need to check url_post_contents_available() too.
           * Everywhere where url_get_contents() is used, we need to check url_get_contents_available() too.
 - Not good: url_*_contents() throws an Exception if not available, but returns false if URL is not available. That's inconsistant...
-- Microsoft Access saves data in UTF-8, but in Access and DBTool(ADO) it is shown as double-coded UTF-8
+
+Unicode compatibility:
+- [DONE]  SQL Server needs nvarchar instead of varchar (works with emoji too)
+- [DONE]  MySQL works with Unicode and emoji if collation is utf8mb4
+- [DONE]  Access table structure works with Unicode
+-         PDO+MySQL: Unicode (with emoji) works, but PDO+ODBC+MSSQL and PDO+ODBC+ACCESS does not work, so it's ODBC's or ODBC-Driver's fault. Can we do something about it?
+-         ODBC+MSSQL and ODBC+ACCESS: Unicode deos not work. So it's ODBC's or ODBC-Driver's fault. Can we do something about it?
+          (Note: ODBC and PDO can save UTF-8, but then they are double-encoded in DBTool/Access/SQLManagementStudio. When you insert Unicode in DBTool/Access/SQLManagementStudio, then they show up as '??' in OIDplus)
 
 Exception Refactoring:
 - [DONE]  Instead of catching OIDplusException, catch Exception
