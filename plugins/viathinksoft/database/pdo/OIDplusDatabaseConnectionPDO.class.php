@@ -155,7 +155,23 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			$username = OIDplus::baseConfig()->getValue('PDO_USERNAME', 'root');
 			$password = OIDplus::baseConfig()->getValue('PDO_PASSWORD', '');
 
-			if (stripos($dsn,"charset=") === false) $dsn = "$dsn;charset=UTF-8";
+			// Try to extend DSN with charset
+			// Note: For MySQL, must be utf8 or utf8, and not UTF-8
+			if (stripos($dsn,"charset=") === false) {
+				try {
+					$this->conn = new \PDO("$dsn;charset=utf8mb4", $username, $password, $options);
+				} catch (\Exception $e1) {
+					try {
+						$this->conn = new \PDO("$dsn;charset=utf8", $username, $password, $options);
+					} catch (\Exception $e2) {
+						try {
+							$this->conn = new \PDO("$dsn;charset=UTF-8", $username, $password, $options);
+						} catch (\Exception $e3) {
+							$this->conn = new \PDO($dsn, $username, $password, $options);
+						}
+					}
+				}
+			}
 
 			$this->conn = new \PDO($dsn, $username, $password, $options);
 		} catch (\PDOException $e) {
