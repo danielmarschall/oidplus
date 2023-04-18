@@ -104,15 +104,15 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 			$result = OIDplus::db()->query("select * from ###config where visible = ? order by name", array(true));
 			while ($row = $result->fetch_object()) {
 				$output .= '<tr>';
-				$output .= '     <td>'.htmlentities($row->name).'</td>';
-				$output .= '     <td>'.htmlentities($row->description).'</td>';
+				$output .= '     <td>'.htmlentities($row->name??'').'</td>';
+				$output .= '     <td>'.htmlentities($row->description??'').'</td>';
 				if ($row->protected == 1) {
 					$desc = $row->value;
 					if (strlen($desc) > 100) $desc = substr($desc, 0, 100) . '...';
 					$output .= '     <td style="word-break: break-all;">'.htmlentities($desc).'</td>';
 					$output .= '     <td>&nbsp;</td>';
 				} else {
-					$output .= '     <td><input type="text" id="config_'.$row->name.'" value="'.htmlentities($row->value).'"></td>';
+					$output .= '     <td><input type="text" id="config_'.$row->name.'" value="'.htmlentities($row->value??'').'"></td>';
 					$output .= '     <td><button type="button" name="config_update_'.$row->name.'" id="config_update_'.$row->name.'" class="btn btn-success btn-xs update" onclick="OIDplusPageAdminSystemConfig.crudActionConfigUpdate('.js_escape($row->name).')">'._L('Update').'</button></td>';
 				}
 				$output .= '</tr>';

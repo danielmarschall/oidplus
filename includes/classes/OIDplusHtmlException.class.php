@@ -39,19 +39,6 @@ class OIDplusHtmlException extends OIDplusException {
 	private $htmlMessage;
 
 	/**
-	 * @param $html
-	 * @return string
-	 */
-	private static function htmlToText($html) {
-		$html = str_replace("\n", "", $html);
-		$html = str_ireplace('<br', "\n<br", $html);
-		$html = str_ireplace('<p', "\n\n<p", $html);
-		$html = strip_tags($html);
-		$html = html_entity_decode($html, ENT_QUOTES, 'UTF-8');
-		return $html;
-	}
-
-	/**
 	 * @param string $message
 	 * @param string|null $title
 	 */
@@ -59,13 +46,13 @@ class OIDplusHtmlException extends OIDplusException {
 		$this->htmlTitle = $title;
 		if ($title) {
 			$title = strip_tags($title);
-			$title_text = self::htmlToText($title);
+			$title_text = html_to_text($title);
 		} else {
 			$title_text = $title;
 		}
 
 		$this->htmlMessage = $message;
-		$message_text = self::htmlToText($message);
+		$message_text = html_to_text($message);
 
 		parent::__construct($message_text, $title_text);
 	}

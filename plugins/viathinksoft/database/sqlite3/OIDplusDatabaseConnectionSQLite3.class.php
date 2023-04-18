@@ -60,10 +60,6 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 				return new OIDplusQueryResultSQLite3($res);
 			}
 		} else {
-			if (!is_array($prepared_args)) {
-				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
-			}
-
 			// convert ? ? ? to :param1 :param2 :param3 ...
 			$sql = preg_replace_callback('@\\?@', function($found) {
 				static $i = 0;

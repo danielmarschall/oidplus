@@ -142,7 +142,7 @@ function oidplus_dbupdate_1002(OIDplusDatabaseConnection $db): int {
 	}
 
 	$version = 1002;
-	$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array($version));
+	$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array("$version"));
 
 	if ($db->transaction_supported()) $db->transaction_commit();
 

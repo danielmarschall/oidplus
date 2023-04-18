@@ -58,10 +58,6 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 			}
 			//oci_free_statement($res); // will be done in OIDplusQueryResultOci::__destruct()
 		} else {
-			if (!is_array($prepared_args)) {
-				throw new OIDplusException(_L('"prepared_args" must be either NULL or an ARRAY.'));
-			}
-
 			// convert ? ? ? to :param1 :param2 :param3
 			$count = 0;
 			$sql = preg_replace_callback('@\\?@', function($found) {

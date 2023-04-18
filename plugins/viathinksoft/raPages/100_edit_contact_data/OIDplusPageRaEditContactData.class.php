@@ -127,18 +127,18 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 			$out['text'] .= '<p>'._L('Change basic information (public)').':</p>
 			  <form id="raChangeContactDataForm" action="javascript:void(0);" onsubmit="return OIDplusPageRaEditContactData.raChangeContactDataFormOnSubmit();">
 			    <input type="hidden" id="email" value="'.htmlentities($ra_email).'"/>
-			    <div><label class="padding_label">'._L('RA Name').':</label><input type="text" id="ra_name" value="'.htmlentities($row['ra_name']).'"/></div>
-			    <div><label class="padding_label">'._L('Organization').':</label><input type="text" id="organization" value="'.htmlentities($row['organization']).'"/></div>
-			    <div><label class="padding_label">'._L('Office').':</label><input type="text" id="office" value="'.htmlentities($row['office']).'"/></div>
-			    <div><label class="padding_label">'._L('Person name').':</label><input type="text" id="personal_name" value="'.htmlentities($row['personal_name']).'"/></div>
+			    <div><label class="padding_label">'._L('RA Name').':</label><input type="text" id="ra_name" value="'.htmlentities($row['ra_name']??'').'"/></div>
+			    <div><label class="padding_label">'._L('Organization').':</label><input type="text" id="organization" value="'.htmlentities($row['organization']??'').'"/></div>
+			    <div><label class="padding_label">'._L('Office').':</label><input type="text" id="office" value="'.htmlentities($row['office']??'').'"/></div>
+			    <div><label class="padding_label">'._L('Person name').':</label><input type="text" id="personal_name" value="'.htmlentities($row['personal_name']??'').'"/></div>
 			    <br>
 			    <div><label class="padding_label">'._L('Privacy').'</label><input type="checkbox" id="privacy" value="" '.($row['privacy'] == 'true' ? ' checked' : '').'/> <label for="privacy">'._L('Hide postal address and Phone/Fax/Mobile Numbers').'</label></div>
-			    <div><label class="padding_label">'._L('Street').':</label><input type="text" id="street" value="'.htmlentities($row['street']).'"/></div>
-			    <div><label class="padding_label">'._L('ZIP/Town').':</label><input type="text" id="zip_town" value="'.htmlentities($row['zip_town']).'"/></div>
-			    <div><label class="padding_label">'._L('Country').':</label><input type="text" id="country" value="'.htmlentities($row['country']).'"/></div>
-			    <div><label class="padding_label">'._L('Phone').':</label><input type="text" id="phone" value="'.htmlentities($row['phone']).'"/></div>
-			    <div><label class="padding_label">'._L('Mobile').':</label><input type="text" id="mobile" value="'.htmlentities($row['mobile']).'"/></div>
-			    <div><label class="padding_label">'._L('Fax').':</label><input type="text" id="fax" value="'.htmlentities($row['fax']).'"/></div>
+			    <div><label class="padding_label">'._L('Street').':</label><input type="text" id="street" value="'.htmlentities($row['street']??'').'"/></div>
+			    <div><label class="padding_label">'._L('ZIP/Town').':</label><input type="text" id="zip_town" value="'.htmlentities($row['zip_town']??'').'"/></div>
+			    <div><label class="padding_label">'._L('Country').':</label><input type="text" id="country" value="'.htmlentities($row['country']??'').'"/></div>
+			    <div><label class="padding_label">'._L('Phone').':</label><input type="text" id="phone" value="'.htmlentities($row['phone']??'').'"/></div>
+			    <div><label class="padding_label">'._L('Mobile').':</label><input type="text" id="mobile" value="'.htmlentities($row['mobile']??'').'"/></div>
+			    <div><label class="padding_label">'._L('Fax').':</label><input type="text" id="fax" value="'.htmlentities($row['fax']??'').'"/></div>
 			    <br><input type="submit" value="'._L('Change data').'">
 			  </form><br><br>';
 

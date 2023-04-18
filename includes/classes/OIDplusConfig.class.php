@@ -245,7 +245,7 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 		}
 
 		// Now change the value in the database
-		OIDplus::db()->query("update ###config set value = ? where name = ?", array($value, $name));
+		OIDplus::db()->query("update ###config set value = ? where name = ?", array("$value", "$name"));
 		$this->values[$name] = $value;
 	}
 

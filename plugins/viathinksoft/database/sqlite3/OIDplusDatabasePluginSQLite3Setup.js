@@ -41,8 +41,8 @@ rebuild_callbacks.push(function() {
 		$("#sqlite3_file_warn")[0].innerHTML = '';
 	}
 
-	$("#struct_1")[0].href = setupdir+'struct_empty.sql.php?plugin=sqlite&prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang=sqlite';
-	$("#struct_2")[0].href = setupdir+'struct_with_examples.sql.php?plugin=sqlite&prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang=sqlite';
+	$("#struct_1")[0].href = setupdir+'struct_empty.sql.php?prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang=sqlite';
+	$("#struct_2")[0].href = setupdir+'struct_with_examples.sql.php?prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang=sqlite';
 	$("#struct_cli_1")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code id="struct_cli_1_code">curl -s "'+$("#struct_1")[0].href+'" | sqlite3 '+$("#sqlite3_file")[0].value+'<!-- TODO: encryption key? --></code><br><input type="button" value="'+_L('Copy to clipboard')+'" onClick="copyToClipboard(struct_cli_1_code)">';
 	$("#struct_cli_2")[0].innerHTML = '<br>'+_L('or via command line:')+'<br><code id="struct_cli_2_code">curl -s "'+$("#struct_2")[0].href+'" | sqlite3 '+$("#sqlite3_file")[0].value+'<!-- TODO: encryption key? --></code><br><input type="button" value="'+_L('Copy to clipboard')+'" onClick="copyToClipboard(struct_cli_2_code)">';
 

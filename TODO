@@ -14,6 +14,7 @@ Unicode compatibility:
 -         PDO+MySQL: Unicode (with emoji) works, but PDO+ODBC+MSSQL and PDO+ODBC+ACCESS does not work, so it's ODBC's or ODBC-Driver's fault. Can we do something about it?
 -         ODBC+MSSQL and ODBC+ACCESS: Unicode deos not work. So it's ODBC's or ODBC-Driver's fault. Can we do something about it?
           (Note: ODBC and PDO can save UTF-8, but then they are double-encoded in DBTool/Access/SQLManagementStudio. When you insert Unicode in DBTool/Access/SQLManagementStudio, then they show up as '??' in OIDplus)
+-         ADO via OLEDB does not seem to support Unicode??? But it should! https://stackoverflow.com/questions/28311687/unable-to-retrieve-utf-8-accented-characters-from-access-via-pdo-odbc/28341697#28341697
 
 Exception Refactoring:
 - [DONE]  Instead of catching OIDplusException, catch Exception

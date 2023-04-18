@@ -46,7 +46,7 @@ class OIDplusException extends \Exception {
 	 * @return string
 	 */
 	public function getTitle(): string {
-		return htmlentities($this->title ?? '');
+		return $this->title ?? '';
 	}
 
 	/**
@@ -59,7 +59,7 @@ class OIDplusException extends \Exception {
 	 * @return string
 	 */
 	public function getHtmlMessage(): string {
-		return htmlentities($this->getMessage(), ENT_SUBSTITUTE); // ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
+		return nl2br(htmlentities($this->getMessage(), ENT_SUBSTITUTE)); // ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
 	}
 
 }
