@@ -171,9 +171,9 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 						}
 					}
 				}
+			} else {
+				$this->conn = new \PDO($dsn, $username, $password, $options);
 			}
-
-			$this->conn = new \PDO($dsn, $username, $password, $options);
 		} catch (\PDOException $e) {
 			$message = $e->getMessage();
 			$message = vts_utf8_encode($message); // Make UTF-8 if it is NOT already UTF-8. Important for German Microsoft Access.

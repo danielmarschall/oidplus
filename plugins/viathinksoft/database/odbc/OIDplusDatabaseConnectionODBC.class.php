@@ -200,19 +200,12 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		// Try to extend DSN with charset
 		// Note: For MySQL, must be utf8 or utf8, and not UTF-8
 		if (stripos($dsn,"charset=") === false) {
-			try {
-				$this->conn = @odbc_connect("$dsn;charset=utf8mb4", $username, $password);
-			} catch (\Exception $e1) {
-				try {
-					$this->conn = @odbc_connect("$dsn;charset=utf8", $username, $password);
-				} catch (\Exception $e2) {
-					try {
-						$this->conn = @odbc_connect("$dsn;charset=UTF-8", $username, $password);
-					} catch (\Exception $e3) {
-						$this->conn = @odbc_connect($dsn, $username, $password);
-					}
-				}
-			}
+			$this->conn = odbc_connect("$dsn;charset=utf8mb4", $username, $password);
+			if (!$this->conn) $this->conn = odbc_connect("$dsn;charset=utf8", $username, $password);
+			if (!$this->conn) $this->conn = odbc_connect("$dsn;charset=UTF-8", $username, $password);
+			if (!$this->conn) $this->conn = odbc_connect($dsn, $username, $password);
+		} else {
+			$this->conn = odbc_connect($dsn, $username, $password);
 		}
 
 		if (!$this->conn) {
