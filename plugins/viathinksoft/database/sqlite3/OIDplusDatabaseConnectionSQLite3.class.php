@@ -232,4 +232,15 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 		}
 		return $slang;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getExtendedInfo(): array {
+		$filename  = OIDplus::baseConfig()->getValue('SQLITE3_FILE', 'userdata/database/oidplus.db');
+		return array(
+			_L('Filename') => $filename
+		);
+	}
+
 }

@@ -311,11 +311,18 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$tmp = preg_replace('@\\.\\d{3}$@', '', $tmp); // remove milliseconds of Microsoft SQL Server
 			$out['text'] .= '		<td>'.$tmp.'</td>';
 			$out['text'] .= '	</tr>';
+
+			$infos = OIDplus::db()->getExtendedInfo();
+			foreach ($infos as $name => $val) {
+				$out['text'] .= '	<tr>';
+				$out['text'] .= '		<td>' . htmlentities($name) . '</td>';
+				$out['text'] .= '		<td>' . htmlentities($val ?? '') . '</td>';
+				$out['text'] .= '	</tr>';
+			}
+
 			$out['text'] .= '</tbody>';
 			$out['text'] .= '</table>';
 			$out['text'] .= '</div></div>';
-
-			// TODO: can we somehow get the DBMS version, connection string etc?
 
 			# ---
 
