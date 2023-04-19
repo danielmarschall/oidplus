@@ -62,9 +62,13 @@ class OIDplusSqlSlangPluginMsSQL extends OIDplusSqlSlangPlugin {
 		// $res = $db->query("SELECT SCOPE_IDENTITY() AS ID");
 
 		// DM 04 Apr 2023 : Added @@ROWCOUNT , see https://stackoverflow.com/questions/4571911/reset-scope-identity
-		$res = $db->query("SELECT @@ROWCOUNT AS RC");
-		$row = $res->fetch_array();
-		$rc = (int)$row['RC'];
+		$rc = $db->rowsAffected();
+		if ($rc == -1) {
+			// -1 means: it is not implemented or possible with that driver
+			$res = $db->query("SELECT @@ROWCOUNT AS RC");
+			$row = $res->fetch_array();
+			$rc = (int)$row['RC'];
+		}
 		if ($rc == 0) return 0;
 
 		$res = $db->query("SELECT @@IDENTITY AS ID");

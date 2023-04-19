@@ -40,6 +40,8 @@ echo "OIDplus Database plugin testcases\n\n";
 
 OIDplus::init(true, true);
 
+OIDplus::baseConfig()->delete('FORCE_DBMS_SLANG');
+
 # Test MySQL
 try {
 	OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'MySQL');
@@ -56,7 +58,8 @@ try {
 	dotest($db);
 } catch (Exception $e) {
 	echo "MySQL:\n";
-	echo redtext($e->getMessage())."\n\n";
+	echo redtext($e->getMessage())."\n";
+	echo redtext($e->getTraceAsString())."\n\n";
 }
 
 # Test PDO
@@ -67,7 +70,8 @@ try {
 	dotest($db);
 } catch (Exception $e) {
 	echo "PDO:\n";
-	echo redtext($e->getMessage())."\n\n";
+	echo redtext($e->getMessage())."\n";
+	echo redtext($e->getTraceAsString())."\n\n";
 }
 
 # Test ODBC
@@ -78,7 +82,8 @@ try {
 	dotest($db);
 } catch (Exception $e) {
 	echo "ODBC:\n";
-	echo redtext($e->getMessage())."\n\n";
+	echo redtext($e->getMessage())."\n";
+	echo redtext($e->getTraceAsString())."\n\n";
 }
 
 # Test ADO
@@ -89,7 +94,8 @@ try {
 	dotest($db);
 } catch (Exception $e) {
 	echo "ADO:\n";
-	echo redtext($e->getMessage())."\n\n";
+	echo redtext($e->getMessage())."\n";
+	echo redtext($e->getTraceAsString())."\n\n";
 }
 
 # Test PgSQL
@@ -100,7 +106,8 @@ try {
 	dotest($db);
 } catch (Exception $e) {
 	echo "PgSQL:\n";
-	echo redtext($e->getMessage())."\n\n";
+	echo redtext($e->getMessage())."\n";
+	echo redtext($e->getTraceAsString())."\n\n";
 }
 
 # Test SQLite3
@@ -111,7 +118,8 @@ try {
 	dotest($db);
 } catch (Exception $e) {
 	echo "SQLite3:\n";
-	echo redtext($e->getMessage())."\n\n";
+	echo redtext($e->getMessage())."\n";
+	echo redtext($e->getTraceAsString())."\n\n";
 }
 
 # Test OCI8
@@ -122,7 +130,8 @@ try {
 	dotest($db);
 } catch (Exception $e) {
 	echo "OCI8:\n";
-	echo redtext($e->getMessage())."\n\n";
+	echo redtext($e->getMessage())."\n";
+	echo redtext($e->getTraceAsString())."\n\n";
 }
 
 # ---

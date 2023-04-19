@@ -70,7 +70,19 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 			}
 		}
 		$sql = str_replace(chr(1), '?', $sql);
-		return $this->doQuery($sql, null);
+		return $this->doQuery($sql);
+	}
+
+	/**
+	 * @var int
+	 */
+	private $rowsAffected = 0;
+
+	/**
+	 * @return int
+	 */
+	public function rowsAffected(): int {
+		return $this->rowsAffected;
 	}
 
 	/**
@@ -82,23 +94,33 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 	public function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
-			$res = new \COM("ADODB.Recordset");
-
 			try {
-				/** @phpstan-ignore-next-line */
-				$res->Open($sql, $this->conn, 3, 3);  // adOpenStatic, adLockOptimistic
+				if (str_starts_with(trim(strtolower($sql)),'select')) {
+					$res = new \COM("ADODB.Recordset");
+
+					$res->Open($sql, $this->conn, 3/*adOpenStatic*/, 3/*adLockOptimistic*/);   /** @phpstan-ignore-line */
+
+					$this->rowsAffected = $res->RecordCount; /** @phpstan-ignore-line */
+
+					$deb = new OIDplusQueryResultADO($res);
+
+					// These two lines are important, otherwise INSERT queries won't have @@ROWCOUNT and stuff...
+					// It's probably this an MARS issue (multiple result sets open at the same time),
+					// especially because the __destruct() raises an Exception that the dataset is already closed...
+					$deb->prefetchAll();
+					$res->Close(); /** @phpstan-ignore-line */
+
+					return $deb;
+
+				} else {
+					$this->conn->Execute($sql, $this->rowsAffected);
+					return new OIDplusQueryResultADO(null);
+				}
 			} catch (\Exception $e) {
 				$this->last_error = $e->getMessage();
 				throw new OIDplusSQLException($sql, $this->error());
 			}
 
-			/** @phpstan-ignore-next-line */
-			if ($res->State == 0) {
-				// It was an INSERT or UPDATE command (i.e. dataset is closed now)
-				return new OIDplusQueryResultADO(true);
-			} else {
-				return new OIDplusQueryResultADO($res);
-			}
 		} else {
 			return $this->doQueryPrepareEmulation($sql, $prepared_args);
 		}
@@ -198,13 +220,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 	 */
 	protected function doDisconnect()/*: void*/ {
 		if (!is_null($this->conn)) {
-			try {
-				$this->conn->Close();
-			} catch (\Exception $e) {
-				// For some reason, in test_database_plugins.php (tested with ODBC-MSSQL), the disconnection method raises the Exception (TODO?)
-				//    Source: ADODB.Recordset
-				//    Description: Der Vorgang ist fuer ein geschlossenes Objekt nicht zugelassen.
-			}
+			if ($this->conn->State != 0) $this->conn->Close();
 			$this->conn = null;
 		}
 	}
