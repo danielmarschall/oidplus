@@ -70,8 +70,8 @@ function oidplus_get_missing_dependencies(): array {
 		// Note that vendor/danielmarschall/php_utils/gmp_supplement.inc.php will implement the GMP functions if BCMath is present.
 		// This is the reason why we use function_exists('gmp_init') instead of extension_loaded('gmp')
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			$install_hint1 = sprintf('On Windows, install it by enabling the line %s in your PHP.ini',
-				'extension=php_gmp.dll');
+			$install_hint1 = sprintf('On Windows, install it by enabling the line %s in the configuration file %s',
+				'extension=php_gmp.dll', php_ini_loaded_file() ? php_ini_loaded_file() : 'PHP.ini');
 			$install_hint2 = 'On Windows, it should be installed by default';
 		} else {
 			$install_hint1 = sprintf('On Linux, install it by running e.g. %s, and then restart your webserver service, e.g. by running %s',
@@ -95,8 +95,8 @@ function oidplus_get_missing_dependencies(): array {
 		// Note that vendor/symfony/polyfill-mbstring/ will always implement the MBString functions, but they only work if iconv is present.
 		// This is the reason why we use extension_loaded('mbstring') instead of function_exists('mb_substr')
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			$install_hint1 = sprintf('On Windows, install it by enabling the line %s in your PHP.ini',
-				'extension=php_mbstring.dll');
+			$install_hint1 = sprintf('On Windows, install it by enabling the line %s in the configuration file %s',
+				'extension=php_mbstring.dll', php_ini_loaded_file() ? php_ini_loaded_file() : 'PHP.ini');
 			$install_hint2 = 'On Windows, it should be installed by default';
 		} else {
 			$install_hint1 = sprintf('On Linux, install it by running e.g. %s, and then restart your webserver service, e.g. by running %s',

@@ -494,6 +494,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Alternative
+		]]></source>
+		<target><![CDATA[
+		Alternativ
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Alternative Identifiers
 		]]></source>
 		<target><![CDATA[
@@ -2634,6 +2642,14 @@
 		]]></source>
 		<target><![CDATA[
 		Neue zufällige UUID OID erzeugen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Generation %1
+		]]></source>
+		<target><![CDATA[
+		%1. Generation
 		]]></target>
 	</message>
 	<message>
@@ -7526,10 +7542,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		To use %1, please enable the lines "extension=%2" and "extension_dir=ext" in your PHP.ini file.
+		To use %1, please enable the lines "extension=%2" and "extension_dir=ext" in the configuration file %3.
 		]]></source>
 		<target><![CDATA[
-		Um %1 nutzen zu können, müssen Sie die Zeilen "extension=%2" und "extension_dir=ext" in der PHP.ini Datei aktivieren.
+		Um %1 nutzen zu können, müssen Sie die Zeilen "extension=%2" und "extension_dir=ext" in der Datei %3 aktivieren.
 		]]></target>
 	</message>
 	<message>
@@ -8666,6 +8682,14 @@
 		]]></source>
 		<target><![CDATA[
 		reCAPTCHA Version
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		redacted
+		]]></source>
+		<target><![CDATA[
+		zensiert
 		]]></target>
 	</message>
 	<message>
