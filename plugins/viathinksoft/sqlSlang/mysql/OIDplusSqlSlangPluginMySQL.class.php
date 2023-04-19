@@ -46,8 +46,7 @@ class OIDplusSqlSlangPluginMySQL extends OIDplusSqlSlangPlugin {
 	public function detect(OIDplusDatabaseConnection $db): bool {
 		try {
 			$vers = $db->query("select version() as dbms_version")->fetch_object()->dbms_version;
-			$vers = strtolower($vers);
-			return (strpos($vers, 'mysql') !== false) || (strpos($vers, 'mariadb') !== false);
+			return (stripos($vers, 'MySQL') !== false) || (stripos($vers, 'MariaDB') !== false);
 		} catch (\Exception $e) {
 			return false;
 		}

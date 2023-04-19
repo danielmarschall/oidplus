@@ -46,8 +46,7 @@ class OIDplusSqlSlangPluginOracle extends OIDplusSqlSlangPlugin {
 	public function detect(OIDplusDatabaseConnection $db): bool {
 		try {
 			$vers = $db->query("SELECT banner FROM v\$version WHERE banner LIKE 'Oracle%'")->fetch_object()->banner;
-			$vers = strtolower($vers);
-			return (strpos($vers, 'oracle') !== false);
+			return (stripos($vers, 'Oracle') !== false);
 		} catch (\Exception $e) {
 			return false;
 		}
