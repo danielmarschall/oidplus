@@ -393,4 +393,11 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		$this->slangDetectionDone = true;
 		return $slangCache;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getExtendedInfo(): array {
+		return array();
+	}
 }

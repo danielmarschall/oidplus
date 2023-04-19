@@ -218,4 +218,14 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 		}
 		return $slang;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getExtendedInfo(): array {
+		$conn_str = OIDplus::baseConfig()->getValue('OCI_CONN_STR', 'localhost/XE');
+		return array(
+			_L('Connection String') => $conn_str
+		);
+	}
 }

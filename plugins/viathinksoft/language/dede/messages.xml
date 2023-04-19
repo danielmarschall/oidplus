@@ -1350,6 +1350,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Connection String
+		]]></source>
+		<target><![CDATA[
+		Verbindungszeichenfolge
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Connection to the database failed!
 		]]></source>
 		<target><![CDATA[
@@ -1634,6 +1642,14 @@
 		]]></source>
 		<target><![CDATA[
 		DOI %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		DSN
+		]]></source>
+		<target><![CDATA[
+		DSN
 		]]></target>
 	</message>
 	<message>
@@ -2234,22 +2250,6 @@
 		]]></source>
 		<target><![CDATA[
 		Beispiel für SQL Server
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Example for SQL Server via ODBC
-		]]></source>
-		<target><![CDATA[
-		Beispiel für SQL Server über ODBC
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Example for SQL Server via OLE DB
-		]]></source>
-		<target><![CDATA[
-		Beispiel für SQL Server über OLE DB
 		]]></target>
 	</message>
 	<message>
@@ -5630,6 +5630,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Port
+		]]></source>
+		<target><![CDATA[
+		Port
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Preview of update %1 &rarr; %2
 		]]></source>
 		<target><![CDATA[
@@ -6434,6 +6442,14 @@
 		]]></source>
 		<target><![CDATA[
 		Menü aufschieben
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Socket
+		]]></source>
+		<target><![CDATA[
+		Socket
 		]]></target>
 	</message>
 	<message>

@@ -283,4 +283,24 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 		}
 		return $slang;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getExtendedInfo(): array {
+		$host     = OIDplus::baseConfig()->getValue('MYSQL_HOST',     'localhost');
+		$username = OIDplus::baseConfig()->getValue('MYSQL_USERNAME', 'root');
+		$password = OIDplus::baseConfig()->getValue('MYSQL_PASSWORD', '');
+		$database = OIDplus::baseConfig()->getValue('MYSQL_DATABASE', 'oidplus');
+		$socket   = OIDplus::baseConfig()->getValue('MYSQL_SOCKET',   '');
+		list($hostname,$port) = explode(':', $host.':'.ini_get("mysqli.default_port"));
+		$port = intval($port);
+		return array(
+			_L('Hostname') => $hostname,
+			_L('Port') => $port,
+			_L('Socket') => $socket,
+			_L('Database') => $database,
+			_L('Username') => $username
+		);
+	}
 }

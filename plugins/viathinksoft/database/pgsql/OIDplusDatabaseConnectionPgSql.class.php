@@ -236,4 +236,29 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 		}
 		return $slang;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getExtendedInfo(): array {
+		$host     = OIDplus::baseConfig()->getValue('PGSQL_HOST',     'localhost:5432');
+		$username = OIDplus::baseConfig()->getValue('PGSQL_USERNAME', 'postgres');
+		$password = OIDplus::baseConfig()->getValue('PGSQL_PASSWORD', '');
+		$database = OIDplus::baseConfig()->getValue('PGSQL_DATABASE', 'oidplus');
+		$socket   = OIDplus::baseConfig()->getValue('PGSQL_SOCKET',   '');
+		if ($socket != '') {
+			$hostname = $socket;
+			$port = '';
+		} else {
+			list($hostname, $port) = explode(':', "$host:5432");
+		}
+		return array(
+			_L('Hostname') => $hostname,
+			_L('Port') => $port,
+			_L('Socket') => $socket,
+			_L('Database') => $database,
+			_L('Username') => $username
+		);
+	}
+
 }

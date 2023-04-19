@@ -309,4 +309,15 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		odbc_autocommit($this->conn, true);
 		$this->intransaction = false;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getExtendedInfo(): array {
+		$dsn = OIDplus::baseConfig()->getValue('ODBC_DSN', 'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
+		return array(
+			_L('DSN') => $dsn
+		);
+	}
+
 }

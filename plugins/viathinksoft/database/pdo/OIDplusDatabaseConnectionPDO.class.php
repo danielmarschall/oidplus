@@ -277,4 +277,14 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		$this->intransaction = false;
 	}
 
+	/**
+	 * @return array
+	 */
+	public function getExtendedInfo(): array {
+		$dsn = OIDplus::baseConfig()->getValue('PDO_DSN', 'mysql:host=localhost;dbname=oidplus;charset=utf8mb4');
+		return array(
+			_L('DSN') => $dsn
+		);
+	}
+
 }

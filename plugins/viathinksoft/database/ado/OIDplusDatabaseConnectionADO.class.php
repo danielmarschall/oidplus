@@ -134,7 +134,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 
 		$conn = new \COM("ADODB.Connection", NULL, 65001/*CP_UTF8*/);
 
-		$connStr = OIDplus::baseConfig()->getValue('ADO_CONNECTION_STRING', 'DRIVER={SQL Server};SERVER=LOCALHOST\SQLEXPRESS;DATABASE=oidplus;CHARSET=UTF8');
+		$connStr = OIDplus::baseConfig()->getValue('ADO_CONNECTION_STRING', 'Provider=MSOLEDBSQL;Data Source=LOCALHOST\SQLEXPRESS;Initial Catalog=oidplus;Integrated Security=SSPI');
 
 		try {
 			if (stripos($connStr, "charset=") === false) {
@@ -286,4 +286,12 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 		$this->conn->RollbackTrans();
 		$this->trans_level--;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getExtendedInfo(): array {
+		return $this->connectionProperties();
+	}
+
 }

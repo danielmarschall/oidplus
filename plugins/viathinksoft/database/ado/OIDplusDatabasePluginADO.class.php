@@ -46,9 +46,8 @@ class OIDplusDatabasePluginADO extends OIDplusDatabasePlugin {
 		return '<div id="DBPLUGIN_PARAMS_ADO">'.
 		       '	<p>'._L('ADO ConnectionString').' (<a href="https://www.connectionstrings.com/" target="_blank">'._L('examples').'</a>):<br><input id="ado_connection_string" type="text" value="Provider=MSOLEDBSQL;Data Source=localhost\instancename;Initial Catalog=oidplus;Integrated Security=SSPI" onkeypress="rebuild()" onkeyup="rebuild()" style="width:600px">  <span id="ado_connection_string_warn"></span>'.
 		       // TODO: Show these examples based on the slang the user chooses
-		       '	<br><font size="-1">'._L('Example for SQL Server via OLE DB').': <i>Provider=MSOLEDBSQL;Data Source=localhost\instancename;Initial Catalog=oidplus;Integrated Security=SSPI</i>'.
-		       '	<br><font size="-1">'._L('Example for SQL Server via ODBC').': <i>DRIVER={SQL Server};SERVER=localhost\instancename;DATABASE=oidplus;CHARSET=UTF8</i>'.
-		       '	<br>'._L('Example for Microsoft Access').': <i>DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\inetpub\wwwroot\oidplus\trunk\userdata\database\oidplus.accdb;</i></font></p>'.
+		       '	<br><font size="-1">'._L('Example for SQL Server').': <i>Provider=MSOLEDBSQL;Data Source=localhost\instancename;Initial Catalog=oidplus;Integrated Security=SSPI</i>'.
+		       '	<br>'._L('Example for Microsoft Access').': <i>Provider=MSDASQL;DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\inetpub\wwwroot\oidplus\trunk\userdata\database\oidplus.accdb;</i></font></p>'.
 		       '	<!-- '._L('Note: You should use the driver "ODBC Driver XX for SQL Server" instead, since it is the latest generation').' -->'.
 		       '	<p>'._L('Which DBMS (SQL dialect) is used?').'<br>'.
 		       '	<i>'._L('Attention: If your DBMS is not listed, OIDplus will most likely not work. If you know that your DBMS is compatible with one of these listed SQL dialects, you can choose that dialect.').'</i><br>'.
