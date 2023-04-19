@@ -1786,6 +1786,8 @@ class OIDplus extends OIDplusBaseClass {
 	public static function getPkiStatus(bool $try_generate=false): bool {
 		if (!function_exists('openssl_pkey_new')) return false;
 
+		if (basename($_SERVER['SCRIPT_NAME']) == 'test_database_plugins.php') return false; // database switching will destroy keys because of the secret file
+
 		if ($try_generate) {
 			// For debug purposes: Invalidate current key once:
 			//OIDplus::config()->setValue('oidplus_private_key', '');

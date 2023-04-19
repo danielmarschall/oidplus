@@ -38,7 +38,7 @@ class OIDplusQueryResultADO extends OIDplusQueryResult {
 	 * @param mixed $res
 	 */
 	public function __construct($res) {
-		$this->no_resultset = is_bool($res);
+		$this->no_resultset = is_null($res);
 
 		if (!$this->no_resultset) {
 			$this->res = $res;
@@ -49,7 +49,7 @@ class OIDplusQueryResultADO extends OIDplusQueryResult {
 	 *
 	 */
 	public function __destruct() {
-		if (!is_null($this->res))  $this->res->Close();
+		if (!is_null($this->res) && ($this->res->State != 0)) $this->res->Close();
 	}
 
 	/**

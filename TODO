@@ -8,11 +8,6 @@ April 2023 planned:
 - Not good: url_*_contents() throws an Exception if not available, but returns false if URL is not available. That's inconsistant...
 
 ADO Database:
-- SQL Server Generation 1 (SQLOLEDB) is incompatible with insert_id(). Can we do something about this?
-  Reason:
-      @@ROWCOUNT is 0 for Generation 1 driver, but 1 for Generation 2-3 driver. Although the insert was successful.
-      Since @@ROWCOUNT=0, @@IDENTITY will not be checked, since the program thinks that it is a failed INSERT that did not reset @@IDENTITY ...
-      How to get insert rowcount?  $con->Execute(..., $rowsAffected);
 - SQL Server Generation 1-3 outputs RecordCount "-1" for the query "select max(id) from ###log" (probably because there is no "TABLE" row selected). Can we do something about this? Is this really expected?!
 
 Unicode compatibility:

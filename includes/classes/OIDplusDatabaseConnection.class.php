@@ -132,6 +132,14 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	}
 
 	/**
+	 * Get the rows affected, for either SELECT, INSERT, DELETE, UPDATE
+	 * @return int
+	 */
+	public function rowsAffected(): int {
+		return -1; // -1 means not implemented
+	}
+
+	/**
 	 * @param string $sql
 	 * @return array[]
 	 * @throws OIDplusException
@@ -140,7 +148,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		$out = array();
 		$res = $this->query($sql);
 		while ($row = $res->fetch_array()) {
-			$out[] = $row;
+			$out[] = /*yield*/ $row;
 		}
 		return $out;
 	}
@@ -284,6 +292,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 				$msgs[] = _L('Table %1 is missing!',$prefix.$tableName);
 			}
 		}
+		// TODO: If there is a general database error (e.g. locked database, etc.) then you will receive the false warning "Table oidplus_config missing"
 		if (count($msgs) > 0) {
 			throw new OIDplusConfigInitializationException(implode("\n\n",$msgs));
 		}
