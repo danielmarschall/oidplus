@@ -66,7 +66,7 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 				while ($row = $res->fetch_array()) {
 					$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
 
-					$out['text'] .= '<span class="severity_'.$row['severity'].'">' . date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr) . ")</span>\n";
+					$out['text'] .= '<span class="severity_'.$row['severity'].'">' . date('Y-m-d H:i:s', (int)$row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr) . ")</span>\n";
 				}
 				$out['text'] .= '</pre>';
 			} else {
