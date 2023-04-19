@@ -46,8 +46,7 @@ class OIDplusSqlSlangPluginPgSQL extends OIDplusSqlSlangPlugin {
 	public function detect(OIDplusDatabaseConnection $db): bool {
 		try {
 			$vers = $db->query("select version() as dbms_version")->fetch_object()->dbms_version;
-			$vers = strtolower($vers);
-			return strpos($vers, 'postgresql') !== false;
+			return stripos($vers, 'PostgreSQL') !== false;
 		} catch (\Exception $e) {
 			return false;
 		}
