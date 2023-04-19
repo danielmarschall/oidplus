@@ -75,7 +75,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 					// ---
 					$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
 					// ---
-					$out['text'] .= '<span class="severity_'.$severity.'">' . date('Y-m-d H:i:s', $row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr.$users.$objects) . ")</span>\n";
+					$out['text'] .= '<span class="severity_'.$severity.'">' . date('Y-m-d H:i:s', (int)$row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr.$users.$objects) . ")</span>\n";
 				}
 				$out['text'] .= '</pre>';
 			} else {

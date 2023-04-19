@@ -494,14 +494,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Alternative
-		]]></source>
-		<target><![CDATA[
-		Alternativ
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Alternative Identifiers
 		]]></source>
 		<target><![CDATA[
@@ -514,6 +506,14 @@
 		]]></source>
 		<target><![CDATA[
 		Alternative Login-Methoden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Alternatively
+		]]></source>
+		<target><![CDATA[
+		Alternativ
 		]]></target>
 	</message>
 	<message>
