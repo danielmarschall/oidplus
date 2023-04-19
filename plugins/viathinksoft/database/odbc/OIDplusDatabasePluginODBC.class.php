@@ -46,7 +46,7 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 		return '<div id="DBPLUGIN_PARAMS_ODBC">'.
 		       '	<p>'._L('ODBC DSN').' (<a href="https://www.connectionstrings.com/" target="_blank">'._L('examples').'</a>):<br><input id="odbc_dsn" type="text" value="DRIVER={SQL Server};SERVER=localhost\instancename;DATABASE=oidplus;CHARSET=UTF8" onkeypress="rebuild()" onkeyup="rebuild()" style="width:600px">  <span id="odbc_dsn_warn"></span>'.
 		       // TODO: Show these examples based on the slang the user chooses
-		       '	<br><font size="-1">'._L('Example for SQL Server').': <i>DRIVER={SQL Server};SERVER=localhost\instancename;DATABASE=oidplus;CHARSET=UTF8</i>'.
+		       '	<br><font size="-1">'._L('Example for SQL Server').': <i>DRIVER={SQL Server};SERVER=<abbr title="'._L('Alternative').': localhost,1433">localhost\instancename</abbr>;DATABASE=oidplus;CHARSET=UTF8</i>'.
 		       '	<br>'._L('Example for Microsoft Access').': <i>DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\inetpub\wwwroot\oidplus\trunk\userdata\database\oidplus.accdb;</i></font></p>'.
 		       '	<!-- '._L('Note: You should use the driver "ODBC Driver XX for SQL Server" instead, since it is the latest generation').' -->'.
 		       '	<p>'._L('ODBC Username').':<br><input id="odbc_username" type="text" value="root" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="odbc_username_warn"></span></p>'.

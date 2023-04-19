@@ -127,7 +127,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 		}
 
 		if (!class_exists('COM')) {
-			throw new OIDplusConfigInitializationException(_L('To use %1, please enable the lines "extension=%2" and "extension_dir=ext" in your PHP.ini file.',get_class(),'com_dotnet'));
+			throw new OIDplusConfigInitializationException(_L('To use %1, please enable the lines "extension=%2" and "extension_dir=ext" in the configuration file %3.',get_class(),'com_dotnet',php_ini_loaded_file() ? php_ini_loaded_file() : 'PHP.ini'));
 		}
 
 		// Try connecting to the database
@@ -291,7 +291,9 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 	 * @return array
 	 */
 	public function getExtendedInfo(): array {
-		return $this->connectionProperties();
+		$props = $this->connectionProperties();
+		if (isset($props['Password'])) $props['Password'] = '['._L('redacted').']';
+		return $props;
 	}
 
 }
