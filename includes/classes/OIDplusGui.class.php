@@ -137,7 +137,9 @@ class OIDplusGui extends OIDplusBaseClass {
 			$htmlMessage = $exception->getHtmlMessage();
 		} else {
 			$htmlTitle = '';
-			$htmlMessage = htmlentities($exception->getMessage());
+			//$htmlMessage = htmlentities($exception->getMessage());
+			$htmlMessage = nl2br(htmlentities(html_to_text($exception->getMessage())));
+
 		}
 		if (!$htmlTitle) {
 			$htmlTitle = _L('OIDplus Error');
@@ -159,16 +161,23 @@ class OIDplusGui extends OIDplusBaseClass {
 		$out  = '<p><b>'.htmlentities(_L('Technical information about the problem')).':</b></p>';
 		$out .= '<pre>';
 		$out .= get_class($exception)."\n";
-		$out .= _L('at file %1 (line %2)',$exception->getFile(),"".$exception->getLine())."\n\n";
-		$out .= _L('Stacktrace').":\n";
+
+		$sourceFile = $exception->getFile();
 		$stacktrace = $exception->getTraceAsString();
+
+		// Censor paths
 		try {
 			$syspath = OIDplus::localpath(NULL);
 			$stacktrace = str_replace($syspath, '...'.DIRECTORY_SEPARATOR, $stacktrace); // for security
+			$sourceFile = str_replace($syspath, '...'.DIRECTORY_SEPARATOR, $sourceFile); // for security
 		} catch (\Throwable $e) {
 			// Catch Exception and Error, because this step (censoring) is purely optional and shoult not prevent the stacktrace of being shown
 		}
+
+		$out .= _L('at file %1 (line %2)',$sourceFile,"".$exception->getLine())."\n\n";
+		$out .= _L('Stacktrace').":\n";
 		$out .= htmlentities($stacktrace);
+
 		$out .= '</pre>';
 		return $out;
 	}
