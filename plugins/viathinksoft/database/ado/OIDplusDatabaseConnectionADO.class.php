@@ -100,8 +100,6 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 
 					$res->Open($sql, $this->conn, 3/*adOpenStatic*/, 3/*adLockOptimistic*/);   /** @phpstan-ignore-line */
 
-					$this->rowsAffected = $res->RecordCount; /** @phpstan-ignore-line */
-
 					$deb = new OIDplusQueryResultADO($res);
 
 					// These two lines are important, otherwise INSERT queries won't have @@ROWCOUNT and stuff...
@@ -109,6 +107,13 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 					// especially because the __destruct() raises an Exception that the dataset is already closed...
 					$deb->prefetchAll();
 					$res->Close(); /** @phpstan-ignore-line */
+
+					// Important: Do num_rows() after prefetchAll(), because
+					// at OLE DB provider for SQL Server, RecordCount is -1 for queries
+					// which don't have physical row tables, e.g. "select max(id) as maxid from ###log"
+					// If we have prefetched the table, then RecordCount won't be checked;
+					// instead, the prefetched array will be counted.
+					$this->rowsAffected = $deb->num_rows();
 
 					return $deb;
 

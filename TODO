@@ -7,9 +7,6 @@ April 2023 planned:
           * Everywhere where url_get_contents() is used, we need to check url_get_contents_available() too.
 - Not good: url_*_contents() throws an Exception if not available, but returns false if URL is not available. That's inconsistant...
 
-ADO Database:
-- SQL Server Generation 1-3 outputs RecordCount "-1" for the query "select max(id) from ###log" (probably because there is no "TABLE" row selected). Can we do something about this? Is this really expected?!
-
 Unicode compatibility:
 - [DONE]  SQL Server needs nvarchar instead of varchar (works with emoji too)
 - [DONE]  MySQL works with Unicode and emoji if collation is utf8mb4
