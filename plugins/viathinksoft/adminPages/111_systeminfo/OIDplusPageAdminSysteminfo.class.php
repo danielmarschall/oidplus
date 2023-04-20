@@ -250,7 +250,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('Web server user account').'</td>';
-			$current_user = get_own_username();
+			$current_user = get_own_username();  // TODO: should we also show the group?
 			$out['text'] .= '		<td>'.($current_user === false ? '<i>'._L('unknown').'</i>' : htmlentities($current_user)).'</td>';
 			$out['text'] .= '	</tr>';
 
@@ -305,7 +305,10 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	</tr>';
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('Server time').'</td>';
-			$tmp = OIDplus::db()->query('select '.OIDplus::db()->sqlDate().' as tmp');
+			// We use "from ###config" because Oracle DB requires a "from" statement.
+			// Instead of creating two queries (one with "select ..." and one with "select ... from dual"),
+			// we make this query. It is OK, because the table ###config is never empty and we are only fetching the first row.
+			$tmp = OIDplus::db()->query('select '.OIDplus::db()->sqlDate().' as tmp from ###config');
 			if ($tmp) $tmp = $tmp->fetch_array();
 			$tmp = $tmp['tmp'] ?? _L('n/a');
 			$tmp = preg_replace('@\\.\\d{3}$@', '', $tmp); // remove milliseconds of Microsoft SQL Server
