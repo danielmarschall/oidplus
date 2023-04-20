@@ -163,6 +163,13 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 
 		$connStr = OIDplus::baseConfig()->getValue('ADO_CONNECTION_STRING', 'Provider=MSOLEDBSQL;Data Source=LOCALHOST\SQLEXPRESS;Initial Catalog=oidplus;Integrated Security=SSPI');
 
+		// TODO: Nothing seems to work! Unicode characters entered in SQL Management Studio are not showing up in OIDplus
+		//$connStr .=  ";Client_CSet=UTF-8;Server_CSet=Windows-1251";
+		//$connStr .=  ";Client_CSet=Windows-1251;Server_CSet=UTF-8";
+		//$connStr .=  ";Client_CSet=Windows-1251;Server_CSet=Windows-1251";
+		//$connStr .=  ";Client_CSet=UTF-8;Server_CSet=UTF-8";
+		//$connStr .= ";CharacterSet=65001";
+
 		try {
 			if (stripos($connStr, "charset=") === false) {
 				// Try to extend DSN with charset
