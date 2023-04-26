@@ -249,6 +249,6 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 		foreach ($options as $name => $val) {
 			$ary_info[_L('Option %1',$name)] = '"'.$val.'"';
 		}
-		return $options;
+		return $ary_info;
 	}
 }
