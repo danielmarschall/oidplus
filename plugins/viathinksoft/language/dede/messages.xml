@@ -2006,6 +2006,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Download extension from Microsoft
+		]]></source>
+		<target><![CDATA[
+		PHP-Erweiterung von Microsoft herunterladen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		E-Mail
 		]]></source>
 		<target><![CDATA[
@@ -2290,6 +2298,22 @@
 		]]></source>
 		<target><![CDATA[
 		Beispiel: OID 2.999.123 mittels VBScript hinzufügen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Example with instance name
+		]]></source>
+		<target><![CDATA[
+		Beispiel mit Instanznamen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Example with port
+		]]></source>
+		<target><![CDATA[
+		Beispiel mit Port
 		]]></target>
 	</message>
 	<message>
@@ -3562,6 +3586,22 @@
 		]]></source>
 		<target><![CDATA[
 		Letzte veröffentlichte Version: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Leave username/password empty if no credentials are required for the DBMS.
+		]]></source>
+		<target><![CDATA[
+		Benutzernamen und Passwort bitte leer lassen, wenn keine Zugangsdaten für das DBMS erforderlich sind.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Leave username/password empty if you want to use SQL Server Integrated Security or if no credentials are required for the DBMS.
+		]]></source>
+		<target><![CDATA[
+		Benutzernamen und Passwort bitte leer lassen, wenn eine SQL Server NT-Authentifizierung verwendet werden sollen oder wenn keine Zugangsdaten für das DBMS erforderlich sind.
 		]]></target>
 	</message>
 	<message>
@@ -6074,6 +6114,38 @@
 		]]></source>
 		<target><![CDATA[
 		SHA1-Namensbasierte UUID basierend auf dem öffentlichen Schlüssel Ihres OIDplus-Systems.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SQL Server database name
+		]]></source>
+		<target><![CDATA[
+		SQL Server Datenbankname
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SQL Server name
+		]]></source>
+		<target><![CDATA[
+		SQL Server Servername
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SQL Server password
+		]]></source>
+		<target><![CDATA[
+		SQL Server Passwort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		SQL Server username
+		]]></source>
+		<target><![CDATA[
+		SQL Server Benutzername
 		]]></target>
 	</message>
 	<message>

@@ -49,13 +49,14 @@ class OIDplusDatabasePluginODBC extends OIDplusDatabasePlugin {
 		       '	<br><font size="-1">'._L('Example for SQL Server').': <i>DRIVER={SQL Server};SERVER=<abbr title="'._L('Alternatively').': localhost,1433">localhost\instancename</abbr>;DATABASE=oidplus;CHARSET=UTF8</i>'.
 		       '	<br>'._L('Example for Microsoft Access').': <i>DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\inetpub\wwwroot\oidplus\trunk\userdata\database\oidplus.accdb;</i></font></p>'.
 		       '	<!-- '._L('Note: You should use the driver "ODBC Driver XX for SQL Server" instead, since it is the latest generation').' -->'.
-		       '	<p>'._L('ODBC Username').':<br><input id="odbc_username" type="text" value="root" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="odbc_username_warn"></span></p>'.
+		       '	<p>'._L('ODBC Username').':<br><input id="odbc_username" type="text" value="root" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="odbc_username_warn"></span>'.
+		       '	<br><font size="-1">'._L('Leave username/password empty if no credentials are required for the DBMS.').'</font></p>'.
 		       '	<p>'._L('ODBC Password').':<br><input id="odbc_password" type="password" value="" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="odbc_password_warn"></span></p>'.
 		       '	<p>'._L('Which DBMS (SQL dialect) is used?').'<br>'.
-		       '	<i>'._L('Attention: If your DBMS is not listed, OIDplus will most likely not work. If you know that your DBMS is compatible with one of these listed SQL dialects, you can choose that dialect.').'</i><br>'.
-		       '	<select name="odbc_slang" id="odbc_slang" onChange="dbplugin_changed()">'.
+		       '	<select name="ado_slang" id="odbc_slang" onChange="dbplugin_changed()">'.
 		       '	<!-- %SQL_SLANG_SELECTION% -->'.
-		       '	</select></p>'.
+		       '	</select><br>'.
+		       '	<i>'._L('Attention: If your DBMS is not listed, OIDplus will most likely not work. If you know that your DBMS is compatible with one of these listed SQL dialects, you can choose that dialect.').'</i></p>'.
 		       '</div>';
 	}
 

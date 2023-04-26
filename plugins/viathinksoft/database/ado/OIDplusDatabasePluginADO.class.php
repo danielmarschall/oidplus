@@ -50,10 +50,10 @@ class OIDplusDatabasePluginADO extends OIDplusDatabasePlugin {
 		       '	<br>'._L('Example for Microsoft Access').': <i>Provider=MSDASQL;DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\inetpub\wwwroot\oidplus\trunk\userdata\database\oidplus.accdb;</i></font></p>'.
 		       '	<!-- '._L('Note: You should use the driver "ODBC Driver XX for SQL Server" instead, since it is the latest generation').' -->'.
 		       '	<p>'._L('Which DBMS (SQL dialect) is used?').'<br>'.
-		       '	<i>'._L('Attention: If your DBMS is not listed, OIDplus will most likely not work. If you know that your DBMS is compatible with one of these listed SQL dialects, you can choose that dialect.').'</i><br>'.
 		       '	<select name="ado_slang" id="ado_slang" onChange="dbplugin_changed()">'.
 		       '	<!-- %SQL_SLANG_SELECTION% -->'.
-		       '	</select></p>'.
+		       '	</select><br>'.
+		       '	<i>'._L('Attention: If your DBMS is not listed, OIDplus will most likely not work. If you know that your DBMS is compatible with one of these listed SQL dialects, you can choose that dialect.').'</i></p>'.
 		       '</div>';
 	}
 

@@ -52,6 +52,7 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 	public function __destruct() {
 		if ($this->res) {
 			oci_free_statement($this->res);
+			$this->res = null;
 		}
 	}
 

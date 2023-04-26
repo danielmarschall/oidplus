@@ -1,11 +1,20 @@
 
-April 2023 planned:
+May 2023 planned:
 - Don't send "information object OIDs" (= Non-OIDs) OIDs to oid-info.com anymore
 - In re Internet access:
           * Check if all instances of https://github.com/danielmarschall/oidplus/issues/5 ("Offline mode") have been addressed
     [OK!] * Everywhere where url_post_contents() is used, we need to check url_post_contents_available() too.
           * Everywhere where url_get_contents() is used, we need to check url_get_contents_available() too.
 - Not good: url_*_contents() throws an Exception if not available, but returns false if URL is not available. That's inconsistant...
+- Idea: If we enter "oid:2.999.123" in the goto box, and only "oid:2.999" exists, should we recommend the user to look at 2.999?
+- Idea: If someone enters an OID in the goto box, should we prepend "oid:" (but only if all other plugins rejected the request)?
+
+Future:
+- Check if we can also support these databases listed at the PHP documentation:
+	CUBRID
+	dBase
+	Firebird/InterBase
+	IBM DB2 — IBM DB2, Cloudscape and Apache Derby
 
 Unicode compatibility:
 - [DONE]  SQL Server needs nvarchar instead of varchar (works with emoji too)
@@ -15,6 +24,7 @@ Unicode compatibility:
 -         ODBC+MSSQL and ODBC+ACCESS: Unicode deos not work. So it's ODBC's or ODBC-Driver's fault. Can we do something about it?
           (Note: ODBC and PDO can save UTF-8, but then they are double-encoded in DBTool/Access/SQLManagementStudio. When you insert Unicode in DBTool/Access/SQLManagementStudio, then they show up as '??' in OIDplus)
 -         ADO via OLEDB does not seem to support Unicode??? But it should! https://stackoverflow.com/questions/28311687/unable-to-retrieve-utf-8-accented-characters-from-access-via-pdo-odbc/28341697#28341697
+- [DONE]  SRVSRV plugin is capable of Unicode and pile of poo Emoji.
 
 Exception Refactoring:
 - [DONE]  Instead of catching OIDplusException, catch Exception
