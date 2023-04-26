@@ -36,6 +36,18 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 	private $last_error = null;
 
 	/**
+	 * @var int
+	 */
+	private $rowsAffected = 0;
+
+	/**
+	 * @return int
+	 */
+	public function rowsAffected(): int {
+		return $this->rowsAffected;
+	}
+
+	/**
 	 * @param string $sql
 	 * @param array|null $prepared_args
 	 * @return OIDplusQueryResultSqlSrv
@@ -78,6 +90,11 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 			$this->last_error = print_r(sqlsrv_errors(), true);
 			throw new OIDplusSQLException($sql, $this->error());
 		} else {
+			if (str_starts_with(trim(strtolower($sql)),'select')) {
+				$this->rowsAffected = sqlsrv_num_rows($res);
+			} else {
+				$this->rowsAffected = sqlsrv_rows_affected($res);
+			}
 			return new OIDplusQueryResultSqlSrv($res);
 		}
 	}
@@ -125,23 +142,20 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 		if (!function_exists('sqlsrv_connect')) throw new OIDplusException(_L('PHP extension "%1" not installed',self::get_sqlsrv_dll_name()));
 
 		// Try connecting to the database
-		$servername = OIDplus::baseConfig()->getValue('SQLSRV_SERVER',   'localhost\oidplus,49010');
+		$servername = OIDplus::baseConfig()->getValue('SQLSRV_SERVER',   'localhost\oidplus');
 		$username   = OIDplus::baseConfig()->getValue('SQLSRV_USERNAME', '');
 		$password   = OIDplus::baseConfig()->getValue('SQLSRV_PASSWORD', '');
 		$database   = OIDplus::baseConfig()->getValue('SQLSRV_DATABASE', 'oidplus');
+		$options    = OIDplus::baseConfig()->getValue('SQLSRV_OPTIONS',  array());
 
-		$connectionInfo = array(
-			"Database" => $database,
-			"CharacterSet" => 'UTF-8',
-			// TODO: Make addition connection infos configurable
-		);
-
+		if (!isset($options['Database'])) $options['Database'] = $database;
+		if (!isset($options['CharacterSet'])) $options['CharacterSet'] = 'UTF-8';
 		if ($username != '') {
-			$connectionInfo['UID'] = $username;
-			$connectionInfo['PWD'] = $password;
+			if (!isset($options['UID'])) $options['UID'] = $username;
+			if (!isset($options['PWD'])) $options['PWD'] = $password;
 		}
 
-		$this->conn = @sqlsrv_connect($servername, $connectionInfo);
+		$this->conn = @sqlsrv_connect($servername, $options);
 
 		if (!$this->conn) {
 			$message = print_r(sqlsrv_errors(), true);
@@ -186,31 +200,21 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 	 */
 	public function transaction_begin()/*: void*/ {
 		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
-		sqlsrv_begin_transaction($this->conn);
-		$this->intransaction = true;
+		if (sqlsrv_begin_transaction($this->conn)) $this->intransaction = true;
 	}
 
 	/**
 	 * @return void
 	 */
 	public function transaction_commit()/*: void*/ {
-		sqlsrv_commit($this->conn);
-		$this->intransaction = false;
+		if (sqlsrv_commit($this->conn)) $this->intransaction = false;
 	}
 
 	/**
 	 * @return void
 	 */
 	public function transaction_rollback()/*: void*/ {
-		sqlsrv_rollback($this->conn);
-		$this->intransaction = false;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function sqlDate(): string {
-		return 'getdate()';
+		if (sqlsrv_rollback($this->conn)) $this->intransaction = false;
 	}
 
 	/**
@@ -230,15 +234,21 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 	 * @return array
 	 */
 	public function getExtendedInfo(): array {
-		$servername = OIDplus::baseConfig()->getValue('SQLSRV_SERVER',   'localhost\oidplus,49010');
+		$servername = OIDplus::baseConfig()->getValue('SQLSRV_SERVER',   'localhost\oidplus');
 		$username   = OIDplus::baseConfig()->getValue('SQLSRV_USERNAME', '');
 		$password   = OIDplus::baseConfig()->getValue('SQLSRV_PASSWORD', '');
 		$database   = OIDplus::baseConfig()->getValue('SQLSRV_DATABASE', 'oidplus');
-		return array(
+		$options    = OIDplus::baseConfig()->getValue('SQLSRV_OPTIONS',  array());
+
+		$ary_info = array(
 			_L('Hostname') => $servername,
 			_L('Username') => $username,
 			_L('Password') => $password != '' ? '('._L('redacted').')' : '',
 			_L('Database') => $database
 		);
+		foreach ($options as $name => $val) {
+			$ary_info[_L('Option %1',$name)] = '"'.$val.'"';
+		}
+		return $options;
 	}
 }

@@ -61,6 +61,9 @@ Used by the Oracle database plugin.
 
 Used by the ODBC database plugin.
 
+Username and password are not required if you want to use SQL Server Integrated Security,
+or if the DBMS does not require credentials (e.g. a File DB).
+
 The base64 encoding protects your password from being read if someone
 "looks over your shoulder" at your display while you have the configuration file opened.
 (Obviously, it doesn't protect you if they can make a photo or screenshot)
@@ -72,6 +75,40 @@ The base64 encoding protects your password from being read if someone
     OIDplus::baseConfig()->setValue('PDO_PASSWORD',             base64_decode('<base64_encoded_password>')); // alternatively as plaintext
 
 Used by the PDO datbase plugin.
+
+Username and password are not required if you want to use SQL Server Integrated Security,
+or if the DBMS does not require credentials (e.g. a File DB).
+
+The base64 encoding protects your password from being read if someone
+"looks over your shoulder" at your display while you have the configuration file opened.
+(Obviously, it doesn't protect you if they can make a photo or screenshot)
+
+### ADO_*
+
+    OIDplus::baseConfig()->setValue('ADO_CONNECTION_STRING',    'Provider=MSOLEDBSQL;Data Source=LOCALHOST\SQLEXPRESS;Initial Catalog=oidplus;Integrated Security=SSPI');
+
+Used by the ADO datbase plugin.
+
+### SQLSRV_*
+
+    OIDplus::baseConfig()->setValue('SQLSRV_SERVER',            'localhost\oidplus');
+    OIDplus::baseConfig()->setValue('SQLSRV_USERNAME',          '');
+    OIDplus::baseConfig()->setValue('SQLSRV_PASSWORD',          base64_decode('<base64_encoded_password>')); // alternatively as plaintext
+    OIDplus::baseConfig()->setValue('SQLSRV_DATABASE',          'oidplus');
+    OIDplus::baseConfig()->setValue('SQLSRV_OPTIONS',           array());
+
+Used by the SQLSRV datbase plugin.
+
+SQLSRV_OPTIONS can be filled with various connection info options
+(see PHP documentation for sqlsrv_connect).
+The following fields will be automatically filled if they are not explicitly overridden:
+- `UID` will be filled with `SQLSRV_USERNAME`
+- `PWD` will be filled with `SQLSRV_PASSWORD`
+- `Database` will be filled with `SQLSRV_DATABASE`
+- `CharacterSet` will be filled with `"UTF-8"`
+
+Username and password are not required if you want to use SQL Server Integrated Security,
+or if the DBMS does not require credentials (e.g. a File DB).
 
 The base64 encoding protects your password from being read if someone
 "looks over your shoulder" at your display while you have the configuration file opened.
@@ -431,7 +468,7 @@ the cookie path in a reverse-proxy setting.
 
 ### RA_PASSWORD_PEPPER
 
-    OIDplus::baseConfig()->getValue('RA_PASSWORD_PEPPER', '');
+    OIDplus::baseConfig()->setValue('RA_PASSWORD_PEPPER', '');
 
 The pepper is stored inside the base configuration file
 It prevents that an attacker with SQL write rights can
@@ -443,7 +480,7 @@ then ALL passwords of RAs become INVALID!
 
 ### RA_PASSWORD_PEPPER_ALGO
 
-    OIDplus::baseConfig()->getValue('RA_PASSWORD_PEPPER_ALGO', 'sha512');
+    OIDplus::baseConfig()->setValue('RA_PASSWORD_PEPPER_ALGO', 'sha512');
 
 The pepper is stored inside the base configuration file
 It prevents that an attacker with SQL write rights can
