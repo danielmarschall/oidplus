@@ -315,6 +315,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	 */
 	public function getExtendedInfo(): array {
 		$dsn = OIDplus::baseConfig()->getValue('ODBC_DSN', 'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
+		$dsn = preg_replace('@(Password|PWD)=(.+);@ismU', '('._L('redacted').');', $dsn);
 		return array(
 			_L('DSN') => $dsn
 		);

@@ -27,13 +27,17 @@ use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
  */
 function oidplus_dbupdate_200(OIDplusDatabaseConnection $db): int {
 	if ($db->transaction_supported()) $db->transaction_begin();
+	try {
+		$db->query("ALTER TABLE ###objects ADD comment varchar(255) NULL");
 
-	$db->query("ALTER TABLE ###objects ADD comment varchar(255) NULL");
+		$version = 201;
+		$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array("$version"));
 
-	$version = 201;
-	$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array("$version"));
-
-	if ($db->transaction_supported()) $db->transaction_commit();
+		if ($db->transaction_supported()) $db->transaction_commit();
+	} catch (\Exception $e) {
+		if ($db->transaction_supported()) $db->transaction_rollback();
+		throw new $e;
+	}
 
 	return $version;
 }

@@ -41,16 +41,6 @@ rebuild_callbacks.push(function() {
 		$("#pdo_dsn_warn")[0].innerHTML = '';
 	}
 
-	// Check 2: Username must not be empty
-	if ($("#pdo_username")[0].value.length == 0)
-	{
-		$("#pdo_username_warn")[0].innerHTML = '<font color="red">'+_L('Please specify a username!')+'</font>';
-		$("#config")[0].innerHTML = '<b>&lt?php</b><br><br><i>// ERROR: Please specify a username!</i>'; // do not translate
-		error = true;
-	} else {
-		$("#pdo_username_warn")[0].innerHTML = '';
-	}
-
 	$("#struct_1")[0].href = setupdir+'struct_empty.sql.php?prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang='+encodeURI($("#pdo_slang")[0].value);
 	$("#struct_2")[0].href = setupdir+'struct_with_examples.sql.php?prefix='+encodeURI($("#tablename_prefix")[0].value)+'&slang='+encodeURI($("#pdo_slang")[0].value);
 	if ($("#pdo_slang")[0].value == 'mysql') {

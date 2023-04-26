@@ -48,6 +48,7 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 		       // TODO: Show these examples based on the slang the user chooses
 		       '	<br><font size="-1">'._L('Example for MySQL/MariaDB').': <i>mysql:dbname=oidplus;host=localhost;port=3306;charset=utf8mb4</i>'.
 		       '	<br>'._L('Example for PostgreSQL').': <i>pgsql:dbname=oidplus;host=localhost;port=5432</i>'.
+		       '	<br>'._L('Example for SQL Server').': <i>odbc:DRIVER={SQL Server};SERVER=localhost\oidplus;DATABASE=oidplus;CHARSET=UTF8</i>'.
 		       '	<br>'._L('Example for Microsoft Access').': <i>odbc:DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\inetpub\wwwroot\oidplus\trunk\userdata\database\oidplus.accdb;</i></font></p>'.
 		       '	<p>'._L('PDO Username').':<br><input id="pdo_username" type="text" value="root" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="pdo_username_warn"></span></p>'.
 		       '	<p>'._L('PDO Password').':<br><input id="pdo_password" type="password" value="" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="pdo_password_warn"></span></p>'.
