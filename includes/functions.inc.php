@@ -145,7 +145,8 @@ if (!function_exists('mb_wordwrap')) {
 	 */
 	function mb_wordwrap(string $str, int $width = 75, string $break = "\n", bool $cut = false): string {
 		// https://stackoverflow.com/a/4988494/488539
-		$lines = explode($break, $str);
+		assert(strlen($break) > 0);
+		$lines = explode("$break", $str);
 		foreach ($lines as &$line) {
 			$line = rtrim($line);
 			if (mb_strlen($line) <= $width) {

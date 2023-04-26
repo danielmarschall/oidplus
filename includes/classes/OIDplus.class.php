@@ -2433,13 +2433,18 @@ class OIDplus extends OIDplusBaseClass {
 			if (!$obj) continue;
 			$idb = $obj->nodeId();
 			if (($idb) && ($ida != $idb)) {
-				OIDplus::db()->transaction_begin();
-				OIDplus::db()->query("update ###objects set id = ? where id = ?", array($idb, $ida));
-				OIDplus::db()->query("update ###asn1id set oid = ? where oid = ?", array($idb, $ida));
-				OIDplus::db()->query("update ###iri set oid = ? where oid = ?", array($idb, $ida));
-				OIDplus::db()->query("update ###log_object set id = ? where id = ?", array($idb, $ida));
-				OIDplus::logger()->log("[INFO]A!", "Object name '%1' has been changed to '%2' during re-canonization", $ida, $idb);
-				OIDplus::db()->transaction_commit();
+				if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_begin();
+				try {
+					OIDplus::db()->query("update ###objects set id = ? where id = ?", array($idb, $ida));
+					OIDplus::db()->query("update ###asn1id set oid = ? where oid = ?", array($idb, $ida));
+					OIDplus::db()->query("update ###iri set oid = ? where oid = ?", array($idb, $ida));
+					OIDplus::db()->query("update ###log_object set object = ? where object = ?", array($idb, $ida));
+					OIDplus::logger()->log("[INFO]A!", "Object name '%1' has been changed to '%2' during re-canonization", $ida, $idb);
+					if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_commit();
+				} catch (\Exception $e) {
+					if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_rollback();
+					throw $e;
+				}
 				OIDplusObject::resetObjectInformationCache();
 			}
 		}

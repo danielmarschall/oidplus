@@ -59,12 +59,17 @@ try {
 			if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
 				OIDplus::db()->transaction_begin();
 			}
-
-			$json_out = $plugin->action($_REQUEST['action'], $params);
-			if (!isset($json_out['status'])) $json_out['status'] = -1;
-
-			if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
-				OIDplus::db()->transaction_commit();
+			try {
+				$json_out = $plugin->action($_REQUEST['action'], $params);
+				if (!isset($json_out['status'])) $json_out['status'] = -1;
+				if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
+					OIDplus::db()->transaction_commit();
+				}
+			} catch (\Exception $e) {
+				if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
+					if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_rollback();
+				}
+				throw $e;
 			}
 		} else {
 			throw new OIDplusException(_L('Invalid action ID'));

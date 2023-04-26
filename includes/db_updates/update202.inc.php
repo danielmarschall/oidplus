@@ -27,15 +27,19 @@ use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
  */
 function oidplus_dbupdate_202(OIDplusDatabaseConnection $db): int {
 	if ($db->transaction_supported()) $db->transaction_begin();
+	try {
+		if ($db->getSlang()->id() == 'mssql') {
+			// (Function "getOidArc" has been removed 6 April 2023)
+		}
 
-	if ($db->getSlang()->id() == 'mssql') {
-		// (Function "getOidArc" has been removed 6 April 2023)
+		$version = 203;
+		$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array("$version"));
+
+		if ($db->transaction_supported()) $db->transaction_commit();
+	} catch (\Exception $e) {
+		if ($db->transaction_supported()) $db->transaction_rollback();
+		throw new $e;
 	}
-
-	$version = 203;
-	$db->query("UPDATE ###config SET value = ? WHERE name = 'database_version'", array("$version"));
-
-	if ($db->transaction_supported()) $db->transaction_commit();
 
 	return $version;
 }
