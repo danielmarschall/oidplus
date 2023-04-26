@@ -336,6 +336,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		if (!is_null($slang)) {
 			return $slang->sqlDate();
 		} else {
+			// Fallback: Take the server date
 			return "'" . date('Y-m-d H:i:s') . "'";
 		}
 	}

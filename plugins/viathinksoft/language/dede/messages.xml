@@ -4838,6 +4838,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Option %1
+		]]></source>
+		<target><![CDATA[
+		Option %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Optional PIX allowed, with "FF" prefix
 		]]></source>
 		<target><![CDATA[
