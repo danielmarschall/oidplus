@@ -98,6 +98,18 @@ try {
 	echo redtext($e->getTraceAsString())."\n\n";
 }
 
+# Test SQLSRV
+try {
+	OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'SQLSRV');
+	OIDplus::init(true, true);
+	$db = OIDplus::db();
+	dotest($db);
+} catch (Exception $e) {
+	echo "ADO:\n";
+	echo redtext($e->getMessage())."\n";
+	echo redtext($e->getTraceAsString())."\n\n";
+}
+
 # Test PgSQL
 try {
 	OIDplus::baseConfig()->setValue('DATABASE_PLUGIN', 'PgSQL');

@@ -23,7 +23,7 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusQueryResultPDO extends OIDplusQueryResult {
+class OIDplusQueryResultSqlSrv extends OIDplusQueryResult {
 	/**
 	 * @var bool
 	 */
@@ -42,9 +42,6 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 
 		if (!$this->no_resultset) {
 			$this->res = $res;
-
-			// This way we can simulate MARS (Multiple Active Result Sets) so that the test case "Simultanous prepared statements" works
-			$this->prefetchedArray = $this->res->fetchAll();
 		}
 	}
 
@@ -53,7 +50,11 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	 */
 	public function __destruct() {
 		if ($this->res) {
-			$this->res->closeCursor();
+			// TODO: Added is_resource(), because for some reason, we get errors here "supplied resource is not a valid ss_sqlsrv_stmt resource"
+			//       at the end of execution of the dev/test_database_plugins script
+			if (is_resource($this->res)) {
+				sqlsrv_free_stmt($this->res);
+			}
 			$this->res = null;
 		}
 	}
@@ -66,43 +67,45 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	}
 
 	/**
-	 * @return void
-	 */
-	public function prefetchAll() {
-		if (!is_null($this->prefetchedArray)) return;
-		$this->prefetchedArray = $this->res->fetchAll();
-	}
-
-	/**
 	 * @return int
 	 */
 	protected function do_num_rows(): int {
-		$ret = $this->res->rowCount();
-
-		// -1 can happen when PDO is connected via ODBC that is running a driver that does not support num_rows (e.g. Microsoft Access)
-		if ($ret === -1) {
-			$this->prefetchAll();
-			return count($this->prefetchedArray) + $this->countAlreadyFetched;
-		}
-
-		return $ret;
+		$nr = sqlsrv_num_rows($this->res);
+		if ($nr === false) return -1;
+		return $nr;
 	}
 
 	/**
 	 * @return array|null
 	 */
 	protected function do_fetch_array()/*: ?array*/ {
-		$ret = $this->res->fetch(\PDO::FETCH_ASSOC);
-		if ($ret === false) $ret = null;
-		return $ret;
+		$ary = sqlsrv_fetch_array($this->res);
+
+		if ($ary) {
+			foreach ($ary as $key => &$a) {
+				// This is a bit TOO object oriented for the rest of OIDplus!
+				if ($a instanceof \DateTime) $a = $a->format('Y-m-d H:i:s');
+			}
+		}
+
+		return $ary;
 	}
 
 	/**
 	 * @return object|null
 	 */
-	protected function do_fetch_object()/*: ?object*/ {
-		$ret = $this->res->fetch(\PDO::FETCH_OBJ);
-		if ($ret === false) $ret = null;
-		return $ret;
+	//protected function do_fetch_object()/*: ?object*/ {
+	//	return sqlsrv_fetch_object($this->res, \stdClass::class);
+	//}
+
+	/**
+	 * The any() function returns true if there is at least one
+	 * row in the section.
+	 *
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function any(): bool {
+		return sqlsrv_has_rows($this->res);
 	}
 }

@@ -50,13 +50,14 @@ class OIDplusDatabasePluginPDO extends OIDplusDatabasePlugin {
 		       '	<br>'._L('Example for PostgreSQL').': <i>pgsql:dbname=oidplus;host=localhost;port=5432</i>'.
 		       '	<br>'._L('Example for SQL Server').': <i>odbc:DRIVER={SQL Server};SERVER=localhost\oidplus;DATABASE=oidplus;CHARSET=UTF8</i>'.
 		       '	<br>'._L('Example for Microsoft Access').': <i>odbc:DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\inetpub\wwwroot\oidplus\trunk\userdata\database\oidplus.accdb;</i></font></p>'.
-		       '	<p>'._L('PDO Username').':<br><input id="pdo_username" type="text" value="root" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="pdo_username_warn"></span></p>'.
+		       '	<p>'._L('PDO Username').':<br><input id="pdo_username" type="text" value="root" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="pdo_username_warn"></span>'.
+		       '	<br><font size="-1">'._L('Leave username/password empty if no credentials are required for the DBMS.').'</font></p>'.
 		       '	<p>'._L('PDO Password').':<br><input id="pdo_password" type="password" value="" onkeypress="rebuild()" onkeyup="rebuild()">  <span id="pdo_password_warn"></span></p>'.
 		       '	<p>'._L('Which DBMS (SQL dialect) is used?').'<br>'.
-		       '	<i>'._L('Attention: If your DBMS is not listed, OIDplus will most likely not work. If you know that your DBMS is compatible with one of these listed SQL dialects, you can choose that dialect.').'</i><br>'.
-		       '	<select name="pdo_slang" id="pdo_slang" onChange="dbplugin_changed()">'.
+		       '	<select name="ado_slang" id="pdo_slang" onChange="dbplugin_changed()">'.
 		       '	<!-- %SQL_SLANG_SELECTION% -->'.
-		       '	</select></p>'.
+		       '	</select><br>'.
+		       '	<i>'._L('Attention: If your DBMS is not listed, OIDplus will most likely not work. If you know that your DBMS is compatible with one of these listed SQL dialects, you can choose that dialect.').'</i></p>'.
 		       '</div>';
 	}
 

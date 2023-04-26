@@ -49,7 +49,10 @@ class OIDplusQueryResultMySQL extends OIDplusQueryResult {
 	 *
 	 */
 	public function __destruct() {
-		if ($this->res) $this->res->close();
+		if ($this->res) {
+			$this->res->close();
+			$this->res = null;
+		}
 	}
 
 	/**

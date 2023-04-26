@@ -51,6 +51,7 @@ class OIDplusQueryResultPgSql extends OIDplusQueryResult {
 	public function __destruct() {
 		if ($this->res) {
 			pg_free_result($this->res);
+			$this->res = null;
 		}
 	}
 
