@@ -36,7 +36,16 @@ class OIDplusSqlSlangPluginFirebird extends OIDplusSqlSlangPlugin {
 	 * @return string
 	 */
 	public function sqlDate(): string {
-		return 'current_timestamp';
+		// Firebird 3 :  LOCALTIMESTAMP == current_timestamp
+		// Firebird 4 :  LOCALTIMESTAMP is without timezone and
+		//               current_timestamp is with timezone.
+		// PDO seems to have big problems with the "time stamp with time zone"
+		// data type, since the plugin "adminPages => Systeminfo" shows an
+		// empty string for "select current_timestamp from ###config".
+		// Passing current_timestamp into a "insert into" query works however...
+		// For now, we use LOCALTIMESTAMP. It does not seem to make a difference
+		//return 'current_timestamp';
+		return 'LOCALTIMESTAMP';
 	}
 
 	/**
