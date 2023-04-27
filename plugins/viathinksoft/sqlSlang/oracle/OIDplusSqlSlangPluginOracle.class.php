@@ -118,16 +118,17 @@ class OIDplusSqlSlangPluginOracle extends OIDplusSqlSlangPlugin {
 	 * @return string
 	 */
 	public function filterQuery(string $sql): string {
-
-		// "select 1" is not valid. You need to add "from dual"
-		if ((stripos($sql,'select') !== false) && (stripos($sql,'from') === false)) {
-			$sql .= ' from dual';
-		}
+		$sql = trim($sql);
 
 		// SQL-Queries MUST NOT end with a ";", otherwise error "SQL command not property ended"
-		$sql = rtrim(trim($sql), "; \n\r\t\v\x00");
+		$sql = rtrim($sql, "; \n\r\t\v\x00");
 		// SQL/PL-Programs MUST end with a ";"
 		if (strtolower(substr($sql,-3)) == 'end') $sql .= ';';
+
+		// "select 1" is not valid. You need to add "from dual"
+		if (str_starts_with(trim(strtolower($sql)),'select') && (stripos($sql,'from') === false)) {
+			$sql .= ' from dual';
+		}
 
 		// Dirty hack!!! We need the name of the last inserted table so that insert_id()
 		// works. This is a dirty hack, because the invokation of filterQuery() does

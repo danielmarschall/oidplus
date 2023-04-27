@@ -194,7 +194,9 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 			}
 		}
 
-		return $this->doQuery($sql, $prepared_args);
+		$res = $this->doQuery($sql, $prepared_args);
+		if ($this->slangDetectionDone) $this->getSlang()->reviewResult($res, $sql, $prepared_args);
+		return $res;
 	}
 
 	/**

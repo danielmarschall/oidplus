@@ -90,7 +90,7 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 			$this->last_error = print_r(sqlsrv_errors(), true);
 			throw new OIDplusSQLException($sql, $this->error());
 		} else {
-			if (str_starts_with(trim(strtolower($sql)),'select')) {
+			if (str_starts_with(trim(strtolower($sql)),'select')) { // Note: Please do not call $this->getSlang()->fetchableRowsExpected($sql)
 				$this->rowsAffected = sqlsrv_num_rows($res);
 			} else {
 				$this->rowsAffected = sqlsrv_rows_affected($res);
