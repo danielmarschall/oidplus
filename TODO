@@ -8,6 +8,11 @@ May 2023 planned:
 - Not good: url_*_contents() throws an Exception if not available, but returns false if URL is not available. That's inconsistant...
 - Idea: If we enter "oid:2.999.123" in the goto box, and only "oid:2.999" exists, should we recommend the user to look at 2.999?
 - Idea: If someone enters an OID in the goto box, should we prepend "oid:" (but only if all other plugins rejected the request)?
+- setup/sql/*.sql should be in plugins/*/sqlSlang/*.sql
+- Finish implementing Firebird SQL slang
+		* Example and wellknown data
+		* Last Insert ID
+		* Transactions via PDO not possible?!
 
 Future:
 - Check if we can also support these databases listed at the PHP documentation:

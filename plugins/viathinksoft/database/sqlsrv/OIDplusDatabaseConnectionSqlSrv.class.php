@@ -129,7 +129,7 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 		$version = $m[0].$m[1];
 
 		// e.g. php_sqlsrv_82_ts_x64.dll
-		return "php_sqlsrv_${version}_${threadsafety}_${architecture}.dll";
+		return "php_sqlsrv_{$version}_{$threadsafety}_{$architecture}.dll";
 	}
 
 	/**

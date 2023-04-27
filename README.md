@@ -33,7 +33,8 @@ Download a TAR.GZ file here: https://www.viathinksoft.com/projects/oidplus
         SQLite3,
         Oracle,
         Microsoft SQL Server,
-        Microsoft Access
+        Microsoft Access,
+        Firebird
 - Independent of operating systems (tested with Windows, Linux and macOS X)
 
 ### Reporting a bug
