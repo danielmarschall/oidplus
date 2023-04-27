@@ -143,7 +143,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			$options = [
 			    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_SILENT,
 			    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-			    \PDO::ATTR_EMULATE_PREPARES   => true,
+			    \PDO::ATTR_EMULATE_PREPARES   => true
 			];
 
 			// Try connecting to the database
@@ -193,17 +193,42 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		} catch (\Exception $e) {
 		}
 
-		// We check if the DBMS supports autocommit.
-		// Attention: Check it after you have sent a query already, because Microsoft Access doesn't seem to allow
-		// changing auto commit once a query was executed ("Attribute cannot be set now SQLState: S1011")
-		// Note: For some weird reason we *DO* need to redirect the output to "$dummy", otherwise it won't work!
-		$sql = "select name from ###config where 1=0";
-		$sql = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $sql);
-		$dummy = $this->conn->query($sql);
+		$this->detectTransactionSupport();
+	}
+
+	/**
+	 * @return void
+	 */
+	private function detectTransactionSupport() {
 		try {
-			$this->conn->beginTransaction();
-			$this->conn->rollBack();
-			$this->transactions_supported = true;
+			// Attention: Check it after you have already sent a query, because Microsoft Access doesn't seem to allow
+			// changing auto commit once a query was executed ("Attribute cannot be set now SQLState: S1011")
+			// Note: For some weird reason we *DO* need to redirect the output to "$dummy", otherwise it won't work!
+			$sql = "select name from ###config where 1=0";
+			$sql = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $sql);
+			$dummy = $this->conn->query($sql);
+		} catch (\Exception $e) {
+			// Microsoft Access might output that "xyz_config" is not found, if TABLENAME_PREFIX is wrong
+			// We didn't had the change to verify the existance of ###config using afterConnectMandatory() at this stage.
+			// This try-catch is usually not required because our error mode is set to silent.
+		}
+
+		// Note for Firebird: If Firebird uses auto-transactions via PDO, it doesn't allow an explicit transaction after a query has been
+		// executed once in auto-commit mode. For some reason, the query was auto-committed, but after the auto-comit, a new transaction is
+		// automatically opened, so new explicit transaction are denied with the error messag ethat a transaction is still open. A bug?!
+		// If we explicit commit the implicitly opened transaction, we can use explicit transactions, but once
+		// we want to run a normal query, Firebird denies it, saying that no transaction is open (because it asserts that an implicit
+		// opened transaction is available).
+		// The only solution would be to disable auto-commit and do everything ourselves, but this is a complex and risky task,
+		// so we just let Firebird run in Transaction-Disabled-Mode.
+
+		try {
+			if (!$this->conn->beginTransaction()) {
+				$this->transactions_supported = false;
+			} else {
+				$this->conn->rollBack();
+				$this->transactions_supported = true;
+			}
 		} catch (\Exception $e) {
 			$this->transactions_supported = false;
 		}
@@ -213,6 +238,14 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	 * @return void
 	 */
 	protected function doDisconnect()/*: void*/ {
+		/*
+		if (!$this->conn->getAttribute(\PDO::ATTR_AUTOCOMMIT)) {
+			try {
+				$this->conn->commit();
+			} catch (\Exception $e) {
+			}
+		}
+		*/
 		$this->conn = null; // the connection will be closed by removing the reference
 	}
 

@@ -288,13 +288,17 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 */
 	private function initRequireTables(array $tableNames)/*: void*/ {
 		$msgs = array();
+
+		// Check for a general database error like a locked file DBMS
+		// which would raise a false warning "Table oidplus_config missing"
+		$this->query("select 0");
+
+		$prefix = OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', '');
 		foreach ($tableNames as $tableName) {
-			$prefix = OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', '');
 			if (!$this->tableExists($prefix.$tableName)) {
 				$msgs[] = _L('Table %1 is missing!',$prefix.$tableName);
 			}
 		}
-		// TODO: If there is a general database error (e.g. locked database, etc.) then you will receive the false warning "Table oidplus_config missing"
 		if (count($msgs) > 0) {
 			throw new OIDplusConfigInitializationException(implode("\n\n",$msgs));
 		}
