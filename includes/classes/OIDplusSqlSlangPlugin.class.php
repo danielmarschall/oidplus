@@ -108,4 +108,23 @@ abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 	 */
 	public abstract function isNullFunction(string $expr1, string $expr2): string;
 
+	/**
+	 * This gives the SQL slang plugin the chance to review the result before it is passed to the application.
+	 * @param OIDplusQueryResult $res
+	 * @param string $sql
+	 * @param array|null $prepared_args
+	 * @return void
+	 */
+	public function reviewResult(OIDplusQueryResult $res, string $sql, array $prepared_args=null) {
+		// nothing here. Override it is you need it.
+	}
+
+	/**
+	 * @param string $sql
+	 * @return bool
+	 */
+	public function fetchableRowsExpected(string $sql): bool {
+		return str_starts_with(trim(strtolower($sql)),'select');
+	}
+
 }

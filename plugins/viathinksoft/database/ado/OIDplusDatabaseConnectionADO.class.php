@@ -95,7 +95,8 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			try {
-				if (str_starts_with(trim(strtolower($sql)),'select')) {
+				$fetchableRowsExpected = $this->slangDetectionDone ? $this->getSlang()->fetchableRowsExpected($sql) : str_starts_with(trim(strtolower($sql)),'select');
+				if ($fetchableRowsExpected) {
 					$res = new \COM("ADODB.Recordset");
 
 					$res->Open($sql, $this->conn, 3/*adOpenStatic*/, 3/*adLockOptimistic*/);   /** @phpstan-ignore-line */

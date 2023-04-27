@@ -10,7 +10,6 @@ May 2023 planned:
 - Idea: If someone enters an OID in the goto box, should we prepend "oid:" (but only if all other plugins rejected the request)?
 - setup/sql/*.sql should be in plugins/*/sqlSlang/*.sql
 - Finish implementing Firebird SQL slang
-		* Last Insert ID
 		* Transactions via PDO not possible?!
 
 Future:

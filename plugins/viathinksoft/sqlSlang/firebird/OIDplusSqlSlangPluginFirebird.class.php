@@ -61,15 +61,41 @@ class OIDplusSqlSlangPluginFirebird extends OIDplusSqlSlangPlugin {
 	}
 
 	/**
+	 * @var mixed
+	 */
+	private $last_insert_id = null;
+
+	/**
 	 * @param OIDplusDatabaseConnection $db
 	 * @return int
 	 * @throws OIDplusException
 	 */
 	public function insert_id(OIDplusDatabaseConnection $db): int {
+		if (!is_numeric($this->last_insert_id)) return -1;
+		return $this->last_insert_id ?? -1;
+	}
 
-		// TODO: IMPLEMENT FOR FIREBIRD!
-		return 0;
+	/**
+	 * This gives the SQL slang plugin the chance to review the result before it is passed to the application.
+	 * @param OIDplusQueryResult $res
+	 * @param string $sql
+	 * @param array|null $prepared_args
+	 * @return void
+	 */
+	public function reviewResult(OIDplusQueryResult $res, string $sql, array $prepared_args=null) {
+		if (str_starts_with(trim(strtolower($sql)),'insert')) {
+			$this->last_insert_id = $res->fetch_array()["id"];
+		} else {
+			$this->last_insert_id = null;
+		}
+	}
 
+	/**
+	 * @param string $sql
+	 * @return bool
+	 */
+	public function fetchableRowsExpected(string $sql): bool {
+		return str_starts_with(trim(strtolower($sql)),'select') || str_starts_with(trim(strtolower($sql)),'insert');
 	}
 
 	/**
@@ -116,14 +142,24 @@ class OIDplusSqlSlangPluginFirebird extends OIDplusSqlSlangPlugin {
 	 * @return string
 	 */
 	public function filterQuery(string $sql): string {
+		// Make sure that the query does not end with ";", otherwise we cannot append stuff to it
+		$sql = trim($sql);
+		$sql = rtrim($sql, "; \n\r\t\v\x00");
+
+		// Rewrite INSERT queries, so we can extract the ID in reviewResult()
+		if (str_starts_with(trim(strtolower($sql)),'insert')) {
+			$sql .= " returning id";
+		}
+
 		// "select 1" is not valid. You need to add "from RDB$DATABASE"
-		if ((stripos($sql,'select') !== false) && (stripos($sql,'from') === false)) {
+		if (str_starts_with(trim(strtolower($sql)),'select') && (stripos($sql,'from') === false)) {
 			$sql .= ' from RDB$DATABASE';
 		}
 
-		//Value is a keyword and cannot be used as column name
+		// Value is a keyword and cannot be used as column name
 		$sql = str_ireplace('value', '"VALUE"', $sql);
 		$sql = str_ireplace('"VALUE"s', 'values', $sql);
+
 		return $sql;
 	}
 
