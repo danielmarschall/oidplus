@@ -4,14 +4,17 @@
 -- Since we use config in the code, we must use "CONFIG" here
 
 
--- You can import this file using the iSQL Tool command:
--- "C:\Program Files\Firebird\Firebird_3_0\isql.exe" -z -i "d:\SVN\OIDplus\trunk\setup\sql\struct_firebird.sql"
--- (Change the file paths)
+
+-- 1. PLEASE CHANGE THE PATH AND CREDENTIALS HERE, BEFORE PASSING THE FILE TO iSQL Tool
+CREATE DATABASE 'C:\inetpub\wwwroot\oidplus\trunk\userdata\database\oidplus.fdb' page_size 8192 user 'SYSDBA' password 'masterkey';
+connect 'C:\inetpub\wwwroot\oidplus\trunk\userdata\database\oidplus.fdb' user 'SYSDBA' password 'masterkey';
+
+-- 2. You can import this file using the iSQL Tool command AS ADMINISTRATOR:
+-- (Change the file path to the path of this downloaded file)
+-- "C:\Program Files\Firebird\Firebird_4_0\isql.exe" -z -i "path_to_this_file.sql"
 
 
--- Connect to the database
--- PLEASE CHANGE THE PATH HERE, BEFORE PASSING THE FILE TO iSQL Tool
-connect 'D:\SVN\OIDplus\trunk\userdata\database\oidplus.fdb' user 'SYSDBA' password 'masterkey';
+
 
 
 recreate table "CONFIG" (
@@ -125,4 +128,4 @@ INSERT INTO "CONFIG" ("NAME", "DESCRIPTION", "VALUE", "PROTECTED", "VISIBLE") VA
 
 -- Quit = exit and rollback changes!
 -- Exit = and commit changes
-exit;
+-- Not required if passed via command line to iSQL Tool
