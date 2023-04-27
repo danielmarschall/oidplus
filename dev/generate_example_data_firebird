@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# OIDplus 2.0
+# Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+DIR=$( dirname "$0" )
+cd "$DIR"
+
+# Export tables "demo_*" into file setup/sql/example_firebird.sql
+# We don't print to console because of encoding issues
+#mysqldump --default-character-set=utf8 --no-create-info --extended-insert=FALSE oidplus demo_iri demo_asn1id demo_ra demo_objects -r ../setup/sql/example_firebird.sql
+
+# Remove database prefix
+#sed -i 's/`demo_/`/g' ../setup/sql/example_firebird.sql
+
+# Since we have to do some manual work to the MySQL data, we do not create a new dump
+# but instead use the MySQL example script (that has been carefully checked)
+cat ../setup/sql/example_mysql.sql > ../setup/sql/example_firebird.sql
+
+# Avoid that there is a conflict with well known IDs (e.g. 2.999)
+#sed -i 's/INSERT INTO `iri`/INSERT IGNORE INTO `iri`/g' ../setup/sql/example_pgsql.sql
+#sed -i 's/INSERT INTO `asn1id`/INSERT IGNORE INTO `asn1id`/g' ../setup/sql/example_pgsql.sql
+
+# Change backticks to double quotes
+# and write everything inside upper case! (very important)
+sed -i 's/`/"/g' ../setup/sql/example_firebird.sql
+sed -i 's/"asn1id"/"ASN1ID"/g' ../setup/sql/example_firebird.sql
+sed -i 's/"objects"/"OBJECTS"/g' ../setup/sql/example_firebird.sql
+sed -i 's/"iri"/"IRI"/g' ../setup/sql/example_firebird.sql
+
+# Change \" to "
+sed -i 's/\\"/"/g' ../setup/sql/example_firebird.sql
+
+# Dates need "TIMESTAMP" prefix
+for year in {2010..2099}
+do
+    sed -i "s/'$year/TIMESTAMP '$year/g" ../setup/sql/example_firebird.sql
+done
+
+# Change "\n" to "' || ASCII_CHAR(10) || '"
+sed -i "s/\\\n/' \|\| ASCII_CHAR\(10\) \|\| '/g" ../setup/sql/example_firebird.sql

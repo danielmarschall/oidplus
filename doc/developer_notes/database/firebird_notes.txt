@@ -2,14 +2,16 @@
 Firebird installation notes
 ---------------------------
 
+Download and install from
+https://firebirdsql.org/en/firebird-4-0/
+Make sure that the clientlibrary fbclient.dll is also selected
+
 In PHP.ini:
 extension=pdo_firebird
+or
+extension=php_pdo_firebird.dll
 
 Restart Apache, XAMPP, etc.
-
-Download and install from
-https://www.firebirdsql.org/en/firebird-3-0/
-Make sure that the clientlibrary fbclient.dll is also selected
 
 If you need to run the Firebird server in application mode, run it as administrator.
 (Otherwise error message "Error occurred during login, please check server firebird.log for details")
@@ -23,11 +25,11 @@ Open Firebird iSQL Tool:
 
 OIDplus userdata/baseconfig/config.inc.php
 
-	OIDplus::baseConfig()->setValue('DATABASE_PLUGIN',   'PDO');
+	OIDplus::baseConfig()->setValue('DATABASE_PLUGIN',  'PDO');
 	OIDplus::baseConfig()->setValue('PDO_DSN',          'firebird:dbname=d:\\svn\\oidplus\\trunk\\userdata\\database\\oidplus.fdb');
 	OIDplus::baseConfig()->setValue('PDO_USERNAME',     'SYSDBA');
 	OIDplus::baseConfig()->setValue('PDO_PASSWORD',     'masterkey');
 	OIDplus::baseConfig()->setValue('TABLENAME_PREFIX',  '');
 	OIDplus::baseConfig()->setValue('FORCE_DBMS_SLANG', 'firebird');
 
-"C:\Program Files\Firebird\Firebird_3_0\isql.exe" -z -i "d:\SVN\OIDplus\trunk\setup\sql\struct_firebird.sql"
+"C:\Program Files\Firebird\Firebird_4_0\isql.exe" -z -i "d:\SVN\OIDplus\trunk\setup\sql\struct_firebird.sql"
