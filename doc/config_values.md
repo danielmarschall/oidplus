@@ -342,6 +342,7 @@ performance but also increases memory usage on large databases.
 
 Currently valid values:
 - `access`
+- `firebird`
 - `mssql`
 - `mysql`
 - `oracle`

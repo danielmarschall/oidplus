@@ -187,7 +187,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		$this->last_query = $sql;
 		$sql = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $sql);
 
-		if ($this->slangDetectionDone) {
+		if ($this->slangDetectionDone || OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
 			$slang = $this->getSlang();
 			if ($slang) {
 				$sql = $slang->filterQuery($sql);
