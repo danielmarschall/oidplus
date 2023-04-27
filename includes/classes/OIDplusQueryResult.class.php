@@ -99,19 +99,20 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 			if ($value === chr(1)) $value = 1;
 		}
 
-		// Oracle returns $ret['VALUE'] because unquoted column-names are always upper-case
+		// Oracle and Firebird returns $ret['VALUE'] because unquoted column-names are always upper-case
 		// We can't quote every single column throughout the whole program, so we use this workaround...
 		if (is_array($ret)) {
-			$keys = array_keys($ret);
-			foreach ($keys as $key) {
-				$ret[strtolower($key)] = $ret[$key];
-				$ret[strtoupper($key)] = $ret[$key];
+			foreach ($ret as $name => $val) {
+				$ret[strtolower($name)] = $val;
+				$ret[strtoupper($name)] = $val;
 			}
 		} else if (is_object($ret)) {
 			foreach ($ret as $name => $val) {
 				$ret->{strtoupper($name)} = $val;
 				$ret->{strtolower($name)} = $val;
 			}
+		} else {
+			assert(false);
 		}
 	}
 

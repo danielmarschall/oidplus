@@ -44,7 +44,7 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 			$this->res = $res;
 
 			// This way we can simulate MARS (Multiple Active Result Sets) so that the test case "Simultanous prepared statements" works
-			$this->prefetchedArray = $this->res->fetchAll();
+			$this->prefetchAll();
 		}
 	}
 
@@ -71,6 +71,9 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	public function prefetchAll() {
 		if (!is_null($this->prefetchedArray)) return;
 		$this->prefetchedArray = $this->res->fetchAll();
+		foreach ($this->prefetchedArray as &$row) {
+			$this->fixFields($row);
+		}
 	}
 
 	/**
