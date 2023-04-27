@@ -187,7 +187,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		$this->last_query = $sql;
 		$sql = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $sql);
 
-		if ($this->slangDetectionDone || OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
+		if ($this->slangDetectionDone) {
 			$slang = $this->getSlang();
 			if ($slang) {
 				$sql = $slang->filterQuery($sql);
@@ -257,6 +257,13 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private function afterConnectMandatory()/*: void*/ {
+		// In case an auto-detection of the slang is required (for generic providers like PDO or ODBC),
+		// we must not be inside a transaction, because the detection requires intentionally submitting
+		// invalid queries to detect the correct DBMS. If we would be inside a transaction, providers like
+		// PDO would automatically roll-back. Therefore, we detect the slang right at the beginning,
+		// before any transaction is used.
+		$this->getSlang();
+
 		// Check if the config table exists. This is important because the database version is stored in it
 		$this->initRequireTables(array('config'));
 
@@ -269,13 +276,6 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		// Now that our database is up-to-date, we check if database tables are existing
 		// without config table, because it was checked above
 		$this->initRequireTables(array('objects', 'asn1id', 'iri', 'ra'/*, 'config'*/));
-
-		// In case an auto-detection of the slang is required (for generic providers like PDO or ODBC),
-		// we must not be inside a transaction, because the detection requires intentionally submitting
-		// invalid queries to detect the correct DBMS. If we would be inside a transaction, providers like
-		// PDO would automatically roll-back. Therefore, we detect the slang right at the beginning,
-		// before any transaction is used.
-		$this->getSlang();
 	}
 
 	/**
