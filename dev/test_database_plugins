@@ -40,8 +40,7 @@ echo "OIDplus Database plugin testcases\n\n";
 
 OIDplus::init(true, true);
 
-// TODO: We can't use this, otherwise PDO+Firebird will fail, because "SELECT value FROM config WHERE name = 'database_version'" fails if it is not prefiltered by the "firebird" SQL slang
-//OIDplus::baseConfig()->delete('FORCE_DBMS_SLANG');
+OIDplus::baseConfig()->delete('FORCE_DBMS_SLANG');
 
 # Test MySQL
 try {
