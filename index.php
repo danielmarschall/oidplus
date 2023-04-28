@@ -46,6 +46,19 @@ if (isset($_REQUEST['h404'])) {
 
 $static_node_id = OIDplus::prefilterQuery($static_node_id, false);
 
+if (OIDplus::baseConfig()->exists('CANONICAL_SYSTEM_URL')) {
+	// Make sure that "goto" is set correctly in the canonical URL
+	$url = [];
+	parse_str($_SERVER['QUERY_STRING'], $url);
+	if (isset($url['goto'])) {
+		if ($url['goto'] != $static_node_id) {
+			$url['goto'] = $static_node_id;
+			$_SERVER['QUERY_STRING'] = http_build_query($url);
+		}
+	}
+	unset($url);
+}
+
 $static = OIDplus::gui()->generateContentPage($static_node_id);
 $page_title_2 = $static['title'];
 $static_icon = $static['icon'];
