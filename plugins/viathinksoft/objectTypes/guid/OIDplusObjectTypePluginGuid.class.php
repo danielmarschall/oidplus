@@ -54,7 +54,15 @@ class OIDplusObjectTypePluginGuid extends OIDplusObjectTypePlugin
 		//     "If available, a formal URN namespace identifier (as defined in RFC\08141, section\05.1 [RFC8141]) SHOULD be used, e.g. 'uuid' should be used instead of 'guid'."
 		// However, our plugin OIDplusObjectTypePluginGuid serves the namespace "guid".
 		// Therefore redirect "uuid" to "guid", so that people can use OID-IP or the GoTo-box with an "uuid:" input
-		return preg_replace('@^uuid:@', 'guid:', $static_node_id);
+		$static_node_id = preg_replace('@^uuid:@', 'guid:', $static_node_id);
+
+		// If someone enters a valid GUID/UUID in the goto-box, prepend "guid:" to it.
+		if (uuid_valid($static_node_id)) {
+			$static_node_id = uuid_canonize($static_node_id); // optional: canonize it
+			$static_node_id = 'guid:'.$static_node_id;
+		}
+
+		return $static_node_id;
 	}
 
 }

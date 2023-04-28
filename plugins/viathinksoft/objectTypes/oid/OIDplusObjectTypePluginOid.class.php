@@ -74,6 +74,12 @@ class OIDplusObjectTypePluginOid extends OIDplusObjectTypePlugin
 			}
 		}
 
+		// Special treatment for OIDs: if someone enters an OID in the goto box,
+		// prepend "oid:"
+		if (sanitizeOID($static_node_id) !== false) {
+			$static_node_id = 'oid:'.$static_node_id;
+		}
+
 		return $static_node_id;
 	}
 
