@@ -7,7 +7,6 @@ May 2023 planned:
           * Everywhere where url_get_contents() is used, we need to check url_get_contents_available() too.
 - Not good: url_*_contents() throws an Exception if not available, but returns false if URL is not available. That's inconsistant...
 - Idea: If we enter "oid:2.999.123" in the goto box, and only "oid:2.999" exists, should we recommend the user to look at 2.999?
-- setup/sql/*.sql should be in plugins/*/sqlSlang/*.sql
 
 Future:
 - Check if we can also support these databases listed at the PHP documentation:

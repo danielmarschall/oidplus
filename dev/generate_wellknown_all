@@ -19,18 +19,18 @@ DIR=$( dirname "$0" )
 
 cd "$DIR"
 
-./generate_wellknown_country_mysql > ../setup/sql/wellknown_country_mysql.sql 
-./generate_wellknown_country_mssql > ../setup/sql/wellknown_country_mssql.sql 
-./generate_wellknown_country_oracle > ../setup/sql/wellknown_country_oracle.sql 
-./generate_wellknown_country_access > ../setup/sql/wellknown_country_access.sql 
-./generate_wellknown_country_pgsql > ../setup/sql/wellknown_country_pgsql.sql 
-./generate_wellknown_country_sqlite > ../setup/sql/wellknown_country_sqlite.sql 
+./generate_wellknown_country_mysql > ../plugins/viathinksoft/sqlSlang/mysql/sql/wellknown_country.sql
+./generate_wellknown_country_mssql > ../plugins/viathinksoft/sqlSlang/mssql/sql/wellknown_country.sql
+./generate_wellknown_country_oracle > ../plugins/viathinksoft/sqlSlang/oracle/sql/wellknown_country.sql
+./generate_wellknown_country_access > ../plugins/viathinksoft/sqlSlang/access/sql/wellknown_country.sql
+./generate_wellknown_country_pgsql > ../plugins/viathinksoft/sqlSlang/pgsql/sql/wellknown_country.sql
+./generate_wellknown_country_sqlite > ../plugins/viathinksoft/sqlSlang/sqlite/sql/wellknown_country.sql
 
-./generate_wellknown_other_mysql > ../setup/sql/wellknown_other_mysql.sql 
-./generate_wellknown_other_mssql > ../setup/sql/wellknown_other_mssql.sql 
-./generate_wellknown_other_oracle > ../setup/sql/wellknown_other_oracle.sql 
-./generate_wellknown_other_access > ../setup/sql/wellknown_other_access.sql 
-./generate_wellknown_other_pgsql > ../setup/sql/wellknown_other_pgsql.sql 
-./generate_wellknown_other_sqlite > ../setup/sql/wellknown_other_sqlite.sql 
+./generate_wellknown_other_mysql > ../plugins/viathinksoft/sqlSlang/mysql/sql/wellknown_other.sql
+./generate_wellknown_other_mssql > ../plugins/viathinksoft/sqlSlang/mssql/sql/wellknown_other.sql
+./generate_wellknown_other_oracle > ../plugins/viathinksoft/sqlSlang/oracle/sql/wellknown_other.sql
+./generate_wellknown_other_access > ../plugins/viathinksoft/sqlSlang/access/sql/wellknown_other.sql
+./generate_wellknown_other_pgsql > ../plugins/viathinksoft/sqlSlang/pgsql/sql/wellknown_other.sql
+./generate_wellknown_other_sqlite > ../plugins/viathinksoft/sqlSlang/sqlite/sql/wellknown_other.sql
 
 

@@ -59,7 +59,7 @@ function _process_oid($oid) {
 			$data = ft_get_oid_data($oid);
 		}
 
-                $output[$oid] = array();
+		$output[$oid] = array();
 		$output[$oid]['asn1id'] = array();
 		$output[$oid]['iri'] = array();
 		$output[$oid]['checksum'] = array();
@@ -80,13 +80,13 @@ function _process_oid($oid) {
 				$std = _is_long($oid) ? "'1'" : "'0'";
 
 				if (strpos($iri, '&#') !== false) {
-$ucstr = html_entity_decode($iri, ENT_COMPAT | ENT_HTML401, "UTF-8");
-$tmp = array();
-preg_match_all('/./u', $ucstr, $m);
-foreach ($m[0] as $o) {
-	$tmp[] = mb_ord($o);
-}
-$iri = 'char('.implode(',',$tmp).')';
+					$ucstr = html_entity_decode($iri, ENT_COMPAT | ENT_HTML401, "UTF-8");
+					$tmp = array();
+					preg_match_all('/./u', $ucstr, $m);
+					foreach ($m[0] as $o) {
+						$tmp[] = mb_ord($o);
+					}
+					$iri = 'char('.implode(',',$tmp).')';
 				} else {
 					$iri = "'$iri'";
 				}
@@ -235,8 +235,8 @@ function ft_get_oid_data($oid) {
 	$cont_json = @file_get_contents($url);
 	if (!$cont_json) {
 		sleep(5);
-                $cont_json = @file_get_contents($url);
-                if (!$cont_json) return false;
+		$cont_json = @file_get_contents($url);
+		if (!$cont_json) return false;
 	}
 	$data = json_decode($cont_json,true);
 

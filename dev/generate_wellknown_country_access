@@ -18,8 +18,8 @@
  * limitations under the License.
  */
 
-// This script generates a part of ../setup/sql/wellknown_country_access.sql , based on Country OIDs at oid-info.com
-// If new countries are added to the ISO / ITU arcs, please re-run this script and update ../setup/sql/wellknown_country_access.sql accordingly
+// This script generates a part of plugins/viathinksoft/sqlSlang/access/sql/wellknown_country.sql , based on Country OIDs at oid-info.com
+// If new countries are added to the ISO / ITU arcs, please re-run this script and update plugins/viathinksoft/sqlSlang/access/sql/wellknown_country.sql accordingly
 
 use ViaThinkSoft\OIDplus\OIDplus;
 

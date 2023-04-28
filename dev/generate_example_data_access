@@ -18,31 +18,31 @@
 DIR=$( dirname "$0" )
 cd "$DIR"
 
-# Export tables "demo_*" into file setup/sql/example_access.sql
+# Export tables "demo_*" into file plugins/viathinksoft/sqlSlang/access/sql/example.sql
 # We don't print to console because of encoding issues
-#mysqldump --default-character-set=utf8 --no-create-info --extended-insert=FALSE oidplus demo_iri demo_asn1id demo_ra demo_objects -r ../setup/sql/example_access.sql
+#mysqldump --default-character-set=utf8 --no-create-info --extended-insert=FALSE oidplus demo_iri demo_asn1id demo_ra demo_objects -r ../plugins/viathinksoft/sqlSlang/access/sql/example.sql
 
 # Remove database prefix
-#sed -i 's/`demo_/`/g' ../setup/sql/example_access.sql
+#sed -i 's/`demo_/`/g' ../plugins/viathinksoft/sqlSlang/access/sql/example.sql
 
 # Since we have to do some manual work to the MySQL data, we do not create a new dump
 # but instead use the MySQL example script (that has been carefully checked)
-cat ../setup/sql/example_mysql.sql > ../setup/sql/example_access.sql
+cat ../plugins/viathinksoft/sqlSlang/access/sql/example_mysql.sql > ../plugins/viathinksoft/sqlSlang/access/sql/example.sql
 
 # Avoid that there is a conflict with well known IDs (e.g. 2.999)
-#sed -i 's/INSERT INTO `iri`/INSERT IGNORE INTO `iri`/g' ../setup/sql/example_access.sql
-#sed -i 's/INSERT INTO `asn1id`/INSERT IGNORE INTO `asn1id`/g' ../setup/sql/example_access.sql
+#sed -i 's/INSERT INTO `iri`/INSERT IGNORE INTO `iri`/g' ../plugins/viathinksoft/sqlSlang/access/sql/example.sql
+#sed -i 's/INSERT INTO `asn1id`/INSERT IGNORE INTO `asn1id`/g' ../plugins/viathinksoft/sqlSlang/access/sql/example.sql
 
 # Change `backticks` to [brackets]
-sed -i 's/`\([^`]\+\)`/\[\1\]/g' ../setup/sql/example_access.sql
+sed -i 's/`\([^`]\+\)`/\[\1\]/g' ../plugins/viathinksoft/sqlSlang/access/sql/example.sql
 
 # Change "\n" to "' + CHR(13) + '"
-sed -i "s/\\\n/' \+ CHR(13) \+ '/g" ../setup/sql/example_access.sql
+sed -i "s/\\\n/' \+ CHR(13) \+ '/g" ../plugins/viathinksoft/sqlSlang/access/sql/example.sql
 
 # Change \" to "
-sed -i 's/\\"/"/g' ../setup/sql/example_access.sql
+sed -i 's/\\"/"/g' ../plugins/viathinksoft/sqlSlang/access/sql/example.sql
 
 # Prepend "SET DATEFORMAT ymd;"
-cat ../setup/sql/example_access.sql >> tmp
-cat tmp > ../setup/sql/example_access.sql
+cat ../plugins/viathinksoft/sqlSlang/access/sql/example.sql >> tmp
+cat tmp > ../plugins/viathinksoft/sqlSlang/access/sql/example.sql
 rm tmp
