@@ -13,7 +13,7 @@ Future:
 	CUBRID
 	dBase
 	Firebird/InterBase => No. This PHP extension is not maintained anymore
-	IBM DB2 — IBM DB2, Cloudscape and Apache Derby
+	IBM DB2 - IBM DB2, Cloudscape and Apache Derby
 
 Unicode compatibility:
 - [DONE]  SQL Server needs nvarchar instead of varchar (works with emoji too)
