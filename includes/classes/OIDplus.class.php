@@ -2133,10 +2133,11 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
+	 * @param string|null $goto
 	 * @return false|string
 	 * @throws OIDplusException
 	 */
-	public static function canonicalURL() {
+	public static function canonicalURL(string $goto=null) {
 		// First part: OIDplus system URL (or canonical system URL)
 		$sysurl = OIDplus::getSystemUrl(self::PATH_ABSOLUTE_CANONICAL);
 
@@ -2153,7 +2154,11 @@ class OIDplus extends OIDplusBaseClass {
 		$tmp = end($tmp);
 
 		// Fourth part: Query string (ordered)
-		$tmp2 = getSortedQuery();
+		$url = [];
+		parse_str($_SERVER['QUERY_STRING'], $url);
+		if ($goto !== null) $url['goto'] = $goto;
+		ksort($url);
+		$tmp2 = http_build_query($url);
 		if ($tmp2 != '') $tmp2 = '?'.$tmp2;
 
 		return $sysurl.$res.$tmp.$tmp2;
