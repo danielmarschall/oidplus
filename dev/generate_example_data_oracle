@@ -18,46 +18,46 @@
 DIR=$( dirname "$0" )
 cd "$DIR"
 
-# Export tables "demo_*" into file setup/sql/example_oracle.sql
+# Export tables "demo_*" into file plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
 # We don't print to console because of encoding issues
-#mysqldump --default-character-set=utf8 --no-create-info --extended-insert=FALSE oidplus demo_iri demo_asn1id demo_ra demo_objects -r ../setup/sql/example_oracle.sql
+#mysqldump --default-character-set=utf8 --no-create-info --extended-insert=FALSE oidplus demo_iri demo_asn1id demo_ra demo_objects -r ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
 
 # Remove database prefix
-#sed -i 's/`demo_/`/g' ../setup/sql/example_oracle.sql
+#sed -i 's/`demo_/`/g' ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
 
 # Since we have to do some manual work to the MySQL data, we do not create a new dump
 # but instead use the MySQL example script (that has been carefully checked)
-cat ../setup/sql/example_mysql.sql > ../setup/sql/example_oracle.sql
+cat ../plugins/viathinksoft/sqlSlang/oracle/sql/example_mysql.sql > ../plugins/viathinksoft/sqlSlang/pgsql/sql/example.sql
 
 # Avoid that there is a conflict with well known IDs (e.g. 2.999)
-#sed -i 's/INSERT INTO `iri`/INSERT IGNORE INTO `iri`/g' ../setup/sql/example_pgsql.sql
-#sed -i 's/INSERT INTO `asn1id`/INSERT IGNORE INTO `asn1id`/g' ../setup/sql/example_pgsql.sql
+#sed -i 's/INSERT INTO `iri`/INSERT IGNORE INTO `iri`/g' ../plugins/viathinksoft/sqlSlang/pgsql/sql/example.sql
+#sed -i 's/INSERT INTO `asn1id`/INSERT IGNORE INTO `asn1id`/g' ../plugins/viathinksoft/sqlSlang/pgsql/sql/example.sql
 
 # Change backticks to double quotes
 # and write everything inside upper case! (very important)
-sed -i 's/`/"/g' ../setup/sql/example_oracle.sql
-sed -i 's/"asn1id"/"ASN1ID"/g' ../setup/sql/example_oracle.sql
-sed -i 's/"objects"/"OBJECTS"/g' ../setup/sql/example_oracle.sql
-sed -i 's/"iri"/"IRI"/g' ../setup/sql/example_oracle.sql
+sed -i 's/`/"/g' ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
+sed -i 's/"asn1id"/"ASN1ID"/g' ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
+sed -i 's/"objects"/"OBJECTS"/g' ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
+sed -i 's/"iri"/"IRI"/g' ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
 
 # Change \" to "
-sed -i 's/\\"/"/g' ../setup/sql/example_oracle.sql
+sed -i 's/\\"/"/g' ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
 
 # Add at the beginning
 # ALTER SESSION SET NLS_DATE_FORMAT = 'yyyy-mm-dd hh24:mi:ss';
-mv ../setup/sql/example_oracle.sql ../setup/sql/example_oracle.tmp
-echo "ALTER SESSION SET NLS_DATE_FORMAT = 'yyyy-mm-dd hh24:mi:ss';" > ../setup/sql/example_oracle.sql
+mv ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql example_oracle.tmp
+echo "ALTER SESSION SET NLS_DATE_FORMAT = 'yyyy-mm-dd hh24:mi:ss';" > ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
 # "set define off" is important, otherwise we cannot use "&" in a SQL statement
-echo "set define off" >> ../setup/sql/example_oracle.sql
-echo "" >> ../setup/sql/example_oracle.sql
-cat ../setup/sql/example_oracle.tmp >> ../setup/sql/example_oracle.sql
-rm ../setup/sql/example_oracle.tmp
+echo "set define off" >> ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
+echo "" >> ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
+cat example_oracle.tmp >> ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
+rm example_oracle.tmp
 
 # Dates need "TIMESTAMP" prefix
 for year in {2010..2099}
 do
-    sed -i "s/'$year/TIMESTAMP '$year/g" ../setup/sql/example_oracle.sql
+    sed -i "s/'$year/TIMESTAMP '$year/g" ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql
 done
 
 # Change "\n" to "' || chr(10) || '"
-sed -i "s/\\\n/' \|\| chr\(10\) \|\| '/g" ../setup/sql/example_oracle.sql
+sed -i "s/\\\n/' \|\| chr\(10\) \|\| '/g" ../plugins/viathinksoft/sqlSlang/oracle/sql/example.sql

@@ -59,7 +59,7 @@ function _process_oid($oid) {
 			$data = ft_get_oid_data($oid);
 		}
 
-                $output[$oid] = array();
+		$output[$oid] = array();
 		$output[$oid]['asn1id'] = array();
 		$output[$oid]['iri'] = array();
 		$output[$oid]['checksum'] = array();
@@ -229,8 +229,8 @@ function ft_get_oid_data($oid) {
 	$cont_json = @file_get_contents($url);
 	if (!$cont_json) {
 		sleep(5);
-                $cont_json = @file_get_contents($url);
-                if (!$cont_json) return false;
+		$cont_json = @file_get_contents($url);
+		if (!$cont_json) return false;
 	}
 	$data = json_decode($cont_json,true);
 

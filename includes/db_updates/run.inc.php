@@ -31,7 +31,7 @@ function oidplus_dbupdate(OIDplusDatabaseConnection $db) {
 	$res = $db->query("SELECT value FROM ###config WHERE name = 'database_version'");
 	$row = $res->fetch_array();
 	if ($row == null) {
-		// Note: The config setting "database_version" is inserted in setup/sql/...sql, not in the OIDplus core init
+		// Note: The config setting "database_version" is inserted in plugins/*/sqlSlang/*/sql/struct.sql, not in the OIDplus core init
 		throw new OIDplusConfigInitializationException(_L('Cannot determine database version (the entry "database_version" inside the table "###config" is probably missing)'));
 	}
 	$version = $row['value'];

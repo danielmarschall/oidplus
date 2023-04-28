@@ -45,7 +45,7 @@ Open sqlcl (SQLplus)
 	paste the struct SQL files from OIDplus
 	Suggestion: Open new console Window
 		cd Desktop
-		wget https://raw.githubusercontent.com/danielmarschall/oidplus/master/setup/sql/struct_oracle.sql
+		wget https://raw.githubusercontent.com/danielmarschall/oidplus/master/plugins/viathinksoft/sqlSlang/oracle/sql/struct.sql
 		Then copy-paste the contents of this file into sqlcl
 		
 	Type "commit" (very important)

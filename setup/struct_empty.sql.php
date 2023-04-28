@@ -28,19 +28,21 @@ $slang = $_REQUEST['slang'] ?? 'mysql';
 
 OIDplus::registerAllPlugins('sqlSlang', OIDplusSqlSlangPlugin::class, array(OIDplus::class,'registerSqlSlangPlugin'));
 $slang_plugin = null;
+$slang_dir = '';
 foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
 	if ($plugin::id() === $slang) {
 		$slang_plugin = $plugin;
+		$slang_dir = $plugin->getPluginDirectory();
 		break;
 	}
 }
 if (is_null($slang_plugin)) {
-	die(_L('Unknown slang'));
+	die(_L('Unknown SQL slang "%1"',$slang));
 }
 
-$cont = trim(file_get_contents(__DIR__.'/sql/struct_'.$slang.'.sql'))."\n\n".
-        trim(file_get_contents(__DIR__.'/sql/wellknown_country_'.$slang.'.sql'))."\n\n".
-        trim(file_get_contents(__DIR__.'/sql/wellknown_other_'.$slang.'.sql'))."\n\n";
+$cont = trim(file_get_contents($slang_dir.'/sql/struct.sql'))."\n\n".
+        trim(file_get_contents($slang_dir.'/sql/wellknown_country.sql'))."\n\n".
+        trim(file_get_contents($slang_dir.'/sql/wellknown_other.sql'))."\n\n";
 
 $table_names = array('objects', 'asn1id', 'iri', 'ra', 'config', 'log', 'log_user', 'log_object');
 foreach ($table_names as $table) {
