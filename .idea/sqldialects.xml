@@ -2,37 +2,32 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/access/sql/example.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mysql/sql/example.sql" dialect="TSQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mysql/sql/example.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/oracle/sql/example.sql" dialect="OracleSqlPlus" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/pgsql/sql/example.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/sqlite/sql/example.sql" dialect="SQLite" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/firebird/sql/example.sql" dialect="GenericSQL" />
-    
     <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/access/sql/struct.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mssql/sql/struct.sql" dialect="TSQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mysql/sql/struct.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/oracle/sql/struct.sql" dialect="OracleSqlPlus" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/pgsql/sql/struct.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/sqlite/sql/struct.sql" dialect="SQLite" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/firebird/sql/struct.sql" dialect="GenericSQL" />
-    
     <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/access/sql/wellknown_country.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mssql/sql/wellknown_country.sql" dialect="TSQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mysql/sql/wellknown_country.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/oracle/sql/wellknown_country.sql" dialect="OracleSqlPlus" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/pgsql/sql/wellknown_country.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/sqlite/sql/wellknown_country.sql" dialect="SQLite" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/firebird/sql/wellknown_country.sql" dialect="GenericSQL" />
-    
     <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/access/sql/wellknown_other.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mssql/sql/wellknown_other.sql" dialect="TSQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mysql/sql/wellknown_other.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/oracle/sql/wellknown_other.sql" dialect="OracleSqlPlus" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/pgsql/sql/wellknown_other.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/sqlite/sql/wellknown_other.sql" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/firebird/sql/example.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/firebird/sql/struct.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/firebird/sql/wellknown_country.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/firebird/sql/wellknown_other.sql" dialect="GenericSQL" />
-
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mssql/sql/struct.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mssql/sql/wellknown_country.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mssql/sql/wellknown_other.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mysql/sql/example.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mysql/sql/struct.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mysql/sql/wellknown_country.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/mysql/sql/wellknown_other.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/oracle/sql/example.sql" dialect="OracleSqlPlus" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/oracle/sql/struct.sql" dialect="OracleSqlPlus" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/oracle/sql/wellknown_country.sql" dialect="OracleSqlPlus" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/oracle/sql/wellknown_other.sql" dialect="OracleSqlPlus" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/pgsql/sql/example.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/pgsql/sql/struct.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/pgsql/sql/wellknown_country.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/pgsql/sql/wellknown_other.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/sqlite/sql/example.sql" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/sqlite/sql/struct.sql" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/sqlite/sql/wellknown_country.sql" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/plugins/viathinksoft/sqlSlang/sqlite/sql/wellknown_other.sql" dialect="SQLite" />
     <file url="PROJECT" dialect="GenericSQL" />
   </component>
 </project>

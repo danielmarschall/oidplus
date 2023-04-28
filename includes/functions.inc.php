@@ -490,17 +490,6 @@ function url_get_contents(string $url, array $extraHeaders=array(), string $user
 }
 
 /**
- * @return string
- */
-function getSortedQuery(): string {
-	// https://stackoverflow.com/a/51777249/488539
-	$url = [];
-	parse_str($_SERVER['QUERY_STRING'], $url);
-	ksort($url);
-	return http_build_query($url);
-}
-
-/**
 * @param array &$rows
 * @param string $fieldName
 * @return void
