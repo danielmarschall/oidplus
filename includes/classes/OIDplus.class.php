@@ -2396,6 +2396,8 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return string
 	 */
 	public static function prefilterQuery(string $static_node_id, bool $throw_exception): string {
+		$static_node_id = trim($static_node_id);
+
 		// Let namespace be case-insensitive
 		$ary = explode(':', $static_node_id, 2);
 		$ary[0] = strtolower($ary[0]);
