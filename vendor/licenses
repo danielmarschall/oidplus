@@ -14,10 +14,10 @@ danielmarschall/oidconverter     9999999-dev 75088eb Apache-2.0
 danielmarschall/oidconverter     dev-master 75088eb  Apache-2.0            
 danielmarschall/php-sha3         9999999-dev 5605bd5 MIT                   
 danielmarschall/php-sha3         dev-master 5605bd5  MIT                   
-danielmarschall/php_utils        9999999-dev 7125532 Apache-2.0            
-danielmarschall/php_utils        dev-master 7125532  Apache-2.0            
-danielmarschall/uuid_mac_utils   9999999-dev d0edce1 Apache-2.0            
-danielmarschall/uuid_mac_utils   dev-master d0edce1  Apache-2.0            
+danielmarschall/php_utils        9999999-dev 4a41123 Apache-2.0            
+danielmarschall/php_utils        dev-master 4a41123  Apache-2.0            
+danielmarschall/uuid_mac_utils   9999999-dev 1a27b4e Apache-2.0            
+danielmarschall/uuid_mac_utils   dev-master 1a27b4e  Apache-2.0            
 danielmarschall/vnag             9999999-dev 839d7dd Apache-2.0            
 danielmarschall/vnag             dev-master 839d7dd  Apache-2.0            
 dcodeio/bcrypt.js                master master       BSD-3-Clause, MIT     
@@ -28,7 +28,7 @@ matthiasmullie/minify            1.3.70              MIT
 matthiasmullie/path-converter    1.1.3               MIT                   
 paragonie/constant_time_encoding v2.6.3              MIT                   
 paragonie/random_compat          v9.99.100           MIT                   
-phpseclib/phpseclib              3.0.x-dev 72bd9d9   MIT                   
+phpseclib/phpseclib              3.0.x-dev 79b6f96   MIT                   
 script47/bs5-utils               master master       MIT                   
 spamspan/spamspan                master              GPL-2.0-only          
 symfony/polyfill-mbstring        v1.19.0             MIT                   
