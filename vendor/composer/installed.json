@@ -350,19 +350,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "7125532cc5cdac6b7c3eadaa8887b570eaf3faeb"
+                "reference": "4a41123a727d2607c931f2486c94d91f46cc58f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/7125532cc5cdac6b7c3eadaa8887b570eaf3faeb",
-                "reference": "7125532cc5cdac6b7c3eadaa8887b570eaf3faeb",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/4a41123a727d2607c931f2486c94d91f46cc58f0",
+                "reference": "4a41123a727d2607c931f2486c94d91f46cc58f0",
                 "shasum": ""
             },
             "require": {
                 "ext-zlib": "*",
                 "php": ">=7.0"
             },
-            "time": "2023-04-10T19:07:02+00:00",
+            "time": "2023-04-21T07:50:32+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -392,18 +392,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/uuid_mac_utils.git",
-                "reference": "d0edce10196d6cef8f8e1c23c346d408abde1704"
+                "reference": "1a27b4ec216e10998932e315e29596cd58659059"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/d0edce10196d6cef8f8e1c23c346d408abde1704",
-                "reference": "d0edce10196d6cef8f8e1c23c346d408abde1704",
+                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/1a27b4ec216e10998932e315e29596cd58659059",
+                "reference": "1a27b4ec216e10998932e315e29596cd58659059",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2022-10-06T11:48:47+00:00",
+            "time": "2023-04-29T18:43:43+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -837,12 +837,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "72bd9d99d9a371cb566e214eae29a499101cce55"
+                "reference": "79b6f96870fcce07907e6b411a2c690496b5eb4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/72bd9d99d9a371cb566e214eae29a499101cce55",
-                "reference": "72bd9d99d9a371cb566e214eae29a499101cce55",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/79b6f96870fcce07907e6b411a2c690496b5eb4c",
+                "reference": "79b6f96870fcce07907e6b411a2c690496b5eb4c",
                 "shasum": ""
             },
             "require": {
@@ -860,7 +860,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2023-04-10T06:25:51+00:00",
+            "time": "2023-04-21T20:39:01+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
