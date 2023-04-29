@@ -2,8 +2,8 @@
 
 /*
  * UUID utils for PHP
- * Copyright 2011 - 2022 Daniel Marschall, ViaThinkSoft
- * Version 2022-01-06
+ * Copyright 2011 - 2023 Daniel Marschall, ViaThinkSoft
+ * Version 2023-04-29
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,7 +162,7 @@ function uuid_info($uuid) {
 
 					if (function_exists('decode_mac')) {
 						echo "\nIn case that this Node ID is a MAC address, here is the interpretation of that MAC address:\n";
-						echo decode_mac($nodeid);
+						decode_mac($nodeid);
 					}
 
 					break;
@@ -220,7 +220,7 @@ function uuid_info($uuid) {
 
 					if (function_exists('decode_mac')) {
 						echo "\nIn case that this Node ID is a MAC address, here is the interpretation of that MAC address:\n";
-						echo decode_mac($nodeid);
+						decode_mac($nodeid);
 					}
 
 					break;

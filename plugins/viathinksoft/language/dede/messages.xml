@@ -1574,6 +1574,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Currently, no MAC/EUI are registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine MAC/EUI in diesem System registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Currently, no OID is registered in the system.
 		]]></source>
 		<target><![CDATA[
@@ -2066,6 +2074,22 @@
 		]]></source>
 		<target><![CDATA[
 		FEHLER: Keine Datenbank-Plugins wurden gefunden! Sie könne OIDplus nicht ohne Datenbank-Verbindung verwenden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		EUI
+		]]></source>
+		<target><![CDATA[
+		EUI
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		EUI / MAC Addresses
+		]]></source>
+		<target><![CDATA[
+		EUI / MAC Adressen
 		]]></target>
 	</message>
 	<message>
@@ -3794,6 +3818,14 @@
 		]]></source>
 		<target><![CDATA[
 		MAC-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		MAC/EUI
+		]]></source>
+		<target><![CDATA[
+		MAC/EUI
 		]]></target>
 	</message>
 	<message>
@@ -7726,18 +7758,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Unknown file type
+		Unknown SQL slang "%1"
 		]]></source>
 		<target><![CDATA[
-		Unbekannter Dateityp
+		Unbekannter SQL-Dialekt "%1"
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		Unknown slang
+		Unknown file type
 		]]></source>
 		<target><![CDATA[
-		Unbekannter Dialekt
+		Unbekannter Dateityp
 		]]></target>
 	</message>
 	<message>
