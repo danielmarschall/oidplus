@@ -45,7 +45,8 @@ class OIDplusObjectTypePluginMac extends OIDplusObjectTypePlugin {
 		}
 
 		// Special treatment for OIDs: if someone enters a valid MAC address in the goto box, prepend "mac:"
-		if ((str_contains($static_node_id, ':') || str_contains($static_node_id, '-')) && mac_valid($static_node_id)) {
+#		if ((str_contains($static_node_id, ':') || str_contains($static_node_id, '-')) && mac_valid($static_node_id)) {
+		if (((strpos($static_node_id, ':') !== false) || (strpos($static_node_id, '-') !== false)) && mac_valid($static_node_id)) {
 			$static_node_id = 'mac:'.$static_node_id;
 		}
 

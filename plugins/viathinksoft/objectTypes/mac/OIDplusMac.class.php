@@ -186,7 +186,7 @@ class OIDplusMac extends OIDplusObject {
 		} else {
 			$title = $this->getTitle();
 
-			// TODO: OIDplus should download "web-data/*.txt" files
+			// TODO: OIDplus should download the *.txt files at "web-data"
 			// TODO: Use getTechInfo(), so we can show a nice table. (Caveat: "Address of registrant" is multi-line)
 			ob_start();
 			try {
@@ -199,15 +199,17 @@ class OIDplusMac extends OIDplusObject {
 			}
 			ob_end_clean();
 
+			$chunked = $this->chunkedNotation(true);
+			if (!mac_valid($this->number)) {
+				$chunked .= ' ...';
+			}
+
+			$content  = '<h2>'._L('EUI').' '.$chunked.'</h2>';
+			$content .= $tech_info_html;
+
 			if ($this->isLeafNode()) {
-				$chunked = $this->chunkedNotation(true);
-				$content  = '<h2>'._L('EUI').' '.$chunked.'</h2>';
-				$content .= $tech_info_html;
 				$content .= '<h2>'._L('Description').'</h2>%%DESC%%';
 			} else {
-				$chunked = $this->chunkedNotation(true);
-				$content  = '<h2>'._L('EUI').' '.$chunked.'</h2>';
-				$content .= $tech_info_html;
 				$content .= '<h2>'._L('Description').'</h2>%%DESC%%';
 				if ($this->userHasWriteRights()) {
 					$content .= '<h2>'._L('Create or change subordinate objects').'</h2>';
@@ -259,6 +261,7 @@ class OIDplusMac extends OIDplusObject {
 			$hint = array_shift($hints);
 			$full[] = $withAbbr && ($hint !== '') ? '<abbr title="'.htmlentities($hint).'">'.$c.'</abbr>' : $c;
 		}
+
 		return implode(' ', $full);
 	}
 
@@ -311,14 +314,13 @@ class OIDplusMac extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 
-		// TODO: Define a ViaThinkSoft AID that maps OUI with AID
-		// (VTS F7) OUI to AID (PIX allowed)
-		/*
-		$mac = $this->nodeId(false);
-		$aid = 'D276000186F7'.$oui;
+		// (VTS F2) EUI-64 to AID (PIX allowed)
+		$eui64 = eui48_to_eui64($this->number);
+		if (!$eui64) $eui64 = $this->number;
+		$eui64 = str_pad($eui64, 16, '0', STR_PAD_RIGHT);
+		$aid = 'D276000186F2'.$eui64;
 		$aid_is_ok = aid_canonize($aid);
-		if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')');
-		*/
+		if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')');
 
 		return $ids;
 	}
