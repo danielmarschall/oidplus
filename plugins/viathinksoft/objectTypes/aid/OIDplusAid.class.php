@@ -397,13 +397,13 @@ class OIDplusAid extends OIDplusObject {
 			}
 		}
 
-		// (VTS F2) MAC address + PIX
+		// (VTS F2) MAC/EUI-64 address + PIX
 		// Resolve only if there is no PIX
 		if (str_starts_with($aid,'D276000186F2')) {
 			$rest = substr($aid,strlen('D276000186F2'));
-			if (strlen($rest) == 12) {
+			if (strlen($rest) == 16) {
 				$mac = $rest;
-				$ids[] = new OIDplusAltId('mac', $mac, _L('MAC address'));
+				$ids[] = new OIDplusAltId('mac', $mac, _L('MAC/EUI-64 address'));
 			}
 		}
 

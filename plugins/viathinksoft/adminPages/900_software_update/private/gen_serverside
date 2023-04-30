@@ -576,6 +576,14 @@ function hotfix_dir(int $rev, string $dir) {
 		$cont = str_replace('public function html_exception_handler', 'public static function html_exception_handler', $cont);
 		file_put_contents($file, $cont);
 	}
+	if ($rev == 1248) {
+		// A PHP 8 function was used, making the update impossible on PHP 7.x systems
+		$file = $dir.'/plugins/viathinksoft/objectTypes/mac/OIDplusObjectTypePluginMac.class.php';
+		$cont = file_get_contents($file);
+		$cont = str_replace("str_contains(\$static_node_id, ':')", "(strpos(\$static_node_id, ':') !== false)", $cont);
+		$cont = str_replace("str_contains(\$static_node_id, '-')", "(strpos(\$static_node_id, '-') !== false)", $cont);
+		file_put_contents($file, $cont);
+	}
 }
 
 /**

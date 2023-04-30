@@ -3814,18 +3814,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		MAC address
+		MAC/EUI
 		]]></source>
 		<target><![CDATA[
-		MAC-Adresse
+		MAC/EUI
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		MAC/EUI
+		MAC/EUI-64 address
 		]]></source>
 		<target><![CDATA[
-		MAC/EUI
+		MAC/EUI-64 Adresse
 		]]></target>
 	</message>
 	<message>
