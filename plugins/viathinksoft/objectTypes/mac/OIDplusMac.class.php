@@ -315,7 +315,7 @@ class OIDplusMac extends OIDplusObject {
 		$ids = parent::getAltIds();
 
 		// (VTS F2) EUI-64 to AID (PIX allowed)
-		$eui64 = eui48_to_eui64($this->number);
+		$eui64 = mac_canonize(eui48_to_eui64($this->number),'');
 		if (!$eui64) $eui64 = $this->number;
 		$eui64 = str_pad($eui64, 16, '0', STR_PAD_RIGHT);
 		$aid = 'D276000186F2'.$eui64;
