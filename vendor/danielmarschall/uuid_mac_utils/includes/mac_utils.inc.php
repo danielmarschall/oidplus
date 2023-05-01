@@ -3,7 +3,7 @@
 /*
  * MAC (EUI-48 and EUI-64) utils for PHP
  * Copyright 2017 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-04-29
+ * Version 2023-05-01
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,12 @@
 const IEEE_MAC_REGISTRY = __DIR__ . '/../web-data';
 
 /**
- * @param string $mac
- * @return bool
+ * Checks if a MAC, EUI, or IPv6-LinkLocal address is valid
+ * @param string $mac MAC, EUI, or IPv6-LinkLocal Address
+ * @return bool True if it is valid
  */
 function mac_valid(string $mac): bool {
-	$tmp = ipv6linklocal_to_eui64($mac);
+	$tmp = ipv6linklocal_to_mac48($mac);
 	if ($tmp !== false) $mac = $tmp;
 
 	$mac = str_replace(array('-', ':'), '', $mac);
@@ -39,14 +40,26 @@ function mac_valid(string $mac): bool {
 }
 
 /**
+ * Returns the amount of bits of a MAC or EUI
  * @param string $mac
- * @param string $delimiter
- * @return string|false
+ * @return false|int
+ */
+function eui_bits(string $mac) {
+	if (!mac_valid($mac)) return false;
+	$mac = mac_canonize($mac, '');
+	return (int)(strlen($mac)*4);
+}
+
+/**
+ * Canonizes a MAC, EUI, or IPv6-LinkLocal address
+ * @param string $mac MAC, EUI, or IPv6-LinkLocal Address
+ * @param string $delimiter Desired delimiter for inserting between each octet
+ * @return string|false The canonized address (Note: IPv6-Linklocal becomes EUI-64)
  */
 function mac_canonize(string $mac, string $delimiter="-") {
 	if (!mac_valid($mac)) return false;
 
-	$tmp = ipv6linklocal_to_eui64($mac);
+	$tmp = ipv6linklocal_to_mac48($mac);
 	if ($tmp !== false) $mac = $tmp;
 
 	$mac = strtoupper($mac);
@@ -112,26 +125,56 @@ function _lookup_ieee_registry(string $file, string $oui_name, string $mac) {
 }
 
 /**
+ * Try to Decapsulate EUI-64 into MAC-48 or EUI-48
  * @param string $eui64
- * @return false|string If EUI-64 can be converted into EUI-48 (if it has FFFE in the middle), returns EUI-48, otherwise returns EUI-64. On invalid input, return false.
+ * @return false|string If EUI-64 can be converted into EUI-48, returns EUI-48, otherwise returns EUI-64. On invalid input, return false.
  */
 function eui64_to_eui48(string $eui64) {
 	if (!mac_valid($eui64)) return false;
 	$eui64 = mac_canonize($eui64, '');
 	if (eui_bits($eui64) == 48) return mac_canonize($eui64);
 
-	if (substr($eui64, 6, 4) == 'FFFE') {
+	if (substr($eui64, 6, 4) == 'FFFF') {
+		// EUI-64 to MAC-48
 		return mac_canonize(substr($eui64, 0, 6).substr($eui64, 10, 6));
+	} else if (substr($eui64, 6, 4) == 'FFFE') {
+		if ((hexdec($eui64[1])&2) == 2) {
+			// Modified EUI-64 to MAC/EUI-48
+			$eui64[1] = dechex(hexdec($eui64[1])&253); // remove bit
+			return mac_canonize(substr($eui64, 0, 6).substr($eui64, 10, 6));
+		} else {
+			// EUI-64 to EUI-48
+			return mac_canonize(substr($eui64, 0, 6).substr($eui64, 10, 6));
+		}
 	} else {
 		return mac_canonize($eui64);
 	}
 }
 
 /**
- * @param string $eui48
- * @return false|string
+ * MAC-48 to EUI-64 Encapsulation
+ * @param string $mac48 MAC-48 address
+ * @return false|string EUI-64 address
+ */
+function mac48_to_eui64(string $mac48) {
+	// Note: MAC-48 is used for network hardware; EUI-48 is used to identify other devices and software.
+	//       MAC48-to-EUI64 Encapsulation uses 0xFFFF middle part
+	if (!mac_valid($mac48)) return false;
+	$mac48 = mac_canonize($mac48, '');
+	if (eui_bits($mac48) == 64) return mac_canonize($mac48);
+
+	$eui64 = substr($mac48, 0, 6).'FFFF'.substr($mac48, 6, 6);
+	return mac_canonize($eui64);
+}
+
+/**
+ * EUI-48 to EUI-64 Encapsulation
+ * @param string $eui48 EUI-48 address
+ * @return false|string EUI-64 address
  */
 function eui48_to_eui64(string $eui48) {
+	// Note: MAC-48 is used for network hardware; EUI-48 is used to identify other devices and software.
+	//       EUI48-to-EUI64 Encapsulation uses 0xFFFF middle part
 	if (!mac_valid($eui48)) return false;
 	$eui48 = mac_canonize($eui48, '');
 	if (eui_bits($eui48) == 64) return mac_canonize($eui48);
@@ -141,10 +184,30 @@ function eui48_to_eui64(string $eui48) {
 }
 
 /**
- * @param string $ipv6
- * @return false|string
+ * MAC/EUI-48 to Modified EUI-64 Encapsulation
+ * @param string $eui48 MAC-48 or EUI-48 address
+ * @return false|string Modified EUI-64 address
  */
-function ipv6linklocal_to_eui64(string $ipv6) {
+function maceui48_to_modeui64(string $eui48) {
+	// Note: MAC-48 is used for network hardware; EUI-48 is used to identify other devices and software.
+	//       EUI48-to-ModifiedEUI64 Encapsulation uses 0xFFFE middle part (SIC! This was a mistake by IETF, since it should actually be 0xFFFF!)
+	if (!mac_valid($eui48)) return false;
+	$eui48 = mac_canonize($eui48, '');
+	if (eui_bits($eui48) == 64) return mac_canonize($eui48);
+
+	$eui64 = substr($eui48, 0, 6).'FFFE'.substr($eui48, 6, 6);
+
+	$eui64[1] = dechex(hexdec($eui64[1]) | 2); // flip seventh bit
+
+	return mac_canonize($eui64);
+}
+
+/**
+ * Try to convert IPv6-LinkLocal address to MAC-48
+ * @param string $ipv6 IPv6-LinkLocal address
+ * @return false|string MAC-48 (or IPv6 if it was no LinkLocal address, or Modified EUI-64 if it decapsulation failed)
+ */
+function ipv6linklocal_to_mac48(string $ipv6) {
 	// https://stackoverflow.com/questions/12095835/quick-way-of-expanding-ipv6-addresses-with-php (modified)
 	$tmp = inet_pton($ipv6);
 	if ($tmp === false) return false;
@@ -158,40 +221,35 @@ function ipv6linklocal_to_eui64(string $ipv6) {
 	if ($cnt == 0) return false;
 
 	// Set LAA to UAA again
-	$mac[1] = dechex(hexdec($mac[1]) & 253);
+	$mac_uaa_64 = $mac;
+	$mac_uaa_64[1] = dechex(hexdec($mac_uaa_64[1]) & 253);
 
-	return eui64_to_eui48($mac);
+	$mac_uaa_48 = eui64_to_eui48($mac_uaa_64);
+	if (eui_bits($mac_uaa_48) == 48) {
+		return $mac_uaa_48; // Output MAC-48 (UAA)
+	} else {
+		return $mac; // Failed decapsulation; output Modified EUI-64 instead
+	}
 }
 
 /**
- * @param string $mac
- * @return false|int
- */
-function eui_bits(string $mac) {
-	if (!mac_valid($mac)) return false;
-	$mac = mac_canonize($mac, '');
-	return (int)(strlen($mac)*4);
-}
-
-/**
+ * Converts MAC-48 or EUI-48 to IPv6-LinkLocal (based on Modified EUI-64)
  * @param string $mac
  * @return false|string
  */
-function eui_to_ipv6linklocal(string $mac) {
+function maceui_to_ipv6linklocal(string $mac) {
 	if (!mac_valid($mac)) return false;
 	if (eui_bits($mac) == 48) {
-		$mac = eui48_to_eui64($mac);
+		$mac = maceui48_to_modeui64($mac);
 	}
 	$mac = mac_canonize($mac, '');
-
-	$mac[1] = dechex(hexdec($mac[1]) | 2);
-
 	$mac = str_pad($mac, 16, '0', STR_PAD_LEFT);
 	return strtolower('fe80::'.substr($mac,0, 4).':'.substr($mac,4, 4).':'.substr($mac,8, 4).':'.substr($mac,12, 4));
 }
 
 /**
- * @param string $mac
+ * Prints information about an IPv6-LinkLocal address, MAC, or EUI.
+ * @param string $mac IPv6-LinkLocal address, MAC, or EUI
  * @return void
  * @throws Exception
  */
@@ -200,31 +258,55 @@ function decode_mac(string $mac) {
 
 	echo sprintf("%-32s %s\n", "Input:", $mac);
 
+	// Format MAC for machine readability
+	$mac = mac_canonize($mac, '');
+
 	$type = '';
-	$tmp = ipv6linklocal_to_eui64($mac);
+	$tmp = ipv6linklocal_to_mac48($mac);
 	if ($tmp !== false) {
 		$mac = $tmp;
 		$type = 'IPv6-Link-Local';
 	}
 	if (!mac_valid($mac)) throw new Exception("Invalid MAC address");
 	if ($tmp === false) {
-		// Size
-		$type = eui_bits($mac)==48 ? 'EUI-48 (6 Byte)' : 'EUI-64 (8 Byte)';
+		if (eui_bits($mac) == 48) {
+			$type = 'MAC-48 (network hardware) or EUI-48 (other devices and software)';
+		} else if (eui_bits($mac) == 64) {
+			if (substr($mac,6,4) == 'FFFE') {
+				if ((hexdec($mac[1])&2) == 2) {
+					$type = 'EUI-64 (MAC/EUI-48 to Modified EUI-64 Encapsulation)';
+				} else {
+					$type = 'EUI-64 (EUI-48 to EUI-64 Encapsulation)';
+				}
+			} else if (substr($mac,6,4) == 'FFFF') {
+				$type = 'EUI-64 (MAC-48 to EUI-64 Encapsulation)';
+			} else {
+				$type = 'EUI-64 (Regular)';
+			}
+		} else {
+			assert(false); /** @phpstan-ignore-line */
+		}
 	}
 	echo sprintf("%-32s %s\n", "Type:", $type);
 
 	echo "\n";
 
-	// Format MAC
-	$mac = mac_canonize($mac, '');
-
 	// Show various representations
 	$eui48 = eui64_to_eui48($mac);
 	echo sprintf("%-32s %s\n", "EUI-48:", (eui_bits($eui48) != 48) ? 'Not available' : $eui48);
-	$eui64 = eui48_to_eui64($mac);
-	echo sprintf("%-32s %s\n", "EUI-64:", (eui_bits($eui64) != 64) ? 'Not available' : $eui64);
-	$ipv6 = eui_to_ipv6linklocal($mac);
-	echo sprintf("%-32s %s\n", "IPv6 link local address:", $ipv6);
+	if (eui_bits($mac) == 48) {
+		$eui64 = mac48_to_eui64($mac);
+		echo sprintf("%-32s %s\n", "EUI-64:", ((eui_bits($eui64) != 64) ? 'Not available' : $eui64).' (MAC-48 to EUI-64 Encapsulation)');
+		$eui64 = eui48_to_eui64($mac);
+		echo sprintf("%-32s %s\n", "", ((eui_bits($eui64) != 64) ? 'Not available' : $eui64).' (EUI-48 to EUI-64 Encapsulation)');
+		$eui64 = maceui48_to_modeui64($mac);
+		echo sprintf("%-32s %s\n", "", ((eui_bits($eui64) != 64) ? 'Not available' : $eui64).' (MAC/EUI-48 to Modified EUI-64 Encapsulation)');
+		$ipv6 = maceui_to_ipv6linklocal($mac);
+		echo sprintf("%-32s %s\n", "IPv6 link local address:", $ipv6);
+	} else {
+		$eui64 = mac_canonize($mac);
+		echo sprintf("%-32s %s\n", "EUI-64:", $eui64);
+	}
 
 	// Vergabestelle
 	$ul = hexdec($mac[1]) & 2; // Bit #LSB+1 of Byte 1
@@ -237,15 +319,15 @@ function decode_mac(string $mac) {
 	echo sprintf("%-32s %s\n", "Transmission type (I/G flag):", $ig_);
 
 	// Query IEEE registries
-	// TODO: gilt OUI nur bei Individual UAA?
-	if (count(glob(IEEE_MAC_REGISTRY.'/*.txt')) > 0) {
+	// TODO: gilt OUI nur bei Individual UAA? For LAA, should we convert to UAA and then query the registry?
+	if (count(glob(IEEE_MAC_REGISTRY.DIRECTORY_SEPARATOR.'*.txt')) > 0) {
 		if (
 			# The IEEE Registration Authority distinguishes between IABs and OUI-36 values. Both are 36-bit values which may be used to generate EUI-48 values, but IABs may not be used to generate EUI-64 values.[6]
 			# Note: The Individual Address Block (IAB) is an inactive registry activity, which has been replaced by the MA-S registry product as of January 1, 2014.
-			($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . '/iab.txt', 'IAB', $mac)) ||
-			($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . '/oui36.txt', 'OUI-36 (MA-S)', $mac)) ||
-			($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . '/mam.txt', 'OUI-28 (MA-M)', $mac)) ||
-			($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . '/oui.txt', 'OUI-24 (MA-L)', $mac))
+			($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'iab.txt', 'IAB', $mac)) ||
+			($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'oui36.txt', 'OUI-36 (MA-S)', $mac)) ||
+			($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'mam.txt', 'OUI-28 (MA-M)', $mac)) ||
+			($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'oui.txt', 'OUI-24 (MA-L)', $mac))
 		) {
 			echo $x;
 		}
