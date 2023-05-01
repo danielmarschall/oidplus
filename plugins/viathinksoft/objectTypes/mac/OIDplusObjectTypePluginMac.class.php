@@ -39,13 +39,13 @@ class OIDplusObjectTypePluginMac extends OIDplusObjectTypePlugin {
 	 */
 	public static function prefilterQuery(string $static_node_id, bool $throw_exception): string {
 		$static_node_id = preg_replace('@^eui:@', 'mac:', $static_node_id);
+		$static_node_id = preg_replace('@^eli:@', 'mac:', $static_node_id);
 
 		if (str_starts_with($static_node_id,'mac:')) {
 			$static_node_id = str_replace(' ', '', $static_node_id);
 		}
 
 		// Special treatment for OIDs: if someone enters a valid MAC address in the goto box, prepend "mac:"
-#		if ((str_contains($static_node_id, ':') || str_contains($static_node_id, '-')) && mac_valid($static_node_id)) {
 		if (((strpos($static_node_id, ':') !== false) || (strpos($static_node_id, '-') !== false)) && mac_valid($static_node_id)) {
 			$static_node_id = 'mac:'.$static_node_id;
 		}
