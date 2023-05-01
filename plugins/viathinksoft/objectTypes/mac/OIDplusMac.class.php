@@ -51,14 +51,14 @@ class OIDplusMac extends OIDplusObject {
 	 * @return string
 	 */
 	public static function objectTypeTitle(): string {
-		return _L('EUI / MAC Addresses');
+		return _L('MAC/EUI/ELI Addresses');
 	}
 
 	/**
 	 * @return string
 	 */
 	public static function objectTypeTitleShort(): string {
-		return _L('MAC/EUI');
+		return _L('MAC/EUI/ELI');
 	}
 
 	/**
@@ -172,7 +172,7 @@ class OIDplusMac extends OIDplusObject {
 			if ($res->any()) {
 				$content  = '<p>'._L('Please select an item in the tree view at the left to show its contents.').'</p>';
 			} else {
-				$content  = '<p>'._L('Currently, no MAC/EUI are registered in the system.').'</p>';
+				$content  = '<p>'._L('Currently, no MAC/EUI/ELI are registered in the system.').'</p>';
 			}
 
 			if (!$this->isLeafNode()) {
@@ -204,7 +204,9 @@ class OIDplusMac extends OIDplusObject {
 				$chunked .= ' ...';
 			}
 
-			$content  = '<h2>'._L('EUI').' '.$chunked.'</h2>';
+			$type = (strtoupper(substr($this->number,1,1)) == 'A') ? _L('ELI') : _L('EUI');
+
+			$content  = '<h2>'.$type.' '.$chunked.'</h2>';
 			$content .= $tech_info_html;
 
 			if ($this->isLeafNode()) {
