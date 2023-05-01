@@ -1574,10 +1574,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Currently, no MAC/EUI are registered in the system.
+		Currently, no MAC/EUI/ELI are registered in the system.
 		]]></source>
 		<target><![CDATA[
-		Derzeit sind keine MAC/EUI in diesem System registriert.
+		Derzeit sind keine MAC/EUI/ELI in diesem System registriert.
 		]]></target>
 	</message>
 	<message>
@@ -2062,6 +2062,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		ELI
+		]]></source>
+		<target><![CDATA[
+		ELI
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		ERROR: No CAPTCHA plugins were found! You CANNOT use OIDplus without the "%1" CAPTCHA plugin.
 		]]></source>
 		<target><![CDATA[
@@ -2082,14 +2090,6 @@
 		]]></source>
 		<target><![CDATA[
 		EUI
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		EUI / MAC Addresses
-		]]></source>
-		<target><![CDATA[
-		EUI / MAC Adressen
 		]]></target>
 	</message>
 	<message>
@@ -3814,18 +3814,26 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		MAC/EUI
-		]]></source>
-		<target><![CDATA[
-		MAC/EUI
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		MAC/EUI-64 address
 		]]></source>
 		<target><![CDATA[
 		MAC/EUI-64 Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		MAC/EUI/ELI
+		]]></source>
+		<target><![CDATA[
+		MAC/EUI/ELI
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		MAC/EUI/ELI Addresses
+		]]></source>
+		<target><![CDATA[
+		MAC/EUI/ELI-Adressen
 		]]></target>
 	</message>
 	<message>
