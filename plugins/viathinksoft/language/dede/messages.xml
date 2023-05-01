@@ -3406,6 +3406,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Invalid characters entered
+		]]></source>
+		<target><![CDATA[
+		Ungültige Zeichen eingegeben
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Invalid design folder name. Do only enter a folder name, not an absolute or relative path
 		]]></source>
 		<target><![CDATA[
@@ -7190,6 +7198,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The first node must be at least 24 bits long, since this is the smallest assignment for OUI/CID from IEEE.
+		]]></source>
+		<target><![CDATA[
+		Der erste Abschnitt muss mindestens 24 Bits lang sein, denn das ist die kleinste Einheit, die IEEE für eine OUI/CID vergibt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The folders "userdata" and "userdata_pub" as well as third-party-plugins (folder "plugins" excluding "viathinksoft") are not listed.
 		]]></source>
 		<target><![CDATA[
@@ -7226,6 +7242,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die Informationen in %1 sind veraltet.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The max length of an EUI-64 or ELI-64 is 64 bit
+		]]></source>
+		<target><![CDATA[
+		Die maximale Länge einer EUI-64 oder ELI-64 ist 64 Bit
 		]]></target>
 	</message>
 	<message>

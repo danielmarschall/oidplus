@@ -100,12 +100,16 @@ class OIDplusMac extends OIDplusObject {
 		$str = strtoupper($str);
 
 		$test = preg_replace('@[0-9A-F]@', '', $str);
-		if ($test != '') throw new OIDplusException("Invalid characters entered");
+		if ($test != '') throw new OIDplusException(_L("Invalid characters entered"));
+
+		if ($this->isRoot() && (strlen($str) < 6)) {
+			throw new OIDplusException(_L("The first node must be at least 24 bits long, since this is the smallest assignment for OUI/CID from IEEE."));
+		}
 
 		$new_mac = $this->nodeId() . $str;
 
 		if (strlen($new_mac) > 16) {
-			throw new OIDplusException("The max length of an EUI-64 is 64 bit");
+			throw new OIDplusException(_L("The max length of an EUI-64 or ELI-64 is 64 bit"));
 		}
 
 		return $this->nodeId() . $str;
@@ -316,7 +320,7 @@ class OIDplusMac extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 
-		// (VTS F2) EUI-64 to AID (PIX allowed)
+		// (VTS F2) EUI/ELI-64 to AID (PIX allowed)
 		$eui64 = mac_canonize(eui48_to_eui64($this->number),'');
 		if (!$eui64) $eui64 = $this->number;
 		$eui64 = str_pad($eui64, 16, '0', STR_PAD_RIGHT);

@@ -397,7 +397,7 @@ class OIDplusAid extends OIDplusObject {
 			}
 		}
 
-		// (VTS F2) MAC/EUI-64 address + PIX
+		// (VTS F2) EUI/ELI-64 address + PIX
 		// Resolve only if there is no PIX
 		if (str_starts_with($aid,'D276000186F2')) {
 			$rest = substr($aid,strlen('D276000186F2'));
