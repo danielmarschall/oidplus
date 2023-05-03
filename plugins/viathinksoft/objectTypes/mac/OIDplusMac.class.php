@@ -51,14 +51,14 @@ class OIDplusMac extends OIDplusObject {
 	 * @return string
 	 */
 	public static function objectTypeTitle(): string {
-		return _L('MAC/EUI/ELI Addresses');
+		return _L('MAC adresses (EUI/ELI/AAI/SAI)');
 	}
 
 	/**
 	 * @return string
 	 */
 	public static function objectTypeTitleShort(): string {
-		return _L('MAC/EUI/ELI');
+		return _L('MAC');
 	}
 
 	/**
@@ -102,17 +102,26 @@ class OIDplusMac extends OIDplusObject {
 		$test = preg_replace('@[0-9A-F]@', '', $str);
 		if ($test != '') throw new OIDplusException(_L("Invalid characters entered"));
 
-		if ($this->isRoot() && (strlen($str) < 6)) {
-			throw new OIDplusException(_L("The first node must be at least 24 bits long, since this is the smallest assignment for OUI/CID from IEEE."));
+		$new_mac = $this->nodeId(false) . $str;
+
+		$type = mac_type(str_pad($new_mac, 12, '0', STR_PAD_RIGHT));
+		$type = substr($type, 0, 3);
+
+		if (($type == 'ELI') || ($type == 'EUI')) {
+			if ($this->isRoot() && (strlen($str) < 6)) {
+				throw new OIDplusException(_L("The first node must be at least 24 bits long, since this is the smallest assignment for OUI/CID from IEEE."));
+			}
 		}
 
-		$new_mac = $this->nodeId() . $str;
-
-		if (strlen($new_mac) > 16) {
-			throw new OIDplusException(_L("The max length of an EUI-64 or ELI-64 is 64 bit"));
+		if (($type == 'ELI') || ($type == 'EUI')) {
+			if (strlen($new_mac) > 16) {
+				throw new OIDplusException(_L("The max length of an EUI-64 or ELI-64 is 64 bit"));
+			}
+		} else {
+			// TODO: Do AAI and SAI have limitations to 48 bit?
 		}
 
-		return $this->nodeId() . $str;
+		return $this->root().$new_mac;
 	}
 
 	/**
@@ -208,9 +217,19 @@ class OIDplusMac extends OIDplusObject {
 				$chunked .= ' ...';
 			}
 
-			$type = (strtoupper(substr($this->number,1,1)) == 'A') ? _L('ELI') : _L('EUI');
+			$type = '';
+			try {
+				$type_raw = mac_type(str_pad($this->number, 12, '0', STR_PAD_RIGHT));
+				if (preg_match('@(.+) \\((.+)\\)@ismU', $type_raw, $m)) {
+					$type_short = $m[1];
+					$type_long = $m[2];
+					$type = '<abbr title="'.htmlentities($type_long).'">'.htmlentities($type_short).'</abbr>';
+				} else {
+					$type = htmlentities($type_raw);
+				}
+			} catch (\Exception $e) {};
 
-			$content  = '<h2>'.$type.' '.$chunked.'</h2>';
+			$content  = '<h2>'.$type.' <strong>'.$chunked.'</strong></h2>';
 			$content .= $tech_info_html;
 
 			if ($this->isLeafNode()) {
@@ -245,7 +264,7 @@ class OIDplusMac extends OIDplusObject {
 		while ($obj = OIDplusObject::findFitting($curid)) {
 			$objParent = $obj->getParent();
 			if (!$objParent) break;
-			$curid = $objParent->nodeId();
+			$curid = $objParent->nodeId(true);
 			$hints[] = $obj->getTitle();
 			$lengths[] = strlen($curid);
 		}
