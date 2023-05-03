@@ -7,7 +7,7 @@
 	<type>ViaThinkSoft\OIDplus\OIDplusObjectTypePlugin</type>
 
 	<info>
-		<name>MAC / EUI</name>
+		<name>MAC adresses (EUI/ELI/AAI/SAI)</name>
 		<author>ViaThinkSoft</author>
 		<license>Apache 2.0</license>
 		<version />
