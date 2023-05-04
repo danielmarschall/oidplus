@@ -401,10 +401,12 @@ class OIDplusAid extends OIDplusObject {
 		// Resolve only if there is no PIX
 		if (str_starts_with($aid,'D276000186F2')) {
 			$size_nibble = substr($aid,strlen('D276000186F2'),1);
-			$mac = substr($aid,strlen('D276000186F2X'),hexdec($size_nibble)+1);
-			if (strlen($aid) <= strlen('D276000186F2X') + hexdec($size_nibble)+1) {
-				$mac_type = mac_type(str_pad($mac, 12, '0', STR_PAD_RIGHT));
-				$ids[] = new OIDplusAltId('mac', $mac, $mac_type);
+			if ($size_nibble != '') {
+				$mac = substr($aid, strlen('D276000186F2X'), hexdec($size_nibble) + 1);
+				if (strlen($aid) <= strlen('D276000186F2X') + hexdec($size_nibble) + 1) {
+					$mac_type = mac_type(str_pad($mac, 12, '0', STR_PAD_RIGHT));
+					$ids[] = new OIDplusAltId('mac', $mac, $mac_type);
+				}
 			}
 		}
 
