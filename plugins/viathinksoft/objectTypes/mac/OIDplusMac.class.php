@@ -113,12 +113,11 @@ class OIDplusMac extends OIDplusObject {
 			}
 		}
 
-		if (($type == 'ELI') || ($type == 'EUI')) {
+		if (($type == 'ELI') || ($type == 'EUI') || ($type == 'AAI') || ($type == 'SAI')) {
+			// Note: AAI-48, AAI-64, SAI-48, and SAI-64 are defined in IEEE 802c-2017
 			if (strlen($new_mac) > 16) {
 				throw new OIDplusException(_L("The max length of an EUI-64 or ELI-64 is 64 bit"));
 			}
-		} else {
-			// TODO: Do AAI and SAI have limitations to 48 bit?
 		}
 
 		return $this->root().$new_mac;
@@ -339,13 +338,13 @@ class OIDplusMac extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 
-		// (VTS F2) EUI/ELI-64 to AID (PIX allowed)
-		$eui64 = mac_canonize(eui48_to_eui64($this->number),'');
-		if (!$eui64) $eui64 = $this->number;
-		$eui64 = str_pad($eui64, 16, '0', STR_PAD_RIGHT);
-		$aid = 'D276000186F2'.$eui64;
-		$aid_is_ok = aid_canonize($aid);
-		if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')');
+		// (VTS F2) MAC address (EUI/ELI/...) to AID (PIX allowed)
+		$size_nibble = strlen($this->number)-1;
+		if ($size_nibble < 16) {
+			$aid = 'D276000186F2'.dechex($size_nibble).$this->number;
+			$aid_is_ok = aid_canonize($aid);
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')');
+		}
 
 		return $ids;
 	}
