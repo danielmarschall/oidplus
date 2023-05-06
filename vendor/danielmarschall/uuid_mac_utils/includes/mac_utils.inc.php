@@ -3,7 +3,7 @@
 /*
  * MAC (EUI-48 and EUI-64) utils for PHP
  * Copyright 2017 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-05-03
+ * Version 2023-05-06
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,8 +112,8 @@ function _lookup_ieee_registry(string $file, string $oui_name, string $mac) {
 
 		$ra_len = strlen(dechex($end-$beg));
 
-		$out = sprintf("%-32s 0x%s\n", "IEEE $oui_name part:", substr($mac, 0, 12-$ra_len));
-		$out .= sprintf("%-32s 0x%s\n", "NIC specific part:", substr($mac, 12-$ra_len));
+		$out = sprintf("%-32s 0x%s\n", "IEEE $oui_name:", substr($mac, 0, 12-$ra_len));
+		$out .= sprintf("%-32s 0x%s\n", "Vendor-specific part:", substr($mac, 12-$ra_len));
 		$out .= sprintf("%-32s %s\n", "Registrant:", $x[0]);
 		foreach ($x as $n => $y) {
 			if ($n == 0) continue;
@@ -216,7 +216,7 @@ function maceui48_to_modeui64(string $eui48) {
  */
 function ipv6linklocal_to_mac48(string $ipv6) {
 	// https://stackoverflow.com/questions/12095835/quick-way-of-expanding-ipv6-addresses-with-php (modified)
-	$tmp = inet_pton($ipv6);
+	$tmp = @inet_pton($ipv6);
 	if ($tmp === false) return false;
 	$hex = unpack("H*hex", $tmp);
 	$ipv6 = substr(preg_replace("/([A-f0-9]{4})/", "$1:", $hex['hex']), 0, -1);
@@ -267,21 +267,21 @@ function mac_type(string $mac): string {
 	 *
 	 *  	ZYXM
 	 * 0	0000	EUI (OUI)
-	 * 1	0001
+	 * 1	0001	[Multicast]
 	 * 2	0010	AAI
-	 * 3	0011
+	 * 3	0011	[Multicast]
 	 * 4	0100	EUI (OUI)
-	 * 5	0101
+	 * 5	0101	[Multicast]
 	 * 6	0110	Reserved
-	 * 7	0111
+	 * 7	0111	[Multicast]
 	 * 8	1000	EUI (OUI)
-	 * 9	1001
+	 * 9	1001	[Multicast]
 	 * A	1010	ELI (CID)
-	 * B	1011
+	 * B	1011	[Multicast]
 	 * C	1100	EUI (OUI)
-	 * D	1101
+	 * D	1101	[Multicast]
 	 * E	1110	SAI
-	 * F	1111
+	 * F	1111	[Multicast]
 	 *
 	 */
 
@@ -293,7 +293,7 @@ function mac_type(string $mac): string {
 	}
 	if (!mac_valid($mac)) throw new Exception("Invalid MAC address");
 	if ($tmp === false) {
-		if ($mac[1] == '2') {
+		if (($mac[1] == '2') || ($mac[1] == '3')) {
 			/*
 			 * AAI: Administratively Assigned Identifier
 			 * Administrators who wish to assign local MAC addresses in an
@@ -302,7 +302,7 @@ function mac_type(string $mac): string {
 			 * SLAP on the same LAN may assign a local MAC address as AAI.
 			 */
 			$type = 'AAI-' . eui_bits($mac).' (Administratively Assigned Identifier)';
-		} else if ($mac[1] == '6') {
+		} else if (($mac[1] == '6') || ($mac[1] == '7')) {
 			/*
 			 * Reserved
 			 * may be administratively used and assigned in accordance with the
@@ -312,7 +312,7 @@ function mac_type(string $mac): string {
 			 * assignment incompatible with the SLAP.
 			 */
 			$type = 'Reserved-' . eui_bits($mac);
-		} else if ($mac[1] == 'A') {
+		} else if (($mac[1] == 'A') || ($mac[1] == 'B')) {
 			/*
 			 * ELI: Extended Local Identifier
 			 * An ELI is based on a 24 bit CID
@@ -320,7 +320,7 @@ function mac_type(string $mac): string {
 			 * Since X=1 (U/L=1), the CID cannot be used to form a universal UAA MAC (only a local LAA MAC)
 			 */
 			$type = 'ELI-' . eui_bits($mac).' (Extended Local Identifier)';
-		} else if ($mac[1] == 'E') {
+		} else if (($mac[1] == 'E') || ($mac[1] == 'F')) {
 			/*
 			 * SAI: Standard Assigned Identifier
 			 * Specification of the use of the SAI quadrant for SLAP address
@@ -337,9 +337,7 @@ function mac_type(string $mac): string {
 			 * and bridges that do not recognize the protocol is not affected.
 			 */
 			$type = 'SAI-' . eui_bits($mac).' (Standard Assigned Identifier)';
-		} else if ((hexdec($mac[1])&1) == 1) {
-			$type = 'Multicast MAC-'.eui_bits($mac);
-		} else if (($mac[1] == '0') || ($mac[1] == '4') || ($mac[1] == '8') || ($mac[1] == 'C')) {
+		} else {
 			/*
 			 * Extended Unique Identifier
 			 * Based on an OUI-24, OUI-28, or OUI-36
@@ -365,6 +363,26 @@ function mac_type(string $mac): string {
 			}
 		}
 	}
+
+	if ((hexdec($mac[1])&1) == 1) {
+		// Question: https://networkengineering.stackexchange.com/questions/83121/can-eli-aai-sai-addresses-be-multicast
+		// Are there "Multicast ELI", "Multicast AAI", "Multicast SAI"?
+		// Some documents of IEEE suggest this, but I am not 100% sure!
+
+		/* https://standards.ieee.org/wp-content/uploads/import/documents/tutorials/eui.pdf writes:
+		 * - The assignee of an OUI or OUI-36 is exclusively authorized to assign group
+		 *   MAC addresses, with I/G=1, by extending a modified version of the assigned
+		 *   OUI or OUI-36 in which the M bit is set to 1. Such addresses are not EUIs and
+		 *   do not globally identify hardware instances, even though U/L=0.
+		 * - The assignee of a CID may assign local group MAC addresses by extending a modified version of
+		 *   the assigned CID by setting the M bit to 1 (so that I/G=1). The resulting
+		 *   extended identifier is an ELI.
+		 */
+
+		// TODO: If "Multicast EUI" is not an EUI, how should we name it instead?!
+		$type = "Multicast $type";
+	}
+
 	return $type;
 }
 
@@ -375,6 +393,9 @@ function mac_type(string $mac): string {
  * @throws Exception
  */
 function decode_mac(string $mac) {
+
+	// TODO: Should we decode Multicast MAC to its IP (see https://ipcisco.com/lesson/multicast-mac-addresses/)?
+
 	echo sprintf("%-32s %s\n", "Input:", $mac);
 
 	// Format MAC for machine readability
@@ -421,23 +442,30 @@ function decode_mac(string $mac) {
 
 	// Query IEEE registries
 	if (count(glob(IEEE_MAC_REGISTRY.DIRECTORY_SEPARATOR.'*.txt')) > 0) {
+		$alt_mac = $mac;
+		$alt_mac[1] = dechex(hexdec($alt_mac[1])^1); // switch Unicat<=>Multicast in order to find the vendor
+
 		if ($mac[1] == 'A') {
 			// Query the CID registry
 			if (
-				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'cid.txt', 'CID', $mac))
+				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'cid.txt', 'CID', $mac)) ||
+				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'cid.txt', 'CID', $alt_mac))
 			) {
 				echo $x;
 			}
 		} else {
 			// Query the OUI registries
-			// TODO: Should we try to convert Unicast<=>Multicast if one of them can't be found?
 			if (
 				# The IEEE Registration Authority distinguishes between IABs and OUI-36 values. Both are 36-bit values which may be used to generate EUI-48 values, but IABs may not be used to generate EUI-64 values.[6]
 				# Note: The Individual Address Block (IAB) is an inactive registry activity, which has been replaced by the MA-S registry product as of January 1, 2014.
 				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'iab.txt', 'IAB', $mac)) ||
 				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'oui36.txt', 'OUI-36 (MA-S)', $mac)) ||
-				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'mam.txt', 'OUI-28 (MA-M)', $mac)) ||
-				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'oui.txt', 'OUI-24 (MA-L)', $mac))
+				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'mam.txt', '28 bit identifier (MA-M)', $mac)) ||
+				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'oui.txt', 'OUI (MA-L)', $mac)) ||
+				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'iab.txt', 'IAB', $alt_mac)) ||
+				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'oui36.txt', 'OUI-36 (MA-S)', $alt_mac)) ||
+				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'mam.txt', '28 bit identifier (MA-M)', $alt_mac)) ||
+				($x = _lookup_ieee_registry(IEEE_MAC_REGISTRY . DIRECTORY_SEPARATOR . 'oui.txt', 'OUI (MA-L)', $alt_mac))
 			) {
 				echo $x;
 			}
@@ -841,6 +869,74 @@ function decode_mac(string $mac) {
 	if (mac_equals($mac, 'AB:00:03:00:00:00')) $app = 'DEC Local Area Transport (LAT) - old, EtherType is 0x6004';
 	if (mac_between($mac, 'AB:00:04:00:00:00', 'AB:00:04:00:FF:FF')) $app = 'Reserved DEC customer private use';
 	if (mac_between($mac, 'AB:00:04:01:00:00', 'AB:00:04:01:FF:FF')) $app = 'DEC Local Area VAX Cluster groups System Communication Architecture (SCA), EtherType is 0x6007';
+
+	// https://standards.ieee.org/products-programs/regauth/grpmac/public/
+	// TODO: Check for duplicates between these and the ones at the top
+	// IEEE Std 802.1D and IEEE Std 802.1Q Reserved Addresses
+	if (mac_equals($mac, '01-80-C2-00-00-00')) $app = 'IEEE Std 802.1Q / Bridge Group address, Nearest Customer Bridge group address';
+	if (mac_equals($mac, '01-80-C2-00-00-01')) $app = 'IEEE Std 802.1Q / IEEE MAC-specific Control Protocols group address';
+	if (mac_equals($mac, '01-80-C2-00-00-02')) $app = 'IEEE Std 802.1Q / IEEE 802.3 Slow_Protocols_Multicast address';
+	if (mac_equals($mac, '01-80-C2-00-00-03')) $app = 'IEEE Std 802.1Q / Nearest non-TPMR Bridge group address, IEEE Std 802.1X PAE address';
+	if (mac_equals($mac, '01-80-C2-00-00-04')) $app = 'IEEE Std 802.1Q / IEEE MAC-specific Control Protocols group address';
+	if (mac_equals($mac, '01-80-C2-00-00-05')) $app = 'IEEE Std 802.1Q / Reserved for future standardization';
+	if (mac_equals($mac, '01-80-C2-00-00-06')) $app = 'IEEE Std 802.1Q / Reserved for future standardization';
+	if (mac_equals($mac, '01-80-C2-00-00-07')) $app = 'IEEE Std 802.1Q / MEF Forum ELMI protocol group address';
+	if (mac_equals($mac, '01-80-C2-00-00-08')) $app = 'IEEE Std 802.1Q / Provider Bridge group address';
+	if (mac_equals($mac, '01-80-C2-00-00-09')) $app = 'IEEE Std 802.1Q / Reserved for future standardization';
+	if (mac_equals($mac, '01-80-C2-00-00-0A')) $app = 'IEEE Std 802.1Q / Reserved for future standardization';
+	if (mac_equals($mac, '01-80-C2-00-00-0B')) $app = 'IEEE Std 802.1Q / EDE-SS PEP Address';
+	if (mac_equals($mac, '01-80-C2-00-00-0C')) $app = 'IEEE Std 802.1Q / Reserved for future standardization';
+	if (mac_equals($mac, '01-80-C2-00-00-0D')) $app = 'IEEE Std 802.1Q / Provider Bridge MVRP address';
+	if (mac_equals($mac, '01-80-C2-00-00-0E')) $app = 'IEEE Std 802.1Q / Individual LAN Scope group address, Nearest Bridge group address';
+	if (mac_equals($mac, '01-80-C2-00-00-0F')) $app = 'IEEE Std 802.1Q / Reserved for future standardization';
+	// Standard Group MAC Addresses
+	if (mac_equals($mac, '01-80-C2-00-00-10')) $app = 'All LANs Bridge Management Group Address (deprecated)';
+	if (mac_equals($mac, '01-80-C2-00-00-11')) $app = 'Load Server Generic Address';
+	if (mac_equals($mac, '01-80-C2-00-00-12')) $app = 'Loadable Device Generic Address';
+	if (mac_equals($mac, '01-80-C2-00-00-13')) $app = 'Transmission of IEEE 1905.1 control packets';
+	if (mac_equals($mac, '01-80-C2-00-00-14')) $app = 'All Level 1 Intermediate Systems Address';
+	if (mac_equals($mac, '01-80-C2-00-00-15')) $app = 'All Level 2 Intermediate Systems Address';
+	if (mac_equals($mac, '01-80-C2-00-00-16')) $app = 'All CONS End Systems Address';
+	if (mac_equals($mac, '01-80-C2-00-00-17')) $app = 'All CONS SNARES Address';
+	if (mac_equals($mac, '01-80-C2-00-00-18')) $app = 'Generic Address for All Manager Stations';
+	if (mac_equals($mac, '01-80-C2-00-00-19')) $app = 'Groupcast with retries (GCR) MAC Group Address';
+	if (mac_equals($mac, '01-80-C2-00-00-1A')) $app = 'Generic Address for All Agent Stations';
+	if (mac_equals($mac, '01-80-C2-00-00-1B')) $app = 'All Multicast Capable End Systems Address';
+	if (mac_equals($mac, '01-80-C2-00-00-1C')) $app = 'All Multicast Announcements Address';
+	if (mac_equals($mac, '01-80-C2-00-00-1D')) $app = 'All Multicast Capable Intermediate Systems Address';
+	if (mac_equals($mac, '01-80-C2-00-00-1E')) $app = 'All DTR Concentrators MAC Group Address';
+	if (mac_equals($mac, '01-80-C2-00-00-1F')) $app = 'EDE-CC PEP Address';
+	if (mac_between($mac, '01-80-C2-00-00-20','01-80-C2-00-00-2F')) $app = 'Reserved for use by Multiple Registration Protocol (MRP) applications';
+	if (mac_between($mac, '01-80-C2-00-00-30','01-80-C2-00-00-3F')) $app = 'Destination group MAC addresses for CCM and Linktrace messages';
+	if (mac_between($mac, '01-80-C2-00-00-40','01-80-C2-00-00-4F')) $app = 'Group MAC addresses used by the TRILL protocols';
+	if (mac_between($mac, '01-80-C2-00-00-50','01-80-C2-00-00-FF')) $app = 'unassigned';
+	if (mac_equals($mac, '01-80-C2-00-01-00')) $app = 'Ring Management Directed Beacon Multicast Address';
+	if (mac_between($mac, '01-80-C2-00-01-01','01-80-C2-00-01-0F')) $app = 'Assigned to ISO/IEC JTC1/SC25 for future use';
+	if (mac_equals($mac, '01-80-C2-00-01-10')) $app = 'Status Report Frame Status Report Protocol Multicast Address';
+	if (mac_between($mac, '01-80-C2-00-01-11','01-80-C2-00-01-1F')) $app = 'Assigned to ISO/IEC JTC1/SC25 for future use';
+	if (mac_equals($mac, '01-80-C2-00-01-20')) $app = 'ISO/IEC 9314-2 All FDDI Concentrator MACs';
+	if (mac_between($mac, '01-80-C2-00-01-21','01-80-C2-00-01-2F')) $app = 'Assigned to ISO/IEC JTC1/SC25 for future use';
+	if (mac_equals($mac, '01-80-C2-00-01-30')) $app = 'ISO/IEC 9314-6 Synchronous Bandwidth Allocation Address';
+	if (mac_between($mac, '01-80-C2-00-01-31','01-80-C2-00-01-FF')) $app = 'Assigned to ISO/IEC JTC1/SC25 for future use';
+	if (mac_between($mac, '01-80-C2-00-02-00','01-80-C2-00-02-FF')) $app = 'Assigned to ETSI for future use';
+	if (mac_between($mac, '01-80-C2-00-03-00', '01-80-C2-FF-FF-FF')) $app = 'unassigned';
+	if (mac_equals($mac, '09-00-2B-00-00-04')) $app = 'ISO 9542 All End System Network Entities Address';
+	if (mac_equals($mac, '09-00-2B-00-00-05')) $app = 'ISO 9542 All Intermediate System Network Entities Address';
+	// Group MAC Addresses Used in ISO 9542 ES-IS Protocol
+	if (mac_equals($mac, '09-00-2B-00-00-04')) $app = 'ISO 9542 All End System Network Entities Address';
+	if (mac_equals($mac, '09-00-2B-00-00-05')) $app = 'ISO 9542 All Intermediate System Network Entities Address';
+	// Locally Administered Group MAC Addresses Used by IEEE Std 802.5 (IEEE Std 802.5 Functional Addresses)
+	if (mac_equals($mac, '03-00-00-00-00-08')) $app = 'Configuration Report Server (CRS) MAC Group Address';
+	if (mac_equals($mac, '03-00-00-00-00-10')) $app = 'Ring Error Monitor (REM) MAC Group Address';
+	if (mac_equals($mac, '03-00-00-00-00-40')) $app = 'Ring Parameter Server (RPS) MAC Group Address';
+	if (mac_equals($mac, '03-00-00-00-01-00')) $app = 'All Intermediate System Network Entities Address';
+	if (mac_equals($mac, '03-00-00-00-02-00')) $app = 'All End System Network Entities Address, and Lobe Media Test (LMT) MAC Group Address';
+	if (mac_equals($mac, '03-00-00-00-04-00')) $app = 'Generic Address for all Manager Stations';
+	if (mac_equals($mac, '03-00-00-00-08-00')) $app = 'All CONs SNARES Address';
+	if (mac_equals($mac, '03-00-00-00-10-00')) $app = 'All CONs End System Address';
+	if (mac_equals($mac, '03-00-00-00-20-00')) $app = 'Loadable Device Generic Address';
+	if (mac_equals($mac, '03-00-00-00-40-00')) $app = 'Load Server Generic Address';
+	if (mac_equals($mac, '03-00-00-40-00-00')) $app = 'Generic Address for all Agent Stations';
 
 	if ($app) {
 		echo sprintf("%-32s %s\n", "Special use:", $app);

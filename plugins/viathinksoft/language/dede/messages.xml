@@ -1574,10 +1574,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Currently, no MAC/EUI/ELI are registered in the system.
+		Currently, no MAC addresses are registered in the system.
 		]]></source>
 		<target><![CDATA[
-		Derzeit sind keine MAC/EUI/ELI in diesem System registriert.
+		Derzeit sind keine MAC-Adressen in diesem System registriert.
 		]]></target>
 	</message>
 	<message>

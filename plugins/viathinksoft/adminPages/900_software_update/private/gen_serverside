@@ -577,6 +577,12 @@ function hotfix_dir(int $rev, string $dir) {
 		file_put_contents($file, $cont);
 	}
 	if ($rev == 1248) {
+		// Possible error message that interrupts AJAX contents if error output is enabled
+		$file = $dir.'/vendor/danielmarschall/uuid_mac_utils/includes/mac_utils.inc.php';
+		$cont = file_get_contents($file);
+		$cont = str_replace(' inet_pton', ' @inet_pton', $cont);
+		file_put_contents($file, $cont);
+
 		// A PHP 8 function was used, making the update impossible on PHP 7.x systems
 		$file = $dir.'/plugins/viathinksoft/objectTypes/mac/OIDplusObjectTypePluginMac.class.php';
 		$cont = file_get_contents($file);
