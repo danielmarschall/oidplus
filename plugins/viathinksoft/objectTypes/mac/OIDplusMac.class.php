@@ -129,7 +129,8 @@ class OIDplusMac extends OIDplusObject {
 	 * @throws OIDplusException
 	 */
 	public function crudShowId(OIDplusObject $parent): string {
-		return $this->chunkedNotation(false);
+		//return $this->chunkedNotation(false);
+		return rtrim(chunk_split($this->number, 2, '-'), '-');
 	}
 
 	/**
