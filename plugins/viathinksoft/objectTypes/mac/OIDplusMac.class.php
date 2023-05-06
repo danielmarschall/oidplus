@@ -184,7 +184,7 @@ class OIDplusMac extends OIDplusObject {
 			if ($res->any()) {
 				$content  = '<p>'._L('Please select an item in the tree view at the left to show its contents.').'</p>';
 			} else {
-				$content  = '<p>'._L('Currently, no MAC/EUI/ELI are registered in the system.').'</p>';
+				$content  = '<p>'._L('Currently, no MAC addresses are registered in the system.').'</p>';
 			}
 
 			if (!$this->isLeafNode()) {
