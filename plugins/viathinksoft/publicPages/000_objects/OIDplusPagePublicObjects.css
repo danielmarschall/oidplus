@@ -19,3 +19,6 @@
 	text-transform: uppercase;
 }
 
+#crudTable td {
+	vertical-align: top;
+}

@@ -18,5 +18,9 @@
 	<php>
 		<mainclass>ViaThinkSoft\OIDplus\OIDplusObjectTypePluginMac</mainclass>
 	</php>
-	
+
+	<js>
+		<file>OIDplusObjectTypePluginMac.js</file>
+	</js>
+
 </manifest>
