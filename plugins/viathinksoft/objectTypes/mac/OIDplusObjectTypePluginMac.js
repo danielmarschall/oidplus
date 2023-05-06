@@ -1,6 +1,6 @@
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-var OIDplusObjectTypePluginOid = {
+var OIDplusObjectTypePluginMac = {
 
-	oid: "1.3.6.1.4.1.37476.2.5.2.4.8.7",
+	oid: "1.3.6.1.4.1.37476.2.5.2.4.8.13",
 
-	generateRandomUUID: function(absolute) {
+	generateRandomAAI: function(bits, multicast) {
 		$("#id").val(_L("Please wait..."));
 		$.ajax({
 			url:"ajax.php",
@@ -33,14 +33,16 @@ var OIDplusObjectTypePluginOid = {
 			},
 			data: {
 				csrf_token:csrf_token,
-				plugin:OIDplusPagePublicObjects.oid,
-				action:"generate_uuid"
+				plugin:OIDplusObjectTypePluginMac.oid,
+				aai_bits: bits,
+				aai_multicast: multicast,
+				action:"generate_aai"
 			},
 			error: oidplus_ajax_error,
 			success: function (data) {
 				oidplus_ajax_success(data, function (data) {
-					$("#id").val(absolute ? "2.25." + data.intval : data.intval);
-					alertSuccess(_L("OK! Generated UUID %1 which resolves to OID %2", data.uuid, "2.25." + data.intval));
+					$("#id").val(data.aai);
+					//alertSuccess(_L("OK! Generated AAI %1", data.aai));
 				});
 			}
 		});

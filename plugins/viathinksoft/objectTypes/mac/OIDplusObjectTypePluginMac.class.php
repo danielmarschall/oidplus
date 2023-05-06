@@ -23,13 +23,67 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusObjectTypePluginMac extends OIDplusObjectTypePlugin {
+class OIDplusObjectTypePluginMac extends OIDplusObjectTypePlugin
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_6 /* gridGeneratorLinks */
+{
 
 	/**
 	 * @return string
 	 */
 	public static function getObjectTypeClassName(): string {
 		return OIDplusMac::class;
+	}
+
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function action(string $actionID, array $params): array {
+		if ($actionID == 'generate_aai') {
+			_CheckParamExists($params, 'aai_bits');
+			_CheckParamExists($params, 'aai_multicast');
+
+			if (($params['aai_bits'] != '48') && ($params['aai_bits'] != '64')) {
+				throw new OIDplusException(_L("Invalid bit amount"));
+			}
+
+			$aai = '';
+			for ($i=0; $i<$params['aai_bits']/4; $i++) {
+				try {
+					$aai .= dechex(random_int(0, 15));
+				} catch (\Exception $e) {
+					$aai .= dechex(mt_rand(0, 15));
+				}
+			}
+
+			if ($params['aai_multicast'] == 'true') {
+				$aai[1] = '3';
+			} else {
+				$aai[1] = '2';
+			}
+
+			$aai = strtoupper($aai);
+			$aai = rtrim(chunk_split($aai, 2, '-'), '-');
+
+			return array("status" => 0, "aai" => $aai);
+		} else {
+			return parent::action($actionID, $params);
+		}
+	}
+
+	/**
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_6
+	 * @param OIDplusObject $objParent
+	 * @return string
+	 */
+	public function gridGeneratorLinks(OIDplusObject $objParent): string {
+		return
+			'<br>'._L('Generate a random AAI:').
+			'<br>- Unicast <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(48, false)">(AAI-48)</a> | <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(64, false)">(AAI-64)</a>'.
+			'<br>- Multicast <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(48, true)">(AAI-48)</a> | <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(64, true)">(AAI-64)</a>'.
+			'<br><a href="https://standards.ieee.org/products-programs/regauth/" target="_blank">('._L('Buy an OUI or CID from IEEE').')</a>';
 	}
 
 	/**

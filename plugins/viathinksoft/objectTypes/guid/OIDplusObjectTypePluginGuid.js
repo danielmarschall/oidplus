@@ -20,6 +20,7 @@ var OIDplusObjectTypePluginGuid = {
 	oid: "1.3.6.1.4.1.37476.2.5.2.4.8.3",
 
 	generateRandomGUID: function() {
+		/*
 		// https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid
 	    // http://www.ietf.org/rfc/rfc4122.txt
 	    var s = [];
@@ -33,6 +34,32 @@ var OIDplusObjectTypePluginGuid = {
 
 	    var uuid = s.join("");
 	    $("#id").val(uuid);
+		 */
+
+		$("#id").val(_L("Please wait..."));
+		$.ajax({
+			url:"ajax.php",
+			method:"POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:OIDplusPagePublicObjects.oid,
+				action:"generate_uuid"
+			},
+			error: oidplus_ajax_error,
+			success: function (data) {
+				oidplus_ajax_success(data, function (data) {
+					$("#id").val(data.uuid);
+					//alertSuccess(_L("OK! Generated UUID %1", data.uuid));
+				});
+			}
+		});
 	}
 
 };

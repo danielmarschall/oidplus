@@ -910,6 +910,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Buy an OUI or CID from IEEE
+		]]></source>
+		<target><![CDATA[
+		Eine OUI oder CID von IEEE kaufen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Bytes
 		]]></source>
 		<target><![CDATA[
@@ -2654,6 +2662,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Generate a random AAI:
+		]]></source>
+		<target><![CDATA[
+		Zufällige AAI erzeugen:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Generate a random AID - not unique!
 		]]></source>
 		<target><![CDATA[
@@ -3386,6 +3402,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ungültige Basiskonfigurations-Einstellung: %1 fehlt oder ist leer
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Invalid bit amount
+		]]></source>
+		<target><![CDATA[
+		Ungültige Bit-Anzahl
 		]]></target>
 	</message>
 	<message>
@@ -4622,6 +4646,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OK! Generated AAI %1
+		]]></source>
+		<target><![CDATA[
+		OK! AAI %1 generiert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OK! Generated UUID %1
+		]]></source>
+		<target><![CDATA[
+		OK! UUID %1 generiert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OK! Generated UUID %1 which resolves to OID %2
 		]]></source>
 		<target><![CDATA[
@@ -5282,6 +5322,14 @@
 		]]></source>
 		<target><![CDATA[
 		Bitte geben Sie einen gültigen Wert ein (0=nein, 1=ja).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Please enter a valid value (1=Timebased, 4=Random).
+		]]></source>
+		<target><![CDATA[
+		Bitte geben Sie einen gültigen Wert ein (1=Zeitbasiert, 4=Zufällig).
 		]]></target>
 	</message>
 	<message>

@@ -319,7 +319,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 		// Generate UUID
 		else if ($actionID == 'generate_uuid') {
-			$uuid = gen_uuid();
+			$uuid = gen_uuid(OIDplus::config()->getValue('uuid_prefer_timebased', '1') == '1');
 			if (!$uuid) return array("status" => 1);
 			return array(
 				"status" => 0,
@@ -499,6 +499,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		OIDplus::config()->prepareConfigKey('oid_grid_show_weid', 'Show WEID/Base36 column in CRUD grid of OIDs?', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
 				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
+			}
+		});
+		OIDplus::config()->prepareConfigKey('uuid_prefer_timebased', 'Preferred UUID Generator version? 1=Timebased (Very secure, but reveals the MAC address of the server); 4=Random (has a very, very tiny change to generate duplicates)', '1', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
+			if (($value != '1') && ($value != '4')) {
+				throw new OIDplusException(_L('Please enter a valid value (1=Timebased, 4=Random).'));
 			}
 		});
 	}
@@ -1019,7 +1024,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$enable_weid_presentation = OIDplus::config()->getValue('oid_grid_show_weid');
 
 		$output  = '<div class="container box"><div id="suboid_table" class="table-responsive">';
-		$output .= '<table class="table table-bordered table-striped">';
+		$output .= '<table id="crudTable" class="table table-bordered table-striped">';
 		$output .= '<thead>';
 		$output .= '	<tr>';
 		$output .= '	     <th>'._L('ID').(($parentNS == 'gs1') ? ' '._L('(without check digit)') : '').'</th>';
