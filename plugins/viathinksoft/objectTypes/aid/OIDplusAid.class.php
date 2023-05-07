@@ -158,7 +158,8 @@ class OIDplusAid extends OIDplusObject {
 	 * @return string
 	 */
 	public function defaultTitle(): string {
-		return $this->aid;
+		//return $this->aid;
+		return rtrim(chunk_split($this->aid, 2, ' '), ' ');
 	}
 
 	/**

@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-04-29
+ * Version 2023-05-06
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,15 @@ define('UUID_NAMEBASED_NS_DNS',     '6ba7b810-9dad-11d1-80b4-00c04fd430c8');
 define('UUID_NAMEBASED_NS_URL',     '6ba7b811-9dad-11d1-80b4-00c04fd430c8');
 define('UUID_NAMEBASED_NS_OID',     '6ba7b812-9dad-11d1-80b4-00c04fd430c8');
 define('UUID_NAMEBASED_NS_X500_DN', '6ba7b814-9dad-11d1-80b4-00c04fd430c8');
+
+function _random_int($min, $max) {
+	// This function tries a CSRNG and falls back to a RNG if no CSRNG is available
+	try {
+		return random_int($min, $max);
+	} catch (Exception $e) {
+		return mt_rand($min, $max);
+	}
+}
 
 function uuid_valid($uuid) {
 	$uuid = str_replace(array('-', '{', '}'), '', $uuid);
@@ -408,8 +417,8 @@ function gen_uuid_timebased() {
 	 * We don't support saved state information and generate
 	 * a random clock sequence each time.
 	 */
-	$uuid['clock_seq_hi'] = 0x80 | mt_rand(0, 64);
-	$uuid['clock_seq_low'] = mt_rand(0, 255);
+	$uuid['clock_seq_hi'] = 0x80 | _random_int(0, 64);
+	$uuid['clock_seq_low'] = _random_int(0, 255);
 
 	/*
 	 * Node should be set to the 48-bit IEEE node identifier
@@ -590,11 +599,11 @@ function gen_uuid_random() {
 	# Make the UUID by ourselves
 	# Source: http://rogerstringer.com/2013/11/15/generate-uuids-php
 	return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-		mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-		mt_rand( 0, 0xffff ),
-		mt_rand( 0, 0x0fff ) | 0x4000,
-		mt_rand( 0, 0x3fff ) | 0x8000,
-		mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+		_random_int( 0, 0xffff ), _random_int( 0, 0xffff ),
+		_random_int( 0, 0xffff ),
+		_random_int( 0, 0x0fff ) | 0x4000,
+		_random_int( 0, 0x3fff ) | 0x8000,
+		_random_int( 0, 0xffff ), _random_int( 0, 0xffff ), _random_int( 0, 0xffff )
 	);
 }
 

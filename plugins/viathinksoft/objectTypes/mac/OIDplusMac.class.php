@@ -96,7 +96,7 @@ class OIDplusMac extends OIDplusObject {
 	 * @throws OIDplusException
 	 */
 	public function addString(string $str): string {
-		$str = str_replace(array('-', ':'), '', $str);
+		$str = str_replace(array('-', ':', ' '), '', $str);
 		$str = strtoupper($str);
 
 		$test = preg_replace('@[0-9A-F]@', '', $str);
@@ -154,7 +154,8 @@ class OIDplusMac extends OIDplusObject {
 	 * @return string
 	 */
 	public function defaultTitle(): string {
-		return $this->number;
+		//return $this->number;
+		return rtrim(chunk_split($this->number, 2, '-'), '-');
 	}
 
 	/**
@@ -341,7 +342,7 @@ class OIDplusMac extends OIDplusObject {
 
 		// (VTS F2) MAC address (EUI/ELI/...) to AID (PIX allowed)
 		$size_nibble = strlen($this->number)-1;
-		if ($size_nibble < 16) {
+		if (($size_nibble >= 0) && ($size_nibble <= 0xF)) {
 			$aid = 'D276000186F2'.dechex($size_nibble).$this->number;
 			$aid_is_ok = aid_canonize($aid);
 			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')');

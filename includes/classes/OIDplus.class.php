@@ -2404,13 +2404,29 @@ class OIDplus extends OIDplusBaseClass {
 		$static_node_id = trim($static_node_id);
 
 		// Let namespace be case-insensitive
-		$ary = explode(':', $static_node_id, 2);
-		$ary[0] = strtolower($ary[0]);
-		$static_node_id = implode(':', $ary);
+		// Note: The query might not contain a namespace. It might be a single OID
+		//       or MAC address, and the plugins need to detect it any add a namespace
+		//       in the prefiltering. But if we have a namespace, we should fix the
+		//       case, so that plugins don't have a problem if they check the namespace
+		//       using str_starts_with().
+		if (substr_count($static_node_id, ':') === 1) {
+			$ary = explode(':', $static_node_id, 2);
+			$ary[0] = strtolower($ary[0]);
+			$static_node_id = implode(':', $ary);
+		}
 
 		// Ask plugins if they want to change the node id
 		foreach (OIDplus::getObjectTypePluginsEnabled() as $plugin) {
 			$static_node_id = $plugin->prefilterQuery($static_node_id, $throw_exception);
+		}
+
+		// Let namespace be case-insensitive
+		// At this point, plugins should have already added the namespace during the prefiltering,
+		// so, now we make sure that the namespace is really lowercase
+		if (substr_count($static_node_id, ':') === 1) {
+			$ary = explode(':', $static_node_id, 2);
+			$ary[0] = strtolower($ary[0]);
+			$static_node_id = implode(':', $ary);
 		}
 
 		return $static_node_id;
