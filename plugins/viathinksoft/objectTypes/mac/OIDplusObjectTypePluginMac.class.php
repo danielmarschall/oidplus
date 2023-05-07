@@ -79,10 +79,11 @@ class OIDplusObjectTypePluginMac extends OIDplusObjectTypePlugin
 	 * @return string
 	 */
 	public function gridGeneratorLinks(OIDplusObject $objParent): string {
+		if (!$objParent->isRoot()) return '';
 		return
 			'<br>'._L('Generate a random AAI:').
-			'<br>- Unicast <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(48, false)">(AAI-48)</a> | <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(64, false)">(AAI-64)</a>'.
-			'<br>- Multicast <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(48, true)">(AAI-48)</a> | <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(64, true)">(AAI-64)</a>'.
+			'<br>- <abbr title="'._L('Random hexadecimal string, but second nibble must be %1','2').'">Unicast</abbr> <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(48, false)">(AAI-48)</a> | <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(64, false)">(AAI-64)</a>'.
+			'<br>- <abbr title="'._L('Random hexadecimal string, but second nibble must be %1','3').'">Multicast</abbr> <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(48, true)">(AAI-48)</a> | <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(64, true)">(AAI-64)</a>'.
 			'<br><a href="https://standards.ieee.org/products-programs/regauth/" target="_blank">('._L('Buy an OUI or CID from IEEE').')</a>';
 	}
 
@@ -92,16 +93,21 @@ class OIDplusObjectTypePluginMac extends OIDplusObjectTypePlugin
 	 * @return string
 	 */
 	public static function prefilterQuery(string $static_node_id, bool $throw_exception): string {
+		$static_node_id = trim($static_node_id);
+
 		$static_node_id = preg_replace('@^eui:@', 'mac:', $static_node_id);
 		$static_node_id = preg_replace('@^eli:@', 'mac:', $static_node_id);
 
-		if (str_starts_with($static_node_id,'mac:')) {
-			$static_node_id = str_replace(' ', '', $static_node_id);
+		// Special treatment for MACs: if someone enters a valid MAC address in the goto box, prepend "mac:"
+		if (((strpos($static_node_id, ':') !== false) ||
+		     (strpos($static_node_id, '-') !== false) ||
+		     (strpos($static_node_id, ' ') !== false)) && mac_valid($static_node_id)) {
+			$static_node_id = 'mac:'.$static_node_id;
 		}
 
-		// Special treatment for OIDs: if someone enters a valid MAC address in the goto box, prepend "mac:"
-		if (((strpos($static_node_id, ':') !== false) || (strpos($static_node_id, '-') !== false)) && mac_valid($static_node_id)) {
-			$static_node_id = 'mac:'.$static_node_id;
+		if (str_starts_with($static_node_id,'mac:')) {
+			$static_node_id = 'mac:'.str_replace(array('-',':',' '), '', substr($static_node_id,4));
+			$static_node_id = 'mac:'.strtoupper(substr($static_node_id,4));
 		}
 
 		return $static_node_id;

@@ -5942,6 +5942,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Random hexadecimal string, but second nibble must be %1
+		]]></source>
+		<target><![CDATA[
+		Zufälliger Hexadezimal-String, aber das zweite Nibble muss %1 sein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Re-Install database (all data will be deleted)
 		]]></source>
 		<target><![CDATA[

@@ -529,6 +529,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				return false;
 			} else {
 				$obj->getContentPage($out['title'], $out['text'], $out['icon']);
+				if (empty($out['title'])) $out['title'] = $obj->defaultTitle();
 				if (empty($out['title'])) $out['title'] = explode(':',$obj->nodeId(),2)[1];
 				$objParent = $obj->getParent();
 			}
