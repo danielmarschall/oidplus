@@ -132,11 +132,11 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 			}
 
 			$connection_string = array();
-			if ($hostname != '') $connection_string[] = "host=$hostname";
-			if ($username != '') $connection_string[] = "user=$username";
-			if ($password != '') $connection_string[] = "password=$password";
-			if ($port     != '') $connection_string[] = "port=$port";
-			if ($database != '') $connection_string[] = "dbname=$database";
+			if ($hostname != '') $connection_string[] = "host='".str_replace("'", "\\'", $hostname)."'";
+			if ($username != '') $connection_string[] = "user='".str_replace("'", "\\'", $username)."'";
+			if ($password != '') $connection_string[] = "password='".str_replace("'", "\\'", $password)."'";
+			if ($port     != '') $connection_string[] = "port='".str_replace("'", "\\'", $port)."'";
+			if ($database != '') $connection_string[] = "dbname='".str_replace("'", "\\'", $database)."'";
 
 			// We need to use PGSQL_CONNECT_FORCE_NEW because we require two connectoins (for isolated log message queries)
 			$this->conn = pg_connect(implode(' ', $connection_string), PGSQL_CONNECT_FORCE_NEW);
