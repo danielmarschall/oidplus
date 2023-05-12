@@ -132,6 +132,8 @@ class OIDplusGui extends OIDplusBaseClass {
 	public static function html_exception_handler(\Throwable $exception) {
 		// Note: This method must be static, because of its registration as Exception handler
 
+		if (PHP_SAPI != 'cli') @http_response_code(500);
+
 		if ($exception instanceof OIDplusException) {
 			$htmlTitle = $exception->gethtmlTitle();
 			$htmlMessage = $exception->getHtmlMessage();
