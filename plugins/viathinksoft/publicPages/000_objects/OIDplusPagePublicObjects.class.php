@@ -25,7 +25,8 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1, /* oobeEntry, oobeRequested */
-	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8  /* getNotifications */
+	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8, /* getNotifications */
+	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9  /* restApiCall */
 	           // Important: Do NOT implement INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7, because our getAlternativesForQuery() is the one that calls others!
 {
 
@@ -54,6 +55,71 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$res = OIDplus::db()->query("select id from ###objects where parent = ? and ".OIDplus::db()->getSlang()->isNullFunction('ra_email',"''")." = ?", array($id, $old_ra));
 		while ($row = $res->fetch_array()) {
 			$this->ra_change_rec($row['id'], $old_ra, $new_ra);
+		}
+	}
+
+	/**
+	 * Implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9
+	 * @param string $requestMethod
+	 * @param string $endpoint
+	 * @return array|false
+	 */
+	public function restApiCall(string $requestMethod, string $endpoint) {
+		if (str_starts_with($endpoint, 'objects/')) {
+			$id = substr($endpoint, strlen('objects/'));
+			if ($requestMethod == "GET") {
+				// TODO: Implement GET (Select)
+				http_response_code(501);
+				return array("error" => "Not implemented");
+			} else if ($requestMethod == "PUT") {
+				// TODO: Implement PUT (Replace)
+				http_response_code(501);
+				return array("error" => "Not implemented");
+			} else if ($requestMethod == "POST") {
+				// TODO: Implement POST (Insert)
+				http_response_code(501);
+				return array("error" => "Not implemented");
+			} else if ($requestMethod == "PATCH") {
+				// TODO: Implement PATCH (Modify)
+				http_response_code(501);
+				return array("error" => "Not implemented");
+			} else if ($requestMethod == "DELETE") {
+				try {
+					self::action('Delete', array("id" => $id));
+					http_response_code(200);
+					return array("status" => "OK");
+				} catch (\Exception $e) {
+					http_response_code(401); // TODO: We need some kind of Exception class to know for sure that the Exception is due to missing authentication!
+					return array("error" => $e->getMessage());
+				}
+			} else {
+				http_response_code(400);
+				return array("error" => "Unsupported request method");
+			}
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9
+	 * Outputs information about valid endpoints
+	 * @param string $kind Reserved for different kind of output format (i.e. OpenAPI "TODO"). Currently only 'html' is implemented
+	 * @return string
+	 */
+	public function restApiInfo(string $kind='html'): string {
+		if ($kind === 'html') {
+			// TODO: Make a good documentation.....
+			$out = '<ul><li><b>Objects API</b><ul>';
+			$out .= '<li>GET objects/[id]<ul><li>Input parameters: None</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
+			$out .= '<li>PUT objects/[id]<ul><li>Input parameters: WORK IN PROGRESS</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
+			$out .= '<li>POST objects/[id]<ul><li>Input parameters: WORK IN PROGRESS</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
+			$out .= '<li>PATCH objects/[id]<ul><li>Input parameters: WORK IN PROGRESS</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
+			$out .= '<li>DELETE objects/[id]<ul><li>Input parameters: None</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
+			$out .= '</ul></li></ul>';
+			return $out;
+		} else {
+			throw new OIDplusException(_L('Invalid REST API information format'));
 		}
 	}
 

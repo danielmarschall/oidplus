@@ -635,6 +635,20 @@ Allow JWT tokens that were created using the admin-plugin
 Allow JWT tokens that were created using the RA-plugin
 "Automated AJAX calls".
 
+### JWT_ALLOW_REST_ADMIN
+
+    OIDplus::baseConfig()->setValue('JWT_ALLOW_REST_ADMIN', true);
+
+Allow JWT tokens that were created using the admin-plugin
+"REST API".
+    
+### JWT_ALLOW_REST_USER
+
+    OIDplus::baseConfig()->setValue('JWT_ALLOW_REST_USER', true);
+
+Allow JWT tokens that were created using the RA-plugin
+"REST API".
+
 ### JWT_ALLOW_LOGIN_ADMIN
 
     OIDplus::baseConfig()->setValue('JWT_ALLOW_LOGIN_ADMIN', true);
