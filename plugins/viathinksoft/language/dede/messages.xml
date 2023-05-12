@@ -718,6 +718,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Authentication
+		]]></source>
+		<target><![CDATA[
+		Authentifizierung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.
 		]]></source>
 		<target><![CDATA[
@@ -2118,6 +2126,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Endpoints
+		]]></source>
+		<target><![CDATA[
+		Endpunkte
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Enforce SSL (always redirect)
 		]]></source>
 		<target><![CDATA[
@@ -3350,6 +3366,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Invalid REST API information format
+		]]></source>
+		<target><![CDATA[
+		Ungültiges REST API Dokumentations-Format
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Invalid WEID
 		]]></source>
 		<target><![CDATA[
@@ -4234,6 +4258,14 @@
 		]]></source>
 		<target><![CDATA[
 		Kein passender Hash-Algorithmus gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		No installed plugin offers a REST functionality
+		]]></source>
+		<target><![CDATA[
+		Keine installierten Plugins bieten eine REST-Funktionalität an
 		]]></target>
 	</message>
 	<message>
@@ -5934,6 +5966,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		REST API
+		]]></source>
+		<target><![CDATA[
+		REST API
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		RFC Internet Draft
 		]]></source>
 		<target><![CDATA[
@@ -7174,6 +7214,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The authentication is done via the following HTTP header:
+		]]></source>
+		<target><![CDATA[
+		Die Authentifizierung erfolgt über die folgende HTTP-Kopfzeile:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The database driver has problems with "%1"
 		]]></source>
 		<target><![CDATA[
@@ -7242,6 +7290,14 @@
 		]]></source>
 		<target><![CDATA[
 		Die Ordner "userdata" und "userdata_pub" sowie Drittanbieter-Plugins (Inhalte in "plugins", die nicht "viathinksoft" sind) werden nicht aufgelistet.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The following endpoints are registered by the plugins in this system:
+		]]></source>
+		<target><![CDATA[
+		Die folgenden Endpunkte werden durch Plugins in diesem System zur Verfügung gestellt:
 		]]></target>
 	</message>
 	<message>
@@ -7582,18 +7638,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		This kind of JWT token can only be used in ajax.php
+		This kind of JWT token (%1) cannot be used in this request type
 		]]></source>
 		<target><![CDATA[
-		Dieser JWT Token kann nur in ajax.php verwendet werden
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		This kind of JWT token can only be used with the %1 request type
-		]]></source>
-		<target><![CDATA[
-		Dieser JWT Token kann nur mit dem %1 Anfragetyp verwendet werden
+		Diese Art von JWT-Token (%1) ist nicht für diesen Aufruf-Typ bestimmt
 		]]></target>
 	</message>
 	<message>
@@ -8386,6 +8434,14 @@
 		]]></source>
 		<target><![CDATA[
 		Sie können den Administrator dieses OIDplus-Systems unter dieser E-Mail-Adresse erreichen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		You can make automated calls to your OIDplus account by calling an REST API.
+		]]></source>
+		<target><![CDATA[
+		Die REST API bietet die Möglichkeit, Aufgaben automatisiert über Ihr OIDplus-Konto durchzuführen.
 		]]></target>
 	</message>
 	<message>

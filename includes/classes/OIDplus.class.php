@@ -2224,6 +2224,12 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public static function getCurrentLang() {
+
+		$rel_url = substr($_SERVER['REQUEST_URI'], strlen(OIDplus::webpath(null, OIDplus::PATH_RELATIVE_TO_ROOT)));
+		if (str_starts_with($rel_url, 'rest/')) { // <== TODO: Find a way how to move this into the plugin, since REST does not belong to the core. (Maybe some kind of "stateless mode" that is enabled by the REST plugin)
+			return self::getDefaultLang();
+		}
+
 		if (isset($_GET['lang'])) {
 			$lang = $_GET['lang'];
 		} else if (isset($_POST['lang'])) {

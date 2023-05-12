@@ -33,15 +33,19 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	/**
 	 * "Automated AJAX" plugin
 	 */
-	const JWT_GENERATOR_AJAX   = 0;
+	const JWT_GENERATOR_AJAX   = 10;
+	/**
+	 * "REST API" plugin
+	 */
+	const JWT_GENERATOR_REST   = 20;
 	/**
 	 * "Remember me" login method
 	 */
-	const JWT_GENERATOR_LOGIN  = 1;
+	const JWT_GENERATOR_LOGIN  = 40;
 	/**
 	 * "Manually crafted" JWT tokens
 	 */
-	const JWT_GENERATOR_MANUAL = 2;
+	const JWT_GENERATOR_MANUAL = 80;
 
 	/**
 	 * @param int $gen OIDplusAuthContentStoreJWT::JWT_GENERATOR_...
@@ -49,8 +53,20 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	 * @return string
 	 */
 	private static function jwtGetBlacklistConfigKey(int $gen, string $sub): string {
-		// Note: Needs to be <= 50 characters!
+		// Note: Needs to be <= 50 characters! If $gen is 2 chars, then the config key is 49 chars long
 		return 'jwt_blacklist_gen('.$gen.')_sub('.trim(base64_encode(md5($sub,true)),'=').')';
+	}
+
+	/**
+	 * @param int $gen
+	 */
+	private static function generatorName($gen) {
+		// Note: The strings are not translated, because the name is used in config keys or logs
+		if ($gen === self::JWT_GENERATOR_AJAX)   return 'Automated AJAX calls';
+		if ($gen === self::JWT_GENERATOR_REST)   return 'REST API';
+		if ($gen === self::JWT_GENERATOR_LOGIN)  return 'Login ("Remember me")';
+		if ($gen === self::JWT_GENERATOR_MANUAL) return 'Manually created';
+		return 'Unknown generator';
 	}
 
 	/**
@@ -63,10 +79,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		$cfg = self::jwtGetBlacklistConfigKey($gen, $sub);
 		$bl_time = time()-1;
 
-		$gen_desc = 'Unknown';
-		if ($gen === self::JWT_GENERATOR_AJAX)   $gen_desc = 'Automated AJAX calls';
-		if ($gen === self::JWT_GENERATOR_LOGIN)  $gen_desc = 'Login ("Remember me")';
-		if ($gen === self::JWT_GENERATOR_MANUAL) $gen_desc = 'Manually created';
+		$gen_desc = self::generatorName($gen);
 
 		OIDplus::config()->prepareConfigKey($cfg, 'Revoke timestamp of all JWT tokens for $sub with generator $gen ($gen_desc)', "$bl_time", OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 		OIDplus::config()->setValue($cfg, $bl_time);
@@ -84,11 +97,13 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	}
 
 	/**
+	 * Do various checks if the token is allowed and not blacklisted
 	 * @param OIDplusAuthContentStore $contentProvider
+	 * @param int $validGenerators Bitmask which generators to allow (-1 = allow all)
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	private static function jwtSecurityCheck(OIDplusAuthContentStore $contentProvider) {
+	private static function jwtSecurityCheck(OIDplusAuthContentStore $contentProvider, int $validGenerators=-1) {
 		// Check if the token is intended for us
 		if ($contentProvider->getValue('aud','') !== OIDplus::getEditionInfo()['jwtaud']) {
 			throw new OIDplusException(_L('Token has wrong audience'));
@@ -107,6 +122,16 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 			if (($has_ra) && !OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_USER', true)) {
 				// Generator: plugins/viathinksoft/raPages/910_automated_ajax_calls/OIDplusPageRaAutomatedAJAXCalls.class.php
 				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_USER'));
+			}
+		}
+		else if ($gen === self::JWT_GENERATOR_REST) {
+			if (($has_admin) && !OIDplus::baseConfig()->getValue('JWT_ALLOW_REST_ADMIN', true)) {
+				// Generator: plugins/viathinksoft/adminPages/911_rest_api/OIDplusPageAdminRestApi.class.php
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_REST_ADMIN'));
+			}
+			if (($has_ra) && !OIDplus::baseConfig()->getValue('JWT_ALLOW_REST_USER', true)) {
+				// Generator: plugins/viathinksoft/raPages/911_rest_api/OIDplusPageRaRestApi.class.php
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_REST_USER'));
 			}
 		}
 		else if ($gen === self::JWT_GENERATOR_LOGIN) {
@@ -156,18 +181,10 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 			}
 		}
 
-		// Checks which are dependent on the generator
-		if ($gen === self::JWT_GENERATOR_LOGIN) {
-			if (!isset($_COOKIE[self::COOKIE_NAME])) {
-				throw new OIDplusException(_L('This kind of JWT token can only be used with the %1 request type','COOKIE'));
-			}
-		}
-		if ($gen === self::JWT_GENERATOR_AJAX) {
-			if (!isset($_GET[self::COOKIE_NAME]) && !isset($_POST[self::COOKIE_NAME])) {
-				throw new OIDplusException(_L('This kind of JWT token can only be used with the %1 request type','GET/POST'));
-			}
-			if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) {
-				throw new OIDplusException(_L('This kind of JWT token can only be used in ajax.php'));
+		// Checks if JWT are dependent on the generator
+		if ($validGenerators !== -1) {
+			if (($gen & $validGenerators) === 0) {
+				throw new OIDplusException(_L('This kind of JWT token (%1) cannot be used in this request type', self::generatorName($gen)));
 			}
 		}
 	}
@@ -250,33 +267,64 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	 */
 	public static function getActiveProvider()/*: ?OIDplusAuthContentStore*/ {
 		if (!self::$contentProvider) {
-			$jwt = '';
-			if (isset($_COOKIE[self::COOKIE_NAME])) $jwt = $_COOKIE[self::COOKIE_NAME];
-			if (isset($_POST[self::COOKIE_NAME]))   $jwt = $_POST[self::COOKIE_NAME];
-			if (isset($_GET[self::COOKIE_NAME]))    $jwt = $_GET[self::COOKIE_NAME];
 
-			if (!empty($jwt)) {
-				$tmp = new OIDplusAuthContentStoreJWT();
+			$tmp = null;
+			$silent_error = false;
 
-				try {
-					// Decode the JWT. In this step, the signature as well as EXP/NBF times will be checked
-					$tmp->loadJWT($jwt);
+			try {
 
-					// Do various checks if the token is allowed and not blacklisted
-					self::jwtSecurityCheck($tmp);
-				} catch (\Exception $e) {
-					if (isset($_GET[self::COOKIE_NAME]) || isset($_POST[self::COOKIE_NAME])) {
-						// Most likely an AJAX request. We can throw an Exception
-						throw new OIDplusException(_L('The JWT token was rejected: %1',$e->getMessage()));
-					} else {
-						// Most likely an expired Cookie/Login session. We must not throw an Exception, otherwise we will break jsTree
-						OIDplus::cookieUtils()->unsetcookie(self::COOKIE_NAME);
-						return null;
+				$rel_url = substr($_SERVER['REQUEST_URI'], strlen(OIDplus::webpath(null, OIDplus::PATH_RELATIVE_TO_ROOT)));
+				if (str_starts_with($rel_url, 'rest/')) { // <== TODO: Find a way how to move this into the plugin, since REST does not belong to the core.
+
+					// REST may only use Bearer Authentication
+					$bearer = getBearerToken();
+					if (!is_null($bearer)) {
+						$silent_error = false;
+						$tmp = new OIDplusAuthContentStoreJWT();
+						$tmp->loadJWT($bearer);
+						self::jwtSecurityCheck($tmp, self::JWT_GENERATOR_REST | self::JWT_GENERATOR_MANUAL);
 					}
+
+				} else {
+
+					// A web-visitor (HTML and AJAX, but not REST) can use a JWT "remember me" Cookie
+					if (isset($_COOKIE[self::COOKIE_NAME])) {
+						$silent_error = true;
+						$tmp = new OIDplusAuthContentStoreJWT();
+						$tmp->loadJWT($_COOKIE[self::COOKIE_NAME]);
+						self::jwtSecurityCheck($tmp, self::JWT_GENERATOR_LOGIN | self::JWT_GENERATOR_MANUAL);
+					}
+
+					// AJAX may additionally use GET/POST automated AJAX (in addition to the normal JWT "remember me" Cookie)
+					if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) {
+						if (isset($_POST[self::COOKIE_NAME])) {
+							$silent_error = false;
+							$tmp = new OIDplusAuthContentStoreJWT();
+							$tmp->loadJWT($_POST[self::COOKIE_NAME]);
+							self::jwtSecurityCheck($tmp, self::JWT_GENERATOR_AJAX | self::JWT_GENERATOR_MANUAL);
+						}
+						if (isset($_GET[self::COOKIE_NAME])) {
+							$silent_error = false;
+							$tmp = new OIDplusAuthContentStoreJWT();
+							$tmp->loadJWT($_GET[self::COOKIE_NAME]);
+							self::jwtSecurityCheck($tmp, self::JWT_GENERATOR_AJAX | self::JWT_GENERATOR_MANUAL);
+						}
+					}
+
 				}
 
-				self::$contentProvider = $tmp;
+			} catch (\Exception $e) {
+				if (!$silent_error) {
+					// Most likely an AJAX request. We can throw an Exception
+					throw new OIDplusException(_L('The JWT token was rejected: %1',$e->getMessage()));
+				} else {
+					// Most likely an expired Cookie/Login session. We must not throw an Exception, otherwise we will break jsTree
+					OIDplus::cookieUtils()->unsetcookie(self::COOKIE_NAME);
+					return null;
+				}
 			}
+
+			self::$contentProvider = $tmp;
 		}
 
 		return self::$contentProvider;
@@ -297,6 +345,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 			$gen = $this->getValue('oidplus_generator',-1);
 			switch ($gen) {
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_AJAX :
+				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_REST :
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_MANUAL :
 					throw new OIDplusException(_L('This kind of JWT token cannot be altered. Therefore you cannot do this action.'));
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN :
@@ -327,6 +376,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 			$gen = $this->getValue('oidplus_generator',-1);
 			switch ($gen) {
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_AJAX :
+				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_REST :
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_MANUAL :
 					throw new OIDplusException(_L('This kind of JWT token cannot be altered. Therefore you cannot do this action.'));
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN :
@@ -346,6 +396,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	// Individual functions
 
 	/**
+	 * Decode the JWT. In this step, the signature as well as EXP/NBF times will be checked
 	 * @param string $jwt
 	 * @return void
 	 * @throws OIDplusException
