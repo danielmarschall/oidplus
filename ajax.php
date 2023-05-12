@@ -19,13 +19,14 @@
 
 use ViaThinkSoft\OIDplus\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\OIDplusAuthContentStoreJWT;
 
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
 try {
 	OIDplus::init(false);
 
-	if (isset($_GET['OIDPLUS_AUTH_JWT']) || isset($_POST['OIDPLUS_AUTH_JWT'])) {
+	if (isset($_GET[OIDplusAuthContentStoreJWT::COOKIE_NAME]) || isset($_POST[OIDplusAuthContentStoreJWT::COOKIE_NAME])) {
 		originHeaders(); // Allows queries from other domains
 		OIDplus::authUtils()->disableCSRF(); // allow access to ajax.php without valid CSRF token
 	}

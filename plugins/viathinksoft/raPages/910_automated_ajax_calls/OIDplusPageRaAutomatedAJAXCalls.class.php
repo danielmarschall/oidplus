@@ -95,7 +95,7 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 			$out['text'] .= '<p><b>'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php</b></p>';
 			$out['text'] .= '<p>'._L('You must at least provide following fields:').'</p>';
 			$out['text'] .= '<p><pre>';
-			$out['text'] .= 'OIDPLUS_AUTH_JWT = "'.htmlentities($token).'"'."\n";
+			$out['text'] .= htmlentities(OIDplusAuthContentStoreJWT::COOKIE_NAME).' = "'.htmlentities($token).'"'."\n";
 			$out['text'] .= '</pre></p>';
 			$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(oidplus_auth_jwt)"></p>';
 			$out['text'] .= '<p>'._L('Please keep this information confidential!').'</p>';
