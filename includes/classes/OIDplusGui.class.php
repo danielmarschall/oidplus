@@ -49,6 +49,9 @@ class OIDplusGui extends OIDplusBaseClass {
 				} else {
 					$out['text'] = '<p>'.$htmlmsg.'</p>';
 				}
+				if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
+					if (PHP_SAPI != 'cli') @http_response_code($e instanceof OIDplusException ? $e->getHttpStatus() : 500);
+				}
 				if (OIDplus::baseConfig()->getValue('DEBUG')) {
 					$out['text'] .= self::getExceptionTechInfo($e);
 				}
@@ -132,16 +135,19 @@ class OIDplusGui extends OIDplusBaseClass {
 	public static function html_exception_handler(\Throwable $exception) {
 		// Note: This method must be static, because of its registration as Exception handler
 
-		if (PHP_SAPI != 'cli') @http_response_code(500);
-
 		if ($exception instanceof OIDplusException) {
 			$htmlTitle = $exception->gethtmlTitle();
 			$htmlMessage = $exception->getHtmlMessage();
+			if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
+				if (PHP_SAPI != 'cli') @http_response_code($exception->getHttpStatus());
+			}
 		} else {
 			$htmlTitle = '';
 			//$htmlMessage = htmlentities($exception->getMessage());
 			$htmlMessage = nl2br(htmlentities(html_to_text($exception->getMessage())));
-
+			if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
+				if (PHP_SAPI != 'cli') @http_response_code(500);
+			}
 		}
 		if (!$htmlTitle) {
 			$htmlTitle = _L('OIDplus Error');

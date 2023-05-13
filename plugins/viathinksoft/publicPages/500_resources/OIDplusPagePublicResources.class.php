@@ -240,7 +240,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 			if ($file != '') {
 				if (!self::mayAccessResource($file)) {
-					throw new OIDplusException(_L('Authentication error. Please log in.'), _L('Access denied'));
+					throw new OIDplusException(_L('Authentication error. Please log in.'), _L('Access denied'), 401);
 				}
 			}
 

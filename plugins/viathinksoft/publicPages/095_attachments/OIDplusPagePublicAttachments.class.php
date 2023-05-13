@@ -187,7 +187,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if (!$obj) throw new OIDplusException(_L('Invalid object "%1"',$id));
-			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.',$id));
+			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.',$id), null, 401);
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn() && !$this->raMayDelete()) {
 				throw new OIDplusException(_L('The administrator has disabled deleting attachments by RAs.'));
@@ -228,7 +228,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
 			if (!$obj) throw new OIDplusException(_L('Invalid object "%1"',$id));
-			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.',$id));
+			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.',$id), null, 401);
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn() && !$this->raMayUpload()) {
 				throw new OIDplusException(_L('The administrator has disabled uploading attachments by RAs.'));

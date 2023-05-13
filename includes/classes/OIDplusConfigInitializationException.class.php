@@ -46,7 +46,7 @@ class OIDplusConfigInitializationException extends OIDplusHtmlException {
 			$message = '<p>'.$message.'</p><p>Please check the file <b>userdata/baseconfig/config.inc.php</b> or run <b>setup/</b> again</p>';
 		}
 
-		parent::__construct($message, $title);
+		parent::__construct($message, $title, 500);
 	}
 
 }

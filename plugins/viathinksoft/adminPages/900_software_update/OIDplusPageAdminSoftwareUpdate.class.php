@@ -59,7 +59,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 			@set_time_limit(0);
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
+				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
 			}
 
 			if (OIDplus::getInstallType() === 'git-wc') {
@@ -196,7 +196,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), $out['title']);
+				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), $out['title'], 401);
 			}
 
 			$out['text'] .= '<div id="update_versioninfo">';

@@ -34,11 +34,18 @@ class OIDplusException extends \Exception {
 	protected $title = null;
 
 	/**
+	 * @var int
+	 */
+	protected $httpStatus = 500;
+
+	/**
 	 * @param string $message
 	 * @param string|null $title
+	 * @param int $httpStatus
 	 */
-	public function __construct(string $message, string $title=null) {
+	public function __construct(string $message, string $title=null, int $httpStatus=500) {
 		$this->title = $title;
+		$this->httpStatus = $httpStatus;
 		parent::__construct($message);
 	}
 
@@ -50,11 +57,19 @@ class OIDplusException extends \Exception {
 	}
 
 	/**
+	 * @return int
+	 */
+	public function getHttpStatus(): int {
+		return $this->httpStatus;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getHtmlTitle(): string {
 		return htmlentities($this->getTitle(), ENT_SUBSTITUTE); // ENT_SUBSTITUTE because ODBC drivers might return ANSI instead of UTF-8 stuff
 	}
+
 	/**
 	 * @return string
 	 */
