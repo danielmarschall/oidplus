@@ -20,6 +20,7 @@
 use ViaThinkSoft\OIDplus\OIDplus;
 use ViaThinkSoft\OIDplus\OIDplusException;
 use ViaThinkSoft\OIDplus\OIDplusGui;
+use ViaThinkSoft\OIDplus\OIDplusHtmlException;
 use ViaThinkSoft\OIDplus\OIDplusPageAdminOIDInfoExport;
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
@@ -41,8 +42,7 @@ if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 		// echo "You need to log in as administrator.\n";
 		// die();
 	} else {
-		echo '<p>'._L('You need to <a %1>log in</a> as administrator.','href="'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'?goto=oidplus%3Alogin%24admin"').'</p>';
-		die();
+		throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.','href="'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'?goto=oidplus%3Alogin%24admin"'), null, 401);
 	}
 }
 

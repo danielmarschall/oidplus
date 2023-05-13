@@ -37,7 +37,7 @@ if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus
 }
 
 if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-	throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')));
+	throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
 }
 
 if (!class_exists('ZipArchive')) {

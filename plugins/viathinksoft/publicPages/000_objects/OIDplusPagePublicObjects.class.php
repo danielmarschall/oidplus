@@ -89,7 +89,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					http_response_code(200);
 					return array("status" => "OK");
 				} catch (\Exception $e) {
-					http_response_code(401); // TODO: We need some kind of Exception class to know for sure that the Exception is due to missing authentication!
+					http_response_code($e instanceof OIDplusException ? $e->getHttpStatus() : 500);
 					return array("error" => $e->getMessage());
 				}
 			} else {
@@ -147,7 +147,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 
 			// Check if permitted
-			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to delete this OID.'));
+			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to delete this OID.'), null, 401);
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
@@ -213,7 +213,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 
 			// Check if permitted
-			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to update this OID.'));
+			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to update this OID.'), null, 401);
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
@@ -349,7 +349,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 
 			// Check if allowed
-			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the RA to update this OID.'));
+			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the RA to update this OID.'), null, 401);
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
@@ -414,7 +414,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				}
 			}
 
-			if (!$objParent->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the correct RA to insert an OID at this arc.'));
+			if (!$objParent->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the correct RA to insert an OID at this arc.'), null, 401);
 
 			// Check if the ID is valid
 			_CheckParamExists($params, 'id');
@@ -731,7 +731,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) { // don't send HTTP error codes in ajax.php, because we want a page and not a JavaScript alert box, when someone enters an invalid OID in the GoTo-Box
 					http_response_code(403);
 				}
-				throw new OIDplusHtmlException(_L('Please <a %1>log in</a> to receive information about this object.',OIDplus::gui()->link('oidplus:login')), _L('Access denied'));
+				throw new OIDplusHtmlException(_L('Please <a %1>log in</a> to receive information about this object.',OIDplus::gui()->link('oidplus:login')), _L('Access denied'), 401);
 			}
 
 			// ---

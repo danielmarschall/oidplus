@@ -233,7 +233,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				}
 			}
 			if (!$ok) {
-				throw new OIDplusHtmlException(_L('You may not invite this RA. Maybe you need to <a %1>log in</a> again.',OIDplus::gui()->link('oidplus:login')));
+				throw new OIDplusHtmlException(_L('You may not invite this RA. Maybe you need to <a %1>log in</a> again.',OIDplus::gui()->link('oidplus:login')), null, 401);
 			}
 		}
 	}

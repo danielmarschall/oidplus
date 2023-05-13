@@ -46,7 +46,7 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 			$ra_logged_in = OIDplus::authUtils()->isRaLoggedIn($email);
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn() && !$ra_logged_in) {
-				throw new OIDplusException(_L('Authentication error. Please log in.'));
+				throw new OIDplusException(_L('Authentication error. Please log in.'), null, 401);
 			}
 
 			if ($ra_logged_in) OIDplus::authUtils()->raLogout($email);
