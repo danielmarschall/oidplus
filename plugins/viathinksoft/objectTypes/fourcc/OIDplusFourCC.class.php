@@ -269,7 +269,7 @@ class OIDplusFourCC extends OIDplusObject {
 	 */
 	public function one_up()/*: ?OIDplusFourCC*/ {
 		// A FourCC is a FourCC, there is no hierarchy
-		return null;
+		return self::parse(self::ns().':');
 	}
 
 	/**

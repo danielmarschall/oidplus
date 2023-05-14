@@ -96,6 +96,7 @@ var OIDplusPagePublicObjects = {
 				plugin:OIDplusPagePublicObjects.oid,
 				action:"Insert",
 				id:$("#id")[0].value,
+				id_fully_qualified:false,
 				ra_email:$("#ra_email")[0].value,
 				comment:$("#comment")[0].value,
 				asn1ids:($("#asn1ids")[0] ? $("#asn1ids")[0].value : null),

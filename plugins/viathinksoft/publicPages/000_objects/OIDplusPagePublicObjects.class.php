@@ -68,15 +68,64 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		if (str_starts_with($endpoint, 'objects/')) {
 			$id = substr($endpoint, strlen('objects/'));
 			if ($requestMethod == "GET"/*Select*/) {
-				// TODO: Implement GET
-				http_response_code(501);
-				return array("error" => "Not implemented");
+				$output = array();
+
+				$res = OIDplus::db()->query("select id, ra_email, comment, confidential, title, description from ###objects where id = ?", array($id));
+				if (!$res->any()) throw new OIDplusException(_L('The object %1 was not found in this database.', $id), null, 404);
+				$row = $res->fetch_array();
+
+				//$output['id'] = $row['id'];
+				$output['ra_email'] = $row['ra_email'];
+				$output['comment'] = $row['comment'];
+				$output['confidential'] = $row['confidential'];
+				$output['title'] = $row['title'];
+				$output['description'] = $row['description'];
+
+				$output['asn1ids'] = array();
+				$res_asn = OIDplus::db()->query("select name from ###asn1id where oid = ?", array($id));
+				while ($row_asn = $res_asn->fetch_array()) {
+					$output['asn1ids'][] = $row_asn['name'];
+				}
+
+				$output['iris'] = array();
+				$res_iri = OIDplus::db()->query("select name from ###iri where oid = ?", array($id));
+				while ($row_iri = $res_iri->fetch_array()) {
+					$output['iris'][] = $row_iri['name'];
+				}
+
+				http_response_code(200);
+				$output['status'] = 0/*OK*/;
+				return $output;
 			} else if ($requestMethod == "PUT"/*Replace*/) {
-				// TODO: Implement PUT
-				http_response_code(501);
-				return array("error" => "Not implemented");
+				$obj = OIDplusObject::parse($id);
+				if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!', 'PUT', $id), null, 400);
+
+				$params = array();
+				$params['id'] = $id;
+				$params['ra_email'] = $_POST['ra_email'] ?? '';
+				$params['comment'] = $_POST['comment'] ?? '';
+				$params['confidential'] = $_POST['confidential'] ?? false;
+				$params['title'] = $_POST['title'] ?? '';
+				$params['description'] = $_POST['description'] ?? '';
+				$params['asn1ids'] = $_POST['asn1ids'] ?? array();
+				$params['iris'] = $_POST['iris'] ?? array();
+
+				if (OIDplusObject::exists($id)) {
+					// TODO: Problem: The superior RA cannot set title/description, so they cannot perform the PUT command!
+					$res = self::action('Update', $params);
+				} else {
+					$params['parent'] = $obj->getParent();
+					$params['id_fully_qualified'] = true;
+					$res = self::action('Insert', $params);
+				}
+				http_response_code(200);
+				return $res;
 			} else if ($requestMethod == "POST"/*Insert*/) {
 				$params = $_POST;
+				$obj = OIDplusObject::parse($id);
+				if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!', 'GET', $id), null, 400);
+				$params['parent'] = $obj->getParent();
+				$params['id_fully_qualified'] = true;
 				$params['id'] = $id;
 				$res = self::action('Insert', $params);
 				http_response_code(200);
@@ -94,11 +143,33 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				http_response_code(200);
 				return $res;
 			} else {
-				throw new OIDplusException(_L("Unsupported request method"), null, 404);
+				//throw new OIDplusException(_L("Not implemented"), null, 501);
+				throw new OIDplusException(_L("Unsupported request method"), null, 400);
 			}
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * @param array $struct
+	 * @return string
+	 */
+	private function array_to_html_ul_li(array $struct): string {
+		// TODO: put in includes/functions.inc.php
+		$res = '';
+		$res .= '<ul>';
+		foreach ($struct as $name => $val) {
+			$res .= '<li>';
+			if (is_array($val)) {
+				$res .= $name . self::array_to_html_ul_li($val);
+			} else {
+				$res .= $val;
+			}
+			$res .= '</li>';
+		}
+		$res .= '</ul>';
+		return $res;
 	}
 
 	/**
@@ -109,17 +180,80 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	public function restApiInfo(string $kind='html'): string {
 		if ($kind === 'html') {
-			// TODO: Make a good documentation.....
-			$out = '<ul><li><b>Objects API</b> (Work in progress, not tested)<ul>';
-			$out .= '<li>GET objects/[id]<ul><li>Input parameters: None</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
-			$out .= '<li>PUT objects/[id]<ul><li>Input parameters: WORK IN PROGRESS</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
-			$out .= '<li>POST objects/[id]<ul><li>Input parameters: WORK IN PROGRESS</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
-			$out .= '<li>PATCH objects/[id]<ul><li>Input parameters: ra_email (optional), comment (optional), iris (optional), asn1ids (optional), confidential (optional), title (optional), description (optional)</li><li>Output parameters: status|error</li></ul></li>';
-			$out .= '<li>DELETE objects/[id]<ul><li>Input parameters: None</li><li>Output parameters: status|error</li></ul></li>';
-			$out .= '</ul></li></ul>';
-			return $out;
+			$struct = [
+				"Objects API" => [
+					'('._L('Receive').') GET objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+						_L('Input parameters') => [
+							'<i>'._L('None').'</i>'
+						],
+						_L('Output parameters') => [
+							'status|error',
+							'ra_email',
+							'comment',
+							'iris',
+							'asn1ids',
+							'confidential',
+							'title',
+							'description'
+						]
+					],
+					'('._L('Re-Create').') PUT objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+						_L('Input parameters') => [
+							'ra_email ('._L('optional').')',
+							'comment ('._L('optional').')',
+							'iris ('._L('optional').')',
+							'asn1ids ('._L('optional').')',
+							'confidential ('._L('optional').')',
+							'title ('._L('optional').')',
+							'description ('._L('optional').')'
+						],
+						_L('Output parameters') => [
+							'status|error',
+							'inserted_id ('._L('if it was created').')'
+						]
+					],
+					'('._L('Create').') POST objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+						_L('Input parameters') => [
+							'ra_email ('._L('optional').')',
+							'comment ('._L('optional').')',
+							'iris ('._L('optional').')',
+							'asn1ids ('._L('optional').')',
+							'confidential ('._L('optional').')',
+							'title ('._L('optional').')',
+							'description ('._L('optional').')'
+						],
+						_L('Output parameters') => [
+							'status|error',
+							'inserted_id'
+						]
+					],
+					'('._L('Update').') PATCH objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+						_L('Input parameters') => [
+							'ra_email ('._L('optional').')',
+							'comment ('._L('optional').')',
+							'iris ('._L('optional').')',
+							'asn1ids ('._L('optional').')',
+							'confidential ('._L('optional').')',
+							'title ('._L('optional').')',
+							'description ('._L('optional').')'
+						],
+						_L('Output parameters') => [
+							'status|error'
+						]
+					],
+					'('._L('Remove').') DELETE objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+						_L('Input parameters') => [
+							'<i>'._L('None').'</i>'
+						],
+						_L('Output parameters') => [
+							'status|error'
+						]
+					]
+				]
+			];
+			return self::array_to_html_ul_li($struct);
 		} else {
-			throw new OIDplusException(_L('Invalid REST API information format'));
+			throw new OIDplusException(_L('Invalid REST API information format'), null, 500);
 		}
 	}
 
@@ -142,7 +276,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','DELETE',$id));
 
 			if (!OIDplusObject::exists($id)) {
-				throw new OIDplusException(_L('Object %1 does not exist',$id));
+				throw new OIDplusException(_L('Object %1 does not exist',$id), null, 404);
 			}
 
 			// Check if permitted
@@ -208,7 +342,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE',$id));
 
 			if (!OIDplusObject::exists($id)) {
-				throw new OIDplusException(_L('Object %1 does not exist',$id));
+				throw new OIDplusException(_L('Object %1 does not exist',$id), null, 404);
 			}
 
 			// Check if permitted
@@ -230,13 +364,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if (!$obj->isWellKnown()) {
 					if (isset($params['iris'])) {
-						$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
+						$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
 						$ids = array_map('trim',$ids);
 						$obj->replaceIris($ids, true);
 					}
 
 					if (isset($params['asn1ids'])) {
-						$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
+						$ids = ($params['asn1ids'] == '') ? array() : (is_array($params['asn1ids']) ? $params['asn1ids'] : explode(',',$params['asn1ids']));
 						$ids = array_map('trim',$ids);
 						$obj->replaceAsn1Ids($ids, true);
 					}
@@ -283,13 +417,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if (!$obj->isWellKnown()) {
 					if (isset($params['iris'])) {
-						$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
+						$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
 						$ids = array_map('trim',$ids);
 						$obj->replaceIris($ids, false);
 					}
 
 					if (isset($params['asn1ids'])) {
-						$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
+						$ids = ($params['asn1ids'] == '') ? array() : (is_array($params['asn1ids']) ? $params['asn1ids'] : explode(',',$params['asn1ids']));
 						$ids = array_map('trim',$ids);
 						$obj->replaceAsn1Ids($ids, false);
 					}
@@ -370,7 +504,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		}
 
 		// Action:     Insert
-		// Parameters: parent, id, ra_email, confidential, iris, asn1ids
+		// Parameters: parent, id (relative!), ra_email, comment, iris, asn1ids, confidential, title, description
 		// Outputs:    status=<0 Error, =0 Success, with following bitfields for further information:
 		//             x+1 = RA is not registered
 		//             x+2 = RA is not registered, but it cannot be invited
@@ -385,7 +519,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			if (!$objParent->isRoot()) {
 				$idParent = $objParent->nodeId();
 				if (!OIDplusObject::exists($idParent)) {
-					throw new OIDplusException(_L('Parent object %1 does not exist',$idParent));
+					throw new OIDplusException(_L('Parent object %1 does not exist',$idParent), null, 404);
 				}
 			}
 
@@ -412,15 +546,21 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 			// Determine absolute OID name
 			// Note: At addString() and parse(), the syntax of the ID will be checked
-			$id = $objParent->addString($params['id']);
+			if ($params['id_fully_qualified'] ?? false) {
+				$id = $params['id'];
+				$obj = OIDplusObject::parse($id);
+				$objParentTest = $obj->getParent();
+				if (!$objParentTest || !$objParentTest->equals($objParent)) throw new OIDplusException(_L('Cannot verify that %1 has parent %2', $obj->nodeId(), $objParent->nodeId()));
+			} else {
+				$id = $objParent->addString($params['id']);
+				$obj = OIDplusObject::parse($id);
+			}
+			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','INSERT',$id));
 
 			// Check, if the OID exists
 			if (OIDplusObject::exists($id)) {
 				throw new OIDplusException(_L('Object %1 already exists!',$id));
 			}
-
-			$obj = OIDplusObject::parse($id);
-			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','INSERT',$id));
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
@@ -433,13 +573,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if (!$obj->isWellKnown()) {
 					if (isset($params['iris'])) {
-						$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
+						$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
 						$ids = array_map('trim',$ids);
 						$obj->replaceIris($ids, true);
 					}
 
 					if (isset($params['asn1ids'])) {
-						$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
+						$ids = ($params['asn1ids'] == '') ? array() : (is_array($params['asn1ids']) ? $params['asn1ids'] : explode(',',$params['asn1ids']));
 						$ids = array_map('trim',$ids);
 						$obj->replaceAsn1Ids($ids, true);
 					}
@@ -470,8 +610,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 			$confidential = isset($params['confidential']) && $params['confidential'] == 'true';
 			$comment = $params['comment'] ?? '';
-			$title = '';
-			$description = '';
+			$title = $params['title'] ?? ''; // This is very special (only useable in REST API): The superior RA can set the title during creation, even if they lose their ownership by delegating afterwards!
+			$description = $params['description'] ?? ''; // This is very special (only useable in REST API): The superior RA can set the title during creation, even if they lose their ownership by delegating afterwards!
 
 			if (strlen($id) > OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')) {
 				$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH');
@@ -486,13 +626,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
 				if (!$obj->isWellKnown()) {
 					if (isset($params['iris'])) {
-						$ids = ($params['iris'] == '') ? array() : explode(',',$params['iris']);
+						$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
 						$ids = array_map('trim',$ids);
 						$obj->replaceIris($ids, false);
 					}
 
 					if (isset($params['asn1ids'])) {
-						$ids = ($params['asn1ids'] == '') ? array() : explode(',',$params['asn1ids']);
+						$ids = ($params['asn1ids'] == '') ? array() : (is_array($params['asn1ids']) ? $params['asn1ids'] : explode(',',$params['asn1ids']));
 						$ids = array_map('trim',$ids);
 						$obj->replaceAsn1Ids($ids, false);
 					}

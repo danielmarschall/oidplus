@@ -84,7 +84,7 @@ class OIDplusPageRaRestApi extends OIDplusPagePluginRa {
 
 			if (is_null(OIDplus::getPluginByOid("1.3.6.1.4.1.37476.2.5.2.4.1.2"))) { // OIDplusPagePublicRestApi
 				throw new OIDplusException(_L('The administrator has disabled this feature. (Plugin %1).','OIDplusPagePublicRestApi'), $out['title']);
-			}			
+			}
 
 			$gen = OIDplusAuthContentStoreJWT::JWT_GENERATOR_REST;
 			$sub = $ra_email;

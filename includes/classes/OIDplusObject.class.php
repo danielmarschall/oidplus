@@ -528,12 +528,12 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	public function getParent()/*: ?OIDplusObject*/ {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($this->nodeId()));
-			if (!$res->any()) return null;
-			$row = $res->fetch_array();
-			$parent = $row['parent'];
-			$obj = OIDplusObject::parse($parent);
-			if ($obj) return $obj;
-			// TODO: Also implement one_up() like below
+			if ($res->any()) {
+				$row = $res->fetch_array();
+				$parent = $row['parent'];
+				$obj = OIDplusObject::parse($parent);
+				if ($obj) return $obj;
+			}
 		} else {
 			self::buildObjectInformationCache();
 			if (isset(self::$object_info_cache[$this->nodeId()])) {
@@ -541,19 +541,20 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				$obj = OIDplusObject::parse($parent);
 				if ($obj) return $obj;
 			}
-
-			// If this OID does not exist, the SQL query "select parent from ..." does not work. So we try to find the next possible parent using one_up()
-			$cur = $this->one_up();
-			if (!$cur) return null;
-			do {
-				// findFitting() checks if that OID exists
-				if ($fitting = self::findFitting($cur->nodeId())) return $fitting;
-
-				$prev = $cur;
-				$cur = $cur->one_up();
-				if (!$cur) return null;
-			} while ($prev->nodeId() !== $cur->nodeId());
 		}
+
+		// If this OID does not exist, the SQL query "select parent from ..." does not work. So we try to find the next possible parent using one_up()
+		$cur = $this->one_up();
+		if (!$cur) return null;
+		do {
+			// findFitting() checks if that OID exists
+			if ($fitting = self::findFitting($cur->nodeId())) return $fitting;
+
+			$prev = $cur;
+			$cur = $cur->one_up();
+			if (!$cur) return null;
+		} while ($prev->nodeId() !== $cur->nodeId());
+
 		return null;
 	}
 
