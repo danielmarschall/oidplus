@@ -4254,6 +4254,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		No endpoints for this plugin found
+		]]></source>
+		<target><![CDATA[
+		Keine Endpunkte für dieses Plugin gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		No extra OIDs found
 		]]></source>
 		<target><![CDATA[
@@ -7326,10 +7334,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The following endpoints are registered by the plugins in this system:
+		The following installed plugins are offering REST endpoints:
 		]]></source>
 		<target><![CDATA[
-		Die folgenden Endpunkte werden durch Plugins in diesem System zur Verfügung gestellt:
+		Die folgenden installierten Plugins bieten REST Endpunkte an:
 		]]></target>
 	</message>
 	<message>
