@@ -48,6 +48,8 @@ class OIDplusLogger extends OIDplusBaseClass {
 			$maskcode = substr($maskcode, 3);
 		}
 
+		if ($maskcode == '') return false;
+
 		// Step 1: Split severities from the rest of the maskcodes
 		/*
 		 * "[ERR]AAA(BBB)+CCC(DDD)"   ==> array(
