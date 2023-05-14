@@ -79,10 +79,39 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				// TODO: Implement POST (Insert)
 				http_response_code(501);
 				return array("error" => "Not implemented");
-			} else if ($requestMethod == "PATCH") {
-				// TODO: Implement PATCH (Modify)
-				http_response_code(501);
-				return array("error" => "Not implemented");
+			} else if ($requestMethod == "PATCH"/*Modify*/) {
+				// TODO: TEST
+
+				$obj = OIDplusObject::parse($id);
+				if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','PATCH',$id), null, 400);
+				if (!OIDplusObject::exists($id)) throw new OIDplusException(_L('Object %1 does not exist',$id), null, 404);
+
+				$need_update1 = false;
+				if (isset($_POST['ra_email']) || isset($_POST['comment']) || isset($_POST['iris']) || isset($_POST['asn1ids']) || isset($_POST['confidential'])) {
+					if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to update this OID.'), null, 401);
+					$need_update1 = true;
+				}
+
+				$need_update2 = false;
+				if (isset($_POST['title']) || isset($_POST['description'])) {
+					if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the RA to update this OID.'), null, 401);
+					$need_update2 = true;
+				}
+
+				$params = $_POST;
+				$params['id'] = $id;
+
+				if ($need_update1) {
+					self::action('Update', $params);
+				}
+
+				if ($need_update2) {
+					self::action('Update2', $params);
+				}
+
+				http_response_code(200);
+				return array("status" => "OK");
+
 			} else if ($requestMethod == "DELETE") {
 				try {
 					self::action('Delete', array("id" => $id));
@@ -110,12 +139,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	public function restApiInfo(string $kind='html'): string {
 		if ($kind === 'html') {
 			// TODO: Make a good documentation.....
-			$out = '<ul><li><b>Objects API</b><ul>';
+			$out = '<ul><li><b>Objects API</b> (Work in progress, not tested)<ul>';
 			$out .= '<li>GET objects/[id]<ul><li>Input parameters: None</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
 			$out .= '<li>PUT objects/[id]<ul><li>Input parameters: WORK IN PROGRESS</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
 			$out .= '<li>POST objects/[id]<ul><li>Input parameters: WORK IN PROGRESS</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
-			$out .= '<li>PATCH objects/[id]<ul><li>Input parameters: WORK IN PROGRESS</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
-			$out .= '<li>DELETE objects/[id]<ul><li>Input parameters: None</li><li>Output parameters: WORK IN PROGRESS</li></ul></li>';
+			$out .= '<li>PATCH objects/[id]<ul><li>Input parameters: ra_email (optional), comment (optional), iris (optional), asn1ids (optional), confidential (optional), title (optional), description (optional)</li><li>Output parameters: status|error</li></ul></li>';
+			$out .= '<li>DELETE objects/[id]<ul><li>Input parameters: None</li><li>Output parameters: status|error</li></ul></li>';
 			$out .= '</ul></li></ul>';
 			return $out;
 		} else {
