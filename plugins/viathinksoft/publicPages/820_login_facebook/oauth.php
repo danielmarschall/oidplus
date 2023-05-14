@@ -100,7 +100,7 @@ if (!$ra->existing()) {
 
 	OIDplus::db()->query("update ###ra set ra_name = ?, personal_name = ? where email = ?", array($personal_name, $personal_name, $email));
 
-	OIDplus::logger()->log("[INFO]RA(%1)!", "RA '%1' was created because of successful Facebook OAuth2 login", $email);
+	OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' was created because of successful Facebook OAuth2 login", $email);
 }
 
 OIDplus::authUtils()->raLoginEx($email, $remember_me=false, 'Facebook-OAuth2');

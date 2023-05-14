@@ -63,7 +63,7 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 				throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
 			}
 
-			OIDplus::logger()->log("[INFO]RA(%1)!/A?", "RA '%1' was created by the admin, without email address verification or invitation", $email);
+			OIDplus::logger()->log("V2:[INFO]RA(%1)+[OK/INFO]A", "RA '%1' was created by the admin, without email address verification or invitation", $email);
 
 			$ra = new OIDplusRA($email);
 			$ra->register_ra($password1);

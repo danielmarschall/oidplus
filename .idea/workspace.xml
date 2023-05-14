@@ -8,10 +8,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df2a484b-bed2-4376-a9d2-11f38408a62e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/trunk.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/trunk.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/logger/verify_maskcodes.phps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/111_systeminfo/OIDplusPageAdminSysteminfo.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/111_systeminfo/OIDplusPageAdminSysteminfo.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/database/ado/OIDplusDatabaseConnectionADO.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/database/ado/OIDplusDatabaseConnectionADO.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/test_logmasks" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/developer_notes/logger_maskcodes.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/developer_notes/logger_maskcodes.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplus.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplus.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusAuthUtils.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusAuthUtils.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusLogger.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusLogger.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/110_system_config/OIDplusPageAdminSystemConfig.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/110_system_config/OIDplusPageAdminSystemConfig.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/120_registration/OIDplusPageAdminRegistration.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/120_registration/OIDplusPageAdminRegistration.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/130_create_ra/OIDplusPageAdminCreateRa.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/130_create_ra/OIDplusPageAdminCreateRa.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/400_oidinfo_export/OIDplusPageAdminOIDInfoExport.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/400_oidinfo_export/OIDplusPageAdminOIDInfoExport.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/700_colors/OIDplusPageAdminColors.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/700_colors/OIDplusPageAdminColors.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/language/dede/messages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/language/dede/messages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/000_objects/OIDplusPagePublicObjects.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/000_objects/OIDplusPagePublicObjects.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/001_ra_base/OIDplusPagePublicRaBaseUtils.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/001_ra_base/OIDplusPagePublicRaBaseUtils.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/090_login/OIDplusPagePublicLogin.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/090_login/OIDplusPagePublicLogin.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/091_forgot_password/OIDplusPagePublicForgotPassword.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/091_forgot_password/OIDplusPagePublicForgotPassword.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/095_attachments/OIDplusPagePublicAttachments.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/095_attachments/OIDplusPagePublicAttachments.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/200_viathinksoft_freeoid/OIDplusPagePublicFreeOID.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/200_viathinksoft_freeoid/OIDplusPagePublicFreeOID.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/500_resources/OIDplusPagePublicResources.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/500_resources/OIDplusPagePublicResources.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/800_login_ldap/OIDplusPagePublicLoginLDAP.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/800_login_ldap/OIDplusPagePublicLoginLDAP.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/810_login_google/oauth.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/810_login_google/oauth.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/820_login_facebook/oauth.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/820_login_facebook/oauth.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/raPages/092_invite/OIDplusPageRaInvite.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/raPages/092_invite/OIDplusPageRaInvite.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/raPages/100_edit_contact_data/OIDplusPageRaEditContactData.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/raPages/100_edit_contact_data/OIDplusPageRaEditContactData.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/raPages/101_change_password/OIDplusPageRaChangePassword.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/raPages/101_change_password/OIDplusPageRaChangePassword.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/raPages/102_change_email/OIDplusPageRaChangeEMail.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/raPages/102_change_email/OIDplusPageRaChangeEMail.class.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +53,9 @@
     <execution>
       <executable path="composer" />
     </execution>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/vendor/danielmarschall/uuid_mac_utils/includes/mac_utils.inc.php" root0="FORCE_HIGHLIGHTING" root1="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -83,28 +110,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/SVN/OIDplus/trunk/setup/sql/wellknown_other_access.sql&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;web-ide.project.structure&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/SVN/OIDplus/trunk/dev/logger/verify_maskcodes.phps",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "SQL Dialects",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect&quot;: [
-      &quot;Oracle&quot;,
-      &quot;TSQL&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect": [
+      "Oracle",
+      "TSQL"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\SVN\OIDplus\trunk\plugins\viathinksoft\raPages\010_notifications" />
@@ -118,26 +145,24 @@
     </key>
   </component>
   <component name="RunManager" selected="PHP Script.message_regenerate.phps">
-    <configuration name="check_log_masks.phps" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/dev/check_log_masks.phps">
-      <method v="2" />
-    </configuration>
-    <configuration name="gs1_utils.inc.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/gs1/gs1_utils.inc.php">
-      <method v="2" />
-    </configuration>
     <configuration name="index.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/index.php">
       <method v="2" />
     </configuration>
     <configuration name="message_regenerate.phps" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/dev/translation/message_regenerate.phps">
       <method v="2" />
     </configuration>
-    <configuration name="test.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/glip/test.php">
+    <configuration name="verify_maskcodes.phps" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/dev/logger/verify_maskcodes.phps">
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="PHP Script.verify_maskcodes.phps" />
+      <item itemvalue="PHP Script.index.php" />
+      <item itemvalue="PHP Script.message_regenerate.phps" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="PHP Script.message_regenerate.phps" />
-        <item itemvalue="PHP Script.check_log_masks.phps" />
-        <item itemvalue="PHP Script.test.php" />
+        <item itemvalue="PHP Script.verify_maskcodes.phps" />
         <item itemvalue="PHP Script.index.php" />
       </list>
     </recent_temporary>
@@ -240,6 +265,28 @@
       <workItem from="1681862765014" duration="1170000" />
       <workItem from="1681927582953" duration="14930000" />
       <workItem from="1682024633727" duration="1284000" />
+      <workItem from="1682032227564" duration="492000" />
+      <workItem from="1682032819762" duration="88000" />
+      <workItem from="1682539677933" duration="2342000" />
+      <workItem from="1682553032943" duration="3216000" />
+      <workItem from="1682626433337" duration="6648000" />
+      <workItem from="1682635346442" duration="2132000" />
+      <workItem from="1682637958287" duration="595000" />
+      <workItem from="1682710670337" duration="2132000" />
+      <workItem from="1682712836624" duration="10702000" />
+      <workItem from="1682786314427" duration="41000" />
+      <workItem from="1682786363250" duration="7964000" />
+      <workItem from="1682802507321" duration="3363000" />
+      <workItem from="1682962458713" duration="3242000" />
+      <workItem from="1683146313089" duration="6928000" />
+      <workItem from="1683156301964" duration="44000" />
+      <workItem from="1683229207291" duration="6126000" />
+      <workItem from="1683237752724" duration="199000" />
+      <workItem from="1683396943834" duration="10827000" />
+      <workItem from="1683663551328" duration="8000" />
+      <workItem from="1683935571903" duration="1954000" />
+      <workItem from="1683999584980" duration="2824000" />
+      <workItem from="1684007063012" duration="17463000" />
     </task>
     <servers />
   </component>

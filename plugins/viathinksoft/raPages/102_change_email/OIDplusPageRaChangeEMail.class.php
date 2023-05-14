@@ -74,12 +74,12 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
 				// Change RA email
 				$ra->change_email($new_email);
-				OIDplus::logger()->log("[WARN]RA(%1)!+[INFO]RA(%2)!+[OK]A!", "Admin changed email address '%1' to '%2'", $old_email, $new_email);
+				OIDplus::logger()->log("V2:[WARN]RA(%1)+[INFO]RA(%2)+[OK]A", "Admin changed email address '%1' to '%2'", $old_email, $new_email);
 
 				// Change objects
 				$res = OIDplus::db()->query("select id from ###objects where ra_email = ?", array($old_email));
 				while ($row = $res->fetch_array()) {
-					OIDplus::logger()->log("[INFO]OID(%1)+SUPOID(%1)", "Admin changed email address of RA '%2' (owner of %1) to '%3'", $row['id'], $old_email, $new_email);
+					OIDplus::logger()->log("V2:[INFO]OID(%1)+SUPOID(%1)", "Admin changed email address of RA '%2' (owner of %1) to '%3'", $row['id'], $old_email, $new_email);
 				}
 				OIDplus::db()->query("update ###objects set ra_email = ? where ra_email = ?", array($new_email, $old_email));
 				OIDplusObject::resetObjectInformationCache();
@@ -92,7 +92,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
 				return array("status" => 0);
 			} else {
-				OIDplus::logger()->log("[INFO]RA(%1)!+RA(%2)!", "Requested email address change from '%1' to '%2'", $old_email, $new_email);
+				OIDplus::logger()->log("V2:[INFO]RA(%1)+RA(%2)", "Requested email address change from '%1' to '%2'", $old_email, $new_email);
 
 				$timestamp = time();
 				$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp));
@@ -162,12 +162,12 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
 			// Change address of RA
 			$ra->change_email($new_email);
-			OIDplus::logger()->log("[OK]RA(%2)!+RA(%1)!", "RA '%1' has changed their email address to '%2'", $old_email, $new_email);
+			OIDplus::logger()->log("V2:[OK]RA(%2)+RA(%1)", "RA '%1' has changed their email address to '%2'", $old_email, $new_email);
 
 			// Change objects
 			$res = OIDplus::db()->query("select id from ###objects where ra_email = ?", array($old_email));
 			while ($row = $res->fetch_array()) {
-				OIDplus::logger()->log("[INFO]OID(%1)+SUPOID(%1)", "RA '%2' (owner of %1) has changed their email address to '%3'", $row['id'], $old_email, $new_email);
+				OIDplus::logger()->log("V2:[INFO]OID(%1)+SUPOID(%1)", "RA '%2' (owner of %1) has changed their email address to '%3'", $row['id'], $old_email, $new_email);
 			}
 			OIDplus::db()->query("update ###objects set ra_email = ? where ra_email = ?", array($new_email, $old_email));
 			OIDplusObject::resetObjectInformationCache();

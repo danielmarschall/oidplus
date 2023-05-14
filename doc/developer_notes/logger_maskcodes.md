@@ -1,9 +1,8 @@
 
-OIDplus Logger Maskcodes
-========================
+OIDplus Logger Mask Codes
+=========================
 
-What is a mask code?
---------------------
+## What is a mask code?
 
 A "mask code" gives information about the log event.
 It contains:
@@ -23,20 +22,33 @@ This event would affect:
 Instead of logging into 3 logbooks separately, you would create a mask code that tells the system to put the message
 into the logbooks of person X, house A, and house B.
 
-Syntax rules
-------------
+## Syntax rules
 
 In the code, mask codes would look like this:
 
-	OIDplus::logger()->log("[INFO]OID(%1)", "RA of object '%1' changed from '%2' to '%3'", $oid, $old_ra, $new_ra);
+	OIDplus::logger()->log("V2:[INFO]OID(%1)", "RA of object '%1' changed from '%2' to '%3'", $oid, $old_ra, $new_ra);
 
-As you can see, the maskcode and message can be parameterized like `sprintf()` does,
+As you can see, the mask code and message can be parameterized like `sprintf()` does,
 but with the difference that `%1`, `%2`, `%3`, ..., is used instead of `%s`.
 
-Please note that the event message is not enclosed in `_L(...)`, because log-messages are always written in English,
+Please note that the event message is not enclosed in `_L(...)`,
+because log messages are always written in English,
 and not in the front-end language of the user.
 
+### Version
+
+A mask code begins with `V2:`
+
+### Components
+
+A mask code can have multiple components which are split into single codes using `+` or `/`, e.g. `OID(x)+RA(x)` would
+be split to `OID(x)` and `RA(x)` which would result in the message being placed in the logbook of OID x,
+and the logbook of the RA owning OID x.
+
+### Severity
+
 At the beginning of each mask code, you must define a severity, which is written in square brackets.
+
 Valid severities:
 - `[OK]`: Rule of thumb: YOU have done something and it was successful.
 - `[INFO]`: Rule of thumb: Someone else has done something (that affects you) and it was successful.
@@ -44,42 +56,80 @@ Valid severities:
 - `[ERR]`: Rule of thumb: Something failed (probably someone did something) and it affects you.
 - `[CRIT]`: Rule of thumb: Something happened (probably someone did something) which is not an error, but some critical situation (e.g. hardware failure), and it affects you.
 
-A mask code can have multiple components which are split into single codes using `+` or `/`, e.g. `OID(x)+RA(x)` would
-be split to `OID(x)` and `RA(x)` which would result in the message being placed in the logbook of OID x,
-and the logbook of the RA owning OID x.
-
-If you have a mask code with multiple components,  you don't have to place the severity for each component.
+If you have a mask code with multiple components, you don't have to place the severity for each component.
 You can just leave it at the beginning. For example, `[WARN]OID(x)+RA(x)` is equal to `[WARN]OID(x)+[WARN]RA(x)`.
-You can also put different severities for the components, e.g. `[INFO]OID(x)+[WARN]RA(x)` would be a info for the OID,
-but a warning for the RA.
+You can also put different severities for the components, e.g. `[INFO]OID(x)+[WARN]RA(x)`
+would be an informative message (`INFO`) for the OID, but a warning (`WARN`) for the RA.
 
-If you want to make the severity dependent on wheather the user is logged in or not,
-prepend `?` or `!` and use `/` as delimiter
-Example: `[?WARN/!OK]RA(x)` means: If RA "x" is not logged in, it is a warning; if it is logged in, it is an success.
-With this technique you can achive that the RA gets warned if an admin changed some of their OIDs,
-but receives an OK-Event if they did the change.
+### Online/Offline dependency
 
-`OID(x)` means: Save the log entry into the logbook of: Object "x".
+If you want to make the logging event dependent on whether 
+the target (`A`, `RA`, `OIDRA`, `SUPOIDRA`) matches the currently
+logged-in user or not, write `[S1/S2]` where `S1` is the severity
+when the logged-in user is the target
+and `S2` is the severity when the user is not logged in or
+logged in as a user not matching the target.
 
-`SUPOID(x)` means: Save the log entry into the logbook of: Parent of object "x".
+With this technique, you can achieve that the RA gets warned if an admin or superior RA
+changed some of their OIDs without their knowledge,
+but receives a success message if they did the change themselves.
 
-`OIDRA(x)!` means: Save the log entry into the logbook of: RA of object "x".
+Example: `[OK/WARN]RA(x)+[OK/INFO]A` means that there are two log messages generated:
+- Message 1: If the currently logged-in user (performing the action)
+is RA "x", then it is a success message (`OK`) for them,
+otherwise it is a warning (`WARN`) for them,
+i.e. they get warned that someone else (admin or superior RA)
+has changed something without their knowledge.
+- Message 2: If the currently logged-in user (performing the action)
+is the administrator of the system, then it is a success message (`OK`)
+for them, otherwise it is an informative message (`INFO`) for them,
+i.e. the admin gets informed that a RA has done something.
 
-`OIDRA(x)?` means: Save the log entry into the logbook of: Logged in RA of object "x". If it is not logged in, nothing will be logged.
+You can use the special severity `NONE` to achieve that an event is
+not logged, so `NONE/...` means that the event is not logged
+if the currently logged-in user matches the target,
+and `.../NONE` means that the event is not logged if the user
+is not logged in or logged in as a user not matching the target.
 
-`SUPOIDRA(x)!` means: Save the log entry into the logbook of: RA that owns the superior object of "x".
+Example: `[OK/NONE]RA(x)+[OK/NONE]A` could be used
+to give the RA or the admin a success message (`OK`)
+for their action, but the admin won't be notified if the
+RA has changed it, and the RA won't be notified if the
+admin changed it. An Exception is if the user is logged in
+with both accounts (RA and admin) at the same time (which is
+possible with OIDplus), then two log messages would be generated.
 
-`SUPOIDRA(x)?` means: Save the log entry into the logbook of: Logged in RA that owns the superior object of "x". If it is not logged in, nothing will be logged.
+The severities `[NONE]` and `[NONE/NONE]` are invalid, because they are meaningless.
 
-`RA(x)!` means: Save the log entry into the logbook of: RA "x".
+The online/offline dependency is only possible for the types `OIDRA`, `SUPOIDRA`, `RA`, and `A`,
+but not for `OID` or `SUPOID`.
 
-`RA(x)?` means: Save the log entry into the logbook of: Logged in RA "x". If it is not logged in, nothing will be logged.
+### Valid types
 
-`A!` means: Save the log entry into the logbook of: The admin.
+Besides the severity, the component has a payload in the form `Type(Value)`. 
 
-`A?` means: Save the log entry into the logbook of: The logged in admin. If it is not logged in, nothing will be logged.
+`OID(x)` means: Save the log entry into the logbook of object "x".
 
-Implementation
-==============
+`SUPOID(x)` means: Save the log entry into the logbook of the parent of object "x".
+
+`OIDRA(x)` means: Save the log entry into the logbook of the RA of object "x".
+
+`SUPOIDRA(x)` means: Save the log entry into the logbook of the RA that owns the superior object of "x".
+
+`RA(x)` means: Save the log entry into the logbook of the RA "x".
+
+`A` means: Save the log entry into the logbook of the administrator of the system.
+
+### Escaping
+
+Inside a severity block, you can escape []/\ with \
+
+Inside the value, you can escape ()+\ with \
+
+## Implementation
 
 You can find the implementation in **includes/classes/OIDplusLogger.class.php**.
+
+## Tests
+
+To check if your mask codes have the correct syntax, run the tool **dev/logger/verify_maskcodes.phps**.

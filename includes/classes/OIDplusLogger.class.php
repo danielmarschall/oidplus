@@ -26,45 +26,54 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusLogger extends OIDplusBaseClass {
 
 	/**
-	 * This function splits a mask code containing multiple components
-	 * (delimited by '+' or '/') in single components
-	 * It takes care that '+' and '/' inside brackets won't be used to split the codes
+	 * This method splits a mask code containing multiple components (delimited by '+') into single components
+	 * It takes care that '+' inside brackets isn't be used to split the codes
 	 * Also, brackets can be escaped.
 	 * The severity block (optional, must be standing in front of a component)
 	 * is handled too. Inside the severity block, you may only use '/' to split components.
 	 * The severity block will be implicitly repeated from the previous components if a component
 	 * does not feature one.
-	 *
-	 * "[ERR]AAA(BBB)+CCC(DDD)"   ==> array(
-	 *                                 array(array("ERR"),"AAA(BBB)"),
-	 *                                 array(array("ERR"),"CCC(DDD)")
-	 *                              )
-	 * "[INFO]AAA(B+BB)+[WARN]CCC(DDD)"  ==> array(
-	 *                                 array(array("INFO"),"AAA(B+BB)"),
-	 *                                 array(array("WARN"),"CCC(DDD)")
-	 *                              )
-	 * "[?WARN/!OK] AAA(B\)BB)+CCC(DDD)" ==> array(
-	 *                                 array(array("?WARN", "!OK"),"AAA(B\)BB)"),
-	 *                                 array(array("?WARN", "!OK"),"CCC(DDD)")
-	 *                              )
-	 * @param string $maskcodes
-	 * @return array|false
+	 * @param string $maskcode A maskcode, e.g. [INFO]OID(2.999)
+	 * @return array|false An array of [$severity,$target],
+	 * where $severity is 'INFO' or [$online,$offline] like ['INFO','INFO']
+	 * and $target is like ['A'], ['OID', '2.999'], etc.
 	 */
-	private function split_maskcodes(string $maskcodes) {
+	public static function parse_maskcode(string $maskcode) {
 		$out = array();
 		$sevs = array(); // Note: The severity block will repeat for the next components if not changed explicitly
 
+		if (!str_starts_with($maskcode,'V2:')) {
+			return false;
+		} else {
+			$maskcode = substr($maskcode, 3);
+		}
+
+		// Step 1: Split severities from the rest of the maskcodes
+		/*
+		 * "[ERR]AAA(BBB)+CCC(DDD)"   ==> array(
+		 *                                 array(array("ERR"),"AAA(BBB)"),
+		 *                                 array(array("ERR"),"CCC(DDD)")
+		 *                              )
+		 * "[INFO]AAA(B+BB)+[WARN]CCC(DDD)"  ==> array(
+		 *                                 array(array("INFO"),"AAA(B+BB)"),
+		 *                                 array(array("WARN"),"CCC(DDD)")
+		 *                              )
+		 * "[OK/WARN] AAA(B\)BB)+CCC(DDD)" ==> array(
+		 *                                 array(array("OK", "WARN"),"AAA(B\)BB)"),
+		 *                                 array(array("OK", "WARN"),"CCC(DDD)")
+		 *                              )
+		 */
 		$code = '';
 		$sev = '';
 		$bracket_level = 0;
 		$is_escaping = false;
 		$inside_severity_block = false;
-		for ($i=0; $i<strlen($maskcodes); $i++) {
-			$char = $maskcodes[$i];
+		for ($i=0; $i<strlen($maskcode); $i++) {
+			$char = $maskcode[$i];
 
 			if ($inside_severity_block) {
 				// Severity block (optional)
-				// e.g.  [?WARN/!OK] ==> $sevs = array("?WARN", "!OK")
+				// e.g.  [OK/WARN] ==> $sevs = array("OK", "WARN")
 				if ($char == '\\') {
 					if ($is_escaping) {
 						$is_escaping = false;
@@ -146,7 +155,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 					}
 					$code .= $char;
 				}
-				else if ((($char == '+') || ($char == '/')) && ($bracket_level == 0)) {
+				else if (($char == '+') && ($bracket_level == 0)) {
 					if ($is_escaping) {
 						$is_escaping = false;
 						$code .= $char;
@@ -167,6 +176,58 @@ class OIDplusLogger extends OIDplusBaseClass {
 		}
 		if ($code != '') $out[] = array($sevs,$code);
 		if ($inside_severity_block) return false;
+		unset($sevs);
+
+		// Step 2: Process severities (split to online/offline)
+		// Allowed:  ['INFO'] or ['INFO', 'INFO']
+		// Disallow: ['NONE'] and ['NONE', 'NONE']
+		foreach ($out as &$component) {
+			$sev_fixed = null;
+			$sevs = $component[0];
+			if (count($sevs) == 1) {
+				if ($sevs[0] == 'NONE') return false; // meaningless component
+				try { self::convertSeverity($sevs[0]); } catch (\Exception $e) { return false; } // just checking for valid value
+				$sev_fixed = $sevs[0];
+			} else if (count($sevs) == 2) {
+				$sev_online = $sevs[0];
+				$sev_offline = $sevs[1];
+				if (($sev_online == 'NONE') && ($sev_offline == 'NONE')) return false; // meaningless component
+				try { self::convertSeverity($sev_online); } catch (\Exception $e) { return false; } // just checking for valid value
+				try { self::convertSeverity($sev_offline); } catch (\Exception $e) { return false; } // just checking for valid value
+				$sev_fixed = [$sev_online, $sev_offline];
+			} else {
+				return false;
+			}
+			$component[0] = $sev_fixed;
+		}
+
+		// Step 3: Process target (split to type and value)
+		// 'OID(2.999)' becomes ['OID', '2.999']
+		// 'A' becomes ['A']
+		foreach ($out as &$component) {
+			$m = array();
+			if (preg_match('@^([^()]+)\((.+)\)$@ismU', $component[1], $m)) {
+				$type = $m[1];
+				$value = $m[2];
+				$component[1] = [$type, $value];
+			} else {
+				$component[1] = [$component[1]];
+			}
+		}
+
+		// Some other checks (it makes it easier to validate the maskcodes with dev tools)
+		foreach ($out as list($severity,$target)) {
+			if (($target[0] == 'OID') || ($target[0] == 'SUPOID')) {
+				if (is_array($severity)) return false; // OID and SUPOID logger mask cannot have online/offline severity
+				if (empty($target[1])) return false; /** @phpstan-ignore-line */
+			} else if (($target[0] == 'OIDRA') || ($target[0] == 'SUPOIDRA') || ($target[0] == 'RA')) {
+				if (empty($target[1])) return false;
+			} else if ($target[0] == 'A') {
+				if (!empty($target[1])) return false;
+			} else {
+				return false;
+			}
+		}
 
 		return $out;
 	}
@@ -187,238 +248,232 @@ class OIDplusLogger extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param string $maskcodes A description of the mask-codes can be found in doc/developer_notes/logger_maskcodes.md
+	 * @param string $maskcode A description of the mask-codes can be found in doc/developer_notes/logger_maskcodes.md
 	 * @param string $message The message of the event
-	 * @param mixed ...$sprintfArgs If used, %1..%n in $maskcodes and $message will be replaced, like _L() does.
+	 * @param mixed ...$sprintfArgs If used, %1..%n in $maskcode and $message will be replaced, like _L() does.
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function log(string $maskcodes, string $message, ...$sprintfArgs): bool {
+	public function log(string $maskcode, string $message, ...$sprintfArgs): bool {
 		$this->reLogMissing(); // try to re-log failed requests
 
-		$maskcodes = my_vsprintf($maskcodes, $sprintfArgs);
+		$sprintfArgs_Escaped = array();
+		foreach ($sprintfArgs as $arg) {
+			// Inside an severity block, e.g. INFO of [INFO], we would need to escape []/\
+			// In the value, e.g. 2.999 of OID(2.999), we would need to escape ()+\
+			// Since there seems to be no meaningful use-case for parametrized severities, we only escape the value
+			$sprintfArgs_Escaped[] = str_replace(array('(',')','+','\\'), array('\\(', '\\)', '\\+', '\\\\'), $arg);
+		}
+
+		$maskcode = my_vsprintf($maskcode, $sprintfArgs_Escaped);
 		$message = my_vsprintf($message, $sprintfArgs);
 
-		if (strpos(str_replace('%%','',$maskcodes),'%') !== false) {
+		if (strpos(str_replace('%%','',$maskcode),'%') !== false) {
 			throw new OIDplusException(_L('Unresolved wildcards in logging maskcode'));
 		}
 
-		return $this->log_internal($maskcodes, $message, true);
+		return $this->log_internal($maskcode, $message, true);
 	}
 
 	/**
-	 * @param string $maskcodes
+	 * @param string $sev_name
+	 * @return int
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	private static function convertSeverity(string $sev_name): int {
+		//$sev_name = strtoupper($sev_name);
+
+		switch ($sev_name) {
+			case 'NONE':
+				// Do not log anything. Used for online/offline severity pairs
+				return -1;
+
+			// [OK]   = Success
+			//          Numeric value: 1
+			//          Rule of thumb: YOU have done something and it was successful
+			case  'OK':
+				return 1;
+
+			// [INFO] = Informational
+			//          Numeric value: 2
+			//          Rule of thumb: Someone else has done something (that affects you) and it was successful
+			case 'INFO':
+				return 2;
+
+			// [WARN] = Warning
+			//          Numeric value: 3
+			//          Rule of thumb: Something happened (probably someone did something) and it affects you
+			case 'WARN':
+				return 3;
+
+			// [ERR]  = Error
+			//          Numeric value: 4
+			//          Rule of thumb: Something failed (probably someone did something) and it affects you
+			case 'ERR':
+				return 4;
+
+			// [CRIT] = Critical
+			//          Numeric value: 5
+			//          Rule of thumb: Something happened (probably someone did something) which is not an error,
+			//          but some critical situation (e.g. hardware failure), and it affects you
+			case 'CRIT':
+				return 5;
+
+			default:
+				throw new OIDplusException(_L('Unknown severity "%1" in logger maskcode',$sev_name));
+		}
+	}
+
+	/**
+	 * @param string $maskcode
 	 * @param string $message
 	 * @param bool $allow_delayed_log
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	private function log_internal(string $maskcodes, string $message, bool $allow_delayed_log): bool {
+	private function log_internal(string $maskcode, string $message, bool $allow_delayed_log): bool {
 		$loggerPlugins = OIDplus::getLoggerPlugins();
 		if (count($loggerPlugins) == 0) {
 			// The plugin might not be initialized in OIDplus::init()
 			// yet. Remember the log entries for later submission during
 			// OIDplus::init();
-			if ($allow_delayed_log) $this->missing_plugin_queue[] = array($maskcodes, $message);
+			if ($allow_delayed_log) $this->missing_plugin_queue[] = array($maskcode, $message);
 			return false;
 		}
 
-		// What is a mask code?
-		// A mask code gives information about the log event:
-		// 1. The severity (info, warning, error)
-		// 2. In which logbook(s) the event shall be placed
-		// Example:
-		// The event would be:
-		// "Person 'X' moves from house 'A' to house 'B'"
-		// This event would affect the person X and the two houses,
-		// so, instead of logging into 3 logbooks separately,
-		// you would create a mask code that tells the system
-		// to put the message into the logbooks of person X,
-		// house A, and house B.
-
 		$logEvent = new OIDplusLogEvent($message);
 
-		// A mask code with multiple components is split into single codes
-		// using '+' or '/', e.g. "OID(x)+RA(x)" would be split to "OID(x)" and "RA(x)"
-		// which would result in the message being placed in the logbook of OID x,
-		// and the logbook of the RA owning OID x.
-		$maskcodes_ary = $this->split_maskcodes($maskcodes);
-		if ($maskcodes_ary === false) {
-			throw new OIDplusException(_L('Invalid maskcode "%1" (failed to split)',$maskcodes));
+		$maskcode_ary = self::parse_maskcode($maskcode);
+		if ($maskcode_ary === false) {
+			throw new OIDplusException(_L('Invalid maskcode "%1" (failed to parse or has invalid data)',$maskcode));
 		}
-		foreach ($maskcodes_ary as list($sevs,$maskcode)) {
-			// At the beginning of each mask code, you must define a severity.
-			// If you have a mask code with multiple components, you don't have to place the
-			// severity for each component. You can just leave it at the beginning.
-			// e.g. "[WARN]OID(x)+RA(x)" is equal to "[WARN]OID(x)+[WARN]RA(x)"
-			// You can also put different severities for the components:
-			// e.g. "[INFO]OID(x)+[WARN]RA(x)" would be a info for the OID, but a warning for the RA.
-			// If you want to make the severity dependent on wheather the user is logged in or not,
-			// prepend "?" or "!" and use '/' as delimiter
-			// Example: "[?WARN/!OK]RA(x)" means: If RA is not logged in, it is a warning; if it is logged in, it is an success
-			$severity = 0; // default severity = none
-			$severity_online = 0;
-			foreach ($sevs as $sev) {
-				switch (strtoupper($sev)) {
-					// [OK]   = Success
-					//          Numeric value: 1
-					//          Rule of thumb: YOU have done something and it was successful
-					case '?OK':
-						$severity_online = 1;
-						break;
-					case '!OK':
-					case  'OK':
-						$severity = 1;
-						break;
-					// [INFO] = Informational
-					//          Numeric value: 2
-					//          Rule of thumb: Someone else has done something (that affects you) and it was successful
-					case '?INFO':
-						$severity_online = 2;
-						break;
-					case '!INFO':
-					case  'INFO':
-						$severity = 2;
-						break;
-					// [WARN] = Warning
-					//          Numeric value: 3
-					//          Rule of thumb: Something happened (probably someone did something) and it affects you
-					case '?WARN':
-						$severity_online = 3;
-						break;
-					case '!WARN':
-					case  'WARN':
-						$severity = 3;
-						break;
-					// [ERR]  = Error
-					//          Numeric value: 4
-					//          Rule of thumb: Something failed (probably someone did something) and it affects you
-					case '?ERR':
-						$severity_online = 4;
-						break;
-					case '!ERR':
-					case  'ERR':
-						$severity = 4;
-						break;
-					// [CRIT] = Critical
-					//          Numeric value: 5
-					//          Rule of thumb: Something happened (probably someone did something) which is not an error,
-					//          but some critical situation (e.g. hardware failure), and it affects you
-					case '?CRIT':
-						$severity_online = 5;
-						break;
-					case '!CRIT':
-					case  'CRIT':
-						$severity = 5;
-						break;
-					default:
-						throw new OIDplusException(_L('Invalid maskcode "%1" (Unknown severity "%2")',$maskcodes,$sev));
+		foreach ($maskcode_ary as list($severity,$target)) {
+			if ($target[0] == 'OID') {
+				// OID(x)	Save log entry into the logbook of: Object "x"
+				$object_id = $target[1];
+				assert(!is_array($severity));
+				$obj = OIDplusObject::parse($object_id);
+				if (!$obj) throw new OIDplusException(_L('OID logger mask: Invalid object %1',$object_id));
+				if (($severity_int = self::convertSeverity($severity)) >= 0) {
+					$logEvent->addTarget(new OIDplusLogTargetObject($severity_int, $object_id));
 				}
 			}
 
-			// OID(x)	Save log entry into the logbook of: Object "x"
-			$m = array();
-			if (preg_match('@^OID\((.+)\)$@ismU', $maskcode, $m)) {
-				$object_id = $m[1];
-				$logEvent->addTarget(new OIDplusLogTargetObject($severity, $object_id));
-				if ($object_id == '') throw new OIDplusException(_L('OID logger mask requires OID'));
-			}
-
-			// SUPOID(x)	Save log entry into the logbook of: Parent of object "x"
-			else if (preg_match('@^SUPOID\((.+)\)$@ismU', $maskcode, $m)) {
-				$object_id         = $m[1];
-				if ($object_id == '') throw new OIDplusException(_L('SUPOID logger mask requires OID'));
+			else if ($target[0] == 'SUPOID') {
+				// SUPOID(x)	Save log entry into the logbook of: Parent of object "x"
+				$object_id = $target[1];
+				assert(!is_array($severity));
 				$obj = OIDplusObject::parse($object_id);
-				if ($obj) {
-					if ($objParent = $obj->getParent()) {
-						$parent = $objParent->nodeId();
-						$logEvent->addTarget(new OIDplusLogTargetObject($severity, $parent));
-					} else {
-						//throw new OIDplusException(_L('%1 has no parent',$object_id));
+				if (!$obj) throw new OIDplusException(_L('SUPOID logger mask: Invalid object %1',$object_id));
+				if ($objParent = $obj->getParent()) {
+					$parent = $objParent->nodeId();
+					if (($severity_int = self::convertSeverity($severity)) >= 0) {
+						$logEvent->addTarget(new OIDplusLogTargetObject($severity_int, $parent));
 					}
 				} else {
-					throw new OIDplusException(_L('SUPOID logger mask: Invalid object %1',$object_id));
+					//throw new OIDplusException(_L('%1 has no parent',$object_id));
 				}
 			}
 
-			// OIDRA(x)?	Save log entry into the logbook of: Logged in RA of object "x"
-			// Remove or replace "?" by "!" if the entity does not need to be logged in
-			else if (preg_match('@^OIDRA\((.+)\)([\?\!])$@ismU', $maskcode, $m)) {
-				$object_id         = $m[1];
-				$ra_need_login     = $m[2] == '?';
-				if ($object_id == '') throw new OIDplusException(_L('OIDRA logger mask requires OID'));
+			else if ($target[0] == 'OIDRA') {
+				// OIDRA(x)	Save log entry into the logbook of: Logged in RA of object "x"
+				$object_id = $target[1];
 				$obj = OIDplusObject::parse($object_id);
-				if ($obj) {
-					if ($ra_need_login) {
-						foreach (OIDplus::authUtils()->loggedInRaList() as $ra) {
-							if ($obj->userHasWriteRights($ra)) $logEvent->addTarget(new OIDplusLogTargetUser($severity_online, $ra->raEmail()));
-						}
-					} else {
-						// $logEvent->addTarget(new OIDplusLogTargetUser($severity, $obj->getRa()->raEmail()));
-						foreach (OIDplusRA::getAllRAs() as $ra) {
-							if ($obj->userHasWriteRights($ra)) $logEvent->addTarget(new OIDplusLogTargetUser($severity, $ra->raEmail()));
-						}
-					}
+				if (!$obj) throw new OIDplusException(_L('OIDRA logger mask: Invalid object "%1"', $object_id));
+				if (!is_array($severity)) {
+					$severity_online = $severity;
+					$severity_offline = $severity;
 				} else {
-					throw new OIDplusException(_L('OIDRA logger mask: Invalid object "%1"',$object_id));
+					$severity_online = $severity[0];
+					$severity_offline = $severity[1];
 				}
-			}
-
-			// SUPOIDRA(x)?	Save log entry into the logbook of: Logged in RA that owns the superior object of "x"
-			// Remove or replace "?" by "!" if the entity does not need to be logged in
-			else if (preg_match('@^SUPOIDRA\((.+)\)([\?\!])$@ismU', $maskcode, $m)) {
-				$object_id         = $m[1];
-				$ra_need_login     = $m[2] == '?';
-				if ($object_id == '') throw new OIDplusException(_L('SUPOIDRA logger mask requires OID'));
-				$obj = OIDplusObject::parse($object_id);
-				if ($obj) {
-					if ($ra_need_login) {
-						foreach (OIDplus::authUtils()->loggedInRaList() as $ra) {
-							if ($obj->userHasParentalWriteRights($ra)) $logEvent->addTarget(new OIDplusLogTargetUser($severity_online, $ra->raEmail()));
-						}
-					} else {
-						if ($objParent = $obj->getParent()) {
-							// $logEvent->addTarget(new OIDplusLogTargetUser($severity, $objParent->getRa()->raEmail()));
-							foreach (OIDplusRA::getAllRAs() as $ra) {
-								if ($obj->userHasParentalWriteRights($ra)) $logEvent->addTarget(new OIDplusLogTargetUser($severity, $ra->raEmail()));
+				foreach (OIDplusRA::getAllRAs() as $ra) {
+					if ($obj->userHasWriteRights($ra)) {
+						if (OIDplus::authUtils()->isRaLoggedIn($ra)) {
+							if (($severity_online_int = self::convertSeverity($severity_online)) >= 0) {
+								$logEvent->addTarget(new OIDplusLogTargetUser($severity_online_int, $ra->raEmail()));
 							}
 						} else {
-							//throw new OIDplusException(_L('%1 has no parent, therefore also no parent RA',$object_id));
+							if (($severity_offline_int = self::convertSeverity($severity_offline)) >= 0) {
+								$logEvent->addTarget(new OIDplusLogTargetUser($severity_offline_int, $ra->raEmail()));
+							}
 						}
 					}
-				} else {
-					throw new OIDplusException(_L('SUPOIDRA logger mask: Invalid object "%1"',$object_id));
 				}
 			}
 
-			// RA(x)?	Save log entry into the logbook of: Logged in RA "x"
-			// Remove or replace "?" by "!" if the entity does not need to be logged in
-			else if (preg_match('@^RA\((.*)\)([\?\!])$@ismU', $maskcode, $m)) {
-				$ra_email          = $m[1];
-				$ra_need_login     = $m[2] == '?';
-				if (!empty($ra_email)) {
-					if ($ra_need_login && OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
-						$logEvent->addTarget(new OIDplusLogTargetUser($severity_online, $ra_email));
-					} else if (!$ra_need_login) {
-						$logEvent->addTarget(new OIDplusLogTargetUser($severity, $ra_email));
+			else if ($target[0] == 'SUPOIDRA') {
+				// SUPOIDRA(x)	Save log entry into the logbook of: Logged in RA that owns the superior object of "x"
+				$object_id = $target[1];
+				$obj = OIDplusObject::parse($object_id);
+				if (!$obj) throw new OIDplusException(_L('SUPOIDRA logger mask: Invalid object "%1"',$object_id));
+				if (!is_array($severity)) {
+					$severity_online = $severity;
+					$severity_offline = $severity;
+				} else {
+					$severity_online = $severity[0];
+					$severity_offline = $severity[1];
+				}
+				foreach (OIDplusRA::getAllRAs() as $ra) {
+					if ($obj->userHasParentalWriteRights($ra)) {
+						if (OIDplus::authUtils()->isRaLoggedIn($ra)) {
+							if (($severity_online_int = self::convertSeverity($severity_online)) >= 0) {
+								$logEvent->addTarget(new OIDplusLogTargetUser($severity_online_int, $ra->raEmail()));
+							}
+						} else {
+							if (($severity_offline_int = self::convertSeverity($severity_offline)) >= 0) {
+								$logEvent->addTarget(new OIDplusLogTargetUser($severity_offline_int, $ra->raEmail()));
+							}
+						}
 					}
 				}
 			}
 
-			// A?	Save log entry into the logbook of: A logged in admin
-			// Remove or replace "?" by "!" if the entity does not need to be logged in
-			else if (preg_match('@^A([\?\!])$@imU', $maskcode, $m)) {
-				$admin_need_login = $m[1] == '?';
-				if ($admin_need_login && OIDplus::authUtils()->isAdminLoggedIn()) {
-					$logEvent->addTarget(new OIDplusLogTargetUser($severity_online, 'admin'));
-				} else if (!$admin_need_login) {
-					$logEvent->addTarget(new OIDplusLogTargetUser($severity, 'admin'));
+			else if ($target[0] == 'RA') {
+				// RA(x)	Save log entry into the logbook of: Logged in RA "x"
+				$ra_email = $target[1];
+				if (!is_array($severity)) {
+					$severity_online = $severity;
+					$severity_offline = $severity;
+				} else {
+					$severity_online = $severity[0];
+					$severity_offline = $severity[1];
+				}
+				if (OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
+					if (($severity_online_int = self::convertSeverity($severity_online)) >= 0) {
+						$logEvent->addTarget(new OIDplusLogTargetUser($severity_online_int, $ra_email));
+					}
+				} else {
+					if (($severity_offline_int = self::convertSeverity($severity_offline)) >= 0) {
+						$logEvent->addTarget(new OIDplusLogTargetUser($severity_offline_int, $ra_email));
+					}
+				}
+			}
+
+			else if ($target[0] == 'A') {
+				// A	Save log entry into the logbook of: A logged in admin
+				if (!is_array($severity)) {
+					$severity_online = $severity;
+					$severity_offline = $severity;
+				} else {
+					$severity_online = $severity[0];
+					$severity_offline = $severity[1];
+				}
+				if (OIDplus::authUtils()->isAdminLoggedIn()) {
+					if (($severity_online_int = self::convertSeverity($severity_online)) >= 0) {
+						$logEvent->addTarget(new OIDplusLogTargetUser($severity_online_int, 'admin'));
+					}
+				} else {
+					if (($severity_offline_int = self::convertSeverity($severity_offline)) >= 0) {
+						$logEvent->addTarget(new OIDplusLogTargetUser($severity_offline_int, 'admin'));
+					}
 				}
 			}
 
 			// Unexpected
 			else {
-				throw new OIDplusException(_L('Unexpected logger component "%1" in mask code "%2"',$maskcode,$maskcodes));
+				throw new OIDplusException(_L('Unexpected logger component type "%1" in mask code "%2"',$target[0],$maskcode));
 			}
 		}
 

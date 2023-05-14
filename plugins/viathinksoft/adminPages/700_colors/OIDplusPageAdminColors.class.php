@@ -88,7 +88,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin
 			OIDplus::config()->setValue('color_invert',    $params['invcolors']);
 			OIDplus::config()->setValue('design',          $params['theme']);
 
-			OIDplus::logger()->log("[OK]A?", "Changed system color theme");
+			OIDplus::logger()->log("V2:[OK/INFO]A", "Changed system color theme");
 
 			return array("status" => 0);
 		} else {
