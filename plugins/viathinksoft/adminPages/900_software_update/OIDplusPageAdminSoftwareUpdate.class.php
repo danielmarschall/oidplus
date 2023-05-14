@@ -427,6 +427,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 		ob_end_clean();
 
 		$cont = preg_replace('@!!!(.+)\\n@', '<font color="red">!!!\\1</font>'."\n", "$cont\n");
+		$cont = preg_replace('@\\*\\*\\*(.+)\\n@', '<strong>!!!\\1</strong>'."\n", "$cont\n");
 
 		$out .= '<pre id="update_infobox">'.$cont.'</pre>';
 
