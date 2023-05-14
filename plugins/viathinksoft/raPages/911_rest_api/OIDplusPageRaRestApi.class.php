@@ -66,9 +66,21 @@ class OIDplusPageRaRestApi extends OIDplusPagePluginRa {
 	 * @throws OIDplusException
 	 */
 	public function gui(string $id, array &$out, bool &$handled) {
-		if (explode('$',$id)[0] == 'oidplus:rest_api_information_ra') {
-			$handled = true;
+		$tmp = explode('$',$id);
+		$classname = $tmp[1] ?? '';
 
+		$parts = explode('.',$tmp[0],2);
+		if ($parts[0] != 'oidplus:rest_api_information_ra') return;
+		$handled = true;
+
+		if (str_starts_with($classname, 'endpoints:')) {
+			$plugin = OIDplus::getPluginByOid(explode(':',$classname)[1]);
+			if (!$plugin || !($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9)) throw new OIDplusException(_L("No endpoints for this plugin found"), null, 404);
+			$out['title'] = _L('REST API').' - '.$plugin->getManifest()->getName() . ' ' . _L('Endpoints');
+			$out['icon'] = file_exists(__DIR__.'/img/endpoints_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
+			$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:rest_api_information_ra').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
+			$out['text'] .= $plugin->restApiInfo('html');
+		} else {
 			$ra_email = explode('$',$id)[1];
 
 			$out['title'] = _L('REST API');
@@ -99,12 +111,13 @@ class OIDplusPageRaRestApi extends OIDplusPagePluginRa {
 			$endpoints = '';
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9) {
-					$endpoints .= $plugin->restApiInfo('html');
+					$link = 'oidplus:rest_api_information_ra$endpoints:'.$plugin->getManifest()->getOid();
+					$endpoints .= '<li><a '.OIDplus::gui()->link($link).'>'.htmlentities($plugin->getManifest()->getName()).'</a></li>';
 				}
 			}
 			if ($endpoints) {
-				$out['text'] .= '<p>'._L('The following endpoints are registered by the plugins in this system:').'</p>';
-				$out['text'] .= '<p>'.$endpoints.'</p>';
+				$out['text'] .= '<p>'._L('The following installed plugins are offering REST endpoints:').'</p>';
+				$out['text'] .= '<p><ul>'.$endpoints.'</ul></p>';
 			} else {
 				$out['text'] .= '<p>'._L('No installed plugin offers a REST functionality').'</p>';
 			}
@@ -146,13 +159,29 @@ class OIDplusPageRaRestApi extends OIDplusPagePluginRa {
 			$tree_icon = null; // default icon (folder)
 		}
 
-		$json[] = array(
-			'id' => 'oidplus:rest_api_information_ra$'.$ra_email,
-			'icon' => $tree_icon,
-			'text' => _L('REST API')
-		);
+		if (file_exists(__DIR__.'/img/endpoints_icon16.png')) {
+			$tree_icon_endpoints = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/endpoints_icon16.png';
+		} else {
+			$tree_icon_endpoints = null; // default icon (folder)
+		}
 
-		// TODO: Make "Endpoints" (with all installed plugins) and "Authentication" as menu entries!
+		$submenu = array();
+		foreach (OIDplus::getAllPlugins() as $plugin) {
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9) {
+				$submenu[] = [
+					'id' => 'oidplus:rest_api_information_ra$endpoints:'.$plugin->getManifest()->getOid(),
+					'icon' => $tree_icon_endpoints,
+					'text' => $plugin->getManifest()->getName() . ' ' . _L('Endpoints')
+				];
+			}
+		}
+
+		$json[] = array(
+			'id' => 'oidplus:rest_api_information_ra',
+			'icon' => $tree_icon,
+			'text' => _L('REST API'),
+			'children' => $submenu
+		);
 
 		return true;
 	}

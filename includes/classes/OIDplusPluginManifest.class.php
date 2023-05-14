@@ -133,6 +133,7 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 	 * @return string
 	 */
 	public function getName(): string {
+		// TODO: Find a way to translate plugin names
 		return $this->name;
 	}
 

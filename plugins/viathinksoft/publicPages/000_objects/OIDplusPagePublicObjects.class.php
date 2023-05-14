@@ -181,73 +181,71 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	public function restApiInfo(string $kind='html'): string {
 		if ($kind === 'html') {
 			$struct = [
-				"Objects API" => [
-					'('._L('Receive').') GET objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
-						_L('Input parameters') => [
-							'<i>'._L('None').'</i>'
-						],
-						_L('Output parameters') => [
-							'status|error',
-							'ra_email',
-							'comment',
-							'iris',
-							'asn1ids',
-							'confidential',
-							'title',
-							'description'
-						]
+				'('._L('Receive').') GET objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+					_L('Input parameters') => [
+						'<i>'._L('None').'</i>'
 					],
-					'('._L('Re-Create').') PUT objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
-						_L('Input parameters') => [
-							'ra_email ('._L('optional').')',
-							'comment ('._L('optional').')',
-							'iris ('._L('optional').')',
-							'asn1ids ('._L('optional').')',
-							'confidential ('._L('optional').')',
-							'title ('._L('optional').')',
-							'description ('._L('optional').')'
-						],
-						_L('Output parameters') => [
-							'status|error',
-							'inserted_id ('._L('if it was created').')'
-						]
+					_L('Output parameters') => [
+						'status|error',
+						'ra_email',
+						'comment',
+						'iris',
+						'asn1ids',
+						'confidential',
+						'title',
+						'description'
+					]
+				],
+				'('._L('Re-Create').') PUT objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+					_L('Input parameters') => [
+						'ra_email ('._L('optional').')',
+						'comment ('._L('optional').')',
+						'iris ('._L('optional').')',
+						'asn1ids ('._L('optional').')',
+						'confidential ('._L('optional').')',
+						'title ('._L('optional').')',
+						'description ('._L('optional').')'
 					],
-					'('._L('Create').') POST objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
-						_L('Input parameters') => [
-							'ra_email ('._L('optional').')',
-							'comment ('._L('optional').')',
-							'iris ('._L('optional').')',
-							'asn1ids ('._L('optional').')',
-							'confidential ('._L('optional').')',
-							'title ('._L('optional').')',
-							'description ('._L('optional').')'
-						],
-						_L('Output parameters') => [
-							'status|error',
-							'inserted_id'
-						]
+					_L('Output parameters') => [
+						'status|error',
+						'inserted_id ('._L('if it was created').')'
+					]
+				],
+				'('._L('Create').') POST objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+					_L('Input parameters') => [
+						'ra_email ('._L('optional').')',
+						'comment ('._L('optional').')',
+						'iris ('._L('optional').')',
+						'asn1ids ('._L('optional').')',
+						'confidential ('._L('optional').')',
+						'title ('._L('optional').')',
+						'description ('._L('optional').')'
 					],
-					'('._L('Update').') PATCH objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
-						_L('Input parameters') => [
-							'ra_email ('._L('optional').')',
-							'comment ('._L('optional').')',
-							'iris ('._L('optional').')',
-							'asn1ids ('._L('optional').')',
-							'confidential ('._L('optional').')',
-							'title ('._L('optional').')',
-							'description ('._L('optional').')'
-						],
-						_L('Output parameters') => [
-							'status|error'
-						]
+					_L('Output parameters') => [
+						'status|error',
+						'inserted_id'
+					]
+				],
+				'('._L('Update').') PATCH objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+					_L('Input parameters') => [
+						'ra_email ('._L('optional').')',
+						'comment ('._L('optional').')',
+						'iris ('._L('optional').')',
+						'asn1ids ('._L('optional').')',
+						'confidential ('._L('optional').')',
+						'title ('._L('optional').')',
+						'description ('._L('optional').')'
 					],
-					'('._L('Remove').') DELETE objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
-						_L('Input parameters') => [
-							'<i>'._L('None').'</i>'
-						],
-						_L('Output parameters') => [
-							'status|error'
-						]
+					_L('Output parameters') => [
+						'status|error'
+					]
+				],
+				'('._L('Remove').') DELETE objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+					_L('Input parameters') => [
+						'<i>'._L('None').'</i>'
+					],
+					_L('Output parameters') => [
+						'status|error'
 					]
 				]
 			];
