@@ -181,7 +181,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	public function restApiInfo(string $kind='html'): string {
 		if ($kind === 'html') {
 			$struct = [
-				'('._L('Receive').') GET objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+				_L('Receive') => [
+					'<b>GET</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>',
 					_L('Input parameters') => [
 						'<i>'._L('None').'</i>'
 					],
@@ -196,7 +197,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						'description'
 					]
 				],
-				'('._L('Re-Create').') PUT objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+				_L('Re-Create') => [
+					'<b>PUT</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>',
 					_L('Input parameters') => [
 						'ra_email ('._L('optional').')',
 						'comment ('._L('optional').')',
@@ -211,7 +213,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						'inserted_id ('._L('if it was created').')'
 					]
 				],
-				'('._L('Create').') POST objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+				_L('Create') => [
+					'<b>POST</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>',
 					_L('Input parameters') => [
 						'ra_email ('._L('optional').')',
 						'comment ('._L('optional').')',
@@ -226,7 +229,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						'inserted_id'
 					]
 				],
-				'('._L('Update').') PATCH objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+				_L('Update') => [
+					'<b>PATCH</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>',
 					_L('Input parameters') => [
 						'ra_email ('._L('optional').')',
 						'comment ('._L('optional').')',
@@ -240,7 +244,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						'status|error'
 					]
 				],
-				'('._L('Remove').') DELETE objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>' => [
+				_L('Remove') => [
+					'<b>DELETE</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>'.
 					_L('Input parameters') => [
 						'<i>'._L('None').'</i>'
 					],

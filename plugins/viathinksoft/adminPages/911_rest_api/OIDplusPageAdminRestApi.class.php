@@ -74,7 +74,7 @@ class OIDplusPageAdminRestApi extends OIDplusPagePluginAdmin {
 			$plugin = OIDplus::getPluginByOid(explode(':',$classname)[1]);
 			if (!$plugin || !($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9)) throw new OIDplusException(_L("No endpoints for this plugin found"), null, 404);
 			$out['title'] = _L('REST API').' - '.$plugin->getManifest()->getName() . ' ' . _L('Endpoints');
-			$out['icon'] = file_exists(__DIR__.'/img/endpoints_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
+			$out['icon'] = file_exists(__DIR__.'/img/endpoints_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/endpoints_icon.png' : '';
 			$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:rest_api_information_admin').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 			$out['text'] .= $plugin->restApiInfo('html');
 		} else {
