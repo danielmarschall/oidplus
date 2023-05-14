@@ -230,7 +230,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 					$file = str_replace(chr(0), '[NUL]', $file);
 				}
 				// This will not be logged anymore, because people could spam the log files otherwise
-				//OIDplus::logger()->log("[WARN]A!", "LFI/RFI attack blocked (requested file '%1')", $file);
+				//OIDplus::logger()->log("V2:[WARN]A", "LFI/RFI attack blocked (requested file '%1')", $file);
 				throw new OIDplusException(_L('This request is invalid'), _L('Access denied'));
 			}
 

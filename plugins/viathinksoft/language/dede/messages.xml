@@ -3462,18 +3462,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Invalid maskcode "%1" (Unknown severity "%2")
+		Invalid maskcode "%1" (failed to parse or has invalid data)
 		]]></source>
 		<target><![CDATA[
-		Ungültiger Mask-Code "%1" (Unbekannter Schweregrad "%2")
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Invalid maskcode "%1" (failed to split)
-		]]></source>
-		<target><![CDATA[
-		Ungültiger Mask-Code "%1" (Splitten fehlgeschlagen)
+		Ungültiger Logging-Maskcode "%1" (Fehler beim Parsen oder ungültige Inhalte)
 		]]></target>
 	</message>
 	<message>
@@ -4446,10 +4438,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		OID logger mask requires OID
+		OID logger mask: Invalid object %1
 		]]></source>
 		<target><![CDATA[
-		OID-Log-Maske benötigt OID
+		OID Logger Mask: Ungültiges Objekt %1
 		]]></target>
 	</message>
 	<message>
@@ -4506,14 +4498,6 @@
 		]]></source>
 		<target><![CDATA[
 		OID-WHOIS Auth Token zum Anzeigen von vollen Informationen zum Objekt (nur erforderlich, wenn das Objekt oder darüberliegende Objekte versteckt sind): %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		OIDRA logger mask requires OID
-		]]></source>
-		<target><![CDATA[
-		OIDRA-Log-Maske benötigt OID
 		]]></target>
 	</message>
 	<message>
@@ -6342,26 +6326,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		SUPOID logger mask requires OID
-		]]></source>
-		<target><![CDATA[
-		SUPOID-Log-Maske benötigt OID
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		SUPOID logger mask: Invalid object %1
 		]]></source>
 		<target><![CDATA[
 		SUPOID-Log-Maske: Ungültiges Objekt %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		SUPOIDRA logger mask requires OID
-		]]></source>
-		<target><![CDATA[
-		SUPOIDRA-Log-Maske benötigt OID
 		]]></target>
 	</message>
 	<message>
@@ -7838,10 +7806,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Unexpected logger component "%1" in mask code "%2"
+		Unexpected logger component type "%1" in mask code "%2"
 		]]></source>
 		<target><![CDATA[
-		Unerwartete Logbuch-Komponente "%1" in Mask-Code "%2"
+		Unerwarteter Logger-Komponententyp "%1" in Maskcode "%2"
 		]]></target>
 	</message>
 	<message>
@@ -7882,6 +7850,14 @@
 		]]></source>
 		<target><![CDATA[
 		Unbekannter Dateityp
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unknown severity "%1" in logger maskcode
+		]]></source>
+		<target><![CDATA[
+		Unbekannter Schweregrad "%1" in Logger-Maskcode
 		]]></target>
 	</message>
 	<message>

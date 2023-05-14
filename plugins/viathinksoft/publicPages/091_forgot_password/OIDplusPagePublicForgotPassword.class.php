@@ -43,7 +43,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
 
-			OIDplus::logger()->log("[WARN]RA(%1)!", "A new password for '%1' was requested (forgot password)", $email);
+			OIDplus::logger()->log("V2:[WARN]RA(%1)", "A new password for '%1' was requested (forgot password)", $email);
 
 			$timestamp = time();
 			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('reset_password;'.$email.';'.$timestamp));
@@ -86,7 +86,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 				throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
 			}
 
-			OIDplus::logger()->log("[INFO]RA(%1)!", "RA '%1' has reset his password (forgot passwort)", $email);
+			OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' has reset his password (forgot passwort)", $email);
 
 			$ra = new OIDplusRA($email);
 			$ra->change_password($password1);

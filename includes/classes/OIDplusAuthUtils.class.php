@@ -179,11 +179,12 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param string $email
+	 * @param string|OIDplusRA $ra
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function isRaLoggedIn(string $email): bool {
+	public function isRaLoggedIn($ra): bool {
+		$email = $ra instanceof OIDplusRA ? $ra->raEmail() : $ra;
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return false;
 		return $acs->isRaLoggedIn($email);
@@ -224,7 +225,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		$logmsg = "RA '$email' logged in";
 		if ($origin != '') $logmsg .= " via $origin";
 		if ($loginfo != '') $logmsg .= " ($loginfo)";
-		OIDplus::logger()->log("[OK]RA(%1)!", "%2", $email, $logmsg);
+		OIDplus::logger()->log("V2:[OK]RA(%1)", "%2", $email, $logmsg);
 	}
 
 	/**
@@ -239,7 +240,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		if (is_null($acs)) return;
 		$acs->raLogoutEx($email, $loginfo);
 
-		OIDplus::logger()->log("[OK]RA(%1)!", "RA '%1' logged out (%2)", $email, $loginfo);
+		OIDplus::logger()->log("V2:[OK]RA(%1)", "RA '%1' logged out (%2)", $email, $loginfo);
 
 		if (($this->raNumLoggedIn() == 0) && (!$this->isAdminLoggedIn())) {
 			// Nobody logged in anymore. Destroy session cookie to make GDPR people happy
@@ -354,7 +355,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		$logmsg = "Admin logged in";
 		if ($origin != '') $logmsg .= " via $origin";
 		if ($loginfo != '') $logmsg .= " ($loginfo)";
-		OIDplus::logger()->log("[OK]A!", "%1", $logmsg);
+		OIDplus::logger()->log("V2:[OK]A", "%1", $logmsg);
 	}
 
 	/**
@@ -376,7 +377,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 			$acs->activate();
 		}
 
-		OIDplus::logger()->log("[OK]A!", "Admin logged out (%1)", $loginfo);
+		OIDplus::logger()->log("V2:[OK]A", "Admin logged out (%1)", $loginfo);
 	}
 
 	// Authentication keys for validating arguments (e.g. sent by mail)

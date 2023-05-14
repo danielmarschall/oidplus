@@ -93,7 +93,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 		$ra = new OIDplusRA($email);
 		if (!$ra->existing()) {
 			$this->registerRA($ra, $ldap_userinfo);
-			OIDplus::logger()->log("[INFO]RA(%1)!", "RA '%1' was created because of successful LDAP login", $email);
+			OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' was created because of successful LDAP login", $email);
 		}
 
 		OIDplus::authUtils()->raLoginEx($email, $remember_me, 'LDAP');
@@ -162,7 +162,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 
 				if (!$ldap->login($upn, $password)) {
 					if (OIDplus::config()->getValue('log_failed_ra_logins', false)) {
-						OIDplus::logger()->log("[WARN]A!", "Failed login to RA account '%1' using LDAP", $upn);
+						OIDplus::logger()->log("V2:[WARN]A", "Failed login to RA account '%1' using LDAP", $upn);
 					}
 					throw new OIDplusException(_L('Wrong password or user not registered'));
 				}

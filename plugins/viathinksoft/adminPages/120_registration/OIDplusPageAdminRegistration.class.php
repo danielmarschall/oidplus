@@ -425,7 +425,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 					return false; // throw new OIDplusException(_L('Received error status code: %1',$json['status']));
 				}
 			} else if ($json['status'] == 99/*Hash conflict*/) {
-				OIDplus::logger()->log("[WARN]A!", "Removing SystemID and key pair because there is a hash conflict with another OIDplus system!");
+				OIDplus::logger()->log("V2:[WARN]A", "Removing SystemID and key pair because there is a hash conflict with another OIDplus system!");
 
 				// Delete the system ID since we have a conflict with the 31-bit hash!
 				OIDplus::config()->setValue('oidplus_private_key', '');
@@ -510,7 +510,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 							$this->sendRegistrationQuery();
 						} catch (\Exception $e) {
 							// Don't do anything, because we don't want that a failed registration query blocks the system
-							OIDplus::logger()->log('[WARN]A!', 'System registration query crashed: %1', $e->getMessage());
+							OIDplus::logger()->log('V2:[WARN]A', 'System registration query crashed: %1', $e->getMessage());
 						}
 					}
 				}
