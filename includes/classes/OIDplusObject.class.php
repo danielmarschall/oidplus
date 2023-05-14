@@ -698,6 +698,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 
 		if (!$ra) {
 			if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
+			// TODO: should we allow that the parent RA also may update title/description about this OID (since they delegated it?)
 			$ownRa = $this->getRaMail();
 			return $ownRa && OIDplus::authUtils()->isRaLoggedIn($ownRa);
 		} else {

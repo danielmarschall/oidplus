@@ -55,7 +55,7 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 					$json_out = array("error" => "Endpoint not found");
 				}
 			} catch (\Exception $e) {
-				http_response_code(500);
+				http_response_code($e instanceof OIDplusException ? $e->getHttpStatus() : 500);
 				$json_out = array("error" => $e->getMessage());
 			}
 

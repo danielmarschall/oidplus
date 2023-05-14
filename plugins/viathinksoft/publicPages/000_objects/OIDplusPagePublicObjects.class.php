@@ -67,63 +67,34 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	public function restApiCall(string $requestMethod, string $endpoint) {
 		if (str_starts_with($endpoint, 'objects/')) {
 			$id = substr($endpoint, strlen('objects/'));
-			if ($requestMethod == "GET") {
-				// TODO: Implement GET (Select)
+			if ($requestMethod == "GET"/*Select*/) {
+				// TODO: Implement GET
 				http_response_code(501);
 				return array("error" => "Not implemented");
-			} else if ($requestMethod == "PUT") {
-				// TODO: Implement PUT (Replace)
+			} else if ($requestMethod == "PUT"/*Replace*/) {
+				// TODO: Implement PUT
 				http_response_code(501);
 				return array("error" => "Not implemented");
-			} else if ($requestMethod == "POST") {
-				// TODO: Implement POST (Insert)
-				http_response_code(501);
-				return array("error" => "Not implemented");
-			} else if ($requestMethod == "PATCH"/*Modify*/) {
-				// TODO: TEST
-
-				$obj = OIDplusObject::parse($id);
-				if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','PATCH',$id), null, 400);
-				if (!OIDplusObject::exists($id)) throw new OIDplusException(_L('Object %1 does not exist',$id), null, 404);
-
-				$need_update1 = false;
-				if (isset($_POST['ra_email']) || isset($_POST['comment']) || isset($_POST['iris']) || isset($_POST['asn1ids']) || isset($_POST['confidential'])) {
-					if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to update this OID.'), null, 401);
-					$need_update1 = true;
-				}
-
-				$need_update2 = false;
-				if (isset($_POST['title']) || isset($_POST['description'])) {
-					if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the RA to update this OID.'), null, 401);
-					$need_update2 = true;
-				}
-
+			} else if ($requestMethod == "POST"/*Insert*/) {
 				$params = $_POST;
 				$params['id'] = $id;
-
-				if ($need_update1) {
-					self::action('Update', $params);
-				}
-
-				if ($need_update2) {
-					self::action('Update2', $params);
-				}
-
+				$res = self::action('Insert', $params);
 				http_response_code(200);
-				return array("status" => "OK");
-
-			} else if ($requestMethod == "DELETE") {
-				try {
-					self::action('Delete', array("id" => $id));
-					http_response_code(200);
-					return array("status" => "OK");
-				} catch (\Exception $e) {
-					http_response_code($e instanceof OIDplusException ? $e->getHttpStatus() : 500);
-					return array("error" => $e->getMessage());
-				}
+				return $res;
+			} else if ($requestMethod == "PATCH"/*Modify*/) {
+				$params = $_POST;
+				$params['id'] = $id;
+				$res = self::action('Update', $params);
+				http_response_code(200);
+				return $res;
+			} else if ($requestMethod == "DELETE"/*Delete*/) {
+				$params = $_POST;
+				$params['id'] = $id;
+				$res = self::action('Delete', $params);
+				http_response_code(200);
+				return $res;
 			} else {
-				http_response_code(400);
-				return array("error" => "Unsupported request method");
+				throw new OIDplusException(_L("Unsupported request method"), null, 404);
 			}
 		} else {
 			return false;
@@ -162,7 +133,6 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	public function action(string $actionID, array $params): array {
 
 		// Action:     Delete
-		// Method:     POST
 		// Parameters: id
 		// Outputs:    <0 Error, =0 Success
 		if ($actionID == 'Delete') {
@@ -225,12 +195,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		}
 
 		// Action:     Update
-		// Method:     POST
-		// Parameters: id, ra_email, comment, iris, asn1ids, confidential
+		// Parameters: id, ra_email, comment, iris, asn1ids, confidential, title, description
 		// Outputs:    <0 Error, =0 Success, with following bitfields for further information:
-		//             1 = RA is not registered
-		//             2 = RA is not registered, but it cannot be invited
-		//             4 = OID is a well-known OID, so RA, ASN.1 and IRI identifiers were reset
+		//             x+1 = RA is not registered
+		//             x+2 = RA is not registered, but it cannot be invited
+		//             x+4 = OID is a well-known OID, so RA, ASN.1 and IRI identifiers were reset
+		//             x+8 = User has write rights to the freshly created OID
 		else if ($actionID == 'Update') {
 			_CheckParamExists($params, 'id');
 			$id = $params['id'];
@@ -242,7 +212,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 
 			// Check if permitted
-			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to update this OID.'), null, 401);
+			if (isset($params['title']) || isset($params['description'])) {
+				if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the RA to update this OID.'), null, 401);
+			}
+			if (isset($params['ra_email']) || isset($params['comment']) || isset($params['iris']) || isset($params['asn1ids']) || isset($params['confidential'])) {
+				if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to update this OID.'), null, 401);
+			}
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
@@ -336,6 +311,22 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				OIDplusObject::resetObjectInformationCache();
 			}
 
+			if (isset($params['title']) || isset($params['description'])) {
+				OIDplus::logger()->log("V2:[INFO]OID(%1)+[OK/INFO]OIDRA(%1)+[OK/INFO]A", "Title/Description of object '%1' updated", $id);
+			}
+
+			if (isset($params['title'])) {
+				$title = $params['title'];
+				OIDplus::db()->query("UPDATE ###objects SET title = ? WHERE id = ?", array($title, $id));
+				OIDplusObject::resetObjectInformationCache();
+			}
+
+			if (isset($params['description'])) {
+				$description = $params['description'];
+				OIDplus::db()->query("UPDATE ###objects SET description = ? WHERE id = ?", array($description, $id));
+				OIDplusObject::resetObjectInformationCache();
+			}
+
 			OIDplus::db()->query("UPDATE ###objects SET updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($id));
 			OIDplusObject::resetObjectInformationCache();
 
@@ -354,6 +345,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				}
 			}
 
+			if ($obj->userHasWriteRights()) {
+				$status += 8;
+			}
+
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
 					$plugin->afterObjectUpdateSuperior($id, $params);
@@ -361,55 +356,6 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 
 			return array("status" => $status);
-		}
-
-		// Action:     Update2
-		// Method:     POST
-		// Parameters: id, title, description
-		// Outputs:    <0 Error, =0 Success
-		else if ($actionID == 'Update2') {
-			_CheckParamExists($params, 'id');
-			$id = $params['id'];
-			$obj = OIDplusObject::parse($id);
-			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE2',$id));
-
-			if (!OIDplusObject::exists($id)) {
-				throw new OIDplusException(_L('Object %1 does not exist',$id));
-			}
-
-			// Check if allowed
-			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the RA to update this OID.'), null, 401);
-
-			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
-					$plugin->beforeObjectUpdateSelf($id, $params);
-				}
-			}
-
-			OIDplus::logger()->log("V2:[INFO]OID(%1)+[OK/INFO]OIDRA(%1)+[OK/INFO]A", "Title/Description of object '%1' updated", $id);
-
-			if (isset($params['title'])) {
-				$title = $params['title'];
-				OIDplus::db()->query("UPDATE ###objects SET title = ? WHERE id = ?", array($title, $id));
-				OIDplusObject::resetObjectInformationCache();
-			}
-
-			if (isset($params['description'])) {
-				$description = $params['description'];
-				OIDplus::db()->query("UPDATE ###objects SET description = ? WHERE id = ?", array($description, $id));
-				OIDplusObject::resetObjectInformationCache();
-			}
-
-			OIDplus::db()->query("UPDATE ###objects SET updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($id));
-			OIDplusObject::resetObjectInformationCache();
-
-			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
-					$plugin->afterObjectUpdateSelf($id, $params);
-				}
-			}
-
-			return array("status" => 0);
 		}
 
 		// Generate UUID
@@ -424,12 +370,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		}
 
 		// Action:     Insert
-		// Method:     POST
 		// Parameters: parent, id, ra_email, confidential, iris, asn1ids
 		// Outputs:    status=<0 Error, =0 Success, with following bitfields for further information:
-		//             1 = RA is not registered
-		//             2 = RA is not registered, but it cannot be invited
-		//             4 = OID is a well-known OID, so RA, ASN.1 and IRI identifiers were reset
+		//             x+1 = RA is not registered
+		//             x+2 = RA is not registered, but it cannot be invited
+		//             x+4 = OID is a well-known OID, so RA, ASN.1 and IRI identifiers were reset
+		//             x+8 = User has write rights to the freshly created OID
 		else if ($actionID == 'Insert') {
 			// Check if you have write rights on the parent (to create a new object)
 			_CheckParamExists($params, 'parent');
@@ -567,6 +513,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				if ($obj->isWellKnown()) {
 					$status += 4;
 				}
+			}
+
+			if ($obj->userHasWriteRights()) {
+				$status += 8;
 			}
 
 			foreach (OIDplus::getAllPlugins() as $plugin) {

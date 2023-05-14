@@ -107,36 +107,41 @@ var OIDplusPagePublicObjects = {
 			error: oidplus_ajax_error,
 			success: function (data) {
 				oidplus_ajax_success(data, function (data) {
-					if (data.status == 0/*OK*/) {
-						if (confirm(_L("Insert OK.") + "\n\n" + _L("Do you want to open the newly created object now?"))) {
-							openAndSelectNode(data.inserted_id, parent);
-							return;
-						}
-					}
+					var message = _L("Insert OK.");
+					var isWarning = false;
 
-					if ((data.status & 1) == 1/*RaNotExisting*/) {
-						if (confirm(_L("Insert OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?", $("#ra_email")[0].value))) {
-							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email")[0].value);
-							return;
-						} else {
-							if (confirm(_L("Do you want to open the newly created object now?"))) {
-								openAndSelectNode(data.inserted_id, parent);
-								return;
-							}
-						}
+					if ((data.status & 4) == 4/*IsWellKnownOID*/) {
+						isWarning = true;
+						message = message + ' ' + _L("However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.");
 					}
 
 					if ((data.status & 2) == 2/*RaNotExistingNoInvitation*/) {
-						if (confirm(_L("Insert OK.") + "\n\n" + _L("Do you want to open the newly created object now?"))) {
+						//message = _L("Insert OK.");
+					}
+
+					message = message + "\n\n";
+
+					if ((data.status & 1) == 1/*RaNotExisting*/) {
+						if (confirm(message + _L("The email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?", $("#ra_email")[0].value))) {
+							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email")[0].value);
+							return;
+						}
+						message = ""; // In the further messages, do not show this part of the message a second time
+					}
+
+					if ((data.status & 8) == 8/*HasWriteRights*/) {
+						if (confirm(message + _L("Do you want to open the newly created object now?"))) {
 							openAndSelectNode(data.inserted_id, parent);
 							return;
 						}
+						message = ""; // In the further messages, do not show this part of the message a second time
 					}
 
-					if ((data.status & 4) == 4/*IsWellKnownOID*/) {
-						if (confirm(_L("Insert OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.") + "\n\n" + _L("Do you want to open the newly created object now?"))) {
-							openAndSelectNode(data.inserted_id, parent);
-							return;
+					if (message.trim() != "") {
+						if (isWarning) {
+							alertWarning(message.trim())
+						} else {
+							alertSuccess(message.trim());
 						}
 					}
 
@@ -175,23 +180,42 @@ var OIDplusPagePublicObjects = {
 			error: oidplus_ajax_error,
 			success: function (data) {
 				oidplus_ajax_success(data, function (data) {
-					if (data.status == 0/*OK*/) {
-						alertSuccess(_L("Update OK"));
-					}
+					var message = _L("Update OK");
+					var isWarning = false;
 
-					if ((data.status & 1) == 1/*RaNotExisting*/) {
-						if (confirm(_L("Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?", $("#ra_email_" + $.escapeSelector(id))[0].value))) {
-							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email_" + $.escapeSelector(id))[0].value);
-							return;
-						}
+					if ((data.status & 4) == 4/*IsWellKnownOID*/) {
+						isWarning = true;
+						message = message + ' ' + _L("However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.");
 					}
 
 					if ((data.status & 2) == 2/*RaNotExistingNoInvitation*/) {
-						alertSuccess(_L("Update OK"));
+						// message = _L("Update OK");
 					}
 
-					if ((data.status & 4) == 4/*IsWellKnownOID*/) {
-						alertWarning(_L("Update OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID."));
+					message = message + "\n\n";
+
+					if ((data.status & 1) == 1/*RaNotExisting*/) {
+						if (confirm(message + _L("The email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?", $("#ra_email_" + $.escapeSelector(id))[0].value))) {
+							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email_" + $.escapeSelector(id))[0].value);
+							return;
+						}
+						message = ""; // In the further messages, do not show this part of the message a second time
+					}
+
+					//if ((data.status & 8) == 8/*HasWriteRights*/) {
+					//	if (confirm(message + _L("Do you want to open the updated object now?"))) {
+					//		openAndSelectNode(id, parent);
+					//		return;
+					//	}
+					//	message = ""; // In the further messages, do not show this part of the message a second time
+					//}
+
+					if (message.trim() != "") {
+						if (isWarning) {
+							alertWarning(message.trim())
+						} else {
+							alertSuccess(message.trim());
+						}
 					}
 
 					// reloadContent();
@@ -245,7 +269,7 @@ var OIDplusPagePublicObjects = {
 			data: {
 				csrf_token:csrf_token,
 				plugin:OIDplusPagePublicObjects.oid,
-				action:"Update2",
+				action:"Update",
 				id:current_node,
 				title:($("#titleedit")[0] ? $("#titleedit")[0].value : null),
 				//description:($("#description")[0] ? $("#description")[0].value : null)
