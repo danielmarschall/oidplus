@@ -241,7 +241,7 @@ class OIDplusGuid extends OIDplusObject {
 	 */
 	public function one_up()/*: ?OIDplusGuid*/ {
 		// A GUID is a GUID, there is no hierarchy
-		return null;
+		return self::parse(self::ns().':');
 	}
 
 	/**
