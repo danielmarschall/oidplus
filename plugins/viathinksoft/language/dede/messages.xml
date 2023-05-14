@@ -7118,6 +7118,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The administrator has disabled this feature. (Plugin %1).
+		]]></source>
+		<target><![CDATA[
+		Der Administrator hat dieses Feature deaktiviert. (Plugin %1).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The administrator has disabled uploading attachments by RAs.
 		]]></source>
 		<target><![CDATA[
