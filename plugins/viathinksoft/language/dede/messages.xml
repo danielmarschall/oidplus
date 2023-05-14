@@ -1942,6 +1942,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Do you want to open the updated object now?
+		]]></source>
+		<target><![CDATA[
+		Möchten Sie das aktualisierte Objekt nun öffnen?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Documents and Resources
 		]]></source>
 		<target><![CDATA[
@@ -2894,6 +2902,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.
+		]]></source>
+		<target><![CDATA[
+		Jedoch wurde die Registrierungsstelle sowie die ASN.1- und IRI-Bezeichner zurückgesetzt, da diese OID eine wohlbekannte OID ist.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Hue shift
 		]]></source>
 		<target><![CDATA[
@@ -3218,22 +3234,6 @@
 		]]></source>
 		<target><![CDATA[
 		Einfügen erfolgreich.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Insert OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.
-		]]></source>
-		<target><![CDATA[
-		Das Hinzufügen war erfolgreich. Jeder wurde die Registrierungsstelle sowie die ASN.1- und IRI-Bezeichner zurückgesetzt, da diese OID eine wohlbekannte OID ist.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Insert OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?
-		]]></source>
-		<target><![CDATA[
-		Hinzufügen erfolgreich. Die eingegebene E-Mail-Adresse %1 existiert jedoch nicht im System. Möchten Sie eine Einladung verwenden, sodass der Eigentümer dieser E-Mail-Adresse seine OIDs in diesem System verwalten kann?
 		]]></target>
 	</message>
 	<message>
@@ -7214,6 +7214,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?
+		]]></source>
+		<target><![CDATA[
+		Die eingegebene E-Mail-Adresse %1 existiert nicht im System. Möchten Sie eine Einladung verwenden, sodass der Eigentümer dieser E-Mail-Adresse seine OIDs in diesem System verwalten kann?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The file attachments feature is not available due to a misconfiguration
 		]]></source>
 		<target><![CDATA[
@@ -7886,6 +7894,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Unsupported request method
+		]]></source>
+		<target><![CDATA[
+		Nicht unterstützte Zugriffs-Methode
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Update
 		]]></source>
 		<target><![CDATA[
@@ -7914,22 +7930,6 @@
 		]]></source>
 		<target><![CDATA[
 		Aktualisierung OK
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Update OK. However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.
-		]]></source>
-		<target><![CDATA[
-		Aktualisierung erfolgreich. Jeder wurde die Registrierungsstelle sowie die ASN.1- und IRI-Bezeichner zurückgesetzt, da diese OID eine wohlbekannte OID ist.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Update OK. However, the email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?
-		]]></source>
-		<target><![CDATA[
-		Aktualisierung erfolgreich. Die eingegebene E-Mail-Adresse %1 existiert jedoch nicht im System. Möchten Sie eine Einladung verwenden, sodass der Eigentümer dieser E-Mail-Adresse seine OIDs in diesem System verwalten kann?
 		]]></target>
 	</message>
 	<message>
