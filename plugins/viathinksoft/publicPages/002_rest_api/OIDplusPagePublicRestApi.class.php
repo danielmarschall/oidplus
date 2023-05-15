@@ -57,7 +57,10 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 				if ($json_out === false) {
 					throw new OIDplusException(_L('REST endpoint not found'), null, 404);
 				}
-				if (!isset($json_out['status'])) $json_out['status'] = -1; // status -1 and -2 like in ajax.php
+				if (!isset($json_out['status'])) {
+					$json_out['status'] = -1; // status -1 and -2 like in ajax.php
+					if (!isset($json_out['error'])) $json_out['error'] = _L('The plugin did not return a status value');
+				}
 				if (!isset($json_out['status_bits'])) $json_out['status_bits'] = [];
 			} catch (\Exception $e) {
 				http_response_code($e instanceof OIDplusException ? $e->getHttpStatus() : 500);

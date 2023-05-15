@@ -7430,6 +7430,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The plugin did not return a status value
+		]]></source>
+		<target><![CDATA[
+		Das Plugin hat keinen Statuswert zurückgeliefert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins
 		]]></source>
 		<target><![CDATA[

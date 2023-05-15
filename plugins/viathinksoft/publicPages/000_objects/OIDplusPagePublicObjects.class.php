@@ -94,10 +94,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					$output['iris'][] = $row_iri['name'];
 				}
 
-				$res['status_bits'] = [];
+				$output['status'] = 0/*OK*/;
+				$output['status_bits'] = [];
 
 				http_response_code(200);
-				$output['status'] = 0/*OK*/;
 				return $output;
 			} else if ($requestMethod == "PUT"/*Replace*/) {
 				$obj = OIDplusObject::parse($id);
@@ -115,21 +115,21 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 				if (OIDplusObject::exists($id)) {
 					// TODO: Problem: The superior RA cannot set title/description, so they cannot perform the PUT command!
-					$res = self::action('Update', $params);
+					$output = self::action('Update', $params);
 				} else {
 					$params['parent'] = $obj->getParent();
 					$params['id_fully_qualified'] = true;
-					$res = self::action('Insert', $params);
+					$output = self::action('Insert', $params);
 				}
 
-				$res['status_bits'] = [];
-				if (($res['status'] & 1) == 1) $res['status_bits'][1] = 'RA is not registered, but it can be invited';
-				if (($res['status'] & 2) == 2) $res['status_bits'][2] = 'RA is not registered and it cannot be invited';
-				if (($res['status'] & 4) == 4) $res['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
-				if (($res['status'] & 8) == 8) $res['status_bits'][8] = 'User has write rights to the freshly created OID';
+				$output['status_bits'] = [];
+				if (($output['status'] & 1) == 1) $output['status_bits'][1] = 'RA is not registered, but it can be invited';
+				if (($output['status'] & 2) == 2) $output['status_bits'][2] = 'RA is not registered and it cannot be invited';
+				if (($output['status'] & 4) == 4) $output['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
+				if (($output['status'] & 8) == 8) $output['status_bits'][8] = 'User has write rights to the freshly created OID';
 
 				http_response_code(200);
-				return $res;
+				return $output;
 			} else if ($requestMethod == "POST"/*Insert*/) {
 				$params = $json_in;
 				$obj = OIDplusObject::parse($id);
@@ -137,38 +137,38 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$params['parent'] = $obj->getParent();
 				$params['id_fully_qualified'] = true;
 				$params['id'] = $id;
-				$res = self::action('Insert', $params);
+				$output = self::action('Insert', $params);
 
-				$res['status_bits'] = [];
-				if (($res['status'] & 1) == 1) $res['status_bits'][1] = 'RA is not registered, but it can be invited';
-				if (($res['status'] & 2) == 2) $res['status_bits'][2] = 'RA is not registered and it cannot be invited';
-				if (($res['status'] & 4) == 4) $res['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
-				if (($res['status'] & 8) == 8) $res['status_bits'][8] = 'User has write rights to the freshly created OID';
+				$output['status_bits'] = [];
+				if (($output['status'] & 1) == 1) $output['status_bits'][1] = 'RA is not registered, but it can be invited';
+				if (($output['status'] & 2) == 2) $output['status_bits'][2] = 'RA is not registered and it cannot be invited';
+				if (($output['status'] & 4) == 4) $output['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
+				if (($output['status'] & 8) == 8) $output['status_bits'][8] = 'User has write rights to the freshly created OID';
 
 				http_response_code(200);
-				return $res;
+				return $output;
 			} else if ($requestMethod == "PATCH"/*Modify*/) {
 				$params = $json_in;
 				$params['id'] = $id;
-				$res = self::action('Update', $params);
+				$output = self::action('Update', $params);
 
-				$res['status_bits'] = [];
-				if (($res['status'] & 1) == 1) $res['status_bits'][1] = 'RA is not registered, but it can be invited';
-				if (($res['status'] & 2) == 2) $res['status_bits'][2] = 'RA is not registered and it cannot be invited';
-				if (($res['status'] & 4) == 4) $res['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
-				if (($res['status'] & 8) == 8) $res['status_bits'][8] = 'User has write rights to the freshly created OID';
+				$output['status_bits'] = [];
+				if (($output['status'] & 1) == 1) $output['status_bits'][1] = 'RA is not registered, but it can be invited';
+				if (($output['status'] & 2) == 2) $output['status_bits'][2] = 'RA is not registered and it cannot be invited';
+				if (($output['status'] & 4) == 4) $output['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
+				if (($output['status'] & 8) == 8) $output['status_bits'][8] = 'User has write rights to the freshly created OID';
 
 				http_response_code(200);
-				return $res;
+				return $output;
 			} else if ($requestMethod == "DELETE"/*Delete*/) {
 				$params = $json_in;
 				$params['id'] = $id;
-				$res = self::action('Delete', $params);
+				$output = self::action('Delete', $params);
 
-				$res['status_bits'] = [];
+				$output['status_bits'] = [];
 
 				http_response_code(200);
-				return $res;
+				return $output;
 			} else {
 				//throw new OIDplusException(_L("Not implemented"), null, 501);
 				throw new OIDplusException(_L("Unsupported request method"), null, 400);
