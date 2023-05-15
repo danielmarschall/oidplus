@@ -490,7 +490,9 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 		          '<div class="container box">' .
 		          $output .
 		          '</div>';
-		if ($doshow) $text .= $output;
+		if ($doshow) {
+			$text = str_replace('<!-- MARKER 5 -->', '<!-- MARKER 5 -->'.$output, $text);
+		}
 	}
 
 	/**
