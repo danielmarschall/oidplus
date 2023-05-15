@@ -25,6 +25,7 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1, /* oobeEntry, oobeRequested */
+	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2, /* modifyContent */
 	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8, /* getNotifications */
 	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9  /* restApi* */
 	           // Important: Do NOT implement INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7, because our getAlternativesForQuery() is the one that calls others!
@@ -56,6 +57,22 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		while ($row = $res->fetch_array()) {
 			$this->ra_change_rec($row['id'], $old_ra, $new_ra);
 		}
+	}
+
+	/**
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2
+	 * @param string $id
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $text
+	 * @return void
+	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 */
+	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
+		// TODO: How can we achieve that RDAP, REST, WHOIS links are grouped together?
+		$text .= '<br /> <a href="'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE)
+			.'rest/v1/objects/'.htmlentities($id).'" class="gray_footer_font" target="_blank">'._L('REST API').'</a> '
+			.'(<a '.OIDplus::gui()->link('oidplus:rest_api_information_admin$endpoints:1.3.6.1.4.1.37476.2.5.2.4.1.0').' class="gray_footer_font">'._L('Documentation').'</a>)';
 	}
 
 	/**

@@ -1966,6 +1966,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Documentation
+		]]></source>
+		<target><![CDATA[
+		Dokumentation
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Documents and Resources
 		]]></source>
 		<target><![CDATA[

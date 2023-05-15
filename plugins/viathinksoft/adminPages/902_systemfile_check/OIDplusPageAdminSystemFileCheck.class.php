@@ -52,8 +52,10 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 	public function gui(string $id, array &$out, bool &$handled) {
 		$parts = explode('$',$id,2);
 		if (!isset($parts[1])) $parts[1] = '';
+
 		if ($parts[0] == 'oidplus:system_file_check') {
 			$handled = true;
+
 			$out['title'] = _L('System file check');
 			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 

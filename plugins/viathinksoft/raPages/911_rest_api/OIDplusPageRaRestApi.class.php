@@ -66,78 +66,83 @@ class OIDplusPageRaRestApi extends OIDplusPagePluginRa {
 	 * @throws OIDplusException
 	 */
 	public function gui(string $id, array &$out, bool &$handled) {
-		$tmp = explode('$',$id);
-		$classname = $tmp[1] ?? '';
+		$parts = explode('$',$id,3);
+		$ra_email = $parts[1] ?? '';
+		$subpage = $parts[2] ?? '';
 
-		$parts = explode('.',$tmp[0],2);
-		if ($parts[0] != 'oidplus:rest_api_information_ra') return;
-		$handled = true;
+		if (empty($ra_email)) return;
 
-		if (str_starts_with($classname, 'endpoints:')) {
-			$plugin = OIDplus::getPluginByOid(explode(':',$classname)[1]);
-			if (!$plugin || !($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9)) throw new OIDplusException(_L("No endpoints for this plugin found"), null, 404);
-			$out['title'] = _L('REST API').' - '.$plugin->getManifest()->getName() . ' ' . _L('Endpoints');
-			$out['icon'] = file_exists(__DIR__.'/img/endpoints_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/endpoints_icon.png' : '';
-			$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:rest_api_information_ra').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
-			$out['text'] .= $plugin->restApiInfo('html');
-		} else {
-			$ra_email = explode('$',$id)[1];
+		if ($parts[0] == 'oidplus:rest_api_information_ra') {
+			$handled = true;
 
-			$out['title'] = _L('REST API');
-			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
-
-			if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as the requested RA %2 or as admin.',OIDplus::gui()->link('oidplus:login$ra$'.$ra_email),'<b>'.htmlentities($ra_email).'</b>'), $out['title'], 401);
-			}
-
-			if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_REST_USER', true)) {
-				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_REST_USER'), $out['title']);
-			}
-
-			if (is_null(OIDplus::getPluginByOid("1.3.6.1.4.1.37476.2.5.2.4.1.2"))) { // OIDplusPagePublicRestApi
-				throw new OIDplusException(_L('The administrator has disabled this feature. (Plugin %1).','OIDplusPagePublicRestApi'), $out['title']);
-			}
-
-			$gen = OIDplusAuthContentStoreJWT::JWT_GENERATOR_REST;
-			$sub = $ra_email;
-
-			$authSimulation = new OIDplusAuthContentStoreJWT();
-			$authSimulation->raLogin($ra_email);
-			$authSimulation->setValue('oidplus_generator', $gen);
-			$token = $authSimulation->getJWTToken();
-
-			$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling an REST API.').'</p>';
-			$out['text'] .= '<h2>'._L('Endpoints').'</h2>';
-			$endpoints = '';
-			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9) {
-					$link = 'oidplus:rest_api_information_ra$endpoints:'.$plugin->getManifest()->getOid();
-					$endpoints .= '<li><a '.OIDplus::gui()->link($link).'>'.htmlentities($plugin->getManifest()->getName()).'</a></li>';
+			if (str_starts_with($subpage, 'endpoints:')) {
+				// Note: This page can be accessed WITHOUT login!
+				$plugin = OIDplus::getPluginByOid(explode(':',$subpage)[1]);
+				if (!$plugin || !($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9)) throw new OIDplusException(_L("No endpoints for this plugin found"), null, 404);
+				$out['title'] = _L('REST API').' - '.$plugin->getManifest()->getName() . ' ' . _L('Endpoints');
+				$out['icon'] = file_exists(__DIR__.'/img/endpoints_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/endpoints_icon.png' : '';
+				$out['text'] = '';
+				if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:rest_api_information_ra').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				}
-			}
-			if ($endpoints) {
-				$out['text'] .= '<p>'._L('The following installed plugins are offering REST endpoints:').'</p>';
-				$out['text'] .= '<p><ul>'.$endpoints.'</ul></p>';
+				$out['text'] .= $plugin->restApiInfo('html');
 			} else {
-				$out['text'] .= '<p>'._L('No installed plugin offers a REST functionality').'</p>';
-			}
-			$out['text'] .= '<h2>'._L('Authentication').'</h2>';
-			$out['text'] .= '<p>'._L('The authentication is done via the following HTTP header:').'</p>';
-			$out['text'] .= '<p><pre id="oidplus_auth_jwt">';
-			$out['text'] .= 'Authentication: Bearer '.htmlentities($token)."\n";
-			$out['text'] .= '</pre></p>';
-			$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(oidplus_auth_jwt)"></p>';
-			$out['text'] .= '<p>'._L('Please keep this information confidential!').'</p>';
-			$out['text'] .= '<p>'._L('The JWT-token (secret!) will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.').'</p>';
+				$out['title'] = _L('REST API');
+				$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
-			$out['text'] .= '<h2>'._L('Blacklisted tokens').'</h2>';
-			$bl_time = OIDplusAuthContentStoreJWT::jwtGetBlacklistTime($gen, $sub);
-			if ($bl_time == 0) {
-				$out['text'] .= '<p>'._L('None of the previously generated JWT tokens have been blacklisted.').'</p>';
-			} else {
-				$out['text'] .= '<p>'._L('All tokens generated before %1 have been blacklisted.',date('d F Y, H:i:s',$bl_time+1)).'</p>';
+				if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
+					throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as the requested RA %2 or as admin.',OIDplus::gui()->link('oidplus:login$ra$'.$ra_email),'<b>'.htmlentities($ra_email).'</b>'), $out['title'], 401);
+				}
+
+				if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_REST_USER', true)) {
+					throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_REST_USER'), $out['title']);
+				}
+
+				if (is_null(OIDplus::getPluginByOid("1.3.6.1.4.1.37476.2.5.2.4.1.2"))) { // OIDplusPagePublicRestApi
+					throw new OIDplusException(_L('The administrator has disabled this feature. (Plugin %1).','OIDplusPagePublicRestApi'), $out['title']);
+				}
+
+				$gen = OIDplusAuthContentStoreJWT::JWT_GENERATOR_REST;
+				$sub = $ra_email;
+
+				$authSimulation = new OIDplusAuthContentStoreJWT();
+				$authSimulation->raLogin($ra_email);
+				$authSimulation->setValue('oidplus_generator', $gen);
+				$token = $authSimulation->getJWTToken();
+
+				$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling an REST API.').'</p>';
+				$out['text'] .= '<h2>'._L('Endpoints').'</h2>';
+				$endpoints = '';
+				foreach (OIDplus::getAllPlugins() as $plugin) {
+					if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9) {
+						$link = 'oidplus:rest_api_information_ra$'.$ra_email.'$endpoints:'.$plugin->getManifest()->getOid();
+						$endpoints .= '<li><a '.OIDplus::gui()->link($link).'>'.htmlentities($plugin->getManifest()->getName()).'</a></li>';
+					}
+				}
+				if ($endpoints) {
+					$out['text'] .= '<p>'._L('The following installed plugins are offering REST endpoints:').'</p>';
+					$out['text'] .= '<p><ul>'.$endpoints.'</ul></p>';
+				} else {
+					$out['text'] .= '<p>'._L('No installed plugin offers a REST functionality').'</p>';
+				}
+				$out['text'] .= '<h2>'._L('Authentication').'</h2>';
+				$out['text'] .= '<p>'._L('The authentication is done via the following HTTP header:').'</p>';
+				$out['text'] .= '<p><pre id="oidplus_auth_jwt">';
+				$out['text'] .= 'Authentication: Bearer '.htmlentities($token)."\n";
+				$out['text'] .= '</pre></p>';
+				$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(oidplus_auth_jwt)"></p>';
+				$out['text'] .= '<p>'._L('Please keep this information confidential!').'</p>';
+				$out['text'] .= '<p>'._L('The JWT-token (secret!) will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.').'</p>';
+
+				$out['text'] .= '<h2>'._L('Blacklisted tokens').'</h2>';
+				$bl_time = OIDplusAuthContentStoreJWT::jwtGetBlacklistTime($gen, $sub);
+				if ($bl_time == 0) {
+					$out['text'] .= '<p>'._L('None of the previously generated JWT tokens have been blacklisted.').'</p>';
+				} else {
+					$out['text'] .= '<p>'._L('All tokens generated before %1 have been blacklisted.',date('d F Y, H:i:s',$bl_time+1)).'</p>';
+				}
+				$out['text'] .= '<button type="button" name="btn_blacklist_jwt" id="btn_blacklist_jwt" class="btn btn-danger btn-xs" onclick="OIDplusPageRaRestApi.blacklistJWT('.js_escape($ra_email).')">'._L('Blacklist all previously generated tokens').'</button>';
 			}
-			$out['text'] .= '<button type="button" name="btn_blacklist_jwt" id="btn_blacklist_jwt" class="btn btn-danger btn-xs" onclick="OIDplusPageRaRestApi.blacklistJWT('.js_escape($ra_email).')">'._L('Blacklist all previously generated tokens').'</button>';
 		}
 	}
 
@@ -169,7 +174,7 @@ class OIDplusPageRaRestApi extends OIDplusPagePluginRa {
 		foreach (OIDplus::getAllPlugins() as $plugin) {
 			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9) {
 				$submenu[] = [
-					'id' => 'oidplus:rest_api_information_ra$endpoints:'.$plugin->getManifest()->getOid(),
+					'id' => 'oidplus:rest_api_information_ra$'.$ra_email.'$endpoints:'.$plugin->getManifest()->getOid(),
 					'icon' => $tree_icon_endpoints,
 					'text' => $plugin->getManifest()->getName() . ' ' . _L('Endpoints')
 				];
@@ -177,7 +182,7 @@ class OIDplusPageRaRestApi extends OIDplusPagePluginRa {
 		}
 
 		$json[] = array(
-			'id' => 'oidplus:rest_api_information_ra',
+			'id' => 'oidplus:rest_api_information_ra$'.$ra_email,
 			'icon' => $tree_icon,
 			'text' => _L('REST API'),
 			'children' => $submenu

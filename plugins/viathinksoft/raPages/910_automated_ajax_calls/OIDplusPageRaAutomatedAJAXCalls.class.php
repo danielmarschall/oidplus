@@ -66,10 +66,11 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 	 * @throws OIDplusException
 	 */
 	public function gui(string $id, array &$out, bool &$handled) {
-		if (explode('$',$id)[0] == 'oidplus:automated_ajax_information_ra') {
-			$handled = true;
+		$parts = explode('$',$id,2);
+		$ra_email = $parts[1] ?? '';
 
-			$ra_email = explode('$',$id)[1];
+		if ($parts[0] == 'oidplus:automated_ajax_information_ra') {
+			$handled = true;
 
 			$out['title'] = _L('Automated AJAX calls');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
