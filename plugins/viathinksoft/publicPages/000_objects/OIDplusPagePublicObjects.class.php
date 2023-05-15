@@ -26,7 +26,7 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1, /* oobeEntry, oobeRequested */
 	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8, /* getNotifications */
-	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9  /* restApiCall */
+	           INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9  /* restApi* */
 	           // Important: Do NOT implement INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7, because our getAlternativesForQuery() is the one that calls others!
 {
 
@@ -62,9 +62,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * Implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9
 	 * @param string $requestMethod
 	 * @param string $endpoint
+	 * @param array $json_in
 	 * @return array|false
 	 */
-	public function restApiCall(string $requestMethod, string $endpoint) {
+	public function restApiCall(string $requestMethod, string $endpoint, array $json_in) {
+		// TODO: Translate status bit-fields that are returned from action() into human readable JSON boolean fields
 		if (str_starts_with($endpoint, 'objects/')) {
 			$id = substr($endpoint, strlen('objects/'));
 			if ($requestMethod == "GET"/*Select*/) {
@@ -102,13 +104,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 				$params = array();
 				$params['id'] = $id;
-				$params['ra_email'] = $_POST['ra_email'] ?? '';
-				$params['comment'] = $_POST['comment'] ?? '';
-				$params['confidential'] = $_POST['confidential'] ?? false;
-				$params['title'] = $_POST['title'] ?? '';
-				$params['description'] = $_POST['description'] ?? '';
-				$params['asn1ids'] = $_POST['asn1ids'] ?? array();
-				$params['iris'] = $_POST['iris'] ?? array();
+				$params['ra_email'] = $json_in['ra_email'] ?? '';
+				$params['comment'] = $json_in['comment'] ?? '';
+				$params['confidential'] = $json_in['confidential'] ?? false;
+				$params['title'] = $json_in['title'] ?? '';
+				$params['description'] = $json_in['description'] ?? '';
+				$params['asn1ids'] = $json_in['asn1ids'] ?? array();
+				$params['iris'] = $json_in['iris'] ?? array();
 
 				if (OIDplusObject::exists($id)) {
 					// TODO: Problem: The superior RA cannot set title/description, so they cannot perform the PUT command!
@@ -121,7 +123,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				http_response_code(200);
 				return $res;
 			} else if ($requestMethod == "POST"/*Insert*/) {
-				$params = $_POST;
+				$params = $json_in;
 				$obj = OIDplusObject::parse($id);
 				if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!', 'GET', $id), null, 400);
 				$params['parent'] = $obj->getParent();
@@ -131,13 +133,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				http_response_code(200);
 				return $res;
 			} else if ($requestMethod == "PATCH"/*Modify*/) {
-				$params = $_POST;
+				$params = $json_in;
 				$params['id'] = $id;
 				$res = self::action('Update', $params);
 				http_response_code(200);
 				return $res;
 			} else if ($requestMethod == "DELETE"/*Delete*/) {
-				$params = $_POST;
+				$params = $json_in;
 				$params['id'] = $id;
 				$res = self::action('Delete', $params);
 				http_response_code(200);
@@ -187,7 +189,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						'<i>'._L('None').'</i>'
 					],
 					_L('Output parameters') => [
-						'status|error',
+						'status ('._L('<0 is error, >=0 is success').')',
+						'error ('._L('if an error occurred').')',
 						'ra_email',
 						'comment',
 						'iris',
@@ -209,7 +212,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						'description ('._L('optional').')'
 					],
 					_L('Output parameters') => [
-						'status|error',
+						'status ('._L('<0 is error, >=0 is success').')',
+						'error ('._L('if an error occurred').')',
 						'inserted_id ('._L('if it was created').')'
 					]
 				],
@@ -225,7 +229,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						'description ('._L('optional').')'
 					],
 					_L('Output parameters') => [
-						'status|error',
+						'status ('._L('<0 is error, >=0 is success').')',
+						'error ('._L('if an error occurred').')',
 						'inserted_id'
 					]
 				],
@@ -241,7 +246,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						'description ('._L('optional').')'
 					],
 					_L('Output parameters') => [
-						'status|error'
+						'status ('._L('<0 is error, >=0 is success').')',
+						'error ('._L('if an error occurred').')',
 					]
 				],
 				_L('Remove') => [
@@ -250,7 +256,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						'<i>'._L('None').'</i>'
 					],
 					_L('Output parameters') => [
-						'status|error'
+						'status ('._L('<0 is error, >=0 is success').')',
+						'error ('._L('if an error occurred').')',
 					]
 				]
 			];
@@ -398,8 +405,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$current_ra = $obj->getRaMail() ?? '';
 				if ($new_ra != $current_ra) {
 					OIDplus::logger()->log("V2:[INFO]OID(%1)+[OK/INFO]SUPOIDRA(%1)+[OK/INFO]A", "RA of object '%1' changed from '%2' to '%3'", $id, $current_ra, $new_ra);
-					OIDplus::logger()->log("V2:[WARN]RA(%2)", "Lost ownership of object '%1' due to RA transfer of superior RA / admin.", $id, $current_ra, $new_ra);
-					OIDplus::logger()->log("V2:[INFO]RA(%3)", "Gained ownership of object '%1' due to RA transfer of superior RA / admin.", $id, $current_ra, $new_ra);
+					if (!empty($current_ra)) OIDplus::logger()->log("V2:[WARN]RA(%2)", "Lost ownership of object '%1' due to RA transfer of superior RA / admin.", $id, $current_ra, $new_ra);
+					if (!empty($new_ra)) OIDplus::logger()->log("V2:[INFO]RA(%3)", "Gained ownership of object '%1' due to RA transfer of superior RA / admin.", $id, $current_ra, $new_ra);
 					if ($parentObj = $obj->getParent()) {
 						$parent_oid = $parentObj->nodeId();
 						OIDplus::logger()->log("V2:[INFO]OID(%4)", "RA of object '%1' changed from '%2' to '%3'", $id, $current_ra, $new_ra, $parent_oid);

@@ -43,20 +43,23 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 			$requestMethod = $_SERVER["REQUEST_METHOD"];
 
 			try {
+				$cont = @file_get_contents('php://input');
+				$json_in = empty($cont) ? [] : @json_decode($cont, true);
+				if (!is_array($json_in)) throw new OIDplusException(_L('Invalid JSON data received'), null, 400);
+
 				$json_out = false;
 				foreach (OIDplus::getAllPlugins() as $plugin) {
 					if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9) {
-						$json_out = $plugin->restApiCall($requestMethod, $rel_url);
+						$json_out = $plugin->restApiCall($requestMethod, $rel_url, $json_in);
 						if ($json_out !== false) break;
 					}
 				}
 				if ($json_out === false) {
-					http_response_code(404);
-					$json_out = array("error" => "Endpoint not found");
+					throw new OIDplusException(_L('REST endpoint not found'), null, 404);
 				}
 			} catch (\Exception $e) {
 				http_response_code($e instanceof OIDplusException ? $e->getHttpStatus() : 500);
-				$json_out = array("error" => $e->getMessage());
+				$json_out = array("status" => -1, "error" => $e->getMessage());
 			}
 
 			OIDplus::invoke_shutdown();
