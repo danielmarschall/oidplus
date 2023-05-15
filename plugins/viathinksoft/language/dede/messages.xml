@@ -198,6 +198,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		<0 is error, >=0 is success
+		]]></source>
+		<target><![CDATA[
+		<0 ist Fehler, >=0 ist Erfolg
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		<a %1>Click here</a> for more information about privacy related topics.
 		]]></source>
 		<target><![CDATA[
@@ -3366,6 +3374,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Invalid JSON data received
+		]]></source>
+		<target><![CDATA[
+		Ungültige JSON-Daten erhalten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Invalid OID %1
 		]]></source>
 		<target><![CDATA[
@@ -5986,6 +6002,14 @@
 		]]></source>
 		<target><![CDATA[
 		REST API
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		REST endpoint not found
+		]]></source>
+		<target><![CDATA[
+		REST-Endpunkt wurde nicht gefunden
 		]]></target>
 	</message>
 	<message>
@@ -8842,6 +8866,14 @@
 		]]></source>
 		<target><![CDATA[
 		hCaptcha Site-Key
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		if an error occurred
+		]]></source>
+		<target><![CDATA[
+		wenn ein Fehler aufgetreten ist
 		]]></target>
 	</message>
 	<message>
