@@ -82,7 +82,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 	 * @throws OIDplusException
 	 */
 	public function gui(string $id, array &$out, bool &$handled) {
-		$tmp = explode('$',$id);
+		$tmp = explode('$',$id,2);
 		$classname = $tmp[1] ?? null;
 
 		$parts = explode('.',$tmp[0],2);

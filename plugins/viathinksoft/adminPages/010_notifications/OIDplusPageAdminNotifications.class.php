@@ -42,12 +42,12 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 	 * @throws OIDplusException
 	 */
 	public function gui(string $id, array &$out, bool &$handled) {
-		$parts = explode('$',$id);
+		$parts = explode('$',$id,2);
 		$id = $parts[0];
+		$ra_email = $parts[1] ?? null/*no filter*/;
 
 		if ($id == 'oidplus:notifications') {
 			$handled = true;
-			$ra_email = $parts[1] ?? null/*no filter*/;
 
 			$out['title'] = _L('Notifications');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';

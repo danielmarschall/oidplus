@@ -186,9 +186,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 	 * @throws OIDplusException
 	 */
 	public function gui(string $id, array &$out, bool &$handled) {
-		$parts = explode('$',$id,2);
-		if (!isset($parts[1])) $parts[1] = '';
-		if ($parts[0] == 'oidplus:software_update') {
+		if ($id == 'oidplus:software_update') {
 			@set_time_limit(0);
 
 			$handled = true;
