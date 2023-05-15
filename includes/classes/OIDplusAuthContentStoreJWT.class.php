@@ -99,11 +99,11 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	/**
 	 * Do various checks if the token is allowed and not blacklisted
 	 * @param OIDplusAuthContentStore $contentProvider
-	 * @param int $validGenerators Bitmask which generators to allow (-1 = allow all)
+	 * @param int|null $validGenerators Bitmask which generators to allow (null = allow all)
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	private static function jwtSecurityCheck(OIDplusAuthContentStore $contentProvider, int $validGenerators=-1) {
+	private static function jwtSecurityCheck(OIDplusAuthContentStore $contentProvider, int $validGenerators=null) {
 		// Check if the token is intended for us
 		if ($contentProvider->getValue('aud','') !== OIDplus::getEditionInfo()['jwtaud']) {
 			throw new OIDplusException(_L('Token has wrong audience'));
@@ -182,7 +182,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		}
 
 		// Checks if JWT are dependent on the generator
-		if ($validGenerators !== -1) {
+		if (!is_null($validGenerators)) {
 			if (($gen & $validGenerators) === 0) {
 				throw new OIDplusException(_L('This kind of JWT token (%1) cannot be used in this request type', self::generatorName($gen)));
 			}
