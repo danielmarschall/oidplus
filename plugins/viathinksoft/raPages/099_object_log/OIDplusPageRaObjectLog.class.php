@@ -71,8 +71,6 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa
 		if (!$obj) return;
 		if (!$obj->userHasWriteRights()) return;
 
-		// TODO: I want that this content comes before the WHOIS modifyContent.
-		//       The problem is that first all public and then all RA plugins get loaded, not mixed by their priority
 		$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event, lu.severity from ###log lo ".
 		                            "left join ###log_object lu on lu.log_id = lo.id ".
 		                            "where lu.object = ? " .

@@ -42,8 +42,10 @@ class OIDplusPagePublicRdap extends OIDplusPagePluginPublic
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
 	 */
 	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
-	    $text .= '<br /> <a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE)
+	    $payload = '<br /> <a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE)
 			.'rdap/rdap.php?query='.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('RDAP').'</a>';
+
+		$text = str_replace('<!-- MARKER 6 -->', '<!-- MARKER 6 -->'.$payload, $text);
 	}
 
 	/**

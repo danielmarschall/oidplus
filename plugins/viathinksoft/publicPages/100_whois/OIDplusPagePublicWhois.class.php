@@ -209,14 +209,14 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 	 * @throws OIDplusException
 	 */
 	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
-		$text .= '<br><img src="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/page_pictogram.png" height="15" alt=""> <a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('Whois').'</a>';
-
+		$payload = '<br><img src="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/page_pictogram.png" height="15" alt=""> <a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('Whois').'</a>';
 		$obj = OIDplusObject::parse($id);
 		if ($obj && $obj->userHasParentalWriteRights()) {
-			$text .= '<br><span class="gray_footer_font">'._L('OID-WHOIS Auth Token for displaying full object information: %1 (only applies if the this or superior objects are marked confidential)','<b>'.self::genWhoisAuthToken($id).'</b>').'</span>';
-			$text .= '<br><span class="gray_footer_font">'._L('OID-WHOIS Auth Token for displaying full RA information: %1 (only applies if the RA has set the privacy-flag)','<b>'.self::genWhoisAuthToken('ra:'.$obj->getRaMail()).'</b>').'</span>';
+			$payload .= '<br><span class="gray_footer_font">'._L('OID-WHOIS Auth Token for displaying full object information: %1 (only applies if the this or superior objects are marked confidential)','<b>'.self::genWhoisAuthToken($id).'</b>').'</span>';
+			$payload .= '<br><span class="gray_footer_font">'._L('OID-WHOIS Auth Token for displaying full RA information: %1 (only applies if the RA has set the privacy-flag)','<b>'.self::genWhoisAuthToken('ra:'.$obj->getRaMail()).'</b>').'</span>';
 		}
 
+		$text = str_replace('<!-- MARKER 6 -->', '<!-- MARKER 6 -->'.$payload, $text);
 	}
 
 	/**

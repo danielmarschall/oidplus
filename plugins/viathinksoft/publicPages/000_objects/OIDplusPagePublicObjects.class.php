@@ -69,10 +69,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
 	 */
 	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
-		// TODO: How can we achieve that RDAP, REST, WHOIS links are grouped together?
-		$text .= '<br /> <a href="'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE)
+		$payload = '<br /> <a href="'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE)
 			.'rest/v1/objects/'.htmlentities($id).'" class="gray_footer_font" target="_blank">'._L('REST API').'</a> '
 			.'(<a '.OIDplus::gui()->link('oidplus:rest_api_information_admin$endpoints:1.3.6.1.4.1.37476.2.5.2.4.1.0').' class="gray_footer_font">'._L('Documentation').'</a>)';
+
+		$text = str_replace('<!-- MARKER 6 -->', '<!-- MARKER 6 -->'.$payload, $text);
 	}
 
 	/**
@@ -111,8 +112,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					$output['iris'][] = $row_iri['name'];
 				}
 
-				$output['status'] = 0/*OK*/;
-				$output['status_bits'] = [];
+				$output_prepend['status'] = 0/*OK*/;
+				$output_prepend['status_bits'] = [];
+				$output = array_merge($output_prepend, $output);
 
 				http_response_code(200);
 				return $output;
@@ -891,6 +893,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 			// ---
 
+			$out['text'] = '<!-- MARKER 1 -->' . $out['text']; // use this to better control modifyContent!
+
 			if ($objParent) {
 				if ($objParent->isRoot()) {
 					$parent_link_text = $objParent->objectTypeTitle();
@@ -916,7 +920,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$out['text'] = '<p><a '.OIDplus::gui()->link('oidplus:system').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '.htmlentities($parent_link_text).'</a></p>' . $out['text'];
 			}
 
+			$out['text'] = '<!-- MARKER 0 -->' . $out['text']; // use this to better control modifyContent!
+
 			// ---
+
+			$out['text'] .= '<!-- MARKER 2 -->'; // use this to better control modifyContent!
 
 			if ($obj) {
 				$title = $obj->getTitle() ?? '';
@@ -950,13 +958,19 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 			// ---
 
-			if (strpos($out['text'], '%%DESC%%') !== false)
-				$out['text'] = str_replace('%%DESC%%',    $desc,                              $out['text']);
-			if (strpos($out['text'], '%%CRUD%%') !== false)
-				$out['text'] = str_replace('%%CRUD%%',    self::showCrud($obj->nodeId()),     $out['text']);
-			if (strpos($out['text'], '%%RA_INFO%%') !== false)
+			if (strpos($out['text'], '%%DESC%%') !== false) {
+				$out['text'] = str_replace('%%DESC%%', $desc, $out['text']);
+			}
+			if (strpos($out['text'], '%%CRUD%%') !== false) {
+				$out['text'] = str_replace('%%CRUD%%', self::showCrud($obj->nodeId()), $out['text']);
+			}
+			if (strpos($out['text'], '%%RA_INFO%%') !== false) {
 				$out['text'] = str_replace('%%RA_INFO%%', OIDplusPagePublicRaInfo::showRaInfo($obj->getRaMail()), $out['text']);
+			}
 
+			$out['text'] .= '<!-- MARKER 3 -->'; // use this to better control modifyContent!
+			$out['text'] .= '<!-- MARKER 4 -->'; // use this to better control modifyContent!
+			$out['text'] .= '<!-- MARKER 5 -->'; // use this to better control modifyContent!
 			$alt_ids = $obj->getAltIds();
 			if (count($alt_ids) > 0) {
 				$out['text'] .= '<h2>'._L('Alternative Identifiers').'</h2>';
@@ -992,11 +1006,18 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$out['text'] .= '</div></div>';
 			}
 
+			$out['text'] .= '<!-- MARKER 6 -->'; // use this to better control modifyContent!
+			$out['text'] .= '<!-- MARKER 7 -->'; // use this to better control modifyContent!
+			$out['text'] .= '<!-- MARKER 8 -->'; // use this to better control modifyContent!
+			$out['text'] .= '<!-- MARKER 9 -->'; // use this to better control modifyContent!
+
 			foreach (OIDplus::getAllPlugins() as $plugin) {
 				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2) {
 					$plugin->modifyContent($obj->nodeId(), $out['title'], $out['icon'], $out['text']);
 				}
 			}
+
+			for ($i=0; $i<=9; $i++) $out['text'] = str_replace("<!-- MARKER $i -->", '', $out['text']);
 		}
 	}
 
