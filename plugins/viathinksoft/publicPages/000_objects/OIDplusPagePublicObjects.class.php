@@ -66,7 +66,6 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @return array|false
 	 */
 	public function restApiCall(string $requestMethod, string $endpoint, array $json_in) {
-		// TODO: Translate status bit-fields that are returned from action() into human readable JSON boolean fields
 		if (str_starts_with($endpoint, 'objects/')) {
 			$id = substr($endpoint, strlen('objects/'));
 			if ($requestMethod == "GET"/*Select*/) {
@@ -95,6 +94,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					$output['iris'][] = $row_iri['name'];
 				}
 
+				$res['status_bits'] = [];
+
 				http_response_code(200);
 				$output['status'] = 0/*OK*/;
 				return $output;
@@ -120,6 +121,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					$params['id_fully_qualified'] = true;
 					$res = self::action('Insert', $params);
 				}
+
+				$res['status_bits'] = [];
+				if (($res['status'] & 1) == 1) $res['status_bits'][1] = 'RA is not registered, but it can be invited';
+				if (($res['status'] & 2) == 2) $res['status_bits'][2] = 'RA is not registered and it cannot be invited';
+				if (($res['status'] & 4) == 4) $res['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
+				if (($res['status'] & 8) == 8) $res['status_bits'][8] = 'User has write rights to the freshly created OID';
+
 				http_response_code(200);
 				return $res;
 			} else if ($requestMethod == "POST"/*Insert*/) {
@@ -130,18 +138,35 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$params['id_fully_qualified'] = true;
 				$params['id'] = $id;
 				$res = self::action('Insert', $params);
+
+				$res['status_bits'] = [];
+				if (($res['status'] & 1) == 1) $res['status_bits'][1] = 'RA is not registered, but it can be invited';
+				if (($res['status'] & 2) == 2) $res['status_bits'][2] = 'RA is not registered and it cannot be invited';
+				if (($res['status'] & 4) == 4) $res['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
+				if (($res['status'] & 8) == 8) $res['status_bits'][8] = 'User has write rights to the freshly created OID';
+
 				http_response_code(200);
 				return $res;
 			} else if ($requestMethod == "PATCH"/*Modify*/) {
 				$params = $json_in;
 				$params['id'] = $id;
 				$res = self::action('Update', $params);
+
+				$res['status_bits'] = [];
+				if (($res['status'] & 1) == 1) $res['status_bits'][1] = 'RA is not registered, but it can be invited';
+				if (($res['status'] & 2) == 2) $res['status_bits'][2] = 'RA is not registered and it cannot be invited';
+				if (($res['status'] & 4) == 4) $res['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
+				if (($res['status'] & 8) == 8) $res['status_bits'][8] = 'User has write rights to the freshly created OID';
+
 				http_response_code(200);
 				return $res;
 			} else if ($requestMethod == "DELETE"/*Delete*/) {
 				$params = $json_in;
 				$params['id'] = $id;
 				$res = self::action('Delete', $params);
+
+				$res['status_bits'] = [];
+
 				http_response_code(200);
 				return $res;
 			} else {
@@ -151,27 +176,6 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		} else {
 			return false;
 		}
-	}
-
-	/**
-	 * @param array $struct
-	 * @return string
-	 */
-	private function array_to_html_ul_li(array $struct): string {
-		// TODO: put in includes/functions.inc.php
-		$res = '';
-		$res .= '<ul>';
-		foreach ($struct as $name => $val) {
-			$res .= '<li>';
-			if (is_array($val)) {
-				$res .= $name . self::array_to_html_ul_li($val);
-			} else {
-				$res .= $val;
-			}
-			$res .= '</li>';
-		}
-		$res .= '</ul>';
-		return $res;
 	}
 
 	/**
@@ -190,6 +194,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					],
 					_L('Output parameters') => [
 						'status ('._L('<0 is error, >=0 is success').')',
+						'status_bits',
 						'error ('._L('if an error occurred').')',
 						'ra_email',
 						'comment',
@@ -213,6 +218,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					],
 					_L('Output parameters') => [
 						'status ('._L('<0 is error, >=0 is success').')',
+						'status_bits',
 						'error ('._L('if an error occurred').')',
 						'inserted_id ('._L('if it was created').')'
 					]
@@ -230,6 +236,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					],
 					_L('Output parameters') => [
 						'status ('._L('<0 is error, >=0 is success').')',
+						'status_bits',
 						'error ('._L('if an error occurred').')',
 						'inserted_id'
 					]
@@ -247,21 +254,23 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					],
 					_L('Output parameters') => [
 						'status ('._L('<0 is error, >=0 is success').')',
+						'status_bits',
 						'error ('._L('if an error occurred').')',
 					]
 				],
 				_L('Remove') => [
-					'<b>DELETE</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>'.
+					'<b>DELETE</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>',
 					_L('Input parameters') => [
 						'<i>'._L('None').'</i>'
 					],
 					_L('Output parameters') => [
 						'status ('._L('<0 is error, >=0 is success').')',
+						'status_bits',
 						'error ('._L('if an error occurred').')',
 					]
 				]
 			];
-			return self::array_to_html_ul_li($struct);
+			return array_to_html_ul_li($struct);
 		} else {
 			throw new OIDplusException(_L('Invalid REST API information format'), null, 500);
 		}
@@ -341,9 +350,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		// Action:     Update
 		// Parameters: id, ra_email, comment, iris, asn1ids, confidential, title, description
 		// Outputs:    <0 Error, =0 Success, with following bitfields for further information:
-		//             x+1 = RA is not registered
-		//             x+2 = RA is not registered, but it cannot be invited
-		//             x+4 = OID is a well-known OID, so RA, ASN.1 and IRI identifiers were reset
+		//             x+1 = RA is not registered, but it can be invited
+		//             x+2 = RA is not registered and it cannot be invited
+		//             x+4 = OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset
 		//             x+8 = User has write rights to the freshly created OID
 		else if ($actionID == 'Update') {
 			_CheckParamExists($params, 'id');
@@ -516,9 +525,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		// Action:     Insert
 		// Parameters: parent, id (relative!), ra_email, comment, iris, asn1ids, confidential, title, description
 		// Outputs:    status=<0 Error, =0 Success, with following bitfields for further information:
-		//             x+1 = RA is not registered
-		//             x+2 = RA is not registered, but it cannot be invited
-		//             x+4 = OID is a well-known OID, so RA, ASN.1 and IRI identifiers were reset
+		//             x+1 = RA is not registered, but it can be invited
+		//             x+2 = RA is not registered and it cannot be invited
+		//             x+4 = OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset
 		//             x+8 = User has write rights to the freshly created OID
 		else if ($actionID == 'Insert') {
 			// Check if you have write rights on the parent (to create a new object)

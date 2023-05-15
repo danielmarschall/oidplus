@@ -62,7 +62,7 @@ try {
 			}
 			try {
 				$json_out = $plugin->action($_REQUEST['action'], $params);
-				if (!isset($json_out['status'])) $json_out['status'] = -1;
+				if (!isset($json_out['status'])) $json_out['status'] = -1; // status -1 and -2 like in REST API
 				if (!OIDplus::baseconfig()->getValue('DISABLE_AJAX_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
 					OIDplus::db()->transaction_commit();
 				}
