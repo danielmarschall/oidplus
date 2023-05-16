@@ -157,7 +157,7 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	/**
-	 * @return array
+	 * @return string[]
 	 * @throws OIDplusException
 	 */
 	private function getTechInfo(): array {
@@ -353,7 +353,7 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	/**
-	 * @return array
+	 * @return OIDplusOidAsn1Id[]
 	 * @throws OIDplusException
 	 */
 	public function getAsn1Ids(): array {
@@ -369,7 +369,7 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	/**
-	 * @return array
+	 * @return OIDplusOidIri[]
 	 * @throws OIDplusException
 	 */
 	public function getIris(): array {
@@ -619,7 +619,7 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	/**
-	 * @return array|OIDplusAltId[]
+	 * @return OIDplusAltId[]
 	 * @throws OIDplusException
 	 */
 	public function getAltIds(): array {

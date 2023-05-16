@@ -8870,6 +8870,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		for OID only
+		]]></source>
+		<target><![CDATA[
+		nur bei OIDs
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		hCaptcha Secret
 		]]></source>
 		<target><![CDATA[

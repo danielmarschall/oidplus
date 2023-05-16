@@ -87,34 +87,34 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		if (str_starts_with($endpoint, 'objects/')) {
 			$id = substr($endpoint, strlen('objects/'));
 			if ($requestMethod == "GET"/*Select*/) {
+				$obj = OIDplusObject::findFitting($id);
+				if (!$obj) throw new OIDplusException(_L('The object %1 was not found in this database.', $id), null, 404);
+
+				if (!$obj->userHasReadRights()) throw new OIDplusException('Insufficient authorization to read information about this object.', null, 401);
+
 				$output = array();
 
-				$res = OIDplus::db()->query("select id, ra_email, comment, confidential, title, description from ###objects where id = ?", array($id));
-				if (!$res->any()) throw new OIDplusException(_L('The object %1 was not found in this database.', $id), null, 404);
-				$row = $res->fetch_array();
+				$output['status'] = 0/*OK*/;
+				$output['status_bits'] = [];
 
-				//$output['id'] = $row['id'];
-				$output['ra_email'] = $row['ra_email'];
-				$output['comment'] = $row['comment'];
-				$output['confidential'] = $row['confidential'];
-				$output['title'] = $row['title'];
-				$output['description'] = $row['description'];
+				//$output['id'] = $obj->nodeId(true);
+				$output['ra_email'] = $obj->getRaMail();
+				$output['comment'] = $obj->getComment();
+				$output['confidential'] = $obj->isConfidential();
+				$output['title'] = $obj->getTitle();
+				$output['description'] = $obj->getDescription();
 
-				$output['asn1ids'] = array();
-				$res_asn = OIDplus::db()->query("select name from ###asn1id where oid = ?", array($id));
-				while ($row_asn = $res_asn->fetch_array()) {
-					$output['asn1ids'][] = $row_asn['name'];
+				if ($obj instanceof OIDplusOid) {
+					$output['asn1ids'] = array(); // TODO: Rename to oid-alphanum-id ?
+					foreach ($obj->getAsn1Ids() as $asn) {
+						$output['asn1ids'][] = $asn->getName();
+					}
+
+					$output['iris'] = array(); // TODO: Rename to oid-unicode-label ?
+					foreach ($obj->getIris() as $iri) {
+						$output['iris'][] = $iri->getName();
+					}
 				}
-
-				$output['iris'] = array();
-				$res_iri = OIDplus::db()->query("select name from ###iri where oid = ?", array($id));
-				while ($row_iri = $res_iri->fetch_array()) {
-					$output['iris'][] = $row_iri['name'];
-				}
-
-				$output_prepend['status'] = 0/*OK*/;
-				$output_prepend['status_bits'] = [];
-				$output = array_merge($output_prepend, $output);
 
 				http_response_code(200);
 				return $output;
@@ -217,8 +217,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						'error ('._L('if an error occurred').')',
 						'ra_email',
 						'comment',
-						'iris',
-						'asn1ids',
+						'iris ('._L('for OID only').')',
+						'asn1ids ('._L('for OID only').')',
 						'confidential',
 						'title',
 						'description'
