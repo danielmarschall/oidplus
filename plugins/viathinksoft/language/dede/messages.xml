@@ -5046,6 +5046,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Outdated plugin: Calling %1 from a plugin is deprecated. Please use %2 instead
+		]]></source>
+		<target><![CDATA[
+		Veraltetes Plugin: Das Aufrufen von %1 ist ab sofort verboten. Es muss zukünftig %2 verwendet werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Output format
 		]]></source>
 		<target><![CDATA[

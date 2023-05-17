@@ -95,7 +95,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				OIDplus::logger()->log("V2:[INFO]RA(%1)+RA(%2)", "Requested email address change from '%1' to '%2'", $old_email, $new_email);
 
 				$timestamp = time();
-				$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp));
+				$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('5ef24124-f4fb-11ed-b67e-3c4a92df8582:'.$old_email.'/'.$new_email.'/'.$timestamp));
 
 				$message = file_get_contents(__DIR__ . '/change_request_email.tpl');
 				$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
@@ -135,7 +135,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				throw new OIDplusException(_L('E-Mail-Address cannot be changed because this user does not have a password'));
 			}
 
-			if (!OIDplus::authUtils()->validateAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp, $auth)) {
+			if (!OIDplus::authUtils()->validateAuthKey('5ef24124-f4fb-11ed-b67e-3c4a92df8582:'.$old_email.'/'.$new_email.'/'.$timestamp, $auth)) {
 				throw new OIDplusException(_L('Invalid auth key'));
 			}
 

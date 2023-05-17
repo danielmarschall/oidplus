@@ -414,7 +414,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 			$k = new \Firebase\JWT\Key($pubKey, 'RS256'); // RSA+SHA256 ist hardcoded in getPkiStatus() generation
 			$this->content = (array) \Firebase\JWT\JWT::decode($jwt, $k);
 		} else {
-			$key = OIDplus::baseConfig()->getValue('SERVER_SECRET', '').'/OIDplusAuthContentStoreJWT';
+			$key = OIDplus::authUtils()->makeSecret('0be35e52-f4ef-11ed-b67e-3c4a92df8582');
 			$key = hash_pbkdf2('sha512', $key, '', 10000, 32/*256bit*/, false);
 			$k = new \Firebase\JWT\Key($key, 'HS512'); // HMAC+SHA512 is hardcoded here
 			$this->content = (array) \Firebase\JWT\JWT::decode($jwt, $k);
@@ -436,7 +436,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 			$privKey = OIDplus::getSystemPrivateKey();
 			return \Firebase\JWT\JWT::encode($payload, $privKey, 'RS256'); // RSA+SHA256 ist hardcoded in getPkiStatus() generation
 		} else {
-			$key = OIDplus::baseConfig()->getValue('SERVER_SECRET', '').'/OIDplusAuthContentStoreJWT';
+			$key = OIDplus::authUtils()->makeSecret('0be35e52-f4ef-11ed-b67e-3c4a92df8582');
 			$key = hash_pbkdf2('sha512', $key, '', 10000, 32/*256bit*/, false);
 			return \Firebase\JWT\JWT::encode($payload, $key, 'HS512'); // HMAC+SHA512 is hardcoded here
 		}
