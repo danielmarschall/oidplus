@@ -159,15 +159,21 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		// When an user believes that a token was compromised, then they can blacklist the tokens identified by their "iat" ("Issued at") property
 		// When a user logs out of a "remember me" session, the JWT token will be blacklisted as well
 		// Small side effect: All "remember me" sessions of that user will be revoked then
-		$sublist = $contentProvider->loggedInRaList();
-		foreach ($sublist as &$sub) {
-			$sub = $sub->raEmail();
+		$iat = $contentProvider->getValue('iat',0);
+		if (($iat-120/*leeway 2min*/) > time()) {
+			// Token was created in the future. Something is wrong!
+			throw new OIDplusException(_L('JWT Token cannot be verified because the server time is wrong'));
 		}
-		if ($has_admin) $sublist[] = 'admin';
+		$sublist = $contentProvider->loggedInRaList();
+		$usernames = array();
 		foreach ($sublist as $sub) {
-			$bl_time = self::jwtGetBlacklistTime($gen, $sub);
-			$iat = $contentProvider->getValue('iat',0);
+			$usernames[] = $sub->raEmail();
+		}
+		if ($has_admin) $usernames[] = 'admin';
+		foreach ($usernames as $username) {
+			$bl_time = self::jwtGetBlacklistTime($gen, $username);
 			if ($iat <= $bl_time) {
+				// Token is blacklisted (it was created before the last blacklist time)
 				throw new OIDplusException(_L('The JWT token was blacklisted on %1. Please generate a new one',date('d F Y, H:i:s',$bl_time)));
 			}
 		}
