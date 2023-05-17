@@ -56,8 +56,6 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'get_challenge') {
-			$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
-
 			$offset = 0; // doesn't matter
 			$min = $offset;
 			$max = $offset + OIDplus::baseConfig()->getValue('VTS_CAPTCHA_COMPLEXITY', 50000);
@@ -66,8 +64,8 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 			$starttime = time();
 			$random = mt_rand($min,$max);
 			$ip_target = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-			$challenge = sha3_512($starttime.'/'.$ip_target.'/'.$random);
-			$challenge_integrity = sha3_512_hmac($challenge,$server_secret);
+			$challenge = sha3_512($starttime.'/'.$ip_target.'/'.$random); // $random is secret!
+			$challenge_integrity = OIDplus::authUtils()->makeAuthKey('797bfc34-f4fa-11ed-86ca-3c4a92df8582:'.$challenge);
 			$send_to_client = array($starttime, $ip_target, $challenge, $min, $max, $challenge_integrity);
 
 			$open_trans_file = self::getOpenTransFileName($ip_target, $random);
@@ -94,7 +92,6 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 	 */
 	private static function getOpenTransFileName(string $ip_target, $random): string {
 		$dir = OIDplus::localpath().'/userdata/cache';
-		$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
 
 		// First, delete challenges which were never completed
 		$files = glob($dir.'/vts_client_challenge_*.tmp');
@@ -105,7 +102,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 			@unlink($file);
 		}
 
-		return $dir.'/vts_client_challenge_'.sha3_512_hmac($ip_target.'/'.$random, $server_secret).'.tmp';
+		return $dir.'/vts_client_challenge_'.OIDplus::authUtils()->makeSecret('461f4a9e-f4fa-11ed-86ca-3c4a92df8582:'.$ip_target.'/'.$random).'.tmp';
 	}
 
 	/**
@@ -134,8 +131,6 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 
 		if (is_null($fieldname)) $fieldname = 'vts_validation_result';
 
-		$server_secret='VtsClientChallenge:'.OIDplus::baseConfig()->getValue('SERVER_SECRET');
-
 		if (!isset($params[$fieldname])) throw new OIDplusException(_L('No challenge response found').' (A)');
 
 		$client_response = @json_decode($params[$fieldname], true);
@@ -156,7 +151,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 			throw new OIDplusException(_L('IP address has changed. Please try again. (current IP %1, expected %2)', $current_ip, $ip_target));
 		} else if (time()-$starttime > OIDplus::baseConfig()->getValue('VTS_CAPTCHA_MAXTIME', 10*60/*10 minutes*/)) {
 			throw new OIDplusException(_L('Challenge expired. Please try again.'));
-		} else if ($challenge_integrity != sha3_512_hmac($challenge,$server_secret)) {
+		} else if (!OIDplus::authUtils()->validateAuthKey('797bfc34-f4fa-11ed-86ca-3c4a92df8582:'.$challenge, $challenge_integrity)) {
 			throw new OIDplusException(_L('Challenge integrity failed'));
 		} else if ($challenge !== sha3_512($starttime.'/'.$ip_target.'/'.$answer)) {
 			throw new OIDplusException(_L('Wrong answer'));

@@ -46,7 +46,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			OIDplus::logger()->log("V2:[WARN]RA(%1)", "A new password for '%1' was requested (forgot password)", $email);
 
 			$timestamp = time();
-			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('reset_password;'.$email.';'.$timestamp));
+			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('93a16dbe-f4fb-11ed-b67e-3c4a92df8582:'.$email.'/'.$timestamp));
 
 			$message = $this->getForgotPasswordText($params['email']);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
@@ -69,7 +69,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$auth = $params['auth'];
 			$timestamp = $params['timestamp'];
 
-			if (!OIDplus::authUtils()->validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
+			if (!OIDplus::authUtils()->validateAuthKey('93a16dbe-f4fb-11ed-b67e-3c4a92df8582:'.$email.'/'.$timestamp, $auth)) {
 				throw new OIDplusException(_L('Invalid auth key'));
 			}
 

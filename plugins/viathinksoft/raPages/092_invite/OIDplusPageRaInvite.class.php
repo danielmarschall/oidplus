@@ -47,7 +47,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' has been invited", $email);
 
 			$timestamp = time();
-			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('activate_ra;'.$email.';'.$timestamp));
+			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('ed840c3e-f4fa-11ed-b67e-3c4a92df8582:'.$email.'/'.$timestamp));
 
 			$message = $this->getInvitationText($email);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
@@ -70,7 +70,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$auth = $params['auth'];
 			$timestamp = $params['timestamp'];
 
-			if (!OIDplus::authUtils()->validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
+			if (!OIDplus::authUtils()->validateAuthKey('ed840c3e-f4fa-11ed-b67e-3c4a92df8582:'.$email.'/'.$timestamp, $auth)) {
 				throw new OIDplusException(_L('Invalid auth key'));
 			}
 

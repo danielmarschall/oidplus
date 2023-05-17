@@ -380,7 +380,16 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		OIDplus::logger()->log("V2:[OK]A", "Admin logged out (%1)", $loginfo);
 	}
 
-	// Authentication keys for validating arguments (e.g. sent by mail)
+	// Authentication keys for generating secrets or validating arguments (e.g. sent by mail)
+
+	/**
+	 * @param string $data
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	public function makeSecret(string $data): string {
+		return sha3_512_hmac($data, 'OIDplus:'.OIDplus::baseConfig()->getValue('SERVER_SECRET'), false);
+	}
 
 	/**
 	 * @param string $data
@@ -388,7 +397,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public function makeAuthKey(string $data): string {
-		return sha3_512_hmac($data, 'authkey:'.OIDplus::baseConfig()->getValue('SERVER_SECRET'), false);
+		return $this->makeSecret($data);
 	}
 
 	/**

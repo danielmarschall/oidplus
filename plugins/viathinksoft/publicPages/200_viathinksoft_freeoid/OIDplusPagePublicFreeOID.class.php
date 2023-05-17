@@ -82,7 +82,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			OIDplus::logger()->log("V2:[INFO]OID(oid:%1)+RA(%2)", "Requested a free OID for email '%2' to be placed into root '%1'", $root_oid, $email);
 
 			$timestamp = time();
-			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp));
+			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('40c87e20-f4fb-11ed-86ca-3c4a92df8582:'.$email.'/'.$timestamp));
 
 			$message = file_get_contents(__DIR__ . '/request_msg.tpl');
 			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
@@ -103,7 +103,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$auth = $params['auth'];
 			$timestamp = $params['timestamp'];
 
-			if (!OIDplus::authUtils()->validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
+			if (!OIDplus::authUtils()->validateAuthKey('40c87e20-f4fb-11ed-86ca-3c4a92df8582:'.$email.'/'.$timestamp, $auth)) {
 				throw new OIDplusException(_L('Invalid auth key'));
 			}
 
