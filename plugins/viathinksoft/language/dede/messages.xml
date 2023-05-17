@@ -3606,6 +3606,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		JWT Token cannot be verified because the server time is wrong
+		]]></source>
+		<target><![CDATA[
+		JWT-Token kann nicht geprüft werden, da die Server-Uhrzeit falsch ist
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		JWT token could not be decoded
 		]]></source>
 		<target><![CDATA[
