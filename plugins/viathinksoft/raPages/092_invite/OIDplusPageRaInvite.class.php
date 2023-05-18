@@ -46,8 +46,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			// TODO: should we also log who has invited?
 			OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' has been invited", $email);
 
-			$timestamp = time();
-			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('ed840c3e-f4fa-11ed-b67e-3c4a92df8582:'.$email.'/'.$timestamp));
+			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.OIDplus::authUtils()->makeAuthKey(['ed840c3e-f4fa-11ed-b67e-3c4a92df8582',$email]));
 
 			$message = $this->getInvitationText($email);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
@@ -62,20 +61,14 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			_CheckParamExists($params, 'password2');
 			_CheckParamExists($params, 'email');
 			_CheckParamExists($params, 'auth');
-			_CheckParamExists($params, 'timestamp');
 
 			$password1 = $params['password1'];
 			$password2 = $params['password2'];
 			$email = $params['email'];
 			$auth = $params['auth'];
-			$timestamp = $params['timestamp'];
 
-			if (!OIDplus::authUtils()->validateAuthKey('ed840c3e-f4fa-11ed-b67e-3c4a92df8582:'.$email.'/'.$timestamp, $auth)) {
-				throw new OIDplusException(_L('Invalid auth key'));
-			}
-
-			if ((OIDplus::config()->getValue('max_ra_invite_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_invite_time'))) {
-				throw new OIDplusException(_L('Invitation expired!'));
+			if (!OIDplus::authUtils()->validateAuthKey(['ed840c3e-f4fa-11ed-b67e-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_invite_time',-1))) {
+				throw new OIDplusException(_L('Invalid or expired authentication key'));
 			}
 
 			if ($password1 !== $password2) {
@@ -161,8 +154,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			$handled = true;
 
 			$email = explode('$',$id)[1];
-			$timestamp = explode('$',$id)[2];
-			$auth = explode('$',$id)[3];
+			$auth = explode('$',$id)[2];
 
 			$out['title'] = _L('Register as Registration Authority');
 
@@ -176,7 +168,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 			if ($res->any()) {
 				$out['text'] = _L('This RA is already registered and does not need to be invited.');
 			} else {
-				if (!OIDplus::authUtils()->validateAuthKey('activate_ra;'.$email.';'.$timestamp, $auth)) {
+				if (!OIDplus::authUtils()->validateAuthKey(['ed840c3e-f4fa-11ed-b67e-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_invite_time',-1))) {
 					throw new OIDplusException(_L('Invalid authorization. Is the URL OK?'), $out['title']);
 				} else {
 					// TODO: like in the FreeOID plugin, we could ask here at least for a name for the RA
@@ -184,7 +176,6 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 					  <form id="activateRaForm" action="javascript:void(0);" onsubmit="return OIDplusPageRaInvite.activateRaFormOnSubmit();">
 					    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
-					    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 					    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
 					    <div><label class="padding_label">'._L('New password').':</label><input type="password" id="password1" value=""/></div>
 					    <div><label class="padding_label">'._L('Repeat').':</label><input type="password" id="password2" value=""/></div>

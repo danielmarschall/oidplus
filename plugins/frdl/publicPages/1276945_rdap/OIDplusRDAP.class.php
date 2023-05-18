@@ -81,7 +81,7 @@ class OIDplusRDAP extends OIDplusBaseClass {
 			$cacheFile = $this->rdapCacheDir. 'rdap_'
 			.sha1(\get_current_user()
 				  . $this->rdapBaseUri.__FILE__.$query
-				  .OIDplus::authUtils()->makeSecret('cee75760-f4f8-11ed-b67e-3c4a92df8582')
+				  .OIDplus::authUtils()->makeSecret(['cee75760-f4f8-11ed-b67e-3c4a92df8582'])
 				 )
 			.'.'
 			.strlen( $this->rdapBaseUri.$query )

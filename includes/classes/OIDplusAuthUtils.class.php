@@ -383,31 +383,47 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	// Authentication keys for generating secrets or validating arguments (e.g. sent by mail)
 
 	/**
-	 * @param string $data
+	 * @param array|string $data
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public function makeSecret(string $data): string {
+	public function makeSecret($data): string {
+		if (!is_array($data)) $data = [$data];
+		$data = json_encode($data);
 		return sha3_512_hmac($data, 'OIDplus:'.OIDplus::baseConfig()->getValue('SERVER_SECRET'), false);
 	}
 
 	/**
-	 * @param string $data
-	 * @return string
+	 * @param array|string $data Arbitary data to be validated later
+	 * @return string A string that need to be validated with validateAuthKey
 	 * @throws OIDplusException
 	 */
-	public function makeAuthKey(string $data): string {
-		return $this->makeSecret($data);
+	public function makeAuthKey($data): string {
+		if (!is_array($data)) $data = [$data];
+		$ts = time();
+		$data_ext = [$ts, $data];
+		$secret = $this->makeSecret($data_ext);
+		return $ts.'.'.$secret;
 	}
 
 	/**
-	 * @param string $data
-	 * @param string $auth_key
-	 * @return bool
+	 * @param array|string $data The original data that had been passed to makeAuthKey()
+	 * @param string $auth_key The result from makeAuthKey()
+	 * @param int $valid_secs How many seconds is the auth key valid? (-1 for infinite)
+	 * @return bool True if the key is valid and not expired.
 	 * @throws OIDplusException
 	 */
-	public function validateAuthKey(string $data, string $auth_key): bool {
-		return hash_equals($this->makeAuthKey($data), $auth_key);
+	public function validateAuthKey($data, string $auth_key, int $valid_secs=-1): bool {
+		$auth_key_ary = explode('.', $auth_key, 2);
+		if (count($auth_key_ary) != 2) return false; // invalid auth key syntax
+		list($ts, $secret) = $auth_key_ary;
+		if (!is_numeric($ts)) return false; // invalid auth key syntax
+		if ($valid_secs >= 0) {
+			if (time() > ($ts+$valid_secs)) return false; // expired auth key
+		}
+		if (!is_array($data)) $data = [$data];
+		$data_ext = [(int)$ts, $data];
+		return hash_equals($this->makeSecret($data_ext), $secret);
 	}
 
 	// "Veto" functions to force logout state

@@ -65,7 +65,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 			$random = mt_rand($min,$max);
 			$ip_target = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 			$challenge = sha3_512($starttime.'/'.$ip_target.'/'.$random); // $random is secret!
-			$challenge_integrity = OIDplus::authUtils()->makeAuthKey('797bfc34-f4fa-11ed-86ca-3c4a92df8582:'.$challenge);
+			$challenge_integrity = OIDplus::authUtils()->makeAuthKey(['797bfc34-f4fa-11ed-86ca-3c4a92df8582',$challenge]);
 			$send_to_client = array($starttime, $ip_target, $challenge, $min, $max, $challenge_integrity);
 
 			$open_trans_file = self::getOpenTransFileName($ip_target, $random);
@@ -102,7 +102,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 			@unlink($file);
 		}
 
-		return $dir.'/vts_client_challenge_'.OIDplus::authUtils()->makeSecret('461f4a9e-f4fa-11ed-86ca-3c4a92df8582:'.$ip_target.'/'.$random).'.tmp';
+		return $dir.'/vts_client_challenge_'.OIDplus::authUtils()->makeSecret(['461f4a9e-f4fa-11ed-86ca-3c4a92df8582',$ip_target,$random]).'.tmp';
 	}
 
 	/**
@@ -149,10 +149,10 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 		$current_ip = ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
 		if ($ip_target != $current_ip) {
 			throw new OIDplusException(_L('IP address has changed. Please try again. (current IP %1, expected %2)', $current_ip, $ip_target));
-		} else if (time()-$starttime > OIDplus::baseConfig()->getValue('VTS_CAPTCHA_MAXTIME', 10*60/*10 minutes*/)) {
-			throw new OIDplusException(_L('Challenge expired. Please try again.'));
-		} else if (!OIDplus::authUtils()->validateAuthKey('797bfc34-f4fa-11ed-86ca-3c4a92df8582:'.$challenge, $challenge_integrity)) {
-			throw new OIDplusException(_L('Challenge integrity failed'));
+		//} else if (time()-$starttime > OIDplus::baseConfig()->getValue('VTS_CAPTCHA_MAXTIME', 10*60/*10 minutes*/)) {
+		//	throw new OIDplusException(_L('Challenge expired. Please try again.'));
+		} else if (!OIDplus::authUtils()->validateAuthKey(['797bfc34-f4fa-11ed-86ca-3c4a92df8582',$challenge],$challenge_integrity,OIDplus::baseConfig()->getValue('VTS_CAPTCHA_MAXTIME', 10*60/*10 minutes*/))) {
+			throw new OIDplusException(_L('Invalid or expired authentication key'));
 		} else if ($challenge !== sha3_512($starttime.'/'.$ip_target.'/'.$answer)) {
 			throw new OIDplusException(_L('Wrong answer'));
 		} else if (!file_exists($open_trans_file)) {
