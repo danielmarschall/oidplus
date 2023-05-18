@@ -45,8 +45,7 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 			OIDplus::logger()->log("V2:[WARN]RA(%1)", "A new password for '%1' was requested (forgot password)", $email);
 
-			$timestamp = time();
-			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('93a16dbe-f4fb-11ed-b67e-3c4a92df8582:'.$email.'/'.$timestamp));
+			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.OIDplus::authUtils()->makeAuthKey(['93a16dbe-f4fb-11ed-b67e-3c4a92df8582',$email]));
 
 			$message = $this->getForgotPasswordText($params['email']);
 			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
@@ -61,20 +60,14 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			_CheckParamExists($params, 'password2');
 			_CheckParamExists($params, 'email');
 			_CheckParamExists($params, 'auth');
-			_CheckParamExists($params, 'timestamp');
 
 			$password1 = $params['password1'];
 			$password2 = $params['password2'];
 			$email = $params['email'];
 			$auth = $params['auth'];
-			$timestamp = $params['timestamp'];
 
-			if (!OIDplus::authUtils()->validateAuthKey('93a16dbe-f4fb-11ed-b67e-3c4a92df8582:'.$email.'/'.$timestamp, $auth)) {
-				throw new OIDplusException(_L('Invalid auth key'));
-			}
-
-			if ((OIDplus::config()->getValue('max_ra_pwd_reset_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_pwd_reset_time'))) {
-				throw new OIDplusException(_L('Invitation expired!'));
+			if (!OIDplus::authUtils()->validateAuthKey(['93a16dbe-f4fb-11ed-b67e-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_pwd_reset_time',-1))) {
+				throw new OIDplusException(_L('Invalid or expired authentication key'));
 			}
 
 			if ($password1 !== $password2) {
@@ -143,20 +136,18 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 			$handled = true;
 
 			$email = explode('$',$id)[1];
-			$timestamp = explode('$',$id)[2];
-			$auth = explode('$',$id)[3];
+			$auth = explode('$',$id)[2];
 
 			$out['title'] = _L('Reset password');
 			$out['icon'] = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/reset_password_icon.png';
 
-			if (!OIDplus::authUtils()->validateAuthKey('reset_password;'.$email.';'.$timestamp, $auth)) {
+			if (!OIDplus::authUtils()->validateAuthKey(['93a16dbe-f4fb-11ed-b67e-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_pwd_reset_time',-1))) {
 				throw new OIDplusException(_L('Invalid authorization. Is the URL OK?'), $out['title']);
 			} else {
 				$out['text'] = '<p>'._L('E-Mail-Address: %1','<b>'.$email.'</b>').'</p>
 
 				  <form id="resetPasswordForm" action="javascript:void(0);" onsubmit="return OIDplusPagePublicForgotPassword.resetPasswordFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
-				    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 				    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
 				    <div><label class="padding_label">'._L('New password').':</label><input type="password" id="password1" value=""/></div>
 				    <div><label class="padding_label">'._L('Repeat').':</label><input type="password" id="password2" value=""/></div>

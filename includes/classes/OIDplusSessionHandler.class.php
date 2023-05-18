@@ -40,7 +40,7 @@ class OIDplusSessionHandler extends OIDplusBaseClass implements OIDplusGetterSet
 	 */
 	public function __construct() {
 		$this->sessionLifetime = OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60);
-		$this->secret = OIDplus::authUtils()->makeSecret('b118abc8-f4ec-11ed-86ca-3c4a92df8582');
+		$this->secret = OIDplus::authUtils()->makeSecret(['b118abc8-f4ec-11ed-86ca-3c4a92df8582']);
 
 		// **PREVENTING SESSION HIJACKING**
 		// Prevents javascript XSS attacks aimed to steal the session ID

@@ -94,8 +94,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			} else {
 				OIDplus::logger()->log("V2:[INFO]RA(%1)+RA(%2)", "Requested email address change from '%1' to '%2'", $old_email, $new_email);
 
-				$timestamp = time();
-				$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('5ef24124-f4fb-11ed-b67e-3c4a92df8582:'.$old_email.'/'.$new_email.'/'.$timestamp));
+				$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.OIDplus::authUtils()->makeAuthKey(['5ef24124-f4fb-11ed-b67e-3c4a92df8582',$old_email,$new_email]));
 
 				$message = file_get_contents(__DIR__ . '/change_request_email.tpl');
 				$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
@@ -119,14 +118,12 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 			_CheckParamExists($params, 'new_email');
 			_CheckParamExists($params, 'password');
 			_CheckParamExists($params, 'auth');
-			_CheckParamExists($params, 'timestamp');
 
 			$old_email = $params['old_email'];
 			$new_email = $params['new_email'];
 			$password = $params['password'];
 
 			$auth = $params['auth'];
-			$timestamp = $params['timestamp'];
 
 			$ra_was_logged_in = OIDplus::authUtils()->isRaLoggedIn($old_email);
 
@@ -135,12 +132,8 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				throw new OIDplusException(_L('E-Mail-Address cannot be changed because this user does not have a password'));
 			}
 
-			if (!OIDplus::authUtils()->validateAuthKey('5ef24124-f4fb-11ed-b67e-3c4a92df8582:'.$old_email.'/'.$new_email.'/'.$timestamp, $auth)) {
-				throw new OIDplusException(_L('Invalid auth key'));
-			}
-
-			if ((OIDplus::config()->getValue('max_ra_email_change_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_email_change_time'))) {
-				throw new OIDplusException(_L('Activation link expired!'));
+			if (!OIDplus::authUtils()->validateAuthKey(['5ef24124-f4fb-11ed-b67e-3c4a92df8582',$old_email,$new_email], $auth, OIDplus::config()->getValue('max_ra_email_change_time', -1))) {
+				throw new OIDplusException(_L('Invalid or expired authentication key'));
 			}
 
 			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($old_email));
@@ -274,8 +267,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
 			$old_email = explode('$',$id)[1];
 			$new_email = explode('$',$id)[2];
-			$timestamp = explode('$',$id)[3];
-			$auth = explode('$',$id)[4];
+			$auth = explode('$',$id)[3];
 
 			$out['title'] = _L('Perform email address change');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
@@ -297,7 +289,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				if ($res->any()) {
 					throw new OIDplusException(_L('eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.'), $out['title']);
 				} else {
-					if (!OIDplus::authUtils()->validateAuthKey('activate_new_ra_email;'.$old_email.';'.$new_email.';'.$timestamp, $auth)) {
+					if (!OIDplus::authUtils()->validateAuthKey(['5ef24124-f4fb-11ed-b67e-3c4a92df8582',$old_email,$new_email], $auth, OIDplus::config()->getValue('max_ra_email_change_time', -1))) {
 						throw new OIDplusException(_L('Invalid authorization. Is the URL OK?'), $out['title']);
 					} else {
 						$out['text'] = '<p>'._L('Old eMail-Address').': <b>'.$old_email.'</b></p>
@@ -306,7 +298,6 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 						 <form id="activateNewRaEmailForm" action="javascript:void(0);" onsubmit="return OIDplusPageRaChangeEMail.activateNewRaEmailFormOnSubmit();">
 					    <input type="hidden" id="old_email" value="'.htmlentities($old_email).'"/>
 					    <input type="hidden" id="new_email" value="'.htmlentities($new_email).'"/>
-					    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>
 					    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>
 
 					    <div><label class="padding_label">'._L('Please verify your password').':</label><input type="password" id="password" value=""/></div>

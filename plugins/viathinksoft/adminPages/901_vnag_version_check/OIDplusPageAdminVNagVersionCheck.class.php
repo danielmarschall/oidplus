@@ -142,7 +142,7 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 	 * @throws OIDplusException
 	 */
 	public static function vnag_password(): string {
-		return OIDplus::authUtils()->makeSecret('65d9f488-f4eb-11ed-b67e-3c4a92df8582');
+		return OIDplus::authUtils()->makeSecret(['65d9f488-f4eb-11ed-b67e-3c4a92df8582']);
 	}
 
 }

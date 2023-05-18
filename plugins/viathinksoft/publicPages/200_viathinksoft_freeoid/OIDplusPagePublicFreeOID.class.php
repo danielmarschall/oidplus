@@ -81,8 +81,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$root_oid = self::getFreeRootOid(false);
 			OIDplus::logger()->log("V2:[INFO]OID(oid:%1)+RA(%2)", "Requested a free OID for email '%2' to be placed into root '%1'", $root_oid, $email);
 
-			$timestamp = time();
-			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.$timestamp.'$'.OIDplus::authUtils()->makeAuthKey('40c87e20-f4fb-11ed-86ca-3c4a92df8582:'.$email.'/'.$timestamp));
+			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.OIDplus::authUtils()->makeAuthKey(['40c87e20-f4fb-11ed-86ca-3c4a92df8582',$email]));
 
 			$message = file_get_contents(__DIR__ . '/request_msg.tpl');
 			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
@@ -97,18 +96,12 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 		} else if ($actionID == 'activate_freeoid') {
 			_CheckParamExists($params, 'email');
 			_CheckParamExists($params, 'auth');
-			_CheckParamExists($params, 'timestamp');
 
 			$email = $params['email'];
 			$auth = $params['auth'];
-			$timestamp = $params['timestamp'];
 
-			if (!OIDplus::authUtils()->validateAuthKey('40c87e20-f4fb-11ed-86ca-3c4a92df8582:'.$email.'/'.$timestamp, $auth)) {
-				throw new OIDplusException(_L('Invalid auth key'));
-			}
-
-			if ((OIDplus::config()->getValue('max_ra_invite_time') > 0) && (time()-$timestamp > OIDplus::config()->getValue('max_ra_invite_time'))) {
-				throw new OIDplusException(_L('Invitation expired!'));
+			if (!OIDplus::authUtils()->validateAuthKey(['40c87e20-f4fb-11ed-86ca-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_invite_time', -1))) {
+				throw new OIDplusException(_L('Invalid or expired authentication key'));
 			}
 
 			// 1. step: Check entered data and add the RA to the database
@@ -286,8 +279,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			$handled = true;
 
 			$email = explode('$',$id)[1];
-			$timestamp = explode('$',$id)[2];
-			$auth = explode('$',$id)[3];
+			$auth = explode('$',$id)[2];
 
 			$out['title'] = _L('Activate Free OID');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
@@ -295,7 +287,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			if ($already_registered_oid = $this->alreadyHasFreeOid($email, true)) {
 				throw new OIDplusHtmlException(_L('This email address already has a FreeOID registered (%1)', '<a '.OIDplus::gui()->link($already_registered_oid).'>'.htmlentities($already_registered_oid).'</a>'));
 			} else {
-				if (!OIDplus::authUtils()->validateAuthKey('com.viathinksoft.freeoid.activate_freeoid;'.$email.';'.$timestamp, $auth)) {
+				if (!OIDplus::authUtils()->validateAuthKey(['40c87e20-f4fb-11ed-86ca-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_invite_time', -1))) {
 					throw new OIDplusException(_L('Invalid authorization. Is the URL OK?'), $out['title']);
 				} else {
 					$ra = new OIDplusRA($email);
@@ -305,7 +297,6 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 
 					$out['text'] .= '  <form id="activateFreeOIDForm" action="javascript:void(0);" onsubmit="return OIDplusPagePublicFreeOID.activateFreeOIDFormOnSubmit();">';
 					$out['text'] .= '    <input type="hidden" id="email" value="'.htmlentities($email).'"/>';
-					$out['text'] .= '    <input type="hidden" id="timestamp" value="'.htmlentities($timestamp).'"/>';
 					$out['text'] .= '    <input type="hidden" id="auth" value="'.htmlentities($auth).'"/>';
 
 					if ($ra_existing) {

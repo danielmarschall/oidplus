@@ -382,14 +382,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Activation link expired!
-		]]></source>
-		<target><![CDATA[
-		Aktivierungs-Link ist abgelaufen!
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Add a file attachment
 		]]></source>
 		<target><![CDATA[
@@ -1154,22 +1146,6 @@
 		]]></source>
 		<target><![CDATA[
 		Kann Datei %1 nicht schreiben
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Challenge expired. Please try again.
-		]]></source>
-		<target><![CDATA[
-		Challenge abgelaufen. Bitte noch einmal versuchen.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Challenge integrity failed
-		]]></source>
-		<target><![CDATA[
-		Challenge ist möglicherweise manipuliert worden
 		]]></target>
 	</message>
 	<message>
@@ -3438,14 +3414,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Invalid auth key
-		]]></source>
-		<target><![CDATA[
-		Ungültiger Authentifizierungs-Schlüssel
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Invalid auth plugin name. It is usually the folder name, without path, e.g. "%1"
 		]]></source>
 		<target><![CDATA[
@@ -3518,6 +3486,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Invalid or expired authentication key
+		]]></source>
+		<target><![CDATA[
+		Ungültiger oder abgelaufener Sicherheitsschlüssel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Invalid protection flag, use OIDplusConfig::PROTECTION_* constants
 		]]></source>
 		<target><![CDATA[
@@ -3546,14 +3522,6 @@
 		]]></source>
 		<target><![CDATA[
 		Farben umkehren
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Invitation expired!
-		]]></source>
-		<target><![CDATA[
-		Einladung abgelaufen!
 		]]></target>
 	</message>
 	<message>
