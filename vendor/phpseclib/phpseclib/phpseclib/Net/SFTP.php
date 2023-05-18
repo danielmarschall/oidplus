@@ -350,7 +350,9 @@ class SFTP extends SSH2
      *
      * Connects to an SFTP server
      *
-     * @param string $host
+     * $host can either be a string, representing the host, or a stream resource.
+     *
+     * @param mixed $host
      * @param int $port
      * @param int $timeout
      */
@@ -545,22 +547,7 @@ class SFTP extends SSH2
      */
     private function partial_init_sftp_connection()
     {
-        $this->window_size_server_to_client[self::CHANNEL] = $this->window_size;
-
-        $packet = Strings::packSSH2(
-            'CsN3',
-            NET_SSH2_MSG_CHANNEL_OPEN,
-            'session',
-            self::CHANNEL,
-            $this->window_size,
-            0x4000
-        );
-
-        $this->send_binary_packet($packet);
-
-        $this->channel_status[self::CHANNEL] = NET_SSH2_MSG_CHANNEL_OPEN;
-
-        $response = $this->get_channel_packet(self::CHANNEL, true);
+        $response = $this->openChannel(self::CHANNEL, true);
         if ($response === true && $this->isTimeout()) {
             return false;
         }
@@ -3422,7 +3409,7 @@ class SFTP extends SSH2
      *
      * Returns a string if NET_SFTP_LOGGING == self::LOG_COMPLEX, an array if NET_SFTP_LOGGING == self::LOG_SIMPLE and false if !defined('NET_SFTP_LOGGING')
      *
-     * @return array|string
+     * @return array|string|false
      */
     public function getSFTPLog()
     {
