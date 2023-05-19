@@ -86,7 +86,16 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	public function restApiCall(string $requestMethod, string $endpoint, array $json_in) {
 		if (str_starts_with($endpoint, 'objects/')) {
 			$id = substr($endpoint, strlen('objects/'));
-			if ($requestMethod == "GET"/*Select*/) {
+			if ($requestMethod == "OPTIONS") {
+				header("access-control-allow-credentials: true");
+				header("access-control-allow-headers: Keep-Alive,User-Agent,Authorization");
+				header("access-control-allow-methods: GET, PUT, POST, DELETE, PATCH, OPTIONS");
+				header("access-control-allow-origin: *");
+				http_response_code(204/*No content*/);
+				OIDplus::invoke_shutdown();
+				die(); // return array();
+			}
+			else if ($requestMethod == "GET"/*Select*/) {
 				$obj = OIDplusObject::findFitting($id);
 				if (!$obj) throw new OIDplusException(_L('The object %1 was not found in this database.', $id), null, 404);
 
