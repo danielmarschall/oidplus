@@ -192,7 +192,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 
 	$('#real_title').html("&nbsp;");
 	$('#real_content').html(_L("Loading..."));
-	$('#static_link').attr("href", "index.php?goto="+encodeURIComponent(id));
+	$('#static_link').attr("href", oidplus_webpath_absolute_canonical+"?goto="+encodeURIComponent(id));
 	$("#gotoedit").val(id);
 
 	// Normal opening of a description
@@ -228,7 +228,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 					"node_id":id,
 					"titleHTML":(data.icon ? '<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' : '') + data.title.htmlentities(),
 					"textHTML":data.text,
-					"staticlinkHREF":"index.php?goto="+encodeURIComponent(id),
+					"staticlinkHREF":oidplus_webpath_absolute_canonical+"?goto="+encodeURIComponent(id),
 				};
 				if (current_node != id) {
 					window.history.pushState(state, data.title, "?goto="+encodeURIComponent(id));
@@ -369,7 +369,7 @@ $(document).ready(function () {
 			"node_id":goto,
 			"titleHTML":$('#real_title').html(),
 			"textHTML":$('#real_content').html(),
-			"staticlinkHREF":"index.php?goto="+encodeURIComponent(goto),
+			"staticlinkHREF":oidplus_webpath_absolute_canonical+"?goto="+encodeURIComponent(goto),
 		}, $('#real_title').html(), "?goto="+encodeURIComponent(goto));
 
 		if (goto != null) data.instance.select_node([goto]);
@@ -504,7 +504,7 @@ function gotoButtonClicked() {
 }
 
 function setLanguage(lngid) {
-	setCookie('LANGUAGE', lngid, 0/*Until browser closes*/, oidplus_webpath);
+	setCookie('LANGUAGE', lngid, 0/*Until browser closes*/, oidplus_webpath_relative);
 
 	if (current_node == "") return false; // Happens for Setup. Open URL instead.
 
