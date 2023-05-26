@@ -274,12 +274,12 @@ class OIDplusGui extends OIDplusBaseClass {
 		}
 		$head_elems[] = '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
 		$head_elems[] = '<title>'.htmlentities($title).'</title>';
-		$head_elems[] = '<script src="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'polyfill.min.js.php"></script>';
-		$head_elems[] = '<script src="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'oidplus.min.js.php?noBaseConfig=1" type="text/javascript"></script>';
-		$head_elems[] = '<link rel="stylesheet" href="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'oidplus.min.css.php?noBaseConfig=1">';
-		$head_elems[] = '<link rel="shortcut icon" type="image/x-icon" href="'.OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'favicon.ico.php">';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'polyfill.min.js.php"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php?noBaseConfig=1" type="text/javascript"></script>';
+		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.css.php?noBaseConfig=1">';
+		$head_elems[] = '<link rel="shortcut icon" type="image/x-icon" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'favicon.ico.php">';
 		if (OIDplus::baseConfig()->exists('CANONICAL_SYSTEM_URL')) {
-			$head_elems[] = '<link rel="canonical" href="'.htmlentities(OIDplus::canonicalURL()).OIDplus::webpath(null, OIDplus::PATH_RELATIVE).'">';
+			$head_elems[] = '<link rel="canonical" href="'.htmlentities(OIDplus::canonicalURL().OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'">';
 		}
 
 		return $head_elems;
