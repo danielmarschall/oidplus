@@ -953,7 +953,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 				if ($obj->userHasWriteRights()) {
 					$rand = ++self::$crudCounter;
-					$desc = '<noscript><p><b>'._L('You need to enable JavaScript to edit title or description of this object.').'</b></p>'.$desc.'</noscript>';
+					$desc = '<noscript><p><font color="red">'._L('You need to enable JavaScript to edit title or description of this object.').'</font></p>'.$desc.'</noscript>';
 					$desc .= '<div class="container box" style="display:none" id="descbox_'.$rand.'">';
 					$desc .= _L('Title').': <input type="text" name="title" id="titleedit" value="'.htmlentities($title).'"><br><br>'._L('Description').':<br>';
 					$desc .= self::showMCE('description', $description);

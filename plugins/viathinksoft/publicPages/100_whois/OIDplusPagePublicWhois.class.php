@@ -115,11 +115,11 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 			// Use this if webwhois.php implements something which is not yet uploaded to IETF:
 			//$out['text'] .= '<p>'._L('RFC Internet Draft').': <a href="'.OIDplus::webpath(__DIR__.'/whois/rfc/draft-viathinksoft-oidip-06.txt', true).'" target="_blank">draft-viathinksoft-oidip-06</a></p>';
 			# ---
-			$out['text'] .= '<h2>'._L('Parameters for new request').'</h2>';
 			$out['text'] .= '<noscript>';
-			$out['text'] .= '<p>'._L('You need to enable JavaScript to use the login area.').'</p>';
+			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use the login area.').'</font></p>';
 			$out['text'] .= '</noscript>';
 			$out['text'] .= '<div id="oidipArea" style="display:none">';
+			$out['text'] .= '<h2>'._L('Parameters for new request').'</h2>';
 			# ---
 			$out['text'] .= _L('Requested object including namespace, e.g. %1','<code>oid:2.999</code>').'<br>';
 			$out['text'] .= '<input type="text" id="whois_query" name="query" value="'.htmlentities($example).'" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
@@ -212,8 +212,8 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 		$payload = '<br><img src="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/page_pictogram.png" height="15" alt=""> <a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('Whois').'</a>';
 		$obj = OIDplusObject::parse($id);
 		if ($obj && $obj->userHasParentalWriteRights()) {
-			$payload .= '<br><span class="gray_footer_font">'._L('OID-WHOIS Auth Token for displaying full object information: %1 (only applies if the this or superior objects are marked confidential)','<b>'.self::genWhoisAuthToken($id).'</b>').'</span>';
-			$payload .= '<br><span class="gray_footer_font">'._L('OID-WHOIS Auth Token for displaying full RA information: %1 (only applies if the RA has set the privacy-flag)','<b>'.self::genWhoisAuthToken('ra:'.$obj->getRaMail()).'</b>').'</span>';
+			$payload .= '<br><span class="gray_footer_font">'._L('OID-IP Auth Token for displaying full object information: %1 (only applies if the this or superior objects are marked confidential)','<b>'.self::genWhoisAuthToken($id).'</b>').'</span>';
+			$payload .= '<br><span class="gray_footer_font">'._L('OID-IP Auth Token for displaying full RA information: %1 (only applies if the RA has set the privacy-flag)','<b>'.self::genWhoisAuthToken('ra:'.$obj->getRaMail()).'</b>').'</span>';
 		}
 
 		$text = str_replace('<!-- MARKER 6 -->', '<!-- MARKER 6 -->'.$payload, $text);
