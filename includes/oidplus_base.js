@@ -63,12 +63,11 @@ function combine_systemtitle_and_pagetitle(systemtitle, pagetitle) {
 }
 
 function getSystemUrl(relative) {
+	relative = (typeof relative === 'undefined') ? false : relative; // do not translate
 	var url = new URL(window.location.href);
-	if (relative) {
-		return url.pathname;
-	} else {
-		return url.href.substr(0, url.href.length-url.search.length);
-	}
+	var res = relative ? url.pathname : url.href.substr(0, url.href.length-url.search.length);
+	if (res.endsWith("index.php")) res = res.substring(0, res.lastIndexOf('/')) + "/";
+	return res;
 }
 
 function getTreeLoadURL() {

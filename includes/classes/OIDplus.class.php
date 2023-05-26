@@ -2125,7 +2125,7 @@ class OIDplus extends OIDplusBaseClass {
 			$target = realpath($target);
 			if ($target === false) return false;
 			$tmp = substr($target, strlen($basedir)+1);
-			$res .= str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // remove OS specific path delimiters introduced by realpath()
+			$res .= str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // replace OS specific path delimiters introduced by realpath()
 			if (is_dir($target)) $res .= '/';
 		}
 
@@ -2133,6 +2133,8 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
+	 * Note: canonicalURL() is different than webpath(),
+	 * because it does additional things like re-ordering of arguments
 	 * @param string|null $goto
 	 * @return false|string
 	 * @throws OIDplusException
@@ -2146,11 +2148,13 @@ class OIDplus extends OIDplusBaseClass {
 		$target = realpath('.');
 		if ($target === false) return false;
 		$tmp = substr($target, strlen($basedir)+1);
-		$res = str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // remove OS specific path delimiters introduced by realpath()
+		$res = str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // replace OS specific path delimiters introduced by realpath()
 		if (is_dir($target) && ($res != '')) $res .= '/';
 
 		// Third part: File name
-		$tmp = explode('/',$_SERVER['SCRIPT_NAME']);
+		$tmp = $_SERVER['SCRIPT_NAME'];
+		$tmp = rtrim($tmp, 'index.php');
+		$tmp = explode('/',$tmp);
 		$tmp = end($tmp);
 
 		// Fourth part: Query string (ordered)
