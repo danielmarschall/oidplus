@@ -239,7 +239,7 @@ function performAccessCheck() {
 				} else {
 					console.log("JS SSL detection result: "+xhr.status);
 					$("#enforce_ssl").val('OIDplus::ENFORCE_SSL_NO'); // disable SSL (because it failed, e.g. because of invalid cert or closed port)
-					setCookie('SSL_CHECK', 0, 0/*Until browser closes*/, oidplus_webpath); // we must revert the SSL_CHECK=1 the PHP script did set (see explanation in OIDplus.class.php:isSslAvailable)
+					setCookie('SSL_CHECK', 0, 0/*Until browser closes*/, oidplus_webpath_relative); // we must revert the SSL_CHECK=1 the PHP script did set (see explanation in OIDplus.class.php:isSslAvailable)
 				}
 			}
 		};

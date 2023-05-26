@@ -326,7 +326,7 @@ class OIDplusGui extends OIDplusBaseClass {
 		$out .= htmlentities($page_title_2).'</h1>';
 		$out .= '<div id="real_content">'.$static_content.'</div>';
 		if ((!isset($_SERVER['REQUEST_METHOD'])) || ($_SERVER['REQUEST_METHOD'] == 'GET')) {
-			$out .= '<br><p><img src="img/share.png" width="15" height="15" alt="'._L('Share').'"> <a href="?goto='.htmlentities($static_node_id).'" id="static_link" class="gray_footer_font">'._L('Static link to this page').'</a>';
+			$out .= '<br><p><img src="img/share.png" width="15" height="15" alt="'._L('Share').'"> <a href="'.htmlentities(OIDplus::canonicalUrl($static_node_id)).'" id="static_link" class="gray_footer_font">'._L('Static link to this page').'</a>';
 			$out .= '</p>';
 		}
 		$out .= '<br>';
