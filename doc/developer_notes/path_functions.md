@@ -10,6 +10,24 @@ Here is an overview of the methods `OIDplus::localpath()` and `OIDplus::webpath(
                               |      Local path                               URL
     --------------------------+---------------------------------------------------------------------------------
                               |
+       Canonical form of the  |      n/a                                      OIDplus::canonicalURL(null)
+       URL in the browser     |                                               Example: https://www.example.com/oidplus/?goto=abc&lang=de
+       (Params preserved and  |                                               OIDplus::canonicalURL('def')
+       ordered)               |                                               Example: https://www.example.com/oidplus/?goto=def&lang=de
+                              |
+                              |
+       URL of the system      |      n/a                                      OIDplus::getSystemUrl(OIDplus::PATH_RELATIVE)
+                              |                                               Example: ../
+                              |                                               OIDplus::getSystemUrl(OIDplus::PATH_RELATIVE_TO_ROOT)
+                              |                                               Example: /oidplus/
+                              |                                               OIDplus::getSystemUrl(OIDplus::PATH_RELATIVE_TO_ROOT_CANONICAL)
+                              |                                               Example: /oidplus/ (if baseconfig CANONICAL_SYSTEM_URL is set)
+                              |                                               OIDplus::getSystemUrl(OIDplus::PATH_ABSOLUTE)
+                              |                                               Example: http://www.example.com/oidplus/
+                              |                                               OIDplus::getSystemUrl(OIDplus::PATH_ABSOLUTE_CANONICAL)
+                              |                                               Example: http://www.example.org/oidplus/ (if baseconfig CANONICAL_SYSTEM_URL is set)
+                              |
+                              |
        Get relative path      |      OIDplus::localpath(null, true)           OIDplus::webpath(null, OIDplus::PATH_RELATIVE)
        to base directory      |      Example: ../                             Example: ../
                               |                                               or

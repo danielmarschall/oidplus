@@ -157,7 +157,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/login_icon.png';
 
 			$out['text']  = '<noscript>';
-			$out['text'] .= '<p>'._L('You need to enable JavaScript to use the login area.').'</p>';
+			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use the login area.').'</font></p>';
 			$out['text'] .= '</noscript>';
 
 			$out['text'] .= '<div id="loginArea" style="visibility: hidden"><div id="loginTab" class="container" style="width:100%;">';

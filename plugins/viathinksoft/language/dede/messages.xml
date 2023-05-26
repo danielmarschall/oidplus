@@ -4494,6 +4494,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OID-IP Auth Token for displaying full RA information: %1 (only applies if the RA has set the privacy-flag)
+		]]></source>
+		<target><![CDATA[
+		OID-IP Auth Token zum Anzeigen von vollen Informationen zur Registrierungsstelle (nur erforderlich, wenn diese ihre Kontaktdaten geschützt hat): %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OID-IP Auth Token for displaying full object information: %1 (only applies if the this or superior objects are marked confidential)
+		]]></source>
+		<target><![CDATA[
+		OID-IP Auth Token zum Anzeigen von vollen Informationen zum Objekt (nur erforderlich, wenn das Objekt oder darüberliegende Objekte versteckt sind): %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OID-IRI notation
 		]]></source>
 		<target><![CDATA[
@@ -4506,22 +4522,6 @@
 		]]></source>
 		<target><![CDATA[
 		OID-Info.com Import/Export
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		OID-WHOIS Auth Token for displaying full RA information: %1 (only applies if the RA has set the privacy-flag)
-		]]></source>
-		<target><![CDATA[
-		OID-WHOIS Auth Token zum Anzeigen von vollen Informationen zur Registrierungsstelle (nur erforderlich, wenn diese ihre Kontaktdaten geschützt hat): %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		OID-WHOIS Auth Token for displaying full object information: %1 (only applies if the this or superior objects are marked confidential)
-		]]></source>
-		<target><![CDATA[
-		OID-WHOIS Auth Token zum Anzeigen von vollen Informationen zum Objekt (nur erforderlich, wenn das Objekt oder darüberliegende Objekte versteckt sind): %1
 		]]></target>
 	</message>
 	<message>

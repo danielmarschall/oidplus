@@ -68,7 +68,7 @@ var OIDplusPagePublicWhois = {
 		}
 		if (auth != "") query += "$auth="+auth;
 		// -------------------------------------------------------------
-		$("#whois_url_bar")[0].innerText = getSystemUrl() + 'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?query=' + encodeURIComponent(query);
+		$("#whois_url_bar")[0].innerText = getSystemUrl(false) + 'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?query=' + encodeURIComponent(query);
 		$("#whois_query_bar")[0].innerText = query;
 	}
 
